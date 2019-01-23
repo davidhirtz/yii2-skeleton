@@ -15,9 +15,13 @@
 		"yiisoft/yii2":">=2.0.13",
 		"yiisoft/yii2-bootstrap4":"*"
 	},
-	"autoload": {
-		"psr-4": {
-			"davidhirtz\\yii2\\skeleton\\": ""
+	"require-dev":{
+		"yiisoft/yii2-debug":"*",
+		"yiisoft/yii2-gii":"*"
+	},
+	"autoload":{
+		"psr-4":{
+			"davidhirtz\\yii2\\skeleton\\":""
 		}
 	},
 	"scripts":{

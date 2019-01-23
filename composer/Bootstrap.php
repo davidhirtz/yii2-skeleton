@@ -18,7 +18,18 @@ class Bootstrap implements BootstrapInterface
 	 */
 	public function bootstrap($app)
 	{
-		echo 'WOW!!!';
+		if(YII_DEBUG)
+		{
+			$app->bootstrap[]='debug';
+
+			$app->setModule('debug', [
+				'class'=>'yii\debug\Module',
+				'on beforeAction'=>function()
+				{
+					Yii::$classMap['yii\bootstrap\BootstrapPluginAsset']=Yii::$app->getBasePath().'/components/helpers/BootstrapPluginAsset.php';
+				},
+			]);
+		}
 //		/** @var Module $module */
 //		/** @var \yii\db\ActiveRecord $modelName */
 //		if($app->hasModule('user') && ($module=$app->getModule('user')) instanceof Module)
