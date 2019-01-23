@@ -1,5 +1,5 @@
 <?php
-namespace davidhirtz\yii2\skeleton\composer\bootstrap;
+namespace davidhirtz\yii2\skeleton\composer;
 
 use Yii;
 use yii\authclient\Collection;
@@ -13,7 +13,6 @@ use yii\i18n\PhpMessageSource;
  */
 class Bootstrap implements BootstrapInterface
 {
-
 	/**
 	 * @inheritdoc
 	 */
