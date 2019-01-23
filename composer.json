@@ -16,20 +16,20 @@
 		"yiisoft/yii2-authclient": "*",
 		"yiisoft/yii2-bootstrap4": "*",
 		"yiisoft/yii2-swiftmailer": "*",
-		"yiisoft/yii2-imagine": ">=2.1.0",
-		"yiisoft/yii2-jui": "^2.0",
-		"2amigos/yii2-file-upload-widget": "~1.0",
-		"2amigos/yii2-ckeditor-widget" : "~2.1",
-		"rmrevin/yii2-fontawesome": "~2.17",
-		"davidhirtz/yii2-datetime-behavior": "*",
-		"davidhirtz/yii2-timeago": "dev-master",
-		"davidhirtz/yii2-curl": "dev-master",
-		"davidhirtz/yii2-lazysizes": "dev-master",
-		"bower-asset/bootbox": ">=4.4.0",
-		"tinify/tinify": "^1.4",
-		"hashids/hashids": "^1.0",
-		"guzzlehttp/guzzle": "~6.0",
-		"guzzlehttp/oauth-subscriber": "0.3.*"
+		//"yiisoft/yii2-imagine": ">=2.1.0",
+		//"yiisoft/yii2-jui": "^2.0",
+		//"2amigos/yii2-file-upload-widget": "~1.0",
+		//"2amigos/yii2-ckeditor-widget" : "~2.1",
+		//"rmrevin/yii2-fontawesome": "~2.17",
+		//"davidhirtz/yii2-datetime-behavior": "*",
+		//"davidhirtz/yii2-timeago": "dev-master",
+		//"davidhirtz/yii2-curl": "dev-master",
+		//"davidhirtz/yii2-lazysizes": "dev-master",
+		//"bower-asset/bootbox": ">=4.4.0",
+		//"tinify/tinify": "^1.4",
+		//"hashids/hashids": "^1.0",
+		//"guzzlehttp/guzzle": "~6.0",
+		//"guzzlehttp/oauth-subscriber": "0.3.*"
 	},
 	"config":{
 		"process-timeout":1800,
@@ -40,14 +40,10 @@
 	"scripts":{
 		"post-install-cmd":[
 			"yii\\composer\\Installer::postInstall"
-		],
-		"post-create-project-cmd":[
-			"yii\\composer\\Installer::postCreateProject",
-			"yii\\composer\\Installer::postInstall"
 		]
 	},
 	"extra":{
-		"yii\\composer\\Installer::postCreateProject":{
+		"yii\\composer\\Installer::postInstall":{
 			"setPermission":[
 				{
 					"runtime":"0777",
