@@ -22,11 +22,11 @@
 	},
 	"scripts":{
 		"post-install-cmd":[
-			"yii\\composer\\Installer::postInstall"
+			"davidhirtz\\yii2\\skeleton\\composer\\Installer::postInstall"
 		]
 	},
 	"extra":{
-		"yii\\composer\\Installer::postInstall":{
+		"davidhirtz\\yii2\\skeleton\\composer\\Installer::postInstall":{
 			"setPermission":[
 				{
 					"runtime":"0777",
