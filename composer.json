@@ -33,20 +33,16 @@
 					"web/assets":"0777",
 					"yii":"0755"
 				}
-			],
-			"createCredentials":[
-				"config/credentials.php"
 			]
 		}
+	},
+	"repositories":[
+		{
+			"type":"composer",
+			"url":"https://asset-packagist.org"
+		}
+	],
+	"extra":{
+		"bootstrap":"davidhirtz\\yii2\\skeleton\\composer\\Bootstrap"
 	}
-},
-"repositories":[
-{
-"type":"composer",
-"url":"https://asset-packagist.org"
-}
-],
-"extra":{
-"bootstrap":"davidhirtz\\yii2\\skeleton\\composer\\Bootstrap"
-}
 }
