@@ -13,6 +13,8 @@ use yii\i18n\PhpMessageSource;
  */
 class Installer extends \yii\composer\Installer
 {
+	public $file='config/credentials.php';
+
 	/**
 	 * @inheritdoc
 	 */
@@ -27,9 +29,9 @@ class Installer extends \yii\composer\Installer
 	 */
 	public function createCredentials()
 	{
-		$config=func_get_args();
-
-		if(!is_file($config))
+		$this->io->write('Test nachricht');
+		
+		if(!is_file($file))
 		{
 			echo $this->io->ask('Do you want to create the "config/credentials.php" file? (yes|no) [no]');
 		}
