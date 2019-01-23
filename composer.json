@@ -15,10 +15,6 @@
 		"yiisoft/yii2":">=2.0.13",
 		"yiisoft/yii2-bootstrap4":"*"
 	},
-	"require-dev":{
-		"yiisoft/yii2-debug":"*",
-		"yiisoft/yii2-gii":"*"
-	},
 	"autoload":{
 		"psr-4":{
 			"davidhirtz\\yii2\\skeleton\\":""
@@ -37,16 +33,20 @@
 					"web/assets":"0777",
 					"yii":"0755"
 				}
+			],
+			"createCredentials":[
+				"config/credentials.php"
 			]
 		}
-	},
-	"repositories":[
-		{
-			"type":"composer",
-			"url":"https://asset-packagist.org"
-		}
-	],
-	"extra":{
-		"bootstrap":"davidhirtz\\yii2\\skeleton\\composer\\Bootstrap"
 	}
+},
+"repositories":[
+{
+"type":"composer",
+"url":"https://asset-packagist.org"
+}
+],
+"extra":{
+"bootstrap":"davidhirtz\\yii2\\skeleton\\composer\\Bootstrap"
+}
 }
