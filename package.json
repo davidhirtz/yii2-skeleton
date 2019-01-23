@@ -1,0 +1,23 @@
+{
+	"name":"dmx2-gulp",
+	"version":"1.0.0",
+	"description":"Yii 2 gulp via yii asset command",
+	"author":"David Hirtz",
+	"license":"ISC",
+	"dependencies":{
+		"browser-sync": "^2.18.13",
+		"gulp": "4.0",
+		"gulp-autoprefixer": "^6.0.0",
+		"gulp-cssnano": "^2.1.0",
+		"gulp-debug": "^4.0.0",
+		"gulp-imagemin": "^4.1.0",
+		"gulp-notify": "^3.2.0",
+		"gulp-rename": "^1.2.2",
+		"gulp-sass": "^4.0.2",
+		"gulp-sourcemaps": "^2.6.4",
+		"gulp-touch": "^1.0.1",
+		"gulp-uglify": "*",
+		"minimist": "*",
+		"node-sass": "^4.9.4"
+	}
+}
