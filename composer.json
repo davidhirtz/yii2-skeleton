@@ -1,24 +1,23 @@
 {
 	"name":"davidhirtz/yii2-skeleton",
+	"type":"yii2-extension",
 	"description":"Yii2 Skeleton",
 	"homepage":"http://www.davidhirtz.com/",
-	"type":"project",
 	"minimum-stability":"dev",
 	"prefer-stable":true,
 	"require":{
-		"php": ">=5.4.0",
+		"php":">=5.4.0",
 		"ext-exif":"*",
 		"ext-json":"*",
 		"ext-openssl":"*",
 		"ext-simplexml":"*",
 		"ext-xmlwriter":"*",
-		"yiisoft/yii2": ">=2.0.13",
-		"yiisoft/yii2-bootstrap4": "*"
+		"yiisoft/yii2":">=2.0.13",
+		"yiisoft/yii2-bootstrap4":"*"
 	},
-	"config":{
-		"process-timeout":1800,
-		"fxp-asset":{
-			"enabled":false
+	"autoload": {
+		"psr-4": {
+			"wadeshuler\\myextension\\": ""
 		}
 	},
 	"scripts":{
@@ -42,5 +41,8 @@
 			"type":"composer",
 			"url":"https://asset-packagist.org"
 		}
-	]
+	],
+	"extra":{
+		"bootstrap":"davidhirtz\\yii2\\skeleton\\composer\\Bootstrap"
+	}
 }
