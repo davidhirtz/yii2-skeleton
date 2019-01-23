@@ -15,6 +15,11 @@
 		"yiisoft/yii2":">=2.0.13",
 		"yiisoft/yii2-bootstrap4":"*"
 	},
+	"autoload": {
+		"psr-4": {
+			"davidhirtz\\yii2\\skeleton\\": ""
+		}
+	},
 	"scripts":{
 		"post-install-cmd":[
 			"yii\\composer\\Installer::postInstall"
