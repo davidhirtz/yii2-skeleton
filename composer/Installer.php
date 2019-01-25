@@ -12,7 +12,7 @@ class Installer extends \yii\composer\Installer
 	 */
 	public static function postInstall($event)
 	{
-		$event->getIO()->write('Post install running');
+		$event->getIO()->writeError('<info>Bin da....</info>');
 		parent::postInstall($event);
 	}
 
