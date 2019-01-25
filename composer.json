@@ -36,7 +36,7 @@
 		}
 	},
 	"scripts":{
-		"post-install-cmd":[
+		"post-update-cmd":[
 			"davidhirtz\\yii2\\skeleton\\composer\\Installer::postInstall"
 		]
 	},

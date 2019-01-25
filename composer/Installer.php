@@ -8,6 +8,15 @@ namespace davidhirtz\yii2\skeleton\composer;
 class Installer extends \yii\composer\Installer
 {
 	/**
+	 * @param \Composer\Script\Event $event
+	 */
+	public static function postInstall($event)
+	{
+		$event->getIO()->write('Post install running');
+		parent::postInstall($event);
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	public static function generateCookieValidationKey()
