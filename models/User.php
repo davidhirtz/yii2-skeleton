@@ -1,8 +1,11 @@
 <?php
+
 namespace davidhirtz\yii2\skeleton\models;
 
 /**
- * Class User
+ * Class User.
+ * @package davidhirtz\yii2\skeleton\models
  */
-class User{
+class User extends BaseUser
+{
 }

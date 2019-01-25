@@ -1,49 +1,34 @@
 <?php
 namespace davidhirtz\yii2\skeleton\composer;
 
-use Yii;
-use yii\authclient\Collection;
-use yii\base\BootstrapInterface;
-use yii\console\Application as ConsoleApplication;
-use yii\i18n\PhpMessageSource;
-
 /**
  * Class Bootstrap
  * @package davidhirtz\yii2\skeleton\bootstrap
  */
 class Installer extends \yii\composer\Installer
 {
-	public $file='config/credentials.php';
-
 	/**
 	 * @inheritdoc
 	 */
-	public function update(InstalledRepositoryInterface $repo, PackageInterface $initial, PackageInterface $target)
+	public static function generateCookieValidationKey()
 	{
-		parent::update($repo, $initial, $target);
-		$this->createCredentials();
-	}
+		$config='config/params.php';
 
-	/**
-	 * Creates credentials via composer install.
-	 */
-	public function createCredentials()
-	{
-		$this->io->write('Test nachricht');
-		
-		if(!is_file($file))
+		if(!is_file($config))
 		{
-			echo $this->io->ask('Do you want to create the "config/credentials.php" file? (yes|no) [no]');
+			$key=self::generateRandomString();
+			file_put_contents($config, <<<EOF
+<?php
+return [
+	'cookieValidationKey'=>"$key",
+];
+EOF
+			);
+
+		}
+		else
+		{
+			parent::generateCookieValidationKey([$config]);
 		}
 	}
-
-	public static function getUserInput()
-	{
-		$handle=fopen('php://stdin', 'r');
-		$input=trim(fgets($handle));
-		fclose($handle);
-
-		return $input;
-	}
-
 }

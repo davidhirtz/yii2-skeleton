@@ -18,18 +18,33 @@ class Bootstrap implements BootstrapInterface
 	 */
 	public function bootstrap($app)
 	{
-		if(YII_DEBUG)
-		{
-			$app->bootstrap[]='debug';
+		Yii::setAlias('@skeleton', dirname(__FILE__));
+		Yii::setAlias('@bower', '@vendor/bower-asset');
+		Yii::setAlias('@npm', '@vendor/npm-asset');
 
-			$app->setModule('debug', [
-				'class'=>'yii\debug\Module',
-				'on beforeAction'=>function()
-				{
-					Yii::$classMap['yii\bootstrap\BootstrapPluginAsset']=Yii::$app->getBasePath().'/components/helpers/BootstrapPluginAsset.php';
-				},
-			]);
+		if(is_file($params=Yii::getAlias('@app/config/params.php')))
+		{
+			$app->params=array_merge($app->params, require($params));
 		}
+
+//		$app->bootstrap[]='log';
+//
+//		$credentials=require(Yii::getAlias('@app/config/credentials.php'));
+//		$app->getRequest()->cookieValidationKey=$credentials['components']['request']['cookieValidationKey'];
+//
+//		if(YII_DEBUG)
+//		{
+//			$app->bootstrap[]='debug';
+//
+//			$app->setModule('debug', [
+//				'class'=>'yii\debug\Module',
+//				'on beforeAction'=>function()
+//				{
+//					//Yii::$classMap['yii\bootstrap\BootstrapPluginAsset']=Yii::$app->getBasePath().'/components/helpers/BootstrapPluginAsset.php';
+//				},
+//			]);
+//		}
+
 //		/** @var Module $module */
 //		/** @var \yii\db\ActiveRecord $modelName */
 //		if($app->hasModule('user') && ($module=$app->getModule('user')) instanceof Module)

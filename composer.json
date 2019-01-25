@@ -6,14 +6,29 @@
 	"minimum-stability":"dev",
 	"prefer-stable":true,
 	"require":{
-		"php":">=5.4.0",
+		"php":">=5.5.0",
 		"ext-exif":"*",
 		"ext-json":"*",
 		"ext-openssl":"*",
 		"ext-simplexml":"*",
 		"ext-xmlwriter":"*",
 		"yiisoft/yii2":">=2.0.13",
-		"yiisoft/yii2-bootstrap4":"*"
+		"yiisoft/yii2-authclient":"*",
+		"yiisoft/yii2-bootstrap4":"*",
+		"yiisoft/yii2-swiftmailer":"*",
+		"yiisoft/yii2-imagine":">=2.1.0",
+		"yiisoft/yii2-jui":"^2.0",
+		"2amigos/yii2-file-upload-widget":"~1.0",
+		"2amigos/yii2-ckeditor-widget":"~2.1",
+		"rmrevin/yii2-fontawesome":"~2.17",
+		"davidhirtz/yii2-datetime-behavior":"*",
+		"davidhirtz/yii2-timeago":"dev-master",
+		"davidhirtz/yii2-curl":"dev-master",
+		"davidhirtz/yii2-lazysizes":"dev-master",
+		"bower-asset/bootbox":">=4.4.0",
+		"tinify/tinify":"^1.4",
+		"guzzlehttp/guzzle":"~6.0",
+		"guzzlehttp/oauth-subscriber":"0.3.*"
 	},
 	"autoload":{
 		"psr-4":{
@@ -26,6 +41,7 @@
 		]
 	},
 	"extra":{
+		"bootstrap":"davidhirtz\\yii2\\skeleton\\composer\\Bootstrap",
 		"davidhirtz\\yii2\\skeleton\\composer\\Installer::postInstall":{
 			"setPermission":[
 				{
@@ -33,6 +49,9 @@
 					"web/assets":"0777",
 					"yii":"0755"
 				}
+			],
+			"generateCookieValidationKey":[
+				"config/params.php"
 			]
 		}
 	},
@@ -41,8 +60,5 @@
 			"type":"composer",
 			"url":"https://asset-packagist.org"
 		}
-	],
-	"extra":{
-		"bootstrap":"davidhirtz\\yii2\\skeleton\\composer\\Bootstrap"
-	}
+	]
 }
