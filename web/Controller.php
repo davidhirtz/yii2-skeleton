@@ -8,7 +8,7 @@ use yii\helpers\Html;
  * Class Controller.
  * @package davidhirtz\yii2\skeleton\web
  *
- * @method \davidhirtz\yii2\skeleton\web\View getView
+ * @method View getView()
  */
 class Controller extends \yii\web\Controller
 {
@@ -16,20 +16,6 @@ class Controller extends \yii\web\Controller
 	 * @var bool
 	 */
 	public $spacelessOutput=false;
-
-	/**
-	 * @inheritdoc
-	 */
-	public function init()
-	{
-		if(!$this->enableCsrfValidation)
-		{
-			// Disable CSRF validation all together to prevent cookies.
-			Yii::$app->getRequest()->enableCsrfValidation=false;
-		}
-
-		parent::init();
-	}
 
 	/**
 	 * @return array

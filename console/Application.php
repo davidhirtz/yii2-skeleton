@@ -16,10 +16,11 @@ class Application extends \yii\console\Application
 	 */
 	public function preInit(&$config)
 	{
-		$defaults=require(dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'defaults.php');
-		$config=ArrayHelper::merge($defaults, $config);
+		ArrayHelper::setDefaultValue($config, 'id', 'console');
 
-		$this->removeWebApplicationConfig($config);
+		//$defaults=require(dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'defaults.php');
+		//$config=ArrayHelper::merge($defaults, $config);
+
 
 
 		parent::preInit($config);
@@ -43,6 +44,7 @@ class Application extends \yii\console\Application
 	{
 		return array_merge(parent::coreCommands(), [
 			'asset'=>'davidhirtz\yii2\skeleton\console\controllers\AssetController',
+			'config'=>'davidhirtz\yii2\skeleton\console\controllers\ConfigController',
 			'migrate'=>[
 				'class'=>'yii\console\controllers\MigrateController',
 				'migrationPath'=>null,
@@ -59,9 +61,9 @@ class Application extends \yii\console\Application
 	 */
 	protected function removeWebApplicationConfig(&$config)
 	{
-		unset($config['components']['errorHandler']['errorAction']);
-		unset($config['components']['request']['cookieValidationKey']);
-		unset($config['components']['session']);
-		unset($config['components']['user']);
+//		unset($config['components']['errorHandler']['errorAction']);
+//		unset($config['components']['request']['cookieValidationKey']);
+//		unset($config['components']['session']);
+//		unset($config['components']['user']);
 	}
 }

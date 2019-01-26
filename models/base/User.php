@@ -1,10 +1,12 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\models;
+namespace davidhirtz\yii2\skeleton\models\base;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
+use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
+use davidhirtz\yii2\skeleton\models\User;
 use Yii;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\datetime\Date;
@@ -48,7 +50,7 @@ use yii\helpers\Url;
  * @see \davidhirtz\yii2\skeleton\models\User::getAuthClients()
  *
  */
-abstract class BaseUser extends ActiveRecord
+abstract class User extends ActiveRecord
 {
 	/**
 	 * @var bool

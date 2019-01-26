@@ -1,0 +1,31 @@
+
+.dropdown{
+
+	&>.btn{
+		width:100%;
+		background-color:$app-dropdown-button-bg;
+		color:$app-dropdown-button-color;
+		border-color:$app-dropdown-button-border-color;
+		@extend .text-overflow;
+	}
+
+	&.is-active>.btn{
+		background-color:$app-dropdown-button-active-bg;
+		color:$app-dropdown-button-active-color;
+		border-color:$app-dropdown-button-active-border-color;
+	}
+
+	.grid-view &{
+		width:100%;
+	}
+}
+
+.dropdown-menu{
+	width:100%;
+	max-height: 50vh;
+	overflow-y:auto;
+
+	&>a{
+		@extend .text-overflow;
+	}
+}

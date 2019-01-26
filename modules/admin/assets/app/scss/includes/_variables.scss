@@ -1,0 +1,304 @@
+/*
+Colors.
+ */
+$green:#5cb85c!default;
+$red:#d9534f!default;
+$white:#fff!default;
+$black:#000!default;
+$cyan:#d9edf7!default;
+
+$gray-100:#f9f9f9!default;
+$gray-200:#f5f5f5!default;
+$gray-300:#eee!default;
+$gray-400:#ddd!default;
+$gray-500:#ccc!default;
+$gray-600:#9d9d9d!default;
+$gray-700:#555!default;
+$gray-800:#333!default;
+$gray-900:#222!default;
+
+$body-bg:$gray-100!default;
+$body-text:$gray-900!default;
+
+$primary:$gray-900!default;
+$secondary:$gray-400!default;
+
+$dark:$primary!default;
+$yiq-text-dark:$primary!default;
+$danger:$red!default;
+$success:$green!default;
+$info:$cyan!default;
+$app-info-text:#31708f!default;
+
+$component-active-bg:$primary!default;
+$component-active-color:$white!default;
+
+/*
+Grid.
+ */
+$grid-breakpoints:(
+		xs: 0,
+		md: 768px,
+		lg: 1024px
+)!default;
+
+$container-max-widths:(
+		xl: 1170px
+)!default;
+
+/*
+Spacers.
+ */
+$app-margin-bottom:20px!default;
+$app-padding-y:10px!default;
+$app-padding-x:15px!default;
+$app-body-padding:70px 0!default;
+
+/**
+Border.
+ */
+$border-radius:3px!default;
+$border-radius-sm:$border-radius!default;
+
+$border-size:1px!default;
+$border-style:solid!default;
+$border-color:$gray-400!default;
+
+/*
+Text.
+ */
+$font-family-base:"Helvetica Neue", Helvetica, Arial, sans-serif!default;
+
+$font-size-base:14px!default;
+$font-size-sm:12px!default;
+$font-size-lg:16px!default;
+$line-height-base:1.4!default;
+
+$h1-font-size:36px!default;
+$h2-font-size:18px!default;
+$small-font-size:$font-size-sm!default;
+
+$app-header-margin:40px 0 $app-margin-bottom!default;
+$app-header-padding-bottom:10px!default;
+$app-header-text-align:center!default;
+$app-header-border-bottom:1px solid $gray-300!default;
+
+$link-color:$primary!default;
+
+$mark-bg:$success!default;
+$mark-padding:0!default;
+
+$caret-width:4px!default;
+
+/*
+Navs.
+ */
+$nav-link-padding-y:10px!default;
+$nav-link-padding-x:$app-padding-x!default;
+$app-submenu-link-margin:0 2px 10px!default;
+$app-submenu-margin-bottom:$app-margin-bottom!default;
+$app-submenu-justify-content:center!default;
+$app-submenu-hover-bg:$gray-300!default;
+$app-submenu-hover-color:$body-text!default;
+
+/*
+Navbar.
+ */
+$app-navbar-expand-breakpoint:md!default;
+$navbar-padding-y:0!default;
+$navbar-padding-x:0!default;
+$app-navbar-nav-link-padding-y:15px!default;
+$navbar-nav-link-padding-x:12px!default;
+$navbar-dark-color:$gray-600!default;
+$app-navbar-background:$dark!default;
+$navbar-dark-hover-color:$white!default;
+$app-navbar-dark-hover-bg:#090909!default;
+$navbar-dark-active-bg:$app-navbar-dark-hover-bg!default;
+$navbar-border:1px solid $navbar-dark-active-bg!default;
+
+$navbar-toggler-padding-y:5px!default;
+$navbar-toggler-padding-x:5px!default;
+$navbar-dark-toggler-border:0!default;
+
+/*
+Breadcrumbs.
+ */
+$breadcrumb-padding-y:$app-padding-y!default;
+$breadcrumb-padding-x:$app-padding-x!default;
+$breadcrumb-margin-bottom:$app-margin-bottom!default;
+$breadcrumb-item-padding:5px!default;
+$breadcrumb-bg:$gray-200!default;
+$breadcrumb-divider-color:$gray-400!default;
+
+$hr-margin-y:15px!default;
+$hr-border-color:$border-color!default;
+
+/*
+Alert.
+ */
+$alert-padding-y:$app-padding-y!default;
+$alert-padding-x:$app-padding-x!default;
+$alert-margin-bottom:$app-margin-bottom!default;
+
+/*
+Card.
+ */
+$card-spacer-y:$app-padding-y!default;
+$card-spacer-x:$app-padding-x!default;
+$card-cap-bg:$gray-200!default;
+$card-border-color:$border-color!default;
+$card-inner-border-radius:0!default;
+$app-card-margin-bottom:$app-margin-bottom!default;
+
+$card-danger-bg:#f2dede!default;
+$card-danger-border:#ebccd1!default;
+$card-danger-color:$danger!default;
+
+/*
+Grid view.
+ */
+$app-grid-view-margin-y:15px!default;
+$app-grid-view-border:1px solid $border-color!default;
+$app-grid-view-buttons-top:6px!default;
+
+/*
+Buttons.
+ */
+$btn-primary-bg:$primary!default;
+$btn-primary-hover-bg:darken($btn-primary-bg, 7.5%)!default;
+$btn-primary-active-bg: darken($btn-primary-bg, 10%)!default;
+$btn-primary-border-color:$primary!default;
+$btn-primary-hover-border-color:$btn-primary-border-color!default;
+$btn-primary-active-border-color:$btn-primary-border-color!default;
+
+$btn-secondary-bg:$white!default;
+$btn-secondary-hover-bg:$gray-200!default;
+$btn-secondary-active-bg:$gray-300!default;
+$btn-secondary-border-color:$border-color!default;
+$btn-secondary-hover-border-color:$btn-secondary-border-color!default;
+$btn-secondary-active-border-color:$btn-secondary-border-color!default;
+
+$btn-padding-y-sm:4px!default;
+$btn-padding-x-sm:6px!default;
+$btn-line-height-sm:1!default;
+
+
+/*
+Input.
+ */
+$form-group-margin-bottom:15px!default;
+$app-form-group-buttons-margin-top:20px!default;
+$form-text-margin-top:6px!default;
+
+$form-check-inline-margin-x:20px!default;
+$form-check-inline-input-margin-x:10px!default;
+
+$input-btn-padding-y:6px!default;
+$input-btn-padding-x:12px!default;
+$input-height:34px!default;
+
+$input-btn-focus-width:1px!default;
+$input-btn-padding-y-sm:$input-btn-padding-y!default;
+$input-btn-padding-x-sm:$input-btn-padding-x!default;
+$input-btn-padding-y-lg:$input-btn-padding-y!default;
+$input-btn-padding-x-lg:$input-btn-padding-x!default;
+
+$custom-select-indicator-padding:10px;
+
+$input-box-shadow:inset 0 1px 1px rgba(0, 0, 0, .075)!default;
+$input-focus-color:$body-text!default;
+$input-btn-focus-width:1px!default;
+$input-focus-border-color:#66afe9!default;
+
+$app-form-label-font-weight:bold!default;
+
+/*
+List group.
+ */
+$list-group-border-color:$border-color!default;
+$list-group-item-padding-y:$app-padding-y!default;
+$list-group-item-padding-x:$app-padding-x!default;
+
+/*
+Tables.
+ */
+$app-table-margin-bottom:0!default;
+$table-border-width:1px!default;
+$table-border-color:transparent!default;
+$app-table-th-border-width:1px!default;
+$app-table-th-border-color:$table-border-color!default;
+$table-cell-padding:10px!default;
+$table-accent-bg:$gray-200!default;
+$table-hover-bg:$gray-300!default;
+$app-table-th-active-font-style:italic!default;
+$app-table-th-selected-bg:$info!default;
+
+/*
+Pagination.
+ */
+$app-pagination-justify-content:center!default;
+$app-pagination-margin:30px 0 0!default;
+$app-pagination-padding:20px 0 10px!default;
+$app-pagination-border-top:1px solid $border-color!default;
+
+$pagination-padding-y:$input-btn-padding-y!default;
+$pagination-padding-x:$input-btn-padding-x!default;
+$pagination-line-height:$line-height-base!default;
+
+$pagination-border-color:$border-color!default;
+$pagination-hover-border-color:$border-color!default;
+
+$pagination-focus-box-shadow:none!default;
+
+/*
+Dropdown.
+ */
+$dropdown-min-width:160px!default;
+$dropdown-padding-y:5px!default;
+$dropdown-spacer:2px!default;
+$dropdown-bg:#fff!default;
+$dropdown-border-color:$border-color!default;
+$dropdown-divider-bg:$border-color!default;
+
+$app-dropdown-button-bg:$gray-100!default;
+$app-dropdown-button-color:$body-text!default;
+$app-dropdown-button-border-color:$border-color!default;
+
+$app-dropdown-button-active-bg:$gray-300!default;
+$app-dropdown-button-active-color:$app-dropdown-button-color!default;
+$app-dropdown-button-active-border-color:$app-dropdown-button-border-color!default;
+
+$dropdown-link-color:$link-color!default;
+$dropdown-link-hover-color:$link-color!default;
+$dropdown-item-padding-y:$input-btn-padding-y!default;
+$dropdown-item-padding-x:$input-btn-padding-x!default;
+
+/*
+Badge.
+ */
+$badge-font-size:12px!default;
+$app-badge-bg:$gray-600!default;
+$app-badge-color:$white!important!default;
+$app-badge-active-bg:$component-active-color!default;
+$app-badge-active-color:$component-active-bg!important!default;
+$badge-font-weight:normal!default;
+$badge-padding-y:3px!default;
+$badge-padding-x:7px!default;
+$badge-border-radius:10px!default;
+
+/*
+Tooltip.
+ */
+$tooltip-max-width:200px!default;
+$tooltip-min-width:80px!default;
+
+/**
+Thumbnail.
+ */
+$thumbnail-padding:$app-padding-y!default;
+$thumbnail-caption-padding:$app-padding-x!default;
+
+/*
+Icon.
+ */
+$app-icon-margin-x:6px!default;

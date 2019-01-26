@@ -2,10 +2,7 @@
 namespace davidhirtz\yii2\skeleton\composer;
 
 use Yii;
-use yii\authclient\Collection;
 use yii\base\BootstrapInterface;
-use yii\console\Application as ConsoleApplication;
-use yii\i18n\PhpMessageSource;
 
 /**
  * Class Bootstrap
@@ -14,7 +11,10 @@ use yii\i18n\PhpMessageSource;
 class Bootstrap implements BootstrapInterface
 {
 	/**
-	 * @inheritdoc
+	 * Shared application configuration after init.
+	 *
+	 * @param \davidhirtz\yii2\skeleton\web\Application|\davidhirtz\yii2\skeleton\console\Application $app
+	 * @throws \yii\base\InvalidConfigException
 	 */
 	public function bootstrap($app)
 	{
@@ -27,23 +27,30 @@ class Bootstrap implements BootstrapInterface
 			$app->params=array_merge($app->params, require($params));
 		}
 
-//		$app->bootstrap[]='log';
-//
-//		$credentials=require(Yii::getAlias('@app/config/credentials.php'));
-//		$app->getRequest()->cookieValidationKey=$credentials['components']['request']['cookieValidationKey'];
-//
-//		if(YII_DEBUG)
-//		{
-//			$app->bootstrap[]='debug';
-//
-//			$app->setModule('debug', [
-//				'class'=>'yii\debug\Module',
-//				'on beforeAction'=>function()
-//				{
-//					//Yii::$classMap['yii\bootstrap\BootstrapPluginAsset']=Yii::$app->getBasePath().'/components/helpers/BootstrapPluginAsset.php';
-//				},
-//			]);
-//		}
+		if(!$app->has('cache'))
+		{
+			$app->set('cache', [
+				'class'=>'yii\caching\FileCache',
+			]);
+		}
+
+		if(!$app->has('db'))
+		{
+			if(file_exists($db=Yii::getAlias('@app/config/db.php')))
+			{
+				$config=[
+					'class'=>'yii\db\Connection',
+					'enableSchemaCache'=>true,
+				];
+
+				$app->set('db', array_merge($config, require($db)));
+			}
+		}
+
+		if($app->has('db') && !$app->getDb()->charset)
+		{
+			$app->getDb()->charset='utf8mb4';
+		}
 
 //		/** @var Module $module */
 //		/** @var \yii\db\ActiveRecord $modelName */

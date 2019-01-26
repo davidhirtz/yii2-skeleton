@@ -18,7 +18,7 @@ class AssetController extends \yii\console\controllers\AssetController
 	public $defaultAction='auto';
 
 	/**
-	 * Combine assets.
+	 * Creates asset bundles based on config.
 	 */
 	public function actionAuto()
 	{

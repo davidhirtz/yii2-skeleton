@@ -1,0 +1,16 @@
+/**
+ * Nav.
+ */
+.submenu{
+	margin-bottom:$app-submenu-margin-bottom;
+	justify-content:$app-submenu-justify-content;
+
+	.nav-link{
+		margin:$app-submenu-link-margin;
+
+		@include hover-focus {
+			color:$app-submenu-hover-color;
+			background-color:$app-submenu-hover-bg;
+		}
+	}
+}

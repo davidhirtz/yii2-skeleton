@@ -1,5 +1,6 @@
 <?php
-namespace davidhirtz\yii2\skeleton\models\forms\user;
+namespace davidhirtz\yii2\skeleton\models\forms\base;
+
 use davidhirtz\yii2\skeleton\db\Identity;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use Yii;
@@ -7,7 +8,7 @@ use yii\base\Model;
 
 /**
  * Class LoginForm.
- * @package davidhirtz\yii2\skeleton\models\forms\user
+ * @package davidhirtz\yii2\skeleton\models\forms\base
  *
  * @property Identity $user
  * @see LoginForm::getUser()

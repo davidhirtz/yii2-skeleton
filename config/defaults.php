@@ -1,9 +1,5 @@
 <?php
 return [
-	'id'=>'skeleton',
-//	'bootstrap'=>[
-//		'log',
-//	],
 	'components'=>[
 		'assetManager'=>[
 			'class'=>'davidhirtz\yii2\skeleton\web\AssetManager',
@@ -56,24 +52,24 @@ return [
 			'class'=>'yii\rbac\DbManager',
 			'cache'=>'cache',
 		],
-		'cache'=>[
-			'class'=>'yii\caching\FileCache',
-		],
+//		'cache'=>[
+//			'class'=>'yii\caching\FileCache',
+//		],
 //		'db'=>[
 //			'class'=>'yii\db\Connection',
 //			'enableSchemaCache'=>true,
 //			'charset'=>'utf8mb4',
 //		],
-		'i18n'=>[
-			'class'=>'davidhirtz\yii2\skeleton\i18n\I18N',
-			'translations'=>[
-				'app'=>[
-					'class'=>'yii\i18n\PhpMessageSource',
-					'sourceLanguage'=>'en-US',
-					'basePath'=>'@app/messages',
-				],
-			],
-		],
+//		'i18n'=>[
+//			'class'=>'davidhirtz\yii2\skeleton\i18n\I18N',
+//			'translations'=>[
+//				'app'=>[
+//					'class'=>'yii\i18n\PhpMessageSource',
+//					'sourceLanguage'=>'en-US',
+//					'basePath'=>'@app/messages',
+//				],
+//			],
+//		],
 		'log'=>[
 			'traceLevel'=>YII_DEBUG ? 3 : 0,
 			'targets'=>[

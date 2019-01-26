@@ -1,0 +1,23 @@
+/**
+ * Panels
+ */
+.card{
+	margin-bottom:$app-card-margin-bottom;
+}
+
+.card-danger{
+	border-color:$card-danger-border;
+
+	.card-header{
+		background-color:$card-danger-bg;
+		color:$card-danger-color;
+		border-color:$card-danger-border;
+	}
+}
+
+.card-title{
+
+	&:last-child{
+		margin-bottom:0;
+	}
+}

@@ -1,0 +1,75 @@
+<?php
+/**
+ * Update user form.
+ * @see davidhirtz\yii2\skeleton\modules\admin\controllers\UserController::actionUpdate()
+ *
+ * @var \davidhirtz\yii2\skeleton\web\View $this
+ * @var \davidhirtz\yii2\skeleton\modules\admin\models\forms\user\UserForm $user
+ */
+use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
+use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
+
+$this->setPageTitle(Yii::t('app', 'Edit User'));
+
+$this->setBreadcrumb(Yii::t('app', 'Users'), ['index']);
+$this->setBreadcrumb($user->getUsername(), ['update', 'id'=>$user->id]);
+$this->setBreadcrumb($this->title);
+?>
+
+<?= Html::errorSummary($user, [
+	'title'=>Yii::t('app', 'The user could not be updated:'),
+]); ?>
+
+<h1 class="page-header">
+	<?= Html::a(Html::encode($user->getUsername()), ['update', 'id'=>$user->id]); ?>
+</h1>
+
+<?= UserSubmenu::widget([
+	'user'=>$user,
+]); ?>
+
+<?= Panel::widget([
+	'title'=>$this->title,
+	'content'=>UserActiveForm::widget([
+		'user'=>$user,
+	]),
+]);
+?>
+
+<?= Panel::widget([
+	'title'=>Yii::t('app', 'Clients'),
+	'content'=>$user->authClients ? $this->render('@app/views/account/_clients', ['user'=>$user]) : Html::tag('div', Yii::t('app', 'No clients are linked to this account.'), ['class'=>'help-block']),
+]);
+?>
+
+<?php
+if(Yii::$app->getUser()->can('userDelete'))
+{
+	if(!$user->getIsOwner())
+	{
+		echo Panel::widget([
+			'type'=>'danger',
+			'title'=>Yii::t('app', 'Delete User'),
+			'content'=>DeleteActiveForm::widget([
+				'model'=>$user,
+				'attribute'=>'name',
+				'message'=>Yii::t('app', 'Please type the username in the text field below to delete this user. All related records and files will also be deleted. This cannot be undone, please be certain!')
+			]),
+		]);
+	}
+	else
+	{
+		?>
+		<div class="alert alert-warning">
+			<?= Yii::t('app', 'You cannot delete {isOwner, select, 1{your} other{the}} account, because {isOwner, select, 1{you are} other{it is}} the owner of this website.', [
+				'isOwner'=>$user->id==Yii::$app->getUser()->id ? : 1,
+			]); ?>
+		</div>
+		<?php
+	}
+}
+?>
+

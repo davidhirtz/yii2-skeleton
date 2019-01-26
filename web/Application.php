@@ -1,6 +1,7 @@
 <?php
 namespace davidhirtz\yii2\skeleton\web;
 
+use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Yii;
 use yii\base\InvalidConfigException;
 
@@ -46,7 +47,15 @@ class Application extends \yii\web\Application
 			$config['id']='skeleton';
 		}
 
-		if(!isset($config['components']['request']['cookieValidationKey']))
+		$defaults=[
+			'id'=>'skeleton',
+			'modules'=>[
+				'admin'=>[
+					'class'=>'davidhirtz\yii2\skeleton\modules\admin\Module',
+				]
+			]
+		];
+
 
 //		dump($config,1);
 
@@ -57,7 +66,7 @@ class Application extends \yii\web\Application
 //		];
 
 		//$defaults=require(dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'defaults.php');
-		//$config=ArrayHelper::merge($defaults, $config);
+		$config=ArrayHelper::merge($defaults, $config);
 
 		parent::preInit($config);
 	}
@@ -94,8 +103,6 @@ class Application extends \yii\web\Application
 	public function coreComponents()
 	{
 		return array_merge(parent::coreComponents(), [
-			'db'=>['class'=>'yii\db\Connection'],
-			'cache'=>['class'=>'yii\caching\FileCache'],
 			'i18n'=>['class'=>'davidhirtz\yii2\skeleton\i18n\I18n'],
 			'request'=>['class'=>'davidhirtz\yii2\skeleton\web\Request'],
 			'session'=>['class'=>'davidhirtz\yii2\skeleton\web\DbSession'],

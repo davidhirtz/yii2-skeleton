@@ -2,7 +2,6 @@
 namespace davidhirtz\yii2\skeleton\i18n;
 use Yii;
 use yii\helpers\ArrayHelper;
-use yii\i18n\PhpMessageSource;
 
 /**
  * Class I18N.
@@ -28,30 +27,30 @@ class I18N extends \yii\i18n\I18N
 	private $_languages;
 
 	/**
+	 * @inheritdoc
+	 */
+	public function init()
+	{
+		if(!isset($this->translations['app']))
+		{
+			$this->translations['app']=[
+				'class'=>'yii\i18n\PhpMessageSource',
+				'sourceLanguage'=>Yii::$app->sourceLanguage,
+				'basePath'=>'@skeleton/messages',
+			];
+		}
+
+		parent::init();
+	}
+
+	/**
 	 * @return array|null
-	 * @throws \yii\base\InvalidConfigException
 	 */
 	public function getLanguages()
 	{
 		if($this->_languages===null)
 		{
-			/**
-			 * Set default language.
-			 */
-			$this->_languages=[Yii::$app->sourceLanguage];
-			$source=$this->getMessageSource('app');
-
-			/**
-			 * Load languages from translations.
-			 */
-			if($source instanceof PhpMessageSource)
-			{
-				/** @noinspection PhpIncludeInspection */
-				$config=require(Yii::getAlias($source->basePath).DIRECTORY_SEPARATOR.'config.php');
-				$this->_languages=array_unique(array_merge($this->_languages, (array)ArrayHelper::getValue($config, 'languages')));
-			}
-
-			sort($this->_languages);
+			$this->_languages=[Yii::$app->language];
 		}
 
 		return $this->_languages;
@@ -76,6 +75,14 @@ class I18N extends \yii\i18n\I18N
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getLanguageCode()
+	{
+		return substr(Yii::$app->language, 0, 2);
+	}
+
+	/**
 	 * @param string $attribute
 	 * @param string $language
 	 * @return string
@@ -93,7 +100,6 @@ class I18N extends \yii\i18n\I18N
 	/**
 	 * @param $attribute
 	 * @return array
-	 * @throws \yii\base\InvalidConfigException
 	 */
 	public function getAttributeNames($attribute)
 	{

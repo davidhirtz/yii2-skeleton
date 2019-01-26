@@ -51,6 +51,11 @@ class UrlManager extends \yii\web\UrlManager
 	/**
 	 * @var array
 	 */
+	public $moduleMap=[];
+
+	/**
+	 * @var array
+	 */
 	public $redirectMap=[];
 
 	/**
@@ -69,41 +74,64 @@ class UrlManager extends \yii\web\UrlManager
 			$this->i18nUrl=false;
 		}
 
+		if($this->moduleMap)
+		{
+			// Todo
+		}
+
+		//$this->defaultRules['sitemap.xml']='sitemap/index';
+
 		if($this->adminAlias)
 		{
-			if($modules=implode('|', array_diff(array_keys(\Yii::$app->modules), ['admin', 'debug', 'gii'])))
-			{
-				$this->defaultRules[]=[
-					'pattern'=>"<module:{$modules}>/{$this->adminAlias}/<controller>/<view>",
-					'route'=>'<module>/admin/<controller>/<view>',
-					'defaults'=>['controller'=>'site', 'view'=>'index'],
-				];
-
-				$this->defaultRules[]=[
-					'pattern'=>"<module:{$modules}>/admin/<controller>/<view>",
-					'route'=>'site/error',
-					'defaults'=>['controller'=>'site', 'view'=>'error'],
-				];
-			}
-
 			$this->defaultRules[]=[
 				'pattern'=>"{$this->adminAlias}/<controller>/<view>",
-				'route'=>'admin/<controller>/<view>',
+				'route'=>'{$this->adminAlias}/<controller>/<view>',
 				'defaults'=>['controller'=>'site', 'view'=>'index'],
-			];
-
-			$this->defaultRules[]=[
-				'pattern'=>"admin/<controller>/<view>",
-				'route'=>'site/error',
-				'defaults'=>['controller'=>'site', 'view'=>'error'],
 			];
 		}
-		else
+
+//		if($this->adminAlias)
+//		{
+//			if($modules=implode('|', array_diff(array_keys(\Yii::$app->modules), ['admin', 'debug', 'gii'])))
+//			{
+//				$this->defaultRules[]=[
+//					'pattern'=>"<module:{$modules}>/{$this->adminAlias}/<controller>/<view>",
+//					'route'=>'<module>/admin/<controller>/<view>',
+//					'defaults'=>['controller'=>'site', 'view'=>'index'],
+//				];
+//
+//				$this->defaultRules[]=[
+//					'pattern'=>"<module:{$modules}>/admin/<controller>/<view>",
+//					'route'=>'site/error',
+//					'defaults'=>['controller'=>'site', 'view'=>'error'],
+//				];
+//			}
+//
+//			$this->defaultRules[]=[
+//				'pattern'=>"{$this->adminAlias}/<controller>/<view>",
+//				'route'=>'admin/<controller>/<view>',
+//				'defaults'=>['controller'=>'site', 'view'=>'index'],
+//			];
+//
+//			$this->defaultRules[]=[
+//				'pattern'=>"admin/<controller>/<view>",
+//				'route'=>'site/error',
+//				'defaults'=>['controller'=>'site', 'view'=>'error'],
+//			];
+//		}
+//		else
+//		{
+//			$this->defaultRules[]=[
+//				'pattern'=>"admin/<controller>/<view>",
+//				'route'=>'admin/<controller>/<view>',
+//				'defaults'=>['controller'=>'site', 'view'=>'index'],
+//			];
+//		}
+
+		if(!$this->rules)
 		{
-			$this->defaultRules[]=[
-				'pattern'=>"admin/<controller>/<view>",
-				'route'=>'admin/<controller>/<view>',
-				'defaults'=>['controller'=>'site', 'view'=>'index'],
+			$this->rules=[
+				'<module>/<controller>/<view>'=>'<module>/<controller>/<view>',
 			];
 		}
 
@@ -134,6 +162,7 @@ class UrlManager extends \yii\web\UrlManager
 		}
 
 		parent::init();
+
 	}
 
 	/**

@@ -20,7 +20,7 @@
 		"yiisoft/yii2-jui":"^2.0",
 		"2amigos/yii2-file-upload-widget":"~1.0",
 		"2amigos/yii2-ckeditor-widget":"~2.1",
-		"rmrevin/yii2-fontawesome":"~2.17",
+		"rmrevin/yii2-fontawesome":"~3.2",
 		"davidhirtz/yii2-datetime-behavior":"*",
 		"davidhirtz/yii2-timeago":"dev-master",
 		"davidhirtz/yii2-curl":"dev-master",
@@ -28,32 +28,16 @@
 		"bower-asset/bootbox":">=4.4.0",
 		"tinify/tinify":"^1.4",
 		"guzzlehttp/guzzle":"~6.0",
-		"guzzlehttp/oauth-subscriber":"0.3.*"
+		"guzzlehttp/oauth-subscriber":"0.3.*",
+		"seld/cli-prompt": "^1.0"
 	},
 	"autoload":{
 		"psr-4":{
 			"davidhirtz\\yii2\\skeleton\\":""
 		}
 	},
-	"scripts":{
-		"post-update-cmd":[
-			"davidhirtz\\yii2\\skeleton\\composer\\Installer::postInstall"
-		]
-	},
 	"extra":{
-		"bootstrap":"davidhirtz\\yii2\\skeleton\\composer\\Bootstrap",
-		"davidhirtz\\yii2\\skeleton\\composer\\Installer::postInstall":{
-			"setPermission":[
-				{
-					"runtime":"0777",
-					"web/assets":"0777",
-					"yii":"0755"
-				}
-			],
-			"generateCookieValidationKey":[
-				"config/params.php"
-			]
-		}
+		"bootstrap":"davidhirtz\\yii2\\skeleton\\composer\\Bootstrap"
 	},
 	"repositories":[
 		{
