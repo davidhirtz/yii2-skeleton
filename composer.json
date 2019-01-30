@@ -37,7 +37,7 @@
 		}
 	},
 	"extra":{
-		"bootstrap":"davidhirtz\\yii2\\skeleton\\composer\\Bootstrap",
+		"bootstrap":"davidhirtz\\yii2\\skeleton\\composer\\Bootstrap"
 	},
 	"repositories":[
 		{
