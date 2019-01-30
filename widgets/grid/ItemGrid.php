@@ -1,5 +1,5 @@
 <?php
-namespace davidhirtz\yii2\skeleton\grid;
+namespace davidhirtz\yii2\skeleton\widgets\grid;
 use davidhirtz\yii2\skeleton\forms\FileUpload;
 use Yii;
 use yii\base\Widget;
@@ -8,7 +8,7 @@ use yii\helpers\Html;
 
 /**
  * Class SortableGrid.
- * @package davidhirtz\yii2\skeleton\grid
+ * @package davidhirtz\yii2\skeleton\widgets\grid
  */
 class ItemGrid extends Widget
 {

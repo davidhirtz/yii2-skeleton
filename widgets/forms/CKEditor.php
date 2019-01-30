@@ -1,6 +1,6 @@
 <?php
 namespace davidhirtz\yii2\skeleton\forms;
-use app\assets\CKEditorBootstrapAsset;
+use davidhirtz\yii2\skeleton\assets\CKEditorBootstrapAsset;
 use davidhirtz\yii2\skeleton\validators\HtmlValidator;
 use Yii;
 
@@ -82,7 +82,7 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
 		$this->clientOptions['skin']='bootstrap,'.$bundle->baseUrl.'/';
 
 		// Contents CSS file.
-		$bundle=$view->registerAssetBundle($bundle->editorAssetBundle ?: 'app\assets\AppAsset');
+		$bundle=$view->registerAssetBundle($bundle->editorAssetBundle ?: 'davidhirtz\yii2\skeleton\assets\AppAsset');
 		$this->clientOptions['contentsCss']=$bundle->baseUrl.'/'.$bundle->css[0];
 
 		// Language.

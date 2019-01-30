@@ -1,12 +1,13 @@
 <?php
-namespace davidhirtz\yii2\skeleton\fontawesome;
-use rmrevin\yii\fontawesome\FA;
+namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
+
+use rmrevin\yii\fontawesome\FAS;
 
 /**
  * Class ActiveField.
- * @package davidhirtz\yii2\skeleton\fontawesome
+ * @package davidhirtz\yii2\skeleton\widgets\fontawesome
  */
-class ActiveField extends \davidhirtz\yii2\skeleton\bootstrap\ActiveField
+class ActiveField extends \davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveField
 {
 	/**
 	 * @var string
@@ -31,7 +32,7 @@ class ActiveField extends \davidhirtz\yii2\skeleton\bootstrap\ActiveField
 		if($this->icon)
 		{
 			$this->inputTemplate=strtr($this->iconInputTemplate, [
-				'{icon}'=>FA::icon($this->icon, $this->iconOptions),
+				'{icon}'=>FAS::icon($this->icon, $this->iconOptions),
 			]);
 
 			if(!isset($this->inputOptions['placeholder']))

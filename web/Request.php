@@ -3,7 +3,6 @@ namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Yii;
-use yii\base\InvalidConfigException;
 
 /**
  * Class Request
@@ -21,17 +20,15 @@ class Request extends \yii\web\Request
 	 */
 	public $cdnUrl='/';
 
+	/**
+	 * @inheritdoc
+	 */
 	public function init()
 	{
-//		if($this->enableCookieValidation && $this->cookieValidationKey===null)
-//		{
-//			if(is_file($config=Yii::getAlias('@app/config/cookie.php')))
-//			{
-//				$this->cookieValidationKey=require($config)['cookieValidationKey'];
-//			}
-//
-//			throw new InvalidConfigException('Cookie validation is enabled, but no validation key was found.');
-//		}
+		if($this->enableCookieValidation && !$this->cookieValidationKey && isset(Yii::$app->params['cookieValidationKey']))
+		{
+			$this->cookieValidationKey=Yii::$app->params['cookieValidationKey'];
+		}
 
 		parent::init();
 	}

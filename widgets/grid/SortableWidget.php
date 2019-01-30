@@ -1,12 +1,12 @@
 <?php
-namespace davidhirtz\yii2\skeleton\grid;
+namespace davidhirtz\yii2\skeleton\widgets\grid;
 use yii\helpers\Url;
 use yii\jui\Widget;
 use yii\web\JsExpression;
 
 /**
  * Class SortableWidget.
- * @package davidhirtz\yii2\skeleton\grid
+ * @package davidhirtz\yii2\skeleton\widgets\grid
  */
 class SortableWidget extends Widget
 {
@@ -26,7 +26,7 @@ class SortableWidget extends Widget
 	public $ajaxUpdateRoute=null;
 
 	/**
-	 * @return string
+	 * @inheritdoc
 	 */
 	public function init()
 	{

@@ -1,13 +1,13 @@
 <?php
-namespace davidhirtz\yii2\skeleton\fontawesome;
+namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
-use rmrevin\yii\fontawesome\FA;
+use rmrevin\yii\fontawesome\FAS;
 use yii\helpers\Html;
 use Yii;
 
 /**
  * Class Nav.
- * @package davidhirtz\yii2\skeleton\fontawesome
+ * @package davidhirtz\yii2\skeleton\widgets\fontawesome
  */
 class Nav extends \yii\bootstrap4\Nav
 {
@@ -89,7 +89,7 @@ class Nav extends \yii\bootstrap4\Nav
 			}
 
 			$item['label']=strtr($template, [
-				'{icon}'=>$icon ? FA::icon($icon, $iconOptions) : '',
+				'{icon}'=>$icon ? FAS::icon($icon, $iconOptions) : '',
 				'{badge}'=>$badge!==false ? Html::tag('span', $badge, $badgeOptions) : '',
 				'{label}'=>$label ? Html::tag('span', $label, ArrayHelper::getValue($item, 'labelOptions', $this->labelOptions)) : '',
 			]);

@@ -99,13 +99,6 @@ return [
 		'app.email'=>'',
 		'app.cookieDuration'=>2592000,
 
-		'user.nameMinLength'=>3,
-		'user.nameMaxLength'=>32,
-		'user.passwordMinLength'=>5,
-		'user.enableSignup'=>false,
-		'user.unconfirmedLogin'=>true,
-		'user.resetPassword'=>true,
-
 		'facebook.appId'=>null,
 		'facebook.secret'=>null,
 

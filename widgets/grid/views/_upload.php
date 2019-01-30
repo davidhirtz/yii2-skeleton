@@ -1,7 +1,7 @@
 <?php
 /**
  * Upload form.
- * @see \davidhirtz\yii2\skeleton\grid\ItemGrid
+ * @see \davidhirtz\yii2\skeleton\widgets\grid\ItemGrid
  *
  * @var \yii\web\View $this
  * @var $upload string

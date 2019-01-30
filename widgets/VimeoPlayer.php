@@ -1,6 +1,6 @@
 <?php
 namespace davidhirtz\yii2\skeleton\widgets;
-use app\assets\VimeoAsset;
+use davidhirtz\yii2\skeleton\assets\VimeoAsset;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use yii\base\Widget;
 use yii\helpers\Html;

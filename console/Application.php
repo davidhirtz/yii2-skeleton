@@ -44,9 +44,9 @@ class Application extends \yii\console\Application
 	{
 		return array_merge(parent::coreCommands(), [
 			'asset'=>'davidhirtz\yii2\skeleton\console\controllers\AssetController',
-			'config'=>'davidhirtz\yii2\skeleton\console\controllers\ConfigController',
+			'params'=>'davidhirtz\yii2\skeleton\console\controllers\ParamsController',
 			'migrate'=>[
-				'class'=>'yii\console\controllers\MigrateController',
+				'class'=>'davidhirtz\yii2\skeleton\console\controllers\MigrateController',
 				'migrationPath'=>null,
 				'migrationNamespaces'=>[
 					'app\migrations',

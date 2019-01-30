@@ -5,14 +5,14 @@ use yii\web\AssetBundle;
 
 /**
  * Class AppAsset.
- * @package app\assets
+ * @package davidhirtz\yii2\skeleton\assets
  */
 class AppAsset extends AssetBundle
 {
 	/**
 	 * @var string
 	 */
-	public $sourcePath='@app/assets/app';
+	public $sourcePath='@skeleton/assets/app';
 
 	/**
 	 * @var array
@@ -36,7 +36,7 @@ class AppAsset extends AssetBundle
 		'yii\grid\GridViewAsset',
 		'rmrevin\yii\fontawesome\CdnFreeAssetBundle',
 		'yii\bootstrap4\BootstrapPluginAsset',
-		'app\assets\BootboxAsset',
+		'davidhirtz\yii2\skeleton\assets\BootboxAsset',
 	];
 
 	/**

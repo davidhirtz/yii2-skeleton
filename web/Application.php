@@ -2,8 +2,6 @@
 namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
-use Yii;
-use yii\base\InvalidConfigException;
 
 /**
  * Class Application
@@ -32,69 +30,58 @@ use yii\base\InvalidConfigException;
 class Application extends \yii\web\Application
 {
 	/**
-	 * @var string
-	 */
-	public $cookieConfig='@app/config/cookie.php';
-
-	/**
 	 * @param array $config
 	 * @throws \yii\base\InvalidConfigException
 	 */
 	public function preInit(&$config)
 	{
-		if(!isset($config['id']))
-		{
-			$config['id']='skeleton';
-		}
-
 		$defaults=[
-			'id'=>'skeleton',
-			'modules'=>[
-				'admin'=>[
-					'class'=>'davidhirtz\yii2\skeleton\modules\admin\Module',
-				]
-			]
+//			'id'=>'skeleton',
+//			'bootstrap'=>[
+//				function()
+//				{
+//					// Enable cookie validation here as extension's bootstrap will already
+//					// initialized at this point, but user defined modules will be loaded after.
+//					$this->enableCookieValidation();
+//				}
+//			],
+//			'modules'=>[
+//				'admin'=>[
+//					'class'=>'davidhirtz\yii2\admin\Module',
+//				],
+//			]
 		];
 
-
-//		dump($config,1);
-
-//		$config['components']['db']=[
-//			'class'=>'yii\db\Connection',
-//			'enableSchemaCache'=>true,
-//			'charset'=>'utf8mb4',
-//		];
-
-		//$defaults=require(dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'defaults.php');
 		$config=ArrayHelper::merge($defaults, $config);
 
 		parent::preInit($config);
 	}
 
-	protected function bootstrap()
-	{
-		parent::bootstrap();
-		$this->enableCookieValidation();
-	}
-
 	/**
 	 * Loads cookie validation key from params.
 	 */
-	protected function enableCookieValidation()
+//	protected function enableCookieValidation()
+//	{
+//		$request=$this->getRequest();
+//
+//		if($request->enableCookieValidation && !$request->cookieValidationKey)
+//		{
+//			if(!isset($this->params['cookieValidationKey']))
+//			{
+//				throw new InvalidConfigException(get_class($request).'::cookieValidationKey must be configured with a secret key.');
+//			}
+//
+//			$request->cookieValidationKey=$this->params['cookieValidationKey'];
+//			unset($this->params['cookieValidationKey']);
+//		}
+//	}
+
+	/**
+	 * @return \davidhirtz\yii2\admin\Module|\yii\base\Module
+	 */
+	public function getAdminModule()
 	{
-		$request=$this->getRequest();
-		dump('enableCookieValidation');
-
-		if($request->enableCookieValidation && !$request->cookieValidationKey)
-		{
-			if(!isset($this->params['cookieValidationKey']))
-			{
-				throw new InvalidConfigException(get_class($request).'::cookieValidationKey must be configured with a secret key.');
-			}
-
-			$request->cookieValidationKey=$this->params['cookieValidationKey'];
-			unset($this->params['cookieValidationKey']);
-		}
+		return $this->getModule('admin');
 	}
 
 	/**

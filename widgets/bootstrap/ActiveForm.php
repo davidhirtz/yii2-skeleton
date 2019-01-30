@@ -57,12 +57,6 @@ class ActiveForm extends \yii\bootstrap4\ActiveForm
 	 */
 	public function run()
 	{
-		if($this->action===false)
-		{
-			// This can probably be removed in mid 2019.
-			throw new \Exception('Setting action to "false" is no longer supported.');
-		}
-
 		$this->renderFields();
 		parent::run();
 	}

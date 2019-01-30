@@ -1,10 +1,10 @@
 <?php
-namespace davidhirtz\yii2\skeleton\fontawesome;
+namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 use yii\helpers\Html;
 
 /**
  * Class Submenu.
- * @package davidhirtz\yii2\skeleton\fontawesome
+ * @package davidhirtz\yii2\skeleton\widgets\fontawesome
  */
 class Submenu extends Nav
 {

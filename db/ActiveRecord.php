@@ -10,6 +10,7 @@ use yii\base\InvalidCallException;
  *
  * @method static ActiveRecord|\yii\db\ActiveRecord findOne($condition)
  * @method static ActiveRecord[] findAll($condition)
+ * @method static ActiveQuery find()
  */
 class ActiveRecord extends \yii\db\ActiveRecord
 {
@@ -80,20 +81,12 @@ class ActiveRecord extends \yii\db\ActiveRecord
 	 * @param array $columns the column names
 	 * @param array $rows the rows to be batch inserted into the table
 	 * @return int number of rows affected by the execution.
+	 * @throws \yii\db\Exception
 	 */
 	public static function batchInsert($columns, $rows)
 	{
 		return static::getDb()->createCommand()
 			->batchInsert(static::tableName(), $columns, $rows)
 			->execute();
-	}
-
-	/**
-	 * @inheritdoc
-	 * @return ActiveQuery|object
-	 */
-	public static function find()
-	{
-		return Yii::createObject(ActiveQuery::class, [get_called_class()]);
 	}
 }
