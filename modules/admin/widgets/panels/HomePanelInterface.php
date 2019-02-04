@@ -1,4 +1,5 @@
 <?php
+
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\panels;
 
 /**
@@ -7,13 +8,13 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\panels;
  */
 interface HomePanelInterface
 {
-	/**
-	 * @return string
-	 */
-	public static function getTitle();
+    /**
+     * @return string
+     */
+    public static function getTitle();
 
-	/**
-	 * @return array
-	 */
-	public static function getListItems();
+    /**
+     * @return array
+     */
+    public static function getListItems();
 }

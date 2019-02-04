@@ -14,70 +14,70 @@
 // Provide a static navbar from which we expand to create full-width, fixed, and
 // other navbar variations.
 
-.navbar{
-	position:fixed;
-	top:0;
-	right:0;
-	left:0;
-	display:flex;
-	flex-wrap:wrap; // allow us to do the line break for collapsing content
-	align-items:center;
-	justify-content:space-between; // space out brand from logo
-	background:$app-navbar-background;
-	padding:$navbar-padding-y $navbar-padding-x;
-	border-bottom:$navbar-border;
-	z-index:$zindex-fixed;
+.navbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  flex-wrap: wrap; // allow us to do the line break for collapsing content
+  align-items: center;
+  justify-content: space-between; // space out brand from logo
+  background: $app-navbar-background;
+  padding: $navbar-padding-y $navbar-padding-x;
+  border-bottom: $navbar-border;
+  z-index: $zindex-fixed;
 
-	// Because flex properties aren't inherited, we need to redeclare these first
-	// few properties so that content nested within behave properly.
-	> .container,
-	> .container-fluid{
-		display:flex;
-		flex-wrap:wrap;
-		align-items:center;
-		justify-content:space-between;
-	}
+  // Because flex properties aren't inherited, we need to redeclare these first
+  // few properties so that content nested within behave properly.
+  > .container,
+  > .container-fluid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
 
 // Navbar nav
 //
 // Custom navbar navigation (doesn't require `.nav`, but does make use of `.nav-link`).
 
-.navbar-nav{
-	display:flex;
-	flex-direction:column; // cannot use `inherit` to get the `.navbar`s value
-	padding-left:0;
-	margin-bottom:0;
-	list-style:none;
+.navbar-nav {
+  display: flex;
+  flex-direction: column; // cannot use `inherit` to get the `.navbar`s value
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
 
-	.nav-link{
-		color:$navbar-dark-color;
-		padding:$app-navbar-nav-link-padding-y $navbar-nav-link-padding-x;
+  .nav-link {
+    color: $navbar-dark-color;
+    padding: $app-navbar-nav-link-padding-y $navbar-nav-link-padding-x;
 
-		@include hover-focus{
-			color:$navbar-dark-hover-color;
-			background-color:$app-navbar-dark-hover-bg;
-		}
-	}
+    @include hover-focus {
+      color: $navbar-dark-hover-color;
+      background-color: $app-navbar-dark-hover-bg;
+    }
+  }
 
-	.show > .nav-link, .active > .nav-link,
-	.nav-link.show, .nav-link.active{
-		color:$navbar-dark-active-color;
-		background-color:$navbar-dark-active-bg;
-	}
+  .show > .nav-link, .active > .nav-link,
+  .nav-link.show, .nav-link.active {
+    color: $navbar-dark-active-color;
+    background-color: $navbar-dark-active-bg;
+  }
 
-	.dropdown-menu{
-		position:static;
-		float:none;
-	}
+  .dropdown-menu {
+    position: static;
+    float: none;
+  }
 }
 
 
-.navbar-nav:last-child{
+.navbar-nav:last-child {
 
-	& > li:last-child:hover a{
-		background-color:$danger;
-	}
+  & > li:last-child:hover a {
+    background-color: $danger;
+  }
 }
 
 
@@ -85,18 +85,18 @@
 //
 //
 
-.navbar-text{
-	display:inline-block;
-	padding:$nav-link-padding-y $nav-link-padding-x;
-	color:$navbar-dark-color;
+.navbar-text {
+  display: inline-block;
+  padding: $nav-link-padding-y $nav-link-padding-x;
+  color: $navbar-dark-color;
 
-	a{
-		color:$navbar-dark-active-color;
+  a {
+    color: $navbar-dark-active-color;
 
-		@include hover-focus{
-			color:$navbar-dark-active-color;
-		}
-	}
+    @include hover-focus {
+      color: $navbar-dark-active-color;
+    }
+  }
 }
 
 // Responsive navbar
@@ -107,94 +107,94 @@
 // When collapsed, prevent the toggleable navbar contents from appearing in
 // the default flexbox row orientation. Requires the use of `flex-wrap: wrap`
 // on the `.navbar` parent.
-.navbar-collapse{
-	flex-basis:100%;
-	flex-grow:1;
-	// For always expanded or extra full navbars, ensure content aligns itself
-	// properly vertically. Can be easily overridden with flex utilities.
-	align-items:center;
+.navbar-collapse {
+  flex-basis: 100%;
+  flex-grow: 1;
+  // For always expanded or extra full navbars, ensure content aligns itself
+  // properly vertically. Can be easily overridden with flex utilities.
+  align-items: center;
 }
 
 // Button for toggling the navbar when in its collapsed state
-.navbar-toggler{
-	padding:$navbar-toggler-padding-y $navbar-toggler-padding-x;
-	font-size:$navbar-toggler-font-size;
-	line-height:1;
-	background-color:transparent; // remove default button style
-	border:$navbar-dark-toggler-border; // remove default button style
-	color:$navbar-dark-color;
-	@include border-radius($navbar-toggler-border-radius);
+.navbar-toggler {
+  padding: $navbar-toggler-padding-y $navbar-toggler-padding-x;
+  font-size: $navbar-toggler-font-size;
+  line-height: 1;
+  background-color: transparent; // remove default button style
+  border: $navbar-dark-toggler-border; // remove default button style
+  color: $navbar-dark-color;
+  @include border-radius($navbar-toggler-border-radius);
 
-	@include hover-focus{
-		text-decoration:none;
-	}
+  @include hover-focus {
+    text-decoration: none;
+  }
 
-	// Opinionated: add "hand" cursor to non-disabled .navbar-toggler elements
-	&:not(:disabled):not(.disabled){
-		cursor:pointer;
-	}
+  // Opinionated: add "hand" cursor to non-disabled .navbar-toggler elements
+  &:not(:disabled):not(.disabled) {
+    cursor: pointer;
+  }
 }
 
 // Keep as a separate element so folks can easily override it with another icon
 // or image file as needed.
-.navbar-toggler-icon{
-	display:inline-block;
-	width:1.5em;
-	height:1.5em;
-	vertical-align:middle;
-	content:"";
-	background:no-repeat $navbar-dark-toggler-icon-bg center center;
-	background-size:100% 100%;
+.navbar-toggler-icon {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  vertical-align: middle;
+  content: "";
+  background: no-repeat $navbar-dark-toggler-icon-bg center center;
+  background-size: 100% 100%;
 }
 
 // Generate series of `.navbar-expand-*` responsive classes for configuring
 // where your navbar collapses.
-.navbar-expand{
+.navbar-expand {
 
-	$infix:breakpoint-infix($app-navbar-expand-breakpoint);
+  $infix: breakpoint-infix($app-navbar-expand-breakpoint);
 
-	&#{$infix}{
+  &#{$infix} {
 
-		@include media-breakpoint-down($app-navbar-expand-breakpoint){
-			> .container,
-			> .container-fluid{
-				padding-right:0;
-				padding-left:0;
-			}
-		}
+    @include media-breakpoint-down($app-navbar-expand-breakpoint) {
+      > .container,
+      > .container-fluid {
+        padding-right: 0;
+        padding-left: 0;
+      }
+    }
 
-		@include media-breakpoint-up($app-navbar-expand-breakpoint){
-			flex-flow:row nowrap;
-			//justify-content:flex-start;
+    @include media-breakpoint-up($app-navbar-expand-breakpoint) {
+      flex-flow: row nowrap;
+      //justify-content:flex-start;
 
-			.navbar-nav{
-				flex-direction:row;
+      .navbar-nav {
+        flex-direction: row;
 
-				.dropdown-menu{
-					position:absolute;
-				}
-			}
+        .dropdown-menu {
+          position: absolute;
+        }
+      }
 
-			// For nesting containers, have to redeclare for alignment purposes
-			> .container,
-			> .container-fluid{
-				flex-wrap:nowrap;
-			}
+      // For nesting containers, have to redeclare for alignment purposes
+      > .container,
+      > .container-fluid {
+        flex-wrap: nowrap;
+      }
 
-			.navbar-collapse{
-				display:flex !important; // stylelint-disable-line declaration-no-important
-				justify-content:space-between;
-				// Changes flex-bases to auto because of an IE10 bug
-				flex-basis:auto;
-			}
+      .navbar-collapse {
+        display: flex !important; // stylelint-disable-line declaration-no-important
+        justify-content: space-between;
+        // Changes flex-bases to auto because of an IE10 bug
+        flex-basis: auto;
+      }
 
-			.navbar-toggler{
-				display:none;
-			}
-		}
-	}
+      .navbar-toggler {
+        display: none;
+      }
+    }
+  }
 }
 
-.i18n-dropdown .dropdown-toggle:after{
-	display:none;
+.i18n-dropdown .dropdown-toggle:after {
+  display: none;
 }

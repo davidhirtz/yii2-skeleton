@@ -23,87 +23,89 @@ use yii\behaviors\TimestampBehavior;
  */
 class AuthClient extends \davidhirtz\yii2\skeleton\db\ActiveRecord
 {
-	/***********************************************************************
-	 * Behaviors.
-	 ***********************************************************************/
+    /***********************************************************************
+     * Behaviors.
+     ***********************************************************************/
 
-	/**
-	 * @inheritdoc
-	 */
-	public function behaviors()
-	{
-		return [
-			'SerializedAttributesBehavior'=>[
-				'class'=>SerializedAttributesBehavior::class,
-				'attributes'=>['data'],
-			],
-			'TimestampBehavior'=>[
-				'class'=>TimestampBehavior::class,
-				'value'=>function(){return new DateTime;},
-			],
-			'DateTimeBehavior'=>[
-				'class'=>DateTimeBehavior::class,
-			],
-		];
-	}
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'SerializedAttributesBehavior' => [
+                'class' => SerializedAttributesBehavior::class,
+                'attributes' => ['data'],
+            ],
+            'TimestampBehavior' => [
+                'class' => TimestampBehavior::class,
+                'value' => function () {
+                    return new DateTime;
+                },
+            ],
+            'DateTimeBehavior' => [
+                'class' => DateTimeBehavior::class,
+            ],
+        ];
+    }
 
-	/***********************************************************************
-	 * Relations.
-	 ***********************************************************************/
+    /***********************************************************************
+     * Relations.
+     ***********************************************************************/
 
-	/**
-	 * @return \yii\db\ActiveQuery
-	 */
-	public function getUser()
-	{
-		return $this->hasOne(User::class, ['id'=>'user_id']);
-	}
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
 
-	/***********************************************************************
-	 * Getters / setters.
-	 ***********************************************************************/
+    /***********************************************************************
+     * Getters / setters.
+     ***********************************************************************/
 
-	/**
-	 * @return string
-	 */
-	public function getDisplayName()
-	{
-		/**
-		 * @var \davidhirtz\yii2\skeleton\auth\clients\ClientInterface $client
-		 */
-		$client=Yii::$app->authClientCollection->getClient($this->name);
-		return $client::getDisplayName($this);
-	}
+    /**
+     * @return string
+     */
+    public function getDisplayName()
+    {
+        /**
+         * @var \davidhirtz\yii2\skeleton\auth\clients\ClientInterface $client
+         */
+        $client = Yii::$app->authClientCollection->getClient($this->name);
+        return $client::getDisplayName($this);
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getExternalUrl()
-	{
-		/**
-		 * @var \davidhirtz\yii2\skeleton\auth\clients\ClientInterface $client
-		 */
-		$client=Yii::$app->authClientCollection->getClient($this->name);
-		return $client::getExternalUrl($this);
-	}
+    /**
+     * @return string
+     */
+    public function getExternalUrl()
+    {
+        /**
+         * @var \davidhirtz\yii2\skeleton\auth\clients\ClientInterface $client
+         */
+        $client = Yii::$app->authClientCollection->getClient($this->name);
+        return $client::getExternalUrl($this);
+    }
 
-	/**
-	 * @return \davidhirtz\yii2\skeleton\auth\clients\ClientInterface|\yii\authclient\ClientInterface
-	 */
-	public function getClientClass()
-	{
-		return Yii::$app->authClientCollection->getClient($this->name);
-	}
+    /**
+     * @return \davidhirtz\yii2\skeleton\auth\clients\ClientInterface|\yii\authclient\ClientInterface
+     */
+    public function getClientClass()
+    {
+        return Yii::$app->authClientCollection->getClient($this->name);
+    }
 
-	/***********************************************************************
-	 * Active Record.
-	 ***********************************************************************/
+    /***********************************************************************
+     * Active Record.
+     ***********************************************************************/
 
-	/**
-	 * @inheritdoc
-	 */
-	public static function tableName()
-	{
-		return '{{%auth_client}}';
-	}
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return '{{%auth_client}}';
+    }
 }

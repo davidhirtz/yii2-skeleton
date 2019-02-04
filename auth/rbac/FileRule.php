@@ -1,4 +1,5 @@
 <?php
+
 namespace davidhirtz\yii2\skeleton\auth\rbac;
 
 use davidhirtz\yii2\skeleton\modules\content\models\Category;
@@ -14,49 +15,46 @@ use Yii;
  */
 class FileRule extends Rule
 {
-	/**
-	 * @var string
-	 */
-	public $name='fileRule';
+    /**
+     * @var string
+     */
+    public $name = 'fileRule';
 
-	/**
-	 * @inheritdoc
-	 */
-	public function execute($userId, $item, $params)
-	{
-		/**
-		 * @var \davidhirtz\yii2\skeleton\modules\content\models\File $file
-		 */
-		$file=ArrayHelper::getValue($params, 'file');
-		return $file===null || $this->validateFileParent($file->getParent());
-	}
+    /**
+     * @inheritdoc
+     */
+    public function execute($userId, $item, $params)
+    {
+        /**
+         * @var \davidhirtz\yii2\skeleton\modules\content\models\File $file
+         */
+        $file = ArrayHelper::getValue($params, 'file');
+        return $file === null || $this->validateFileParent($file->getParent());
+    }
 
-	/**
-	 * @var \davidhirtz\yii2\skeleton\modules\content\models\Category|\davidhirtz\yii2\skeleton\modules\content\models\Page|\davidhirtz\yii2\skeleton\modules\content\models\Section $parent
-	 * @return bool
-	 */
-	private function validateFileParent($parent)
-	{
-		switch(get_class($parent))
-		{
-			case Category::class:
+    /**
+     * @var \davidhirtz\yii2\skeleton\modules\content\models\Category|\davidhirtz\yii2\skeleton\modules\content\models\Page|\davidhirtz\yii2\skeleton\modules\content\models\Section $parent
+     * @return bool
+     */
+    private function validateFileParent($parent)
+    {
+        switch (get_class($parent)) {
+            case Category::class:
 
-				if(Yii::$app->getUser()->can('categoryUpdate'))
-				{
-					return true;
-				}
+                if (Yii::$app->getUser()->can('categoryUpdate')) {
+                    return true;
+                }
 
-				break;
+                break;
 
-			case Page::class:
-			case Section::class:
+            case Page::class:
+            case Section::class:
 
-				if(Yii::$app->getUser()->can('pageUpdate'))
-				{
-					return true;
-				}
-		}
+                if (Yii::$app->getUser()->can('pageUpdate')) {
+                    return true;
+                }
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

@@ -1,5 +1,7 @@
 <?php
+
 namespace davidhirtz\yii2\skeleton\assets;
+
 use yii\web\AssetBundle;
 
 /**
@@ -8,15 +10,15 @@ use yii\web\AssetBundle;
  */
 class BootboxAsset extends AssetBundle
 {
-	/**
-	 * @var string
-	 */
-	public $sourcePath='@bower/bootbox';
+    /**
+     * @var string
+     */
+    public $sourcePath = '@bower/bootbox';
 
-	/**
-	 * @var array
-	 */
-	public $js=[
-		'bootbox.js',
-	];
+    /**
+     * @var array
+     */
+    public $js = [
+        'bootbox.js',
+    ];
 }

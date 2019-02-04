@@ -8,8 +8,8 @@
  */
 class Yii extends \yii\BaseYii
 {
-	/**
-	 * @var davidhirtz\yii2\skeleton\web\Application
-	 */
-	public static $app;
+    /**
+     * @var davidhirtz\yii2\skeleton\web\Application
+     */
+    public static $app;
 }

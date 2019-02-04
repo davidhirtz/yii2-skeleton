@@ -1,5 +1,7 @@
 <?php
+
 namespace davidhirtz\yii2\skeleton\models\forms;
+
 use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\web\NotFoundHttpException;
@@ -10,121 +12,118 @@ use yii\web\NotFoundHttpException;
  */
 class DeleteForm extends Model
 {
-	/**
-	 * @var string
-	 */
-	public $name;
+    /**
+     * @var string
+     */
+    public $name;
 
-	/**
-	 * @var string
-	 */
-	public $attribute='name';
+    /**
+     * @var string
+     */
+    public $attribute = 'name';
 
-	/**
-	 * @var \davidhirtz\yii2\skeleton\db\ActiveRecord
-	 * @see DeleteForm::getModel()
-	 */
-	private $_model;
+    /**
+     * @var \davidhirtz\yii2\skeleton\db\ActiveRecord
+     * @see DeleteForm::getModel()
+     */
+    private $_model;
 
-	/***********************************************************************
-	 * Validation.
-	 ***********************************************************************/
+    /***********************************************************************
+     * Validation.
+     ***********************************************************************/
 
-	/**
-	 * @inheritdoc
-	 */
-	public function rules()
-	{
-		if($this->attribute!==false)
-		{
-			return [
-				[
-					['name'],
-					'filter',
-					'filter'=>'trim',
-				],
-				[
-					['name'],
-					'required',
-				],
-				[
-					['name'],
-					'compare',
-					'compareValue'=>$this->getModel()->getAttribute($this->attribute),
-				],
-			];
-		}
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        if ($this->attribute !== false) {
+            return [
+                [
+                    ['name'],
+                    'filter',
+                    'filter' => 'trim',
+                ],
+                [
+                    ['name'],
+                    'required',
+                ],
+                [
+                    ['name'],
+                    'compare',
+                    'compareValue' => $this->getModel()->getAttribute($this->attribute),
+                ],
+            ];
+        }
 
-		return [];
-	}
+        return [];
+    }
 
-	/***********************************************************************
-	 * Methods.
-	 ***********************************************************************/
+    /***********************************************************************
+     * Methods.
+     ***********************************************************************/
 
-	/**
-	 * @return bool
-	 * @throws InvalidConfigException
-	 * @throws \Throwable
-	 * @throws \yii\db\StaleObjectException
-	 */
-	public function delete()
-	{
-		return $this->validate() ? $this->getModel()->delete() : false;
-	}
+    /**
+     * @return bool
+     * @throws InvalidConfigException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function delete()
+    {
+        return $this->validate() ? $this->getModel()->delete() : false;
+    }
 
-	/***********************************************************************
-	 * Getters / setters.
-	 ***********************************************************************/
+    /***********************************************************************
+     * Getters / setters.
+     ***********************************************************************/
 
-	/**
-	 * @return mixed
-	 * @throws InvalidConfigException
-	 */
-	public function getId()
-	{
-		return $this->getModel()->getPrimaryKey();
-	}
+    /**
+     * @return mixed
+     * @throws InvalidConfigException
+     */
+    public function getId()
+    {
+        return $this->getModel()->getPrimaryKey();
+    }
 
-	/**
-	 * @return \davidhirtz\yii2\skeleton\db\ActiveRecord
-	 * @throws InvalidConfigException
-	 */
-	public function getModel()
-	{
-		if(!$this->_model)
-		{
-			throw new InvalidConfigException;
-		}
+    /**
+     * @return \davidhirtz\yii2\skeleton\db\ActiveRecord
+     * @throws InvalidConfigException
+     */
+    public function getModel()
+    {
+        if (!$this->_model) {
+            throw new InvalidConfigException;
+        }
 
-		return $this->_model;
-	}
+        return $this->_model;
+    }
 
-	/**
-	 * @param \davidhirtz\yii2\skeleton\db\ActiveRecord $model
-	 * @throws NotFoundHttpException
-	 */
-	public function setModel($model)
-	{
-		if(!$model)
-		{
-			throw new NotFoundHttpException;
-		}
+    /**
+     * @param \davidhirtz\yii2\skeleton\db\ActiveRecord $model
+     * @throws NotFoundHttpException
+     */
+    public function setModel($model)
+    {
+        if (!$model) {
+            throw new NotFoundHttpException;
+        }
 
-		$this->_model=$model;
-	}
+        $this->_model = $model;
+    }
 
-	/***********************************************************************
-	 * Model.
-	 ***********************************************************************/
+    /***********************************************************************
+     * Model.
+     ***********************************************************************/
 
-	/**
-	 * @inheritdoc
-	 */
-	public function attributeLabels()
-	{
-		return [
-			'name'=>$this->getModel()->getAttributeLabel($this->attribute),
-		];
-	}
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'name' => $this->getModel()->getAttributeLabel($this->attribute),
+        ];
+    }
 }

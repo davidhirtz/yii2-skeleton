@@ -1,5 +1,7 @@
 <?php
+
 namespace davidhirtz\yii2\skeleton\assets;
+
 use yii\web\AssetBundle;
 
 /**
@@ -8,20 +10,20 @@ use yii\web\AssetBundle;
  */
 class CKEditorBootstrapAsset extends AssetBundle
 {
-	/**
-	 * @var string
-	 */
-	public $sourcePath='@skeleton/assets/ckeditor-bootstrap/';
+    /**
+     * @var string
+     */
+    public $sourcePath = '@skeleton/assets/ckeditor-bootstrap/';
 
-	/**
-	 * @var string
-	 */
-	public $editorAssetBundle;
+    /**
+     * @var string
+     */
+    public $editorAssetBundle;
 
-	/**
-	 * @var array
-	 */
-	public $depends=[
-		'\dosamigos\ckeditor\CKEditorAsset',
-	];
+    /**
+     * @var array
+     */
+    public $depends = [
+        '\dosamigos\ckeditor\CKEditorAsset',
+    ];
 }

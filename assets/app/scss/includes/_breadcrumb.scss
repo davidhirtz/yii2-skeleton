@@ -1,10 +1,10 @@
 .breadcrumb {
 
-	li{
-		@extend .text-overflow;
-	}
+  li {
+    @extend .text-overflow;
+  }
 
-	li:not(.active):not(:last-child){
-		max-width: 150px;
-	}
+  li:not(.active):not(:last-child) {
+    max-width: 150px;
+  }
 }

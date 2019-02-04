@@ -1,24 +1,24 @@
 /**
  * Alerts.
  */
-.alert{
+.alert {
 
-	ul{
-		margin:$alert-padding-y $alert-padding-x 0 0;
-		list-style-type: square;
-	}
+  ul {
+    margin: $alert-padding-y $alert-padding-x 0 0;
+    list-style-type: square;
+  }
 
-	li{
-		padding-bottom:$alert-padding-y;
-		font-weight: normal;
-	}
+  li {
+    padding-bottom: $alert-padding-y;
+    font-weight: normal;
+  }
 }
 
-.alert-error{
-	background-color:$danger;
+.alert-error {
+  background-color: $danger;
 }
 
-.alert-info{
-	background-color:$info;
-	color:$app-info-text;
+.alert-info {
+  background-color: $info;
+  color: $app-info-text;
 }

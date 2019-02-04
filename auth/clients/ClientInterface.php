@@ -11,26 +11,26 @@ namespace davidhirtz\yii2\skeleton\auth\clients;
  */
 interface ClientInterface extends \yii\authclient\ClientInterface
 {
-	/**
-	 * @return string
-	 */
-	public function getAuthData();
+    /**
+     * @return string
+     */
+    public function getAuthData();
 
-	/**
-	 *
-	 * @return array
-	 */
-	public function getSafeUserAttributes();
+    /**
+     *
+     * @return array
+     */
+    public function getSafeUserAttributes();
 
-	/**
-	 * @param \davidhirtz\yii2\skeleton\models\AuthClient $client
-	 * @return string
-	 */
-	public static function getDisplayName($client);
+    /**
+     * @param \davidhirtz\yii2\skeleton\models\AuthClient $client
+     * @return string
+     */
+    public static function getDisplayName($client);
 
-	/**
-	 * @param \davidhirtz\yii2\skeleton\models\AuthClient $client
-	 * @return string
-	 */
-	public static function getExternalUrl($client);
+    /**
+     * @param \davidhirtz\yii2\skeleton\models\AuthClient $client
+     * @return string
+     */
+    public static function getExternalUrl($client);
 }

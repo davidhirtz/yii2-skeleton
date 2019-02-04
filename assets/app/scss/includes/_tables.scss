@@ -3,29 +3,29 @@
 //
 
 .table {
-	width: 100%;
-	margin-bottom: $app-table-margin-bottom;
-	background-color: $table-bg; // Reset for nesting within parents with `background-color`.
+  width: 100%;
+  margin-bottom: $app-table-margin-bottom;
+  background-color: $table-bg; // Reset for nesting within parents with `background-color`.
 
-	th,
-	td {
-		padding: $table-cell-padding;
-		vertical-align: top;
-		border-top: $table-border-width solid $table-border-color;
-	}
+  th,
+  td {
+    padding: $table-cell-padding;
+    vertical-align: top;
+    border-top: $table-border-width solid $table-border-color;
+  }
 
-	thead th {
-		vertical-align: bottom;
-		border-bottom: $app-table-th-border-width solid $app-table-th-border-color;
-	}
+  thead th {
+    vertical-align: bottom;
+    border-bottom: $app-table-th-border-width solid $app-table-th-border-color;
+  }
 
-	tbody + tbody {
-		border-top: $app-table-th-border-width solid $table-border-color;
-	}
+  tbody + tbody {
+    border-top: $app-table-th-border-width solid $table-border-color;
+  }
 
-	.table {
-		background-color: $body-bg;
-	}
+  .table {
+    background-color: $body-bg;
+  }
 }
 
 //
@@ -75,9 +75,9 @@
 // Default zebra-stripe styles (alternating gray and transparent backgrounds)
 
 .table-striped {
-	tbody tr:nth-of-type(#{$table-striped-order}) {
-		background-color: $table-accent-bg;
-	}
+  tbody tr:nth-of-type(#{$table-striped-order}) {
+    background-color: $table-accent-bg;
+  }
 }
 
 
@@ -86,11 +86,11 @@
 // Placed here since it has to come after the potential zebra striping
 
 .table-hover {
-	tbody tr {
-		@include hover {
-			background-color: $table-hover-bg;
-		}
-	}
+  tbody tr {
+    @include hover {
+      background-color: $table-hover-bg;
+    }
+  }
 }
 
 
@@ -100,7 +100,7 @@
 // inheritance to nested tables.
 
 @each $color, $value in $theme-colors {
-	@include table-row-variant($color, theme-color-level($color, -9));
+  @include table-row-variant($color, theme-color-level($color, -9));
 }
 
 @include table-row-variant(active, $table-active-bg);
@@ -187,47 +187,47 @@
 //}
 
 
-.table-vertical td{
-	vertical-align:middle;
+.table-vertical td {
+  vertical-align: middle;
 }
 
-th > a, th > a:hover{
-	display:block;
-	color:inherit;
-	text-decoration:none;
-	font-weight:bold;
-	white-space:nowrap;
+th > a, th > a:hover {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  font-weight: bold;
+  white-space: nowrap;
 }
 
-th > a.asc, th > a.desc{
-	position:relative;
-	font-style:$app-table-th-active-font-style;
+th > a.asc, th > a.desc {
+  position: relative;
+  font-style: $app-table-th-active-font-style;
 }
 
-tr.is-selected{
-	background-color:$app-table-th-selected-bg!important;
+tr.is-selected {
+  background-color: $app-table-th-selected-bg !important;
 
-	&+.is-selected td{
-		border-color:$card-bg;
-	}
+  & + .is-selected td {
+    border-color: $card-bg;
+  }
 }
 
-tr.disabled{
-	text-decoration:line-through;
+tr.disabled {
+  text-decoration: line-through;
 }
 
-a.asc:after, a.desc:after{
-	display:inline-block;
-	margin:0 0 0.2em 0.5em;
-	width:0;
-	height:0;
-	border-left:0.4em solid transparent;
-	border-right:0.4em solid transparent;
-	border-bottom:0.4em solid #000;
-	content:"";
+a.asc:after, a.desc:after {
+  display: inline-block;
+  margin: 0 0 0.2em 0.5em;
+  width: 0;
+  height: 0;
+  border-left: 0.4em solid transparent;
+  border-right: 0.4em solid transparent;
+  border-bottom: 0.4em solid #000;
+  content: "";
 }
 
-a.desc:after{
-	border-top:0.4em solid #000;
-	border-bottom:0;
+a.desc:after {
+  border-top: 0.4em solid #000;
+  border-bottom: 0;
 }

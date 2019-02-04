@@ -1,4 +1,5 @@
 <?php
+
 namespace davidhirtz\yii2\skeleton\assets;
 
 use yii\web\AssetBundle;
@@ -9,9 +10,9 @@ use yii\web\AssetBundle;
  */
 class SignupAsset extends AssetBundle
 {
-	/**
-	 * @link https://github.com/libraryh3lp/jstimezonedetect
-	 * @var array
-	 */
-	public $js=['//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.6/jstz.min.js'];
+    /**
+     * @link https://github.com/libraryh3lp/jstimezonedetect
+     * @var array
+     */
+    public $js = ['//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.6/jstz.min.js'];
 }

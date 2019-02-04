@@ -1,4 +1,5 @@
 <?php
+
 namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\composer\Bootstrap;
@@ -30,33 +31,33 @@ use Yii;
  */
 class Application extends \yii\web\Application
 {
-	/**
-	 * @param array $config
-	 * @throws \yii\base\InvalidConfigException
-	 */
-	public function preInit(&$config)
-	{
-		$config=Bootstrap::preInit($config);
-		parent::preInit($config);
-	}
+    /**
+     * @param array $config
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function preInit(&$config)
+    {
+        $config = Bootstrap::preInit($config);
+        parent::preInit($config);
+    }
 
-	/**
-	 * @return array
-	 */
-	public function coreComponents()
-	{
-		return array_merge(parent::coreComponents(), [
-			'request'=>['class'=>'davidhirtz\yii2\skeleton\web\Request'],
-			'user'=>['class'=>'davidhirtz\yii2\skeleton\web\User'],
-		]);
-	}
+    /**
+     * @return array
+     */
+    public function coreComponents()
+    {
+        return array_merge(parent::coreComponents(), [
+            'request' => ['class' => 'davidhirtz\yii2\skeleton\web\Request'],
+            'user' => ['class' => 'davidhirtz\yii2\skeleton\web\User'],
+        ]);
+    }
 
-	/**
-	 * @return object|null|\yii\authclient\Collection
-	 * @throws \yii\base\InvalidConfigException
-	 */
-	public function getAuthClientCollection()
-	{
-		return $this->get('authClientCollection', false);
-	}
+    /**
+     * @return object|null|\yii\authclient\Collection
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getAuthClientCollection()
+    {
+        return $this->get('authClientCollection', false);
+    }
 }

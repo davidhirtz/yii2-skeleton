@@ -1,4 +1,5 @@
 <?php
+
 namespace davidhirtz\yii2\skeleton\modules\admin\models\forms\base;
 
 use davidhirtz\yii2\skeleton\models\User;
@@ -14,177 +15,173 @@ use Yii;
  */
 class UserForm extends User
 {
-	/**
-	 * @var string
-	 */
-	public $newPassword;
+    /**
+     * @var string
+     */
+    public $newPassword;
 
-	/**
-	 * @var string
-	 */
-	public $repeatPassword;
+    /**
+     * @var string
+     */
+    public $repeatPassword;
 
-	/**
-	 * @var bool
-	 */
-	public $sendEmail;
+    /**
+     * @var bool
+     */
+    public $sendEmail;
 
-	/**
-	 * @return array
-	 */
-	public function behaviors(): array
-	{
-		return array_merge(parent::behaviors(), [
-			'BlameableBehavior'=>[
-				'class'=>BlameableBehavior::class,
-				'attributes'=>[
-					BaseActiveRecord::EVENT_BEFORE_INSERT=>['created_by_user_id'],
-				],
-			],
-		]);
-	}
+    /**
+     * @return array
+     */
+    public function behaviors(): array
+    {
+        return array_merge(parent::behaviors(), [
+            'BlameableBehavior' => [
+                'class' => BlameableBehavior::class,
+                'attributes' => [
+                    BaseActiveRecord::EVENT_BEFORE_INSERT => ['created_by_user_id'],
+                ],
+            ],
+        ]);
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function rules(): array
-	{
-		return array_merge(parent::rules(), [
-			[
-				['newPassword', 'repeatPassword'],
-				'required',
-				'on'=>static::SCENARIO_INSERT,
-			],
-			[
-				['newPassword'],
-				'filter',
-				'filter'=>'trim',
-			],
-			[
-				['newPassword'],
-				'string',
-				'min'=>$this->passwordMinLength,
-				'skipOnEmpty'=>true,
-			],
-			[
-				['repeatPassword'],
-				'compare',
-				'compareAttribute'=>'newPassword',
-				'message'=>Yii::t('app', 'The password must match the new password.'),
-			],
-			[
-				['sendEmail'],
-				'boolean',
-			],
-		]);
-	}
+    /**
+     * @inheritdoc
+     */
+    public function rules(): array
+    {
+        return array_merge(parent::rules(), [
+            [
+                ['newPassword', 'repeatPassword'],
+                'required',
+                'on' => static::SCENARIO_INSERT,
+            ],
+            [
+                ['newPassword'],
+                'filter',
+                'filter' => 'trim',
+            ],
+            [
+                ['newPassword'],
+                'string',
+                'min' => $this->passwordMinLength,
+                'skipOnEmpty' => true,
+            ],
+            [
+                ['repeatPassword'],
+                'compare',
+                'compareAttribute' => 'newPassword',
+                'message' => Yii::t('app', 'The password must match the new password.'),
+            ],
+            [
+                ['sendEmail'],
+                'boolean',
+            ],
+        ]);
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function init()
-	{
-		$this->setScenario(static::SCENARIO_INSERT);
-		parent::init();
-	}
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        $this->setScenario(static::SCENARIO_INSERT);
+        parent::init();
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function afterFind()
-	{
-		$this->setScenario(static::SCENARIO_UPDATE);
-		parent::afterFind();
-	}
+    /**
+     * @inheritdoc
+     */
+    public function afterFind()
+    {
+        $this->setScenario(static::SCENARIO_UPDATE);
+        parent::afterFind();
+    }
 
-	/**
-	 * @param bool $insert
-	 * @return bool
-	 */
-	public function beforeSave($insert): bool
-	{
-		if($this->newPassword)
-		{
-			$this->generatePasswordHash($this->newPassword);
-		}
+    /**
+     * @param bool $insert
+     * @return bool
+     */
+    public function beforeSave($insert): bool
+    {
+        if ($this->newPassword) {
+            $this->generatePasswordHash($this->newPassword);
+        }
 
-		return parent::beforeSave($insert);
-	}
+        return parent::beforeSave($insert);
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function afterSave($insert, $changedAttributes)
-	{
-		if(!$insert)
-		{
-			if(array_key_exists('password', $changedAttributes))
-			{
-				$this->deleteAuthKeys();
-				$this->deleteActiveSessions();
-			}
-		}
+    /**
+     * @inheritdoc
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        if (!$insert) {
+            if (array_key_exists('password', $changedAttributes)) {
+                $this->deleteAuthKeys();
+                $this->deleteActiveSessions();
+            }
+        }
 
-		if($this->sendEmail)
-		{
-			$this->sendCredentialsEmail();
-		}
+        if ($this->sendEmail) {
+            $this->sendCredentialsEmail();
+        }
 
-		parent::afterSave($insert, $changedAttributes);
-	}
+        parent::afterSave($insert, $changedAttributes);
+    }
 
-	/**
-	 * Sends user credentials via email.
-	 */
-	public function sendCredentialsEmail()
-	{
-		$language=Yii::$app->language;
-		Yii::$app->language=$this->language;
+    /**
+     * Sends user credentials via email.
+     */
+    public function sendCredentialsEmail()
+    {
+        $language = Yii::$app->language;
+        Yii::$app->language = $this->language;
 
-		Yii::$app->getMailer()->compose('@skeleton/mail/account/credentials', ['user'=>$this])
-			->setSubject(Yii::t('app', 'Your {name} Account', ['name'=>Yii::$app->name]))
-			->setFrom(Yii::$app->params['email'])
-			->setTo($this->email)
-			->send();
+        Yii::$app->getMailer()->compose('@skeleton/mail/account/credentials', ['user' => $this])
+            ->setSubject(Yii::t('app', 'Your {name} Account', ['name' => Yii::$app->name]))
+            ->setFrom(Yii::$app->params['email'])
+            ->setTo($this->email)
+            ->send();
 
-		Yii::$app->language=$language;
-	}
+        Yii::$app->language = $language;
+    }
 
-	/**
-	 * @return array
-	 */
-	public function scenarios()
-	{
-		$attributes=[
-			'city', 
-			'country', 
-			'email', 
-			'first_name', 
-			'language', 
-			'last_name',
-			'name', 
-			'newPassword', 
-			'repeatPassword', 
-			'sendEmail',
-			'status', 
-			'timezone', 
-		];
+    /**
+     * @return array
+     */
+    public function scenarios()
+    {
+        $attributes = [
+            'city',
+            'country',
+            'email',
+            'first_name',
+            'language',
+            'last_name',
+            'name',
+            'newPassword',
+            'repeatPassword',
+            'sendEmail',
+            'status',
+            'timezone',
+        ];
 
-		return [
-			static::SCENARIO_INSERT=>$attributes,
-			static::SCENARIO_UPDATE=>$attributes,
-		];
-	}
+        return [
+            static::SCENARIO_INSERT => $attributes,
+            static::SCENARIO_UPDATE => $attributes,
+        ];
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function attributeLabels()
-	{
-		return array_merge(parent::attributeLabels(), [
-			'newPassword'=>$this->getIsNewRecord() ? Yii::t('app', 'Password') : Yii::t('app', 'New password'),
-			'repeatPassword'=>Yii::t('app', 'Repeat password'),
-			'sendEmail'=>Yii::t('app', 'Send user account details via email'),
-		]);
-	}
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return array_merge(parent::attributeLabels(), [
+            'newPassword' => $this->getIsNewRecord() ? Yii::t('app', 'Password') : Yii::t('app', 'New password'),
+            'repeatPassword' => Yii::t('app', 'Repeat password'),
+            'sendEmail' => Yii::t('app', 'Send user account details via email'),
+        ]);
+    }
 }

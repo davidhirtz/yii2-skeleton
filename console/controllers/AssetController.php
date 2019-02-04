@@ -1,4 +1,5 @@
 <?php
+
 namespace davidhirtz\yii2\skeleton\console\controllers;
 
 use yii\console\Exception;
@@ -12,91 +13,79 @@ use yii\helpers\FileHelper;
  */
 class AssetController extends \yii\console\controllers\AssetController
 {
-	/**
-	 * @var string
-	 */
-	public $defaultAction='auto';
+    /**
+     * @var string
+     */
+    public $defaultAction = 'auto';
 
-	/**
-	 * Creates asset bundles based on config.
-	 */
-	public function actionAuto()
-	{
-		$manager=Yii::$app->getAssetManager();
-		$manager->combineOptions['assetManager']=$manager;
+    /**
+     * Creates asset bundles based on config.
+     */
+    public function actionAuto()
+    {
+        $manager = Yii::$app->getAssetManager();
+        $manager->combineOptions['assetManager'] = $manager;
 
-		$this->actionCompress($manager->combineOptions, Yii::getAlias($manager->combinedBundlesAlias));
-	}
+        $this->actionCompress($manager->combineOptions, Yii::getAlias($manager->combinedBundlesAlias));
+    }
 
-	/**
-	 * Removes all published assets.
-	 */
-	public function actionClear()
-	{
-		$basePath=Yii::$app->getAssetManager()->basePath;
-		$assets=FileHelper::findDirectories($basePath);
+    /**
+     * Removes all published assets.
+     */
+    public function actionClear()
+    {
+        $basePath = Yii::$app->getAssetManager()->basePath;
+        $assets = FileHelper::findDirectories($basePath);
 
-		$total=count($assets);
-		$errors=0;
-		$done=0;
+        $total = count($assets);
+        $errors = 0;
+        $done = 0;
 
-		if(!$total)
-		{
-			$this->stdout("All assets are already cleared\n", Console::FG_GREEN);
-		}
-		else
-		{
-			$prefix='Published assets deleted: ';
+        if (!$total) {
+            $this->stdout("All assets are already cleared\n", Console::FG_GREEN);
+        } else {
+            $prefix = 'Published assets deleted: ';
 
-			Console::startProgress($done, $total, $prefix);
+            Console::startProgress($done, $total, $prefix);
 
-			foreach($assets as $asset)
-			{
-				FileHelper::removeDirectory($asset);
-				Console::updateProgress(++$done, $total, $prefix);
-			}
+            foreach ($assets as $asset) {
+                FileHelper::removeDirectory($asset);
+                Console::updateProgress(++$done, $total, $prefix);
+            }
 
-			Console::endProgress();
+            Console::endProgress();
 
-			if($errors)
-			{
-				$this->stdout("{$errors} assets could not be cleared.\n", Console::FG_RED);
-			}
-		}
-	}
+            if ($errors) {
+                $this->stdout("{$errors} assets could not be cleared.\n", Console::FG_RED);
+            }
+        }
+    }
 
-	/**
-	 * @param mixed $configFile
-	 * @inheritdoc
-	 */
-	public function actionCompress($configFile, $bundleFile)
-	{
-		parent::actionCompress($configFile, $bundleFile);
-	}
+    /**
+     * @param mixed $configFile
+     * @inheritdoc
+     */
+    public function actionCompress($configFile, $bundleFile)
+    {
+        parent::actionCompress($configFile, $bundleFile);
+    }
 
-	/**
-	 * @param string $configFile
-	 * @throws Exception
-	 */
-	protected function loadConfiguration($configFile)
-	{
-		if(is_array($configFile))
-		{
-			foreach($configFile as $name=>$value)
-			{
-				if(property_exists($this, $name) || $this->canSetProperty($name))
-				{
-					$this->$name=$value;
-				}
-				else
-				{
-					throw new Exception("Unknown combined configuration option: $name");
-				}
-			}
-		}
-		else
-		{
-			parent::loadConfiguration($configFile);
-		}
-	}
+    /**
+     * @param string $configFile
+     * @throws Exception
+     */
+    protected function loadConfiguration($configFile)
+    {
+        if (is_array($configFile)) {
+            foreach ($configFile as $name => $value) {
+                if (property_exists($this, $name) || $this->canSetProperty($name)) {
+                    $this->$name = $value;
+                } else {
+                    throw new Exception("Unknown combined configuration option: $name");
+                }
+            }
+        } else {
+            parent::loadConfiguration($configFile);
+        }
+    }
 }

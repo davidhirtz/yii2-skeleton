@@ -7,6 +7,7 @@
  * @var ActiveDataProvider $provider
  * @var string $ip
  */
+
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\UserLoginGridView;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
@@ -20,12 +21,12 @@ $this->setBreadcrumb($this->title);
 ?>
 
 <?= UserSubmenu::widget([
-	'title'=>Html::a(Html::encode(Yii::t('app', 'Logins')), ['/admin/user/index']),
+    'title' => Html::a(Html::encode(Yii::t('app', 'Logins')), ['/admin/user/index']),
 ]); ?>
 
 <?= Panel::widget([
-	'content'=>UserLoginGridView::widget([
-		'dataProvider'=>$provider,
-		'search'=>$ip,
-	]),
+    'content' => UserLoginGridView::widget([
+        'dataProvider' => $provider,
+        'search' => $ip,
+    ]),
 ]); ?>

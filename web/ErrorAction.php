@@ -1,4 +1,5 @@
 <?php
+
 namespace davidhirtz\yii2\skeleton\web;
 
 /**
@@ -7,11 +8,11 @@ namespace davidhirtz\yii2\skeleton\web;
  */
 class ErrorAction extends \yii\web\ErrorAction
 {
-	/**
-	 * @inheritdoc
-	 */
-	protected function renderAjaxResponse()
-	{
-		return $this->getExceptionMessage();
-	}
+    /**
+     * @inheritdoc
+     */
+    protected function renderAjaxResponse()
+    {
+        return $this->getExceptionMessage();
+    }
 }

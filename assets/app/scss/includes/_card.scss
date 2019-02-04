@@ -1,28 +1,28 @@
 /**
  * Panels
  */
-.card{
-	margin-bottom:$app-card-margin-bottom;
+.card {
+  margin-bottom: $app-card-margin-bottom;
 }
 
-.card-danger{
-	border-color:$card-danger-border;
+.card-danger {
+  border-color: $card-danger-border;
 
-	.card-header{
-		background-color:$card-danger-bg;
-		color:$card-danger-color;
-		border-color:$card-danger-border;
-	}
+  .card-header {
+    background-color: $card-danger-bg;
+    color: $card-danger-color;
+    border-color: $card-danger-border;
+  }
 }
 
-.card-title{
+.card-title {
 
-	&:last-child{
-		margin-bottom:0;
-	}
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
-.centered{
-	margin:0 auto;
-	max-width:400px;
+.centered {
+  margin: 0 auto;
+  max-width: 400px;
 }

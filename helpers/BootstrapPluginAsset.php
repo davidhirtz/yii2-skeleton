@@ -1,4 +1,5 @@
 <?php
+
 namespace yii\bootstrap;
 
 use yii\web\AssetBundle;
@@ -11,14 +12,14 @@ use yii\web\AssetBundle;
  */
 class BootstrapPluginAsset extends AssetBundle
 {
-	public $sourcePath=null;
+    public $sourcePath = null;
 
-	public $js=[
-		'//stackpath.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
-	];
+    public $js = [
+        '//stackpath.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
+    ];
 
-	public $depends=[
-		'yii\web\JqueryAsset',
-		'yii\bootstrap\BootstrapAsset',
-	];
+    public $depends = [
+        'yii\web\JqueryAsset',
+        'yii\bootstrap\BootstrapAsset',
+    ];
 }

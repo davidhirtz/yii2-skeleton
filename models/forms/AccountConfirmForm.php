@@ -1,4 +1,5 @@
 <?php
+
 namespace davidhirtz\yii2\skeleton\models\forms;
 
 use davidhirtz\yii2\skeleton\models\traits\IdentityTrait;
@@ -12,90 +13,87 @@ use Yii;
  */
 class AccountConfirmForm extends Model
 {
-	use IdentityTrait;
+    use IdentityTrait;
 
-	/**
-	 * @var string
-	 */
-	public $email;
+    /**
+     * @var string
+     */
+    public $email;
 
-	/**
-	 * @var string
-	 */
-	public $code;
+    /**
+     * @var string
+     */
+    public $code;
 
-	/**
-	 * @inheritdoc
-	 */
-	public function rules()
-	{
-		return [
-			[
-				['email'],
-				'filter',
-				'filter'=>'trim',
-			],
-			[
-				['email', 'code'],
-				'required',
-			],
-			[
-				['code'],
-				'string',
-				'length'=>User::EMAIL_CONFIRMATION_CODE_LENGTH,
-				'notEqual'=>Yii::t('yii', '{attribute} is invalid.'),
-				'skipOnError'=>true,
-			],
-		];
-	}
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [
+                ['email'],
+                'filter',
+                'filter' => 'trim',
+            ],
+            [
+                ['email', 'code'],
+                'required',
+            ],
+            [
+                ['code'],
+                'string',
+                'length' => User::EMAIL_CONFIRMATION_CODE_LENGTH,
+                'notEqual' => Yii::t('yii', '{attribute} is invalid.'),
+                'skipOnError' => true,
+            ],
+        ];
+    }
 
-	/**
-	 * Validates user credentials.
-	 */
-	public function afterValidate()
-	{
-		if(!$this->hasErrors())
-		{
-			$user=$this->getUser();
+    /**
+     * Validates user credentials.
+     */
+    public function afterValidate()
+    {
+        if (!$this->hasErrors()) {
+            $user = $this->getUser();
 
-			if(!$user || $user->email_confirmation_code!=$this->code)
-			{
-				$this->addError('code', Yii::t('yii', '{attribute} is invalid.', [
-					'attribute'=>$this->getAttributeLabel('code'),
-				]));
-			}
-		}
+            if (!$user || $user->email_confirmation_code != $this->code) {
+                $this->addError('code', Yii::t('yii', '{attribute} is invalid.', [
+                    'attribute' => $this->getAttributeLabel('code'),
+                ]));
+            }
+        }
 
-		parent::afterValidate();
-	}
+        parent::afterValidate();
+    }
 
-	/***********************************************************************
-	 * Methods.
-	 ***********************************************************************/
+    /***********************************************************************
+     * Methods.
+     ***********************************************************************/
 
-	/**
-	 * Logs in a user using the provided email and password.
-	 * @return boolean
-	 */
-	public function confirm()
-	{
-		if($this->validate())
-		{
-			$this->getUser()->updateAttributes(['email_confirmation_code'=>null]);
-			return true;
-		}
+    /**
+     * Logs in a user using the provided email and password.
+     * @return boolean
+     */
+    public function confirm()
+    {
+        if ($this->validate()) {
+            $this->getUser()->updateAttributes(['email_confirmation_code' => null]);
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	/**
-	 * @return array
-	 */
-	public function attributeLabels()
-	{
-		return [
-			'name'=>Yii::t('app', 'Username'),
-			'code'=>Yii::t('app', 'Email confirmation code'),
-		];
-	}
+    /**
+     * @return array
+     */
+    public function attributeLabels()
+    {
+        return [
+            'name' => Yii::t('app', 'Username'),
+            'code' => Yii::t('app', 'Email confirmation code'),
+        ];
+    }
 }

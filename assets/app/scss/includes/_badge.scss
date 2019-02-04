@@ -4,32 +4,32 @@
 // `background-color`.
 
 .badge {
-	display: inline-block;
-	padding: $badge-padding-y $badge-padding-x;
-	font-size: $badge-font-size;
-	font-weight: $badge-font-weight;
-	line-height: 1;
-	text-align: center;
-	white-space: nowrap;
-	vertical-align: baseline;
-	@include border-radius($badge-border-radius);
-	background-color:$app-badge-bg;
-	color:$app-badge-color;
-	text-decoration:none!important;
+  display: inline-block;
+  padding: $badge-padding-y $badge-padding-x;
+  font-size: $badge-font-size;
+  font-weight: $badge-font-weight;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  @include border-radius($badge-border-radius);
+  background-color: $app-badge-bg;
+  color: $app-badge-color;
+  text-decoration: none !important;
 
-	// Empty badges collapse automatically
-	&:empty {
-		display: none;
-	}
+  // Empty badges collapse automatically
+  &:empty {
+    display: none;
+  }
 }
 
-.list-group-item .badge, .nav-pills .badge{
-	margin-left:.5em;
+.list-group-item .badge, .nav-pills .badge {
+  margin-left: .5em;
 }
 
-.active .badge{
-	background-color:$app-badge-active-bg;
-	color:$app-badge-active-color;
+.active .badge {
+  background-color: $app-badge-active-bg;
+  color: $app-badge-active-color;
 }
 
 // Quick fix for badges in buttons

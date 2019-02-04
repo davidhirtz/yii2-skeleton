@@ -1,4 +1,5 @@
 <?php
+
 namespace davidhirtz\yii2\skeleton\tasks;
 
 /**
@@ -7,13 +8,13 @@ namespace davidhirtz\yii2\skeleton\tasks;
  */
 interface TaskInterface
 {
-	/**
-	 * @return bool
-	 */
-	public function run();
+    /**
+     * @return bool
+     */
+    public function run();
 
-	/**
-	 * @return string
-	 */
-	public function getMessage();
+    /**
+     * @return string
+     */
+    public function getMessage();
 }

@@ -1,44 +1,33 @@
 /**
  * CKEditor dialog.
  */
-
 /**
  * The default stylesheet included on all requests.
  */
 @import "../../app/scss/includes/variables";
-
 /**
  * Includes Bootstrap 4.
  */
 @import "../../../vendor/npm-asset/bootstrap/scss/functions";
 @import "../../../vendor/npm-asset/bootstrap/scss/variables";
 @import "../../../vendor/npm-asset/bootstrap/scss/mixins";
-
 /* "Reset" styles, necessary to avoid the editor UI being broken by external CSS. */
 //@import "includes/reset";
-
 /* Styles the main interface structure (holding box). */
 @import "includes/mainui";
-
 /* Styles all "panels", which are the floating elements that appear when
    opening toolbar combos, menu buttons, context menus, etc. */
 @import "includes/panel";
-
 /* Styles the color panel displayed by the color buttons. */
 @import "includes/colorpanel";
-
 /* Styles to toolbar. */
 @import "includes/toolbar";
-
 /* Styles menus, which are lists of selectable items (context menu, menu button). */
 @import "includes/menu";
-
 /* Styles toolbar combos. */
 @import "includes/richcombo";
-
 /* Styles the elements path bar, available at the bottom of the editor UI.*/
 @import "includes/elementspath";
-
 /* Contains hard-coded presets for "configurable-like" options of the UI
    (e.g. display labels on specific buttons) */
 @import "includes/presets";
@@ -47,7 +36,7 @@
    To avoid showing the editor UI while its styles are still not available, the
    editor creates it with visibility:hidden. Here, we restore the UI visibility. */
 .cke_chrome {
-    visibility: inherit;
+  visibility: inherit;
 }
 
 /* For accessibility purposes, several "voice labels" are present in the UI.
@@ -55,9 +44,9 @@
    used by screen-readers to announce other elements. Here, we hide these
    <spans>, in fact. */
 .cke_voice_label {
-    display: none;
+  display: none;
 }
 
 legend.cke_voice_label {
-    display: none;
+  display: none;
 }

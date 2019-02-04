@@ -1,4 +1,5 @@
 <?php
+
 namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
 /**

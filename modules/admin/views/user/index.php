@@ -6,6 +6,7 @@
  * @var \davidhirtz\yii2\skeleton\web\View $this
  * @var ActiveDataProvider $provider
  */
+
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\UserGridView;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\panels\UserOwnerPanel;
@@ -18,18 +19,17 @@ $this->setBreadcrumb($this->title, ['index']);
 ?>
 
 <?= UserSubmenu::widget([
-	'title'=>Html::a(Html::encode($this->title), ['index']),
+    'title' => Html::a(Html::encode($this->title), ['index']),
 ]); ?>
 
 <?= Panel::widget([
-	'content'=>UserGridView::widget([
-		'dataProvider'=>$provider,
-	]),
+    'content' => UserGridView::widget([
+        'dataProvider' => $provider,
+    ]),
 ]); ?>
 
 <?php
-if(Yii::$app->getUser()->getIdentity()->isOwner())
-{
-	echo UserOwnerPanel::widget();
+if (Yii::$app->getUser()->getIdentity()->isOwner()) {
+    echo UserOwnerPanel::widget();
 }
 ?>

@@ -2,12 +2,10 @@
  * The default stylesheet included on all requests.
  */
 @import "includes/variables";
-
 /**
  * Includes Bootstrap 4.
  */
 //@import "../../../../../../vendor/npm-asset/bootstrap/scss/bootstrap";
-
 @import "../../../../../../vendor/npm-asset/bootstrap/scss/functions";
 @import "../../../../../../vendor/npm-asset/bootstrap/scss/variables";
 @import "../../../../../../vendor/npm-asset/bootstrap/scss/mixins";

@@ -23,124 +23,120 @@ use yii\rbac\Item;
 class AuthItem extends \davidhirtz\yii2\skeleton\db\ActiveRecord
 {
 
-	/**
-	 * @var bool
-	 */
-	public $isAssigned=false;
+    /**
+     * @var bool
+     */
+    public $isAssigned = false;
 
-	/**
-	 * @var bool
-	 */
-	public $isInherited=false;
+    /**
+     * @var bool
+     */
+    public $isInherited = false;
 
-	/**
-	 * @see \davidhirtz\yii2\skeleton\models\queries\AuthItemQuery::allWithChildren()
-	 * @var \davidhirtz\yii2\skeleton\AuthItem[]
-	 */
-	public $children=[];
+    /**
+     * @see \davidhirtz\yii2\skeleton\models\queries\AuthItemQuery::allWithChildren()
+     * @var \davidhirtz\yii2\skeleton\AuthItem[]
+     */
+    public $children = [];
 
-	/***********************************************************************
-	 * Relations.
-	 ***********************************************************************/
+    /***********************************************************************
+     * Relations.
+     ***********************************************************************/
 
-	/**
-	 * @return \yii\db\ActiveQuery
-	 */
-	public function getUsers()
-	{
-		return $this->hasMany(User::class, ['id'=>'user_id'])
-			->viaTable(Yii::$app->authManager->assignmentTable, ['item_name'=>'name']);
-	}
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUsers()
+    {
+        return $this->hasMany(User::class, ['id' => 'user_id'])
+            ->viaTable(Yii::$app->authManager->assignmentTable, ['item_name' => 'name']);
+    }
 
-	/***********************************************************************
-	 * Methods.
-	 ***********************************************************************/
+    /***********************************************************************
+     * Methods.
+     ***********************************************************************/
 
-	/**
-	 * @return AuthItemQuery
-	 */
-	public static function find()
-	{
-		return new AuthItemQuery(get_called_class());
-	}
+    /**
+     * @return AuthItemQuery
+     */
+    public static function find()
+    {
+        return new AuthItemQuery(get_called_class());
+    }
 
-	/***********************************************************************
-	 * Getters / setters.
-	 ***********************************************************************/
+    /***********************************************************************
+     * Getters / setters.
+     ***********************************************************************/
 
-	/**
-	 * @return bool
-	 */
-	public function hasPermission()
-	{
-		foreach($this->children as $authItem)
-		{
-			if($authItem->isAssigned)
-			{
-				return true;
-			}
-		}
+    /**
+     * @return bool
+     */
+    public function hasPermission()
+    {
+        foreach ($this->children as $authItem) {
+            if ($authItem->isAssigned) {
+                return true;
+            }
+        }
 
-		return $this->isAssigned;
-	}
+        return $this->isAssigned;
+    }
 
-	/**
-	 * @return string the display name.
-	 */
-	public function getDisplayName()
-	{
-		return str_replace(' ', ' / ', $this->generateAttributeLabel($this->name));
-	}
+    /**
+     * @return string the display name.
+     */
+    public function getDisplayName()
+    {
+        return str_replace(' ', ' / ', $this->generateAttributeLabel($this->name));
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getTypeIcon()
-	{
-		switch($this->type)
-		{
-			case Item::TYPE_ROLE:
-				return 'user';
+    /**
+     * @return string
+     */
+    public function getTypeIcon()
+    {
+        switch ($this->type) {
+            case Item::TYPE_ROLE:
+                return 'user';
 
-			case Item::TYPE_PERMISSION:
-				return 'pencil';
-		}
-	}
+            case Item::TYPE_PERMISSION:
+                return 'pencil';
+        }
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getTypeName()
-	{
-		switch($this->type)
-		{
-			case Item::TYPE_ROLE:
-				return 'Role';
+    /**
+     * @return string
+     */
+    public function getTypeName()
+    {
+        switch ($this->type) {
+            case Item::TYPE_ROLE:
+                return 'Role';
 
-			case Item::TYPE_PERMISSION:
-				return 'Permission';
-		}
-	}
+            case Item::TYPE_PERMISSION:
+                return 'Permission';
+        }
+    }
 
-	/**
-	 * @return bool
-	 */
-	public function getIsRole()
-	{
-		return $this->type==Item::TYPE_ROLE;
-	}
+    /**
+     * @return bool
+     */
+    public function getIsRole()
+    {
+        return $this->type == Item::TYPE_ROLE;
+    }
 
-	/**
-	 * @return bool
-	 */
-	public function getIsPermission()
-	{
-		return $this->type==Item::TYPE_PERMISSION;
-	}
+    /**
+     * @return bool
+     */
+    public function getIsPermission()
+    {
+        return $this->type == Item::TYPE_PERMISSION;
+    }
 
-	/***********************************************************************
-	 * Active Record.
-	 ***********************************************************************/
+    /***********************************************************************
+     * Active Record.
+     ***********************************************************************/
 
     /**
      * @inheritdoc
@@ -148,18 +144,18 @@ class AuthItem extends \davidhirtz\yii2\skeleton\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-			'name'=>Yii::t('app', 'Name'),
-			'displayName'=>Yii::t('app', 'Name'),
-			'type'=>Yii::t('app', 'Type'),
-			'description'=>Yii::t('app', 'Description'),
+            'name' => Yii::t('app', 'Name'),
+            'displayName' => Yii::t('app', 'Name'),
+            'type' => Yii::t('app', 'Type'),
+            'description' => Yii::t('app', 'Description'),
         ];
     }
 
-	/**
-	 * @inheritdoc
-	 */
-	public static function tableName()
-	{
-		return '{{%auth_item}}';
-	}
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return '{{%auth_item}}';
+    }
 }

@@ -1,5 +1,7 @@
 <?php
+
 namespace davidhirtz\yii2\skeleton\widgets\forms;
+
 use yii\db\ActiveRecord;
 
 /**
@@ -10,48 +12,48 @@ use yii\db\ActiveRecord;
  */
 class FileUpload extends \dosamigos\fileupload\FileUpload
 {
-	/**
-	 * @var bool
-	 */
-	public $multiple=true;
+    /**
+     * @var bool
+     */
+    public $multiple = true;
 
-	/**
-	 * @var string
-	 */
-	public $attribute='upload';
+    /**
+     * @var string
+     */
+    public $attribute = 'upload';
 
-	/**
-	 * @var string
-	 */
-	public $dropZone='#files';
+    /**
+     * @var string
+     */
+    public $dropZone = '#files';
 
-	/**
-	 * @var bool
-	 */
-	public $useDefaultButton=false;
+    /**
+     * @var bool
+     */
+    public $useDefaultButton = false;
 
-	/**
-	 * @inheritdoc
-	 */
-	public function init()
-	{
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
 
-		$this->options['multiple']=$this->multiple;
+        $this->options['multiple'] = $this->multiple;
 
-		$defaultClientOptions=[
-			'dropZone'=>$this->dropZone,
-			//'maxChunkSize'=>10000000,
-		];
+        $defaultClientOptions = [
+            'dropZone' => $this->dropZone,
+            //'maxChunkSize'=>10000000,
+        ];
 
-		$this->clientOptions=array_merge($defaultClientOptions, $this->clientOptions);
+        $this->clientOptions = array_merge($defaultClientOptions, $this->clientOptions);
 
-		$defaultClientEvents=[
-			'fileuploaddone'=>$this->dropZone ? 'function(e,x){$("'.$this->dropZone.'").append(x.result)}' : null,
-			'fileuploadfail'=>'function(e,d){alert(d.jqXHR.responseText)}',
-		];
+        $defaultClientEvents = [
+            'fileuploaddone' => $this->dropZone ? 'function(e,x){$("' . $this->dropZone . '").append(x.result)}' : null,
+            'fileuploadfail' => 'function(e,d){alert(d.jqXHR.responseText)}',
+        ];
 
-		$this->clientEvents=array_merge($defaultClientEvents, $this->clientEvents);
+        $this->clientEvents = array_merge($defaultClientEvents, $this->clientEvents);
 
-		parent::init();
-	}
+        parent::init();
+    }
 }

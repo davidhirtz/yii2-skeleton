@@ -1,4 +1,5 @@
 <?php
+
 namespace davidhirtz\yii2\skeleton\models\forms;
 
 use davidhirtz\yii2\datetime\DateTime;
@@ -12,122 +13,113 @@ use yii\base\Model;
  */
 class OwnershipForm extends Model
 {
-	/**
-	 * @var string
-	 */
-	public $name;
+    /**
+     * @var string
+     */
+    public $name;
 
-	/**
-	 * @var User
-	 * @see OwnerForm::getUser()
-	 */
-	private $_user;
+    /**
+     * @var User
+     * @see OwnerForm::getUser()
+     */
+    private $_user;
 
-	/***********************************************************************
-	 * Validation.
-	 ***********************************************************************/
+    /***********************************************************************
+     * Validation.
+     ***********************************************************************/
 
-	/**
-	 * @inheritdoc
-	 */
-	public function rules()
-	{
-		return [
-			[
-				['name'],
-				'filter',
-				'filter'=>'trim',
-			],
-			[
-				['name'],
-				'required',
-			],
-			[
-				['name'],
-				'validateUser',
-			],
-		];
-	}
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [
+                ['name'],
+                'filter',
+                'filter' => 'trim',
+            ],
+            [
+                ['name'],
+                'required',
+            ],
+            [
+                ['name'],
+                'validateUser',
+            ],
+        ];
+    }
 
-	/**
-	 * @see PasswordResetForm::rules()
-	 * @return bool
-	 */
-	public function validateUser()
-	{
-		$user=$this->getUser();
+    /**
+     * @see PasswordResetForm::rules()
+     * @return bool
+     */
+    public function validateUser()
+    {
+        $user = $this->getUser();
 
-		if(!$user)
-		{
-			$this->addError('name', Yii::t('app', 'The user {name} was not found.', ['name'=>$this->name]));
-		}
+        if (!$user) {
+            $this->addError('name', Yii::t('app', 'The user {name} was not found.', ['name' => $this->name]));
+        } elseif ($user->isDisabled()) {
+            $this->addError('name', Yii::t('app', 'This user is currently disabled and thus can not be made website owner!'));
+        } elseif ($user->isOwner()) {
+            $this->addError('name', Yii::t('app', 'This user is already the owner of the website!'));
+        }
 
-		elseif($user->isDisabled())
-		{
-			$this->addError('name', Yii::t('app', 'This user is currently disabled and thus can not be made website owner!'));
-		}
+        return !$this->hasErrors();
+    }
 
-		elseif($user->isOwner())
-		{
-			$this->addError('name', Yii::t('app', 'This user is already the owner of the website!'));
-		}
+    /***********************************************************************
+     * Methods.
+     ***********************************************************************/
 
-		return !$this->hasErrors();
-	}
+    /**
+     * Transfers the website ownership to user.
+     */
+    public function transfer()
+    {
+        if ($this->validate()) {
+            User::updateAll(['is_owner' => false, 'updated_at' => new DateTime], ['is_owner' => true]);
 
-	/***********************************************************************
-	 * Methods.
-	 ***********************************************************************/
+            $user = $this->getUser();
+            $user->is_owner = true;
 
-	/**
-	 * Transfers the website ownership to user.
-	 */
-	public function transfer()
-	{
-		if($this->validate())
-		{
-			User::updateAll(['is_owner'=>false, 'updated_at'=>new DateTime], ['is_owner'=>true]);
+            return $user->update(false);
+        }
 
-			$user=$this->getUser();
-			$user->is_owner=true;
+        return false;
+    }
 
-			return $user->update(false);
-		}
+    /***********************************************************************
+     * Getters / setters.
+     ***********************************************************************/
 
-		return false;
-	}
+    /**
+     * @return User
+     */
+    public function getUser()
+    {
+        if ($this->_user === null) {
+            $this->_user = User::findByName($this->name)
+                ->select(['id', 'status', 'name', 'is_owner', 'updated_at'])
+                ->limit(1)
+                ->one();
+        }
 
-	/***********************************************************************
-	 * Getters / setters.
-	 ***********************************************************************/
+        return $this->_user;
+    }
 
-	/**
-	 * @return User
-	 */
-	public function getUser()
-	{
-		if($this->_user===null)
-		{
-			$this->_user=User::findByName($this->name)
-				->select(['id', 'status', 'name', 'is_owner', 'updated_at'])
-				->limit(1)
-				->one();
-		}
+    /***********************************************************************
+     * Model.
+     ***********************************************************************/
 
-		return $this->_user;
-	}
-
-	/***********************************************************************
-	 * Model.
-	 ***********************************************************************/
-
-	/**
-	 * @inheritdoc
-	 */
-	public function attributeLabels()
-	{
-		return [
-			'name'=>Yii::t('app', 'Username'),
-		];
-	}
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'name' => Yii::t('app', 'Username'),
+        ];
+    }
 }

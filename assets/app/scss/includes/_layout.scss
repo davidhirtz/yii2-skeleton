@@ -1,14 +1,14 @@
-body{
-	padding:$app-body-padding;
+body {
+  padding: $app-body-padding;
 }
 
-.page-header{
-	margin:$app-header-margin;
-	padding-bottom:$app-header-padding-bottom;
-	text-align:$app-header-text-align;
-	border-bottom:$app-header-border-bottom;
+.page-header {
+  margin: $app-header-margin;
+  padding-bottom: $app-header-padding-bottom;
+  text-align: $app-header-text-align;
+  border-bottom: $app-header-border-bottom;
 
-	a:hover{
-		text-decoration:none;
-	}
+  a:hover {
+    text-decoration: none;
+  }
 }

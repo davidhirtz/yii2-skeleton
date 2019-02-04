@@ -1,28 +1,28 @@
-.i18n-dropdown{
+.i18n-dropdown {
 
-	.caret{
-		display:none;
-	}
+  .caret {
+    display: none;
+  }
 
-	.dropdown-menu{
-		left: 0;
-		right: auto;
-	}
+  .dropdown-menu {
+    left: 0;
+    right: auto;
+  }
 }
 
-.i18n-icon{
-	display:inline-block;
-	width:18px;
-	height:18px;
-	background:url(../images/flags/en-US.png) no-repeat;
-	background-size:contain;
-	vertical-align:middle;
+.i18n-icon {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background: url(../images/flags/en-US.png) no-repeat;
+  background-size: contain;
+  vertical-align: middle;
 
-	&.de{
-		background-image:url(../images/flags/de.png);
-	}
+  &.de {
+    background-image: url(../images/flags/de.png);
+  }
 }
 
-.i18n-label{
-	margin-left:.5em;
+.i18n-label {
+  margin-left: .5em;
 }
