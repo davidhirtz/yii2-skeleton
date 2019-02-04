@@ -37,6 +37,10 @@ class Application extends \yii\web\Application
      */
     public function preInit(&$config)
     {
+        if (!isset($config['basePath'])) {
+            $config['basePath'] = dirname($_SERVER['SCRIPT_FILENAME'], 2);
+        }
+
         $config = Bootstrap::preInit($config);
         parent::preInit($config);
     }

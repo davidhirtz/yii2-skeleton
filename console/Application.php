@@ -17,6 +17,10 @@ class Application extends \yii\console\Application
      */
     public function preInit(&$config)
     {
+        if (!isset($config['basePath'])) {
+            $config['basePath'] = getcwd();
+        }
+
         $config = Bootstrap::preInit($config);
         parent::preInit($config);
     }

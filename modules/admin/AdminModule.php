@@ -10,7 +10,7 @@ use Yii;
  *
  * @method static Module getInstance()
  */
-class BaseModule extends \yii\base\Module
+abstract class AdminModule extends \yii\base\Module
 {
     /**
      * @var string
@@ -26,6 +26,11 @@ class BaseModule extends \yii\base\Module
      * @var string
      */
     public $controllerNamespace = 'davidhirtz\yii2\skeleton\modules\admin\controllers';
+
+    /**
+     * @var string
+     */
+    public $defaultRoute = 'site';
 
     /**
      * @var string

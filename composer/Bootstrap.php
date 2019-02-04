@@ -21,9 +21,13 @@ class Bootstrap implements BootstrapInterface
     {
         Yii::setAlias('@skeleton', dirname(__FILE__, 2));
 
+        if (isset($config['classMap'])) {
+            Yii::$classMap = array_merge(Yii::$classMap, $config['classMap']);
+            unset($config['classMap']);
+        }
+
         $core = [
             'id' => 'skeleton',
-            'basePath' => dirname(__FILE__, 5),
             'aliases' => [
                 '@bower' => '@vendor/bower-asset',
                 '@npm' => '@vendor/npm-asset',
@@ -105,7 +109,7 @@ class Bootstrap implements BootstrapInterface
                 'urlManager' => [
                     'class' => 'davidhirtz\yii2\skeleton\web\UrlManager',
                 ],
-                'user' =>[
+                'user' => [
                     'class' => 'davidhirtz\yii2\skeleton\web\User',
                 ],
                 'view' => [
@@ -119,13 +123,13 @@ class Bootstrap implements BootstrapInterface
             ],
         ];
 
-        $basePath = isset($config['basePath']) ? $config['basePath'] : $core['basePath'];
+        $configPath = $config['basePath'] . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR;
 
-        if (is_file($params = $basePath . '/config/params.php')) {
+        if (is_file($params = $configPath . 'params.php')) {
             $core['params'] = require($params);
         }
 
-        if (is_file($db = $basePath . '/config/db.php')) {
+        if (is_file($db = $configPath . 'db.php')) {
             $core['components']['db'] = array_merge($core['components']['db'], require($db));
         }
 

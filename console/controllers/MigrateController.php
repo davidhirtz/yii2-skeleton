@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\console\controllers;
 
 use davidhirtz\yii2\skeleton\console\controllers\traits\ConfigTrait;
+use Yii;
 
 /**
  * Manages application migrations.
@@ -62,6 +63,10 @@ class MigrateController extends \yii\console\controllers\MigrateController
                 $db['password'] = \Seld\CliPrompt\CliPrompt::hiddenPrompt();
 
                 $this->setConfig($this->dbFile, $db);
+
+                Yii::$app->setComponents([
+                    'db'=>array_merge(Yii::$app->getComponents()['db'], $db),
+                ]);
             }
         }
     }
