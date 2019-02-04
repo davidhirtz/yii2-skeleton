@@ -10,7 +10,7 @@
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\models\AuthItem;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
-use rmrevin\yii\fontawesome\FA;
+use rmrevin\yii\fontawesome\FAS;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -39,7 +39,7 @@ $this->setBreadcrumb($this->title);
                 'headerOptions' => ['class' => 'hidden-sm hidden-xs'],
                 'contentOptions' => ['class' => 'text-center hidden-sm hidden-xs'],
                 'content' => function (AuthItem $authItem) {
-                    return FA::icon($authItem->getTypeIcon(), [
+                    return FAS::icon($authItem->getTypeIcon(), [
                         'data-toggle' => 'tooltip',
                         'title' => $authItem->getTypeName()
                     ]);

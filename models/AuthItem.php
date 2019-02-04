@@ -100,7 +100,7 @@ class AuthItem extends \davidhirtz\yii2\skeleton\db\ActiveRecord
                 return 'user';
 
             case Item::TYPE_PERMISSION:
-                return 'pencil';
+                return 'edit';
         }
     }
 
