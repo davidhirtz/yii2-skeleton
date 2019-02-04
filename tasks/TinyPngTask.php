@@ -64,7 +64,7 @@ class TinyPngTask extends BaseObject implements TaskInterface
              * Make sure file still exists.
              */
             if (!file_exists($this->file)) {
-                $this->setMessage(Yii::t('app', 'File {filename} could not be compressed.', [
+                $this->setMessage(Yii::t('skeleton', 'File {filename} could not be compressed.', [
                     'filename' => $this->file,
                 ]));
 
@@ -83,7 +83,7 @@ class TinyPngTask extends BaseObject implements TaskInterface
             }
 
             if ($newFilesize = $source->toFile($this->dest)) {
-                $this->setMessage(Yii::t('app', 'File {filename} was compressed by {filesize} ({percent}).', [
+                $this->setMessage(Yii::t('skeleton', 'File {filename} was compressed by {filesize} ({percent}).', [
                     'filename' => $this->dest,
                     'filesize' => Yii::$app->getFormatter()->asSize($filesize - $newFilesize),
                     'percent' => Yii::$app->getFormatter()->asPercent(($filesize - $newFilesize) / $filesize, 1),

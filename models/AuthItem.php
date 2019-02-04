@@ -148,10 +148,10 @@ class AuthItem extends \davidhirtz\yii2\skeleton\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'name' => Yii::t('app', 'Name'),
-            'displayName' => Yii::t('app', 'Name'),
-            'type' => Yii::t('app', 'Type'),
-            'description' => Yii::t('app', 'Description'),
+            'name' => Yii::t('skeleton', 'Name'),
+            'displayName' => Yii::t('skeleton', 'Name'),
+            'type' => Yii::t('skeleton', 'Type'),
+            'description' => Yii::t('skeleton', 'Description'),
         ];
     }
 

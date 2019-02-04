@@ -85,7 +85,7 @@ class UserGridView extends GridView
      */
     public function renderCreateUserButton()
     {
-        return Html::a(Html::iconText('user-plus', Yii::t('app', 'New User')), ['create'], ['class' => 'btn btn-primary']);
+        return Html::a(Html::iconText('user-plus', Yii::t('skeleton', 'New User')), ['create'], ['class' => 'btn btn-primary']);
     }
 
     /***********************************************************************

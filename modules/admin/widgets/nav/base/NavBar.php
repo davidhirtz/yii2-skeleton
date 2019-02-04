@@ -85,12 +85,12 @@ class NavBar extends \yii\bootstrap4\NavBar implements NavBarInterface
         if ($user->getIsGuest()) {
             return [
                 [
-                    'label' => Yii::t('app', 'Login'),
+                    'label' => Yii::t('skeleton', 'Login'),
                     'icon' => 'sign-in-alt',
                     'url' => $user->loginUrl,
                 ],
                 [
-                    'label' => Yii::t('app', 'Sign up'),
+                    'label' => Yii::t('skeleton', 'Sign up'),
                     'icon' => 'plus-circle',
                     'url' => ['/admin/account/create'],
                     'visible' => Yii::$app->getUser()->isSignupEnabled(),
@@ -130,7 +130,7 @@ class NavBar extends \yii\bootstrap4\NavBar implements NavBarInterface
                 ],
             ],
             [
-                'label' => Yii::t('app', 'Logout'),
+                'label' => Yii::t('skeleton', 'Logout'),
                 'icon' => 'sign-out',
                 'url' => ['/admin/account/logout'],
                 'linkOptions' => [
@@ -151,7 +151,7 @@ class NavBar extends \yii\bootstrap4\NavBar implements NavBarInterface
         if (!Yii::$app->getUser()->getIsGuest()) {
             return [
                 [
-                    'label' => Yii::t('app', 'Home'),
+                    'label' => Yii::t('skeleton', 'Home'),
                     'icon' => 'home',
                     'url' => ['/admin/site/index'],
                     'labelOptions' => [
@@ -172,7 +172,7 @@ class NavBar extends \yii\bootstrap4\NavBar implements NavBarInterface
         if (Yii::$app->getUser()->can('userUpdate')) {
             return [
                 [
-                    'label' => Yii::t('app', 'Users'),
+                    'label' => Yii::t('skeleton', 'Users'),
                     'icon' => 'users',
                     'url' => ['/admin/user/index'],
                     'active' => ['admin/auth', 'admin/login', 'admin/user'],

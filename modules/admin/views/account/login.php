@@ -15,18 +15,18 @@ use rmrevin\yii\fontawesome\FAS;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use yii\helpers\Url;
 
-$this->setPageTitle(Yii::t('app', 'Login'));
+$this->setPageTitle(Yii::t('skeleton', 'Login'));
 $this->setBreadcrumb($this->title);
 ?>
 
 <?= Html::errorSummary($form, [
-    'header' => Yii::t('app', 'Login unsuccessful'),
+    'header' => Yii::t('skeleton', 'Login unsuccessful'),
 ]); ?>
 
 <noscript>
     <div class="alert alert-danger">
-        <div class="alert-heading"><?= Yii::t('app', 'JavaScript is disabled on your browser.'); ?></div>
-        <p><?= Yii::t('app', 'Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to sign up.'); ?></p>
+        <div class="alert-heading"><?= Yii::t('skeleton', 'JavaScript is disabled on your browser.'); ?></div>
+        <p><?= Yii::t('skeleton', 'Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to sign up.'); ?></p>
     </div>
 </noscript>
 
@@ -38,7 +38,7 @@ $this->setBreadcrumb($this->title);
                 ?>
                 <a href="<?= Url::to(['auth', 'client' => 'facebook']); ?>" class="list-group-item">
                     <?= FAB::icon('facebook-f', ['class' => 'fa-fw']); ?>
-                    <?= Yii::t('app', 'Login with Facebook'); ?>
+                    <?= Yii::t('skeleton', 'Login with Facebook'); ?>
                 </a>
                 <?php
             }
@@ -62,7 +62,7 @@ $this->setBreadcrumb($this->title);
         }
         ?>
         <div class="form-group">
-            <?= Html::submitButton(Yii::t('app', 'Login'), ['class' => 'btn btn-primary btn-block']) ?>
+            <?= Html::submitButton(Yii::t('skeleton', 'Login'), ['class' => 'btn btn-primary btn-block']) ?>
         </div>
         <?php $af->end(); ?>
         <?php Panel::end(); ?>
@@ -71,7 +71,7 @@ $this->setBreadcrumb($this->title);
             if (Yii::$app->getUser()->isSignupEnabled()) {
                 ?>
                 <a href="<?php echo Url::to(['create']); ?>" class="list-group-item list-group-item-action">
-                    <?= FAS::icon('user', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('app', 'Create new account'); ?>
+                    <?= FAS::icon('user', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'Create new account'); ?>
                 </a>
                 <?php
             }
@@ -80,13 +80,13 @@ $this->setBreadcrumb($this->title);
                 if (!Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
                     ?>
                     <a href="<?php echo Url::to(['resend']); ?>" class="list-group-item list-group-item-action">
-                        <?= FAS::icon('envelope', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('app', 'Resend email confirmation'); ?>
+                        <?= FAS::icon('envelope', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'Resend email confirmation'); ?>
                     </a>
                     <?php
                 }
                 ?>
                 <a href="<?php echo Url::to(['recover']); ?>" class="list-group-item list-group-item-action">
-                    <?= FAS::icon('key', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('app', 'I forgot my password'); ?>
+                    <?= FAS::icon('key', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'I forgot my password'); ?>
                 </a>
                 <?php
             }

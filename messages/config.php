@@ -9,6 +9,7 @@ return [
     'languages' => ['de', 'en-US'],
     'ignoreCategories' => ['yii'],
     'overwrite' => true,
+    'removeUnused' => true,
     'only' => ['*.php'],
     'format' => 'php',
     'sort' => true,
@@ -16,6 +17,5 @@ return [
         '/config',
         '/messages',
         '/tests',
-        '/web',
     ],
 ];

@@ -92,8 +92,8 @@ class AccountConfirmForm extends Model
     public function attributeLabels()
     {
         return [
-            'name' => Yii::t('app', 'Username'),
-            'code' => Yii::t('app', 'Email confirmation code'),
+            'name' => Yii::t('skeleton', 'Username'),
+            'code' => Yii::t('skeleton', 'Email confirmation code'),
         ];
     }
 }

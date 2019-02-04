@@ -14,16 +14,16 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use rmrevin\yii\fontawesome\FAS;
 use yii\helpers\Url;
 
-$this->setPageTitle(Yii::t('app', 'Recover Password'));
+$this->setPageTitle(Yii::t('skeleton', 'Recover Password'));
 $this->setBreadcrumb($this->title);
 ?>
 
-<?= Html::errorSummary($form, ['header' => Yii::t('app', 'Your password could not be reset:')]); ?>
+<?= Html::errorSummary($form, ['header' => Yii::t('skeleton', 'Your password could not be reset')]); ?>
 
 <div class="container">
     <div class="centered">
         <?php Panel::begin(['title' => $this->title]); ?>
-        <p><?= Yii::t('app', 'Enter your email address and we will send you instructions how to reset your password.'); ?></p>
+        <p><?= Yii::t('skeleton', 'Enter your email address and we will send you instructions how to reset your password.'); ?></p>
         <?php
         $af = ActiveForm::begin([
             'enableClientValidation' => false,
@@ -34,7 +34,7 @@ $this->setBreadcrumb($this->title);
             'autofocus' => !$form->hasErrors(),
         ]); ?>
         <div class="form-group">
-            <?= Html::submitButton(Yii::t('app', 'Send Email'), ['class' => 'btn btn-primary btn-block']) ?>
+            <?= Html::submitButton(Yii::t('skeleton', 'Send Email'), ['class' => 'btn btn-primary btn-block']) ?>
         </div>
         <?php ActiveForm::end(); ?>
         <?php Panel::end(); ?>
@@ -43,7 +43,7 @@ $this->setBreadcrumb($this->title);
             ?>
             <div class="list-group">
                 <a href="<?php echo Url::to(['login']); ?>" class="list-group-item">
-                    <?= FAS::icon('sign-in-alt', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('app', 'Back to login'); ?>
+                    <?= FAS::icon('sign-in-alt', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'Back to login'); ?>
                 </a>
             </div>
             <?php

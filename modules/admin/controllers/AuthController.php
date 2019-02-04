@@ -89,7 +89,7 @@ class AuthController extends Controller
         $rbac->invalidateCache();
 
         if ($rbac->getAssignment($role->name, $user->id)) {
-            Yii::$app->getSession()->addFlash('error', Yii::t('app', 'This permission was already assigned to user {name}.', [
+            $this->error( Yii::t('skeleton', 'This permission was already assigned to user {name}.', [
                 'name' => $user->getUsername(),
             ]));
         } else {
@@ -118,7 +118,7 @@ class AuthController extends Controller
         $rbac->invalidateCache();
 
         if (!$rbac->getAssignment($role->name, $user->id)) {
-            Yii::$app->getSession()->addFlash('error', Yii::t('app', 'This permission was not assigned to user {name}.', [
+            Yii::$app->getSession()->addFlash('error', Yii::t('skeleton', 'This permission was not assigned to user {name}.', [
                 'name' => $user->getUsername(),
             ]));
         } else {

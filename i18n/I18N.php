@@ -33,8 +33,8 @@ class I18N extends \yii\i18n\I18N
      */
     public function init()
     {
-        if (!isset($this->translations['app'])) {
-            $this->translations['app'] = [
+        if (!isset($this->translations['skeleton'])) {
+            $this->translations['skeleton'] = [
                 'class' => 'yii\i18n\PhpMessageSource',
                 'sourceLanguage' => Yii::$app->sourceLanguage,
                 'basePath' => '@skeleton/messages',

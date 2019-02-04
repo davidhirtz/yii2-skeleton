@@ -60,13 +60,13 @@ class AccountResendConfirmForm extends Model
             $user = $this->getUser();
 
             if (!$user) {
-                $this->addError('email', Yii::t('app', 'Your email was not found.'));
+                $this->addError('email', Yii::t('skeleton', 'Your email was not found.'));
             } elseif ($user->isDisabled() && !$user->isOwner()) {
-                $this->addError('email', Yii::t('app', 'Your account is currently disabled. Please contact an administrator!'));
+                $this->addError('email', Yii::t('skeleton', 'Your account is currently disabled. Please contact an administrator!'));
             } elseif (!$user->email_confirmation_code) {
-                $this->addError('email', Yii::t('app', 'Your account was already confirmed!'));
+                $this->addError('email', Yii::t('skeleton', 'Your account was already confirmed!'));
             } elseif ($this->isAlreadySent()) {
-                $this->addError('email', Yii::t('app', 'We have just sent a link to confirm your account to {email}. Please check your inbox!', ['email' => $user->email]));
+                $this->addError('email', Yii::t('skeleton', 'We have just sent a link to confirm your account to {email}. Please check your inbox!', ['email' => $user->email]));
             }
         }
 
@@ -98,7 +98,7 @@ class AccountResendConfirmForm extends Model
         $user = $this->getUser();
 
         Yii::$app->getMailer()->compose('@skeleton/mail/account/confirm', ['user' => $user])
-            ->setSubject(Yii::t('app', 'Confirm your account'))
+            ->setSubject(Yii::t('skeleton', 'Confirm your account'))
             ->setFrom(Yii::$app->params['email'])
             ->setTo($user->email)
             ->send();
@@ -119,7 +119,7 @@ class AccountResendConfirmForm extends Model
     public function attributeLabels()
     {
         return [
-            'email' => Yii::t('app', 'Email'),
+            'email' => Yii::t('skeleton', 'Email'),
         ];
     }
 }

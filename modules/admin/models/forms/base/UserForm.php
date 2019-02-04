@@ -71,7 +71,7 @@ class UserForm extends User
                 ['repeatPassword'],
                 'compare',
                 'compareAttribute' => 'newPassword',
-                'message' => Yii::t('app', 'The password must match the new password.'),
+                'message' => Yii::t('skeleton', 'The password must match the new password.'),
             ],
             [
                 ['sendEmail'],
@@ -139,7 +139,7 @@ class UserForm extends User
         Yii::$app->language = $this->language;
 
         Yii::$app->getMailer()->compose('@skeleton/mail/account/credentials', ['user' => $this])
-            ->setSubject(Yii::t('app', 'Your {name} Account', ['name' => Yii::$app->name]))
+            ->setSubject(Yii::t('skeleton', 'Your {name} Account', ['name' => Yii::$app->name]))
             ->setFrom(Yii::$app->params['email'])
             ->setTo($this->email)
             ->send();
@@ -179,9 +179,9 @@ class UserForm extends User
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'newPassword' => $this->getIsNewRecord() ? Yii::t('app', 'Password') : Yii::t('app', 'New password'),
-            'repeatPassword' => Yii::t('app', 'Repeat password'),
-            'sendEmail' => Yii::t('app', 'Send user account details via email'),
+            'newPassword' => $this->getIsNewRecord() ? Yii::t('skeleton', 'Password') : Yii::t('skeleton', 'New password'),
+            'repeatPassword' => Yii::t('skeleton', 'Repeat password'),
+            'sendEmail' => Yii::t('skeleton', 'Send user account details via email'),
         ]);
     }
 }

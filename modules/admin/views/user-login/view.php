@@ -14,9 +14,9 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 
-$this->setPageTitle(Yii::t('app', 'Logins'));
+$this->setPageTitle(Yii::t('skeleton', 'Logins'));
 
-$this->setBreadcrumb(Yii::t('app', 'Users'), ['/admin/user/index']);
+$this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['/admin/user/index']);
 $this->setBreadcrumb($user->getUsername(), ['/admin/user/update', 'id' => $user->id]);
 $this->setBreadcrumb($this->title);
 ?>

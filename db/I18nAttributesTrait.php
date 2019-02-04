@@ -81,7 +81,7 @@ trait I18nAttributesTrait
                 foreach ($i18N->getLanguages() as $language) {
                     $label = $this->getAttributeLabel($attribute);
 
-                    $this->_i18nLabels[Yii::$app->getI18n()->getAttributeName($attribute, $language)] = $language == Yii::$app->language ? $label : Yii::t('app', '{label} ({language})', [
+                    $this->_i18nLabels[Yii::$app->getI18n()->getAttributeName($attribute, $language)] = $language == Yii::$app->language ? $label : Yii::t('skeleton', '{label} ({language})', [
                         'label' => $label,
                         'language' => strtoupper($language),
                     ]);

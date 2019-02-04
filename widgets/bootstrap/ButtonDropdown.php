@@ -43,7 +43,7 @@ class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
     public function init()
     {
         if ($this->defaultItem === null) {
-            $this->defaultItem = Yii::t('app', 'Show All');
+            $this->defaultItem = Yii::t('skeleton', 'Show All');
         }
 
         if ($this->items) {

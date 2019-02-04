@@ -17,7 +17,7 @@ class BaseHomePanel implements HomePanelInterface
      */
     public static function getTitle()
     {
-        return Yii::t('app', 'Admin');
+        return Yii::t('skeleton', 'Admin');
     }
 
     /**
@@ -29,24 +29,24 @@ class BaseHomePanel implements HomePanelInterface
 
         return [
             [
-                'label' => Yii::t('app', 'Create New User'),
+                'label' => Yii::t('skeleton', 'Create New User'),
                 'url' => ['/admin/user/create'],
                 'icon' => 'user-plus',
                 'visible' => $user->can('userCreate'),
             ],
             [
-                'label' => Yii::t('app', 'Your Account'),
+                'label' => Yii::t('skeleton', 'Your Account'),
                 'url' => ['/admin/account/update'],
                 'icon' => 'user',
             ],
             [
-                'label' => Yii::t('app', 'System Settings'),
+                'label' => Yii::t('skeleton', 'System Settings'),
                 'url' => ['/admin/system/index'],
                 'icon' => 'cog',
                 'visible' => $user->can('admin'),
             ],
             [
-                'label' => Yii::t('app', 'Homepage'),
+                'label' => Yii::t('skeleton', 'Homepage'),
                 'url' => Url::home(),
                 'icon' => 'globe',
                 'options' => ['target' => '_blank'],

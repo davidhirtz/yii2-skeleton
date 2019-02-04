@@ -59,11 +59,11 @@ class OwnershipForm extends Model
         $user = $this->getUser();
 
         if (!$user) {
-            $this->addError('name', Yii::t('app', 'The user {name} was not found.', ['name' => $this->name]));
+            $this->addError('name', Yii::t('skeleton', 'The user {name} was not found.', ['name' => $this->name]));
         } elseif ($user->isDisabled()) {
-            $this->addError('name', Yii::t('app', 'This user is currently disabled and thus can not be made website owner!'));
+            $this->addError('name', Yii::t('skeleton', 'This user is currently disabled and thus can not be made website owner!'));
         } elseif ($user->isOwner()) {
-            $this->addError('name', Yii::t('app', 'This user is already the owner of the website!'));
+            $this->addError('name', Yii::t('skeleton', 'This user is already the owner of the website!'));
         }
 
         return !$this->hasErrors();
@@ -119,7 +119,7 @@ class OwnershipForm extends Model
     public function attributeLabels()
     {
         return [
-            'name' => Yii::t('app', 'Username'),
+            'name' => Yii::t('skeleton', 'Username'),
         ];
     }
 }

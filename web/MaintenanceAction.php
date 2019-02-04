@@ -25,7 +25,7 @@ class MaintenanceAction extends Action
         $headers->set('Pragma', 'no-cache');
         $headers->set('Retry-After', self::RETRY_AFTER_SECONDS);
 
-        throw new HttpException(self::SERVICE_UNAVAILABLE_HTTP_CODE, Yii::t('app', 'Temporary down for scheduled maintenance. {site} will be back online shortly.', [
+        throw new HttpException(self::SERVICE_UNAVAILABLE_HTTP_CODE, Yii::t('skeleton', 'Temporary down for scheduled maintenance. {site} will be back online shortly.', [
             'site' => Yii::$app->name,
         ]));
     }

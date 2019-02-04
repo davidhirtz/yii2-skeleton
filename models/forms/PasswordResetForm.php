@@ -73,7 +73,7 @@ class PasswordResetForm extends Model
                 ['repeatPassword'],
                 'compare',
                 'compareAttribute' => 'newPassword',
-                'message' => Yii::t('app', 'The password must match the new password.'),
+                'message' => Yii::t('skeleton', 'The password must match the new password.'),
             ],
         ];
     }
@@ -87,11 +87,11 @@ class PasswordResetForm extends Model
         $user = $this->getUser();
 
         if (!$user || $user->password_reset_code != $this->code) {
-            $this->addError('id', Yii::t('app', 'The password recovery url is invalid.'));
+            $this->addError('id', Yii::t('skeleton', 'The password recovery url is invalid.'));
         }
 
         if ($user->isDisabled() && !$user->isOwner()) {
-            $this->addError('id', Yii::t('app', 'Your account is currently disabled. Please contact an administrator!'));
+            $this->addError('id', Yii::t('skeleton', 'Your account is currently disabled. Please contact an administrator!'));
         }
 
         return !$this->hasErrors();
@@ -138,8 +138,8 @@ class PasswordResetForm extends Model
         $user = $this->getUser();
 
         return [
-            'newPassword' => $user && $user->login_count ? Yii::t('app', 'New password') : Yii::t('app', 'Password'),
-            'repeatPassword' => Yii::t('app', 'Repeat password'),
+            'newPassword' => $user && $user->login_count ? Yii::t('skeleton', 'New password') : Yii::t('skeleton', 'Password'),
+            'repeatPassword' => Yii::t('skeleton', 'Repeat password'),
         ];
     }
 }

@@ -82,7 +82,7 @@ class Html extends \yii\helpers\BaseHtml
     {
         if ($models instanceof ActiveRecord) {
             if (!isset($options['header'])) {
-                $options['header'] = $models->getIsNewRecord() ? Yii::t('app', 'The record could not be created:') : Yii::t('app', 'The record could not be updated:');
+                $options['header'] = $models->getIsNewRecord() ? Yii::t('skeleton', 'The record could not be created:') : Yii::t('skeleton', 'The record could not be updated:');
             }
         }
 
@@ -154,7 +154,7 @@ class Html extends \yii\helpers\BaseHtml
         }
 
         if (!$user || $options) {
-            return self::tag($user ? 'span' : 'em', $user ? $user->getUsername() : Yii::t('app', 'Deleted'), $options);
+            return self::tag($user ? 'span' : 'em', $user ? $user->getUsername() : Yii::t('skeleton', 'Deleted'), $options);
         }
 
         return $user->getUsername();

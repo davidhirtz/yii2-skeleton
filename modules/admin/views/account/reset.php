@@ -12,17 +12,17 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
 
-$this->setPageTitle(Yii::t('app', 'Set New Password'));
+$this->setPageTitle(Yii::t('skeleton', 'Set New Password'));
 $this->setBreadcrumb($this->title);
 ?>
 
 <?= Html::errorSummary($form, [
-    'header' => Yii::t('app', 'Your password could not be saved'),
+    'header' => Yii::t('skeleton', 'Your password could not be saved'),
 ]); ?>
 <div class="container">
     <div class="centered">
         <?php Panel::begin(['title' => $this->title]); ?>
-        <p><?= Yii::t('app', 'Please enter a new password below to update your account.'); ?></p>
+        <p><?= Yii::t('skeleton', 'Please enter a new password below to update your account.'); ?></p>
         <?php
         $af = ActiveForm::begin([
             'enableClientValidation' => false,
@@ -33,7 +33,7 @@ $this->setBreadcrumb($this->title);
         echo $af->field($form, 'repeatPassword', ['icon' => 'key'])->passwordInput();
         ?>
         <div class="form-group">
-            <?= Html::submitButton(Yii::t('app', 'Save New Password'), ['class' => 'btn btn-primary btn-block']) ?>
+            <?= Html::submitButton(Yii::t('skeleton', 'Save New Password'), ['class' => 'btn btn-primary btn-block']) ?>
         </div>
         <?php $af->end(); ?>
         <?php Panel::end(); ?>

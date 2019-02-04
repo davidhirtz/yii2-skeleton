@@ -146,7 +146,7 @@ class ItemGrid extends Widget
     public function renderEmptyInfo()
     {
         if ($this->enabledFileUpload) {
-            $info = Html::tag('div', $this->message ?: Yii::t('app', 'Did you know you can also drag and drop files here to upload them instantly?'), ['class' => 'alert alert-info']);
+            $info = Html::tag('div', $this->message ?: Yii::t('skeleton', 'Did you know you can also drag and drop files here to upload them instantly?'), ['class' => 'alert alert-info']);
             echo Html::tag('div', $info, ['class' => 'col visible-if-empty']);
         }
     }

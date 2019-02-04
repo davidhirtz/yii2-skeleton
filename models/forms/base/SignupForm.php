@@ -82,20 +82,20 @@ class SignupForm extends Identity
                 ['terms'],
                 'compare',
                 'compareValue' => 1,
-                'message' => Yii::t('app', 'Please accept the terms of service and privacy policy.'),
+                'message' => Yii::t('skeleton', 'Please accept the terms of service and privacy policy.'),
             ],
             [
                 ['token'],
                 'compare',
                 'compareValue' => static::getSessionToken(),
-                'message' => Yii::t('app', 'Sign up could not be completed, please try again.'),
+                'message' => Yii::t('skeleton', 'Sign up could not be completed, please try again.'),
                 'skipOnError' => true,
             ],
             [
                 ['honeypot'],
                 'compare',
                 'compareValue' => '',
-                'message' => Yii::t('app', 'Sign up could not be completed, please try again.'),
+                'message' => Yii::t('skeleton', 'Sign up could not be completed, please try again.'),
             ],
         ]);
     }
@@ -123,7 +123,7 @@ class SignupForm extends Identity
             $timestamp = time() - Yii::$app->getSession()->get(static::SESSION_TIMESTAMP_NAME, 0);
 
             if ($timestamp < static::SESSION_MIN_TIME && $timestamp > static::SESSION_MAX_TIME) {
-                $this->addError('token', Yii::t('app', 'Sign up could not be completed, please try again.'));
+                $this->addError('token', Yii::t('skeleton', 'Sign up could not be completed, please try again.'));
             }
 
             if ($this->ip) {
@@ -141,7 +141,7 @@ class SignupForm extends Identity
                     ->one();
 
                 if ($signup && $signup->created_at > new DateTime('-2 mins')) {
-                    $this->addError(false, Yii::t('app', 'You have just created a new user account. Please wait a few minutes!'));
+                    $this->addError(false, Yii::t('skeleton', 'You have just created a new user account. Please wait a few minutes!'));
                 }
             }
         }
@@ -209,7 +209,7 @@ class SignupForm extends Identity
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'terms' => Yii::t('app', 'I accept the terms of service and privacy policy'),
+            'terms' => Yii::t('skeleton', 'I accept the terms of service and privacy policy'),
         ]);
     }
 }

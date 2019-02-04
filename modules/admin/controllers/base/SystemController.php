@@ -108,7 +108,7 @@ class SystemController extends Controller
             FileHelper::removeDirectory($asset);
         }
 
-        $this->success(Yii::t('app', 'All assets refreshed.'));
+        $this->success(Yii::t('skeleton', 'All assets refreshed.'));
         return $this->redirect(['index']);
     }
 
@@ -124,7 +124,7 @@ class SystemController extends Controller
 
         Yii::$app->get($cache)->flush();
 
-        $this->success(Yii::t('app', 'Cache was flushed.'));
+        $this->success(Yii::t('skeleton', 'Cache was flushed.'));
         return $this->redirect(['index']);
     }
 

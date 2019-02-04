@@ -95,7 +95,7 @@ class UserForm extends User
             if (array_key_exists('email', $changedAttributes)) {
                 if (!Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
                     Yii::$app->getUser()->logout(false);
-                    Yii::$app->getSession()->addFlash('success', Yii::t('app', 'Please check your emails to confirm your new email address!'));
+                    Yii::$app->getSession()->addFlash('success', Yii::t('skeleton', 'Please check your emails to confirm your new email address!'));
                 }
 
                 $this->sendEmailConfirmationEmail();
@@ -116,7 +116,7 @@ class UserForm extends User
     public function sendEmailConfirmationEmail()
     {
         Yii::$app->getMailer()->compose('@skeleton/mail/account/email', ['user' => $this])
-            ->setSubject(Yii::t('app', 'Please confirm your new email address'))
+            ->setSubject(Yii::t('skeleton', 'Please confirm your new email address'))
             ->setFrom(Yii::$app->params['email'])
             ->setTo($this->email)
             ->send();
@@ -149,9 +149,9 @@ class UserForm extends User
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'newPassword' => Yii::t('app', 'New password'),
-            'oldPassword' => Yii::t('app', 'Current password'),
-            'upload' => Yii::t('app', 'Picture'),
+            'newPassword' => Yii::t('skeleton', 'New password'),
+            'oldPassword' => Yii::t('skeleton', 'Current password'),
+            'upload' => Yii::t('skeleton', 'Picture'),
         ]);
     }
 }

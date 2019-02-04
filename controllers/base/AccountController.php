@@ -2,14 +2,19 @@
 
 namespace davidhirtz\yii2\skeleton\controllers\base;
 
+use davidhirtz\yii2\skeleton\auth\clients\Facebook;
 use davidhirtz\yii2\skeleton\db\Identity;
+use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\forms\AccountConfirmForm;
+use davidhirtz\yii2\skeleton\models\forms\AuthClientSignupForm;
+use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
 use davidhirtz\yii2\skeleton\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\models\forms\AccountResendConfirmForm;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
 use davidhirtz\yii2\skeleton\models\forms\PasswordRecoverForm;
 use davidhirtz\yii2\skeleton\models\forms\PasswordResetForm;
 use davidhirtz\yii2\skeleton\models\forms\SignupForm;
+use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\skeleton\web\Controller;
 use Yii;
@@ -89,11 +94,11 @@ class AccountController extends Controller
     public function actionCreate()
     {
         if (!Yii::$app->getUser()->isSignupEnabled()) {
-            throw new ForbiddenHttpException(Yii::t('app', 'Sorry, signing up is currently disabled!'));
+            throw new ForbiddenHttpException(Yii::t('skeleton', 'Sorry, signing up is currently disabled!'));
         }
 
         if (!Yii::$app->getUser()->getIsGuest()) {
-            Yii::t('app', 'Please logout before creating another account');
+            Yii::t('skeleton', 'Please logout before creating another account');
             return $this->goHome();
         }
 
@@ -102,7 +107,7 @@ class AccountController extends Controller
 
         if ($user->load($request->post())) {
             if ($user->save()) {
-                $this->success(Yii::t('app', 'Sign up completed. Please check your inbox to confirm your email address.'));
+                $this->success(Yii::t('skeleton', 'Sign up completed. Please check your inbox to confirm your email address.'));
                 return $this->goBack();
             }
 
@@ -137,7 +142,7 @@ class AccountController extends Controller
     public function actionLogin()
     {
         if (!Yii::$app->getUser()->getIsGuest()) {
-            $this->error(Yii::t('app', 'Please logout before logging in with another account'));
+            $this->error(Yii::t('skeleton', 'Please logout before logging in with another account'));
             return $this->goHome();
         }
 
@@ -146,7 +151,7 @@ class AccountController extends Controller
 
         if ($form->load($request->post())) {
             if ($form->login()) {
-                $this->success($form->getUser()->login_count > 1 ? Yii::t('app', 'Welcome back, {name}!', ['name' => $form->getUser()->getUsername()]) : Yii::t('app', 'Login successful!'));
+                $this->success($form->getUser()->login_count > 1 ? Yii::t('skeleton', 'Welcome back, {name}!', ['name' => $form->getUser()->getUsername()]) : Yii::t('skeleton', 'Login successful!'));
                 return $this->goBack();
             }
 
@@ -168,7 +173,7 @@ class AccountController extends Controller
     public function actionLogout()
     {
         if (Yii::$app->getUser()->logout()) {
-            $this->success(Yii::t('app', 'You are now logged out! See you soon!'));
+            $this->success(Yii::t('skeleton', 'You are now logged out! See you soon!'));
         }
 
         return $this->goHome();
@@ -202,7 +207,7 @@ class AccountController extends Controller
             }
         }
 
-        $this->success(Yii::t('app', 'Your email address was successfully confirmed!'));
+        $this->success(Yii::t('skeleton', 'Your email address was successfully confirmed!'));
         return $this->goHome();
     }
 
@@ -225,8 +230,8 @@ class AccountController extends Controller
             }
 
             if ($form->resend()) {
-                $this->success(Yii::t('app', 'We have sent another email to confirm your account to {email}.', [
-                    'email' => $form->user->email,
+                $this->success(Yii::t('skeleton', 'We have sent another email to confirm your account to {email}.', [
+                    'email' => $form->getUser()->email,
                 ]));
 
                 return $this->goHome();
@@ -257,7 +262,7 @@ class AccountController extends Controller
 
         if ($form->load(Yii::$app->getRequest()->post())) {
             if ($form->recover()) {
-                $this->success(Yii::t('app', 'We have sent an email with instructions to reset your password to {email}.', ['email' => $form->user->email]));
+                $this->success(Yii::t('skeleton', 'We have sent an email with instructions to reset your password to {email}.', ['email' => $form->user->email]));
                 return $this->goHome();
             }
 
@@ -291,7 +296,7 @@ class AccountController extends Controller
 
         if ($form->load(Yii::$app->getRequest()->post())) {
             if ($form->reset()) {
-                $this->success(Yii::t('app', 'Your password was updated.'));
+                $this->success(Yii::t('skeleton', 'Your password was updated.'));
                 return $this->goHome();
             }
         } elseif (!$form->validateUser()) {
@@ -316,7 +321,7 @@ class AccountController extends Controller
 
         if ($user->load(Yii::$app->getRequest()->post())) {
             if ($user->update()) {
-                $this->success(Yii::t('app', 'Your account was updated.'));
+                $this->success(Yii::t('skeleton', 'Your account was updated.'));
                 return $this->refresh();
             }
         }
@@ -338,7 +343,7 @@ class AccountController extends Controller
         ]);
 
         if ($form->load(Yii::$app->getRequest()->post()) && $form->delete()) {
-            $this->success(Yii::t('app', 'Your account was successfully deleted and you have been logged out. Bye!'));
+            $this->success(Yii::t('skeleton', 'Your account was successfully deleted and you have been logged out. Bye!'));
             Yii::$app->getUser()->logout();
 
             return $this->goHome();
@@ -372,7 +377,7 @@ class AccountController extends Controller
         if ($auth->delete()) {
             $client = $auth->getClientClass();
 
-            $this->success(Yii::t('app', '{client} account "{name}" was removed from {isOwner, select, 1{your} other{this}} profile.', [
+            $this->success(Yii::t('skeleton', '{client} account "{name}" was removed from your profile.', [
                 'client' => $client->getTitle(),
                 'name' => $client::getDisplayName($auth),
                 'isOwner' => 1,
@@ -407,33 +412,31 @@ class AccountController extends Controller
 
         if (Yii::$app->getUser()->getIsGuest()) {
             if ($auth) {
-                /**
-                 * Login.
-                 */
+
+                // Login
                 $user = Identity::findIdentity($auth->user_id);
 
                 if (!$user) {
-                    $this->error(Yii::t('app', 'Your account is currently disabled. Please contact an administrator!'));
+                    $this->error(Yii::t('skeleton', 'Your account is currently disabled. Please contact an administrator!'));
                     return $this->redirect(['login']);
                 }
 
-                $this->success(Yii::t('app', 'Welcome back, {name}!', [
+                $this->success(Yii::t('skeleton', 'Welcome back, {name}!', [
                     'name' => $user->getUsername(),
                 ]));
 
                 $user->loginType = $client->getName();
                 Yii::$app->getUser()->login($user, $user->cookieLifetime);
             } else {
-                /**
-                 * Signup.
-                 */
+
+                // Signup..
                 if (!Yii::$app->getUser()->isSignupEnabled()) {
-                    $this->error(Yii::t('app', 'Sorry, signing up is currently disabled!'));
+                    $this->error(Yii::t('skeleton', 'Sorry, signing up is currently disabled!'));
                     return $this->redirect(['login']);
                 }
 
                 if (User::findByEmail($attributes['email'])->exists()) {
-                    $this->error(Yii::t('app', 'A user with email {email} already exists but is not linked to this {client} account. Login using email first to link it.', [
+                    $this->error(Yii::t('skeleton', 'A user with email {email} already exists but is not linked to this {client} account. Login using email first to link it.', [
                         'client' => $client->getTitle(),
                         'email' => $attributes['email'],
                     ]));
@@ -447,14 +450,14 @@ class AccountController extends Controller
                 $user->loginType = $client->getName();
 
                 if ($user->save()) {
-                    $this->success(Yii::t('app', 'Sign up with {client} completed.', [
+                    $this->success(Yii::t('skeleton', 'Sign up with {client} completed.', [
                         'client' => $client->getTitle(),
                     ]));
                 }
             }
         } else {
             if ($auth && $auth->user_id != Yii::$app->getUser()->getId()) {
-                $this->error(Yii::t('app', 'A different user is already linked with this {client} account!', [
+                $this->error(Yii::t('skeleton', 'A different user is already linked with this {client} account!', [
                     'client' => $client->getTitle(),
                 ]));
 
@@ -462,7 +465,7 @@ class AccountController extends Controller
             }
 
 
-            $this->success(Yii::t('app', 'You have successfully {type, select, insert{added} update{updated}} your {client} account to your profile.', [
+            $this->success(Yii::t('skeleton', 'You have successfully {type, select, insert{added} update{updated}} your {client} account to your profile.', [
                 'type' => !$auth ? 'insert' : 'update',
                 'client' => $client->getTitle(),
             ]));

@@ -84,11 +84,11 @@ class LoginForm extends Model
             $user = $this->getUser();
 
             if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError('email', Yii::t('app', 'Your email or password are incorrect.'));
+                $this->addError('email', Yii::t('skeleton', 'Your email or password are incorrect.'));
             } elseif ($user->isDisabled() && !$user->isOwner()) {
-                $this->addError('status', Yii::t('app', 'Your account is currently disabled. Please contact an administrator!'));
+                $this->addError('status', Yii::t('skeleton', 'Your account is currently disabled. Please contact an administrator!'));
             } elseif ($user->isUnconfirmed() && !Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
-                $this->addError('status', Yii::t('app', 'Your email address is not confirmed yet. You should find a confirmation email in your inbox.'));
+                $this->addError('status', Yii::t('skeleton', 'Your email address is not confirmed yet. You should find a confirmation email in your inbox.'));
             } else {
                 $this->addErrors($user->getErrors());
             }
@@ -130,7 +130,7 @@ class LoginForm extends Model
     public function attributeLabels()
     {
         return [
-            'rememberMe' => Yii::t('app', 'Keep me logged in'),
+            'rememberMe' => Yii::t('skeleton', 'Keep me logged in'),
         ];
     }
 }

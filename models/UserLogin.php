@@ -72,19 +72,19 @@ class UserLogin extends ActiveRecord
     {
         switch ($this->type) {
             case static::TYPE_LOGIN:
-                return Yii::t('app', 'Login');
+                return Yii::t('skeleton', 'Login');
 
             case static::TYPE_COOKIE:
-                return Yii::t('app', 'Cookie');
+                return Yii::t('skeleton', 'Cookie');
 
             case static::TYPE_SIGNUP:
-                return Yii::t('app', 'Sign up');
+                return Yii::t('skeleton', 'Sign up');
 
             case static::TYPE_CONFIRM_EMAIL:
-                return Yii::t('app', 'Email confirmation');
+                return Yii::t('skeleton', 'Email confirmation');
 
             case static::TYPE_RESET_PASSWORD:
-                return Yii::t('app', 'Password reset');
+                return Yii::t('skeleton', 'Password reset');
         }
 
         return ucfirst($this->type);
@@ -131,11 +131,11 @@ class UserLogin extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'typeName' => Yii::t('app', 'Login'),
-            'browser' => Yii::t('app', 'Browser'),
-            'ip' => Yii::t('app', 'IP'),
-            'user' => Yii::t('app', 'User'),
-            'created_at' => Yii::t('app', 'Login'),
+            'typeName' => Yii::t('skeleton', 'Login'),
+            'browser' => Yii::t('skeleton', 'Browser'),
+            'ip' => Yii::t('skeleton', 'IP'),
+            'user' => Yii::t('skeleton', 'User'),
+            'created_at' => Yii::t('skeleton', 'Login'),
         ];
     }
 

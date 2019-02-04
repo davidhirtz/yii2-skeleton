@@ -134,13 +134,13 @@ abstract class User extends ActiveRecord
                 ['name'],
                 'match',
                 'pattern' => static::NAME_VALIDATION_REGEXP,
-                'message' => Yii::t('app', 'Username must only contain alphanumeric characters.'),
+                'message' => Yii::t('skeleton', 'Username must only contain alphanumeric characters.'),
                 'skipOnError' => true,
             ],
             [
                 ['name'],
                 'unique',
-                'message' => Yii::t('app', 'This username is already used by another user.'),
+                'message' => Yii::t('skeleton', 'This username is already used by another user.'),
                 'skipOnError' => true,
             ],
             [
@@ -156,7 +156,7 @@ abstract class User extends ActiveRecord
             [
                 ['email'],
                 'unique',
-                'message' => Yii::t('app', 'This email is already used by another user.'),
+                'message' => Yii::t('skeleton', 'This email is already used by another user.'),
                 'skipOnError' => true,
             ],
             [
@@ -318,7 +318,7 @@ abstract class User extends ActiveRecord
     public function delete()
     {
         if ($this->isOwner()) {
-            $this->addError('id', Yii::t('app', 'This user is the website owner. Please transfer ownership to another user before deleting this user.'));
+            $this->addError('id', Yii::t('skeleton', 'This user is the website owner. Please transfer ownership to another user before deleting this user.'));
             return false;
         }
 
@@ -444,11 +444,11 @@ abstract class User extends ActiveRecord
     {
         return [
             static::STATUS_DISABLED => [
-                'name' => Yii::t('app', 'Disabled'),
+                'name' => Yii::t('skeleton', 'Disabled'),
                 'icon' => 'exclamation-triangle',
             ],
             static::STATUS_ENABLED => [
-                'name' => Yii::t('app', 'Enabled'),
+                'name' => Yii::t('skeleton', 'Enabled'),
                 'icon' => 'user',
             ],
         ];
@@ -459,7 +459,7 @@ abstract class User extends ActiveRecord
      */
     public function getStatusName()
     {
-        return !$this->isOwner() ? static::getStatuses()[$this->status]['name'] : Yii::t('app', 'Site Owner');
+        return !$this->isOwner() ? static::getStatuses()[$this->status]['name'] : Yii::t('skeleton', 'Site Owner');
     }
 
     /**
@@ -480,25 +480,25 @@ abstract class User extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'status' => Yii::t('app', 'Status'),
-            'name' => Yii::t('app', 'Username'),
-            'email' => Yii::t('app', 'Email'),
-            'password' => Yii::t('app', 'Password'),
-            'first_name' => Yii::t('app', 'First name'),
-            'last_name' => Yii::t('app', 'Last name'),
-            'birthdate' => Yii::t('app', 'Birthdate'),
-            'city' => Yii::t('app', 'City'),
-            'country' => Yii::t('app', 'Country'),
-            'picture' => Yii::t('app', 'Picture'),
-            'language' => Yii::t('app', 'Language'),
-            'timezone' => Yii::t('app', 'Timezone'),
-            'email_confirmation_code' => Yii::t('app', 'Email confirmation code'),
-            'login_count' => Yii::t('app', 'Login count'),
-            'last_login' => Yii::t('app', 'Last login'),
-            'is_owner' => Yii::t('app', 'Website owner'),
-            'updated_at' => Yii::t('app', 'Updated'),
-            'created_at' => Yii::t('app', 'Created'),
+            'id' => Yii::t('skeleton', 'ID'),
+            'status' => Yii::t('skeleton', 'Status'),
+            'name' => Yii::t('skeleton', 'Username'),
+            'email' => Yii::t('skeleton', 'Email'),
+            'password' => Yii::t('skeleton', 'Password'),
+            'first_name' => Yii::t('skeleton', 'First name'),
+            'last_name' => Yii::t('skeleton', 'Last name'),
+            'birthdate' => Yii::t('skeleton', 'Birthdate'),
+            'city' => Yii::t('skeleton', 'City'),
+            'country' => Yii::t('skeleton', 'Country'),
+            'picture' => Yii::t('skeleton', 'Picture'),
+            'language' => Yii::t('skeleton', 'Language'),
+            'timezone' => Yii::t('skeleton', 'Timezone'),
+            'email_confirmation_code' => Yii::t('skeleton', 'Email confirmation code'),
+            'login_count' => Yii::t('skeleton', 'Login count'),
+            'last_login' => Yii::t('skeleton', 'Last login'),
+            'is_owner' => Yii::t('skeleton', 'Website owner'),
+            'updated_at' => Yii::t('skeleton', 'Updated'),
+            'created_at' => Yii::t('skeleton', 'Created'),
         ];
     }
 

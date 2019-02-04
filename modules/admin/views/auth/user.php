@@ -18,9 +18,9 @@ use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use yii\widgets\Pjax;
 
-$this->setPageTitle(Yii::t('app', 'Edit Permissions'));
+$this->setPageTitle(Yii::t('skeleton', 'Edit Permissions'));
 
-$this->setBreadcrumb(Yii::t('app', 'Users'), ['/admin/user/index']);
+$this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['/admin/user/index']);
 $this->setBreadcrumb($user->getUsername(), ['/admin/user/update', 'id' => $user->id]);
 $this->setBreadcrumb($this->title);
 
@@ -54,10 +54,10 @@ $grid = new GridView([
         [
             'attribute' => 'description',
             'content' => function (AuthItem $authItem) {
-                $items = [Yii::t('app', $authItem->description)];
+                $items = [Yii::t('skeleton', $authItem->description)];
 
                 foreach ($authItem->children as $child) {
-                    $items[] = !$authItem->isAssigned && ($child->isAssigned || $child->isInherited) ? Html::tag('span', Yii::t('app', $child->description), ['class' => 'bg-success']) : Yii::t('app', $child->description);
+                    $items[] = !$authItem->isAssigned && ($child->isAssigned || $child->isInherited) ? Html::tag('span', Yii::t('skeleton', $child->description), ['class' => 'bg-success']) : Yii::t('skeleton', $child->description);
                 }
 
                 return Html::ul(array_filter($items), ['class' => 'list-unstyled', 'encode' => false]);
@@ -96,9 +96,9 @@ $grid = new GridView([
             <a class="close" href="<?= Url::to(['index']); ?>" aria-label="Close">
                 <span aria-hidden="true">×</span>
             </a>
-            <?php echo Yii::t('app', 'Assign and revoke user permissions to {name}. Click {here} to view all permissions.', [
+            <?php echo Yii::t('skeleton', 'Assign and revoke user permissions to {name}. Click {here} to view all permissions.', [
                 'name' => $user->getUsername(),
-                'here' => Html::a(Yii::t('app', 'here'), ['index'], ['class' => 'alert-link']),
+                'here' => Html::a(Yii::t('skeleton', 'here'), ['index'], ['class' => 'alert-link']),
             ]); ?>
         </div>
         <?php

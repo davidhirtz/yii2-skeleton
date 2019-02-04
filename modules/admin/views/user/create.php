@@ -12,18 +12,18 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
 
-$this->setPageTitle(Yii::t('app', 'Create New User'));
+$this->setPageTitle(Yii::t('skeleton', 'Create New User'));
 
-$this->setBreadcrumb(Yii::t('app', 'Users'), ['index']);
+$this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
 $this->setBreadcrumb($this->title);
 ?>
 
 <?= Html::errorSummary($user, [
-    'header' => Yii::t('app', 'The user could not be created'),
+    'header' => Yii::t('skeleton', 'The user could not be created'),
 ]); ?>
 
 <?= UserSubmenu::widget([
-    'title' => Html::a(Yii::t('app', 'Users'), ['index']),
+    'title' => Html::a(Yii::t('skeleton', 'Users'), ['index']),
 ]); ?>
 
 <?= Panel::widget([

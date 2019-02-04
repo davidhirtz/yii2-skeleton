@@ -178,7 +178,7 @@ trait ActiveFormTrait
     public function button($label = null, $options = ['class' => 'btn-primary'])
     {
         if (!$label) {
-            $label = $this->model->getIsNewRecord() ? Yii::t('app', 'Create') : Yii::t('app', 'Update');
+            $label = $this->model->getIsNewRecord() ? Yii::t('skeleton', 'Create') : Yii::t('skeleton', 'Update');
         }
 
         if (!isset($options['type'])) {

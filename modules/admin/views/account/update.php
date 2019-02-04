@@ -16,7 +16,7 @@ use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
 use rmrevin\yii\fontawesome\FAB;
 use yii\helpers\Url;
 
-$this->setPageTitle(Yii::t('app', 'Account'));
+$this->setPageTitle(Yii::t('skeleton', 'Account'));
 $this->setBreadcrumb($this->title);
 ?>
 <?php
@@ -24,9 +24,9 @@ if ($user->isUnconfirmed()) {
     ?>
     <div class="alert alert-warning">
         <?php
-        echo Yii::t('app', 'Your email address "{email}" was not yet confirmed. Please check your inbox or click {here} to request a new confirmation email.', [
+        echo Yii::t('skeleton', 'Your email address "{email}" was not yet confirmed. Please check your inbox or click {here} to request a new confirmation email.', [
             'email' => $user->email,
-            'here' => Html::a(Yii::t('app', 'here'), ['resend']),
+            'here' => Html::a(Yii::t('skeleton', 'here'), ['resend']),
         ]);
         ?>
     </div>
@@ -35,7 +35,7 @@ if ($user->isUnconfirmed()) {
 ?>
 
 <?= Html::errorSummary($user, [
-    'header' => Yii::t('app', 'Your account could not be updated'),
+    'header' => Yii::t('skeleton', 'Your account could not be updated'),
 ]); ?>
 
 <?= Panel::widget([
@@ -47,7 +47,7 @@ if ($user->isUnconfirmed()) {
 ?>
 
 <?php Panel::begin([
-    'title' => Yii::t('app', 'Clients'),
+    'title' => Yii::t('skeleton', 'Clients'),
 ]) ?>
 <?php
 if ($user->authClients) {
@@ -55,10 +55,10 @@ if ($user->authClients) {
     <table class="table table-vertical table-striped">
         <thead>
         <tr>
-            <th><?= Yii::t('app', 'Client'); ?></th>
-            <th><?= Yii::t('app', 'Name'); ?></th>
-            <th class="d-none d-table-cell-md"><?= Yii::t('app', 'Updated'); ?></th>
-            <th class="d-none d-table-cell-lg"><?= Yii::t('app', 'Created'); ?></th>
+            <th><?= Yii::t('skeleton', 'Client'); ?></th>
+            <th><?= Yii::t('skeleton', 'Name'); ?></th>
+            <th class="d-none d-table-cell-md"><?= Yii::t('skeleton', 'Updated'); ?></th>
+            <th class="d-none d-table-cell-lg"><?= Yii::t('skeleton', 'Created'); ?></th>
             <th></th>
         </tr>
         </thead>
@@ -77,11 +77,11 @@ if ($user->authClients) {
                 <td class="text-right">
                     <a href="<?= Url::to(['deauthorize', 'id' => $auth->id, 'name' => $auth->name]) ?>"
                        data-method="post"
-                       data-confirm="<?= Yii::t('app', 'Are you sure your want to remove {isOwner, select, 1{your} other{this}} {client} account?', [
+                       data-confirm="<?= Yii::t('skeleton', 'Are you sure your want to remove {isOwner, select, 1{your} other{this}} {client} account?', [
                            'client' => $title,
                            'isOwner' => $auth->user_id == Yii::$app->user->id
                        ]); ?>" data-toggle="tooltip"
-                       title="<?= Yii::t('app', 'Remove {client}', ['client' => $title]); ?>" class="btn btn-danger">
+                       title="<?= Yii::t('skeleton', 'Remove {client}', ['client' => $title]); ?>" class="btn btn-danger">
                         <i class="fa fa-remove"></i>
                     </a>
                 </td>
@@ -96,9 +96,9 @@ if ($user->authClients) {
 }
 ?>
     <p>
-        <?= Yii::t('app', 'Click {here} to add {clientCount, plural, =0{an external client} other{additional clients}} to your account.', [
+        <?= Yii::t('skeleton', 'Click {here} to add {clientCount, plural, =0{an external client} other{additional clients}} to your account.', [
             'clientCount' => count($user->authClients),
-            'here' => Html::a(Yii::t('app', 'here'), '#', [
+            'here' => Html::a(Yii::t('skeleton', 'here'), '#', [
                 'data-toggle' => 'modal',
                 'data-target' => '#auth-client-modal'
             ]),
@@ -110,11 +110,11 @@ if ($user->authClients) {
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"
-                            aria-label="<?= Yii::t('app', 'Close'); ?>">
+                            aria-label="<?= Yii::t('skeleton', 'Close'); ?>">
                         <span aria-hidden="true">&times;</span>
                     </button>
                     <h4 class="modal-title">
-                        <?= Yii::t('app', 'Clients'); ?>
+                        <?= Yii::t('skeleton', 'Clients'); ?>
                     </h4>
                 </div>
                 <div class="modal-body">
@@ -124,7 +124,7 @@ if ($user->authClients) {
                             ?>
                             <a href="<?= Url::to(['auth', 'client' => 'facebook']); ?>" class="list-group-item">
                                 <?= FAB::icon('facebook-f', ['class' => 'fa-fw']); ?>
-                                <?= Yii::t('app', 'Login with Facebook'); ?>
+                                <?= Yii::t('skeleton', 'Login with Facebook'); ?>
                             </a>
                             <?php
                         }
@@ -139,18 +139,18 @@ if ($user->authClients) {
 if (!$user->isOwner()) {
     echo Panel::widget([
         'type' => 'danger',
-        'title' => Yii::t('app', 'Delete Account'),
+        'title' => Yii::t('skeleton', 'Delete Account'),
         'content' => DeleteActiveForm::widget([
             'model' => $user,
             'attribute' => 'name',
             'action' => ['delete'],
-            'message' => Yii::t('app', 'Type your username in the text field below to delete your account, all related items and uploaded files. This cannot be undone, please be certain!'),
+            'message' => Yii::t('skeleton', 'Type your username in the text field below to delete your account, all related items and uploaded files. This cannot be undone, please be certain!'),
         ])
     ]);
 } else {
     ?>
     <div class="alert alert-warning">
-        <?= Yii::t('app', 'You cannot delete your account, because you are the owner of this website.'); ?>
+        <?= Yii::t('skeleton', 'You cannot delete your account, because you are the owner of this website.'); ?>
     </div>
     <?php
 }

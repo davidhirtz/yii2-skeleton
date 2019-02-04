@@ -15,12 +15,12 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\GridView;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
 use rmrevin\yii\fontawesome\FAS;
 
-$this->setPageTitle(Yii::t('app', 'System'));
+$this->setPageTitle(Yii::t('skeleton', 'System'));
 $this->setBreadcrumb($this->title);
 ?>
 
 <?= Submenu::widget([
-    'title' => Yii::t('app', 'Assets'),
+    'title' => Yii::t('skeleton', 'Assets'),
 ]); ?>
 
 <?= Panel::widget([
@@ -29,17 +29,17 @@ $this->setBreadcrumb($this->title);
         'layout' => '{items}{footer}',
         'columns' => [
             [
-                'label' => Yii::t('app', 'Name'),
+                'label' => Yii::t('skeleton', 'Name'),
                 'content' => function ($item) {
                     return Html::tag('div', ucwords(str_replace('-', ' ', $item['name'])), ['class' => 'strong']) .
-                        Html::tag('div', $item['directory'] ?: Yii::t('app', 'Unpublished'), ['class' => 'small']);
+                        Html::tag('div', $item['directory'] ?: Yii::t('skeleton', 'Unpublished'), ['class' => 'small']);
                 }
             ],
         ],
         'footer' => [
             [
                 [
-                    'content' => Html::a(Yii::t('app', 'Refresh'), ['publish'], [
+                    'content' => Html::a(Yii::t('skeleton', 'Refresh'), ['publish'], [
                         'class' => 'btn btn-secondary',
                         'data-method' => 'post'
                     ]),
@@ -51,7 +51,7 @@ $this->setBreadcrumb($this->title);
 ]); ?>
 
 <?= Submenu::widget([
-    'title' => Yii::t('app', 'Cache'),
+    'title' => Yii::t('skeleton', 'Cache'),
 ]); ?>
 
 <?= Panel::widget([
@@ -60,7 +60,7 @@ $this->setBreadcrumb($this->title);
         'layout' => '{items}{footer}',
         'columns' => [
             [
-                'label' => Yii::t('app', 'Name'),
+                'label' => Yii::t('skeleton', 'Name'),
                 'content' => function ($item) {
                     return Html::tag('div', ucwords($item['name']), ['class' => 'strong']) .
                         Html::tag('div', $item['class'], ['class' => 'small']);
@@ -80,7 +80,7 @@ $this->setBreadcrumb($this->title);
 ]); ?>
 
 <?= Submenu::widget([
-    'title' => Yii::t('app', 'Logs'),
+    'title' => Yii::t('skeleton', 'Logs'),
 ]); ?>
 
 <?= Panel::widget([
@@ -89,10 +89,10 @@ $this->setBreadcrumb($this->title);
         'layout' => '{items}{footer}',
         'columns' => [
             [
-                'label' => Yii::t('app', 'Name'),
+                'label' => Yii::t('skeleton', 'Name'),
                 'content' => function ($modified, $name) {
                     return Html::tag('div', Html::a($name, ['view', 'log' => $name]), ['class' => 'strong']) .
-                        Html::tag('div', Yii::t('app', 'Last updated {timestamp}.', [
+                        Html::tag('div', Yii::t('skeleton', 'Last updated {timestamp}.', [
                             'timestamp' => \davidhirtz\yii2\timeago\Timeago::tag($modified),
                         ]), ['class' => 'small']);
                 }

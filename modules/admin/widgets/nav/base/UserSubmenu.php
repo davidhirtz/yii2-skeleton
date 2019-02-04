@@ -25,18 +25,18 @@ class UserSubmenu extends Submenu
         if ($this->user && !$this->user->getIsNewRecord()) {
             $this->items = [
                 [
-                    'label' => Yii::t('app', 'User'),
+                    'label' => Yii::t('skeleton', 'User'),
                     'url' => ['/admin/user/update', 'id' => $this->user->id],
                     'icon' => 'user hidden-sm hidden-xs',
                 ],
                 [
-                    'label' => Yii::t('app', 'Permissions'),
+                    'label' => Yii::t('skeleton', 'Permissions'),
                     'url' => ['/admin/auth/user', 'id' => $this->user->id],
                     'icon' => 'unlock-alt hidden-sm hidden-xs',
                     'visible' => Yii::$app->getUser()->can('authUpdate', ['user' => $this->user]),
                 ],
                 [
-                    'label' => Yii::t('app', 'Logins'),
+                    'label' => Yii::t('skeleton', 'Logins'),
                     'url' => ['/admin/user-login/view', 'id' => $this->user->id],
                     'icon' => 'bars hidden-sm hidden-xs',
                     'visible' => Yii::$app->getUser()->can('userUpdate'),
@@ -45,19 +45,19 @@ class UserSubmenu extends Submenu
         } else {
             $this->items = [
                 [
-                    'label' => Yii::t('app', 'Users'),
+                    'label' => Yii::t('skeleton', 'Users'),
                     'url' => ['/admin/user/index'],
                     'icon' => 'users hidden-sm hidden-xs',
                     'active' => ['user/(index|owner)'],
                 ],
                 [
-                    'label' => Yii::t('app', 'Permissions'),
+                    'label' => Yii::t('skeleton', 'Permissions'),
                     'url' => ['/admin/auth/index'],
                     'icon' => 'unlock-alt hidden-sm hidden-xs',
                     'visible' => Yii::$app->getUser()->can('authUpdate'),
                 ],
                 [
-                    'label' => Yii::t('app', 'Logins'),
+                    'label' => Yii::t('skeleton', 'Logins'),
                     'url' => ['/admin/user-login/index'],
                     'icon' => 'bars hidden-sm hidden-xs',
                     'visible' => Yii::$app->getUser()->can('userUpdate'),

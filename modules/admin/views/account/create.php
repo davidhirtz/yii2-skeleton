@@ -16,17 +16,17 @@ use yii\helpers\Url;
 
 \davidhirtz\yii2\skeleton\assets\SignupAsset::register($this);
 
-$this->setPageTitle(Yii::t('app', 'Sign up'));
+$this->setPageTitle(Yii::t('skeleton', 'Sign up'));
 $this->setBreadcrumb($this->title);
 ?>
 
 <?= Html::errorSummary($user, [
-    'header' => Yii::t('app', 'Your account could not be created'),
+    'header' => Yii::t('skeleton', 'Your account could not be created'),
 ]); ?>
 
 <noscript>
     <div class="alert alert-danger">
-        <p><?php echo Yii::t('app', 'Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to sign up.'); ?></p>
+        <p><?php echo Yii::t('skeleton', 'Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to sign up.'); ?></p>
     </div>
 </noscript>
 
@@ -38,7 +38,7 @@ $this->setBreadcrumb($this->title);
                 ?>
                 <a href="<?= Url::to(['auth', 'client' => 'facebook']); ?>" class="list-group-item">
                     <?= FAS::icon('facebook', ['class' => 'fa-fw']); ?>
-                    <?= Yii::t('app', 'Sign up with Facebook'); ?>
+                    <?= Yii::t('skeleton', 'Sign up with Facebook'); ?>
                 </a>
                 <?php
             }
@@ -64,13 +64,13 @@ $this->setBreadcrumb($this->title);
                 <?= Html::activeHiddenInput($user, 'honeypot', ['id' => 'honeypot']); ?>
                 <?= Html::activeHiddenInput($user, 'token', ['id' => 'token', 'data-url' => Url::to(['token'])]); ?>
                 <?= Html::activeHiddenInput($user, 'timezone', ['id' => 'tz']); ?>
-                <button type="submit" class="btn btn-primary btn-block"><?= Yii::t('app', 'Create Account'); ?></button>
+                <button type="submit" class="btn btn-primary btn-block"><?= Yii::t('skeleton', 'Create Account'); ?></button>
             </div>
             <?php ActiveForm::end(); ?>
             <?php Panel::end(); ?>
             <div class="list-group">
                 <a href="<?php echo Url::to(['login']); ?>" class="list-group-item">
-                    <?= FAS::icon('sign-in-alt', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('app', 'Back to login'); ?>
+                    <?= FAS::icon('sign-in-alt', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'Back to login'); ?>
                 </a>
             </div>
         </div>

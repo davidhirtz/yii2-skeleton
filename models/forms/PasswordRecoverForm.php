@@ -60,11 +60,11 @@ class PasswordRecoverForm extends Model
             $user = $this->getUser();
 
             if (!$user) {
-                $this->addError('email', Yii::t('app', 'Your email was not found.'));
+                $this->addError('email', Yii::t('skeleton', 'Your email was not found.'));
             } elseif ($user->isDisabled() && !$user->isOwner()) {
-                $this->addError('email', Yii::t('app', 'Your account is currently disabled. Please contact an administrator!'));
+                $this->addError('email', Yii::t('skeleton', 'Your account is currently disabled. Please contact an administrator!'));
             } elseif ($this->isAlreadySent()) {
-                $this->addError('email', Yii::t('app', 'We have just sent a link to reset your password to {email}. Please check your inbox!', ['email' => $user->email]));
+                $this->addError('email', Yii::t('skeleton', 'We have just sent a link to reset your password to {email}. Please check your inbox!', ['email' => $user->email]));
             }
         }
 
@@ -98,7 +98,7 @@ class PasswordRecoverForm extends Model
         $user = $this->getUser();
 
         Yii::$app->getMailer()->compose('@skeleton/mail/account/recover', ['user' => $user])
-            ->setSubject(Yii::t('app', 'Reset your password'))
+            ->setSubject(Yii::t('skeleton', 'Reset your password'))
             ->setFrom(Yii::$app->params['email'])
             ->setTo($user->email)
             ->send();
@@ -120,7 +120,7 @@ class PasswordRecoverForm extends Model
     public function attributeLabels()
     {
         return [
-            'email' => Yii::t('app', 'Email'),
+            'email' => Yii::t('skeleton', 'Email'),
         ];
     }
 }

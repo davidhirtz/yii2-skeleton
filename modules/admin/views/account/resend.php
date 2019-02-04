@@ -14,21 +14,21 @@ use rmrevin\yii\fontawesome\FAS;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use yii\helpers\Url;
 
-$this->setPageTitle(Yii::t('app', 'Resend Account Confirmation'));
+$this->setPageTitle(Yii::t('skeleton', 'Resend Account Confirmation'));
 
 if (!Yii::$app->getUser()->getIsGuest()) {
-    $this->setBreadcrumb(Yii::t('app', 'Account'), ['update']);
+    $this->setBreadcrumb(Yii::t('skeleton', 'Account'), ['update']);
 }
 
 $this->setBreadcrumb($this->title);
 ?>
 <?= Html::errorSummary($form, [
-    'header' => Yii::t('app', 'Your confirmation could not be resend'),
+    'header' => Yii::t('skeleton', 'Your confirmation could not be resend'),
 ]); ?>
 <div class="container">
     <div class="centered">
         <?php Panel::begin(['title' => $this->title]); ?>
-        <p><?= Yii::t('app', 'Enter your email address and we will send you another email to confirm your account.'); ?></p>
+        <p><?= Yii::t('skeleton', 'Enter your email address and we will send you another email to confirm your account.'); ?></p>
         <?php
         $af = ActiveForm::begin([
             'enableClientValidation' => false,
@@ -40,7 +40,7 @@ $this->setBreadcrumb($this->title);
             'enableError' => false
         ]); ?>
         <div class="form-group">
-            <?= Html::submitButton(Yii::t('app', 'Send Email'), ['class' => 'btn btn-primary btn-block']) ?>
+            <?= Html::submitButton(Yii::t('skeleton', 'Send Email'), ['class' => 'btn btn-primary btn-block']) ?>
         </div>
         <?php ActiveForm::end(); ?>
         <?php Panel::end(); ?>
@@ -50,7 +50,7 @@ $this->setBreadcrumb($this->title);
         ?>
         <div class="list-group">
             <a href="<?php echo Url::to(['login']); ?>" class="list-group-item">
-                <?= FAS::icon('sign-in-alt', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('app', 'Back to login'); ?>
+                <?= FAS::icon('sign-in-alt', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'Back to login'); ?>
             </a>
         </div>
         <?php

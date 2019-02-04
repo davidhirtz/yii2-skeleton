@@ -15,14 +15,14 @@ use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
 
-$this->setPageTitle(Yii::t('app', 'Permissions'));
+$this->setPageTitle(Yii::t('skeleton', 'Permissions'));
 
-$this->setBreadcrumb(Yii::t('app', 'Users'), ['/admin/user/index']);
+$this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['/admin/user/index']);
 $this->setBreadcrumb($this->title);
 ?>
 
 <?= UserSubmenu::widget([
-    'title' => Html::a(Html::encode(Yii::t('app', 'Permissions')), ['/admin/user/index']),
+    'title' => Html::a(Html::encode(Yii::t('skeleton', 'Permissions')), ['/admin/user/index']),
 ]); ?>
 
 <?= Panel::widget([
@@ -53,17 +53,17 @@ $this->setBreadcrumb($this->title);
             [
                 'attribute' => 'description',
                 'content' => function (AuthItem $authItem) {
-                    $items = [Yii::t('app', $authItem->description)];
+                    $items = [Yii::t('skeleton', $authItem->description)];
 
                     foreach ($authItem->children as $child) {
-                        $items[] = Yii::t('app', $child->description);
+                        $items[] = Yii::t('skeleton', $child->description);
                     }
 
                     return Html::ul(array_filter($items), ['class' => 'list-unstyled']);
                 }
             ],
             [
-                'label' => Yii::t('app', 'Users'),
+                'label' => Yii::t('skeleton', 'Users'),
                 'content' => function (AuthItem $authItem) {
                     $items = [];
 

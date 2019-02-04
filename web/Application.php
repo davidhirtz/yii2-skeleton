@@ -48,7 +48,6 @@ class Application extends \yii\web\Application
     {
         return array_merge(parent::coreComponents(), [
             'request' => ['class' => 'davidhirtz\yii2\skeleton\web\Request'],
-            'user' => ['class' => 'davidhirtz\yii2\skeleton\web\User'],
         ]);
     }
 

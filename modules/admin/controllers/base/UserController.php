@@ -98,7 +98,7 @@ class UserController extends Controller
 
         if ($user->load(Yii::$app->getRequest()->post())) {
             if ($user->insert()) {
-                $this->success(Yii::t('app', 'The user was created.'));
+                $this->success(Yii::t('skeleton', 'The user was created.'));
                 return $this->redirect(['update', 'id' => $user->id]);
             }
         } else {
@@ -135,7 +135,7 @@ class UserController extends Controller
 
         if ($user->load(Yii::$app->getRequest()->post())) {
             if ($user->update()) {
-                $this->success(Yii::t('app', 'The user was updated.'));
+                $this->success(Yii::t('skeleton', 'The user was updated.'));
                 return $this->refresh();
             }
         }
@@ -166,7 +166,7 @@ class UserController extends Controller
 
         if ($form->load(Yii::$app->getRequest()->post())) {
             if ($form->delete()) {
-                $this->success(Yii::t('app', 'The user was deleted.'));
+                $this->success(Yii::t('skeleton', 'The user was deleted.'));
 
                 if ($user->id == Yii::$app->getUser()->id) {
                     Yii::$app->getUser()->logout(false);
@@ -211,7 +211,7 @@ class UserController extends Controller
         if ($auth->delete()) {
             $client = $auth->getClientClass();
 
-            $this->success(Yii::t('app', '{client} account "{name}" was removed from user account.', [
+            $this->success(Yii::t('skeleton', '{client} account "{name}" was removed from user account.', [
                 'client' => $client->getTitle(),
                 'name' => $client::getDisplayName($auth),
             ]));
@@ -236,7 +236,7 @@ class UserController extends Controller
 
         if ($form->load(Yii::$app->request->post())) {
             if ($form->transfer()) {
-                $this->success(Yii::t('app', 'The website ownership was successful transferred!'));
+                $this->success(Yii::t('skeleton', 'The website ownership was successful transferred!'));
                 return $this->goHome();
             }
         }

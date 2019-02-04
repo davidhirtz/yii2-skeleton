@@ -171,22 +171,22 @@ class GridView extends \yii\grid\GridView
                 switch ($count) {
                     case 1:
 
-                        $summary = Yii::t('app', 'Displaying the only result matching "{search}".', $params);
+                        $summary = Yii::t('skeleton', 'Displaying the only result matching "{search}".', $params);
                         break;
 
                     case 0:
 
-                        $summary = Yii::t('app', 'Sorry, no results found matching matching "{search}".', $params);
+                        $summary = Yii::t('skeleton', 'Sorry, no results found matching matching "{search}".', $params);
                         break;
 
                     case $pagination === false:
                     case $totalCount:
 
-                        $summary = Yii::t('app', 'Displaying all {totalCount, number} results matching "{search}".', $params);
+                        $summary = Yii::t('skeleton', 'Displaying all {totalCount, number} results matching "{search}".', $params);
                         break;
 
                     default:
-                        $summary = Yii::t('app', 'Displaying {begin, number}-{end, number} of {totalCount, number} results matching "{search}".', $params);
+                        $summary = Yii::t('skeleton', 'Displaying {begin, number}-{end, number} of {totalCount, number} results matching "{search}".', $params);
                         break;
 
                 }
@@ -194,22 +194,22 @@ class GridView extends \yii\grid\GridView
                 switch ($count) {
                     case 1:
 
-                        $summary = Yii::t('app', 'Displaying the only record.', $params);
+                        $summary = Yii::t('skeleton', 'Displaying the only record.', $params);
                         break;
 
                     case 0:
 
-                        $summary = Yii::t('app', 'Sorry, no records found.', $params);
+                        $summary = Yii::t('skeleton', 'Sorry, no records found.', $params);
                         break;
 
                     case $pagination === false:
                     case $totalCount:
 
-                        $summary = Yii::t('app', 'Displaying all {totalCount, number} records.', $params);
+                        $summary = Yii::t('skeleton', 'Displaying all {totalCount, number} records.', $params);
                         break;
 
                     default:
-                        $summary = Yii::t('app', 'Displaying {begin, number}-{end, number} of {totalCount, number} records.', $params);
+                        $summary = Yii::t('skeleton', 'Displaying {begin, number}-{end, number} of {totalCount, number} records.', $params);
                         break;
                 }
             }
@@ -224,7 +224,7 @@ class GridView extends \yii\grid\GridView
             Html::addCssClass($options, 'alert-dismissible');
             $summary .= Html::a(Html::tag('span', '&times;', ['aria-hidden' => true]), $this->searchUrl, [
                 'class' => 'close',
-                'aria-label' => Yii::t('app', 'Close')
+                'aria-label' => Yii::t('skeleton', 'Close')
             ]);
         }
 
@@ -307,7 +307,7 @@ class GridView extends \yii\grid\GridView
         $options = [
             'class' => 'form-control',
             'prepend' => Html::submitButton(FAS::icon(ArrayHelper::remove($this->searchFormOptions, 'icon', 'search'), ['class' => 'fa-fw']), ['class' => 'btn-transparent']),
-            'placeholder' => Yii::t('app', 'Search ...'),
+            'placeholder' => Yii::t('skeleton', 'Search ...'),
         ];
 
         return Html::beginForm($this->searchUrl, 'get') .

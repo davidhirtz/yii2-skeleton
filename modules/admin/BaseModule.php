@@ -42,7 +42,7 @@ class BaseModule extends \yii\base\Module
             //Yii::$app->getErrorHandler()->errorAction='/admin/site/error';
 
             if ($this->name !== false) {
-                Yii::$app->getView()->setBreadcrumb($this->name ?: Yii::t('app', 'Admin'), ['/admin/site/index']);
+                Yii::$app->getView()->setBreadcrumb($this->name ?: Yii::t('skeleton', 'Admin'), ['/admin/site/index']);
             }
         }
 
