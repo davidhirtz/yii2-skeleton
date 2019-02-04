@@ -1,11 +1,12 @@
 <?php
-namespace davidhirtz\yii2\skeleton\pagers;
+namespace davidhirtz\yii2\skeleton\widgets\pagers;
+
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
 
 /**
  * Class LinkPager.
- * @package davidhirtz\yii2\skeleton\pagers
+ * @package davidhirtz\yii2\skeleton\widgets\pagers
  */
 class LinkPager extends \yii\widgets\LinkPager
 {
@@ -97,6 +98,8 @@ class LinkPager extends \yii\widgets\LinkPager
 
 			return Html::tag('ul', implode('', $buttons), $this->options);
 		}
+
+		return null;
 	}
 
 	/**
@@ -140,10 +143,7 @@ class LinkPager extends \yii\widgets\LinkPager
 	{
 		$label=$this->firstPageLabel===true ? '1' : $this->firstPageLabel;
 
-		if($label!==false && $this->pagination->getPage()>0)
-		{
-			return $this->renderPageButton($label, 0, $this->firstPageCssClass, false, false);
-		}
+		return ($label!==false && $this->pagination->getPage()>0) ? $this->renderPageButton($label, 0, $this->firstPageCssClass, false, false) : null;
 	}
 
 	/**
@@ -154,10 +154,7 @@ class LinkPager extends \yii\widgets\LinkPager
 		$pageCount=$this->pagination->getPageCount();
 		$label=$this->lastPageLabel===true ? $pageCount : $this->lastPageLabel;
 
-		if($label!==false)
-		{
-			return $this->renderPageButton($label, $pageCount-1, $this->lastPageCssClass, $this->pagination->getPage()>=$pageCount-1, false);
-		}
+		return $label!==false ? $this->renderPageButton($label, $pageCount-1, $this->lastPageCssClass, $this->pagination->getPage()>=$pageCount-1, false) : null;
 	}
 
 	/**
@@ -183,6 +180,8 @@ class LinkPager extends \yii\widgets\LinkPager
 
 			return $this->renderPageButton($label, $page, $cssClass ?: $this->prevPageCssClass, $currentPage<=0, false);
 		}
+
+		return null;
 	}
 
 	/**
@@ -209,6 +208,8 @@ class LinkPager extends \yii\widgets\LinkPager
 
 			return $this->renderPageButton($label, $page, $cssClass ?: $this->nextPageCssClass, $currentPage>=$pageCount-1, false);
 		}
+
+		return null;
 	}
 
 	/**
@@ -223,5 +224,7 @@ class LinkPager extends \yii\widgets\LinkPager
 			$ellipsis=$start<$stop-2;
 			return $this->renderPageButton($ellipsis ? '...' : $start+2, $start+1, '', $ellipsis, false);
 		}
+
+		return null;
 	}
 }

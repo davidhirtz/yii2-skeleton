@@ -3,7 +3,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\nav;
 
 /**
  * Class NavBarInterface.
- * @package davidhirtz\yii2\skeleton\modules\admin\widgets
+ * @package davidhirtz\yii2\skeleton\modules\admin\widgets\nav
  */
 interface NavBarInterface
 {

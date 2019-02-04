@@ -2,6 +2,7 @@
 namespace davidhirtz\yii2\skeleton\models\forms\base;
 
 use davidhirtz\yii2\skeleton\db\Identity;
+use davidhirtz\yii2\skeleton\models\traits\IdentityTrait;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use Yii;
 use yii\base\Model;
@@ -15,6 +16,13 @@ use yii\base\Model;
  */
 class LoginForm extends Model
 {
+	use IdentityTrait;
+
+	/**
+	 * @var bool
+	 */
+	public $enableFacebookLogin=true;
+
 	/**
 	 * @var string
 	 */
@@ -33,22 +41,12 @@ class LoginForm extends Model
 	/**
 	 * @var integer
 	 */
-	public $cookieDuration;
+	public $cookieLifetime;
 
 	/**
 	 * @var integer
 	 */
 	public $ip;
-
-	/**
-	 * @var Identity
-	 * @see LoginForm::getIdentity()
-	 */
-	private $_user=false;
-
-	/***********************************************************************
-	 * Validation.
-	 ***********************************************************************/
 
 	/**
 	 * @inheritdoc
@@ -89,11 +87,11 @@ class LoginForm extends Model
 			{
 				$this->addError('email', Yii::t('app', 'Your email or password are incorrect.'));
 			}
-			elseif($user->getIsDisabled() && !$user->getIsOwner())
+			elseif($user->isDisabled() && !$user->isOwner())
 			{
 				$this->addError('status', Yii::t('app', 'Your account is currently disabled. Please contact an administrator!'));
 			}
-			elseif($user->getIsUnconfirmed() && !Yii::$app->params['user.unconfirmedLogin'])
+			elseif($user->isUnconfirmed() && !Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled())
 			{
 				$this->addError('status', Yii::t('app', 'Your email address is not confirmed yet. You should find a confirmation email in your inbox.'));
 			}
@@ -106,59 +104,33 @@ class LoginForm extends Model
 		parent::afterValidate();
 	}
 
-	/***********************************************************************
-	 * Methods.
-	 ***********************************************************************/
-
 	/**
 	 * Logs in a user using the provided email and password.
-	 * @return boolean
+	 * @return bool
 	 */
 	public function login()
 	{
 		if($this->validate())
 		{
-			/**
-			 * Set identity attributes.
-			 */
 			$user=$this->getUser();
-
 			$user->generatePasswordHash($this->password);
 			$user->loginType=UserLogin::TYPE_LOGIN;
 			$user->ip=$this->ip;
 
-			/**
-			 * Login.
-			 */
-			return Yii::$app->getUser()->login($user, $this->rememberMe ? $this->cookieDuration ?: Yii::$app->params['app.cookieDuration'] : 0);
+			return Yii::$app->getUser()->login($user, $this->rememberMe ? ($this->cookieLifetime ?: $user->cookieLifetime) : 0);
 		}
 
 		return false;
 	}
 
-	/***********************************************************************
-	 * Getters / setters.
-	 ***********************************************************************/
-
 	/**
-	 * @return Identity
+	 * @return bool
+	 * @throws \yii\base\InvalidConfigException
 	 */
-	public function getUser()
+	public function isFacebookLoginEnabled()
 	{
-		if($this->_user===false)
-		{
-			$this->_user=Identity::findByEmail($this->email)
-				->loginAttributesOnly()
-				->limit(1)
-				->one();
-		}
-
-		return $this->_user;
+		return $this->enableFacebookLogin && Yii::$app->getAuthClientCollection()->hasClient('Facebook');
 	}
-
-	/***********************************************************************
-	 * Model.
-	 ***********************************************************************/
 
 	/**
 	 * @inheritdoc

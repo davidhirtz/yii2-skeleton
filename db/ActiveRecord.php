@@ -19,18 +19,27 @@ class ActiveRecord extends \yii\db\ActiveRecord
 	 */
 	public $i18nAttributes=[];
 
+	/**
+	 * Scenarios.
+	 */
+	const SCENARIO_INSERT='insert';
+	const SCENARIO_UPDATE='update';
+
 	/***********************************************************************
 	 * Methods.
 	 ***********************************************************************/
 
 	/**
 	 * @param string $attribute
+	 * @return bool
 	 */
-	public function addInvalidAttributeError($attribute)
+	public function addInvalidAttributeError($attribute): bool
 	{
 		$this->addError($attribute, Yii::t('yii', '{attribute} is invalid.', [
 			'attribute'=>$this->getAttributeLabel($attribute),
 		]));
+
+		return false;
 	}
 
 	/**

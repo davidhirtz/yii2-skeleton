@@ -1,10 +1,10 @@
 <?php
-namespace davidhirtz\yii2\skeleton\forms;
+namespace davidhirtz\yii2\skeleton\widgets\forms;
 use yii\db\ActiveRecord;
 
 /**
  * Class FileUpload.
- * @package davidhirtz\yii2\skeleton\form
+ * @package davidhirtz\yii2\skeleton\widgets\form
  *
  * @property ActiveRecord $model
  */

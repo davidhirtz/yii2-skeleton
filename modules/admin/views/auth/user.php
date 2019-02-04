@@ -9,7 +9,7 @@
  */
 use davidhirtz\yii2\skeleton\models\AuthItem;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
-use rmrevin\yii\fontawesome\FA;
+use rmrevin\yii\fontawesome\FAS;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -33,10 +33,7 @@ $grid=new GridView([
 	],
 	'rowOptions'=>function(AuthItem $authItem)
 		{
-			if($authItem->isAssigned || $authItem->isInherited)
-			{
-				return ['class'=>'bg-success'];
-			}
+            return ($authItem->isAssigned || $authItem->isInherited) ? ['class'=>'bg-success'] : null;
 		},
 	'columns'=>[
 		[
@@ -44,7 +41,7 @@ $grid=new GridView([
 			'contentOptions'=>['class'=>'text-center hidden-sm hidden-xs'],
 			'content'=>function(AuthItem $authItem)
 				{
-					return FA::icon($authItem->getTypeIcon(), ['data-toggle'=>'tooltip', 'title'=>$authItem->getTypeName()]);
+					return FAS::icon($authItem->getTypeIcon(), ['data-toggle'=>'tooltip', 'title'=>$authItem->getTypeName()]);
 				}
 		],
 		[
@@ -70,7 +67,7 @@ $grid=new GridView([
 			'contentOptions'=>['class'=>'text-right'],
 			'content'=>function(AuthItem $authItem) use($user)
 				{
-					return Html::a(FA::icon($authItem->isAssigned ? 'ban' : 'star'), [$authItem->isAssigned ? 'revoke' : 'assign', 'id'=>$user->id, 'name'=>$authItem->name, 'type'=>$authItem->type], [
+					return Html::a(FAS::icon($authItem->isAssigned ? 'ban' : 'star'), [$authItem->isAssigned ? 'revoke' : 'assign', 'id'=>$user->id, 'name'=>$authItem->name, 'type'=>$authItem->type], [
 						'class'=>'btn btn-secondary',
 						'data-method'=>'post',
 					]);

@@ -1,6 +1,7 @@
 <?php
 namespace davidhirtz\yii2\skeleton\assets;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
+use Yii;
 use yii\web\AssetBundle;
 
 /**
@@ -44,6 +45,11 @@ class AppAsset extends AssetBundle
 	 */
 	public function init()
 	{
+		Yii::$app->getAssetManager()->bundles['yii\bootstrap4\BootstrapAsset']=[
+//			'sourcePath'=>null,
+//			'css'=>[],
+		];
+
 		if(YII_DEBUG)
 		{
 			ArrayHelper::replaceValue($this->css, 'css/app.min.css', 'css/app.css');

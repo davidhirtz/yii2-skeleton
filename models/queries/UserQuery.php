@@ -16,17 +16,9 @@ class UserQuery extends ActiveQuery
 	/**
 	 * @return $this
 	 */
-	public function identityAttributesOnly()
+	public function selectIdentityAttributes()
 	{
-		return $this->select(['id', 'status', 'name', 'email', 'gender', 'first_name', 'last_name', 'language', 'timezone', 'email_confirmation_code', 'is_owner', 'login_count', 'last_login', 'updated_at']);
-	}
-
-	/**
-	 * @return $this
-	 */
-	public function loginAttributesOnly()
-	{
-		return $this->select(['id', 'status', 'name', 'password', 'password_salt', 'timezone', 'language', 'email_confirmation_code', 'is_owner', 'login_count', 'last_login']);
+		return $this->addSelect(['id', 'status', 'name', 'email', 'password', 'password_salt', 'first_name', 'last_name', 'language', 'timezone', 'email_confirmation_code', 'password_reset_code', 'is_owner', 'login_count', 'last_login', 'updated_at']);
 	}
 
 	/**
@@ -40,7 +32,7 @@ class UserQuery extends ActiveQuery
 	/**
 	 * @return $this
 	 */
-	public function listAttributesOnly()
+	public function selectListAttributes()
 	{
 		return $this->select(['id', 'status', 'name', 'email', 'first_name', 'last_name', 'email_confirmation_code', 'is_owner', 'last_login', 'created_at']);
 	}

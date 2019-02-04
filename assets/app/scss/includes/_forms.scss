@@ -1,4 +1,5 @@
 @mixin custom-form-validation-state($state, $color){
+
 	.#{$state}-feedback{
 		display:none;
 		width:100%;
@@ -7,20 +8,21 @@
 		color:$color;
 	}
 
-	.#{$state}-tooltip{
-		position:absolute;
-		top:100%;
-		z-index:5;
-		display:none;
-		max-width:100%; // Contain to parent when possible
-		padding:$tooltip-padding-y $tooltip-padding-x;
-		margin-top:.1rem;
-		font-size:$tooltip-font-size;
-		line-height:$line-height-base;
-		color:color-yiq($color);
-		background-color:rgba($color, $tooltip-opacity);
-		@include border-radius($tooltip-border-radius);
-	}
+	//
+	//.#{$state}-tooltip{
+	//	position:absolute;
+	//	top:100%;
+	//	z-index:5;
+	//	display:none;
+	//	max-width:100%; // Contain to parent when possible
+	//	padding:$tooltip-padding-y $tooltip-padding-x;
+	//	margin-top:.1rem;
+	//	font-size:$tooltip-font-size;
+	//	line-height:$line-height-base;
+	//	color:color-yiq($color);
+	//	background-color:rgba($color, $tooltip-opacity);
+	//	@include border-radius($tooltip-border-radius);
+	//}
 
 	.is-#{$state}{
 
@@ -43,7 +45,7 @@
 			display:block;
 		}
 
-		.form-check, .col-form-label{
+		.form-check, .col-form-label, .form-check-label{
 			color:$color;
 		}
 	}
@@ -279,14 +281,14 @@ textarea.form-control{
 
 .form-check-inline{
 	display:inline-flex;
-	align-items:center;
+	align-items:baseline;
 	padding-left:0; // Override base .form-check
 	margin-right:$form-check-inline-margin-x;
 
 	// Undo .form-check-input defaults and add some `margin-right`.
 	.form-check-input{
 		//position:static;
-		margin-top:-2px;
+		//margin-top:-2px;
 		margin-right:$form-check-inline-input-margin-x;
 		//margin-left:0;
 	}

@@ -1,6 +1,6 @@
 <?php
 namespace davidhirtz\yii2\skeleton\widgets\grid;
-use davidhirtz\yii2\skeleton\forms\FileUpload;
+use davidhirtz\yii2\skeleton\widgets\forms\FileUpload;
 use Yii;
 use yii\base\Widget;
 use yii\db\ActiveRecord;
@@ -25,7 +25,7 @@ class ItemGrid extends Widget
 	/**
 	 * @var string
 	 */
-	public $uploadViewFile='@app/components/widgets/grid/views/_upload';
+	public $uploadViewFile='@skeleton/components/widgets/grid/views/_upload';
 
 	/**
 	 * @var string

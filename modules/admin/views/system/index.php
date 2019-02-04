@@ -11,9 +11,9 @@
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\GridView;
-use rmrevin\yii\fontawesome\FA;
+use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
+use rmrevin\yii\fontawesome\FAS;
 
 $this->setPageTitle(Yii::t('app', 'System'));
 $this->setBreadcrumb($this->title);
@@ -69,7 +69,7 @@ $this->setBreadcrumb($this->title);
 				'contentOptions'=>['class'=>'text-right'],
 				'content'=>function($item)
 				{
-					return Html::buttons(Html::a(FA::icon('refresh'), ['flush', 'cache'=>$item['name']], [
+					return Html::buttons(Html::a(FAS::icon('sync-alt'), ['flush', 'cache'=>$item['name']], [
 						'class'=>'btn btn-secondary',
 						'data-method'=>'post',
 					]));
@@ -102,7 +102,7 @@ $this->setBreadcrumb($this->title);
 				'contentOptions'=>['class'=>'text-right'],
 				'content'=>function($modified, $name)
 				{
-					return Html::buttons(Html::a(FA::icon('trash'), ['delete', 'log'=>$name], [
+					return Html::buttons(Html::a(FAS::icon('trash'), ['delete', 'log'=>$name], [
 						'class'=>'btn btn-secondary',
 						'data-method'=>'post',
 					]));

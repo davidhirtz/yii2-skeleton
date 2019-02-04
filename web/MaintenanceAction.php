@@ -20,15 +20,12 @@ class MaintenanceAction extends Action
 	 */
 	public function run()
 	{
-		/**
-		 * Set no cache and set retry headers.
-		 */
-		$headers=Yii::$app->response->headers;
+		$headers=Yii::$app->getResponse()->getHeaders();
 		$headers->set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
 		$headers->set('Pragma', 'no-cache');
 		$headers->set('Retry-After', self::RETRY_AFTER_SECONDS);
 
-		throw new HttpException(self::SERVICE_UNAVAILABLE_HTTP_CODE, Yii::t('app', 'Temporary down for scheduled maintenance. {site} should be back online shortly.', [
+		throw new HttpException(self::SERVICE_UNAVAILABLE_HTTP_CODE, Yii::t('app', 'Temporary down for scheduled maintenance. {site} will be back online shortly.', [
 			'site'=>Yii::$app->name,
 		]));
 	}

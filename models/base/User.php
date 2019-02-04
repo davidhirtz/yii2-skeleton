@@ -1,24 +1,19 @@
 <?php
-
 namespace davidhirtz\yii2\skeleton\models\base;
 
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
-use davidhirtz\yii2\skeleton\models\User;
-use Yii;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\datetime\Date;
 use davidhirtz\yii2\datetime\DateTime;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
-use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use yii\helpers\Url;
+use Yii;
 
 /**
- * Class BaseUser.
- * @package davidhirtz\yii2\skeleton\models
+ * Class User.
+ * @package davidhirtz\yii2\skeleton\models\base
  *
  * @property integer $id
  * @property integer $status
@@ -26,7 +21,6 @@ use yii\helpers\Url;
  * @property string $email
  * @property string $password
  * @property string $password_salt
- * @property integer $gender
  * @property string $first_name
  * @property string $last_name
  * @property string $language
@@ -40,10 +34,10 @@ use yii\helpers\Url;
  * @property DateTime $updated_at
  * @property DateTime $created_at
  *
- * @method static User findOne($condition)
- * @method static User[] findAll($condition)
+ * @method static \davidhirtz\yii2\skeleton\models\User findOne($condition)
+ * @method static \davidhirtz\yii2\skeleton\models\User[] findAll($condition)
  *
- * @property User $admin
+ * @property \davidhirtz\yii2\skeleton\models\User $admin
  * @see \davidhirtz\yii2\skeleton\models\User::getAdmin()
  *
  * @property AuthClient[] $authClients
@@ -53,9 +47,19 @@ use yii\helpers\Url;
 abstract class User extends ActiveRecord
 {
 	/**
-	 * @var bool
+	 * @var int
 	 */
-	public static $enablePicture=false;
+	public $nameMinLength=3;
+
+	/**
+	 * @var int
+	 */
+	public $nameMaxLength=32;
+
+	/**
+	 * @var int
+	 */
+	public $passwordMinLength=5;
 
 	/**
 	 * Constants.
@@ -67,9 +71,11 @@ abstract class User extends ActiveRecord
 	const GENDER_FEMALE=1;
 	const GENDER_MALE=2;
 
+	const NAME_VALIDATION_REGEXP='/^\d*[a-z][a-z0-9\.-]*[a-z0-9]$/si';
+	const NAME_MAX_LENGTH=32;
+
 	const EMAIL_CONFIRMATION_CODE_LENGTH=30;
 	const PASSWORD_RESET_CODE_LENGTH=30;
-	const NAME_VALIDATION_REGEXP='/^\d*[a-z][a-z0-9\.-]*[a-z0-9]$/si';
 
 	const BASE_UPLOAD_PATH='uploads/users/{id}/';
 	const PICTURE_UPLOAD_PATH='profile/';
@@ -77,7 +83,7 @@ abstract class User extends ActiveRecord
 	/**
 	 * @inheritdoc
 	 */
-	public function behaviors()
+	public function behaviors(): array
 	{
 		return [
 			'DateTimeBehavior'=>[
@@ -97,7 +103,7 @@ abstract class User extends ActiveRecord
 	/**
 	 * @inheritdoc
 	 */
-	public function rules()
+	public function rules(): array
 	{
 		return [
 			[
@@ -110,20 +116,15 @@ abstract class User extends ActiveRecord
 				'required',
 			],
 			[
-				['gender', 'status'],
-				'filter',
-				'filter'=>'intval',
-			],
-			[
 				['status'],
 				'in',
-				'range'=>array_keys($this->getStatuses()),
+				'range'=>array_keys(static::getStatuses()),
 			],
 			[
 				['name'],
 				'string',
-				'min'=>Yii::$app->params['user.nameMinLength'],
-				'max'=>max(Yii::$app->params['user.nameMinLength'], min(Yii::$app->params['user.nameMaxLength'], 32)),
+				'min'=>$this->nameMinLength,
+				'max'=>max($this->nameMinLength, min($this->nameMaxLength, static::NAME_MAX_LENGTH)),
 				'skipOnError'=>true,
 			],
 			[
@@ -158,17 +159,12 @@ abstract class User extends ActiveRecord
 			[
 				['password'],
 				'string',
-				'min'=>Yii::$app->params['user.passwordMinLength'],
+				'min'=>$this->passwordMinLength,
 			],
 			[
 				['city', 'country', 'first_name', 'last_name'],
 				'string',
 				'max'=>50,
-			],
-			[
-				['gender'],
-				'in',
-				'range'=>[static::GENDER_UNKNOWN, static::GENDER_MALE, static::GENDER_FEMALE],
 			],
 			[
 				['language'],
@@ -187,7 +183,7 @@ abstract class User extends ActiveRecord
 	 * @param string $password
 	 * @return bool
 	 */
-	public function validatePassword($password)
+	public function validatePassword(string $password) : bool
 	{
 		return $this->password ? Yii::$app->security->validatePassword($password.$this->password_salt, $this->password) : false;
 	}
@@ -209,9 +205,9 @@ abstract class User extends ActiveRecord
 	 ***********************************************************************/
 
 	/**
-	 * @return ActiveQuery
+	 * @return UserQuery
 	 */
-	public function getAdmin()
+	public function getAdmin(): UserQuery
 	{
 		return $this->hasOne(User::class, ['id'=>'created_by_user_id']);
 	}
@@ -219,7 +215,7 @@ abstract class User extends ActiveRecord
 	/**
 	 * @return ActiveQuery
 	 */
-	public function getAuthClients()
+	public function getAuthClients(): ActiveQuery
 	{
 		return $this->hasMany(AuthClient::class, ['user_id'=>'id']);
 	}
@@ -231,11 +227,16 @@ abstract class User extends ActiveRecord
 	/**
 	 * @return bool
 	 */
-	public function beforeValidate()
+	public function beforeValidate(): bool
 	{
 		if(!$this->language)
 		{
 			$this->language=Yii::$app->language;
+		}
+
+		if($this->is_owner)
+		{
+			$this->status=static::STATUS_ENABLED;
 		}
 
 		return parent::beforeValidate();
@@ -244,7 +245,7 @@ abstract class User extends ActiveRecord
 	/**
 	 * @inheritdoc
 	 */
-	public function beforeSave($insert)
+	public function beforeSave($insert): bool
 	{
 		if($insert)
 		{
@@ -271,7 +272,7 @@ abstract class User extends ActiveRecord
 	 * @param string $email
 	 * @return UserQuery
 	 */
-	public static function findByEmail($email)
+	public static function findByEmail(string $email): UserQuery
 	{
 		return static::find()->whereLower([static::tableName().'.[[email]]'=>$email]);
 	}
@@ -280,7 +281,7 @@ abstract class User extends ActiveRecord
 	 * @param string $name
 	 * @return UserQuery
 	 */
-	public static function findByName($name)
+	public static function findByName(string $name): UserQuery
 	{
 		return static::find()->whereLower([static::tableName().'.[[name]]'=>$name]);
 	}
@@ -288,8 +289,9 @@ abstract class User extends ActiveRecord
 	/**
 	 * Generates password hash.
 	 * @param string $password
+	 * @throws \yii\base\Exception
 	 */
-	public function generatePasswordHash($password=null)
+	public function generatePasswordHash(string $password=null)
 	{
 		$this->password_salt=Yii::$app->getSecurity()->generateRandomString(10);
 		$this->password=Yii::$app->getSecurity()->generatePasswordHash(($password ?: $this->password).$this->password_salt);
@@ -312,12 +314,11 @@ abstract class User extends ActiveRecord
 	}
 
 	/**
-	 * Prevent deleting the website owner.
-	 * @return bool
+	 * @inheritdoc
 	 */
 	public function delete()
 	{
-		if($this->getIsOwner())
+		if($this->isOwner())
 		{
 			$this->addError('id', Yii::t('app', 'This user is the website owner. Please transfer ownership to another user before deleting this user.'));
 			return false;
@@ -327,8 +328,7 @@ abstract class User extends ActiveRecord
 	}
 
 	/**
-	 * Deletes all user related auth keys, rendering all auto login
-	 * cookies invalid.
+	 * Deletes all user related auth keys, rendering all auto login cookies invalid.
 	 * @return int
 	 */
 	public function deleteAuthKeys()
@@ -340,31 +340,14 @@ abstract class User extends ActiveRecord
 
 	/**
 	 * Deletes user sessions.
-	 * @param null $except
+	 * @param string $except
 	 * @return int
 	 */
-	public function deleteActiveSessions($except=null)
+	public function deleteActiveSessions(string $except=null)
 	{
 		return $this->getDb()->createCommand()
 			->delete('{{%session}}', '[[user_id]]=:userId AND [[id]]!=:id', [':userId'=>$this->id, ':id'=>(string)$except])
 			->execute();
-	}
-
-	/**
-	 * Generates thumbnails.
-	 */
-	public function generateThumbnails()
-	{
-	}
-
-	/**
-	 * Deletes picture.
-	 * @param string $picture;
-	 */
-	public function deletePicture($picture=null)
-	{
-		$webroot=Yii::getAlias('@webroot').'/';
-		FileHelper::removeFile($webroot.$this->getPicturePath().($picture ?: $this->picture));
 	}
 
 	/***********************************************************************
@@ -374,15 +357,15 @@ abstract class User extends ActiveRecord
 	/**
 	 * @return bool
 	 */
-	public function getIsOwner()
+	public function isOwner(): bool
 	{
-		return (boolean)$this->is_owner;
+		return (bool)$this->is_owner;
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function getIsDisabled()
+	public function isDisabled(): bool
 	{
 		return $this->status==static::STATUS_DISABLED;
 	}
@@ -390,15 +373,15 @@ abstract class User extends ActiveRecord
 	/**
 	 * @return bool
 	 */
-	public function getIsUnconfirmed()
+	public function isUnconfirmed(): bool
 	{
-		return !$this->getIsOwner() && !empty($this->email_confirmation_code);
+		return !$this->isOwner() && !empty($this->email_confirmation_code);
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getFullName()
+	public function getFullName(): string
 	{
 		return trim($this->first_name.' '.$this->last_name);
 	}
@@ -406,7 +389,7 @@ abstract class User extends ActiveRecord
 	/**
 	 * @return string
 	 */
-	public function getInitials()
+	public function getInitials(): string
 	{
 		return $this->first_name && $this->last_name ? ($this->first_name[0].$this->last_name[0]) : substr($this->name, 0, 2);
 	}
@@ -414,7 +397,7 @@ abstract class User extends ActiveRecord
 	/**
 	 * @return string
 	 */
-	public function getUsername()
+	public function getUsername(): string
 	{
 		return $this->name;
 	}
@@ -422,26 +405,21 @@ abstract class User extends ActiveRecord
 	/**
 	 * @return string
 	 */
-	public function getEmailConfirmationUrl()
+	public function getEmailConfirmationUrl(): string
 	{
-		if($this->email_confirmation_code)
-		{
-			return Url::to(['/account/confirm', 'user'=>$this->name, 'code'=>$this->email_confirmation_code], true);
-		}
+		return $this->email_confirmation_code ? Url::to(['account/confirm', 'email'=>$this->email, 'code'=>$this->email_confirmation_code], true) : null;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getPasswordResetUrl()
+	public function getPasswordResetUrl(): string
 	{
-		if($this->password_reset_code)
-		{
-			return Url::to(['account/reset', 'user'=>$this->name, 'code'=>$this->password_reset_code], true);
-		}
+		return $this->password_reset_code ? Url::to(['account/reset', 'email'=>$this->email, 'code'=>$this->password_reset_code], true) : null;
 	}
 
 	/**
+	 * @throws \Exception
 	 * @return string
 	 */
 	public function getTimezoneOffset()
@@ -451,44 +429,18 @@ abstract class User extends ActiveRecord
 	}
 
 	/**
-	 * @return string
-	 */
-	public function getBaseUploadPath()
-	{
-		return strtr(static::BASE_UPLOAD_PATH, ['{id}'=>$this->id]);
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getPicturePath()
-	{
-		return $this->getBaseUploadPath().static::PICTURE_UPLOAD_PATH;
-	}
-
-	/**
 	 * @return array
 	 */
-	public function getStatuses()
+	public static function getStatuses()
 	{
-		if($this->getIsOwner())
-		{
-			return [
-				static::STATUS_ENABLED=>[
-					'name'=>Yii::t('app', 'Site Owner'),
-					'icon'=>'star',
-				],
-			];
-		}
-
 		return [
 			static::STATUS_DISABLED=>[
 				'name'=>Yii::t('app', 'Disabled'),
 				'icon'=>'exclamation-triangle',
 			],
 			static::STATUS_ENABLED=>[
-				'name'=>$this->getIsUnconfirmed() ? Yii::t('app', 'Enabled') : Yii::t('app', 'Confirmed'),
-				'icon'=>$this->getIsUnconfirmed() ? 'user-circle' : 'user-circle-o',
+				'name'=>Yii::t('app', 'Enabled'),
+				'icon'=>'user',
 			],
 		];
 	}
@@ -498,7 +450,7 @@ abstract class User extends ActiveRecord
 	 */
 	public function getStatusName()
 	{
-		return ArrayHelper::getValue($this->getStatuses(), [$this->status, 'name']);
+		return !$this->isOwner() ? static::getStatuses()[$this->status]['name'] : Yii::t('app', 'Site Owner');
 	}
 
 	/**
@@ -506,7 +458,7 @@ abstract class User extends ActiveRecord
 	 */
 	public function getStatusIcon()
 	{
-		return ArrayHelper::getValue($this->getStatuses(), [$this->status, 'icon']);
+		return !$this->isOwner() ? static::getStatuses()[$this->status]['icon'] : 'star';
 	}
 
 	/***********************************************************************
@@ -524,7 +476,6 @@ abstract class User extends ActiveRecord
 			'name'=>Yii::t('app', 'Username'),
 			'email'=>Yii::t('app', 'Email'),
 			'password'=>Yii::t('app', 'Password'),
-			'gender'=>Yii::t('app', 'Gender'),
 			'first_name'=>Yii::t('app', 'First name'),
 			'last_name'=>Yii::t('app', 'Last name'),
 			'birthdate'=>Yii::t('app', 'Birthdate'),
@@ -540,6 +491,14 @@ abstract class User extends ActiveRecord
 			'updated_at'=>Yii::t('app', 'Updated'),
 			'created_at'=>Yii::t('app', 'Created'),
 		];
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function formName()
+	{
+		return 'user';
 	}
 
 	/**

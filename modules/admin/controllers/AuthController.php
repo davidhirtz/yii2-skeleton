@@ -1,9 +1,10 @@
 <?php
 
 namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
-use app\controllers\Controller;
+
 use davidhirtz\yii2\skeleton\models\AuthItem;
 use davidhirtz\yii2\skeleton\models\User;
+use davidhirtz\yii2\skeleton\web\Controller;
 use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -18,204 +19,186 @@ use yii\web\NotFoundHttpException;
  */
 class AuthController extends Controller
 {
-	/***********************************************************************
-	 * Behaviors.
-	 ***********************************************************************/
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['assign', 'index', 'revoke', 'user'],
+                        'roles' => ['authUpdate'],
+                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'assign' => ['post'],
+                    'revoke' => ['post'],
+                ],
+            ],
+        ];
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function behaviors()
-	{
-		return [
-			'access'=>[
-				'class'=>AccessControl::class,
-				'rules'=>[
-					[
-						'allow'=>true,
-						'actions'=>['assign', 'index', 'revoke', 'user'],
-						'roles'=>['authUpdate'],
-					],
-				],
-			],
-			'verbs'=>[
-				'class'=>VerbFilter::class,
-				'actions'=>[
-					'assign'=>['post'],
-					'revoke'=>['post'],
-				],
-			],
-		];
-	}
+    /**
+     * Auth list.
+     * @return string
+     */
+    public function actionIndex()
+    {
+        $items = AuthItem::find()
+            ->select(['name', 'type', 'description'])
+            ->orderByType()
+            ->withUsers()
+            ->allWithChildren();
 
-	/***********************************************************************
-	 * Actions.
-	 ***********************************************************************/
+        /** @noinspection MissedViewInspection */
+        return $this->render('index', [
+            'provider' => new ArrayDataProvider(['allModels' => $items]),
+        ]);
+    }
 
-	/**
-	 * Auth list.
-	 * @return string
-	 */
-	public function actionIndex()
-	{
-		$items=AuthItem::find()
-			->select(['name', 'type', 'description'])
-			->orderByType()
-			->withUsers()
-			->allWithChildren();
+    /**
+     * Auth user list.
+     * @param int $id
+     * @return string
+     */
+    public function actionUser($id)
+    {
+        $user = $this->getUser($id);
+        return $this->renderUserAuthItems($user);
+    }
 
-		return $this->render('index', [
-			'provider'=>new ArrayDataProvider(['allModels'=>$items]),
-		]);
-	}
+    /**
+     * @param int $id
+     * @param string $name
+     * @param int $type
+     * @return \yii\web\Response|string
+     */
+    public function actionAssign($id, $name, $type)
+    {
+        $user = $this->getUser($id);
+        $role = $this->getAuthItem($name, $type);
 
-	/**
-	 * Auth user list.
-	 * @param int $id
-	 * @return string
-	 */
-	public function actionUser($id)
-	{
-		$user=$this->getUser($id);
-		return $this->renderUserAuthItems($user);
-	}
+        $rbac = Yii::$app->getAuthManager();
+        $rbac->invalidateCache();
 
-	/**
-	 * @param int $id
-	 * @param string $name
-	 * @param int $type
-	 * @return \yii\web\Response|string
-	 */
-	public function actionAssign($id, $name, $type)
-	{
-		$user=$this->getUser($id);
-		$role=$this->getAuthItem($name, $type);
+        if ($rbac->getAssignment($role->name, $user->id)) {
+            Yii::$app->getSession()->addFlash('error', Yii::t('app', 'This permission was already assigned to user {name}.', [
+                'name' => $user->getUsername(),
+            ]));
+        } else {
+            $rbac->assign($role, $user->id);
 
-		$rbac=Yii::$app->getAuthManager();
-		$rbac->invalidateCache();
+            if (Yii::$app->getRequest()->getIsAjax()) {
+                return $this->renderUserAuthItems($user);
+            }
+        }
 
-		if($rbac->getAssignment($role->name, $user->id))
-		{
-			Yii::$app->getSession()->addFlash('error', Yii::t('app', 'This permission was already assigned to user {name}.', [
-				'name'=>$user->getUsername(),
-			]));
-		}
-		else
-		{
-			$rbac->assign($role, $user->id);
+        return $this->redirect(['user', 'id' => $user->id]);
+    }
 
-			if(Yii::$app->getRequest()->getIsAjax())
-			{
-				return $this->renderUserAuthItems($user);
-			}
-		}
+    /**
+     * @param int $id
+     * @param string $name
+     * @param int $type
+     * @return \yii\web\Response|string
+     */
+    public function actionRevoke($id, $name, $type)
+    {
+        $user = $this->getUser($id);
+        $role = $this->getAuthItem($name, $type);
 
-		return $this->redirect(['user', 'id'=>$user->id]);
-	}
+        $rbac = Yii::$app->getAuthManager();
+        $rbac->invalidateCache();
 
-	/**
-	 * @param int $id
-	 * @param string $name
-	 * @param int $type
-	 * @return \yii\web\Response|string
-	 */
-	public function actionRevoke($id, $name, $type)
-	{
-		$user=$this->getUser($id);
-		$role=$this->getAuthItem($name, $type);
+        if (!$rbac->getAssignment($role->name, $user->id)) {
+            Yii::$app->getSession()->addFlash('error', Yii::t('app', 'This permission was not assigned to user {name}.', [
+                'name' => $user->getUsername(),
+            ]));
+        } else {
+            $rbac->revoke($role, $user->id);
 
-		$rbac=Yii::$app->getAuthManager();
-		$rbac->invalidateCache();
+            if (Yii::$app->getRequest()->getIsAjax()) {
+                return $this->renderUserAuthItems($user);
+            }
+        }
 
-		if(!$rbac->getAssignment($role->name, $user->id))
-		{
-			Yii::$app->getSession()->addFlash('error', Yii::t('app', 'This permission was not assigned to user {name}.', [
-				'name'=>$user->getUsername(),
-			]));
-		}
-		else
-		{
-			$rbac->revoke($role, $user->id);
+        return $this->redirect(['user', 'id' => $user->id]);
+    }
 
-			if(Yii::$app->getRequest()->getIsAjax())
-			{
-				return $this->renderUserAuthItems($user);
-			}
-		}
+    /***********************************************************************
+     * Methods.
+     ***********************************************************************/
 
-		return $this->redirect(['user', 'id'=>$user->id]);
-	}
+    /**
+     * @param User $user
+     * @return string
+     */
+    private function renderUserAuthItems($user)
+    {
+        $items = AuthItem::find()
+            ->select(['name', 'type', 'description'])
+            ->orderByType()
+            ->withAssignment($user->id)
+            ->allWithChildren();
 
-	/***********************************************************************
-	 * Methods.
-	 ***********************************************************************/
+        /** @noinspection MissedViewInspection */
+        return $this->render('user', [
+            'provider' => new ArrayDataProvider(['allModels' => $items]),
+            'user' => $user,
+        ]);
+    }
 
-	/**
-	 * @param User $user
-	 * @return string
-	 */
-	private function renderUserAuthItems($user)
-	{
-		$items=AuthItem::find()
-			->select(['name', 'type', 'description'])
-			->orderByType()
-			->withAssignment($user->id)
-			->allWithChildren();
+    /**
+     * @param int $id
+     * @return User
+     */
+    private function getUser($id)
+    {
+        /**
+         * @var \davidhirtz\yii2\skeleton\models\User $user
+         */
+        if (!$user = User::findOne($id)) {
+            throw new NotFoundHttpException;
+        }
 
-		return $this->render('user', [
-			'provider'=>new ArrayDataProvider(['allModels'=>$items]),
-			'user'=>$user,
-		]);
-	}
+        if (!Yii::$app->user->can('authUpdate', ['user' => $user])) {
+            throw new ForbiddenHttpException;
+        }
 
-	/**
-	 * @param int $id
-	 * @return User
-	 */
-	private function getUser($id)
-	{
-		/**
-		 * @var \davidhirtz\yii2\skeleton\models\User $user
-		 */
-		if(!$user=User::findOne($id))
-		{
-			throw new NotFoundHttpException;
-		}
+        return $user;
+    }
 
-		if(!Yii::$app->user->can('authUpdate', ['user'=>$user]))
-		{
-			throw new ForbiddenHttpException;
-		}
+    /**
+     * @param string $name
+     * @param string $type
+     * @return \yii\rbac\Role
+     */
+    private function getAuthItem($name, $type)
+    {
+        $rbac = Yii::$app->getAuthManager();
+        $role = null;
 
-		return $user;
-	}
+        switch ($type) {
+            case Role::TYPE_ROLE:
+                $role = $rbac->getRole($name);
+                break;
 
-	/**
-	 * @param string $name
-	 * @param string $type
-	 * @return \yii\rbac\Role
-	 */
-	private function getAuthItem($name, $type)
-	{
-		$rbac=Yii::$app->getAuthManager();
-		$role=null;
+            case Role::TYPE_PERMISSION:
+                $role = $rbac->getPermission($name);
+                break;
+        }
 
-		switch($type)
-		{
-			case Role::TYPE_ROLE:
-				$role=$rbac->getRole($name);
-				break;
+        if (!$role) {
+            throw new NotFoundHttpException;
+        }
 
-			case Role::TYPE_PERMISSION:
-				$role=$rbac->getPermission($name);
-				break;
-		}
-
-		if(!$role)
-		{
-			throw new NotFoundHttpException;
-		}
-
-		return $role;
-	}
+        return $role;
+    }
 }

@@ -28,16 +28,12 @@ class Submenu extends Nav
 	}
 
 	/**
-	 * Wraps submenu in nav tag and displays title.
+	 * @throws \yii\base\InvalidConfigException
 	 * @return string
 	 */
 	public function run()
 	{
-		if($this->title)
-		{
-			echo Html::tag('h1', $this->title, ['class'=>'page-header']);
-		}
-
-		return Html::tag('nav', parent::run());
+		return ($this->title ? Html::tag('h1', $this->title, ['class'=>'page-header']) : '').
+			Html::tag('nav', parent::run());
 	}
 }

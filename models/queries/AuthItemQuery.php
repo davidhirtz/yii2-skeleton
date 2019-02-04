@@ -39,7 +39,7 @@ class AuthItemQuery extends ActiveQuery
 		return $this->with([
 			'users'=>function(UserQuery $query)
 				{
-					$query->listAttributesOnly()
+					$query->selectListAttributes()
 						->orderBy(['name'=>SORT_ASC]);
 				}
 		]);

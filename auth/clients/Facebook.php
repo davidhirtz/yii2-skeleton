@@ -24,7 +24,6 @@ class Facebook extends \yii\authclient\clients\Facebook implements ClientInterfa
 		'link',
 		'birthday',
 		'location',
-		'gender',
 		'email',
 		'timezone',
 		'locale',
@@ -37,13 +36,25 @@ class Facebook extends \yii\authclient\clients\Facebook implements ClientInterfa
 	 */
 	public function init()
 	{
-		if(!Yii::$app->params['facebook.appId'] || !Yii::$app->params['facebook.secret'])
+		if(!$this->clientId)
 		{
-			throw new NotSupportedException;
+			if(!isset(Yii::$app->params['facebookClientId']))
+			{
+				throw new NotSupportedException;
+			}
+
+			$this->clientId=Yii::$app->params['facebookClientId'];
 		}
 
-		$this->clientId=Yii::$app->params['facebook.appId'];
-		$this->clientSecret=Yii::$app->params['facebook.secret'];
+		if(!$this->clientSecret)
+		{
+			if(!isset(Yii::$app->params['facebookClientSecret']))
+			{
+				throw new NotSupportedException;
+			}
+
+			$this->clientSecret=Yii::$app->params['facebookClientSecret'];
+		}
 
 		parent::init();
 	}

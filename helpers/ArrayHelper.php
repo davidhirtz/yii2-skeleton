@@ -46,24 +46,6 @@ class ArrayHelper extends \yii\helpers\BaseArrayHelper
 	}
 
 	/**
-	 * @param array $array
-	 * @param string $key
-	 * @param string $value
-	 * @return array
-	 */
-	public static function simplify($array, $key, $value)
-	{
-		$result=[];
-
-		foreach($array as $index=>$element)
-		{
-			$result[$key ? $element[$key] : $index]=static::getValue($element, $value);
-		}
-
-		return $result;
-	}
-
-	/**
 	 * Adds unique keys to comma separated string.
 	 *
 	 * @param array|string $string

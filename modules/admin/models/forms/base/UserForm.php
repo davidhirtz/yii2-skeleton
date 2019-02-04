@@ -1,12 +1,16 @@
 <?php
 namespace davidhirtz\yii2\skeleton\modules\admin\models\forms\base;
+
 use davidhirtz\yii2\skeleton\models\User;
-use Yii;
 use yii\behaviors\BlameableBehavior;
+use yii\db\BaseActiveRecord;
+use Yii;
 
 /**
- * Class BaseUserForm.
+ * Class UserForm.
  * @package davidhirtz\yii2\skeleton\modules\admin\models\forms\base
+ *
+ * @property \davidhirtz\yii2\skeleton\modules\admin\models\forms\base\UserForm $model
  */
 class UserForm extends User
 {
@@ -25,45 +29,32 @@ class UserForm extends User
 	 */
 	public $sendEmail;
 
-	/***********************************************************************
-	 * Behaviors.
-	 ***********************************************************************/
-
 	/**
 	 * @return array
 	 */
-	public function behaviors()
+	public function behaviors(): array
 	{
 		return array_merge(parent::behaviors(), [
 			'BlameableBehavior'=>[
 				'class'=>BlameableBehavior::class,
 				'attributes'=>[
-					static::EVENT_BEFORE_INSERT=>['created_by_user_id'],
+					BaseActiveRecord::EVENT_BEFORE_INSERT=>['created_by_user_id'],
 				],
 			],
 		]);
 	}
 
-	/***********************************************************************
-	 * Validation.
-	 ***********************************************************************/
-
 	/**
 	 * @inheritdoc
 	 */
-	public function rules()
+	public function rules(): array
 	{
-		$rules=parent::rules();
-
-		if($this->getIsNewRecord())
-		{
-			$rules[]=[
+		return array_merge(parent::rules(), [
+			[
 				['newPassword', 'repeatPassword'],
 				'required',
-			];
-		}
-
-		return array_merge($rules, [
+				'on'=>static::SCENARIO_INSERT,
+			],
 			[
 				['newPassword'],
 				'filter',
@@ -72,7 +63,7 @@ class UserForm extends User
 			[
 				['newPassword'],
 				'string',
-				'min'=>Yii::$app->params['user.passwordMinLength'],
+				'min'=>$this->passwordMinLength,
 				'skipOnEmpty'=>true,
 			],
 			[
@@ -88,22 +79,30 @@ class UserForm extends User
 		]);
 	}
 
-	/***********************************************************************
-	 * Events.
-	 ***********************************************************************/
+	/**
+	 * @inheritdoc
+	 */
+	public function init()
+	{
+		$this->setScenario(static::SCENARIO_INSERT);
+		parent::init();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function afterFind()
+	{
+		$this->setScenario(static::SCENARIO_UPDATE);
+		parent::afterFind();
+	}
 
 	/**
 	 * @param bool $insert
 	 * @return bool
 	 */
-	public function beforeSave($insert)
+	public function beforeSave($insert): bool
 	{
-		// Emails set by admin are automatically confirmed.
-		if($this->getOldAttribute('email')!=$this->email)
-		{
-			$this->email_confirmation_code=null;
-		}
-
 		if($this->newPassword)
 		{
 			$this->generatePasswordHash($this->newPassword);
@@ -117,52 +116,65 @@ class UserForm extends User
 	 */
 	public function afterSave($insert, $changedAttributes)
 	{
-		if($insert)
+		if(!$insert)
 		{
-			if($this->sendEmail)
-			{
-				$this->sendCredentialsEmail();
-			}
-		}
-		else
-		{
-			// Log user out if unconfirmed logins are not allowed and render all auth cookies invalid on a password change.
-			if(isset($changedAttributes['password']))
+			if(array_key_exists('password', $changedAttributes))
 			{
 				$this->deleteAuthKeys();
 				$this->deleteActiveSessions();
 			}
 		}
 
+		if($this->sendEmail)
+		{
+			$this->sendCredentialsEmail();
+		}
+
 		parent::afterSave($insert, $changedAttributes);
 	}
 
-	/***********************************************************************
-	 * Methods.
-	 ***********************************************************************/
-
 	/**
-	 * Sends credentials via email.
+	 * Sends user credentials via email.
 	 */
 	public function sendCredentialsEmail()
 	{
+		$language=Yii::$app->language;
 		Yii::$app->language=$this->language;
 
-		$mail=Yii::$app->getMailer()->compose('@app/mail/account/credentials', [
-			'user'=>$this,
-		]);
-
-		$mail->setSubject(Yii::t('app', 'Your {name} Account', ['name'=>Yii::$app->name]))
-			->setFrom(Yii::$app->params['app.email'] ?: 'hostmaster@'.Yii::$app->getRequest()->getHostName())
+		Yii::$app->getMailer()->compose('@skeleton/mail/account/credentials', ['user'=>$this])
+			->setSubject(Yii::t('app', 'Your {name} Account', ['name'=>Yii::$app->name]))
+			->setFrom(Yii::$app->params['email'])
 			->setTo($this->email)
 			->send();
 
-		Yii::$app->language=Yii::$app->getUser()->getIdentity()->language;
+		Yii::$app->language=$language;
 	}
 
-	/***********************************************************************
-	 * Active Record.
-	 ***********************************************************************/
+	/**
+	 * @return array
+	 */
+	public function scenarios()
+	{
+		$attributes=[
+			'city', 
+			'country', 
+			'email', 
+			'first_name', 
+			'language', 
+			'last_name',
+			'name', 
+			'newPassword', 
+			'repeatPassword', 
+			'sendEmail',
+			'status', 
+			'timezone', 
+		];
+
+		return [
+			static::SCENARIO_INSERT=>$attributes,
+			static::SCENARIO_UPDATE=>$attributes,
+		];
+	}
 
 	/**
 	 * @inheritdoc

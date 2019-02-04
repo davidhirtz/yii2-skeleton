@@ -10,13 +10,10 @@
 /**
  * Includes Bootstrap 4.
  */
-@import "../../../vendor/npm-asset/bootstrap/scss/functions";
-@import "../../../vendor/npm-asset/bootstrap/scss/variables";
-@import "../../../vendor/npm-asset/bootstrap/scss/mixins";
+@import "../../../../../../vendor/npm-asset/bootstrap/scss/functions";
+@import "../../../../../../vendor/npm-asset/bootstrap/scss/variables";
+@import "../../../../../../vendor/npm-asset/bootstrap/scss/mixins";
 
-
-/* Comments in this file will give more details about each of the above blocks.
-*/
 
 /* The outer container of the dialog. */
 .cke_dialog {

@@ -99,7 +99,7 @@ class UserLogin extends ActiveRecord
 		switch($this->type)
 		{
 			case static::TYPE_LOGIN:
-				return 'sign-in';
+				return 'sign-in-alt';
 
 			case static::TYPE_COOKIE:
 				return 'heart';

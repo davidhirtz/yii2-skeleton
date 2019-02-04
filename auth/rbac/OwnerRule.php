@@ -24,6 +24,6 @@ class OwnerRule extends Rule
 		 * @var \davidhirtz\yii2\skeleton\models\User $user
 		 */
 		$user=ArrayHelper::getValue($params, 'user');
-		return $user===null || !$user->getIsOwner() || $user->id==$userId;
+		return $user===null || !$user->isOwner() || $user->id==$userId;
 	}
 }

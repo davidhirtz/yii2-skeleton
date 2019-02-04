@@ -148,7 +148,7 @@ return [
     'Status' => '',
     'System' => '',
     'System Settings' => 'Systemeinstellungen',
-    'Temporary down for scheduled maintenance. {site} should be back online shortly.' => '{site} wird momentan aktualisiert und ist in Kürze wieder erreichbar.',
+    'Temporary down for scheduled maintenance. {site} will be back online shortly.' => '{site} wird momentan aktualisiert und ist in Kürze wieder erreichbar.',
     'Thank you for signing up! Please confirm your email address by clicking the link below.' => 'Vielen Dank für Ihre Registrierung! Bitte klicken Sie den folgenden Link, um Ihre Registrierung abzuschließen.',
     'Thank you!' => 'Vielen Dank!',
     'The above error occurred while the Web server was processing your request.' => 'Der oben angezeigte Fehler ist bei Ihrer Anfrage aufgetreten.',

@@ -6,6 +6,8 @@ use Yii;
 /**
  * Class BaseModule.
  * @package davidhirtz\yii2\skeleton\modules\admin
+ *
+ * @method static Module getInstance()
  */
 class BaseModule extends \yii\base\Module
 {
@@ -17,12 +19,17 @@ class BaseModule extends \yii\base\Module
 	/**
 	 * @var string
 	 */
+	public $alias;
+
+	/**
+	 * @var string
+	 */
 	public $controllerNamespace='davidhirtz\yii2\skeleton\modules\admin\controllers';
 
 	/**
 	 * @var string
 	 */
-	public $layout='@app/modules/admin/views/layouts/main';
+	public $layout='@skeleton/modules/admin/views/layouts/main';
 
 	/**
 	 * @inheritdoc
@@ -32,7 +39,7 @@ class BaseModule extends \yii\base\Module
 		if(!Yii::$app->getRequest()->getIsConsoleRequest())
 		{
 			Yii::$app->getUser()->loginUrl=['/admin/account/login'];
-			Yii::$app->getErrorHandler()->errorAction='/admin/site/error';
+			//Yii::$app->getErrorHandler()->errorAction='/admin/site/error';
 
 			if($this->name!==false)
 			{

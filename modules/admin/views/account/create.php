@@ -1,63 +1,78 @@
 <?php
 /**
  * Signup form.
- * @see davidhirtz\yii2\skeleton\module\admin\controllers\UserController::actionCreate()
+ * @see davidhirtz\yii2\skeleton\controllers\UserController::actionCreate()
  *
- * @var \davidhirtz\yii2\skeleton\web\View $this
- * @var app\models\forms\user\SignupForm $user
- * @var yii\bootstrap4\ActiveForm $form
+ * @var davidhirtz\yii2\skeleton\web\View $this
+ * @var davidhirtz\yii2\skeleton\models\forms\SignupForm $user
+ * @var yii\bootstrap4\ActiveForm $af
  */
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
-use yii\bootstrap4\ActiveForm;
+use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
+use rmrevin\yii\fontawesome\FAS;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use yii\helpers\Url;
 
-\app\assets\SignupAsset::register($this);
+\davidhirtz\yii2\skeleton\assets\SignupAsset::register($this);
 
 $this->setPageTitle(Yii::t('app', 'Sign up'));
 $this->setBreadcrumb($this->title);
 ?>
+
 <?= Html::errorSummary($user, [
-	'header'=>Yii::t('app', 'Your account could not be created:'),
+	'header'=>Yii::t('app', 'Your account could not be created'),
 ]); ?>
+
 <noscript>
 	<div class="alert alert-danger">
 		<p><?php echo Yii::t('app', 'Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to sign up.'); ?></p>
 	</div>
 </noscript>
-<div class="container">
 
+<div class="container">
 	<div class="row justify-content-center">
-		<div class="col-md-4">
-			<?= $this->render('_auth'); ?>
+		<div class="centered">
+			<?php
+			if($user->isFacebookSignupEnabled())
+			{
+				?>
+				<a href="<?= Url::to(['auth', 'client'=>'facebook']); ?>" class="list-group-item">
+					<?= FAS::icon('facebook', ['class'=>'fa-fw']); ?>
+					<?= Yii::t('app', 'Sign up with Facebook'); ?>
+				</a>
+				<?php
+			}
+			?>
 		</div>
 	</div>
 	<div class="row justify-content-center">
-		<div class="col-md-4">
+		<div class="centered">
 			<?php Panel::begin(['title'=>$this->title]); ?>
 			<?php
-			$form=ActiveForm::begin([
-				'fieldClass'=>'davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveField',
-				'validationStateOn'=>ActiveForm::VALIDATION_STATE_ON_CONTAINER,
+			$af=ActiveForm::begin([
+				'model'=>$user,
 			]);
 
-			$this->registerJs("jQuery('#{$form->id}').signupForm();");
+			$this->registerJs("jQuery('#{$af->id}').signupForm();");
 
-			echo $form->field($user, 'name', ['inputOptions'=>['autofocus'=>!$user->hasErrors()], 'icon'=>'user']);
-			echo $form->field($user, 'email', ['inputOptions'=>['type'=>'email'], 'icon'=>'envelope']);
-			echo $form->field($user, 'password', ['icon'=>'key'])->passwordInput();
-			echo $form->field($user, 'terms', ['enableError'=>false])->checkbox();
+			echo $af->field($user, 'name', ['inputOptions'=>['autofocus'=>!$user->hasErrors()], 'icon'=>'user']);
+			echo $af->field($user, 'email', ['inputOptions'=>['type'=>'email'], 'icon'=>'envelope']);
+			echo $af->field($user, 'password', ['icon'=>'key'])->passwordInput();
+			echo $af->field($user, 'terms', ['enableError'=>false])->checkbox();
 			?>
 			<div class="form-group">
-				<?php
-				echo Html::activeHiddenInput($user, 'honeypot', ['id'=>'honeypot']);
-				echo Html::activeHiddenInput($user, 'token', ['id'=>'token', 'data-url'=>Url::to(['token'])]);
-				echo Html::activeHiddenInput($user, 'timezone', ['id'=>'tz']);
-				echo Html::submitButton(Yii::t('app', 'Create Account'), ['class'=>'btn btn-primary btn-block'])
-				?>
+				<?= Html::activeHiddenInput($user, 'honeypot', ['id'=>'honeypot']); ?>
+				<?= Html::activeHiddenInput($user, 'token', ['id'=>'token', 'data-url'=>Url::to(['token'])]); ?>
+				<?= Html::activeHiddenInput($user, 'timezone', ['id'=>'tz']); ?>
+				<button type="submit" class="btn btn-primary btn-block"><?= Yii::t('app', 'Create Account'); ?></button>
 			</div>
 			<?php ActiveForm::end(); ?>
 			<?php Panel::end(); ?>
+			<div class="list-group">
+				<a href="<?php echo Url::to(['login']); ?>" class="list-group-item">
+					<?= FAS::icon('sign-in-alt', ['class'=>'fa-fw icon-left']); ?><?= Yii::t('app', 'Back to login'); ?>
+				</a>
+			</div>
 		</div>
 	</div>
 </div>

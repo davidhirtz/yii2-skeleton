@@ -1,12 +1,12 @@
 <?php
-namespace davidhirtz\yii2\skeleton\forms;
+namespace davidhirtz\yii2\skeleton\widgets\forms;
 use davidhirtz\yii2\skeleton\assets\CKEditorBootstrapAsset;
 use davidhirtz\yii2\skeleton\validators\HtmlValidator;
 use Yii;
 
 /**
  * Class CKEditor.
- * @package davidhirtz\yii2\skeleton\form
+ * @package davidhirtz\yii2\skeleton\widgets\form
  */
 class CKEditor extends \dosamigos\ckeditor\CKEditor
 {

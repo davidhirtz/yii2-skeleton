@@ -1,7 +1,7 @@
 <?php
 namespace davidhirtz\yii2\skeleton\helpers;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use rmrevin\yii\fontawesome\FA;
+use rmrevin\yii\fontawesome\FAS;
 use Yii;
 use yii\base\Model;
 
@@ -32,7 +32,8 @@ class Html extends \yii\helpers\BaseHtml
 	 */
 	public static function iconText($icon, $content, $options=[])
 	{
-		return Html::tag('span', FA::icon($icon, ['class'=>'fa-fw']).Html::tag('span', $content), ['class'=>'icon-text']);
+	    static::addCssClass($options, 'icon-text');
+		return Html::tag('span', FAS::icon($icon, ['class'=>'fa-fw']).Html::tag('span', $content), $options);
 	}
 
 	/**
@@ -47,6 +48,8 @@ class Html extends \yii\helpers\BaseHtml
 			$buttons=implode('', (array)$buttons);
 			return $options ? static::tag('div', $buttons, $options) : $buttons;
 		}
+
+		return null;
 	}
 
 	/**
@@ -79,9 +82,17 @@ class Html extends \yii\helpers\BaseHtml
 	 */
 	public static function errorSummary($models, $options=[])
 	{
-		if(!is_array($models) && $models instanceof ActiveRecord)
+		if($models instanceof ActiveRecord)
 		{
-			ArrayHelper::setDefaultValue($options, 'header', $models->getIsNewRecord() ? Yii::t('app', 'The record could not be created:') : Yii::t('app', 'The record could not be updated:'));
+			if(!isset($options['header']))
+			{
+				$options['header']=$models->getIsNewRecord() ? Yii::t('app', 'The record could not be created:') : Yii::t('app', 'The record could not be updated:');
+			}
+		}
+
+		if(isset($options['header']))
+		{
+			$options['header']=static::tag('div', $options['header'], ['options'=>'alert-heading']).'<hr>';
 		}
 
 		self::addCssClass($options, ['alert', 'alert-error']);

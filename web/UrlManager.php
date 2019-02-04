@@ -128,12 +128,12 @@ class UrlManager extends \yii\web\UrlManager
 //			];
 //		}
 
-		if(!$this->rules)
-		{
-			$this->rules=[
-				'<module>/<controller>/<view>'=>'<module>/<controller>/<view>',
-			];
-		}
+//		if(!$this->rules)
+//		{
+//			$this->rules=[
+//				'<module>/<controller>/<view>'=>'<module>/<controller>/<view>',
+//			];
+//		}
 
 		if($this->defaultRules)
 		{

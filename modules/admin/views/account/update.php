@@ -1,22 +1,25 @@
 <?php
 /**
  * Edit account form.
- * @see \davidhirtz\yii2\skeleton\module\admin\controllers\AccountController::actionUpdate()
+ * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController::actionUpdate()
  *
  * @var \davidhirtz\yii2\skeleton\web\View $this
- * @var \app\models\forms\user\AccountForm $user
+ * @var \davidhirtz\yii2\skeleton\models\forms\UserForm $user
  * @var \davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm $form
  */
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\models\forms\LoginForm;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
-use davidhirtz\yii2\skeleton\widgets\forms\UserActiveForm;
+use rmrevin\yii\fontawesome\FAB;
+use yii\helpers\Url;
 
 $this->setPageTitle(Yii::t('app', 'Account'));
 $this->setBreadcrumb($this->title);
 ?>
 <?php
-if($user->getIsUnconfirmed())
+if($user->isUnconfirmed())
 {
 	?>
 	<div class="alert alert-warning">
@@ -32,13 +35,13 @@ if($user->getIsUnconfirmed())
 ?>
 
 <?= Html::errorSummary($user, [
-	'header'=>Yii::t('app', 'Your account could not be updated:'),
+	'header'=>Yii::t('app', 'Your account could not be updated'),
 ]); ?>
 
 <?= Panel::widget([
 	'title'=>$this->title,
 	'content'=>UserActiveForm::widget([
-		'user'=>$user,
+		'model'=>$user,
 	]),
 ]);
 ?>
@@ -50,7 +53,40 @@ if($user->getIsUnconfirmed())
 	if($user->authClients)
 	{
 	?>
-		<?= $this->render('_clients', ['user'=>$user]); ?>
+        <table class="table table-vertical table-striped">
+            <thead>
+            <tr>
+                <th><?= Yii::t('app', 'Client'); ?></th>
+                <th><?= Yii::t('app', 'Name'); ?></th>
+                <th class="d-none d-table-cell-md"><?= Yii::t('app', 'Updated'); ?></th>
+                <th class="d-none d-table-cell-lg"><?= Yii::t('app', 'Created'); ?></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+            foreach($user->authClients as $auth)
+            {
+                $client=$auth->getClientClass();
+                $url=$client::getExternalUrl($auth);
+                $title=$client->getTitle();
+                ?>
+                <tr>
+                    <td><?= $title; ?></td>
+                    <td><?= $url ? Html::a($auth->getDisplayName(), $url, ['target'=>'_blank']) : $auth->getDisplayName(); ?></td>
+                    <td class="d-none d-table-cell-md"><?= \davidhirtz\yii2\timeago\Timeago::tag($auth->updated_at); ?>
+                    <td class="d-none d-table-cell-lg"><?= \davidhirtz\yii2\timeago\Timeago::tag($auth->created_at); ?>
+                    <td class="text-right">
+                        <a href="<?= Url::to(['deauthorize', 'id'=>$auth->id, 'name'=>$auth->name]) ?>" data-method="post" data-confirm="<?= Yii::t('app', 'Are you sure your want to remove {isOwner, select, 1{your} other{this}} {client} account?', ['client'=>$title, 'isOwner'=>$auth->user_id==Yii::$app->user->id]); ?>" data-toggle="tooltip" title="<?= Yii::t('app', 'Remove {client}', ['client'=>$title]); ?>" class="btn btn-danger">
+                            <i class="fa fa-remove"></i>
+                        </a>
+                    </td>
+                </tr>
+                <?php
+            }
+            ?>
+            </tbody>
+        </table>
 		<hr>
 	<?php
 	}
@@ -74,14 +110,26 @@ if($user->getIsUnconfirmed())
 				</h4>
 			</div>
 			<div class="modal-body">
-				<?= $this->render('_auth'); ?>
+				<div class="list-group">
+					<?php
+					if((new LoginForm())->isFacebookLoginEnabled())
+					{
+						?>
+						<a href="<?= Url::to(['auth', 'client'=>'facebook']); ?>" class="list-group-item">
+							<?= FAB::icon('facebook-f', ['class'=>'fa-fw']); ?>
+							<?= Yii::t('app', 'Login with Facebook'); ?>
+						</a>
+						<?php
+					}
+					?>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
 
 <?php
-if(!$user->getIsOwner())
+if(!$user->isOwner())
 {
 	echo Panel::widget([
 		'type'=>'danger',
@@ -93,5 +141,13 @@ if(!$user->getIsOwner())
 			'message'=>Yii::t('app', 'Type your username in the text field below to delete your account, all related items and uploaded files. This cannot be undone, please be certain!'),
 		])
 	]);
+}
+else
+{
+	?>
+	<div class="alert alert-warning">
+		<?= Yii::t('app', 'You cannot delete your account, because you are the owner of this website.'); ?>
+	</div>
+	<?php
 }
 ?>

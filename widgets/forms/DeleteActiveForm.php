@@ -1,6 +1,6 @@
 <?php
-namespace davidhirtz\yii2\skeleton\forms;
-use davidhirtz\yii2\skeleton\bootstrap\ActiveForm;
+namespace davidhirtz\yii2\skeleton\widgets\forms;
+use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
 use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -8,7 +8,7 @@ use yii\base\Model;
 
 /**
  * Class DeleteActiveForm.
- * @package davidhirtz\yii2\skeleton\forms
+ * @package davidhirtz\yii2\skeleton\widgets\forms
  */
 class DeleteActiveForm extends ActiveForm
 {
@@ -42,27 +42,32 @@ class DeleteActiveForm extends ActiveForm
 	 */
 	public function init()
 	{
-		if(!$this->model instanceof Model)
-		{
-			throw new InvalidConfigException;
-		}
-
 		if($this->action===null)
 		{
 			$this->action=['delete', 'id'=>$this->model->getPrimaryKey()];
 		}
 
-		if(!$this->message && $this->message!==false)
+		if($this->message===null)
 		{
 			if($this->attribute)
 			{
-				$this->message=Yii::t('app', 'Please type the exact name in the text field below to delete this record. All related files will also be unrecoverably deleted. This cannot be undone, please be certain!');
+				$this->message=Yii::t('app', 'Please type the exact {attribute} in the text field below to delete this record. All related files will also be unrecoverably deleted. This cannot be undone, please be certain!', [
+				    '{attribute}'=>$this->model->getAttributeLabel($this->attribute),
+                ]);
 			}
 			else
 			{
 				$this->message=Yii::t('app', 'Warning: Deleting this record cannot be undone. All related files will also be unrecoverably deleted. Please be certain!');
 			}
 		}
+
+		if($this->buttons===null)
+        {
+            $this->buttons=[$this->button(Yii::t('app', 'Delete'), [
+                'class'=>'btn-danger',
+                'data-confirm'=>Yii::t('yii', 'Are you sure you want to delete this item?'),
+            ])];
+        }
 
 		parent::init();
 	}
@@ -105,10 +110,5 @@ class DeleteActiveForm extends ActiveForm
 		{
 			echo $this->field($this->getForm(), 'name');
 		}
-
-		echo $this->submitButton(Yii::t('app', 'Delete'), [
-			'class'=>'btn-danger',
-			'data-confirm'=>Yii::t('yii', 'Are you sure you want to delete this item?'),
-		]);
 	}
 }

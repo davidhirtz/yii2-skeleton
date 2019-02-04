@@ -28,7 +28,7 @@ $this->setBreadcrumb($this->title, ['index']);
 ]); ?>
 
 <?php
-if(Yii::$app->getUser()->getIdentity()->getIsOwner())
+if(Yii::$app->getUser()->getIdentity()->isOwner())
 {
 	echo UserOwnerPanel::widget();
 }

@@ -27,14 +27,24 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 <div class="wrap">
 	<header>
-		<?=	NavBar::widget(); ?>
+		<?php
+		if(!Yii::$app->getUser()->getIsGuest())
+		{
+			echo NavBar::widget();
+		}
+		?>
 	</header>
 	<main>
 		<div class="container">
-			<?= Breadcrumbs::widget([
-				'links'=>$this->getBreadcrumbs(),
-				'cssClass'=>'d-none d-md-flex',
-			]); ?>
+			<?php
+			if(!Yii::$app->getUser()->getIsGuest())
+			{
+				echo Breadcrumbs::widget([
+					'links'=>$this->getBreadcrumbs(),
+					'cssClass'=>'d-none d-md-flex',
+				]);
+			}
+			?>
 			<?= Flashes::widget(); ?>
 			<?= $content ?>
 		</div>

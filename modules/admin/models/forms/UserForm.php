@@ -2,9 +2,9 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\models\forms;
 
 /**
- * Class UserForm.
+ * Class UserForm
  * @package davidhirtz\yii2\skeleton\modules\admin\models\forms
  */
-class UserForm extends base\UserForm
+class UserForm extends \davidhirtz\yii2\skeleton\modules\admin\models\forms\base\UserForm
 {
 }

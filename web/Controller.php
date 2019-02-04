@@ -18,21 +18,6 @@ class Controller extends \yii\web\Controller
 	public $spacelessOutput=false;
 
 	/**
-	 * @return array
-	 */
-	public function actions()
-	{
-		return [
-			'error'=>[
-				'class'=>'davidhirtz\yii2\skeleton\web\ErrorAction',
-			],
-			'maintenance'=>[
-				'class'=>'davidhirtz\yii2\skeleton\web\MaintenanceAction',
-			],
-		];
-	}
-
-	/**
 	 * Omits layout and asset rendering for AJAX route requests.
 	 *
 	 * Remove spaces for output, this is not recommended for performance, but is currently

@@ -1,12 +1,16 @@
 <?php
 namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
+use davidhirtz\yii2\skeleton\widgets\forms\ActiveFieldTrait;
+
 /**
  * Class ActiveField.
  * @package davidhirtz\yii2\skeleton\widgets\bootstrap
  */
 class ActiveField extends \yii\bootstrap4\ActiveField
 {
+    use ActiveFieldTrait;
+
 	/**
 	 * @var string
 	 */

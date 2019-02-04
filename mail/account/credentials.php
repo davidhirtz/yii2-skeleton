@@ -4,7 +4,7 @@
  *
  * @var yii\web\View $this
  * @var \yii\mail\MessageInterface $message
- * @var \app\modules\admin\models\forms\user\UserForm $user
+ * @var \davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm $user
  */
 use yii\helpers\Url;
 $this->title=Yii::t('app', 'Your Account');

@@ -23,6 +23,11 @@ class Identity extends User implements IdentityInterface
 	public $ip;
 
 	/**
+	 * @var int
+	 */
+	public $cookieLifetime=2592000;
+
+	/**
 	 * @var int default 90 days
 	 */
 	public $authKeyLifetime=776000;
@@ -41,7 +46,7 @@ class Identity extends User implements IdentityInterface
 		 */
 		$identity=static::find()
 			->where(['id'=>$id, 'status'=>self::STATUS_ENABLED])
-			->identityAttributesOnly()
+			->selectIdentityAttributes()
 			->one();
 
 		if($identity)

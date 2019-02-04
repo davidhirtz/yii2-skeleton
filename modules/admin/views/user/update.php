@@ -4,7 +4,7 @@
  * @see davidhirtz\yii2\skeleton\modules\admin\controllers\UserController::actionUpdate()
  *
  * @var \davidhirtz\yii2\skeleton\web\View $this
- * @var \davidhirtz\yii2\skeleton\modules\admin\models\forms\user\UserForm $user
+ * @var \davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm $user
  */
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
@@ -20,7 +20,7 @@ $this->setBreadcrumb($this->title);
 ?>
 
 <?= Html::errorSummary($user, [
-	'title'=>Yii::t('app', 'The user could not be updated:'),
+	'title'=>Yii::t('app', 'The user could not be updated'),
 ]); ?>
 
 <h1 class="page-header">
@@ -34,21 +34,15 @@ $this->setBreadcrumb($this->title);
 <?= Panel::widget([
 	'title'=>$this->title,
 	'content'=>UserActiveForm::widget([
-		'user'=>$user,
+		'model'=>$user,
 	]),
-]);
-?>
-
-<?= Panel::widget([
-	'title'=>Yii::t('app', 'Clients'),
-	'content'=>$user->authClients ? $this->render('@app/views/account/_clients', ['user'=>$user]) : Html::tag('div', Yii::t('app', 'No clients are linked to this account.'), ['class'=>'help-block']),
 ]);
 ?>
 
 <?php
 if(Yii::$app->getUser()->can('userDelete'))
 {
-	if(!$user->getIsOwner())
+	if(!$user->isOwner())
 	{
 		echo Panel::widget([
 			'type'=>'danger',
@@ -64,9 +58,7 @@ if(Yii::$app->getUser()->can('userDelete'))
 	{
 		?>
 		<div class="alert alert-warning">
-			<?= Yii::t('app', 'You cannot delete {isOwner, select, 1{your} other{the}} account, because {isOwner, select, 1{you are} other{it is}} the owner of this website.', [
-				'isOwner'=>$user->id==Yii::$app->getUser()->id ? : 1,
-			]); ?>
+			<?= Yii::t('app', 'You cannot delete this user, because it is the owner of this website.'); ?>
 		</div>
 		<?php
 	}

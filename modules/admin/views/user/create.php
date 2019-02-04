@@ -4,11 +4,11 @@
  * @see davidhirtz\yii2\skeleton\modules\admin\controllers\UserController::actionCreate()
  *
  * @var \davidhirtz\yii2\skeleton\web\View $this
- * @var \davidhirtz\yii2\skeleton\modules\admin\models\forms\user\UserForm $user
+ * @var \davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm $user
  */
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
+use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
 
 $this->setPageTitle(Yii::t('app', 'Create New User'));
@@ -18,7 +18,7 @@ $this->setBreadcrumb($this->title);
 ?>
 
 <?= Html::errorSummary($user, [
-	'header'=>Yii::t('app', 'The user could not be created:'),
+	'header'=>Yii::t('app', 'The user could not be created'),
 ]); ?>
 
 <?= UserSubmenu::widget([
@@ -28,7 +28,7 @@ $this->setBreadcrumb($this->title);
 <?= Panel::widget([
 	'title'=>$this->title,
 	'content'=>UserActiveForm::widget([
-		'user'=>$user,
+		'model'=>$user,
 	]),
 ]);
 ?>

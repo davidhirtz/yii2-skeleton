@@ -148,7 +148,7 @@ return [
     'Status' => '',
     'System' => '',
     'System Settings' => '',
-    'Temporary down for scheduled maintenance. {site} should be back online shortly.' => '',
+    'Temporary down for scheduled maintenance. {site} will be back online shortly.' => '',
     'Thank you for signing up! Please confirm your email address by clicking the link below.' => '',
     'Thank you!' => '',
     'The above error occurred while the Web server was processing your request.' => '',

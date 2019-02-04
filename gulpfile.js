@@ -1,3 +1,5 @@
+"use strict";
+
 // Requirements.
 var gulp=require('gulp');
 
@@ -19,57 +21,17 @@ var options={
 	sass:{
 		errLogToConsole:true,
 		outputStyle:'expanded',
-		includePaths:[
-			'vendor/davidhirtz/assets/site/scss/'
-		]
+		// includePaths:[
+		// 	'vendor/davidhirtz/assets/site/scss/'
+		// ]
 	}
 };
-
-// Console.
-function getPathFromConsole()
-{
-	var minimist=require('minimist');
-
-	/** @var {Object} */
-	var options=minimist(process.argv.slice(2));
-	var index=options.output.lastIndexOf('/');
-
-	return {
-		src:options.src,
-		dir:options.output.substr(0, index),
-		file:options.output.substr(index+1)
-	};
-}
-
-// Combine and minify CSS.
-// Used by command-line via "yii asset"
-gulp.task('combine-css', function()
-{
-	var path=getPathFromConsole();
-
-	return gulp.src(path.src)
-		.pipe(cssnano())
-		.pipe(rename(path.file))
-		.pipe(gulp.dest(path.dir))
-});
-
-// Combine and minify Javascripts.
-// Used by command-line via "yii asset"
-gulp.task('combine-js', function()
-{
-	var path=getPathFromConsole();
-
-	return gulp.src(path.src)
-		.pipe(uglify())
-		.pipe(rename(path.file))
-		.pipe(gulp.dest(path.dir))
-});
 
 // CSS.
 function scss()
 {
 	// noinspection JSUnresolvedFunction
-	return gulp.src('assets/site/scss/site.scss', {base:'./'})
+	return gulp.src('assets/*/scss/*.scss', {base:'./'})
 		.pipe(sourcemaps.init())
 		.pipe(sass(options.sass).on('error', sass.logError))
 		.pipe(autoprefixer(options.autoprefixer))
@@ -90,16 +52,16 @@ function scss()
 function scripts()
 {
 	// noinspection JSUnresolvedFunction
-	return gulp.src('assets/site/js/*.js', {base:'./'})
+	return gulp.src(['assets/*/js/*.js', '!assets/*/js/*.min.js'], {base:'./'})
 		.pipe(uglify())
 		.pipe(rename({suffix:'.min'}))
-		.pipe(gulp.dest('.'))
+		.pipe(gulp.dest('.'));
 }
 
 // Images.
 function images()
 {
-	return gulp.src('web/images/**', {base:'./'})
+	return gulp.src('assets/*/images/**', {base:'./'})
 		.pipe(imagemin({
 			svgoPlugins:[
 				{
@@ -113,9 +75,9 @@ function images()
 // Watcher.
 function watch()
 {
-	gulp.watch('assets/site/scss/**/_*.scss', scss);
-	gulp.watch('assets/site/scss/*.scss', scss);
-	gulp.watch('assets/site/js/*.js', scripts);
+	gulp.watch('assets/*/scss/**/_*.scss', scss);
+	gulp.watch('assets/*/scss/*.scss', scss);
+	gulp.watch('assets/*/js/*.js', scripts);
 }
 
 // Tasks.

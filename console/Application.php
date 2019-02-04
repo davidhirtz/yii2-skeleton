@@ -1,7 +1,7 @@
 <?php
 namespace davidhirtz\yii2\skeleton\console;
 
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
+use davidhirtz\yii2\skeleton\composer\Bootstrap;
 use Yii;
 
 /**
@@ -16,13 +16,7 @@ class Application extends \yii\console\Application
 	 */
 	public function preInit(&$config)
 	{
-		ArrayHelper::setDefaultValue($config, 'id', 'console');
-
-		//$defaults=require(dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'defaults.php');
-		//$config=ArrayHelper::merge($defaults, $config);
-
-
-
+		$config=Bootstrap::preInit($config);
 		parent::preInit($config);
 	}
 
@@ -54,16 +48,5 @@ class Application extends \yii\console\Application
 				],
 			],
 		]);
-	}
-
-	/**
-	 * @param array $config
-	 */
-	protected function removeWebApplicationConfig(&$config)
-	{
-//		unset($config['components']['errorHandler']['errorAction']);
-//		unset($config['components']['request']['cookieValidationKey']);
-//		unset($config['components']['session']);
-//		unset($config['components']['user']);
 	}
 }

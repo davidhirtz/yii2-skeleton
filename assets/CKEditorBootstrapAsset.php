@@ -11,7 +11,7 @@ class CKEditorBootstrapAsset extends AssetBundle
 	/**
 	 * @var string
 	 */
-	public $sourcePath='@app/assets/ckeditor-bootstrap/';
+	public $sourcePath='@skeleton/assets/ckeditor-bootstrap/';
 
 	/**
 	 * @var string

@@ -6,7 +6,7 @@ use yii\widgets\InputWidget;
 
 /**
  * Class CountryDropDownList.
- * @package davidhirtz\yii2\skeleton\form
+ * @package davidhirtz\yii2\skeleton\widgets\form
  *
  * @property array $countries
  * @see CountryDropdown::getCountries()

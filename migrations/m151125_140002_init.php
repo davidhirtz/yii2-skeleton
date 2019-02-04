@@ -54,7 +54,6 @@ class m151125_140002_init extends \m140506_102106_rbac_init
 			'email'=>'varchar(100) NOT NULL',
 			'password'=>'varchar(100) DEFAULT NULL',
 			'password_salt'=>'varchar(10) DEFAULT NULL',
-			'gender'=>'tinyint(1) unsigned NOT NULL DEFAULT "0"',
 			'first_name'=>'varchar(50) DEFAULT NULL',
 			'last_name'=>'varchar(50) DEFAULT NULL',
 			'birthdate'=>'date DEFAULT NULL',
