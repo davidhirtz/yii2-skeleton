@@ -7,21 +7,21 @@ use Yii;
 use yii\web\AssetBundle;
 
 /**
- * Class AppAsset.
+ * Class AdminAsset.
  * @package davidhirtz\yii2\skeleton\assets
  */
-class AppAsset extends AssetBundle
+class AdminAsset extends AssetBundle
 {
     /**
      * @var string
      */
-    public $sourcePath = '@skeleton/assets/app';
+    public $sourcePath = '@skeleton/assets/admin';
 
     /**
      * @var array
      */
     public $css = [
-        'css/app.min.css',
+        'css/admin.min.css',
     ];
 
     /**
@@ -29,7 +29,7 @@ class AppAsset extends AssetBundle
      */
     public $js = [
         'js/jquery-ui.min.js',
-        'js/app.min.js',
+        'js/admin.min.js',
     ];
 
     /**
@@ -48,14 +48,14 @@ class AppAsset extends AssetBundle
     public function init()
     {
         Yii::$app->getAssetManager()->bundles['yii\bootstrap4\BootstrapAsset'] = [
-//			'sourcePath'=>null,
-//			'css'=>[],
+			'sourcePath'=>null,
+			'css'=>[],
         ];
 
         if (YII_DEBUG) {
-            ArrayHelper::replaceValue($this->css, 'css/app.min.css', 'css/app.css');
+            ArrayHelper::replaceValue($this->css, 'css/admin.min.css', 'css/admin.css');
             ArrayHelper::replaceValue($this->js, 'js/jquery-ui.min.js', 'js/jquery-ui.js');
-            ArrayHelper::replaceValue($this->js, 'js/app.min.js', 'js/app.js');
+            ArrayHelper::replaceValue($this->js, 'js/admin.min.js', 'js/admin.js');
         }
 
         parent::init();

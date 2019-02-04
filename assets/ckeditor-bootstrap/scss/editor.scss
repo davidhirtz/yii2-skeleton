@@ -4,13 +4,15 @@
 /**
  * The default stylesheet included on all requests.
  */
-@import "../../app/scss/includes/variables";
+@import "../../admin/scss/includes/variables";
+
 /**
  * Includes Bootstrap 4.
  */
-@import "../../../vendor/npm-asset/bootstrap/scss/functions";
-@import "../../../vendor/npm-asset/bootstrap/scss/variables";
-@import "../../../vendor/npm-asset/bootstrap/scss/mixins";
+@import "../../../../../npm-asset/bootstrap/scss/functions";
+@import "../../../../..//npm-asset/bootstrap/scss/variables";
+@import "../../../../..//npm-asset/bootstrap/scss/mixins";
+
 /* "Reset" styles, necessary to avoid the editor UI being broken by external CSS. */
 //@import "includes/reset";
 /* Styles the main interface structure (holding box). */

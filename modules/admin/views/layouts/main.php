@@ -6,13 +6,13 @@
  * @var string $content
  */
 
-use davidhirtz\yii2\skeleton\assets\AppAsset;
+use davidhirtz\yii2\skeleton\assets\AdminAsset;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Flashes;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\NavBar;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Breadcrumbs;
 use yii\helpers\Html;
 
-AppAsset::register($this);
+AdminAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
     <!DOCTYPE html>

@@ -83,7 +83,7 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
         $this->clientOptions['skin'] = 'bootstrap,' . $bundle->baseUrl . '/';
 
         // Contents CSS file.
-        $bundle = $view->registerAssetBundle($bundle->editorAssetBundle ?: 'davidhirtz\yii2\skeleton\assets\AppAsset');
+        $bundle = $view->registerAssetBundle($bundle->editorAssetBundle ?: 'davidhirtz\yii2\skeleton\assets\AdminAsset');
         $this->clientOptions['contentsCss'] = $bundle->baseUrl . '/' . $bundle->css[0];
 
         // Language.

@@ -35,7 +35,7 @@ class AuthItem extends \davidhirtz\yii2\skeleton\db\ActiveRecord
 
     /**
      * @see \davidhirtz\yii2\skeleton\models\queries\AuthItemQuery::allWithChildren()
-     * @var \davidhirtz\yii2\skeleton\AuthItem[]
+     * @var \davidhirtz\yii2\skeleton\models\AuthItem[]
      */
     public $children = [];
 
@@ -102,6 +102,8 @@ class AuthItem extends \davidhirtz\yii2\skeleton\db\ActiveRecord
             case Item::TYPE_PERMISSION:
                 return 'edit';
         }
+
+        return null;
     }
 
     /**
@@ -116,6 +118,8 @@ class AuthItem extends \davidhirtz\yii2\skeleton\db\ActiveRecord
             case Item::TYPE_PERMISSION:
                 return 'Permission';
         }
+
+        return null;
     }
 
     /**
