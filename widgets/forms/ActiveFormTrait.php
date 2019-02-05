@@ -72,7 +72,7 @@ trait ActiveFormTrait
             $this->renderButtons();
         }
 
-        parent::run();
+        return parent::run();
     }
 
     /**
