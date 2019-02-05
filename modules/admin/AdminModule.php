@@ -13,14 +13,19 @@ use Yii;
 abstract class AdminModule extends \yii\base\Module
 {
     /**
-     * @var string
+     * @var string the module display name, defaults to "Admin"
      */
     public $name;
 
     /**
-     * @var string
+     * @var string the module base route, defaults to the module id
      */
     public $alias;
+
+    /**
+     * @var array containing the admin menu items
+     */
+    public $navItems = [];
 
     /**
      * @var string
@@ -30,7 +35,7 @@ abstract class AdminModule extends \yii\base\Module
     /**
      * @var string
      */
-    public $defaultRoute = 'site';
+    public $defaultRoute = 'dashboard';
 
     /**
      * @var string
@@ -44,10 +49,10 @@ abstract class AdminModule extends \yii\base\Module
     {
         if (!Yii::$app->getRequest()->getIsConsoleRequest()) {
             Yii::$app->getUser()->loginUrl = ['/admin/account/login'];
-            //Yii::$app->getErrorHandler()->errorAction='/admin/site/error';
+            //Yii::$app->getErrorHandler()->errorAction='/admin/dashboard/error';
 
             if ($this->name !== false) {
-                Yii::$app->getView()->setBreadcrumb($this->name ?: Yii::t('skeleton', 'Admin'), ['/admin/site/index']);
+                Yii::$app->getView()->setBreadcrumb($this->name ?: Yii::t('skeleton', 'Admin'), ['/admin/dashboard/index']);
             }
         }
 

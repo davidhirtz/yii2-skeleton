@@ -10,11 +10,11 @@ use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 
 /**
- * Class SiteController.
+ * Class DashboardController.
  * @package davidhirtz\yii2\skeleton\modules\admin\controllers
- * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\SiteController
+ * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\DashboardController
  */
-class SiteController extends Controller
+class DashboardController extends Controller
 {
     /**
      * @var array
@@ -39,18 +39,18 @@ class SiteController extends Controller
             ],
         ];
     }
-
-    /**
-     * @return array
-     */
-    public function actions()
-    {
-        return ArrayHelper::merge(parent::actions(), [
-            'error' => [
-                'view' => '@skeleton/modules/admin/views/site/error',
-            ],
-        ]);
-    }
+//
+//    /**
+//     * @return array
+//     */
+//    public function actions()
+//    {
+//        return ArrayHelper::merge(parent::actions(), [
+//            'error' => [
+//                'view' => '@skeleton/modules/admin/views/site/error',
+//            ],
+//        ]);
+//    }
 
     /**
      * @return string
@@ -70,7 +70,8 @@ class SiteController extends Controller
             }
         }
 
-        return $this->render('@skeleton/modules/admin/views/site/index', [
+        /** @noinspection MissedViewInspection */
+        return $this->render('index', [
             'panels' => $panels,
         ]);
     }

@@ -49,10 +49,7 @@ $this->setBreadcrumb($this->title);
         <div class="centered">
             <?php Panel::begin(['title' => $this->title]); ?>
             <?php
-            $af = ActiveForm::begin([
-                'model' => $user,
-            ]);
-
+            $af = ActiveForm::begin();
             $this->registerJs("jQuery('#{$af->id}').signupForm();");
 
             echo $af->field($user, 'name', ['inputOptions' => ['autofocus' => !$user->hasErrors()], 'icon' => 'user']);

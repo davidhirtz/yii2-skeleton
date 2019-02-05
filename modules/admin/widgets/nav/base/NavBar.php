@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\nav\base;
 
+use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\NavBarInterface;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Nav;
 use Yii;
@@ -50,30 +51,32 @@ class NavBar extends \yii\bootstrap4\NavBar implements NavBarInterface
      */
     public static function getItems()
     {
-        return array_merge(static::getHomeItems(), static::getModuleItems(), static::getUserItems());
+        /** @var Module $module */
+        $module=Yii::$app->getModule('admin');
+        return array_merge(static::getHomeItems(), $module->navItems, static::getUserItems());
     }
 
     /**
      * @return array
      */
-    protected static function getModuleItems()
-    {
-        $modules = Yii::$app->getModules();
-        $items = [];
-
-        foreach ($modules as $name => $module) {
-            if (!in_array($name, static::$excludedModules)) {
-                /**
-                 * @var NavBarInterface $className
-                 */
-                if (class_exists($className = "app\\modules\\{$name}\\modules\\admin\\components\\widgets\\nav\\NavBar")) {
-                    $items = array_merge($items, $className::getItems());
-                }
-            }
-        }
-
-        return $items;
-    }
+//    protected static function getModuleItems()
+//    {
+//        $modules = Yii::$app->getModules();
+//        $items = [];
+//
+//        foreach ($modules as $name => $module) {
+//            if (!in_array($name, static::$excludedModules)) {
+//                /**
+//                 * @var NavBarInterface $className
+//                 */
+//                if (class_exists($className = "app\\modules\\{$name}\\modules\\admin\\components\\widgets\\nav\\NavBar")) {
+//                    $items = array_merge($items, $className::getItems());
+//                }
+//            }
+//        }
+//
+//        return $items;
+//    }
 
     /**
      * @return array
@@ -131,7 +134,7 @@ class NavBar extends \yii\bootstrap4\NavBar implements NavBarInterface
             ],
             [
                 'label' => Yii::t('skeleton', 'Logout'),
-                'icon' => 'sign-out',
+                'icon' => 'sign-out-alt',
                 'url' => ['/admin/account/logout'],
                 'linkOptions' => [
                     'data-method' => 'post',
@@ -148,20 +151,16 @@ class NavBar extends \yii\bootstrap4\NavBar implements NavBarInterface
      */
     protected static function getHomeItems()
     {
-        if (!Yii::$app->getUser()->getIsGuest()) {
-            return [
-                [
-                    'label' => Yii::t('skeleton', 'Home'),
-                    'icon' => 'home',
-                    'url' => ['/admin/site/index'],
-                    'labelOptions' => [
-                        'class' => 'hidden-xs',
-                    ],
+        return [
+            [
+                'label' => Yii::t('skeleton', 'Home'),
+                'icon' => 'home',
+                'url' => ['/admin/dashboard/index'],
+                'labelOptions' => [
+                    'class' => 'hidden-xs',
                 ],
-            ];
-        }
-
-        return [];
+            ],
+        ];
     }
 
     /**

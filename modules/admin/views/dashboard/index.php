@@ -1,7 +1,7 @@
 <?php
 /**
  * Admin index.
- * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\SiteController::actionIndex()
+ * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\DashboardController::actionIndex()
  * @var \davidhirtz\yii2\skeleton\web\View $this
  * @var HomePanelInterface[] $panels
  */
