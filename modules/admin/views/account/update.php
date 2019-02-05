@@ -14,6 +14,7 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
 use rmrevin\yii\fontawesome\FAB;
+use rmrevin\yii\fontawesome\FAR;
 use yii\helpers\Url;
 
 $this->setPageTitle(Yii::t('skeleton', 'Account'));
@@ -75,14 +76,8 @@ if ($user->authClients) {
                 <td class="d-none d-table-cell-md"><?= \davidhirtz\yii2\timeago\Timeago::tag($auth->updated_at); ?>
                 <td class="d-none d-table-cell-lg"><?= \davidhirtz\yii2\timeago\Timeago::tag($auth->created_at); ?>
                 <td class="text-right">
-                    <a href="<?= Url::to(['deauthorize', 'id' => $auth->id, 'name' => $auth->name]) ?>"
-                       data-method="post"
-                       data-confirm="<?= Yii::t('skeleton', 'Are you sure your want to remove {isOwner, select, 1{your} other{this}} {client} account?', [
-                           'client' => $title,
-                           'isOwner' => $auth->user_id == Yii::$app->user->id
-                       ]); ?>" data-toggle="tooltip"
-                       title="<?= Yii::t('skeleton', 'Remove {client}', ['client' => $title]); ?>" class="btn btn-danger">
-                        <i class="fa fa-remove"></i>
+                    <a href="<?= Url::to(['deauthorize', 'id' => $auth->id, 'name' => $auth->name]) ?>" data-method="post" data-confirm="<?= Yii::t('skeleton', 'Are you sure your want to remove your {client} account?', ['client' => $title]); ?>" data-toggle="tooltip" title="<?= Yii::t('skeleton', 'Remove {client}', ['client' => $title]); ?>" class="btn btn-danger">
+                        <?= FAR::icon('trash-alt'); ?>
                     </a>
                 </td>
             </tr>
@@ -109,13 +104,13 @@ if ($user->authClients) {
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
+                    <h4 class="modal-title">
+                        <?= Yii::t('skeleton', 'Clients'); ?>
+                    </h4>
                     <button type="button" class="close" data-dismiss="modal"
                             aria-label="<?= Yii::t('skeleton', 'Close'); ?>">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title">
-                        <?= Yii::t('skeleton', 'Clients'); ?>
-                    </h4>
                 </div>
                 <div class="modal-body">
                     <div class="list-group">

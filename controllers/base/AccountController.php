@@ -389,10 +389,6 @@ class AccountController extends Controller
         throw new ServerErrorHttpException;
     }
 
-    /***********************************************************************
-     * Events.
-     ***********************************************************************/
-
     /**
      * @see \yii\authclient\AuthAction::$successCallback
      * @param Facebook $client
@@ -402,15 +398,14 @@ class AccountController extends Controller
     {
         $attributes = $client->getUserAttributes();
 
-        /**
-         * @var $auth AuthClient
-         */
+        /** @var $auth AuthClient */
         $auth = AuthClient::find()
             ->where(['id' => $attributes['id'], 'name' => $client->getName()])
             ->limit(1)
             ->one();
 
         if (Yii::$app->getUser()->getIsGuest()) {
+
             if ($auth) {
 
                 // Login
@@ -427,9 +422,10 @@ class AccountController extends Controller
 
                 $user->loginType = $client->getName();
                 Yii::$app->getUser()->login($user, $user->cookieLifetime);
+
             } else {
 
-                // Signup..
+                // Signup
                 if (!Yii::$app->getUser()->isSignupEnabled()) {
                     $this->error(Yii::t('skeleton', 'Sorry, signing up is currently disabled!'));
                     return $this->redirect(['login']);
@@ -465,8 +461,7 @@ class AccountController extends Controller
             }
 
 
-            $this->success(Yii::t('skeleton', 'You have successfully {type, select, insert{added} update{updated}} your {client} account to your profile.', [
-                'type' => !$auth ? 'insert' : 'update',
+            $this->success(Yii::t('skeleton', 'Your {client} account is now connected with your profile.', [
                 'client' => $client->getTitle(),
             ]));
 
@@ -474,9 +469,6 @@ class AccountController extends Controller
             Url::remember(['update']);
         }
 
-        /**
-         * Update auth.
-         */
         if (!$auth) {
             $auth = new AuthClient;
             $auth->id = $attributes['id'];

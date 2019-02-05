@@ -107,7 +107,7 @@ class Facebook extends \yii\authclient\clients\Facebook implements ClientInterfa
      */
     public static function getExternalUrl($client)
     {
-        return "https://www.facebook.com/{$client->id}";
+        return "https://www.facebook.com/profile.php?{$client->id}";
     }
 
     /**

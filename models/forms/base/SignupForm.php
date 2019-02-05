@@ -200,7 +200,7 @@ class SignupForm extends Identity
      */
     public function isFacebookSignupEnabled()
     {
-        return $this->enableFacebookSignup && Yii::$app->getAuthClientCollection()->hasClient('Facebook');
+        return $this->enableFacebookSignup && Yii::$app->getAuthClientCollection()->hasClient('facebook');
     }
 
     /**

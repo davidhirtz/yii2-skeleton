@@ -121,7 +121,7 @@ class LoginForm extends Model
      */
     public function isFacebookLoginEnabled()
     {
-        return $this->enableFacebookLogin && Yii::$app->getAuthClientCollection()->hasClient('Facebook');
+        return $this->enableFacebookLogin && Yii::$app->getAuthClientCollection()->hasClient('facebook');
     }
 
     /**
