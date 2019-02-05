@@ -27,7 +27,7 @@ class Facebook extends \yii\authclient\clients\Facebook implements ClientInterfa
         'email',
         'timezone',
         'locale',
-        'picture.type(large)',
+        'picture.width(2000).height(2000)',
     ];
 
     /**
@@ -61,28 +61,34 @@ class Facebook extends \yii\authclient\clients\Facebook implements ClientInterfa
     public function getSafeUserAttributes()
     {
         $attributes = $this->getUserAttributes();
+        $safe = [];
 
-        $safe = [
-            'name' => ArrayHelper::getValue($attributes, 'name'),
-            'first_name' => ArrayHelper::getValue($attributes, 'first_name'),
-            'last_name' => ArrayHelper::getValue($attributes, 'last_name'),
-            'email' => ArrayHelper::getValue($attributes, 'email'),
-            'language' => ArrayHelper::getValue($attributes, 'locale'),
-            'timezone' => timezone_name_from_abbr('', ArrayHelper::getValue($attributes, 'timezone', 0) * 3600, 0),
-        ];
-
-        if ($birthday = ArrayHelper::getValue($attributes, 'birthday')) {
-            $safe['birthdate'] = new Date($birthday);
+        foreach (['name', 'first_name', 'last_name', 'email'] as $key) {
+            if (isset($attributes[$key])) {
+                $safe[$key] = $attributes[$key];
+            }
         }
 
-        if ($location = ArrayHelper::getValue($attributes, 'location.name')) {
-            $location = explode(', ', $location);
-            $safe['country'] = array_pop($location);
-            $safe['city'] = implode(', ', $location);
+        if (isset($attributes['locale'])) {
+            $safe['language'] = $attributes['locale'];
         }
 
-        if ($picture = ArrayHelper::getValue($attributes, 'picture.data.url') && !ArrayHelper::getValue($attributes, 'picture.data.is_silhouette')) {
-            $safe['externalPictureUrl'] = $picture;
+        if (isset($attributes['timezone'])) {
+            $safe['timezone'] = timezone_name_from_abbr('', $attributes['timezone'] * 3600, 0);
+        }
+
+        if (isset($attributes['birthday'])) {
+            $safe['birthdate'] = new Date($attributes['birthday']);
+        }
+
+        if (isset($attributes['location']['name'])) {
+            $pos = strpos($attributes['location']['name'], ',');
+            $safe['country'] = mb_substr($attributes['location']['name'], 0, $pos, Yii::$app->charset);
+            $safe['city'] = trim(mb_substr($attributes['location']['name'], $pos + 1, null, Yii::$app->charset));
+        }
+
+        if (isset($attributes['picture']['data']) && !$attributes['picture']['data']['is_silhouette']) {
+            $safe['picture'] = $attributes['picture']['data'];
         }
 
         return $safe;
