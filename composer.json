@@ -30,7 +30,7 @@
 		"guzzlehttp/guzzle":"~6.0",
 		"guzzlehttp/oauth-subscriber":"0.3.*",
 		"seld/cli-prompt": "^1.0",
-		"npm-asset/@davidhirtz/jquery-router":"*"
+		"npm-asset/@davidhirtz/jquery-router":"1.0.0"
 	},
 	"autoload":{
 		"psr-4":{
