@@ -29,7 +29,8 @@
 		"tinify/tinify":"^1.4",
 		"guzzlehttp/guzzle":"~6.0",
 		"guzzlehttp/oauth-subscriber":"0.3.*",
-		"seld/cli-prompt": "^1.0"
+		"seld/cli-prompt": "^1.0",
+		"npm-asset/@davidhirtz/jquery-router":"dev-master"
 	},
 	"autoload":{
 		"psr-4":{
@@ -43,6 +44,10 @@
 		{
 			"type":"composer",
 			"url":"https://asset-packagist.org"
+		},
+		{
+			"type":"git",
+			"url":"git@github.com:davidhirtz/jquery-router.git"
 		}
 	]
 }
