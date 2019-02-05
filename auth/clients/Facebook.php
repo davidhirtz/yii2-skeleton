@@ -63,7 +63,7 @@ class Facebook extends \yii\authclient\clients\Facebook implements ClientInterfa
         $attributes = $this->getUserAttributes();
         $safe = [];
 
-        foreach (['name', 'first_name', 'last_name', 'email'] as $key) {
+        foreach (['id', 'name', 'first_name', 'last_name', 'email'] as $key) {
             if (isset($attributes[$key])) {
                 $safe[$key] = $attributes[$key];
             }
