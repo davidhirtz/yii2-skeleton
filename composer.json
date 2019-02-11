@@ -26,7 +26,6 @@
 		"davidhirtz/yii2-curl":"dev-master",
 		"davidhirtz/yii2-lazysizes":"dev-master",
 		"bower-asset/bootbox":">=4.4.0",
-		"tinify/tinify":"^1.4",
 		"guzzlehttp/guzzle":"~6.0",
 		"guzzlehttp/oauth-subscriber":"0.3.*",
 		"seld/cli-prompt": "^1.0",
