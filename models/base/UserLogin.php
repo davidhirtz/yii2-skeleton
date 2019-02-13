@@ -4,6 +4,7 @@ namespace davidhirtz\yii2\skeleton\models\base;
 
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
+use davidhirtz\yii2\skeleton\models\User;
 use Yii;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 

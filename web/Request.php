@@ -17,11 +17,6 @@ class Request extends \yii\web\Request
     public $setUserLanguage = true;
 
     /**
-     * @var string
-     */
-    public $cdnUrl = '/';
-
-    /**
      * @inheritdoc
      */
     public function init()

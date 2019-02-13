@@ -124,7 +124,11 @@ trait ActiveFormTrait
                         $field->widget($type, $inputOptions);
                     }
 
-                    echo in_array($attribute, $this->model->i18nAttributes) ? implode("\n", $this->i18nAttributeFields($field)) : $field;
+                    // Prevent empty field rows for auto-generated fields.
+                    if($field->parts['{input}'])
+                    {
+                        echo in_array($attribute, $this->model->i18nAttributes) ? implode("\n", $this->i18nAttributeFields($field)) : $field;
+                    }
                 }
             }
         }
