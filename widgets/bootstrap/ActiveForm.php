@@ -3,7 +3,6 @@
 namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveFormTrait;
-use Yii;
 
 /**
  * Class ActiveForm.

@@ -41,6 +41,10 @@ class Controller extends \yii\web\Controller
      */
     public function renderAjaxRouteContent($content)
     {
+        Yii::$app->getResponse()->getHeaders()
+            ->set('Cache-Control', ['no-store, no-cache, must-revalidate, max-age=0', 'post-check=0, pre-check=0'])
+            ->set('Pragma', 'no-cache');
+
         return $content . $this->renderAjaxRouteScripts();
     }
 
