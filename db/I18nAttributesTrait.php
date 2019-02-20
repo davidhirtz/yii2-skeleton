@@ -2,7 +2,6 @@
 
 namespace davidhirtz\yii2\skeleton\db;
 
-use davidhirtz\yii2\skeleton\i18n\I18N;
 use Yii;
 
 /**
@@ -36,17 +35,27 @@ trait I18nAttributesTrait
      */
     public function getI18nAttributeName($attribute, $language = null)
     {
-        return in_array($attribute, $this->i18nAttributes) ? I18N::getAttributeName($attribute, $language) : $attribute;
+        return in_array($attribute, $this->i18nAttributes) ? Yii::$app->getI18n()->getAttributeName($attribute, $language) : $attribute;
     }
 
     /**
-     * @param string $attribute
-     * @param string $language
+     * @param array|string $attributes
+     * @param array $languages
      * @return array
      */
-    public function getI18nAttributeNames($attribute, $language = null)
+    public function getI18nAttributeNames($attributes, $languages = null)
     {
-        return in_array($attribute, $this->i18nAttributes) ? Yii::$app->getI18n()->getAttributeNames($attribute) : [$attribute];
+        $names = [];
+
+        foreach((array)$attributes as $attribute) {
+            if (in_array($attribute, $this->i18nAttributes)) {
+                $names = array_merge($names, Yii::$app->getI18n()->getAttributeNames($attribute, $languages));
+            } else {
+                $names[] = $attribute;
+            }
+        }
+
+        return $names;
     }
 
     /**

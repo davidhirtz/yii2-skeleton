@@ -97,15 +97,22 @@ class I18N extends \yii\i18n\I18N
     }
 
     /**
-     * @param $attribute
+     * @param array|string $attributes
+     * @param array $languages
      * @return array
      */
-    public function getAttributeNames($attribute)
+    public function getAttributeNames($attributes, $languages = null)
     {
         $names = [];
 
-        foreach ($this->getLanguages() as $language) {
-            $names[] = static::getAttributeName($attribute, $language);
+        if ($languages === null) {
+            $languages = $this->getLanguages();
+        }
+
+        foreach ((array)$attributes as $attribute) {
+            foreach ($languages as $language) {
+                $names[] = static::getAttributeName($attribute, $language);
+            }
         }
 
         return $names;
