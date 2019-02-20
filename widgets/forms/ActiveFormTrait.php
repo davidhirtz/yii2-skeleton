@@ -49,6 +49,11 @@ trait ActiveFormTrait
     public $languages;
 
     /**
+     * @var string
+     */
+    public $urlInputTemplate = '<div class="input-group"><div class="input-group-prepend"><span class="input-group-text">{prepend}</span></div>{input}</div>';
+
+    /**
      * @inheritdoc
      */
     public function init()
@@ -89,13 +94,13 @@ trait ActiveFormTrait
                 $fieldConfig = (array)$fieldConfig;
                 $attribute = array_shift($fieldConfig);
 
-                if ($this->showUnsafeAttributes || in_array($attribute, $safeAttributes)) {
+                // Horizontal line.
+                if ($attribute == '-') {
+                    echo $this->renderHorizontalLine();
+                    continue;
+                }
 
-                    // Horizontal line.
-                    if ($attribute == '-') {
-                        echo $this->renderHorizontalLine();
-                        continue;
-                    }
+                if ($this->showUnsafeAttributes || in_array($attribute, $safeAttributes)) {
 
                     // Custom field.
                     if (!isset($fieldConfig[0]) || is_array($fieldConfig[0])) {
@@ -109,9 +114,14 @@ trait ActiveFormTrait
 
                     // Auto-generated field.
                     $options = isset($fieldConfig[0]) && is_array($fieldConfig[0]) ? array_shift($fieldConfig) : [];
-                    $field = $this->field($this->model, $attribute, $options);
-
                     $type = isset($fieldConfig[0]) ? $fieldConfig[0] : 'text';
+
+                    if ($type == 'url') {
+                        $options['inputTemplate'] = strtr($this->urlInputTemplate, ['{prepend}' => $this->getBaseUrl()]);
+                        $type = 'text';
+                    }
+
+                    $field = $this->field($this->model, $attribute, $options);
                     $inputOptions = isset($fieldConfig[1]) ? $fieldConfig[1] : [];
 
                     if (in_array($type, ['email', 'number', 'password', 'text'])) {
@@ -125,21 +135,12 @@ trait ActiveFormTrait
                     }
 
                     // Prevent empty field rows for auto-generated fields.
-                    if($field->parts['{input}'])
-                    {
+                    if ($field->parts['{input}']) {
                         echo in_array($attribute, $this->model->i18nAttributes) ? implode("\n", $this->i18nAttributeFields($field)) : $field;
                     }
                 }
             }
         }
-    }
-
-    /**
-     * Renders the configured buttons.
-     */
-    public function renderButtons()
-    {
-        echo $this->buttonRow($this->buttons ?: ($this->showSubmitButton ? $this->button() : null));
     }
 
     /**
@@ -149,18 +150,21 @@ trait ActiveFormTrait
     public function i18nAttributeFields($field)
     {
         $i18n = Yii::$app->getI18n();
-        $fields = [];
+        $fields = [$field];
 
-        if (!$field->languages === null) {
+        if ($field->languages === null) {
             $field->languages = $this->languages;
         }
 
-        foreach ($field->languages as $language) {
-            if ($language != Yii::$app->sourceLanguage) {
-                $fields[] = $clone = clone $field;
-                $clone->attribute = $i18n->getAttributeName($field->attribute, $language);
+        if ($field->languages) {
+            foreach ($field->languages as $language) {
+                if ($language != Yii::$app->sourceLanguage) {
+                    $fields[] = $clone = clone $field;
+                    $clone->attribute = $i18n->getAttributeName($field->attribute, $language);
+                }
             }
         }
+
 
         return $fields;
     }
@@ -174,7 +178,15 @@ trait ActiveFormTrait
     }
 
     /**
-     * @param \davidhirtz\yii2\skeleton\db\ActiveRecord|string $label
+     * Renders the configured buttons.
+     */
+    public function renderButtons()
+    {
+        echo $this->buttonRow($this->buttons ?: ($this->showSubmitButton ? $this->button() : null));
+    }
+
+    /**
+     * @param string $label
      * @param array $options
      *
      * @return string
@@ -250,5 +262,13 @@ trait ActiveFormTrait
     {
         Html::addCssClass($options, $this->fieldConfig['horizontalCssClasses']['field']);
         return Html::tag('div', $content, $options);
+    }
+
+    /**
+     * @return string
+     */
+    public function getBaseUrl()
+    {
+        return Yii::$app->getRequest()->getHostInfo() . '/';
     }
 }
