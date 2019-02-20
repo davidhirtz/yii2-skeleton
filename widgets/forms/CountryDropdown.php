@@ -27,12 +27,12 @@ class CountryDropdown extends InputWidget
      * @var bool
      */
     public $lowerCaseCodes = false;
-
+    
     /**
      * @var array
      */
     public $options = ['class' => 'form-control'];
-
+    
     /**
      * @var array
      */
@@ -307,5 +307,25 @@ class CountryDropdown extends InputWidget
 
         $countries = $this->countryCodes ? ($this->lowerCaseCodes ? array_change_key_case(static::$countries) : static::$countries) : array_combine(static::$countries, static::$countries);
         return $this->hasModel() ? Html::activeDropDownList($this->model, $this->attribute, $countries, $this->options) : Html::dropDownList($this->name, $this->value, $countries, $this->options);
+    }
+
+    /**
+     * @param string $code
+     * @param mixed $default
+     * @return mixed
+     */
+    public static function getCountryName($code, $default = null)
+    {
+        return ArrayHelper::getValue(static::$countries, strtoupper($code), $default);
+    }
+
+    /**
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
+     */
+    public static function getCountryCode($name, $default = null)
+    {
+        return array_search($name, static::$countries) ?: $default;
     }
 }
