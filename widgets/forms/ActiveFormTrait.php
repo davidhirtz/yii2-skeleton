@@ -161,6 +161,7 @@ trait ActiveFormTrait
                 if ($language != Yii::$app->sourceLanguage) {
                     $fields[] = $clone = clone $field;
                     $clone->attribute = $i18n->getAttributeName($field->attribute, $language);
+                    $clone->parts = [];
                 }
             }
         }
