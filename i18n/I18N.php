@@ -87,7 +87,7 @@ class I18N extends \yii\i18n\I18N
      * @param string $language
      * @return string
      */
-    public static function getAttributeName($attribute, $language = null)
+    public function getAttributeName($attribute, $language = null)
     {
         if (!$language) {
             $language = Yii::$app->language;
@@ -123,7 +123,7 @@ class I18N extends \yii\i18n\I18N
      * @param string $language
      * @return string
      */
-    public static function getTableName($tableName, $language = null)
+    public function getTableName($tableName, $language = null)
     {
         return '{{%' . static::getAttributeName($tableName, $language) . '}}';
     }

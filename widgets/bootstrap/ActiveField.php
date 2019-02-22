@@ -25,4 +25,16 @@ class ActiveField extends \yii\bootstrap4\ActiveField
         $this->labelOptions = []; // Removes label options, class can be removed when extension is fixed...
         return parent::checkbox($options, $enclosedByLabel);
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function fileInput($options = [])
+    {
+        if (!isset($options['class'])) {
+            $options['class'] = 'form-control-file';
+        }
+
+        return parent::fileInput($options);
+    }
 }
