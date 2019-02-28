@@ -37,4 +37,19 @@ class ActiveField extends \yii\bootstrap4\ActiveField
 
         return parent::fileInput($options);
     }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function dropdownList($items, $options = [])
+    {
+        if($items || $this->model->isAttributeRequired($this->attribute)) {
+            return parent::dropdownList($items, $options);
+        }
+
+        // Don't render empty drop down list.
+        $this->parts['{input}'] = null;
+        return $this;
+    }
 }
