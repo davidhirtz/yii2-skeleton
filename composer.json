@@ -7,7 +7,6 @@
 	"prefer-stable":true,
 	"require":{
 		"php":">=7.0",
-		"ext-exif":"*",
 		"ext-json":"*",
 		"ext-openssl":"*",
 		"ext-simplexml":"*",

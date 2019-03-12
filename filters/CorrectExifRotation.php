@@ -6,6 +6,7 @@ use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Imagine\Filter\FilterInterface;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Palette\Color\ColorInterface;
+use yii\base\InvalidConfigException;
 
 /**
  * Class CorrectExifRotation.
@@ -61,10 +62,15 @@ class CorrectExifRotation implements FilterInterface
 
     /**
      * @param ImageInterface $image
-     * @return array
+     * @return array|bool
      */
     private function getExifFromImage(ImageInterface $image)
     {
+        if (!extension_loaded('exif')) {
+            throw new InvalidConfigException('Exif extension must be enabled for this filter.');
+        }
+
+        /** @noinspection PhpComposerExtensionStubsInspection */
         $data = exif_read_data("data://image/jpeg;base64," . base64_encode($image->get('jpg')));
         return is_array($data) ? $data : [];
     }
