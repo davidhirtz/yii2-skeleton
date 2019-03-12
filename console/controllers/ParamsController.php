@@ -125,7 +125,7 @@ class ParamsController extends Controller
             try {
                 chmod(Yii::getAlias($path), 0777);
             } catch (\Exception $e) {
-                throw new Exception("Failed to change permissions for directory \"{$path}\": " . $e->getMessage(), $e->getCode(), $e);
+                $this->stderr("Failed to change permissions for directory \"{$path}\": " . $e->getMessage());
             }
         }
     }
