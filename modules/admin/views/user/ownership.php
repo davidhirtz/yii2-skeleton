@@ -12,7 +12,7 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
 use davidhirtz\yii2\skeleton\helpers\Html;
 
-$this->setPageTitle(Yii::t('skeleton', 'Transfer Ownership'));
+$this->setTitle(Yii::t('skeleton', 'Transfer Ownership'));
 
 $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
 $this->setBreadcrumb($this->title);

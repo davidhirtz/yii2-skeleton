@@ -12,7 +12,7 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
 
-$this->setPageTitle(Yii::t('skeleton', 'Create New User'));
+$this->setTitle(Yii::t('skeleton', 'Create New User'));
 
 $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
 $this->setBreadcrumb($this->title);

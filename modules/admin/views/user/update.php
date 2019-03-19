@@ -13,7 +13,7 @@ use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
 
-$this->setPageTitle(Yii::t('skeleton', 'Edit User'));
+$this->setTitle(Yii::t('skeleton', 'Edit User'));
 
 $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
 $this->setBreadcrumb($user->getUsername(), ['update', 'id' => $user->id]);

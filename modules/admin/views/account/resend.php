@@ -14,7 +14,7 @@ use rmrevin\yii\fontawesome\FAS;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use yii\helpers\Url;
 
-$this->setPageTitle(Yii::t('skeleton', 'Resend Account Confirmation'));
+$this->setTitle(Yii::t('skeleton', 'Resend Account Confirmation'));
 
 if (!Yii::$app->getUser()->getIsGuest()) {
     $this->setBreadcrumb(Yii::t('skeleton', 'Account'), ['update']);

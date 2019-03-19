@@ -3,7 +3,6 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\nav\base;
 
 use davidhirtz\yii2\skeleton\modules\admin\Module;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\NavBarInterface;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Nav;
 use Yii;
 use yii\helpers\Url;
@@ -12,7 +11,7 @@ use yii\helpers\Url;
  * Class NavBar.
  * @package davidhirtz\yii2\skeleton\modules\admin\widgets\nav\base
  */
-class NavBar extends \yii\bootstrap4\NavBar implements NavBarInterface
+class NavBar extends \yii\bootstrap4\NavBar
 {
     /**
      * @var array
@@ -22,21 +21,16 @@ class NavBar extends \yii\bootstrap4\NavBar implements NavBarInterface
     ];
 
     /**
-     * @var array
-     */
-    public static $excludedModules = ['admin', 'debug', 'gii'];
-
-    /**
      * @inheritdoc
      */
     public function run()
     {
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav'],
-            'items' => static::getItems(),
+            'items' => $this->getItems(),
         ]);
 
-        if ($items = static::getAccountItems()) {
+        if ($items = $this->getAccountItems()) {
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav'],
                 'items' => $items,
@@ -49,39 +43,17 @@ class NavBar extends \yii\bootstrap4\NavBar implements NavBarInterface
     /**
      * @return array
      */
-    public static function getItems()
+    public function getItems()
     {
         /** @var Module $module */
-        $module=Yii::$app->getModule('admin');
-        return array_merge(static::getHomeItems(), $module->navItems, static::getUserItems());
+        $module = Yii::$app->getModule('admin');
+        return array_merge($this->getHomeItems(), $module->navbarItems, $this->getUserItems());
     }
 
     /**
      * @return array
      */
-//    protected static function getModuleItems()
-//    {
-//        $modules = Yii::$app->getModules();
-//        $items = [];
-//
-//        foreach ($modules as $name => $module) {
-//            if (!in_array($name, static::$excludedModules)) {
-//                /**
-//                 * @var NavBarInterface $className
-//                 */
-//                if (class_exists($className = "app\\modules\\{$name}\\modules\\admin\\components\\widgets\\nav\\NavBar")) {
-//                    $items = array_merge($items, $className::getItems());
-//                }
-//            }
-//        }
-//
-//        return $items;
-//    }
-
-    /**
-     * @return array
-     */
-    protected static function getAccountItems()
+    protected function getAccountItems()
     {
         $user = Yii::$app->getUser();
 
@@ -149,7 +121,7 @@ class NavBar extends \yii\bootstrap4\NavBar implements NavBarInterface
     /**
      * @return array
      */
-    protected static function getHomeItems()
+    protected function getHomeItems()
     {
         return [
             [
@@ -166,7 +138,7 @@ class NavBar extends \yii\bootstrap4\NavBar implements NavBarInterface
     /**
      * @return array
      */
-    protected static function getUserItems()
+    protected function getUserItems()
     {
         if (Yii::$app->getUser()->can('userUpdate')) {
             return [

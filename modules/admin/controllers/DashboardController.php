@@ -15,11 +15,6 @@ use Yii;
 class DashboardController extends Controller
 {
     /**
-     * @var array
-     */
-    protected $excludedModules = [];
-
-    /**
      * @inheritdoc
      */
     public function behaviors()
@@ -37,40 +32,18 @@ class DashboardController extends Controller
             ],
         ];
     }
-//
-//    /**
-//     * @return array
-//     */
-//    public function actions()
-//    {
-//        return ArrayHelper::merge(parent::actions(), [
-//            'error' => [
-//                'view' => '@skeleton/modules/admin/views/site/error',
-//            ],
-//        ]);
-//    }
 
     /**
      * @return string
      */
     public function actionIndex()
     {
-        $excludedModules = array_merge(['debug', 'gii'], (array)$this->excludedModules);
-        $panels = [];
-
         /** @var Module $module */
-        foreach (Yii::$app->getModules() as $name => $module) {
-            if (!in_array($name, $excludedModules)) {
-                /**  @var HomePanelInterface $className */
-                if (class_exists($className = "app\\modules\\{$name}\\modules\\admin\\components\\widgets\\panels\\HomePanel")) {
-                    $panels[] = $className;
-                }
-            }
-        }
+        $module = $this->module;
 
         /** @noinspection MissedViewInspection */
         return $this->render('index', [
-            'panels' => $panels,
+            'panels' => $module->panels,
         ]);
     }
 }

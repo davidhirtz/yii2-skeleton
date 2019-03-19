@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\modules\admin\Module;
 use Yii;
 
 /**
@@ -36,6 +37,17 @@ class Breadcrumbs extends \yii\widgets\Breadcrumbs
                 'label' => Yii::$app->name,
                 'url' => Yii::$app->getHomeUrl(),
             ];
+        }
+
+        // Admin module breadcrumb.
+        if (Yii::$app->controller->module instanceof Module) {
+
+            /** @var Module $module */
+            $module = Yii::$app->getModule('admin');
+
+            if ($module->name !== false) {
+                $this->links = array_merge([['label' => $module->name ?: Yii::t('skeleton', 'Admin'), 'url' => ['/admin/dashboard/index']]], $this->links);
+            }
         }
 
         if ($this->cssClass) {

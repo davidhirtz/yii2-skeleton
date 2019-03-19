@@ -14,7 +14,7 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use rmrevin\yii\fontawesome\FAS;
 use yii\helpers\Url;
 
-$this->setPageTitle(Yii::t('skeleton', 'Recover Password'));
+$this->setTitle(Yii::t('skeleton', 'Recover Password'));
 $this->setBreadcrumb($this->title);
 ?>
 

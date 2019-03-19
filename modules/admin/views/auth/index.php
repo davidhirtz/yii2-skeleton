@@ -15,7 +15,7 @@ use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
 
-$this->setPageTitle(Yii::t('skeleton', 'Permissions'));
+$this->setTitle(Yii::t('skeleton', 'Permissions'));
 
 $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['/admin/user/index']);
 $this->setBreadcrumb($this->title);

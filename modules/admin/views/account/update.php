@@ -17,7 +17,7 @@ use rmrevin\yii\fontawesome\FAB;
 use rmrevin\yii\fontawesome\FAR;
 use yii\helpers\Url;
 
-$this->setPageTitle(Yii::t('skeleton', 'Account'));
+$this->setTitle(Yii::t('skeleton', 'Account'));
 $this->setBreadcrumb($this->title);
 ?>
 <?php

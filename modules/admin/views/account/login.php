@@ -15,7 +15,7 @@ use rmrevin\yii\fontawesome\FAS;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use yii\helpers\Url;
 
-$this->setPageTitle(Yii::t('skeleton', 'Login'));
+$this->setTitle(Yii::t('skeleton', 'Login'));
 $this->setBreadcrumb($this->title);
 ?>
 

@@ -12,7 +12,7 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
 
-$this->setPageTitle(Yii::t('skeleton', 'Set New Password'));
+$this->setTitle(Yii::t('skeleton', 'Set New Password'));
 $this->setBreadcrumb($this->title);
 ?>
 

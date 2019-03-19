@@ -14,7 +14,7 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
 use yii\data\ActiveDataProvider;
 use davidhirtz\yii2\skeleton\helpers\Html;
 
-$this->setPageTitle(Yii::t('skeleton', 'Users'));
+$this->setTitle(Yii::t('skeleton', 'Users'));
 $this->setBreadcrumb($this->title, ['index']);
 ?>
 

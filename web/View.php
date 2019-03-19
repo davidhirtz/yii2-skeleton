@@ -4,7 +4,6 @@ namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use yii\helpers\Json;
-use yii\helpers\StringHelper;
 use Yii;
 
 /**
@@ -18,12 +17,7 @@ class View extends \yii\web\View
     /**
      * @var string
      */
-    public $pageTitleTemplate = '{app} | {title}';
-
-    /**
-     * @var string
-     */
-    private $_description;
+    public $titleTemplate;
 
     /**
      * @var array
@@ -33,7 +27,7 @@ class View extends \yii\web\View
     /**
      * @param $title
      */
-    public function setPageTitle($title)
+    public function setTitle($title)
     {
         $this->title = $title;
     }
@@ -41,13 +35,13 @@ class View extends \yii\web\View
     /**
      * @return string
      */
-    public function getPageTitle()
+    public function getTitle()
     {
-        $title = StringHelper::truncate($this->title, 50);
-        return $title ? ($this->pageTitleTemplate ? strtr($this->pageTitleTemplate, [
-            '{title}' => $title,
-            '{app}' => Yii::$app->name
-        ]) : $title) : Yii::$app->name;
+        if (!$this->titleTemplate) {
+            return $this->title ?: Yii::$app->name;
+        }
+
+        return strtr($this->titleTemplate, ['{title}' => $this->title, '{app}' => Yii::$app->name]);
     }
 
     /**
@@ -57,8 +51,8 @@ class View extends \yii\web\View
     public function setDescription($description, $replace = true)
     {
         if (empty($this->metaTags['description']) || $replace) {
-            $this->_description = preg_replace("/\n+/", " ", Html::encode($description));
-            $this->registerMetaTag(['name' => 'description', 'content' => $this->_description], 'description');
+            $description = preg_replace("/\n+/", " ", Html::encode($description));
+            $this->registerMetaTag(['name' => 'description', 'content' => $description], 'description');
         }
     }
 
@@ -67,7 +61,7 @@ class View extends \yii\web\View
      */
     public function getDescription()
     {
-        return $this->_description;
+        return isset($this->metaTags['description']) ? $this->metaTags['description'] : '';
     }
 
     /**
@@ -76,7 +70,7 @@ class View extends \yii\web\View
     public function setBreadcrumbs($breadcrumbs)
     {
         foreach ($breadcrumbs as $key => $value) {
-            if (!is_numeric($key) || is_array($value)) {
+            if (!is_numeric($key)) {
                 $this->setBreadcrumb($key, $value);
             } else {
                 $this->setBreadcrumb($value);
@@ -111,7 +105,7 @@ class View extends \yii\web\View
         $this->registerMetaTag(['name' => 'twitter:card', 'content' => $card], 'twitter:card');
         $this->registerMetaTag([
             'name' => 'twitter:title',
-            'content' => $title ?: $this->getPageTitle()
+            'content' => $title ?: $this->getTitle()
         ], 'twitter:title');
         $this->registerMetaTag([
             'name' => 'twitter:description',
@@ -133,7 +127,7 @@ class View extends \yii\web\View
      */
     public function registerOpenGraphMetaTags($type = 'website', $title = null, $description = null)
     {
-        $this->registerMetaTag(['name' => 'og:title', 'content' => $title ?: $this->getPageTitle()], 'og:title');
+        $this->registerMetaTag(['name' => 'og:title', 'content' => $title ?: $this->getTitle()], 'og:title');
         $this->registerMetaTag([
             'name' => 'og:description',
             'content' => $description ?: $this->getDescription()

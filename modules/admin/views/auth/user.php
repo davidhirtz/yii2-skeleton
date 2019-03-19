@@ -18,7 +18,7 @@ use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use yii\widgets\Pjax;
 
-$this->setPageTitle(Yii::t('skeleton', 'Edit Permissions'));
+$this->setTitle(Yii::t('skeleton', 'Edit Permissions'));
 
 $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['/admin/user/index']);
 $this->setBreadcrumb($user->getUsername(), ['/admin/user/update', 'id' => $user->id]);

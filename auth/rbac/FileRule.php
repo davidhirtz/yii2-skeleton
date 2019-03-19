@@ -50,7 +50,7 @@ class FileRule extends Rule
             case Page::class:
             case Section::class:
 
-                if (Yii::$app->getUser()->can('pageUpdate')) {
+                if (Yii::$app->getUser()->can('author')) {
                     return true;
                 }
         }

@@ -11,7 +11,7 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\panels\HomePanelInterface;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ListGroup;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 
-$this->setPageTitle(Yii::t('skeleton', 'Admin'));
+$this->setTitle(Yii::t('skeleton', 'Admin'));
 ?>
 <h1 class="page-header"><?= Yii::$app->name; ?></h1>
 <div class="row justify-content-center">

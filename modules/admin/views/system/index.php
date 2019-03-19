@@ -15,7 +15,7 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\GridView;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
 use rmrevin\yii\fontawesome\FAS;
 
-$this->setPageTitle(Yii::t('skeleton', 'System'));
+$this->setTitle(Yii::t('skeleton', 'System'));
 $this->setBreadcrumb($this->title);
 ?>
 

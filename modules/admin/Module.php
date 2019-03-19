@@ -23,12 +23,12 @@ class Module extends \yii\base\Module
     /**
      * @var array containing the admin menu items
      */
-    public $navItems = [];
+    public $navbarItems = [];
 
     /**
-     * @var string
+     * @var array containing the panel items
      */
-    //public $controllerNamespace = 'davidhirtz\yii2\skeleton\modules\admin\controllers';
+    public $panels = [];
 
     /**
      * @var string
@@ -41,56 +41,84 @@ class Module extends \yii\base\Module
     public $layout = '@skeleton/modules/admin/views/layouts/main';
 
     /**
+     * @var array
+     */
+    protected $defaultControllerMap = [
+        'account' => [
+            'class' => 'davidhirtz\yii2\skeleton\controllers\AccountController',
+            'viewPath' => '@skeleton/modules/admin/views/account',
+        ],
+        'auth' => [
+            'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController',
+            'viewPath' => '@skeleton/modules/admin/views/auth',
+        ],
+        'dashboard' => [
+            'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\DashboardController',
+            'viewPath' => '@skeleton/modules/admin/views/dashboard',
+        ],
+        'system' => [
+            'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController',
+            'viewPath' => '@skeleton/modules/admin/views/system',
+        ],
+        'user' => [
+            'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\UserController',
+            'viewPath' => '@skeleton/modules/admin/views/user',
+        ],
+        'user-login' => [
+            'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\UserLoginController',
+            'viewPath' => '@skeleton/modules/admin/views/user-login',
+        ],
+    ];
+
+    /**
      * @inheritdoc
      */
     public function init()
     {
-        if (!Yii::$app->getRequest()->getIsConsoleRequest()) {
-            Yii::$app->getUser()->loginUrl = ['/admin/account/login'];
-            //Yii::$app->getErrorHandler()->errorAction='/admin/dashboard/error';
+        $user = Yii::$app->getUser();
 
-            if ($this->name !== false) {
-                Yii::$app->getView()->setBreadcrumb($this->name ?: Yii::t('skeleton', 'Admin'), ['/admin/dashboard/index']);
-            }
+        if (!Yii::$app->getRequest()->getIsConsoleRequest()) {
+            $user->loginUrl = ['/admin/account/login'];
         }
 
-        $this->registerCoreControllers();
+        if (!$this->panels) {
+            $this->panels = [
+                [
+                    'name' => $this->name ?: Yii::t('app', 'Administration'),
+                    'items' => [
+                        [
+                            'label' => Yii::t('skeleton', 'Create New User'),
+                            'url' => ['/admin/user/create'],
+                            'icon' => 'user-plus',
+                            'visible' => $user->can('userCreate'),
+                        ],
+                        [
+                            'label' => Yii::t('skeleton', 'Your Account'),
+                            'url' => ['/admin/account/update'],
+                            'icon' => 'user',
+                        ],
+                        [
+                            'label' => Yii::t('skeleton', 'System Settings'),
+                            'url' => ['/admin/system/index'],
+                            'icon' => 'cog',
+                            'visible' => $user->can('admin'),
+                        ],
+                        [
+                            'label' => Yii::t('skeleton', 'Homepage'),
+                            'url' => '/',
+                            'icon' => 'globe',
+                            'options' => ['target' => '_blank'],
+                        ],
+                    ],
+                ],
+            ];
+        }
 
+        foreach (array_keys($this->getModules()) as $module) {
+            $this->getModule($module);
+        }
+
+        $this->controllerMap = array_merge($this->defaultControllerMap, $this->controllerMap);
         parent::init();
-    }
-
-    /**
-     * Registers the core skeleton admin controllers.
-     */
-    protected function registerCoreControllers()
-    {
-        $controllerMap = [
-            'account' => [
-                'class' => 'davidhirtz\yii2\skeleton\controllers\AccountController',
-                'viewPath' => '@skeleton/modules/admin/views/account',
-            ],
-            'auth' => [
-                'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController',
-                'viewPath' => '@skeleton/modules/admin/views/auth',
-            ],
-            'dashboard' => [
-                'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\DashboardController',
-                'viewPath' => '@skeleton/modules/admin/views/dashboard',
-            ],
-            'system' => [
-                'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController',
-                'viewPath' => '@skeleton/modules/admin/views/system',
-            ],
-            'user' => [
-                'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\UserController',
-                'viewPath' => '@skeleton/modules/admin/views/user',
-            ],
-            'user-login' => [
-                'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\UserLoginController',
-                'viewPath' => '@skeleton/modules/admin/views/user-login',
-            ],
-        ];
-
-        $this->controllerMap = array_merge($controllerMap, $this->controllerMap);
     }
 }

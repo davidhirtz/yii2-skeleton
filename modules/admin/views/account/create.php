@@ -16,7 +16,7 @@ use yii\helpers\Url;
 
 \davidhirtz\yii2\skeleton\assets\SignupAsset::register($this);
 
-$this->setPageTitle(Yii::t('skeleton', 'Sign up'));
+$this->setTitle(Yii::t('skeleton', 'Sign up'));
 $this->setBreadcrumb($this->title);
 ?>
 
