@@ -13,7 +13,7 @@ class BootboxAsset extends AssetBundle
     /**
      * @var string
      */
-    public $sourcePath = '@bower/bootbox';
+    public $sourcePath = '@bower/bootbox/src';
 
     /**
      * @var array

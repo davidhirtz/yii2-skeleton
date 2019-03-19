@@ -37,5 +37,4 @@ $this->setPageTitle(Yii::t('skeleton', 'Admin'));
         <?php
     }
     ?>
-
 </div>

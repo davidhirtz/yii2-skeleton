@@ -4,6 +4,7 @@ namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\composer\Bootstrap;
 use Yii;
+use yii\swiftmailer\Mailer;
 
 /**
  * Class Application
@@ -23,6 +24,7 @@ use Yii;
  * @method AssetManager getAssetManager()
  * @method \yii\rbac\DbManager getAuthManager()
  * @method \davidhirtz\yii2\skeleton\i18n\I18N getI18n()
+ * @method Mailer getMailer()
  * @method Request getRequest()
  * @method DbSession getSession()
  * @method UrlManager getUrlManager()
