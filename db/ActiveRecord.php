@@ -77,7 +77,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     {
         foreach ($models as $model) {
             $primaryKey = $model->getPrimaryKey(true);
-            $position = ArrayHelper::getValue($order, $index ? $primaryKey[$index] : current($primaryKey), 0);
+            $position = ArrayHelper::getValue($order, $index ? $primaryKey[$index] : current($primaryKey), 0) + 1;
 
             if ($position != $model->getAttribute($attribute)) {
                 $model::updateAll([$attribute => $position], $primaryKey);
