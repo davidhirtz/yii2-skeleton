@@ -3,10 +3,8 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
 use davidhirtz\yii2\skeleton\modules\admin\Module;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\panels\HomePanelInterface;
 use davidhirtz\yii2\skeleton\web\Controller;
 use yii\filters\AccessControl;
-use Yii;
 
 /**
  * Class SiteController.
