@@ -47,7 +47,7 @@ class UserGridView extends GridView
             $this->header = [
                 [
                     [
-                        'content' => $this->renderSearchInput(),
+                        'content' => $this->getSearchInput(),
                         'options' => [
                             'class' => 'col-8 col-md-6',
                         ],

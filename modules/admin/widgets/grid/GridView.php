@@ -295,7 +295,7 @@ class GridView extends \yii\grid\GridView
     /**
      * @return string
      */
-    public function renderSearchInput()
+    public function getSearchInput()
     {
         if ($this->searchUrl === null) {
             $this->searchUrl = Url::current([$this->searchParamName => null]);
