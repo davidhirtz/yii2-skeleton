@@ -12,7 +12,6 @@ use yii\base\InvalidCallException;
  *
  * @method static ActiveRecord|\yii\db\ActiveRecord findOne($condition)
  * @method static ActiveRecord[] findAll($condition)
- * @method static ActiveQuery find()
  */
 class ActiveRecord extends \yii\db\ActiveRecord
 {
@@ -27,10 +26,6 @@ class ActiveRecord extends \yii\db\ActiveRecord
     const SCENARIO_INSERT = 'insert';
     const SCENARIO_UPDATE = 'update';
 
-    /***********************************************************************
-     * Methods.
-     ***********************************************************************/
-
     /**
      * @param string $attribute
      * @return bool
@@ -42,6 +37,14 @@ class ActiveRecord extends \yii\db\ActiveRecord
         ]));
 
         return false;
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public static function find(): ActiveQuery
+    {
+        return Yii::createObject(ActiveQuery::class, [get_called_class()]);
     }
 
     /**

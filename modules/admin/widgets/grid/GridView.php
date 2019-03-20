@@ -122,11 +122,11 @@ class GridView extends \yii\grid\GridView
 
     /**
      * @return string|null
-     * @throws \Exception
      */
     public function renderItems()
     {
         if ($this->dataProvider->getCount()) {
+
             if ($this->getIsSortedByPosition()) {
                 SortableWidget::widget([
                     'id' => $this->tableOptions['id'] . ' tbody',
@@ -138,9 +138,11 @@ class GridView extends \yii\grid\GridView
                     ],
                 ]);
             }
+
+            return parent::renderItems();
         }
 
-        return parent::renderItems();
+        return '';
     }
 
     /**
