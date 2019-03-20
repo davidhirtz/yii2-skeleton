@@ -51,7 +51,12 @@ trait ActiveFormTrait
     /**
      * @var string
      */
-    public $urlInputTemplate = '<div class="input-group"><div class="input-group-prepend"><span class="input-group-text">{prepend}</span></div>{input}</div>';
+    public $prependInputTemplate = '<div class="input-group"><div class="input-group-prepend"><span class="input-group-text">{prepend}</span></div>{input}</div>';
+
+    /**
+     * @var string
+     */
+    public $appendInputTemplate = '<div class="input-group">{input}<div class="input-group-append"><span class="input-group-text">{append}</span></div></div>';
 
     /**
      * @inheritdoc
@@ -138,7 +143,7 @@ trait ActiveFormTrait
         $type = isset($fieldConfig[0]) ? array_shift($fieldConfig) : 'text';
 
         if ($type == 'url') {
-            $options['inputTemplate'] = strtr($this->urlInputTemplate, ['{prepend}' => $this->getBaseUrl()]);
+            $options['inputTemplate'] = strtr($this->prependInputTemplate, ['{prepend}' => $this->getBaseUrl()]);
             $type = 'text';
         }
 
