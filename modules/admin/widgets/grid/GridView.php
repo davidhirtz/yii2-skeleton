@@ -62,6 +62,11 @@ class GridView extends \yii\grid\GridView
     ];
 
     /**
+     * @var string
+     */
+    public $emptyText = false;
+
+    /**
      * @var \yii\data\ActiveDataProvider|\yii\data\ArrayDataProvider
      */
     public $dataProvider;
@@ -95,10 +100,9 @@ class GridView extends \yii\grid\GridView
      */
     public function init()
     {
-        // User-defined render methods.
         foreach ($this->columns as &$column) {
             if (is_string($column)) {
-                $methodName = 'render' . lcfirst(Inflector::camelize($column)) . 'Column';
+                $methodName = lcfirst(Inflector::camelize($column)) . 'Column';
                 if (method_exists($this, $methodName)) {
                     $column = call_user_func([$this, $methodName]);
                 }
@@ -125,24 +129,19 @@ class GridView extends \yii\grid\GridView
      */
     public function renderItems()
     {
-        if ($this->dataProvider->getCount()) {
-
-            if ($this->getIsSortedByPosition()) {
-                SortableWidget::widget([
-                    'id' => $this->tableOptions['id'] . ' tbody',
-                    'ajaxUpdateRoute' => $this->orderRoute,
-                    'cloneHelperWidth' => true,
-                    'clientOptions' => [
-                        'handle' => '.sortable-handle',
-                        'axis' => 'y',
-                    ],
-                ]);
-            }
-
-            return parent::renderItems();
+        if ($this->getIsSortedByPosition()) {
+            SortableWidget::widget([
+                'id' => $this->tableOptions['id'] . ' tbody',
+                'ajaxUpdateRoute' => $this->orderRoute,
+                'cloneHelperWidth' => true,
+                'clientOptions' => [
+                    'handle' => '.sortable-handle',
+                    'axis' => 'y',
+                ],
+            ]);
         }
 
-        return '';
+        return $this->dataProvider->getCount() || $this->emptyText ? parent::renderItems() : null;
     }
 
     /**

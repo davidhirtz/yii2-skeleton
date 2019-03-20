@@ -88,14 +88,10 @@ class UserGridView extends GridView
         return Html::a(Html::iconText('user-plus', Yii::t('skeleton', 'New User')), ['create'], ['class' => 'btn btn-primary']);
     }
 
-    /***********************************************************************
-     * Columns.
-     ***********************************************************************/
-
     /**
      * @return array
      */
-    public function renderStatusColumn()
+    public function statusColumn()
     {
         return [
             'contentOptions' => ['class' => 'text-center'],
@@ -111,7 +107,7 @@ class UserGridView extends GridView
     /**
      * @return array
      */
-    public function renderNameColumn()
+    public function nameColumn()
     {
         return [
             'attribute' => 'name',
@@ -126,7 +122,7 @@ class UserGridView extends GridView
     /**
      * @return array
      */
-    public function renderEmailColumn()
+    public function emailColumn()
     {
         return [
             'attribute' => 'email',
@@ -144,7 +140,7 @@ class UserGridView extends GridView
     /**
      * @return array
      */
-    public function renderLastLoginColumn()
+    public function lastLoginColumn()
     {
         return [
             'attribute' => 'last_login',
@@ -159,7 +155,7 @@ class UserGridView extends GridView
     /**
      * @return array
      */
-    public function renderCreatedAtColumn()
+    public function createdAtColumn()
     {
         return [
             'attribute' => 'created_at',
@@ -174,7 +170,7 @@ class UserGridView extends GridView
     /**
      * @return array
      */
-    public function renderButtonsColumn()
+    public function buttonsColumn()
     {
         return [
             'contentOptions' => ['class' => 'text-right'],
