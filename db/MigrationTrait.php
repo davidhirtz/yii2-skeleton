@@ -29,9 +29,10 @@ trait MigrationTrait
     /**
      * @param string $table
      * @param array|string $attributes
+     * @param bool $allowNull
      * @param mixed $except
      */
-    public function addI18nColumns($table, $attributes, $except = null)
+    public function addI18nColumns($table, $attributes, $allowNull = false, $except = null)
     {
         if ($attributes) {
             $schema = Yii::$app->getDb()->getSchema();
@@ -43,24 +44,26 @@ trait MigrationTrait
 
             foreach ((array)$attributes as $attribute) {
                 $column = $schema->getTableSchema($table)->getColumn($attribute);
-                $prevAttribute = $attribute;
 
-                $type = $schema->createColumnSchemaBuilder($column->type, $column->size)->defaultValue($column->defaultValue);
+                if ($column) {
+                    $prevAttribute = $attribute;
+                    $type = $schema->createColumnSchemaBuilder($column->type, $column->size)->defaultValue($column->defaultValue);
 
-                if ($column->unsigned) {
-                    $type->unsigned();
-                }
+                    if ($column->unsigned) {
+                        $type->unsigned();
+                    }
 
-                if (!$column->allowNull) {
-                    $type->notNull();
-                }
+                    if ($allowNull && !$column->allowNull) {
+                        $type->notNull();
+                    }
 
-                foreach ($languages as $language) {
-                    if (!in_array($language, $except)) {
-                        $type->append("AFTER [[{$prevAttribute}]]");
-                        $prevAttribute = Yii::$app->getI18n()->getAttributeName($attribute, $language);
+                    foreach ($languages as $language) {
+                        if (!in_array($language, $except)) {
+                            $type->append("AFTER [[{$prevAttribute}]]");
+                            $prevAttribute = Yii::$app->getI18n()->getAttributeName($attribute, $language);
 
-                        $this->addColumn($table, $prevAttribute, $type);
+                            $this->addColumn($table, $prevAttribute, $type);
+                        }
                     }
                 }
             }

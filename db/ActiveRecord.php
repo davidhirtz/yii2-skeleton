@@ -42,7 +42,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     /**
      * @return ActiveQuery
      */
-    public static function find(): ActiveQuery
+    public static function find()
     {
         return Yii::createObject(ActiveQuery::class, [get_called_class()]);
     }
