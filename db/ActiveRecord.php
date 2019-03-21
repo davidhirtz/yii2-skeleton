@@ -21,10 +21,16 @@ class ActiveRecord extends \yii\db\ActiveRecord
     public $i18nAttributes = [];
 
     /**
-     * Scenarios.
+     * Constants.
      */
     const SCENARIO_INSERT = 'insert';
     const SCENARIO_UPDATE = 'update';
+
+    const STATUS_DEFAULT = 1;
+    const STATUS_DISABLED = 0;
+    const STATUS_ENABLED = 1;
+
+    const TYPE_DEFAULT = 1;
 
     /**
      * @param string $attribute
@@ -99,5 +105,20 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return static::getDb()->createCommand()
             ->batchInsert(static::tableName(), $columns, $rows)
             ->execute();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => Yii::t('skeleton', 'ID'),
+            'status' => Yii::t('skeleton', 'Status'),
+            'type' => Yii::t('skeleton', 'Type'),
+            'updated_by_user_id' => Yii::t('skeleton', 'User'),
+            'updated_at' => Yii::t('skeleton', 'Last Update'),
+            'created_at' => Yii::t('skeleton', 'Created'),
+        ];
     }
 }

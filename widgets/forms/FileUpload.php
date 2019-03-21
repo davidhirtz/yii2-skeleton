@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
 use yii\db\ActiveRecord;
+use yii\web\JsExpression;
 
 /**
  * Class FileUpload.
@@ -37,19 +38,17 @@ class FileUpload extends \dosamigos\fileupload\FileUpload
      */
     public function init()
     {
-
         $this->options['multiple'] = $this->multiple;
 
         $defaultClientOptions = [
             'dropZone' => $this->dropZone,
-            //'maxChunkSize'=>10000000,
         ];
 
         $this->clientOptions = array_merge($defaultClientOptions, $this->clientOptions);
 
         $defaultClientEvents = [
-            'fileuploaddone' => $this->dropZone ? 'function(e,x){$("' . $this->dropZone . '").append(x.result)}' : null,
-            'fileuploadfail' => 'function(e,d){alert(d.jqXHR.responseText)}',
+            'fileuploaddone' => $this->dropZone ? new JsExpression('function(e,x){$(\'' . $this->dropZone . '\').append(x.result)}') : null,
+            'fileuploadfail' => new JsExpression('function(e,d){bootbox.alert(d.jqXHR.responseText)}'),
         ];
 
         $this->clientEvents = array_merge($defaultClientEvents, $this->clientEvents);
