@@ -77,7 +77,7 @@ function watch()
 {
 	gulp.watch('assets/*/scss/**/_*.scss', scss);
 	gulp.watch('assets/*/scss/*.scss', scss);
-	gulp.watch('assets/*/js/*.js', scripts);
+	gulp.watch(['assets/*/js/*.js', '!assets/*/js/*.min.js'], scripts);
 }
 
 // Tasks.

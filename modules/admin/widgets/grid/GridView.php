@@ -111,7 +111,7 @@ class GridView extends \yii\grid\GridView
 
         if (!$this->rowOptions) {
             $this->rowOptions = function ($record) {
-                return $record instanceof ActiveRecord ? ['id' => $this->getFormName() . '-' . implode('-', (array)$record->getPrimaryKey())] : [];
+                return $record instanceof ActiveRecord ? ['id' => $this->getRowId($record)] : [];
             };
         }
 
@@ -119,10 +119,6 @@ class GridView extends \yii\grid\GridView
 
         parent::init();
     }
-
-    /***********************************************************************
-     * Render methods.
-     ***********************************************************************/
 
     /**
      * @return string|null
@@ -316,10 +312,6 @@ class GridView extends \yii\grid\GridView
             Html::endForm();
     }
 
-    /***********************************************************************
-     * Getters / setters.
-     ***********************************************************************/
-
     /**
      * @throws \yii\base\InvalidConfigException
      * @return string
@@ -350,6 +342,15 @@ class GridView extends \yii\grid\GridView
     public function getTableId()
     {
         return $this->getFormName() . '-table';
+    }
+
+    /**
+     * @param ActiveRecord $record
+     * @return string
+     */
+    public function getRowId($record)
+    {
+        return $this->getFormName() . '-' . implode('-', (array)$record->getPrimaryKey());
     }
 
     /**

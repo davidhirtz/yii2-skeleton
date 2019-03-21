@@ -1,107 +1,115 @@
-$(function()
-{
-	/**
-	 * Use Bootbox for yii confirm dialogs.
-	 */
-	yii.confirm=function(message, ok, cancel)
-	{
-		bootbox.confirm(message, function(result)
-		{
-			if(result)
-			{
-				!ok || ok();
-			}
-			else
-			{
-				!cancel || cancel();
-			}
-		});
-	};
+$(function () {
+    /**
+     * Use Bootbox for yii confirm dialogs.
+     */
+    yii.confirm = function (message, ok, cancel) {
+        var $link = $(this);
 
-	/**
-	 * Bootstrap tooltips.
-	 */
-	$('[data-toggle="tooltip"]').tooltip();
+        bootbox.confirm(message, function (result) {
+            if (result) {
+                if ($link.data('ajax')) {
 
-	/**
-	 * Toggle form groups based on "data-form-toggle" tag.
-	 */
-	$('[data-form-toggle]').change(function()
-	{
-		var $input=$(this),
-			$option=$input.find('option:selected');
+                    var $target = $($link.data('target')),
+                        action = $link.data('ajax');
 
-		if($input.data('targets'))
-		{
-			$($input.data('targets')).each(function()
-			{
-				this.show();
-			});
-		}
+                    $.ajax({
+                        url: $link.attr('href'),
+                        method: $link.data('method') || 'post',
+                        params: $link.data('params'),
+                        success: function () {
+                            if ($target.length) {
 
-		$input.data('targets', []);
+                                if (action === 'remove') {
+                                    $target.remove();
 
-		$.each($input.data('form-toggle'), function(x, data)
-		{
-			var values=$.isArray(data[0]) ? data[0] : [data[0]],
-				targets=$.isArray(data[1]) ? data[1] : [data[1]],
-				matches,
-				value,
-				z;
+                                } else if (action === 'success') {
+                                    $target.toggleClass('bg-success');
+                                }
 
-			value=String($option.length ?
-				((matches=String(values[0]).match(/^data-([\w-]+)/)) ? $option.data(matches[1]) : $input.val()) :
-				($input.prop('checked') ? $input.val() : 0));
+                            }
+                        }
+                    });
+                } else {
+                    !ok || ok();
+                }
+            } else {
+                !cancel || cancel();
+            }
+        });
+    };
 
-			for(x=0; x<values.length; x++)
-			{
-				if(String(values[x])===value)
-				{
-					for(z=0; z<targets.length; z++)
-					{
-						$input.data('targets').push($(targets[z].match(/^[.#]/) ? targets[z] : ('.field-'+targets[z])).hide());
-					}
+    /**
+     * Bootstrap tooltips.
+     */
+    $('[data-toggle="tooltip"]').tooltip();
 
-					break;
-				}
-			}
-		});
-	})
-	.filter(':visible').trigger('change');
+    /**
+     * Toggle form groups based on "data-form-toggle" tag.
+     */
+    $('[data-form-toggle]').change(function () {
+        var $input = $(this),
+            $option = $input.find('option:selected');
 
-	/**
-	 * Toggle form groups based on "data-form-toggle" tag.
-	 */
-	$('[data-form-target]').change(function()
-	{
-		var $input=$(this),
-			value=$input.find('option:selected').data('value'),
-			target=$input.data('form-target');
+        if ($input.data('targets')) {
+            $($input.data('targets')).each(function () {
+                this.show();
+            });
+        }
 
-		$(target.match(/^[.#]/) ? target : ("#"+target)).html(value);
-	})
-	.filter(':visible').trigger('change');
+        $input.data('targets', []);
 
-	/**
-	 * Signup form.
-	 * @returns {jQuery}
-	 */
-	$.fn.signupForm=function()
-	{
-		return $(this).on('beforeValidate', function()
-		{
-			var $token=$('#token');
+        $.each($input.data('form-toggle'), function (x, data) {
+            var values = $.isArray(data[0]) ? data[0] : [data[0]],
+                targets = $.isArray(data[1]) ? data[1] : [data[1]],
+                matches,
+                value,
+                z;
 
-			if(!$token.val())
-			{
-				$('#tz').val(jstz.determine().name());
-				$('#honeypot').val('');
+            value = String($option.length ?
+                ((matches = String(values[0]).match(/^data-([\w-]+)/)) ? $option.data(matches[1]) : $input.val()) :
+                ($input.prop('checked') ? $input.val() : 0));
 
-				$.get($token.data('url'), function(data)
-				{
-					$token.val(data);
-				});
-			}
-		})
-	}
+            for (x = 0; x < values.length; x++) {
+                if (String(values[x]) === value) {
+                    for (z = 0; z < targets.length; z++) {
+                        $input.data('targets').push($(targets[z].match(/^[.#]/) ? targets[z] : ('.field-' + targets[z])).hide());
+                    }
+
+                    break;
+                }
+            }
+        });
+    })
+        .filter(':visible').trigger('change');
+
+    /**
+     * Toggle form groups based on "data-form-toggle" tag.
+     */
+    $('[data-form-target]').change(function () {
+        var $input = $(this),
+            value = $input.find('option:selected').data('value'),
+            target = $input.data('form-target');
+
+        $(target.match(/^[.#]/) ? target : ("#" + target)).html(value);
+    })
+        .filter(':visible').trigger('change');
+
+    /**
+     * Signup form.
+     * @returns {jQuery}
+     */
+    $.fn.signupForm = function () {
+        return $(this).on('beforeValidate', function () {
+            var $token = $('#token');
+
+            if (!$token.val()) {
+                $('#tz').val(jstz.determine().name());
+                $('#honeypot').val('');
+
+                $.get($token.data('url'), function (data) {
+                    $token.val(data);
+                });
+            }
+        });
+    }
 });
