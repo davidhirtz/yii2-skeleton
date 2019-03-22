@@ -2,7 +2,6 @@
 
 namespace davidhirtz\yii2\skeleton\assets;
 
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Yii;
 use yii\web\AssetBundle;
 
@@ -21,15 +20,15 @@ class AdminAsset extends AssetBundle
      * @var array
      */
     public $css = [
-        'css/admin.min.css',
+        YII_DEBUG ? 'css/admin.css' : 'css/admin.min.css',
     ];
 
     /**
      * @var array
      */
     public $js = [
-        'js/jquery-ui.min.js',
-        'js/admin.min.js',
+        YII_DEBUG ? 'js/jquery-ui.js' : 'js/jquery-ui.min.js',
+        YII_DEBUG ? 'js/admin.js' : 'js/admin.min.js',
     ];
 
     /**
@@ -51,12 +50,6 @@ class AdminAsset extends AssetBundle
 			'sourcePath'=>null,
 			'css'=>[],
         ];
-
-        if (YII_DEBUG) {
-            ArrayHelper::replaceValue($this->css, 'css/admin.min.css', 'css/admin.css');
-            ArrayHelper::replaceValue($this->js, 'js/jquery-ui.min.js', 'js/jquery-ui.js');
-            ArrayHelper::replaceValue($this->js, 'js/admin.min.js', 'js/admin.js');
-        }
 
         parent::init();
     }

@@ -39,11 +39,11 @@ class Breadcrumbs extends \yii\widgets\Breadcrumbs
             ];
         }
 
-        // Admin module breadcrumb.
-        if (Yii::$app->controller->module instanceof Module) {
+        /** @var Module $module */
+        $module = Yii::$app->getModule('admin');
 
-            /** @var Module $module */
-            $module = Yii::$app->getModule('admin');
+        // Admin module breadcrumb.
+        if (Yii::$app->controller->module instanceof Module || in_array(Yii::$app->controller->module, $module->getModules())) {
 
             if ($module->name !== false) {
                 $this->links = array_merge([['label' => $module->name ?: Yii::t('skeleton', 'Admin'), 'url' => ['/admin/dashboard/index']]], $this->links);

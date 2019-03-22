@@ -35,6 +35,11 @@ class DeleteActiveForm extends ActiveForm
     public $action;
 
     /**
+     * @var array|string
+     */
+    public $label;
+
+    /**
      * @var \davidhirtz\yii2\skeleton\models\forms\DeleteForm
      */
     private $_form;
@@ -46,6 +51,10 @@ class DeleteActiveForm extends ActiveForm
     {
         if ($this->action === null) {
             $this->action = ['delete', 'id' => $this->model->getPrimaryKey()];
+        }
+
+        if(!$this->label) {
+            $this->label = Yii::t('skeleton', 'Delete');
         }
 
         if ($this->message === null) {
@@ -60,7 +69,7 @@ class DeleteActiveForm extends ActiveForm
 
         if ($this->buttons === null) {
             $this->buttons = [
-                $this->button(Yii::t('skeleton', 'Delete'), [
+                $this->button($this->label, [
                     'class' => 'btn-danger',
                     'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
                 ])

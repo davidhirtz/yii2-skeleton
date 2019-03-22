@@ -36,6 +36,10 @@ class Panel extends Widget
      */
     public function init()
     {
+        if ($this->getId(false)) {
+            $this->options['id'] = $this->getId();
+        }
+
         Html::addCssClass($this->options, 'card card-' . $this->type);
         parent::init();
 
