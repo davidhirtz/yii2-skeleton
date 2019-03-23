@@ -106,6 +106,14 @@ trait ActiveFormTrait
                     continue;
                 }
 
+                if(isset($fieldConfig[0]['visible'])) {
+                    if($fieldConfig[0]['visible']===false) {
+                        continue;
+                    }
+
+                    unset($fieldConfig[0]['visible']);
+                }
+
                 if ($this->showUnsafeAttributes || in_array($attribute, $safeAttributes)) {
 
                     // Custom field.
@@ -143,7 +151,7 @@ trait ActiveFormTrait
         $type = isset($fieldConfig[0]) ? array_shift($fieldConfig) : 'text';
 
         if ($type == 'url') {
-            $options['inputTemplate'] = strtr($this->prependInputTemplate, ['{prepend}' => $this->getBaseUrl()]);
+            $options['inputTemplate'] = $this->prependInput($this->getBaseUrl());
             $type = 'text';
         }
 
@@ -166,6 +174,24 @@ trait ActiveFormTrait
         if ($field->parts['{input}']) {
             echo $field;
         }
+    }
+
+    /**
+     * @param string $text
+     * @return string
+     */
+    public function appendInput($text)
+    {
+        return strtr($this->appendInputTemplate, ['{append}' => $text]);
+    }
+
+    /**
+     * @param string $text
+     * @return string
+     */
+    public function prependInput($text)
+    {
+        return strtr($this->prependInputTemplate, ['{prepend}' => $text]);
     }
 
     /**

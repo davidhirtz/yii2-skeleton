@@ -73,14 +73,7 @@ class Image extends BaseImage
      *
      * @return ImageInterface
      */
-    public static function smartResize(
-        $image,
-        $width = null,
-        $height = null,
-        $allowUpscaling = false,
-        $bgColor = null,
-        $bgAlpha = null
-    ) {
+    public static function smartResize($image, $width = null, $height = null, $allowUpscaling = false, $bgColor = null, $bgAlpha = null) {
         return (!$width || !$height) ? static::resize($image, $width, $height, true, $allowUpscaling) : static::fit($image, $width, $height, $bgColor, $bgAlpha);
     }
 
@@ -104,6 +97,7 @@ class Image extends BaseImage
      */
     public static function getSvgDimensions($filename)
     {
+        /** @noinspection PhpComposerExtensionStubsInspection */
         $svg = simplexml_load_file($filename);
         $attributes = $svg->attributes();
 

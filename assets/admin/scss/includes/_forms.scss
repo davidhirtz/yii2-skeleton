@@ -173,6 +173,7 @@ select.form-control {
   background-color: transparent;
   border: solid transparent;
   border-width: $input-border-width 0;
+  outline: none!important;
 
   &.form-control-sm,
   &.form-control-lg {

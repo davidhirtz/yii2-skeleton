@@ -2,7 +2,6 @@
 
 namespace davidhirtz\yii2\skeleton\db;
 
-use davidhirtz\yii2\skeleton\i18n\I18N;
 use Yii;
 
 /**
@@ -22,9 +21,10 @@ class ActiveQuery extends \yii\db\ActiveQuery
     {
         if (is_array($this->select)) {
             if ($attributes = $this->getModelInstance()->i18nAttributes) {
+                $i18n = Yii::$app->getI18n();
                 foreach ($this->select as &$attribute) {
                     if (in_array($attribute, $attributes)) {
-                        $attribute = I18N::getAttributeName($attribute);
+                        $attribute = $i18n->getAttributeName($attribute);
                     }
                 }
             }
