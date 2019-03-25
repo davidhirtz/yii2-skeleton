@@ -114,7 +114,7 @@ return [
     'Please enter a new password below to update your account.' => 'Bitte wählen Sie ein neues Passwort, um Ihren Account zu aktualisieren.',
     'Please logout before creating another account' => 'Bitte loggen Sie sich aus bevor Sie einen neuen Account erstellen.',
     'Please logout before logging in with another account' => 'Bitte loggen Sie sich aus bevor Sie sich mit einem anderen Account einloggen',
-    'Please type the exact {attribute} in the text field below to delete this record. All related files will also be unrecoverably deleted. This cannot be undone, please be certain!' => '',
+    'Please type the exact {attribute} in the text field below to delete this record. All related files will also be unrecoverably deleted. This cannot be undone, please be certain!' => 'Bitte bestätigen Sie mit dem Feld "{attribute}" die Löschung des Eintrags. Bitte beachten Sie, dass auch alle dazugehörigen Daten unwiderruflich gelöscht werden!',
     'Please type the username in the text field below to delete this user. All related records and files will also be deleted. This cannot be undone, please be certain!' => 'Bitte schreiben Sie den exakten Benutzernamen in das Textfeld unten um die Löschung dieses Benutzers sowie der von ihm erstellten Beiträge und Uploads zu bestätigen. Die Löschung kann nicht wieder rückgängig gemacht werden!',
     'Recover Password' => 'Passwort wiederherstellen',
     'Refresh' => 'Aktualisieren',

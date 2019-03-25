@@ -75,43 +75,43 @@ class Module extends \yii\base\Module
      */
     public function init()
     {
-        $user = Yii::$app->getUser();
-
         if (!Yii::$app->getRequest()->getIsConsoleRequest()) {
-            $user->loginUrl = ['/admin/account/login'];
-        }
 
-        if (!$this->panels) {
-            $this->panels = [
-                [
-                    'name' => $this->name ?: Yii::t('app', 'Administration'),
-                    'items' => [
-                        [
-                            'label' => Yii::t('skeleton', 'Create New User'),
-                            'url' => ['/admin/user/create'],
-                            'icon' => 'user-plus',
-                            'visible' => $user->can('userCreate'),
-                        ],
-                        [
-                            'label' => Yii::t('skeleton', 'Your Account'),
-                            'url' => ['/admin/account/update'],
-                            'icon' => 'user',
-                        ],
-                        [
-                            'label' => Yii::t('skeleton', 'System Settings'),
-                            'url' => ['/admin/system/index'],
-                            'icon' => 'cog',
-                            'visible' => $user->can('admin'),
-                        ],
-                        [
-                            'label' => Yii::t('skeleton', 'Homepage'),
-                            'url' => '/',
-                            'icon' => 'globe',
-                            'options' => ['target' => '_blank'],
+            $user = Yii::$app->getUser();
+            $user->loginUrl = ['/admin/account/login'];
+
+            if (!$this->panels) {
+                $this->panels = [
+                    [
+                        'name' => $this->name ?: Yii::t('app', 'Administration'),
+                        'items' => [
+                            [
+                                'label' => Yii::t('skeleton', 'Create New User'),
+                                'url' => ['/admin/user/create'],
+                                'icon' => 'user-plus',
+                                'visible' => $user->can('userCreate'),
+                            ],
+                            [
+                                'label' => Yii::t('skeleton', 'Your Account'),
+                                'url' => ['/admin/account/update'],
+                                'icon' => 'user',
+                            ],
+                            [
+                                'label' => Yii::t('skeleton', 'System Settings'),
+                                'url' => ['/admin/system/index'],
+                                'icon' => 'cog',
+                                'visible' => $user->can('admin'),
+                            ],
+                            [
+                                'label' => Yii::t('skeleton', 'Homepage'),
+                                'url' => '/',
+                                'icon' => 'globe',
+                                'options' => ['target' => '_blank'],
+                            ],
                         ],
                     ],
-                ],
-            ];
+                ];
+            }
         }
 
         foreach (array_keys($this->getModules()) as $module) {
