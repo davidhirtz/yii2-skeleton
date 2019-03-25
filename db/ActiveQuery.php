@@ -47,6 +47,15 @@ class ActiveQuery extends \yii\db\ActiveQuery
     }
 
     /**
+     * @return $this
+     */
+    public function enabled()
+    {
+        $model = $this->getModelInstance();
+        return $this->andWhere([$model::tableName() . '.status' => $model::STATUS_ENABLED]);
+    }
+
+    /**
      * @param string $search
      * @return array
      */
