@@ -10,6 +10,8 @@ use yii\base\InvalidCallException;
  * Class ActiveRecord.
  * @package davidhirtz\yii2\skeleton\db
  *
+ * @method ActiveQuery hasMany($class, array $link)
+ * @method ActiveQuery hasOne($class, array $link)
  * @method static ActiveRecord|\yii\db\ActiveRecord findOne($condition)
  * @method static ActiveRecord[] findAll($condition)
  */
