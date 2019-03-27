@@ -18,6 +18,11 @@ class UrlManager extends \yii\web\UrlManager
     /**
      * @var bool
      */
+    public $enableStrictParsing = true;
+
+    /**
+     * @var bool
+     */
     public $showScriptName = false;
 
     /**
@@ -41,21 +46,6 @@ class UrlManager extends \yii\web\UrlManager
     public $languageParam = 'language';
 
     /**
-     * @var string
-     */
-    public $adminAlias;
-
-    /**
-     * @var array
-     */
-    public $defaultRules = [];
-
-    /**
-     * @var array
-     */
-    public $moduleMap = [];
-
-    /**
      * @var array
      */
     public $redirectMap = [];
@@ -73,69 +63,6 @@ class UrlManager extends \yii\web\UrlManager
     {
         if (!$this->enablePrettyUrl) {
             $this->i18nUrl = false;
-        }
-
-        if ($this->moduleMap) {
-            // Todo
-        }
-
-        //$this->defaultRules['sitemap.xml']='sitemap/index';
-
-        if ($this->adminAlias) {
-            $this->defaultRules[] = [
-                'pattern' => "{$this->adminAlias}/<controller>/<view>",
-                'route' => '{$this->adminAlias}/<controller>/<view>',
-                'defaults' => ['controller' => 'site', 'view' => 'index'],
-            ];
-        }
-
-//		if($this->adminAlias)
-//		{
-//			if($modules=implode('|', array_diff(array_keys(\Yii::$app->modules), ['admin', 'debug', 'gii'])))
-//			{
-//				$this->defaultRules[]=[
-//					'pattern'=>"<module:{$modules}>/{$this->adminAlias}/<controller>/<view>",
-//					'route'=>'<module>/admin/<controller>/<view>',
-//					'defaults'=>['controller'=>'site', 'view'=>'index'],
-//				];
-//
-//				$this->defaultRules[]=[
-//					'pattern'=>"<module:{$modules}>/admin/<controller>/<view>",
-//					'route'=>'site/error',
-//					'defaults'=>['controller'=>'site', 'view'=>'error'],
-//				];
-//			}
-//
-//			$this->defaultRules[]=[
-//				'pattern'=>"{$this->adminAlias}/<controller>/<view>",
-//				'route'=>'admin/<controller>/<view>',
-//				'defaults'=>['controller'=>'site', 'view'=>'index'],
-//			];
-//
-//			$this->defaultRules[]=[
-//				'pattern'=>"admin/<controller>/<view>",
-//				'route'=>'site/error',
-//				'defaults'=>['controller'=>'site', 'view'=>'error'],
-//			];
-//		}
-//		else
-//		{
-//			$this->defaultRules[]=[
-//				'pattern'=>"admin/<controller>/<view>",
-//				'route'=>'admin/<controller>/<view>',
-//				'defaults'=>['controller'=>'site', 'view'=>'index'],
-//			];
-//		}
-
-//		if(!$this->rules)
-//		{
-//			$this->rules=[
-//				'<module>/<controller>/<view>'=>'<module>/<controller>/<view>',
-//			];
-//		}
-
-        if ($this->defaultRules) {
-            $this->rules = array_merge($this->defaultRules, $this->rules);
         }
 
         if ($this->i18nUrl) {

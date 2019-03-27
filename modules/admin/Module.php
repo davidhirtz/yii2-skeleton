@@ -16,7 +16,7 @@ class Module extends \yii\base\Module
     public $name;
 
     /**
-     * @var string the module base route, defaults to the module id
+     * @var string the module base route, defaults to "admin"
      */
     public $alias;
 

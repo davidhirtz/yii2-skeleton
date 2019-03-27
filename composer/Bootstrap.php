@@ -119,6 +119,7 @@ class Bootstrap implements BootstrapInterface
             'modules' => [
                 'admin' => [
                     'class' => 'davidhirtz\yii2\skeleton\modules\admin\Module',
+                    'alias' => 'admin',
                 ],
             ],
         ];
@@ -163,5 +164,14 @@ class Bootstrap implements BootstrapInterface
                 $app->params['email'] = 'hostmaster@' . $app->getRequest()->getServerName();
             }
         }
+
+        $alias = $app->getModules()['admin']['alias'];
+
+        $app->getUrlManager()->addRules([
+            $alias . '/<module>/<controller>/<view>' => 'admin/<module>/<controller>/<view>',
+            $alias . '/<controller>/<view>' => 'admin/<controller>/<view>',
+            $alias . '/<controller>' => 'admin/<controller>',
+            $alias . '/' => 'admin/',
+        ], false);
     }
 }
