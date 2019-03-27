@@ -168,6 +168,7 @@ class Bootstrap implements BootstrapInterface
         $alias = $app->getModules()['admin']['alias'];
 
         $app->getUrlManager()->addRules([
+            '' => $app->defaultRoute,
             $alias . '/<module>/<controller>/<view>' => 'admin/<module>/<controller>/<view>',
             $alias . '/<controller>/<view>' => 'admin/<controller>/<view>',
             $alias . '/<controller>' => 'admin/<controller>',
