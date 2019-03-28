@@ -30,7 +30,7 @@ class AuthController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['assign', 'index', 'revoke', 'user'],
+                        'actions' => ['assign', 'index', 'revoke', 'view'],
                         'roles' => ['authUpdate'],
                     ],
                 ],
@@ -46,7 +46,6 @@ class AuthController extends Controller
     }
 
     /**
-     * Auth list.
      * @return string
      */
     public function actionIndex()
@@ -64,13 +63,12 @@ class AuthController extends Controller
     }
 
     /**
-     * Auth user list.
-     * @param int $id
+     * @param int $user
      * @return string
      */
-    public function actionUser($id)
+    public function actionView($user)
     {
-        $user = $this->getUser($id);
+        $user = $this->getUser($user);
         return $this->renderUserAuthItems($user);
     }
 
@@ -149,7 +147,7 @@ class AuthController extends Controller
             ->allWithChildren();
 
         /** @noinspection MissedViewInspection */
-        return $this->render('user', [
+        return $this->render('view', [
             'provider' => new ArrayDataProvider(['allModels' => $items]),
             'user' => $user,
         ]);

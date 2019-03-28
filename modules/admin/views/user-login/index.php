@@ -12,17 +12,11 @@ use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\UserLoginGridView;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
 use yii\data\ActiveDataProvider;
-use yii\helpers\Html;
 
 $this->setTitle(Yii::t('skeleton', 'Logins'));
-
-$this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['/admin/user/index']);
-$this->setBreadcrumb($this->title);
 ?>
 
-<?= UserSubmenu::widget([
-    'title' => Html::a(Html::encode(Yii::t('skeleton', 'Logins')), ['/admin/user/index']),
-]); ?>
+<?= UserSubmenu::widget(); ?>
 
 <?= Panel::widget([
     'content' => UserLoginGridView::widget([

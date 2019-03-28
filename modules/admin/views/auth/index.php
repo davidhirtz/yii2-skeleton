@@ -16,14 +16,9 @@ use yii\grid\GridView;
 use yii\helpers\Html;
 
 $this->setTitle(Yii::t('skeleton', 'Permissions'));
-
-$this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['/admin/user/index']);
-$this->setBreadcrumb($this->title);
 ?>
 
-<?= UserSubmenu::widget([
-    'title' => Html::a(Html::encode(Yii::t('skeleton', 'Permissions')), ['/admin/user/index']),
-]); ?>
+<?= UserSubmenu::widget(); ?>
 
 <?= Panel::widget([
     'content' => GridView::widget([

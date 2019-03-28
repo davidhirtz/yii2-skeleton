@@ -18,8 +18,8 @@ use rmrevin\yii\fontawesome\FAR;
 use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Account'));
-$this->setBreadcrumb($this->title);
 ?>
+
 <?php
 if ($user->isUnconfirmed()) {
     ?>

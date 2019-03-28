@@ -15,7 +15,6 @@ use rmrevin\yii\fontawesome\FAS;
 use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Recover Password'));
-$this->setBreadcrumb($this->title);
 ?>
 
 <?= Html::errorSummary($form, ['header' => Yii::t('skeleton', 'Your password could not be reset')]); ?>

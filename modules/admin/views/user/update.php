@@ -14,22 +14,15 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
 
 $this->setTitle(Yii::t('skeleton', 'Edit User'));
-
 $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
-$this->setBreadcrumb($user->getUsername(), ['update', 'id' => $user->id]);
-$this->setBreadcrumb($this->title);
 ?>
-
-<?= Html::errorSummary($user, [
-    'title' => Yii::t('skeleton', 'The user could not be updated'),
-]); ?>
-
-<h1 class="page-header">
-    <?= Html::a(Html::encode($user->getUsername()), ['update', 'id' => $user->id]); ?>
-</h1>
 
 <?= UserSubmenu::widget([
     'user' => $user,
+]); ?>
+
+<?= Html::errorSummary($user, [
+    'title' => Yii::t('skeleton', 'The user could not be updated'),
 ]); ?>
 
 <?= Panel::widget([

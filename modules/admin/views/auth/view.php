@@ -19,10 +19,7 @@ use yii\widgets\ActiveForm;
 use yii\widgets\Pjax;
 
 $this->setTitle(Yii::t('skeleton', 'Edit Permissions'));
-
 $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['/admin/user/index']);
-$this->setBreadcrumb($user->getUsername(), ['/admin/user/update', 'id' => $user->id]);
-$this->setBreadcrumb($this->title);
 
 /**
  * Grid.
@@ -80,10 +77,6 @@ $grid = new GridView([
     ],
 ]);
 ?>
-<h1 class="page-header"><?= Html::a(Html::encode($user->getUsername()), [
-        '/admin/user/update',
-        'id' => $user->id
-    ]); ?></h1>
 <?= UserSubmenu::widget(['user' => $user]); ?>
 <div class="card">
     <div class="card-header">

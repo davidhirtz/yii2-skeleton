@@ -63,14 +63,14 @@ class UserLoginController extends Controller
     }
 
     /**
-     * @param int $id
+     * @param int $user
      * @return string
      */
-    public function actionView($id)
+    public function actionView($user)
     {
         $user = User::find()
             ->nameAttributesOnly()
-            ->where(['id' => $id])
+            ->where(['id' => $user])
             ->one();
 
         if (!$user) {

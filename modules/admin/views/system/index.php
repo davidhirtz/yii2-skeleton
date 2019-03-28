@@ -16,7 +16,6 @@ use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
 use rmrevin\yii\fontawesome\FAS;
 
 $this->setTitle(Yii::t('skeleton', 'System'));
-$this->setBreadcrumb($this->title);
 ?>
 
 <?= Submenu::widget([

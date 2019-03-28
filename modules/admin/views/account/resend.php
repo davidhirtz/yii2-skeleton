@@ -15,12 +15,6 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Resend Account Confirmation'));
-
-if (!Yii::$app->getUser()->getIsGuest()) {
-    $this->setBreadcrumb(Yii::t('skeleton', 'Account'), ['update']);
-}
-
-$this->setBreadcrumb($this->title);
 ?>
 <?= Html::errorSummary($form, [
     'header' => Yii::t('skeleton', 'Your confirmation could not be resend'),

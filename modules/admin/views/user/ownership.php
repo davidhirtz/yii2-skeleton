@@ -13,17 +13,12 @@ use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
 use davidhirtz\yii2\skeleton\helpers\Html;
 
 $this->setTitle(Yii::t('skeleton', 'Transfer Ownership'));
-
-$this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
-$this->setBreadcrumb($this->title);
 ?>
+
+<?= UserSubmenu::widget(); ?>
 
 <?= Html::errorSummary($form, [
     'header' => Yii::t('skeleton', 'The site ownership could not be transferred'),
-]); ?>
-
-<?= UserSubmenu::widget([
-    'title' => Html::a(Html::encode(Yii::t('skeleton', 'Users')), ['index']),
 ]); ?>
 
 <?php

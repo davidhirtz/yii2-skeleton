@@ -13,17 +13,12 @@ use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
 
 $this->setTitle(Yii::t('skeleton', 'Create New User'));
-
-$this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
-$this->setBreadcrumb($this->title);
 ?>
+
+<?= UserSubmenu::widget(); ?>
 
 <?= Html::errorSummary($user, [
     'header' => Yii::t('skeleton', 'The user could not be created'),
-]); ?>
-
-<?= UserSubmenu::widget([
-    'title' => Html::a(Yii::t('skeleton', 'Users'), ['index']),
 ]); ?>
 
 <?= Panel::widget([

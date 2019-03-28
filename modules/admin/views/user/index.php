@@ -12,15 +12,11 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\UserGridView;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\panels\UserOwnerPanel;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
 use yii\data\ActiveDataProvider;
-use davidhirtz\yii2\skeleton\helpers\Html;
 
 $this->setTitle(Yii::t('skeleton', 'Users'));
-$this->setBreadcrumb($this->title, ['index']);
 ?>
 
-<?= UserSubmenu::widget([
-    'title' => Html::a(Html::encode($this->title), ['index']),
-]); ?>
+<?= UserSubmenu::widget(); ?>
 
 <?= Panel::widget([
     'content' => UserGridView::widget([

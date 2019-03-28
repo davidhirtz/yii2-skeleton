@@ -13,12 +13,12 @@ use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
 
 $this->setTitle(Yii::t('skeleton', 'Set New Password'));
-$this->setBreadcrumb($this->title);
 ?>
 
 <?= Html::errorSummary($form, [
     'header' => Yii::t('skeleton', 'Your password could not be saved'),
 ]); ?>
+
 <div class="container">
     <div class="centered">
         <?php Panel::begin(['title' => $this->title]); ?>

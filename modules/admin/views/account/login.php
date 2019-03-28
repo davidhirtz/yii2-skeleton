@@ -16,7 +16,6 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Login'));
-$this->setBreadcrumb($this->title);
 ?>
 
 <?= Html::errorSummary($form, [

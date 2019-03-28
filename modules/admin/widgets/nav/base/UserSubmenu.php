@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\nav\base;
 
+use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
 use Yii;
@@ -31,24 +32,29 @@ class UserSubmenu extends Submenu
                 ],
                 [
                     'label' => Yii::t('skeleton', 'Permissions'),
-                    'url' => ['/admin/auth/user', 'id' => $this->user->id],
+                    'url' => ['/admin/auth/view', 'user' => $this->user->id],
                     'icon' => 'unlock-alt hidden-sm hidden-xs',
                     'visible' => Yii::$app->getUser()->can('authUpdate', ['user' => $this->user]),
                 ],
                 [
                     'label' => Yii::t('skeleton', 'Logins'),
-                    'url' => ['/admin/user-login/view', 'id' => $this->user->id],
+                    'url' => ['/admin/user-login/view', 'user' => $this->user->id],
                     'icon' => 'bars hidden-sm hidden-xs',
                     'visible' => Yii::$app->getUser()->can('userUpdate'),
                 ],
             ];
+
+            if(!$this->title) {
+                $this->title = Html::a($this->user->getOldAttribute('name'), ['/admin/user/update', 'id' => $this->user->id]);
+            }
+
         } else {
             $this->items = [
                 [
                     'label' => Yii::t('skeleton', 'Users'),
                     'url' => ['/admin/user/index'],
                     'icon' => 'users hidden-sm hidden-xs',
-                    'active' => ['user/(index|owner)'],
+                    'active' => ['user/(index|owner|create)'],
                 ],
                 [
                     'label' => Yii::t('skeleton', 'Permissions'),
@@ -63,6 +69,10 @@ class UserSubmenu extends Submenu
                     'visible' => Yii::$app->getUser()->can('userUpdate'),
                 ],
             ];
+
+            if(!$this->title) {
+                $this->title = Html::a(Yii::t('skeleton', 'Users'), ['/admin/user/index']);
+            }
         }
 
         parent::init();
