@@ -100,9 +100,6 @@ class NavBar extends \yii\bootstrap4\NavBar
                 'label' => $user->getIdentity()->getUsername(),
                 'icon' => 'user',
                 'url' => ['/admin/account/update'],
-                'labelOptions' => [
-                    'class' => 'hidden-xs',
-                ],
             ],
             [
                 'label' => Yii::t('skeleton', 'Logout'),
@@ -110,9 +107,6 @@ class NavBar extends \yii\bootstrap4\NavBar
                 'url' => ['/admin/account/logout'],
                 'linkOptions' => [
                     'data-method' => 'post',
-                ],
-                'labelOptions' => [
-                    'class' => 'hidden-xs',
                 ],
             ],
         ];
@@ -128,9 +122,6 @@ class NavBar extends \yii\bootstrap4\NavBar
                 'label' => Yii::t('skeleton', 'Home'),
                 'icon' => 'home',
                 'url' => ['/admin/dashboard/index'],
-                'labelOptions' => [
-                    'class' => 'hidden-xs',
-                ],
             ],
         ];
     }
@@ -147,9 +138,6 @@ class NavBar extends \yii\bootstrap4\NavBar
                     'icon' => 'users',
                     'url' => ['/admin/user/index'],
                     'active' => ['admin/auth', 'admin/login', 'admin/user'],
-                    'labelOptions' => [
-                        'class' => 'hidden-xs',
-                    ],
                 ]
             ];
         }

@@ -31,8 +31,8 @@ $this->setTitle(Yii::t('skeleton', 'Permissions'));
         ],
         'columns' => [
             [
-                'headerOptions' => ['class' => 'hidden-sm hidden-xs'],
-                'contentOptions' => ['class' => 'text-center hidden-sm hidden-xs'],
+                'headerOptions' => ['class' => 'd-none d-md-table-cell'],
+                'contentOptions' => ['class' => 'd-none d-md-table-cell text-center'],
                 'content' => function (AuthItem $authItem) {
                     return FAS::icon($authItem->getTypeIcon(), [
                         'data-toggle' => 'tooltip',
@@ -42,8 +42,8 @@ $this->setTitle(Yii::t('skeleton', 'Permissions'));
             ],
             [
                 'attribute' => 'displayName',
-                'headerOptions' => ['class' => 'hidden-xs'],
-                'contentOptions' => ['class' => 'hidden-xs'],
+                'headerOptions' => ['class' => 'd-none d-md-table-cell'],
+                'contentOptions' => ['class' => 'd-none d-md-table-cell'],
             ],
             [
                 'attribute' => 'description',

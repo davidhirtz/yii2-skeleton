@@ -24,6 +24,7 @@ class UserGridView extends GridView
         'email',
         'last_login',
         'created_at',
+        'buttons'
     ];
 
     /**
@@ -31,25 +32,13 @@ class UserGridView extends GridView
      */
     public function init()
     {
-//		if(!$this->columns)
-//		{
-//			$this->columns=[
-//				$this->renderStatusColumn(),
-//				$this->renderNameColumn(),
-//				$this->renderEmailColumn(),
-//				$this->renderLastLoginColumn(),
-//				$this->renderCreatedAtColumn(),
-//				$this->renderButtonsColumn(),
-//			];
-//		}
-
         if ($this->header === null) {
             $this->header = [
                 [
                     [
                         'content' => $this->getSearchInput(),
                         'options' => [
-                            'class' => 'col-8 col-md-6',
+                            'class' => 'col-12 col-md-6',
                         ],
                     ],
                     'options' => [
@@ -63,7 +52,7 @@ class UserGridView extends GridView
             $this->footer = [
                 [
                     [
-                        'content' => $this->renderCreateUserButton(),
+                        'content' => $this->createUserButton(),
                         'visible' => Yii::$app->getUser()->can('userCreate'),
                         'options' => [
                             'class' => 'col-12',
@@ -83,7 +72,7 @@ class UserGridView extends GridView
     /**
      * @return string
      */
-    public function renderCreateUserButton()
+    public function createUserButton()
     {
         return Html::a(Html::iconText('user-plus', Yii::t('skeleton', 'New User')), ['create'], ['class' => 'btn btn-primary']);
     }
@@ -126,8 +115,8 @@ class UserGridView extends GridView
     {
         return [
             'attribute' => 'email',
-            'headerOptions' => ['class' => 'hidden-xs'],
-            'contentOptions' => ['class' => 'hidden-xs'],
+            'headerOptions' => ['class' => 'd-none d-md-table-cell'],
+            'contentOptions' => ['class' => 'd-none d-md-table-cell'],
             'content' => function (User $user) {
                 return Html::a(Html::markKeywords($user->email, $this->getSearchKeywords()), [
                     'update',
@@ -144,8 +133,8 @@ class UserGridView extends GridView
     {
         return [
             'attribute' => 'last_login',
-            'headerOptions' => ['class' => 'hidden-xs'],
-            'contentOptions' => ['class' => 'hidden-xs'],
+            'headerOptions' => ['class' => 'd-none d-md-table-cell'],
+            'contentOptions' => ['class' => 'd-none d-md-table-cell'],
             'content' => function (User $user) {
                 return Html::a(Timeago::tag($user->last_login), ['/admin/user-login/view', 'id' => $user->id]);
             }
@@ -159,8 +148,8 @@ class UserGridView extends GridView
     {
         return [
             'attribute' => 'created_at',
-            'headerOptions' => ['class' => 'hidden-sm hidden-xs'],
-            'contentOptions' => ['class' => 'hidden-sm hidden-xs'],
+            'headerOptions' => ['class' => 'd-none d-md-table-cell'],
+            'contentOptions' => ['class' => 'd-none d-md-table-cell'],
             'content' => function (User $user) {
                 return Timeago::tag($user->created_at);
             }
@@ -173,7 +162,8 @@ class UserGridView extends GridView
     public function buttonsColumn()
     {
         return [
-            'contentOptions' => ['class' => 'text-right'],
+            'headerOptions' => ['class' => 'd-none d-md-table-cell'],
+            'contentOptions' => ['class' => 'd-none d-md-table-cell text-right'],
             'content' => function (User $user) {
                 $buttons = [];
 

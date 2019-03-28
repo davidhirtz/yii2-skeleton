@@ -50,8 +50,8 @@ class UserLoginGridView extends GridView
                 ],
                 [
                     'attribute' => 'browser',
-                    'headerOptions' => ['class' => 'hidden-sm hidden-xs', 'style' => 'width:45%;'],
-                    'contentOptions' => ['class' => 'hidden-sm hidden-xs'],
+                    'headerOptions' => ['class' => 'd-none d-md-table-cell', 'style' => 'width:45%;'],
+                    'contentOptions' => ['class' => 'd-none d-md-table-cell'],
                     'content' => function (UserLogin $login) {
                         return $login->browser;
                     }

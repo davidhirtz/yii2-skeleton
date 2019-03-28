@@ -28,23 +28,32 @@ class UserSubmenu extends Submenu
                 [
                     'label' => Yii::t('skeleton', 'User'),
                     'url' => ['/admin/user/update', 'id' => $this->user->id],
-                    'icon' => 'user hidden-sm hidden-xs',
+                    'icon' => 'user',
+                    'labelOptions' => [
+                        'class' => 'd-none d-md-inline'
+                    ],
                 ],
                 [
                     'label' => Yii::t('skeleton', 'Permissions'),
                     'url' => ['/admin/auth/view', 'user' => $this->user->id],
-                    'icon' => 'unlock-alt hidden-sm hidden-xs',
+                    'icon' => 'unlock-alt',
                     'visible' => Yii::$app->getUser()->can('authUpdate', ['user' => $this->user]),
+                    'labelOptions' => [
+                        'class' => 'd-none d-md-inline'
+                    ],
                 ],
                 [
                     'label' => Yii::t('skeleton', 'Logins'),
                     'url' => ['/admin/user-login/view', 'user' => $this->user->id],
-                    'icon' => 'bars hidden-sm hidden-xs',
+                    'icon' => 'bars',
                     'visible' => Yii::$app->getUser()->can('userUpdate'),
+                    'labelOptions' => [
+                        'class' => 'd-none d-md-inline'
+                    ],
                 ],
             ];
 
-            if(!$this->title) {
+            if (!$this->title) {
                 $this->title = Html::a($this->user->getOldAttribute('name'), ['/admin/user/update', 'id' => $this->user->id]);
             }
 
@@ -53,24 +62,33 @@ class UserSubmenu extends Submenu
                 [
                     'label' => Yii::t('skeleton', 'Users'),
                     'url' => ['/admin/user/index'],
-                    'icon' => 'users hidden-sm hidden-xs',
+                    'icon' => 'users',
                     'active' => ['user/(index|owner|create)'],
+                    'labelOptions' => [
+                        'class' => 'd-none d-md-inline'
+                    ],
                 ],
                 [
                     'label' => Yii::t('skeleton', 'Permissions'),
                     'url' => ['/admin/auth/index'],
-                    'icon' => 'unlock-alt hidden-sm hidden-xs',
+                    'icon' => 'unlock-alt',
                     'visible' => Yii::$app->getUser()->can('authUpdate'),
+                    'labelOptions' => [
+                        'class' => 'd-none d-md-inline'
+                    ],
                 ],
                 [
                     'label' => Yii::t('skeleton', 'Logins'),
                     'url' => ['/admin/user-login/index'],
-                    'icon' => 'bars hidden-sm hidden-xs',
+                    'icon' => 'bars',
                     'visible' => Yii::$app->getUser()->can('userUpdate'),
+                    'labelOptions' => [
+                        'class' => 'd-none d-md-inline'
+                    ],
                 ],
             ];
 
-            if(!$this->title) {
+            if (!$this->title) {
                 $this->title = Html::a(Yii::t('skeleton', 'Users'), ['/admin/user/index']);
             }
         }
