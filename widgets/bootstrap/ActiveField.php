@@ -18,6 +18,15 @@ class ActiveField extends \yii\bootstrap4\ActiveField
     public $checkTemplate = '{beginWrapper}<div class="form-check-inline">{input}{label}{error}{hint}</div>{endWrapper}';
 
     /**
+     * @inheritDoc
+     */
+    public function init()
+    {
+        $this->checkHorizontalTemplate = $this->checkTemplate;
+        parent::init();
+    }
+
+    /**
      * @inheritdoc
      */
     public function checkbox($options = [], $enclosedByLabel = false)
