@@ -171,8 +171,7 @@ abstract class User extends ActiveRecord
             ],
             [
                 ['language'],
-                'in',
-                'range' => Yii::$app->getI18n()->languages,
+                'validateLanguage',
             ],
             [
                 ['timezone'],
@@ -199,6 +198,17 @@ abstract class User extends ActiveRecord
     {
         if (!in_array($this->timezone, \DateTimeZone::listIdentifiers())) {
             $this->timezone = null;
+        }
+    }
+
+    /**
+     * Sanitizes language.
+     * @see User::rules()
+     */
+    public function validateLanguage()
+    {
+        if (!in_array($this->language, Yii::$app->getI18n()->languages)) {
+            $this->timezone = Yii::$app->language;
         }
     }
 
@@ -428,8 +438,8 @@ abstract class User extends ActiveRecord
     }
 
     /**
-     * @throws \Exception
      * @return string
+     * @throws \Exception
      */
     public function getTimezoneOffset()
     {
