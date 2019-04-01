@@ -59,7 +59,7 @@ class UserForm extends User
     /**
      * @return bool
      */
-    protected function validateNewPassword(): bool
+    public function validateNewPassword(): bool
     {
         return !$this->validatePassword($this->oldPassword) ? $this->addInvalidAttributeError('oldPassword') : true;
     }
