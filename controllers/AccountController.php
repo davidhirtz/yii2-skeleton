@@ -321,6 +321,7 @@ class AccountController extends Controller
 
         if ($user->load(Yii::$app->getRequest()->post())) {
             if ($user->update()) {
+                $user->newPassword = $user->oldPassword = null;
                 $this->success(Yii::t('skeleton', 'Your account was updated.'));
                 return $this->refresh();
             }
