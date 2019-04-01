@@ -174,9 +174,9 @@ class UrlManager extends \yii\web\UrlManager
                     }
 
                     Yii::$app->language = $language;
-                } elseif ($this->defaultLanguage) {
-                    Yii::$app->language = $this->defaultLanguage;
                 }
+            } elseif ($this->defaultLanguage) {
+                Yii::$app->language = $this->defaultLanguage;
             }
         }
 
