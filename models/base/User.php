@@ -208,7 +208,7 @@ abstract class User extends ActiveRecord
     public function validateLanguage()
     {
         if (!in_array($this->language, Yii::$app->getI18n()->languages)) {
-            $this->timezone = Yii::$app->language;
+            $this->language = Yii::$app->language;
         }
     }
 
