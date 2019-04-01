@@ -83,6 +83,10 @@ class UserForm extends User
             $this->generateEmailConfirmationCode();
         }
 
+        if ($this->newPassword) {
+            $this->generatePasswordHash($this->newPassword);
+        }
+
         return parent::beforeSave($insert);
     }
 
