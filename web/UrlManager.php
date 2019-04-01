@@ -125,7 +125,8 @@ class UrlManager extends \yii\web\UrlManager
     }
 
     /**
-     * @inheritdoc
+     * @param Request $request
+     * @return array|bool
      */
     public function parseRequest($request)
     {
@@ -173,6 +174,8 @@ class UrlManager extends \yii\web\UrlManager
                     }
 
                     Yii::$app->language = $language;
+                } elseif ($this->defaultLanguage) {
+                    Yii::$app->language = $this->defaultLanguage;
                 }
             }
         }
