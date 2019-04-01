@@ -87,9 +87,9 @@ class AccountController extends Controller
     }
 
     /**
-     * @throws ForbiddenHttpException
-     * @throws \yii\base\Exception
      * @return string
+     * @throws \yii\base\Exception
+     * @throws ForbiddenHttpException
      */
     public function actionCreate()
     {
@@ -127,8 +127,8 @@ class AccountController extends Controller
      * Returns JSON encoded string containing a signup token.
      * The token will only be every five minutes, to prevent multiple signups within one session.
      *
-     * @throws \yii\base\Exception
      * @return string
+     * @throws \yii\base\Exception
      */
     public function actionToken()
     {
@@ -247,10 +247,10 @@ class AccountController extends Controller
     }
 
     /**
-     * @throws ForbiddenHttpException
+     * @return string
      * @throws \Throwable
      * @throws \yii\db\StaleObjectException
-     * @return string
+     * @throws ForbiddenHttpException
      */
     public function actionRecover()
     {
@@ -280,8 +280,8 @@ class AccountController extends Controller
     /**
      * @param string $email
      * @param string $code
-     * @throws ForbiddenHttpException
      * @return string
+     * @throws ForbiddenHttpException
      */
     public function actionReset($email, $code)
     {
@@ -311,18 +311,22 @@ class AccountController extends Controller
     }
 
     /**
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
      * @return string
+     * @throws \yii\db\StaleObjectException
+     * @throws \Throwable
      */
     public function actionUpdate()
     {
         $user = UserForm::findOne(Yii::$app->getUser()->getId());
 
         if ($user->load(Yii::$app->getRequest()->post())) {
+
             if ($user->update()) {
-                $user->newPassword = $user->oldPassword = null;
                 $this->success(Yii::t('skeleton', 'Your account was updated.'));
+            }
+
+            if (!$user->hasErrors()) {
+                $user->newPassword = $user->oldPassword = null;
                 return $this->refresh();
             }
         }
@@ -391,9 +395,9 @@ class AccountController extends Controller
     }
 
     /**
-     * @see \yii\authclient\AuthAction::$successCallback
      * @param Facebook $client
      * @return string
+     * @see \yii\authclient\AuthAction::$successCallback
      */
     public function onAuthSuccess($client)
     {
