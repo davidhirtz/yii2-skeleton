@@ -20,10 +20,7 @@ var options={
 	],
 	sass:{
 		errLogToConsole:true,
-		outputStyle:'expanded',
-		// includePaths:[
-		// 	'vendor/davidhirtz/assets/site/scss/'
-		// ]
+		outputStyle:'expanded'
 	}
 };
 
