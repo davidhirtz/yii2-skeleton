@@ -136,7 +136,7 @@ class UserGridView extends GridView
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
             'contentOptions' => ['class' => 'd-none d-md-table-cell'],
             'content' => function (User $user) {
-                return Html::a(Timeago::tag($user->last_login), ['/admin/user-login/view', 'id' => $user->id]);
+                return Html::a(Timeago::tag($user->last_login), ['/admin/user-login/view', 'user' => $user->id]);
             }
         ];
     }
