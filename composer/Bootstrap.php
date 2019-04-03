@@ -106,6 +106,9 @@ class Bootstrap implements BootstrapInterface
                 'session' => [
                     'class' => 'davidhirtz\yii2\skeleton\web\DbSession',
                 ],
+                'sitemap' => [
+                    'class' => 'davidhirtz\yii2\skeleton\web\Sitemap',
+                ],
                 'urlManager' => [
                     'class' => 'davidhirtz\yii2\skeleton\web\UrlManager',
                 ],
@@ -115,6 +118,9 @@ class Bootstrap implements BootstrapInterface
                 'view' => [
                     'class' => 'davidhirtz\yii2\skeleton\web\View',
                 ],
+            ],
+            'controllerMap' => [
+                'sitemap' => 'davidhirtz\yii2\skeleton\controllers\SitemapController',
             ],
             'modules' => [
                 'admin' => [
@@ -169,6 +175,7 @@ class Bootstrap implements BootstrapInterface
 
         $app->getUrlManager()->addRules([
             '' => $app->defaultRoute,
+            'sitemap.xml' => 'sitemap/index',
             $alias . '/<module>/<controller>/<view>' => 'admin/<module>/<controller>/<view>',
             $alias . '/<controller>/<view>' => 'admin/<controller>/<view>',
             $alias . '/<controller>' => 'admin/<controller>',
