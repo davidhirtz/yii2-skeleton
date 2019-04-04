@@ -49,7 +49,7 @@ trait StatusAttributeTrait
      */
     public function getStatusName(): string
     {
-        return $this->status ? static::getStatuses()[$this->status]['name'] : null;
+        return $this->status ? static::getStatuses()[$this->status]['name'] : '';
     }
 
     /**
@@ -57,7 +57,7 @@ trait StatusAttributeTrait
      */
     public function getStatusIcon(): string
     {
-        return $this->status ? static::getStatuses()[$this->status]['icon'] : null;
+        return $this->status ? static::getStatuses()[$this->status]['icon'] : '';
     }
 
     /**

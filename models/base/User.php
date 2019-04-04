@@ -467,7 +467,7 @@ abstract class User extends ActiveRecord
     /**
      * @return string
      */
-    public function getStatusName()
+    public function getStatusName(): string
     {
         return !$this->isOwner() ? static::getStatuses()[$this->status]['name'] : Yii::t('skeleton', 'Site Owner');
     }
@@ -475,7 +475,7 @@ abstract class User extends ActiveRecord
     /**
      * @return string
      */
-    public function getStatusIcon()
+    public function getStatusIcon(): string
     {
         return !$this->isOwner() ? static::getStatuses()[$this->status]['icon'] : 'star';
     }
