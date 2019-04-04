@@ -180,16 +180,16 @@ class View extends \yii\web\View
         $items = [];
         $pos = 1;
 
-        foreach ($links as $url => $link) {
-            if (!is_array($link)) {
-                $link = [
-                    'name' => $link,
-                    'item' => $url,
+        foreach ($links as $name => $item) {
+            if (!is_int($name)) {
+                $item = [
+                    'name' => $name,
+                    'item' => $item,
                 ];
             }
 
-            $link['item'] = Url::to($link['item'], true);
-            $items[] = array_merge(['@type' => 'ListItem', 'position' => $pos++], $link);
+            $item['item'] = Url::to($item['item'], true);
+            $items[] = array_merge(['@type' => 'ListItem', 'position' => $pos++], $item);
         }
 
         $this->registerStructuredData(['@type' => 'BreadcrumbList', 'itemListElement' => $items]);
