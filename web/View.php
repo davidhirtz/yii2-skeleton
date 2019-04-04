@@ -5,6 +5,7 @@ namespace davidhirtz\yii2\skeleton\web;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use yii\helpers\Json;
 use Yii;
+use yii\helpers\Url;
 
 /**
  * Class View
@@ -35,7 +36,7 @@ class View extends \yii\web\View
     /**
      * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         if (!$this->titleTemplate) {
             return $this->title ?: Yii::$app->name;
@@ -59,7 +60,7 @@ class View extends \yii\web\View
     /**
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return isset($this->metaTags['description']) ? $this->metaTags['description'] : '';
     }
@@ -90,7 +91,7 @@ class View extends \yii\web\View
     /**
      * @return array
      */
-    public function getBreadcrumbs()
+    public function getBreadcrumbs(): array
     {
         return $this->_breadcrumbs;
     }
@@ -128,10 +129,7 @@ class View extends \yii\web\View
     public function registerOpenGraphMetaTags($type = 'website', $title = null, $description = null)
     {
         $this->registerMetaTag(['name' => 'og:title', 'content' => $title ?: $this->getTitle()], 'og:title');
-        $this->registerMetaTag([
-            'name' => 'og:description',
-            'content' => $description ?: $this->getDescription()
-        ], 'og:description');
+        $this->registerMetaTag(['name' => 'og:description', 'content' => $description ?: $this->getDescription()], 'og:description');
 
         if ($type) {
             $this->registerMetaTag(['name' => 'og:type', 'content' => $type], 'og:type');
@@ -146,9 +144,7 @@ class View extends \yii\web\View
      */
     public function registerImageMetaTags($url, $width = null, $height = null, $text = null)
     {
-        if (!parse_url($url, PHP_URL_HOST)) {
-            $url = rtrim(Yii::$app->getRequest()->getHostInfo(), '/') . '/' . ltrim($url, '/');
-        }
+        $url = Url::to($url, true);
 
         $this->registerMetaTag(['property' => 'og:image', 'content' => $url]);
 
@@ -177,10 +173,25 @@ class View extends \yii\web\View
     }
 
     /**
-     * @param array $items
+     * @param array $links can either be an array containing "name" and "item" as key and value or an associative array.
      */
-    public function registerStructuredDataBreadcrumbs($items)
+    public function registerStructuredDataBreadcrumbs($links)
     {
+        $items = [];
+        $pos = 1;
+
+        foreach ($links as $url => $link) {
+            if (!is_array($link)) {
+                $link = [
+                    'name' => $link,
+                    'item' => $url,
+                ];
+            }
+
+            $link['item'] = Url::to($link['item'], true);
+            $items[] = array_merge(['@type' => 'ListItem', 'position' => $pos++], $link);
+        }
+
         $this->registerStructuredData(['@type' => 'BreadcrumbList', 'itemListElement' => $items]);
     }
 
