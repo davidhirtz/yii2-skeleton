@@ -28,7 +28,7 @@
 		"guzzlehttp/guzzle":"~6.0",
 		"guzzlehttp/oauth-subscriber":"0.3.*",
 		"seld/cli-prompt": "^1.0",
-		"npm-asset/skeleton-router":">=1.1.5"
+		"npm-asset/skeleton-router":">=1.1.6"
 	},
 	"autoload":{
 		"psr-4":{
