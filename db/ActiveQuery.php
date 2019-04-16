@@ -52,7 +52,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
     public function enabled()
     {
         $model = $this->getModelInstance();
-        return $this->andWhere([$model::tableName() . '.status' => $model::STATUS_ENABLED]);
+        return $this->andWhere(['>', $model::tableName() . '.status', $model::STATUS_DISABLED]);
     }
 
     /**

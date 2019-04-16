@@ -68,14 +68,6 @@ class UserQuery extends ActiveQuery
     }
 
     /**
-     * @return $this
-     */
-    public function enabled()
-    {
-        return $this->andWhere([User::tableName() . '.[[status]]' => User::STATUS_ENABLED]);
-    }
-
-    /**
      * @param string $search
      * @return $this
      */
