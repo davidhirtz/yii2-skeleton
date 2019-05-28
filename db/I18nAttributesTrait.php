@@ -111,7 +111,7 @@ trait I18nAttributesTrait
             foreach ($rules as $key => $rule) {
 
                 // If a i18n attribute has an unique validator with a targetAttribute all related
-                // attributes need their own rule.
+                // attributes need their own rule translating the target attribute.
                 if ($rule[1] === 'unique' && array_key_exists('targetAttribute', $rule)) {
                     $attribute = is_array($rule[0]) ? array_pop($rule[0]) : $rule[0];
 
@@ -119,6 +119,7 @@ trait I18nAttributesTrait
                         if ($attribute !== $i18nAttribute) {
                             $i18nRule = $rule;
                             $i18nRule[0] = $i18nAttribute;
+                            $i18nRule['targetAttribute'] = (array)$i18nRule['targetAttribute'];
 
                             foreach ((array)$i18nRule['targetAttribute'] as $targetKey => $targetAttribute) {
                                 if ($targetAttribute === $attribute) {
