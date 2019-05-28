@@ -47,7 +47,7 @@ trait I18nAttributesTrait
     {
         $names = [];
 
-        foreach((array)$attributes as $attribute) {
+        foreach ((array)$attributes as $attribute) {
             if (in_array($attribute, $this->i18nAttributes)) {
                 $names = array_merge($names, Yii::$app->getI18n()->getAttributeNames($attribute, $languages));
             } else {
@@ -109,17 +109,42 @@ trait I18nAttributesTrait
     {
         if ($this->i18nAttributes) {
             foreach ($rules as $key => $rule) {
-                $attributes = [];
 
-                foreach ((array)$rule[0] as $attribute) {
-                    if ($attribute) {
-                        foreach ($this->getI18nAttributeNames($attribute) as $i18nAttribute) {
-                            $attributes[] = $i18nAttribute;
+                // If a i18n attribute has an unique validator with a targetAttribute all related
+                // attributes need their own rule.
+                if ($rule[1] === 'unique' && array_key_exists('targetAttribute', $rule)) {
+                    $attribute = is_array($rule[0]) ? array_pop($rule[0]) : $rule[0];
+
+                    foreach ($this->getI18nAttributeNames($attribute) as $i18nAttribute) {
+                        if ($attribute !== $i18nAttribute) {
+                            $i18nRule = $rule;
+                            $i18nRule[0] = $i18nAttribute;
+
+                            foreach ((array)$i18nRule['targetAttribute'] as $targetKey => $targetAttribute) {
+                                if ($targetAttribute === $attribute) {
+                                    $i18nRule['targetAttribute'][$targetKey] = $i18nAttribute;
+                                }
+                            }
+
+                            $rules[] = $i18nRule;
                         }
                     }
+
+                } else {
+
+                    $attributes = [];
+
+                    foreach ((array)$rule[0] as $attribute) {
+                        if ($attribute) {
+                            foreach ($this->getI18nAttributeNames($attribute) as $i18nAttribute) {
+                                $attributes[] = $i18nAttribute;
+                            }
+                        }
+                    }
+
+                    $rules[$key][0] = $attributes;
                 }
 
-                $rules[$key][0] = $attributes;
             }
         }
 
