@@ -36,7 +36,7 @@ class Request extends \yii\web\Request
         if (count($languages = Yii::$app->getI18n()->getLanguages()) > 1) {
             $manager = Yii::$app->getUrlManager();
 
-            if (!$manager->i18nUrl) {
+            if (!$manager->i18nUrl && !$manager->i18nSubdomain) {
                 $param = $manager->languageParam;
                 $cookie = $this->getCookies()->getValue($param);
                 $identity = Yii::$app->getUser()->getIdentity();

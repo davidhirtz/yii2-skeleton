@@ -31,6 +31,11 @@ class UrlManager extends \yii\web\UrlManager
     public $i18nUrl = false;
 
     /**
+     * @var bool
+     */
+    public $i18nSubdomain = false;
+
+    /**
      * @var array
      */
     public $languages;
@@ -66,19 +71,21 @@ class UrlManager extends \yii\web\UrlManager
         }
 
         if ($this->i18nUrl) {
-            if ($this->defaultLanguage === null) {
-                $this->defaultLanguage = Yii::$app->sourceLanguage;
-            }
+            $this->i18nSubdomain = false;
+        }
 
-            if ($this->languages === null) {
-                foreach (Yii::$app->getI18n()->getLanguages() as $language) {
-                    $this->languages[$language] = strstr($language, '-', true) ?: $language;
-                }
-            }
+        if ($this->defaultLanguage === null) {
+            $this->defaultLanguage = Yii::$app->sourceLanguage;
+        }
 
-            if (!$this->languages) {
-                $this->i18nUrl = false;
+        if ($this->languages === null) {
+            foreach (Yii::$app->getI18n()->getLanguages() as $language) {
+                $this->languages[$language] = strstr($language, '-', true) ?: $language;
             }
+        }
+
+        if (!$this->languages) {
+            $this->i18nUrl = false;
         }
 
         parent::init();
@@ -98,7 +105,7 @@ class UrlManager extends \yii\web\UrlManager
             unset($params['i18n']);
         }
 
-        if ($i18nUrl) {
+        if ($i18nUrl || $this->i18nSubdomain) {
             if (isset($params[$this->languageParam])) {
                 $language = $params[$this->languageParam];
                 unset($params[$this->languageParam]);
@@ -119,6 +126,11 @@ class UrlManager extends \yii\web\UrlManager
                 $position = strlen($this->showScriptName ? $this->getScriptUrl() : $this->getBaseUrl());
                 return rtrim(substr_replace($event->url, '/' . $this->languages[$language], $position, 0), '/');
             }
+        }
+
+        if ($this->i18nSubdomain && $language !== Yii::$app->language) {
+            $subdomain = $language == $this->defaultLanguage || !in_array($language, $this->languages) ? 'www' : $language;
+            return parse_url($this->getHostInfo(), PHP_URL_SCHEME) . '://' . $subdomain . $this->getI18nHostInfo() . $event->url;
         }
 
         return $event->url;
@@ -180,10 +192,23 @@ class UrlManager extends \yii\web\UrlManager
             }
         }
 
+        if($this->i18nSubdomain) {
+            $subdomain = explode('.', parse_url($this->getHostInfo(), PHP_URL_HOST))[0];
+            Yii::$app->language = in_array($subdomain, $this->languages) ? $subdomain : $this->defaultLanguage;
+        }
+
         $this->trigger(static::EVENT_BEFORE_PARSE, $event = new UrlManagerEvent([
             'request' => $request,
         ]));
 
         return parent::parseRequest($event->request);
+    }
+
+    /**
+     * @return bool|string
+     */
+    public function getI18nHostInfo()
+    {
+        return substr(parse_url($this->getHostInfo(), PHP_URL_HOST), strlen(Yii::$app->language == $this->defaultLanguage ? 'www' : Yii::$app->language));
     }
 }
