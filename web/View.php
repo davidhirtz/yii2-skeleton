@@ -181,7 +181,7 @@ class View extends \yii\web\View
         $pos = 1;
 
         foreach ($links as $name => $item) {
-            if (!is_int($name)) {
+            if (!is_array($item)) {
                 $item = [
                     'name' => $name,
                     'item' => $item,
