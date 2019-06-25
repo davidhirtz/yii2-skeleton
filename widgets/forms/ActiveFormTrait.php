@@ -292,7 +292,7 @@ trait ActiveFormTrait
     }
 
     /**
-     * @param mixed $attribute
+     * @param mixed $attribute can be used to customize the base url per attribute
      * @return string
      */
     public function getBaseUrl($attribute = null)
