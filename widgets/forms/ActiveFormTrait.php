@@ -152,7 +152,7 @@ trait ActiveFormTrait
 
         if ($type == 'url') {
             if (!isset($options['inputTemplate'])) {
-                $options['inputTemplate'] = $this->prependInput($this->getBaseUrl());
+                $options['inputTemplate'] = $this->prependInput($this->getBaseUrl($attribute));
             }
             $type = 'text';
         }
@@ -292,9 +292,10 @@ trait ActiveFormTrait
     }
 
     /**
+     * @param mixed $attribute
      * @return string
      */
-    public function getBaseUrl()
+    public function getBaseUrl($attribute = null)
     {
         return Yii::$app->getRequest()->getHostInfo() . '/';
     }
