@@ -106,8 +106,8 @@ trait ActiveFormTrait
                     continue;
                 }
 
-                if(isset($fieldConfig[0]['visible'])) {
-                    if($fieldConfig[0]['visible']===false) {
+                if (isset($fieldConfig[0]['visible'])) {
+                    if ($fieldConfig[0]['visible'] === false) {
                         continue;
                     }
 
@@ -151,7 +151,9 @@ trait ActiveFormTrait
         $type = isset($fieldConfig[0]) ? array_shift($fieldConfig) : 'text';
 
         if ($type == 'url') {
-            $options['inputTemplate'] = $this->prependInput($this->getBaseUrl());
+            if (!isset($options['inputTemplate'])) {
+                $options['inputTemplate'] = $this->prependInput($this->getBaseUrl());
+            }
             $type = 'text';
         }
 
