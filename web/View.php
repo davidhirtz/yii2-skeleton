@@ -26,6 +26,11 @@ class View extends \yii\web\View
     private $_breadcrumbs = [];
 
     /**
+     * @var string
+     */
+    private $_description;
+
+    /**
      * @param $title
      */
     public function setTitle($title)
@@ -52,8 +57,8 @@ class View extends \yii\web\View
     public function setDescription($description, $replace = true)
     {
         if (empty($this->metaTags['description']) || $replace) {
-            $description = preg_replace("/\n+/", " ", Html::encode($description));
-            $this->registerMetaTag(['name' => 'description', 'content' => $description], 'description');
+            $this->_description = preg_replace("/\n+/", " ", Html::encode($description));
+            $this->registerMetaTag(['name' => 'description', 'content' => $this->_description], 'description');
         }
     }
 
@@ -62,7 +67,7 @@ class View extends \yii\web\View
      */
     public function getDescription(): string
     {
-        return isset($this->metaTags['description']) ? $this->metaTags['description'] : '';
+        return $this->_description;
     }
 
     /**
