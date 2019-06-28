@@ -32,6 +32,9 @@ class Bootstrap implements BootstrapInterface
                 '@bower' => '@vendor/bower-asset',
                 '@npm' => '@vendor/npm-asset',
             ],
+            'bootstrap' => [
+                'log',
+            ],
             'components' => [
                 'assetManager' => [
                     'class' => 'davidhirtz\yii2\skeleton\web\AssetManager',
