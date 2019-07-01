@@ -74,9 +74,11 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
         $this->clientOptions['removePlugins'] = implode(',', array_unique(array_filter($removePlugins)));
         $this->clientOptions['toolbar'] = $this->toolbar;
 
-        /** @var HtmlValidator $validator */
-        $validator = Yii::createObject($this->validator);
-        $this->clientOptions['allowedContent'] = str_replace('|', ',', implode(';', $validator->allowedHtmlTags));
+        if ($this->validator) {
+            /** @var HtmlValidator $validator */
+            $validator = Yii::createObject($this->validator);
+            $this->clientOptions['allowedContent'] = str_replace('|', ',', implode(';', $validator->allowedHtmlTags));
+        }
 
         // Editor skin path.
         $bundle = CKEditorBootstrapAsset::register($view = $this->getView());
