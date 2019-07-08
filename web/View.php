@@ -201,6 +201,37 @@ class View extends \yii\web\View
     }
 
     /**
+     * @param array $languages
+     * @param string $default
+     */
+    public function registerHrefLangLinkTags($languages = [], $default = null)
+    {
+        if (!$languages) {
+            $languages = Yii::$app->getUrlManager()->languages;
+        }
+
+        foreach ($languages as $language) {
+            $this->registerLinkTag(['rel' => 'alternate', 'hreflang' => $language, 'href' => Url::current(['language' => $language], true)], 'hreflang_' . $language);
+        }
+
+        if ($default !== false) {
+            $this->registerDefaultHrefLangLinkTag($default);
+        }
+    }
+
+    /**
+     * @param string $language
+     */
+    public function registerDefaultHrefLangLinkTag($language = null)
+    {
+        if (!$language) {
+            $language = Yii::$app->sourceLanguage;
+        }
+
+        $this->registerLinkTag(['rel' => 'alternate', 'hreflang' => 'x-default', 'href' => isset($this->linkTags['hreflang_' . $language]) ? $this->linkTags['hreflang_' . $language]['href'] : Url::current(['language' => $language], true)], 'hreflang_default');
+    }
+
+    /**
      * @return string
      */
     public static function getLanguage()
