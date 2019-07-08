@@ -228,7 +228,11 @@ class View extends \yii\web\View
             $language = Yii::$app->sourceLanguage;
         }
 
-        $this->registerLinkTag(['rel' => 'alternate', 'hreflang' => 'x-default', 'href' => isset($this->linkTags['hreflang_' . $language]) ? $this->linkTags['hreflang_' . $language]['href'] : Url::current(['language' => $language], true)], 'hreflang_default');
+        if (isset($this->linkTags['hreflang_' . $language])) {
+            $this->linkTags['hreflang_default'] = $this->linkTags['hreflang_' . $language];
+        } else {
+            $this->registerLinkTag(['rel' => 'alternate', 'hreflang' => 'x-default', 'href' => Url::current(['language' => $language], true)], 'hreflang_default');
+        }
     }
 
     /**
