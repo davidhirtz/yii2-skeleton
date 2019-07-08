@@ -229,7 +229,7 @@ class View extends \yii\web\View
         }
 
         if (isset($this->linkTags['hreflang_' . $language])) {
-            $this->linkTags['hreflang_default'] = $this->linkTags['hreflang_' . $language];
+            $this->linkTags['hreflang_default'] = str_replace('hreflang="' . $language . '"', 'hreflang="x-default"', $this->linkTags['hreflang_' . $language]);
         } else {
             $this->registerLinkTag(['rel' => 'alternate', 'hreflang' => 'x-default', 'href' => Url::current(['language' => $language], true)], 'hreflang_default');
         }
