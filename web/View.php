@@ -211,12 +211,21 @@ class View extends \yii\web\View
         }
 
         foreach ($languages as $language) {
-            $this->registerLinkTag(['rel' => 'alternate', 'hreflang' => $language, 'href' => Url::current(['language' => $language], true)], 'hreflang_' . $language);
+            $this->registerHrefLangLinkTag($language, Url::current(['language' => $language], true));
         }
 
         if ($default !== false) {
             $this->registerDefaultHrefLangLinkTag($default);
         }
+    }
+
+    /**
+     * @param string $language
+     * @param string $url
+     */
+    public function registerHrefLangLinkTag($language, $url)
+    {
+        $this->registerLinkTag(['rel' => 'alternate', 'hreflang' => $language, 'href' => $url], 'hreflang_' . $language);
     }
 
     /**
