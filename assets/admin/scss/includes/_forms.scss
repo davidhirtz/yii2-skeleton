@@ -286,7 +286,7 @@ textarea.form-control {
   margin-right: $form-check-inline-margin-x;
 
   // Undo .form-check-input defaults and add some `margin-right`.
-  .form-check-input {
+  .custom-control-input {
     //position:static;
     //margin-top:-2px;
     margin-right: $form-check-inline-input-margin-x;
