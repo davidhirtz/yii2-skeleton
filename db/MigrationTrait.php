@@ -36,7 +36,8 @@ trait MigrationTrait
     {
         if ($attributes) {
             $schema = Yii::$app->getDb()->getSchema();
-            $languages = Yii::$app->getI18n()->getLanguages();
+            $i18n = Yii::$app->getI18n();
+            $languages = $i18n->getLanguages();
 
             if ($except === null) {
                 $except = [Yii::$app->sourceLanguage];
@@ -60,10 +61,31 @@ trait MigrationTrait
                     foreach ($languages as $language) {
                         if (!in_array($language, $except)) {
                             $type->append("AFTER [[{$prevAttribute}]]");
-                            $prevAttribute = Yii::$app->getI18n()->getAttributeName($attribute, $language);
+                            $prevAttribute = $i18n->getAttributeName($attribute, $language);
 
                             $this->addColumn($table, $prevAttribute, $type);
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @param string $table
+     * @param array|string $attributes
+     * @param mixed $except
+     */
+    public function dropI18nColumns($table, $attributes, $except = null)
+    {
+        if ($attributes) {
+            $i18n = Yii::$app->getI18n();
+            $languages = $i18n->getLanguages();
+
+            foreach ((array)$attributes as $attribute) {
+                foreach ($languages as $language) {
+                    if (!$except || !in_array($language, $except)) {
+                        $this->dropColumn($table, $i18n->getAttributeName($attribute, $language));
                     }
                 }
             }
