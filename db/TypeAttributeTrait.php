@@ -38,6 +38,6 @@ trait TypeAttributeTrait
      */
     public function getTypeName(): string
     {
-        return $this->type ? static::getTypes()[$this->type]['name'] : null;
+        return $this->type !== null ? static::getTypes()[$this->type]['name'] : null;
     }
 }
