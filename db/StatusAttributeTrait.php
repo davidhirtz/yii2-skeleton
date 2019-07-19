@@ -17,7 +17,7 @@ trait StatusAttributeTrait
      */
     public function validateStatus()
     {
-        if (!$this->status) {
+        if ($this->status === null) {
             $this->status = static::STATUS_DEFAULT;
 
         } elseif (!in_array($this->status, array_keys(static::getStatuses()))) {

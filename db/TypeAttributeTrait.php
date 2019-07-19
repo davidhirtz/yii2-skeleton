@@ -15,7 +15,7 @@ trait TypeAttributeTrait
      */
     public function validateType()
     {
-        if (!$this->type) {
+        if ($this->type === null) {
             $this->type = static::TYPE_DEFAULT;
 
         } elseif (static::getTypes() && !in_array($this->type, array_keys(static::getTypes()))) {
