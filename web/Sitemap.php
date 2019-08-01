@@ -8,6 +8,7 @@ use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Yii;
 use yii\base\Component;
 use yii\caching\Cache;
+use yii\caching\Dependency;
 
 /**
  * Class Sitemap
@@ -24,6 +25,16 @@ class Sitemap extends Component
      * @var int
      */
     public $duration = 86400;
+
+    /**
+     * @var array|Dependency
+     */
+    public $dependency;
+
+    /**
+     * @var string[]|string
+     */
+    public $variations;
 
     /**
      * Static views.
@@ -65,7 +76,6 @@ class Sitemap extends Component
 
     /**
      * Generates site maps from models.
-     * @return string
      */
     private function generateFileUrls()
     {
@@ -98,7 +108,6 @@ class Sitemap extends Component
 
     /**
      * Generates site maps from models.
-     * @return string
      */
     private function generateModelUrls()
     {

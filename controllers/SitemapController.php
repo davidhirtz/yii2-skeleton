@@ -38,6 +38,8 @@ class SitemapController extends Controller
                 'only' => ['index'],
                 'cache' => Yii::$app->sitemap->cache,
                 'duration' => Yii::$app->sitemap->duration,
+                'dependency' => Yii::$app->sitemap->dependency,
+                'variations' => Yii::$app->sitemap->variations,
             ];
         }
 
