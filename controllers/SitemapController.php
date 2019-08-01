@@ -33,13 +33,14 @@ class SitemapController extends Controller
         $behaviors = parent::behaviors();
 
         if (Yii::$app->sitemap->cache) {
+            $sitemap = Yii::$app->sitemap;
             $behaviors[] = [
                 'class' => 'yii\filters\PageCache',
                 'only' => ['index'],
-                'cache' => Yii::$app->sitemap->cache,
-                'duration' => Yii::$app->sitemap->duration,
-                'dependency' => Yii::$app->sitemap->dependency,
-                'variations' => Yii::$app->sitemap->variations,
+                'cache' => $sitemap->cache,
+                'duration' => $sitemap->duration,
+                'dependency' => $sitemap->dependency,
+                'variations' => is_callable($sitemap->variations) ? call_user_func($sitemap->variations) : $sitemap->variations,
             ];
         }
 

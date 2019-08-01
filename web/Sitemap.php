@@ -32,7 +32,7 @@ class Sitemap extends Component
     public $dependency;
 
     /**
-     * @var string[]|string
+     * @var string[]|string|callable
      */
     public $variations;
 
