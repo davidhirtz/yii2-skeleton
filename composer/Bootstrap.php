@@ -43,7 +43,7 @@ class Bootstrap implements BootstrapInterface
                             'sourcePath' => null,
                             'js' => [
                                 [
-                                    '//cdnjs.cloudflare.com/ajax/libs/lazysizes/4.0.4/lazysizes.min.js',
+                                    '//cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.1/lazysizes.min.js',
                                     'position' => \davidhirtz\yii2\skeleton\web\View::POS_HEAD,
                                     'async' => true,
                                 ],
