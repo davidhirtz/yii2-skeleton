@@ -13,12 +13,12 @@ class BootboxAsset extends AssetBundle
     /**
      * @var string
      */
-    public $sourcePath = '@bower/bootbox/src';
+    public $sourcePath = '@bower/bootbox/dist';
 
     /**
      * @var array
      */
     public $js = [
-        'bootbox.js',
+        'bootbox.min.js',
     ];
 }
