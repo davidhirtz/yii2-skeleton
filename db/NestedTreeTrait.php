@@ -145,7 +145,15 @@ trait NestedTreeTrait
     }
 
     /**
-     * @see BasePage::rules()
+     * @return int
+     */
+    public function getBranchCount()
+    {
+        return ($this->rgt-$this->lft-1)/2;
+    }
+
+    /**
+     * Validation rule.
      */
     public function validateParentId()
     {
@@ -194,7 +202,7 @@ trait NestedTreeTrait
     {
         if ($this->getIsNewRecord()) {
             if ($this->parent_id) {
-                // Update right hand side of tree to make room for page.
+                // Update right hand side of tree to make room for item.
                 static::updateAllCounters(['lft' => 2, 'rgt' => 2], '[[lft]]>:rgt', [
                     'rgt' => $this->parent->getAttribute('rgt'),
                 ]);

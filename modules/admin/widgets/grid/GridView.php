@@ -109,6 +109,8 @@ class GridView extends \yii\grid\GridView
             }
         }
 
+        $this->columns = array_filter($this->columns);
+
         if (!$this->rowOptions) {
             $this->rowOptions = function ($record) {
                 return $record instanceof ActiveRecord ? ['id' => $this->getRowId($record)] : [];
@@ -313,8 +315,8 @@ class GridView extends \yii\grid\GridView
     }
 
     /**
-     * @throws \yii\base\InvalidConfigException
      * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function getFormName()
     {
@@ -336,8 +338,8 @@ class GridView extends \yii\grid\GridView
     }
 
     /**
-     * @throws \yii\base\InvalidConfigException
      * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function getTableId()
     {
