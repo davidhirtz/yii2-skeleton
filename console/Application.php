@@ -12,6 +12,11 @@ use Yii;
 class Application extends \yii\console\Application
 {
     /**
+     * @var array containing the config for widgets which make use of the WidgetConfigTrait.
+     */
+    public $widgets = [];
+
+    /**
      * @param array $config
      * @throws \yii\base\InvalidConfigException
      */

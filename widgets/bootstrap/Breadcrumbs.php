@@ -4,6 +4,7 @@ namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use Yii;
 
 /**
@@ -12,6 +13,8 @@ use Yii;
  */
 class Breadcrumbs extends \yii\widgets\Breadcrumbs
 {
+    use WidgetConfigTrait;
+
     /**
      * @var string
      */

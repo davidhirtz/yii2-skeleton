@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\db;
 
 use Yii;
+use yii\validators\RequiredValidator;
 
 /**
  * Class StatusAttributeTrait.

@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\nav\base;
 
 use davidhirtz\yii2\skeleton\modules\admin\Module;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Nav;
 use Yii;
 use yii\helpers\Url;
@@ -13,6 +14,8 @@ use yii\helpers\Url;
  */
 class NavBar extends \yii\bootstrap4\NavBar
 {
+    use WidgetConfigTrait;
+
     /**
      * @var array
      */

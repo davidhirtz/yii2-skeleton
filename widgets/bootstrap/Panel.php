@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
+use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use yii\base\Widget;
 use yii\helpers\Html;
 
@@ -11,6 +12,8 @@ use yii\helpers\Html;
  */
 class Panel extends Widget
 {
+    use WidgetConfigTrait;
+
     /**
      * @var string
      */

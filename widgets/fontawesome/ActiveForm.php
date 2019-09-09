@@ -2,12 +2,16 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 
+use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
+
 /**
  * Class ActiveField.
  * @package davidhirtz\yii2\skeleton\widgets\fontawesome
  */
 class ActiveForm extends \yii\bootstrap4\ActiveForm
 {
+    use WidgetConfigTrait;
+
     /**
      * @var string
      */

@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\panels;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 
 /**
@@ -11,6 +12,8 @@ use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
  */
 class HelpPanel extends Panel
 {
+    use WidgetConfigTrait;
+
     /**
      * @var array
      */
@@ -52,9 +55,7 @@ class HelpPanel extends Panel
      */
     public function renderButtonToolbar($buttons)
     {
-        if ($buttons) {
-            return Html::tag('div', Html::buttons($buttons), ['class' => 'card-buttons']);
-        }
+        return $buttons ? Html::tag('div', Html::buttons($buttons), ['class' => 'card-buttons']) : '';
     }
 }
 

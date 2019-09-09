@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\grid;
 
+use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use yii\helpers\Url;
 use yii\jui\Widget;
 use yii\web\JsExpression;
@@ -12,6 +13,8 @@ use yii\web\JsExpression;
  */
 class SortableWidget extends Widget
 {
+    use WidgetConfigTrait;
+
     /**
      * @var bool
      */

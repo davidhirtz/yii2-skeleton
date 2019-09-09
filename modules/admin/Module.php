@@ -76,7 +76,6 @@ class Module extends \yii\base\Module
     public function init()
     {
         if (!Yii::$app->getRequest()->getIsConsoleRequest()) {
-
             $user = Yii::$app->getUser();
             $user->loginUrl = ['/admin/account/login'];
 
@@ -114,6 +113,7 @@ class Module extends \yii\base\Module
             }
         }
 
+        // Load all admin modules.
         foreach (array_keys($this->getModules()) as $module) {
             $this->getModule($module);
         }

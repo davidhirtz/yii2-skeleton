@@ -5,7 +5,6 @@ namespace davidhirtz\yii2\skeleton\widgets\forms;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
 use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
 use Yii;
-use yii\base\InvalidConfigException;
 use yii\base\Model;
 
 /**

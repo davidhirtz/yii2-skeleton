@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
+use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveFormTrait;
 
 /**
@@ -13,7 +14,7 @@ use davidhirtz\yii2\skeleton\widgets\forms\ActiveFormTrait;
  */
 class ActiveForm extends \yii\bootstrap4\ActiveForm
 {
-    use ActiveFormTrait;
+    use ActiveFormTrait, WidgetConfigTrait;
 
     /**
      * @inheritdoc

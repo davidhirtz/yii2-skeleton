@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
+use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use yii\db\ActiveRecord;
 use yii\web\JsExpression;
 
@@ -13,6 +14,8 @@ use yii\web\JsExpression;
  */
 class FileUpload extends \dosamigos\fileupload\FileUpload
 {
+    use WidgetConfigTrait;
+
     /**
      * @var bool
      */

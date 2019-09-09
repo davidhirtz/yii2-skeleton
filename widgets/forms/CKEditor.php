@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
 use davidhirtz\yii2\skeleton\assets\CKEditorBootstrapAsset;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use davidhirtz\yii2\skeleton\validators\HtmlValidator;
 use Yii;
 
@@ -12,6 +13,8 @@ use Yii;
  */
 class CKEditor extends \dosamigos\ckeditor\CKEditor
 {
+    use WidgetConfigTrait;
+
     /**
      * @var array
      */

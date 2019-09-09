@@ -4,6 +4,7 @@ namespace davidhirtz\yii2\skeleton\widgets\forms;
 
 use DateTime;
 use DateTimeZone;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use yii\helpers\Html;
 use yii\widgets\InputWidget;
 
@@ -16,6 +17,8 @@ use yii\widgets\InputWidget;
  */
 class TimezoneDropdown extends InputWidget
 {
+    use WidgetConfigTrait;
+
     /**
      * @var array
      */
