@@ -5,6 +5,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use davidhirtz\yii2\skeleton\widgets\grid\SortableWidget;
 use rmrevin\yii\fontawesome\FAS;
 use Yii;
@@ -18,6 +19,8 @@ use yii\helpers\Url;
  */
 class GridView extends \yii\grid\GridView
 {
+    use WidgetConfigTrait;
+
     /**
      * @var array|null
      */
