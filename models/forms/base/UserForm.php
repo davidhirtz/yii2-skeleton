@@ -9,7 +9,7 @@ use Yii;
  * Class UserForm.
  * @package davidhirtz\yii2\skeleton\models\forms\base
  *
- * @property \davidhirtz\yii2\skeleton\models\forms\base\UserForm $model
+ * @method static \davidhirtz\yii2\skeleton\models\forms\UserForm findOne($condition)
  */
 class UserForm extends User
 {

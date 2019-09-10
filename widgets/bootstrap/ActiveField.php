@@ -47,7 +47,6 @@ class ActiveField extends \yii\bootstrap4\ActiveField
         return parent::fileInput($options);
     }
 
-
     /**
      * @inheritdoc
      */

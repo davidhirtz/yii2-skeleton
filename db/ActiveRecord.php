@@ -4,7 +4,6 @@ namespace davidhirtz\yii2\skeleton\db;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Yii;
-use yii\base\InvalidCallException;
 
 /**
  * Class ActiveRecord.
@@ -57,26 +56,28 @@ class ActiveRecord extends \yii\db\ActiveRecord
 
     /**
      * @param string $name
+     * @return ActiveRecord|null
      */
     public function refreshRelation($name)
     {
-        $this->populateRelation($name, $this->getRelation($name)->one());
+        $this->populateRelation($name, $related = $this->getRelation($name)->one());
+        return $related;
     }
 
     /**
      * @param string $name
      * @return bool
      */
-    public function relationIsChanged($name)
-    {
-        $relation = $this->getRelation($name);
-
-        if ($relation->multiple) {
-            throw new InvalidCallException('ActiveRecord::relationIsChanged cannot be called on multiple related records.');
-        }
-
-        return !$this->isRelationPopulated($name) || !$this->{$name} instanceof $relation->modelClass || $this->{$name}->{key($relation->link)} != $this->{current($relation->link)};
-    }
+//    public function relationIsChanged($name)
+//    {
+//        $relation = $this->getRelation($name);
+//
+//        if ($relation->multiple) {
+//            throw new InvalidCallException('ActiveRecord::relationIsChanged cannot be called on multiple related records.');
+//        }
+//
+//        return !$this->isRelationPopulated($name) || !$this->{$name} instanceof $relation->modelClass || $this->{$name}->{key($relation->link)} != $this->{current($relation->link)};
+//    }
 
     /**
      * @param ActiveRecord[] $models

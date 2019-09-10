@@ -15,7 +15,7 @@ class AuthClientSignupForm extends Identity
     /**
      * Traits.
      */
-    use \davidhirtz\yii2\skeleton\models\traits\user\SignupEmailTrait;
+    use \davidhirtz\yii2\skeleton\models\traits\SignupEmailTrait;
 
     /**
      * @var string
@@ -39,7 +39,7 @@ class AuthClientSignupForm extends Identity
     /**
      * @return array
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return array_merge(parent::behaviors(), [
             [
@@ -57,7 +57,7 @@ class AuthClientSignupForm extends Identity
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return array_merge(parent::rules(), [
             [
@@ -68,7 +68,7 @@ class AuthClientSignupForm extends Identity
     }
 
     /**
-     * @see \davidhirtz\yii2\skeleton\models\forms\user\AuthSignupForm::rules()
+     * @see \davidhirtz\yii2\skeleton\models\forms\AuthSignupForm::rules()
      * @todo
      */
     public function validateExternalPictureUrl()
