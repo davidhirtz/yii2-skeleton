@@ -66,26 +66,22 @@ class Nav extends \yii\bootstrap4\Nav
      */
     public function renderItem($item)
     {
-        /**
-         * Link options.
-         */
         if ($this->linkOptions) {
-            ArrayHelper::setDefaultValue($item, 'linkOptions', $this->linkOptions);
+            $item['linkOptions'] = $item['linkOptions'] ?? $this->linkOptions;
         }
 
-        /**
-         * Icon & badge.
-         */
+        // Icon & badge.
         $icon = ArrayHelper::getValue($item, 'icon');
         $badge = ArrayHelper::getValue($item, 'badge', false);
 
         if ($icon || $badge) {
-            $label = ArrayHelper::getValue($item, 'label');
-            $iconOptions = ArrayHelper::getValue($item, 'iconOptions', $this->iconOptions);
-            $badgeOptions = ArrayHelper::getValue($item, 'badgeOptions', $this->badgeOptions);
-            $template = ArrayHelper::getValue($item, 'template', $this->itemTemplate);
+            $label = $item['label'] ?? '';
+            $iconOptions = $item['iconOptions'] ?? $this->iconOptions;
+            $badgeOptions = $item['badgeOptions'] ?? $this->badgeOptions;
+            $template = $item['template'] ?? $this->itemTemplate;
 
-            if (ArrayHelper::getValue($item, 'encode', $this->encodeLabels)) {
+            // Only encode label.
+            if ($item['encode'] ?? $this->encodeLabels) {
                 $label = Html::encode($label);
                 $item['encode'] = false;
             }
@@ -93,28 +89,38 @@ class Nav extends \yii\bootstrap4\Nav
             $item['label'] = strtr($template, [
                 '{icon}' => $icon ? FAS::icon($icon, $iconOptions) : '',
                 '{badge}' => $badge !== false ? Html::tag('span', $badge, $badgeOptions) : '',
-                '{label}' => $label ? Html::tag('span', $label, ArrayHelper::getValue($item, 'labelOptions', $this->labelOptions)) : '',
+                '{label}' => $label ? Html::tag('span', $label, $item['labelOptions'] ?? $this->labelOptions) : '',
             ]);
         }
 
-        /**
-         * Items.
-         */
         if ($items = ArrayHelper::getValue($item, 'items')) {
             if ($items instanceof \Closure) {
                 $item['items'] = call_user_func($items) ?: null;
             }
         }
 
-        /**
-         * Active.
-         */
-        if (is_array($routes = ArrayHelper::getValue($item, 'active'))) {
+        // If active is an array, treat its' elements as routes and check them  against the current controller route.
+        // If the route itself is an array, the key represents the route and the value either GET parameter names or
+        // name value pairs that must match with the request.
+        if (is_array($routes = $item['active'] ?? false)) {
+            $request = Yii::$app->getRequest();
             $item['active'] = false;
 
             if (!$this->isActive) {
-                foreach ($routes as $route) {
+                foreach ($routes as $route => $params) {
+                    if (is_int($route)) {
+                        $route = $params;
+                    }
+
                     if (preg_match("~{$route}~", Yii::$app->controller->route, $matches)) {
+                        if (is_array($params)) {
+                            foreach ($params as $key => $value) {
+                                if ((is_int($key) && !in_array($value, array_keys($request->get()))) || (is_string($key) && $request->get($key) != $value)) {
+                                    continue 2;
+                                }
+                            }
+                        }
+
                         $this->isActive = $item['active'] = true;
                         break;
                     }
