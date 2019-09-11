@@ -2,7 +2,6 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use rmrevin\yii\fontawesome\FAS;
 use yii\helpers\Html;
@@ -71,8 +70,8 @@ class Nav extends \yii\bootstrap4\Nav
         }
 
         // Icon & badge.
-        $icon = ArrayHelper::getValue($item, 'icon');
-        $badge = ArrayHelper::getValue($item, 'badge', false);
+        $icon = $item['icon'] ?? false;
+        $badge = $item['badge'] ?? false;
 
         if ($icon || $badge) {
             $label = $item['label'] ?? '';
@@ -93,7 +92,7 @@ class Nav extends \yii\bootstrap4\Nav
             ]);
         }
 
-        if ($items = ArrayHelper::getValue($item, 'items')) {
+        if ($items = $item['items'] ?? []) {
             if ($items instanceof \Closure) {
                 $item['items'] = call_user_func($items) ?: null;
             }
