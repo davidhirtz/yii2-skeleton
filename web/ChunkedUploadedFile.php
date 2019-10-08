@@ -15,11 +15,6 @@ use Yii;
 class ChunkedUploadedFile extends \yii\web\UploadedFile
 {
     /**
-     * @var string
-     */
-    public $partialUploadPath = '@runtime/uploads/';
-
-    /**
      * @var int
      */
     public $chunkOffset;
@@ -45,26 +40,35 @@ class ChunkedUploadedFile extends \yii\web\UploadedFile
     private $_partialName;
 
     /**
+     * @var string
+     */
+    private $_partialUploadPath;
+
+    /**
      * Checks whether file was uploaded in chunks.
      */
     public function init()
     {
-        /**
-         * Try to get file name from header if it was  not set via FILES.
-         */
+        // Try to get file name from header if it was  not set via FILES.
         if (!$this->name) {
             $this->name = rawurldecode(preg_replace('/(^[^"]+")|("$)/', '', ArrayHelper::getValue($_SERVER, 'HTTP_CONTENT_DISPOSITION')));
         }
 
-        /**
-         * Parse the Content-Range header, which is formatted like this:
-         * Content-Range: bytes {int:start}-{int:end}/{int:total}
-         */
+        // Parse the Content-Range header, which is formatted like this:
+        // Content-Range: bytes {int:start}-{int:end}/{int:total}
         if ($range = ArrayHelper::getValue($_SERVER, 'HTTP_CONTENT_RANGE')) {
             $range = preg_split('/[^0-9]+/', $range);
             $this->chunkOffset = ArrayHelper::getValue($range, 1);
             $this->chunkSize = ArrayHelper::getValue($range, 2);
             $this->size = ArrayHelper::getValue($range, 3);
+        }
+
+        if ($this->chunkOffset !== null) {
+            if (file_put_contents($this->getPartialUploadPath() . $this->getPartialName(), fopen($this->tempName, 'r'), FILE_APPEND) === false) {
+                $this->error = UPLOAD_ERR_CANT_WRITE;
+            } elseif (!$this->isCompleted()) {
+                $this->error = UPLOAD_ERR_PARTIAL;
+            }
         }
 
         parent::init();
@@ -80,48 +84,24 @@ class ChunkedUploadedFile extends \yii\web\UploadedFile
      */
     public function saveAs($file, $deleteTempFile = true)
     {
-        /**
-         * Garbage collection.
-         */
-        if (rand(1, 10000) <= $this->gcProbability) {
+        if ($deleteTempFile && rand(1, 10000) <= $this->gcProbability) {
             $this->removeAbortedFiles();
         }
 
-        /**
-         * Check if file was uploaded in chunks.
-         */
         if ($this->chunkOffset !== null) {
-            FileHelper::createDirectory($path = rtrim(\Yii::getAlias($this->partialUploadPath), '/'));
-            $name = $path . '/' . $this->getPartialName();
-
-            /**
-             * Write partial file.
-             */
-            if (file_put_contents($name, fopen($this->tempName, 'r'), FILE_APPEND) === false) {
-                return false;
-            }
-
-            if ($deleteTempFile) {
-                unlink($this->tempName);
-            }
-
-            /**
-             * If file size matches total file size, move file to destination.
-             */
-            clearstatcache(true, $name);
-            return filesize($name) == $this->size ? rename($name, $file) : false;
+            return $this->isCompleted() ? rename($this->getPartialUploadPath() . $this->getPartialName(), $file) : false;
         }
 
         return parent::saveAs($file, $deleteTempFile);
     }
 
     /**
-     * @return int
+     * @return int the file count of deleted temporary files
      */
     public function removeAbortedFiles()
     {
         $lifetime = time() - $this->lifetime;
-        $path = rtrim(\Yii::getAlias($this->partialUploadPath), '/');
+        $path = rtrim(\Yii::getAlias($this->getPartialUploadPath()), '/');
         $fileCount = 0;
 
         if (is_dir($path)) {
@@ -145,7 +125,7 @@ class ChunkedUploadedFile extends \yii\web\UploadedFile
     public function getPartialName()
     {
         if ($this->_partialName === null) {
-            $this->_partialName = Yii::$app->session->id . '-' . $this->name . '.part';
+            $this->_partialName = Yii::$app->getSession()->getId() . '-' . $this->name . '.part';
         }
 
         return $this->_partialName;
@@ -159,13 +139,46 @@ class ChunkedUploadedFile extends \yii\web\UploadedFile
         $this->_partialName = $partialName;
     }
 
+    /**
+     * @return string
+     */
+    public function getPartialUploadPath()
+    {
+        if ($this->_partialUploadPath === null) {
+            $this->setPartialUploadPath('@runtime/uploads');
+        }
+
+        return $this->_partialUploadPath;
+    }
+
+    /**
+     * @param string $path
+     */
+    public function setPartialUploadPath($path)
+    {
+        FileHelper::createDirectory($this->_partialUploadPath = rtrim(\Yii::getAlias($path), '/') . '/');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCompleted()
+    {
+        if ($this->chunkSize === null) {
+            return true;
+        }
+
+        clearstatcache(true, $name = $this->getPartialUploadPath() . $this->getPartialName());
+        return filesize($name) == $this->size;
+    }
+
     /***********************************************************************
      * Static methods.
      ***********************************************************************/
 
     /**
      * @inheritdoc
-     * @return ChunkedUploadedFile|\yii\web\UploadedFile
+     * @return ChunkedUploadedFile
      */
     public static function getInstance($model, $attribute)
     {
@@ -174,7 +187,7 @@ class ChunkedUploadedFile extends \yii\web\UploadedFile
 
     /**
      * @inheritdoc
-     * @return ChunkedUploadedFile[]|\yii\web\UploadedFile[]
+     * @return ChunkedUploadedFile[]
      */
     public static function getInstances($model, $attribute)
     {
@@ -183,7 +196,7 @@ class ChunkedUploadedFile extends \yii\web\UploadedFile
 
     /**
      * @inheritdoc
-     * @return ChunkedUploadedFile|\yii\web\UploadedFile
+     * @return ChunkedUploadedFile
      */
     public static function getInstanceByName($name)
     {
@@ -192,7 +205,7 @@ class ChunkedUploadedFile extends \yii\web\UploadedFile
 
     /**
      * @inheritdoc
-     * @return ChunkedUploadedFile[]|\yii\web\UploadedFile[]
+     * @return ChunkedUploadedFile[]
      */
     public static function getInstancesByName($name)
     {

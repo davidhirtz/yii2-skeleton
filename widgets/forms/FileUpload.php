@@ -17,6 +17,11 @@ class FileUpload extends \dosamigos\fileupload\FileUpload
     use WidgetConfigTrait;
 
     /**
+     * @var int
+     */
+    public $maxChunkSize = 2000000;
+
+    /**
      * @var bool
      */
     public $multiple = true;
@@ -45,6 +50,7 @@ class FileUpload extends \dosamigos\fileupload\FileUpload
 
         $defaultClientOptions = [
             'dropZone' => $this->dropZone,
+            'maxChunkSize' => $this->maxChunkSize,
         ];
 
         $this->clientOptions = array_merge($defaultClientOptions, $this->clientOptions);
