@@ -177,7 +177,7 @@ class ChunkedUploadedFile extends \yii\web\UploadedFile
      */
     public function isPartial()
     {
-        return $this->chunkSize !== null && $this->error = UPLOAD_ERR_PARTIAL;
+        return $this->chunkSize !== null && $this->error === UPLOAD_ERR_PARTIAL;
     }
 
     /***********************************************************************
