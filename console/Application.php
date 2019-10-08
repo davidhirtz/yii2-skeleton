@@ -27,6 +27,7 @@ class Application extends \yii\console\Application
         }
 
         $config = Bootstrap::preInit($config);
+        unset($config['components']['errorHandler']['errorAction']);
         parent::preInit($config);
     }
 
