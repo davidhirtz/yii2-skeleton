@@ -64,10 +64,16 @@ class ChunkedUploadedFile extends \yii\web\UploadedFile
         }
 
         if ($this->chunkOffset !== null) {
-            if (file_put_contents($this->getPartialUploadPath() . $this->getPartialName(), fopen($this->tempName, 'r'), FILE_APPEND) === false) {
+            if (file_put_contents($tempName = $this->getPartialUploadPath() . $this->getPartialName(), fopen($this->tempName, 'r'), FILE_APPEND) === false) {
                 $this->error = UPLOAD_ERR_CANT_WRITE;
-            } elseif (!$this->isCompleted()) {
-                $this->error = UPLOAD_ERR_PARTIAL;
+            } else {
+                if (!$this->isCompleted()) {
+                    $this->error = UPLOAD_ERR_PARTIAL;
+                }
+
+                // Update temporary name to use the actual combined temp file instead of
+                // the partial upload.
+                $this->tempName = $tempName;
             }
         }
 
