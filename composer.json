@@ -23,7 +23,7 @@
 		"davidhirtz/yii2-datetime-behavior":"*",
 		"davidhirtz/yii2-timeago":"dev-master",
 		"davidhirtz/yii2-curl":"dev-master",
-		"davidhirtz/yii2-lazysizes":"dev-master",
+		"davidhirtz/yii2-lazysizes":">=2",
 		"bower-asset/bootbox":">=5",
 		"guzzlehttp/guzzle":"~6.0",
 		"guzzlehttp/oauth-subscriber":"0.3.*",
