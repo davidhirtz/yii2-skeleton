@@ -55,6 +55,11 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
     public $validator = 'davidhirtz\yii2\skeleton\validators\HtmlValidator';
 
     /**
+     * @var array containing format tags for the format dropdown.
+     */
+    public $formatTags;
+
+    /**
      * @inheritdoc
      */
     public function init()
@@ -74,14 +79,26 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
             $removePlugins = array_diff($removePlugins, $this->extraPlugins);
         }
 
-        $this->clientOptions['removePlugins'] = implode(',', array_unique(array_filter($removePlugins)));
-        $this->clientOptions['toolbar'] = $this->toolbar;
 
         if ($this->validator) {
+            if (is_array($this->validator) && isset($this->validator[0])) {
+                $this->validator['class'] = array_shift($this->validator);
+            }
+
             /** @var HtmlValidator $validator */
             $validator = Yii::createObject($this->validator);
             $this->clientOptions['allowedContent'] = str_replace('|', ',', implode(';', $validator->allowedHtmlTags));
+
+            // Format dropdown.
+            if ($formatTags = $this->formatTags ?: array_intersect($validator->allowedHtmlTags, ['h1', 'h2', 'h3', 'h4', 'h5', 'code'])) {
+                array_unshift($this->toolbar, ['Format']);
+                array_unshift($formatTags, 'p');
+                $this->clientOptions['format_tags'] = implode(';', array_unique($formatTags));
+            }
         }
+
+        $this->clientOptions['removePlugins'] = implode(',', array_unique(array_filter($removePlugins)));
+        $this->clientOptions['toolbar'] = $this->toolbar;
 
         // Editor skin path.
         $bundle = CKEditorBootstrapAsset::register($view = $this->getView());

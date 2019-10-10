@@ -68,7 +68,6 @@ class HtmlValidator extends \yii\validators\Validator
             'li',
             'ol',
             'p',
-            'pre',
             'span[style]', // Needed for underline and strike-through.
             'strike',
             'strong',
