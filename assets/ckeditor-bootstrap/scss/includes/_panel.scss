@@ -64,7 +64,7 @@ panel contents and color panels check menu.css and colorpanel.css.
 /* This class represents panels which are used by rich combos. */
 .cke_combopanel {
   width: 150px;
-  height: 178px;
+  height: 110px;
 }
 
 /* The IFRAME the panel is wrapped into. */
@@ -115,9 +115,10 @@ is its visual representation:
 /* The list of panel items. */
 .cke_panel_list {
   list-style-type: none;
-  margin: 3px;
+  margin: 0;
   padding: 0;
   white-space: nowrap;
+  font-size: 12px;
 }
 
 /* The item of .cke_panel_list */
@@ -129,17 +130,21 @@ is its visual representation:
 /* The child of .cke_panel_listItem. These elements contain spans which are
    to display a real name of the property which is visible for an end-user. */
 .cke_panel_listItem a {
-  padding: 3px 4px;
+  padding: 6px 10px;
   display: block;
-  border: 1px solid #fff;
   color: inherit !important;
-  text-decoration: none;
+  text-decoration: none !important;
   overflow: hidden;
   text-overflow: ellipsis;
-  border-radius: 2px;
 
   &:hover, &:focus, &:active {
-    background-color: $primary;
+    background-color: $secondary;
+    outline: 0;
+  }
+
+  & > * {
+    font-size: inherit !important;
+    font-weight: inherit !important;
   }
 }
 
@@ -175,20 +180,21 @@ is its visual representation:
 
 /* The title of the entire panel which is visible on top of the list. */
 .cke_panel_grouptitle {
-  font-size: 11px;
-  font-weight: bold;
-  white-space: nowrap;
-  margin: 0;
-  padding: 6px 6px;
-
-  color: #474747;
-  border-bottom: 1px solid $gray-500;
-
-  background: $gray-400;
-
-  &:first-child {
-    border-radius: $border-radius $border-radius 0 0;
-  }
+  display: none;
+  //font-size: 11px;
+  //font-weight: bold;
+  //white-space: nowrap;
+  //margin: 0;
+  //padding: 6px 6px;
+  //
+  //color: #474747;
+  //border-bottom: 1px solid $gray-500;
+  //
+  //background: $gray-400;
+  //
+  //&:first-child {
+  //  border-radius: $border-radius $border-radius 0 0;
+  //}
 }
 
 /* The following styles set defaults of the elements used by the Paragraph

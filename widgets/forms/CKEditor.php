@@ -79,7 +79,6 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
             $removePlugins = array_diff($removePlugins, $this->extraPlugins);
         }
 
-
         if ($this->validator) {
             if (is_array($this->validator) && isset($this->validator[0])) {
                 $this->validator['class'] = array_shift($this->validator);
@@ -102,11 +101,12 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
 
         // Editor skin path.
         $bundle = CKEditorBootstrapAsset::register($view = $this->getView());
-        $this->clientOptions['skin'] = 'bootstrap,' . $bundle->baseUrl . '/';
+        $this->clientOptions['skin'] = 'skeleton,' . $bundle->baseUrl . '/';
 
         // Contents CSS file.
         $bundle = $view->registerAssetBundle($bundle->editorAssetBundle ?: 'davidhirtz\yii2\skeleton\assets\AdminAsset');
         $this->clientOptions['contentsCss'] = $bundle->baseUrl . '/' . $bundle->css[0];
+        $this->clientOptions['stylesSet'] = false;
 
         // Language.
         if (Yii::$app->language != Yii::$app->sourceLanguage) {
