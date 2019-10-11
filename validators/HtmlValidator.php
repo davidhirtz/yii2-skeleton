@@ -13,7 +13,9 @@ use yii\helpers\HtmlPurifier;
 class HtmlValidator extends \yii\validators\Validator
 {
     /**
-     * @var array|string
+     * @var array common tags are h1-h5 for format,
+     * table, th, td, tr for tables
+     * blockquote, strike, u for font styles
      */
     public $allowedHtmlTags = [];
 
@@ -51,7 +53,6 @@ class HtmlValidator extends \yii\validators\Validator
             'CSS.AllowedProperties' => 'text-decoration',
             'HTML.TargetBlank' => true,
             'HTML.Nofollow' => true,
-            'HTML.TidyLevel' => 'heavy',
         ], $this->purifierOptions);
 
         if (isset($this->purifierOptions['HTML.Allowed'])) {
@@ -59,20 +60,16 @@ class HtmlValidator extends \yii\validators\Validator
         }
 
         $this->allowedHtmlTags = array_merge($this->allowedHtmlTags, [
-            'a[href|target|rel]',
-            'blockquote',
+            'a[href|rel|target]',
             'br',
             'div',
             'em',
-            'img[src|width|height|alt|title]',
+            'img[alt|height|src|title|width]',
             'li',
             'ol',
             'p',
-            'span[style]', // Needed for underline and strike-through.
-            'strike',
             'strong',
             'ul',
-            'u',
         ]);
 
         $this->allowedHtmlTags = array_unique(array_filter(array_diff($this->allowedHtmlTags, $this->excludedHtmlTags)));

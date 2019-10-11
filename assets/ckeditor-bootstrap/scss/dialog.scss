@@ -5,7 +5,6 @@
  * The default stylesheet included on all requests.
  */
 @import "../../admin/scss/includes/variables";
-
 /**
  * Includes Bootstrap 4.
  */
@@ -24,7 +23,7 @@
 /* The inner boundary container. */
 .cke_dialog_body {
   z-index: 1;
-  background: $gray-400;
+  background: $gray-200;
   border: 1px solid $input-border-color;
 
   border-radius: $border-radius;
@@ -39,7 +38,6 @@
 }
 
 
-
 /* Due to our reset we have to recover the styles of some elements. */
 .cke_dialog strong {
   font-weight: bold;
@@ -48,13 +46,12 @@
 /* The dialog title. */
 .cke_dialog_title {
   font-weight: bold;
-  font-size: 13px;
   cursor: move;
   position: relative;
   color: $body-color;
   border-bottom: 1px solid $input-border-color;
-  padding: 10px 12px;
-  background: $gray-400;
+  padding: $card-spacer-y $card-spacer-x;
+  background: $gray-200;
 }
 
 /* The outer part of the dialog contants, which contains the contents body
@@ -71,8 +68,7 @@
 /* The contents body part, which will hold all elements available in the dialog. */
 .cke_dialog_contents_body {
   overflow: auto;
-  padding: 17px 10px 5px 10px;
-  margin-top: 22px;
+  padding: $card-spacer-x;
 }
 
 /* The dialog footer, which usually contains the "Ok" and "Cancel" buttons as
@@ -80,9 +76,10 @@
 .cke_dialog_footer {
   text-align: right;
   position: relative;
+  padding: $card-spacer-y $card-spacer-x;
   border-radius: 0 0 $border-radius $border-radius;
   border-top: 1px solid $input-border-color;
-  background: $gray-400;
+  background: $gray-200;
 }
 
 .cke_rtl .cke_dialog_footer {
@@ -95,7 +92,7 @@
 }
 
 .cke_dialog .cke_resizer {
-  margin-top: 28px;
+  display: none;
 }
 
 .cke_dialog .cke_resizer_rtl {
@@ -131,15 +128,15 @@ The .cke_dialog_tab_selected class is appended to the active tab.
 .cke_dialog_tabs {
   height: 24px;
   display: inline-block;
-  margin: 10px 0 0;
+  margin: 14px 0 0;
   position: absolute;
   z-index: 2;
   left: 10px;
 }
 
-.cke_rtl .cke_dialog_tabs {
-  right: 10px;
-}
+//.cke_rtl .cke_dialog_tabs {
+//  right: 10px;
+//}
 
 /* A single tab (an <a> element). */
 a.cke_dialog_tab {
@@ -216,13 +213,13 @@ a.cke_dialog_tab_disabled {
 .cke_dialog_close_button {
   background-image: url(images/close.png);
   background-repeat: no-repeat;
-  background-position: 0 0;
+  background-position: center;
   position: absolute;
   cursor: pointer;
   text-align: center;
   height: 20px;
   width: 20px;
-  top: 9px;
+  top: 12px;
   z-index: 5;
 }
 
@@ -244,12 +241,12 @@ a.cke_dialog_tab_disabled {
 }
 
 .cke_ltr .cke_dialog_close_button {
-  right: 5px;
+  right: 10px;
 }
 
-.cke_rtl .cke_dialog_close_button {
-  left: 6px;
-}
+//.cke_rtl .cke_dialog_close_button {
+//  left: 6px;
+//}
 
 
 /*
@@ -296,13 +293,13 @@ It is possible to have nested V/H-Boxes.
   }
 }
 
-.cke_dialog_ui_vbox {
-  margin-top: 5px;
-}
+//.cke_dialog_ui_vbox {
+//  margin-top: 5px;
+//}
 
-.cke_dialog_ui_vbox_child {
-  padding: 5px 0;
-}
+//.cke_dialog_ui_vbox_child {
+//  padding: 5px 0;
+//}
 
 .cke_dialog_ui_hbox {
   width: 100%;
@@ -322,26 +319,26 @@ It is possible to have nested V/H-Boxes.
   }
 }
 
-.cke_ltr .cke_dialog_ui_hbox_first,
-.cke_ltr .cke_dialog_ui_hbox_child {
-  padding-right: 10px;
-}
-
-.cke_rtl .cke_dialog_ui_hbox_first,
-.cke_rtl .cke_dialog_ui_hbox_child {
-  padding-left: 10px;
-}
-
-.cke_ltr .cke_dialog_footer_buttons .cke_dialog_ui_hbox_first,
-.cke_ltr .cke_dialog_footer_buttons .cke_dialog_ui_hbox_child {
-  padding-right: 5px;
-}
-
-.cke_rtl .cke_dialog_footer_buttons .cke_dialog_ui_hbox_first,
-.cke_rtl .cke_dialog_footer_buttons .cke_dialog_ui_hbox_child {
-  padding-left: 5px;
-  padding-right: 0;
-}
+//.cke_ltr .cke_dialog_ui_hbox_first,
+//.cke_ltr .cke_dialog_ui_hbox_child {
+//  padding-right: 10px;
+//}
+//
+//.cke_rtl .cke_dialog_ui_hbox_first,
+//.cke_rtl .cke_dialog_ui_hbox_child {
+//  padding-left: 10px;
+//}
+//
+//.cke_ltr .cke_dialog_footer_buttons .cke_dialog_ui_hbox_first,
+//.cke_ltr .cke_dialog_footer_buttons .cke_dialog_ui_hbox_child {
+//  padding-right: 5px;
+//}
+//
+//.cke_rtl .cke_dialog_footer_buttons .cke_dialog_ui_hbox_first,
+//.cke_rtl .cke_dialog_footer_buttons .cke_dialog_ui_hbox_child {
+//  padding-left: 5px;
+//  padding-right: 0;
+//}
 
 /* Applies to all labeled dialog fields */
 .cke_hc div {
@@ -446,57 +443,77 @@ The buttons used in the dialog footer or inside the contents.
 /* The outer part of the button. */
 a.cke_dialog_ui_button {
   display: inline-block;
-  *display: inline;
-  *zoom: 1;
-
-  padding: 3px 0;
-  margin: 0;
-
+  font-weight: $btn-font-weight;
   text-align: center;
-  color: $body-color;
+  white-space: nowrap;
   vertical-align: middle;
-  cursor: pointer;
+  user-select: none;
+  border: $btn-border-width solid transparent;
+  @include button-size($btn-padding-y, $btn-padding-x, $font-size-base, $btn-line-height, $btn-border-radius);
+  @include transition($btn-transition);
 
-  border: 1px solid $input-border-color;
-  border-radius: $border-radius;
-  background: #fff;
-
-  &:hover, &:focus, &:active {
-    border-color: $gray-600;
-    background-color: $gray-400;
+  // Share hover and focus styles
+  @include hover-focus {
     text-decoration: none;
+  }
+
+  &:focus,
+  &.focus {
+    outline: 0;
+    box-shadow: $btn-focus-box-shadow;
+  }
+
+  // Disabled comes first so active can properly restyle
+  &.disabled,
+  &:disabled {
+    opacity: $btn-disabled-opacity;
+    @include box-shadow(none);
+  }
+
+  // Opinionated: add "hand" cursor to non-disabled .btn elements
+  &:not(:disabled):not(.disabled) {
+    cursor: pointer;
+  }
+
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    @include box-shadow($btn-active-box-shadow);
+
+    &:focus {
+      @include box-shadow($btn-focus-box-shadow, $btn-active-box-shadow);
+    }
   }
 }
 
 /* Buttons inside the content */
-.cke_dialog_page_contents {
-  a.cke_dialog_ui_button {
-    height: 22px;
-    line-height: 22px;
-    background-color: #f4f4f4;
-
-    &:hover, &:focus, &:active {
-      background-color: $gray-400;
-    }
-  }
-}
-
-span.cke_dialog_ui_button {
-  padding: 0 12px;
-}
-
-.cke_hc a.cke_dialog_ui_button {
-  &:hover, &:focus, &:active {
-    border: 3px solid;
-    padding-top: 1px;
-    padding-bottom: 1px;
-
-    span {
-      padding-left: 10px;
-      padding-right: 10px;
-    }
-  }
-}
+//.cke_dialog_page_contents {
+//  a.cke_dialog_ui_button {
+//    height: 22px;
+//    line-height: 22px;
+//    background-color: #f4f4f4;
+//
+//    &:hover, &:focus, &:active {
+//      background-color: $gray-400;
+//    }
+//  }
+//}
+//
+//span.cke_dialog_ui_button {
+//  padding: 0 12px;
+//}
+//
+//.cke_hc a.cke_dialog_ui_button {
+//  &:hover, &:focus, &:active {
+//    border: 3px solid;
+//    padding-top: 1px;
+//    padding-bottom: 1px;
+//
+//    span {
+//      padding-left: 10px;
+//      padding-right: 10px;
+//    }
+//  }
+//}
 
 /*
 a.cke_dialog_ui_button[style*="width"]
@@ -506,35 +523,34 @@ a.cke_dialog_ui_button[style*="width"]
 }
 */
 /* The inner part of the button (both in dialog tabs and dialog footer). */
-.cke_dialog_footer_buttons a.cke_dialog_ui_button span {
-  color: inherit;
-  font-size: 12px;
-  line-height: 20px;
-}
+//.cke_dialog_footer_buttons a.cke_dialog_ui_button span {
+//  color: inherit;
+//}
 
 /* Special class appended to the Ok button. */
 a.cke_dialog_ui_button_ok {
-  color: color-yiq($success);
-  background-color: theme-color("success");
+  @include button-variant($btn-primary-bg, $btn-primary-border-color, $btn-primary-hover-bg, $btn-primary-hover-border-color, $btn-primary-active-bg, $btn-primary-active-border-color);
 }
 
 /* Special class appended to the Cancel button. */
 a.cke_dialog_ui_button_cancel {
-  color: color-yiq($secondary);
-  background-color: theme-color("secondary");
+  @include button-variant($danger, $danger);
 }
 
-span.cke_dialog_ui_button {
-  cursor: pointer;
-}
-
+//span.cke_dialog_ui_button {
+//  cursor: pointer;
+//}
+//
 /* A special container that holds the footer buttons. */
 .cke_dialog_footer_buttons {
   display: inline-table;
-  margin: 10px;
   width: auto;
   position: relative;
   vertical-align: middle;
+
+  a.cke_dialog_ui_button {
+    margin-left: 5px;
+  }
 }
 
 /*
@@ -546,18 +562,15 @@ div.cke_dialog_ui_input_select {
 }
 
 select.cke_dialog_ui_input_select {
-  height: 30px;
-  line-height: 30px;
-
-  background-color: #fff;
-  padding: 4px 10px;
-  border: 1px solid $input-border-color;
+  height: $input-height; // Make inputs at least the height of their button counterpart (base line-height + padding + border)
+  padding: $input-padding-y $input-padding-x;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: $input-color;
+  background-color: $input-bg;
 
   outline: none;
   border-radius: $border-radius;
-
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
 }
 
 .cke_dialog_ui_input_file {
@@ -734,18 +747,15 @@ tendency that these will be moved to the plugins code in the future.
 
   label {
     display: inline-block;
-    margin-bottom: 3px;
+    margin-bottom: 5px;
     cursor: default;
-
-    &.cke_required {
-      font-weight: bold;
-    }
+    font-weight: bold;
   }
 }
 
-.cke_dialog_ui_html {
-  line-height: 150%;
-}
+//.cke_dialog_ui_html {
+//  line-height: 150%;
+//}
 
 a.cke_smile {
   overflow: hidden;

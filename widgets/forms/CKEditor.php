@@ -31,7 +31,6 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
      */
     public $clientOptions = [
         'height' => 300,
-        'removeDialogTabs' => 'link:advanced',
     ];
 
     /**
@@ -43,6 +42,11 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
      * @var array
      */
     public $removePlugins = [];
+
+    /**
+     * @var array
+     */
+    public $removeButtons = [];
 
     /**
      * @var string
@@ -58,6 +62,11 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
      * @var array containing format tags for the format dropdown.
      */
     public $formatTags;
+
+    /**
+     * @var CKEditorBootstrapAsset
+     */
+    public $assetBundle = CKEditorBootstrapAsset::class;
 
     /**
      * @inheritdoc
@@ -92,16 +101,25 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
             if ($formatTags = $this->formatTags ?: array_intersect($validator->allowedHtmlTags, ['h1', 'h2', 'h3', 'h4', 'h5', 'code'])) {
                 array_unshift($this->toolbar, ['Format']);
                 array_unshift($formatTags, 'p');
+
                 $this->clientOptions['format_tags'] = implode(';', array_unique($formatTags));
             }
         }
 
         $this->clientOptions['removePlugins'] = implode(',', array_unique(array_filter($removePlugins)));
+        $this->clientOptions['removeButtons'] = implode(',', $this->removeButtons);
         $this->clientOptions['toolbar'] = $this->toolbar;
 
         // Editor skin path.
-        $bundle = CKEditorBootstrapAsset::register($view = $this->getView());
-        $this->clientOptions['skin'] = 'skeleton,' . $bundle->baseUrl . '/';
+        $bundle = $this->assetBundle::register($view = $this->getView());
+
+        if (!isset($this->clientOptions['skin'])) {
+            $this->clientOptions['skin'] = 'skeleton,' . $bundle->baseUrl . '/';
+        }
+
+        if (!isset($this->clientOptions['removeDialogTabs'])) {
+            $this->clientOptions['removeDialogTabs'] = 'link:advanced';
+        }
 
         // Contents CSS file.
         $bundle = $view->registerAssetBundle($bundle->editorAssetBundle ?: 'davidhirtz\yii2\skeleton\assets\AdminAsset');

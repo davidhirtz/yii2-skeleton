@@ -1,1 +1,1 @@
-﻿CKEDITOR.skin.name='skeleton';
+﻿CKEDITOR.skin.name = 'skeleton';
