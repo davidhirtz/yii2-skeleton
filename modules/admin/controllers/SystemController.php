@@ -185,38 +185,34 @@ class SystemController extends Controller
      */
     protected function findAssets()
     {
-        $assets = [];
         $manager = Yii::$app->getAssetManager();
+        $basePath = $manager->basePath;
+        $baseUrl = $manager->baseUrl;
 
-        foreach ($this->findAssetFolders(Yii::getAlias('@app')) as $file) {
-            $asset = $manager->getPublishedUrl($file);
+        $directories = FileHelper::findDirectories($basePath);
+        $assets = [];
+
+        foreach ($directories as $directory) {
+            $handle = @opendir($directory);
+            $basename = pathinfo($directory, PATHINFO_BASENAME);
+            $files = [];
+
+            while (($file = readdir($handle)) !== false) {
+                if ($file !== '.' && $file !== '..') {
+                    $files[$file] = $baseUrl . '/' . $basename . '/';
+                }
+            }
+
+            closedir($handle);
 
             $assets[] = [
-                'name' => pathinfo($file, PATHINFO_FILENAME),
-                'directory' => $asset,
+                'name' => $basename,
+                'files' => $files,
+                'modified' => filemtime($directory),
             ];
         }
 
-        krsort($assets);
         return $assets;
-    }
-
-    /**
-     * @param string $path
-     * @return array
-     */
-    private function findAssetFolders($path)
-    {
-        $assets = "{$path}/assets";
-        $files = is_dir($assets) ? FileHelper::findDirectories($assets) : [];
-
-        if (is_dir($modules = Yii::getAlias("{$path}/modules"))) {
-            foreach (FileHelper::findDirectories($modules) as $path) {
-                $files = array_merge($files, $this->findAssetFolders($path));
-            }
-        }
-
-        return $files;
     }
 
     /**

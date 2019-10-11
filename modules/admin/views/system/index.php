@@ -30,10 +30,24 @@ $this->setTitle(Yii::t('skeleton', 'System'));
             [
                 'label' => Yii::t('skeleton', 'Name'),
                 'content' => function ($item) {
-                    return Html::tag('div', ucwords(str_replace('-', ' ', $item['name'])), ['class' => 'strong']) .
-                        Html::tag('div', $item['directory'] ?: Yii::t('skeleton', 'Unpublished'), ['class' => 'small']);
+
+                    $links = [];
+
+                    foreach ($item['files'] as $file => $link) {
+                        $links[] = Html::a($file, $link, ['target' => '_blank']);
+                    }
+
+                    return Html::tag('div', $item['name'], ['class' => 'strong']) .
+                        Html::ul($links, ['class' => 'small', 'encode' => false]);
                 }
             ],
+            [
+                'label' => Yii::t('skeleton', 'Updated'),
+                'contentOptions' => ['style' => 'vertical-align:top'],
+                'content' => function ($item) {
+                    return \davidhirtz\yii2\timeago\Timeago::tag($item['modified']);
+                }
+            ]
         ],
         'footer' => [
             [
