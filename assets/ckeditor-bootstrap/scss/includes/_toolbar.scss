@@ -95,9 +95,9 @@ a.cke_button {
   outline: none;
   cursor: default;
   float: left;
-  border: 0;
-  border-radius: 2px;
-  background: #fff;
+  border: 1px solid $white;
+  border-radius: $border-radius;
+  background: $white;
 }
 
 .cke_rtl .cke_button {
@@ -115,8 +115,9 @@ a.cke_button {
 /* This class is applied to the button when it is "active" (pushed).
    This style indicates that the feature associated with the button is active
    i.e. currently writing in bold or when spell checking is enabled. */
-.cke_button_on {
-  background: $gray-300;
+a.cke_button_on {
+  background: $gray-200;
+  border-color: $input-border-color;
 }
 
 .cke_hc {
@@ -147,14 +148,15 @@ a.cke_button {
   opacity: 0.5;
 }
 
-a.cke_button_on {
-  &:hover, &:focus, &:active {
-  }
-}
+//a.cke_button_on {
+//  &:hover, &:focus, &:active {
+//  }
+//}
 
 a.cke_button_off, a.cke_button_disabled {
   &:hover, &:focus, &:active {
-    background: $gray-300 !important;
+    background: $gray-300;
+    border-color: $gray-300;
   }
 }
 

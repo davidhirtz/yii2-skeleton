@@ -60,25 +60,26 @@ The visual representation of a rich combo widget looks as follows:
   float: left;
   margin-right: 10px;
   border-radius: $border-radius;
-  background: #fff;
+  border: 1px solid $white;
+  background: $white;
 }
 
 /* Different states of the container. */
-.cke_combo_off {
-  a.cke_combo_button {
-    &:hover, &:focus {
-      outline: none;
-    }
-
-    &:active {
-      border-color: $gray-600;
-    }
-  }
-}
+//.cke_combo_off {
+//  a.cke_combo_button {
+//    &:hover, &:focus {
+//      outline: none;
+//    }
+//
+//    &:active {
+//      border-color: $gray-600;
+//    }
+//  }
+//}
 
 .cke_combo_on {
   a.cke_combo_button {
-    border-color: $gray-600;
+    border-color: $input-border-color;
   }
 }
 
