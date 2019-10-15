@@ -25,7 +25,7 @@ class HelpPanel extends Panel
      * @var array
      */
     public $contentOptions = [
-        'class' => 'offset-md-4 col-md-8 col-lg-6',
+        'class' => 'offset-md-4 col-md-8',
     ];
 
     /**
