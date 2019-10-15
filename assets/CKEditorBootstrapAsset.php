@@ -18,7 +18,7 @@ class CKEditorBootstrapAsset extends AssetBundle
     /**
      * @var string
      */
-    public $editorAssetBundle;
+    public $editorAssetBundle = 'davidhirtz\yii2\skeleton\assets\AdminAsset';
 
     /**
      * @var array

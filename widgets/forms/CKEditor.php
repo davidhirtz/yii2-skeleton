@@ -117,14 +117,19 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
             $this->clientOptions['skin'] = 'skeleton,' . $bundle->baseUrl . '/';
         }
 
+        // Contents CSS file.
+        if ($bundle->editorAssetBundle) {
+            $bundle = $view->registerAssetBundle($bundle->editorAssetBundle);
+            $this->clientOptions['contentsCss'] = $bundle->baseUrl . '/' . $bundle->css[0];
+        }
+
         if (!isset($this->clientOptions['removeDialogTabs'])) {
             $this->clientOptions['removeDialogTabs'] = 'link:advanced';
         }
 
-        // Contents CSS file.
-        $bundle = $view->registerAssetBundle($bundle->editorAssetBundle ?: 'davidhirtz\yii2\skeleton\assets\AdminAsset');
-        $this->clientOptions['contentsCss'] = $bundle->baseUrl . '/' . $bundle->css[0];
-        $this->clientOptions['stylesSet'] = false;
+        if (!isset($this->clientOptions['stylesSet'])) {
+            $this->clientOptions['stylesSet'] = false;
+        }
 
         // Language.
         if (Yii::$app->language != Yii::$app->sourceLanguage) {

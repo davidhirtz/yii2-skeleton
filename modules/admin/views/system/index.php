@@ -34,7 +34,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                     $links = [];
 
                     foreach ($item['files'] as $file => $link) {
-                        $links[] = Html::a($file, $link, ['target' => '_blank']);
+                        $links[] = Html::a($file, $link . $file, ['target' => '_blank']);
                     }
 
                     return Html::tag('div', $item['name'], ['class' => 'strong']) .
