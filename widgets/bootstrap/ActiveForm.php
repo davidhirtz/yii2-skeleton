@@ -21,10 +21,10 @@ class ActiveForm extends \yii\bootstrap4\ActiveForm
      */
     public $fieldConfig = [
         'horizontalCssClasses' => [
-            'wrapper' => 'col-md-8 col-lg-6',
+            'wrapper' => 'col-md-8',
             'field' => 'form-group row',
-            'label' => 'col-form-label col-md-3 col-lg-4',
-            'offset' => 'offset-md-3 offset-lg-4 col-md-8 col-lg-6',
+            'label' => 'col-form-label col-md-3',
+            'offset' => 'offset-md-3 col-md-8',
         ],
     ];
 
