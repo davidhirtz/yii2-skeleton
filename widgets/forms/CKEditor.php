@@ -120,7 +120,10 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
         // Contents CSS file.
         if ($bundle->editorAssetBundle) {
             $bundle = $view->registerAssetBundle($bundle->editorAssetBundle);
-            $this->clientOptions['contentsCss'] = $bundle->baseUrl . '/' . $bundle->css[0];
+
+            if (!isset($this->clientOptions['contentsCss'])) {
+                $this->clientOptions['contentsCss'] = $bundle->baseUrl . '/' . $bundle->css[0];
+            }
         }
 
         if (!isset($this->clientOptions['removeDialogTabs'])) {
