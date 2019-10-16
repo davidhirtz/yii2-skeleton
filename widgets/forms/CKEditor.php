@@ -29,9 +29,7 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
     /**
      * @inherit
      */
-    public $clientOptions = [
-        'height' => 300,
-    ];
+    public $clientOptions = [];
 
     /**
      * @var array
@@ -132,6 +130,10 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
 
         if (!isset($this->clientOptions['stylesSet'])) {
             $this->clientOptions['stylesSet'] = false;
+        }
+
+        if (!isset($this->clientOptions['height'])) {
+            $this->clientOptions['height'] = 300;
         }
 
         // Language.
