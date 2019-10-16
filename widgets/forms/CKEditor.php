@@ -102,6 +102,27 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
 
                 $this->clientOptions['format_tags'] = implode(';', array_unique($formatTags));
             }
+
+            if ($validator->allowedClasses) {
+                $tags = [];
+
+                foreach ($validator->allowedHtmlTags as $tag) {
+                    if (preg_match('/^(\w+)\[.*class.*]/', $tag, $matches)) {
+                        $tags[] = $matches[1];
+                    }
+                }
+
+                // @see https://ckeditor.com/docs/ckeditor4/latest/guide/dev_allowed_content_rules.html
+                $this->clientOptions['allowedContent'] .= ';' . implode(' ', $tags) . '(' . implode(',', $validator->allowedClasses) . ')';
+            }
+        }
+
+        if (!isset($this->clientOptions['stylesSet'])) {
+            $this->clientOptions['stylesSet'] = false;
+        }
+
+        if ($this->clientOptions['stylesSet']) {
+            $this->toolbar[0][] = 'Styles';
         }
 
         $this->clientOptions['removePlugins'] = implode(',', array_unique(array_filter($removePlugins)));
@@ -126,10 +147,6 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
 
         if (!isset($this->clientOptions['removeDialogTabs'])) {
             $this->clientOptions['removeDialogTabs'] = 'link:advanced';
-        }
-
-        if (!isset($this->clientOptions['stylesSet'])) {
-            $this->clientOptions['stylesSet'] = false;
         }
 
         if (!isset($this->clientOptions['height'])) {
