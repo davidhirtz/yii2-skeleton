@@ -93,37 +93,32 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
 
             /** @var HtmlValidator $validator */
             $validator = Yii::createObject($this->validator);
-            $this->clientOptions['allowedContent'] = str_replace('|', ',', implode(';', $validator->allowedHtmlTags));
+            $this->clientOptions['allowedContent'] = str_replace('|', ',', implode(';', array_diff($validator->allowedHtmlTags, ['*[class]'])));
+
+            // Styles.
+            if (!isset($this->clientOptions['stylesSet'])) {
+                $this->clientOptions['stylesSet'] = false;
+            }
+
+            if ($this->clientOptions['stylesSet']) {
+                array_unshift($this->toolbar, ['Styles']);
+            }
 
             // Format dropdown.
-            if ($formatTags = $this->formatTags ?: array_intersect($validator->allowedHtmlTags, ['h1', 'h2', 'h3', 'h4', 'h5', 'code'])) {
-                array_unshift($this->toolbar, ['Format']);
-                array_unshift($formatTags, 'p');
+            if($this->formatTags !== false) {
+                if ($formatTags = $this->formatTags ?: array_intersect($validator->allowedHtmlTags, ['h1', 'h2', 'h3', 'h4', 'h5', 'code'])) {
+                    array_unshift($this->toolbar, ['Format']);
+                    array_unshift($formatTags, 'p');
 
-                $this->clientOptions['format_tags'] = implode(';', array_unique($formatTags));
+                    $this->clientOptions['format_tags'] = implode(';', array_unique($formatTags));
+                }
             }
 
             if ($validator->allowedClasses) {
-                $tags = [];
-
-                foreach ($validator->allowedHtmlTags as $tag) {
-                    if (preg_match('/^(\w+)\[.*class.*]/', $tag, $matches)) {
-                        $tags[] = $matches[1];
-                    }
-                }
-
-                // @see https://ckeditor.com/docs/ckeditor4/latest/guide/dev_allowed_content_rules.html
-                $this->clientOptions['allowedContent'] .= ';' . implode(' ', $tags) . '(' . implode(',', $validator->allowedClasses) . ')';
+                $this->clientOptions['allowedContent'] .= ';*(' . implode(',', $validator->allowedClasses) . ')';
             }
         }
 
-        if (!isset($this->clientOptions['stylesSet'])) {
-            $this->clientOptions['stylesSet'] = false;
-        }
-
-        if ($this->clientOptions['stylesSet']) {
-            $this->toolbar[0][] = 'Styles';
-        }
 
         $this->clientOptions['removePlugins'] = implode(',', array_unique(array_filter($removePlugins)));
         $this->clientOptions['removeButtons'] = implode(',', $this->removeButtons);

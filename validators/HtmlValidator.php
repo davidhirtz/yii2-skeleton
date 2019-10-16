@@ -14,8 +14,7 @@ class HtmlValidator extends \yii\validators\Validator
 {
     /**
      * @var array common tags are h1-h5 for format, table, th, td, tr for tables or
-     * blockquote, strike, u for font styles. Tags can also be set as key with the value
-     * containing additional conditions in an array.
+     * blockquote, strike, u for font styles.
      */
     public $allowedHtmlTags = [];
 
@@ -60,11 +59,11 @@ class HtmlValidator extends \yii\validators\Validator
         }
 
         $this->allowedHtmlTags = ArrayHelper::merge($this->allowedHtmlTags, [
-            'a' => ['href', 'rel', 'target'],
+            'a[href|rel|target]',
             'br',
             'div',
             'em',
-            'img' => ['alt', 'height', 'src', 'title', 'width'],
+            'img[alt|height|src|title|width]',
             'li',
             'ol',
             'p',
@@ -72,11 +71,10 @@ class HtmlValidator extends \yii\validators\Validator
             'ul',
         ]);
 
-        // Merge tags with definitions.
-        foreach($this->allowedHtmlTags as $tag => &$definition) {
-            if (is_string($tag)) {
-                $definition = $tag . '[' . implode('|', (array)$definition) . ']';
-            }
+        if ($this->allowedClasses) {
+            $this->purifierOptions['Attr.AllowedClasses'] = ArrayHelper::getValue($this->purifierOptions, 'Attr.AllowedClasses');
+            $this->purifierOptions['Attr.AllowedClasses'] .= implode(',', (array)$this->allowedClasses);
+            $this->allowedHtmlTags[] = '*[class]';
         }
 
         $this->allowedHtmlTags = array_unique(array_filter(array_diff($this->allowedHtmlTags, $this->excludedHtmlTags)));
@@ -87,10 +85,6 @@ class HtmlValidator extends \yii\validators\Validator
             $this->purifierOptions['CSS.AllowedProperties'] .= implode(',', (array)$this->allowedCssProperties);
         }
 
-        if ($this->allowedClasses) {
-            $this->purifierOptions['Attr.AllowedClasses'] = ArrayHelper::getValue($this->purifierOptions, 'Attr.AllowedClasses');
-            $this->purifierOptions['Attr.AllowedClasses'] .= implode(',', (array)$this->allowedClasses);
-        }
 
         parent::init();
     }
