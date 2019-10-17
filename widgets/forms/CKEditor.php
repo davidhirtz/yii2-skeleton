@@ -24,7 +24,8 @@ class CKEditor extends InputWidget
      * @var array
      */
     public $toolbar = [
-        ['h1', 'h2', 'h3', 'h4', 'h5', 'Bold', 'Italic', 'Underline', 'Strike'],
+        ['h1', 'h2', 'h3', 'h4', 'h5'],
+        ['Bold', 'Italic', 'Underline', 'Strike'],
         ['NumberedList', 'BulletedList', 'Table', 'Blockquote'],
         ['RemoveFormat'],
         ['Link', 'Unlink'],

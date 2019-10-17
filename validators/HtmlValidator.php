@@ -47,11 +47,9 @@ class HtmlValidator extends \yii\validators\Validator
             'Attr.AllowedFrameTargets' => '_blank',
             'Attr.AllowedRel' => 'nofollow',
             'AutoFormat.RemoveEmpty' => true,
-            'AutoFormat.Linkify' => true,
             'AutoFormat.AutoParagraph' => true,
             'CSS.AllowedProperties' => 'text-decoration',
             'HTML.TargetBlank' => true,
-            'HTML.Nofollow' => true,
         ], $this->purifierOptions);
 
         if (isset($this->purifierOptions['HTML.Allowed'])) {
@@ -62,7 +60,6 @@ class HtmlValidator extends \yii\validators\Validator
             'a[href|rel|target]',
             'br',
             'div',
-            'em',
             'img[alt|height|src|title|width]',
             'li',
             'ol',
