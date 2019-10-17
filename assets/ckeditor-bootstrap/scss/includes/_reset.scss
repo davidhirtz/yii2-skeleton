@@ -61,41 +61,41 @@ http://docs.cksource.com/CKEditor_4.x/Skin_SDK/Reset
   float: none;
 }
 
-.cke_reset_all {
-  .cke_rtl * {
-    text-align: right;
-  }
-
-  /* Defaults for some elements. */
-  iframe {
-    vertical-align: inherit; /** For IE */
-  }
-
-  textarea {
-    white-space: pre;
-  }
-
-  textarea, input[type="text"], input[type="password"] {
-    cursor: text;
-  }
-
-  textarea[disabled], input[type="text"][disabled], input[type="password"][disabled] {
-    cursor: default;
-  }
-
-  fieldset {
-    padding: 10px;
-    margin-top: 10px;
-    border: 1px solid $input-border-color;
-
-    legend {
-      padding: 0 5px;
-    }
-  }
-
-  select {
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-  }
-}
+//.cke_reset_all {
+//  .cke_rtl * {
+//    text-align: right;
+//  }
+//
+//  /* Defaults for some elements. */
+//  iframe {
+//    vertical-align: inherit; /** For IE */
+//  }
+//
+//  textarea {
+//    white-space: pre;
+//  }
+//
+//  textarea, input[type="text"], input[type="password"] {
+//    cursor: text;
+//  }
+//
+//  textarea[disabled], input[type="text"][disabled], input[type="password"][disabled] {
+//    cursor: default;
+//  }
+//
+//  fieldset {
+//    padding: 10px;
+//    margin-top: 10px;
+//    border: 1px solid $input-border-color;
+//
+//    legend {
+//      padding: 0 5px;
+//    }
+//  }
+//
+//  select {
+//    box-sizing: border-box;
+//    -moz-box-sizing: border-box;
+//    -webkit-box-sizing: border-box;
+//  }
+//}

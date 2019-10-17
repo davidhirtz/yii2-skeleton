@@ -1,46 +1,13 @@
 /**
  * CKEditor dialog.
  */
-/**
- * The default stylesheet included on all requests.
- */
 @import "../../admin/scss/includes/variables";
-
-/**
- * Includes Bootstrap 4.
- */
 @import "../../../../../npm-asset/bootstrap/scss/functions";
 @import "../../../../../npm-asset/bootstrap/scss/variables";
 @import "../../../../../npm-asset/bootstrap/scss/mixins";
-
-@import "includes/mainui";
-@import "includes/panel";
-@import "includes/content";
-@import "includes/colorpanel";
+@import "includes/variables";
+@import "includes/layout";
 @import "includes/toolbar";
-@import "includes/menu";
-@import "includes/richcombo";
-@import "includes/presets";
-
-/* Important!
-   To avoid showing the editor UI while its styles are still not available, the
-   editor creates it with visibility:hidden. Here, we restore the UI visibility. */
-.cke_chrome {
-  visibility: inherit;
-}
-
-.cke_ltr{
-  overflow-y: hidden; // Dropdowns.
-}
-
-/* For accessibility purposes, several "voice labels" are present in the UI.
-   These are usually <span> elements that show not be visible, but that are
-   used by screen-readers to announce other elements. Here, we hide these
-   <spans>, in fact. */
-.cke_voice_label {
-  display: none;
-}
-
-legend.cke_voice_label {
-  display: none;
-}
+@import "includes/panel";
+//@import "includes/richcombo";
+@import "includes/content";

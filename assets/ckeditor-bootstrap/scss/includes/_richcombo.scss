@@ -30,14 +30,6 @@ The visual representation of a rich combo widget looks as follows:
   float: left;
 }
 
-.cke_rtl .cke_combo {
-  float: right;
-}
-
-.cke_hc .cke_combo {
-  margin-top: -2px;
-}
-
 /* The label of the combo widget. It is invisible by default, yet
    it's important for semantics and accessibility. */
 .cke_combo_label {
@@ -46,12 +38,6 @@ The visual representation of a rich combo widget looks as follows:
   line-height: 26px;
   vertical-align: top;
   margin-right: 5px;
-}
-
-.cke_rtl .cke_combo_label {
-  float: right;
-  margin-left: 5px;
-  margin-right: 0;
 }
 
 /* The container for combo text and arrow. */
@@ -83,28 +69,6 @@ The visual representation of a rich combo widget looks as follows:
   }
 }
 
-.cke_rtl .cke_combo_button {
-  float: right;
-  margin-left: 5px;
-  margin-right: 0;
-}
-
-.cke_hc a.cke_combo_button {
-  padding: 3px;
-}
-
-.cke_hc .cke_combo_on a.cke_combo_button {
-  border-width: 3px;
-  padding: 1px;
-}
-
-.cke_hc .cke_combo_off a.cke_combo_button {
-  &:hover, &:focus, &:active {
-    border-width: 3px;
-    padding: 1px;
-  }
-}
-
 /* The label that shows the current value of the rich combo.
    By default, it holds the name of the property.
    See: .cke_combo_inlinelabel */
@@ -121,18 +85,6 @@ The visual representation of a rich combo widget looks as follows:
   font-size: 12px;
 }
 
-.cke_rtl .cke_combo_text {
-  float: right;
-  text-align: right;
-  padding-left: 0;
-  padding-right: 10px;
-}
-
-.cke_hc .cke_combo_text {
-  line-height: 18px;
-  font-size: 12px;
-}
-
 /* The handler which opens the panel of rich combo properties.
    It holds an arrow as a visual indicator. */
 .cke_combo_open {
@@ -143,10 +95,6 @@ The visual representation of a rich combo widget looks as follows:
   line-height: 17px;
   margin: 2px 10px 0;
   width: 5px;
-}
-
-.cke_hc .cke_combo_open {
-  height: 12px;
 }
 
 /* The arrow which is displayed inside of the .cke_combo_open handler. */
@@ -161,18 +109,4 @@ The visual representation of a rich combo widget looks as follows:
   border-left: 3px solid transparent;
   border-right: 3px solid transparent;
   border-top: 3px solid $body-color;
-}
-
-.cke_hc .cke_combo_arrow {
-  font-size: 10px;
-  width: auto;
-  border: 0;
-  margin-top: 3px;
-}
-
-/* Disabled combo button styles. */
-.cke_combo_disabled {
-  .cke_combo_inlinelabel, .cke_combo_open {
-    opacity: 0.3;
-  }
 }

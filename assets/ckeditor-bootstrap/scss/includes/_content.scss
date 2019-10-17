@@ -2,11 +2,15 @@
  * CKEditor config.
  */
 .cke_editable {
-  padding: $input-padding-y $input-padding-x;
-  font-size: $font-size-base;
-  line-height: $line-height-base;
-  color: $input-color;
-  background-color: $input-bg;
+  padding: $cke-content-padding;
+  font-family: $cke-content-font-family;
+  @include font-size($cke-content-font-size);
+  font-weight: $cke-content-font-weight;
+  line-height: $cke-content-line-height;
+  color: $cke-content-color;
+  background-color: $cke-content-bg;
+  border: $cke-content-border;
+  background-clip: padding-box;
   height: 100%;
   outline: 0;
 
@@ -15,13 +19,13 @@
   }
 
   a {
-    color: #000;
-    text-decoration: underline;
+    color: $cke-content-link-color;
+    text-decoration: $cke-content-link-decoration;
   }
 
   blockquote {
-    padding: $input-padding-x;
-    background-color: $gray-200;
+    padding: $cke-blockquote-padding;
+    background-color: $cke-blockquote-color;
   }
 
   h1 {
@@ -56,5 +60,12 @@
   td {
     vertical-align: top;
     padding: .5em;
+    border: $cke-table-border;
   }
+}
+.cke_source {
+  font-family: 'Courier New', monospace;
+  font-size: small;
+  background-color: $cke-source-bg;
+  white-space: pre;
 }

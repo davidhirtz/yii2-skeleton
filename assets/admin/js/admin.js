@@ -149,6 +149,11 @@ $(function () {
 
                 // Remove useless targets.
                 targetType.items = [targetType.items[0], targetType.items[3]];
+                targetTab.remove('linkTargetName');
+                targetTab.remove('popupFeatures');
+                targetTab.elements[0].widths = ['100%'];
+
+                console.log(targetTab);
             }
         });
     }

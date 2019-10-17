@@ -44,76 +44,36 @@ Special outer level classes used in this file:
     .cke_hc: Available when the editor is rendered on "High Contrast".
 
 */
-
-/* The outer boundary of the interface. */
 .cke_chrome {
   display: block;
   width: 100%;
   padding: 0;
   font-size: $font-size-base;
   line-height: $line-height-base;
-  color: $input-color;
-  background-color: $input-bg;
-  border: 1px solid $input-border-color;
-  border-radius: $input-border-radius; // Note: This has no effect on <select>s in some browsers, due to the limited stylability of <select>s in CSS.
-
+  background-color: $cke-bg;
+  border: $cke-border;
+  border-radius: $cke-border-radius;
+  visibility: inherit;
 }
 
-/* The inner boundary of the interface. */
 .cke_inner {
-  /* This is <span>, so transform it into a block.*/
   display: block;
-
   -webkit-touch-callout: none;
-
   background: transparent;
   padding: 0;
 }
 
-/* Added to the outer boundary of the UI when in inline editing,
-   when the UI is floating. */
-.cke_float {
-  /* Make white the space between the outer and the inner borders. */
-  border: none;
-
-  .cke_inner {
-    /* As we don't have blocks following top (toolbar) we suppress the padding
-       as the toolbar defines its own margin. */
-    padding-bottom: 0;
-  }
-
-  .cke_top {
-    border: 1px solid $input-border-color;
-  }
-}
-
-/* Make the main spaces enlarge to hold potentially floated content. */
 .cke_top, .cke_contents, .cke_bottom {
-  /* These are <span>s, so transform them into blocks.*/
   display: block;
-
-  /* Ideally this should be "auto", but it shows scrollbars in IE7. */
   overflow: hidden;
 }
 
-.cke_top, .cke_bottom {
-  padding: 3px 0 0;
-  background: $gray-400;
-}
-
 .cke_top {
-  color: $input-color;
-  background-color: $input-group-addon-bg;
-  border-bottom: 1px solid $input-group-addon-border-color;
-  /* Allow breaking toolbars when in a narrow editor. (#9947) */
-  white-space: normal;
-  padding: $input-padding-y 0 $input-padding-y $input-padding-x;
-}
-
-.cke_contents {
-  background-color: #fff;
-  border: 0;
-  @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, .075)); // Redeclare so transitions work;
+  color: $cke-top-color;
+  background-color: $cke-top-bg;
+  border-bottom: $cke-top-border-bottom;
+  padding: $cke-top-padding;
+  white-space: normal; // Allow breaking toolbars when in a narrow editor. (#9947)
 }
 
 .cke_bottom {
@@ -124,4 +84,20 @@ Special outer level classes used in this file:
 .cke_browser_ios .cke_contents {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+.cke_ltr{
+  overflow-y: hidden; // Dropdowns.
+}
+
+/* For accessibility purposes, several "voice labels" are present in the UI.
+   These are usually <span> elements that show not be visible, but that are
+   used by screen-readers to announce other elements. Here, we hide these
+   <spans>, in fact. */
+.cke_voice_label {
+  display: none;
+}
+
+.cke_resizer{
+  display: none;
 }

@@ -1,0 +1,99 @@
+/*
+Main.
+ */
+$cke-bg: $input-bg !default;
+$cke-border: $input-border-width solid $input-border-color !default;
+$cke-border-radius: $input-border-radius !default;
+
+$cke-top-padding: $input-padding-y 0 $input-padding-y $input-padding-x !default;
+$cke-top-color: $input-color !default;
+$cke-top-bg: $input-group-addon-bg !default;
+$cke-top-border-bottom: 1px solid $input-group-addon-border-color !default;
+
+/*
+Toolbar.
+ */
+$cke-toolbar-margin: 0 10px 0 0 !default;
+$cke-toolbar-border-radius: $border-radius !default;
+
+$cke-toolbar-button-margin: 0 1px 0 0 !default;
+$cke-toolbar-button-padding: $input-padding-y $input-padding-x !default;
+$cke-toolbar-button-border: 1px solid transparent !default;
+$cke-toolbar-button-border-radius: $border-radius !default;
+$cke-toolbar-button-bg: $btn-secondary-bg !default;
+$cke-toolbar-button-active-bg: $gray-300 !default;
+$cke-toolbar-button-active-border-color: $input-border-color !default;
+$cke-toolbar-button-hover-bg: $gray-300 !default;
+$cke-toolbar-button-hover-border-color: $gray-200 !default;
+$cke-toolbar-button-icon-margin: 0 !default;
+$cke-toolbar-button-icon-width: 16px !default;
+$cke-toolbar-button-icon-height: 16px !default;
+
+/*
+Panel.
+ */
+$cke-panel-width: 120px !default;
+$cke-panel-height: 100px !default;
+$cke-panel-margin: 5px 0 0 !default;
+$cke-panel-bg: $card-bg !default;
+$cke-panel-border: $card-border-width solid $card-border-color !default;
+$cke-panel-border-radius: $border-radius !default;
+
+$cke-panel-item-padding: 6px 10px !default;
+$cke-panel-item-active-bg: $secondary !default;
+$cke-panel-item-selected-bg: $cke-panel-item-active-bg !default;
+
+$cke-combo-panel-width: 150px !default;
+$cke-combo-panel-height: 110px !default;
+
+/*
+Content.
+ */
+$cke-content-padding: $input-padding-y $input-padding-x !default;
+$cke-content-font-family: $input-font-family !default;
+$cke-content-font-size: $input-font-size !default;
+$cke-content-link-color: $link-color !default;
+$cke-content-font-weight: $input-font-weight !default;
+$cke-content-line-height: $input-line-height !default;
+$cke-content-color: $input-color !default;
+$cke-content-bg: $input-bg !default;
+$cke-content-border: $input-border-width solid $input-border-color !default;
+$cke-content-link-decoration: $link-decoration !default;
+
+$cke-blockquote-padding: $input-padding-x !default;
+$cke-blockquote-color: $gray-200 !default;
+
+$cke-table-border: 1px dotted $gray-400 !default;
+
+$cke-source-bg: $white !default;
+
+/*
+Dialog.
+ */
+$cke-dialog-bg: $card-bg !default;
+$cke-dialog-border: $card-border-width solid $card-border-color !default;
+$cke-dialog-border-radius: $card-border-radius !default;
+$cke-dialog-padding: $card-spacer-y $card-spacer-x !default;
+
+$cke-dialog-title-font-weight: $font-weight-bold !default;
+$cke-dialog-title-bg: $card-cap-bg !default;
+$cke-dialog-title-color: $card-cap-color !default;
+$cke-dialog-title-padding: $cke-dialog-padding !default;
+$cke-dialog-title-border-bottom: $card-border-width solid $card-border-color !default;
+
+$cke-dialog-contents-padding: $cke-dialog-padding !default;
+
+$cke-dialog-footer-padding: $cke-dialog-padding !default;
+$cke-dialog-footer-bg: $card-cap-bg !default;
+$cke-dialog-footer-border-radius: 0 0 $border-radius $border-radius !default;
+$cke-dialog-footer-border-top: $card-border-width solid $card-border-color !default;
+
+$cke-dialog-tabs-margin: 0 $card-spacer-x !default;
+$cke-dialog-tab-margin: $card-spacer-y 3px $card-spacer-y 0 !default;
+$cke-dialog-tab-padding: $nav-link-padding-y $nav-link-padding-x !default;
+$cke-dialog-tab-color: $navbar-dark-color !default;
+$cke-dialog-tab-border-radius: $nav-pills-border-radius !default;
+$cke-dialog-tab-hover-color: $app-submenu-hover-color !default;
+$cke-dialog-tab-hover-bg: $app-submenu-hover-bg !default;
+$cke-dialog-tab-active-color: $nav-pills-link-active-color !default;
+$cke-dialog-tab-active-bg: $nav-pills-link-active-bg !default;
