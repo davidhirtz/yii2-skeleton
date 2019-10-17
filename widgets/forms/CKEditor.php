@@ -108,10 +108,6 @@ class CKEditor extends InputWidget
             // Format dropdown.
             if ($this->formatTags !== false) {
                 if ($formatTags = $this->formatTags ?: array_intersect($validator->allowedHtmlTags, ['h1', 'h2', 'h3', 'h4', 'h5', 'code'])) {
-                    array_unshift($this->toolbar, ['Format']);
-                    array_unshift($formatTags, 'p');
-
-                    $this->clientOptions['format_tags'] = implode(';', array_unique($formatTags));
                 }
             }
 
