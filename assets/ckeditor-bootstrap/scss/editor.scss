@@ -13,25 +13,13 @@
 @import "../../../../../npm-asset/bootstrap/scss/variables";
 @import "../../../../../npm-asset/bootstrap/scss/mixins";
 
-/* "Reset" styles, necessary to avoid the editor UI being broken by external CSS. */
-//@import "includes/reset";
-/* Styles the main interface structure (holding box). */
 @import "includes/mainui";
-/* Styles all "panels", which are the floating elements that appear when
-   opening toolbar combos, menu buttons, context menus, etc. */
 @import "includes/panel";
-/* Styles the color panel displayed by the color buttons. */
+@import "includes/content";
 @import "includes/colorpanel";
-/* Styles to toolbar. */
 @import "includes/toolbar";
-/* Styles menus, which are lists of selectable items (context menu, menu button). */
 @import "includes/menu";
-/* Styles toolbar combos. */
 @import "includes/richcombo";
-/* Styles the elements path bar, available at the bottom of the editor UI.*/
-@import "includes/elementspath";
-/* Contains hard-coded presets for "configurable-like" options of the UI
-   (e.g. display labels on specific buttons) */
 @import "includes/presets";
 
 /* Important!

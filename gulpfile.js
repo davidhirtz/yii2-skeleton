@@ -75,8 +75,7 @@ function images() {
 
 // Watcher.
 function watch() {
-    gulp.watch('assets/*/scss/**/_*.scss', scss);
-    gulp.watch('assets/*/scss/*.scss', scss);
+    gulp.watch(['assets/*/scss/*.scss', 'assets/*/scss/**/_*.scss'], scss);
     gulp.watch(['assets/*/js/*.js', '!assets/*/js/*.min.js'], scripts);
 }
 

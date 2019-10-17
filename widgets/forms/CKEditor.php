@@ -2,16 +2,21 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
+use davidhirtz\yii2\skeleton\assets\CKEditorAsset;
 use davidhirtz\yii2\skeleton\assets\CKEditorBootstrapAsset;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use davidhirtz\yii2\skeleton\validators\HtmlValidator;
 use Yii;
+use yii\helpers\Html;
+use yii\helpers\Json;
+use yii\web\AssetBundle;
+use yii\widgets\InputWidget;
 
 /**
  * Class CKEditor.
  * @package davidhirtz\yii2\skeleton\widgets\form
  */
-class CKEditor extends \dosamigos\ckeditor\CKEditor
+class CKEditor extends InputWidget
 {
     use WidgetConfigTrait;
 
@@ -19,7 +24,7 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
      * @var array
      */
     public $toolbar = [
-        ['Bold', 'Italic', 'Underline', 'Strike'],
+        ['h1', 'h2', 'h3', 'h4', 'h5', 'Bold', 'Italic', 'Underline', 'Strike'],
         ['NumberedList', 'BulletedList', 'Table', 'Blockquote'],
         ['RemoveFormat'],
         ['Link', 'Unlink'],
@@ -49,11 +54,6 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
     /**
      * @var string
      */
-    public $preset = 'custom';
-
-    /**
-     * @var string
-     */
     public $validator = 'davidhirtz\yii2\skeleton\validators\HtmlValidator';
 
     /**
@@ -62,9 +62,14 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
     public $formatTags;
 
     /**
-     * @var CKEditorBootstrapAsset
+     * @var AssetBundle
      */
-    public $assetBundle = CKEditorBootstrapAsset::class;
+    public $skinAssetBundle = CKEditorBootstrapAsset::class;
+
+    /**
+     * @var
+     */
+    private static $isRegistered;
 
     /**
      * @inheritdoc
@@ -74,12 +79,7 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
         // Plugins.
         $removePlugins = array_merge($this->removePlugins, [
             'elementspath',
-            'magicline',
             'resize',
-            'contextmenu',
-            'liststyle',
-            'tabletools',
-            'tableselection',
         ]);
 
         if ($this->extraPlugins) {
@@ -105,7 +105,7 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
             }
 
             // Format dropdown.
-            if($this->formatTags !== false) {
+            if ($this->formatTags !== false) {
                 if ($formatTags = $this->formatTags ?: array_intersect($validator->allowedHtmlTags, ['h1', 'h2', 'h3', 'h4', 'h5', 'code'])) {
                     array_unshift($this->toolbar, ['Format']);
                     array_unshift($formatTags, 'p');
@@ -119,29 +119,34 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
             }
         }
 
+        if($this->skinAssetBundle) {
+            $bundle = $this->skinAssetBundle::register($view = $this->getView());
 
-        $this->clientOptions['removePlugins'] = implode(',', array_unique(array_filter($removePlugins)));
-        $this->clientOptions['removeButtons'] = implode(',', $this->removeButtons);
-        $this->clientOptions['toolbar'] = $this->toolbar;
-
-        // Editor skin path.
-        $bundle = $this->assetBundle::register($view = $this->getView());
-
-        if (!isset($this->clientOptions['skin'])) {
-            $this->clientOptions['skin'] = 'skeleton,' . $bundle->baseUrl . '/';
-        }
-
-        // Contents CSS file.
-        if ($bundle->editorAssetBundle) {
-            $bundle = $view->registerAssetBundle($bundle->editorAssetBundle);
-
-            if (!isset($this->clientOptions['contentsCss'])) {
-                $this->clientOptions['contentsCss'] = $bundle->baseUrl . '/' . $bundle->css[0];
+            if (!isset($this->clientOptions['skin'])) {
+                $this->clientOptions['skin'] = 'skeleton,' . $bundle->baseUrl . '/';
             }
         }
 
+        if ($removePlugins = array_unique(array_filter($removePlugins))) {
+            $this->clientOptions['removePlugins'] = implode(',', $removePlugins);
+        }
+
+        if ($this->extraPlugins) {
+            $this->clientOptions['extraPlugins'] = implode(',', $this->extraPlugins);
+        }
+
+        if ($this->removeButtons) {
+            $this->clientOptions['removeButtons'] = implode(',', $this->removeButtons);
+        }
+
+        $this->clientOptions['toolbar'] = $this->toolbar;
+
         if (!isset($this->clientOptions['removeDialogTabs'])) {
             $this->clientOptions['removeDialogTabs'] = 'link:advanced';
+        }
+
+        if (!isset($this->clientOptions['customConfig'])) {
+            $this->clientOptions['customConfig'] = '';
         }
 
         if (!isset($this->clientOptions['height'])) {
@@ -154,5 +159,31 @@ class CKEditor extends \dosamigos\ckeditor\CKEditor
         }
 
         parent::init();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function run()
+    {
+        if ($this->hasModel()) {
+            echo Html::activeTextarea($this->model, $this->attribute, $this->options);
+        } else {
+            echo Html::textarea($this->name, $this->value, $this->options);
+        }
+
+        $this->registerPlugin();
+    }
+
+    /**
+     * Registers CKEditor plugin.
+     */
+    protected function registerPlugin()
+    {
+        $options = Json::encode($this->clientOptions);
+        $view = $this->getView();
+
+        $view->registerJs("CKEDITOR.replace('{$this->options['id']}', $options);");
+        CKEditorAsset::register($view);
     }
 }

@@ -7,6 +7,12 @@
   line-height: $line-height-base;
   color: $input-color;
   background-color: $input-bg;
+  height: 100%;
+  outline: 0;
+
+  .cke_focus & {
+    color: $input-focus-color;
+  }
 
   a {
     color: #000;

@@ -91,11 +91,11 @@ Special outer level classes used in this file:
 a.cke_button {
   display: inline-block;
   margin-right: 1px;
-  padding: $input-padding-y 10px;
+  padding: $input-padding-y $input-padding-x;
   outline: none;
   cursor: default;
   float: left;
-  border: 1px solid $white;
+  border: 1px solid transparent;
   border-radius: $border-radius;
   background: $white;
 }

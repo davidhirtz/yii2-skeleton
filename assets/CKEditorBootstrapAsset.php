@@ -16,14 +16,11 @@ class CKEditorBootstrapAsset extends AssetBundle
     public $sourcePath = '@skeleton/assets/ckeditor-bootstrap/';
 
     /**
-     * @var string
-     */
-    public $editorAssetBundle = 'davidhirtz\yii2\skeleton\assets\AdminAsset';
-
-    /**
      * @var array
      */
-    public $depends = [
-        '\dosamigos\ckeditor\CKEditorAsset',
+    public $publishOptions = [
+        'except' => [
+            'scss',
+        ],
     ];
 }
