@@ -5,7 +5,7 @@ namespace davidhirtz\yii2\skeleton\assets;
 use yii\web\AssetBundle;
 
 /**
- * Class CKEditorBootstrapAsset.
+ * Class CKEditorBootstrapAsset
  * @package davidhirtz\yii2\skeleton\assets
  */
 class CKEditorBootstrapAsset extends AssetBundle

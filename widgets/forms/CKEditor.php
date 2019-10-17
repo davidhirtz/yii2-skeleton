@@ -13,7 +13,7 @@ use yii\web\AssetBundle;
 use yii\widgets\InputWidget;
 
 /**
- * Class CKEditor.
+ * Class CKEditor
  * @package davidhirtz\yii2\skeleton\widgets\form
  */
 class CKEditor extends InputWidget
@@ -58,11 +58,6 @@ class CKEditor extends InputWidget
     public $validator = 'davidhirtz\yii2\skeleton\validators\HtmlValidator';
 
     /**
-     * @var array containing format tags for the format dropdown.
-     */
-    public $formatTags;
-
-    /**
      * @var AssetBundle
      */
     public $skinAssetBundle = CKEditorBootstrapAsset::class;
@@ -103,12 +98,6 @@ class CKEditor extends InputWidget
 
             if ($this->clientOptions['stylesSet']) {
                 array_unshift($this->toolbar, ['Styles']);
-            }
-
-            // Format dropdown.
-            if ($this->formatTags !== false) {
-                if ($formatTags = $this->formatTags ?: array_intersect($validator->allowedHtmlTags, ['h1', 'h2', 'h3', 'h4', 'h5', 'code'])) {
-                }
             }
 
             if ($validator->allowedClasses) {

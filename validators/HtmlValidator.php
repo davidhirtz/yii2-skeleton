@@ -7,7 +7,7 @@ use yii\base\InvalidConfigException;
 use yii\helpers\HtmlPurifier;
 
 /**
- * Class HtmlValidator.
+ * Class HtmlValidator
  * @package davidhirtz\yii2\skeleton\validators
  */
 class HtmlValidator extends \yii\validators\Validator
@@ -128,7 +128,7 @@ class HtmlValidator extends \yii\validators\Validator
         // Clean breaks.
         $html = preg_replace("#(?<!<br>)\s*\n#", "<br>\n", $html);
         $html = preg_replace("#(</?" . $blocks . "[^>]*>)\s*<br>#", "$1", $html);
-        $html = preg_replace("#<br>(\s*<\/?(?:div|dd|dl|dt|li|ol|p|pre|table|tbody|td|th|ul)[^>]*>)#", "$1", $html);
+        $html = preg_replace("#<br>(\s*</?(?:div|dd|dl|dt|li|ol|p|pre|table|tbody|td|th|ul)[^>]*>)#", "$1", $html);
 
         // Remove empty elements at beginning and end of paragraphs.
         $html = preg_replace("#\n*\s*<p>\n*\s*#", "\n<p>", $html);
