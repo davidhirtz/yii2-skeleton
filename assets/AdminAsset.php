@@ -19,16 +19,12 @@ class AdminAsset extends AssetBundle
     /**
      * @var array
      */
-    public $css = [
-        YII_DEBUG ? 'css/admin.css' : 'css/admin.min.css',
-    ];
+    public $css = [YII_DEBUG ? 'css/admin.css' : 'css/admin.min.css'];
 
     /**
      * @var array
      */
-    public $js = [
-        YII_DEBUG ? 'js/admin.js' : 'js/admin.min.js',
-    ];
+    public $js = [YII_DEBUG ? 'js/admin.js' : 'js/admin.min.js'];
 
     /**
      * @var array
@@ -38,6 +34,15 @@ class AdminAsset extends AssetBundle
         'yii\bootstrap4\BootstrapPluginAsset',
         'davidhirtz\yii2\skeleton\assets\BootboxAsset',
         'davidhirtz\yii2\skeleton\assets\FontAwesomeAsset',
+    ];
+
+    /**
+     * @var array
+     */
+    public $publishOptions = [
+        'except' => [
+            'scss/',
+        ],
     ];
 
     /**

@@ -20,7 +20,7 @@ class CKEditorBootstrapAsset extends AssetBundle
      */
     public $publishOptions = [
         'except' => [
-            'scss',
+            'scss/',
         ],
     ];
 }
