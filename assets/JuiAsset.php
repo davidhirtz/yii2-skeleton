@@ -43,7 +43,7 @@ class JuiAsset extends AssetBundle
     public function init()
     {
         if (Yii::$app->language != Yii::$app->sourceLanguage) {
-            $this->js[] = '/i18n/datepicker-' . Yii::$app->language . '.js';
+            $this->js[] = 'i18n/datepicker-' . Yii::$app->language . '.js';
         }
 
         parent::init();
