@@ -6,7 +6,6 @@ use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
-use davidhirtz\yii2\skeleton\widgets\jui\SortableWidget;
 use rmrevin\yii\fontawesome\FAS;
 use Yii;
 use yii\helpers\Inflector;
@@ -130,9 +129,21 @@ class GridView extends \yii\grid\GridView
      */
     public function renderItems()
     {
-        if ($this->getIsSortedByPosition()) {
+        return $this->dataProvider->getCount() || $this->emptyText ? parent::renderItems() : null;
+    }
+
+    /**
+     * This registers the jQuery UI sortable widget on the body. The .sortable class is needed to
+     * reinitialize the widget after an AJAX update to the list eg. from the file upload widget.
+     * @return string
+     */
+    public function renderTableBody()
+    {
+        $tableBody = parent::renderTableBody();
+
+        if ($this->isSortedByPosition()) {
             \davidhirtz\yii2\skeleton\widgets\jui\SortableWidget::widget([
-                'id' => $this->tableOptions['id'] . ' tbody',
+                'id' => $this->tableOptions['id'] . ' .sortable',
                 'ajaxUpdateRoute' => $this->orderRoute,
                 'cloneHelperWidth' => true,
                 'clientOptions' => [
@@ -140,10 +151,13 @@ class GridView extends \yii\grid\GridView
                     'axis' => 'y',
                 ],
             ]);
+
+            $tableBody = preg_replace('/^<tbody/', '<tbody class="sortable"', $tableBody);
         }
 
-        return $this->dataProvider->getCount() || $this->emptyText ? parent::renderItems() : null;
+        return $tableBody;
     }
+
 
     /**
      * @return string
@@ -369,7 +383,7 @@ class GridView extends \yii\grid\GridView
     /**
      * @return bool
      */
-    public function getIsSortedByPosition()
+    public function isSortedByPosition()
     {
         return $this->dataProvider->getSort() === false && $this->dataProvider->getPagination() === false;
     }

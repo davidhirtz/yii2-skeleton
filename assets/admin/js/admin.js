@@ -18,7 +18,6 @@ $(function () {
                         params: $link.data('params'),
                         success: function () {
                             if ($target.length) {
-
                                 if (action === 'remove') {
                                     $target.remove();
 
@@ -167,7 +166,14 @@ $(function () {
  * @param target
  */
 function fileUploadDone(target) {
-    var $target = $(target);
+    var $target = $(target),
+        $sortable = $(target).find('.sortable'),
+        sortableOptions;
+
+    if ($sortable.length) {
+        sortableOptions = $sortable.sortable('option');
+    }
+
 
     $.get(document.location.href, function (html) {
         $target.html($('<div>').html(html).find(target).html());
@@ -176,8 +182,8 @@ function fileUploadDone(target) {
             $('.timeago').timeago();
         }
 
-        if ($.hasOwnProperty('ui.sortable')) {
-            console.log($.ui.sortable);
+        if (sortableOptions) {
+            $target.find('.sortable').sortable(sortableOptions);
         }
     })
 }
