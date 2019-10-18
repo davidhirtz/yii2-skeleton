@@ -91,15 +91,6 @@ class CKEditor extends InputWidget
             $validator = Yii::createObject($this->validator);
             $this->clientOptions['allowedContent'] = str_replace('|', ',', implode(';', array_diff($validator->allowedHtmlTags, ['*[class]'])));
 
-            // Styles.
-            if (!isset($this->clientOptions['stylesSet'])) {
-                $this->clientOptions['stylesSet'] = false;
-            }
-
-            if ($this->clientOptions['stylesSet']) {
-                array_unshift($this->toolbar, ['Styles']);
-            }
-
             if ($validator->allowedClasses) {
                 $this->clientOptions['allowedContent'] .= ';*(' . implode(',', $validator->allowedClasses) . ')';
             }
@@ -129,6 +120,10 @@ class CKEditor extends InputWidget
 
         if (!isset($this->clientOptions['removeDialogTabs'])) {
             $this->clientOptions['removeDialogTabs'] = 'link:advanced';
+        }
+
+        if (!isset($this->clientOptions['stylesSet'])) {
+            $this->clientOptions['stylesSet'] = false;
         }
 
         if (!isset($this->clientOptions['customConfig'])) {
