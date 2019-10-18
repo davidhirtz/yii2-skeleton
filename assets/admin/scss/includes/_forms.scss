@@ -142,8 +142,7 @@ select.form-control {
 // For use with horizontal and inline forms, when you need the label (or legend)
 // text to align with the form controls.
 .col-form-label {
-  padding-top: calc(#{$input-padding-y} + #{$input-border-width});
-  padding-bottom: calc(#{$input-padding-y} + #{$input-border-width});
+  padding-top: $app-form-label-padding-top;
   margin-bottom: 0; // Override the `<label>/<legend>` default
   font-size: inherit; // Override the `<legend>` default
   line-height: $input-line-height;

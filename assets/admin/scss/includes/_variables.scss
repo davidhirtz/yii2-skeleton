@@ -213,15 +213,20 @@ $input-btn-padding-y-sm: $input-btn-padding-y !default;
 $input-btn-padding-x-sm: $input-btn-padding-x !default;
 $input-btn-padding-y-lg: $input-btn-padding-y !default;
 $input-btn-padding-x-lg: $input-btn-padding-x !default;
+$input-btn-border-width: $border-width !default;
 
 $custom-select-indicator-padding: 10px;
 
+$input-padding-y: $input-btn-padding-y !default;
+$input-padding-x: $input-btn-padding-x !default;
 $input-color: $gray-700 !default;
+$input-border-width: $input-btn-border-width !default;
 $input-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075) !default;
 $input-focus-color: $body-text !default;
 $input-btn-focus-width: 1px !default;
 $input-focus-border-color: #66afe9 !default;
 
+$app-form-label-padding-top: $input-padding-y + $input-border-width;
 $app-form-label-font-weight: bold !default;
 
 /*
