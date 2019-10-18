@@ -1,10 +1,10 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\widgets\grid;
+namespace davidhirtz\yii2\skeleton\widgets\jui;
 
 use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
+use yii\base\Widget;
 use yii\helpers\Url;
-use yii\jui\Widget;
 use yii\web\JsExpression;
 
 /**
@@ -13,7 +13,7 @@ use yii\web\JsExpression;
  */
 class SortableWidget extends Widget
 {
-    use WidgetConfigTrait;
+    use JuiWidgetTrait, WidgetConfigTrait;
 
     /**
      * @var bool
@@ -35,10 +35,11 @@ class SortableWidget extends Widget
      */
     public function init()
     {
-        $view = $this->getView();
+        if (!isset($this->options['id'])) {
+            $this->options['id'] = $this->getId();
+        }
 
         if ($this->cloneHelperWidth) {
-            $view->registerJs('jUiSortableHelper=function(e,t){var o=t.children(),h=t.clone();h.children().each(function(index){$(this).width(o.eq(index).outerWidth());});return h;}', $view::POS_READY, __CLASS__ . 'helper');
             $this->clientOptions['helper'] = new JsExpression('jUiSortableHelper');
         }
 
@@ -47,12 +48,15 @@ class SortableWidget extends Widget
         }
 
         if ($this->ajaxUpdateRoute) {
-            $this->clientOptions['update'] = new JsExpression('function(e,u){var d=$(this).sortable("serialize");$.ajax({data:d,type:"POST",url:"' . Url::to($this->ajaxUpdateRoute) . '"});}');
+            $this->clientOptions['update'] = new JsExpression('function(){$.post("' . Url::to($this->ajaxUpdateRoute) . '",$(this).sortable(\'serialize\'))}');
         }
 
         parent::init();
     }
 
+    /**
+     * @return string|void
+     */
     public function run()
     {
         $this->registerWidget('sortable');

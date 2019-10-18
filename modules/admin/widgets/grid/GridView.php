@@ -6,7 +6,7 @@ use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
-use davidhirtz\yii2\skeleton\widgets\grid\SortableWidget;
+use davidhirtz\yii2\skeleton\widgets\jui\SortableWidget;
 use rmrevin\yii\fontawesome\FAS;
 use Yii;
 use yii\helpers\Inflector;
@@ -131,7 +131,7 @@ class GridView extends \yii\grid\GridView
     public function renderItems()
     {
         if ($this->getIsSortedByPosition()) {
-            SortableWidget::widget([
+            \davidhirtz\yii2\skeleton\widgets\jui\SortableWidget::widget([
                 'id' => $this->tableOptions['id'] . ' tbody',
                 'ajaxUpdateRoute' => $this->orderRoute,
                 'cloneHelperWidth' => true,

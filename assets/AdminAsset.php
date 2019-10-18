@@ -27,7 +27,6 @@ class AdminAsset extends AssetBundle
      * @var array
      */
     public $js = [
-        YII_DEBUG ? 'js/jquery-ui.js' : 'js/jquery-ui.min.js',
         YII_DEBUG ? 'js/admin.js' : 'js/admin.min.js',
     ];
 
@@ -42,7 +41,7 @@ class AdminAsset extends AssetBundle
     ];
 
     /**
-     * Debug.
+     * @inheritDoc
      */
     public function init()
     {

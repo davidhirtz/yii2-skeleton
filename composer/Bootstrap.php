@@ -39,23 +39,6 @@ class Bootstrap implements BootstrapInterface
                 'assetManager' => [
                     'class' => 'davidhirtz\yii2\skeleton\web\AssetManager',
                     'bundles' => [
-                        'davidhirtz\yii2\lazysizes\AssetBundle' => [
-                            'sourcePath' => null,
-                            'js' => [
-                                [
-                                    '//cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.1/lazysizes.min.js',
-                                    'position' => \davidhirtz\yii2\skeleton\web\View::POS_HEAD,
-                                    'async' => true,
-                                ],
-                            ],
-                        ],
-                        // Overrides Bootstrap 3 dependency, this can probably removed in the future
-                        'dosamigos\fileupload\FileUploadAsset' => [
-                            'depends' => [
-                                'yii\web\JqueryAsset',
-                                'yii\bootstrap4\BootstrapAsset',
-                            ],
-                        ],
                         'yii\bootstrap4\BootstrapAsset' => [
                             'sourcePath' => null,
                             'css' => [],
@@ -66,13 +49,6 @@ class Bootstrap implements BootstrapInterface
                                 '//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js',
                             ],
                         ],
-                        'yii\jui\JuiAsset' => [
-                            'js' => [],
-                        ],
-                    ],
-                    'combineOptions' => [
-                        'jsCompressor' => 'gulp combine-js --src {from} --output {to}',
-                        'cssCompressor' => 'gulp combine-css --src {from} --output {to}',
                     ],
                 ],
                 'authClientCollection' => [

@@ -100,7 +100,7 @@ class FileUpload extends InputWidget
         $view = $this->getView();
         FileUploadAsset::register($view);
 
-        $options = Json::encode($this->clientOptions);
+        $options = Json::htmlEncode($this->clientOptions);
         $id = $this->options['id'];
 
         $js[] = "$('#{$id}').fileupload({$options})";

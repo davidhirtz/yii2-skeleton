@@ -26,7 +26,6 @@ class FileUploadAsset extends AssetBundle
      * @var array
      */
     public $js = [
-        'js/vendor/jquery.ui.widget.js',
         'js/jquery.iframe-transport.js',
         'js/jquery.fileupload.js'
     ];
@@ -45,7 +44,7 @@ class FileUploadAsset extends AssetBundle
      * @var array
      */
     public $depends = [
-        'yii\web\JqueryAsset',
+        'davidhirtz\yii2\skeleton\assets\JuiAsset',
         'yii\bootstrap4\BootstrapAsset',
     ];
 }

@@ -113,6 +113,9 @@ $(function () {
         });
     };
 
+    /**
+     * CKEditor dialog improvements.
+     */
     if (window.hasOwnProperty('CKEDITOR')) {
         CKEDITOR.on('dialogDefinition', function (ev) {
             var dialogName = ev.data.name,
@@ -158,3 +161,37 @@ $(function () {
         });
     }
 });
+
+/**
+ * @see https://github.com/blueimp/jQuery-File-Upload/wiki/Options#callback-options
+ * @param target
+ */
+function fileUploadDone(target) {
+    var $target = $(target);
+
+    $.get(document.location.href, function (html) {
+        $target.html($('<div>').html(html).find(target).html());
+
+        if ($.hasOwnProperty('timeago')) {
+            $('.timeago').timeago();
+        }
+
+        if ($.hasOwnProperty('ui.sortable')) {
+            console.log($.ui.sortable);
+        }
+    })
+}
+
+/**
+ * JqueryUI sortable helper.
+ */
+function jUiSortableHelper(e, $target) {
+    var $children = $target.children(),
+        $clone = $target.clone();
+
+    $clone.children().each(function (index) {
+        $(this).width($children.eq(index).outerWidth());
+    });
+
+    return $clone;
+}
