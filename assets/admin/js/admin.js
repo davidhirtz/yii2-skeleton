@@ -162,36 +162,42 @@ var Skeleton = {
      * @param container
      */
     initContent: function (container) {
-        var $container = $(container || 'body');
+        var _ = this,
+            $container = $(container || 'body');
 
+        // Bootstrap tooltips.
         $container.find('[data-toggle="tooltip"]').tooltip();
 
+        // Timeago.
         if ($.hasOwnProperty('timeago')) {
             $container.find('.timeago').timeago();
         }
 
-        $container.find('.sortable').each(function () {
-            var $sortable = $(this);
-            $sortable.sortable({
-                clientOptions: {
-                    handle: '.sortable-handle',
-                    axis: 'y'
-                },
-                helper: function (e, $target) {
-                    var $children = $target.children(),
-                        $clone = $target.clone();
+        if (_.hasJUI()) {
+            // Sortable.
+            $container.find('.sortable').each(function () {
+                var $sortable = $(this);
+                $sortable.sortable({
+                    clientOptions: {
+                        handle: '.sortable-handle',
+                        axis: 'y'
+                    },
+                    helper: function (e, $target) {
+                        var $children = $target.children(),
+                            $clone = $target.clone();
 
-                    $clone.children().each(function (index) {
-                        $(this).width($children.eq(index).outerWidth());
-                    });
+                        $clone.children().each(function (index) {
+                            $(this).width($children.eq(index).outerWidth());
+                        });
 
-                    return $clone;
-                },
-                update: function () {
-                    $.post($sortable.data('sort-url'), $(this).sortable('serialize'));
-                }
+                        return $clone;
+                    },
+                    update: function () {
+                        $.post($sortable.data('sort-url'), $(this).sortable('serialize'));
+                    }
+                });
             });
-        });
+        }
     },
 
     /**
@@ -208,5 +214,13 @@ var Skeleton = {
         $.ajax(data).done(function (html) {
             _.initContent($target.html($('<div>').html(html).find(target).html()));
         });
+    },
+
+    /**
+     * Whether jQuery UI is loaded.
+     * @return {boolean}
+     */
+    hasJUI: function () {
+        return $.hasOwnProperty('ui');
     }
 };
