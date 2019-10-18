@@ -6,6 +6,7 @@ use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
+use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
 use yii\helpers\Inflector;
@@ -125,37 +126,27 @@ class GridView extends \yii\grid\GridView
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function renderItems()
     {
-        return $this->dataProvider->getCount() || $this->emptyText ? parent::renderItems() : null;
-    }
-
-    /**
-     * This registers the jQuery UI sortable widget on the body. The .sortable class is needed to
-     * reinitialize the widget after an AJAX update to the list eg. from the file upload widget.
-     * @return string
-     */
-    public function renderTableBody()
-    {
-        $tableBody = parent::renderTableBody();
-
         if ($this->isSortedByPosition()) {
-            \davidhirtz\yii2\skeleton\widgets\jui\SortableWidget::widget([
-                'id' => $this->tableOptions['id'] . ' .sortable',
-                'ajaxUpdateRoute' => $this->orderRoute,
+            $sortableOptions = [
+                'id' => $this->tableOptions['id'] . ' tbody',
+                'ajaxUpdateRoute' => Url::to($this->orderRoute),
                 'cloneHelperWidth' => true,
                 'clientOptions' => [
                     'handle' => '.sortable-handle',
                     'axis' => 'y',
                 ],
-            ]);
+            ];
 
-            $tableBody = preg_replace('/^<tbody/', '<tbody class="sortable"', $tableBody);
+            // Save config in variable for later use after FileUpload uploads.
+            \davidhirtz\yii2\skeleton\widgets\jui\SortableWidget::widget($sortableOptions);
+            $this->getView()->registerJsVar('sortableOptions', $sortableOptions, View::POS_END);
         }
 
-        return $tableBody;
+        return $this->dataProvider->getCount() || $this->emptyText ? parent::renderItems() : '';
     }
 
 

@@ -149,8 +149,6 @@ $(function () {
                 targetTab.remove('linkTargetName');
                 targetTab.remove('popupFeatures');
                 targetTab.elements[0].widths = ['100%'];
-
-                console.log(targetTab);
             }
         });
     }
@@ -165,13 +163,7 @@ var Skeleton = {
      * @param data
      */
     replaceWithAjax: function (target, data) {
-        var $target = $(target),
-            $sortable = $(target).find('.sortable'),
-            sortableOptions;
-
-        if ($sortable.length) {
-            sortableOptions = $sortable.sortable('option');
-        }
+        var $target = $(target);
 
         if (typeof data === 'string') {
             data = {url: data};
@@ -194,8 +186,8 @@ var Skeleton = {
                 $target.find('.timeago').timeago();
             }
 
-            if (sortableOptions) {
-                $target.find('.sortable').sortable(sortableOptions);
+            if (window['sortableOptions']) {
+                $target.find('#' + window['sortableOptions'].id).sortable(window['sortableOptions']);
             }
 
             $target.find('[data-toggle="tooltip"]').tooltip();
