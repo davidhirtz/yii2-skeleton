@@ -2,9 +2,14 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
+use davidhirtz\yii2\skeleton\assets\FileUploadAsset;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use yii\db\ActiveRecord;
+use yii\helpers\Html;
+use yii\helpers\Json;
+use yii\helpers\Url;
 use yii\web\JsExpression;
+use yii\widgets\InputWidget;
 
 /**
  * Class FileUpload.
@@ -12,9 +17,27 @@ use yii\web\JsExpression;
  *
  * @property ActiveRecord $model
  */
-class FileUpload extends \dosamigos\fileupload\FileUpload
+class FileUpload extends InputWidget
 {
     use WidgetConfigTrait;
+
+    /**
+     * @var string|array upload route
+     */
+    public $url;
+
+    /**
+     * @var array the plugin options. For more information see the jQuery File Upload options documentation.
+     * @see https://github.com/blueimp/jQuery-File-Upload/wiki/Options
+     */
+    public $clientOptions = [];
+
+    /**
+     * @var array the event handlers for the jQuery File Upload plugin.
+     * Please refer to the jQuery File Upload plugin web page for possible options.
+     * @see https://github.com/blueimp/jQuery-File-Upload/wiki/Options#callback-options
+     */
+    public $clientEvents = [];
 
     /**
      * @var int
@@ -37,23 +60,18 @@ class FileUpload extends \dosamigos\fileupload\FileUpload
     public $dropZone = '#files';
 
     /**
-     * @var bool
-     */
-    public $useDefaultButton = false;
-
-    /**
      * @inheritdoc
      */
     public function init()
     {
-        $this->options['multiple'] = $this->multiple;
-
         $defaultClientOptions = [
+            'url' => Url::to($this->url),
             'dropZone' => $this->dropZone,
             'maxChunkSize' => $this->maxChunkSize,
         ];
 
         $this->clientOptions = array_merge($defaultClientOptions, $this->clientOptions);
+        $this->options['multiple'] = $this->multiple;
 
         $defaultClientEvents = [
             'fileuploaddone' => $this->dropZone ? new JsExpression('function(e,x){$(\'' . $this->dropZone . '\').append(x.result)}') : null,
@@ -63,5 +81,36 @@ class FileUpload extends \dosamigos\fileupload\FileUpload
         $this->clientEvents = array_merge($defaultClientEvents, $this->clientEvents);
 
         parent::init();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function run()
+    {
+        $this->registerClientScript();
+        echo $this->hasModel() ? Html::activeFileInput($this->model, $this->attribute, $this->options) : Html::fileInput($this->name, $this->value, $this->options);
+    }
+
+    /**
+     * Registers required scripts.
+     */
+    public function registerClientScript()
+    {
+        $view = $this->getView();
+        FileUploadAsset::register($view);
+
+        $options = Json::encode($this->clientOptions);
+        $id = $this->options['id'];
+
+        $js[] = "$('#{$id}').fileupload({$options})";
+
+        if (!empty($this->clientEvents)) {
+            foreach ($this->clientEvents as $event => $handler) {
+                $js[] = ".on('{$event}', {$handler})";
+            }
+        }
+
+        $view->registerJs(implode('', $js) . ';');
     }
 }

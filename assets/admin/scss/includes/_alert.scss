@@ -22,3 +22,17 @@
   background-color: $info;
   color: $app-info-text;
 }
+
+/*
+Bootbox.
+ */
+.bootbox-body {
+
+  // Yii2 Response is sending AJAX errors wrapped in <pre>
+  pre {
+    font: inherit;
+    overflow: initial;
+    white-space: inherit;
+    font-weight: $font-weight-bold;
+  }
+}

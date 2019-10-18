@@ -17,7 +17,7 @@
 		"yiisoft/yii2-swiftmailer":"*",
 		"yiisoft/yii2-imagine":">=2.1.0",
 		"yiisoft/yii2-jui":"^2.0",
-		"2amigos/yii2-file-upload-widget":"~1.0",
+		"bower-asset/blueimp-file-upload": ">=10.2.0",
 		"rmrevin/yii2-fontawesome":"~3.2",
 		"davidhirtz/yii2-datetime-behavior":"*",
 		"davidhirtz/yii2-timeago":"dev-master",
