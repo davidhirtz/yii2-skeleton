@@ -153,58 +153,60 @@ $(function () {
         });
     }
 
-    $('[data-toggle="tooltip"]').tooltip();
+    Skeleton.initContent();
 });
 
 var Skeleton = {
+    /**
+     * Init content.
+     * @param container
+     */
+    initContent: function (container) {
+        var $container = $(container || 'body');
+
+        $container.find('[data-toggle="tooltip"]').tooltip();
+
+        if ($.hasOwnProperty('timeago')) {
+            $container.find('.timeago').timeago();
+        }
+
+        $container.find('.sortable').each(function () {
+            var $sortable = $(this);
+            $sortable.sortable({
+                clientOptions: {
+                    handle: '.sortable-handle',
+                    axis: 'y'
+                },
+                helper: function (e, $target) {
+                    var $children = $target.children(),
+                        $clone = $target.clone();
+
+                    $clone.children().each(function (index) {
+                        $(this).width($children.eq(index).outerWidth());
+                    });
+
+                    return $clone;
+                },
+                update: function () {
+                    $.post($sortable.data('sort-url'), $(this).sortable('serialize'));
+                }
+            });
+        });
+    },
+
     /**
      * Loads given url and replaces the selected element. Initializes
      * @param target
      * @param data
      */
     replaceWithAjax: function (target, data) {
-        var $target = $(target);
+        var _ = this,
+            $target = $(target);
 
-        if (typeof data === 'string') {
-            data = {url: data};
-        } else if (data === undefined) {
-            data = {};
-        }
-
-        if (!data.url) {
-            data.url = document.location.href;
-        }
-
-        if (!data.type) {
-            data.type = 'get';
-        }
+        data = $.extend({url: document.location.href}, (typeof data === 'string') ? {url: data} : (data || {}));
 
         $.ajax(data).done(function (html) {
-            $target.html($('<div>').html(html).find(target).html());
-
-            if ($.hasOwnProperty('timeago')) {
-                $target.find('.timeago').timeago();
-            }
-
-            if (window['sortableOptions']) {
-                $target.find('#' + window['sortableOptions'].id).sortable(window['sortableOptions']);
-            }
-
-            $target.find('[data-toggle="tooltip"]').tooltip();
+            _.initContent($target.html($('<div>').html(html).find(target).html()));
         });
-    },
-
-    /**
-     * JqueryUI sortable helper.
-     */
-    sortableHelper: function (e, $target) {
-        var $children = $target.children(),
-            $clone = $target.clone();
-
-        $clone.children().each(function (index) {
-            $(this).width($children.eq(index).outerWidth());
-        });
-
-        return $clone;
     }
 };
