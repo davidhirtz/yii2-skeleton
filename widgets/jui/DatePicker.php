@@ -33,7 +33,7 @@ class DatePicker extends InputWidget
     public $showTime = false;
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function init()
     {
@@ -63,7 +63,7 @@ class DatePicker extends InputWidget
     }
 
     /**
-     *
+     * @inheritDoc
      */
     public function run()
     {

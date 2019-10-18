@@ -19,9 +19,9 @@ class JuiAsset extends AssetBundle
     /**
      * @var array
      */
-    public $css = [
-        YII_DEBUG ? 'jquery-ui.css' : 'jquery-ui.min.css',
-    ];
+//    public $css = [
+//        YII_DEBUG ? 'jquery-ui.css' : 'jquery-ui.min.css',
+//    ];
 
     /**
      * @var array

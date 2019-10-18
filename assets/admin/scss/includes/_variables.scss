@@ -55,13 +55,19 @@ $app-padding-y: 10px !default;
 $app-padding-x: 15px !default;
 $app-body-padding: 70px 0 !default;
 
-/**
+/*
+Body.
+ */
+$body-bg: $white !default;
+$body-color: #000 !default;
+
+/*
 Border.
  */
 $border-radius: 3px !default;
 $border-radius-sm: $border-radius !default;
 
-$border-size: 1px !default;
+$border-width: 1px !default;
 $border-style: solid !default;
 $border-color: $gray-400 !default;
 
@@ -144,9 +150,13 @@ $alert-margin-bottom: $app-margin-bottom !default;
 /*
 Card.
  */
+$card-bg: $white !default;
+$card-color: $body-color !default;
 $card-spacer-y: $app-padding-y !default;
 $card-spacer-x: $app-padding-x !default;
+$card-cap-color: null !default;
 $card-cap-bg: $gray-200 !default;
+$card-border-width: $border-width !default;
 $card-border-color: $border-color !default;
 $card-inner-border-radius: 0 !default;
 $app-card-margin-bottom: $app-margin-bottom !default;
@@ -206,6 +216,7 @@ $input-btn-padding-x-lg: $input-btn-padding-x !default;
 
 $custom-select-indicator-padding: 10px;
 
+$input-color: $gray-700 !default;
 $input-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075) !default;
 $input-focus-color: $body-text !default;
 $input-btn-focus-width: 1px !default;
@@ -303,3 +314,28 @@ $thumbnail-caption-padding: $app-padding-x !default;
 Icon.
  */
 $app-icon-margin-x: 6px !default;
+
+/*
+Datepicker.
+ */
+$datepicker-spacer-y: $card-spacer-y !default;
+$datepicker-spacer-x: $card-spacer-x !default;
+$datepicker-spacer: $datepicker-spacer-y $datepicker-spacer-x !default;
+$datepicker-bg: $card-bg !default;
+$datepicker-color: $card-color !default;
+$datepicker-header-margin: -10px -15px 10px !default;
+$datepicker-header-padding: $datepicker-spacer !default;
+$datepicker-border: $card-border-width solid $card-border-color !default;
+$datepicker-header-bg: $card-cap-bg !default;
+$datepicker-header-color: $card-cap-color !default;
+$datepicker-td-padding: 0 !default;
+$datepicker-td-border: $card-border-width solid $card-border-color !default;
+$datepicker-link-padding: 6px !default;
+$datepicker-link-bg: $gray-200 !default;
+$datepicker-link-color: $input-color !default;
+$datepicker-link-hover-bg: $gray-300 !default;
+$datepicker-link-hover-color: $datepicker-link-color !default;
+$datepicker-link-current-bg: $gray-900 !default;
+$datepicker-link-current-color: $white !default;
+$datepicker-link-today-bg: $gray-500 !default;
+$datepicker-link-today-color: $datepicker-link-color !default;

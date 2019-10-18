@@ -56,7 +56,6 @@
 .form-control {
   display: block;
   width: 100%;
-  height: $input-height;
   padding: $input-padding-y $input-padding-x;
   font-size: $font-size-base;
   line-height: $input-line-height;
@@ -107,6 +106,8 @@
 }
 
 select.form-control {
+  height: $input-height;
+
   &:focus::-ms-value {
     // Suppress the nested default white text on blue background highlight given to
     // the selected option text when the (still closed) <select> receives focus
