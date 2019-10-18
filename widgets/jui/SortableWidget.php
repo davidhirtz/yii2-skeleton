@@ -40,7 +40,7 @@ class SortableWidget extends Widget
         }
 
         if ($this->cloneHelperWidth) {
-            $this->clientOptions['helper'] = new JsExpression('jUiSortableHelper');
+            $this->clientOptions['helper'] = new JsExpression('Skeleton.sortableHelper');
         }
 
         if ($this->clonePlaceholderContent) {

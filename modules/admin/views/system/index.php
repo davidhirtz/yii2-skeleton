@@ -13,7 +13,7 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\GridView;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
-use rmrevin\yii\fontawesome\FAS;
+use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 
 $this->setTitle(Yii::t('skeleton', 'System'));
 ?>
@@ -82,7 +82,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
             [
                 'contentOptions' => ['class' => 'text-right'],
                 'content' => function ($item) {
-                    return Html::buttons(Html::a(FAS::icon('sync-alt'), ['flush', 'cache' => $item['name']], [
+                    return Html::buttons(Html::a(Icon::tag('sync-alt'), ['flush', 'cache' => $item['name']], [
                         'class' => 'btn btn-secondary',
                         'data-method' => 'post',
                     ]));
@@ -113,7 +113,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
             [
                 'contentOptions' => ['class' => 'text-right'],
                 'content' => function ($modified, $name) {
-                    return Html::buttons(Html::a(FAS::icon('trash'), ['delete', 'log' => $name], [
+                    return Html::buttons(Html::a(Icon::tag('trash'), ['delete', 'log' => $name], [
                         'class' => 'btn btn-secondary',
                         'data-method' => 'post',
                     ]));

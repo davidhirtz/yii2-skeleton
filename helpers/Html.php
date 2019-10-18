@@ -3,7 +3,7 @@
 namespace davidhirtz\yii2\skeleton\helpers;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use rmrevin\yii\fontawesome\FAS;
+use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
 use yii\base\Model;
 
@@ -35,7 +35,7 @@ class Html extends \yii\helpers\BaseHtml
     public static function iconText($icon, $content, $options = [])
     {
         static::addCssClass($options, 'icon-text');
-        return Html::tag('span', FAS::icon($icon, ['class' => 'fa-fw']) . Html::tag('span', $content), $options);
+        return Html::tag('span', Icon::tag($icon, ['class' => 'fa-fw']) . Html::tag('span', $content), $options);
     }
 
     /**

@@ -10,7 +10,7 @@
 
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
-use rmrevin\yii\fontawesome\FAS;
+use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use yii\helpers\Url;
 
@@ -44,7 +44,7 @@ $this->setTitle(Yii::t('skeleton', 'Resend Account Confirmation'));
         ?>
         <div class="list-group">
             <a href="<?php echo Url::to(['login']); ?>" class="list-group-item">
-                <?= FAS::icon('sign-in-alt', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'Back to login'); ?>
+                <?= Icon::tag('sign-in-alt', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'Back to login'); ?>
             </a>
         </div>
         <?php

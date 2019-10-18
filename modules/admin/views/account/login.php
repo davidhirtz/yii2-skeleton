@@ -11,7 +11,7 @@
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
 use rmrevin\yii\fontawesome\FAB;
-use rmrevin\yii\fontawesome\FAS;
+use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use yii\helpers\Url;
 
@@ -70,7 +70,7 @@ $this->setTitle(Yii::t('skeleton', 'Login'));
             if (Yii::$app->getUser()->isSignupEnabled()) {
                 ?>
                 <a href="<?php echo Url::to(['create']); ?>" class="list-group-item list-group-item-action">
-                    <?= FAS::icon('user', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'Create new account'); ?>
+                    <?= Icon::tag('user', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'Create new account'); ?>
                 </a>
                 <?php
             }
@@ -79,13 +79,13 @@ $this->setTitle(Yii::t('skeleton', 'Login'));
                 if (!Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
                     ?>
                     <a href="<?php echo Url::to(['resend']); ?>" class="list-group-item list-group-item-action">
-                        <?= FAS::icon('envelope', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'Resend email confirmation'); ?>
+                        <?= Icon::tag('envelope', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'Resend email confirmation'); ?>
                     </a>
                     <?php
                 }
                 ?>
                 <a href="<?php echo Url::to(['recover']); ?>" class="list-group-item list-group-item-action">
-                    <?= FAS::icon('key', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'I forgot my password'); ?>
+                    <?= Icon::tag('key', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'I forgot my password'); ?>
                 </a>
                 <?php
             }

@@ -46,7 +46,7 @@ class Bootstrap implements BootstrapInterface
                         'yii\web\JqueryAsset' => [
                             'sourcePath' => null,
                             'js' => [
-                                '//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js',
+                                'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js',
                             ],
                         ],
                     ],

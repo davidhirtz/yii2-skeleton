@@ -2,7 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 
-use rmrevin\yii\fontawesome\FAS;
+use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 
 /**
  * Class ActiveField.
@@ -32,7 +32,7 @@ class ActiveField extends \davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveFiel
     {
         if ($this->icon) {
             $this->inputTemplate = strtr($this->iconInputTemplate, [
-                '{icon}' => FAS::icon($this->icon, $this->iconOptions),
+                '{icon}' => Icon::tag($this->icon, $this->iconOptions),
             ]);
 
             if (!isset($this->inputOptions['placeholder'])) {

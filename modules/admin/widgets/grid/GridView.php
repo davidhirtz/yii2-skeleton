@@ -6,7 +6,7 @@ use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
-use rmrevin\yii\fontawesome\FAS;
+use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
@@ -322,7 +322,7 @@ class GridView extends \yii\grid\GridView
 
         $options = [
             'class' => 'form-control',
-            'prepend' => Html::submitButton(FAS::icon(ArrayHelper::remove($this->searchFormOptions, 'icon', 'search'), ['class' => 'fa-fw']), ['class' => 'btn-transparent']),
+            'prepend' => Html::submitButton(Icon::tag(ArrayHelper::remove($this->searchFormOptions, 'icon', 'search'), ['class' => 'fa-fw']), ['class' => 'btn-transparent']),
             'placeholder' => Yii::t('skeleton', 'Search ...'),
         ];
 

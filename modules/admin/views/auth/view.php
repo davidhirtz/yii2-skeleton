@@ -10,7 +10,7 @@
 
 use davidhirtz\yii2\skeleton\models\AuthItem;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
-use rmrevin\yii\fontawesome\FAS;
+use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -37,7 +37,7 @@ $grid = new GridView([
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
             'contentOptions' => ['class' => 'd-none d-md-table-cell text-center'],
             'content' => function (AuthItem $authItem) {
-                return FAS::icon($authItem->getTypeIcon(), [
+                return Icon::tag($authItem->getTypeIcon(), [
                     'data-toggle' => 'tooltip',
                     'title' => $authItem->getTypeName()
                 ]);
@@ -63,7 +63,7 @@ $grid = new GridView([
         [
             'contentOptions' => ['class' => 'text-right'],
             'content' => function (AuthItem $authItem) use ($user) {
-                return Html::a(FAS::icon($authItem->isAssigned ? 'ban' : 'star'), [
+                return Html::a(Icon::tag($authItem->isAssigned ? 'ban' : 'star'), [
                     $authItem->isAssigned ? 'revoke' : 'assign',
                     'id' => $user->id,
                     'name' => $authItem->name,

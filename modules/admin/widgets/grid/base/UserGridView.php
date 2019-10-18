@@ -6,7 +6,7 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\GridView;
 use davidhirtz\yii2\timeago\Timeago;
-use rmrevin\yii\fontawesome\FAS;
+use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
 
 /**
@@ -85,7 +85,7 @@ class UserGridView extends GridView
         return [
             'contentOptions' => ['class' => 'text-center'],
             'content' => function (User $user) {
-                return FAS::icon($user->getStatusIcon(), [
+                return Icon::tag($user->getStatusIcon(), [
                     'data-toggle' => 'tooltip',
                     'title' => $user->getStatusName()
                 ]);
@@ -168,7 +168,7 @@ class UserGridView extends GridView
                 $buttons = [];
 
                 if (Yii::$app->getUser()->can('userUpdate', ['user' => $user])) {
-                    $buttons[] = Html::a(FAS::icon('wrench'), [
+                    $buttons[] = Html::a(Icon::tag('wrench'), [
                         'update',
                         'id' => $user->id
                     ], ['class' => 'btn btn-secondary']);

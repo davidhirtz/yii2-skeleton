@@ -16,7 +16,6 @@
 		"yiisoft/yii2-bootstrap4":"*",
 		"yiisoft/yii2-swiftmailer":"*",
 		"yiisoft/yii2-imagine":">=2.1.0",
-		"rmrevin/yii2-fontawesome":"~3.2",
 		"guzzlehttp/guzzle":"~6.0",
 		"guzzlehttp/oauth-subscriber":"0.3.*",
 		"seld/cli-prompt": "^1.0",

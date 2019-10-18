@@ -35,9 +35,9 @@ class AdminAsset extends AssetBundle
      */
     public $depends = [
         'yii\grid\GridViewAsset',
-        'rmrevin\yii\fontawesome\CdnFreeAssetBundle',
         'yii\bootstrap4\BootstrapPluginAsset',
         'davidhirtz\yii2\skeleton\assets\BootboxAsset',
+        'davidhirtz\yii2\skeleton\assets\FontAwesomeAsset',
     ];
 
     /**

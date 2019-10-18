@@ -3,7 +3,7 @@
 namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 
 use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
-use rmrevin\yii\fontawesome\FAS;
+use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use yii\helpers\Html;
 use Yii;
 
@@ -86,7 +86,7 @@ class Nav extends \yii\bootstrap4\Nav
             }
 
             $item['label'] = strtr($template, [
-                '{icon}' => $icon ? FAS::icon($icon, $iconOptions) : '',
+                '{icon}' => $icon ? Icon::tag($icon, $iconOptions) : '',
                 '{badge}' => $badge !== false ? Html::tag('span', $badge, $badgeOptions) : '',
                 '{label}' => $label ? Html::tag('span', $label, $item['labelOptions'] ?? $this->labelOptions) : '',
             ]);

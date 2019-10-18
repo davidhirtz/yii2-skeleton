@@ -4,7 +4,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid;
 
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\models\UserLogin;
-use rmrevin\yii\fontawesome\FAS;
+use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use yii\helpers\Html;
 
 /**
@@ -25,7 +25,7 @@ class UserLoginGridView extends GridView
                 [
                     'contentOptions' => ['class' => 'text-center'],
                     'content' => function (UserLogin $login) {
-                        return FAS::icon($login->getTypeIcon(), [
+                        return Icon::tag($login->getTypeIcon(), [
                             'data-toggle' => 'tooltip',
                             'title' => $login->getTypeName()
                         ]);

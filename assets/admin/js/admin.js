@@ -38,11 +38,6 @@ $(function () {
     };
 
     /**
-     * Bootstrap tooltips.
-     */
-    $('[data-toggle="tooltip"]').tooltip();
-
-    /**
      * Toggle form groups based on "data-form-toggle" tag.
      */
     $('[data-form-toggle]').change(function () {
@@ -159,45 +154,65 @@ $(function () {
             }
         });
     }
+
+    $('[data-toggle="tooltip"]').tooltip();
 });
 
-/**
- * @see https://github.com/blueimp/jQuery-File-Upload/wiki/Options#callback-options
- * @param target
- */
-function fileUploadDone(target) {
-    var $target = $(target),
-        $sortable = $(target).find('.sortable'),
-        sortableOptions;
+var Skeleton = {
+    /**
+     * Loads given url and replaces the selected element. Initializes
+     * @param target
+     * @param data
+     */
+    replaceWithAjax: function (target, data) {
+        var $target = $(target),
+            $sortable = $(target).find('.sortable'),
+            sortableOptions;
 
-    if ($sortable.length) {
-        sortableOptions = $sortable.sortable('option');
+        if ($sortable.length) {
+            sortableOptions = $sortable.sortable('option');
+        }
+
+        if (typeof data === 'string') {
+            data = {url: data};
+        } else if (data === undefined) {
+            data = {};
+        }
+
+        if (!data.url) {
+            data.url = document.location.href;
+        }
+
+        if (!data.type) {
+            data.type = 'get';
+        }
+
+        $.ajax(data).done(function (html) {
+            $target.html($('<div>').html(html).find(target).html());
+
+            if ($.hasOwnProperty('timeago')) {
+                $target.find('.timeago').timeago();
+            }
+
+            if (sortableOptions) {
+                $target.find('.sortable').sortable(sortableOptions);
+            }
+
+            $target.find('[data-toggle="tooltip"]').tooltip();
+        });
+    },
+
+    /**
+     * JqueryUI sortable helper.
+     */
+    sortableHelper: function (e, $target) {
+        var $children = $target.children(),
+            $clone = $target.clone();
+
+        $clone.children().each(function (index) {
+            $(this).width($children.eq(index).outerWidth());
+        });
+
+        return $clone;
     }
-
-
-    $.get(document.location.href, function (html) {
-        $target.html($('<div>').html(html).find(target).html());
-
-        if ($.hasOwnProperty('timeago')) {
-            $('.timeago').timeago();
-        }
-
-        if (sortableOptions) {
-            $target.find('.sortable').sortable(sortableOptions);
-        }
-    })
-}
-
-/**
- * JqueryUI sortable helper.
- */
-function jUiSortableHelper(e, $target) {
-    var $children = $target.children(),
-        $clone = $target.clone();
-
-    $clone.children().each(function (index) {
-        $(this).width($children.eq(index).outerWidth());
-    });
-
-    return $clone;
-}
+};
