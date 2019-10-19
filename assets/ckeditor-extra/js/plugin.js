@@ -66,3 +66,11 @@ CKEDITOR.on('dialogDefinition', function (event) {
         targetTab.elements[0].widths = ['100%'];
     }
 });
+
+CKEDITOR.on('instanceReady', function (event) {
+    event.editor.dataProcessor.writer.selfClosingEnd = '>';
+    event.editor.dataProcessor.writer.setRules('p', {
+        breakBeforeOpen: false,
+        breakAfterClose: false
+    });
+});
