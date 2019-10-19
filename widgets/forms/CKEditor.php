@@ -4,9 +4,12 @@ namespace davidhirtz\yii2\skeleton\widgets\forms;
 
 use davidhirtz\yii2\skeleton\assets\CKEditorAsset;
 use davidhirtz\yii2\skeleton\assets\CKEditorBootstrapAsset;
+use davidhirtz\yii2\skeleton\assets\CKEditorExtraAsset;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use davidhirtz\yii2\skeleton\validators\HtmlValidator;
 use Yii;
+use yii\base\InvalidConfigException;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\web\AssetBundle;
@@ -21,36 +24,67 @@ class CKEditor extends InputWidget
     use WidgetConfigTrait;
 
     /**
-     * @var array
+     * @var array containing extra toolbar buttons.
      */
-    public $toolbar = [
-        ['h1', 'h2', 'h3', 'h4', 'h5'],
-        ['Bold', 'Italic', 'Underline', 'Strike'],
-        ['NumberedList', 'BulletedList', 'Table', 'Blockquote'],
-        ['RemoveFormat'],
-        ['Link', 'Unlink'],
-        ['Source'],
+    public $toolbar = [];
+
+    /**
+     * @var array containing the default toolbar buttons, these will be filtered out by CKEditor's Advanced Content Filter.
+     */
+    public $defaultToolbar = [
+        'Format' => ['h1', 'h2', 'h3', 'h4', 'h5'],
+        'Styles' => ['Bold', 'Italic', 'Underline', 'Strike'],
+        'List' => ['NumberedList', 'BulletedList', 'Table', 'Blockquote'],
+        'Link' => ['Link', 'Unlink'],
+        'Extra' => [],
+        'Tools' => ['RemoveFormat', 'Source'],
     ];
 
     /**
-     * @inherit
-     */
-    public $clientOptions = [];
-
-    /**
-     * @var array
+     * @var array containing a list of custom plugins that should be added by CKEditor.
      */
     public $extraPlugins = [];
 
     /**
-     * @var array
+     * @var array containing a list of plugins that should be removed by CKEditor.
      */
     public $removePlugins = [];
 
     /**
-     * @var array
+     * @var array containing a list of custom buttons that should be added by "extra" plugin.
+     * Important: Buttons will still be checked against CKEditor's Advanced Content Filter.
+     *
+     * Optional you can also set the "toolbar" name either as string or as array with the key
+     * representing the position and the value the toolbar name. Otherwise the button has to
+     * be added to the toolbar via the config.
+     *
+     * [
+     *   [
+     *       'name' => 'Button',
+     *       'label' => 'Button label',
+     *       'icon' => '/icons/button.svg',
+     *       'command' => 'btn',
+     *       'definition' => [
+     *           'element' => 'a',
+     *           'attributes' => [
+     *               'class' => 'btn',
+     *               'style' => 'color:red;',
+     *           ],
+     *       ],
+     *   ],
+     * ]
+     */
+    public $extraButtons = [];
+
+    /**
+     * @var array containing a list of buttons that should be removed regardless of CKEditor's Advanced Content Filter.
      */
     public $removeButtons = [];
+
+    /**
+     * @var array containing all CKEditor options, only set directly to override default behavior.
+     */
+    public $clientOptions = [];
 
     /**
      * @var string
@@ -73,13 +107,46 @@ class CKEditor extends InputWidget
     public function init()
     {
         // Plugins.
-        $removePlugins = array_merge($this->removePlugins, [
-            'elementspath',
-            'resize',
-        ]);
+        $extraPlugins = array_unique(array_merge($this->extraPlugins, ['extra']));
+        $this->clientOptions['extraPlugins'] = implode(',', $extraPlugins);
 
-        if ($this->extraPlugins) {
-            $removePlugins = array_diff($removePlugins, $this->extraPlugins);
+        $removePlugins = array_diff(array_unique(array_merge($this->removePlugins, ['elementspath', 'resize'])), $extraPlugins);
+
+        if ($removePlugins) {
+            $this->clientOptions['removePlugins'] = implode(',', $removePlugins);
+        }
+
+        // Buttons.
+        if ($this->removeButtons) {
+            $this->clientOptions['removeButtons'] = implode(',', $this->removeButtons);
+        }
+
+        if ($this->extraButtons) {
+            foreach ($this->extraButtons as &$button) {
+                if (!isset($button['name']) || !isset($button['definition']['element'])) {
+                    throw new InvalidConfigException('CKEditor buttons require name and element style definition.');
+                }
+
+                if (!isset($button['label'])) {
+                    $button['label'] = '';
+                }
+
+                if (!isset($button['command'])) {
+                    $button['command'] = strtolower($button['name']);
+                }
+
+                if (!isset($button['icon'])) {
+                    $button['icon'] = null;
+                }
+
+                if (isset($button['toolbar'])) {
+                    if (is_string($button['toolbar'])) {
+                        $this->toolbar[$button['toolbar']][] = $button['name'];
+                    } elseif (is_array($button['toolbar'])) {
+                        array_splice($this->defaultToolbar[current($button['toolbar'])], key($button['toolbar']), 0, [$button['name']]);
+                    }
+                }
+            }
         }
 
         if ($this->validator) {
@@ -96,7 +163,7 @@ class CKEditor extends InputWidget
             }
         }
 
-        if($this->skinAssetBundle) {
+        if ($this->skinAssetBundle) {
             $bundle = $this->skinAssetBundle::register($view = $this->getView());
 
             if (!isset($this->clientOptions['skin'])) {
@@ -104,19 +171,13 @@ class CKEditor extends InputWidget
             }
         }
 
-        if ($removePlugins = array_unique(array_filter($removePlugins))) {
-            $this->clientOptions['removePlugins'] = implode(',', $removePlugins);
+        $toolbar = [];
+
+        foreach (ArrayHelper::merge($this->defaultToolbar, $this->toolbar) as $name => $items) {
+            $toolbar[] = ['name' => $name, 'items' => $items];
         }
 
-        if ($this->extraPlugins) {
-            $this->clientOptions['extraPlugins'] = implode(',', $this->extraPlugins);
-        }
-
-        if ($this->removeButtons) {
-            $this->clientOptions['removeButtons'] = implode(',', $this->removeButtons);
-        }
-
-        $this->clientOptions['toolbar'] = $this->toolbar;
+        $this->clientOptions['toolbar'] = $toolbar;
 
         if (!isset($this->clientOptions['removeDialogTabs'])) {
             $this->clientOptions['removeDialogTabs'] = 'link:advanced';
@@ -164,7 +225,10 @@ class CKEditor extends InputWidget
         $options = Json::encode($this->clientOptions);
         $view = $this->getView();
 
-        $view->registerJs("CKEDITOR.replace('{$this->options['id']}', $options);");
         CKEditorAsset::register($view);
+        $extraAsset = CKEditorExtraAsset::register($view);
+
+        $view->registerJs("CKEDITOR.replace('{$this->options['id']}', $options);");
+        $view->registerJs("CKEDITOR.plugins.addExternal( 'extra', '{$extraAsset->getPluginPath()}');CKEDITOR.buttons=" . Json::htmlEncode($this->extraButtons), $view::POS_READY, 'ckEditorExtra');
     }
 }
