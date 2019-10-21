@@ -1,3 +1,6 @@
+/**
+ * Extra buttons set via CKEDITOR.buttons.
+ */
 CKEDITOR.plugins.add('extra', {
     init: function (editor) {
         var buttons = CKEDITOR.buttons;
