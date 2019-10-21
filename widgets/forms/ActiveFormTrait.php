@@ -6,6 +6,7 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveField;
 use Yii;
 use yii\helpers\Inflector;
+use yii\helpers\Json;
 
 /**
  * Class ActiveFormTrait.
@@ -298,5 +299,36 @@ trait ActiveFormTrait
     public function getBaseUrl($attribute = null)
     {
         return Yii::$app->getRequest()->getHostInfo() . '/';
+    }
+
+    /**
+     * Encodes data toggle options of input fields. Attribute names can either be set via the fields
+     * key or as an array with the values being the first value and the field names the second.
+     *
+     * [
+     *     'content' => [Section::TYPE_VISUAL],
+     *     [[Section::TYPE_VISUAL], ['content'],
+     * ],
+     *
+     * @param array $fields
+     * @param array|null $languages
+     * @return array
+     */
+    public function getToggleOptions($fields, $languages = null)
+    {
+        $options = [];
+
+        foreach ($fields as $name => $values) {
+            $attributes = is_string($name) ? $name : array_pop($values);
+            $selectors = [];
+
+            foreach (method_exists($this->model, 'getI18nAttributeNames' ) ? $this->model->getI18nAttributeNames($attributes, $languages) : $attributes as $attribute) {
+                $selectors[] = $this->model->hasAttribute($attribute) ? \yii\helpers\Html::getInputId($this->model, $attribute) : $attribute;
+            }
+
+            $options[] = [$values, $selectors];
+        }
+
+        return ['data-form-toggle' => Json::htmlEncode($options)];
     }
 }
