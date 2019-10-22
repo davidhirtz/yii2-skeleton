@@ -350,9 +350,8 @@ class GridView extends \yii\grid\GridView
 
     /**
      * @return string
-     * @throws \yii\base\InvalidConfigException
      */
-    public function getTableId()
+    public function getTableId(): string
     {
         return $this->getFormName() . '-table';
     }
@@ -361,7 +360,7 @@ class GridView extends \yii\grid\GridView
      * @param ActiveRecord $record
      * @return string
      */
-    public function getRowId($record)
+    public function getRowId($record): string
     {
         return $this->getFormName() . '-' . implode('-', (array)$record->getPrimaryKey());
     }
@@ -369,7 +368,7 @@ class GridView extends \yii\grid\GridView
     /**
      * @return array
      */
-    public function getSearchKeywords()
+    public function getSearchKeywords(): array
     {
         return array_filter(explode(' ', $this->search));
     }
@@ -377,7 +376,7 @@ class GridView extends \yii\grid\GridView
     /**
      * @return bool
      */
-    public function isSortedByPosition()
+    public function isSortedByPosition(): bool
     {
         return $this->dataProvider->getSort() === false && $this->dataProvider->getPagination() === false;
     }

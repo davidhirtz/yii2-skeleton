@@ -132,10 +132,8 @@ var Skeleton = {
             $container.find('.sortable').each(function () {
                 var $sortable = $(this);
                 $sortable.sortable({
-                    clientOptions: {
-                        handle: '.sortable-handle',
-                        axis: 'y'
-                    },
+                    axis: 'y',
+                    handle: '.sortable-handle',
                     helper: function (e, $target) {
                         var $children = $target.children(),
                             $clone = $target.clone();
