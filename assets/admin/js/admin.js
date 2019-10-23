@@ -38,12 +38,24 @@ $(function () {
     };
 
     /**
-     * Toggle form groups based on "data-form-toggle" tag.
+     * Toggle form groups based on "data-form-toggle" attribute.
+     *
+     * The first array position  represent all possible values on which all target elements listed
+     * in the second array position will be hidden. Elements can be either a class or id selector
+     * or the name of the field in which case the corresponding row will be hidden.
+     *
+     * [
+     *     [
+     *         [3,6],
+     *         ["section-content_de","section-content"]
+     *     ],
+     * ]
      */
     $('[data-form-toggle]').change(function () {
         var $input = $(this),
             $option = $input.find('option:selected');
 
+        // Show all previously hidden elements.
         if ($input.data('targets')) {
             $($input.data('targets')).each(function () {
                 this.show();

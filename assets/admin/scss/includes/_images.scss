@@ -1,6 +1,10 @@
 .thumb {
-  display:block;
+  display: block;
   padding-top: 80%;
   background: no-repeat left;
   background-size: contain;
+}
+
+.img-transparent {
+  background: url(../images/transparent.svg);
 }
