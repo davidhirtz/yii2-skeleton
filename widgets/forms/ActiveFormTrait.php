@@ -101,12 +101,6 @@ trait ActiveFormTrait
                 $fieldConfig = (array)$fieldConfig;
                 $attribute = array_shift($fieldConfig);
 
-                // Horizontal line.
-                if ($attribute == '-') {
-                    echo $this->renderHorizontalLine();
-                    continue;
-                }
-
                 if (isset($fieldConfig[0]['visible'])) {
                     if ($fieldConfig[0]['visible'] === false) {
                         continue;
@@ -115,8 +109,13 @@ trait ActiveFormTrait
                     unset($fieldConfig[0]['visible']);
                 }
 
-                if ($this->showUnsafeAttributes || in_array($attribute, $safeAttributes)) {
+                // Horizontal line.
+                if ($attribute == '-') {
+                    echo $this->renderHorizontalLine();
+                    continue;
+                }
 
+                if ($this->showUnsafeAttributes || in_array($attribute, $safeAttributes)) {
                     // Custom field.
                     if (!isset($fieldConfig[0]) || is_array($fieldConfig[0])) {
                         $methodName = lcfirst(Inflector::camelize($attribute)) . 'Field';
