@@ -5,6 +5,7 @@ namespace davidhirtz\yii2\skeleton\web;
 use davidhirtz\yii2\skeleton\behaviors\SitemapBehavior;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
+use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use Yii;
 use yii\base\Component;
 use yii\caching\Cache;
@@ -80,27 +81,24 @@ class Sitemap extends Component
     private function generateFileUrls()
     {
         $manager = Yii::$app->getUrlManager();
-        $languages = $manager->i18nUrl ? array_keys($manager->languages) : [null];
 
         foreach ($this->views as $view) {
-            $exclude = ArrayHelper::getValue($view, 'exclude', []);
-            $params = ArrayHelper::getValue($view, 'params', []);
-            $paramName = ArrayHelper::getValue($view, 'paramName', 'view');
+            $languages = $view['languages'] ?? ($manager->i18nUrl ? array_keys($manager->languages) : [null]);
+            $paramName = $view['paramName'] ?? 'view';
+            $params = [];
 
-            foreach (glob(Yii::getAlias($view['alias']) . '/*.php') as $file) {
-                $name = pathinfo($file, PATHINFO_FILENAME);
+            $options = ArrayHelper::merge($view['options'] ?? [], [
+                'except' => ['_*', 'error.php'],
+                'recursive' => false,
+            ]);
 
-                if (!in_array($name, $exclude)) {
-                    foreach ($languages as $language) {
-                        $this->urls[] = [
-                            'loc' => array_filter(array_merge([
-                                $view['route'],
-                                $paramName => $name,
-                                'language' => $language
-                            ], $params)),
-                            'lastmod' => date(DATE_W3C, filectime($file)),
-                        ];
-                    }
+            foreach (FileHelper::findFiles(Yii::getAlias($view['alias']), $options) as $file) {
+                $name = $paramName !== false ? pathinfo($file, PATHINFO_FILENAME) : null;
+                foreach ($languages as $language) {
+                    $this->urls[] = [
+                        'loc' => array_filter(array_merge([$view['route'], $paramName => $name, 'language' => $language], $params)),
+                        'lastmod' => date(DATE_W3C, filectime($file)),
+                    ];
                 }
             }
         }
