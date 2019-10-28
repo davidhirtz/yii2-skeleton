@@ -27,12 +27,12 @@ class ActiveRecord extends \yii\db\ActiveRecord
     const SCENARIO_INSERT = 'insert';
     const SCENARIO_UPDATE = 'update';
 
-    const STATUS_DEFAULT = 1;
+    const STATUS_DEFAULT = 3;
     const STATUS_DISABLED = 0;
     const STATUS_DRAFT = 1;
     const STATUS_ENABLED = 3;
 
-    const TYPE_DEFAULT = 3;
+    const TYPE_DEFAULT = 1;
 
     /**
      * @param string $attribute
