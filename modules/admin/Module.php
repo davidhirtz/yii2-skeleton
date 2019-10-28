@@ -82,7 +82,7 @@ class Module extends \yii\base\Module
             if (!$this->panels) {
                 $this->panels = [
                     [
-                        'name' => $this->name ?: Yii::t('app', 'Administration'),
+                        'name' => $this->name ?: Yii::t('skeleton', 'Administration'),
                         'items' => [
                             [
                                 'label' => Yii::t('skeleton', 'Create New User'),

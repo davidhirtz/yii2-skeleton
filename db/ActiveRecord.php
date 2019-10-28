@@ -28,7 +28,8 @@ class ActiveRecord extends \yii\db\ActiveRecord
     const SCENARIO_UPDATE = 'update';
 
     const STATUS_DEFAULT = 1;
-    const STATUS_DISABLED = 0;
+    const STATUS_DISABLED = -1;
+    const STATUS_DRAFT = 0;
     const STATUS_ENABLED = 1;
 
     const TYPE_DEFAULT = 1;

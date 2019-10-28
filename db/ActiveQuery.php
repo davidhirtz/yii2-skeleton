@@ -15,6 +15,11 @@ use Yii;
 class ActiveQuery extends \yii\db\ActiveQuery
 {
     /**
+     * @var int
+     */
+    protected static $_status;
+
+    /**
      * @return $this
      */
     public function replaceI18nAttributes()
@@ -40,10 +45,25 @@ class ActiveQuery extends \yii\db\ActiveQuery
     public function whereLower($attributes)
     {
         foreach ($attributes as $attribute => $value) {
-            $this->andWhere(["LOWER({$attribute})" => mb_strtolower($value, Yii::$app->charset)]);
+            $this->andWhere(["LOWER([[{$attribute}]])" => mb_strtolower($value, Yii::$app->charset)]);
         }
 
         return $this;
+    }
+
+    /**
+     * Alters where statement and sets static status that can be used by related queries.
+     * @param int $status
+     * @return $this
+     */
+    public function whereStatus($status = null)
+    {
+        if ($status !== null) {
+            static::$_status = (int)$status;
+        }
+
+        $model = $this->getModelInstance();
+        return $this->andFilterWhere(['>=', $model::tableName() . '.status', static::$_status]);
     }
 
     /**
@@ -51,8 +71,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
      */
     public function enabled()
     {
-        $model = $this->getModelInstance();
-        return $this->andWhere(['>', $model::tableName() . '.status', $model::STATUS_DISABLED]);
+        return $this->whereStatus($this->getModelInstance()::STATUS_ENABLED);
     }
 
     /**

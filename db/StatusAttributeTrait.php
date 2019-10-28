@@ -38,6 +38,10 @@ trait StatusAttributeTrait
                 'name' => Yii::t('skeleton', 'Enabled'),
                 'icon' => 'globe',
             ],
+            static::STATUS_DRAFT => [
+                'name' => Yii::t('skeleton', 'Draft'),
+                'icon' => 'edit',
+            ],
             static::STATUS_DISABLED => [
                 'name' => Yii::t('skeleton', 'Disabled'),
                 'icon' => 'exclamation-triangle',
