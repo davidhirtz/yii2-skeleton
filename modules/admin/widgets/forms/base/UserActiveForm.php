@@ -18,6 +18,7 @@ use yii\helpers\ArrayHelper;
 class UserActiveForm extends ActiveForm
 {
     public $fields = [
+        ['status'],
         ['name'],
         ['email', 'email'],
         ['newPassword', 'password'],
