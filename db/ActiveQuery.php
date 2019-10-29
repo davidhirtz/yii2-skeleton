@@ -45,7 +45,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
     public function whereLower($attributes)
     {
         foreach ($attributes as $attribute => $value) {
-            $this->andWhere(["LOWER([[{$attribute}]])" => mb_strtolower($value, Yii::$app->charset)]);
+            $this->andWhere(["LOWER({$attribute})" => mb_strtolower($value, Yii::$app->charset)]);
         }
 
         return $this;
