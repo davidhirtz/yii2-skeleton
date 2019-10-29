@@ -32,11 +32,6 @@ use davidhirtz\yii2\skeleton\composer\Bootstrap;
 class Application extends \yii\web\Application
 {
     /**
-     * @var array containing the config for widgets which make use of the WidgetConfigTrait.
-     */
-    public $widgets = [];
-
-    /**
      * @param array $config
      * @throws \yii\base\InvalidConfigException
      */

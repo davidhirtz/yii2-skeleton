@@ -3,7 +3,6 @@
 namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use Yii;
 use yii\helpers\Url;
 
@@ -13,8 +12,6 @@ use yii\helpers\Url;
  */
 class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
 {
-    use WidgetConfigTrait;
-
     /**
      * @var string
      */

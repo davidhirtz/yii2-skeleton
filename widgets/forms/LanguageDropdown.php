@@ -2,7 +2,6 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
-use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use Yii;
 use yii\helpers\Html;
 use yii\widgets\InputWidget;
@@ -16,8 +15,6 @@ use yii\widgets\InputWidget;
  */
 class LanguageDropdown extends InputWidget
 {
-    use WidgetConfigTrait;
-
     /**
      * @var bool
      */

@@ -2,7 +2,6 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\jui;
 
-use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use Yii;
 use yii\helpers\FormatConverter;
 use yii\helpers\Html;
@@ -15,7 +14,7 @@ use yii\widgets\InputWidget;
  */
 class DatePicker extends InputWidget
 {
-    use JuiWidgetTrait, WidgetConfigTrait;
+    use JuiWidgetTrait;
 
     /**
      * @var string

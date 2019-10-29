@@ -3,7 +3,6 @@
 namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use Yii;
 use yii\bootstrap4\Html;
 
@@ -13,8 +12,6 @@ use yii\bootstrap4\Html;
  */
 class Flashes extends \yii\bootstrap4\Widget
 {
-    use WidgetConfigTrait;
-
     /**
      * @var array
      */

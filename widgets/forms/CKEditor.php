@@ -5,7 +5,6 @@ namespace davidhirtz\yii2\skeleton\widgets\forms;
 use davidhirtz\yii2\skeleton\assets\CKEditorAsset;
 use davidhirtz\yii2\skeleton\assets\CKEditorBootstrapAsset;
 use davidhirtz\yii2\skeleton\assets\CKEditorExtraAsset;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use davidhirtz\yii2\skeleton\validators\HtmlValidator;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -21,8 +20,6 @@ use yii\widgets\InputWidget;
  */
 class CKEditor extends InputWidget
 {
-    use WidgetConfigTrait;
-
     /**
      * @var array containing extra toolbar buttons.
      */

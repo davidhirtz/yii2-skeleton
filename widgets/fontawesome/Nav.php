@@ -2,8 +2,6 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 
-use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use yii\helpers\Html;
 use Yii;
 
@@ -13,8 +11,6 @@ use Yii;
  */
 class Nav extends \yii\bootstrap4\Nav
 {
-    use WidgetConfigTrait;
-
     /**
      * @var string default item template, can be set individually by item option "template".
      */

@@ -4,7 +4,6 @@ namespace davidhirtz\yii2\skeleton\widgets\pagers;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 
 /**
  * Class LinkPager.
@@ -12,8 +11,6 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
  */
 class LinkPager extends \yii\widgets\LinkPager
 {
-    use WidgetConfigTrait;
-
     /**
      * @var array
      */

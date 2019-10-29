@@ -3,7 +3,6 @@
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
 use davidhirtz\yii2\skeleton\assets\FileUploadAsset;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use yii\db\ActiveRecord;
 use yii\helpers\Html;
 use yii\helpers\Json;
@@ -19,8 +18,6 @@ use yii\widgets\InputWidget;
  */
 class FileUpload extends InputWidget
 {
-    use WidgetConfigTrait;
-
     /**
      * @var string|array upload route
      */

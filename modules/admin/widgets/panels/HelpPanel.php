@@ -3,7 +3,6 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\panels;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 
 /**
@@ -12,8 +11,6 @@ use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
  */
 class HelpPanel extends Panel
 {
-    use WidgetConfigTrait;
-
     /**
      * @var array
      */

@@ -4,7 +4,6 @@ namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use yii\bootstrap4\BootstrapAsset;
 
 /**
@@ -13,8 +12,6 @@ use yii\bootstrap4\BootstrapAsset;
  */
 class ListGroup extends \yii\bootstrap4\Widget
 {
-    use WidgetConfigTrait;
-
     /**
      * @var array
      */

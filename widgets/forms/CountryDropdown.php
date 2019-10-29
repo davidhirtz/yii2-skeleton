@@ -3,7 +3,6 @@
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\WidgetConfigTrait;
 use yii\base\InvalidConfigException;
 use yii\helpers\Html;
 use yii\widgets\InputWidget;
@@ -14,8 +13,6 @@ use yii\widgets\InputWidget;
  */
 class CountryDropdown extends InputWidget
 {
-    use WidgetConfigTrait;
-
     /**
      * @var bool
      */
