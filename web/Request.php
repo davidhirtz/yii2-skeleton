@@ -52,7 +52,8 @@ class Request extends \yii\web\Request
                                 'language' => $language,
                             ]);
                         } elseif ($language != Yii::$app->sourceLanguage && $cookie !== $language) {
-                            Yii::$app->getResponse()->getCookies()->add(new \yii\web\Cookie([
+                            Yii::$app->getResponse()->getCookies()->add(Yii::createObject([
+                                'class' => \yii\web\Cookie::class,
                                 'name' => $param,
                                 'value' => $language,
                             ]));
