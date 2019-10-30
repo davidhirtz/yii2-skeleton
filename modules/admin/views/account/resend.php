@@ -43,7 +43,7 @@ $this->setTitle(Yii::t('skeleton', 'Resend Account Confirmation'));
     if (Yii::$app->getUser()->getIsGuest()) {
         ?>
         <div class="list-group">
-            <a href="<?php echo Url::to(['login']); ?>" class="list-group-item">
+            <a href="<?php echo Url::to(['login']); ?>" class="list-group-item list-group-item-action">
                 <?= Icon::tag('sign-in-alt', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'Back to login'); ?>
             </a>
         </div>

@@ -30,18 +30,6 @@ $this->setTitle(Yii::t('skeleton', 'Login'));
 
 <div class="container">
     <div class="centered">
-        <div class="list-group">
-            <?php
-            if ($form->isFacebookLoginEnabled()) {
-                ?>
-                <a href="<?= Url::to(['auth', 'client' => 'facebook']); ?>" class="list-group-item">
-                    <?= Icon::brand('facebook-f', ['class' => 'fa-fw']); ?>
-                    <?= Yii::t('skeleton', 'Login with Facebook'); ?>
-                </a>
-                <?php
-            }
-            ?>
-        </div>
         <?php Panel::begin(['title' => $this->title]); ?>
         <?php
         $af = ActiveForm::begin([
@@ -66,9 +54,18 @@ $this->setTitle(Yii::t('skeleton', 'Login'));
         <?php Panel::end(); ?>
         <div class="list-group">
             <?php
+            if ($form->isFacebookLoginEnabled()) {
+                ?>
+                <a href="<?= Url::to(['auth', 'client' => 'facebook']); ?>" class="list-group-item list-group-item-action">
+                    <?= Icon::brand('facebook-f', ['class' => 'fa-fw']); ?>
+                    <?= Yii::t('skeleton', 'Login with Facebook'); ?>
+                </a>
+                <?php
+            }
+
             if (Yii::$app->getUser()->isSignupEnabled()) {
                 ?>
-                <a href="<?php echo Url::to(['create']); ?>" class="list-group-item list-group-item-action">
+                <a href="<?= Url::to(['create']); ?>" class="list-group-item list-group-item-action">
                     <?= Icon::tag('user', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'Create new account'); ?>
                 </a>
                 <?php
@@ -77,13 +74,13 @@ $this->setTitle(Yii::t('skeleton', 'Login'));
             if (Yii::$app->getUser()->isPasswordResetEnabled()) {
                 if (!Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
                     ?>
-                    <a href="<?php echo Url::to(['resend']); ?>" class="list-group-item list-group-item-action">
+                    <a href="<?= Url::to(['resend']); ?>" class="list-group-item list-group-item-action">
                         <?= Icon::tag('envelope', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'Resend email confirmation'); ?>
                     </a>
                     <?php
                 }
                 ?>
-                <a href="<?php echo Url::to(['recover']); ?>" class="list-group-item list-group-item-action">
+                <a href="<?= Url::to(['recover']); ?>" class="list-group-item list-group-item-action">
                     <?= Icon::tag('key', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'I forgot my password'); ?>
                 </a>
                 <?php
