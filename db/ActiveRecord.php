@@ -56,6 +56,8 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
+     * Reloads the relation and returns the record.
+     *
      * @param string $name
      * @return ActiveRecord|null
      */

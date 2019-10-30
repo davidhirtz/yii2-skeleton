@@ -13,8 +13,7 @@ use davidhirtz\yii2\skeleton\models\forms\LoginForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
-use rmrevin\yii\fontawesome\FAB;
-use rmrevin\yii\fontawesome\FAR;
+use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Account'));
@@ -77,7 +76,7 @@ if ($user->authClients) {
                 <td class="d-none d-table-cell-lg"><?= \davidhirtz\yii2\timeago\Timeago::tag($auth->created_at); ?>
                 <td class="text-right">
                     <a href="<?= Url::to(['deauthorize', 'id' => $auth->id, 'name' => $auth->name]) ?>" data-method="post" data-confirm="<?= Yii::t('skeleton', 'Are you sure your want to remove your {client} account?', ['client' => $title]); ?>" data-toggle="tooltip" title="<?= Yii::t('skeleton', 'Remove {client}', ['client' => $title]); ?>" class="btn btn-danger">
-                        <?= FAR::icon('trash-alt'); ?>
+                        <?= Icon::tag('trash-alt'); ?>
                     </a>
                 </td>
             </tr>
@@ -118,7 +117,7 @@ if ($user->authClients) {
                         if ((new LoginForm())->isFacebookLoginEnabled()) {
                             ?>
                             <a href="<?= Url::to(['auth', 'client' => 'facebook']); ?>" class="list-group-item">
-                                <?= FAB::icon('facebook-f', ['class' => 'fa-fw']); ?>
+                                <?= Icon::tag('facebook-f', ['class' => 'fa-fw']); ?>
                                 <?= Yii::t('skeleton', 'Login with Facebook'); ?>
                             </a>
                             <?php

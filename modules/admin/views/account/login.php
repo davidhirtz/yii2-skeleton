@@ -10,7 +10,6 @@
 
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
-use rmrevin\yii\fontawesome\FAB;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use yii\helpers\Url;
@@ -36,7 +35,7 @@ $this->setTitle(Yii::t('skeleton', 'Login'));
             if ($form->isFacebookLoginEnabled()) {
                 ?>
                 <a href="<?= Url::to(['auth', 'client' => 'facebook']); ?>" class="list-group-item">
-                    <?= FAB::icon('facebook-f', ['class' => 'fa-fw']); ?>
+                    <?= Icon::tag('facebook-f', ['class' => 'fa-fw']); ?>
                     <?= Yii::t('skeleton', 'Login with Facebook'); ?>
                 </a>
                 <?php
