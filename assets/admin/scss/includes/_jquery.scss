@@ -28,6 +28,18 @@ https://github.com/blueimp/jQuery-File-Upload
 /*
 jQuery UI Sortable.
  */
+.ui-datepicker-row-break {
+  clear: both;
+  width: 100%;
+  font-size: 0;
+
+  &::after {
+    content: "";
+    display: table;
+    border-collapse: collapse;
+  }
+}
+
 .ui-datepicker {
   display: none;
   background-color: $datepicker-bg;
@@ -37,6 +49,16 @@ jQuery UI Sortable.
   min-width: 300px;
 }
 
+.ui-datepicker-multi-2 {
+  padding: $datepicker-spacer-y 0;
+
+  .ui-datepicker-group {
+    float: left;
+    width: 50%;
+    padding: 0 $datepicker-spacer-x;
+  }
+}
+
 .ui-datepicker-header {
   position: relative;
   margin: $datepicker-header-margin;
@@ -44,7 +66,6 @@ jQuery UI Sortable.
   background-color: $datepicker-header-bg;
   color: $datepicker-header-color;
 }
-
 
 .ui-datepicker-prev, .ui-datepicker-next {
   position: absolute;
@@ -135,7 +156,7 @@ jQuery UI Sortable.
   background-color: $datepicker-link-bg;
   color: $datepicker-link-color;
 
-  &.ui-state-hover{
+  &.ui-state-hover {
     background-color: $datepicker-link-hover-bg;
     color: $datepicker-link-hover-color;
   }
