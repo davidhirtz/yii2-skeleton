@@ -17,12 +17,6 @@ class Icon
     private $options = [];
 
     /**
-     * CSS class
-     * @var string
-     */
-    public static $cssClass = 'fas';
-
-    /**
      * CSS class prefix
      * @var string
      */
@@ -34,17 +28,12 @@ class Icon
      */
     public function __construct($name, $options = [])
     {
-        Html::addCssClass($options, static::$cssClass);
-
-        if (!empty($name)) {
-            Html::addCssClass($options, static::$cssClassPrefix . $name);
-        }
-
+        Html::addCssClass($options, static::$cssClassPrefix . $name);
         $this->options = $options;
     }
 
     /**
-     * Creates an `Icon` component that can be used to FontAwesome html icon
+     * Creates an Icon component.
      *
      * @param string $name
      * @param array $options
@@ -52,6 +41,28 @@ class Icon
      */
     public static function tag($name, $options = [])
     {
+        return static::solid($name, $options);
+    }
+
+    /**
+     * @param string $name
+     * @param array $options
+     * @return Icon
+     */
+    public static function solid($name, $options = [])
+    {
+        Html::addCssClass($options, 'fas');
+        return new static($name, $options);
+    }
+
+    /**
+     * @param string $name
+     * @param array $options
+     * @return Icon
+     */
+    public static function brand($name, $options = [])
+    {
+        Html::addCssClass($options, 'fab');
         return new static($name, $options);
     }
 

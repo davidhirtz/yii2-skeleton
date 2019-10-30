@@ -35,7 +35,7 @@ $this->setTitle(Yii::t('skeleton', 'Login'));
             if ($form->isFacebookLoginEnabled()) {
                 ?>
                 <a href="<?= Url::to(['auth', 'client' => 'facebook']); ?>" class="list-group-item">
-                    <?= Icon::tag('facebook-f', ['class' => 'fa-fw']); ?>
+                    <?= Icon::brand('facebook-f', ['class' => 'fa-fw']); ?>
                     <?= Yii::t('skeleton', 'Login with Facebook'); ?>
                 </a>
                 <?php
