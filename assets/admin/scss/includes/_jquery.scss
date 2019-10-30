@@ -57,6 +57,14 @@ jQuery UI Sortable.
     width: 50%;
     padding: 0 $datepicker-spacer-x;
   }
+
+  .ui-datepicker-group-first .ui-datepicker-title {
+    text-align: right;
+  }
+
+  .ui-datepicker-group-last .ui-datepicker-title {
+    text-align: left;
+  }
 }
 
 .ui-datepicker-header {
