@@ -22,7 +22,7 @@ class DatePicker extends InputWidget
     public $language;
 
     /**
-     * @var string
+     * @var string|false
      */
     public $dateFormat;
 
@@ -50,7 +50,7 @@ class DatePicker extends InputWidget
 
         if (strncmp($this->dateFormat, 'php:', 4) === 0) {
             $this->clientOptions['dateFormat'] = FormatConverter::convertDatePhpToJui(substr($this->dateFormat, 4));
-        } else {
+        } elseif ($this->dateFormat) {
             $this->clientOptions['dateFormat'] = FormatConverter::convertDateIcuToJui($this->dateFormat, 'date', $this->language);
         }
 
@@ -67,7 +67,9 @@ class DatePicker extends InputWidget
     public function run()
     {
         if ($value = $this->hasModel() ? Html::getAttributeValue($this->model, $this->attribute) : $this->value) {
-            $value = Yii::$app->formatter->asDate($value, $this->dateFormat);
+            if ($this->dateFormat) {
+                $value = Yii::$app->formatter->asDate($value, $this->dateFormat);
+            }
         }
 
         $options = $this->options;
