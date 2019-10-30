@@ -36,8 +36,6 @@ class Request extends \yii\web\Request
             $this->cookieValidationKey = Yii::$app->params['cookieValidationKey'];
         }
 
-        dump($this->getDraftHostInfo());
-
         parent::init();
     }
 
