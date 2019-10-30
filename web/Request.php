@@ -12,9 +12,20 @@ use Yii;
 class Request extends \yii\web\Request
 {
     /**
-     * @var bool
+     * @var bool whether user language should be saved for logged in users (db) and guests (cookie).
      */
     public $setUserLanguage = true;
+
+    /**
+     * @var string the subdomain indicating a draft version of the application. Further validation should
+     * be done on the controller level.
+     */
+    public $draftSubdomain = 'draft';
+
+    /**
+     * @var string
+     */
+    private $_draftHostInfo;
 
     /**
      * @inheritdoc
@@ -24,6 +35,8 @@ class Request extends \yii\web\Request
         if ($this->enableCookieValidation && !$this->cookieValidationKey && isset(Yii::$app->params['cookieValidationKey'])) {
             $this->cookieValidationKey = Yii::$app->params['cookieValidationKey'];
         }
+
+        dump($this->getDraftHostInfo());
 
         parent::init();
     }
@@ -83,5 +96,33 @@ class Request extends \yii\web\Request
     public function getIsAjaxRoute()
     {
         return $this->getIsAjax() && ArrayHelper::getValue($_SERVER, 'HTTP_X_AJAX_REQUEST') == 'route';
+    }
+
+    /**
+     * @return string
+     */
+    public function getDraftHostInfo()
+    {
+        if ($this->_draftHostInfo === null) {
+            $this->_draftHostInfo = preg_replace('#^((https?://)(www.)?)#', "$2{$this->draftSubdomain}.", parent::getHostInfo());
+        }
+
+        return $this->_draftHostInfo;
+    }
+
+    /**
+     * @param string $draftHostInfo
+     */
+    public function setDraftHostInfo($draftHostInfo)
+    {
+        $this->_draftHostInfo = $draftHostInfo;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsDraft()
+    {
+        return strpos($this->getHostName(), $this->draftSubdomain) === 0;
     }
 }
