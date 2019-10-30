@@ -193,7 +193,7 @@ class UrlManager extends \yii\web\UrlManager
         }
 
         if($this->i18nSubdomain) {
-            $subdomain = explode('.', parse_url($this->getHostInfo(), PHP_URL_HOST))[0];
+            $subdomain = explode('.', parse_url($this->getHostInfo(), PHP_URL_HOST))[$request->getIsDraft() ? 1 : 0];
             Yii::$app->language = in_array($subdomain, $this->languages) ? $subdomain : $this->defaultLanguage;
         }
 

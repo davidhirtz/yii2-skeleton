@@ -102,7 +102,7 @@ class Request extends \yii\web\Request
     public function getDraftHostInfo()
     {
         if ($this->_draftHostInfo === null) {
-            $this->_draftHostInfo = preg_replace('#^((https?://)(www.)?)#', "$2{$this->draftSubdomain}.", parent::getHostInfo());
+            $this->_draftHostInfo = !$this->getIsDraft() ? preg_replace('#^((https?://)(www.)?)#', "$2{$this->draftSubdomain}.", $this->getHostInfo()) : $this->getHostInfo();
         }
 
         return $this->_draftHostInfo;
