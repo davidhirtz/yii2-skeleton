@@ -50,16 +50,6 @@ trait ActiveFormTrait
     public $languages;
 
     /**
-     * @var string
-     */
-    public $prependInputTemplate = '<div class="input-group"><div class="input-group-prepend"><span class="input-group-text">{prepend}</span></div>{input}</div>';
-
-    /**
-     * @var string
-     */
-    public $appendInputTemplate = '<div class="input-group">{input}<div class="input-group-append"><span class="input-group-text">{append}</span></div></div>';
-
-    /**
      * @inheritdoc
      */
     public function init()
@@ -92,7 +82,6 @@ trait ActiveFormTrait
     public function renderFields()
     {
         if ($this->fields) {
-
             $safeAttributes = $this->model->safeAttributes();
             $i18n = Yii::$app->getI18n();
 
@@ -150,13 +139,6 @@ trait ActiveFormTrait
         $options = isset($fieldConfig[0]) && is_array($fieldConfig[0]) ? array_shift($fieldConfig) : [];
         $type = isset($fieldConfig[0]) ? array_shift($fieldConfig) : 'text';
 
-        if ($type == 'url') {
-            if (!isset($options['inputTemplate'])) {
-                $options['inputTemplate'] = $this->prependInput($this->getBaseUrl($attribute));
-            }
-            $type = 'text';
-        }
-
         $field = $this->field($this->model, $attribute, $options);
         $inputOptions = isset($fieldConfig[0]) ? $fieldConfig[0] : [];
 
@@ -176,24 +158,6 @@ trait ActiveFormTrait
         if ($field->parts['{input}']) {
             echo $field;
         }
-    }
-
-    /**
-     * @param string $text
-     * @return string
-     */
-    public function appendInput($text)
-    {
-        return strtr($this->appendInputTemplate, ['{append}' => $text]);
-    }
-
-    /**
-     * @param string $text
-     * @return string
-     */
-    public function prependInput($text)
-    {
-        return strtr($this->prependInputTemplate, ['{prepend}' => $text]);
     }
 
     /**
@@ -292,15 +256,6 @@ trait ActiveFormTrait
     }
 
     /**
-     * @param mixed $attribute can be used to customize the base url per attribute
-     * @return string
-     */
-    public function getBaseUrl($attribute = null)
-    {
-        return Yii::$app->getRequest()->getHostInfo() . '/';
-    }
-
-    /**
      * Encodes data toggle options of input fields. Attribute names can either be set via the fields
      * key or as an array with the values being the first value and the field names the second.
      *
@@ -321,7 +276,7 @@ trait ActiveFormTrait
             $attributes = is_string($name) ? $name : array_pop($values);
             $selectors = [];
 
-            foreach (method_exists($this->model, 'getI18nAttributeNames' ) ? $this->model->getI18nAttributeNames($attributes, $languages) : $attributes as $attribute) {
+            foreach (method_exists($this->model, 'getI18nAttributesNames') ? $this->model->getI18nAttributesNames($attributes, $languages) : $attributes as $attribute) {
                 $selectors[] = $this->model->hasAttribute($attribute) ? \yii\helpers\Html::getInputId($this->model, $attribute) : $attribute;
             }
 

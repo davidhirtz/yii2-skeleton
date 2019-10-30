@@ -3,7 +3,6 @@
 namespace davidhirtz\yii2\skeleton\db;
 
 use Yii;
-use yii\validators\RequiredValidator;
 
 /**
  * Class StatusAttributeTrait.
@@ -70,7 +69,15 @@ trait StatusAttributeTrait
      */
     public function isEnabled()
     {
-        return $this->status == static::STATUS_ENABLED;
+        return $this->status >= static::STATUS_ENABLED;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDraft()
+    {
+        return $this->status == static::STATUS_DRAFT;
     }
 
     /**

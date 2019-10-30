@@ -137,6 +137,19 @@ class UrlManager extends \yii\web\UrlManager
     }
 
     /**
+     * @param array $params
+     * @return bool|string
+     */
+    public function createDraftUrl($params)
+    {
+        if ($hostInfo = Yii::$app->getRequest()->getDraftHostInfo()) {
+            return $hostInfo . $this->createUrl($params);
+        }
+
+        return false;
+    }
+
+    /**
      * @param Request $request
      * @return array|bool
      */
@@ -192,7 +205,7 @@ class UrlManager extends \yii\web\UrlManager
             }
         }
 
-        if($this->i18nSubdomain) {
+        if ($this->i18nSubdomain) {
             $subdomain = explode('.', parse_url($this->getHostInfo(), PHP_URL_HOST))[$request->getIsDraft() ? 1 : 0];
             Yii::$app->language = in_array($subdomain, $this->languages) ? $subdomain : $this->defaultLanguage;
         }

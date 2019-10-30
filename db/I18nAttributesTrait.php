@@ -25,7 +25,7 @@ trait I18nAttributesTrait
      */
     public function getI18nAttribute($attribute, $language = null)
     {
-        return $this->getAttribute(in_array($attribute, $this->i18nAttributes) ? $this->getI18nAttributeName($attribute, $language) : $attribute);
+        return $this->getAttribute($this->isI18nAttribute($attribute) ? $this->getI18nAttributeName($attribute, $language) : $attribute);
     }
 
     /**
@@ -35,7 +35,7 @@ trait I18nAttributesTrait
      */
     public function getI18nAttributeName($attribute, $language = null)
     {
-        return in_array($attribute, $this->i18nAttributes) ? Yii::$app->getI18n()->getAttributeName($attribute, $language) : $attribute;
+        return $this->isI18nAttribute($attribute) ? Yii::$app->getI18n()->getAttributeName($attribute, $language) : $attribute;
     }
 
     /**
@@ -43,16 +43,13 @@ trait I18nAttributesTrait
      * @param array $languages
      * @return array
      */
-    public function getI18nAttributeNames($attributes, $languages = null)
+    public function getI18nAttributesNames($attributes, $languages = null)
     {
+        $i18n = Yii::$app->getI18n();
         $names = [];
 
         foreach ((array)$attributes as $attribute) {
-            if (in_array($attribute, $this->i18nAttributes)) {
-                $names = array_merge($names, Yii::$app->getI18n()->getAttributeNames($attribute, $languages));
-            } else {
-                $names[] = $attribute;
-            }
+            $names = array_merge($names, $this->isI18nAttribute($attribute) ? $i18n->getAttributeNames($attribute, $languages) : [$attribute]);
         }
 
         return $names;
@@ -113,7 +110,7 @@ trait I18nAttributesTrait
                 // attributes need their own rule translating the target attribute.
                 if ($rule[1] === 'unique' && !empty($rule['targetAttribute'])) {
                     $attribute = is_array($rule[0]) ? array_pop($rule[0]) : $rule[0];
-                    foreach ($this->getI18nAttributeNames($attribute) as $i18nAttribute) {
+                    foreach ($this->getI18nAttributesNames($attribute) as $i18nAttribute) {
                         if ($attribute !== $i18nAttribute) {
                             $i18nRule = $rule;
                             $i18nRule[0] = $i18nAttribute;
@@ -135,7 +132,7 @@ trait I18nAttributesTrait
 
                     foreach ((array)$rule[0] as $attribute) {
                         if ($attribute) {
-                            foreach ($this->getI18nAttributeNames($attribute) as $i18nAttribute) {
+                            foreach ($this->getI18nAttributesNames($attribute) as $i18nAttribute) {
                                 $attributes[] = $i18nAttribute;
                             }
                         }
@@ -148,5 +145,14 @@ trait I18nAttributesTrait
         }
 
         return $rules;
+    }
+
+    /**
+     * @param string $attribute
+     * @return bool
+     */
+    public function isI18nAttribute($attribute): bool
+    {
+        return in_array($attribute, $this->i18nAttributes);
     }
 }
