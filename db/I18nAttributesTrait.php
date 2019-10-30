@@ -39,6 +39,32 @@ trait I18nAttributesTrait
     }
 
     /**
+     * @param string $attribute
+     * @param array $languages
+     * @return array
+     */
+    public function getI18nAttributeNames($attribute, $languages = null)
+    {
+        $names = [Yii::$app->sourceLanguage => $attribute];
+
+        if ($this->isI18nAttribute($attribute)) {
+            $i18n = Yii::$app->getI18n();
+
+            if (!$languages) {
+                $languages = $i18n->getLanguages();
+            }
+
+            foreach ($languages as $language) {
+                if ($language !== Yii::$app->sourceLanguage) {
+                    $names[$language] = $i18n->getAttributeName($attribute, $language);
+                }
+            }
+        }
+
+        return $names;
+    }
+
+    /**
      * @param array|string $attributes
      * @param array $languages
      * @return array
