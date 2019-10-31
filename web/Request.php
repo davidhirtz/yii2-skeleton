@@ -17,15 +17,20 @@ class Request extends \yii\web\Request
     public $setUserLanguage = true;
 
     /**
-     * @var string the subdomain indicating a draft version of the application. Further validation should
+     * @var string|false the subdomain indicating a draft version of the application. Further validation should
      * be done on the controller level.
      */
     public $draftSubdomain = 'draft';
 
     /**
-     * @var string
+     * @var string|false
      */
     private $_draftHostInfo;
+
+    /**
+     * @var bool
+     */
+    private $_isDraft = false;
 
     /**
      * @inheritdoc
@@ -34,6 +39,11 @@ class Request extends \yii\web\Request
     {
         if ($this->enableCookieValidation && !$this->cookieValidationKey && isset(Yii::$app->params['cookieValidationKey'])) {
             $this->cookieValidationKey = Yii::$app->params['cookieValidationKey'];
+        }
+
+        if ($this->draftSubdomain && strpos($hostInfo = $this->getHostInfo(), $subdomain = "//{$this->draftSubdomain}.") !== false) {
+            $this->setHostInfo(str_replace($subdomain, '//', $hostInfo));
+            $this->_isDraft = 1;
         }
 
         parent::init();
@@ -97,23 +107,18 @@ class Request extends \yii\web\Request
     }
 
     /**
+     * Creates the draft URL by trying to replace existing "www" or adding the $draftSubdomain as
+     * the first subdomain to the host.
+     *
      * @return string
      */
     public function getDraftHostInfo()
     {
         if ($this->_draftHostInfo === null) {
-            $this->_draftHostInfo = !$this->getIsDraft() ? preg_replace('#^((https?://)(www.)?)#', "$2{$this->draftSubdomain}.", $this->getHostInfo()) : $this->getHostInfo();
+            $this->_draftHostInfo = $this->draftSubdomain ? preg_replace('#^((https?://)(www.)?)#', "$2{$this->draftSubdomain}.", $this->getHostInfo()) : false;
         }
 
         return $this->_draftHostInfo;
-    }
-
-    /**
-     * @param string $draftHostInfo
-     */
-    public function setDraftHostInfo($draftHostInfo)
-    {
-        $this->_draftHostInfo = $draftHostInfo;
     }
 
     /**
@@ -121,6 +126,6 @@ class Request extends \yii\web\Request
      */
     public function getIsDraft()
     {
-        return strpos($this->getHostName(), $this->draftSubdomain) === 0;
+        return $this->_isDraft;
     }
 }

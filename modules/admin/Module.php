@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\modules\admin;
 
 use Yii;
+use yii\helpers\Url;
 
 /**
  * Class Module.
@@ -120,5 +121,20 @@ class Module extends \yii\base\Module
 
         $this->controllerMap = array_merge($this->defaultControllerMap, $this->controllerMap);
         parent::init();
+    }
+
+    /**
+     * Redirects draft URLs for the backend.
+     *
+     * @param \yii\base\Action $action
+     * @return bool
+     */
+    public function beforeAction($action)
+    {
+        if (Yii::$app->getRequest()->getIsDraft()) {
+            Yii::$app->getResponse()->redirect(Url::current([], true))->send();
+        }
+
+        return parent::beforeAction($action);
     }
 }
