@@ -83,6 +83,9 @@ class I18N extends \yii\i18n\I18N
     }
 
     /**
+     * Returns the translated attribute name for given language. If language is omitted
+     * the current application language is used.
+     *
      * @param string $attribute
      * @param string $language
      * @return string
@@ -97,6 +100,9 @@ class I18N extends \yii\i18n\I18N
     }
 
     /**
+     * Returns a flat array with all translated attribute name for given languages.
+     * If languages is omitted all available languages are used.
+     *
      * @param array|string $attributes
      * @param array $languages
      * @return array

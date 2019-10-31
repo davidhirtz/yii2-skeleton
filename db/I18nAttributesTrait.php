@@ -29,6 +29,9 @@ trait I18nAttributesTrait
     }
 
     /**
+     * Returns the translated attribute name for given language. If language is omitted
+     * the current application language is used.
+     *
      * @param string $attribute
      * @param string $language
      * @return string
@@ -39,32 +42,38 @@ trait I18nAttributesTrait
     }
 
     /**
+     * Returns an array with all attribute variations indexed by language. If the attribute
+     * is not translated this method returns the attribute indexed by the current application
+     * language.
+     *
      * @param string $attribute
      * @param array $languages
      * @return array
      */
     public function getI18nAttributeNames($attribute, $languages = null)
     {
-        $names = [Yii::$app->sourceLanguage => $attribute];
-
         if ($this->isI18nAttribute($attribute)) {
             $i18n = Yii::$app->getI18n();
+            $names = [];
 
             if (!$languages) {
                 $languages = $i18n->getLanguages();
             }
 
             foreach ($languages as $language) {
-                if ($language !== Yii::$app->sourceLanguage) {
-                    $names[$language] = $i18n->getAttributeName($attribute, $language);
-                }
+                $names[$language] = $i18n->getAttributeName($attribute, $language);
             }
+        } else {
+            $names[Yii::$app->language] = $attribute;
         }
 
         return $names;
     }
 
     /**
+     * Returns a flat array with all translated attribute name for given languages.
+     * If languages is omitted all available languages are used.
+     *
      * @param array|string $attributes
      * @param array $languages
      * @return array
@@ -98,7 +107,6 @@ trait I18nAttributesTrait
         /** @noinspection PhpUndefinedClassInspection */
         return parent::getAttributeLabel($attribute);
     }
-
 
     /**
      * @return array|null
