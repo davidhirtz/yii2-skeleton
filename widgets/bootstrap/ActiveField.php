@@ -115,6 +115,6 @@ class ActiveField extends \yii\bootstrap4\ActiveField
         $baseUrl = rtrim($options['baseUrl'] ?? Yii::$app->getRequest()->getHostInfo(), '/');
         unset($options['baseUrl']);
 
-        return $this->input('text', $options)->prependInput(substr($baseUrl, -1) !== '#' ? ($baseUrl . '/') : $baseUrl);
+        return $this->input('text', $options)->prependInput($baseUrl[-1] !== '#' ? ($baseUrl . '/') : $baseUrl);
     }
 }

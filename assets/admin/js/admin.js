@@ -93,10 +93,21 @@ $(function () {
      */
     $('[data-form-target]').change(function () {
         var $input = $(this),
-            value = $input.find('option:selected').data('value'),
-            target = $input.data('form-target');
+            values = $input.find('option:selected').data('value'),
+            targets = $input.data('form-target'),
+            i;
 
-        $(target.match(/^[.#]/) ? target : ("#" + target)).html(value);
+        if (!$.isArray(values)) {
+            values = [values];
+        }
+
+        if (!$.isArray(targets)) {
+            targets = [targets];
+        }
+
+        for(i = 0; i<targets.length; i++) {
+            $(targets[i].match(/^[.#]/) ? targets[i] : ("#" + targets[i])).html(values[i]);
+        }
     })
         .filter(':visible').trigger('change');
 
