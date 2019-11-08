@@ -202,6 +202,7 @@ th > a, th > a:hover {
 th > a.asc, th > a.desc {
   position: relative;
   font-style: $app-table-th-active-font-style;
+  text-decoration: $app-table-th-active-text-decoration;
 }
 
 tr.is-selected {

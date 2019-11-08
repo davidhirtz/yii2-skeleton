@@ -44,7 +44,7 @@ $grid-breakpoints: (
 ) !default;
 
 $container-max-widths: (
-        xl: 1170px
+        xl: 1400px
 ) !default;
 
 /*
@@ -74,7 +74,8 @@ $border-color: $gray-400 !default;
 /*
 Text.
  */
-$font-family-base: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$font-family-base: "Open Sans", sans-serif !default;
+$app-default-font: "Open Sans", sans-serif;
 
 $font-size-base: 14px !default;
 $font-size-sm: 12px !default;
@@ -116,7 +117,7 @@ $navbar-padding-y: 0 !default;
 $navbar-padding-x: 0 !default;
 $app-navbar-nav-link-padding-y: 15px !default;
 $navbar-nav-link-padding-x: 12px !default;
-$navbar-dark-color: $gray-600 !default;
+$navbar-dark-color: $gray-500 !default;
 $app-navbar-background: $dark !default;
 $navbar-dark-hover-color: $white !default;
 $app-navbar-dark-hover-bg: #090909 !default;
@@ -204,7 +205,7 @@ $form-text-margin-top: 6px !default;
 $form-check-inline-margin-x: 20px !default;
 $form-check-inline-input-margin-x: 10px !default;
 
-$input-btn-padding-y: 6px !default;
+$input-btn-padding-y: 8px !default;
 $input-btn-padding-x: 12px !default;
 $input-height: 34px !default;
 
@@ -244,10 +245,11 @@ $table-border-width: 1px !default;
 $table-border-color: transparent !default;
 $app-table-th-border-width: 1px !default;
 $app-table-th-border-color: $table-border-color !default;
-$table-cell-padding: 10px !default;
+$table-cell-padding: 12px !default;
 $table-accent-bg: $gray-200 !default;
 $table-hover-bg: $gray-300 !default;
-$app-table-th-active-font-style: italic !default;
+$app-table-th-active-font-style: normal !default;
+$app-table-th-active-text-decoration: underline !default;
 $app-table-th-selected-bg: $info !default;
 
 /*
