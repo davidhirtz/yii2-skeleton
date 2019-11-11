@@ -273,9 +273,13 @@ trait ActiveFormTrait
         $options = [];
 
         foreach ($fields as $name => $values) {
-            $attributes = is_string($name) ? $name : array_pop($values);
-            $selectors = [];
+            if (is_int($name)) {
+                list($values, $attributes) = $values;
+            } else {
+                $attributes = [$name];
+            }
 
+            $selectors = [];
             foreach (method_exists($this->model, 'getI18nAttributesNames') ? $this->model->getI18nAttributesNames($attributes, $languages) : $attributes as $attribute) {
                 $selectors[] = $this->model->hasAttribute($attribute) ? \yii\helpers\Html::getInputId($this->model, $attribute) : $attribute;
             }
