@@ -62,7 +62,6 @@ class I18N extends \yii\i18n\I18N
     public function setLanguages($languages)
     {
         $this->_languages = array_unique((array)$languages);
-        sort($this->_languages);
     }
 
     /**
