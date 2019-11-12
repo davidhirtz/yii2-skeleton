@@ -12,6 +12,7 @@
   border: $cke-content-border;
   background-clip: padding-box;
   height: 100%;
+  overflow-y: scroll;
   outline: 0;
 
   .cke_focus & {
