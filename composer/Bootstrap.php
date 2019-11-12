@@ -75,7 +75,10 @@ class Bootstrap implements BootstrapInterface
                         [
                             'class' => 'yii\log\FileTarget',
                             'levels' => ['error', 'warning'],
-                            'except' => ['yii\web\HttpException:*'],
+                            'except' => [
+                                'yii\web\HttpException:*',
+                                'yii\web\User::getIdentityAndDurationFromCookie',
+                            ],
                         ],
                     ],
                 ],
