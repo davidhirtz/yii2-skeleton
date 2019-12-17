@@ -85,6 +85,7 @@ class Sitemap extends Component
         foreach ($this->views as $view) {
             $languages = $view['languages'] ?? ($manager->i18nUrl ? array_keys($manager->languages) : [null]);
             $paramName = $view['paramName'] ?? 'view';
+            $defaultView = $view['defaultView'] ?? 'index';
             $params = [];
 
             $options = ArrayHelper::merge($view['options'] ?? [], [
@@ -96,7 +97,7 @@ class Sitemap extends Component
                 $name = $paramName !== false ? pathinfo($file, PATHINFO_FILENAME) : null;
                 foreach ($languages as $language) {
                     $this->urls[] = [
-                        'loc' => array_filter(array_merge([$view['route'], $paramName => $name, 'language' => $language], $params)),
+                        'loc' => array_filter(array_merge([$view['route'], $paramName => $name !== $defaultView ? $name : null, 'language' => $language], $params)),
                         'lastmod' => date(DATE_W3C, filectime($file)),
                     ];
                 }
