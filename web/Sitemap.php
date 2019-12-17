@@ -76,7 +76,23 @@ class Sitemap extends Component
     }
 
     /**
-     * Generates site maps from models.
+     * Generates site maps from view files.
+     *
+     * Required config parameters are "alias" and "route", optional "languages", "paramName",
+     * "defaultView" and "options" for FileHelper::findFiles.
+     *
+     * 'components' => [
+     *    'sitemap' => [
+     *        'views' => [
+     *            [
+     *                'alias' => '@app/views/site',
+     *                'route' => 'site/static',
+     *                'options' => [
+     *                    'except' => ['hidden.php'],
+     *                ],
+     *            ],
+     *        ],
+     *    ],
      */
     private function generateFileUrls()
     {
