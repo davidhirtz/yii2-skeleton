@@ -8,26 +8,7 @@ $(function () {
         bootbox.confirm(message, function (result) {
             if (result) {
                 if ($link.data('ajax')) {
-
-                    var $target = $($link.data('target')),
-                        action = $link.data('ajax');
-
-                    $.ajax({
-                        url: $link.attr('href'),
-                        method: $link.data('method') || 'post',
-                        params: $link.data('params'),
-                        success: function () {
-                            if ($target.length) {
-                                if (action === 'remove') {
-                                    $target.remove();
-
-                                } else if (action === 'success') {
-                                    $target.toggleClass('bg-success');
-                                }
-
-                            }
-                        }
-                    });
+                    _ajaxLink($link);
                 } else {
                     !ok || ok();
                 }
@@ -36,6 +17,47 @@ $(function () {
             }
         });
     };
+
+    /**
+     * Use same functionality as yii.confirm for regular data-ajax links.
+     */
+    $('a[data-ajax]').click(function (e) {
+        var $link = $(this);
+
+        if (!$link.data('confirm')) {
+            _ajaxLink($($link));
+            e.preventDefault();
+        }
+    });
+
+    /**
+     * Helper function for yii.confirm and regular data-ajax links.
+     * @param $link
+     * @private
+     */
+    function _ajaxLink($link) {
+        var $target = $($link.data('target')),
+            action = $link.data('ajax');
+
+        $.ajax({
+            url: $link.attr('href'),
+            method: $link.data('method') || 'post',
+            params: $link.data('params'),
+            success: function () {
+                if ($target.length) {
+                    if (action === 'remove') {
+                        $target.remove();
+
+                    } else if (action === 'success') {
+                        $target.toggleClass('bg-success');
+
+                    } else if (action === 'select') {
+                        $target.toggleClass('is-selected');
+                    }
+                }
+            }
+        });
+    }
 
     /**
      * Toggle form groups based on "data-form-toggle" attribute.
@@ -105,7 +127,7 @@ $(function () {
             targets = [targets];
         }
 
-        for(i = 0; i<targets.length; i++) {
+        for (i = 0; i < targets.length; i++) {
             $(targets[i].match(/^[.#]/) ? targets[i] : ("#" + targets[i])).html(values[i]);
         }
     })
