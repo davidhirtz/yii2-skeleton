@@ -22,7 +22,7 @@
 		"davidhirtz/yii2-datetime-behavior":"*",
 		"davidhirtz/yii2-timeago":"dev-master",
 		"davidhirtz/yii2-curl":"dev-master",
-		"davidhirtz/yii2-lazysizes":">=2",
+		"davidhirtz/yii2-lazysizes":">=2.1",
 		"bower-asset/blueimp-file-upload": ">=10.2.0",
 		"bower-asset/bootbox":">=5",
 		"npm-asset/skeleton-router":">=1.1.6"
