@@ -2,12 +2,15 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 
+use davidhirtz\yii2\skeleton\web\View;
 use yii\helpers\Html;
 use Yii;
 
 /**
  * Class Nav.
  * @package davidhirtz\yii2\skeleton\widgets\fontawesome
+ *
+ * @method View getView()
  */
 class Nav extends \yii\bootstrap4\Nav
 {
