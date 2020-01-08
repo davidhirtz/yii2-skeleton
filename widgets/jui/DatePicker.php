@@ -68,7 +68,10 @@ class DatePicker extends InputWidget
     {
         if ($value = $this->hasModel() ? Html::getAttributeValue($this->model, $this->attribute) : $this->value) {
             if ($this->dateFormat) {
-                $value = Yii::$app->formatter->asDate($value, $this->dateFormat);
+                try {
+                    $value = Yii::$app->formatter->asDate($value, $this->dateFormat);
+                } catch (\Exception $exception) {
+                }
             }
         }
 
