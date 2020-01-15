@@ -10,7 +10,9 @@ use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
  *
  * @property int $id
  * @property int $parent_id
- * @property int $path
+ * @property int $rgt
+ * @property int $lft
+ * @property string $name
  *
  * @property ActiveRecord $parent
  * @method static ActiveQuery find()
@@ -30,6 +32,12 @@ trait MaterializedTreeTrait
     private $_descendants;
 
     /**
+     * @var ActiveRecord[]
+     * @see getChildren()
+     */
+    private $_children;
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getParent()
@@ -44,7 +52,7 @@ trait MaterializedTreeTrait
     public function getAncestors($refresh = false)
     {
         if ($this->_ancestors === null || $refresh) {
-            $this->_ancestors = $this->findAncestors()
+            $this->_ancestors = !$this->path ? [] : $this->findAncestors()
                 ->indexBy('id')
                 ->all();
         }
@@ -89,6 +97,43 @@ trait MaterializedTreeTrait
     {
         return static::find()->where(['id' => ArrayHelper::cacheStringToArray($this->path)])
             ->orderBy(['path' => SORT_ASC]);
+    }
+
+    /**
+     * @param bool $refresh
+     * @return ActiveRecord[]
+     */
+    public function getChildren($refresh = false)
+    {
+        if ($this->_children === null || $refresh) {
+            $this->_children = $this->findChildren()
+                ->indexBy('id')
+                ->all();
+        }
+
+        return $this->_children;
+    }
+
+    /**
+     * @param static[] $children
+     */
+    public function setChildren($children)
+    {
+        $this->_children = [];
+
+        foreach ($children as $child) {
+            if ($child['parent_id'] == $this->id) {
+                $this->_children[$child->id] = $child;
+            }
+        }
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function findChildren()
+    {
+        return static::find()->where(['parent_id' => $this->id]);
     }
 
     /**
