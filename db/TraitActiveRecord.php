@@ -3,7 +3,7 @@
 namespace davidhirtz\yii2\skeleton\db;
 
 /**
- * Class TraitActiveRecord.
+ * Class TraitActiveRecord
  * @package davidhirtz\yii2\skeleton\db
  *
  * Note: This class is only used to inherit active record methods
@@ -12,4 +12,13 @@ namespace davidhirtz\yii2\skeleton\db;
 abstract class TraitActiveRecord extends ActiveRecord
 {
     use NestedTreeTrait, I18nAttributesTrait;
+}
+
+/**
+ * Class MaterializedTreeTraitActiveRecord
+ * @package davidhirtz\yii2\skeleton\db
+ */
+abstract class MaterializedTreeTraitActiveRecord extends ActiveRecord
+{
+    use MaterializedTreeTrait;
 }

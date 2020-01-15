@@ -10,9 +10,7 @@ use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
  *
  * @property int $id
  * @property int $parent_id
- * @property int $rgt
- * @property int $lft
- * @property string $name
+ * @property int $path
  *
  * @property ActiveRecord $parent
  * @method static ActiveQuery find()
