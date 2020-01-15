@@ -58,14 +58,15 @@ class Panel extends Widget
             $this->content = ob_get_clean();
         }
 
-        echo Html::beginTag('div', $this->options);
+        if ($this->content) {
+            echo Html::beginTag('div', $this->options);
 
-        if ($this->title) {
-            echo Html::tag('div', Html::tag('h2', $this->title, ['class' => 'card-title']), ['class' => 'card-header']);
+            if ($this->title) {
+                echo Html::tag('div', Html::tag('h2', $this->title, ['class' => 'card-title']), ['class' => 'card-header']);
+            }
+
+            echo Html::tag('div', $this->content, ['class' => 'card-body']);
+            echo Html::endTag('div');
         }
-
-        echo Html::tag('div', $this->content, ['class' => 'card-body']);
-        echo Html::endTag('div');
-
     }
 }
