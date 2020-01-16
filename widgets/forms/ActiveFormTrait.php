@@ -105,8 +105,14 @@ trait ActiveFormTrait
                 }
 
                 if ($this->showUnsafeAttributes || in_array($attribute, $safeAttributes)) {
+                    // Hidden input.
+                    if (($fieldConfig[0] ?? null) === 'hidden') {
+                        echo Html::activeHiddenInput($this->model, $attribute);
+                        continue;
+                    }
+
                     // Custom field.
-                    if (!isset($fieldConfig[0]) || is_array($fieldConfig[0])) {
+                    if (is_array($fieldConfig[0] ?? [])) {
                         $methodName = lcfirst(Inflector::camelize($attribute)) . 'Field';
 
                         if (method_exists($this, $methodName)) {
