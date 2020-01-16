@@ -17,11 +17,6 @@ use Yii;
 class ActiveRecord extends \yii\db\ActiveRecord
 {
     /**
-     * @var array
-     */
-    public $i18nAttributes = [];
-
-    /**
      * Constants.
      */
     const SCENARIO_INSERT = 'insert';
@@ -35,6 +30,16 @@ class ActiveRecord extends \yii\db\ActiveRecord
     const TYPE_DEFAULT = 1;
 
     /**
+     * @var array
+     */
+    public $i18nAttributes = [];
+
+    /**
+     * @var bool
+     */
+    private $_isDeleted = false;
+
+    /**
      * @param string $attribute
      * @return bool
      */
@@ -45,6 +50,15 @@ class ActiveRecord extends \yii\db\ActiveRecord
         ]));
 
         return false;
+    }
+
+    /**
+     * Sets deleted flag.
+     */
+    public function beforeDelete()
+    {
+        $this->_isDeleted = true;
+        return parent::beforeDelete();
     }
 
     /**
@@ -66,21 +80,6 @@ class ActiveRecord extends \yii\db\ActiveRecord
         $this->populateRelation($name, $related = $this->getRelation($name)->one());
         return $related;
     }
-
-    /**
-     * @param string $name
-     * @return bool
-     */
-//    public function relationIsChanged($name)
-//    {
-//        $relation = $this->getRelation($name);
-//
-//        if ($relation->multiple) {
-//            throw new InvalidCallException('ActiveRecord::relationIsChanged cannot be called on multiple related records.');
-//        }
-//
-//        return !$this->isRelationPopulated($name) || !$this->{$name} instanceof $relation->modelClass || $this->{$name}->{key($relation->link)} != $this->{current($relation->link)};
-//    }
 
     /**
      * @param ActiveRecord[] $models
@@ -111,6 +110,14 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return static::getDb()->createCommand()
             ->batchInsert(static::tableName(), $columns, $rows)
             ->execute();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDeleted(): bool
+    {
+        return $this->_isDeleted;
     }
 
     /**
