@@ -14,6 +14,11 @@ class MigrateController extends \yii\console\controllers\MigrateController
     use ConfigTrait;
 
     /**
+     * @var array
+     */
+    private $_dbConfig;
+
+    /**
      * @var string
      */
     public $dbFile = '@app/config/db.php';
@@ -25,8 +30,11 @@ class MigrateController extends \yii\console\controllers\MigrateController
      */
     public function beforeAction($action)
     {
-        $this->actionConfig(false);
-        return parent::beforeAction($action);
+        if ($this->interactive) {
+            $this->actionConfig(false);
+        }
+
+        return $this->getDbConfig() ? parent::beforeAction($action) : false;
     }
 
     /**
@@ -37,7 +45,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
      */
     public function actionConfig($replace = true)
     {
-        $db = $this->getConfig($this->dbFile);
+        $db = $this->getDbConfig();
         $found = !empty($db);
 
         if (!$found || $replace) {
@@ -63,11 +71,24 @@ class MigrateController extends \yii\console\controllers\MigrateController
                 $db['password'] = \Seld\CliPrompt\CliPrompt::hiddenPrompt();
 
                 $this->setConfig($this->dbFile, $db);
+                $this->_dbConfig = $db;
 
                 Yii::$app->setComponents([
-                    'db'=>array_merge(Yii::$app->getComponents()['db'], $db),
+                    'db' => array_merge(Yii::$app->getComponents()['db'], $db),
                 ]);
             }
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getDbConfig()
+    {
+        if ($this->_dbConfig === null) {
+            $this->_dbConfig = $this->getConfig($this->dbFile);
+        }
+
+        return $this->_dbConfig;
     }
 }
