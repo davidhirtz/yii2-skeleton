@@ -30,3 +30,9 @@
     @extend .text-overflow;
   }
 }
+
+.dropdown-header{
+  font-size: inherit;
+  font-weight: normal;
+  cursor: default;
+}
