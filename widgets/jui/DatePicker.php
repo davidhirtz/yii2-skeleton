@@ -41,7 +41,7 @@ class DatePicker extends InputWidget
         }
 
         if ($this->dateFormat === null) {
-            $this->dateFormat = Yii::$app->getFormatter()->dateFormat;
+            $this->dateFormat = 'short';
         }
 
         if (!$this->language) {
@@ -69,7 +69,7 @@ class DatePicker extends InputWidget
         if ($value = $this->hasModel() ? Html::getAttributeValue($this->model, $this->attribute) : $this->value) {
             if ($this->dateFormat) {
                 try {
-                    $value = Yii::$app->formatter->asDate($value, $this->dateFormat);
+                    $value = $this->showTime ? Yii::$app->getFormatter()->asDatetime($value, $this->dateFormat) : Yii::$app->getFormatter()->asDate($value, $this->dateFormat);
                 } catch (\Exception $exception) {
                 }
             }
