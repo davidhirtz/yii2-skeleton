@@ -41,7 +41,7 @@ class DatePicker extends InputWidget
         }
 
         if ($this->dateFormat === null) {
-            $this->dateFormat = $this->showTime ? 'php:Y-m-d H:i' : Yii::$app->getFormatter()->dateFormat;
+            $this->dateFormat = Yii::$app->getFormatter()->dateFormat;
         }
 
         if (!$this->language) {
@@ -51,7 +51,7 @@ class DatePicker extends InputWidget
         if (strncmp($this->dateFormat, 'php:', 4) === 0) {
             $this->clientOptions['dateFormat'] = FormatConverter::convertDatePhpToJui(substr($this->dateFormat, 4));
         } elseif ($this->dateFormat) {
-            $this->clientOptions['dateFormat'] = FormatConverter::convertDateIcuToJui($this->dateFormat, 'date', $this->language);
+            $this->clientOptions['dateFormat'] = FormatConverter::convertDateIcuToJui($this->dateFormat, $this->showTime ? 'datetime' : 'date', $this->language);
         }
 
         if ($this->showTime) {
