@@ -6,11 +6,18 @@ namespace davidhirtz\yii2\skeleton\behaviors;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 
 /**
- * Class BlameableBehavior.
+ * Class BlameableBehavior
  * @package davidhirtz\yii2\skeleton\behaviors
+ *
+ * @property ActiveRecord $owner
  */
 class BlameableBehavior extends \yii\behaviors\BlameableBehavior
 {
+    /**
+     * @var bool
+     */
+    public $overwriteChangedValues = false;
+
     /**
      * @inheritdoc
      */
@@ -24,5 +31,26 @@ class BlameableBehavior extends \yii\behaviors\BlameableBehavior
         }
 
         parent::init();
+    }
+
+    /**
+     * Temporarily removes attributes that where changed by owner.
+     * @inheritDoc
+     */
+    public function evaluateAttributes($event)
+    {
+        $attributes = (array)$this->attributes[$event->name];
+
+        if (!$this->overwriteChangedValues) {
+            $this->attributes[$event->name] = [];
+            foreach ($attributes as $attribute) {
+                if (!$this->owner->isAttributeChanged($attribute)) {
+                    $this->attributes[$event->name][] = $attribute;
+                }
+            }
+        }
+
+        parent::evaluateAttributes($event);
+        $this->attributes[$event->name] = $attributes;
     }
 }
