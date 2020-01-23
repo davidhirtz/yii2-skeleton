@@ -146,7 +146,7 @@ jQuery UI Sortable.
 
 .ui-datepicker-today a {
   background-color: $datepicker-link-today-bg;
-  color: $datepicker-link-today-color;
+  color: $datepicker-link-today-color !important;
 }
 
 /*

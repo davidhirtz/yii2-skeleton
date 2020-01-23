@@ -32,6 +32,11 @@ class DatePicker extends InputWidget
     public $showTime = false;
 
     /**
+     * @var bool
+     */
+    public $constrainInput = false;
+
+    /**
      * @inheritDoc
      */
     public function init()
@@ -48,14 +53,14 @@ class DatePicker extends InputWidget
             $this->language = Yii::$app->language;
         }
 
-        if (strncmp($this->dateFormat, 'php:', 4) === 0) {
-            $this->clientOptions['dateFormat'] = FormatConverter::convertDatePhpToJui(substr($this->dateFormat, 4));
-        } elseif ($this->dateFormat) {
-            $this->clientOptions['dateFormat'] = FormatConverter::convertDateIcuToJui($this->dateFormat, $this->showTime ? 'datetime' : 'date', $this->language);
+        if (!isset($this->clientOptions['dateFormat'])) {
+            $this->clientOptions['dateFormat'] = strncmp($this->dateFormat, 'php:', 4) === 0 ?
+                FormatConverter::convertDatePhpToJui(substr($this->dateFormat, 4)) :
+                FormatConverter::convertDateIcuToJui($this->dateFormat);
         }
 
-        if ($this->showTime) {
-            $this->clientOptions['onSelect'] = new JsExpression('function(t){$(this).val(t.slice(0, 10)+" 00:00");}');
+        if (!$this->constrainInput) {
+            $this->clientOptions['constrainInput'] = false;
         }
 
         parent::init();
@@ -69,7 +74,23 @@ class DatePicker extends InputWidget
         if ($value = $this->hasModel() ? Html::getAttributeValue($this->model, $this->attribute) : $this->value) {
             if ($this->dateFormat) {
                 try {
-                    $value = $this->showTime ? Yii::$app->getFormatter()->asDatetime($value, $this->dateFormat) : Yii::$app->getFormatter()->asDate($value, $this->dateFormat);
+                    if ($this->showTime) {
+                        // jQuery UI Datepicker does not support datetime formats.
+                        $date = Yii::$app->getFormatter()->asDate($value, $this->dateFormat);
+                        $dateLength = strlen($date);
+                        $time = substr(Yii::$app->getFormatter()->asDatetime($value, $this->dateFormat), $dateLength);
+                        $value = $date . $time;
+
+                        if ($this->showTime) {
+                            // Unfortunately Datepicker's "instance.lastVal" is not updated when the widget is open, to improve the
+                            // functionality the current date is cached via jQuery data and the time part of string is added on select.
+                            $this->clientEvents['keyup'] = new JsExpression('function(e){$(this).data("value",$(this).val())}');
+                            $this->clientOptions['onSelect'] = new JsExpression('function(t,i){$(this).val(t+($(this).data("value")||i.lastVal).substring(' . $dateLength . ')).focus()}');
+                        }
+
+                    } else {
+                        $value = Yii::$app->getFormatter()->asDate($value, $this->dateFormat);
+                    }
                 } catch (\Exception $exception) {
                 }
             }
@@ -83,6 +104,8 @@ class DatePicker extends InputWidget
         } else {
             echo Html::textInput($this->name, $value, $options);
         }
+
+        $this->clientEvents['keypress'] = new JsExpression('function(e){if(e.which==13)this.form.submit()}');
 
         $this->registerWidget('datepicker');
     }
