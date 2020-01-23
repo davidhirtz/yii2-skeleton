@@ -6,7 +6,7 @@ use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Yii;
 
 /**
- * Class ActiveRecord.
+ * Class ActiveRecord
  * @package davidhirtz\yii2\skeleton\db
  *
  * @method ActiveQuery hasMany($class, array $link)
@@ -33,6 +33,21 @@ class ActiveRecord extends \yii\db\ActiveRecord
      * @var array
      */
     public $i18nAttributes = [];
+
+    /**
+     * @var array containing cached active attributes, reset on setScenario
+     */
+    private $_activeAttributes;
+
+    /**
+     * @var array containing cached safe attributes, reset on setScenario
+     */
+    private $_safeAttributes;
+
+    /**
+     * @var array containing cached scenarios
+     */
+    private $_scenarios;
 
     /**
      * @var bool
@@ -110,6 +125,51 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return static::getDb()->createCommand()
             ->batchInsert(static::tableName(), $columns, $rows)
             ->execute();
+    }
+
+    /**
+     * @return array
+     */
+    public function activeAttributes()
+    {
+        if ($this->_activeAttributes === null) {
+            $this->_activeAttributes = parent::activeAttributes();
+        }
+
+        return $this->_activeAttributes;
+    }
+
+    /**
+     * @return array
+     */
+    public function safeAttributes()
+    {
+        if ($this->_safeAttributes === null) {
+            $this->_safeAttributes = parent::safeAttributes();
+        }
+
+        return $this->_safeAttributes;
+    }
+
+    /**
+     * @return array
+     */
+    public function scenarios()
+    {
+        if ($this->_scenarios === null) {
+            $this->_scenarios = parent::scenarios();
+        }
+
+        return $this->_scenarios;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setScenario($value)
+    {
+        $this->_activeAttributes = $this->_safeAttributes = null;
+        parent::setScenario($value);
     }
 
     /**
