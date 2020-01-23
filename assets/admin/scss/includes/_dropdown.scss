@@ -31,7 +31,8 @@
   }
 }
 
-.dropdown-header{
+.dropdown-header {
+  padding: $app-dropdown-header-padding-y $app-dropdown-header-padding-x;
   font-size: inherit;
   font-weight: normal;
   cursor: default;
