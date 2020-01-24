@@ -13,32 +13,37 @@ use yii\helpers\Url;
 class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
 {
     /**
-     * @var string
+     * @var string the default item label
      */
     public $defaultItem;
 
     /**
-     * @var string
+     * @var string the default item parameter value
      */
     public $defaultValue;
 
     /**
-     * @var string
+     * @var string the parameter name of the default item
      */
     public $paramName;
 
     /**
-     * @var array
+     * @var array containing items as array with "label" and optional "url" keys
      */
     public $items = [];
 
     /**
-     * @var bool
+     * @var bool whether the label should be HTML-encoded.
      */
     public $encodeLabel = false;
 
     /**
-     * Sets default label.
+     * @var bool
+     */
+    public $showFilter = false;
+
+    /**
+     * Sets default label and adds filter text field.
      */
     public function init()
     {
@@ -50,11 +55,18 @@ class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
             $this->dropdown['items'] = $this->items;
         }
 
+        if ($this->showFilter) {
+            array_unshift($this->dropdown['items'],
+                ['label' => '<input type="text" class="dropdown-filter form-control">', 'encode' => false],
+                '-'
+            );
+        }
+
         if ($isActive = Yii::$app->getRequest()->get($this->paramName)) {
-            if ($this->defaultItem != false && isset($this->dropdown['items'])) {
+            if ($this->defaultItem !== false && isset($this->dropdown['items'])) {
                 array_unshift($this->dropdown['items'],
                     ['label' => $this->defaultItem, 'url' => Url::current([$this->paramName => $this->defaultValue])],
-                    '<div class="dropdown-divider"></div>'
+                    '-'
                 );
             }
         }
@@ -64,5 +76,19 @@ class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
         }
 
         parent::init();
+
+        if ($this->showFilter) {
+            $this->getView()->registerJs("jQuery('#{$this->options['id']}').dropdownFilter();");
+        }
+    }
+
+    /**
+     * Resets the options id back to widget id which is set to the button id in {@link \yii\bootstrap4\ButtonDropdown::run()}.
+     * Otherwise Bootstrap events don't register on the correct element.
+     */
+    protected function registerClientEvents()
+    {
+        $this->options['id'] = $this->getId();
+        parent::registerClientEvents();
     }
 }

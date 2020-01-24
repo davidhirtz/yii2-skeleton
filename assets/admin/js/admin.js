@@ -1,5 +1,14 @@
 $(function () {
     /**
+     * Extend jQuery to filter case insensitive.
+     */
+    $.expr[":"].contains = $.expr.createPseudo(function (arg) {
+        return function (e) {
+            return $(e).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+        };
+    });
+
+    /**
      * Use Bootbox for yii confirm dialogs.
      */
     yii.confirm = function (message, ok, cancel) {
@@ -148,6 +157,38 @@ $(function () {
                 $.get($token.data('url'), function (data) {
                     $token.val(data);
                 });
+            }
+        });
+    };
+
+    /**
+     * Enables filter in ButtonDropdown.
+     */
+    $.fn.dropdownFilter = function () {
+        var $dropdown = $(this),
+            $filter = $dropdown.find('.dropdown-filter'),
+            $items = $filter.parent().next().nextAll();
+
+        $dropdown.on('shown.bs.dropdown', function () {
+            $filter.focus();
+        });
+
+        $filter.keyup(function (e) {
+            var val = $filter.val(),
+                $target;
+
+            $items.show();
+
+            if (val !== '') {
+                $items.not(':contains("' + val + '")').hide();
+
+                if (e.which === 13) {
+                    $target = $items.filter('a:visible').eq(0);
+
+                    if ($target.length) {
+                        window.location.href = $target.attr('href');
+                    }
+                }
             }
         });
     };
