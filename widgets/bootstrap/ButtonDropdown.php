@@ -38,9 +38,14 @@ class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
     public $encodeLabel = false;
 
     /**
-     * @var bool
+     * @var bool whether the filter text field should be added to the dropdown
      */
     public $showFilter = false;
+
+    /**
+     * @var string the filter text field placeholder text
+     */
+    public $filterPlaceholder;
 
     /**
      * Sets default label and adds filter text field.
@@ -56,8 +61,12 @@ class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
         }
 
         if ($this->showFilter) {
+            if ($this->filterPlaceholder === null) {
+                $this->filterPlaceholder = Yii::t('skeleton', 'Filter');
+            }
+
             array_unshift($this->dropdown['items'],
-                ['label' => '<input type="text" class="dropdown-filter form-control">', 'encode' => false],
+                ['label' => Html::input('input', null, ['class' => 'dropdown-filter form-control', 'placeholder' => $this->filterPlaceholder]), 'encode' => false],
                 '-'
             );
         }

@@ -71,6 +71,7 @@ return [
     'Enter the username of the user you want to make owner of this site. This will remove all your admin privileges and there is no going back. Please be certain!' => '',
     'Enter your email address and we will send you another email to confirm your account.' => '',
     'Enter your email address and we will send you instructions how to reset your password.' => '',
+    'Filter' => '',
     'First name' => '',
     'Here is your login information for {name}.' => '',
     'Hi {name}, ' => '',

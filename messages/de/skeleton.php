@@ -71,6 +71,7 @@ return [
     'Enter the username of the user you want to make owner of this site. This will remove all your admin privileges and there is no going back. Please be certain!' => 'Bitte geben Sie den Benutzernamen des Benutzers an, den Sie zum Besitzer der Webseite machen wollen. Wichtig: Durch einen Transfer des Webseitenbesitzers verlieren Sie alle globalen Administrationsrechte!',
     'Enter your email address and we will send you another email to confirm your account.' => 'Bitte geben Sie Ihre Emailadresse an. Sie erhalten daraufhin in Kürze eine Email, mit der Sie Ihren Account bestätigen können.',
     'Enter your email address and we will send you instructions how to reset your password.' => 'Bitte geben Sie Ihre Emailadresse an. Sie erhalten daraufhin in Kürze eine Email, mit der Sie Ihre Passwort zurücksetzen können.',
+    'Filter' => 'Filter',
     'First name' => 'Vorname',
     'Here is your login information for {name}.' => 'Hier sind ihre Login Informationen für {name}.',
     'Hi {name}, ' => 'Hallo {name}',
