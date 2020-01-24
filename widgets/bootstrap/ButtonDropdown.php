@@ -66,7 +66,7 @@ class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
             }
 
             array_unshift($this->dropdown['items'],
-                ['label' => Html::input('input', null, ['class' => 'dropdown-filter form-control', 'placeholder' => $this->filterPlaceholder]), 'encode' => false],
+                ['label' => Html::tag('input', null, ['class' => 'dropdown-filter form-control', 'placeholder' => $this->filterPlaceholder]), 'encode' => false],
                 '-'
             );
         }
