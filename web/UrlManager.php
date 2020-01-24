@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\web;
 
 use Yii;
+use yii\web\UrlRule;
 
 /**
  * Class UrlManager
@@ -215,6 +216,29 @@ class UrlManager extends \yii\web\UrlManager
         ]));
 
         return parent::parseRequest($event->request);
+    }
+
+    /**
+     * Generates a list of rule parameters at given position. This can be used to validate dynamic slugs, etc.
+     * @param int $position
+     * @return array
+     */
+    public function getImmutableRuleParams($position = 0)
+    {
+        $params = [];
+        foreach (Yii::$app->getUrlManager()->rules as $rule) {
+            if ($rule instanceof UrlRule) {
+                $param = explode('/', $rule->name)[$position];
+                if (preg_match('/^\w+$/', $param)) {
+                    $params[] = $param;
+                } elseif (preg_match('/^<\w+:([\w|]+)>$/', $param, $matches)) {
+                    $params = array_merge($params, explode('|', $matches[1]));
+                }
+            }
+        }
+
+        return array_unique($params);
+
     }
 
     /**
