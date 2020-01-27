@@ -20,6 +20,28 @@ class ActiveQuery extends \yii\db\ActiveQuery
     protected static $_status;
 
     /**
+     * Adds columns with model prefix.
+     *
+     * @param array $columns
+     * @return $this
+     */
+    public function addSelectPrefixed($columns)
+    {
+        foreach ($this->select as $key => $attribute) {
+            if (in_array($attribute, $columns)) {
+                unset($this->select[$key]);
+            }
+        }
+
+        foreach ($columns as $column) {
+            $this->select[] = $this->getModelInstance()::tableName() . ".[[{$column}]]";
+        }
+
+        return $this;
+    }
+
+    /**
+     * @todo this is not working for prefixed columns.
      * @return $this
      */
     public function replaceI18nAttributes()
@@ -53,6 +75,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
 
     /**
      * Alters where statement and sets static status that can be used by related queries.
+     *
      * @param int $status
      * @return $this
      */
