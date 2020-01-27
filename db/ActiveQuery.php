@@ -27,6 +27,10 @@ class ActiveQuery extends \yii\db\ActiveQuery
      */
     public function addSelectPrefixed($columns)
     {
+        if (!is_array($this->select)) {
+            $this->select = $this->normalizeSelect($this->select);
+        }
+
         foreach ($this->select as $key => $attribute) {
             if (in_array($attribute, $columns)) {
                 unset($this->select[$key]);
@@ -41,8 +45,8 @@ class ActiveQuery extends \yii\db\ActiveQuery
     }
 
     /**
-     * @todo this is not working for prefixed columns.
      * @return $this
+     * @todo this is not working for prefixed columns.
      */
     public function replaceI18nAttributes()
     {
