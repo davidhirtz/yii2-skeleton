@@ -4,6 +4,7 @@ namespace davidhirtz\yii2\skeleton\db;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Yii;
+use yii\db\Connection;
 
 /**
  * Class ActiveRecord
@@ -13,6 +14,7 @@ use Yii;
  * @method ActiveQuery hasOne($class, array $link)
  * @method static ActiveRecord|\yii\db\ActiveRecord findOne($condition)
  * @method static ActiveRecord[] findAll($condition)
+ * @method static Connection getDb()
  */
 class ActiveRecord extends \yii\db\ActiveRecord
 {
