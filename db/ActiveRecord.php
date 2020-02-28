@@ -37,17 +37,17 @@ class ActiveRecord extends \yii\db\ActiveRecord
     public $i18nAttributes = [];
 
     /**
-     * @var array containing cached active attributes, reset on setScenario
+     * @var array {@see ActiveRecord::activeAttributes()}
      */
     private $_activeAttributes;
 
     /**
-     * @var array containing cached safe attributes, reset on setScenario
+     * @var array {@see ActiveRecord::safeAttributes()}
      */
     private $_safeAttributes;
 
     /**
-     * @var array containing cached scenarios
+     * @var array {@see ActiveRecord::scenarios()}
      */
     private $_scenarios;
 
@@ -120,16 +120,23 @@ class ActiveRecord extends \yii\db\ActiveRecord
      * @param array $columns the column names
      * @param array $rows the rows to be batch inserted into the table
      * @return int number of rows affected by the execution.
-     * @throws \yii\db\Exception
      */
-    public static function batchInsert($columns, $rows)
+    public static function batchInsert($columns, $rows = null)
     {
+        if ($rows === null) {
+            $rows = $columns;
+            $columns = array_keys($columns);
+        }
+
         return static::getDb()->createCommand()
             ->batchInsert(static::tableName(), $columns, $rows)
             ->execute();
     }
 
     /**
+     * This method is in place to avoid endless calls to {@link \yii\db\ActiveRecord::activeAttributes()}.
+     * If this method's results are cached in a future Yii2 version, this can be removed.
+     *
      * @return array
      */
     public function activeAttributes()
@@ -142,6 +149,9 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
+     * This method is in place to avoid endless calls to {@link \yii\db\ActiveRecord::safeAttributes()}.
+     * If this method's results are cached in a future Yii2 version, this can be removed.
+     *
      * @return array
      */
     public function safeAttributes()
@@ -154,6 +164,9 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
+     * This method is in place to avoid endless calls to {@link \yii\db\ActiveRecord::scenarios()}.
+     * If this method's results are cached in a future Yii2 version, this can be removed.
+     *
      * @return array
      */
     public function scenarios()
@@ -170,7 +183,10 @@ class ActiveRecord extends \yii\db\ActiveRecord
      */
     public function setScenario($value)
     {
-        $this->_activeAttributes = $this->_safeAttributes = null;
+        $this->_activeAttributes = null;
+        $this->_safeAttributes = null;
+        $this->_scenarios = null;
+
         parent::setScenario($value);
     }
 
