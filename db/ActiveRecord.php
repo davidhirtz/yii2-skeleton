@@ -125,7 +125,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     {
         if ($rows === null) {
             $rows = $columns;
-            $columns = array_keys($columns);
+            $columns = array_keys(current($columns));
         }
 
         return static::getDb()->createCommand()
