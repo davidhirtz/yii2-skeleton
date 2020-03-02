@@ -99,21 +99,32 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
+     * Updates the order attribute of given models by given order.
+     *
+     * ```php
+     * davidhirtz\yii2\skeleton\db\ActiveRecord::updatePosition($asset, array_flip(Yii::$app->getRequest()->post('param')))
+     * ```
+     *
      * @param ActiveRecord[] $models
-     * @param array $order
-     * @param string $attribute
-     * @param string $index
+     * @param array $order containing the primary keys in new order
+     * @param string $attribute the order attribute
+     * @param string|null $index key attribute name
+     * @return int
      */
     public static function updatePosition($models, $order = [], $attribute = 'position', $index = null)
     {
+        $rowsUpdated = 0;
+
         foreach ($models as $model) {
             $primaryKey = $model->getPrimaryKey(true);
             $position = ArrayHelper::getValue($order, $index ? $primaryKey[$index] : current($primaryKey), 0) + 1;
 
             if ($position != $model->getAttribute($attribute)) {
-                $model::updateAll([$attribute => $position], $primaryKey);
+                $rowsUpdated += $model::updateAll([$attribute => $position], $primaryKey);
             }
         }
+
+        return $rowsUpdated;
     }
 
     /**
