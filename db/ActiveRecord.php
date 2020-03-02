@@ -99,7 +99,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
-     * Updates the order attribute of given models by given order.
+     * Updates the order attribute of models by given order.
      *
      * ```php
      * davidhirtz\yii2\skeleton\db\ActiveRecord::updatePosition($asset, array_flip(Yii::$app->getRequest()->post('param')))
