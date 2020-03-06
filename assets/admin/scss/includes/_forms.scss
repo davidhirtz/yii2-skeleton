@@ -76,14 +76,25 @@
   @include box-shadow($input-box-shadow);
   @include transition($input-transition);
 
+  // Customize the `:focus` state to imitate native WebKit styles.
+  &:focus {
+    color: $input-focus-color;
+    background-color: $input-focus-bg;
+    border-color: $input-focus-border-color;
+    outline: 0;
+    // Avoid using mixin so we can pass custom focus shadow properly
+    @if $enable-shadows {
+      box-shadow: $input-box-shadow, $input-focus-box-shadow;
+    } @else {
+      box-shadow: $input-focus-box-shadow;
+    }
+  }
+
   // Unstyle the caret on `<select>`s in IE10+.
   &::-ms-expand {
     background-color: transparent;
     border: 0;
   }
-
-  // Customize the `:focus` state to imitate native WebKit styles.
-  @include form-control-focus();
 
   // Placeholder
   &::placeholder {
@@ -173,7 +184,7 @@ select.form-control {
   background-color: transparent;
   border: solid transparent;
   border-width: $input-border-width 0;
-  outline: none!important;
+  outline: none !important;
 
   &.form-control-sm,
   &.form-control-lg {
@@ -388,6 +399,10 @@ input[type="button"], input[type="submit"], button {
 
 .btn + .btn {
   margin-left: 5px;
+}
+
+.btn-list .btn {
+  margin: 5px 5px 0 0;
 }
 
 .btn-submit {
