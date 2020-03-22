@@ -379,6 +379,16 @@ class GridView extends \yii\grid\GridView
     }
 
     /**
+     * @param ActiveRecord $model
+     * @param array $params
+     * @return array
+     */
+    protected function getRoute($model, $params = []): array
+    {
+        return array_merge(['update', 'id' => $model->getPrimaryKey()], $params);
+    }
+
+    /**
      * @return ActiveRecord
      */
     public function getModel()

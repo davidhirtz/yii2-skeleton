@@ -5,6 +5,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid\base;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\GridView;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\StatusGridViewTrait;
 use davidhirtz\yii2\timeago\Timeago;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
@@ -15,6 +16,8 @@ use Yii;
  */
 class UserGridView extends GridView
 {
+    use StatusGridViewTrait;
+
     /**
      * @var array
      */
@@ -75,22 +78,6 @@ class UserGridView extends GridView
     public function createUserButton()
     {
         return Html::a(Html::iconText('user-plus', Yii::t('skeleton', 'New User')), ['create'], ['class' => 'btn btn-primary']);
-    }
-
-    /**
-     * @return array
-     */
-    public function statusColumn()
-    {
-        return [
-            'contentOptions' => ['class' => 'text-center'],
-            'content' => function (User $user) {
-                return Icon::tag($user->getStatusIcon(), [
-                    'data-toggle' => 'tooltip',
-                    'title' => $user->getStatusName()
-                ]);
-            }
-        ];
     }
 
     /**
@@ -177,5 +164,13 @@ class UserGridView extends GridView
                 return Html::buttons($buttons);
             }
         ];
+    }
+
+    /**
+     * @return \davidhirtz\yii2\skeleton\db\ActiveRecord|User
+     */
+    public function getModel()
+    {
+        return User::instance();
     }
 }

@@ -8,7 +8,6 @@ use davidhirtz\yii2\skeleton\models\User;
 /**
  * Class UserQuery.
  * @package davidhirtz\yii2\skeleton\models\queries
- * @see UserQuery
  *
  * @method User[] all($db = null)
  * @method User one($db = null)
