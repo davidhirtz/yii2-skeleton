@@ -41,14 +41,6 @@ class Application extends \yii\web\Application
             $config['basePath'] = dirname($_SERVER['SCRIPT_FILENAME'], 2);
         }
 
-        // Makes sure class names don't start with backslash.
-        if (isset($config['widgets'])) {
-            $keys = array_map(function ($k) {
-                return ltrim($k, '\\');
-            }, array_keys($config['widgets']));
-            $config['widgets'] = array_combine($keys, $config['widgets']);
-        }
-
         $config = Bootstrap::preInit($config);
         parent::preInit($config);
     }
@@ -59,7 +51,12 @@ class Application extends \yii\web\Application
     public function coreComponents()
     {
         return array_merge(parent::coreComponents(), [
-            'request' => ['class' => 'davidhirtz\yii2\skeleton\web\Request'],
+            'request' => [
+                'class' => 'davidhirtz\yii2\skeleton\web\Request',
+            ],
+            'user' => [
+                'class' => 'davidhirtz\yii2\skeleton\web\User',
+            ],
         ]);
     }
 

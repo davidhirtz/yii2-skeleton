@@ -94,9 +94,6 @@ class Bootstrap implements BootstrapInterface
                 'urlManager' => [
                     'class' => 'davidhirtz\yii2\skeleton\web\UrlManager',
                 ],
-                'user' => [
-                    'class' => 'davidhirtz\yii2\skeleton\web\User',
-                ],
                 'view' => [
                     'class' => 'davidhirtz\yii2\skeleton\web\View',
                 ],
