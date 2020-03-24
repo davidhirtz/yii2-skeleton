@@ -12,36 +12,38 @@ use yii\helpers\ArrayHelper;
 trait BootstrapTrait
 {
     /**
+     * Extends given application component.
+     *
      * @param \yii\base\Application $app
      * @param string $id
-     * @param array $config
+     * @param array $definition
      */
-    public function extendComponent($app, $id, $config)
+    public function extendComponent($app, $id, $definition)
     {
-        $components = isset($app->getComponents()[$id]) ? $app->getComponents()[$id] : [];
-        $app->setComponents([$id => ArrayHelper::merge($config, $components)]);
+        $app->set($id, ArrayHelper::merge($app->getComponents()[$id] ?? [], $definition));
     }
 
     /**
+     * Extends multiple application components.
+     *
      * @param \yii\base\Application $app
      * @param array $components
      */
     public function extendComponents($app, $components)
     {
-        foreach ($components as $id => $config) {
-            $this->extendComponent($app, $id, $config);
+        foreach ($components as $id => $definition) {
+            $this->extendComponent($app, $id, $definition);
         }
     }
 
     /**
      * @param \yii\base\Application $app
      * @param string $id
-     * @param array $config
+     * @param array $module
      */
-    public function extendModule($app, $id, $config)
+    public function extendModule($app, $id, $module)
     {
-        $module = isset($app->getModules()[$id]) ? $app->getModules()[$id] : [];
-        $app->setModule($id, ArrayHelper::merge($config, $module));
+        $app->setModule($id, ArrayHelper::merge($app->getModules()[$id] ?? [], $module));
     }
 
     /**
