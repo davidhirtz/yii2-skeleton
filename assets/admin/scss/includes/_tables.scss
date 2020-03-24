@@ -213,12 +213,8 @@ tr.is-selected {
   }
 }
 
-.is-selected .is-selected-hidden, .is-selected-block {
+.is-selected .is-selected-hidden, tr:not(.is-selected) .is-selected-block {
   display: none;
-}
-
-.is-selected .is-selected-block {
-  display: block;
 }
 
 tr.disabled {
