@@ -12,6 +12,11 @@ use Yii;
 class Application extends \yii\console\Application
 {
     /**
+     * @var string the namespace that command controller classes are located in.
+     */
+    public $controllerNamespace = 'app\\commands';
+    
+    /**
      * @param array $config
      * @throws \yii\base\InvalidConfigException
      */
