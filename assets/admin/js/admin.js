@@ -116,8 +116,10 @@ $(function () {
                 }
             }
         });
-    })
-        .filter(':visible').trigger('change');
+
+        Skeleton.toggleHr();
+
+    }).filter(':visible').trigger('change');
 
     /**
      * Toggle form groups based on "data-form-toggle" tag.
@@ -139,8 +141,10 @@ $(function () {
         for (i = 0; i < targets.length; i++) {
             $(targets[i].match(/^[.#]/) ? targets[i] : ("#" + targets[i])).html(values[i]);
         }
-    })
-        .filter(':visible').trigger('change');
+
+        Skeleton.toggleHr();
+
+    }).filter(':visible').trigger('change');
 
     /**
      * Signup form.
@@ -251,6 +255,17 @@ var Skeleton = {
 
         $.ajax(data).done(function (html) {
             _.initContent($target.html($('<div>').html(html).find(target).html()));
+        });
+    },
+
+    /**
+     * Toggles <hr> based on visibility of neighbors.
+     */
+    toggleHr: function () {
+        $('hr').each(function () {
+            var $hr = $(this);
+            // noinspection JSCheckFunctionSignatures
+            $hr.toggle($hr.nextUntil('hr').filter(':visible').length > 0);
         });
     },
 
