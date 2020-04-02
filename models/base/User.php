@@ -399,7 +399,7 @@ abstract class User extends ActiveRecord
     /**
      * @return string
      */
-    public function getUsername(): string
+    public function getUsername()
     {
         return $this->name;
     }
