@@ -4,16 +4,14 @@ namespace davidhirtz\yii2\skeleton\models\base;
 
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
-use davidhirtz\yii2\datetime\DateTimeBehavior;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\datetime\DateTime;
-use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\helpers\Url;
 use Yii;
 
 /**
- * Class User.
+ * Class User
  * @package davidhirtz\yii2\skeleton\models\base
  *
  * @property integer $id
@@ -50,12 +48,22 @@ abstract class User extends ActiveRecord
     /**
      * @var int
      */
+    public $requireName = true;
+
+    /**
+     * @var int
+     */
     public $nameMinLength = 3;
 
     /**
      * @var int
      */
     public $nameMaxLength = 32;
+
+    /**
+     * @var string
+     */
+    public $namePattern = '/^\d*[a-z][a-z0-9\.-]*[a-z0-9]$/si';
 
     /**
      * @var int
@@ -65,43 +73,25 @@ abstract class User extends ActiveRecord
     /**
      * Constants.
      */
-    const STATUS_DISABLED = 0;
     const STATUS_ENABLED = 1;
 
     const GENDER_UNKNOWN = 0;
     const GENDER_FEMALE = 1;
     const GENDER_MALE = 2;
 
-    const NAME_VALIDATION_REGEXP = '/^\d*[a-z][a-z0-9\.-]*[a-z0-9]$/si';
-    const NAME_MAX_LENGTH = 32;
-
     const EMAIL_CONFIRMATION_CODE_LENGTH = 30;
     const PASSWORD_RESET_CODE_LENGTH = 30;
 
-    const BASE_UPLOAD_PATH = 'uploads/users/{id}/';
-    const PICTURE_UPLOAD_PATH = 'profile/';
-
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function behaviors(): array
     {
         return [
-            'DateTimeBehavior' => [
-                'class' => DateTimeBehavior::class,
-            ],
-            'TimestampBehavior' => [
-                'class' => TimestampBehavior::class,
-                'value' => function () {
-                    return new DateTime;
-                },
-            ],
+            'DateTimeBehavior' => 'davidhirtz\yii2\datetime\DateTimeBehavior',
+            'TimestampBehavior' => 'davidhirtz\yii2\skeleton\behaviors\TimestampBehavior',
         ];
     }
-
-    /***********************************************************************
-     * Validation.
-     ***********************************************************************/
 
     /**
      * @inheritdoc
@@ -111,11 +101,10 @@ abstract class User extends ActiveRecord
         return [
             [
                 ['name', 'email', 'password', 'city', 'country', 'first_name', 'last_name'],
-                'filter',
-                'filter' => 'trim',
+                'trim',
             ],
             [
-                ['status', 'name', 'email', 'language'],
+                ['status', 'email', 'language'],
                 'required',
             ],
             [
@@ -125,15 +114,19 @@ abstract class User extends ActiveRecord
             ],
             [
                 ['name'],
+                $this->requireName ? 'required' : 'safe',
+            ],
+            [
+                ['name'],
                 'string',
                 'min' => $this->nameMinLength,
-                'max' => max($this->nameMinLength, min($this->nameMaxLength, static::NAME_MAX_LENGTH)),
+                'max' => max($this->nameMinLength, $this->nameMaxLength),
                 'skipOnError' => true,
             ],
             [
                 ['name'],
                 'match',
-                'pattern' => static::NAME_VALIDATION_REGEXP,
+                'pattern' => $this->namePattern,
                 'message' => Yii::t('skeleton', 'Username must only contain alphanumeric characters.'),
                 'skipOnError' => true,
             ],
@@ -171,10 +164,12 @@ abstract class User extends ActiveRecord
             ],
             [
                 ['language'],
+                /** {@see \davidhirtz\yii2\skeleton\models\User::validateLanguage()} */
                 'validateLanguage',
             ],
             [
                 ['timezone'],
+                /** {@see \davidhirtz\yii2\skeleton\models\User::validateTimezone()} */
                 'validateTimezone',
             ],
         ];
@@ -212,30 +207,6 @@ abstract class User extends ActiveRecord
         }
     }
 
-    /***********************************************************************
-     * Relations.
-     ***********************************************************************/
-
-    /**
-     * @return UserQuery
-     */
-    public function getAdmin(): UserQuery
-    {
-        return $this->hasOne(User::class, ['id' => 'created_by_user_id']);
-    }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getAuthClients(): ActiveQuery
-    {
-        return $this->hasMany(AuthClient::class, ['user_id' => 'id']);
-    }
-
-    /***********************************************************************
-     * Events.
-     ***********************************************************************/
-
     /**
      * @return bool
      */
@@ -253,7 +224,19 @@ abstract class User extends ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
+     */
+    public function afterValidate()
+    {
+        if (!$this->name) {
+            $this->name = null;
+        }
+
+        parent::afterValidate();
+    }
+
+    /**
+     * @inheritDoc
      */
     public function beforeSave($insert): bool
     {
@@ -265,9 +248,21 @@ abstract class User extends ActiveRecord
         return parent::beforeSave($insert);
     }
 
-    /***********************************************************************
-     * Methods.
-     ***********************************************************************/
+    /**
+     * @return UserQuery
+     */
+    public function getAdmin(): UserQuery
+    {
+        return $this->hasOne(User::class, ['id' => 'created_by_user_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getAuthClients(): ActiveQuery
+    {
+        return $this->hasMany(AuthClient::class, ['user_id' => 'id']);
+    }
 
     /**
      * @return UserQuery
@@ -360,10 +355,6 @@ abstract class User extends ActiveRecord
             ])
             ->execute();
     }
-
-    /***********************************************************************
-     * Getters / setters.
-     ***********************************************************************/
 
     /**
      * @return bool
@@ -480,10 +471,6 @@ abstract class User extends ActiveRecord
         return !$this->isOwner() ? static::getStatuses()[$this->status]['icon'] : 'star';
     }
 
-    /***********************************************************************
-     * Active Record.
-     ***********************************************************************/
-
     /**
      * @inheritdoc
      */
@@ -517,7 +504,7 @@ abstract class User extends ActiveRecord
      */
     public function formName()
     {
-        return 'user';
+        return 'User';
     }
 
     /**

@@ -53,7 +53,7 @@ $this->setTitle(Yii::t('skeleton', 'Sign up'));
             <?php
             if ($user->isFacebookSignupEnabled()) {
                 ?>
-                <a href="<?= Url::to(['auth', 'client' => 'facebook']); ?>" class="list-group-item list-group-item-action">
+                <a href="<?= Url::to(['auth', 'authclient' => 'facebook']); ?>" class="list-group-item list-group-item-action">
                     <?= Icon::brand('facebook-f', ['class' => 'fa-fw']); ?>
                     <?= Yii::t('skeleton', 'Sign up with Facebook'); ?>
                 </a>

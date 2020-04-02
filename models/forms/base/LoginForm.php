@@ -125,6 +125,14 @@ class LoginForm extends Model
     }
 
     /**
+     * @return string
+     */
+    public function formName(): string
+    {
+        return 'Login';
+    }
+
+    /**
      * @inheritdoc
      */
     public function attributeLabels()

@@ -80,7 +80,6 @@ class AccountController extends Controller
         return [
             'auth' => [
                 'class' => 'yii\authclient\AuthAction',
-                'clientIdGetParamName' => 'client',
                 'successCallback' => [$this, 'onAuthSuccess'],
             ],
         ];

@@ -3,13 +3,12 @@
 namespace davidhirtz\yii2\skeleton\models\base;
 
 use davidhirtz\yii2\datetime\DateTime;
-use davidhirtz\yii2\datetime\DateTimeBehavior;
 use davidhirtz\yii2\skeleton\models\User;
 use Yii;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 
 /**
- * Class UserLogin.
+ * Class UserLogin
  * @package davidhirtz\yii2\skeleton\models\base
  *
  * @property string $id
@@ -44,9 +43,7 @@ class UserLogin extends ActiveRecord
     public function behaviors()
     {
         return [
-            'DateTimeBehavior' => [
-                'class' => DateTimeBehavior::class,
-            ],
+            'DateTimeBehavior' => 'davidhirtz\yii2\datetime\DateTimeBehavior',
         ];
     }
 
