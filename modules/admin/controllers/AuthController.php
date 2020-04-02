@@ -87,7 +87,7 @@ class AuthController extends Controller
         $rbac->invalidateCache();
 
         if ($rbac->getAssignment($role->name, $user->id)) {
-            $this->error( Yii::t('skeleton', 'This permission was already assigned to user {name}.', [
+            $this->error(Yii::t('skeleton', 'This permission was already assigned to user {name}.', [
                 'name' => $user->getUsername(),
             ]));
         } else {
@@ -129,10 +129,6 @@ class AuthController extends Controller
 
         return $this->redirect(['user', 'id' => $user->id]);
     }
-
-    /***********************************************************************
-     * Methods.
-     ***********************************************************************/
 
     /**
      * @param User $user

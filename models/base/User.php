@@ -401,7 +401,7 @@ abstract class User extends ActiveRecord
      */
     public function getUsername(): string
     {
-        return $this->name;
+        return $this->name ?: Yii::t('skeleton', 'User');
     }
 
     /**
