@@ -5,6 +5,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
+use Yii;
 use yii\helpers\Html;
 
 /**
@@ -47,7 +48,7 @@ class UserLoginGridView extends GridView
                     'attribute' => 'user',
                     'visible' => !$this->user,
                     'content' => function (UserLogin $login) {
-                        return $login->user ? Html::a($login->user->getUsername(), ['view', 'id' => $login->user_id]) : 'N/A';
+                        return $login->user ? Html::a(($name = $login->user->getUsername()) ?: Html::tag('span', Yii::t('skeleton', 'User'), ['class' => !$name ? 'text-muted' : null]), ['view', 'id' => $login->user_id]) : '';
                     }
                 ],
                 [
