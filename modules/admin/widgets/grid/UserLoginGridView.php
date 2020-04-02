@@ -16,6 +16,11 @@ use yii\helpers\Html;
 class UserLoginGridView extends GridView
 {
     /**
+     * @var User
+     */
+    public $user;
+
+    /**
      * Sets default columns.
      */
     public function init()
@@ -40,12 +45,9 @@ class UserLoginGridView extends GridView
                 ],
                 [
                     'attribute' => 'user',
-                    'visible' => !$this->model,
+                    'visible' => !$this->user,
                     'content' => function (UserLogin $login) {
-                        return $login->user ? Html::a($login->user->getUsername(), [
-                            'view',
-                            'id' => $login->user_id
-                        ]) : 'N/A';
+                        return $login->user ? Html::a($login->user->getUsername(), ['view', 'id' => $login->user_id]) : 'N/A';
                     }
                 ],
                 [

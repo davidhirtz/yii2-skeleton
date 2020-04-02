@@ -21,6 +21,6 @@ $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['/admin/user/index']);
 <?= Panel::widget([
     'content' => UserLoginGridView::widget([
         'dataProvider' => $provider,
-        'model' => $user,
+        'user' => $user,
     ]),
 ]); ?>

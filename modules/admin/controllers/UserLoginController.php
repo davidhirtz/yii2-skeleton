@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
+use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use yii\data\ActiveDataProvider;
@@ -46,7 +47,7 @@ class UserLoginController extends Controller
                 ->orderBy(['created_at' => SORT_DESC])
                 ->filterWhere(['ip' => $q])
                 ->with([
-                    'user' => function (\davidhirtz\yii2\skeleton\models\queries\UserQuery $query) {
+                    'user' => function (UserQuery $query) {
                         $query->nameAttributesOnly();
                     }
                 ])
