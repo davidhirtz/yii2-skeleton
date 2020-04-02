@@ -4,12 +4,12 @@ namespace davidhirtz\yii2\skeleton\models\forms\base;
 
 use davidhirtz\yii2\skeleton\db\Identity;
 use davidhirtz\yii2\skeleton\models\UserLogin;
-use davidhirtz\yii2\datetime\DateTime;
 use Yii;
 
 /**
  * Class SignupForm.
  * @package davidhirtz\yii2\skeleton\models\forms\base
+ * @see \davidhirtz\yii2\skeleton\models\forms\SignupForm
  */
 class SignupForm extends Identity
 {
@@ -42,31 +42,17 @@ class SignupForm extends Identity
     public $ip;
 
     /**
+     * @var int
+     */
+    public $spamProtectionInSeconds = 120;
+
+    /**
      * Cookie name.
      */
     const SESSION_TOKEN_NAME = 'signup_token';
     const SESSION_TIMESTAMP_NAME = 'signup_timestamp';
-    const SESSION_MIN_TIME = 5;
+    const SESSION_MIN_TIME = 2;
     const SESSION_MAX_TIME = 1800;
-
-    /***********************************************************************
-     * Init.
-     ***********************************************************************/
-
-    /**
-     * @inheritdoc
-     */
-    public function init()
-    {
-        $this->on(static::EVENT_AFTER_INSERT, [$this, 'onAfterInsert']);
-        $this->on(static::EVENT_AFTER_INSERT, [$this, 'sendSignupEmail']);
-
-        parent::init();
-    }
-
-    /***********************************************************************
-     * Validation.
-     ***********************************************************************/
 
     /**
      * @inheritdoc
@@ -75,7 +61,7 @@ class SignupForm extends Identity
     {
         return array_merge(parent::rules(), [
             [
-                ['password', 'token'],
+                ['password'],
                 'required',
             ],
             [
@@ -83,13 +69,12 @@ class SignupForm extends Identity
                 'compare',
                 'compareValue' => 1,
                 'message' => Yii::t('skeleton', 'Please accept the terms of service and privacy policy.'),
+                'skipOnEmpty' => false,
             ],
             [
                 ['token'],
-                'compare',
-                'compareValue' => static::getSessionToken(),
-                'message' => Yii::t('skeleton', 'Sign up could not be completed, please try again.'),
-                'skipOnError' => true,
+                /** {@see \davidhirtz\yii2\skeleton\models\forms\SignupForm::validateToken()} */
+                'validateToken',
             ],
             [
                 ['honeypot'],
@@ -98,6 +83,43 @@ class SignupForm extends Identity
                 'message' => Yii::t('skeleton', 'Sign up could not be completed, please try again.'),
             ],
         ]);
+    }
+
+    /**
+     * Validates token.
+     */
+    public function validateToken()
+    {
+        if (($token = static::getSessionToken()) !== null) {
+            if ($this->token !== $token) {
+                $this->addError('token', Yii::t('skeleton', 'Sign up could not be completed, please try again.'));
+            }
+
+            if (!$this->hasErrors('token')) {
+                $timestamp = time() - Yii::$app->getSession()->get(static::SESSION_TIMESTAMP_NAME, 0);
+                if ($timestamp < static::SESSION_MIN_TIME && $timestamp > static::SESSION_MAX_TIME) {
+                    $this->addError('token', Yii::t('skeleton', 'Sign up could not be completed, please try again.'));
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks the IP address against the new signups.
+     */
+    public function validateIp()
+    {
+        if ($this->ip && $this->spamProtectionInSeconds > 0) {
+            $signup = UserLogin::find()
+                ->where(['type' => UserLogin::TYPE_SIGNUP, 'ip' => $this->ip])
+                ->orderBy(['created_at' => SORT_DESC])
+                ->limit(1)
+                ->one();
+
+            if ($signup && $signup->created_at->getTimestamp() > time() - $this->spamProtectionInSeconds) {
+                $this->addError('id', Yii::t('skeleton', 'You have just created a new user account. Please wait a few minutes!'));
+            }
+        }
     }
 
     /**
@@ -117,33 +139,7 @@ class SignupForm extends Identity
     public function afterValidate()
     {
         if (!$this->hasErrors()) {
-            /**
-             * Throw error if session timestamp is expired
-             */
-            $timestamp = time() - Yii::$app->getSession()->get(static::SESSION_TIMESTAMP_NAME, 0);
-
-            if ($timestamp < static::SESSION_MIN_TIME && $timestamp > static::SESSION_MAX_TIME) {
-                $this->addError('token', Yii::t('skeleton', 'Sign up could not be completed, please try again.'));
-            }
-
-            if ($this->ip) {
-                /**
-                 * TODO IP Ban check
-                 */
-
-                /**
-                 * Signup spam protection.
-                 * @var UserLogin $signup
-                 */
-                $signup = UserLogin::find()
-                    ->where(['type' => UserLogin::TYPE_SIGNUP, 'ip' => $this->ip])
-                    ->orderBy(['created_at' => SORT_DESC])
-                    ->one();
-
-                if ($signup && $signup->created_at > new DateTime('-2 mins')) {
-                    $this->addError(false, Yii::t('skeleton', 'You have just created a new user account. Please wait a few minutes!'));
-                }
-            }
+            $this->validateIp();
         }
 
         parent::afterValidate();
@@ -163,14 +159,26 @@ class SignupForm extends Identity
     }
 
     /**
-     * Saves login.
+     * @param bool $insert
+     * @param array $changedAttributes
      */
-    public function onAfterInsert()
+    public function afterSave($insert, $changedAttributes)
     {
-        // Reset signup token.
-        Yii::$app->getSession()->set(static::SESSION_TOKEN_NAME, '');
+        if (static::getSessionToken() !== null) {
+            Yii::$app->getSession()->set(static::SESSION_TOKEN_NAME, '');
+        }
 
-        // Login.
+        $this->createUserLogin();
+        $this->sendSignupEmail();
+
+        parent::afterSave($insert, $changedAttributes);
+    }
+
+    /**
+     * Creates user login record.
+     */
+    private function createUserLogin()
+    {
         if (Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
             $this->loginType = UserLogin::TYPE_SIGNUP;
             Yii::$app->getUser()->login($this);
@@ -178,8 +186,10 @@ class SignupForm extends Identity
     }
 
     /**
-     * @return string
-     * @throws \yii\base\Exception
+     * Generates a random token that is saved in the user session. Override this method to return
+     * null to disabled token check.
+     *
+     * @return string|null
      */
     public static function getSessionToken()
     {
@@ -196,17 +206,16 @@ class SignupForm extends Identity
 
     /**
      * @return bool
-     * @throws \yii\base\InvalidConfigException
      */
-    public function isFacebookSignupEnabled()
+    public function isFacebookSignupEnabled(): bool
     {
         return $this->enableFacebookSignup && Yii::$app->getAuthClientCollection()->hasClient('facebook');
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return array_merge(parent::attributeLabels(), [
             'terms' => Yii::t('skeleton', 'I accept the terms of service and privacy policy'),
