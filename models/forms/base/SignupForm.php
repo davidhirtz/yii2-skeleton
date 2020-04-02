@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\models\forms\base;
 
 use davidhirtz\yii2\skeleton\db\Identity;
+use davidhirtz\yii2\skeleton\helpers\StringHelper;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use Yii;
 
@@ -44,7 +45,7 @@ class SignupForm extends Identity
     /**
      * @var int
      */
-    public $spamProtectionInSeconds = 120;
+    public $spamProtectionInSeconds = 60;
 
     /**
      * Cookie name.
@@ -111,7 +112,7 @@ class SignupForm extends Identity
     {
         if ($this->ip && $this->spamProtectionInSeconds > 0) {
             $signup = UserLogin::find()
-                ->where(['type' => UserLogin::TYPE_SIGNUP, 'ip' => $this->ip])
+                ->where(['type' => UserLogin::TYPE_SIGNUP, 'ip' => StringHelper::ip2Long($this->ip)])
                 ->orderBy(['created_at' => SORT_DESC])
                 ->limit(1)
                 ->one();
@@ -129,6 +130,10 @@ class SignupForm extends Identity
     {
         if ($this->status === null) {
             $this->status = static::STATUS_ENABLED;
+        }
+
+        if(!$this->ip === null) {
+            $this->ip = Yii::$app->getRequest()->getUserIP();
         }
 
         // There were some cases in which the value set by the ajax call
