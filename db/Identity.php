@@ -50,7 +50,7 @@ class Identity extends User implements IdentityInterface
             ->selectIdentityAttributes()
             ->one();
 
-        if ($identity) {
+        if ($identity && $identity->timezone) {
             Yii::$app->timeZone = $identity->timezone;
         }
 
