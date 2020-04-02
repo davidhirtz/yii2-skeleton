@@ -127,7 +127,12 @@ class SignupForm extends Identity
      */
     public function beforeValidate(): bool
     {
-        $this->status = static::STATUS_ENABLED;
+        if ($this->status === null) {
+            $this->status = static::STATUS_ENABLED;
+        }
+
+        // There were some cases in which the value set by the ajax call
+        // contained a leading space....
         $this->token = trim($this->token);
 
         return parent::beforeValidate();
@@ -164,12 +169,14 @@ class SignupForm extends Identity
      */
     public function afterSave($insert, $changedAttributes)
     {
-        if (static::getSessionToken() !== null) {
-            Yii::$app->getSession()->set(static::SESSION_TOKEN_NAME, '');
-        }
+        if ($insert) {
+            if (static::getSessionToken() !== null) {
+                Yii::$app->getSession()->set(static::SESSION_TOKEN_NAME, '');
+            }
 
-        $this->createUserLogin();
-        $this->sendSignupEmail();
+            $this->createUserLogin();
+            $this->sendSignupEmail();
+        }
 
         parent::afterSave($insert, $changedAttributes);
     }
