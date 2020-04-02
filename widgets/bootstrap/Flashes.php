@@ -10,50 +10,79 @@ use yii\bootstrap4\Html;
  * Class Flashes.
  * @package davidhirtz\yii2\skeleton\widgets\bootstrap
  */
-class Flashes extends \yii\bootstrap4\Widget
+class Flashes extends \yii\base\Widget
 {
     /**
-     * @var array
+     * @var array containing message, leave empty for default implementation
      */
     public $alerts;
 
     /**
-     * Loads flash messages.
+     * @var array containing alert element HTML options
+     */
+    public $options = ['class' => 'alert'];
+
+    /**
+     * @var array containing wrapper element HTML options
+     */
+    public $wrapperOptions = [];
+
+    /**
+     * @var string the status css class prefix
+     */
+    public $statusCssClass = 'alert-';
+
+    /**
+     * Loads alerts.
      */
     public function init()
     {
         if ($this->alerts === null) {
             $this->alerts = Yii::$app->getSession()->getAllFlashes();
         }
+
+        parent::init();
     }
 
     /**
-     * Displays flash messages.
+     * Renders all alerts.
+     * @return string
      */
     public function run()
     {
+        $content = '';
+
         if ($this->alerts) {
             foreach ($this->alerts as $status => $alerts) {
                 foreach ((array)$alerts as $alert) {
                     foreach ((array)$alert as $message) {
-                        echo $this->renderAlert($status, $message);
+                        $content .= $this->renderAlert($status, $message);
                     }
                 }
             }
         }
+
+        if ($content) {
+            $tag = ArrayHelper::remove($this->wrapperOptions, 'tag', 'div');
+            return $this->wrapperOptions ? Html::tag($tag, $content, $this->wrapperOptions) : $content;
+        }
+
+        return '';
     }
 
     /**
+     * Renders alert.
+     *
      * @param string $status
-     * @param array|string $message
+     * @param string $message
      *
      * @return string
      */
     public function renderAlert($status, $message)
     {
         $tag = ArrayHelper::remove($this->options, 'tag', 'div');
-        $message = Html::tag('div', $message, ['class' => 'alert alert-' . $status]);
+        Html::addCssClass($this->options, $this->statusCssClass . $status);
 
-        return $this->options ? Html::tag($tag, $message, $this->options) : $message;
+        return Html::tag($tag, $message, $this->options);
     }
 }
