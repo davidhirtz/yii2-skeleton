@@ -2,6 +2,8 @@
 
 namespace davidhirtz\yii2\skeleton\models\base;
 
+use davidhirtz\yii2\datetime\Date;
+use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
@@ -22,6 +24,10 @@ use Yii;
  * @property string $password_salt
  * @property string $first_name
  * @property string $last_name
+ * @property Date $birthdate
+ * @property string $city
+ * @property string $country
+ * @property string $picture
  * @property string $language
  * @property string $timezone
  * @property string $email_confirmation_code
@@ -36,12 +42,9 @@ use Yii;
  * @method static \davidhirtz\yii2\skeleton\models\User findOne($condition)
  * @method static \davidhirtz\yii2\skeleton\models\User[] findAll($condition)
  *
- * @property \davidhirtz\yii2\skeleton\models\User $admin
- * @see \davidhirtz\yii2\skeleton\models\User::getAdmin()
- *
- * @property AuthClient[] $authClients
- * @see \davidhirtz\yii2\skeleton\models\User::getAuthClients()
- *
+ * @property \davidhirtz\yii2\skeleton\models\User $admin {@link \davidhirtz\yii2\skeleton\models\User::getAdmin()}
+ * @property AuthClient[] $authClients {@link \davidhirtz\yii2\skeleton\models\User::getAuthClients()}
+ * @property string $uploadPath
  */
 abstract class User extends ActiveRecord
 {
@@ -69,6 +72,11 @@ abstract class User extends ActiveRecord
      * @var int
      */
     public $passwordMinLength = 5;
+
+    /**
+     * @var string|bool set false to disabled profile pictures
+     */
+    private $_uploadPath = 'uploads/users/';
 
     /**
      * Constants.
@@ -249,6 +257,20 @@ abstract class User extends ActiveRecord
     }
 
     /**
+     * @inheritDoc
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        if (!$insert) {
+            if (isset($changedAttributes['picture'])) {
+                $this->deletePicture($changedAttributes['picture']);
+            }
+        }
+
+        parent::afterSave($insert, $changedAttributes);
+    }
+
+    /**
      * @return UserQuery
      */
     public function getAdmin(): UserQuery
@@ -357,6 +379,16 @@ abstract class User extends ActiveRecord
     }
 
     /**
+     * @param string $picture
+     */
+    public function deletePicture($picture)
+    {
+        if ($picture) {
+            FileHelper::removeFile($this->getUploadPath() . $picture);
+        }
+    }
+
+    /**
      * @return bool
      */
     public function isOwner(): bool
@@ -409,11 +441,7 @@ abstract class User extends ActiveRecord
      */
     public function getEmailConfirmationUrl(): string
     {
-        return $this->email_confirmation_code ? Url::to([
-            'account/confirm',
-            'email' => $this->email,
-            'code' => $this->email_confirmation_code
-        ], true) : null;
+        return $this->email_confirmation_code ? Url::to(['account/confirm', 'email' => $this->email, 'code' => $this->email_confirmation_code], true) : null;
     }
 
     /**
@@ -421,11 +449,7 @@ abstract class User extends ActiveRecord
      */
     public function getPasswordResetUrl(): string
     {
-        return $this->password_reset_code ? Url::to([
-            'account/reset',
-            'email' => $this->email,
-            'code' => $this->password_reset_code
-        ], true) : null;
+        return $this->password_reset_code ? Url::to(['account/reset', 'email' => $this->email, 'code' => $this->password_reset_code], true) : null;
     }
 
     /**
@@ -436,6 +460,30 @@ abstract class User extends ActiveRecord
     {
         $date = new \DateTime('now');
         return 'GMT ' . $date->format('P');
+    }
+
+    /**
+     * @return bool|false
+     */
+    public function getUploadPath()
+    {
+        return $this->_uploadPath ? (Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $this->_uploadPath) : false;
+    }
+
+    /**
+     * @param string|false $uploadPath
+     */
+    public function setUploadPath($uploadPath)
+    {
+        $this->_uploadPath = trim($uploadPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * @return bool|false
+     */
+    public function getBaseUrl()
+    {
+        return str_replace(DIRECTORY_SEPARATOR, '/', $this->_uploadPath);
     }
 
     /**

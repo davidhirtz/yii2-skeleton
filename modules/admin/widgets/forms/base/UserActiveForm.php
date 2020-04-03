@@ -4,6 +4,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms\base;
 
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
+use davidhirtz\yii2\skeleton\widgets\forms\CountryDropdown;
 use davidhirtz\yii2\skeleton\widgets\forms\LanguageDropdown;
 use davidhirtz\yii2\skeleton\widgets\forms\TimezoneDropdown;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
@@ -17,21 +18,25 @@ use yii\helpers\ArrayHelper;
  */
 class UserActiveForm extends ActiveForm
 {
+    /**
+     * @var array
+     */
     public $fields = [
-        ['status'],
-        ['name'],
+        'status',
+        'name',
         ['email', 'email'],
         ['newPassword', 'password'],
         ['repeatPassword', 'password'],
-        ['oldPassword'],
-        ['-'],
+        'oldPassword',
+        '-',
         ['language', LanguageDropdown::class],
         ['timezone', TimezoneDropdown::class],
-        ['-'],
-        ['first_name'],
-        ['last_name', 'text'],
-        ['city', 'text'],
-        ['country'],
+        ['upload', 'fileInput'],
+        '-',
+        'first_name',
+        'last_name',
+        'city',
+        ['country', CountryDropdown::class],
         ['sendEmail', 'checkbox'],
     ];
 

@@ -2,7 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\controllers;
 
-use davidhirtz\yii2\skeleton\auth\clients\Facebook;
+use davidhirtz\yii2\skeleton\auth\clients\ClientInterface;
 use davidhirtz\yii2\skeleton\db\Identity;
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\forms\AccountConfirmForm;
@@ -49,7 +49,7 @@ class AccountController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['deauthorize', 'delete', 'logout', 'update'],
+                'only' => ['deauthorize', 'delete', 'logout', 'picture', 'update'],
                 'rules' => [
                     [
                         'allow' => true,
@@ -61,6 +61,7 @@ class AccountController extends Controller
                 'class' => VerbFilter::class,
                 'actions' => [
                     'deauthorize' => ['post'],
+                    'picture' => ['post'],
                     'delete' => ['post'],
                     'logout' => ['post'],
                 ],
@@ -127,7 +128,6 @@ class AccountController extends Controller
      * The token will only be every five minutes, to prevent multiple signups within one session.
      *
      * @return string
-     * @throws \yii\base\Exception
      */
     public function actionToken()
     {
@@ -319,7 +319,6 @@ class AccountController extends Controller
         $user = UserForm::findOne(Yii::$app->getUser()->getId());
 
         if ($user->load(Yii::$app->getRequest()->post())) {
-
             if ($user->update()) {
                 $this->success(Yii::t('skeleton', 'Your account was updated.'));
             }
@@ -337,13 +336,29 @@ class AccountController extends Controller
     }
 
     /**
-     * Delete.
-     * @return string
+     * Deletes profile picture.
+     * @return \yii\web\Response
+     */
+    public function actionPicture()
+    {
+        $user = UserForm::findOne(Yii::$app->getUser()->getId());
+        $user->picture = null;
+
+        if ($user->update()) {
+            $this->success(Yii::t('skeleton', 'Your account was updated.'));
+        }
+
+        return $this->redirect(['update']);
+    }
+
+    /**
+     * Deletes user account.
+     * @return \yii\web\Response
      */
     public function actionDelete()
     {
         $form = new DeleteForm([
-            'model' => Yii::$app->getUser()->getIdentity(),
+            'model' => UserForm::findOne(Yii::$app->getUser()->getId()),
         ]);
 
         if ($form->load(Yii::$app->getRequest()->post()) && $form->delete()) {
@@ -362,7 +377,7 @@ class AccountController extends Controller
      *
      * @param string $id
      * @param string $name
-     * @return string
+     * @return \yii\web\Response
      */
     public function actionDeauthorize($id, $name)
     {
@@ -394,7 +409,7 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Facebook $client
+     * @param ClientInterface $client
      * @return string
      * @see \yii\authclient\AuthAction::$successCallback
      */
@@ -409,9 +424,7 @@ class AccountController extends Controller
             ->one();
 
         if (Yii::$app->getUser()->getIsGuest()) {
-
             if ($auth) {
-
                 // Login
                 $user = Identity::findIdentity($auth->user_id);
 
@@ -428,7 +441,6 @@ class AccountController extends Controller
                 Yii::$app->getUser()->login($user, $user->cookieLifetime);
 
             } else {
-
                 // Signup
                 if (!Yii::$app->getUser()->isSignupEnabled()) {
                     $this->error(Yii::t('skeleton', 'Sorry, signing up is currently disabled!'));
@@ -445,7 +457,6 @@ class AccountController extends Controller
                 }
 
                 $user = new AuthClientSignupForm;
-
                 $user->setAttributes($client->getSafeUserAttributes());
                 $user->loginType = $client->getName();
 

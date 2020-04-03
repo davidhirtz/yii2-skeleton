@@ -2,8 +2,10 @@
 
 namespace davidhirtz\yii2\skeleton\models\forms\base;
 
+use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use davidhirtz\yii2\skeleton\models\User;
 use Yii;
+use yii\web\UploadedFile;
 
 /**
  * Class UserForm.
@@ -29,6 +31,21 @@ class UserForm extends User
     public $oldEmail;
 
     /**
+     * @var UploadedFile
+     */
+    public $upload;
+
+    /**
+     * @var array
+     */
+    public $uploadExtensions = ['gif', 'jpg', 'jpeg', 'png'];
+
+    /**
+     * @var bool
+     */
+    public $uploadCheckExtensionByMimeType = true;
+
+    /**
      * @inheritdoc
      */
     public function rules(): array
@@ -46,6 +63,7 @@ class UserForm extends User
             ],
             [
                 ['newPassword'],
+                /** {@see \davidhirtz\yii2\skeleton\models\forms\UserForm::validateNewPassword()} */
                 'validateNewPassword',
                 'skipOnError' => true,
             ],
@@ -53,19 +71,26 @@ class UserForm extends User
                 ['timezone'],
                 'required',
             ],
+            [
+                ['upload'],
+                'file',
+                'checkExtensionByMimeType' => $this->uploadCheckExtensionByMimeType,
+                'extensions' => $this->uploadExtensions,
+            ],
         ]);
     }
 
     /**
-     * @return bool
+     * @inheritDoc
      */
-    public function validateNewPassword(): bool
+    public function beforeValidate(): bool
     {
-        return !$this->validatePassword($this->oldPassword) ? $this->addInvalidAttributeError('oldPassword') : true;
+        $this->upload = $this->getUploadPath() ? UploadedFile::getInstance($this, 'upload') : null;
+        return parent::beforeValidate();
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function afterFind()
     {
@@ -87,31 +112,54 @@ class UserForm extends User
             $this->generatePasswordHash($this->newPassword);
         }
 
+        if ($this->upload) {
+            $this->generatePictureFilename();
+        }
+
         return parent::beforeSave($insert);
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function afterSave($insert, $changedAttributes)
     {
         if (!$insert) {
+            $session = Yii::$app->getSession();
+
             if (array_key_exists('email', $changedAttributes)) {
-                if (!Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
-                    Yii::$app->getUser()->logout(false);
-                    Yii::$app->getSession()->addFlash('success', Yii::t('skeleton', 'Please check your emails to confirm your new email address!'));
+                $user = Yii::$app->getUser();
+
+                if (!$user->isUnconfirmedEmailLoginEnabled()) {
+                    $user->logout(false);
+
+                    if ($session) {
+                        $session->addFlash('success', Yii::t('skeleton', 'Please check your emails to confirm your new email address!'));
+                    }
                 }
 
                 $this->sendEmailConfirmationEmail();
             }
 
             if (isset($changedAttributes['password'])) {
+                $this->deleteActiveSessions($session ? $session->getId() : null);
                 $this->deleteAuthKeys();
-                $this->deleteActiveSessions(Yii::$app->getSession()->getId());
             }
         }
 
+        if ($this->upload) {
+            $this->savePictureUpload();
+        }
+
         parent::afterSave($insert, $changedAttributes);
+    }
+
+    /**
+     * @return bool
+     */
+    public function validateNewPassword(): bool
+    {
+        return !$this->validatePassword($this->oldPassword) ? $this->addInvalidAttributeError('oldPassword') : true;
     }
 
     /**
@@ -124,6 +172,35 @@ class UserForm extends User
             ->setFrom(Yii::$app->params['email'])
             ->setTo($this->email)
             ->send();
+    }
+
+    /**
+     * @throws \yii\base\Exception
+     */
+    public function savePictureUpload()
+    {
+        if (FileHelper::createDirectory($uploadPath = $this->getUploadPath())) {
+            $this->upload->saveAs($uploadPath . $this->picture);
+        }
+    }
+
+    /**
+     * Generates filename for picture upload.
+     */
+    public function generatePictureFilename()
+    {
+        $this->picture = FileHelper::generateRandomFilename($this->upload->extension ?? null, 12);
+        $this->generatePictureFilenameInternal();
+    }
+
+    /**
+     * Makes sure the generated picture filename is not used already.
+     */
+    private function generatePictureFilenameInternal()
+    {
+        if (is_file($this->getUploadPath() . $this->picture)) {
+            $this->generatePictureFilename();
+        }
     }
 
     /**
@@ -143,6 +220,7 @@ class UserForm extends User
                 'newPassword',
                 'oldPassword',
                 'timezone',
+                'upload',
             ],
         ];
     }

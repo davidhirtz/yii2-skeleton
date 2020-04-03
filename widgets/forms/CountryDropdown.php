@@ -27,12 +27,12 @@ class CountryDropdown extends InputWidget
      * @var bool
      */
     public $lowerCaseCodes = false;
-    
+
     /**
      * @var array
      */
     public $options = ['class' => 'form-control'];
-    
+
     /**
      * @var array
      */
@@ -301,8 +301,8 @@ class CountryDropdown extends InputWidget
      */
     public function run()
     {
-        if ($this->allowEmpty) {
-            ArrayHelper::setDefaultValue($this->options, 'prompt', '');
+        if ($this->allowEmpty && !isset($this->options['prompt'])) {
+            $this->options['prompt'] = '';
         }
 
         $countries = $this->countryCodes ? ($this->lowerCaseCodes ? array_change_key_case(static::$countries) : static::$countries) : array_combine(static::$countries, static::$countries);
