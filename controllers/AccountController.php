@@ -465,11 +465,6 @@ class AccountController extends Controller
                         'client' => $client->getTitle(),
                     ]));
                 }
-
-                if ($user->getErrors()) {
-                    Yii::error($user->getErrors());
-                    throw new NotFoundHttpException;
-                }
             }
         } else {
             if ($auth && $auth->user_id != Yii::$app->getUser()->getId()) {
@@ -488,16 +483,18 @@ class AccountController extends Controller
             Url::remember(['update']);
         }
 
-        if (!$auth) {
-            $auth = new AuthClient;
-            $auth->id = $attributes['id'];
-            $auth->name = $client->getName();
-            $auth->user_id = $user->id;
+        if (!$user->getErrors()) {
+            if (!$auth) {
+                $auth = new AuthClient;
+                $auth->id = $attributes['id'];
+                $auth->name = $client->getName();
+                $auth->user_id = $user->id;
+            }
+
+            $auth->data = $client->getAuthData();
+            $auth->save();
         }
-
-        $auth->data = $client->getAuthData();
-        $auth->save();
-
+        
         return $this->goBack();
     }
 }
