@@ -227,9 +227,7 @@ abstract class User extends ActiveRecord
     public function validateCountry()
     {
         if ($this->country) {
-            $countries = require_once(Yii::getAlias('@skeleton/messages/') . Yii::$app->language . '/countries.php');
-
-            if (!isset($countries[$this->country])) {
+            if (!isset(static::getCountries()[$this->country])) {
                 $this->country = null;
             }
         }
@@ -536,6 +534,14 @@ abstract class User extends ActiveRecord
     public function getStatusIcon(): string
     {
         return !$this->isOwner() ? static::getStatuses()[$this->status]['icon'] : 'star';
+    }
+
+    /**
+     * @return array
+     */
+    public static function getCountries(): array
+    {
+        return require_once(Yii::getAlias('@skeleton/messages/') . Yii::$app->language . '/countries.php');
     }
 
     /**
