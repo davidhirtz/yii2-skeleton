@@ -301,7 +301,8 @@ abstract class User extends ActiveRecord
      */
     public function getAuthClients(): ActiveQuery
     {
-        return $this->hasMany(AuthClient::class, ['user_id' => 'id']);
+        return $this->hasMany(AuthClient::class, ['user_id' => 'id'])
+            ->indexBy('id');
     }
 
     /**
