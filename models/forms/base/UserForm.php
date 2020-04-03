@@ -175,13 +175,15 @@ class UserForm extends User
     }
 
     /**
-     * @throws \yii\base\Exception
+     * @return bool
      */
-    public function savePictureUpload()
+    public function savePictureUpload(): bool
     {
         if (FileHelper::createDirectory($uploadPath = $this->getUploadPath())) {
-            $this->upload->saveAs($uploadPath . $this->picture);
+            return $this->upload->saveAs($uploadPath . $this->picture);
         }
+
+        return false;
     }
 
     /**
