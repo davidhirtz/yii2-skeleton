@@ -202,7 +202,7 @@ return [
     'Your account was successfully deleted and you have been logged out. Bye!' => 'Ihr Account wurde erfolgreich gelöscht. Sie wurden ausgeloggt. Bis bald!',
     'Your account was updated.' => 'Ihr Account wurde aktualisiert.',
     'Your confirmation could not be resend' => 'Ihr Bestätigungsemail konnte nicht erneut versandt werden',
-    'Your email address "{email}" was not yet confirmed. Please check your inbox or click {here} to request a new confirmation email.' => 'Ihre Emailadresse "{email}" wurde bisher noch nicht bestätigt. Bitte überprüfen Sie Ihre Emails oder klicken Sie {here}, um eine neue BEstätigungsemail anzufordern.',
+    'Your email address "{email}" was not yet confirmed. Please check your inbox or click {here} to request a new confirmation email.' => 'Ihre Emailadresse "{email}" wurde bisher noch nicht bestätigt. Bitte überprüfen Sie Ihre Emails oder klicken Sie {here}, um eine neue Bestätigungsemail anzufordern.',
     'Your email address is not confirmed yet. You should find a confirmation email in your inbox.' => 'Ihre Emailaddresse wurde noch nicht bestätigt. Bitte überprüfen Sie Ihre Emails.',
     'Your email address was successfully confirmed!' => 'Ihre Emailadresse wurde erfolgreich bestätigt!',
     'Your email or password are incorrect.' => 'Email oder Passwort sind nicht korrekt.',

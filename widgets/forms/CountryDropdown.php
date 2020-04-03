@@ -21,7 +21,7 @@ class CountryDropdown extends InputWidget
     /**
      * @var bool
      */
-    public $countryCodes = false;
+    public $countryCodes = true;
 
     /**
      * @var bool
@@ -305,8 +305,16 @@ class CountryDropdown extends InputWidget
             $this->options['prompt'] = '';
         }
 
-        $countries = $this->countryCodes ? ($this->lowerCaseCodes ? array_change_key_case(static::$countries) : static::$countries) : array_combine(static::$countries, static::$countries);
+        $countries = $this->getCountries();
         return $this->hasModel() ? Html::activeDropDownList($this->model, $this->attribute, $countries, $this->options) : Html::dropDownList($this->name, $this->value, $countries, $this->options);
+    }
+
+    /**
+     * @return array
+     */
+    public function getCountries(): array
+    {
+        return $this->countryCodes ? ($this->lowerCaseCodes ? array_change_key_case(static::$countries) : static::$countries) : array_combine(static::$countries, static::$countries);
     }
 
     /**

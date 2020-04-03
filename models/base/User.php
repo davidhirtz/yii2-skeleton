@@ -8,6 +8,7 @@ use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\datetime\DateTime;
+use davidhirtz\yii2\skeleton\widgets\forms\CountryDropdown;
 use yii\db\ActiveQuery;
 use yii\helpers\Url;
 use Yii;
@@ -166,7 +167,7 @@ abstract class User extends ActiveRecord
                 'min' => $this->passwordMinLength,
             ],
             [
-                ['city', 'country', 'first_name', 'last_name'],
+                ['city', 'first_name', 'last_name'],
                 'string',
                 'max' => 50,
             ],
@@ -180,6 +181,11 @@ abstract class User extends ActiveRecord
                 /** {@see \davidhirtz\yii2\skeleton\models\User::validateTimezone()} */
                 'validateTimezone',
             ],
+            [
+                ['country'],
+                /** {@see \davidhirtz\yii2\skeleton\models\User::validateCountry()} */
+                'validateCountry',
+            ]
         ];
     }
 
@@ -212,6 +218,17 @@ abstract class User extends ActiveRecord
     {
         if (!in_array($this->language, Yii::$app->getI18n()->languages)) {
             $this->language = Yii::$app->language;
+        }
+    }
+
+    /**
+     * Sanitizes country.
+     * @see User::rules()
+     */
+    public function validateCountry()
+    {
+        if (!isset(CountryDropdown::$countries[$this->country])) {
+            $this->country = null;
         }
     }
 

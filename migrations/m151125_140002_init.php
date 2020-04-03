@@ -59,7 +59,7 @@ class m151125_140002_init extends \m140506_102106_rbac_init
             'last_name' => 'varchar(50) DEFAULT NULL',
             'birthdate' => 'date DEFAULT NULL',
             'city' => 'varchar(50) DEFAULT NULL',
-            'country' => 'varchar(50) DEFAULT NULL',
+            'country' => 'varchar(2) DEFAULT NULL',
             'picture' => 'varchar(50) DEFAULT NULL',
             'language' => 'varchar(5) NOT NULL DEFAULT "en"',
             'timezone' => 'varchar(100) DEFAULT NULL',
