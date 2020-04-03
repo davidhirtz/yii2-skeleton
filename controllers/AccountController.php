@@ -465,6 +465,11 @@ class AccountController extends Controller
                         'client' => $client->getTitle(),
                     ]));
                 }
+
+                if ($user->getErrors()) {
+                    Yii::error($user->getErrors());
+                    throw new NotFoundHttpException;
+                }
             }
         } else {
             if ($auth && $auth->user_id != Yii::$app->getUser()->getId()) {
@@ -474,7 +479,7 @@ class AccountController extends Controller
 
                 return $this->goBack();
             }
-            
+
             $this->success(Yii::t('skeleton', 'Your {client} account is now connected with your profile.', [
                 'client' => $client->getTitle(),
             ]));
