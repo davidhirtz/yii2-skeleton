@@ -78,7 +78,10 @@ class Module extends \yii\base\Module
     {
         if (!Yii::$app->getRequest()->getIsConsoleRequest()) {
             $user = Yii::$app->getUser();
-            $user->loginUrl = ['/admin/account/login'];
+
+            if ($user->loginUrl === null) {
+                $user->loginUrl = ['/admin/account/login'];
+            }
 
             if (!$this->panels) {
                 $this->panels = [

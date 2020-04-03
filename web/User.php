@@ -48,9 +48,10 @@ class User extends \yii\web\User
     public $identityClass = 'davidhirtz\yii2\skeleton\db\Identity';
 
     /**
-     * @var string
+     * @var array|null defaults to 403 error, if null admin module will set the correct
+     * login url.
      */
-    public $loginUrl = ['/account/login'];
+    public $loginUrl = null;
 
     /**
      * @var
