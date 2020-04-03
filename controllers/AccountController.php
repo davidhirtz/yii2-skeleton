@@ -474,13 +474,12 @@ class AccountController extends Controller
 
                 return $this->goBack();
             }
-
-
+            
             $this->success(Yii::t('skeleton', 'Your {client} account is now connected with your profile.', [
                 'client' => $client->getTitle(),
             ]));
 
-            $user = Yii::$app->getUser()->getIdentity();
+            $user = UserForm::findOne(Yii::$app->getUser()->getId());
             Url::remember(['update']);
         }
 
