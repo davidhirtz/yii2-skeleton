@@ -447,7 +447,7 @@ class AccountController extends Controller
                     return $this->redirect(['login']);
                 }
 
-                if (User::findByEmail($attributes['email'])->exists()) {
+                if ($this->isAuthEmailTaken($attributes)) {
                     $this->error(Yii::t('skeleton', 'A user with email {email} already exists but is not linked to this {client} account. Login using email first to link it.', [
                         'client' => $client->getTitle(),
                         'email' => $attributes['email'],
@@ -469,12 +469,22 @@ class AccountController extends Controller
                 ]));
             }
         } else {
-            if ($auth && $auth->user_id != Yii::$app->getUser()->getId()) {
-                $this->error(Yii::t('skeleton', 'A different user is already linked with this {client} account!', [
+            $userId = Yii::$app->getUser()->getId();
+
+            if ($auth && $auth->user_id != $userId) {
+                $this->error(Yii::t('skeleton', 'A different user is already linked with this {client} account.', [
                     'client' => $client->getTitle(),
                 ]));
 
                 return $this->goBack();
+            }
+
+            if ($this->isAuthEmailTaken($attributes)) {
+                $this->error(Yii::t('skeleton', 'A different user with this email already exists.', [
+                    'email' => $attributes['email'],
+                ]));
+
+                return $this->redirect(['login']);
             }
 
             $this->success(Yii::t('skeleton', 'Your {client} account is now connected with your profile.', [
@@ -496,5 +506,16 @@ class AccountController extends Controller
         $auth->save();
 
         return $this->goBack();
+    }
+
+    /**
+     * @param array $attributes
+     * @return bool
+     */
+    private function isAuthEmailTaken($attributes)
+    {
+        return !isset($attributes['email']) ? false : User::findByEmail($attributes['email'])
+            ->andFilterWhere(['!=', 'id', Yii::$app->getUser()->getId()])
+            ->exists();
     }
 }

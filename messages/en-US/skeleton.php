@@ -17,7 +17,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'A different user is already linked with this {client} account!' => '',
+    'A different user is already linked with this {client} account.' => '',
+    'A different user with this email already exists.' => '',
     'A user with email {email} already exists but is not linked to this {client} account. Login using email first to link it.' => '',
     'Account' => '',
     'Admin' => '',

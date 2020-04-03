@@ -17,7 +17,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'A different user is already linked with this {client} account!' => 'Ein anderer Benutzer ist bereits mit diesem {client} Account verbunden!',
+    'A different user is already linked with this {client} account.' => 'Ein anderer Benutzer ist bereits mit diesem {client} Account verbunden.',
+    'A different user with this email already exists.' => 'Ein anderer Benutzer ist bereits mit diese Email registriert.',
     'A user with email {email} already exists but is not linked to this {client} account. Login using email first to link it.' => 'Es exisitiert zwar ein Benutzer mit der Emailadresse {email}, dieser ist aber noch nicht mit diesem {client} Account verbunden. Bitte loggen Sie sich zunächst mit Ihrer Emailadresse ein, um diesen Account hinzuzufügen.',
     'Account' => 'Account',
     'Admin' => 'Admin',
