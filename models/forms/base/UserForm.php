@@ -83,15 +83,6 @@ class UserForm extends User
     /**
      * @inheritDoc
      */
-    public function beforeValidate(): bool
-    {
-        $this->upload = $this->getUploadPath() ? UploadedFile::getInstance($this, 'upload') : null;
-        return parent::beforeValidate();
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function afterFind()
     {
         $this->oldEmail = $this->email;
@@ -152,6 +143,19 @@ class UserForm extends User
         }
 
         parent::afterSave($insert, $changedAttributes);
+    }
+
+    /**
+     * @param array $data
+     * @param null $formName
+     * @return bool
+     */
+    public function load($data, $formName = null)
+    {
+        $this->upload = $this->getUploadPath() ? UploadedFile::getInstance($this, 'upload') : null;
+        $hasData = parent::load($data, $formName);
+
+        return $hasData || $this->upload;
     }
 
     /**
