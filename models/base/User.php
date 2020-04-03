@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\models\base;
 
 use davidhirtz\yii2\datetime\Date;
+use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
@@ -403,6 +404,15 @@ abstract class User extends ActiveRecord
     public function deletePicture($picture): bool
     {
         return $picture ? FileHelper::removeFile($this->getUploadPath() . $picture) : false;
+    }
+
+    /**
+     * @param $clientName
+     * @return bool
+     */
+    public function hasAuthClient($clientName): bool
+    {
+        return ($authClients = $this->authClients) ? in_array($clientName, ArrayHelper::getColumn($authClients, 'name')) : false;
     }
 
     /**
