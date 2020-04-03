@@ -380,12 +380,11 @@ abstract class User extends ActiveRecord
 
     /**
      * @param string $picture
+     * @return bool
      */
-    public function deletePicture($picture)
+    public function deletePicture($picture): bool
     {
-        if ($picture) {
-            FileHelper::removeFile($this->getUploadPath() . $picture);
-        }
+        return $picture ? FileHelper::removeFile($this->getUploadPath() . $picture) : false;
     }
 
     /**
