@@ -247,6 +247,10 @@ abstract class User extends ActiveRecord
             $this->status = static::STATUS_ENABLED;
         }
 
+        if($this->status === null) {
+            $this->status = static::STATUS_ENABLED;
+        }
+
         return parent::beforeValidate();
     }
 
@@ -268,7 +272,6 @@ abstract class User extends ActiveRecord
     public function beforeSave($insert): bool
     {
         if ($insert) {
-            $this->status = static::STATUS_ENABLED;
             $this->is_owner = !static::find()->count() ? true : false;
         }
 

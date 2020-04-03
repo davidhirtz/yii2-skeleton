@@ -460,11 +460,13 @@ class AccountController extends Controller
                 $user->setAttributes($client->getSafeUserAttributes());
                 $user->loginType = $client->getName();
 
-                if ($user->save()) {
-                    $this->success(Yii::t('skeleton', 'Sign up with {client} completed.', [
-                        'client' => $client->getTitle(),
-                    ]));
+                if (!$user->save()) {
+                    throw new BadRequestHttpException;
                 }
+
+                $this->success(Yii::t('skeleton', 'Sign up with {client} completed.', [
+                    'client' => $client->getTitle(),
+                ]));
             }
         } else {
             if ($auth && $auth->user_id != Yii::$app->getUser()->getId()) {
@@ -479,22 +481,20 @@ class AccountController extends Controller
                 'client' => $client->getTitle(),
             ]));
 
-            $user = UserForm::findOne(Yii::$app->getUser()->getId());
+            $user = Yii::$app->getUser()->getIdentity();
             Url::remember(['update']);
         }
 
-        if (!$user->getErrors()) {
-            if (!$auth) {
-                $auth = new AuthClient;
-                $auth->id = $attributes['id'];
-                $auth->name = $client->getName();
-                $auth->user_id = $user->id;
-            }
-
-            $auth->data = $client->getAuthData();
-            $auth->save();
+        if (!$auth) {
+            $auth = new AuthClient;
+            $auth->id = $attributes['id'];
+            $auth->name = $client->getName();
+            $auth->user_id = $user->id;
         }
-        
+
+        $auth->data = $client->getAuthData();
+        $auth->save();
+
         return $this->goBack();
     }
 }
