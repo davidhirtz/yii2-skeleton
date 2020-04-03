@@ -213,7 +213,7 @@ return [
     'Your {client} account is now connected with your profile.' => 'Ihr {client} Account ist nun Ihrem Profil zugeordnet.',
     'Your {name} Account' => 'Ihr {name} Account',
     'here' => 'hier',
-    '{client} account "{name}" was removed from user account.' => '{client} Account "{name}" wurde von Ihrem Benutzerkonte entfernt.',
-    '{client} account "{name}" was removed from your profile.' => '{client} Account "{name}" wurde erfolgreich von Ihrem Profile entfernt.',
+    '{client} account "{name}" was removed from user account.' => '{client} Account "{name}" wurde vom Benutzerkonto entfernt.',
+    '{client} account "{name}" was removed from your profile.' => '{client} Account "{name}" wurde von Ihrem Benutzerkonto entfernt.',
     '{label} ({language})' => '{label} ({language})',
 ];
