@@ -469,7 +469,7 @@ abstract class User extends ActiveRecord
     /**
      * @return string
      */
-    public function getEmailConfirmationUrl(): string
+    public function getEmailConfirmationUrl()
     {
         return $this->email_confirmation_code ? Url::to(['account/confirm', 'email' => $this->email, 'code' => $this->email_confirmation_code], true) : null;
     }
@@ -477,7 +477,7 @@ abstract class User extends ActiveRecord
     /**
      * @return string
      */
-    public function getPasswordResetUrl(): string
+    public function getPasswordResetUrl()
     {
         return $this->password_reset_code ? Url::to(['account/reset', 'email' => $this->email, 'code' => $this->password_reset_code], true) : null;
     }

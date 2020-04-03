@@ -68,10 +68,6 @@ class UserForm extends User
                 'skipOnError' => true,
             ],
             [
-                ['timezone'],
-                'required',
-            ],
-            [
                 ['upload'],
                 'file',
                 'checkExtensionByMimeType' => $this->uploadCheckExtensionByMimeType,
