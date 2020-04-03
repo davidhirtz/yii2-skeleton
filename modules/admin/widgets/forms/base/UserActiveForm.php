@@ -37,7 +37,7 @@ class UserActiveForm extends ActiveForm
         'last_name',
         'city',
         ['country', CountryDropdown::class],
-        ['sendEmail', 'checkbox'],
+        'sendEmail',
     ];
 
     /**
@@ -61,5 +61,14 @@ class UserActiveForm extends ActiveForm
 
         $statusOptions = ArrayHelper::getColumn(User::getStatuses(), 'name');
         return count($statusOptions) > 1 ? $this->field($this->model, 'status')->dropDownList($statusOptions, $options) : null;
+    }
+
+    /**
+     * @param array $options
+     * @return string|\yii\widgets\ActiveField
+     */
+    public function sendEmailField($options = [])
+    {
+        return $this->model->getIsNewRecord() ? $this->field($this->model, 'sendEmail')->checkbox($options) : '';
     }
 }

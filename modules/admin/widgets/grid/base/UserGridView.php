@@ -88,8 +88,7 @@ class UserGridView extends GridView
         return [
             'attribute' => 'name',
             'content' => function (User $user) {
-                $name = $user->getFullName();
-                $name = Html::markKeywords($name ? "{$user->name} ($name)" : $user->name, $this->getSearchKeywords());
+                $name = ($name = $user->getUsername()) ? Html::markKeywords($name, $this->getSearchKeywords()) : Html::tag('span', Yii::t('skeleton', 'User'), ['class' => 'text-muted']);
                 return Html::a($name, ['update', 'id' => $user->id]);
             }
         ];
