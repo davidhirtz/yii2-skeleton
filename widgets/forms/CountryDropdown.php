@@ -63,7 +63,7 @@ class CountryDropdown extends InputWidget
      */
     public function getCountries(): array
     {
-        $countries = require_once(Yii::getAlias('@skeleton/messages/') . Yii::$app->language . '/countries.php');
+        $countries = require(Yii::getAlias('@skeleton/messages/') . Yii::$app->language . '/countries.php');
         return $this->countryCodes ? ($this->lowerCaseCodes ? array_change_key_case($countries) : $countries) : array_combine($countries, $countries);
     }
 }

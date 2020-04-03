@@ -541,7 +541,7 @@ abstract class User extends ActiveRecord
      */
     public static function getCountries(): array
     {
-        return require_once(Yii::getAlias('@skeleton/messages/') . Yii::$app->language . '/countries.php');
+        return require(Yii::getAlias('@skeleton/messages/') . Yii::$app->language . '/countries.php');
     }
 
     /**
