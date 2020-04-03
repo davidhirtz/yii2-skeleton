@@ -484,7 +484,7 @@ class AccountController extends Controller
                     'email' => $attributes['email'],
                 ]));
 
-                return $this->redirect(['login']);
+                return $this->goBack();
             }
 
             $this->success(Yii::t('skeleton', 'Your {client} account is now connected with your profile.', [
