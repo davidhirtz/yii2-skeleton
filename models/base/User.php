@@ -8,7 +8,6 @@ use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\datetime\DateTime;
-use davidhirtz\yii2\skeleton\widgets\forms\CountryDropdown;
 use yii\db\ActiveQuery;
 use yii\helpers\Url;
 use Yii;
@@ -227,8 +226,12 @@ abstract class User extends ActiveRecord
      */
     public function validateCountry()
     {
-        if (!isset(CountryDropdown::$countries[$this->country])) {
-            $this->country = null;
+        if ($this->country) {
+            $countries = require_once(Yii::getAlias('@skeleton/messages/') . Yii::$app->language . '/countries.php');
+
+            if (!isset($countries[$this->country])) {
+                $this->country = null;
+            }
         }
     }
 
