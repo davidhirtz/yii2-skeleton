@@ -3,7 +3,6 @@
 namespace davidhirtz\yii2\skeleton\controllers;
 
 use davidhirtz\yii2\skeleton\auth\clients\ClientInterface;
-use davidhirtz\yii2\skeleton\db\Identity;
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\forms\AccountConfirmForm;
 use davidhirtz\yii2\skeleton\models\forms\AuthClientSignupForm;
@@ -14,13 +13,12 @@ use davidhirtz\yii2\skeleton\models\forms\LoginForm;
 use davidhirtz\yii2\skeleton\models\forms\PasswordRecoverForm;
 use davidhirtz\yii2\skeleton\models\forms\PasswordResetForm;
 use davidhirtz\yii2\skeleton\models\forms\SignupForm;
-use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\skeleton\web\Controller;
 use Yii;
+use yii\base\InvalidCallException;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
@@ -36,10 +34,6 @@ class AccountController extends Controller
      * @var string
      */
     public $defaultAction = 'update';
-
-    /***********************************************************************
-     * Behaviors.
-     ***********************************************************************/
 
     /**
      * @inheritdoc
@@ -69,10 +63,6 @@ class AccountController extends Controller
         ];
     }
 
-    /***********************************************************************
-     * Actions.
-     ***********************************************************************/
-
     /**
      * @return array
      */
@@ -88,15 +78,9 @@ class AccountController extends Controller
 
     /**
      * @return string
-     * @throws \yii\base\Exception
-     * @throws ForbiddenHttpException
      */
     public function actionCreate()
     {
-        if (!Yii::$app->getUser()->isSignupEnabled()) {
-            throw new ForbiddenHttpException(Yii::t('skeleton', 'Sorry, signing up is currently disabled!'));
-        }
-
         if (!Yii::$app->getUser()->getIsGuest()) {
             Yii::t('skeleton', 'Please logout before creating another account');
             return $this->goHome();
@@ -357,8 +341,10 @@ class AccountController extends Controller
      */
     public function actionDelete()
     {
-        $form = new DeleteForm([
-            'model' => UserForm::findOne(Yii::$app->getUser()->getId()),
+        /** @var DeleteForm $form */
+        $form = Yii::createObject([
+            'class' => 'davidhirtz\yii2\skeleton\models\forms\DeleteForm',
+            'model' => UserForm::findOne(Yii::$app->getUser()->getId())
         ]);
 
         if ($form->load(Yii::$app->getRequest()->post()) && $form->delete()) {
@@ -415,107 +401,79 @@ class AccountController extends Controller
      */
     public function onAuthSuccess($client)
     {
-        $attributes = $client->getUserAttributes();
-
-        /** @var $auth AuthClient */
-        $auth = AuthClient::find()
-            ->where(['id' => $attributes['id'], 'name' => $client->getName()])
-            ->limit(1)
-            ->one();
+        $auth = AuthClient::findOrCreateFromClient($client);
 
         if (Yii::$app->getUser()->getIsGuest()) {
-            if ($auth) {
-                // Login
-                $user = Identity::findIdentity($auth->user_id);
-
-                if (!$user) {
-                    $this->error(Yii::t('skeleton', 'Your account is currently disabled. Please contact an administrator!'));
-                    return $this->redirect(['login']);
-                }
-
-                $this->success(Yii::t('skeleton', 'Welcome back, {name}!', [
-                    'name' => $user->getUsername(),
-                ]));
-
-                $user->loginType = $client->getName();
-                Yii::$app->getUser()->login($user, $user->cookieLifetime);
-
-            } else {
-                // Signup
-                if (!Yii::$app->getUser()->isSignupEnabled()) {
-                    $this->error(Yii::t('skeleton', 'Sorry, signing up is currently disabled!'));
-                    return $this->redirect(['login']);
-                }
-
-                if ($this->isAuthEmailTaken($attributes)) {
-                    $this->error(Yii::t('skeleton', 'A user with email {email} already exists but is not linked to this {client} account. Login using email first to link it.', [
-                        'client' => $client->getTitle(),
-                        'email' => $attributes['email'],
-                    ]));
-
-                    return $this->redirect(['login']);
-                }
-
-                $user = new AuthClientSignupForm;
-                $user->setAttributes($client->getSafeUserAttributes());
-                $user->loginType = $client->getName();
-
-                if (!$user->save()) {
-                    throw new BadRequestHttpException;
-                }
-
-                $this->success(Yii::t('skeleton', 'Sign up with {client} completed.', [
-                    'client' => $client->getTitle(),
-                ]));
-            }
-        } else {
-            $userId = Yii::$app->getUser()->getId();
-
-            if ($auth && $auth->user_id != $userId) {
-                $this->error(Yii::t('skeleton', 'A different user is already linked with this {client} account.', [
-                    'client' => $client->getTitle(),
-                ]));
-
-                return $this->goBack();
+            if (($auth->getIsNewRecord() ? $this->signupWithAuthClient($auth) : $this->loginWithAuthClient($auth)) === false) {
+                return $this->redirect(['login']);
             }
 
-            if ($this->isAuthEmailTaken($attributes)) {
-                $this->error(Yii::t('skeleton', 'A different user with this email already exists.', [
-                    'email' => $attributes['email'],
-                ]));
+            return $this->goBack();
 
-                return $this->goBack();
-            }
+        }
 
+        $auth->user_id = Yii::$app->getUser()->getId();
+
+        if ($auth->save()) {
             $this->success(Yii::t('skeleton', 'Your {client} account is now connected with your profile.', [
                 'client' => $client->getTitle(),
             ]));
-
-            $user = Yii::$app->getUser()->getIdentity();
-            Url::remember(['update']);
         }
 
-        if (!$auth) {
-            $auth = new AuthClient;
-            $auth->id = $attributes['id'];
-            $auth->name = $client->getName();
-            $auth->user_id = $user->id;
-        }
-
-        $auth->data = $client->getAuthData();
-        $auth->save();
-
-        return $this->goBack();
+        $this->error($auth->getErrors());
+        return $this->redirect(['update']);
     }
 
     /**
-     * @param array $attributes
+     * @param $auth AuthClient
      * @return bool
      */
-    private function isAuthEmailTaken($attributes)
+    private function loginWithAuthClient($auth)
     {
-        return !isset($attributes['email']) ? false : User::findByEmail($attributes['email'])
-            ->andFilterWhere(['!=', 'id', Yii::$app->getUser()->getId()])
-            ->exists();
+        if ($auth->getIsNewRecord()) {
+            throw new InvalidCallException;
+        }
+
+        $user = $auth->identity;
+
+        if (!$user || $user->isDisabled()) {
+            $this->error(Yii::t('skeleton', 'Your account is currently disabled. Please contact an administrator!'));
+            return false;
+        }
+
+        $this->success(Yii::t('skeleton', 'Welcome back, {name}!', [
+            'name' => $user->getUsername(),
+        ]));
+
+        $user->loginType = $auth->getClientClass()->getName();
+        Yii::$app->getUser()->login($user, $user->cookieLifetime);
+
+        return $auth->update();
+    }
+
+    /**
+     * @param $auth AuthClient
+     * @return bool
+     */
+    private function signupWithAuthClient($auth)
+    {
+        if (!$auth->getIsNewRecord()) {
+            throw new InvalidCallException;
+        }
+
+        $user = new AuthClientSignupForm;
+        $user->setClient($auth->getClientClass());
+
+        if (!$user->save()) {
+            $this->error($user->getErrors());
+            return false;
+        }
+
+        $this->success(Yii::t('skeleton', 'Sign up with {client} completed.', [
+            'client' => $auth->getClientClass()->getTitle(),
+        ]));
+
+        $auth->user_id = $user->id;
+        return $auth->insert();
     }
 }

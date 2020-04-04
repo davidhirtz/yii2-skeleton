@@ -204,7 +204,7 @@ class UserController extends Controller
             throw new NotFoundHttpException;
         }
 
-        if (!Yii::$app->getUser()->can('userUpdate', ['user' => $auth->user])) {
+        if (!Yii::$app->getUser()->can('userUpdate', ['user' => $auth->identity])) {
             throw new ForbiddenHttpException;
         }
 

@@ -80,7 +80,9 @@ class Controller extends \yii\web\Controller
      */
     public function error($message)
     {
-        Yii::$app->getSession()->addFlash('error', $message);
+        if ($message) {
+            Yii::$app->getSession()->addFlash('error', $message);
+        }
     }
 
     /**
@@ -89,6 +91,8 @@ class Controller extends \yii\web\Controller
      */
     public function success($message)
     {
-        Yii::$app->getSession()->addFlash('success', $message);
+        if ($message) {
+            Yii::$app->getSession()->addFlash('success', $message);
+        }
     }
 }

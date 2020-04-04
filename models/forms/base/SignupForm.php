@@ -128,11 +128,16 @@ class SignupForm extends Identity
      */
     public function beforeValidate(): bool
     {
+        if (!Yii::$app->getUser()->isSignupEnabled()) {
+            $this->addError('id', Yii::t('skeleton', 'Sorry, signing up is currently disabled!'));
+            return false;
+        }
+
         if ($this->status === null) {
             $this->status = static::STATUS_ENABLED;
         }
 
-        if(!$this->ip === null) {
+        if (!$this->ip === null) {
             $this->ip = Yii::$app->getRequest()->getUserIP();
         }
 

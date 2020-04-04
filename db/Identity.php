@@ -46,8 +46,9 @@ class Identity extends User implements IdentityInterface
          * @var Identity $identity
          */
         $identity = static::find()
-            ->where(['id' => $id, 'status' => self::STATUS_ENABLED])
+            ->where(['id' => $id])
             ->selectIdentityAttributes()
+            ->enabled()
             ->one();
 
         if ($identity && $identity->timezone) {
