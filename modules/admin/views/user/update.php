@@ -41,7 +41,7 @@ if (Yii::$app->getUser()->can('userDelete')) {
             'title' => Yii::t('skeleton', 'Delete User'),
             'content' => DeleteActiveForm::widget([
                 'model' => $user,
-                'attribute' => 'name',
+                'attribute' => 'email',
                 'message' => Yii::t('skeleton', 'Please type the username in the text field below to delete this user. All related records and files will also be deleted. This cannot be undone, please be certain!')
             ]),
         ]);

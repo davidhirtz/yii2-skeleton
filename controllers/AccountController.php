@@ -344,7 +344,8 @@ class AccountController extends Controller
         /** @var DeleteForm $form */
         $form = Yii::createObject([
             'class' => 'davidhirtz\yii2\skeleton\models\forms\DeleteForm',
-            'model' => UserForm::findOne(Yii::$app->getUser()->getId())
+            'model' => UserForm::findOne(Yii::$app->getUser()->getId()),
+            'attribute' => 'email',
         ]);
 
         if ($form->load(Yii::$app->getRequest()->post()) && $form->delete()) {
