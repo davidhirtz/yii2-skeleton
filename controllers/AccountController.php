@@ -349,8 +349,8 @@ class AccountController extends Controller
 
         if ($form->load(Yii::$app->getRequest()->post()) && $form->delete()) {
             $this->success(Yii::t('skeleton', 'Your account was successfully deleted and you have been logged out. Bye!'));
-            Yii::$app->getUser()->logout();
 
+            Yii::$app->getUser()->logout();
             return $this->goHome();
         }
 

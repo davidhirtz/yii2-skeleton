@@ -64,7 +64,7 @@ class DeleteForm extends Model
         $methodName = 'validate' . Inflector::camelize($this->attribute);
         $model = $this->getModel();
 
-        if (method_exists($model, $methodName) ? call_user_func([$model, $methodName], $this->name) : $this->name !== $model->getAttribute($this->attribute)) {
+        if (method_exists($model, $methodName) ? !call_user_func([$model, $methodName], $this->name) : $this->name !== $model->getAttribute($this->attribute)) {
             $this->addError('name', Yii::t('yii', '{attribute} is invalid.', [
                 'attribute' => $this->getModel()->getAttributeLabel($this->attribute),
             ]));
@@ -79,7 +79,13 @@ class DeleteForm extends Model
      */
     public function delete()
     {
-        return $this->validate() ? $this->getModel()->delete() : false;
+        if ($this->validate()) {
+            if (!$this->getModel()->delete()) {
+                $this->addErrors($this->getModel()->getErrors());
+            }
+
+        }
+        return !$this->hasErrors();
     }
 
     /**
