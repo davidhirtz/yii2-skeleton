@@ -409,7 +409,6 @@ class AccountController extends Controller
             }
 
             return $this->goBack();
-
         }
 
         $auth->user_id = Yii::$app->getUser()->getId();
@@ -420,7 +419,7 @@ class AccountController extends Controller
             ]));
         }
 
-        $this->error($auth->getErrors());
+        $this->error($auth->getFirstErrors());
         return $this->redirect(['update']);
     }
 
@@ -465,7 +464,7 @@ class AccountController extends Controller
         $user->setClient($auth->getClientClass());
 
         if (!$user->save()) {
-            $this->error($user->getErrors());
+            $this->error($user->getFirstErrors());
             return false;
         }
 
