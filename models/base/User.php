@@ -75,11 +75,6 @@ abstract class User extends ActiveRecord
     public $passwordMinLength = 5;
 
     /**
-     * @var string
-     */
-    public $emailUniqueMessage;
-
-    /**
      * @var string|bool set false to disabled profile pictures
      */
     private $_uploadPath = 'uploads/users/';
@@ -95,18 +90,6 @@ abstract class User extends ActiveRecord
 
     const EMAIL_CONFIRMATION_CODE_LENGTH = 30;
     const PASSWORD_RESET_CODE_LENGTH = 30;
-
-    /**
-     * @inheritDoc
-     */
-    public function init()
-    {
-        if($this->emailUniqueMessage === null) {
-            $this->emailUniqueMessage = Yii::t('skeleton', 'This email is already used by another user.');
-        }
-
-        parent::init();
-    }
 
     /**
      * @inheritDoc
@@ -175,7 +158,7 @@ abstract class User extends ActiveRecord
             [
                 ['email'],
                 'unique',
-                'message' => $this->emailUniqueMessage,
+                'message' => Yii::t('skeleton', 'This email is already used by another user.'),
                 'skipOnError' => true,
             ],
             [

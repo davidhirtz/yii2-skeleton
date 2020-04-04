@@ -80,13 +80,25 @@ class AuthClientSignupForm extends Identity
         if (!in_array($this->language, Yii::$app->getI18n()->languages)) {
             $this->language = Yii::$app->language;
         }
-        
-        $this->emailUniqueMessage = Yii::t('skeleton', 'A user with email {email} already exists but is not linked to this {client} account. Login using email first to link it.', [
-            'client' => $this->getClient()->getTitle(),
-            'email' => $this->email,
-        ]);
 
         return parent::beforeValidate();
+    }
+
+    /**
+     * Overrides default email error to give user more context why the signup cannot completed
+     * with this email address.
+     */
+    public function afterValidate()
+    {
+        if($this->hasErrors('email')) {
+            $this->clearErrors('email');
+            $this->addError('email', Yii::t('skeleton', 'A user with email {email} already exists but is not linked to this {client} account. Login using email first to link it.', [
+                'client' => $this->getClient()->getTitle(),
+                'email' => $this->email,
+            ]));
+        }
+
+        parent::afterValidate();
     }
 
     /**
