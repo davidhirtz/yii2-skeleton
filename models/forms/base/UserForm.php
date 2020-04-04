@@ -52,6 +52,12 @@ class UserForm extends User
     {
         return array_merge(parent::rules(), [
             [
+                ['email'],
+                /** {@see \davidhirtz\yii2\skeleton\models\forms\UserForm::validateEmail()} */
+                'validateEmail',
+                'skipOnError' => true,
+            ],
+            [
                 ['newPassword', 'oldPassword'],
                 'filter',
                 'filter' => 'trim',
@@ -152,6 +158,14 @@ class UserForm extends User
         $hasData = parent::load($data, $formName);
 
         return $hasData || $this->upload;
+    }
+
+    /**
+     * @return bool
+     */
+    public function validateEmail(): bool
+    {
+        return !$this->validatePassword($this->oldPassword) ? $this->addInvalidAttributeError('oldPassword') : true;
     }
 
     /**
