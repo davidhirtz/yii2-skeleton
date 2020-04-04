@@ -44,11 +44,6 @@ class AuthClientSignupForm extends Identity
      */
     public function rules(): array
     {
-        $this->emailUniqueMessage = Yii::t('skeleton', 'A user with email {email} already exists but is not linked to this {client} account. Login using email first to link it.', [
-            'client' => $this->getClient()->getTitle(),
-            'email' => $this->email,
-        ]);
-
         return array_merge(parent::rules(), [
             [
                 ['externalPictureUrl'],
@@ -85,6 +80,11 @@ class AuthClientSignupForm extends Identity
         if (!in_array($this->language, Yii::$app->getI18n()->languages)) {
             $this->language = Yii::$app->language;
         }
+        
+        $this->emailUniqueMessage = Yii::t('skeleton', 'A user with email {email} already exists but is not linked to this {client} account. Login using email first to link it.', [
+            'client' => $this->getClient()->getTitle(),
+            'email' => $this->email,
+        ]);
 
         return parent::beforeValidate();
     }
@@ -96,7 +96,7 @@ class AuthClientSignupForm extends Identity
     {
         parent::afterSave($insert, $changedAttributes);
 
-        if($insert) {
+        if ($insert) {
             if (!$this->isUnconfirmed() || Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
                 Yii::$app->getUser()->login($this);
             }
