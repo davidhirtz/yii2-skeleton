@@ -165,7 +165,7 @@ class UserForm extends User
      */
     public function validateEmail(): bool
     {
-        return !$this->validatePassword($this->oldPassword) ? $this->addInvalidAttributeError('oldPassword') : true;
+        return $this->isAttributeChanged('email') && !$this->validatePassword($this->oldPassword) ? $this->addInvalidAttributeError('oldPassword') : true;
     }
 
     /**
@@ -173,7 +173,7 @@ class UserForm extends User
      */
     public function validateNewPassword(): bool
     {
-        return !$this->validatePassword($this->oldPassword) ? $this->addInvalidAttributeError('oldPassword') : true;
+        return $this->newPassword && !$this->validatePassword($this->oldPassword) ? $this->addInvalidAttributeError('oldPassword') : true;
     }
 
     /**
