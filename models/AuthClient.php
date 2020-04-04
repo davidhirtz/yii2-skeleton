@@ -107,10 +107,8 @@ class AuthClient extends \davidhirtz\yii2\skeleton\db\ActiveRecord
      */
     public static function findOrCreateFromClient($client)
     {
-        Yii::error('ID IS ' . $client->getId());
-        
         $attributes = [
-            'id' => $client->getId(),
+            'id' => $client->getSafeUserAttributes()['id'],
             'name' => $client->getName(),
         ];
 
