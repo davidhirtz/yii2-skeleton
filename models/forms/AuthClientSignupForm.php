@@ -26,18 +26,6 @@ class AuthClientSignupForm extends Identity
     public $externalPictureUrl;
 
     /**
-     * @inheritdoc
-     */
-    public function init()
-    {
-
-
-        $this->on(static::EVENT_AFTER_INSERT, [$this, 'onAfterInsert']);
-        $this->on(static::EVENT_AFTER_INSERT, [$this, 'sendSignupEmail']);
-        parent::init();
-    }
-
-    /**
      * @return array
      */
     public function behaviors(): array
@@ -50,10 +38,6 @@ class AuthClientSignupForm extends Identity
             ],
         ]);
     }
-
-    /***********************************************************************
-     * Validation.
-     ***********************************************************************/
 
     /**
      * @return array
@@ -106,12 +90,18 @@ class AuthClientSignupForm extends Identity
     }
 
     /**
-     * Login after insert.
+     * @inheritDoc
      */
-    public function onAfterInsert()
+    public function afterSave($insert, $changedAttributes)
     {
-        if (!$this->isUnconfirmed() || Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
-            Yii::$app->getUser()->login($this);
+        parent::afterSave($insert, $changedAttributes);
+
+        if($insert) {
+            if (!$this->isUnconfirmed() || Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
+                Yii::$app->getUser()->login($this);
+            }
+
+            $this->sendSignupEmail();
         }
     }
 
