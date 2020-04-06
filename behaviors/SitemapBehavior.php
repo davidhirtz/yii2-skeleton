@@ -6,6 +6,7 @@ use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use yii\base\Behavior;
 use yii\base\InvalidConfigException;
+use yii\db\ExpressionInterface;
 
 /**
  * Class SitemapBehavior.
@@ -62,9 +63,10 @@ class SitemapBehavior extends Behavior
 
     /**
      * Generates XML site map urls from record.
+     * @param int|ExpressionInterface|null $offset
      * @return array
      */
-    public function generateSitemapUrls()
+    public function generateSitemapUrls($offset = null)
     {
         $urls = [];
 
@@ -72,7 +74,7 @@ class SitemapBehavior extends Behavior
          * @var ActiveRecord $owner
          */
         $owner = $this->owner;
-        $query = $owner::find();
+        $query = $owner::find()->offset($offset);
 
         if (is_callable($this->query)) {
             call_user_func($this->query, $query);

@@ -123,6 +123,7 @@ class Sitemap extends Component
 
     /**
      * Generates site maps from models.
+     * @todo use offset for large sitemaps.
      */
     private function generateModelUrls()
     {
