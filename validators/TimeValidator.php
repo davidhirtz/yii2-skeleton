@@ -8,7 +8,7 @@ use yii\validators\Validator;
 use Yii;
 
 /**
- * Class TimeValidator.
+ * Class TimeValidator
  * @package davidhirtz\yii2\skeleton\validators
  */
 class TimeValidator extends Validator
@@ -35,23 +35,18 @@ class TimeValidator extends Validator
     }
 
     /**
-     * Validates a hour and converts to minutes.
-     *
      * @param \yii\base\Model $model
      * @param string $attribute
      */
     public function validateAttribute($model, $attribute)
     {
         $value = $model->$attribute;
+        $strlen = strlen($value);
 
-        switch (strlen($value)) {
-            case 1:
-                $value = "0{$value}00";
-                break;
-            case 2:
-            case 3:
-                $value = substr("{$value}00", 0, 4);
-                break;
+        if ($strlen === 1) {
+            $value = "0{$value}00";
+        } elseif ($strlen < 4) {
+            $value = substr("{$value}00", 0, 4);
         }
 
         if (!preg_match($this->pattern, $value, $match)) {
@@ -59,13 +54,13 @@ class TimeValidator extends Validator
             return;
         }
 
-        $hours = ArrayHelper::getValue($match, 1, 0);
-        $minutes = ArrayHelper::getValue($match, 2, 0);
+        $hours = $match[1] ?? 0;
+        $minutes = $match[2] ?? 0;
 
         if (ArrayHelper::getValue($match, 3) == 'pm' && $hours < 12) {
             $hours += 12;
         }
 
-        $model->$attribute = $hours * 60 + $minutes;
+        $model->$attribute = "{$hours}:{$minutes}:00";
     }
 }
