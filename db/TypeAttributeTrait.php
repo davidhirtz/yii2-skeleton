@@ -11,7 +11,7 @@ namespace davidhirtz\yii2\skeleton\db;
 trait TypeAttributeTrait
 {
     /**
-     * Status validator.
+     * Checks if type is set as a key of {@link TypeAttributeTrait::getTypes()}.
      */
     public function validateType()
     {
@@ -26,7 +26,8 @@ trait TypeAttributeTrait
     }
 
     /**
-     * @return array
+     * Override this method to implement types.
+     * @return array containing the type as key and a associative array containing at least "name".
      */
     public static function getTypes(): array
     {
@@ -34,10 +35,19 @@ trait TypeAttributeTrait
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getTypeName(): string
     {
-        return static::getTypes()[$this->type]['name'] ?? '';
+        return $this->getTypeOptions()['name'] ?? '';
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getTypeOptions(): array
+    {
+        return static::getTypes()[$this->type] ?? [];
     }
 }
