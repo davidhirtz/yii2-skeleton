@@ -30,7 +30,7 @@ $(function () {
     /**
      * Use same functionality as yii.confirm for regular data-ajax links.
      */
-    $('a[data-ajax]').click(function (e) {
+    $('[data-ajax]').click(function (e) {
         var $link = $(this);
 
         if (!$link.data('confirm')) {
@@ -197,6 +197,14 @@ $(function () {
         });
     };
 
+    $(document).ajaxError(function (e, data) {
+        var error = data.responseText;
+
+        if (error) {
+            bootbox.alert(error);
+        }
+    });
+
     Skeleton.initContent();
 });
 
@@ -214,6 +222,7 @@ var Skeleton = {
 
         // Timeago.
         if ($.hasOwnProperty('timeago')) {
+            // noinspection JSUnresolvedFunction
             $container.find('.timeago').timeago();
         }
 

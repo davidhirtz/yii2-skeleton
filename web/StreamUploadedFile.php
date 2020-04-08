@@ -27,13 +27,15 @@ class StreamUploadedFile extends \yii\web\UploadedFile
      */
     public function init()
     {
-        if (!$this->url || !($contents = file_get_contents($this->url))) {
+        if (!$this->url || !($contents = @file_get_contents($this->url))) {
             $this->error = UPLOAD_ERR_NO_FILE;
         } else {
             if (($this->tmpFile = tmpfile()) === false) {
                 $this->error = UPLOAD_ERR_NO_TMP_DIR;
+
             } elseif (fwrite($this->tmpFile, $contents) === false) {
                 $this->error = UPLOAD_ERR_CANT_WRITE;
+
             } else {
                 $this->name = basename(parse_url($this->url, PHP_URL_PATH));
                 $this->tempName = stream_get_meta_data($this->tmpFile)['uri'];

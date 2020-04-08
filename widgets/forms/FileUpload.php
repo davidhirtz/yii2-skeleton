@@ -72,11 +72,9 @@ class FileUpload extends InputWidget
 
         $defaultClientEvents = [
             'fileuploaddone' => $this->dropZone ? new JsExpression('function(e,x){$(\'' . $this->dropZone . '\').append(x.result)}') : null,
-            'fileuploadfail' => new JsExpression('function(e,d){bootbox.alert(d.jqXHR.responseText)}'),
         ];
 
         $this->clientEvents = array_merge($defaultClientEvents, $this->clientEvents);
-
         parent::init();
     }
 
