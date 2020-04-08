@@ -134,7 +134,10 @@ class Module extends \yii\base\Module
      */
     public function beforeAction($action)
     {
-        if (Yii::$app->getRequest()->getIsDraft()) {
+        $request = Yii::$app->getRequest();
+
+        if ($request->getIsDraft()) {
+            $request->setHostInfo($request->getProductionHostInfo());
             Yii::$app->getResponse()->redirect(Url::current([], true))->send();
         }
 

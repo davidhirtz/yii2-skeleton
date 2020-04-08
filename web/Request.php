@@ -106,6 +106,14 @@ class Request extends \yii\web\Request
     }
 
     /**
+     * @return string
+     */
+    public function getProductionHostInfo()
+    {
+        return $this->getIsDraft() ? str_replace("//{$this->draftSubdomain}.", '//', $this->getHostInfo()) : $this->getHostInfo();
+    }
+
+    /**
      * Creates the draft URL by trying to replace existing "www" or adding the $draftSubdomain as
      * the first subdomain to the host.
      *
