@@ -41,8 +41,7 @@ class Request extends \yii\web\Request
             $this->cookieValidationKey = Yii::$app->params['cookieValidationKey'];
         }
 
-        if ($this->draftSubdomain && strpos($hostInfo = $this->getHostInfo(), $subdomain = "//{$this->draftSubdomain}.") !== false) {
-            $this->setHostInfo(str_replace($subdomain, '//', $hostInfo));
+        if ($this->draftSubdomain && strpos($hostInfo = $this->getHostInfo(), "//{$this->draftSubdomain}.") !== false) {
             $this->_isDraft = 1;
         }
 
@@ -115,7 +114,7 @@ class Request extends \yii\web\Request
     public function getDraftHostInfo()
     {
         if ($this->_draftHostInfo === null) {
-            $this->_draftHostInfo = $this->draftSubdomain ? preg_replace('#^((https?://)(www.)?)#', "$2{$this->draftSubdomain}.", $this->getHostInfo()) : false;
+            $this->_draftHostInfo = $this->getIsDraft() ? $this->getHostInfo() : ($this->draftSubdomain ? preg_replace('#^((https?://)(www.)?)#', "$2{$this->draftSubdomain}.", $this->getHostInfo()) : false);
         }
 
         return $this->_draftHostInfo;
