@@ -11,8 +11,9 @@ use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
 
 /**
- * Class UserGridView.
+ * Class UserGridView
  * @package app\modules\admin\components\widgets\grid
+ * @see \davidhirtz\yii2\skeleton\modules\admin\widgets\grid\UserGridView
  */
 class UserGridView extends GridView
 {
@@ -55,7 +56,7 @@ class UserGridView extends GridView
             $this->footer = [
                 [
                     [
-                        'content' => $this->createUserButton(),
+                        'content' => $this->getCreateUserButton(),
                         'visible' => Yii::$app->getUser()->can('userCreate'),
                         'options' => [
                             'class' => 'col-12',
@@ -73,14 +74,6 @@ class UserGridView extends GridView
     }
 
     /**
-     * @return string
-     */
-    public function createUserButton()
-    {
-        return Html::a(Html::iconText('user-plus', Yii::t('skeleton', 'New User')), ['create'], ['class' => 'btn btn-primary']);
-    }
-
-    /**
      * @return array
      */
     public function nameColumn()
@@ -89,7 +82,7 @@ class UserGridView extends GridView
             'attribute' => 'name',
             'content' => function (User $user) {
                 $name = ($name = $user->getUsername()) ? Html::markKeywords($name, $this->getSearchKeywords()) : Html::tag('span', Yii::t('skeleton', 'User'), ['class' => 'text-muted']);
-                return Html::a($name, ['update', 'id' => $user->id]);
+                return ($route = $this->getRoute($user)) ? Html::a($name, $route) : $name;
             }
         ];
     }
@@ -104,10 +97,7 @@ class UserGridView extends GridView
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
             'contentOptions' => ['class' => 'd-none d-md-table-cell'],
             'content' => function (User $user) {
-                return Html::a(Html::markKeywords($user->email, $this->getSearchKeywords()), [
-                    'update',
-                    'id' => $user->id
-                ]);
+                return Html::markKeywords($user->email, $this->getSearchKeywords());
             }
         ];
     }
@@ -151,18 +141,36 @@ class UserGridView extends GridView
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
             'contentOptions' => ['class' => 'd-none d-md-table-cell text-right'],
             'content' => function (User $user) {
-                $buttons = [];
-
-                if (Yii::$app->getUser()->can('userUpdate', ['user' => $user])) {
-                    $buttons[] = Html::a(Icon::tag('wrench'), [
-                        'update',
-                        'id' => $user->id
-                    ], ['class' => 'btn btn-secondary']);
-                }
-
-                return Html::buttons($buttons);
+                return Html::buttons($this->getRowButtons($user));
             }
         ];
+    }
+
+    /**
+     * @return string
+     */
+    protected function getCreateUserButton()
+    {
+        return Html::a(Html::iconText('user-plus', Yii::t('skeleton', 'New User')), ['create'], ['class' => 'btn btn-primary']);
+    }
+
+    /**
+     * @param $user
+     * @return array|string
+     */
+    protected function getRowButtons($user)
+    {
+        return ($route = $this->getRoute($user)) ? Html::a(Icon::tag('wrench'), $route, ['class' => 'btn btn-secondary']) : [];
+    }
+
+    /**
+     * @param \davidhirtz\yii2\skeleton\db\ActiveRecord $model
+     * @param array $params
+     * @return array
+     */
+    protected function getRoute($model, $params = []): array
+    {
+        return Yii::$app->getUser()->can('userUpdate', ['user' => $model]) ? parent::getRoute($model, $params) : false;
     }
 
     /**

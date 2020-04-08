@@ -30,7 +30,8 @@ trait StatusGridViewTrait
         return [
             'contentOptions' => ['class' => 'text-center'],
             'content' => function ($model) {
-                return Html::a($this->getStatusIcon($model), $this->getRoute($model));
+                $icon = $this->getStatusIcon($model);
+                return ($route = $this->getRoute($model)) ? Html::a($icon, $route) : $icon;
             }
         ];
     }

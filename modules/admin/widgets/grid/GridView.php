@@ -13,7 +13,7 @@ use yii\helpers\StringHelper;
 use yii\helpers\Url;
 
 /**
- * Class GridView.
+ * Class GridView
  * @package davidhirtz\yii2\skeleton\modules\admin\widgets
  */
 class GridView extends \yii\grid\GridView
@@ -381,9 +381,9 @@ class GridView extends \yii\grid\GridView
     /**
      * @param ActiveRecord $model
      * @param array $params
-     * @return array
+     * @return array|false
      */
-    protected function getRoute($model, $params = []): array
+    protected function getRoute($model, $params = [])
     {
         return array_merge(['update', 'id' => $model->getPrimaryKey()], $params);
     }
