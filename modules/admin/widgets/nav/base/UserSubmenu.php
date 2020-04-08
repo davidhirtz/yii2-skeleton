@@ -28,6 +28,7 @@ class UserSubmenu extends Submenu
                 [
                     'label' => Yii::t('skeleton', 'User'),
                     'url' => ['/admin/user/update', 'id' => $this->user->id],
+                    'visible' => Yii::$app->getUser()->can('userUpdate', ['user' => $this->user]),
                     'icon' => 'user',
                     'labelOptions' => [
                         'class' => 'd-none d-md-inline'
@@ -36,8 +37,8 @@ class UserSubmenu extends Submenu
                 [
                     'label' => Yii::t('skeleton', 'Permissions'),
                     'url' => ['/admin/auth/view', 'user' => $this->user->id],
-                    'icon' => 'unlock-alt',
                     'visible' => Yii::$app->getUser()->can('authUpdate', ['user' => $this->user]),
+                    'icon' => 'unlock-alt',
                     'labelOptions' => [
                         'class' => 'd-none d-md-inline'
                     ],

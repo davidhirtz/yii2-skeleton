@@ -168,7 +168,7 @@ class UserGridView extends GridView
      * @param array $params
      * @return array
      */
-    protected function getRoute($model, $params = []): array
+    protected function getRoute($model, $params = [])
     {
         return Yii::$app->getUser()->can('userUpdate', ['user' => $model]) ? parent::getRoute($model, $params) : false;
     }
