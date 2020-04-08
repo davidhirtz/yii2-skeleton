@@ -24,11 +24,13 @@ class UserSubmenu extends Submenu
     public function init()
     {
         if ($this->user && !$this->user->getIsNewRecord()) {
+            $canUpdate = Yii::$app->getUser()->can('userUpdate', ['user' => $this->user]);
+
             $this->items = [
                 [
                     'label' => Yii::t('skeleton', 'User'),
                     'url' => ['/admin/user/update', 'id' => $this->user->id],
-                    'visible' => Yii::$app->getUser()->can('userUpdate', ['user' => $this->user]),
+                    'visible' => $canUpdate,
                     'icon' => 'user',
                     'labelOptions' => [
                         'class' => 'd-none d-md-inline'
@@ -55,7 +57,8 @@ class UserSubmenu extends Submenu
             ];
 
             if (!$this->title) {
-                $this->title = Html::a($this->user->getOldAttribute('name'), ['/admin/user/update', 'id' => $this->user->id]);
+                $name = $this->user->getOldAttribute('name');
+                $this->title = $canUpdate ? Html::a($name, ['/admin/user/update', 'id' => $this->user->id]) : $name;
             }
 
         } else {
