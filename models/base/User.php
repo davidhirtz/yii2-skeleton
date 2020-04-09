@@ -206,7 +206,7 @@ abstract class User extends ActiveRecord
     public function validateTimezone()
     {
         if (!in_array($this->timezone, \DateTimeZone::listIdentifiers())) {
-            $this->timezone = null;
+            $this->timezone = Yii::$app->getTimeZone();
         }
     }
 
