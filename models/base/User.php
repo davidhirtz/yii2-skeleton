@@ -239,15 +239,7 @@ abstract class User extends ActiveRecord
      */
     public function beforeValidate(): bool
     {
-        if (!$this->language) {
-            $this->language = Yii::$app->language;
-        }
-
-        if ($this->is_owner) {
-            $this->status = static::STATUS_ENABLED;
-        }
-
-        if($this->status === null) {
+        if($this->status === null ||$this->is_owner) {
             $this->status = static::STATUS_ENABLED;
         }
 
