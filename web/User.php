@@ -151,7 +151,7 @@ class User extends \yii\web\User
         $columns = [
             'user_id' => $identity->id,
             'type' => $identity->loginType,
-            'browser' => Yii::$app->getRequest()->getUserAgent(),
+            'browser' => mb_substr(Yii::$app->getRequest()->getUserAgent(), 0, 255),
             'ip' => StringHelper::ip2Long($identity->ip ?: Yii::$app->getRequest()->getUserIP()),
             'created_at' => $identity->last_login,
         ];
