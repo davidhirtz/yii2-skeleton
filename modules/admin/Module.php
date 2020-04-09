@@ -39,6 +39,11 @@ class Module extends \yii\base\Module
     /**
      * @var string
      */
+    public $controllerNamespace = 'app\modules\admin\controllers';
+
+    /**
+     * @var string
+     */
     public $layout = '@skeleton/modules/admin/views/layouts/main';
 
     /**

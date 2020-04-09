@@ -105,6 +105,7 @@ class Bootstrap implements BootstrapInterface
                 'admin' => [
                     'class' => 'davidhirtz\yii2\skeleton\modules\admin\Module',
                     'alias' => 'admin',
+                    'viewPath' => '@app/modules/admin/views',
                 ],
             ],
         ];
