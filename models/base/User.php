@@ -239,7 +239,7 @@ abstract class User extends ActiveRecord
      */
     public function beforeValidate(): bool
     {
-        if($this->status === null ||$this->is_owner) {
+        if ($this->status === null || $this->is_owner) {
             $this->status = static::STATUS_ENABLED;
         }
 
