@@ -264,7 +264,7 @@ abstract class User extends ActiveRecord
     public function beforeSave($insert): bool
     {
         if ($insert) {
-            $this->is_owner = !static::find()->count() ? true : false;
+            $this->is_owner = !static::find()->exists() ? true : false;
         }
 
         return parent::beforeSave($insert);
