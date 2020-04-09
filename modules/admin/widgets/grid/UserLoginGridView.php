@@ -50,7 +50,7 @@ class UserLoginGridView extends GridView
                     'attribute' => 'user',
                     'visible' => !$this->user,
                     'content' => function (UserLogin $login) {
-                        return $login->user ? Html::a(($name = $login->user->getUsername()) ?: Html::tag('span', Yii::t('skeleton', 'User'), ['class' => !$name ? 'text-muted' : null]), ['view', 'id' => $login->user_id]) : '';
+                        return $login->user ? Html::a(($name = $login->user->getUsername()) ?: Html::tag('span', Yii::t('skeleton', 'User'), ['class' => !$name ? 'text-muted' : null]), ['view', 'user' => $login->user_id]) : '';
                     }
                 ],
                 [
