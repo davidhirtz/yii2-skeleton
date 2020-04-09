@@ -31,10 +31,12 @@ class UserLoginGridView extends GridView
                 [
                     'contentOptions' => ['class' => 'text-center'],
                     'content' => function (UserLogin $login) {
-                        return Icon::tag($login->getTypeIcon() ?: Icon::brand($login->type), [
+                        $options = [
                             'data-toggle' => 'tooltip',
                             'title' => $login->getTypeName()
-                        ]);
+                        ];
+
+                        return ($icon = $login->getTypeIcon()) ? Icon::tag($icon, $options) : Icon::brand($login->type, $options);
                     }
                 ],
                 [
