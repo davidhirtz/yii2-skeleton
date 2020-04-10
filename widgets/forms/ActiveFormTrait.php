@@ -86,7 +86,6 @@ trait ActiveFormTrait
             $i18n = Yii::$app->getI18n();
 
             foreach ($this->fields as $fieldConfig) {
-
                 $fieldConfig = (array)$fieldConfig;
                 $attribute = array_shift($fieldConfig);
 
@@ -100,7 +99,7 @@ trait ActiveFormTrait
 
                 // Horizontal line.
                 if ($attribute == '-') {
-                    echo $this->renderHorizontalLine();
+                    echo $this->horizontalLine();
                     continue;
                 }
 
@@ -167,6 +166,15 @@ trait ActiveFormTrait
     }
 
     /**
+     * Renders the configured buttons.
+     */
+    public function renderButtons()
+    {
+        echo $this->buttonRow($this->buttons ?: ($this->showSubmitButton ? $this->button() : null));
+    }
+
+    /**
+     * @deprecated please use {@link ActiveFormTrait::horizontalLine()}
      * @return string
      */
     public function renderHorizontalLine()
@@ -175,13 +183,12 @@ trait ActiveFormTrait
     }
 
     /**
-     * Renders the configured buttons.
+     * @return string
      */
-    public function renderButtons()
+    public function horizontalLine()
     {
-        echo $this->buttonRow($this->buttons ?: ($this->showSubmitButton ? $this->button() : null));
+        return '<hr>';
     }
-
     /**
      * @param string $label
      * @param array $options
@@ -203,13 +210,14 @@ trait ActiveFormTrait
     }
 
     /**
-     * @param array|string $buttons
+     * @param string $content
      * @param array $options
      * @return string
      */
-    public function buttonRow($buttons, $options = [])
+    public function label($content, $options = [])
     {
-        return $buttons ? $this->row($this->offset(Html::buttons($buttons, $options)), ['class' => 'form-group-buttons']) : null;
+        Html::addCssClass($options, $this->fieldConfig['horizontalCssClasses']['label']);
+        return Html::tag('div', $content, $options);
     }
 
     /**
@@ -217,26 +225,10 @@ trait ActiveFormTrait
      * @param array $options
      * @return string
      */
-    public function textRow($content, $options = [])
+    public function input($content, $options = [])
     {
-        return $this->row($this->offset(Html::formText($content, $options)));
-    }
-
-    /**
-     * @param array $items
-     * @param array $options
-     * @return string
-     */
-    public function listRow($items, $options = [])
-    {
-        if (!$options) {
-            $options = [
-                'class' => 'list-unstyled small text-muted',
-                'encode' => false,
-            ];
-        }
-
-        return $this->renderHorizontalLine() . $this->textRow(Html::ul($items, $options));
+        Html::addCssClass($options, $this->fieldConfig['horizontalCssClasses']['input']);
+        return Html::tag('div', $content, $options);
     }
 
     /**
@@ -259,6 +251,65 @@ trait ActiveFormTrait
     {
         Html::addCssClass($options, $this->fieldConfig['horizontalCssClasses']['field']);
         return Html::tag('div', $content, $options);
+    }
+
+    /**
+     * @param string $content
+     * @param array $options
+     * @return string
+     */
+    public function wrapper($content, $options = [])
+    {
+        Html::addCssClass($options, $this->fieldConfig['horizontalCssClasses']['wrapper']);
+        return Html::tag('div', $content, $options);
+    }
+
+    /**
+     * @param array|string $buttons
+     * @param array $options
+     * @return string
+     */
+    public function buttonRow($buttons, $options = [])
+    {
+        return $buttons ? $this->row($this->offset(Html::buttons($buttons, $options)), ['class' => 'form-group-buttons']) : null;
+    }
+
+    /**
+     * @param string $label
+     * @param string $content
+     * @param array $options
+     * @return string
+     */
+    public function labelRow($label, $content, $options = [])
+    {
+        return $this->row($this->label($label) . $this->wrapper($content), $options);
+    }
+
+    /**
+     * @param array $items
+     * @param array $options
+     * @return string
+     */
+    public function listRow($items, $options = [])
+    {
+        if (!$options) {
+            $options = [
+                'class' => 'list-unstyled small text-muted',
+                'encode' => false,
+            ];
+        }
+
+        return $this->horizontalLine() . $this->textRow(Html::ul($items, $options));
+    }
+
+    /**
+     * @param string $content
+     * @param array $options
+     * @return string
+     */
+    public function textRow($content, $options = [])
+    {
+        return $this->row($this->offset(Html::formText($content, $options)));
     }
 
     /**
