@@ -174,7 +174,9 @@ trait ActiveFormTrait
     }
 
     /**
-     * @deprecated please use {@link ActiveFormTrait::horizontalLine()}
+     * @deprecated as the "render" methods should echo instead of return, please use
+     * {@link ActiveFormTrait::horizontalLine()} instead.
+     *
      * @return string
      */
     public function renderHorizontalLine()
