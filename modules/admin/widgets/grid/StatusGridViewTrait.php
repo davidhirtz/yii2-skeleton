@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid;
 
+use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\db\StatusAttributeTrait;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
@@ -23,6 +24,11 @@ trait StatusGridViewTrait
     public $status;
 
     /**
+     * @var string
+     */
+    public $statusParamName = 'status';
+
+    /**
      * @return array
      */
     public function statusColumn()
@@ -30,6 +36,7 @@ trait StatusGridViewTrait
         return [
             'contentOptions' => ['class' => 'text-center'],
             'content' => function ($model) {
+                /** @var ActiveRecord|StatusAttributeTrait $model */
                 $icon = $this->getStatusIcon($model);
                 return ($route = $this->getRoute($model)) ? Html::a($icon, $route) : $icon;
             }
@@ -46,7 +53,7 @@ trait StatusGridViewTrait
         return ButtonDropdown::widget([
             'label' => $status ? Html::tag('strong', $status['plural'] ?? $status['name']) : Yii::t('skeleton', 'Status'),
             'items' => $this->statusDropdownItems(),
-            'paramName' => 'status',
+            'paramName' => $this->statusParamName,
         ]);
     }
 
@@ -72,7 +79,7 @@ trait StatusGridViewTrait
         foreach ($this->getModel()::getStatuses() as $id => $status) {
             $items[] = [
                 'label' => $status['plural'] ?? $status['name'],
-                'url' => Url::current(['status' => $id, 'page' => null]),
+                'url' => Url::current([$this->statusParamName => $id, 'page' => null]),
             ];
         }
 

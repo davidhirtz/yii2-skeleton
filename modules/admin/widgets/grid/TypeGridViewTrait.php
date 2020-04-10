@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid;
 
+use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\db\TypeAttributeTrait;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
@@ -22,6 +23,11 @@ trait TypeGridViewTrait
     public $type;
 
     /**
+     * @var string
+     */
+    public $typeParamName = 'type';
+
+    /**
      * @return array
      */
     public function typeColumn()
@@ -30,8 +36,8 @@ trait TypeGridViewTrait
             'attribute' => 'type',
             'visible' => !$this->type && count($this->getModel()::getTypes()) > 1,
             'content' => function ($model) {
-                /** @var TypeAttributeTrait $model */
-                return Html::a($model->getTypeName(), $this->getRoute($model));
+                /** @var ActiveRecord|TypeAttributeTrait $model */
+                return ($route = $this->getRoute($model)) ? Html::a($model->getTypeName(), $route) : $model->getTypeName();
             }
         ];
     }
@@ -46,7 +52,7 @@ trait TypeGridViewTrait
         return ButtonDropdown::widget([
             'label' => $type ? Html::tag('strong', $type['plural'] ?? $type['name']) : Yii::t('skeleton', 'Type'),
             'items' => $this->typeDropdownItems(),
-            'paramName' => 'type',
+            'paramName' => $this->typeParamName,
         ]);
     }
 
@@ -60,7 +66,7 @@ trait TypeGridViewTrait
         foreach ($this->getModel()::getTypes() as $id => $type) {
             $items[] = [
                 'label' => $type['plural'] ?? $type['name'],
-                'url' => Url::current(['type' => $id, 'page' => null]),
+                'url' => Url::current([$this->typeParamName => $id, 'page' => null]),
             ];
         }
 
