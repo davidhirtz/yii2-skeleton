@@ -144,6 +144,9 @@ abstract class User extends ActiveRecord
                 'unique',
                 'message' => Yii::t('skeleton', 'This username is already used by another user.'),
                 'skipOnError' => true,
+                'when' => function () {
+                    return $this->isAttributeChanged('name');
+                }
             ],
             [
                 ['email'],
@@ -160,6 +163,9 @@ abstract class User extends ActiveRecord
                 'unique',
                 'message' => Yii::t('skeleton', 'This email is already used by another user.'),
                 'skipOnError' => true,
+                'when' => function () {
+                    return $this->isAttributeChanged('email');
+                }
             ],
             [
                 ['password'],
