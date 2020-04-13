@@ -113,7 +113,7 @@ abstract class User extends ActiveRecord
                 'trim',
             ],
             [
-                ['status', 'email', 'language'],
+                ['email'],
                 'required',
             ],
             [
