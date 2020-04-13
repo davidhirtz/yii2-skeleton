@@ -22,6 +22,11 @@ class Module extends \yii\base\Module
     public $alias;
 
     /**
+     * @var array containing the roles to access any admin module or controller
+     */
+    public $roles = ['admin'];
+
+    /**
      * @var array containing the admin menu items
      */
     public $navbarItems = [];

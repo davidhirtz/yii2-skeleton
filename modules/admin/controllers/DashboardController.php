@@ -9,6 +9,8 @@ use yii\filters\AccessControl;
 /**
  * Class SiteController.
  * @package app\controllers
+ *
+ * @property Module $module
  */
 class DashboardController extends Controller
 {
@@ -24,7 +26,7 @@ class DashboardController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['admin'],
+                        'roles' => $this->module->roles,
                     ],
                 ],
             ],
@@ -36,12 +38,9 @@ class DashboardController extends Controller
      */
     public function actionIndex()
     {
-        /** @var Module $module */
-        $module = $this->module;
-
         /** @noinspection MissedViewInspection */
         return $this->render('index', [
-            'panels' => $module->panels,
+            'panels' => $this->module->panels,
         ]);
     }
 }
