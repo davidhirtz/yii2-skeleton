@@ -57,7 +57,7 @@ class UserSubmenu extends Submenu
             ];
 
             if (!$this->title) {
-                $name = $this->user->getOldAttribute('name');
+                $name = $this->user->getUsername();
                 $this->title = $canUpdate ? Html::a($name, ['/admin/user/update', 'id' => $this->user->id]) : $name;
             }
 
