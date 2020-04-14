@@ -63,7 +63,7 @@ $this->setTitle(Yii::t('skeleton', 'Permissions'));
                     $items = [];
 
                     foreach ($authItem->users as $user) {
-                        $items[$user->id] = Html::a($user->getUsername(), ['user', 'id' => $user->id]);
+                        $items[$user->id] = Html::a($user->getUsername(), ['auth/view', 'user' => $user->id]);
                     }
 
                     return Html::ul(array_filter($items), ['class' => 'list-unstyled', 'encode' => false]);
