@@ -40,10 +40,10 @@ class UserLoginGridView extends GridView
                     }
                 ],
                 [
-                    'attribute' => 'ip',
+                    'attribute' => 'ip_address',
                     'content' => function (UserLogin $login) {
-                        $ip = $login->getDisplayIp();
-                        return $ip ? Html::a($login->getDisplayIp(), ['index', 'q' => $login->ip]) : '';
+                        $ipAddress = $login->getDisplayIp();
+                        return $ipAddress ? Html::a($ipAddress, ['index', 'q' => $ipAddress]) : '';
                     }
                 ],
                 [

@@ -45,9 +45,9 @@ class LoginForm extends Model
     public $cookieLifetime;
 
     /**
-     * @var integer
+     * @var string
      */
-    public $ip;
+    public $ipAddress;
 
     /**
      * @inheritdoc
@@ -107,7 +107,7 @@ class LoginForm extends Model
             $user = $this->getUser();
             $user->generatePasswordHash($this->password);
             $user->loginType = UserLogin::TYPE_LOGIN;
-            $user->ip = $this->ip;
+            $user->ipAddress = $this->ipAddress;
 
             return Yii::$app->getUser()->login($user, $this->rememberMe ? ($this->cookieLifetime ?: $user->cookieLifetime) : 0);
         }

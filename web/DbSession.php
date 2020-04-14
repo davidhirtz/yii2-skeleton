@@ -2,28 +2,30 @@
 
 namespace davidhirtz\yii2\skeleton\web;
 
+use davidhirtz\yii2\skeleton\models\SessionAuthKey;
 use Yii;
 
 /**
- * Class DbSession.
+ * Class DbSession
  * @package davidhirtz\yii2\skeleton\web
  */
 class DbSession extends \yii\web\DbSession
 {
     /**
+     * @
      * @var int
      */
     public $updateInterval = 60;
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function init()
     {
         if (!$this->writeCallback) {
             $this->writeCallback = function () {
                 return [
-                    'ip' => sprintf('%u', ip2long(Yii::$app->getRequest()->getUserIP())),
+                    'ip_address' => inet_pton(Yii::$app->getRequest()->getUserIP()),
                 ];
             };
         }
@@ -32,12 +34,12 @@ class DbSession extends \yii\web\DbSession
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function gcSession($maxLifetime)
     {
         $this->db->createCommand()
-            ->delete('session_auth_key', '[[expire]]<:expire', [':expire' => time()])
+            ->delete(SessionAuthKey::tableName(), '[[expire]]<:expire', [':expire' => time()])
             ->execute();
 
         return parent::gcSession($maxLifetime);

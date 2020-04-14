@@ -3,7 +3,6 @@
 namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\db\Identity;
-use davidhirtz\yii2\skeleton\helpers\StringHelper;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\datetime\DateTime;
 use Yii;
@@ -152,7 +151,7 @@ class User extends \yii\web\User
             'user_id' => $identity->id,
             'type' => $identity->loginType,
             'browser' => mb_substr(Yii::$app->getRequest()->getUserAgent(), 0, 255),
-            'ip' => StringHelper::ip2Long($identity->ip ?: Yii::$app->getRequest()->getUserIP()),
+            'ip_address' => inet_pton($identity->ipAddress ?: Yii::$app->getRequest()->getUserIP()),
             'created_at' => $identity->last_login,
         ];
 

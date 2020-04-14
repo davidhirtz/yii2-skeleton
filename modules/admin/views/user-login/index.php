@@ -5,7 +5,7 @@
  *
  * @var \davidhirtz\yii2\skeleton\web\View $this
  * @var ActiveDataProvider $provider
- * @var string $ip
+ * @var string $ipAddress
  */
 
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
@@ -21,6 +21,6 @@ $this->setTitle(Yii::t('skeleton', 'Logins'));
 <?= Panel::widget([
     'content' => UserLoginGridView::widget([
         'dataProvider' => $provider,
-        'search' => $ip,
+        'search' => $ipAddress,
     ]),
 ]); ?>

@@ -10,12 +10,13 @@ use davidhirtz\yii2\skeleton\db\ActiveRecord;
 /**
  * Class UserLogin
  * @package davidhirtz\yii2\skeleton\models\base
+ * @see \davidhirtz\yii2\skeleton\models\UserLogin
  *
  * @property string $id
  * @property integer $user_id
  * @property string $type
  * @property string $browser
- * @property integer $ip
+ * @property integer $ip_address
  * @property DateTime $created_at
  *
  * @property User $user
@@ -118,7 +119,7 @@ class UserLogin extends ActiveRecord
      */
     public function getDisplayIp()
     {
-        return $this->ip ? long2ip((int)$this->ip) : null;
+        return inet_ntop($this->ip_address) ?: '';
     }
 
     /***********************************************************************
@@ -133,7 +134,7 @@ class UserLogin extends ActiveRecord
         return [
             'typeName' => Yii::t('skeleton', 'Login'),
             'browser' => Yii::t('skeleton', 'Browser'),
-            'ip' => Yii::t('skeleton', 'IP'),
+            'ip_address' => Yii::t('skeleton', 'IP'),
             'user' => Yii::t('skeleton', 'User'),
             'created_at' => Yii::t('skeleton', 'Login'),
         ];

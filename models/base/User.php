@@ -9,6 +9,7 @@ use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\datetime\DateTime;
+use davidhirtz\yii2\skeleton\models\Session;
 use yii\db\ActiveQuery;
 use yii\helpers\Url;
 use Yii;
@@ -391,7 +392,7 @@ abstract class User extends ActiveRecord
     public function deleteActiveSessions(string $except = null)
     {
         return $this->getDb()->createCommand()
-            ->delete('{{%session}}', '[[user_id]]=:userId AND [[id]]!=:id', [
+            ->delete(Session::tableName(), '[[user_id]]=:userId AND [[id]]!=:id', [
                 ':userId' => $this->id,
                 ':id' => (string)$except
             ])

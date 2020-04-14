@@ -19,9 +19,9 @@ class Identity extends User implements IdentityInterface
     public $loginType;
 
     /**
-     * @var int
+     * @var string
      */
-    public $ip;
+    public $ipAddress;
 
     /**
      * @var int

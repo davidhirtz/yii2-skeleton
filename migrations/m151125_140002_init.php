@@ -3,6 +3,8 @@
 namespace davidhirtz\yii2\skeleton\migrations;
 
 use davidhirtz\yii2\skeleton\models\AuthClient;
+use davidhirtz\yii2\skeleton\models\Session;
+use davidhirtz\yii2\skeleton\models\SessionAuthKey;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\skeleton\models\User;
 use Yii;
@@ -99,20 +101,19 @@ class m151125_140002_init extends \m140506_102106_rbac_init
             'user_id' => 'int unsigned NOT NULL',
             'type' => 'varchar(12) NOT NULL',
             'browser' => 'varchar(255) NULL',
-            'ip' => 'bigint unsigned DEFAULT NULL',
+            'ip_address' => 'varbinary(16) NULL',
             'created_at' => 'datetime NOT NULL',
             'PRIMARY KEY ([[id]])',
             'KEY [[user_id]] ([[user_id]])',
-            'KEY [[ip]] ([[ip]])',
         ], $this->getTableOptions());
 
         /**
          * Session.
          */
-        $this->createTable('{{%session}}', [
+        $this->createTable(Session::tableName(), [
             'id' => 'char(64) NOT NULL',
             'user_id' => 'int unsigned DEFAULT NULL',
-            'ip' => 'int unsigned NOT NULL DEFAULT "0"',
+            'ip_address' => 'varbinary(16) NULL',
             'expire' => 'int unsigned DEFAULT NULL',
             'data' => 'longblob',
             'PRIMARY KEY ([[id]])',
@@ -123,7 +124,7 @@ class m151125_140002_init extends \m140506_102106_rbac_init
         /**
          * Cookie authentication key.
          */
-        $this->createTable('{{%session_auth_key}}', [
+        $this->createTable(SessionAuthKey::tableName(), [
             'id' => 'varchar(64) NOT NULL',
             'user_id' => 'int(10) unsigned NOT NULL',
             'expire' => 'int unsigned DEFAULT NULL',
@@ -139,8 +140,8 @@ class m151125_140002_init extends \m140506_102106_rbac_init
         $this->addForeignKey('user_created_by_user_id_ibfk', User::tableName(), 'created_by_user_id', User::tableName(), 'id', 'SET NULL');
         $this->addForeignKey('auth_assignment_user_id_ibfk', $auth->assignmentTable, 'user_id', User::tableName(), 'id', 'CASCADE');
         $this->addForeignKey('login_user_id_ibfk', UserLogin::tableName(), 'user_id', User::tableName(), 'id', 'CASCADE');
-        $this->addForeignKey('session_user_id_ibfk', '{{%session}}', 'user_id', User::tableName(), 'id', 'CASCADE');
-        $this->addForeignKey('session_auth_key_user_id_ibfk', '{{%session_auth_key}}', 'user_id', User::tableName(), 'id', 'CASCADE');
+        $this->addForeignKey('session_user_id_ibfk', Session::tableName(), 'user_id', User::tableName(), 'id', 'CASCADE');
+        $this->addForeignKey('session_auth_key_user_id_ibfk', SessionAuthKey::tableName(), 'user_id', User::tableName(), 'id', 'CASCADE');
 
         /**
          * Authentication data.
@@ -185,8 +186,8 @@ class m151125_140002_init extends \m140506_102106_rbac_init
     public function down()
     {
         $this->dropTable(AuthClient::tableName());
-        $this->dropTable('{{%session_auth_key}}');
-        $this->dropTable('{{%session}}');
+        $this->dropTable(SessionAuthKey::tableName());
+        $this->dropTable(Session::tableName());
         $this->dropTable(UserLogin::tableName());
 
         parent::down();

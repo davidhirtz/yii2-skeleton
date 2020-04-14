@@ -3,7 +3,6 @@
 namespace davidhirtz\yii2\skeleton\models\forms\base;
 
 use davidhirtz\yii2\skeleton\db\Identity;
-use davidhirtz\yii2\skeleton\helpers\StringHelper;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use Yii;
 
@@ -40,7 +39,7 @@ class SignupForm extends Identity
     /**
      * @var integer the web user ip.
      */
-    public $ip;
+    public $ipAddress;
 
     /**
      * @var int
@@ -110,9 +109,9 @@ class SignupForm extends Identity
      */
     public function validateIp()
     {
-        if ($this->ip && $this->spamProtectionInSeconds > 0) {
+        if ($this->ipAddress && $this->spamProtectionInSeconds > 0) {
             $signup = UserLogin::find()
-                ->where(['type' => UserLogin::TYPE_SIGNUP, 'ip' => StringHelper::ip2Long($this->ip)])
+                ->where(['type' => UserLogin::TYPE_SIGNUP, 'ip_address' => inet_pton($this->ipAddress)])
                 ->orderBy(['created_at' => SORT_DESC])
                 ->limit(1)
                 ->one();
@@ -137,8 +136,8 @@ class SignupForm extends Identity
             $this->status = static::STATUS_ENABLED;
         }
 
-        if (!$this->ip === null) {
-            $this->ip = Yii::$app->getRequest()->getUserIP();
+        if (!$this->ipAddress === null) {
+            $this->ipAddress = Yii::$app->getRequest()->getUserIP();
         }
 
         // There were some cases in which the value set by the ajax call

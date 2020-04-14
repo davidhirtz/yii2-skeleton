@@ -41,11 +41,13 @@ class UserLoginController extends Controller
      */
     public function actionIndex($q = null)
     {
+        $ipAddress = $q ? inet_pton($q) : null;
+
         $provider = new ActiveDataProvider([
             'sort' => false,
             'query' => UserLogin::find()
                 ->orderBy(['created_at' => SORT_DESC])
-                ->filterWhere(['ip' => $q])
+                ->filterWhere(['ip_address' => $ipAddress])
                 ->with([
                     'user' => function (UserQuery $query) {
                         $query->nameAttributesOnly();
@@ -59,7 +61,7 @@ class UserLoginController extends Controller
         /** @noinspection MissedViewInspection */
         return $this->render('index', [
             'provider' => $provider,
-            'ip' => $q ? long2ip($q) : null,
+            'ipAddress' => $ipAddress,
         ]);
     }
 
