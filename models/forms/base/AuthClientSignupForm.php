@@ -4,6 +4,9 @@ namespace davidhirtz\yii2\skeleton\models\forms\base;
 
 use davidhirtz\yii2\skeleton\auth\clients\ClientInterface;
 use davidhirtz\yii2\skeleton\db\Identity;
+use davidhirtz\yii2\skeleton\models\traits\PictureUploadTrait;
+use davidhirtz\yii2\skeleton\models\traits\SignupEmailTrait;
+use davidhirtz\yii2\skeleton\web\StreamUploadedFile;
 use Yii;
 use yii\behaviors\SluggableBehavior;
 
@@ -14,7 +17,7 @@ use yii\behaviors\SluggableBehavior;
  */
 class AuthClientSignupForm extends Identity
 {
-    use \davidhirtz\yii2\skeleton\models\traits\SignupEmailTrait;
+    use PictureUploadTrait, SignupEmailTrait;
 
     /**
      * @var ClientInterface
@@ -48,20 +51,17 @@ class AuthClientSignupForm extends Identity
         return array_merge(parent::rules(), [
             [
                 ['externalPictureUrl'],
+                /** {@link AuthClientSignupForm::validateExternalPictureUrl()} */
                 'validateExternalPictureUrl',
             ],
         ]);
     }
 
     /**
-     * @see \davidhirtz\yii2\skeleton\models\forms\AuthSignupForm::rules()
-     * @todo
+     * Override to implement validation if needed.
      */
     public function validateExternalPictureUrl()
     {
-//		if($this->externalPictureUrl)
-//		{
-//		}
     }
 
     /**
@@ -82,6 +82,10 @@ class AuthClientSignupForm extends Identity
             $this->language = Yii::$app->language;
         }
 
+        if ($this->externalPictureUrl) {
+            $this->upload = new StreamUploadedFile(['url' => $this->externalPictureUrl]);
+        }
+
         return parent::beforeValidate();
     }
 
@@ -91,8 +95,9 @@ class AuthClientSignupForm extends Identity
      */
     public function afterValidate()
     {
-        if($this->hasErrors('email')) {
+        if ($this->hasErrors('email')) {
             $this->clearErrors('email');
+
             $this->addError('email', Yii::t('skeleton', 'A user with email {email} already exists but is not linked to this {client} account. Login using email first to link it.', [
                 'client' => $this->getClient()->getTitle(),
                 'email' => $this->email,
@@ -103,10 +108,27 @@ class AuthClientSignupForm extends Identity
     }
 
     /**
+     * @param bool $insert
+     * @return bool
+     */
+    public function beforeSave($insert): bool
+    {
+        if ($this->upload) {
+            $this->generatePictureFilename();
+        }
+
+        return parent::beforeSave($insert);
+    }
+
+    /**
      * @inheritDoc
      */
     public function afterSave($insert, $changedAttributes)
     {
+        if ($this->upload) {
+            $this->savePictureUpload();
+        }
+
         parent::afterSave($insert, $changedAttributes);
 
         if ($insert) {

@@ -5,7 +5,7 @@ namespace davidhirtz\yii2\skeleton\models\traits;
 use Yii;
 
 /**
- * Class SignupEmailTrait.
+ * Class SignupEmailTrait
  * @package davidhirtz\yii2\skeleton\models\traits
  *
  * @property string $email

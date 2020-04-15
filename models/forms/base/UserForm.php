@@ -2,19 +2,21 @@
 
 namespace davidhirtz\yii2\skeleton\models\forms\base;
 
-use davidhirtz\yii2\skeleton\helpers\FileHelper;
+use davidhirtz\yii2\skeleton\models\traits\PictureUploadTrait;
 use davidhirtz\yii2\skeleton\models\User;
 use Yii;
 use yii\web\UploadedFile;
 
 /**
- * Class UserForm.
+ * Class UserForm
  * @package davidhirtz\yii2\skeleton\models\forms\base
  *
  * @method static \davidhirtz\yii2\skeleton\models\forms\UserForm findOne($condition)
  */
 class UserForm extends User
 {
+    use PictureUploadTrait;
+
     /**
      * @var string
      */
@@ -29,11 +31,6 @@ class UserForm extends User
      * @var string
      */
     public $oldEmail;
-
-    /**
-     * @var UploadedFile
-     */
-    public $upload;
 
     /**
      * @var array
@@ -161,19 +158,23 @@ class UserForm extends User
     }
 
     /**
-     * @return bool
+     * Validates old password on email change.
      */
-    public function validateEmail(): bool
+    public function validateEmail()
     {
-        return $this->isAttributeChanged('email') && !$this->validatePassword($this->oldPassword) ? $this->addInvalidAttributeError('oldPassword') : true;
+        if($this->isAttributeChanged('email') && !$this->validatePassword($this->oldPassword)) {
+            $this->addInvalidAttributeError('oldPassword');
+        }
     }
 
     /**
-     * @return bool
+     * Validates old password on password change.
      */
-    public function validateNewPassword(): bool
+    public function validateNewPassword()
     {
-        return $this->newPassword && !$this->validatePassword($this->oldPassword) ? $this->addInvalidAttributeError('oldPassword') : true;
+        if($this->newPassword && !$this->validatePassword($this->oldPassword)) {
+            $this->addInvalidAttributeError('oldPassword');
+        }
     }
 
     /**
@@ -186,37 +187,6 @@ class UserForm extends User
             ->setFrom(Yii::$app->params['email'])
             ->setTo($this->email)
             ->send();
-    }
-
-    /**
-     * @return bool
-     */
-    public function savePictureUpload(): bool
-    {
-        if (FileHelper::createDirectory($uploadPath = $this->getUploadPath())) {
-            return $this->upload->saveAs($uploadPath . $this->picture);
-        }
-
-        return false;
-    }
-
-    /**
-     * Generates filename for picture upload.
-     */
-    public function generatePictureFilename()
-    {
-        $this->picture = FileHelper::generateRandomFilename($this->upload->extension ?? null, 12);
-        $this->generatePictureFilenameInternal();
-    }
-
-    /**
-     * Makes sure the generated picture filename is not used already.
-     */
-    private function generatePictureFilenameInternal()
-    {
-        if (is_file($this->getUploadPath() . $this->picture)) {
-            $this->generatePictureFilename();
-        }
     }
 
     /**
