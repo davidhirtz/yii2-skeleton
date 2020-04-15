@@ -168,22 +168,16 @@ select.form-control {
   }
 }
 
-// Readonly controls as plain text
-//
-// Apply class to a readonly input to make it appear like regular plain
-// text (without any border, background color, focus indicator)
 
 .form-control-plaintext {
   display: block;
   width: 100%;
-  padding-top: $input-padding-y;
-  padding-bottom: $input-padding-y;
+  padding: $input-padding-y $input-padding-x;
+  border: $input-border-width solid transparent;
   margin-bottom: 0; // match inputs if this class comes on inputs with default margins
   line-height: $input-line-height;
   color: $input-plaintext-color;
   background-color: transparent;
-  border: solid transparent;
-  border-width: $input-border-width 0;
   outline: none !important;
 
   &.form-control-sm,
