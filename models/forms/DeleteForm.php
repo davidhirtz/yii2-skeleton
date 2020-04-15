@@ -17,7 +17,7 @@ class DeleteForm extends Model
     /**
      * @var string
      */
-    public $name;
+    public $value;
 
     /**
      * @var string
@@ -30,25 +30,20 @@ class DeleteForm extends Model
     private $_model;
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function rules()
     {
         return [
             [
-                ['name'],
-                'filter',
-                'filter' => 'trim',
-            ],
-            [
-                ['name'],
+                ['value'],
                 'required',
                 'when' => function () {
                     return $this->attribute;
                 }
             ],
             [
-                ['name'],
+                ['value'],
                 /** {@link DeleteForm::validateName()} */
                 'validateName',
             ],
@@ -64,7 +59,7 @@ class DeleteForm extends Model
         $methodName = 'validate' . Inflector::camelize($this->attribute);
         $model = $this->getModel();
 
-        if (method_exists($model, $methodName) ? !call_user_func([$model, $methodName], $this->name) : $this->name !== $model->getAttribute($this->attribute)) {
+        if (method_exists($model, $methodName) ? !call_user_func([$model, $methodName], $this->value) : $this->value !== $model->getAttribute($this->attribute)) {
             $this->addError('name', Yii::t('yii', '{attribute} is invalid.', [
                 'attribute' => $this->getModel()->getAttributeLabel($this->attribute),
             ]));
@@ -75,7 +70,6 @@ class DeleteForm extends Model
      * @return bool
      * @throws InvalidConfigException
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
      */
     public function delete()
     {
@@ -85,12 +79,12 @@ class DeleteForm extends Model
             }
 
         }
+
         return !$this->hasErrors();
     }
 
     /**
      * @return mixed
-     * @throws InvalidConfigException
      */
     public function getId()
     {
@@ -127,7 +121,7 @@ class DeleteForm extends Model
     public function attributeLabels()
     {
         return [
-            'name' => $this->getModel()->getAttributeLabel($this->attribute),
+            'value' => $this->getModel()->getAttributeLabel($this->attribute),
         ];
     }
 }

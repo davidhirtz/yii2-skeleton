@@ -39,6 +39,11 @@ class DeleteActiveForm extends ActiveForm
     public $label;
 
     /**
+     * @var array
+     */
+    public $fieldOptions = [];
+
+    /**
      * @var \davidhirtz\yii2\skeleton\models\forms\DeleteForm
      */
     private $_form;
@@ -52,7 +57,7 @@ class DeleteActiveForm extends ActiveForm
             $this->action = ['delete', 'id' => $this->model->getPrimaryKey()];
         }
 
-        if(!$this->label) {
+        if (!$this->label) {
             $this->label = Yii::t('skeleton', 'Delete');
         }
 
@@ -84,7 +89,8 @@ class DeleteActiveForm extends ActiveForm
     public function getForm()
     {
         if ($this->_form === null) {
-            $this->_form = new DeleteForm([
+            $this->_form = Yii::createObject([
+                'class' => 'davidhirtz\yii2\skeleton\models\forms\DeleteForm',
                 'model' => $this->model,
                 'attribute' => $this->attribute,
             ]);
@@ -111,7 +117,7 @@ class DeleteActiveForm extends ActiveForm
         }
 
         if ($this->attribute) {
-            echo $this->field($this->getForm(), 'name');
+            echo $this->field($this->getForm(), 'value', $this->fieldOptions);
         }
     }
 }

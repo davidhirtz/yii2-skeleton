@@ -58,7 +58,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
 
     /**
      * @param string $attribute
-     * @return bool
+     * @return false
      */
     public function addInvalidAttributeError($attribute): bool
     {

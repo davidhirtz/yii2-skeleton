@@ -160,8 +160,11 @@ class UserController extends Controller
             throw new NotFoundHttpException;
         }
 
-        $form = new DeleteForm([
+        /** @var DeleteForm $form */
+        $form = Yii::createObject([
+            'class' => 'davidhirtz\yii2\skeleton\models\forms\DeleteForm',
             'model' => $user,
+            'attribute' => 'email',
         ]);
 
         if ($form->load(Yii::$app->getRequest()->post())) {

@@ -136,9 +136,14 @@ if (!$user->isOwner()) {
         'title' => Yii::t('skeleton', 'Delete Account'),
         'content' => DeleteActiveForm::widget([
             'model' => $user,
-            'attribute' => 'name',
+            'attribute' => 'password',
             'action' => ['delete'],
-            'message' => Yii::t('skeleton', 'Type your username in the text field below to delete your account, all related items and uploaded files. This cannot be undone, please be certain!'),
+            'message' => Yii::t('skeleton', 'Type your password in the text field below to delete your account, all related items and uploaded files. This cannot be undone, please be certain!'),
+            'fieldOptions' => [
+                'inputOptions' => [
+                    'type' => 'password',
+                ],
+            ],
         ])
     ]);
 } else {

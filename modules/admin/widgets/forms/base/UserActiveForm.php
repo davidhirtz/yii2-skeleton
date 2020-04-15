@@ -26,7 +26,6 @@ class UserActiveForm extends ActiveForm
         'name',
         ['email', 'email'],
         ['newPassword', 'password'],
-        ['repeatPassword', 'password'],
         'oldPassword',
         '-',
         ['language', LanguageDropdown::class],
