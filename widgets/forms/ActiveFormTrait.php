@@ -174,10 +174,10 @@ trait ActiveFormTrait
     }
 
     /**
+     * @return string
      * @deprecated as the "render" methods should echo instead of return, please use
      * {@link ActiveFormTrait::horizontalLine()} instead.
      *
-     * @return string
      */
     public function renderHorizontalLine()
     {
@@ -191,6 +191,7 @@ trait ActiveFormTrait
     {
         return '<hr>';
     }
+
     /**
      * @param string $label
      * @param array $options
@@ -285,6 +286,17 @@ trait ActiveFormTrait
     public function labelRow($label, $content, $options = [])
     {
         return $this->row($this->label($label) . $this->wrapper($content), $options);
+    }
+
+    /**
+     * @param string $label
+     * @param string $content
+     * @param array $options
+     * @return string
+     */
+    public function plainTextRow($label, $content, $options = [])
+    {
+        return $this->row($this->label($label) . $this->wrapper(Html::tag('div', $content, ['class' => 'form-control-plaintext'])), $options);
     }
 
     /**
