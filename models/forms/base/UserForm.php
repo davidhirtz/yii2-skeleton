@@ -33,11 +33,6 @@ class UserForm extends User
     public $oldEmail;
 
     /**
-     * @var array
-     */
-    public $uploadExtensions = ['gif', 'jpg', 'jpeg', 'png'];
-
-    /**
      * @var bool
      */
     public $uploadCheckExtensionByMimeType = true;

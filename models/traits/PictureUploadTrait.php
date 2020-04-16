@@ -20,11 +20,23 @@ trait PictureUploadTrait
     public $upload;
 
     /**
+     * @var array
+     */
+    public $uploadExtensions = ['gif', 'jpg', 'jpeg', 'png'];
+
+    /**
      * Generates filename for picture upload.
      */
     public function generatePictureFilename()
     {
-        $this->picture = FileHelper::generateRandomFilename($this->upload->extension ?? null, 12);
+        $extension = $this->upload->extension ?? null;
+
+        if (!$extension) {
+            $extensions = array_intersect($this->uploadExtensions, FileHelper::getExtensionsByMimeType($this->upload->type ?? false));
+            $extension = $extensions ? current($extensions) : null;
+        }
+
+        $this->picture = FileHelper::generateRandomFilename($extension, 12);
         $this->generatePictureFilenameInternal();
     }
 

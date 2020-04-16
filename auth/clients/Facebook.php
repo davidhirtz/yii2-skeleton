@@ -88,7 +88,7 @@ class Facebook extends \yii\authclient\clients\Facebook implements ClientInterfa
         }
 
         if (isset($attributes['picture']['data']) && !$attributes['picture']['data']['is_silhouette']) {
-            $safe['picture'] = $attributes['picture']['data'];
+            $safe['externalPictureUrl'] = $attributes['picture']['data']['url'];
         }
 
         return $safe;

@@ -82,10 +82,6 @@ class AuthClientSignupForm extends Identity
             $this->language = Yii::$app->language;
         }
 
-        if ($this->externalPictureUrl) {
-            $this->upload = new StreamUploadedFile(['url' => $this->externalPictureUrl]);
-        }
-
         return parent::beforeValidate();
     }
 
@@ -113,8 +109,11 @@ class AuthClientSignupForm extends Identity
      */
     public function beforeSave($insert): bool
     {
-        if ($this->upload) {
-            $this->generatePictureFilename();
+        if ($insert) {
+            if ($this->externalPictureUrl) {
+                $this->upload = new StreamUploadedFile(['url' => $this->externalPictureUrl]);
+                $this->generatePictureFilename();
+            }
         }
 
         return parent::beforeSave($insert);
@@ -125,13 +124,13 @@ class AuthClientSignupForm extends Identity
      */
     public function afterSave($insert, $changedAttributes)
     {
-        if ($this->upload) {
-            $this->savePictureUpload();
-        }
-
         parent::afterSave($insert, $changedAttributes);
 
         if ($insert) {
+            if ($this->upload) {
+                $this->savePictureUpload();
+            }
+
             if (!$this->isUnconfirmed() || Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
                 Yii::$app->getUser()->login($this);
             }

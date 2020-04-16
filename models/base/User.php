@@ -271,7 +271,7 @@ abstract class User extends ActiveRecord
     public function beforeSave($insert): bool
     {
         if ($insert) {
-            $this->is_owner = !static::find()->exists() ? true : false;
+            $this->is_owner = !static::find()->exists();
         }
 
         return parent::beforeSave($insert);
@@ -289,6 +289,18 @@ abstract class User extends ActiveRecord
         }
 
         parent::afterSave($insert, $changedAttributes);
+    }
+
+    /**
+     * Deletes picture after delete.
+     */
+    public function afterDelete()
+    {
+        if ($this->picture) {
+            $this->deletePicture($this->picture);
+        }
+
+        parent::afterDelete();
     }
 
     /**
