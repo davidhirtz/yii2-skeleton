@@ -54,7 +54,6 @@ class UserForm extends User
             [
                 ['newPassword', 'repeatPassword'],
                 'required',
-                'on' => static::SCENARIO_INSERT,
             ],
             [
                 ['newPassword'],
