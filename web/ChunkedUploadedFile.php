@@ -73,7 +73,7 @@ class ChunkedUploadedFile extends \yii\web\UploadedFile
 
         // Unfortunately Yii's initializes UploadedFile without checking the definitions first.
         if ($this->maxSize === null) {
-            $this->maxSize = Yii::$container->getDefinitions()[__CLASS__]['maxSize'] ?? null;
+            $this->maxSize = Yii::$container->getDefinitions()[static::class]['maxSize'] ?? null;
         }
 
         if ($this->maxSize > 0 && $this->size > $this->maxSize) {
