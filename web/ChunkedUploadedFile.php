@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
+use yii\base\InvalidCallException;
 use yii\helpers\ArrayHelper;
 use Yii;
 
@@ -11,6 +12,8 @@ use Yii;
  * @package davidhirtz\yii2\skeleton\web
  *
  * @property string $partialName
+ * @method static ChunkedUploadedFile getInstance($model, $attribute)
+ * @method static ChunkedUploadedFile getInstanceByName($name)($name)
  */
 class ChunkedUploadedFile extends \yii\web\UploadedFile
 {
@@ -35,6 +38,11 @@ class ChunkedUploadedFile extends \yii\web\UploadedFile
     public $gcProbability = 1000;
 
     /**
+     * @var int|null the maximum file size for chunked uploads. Can be set via container definitions config.
+     */
+    public $maxSize = null;
+
+    /**
      * @var string
      */
     private $_partialName;
@@ -49,7 +57,7 @@ class ChunkedUploadedFile extends \yii\web\UploadedFile
      */
     public function init()
     {
-        // Try to get file name from header if it was  not set via FILES.
+        // Try to get file name from header if it was not set via FILES.
         if (!$this->name) {
             $this->name = rawurldecode(preg_replace('/(^[^"]+")|("$)/', '', ArrayHelper::getValue($_SERVER, 'HTTP_CONTENT_DISPOSITION')));
         }
@@ -63,7 +71,15 @@ class ChunkedUploadedFile extends \yii\web\UploadedFile
             $this->size = ArrayHelper::getValue($range, 3);
         }
 
-        if ($this->chunkOffset !== null) {
+        // Unfortunately Yii's initializes UploadedFile without checking the definitions first.
+        if ($this->maxSize === null) {
+            $this->maxSize = Yii::$container->getDefinitions()[__CLASS__]['maxSize'] ?? null;
+        }
+
+        if ($this->maxSize > 0 && $this->size > $this->maxSize) {
+            $this->error = UPLOAD_ERR_FORM_SIZE;
+
+        } elseif ($this->chunkOffset !== null) {
             if (file_put_contents($tempName = $this->getPartialUploadPath() . $this->getPartialName(), fopen($this->tempName, 'r'), FILE_APPEND) === false) {
                 $this->error = UPLOAD_ERR_CANT_WRITE;
             } else {
@@ -120,10 +136,6 @@ class ChunkedUploadedFile extends \yii\web\UploadedFile
 
         return $fileCount;
     }
-
-    /***********************************************************************
-     * Getters / setters.
-     ***********************************************************************/
 
     /**
      * @return string
@@ -186,43 +198,21 @@ class ChunkedUploadedFile extends \yii\web\UploadedFile
         return $this->chunkSize !== null && $this->error === UPLOAD_ERR_PARTIAL;
     }
 
-    /***********************************************************************
-     * Static methods.
-     ***********************************************************************/
-
     /**
-     * @inheritdoc
-     * @return ChunkedUploadedFile
-     */
-    public static function getInstance($model, $attribute)
-    {
-        return parent::getInstance($model, $attribute);
-    }
-
-    /**
-     * @inheritdoc
-     * @return ChunkedUploadedFile[]
+     * Multiple uploads are not supported for chunked uploads.
+     * @noinspection PhpDocSignatureInspection
      */
     public static function getInstances($model, $attribute)
     {
-        return parent::getInstances($model, $attribute);
+        throw new InvalidCallException;
     }
 
     /**
-     * @inheritdoc
-     * @return ChunkedUploadedFile
-     */
-    public static function getInstanceByName($name)
-    {
-        return parent::getInstanceByName($name);
-    }
-
-    /**
-     * @inheritdoc
-     * @return ChunkedUploadedFile[]
+     * Multiple uploads are not supported for chunked uploads.
+     * @noinspection PhpDocSignatureInspection
      */
     public static function getInstancesByName($name)
     {
-        return parent::getInstancesByName($name);
+        throw new InvalidCallException;
     }
 }
