@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
+use davidhirtz\yii2\skeleton\models\Session;
 use davidhirtz\yii2\skeleton\web\Controller;
 use Yii;
 use yii\caching\Cache;
@@ -33,7 +34,7 @@ class SystemController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['delete', 'flush', 'index', 'publish', 'view'],
+                        'actions' => ['delete', 'flush', 'index', 'publish', 'session-gc', 'view'],
                         'roles' => ['admin'],
                     ],
                 ],
@@ -44,6 +45,7 @@ class SystemController extends Controller
                     'delete' => ['post'],
                     'flush' => ['post'],
                     'publish' => ['post'],
+                    'session-gc' => ['post'],
                 ],
             ],
         ];
@@ -88,11 +90,19 @@ class SystemController extends Controller
             'sort' => false,
         ]);
 
+        // Sessions.
+        $sessionCount = Session::find()->count();
+        $expiredSessionCount = Session::find()
+            ->where(['<', 'expire', time()])
+            ->count();
+
         /** @noinspection MissedViewInspection */
         return $this->render('index', [
             'assets' => $assets,
             'caches' => $caches,
             'logs' => $logs,
+            'sessionCount' => $sessionCount,
+            'expiredSessionCount' => $expiredSessionCount,
         ]);
     }
 
@@ -143,6 +153,16 @@ class SystemController extends Controller
         $schema = $connection->getSchema();
         $schema->refresh();
 
+        return $this->redirect(['index']);
+    }
+
+    /**
+     * @return \yii\web\Response
+     */
+    public function actionSessionGc()
+    {
+        Yii::$app->getSession()->gcSession(0);
+        $this->success(Yii::t('skeleton', 'Expired sessions were deleted.'));
         return $this->redirect(['index']);
     }
 

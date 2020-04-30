@@ -7,6 +7,8 @@
  * @var \yii\data\ArrayDataProvider $assets
  * @var \yii\data\ArrayDataProvider $caches
  * @var \yii\data\ArrayDataProvider $logs
+ * @var int $sessionCount
+ * @var int $expiredSessionCount
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
@@ -17,6 +19,38 @@ use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 
 $this->setTitle(Yii::t('skeleton', 'System'));
 ?>
+
+<?= Submenu::widget([
+    'title' => Yii::t('skeleton', 'Logs'),
+]); ?>
+
+<?= Panel::widget([
+    'content' => GridView::widget([
+        'dataProvider' => $logs,
+        'layout' => '{items}{footer}',
+        'columns' => [
+            [
+                'label' => Yii::t('skeleton', 'Name'),
+                'content' => function ($modified, $name) {
+                    return Html::tag('div', Html::a($name, ['view', 'log' => $name]), ['class' => 'strong']) .
+                        Html::tag('div', Yii::t('skeleton', 'Last updated {timestamp}.', [
+                            'timestamp' => \davidhirtz\yii2\timeago\Timeago::tag($modified),
+                        ]), ['class' => 'small']);
+                }
+            ],
+            [
+                'contentOptions' => ['class' => 'text-right'],
+                'content' => function ($modified, $name) {
+                    return Html::buttons(Html::a(Icon::tag('trash'), ['delete', 'log' => $name], [
+                        'class' => 'btn btn-secondary',
+                        'data-method' => 'post',
+                    ]));
+                }
+            ],
+        ],
+    ]),
+]); ?>
+
 
 <?= Submenu::widget([
     'title' => Yii::t('skeleton', 'Assets'),
@@ -93,32 +127,35 @@ $this->setTitle(Yii::t('skeleton', 'System'));
 ]); ?>
 
 <?= Submenu::widget([
-    'title' => Yii::t('skeleton', 'Logs'),
+    'title' => Yii::t('skeleton', 'Sessions'),
 ]); ?>
 
-<?= Panel::widget([
-    'content' => GridView::widget([
-        'dataProvider' => $logs,
-        'layout' => '{items}{footer}',
-        'columns' => [
-            [
-                'label' => Yii::t('skeleton', 'Name'),
-                'content' => function ($modified, $name) {
-                    return Html::tag('div', Html::a($name, ['view', 'log' => $name]), ['class' => 'strong']) .
-                        Html::tag('div', Yii::t('skeleton', 'Last updated {timestamp}.', [
-                            'timestamp' => \davidhirtz\yii2\timeago\Timeago::tag($modified),
-                        ]), ['class' => 'small']);
-                }
-            ],
-            [
-                'contentOptions' => ['class' => 'text-right'],
-                'content' => function ($modified, $name) {
-                    return Html::buttons(Html::a(Icon::tag('trash'), ['delete', 'log' => $name], [
-                        'class' => 'btn btn-secondary',
-                        'data-method' => 'post',
-                    ]));
-                }
-            ],
-        ],
-    ]),
-]); ?>
+<div class="card card-default">
+    <div class="card-body">
+        <div class="grid-view">
+            <table class="table table-vertical table-striped table-hover">
+                <thead>
+                <tr>
+                    <th>Sessions</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <div>
+                            <span class="strong"><?= Yii::t('skeleton', 'Expired sessions'); ?>: <?= $expiredSessionCount; ?></span>
+                        </div>
+                        <div class="small">
+                            <?= Yii::t('skeleton', 'Total sessions'); ?>: <?= $sessionCount; ?> / <?= Yii::t('skeleton', 'Garbage collection probability'); ?>: <?= Yii::$app->getSession()->getGCProbability(); ?>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <a class="btn btn-secondary" href="/admin/system/session-gc" data-method="post"><i class="fas fa-trash"></i></a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
