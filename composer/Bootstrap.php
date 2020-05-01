@@ -120,6 +120,31 @@ class Bootstrap implements BootstrapInterface
             $core['components']['db'] = array_merge($core['components']['db'], require($db));
         }
 
+        if (YII_DEBUG) {
+            $core['bootstrap'][] = 'debug';
+            $config['modules']['debug'] = [
+                'class' => 'yii\debug\Module',
+            ];
+        }
+
+        if (YII_DEV_ENV) {
+            $core['bootstrap'][] = 'gii';
+            $config['modules']['gii'] = [
+                'class' => 'yii\gii\Module',
+                'generators' => [
+                    'model' => [
+                        'class' => 'yii\gii\generators\model\Generator',
+                        'baseClass' => 'davidhirtz\yii2\skeleton\db\ActiveRecord',
+                        'queryBaseClass' => 'davidhirtz\yii2\skeleton\db\ActiveQuery',
+                        'queryNs' => 'app\models\queries',
+                        'templates' => [
+                            'skeleton' => '@skeleton/gii/generators/model/default',
+                        ],
+                    ],
+                ],
+            ];
+        }
+
         return ArrayHelper::merge($core, $config);
     }
 
