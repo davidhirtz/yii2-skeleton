@@ -127,7 +127,7 @@ class Bootstrap implements BootstrapInterface
             ];
         }
 
-        if (YII_DEV_ENV) {
+        if (YII_ENV_DEV) {
             $core['bootstrap'][] = 'gii';
             $config['modules']['gii'] = [
                 'class' => 'yii\gii\Module',
