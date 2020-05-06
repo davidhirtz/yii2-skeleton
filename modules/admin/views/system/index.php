@@ -19,37 +19,39 @@ use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 
 $this->setTitle(Yii::t('skeleton', 'System'));
 ?>
+<?php if ($logs->getModels()) {
+    echo Submenu::widget([
+        'title' => Yii::t('skeleton', 'Logs'),
+    ]);
 
-<?= Submenu::widget([
-    'title' => Yii::t('skeleton', 'Logs'),
-]); ?>
-
-<?= Panel::widget([
-    'content' => GridView::widget([
-        'dataProvider' => $logs,
-        'layout' => '{items}{footer}',
-        'columns' => [
-            [
-                'label' => Yii::t('skeleton', 'Name'),
-                'content' => function ($modified, $name) {
-                    return Html::tag('div', Html::a($name, ['view', 'log' => $name]), ['class' => 'strong']) .
-                        Html::tag('div', Yii::t('skeleton', 'Last updated {timestamp}.', [
-                            'timestamp' => \davidhirtz\yii2\timeago\Timeago::tag($modified),
-                        ]), ['class' => 'small']);
-                }
+    echo Panel::widget([
+        'content' => GridView::widget([
+            'dataProvider' => $logs,
+            'layout' => '{items}{footer}',
+            'columns' => [
+                [
+                    'label' => Yii::t('skeleton', 'Name'),
+                    'content' => function ($modified, $name) {
+                        return Html::tag('div', Html::a($name, ['view', 'log' => $name]), ['class' => 'strong']) .
+                            Html::tag('div', Yii::t('skeleton', 'Last updated {timestamp}.', [
+                                'timestamp' => \davidhirtz\yii2\timeago\Timeago::tag($modified),
+                            ]), ['class' => 'small']);
+                    }
+                ],
+                [
+                    'contentOptions' => ['class' => 'text-right'],
+                    'content' => function ($modified, $name) {
+                        return Html::buttons(Html::a(Icon::tag('trash'), ['delete', 'log' => $name], [
+                            'class' => 'btn btn-secondary',
+                            'data-method' => 'post',
+                        ]));
+                    }
+                ],
             ],
-            [
-                'contentOptions' => ['class' => 'text-right'],
-                'content' => function ($modified, $name) {
-                    return Html::buttons(Html::a(Icon::tag('trash'), ['delete', 'log' => $name], [
-                        'class' => 'btn btn-secondary',
-                        'data-method' => 'post',
-                    ]));
-                }
-            ],
-        ],
-    ]),
-]); ?>
+        ]),
+    ]);
+}
+?>
 
 
 <?= Submenu::widget([
