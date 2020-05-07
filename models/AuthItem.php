@@ -2,26 +2,29 @@
 
 namespace davidhirtz\yii2\skeleton\models;
 
+use davidhirtz\yii2\skeleton\db\TypeAttributeTrait;
 use davidhirtz\yii2\skeleton\models\queries\AuthItemQuery;
+use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use Yii;
 use yii\rbac\Item;
 
 /**
- * Class AuthItem.
+ * Class AuthItem
  * @package davidhirtz\yii2\skeleton\models
  *
  * @property string $name
- * @property integer $type
+ * @property int $type
  * @property string $description
  * @property string $rule_name
  * @property string $data
- * @property integer $created_at
- * @property integer $updated_at
+ * @property int $created_at
+ * @property int $updated_at
  *
- * @property User[] $users
+ * @property User[] $users {@see AuthItem::getUsers()}
  */
 class AuthItem extends \davidhirtz\yii2\skeleton\db\ActiveRecord
 {
+    use TypeAttributeTrait;
 
     /**
      * @var bool
@@ -39,22 +42,15 @@ class AuthItem extends \davidhirtz\yii2\skeleton\db\ActiveRecord
      */
     public $children = [];
 
-    /***********************************************************************
-     * Relations.
-     ***********************************************************************/
-
     /**
-     * @return \yii\db\ActiveQuery
+     * @return UserQuery
      */
     public function getUsers()
     {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->hasMany(User::class, ['id' => 'user_id'])
-            ->viaTable(Yii::$app->authManager->assignmentTable, ['item_name' => 'name']);
+            ->viaTable(Yii::$app->getAuthManager()->assignmentTable, ['item_name' => 'name']);
     }
-
-    /***********************************************************************
-     * Methods.
-     ***********************************************************************/
 
     /**
      * @return AuthItemQuery
@@ -64,9 +60,22 @@ class AuthItem extends \davidhirtz\yii2\skeleton\db\ActiveRecord
         return new AuthItemQuery(get_called_class());
     }
 
-    /***********************************************************************
-     * Getters / setters.
-     ***********************************************************************/
+    /**
+     * @return string
+     */
+    public function getDisplayName(): string
+    {
+        return str_replace(' ', ' / ', $this->generateAttributeLabel($this->name));
+    }
+
+    /**
+     * @return string
+     */
+    public function getTypeIcon(): string
+    {
+        return $this->getTypeOptions()['icon'] ?? '';
+    }
+
 
     /**
      * @return bool
@@ -83,49 +92,9 @@ class AuthItem extends \davidhirtz\yii2\skeleton\db\ActiveRecord
     }
 
     /**
-     * @return string the display name.
-     */
-    public function getDisplayName()
-    {
-        return str_replace(' ', ' / ', $this->generateAttributeLabel($this->name));
-    }
-
-    /**
-     * @return string
-     */
-    public function getTypeIcon()
-    {
-        switch ($this->type) {
-            case Item::TYPE_ROLE:
-                return 'user';
-
-            case Item::TYPE_PERMISSION:
-                return 'edit';
-        }
-
-        return null;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTypeName()
-    {
-        switch ($this->type) {
-            case Item::TYPE_ROLE:
-                return 'Role';
-
-            case Item::TYPE_PERMISSION:
-                return 'Permission';
-        }
-
-        return null;
-    }
-
-    /**
      * @return bool
      */
-    public function getIsRole()
+    public function isRole(): bool
     {
         return $this->type == Item::TYPE_ROLE;
     }
@@ -133,19 +102,32 @@ class AuthItem extends \davidhirtz\yii2\skeleton\db\ActiveRecord
     /**
      * @return bool
      */
-    public function getIsPermission()
+    public function isPermission(): bool
     {
         return $this->type == Item::TYPE_PERMISSION;
     }
 
-    /***********************************************************************
-     * Active Record.
-     ***********************************************************************/
+    /**
+     * @return array
+     */
+    public static function getTypes(): array
+    {
+        return [
+            Item::TYPE_ROLE => [
+                'name' => 'Role',
+                'icon' => 'user',
+            ],
+            Item::TYPE_PERMISSION => [
+                'name' => 'Permission',
+                'icon' => 'edit',
+            ],
+        ];
+    }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'name' => Yii::t('skeleton', 'Name'),
@@ -156,9 +138,9 @@ class AuthItem extends \davidhirtz\yii2\skeleton\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%auth_item}}';
     }
