@@ -8,7 +8,7 @@ use Yii;
 use yii\helpers\Url;
 
 /**
- * Class NavBar.
+ * Class NavBar
  * @package davidhirtz\yii2\skeleton\modules\admin\widgets\nav\base
  */
 class NavBar extends \yii\bootstrap4\NavBar
@@ -131,17 +131,14 @@ class NavBar extends \yii\bootstrap4\NavBar
      */
     protected function getUserItems()
     {
-        if (Yii::$app->getUser()->can('userUpdate')) {
-            return [
-                [
-                    'label' => Yii::t('skeleton', 'Users'),
-                    'icon' => 'users',
-                    'url' => ['/admin/user/index'],
-                    'active' => ['admin/auth', 'admin/login', 'admin/user'],
-                ]
-            ];
-        }
-
-        return [];
+        return [
+            [
+                'label' => Yii::t('skeleton', 'Users'),
+                'icon' => 'users',
+                'url' => ['/admin/user/index'],
+                'active' => ['admin/auth', 'admin/login', 'admin/user'],
+                'roles' => ['userUpdate'],
+            ]
+        ];
     }
 }

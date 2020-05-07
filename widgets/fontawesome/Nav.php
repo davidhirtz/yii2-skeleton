@@ -2,12 +2,13 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 
+use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\web\View;
 use yii\helpers\Html;
 use Yii;
 
 /**
- * Class Nav.
+ * Class Nav
  * @package davidhirtz\yii2\skeleton\widgets\fontawesome
  *
  * @method View getView()
@@ -45,6 +46,27 @@ class Nav extends \yii\bootstrap4\Nav
     private $isActive = false;
 
     /**
+     * Checks for "roles" option and validates user.
+     * @return string
+     */
+    public function renderItems()
+    {
+        foreach ($this->items as &$item) {
+            if ($roles = ArrayHelper::remove($item, 'roles')) {
+                foreach ((array)$roles as $role) {
+                    if (Yii::$app->getUser()->can($role)) {
+                        continue 2;
+                    }
+                }
+
+                $item['visible'] = false;
+            }
+        }
+
+        return parent::renderItems();
+    }
+
+    /**
      * Allows the addition of Font Awesome icons to nav label and
      * wraps label in additional span tag.
      *
@@ -58,6 +80,7 @@ class Nav extends \yii\bootstrap4\Nav
      * - items: array|callable allows submenu items to be callable
      * - label: string, optional, if icon is set, required if icon is empty.
      * - labelOptions: array, optional, additional html options for label tag
+     * - roles: array {@link Nav::renderItems()}
      * - template: string, optional, use format "{icon}{label}" to change label template.
      *
      * @inheritdoc
