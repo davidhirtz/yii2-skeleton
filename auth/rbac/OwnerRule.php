@@ -21,9 +21,7 @@ class OwnerRule extends Rule
      */
     public function execute($userId, $item, $params)
     {
-        /**
-         * @var \davidhirtz\yii2\skeleton\models\User $user
-         */
+        /** @var \davidhirtz\yii2\skeleton\models\User $user */
         $user = ArrayHelper::getValue($params, 'user');
         return $user === null || !$user->isOwner() || $user->id == $userId;
     }

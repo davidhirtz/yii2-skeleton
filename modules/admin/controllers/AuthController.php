@@ -155,15 +155,12 @@ class AuthController extends Controller
      */
     private function getUser($id)
     {
-        /**
-         * @var \davidhirtz\yii2\skeleton\models\User $user
-         */
         if (!$user = User::findOne($id)) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         if (!Yii::$app->user->can('authUpdate', ['user' => $user])) {
-            throw new ForbiddenHttpException;
+            throw new ForbiddenHttpException();
         }
 
         return $user;
@@ -190,7 +187,7 @@ class AuthController extends Controller
         }
 
         if (!$role) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         return $role;

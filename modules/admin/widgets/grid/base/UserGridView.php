@@ -112,7 +112,8 @@ class UserGridView extends GridView
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
             'contentOptions' => ['class' => 'd-none d-md-table-cell'],
             'content' => function (User $user) {
-                return Html::a(Timeago::tag($user->last_login), ['/admin/user-login/view', 'user' => $user->id]);
+                $timeago = Timeago::tag($user->last_login);
+                return Yii::$app->getUser()->can('userUpdate', ['user' => $user]) ? Html::a($timeago, ['/admin/user-login/view', 'user' => $user->id]) : $timeago;
             }
         ];
     }
@@ -160,13 +161,26 @@ class UserGridView extends GridView
      */
     protected function getRowButtons($user)
     {
-        return ($route = $this->getRoute($user)) ? Html::a(Icon::tag('wrench'), $route, ['class' => 'btn btn-secondary']) : [];
+        if ($route = $this->getRoute($user)) {
+            return Html::a(Icon::tag('wrench'), $route, ['class' => 'btn btn-secondary']);
+        }
+
+        if (Yii::$app->getUser()->can('authUpdate', ['user' => $user])) {
+            return Html::a(Icon::tag('unlock-alt'), ['/admin/auth/view', 'user' => $user->id],
+                [
+                    'class' => 'btn btn-secondary',
+                    'data-toggle' => 'tooltip',
+                    'title' => Yii::t('skeleton', 'Permissions'),
+                ]);
+        }
+
+        return [];
     }
 
     /**
      * @param \davidhirtz\yii2\skeleton\db\ActiveRecord $model
      * @param array $params
-     * @return array
+     * @return array|false
      */
     protected function getRoute($model, $params = [])
     {

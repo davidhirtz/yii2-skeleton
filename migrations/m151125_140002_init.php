@@ -147,7 +147,7 @@ class m151125_140002_init extends \m140506_102106_rbac_init
          * Authentication data.
          */
         $sourceLanguage = Yii::$app->sourceLanguage;
-        $ownerRule = new \davidhirtz\yii2\skeleton\auth\rbac\OwnerRule;
+        $ownerRule = new \davidhirtz\yii2\skeleton\auth\rbac\OwnerRule();
         $auth->add($ownerRule);
 
         $authUpdate = $auth->createPermission('authUpdate');

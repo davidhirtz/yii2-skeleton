@@ -50,6 +50,11 @@ class UserController extends Controller
                         'actions' => ['deauthorize', 'index', 'ownership', 'update'],
                         'roles' => ['userUpdate'],
                     ],
+                    [
+                        'allow' => true,
+                        'actions' => ['index'],
+                        'roles' => ['authUpdate'],
+                    ],
                 ],
             ],
             'verbs' => [
@@ -93,7 +98,7 @@ class UserController extends Controller
      */
     public function actionCreate()
     {
-        $user = new UserForm;
+        $user = new UserForm();
         $user->status = $user::STATUS_ENABLED;
 
         if ($user->load(Yii::$app->getRequest()->post())) {
@@ -126,11 +131,11 @@ class UserController extends Controller
         $user = UserForm::findOne(['id' => $id]);
 
         if (!$user) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         if (!Yii::$app->getUser()->can('userUpdate', ['user' => $user])) {
-            throw new ForbiddenHttpException;
+            throw new ForbiddenHttpException();
         }
 
         if ($user->load(Yii::$app->getRequest()->post())) {
@@ -148,16 +153,12 @@ class UserController extends Controller
 
     /**
      * @param int $id
-     * @throws NotFoundHttpException
-     * @throws \Throwable
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\db\StaleObjectException
      * @return string
      */
     public function actionDelete($id)
     {
         if (!$user = User::findOne(['id' => $id])) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         /** @var DeleteForm $form */
@@ -204,11 +205,11 @@ class UserController extends Controller
             ->one();
 
         if (!$auth) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         if (!Yii::$app->getUser()->can('userUpdate', ['user' => $auth->identity])) {
-            throw new ForbiddenHttpException;
+            throw new ForbiddenHttpException();
         }
 
         if ($auth->delete()) {
@@ -222,7 +223,7 @@ class UserController extends Controller
             return $this->redirect(['update', 'id' => $auth->user_id]);
         }
 
-        throw new ServerErrorHttpException;
+        throw new ServerErrorHttpException();
     }
 
     /**
@@ -232,10 +233,10 @@ class UserController extends Controller
     public function actionOwnership()
     {
         if (!Yii::$app->getUser()->getIdentity()->isOwner()) {
-            throw new ForbiddenHttpException;
+            throw new ForbiddenHttpException();
         }
 
-        $form = new OwnershipForm;
+        $form = new OwnershipForm();
 
         if ($form->load(Yii::$app->request->post())) {
             if ($form->transfer()) {

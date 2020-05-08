@@ -41,13 +41,17 @@ class NavBar extends \yii\bootstrap4\NavBar
     }
 
     /**
+     * Sorts {@link Module::$navbarItems} by key and adds home button.
      * @return array
      */
     public function getItems()
     {
         /** @var Module $module */
         $module = Yii::$app->getModule('admin');
-        return array_merge($this->getHomeItems(), $module->navbarItems, $this->getUserItems());
+        $items = $module->navbarItems;
+        ksort($items);
+
+        return array_merge($this->getHomeItems(), $items);
     }
 
     /**
@@ -123,22 +127,6 @@ class NavBar extends \yii\bootstrap4\NavBar
                 'icon' => 'home',
                 'url' => ['/admin/dashboard/index'],
             ],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    protected function getUserItems()
-    {
-        return [
-            [
-                'label' => Yii::t('skeleton', 'Users'),
-                'icon' => 'users',
-                'url' => ['/admin/user/index'],
-                'active' => ['admin/auth', 'admin/login', 'admin/user'],
-                'roles' => ['userUpdate'],
-            ]
         ];
     }
 }

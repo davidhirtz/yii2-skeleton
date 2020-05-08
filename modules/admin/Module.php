@@ -6,7 +6,7 @@ use Yii;
 use yii\helpers\Url;
 
 /**
- * Class Module.
+ * Class Module
  * @package davidhirtz\yii2\skeleton\modules\admin
  */
 class Module extends \yii\base\Module
@@ -22,9 +22,11 @@ class Module extends \yii\base\Module
     public $alias;
 
     /**
-     * @var array containing the roles to access any admin module or controller
+     * @var array|false|null containing the roles to access any admin module or controller, if not set
+     * the roles set via {@link Module::$navbarItems} will be used. If false the module role check is
+     * disabled.
      */
-    public $roles = ['admin'];
+    public $roles;
 
     /**
      * @var array containing the admin menu items
@@ -82,7 +84,7 @@ class Module extends \yii\base\Module
     ];
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function init()
     {
@@ -93,9 +95,21 @@ class Module extends \yii\base\Module
                 $user->loginUrl = ['/admin/account/login'];
             }
 
+            if(!$this->navbarItems) {
+                $this->navbarItems= [
+                    'users' => [
+                        'label' => Yii::t('skeleton', 'Users'),
+                        'icon' => 'users',
+                        'url' => ['/admin/user/index'],
+                        'active' => ['admin/auth', 'admin/login', 'admin/user'],
+                        'roles' => ['authUpdate', 'userUpdate'],
+                    ],
+                ];
+            }
+
             if (!$this->panels) {
                 $this->panels = [
-                    [
+                    'skeleton' => [
                         'name' => $this->name ?: Yii::t('skeleton', 'Administration'),
                         'items' => [
                             [
@@ -127,9 +141,16 @@ class Module extends \yii\base\Module
             }
         }
 
-        // Load all admin modules.
         foreach (array_keys($this->getModules()) as $module) {
             $this->getModule($module);
+        }
+
+        if($this->roles === null) {
+            $this->roles = [];
+
+            foreach($this->navbarItems as $item) {
+                $this->roles = array_filter(array_merge($this->roles, $item['roles'] ?? []));
+            }
         }
 
         $this->controllerMap = array_merge($this->defaultControllerMap, $this->controllerMap);
