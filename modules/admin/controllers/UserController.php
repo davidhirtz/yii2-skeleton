@@ -6,9 +6,9 @@ use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
 use davidhirtz\yii2\skeleton\models\forms\OwnershipForm;
 use davidhirtz\yii2\skeleton\models\User;
+use davidhirtz\yii2\skeleton\modules\admin\data\UserActiveDataProvider;
 use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\web\Controller;
-use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\ForbiddenHttpException;
@@ -17,17 +17,13 @@ use yii\web\ServerErrorHttpException;
 use Yii;
 
 /**
- * Class UserController.
+ * Class UserController
  * @package app\controllers
  */
 class UserController extends Controller
 {
-    /***********************************************************************
-     * Behaviors.
-     ***********************************************************************/
-
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function behaviors()
     {
@@ -67,24 +63,17 @@ class UserController extends Controller
         ];
     }
 
-    /***********************************************************************
-     * Actions.
-     ***********************************************************************/
-
     /**
      * @param string $q
      * @return string
      */
     public function actionIndex($q = null)
     {
-        $provider = new ActiveDataProvider([
-            'query' => User::find()
-                ->selectListAttributes()
-                ->matching($q),
+        /** @var UserActiveDataProvider $provider */
+        $provider = Yii::createObject([
+            'class' => 'davidhirtz\yii2\skeleton\modules\admin\data\UserActiveDataProvider',
+            'searchString' => $q,
         ]);
-
-        $provider->getSort()->defaultOrder = ['last_login' => SORT_DESC];
-        $provider->getPagination()->defaultPageSize = 50;
 
         /** @noinspection MissedViewInspection */
         return $this->render('index', [
@@ -120,10 +109,6 @@ class UserController extends Controller
 
     /**
      * @param int $id
-     * @throws ForbiddenHttpException
-     * @throws NotFoundHttpException
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
      * @return string
      */
     public function actionUpdate($id)
@@ -189,11 +174,6 @@ class UserController extends Controller
     /**
      * @param string $id
      * @param string $name
-     * @throws ForbiddenHttpException
-     * @throws NotFoundHttpException
-     * @throws ServerErrorHttpException
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
      * @return string
      */
     public function actionDeauthorize($id, $name)
@@ -227,7 +207,6 @@ class UserController extends Controller
     }
 
     /**
-     * @throws ForbiddenHttpException
      * @return string
      */
     public function actionOwnership()
