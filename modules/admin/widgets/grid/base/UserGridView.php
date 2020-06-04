@@ -182,13 +182,13 @@ class UserGridView extends GridView
     }
 
     /**
-     * @param \davidhirtz\yii2\skeleton\db\ActiveRecord $model
+     * @param User $model
      * @param array $params
      * @return array|false
      */
     protected function getRoute($model, $params = [])
     {
-        return Yii::$app->getUser()->can('userUpdate', ['user' => $model]) ? parent::getRoute($model, $params) : false;
+        return Yii::$app->getUser()->can('userUpdate', ['user' => $model]) ? array_merge(['/admin/user/update', 'id' => $model->id], $params) : false;
     }
 
     /**
