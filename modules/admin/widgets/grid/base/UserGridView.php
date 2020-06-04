@@ -4,6 +4,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid\base;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\User;
+use davidhirtz\yii2\skeleton\modules\admin\data\UserActiveDataProvider;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\GridView;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\StatusGridViewTrait;
 use davidhirtz\yii2\timeago\Timeago;
@@ -14,6 +15,8 @@ use Yii;
  * Class UserGridView
  * @package app\modules\admin\components\widgets\grid
  * @see \davidhirtz\yii2\skeleton\modules\admin\widgets\grid\UserGridView
+ *
+ * @property UserActiveDataProvider $dataProvider
  */
 class UserGridView extends GridView
 {
