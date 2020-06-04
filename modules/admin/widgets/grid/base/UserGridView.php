@@ -20,22 +20,27 @@ class UserGridView extends GridView
     use StatusGridViewTrait;
 
     /**
-     * @var array
-     */
-    public $columns = [
-        'status',
-        'name',
-        'email',
-        'last_login',
-        'created_at',
-        'buttons'
-    ];
-
-    /**
      * @inheritdoc
      */
     public function init()
     {
+        if (!$this->columns) {
+            $this->columns = [
+                $this->statusColumn(),
+                $this->nameColumn(),
+                $this->emailColumn(),
+                $this->lastLoginColumn(),
+                $this->createdAtColumn(),
+                $this->buttonsColumn(),
+            ];
+        }
+
+        if (!$this->rowOptions) {
+            $this->rowOptions = function (User $user) {
+                return ['class' => $user->isDisabled() ? 'disabled' : null];
+            };
+        }
+
         if ($this->header === null) {
             $this->header = [
                 [
@@ -65,10 +70,6 @@ class UserGridView extends GridView
                 ],
             ];
         }
-
-        $this->rowOptions = function (User $user) {
-            return ['class' => $user->isDisabled() ? 'disabled' : null];
-        };
 
         parent::init();
     }
