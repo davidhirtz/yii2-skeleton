@@ -187,12 +187,22 @@ select.form-control {
   }
 }
 
-// stylelint-disable no-duplicate-selectors
 select.form-control {
   appearance: none;
 
   &[size], &[multiple] {
     height: auto;
+  }
+
+  // Following is a workaround for Chrome and FF, because Safari doesn't allow styling of option
+  // tags but for the select tag.
+  option {
+    margin: 0 (-$input-padding-x);
+    padding: $input-padding-y 0 $input-padding-y $input-padding-x;
+
+    &:first-child {
+      margin-top: -$input-padding-y;
+    }
   }
 }
 
@@ -200,10 +210,15 @@ select[multiple].form-control {
   overflow-y: auto;
 }
 
+// Removes weird whitespace in FF and adds padding to options on multiple.
 @-moz-document url-prefix() {
-  select.form-control, select[size].form-control option {
-    text-indent: -2px; // Try to remove weird whitespace in FF.
+  select.form-control {
+    text-indent: -2px;
   }
+
+  //select[size].form-control option, select[multiple].form-control option {
+  //  text-indent: -3px;
+  //}
 }
 
 textarea.form-control {
