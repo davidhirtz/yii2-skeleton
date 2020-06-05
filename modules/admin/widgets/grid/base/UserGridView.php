@@ -101,7 +101,12 @@ class UserGridView extends GridView
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
             'contentOptions' => ['class' => 'd-none d-md-table-cell'],
             'content' => function (User $user) {
-                return Html::markKeywords($user->email, $this->getSearchKeywords());
+                $email = Html::markKeywords($user->email, $this->getSearchKeywords());
+                return !$user->isUnconfirmed() ? $email : Html::tag('span', $email, [
+                    'class' => 'text-muted',
+                    'data-toggle' => 'tooltip',
+                    'title' => Yii::t('skeleton', 'Unconfirmed email'),
+                ]);
             }
         ];
     }
