@@ -189,34 +189,20 @@ select.form-control {
 
 // stylelint-disable no-duplicate-selectors
 select.form-control {
+  appearance: none;
 
-  //@media screen and (-webkit-min-device-pixel-ratio:0)
-  //{
-  //	&{
-  //
-  //	}
-  //}
-
-  text-indent: calc(#{$input-padding-x} - 8px);
-
-  &[size],
-  &[multiple] {
+  &[size], &[multiple] {
     height: auto;
   }
 }
 
-@-moz-document url-prefix() {
-  select.form-control {
-    text-indent: 0;
-  }
+select[multiple].form-control {
+  overflow-y: auto;
 }
 
-select[multiple].form-control {
-  padding: 0;
-  overflow-y: auto;
-
-  option {
-    padding: $input-btn-padding-y $input-btn-padding-x;
+@-moz-document url-prefix() {
+  select.form-control, select[size].form-control option {
+    text-indent: -2px; // Try to remove weird whitespace in FF.
   }
 }
 
