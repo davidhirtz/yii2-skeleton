@@ -27,12 +27,17 @@ class Application extends \yii\console\Application
         }
 
         $config = Bootstrap::preInit($config);
+
+        // Removes web components.
         unset($config['components']['errorHandler']['errorAction']);
+        unset($config['components']['user']);
+        unset($config['components']['session']);
+
         parent::preInit($config);
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     protected function bootstrap()
     {
@@ -43,7 +48,7 @@ class Application extends \yii\console\Application
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function coreCommands()
     {

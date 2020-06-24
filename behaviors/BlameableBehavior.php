@@ -34,7 +34,7 @@ class BlameableBehavior extends \yii\behaviors\BlameableBehavior
     }
 
     /**
-     * Temporarily removes attributes that where changed by owner.
+     * Temporarily removes attributes that were changed by owner.
      * @inheritDoc
      */
     public function evaluateAttributes($event)
