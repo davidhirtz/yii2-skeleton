@@ -10,9 +10,7 @@ use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
  *
  * @property int $id
  * @property int $parent_id
- * @property int $rgt
- * @property int $lft
- * @property string $name
+ * @property string $path
  *
  * @property ActiveRecord $parent
  * @method static ActiveQuery find()
@@ -68,10 +66,11 @@ trait MaterializedTreeTrait
         $this->_ancestors = [];
 
         if ($this->path) {
-            $locationIds = ArrayHelper::cacheStringToArray($this->path);
-            foreach ($locationIds as $locationId) {
-                if (isset($ancestors[$locationId])) {
-                    $this->_ancestors[$locationId] = $ancestors[$locationId];
+            $ancestorIds = $this->getAncestorIds();
+
+            foreach ($ancestorIds as $ancestorId) {
+                if (isset($ancestors[$ancestorId])) {
+                    $this->_ancestors[$ancestorId] = $ancestors[$ancestorId];
                 }
             }
         }
@@ -95,7 +94,7 @@ trait MaterializedTreeTrait
      */
     public function findAncestors()
     {
-        return static::find()->where(['id' => ArrayHelper::cacheStringToArray($this->path)])
+        return static::find()->where(['id' => $this->getAncestorIds()])
             ->orderBy(['path' => SORT_ASC]);
     }
 
@@ -137,6 +136,14 @@ trait MaterializedTreeTrait
     }
 
     /**
+     * @return array
+     */
+    public function getAncestorIds(): array
+    {
+        return ArrayHelper::cacheStringToArray($this->path);
+    }
+
+    /**
      * @param bool $refresh
      * @return ActiveRecord[]
      */
@@ -171,7 +178,8 @@ trait MaterializedTreeTrait
      */
     public function findDescendants()
     {
-        $path = ArrayHelper::createCacheString(ArrayHelper::cacheStringToArray($this->path, $this->id));
+        $path = ArrayHelper::createCacheString($this->getAncestorIds() + [$this->id]);
+
         return static::find()->where(static::tableName() . '.[[path]] LIKE :path', ['path' => $path . '%'])
             ->orderBy(['path' => SORT_ASC]);
     }
