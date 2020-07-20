@@ -32,6 +32,21 @@ class Panel extends Widget
     public $options = [];
 
     /**
+     * @var array
+     */
+    public $bodyOptions = [];
+
+    /**
+     * @var bool
+     */
+    public $isCollapsable = false;
+
+    /**
+     * @var bool
+     */
+    public $isCollapsed = true;
+
+    /**
      * Sets default CSS class.
      */
     public function init()
@@ -41,6 +56,8 @@ class Panel extends Widget
         }
 
         Html::addCssClass($this->options, 'card card-' . $this->type);
+        Html::addCssClass($this->bodyOptions, 'card-body');
+
         parent::init();
 
         if (!$this->content) {
@@ -59,13 +76,17 @@ class Panel extends Widget
         }
 
         if ($this->content) {
+            $collapseId = $this->getId() . '-body';
             echo Html::beginTag('div', $this->options);
 
             if ($this->title) {
-                echo Html::tag('div', Html::tag('h2', $this->title, ['class' => 'card-title']), ['class' => 'card-header']);
+                $title = $this->isCollapsable ? Html::a($this->title, "#{$collapseId}", ['data-toggle' => 'collapse']) : $this->title;
+                echo Html::tag('div', Html::tag('h2', $title, ['class' => 'card-title']), ['class' => 'card-header']);
             }
 
-            echo Html::tag('div', $this->content, ['class' => 'card-body']);
+            $body = Html::tag('div', $this->content, $this->bodyOptions);
+            echo $this->isCollapsable ? Html::tag('div', $body, ['class' => $this->isCollapsed ? 'collapse' : 'collapse show', 'id' => $collapseId]) : $body;
+
             echo Html::endTag('div');
         }
     }
