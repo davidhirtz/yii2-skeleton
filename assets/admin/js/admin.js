@@ -82,7 +82,9 @@ $(function () {
      *     ],
      * ]
      */
-    $('[data-form-toggle]').change(function () {
+    var $formToggles = $('[data-form-toggle]');
+
+    $formToggles.change(function () {
         var $input = $(this),
             $option = $input.find('option:selected');
 
@@ -117,6 +119,7 @@ $(function () {
             }
         });
 
+        $formToggles.filter(':visible').not($input).trigger('change');
         Skeleton.toggleHr();
 
     }).filter(':visible').trigger('change');
@@ -124,7 +127,9 @@ $(function () {
     /**
      * Toggle form groups based on "data-form-toggle" tag.
      */
-    $('[data-form-target]').change(function () {
+    var $formTargets = $('[data-form-target]');
+
+    $formTargets.change(function () {
         var $input = $(this),
             values = $input.find('option:selected').data('value'),
             targets = $input.data('form-target'),
@@ -142,6 +147,7 @@ $(function () {
             $(targets[i].match(/^[.#]/) ? targets[i] : ("#" + targets[i])).html(values[i]);
         }
 
+        $formTargets.filter(':visible').not($input).trigger('change');
         Skeleton.toggleHr();
 
     }).filter(':visible').trigger('change');
