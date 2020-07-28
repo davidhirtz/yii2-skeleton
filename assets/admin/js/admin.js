@@ -90,7 +90,7 @@ $(function () {
         if ($input.data('targets')) {
             $($input.data('targets')).each(function () {
                 this.show();
-            }).filter('[data-form-toggle]').trigger('change');
+            });
         }
 
         $input.data('targets', []);
