@@ -89,7 +89,7 @@ $(function () {
         // Show all previously hidden elements.
         if ($input.data('targets')) {
             $($input.data('targets')).each(function () {
-                this.show();
+                $(this).show().trigger('change');
             });
         }
 
