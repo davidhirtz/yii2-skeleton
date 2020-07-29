@@ -84,16 +84,14 @@ $(function () {
      */
     $('[data-form-toggle]').change(function () {
         var $input = $(this),
-            $option = $input.find('option:selected');
+            $option = $input.find('option:selected'),
+            $targets = $input.data('targets');
 
-        // Show all previously hidden elements.
-        if ($input.data('targets')) {
-            $($input.data('targets')).each(function () {
-                this.show();
-            });
+        if ($targets) {
+            $targets.show().find('[data-form-toggle]').trigger('change');
         }
 
-        $input.data('targets', []);
+        $targets = $();
 
         $.each($input.data('form-toggle'), function (x, data) {
             var values = $.isArray(data[0]) ? data[0] : [data[0]],
@@ -109,7 +107,7 @@ $(function () {
             for (x = 0; x < values.length; x++) {
                 if (String(values[x]) === value) {
                     for (z = 0; z < targets.length; z++) {
-                        $input.data('targets').push($(targets[z].match(/^[.#]/) ? targets[z] : ('.field-' + targets[z])).hide());
+                        $targets = $targets.add($(targets[z].match(/^[.#]/) ? targets[z] : ('.field-' + targets[z])).hide());
                     }
 
                     break;
@@ -117,6 +115,7 @@ $(function () {
             }
         });
 
+        $input.data('targets', $targets);
         Skeleton.toggleHr();
 
     }).filter(':visible').trigger('change');
