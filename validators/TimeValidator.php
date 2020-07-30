@@ -23,7 +23,7 @@ class TimeValidator extends Validator
      */
     public function init()
     {
-        if ($this->pattern === null) {
+        if (!$this->pattern) {
             throw new InvalidConfigException('The "pattern" property must be set.');
         }
 
@@ -40,8 +40,9 @@ class TimeValidator extends Validator
      */
     public function validateAttribute($model, $attribute)
     {
-        $value = $model->$attribute;
-        $strlen = strlen($value);
+        // Removes trailing seconds
+        $value = strlen($value = $model->$attribute) === 8 ? preg_replace('/:00$/', '', $value) : $value;
+        $strlen = strlen($model->$attribute);
 
         if ($strlen === 1) {
             $value = "0{$value}00";
@@ -61,6 +62,7 @@ class TimeValidator extends Validator
             $hours += 12;
         }
 
+        // Adds seconds for MySQL conform data format
         $model->$attribute = "{$hours}:{$minutes}:00";
     }
 }
