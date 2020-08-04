@@ -110,6 +110,42 @@ class FileHelper extends \yii\helpers\BaseFileHelper
     }
 
     /**
+     * Creates a config PHP file from config array.
+     *
+     * @param string $file
+     * @param array $config
+     * @param array|string|null $phpdoc
+     */
+    public static function createConfigFile($file, $config = [], $phpdoc = null)
+    {
+        $file = Yii::getAlias($file);
+
+        $config = var_export($config, true);
+        $config = preg_replace("/^([ ]*)(.*)/m", '$1$1$2', $config);
+        $config = preg_split("/\r\n|\n|\r/", $config);
+        $config = preg_replace(["/\s*array\s\($/", "/\)(,)?$/", "/\s=>\s$/"], [null, ']$1', ' => ['], $config);
+        $export = join(PHP_EOL, array_filter(["["] + $config));
+        $date = date('c');
+
+        if ($phpdoc) {
+            if (is_string($phpdoc)) {
+                $phpdoc = preg_split("/\r\n|\n|\r/", $phpdoc);
+            }
+
+            $phpdoc = "\n * " . implode("\n * ", $phpdoc) . "\n *";
+        }
+
+        file_put_contents($file, <<<EOL
+<?php
+/**$phpdoc
+ * @version $date
+ */
+return $export;
+EOL
+        );
+    }
+
+    /**
      * @param string|null $extension
      * @param int $length
      *

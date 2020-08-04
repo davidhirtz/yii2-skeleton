@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\console\controllers\traits;
 
+use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use yii\helpers\Console;
 use Yii;
 
@@ -58,24 +59,7 @@ trait ConfigTrait
      */
     protected function setConfig($file, $config)
     {
-        $file = Yii::getAlias($file);
-
-        $config = var_export($config, true);
-        $config = preg_replace("/^([ ]*)(.*)/m", '$1$1$2', $config);
-        $config = preg_split("/\r\n|\n|\r/", $config);
-        $config = preg_replace(["/\s*array\s\($/", "/\)(,)?$/", "/\s=>\s$/"], [null, ']$1', ' => ['], $config);
-        $export = join(PHP_EOL, array_filter(["["] + $config));
-        $date = date('c');
-
-        file_put_contents($file, <<<EOL
-<?php
-/**
- * @version $date
- */
-return $export;
-EOL
-        );
-
+        FileHelper::createConfigFile($file, $config);
         $this->stdout($file . ' was updated.' . PHP_EOL, Console::FG_GREEN);
     }
 }
