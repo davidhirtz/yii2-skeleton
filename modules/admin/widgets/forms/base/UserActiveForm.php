@@ -19,39 +19,46 @@ use yii\helpers\ArrayHelper;
 class UserActiveForm extends ActiveForm
 {
     /**
-     * @var array
+     * @inheritDoc
      */
-    public $fields = [
-        'status',
-        'name',
-        ['email', 'email'],
-        ['newPassword', 'password'],
-        ['repeatPassword', 'password'],
-        'oldPassword',
-        '-',
-        ['language', LanguageDropdown::class],
-        ['timezone', TimezoneDropdown::class],
-        ['upload', 'fileInput'],
-        '-',
-        'first_name',
-        'last_name',
-        'city',
-        ['country', CountryDropdown::class],
-        'sendEmail',
-    ];
-
-    /**
-     * @param array $options
-     * @return \yii\bootstrap4\ActiveField|\yii\widgets\ActiveField
-     */
-    public function oldPasswordField($options = [])
+    public function init()
     {
-        return $this->model->password ? $this->field($this->model, 'oldPassword', ['enableClientValidation' => false])->passwordInput($options) : null;
+        if (!$this->fields) {
+            $this->fields = [
+                'status',
+                'name',
+                ['email', 'email'],
+                ['newPassword', 'password'],
+                ['repeatPassword', 'password'],
+                'oldPassword',
+                '-',
+                ['language', LanguageDropdown::class],
+                ['timezone', TimezoneDropdown::class],
+                ['upload', 'fileInput'],
+                '-',
+                'first_name',
+                'last_name',
+                'city',
+                ['country', CountryDropdown::class],
+                'sendEmail',
+            ];
+        }
+
+        parent::init();
     }
 
     /**
      * @param array $options
-     * @return \yii\bootstrap4\ActiveField|\yii\widgets\ActiveField
+     * @return \yii\widgets\ActiveField|string
+     */
+    public function oldPasswordField($options = [])
+    {
+        return $this->model->password ? $this->field($this->model, 'oldPassword', ['enableClientValidation' => false])->passwordInput($options) : '';
+    }
+
+    /**
+     * @param array $options
+     * @return \yii\widgets\ActiveField|string
      */
     public function statusField($options = [])
     {
@@ -60,12 +67,12 @@ class UserActiveForm extends ActiveForm
         }
 
         $statusOptions = ArrayHelper::getColumn(User::getStatuses(), 'name');
-        return count($statusOptions) > 1 ? $this->field($this->model, 'status')->dropDownList($statusOptions, $options) : null;
+        return count($statusOptions) > 1 ? $this->field($this->model, 'status')->dropDownList($statusOptions, $options) : '';
     }
 
     /**
      * @param array $options
-     * @return string|\yii\widgets\ActiveField
+     * @return \yii\widgets\ActiveField|string
      */
     public function sendEmailField($options = [])
     {
