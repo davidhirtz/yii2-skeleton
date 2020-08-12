@@ -65,10 +65,10 @@ class ActiveField extends \yii\bootstrap4\ActiveField
     /**
      * @inheritdoc
      */
-    public function dropdownList($items, $options = [])
+    public function dropDownList($items, $options = [])
     {
         if ($items || $this->model->isAttributeRequired($this->attribute)) {
-            return parent::dropdownList($items, $options);
+            return parent::dropDownList($items, $options);
         }
 
         // Don't render empty drop down list.
