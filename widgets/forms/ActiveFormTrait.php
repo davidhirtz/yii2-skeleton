@@ -112,7 +112,7 @@ trait ActiveFormTrait
                         continue;
                     }
 
-                    if (isset($this->model->getAttributes()[$attribute])) {
+                    if ($this->model->hasProperty($attribute)) {
                         if ($this->showUnsafeAttributes || in_array($attribute, $safeAttributes)) {
                             if (($fieldConfig[0] ?? null) === 'hidden') {
                                 echo $this->hiddenInputField($this->model, $attribute);
@@ -189,8 +189,8 @@ trait ActiveFormTrait
             $field->widget($type, $inputOptions);
         }
 
-//        return $field->parts['{input}'] ? $field : '';
-        return $field;
+        // This hides empty dropdowns etc.
+        return $field->parts['{input}'] ? $field : '';
     }
 
     /**
