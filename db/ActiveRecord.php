@@ -21,15 +21,15 @@ class ActiveRecord extends \yii\db\ActiveRecord
     /**
      * Constants.
      */
-    const SCENARIO_INSERT = 'insert';
-    const SCENARIO_UPDATE = 'update';
+    public const SCENARIO_INSERT = 'insert';
+    public const SCENARIO_UPDATE = 'update';
 
-    const STATUS_DEFAULT = 3;
-    const STATUS_DISABLED = 0;
-    const STATUS_DRAFT = 1;
-    const STATUS_ENABLED = 3;
+    public const STATUS_DEFAULT = 3;
+    public const STATUS_DISABLED = 0;
+    public const STATUS_DRAFT = 1;
+    public const STATUS_ENABLED = 3;
 
-    const TYPE_DEFAULT = 1;
+    public const TYPE_DEFAULT = 1;
 
     /**
      * @var array
@@ -90,7 +90,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
      * Reloads the relation and returns the record.
      *
      * @param string $name
-     * @return ActiveRecord|null
+     * @return \yii\db\ActiveRecordInterface
      */
     public function refreshRelation($name)
     {
@@ -129,7 +129,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
 
     /**
      * @param array $columns the column names
-     * @param array $rows the rows to be batch inserted into the table
+     * @param array|null $rows the rows to be batch inserted into the table
      * @return int number of rows affected by the execution.
      */
     public static function batchInsert($columns, $rows = null)
