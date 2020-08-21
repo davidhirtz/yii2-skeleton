@@ -66,13 +66,15 @@ trait ActiveFormTrait
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function run()
     {
         if ($this->model) {
+            $this->renderHeader();
             $this->renderFields();
             $this->renderButtons();
+            $this->renderFooter();
         }
 
         return parent::run();
@@ -194,6 +196,20 @@ trait ActiveFormTrait
     public function renderButtons()
     {
         echo $this->buttonRow($this->buttons ?: ($this->showSubmitButton ? $this->button() : null));
+    }
+
+    /**
+     * Renders the footer.
+     */
+    public function renderHeader()
+    {
+    }
+
+    /**
+     * Renders the footer.
+     */
+    public function renderFooter()
+    {
     }
 
     /**

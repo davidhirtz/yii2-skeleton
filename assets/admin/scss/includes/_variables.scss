@@ -309,6 +309,15 @@ $badge-padding-x: 7px !default;
 $badge-border-radius: 10px !default;
 
 /*
+Toolbar.
+ */
+$app-toolbar-padding-y: $app-padding-y !default;
+$app-toolbar-padding-x: $app-padding-x !default;
+$app-toolbar-background: $body-bg !default;
+$app-toolbar-border: 1px solid $border-color !default;
+
+
+/*
 Tooltip.
  */
 $tooltip-max-width: 200px !default;

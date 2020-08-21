@@ -35,7 +35,6 @@ class Submenu extends Nav
      */
     public function run()
     {
-        return ($this->title ? Html::tag('h1', $this->title, ['class' => 'page-header']) : '') .
-            Html::tag('nav', parent::run());
+        return ($this->title ? Html::tag('h1', $this->title, ['class' => 'page-header']) : '') . Html::tag('nav', parent::run());
     }
 }

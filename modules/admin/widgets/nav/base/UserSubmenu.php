@@ -8,7 +8,7 @@ use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
 use Yii;
 
 /**
- * Class UserSubmenu.
+ * Class UserSubmenu
  * @package davidhirtz\yii2\skeleton\modules\admin\widgets\nav\base
  */
 class UserSubmenu extends Submenu
@@ -26,7 +26,7 @@ class UserSubmenu extends Submenu
         if ($this->user && !$this->user->getIsNewRecord()) {
             if (!$this->title) {
                 $name = $this->user->getUsername();
-                $this->title = yii::$app->getUser()->can('userUpdate', ['user' => $this->user]) ? Html::a($name, ['/admin/user/update', 'id' => $this->user->id]) : $name;
+                $this->title = Yii::$app->getUser()->can('userUpdate', ['user' => $this->user]) ? Html::a($name, ['/admin/user/update', 'id' => $this->user->id]) : $name;
             }
 
             $this->items = array_merge($this->items, $this->getUserItems());
@@ -121,7 +121,7 @@ class UserSubmenu extends Submenu
             [
                 'label' => Yii::t('skeleton', 'User'),
                 'url' => ['/admin/user/update', 'id' => $this->user->id],
-                'visible' => yii::$app->getUser()->can('userUpdate', ['user' => $this->user]),
+                'visible' => Yii::$app->getUser()->can('userUpdate', ['user' => $this->user]),
                 'icon' => 'user',
                 'labelOptions' => [
                     'class' => 'd-none d-md-inline'

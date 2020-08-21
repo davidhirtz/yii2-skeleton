@@ -2,12 +2,15 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms\base;
 
+use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\widgets\forms\CountryDropdown;
 use davidhirtz\yii2\skeleton\widgets\forms\LanguageDropdown;
 use davidhirtz\yii2\skeleton\widgets\forms\TimezoneDropdown;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
+use davidhirtz\yii2\timeago\Timeago;
+use Yii;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -29,7 +32,7 @@ class UserActiveForm extends ActiveForm
                 'name',
                 ['email', 'email'],
                 ['newPassword', 'password'],
-                ['repeatPassword', 'password'],
+                'repeatPassword',
                 'oldPassword',
                 '-',
                 ['language', LanguageDropdown::class],
@@ -44,7 +47,48 @@ class UserActiveForm extends ActiveForm
             ];
         }
 
+        if (!$this->getId(false)) {
+            $this->setId('user-form');
+        }
+
         parent::init();
+    }
+
+    /**
+     * Renders user information footer.
+     */
+    public function renderFooter()
+    {
+        if ($items = array_filter($this->getFooterItems())) {
+            echo $this->listRow($items);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    protected function getFooterItems(): array
+    {
+        $items = [];
+
+        if ($this->model->updated_at) {
+            $items[] = Yii::t('skeleton', 'Last updated {timestamp}', [
+                'timestamp' => Timeago::tag($this->model->updated_at),
+            ]);
+        }
+
+        if ($this->model->created_by_user_id) {
+            $items[] = Yii::t('skeleton', 'Created by {user} {timestamp}', [
+                'timestamp' => Timeago::tag($this->model->created_at),
+                'user' => Html::username($this->model->admin, Yii::$app->getUser()->can('userUpdate', ['user' => $this->model]) ? ['/admin/user/update', 'id' => $this->model->id] : null),
+            ]);
+        } else {
+            $items[] = Yii::t('skeleton', 'Signed up {timestamp}', [
+                'timestamp' => Timeago::tag($this->model->created_at),
+            ]);
+        }
+
+        return $items;
     }
 
     /**
@@ -54,6 +98,15 @@ class UserActiveForm extends ActiveForm
     public function oldPasswordField($options = [])
     {
         return $this->model->password ? $this->field($this->model, 'oldPassword', ['enableClientValidation' => false])->passwordInput($options) : '';
+    }
+
+    /**
+     * @param array $options
+     * @return \yii\widgets\ActiveField|string
+     */
+    public function repeatPasswordField($options = [])
+    {
+        return $this->field($this->model, 'repeatPassword', ['enableClientValidation' => false])->passwordInput($options);
     }
 
     /**

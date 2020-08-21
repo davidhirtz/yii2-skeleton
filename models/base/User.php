@@ -18,8 +18,8 @@ use Yii;
  * Class User
  * @package davidhirtz\yii2\skeleton\models\base
  *
- * @property integer $id
- * @property integer $status
+ * @property int $id
+ * @property int $status
  * @property string $name
  * @property string $email
  * @property string $password
@@ -34,9 +34,9 @@ use Yii;
  * @property string $timezone
  * @property string $email_confirmation_code
  * @property string $password_reset_code
- * @property integer $is_owner
- * @property integer $created_by_user_id
- * @property integer $login_count
+ * @property int $is_owner
+ * @property int $created_by_user_id
+ * @property int $login_count
  * @property DateTime $last_login
  * @property DateTime $updated_at
  * @property DateTime $created_at
@@ -83,14 +83,14 @@ abstract class User extends ActiveRecord
     /**
      * Constants.
      */
-    const STATUS_ENABLED = 1;
+    public const STATUS_ENABLED = 1;
 
-    const GENDER_UNKNOWN = 0;
-    const GENDER_FEMALE = 1;
-    const GENDER_MALE = 2;
+    public const GENDER_UNKNOWN = 0;
+    public const GENDER_FEMALE = 1;
+    public const GENDER_MALE = 2;
 
-    const EMAIL_CONFIRMATION_CODE_LENGTH = 30;
-    const PASSWORD_RESET_CODE_LENGTH = 30;
+    public const EMAIL_CONFIRMATION_CODE_LENGTH = 30;
+    public const PASSWORD_RESET_CODE_LENGTH = 30;
 
     /**
      * @inheritDoc
@@ -308,7 +308,8 @@ abstract class User extends ActiveRecord
      */
     public function getAdmin(): UserQuery
     {
-        return $this->hasOne(User::class, ['id' => 'created_by_user_id']);
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->hasOne(\davidhirtz\yii2\skeleton\models\User::class, ['id' => 'created_by_user_id']);
     }
 
     /**
@@ -347,7 +348,7 @@ abstract class User extends ActiveRecord
 
     /**
      * Generates password hash.
-     * @param string $password
+     * @param string|null $password
      * @throws \yii\base\Exception
      */
     public function generatePasswordHash(string $password = null)
@@ -398,7 +399,7 @@ abstract class User extends ActiveRecord
 
     /**
      * Deletes user sessions.
-     * @param string $except
+     * @param string|null $except
      * @return int
      */
     public function deleteActiveSessions(string $except = null)

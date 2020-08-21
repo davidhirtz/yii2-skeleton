@@ -4,6 +4,10 @@
 
 .text-muted {
   color: $text-muted !important;
+
+  a {
+    color: inherit;
+  }
 }
 
 .text-nowrap {

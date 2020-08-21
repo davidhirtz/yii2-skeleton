@@ -33,7 +33,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                     'label' => Yii::t('skeleton', 'Name'),
                     'content' => function ($modified, $name) {
                         return Html::tag('div', Html::a($name, ['view', 'log' => $name]), ['class' => 'strong']) .
-                            Html::tag('div', Yii::t('skeleton', 'Last updated {timestamp}.', [
+                            Html::tag('div', Yii::t('skeleton', 'Last updated {timestamp}', [
                                 'timestamp' => \davidhirtz\yii2\timeago\Timeago::tag($modified),
                             ]), ['class' => 'small']);
                     }

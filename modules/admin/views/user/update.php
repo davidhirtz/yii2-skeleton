@@ -8,6 +8,7 @@
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserToolbar;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
@@ -18,6 +19,10 @@ $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
 ?>
 
 <?= UserSubmenu::widget([
+    'user' => $user,
+]); ?>
+
+<?= UserToolbar::widget([
     'user' => $user,
 ]); ?>
 

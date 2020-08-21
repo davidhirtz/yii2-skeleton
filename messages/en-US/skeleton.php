@@ -92,7 +92,7 @@ return [
     'Last Update' => '',
     'Last login' => '',
     'Last name' => '',
-    'Last updated {timestamp}.' => '',
+    'Last updated {timestamp}' => '',
     'Login' => '',
     'Login count' => '',
     'Login successful!' => '',

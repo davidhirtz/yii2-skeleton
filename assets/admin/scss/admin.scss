@@ -61,7 +61,7 @@ Admin.
 @import "../../../../../../vendor/npm-asset/bootstrap/scss/utilities/embed";
 @import "../../../../../../vendor/npm-asset/bootstrap/scss/utilities/flex";
 ////@import "../../../../../../vendor/npm-asset/bootstrap/scss/utilities/float";
-////@import "../../../../../../vendor/npm-asset/bootstrap/scss/utilities/position";
+@import "../../../../../../vendor/npm-asset/bootstrap/scss/utilities/position";
 @import "../../../../../../vendor/npm-asset/bootstrap/scss/utilities/screenreaders";
 @import "../../../../../../vendor/npm-asset/bootstrap/scss/utilities/shadows";
 @import "../../../../../../vendor/npm-asset/bootstrap/scss/utilities/sizing";
@@ -71,6 +71,7 @@ Admin.
 @import "../../../../../../vendor/npm-asset/bootstrap/scss/utilities/visibility";
 //
 @import "includes/layout";
+@import "includes/toolbar";
 @import "includes/jquery";
 @import "includes/language";
 //

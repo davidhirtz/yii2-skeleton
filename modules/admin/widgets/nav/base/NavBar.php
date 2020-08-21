@@ -17,7 +17,7 @@ class NavBar extends \yii\bootstrap4\NavBar
      * @var array
      */
     public $options = [
-        'class' => 'navbar navbar-expand-md',
+        'class' => 'navbar navbar-expand-md fixed-top',
     ];
 
     /**

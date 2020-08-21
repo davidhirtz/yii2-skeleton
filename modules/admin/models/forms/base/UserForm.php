@@ -8,7 +8,7 @@ use yii\db\BaseActiveRecord;
 use Yii;
 
 /**
- * Class UserForm.
+ * Class UserForm
  * @package davidhirtz\yii2\skeleton\modules\admin\models\forms\base
  *
  * @property \davidhirtz\yii2\skeleton\modules\admin\models\forms\base\UserForm $model
@@ -52,10 +52,6 @@ class UserForm extends User
     {
         return array_merge(parent::rules(), [
             [
-                ['newPassword', 'repeatPassword'],
-                'required',
-            ],
-            [
                 ['newPassword'],
                 'filter',
                 'filter' => 'trim',
@@ -65,6 +61,13 @@ class UserForm extends User
                 'string',
                 'min' => $this->passwordMinLength,
                 'skipOnEmpty' => true,
+            ],
+            [
+                ['repeatPassword'],
+                'required',
+                'when' => function () {
+                    return (bool)$this->newPassword;
+                },
             ],
             [
                 ['repeatPassword'],

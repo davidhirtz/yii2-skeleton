@@ -92,7 +92,7 @@ return [
     'Last Update' => 'Letztes Update',
     'Last login' => 'Letzter Login',
     'Last name' => 'Nachname',
-    'Last updated {timestamp}.' => 'Letztes Update {timestamp}',
+    'Last updated {timestamp}' => 'Letzte Aktualisierung {timestamp}',
     'Login' => 'Login',
     'Login count' => 'Logins',
     'Login successful!' => 'Login erfolgreich!',
