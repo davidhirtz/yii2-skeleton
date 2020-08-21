@@ -51,43 +51,6 @@ class UserActiveForm extends ActiveForm
     }
 
     /**
-     * Renders user information footer.
-     */
-    public function renderFooter()
-    {
-        if ($items = array_filter($this->getFooterItems())) {
-            echo $this->listRow($items);
-        }
-    }
-
-    /**
-     * @return array
-     */
-    protected function getFooterItems(): array
-    {
-        $items = [];
-
-        if ($this->model->updated_at) {
-            $items[] = Yii::t('skeleton', 'Last updated {timestamp}', [
-                'timestamp' => Timeago::tag($this->model->updated_at),
-            ]);
-        }
-
-        if ($this->model->created_by_user_id) {
-            $items[] = Yii::t('skeleton', 'Created by {user} {timestamp}', [
-                'timestamp' => Timeago::tag($this->model->created_at),
-                'user' => Html::username($this->model->admin, Yii::$app->getUser()->can('userUpdate', ['user' => $this->model]) ? ['/admin/user/update', 'id' => $this->model->id] : null),
-            ]);
-        } else {
-            $items[] = Yii::t('skeleton', 'Signed up {timestamp}', [
-                'timestamp' => Timeago::tag($this->model->created_at),
-            ]);
-        }
-
-        return $items;
-    }
-
-    /**
      * @param array $options
      * @return \yii\widgets\ActiveField|string
      */
@@ -126,5 +89,42 @@ class UserActiveForm extends ActiveForm
     public function sendEmailField($options = [])
     {
         return $this->model->getIsNewRecord() ? $this->field($this->model, 'sendEmail')->checkbox($options) : '';
+    }
+
+    /**
+     * Renders user information footer.
+     */
+    public function renderFooter()
+    {
+        if ($items = array_filter($this->getFooterItems())) {
+            echo $this->listRow($items);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    protected function getFooterItems(): array
+    {
+        $items = [];
+
+        if ($this->model->updated_at) {
+            $items[] = Yii::t('skeleton', 'Last updated {timestamp}', [
+                'timestamp' => Timeago::tag($this->model->updated_at),
+            ]);
+        }
+
+        if ($this->model->created_by_user_id) {
+            $items[] = Yii::t('skeleton', 'Created by {user} {timestamp}', [
+                'timestamp' => Timeago::tag($this->model->created_at),
+                'user' => Html::username($this->model->admin, Yii::$app->getUser()->can('userUpdate', ['user' => $this->model->admin]) ? ['/admin/user/update', 'id' => $this->model->id] : null),
+            ]);
+        } else {
+            $items[] = Yii::t('skeleton', 'Signed up {timestamp}', [
+                'timestamp' => Timeago::tag($this->model->created_at),
+            ]);
+        }
+
+        return $items;
     }
 }
