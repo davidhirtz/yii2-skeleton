@@ -20,12 +20,12 @@ class Toolbar extends \yii\base\Widget
     /**
      * @var array|string containing the buttons on the left side of the toolbar
      */
-    public $actions = [];
+    public $actions;
 
     /**
      * @var array|string containing the links on the right side of the toolbar
      */
-    public $links = [];
+    public $links;
 
     /**
      * @var array containing the navbar options.
@@ -72,7 +72,7 @@ class Toolbar extends \yii\base\Widget
     protected function renderActions($items, $options = null)
     {
         if ($options === null) {
-            $options = ['class' => $this->model ? 'col offset-md-3' : 'col'];
+            $options = ['class' => $this->hasForm() ? 'col offset-md-3' : 'col'];
         }
 
         return $this->renderItems($items, $options);
@@ -86,7 +86,7 @@ class Toolbar extends \yii\base\Widget
     protected function renderLinks($items, $options = null)
     {
         if ($options === null) {
-            $options = ['class' => 'col'];
+            $options = ['class' => 'col text-right'];
         }
 
         return $this->renderItems($items, $options);
@@ -116,5 +116,13 @@ class Toolbar extends \yii\base\Widget
             'class' => 'btn btn-primary btn-submit',
             'form' => $formName ?: strtolower($this->model->formName()),
         ]);
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasForm(): bool
+    {
+        return (bool)$this->model;
     }
 }

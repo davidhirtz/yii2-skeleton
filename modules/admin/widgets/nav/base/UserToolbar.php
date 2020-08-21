@@ -20,7 +20,7 @@ class UserToolbar extends Toolbar
      */
     public function init()
     {
-        if (!$this->actions) {
+        if ($this->actions === null) {
             $this->actions = [$this->model ? $this->getFormSubmitButton() : $this->getCreateUserButton()];
         }
 
