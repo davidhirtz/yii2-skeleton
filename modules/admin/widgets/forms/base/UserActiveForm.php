@@ -47,10 +47,6 @@ class UserActiveForm extends ActiveForm
             ];
         }
 
-        if (!$this->getId(false)) {
-            $this->setId('user-form');
-        }
-
         parent::init();
     }
 

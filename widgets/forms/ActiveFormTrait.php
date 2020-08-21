@@ -60,6 +60,10 @@ trait ActiveFormTrait
                     return Yii::$app->language != $language;
                 });
             }
+
+            if (!$this->getId(false)) {
+                $this->setId(strtolower($this->model->formName()));
+            }
         }
 
         parent::init();

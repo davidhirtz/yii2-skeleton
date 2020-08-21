@@ -2,7 +2,9 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
-use yii\bootstrap4\Html;
+use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use davidhirtz\yii2\skeleton\helpers\Html;
+use Yii;
 
 /**
  * Class Toolbar
@@ -10,6 +12,11 @@ use yii\bootstrap4\Html;
  */
 class Toolbar extends \yii\base\Widget
 {
+    /**
+     * @var ActiveRecord
+     */
+    public $model;
+
     /**
      * @var array|string containing the buttons on the left side of the toolbar
      */
@@ -42,38 +49,6 @@ class Toolbar extends \yii\base\Widget
     ];
 
     /**
-     * @param array|string $items
-     * @return string
-     */
-    protected function renderActions($items)
-    {
-        return $this->renderItems($items);
-    }
-
-    /**
-     * @param array|string $items
-     * @return string
-     */
-    protected function renderLinks($items)
-    {
-        return $this->renderItems($items);
-    }
-
-    /**
-     * @param array|string $items
-     * @param array $options
-     * @return string
-     */
-    protected function renderItems($items, $options = ['class' => 'col'])
-    {
-        if ($items = array_filter((array)$items)) {
-            return Html::tag('div', implode('', $items), $options);
-        }
-
-        return '';
-    }
-
-    /**
      * @return string
      */
     public function run()
@@ -87,5 +62,59 @@ class Toolbar extends \yii\base\Widget
         }
 
         return '';
+    }
+
+    /**
+     * @param array|string $items
+     * @param array|null $options
+     * @return string
+     */
+    protected function renderActions($items, $options = null)
+    {
+        if ($options === null) {
+            $options = ['class' => $this->model ? 'col offset-md-3' : 'col'];
+        }
+
+        return $this->renderItems($items, $options);
+    }
+
+    /**
+     * @param array|string $items
+     * @param array|null $options
+     * @return string
+     */
+    protected function renderLinks($items, $options = null)
+    {
+        if ($options === null) {
+            $options = ['class' => 'col'];
+        }
+
+        return $this->renderItems($items, $options);
+    }
+
+    /**
+     * @param array|string $items
+     * @param array $options
+     * @return string
+     */
+    protected function renderItems($items, $options = [])
+    {
+        if ($items = array_filter((array)$items)) {
+            return Html::tag('div', implode('', $items), $options);
+        }
+
+        return '';
+    }
+
+    /**
+     * @param string|null $formName
+     * @return string
+     */
+    protected function getFormSubmitButton($formName = null)
+    {
+        return Html::submitButton($this->model->getIsNewRecord() ? Yii::t('skeleton', 'Create') : Yii::t('skeleton', 'Update'), [
+            'class' => 'btn btn-primary btn-submit',
+            'form' => $formName ?: strtolower($this->model->formName()),
+        ]);
     }
 }

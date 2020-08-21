@@ -23,7 +23,7 @@ $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
 ]); ?>
 
 <?= UserToolbar::widget([
-    'user' => $user,
+    'model' => $user,
 ]); ?>
 
 <?= Html::errorSummary($user, [
