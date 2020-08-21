@@ -61,12 +61,13 @@ class Toolbar extends \yii\base\Widget
 
     /**
      * @param array|string $items
+     * @param array $options
      * @return string
      */
-    protected function renderItems($items)
+    protected function renderItems($items, $options = ['class' => 'col'])
     {
         if ($items = array_filter((array)$items)) {
-            return Html::tag('div', implode('', $items), ['class' => 'btn-toolbar']);
+            return Html::tag('div', implode('', $items), $options);
         }
 
         return '';

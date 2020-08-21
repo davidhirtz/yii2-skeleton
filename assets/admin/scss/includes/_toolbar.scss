@@ -7,8 +7,11 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  padding: $app-toolbar-padding-y $app-toolbar-padding-x;
   background: $app-toolbar-background;
   border-top: $app-toolbar-border;
   z-index: $zindex-fixed;
+
+  .btn-toolbar{
+    padding: $app-toolbar-padding-y $app-toolbar-padding-x;
+  }
 }

@@ -10,6 +10,7 @@ use Yii;
 /**
  * Class UserToolbar
  * @package davidhirtz\yii2\skeleton\modules\admin\widgets\nav\base
+ * @see \davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserToolbar
  */
 class UserToolbar extends Toolbar
 {
@@ -24,7 +25,7 @@ class UserToolbar extends Toolbar
     public function init()
     {
         if (!$this->actions) {
-            $this->actions = [$this->user ? $this->getFormSubmitButton() : $this->getCreateUserButton()];
+            $this->actions = [$this->user ? $this->getFormSubmitButton() : $this->getCreateUserButton()] + [$this->getCreateUserButton(), $this->getCreateUserButton(), $this->getCreateUserButton()];
         }
 
         parent::init();
