@@ -25,7 +25,7 @@ class UserToolbar extends Toolbar
     public function init()
     {
         if (!$this->actions) {
-            $this->actions = [$this->user ? $this->getFormSubmitButton() : $this->getCreateUserButton()] + [$this->getCreateUserButton(), $this->getCreateUserButton(), $this->getCreateUserButton()];
+            $this->actions = [$this->user ? $this->getFormSubmitButton() : $this->getCreateUserButton()];
         }
 
         parent::init();
