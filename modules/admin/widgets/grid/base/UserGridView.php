@@ -171,13 +171,13 @@ class UserGridView extends GridView
     protected function getRowButtons($user)
     {
         if ($route = $this->getRoute($user)) {
-            return Html::a(Icon::tag('wrench'), $route, ['class' => 'btn btn-secondary']);
+            return Html::a(Icon::tag('wrench'), $route, ['class' => 'btn btn-primary']);
         }
 
         if (Yii::$app->getUser()->can('authUpdate', ['user' => $user])) {
             return Html::a(Icon::tag('unlock-alt'), ['/admin/auth/view', 'user' => $user->id],
                 [
-                    'class' => 'btn btn-secondary',
+                    'class' => 'btn btn-primary',
                     'data-toggle' => 'tooltip',
                     'title' => Yii::t('skeleton', 'Permissions'),
                 ]);

@@ -34,7 +34,7 @@ class UserToolbar extends Toolbar
     {
         if (Yii::$app->getUser()->can('userCreate')) {
             return Html::a(Html::iconText('user-plus', Yii::t('skeleton', 'New User')), ['create'], [
-                'class' => 'btn btn-primary',
+                'class' => 'btn btn-primary btn-submit',
             ]);
         }
 
