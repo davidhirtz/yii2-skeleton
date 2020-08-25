@@ -4,10 +4,10 @@
  * for the Yii framework. It is used by the 'yii message' command.
  */
 return [
-    'sourcePath' => dirname(__DIR__),
+    'sourcePath' => dirname(dirname(__DIR__)),
     'messagePath' => __DIR__,
     'languages' => ['de', 'en-US'],
-    'ignoreCategories' => ['yii'],
+    'ignoreCategories' => ['anakin', 'cms', 'media', 'newsletter', 'shop', 'yii'],
     'overwrite' => true,
     'removeUnused' => true,
     'only' => ['*.php'],
@@ -19,3 +19,4 @@ return [
         '/tests',
     ],
 ];
+
