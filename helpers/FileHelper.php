@@ -5,6 +5,7 @@ namespace davidhirtz\yii2\skeleton\helpers;
 use Yii;
 use yii\base\Exception;
 use yii\base\InvalidArgumentException;
+use yii\helpers\VarDumper;
 
 /**
  * Class FileHelper.
@@ -120,11 +121,12 @@ class FileHelper extends \yii\helpers\BaseFileHelper
     {
         $file = Yii::getAlias($file);
 
-        $config = var_export($config, true);
-        $config = preg_replace("/^([ ]*)(.*)/m", '$1$1$2', $config);
-        $config = preg_split("/\r\n|\n|\r/", $config);
-        $config = preg_replace(["/\s*array\s\($/", "/\)(,)?$/", "/\s=>\s$/"], [null, ']$1', ' => ['], $config);
-        $export = join(PHP_EOL, array_filter(["["] + $config));
+//        $config = var_export($config, true);
+//        $config = preg_replace("/^([ ]*)(.*)/m", '$1$1$2', $config);
+//        $config = preg_split("/\r\n|\n|\r/", $config);
+//        $config = preg_replace(["/\s*array\s\($/", "/\)(,)?$/", "/\s=>\s$/"], [null, ']$1', ' => ['], $config);
+//        $export = join(PHP_EOL, array_filter(["["] + $config));
+        $export = VarDumper::export($config);
         $date = date('c');
 
         if ($phpdoc) {
