@@ -42,7 +42,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                     'contentOptions' => ['class' => 'text-right'],
                     'content' => function ($modified, $name) {
                         return Html::buttons(Html::a(Icon::tag('trash'), ['delete', 'log' => $name], [
-                            'class' => 'btn btn-secondary',
+                            'class' => 'btn btn-primary',
                             'data-method' => 'post',
                         ]));
                     }
@@ -89,7 +89,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
             [
                 [
                     'content' => Html::a(Yii::t('skeleton', 'Refresh'), ['publish'], [
-                        'class' => 'btn btn-secondary',
+                        'class' => 'btn btn-primary',
                         'data-method' => 'post'
                     ]),
                     'options' => ['class' => 'col text-right'],
@@ -119,7 +119,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                 'contentOptions' => ['class' => 'text-right'],
                 'content' => function ($item) {
                     return Html::buttons(Html::a(Icon::tag('sync-alt'), ['flush', 'cache' => $item['name']], [
-                        'class' => 'btn btn-secondary',
+                        'class' => 'btn btn-primary',
                         'data-method' => 'post',
                     ]));
                 }
@@ -153,7 +153,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                         </div>
                     </td>
                     <td class="text-right">
-                        <a class="btn btn-secondary" href="/admin/system/session-gc" data-method="post"><i class="fas fa-trash"></i></a>
+                        <a class="btn btn-primary" href="/admin/system/session-gc" data-method="post"><i class="fas fa-trash"></i></a>
                     </td>
                 </tr>
                 </tbody>

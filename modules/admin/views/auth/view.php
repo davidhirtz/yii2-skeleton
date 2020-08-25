@@ -69,7 +69,7 @@ $grid = new GridView([
                     'name' => $authItem->name,
                     'type' => $authItem->type
                 ], [
-                    'class' => 'btn btn-secondary',
+                    'class' => 'btn btn-primary',
                     'data-method' => 'post',
                 ]);
             }
