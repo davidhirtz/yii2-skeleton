@@ -408,6 +408,17 @@ input[type="button"], input[type="submit"], button {
   margin-bottom: 0;
 }
 
+.form-group-sticky{
+  position: $app-form-sticky-position;
+
+  @if ($app-grid-view-footer-position == 'sticky') {
+    bottom: 0;
+    padding-bottom: $app-form-sticky-padding-bottom;
+    border-top: $app-form-sticky-border-width $border-style $border-color;
+    background-color: $card-bg;
+  }
+}
+
 /**
  * Inputs & labels.
  */

@@ -169,6 +169,8 @@ $card-danger-color: $danger !default;
 /*
 Grid view.
  */
+$app-grid-view-footer-position: sticky !default;
+
 $app-grid-view-margin-y: 15px !default;
 $app-grid-view-border: 1px solid $border-color !default;
 $app-grid-view-buttons-top: 6px !default;
@@ -198,8 +200,12 @@ $btn-line-height-sm: 1 !default;
 /*
 Input.
  */
-$form-group-margin-bottom: 15px !default;
-$app-form-group-buttons-margin-top: 20px !default;
+$app-form-sticky-position: sticky !default;
+$app-form-sticky-border-width: $border-width !default;
+$app-form-sticky-padding-bottom: $card-spacer-y !default;
+
+$form-group-margin-bottom: $card-spacer-y !default;
+$app-form-group-buttons-margin-top: $card-spacer-y !default;
 $form-text-margin-top: 6px !default;
 
 $form-check-inline-margin-x: 20px !default;

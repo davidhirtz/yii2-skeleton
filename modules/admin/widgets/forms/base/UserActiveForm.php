@@ -22,6 +22,11 @@ use yii\helpers\ArrayHelper;
 class UserActiveForm extends ActiveForm
 {
     /**
+     * @var bool
+     */
+    public $hasStickyButtons = true;
+
+    /**
      * @inheritDoc
      */
     public function init()

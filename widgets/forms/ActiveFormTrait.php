@@ -44,6 +44,11 @@ trait ActiveFormTrait
     public $showSubmitButton = true;
 
     /**
+     * @var bool whether bottom buttons should be sticky
+     */
+    public $hasStickyButtons = false;
+
+    /**
      * @var array containing a custom list of languages used for i18n aware attributes.
      * Leave empty to use default languages.
      */
@@ -199,7 +204,8 @@ trait ActiveFormTrait
      */
     public function renderButtons()
     {
-        echo $this->buttonRow($this->buttons ?: ($this->showSubmitButton ? $this->button() : null));
+        $buttonRow = $this->buttonRow($this->buttons ?: ($this->showSubmitButton ? $this->button() : null));
+        echo $buttonRow && $this->hasStickyButtons ? Html::tag('div', $buttonRow, ['class' => 'form-group-sticky']) : $buttonRow;
     }
 
     /**
@@ -356,7 +362,7 @@ trait ActiveFormTrait
             ];
         }
 
-        return $this->horizontalLine() . $this->textRow(Html::ul($items, $options));
+        return $this->textRow(Html::ul($items, $options));
     }
 
     /**

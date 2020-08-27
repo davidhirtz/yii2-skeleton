@@ -31,8 +31,15 @@
 }
 
 .grid-view-footer {
+  position: $app-grid-view-footer-position;
   margin-top: $app-grid-view-margin-y;
   border-top: $app-grid-view-border;
+
+  @if ($app-grid-view-footer-position == 'sticky') {
+    bottom: 0;
+    background-color: $card-bg;
+    padding-bottom: $card-spacer-y;
+  }
 
   [class*="col"] {
     padding-top: $app-grid-view-margin-y;

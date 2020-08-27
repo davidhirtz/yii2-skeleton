@@ -9,16 +9,13 @@
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserToolbar;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
 
 $this->setTitle(Yii::t('skeleton', 'Create New User'));
 ?>
 
-<?= UserSubmenu::widget(); ?>
-
-<?= UserToolbar::widget([
+<?= UserSubmenu::widget([
     'model' => $user,
 ]); ?>
 
