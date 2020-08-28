@@ -20,11 +20,9 @@ class Bootstrap implements BootstrapInterface
     public static function preInit($config)
     {
         Yii::setAlias('@skeleton', dirname(__FILE__, 2));
+        Yii::$classMap = array_merge(Yii::$classMap, ArrayHelper::remove($config, 'classMap', []));
 
-        if (isset($config['classMap'])) {
-            Yii::$classMap = array_merge(Yii::$classMap, $config['classMap']);
-            unset($config['classMap']);
-        }
+        $cookieDomain = ArrayHelper::remove($config, 'cookieDomain');
 
         $core = [
             'id' => 'skeleton',
@@ -87,6 +85,10 @@ class Bootstrap implements BootstrapInterface
                 ],
                 'session' => [
                     'class' => 'davidhirtz\yii2\skeleton\web\DbSession',
+                    'cookieParams' => [
+                        'domain' => $cookieDomain,
+                        'httponly' => true,
+                    ],
                 ],
                 'sitemap' => [
                     'class' => 'davidhirtz\yii2\skeleton\web\Sitemap',
@@ -96,6 +98,13 @@ class Bootstrap implements BootstrapInterface
                 ],
                 'view' => [
                     'class' => 'davidhirtz\yii2\skeleton\web\View',
+                ],
+            ],
+            'container' => [
+                'definitions' => [
+                    'yii\web\Cookie' => [
+                        'domain' => $cookieDomain,
+                    ],
                 ],
             ],
             'controllerMap' => [
