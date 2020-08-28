@@ -371,11 +371,23 @@ class GridView extends \yii\grid\GridView
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isSortedByPosition(): bool
+    protected function getSortableButton()
     {
-        return $this->dataProvider->getSort() === false && $this->dataProvider->getPagination() === false;
+        return Html::tag('span', Icon::tag('arrows-alt'), ['class' => 'btn btn-secondary sortable-handle']);
+    }
+
+
+    /**
+     * @param ActiveRecord $model
+     * @return string
+     */
+    protected function getUpdateButton($model)
+    {
+        return Html::a(Icon::tag('wrench'), $this->getRoute($model), [
+            'class' => 'btn btn-primary d-none d-md-inline-block',
+        ]);
     }
 
     /**
@@ -418,5 +430,13 @@ class GridView extends \yii\grid\GridView
     public function getModels()
     {
         return $this->dataProvider->getModels();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSortedByPosition(): bool
+    {
+        return $this->dataProvider->getSort() === false && $this->dataProvider->getPagination() === false;
     }
 }
