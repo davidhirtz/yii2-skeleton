@@ -87,7 +87,7 @@ class Html extends \yii\helpers\BaseHtml
         }
 
         if (isset($options['header'])) {
-            $options['header'] = static::tag('div', $options['header'], ['options' => 'alert-heading']) . '<hr>';
+            $options['header'] = static::tag('div', $options['header'], ['class' => 'alert-heading']) . '<hr>';
         }
 
         self::addCssClass($options, ['alert', 'alert-error']);

@@ -25,7 +25,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
 /**
- * Class AccountController.
+ * Class AccountController
  * @package davidhirtz\yii2\skeleton\controllers
  */
 class AccountController extends Controller
@@ -86,7 +86,7 @@ class AccountController extends Controller
             return $this->goHome();
         }
 
-        $user = new SignupForm;
+        $user = new SignupForm();
         $request = Yii::$app->getRequest();
 
         if ($user->load($request->post())) {
@@ -129,7 +129,7 @@ class AccountController extends Controller
             return $this->goHome();
         }
 
-        $form = new LoginForm;
+        $form = new LoginForm();
         $request = Yii::$app->getRequest();
 
         if ($form->load($request->post())) {
@@ -170,7 +170,7 @@ class AccountController extends Controller
      * @return string
      * @throws BadRequestHttpException
      */
-    public function actionConfirm($email, $code)
+    public function actionConfirm(string $email, string $code)
     {
         $form = new AccountConfirmForm([
             'email' => $email,
@@ -204,7 +204,7 @@ class AccountController extends Controller
      */
     public function actionResend()
     {
-        $form = new AccountResendConfirmForm;
+        $form = new AccountResendConfirmForm();
         $request = Yii::$app->getRequest();
 
         if (!Yii::$app->getUser()->getIsGuest() || $form->load($request->post())) {
@@ -238,10 +238,10 @@ class AccountController extends Controller
     public function actionRecover()
     {
         if (!Yii::$app->getUser()->isPasswordResetEnabled()) {
-            throw new ForbiddenHttpException;
+            throw new ForbiddenHttpException();
         }
 
-        $form = new PasswordRecoverForm;
+        $form = new PasswordRecoverForm();
 
         if ($form->load(Yii::$app->getRequest()->post())) {
             if ($form->recover()) {
@@ -266,10 +266,10 @@ class AccountController extends Controller
      * @return string
      * @throws ForbiddenHttpException
      */
-    public function actionReset($email, $code)
+    public function actionReset(string $email, string $code)
     {
         if (!Yii::$app->getUser()->isPasswordResetEnabled()) {
-            throw new ForbiddenHttpException;
+            throw new ForbiddenHttpException();
         }
 
         $form = new PasswordResetForm([
@@ -366,7 +366,7 @@ class AccountController extends Controller
      * @param string $name
      * @return \yii\web\Response
      */
-    public function actionDeauthorize($id, $name)
+    public function actionDeauthorize(string $id, string $name)
     {
         /**
          * @var $auth AuthClient
@@ -377,7 +377,7 @@ class AccountController extends Controller
             ->one();
 
         if (!$auth) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         if ($auth->delete()) {
@@ -392,7 +392,7 @@ class AccountController extends Controller
             return $this->redirect(['update']);
         }
 
-        throw new ServerErrorHttpException;
+        throw new ServerErrorHttpException();
     }
 
     /**
@@ -400,7 +400,7 @@ class AccountController extends Controller
      * @return string
      * @see \yii\authclient\AuthAction::$successCallback
      */
-    public function onAuthSuccess($client)
+    public function onAuthSuccess(ClientInterface $client)
     {
         $auth = AuthClient::findOrCreateFromClient($client);
 
@@ -425,13 +425,13 @@ class AccountController extends Controller
     }
 
     /**
-     * @param $auth AuthClient
+     * @param AuthClient $auth
      * @return bool
      */
-    private function loginWithAuthClient($auth)
+    private function loginWithAuthClient(AuthClient $auth): bool
     {
         if ($auth->getIsNewRecord()) {
-            throw new InvalidCallException;
+            throw new InvalidCallException();
         }
 
         $user = $auth->identity;
@@ -452,16 +452,16 @@ class AccountController extends Controller
     }
 
     /**
-     * @param $auth AuthClient
+     * @param AuthClient $auth
      * @return bool
      */
-    private function signupWithAuthClient($auth)
+    private function signupWithAuthClient(AuthClient $auth): bool
     {
         if (!$auth->getIsNewRecord()) {
-            throw new InvalidCallException;
+            throw new InvalidCallException();
         }
 
-        $user = new AuthClientSignupForm;
+        $user = new AuthClientSignupForm();
         $user->setClient($auth->getClientClass());
 
         if (!$user->save()) {
