@@ -22,7 +22,7 @@ class Bootstrap implements BootstrapInterface
         Yii::setAlias('@skeleton', dirname(__FILE__, 2));
         Yii::$classMap = array_merge(Yii::$classMap, ArrayHelper::remove($config, 'classMap', []));
 
-        $cookieDomain = ArrayHelper::remove($config, 'cookieDomain');
+        $cookieDomain = ArrayHelper::remove($config, 'cookieDomain', '');
 
         $core = [
             'id' => 'skeleton',
