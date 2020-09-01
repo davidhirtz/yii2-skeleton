@@ -385,9 +385,9 @@ class GridView extends \yii\grid\GridView
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getFormName(): string
+    public function getFormName()
     {
         if ($this->_formName === null) {
             if ($model = $this->getModel()) {
