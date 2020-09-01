@@ -1,5 +1,5 @@
 
-.dropdown {
+.dropdown, .dropup {
 
   & > .btn {
     width: 100%;
@@ -15,7 +15,13 @@
     border-color: $app-dropdown-button-active-border-color;
   }
 
-  .grid-view & {
+  & > .btn-submit {
+    background-color: $btn-primary-bg;
+    color: color-yiq($btn-primary-bg);
+    border-color: $btn-primary-border-color;
+  }
+
+  .grid-view-header & {
     width: 100%;
   }
 }

@@ -184,6 +184,7 @@ return [
     'Type your password in the text field below to delete your account, all related items and uploaded files. This cannot be undone, please be certain!' => '',
     'Unconfirmed email' => '',
     'Update' => '',
+    'Update Selected' => '',
     'Update users' => '',
     'Updated' => '',
     'User' => '',

@@ -6,6 +6,7 @@ use davidhirtz\yii2\skeleton\assets\JuiAsset;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
 use yii\helpers\Inflector;
@@ -88,7 +89,7 @@ class GridView extends \yii\grid\GridView
     /**
      * @var bool whether the items should receive a {@link yii\grid\CheckboxColumn} and moved inside a wrapping form
      */
-    public $hasSelection = false;
+    public $showSelection = false;
 
     /**
      * @var array the url route for selection update
@@ -128,8 +129,9 @@ class GridView extends \yii\grid\GridView
 
         $this->columns = array_filter($this->columns);
 
-        if ($this->hasSelection) {
+        if ($this->showSelection) {
             array_unshift($this->columns, $this->selectionColumn);
+            $this->getView()->registerJs('Skeleton.initSelection("#' . $this->getSelectionFormId() . '")');
         }
 
         if (!$this->rowOptions) {
@@ -149,7 +151,7 @@ class GridView extends \yii\grid\GridView
     public function renderItems(): string
     {
         if ($this->dataProvider->getCount() || $this->emptyText) {
-            return $this->hasSelection ? $this->renderSelectionForm(parent::renderItems()) : parent::renderItems();
+            return $this->showSelection ? $this->renderSelectionForm(parent::renderItems()) : parent::renderItems();
         }
 
         return '';
@@ -354,6 +356,32 @@ class GridView extends \yii\grid\GridView
         return Html::beginForm($this->searchUrl, 'get') .
             Html::input('search', $this->searchParamName, $this->search, array_merge($options, $this->searchFormOptions)) .
             Html::endForm();
+    }
+
+    /**
+     * @return string
+     */
+    public function getSelectionButton(): string
+    {
+        if ($items = $this->getSelectionButtonItems()) {
+            return ButtonDropdown::widget([
+                'label' => Html::iconText('wrench', Yii::t('skeleton', 'Update Selected')),
+                'buttonOptions' => ['class' => 'btn-submit'],
+                'options' => ['id' => 'btn-selection', 'style' => 'display:none'],
+                'direction' => ButtonDropdown::DIRECTION_UP,
+                'items' => $items,
+            ]);
+        }
+
+        return '';
+    }
+
+    /**
+     * @return array
+     */
+    protected function getSelectionButtonItems(): array
+    {
+        return [];
     }
 
     /**

@@ -14,7 +14,7 @@ use yii\helpers\Url;
  * Trait StatusGridViewTrait
  * @package davidhirtz\yii2\skeleton\modules\admin\widgets\grid
  *
- * @method StatusAttributeTrait getModel()
+ * @method ActiveRecord|StatusAttributeTrait getModel()
  */
 trait StatusGridViewTrait
 {
@@ -58,10 +58,10 @@ trait StatusGridViewTrait
     }
 
     /**
-     * @param StatusAttributeTrait $model
+     * @param ActiveRecord|StatusAttributeTrait $model
      * @return Icon
      */
-    protected function getStatusIcon($model)
+    protected function getStatusIcon(ActiveRecord $model)
     {
         return Icon::tag($model->getStatusIcon(), [
             'data-toggle' => 'tooltip',
@@ -80,6 +80,29 @@ trait StatusGridViewTrait
             $items[] = [
                 'label' => $status['plural'] ?? $status['name'],
                 'url' => Url::current([$this->statusParamName => $id, 'page' => null]),
+            ];
+        }
+
+        return $items;
+    }
+
+    /**
+     * @return array
+     */
+    protected function statusSelectionButtonItems(): array
+    {
+        $model = $this->getModel();
+        $items = [];
+
+        foreach ($model::getStatuses() as $id => $status) {
+            $items[] = [
+                'label' => $status['name'],
+                'url' => '#',
+                'linkOptions' => [
+                    'data-method' => 'post',
+                    'data-form' => $this->getSelectionFormId(),
+                    'data-params' => [Html::getInputName($model, 'status') => $id],
+                ],
             ];
         }
 

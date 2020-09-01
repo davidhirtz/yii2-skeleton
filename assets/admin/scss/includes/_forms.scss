@@ -392,7 +392,7 @@ input[type="button"], input[type="submit"], button {
 //	font-size: inherit;
 //}
 
-.btn + .btn {
+.btn + .btn, .btn + .btn-group, .btn-group + .btn {
   margin-left: 5px;
 }
 
@@ -408,7 +408,7 @@ input[type="button"], input[type="submit"], button {
   margin-bottom: 0;
 }
 
-.form-group-sticky{
+.form-group-sticky {
   position: $app-form-sticky-position;
 
   @if ($app-grid-view-footer-position == 'sticky') {

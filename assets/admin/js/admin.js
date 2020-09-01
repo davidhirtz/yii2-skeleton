@@ -283,5 +283,12 @@ var Skeleton = {
      */
     hasJUI: function () {
         return $.hasOwnProperty('ui');
+    },
+
+    initSelection: function (form) {
+        console.log(form)
+        var $checkboxes = $(form).find('input[type=checkbox]').on('change', function () {
+            $('#btn-selection').toggle($checkboxes.filter(':checked').length > 0);
+        })
     }
 };

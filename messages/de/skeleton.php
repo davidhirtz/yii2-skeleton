@@ -184,6 +184,7 @@ return [
     'Type your password in the text field below to delete your account, all related items and uploaded files. This cannot be undone, please be certain!' => 'Bitte schreiben Sie Ihr Passwort in das Textfeld unten um die Löschung Ihres Account sowie sämtlicher Einträge und Uploads zu bestätigen. Die Löschung kann nicht wieder rückgängig gemacht werden!',
     'Unconfirmed email' => 'Unbestätigte Email',
     'Update' => 'Aktualisieren',
+    'Update Selected' => 'Auswahl aktualisieren',
     'Update users' => 'Benutzer bearbeiten',
     'Updated' => 'Aktualisiert',
     'User' => 'Benutzer',

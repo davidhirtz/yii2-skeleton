@@ -71,23 +71,25 @@ class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
             );
         }
 
-        if ($isActive = Yii::$app->getRequest()->get($this->paramName)) {
-            if ($this->defaultItem !== false && isset($this->dropdown['items'])) {
-                array_unshift($this->dropdown['items'],
-                    ['label' => $this->defaultItem, 'url' => Url::current([$this->paramName => $this->defaultValue])],
-                    '-'
-                );
+        if ($this->paramName) {
+            if ($isActive = Yii::$app->getRequest()->get($this->paramName)) {
+                if ($this->defaultItem !== false && isset($this->dropdown['items'])) {
+                    array_unshift($this->dropdown['items'],
+                        ['label' => $this->defaultItem, 'url' => Url::current([$this->paramName => $this->defaultValue])],
+                        '-'
+                    );
+                }
             }
-        }
 
-        if ($isActive) {
-            Html::addCssClass($this->options, 'is-active');
+            if ($isActive) {
+                Html::addCssClass($this->options, 'is-active');
+            }
         }
 
         parent::init();
 
         if ($this->showFilter) {
-            $this->getView()->registerJs("jQuery('#{$this->options['id']}').dropdownFilter();");
+            $this->getView()->registerJs("$('#{$this->options['id']}').dropdownFilter();");
         }
     }
 
