@@ -50,19 +50,19 @@ class GridView extends \yii\grid\GridView
     public $searchUrl;
 
     /**
-     * @var array
+     * @var array the url route for sortable widget
      */
     public $orderRoute = ['order'];
 
     /**
-     * @var array
+     * @var array containing the table options
      */
     public $tableOptions = [
         'class' => 'table table-vertical table-striped table-hover',
     ];
 
     /**
-     * @var string
+     * @var string|false the content which should be shown on no results
      */
     public $emptyText = false;
 
@@ -77,12 +77,29 @@ class GridView extends \yii\grid\GridView
     public $layout = '{header}{summary}{items}{pager}{footer}';
 
     /**
-     * @var array
+     * @var array containing the pager configuration
      */
     public $pager = [
         'class' => '\davidhirtz\yii2\skeleton\widgets\pagers\LinkPager',
         'firstPageLabel' => true,
         'lastPageLabel' => true,
+    ];
+
+    /**
+     * @var bool whether the items should receive a {@link yii\grid\CheckboxColumn} and moved inside a wrapping form
+     */
+    public $hasSelection = false;
+
+    /**
+     * @var array the url route for selection update
+     */
+    public $selectionRoute = ['update-all'];
+
+    /**
+     * @var array containing the selection form html options
+     */
+    public $selectionColumn = [
+        'class' => 'yii\grid\CheckboxColumn'
     ];
 
     /**
@@ -96,7 +113,7 @@ class GridView extends \yii\grid\GridView
     private $_formName;
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function init()
     {
@@ -111,13 +128,17 @@ class GridView extends \yii\grid\GridView
 
         $this->columns = array_filter($this->columns);
 
+        if ($this->hasSelection) {
+            array_unshift($this->columns, $this->selectionColumn);
+        }
+
         if (!$this->rowOptions) {
             $this->rowOptions = function ($record) {
                 return $record instanceof ActiveRecord ? ['id' => $this->getRowId($record)] : [];
             };
         }
 
-        ArrayHelper::setDefaultValue($this->tableOptions, 'id', $this->getTableId());
+        $this->tableOptions['id'] = $this->tableOptions['id'] ?? $this->getTableId();
 
         parent::init();
     }
@@ -125,15 +146,28 @@ class GridView extends \yii\grid\GridView
     /**
      * @return string
      */
-    public function renderItems()
+    public function renderItems(): string
     {
-        return $this->dataProvider->getCount() || $this->emptyText ? parent::renderItems() : '';
+        if ($this->dataProvider->getCount() || $this->emptyText) {
+            return $this->hasSelection ? $this->renderSelectionForm(parent::renderItems()) : parent::renderItems();
+        }
+
+        return '';
+    }
+
+    /**
+     * @param string $items
+     * @return string
+     */
+    protected function renderSelectionForm(string $items): string
+    {
+        return Html::beginForm($this->selectionRoute, 'post', ['id' => $this->getSelectionFormId()]) . $items . Html::endForm();
     }
 
     /**
      * @return string
      */
-    public function renderTableBody()
+    public function renderTableBody(): string
     {
         $tableBody = parent::renderTableBody();
 
@@ -153,7 +187,7 @@ class GridView extends \yii\grid\GridView
     /**
      * @return string
      */
-    public function renderSummary()
+    public function renderSummary(): string
     {
         $summary = $this->summary;
         $options = $this->summaryOptions;
@@ -241,24 +275,24 @@ class GridView extends \yii\grid\GridView
     /**
      * @return string
      */
-    public function renderHeader()
+    public function renderHeader(): string
     {
-        return $this->header ? Html::tag('div', is_array($this->header) ? $this->renderRows($this->header) : $this->header, ['class' => 'grid-view-header']) : null;
+        return $this->header ? Html::tag('div', is_array($this->header) ? $this->renderRows($this->header) : $this->header, ['class' => 'grid-view-header']) : '';
     }
 
     /**
      * @return string
      */
-    public function renderFooter()
+    public function renderFooter(): string
     {
-        return $this->footer ? Html::tag('div', is_array($this->footer) ? $this->renderRows($this->footer) : $this->footer, ['class' => 'grid-view-footer']) : null;
+        return $this->footer ? Html::tag('div', is_array($this->footer) ? $this->renderRows($this->footer) : $this->footer, ['class' => 'grid-view-footer']) : '';
     }
 
     /**
      * @param array $rows
      * @return string
      */
-    public function renderRows($rows)
+    public function renderRows(array $rows): string
     {
         $result = [];
 
@@ -282,7 +316,7 @@ class GridView extends \yii\grid\GridView
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function renderSection($name)
     {
@@ -301,7 +335,7 @@ class GridView extends \yii\grid\GridView
     /**
      * @return string
      */
-    public function getSearchInput()
+    public function getSearchInput(): string
     {
         if ($this->searchUrl === null) {
             $this->searchUrl = Url::current([$this->searchParamName => null]);
@@ -324,9 +358,8 @@ class GridView extends \yii\grid\GridView
 
     /**
      * @return string
-     * @throws \yii\base\InvalidConfigException
      */
-    public function getFormName()
+    public function getFormName(): string
     {
         if ($this->_formName === null) {
             if ($model = $this->getModel()) {
@@ -340,9 +373,17 @@ class GridView extends \yii\grid\GridView
     /**
      * @param string $formName
      */
-    public function setFormName($formName)
+    public function setFormName(string $formName)
     {
         $this->_formName = $formName;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getSelectionFormId(): string
+    {
+        return $this->getFormName() . '-items';
     }
 
     /**
@@ -357,7 +398,7 @@ class GridView extends \yii\grid\GridView
      * @param ActiveRecord $record
      * @return string
      */
-    public function getRowId($record): string
+    public function getRowId(ActiveRecord $record): string
     {
         return $this->getFormName() . '-' . implode('-', (array)$record->getPrimaryKey());
     }
@@ -373,7 +414,7 @@ class GridView extends \yii\grid\GridView
     /**
      * @return string
      */
-    protected function getSortableButton()
+    protected function getSortableButton(): string
     {
         return Html::tag('span', Icon::tag('arrows-alt'), ['class' => 'btn btn-secondary sortable-handle']);
     }
@@ -383,7 +424,7 @@ class GridView extends \yii\grid\GridView
      * @param ActiveRecord $model
      * @return string
      */
-    protected function getUpdateButton($model)
+    protected function getUpdateButton(ActiveRecord $model): string
     {
         return Html::a(Icon::tag('wrench'), $this->getRoute($model), [
             'class' => 'btn btn-primary d-none d-md-inline-block',
@@ -395,7 +436,7 @@ class GridView extends \yii\grid\GridView
      * @param array $params
      * @return array|false
      */
-    protected function getRoute($model, $params = [])
+    protected function getRoute(ActiveRecord $model, $params = [])
     {
         return array_merge(['update', 'id' => $model->getPrimaryKey()], $params);
     }
@@ -409,7 +450,7 @@ class GridView extends \yii\grid\GridView
             if ($this->dataProvider instanceof \yii\data\ActiveDataProvider) {
                 /**  @var \davidhirtz\yii2\skeleton\db\ActiveQuery $query */
                 $query = $this->dataProvider->query;
-                $this->_model = new $query->modelClass;
+                $this->_model = new $query->modelClass();
             }
         }
 
@@ -419,7 +460,7 @@ class GridView extends \yii\grid\GridView
     /**
      * @param ActiveRecord $model
      */
-    public function setModel($model)
+    public function setModel(ActiveRecord $model)
     {
         $this->_model = $model;
     }

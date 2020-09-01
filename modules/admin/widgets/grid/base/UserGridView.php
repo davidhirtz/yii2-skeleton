@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid\base;
 
+use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\UserActiveDataProvider;
@@ -187,11 +188,11 @@ class UserGridView extends GridView
     }
 
     /**
-     * @param User $model
+     * @param ActiveRecord $model
      * @param array $params
      * @return array|false
      */
-    protected function getRoute($model, $params = [])
+    protected function getRoute(ActiveRecord $model, $params = [])
     {
         return Yii::$app->getUser()->can('userUpdate', ['user' => $model]) ? array_merge(['/admin/user/update', 'id' => $model->id], $params) : false;
     }
