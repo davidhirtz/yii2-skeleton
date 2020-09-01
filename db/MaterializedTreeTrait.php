@@ -179,8 +179,11 @@ trait MaterializedTreeTrait
     public function findDescendants()
     {
         $path = ArrayHelper::createCacheString(array_merge($this->getAncestorIds(), [$this->id]));
+        $fieldName = static::tableName() . '.[[path]]';
 
-        return static::find()->where(static::tableName() . '.[[path]] LIKE :path', ['path' => $path . '%'])
-            ->orderBy(['path' => SORT_ASC]);
+        return static::find()->where($fieldName . ' = :path OR ' . $fieldName . ' LIKE :like', [
+            'path' => $path,
+            'like' => $path . ',%',
+        ])->orderBy(['path' => SORT_ASC]);
     }
 }
