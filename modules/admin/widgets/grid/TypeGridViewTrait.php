@@ -23,9 +23,14 @@ trait TypeGridViewTrait
     public $type;
 
     /**
-     * @var string
+     * @var string the type parameter name
      */
     public $typeParamName = 'type';
+
+    /**
+     * @var string|null whether the default item in the types dropdown should be shown
+     */
+    public $defaultTypeItem = null;
 
     /**
      * @return array
@@ -53,6 +58,7 @@ trait TypeGridViewTrait
             'label' => $type ? Html::tag('strong', $type['plural'] ?? $type['name']) : Yii::t('skeleton', 'Type'),
             'items' => $this->typeDropdownItems(),
             'paramName' => $this->typeParamName,
+            'defaultItem' => $this->defaultTypeItem,
         ]);
     }
 

@@ -24,9 +24,15 @@ trait StatusGridViewTrait
     public $status;
 
     /**
-     * @var string
+     * @var string the status parameter name
      */
     public $statusParamName = 'status';
+
+    /**
+     * @var string|null whether the default item in the status dropdown should be shown
+     */
+    public $defaultStatusItem = null;
+
 
     /**
      * @return array
@@ -54,6 +60,7 @@ trait StatusGridViewTrait
             'label' => $status ? Html::tag('strong', $status['plural'] ?? $status['name']) : Yii::t('skeleton', 'Status'),
             'items' => $this->statusDropdownItems(),
             'paramName' => $this->statusParamName,
+            'defaultItem' => $this->defaultStatusItem,
         ]);
     }
 
