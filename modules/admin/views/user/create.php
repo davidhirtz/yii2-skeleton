@@ -16,7 +16,7 @@ $this->setTitle(Yii::t('skeleton', 'Create New User'));
 ?>
 
 <?= UserSubmenu::widget([
-    'model' => $user,
+    'user' => $user,
 ]); ?>
 
 <?= Html::errorSummary($user, [
