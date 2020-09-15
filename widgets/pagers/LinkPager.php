@@ -159,7 +159,7 @@ class LinkPager extends \yii\widgets\LinkPager
             $label = $this->prevPageLabel;
         }
 
-        if ($label) {
+        if ($label !== false) {
             $currentPage = $this->pagination->getPage();
 
             if (($page = $currentPage - 1) < 0) {
@@ -183,7 +183,7 @@ class LinkPager extends \yii\widgets\LinkPager
             $label = $this->nextPageLabel;
         }
 
-        if ($label) {
+        if ($label !== false) {
             $currentPage = $this->pagination->getPage();
             $pageCount = $this->pagination->getPageCount();
 
