@@ -7,7 +7,7 @@ use davidhirtz\yii2\skeleton\web\Controller;
 use yii\filters\AccessControl;
 
 /**
- * Class SiteController.
+ * Class DashboardController
  * @package app\controllers
  *
  * @property Module $module
@@ -15,7 +15,7 @@ use yii\filters\AccessControl;
 class DashboardController extends Controller
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function behaviors()
     {
@@ -26,7 +26,7 @@ class DashboardController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => $this->module->roles ?: null,
+                        'roles' => $this->module->roles ?: ['@'],
                     ],
                 ],
             ],

@@ -20,10 +20,10 @@ trait I18nAttributesTrait
 
     /**
      * @param string $attribute
-     * @param string $language
+     * @param string|null $language
      * @return mixed
      */
-    public function getI18nAttribute($attribute, $language = null)
+    public function getI18nAttribute(string $attribute, $language = null)
     {
         return $this->getAttribute($this->isI18nAttribute($attribute) ? $this->getI18nAttributeName($attribute, $language) : $attribute);
     }
@@ -33,10 +33,10 @@ trait I18nAttributesTrait
      * the current application language is used.
      *
      * @param string $attribute
-     * @param string $language
+     * @param string|null $language
      * @return string
      */
-    public function getI18nAttributeName($attribute, $language = null)
+    public function getI18nAttributeName(string $attribute, $language = null)
     {
         return $this->isI18nAttribute($attribute) ? Yii::$app->getI18n()->getAttributeName($attribute, $language) : $attribute;
     }
@@ -47,10 +47,10 @@ trait I18nAttributesTrait
      * language.
      *
      * @param string $attribute
-     * @param array $languages
+     * @param array|null $languages
      * @return array
      */
-    public function getI18nAttributeNames($attribute, $languages = null)
+    public function getI18nAttributeNames(string $attribute, $languages = null)
     {
         if ($this->isI18nAttribute($attribute)) {
             $i18n = Yii::$app->getI18n();
@@ -75,7 +75,7 @@ trait I18nAttributesTrait
      * If languages is omitted all available languages are used.
      *
      * @param array|string $attributes
-     * @param array $languages
+     * @param array|null $languages
      * @return array
      */
     public function getI18nAttributesNames($attributes, $languages = null)
@@ -137,7 +137,7 @@ trait I18nAttributesTrait
      * @param array $rules
      * @return mixed
      */
-    public function getI18nRules($rules)
+    public function getI18nRules(array $rules)
     {
         if ($this->i18nAttributes) {
             foreach ($rules as $key => $rule) {
@@ -186,7 +186,7 @@ trait I18nAttributesTrait
      * @param string $attribute
      * @return bool
      */
-    public function isI18nAttribute($attribute): bool
+    public function isI18nAttribute(string $attribute): bool
     {
         return in_array($attribute, $this->i18nAttributes);
     }
