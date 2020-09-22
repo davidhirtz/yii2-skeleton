@@ -7,21 +7,36 @@ use Imagine\Image\ImageInterface;
 use Imagine\Image\Point;
 use yii\imagine\BaseImage;
 use Imagine\Image\Palette\RGB;
+use Yii;
 
 /**
- * Class Image.
+ * Class Image
  * @package davidhirtz\yii2\skeleton\helpers
  */
 class Image extends BaseImage
 {
+    /**
+     * @inheritDoc
+     */
+    protected static function ensureImageInterfaceInstance($image)
+    {
+        // Prevent loading remote resources via Imagine as doesn't support stream wrappers
+        // such as Amazon S3. This makes sure remote files are loaded via fopen.
+        if (is_string($image) && !stream_is_local($image = Yii::getAlias($image))) {
+            $image = fopen($image, 'r');
+        }
+
+        return parent::ensureImageInterfaceInstance($image);
+    }
+
     /**
      * Resizes and crops image to exactly fit the given dimensions.
      *
      * @param string|resource|ImageInterface $image
      * @param int $width
      * @param int $height
-     * @param string $bgColor
-     * @param int $bgAlpha
+     * @param string|null $bgColor
+     * @param int|null $bgAlpha
      *
      * @return ImageInterface
      */
@@ -65,21 +80,22 @@ class Image extends BaseImage
      * Shortcut method.
      *
      * @param string|resource|ImageInterface $image
-     * @param int $width
-     * @param int $height
+     * @param int|null $width
+     * @param int|null $height
      * @param bool $allowUpscaling
-     * @param string $bgColor
-     * @param int $bgAlpha
+     * @param string|null $bgColor
+     * @param int|null $bgAlpha
      *
      * @return ImageInterface
      */
-    public static function smartResize($image, $width = null, $height = null, $allowUpscaling = false, $bgColor = null, $bgAlpha = null) {
+    public static function smartResize($image, $width = null, $height = null, $allowUpscaling = false, $bgColor = null, $bgAlpha = null)
+    {
         return (!$width || !$height) ? static::resize($image, $width, $height, true, $allowUpscaling) : static::fit($image, $width, $height, $bgColor, $bgAlpha);
     }
 
     /**
      * @param string $filename
-     * @param string $extension
+     * @param string|null $extension
      * @return array
      */
     public static function getImageSize($filename, $extension = null)

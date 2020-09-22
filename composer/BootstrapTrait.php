@@ -43,7 +43,9 @@ trait BootstrapTrait
      */
     public function extendModule($app, $id, $module)
     {
-        $app->setModule($id, ArrayHelper::merge($app->getModules()[$id] ?? [], $module));
+        if ($module) {
+            $app->setModule($id, ArrayHelper::merge($module, $app->getModules()[$id] ?? []));
+        }
     }
 
     /**

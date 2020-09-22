@@ -111,6 +111,20 @@ class FileHelper extends \yii\helpers\BaseFileHelper
     }
 
     /**
+     * @inheritDoc
+     */
+    public static function createDirectory($path, $mode = 0775, $recursive = true)
+    {
+        // Yii integration does not work with stream wrappers such as Amazon S3, if stream
+        // is not local, let the implementation work out the specifics.
+        if (!stream_is_local($path)) {
+            return @mkdir($path);
+        }
+
+        return parent::createDirectory($path, $mode, $recursive);
+    }
+
+    /**
      * Creates a config PHP file from config array.
      *
      * @param string $file
@@ -120,12 +134,6 @@ class FileHelper extends \yii\helpers\BaseFileHelper
     public static function createConfigFile($file, $config = [], $phpdoc = null)
     {
         $file = Yii::getAlias($file);
-
-//        $config = var_export($config, true);
-//        $config = preg_replace("/^([ ]*)(.*)/m", '$1$1$2', $config);
-//        $config = preg_split("/\r\n|\n|\r/", $config);
-//        $config = preg_replace(["/\s*array\s\($/", "/\)(,)?$/", "/\s=>\s$/"], [null, ']$1', ' => ['], $config);
-//        $export = join(PHP_EOL, array_filter(["["] + $config));
         $export = VarDumper::export($config);
         $date = date('c');
 
