@@ -43,7 +43,7 @@ class Image extends BaseImage
     public static function fit($image, $width, $height, $bgColor = null, $bgAlpha = null)
     {
         if ($bgColor) {
-            $img = self::resize($image, $width, $height);
+            $img = static::resize($image, $width, $height);
             $size = $img->getSize();
 
             $palette = new RGB();
@@ -91,6 +91,15 @@ class Image extends BaseImage
     public static function smartResize($image, $width = null, $height = null, $allowUpscaling = false, $bgColor = null, $bgAlpha = null)
     {
         return (!$width || !$height) ? static::resize($image, $width, $height, true, $allowUpscaling) : static::fit($image, $width, $height, $bgColor, $bgAlpha);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function resize($image, $width, $height, $keepAspectRatio = true, $allowUpscaling = false)
+    {
+        // Ensure actual implementation of "ensureImageInterfaceInstance".
+        return parent::resize(static::ensureImageInterfaceInstance($image), $width, $height, $keepAspectRatio, $allowUpscaling);
     }
 
     /**
