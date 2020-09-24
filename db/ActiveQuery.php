@@ -80,7 +80,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
     /**
      * Alters where statement and sets static status that can be used by related queries.
      *
-     * @param int $status
+     * @param int|null $status
      * @return $this
      */
     public function whereStatus($status = null)
