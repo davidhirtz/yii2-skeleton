@@ -6,7 +6,7 @@ use davidhirtz\yii2\skeleton\console\controllers\traits\ConfigTrait;
 use Yii;
 
 /**
- * Manages application migrations.
+ * Manages application migrations
  * @package davidhirtz\yii2\skeleton\console\controllers
  */
 class MigrateController extends \yii\console\controllers\MigrateController
@@ -22,6 +22,11 @@ class MigrateController extends \yii\console\controllers\MigrateController
      * @var string
      */
     public $dbFile = '@app/config/db.php';
+
+    /**
+     * @var string
+     */
+    public $templateFile = '@skeleton/views/migration.php';
 
     /**
      * @param \yii\base\Action $action

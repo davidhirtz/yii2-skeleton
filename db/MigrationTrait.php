@@ -6,7 +6,7 @@ use Yii;
 use yii\base\InvalidConfigException;
 
 /**
- * Class MigrationTrait.
+ * Class MigrationTrait
  * @package davidhirtz\yii2\skeleton\db
  */
 trait MigrationTrait
@@ -23,7 +23,7 @@ trait MigrationTrait
             return $db->charset == 'utf8mb4' ? 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE InnoDB' : 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE InnoDB';
         }
 
-        throw new InvalidConfigException;
+        throw new InvalidConfigException();
     }
 
     /**
