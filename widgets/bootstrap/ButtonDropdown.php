@@ -13,7 +13,7 @@ use yii\helpers\Url;
 class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
 {
     /**
-     * @var string the default item label
+     * @var string|false|null the default item label, set to `false` to disable the default item
      */
     public $defaultItem;
 
