@@ -94,11 +94,15 @@ trait StatusGridViewTrait
     }
 
     /**
+     * @param StatusAttributeTrait|null $model
      * @return array
      */
-    protected function statusSelectionButtonItems(): array
+    protected function statusSelectionButtonItems($model = null): array
     {
-        $model = $this->getModel();
+        if (!$model) {
+            $model = $this->getModel();
+        }
+
         $items = [];
 
         foreach ($model::getStatuses() as $id => $status) {
