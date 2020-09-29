@@ -130,8 +130,7 @@ class AuthItem extends ActiveRecord
     public function attributeLabels(): array
     {
         return [
-            'name' => Yii::t('skeleton', 'Name'),
-            'displayName' => Yii::t('skeleton', 'Name'),
+            'name' => Yii::t('skeleton', 'Permission'),
             'type' => Yii::t('skeleton', 'Type'),
             'description' => Yii::t('skeleton', 'Description'),
         ];

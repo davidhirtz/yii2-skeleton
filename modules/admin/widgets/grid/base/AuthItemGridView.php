@@ -97,22 +97,19 @@ class AuthItemGridView extends GridView
     public function descriptionColumn()
     {
         return [
+            'label' => Yii::t('skeleton', 'Additional Permissions'),
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
             'contentOptions' => ['class' => 'd-none d-md-table-cell'],
             'content' => function (AuthItem $authItem) {
-                if ($authItem->isRole()) {
-                    $items = [Yii::t('skeleton', $authItem->description)];
+                $items = [];
 
-                    foreach ($authItem->children as $child) {
-                        $description = Yii::t('skeleton', $child->description);
-                        $isActive = $this->user && !$authItem->isAssigned && ($child->isAssigned || $child->isInherited);
-                        $items[] = $isActive ? Html::tag('span', $description, ['class' => 'bg-success']) : $description;
-                    }
-
-                    return Html::ul(array_filter($items), ['class' => 'list-unstyled', 'encode' => false]);
+                foreach ($authItem->children as $child) {
+                    $description = Yii::t('skeleton', $child->description);
+                    $isActive = $this->user && !$authItem->isAssigned && ($child->isAssigned || $child->isInherited);
+                    $items[] = $isActive ? Html::tag('span', $description, ['class' => 'bg-success']) : $description;
                 }
 
-                return '';
+                return Html::ul(array_filter($items), ['class' => 'list-unstyled', 'encode' => false]);
             }
         ];
     }
