@@ -64,7 +64,7 @@ class UserController extends Controller
     }
 
     /**
-     * @param string $q
+     * @param string|null $q
      * @return string
      */
     public function actionIndex($q = null)
@@ -82,13 +82,16 @@ class UserController extends Controller
     }
 
     /**
-     * @throws \Throwable
      * @return string
      */
     public function actionCreate()
     {
         $user = new UserForm();
         $user->status = $user::STATUS_ENABLED;
+
+        if (!Yii::$app->getUser()->can('userCreate', ['user' => $user])) {
+            throw new ForbiddenHttpException();
+        }
 
         if ($user->load(Yii::$app->getRequest()->post())) {
             if ($user->insert()) {
@@ -146,6 +149,10 @@ class UserController extends Controller
             throw new NotFoundHttpException();
         }
 
+        if (!Yii::$app->getUser()->can('userDelete', ['user' => $user])) {
+            throw new ForbiddenHttpException();
+        }
+
         /** @var DeleteForm $form */
         $form = Yii::createObject([
             'class' => 'davidhirtz\yii2\skeleton\models\forms\DeleteForm',
@@ -178,8 +185,12 @@ class UserController extends Controller
      */
     public function actionDeauthorize($id, $name)
     {
+        /** @var AuthClient $auth */
         $auth = AuthClient::find()
-            ->where(['auth_client.id' => $id, 'auth_client.name' => $name])
+            ->where([
+                AuthClient::tableName() . '.[[id]]' => $id,
+                AuthClient::tableName() . '.[[name]]' => $name,
+            ])
             ->joinWith('user', true, 'JOIN')
             ->limit(1)
             ->one();
