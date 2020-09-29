@@ -285,10 +285,16 @@ var Skeleton = {
         return $.hasOwnProperty('ui');
     },
 
+    /**
+     * Toggles selection buttons in grid view. Can also toggle the parent ".grid-view-header" or ".grid-view-footer"
+     * element it's given the ".hidden-if-inactive" class.
+     *
+     * @param form
+     */
     initSelection: function (form) {
-        console.log(form)
         var $checkboxes = $(form).find('input[type=checkbox]').on('change', function () {
-            $('#btn-selection').toggle($checkboxes.filter(':checked').length > 0);
+            var isSelected = $checkboxes.filter(':checked').length > 0;
+            $('#btn-selection').toggle(isSelected).closest('.hidden-if-inactive').toggleClass('.active', isSelected);
         })
     }
 };
