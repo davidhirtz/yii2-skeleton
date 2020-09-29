@@ -3,9 +3,9 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid;
 
 /**
- * Class UserGridView
+ * Class AuthItemGridView
  * @package davidhirtz\yii2\skeleton\modules\admin\widgets
  */
-class UserGridView extends base\UserGridView
+class AuthItemGridView extends base\AuthItemGridView
 {
 }

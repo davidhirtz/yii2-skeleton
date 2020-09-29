@@ -3,12 +3,14 @@
 namespace davidhirtz\yii2\skeleton\models\queries;
 
 use davidhirtz\yii2\skeleton\db\ActiveQuery;
+use davidhirtz\yii2\skeleton\models\AuthItem;
 use Yii;
 use yii\db\Connection;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
- * Class AuthItemQuery.
+ * Class AuthItemQuery
  * @package davidhirtz\yii2\skeleton\models\queries
  */
 class AuthItemQuery extends ActiveQuery
@@ -29,6 +31,7 @@ class AuthItemQuery extends ActiveQuery
     {
         $this->addSelect(['isAssigned' => '([[item_name]]=[[name]])']);
         $this->join('LEFT JOIN', Yii::$app->authManager->assignmentTable, '[[item_name]]=[[name]] AND [[user_id]]=:userId', ['userId' => $userId]);
+
         return $this;
     }
 
@@ -46,14 +49,17 @@ class AuthItemQuery extends ActiveQuery
     }
 
     /**
-     * @param Connection $db
-     * @return \davidhirtz\yii2\skeleton\models\AuthItem[]|array
+     * @param Connection|null $db
+     * @return AuthItem[]|array
      */
     public function allWithChildren($db = null)
     {
-        /**  @var \davidhirtz\yii2\skeleton\models\AuthItem[] $items */
+        /**  @var AuthItem[] $items */
         $items = ArrayHelper::index(parent::all($db), 'name');
-        $relations = (new \yii\db\Query())->select('*')->from(Yii::$app->getAuthManager()->itemChildTable)->all();
+
+        $relations = (new Query())->select('*')
+            ->from(Yii::$app->getAuthManager()->itemChildTable)
+            ->all();
 
         foreach ($relations as $relation) {
             $this->setAuthItemChild($items, $relations, $relation['parent'], $relation['child']);
@@ -63,7 +69,7 @@ class AuthItemQuery extends ActiveQuery
     }
 
     /**
-     * @param \davidhirtz\yii2\skeleton\models\AuthItem[] $items
+     * @param AuthItem[] $items
      * @param array $relations
      * @param string $parent
      * @param string $child

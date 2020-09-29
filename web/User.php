@@ -11,8 +11,8 @@ use Yii;
  * Class User
  * @package davidhirtz\yii2\skeleton\web
  *
- * @property \davidhirtz\yii2\skeleton\db\Identity $identity
- * @method \davidhirtz\yii2\skeleton\db\Identity getIdentity($autoRenew = true)
+ * @property Identity $identity
+ * @method Identity getIdentity($autoRenew = true)
  */
 class User extends \yii\web\User
 {
@@ -42,6 +42,16 @@ class User extends \yii\web\User
     public $enableAutoLogin = true;
 
     /**
+     * @var bool
+     */
+    public $disableRbacForGuests = true;
+
+    /**
+     * @var bool
+     */
+    public $disableRbacForOwner = true;
+
+    /**
      * @var string
      */
     public $identityClass = 'davidhirtz\yii2\skeleton\db\Identity';
@@ -58,7 +68,7 @@ class User extends \yii\web\User
     private $_userCount;
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function init()
     {
@@ -71,7 +81,7 @@ class User extends \yii\web\User
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function loginRequired($checkAjax = true, $checkAcceptHeader = true)
     {
@@ -87,10 +97,8 @@ class User extends \yii\web\User
      * @param Identity $identity
      * @param bool $cookieBased
      * @param int $duration
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
      */
-    public function afterLogin($identity, $cookieBased, $duration)
+    protected function afterLogin($identity, $cookieBased, $duration)
     {
         /**
          * Update login count, cache previous login date in session and
@@ -112,7 +120,7 @@ class User extends \yii\web\User
          * Update user record and insert login log.
          */
         $identity->login_count++;
-        $identity->last_login = new DateTime;
+        $identity->last_login = new DateTime();
 
         if ($cookieBased) {
             $identity->loginType = UserLogin::TYPE_COOKIE;
@@ -127,7 +135,7 @@ class User extends \yii\web\User
     /**
      * @param Identity $identity
      */
-    public function afterLogout($identity)
+    protected function afterLogout($identity)
     {
         /**
          * Removes user id from session.
@@ -143,7 +151,6 @@ class User extends \yii\web\User
 
     /**
      * @param Identity $identity
-     * @throws \yii\db\Exception
      */
     private function insertLogin($identity)
     {
@@ -159,17 +166,15 @@ class User extends \yii\web\User
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function can($permissionName, $params = [], $allowCaching = true)
     {
-        // Disable RBAC for guests.
-        if ($this->getIsGuest()) {
+        if ($this->disableRbacForGuests && $this->getIsGuest()) {
             return false;
         }
 
-        // Don't run RBAC for site owner.
-        return !$this->identity->isOwner() ? parent::can($permissionName, $params, $allowCaching) : true;
+        return ($this->disableRbacForOwner || !$this->identity->isOwner()) ? parent::can($permissionName, $params, $allowCaching) : true;
     }
 
     /**

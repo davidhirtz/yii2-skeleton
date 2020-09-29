@@ -2,11 +2,15 @@
 
 namespace davidhirtz\yii2\skeleton\auth\rbac;
 
-use yii\helpers\ArrayHelper;
+use davidhirtz\yii2\skeleton\models\User;
 use yii\rbac\Rule;
 
 /**
- * Class OwnerRule.
+ * Class OwnerRule
+ *
+ * Checks if the user record can be updated. If no user record was provided via `$params` the rule will return `true` so
+ * permissions like `userUpdate` and `userDelete` can be used in access control management.
+ *
  * @package davidhirtz\yii2\skeleton\auth\rbac
  */
 class OwnerRule extends Rule
@@ -17,12 +21,12 @@ class OwnerRule extends Rule
     public $name = 'userUpdateRule';
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function execute($userId, $item, $params)
     {
-        /** @var \davidhirtz\yii2\skeleton\models\User $user */
-        $user = ArrayHelper::getValue($params, 'user');
+        /** @var User $user */
+        $user = $params['user'] ?? null;
         return $user === null || !$user->isOwner() || $user->id == $userId;
     }
 }

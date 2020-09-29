@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\models;
 
+use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\db\TypeAttributeTrait;
 use davidhirtz\yii2\skeleton\models\queries\AuthItemQuery;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
@@ -22,7 +23,7 @@ use yii\rbac\Item;
  *
  * @property User[] $users {@see AuthItem::getUsers()}
  */
-class AuthItem extends \davidhirtz\yii2\skeleton\db\ActiveRecord
+class AuthItem extends ActiveRecord
 {
     use TypeAttributeTrait;
 
@@ -38,7 +39,7 @@ class AuthItem extends \davidhirtz\yii2\skeleton\db\ActiveRecord
 
     /**
      * @see \davidhirtz\yii2\skeleton\models\queries\AuthItemQuery::allWithChildren()
-     * @var \davidhirtz\yii2\skeleton\models\AuthItem[]
+     * @var AuthItem[]
      */
     public $children = [];
 
@@ -75,7 +76,6 @@ class AuthItem extends \davidhirtz\yii2\skeleton\db\ActiveRecord
     {
         return $this->getTypeOptions()['icon'] ?? '';
     }
-
 
     /**
      * @return bool

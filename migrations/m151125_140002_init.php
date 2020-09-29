@@ -2,11 +2,14 @@
 
 namespace davidhirtz\yii2\skeleton\migrations;
 
+use davidhirtz\yii2\skeleton\auth\rbac\OwnerRule;
+use davidhirtz\yii2\skeleton\db\MigrationTrait;
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\Session;
 use davidhirtz\yii2\skeleton\models\SessionAuthKey;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\skeleton\models\User;
+use m140506_102106_rbac_init;
 use Yii;
 
 require(Yii::getAlias('@yii/rbac/migrations') . '/m140506_102106_rbac_init.php');
@@ -14,9 +17,9 @@ require(Yii::getAlias('@yii/rbac/migrations') . '/m140506_102106_rbac_init.php')
 /**
  * Class m151125_140002_init.
  */
-class m151125_140002_init extends \m140506_102106_rbac_init
+class m151125_140002_init extends m140506_102106_rbac_init
 {
-    use \davidhirtz\yii2\skeleton\db\MigrationTrait;
+    use MigrationTrait;
 
     /**
      * @inheritdoc
@@ -147,7 +150,7 @@ class m151125_140002_init extends \m140506_102106_rbac_init
          * Authentication data.
          */
         $sourceLanguage = Yii::$app->sourceLanguage;
-        $ownerRule = new \davidhirtz\yii2\skeleton\auth\rbac\OwnerRule();
+        $ownerRule = new OwnerRule();
         $auth->add($ownerRule);
 
         $authUpdate = $auth->createPermission('authUpdate');

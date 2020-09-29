@@ -12,6 +12,7 @@ use Yii;
 use yii\rbac\Role;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * Class AuthController.
@@ -51,7 +52,6 @@ class AuthController extends Controller
     public function actionIndex()
     {
         $items = AuthItem::find()
-            ->select(['name', 'type', 'description'])
             ->orderByType()
             ->withUsers()
             ->allWithChildren();
@@ -69,73 +69,7 @@ class AuthController extends Controller
     public function actionView($user)
     {
         $user = $this->getUser($user);
-        return $this->renderUserAuthItems($user);
-    }
 
-    /**
-     * @param int $id
-     * @param string $name
-     * @param int $type
-     * @return \yii\web\Response|string
-     */
-    public function actionAssign($id, $name, $type)
-    {
-        $user = $this->getUser($id);
-        $role = $this->getAuthItem($name, $type);
-
-        $rbac = Yii::$app->getAuthManager();
-        $rbac->invalidateCache();
-
-        if ($rbac->getAssignment($role->name, $user->id)) {
-            $this->error(Yii::t('skeleton', 'This permission was already assigned to user {name}.', [
-                'name' => $user->getUsername(),
-            ]));
-        } else {
-            $rbac->assign($role, $user->id);
-
-            if (Yii::$app->getRequest()->getIsAjax()) {
-                return $this->renderUserAuthItems($user);
-            }
-        }
-
-        return $this->redirect(['user', 'id' => $user->id]);
-    }
-
-    /**
-     * @param int $id
-     * @param string $name
-     * @param int $type
-     * @return \yii\web\Response|string
-     */
-    public function actionRevoke($id, $name, $type)
-    {
-        $user = $this->getUser($id);
-        $role = $this->getAuthItem($name, $type);
-
-        $rbac = Yii::$app->getAuthManager();
-        $rbac->invalidateCache();
-
-        if (!$rbac->getAssignment($role->name, $user->id)) {
-            Yii::$app->getSession()->addFlash('error', Yii::t('skeleton', 'This permission was not assigned to user {name}.', [
-                'name' => $user->getUsername(),
-            ]));
-        } else {
-            $rbac->revoke($role, $user->id);
-
-            if (Yii::$app->getRequest()->getIsAjax()) {
-                return $this->renderUserAuthItems($user);
-            }
-        }
-
-        return $this->redirect(['user', 'id' => $user->id]);
-    }
-
-    /**
-     * @param User $user
-     * @return string
-     */
-    private function renderUserAuthItems($user)
-    {
         $items = AuthItem::find()
             ->select(['name', 'type', 'description'])
             ->orderByType()
@@ -147,6 +81,58 @@ class AuthController extends Controller
             'provider' => new ArrayDataProvider(['allModels' => $items]),
             'user' => $user,
         ]);
+    }
+
+    /**
+     * @param int $id
+     * @param string $name
+     * @param int $type
+     * @return Response|string
+     */
+    public function actionAssign($id, $name, $type)
+    {
+        $user = $this->getUser($id);
+        $role = $this->getAuthItem($name, $type);
+
+        $rbac = Yii::$app->getAuthManager();
+        $rbac->invalidateCache();
+
+        if (!$rbac->getAssignment($role->name, $user->id)) {
+            $rbac->assign($role, $user->id);
+
+        } else {
+            $this->error(Yii::t('skeleton', 'This permission was already assigned to user {name}.', [
+                'name' => $user->getUsername(),
+            ]));
+        }
+
+        return $this->redirect(['view', 'user' => $user->id]);
+    }
+
+    /**
+     * @param int $id
+     * @param string $name
+     * @param int $type
+     * @return Response|string
+     */
+    public function actionRevoke($id, $name, $type)
+    {
+        $user = $this->getUser($id);
+        $role = $this->getAuthItem($name, $type);
+
+        $rbac = Yii::$app->getAuthManager();
+        $rbac->invalidateCache();
+
+        if ($rbac->getAssignment($role->name, $user->id)) {
+            $rbac->revoke($role, $user->id);
+
+        } else {
+            $this->error(Yii::t('skeleton', 'This permission was not assigned to user {name}.', [
+                'name' => $user->getUsername(),
+            ]));
+        }
+
+        return $this->redirect(['view', 'user' => $user->id]);
     }
 
     /**
@@ -169,7 +155,7 @@ class AuthController extends Controller
     /**
      * @param string $name
      * @param string $type
-     * @return \yii\rbac\Role
+     * @return Role
      */
     private function getAuthItem($name, $type)
     {

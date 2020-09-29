@@ -5,6 +5,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
+use davidhirtz\yii2\timeago\Timeago;
 use Yii;
 use yii\helpers\Html;
 
@@ -64,7 +65,7 @@ class UserLoginGridView extends GridView
                 [
                     'attribute' => 'created_at',
                     'content' => function (UserLogin $login) {
-                        return \davidhirtz\yii2\timeago\Timeago::tag($login->created_at);
+                        return Timeago::tag($login->created_at);
                     }
                 ],
             ];
