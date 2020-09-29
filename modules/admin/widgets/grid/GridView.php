@@ -3,12 +3,15 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid;
 
 use davidhirtz\yii2\skeleton\assets\JuiAsset;
+use davidhirtz\yii2\skeleton\db\ActiveQuery;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
+use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 use yii\helpers\Url;
@@ -68,7 +71,7 @@ class GridView extends \yii\grid\GridView
     public $emptyText = false;
 
     /**
-     * @var \yii\data\ActiveDataProvider|\yii\data\ArrayDataProvider
+     * @var ActiveDataProvider|ArrayDataProvider
      */
     public $dataProvider;
 
@@ -279,7 +282,10 @@ class GridView extends \yii\grid\GridView
      */
     public function renderHeader(): string
     {
-        return $this->header ? Html::tag('div', is_array($this->header) ? $this->renderRows($this->header) : $this->header, ['class' => 'grid-view-header']) : '';
+        $options = ArrayHelper::remove($this->footer, 'options', []);
+        Html::addCssClass($options, 'grid-view-header');
+
+        return $this->header ? Html::tag('div', is_array($this->header) ? $this->renderRows($this->header) : $this->header, $options) : '';
     }
 
     /**
@@ -287,7 +293,10 @@ class GridView extends \yii\grid\GridView
      */
     public function renderFooter(): string
     {
-        return $this->footer ? Html::tag('div', is_array($this->footer) ? $this->renderRows($this->footer) : $this->footer, ['class' => 'grid-view-footer']) : '';
+        $options = ArrayHelper::remove($this->footer, 'options', []);
+        Html::addCssClass($options, 'grid-view-footer');
+
+        return $this->footer ? Html::tag('div', is_array($this->footer) ? $this->renderRows($this->footer) : $this->footer, $options) : '';
     }
 
     /**
@@ -475,8 +484,8 @@ class GridView extends \yii\grid\GridView
     public function getModel()
     {
         if (!$this->_model) {
-            if ($this->dataProvider instanceof \yii\data\ActiveDataProvider) {
-                /**  @var \davidhirtz\yii2\skeleton\db\ActiveQuery $query */
+            if ($this->dataProvider instanceof ActiveDataProvider) {
+                /**  @var ActiveQuery $query */
                 $query = $this->dataProvider->query;
                 $this->_model = new $query->modelClass();
             }
