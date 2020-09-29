@@ -282,7 +282,7 @@ class GridView extends \yii\grid\GridView
      */
     public function renderHeader(): string
     {
-        $options = ArrayHelper::remove($this->footer, 'options', []);
+        $options = ArrayHelper::remove($this->header, 'options', []);
         Html::addCssClass($options, 'grid-view-header');
 
         return $this->header ? Html::tag('div', is_array($this->header) ? $this->renderRows($this->header) : $this->header, $options) : '';
