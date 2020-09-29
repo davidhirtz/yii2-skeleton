@@ -294,7 +294,7 @@ var Skeleton = {
     initSelection: function (form) {
         var $checkboxes = $(form).find('input[type=checkbox]').on('change', function () {
             var isSelected = $checkboxes.filter(':checked').length > 0;
-            $('#btn-selection').toggle(isSelected).closest('.hidden-if-inactive').toggleClass('.active', isSelected);
+            $('#btn-selection').toggle(isSelected).closest('.hidden-if-inactive').toggleClass('active', isSelected);
         })
     }
 };
