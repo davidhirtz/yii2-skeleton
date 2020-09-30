@@ -109,7 +109,7 @@ class AuthItemGridView extends GridView
                     }
                 }
 
-                return Html::tag('span', $authItem->isRole() ? $authItem->getDisplayName() : Yii::t('skeleton', $authItem->description), [
+                return Html::tag('span', $authItem->isRole() ? $authItem->getDisplayName() : ($this->getTranslations()[$authItem->description] ?? $authItem->description), [
                     'class' => $cssClass,
                 ]);
             }

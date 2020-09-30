@@ -56,9 +56,14 @@ class AuthController extends Controller
             ->withUsers()
             ->allWithChildren();
 
+        $provider = new ArrayDataProvider([
+            'allModels' => $items,
+            'pagination' => false,
+        ]);
+
         /** @noinspection MissedViewInspection */
         return $this->render('index', [
-            'provider' => new ArrayDataProvider(['allModels' => $items]),
+            'provider' => $provider,
         ]);
     }
 
