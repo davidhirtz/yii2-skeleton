@@ -17,37 +17,38 @@ use Yii;
 class User extends \yii\web\User
 {
     /**
-     * @var bool
+     * @var bool whether users can log in
      */
     public $enableLogin = true;
 
     /**
-     * @var bool
+     * @var bool whether the user can log in without a confirmed email address
      */
     public $enableUnconfirmedEmailLogin = true;
 
     /**
-     * @var bool
+     * @var bool whether users can reset their password
      */
     public $enablePasswordReset = true;
 
     /**
-     * @var bool
+     * @var bool whether users can create new accounts
      */
     public $enableSignup = false;
 
     /**
-     * @var bool
+     * @var bool whether login via cookie or long living access token is allowed
      */
     public $enableAutoLogin = true;
 
     /**
-     * @var bool
+     * @var bool whether the role based access management always returns `false` if user is not logged in
      */
     public $disableRbacForGuests = true;
 
     /**
-     * @var bool
+     * @var bool whether the role based access management always returns `true` if user is the site owner.
+     * @see \davidhirtz\yii2\skeleton\models\User::isOwner()
      */
     public $disableRbacForOwner = true;
 
@@ -63,7 +64,7 @@ class User extends \yii\web\User
     public $loginUrl = null;
 
     /**
-     * @var
+     * @var int
      */
     private $_userCount;
 

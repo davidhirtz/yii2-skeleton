@@ -76,9 +76,14 @@ class AuthController extends Controller
             ->withAssignment($user->id)
             ->allWithChildren();
 
+        $provider = new ArrayDataProvider([
+            'allModels' => $items,
+            'pagination' => false,
+        ]);
+
         /** @noinspection MissedViewInspection */
         return $this->render('view', [
-            'provider' => new ArrayDataProvider(['allModels' => $items]),
+            'provider' => $provider,
             'user' => $user,
         ]);
     }
@@ -99,7 +104,6 @@ class AuthController extends Controller
 
         if (!$rbac->getAssignment($role->name, $user->id)) {
             $rbac->assign($role, $user->id);
-
         } else {
             $this->error(Yii::t('skeleton', 'This permission was already assigned to user {name}.', [
                 'name' => $user->getUsername(),
@@ -125,7 +129,6 @@ class AuthController extends Controller
 
         if ($rbac->getAssignment($role->name, $user->id)) {
             $rbac->revoke($role, $user->id);
-
         } else {
             $this->error(Yii::t('skeleton', 'This permission was not assigned to user {name}.', [
                 'name' => $user->getUsername(),

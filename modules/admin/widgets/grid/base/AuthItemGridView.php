@@ -35,6 +35,8 @@ class AuthItemGridView extends GridView
         'class' => 'table table-striped',
     ];
 
+    private static $prevRuleName;
+
     /**
      * @inheritDoc
      */
@@ -86,7 +88,21 @@ class AuthItemGridView extends GridView
         return [
             'attribute' => 'name',
             'content' => function (AuthItem $authItem) {
-                return $authItem->isRole() ? Html::tag('strong', $authItem->getDisplayName()) : Yii::t('skeleton', $authItem->description);
+                $cssClass = $authItem->isRole() ? 'strong' : null;
+
+                if ($authItem->isPermission()) {
+                    preg_match('/[A-Z]/', $authItem->name, $matches, PREG_OFFSET_CAPTURE);
+                    $ruleName = substr($authItem->name, 0, $matches[0][1] ?? 0);
+
+                    if ($ruleName !== static::$prevRuleName) {
+                        static::$prevRuleName = $ruleName;
+                        $cssClass = 'strong';
+                    }
+                }
+
+                return Html::tag('span', $authItem->isRole() ? $authItem->getDisplayName() : Yii::t('skeleton', $authItem->description), [
+                    'class' => $cssClass,
+                ]);
             }
         ];
     }
@@ -97,7 +113,7 @@ class AuthItemGridView extends GridView
     public function descriptionColumn()
     {
         return [
-            'label' => Yii::t('skeleton', 'Additional Permissions'),
+            'label' => Yii::t('skeleton', 'Inherited Permissions'),
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
             'contentOptions' => ['class' => 'd-none d-md-table-cell'],
             'content' => function (AuthItem $authItem) {

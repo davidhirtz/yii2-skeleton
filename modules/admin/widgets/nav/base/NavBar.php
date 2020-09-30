@@ -21,19 +21,21 @@ class NavBar extends \yii\bootstrap4\NavBar
     ];
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function run()
     {
         echo Nav::widget([
-            'options' => ['class' => 'navbar-nav'],
             'items' => $this->getItems(),
+            'options' => ['class' => 'navbar-nav'],
+            'hideOneItem' => false,
         ]);
 
         if ($items = $this->getAccountItems()) {
             echo Nav::widget([
-                'options' => ['class' => 'navbar-nav'],
                 'items' => $items,
+                'options' => ['class' => 'navbar-nav'],
+                'hideOneItem' => false,
             ]);
         }
 

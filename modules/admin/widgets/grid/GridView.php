@@ -470,6 +470,20 @@ class GridView extends \yii\grid\GridView
 
     /**
      * @param ActiveRecord $model
+     * @return string
+     */
+    protected function getDeleteButton(ActiveRecord $model)
+    {
+        return Html::a(Icon::tag('trash'), ['delete', 'id' => $model->getPrimaryKey()], [
+            'class' => 'btn btn-danger',
+            'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+            'data-ajax' => 'remove',
+            'data-target' => '#' . $this->getRowId($model),
+        ]);
+    }
+
+    /**
+     * @param ActiveRecord $model
      * @param array $params
      * @return array|false
      */

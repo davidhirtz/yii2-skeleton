@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 
+use Closure;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\web\View;
 use yii\helpers\Html;
@@ -16,27 +17,32 @@ use Yii;
 class Nav extends \yii\bootstrap4\Nav
 {
     /**
-     * @var string default item template, can be set individually by item option "template".
+     * @var bool whether the widget should not be rendered if there is only a single item present.
+     */
+    public $hideOneItem = true;
+
+    /**
+     * @var string default item template, can be set individually by item option `template`.
      */
     public $itemTemplate = '{icon} {label} {badge}';
 
     /**
-     * @var array default link html options, can be set individually by item options "linkOptions".
+     * @var array default link html options, can be set individually by item options `linkOptions`.
      */
     public $linkOptions = [];
 
     /**
-     * @var array default icon html options, can be set individually by item option "iconOptions".
+     * @var array default icon html options, can be set individually by item option `iconOptions`.
      */
     public $iconOptions = ['class' => 'fa-fw'];
 
     /**
-     * @var array default badge html options, can be set individually by item option "badgeOptions".
+     * @var array default badge html options, can be set individually by item option `badgeOptions`.
      */
     public $badgeOptions = ['class' => 'badge'];
 
     /**
-     * @var array default label html options, can be set individually by item option "labelOptions".
+     * @var array default label html options, can be set individually by item option `labelOptions`.
      */
     public $labelOptions = [];
 
@@ -46,24 +52,39 @@ class Nav extends \yii\bootstrap4\Nav
     private $isActive = false;
 
     /**
-     * Checks for "roles" option and validates user.
+     * Overrides default implementation for `roles` option to validate user access. And allows for the option to hide
+     * nav, if only a single item is set.
+     *
      * @return string
      */
     public function renderItems()
     {
-        foreach ($this->items as &$item) {
+        $items = [];
+
+        foreach ($this->items as $item) {
             if ($roles = ArrayHelper::remove($item, 'roles')) {
+                $hasAccess = false;
+
                 foreach ((array)$roles as $role) {
                     if (Yii::$app->getUser()->can($role)) {
-                        continue 2;
+                        $hasAccess = true;
+                        break;
                     }
                 }
 
-                $item['visible'] = false;
+                if (!$hasAccess) {
+                    continue;
+                }
             }
+
+            if (!($item['visible'] ?? true)) {
+                continue;
+            }
+
+            $items[] = $this->renderItem($item);
         }
 
-        return parent::renderItems();
+        return !$this->hideOneItem || count($items) > 1 ?  Html::tag('ul', implode('', $items), $this->options) : '';
     }
 
     /**
@@ -115,7 +136,7 @@ class Nav extends \yii\bootstrap4\Nav
         }
 
         if ($items = $item['items'] ?? []) {
-            if ($items instanceof \Closure) {
+            if ($items instanceof Closure) {
                 $item['items'] = call_user_func($items) ?: null;
             }
         }

@@ -5,7 +5,7 @@ namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 use yii\helpers\Html;
 
 /**
- * Class Submenu.
+ * Class Submenu
  * @package davidhirtz\yii2\skeleton\widgets\fontawesome
  */
 class Submenu extends Nav
@@ -30,11 +30,11 @@ class Submenu extends Nav
     }
 
     /**
-     * @throws \yii\base\InvalidConfigException
      * @return string
      */
     public function run()
     {
-        return ($this->title ? Html::tag('h1', $this->title, ['class' => 'page-header']) : '') . Html::tag('nav', parent::run());
+        $content = parent::run();
+        return ($this->title ? Html::tag('h1', $this->title, ['class' => 'page-header']) : '') . ($content  ? Html::tag('nav', $content) : '');
     }
 }

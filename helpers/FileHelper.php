@@ -5,13 +5,14 @@ namespace davidhirtz\yii2\skeleton\helpers;
 use Yii;
 use yii\base\Exception;
 use yii\base\InvalidArgumentException;
+use yii\helpers\BaseFileHelper;
 use yii\helpers\VarDumper;
 
 /**
- * Class FileHelper.
+ * Class FileHelper
  * @package davidhirtz\yii2\skeleton\helpers
  */
-class FileHelper extends \yii\helpers\BaseFileHelper
+class FileHelper extends BaseFileHelper
 {
     /**
      * @param string $dir
