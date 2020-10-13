@@ -4,13 +4,14 @@ namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Yii;
+use yii\base\Widget;
 use yii\bootstrap4\Html;
 
 /**
- * Class Flashes.
+ * Class Flashes
  * @package davidhirtz\yii2\skeleton\widgets\bootstrap
  */
-class Flashes extends \yii\base\Widget
+class Flashes extends Widget
 {
     /**
      * @var array containing message, leave empty for default implementation
@@ -80,9 +81,11 @@ class Flashes extends \yii\base\Widget
      */
     public function renderAlert($status, $message)
     {
-        $tag = ArrayHelper::remove($this->options, 'tag', 'div');
-        Html::addCssClass($this->options, $this->statusCssClass . $status);
+        $options = $this->options;
 
-        return Html::tag($tag, $message, $this->options);
+        $tag = ArrayHelper::remove($options, 'tag', 'div');
+        Html::addCssClass($options, $this->statusCssClass . $status);
+
+        return Html::tag($tag, $message, $options);
     }
 }
