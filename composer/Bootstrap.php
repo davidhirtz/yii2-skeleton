@@ -22,8 +22,6 @@ class Bootstrap implements BootstrapInterface
         Yii::setAlias('@skeleton', dirname(__FILE__, 2));
         Yii::$classMap = array_merge(Yii::$classMap, ArrayHelper::remove($config, 'classMap', []));
 
-        $cookieDomain = ArrayHelper::remove($config, 'cookieDomain', '');
-
         $core = [
             'id' => 'skeleton',
             'aliases' => [
@@ -85,10 +83,6 @@ class Bootstrap implements BootstrapInterface
                 ],
                 'session' => [
                     'class' => 'davidhirtz\yii2\skeleton\web\DbSession',
-                    'cookieParams' => [
-                        'domain' => $cookieDomain,
-                        'httponly' => true,
-                    ],
                 ],
                 'sitemap' => [
                     'class' => 'davidhirtz\yii2\skeleton\web\Sitemap',
@@ -98,13 +92,6 @@ class Bootstrap implements BootstrapInterface
                 ],
                 'view' => [
                     'class' => 'davidhirtz\yii2\skeleton\web\View',
-                ],
-            ],
-            'container' => [
-                'definitions' => [
-                    'yii\web\Cookie' => [
-                        'domain' => $cookieDomain,
-                    ],
                 ],
             ],
             'controllerMap' => [
@@ -119,26 +106,16 @@ class Bootstrap implements BootstrapInterface
             ],
         ];
 
-        $configPath = $config['basePath'] . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR;
-
-        if (is_file($params = $configPath . 'params.php')) {
-            $core['params'] = require($params);
-        }
-
-        if (is_file($db = $configPath . 'db.php')) {
-            $core['components']['db'] = array_merge($core['components']['db'], require($db));
-        }
-
         if (YII_DEBUG) {
             $core['bootstrap'][] = 'debug';
-            $config['modules']['debug'] = [
+            $core['modules']['debug'] = [
                 'class' => 'yii\debug\Module',
             ];
         }
 
         if (YII_ENV_DEV) {
             $core['bootstrap'][] = 'gii';
-            $config['modules']['gii'] = [
+            $core['modules']['gii'] = [
                 'class' => 'yii\gii\Module',
                 'generators' => [
                     'model' => [
@@ -154,7 +131,18 @@ class Bootstrap implements BootstrapInterface
             ];
         }
 
-        return ArrayHelper::merge($core, $config);
+        $path = $config['basePath'] . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR;
+        $config = ArrayHelper::merge($core, $config);
+
+        if (is_file($params = $path . 'params.php')) {
+            $config['params'] = array_merge($config['params'] ?? [], require($params));
+        }
+
+        if (is_file($db = $path . 'db.php')) {
+            $config['components']['db'] = array_merge($config['components']['db'], require($db));
+        }
+
+        return $config;
     }
 
     /**
@@ -176,6 +164,12 @@ class Bootstrap implements BootstrapInterface
         if ($collection) {
             $app->setComponents([
                 'authClientCollection' => ArrayHelper::merge($collection, $app->getComponents()['authClientCollection']),
+            ]);
+        }
+
+        if (isset(Yii::$app->params['cookieDomain'])) {
+            Yii::$container->set('yii\web\Cookie', [
+                'domain' => Yii::$app->params['cookieDomain'],
             ]);
         }
 

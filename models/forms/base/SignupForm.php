@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\models\forms\base;
 
 use davidhirtz\yii2\skeleton\db\Identity;
+use davidhirtz\yii2\skeleton\models\traits\SignupEmailTrait;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use Yii;
 
@@ -13,7 +14,7 @@ use Yii;
  */
 class SignupForm extends Identity
 {
-    use \davidhirtz\yii2\skeleton\models\traits\SignupEmailTrait;
+    use SignupEmailTrait;
 
     /**
      * @var bool
@@ -27,7 +28,7 @@ class SignupForm extends Identity
     public $honeypot;
 
     /**
-     * @var boolean whether user has accepted the terms of service.
+     * @var bool whether user has accepted the terms of service.
      */
     public $terms;
 
@@ -37,7 +38,7 @@ class SignupForm extends Identity
     public $token;
 
     /**
-     * @var integer the web user ip.
+     * @var int the web user ip.
      */
     public $ipAddress;
 
@@ -49,10 +50,10 @@ class SignupForm extends Identity
     /**
      * Cookie name.
      */
-    const SESSION_TOKEN_NAME = 'signup_token';
-    const SESSION_TIMESTAMP_NAME = 'signup_timestamp';
-    const SESSION_MIN_TIME = 2;
-    const SESSION_MAX_TIME = 1800;
+    public const SESSION_TOKEN_NAME = 'signup_token';
+    public const SESSION_TIMESTAMP_NAME = 'signup_timestamp';
+    public const SESSION_MIN_TIME = 2;
+    public const SESSION_MAX_TIME = 1800;
 
     /**
      * @inheritdoc
