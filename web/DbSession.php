@@ -12,10 +12,14 @@ use Yii;
 class DbSession extends \yii\web\DbSession
 {
     /**
-     * @
-     * @var int
+     * @var int not yet implemented
      */
     public $updateInterval = 60;
+
+    /**
+     * @var string the optional cookie domain.
+     */
+    public $cookieDomain;
 
     /**
      * @inheritDoc
@@ -28,6 +32,16 @@ class DbSession extends \yii\web\DbSession
                     'ip_address' => inet_pton(Yii::$app->getRequest()->getUserIP()),
                 ];
             };
+        }
+
+        if($this->cookieDomain === null && isset(Yii::$app->params['cookieDomain'])) {
+            $this->cookieDomain = Yii::$app->params['cookieDomain'];
+        }
+
+        if($this->cookieDomain) {
+            $this->setCookieParams(array_merge($this->getCookieParams(), [
+                'domain' => $this->cookieDomain,
+            ]));
         }
 
         parent::init();
