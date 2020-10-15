@@ -3,15 +3,20 @@
 namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\composer\Bootstrap;
+use davidhirtz\yii2\skeleton\i18n\I18N;
+use yii\authclient\Collection;
+use yii\rbac\DbManager;
+use yii\swiftmailer\Mailer;
+use yii\web\Cookie;
 
 /**
  * Class Application
  * @package davidhirtz\yii2\skeleton\web
  *
- * @property \yii\authclient\Collection $authClientCollection
+ * @property Collection $authClientCollection
  * @property AssetManager $assetManager
- * @property \yii\rbac\DbManager $authManager
- * @property \davidhirtz\yii2\skeleton\i18n\I18N $i18n
+ * @property DbManager $authManager
+ * @property I18N $i18n
  * @property Request $request
  * @property DbSession $session
  * @property Sitemap $sitemap
@@ -20,9 +25,9 @@ use davidhirtz\yii2\skeleton\composer\Bootstrap;
  * @property View $view
  *
  * @method AssetManager getAssetManager()
- * @method \yii\rbac\DbManager getAuthManager()
- * @method \davidhirtz\yii2\skeleton\i18n\I18N getI18n()
- * @method \yii\swiftmailer\Mailer getMailer()
+ * @method DbManager getAuthManager()
+ * @method I18N getI18n()
+ * @method Mailer getMailer()
  * @method Request getRequest()
  * @method DbSession getSession()
  * @method UrlManager getUrlManager()
@@ -33,7 +38,6 @@ class Application extends \yii\web\Application
 {
     /**
      * @param array $config
-     * @throws \yii\base\InvalidConfigException
      */
     public function preInit(&$config)
     {
@@ -42,6 +46,8 @@ class Application extends \yii\web\Application
         }
 
         $config = Bootstrap::preInit($config);
+        $this->setCookieConfig($config);
+
         parent::preInit($config);
     }
 
@@ -61,11 +67,23 @@ class Application extends \yii\web\Application
     }
 
     /**
-     * @return object|null|\yii\authclient\Collection
-     * @throws \yii\base\InvalidConfigException
+     * @return object|null|Collection
      */
     public function getAuthClientCollection()
     {
         return $this->get('authClientCollection', false);
+    }
+
+    /**
+     * @param array $config
+     */
+    protected function setCookieConfig(&$config)
+    {
+        $cookieConfig = [
+            'domain' => $this->params['cookieDomain'] ?? '',
+            'sameSite' => PHP_VERSION_ID >= 70300 ? Cookie::SAME_SITE_LAX : null,
+        ];
+
+        $config['container']['definitions']['yii\web\Cookie'] = array_merge($cookieConfig, $config['container']['definitions']['yii\web\Cookie'] ?? []);
     }
 }

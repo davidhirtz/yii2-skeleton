@@ -167,11 +167,6 @@ class Bootstrap implements BootstrapInterface
             ]);
         }
 
-        Yii::$container->set('yii\web\Cookie', [
-            'domain' => Yii::$app->params['cookieDomain'] ?? '',
-            'sameSite' => PHP_VERSION_ID >= 70300 ? yii\web\Cookie::SAME_SITE_LAX : null,
-        ]);
-
         if (!isset($app->params['email'])) {
             if ($app instanceof Application) {
                 $app->params['email'] = 'hostmaster@' . $app->getRequest()->getServerName();
