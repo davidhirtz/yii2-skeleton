@@ -25,7 +25,7 @@
 		"davidhirtz/yii2-lazysizes":">=2.1",
 		"bower-asset/blueimp-file-upload": ">=10.2.0",
 		"bower-asset/bootbox":">=5",
-		"npm-asset/skeleton-router":">=1.1.12"
+		"npm-asset/skeleton-router":">=1.1.13"
 	},
 	"autoload":{
 		"psr-4":{
