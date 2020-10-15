@@ -16,6 +16,12 @@ use yii\helpers\Url;
 class View extends \yii\web\View
 {
     /**
+     * Keys.
+     */
+    public const HREF_LANG_KEY = 'hreflang_';
+    public const CANONICAL_KEY = 'canonical';
+
+    /**
      * @var string
      */
     public $titleTemplate;
@@ -103,8 +109,8 @@ class View extends \yii\web\View
 
     /**
      * @param string $card
-     * @param string $title
-     * @param string $description
+     * @param string|null $title
+     * @param string|null $description
      */
     public function registerTwitterCardMetaTags($card = 'summary_large_image', $title = null, $description = null)
     {
@@ -128,8 +134,8 @@ class View extends \yii\web\View
 
     /**
      * @param string $type
-     * @param string $title
-     * @param string $description
+     * @param string|null $title
+     * @param string|null $description
      */
     public function registerOpenGraphMetaTags($type = 'website', $title = null, $description = null)
     {
@@ -143,9 +149,9 @@ class View extends \yii\web\View
 
     /**
      * @param string $url
-     * @param int $width
-     * @param int $height
-     * @param string $text
+     * @param int|null $width
+     * @param int|null $height
+     * @param string|null $text
      */
     public function registerImageMetaTags($url, $width = null, $height = null, $text = null)
     {
@@ -202,7 +208,7 @@ class View extends \yii\web\View
 
     /**
      * @param array $languages
-     * @param string $default
+     * @param string|null $default
      */
     public function registerHrefLangLinkTags($languages = [], $default = null)
     {
@@ -225,11 +231,19 @@ class View extends \yii\web\View
      */
     public function registerHrefLangLinkTag($language, $url)
     {
-        $this->registerLinkTag(['rel' => 'alternate', 'hreflang' => $language, 'href' => $url], 'hreflang_' . $language);
+        $this->registerLinkTag(['rel' => 'alternate', 'hreflang' => $language, 'href' => $url], static::HREF_LANG_KEY . $language);
     }
 
     /**
-     * @param string $language
+     * @param string $url
+     */
+    public function registerCanonicalTag($url)
+    {
+        $this->registerLinkTag(['rel' => 'canonical', 'href' => $url], static::CANONICAL_KEY);
+    }
+
+    /**
+     * @param string|null $language
      */
     public function registerDefaultHrefLangLinkTag($language = null)
     {
@@ -237,8 +251,8 @@ class View extends \yii\web\View
             $language = Yii::$app->sourceLanguage;
         }
 
-        if (isset($this->linkTags['hreflang_' . $language])) {
-            $this->linkTags['hreflang_default'] = str_replace('hreflang="' . $language . '"', 'hreflang="x-default"', $this->linkTags['hreflang_' . $language]);
+        if (isset($this->linkTags[static::HREF_LANG_KEY . $language])) {
+            $this->linkTags[static::HREF_LANG_KEY . 'default'] = str_replace('hreflang="' . $language . '"', 'hreflang="x-default"', $this->linkTags[static::HREF_LANG_KEY . $language]);
         }
     }
 
