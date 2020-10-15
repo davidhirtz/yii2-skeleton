@@ -147,7 +147,7 @@ class Bootstrap implements BootstrapInterface
 
     /**
      * Shared application configuration after init.
-     * @param \davidhirtz\yii2\skeleton\web\Application|\davidhirtz\yii2\skeleton\console\Application $app
+     * @param Application|\davidhirtz\yii2\skeleton\console\Application $app
      */
     public function bootstrap($app)
     {
@@ -167,11 +167,10 @@ class Bootstrap implements BootstrapInterface
             ]);
         }
 
-        if (isset(Yii::$app->params['cookieDomain'])) {
-            Yii::$container->set('yii\web\Cookie', [
-                'domain' => Yii::$app->params['cookieDomain'],
-            ]);
-        }
+        Yii::$container->set('yii\web\Cookie', [
+            'domain' => Yii::$app->params['cookieDomain'] ?? '',
+            'sameSite' => PHP_VERSION_ID >= 70300 ? yii\web\Cookie::SAME_SITE_LAX : null,
+        ]);
 
         if (!isset($app->params['email'])) {
             if ($app instanceof Application) {
