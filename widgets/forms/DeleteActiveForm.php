@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
+use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
 use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
 use Yii;
@@ -14,7 +15,7 @@ use yii\base\Model;
 class DeleteActiveForm extends ActiveForm
 {
     /**
-     * @var \davidhirtz\yii2\skeleton\db\ActiveRecord
+     * @var ActiveRecord
      */
     public $model;
 
@@ -44,7 +45,7 @@ class DeleteActiveForm extends ActiveForm
     public $fieldOptions = [];
 
     /**
-     * @var \davidhirtz\yii2\skeleton\models\forms\DeleteForm
+     * @var DeleteForm
      */
     private $_form;
 
@@ -64,7 +65,7 @@ class DeleteActiveForm extends ActiveForm
         if ($this->message === null) {
             if ($this->attribute) {
                 $this->message = Yii::t('skeleton', 'Please type the exact {attribute} in the text field below to delete this record. All related files will also be unrecoverably deleted. This cannot be undone, please be certain!', [
-                    '{attribute}' => $this->model->getAttributeLabel($this->attribute),
+                    'attribute' => $this->model->getAttributeLabel($this->attribute),
                 ]);
             } else {
                 $this->message = Yii::t('skeleton', 'Warning: Deleting this record cannot be undone. All related files will also be unrecoverably deleted. Please be certain!');
