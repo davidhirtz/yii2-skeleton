@@ -80,7 +80,7 @@ class Application extends \yii\web\Application
     protected function setCookieConfig(&$config)
     {
         $cookieConfig = [
-            'domain' => $this->params['cookieDomain'] ?? '',
+            'domain' => $config['params']['cookieDomain'] ?? '',
             'sameSite' => PHP_VERSION_ID >= 70300 ? Cookie::SAME_SITE_LAX : null,
         ];
 
