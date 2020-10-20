@@ -42,9 +42,9 @@ class AuthItemGridView extends GridView
     private $_translations;
 
     /**
-     * @var string
+     * @var string the previous rule name, needs to be `public` because it's called in content closure.
      */
-    private static $prevRuleName;
+    public static $prevRuleName;
 
     /**
      * @inheritDoc
