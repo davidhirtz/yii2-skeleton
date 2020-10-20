@@ -4,6 +4,7 @@ namespace davidhirtz\yii2\skeleton\helpers;
 
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
+use Imagine\Image\Palette\Color\ColorInterface;
 use Imagine\Image\Point;
 use yii\imagine\BaseImage;
 use Imagine\Image\Palette\RGB;
@@ -100,6 +101,17 @@ class Image extends BaseImage
     {
         // Ensure actual implementation of "ensureImageInterfaceInstance".
         return parent::resize(static::ensureImageInterfaceInstance($image), $width, $height, $keepAspectRatio, $allowUpscaling);
+    }
+
+    /**
+     * @param string|resource|ImageInterface $image
+     * @param int $angle
+     * @param ColorInterface|null $background
+     * @return ImageInterface
+     */
+    public static function rotate($image, $angle, $background = null)
+    {
+        return static::ensureImageInterfaceInstance($image)->rotate($angle, $background);
     }
 
     /**
