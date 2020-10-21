@@ -129,23 +129,24 @@ class Image extends BaseImage
     }
 
     /**
+     * Extracts width and height from SVG attributes including viewBox.
+     *
      * @param string $filename
      * @return array
      */
     public static function getSvgDimensions($filename)
     {
-        /** @noinspection PhpComposerExtensionStubsInspection */
         $svg = simplexml_load_file($filename);
         $attributes = $svg->attributes();
-
-        $dimensions = array_fill(0, 1, 0);
+        $dimensions = [0, 0];
 
         if ($attributes->width && $attributes->height) {
             $dimensions[0] = (int)$attributes->width;
             $dimensions[1] = (int)$attributes->height;
-        } elseif (preg_match('/(\d+) (\d+)$/', $attributes->viewBox, $match)) {
-            $dimensions[0] = (int)$match[1];
-            $dimensions[1] = (int)$match[2];
+        } elseif (preg_match('/(\d+(\.\d+)?) (\d+(\.\d+)?)$/', $attributes->viewBox, $match)) {
+            $viewBox = explode(' ', $match[0]);
+            $dimensions[0] = (int)$viewBox[0];
+            $dimensions[1] = (int)$viewBox[1];
         }
 
         return $dimensions;
