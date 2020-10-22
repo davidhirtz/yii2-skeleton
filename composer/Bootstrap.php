@@ -95,6 +95,7 @@ class Bootstrap implements BootstrapInterface
                 ],
             ],
             'controllerMap' => [
+                'health' => 'davidhirtz\yii2\skeleton\controllers\HealthController',
                 'sitemap' => 'davidhirtz\yii2\skeleton\controllers\SitemapController',
             ],
             'modules' => [
@@ -177,6 +178,7 @@ class Bootstrap implements BootstrapInterface
 
         $app->getUrlManager()->addRules([
             '' => $app->defaultRoute,
+            'application-health' => 'health/index',
             'sitemap.xml' => 'sitemap/index',
             $alias . '/<module>/<controller>/<view>' => 'admin/<module>/<controller>/<view>',
             $alias . '/<controller>/<view>' => 'admin/<controller>/<view>',

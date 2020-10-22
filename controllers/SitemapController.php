@@ -2,13 +2,16 @@
 
 namespace davidhirtz\yii2\skeleton\controllers;
 
+use DateTime;
 use davidhirtz\yii2\skeleton\web\Controller;
+use Exception;
+use XMLWriter;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use Yii;
 
 /**
- * Class SitemapController.
+ * Class SitemapController
  * @package davidhirtz\yii2\skeleton\controllers
  */
 class SitemapController extends Controller
@@ -19,7 +22,7 @@ class SitemapController extends Controller
     public function init()
     {
         if (!Yii::$app->has('sitemap')) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         return parent::init();
@@ -62,9 +65,8 @@ class SitemapController extends Controller
             $headers = $response->getHeaders();
             $headers->add('Content-Type', 'application/xml');
 
-            /** @noinspection PhpComposerExtensionStubsInspection */
-            $writer = new \XMLWriter();
-            $writer->openURI('php://output');
+            $writer = new XMLWriter();
+            $writer->openUri('php://output');
             $writer->startDocument('1.0', 'UTF-8');
 
             $writer->startElement('urlset');
@@ -80,7 +82,7 @@ class SitemapController extends Controller
 
                 if (isset($url['lastmod'])) {
                     $lastmod = $url['lastmod'];
-                    $writer->writeElement('lastmod', $lastmod instanceof \DateTime ? $lastmod->format(DATE_W3C) : $lastmod);
+                    $writer->writeElement('lastmod', $lastmod instanceof DateTime ? $lastmod->format(DATE_W3C) : $lastmod);
                 }
 
                 if (isset($url['changefreq'])) {
@@ -112,7 +114,7 @@ class SitemapController extends Controller
             $writer->endElement();
             $writer->endDocument();
             $writer->flush();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw $exception;
         }
 

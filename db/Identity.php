@@ -8,7 +8,7 @@ use yii\web\IdentityInterface;
 use Yii;
 
 /**
- * Class Identity.
+ * Class Identity
  * @package davidhirtz\yii2\skeleton\db
  */
 class Identity extends User implements IdentityInterface

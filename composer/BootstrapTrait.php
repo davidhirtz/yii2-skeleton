@@ -2,7 +2,9 @@
 
 namespace davidhirtz\yii2\skeleton\composer;
 
+use davidhirtz\yii2\skeleton\console\Application;
 use davidhirtz\yii2\skeleton\console\controllers\MigrateController;
+use yii\base\ActionEvent;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -65,9 +67,9 @@ trait BootstrapTrait
      */
     public function setMigrationNamespace($app, $namespace)
     {
-        if ($app instanceof \davidhirtz\yii2\skeleton\console\Application) {
-            $app->on($app::EVENT_BEFORE_ACTION, function (\yii\base\ActionEvent $event) {
-                /** @var \davidhirtz\yii2\skeleton\console\controllers\MigrateController $controller */
+        if ($app instanceof Application) {
+            $app->on($app::EVENT_BEFORE_ACTION, function (ActionEvent $event) {
+                /** @var MigrateController $controller */
                 $controller = $event->action->controller;
                 if ($controller instanceof MigrateController) {
                     $controller->migrationNamespaces[] = $event->data;
