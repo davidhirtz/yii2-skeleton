@@ -435,7 +435,7 @@ class GridView extends \yii\grid\GridView
      * @param ActiveRecord $record
      * @return string
      */
-    public function getRowId(ActiveRecord $record): string
+    public function getRowId($record): string
     {
         return $this->getFormName() . '-' . implode('-', (array)$record->getPrimaryKey());
     }
@@ -461,7 +461,7 @@ class GridView extends \yii\grid\GridView
      * @param ActiveRecord $model
      * @return string
      */
-    protected function getUpdateButton(ActiveRecord $model): string
+    protected function getUpdateButton($model): string
     {
         return Html::a(Icon::tag('wrench'), $this->getRoute($model), [
             'class' => 'btn btn-primary d-none d-md-inline-block',
@@ -472,7 +472,7 @@ class GridView extends \yii\grid\GridView
      * @param ActiveRecord $model
      * @return string
      */
-    protected function getDeleteButton(ActiveRecord $model)
+    protected function getDeleteButton($model)
     {
         return Html::a(Icon::tag('trash'), ['delete', 'id' => $model->getPrimaryKey()], [
             'class' => 'btn btn-danger',
@@ -487,7 +487,7 @@ class GridView extends \yii\grid\GridView
      * @param array $params
      * @return array|false
      */
-    protected function getRoute(ActiveRecord $model, $params = [])
+    protected function getRoute($model, $params = [])
     {
         return array_merge(['update', 'id' => $model->getPrimaryKey()], $params);
     }
@@ -511,7 +511,7 @@ class GridView extends \yii\grid\GridView
     /**
      * @param ActiveRecord $model
      */
-    public function setModel(ActiveRecord $model)
+    public function setModel($model)
     {
         $this->_model = $model;
     }

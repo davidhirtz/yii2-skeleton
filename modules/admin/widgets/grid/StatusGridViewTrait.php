@@ -65,10 +65,10 @@ trait StatusGridViewTrait
     }
 
     /**
-     * @param ActiveRecord|StatusAttributeTrait $model
+     * @param StatusAttributeTrait $model
      * @return Icon
      */
-    protected function getStatusIcon(ActiveRecord $model)
+    protected function getStatusIcon($model)
     {
         return Icon::tag($model->getStatusIcon(), [
             'data-toggle' => 'tooltip',
