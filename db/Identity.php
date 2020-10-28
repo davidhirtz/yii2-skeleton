@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\db;
 
+use davidhirtz\yii2\skeleton\models\SessionAuthKey;
 use davidhirtz\yii2\skeleton\models\User;
 use yii\base\NotSupportedException;
 use yii\web\IdentityInterface;
@@ -29,16 +30,7 @@ class Identity extends User implements IdentityInterface
     public $cookieLifetime = 2592000;
 
     /**
-     * @var int default 90 days
-     */
-    public $authKeyLifetime = 776000;
-
-    /***********************************************************************
-     * Identity interface.
-     ***********************************************************************/
-
-    /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public static function findIdentity($id)
     {
@@ -59,7 +51,7 @@ class Identity extends User implements IdentityInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
@@ -67,7 +59,23 @@ class Identity extends User implements IdentityInterface
     }
 
     /**
-     * @inheritdoc
+     * Validates the identity cookie with the given `authKey`. The session auth key won't be needed as a new key will be
+     * generated after the validation in {@link \davidhirtz\yii2\skeleton\web\User::getIdentityAndDurationFromCookie()}.
+     *
+     * @param string $authKey
+     * @return true
+     */
+    public function validateAuthKey($authKey): bool
+    {
+        return (bool)SessionAuthKey::deleteAll('[[id]]=:id AND [[user_id]]=:userId AND [[expire]]>:expired', [
+            'id' => $authKey,
+            'userId' => $this->id,
+            'expired' => time(),
+        ]);
+    }
+
+    /**
+     * @inheritDoc
      */
     public function getId()
     {
@@ -75,31 +83,20 @@ class Identity extends User implements IdentityInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function getAuthKey()
     {
         $columns = [
             'id' => Yii::$app->getSecurity()->generateRandomString(64),
             'user_id' => $this->id,
-            'expire' => time() + $this->authKeyLifetime,
+            'expire' => time() + $this->cookieLifetime,
         ];
 
-        Yii::$app->getDb()->createCommand()->insert('session_auth_key', $columns)->execute();
-        return $columns['id'];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function validateAuthKey($authKey)
-    {
-        return Yii::$app->getDb()->createCommand()
-            ->delete('session_auth_key', '`id`=:id AND `user_id`=:userId AND `expire`>:expired', [
-                ':id' => $authKey,
-                ':userId' => $this->id,
-                ':expired' => time()
-            ])
+        Yii::$app->getDb()->createCommand()
+            ->insert(SessionAuthKey::tableName(), $columns)
             ->execute();
+
+        return $columns['id'];
     }
 }

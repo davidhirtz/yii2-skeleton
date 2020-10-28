@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\db\Identity;
+use davidhirtz\yii2\skeleton\models\SessionAuthKey;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\datetime\DateTime;
 use Yii;
@@ -134,17 +135,35 @@ class User extends \yii\web\User
     }
 
     /**
+     * Removes the current session auth key on logout.
+     *
+     * @param Identity $identity
+     * @return bool
+     */
+    protected function beforeLogout($identity)
+    {
+        $value = Yii::$app->getRequest()->getCookies()->getValue($this->identityCookie['name']);
+
+        if ($value !== null) {
+            $data = json_decode($value, true);
+
+            SessionAuthKey::deleteAll([
+                'id' => $data[1],
+                'user_id' => $data[0],
+            ]);
+        }
+
+        return parent::beforeLogout($identity);
+    }
+
+    /**
+     * Removes user id from session.
      * @param Identity $identity
      */
     protected function afterLogout($identity)
     {
-        /**
-         * Removes user id from session.
-         */
         Yii::$app->getSession()->writeCallback = function () {
-            return [
-                'user_id' => null,
-            ];
+            return ['user_id' => null];
         };
 
         parent::afterLogout($identity);

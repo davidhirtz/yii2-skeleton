@@ -19,7 +19,7 @@ trait ConfigTrait
     protected function filterUserInput($value)
     {
         $boolean = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-        return $boolean !== null ? $boolean : (filter_var($value, FILTER_VALIDATE_INT) !== false ? intval($value) : $value);
+        return $boolean !== null ? $boolean : (string)$value;
     }
 
     /**

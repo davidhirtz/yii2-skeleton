@@ -40,11 +40,6 @@ class LoginForm extends Model
     public $rememberMe = true;
 
     /**
-     * @var integer
-     */
-    public $cookieLifetime;
-
-    /**
      * @var string
      */
     public $ipAddress;
@@ -109,7 +104,7 @@ class LoginForm extends Model
             $user->loginType = UserLogin::TYPE_LOGIN;
             $user->ipAddress = $this->ipAddress;
 
-            return Yii::$app->getUser()->login($user, $this->rememberMe ? ($this->cookieLifetime ?: $user->cookieLifetime) : 0);
+            return Yii::$app->getUser()->login($user, $this->rememberMe ? $user->cookieLifetime : 0);
         }
 
         return false;
@@ -117,7 +112,6 @@ class LoginForm extends Model
 
     /**
      * @return bool
-     * @throws \yii\base\InvalidConfigException
      */
     public function isFacebookLoginEnabled()
     {

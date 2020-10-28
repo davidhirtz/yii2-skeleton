@@ -34,11 +34,11 @@ class DbSession extends \yii\web\DbSession
             };
         }
 
-        if($this->cookieDomain === null && isset(Yii::$app->params['cookieDomain'])) {
-            $this->cookieDomain = Yii::$app->params['cookieDomain'];
+        if ($this->cookieDomain === null) {
+            $this->cookieDomain = Yii::$app->params['cookieDomain'] ?? null;
         }
 
-        if($this->cookieDomain) {
+        if ($this->cookieDomain) {
             $this->setCookieParams(array_merge($this->getCookieParams(), [
                 'domain' => $this->cookieDomain,
             ]));
@@ -52,9 +52,9 @@ class DbSession extends \yii\web\DbSession
      */
     public function gcSession($maxLifetime)
     {
-        $this->db->createCommand()
-            ->delete(SessionAuthKey::tableName(), '[[expire]]<:expire', [':expire' => time()])
-            ->execute();
+        SessionAuthKey::deleteAll('[[expire]]<:expire', [
+            'expire' => time(),
+        ]);
 
         return parent::gcSession($maxLifetime);
     }

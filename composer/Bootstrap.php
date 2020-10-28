@@ -73,7 +73,7 @@ class Bootstrap implements BootstrapInterface
                             'levels' => ['error', 'warning'],
                             'except' => [
                                 'yii\web\HttpException:*',
-                                'yii\web\User::getIdentityAndDurationFromCookie',
+                                //'yii\web\User::getIdentityAndDurationFromCookie',
                             ],
                         ],
                     ],
