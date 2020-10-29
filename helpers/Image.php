@@ -17,17 +17,21 @@ use Yii;
 class Image extends BaseImage
 {
     /**
-     * @inheritDoc
+     * Replacement for Imagick's native `writeImages` as it doesn't support stream wrappers. Image format
+     * can be set via options, otherwise the filename extension will be used.
+     *
+     * @param ImageInterface $image
+     * @param string $filename
+     * @param array $options
+     * @return false|int
      */
-    protected static function ensureImageInterfaceInstance($image)
+    public static function saveImage($image, $filename, $options = [])
     {
-        // Prevent loading remote resources via Imagine as doesn't support stream wrappers
-        // such as Amazon S3. This makes sure remote files are loaded via fopen.
-        if (is_string($image) && !stream_is_local($image = Yii::getAlias($image))) {
-            $image = fopen($image, 'r');
+        if (!$format = ArrayHelper::remove($options, 'format')) {
+            $format = pathinfo($filename, PATHINFO_EXTENSION);
         }
 
-        return parent::ensureImageInterfaceInstance($image);
+        return file_put_contents($filename, $image->get($format, $options));
     }
 
     /**
@@ -43,9 +47,11 @@ class Image extends BaseImage
      */
     public static function fit($image, $width, $height, $bgColor = null, $bgAlpha = null)
     {
+        $image = static::ensureImageInterfaceInstance($image);
+
         if ($bgColor) {
-            $img = static::resize($image, $width, $height);
-            $size = $img->getSize();
+            $image = static::resize($image, $width, $height);
+            $size = $image->getSize();
 
             $palette = new RGB();
             $thumb = static::getImagine()->create(new Box($width, $height), $palette->color($bgColor, $bgAlpha));
@@ -53,28 +59,27 @@ class Image extends BaseImage
             $x = ceil(($width - $size->getWidth()) / 2);
             $y = ceil(($height - $size->getHeight()) / 2);
 
-            return $thumb->paste($img, new Point($x, $y));
-        } else {
-            $img = static::ensureImageInterfaceInstance($image)
-                ->copy();
-
-            $size = $img->getSize();
-            $ratio = max($width / $size->getWidth(), $height / $size->getHeight());
-
-            $newWidth = ceil($size->getWidth() * $ratio);
-            $newHeight = ceil($size->getHeight() * $ratio);
-
-            $img->resize(new Box($newWidth, $newHeight));
-
-            if ($newWidth != $width || $newHeight != $height) {
-                $x = ceil(($newWidth - $width) / 2);
-                $y = ceil(($newHeight - $height) / 2);
-
-                $img->crop(new Point($x, $y), new Box($width, $height));
-            }
-
-            return $img;
+            return $thumb->paste($image, new Point($x, $y));
         }
+
+        $image = $image->copy();
+
+        $size = $image->getSize();
+        $ratio = max($width / $size->getWidth(), $height / $size->getHeight());
+
+        $newWidth = ceil($size->getWidth() * $ratio);
+        $newHeight = ceil($size->getHeight() * $ratio);
+
+        $image->resize(new Box($newWidth, $newHeight));
+
+        if ($newWidth != $width || $newHeight != $height) {
+            $x = ceil(($newWidth - $width) / 2);
+            $y = ceil(($newHeight - $height) / 2);
+
+            $image->crop(new Point($x, $y), new Box($width, $height));
+        }
+
+        return $image;
     }
 
     /**
@@ -150,5 +155,19 @@ class Image extends BaseImage
         }
 
         return $dimensions;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected static function ensureImageInterfaceInstance($image)
+    {
+        // Prevent loading remote resources via Imagine as doesn't support stream wrappers
+        // such as Amazon S3. This makes sure remote files are loaded via fopen.
+        if (is_string($image) && !stream_is_local($image = Yii::getAlias($image))) {
+            $image = fopen($image, 'r');
+        }
+
+        return parent::ensureImageInterfaceInstance($image);
     }
 }
