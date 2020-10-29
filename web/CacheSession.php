@@ -3,10 +3,10 @@
 namespace davidhirtz\yii2\skeleton\web;
 
 /**
- * Class DbSession
+ * Class CacheSession
  * @package davidhirtz\yii2\skeleton\web
  */
-class DbSession extends \yii\web\DbSession
+class CacheSession extends \yii\web\CacheSession
 {
     use SessionTrait;
 }

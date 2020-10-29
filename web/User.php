@@ -7,6 +7,7 @@ use davidhirtz\yii2\skeleton\models\SessionAuthKey;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\datetime\DateTime;
 use Yii;
+use yii\web\MultiFieldSession;
 
 /**
  * Class User
@@ -102,25 +103,21 @@ class User extends \yii\web\User
      */
     protected function afterLogin($identity, $cookieBased, $duration)
     {
-        /**
-         * Update login count, cache previous login date in session and
-         * insert new record to login log.
-         */
+        // Update login count, cache previous login date in session and insert new record to login log.
         $session = Yii::$app->getSession();
         $session->set('last_login_timestamp', $identity->last_login ? $identity->last_login->getTimestamp() : null);
 
-        /**
-         * Updates session's user id.
-         */
-        $session->writeCallback = function () use ($identity) {
-            return [
-                'user_id' => $identity->id,
-            ];
-        };
+        // Updates session's user id.
+        if ($session instanceof MultiFieldSession) {
+            $session->writeCallback = function () use ($identity) {
+                return [
+                    'ip_address' => inet_pton(Yii::$app->getRequest()->getUserIP()),
+                    'user_id' => $identity->id,
+                ];
+            };
+        }
 
-        /**
-         * Update user record and insert login log.
-         */
+        // Update user record and insert login log.
         $identity->login_count++;
         $identity->last_login = new DateTime();
 
@@ -162,9 +159,15 @@ class User extends \yii\web\User
      */
     protected function afterLogout($identity)
     {
-        Yii::$app->getSession()->writeCallback = function () {
-            return ['user_id' => null];
-        };
+        $session = Yii::$app->getSession();
+
+        if ($session instanceof MultiFieldSession) {
+            Yii::$app->getSession()->writeCallback = function () {
+                return [
+                    'user_id' => null,
+                ];
+            };
+        }
 
         parent::afterLogout($identity);
     }

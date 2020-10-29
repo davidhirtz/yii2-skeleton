@@ -29,7 +29,7 @@ use yii\web\Cookie;
  * @method I18N getI18n()
  * @method Mailer getMailer()
  * @method Request getRequest()
- * @method DbSession getSession()
+ * @method CacheSession|DbSession getSession()
  * @method UrlManager getUrlManager()
  * @method User getUser()
  * @method View getView()
