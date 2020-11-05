@@ -67,11 +67,13 @@ class Identity extends User implements IdentityInterface
      */
     public function validateAuthKey($authKey): bool
     {
-        return (bool)SessionAuthKey::deleteAll('[[id]]=:id AND [[user_id]]=:userId AND [[expire]]>:expired', [
+        $params = [
             'id' => $authKey,
             'userId' => $this->id,
             'expired' => time(),
-        ]);
+        ];
+
+        return SessionAuthKey::deleteAll('[[id]]=:id AND [[user_id]]=:userId AND [[expire]]>:expired', $params) == 1;
     }
 
     /**
