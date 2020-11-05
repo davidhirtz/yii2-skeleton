@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
+use Yii;
 use yii\web\UploadedFile;
 
 /**
@@ -44,6 +45,16 @@ class StreamUploadedFile extends UploadedFile
      */
     public function saveAs($file, $deleteTempFile = true)
     {
-        return $this->error == UPLOAD_ERR_OK ? file_put_contents($file, file_get_contents($this->tempName)) : false;
+        $file = Yii::getAlias($file);
+
+        if ($this->error == UPLOAD_ERR_OK ? file_put_contents($file, file_get_contents($this->tempName)) : false) {
+            if ($deleteTempFile) {
+                unlink($this->tempName);
+            }
+
+            return true;
+        }
+
+        return false;
     }
 }
