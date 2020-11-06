@@ -20,19 +20,25 @@ class StreamUploadedFile extends UploadedFile
     public $url;
 
     /**
+     * @var resource this must be set as a protected variable so PHP garbage collection will not remove the file after
+     * running {@link StreamUploadedFile::init()}.
+     */
+    protected $tmpFile;
+
+    /**
      * Uploads file from url.
      */
     public function init()
     {
         if (!$this->url || !($contents = @file_get_contents($this->url))) {
             $this->error = UPLOAD_ERR_NO_FILE;
-        } elseif (($tmpFile = tmpfile()) === false) {
+        } elseif (($this->tmpFile = tmpfile()) === false) {
             $this->error = UPLOAD_ERR_NO_TMP_DIR;
-        } elseif (fwrite($tmpFile, $contents) === false) {
+        } elseif (fwrite($this->tmpFile, $contents) === false) {
             $this->error = UPLOAD_ERR_CANT_WRITE;
         } else {
             $this->name = basename(parse_url($this->url, PHP_URL_PATH));
-            $this->tempName = stream_get_meta_data($tmpFile)['uri'];
+            $this->tempName = stream_get_meta_data($this->tmpFile)['uri'];
             $this->type = FileHelper::getMimeType($this->tempName);
             $this->size = filesize($this->tempName);
         }
@@ -45,7 +51,7 @@ class StreamUploadedFile extends UploadedFile
      */
     public function saveAs($file, $deleteTempFile = true)
     {
-        $file = Yii::getAlias($file);
+        Yii::getAlias($file);
 
         if ($this->error == UPLOAD_ERR_OK ? file_put_contents($file, file_get_contents($this->tempName)) : false) {
             if ($deleteTempFile) {
