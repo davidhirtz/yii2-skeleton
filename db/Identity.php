@@ -73,7 +73,9 @@ class Identity extends User implements IdentityInterface
             'expired' => time(),
         ];
 
-        return SessionAuthKey::deleteAll('[[id]]=:id AND [[user_id]]=:userId AND [[expire]]>:expired', $params) == 1;
+        return SessionAuthKey::find()
+            ->where('[[id]]=:id AND [[user_id]]=:userId AND [[expire]]>:expired', $params)
+            ->exists();
     }
 
     /**
