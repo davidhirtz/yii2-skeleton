@@ -30,6 +30,11 @@ class Identity extends User implements IdentityInterface
     public $cookieLifetime = 2592000;
 
     /**
+     * @var SessionAuthKey
+     */
+    private $_authKey;
+
+    /**
      * @inheritDoc
      */
     public static function findIdentity($id)
@@ -67,15 +72,16 @@ class Identity extends User implements IdentityInterface
      */
     public function validateAuthKey($authKey): bool
     {
-        $params = [
-            'id' => $authKey,
-            'userId' => $this->id,
-            'expired' => time(),
-        ];
+        $this->_authKey = SessionAuthKey::find()
+            ->where('[[id]]=:id AND [[user_id]]=:userId AND [[expire]]>:expired')
+            ->params([
+                'id' => $authKey,
+                'userId' => $this->id,
+                'expired' => time(),
+            ])
+            ->one();
 
-        return SessionAuthKey::find()
-            ->where('[[id]]=:id AND [[user_id]]=:userId AND [[expire]]>:expired', $params)
-            ->exists();
+        return $this->_authKey !== null;
     }
 
     /**
@@ -87,12 +93,18 @@ class Identity extends User implements IdentityInterface
     }
 
     /**
-     * @inheritDoc
+     * Updates the {@link SessionAuthKey::$expire} if the key was validated by {@link Identity::validateAuthKey()} or
+     * generates a new auth key otherwise.
      */
     public function getAuthKey()
     {
+        if ($this->_authKey !== null) {
+            SessionAuthKey::updateAll(['expire' => time() + $this->cookieLifetime], ['id' => $this->_authKey->id]);
+            return $this->_authKey->id;
+        }
+
         $columns = [
-            'id' => Yii::$app->getSecurity()->generateRandomString(64),
+            'id' => $this->_authKey ? $this->_authKey->id : Yii::$app->getSecurity()->generateRandomString(64),
             'user_id' => $this->id,
             'expire' => time() + $this->cookieLifetime,
         ];
