@@ -73,7 +73,6 @@ class Bootstrap implements BootstrapInterface
                             'levels' => ['error', 'warning'],
                             'except' => [
                                 'yii\web\HttpException:*',
-                                //'yii\web\User::getIdentityAndDurationFromCookie',
                             ],
                         ],
                     ],
@@ -111,6 +110,7 @@ class Bootstrap implements BootstrapInterface
             $core['bootstrap'][] = 'debug';
             $core['modules']['debug'] = [
                 'class' => 'yii\debug\Module',
+                'traceLine' => '<a href="phpstorm://open?url={file}&line={line}">{file}:{line}</a>',
             ];
         }
 
