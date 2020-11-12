@@ -4,6 +4,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use davidhirtz\yii2\skeleton\models\Session;
+use davidhirtz\yii2\skeleton\modules\admin\data\LogDataProvider;
 use davidhirtz\yii2\skeleton\web\Controller;
 use Yii;
 use yii\caching\Cache;
@@ -12,6 +13,7 @@ use yii\db\Connection;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * Class SystemController.
@@ -107,7 +109,7 @@ class SystemController extends Controller
     }
 
     /**
-     * @return \yii\web\Response
+     * @return Response
      */
     public function actionPublish()
     {
@@ -124,12 +126,12 @@ class SystemController extends Controller
 
     /**
      * @param string $cache
-     * @return \yii\web\Response
+     * @return Response
      */
     public function actionFlush($cache)
     {
         if (!in_array($cache, array_keys($this->findCaches()))) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         Yii::$app->get($cache)->flush();
@@ -140,14 +142,14 @@ class SystemController extends Controller
 
     /**
      * @param string $db
-     * @return \yii\web\Response
+     * @return Response
      */
     public function actionSchema($db)
     {
         $connection = Yii::$app->get($db, false);
 
         if (!$connection instanceof Connection) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         $schema = $connection->getSchema();
@@ -157,7 +159,7 @@ class SystemController extends Controller
     }
 
     /**
-     * @return \yii\web\Response
+     * @return Response
      */
     public function actionSessionGc()
     {
@@ -168,23 +170,34 @@ class SystemController extends Controller
 
     /**
      * @param string $log
-     * @return \yii\web\Response
+     * @param bool $raw
+     * @return Response|string
      */
-    public function actionView($log)
+    public function actionView($log, $raw = false)
     {
         if (array_key_exists($log, $this->findLogs())) {
-            return Yii::$app->getResponse()->sendFile(Yii::getAlias('@app/runtime/logs/' . $log), basename($log), [
-                'mimeType' => 'text/plain',
-                'inline' => true,
+            $path = Yii::getAlias('@app/runtime/logs/' . $log);
+
+            if ($raw) {
+                return Yii::$app->getResponse()->sendFile($path, basename($log), [
+                    'mimeType' => 'text/plain',
+                    'inline' => true,
+                ]);
+            }
+
+            return $this->render('view', [
+                'provider' => new LogDataProvider([
+                    'file' => $path,
+                ]),
             ]);
         }
 
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**
      * @param string $log
-     * @return \yii\web\Response
+     * @return Response
      */
     public function actionDelete($log)
     {
@@ -193,7 +206,7 @@ class SystemController extends Controller
             return $this->redirect(['index']);
         }
 
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /***********************************************************************

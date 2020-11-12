@@ -16,6 +16,8 @@ use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\GridView;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
+use davidhirtz\yii2\timeago\Timeago;
+use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'System'));
 ?>
@@ -32,19 +34,24 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                 [
                     'label' => Yii::t('skeleton', 'Name'),
                     'content' => function ($modified, $name) {
-                        return Html::tag('div', Html::a($name, ['view', 'log' => $name]), ['class' => 'strong']) .
-                            Html::tag('div', Yii::t('skeleton', 'Last updated {timestamp}', [
-                                'timestamp' => \davidhirtz\yii2\timeago\Timeago::tag($modified),
-                            ]), ['class' => 'small']);
+                        $html = Html::tag('div', Html::a($name, ['view', 'log' => $name]), ['class' => 'strong']);
+                        $html .= Html::tag('div', Yii::t('skeleton', 'Last updated {timestamp}', ['timestamp' => Timeago::tag($modified)]), ['class' => 'small']);
+
+                        return $html;
                     }
                 ],
                 [
                     'contentOptions' => ['class' => 'text-right'],
                     'content' => function ($modified, $name) {
-                        return Html::buttons(Html::a(Icon::tag('trash'), ['delete', 'log' => $name], [
-                            'class' => 'btn btn-primary',
-                            'data-method' => 'post',
-                        ]));
+                        return Html::buttons([
+                            Html::a(Icon::tag('file'), ['view', 'log' => $name, 'raw' => 1], [
+                                'class' => 'btn btn-primary',
+                            ]),
+                            Html::a(Icon::tag('trash'), ['delete', 'log' => $name], [
+                                'class' => 'btn btn-danger',
+                                'data-method' => 'post',
+                            ]),
+                        ]);
                     }
                 ],
             ],
@@ -66,7 +73,6 @@ $this->setTitle(Yii::t('skeleton', 'System'));
             [
                 'label' => Yii::t('skeleton', 'Name'),
                 'content' => function ($item) {
-
                     $links = [];
 
                     foreach ($item['files'] as $file => $link) {
@@ -81,7 +87,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                 'label' => Yii::t('skeleton', 'Updated'),
                 'contentOptions' => ['style' => 'vertical-align:top'],
                 'content' => function ($item) {
-                    return \davidhirtz\yii2\timeago\Timeago::tag($item['modified']);
+                    return Timeago::tag($item['modified']);
                 }
             ]
         ],
@@ -153,7 +159,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                         </div>
                     </td>
                     <td class="text-right">
-                        <a class="btn btn-primary" href="/admin/system/session-gc" data-method="post"><i class="fas fa-trash"></i></a>
+                        <a class="btn btn-primary" href="<?= Url::toRoute(['/admin/system/session-gc']) ?>" data-method="post"><i class="fas fa-trash"></i></a>
                     </td>
                 </tr>
                 </tbody>
