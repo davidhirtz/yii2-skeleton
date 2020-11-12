@@ -203,7 +203,9 @@ class View extends \yii\web\View
             $items[] = array_merge(['@type' => 'ListItem', 'position' => $pos++], $item);
         }
 
-        $this->registerStructuredData(['@type' => 'BreadcrumbList', 'itemListElement' => $items]);
+        if ($items) {
+            $this->registerStructuredData(['@type' => 'BreadcrumbList', 'itemListElement' => $items]);
+        }
     }
 
     /**

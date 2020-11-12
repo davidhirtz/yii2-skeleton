@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\validators;
 
+use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use yii\base\InvalidConfigException;
 use yii\base\NotSupportedException;
 use yii\validators\Validator;
@@ -13,17 +14,18 @@ use yii\validators\Validator;
 class RelationValidator extends Validator
 {
     /**
-     * @var string
+     * @var string the relation name
      */
     public $relation;
 
     /**
-     * @var bool
+     * @var bool whether validator should skip on empty. This defaults to `false` to typecast value and generate
+     * an error if `required` is `true`.
      */
     public $skipOnEmpty = false;
 
     /**
-     * @var bool
+     * @var bool whether an error should be added when `attribute` is empty.
      */
     public $required = false;
 
@@ -42,7 +44,7 @@ class RelationValidator extends Validator
     /**
      * Typecasts attribute and validates relation.
      *
-     * @param \davidhirtz\yii2\skeleton\db\ActiveRecord $model
+     * @param ActiveRecord $model
      * @param string $attribute
      */
     public function validateAttribute($model, $attribute)
@@ -51,8 +53,9 @@ class RelationValidator extends Validator
         $model->setAttribute($attribute, $value = $columnSchema->phpTypecast($model->getAttribute($attribute)));
 
         if ($value) {
-            /** @var \yii\db\ActiveRecord $record */
+            /** @var ActiveRecord $record */
             $related = $model->{$this->relation};
+
             if ((!$related || $related->getPrimaryKey() !== $value) && !$model->refreshRelation($this->relation)) {
                 $model->addInvalidAttributeError($attribute);
             }
