@@ -6,6 +6,7 @@ use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Palette\Color\ColorInterface;
 use Imagine\Image\Point;
+use yii\db\Exception;
 use yii\imagine\BaseImage;
 use Imagine\Image\Palette\RGB;
 use Yii;
@@ -122,7 +123,7 @@ class Image extends BaseImage
     /**
      * @param string $filename
      * @param string|null $extension
-     * @return array
+     * @return array|bool
      */
     public static function getImageSize($filename, $extension = null)
     {
@@ -137,24 +138,30 @@ class Image extends BaseImage
      * Extracts width and height from SVG attributes including viewBox.
      *
      * @param string $filename
-     * @return array
+     * @return array|bool
      */
     public static function getSvgDimensions($filename)
     {
-        $svg = simplexml_load_file($filename);
-        $attributes = $svg->attributes();
-        $dimensions = [0, 0];
+        try {
+            $svg = simplexml_load_file($filename);
+            $attributes = $svg->attributes();
+            $dimensions = [0, 0];
 
-        if ($attributes->width && $attributes->height) {
-            $dimensions[0] = (int)$attributes->width;
-            $dimensions[1] = (int)$attributes->height;
-        } elseif (preg_match('/(\d+(\.\d+)?) (\d+(\.\d+)?)$/', $attributes->viewBox, $match)) {
-            $viewBox = explode(' ', $match[0]);
-            $dimensions[0] = (int)$viewBox[0];
-            $dimensions[1] = (int)$viewBox[1];
+            if ($attributes->width && $attributes->height) {
+                $dimensions[0] = (int)$attributes->width;
+                $dimensions[1] = (int)$attributes->height;
+            } elseif (preg_match('/(\d+(\.\d+)?) (\d+(\.\d+)?)$/', $attributes->viewBox, $match)) {
+                $viewBox = explode(' ', $match[0]);
+                $dimensions[0] = (int)$viewBox[0];
+                $dimensions[1] = (int)$viewBox[1];
+            }
+
+            return $dimensions;
+        } catch (Exception $exception) {
+            Yii::error($exception);
         }
 
-        return $dimensions;
+        return false;
     }
 
     /**

@@ -183,7 +183,7 @@ class Bootstrap implements BootstrapInterface
             $alias . '/<module>/<controller>/<view>' => 'admin/<module>/<controller>/<view>',
             $alias . '/<controller>/<view>' => 'admin/<controller>/<view>',
             $alias . '/<controller>' => 'admin/<controller>',
-            $alias . '/' => 'admin/',
+            $alias . '/?' => 'admin/',
         ], false);
     }
 }
