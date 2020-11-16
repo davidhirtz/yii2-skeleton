@@ -138,7 +138,7 @@ class UserForm extends User
     public function sendCredentialsEmail()
     {
         $language = Yii::$app->language;
-        Yii::$app->language = $this->language;
+        Yii::$app->language = $this->language ?: $language;
 
         Yii::$app->getMailer()->compose('@skeleton/mail/account/credentials', ['user' => $this])
             ->setSubject(Yii::t('skeleton', 'Your {name} Account', ['name' => Yii::$app->name]))
