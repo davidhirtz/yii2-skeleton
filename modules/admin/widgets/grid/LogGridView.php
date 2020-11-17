@@ -14,6 +14,10 @@ use Yii;
  */
 class LogGridView extends GridView
 {
+    /**
+     * @var string
+     */
+    public $layout = '{items}';
 
     /**
      * @var array containing the table options

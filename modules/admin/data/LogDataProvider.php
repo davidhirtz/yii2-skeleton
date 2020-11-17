@@ -11,10 +11,19 @@ use yii\data\ArrayDataProvider;
  */
 class LogDataProvider extends ArrayDataProvider
 {
+    /**
+     * @var string
+     */
     public $file;
 
+    /**
+     * @var array
+     */
     public $items;
 
+    /**
+     * @inheritDoc
+     */
     public function init()
     {
         if ($this->file) {
