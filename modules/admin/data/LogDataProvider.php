@@ -64,7 +64,7 @@ class LogDataProvider extends ArrayDataProvider
                         'category' => $logInfo[6],
                         'vars' => ''
                     ];
-                } else {
+                } elseif(isset($log['vars'])) {
                     $log['vars'] .= utf8_encode($line);
                 }
             }
