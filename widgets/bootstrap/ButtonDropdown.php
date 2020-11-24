@@ -7,7 +7,7 @@ use Yii;
 use yii\helpers\Url;
 
 /**
- * Class ButtonDropdown.
+ * Class ButtonDropdown
  * @package davidhirtz\yii2\skeleton\widgets\bootstrap
  */
 class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
@@ -23,7 +23,7 @@ class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
     public $defaultValue;
 
     /**
-     * @var string the parameter name of the default item
+     * @var string the parameter name
      */
     public $paramName;
 
@@ -46,6 +46,11 @@ class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
      * @var string the filter text field placeholder text
      */
     public $filterPlaceholder;
+
+    /**
+     * @var bool whether dropdown is active, if `null` the request will be checked for `paramName`
+     */
+    public $isActive;
 
     /**
      * Sets default label and adds filter text field.
@@ -71,19 +76,19 @@ class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
             );
         }
 
-        if ($this->paramName) {
-            if ($isActive = Yii::$app->getRequest()->get($this->paramName)) {
-                if ($this->defaultItem !== false && isset($this->dropdown['items'])) {
-                    array_unshift($this->dropdown['items'],
-                        ['label' => $this->defaultItem, 'url' => Url::current([$this->paramName => $this->defaultValue])],
-                        '-'
-                    );
-                }
+        if ($this->isActive === null && $this->paramName) {
+            $this->isActive = Yii::$app->getRequest()->get($this->paramName) !== null;
+        }
+
+        if ($this->isActive) {
+            if ($this->defaultItem !== false && isset($this->dropdown['items'])) {
+                array_unshift($this->dropdown['items'],
+                    ['label' => $this->defaultItem, 'url' => Url::current([$this->paramName => $this->defaultValue])],
+                    '-'
+                );
             }
 
-            if ($isActive) {
-                Html::addCssClass($this->options, 'is-active');
-            }
+            Html::addCssClass($this->options, 'is-active');
         }
 
         parent::init();
