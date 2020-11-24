@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\modules\admin;
 
 use Yii;
+use yii\base\Action;
 use yii\helpers\Url;
 
 /**
@@ -158,16 +159,17 @@ class Module extends \yii\base\Module
     }
 
     /**
-     * Redirects draft URLs for the backend.
+     * Redirects draft URLs for the backend, but only if it's not an AJAX to prevent breaking existing
+     * frontend implementations or REST APIs that use admin endpoints.
      *
-     * @param \yii\base\Action $action
+     * @param Action $action
      * @return bool
      */
     public function beforeAction($action)
     {
         $request = Yii::$app->getRequest();
 
-        if ($request->getIsDraft()) {
+        if ($request->getIsDraft() && !$request->getIsAjax()) {
             $request->setHostInfo($request->getProductionHostInfo());
             Yii::$app->getResponse()->redirect(Url::current([], true))->send();
         }
