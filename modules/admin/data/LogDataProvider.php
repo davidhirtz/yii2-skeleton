@@ -2,7 +2,6 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\data;
 
-use Yii;
 use yii\data\ArrayDataProvider;
 
 /**
@@ -47,7 +46,6 @@ class LogDataProvider extends ArrayDataProvider
             while (!feof($file)) {
                 $line = fgets($file);
                 preg_match($pattern, $line, $logInfo);
-                //$logTimeAndMessage = preg_split($pattern, $line);
 
                 if (count($logInfo) === 7) {
                     if (!empty($log)) {
@@ -65,8 +63,12 @@ class LogDataProvider extends ArrayDataProvider
                         'vars' => ''
                     ];
                 } elseif(isset($log['vars'])) {
-                    $log['vars'] .= utf8_encode($line);
+                    $log['vars'] .= $line;
                 }
+            }
+
+            if (!empty($log)) {
+                $models[] = $log;
             }
 
             fclose($file);
