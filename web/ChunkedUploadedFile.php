@@ -6,6 +6,7 @@ use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use yii\base\InvalidCallException;
 use yii\helpers\ArrayHelper;
 use Yii;
+use yii\web\UploadedFile;
 
 /**
  * Class ChunkedUploadedFile.
@@ -15,27 +16,27 @@ use Yii;
  * @method static ChunkedUploadedFile getInstance($model, $attribute)
  * @method static ChunkedUploadedFile getInstanceByName($name)($name)
  */
-class ChunkedUploadedFile extends \yii\web\UploadedFile
+class ChunkedUploadedFile extends UploadedFile
 {
     /**
-     * @var int
+     * @var int the current chunk offset set by HTTP headers
      */
     public $chunkOffset;
 
     /**
-     * @var int
+     * @var int the chunk size set by HTTP headers
      */
     public $chunkSize;
 
     /**
-     * @var int
+     * @var int temporary file life time in seconds
      */
     public $lifetime = 86400;
 
     /**
-     * @var int
+     * @var int garbage collection probability, defaults to 1%
      */
-    public $gcProbability = 1000;
+    public $gcProbability = 1;
 
     /**
      * @var int|null the maximum file size for chunked uploads. Can be set via container definitions config.
@@ -71,24 +72,30 @@ class ChunkedUploadedFile extends \yii\web\UploadedFile
             $this->size = ArrayHelper::getValue($range, 3);
         }
 
-        // Unfortunately Yii's initializes UploadedFile without checking the definitions first.
+        // Unfortunately Yii initializes UploadedFile without checking the definitions first.
         if ($this->maxSize === null) {
             $this->maxSize = Yii::$container->getDefinitions()[static::class]['maxSize'] ?? null;
         }
 
         if ($this->maxSize > 0 && $this->size > $this->maxSize) {
             $this->error = UPLOAD_ERR_FORM_SIZE;
-
         } elseif ($this->chunkOffset !== null) {
-            if (file_put_contents($tempName = $this->getPartialUploadPath() . $this->getPartialName(), fopen($this->tempName, 'r'), FILE_APPEND) === false) {
+            $tempName = $this->getPartialUploadPath() . $this->getPartialName();
+
+            // Remove previously aborted file upload on first upload chunk.
+            if ($this->chunkOffset == 0 && is_file($tempName)) {
+                Yii::debug("Remove previously aborted upload '{$tempName}'");
+                @unlink($tempName);
+            }
+
+            if (file_put_contents($tempName, fopen($this->tempName, 'r'), FILE_APPEND) === false) {
                 $this->error = UPLOAD_ERR_CANT_WRITE;
             } else {
                 if (!$this->isCompleted()) {
                     $this->error = UPLOAD_ERR_PARTIAL;
                 }
 
-                // Update temporary name to use the actual combined temp file instead of
-                // the partial upload.
+                // Update temporary name to use the actual combined temp file instead of the partial upload.
                 $this->tempName = $tempName;
             }
         }
@@ -97,21 +104,25 @@ class ChunkedUploadedFile extends \yii\web\UploadedFile
     }
 
     /**
-     * Saves the chunked uploaded file.
-     * Returns boolean whether all chunks of the file where uploaded successfully.
+     * Saves the chunked uploaded file and returns bool whether saving the file was successful.
      *
      * @param string $file
-     * @param boolean $deleteTempFile
-     * @return boolean
+     * @param bool $deleteTempFile
+     * @return bool
      */
     public function saveAs($file, $deleteTempFile = true)
     {
-        if ($deleteTempFile && rand(1, 10000) <= $this->gcProbability) {
+        if ($deleteTempFile && rand(1, 10000) <= $this->gcProbability * 100) {
             $this->removeAbortedFiles();
         }
 
         if ($this->chunkOffset !== null) {
-            return $this->isCompleted() ? rename($this->getPartialUploadPath() . $this->getPartialName(), $file) : false;
+            if ($this->isCompleted()) {
+                $tempFilename = $this->getPartialUploadPath() . $this->getPartialName();
+                return FileHelper::rename($tempFilename, $file);
+            }
+
+            return false;
         }
 
         return parent::saveAs($file, $deleteTempFile);
@@ -123,7 +134,7 @@ class ChunkedUploadedFile extends \yii\web\UploadedFile
     public function removeAbortedFiles()
     {
         $lifetime = time() - $this->lifetime;
-        $path = rtrim(\Yii::getAlias($this->getPartialUploadPath()), '/');
+        $path = rtrim(Yii::getAlias($this->getPartialUploadPath()), '/');
         $fileCount = 0;
 
         if (is_dir($path)) {
@@ -174,10 +185,13 @@ class ChunkedUploadedFile extends \yii\web\UploadedFile
      */
     public function setPartialUploadPath($path)
     {
-        FileHelper::createDirectory($this->_partialUploadPath = rtrim(\Yii::getAlias($path), '/') . '/');
+        FileHelper::createDirectory($this->_partialUploadPath = rtrim(Yii::getAlias($path), '/') . '/');
     }
 
     /**
+     * Returns true if the file size matches the `size` set by HTTP headers on chunked uploads.
+     * Stat cache needs to be refreshed before returning the accurate file size.
+     *
      * @return bool
      */
     public function isCompleted()
@@ -186,8 +200,8 @@ class ChunkedUploadedFile extends \yii\web\UploadedFile
             return true;
         }
 
-        clearstatcache(true, $name = $this->getPartialUploadPath() . $this->getPartialName());
-        return filesize($name) == $this->size;
+        clearstatcache(true, $tempName = $this->getPartialUploadPath() . $this->getPartialName());
+        return filesize($tempName) == $this->size;
     }
 
     /**
@@ -204,7 +218,7 @@ class ChunkedUploadedFile extends \yii\web\UploadedFile
      */
     public static function getInstances($model, $attribute)
     {
-        throw new InvalidCallException;
+        throw new InvalidCallException();
     }
 
     /**
@@ -213,6 +227,6 @@ class ChunkedUploadedFile extends \yii\web\UploadedFile
      */
     public static function getInstancesByName($name)
     {
-        throw new InvalidCallException;
+        throw new InvalidCallException();
     }
 }

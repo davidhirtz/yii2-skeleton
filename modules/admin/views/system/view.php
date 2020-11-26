@@ -1,7 +1,7 @@
 <?php
 /**
  * Error log.
- * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController::actionIndex()
+ * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController::actionView()
  *
  * @var View $this
  * @var LogDataProvider $provider

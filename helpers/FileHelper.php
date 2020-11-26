@@ -3,7 +3,6 @@
 namespace davidhirtz\yii2\skeleton\helpers;
 
 use Yii;
-use yii\base\Exception;
 use yii\base\InvalidArgumentException;
 use yii\helpers\BaseFileHelper;
 use yii\helpers\VarDumper;
@@ -57,58 +56,29 @@ class FileHelper extends BaseFileHelper
     }
 
     /**
-     * Moves file to new destination.
-     *
-     * If no extension is set the original extension will be used.
-     * If no destination path is set, the source path will be used.
+     * This is a stream wrapper aware replacement to PHP's rename function. Renaming
+     * remote folders is not supported.
      *
      * @param string $source
      * @param string $dest
-     * @param bool $throwException
      *
      * @return string the new file path.
      */
-    public static function rename($source, $dest, $throwException = true)
+    public static function rename($source, $dest)
     {
-        if (!file_exists($source)) {
-            $error = sprintf('Renaming %s to %s failed, source directory was not found.', $source, $dest);
-
-            if ($throwException) {
-                throw new Exception($error);
-            }
-
-            Yii::warning($error);
-            return $source;
+        if (stream_is_local($source) == stream_is_local($dest)) {
+            return rename($source, $dest);
         }
 
-        $path = pathinfo($dest);
-
-        if (empty($path['dirname']) || $path['dirname'] == '.') {
-            $path['dirname'] = dirname($source);
-        } else {
-            static::createDirectory($path['dirname']);
+        if (is_dir($source)) {
+            return false;
         }
 
-        if (!is_dir($source)) {
-            if (empty($path['extension'])) {
-                $path['extension'] = pathinfo($source, PATHINFO_EXTENSION);
-            }
-
-            $dest = $path['dirname'] . DIRECTORY_SEPARATOR . $path['filename'] . '.' . $path['extension'];
+        if (file_put_contents($dest, file_get_contents($source))) {
+            return unlink($source);
         }
 
-        if (@rename($source, $dest) === false) {
-            $error = sprintf('Renaming %s to %s failed', $source, $dest);
-
-            if ($throwException) {
-                throw new Exception($error);
-            }
-
-            Yii::warning(sprintf('Renaming %s to %s failed', $source, $dest));
-            return $source;
-        }
-
-        return $dest;
+        return false;
     }
 
     /**
