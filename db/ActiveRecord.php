@@ -4,7 +4,11 @@ namespace davidhirtz\yii2\skeleton\db;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Yii;
+use yii\behaviors\AttributeTypecastBehavior;
+use yii\db\ActiveRecordInterface;
 use yii\db\Connection;
+use yii\validators\BooleanValidator;
+use yii\validators\NumberValidator;
 
 /**
  * Class ActiveRecord
@@ -70,6 +74,15 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
+     * @inheritDoc
+     */
+    public function beforeValidate()
+    {
+        $this->typecastAttributes();
+        return parent::beforeValidate();
+    }
+
+    /**
      * Sets deleted flag.
      */
     public function beforeDelete()
@@ -87,10 +100,32 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
+     * Typecasts boolean and numeric validators. This is similar to {@link AttributeTypecastBehavior} but performs the
+     * operation before the actual validation to allow the use of {@link \yii\db\ActiveRecord::isAttributeChanged()} in
+     * validation.
+     */
+    public function typecastAttributes()
+    {
+        foreach ($this->getValidators() as $validator) {
+            if ($validator instanceof BooleanValidator || $validator instanceof NumberValidator) {
+                foreach ((array)$validator->attributes as $attribute) {
+                    $this->$attribute = ($validator instanceof BooleanValidator || $validator->integerOnly) ? (int)$this->$attribute : (float)$this->$attribute;
+                }
+            }
+        }
+
+        foreach (static::getDb()->getSchema()->getTableSchema(static::tableName())->columns as $column) {
+            if ($column->allowNull && !$this->{$column->name}) {
+                $this->{$column->name} = null;
+            }
+        }
+    }
+
+    /**
      * Reloads the relation and returns the record.
      *
      * @param string $name
-     * @return \yii\db\ActiveRecordInterface
+     * @return ActiveRecordInterface
      */
     public function refreshRelation($name)
     {

@@ -149,7 +149,7 @@ trait NestedTreeTrait
      */
     public function getBranchCount()
     {
-        return ($this->rgt-$this->lft-1)/2;
+        return ($this->rgt - $this->lft - 1) / 2;
     }
 
     /**
@@ -220,60 +220,57 @@ trait NestedTreeTrait
                 $this->rgt = $rgt + 2;
                 $this->lft = $rgt + 1;
             }
-        } else {
-            if ($this->isAttributeChanged('parent_id', false)) {
-                $query = static::find()->select(['id'])->where('[[lft]] BETWEEN :lft AND :rgt', [
-                    'lft' => $this->lft,
-                    'rgt' => $this->rgt,
-                ]);
+        } elseif ($this->isAttributeChanged('parent_id', false)) {
+            $query = static::find()->select(['id'])->where('[[lft]] BETWEEN :lft AND :rgt', [
+                'lft' => $this->lft,
+                'rgt' => $this->rgt,
+            ]);
 
-                $branchIds = ArrayHelper::getColumn($query->all(), 'id');
-                $diff = count($branchIds) * 2;
+            $branchIds = ArrayHelper::getColumn($query->all(), 'id');
+            $diff = count($branchIds) * 2;
 
-                // Remove branch from ancestors.
-                static::updateAllCounters(['rgt' => -$diff], '[[lft]]<:rgt AND [[rgt]]>:rgt', [
-                    'rgt' => $this->rgt,
-                ]);
+            // Remove branch from ancestors.
+            static::updateAllCounters(['rgt' => -$diff], '[[lft]]<:rgt AND [[rgt]]>:rgt', [
+                'rgt' => $this->rgt,
+            ]);
 
-                // Detach branch from right hand side of tree.
-                static::updateAllCounters(['lft' => -$diff, 'rgt' => -$diff], '[[lft]]>:rgt', [
-                    'rgt' => $this->rgt,
-                ]);
+            // Detach branch from right hand side of tree.
+            static::updateAllCounters(['lft' => -$diff, 'rgt' => -$diff], '[[lft]]>:rgt', [
+                'rgt' => $this->rgt,
+            ]);
 
-                if ($this->parent) {
-                    // Refresh tree attributes.
-                    $this->parent->refresh();
+            if ($this->parent) {
+                // Refresh tree attributes.
+                $this->parent->refresh();
 
-                    // Update new ancestors.
-                    $query = (new Query())->where([
-                        'not in',
-                        'id',
-                        $branchIds
-                    ])->andWhere(new Expression(':rgt BETWEEN [[lft]] AND [[rgt]]', ['rgt' => $this->parent->getAttribute('rgt')]));
-                    static::updateAllCounters(['rgt' => $diff], $query->where);
+                // Update new ancestors.
+                $query = (new Query())->where([
+                    'not in',
+                    'id',
+                    $branchIds
+                ])->andWhere(new Expression(':rgt BETWEEN [[lft]] AND [[rgt]]', ['rgt' => $this->parent->getAttribute('rgt')]));
+                static::updateAllCounters(['rgt' => $diff], $query->where);
 
-                    // Update new right hand side of tree.
-                    $query = (new Query())->where([
-                        'not in',
-                        'id',
-                        $branchIds
-                    ])->andWhere(new Expression('[[lft]]>:rgt', ['rgt' => $this->parent->getAttribute('rgt')]));
-                    static::updateAllCounters(['lft' => $diff, 'rgt' => $diff], $query->where);
+                // Update new right hand side of tree.
+                $query = (new Query())
+                    ->where(['not in', 'id', $branchIds])
+                    ->andWhere(new Expression('[[lft]]>:rgt', ['rgt' => $this->parent->getAttribute('rgt')]));
 
-                    $this->parent->setAttribute('rgt', $this->parent->getAttribute('rgt') + $diff);
-                    $diff = $this->parent->getAttribute('rgt') > $this->rgt ? ('+' . ($this->parent->getAttribute('rgt') - $this->rgt - 1)) : ('-' . abs($this->parent->getAttribute('rgt') - $this->rgt - 1));
-                } else {
-                    // Find max right excluding self and children.
-                    $rgt = static::find()->where(['not in', 'id', $branchIds])->max('rgt');
-                    $diff = $rgt - $this->lft + 1;
-                }
+                static::updateAllCounters(['lft' => $diff, 'rgt' => $diff], $query->where);
 
-                // Update branch.
-                static::updateAllCounters(['lft' => $diff, 'rgt' => $diff], ['in', 'id', $branchIds]);
-
-                $this->rgt += $diff;
-                $this->lft += $diff;
+                $this->parent->setAttribute('rgt', $this->parent->getAttribute('rgt') + $diff);
+                $diff = $this->parent->getAttribute('rgt') > $this->rgt ? ('+' . ($this->parent->getAttribute('rgt') - $this->rgt - 1)) : ('-' . abs($this->parent->getAttribute('rgt') - $this->rgt - 1));
+            } else {
+                // Find max right excluding self and children.
+                $rgt = static::find()->where(['not in', 'id', $branchIds])->max('rgt');
+                $diff = $rgt - $this->lft + 1;
             }
+
+            // Update branch.
+            static::updateAllCounters(['lft' => $diff, 'rgt' => $diff], ['in', 'id', $branchIds]);
+
+            $this->rgt += $diff;
+            $this->lft += $diff;
         }
     }
 
@@ -323,8 +320,8 @@ trait NestedTreeTrait
             ]);
         }
 
-        $models = $query
-            ->select(['id', 'parent_id', 'lft', 'rgt'])
+        /** @var static[] $models */
+        $models = $query->select(['id', 'parent_id', 'lft', 'rgt'])
             ->orderBy(['lft' => SORT_ASC, 'position' => SORT_ASC])
             ->indexBy('id')
             ->all();
