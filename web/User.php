@@ -197,7 +197,7 @@ class User extends \yii\web\User
             return false;
         }
 
-        return (!$this->disableRbacForOwner && !$this->identity->isOwner()) ? parent::can($permissionName, $params, $allowCaching) : true;
+        return (!$this->disableRbacForOwner || !$this->identity->isOwner()) ? parent::can($permissionName, $params, $allowCaching) : true;
     }
 
     /**
