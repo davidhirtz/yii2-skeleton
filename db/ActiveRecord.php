@@ -102,14 +102,14 @@ class ActiveRecord extends \yii\db\ActiveRecord
     /**
      * Typecasts boolean and numeric validators. This is similar to {@link AttributeTypecastBehavior} but performs the
      * operation before the actual validation to allow the use of {@link \yii\db\ActiveRecord::isAttributeChanged()} in
-     * validation.
+     * validation. As Yii2 represents floats and decimals as strings only integer values will be typecast.
      */
     public function typecastAttributes()
     {
         foreach ($this->getValidators() as $validator) {
-            if ($validator instanceof BooleanValidator || $validator instanceof NumberValidator) {
+            if ($validator instanceof BooleanValidator || ($validator instanceof NumberValidator && $validator->integerOnly)) {
                 foreach ((array)$validator->attributes as $attribute) {
-                    $this->$attribute = ($validator instanceof BooleanValidator || $validator->integerOnly) ? (int)$this->$attribute : (float)$this->$attribute;
+                    $this->$attribute = (int)$this->$attribute;
                 }
             }
         }
