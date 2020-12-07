@@ -6,6 +6,7 @@ use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\models\User;
 use Yii;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use yii\db\ActiveQuery;
 
 /**
  * Class UserLogin
@@ -13,13 +14,13 @@ use davidhirtz\yii2\skeleton\db\ActiveRecord;
  * @see \davidhirtz\yii2\skeleton\models\UserLogin
  *
  * @property string $id
- * @property integer $user_id
+ * @property int $user_id
  * @property string $type
  * @property string $browser
- * @property integer $ip_address
+ * @property int $ip_address
  * @property DateTime $created_at
  *
- * @property User $user
+ * @property User $user {@link \davidhirtz\yii2\skeleton\models\UserLogin::getUser()}
  * @property-read string $typeName
  * @property-read string $displayIp
  */
@@ -28,15 +29,11 @@ class UserLogin extends ActiveRecord
     /**
      * Type codes.
      */
-    const TYPE_COOKIE = 'auto';
-    const TYPE_LOGIN = 'login';
-    const TYPE_SIGNUP = 'signup';
-    const TYPE_CONFIRM_EMAIL = 'email';
-    const TYPE_RESET_PASSWORD = 'password';
-
-    /***********************************************************************
-     * Behaviors.
-     ***********************************************************************/
+    public const TYPE_COOKIE = 'auto';
+    public const TYPE_LOGIN = 'login';
+    public const TYPE_SIGNUP = 'signup';
+    public const TYPE_CONFIRM_EMAIL = 'email';
+    public const TYPE_RESET_PASSWORD = 'password';
 
     /**
      * @inheritdoc
@@ -48,21 +45,14 @@ class UserLogin extends ActiveRecord
         ];
     }
 
-    /***********************************************************************
-     * Relations.
-     ***********************************************************************/
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getUser()
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }
-
-    /***********************************************************************
-     * Getters / Setters.
-     ***********************************************************************/
 
     /**
      * @return string
@@ -121,10 +111,6 @@ class UserLogin extends ActiveRecord
     {
         return inet_ntop($this->ip_address) ?: '';
     }
-
-    /***********************************************************************
-     * Active Record.
-     ***********************************************************************/
 
     /**
      * @inheritdoc

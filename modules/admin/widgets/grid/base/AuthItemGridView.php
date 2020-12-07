@@ -6,10 +6,10 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid\base;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\AuthItem;
 use davidhirtz\yii2\skeleton\models\User;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\MessageSourceTrait;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
 use yii\grid\GridView;
-use yii\i18n\MessageSource;
 
 /**
  * Class AuthItemGridView
@@ -17,6 +17,8 @@ use yii\i18n\MessageSource;
  */
 class AuthItemGridView extends GridView
 {
+    use MessageSourceTrait;
+
     /**
      * @var User
      */
@@ -35,11 +37,6 @@ class AuthItemGridView extends GridView
     public $tableOptions = [
         'class' => 'table table-striped',
     ];
-
-    /**
-     * @var array
-     */
-    private $_translations;
 
     /**
      * @var string the previous rule name, needs to be `public` because it's called in content closure.
@@ -183,41 +180,5 @@ class AuthItemGridView extends GridView
             'class' => 'btn btn-primary',
             'data-method' => 'post',
         ]);
-    }
-
-    /**
-     * Finds the correct translation source for the authItem description.
-     * @return array
-     */
-    public function getTranslations(): array
-    {
-        if ($this->_translations === null) {
-            $this->_translations = [];
-
-            if (Yii::$app->language !== Yii::$app->sourceLanguage) {
-                $i18n = Yii::$app->getI18n();
-                $sources = array_keys($i18n->translations);
-
-                /** @var AuthItem $authItem */
-                foreach ($this->dataProvider->getModels() as $authItem) {
-                    /** @var MessageSource $source */
-                    foreach ($sources as $source) {
-                        if ($translation = $i18n->getMessageSource($source)->translate($source, $authItem->description, Yii::$app->language)) {
-                            $this->_translations[$authItem->description] = $translation;
-                        }
-                    }
-                }
-            }
-        }
-
-        return $this->_translations;
-    }
-
-    /**
-     * @param array $translations
-     */
-    public function setTranslations(array $translations): void
-    {
-        $this->_translations = $translations;
     }
 }

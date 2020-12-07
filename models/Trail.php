@@ -3,9 +3,9 @@
 namespace davidhirtz\yii2\skeleton\models;
 
 /**
- * Class User
+ * Class Trail
  * @package davidhirtz\yii2\skeleton\models
  */
-class User extends base\User
+class Trail extends base\Trail
 {
 }

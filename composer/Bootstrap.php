@@ -51,8 +51,7 @@ class Bootstrap implements BootstrapInterface
                     'class' => 'yii\authclient\Collection',
                 ],
                 'authManager' => [
-                    'class' => 'yii\rbac\DbManager',
-                    'cache' => 'cache',
+                    'class' => 'davidhirtz\yii2\skeleton\auth\rbac\DbManager',
                 ],
                 'cache' => [
                     'class' => 'yii\caching\FileCache',

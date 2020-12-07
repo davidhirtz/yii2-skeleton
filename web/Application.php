@@ -2,10 +2,10 @@
 
 namespace davidhirtz\yii2\skeleton\web;
 
+use davidhirtz\yii2\skeleton\auth\rbac\DbManager;
 use davidhirtz\yii2\skeleton\composer\Bootstrap;
 use davidhirtz\yii2\skeleton\i18n\I18N;
 use yii\authclient\Collection;
-use yii\rbac\DbManager;
 use yii\swiftmailer\Mailer;
 use yii\web\Cookie;
 

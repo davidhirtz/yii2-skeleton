@@ -100,9 +100,7 @@ class PasswordResetForm extends Model
 
     /**
      * Hashes new password and logs in user if possible.
-     *
-     * This method also deletes all cookie auth keys for this user,
-     * so auto login cookies are not working anymore.
+     * This method also deletes all cookie auth keys for this user, so auto login cookies are not working anymore.
      */
     public function reset()
     {
@@ -116,8 +114,7 @@ class PasswordResetForm extends Model
                 if (!$user->isUnconfirmed() || Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
                     $user->loginType = UserLogin::TYPE_RESET_PASSWORD;
 
-                    $user->deleteAuthKeys();
-                    $user->deleteActiveSessions();
+                    $user->afterPasswordChange();
 
                     // Login also takes care of updating the user record.
                     return Yii::$app->getUser()->login($user);

@@ -2,10 +2,12 @@
 
 namespace davidhirtz\yii2\skeleton\models;
 
+use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\auth\clients\ClientInterface;
 use davidhirtz\yii2\skeleton\behaviors\SerializedAttributesBehavior;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TimestampBehavior;
+use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\db\Identity;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use Yii;
@@ -15,15 +17,15 @@ use Yii;
  * @package davidhirtz\yii2\skeleton\models
  *
  * @property string $id
- * @property integer $user_id
+ * @property int $user_id
  * @property string $name
  * @property array $data
- * @property \davidhirtz\yii2\datetime\DateTime $updated_at
- * @property \davidhirtz\yii2\datetime\DateTime $created_at
+ * @property DateTime $updated_at
+ * @property DateTime $created_at
  *
  * @property Identity $identity
  */
-class AuthClient extends \davidhirtz\yii2\skeleton\db\ActiveRecord
+class AuthClient extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -98,6 +100,7 @@ class AuthClient extends \davidhirtz\yii2\skeleton\db\ActiveRecord
      */
     public function getIdentity()
     {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->hasOne(Identity::class, ['id' => 'user_id']);
     }
 
@@ -118,7 +121,7 @@ class AuthClient extends \davidhirtz\yii2\skeleton\db\ActiveRecord
             ->one();
 
         if (!$auth) {
-            $auth = new AuthClient;
+            $auth = new AuthClient();
             $auth->setAttributes($attributes, false);
         }
 
@@ -144,7 +147,7 @@ class AuthClient extends \davidhirtz\yii2\skeleton\db\ActiveRecord
     }
 
     /**
-     * @return \davidhirtz\yii2\skeleton\auth\clients\ClientInterface|\yii\authclient\ClientInterface
+     * @return ClientInterface|\yii\authclient\ClientInterface
      */
     public function getClientClass()
     {

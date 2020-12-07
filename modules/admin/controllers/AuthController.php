@@ -104,12 +104,7 @@ class AuthController extends Controller
         $user = $this->getUser($id);
         $role = $this->getAuthItem($name, $type);
 
-        $rbac = Yii::$app->getAuthManager();
-        $rbac->invalidateCache();
-
-        if (!$rbac->getAssignment($role->name, $user->id)) {
-            $rbac->assign($role, $user->id);
-        } else {
+        if (!Yii::$app->getAuthManager()->assign($role, $user->id)) {
             $this->error(Yii::t('skeleton', 'This permission was already assigned to user {name}.', [
                 'name' => $user->getUsername(),
             ]));
@@ -129,12 +124,7 @@ class AuthController extends Controller
         $user = $this->getUser($id);
         $role = $this->getAuthItem($name, $type);
 
-        $rbac = Yii::$app->getAuthManager();
-        $rbac->invalidateCache();
-
-        if ($rbac->getAssignment($role->name, $user->id)) {
-            $rbac->revoke($role, $user->id);
-        } else {
+        if (!Yii::$app->getAuthManager()->revoke($role, $user->id)) {
             $this->error(Yii::t('skeleton', 'This permission was not assigned to user {name}.', [
                 'name' => $user->getUsername(),
             ]));

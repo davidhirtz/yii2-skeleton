@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\models\forms\base;
 
+use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\traits\PictureUploadTrait;
 use davidhirtz\yii2\skeleton\models\User;
 use Yii;
@@ -127,8 +128,7 @@ class UserForm extends User
             }
 
             if (isset($changedAttributes['password'])) {
-                $this->deleteActiveSessions($session ? $session->getId() : null);
-                $this->deleteAuthKeys();
+                $this->afterPasswordChange($session ? $session->getId() : null);
             }
         }
 
@@ -157,7 +157,7 @@ class UserForm extends User
      */
     public function validateEmail()
     {
-        if($this->isAttributeChanged('email') && !$this->validatePassword($this->oldPassword)) {
+        if ($this->isAttributeChanged('email') && !$this->validatePassword($this->oldPassword)) {
             $this->addInvalidAttributeError('oldPassword');
         }
     }
@@ -167,7 +167,7 @@ class UserForm extends User
      */
     public function validateNewPassword()
     {
-        if($this->newPassword && !$this->validatePassword($this->oldPassword)) {
+        if ($this->newPassword && !$this->validatePassword($this->oldPassword)) {
             $this->addInvalidAttributeError('oldPassword');
         }
     }

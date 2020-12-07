@@ -74,6 +74,10 @@ class Module extends \yii\base\Module
             'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController',
             'viewPath' => '@skeleton/modules/admin/views/system',
         ],
+        'trail' => [
+            'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\TrailController',
+            'viewPath' => '@skeleton/modules/admin/views/trail',
+        ],
         'user' => [
             'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\UserController',
             'viewPath' => '@skeleton/modules/admin/views/user',
@@ -96,8 +100,8 @@ class Module extends \yii\base\Module
                 $user->loginUrl = ['/admin/account/login'];
             }
 
-            if(!$this->navbarItems) {
-                $this->navbarItems= [
+            if (!$this->navbarItems) {
+                $this->navbarItems = [
                     'users' => [
                         'label' => Yii::t('skeleton', 'Users'),
                         'icon' => 'users',
@@ -146,10 +150,10 @@ class Module extends \yii\base\Module
             $this->getModule($module);
         }
 
-        if($this->roles === null) {
+        if ($this->roles === null) {
             $this->roles = [];
 
-            foreach($this->navbarItems as $item) {
+            foreach ($this->navbarItems as $item) {
                 $this->roles = array_filter(array_merge($this->roles, $item['roles'] ?? []));
             }
         }

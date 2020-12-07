@@ -120,8 +120,7 @@ class UserForm extends User
     {
         if (!$insert) {
             if (array_key_exists('password', $changedAttributes)) {
-                $this->deleteAuthKeys();
-                $this->deleteActiveSessions();
+                $this->afterPasswordChange();
             }
         }
 

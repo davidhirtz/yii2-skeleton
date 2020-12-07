@@ -2,7 +2,9 @@
 
 namespace davidhirtz\yii2\skeleton\models\base;
 
+use DateTimeZone;
 use davidhirtz\yii2\datetime\Date;
+use davidhirtz\yii2\skeleton\db\StatusAttributeTrait;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use davidhirtz\yii2\skeleton\models\AuthClient;
@@ -10,6 +12,7 @@ use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\models\Session;
+use davidhirtz\yii2\skeleton\models\Trail;
 use yii\db\ActiveQuery;
 use yii\helpers\Url;
 use Yii;
@@ -50,6 +53,20 @@ use Yii;
  */
 abstract class User extends ActiveRecord
 {
+    use StatusAttributeTrait;
+
+    /**
+     * Constants.
+     */
+    public const STATUS_ENABLED = 1;
+
+    public const GENDER_UNKNOWN = 0;
+    public const GENDER_FEMALE = 1;
+    public const GENDER_MALE = 2;
+
+    public const EMAIL_CONFIRMATION_CODE_LENGTH = 30;
+    public const PASSWORD_RESET_CODE_LENGTH = 30;
+
     /**
      * @var int
      */
@@ -81,18 +98,6 @@ abstract class User extends ActiveRecord
     private $_uploadPath = 'uploads/users/';
 
     /**
-     * Constants.
-     */
-    public const STATUS_ENABLED = 1;
-
-    public const GENDER_UNKNOWN = 0;
-    public const GENDER_FEMALE = 1;
-    public const GENDER_MALE = 2;
-
-    public const EMAIL_CONFIRMATION_CODE_LENGTH = 30;
-    public const PASSWORD_RESET_CODE_LENGTH = 30;
-
-    /**
      * @inheritDoc
      */
     public function behaviors(): array
@@ -100,6 +105,11 @@ abstract class User extends ActiveRecord
         return [
             'DateTimeBehavior' => 'davidhirtz\yii2\datetime\DateTimeBehavior',
             'TimestampBehavior' => 'davidhirtz\yii2\skeleton\behaviors\TimestampBehavior',
+            'TrailBehavior' => [
+                'class' => 'davidhirtz\yii2\skeleton\behaviors\TrailBehavior',
+                'model' => \davidhirtz\yii2\skeleton\models\User::class,
+                'attributes' => $this->getTrailAttributes(),
+            ],
         ];
     }
 
@@ -119,8 +129,7 @@ abstract class User extends ActiveRecord
             ],
             [
                 ['status'],
-                'in',
-                'range' => array_keys(static::getStatuses()),
+                'validateStatus',
             ],
             [
                 ['name'],
@@ -212,7 +221,7 @@ abstract class User extends ActiveRecord
      */
     public function validateTimezone()
     {
-        if (!in_array($this->timezone, \DateTimeZone::listIdentifiers())) {
+        if (!in_array($this->timezone, DateTimeZone::listIdentifiers())) {
             $this->timezone = Yii::$app->getTimeZone();
         }
     }
@@ -349,7 +358,6 @@ abstract class User extends ActiveRecord
     /**
      * Generates password hash.
      * @param string|null $password
-     * @throws \yii\base\Exception
      */
     public function generatePasswordHash(string $password = null)
     {
@@ -387,6 +395,21 @@ abstract class User extends ActiveRecord
     }
 
     /**
+     * @param string|null $except
+     */
+    public function afterPasswordChange($except = null)
+    {
+        $trail = new Trail();
+        $trail->model = \davidhirtz\yii2\skeleton\models\User::class;
+        $trail->model_id = $this->id;
+        $trail->type = Trail::TYPE_PASSWORD;
+        $trail->insert();
+
+        $this->deleteAuthKeys();
+        $this->deleteActiveSessions($except);
+    }
+
+    /**
      * Deletes all user related auth keys, rendering all auto login cookies invalid.
      * @return int
      */
@@ -402,7 +425,7 @@ abstract class User extends ActiveRecord
      * @param string|null $except
      * @return int
      */
-    public function deleteActiveSessions(string $except = null)
+    public function deleteActiveSessions($except = null)
     {
         return $this->getDb()->createCommand()
             ->delete(Session::tableName(), '[[user_id]]=:userId AND [[id]]!=:id', [
@@ -419,39 +442,6 @@ abstract class User extends ActiveRecord
     public function deletePicture($picture): bool
     {
         return $picture ? FileHelper::removeFile($this->getUploadPath() . $picture) : false;
-    }
-
-    /**
-     * @param $clientName
-     * @return bool
-     */
-    public function hasAuthClient($clientName): bool
-    {
-        return ($authClients = $this->authClients) ? in_array($clientName, ArrayHelper::getColumn($authClients, 'name')) : false;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isOwner(): bool
-    {
-        return (bool)$this->is_owner;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDisabled(): bool
-    {
-        return $this->status == static::STATUS_DISABLED;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isUnconfirmed(): bool
-    {
-        return !$this->isOwner() && !empty($this->email_confirmation_code);
     }
 
     /**
@@ -496,7 +486,6 @@ abstract class User extends ActiveRecord
 
     /**
      * @return string
-     * @throws \Exception
      */
     public function getTimezoneOffset()
     {
@@ -559,6 +548,57 @@ abstract class User extends ActiveRecord
     public function getStatusIcon(): string
     {
         return !$this->isOwner() ? static::getStatuses()[$this->status]['icon'] : 'star';
+    }
+
+    /**
+     * @return array
+     */
+    public function getTrailAttributes(): array
+    {
+        return array_diff($this->attributes(), [
+            'password',
+            'password_salt',
+            'email_confirmation_code',
+            'password_reset_code',
+            'login_count',
+            'last_login',
+            'created_by_user_id',
+            'updated_at',
+            'created_at',
+        ]);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTrailModelName(): string
+    {
+        return $this->id ? $this->getUsername() : Yii::t('skeleton', 'Deleted user');
+    }
+
+    /**
+     * @param $clientName
+     * @return bool
+     */
+    public function hasAuthClient($clientName): bool
+    {
+        return ($authClients = $this->authClients) ? in_array($clientName, ArrayHelper::getColumn($authClients, 'name')) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOwner(): bool
+    {
+        return (bool)$this->is_owner;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUnconfirmed(): bool
+    {
+        return !$this->isOwner() && !empty($this->email_confirmation_code);
     }
 
     /**
