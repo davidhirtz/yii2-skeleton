@@ -102,15 +102,14 @@ abstract class User extends ActiveRecord
      */
     public function behaviors(): array
     {
-        return [
+        return array_merge(parent::behaviors(), [
             'DateTimeBehavior' => 'davidhirtz\yii2\datetime\DateTimeBehavior',
             'TimestampBehavior' => 'davidhirtz\yii2\skeleton\behaviors\TimestampBehavior',
             'TrailBehavior' => [
                 'class' => 'davidhirtz\yii2\skeleton\behaviors\TrailBehavior',
                 'model' => \davidhirtz\yii2\skeleton\models\User::class,
-                'attributes' => $this->getTrailAttributes(),
             ],
-        ];
+        ]);
     }
 
     /**
@@ -571,9 +570,31 @@ abstract class User extends ActiveRecord
     /**
      * @return string
      */
-    public function getTrailModelName(): string
+    public function getTrailModelName()
     {
-        return $this->id ? $this->getUsername() : Yii::t('skeleton', 'Deleted user');
+        return $this->id ? $this->getUsername() : Yii::t('skeleton', 'Deleted');
+    }
+
+    /**
+     * @return string
+     */
+    public function getTrailModelType(): string
+    {
+        return Yii::t('skeleton', 'User');
+    }
+
+    /**
+     * @param string $attribute
+     * @param string $value
+     * @return string
+     */
+    public function formatTrailAttributeValue($attribute, $value)
+    {
+        if($attribute == 'language') {
+            return Yii::$app->getI18n()->getLabel($value) ?: $value;
+        }
+
+        return $this->getBehavior('TrailBehavior')->formatTrailAttributeValue($attribute, $value);
     }
 
     /**

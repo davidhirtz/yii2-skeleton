@@ -3,15 +3,17 @@
 namespace davidhirtz\yii2\skeleton\helpers;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
 use yii\base\Model;
+use yii\helpers\BaseHtml;
 
 /**
  * Class Html.
  * @package davidhirtz\yii2\skeleton\helpers
  */
-class Html extends \yii\helpers\BaseHtml
+class Html extends BaseHtml
 {
     /**
      * @param string $content
@@ -75,6 +77,29 @@ class Html extends \yii\helpers\BaseHtml
     }
 
     /**
+     * @param array $items
+     * @param array $rowOptions
+     * @param array $cellOptions
+     * @return string
+     */
+    public static function tableBody($items, $rowOptions = [], $cellOptions = []): string
+    {
+        $rows = [];
+
+        foreach ($items as $row) {
+            $cells = [];
+
+            foreach ($row as $cell) {
+                $cells[] = static::tag('td', $cell, $cellOptions);
+            }
+
+            $rows[] .= static::tag('tr', implode('', $cells), $rowOptions);
+        }
+
+        return $rows ? Html::tag('tbody', implode('', $rows)) : '';
+    }
+
+    /**
      * @param Model|Model[] $models
      * @inheritdoc
      */
@@ -102,7 +127,7 @@ class Html extends \yii\helpers\BaseHtml
      */
     public static function formatInlineJs($js, $params = [])
     {
-        $js = str_replace(["\r", "\n", "\t"], "", $js);
+        $js = str_replace(["\r", "\n", "\t"], '', $js);
         return $params ? strtr($js, $params) : $js;
     }
 
@@ -134,7 +159,7 @@ class Html extends \yii\helpers\BaseHtml
     {
         if ($keywords) {
             foreach ((array)$keywords as $keyword) {
-                $text = preg_replace("~(" . preg_quote($keyword) . ")~ui", "<mark>$1</mark>", $text);
+                $text = preg_replace('~(' . preg_quote($keyword) . ')~ui', '<mark>$1</mark>', $text);
             }
         }
 
@@ -142,7 +167,7 @@ class Html extends \yii\helpers\BaseHtml
     }
 
     /**
-     * @param \davidhirtz\yii2\skeleton\models\User $user
+     * @param User $user
      * @param array|string|null $url
      * @param array $options
      * @return string

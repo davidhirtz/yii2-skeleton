@@ -3,9 +3,9 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\nav;
 
 /**
- * Class UserSubmenu
+ * Class TrailSubmenu
  * @package davidhirtz\yii2\skeleton\modules\admin\widgets\nav
  */
-class UserSubmenu extends base\UserSubmenu
+class TrailSubmenu extends base\TrailSubmenu
 {
 }

@@ -47,7 +47,11 @@ class UserSubmenu extends Submenu
      */
     protected function getDefaultItems(): array
     {
-        return array_filter(array_merge($this->getUserGridViewItems(), $this->getPermissionGridViewItems(), $this->getLoginGridViewItems()));
+        return array_filter(array_merge(
+            $this->getUserGridViewItems(),
+            $this->getPermissionGridViewItems(),
+            $this->getLoginGridViewItems(),
+        ));
     }
 
     /**
@@ -55,7 +59,12 @@ class UserSubmenu extends Submenu
      */
     protected function getUserItems(): array
     {
-        return array_filter(array_merge($this->getUserFormItems(), $this->getUserPermissionGridViewItems(), $this->getUserLoginGridViewItems()));
+        return array_filter(array_merge(
+            $this->getUserFormItems(),
+            $this->getUserPermissionGridViewItems(),
+            $this->getUserLoginGridViewItems(),
+            $this->getUserTrailGridViewItems(),
+        ));
     }
 
     /**
@@ -159,6 +168,24 @@ class UserSubmenu extends Submenu
                 'url' => ['/admin/user-login/view', 'user' => $this->user->id],
                 'icon' => 'bars',
                 'visible' => Yii::$app->getUser()->can('userUpdate'),
+                'labelOptions' => [
+                    'class' => 'd-none d-md-inline'
+                ],
+            ]
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    protected function getUserTrailGridViewItems(): array
+    {
+        return [
+            [
+                'label' => Yii::t('skeleton', 'Trail'),
+                'url' => ['/admin/trail/index', 'user' => $this->user->id],
+                'icon' => 'history',
+                'visible' => Yii::$app->getUser()->can('admin'),
                 'labelOptions' => [
                     'class' => 'd-none d-md-inline'
                 ],

@@ -6,6 +6,7 @@ use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\db\TypeAttributeTrait;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
+use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
 use yii\helpers\Url;
 
@@ -48,6 +49,22 @@ trait TypeGridViewTrait
     }
 
     /**
+     * @return array
+     */
+    public function typeIconColumn()
+    {
+        return [
+            'visible' => !$this->type && count($this->getModel()::getTypes()) > 1,
+            'contentOptions' => ['class' => 'text-center'],
+            'content' => function ($model) {
+                /** @var ActiveRecord|TypeAttributeTrait $model */
+                $icon = $this->getTypeIcon($model);
+                return ($route = $this->getRoute($model)) ? Html::a($icon, $route) : $icon;
+            }
+        ];
+    }
+
+    /**
      * @return string
      */
     public function typeDropdown()
@@ -77,5 +94,17 @@ trait TypeGridViewTrait
         }
 
         return $items;
+    }
+
+    /**
+     * @param TypeAttributeTrait $model
+     * @return Icon
+     */
+    protected function getTypeIcon($model)
+    {
+        return Icon::tag($model->getTypeIcon(), [
+            'data-toggle' => 'tooltip',
+            'title' => $model->getTypeName(),
+        ]);
     }
 }

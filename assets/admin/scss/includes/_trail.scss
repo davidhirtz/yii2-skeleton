@@ -1,0 +1,55 @@
+%trail-del {
+  background-color: $trail-del-bg;
+  text-decoration: none;
+}
+
+%trail-ins {
+  background-color: $trail-ins-bg;
+  text-decoration: none;
+}
+
+.trail {
+  del {
+    @extend %trail-del;
+  }
+
+  ins {
+    @extend %trail-ins;
+  }
+}
+
+.trail-attributes {
+  //margin: -$table-cell-padding;
+  //margin-bottom: 0;
+
+  tr {
+    background: transparent !important;
+
+    &:last-child td {
+      padding-bottom: 0;
+    }
+  }
+
+  td {
+    padding: 0 30px 15px 0;
+    //border: 1px solid $body-text;
+
+    &:first-child {
+      min-width: 140px;
+    }
+
+    &:last-child {
+      word-break: break-word;
+    }
+  }
+}
+
+.diff-wrapper {
+  .change-del {
+    @extend %trail-del;
+  }
+
+  .change-ins {
+    @extend %trail-ins;
+  }
+}

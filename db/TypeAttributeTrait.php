@@ -42,6 +42,13 @@ trait TypeAttributeTrait
         return $this->getTypeOptions()['name'] ?? '';
     }
 
+    /**
+     * @return string|null
+     */
+    public function getTypeIcon(): string
+    {
+        return static::getTypes()[$this->type]['icon'] ?? '';
+    }
 
     /**
      * @return array

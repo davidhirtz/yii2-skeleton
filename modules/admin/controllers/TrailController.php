@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
+use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\TrailActiveDataProvider;
 use davidhirtz\yii2\skeleton\web\Controller;
 use yii\filters\AccessControl;
@@ -32,11 +33,21 @@ class TrailController extends Controller
     }
 
     /**
+     * @param int $id
+     * @param string $model
+     * @param int $user
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex($id = null, $model = null, $user = null)
     {
-        $provider = new TrailActiveDataProvider();
+        $model = explode(':', $model);
+
+        $provider = new TrailActiveDataProvider([
+            'user' => $user ? User::findOne($user) : null,
+            'model' => $model[0] ?? null,
+            'modelId' => $model[1] ?? null,
+            'trailId' => $id,
+        ]);
 
         return $this->render('index', [
             'provider' => $provider,

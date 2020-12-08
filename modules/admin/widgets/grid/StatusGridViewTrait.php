@@ -33,7 +33,6 @@ trait StatusGridViewTrait
      */
     public $defaultStatusItem = null;
 
-
     /**
      * @return array
      */
