@@ -35,7 +35,7 @@ class TrailSubmenu extends Submenu
                 $name = $model->getTrailModelName();
                 $this->title = ($route = $model->getTrailModelAdminRoute()) ? Html::a($name, $route) : $name;
             } else {
-                $this->title = Html::a(Yii::t('skeleton', 'Trail'), ['index']);
+                $this->title = Html::a(Yii::t('skeleton', 'History'), ['index']);
             }
         }
 
@@ -53,7 +53,7 @@ class TrailSubmenu extends Submenu
 
         if ($this->dataProvider->trailId) {
             $view->setBreadcrumb(Yii::t('skeleton', '{model} #{id}', [
-                'model' => Yii::t('skeleton', 'Trail'),
+                'model' => Yii::t('skeleton', 'History'),
                 'id' => $this->dataProvider->trailId,
             ]));
         }

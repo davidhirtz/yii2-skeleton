@@ -538,7 +538,7 @@ abstract class User extends ActiveRecord
      */
     public function getStatusName(): string
     {
-        return !$this->isOwner() ? static::getStatuses()[$this->status]['name'] : Yii::t('skeleton', 'Site Owner');
+        return !$this->isOwner() ? (static::getStatuses()[$this->status]['name'] ?? '') : Yii::t('skeleton', 'Site Owner');
     }
 
     /**
@@ -546,7 +546,7 @@ abstract class User extends ActiveRecord
      */
     public function getStatusIcon(): string
     {
-        return !$this->isOwner() ? static::getStatuses()[$this->status]['icon'] : 'star';
+        return !$this->isOwner() ? (static::getStatuses()[$this->status]['icon'] ?? '') : 'star';
     }
 
     /**

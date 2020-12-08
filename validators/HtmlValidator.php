@@ -4,13 +4,15 @@ namespace davidhirtz\yii2\skeleton\validators;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use yii\base\InvalidConfigException;
+use yii\db\ActiveRecord;
 use yii\helpers\HtmlPurifier;
+use yii\validators\Validator;
 
 /**
  * Class HtmlValidator
  * @package davidhirtz\yii2\skeleton\validators
  */
-class HtmlValidator extends \yii\validators\Validator
+class HtmlValidator extends Validator
 {
     /**
      * @var array common tags are h1-h5 for format, table, th, td, tr for tables or
@@ -88,7 +90,7 @@ class HtmlValidator extends \yii\validators\Validator
 
     /**
      * Purifies html.
-     * @param \yii\db\ActiveRecord $model
+     * @param ActiveRecord $model
      * @param string $attribute
      */
     public function validateAttribute($model, $attribute)
@@ -97,7 +99,7 @@ class HtmlValidator extends \yii\validators\Validator
         $html = $model->getAttribute($attribute);
 
         // Unify line breaks..
-        $html = str_replace(array("\r\n", "\r"), "\n", $html);
+        $html = str_replace(["\r\n", "\r"], "\n", $html);
 
         // Fix HtmlPurifier AutoFormat.AutoParagraph removing <ul>...</ul> tags in some cases.
         // Additional line breaks seem to fix this.
@@ -110,8 +112,8 @@ class HtmlValidator extends \yii\validators\Validator
         $html = HtmlPurifier::process($html, $this->purifierOptions);
 
         // Change invalid break tags.
-        $html = preg_replace('#<br />#', "<br>", $html);
-        $html = preg_replace('#\s<br>#', "<br>", $html);
+        $html = preg_replace('#<br />#', '<br>', $html);
+        $html = preg_replace('#\s<br>#', '<br>', $html);
 
         // Add break tags.
         $blocks = '(?:div|dl|dd|dt|ul|ol|li|pre|blockquote|address|style|p|h[1-6]|hr|legend|section|article|aside)';
@@ -120,23 +122,23 @@ class HtmlValidator extends \yii\validators\Validator
         $html = preg_replace("#(</'.$blocks.'>)#", "$1\n\n", $html);
 
         // Remove multiple breaking whitespaces.
-        $html = preg_replace('#\s{2,}#', " ", $html);
+        $html = preg_replace('#\s{2,}#', ' ', $html);
 
         // Make sure no empty paragraphs were generated.
-        $html = preg_replace("#<p>\s*</p>#", '', $html);
+        $html = preg_replace('#<p>\s*</p>#', '', $html);
 
         // Clean breaks.
         $html = preg_replace("#(?<!<br>)\s*\n#", "<br>\n", $html);
-        $html = preg_replace("#(</?" . $blocks . "[^>]*>)\s*<br>#", "$1", $html);
-        $html = preg_replace("#<br>(\s*</?(?:div|dd|dl|dt|li|ol|p|pre|table|tbody|td|th|ul)[^>]*>)#", "$1", $html);
+        $html = preg_replace('#(</?' . $blocks . '[^>]*>)\s*<br>#', '$1', $html);
+        $html = preg_replace('#<br>(\s*</?(?:div|dd|dl|dt|li|ol|p|pre|table|tbody|td|th|ul)[^>]*>)#', '$1', $html);
 
         // Remove empty elements at beginning and end of paragraphs.
         $html = preg_replace("#\n*\s*<p>\n*\s*#", "\n<p>", $html);
         $html = preg_replace("#\n*\s*</p>\n*\s*#", "</p>\n", $html);
 
         // Remove empty elements at the end and beginning of tables.
-        $html = preg_replace("#\n*\s*<table>#", "<table>", $html);
-        $html = preg_replace("#</table>\n*\s*#", "</table>", $html);
+        $html = preg_replace("#\n*\s*<table>#", '<table>', $html);
+        $html = preg_replace("#</table>\n*\s*#", '</table>', $html);
 
         // Remove whitespaces in lists.
         $html = preg_replace("#\n*<li>\s*\n*(.*)\s*\n*</li>#i", "\n<li>$1</li>", $html);

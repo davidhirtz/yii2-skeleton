@@ -182,10 +182,10 @@ class UserSubmenu extends Submenu
     {
         return [
             [
-                'label' => Yii::t('skeleton', 'Trail'),
+                'label' => Yii::t('skeleton', 'History'),
                 'url' => ['/admin/trail/index', 'user' => $this->user->id],
                 'icon' => 'history',
-                'visible' => Yii::$app->getUser()->can('admin'),
+                'visible' => Yii::$app->getUser()->can('trailIndex'),
                 'labelOptions' => [
                     'class' => 'd-none d-md-inline'
                 ],

@@ -51,7 +51,6 @@ class TrailGridView extends GridView
         if (!$this->columns) {
             $this->columns = [
                 $this->typeIconColumn(),
-                $this->idColumn(),
                 $this->modelColumn(),
                 $this->dataColumn(),
                 $this->userColumn(),
@@ -67,17 +66,6 @@ class TrailGridView extends GridView
     /**
      * @return array
      */
-    public function idColumn(): array
-    {
-        return [
-            'attribute' => 'id',
-            'visible' => $this->dataProvider->model,
-        ];
-    }
-
-    /**
-     * @return array
-     */
     public function modelColumn(): array
     {
         return [
@@ -87,10 +75,10 @@ class TrailGridView extends GridView
             'content' => function (Trail $trail) {
                 if ($trail->model) {
                     $model = $trail->getModelClass();
-                    $cssClass = $model instanceof ActiveRecord && !$model->getIsNewRecord() ? 'strong' : 'text-muted';
+                    $tag = $model instanceof ActiveRecord && !$model->getIsNewRecord() ? 'strong' : 'em';
                     $type = $trail->getModelType();
 
-                    return Html::a($trail->getModelName(), $this->getTrailModelRoute($trail), ['class' => $cssClass]) .
+                    return Html::a(Html::tag($tag, $trail->getModelName()), $this->getTrailModelRoute($trail)) .
                         ($type ? Html::tag('div', $type, ['class' => 'small']) : '');
                 }
 
@@ -122,7 +110,7 @@ class TrailGridView extends GridView
 
         if ($trail->hasAttributesEnabled()) {
             if ($trail->isCreateType()) {
-                return $this->renderInsertAttributesContent($trail);
+                return $this->renderCreateAttributesContent($trail);
             }
 
             if ($trail->isUpdateType()) {
@@ -155,21 +143,23 @@ class TrailGridView extends GridView
      * @param Trail $trail
      * @return string
      */
-    protected function renderInsertAttributesContent($trail)
+    protected function renderCreateAttributesContent($trail)
     {
         $model = $trail->getModelClass();
         $rows = [];
 
         if (is_array($trail->data)) {
             foreach ($trail->data as $attribute => $value) {
-                $rows[] = [
-                    $model->getAttributeLabel($attribute),
-                    Html::tag('ins', Html::encode($this->formatTrailAttributeValue($model, $attribute, $value))),
-                ];
+                if ($value = $this->formatTrailAttributeValue($model, $attribute, $value)) {
+                    $rows[] = [
+                        $model->getAttributeLabel($attribute),
+                        Html::encode($value),
+                    ];
+                }
             }
         }
 
-        return $this->renderTrailAttributes($rows);
+        return $this->renderTrailAttributes($rows, ['class' => 'trail-insert']);
     }
 
     /**
@@ -185,32 +175,28 @@ class TrailGridView extends GridView
             foreach ($trail->data as $attribute => $values) {
                 $oldValue = $this->formatTrailAttributeValue($model, $attribute, $values[0]);
                 $newValue = $this->formatTrailAttributeValue($model, $attribute, $values[1]);
-                $row = [$model->getAttributeLabel($attribute)];
-
-                if (!$oldValue) {
-                    $row[] = Html::tag('ins', htmlspecialchars($newValue));
-                } elseif (!$newValue) {
-                    $row[] = Html::tag('del', htmlspecialchars($oldValue));
-                } else {
-                    $row[] = DiffHelper::calculate($oldValue, $newValue, 'Combined', [], [
-                        'mergeThreshold' => 1,
-                    ]);
-                }
-
-                $rows[] = $row;
+                $rows[] = [
+                    $model->getAttributeLabel($attribute),
+                    DiffHelper::calculate($oldValue, $newValue, 'SideBySide', [], [
+                        'showHeader' => false,
+                        'lineNumbers' => false,
+                    ]),
+                ];
             }
         }
 
-        return $this->renderTrailAttributes($rows);
+        return $this->renderTrailAttributes($rows, ['class' => 'trail-update']);
     }
 
     /**
      * @param array $rows
+     * @param array $options
      * @return string
      */
-    protected function renderTrailAttributes($rows): string
+    protected function renderTrailAttributes($rows, $options = []): string
     {
-        return $rows ? Html::tag('table', Html::tableBody($rows), ['class' => 'trail-attributes']) : '';
+        Html::addCssClass($options, 'trail-table');
+        return $rows ? Html::tag('table', Html::tableBody($rows), $options) : '';
     }
 
     /**
@@ -219,22 +205,7 @@ class TrailGridView extends GridView
      */
     protected function renderDataModelContent($trail)
     {
-        /** @var TrailBehavior $model */
-        $model = $trail->getDataModelClass();
-        $options = $trail->getTypeOptions();
-
-        if ($model) {
-            $name = $model->getTrailModelName();
-            $model = ($route = $model->getTrailModelAdminRoute()) ? Html::a($name, $route) : $name;
-        } else {
-            $model = Html::tag('em', Yii::t('skeleton', 'Deleted'));
-        }
-
-        $message = Yii::t($options['messageCategory'] ?? 'skeleton', $options['message'] ?? '', [
-            'model' => $model,
-        ]);
-
-        return $message . ' ' . $this->renderDataTrailLink($trail);
+        return $this->renderI18nTrailMessage($trail, $trail->getDataModelClass()) . ' ' . $this->renderDataTrailLink($trail);
     }
 
     /**
@@ -247,7 +218,32 @@ class TrailGridView extends GridView
             return $this->getTranslations()[$trail->message] ?? $trail->message;
         }
 
-        return Html::tag('strong', $trail->getTypeOptions()['message'] ?? '');
+        return $this->renderI18nTrailMessage($trail, $trail->getModelClass());
+    }
+
+    /**
+     * @param Trail $trail
+     * @param ActiveRecord|TrailBehavior $model
+     * @return string
+     */
+    protected function renderI18nTrailMessage($trail, $model)
+    {
+        if ($model) {
+            $name = $model->getTrailModelName();
+            $model = ($route = $model->getTrailModelAdminRoute()) ? Html::a($name, $route) : $name;
+        } else {
+            $model = Html::tag('em', Yii::t('skeleton', 'Deleted'));
+        }
+
+        $options = $trail->getTypeOptions();
+
+        if (isset($options['message'])) {
+            return Yii::t($options['messageCategory'] ?? 'skeleton', $options['message'] ?? '', [
+                'model' => $model,
+            ]);
+        }
+
+        return '';
     }
 
     /**
@@ -301,7 +297,7 @@ class TrailGridView extends GridView
     protected function renderDataTrailLink($trail)
     {
         if ($trailId = ($trail->data['trail_id'] ?? false)) {
-            $link = isset($this->dataProvider->getModels()[$trail->id]) ? Url::current(['#' => 'trail-' . $trailId]) : ['index', 'id' => $trailId];
+            $link = isset($this->dataProvider->getModels()[$trailId]) ? Url::current(['#' => 'trail-' . $trailId]) : ['index', 'id' => $trailId];
             return Html::a('(#' . $trailId . ')', $link);
         }
 

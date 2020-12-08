@@ -27,14 +27,21 @@ class TrailBehavior extends Behavior
     private const VALUE_TYPE_DATETIME = 'datetime';
 
     /**
+     * If `model` is not set, the default class of `owner` will be used
      * @var string
      */
     public $model;
 
     /**
+     * The excluded default attributes if the owner class does not override {@link TrailBehavior::getTrailAttributes()}
      * @var string[]
      */
-    public $exclude = ['updated_by_user_id', 'updated_at', 'created_at'];
+    public $exclude = [
+        'position',
+        'updated_by_user_id',
+        'updated_at',
+        'created_at',
+    ];
 
     /**
      * @var string {@see TrailBehavior::getTrailModelName()}
@@ -167,6 +174,7 @@ class TrailBehavior extends Behavior
      */
     public function getTrailModelAdminRoute()
     {
+        return false;
     }
 
     /**
@@ -195,7 +203,7 @@ class TrailBehavior extends Behavior
             return $this->owner->getTypeName();
         }
 
-        switch ($this->getOwnerAttributeValues()[$attribute] ?? false) {
+        switch ($this->getDefaultAttributeValues()[$attribute] ?? false) {
             case static::VALUE_TYPE_BOOLEAN:
                 return $value ? Yii::t('yii', 'Yes') : Yii::t('yii', 'No');
 
@@ -209,10 +217,10 @@ class TrailBehavior extends Behavior
     }
 
     /**
-     * @return mixed
-     * @todo rename!
+     * Cycles through the owner model validators to detect default display values for attribute names.
+     * @return array
      */
-    protected function getOwnerAttributeValues()
+    protected function getDefaultAttributeValues()
     {
         $className = get_class($this->owner);
 

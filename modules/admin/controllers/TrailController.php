@@ -25,7 +25,7 @@ class TrailController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['admin'],
+                        'roles' => ['trailIndex'],
                     ],
                 ],
             ],

@@ -4,6 +4,7 @@ namespace davidhirtz\yii2\skeleton\migrations;
 
 use davidhirtz\yii2\skeleton\db\MigrationTrait;
 use davidhirtz\yii2\skeleton\models\Trail;
+use Yii;
 use yii\db\Migration;
 
 /**
@@ -33,6 +34,16 @@ class M201205112000Trail extends Migration
 
         $this->createIndex('model', Trail::tableName(), ['model', 'model_id']);
         $this->createIndex('user_id', Trail::tableName(), ['user_id']);
+
+        $sourceLanguage = Yii::$app->sourceLanguage;
+        $auth = Yii::$app->getAuthManager();
+        $admin = $auth->getRole('admin');
+
+        $trailIndex = $auth->createPermission('trailIndex');
+        $trailIndex->description = Yii::t('skeleton', 'View history', [], $sourceLanguage);
+        $auth->add($trailIndex);
+
+        $auth->addChild($admin, $trailIndex);
     }
 
     /**
@@ -41,5 +52,8 @@ class M201205112000Trail extends Migration
     public function safeDown()
     {
         $this->dropTable(Trail::tableName());
+
+        $auth = Yii::$app->getAuthManager();
+        $this->delete($auth->itemTable, ['name' => 'trailIndex']);
     }
 }

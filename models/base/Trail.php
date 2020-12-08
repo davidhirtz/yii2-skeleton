@@ -37,8 +37,6 @@ abstract class Trail extends ActiveRecord
     public const TYPE_CREATE = 1;
     public const TYPE_UPDATE = 2;
     public const TYPE_DELETE = 3;
-    public const TYPE_LINK = 4;
-    public const TYPE_UNLINK = 5;
     public const TYPE_ASSIGN = 6;
     public const TYPE_REVOKE = 7;
     public const TYPE_CHILD_CREATE = 8;
@@ -244,6 +242,20 @@ abstract class Trail extends ActiveRecord
     }
 
     /**
+     * @param ActiveRecord|null $model
+     * @param null $message
+     */
+    public static function createOrderTrail($model, $message = null)
+    {
+        $trail = new static();
+        $trail->type = static::TYPE_ORDER;
+        $trail->model = $model ? get_class($model) : null;
+        $trail->model_id = $model ? $model->getPrimaryKey(true) : null;
+        $trail->message = $message;
+        $trail->insert();
+    }
+
+    /**
      * @param string $model
      * @param string $modelId
      * @return mixed
@@ -295,18 +307,6 @@ abstract class Trail extends ActiveRecord
                 'message' => Yii::t('skeleton', '{model} was deleted', [], $language),
                 'parentType' => static::TYPE_CHILD_DELETE,
                 'icon' => 'trash-alt',
-            ],
-            static::TYPE_LINK => [
-                'name' => Yii::t('skeleton', 'Linked'),
-                'message' => Yii::t('skeleton', '{model} linked', [], $language),
-                'hasDataModel' => true,
-                'icon' => 'link',
-            ],
-            static::TYPE_UNLINK => [
-                'name' => Yii::t('skeleton', 'Unlinked'),
-                'message' => Yii::t('skeleton', '{model} unlinked', [], $language),
-                'hasDataModel' => true,
-                'icon' => 'unlink',
             ],
             static::TYPE_ASSIGN => [
                 'name' => Yii::t('skeleton', 'Permission assigned'),

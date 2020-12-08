@@ -14,8 +14,9 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 
-$this->setTitle(Yii::t('skeleton', 'Trail'));
-$this->setBreadcrumb(Yii::t('skeleton', 'Trail'), ['index']);
+$this->setTitle(Yii::t('skeleton', 'History'));
+$this->setBreadcrumb(Yii::t('skeleton', 'History'), ['index']);
+
 if ($provider->user) {
     echo UserSubmenu::widget([
         'user' => $provider->user,

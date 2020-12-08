@@ -1,55 +1,144 @@
-%trail-del {
-  background-color: $trail-del-bg;
-  text-decoration: none;
-}
+$diff-bg-color: #fff !default;
+$diff-text-color: invert($diff-bg-color) !default;
 
-%trail-ins {
-  background-color: $trail-ins-bg;
-  text-decoration: none;
-}
+$diff-bg-color-ins-base: $trail-ins-bg !default;
+$diff-bg-color-del-base: $trail-del-bg !default;
+$diff-bg-color-rep-base: #fbdb65 !default;
 
-.trail {
-  del {
-    @extend %trail-del;
-  }
+$diff-op-highlight-ratio: 90% !default;
+$diff-op-normal-ratio: 25% !default;
 
-  ins {
-    @extend %trail-ins;
-  }
-}
+// emphasized colors for detailed inline difference
+$diff-bg-color-ins-highlight: mix($diff-bg-color-ins-base, $diff-bg-color, $diff-op-highlight-ratio) !default;
+$diff-bg-color-del-highlight: mix($diff-bg-color-del-base, $diff-bg-color, $diff-op-highlight-ratio) !default;
 
-.trail-attributes {
-  //margin: -$table-cell-padding;
-  //margin-bottom: 0;
+// colors for operation rows
+$diff-bg-color-ins: mix($diff-bg-color-ins-base, $diff-bg-color, $diff-op-normal-ratio) !default;
+$diff-bg-color-del: mix($diff-bg-color-del-base, $diff-bg-color, $diff-op-normal-ratio) !default;
+$diff-bg-color-rep: mix($diff-bg-color-rep-base, $diff-bg-color, $diff-op-normal-ratio) !default;
+
+$diff-table-head-color: mix($diff-bg-color, $diff-text-color, 65%) !default;
+$diff-table-sidebar-color: mix($diff-bg-color, $diff-text-color, 80%) !default;
+$diff-border-color: $diff-text-color !default;
+
+// color for the nonexistent block
+// for example, there are a deleted line that has no corresponding one
+$diff-bg-color-none-block: mix($diff-bg-color, $diff-table-sidebar-color, 80%) !default;
+$diff-bg-color-none-block-alternative: mix($diff-bg-color, $diff-table-sidebar-color, 55%) !default;
+
+
+.trail-table {
+  width: 100%;
 
   tr {
-    background: transparent !important;
-
-    &:last-child td {
-      padding-bottom: 0;
-    }
+    background: transparent !important; // Replaces .table-stripes
   }
 
   td {
-    padding: 0 30px 15px 0;
-    //border: 1px solid $body-text;
+    border: 0 !important;
+  }
 
-    &:first-child {
-      min-width: 140px;
-    }
+  & > tbody > tr > td:first-child {
+    width: 140px;
+    text-align: right;
+  }
+}
 
-    &:last-child {
-      word-break: break-word;
-    }
+.trail-insert {
+  & > tbody > tr > td:last-child {
+    background: $diff-bg-color-ins;
+  }
+}
+
+.trail-update {
+  & > tbody > tr > td:last-child {
+    padding: 0;
   }
 }
 
 .diff-wrapper {
-  .change-del {
-    @extend %trail-del;
+  background: repeating-linear-gradient(-45deg, $diff-bg-color-none-block, $diff-bg-color-none-block 0.5em, $diff-bg-color-none-block-alternative 0.5em, $diff-bg-color-none-block-alternative 1em);
+  border-collapse: collapse;
+  border-spacing: 0;
+  empty-cells: show;
+  width: 100%;
+  word-break: break-all;
+  white-space: pre-wrap;
+
+  td {
+    vertical-align: baseline;
   }
 
-  .change-ins {
-    @extend %trail-ins;
+  td {
+    border-collapse: separate;
+    width: 50%;
+
+    // make empty cell has height
+    &:empty:after {
+      content: " ";
+      visibility: hidden;
+    }
+  }
+
+  tbody {
+    border: 0 !important; // Override tbody + tbody
+
+    //&.skipped {
+    //  border-top: 1px solid $diff-border-color;
+    //
+    //  td,
+    //  th {
+    //    display: none;
+    //  }
+    //}
+  }
+
+    &.diff-combined {
+      .change.change-rep {
+        .rep {
+          // fixes https://github.com/jfcherng/php-diff/issues/34#issuecomment-671404456
+          white-space: normal;
+        }
+      }
+    }
+}
+
+.trail {
+  del {
+    background-color: $diff-bg-color-del-highlight;
+    text-decoration: none;
+  }
+
+  ins {
+    background-color: $diff-bg-color-ins-highlight;
+    text-decoration: none;
+  }
+
+  .change-eq {
+    .old,
+    .new {
+      background: $gray-300;
+    }
+  }
+
+  .old {
+    background: $diff-bg-color-del;
+  }
+
+  .new {
+    background: $diff-bg-color-ins;
+  }
+
+  .rep {
+    background: $diff-bg-color-rep;
+  }
+
+  .old,
+  .new,
+  .rep {
+    &.none {
+      background: transparent;
+      cursor: not-allowed;
+    }
   }
 }
