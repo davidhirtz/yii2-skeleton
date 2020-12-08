@@ -266,7 +266,7 @@ class TrailGridView extends GridView
                 }
 
                 $name = Yii::t('skeleton', '{model} #{id}', [
-                    'model' => Yii::t('app', 'User'),
+                    'model' => Yii::t('skeleton', 'User'),
                     'id' => $trail->user_id,
                 ]);
 
