@@ -75,8 +75,9 @@ class TrailGridView extends GridView
             'content' => function (Trail $trail) {
                 if ($trail->model) {
                     $model = $trail->getModelClass();
-                    $tag = $model instanceof ActiveRecord && !$model->getIsNewRecord() ? 'strong' : 'em';
-                    $type = $trail->getModelType();
+                    $isModel = $model instanceof ActiveRecord && !$model->getIsNewRecord();
+                    $tag = $isModel ? 'strong' : 'em';
+                    $type = $isModel ? $trail->getModelType() : false;
 
                     return Html::a(Html::tag($tag, $trail->getModelName()), $this->getTrailModelRoute($trail)) .
                         ($type ? Html::tag('div', $type, ['class' => 'small']) : '');
@@ -205,7 +206,7 @@ class TrailGridView extends GridView
      */
     protected function renderDataModelContent($trail)
     {
-        return $this->renderI18nTrailMessage($trail, $trail->getDataModelClass()) . ' ' . $this->renderDataTrailLink($trail);
+        return $this->renderI18nTrailMessage($trail, $trail->getDataModelClass());
     }
 
     /**
@@ -215,7 +216,7 @@ class TrailGridView extends GridView
     protected function renderMessageContent($trail)
     {
         if ($trail->message) {
-            return $this->getTranslations()[$trail->message] ?? $trail->message;
+            return trim(($this->getTranslations()[$trail->message] ?? $trail->message) . ' ' . $this->renderDataTrailLink($trail));
         }
 
         return $this->renderI18nTrailMessage($trail, $trail->getModelClass());
@@ -236,14 +237,17 @@ class TrailGridView extends GridView
         }
 
         $options = $trail->getTypeOptions();
+        $message = '';
 
         if (isset($options['message'])) {
-            return Yii::t($options['messageCategory'] ?? 'skeleton', $options['message'] ?? '', [
+            $message .= Yii::t($options['messageCategory'] ?? 'skeleton', $options['message'] ?? '', [
                 'model' => $model,
             ]);
         }
 
-        return '';
+        $message .= ' ' . $this->renderDataTrailLink($trail);
+
+        return trim($message);
     }
 
     /**

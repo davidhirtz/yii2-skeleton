@@ -243,16 +243,21 @@ abstract class Trail extends ActiveRecord
 
     /**
      * @param ActiveRecord|null $model
-     * @param null $message
+     * @param string|null $message
+     * @param array|null $data
+     * @return static
      */
-    public static function createOrderTrail($model, $message = null)
+    public static function createOrderTrail($model, $message = null, $data = [])
     {
         $trail = new static();
         $trail->type = static::TYPE_ORDER;
         $trail->model = $model ? get_class($model) : null;
         $trail->model_id = $model ? $model->getPrimaryKey(true) : null;
         $trail->message = $message;
+        $trail->data = $data;
         $trail->insert();
+
+        return $trail;
     }
 
     /**
