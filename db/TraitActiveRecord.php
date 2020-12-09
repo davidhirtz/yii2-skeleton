@@ -11,7 +11,8 @@ namespace davidhirtz\yii2\skeleton\db;
  */
 abstract class TraitActiveRecord extends ActiveRecord
 {
-    use NestedTreeTrait, I18nAttributesTrait;
+    use I18nAttributesTrait;
+    use NestedTreeTrait;
 }
 
 /**

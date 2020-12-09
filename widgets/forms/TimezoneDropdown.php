@@ -4,6 +4,7 @@ namespace davidhirtz\yii2\skeleton\widgets\forms;
 
 use DateTime;
 use DateTimeZone;
+use Exception;
 use yii\helpers\Html;
 use yii\widgets\InputWidget;
 
@@ -38,7 +39,7 @@ class TimezoneDropdown extends InputWidget
 
     /**
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function getTimezones()
     {

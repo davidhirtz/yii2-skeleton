@@ -13,6 +13,7 @@ use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\models\Session;
 use davidhirtz\yii2\skeleton\models\Trail;
+use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
 use yii\db\ActiveQuery;
 use yii\helpers\Url;
 use Yii;
@@ -127,8 +128,13 @@ abstract class User extends ActiveRecord
                 'required',
             ],
             [
-                ['status'],
-                'validateStatus',
+                ['status', 'language', 'timezone'],
+                'davidhirtz\yii2\skeleton\validators\DynamicRangeValidator',
+            ],
+            [
+                ['country'],
+                'davidhirtz\yii2\skeleton\validators\DynamicRangeValidator',
+                'skipOnEmpty' => true,
             ],
             [
                 ['name'],
@@ -186,21 +192,6 @@ abstract class User extends ActiveRecord
                 'string',
                 'max' => 50,
             ],
-            [
-                ['language'],
-                /** {@see \davidhirtz\yii2\skeleton\models\User::validateLanguage()} */
-                'validateLanguage',
-            ],
-            [
-                ['timezone'],
-                /** {@see \davidhirtz\yii2\skeleton\models\User::validateTimezone()} */
-                'validateTimezone',
-            ],
-            [
-                ['country'],
-                /** {@see \davidhirtz\yii2\skeleton\models\User::validateCountry()} */
-                'validateCountry',
-            ]
         ];
     }
 
@@ -215,62 +206,15 @@ abstract class User extends ActiveRecord
     }
 
     /**
-     * Sanitizes timezone.
-     * @see User::rules()
-     */
-    public function validateTimezone()
-    {
-        if (!in_array($this->timezone, DateTimeZone::listIdentifiers())) {
-            $this->timezone = Yii::$app->getTimeZone();
-        }
-    }
-
-    /**
-     * Sanitizes language.
-     * @see User::rules()
-     */
-    public function validateLanguage()
-    {
-        if (!in_array($this->language, Yii::$app->getI18n()->languages)) {
-            $this->language = Yii::$app->language;
-        }
-    }
-
-    /**
-     * Sanitizes country.
-     * @see User::rules()
-     */
-    public function validateCountry()
-    {
-        if ($this->country) {
-            if (!isset(static::getCountries()[$this->country])) {
-                $this->country = null;
-            }
-        }
-    }
-
-    /**
      * @return bool
      */
     public function beforeValidate(): bool
     {
-        if ($this->status === null || $this->is_owner) {
-            $this->status = static::STATUS_ENABLED;
-        }
+        $this->status = $this->status === null ? static::STATUS_ENABLED : $this->status;
+        $this->language = $this->language ?: Yii::$app->language;
+        $this->timezone = $this->timezone ?: Yii::$app->getTimeZone();
 
         return parent::beforeValidate();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function afterValidate()
-    {
-        if (!$this->name) {
-            $this->name = null;
-        }
-
-        parent::afterValidate();
     }
 
     /**
@@ -584,20 +528,6 @@ abstract class User extends ActiveRecord
     }
 
     /**
-     * @param string $attribute
-     * @param string $value
-     * @return string
-     */
-    public function formatTrailAttributeValue($attribute, $value)
-    {
-        if($attribute == 'language') {
-            return Yii::$app->getI18n()->getLabel($value) ?: $value;
-        }
-
-        return $this->getBehavior('TrailBehavior')->formatTrailAttributeValue($attribute, $value);
-    }
-
-    /**
      * @return array|false
      */
     public function getTrailModelAdminRoute()
@@ -632,10 +562,36 @@ abstract class User extends ActiveRecord
 
     /**
      * @return array
+     * @see DynamicRangeValidator
      */
     public static function getCountries(): array
     {
         return require(Yii::getAlias('@skeleton/messages/') . Yii::$app->language . '/countries.php');
+    }
+
+    /**
+     * @return array
+     * @see DynamicRangeValidator
+     */
+    public static function getLanguages(): array
+    {
+        $i18n = Yii::$app->getI18n();
+        $languages = [];
+
+        foreach (Yii::$app->getI18n()->getLanguages() as $language) {
+            $languages[$language]['name'] = $i18n->getLabel($language);
+        }
+
+        return $languages;
+    }
+
+    /**
+     * @return array
+     * @see DynamicRangeValidator
+     */
+    public static function getTimezones()
+    {
+        return array_combine(DateTimeZone::listIdentifiers(), DateTimeZone::listIdentifiers());
     }
 
     /**

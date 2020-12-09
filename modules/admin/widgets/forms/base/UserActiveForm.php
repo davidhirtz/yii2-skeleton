@@ -7,7 +7,7 @@ use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\widgets\forms\CountryDropdown;
-use davidhirtz\yii2\skeleton\widgets\forms\LanguageDropdown;
+use davidhirtz\yii2\skeleton\widgets\forms\DynamicRangeDropdown;
 use davidhirtz\yii2\skeleton\widgets\forms\TimezoneDropdown;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
 use davidhirtz\yii2\timeago\Timeago;
@@ -42,14 +42,14 @@ class UserActiveForm extends ActiveForm
                 'repeatPassword',
                 'oldPassword',
                 '-',
-                ['language', LanguageDropdown::class],
-                ['timezone', TimezoneDropdown::class],
+                'language',
+                'timezone',
                 ['upload', 'fileInput'],
                 '-',
                 'first_name',
                 'last_name',
                 'city',
-                ['country', CountryDropdown::class],
+                'country',
                 'sendEmail',
             ];
         }
@@ -85,8 +85,34 @@ class UserActiveForm extends ActiveForm
             return null;
         }
 
-        $statusOptions = ArrayHelper::getColumn(User::getStatuses(), 'name');
-        return count($statusOptions) > 1 ? $this->field($this->model, 'status')->dropDownList($statusOptions, $options) : '';
+        return $this->field($this->model, 'status')->widget(DynamicRangeDropdown::class, $options);
+    }
+
+    /**
+     * @param array $options
+     * @return ActiveField|string
+     */
+    public function countryField($options = [])
+    {
+        return $this->field($this->model, 'country')->widget(DynamicRangeDropdown::class, $options);
+    }
+
+    /**
+     * @param array $options
+     * @return ActiveField|string
+     */
+    public function languageField($options = [])
+    {
+        return $this->field($this->model, 'language')->widget(DynamicRangeDropdown::class, $options);
+    }
+
+    /**
+     * @param array $options
+     * @return ActiveField|string
+     */
+    public function timezoneField($options = [])
+    {
+        return $this->field($this->model, 'timezone')->widget(DynamicRangeDropdown::class, $options);
     }
 
     /**

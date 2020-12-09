@@ -2,7 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
+use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveField;
 use Yii;
@@ -18,7 +18,7 @@ use yii\helpers\Json;
 trait ActiveFormTrait
 {
     /**
-     * @var \davidhirtz\yii2\skeleton\db\ActiveRecord
+     * @var ActiveRecord
      */
     public $model;
 
@@ -139,7 +139,7 @@ trait ActiveFormTrait
     /**
      * Renders i18n aware hidden input field for given attribute.
      *
-     * @param \davidhirtz\yii2\skeleton\db\ActiveRecord $model
+     * @param ActiveRecord $model
      * @param string $attribute
      * @return string
      */

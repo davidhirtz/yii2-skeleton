@@ -13,7 +13,8 @@ use Yii;
 trait StatusAttributeTrait
 {
     /**
-     * Status validator.
+     * Status validator
+     * @deprecated Please use {@link \davidhirtz\yii2\skeleton\validators\DynamicRangeValidator}
      */
     public function validateStatus()
     {

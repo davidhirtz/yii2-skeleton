@@ -214,8 +214,8 @@ class TrailBehavior extends Behavior
                 return isset($value['date']) ? Yii::$app->getFormatter()->asDatetime(new DateTime($value['date'], new DateTimeZone($date['timezone'] ?? Yii::$app->timeZone)), 'medium') : $value;
 
             case static::VALUE_TYPE_RANGE:
-                $rangeClass = 'get' . Inflector::camelize(Inflector::pluralize($attribute));
-                return $this->owner->hasMethod($rangeClass) ? ($this->owner::$rangeClass()[$value]['name'] ?? $value) : $value;
+                $method = 'get' . Inflector::camelize(Inflector::pluralize($attribute));
+                return $this->owner->hasMethod($method) ? ($this->owner::$method()[$value]['name'] ?? $value) : $value;
         }
 
         return is_array($value) ? print_r($value, true) : (string)$value;
@@ -230,12 +230,7 @@ class TrailBehavior extends Behavior
         $className = get_class($this->owner);
 
         if (!isset(static::$_modelAttributes[$className])) {
-            // Common fields `status` and `type` often use the related Trait instead of the `RangeValidator`. This makes
-            // sure they are still treated as such.
-            $attributes = [
-                'status' => static::VALUE_TYPE_RANGE,
-                'type' => static::VALUE_TYPE_RANGE,
-            ];
+            $attributes = [];
 
             $types = [
                 static::VALUE_TYPE_BOOLEAN => BooleanValidator::class,

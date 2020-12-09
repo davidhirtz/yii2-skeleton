@@ -2,6 +2,8 @@
 
 namespace davidhirtz\yii2\skeleton\db;
 
+use Yii;
+
 /**
  * Class TypeAttributeTrait.
  * @package davidhirtz\yii2\skeleton\db
@@ -12,6 +14,7 @@ trait TypeAttributeTrait
 {
     /**
      * Checks if type is set as a key of {@link TypeAttributeTrait::getTypes()}.
+     * @deprecated Please use {@link \davidhirtz\yii2\skeleton\validators\DynamicRangeValidator}
      */
     public function validateType()
     {
@@ -31,7 +34,11 @@ trait TypeAttributeTrait
      */
     public static function getTypes(): array
     {
-        return [];
+        return [
+            static::TYPE_DEFAULT => [
+                'name' => Yii::t('skeleton', 'Default'),
+            ],
+        ];
     }
 
     /**

@@ -42,6 +42,18 @@ class ActiveField extends \yii\bootstrap4\ActiveField
     }
 
     /**
+     * Makes sure that empty input fields are not rendered. This only applies if the '{input}' was explicitly set to
+     * an empty string (eg. from widgets).
+     *
+     * @param null $content
+     * @return string
+     */
+    public function render($content = null)
+    {
+        return ($content === null && ($this->parts['{input}'] ?? false) !== '') ? parent::render($content) : '';
+    }
+
+    /**
      * @inheritdoc
      */
     public function checkbox($options = [], $enclosedByLabel = false)
@@ -65,10 +77,10 @@ class ActiveField extends \yii\bootstrap4\ActiveField
     /**
      * @inheritdoc
      */
-    public function dropDownList($items, $options = [])
+    public function dropdownList($items, $options = [])
     {
         if ($items || $this->model->isAttributeRequired($this->attribute)) {
-            return parent::dropDownList($items, $options);
+            return parent::dropdownList($items, $options);
         }
 
         // Don't render empty drop down list.
