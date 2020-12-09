@@ -41,6 +41,7 @@ $diff-bg-color-none-block-alternative: mix($diff-bg-color, $diff-table-sidebar-c
   & > tbody > tr > td:first-child {
     width: 140px;
     text-align: right;
+    background-color: $gray-300;
   }
 }
 
@@ -93,14 +94,14 @@ $diff-bg-color-none-block-alternative: mix($diff-bg-color, $diff-table-sidebar-c
     //}
   }
 
-    &.diff-combined {
-      .change.change-rep {
-        .rep {
-          // fixes https://github.com/jfcherng/php-diff/issues/34#issuecomment-671404456
-          white-space: normal;
-        }
+  &.diff-combined {
+    .change.change-rep {
+      .rep {
+        // fixes https://github.com/jfcherng/php-diff/issues/34#issuecomment-671404456
+        white-space: normal;
       }
     }
+  }
 }
 
 .trail {

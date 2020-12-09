@@ -572,7 +572,7 @@ abstract class User extends ActiveRecord
      */
     public function getTrailModelName()
     {
-        return $this->id ? $this->getUsername() : Yii::t('skeleton', 'Deleted');
+        return $this->id ? $this->getUsername() : $this->getTrailModelType();
     }
 
     /**
@@ -595,6 +595,14 @@ abstract class User extends ActiveRecord
         }
 
         return $this->getBehavior('TrailBehavior')->formatTrailAttributeValue($attribute, $value);
+    }
+
+    /**
+     * @return array|false
+     */
+    public function getTrailModelAdminRoute()
+    {
+        return ['/admin/user/index', 'id' => $this->id];
     }
 
     /**

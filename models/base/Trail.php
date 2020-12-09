@@ -287,6 +287,17 @@ abstract class Trail extends ActiveRecord
     }
 
     /**
+     * @param ActiveRecord|null $model
+     * @param int|string|null $id
+     * @return array
+     */
+    public static function getAdminRouteByModel($model, $id = null)
+    {
+        $model = $model ? implode(':', array_filter([get_class($model), $id ?: $model->getPrimaryKey()])) : null;
+        return ['/admin/trail/index', 'model' => $model];
+    }
+
+    /**
      * The message translations are set via `Yii::t()` here so the translation controller will pick them up. The actual
      * translation will happen in {@link TrailGridView}.
      *
@@ -360,6 +371,7 @@ abstract class Trail extends ActiveRecord
             'model' => Yii::t('skeleton', 'Record'),
             'user_id' => Yii::t('skeleton', 'User'),
             'data' => Yii::t('skeleton', 'Updates'),
+            'created_at' => Yii::t('skeleton', 'Time'),
         ]);
     }
 

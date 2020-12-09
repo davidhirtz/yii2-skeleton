@@ -135,6 +135,12 @@ class Module extends \yii\base\Module
                                 'visible' => $user->can('admin'),
                             ],
                             [
+                                'label' => Yii::t('skeleton', 'History'),
+                                'url' => ['/admin/trail/index'],
+                                'icon' => 'cog',
+                                'visible' => $user->can('trailIndex'),
+                            ],
+                            [
                                 'label' => Yii::t('skeleton', 'Homepage'),
                                 'url' => '/',
                                 'icon' => 'globe',

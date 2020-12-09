@@ -189,6 +189,7 @@ return [
     'This user is currently disabled and thus can not be made website owner!' => 'Dieser Benutzer ist momentan deaktiviert und kann deshalb nicht zum Besitzer der Webseite gemacht werden!',
     'This user is the website owner. Please transfer ownership to another user before deleting this user.' => 'Dieser Benutzer ist der Besitzer dieser Webseite. Bite ernennen Sie einen anderen Benutzer zum Webseitenbesitzer bevor Sie diesen Account löschen.',
     'This username is already used by another user.' => 'Dieser Name wird bereits von einem anderen Benutzer verwendet.',
+    'Time' => 'Zeitpunkt',
     'Timezone' => 'Zeitzone',
     'Total sessions' => 'Session gesamt',
     'Transfer' => 'Übertragen',

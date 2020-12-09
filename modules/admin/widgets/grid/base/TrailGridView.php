@@ -70,7 +70,7 @@ class TrailGridView extends GridView
     {
         return [
             'attribute' => 'model',
-            'contentOptions' => ['class' => 'text-nowrap'],
+            'contentOptions' => ['style' => 'width:300px'],
             'visible' => !$this->dataProvider->model,
             'content' => function (Trail $trail) {
                 if ($trail->model) {
@@ -176,6 +176,7 @@ class TrailGridView extends GridView
             foreach ($trail->data as $attribute => $values) {
                 $oldValue = $this->formatTrailAttributeValue($model, $attribute, $values[0]);
                 $newValue = $this->formatTrailAttributeValue($model, $attribute, $values[1]);
+
                 $rows[] = [
                     $model->getAttributeLabel($attribute),
                     DiffHelper::calculate($oldValue, $newValue, 'SideBySide', [], [
@@ -245,9 +246,7 @@ class TrailGridView extends GridView
             ]);
         }
 
-        $message .= ' ' . $this->renderDataTrailLink($trail);
-
-        return trim($message);
+        return trim($message . ' ' . $this->renderDataTrailLink($trail));
     }
 
     /**
@@ -258,7 +257,7 @@ class TrailGridView extends GridView
         return [
             'attribute' => 'user_id',
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
-            'contentOptions' => ['class' => 'd-none d-md-table-cell'],
+            'contentOptions' => ['class' => 'd-none d-md-table-cell text-nowrap'],
             'visible' => !$this->dataProvider->user,
             'content' => function (Trail $trail) {
                 if (!$trail->user_id) {

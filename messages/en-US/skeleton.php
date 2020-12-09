@@ -189,6 +189,7 @@ return [
     'This user is currently disabled and thus can not be made website owner!' => '',
     'This user is the website owner. Please transfer ownership to another user before deleting this user.' => '',
     'This username is already used by another user.' => '',
+    'Time' => '',
     'Timezone' => '',
     'Total sessions' => '',
     'Transfer' => '',
