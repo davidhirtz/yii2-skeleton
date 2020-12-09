@@ -308,6 +308,9 @@ class TrailGridView extends GridView
     }
 
     /**
+     * Wraps behavior method and makes sure value is cast to string to prevent {@link \Jfcherng\Diff\Differ} to throw
+     * errors.
+     *
      * @param ActiveRecord $model
      * @param string $attribute
      * @param string $value
@@ -316,7 +319,7 @@ class TrailGridView extends GridView
     protected function formatTrailAttributeValue($model, $attribute, $value)
     {
         /** @var TrailBehavior $model */
-        return $model->formatTrailAttributeValue($attribute, $value);
+        return (string)$model->formatTrailAttributeValue($attribute, $value);
     }
 
     /**
