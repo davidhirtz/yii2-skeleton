@@ -110,18 +110,20 @@ abstract class Trail extends ActiveRecord
                 }
 
                 foreach ($this->parents as $parent) {
-                    $trail = new static();
-                    $trail->model = get_class($parent);
-                    $trail->model_id = $parent->getPrimaryKey(true);
-                    $trail->type = $type;
+                    if (!$parent->isDeleted()) {
+                        $trail = new static();
+                        $trail->model = get_class($parent);
+                        $trail->model_id = $parent->getPrimaryKey(true);
+                        $trail->type = $type;
 
-                    $trail->data = [
-                        'model' => $this->model,
-                        'model_id' => $this->model_id,
-                        'trail_id' => $this->id,
-                    ];
+                        $trail->data = [
+                            'model' => $this->model,
+                            'model_id' => $this->model_id,
+                            'trail_id' => $this->id,
+                        ];
 
-                    $trail->insert();
+                        $trail->insert();
+                    }
                 }
             }
         }

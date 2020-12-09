@@ -137,7 +137,7 @@ class Module extends \yii\base\Module
                             [
                                 'label' => Yii::t('skeleton', 'History'),
                                 'url' => ['/admin/trail/index'],
-                                'icon' => 'cog',
+                                'icon' => 'history',
                                 'visible' => $user->can('trailIndex'),
                             ],
                             [

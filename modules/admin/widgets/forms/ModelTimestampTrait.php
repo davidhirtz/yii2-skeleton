@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\timeago\Timeago;
 use Yii;
 
@@ -10,32 +11,33 @@ use Yii;
  * Class ModelTimestampTrait
  * @package davidhirtz\yii2\skeleton\modules\admin\widgets\forms
  */
-trait ModelTimestampTrait{
-
+trait ModelTimestampTrait
+{
     /**
      * @return array
      */
     protected function getTimestampItems(): array
     {
-        $items = [];
-
         if (!$this->model->getIsNewRecord()) {
             if ($this->model->updated_by_user_id) {
-                $items[] = Yii::t('skeleton', 'Last updated by {user} {timestamp}', [
+                $text = Yii::t('skeleton', 'Last updated by {user} {timestamp}', [
                     'timestamp' => Timeago::tag($this->model->updated_at),
-                    'user' => Html::username($this->model->updated, Yii::$app->getUser()->can('userUpdate', ['user' => $this->model->updated]) ? ['/admin/user/update', 'id' => $this->model->updated_by_user_id] : null),
+                    'user' => Html::username($this->model->updated),
                 ]);
             } else {
-                $items[] = Yii::t('skeleton', 'Last updated {timestamp}', [
+                $text = Yii::t('skeleton', 'Last updated {timestamp}', [
                     'timestamp' => Timeago::tag($this->model->updated_at),
                 ]);
             }
 
-            $items[] = Yii::t('skeleton', 'Created {timestamp}', [
-                'timestamp' => Timeago::tag($this->model->created_at),
-            ]);
+            return [
+                Yii::$app->getUser()->can('trailIndex') ? Html::a($text, Trail::getAdminRouteByModel($this->model)) : $text,
+                Yii::t('skeleton', 'Created {timestamp}', [
+                    'timestamp' => Timeago::tag($this->model->created_at),
+                ]),
+            ];
         }
 
-        return $items;
+        return [];
     }
 }
