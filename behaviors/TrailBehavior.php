@@ -12,7 +12,9 @@ use ReflectionClass;
 use Yii;
 use yii\base\Behavior;
 use yii\db\AfterSaveEvent;
+use yii\helpers\Inflector;
 use yii\validators\BooleanValidator;
+use yii\validators\RangeValidator;
 
 /**
  * Class TrailBehavior
@@ -24,6 +26,7 @@ use yii\validators\BooleanValidator;
 class TrailBehavior extends Behavior
 {
     private const VALUE_TYPE_BOOLEAN = 'bool';
+    private const VALUE_TYPE_RANGE = 'range';
     private const VALUE_TYPE_DATETIME = 'datetime';
 
     /**
@@ -193,24 +196,26 @@ class TrailBehavior extends Behavior
      */
     public function formatTrailAttributeValue($attribute, $value)
     {
-        if ($attribute == 'status' && $this->owner->hasMethod('getStatusName')) {
-            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
-            return $this->owner->getStatusName();
-        }
-
-        if ($attribute == 'type' && $this->owner->hasMethod('getTypeName')) {
-            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
-            return $this->owner->getTypeName();
-        }
+//        if ($attribute == 'status' && $this->owner->hasMethod('getStatuses')) {
+//            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+//            return $this->owner::getStatuses()[$value]['name'] ?? $value;
+//        }
+//
+//        if ($attribute == 'type' && $this->owner->hasMethod('getTypes')) {
+//            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+//            return $this->owner::getTypes()[$value]['name'] ?? $value;
+//        }
 
         switch ($this->getDefaultAttributeValues()[$attribute] ?? false) {
             case static::VALUE_TYPE_BOOLEAN:
                 return $value ? Yii::t('yii', 'Yes') : Yii::t('yii', 'No');
 
             case static::VALUE_TYPE_DATETIME:
-                if (isset($value['date'])) {
-                    return Yii::$app->getFormatter()->asDatetime(new DateTime($value['date'], new DateTimeZone($date['timezone'] ?? Yii::$app->timeZone)), 'medium');
-                }
+                return isset($value['date']) ? Yii::$app->getFormatter()->asDatetime(new DateTime($value['date'], new DateTimeZone($date['timezone'] ?? Yii::$app->timeZone)), 'medium') : $value;
+
+            case static::VALUE_TYPE_RANGE:
+                $rangeClass = 'get' . Inflector::camelize(Inflector::pluralize($attribute));
+                return $this->owner->hasMethod($rangeClass) ? ($this->owner::$rangeClass()[$value]['name'] ?? $value) : $value;
         }
 
         return is_array($value) ? print_r($value, true) : (string)$value;
@@ -225,16 +230,25 @@ class TrailBehavior extends Behavior
         $className = get_class($this->owner);
 
         if (!isset(static::$_modelAttributes[$className])) {
-            $attributes = [];
+            // Common fields `status` and `type` often use the related Trait instead of the `RangeValidator`. This makes
+            // sure they are still treated as such.
+            $attributes = [
+                'status' => static::VALUE_TYPE_RANGE,
+                'type' => static::VALUE_TYPE_RANGE,
+            ];
+
+            $types = [
+                static::VALUE_TYPE_BOOLEAN => BooleanValidator::class,
+                static::VALUE_TYPE_DATETIME => DateTimeValidator::class,
+                static::VALUE_TYPE_RANGE => RangeValidator::class,
+            ];
 
             foreach ($this->owner->getValidators() as $validator) {
-                if ($validator instanceof BooleanValidator) {
-                    foreach ((array)$validator->attributes as $attribute) {
-                        $attributes[$attribute] = static::VALUE_TYPE_BOOLEAN;
-                    }
-                } elseif ($validator instanceof DateTimeValidator) {
-                    foreach ((array)$validator->attributes as $attribute) {
-                        $attributes[$attribute] = static::VALUE_TYPE_DATETIME;
+                foreach ($types as $type => $instance) {
+                    if ($validator instanceof $instance) {
+                        foreach ((array)$validator->attributes as $attribute) {
+                            $attributes[$attribute] = $type;
+                        }
                     }
                 }
             }
