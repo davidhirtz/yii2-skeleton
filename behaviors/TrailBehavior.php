@@ -85,7 +85,6 @@ class TrailBehavior extends Behavior
         $this->afterSave(false, $event->changedAttributes);
     }
 
-
     /**
      */
     public function afterDelete()
@@ -196,16 +195,6 @@ class TrailBehavior extends Behavior
      */
     public function formatTrailAttributeValue($attribute, $value)
     {
-//        if ($attribute == 'status' && $this->owner->hasMethod('getStatuses')) {
-//            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
-//            return $this->owner::getStatuses()[$value]['name'] ?? $value;
-//        }
-//
-//        if ($attribute == 'type' && $this->owner->hasMethod('getTypes')) {
-//            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
-//            return $this->owner::getTypes()[$value]['name'] ?? $value;
-//        }
-
         switch ($this->getDefaultAttributeValues()[$attribute] ?? false) {
             case static::VALUE_TYPE_BOOLEAN:
                 return $value ? Yii::t('yii', 'Yes') : Yii::t('yii', 'No');
@@ -215,7 +204,14 @@ class TrailBehavior extends Behavior
 
             case static::VALUE_TYPE_RANGE:
                 $method = 'get' . Inflector::camelize(Inflector::pluralize($attribute));
-                return $this->owner->hasMethod($method) ? ($this->owner::$method()[$value]['name'] ?? $value) : $value;
+
+                if ($this->owner->hasMethod($method)) {
+                    if ($value = ($this->owner::$method()[$value] ?? false)) {
+                        return is_string($value) ? $value : ($value['name'] ?? $value);
+                    }
+                }
+
+                return $value;
         }
 
         return is_array($value) ? print_r($value, true) : (string)$value;

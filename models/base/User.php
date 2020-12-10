@@ -532,7 +532,7 @@ abstract class User extends ActiveRecord
      */
     public function getTrailModelAdminRoute()
     {
-        return ['/admin/user/index', 'id' => $this->id];
+        return ['/admin/user/update', 'id' => $this->id];
     }
 
     /**

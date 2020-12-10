@@ -63,7 +63,7 @@ abstract class Trail extends ActiveRecord
         return [
             [
                 ['type'],
-                'validateType',
+                'davidhirtz\yii2\skeleton\validators\DynamicRangeValidator',
             ],
         ];
     }
@@ -281,7 +281,7 @@ abstract class Trail extends ActiveRecord
      * @param string $modelId
      * @return ActiveRecord
      */
-    private static function findModelById($model, $modelId)
+    protected static function findModelById($model, $modelId)
     {
         $instance = $model::instance();
         $keys = array_combine($instance->primaryKey(), explode('-', $modelId));
