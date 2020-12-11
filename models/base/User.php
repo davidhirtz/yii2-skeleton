@@ -108,7 +108,7 @@ abstract class User extends ActiveRecord
             'TimestampBehavior' => 'davidhirtz\yii2\skeleton\behaviors\TimestampBehavior',
             'TrailBehavior' => [
                 'class' => 'davidhirtz\yii2\skeleton\behaviors\TrailBehavior',
-                'model' => \davidhirtz\yii2\skeleton\models\User::class,
+                'modelClass' => \davidhirtz\yii2\skeleton\models\User::class,
             ],
         ]);
     }

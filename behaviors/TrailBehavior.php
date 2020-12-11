@@ -30,10 +30,9 @@ class TrailBehavior extends Behavior
     private const VALUE_TYPE_DATETIME = 'datetime';
 
     /**
-     * If `model` is not set, the default class of `owner` will be used
-     * @var string
+     * @var string|null if not set, the default class of `owner` will be used
      */
-    public $model;
+    public $modelClass;
 
     /**
      * The excluded default attributes if the owner class does not override {@link TrailBehavior::getTrailAttributes()}
@@ -127,7 +126,7 @@ class TrailBehavior extends Behavior
     protected function createTrail()
     {
         $trail = new Trail();
-        $trail->model = $this->model ?: get_class($this->owner);
+        $trail->model = $this->modelClass ?: get_class($this->owner);
         $trail->model_id = $this->owner->getPrimaryKey(true);
 
         /** @noinspection PhpPossiblePolymorphicInvocationInspection */

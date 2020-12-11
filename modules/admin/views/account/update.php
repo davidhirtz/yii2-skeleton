@@ -3,17 +3,21 @@
  * Edit account form.
  * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController::actionUpdate()
  *
- * @var \davidhirtz\yii2\skeleton\web\View $this
- * @var \davidhirtz\yii2\skeleton\models\forms\UserForm $user
- * @var \davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm $form
+ * @var View $this
+ * @var UserForm $user
+ * @var ActiveForm $form
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
+use davidhirtz\yii2\skeleton\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
+use davidhirtz\yii2\skeleton\web\View;
+use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
+use davidhirtz\yii2\timeago\Timeago;
 use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Account'));
@@ -72,8 +76,8 @@ if ($user->authClients) {
             <tr>
                 <td><?= $title; ?></td>
                 <td><?= $url ? Html::a($auth->getDisplayName(), $url, ['target' => '_blank']) : $auth->getDisplayName(); ?></td>
-                <td class="d-none d-table-cell-md"><?= \davidhirtz\yii2\timeago\Timeago::tag($auth->updated_at); ?>
-                <td class="d-none d-table-cell-lg"><?= \davidhirtz\yii2\timeago\Timeago::tag($auth->created_at); ?>
+                <td class="d-none d-table-cell-md"><?= Timeago::tag($auth->updated_at); ?>
+                <td class="d-none d-table-cell-lg"><?= Timeago::tag($auth->created_at); ?>
                 <td class="text-right">
                     <a href="<?= Url::to(['deauthorize', 'id' => $auth->id, 'name' => $auth->name]) ?>" data-method="post" data-confirm="<?= Yii::t('skeleton', 'Are you sure your want to remove your {client} account?', ['client' => $title]); ?>" data-toggle="tooltip" title="<?= Yii::t('skeleton', 'Remove {client}', ['client' => $title]); ?>" class="btn btn-danger">
                         <?= Icon::tag('trash-alt'); ?>

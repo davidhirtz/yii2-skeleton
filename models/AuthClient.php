@@ -13,7 +13,7 @@ use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use Yii;
 
 /**
- * Class AuthClient.
+ * Class AuthClient
  * @package davidhirtz\yii2\skeleton\models
  *
  * @property string $id
@@ -28,17 +28,18 @@ use Yii;
 class AuthClient extends ActiveRecord
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function behaviors()
     {
         return [
             'DateTimeBehavior' => DateTimeBehavior::class,
-            'TimestampBehavior' => TimestampBehavior::class,
             'SerializedAttributesBehavior' => [
                 'class' => SerializedAttributesBehavior::class,
                 'attributes' => ['data'],
             ],
+            'TimestampBehavior' => TimestampBehavior::class,
+            'TrailBehavior' => 'davidhirtz\yii2\skeleton\behaviors\TrailBehavior',
         ];
     }
 
@@ -87,7 +88,7 @@ class AuthClient extends ActiveRecord
                 ->andWhere(['!=', 'id', $this->user_id])
                 ->exists();
 
-            if($emailIsAlreadyRegistered) {
+            if ($emailIsAlreadyRegistered) {
                 $this->addError('data', Yii::t('skeleton', 'A different user with this email already exists.', [
                     'email' => $this->data['email'],
                 ]));
@@ -131,6 +132,43 @@ class AuthClient extends ActiveRecord
     }
 
     /**
+     * @return array
+     */
+    public function getTrailParents()
+    {
+        return [$this->identity];
+    }
+
+    /**
+     * @return array
+     */
+    public function getTrailAttributes(): array
+    {
+        return array_diff($this->attributes(), [
+            'name',
+            'data',
+            'updated_at',
+            'created_at',
+        ]);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTrailModelName()
+    {
+        return $this->name ? $this->getClientClass()->getTitle() : $this->getTrailModelType();
+    }
+
+    /**
+     * @return string
+     */
+    public function getTrailModelType(): string
+    {
+        return Yii::t('skeleton', 'Client');
+    }
+
+    /**
      * @return string
      */
     public function getDisplayName()
@@ -155,7 +193,7 @@ class AuthClient extends ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public static function tableName()
     {

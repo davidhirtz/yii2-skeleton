@@ -24,7 +24,7 @@ return [
     'Admin' => 'Admin',
     'Administration' => 'Administration',
     'All assets refreshed.' => 'Alle Assets wurden aktualisiert',
-    'Are you sure your want to remove your {client} account?' => 'Sind Sie sich sicher, dass Sie {isOwner, select, 1{Ihren} other{diesen}} {client} Account löschen möchten?',
+    'Are you sure your want to remove your {client} account?' => 'Sind Sie sich sicher, dass Sie Ihren {client} Account entfernen möchten?',
     'Assets' => 'Assets',
     'Assign and revoke user permissions' => 'Benutzerrechte zuteilen und aberkennen',
     'Back to login' => 'Zurück zum Login',
