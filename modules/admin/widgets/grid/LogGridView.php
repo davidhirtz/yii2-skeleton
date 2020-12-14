@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid;
 
+use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\modules\admin\data\LogDataProvider;
 use Yii;
@@ -53,11 +54,14 @@ class LogGridView extends GridView
             'headerOptions' => ['width' => '150'],
             'contentOptions' => ['class' => 'text-nowrap'],
             'content' => function ($model) {
-                return Yii::$app->getFormatter()->asDatetime($model['date'], 'short');
+                return Yii::$app->getFormatter()->asDatetime(new DateTime($model['date']), 'short');
             }
         ];
     }
 
+    /**
+     * @return array
+     */
     public function levelColumn()
     {
         return [
