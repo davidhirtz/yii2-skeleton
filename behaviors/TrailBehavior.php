@@ -205,7 +205,7 @@ class TrailBehavior extends Behavior
                 $method = 'get' . Inflector::camelize(Inflector::pluralize($attribute));
 
                 if ($this->owner->hasMethod($method)) {
-                    if ($value = ($this->owner::$method()[$value] ?? false)) {
+                    if ($value = ($this->owner->{$method}()[$value] ?? false)) {
                         return is_string($value) ? $value : ($value['name'] ?? $value);
                     }
                 }
