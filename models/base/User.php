@@ -206,13 +206,17 @@ abstract class User extends ActiveRecord
     }
 
     /**
+     * Sets defaults, but does not run validations.
      * @return bool
      */
     public function beforeValidate(): bool
     {
+        // Set defaults in case these were omitted in signup.
         $this->status = $this->status === null ? static::STATUS_ENABLED : $this->status;
-        $this->language = $this->language ?: Yii::$app->language;
         $this->timezone = $this->timezone ?: Yii::$app->getTimeZone();
+
+        // Changes to the available app languages might be rare, but needs to be accounted for.
+        $this->language = $this->language && count(Yii::$app->getI18n()->languages) > 1 ? $this->language : Yii::$app->language;
 
         return parent::beforeValidate();
     }
