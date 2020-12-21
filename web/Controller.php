@@ -55,7 +55,7 @@ class Controller extends \yii\web\Controller
     public function renderAjaxRouteScripts()
     {
         $view = $this->getView();
-        $view->registerJs('document.title="' . addslashes($view->getTitle()) . '";');
+        $view->registerJs('document.title="' . addslashes(preg_replace( "/[\r|\n]/", "", $view->getTitle())) . '";');
 
         return implode('', $view->css) . Html::script(implode('', call_user_func_array('array_merge', $view->js)), ['type' => 'text/javascript']);
     }

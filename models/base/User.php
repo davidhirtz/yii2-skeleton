@@ -358,7 +358,7 @@ abstract class User extends ActiveRecord
      */
     public function deleteAuthKeys()
     {
-        return $this->getDb()->createCommand()
+        return static::getDb()->createCommand()
             ->delete('{{%session_auth_key}}', '[[user_id]]=:userId', [':userId' => $this->id])
             ->execute();
     }
@@ -370,7 +370,7 @@ abstract class User extends ActiveRecord
      */
     public function deleteActiveSessions($except = null)
     {
-        return $this->getDb()->createCommand()
+        return static::getDb()->createCommand()
             ->delete(Session::tableName(), '[[user_id]]=:userId AND [[id]]!=:id', [
                 ':userId' => $this->id,
                 ':id' => (string)$except
