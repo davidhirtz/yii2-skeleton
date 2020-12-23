@@ -7,7 +7,7 @@ use Yii;
 
 /**
  * Class UserOwnerPanel.
- * @package davidhirtz\yii2\skeleton\modules\admin\widgets
+ * @package davidhirtz\yii2\skeleton\modules\admin\widgets\panels
  */
 class UserOwnerPanel extends HelpPanel
 {

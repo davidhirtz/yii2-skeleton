@@ -22,6 +22,7 @@ use yii\filters\VerbFilter;
 use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 use yii\web\ServerErrorHttpException;
 
 /**
@@ -231,9 +232,6 @@ class AccountController extends Controller
 
     /**
      * @return string
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
-     * @throws ForbiddenHttpException
      */
     public function actionRecover()
     {
@@ -266,7 +264,7 @@ class AccountController extends Controller
      * @return string
      * @throws ForbiddenHttpException
      */
-    public function actionReset(string $email, string $code)
+    public function actionReset($email, $code)
     {
         if (!Yii::$app->getUser()->isPasswordResetEnabled()) {
             throw new ForbiddenHttpException();
@@ -295,8 +293,6 @@ class AccountController extends Controller
 
     /**
      * @return string
-     * @throws \yii\db\StaleObjectException
-     * @throws \Throwable
      */
     public function actionUpdate()
     {
@@ -321,7 +317,7 @@ class AccountController extends Controller
 
     /**
      * Deletes profile picture.
-     * @return \yii\web\Response
+     * @return Response
      */
     public function actionPicture()
     {
@@ -337,7 +333,7 @@ class AccountController extends Controller
 
     /**
      * Deletes user account.
-     * @return \yii\web\Response
+     * @return Response
      */
     public function actionDelete()
     {
@@ -364,7 +360,7 @@ class AccountController extends Controller
      *
      * @param string $id
      * @param string $name
-     * @return \yii\web\Response
+     * @return Response
      */
     public function actionDeauthorize(string $id, string $name)
     {

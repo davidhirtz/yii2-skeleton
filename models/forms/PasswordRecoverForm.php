@@ -72,8 +72,6 @@ class PasswordRecoverForm extends Model
     }
 
     /**
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
      * @return bool
      */
     public function recover()
@@ -81,7 +79,7 @@ class PasswordRecoverForm extends Model
         if ($this->validate()) {
             $user = $this->getUser();
             $user->generatePasswordResetCode();
-            $user->update(false);
+            $user->update();
 
             $this->sendPasswordResetEmail();
             return true;
@@ -106,7 +104,6 @@ class PasswordRecoverForm extends Model
 
     /**
      * @return bool
-     * @throws \Exception
      */
     public function isAlreadySent()
     {

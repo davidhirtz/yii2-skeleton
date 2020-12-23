@@ -79,8 +79,8 @@ class PasswordResetForm extends Model
     }
 
     /**
-     * @see PasswordResetForm::rules()
      * @return bool
+     * @see PasswordResetForm::rules()
      */
     public function validateUser()
     {
@@ -88,9 +88,7 @@ class PasswordResetForm extends Model
 
         if (!$user || $user->password_reset_code != $this->code) {
             $this->addError('id', Yii::t('skeleton', 'The password recovery url is invalid.'));
-        }
-
-        if ($user->isDisabled() && !$user->isOwner()) {
+        } elseif ($user->isDisabled() && !$user->isOwner()) {
             $this->addError('id', Yii::t('skeleton', 'Your account is currently disabled. Please contact an administrator!'));
         }
 

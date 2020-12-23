@@ -10,8 +10,6 @@ use Yii;
 /**
  * Class UserForm
  * @package davidhirtz\yii2\skeleton\modules\admin\models\forms\base
- *
- * @property \davidhirtz\yii2\skeleton\modules\admin\models\forms\base\UserForm $model
  */
 class UserForm extends User
 {

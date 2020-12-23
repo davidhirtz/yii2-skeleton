@@ -1,13 +1,16 @@
 <?php
 /**
- * Update user form.
+ * Admin user form
  * @see davidhirtz\yii2\skeleton\modules\admin\controllers\UserController::actionUpdate()
  *
- * @var \davidhirtz\yii2\skeleton\web\View $this
- * @var \davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm $user
+ * @var View $this
+ * @var UserForm $user
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\panels\UserHelpPanel;
+use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
@@ -32,6 +35,10 @@ $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
     ]),
 ]);
 ?>
+
+<?= UserHelpPanel::widget([
+    'user' => $user,
+]); ?>
 
 <?php
 if (Yii::$app->getUser()->can('userDelete')) {

@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
+use davidhirtz\yii2\skeleton\modules\admin\controllers\traits\UserTrait;
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
 use davidhirtz\yii2\skeleton\models\forms\OwnershipForm;
@@ -22,6 +23,8 @@ use Yii;
  */
 class UserController extends Controller
 {
+    use UserTrait;
+
     /**
      * @inheritDoc
      */
@@ -43,7 +46,7 @@ class UserController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['deauthorize', 'index', 'ownership', 'update'],
+                        'actions' => ['deauthorize', 'index', 'ownership', 'reset', 'update'],
                         'roles' => ['userUpdate'],
                     ],
                     [
@@ -58,6 +61,7 @@ class UserController extends Controller
                 'actions' => [
                     'deauthorize' => ['post'],
                     'delete' => ['post'],
+                    'reset' => ['post'],
                 ],
             ],
         ];
@@ -116,15 +120,7 @@ class UserController extends Controller
      */
     public function actionUpdate($id)
     {
-        $user = UserForm::findOne(['id' => $id]);
-
-        if (!$user) {
-            throw new NotFoundHttpException();
-        }
-
-        if (!Yii::$app->getUser()->can('userUpdate', ['user' => $user])) {
-            throw new ForbiddenHttpException();
-        }
+        $user = $this->findUserForm($id, 'userUpdate');
 
         if ($user->load(Yii::$app->getRequest()->post())) {
             if ($user->update()) {
@@ -137,6 +133,22 @@ class UserController extends Controller
         return $this->render('update', [
             'user' => $user,
         ]);
+    }
+
+    /**
+     * @param int $id
+     * @return string
+     */
+    public function actionReset($id)
+    {
+        $user = $this->findUserForm($id, 'userUpdate');
+        $user->generatePasswordResetCode();
+
+        if ($user->update()) {
+            $this->success(Yii::t('skeleton', 'The password reset link was updated.'));
+        }
+
+        return $this->redirect(['update', 'id' => $user->id]);
     }
 
     /**
