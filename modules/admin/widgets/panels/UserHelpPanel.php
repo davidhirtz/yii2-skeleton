@@ -50,7 +50,7 @@ class UserHelpPanel extends base\UserHelpPanel
      */
     protected function getCreatePasswordResetLinkButton()
     {
-        return Html::a(Html::iconText('key', Yii::t('skeleton', 'Reset password link')), ['reset', 'id' => $this->user->id], [
+        return Html::a(Html::iconText('key', Yii::t('skeleton', 'Create password link')), ['reset', 'id' => $this->user->id], [
             'class' => 'btn btn-primary',
             'data-confirm' => $this->user->password_reset_code ? Yii::t('skeleton', 'Are you sure you want to create a new password reset link? The current link will be invalidated.') : null,
             'data-method' => 'post',

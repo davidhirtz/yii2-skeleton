@@ -146,7 +146,7 @@ return [
     'Repeat password' => 'Passwort wiederholen',
     'Resend Account Confirmation' => 'Account-Aktivierung senden',
     'Resend email confirmation' => 'Account-Aktivierung erneut senden',
-    'Reset password link' => 'Passwort-Link erstellen',
+    'Create password link' => 'Passwort-Link erstellen',
     'Reset your password' => 'Passwort zurücksetzen',
     'Save New Password' => 'Neues Passwort speichern',
     'Search ...' => 'Suchen ...',

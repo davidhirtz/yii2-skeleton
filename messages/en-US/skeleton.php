@@ -145,7 +145,7 @@ return [
     'Repeat password' => '',
     'Resend Account Confirmation' => '',
     'Resend email confirmation' => '',
-    'Reset password link' => '',
+    'Create password link' => '',
     'Reset your password' => '',
     'Save New Password' => '',
     'Search ...' => '',
