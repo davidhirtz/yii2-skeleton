@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Message translations.
  *
@@ -46,8 +45,10 @@ return [
     'Create' => 'Erstellen',
     'Create Account' => 'Account erstellen',
     'Create New User' => 'Neuen Benutzer erstellen',
+    'Create Password' => 'Passwort erstellen',
     'Create new account' => 'Neuen Account erstellen',
     'Create new users' => 'Neue Benutzer erstellen',
+    'Create password link' => 'Passwort-Link erstellen',
     'Created' => 'Erstellt',
     'Created by {user} {timestamp}' => 'Erstellt von {user} {timestamp}',
     'Created {timestamp}' => 'Erstellt {timestamp}',
@@ -134,6 +135,7 @@ return [
     'Please contact us if you think this is a server error. Thank you.' => 'Bitte kontaktieren Sie uns, wenn Sie glauben dies ist ein Fehler auf unserer Seite.',
     'Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to sign up.' => 'Bitte aktivieren Sie Javascript oder aktualisieren Sie Ihren Internetbrowser, um sich zu registrieren.',
     'Please enter a new password below to update your account.' => 'Bitte wählen Sie ein neues Passwort, um Ihren Account zu aktualisieren.',
+    'Please enter a password below to complete your account.' => 'Bitte wählen Sie ein neues Passwort, um Ihren Account zu vervollständigen.',
     'Please logout before creating another account' => 'Bitte loggen Sie sich aus bevor Sie einen neuen Account erstellen.',
     'Please logout before logging in with another account' => 'Bitte loggen Sie sich aus bevor Sie sich mit einem anderen Account einloggen',
     'Please type the exact {attribute} in the text field below to delete this record. All related files will also be unrecoverably deleted. This cannot be undone, please be certain!' => 'Bitte bestätigen Sie mit dem Feld "{attribute}" die Löschung des Datensatzes. Bitte beachten Sie, dass auch alle dazugehörigen Daten unwiderruflich gelöscht werden!',
@@ -146,7 +148,6 @@ return [
     'Repeat password' => 'Passwort wiederholen',
     'Resend Account Confirmation' => 'Account-Aktivierung senden',
     'Resend email confirmation' => 'Account-Aktivierung erneut senden',
-    'Create password link' => 'Passwort-Link erstellen',
     'Reset your password' => 'Passwort zurücksetzen',
     'Save New Password' => 'Neues Passwort speichern',
     'Search ...' => 'Suchen ...',

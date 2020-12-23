@@ -3,16 +3,20 @@
  * Reset password form.
  * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController::actionReset()
  *
- * @var \davidhirtz\yii2\skeleton\web\View $this
- * @var \davidhirtz\yii2\skeleton\models\forms\PasswordResetForm $form
+ * @var View $this
+ * @var PasswordResetForm $form
  * @var \yii\bootstrap4\ActiveForm $af
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\models\forms\PasswordResetForm;
+use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
 
-$this->setTitle(Yii::t('skeleton', 'Set New Password'));
+$title = $form->user->password ? Yii::t('skeleton', 'Set New Password') : Yii::t('skeleton', 'Create Password');
+$description = $form->user->password ? Yii::t('skeleton', 'Please enter a new password below to update your account.') : Yii::t('skeleton', 'Please enter a password below to complete your account.');
+$this->setTitle($title);
 ?>
 
 <?= Html::errorSummary($form, [
@@ -22,7 +26,7 @@ $this->setTitle(Yii::t('skeleton', 'Set New Password'));
 <div class="container">
     <div class="centered">
         <?php Panel::begin(['title' => $this->title]); ?>
-        <p><?= Yii::t('skeleton', 'Please enter a new password below to update your account.'); ?></p>
+        <p><?= $description; ?></p>
         <?php
         $af = ActiveForm::begin([
             'enableClientValidation' => false,
@@ -35,7 +39,7 @@ $this->setTitle(Yii::t('skeleton', 'Set New Password'));
         <div class="form-group">
             <?= Html::submitButton(Yii::t('skeleton', 'Save New Password'), ['class' => 'btn btn-primary btn-block']) ?>
         </div>
-        <?php $af->end(); ?>
+        <?php $af::end(); ?>
         <?php Panel::end(); ?>
     </div>
 </div>
