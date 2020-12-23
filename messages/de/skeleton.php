@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Message translations.
  *
@@ -24,6 +25,7 @@ return [
     'Admin' => 'Admin',
     'Administration' => 'Administration',
     'All assets refreshed.' => 'Alle Assets wurden aktualisiert',
+    'Are you sure you want to create a new password reset link? The current link will be invalidated.' => 'Sind Sie sich sicher, dass Sie den Passwort-Link neu setzen wollen? Der bisherige Link verliert damit seine Gültigkeit.',
     'Are you sure your want to remove your {client} account?' => 'Sind Sie sich sicher, dass Sie Ihren {client} Account entfernen möchten?',
     'Assets' => 'Assets',
     'Assign and revoke user permissions' => 'Benutzerrechte zuteilen und aberkennen',
@@ -111,6 +113,7 @@ return [
     'Name' => 'Name',
     'New User' => 'Neuer Benutzer',
     'New password' => 'Neues Passwort',
+    'Operations' => 'Operationen',
     'Ordered' => 'Sortiert',
     'Password' => 'Passwort',
     'Password changed' => 'Passwort geändert',
@@ -143,6 +146,7 @@ return [
     'Repeat password' => 'Passwort wiederholen',
     'Resend Account Confirmation' => 'Account-Aktivierung senden',
     'Resend email confirmation' => 'Account-Aktivierung erneut senden',
+    'Reset password link' => 'Passwort-Link erstellen',
     'Reset your password' => 'Passwort zurücksetzen',
     'Save New Password' => 'Neues Passwort speichern',
     'Search ...' => 'Suchen ...',
@@ -151,6 +155,7 @@ return [
     'Sessions' => 'Sitzungen',
     'Set New Password' => 'Neues Passwort',
     'Show All' => 'Alle anzeigen',
+    'Show password link' => 'Passwort-Link anzeigen',
     'Sign up' => 'Registrieren',
     'Sign up completed. Please check your inbox to confirm your email address.' => 'Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mails, um Ihren Account zu aktivieren.',
     'Sign up confirmation' => 'Registrierungsbestätigung',
@@ -171,6 +176,7 @@ return [
     'The above error occurred while the Web server was processing your request.' => 'Der oben angezeigte Fehler ist bei Ihrer Anfrage aufgetreten.',
     'The password must match the new password.' => 'Das Passwort muss identisch mit dem neuen Passwort sein.',
     'The password recovery url is invalid.' => 'Ihr Link zum Zurücksetzen des Passworts ist nicht gültig.',
+    'The password reset link was updated.' => 'Der Passwort-Link wurde ersetzt.',
     'The password was changed' => 'Das Passwort wurde geändert',
     'The record could not be created:' => 'Der Datensatz konnte nicht erstellt werden:',
     'The record could not be updated:' => 'Der Datensatz konnte nicht aktualisiert werden:',
