@@ -10,6 +10,8 @@ use Yii;
 /**
  * Class UserForm
  * @package davidhirtz\yii2\skeleton\modules\admin\models\forms\base
+ *
+ * @method static \davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm findOne($condition)
  */
 class UserForm extends User
 {

@@ -2,7 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\controllers\traits;
 
-use davidhirtz\yii2\skeleton\models\forms\UserForm;
+use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
 use Yii;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;

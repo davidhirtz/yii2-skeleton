@@ -6,13 +6,10 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
-use davidhirtz\yii2\skeleton\widgets\forms\CountryDropdown;
 use davidhirtz\yii2\skeleton\widgets\forms\DynamicRangeDropdown;
-use davidhirtz\yii2\skeleton\widgets\forms\TimezoneDropdown;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
 use davidhirtz\yii2\timeago\Timeago;
 use Yii;
-use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveField;
 
 /**
@@ -82,7 +79,7 @@ class UserActiveForm extends ActiveForm
     public function statusField($options = [])
     {
         if ($this->model->isOwner()) {
-            return null;
+            return '';
         }
 
         return $this->field($this->model, 'status')->widget(DynamicRangeDropdown::class, $options);
