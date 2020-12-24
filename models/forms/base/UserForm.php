@@ -4,7 +4,6 @@ namespace davidhirtz\yii2\skeleton\models\forms\base;
 
 use davidhirtz\yii2\skeleton\models\User;
 use Yii;
-use yii\web\UploadedFile;
 
 /**
  * Class UserForm
