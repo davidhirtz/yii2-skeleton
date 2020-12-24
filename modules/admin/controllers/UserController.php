@@ -46,7 +46,7 @@ class UserController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['deauthorize', 'index', 'ownership', 'reset', 'update'],
+                        'actions' => ['deauthorize', 'delete-picture', 'index', 'ownership', 'reset', 'update'],
                         'roles' => ['userUpdate'],
                     ],
                     [
@@ -60,6 +60,7 @@ class UserController extends Controller
                 'class' => VerbFilter::class,
                 'actions' => [
                     'deauthorize' => ['post'],
+                    'delete-picture' => ['post'],
                     'delete' => ['post'],
                     'reset' => ['post'],
                 ],
@@ -133,6 +134,22 @@ class UserController extends Controller
         return $this->render('update', [
             'user' => $user,
         ]);
+    }
+
+    /**
+     * @param int $id
+     * @return string
+     */
+    public function actionDeletePicture($id)
+    {
+        $user = $this->findUserForm($id, 'userUpdate');
+        $user->picture = null;
+
+        if ($user->update()) {
+            $this->success(Yii::t('skeleton', 'The user was updated.'));
+        }
+
+        return $this->redirect(['update', 'id' => $user->id]);
     }
 
     /**

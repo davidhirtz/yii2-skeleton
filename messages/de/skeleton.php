@@ -58,6 +58,7 @@ return [
     'Delete' => 'Löschen',
     'Delete Account' => 'Account löschen',
     'Delete User' => 'Benutzer löschen',
+    'Delete picture' => 'Profilbild löschen',
     'Delete users' => 'Benutzer löschen',
     'Deleted' => 'Gelöscht',
     'Description' => 'Beschreibung',

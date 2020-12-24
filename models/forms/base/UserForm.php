@@ -2,8 +2,6 @@
 
 namespace davidhirtz\yii2\skeleton\models\forms\base;
 
-use davidhirtz\yii2\skeleton\models\Trail;
-use davidhirtz\yii2\skeleton\models\traits\PictureUploadTrait;
 use davidhirtz\yii2\skeleton\models\User;
 use Yii;
 use yii\web\UploadedFile;
@@ -16,8 +14,6 @@ use yii\web\UploadedFile;
  */
 class UserForm extends User
 {
-    use PictureUploadTrait;
-
     /**
      * @var string
      */
@@ -32,11 +28,6 @@ class UserForm extends User
      * @var string
      */
     public $oldEmail;
-
-    /**
-     * @var bool
-     */
-    public $uploadCheckExtensionByMimeType = true;
 
     /**
      * @inheritdoc
@@ -66,12 +57,6 @@ class UserForm extends User
                 'validateNewPassword',
                 'skipOnError' => true,
             ],
-            [
-                ['upload'],
-                'file',
-                'checkExtensionByMimeType' => $this->uploadCheckExtensionByMimeType,
-                'extensions' => $this->uploadExtensions,
-            ],
         ]);
     }
 
@@ -96,10 +81,6 @@ class UserForm extends User
 
         if ($this->newPassword) {
             $this->generatePasswordHash($this->newPassword);
-        }
-
-        if ($this->upload) {
-            $this->generatePictureFilename();
         }
 
         return parent::beforeSave($insert);
@@ -132,24 +113,7 @@ class UserForm extends User
             }
         }
 
-        if ($this->upload) {
-            $this->savePictureUpload();
-        }
-
         parent::afterSave($insert, $changedAttributes);
-    }
-
-    /**
-     * @param array $data
-     * @param null $formName
-     * @return bool
-     */
-    public function load($data, $formName = null)
-    {
-        $this->upload = $this->getUploadPath() ? UploadedFile::getInstance($this, 'upload') : null;
-        $hasData = parent::load($data, $formName);
-
-        return $hasData || $this->upload;
     }
 
     /**
@@ -214,7 +178,6 @@ class UserForm extends User
         return array_merge(parent::attributeLabels(), [
             'newPassword' => Yii::t('skeleton', 'New password'),
             'oldPassword' => Yii::t('skeleton', 'Current password'),
-            'upload' => Yii::t('skeleton', 'Picture'),
         ]);
     }
 }

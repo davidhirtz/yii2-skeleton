@@ -58,6 +58,7 @@ return [
     'Delete' => '',
     'Delete Account' => '',
     'Delete User' => '',
+    'Delete picture' => '',
     'Delete users' => '',
     'Deleted' => '',
     'Description' => '',

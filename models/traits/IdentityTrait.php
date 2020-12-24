@@ -5,7 +5,7 @@ namespace davidhirtz\yii2\skeleton\models\traits;
 use davidhirtz\yii2\skeleton\db\Identity;
 
 /**
- * Class IdentityTrait.
+ * Class IdentityTrait
  * @package davidhirtz\yii2\skeleton\models\traits
  */
 trait IdentityTrait

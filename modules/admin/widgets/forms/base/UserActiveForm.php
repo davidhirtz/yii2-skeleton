@@ -41,7 +41,7 @@ class UserActiveForm extends ActiveForm
                 '-',
                 'language',
                 'timezone',
-                ['upload', 'fileInput'],
+                'upload',
                 '-',
                 'first_name',
                 'last_name',
@@ -87,6 +87,15 @@ class UserActiveForm extends ActiveForm
 
     /**
      * @param array $options
+     * @return string
+     */
+    public function uploadField($options = [])
+    {
+        return $this->getPicturePreview() . $this->field($this->model, 'upload')->fileInput($options);
+    }
+
+    /**
+     * @param array $options
      * @return ActiveField|string
      */
     public function countryField($options = [])
@@ -119,6 +128,18 @@ class UserActiveForm extends ActiveForm
     public function sendEmailField($options = [])
     {
         return $this->model->getIsNewRecord() ? $this->field($this->model, 'sendEmail')->checkbox($options) : '';
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPicturePreview()
+    {
+        if (!$this->model->picture) {
+            return '';
+        }
+
+        return $this->row($this->offset(Html::img($this->model->getBaseUrl() . $this->model->picture, ['style' => 'max-width:150px'])));
     }
 
     /**

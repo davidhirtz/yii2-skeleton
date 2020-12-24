@@ -4,7 +4,6 @@ namespace davidhirtz\yii2\skeleton\models\forms\base;
 
 use davidhirtz\yii2\skeleton\auth\clients\ClientInterface;
 use davidhirtz\yii2\skeleton\db\Identity;
-use davidhirtz\yii2\skeleton\models\traits\PictureUploadTrait;
 use davidhirtz\yii2\skeleton\models\traits\SignupEmailTrait;
 use davidhirtz\yii2\skeleton\web\StreamUploadedFile;
 use Yii;
@@ -17,7 +16,7 @@ use yii\behaviors\SluggableBehavior;
  */
 class AuthClientSignupForm extends Identity
 {
-    use PictureUploadTrait, SignupEmailTrait;
+    use SignupEmailTrait;
 
     /**
      * @var ClientInterface

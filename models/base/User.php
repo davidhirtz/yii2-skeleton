@@ -14,9 +14,11 @@ use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\models\Session;
 use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
+use davidhirtz\yii2\skeleton\web\StreamUploadedFile;
 use yii\db\ActiveQuery;
 use yii\helpers\Url;
 use Yii;
+use yii\web\UploadedFile;
 
 /**
  * Class User
@@ -94,6 +96,21 @@ abstract class User extends ActiveRecord
     public $passwordMinLength = 5;
 
     /**
+     * @var UploadedFile|StreamUploadedFile
+     */
+    public $upload;
+
+    /**
+     * @var array
+     */
+    public $uploadExtensions = ['gif', 'jpg', 'jpeg', 'png'];
+
+    /**
+     * @var bool
+     */
+    public $uploadCheckExtensionByMimeType = true;
+
+    /**
      * @var string|bool set false to disabled profile pictures
      */
     private $_uploadPath = 'uploads/users/';
@@ -114,7 +131,7 @@ abstract class User extends ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function rules(): array
     {
@@ -192,6 +209,12 @@ abstract class User extends ActiveRecord
                 'string',
                 'max' => 50,
             ],
+            [
+                ['upload'],
+                'file',
+                'checkExtensionByMimeType' => $this->uploadCheckExtensionByMimeType,
+                'extensions' => $this->uploadExtensions,
+            ],
         ];
     }
 
@@ -230,6 +253,10 @@ abstract class User extends ActiveRecord
             $this->is_owner = !static::find()->exists();
         }
 
+        if ($this->upload) {
+            $this->generatePictureFilename();
+        }
+
         return parent::beforeSave($insert);
     }
 
@@ -242,6 +269,10 @@ abstract class User extends ActiveRecord
             if (isset($changedAttributes['picture'])) {
                 $this->deletePicture($changedAttributes['picture']);
             }
+        }
+
+        if ($this->upload) {
+            $this->savePictureUpload();
         }
 
         parent::afterSave($insert, $changedAttributes);
@@ -303,33 +334,21 @@ abstract class User extends ActiveRecord
     }
 
     /**
-     * Generates password hash.
-     * @param string|null $password
+     * @param array $data
+     * @param null $formName
+     * @return bool
      */
-    public function generatePasswordHash(string $password = null)
+    public function load($data, $formName = null)
     {
-        $this->password_salt = Yii::$app->getSecurity()->generateRandomString(10);
-        $this->password = Yii::$app->getSecurity()->generatePasswordHash(($password ?: $this->password) . $this->password_salt);
+        // First load form data, then override upload via instance.
+        $hasData = parent::load($data, $formName);
+        $this->upload = $this->getUploadPath() ? UploadedFile::getInstance($this, 'upload') : null;
+
+        return $hasData || $this->upload;
     }
 
     /**
-     * Generates email confirmation code.
-     */
-    public function generateEmailConfirmationCode()
-    {
-        $this->email_confirmation_code = Yii::$app->getSecurity()->generateRandomString(static::EMAIL_CONFIRMATION_CODE_LENGTH);
-    }
-
-    /**
-     * Generates password code.
-     */
-    public function generatePasswordResetCode()
-    {
-        $this->password_reset_code = Yii::$app->getSecurity()->generateRandomString(static::PASSWORD_RESET_CODE_LENGTH);
-    }
-
-    /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function delete()
     {
@@ -383,12 +402,76 @@ abstract class User extends ActiveRecord
     }
 
     /**
+     * Generates filename for picture upload.
+     */
+    public function generatePictureFilename()
+    {
+        $extension = $this->upload->extension ?? null;
+
+        if (!$extension) {
+            $extensions = array_intersect($this->uploadExtensions, FileHelper::getExtensionsByMimeType($this->upload->type ?? false));
+            $extension = $extensions ? current($extensions) : null;
+        }
+
+        $this->picture = FileHelper::generateRandomFilename($extension, 12);
+        $this->generatePictureFilenameInternal();
+    }
+
+    /**
+     * Makes sure the generated picture filename is not used already.
+     */
+    private function generatePictureFilenameInternal()
+    {
+        if (is_file($this->getUploadPath() . $this->picture)) {
+            $this->generatePictureFilename();
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function savePictureUpload(): bool
+    {
+        if (FileHelper::createDirectory($uploadPath = $this->getUploadPath())) {
+            return $this->upload->saveAs($uploadPath . $this->picture);
+        }
+
+        return false;
+    }
+
+    /**
      * @param string $picture
      * @return bool
      */
     public function deletePicture($picture): bool
     {
         return $picture ? FileHelper::removeFile($this->getUploadPath() . $picture) : false;
+    }
+
+    /**
+     * Generates password hash.
+     * @param string|null $password
+     */
+    public function generatePasswordHash(string $password = null)
+    {
+        $this->password_salt = Yii::$app->getSecurity()->generateRandomString(10);
+        $this->password = Yii::$app->getSecurity()->generatePasswordHash(($password ?: $this->password) . $this->password_salt);
+    }
+
+    /**
+     * Generates email confirmation code.
+     */
+    public function generateEmailConfirmationCode()
+    {
+        $this->email_confirmation_code = Yii::$app->getSecurity()->generateRandomString(static::EMAIL_CONFIRMATION_CODE_LENGTH);
+    }
+
+    /**
+     * Generates password code.
+     */
+    public function generatePasswordResetCode()
+    {
+        $this->password_reset_code = Yii::$app->getSecurity()->generateRandomString(static::PASSWORD_RESET_CODE_LENGTH);
     }
 
     /**
@@ -461,7 +544,7 @@ abstract class User extends ActiveRecord
      */
     public function getBaseUrl()
     {
-        return str_replace(DIRECTORY_SEPARATOR, '/', $this->_uploadPath);
+        return '/' . ltrim(str_replace(DIRECTORY_SEPARATOR, '/', $this->_uploadPath), '/');
     }
 
     /**
@@ -599,7 +682,7 @@ abstract class User extends ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function attributeLabels()
     {
@@ -623,11 +706,12 @@ abstract class User extends ActiveRecord
             'is_owner' => Yii::t('skeleton', 'Website owner'),
             'updated_at' => Yii::t('skeleton', 'Updated'),
             'created_at' => Yii::t('skeleton', 'Created'),
+            'upload' => Yii::t('skeleton', 'Picture'),
         ];
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function formName()
     {
@@ -635,7 +719,7 @@ abstract class User extends ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public static function tableName()
     {

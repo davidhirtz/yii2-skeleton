@@ -166,6 +166,7 @@ class UserForm extends User
             'sendEmail',
             'status',
             'timezone',
+            'upload',
         ];
 
         return [
