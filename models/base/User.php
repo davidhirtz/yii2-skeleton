@@ -247,6 +247,19 @@ abstract class User extends ActiveRecord
     /**
      * @inheritDoc
      */
+    public function afterValidate()
+    {
+        // Make sure empty name is null to prevent duplicate errors.
+        if (!$this->requireName && !$this->name) {
+            $this->name = null;
+        }
+
+        parent::afterValidate();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function beforeSave($insert): bool
     {
         if ($insert) {
