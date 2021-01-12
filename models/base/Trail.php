@@ -287,8 +287,12 @@ abstract class Trail extends ActiveRecord
     protected static function findModelById($model, $modelId)
     {
         $instance = $model::instance();
-        $keys = array_combine($instance->primaryKey(), explode('-', $modelId));
-        return $model::findOne($keys) ?: $instance;
+
+        if ($keys = @array_combine($instance::primaryKey(), explode('-', $modelId))) {
+            return $model::findOne($keys) ?: $instance;
+        }
+
+        return $instance;
     }
 
     /**
