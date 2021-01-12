@@ -112,7 +112,7 @@ abstract class Trail extends ActiveRecord
                 foreach ($this->parents as $parent) {
                     if (!$parent->isDeleted()) {
                         /** @var TrailBehavior $behavior */
-                        if($behavior = $parent->getBehavior('TrailBehavior')) {
+                        if ($behavior = $parent->getBehavior('TrailBehavior')) {
                             $trail = new static();
                             $trail->model = $behavior->modelClass ?: get_class($parent);
                             $trail->model_id = $parent->getPrimaryKey(true);
@@ -288,6 +288,7 @@ abstract class Trail extends ActiveRecord
     {
         $instance = $model::instance();
 
+        // Prevent PHP warnings if record has a primary key mismatch
         if ($keys = @array_combine($instance::primaryKey(), explode('-', $modelId))) {
             return $model::findOne($keys) ?: $instance;
         }
