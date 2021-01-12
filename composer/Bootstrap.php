@@ -70,6 +70,7 @@ class Bootstrap implements BootstrapInterface
                         [
                             'class' => 'yii\log\FileTarget',
                             'levels' => ['error', 'warning'],
+                            'fileMode' => 0770, // Make sure both web and console user can write to file
                             'except' => [
                                 'yii\web\HttpException:*',
                             ],
