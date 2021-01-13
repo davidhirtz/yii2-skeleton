@@ -273,7 +273,7 @@ var Skeleton = {
         $('hr').each(function () {
             var $hr = $(this);
             // noinspection JSCheckFunctionSignatures
-            $hr.toggle($hr.nextUntil('hr').filter(':visible').length > 0);
+            $hr.toggle($hr.nextUntil('hr, .form-group-sticky').filter(':visible').length > 0);
         });
     },
 
