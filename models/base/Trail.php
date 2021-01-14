@@ -256,8 +256,14 @@ abstract class Trail extends ActiveRecord
     {
         $trail = new static();
         $trail->type = static::TYPE_ORDER;
-        $trail->model = $model ? get_class($model) : null;
-        $trail->model_id = $model ? $model->getPrimaryKey(true) : null;
+
+        if ($model) {
+            /** @var TrailBehavior $behavior */
+            $behavior = $model->getBehavior('TrailBehavior');
+            $trail->model = $behavior->modelClass;
+            $trail->model_id = $model->getPrimaryKey(true);
+        }
+
         $trail->message = $message;
         $trail->data = $data;
         $trail->insert();
