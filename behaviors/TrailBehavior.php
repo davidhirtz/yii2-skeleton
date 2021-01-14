@@ -56,6 +56,18 @@ class TrailBehavior extends Behavior
     private static $_modelAttributes = [];
 
     /**
+     * @inheritDoc
+     */
+    public function attach($owner)
+    {
+        if (!$this->modelClass) {
+            $this->modelClass = get_class($owner);
+        }
+
+        parent::attach($owner);
+    }
+
+    /**
      * @return array|string[]
      */
     public function events()
@@ -126,7 +138,7 @@ class TrailBehavior extends Behavior
     protected function createTrail()
     {
         $trail = new Trail();
-        $trail->model = $this->modelClass ?: get_class($this->owner);
+        $trail->model = $this->modelClass;
         $trail->model_id = $this->owner->getPrimaryKey(true);
 
         /** @noinspection PhpPossiblePolymorphicInvocationInspection */

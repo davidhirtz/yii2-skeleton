@@ -114,7 +114,7 @@ abstract class Trail extends ActiveRecord
                         /** @var TrailBehavior $behavior */
                         if ($behavior = $parent->getBehavior('TrailBehavior')) {
                             $trail = new static();
-                            $trail->model = $behavior->modelClass ?: get_class($parent);
+                            $trail->model = $behavior->modelClass;
                             $trail->model_id = $parent->getPrimaryKey(true);
                             $trail->type = $type;
 
@@ -303,7 +303,10 @@ abstract class Trail extends ActiveRecord
      */
     public static function getAdminRouteByModel($model, $id = null)
     {
-        $model = $model ? implode(':', array_filter([get_class($model), $id ?: $model->getPrimaryKey()])) : null;
+        /** @var TrailBehavior $behavior */
+        $behavior = $model->getBehavior('TrailBehavior');
+        $model = $model ? implode(':', array_filter([$behavior->modelClass, $id ?: $model->getPrimaryKey()])) : null;
+
         return ['/admin/trail/index', 'model' => $model];
     }
 
