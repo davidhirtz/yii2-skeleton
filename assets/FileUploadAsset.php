@@ -13,7 +13,7 @@ class FileUploadAsset extends AssetBundle
     /**
      * @var string
      */
-    public $sourcePath = '@bower/blueimp-file-upload';
+    public $sourcePath = '@npm/blueimp-file-upload';
 
     /**
      * @var array

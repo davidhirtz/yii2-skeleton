@@ -6,7 +6,7 @@
 	"minimum-stability":"dev",
 	"prefer-stable":true,
 	"require":{
-		"php":">=7.1",
+		"php":">=7.4",
 		"ext-json":"*",
 		"ext-openssl":"*",
 		"ext-simplexml":"*",
@@ -24,17 +24,14 @@
 		"davidhirtz/yii2-curl":"dev-master",
 		"davidhirtz/yii2-lazysizes":">=2.1",
 		"jfcherng/php-diff": "^6.9",
-		"bower-asset/blueimp-file-upload": ">=10.2.0",
-		"bower-asset/bootbox":">=5",
+		"npm-asset/blueimp-file-upload": ">=10.2.0",
+		"npm-asset/bootbox":">=5",
 		"npm-asset/skeleton-router":">=1.1.13"
 	},
 	"autoload":{
 		"psr-4":{
 			"davidhirtz\\yii2\\skeleton\\":""
 		}
-	},
-	"extra":{
-		"bootstrap":"davidhirtz\\yii2\\skeleton\\composer\\Bootstrap"
 	},
 	"repositories":[
 		{

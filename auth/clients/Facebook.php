@@ -4,7 +4,7 @@ namespace davidhirtz\yii2\skeleton\auth\clients;
 
 use davidhirtz\yii2\datetime\Date;
 use Yii;
-use yii\base\NotSupportedException;
+use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -32,13 +32,12 @@ class Facebook extends \yii\authclient\clients\Facebook implements ClientInterfa
 
     /**
      * Sets login information from application params.
-     * @throws \yii\base\NotSupportedException
      */
     public function init()
     {
         if (!$this->clientId) {
             if (!isset(Yii::$app->params['facebookClientId'])) {
-                throw new NotSupportedException;
+                throw new InvalidConfigException(__CLASS__ . '::$clientId must be defined');
             }
 
             $this->clientId = Yii::$app->params['facebookClientId'];
@@ -46,7 +45,7 @@ class Facebook extends \yii\authclient\clients\Facebook implements ClientInterfa
 
         if (!$this->clientSecret) {
             if (!isset(Yii::$app->params['facebookClientSecret'])) {
-                throw new NotSupportedException;
+                throw new InvalidConfigException(__CLASS__ . '::$clientSecret must be defined');
             }
 
             $this->clientSecret = Yii::$app->params['facebookClientSecret'];

@@ -3,7 +3,7 @@
 namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\auth\rbac\DbManager;
-use davidhirtz\yii2\skeleton\composer\Bootstrap;
+use davidhirtz\yii2\skeleton\core\ApplicationTrait;
 use davidhirtz\yii2\skeleton\i18n\I18N;
 use yii\authclient\Collection;
 use yii\swiftmailer\Mailer;
@@ -36,19 +36,31 @@ use yii\web\Cookie;
  */
 class Application extends \yii\web\Application
 {
+    use ApplicationTrait;
+
     /**
      * @param array $config
      */
     public function preInit(&$config)
     {
-        if (!isset($config['basePath'])) {
-            $config['basePath'] = dirname($_SERVER['SCRIPT_FILENAME'], 2);
-        }
+        $config['basePath'] = $config['basePath'] ?? dirname($_SERVER['SCRIPT_FILENAME'], 2);
 
-        $config = Bootstrap::preInit($config);
+        $this->preInitInternal($config);
         $this->setCookieConfig($config);
+        $this->setMaintenanceConfig($config);
 
         parent::preInit($config);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function bootstrap()
+    {
+        $this->setDefaultUrlManagerRules();
+        $this->setDefaultEmail();
+
+        parent::bootstrap();
     }
 
     /**
@@ -67,7 +79,7 @@ class Application extends \yii\web\Application
     }
 
     /**
-     * @return object|null|Collection
+     * @return Collection|null
      */
     public function getAuthClientCollection()
     {
@@ -85,5 +97,23 @@ class Application extends \yii\web\Application
         ]);
 
         $config['container']['definitions']['yii\web\Cookie'] = array_merge($cookieConfig, $config['container']['definitions']['yii\web\Cookie'] ?? []);
+    }
+
+    /**
+     * @param array $config
+     */
+    protected function setMaintenanceConfig(&$config)
+    {
+        if (!empty($config['params']['maintenance'])) {
+            $config['catchAll'] = ['maintenance/index'];
+        }
+    }
+
+    /**
+     * Sets default email account based on server name, this must be called after initialization.
+     */
+    protected function setDefaultEmail()
+    {
+        $this->params['email'] = $this->params['email'] ?? ('hostmaster@' . $this->getRequest()->getServerName());
     }
 }

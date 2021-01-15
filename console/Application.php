@@ -2,7 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\console;
 
-use davidhirtz\yii2\skeleton\composer\Bootstrap;
+use davidhirtz\yii2\skeleton\core\ApplicationTrait;
 use Yii;
 
 /**
@@ -11,6 +11,8 @@ use Yii;
  */
 class Application extends \yii\console\Application
 {
+    use ApplicationTrait;
+
     /**
      * @var string the namespace that command controller classes are located in.
      */
@@ -18,20 +20,18 @@ class Application extends \yii\console\Application
 
     /**
      * @param array $config
-     * @throws \yii\base\InvalidConfigException
      */
     public function preInit(&$config)
     {
-        if (!isset($config['basePath'])) {
-            $config['basePath'] = getcwd();
-        }
-
-        $config = Bootstrap::preInit($config);
+        $config['basePath'] = $config['basePath'] ?? getcwd();
+        $this->preInitInternal($config);
 
         // Removes web components.
-        unset($config['components']['errorHandler']['errorAction']);
-        unset($config['components']['user']);
-        unset($config['components']['session']);
+        unset(
+            $config['components']['errorHandler']['errorAction'],
+            $config['components']['user'],
+            $config['components']['session']
+        );
 
         parent::preInit($config);
     }
@@ -41,8 +41,8 @@ class Application extends \yii\console\Application
      */
     protected function bootstrap()
     {
-        Yii::setAlias('@webroot', '@app/web');
-        Yii::setAlias('@web', '@app');
+        $this->setWebrootAliases();
+        $this->setDefaultUrlManagerRules();
 
         parent::bootstrap();
     }
@@ -64,5 +64,14 @@ class Application extends \yii\console\Application
                 ],
             ],
         ]);
+    }
+
+    /**
+     * Sets webroot aliases for console applications.
+     */
+    protected function setWebrootAliases()
+    {
+        Yii::setAlias('@webroot', '@app/web');
+        Yii::setAlias('@web', '@app');
     }
 }
