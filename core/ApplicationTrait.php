@@ -3,7 +3,9 @@
 namespace davidhirtz\yii2\skeleton\core;
 
 use Yii;
+use yii\base\ActionEvent;
 use yii\base\InvalidConfigException;
+use yii\console\controllers\MigrateController;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -112,7 +114,7 @@ trait ApplicationTrait
             $core['bootstrap'][] = 'debug';
             $core['modules']['debug'] = [
                 'class' => 'yii\debug\Module',
-                'traceLine' => '<a href="phpstorm://open?url={file}&line={line}">{file}:{line}</a>',
+                'traceLine' => '<a href="phpstorm://open?file={file}&line={line}">{file}:{line}</a>',
             ];
         }
 
@@ -176,6 +178,65 @@ trait ApplicationTrait
             $config['components']['authClientCollection']['clients']['facebook'] = [
                 'class' => 'davidhirtz\yii2\skeleton\auth\clients\Facebook',
             ];
+        }
+    }
+    /**
+     * Extends given application component.
+     *
+     * @param string $id
+     * @param array $definition
+     */
+    public function extendComponent($id, $definition)
+    {
+        $this->set($id, ArrayHelper::merge($this->getComponents()[$id] ?? [], $definition));
+    }
+
+    /**
+     * Extends multiple application components.
+     *
+     * @param array $components
+     */
+    public function extendComponents($components)
+    {
+        foreach ($components as $id => $definition) {
+            $this->extendComponent($id, $definition);
+        }
+    }
+
+    /**
+     * @param string $id
+     * @param array $module
+     */
+    public function extendModule($id, $module)
+    {
+        if ($module) {
+            $this->setModule($id, ArrayHelper::merge($module, $this->getModules()[$id] ?? []));
+        }
+    }
+
+    /**
+     * @param array $modules
+     */
+    public function extendModules($modules)
+    {
+        foreach ($modules as $id => $config) {
+            $this->extendModule($id, $config);
+        }
+    }
+
+    /**
+     * @param string $namespace
+     */
+    public function setMigrationNamespace($namespace)
+    {
+        if ($this->getRequest()->getIsConsoleRequest()) {
+            $this->on(static::EVENT_BEFORE_ACTION, function (ActionEvent $event) {
+                $controller = $event->action->controller;
+
+                if ($controller instanceof MigrateController) {
+                    $controller->migrationNamespaces[] = $event->data;
+                }
+            }, $namespace);
         }
     }
 }
