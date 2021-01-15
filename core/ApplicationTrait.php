@@ -84,6 +84,9 @@ trait ApplicationTrait
                 'mailer' => [
                     'htmlLayout' => '@skeleton/mail/layouts/html',
                 ],
+                'maintenance' => [
+                    'class' => 'davidhirtz\yii2\skeleton\web\Maintenance',
+                ],
                 'session' => [
                     'class' => 'davidhirtz\yii2\skeleton\web\DbSession',
                 ],

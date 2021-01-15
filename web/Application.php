@@ -47,7 +47,6 @@ class Application extends \yii\web\Application
 
         $this->preInitInternal($config);
         $this->setCookieConfig($config);
-        $this->setMaintenanceConfig($config);
 
         parent::preInit($config);
     }
@@ -59,6 +58,8 @@ class Application extends \yii\web\Application
     {
         $this->setDefaultUrlManagerRules();
         $this->setDefaultEmail();
+
+        $this->checkMaintenanceStatus();
 
         parent::bootstrap();
     }
@@ -100,20 +101,21 @@ class Application extends \yii\web\Application
     }
 
     /**
-     * @param array $config
-     */
-    protected function setMaintenanceConfig(&$config)
-    {
-        if (!empty($config['params']['maintenance'])) {
-            $config['catchAll'] = ['maintenance/index'];
-        }
-    }
-
-    /**
      * Sets default email account based on server name, this must be called after initialization.
      */
     protected function setDefaultEmail()
     {
         $this->params['email'] = $this->params['email'] ?? ('hostmaster@' . $this->getRequest()->getServerName());
+    }
+
+    /**
+     * Checks if maintenance mode was set via config. If enabled this triggers {@link Maintenance::bootstrap()} on
+     * application bootstrap.
+     */
+    protected function checkMaintenanceStatus()
+    {
+        if (!empty($this->params['maintenance']) || !empty($this->getComponents()['maintenance']['enabled'])) {
+            $this->bootstrap[] = 'maintenance';
+        }
     }
 }
