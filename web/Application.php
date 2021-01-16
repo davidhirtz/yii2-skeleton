@@ -47,6 +47,7 @@ class Application extends \yii\web\Application
 
         $this->preInitInternal($config);
         $this->setCookieConfig($config);
+        $this->setDebugModuleConfig($config);
 
         parent::preInit($config);
     }
@@ -88,16 +89,30 @@ class Application extends \yii\web\Application
     }
 
     /**
+     * Sets default cookie `domain` and `sameSite` properties
      * @param array $config
      */
     protected function setCookieConfig(&$config)
     {
-        $cookieConfig = array_filter([
-            'domain' => $config['params']['cookieDomain'] ?? null,
-            'sameSite' => PHP_VERSION_ID >= 70300 ? Cookie::SAME_SITE_LAX : null,
-        ]);
+        $cookie = $config['container']['definitions']['yii\web\Cookie'] ?? [];
+        $config['container']['definitions']['yii\web\Cookie']['domain'] = $cookie['domain'] ?? $config['params']['cookieDomain'] ?? null;
+        $config['container']['definitions']['yii\web\Cookie']['sameSite'] = $cookie['sameSite'] ?? (PHP_VERSION_ID >= 70300 ? Cookie::SAME_SITE_LAX : null);
+    }
 
-        $config['container']['definitions']['yii\web\Cookie'] = array_merge($cookieConfig, $config['container']['definitions']['yii\web\Cookie'] ?? []);
+    /**
+     * Configures Yii2 debug module (which is currently only available for web applications) if `YII_DEBUG` is `true`.
+     * @param array $config
+     */
+    protected function setDebugModuleConfig(&$config)
+    {
+        if (YII_DEBUG) {
+            if (!in_array('debug', $config['bootstrap'] ?? [])) {
+                $config['bootstrap'][] = 'debug';
+            }
+
+            $config['modules']['debug']['class'] = $config['modules']['debug']['class'] ?? 'yii\debug\Module';
+            $config['modules']['debug']['traceLine'] = $config['modules']['debug']['traceLine'] ?? '<a href="phpstorm://open?file={file}&line={line}">{file}:{line}</a>';
+        }
     }
 
     /**

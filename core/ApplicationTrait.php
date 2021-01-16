@@ -113,14 +113,6 @@ trait ApplicationTrait
             ],
         ];
 
-        if (YII_DEBUG) {
-            $core['bootstrap'][] = 'debug';
-            $core['modules']['debug'] = [
-                'class' => 'yii\debug\Module',
-                'traceLine' => '<a href="phpstorm://open?file={file}&line={line}">{file}:{line}</a>',
-            ];
-        }
-
         if (YII_ENV_DEV) {
             $core['bootstrap'][] = 'gii';
             $core['modules']['gii'] = [
