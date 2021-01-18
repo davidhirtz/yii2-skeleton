@@ -311,7 +311,7 @@ abstract class Trail extends ActiveRecord
     {
         /** @var TrailBehavior $behavior */
         $behavior = $model->getBehavior('TrailBehavior');
-        $model = $model ? implode(':', array_filter([$behavior->modelClass, $id ?: $model->getPrimaryKey()])) : null;
+        $model = $model ? implode(':', array_filter([$behavior->modelClass, $id ?: implode('-', $model->getPrimaryKey(true))])) : null;
 
         return ['/admin/trail/index', 'model' => $model];
     }
