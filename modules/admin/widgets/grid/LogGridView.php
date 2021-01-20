@@ -88,7 +88,7 @@ class LogGridView extends GridView
                 }
 
                 if (isset($model['vars'])) {
-                    $html .= Html::tag('pre', Html::encode(trim($model['vars'])), ['class' => 'small']);
+                    $html .= Html::tag('pre', Html::encode(rtrim($model['vars'])), ['class' => 'small']);
                 }
 
                 return $html;
