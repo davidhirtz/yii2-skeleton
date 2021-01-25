@@ -14,7 +14,7 @@ use yii\filters\AccessControl;
 class TrailController extends Controller
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function behaviors()
     {

@@ -3,7 +3,6 @@
 namespace davidhirtz\yii2\skeleton\helpers;
 
 use Yii;
-use yii\base\InvalidArgumentException;
 use yii\helpers\BaseFileHelper;
 use yii\helpers\VarDumper;
 
@@ -14,32 +13,6 @@ use yii\helpers\VarDumper;
 class FileHelper extends BaseFileHelper
 {
     /**
-     * @param string $dir
-     * @param bool $includePath
-     * @return array
-     */
-    public static function findDirectories($dir, $includePath = true)
-    {
-        $handle = @opendir($dir);
-        $list = [];
-
-        if ($handle === false) {
-            throw new InvalidArgumentException("Unable to open directory: $dir");
-        }
-
-        while (($file = readdir($handle)) !== false) {
-            if ($file[0] !== '.') {
-                if (is_dir($path = $dir . DIRECTORY_SEPARATOR . $file)) {
-                    $list[] = $includePath ? $path : $file;
-                }
-            }
-        }
-
-        closedir($handle);
-        return $list;
-    }
-
-    /**
      * Removes a file, logging warnings.
      *
      * @param string $filename
@@ -48,7 +21,7 @@ class FileHelper extends BaseFileHelper
     public static function removeFile($filename)
     {
         if (@unlink($filename) === false) {
-            Yii::warning(strtr('Deleting file {name} failed.', ['{name}' => $filename]));
+            Yii::warning("Deleting file \"{$filename}\" failed.");
             return false;
         }
 
@@ -67,18 +40,31 @@ class FileHelper extends BaseFileHelper
     public static function rename($source, $dest)
     {
         if (stream_is_local($source) == stream_is_local($dest)) {
-            return rename($source, $dest);
+            Yii::debug("Moving file \"{$source}\" to  \"{$dest}\"");
+            return @rename($source, $dest);
         }
 
         if (is_dir($source)) {
+            Yii::warning("Unable to rename directory \"{$source}\"");
             return false;
         }
 
         if (file_put_contents($dest, file_get_contents($source))) {
-            return unlink($source);
+            Yii::debug("Moving remote file \"{$source}\" to  \"{$dest}\"");
+            return @unlink($source);
         }
 
         return false;
+    }
+
+    /**
+     * @param string $path
+     * @return bool
+     */
+    public static function unlink($path)
+    {
+        Yii::debug("Deleting file \"{$path}\"");
+        return @parent::unlink($path);
     }
 
     /**

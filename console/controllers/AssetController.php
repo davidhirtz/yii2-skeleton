@@ -35,7 +35,7 @@ class AssetController extends \yii\console\controllers\AssetController
     public function actionClear()
     {
         $basePath = Yii::$app->getAssetManager()->basePath;
-        $assets = FileHelper::findDirectories($basePath);
+        $assets = FileHelper::findDirectories($basePath, ['recursive' => false]);
 
         $total = count($assets);
         $errors = 0;

@@ -177,13 +177,15 @@ class TrailGridView extends GridView
                 $oldValue = $this->formatTrailAttributeValue($model, $attribute, $values[0]);
                 $newValue = $this->formatTrailAttributeValue($model, $attribute, $values[1]);
 
-                $rows[] = [
-                    $model->getAttributeLabel($attribute),
-                    DiffHelper::calculate($oldValue, $newValue, 'SideBySide', [], [
-                        'showHeader' => false,
-                        'lineNumbers' => false,
-                    ]),
-                ];
+                if ($oldValue !== $newValue) {
+                    $rows[] = [
+                        $model->getAttributeLabel($attribute),
+                        DiffHelper::calculate($oldValue, $newValue, 'SideBySide', [], [
+                            'showHeader' => false,
+                            'lineNumbers' => false,
+                        ]),
+                    ];
+                }
             }
         }
 

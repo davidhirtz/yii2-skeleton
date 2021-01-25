@@ -114,7 +114,7 @@ class SystemController extends Controller
     public function actionPublish()
     {
         $basePath = Yii::$app->getAssetManager()->basePath;
-        $assets = FileHelper::findDirectories($basePath);
+        $assets = FileHelper::findDirectories($basePath, ['recursive' => false]);
 
         foreach ($assets as $asset) {
             FileHelper::removeDirectory($asset);
@@ -222,7 +222,7 @@ class SystemController extends Controller
         $basePath = $manager->basePath;
         $baseUrl = $manager->baseUrl;
 
-        $directories = FileHelper::findDirectories($basePath);
+        $directories = FileHelper::findDirectories($basePath, ['recursive' => false]);
         $assets = [];
 
         foreach ($directories as $directory) {
