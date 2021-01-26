@@ -26,7 +26,7 @@
 		"jfcherng/php-diff": "^6.9",
 		"npm-asset/blueimp-file-upload": ">=10.2.0",
 		"npm-asset/bootbox":">=5",
-		"npm-asset/skeleton-router":">=1.1.15"
+		"npm-asset/skeleton-router":">=1.1.14"
 	},
 	"autoload":{
 		"psr-4":{
