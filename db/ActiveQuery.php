@@ -62,18 +62,26 @@ class ActiveQuery extends \yii\db\ActiveQuery
 
     /**
      * @return $this
-     * @todo this is not working for prefixed columns.
      */
     public function replaceI18nAttributes()
     {
         if (is_array($this->select)) {
             if ($attributes = $this->getModelInstance()->i18nAttributes) {
+                $attributes = array_combine($attributes, $this->prefixColumns($attributes));
+                list(, $alias) = $this->getTableNameAndAlias();
                 $i18n = Yii::$app->getI18n();
-                foreach ($this->select as &$attribute) {
-                    if (in_array($attribute, $attributes)) {
-                        $attribute = $i18n->getAttributeName($attribute);
+
+                foreach ($this->select as $key => $column) {
+                    $attribute = isset($attributes[$column]) ? $column : array_search($column, $attributes);
+
+                    if ($attribute) {
+                        $column = "{$alias}.[[" . $i18n->getAttributeName($attribute) . ']]';
+                        $this->select[$column] = $column;
+                        unset($this->select[$key]);
                     }
                 }
+
+                $this->select = array_unique($this->select);
             }
         }
 
