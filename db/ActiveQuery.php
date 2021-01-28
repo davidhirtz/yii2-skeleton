@@ -20,28 +20,44 @@ class ActiveQuery extends \yii\db\ActiveQuery
     protected static $_status;
 
     /**
-     * Adds columns with model prefix.
-     *
-     * @param array $columns
+     * Selects all columns defined in {@link ActiveRecord::attributes()}.
      * @return $this
      */
-    public function addSelectPrefixed($columns)
+    public function selectAllColumns()
     {
-        if (!is_array($this->select)) {
-            $this->select = $this->normalizeSelect($this->select);
-        }
-
-        foreach ($this->select as $key => $attribute) {
-            if (in_array($attribute, $columns)) {
-                unset($this->select[$key]);
-            }
-        }
-
-        foreach ($columns as $column) {
-            $this->select[] = $this->getModelInstance()::tableName() . ".[[{$column}]]";
-        }
-
+        $this->select = $this->prefixColumns($this->getModelInstance()->attributes());
         return $this;
+    }
+
+    /**
+     * Prefixes given `columns` with the table alias.
+     *
+     * @param array $columns
+     * @return array
+     */
+    public function prefixColumns($columns): array
+    {
+        list(, $alias) = $this->getTableNameAndAlias();
+
+        foreach ($columns as &$column) {
+            $column = "{$alias}.[[{$column}]]";
+        }
+
+        return $columns;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function prepare($builder)
+    {
+        // Override Yii2's default implementation of adding the anti-pattern `$alias.*` on empty select. This causes
+        // problems with `sql_mode=only_full_group_by`.
+        if (empty($this->select)) {
+            $this->selectAllColumns();
+        }
+
+        return parent::prepare($builder);
     }
 
     /**
