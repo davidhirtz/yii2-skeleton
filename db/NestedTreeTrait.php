@@ -34,6 +34,16 @@ trait NestedTreeTrait
     private $_descendants;
 
     /**
+     * @return array
+     */
+    public function transactions(): array
+    {
+        return [
+            self::SCENARIO_DEFAULT => self::OP_ALL,
+        ];
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getParent()
