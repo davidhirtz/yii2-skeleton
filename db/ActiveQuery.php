@@ -111,12 +111,20 @@ class ActiveQuery extends \yii\db\ActiveQuery
      */
     public function whereStatus($status = null)
     {
+        static::setStatus($status);
+        
+        $model = $this->getModelInstance();
+        return $this->andFilterWhere(['>=', $model::tableName() . '.status', static::$_status]);
+    }
+
+    /**
+     * @param int $status
+     */
+    public static function setStatus($status): void
+    {
         if ($status !== null) {
             static::$_status = (int)$status;
         }
-
-        $model = $this->getModelInstance();
-        return $this->andFilterWhere(['>=', $model::tableName() . '.status', static::$_status]);
     }
 
     /**
