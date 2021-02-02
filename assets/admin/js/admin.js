@@ -138,7 +138,9 @@ $(function () {
         }
 
         for (i = 0; i < targets.length; i++) {
-            $(targets[i].match(/^[.#]/) ? targets[i] : ("#" + targets[i])).html(values[i]);
+            $(targets[i].match(/^[.#]/) ? targets[i] : ("#" + targets[i])).each(function() {
+                this[this.value !== undefined ? "value" : "innerHTML"] = values[i];
+            });
         }
 
         Skeleton.toggleHr();
