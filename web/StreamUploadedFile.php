@@ -20,10 +20,10 @@ class StreamUploadedFile extends UploadedFile
     public $url;
 
     /**
-     * @var resource this must be set as a protected variable so PHP garbage collection will not remove the file after
-     * running {@link StreamUploadedFile::init()}.
+     * @var array containing a list of allowed extensions which will be filtered against the found mime-type of
+     * the downloaded file. This will also determine the file ending. Leave empty to use url ending.
      */
-    protected $tmpFile;
+    public $allowedExtensions;
 
     /**
      * @var string
@@ -76,6 +76,24 @@ class StreamUploadedFile extends UploadedFile
         }
 
         return false;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExtension()
+    {
+        if ($this->allowedExtensions) {
+            if ($mimeType = FileHelper::getMimeType($this->tempName)) {
+                $mimeTypes = array_intersect($this->allowedExtensions, FileHelper::getExtensionsByMimeType($mimeType));
+
+                if ($mimeTypes) {
+                    return current($mimeTypes);
+                }
+            }
+        }
+
+        return parent::getExtension();
     }
 
     /**

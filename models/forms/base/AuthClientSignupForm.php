@@ -110,7 +110,10 @@ class AuthClientSignupForm extends Identity
     {
         if ($insert) {
             if ($this->externalPictureUrl) {
-                $this->upload = new StreamUploadedFile(['url' => $this->externalPictureUrl]);
+                $this->upload = new StreamUploadedFile([
+                    'allowedExtensions' => $this->uploadExtensions,
+                    'url' => $this->externalPictureUrl,
+                ]);
             }
         }
 
