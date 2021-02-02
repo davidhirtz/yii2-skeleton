@@ -289,6 +289,9 @@ abstract class User extends ActiveRecord
         }
 
         parent::afterSave($insert, $changedAttributes);
+
+        // Finally unset upload, so additional updates won't try to upload again.
+        $this->upload = null;
     }
 
     /**

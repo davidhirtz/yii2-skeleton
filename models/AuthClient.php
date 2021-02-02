@@ -112,7 +112,7 @@ class AuthClient extends ActiveRecord
     public static function findOrCreateFromClient($client)
     {
         $attributes = [
-            'id' => $client->getSafeUserAttributes()['id'],
+            'id' => $client->getUserAttributes()['id'],
             'name' => $client->getName(),
         ];
 

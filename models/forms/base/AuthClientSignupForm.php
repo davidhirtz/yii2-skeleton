@@ -111,7 +111,6 @@ class AuthClientSignupForm extends Identity
         if ($insert) {
             if ($this->externalPictureUrl) {
                 $this->upload = new StreamUploadedFile(['url' => $this->externalPictureUrl]);
-                $this->generatePictureFilename();
             }
         }
 
@@ -126,10 +125,6 @@ class AuthClientSignupForm extends Identity
         parent::afterSave($insert, $changedAttributes);
 
         if ($insert) {
-            if ($this->upload) {
-                $this->savePictureUpload();
-            }
-
             if (!$this->isUnconfirmed() || Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
                 Yii::$app->getUser()->login($this);
             }

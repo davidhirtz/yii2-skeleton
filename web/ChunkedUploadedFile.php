@@ -185,7 +185,8 @@ class ChunkedUploadedFile extends UploadedFile
      */
     public function setPartialUploadPath($path)
     {
-        FileHelper::createDirectory($this->_partialUploadPath = rtrim(Yii::getAlias($path), '/') . '/');
+        $this->_partialUploadPath = rtrim(Yii::getAlias($path), '/') . '/';
+        FileHelper::createDirectory($this->_partialUploadPath);
     }
 
     /**
