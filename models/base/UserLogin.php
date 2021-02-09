@@ -45,7 +45,6 @@ class UserLogin extends ActiveRecord
         ];
     }
 
-
     /**
      * @return ActiveQuery
      */

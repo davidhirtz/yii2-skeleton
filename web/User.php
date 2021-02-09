@@ -180,7 +180,7 @@ class User extends \yii\web\User
         $columns = [
             'user_id' => $identity->id,
             'type' => $identity->loginType,
-            'browser' => mb_substr(Yii::$app->getRequest()->getUserAgent(), 0, 255),
+            'browser' => mb_substr(Yii::$app->getRequest()->getUserAgent(), 0, 255, Yii::$app->charset),
             'ip_address' => inet_pton($identity->ipAddress ?: Yii::$app->getRequest()->getUserIP()),
             'created_at' => $identity->last_login,
         ];
