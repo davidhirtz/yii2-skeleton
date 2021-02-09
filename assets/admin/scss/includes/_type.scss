@@ -17,7 +17,10 @@
 }
 
 .icon-text {
-  margin-left: $app-icon-margin-x;
+  span{
+    display: inline-block;
+    margin-left: $app-icon-margin-x;
+  }
 }
 
 .list-unstyled:last-child {
