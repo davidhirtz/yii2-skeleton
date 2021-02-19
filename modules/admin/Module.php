@@ -23,11 +23,16 @@ class Module extends \yii\base\Module
     public $alias;
 
     /**
-     * @var array|false|null containing the roles to access any admin module or controller, if not set
-     * the roles set via {@link Module::$navbarItems} will be used. If false the module role check is
-     * disabled.
+     * @var array|false|null containing the roles to access any admin module or controller, if not set the roles set
+     * via {@link Module::$navbarItems} will be used. If false the module role check is disabled.
      */
     public $roles;
+
+    /**
+     * @var int|null the time in seconds after which trail records should be deleted. Leave empty to never delete trail
+     * records.
+     */
+    public $trailLifetime;
 
     /**
      * @var array containing the admin menu items
