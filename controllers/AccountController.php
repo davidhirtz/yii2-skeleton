@@ -83,7 +83,7 @@ class AccountController extends Controller
     public function actionCreate()
     {
         if (!Yii::$app->getUser()->getIsGuest()) {
-            Yii::t('skeleton', 'Please logout before creating another account');
+            $this->error(Yii::t('skeleton', 'Please logout before creating another account'));
             return $this->goHome();
         }
 
