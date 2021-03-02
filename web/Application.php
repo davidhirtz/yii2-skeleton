@@ -71,6 +71,9 @@ class Application extends \yii\web\Application
     public function coreComponents()
     {
         return array_merge(parent::coreComponents(), [
+            'errorHandler' => [
+                'class' => 'davidhirtz\yii2\skeleton\web\ErrorHandler',
+            ],
             'request' => [
                 'class' => 'davidhirtz\yii2\skeleton\web\Request',
             ],

@@ -234,7 +234,6 @@ class GridView extends \yii\grid\GridView
                     default:
                         $summary = Yii::t('skeleton', 'Displaying {begin, number}-{end, number} of {totalCount, number} results matching "{search}".', $params);
                         break;
-
                 }
             } else {
                 switch ($count) {
@@ -474,7 +473,7 @@ class GridView extends \yii\grid\GridView
      */
     protected function getDeleteButton($model)
     {
-        return Html::a(Icon::tag('trash'), ['delete', 'id' => $model->getPrimaryKey()], [
+        return Html::a(Icon::tag('trash'), $this->getDeleteRoute($model), [
             'class' => 'btn btn-danger',
             'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
             'data-ajax' => 'remove',
@@ -490,6 +489,16 @@ class GridView extends \yii\grid\GridView
     protected function getRoute($model, $params = [])
     {
         return array_merge(['update', 'id' => $model->getPrimaryKey()], $params);
+    }
+
+    /**
+     * @param ActiveRecord $model
+     * @param array $params
+     * @return array|false
+     */
+    protected function getDeleteRoute($model, $params = [])
+    {
+        return array_merge(['delete', 'id' => $model->getPrimaryKey()], $params);
     }
 
     /**

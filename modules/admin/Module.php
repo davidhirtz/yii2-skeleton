@@ -75,6 +75,10 @@ class Module extends \yii\base\Module
             'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\DashboardController',
             'viewPath' => '@skeleton/modules/admin/views/dashboard',
         ],
+        'redirect' => [
+            'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController',
+            'viewPath' => '@skeleton/modules/admin/views/redirect',
+        ],
         'system' => [
             'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController',
             'viewPath' => '@skeleton/modules/admin/views/system',
@@ -144,6 +148,12 @@ class Module extends \yii\base\Module
                                 'url' => ['/admin/trail/index'],
                                 'icon' => 'history',
                                 'visible' => $user->can('trailIndex'),
+                            ],
+                            [
+                                'label' => Yii::t('skeleton', 'Redirects'),
+                                'url' => ['/admin/redirect/index'],
+                                'icon' => 'forward',
+                                'visible' => $user->can('redirectCreate'),
                             ],
                             [
                                 'label' => Yii::t('skeleton', 'Homepage'),

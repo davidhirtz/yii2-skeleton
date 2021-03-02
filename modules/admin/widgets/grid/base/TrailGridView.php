@@ -39,6 +39,9 @@ class TrailGridView extends GridView
         'class' => 'table table-striped trail',
     ];
 
+    /**
+     * @inheritDoc
+     */
     public function init()
     {
         $this->rowOptions = function (Trail $trail) {

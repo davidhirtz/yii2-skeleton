@@ -27,22 +27,23 @@ class UrlManager extends \yii\web\UrlManager
     public $showScriptName = false;
 
     /**
-     * @var bool
+     * @var bool whether the language should be added to the URL via `languageParam`.
      */
     public $i18nUrl = false;
 
     /**
-     * @var bool
+     * @var bool whether the subdomain should be used as language identifier.
      */
     public $i18nSubdomain = false;
 
     /**
-     * @var array
+     * @var array containing the languages available for `i18nUrl` or `i18nSubdomain`, leave empty to use the languages
+     * defined in `i18n` component.
      */
     public $languages;
 
     /**
-     * @var string
+     * @var string the default language for which no language identifier should be added to path or subdomain.
      */
     public $defaultLanguage;
 
@@ -52,15 +53,18 @@ class UrlManager extends \yii\web\UrlManager
     public $languageParam = 'language';
 
     /**
-     * @var array
+     * @var array containing hard redirects, either as request URI => URL pairs, which generate regular 301 redirects
+     * or as arrays containing the one ore many request URIs at first position, the target URL as the second and an
+     * optional third containing the redirect code (defaults to 301). If dynamic redirects are needed, please take
+     * a look at {@link \davidhirtz\yii2\skeleton\models\Redirect}.
      */
     public $redirectMap = [];
 
     /**
      * Events.
      */
-    const EVENT_AFTER_CREATE = 'afterCreate';
-    const EVENT_BEFORE_PARSE = 'beforeParse';
+    public const EVENT_AFTER_CREATE = 'afterCreate';
+    public const EVENT_BEFORE_PARSE = 'beforeParse';
 
     /**
      * @inheritdoc
@@ -90,7 +94,6 @@ class UrlManager extends \yii\web\UrlManager
         }
 
         parent::init();
-
     }
 
     /**
@@ -238,7 +241,6 @@ class UrlManager extends \yii\web\UrlManager
         }
 
         return array_unique($params);
-
     }
 
     /**

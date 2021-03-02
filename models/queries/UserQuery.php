@@ -82,12 +82,10 @@ class UserQuery extends ActiveQuery
 
                 if (is_numeric($keyword)) {
                     $this->andWhere("{$tableName}.[[id]]=:id", ['id' => $keyword]);
+                } elseif (strpos($keyword, '@') !== false) {
+                    $this->andWhere("{$tableName}.[[email]] LIKE :search", ['search' => "%{$keyword}%"]);
                 } else {
-                    if (strpos($keyword, '@') !== false) {
-                        $this->andWhere("{$tableName}.[[email]] LIKE :search", ['search' => "%{$keyword}%"]);
-                    } else {
-                        $this->andWhere("{$tableName}.[[name]] LIKE :search OR {$tableName}.[[email]] LIKE :search OR {$tableName}.[[first_name]] LIKE :search OR {$tableName}.[[last_name]] LIKE :search", ['search' => "{$keyword}%"]);
-                    }
+                    $this->andWhere("{$tableName}.[[name]] LIKE :search OR {$tableName}.[[email]] LIKE :search OR {$tableName}.[[first_name]] LIKE :search OR {$tableName}.[[last_name]] LIKE :search", ['search' => "{$keyword}%"]);
                 }
             } else {
                 $this->andWhere("{$tableName}.[[first_name]] LIKE :name OR {$tableName}.[[last_name]] LIKE :name OR ({$tableName}.[[first_name]] LIKE :firstname AND {$tableName}.[[last_name]] LIKE :lastname) OR ({$tableName}.[[first_name]] LIKE :lastname AND {$tableName}.[[last_name]] LIKE :firstname)", [

@@ -87,7 +87,6 @@ class TrailBehavior extends Behavior
         $this->afterSave(true, $event->changedAttributes);
     }
 
-
     /**
      * @param AfterSaveEvent $event
      */
