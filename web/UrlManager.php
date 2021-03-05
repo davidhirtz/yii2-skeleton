@@ -93,6 +93,10 @@ class UrlManager extends \yii\web\UrlManager
             $this->i18nUrl = false;
         }
 
+        if (Yii::$app instanceof \davidhirtz\yii2\skeleton\console\Application) {
+            $this->setBaseUrl(Yii::$app->params['baseUrl'] ?? '');
+        }
+
         parent::init();
     }
 
