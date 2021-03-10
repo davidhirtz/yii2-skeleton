@@ -14,9 +14,17 @@ class MigrateController extends \yii\console\controllers\MigrateController
     use ConfigTrait;
 
     /**
-     * @var array
+     * @inheritdoc
      */
-    private $_dbConfig;
+    public $migrationPath = null;
+
+    /**
+     * @inheritdoc
+     */
+    public $migrationNamespaces = [
+        'app\migrations',
+        'davidhirtz\yii2\skeleton\migrations',
+    ];
 
     /**
      * @var string
@@ -27,6 +35,11 @@ class MigrateController extends \yii\console\controllers\MigrateController
      * @var string
      */
     public $templateFile = '@skeleton/views/migration.php';
+
+    /**
+     * @var array
+     */
+    private $_dbConfig;
 
     /**
      * @param \yii\base\Action $action

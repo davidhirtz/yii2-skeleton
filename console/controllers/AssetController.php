@@ -26,6 +26,7 @@ class AssetController extends \yii\console\controllers\AssetController
         $manager = Yii::$app->getAssetManager();
         $manager->combineOptions['assetManager'] = $manager;
 
+        /** @noinspection PhpParamsInspection */
         $this->actionCompress($manager->combineOptions, Yii::getAlias($manager->combinedBundlesAlias));
     }
 
@@ -59,15 +60,6 @@ class AssetController extends \yii\console\controllers\AssetController
                 $this->stdout("{$errors} assets could not be cleared.\n", Console::FG_RED);
             }
         }
-    }
-
-    /**
-     * @param mixed $configFile
-     * @inheritdoc
-     */
-    public function actionCompress($configFile, $bundleFile)
-    {
-        parent::actionCompress($configFile, $bundleFile);
     }
 
     /**

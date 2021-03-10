@@ -9,7 +9,7 @@ use yii\console\Controller;
 use Yii;
 
 /**
- * Manages application parameter.
+ * Manages application parameters.
  * @package davidhirtz\yii2\skeleton\console\controllers
  */
 class ParamsController extends Controller

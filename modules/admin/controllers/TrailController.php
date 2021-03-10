@@ -2,13 +2,9 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
-use davidhirtz\yii2\datetime\DateTime;
-use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\TrailActiveDataProvider;
-use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\web\Controller;
-use Yii;
 use yii\filters\AccessControl;
 
 /**
@@ -44,13 +40,7 @@ class TrailController extends Controller
      */
     public function actionIndex($id = null, $model = null, $user = null)
     {
-        /** @var Module $module */
-        $module = Yii::$app->getModule('admin');
         $model = explode(':', $model);
-
-        if ($module->trailLifetime > 0) {
-            Trail::deleteAll(['<', 'created_at', (string)(new DateTime())->setTimestamp(time() - $module->trailLifetime)]);
-        }
 
         $provider = new TrailActiveDataProvider([
             'user' => $user ? User::findOne($user) : null,
