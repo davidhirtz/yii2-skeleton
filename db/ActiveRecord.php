@@ -55,7 +55,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
      * @var array {@see ActiveRecord::scenarios()}
      */
     private $_scenarios;
-    
+
     /**
      * @var bool whether the current operation is part of a more complex process, this can be used to postpone conditional
      * updates after save or delete. See {@link ActiveRecord::getIsBatch()}.
