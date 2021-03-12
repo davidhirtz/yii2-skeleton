@@ -36,7 +36,8 @@ class ActiveRecord extends \yii\db\ActiveRecord
     public const TYPE_DEFAULT = 1;
 
     /**
-     * @var array
+     * @var array containing a the attribute names of attributes which should be used with I18N features such as
+     * {@link ActiveRecord::getI18nAttribute()}, {@link ActiveRecord::getI18nRules()}, etc.
      */
     public $i18nAttributes = [];
 
@@ -54,9 +55,16 @@ class ActiveRecord extends \yii\db\ActiveRecord
      * @var array {@see ActiveRecord::scenarios()}
      */
     private $_scenarios;
+    
+    /**
+     * @var bool whether the current operation is part of a more complex process, this can be used to postpone conditional
+     * updates after save or delete. See {@link ActiveRecord::getIsBatch()}.
+     */
+    private $_isBatch = false;
 
     /**
-     * @var bool
+     * @var bool whether the record was deleted, this is set in {@link ActiveRecord::afterDelete()} and can be used
+     * via {@link ActiveRecord::isDeleted()}.
      */
     private $_isDeleted = false;
 
@@ -234,6 +242,22 @@ class ActiveRecord extends \yii\db\ActiveRecord
         $this->_scenarios = null;
 
         parent::setScenario($value);
+    }
+
+    /**
+     * @param bool $isBatch
+     */
+    public function setIsBatch(bool $isBatch): void
+    {
+        $this->_isBatch = $isBatch;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsBatch(): bool
+    {
+        return $this->_isBatch;
     }
 
     /**
