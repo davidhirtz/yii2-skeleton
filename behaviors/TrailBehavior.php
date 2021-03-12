@@ -8,6 +8,7 @@ use DateTimeZone;
 use davidhirtz\yii2\datetime\DateTimeValidator;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\models\Trail;
+use Exception;
 use ReflectionClass;
 use Yii;
 use yii\base\Behavior;
@@ -96,12 +97,13 @@ class TrailBehavior extends Behavior
     }
 
     /**
+     * @see TrailBehavior::events()
      */
     public function afterDelete()
     {
         $trail = $this->createTrail();
         $trail->type = Trail::TYPE_DELETE;
-        $trail->insert();
+        $this->insertTrail($trail);
     }
 
     /**
@@ -127,7 +129,7 @@ class TrailBehavior extends Behavior
             $trail = $this->createTrail();
             $trail->type = $insert ? Trail::TYPE_CREATE : Trail::TYPE_UPDATE;
             $trail->data = $data;
-            $trail->insert();
+            $this->insertTrail($trail);
         }
     }
 
@@ -144,6 +146,19 @@ class TrailBehavior extends Behavior
         $trail->parents = $this->owner->getTrailParents();
 
         return $trail;
+    }
+
+    /**
+     * Inserts trails in try/catch block.
+     * @param Trail $trail
+     */
+    protected function insertTrail($trail)
+    {
+        try {
+            $trail->insert();
+        } catch (Exception $exception) {
+            Yii::error($exception);
+        }
     }
 
     /**

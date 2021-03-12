@@ -16,7 +16,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 /**
- * Class SystemController.
+ * Class SystemController
  * @package davidhirtz\yii2\skeleton\modules\admin\controllers
  */
 class SystemController extends Controller
@@ -85,13 +85,6 @@ class SystemController extends Controller
             'sort' => false,
         ]);
 
-        // Logs.
-        $logs = new ArrayDataProvider([
-            'allModels' => $this->findLogs(),
-            'pagination' => false,
-            'sort' => false,
-        ]);
-
         // Sessions.
         $sessionCount = Session::find()->count();
         $expiredSessionCount = Session::find()
@@ -102,7 +95,7 @@ class SystemController extends Controller
         return $this->render('index', [
             'assets' => $assets,
             'caches' => $caches,
-            'logs' => $logs,
+            'logs' => $this->getLogDataProvider(),
             'sessionCount' => $sessionCount,
             'expiredSessionCount' => $expiredSessionCount,
         ]);
@@ -175,24 +168,22 @@ class SystemController extends Controller
      */
     public function actionView($log, $raw = false)
     {
-        if (array_key_exists($log, $this->findLogs())) {
-            $path = Yii::getAlias('@app/runtime/logs/' . $log);
+        $provider = $this->getLogDataProvider($log);
 
-            if ($raw) {
-                return Yii::$app->getResponse()->sendFile($path, basename($log), [
-                    'mimeType' => 'text/plain',
-                    'inline' => true,
-                ]);
-            }
+        if (!$provider->isFileValid()) {
+            throw new NotFoundHttpException();
+        }
 
-            return $this->render('view', [
-                'provider' => new LogDataProvider([
-                    'file' => $path,
-                ]),
+        if ($raw) {
+            return Yii::$app->getResponse()->sendFile($provider->file, basename($log), [
+                'mimeType' => 'text/plain',
+                'inline' => true,
             ]);
         }
 
-        throw new NotFoundHttpException();
+        return $this->render('view', [
+            'provider' => $provider,
+        ]);
     }
 
     /**
@@ -201,17 +192,27 @@ class SystemController extends Controller
      */
     public function actionDelete($log)
     {
-        if (array_key_exists($log, $this->findLogs())) {
-            FileHelper::removeFile(Yii::getAlias('@app/runtime/logs/' . $log));
-            return $this->redirect(['index']);
+        $provider = $this->getLogDataProvider($log);
+
+        if (!$provider->isFileValid()) {
+            throw new NotFoundHttpException();
         }
 
-        throw new NotFoundHttpException();
+        FileHelper::removeFile($provider->file);
+        return $this->redirect(['index']);
     }
 
-    /***********************************************************************
-     * Methods.
-     ***********************************************************************/
+    /**
+     * @param string|null $file
+     * @return LogDataProvider
+     */
+    protected function getLogDataProvider($file = null)
+    {
+        return $provider = Yii::createObject([
+            'class' => LogDataProvider::class,
+            'file' => $file,
+        ]);
+    }
 
     /**
      * @return array
@@ -277,19 +278,5 @@ class SystemController extends Controller
     private function isCacheClass($className)
     {
         return is_subclass_of($className, Cache::class);
-    }
-
-    /**
-     * @return array
-     */
-    protected function findLogs()
-    {
-        $logs = [];
-
-        foreach (glob(Yii::getAlias('@app/runtime/logs/*')) as $file) {
-            $logs[pathinfo($file, PATHINFO_BASENAME)] = filemtime($file);
-        }
-
-        return $logs;
     }
 }
