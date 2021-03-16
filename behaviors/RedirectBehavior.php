@@ -53,22 +53,9 @@ class RedirectBehavior extends Behavior
         /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         $url = Redirect::sanitizeUrl($this->owner->getUrl());
 
-        if ($this->prevUrl != $url) {
-            if ($url) {
-                if ($this->prevUrl) {
-                    $this->updatePreviousRedirectUrls($url);
-                }
-
-                $this->deleteAllRedirectRecords(['request_uri' => $url]);
-            }
-
-            // Finally add redirect, this needs to be done last, otherwise it gets overridden by the model's `afterSave`
-            if ($this->prevUrl) {
-                $redirect = new Redirect();
-                $redirect->request_uri = $this->prevUrl;
-                $redirect->url = $url;
-                $redirect->insert();
-            }
+        if ($url && $this->prevUrl && $this->prevUrl != $url) {
+            $this->updatePreviousRedirectUrls($url);
+            $this->insertRedirect($url);
         }
     }
 
@@ -79,7 +66,7 @@ class RedirectBehavior extends Behavior
     {
         /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         if ($url = Redirect::sanitizeUrl($this->owner->getUrl())) {
-            $this->deleteAllRedirectRecords(['url' => $url]);
+            $this->deleteRedirects($url);
         }
     }
 
@@ -100,18 +87,29 @@ class RedirectBehavior extends Behavior
         }
     }
 
+    /**
+     * Inserts a new {@link Redirect} record for given `url`.
+     * @param string $url
+     */
+    protected function insertRedirect($url)
+    {
+        $redirect = new Redirect();
+        $redirect->request_uri = $this->prevUrl;
+        $redirect->url = $url;
+        $redirect->insert();
+    }
 
     /**
      * Deletes redirect records matching given `attribute`. This is not handled via `deleteAll` to enable {@link Trail}
      * records.
      *
-     * @param array|string $condition
+     * @param string $url
      */
-    protected function deleteAllRedirectRecords($condition)
+    protected function deleteRedirects($url)
     {
         /** @var Redirect[] $redirects */
         $redirects = Redirect::find()
-            ->where($condition)
+            ->where(['url' => $url])
             ->all();
 
         foreach ($redirects as $redirect) {
