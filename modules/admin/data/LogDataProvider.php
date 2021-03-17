@@ -37,6 +37,7 @@ class LogDataProvider extends ArrayDataProvider
             }
 
             $this->allModels = $this->file ? $this->parseFile() : $this->findFiles();
+            $this->setPagination(false);
         }
 
         parent::init();
