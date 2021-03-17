@@ -83,7 +83,7 @@ class LogDataProvider extends ArrayDataProvider
             fclose($file);
         }
 
-        return $models;
+        return array_reverse($models);
     }
 
     /**
