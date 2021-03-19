@@ -4,6 +4,7 @@ namespace davidhirtz\yii2\skeleton\db;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Yii;
+use yii\base\NotSupportedException;
 use yii\behaviors\AttributeTypecastBehavior;
 use yii\db\ActiveRecordInterface;
 use yii\db\Connection;
@@ -173,18 +174,31 @@ class ActiveRecord extends \yii\db\ActiveRecord
     /**
      * @param array $columns the column names
      * @param array|null $rows the rows to be batch inserted into the table
-     * @return int number of rows affected by the execution.
+     * @param bool $ignore whether records should be inserted regardless of previous errors or existing primary keys
+     * @return int number of rows affected by the execution
      */
-    public static function batchInsert($columns, $rows = null)
+    public static function batchInsert($columns, $rows = null, $ignore = false)
     {
         if ($rows === null) {
             $rows = $columns;
             $columns = array_keys(current($columns));
         }
 
-        return static::getDb()->createCommand()
-            ->batchInsert(static::tableName(), $columns, $rows)
-            ->execute();
+        $query = static::getDb()->createCommand()
+            ->batchInsert(static::tableName(), $columns, $rows);
+
+        if ($ignore) {
+            if (static::getDb()->getDriverName() !== 'mysql') {
+                throw new NotSupportedException(static::class . "::batchInsert does not support the option `ignore` for this database driver.");
+            }
+
+            $sql = $query->getRawSql();
+            $sql = 'INSERT IGNORE' . mb_substr($sql, strlen('INSERT'), Yii::$app->charset);
+
+            return static::getDb()->createCommand($sql)->execute();
+        }
+
+        return $query->execute();
     }
 
     /**
