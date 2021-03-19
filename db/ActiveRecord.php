@@ -193,7 +193,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
             }
 
             $sql = $query->getRawSql();
-            $sql = 'INSERT IGNORE' . mb_substr($sql, strlen('INSERT'), Yii::$app->charset);
+            $sql = 'INSERT IGNORE' . mb_substr($sql, 0, strlen('INSERT'), Yii::$app->charset);
 
             return static::getDb()->createCommand($sql)->execute();
         }
