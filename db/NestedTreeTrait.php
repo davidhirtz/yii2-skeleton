@@ -52,11 +52,12 @@ trait NestedTreeTrait
     }
 
     /**
+     * @param bool $refresh
      * @return ActiveRecord[]
      */
-    public function getAncestors()
+    public function getAncestors($refresh = false)
     {
-        if ($this->_ancestors === null) {
+        if ($this->_ancestors === null || $refresh) {
             $this->_ancestors = [];
 
             if ($this->parent_id) {
@@ -113,11 +114,12 @@ trait NestedTreeTrait
     }
 
     /**
+     * @param bool $refresh
      * @return ActiveRecord[]
      */
-    public function getDescendants()
+    public function getDescendants($refresh = false)
     {
-        if ($this->_descendants === null) {
+        if ($this->_descendants === null || $refresh) {
             $this->_descendants = [];
 
             if ($this->lft < $this->rgt + 1) {
