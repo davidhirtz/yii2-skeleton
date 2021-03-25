@@ -2,10 +2,11 @@
 
 namespace davidhirtz\yii2\skeleton\db;
 
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\TypeGridViewTrait;
 use Yii;
 
 /**
- * Class TypeAttributeTrait.
+ * Class TypeAttributeTrait
  * @package davidhirtz\yii2\skeleton\db
  *
  * @property int $type
@@ -13,24 +14,25 @@ use Yii;
 trait TypeAttributeTrait
 {
     /**
-     * Checks if type is set as a key of {@link TypeAttributeTrait::getTypes()}.
-     * @deprecated Please use {@link \davidhirtz\yii2\skeleton\validators\DynamicRangeValidator}
+     * @param array $row
+     * @return static
      */
-    public function validateType()
+    public static function instantiate($row)
     {
-        if ($this->type === null) {
-            $this->type = static::TYPE_DEFAULT;
-
-        } elseif (static::getTypes() && !in_array($this->type, array_keys(static::getTypes()))) {
-            $this->addInvalidAttributeError('type');
+        if ($className = static::getTypes()[$row['type'] ?? null]['class'] ?? false) {
+            return new $className();
         }
 
-        $this->type = (int)$this->type;
+        /** @noinspection PhpUndefinedClassInspection */
+        return parent::instantiate($row);
     }
 
     /**
-     * Override this method to implement types.
-     * @return array containing the type as key and a associative array containing at least "name".
+     * Override this method to implement types. The type array is must consist of a unique type as key and a associative
+     * array containing at least a "name" key. Optional a "class" key can be set to instantiate a model on find and the
+     * "icon" value will be used in {@link TypeGridViewTrait} on default.
+     *
+     * @return array
      */
     public static function getTypes(): array
     {
