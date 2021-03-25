@@ -86,10 +86,10 @@ trait TypeGridViewTrait
     {
         $items = [];
 
-        foreach ($this->getModel()::getTypes() as $id => $type) {
+        foreach ($this->getModel()::getTypes() as $type => $typeOptions) {
             $items[] = [
-                'label' => $type['plural'] ?? $type['name'],
-                'url' => Url::current([$this->typeParamName => $id, 'page' => null]),
+                'label' => isset($typeOptions['class']) ? $this->getModel()::instantiate(['type' => $type])->getTypeName() : ($typeOptions['plural'] ?? $typeOptions['name']),
+                'url' => Url::current([$this->typeParamName => $type, 'page' => null]),
             ];
         }
 

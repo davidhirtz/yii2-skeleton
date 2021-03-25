@@ -20,7 +20,7 @@ trait TypeAttributeTrait
     public static function instantiate($row)
     {
         if ($className = static::getTypes()[$row['type'] ?? null]['class'] ?? false) {
-            return new $className();
+            return new $className(['type' => $row['type']]);
         }
 
         /** @noinspection PhpUndefinedClassInspection */
