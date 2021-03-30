@@ -69,10 +69,14 @@ trait TypeGridViewTrait
      */
     public function typeDropdown()
     {
-        $type = $this->getModel()::getTypes()[$this->type] ?? false;
+        $typeOptions = $this->getModel()::getTypes()[$this->type] ?? false;
+
+        if ($typeOptions) {
+            $name = isset($typeOptions['class']) ? $this->getModel()::instantiate(['type' => $this->type])->getTypeName() : ($typeOptions['plural'] ?? $typeOptions['name']);
+        }
 
         return ButtonDropdown::widget([
-            'label' => $type ? Html::tag('strong', $type['plural'] ?? $type['name']) : Yii::t('skeleton', 'Type'),
+            'label' => $name ?? Yii::t('skeleton', 'Type'),
             'items' => $this->typeDropdownItems(),
             'paramName' => $this->typeParamName,
             'defaultItem' => $this->defaultTypeItem,
