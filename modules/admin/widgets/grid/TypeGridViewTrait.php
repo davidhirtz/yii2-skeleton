@@ -40,6 +40,7 @@ trait TypeGridViewTrait
     {
         return [
             'attribute' => 'type',
+            'contentOptions' => ['class' => 'text-nowrap'],
             'visible' => !$this->type && count($this->getModel()::getTypes()) > 1,
             'content' => function ($model) {
                 /** @var ActiveRecord|TypeAttributeTrait $model */
