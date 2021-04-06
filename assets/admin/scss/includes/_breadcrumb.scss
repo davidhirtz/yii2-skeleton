@@ -1,10 +1,10 @@
 .breadcrumb {
 
-  li {
+  a {
     @extend .text-overflow;
   }
 
-  li:not(.active):not(:last-child) {
+  li:not(.active):not(:last-child) a {
     max-width: 150px;
   }
 }
