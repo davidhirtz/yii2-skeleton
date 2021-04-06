@@ -14,6 +14,11 @@ use Yii;
 trait TypeAttributeTrait
 {
     /**
+     * @var static[]
+     */
+    private static $_instances;
+
+    /**
      * @param array $row
      * @return static
      */
@@ -41,6 +46,24 @@ trait TypeAttributeTrait
                 'name' => Yii::t('skeleton', 'Default'),
             ],
         ];
+    }
+
+    /**
+     * Returns an array containing all instances set via the "class" option in `getTypes`.
+     * @return static[]
+     */
+    public static function getTypeInstances()
+    {
+        if (static::$_instances === null) {
+            static::$_instances = [];
+
+            foreach (static::getTypes() as $type => $typeOptions) {
+                static::$_instances[$type] = static::instantiate(['type' => $type]);
+                static::$_instances[$type]->type = $type;
+            }
+        }
+
+        return static::$_instances;
     }
 
     /**
