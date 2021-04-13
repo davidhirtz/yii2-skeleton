@@ -24,7 +24,7 @@ trait UserTrait
             throw new NotFoundHttpException();
         }
 
-        if ($permissionName && !Yii::$app->getUser()->can($permissionName, ['entry' => $user])) {
+        if ($permissionName && !Yii::$app->getUser()->can($permissionName, ['user' => $user])) {
             throw new ForbiddenHttpException();
         }
 
