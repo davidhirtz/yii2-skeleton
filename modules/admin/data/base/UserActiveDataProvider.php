@@ -25,6 +25,10 @@ class UserActiveDataProvider extends ActiveDataProvider
      */
     public function init()
     {
+        if (!$this->query) {
+            $this->query = User::find();
+        }
+
         $this->initQuery();
         parent::init();
     }
@@ -34,15 +38,13 @@ class UserActiveDataProvider extends ActiveDataProvider
      */
     protected function initQuery()
     {
-        $this->query = User::find();
-
         if ($this->searchString) {
             $this->query->matching($this->searchString);
         }
     }
 
     /**
-     * @param array|bool|\yii\data\Sort $value
+     * @inheritDoc
      */
     public function setSort($value)
     {
@@ -54,7 +56,7 @@ class UserActiveDataProvider extends ActiveDataProvider
     }
 
     /**
-     * @param array|bool|\yii\data\Pagination $value
+     * @inheritDoc
      */
     public function setPagination($value)
     {
