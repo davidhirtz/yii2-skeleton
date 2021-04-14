@@ -232,7 +232,7 @@ class TrailBehavior extends Behavior
 
                 if ($this->owner->hasMethod($method)) {
                     if ($value = ($this->owner->{$method}()[$value] ?? false)) {
-                        return is_string($value) ? $value : ($value['name'] ?? $value);
+                        return is_string($value) ? $value : ($value['name'] ?? print_r($value, true));
                     }
                 }
 
