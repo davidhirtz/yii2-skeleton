@@ -48,7 +48,7 @@ class Sitemap extends Component
      * @var int the maximum number of sitemap URLs per sitemap. This is used to split URLs into separate sitemaps when
      * `useSitemapIndex` is set to true.
      */
-    public $maxUrlCount = 3;
+    public $maxUrlCount = 50000;
 
     /**
      * @var array containing the static views. Array keys "alias" for view path and "route" string for URL manager are
