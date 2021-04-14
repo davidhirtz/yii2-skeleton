@@ -114,7 +114,7 @@ class SitemapController extends Controller
                 $this->writer->writeAttribute('xmlns:image', 'http://www.google.com/schemas/sitemap-image/1.1');
             }
 
-            $this->writer->startElement('url');
+            $this->writer->startElement($isIndex ? 'sitemap' : 'url');
             $this->writer->writeElement('loc', Url::to(is_array($url) ? $url['loc'] : $url, true));
 
             if (isset($url['lastmod'])) {
