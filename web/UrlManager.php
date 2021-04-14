@@ -254,4 +254,12 @@ class UrlManager extends \yii\web\UrlManager
     {
         return substr(parse_url($this->getHostInfo(), PHP_URL_HOST), strlen(Yii::$app->language == $this->defaultLanguage ? 'www' : Yii::$app->language));
     }
+
+    /**
+     * @return bool
+     */
+    public function hasI18nUrls()
+    {
+        return $this->i18nUrl || $this->i18nSubdomain;
+    }
 }

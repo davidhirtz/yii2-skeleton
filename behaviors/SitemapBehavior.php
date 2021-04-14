@@ -2,17 +2,19 @@
 
 namespace davidhirtz\yii2\skeleton\behaviors;
 
+use davidhirtz\yii2\skeleton\db\ActiveQuery;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
+use davidhirtz\yii2\skeleton\web\Sitemap;
+use Yii;
 use yii\base\Behavior;
 use yii\base\InvalidConfigException;
-use yii\db\ExpressionInterface;
 
 /**
  * Class SitemapBehavior.
  * @package davidhirtz\yii2\skeleton\behaviors
+ * @see https://www.sitemaps.org/protocol.html
  *
- * @see http://www.sitemaps.org/protocol.html
+ * @property ActiveRecord $owner
  */
 class SitemapBehavior extends Behavior
 {
@@ -25,37 +27,44 @@ class SitemapBehavior extends Behavior
     public const CHANGE_FREQUENCY_NEVER = 'never';
 
     /**
-     * @var int
-     */
-    public $batchSize = 100;
-
-    /**
-     * @var string
-     */
-    public $defaultChangeFrequency;
-
-    /**
-     * @var float
-     */
-    public $defaultPriority;
-
-    /**
-     * @var callable
-     */
-    public $query;
-
-    /**
-     * @var callable must return single or nested array with URL or valid route as "loc" key.
+     * @var callable required method, that returns a single or nested array with sitemap URL or valid route as "loc" key.
      */
     public $callback;
 
     /**
-     * @throws InvalidConfigException
+     * @var int the maximum number rows selected by the default database query, if this is null the default value from
+     * {@link Sitemap} will be used. Change this value if one record produces more than one URL (for example for
+     * multiple languages).
+     */
+    public $maxUrlCount;
+
+    /**
+     * @var int the batch size for the default database query.
+     */
+    public $batchSize = 100;
+
+    /**
+     * @var string the default change frequency, leave empty to omit.
+     */
+    public $defaultChangeFrequency;
+
+    /**
+     * @var float the default priority frequency, leave empty to omit. Valid values range from 0.0 to 1.0, the default
+     * of a page is 0.5.
+     */
+    public $defaultPriority;
+
+    /**
+     * @inheritDoc
      */
     public function init()
     {
         if (!is_callable($this->callback)) {
-            throw new InvalidConfigException('SitemapBehavior::$dataClosure isn\'t callable.');
+            throw new InvalidConfigException('SitemapBehavior::$callback must be callable.');
+        }
+
+        if (!$this->maxUrlCount) {
+            $this->maxUrlCount = Yii::$app->sitemap->maxUrlCount;
         }
 
         parent::init();
@@ -63,21 +72,19 @@ class SitemapBehavior extends Behavior
 
     /**
      * Generates XML site map urls from record.
-     * @param int|ExpressionInterface|null $offset
+     *
+     * @param int $offset
      * @return array
      */
-    public function generateSitemapUrls($offset = null)
+    public function generateSitemapUrls($offset = 0)
     {
+        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+        /** @var ActiveQuery $query */
+        $query = $this->owner->getSitemapQuery();
         $urls = [];
 
-        /**
-         * @var ActiveRecord $owner
-         */
-        $owner = $this->owner;
-        $query = $owner::find()->offset($offset);
-
-        if (is_callable($this->query)) {
-            call_user_func($this->query, $query);
+        if (Yii::$app->sitemap->useSitemapIndex) {
+            $query->limit($this->maxUrlCount)->offset($offset * $this->maxUrlCount);
         }
 
         foreach ($query->each($this->batchSize) as $model) {
@@ -86,9 +93,8 @@ class SitemapBehavior extends Behavior
             if ($result) {
                 foreach (is_int(key($result)) ? $result : [$result] as $data) {
                     if (isset($data['loc'])) {
-                        ArrayHelper::setDefaultValue($data, 'changefreq', $this->defaultChangeFrequency);
-                        ArrayHelper::setDefaultValue($data, 'priority', $this->defaultPriority);
-
+                        $data['changefreq'] = $data['changefreq'] ?? $this->defaultChangeFrequency;
+                        $data['priority'] = $data['priority'] ?? $this->defaultPriority;
                         $urls[] = array_filter($data);
                     }
                 }
@@ -96,5 +102,13 @@ class SitemapBehavior extends Behavior
         }
 
         return $urls;
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getSitemapQuery()
+    {
+        return $this->owner::find();
     }
 }
