@@ -3,19 +3,20 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
-use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\models\UserLogin;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\traits\UserTrait;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 
 /**
- * Class UserLoginController.
+ * Class UserLoginController
  * @package davidhirtz\yii2\skeleton\modules\admin\controllers
  */
 class UserLoginController extends Controller
 {
+    use UserTrait;
+
     /**
      * @inheritdoc
      */
@@ -68,14 +69,7 @@ class UserLoginController extends Controller
      */
     public function actionView($user)
     {
-        $user = User::find()
-            ->nameAttributesOnly()
-            ->where(['id' => $user])
-            ->one();
-
-        if (!$user) {
-            throw new NotFoundHttpException;
-        }
+        $user = $this->findUserForm($user, 'userUpdate');
 
         $provider = new ActiveDataProvider([
             'sort' => false,

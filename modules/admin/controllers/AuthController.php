@@ -3,23 +3,24 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
 use davidhirtz\yii2\skeleton\models\AuthItem;
-use davidhirtz\yii2\skeleton\models\User;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\traits\UserTrait;
 use davidhirtz\yii2\skeleton\web\Controller;
 use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use Yii;
 use yii\rbac\Role;
-use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 /**
- * Class AuthController.
+ * Class AuthController
  * @package davidhirtz\yii2\skeleton\modules\admin\controllers
  */
 class AuthController extends Controller
 {
+    use UserTrait;
+
     /**
      * @inheritdoc
      */
@@ -73,7 +74,7 @@ class AuthController extends Controller
      */
     public function actionView($user)
     {
-        $user = $this->getUser($user);
+        $user = $this->findUserForm($user, 'authUpdate');
 
         $items = AuthItem::find()
             ->select(['name', 'type', 'description'])
@@ -101,7 +102,7 @@ class AuthController extends Controller
      */
     public function actionAssign($id, $name, $type)
     {
-        $user = $this->getUser($id);
+        $user = $this->findUserForm($id, 'authUpdate');
         $role = $this->getAuthItem($name, $type);
 
         if (!Yii::$app->getAuthManager()->assign($role, $user->id)) {
@@ -121,7 +122,7 @@ class AuthController extends Controller
      */
     public function actionRevoke($id, $name, $type)
     {
-        $user = $this->getUser($id);
+        $user = $this->findUserForm($id, 'authUpdate');
         $role = $this->getAuthItem($name, $type);
 
         if (!Yii::$app->getAuthManager()->revoke($role, $user->id)) {
@@ -131,23 +132,6 @@ class AuthController extends Controller
         }
 
         return $this->redirect(['view', 'user' => $user->id]);
-    }
-
-    /**
-     * @param int $id
-     * @return User
-     */
-    private function getUser($id)
-    {
-        if (!$user = User::findOne($id)) {
-            throw new NotFoundHttpException();
-        }
-
-        if (!Yii::$app->user->can('authUpdate', ['user' => $user])) {
-            throw new ForbiddenHttpException();
-        }
-
-        return $user;
     }
 
     /**
