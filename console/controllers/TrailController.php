@@ -17,7 +17,8 @@ use yii\helpers\Console;
 class TrailController extends Controller
 {
     /**
-     * Removes trail records older than the application `trailLifetime`.
+     * Removes trail records older than the application `trailLifetime`. As there is currently no index on created at
+     * we need to delete the records in batch.
      */
     public function actionClear()
     {
@@ -25,15 +26,40 @@ class TrailController extends Controller
             throw new InvalidConfigException("Application `trailLifetime` must be set");
         }
 
-        $lastId = Trail::find()
-            ->select('id')
-            ->where(['<', 'created_at', (string)(new DateTime())->setTimestamp(time() - $this->getTrailLifeTime())])
-            ->orderBy(['id' => SORT_DESC])
-            ->limit(1)
-            ->scalar();
+        $threshold = (string)(new DateTime())->setTimestamp(time() - $this->getTrailLifeTime());
+        $totalCount = 0;
 
-        $deleteCount = Trail::deleteAll(['<=', 'id', $lastId]);
-        $this->stdout(($deleteCount ? "Deleted {$deleteCount} expired trail records" : "No expired trail records found") . PHP_EOL, Console::FG_GREEN);
+        $query = Trail::find()
+            ->select(['id', 'created_at'])
+            ->orderBy(['id' => SORT_ASC])
+            ->limit(100)
+            ->asArray();
+
+        while (true) {
+            $rows = $query->all();
+            $ids = [];
+
+            foreach ($rows as $row) {
+                if ($row['created_at'] < $threshold) {
+                    $ids[] = $row['id'];
+                }
+            }
+
+            if ($ids) {
+                $deletedCount = Trail::deleteAll(['id' => $ids]);
+                $totalCount += $deletedCount;
+
+                $this->stdout(("Deleting records ... (" . Yii::$app->getFormatter()->asInteger($totalCount) . ")\r"));
+
+                if ($deletedCount == count($rows)) {
+                    continue;
+                }
+            }
+
+            break;
+        }
+
+        $this->stdout(($totalCount ? "Deleted {$totalCount} expired trail records" : "No expired trail records found") . PHP_EOL, Console::FG_GREEN);
     }
 
     /**
