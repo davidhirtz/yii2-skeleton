@@ -175,6 +175,7 @@ trait ApplicationTrait
             ];
         }
     }
+
     /**
      * Extends given application component.
      *
