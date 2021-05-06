@@ -2,10 +2,8 @@
 
 namespace davidhirtz\yii2\skeleton\helpers;
 
-use davidhirtz\yii2\skeleton\filters\CorrectExifRotation;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
-use Imagine\Image\Metadata\ExifMetadataReader;
 use Imagine\Image\Palette\Color\ColorInterface;
 use Imagine\Image\Point;
 use yii\db\Exception;
@@ -123,9 +121,9 @@ class Image extends BaseImage
     }
 
     /**
-     * @param \Imagine\Image\ImageInterface|resource|string $image
+     * @param ImageInterface|resource|string $image
      * @param string $color
-     * @return \Imagine\Image\ImageInterface|\Imagine\Imagick\Image|resource|string
+     * @return ImageInterface|resource|string
      */
     public static function autorotate($image, $color = '000000')
     {
