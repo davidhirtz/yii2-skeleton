@@ -3,16 +3,16 @@
 namespace davidhirtz\yii2\skeleton\filters;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
+use davidhirtz\yii2\skeleton\helpers\Image;
 use Imagine\Filter\FilterInterface;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Palette\Color\ColorInterface;
 use yii\base\InvalidConfigException;
 
 /**
- * Class CorrectExifRotation.
+ * Class CorrectExifRotation
  * @package davidhirtz\yii2\skeleton\filters
  *
- * @example
  * $imagine = new \Imagine\Imagick\Imagine();
  * $image = $imagine->open('/path/to/image.ext');
  *
@@ -32,32 +32,23 @@ class CorrectExifRotation implements FilterInterface
     public function apply(ImageInterface $image)
     {
         $orientation = (int)ArrayHelper::getValue($this->getExifFromImage($image), 'Orientation');
-        $rotate = 0;
+        $angle = 0;
 
         switch ($orientation) {
             case 8:
-                $rotate = -90;
+                $angle = -90;
                 break;
 
             case 3:
-                $rotate = 180;
+                $angle = 180;
                 break;
 
             case 6:
-                $rotate = 90;
+                $angle = 90;
                 break;
         }
 
-        if ($rotate) {
-            $image->rotate($rotate, $this->background);
-
-            if ($image instanceof \Imagine\Imagick\Image) {
-                $imagick = $image->getImagick();
-                $imagick->setImageOrientation($imagick::ORIENTATION_TOPLEFT);
-            }
-        }
-
-        return $image;
+        return $angle ? Image::rotate($image, $angle, $this->background) : $image;
     }
 
     /**
@@ -70,7 +61,6 @@ class CorrectExifRotation implements FilterInterface
             throw new InvalidConfigException('Exif extension must be enabled for this filter.');
         }
 
-        /** @noinspection PhpComposerExtensionStubsInspection */
         $data = exif_read_data("data://image/jpeg;base64," . base64_encode($image->get('jpg')));
         return is_array($data) ? $data : [];
     }

@@ -117,6 +117,7 @@ class Image extends BaseImage
      */
     public static function rotate($image, $angle, $background = null)
     {
+        $image = static::setImageRotation($image);
         return static::ensureImageInterfaceInstance($image)->rotate($angle, $background);
     }
 
@@ -157,11 +158,28 @@ class Image extends BaseImage
             }
 
             return $dimensions;
-        } catch (Exception $exception) {
+        } /** @noinspection PhpRedundantCatchClauseInspection */ catch (Exception $exception) {
             Yii::error($exception);
         }
 
         return false;
+    }
+
+    /**
+     * Sets the EXIF image rotation.
+     *
+     * @param string|resource|ImageInterface $image
+     * @param int|null $rotation
+     * @return ImageInterface
+     */
+    public static function setImageRotation($image, $rotation = null)
+    {
+        if ($image instanceof \Imagine\Imagick\Image) {
+            $imagick = $image->getImagick();
+            $imagick->setImageOrientation($rotation ?: $imagick::ORIENTATION_TOPLEFT);
+        }
+
+        return $image;
     }
 
     /**
