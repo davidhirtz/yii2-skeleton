@@ -2,8 +2,10 @@
 
 namespace davidhirtz\yii2\skeleton\helpers;
 
+use davidhirtz\yii2\skeleton\filters\CorrectExifRotation;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
+use Imagine\Image\Metadata\ExifMetadataReader;
 use Imagine\Image\Palette\Color\ColorInterface;
 use Imagine\Image\Point;
 use yii\db\Exception;
@@ -117,8 +119,7 @@ class Image extends BaseImage
      */
     public static function rotate($image, $angle, $background = null)
     {
-        $image = static::setImageRotation($image);
-        return static::ensureImageInterfaceInstance($image)->rotate($angle, $background);
+        return static::setImageRotation(static::ensureImageInterfaceInstance($image))->rotate($angle, $background);
     }
 
     /**
