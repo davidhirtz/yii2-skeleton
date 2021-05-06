@@ -7,6 +7,7 @@ use davidhirtz\yii2\datetime\Date;
 use davidhirtz\yii2\skeleton\db\StatusAttributeTrait;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
+use davidhirtz\yii2\skeleton\helpers\Image;
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
@@ -71,9 +72,9 @@ abstract class User extends ActiveRecord
     public const PASSWORD_RESET_CODE_LENGTH = 30;
 
     /**
-     * @var int
+     * @var bool whether uploads should be automatically rotated based on their EXIF data
      */
-    public $requireName = true;
+    public $autorotatePicture = true;
 
     /**
      * @var int
@@ -94,6 +95,11 @@ abstract class User extends ActiveRecord
      * @var int
      */
     public $passwordMinLength = 5;
+
+    /**
+     * @var int
+     */
+    public $requireName = true;
 
     /**
      * @var UploadedFile|StreamUploadedFile
@@ -449,7 +455,13 @@ abstract class User extends ActiveRecord
     public function savePictureUpload(): bool
     {
         if (FileHelper::createDirectory($uploadPath = $this->getUploadPath())) {
-            return $this->upload->saveAs($uploadPath . $this->picture);
+            if ($this->upload->saveAs($uploadPath . $this->picture)) {
+                if ($this->autorotatePicture) {
+                    Image::autorotate($uploadPath . $this->picture)->save();
+                }
+
+                return true;
+            }
         }
 
         return false;
