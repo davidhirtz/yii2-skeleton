@@ -18,6 +18,15 @@ use Yii;
 class Image extends BaseImage
 {
     /**
+     * @param $image
+     * @return ImageInterface
+     */
+    public static function getImage($image)
+    {
+        return static::ensureImageInterfaceInstance($image);
+    }
+
+    /**
      * Replacement for Imagick's native `writeImages` as it doesn't support stream wrappers. Image format
      * can be set via options, otherwise the filename extension will be used.
      *
