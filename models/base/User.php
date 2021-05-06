@@ -225,7 +225,7 @@ abstract class User extends ActiveRecord
      */
     public function validatePassword(string $password): bool
     {
-        return $this->password ? Yii::$app->security->validatePassword($password . $this->password_salt, $this->password) : false;
+        return $this->password && Yii::$app->security->validatePassword($password . $this->password_salt, $this->password);
     }
 
     /**
@@ -461,7 +461,7 @@ abstract class User extends ActiveRecord
      */
     public function deletePicture($picture): bool
     {
-        return $picture ? FileHelper::removeFile($this->getUploadPath() . $picture) : false;
+        return $picture && FileHelper::removeFile($this->getUploadPath() . $picture);
     }
 
     /**
@@ -644,7 +644,7 @@ abstract class User extends ActiveRecord
      */
     public function hasAuthClient($clientName): bool
     {
-        return ($authClients = $this->authClients) ? in_array($clientName, ArrayHelper::getColumn($authClients, 'name')) : false;
+        return (($authClients = $this->authClients)) && in_array($clientName, ArrayHelper::getColumn($authClients, 'name'));
     }
 
     /**
