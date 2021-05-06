@@ -123,6 +123,16 @@ class Image extends BaseImage
     }
 
     /**
+     * @param \Imagine\Image\ImageInterface|resource|string $image
+     * @param string $color
+     * @return \Imagine\Image\ImageInterface|\Imagine\Imagick\Image|resource|string
+     */
+    public static function autorotate($image, $color = '000000')
+    {
+        return static::setImageRotation(parent::autorotate($image, $color));
+    }
+
+    /**
      * @param string $filename
      * @param string|null $extension
      * @return array|bool
