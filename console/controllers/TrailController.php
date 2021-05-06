@@ -5,6 +5,7 @@ namespace davidhirtz\yii2\skeleton\console\controllers;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
+use Exception;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\console\Controller;
@@ -60,7 +61,20 @@ class TrailController extends Controller
             break;
         }
 
-        $this->stdout(($totalCount ? "Deleted {$totalCount} expired trail records" : "No expired trail records found") . PHP_EOL, Console::FG_GREEN);
+        $this->stdout(($totalCount ? "Deleted {$totalCount} expired trail records" : 'No expired trail records found') . PHP_EOL, Console::FG_GREEN);
+
+        if ($totalCount) {
+            $this->stdout("Optimizing table ... ");
+            $start = microtime(true);
+
+            try {
+                Yii::$app->getDb()->createCommand('OPTIMIZE TABLE ' . Trail::tableName());
+                $this->stdout('done (time: ' . sprintf('%.2f', microtime(true) - $start) . 's)' . PHP_EOL, Console::FG_RED);
+            } catch (Exception $exception) {
+                Yii::error($exception);
+                $this->stdout('failed' . PHP_EOL, Console::FG_RED);
+            }
+        }
     }
 
     /**
