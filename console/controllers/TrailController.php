@@ -52,6 +52,7 @@ class TrailController extends Controller
                 $this->stdout(("Deleting records ... (" . Yii::$app->getFormatter()->asInteger($totalCount) . ")\r"));
 
                 if ($deletedCount == count($rows)) {
+                    sleep(1);
                     continue;
                 }
             }
