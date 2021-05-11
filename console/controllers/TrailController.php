@@ -77,7 +77,7 @@ class TrailController extends Controller
 
         try {
             Yii::$app->getDb()->createCommand('OPTIMIZE TABLE ' . Trail::tableName());
-            $this->stdout('done (time: ' . sprintf('%.2f', microtime(true) - $start) . 's)' . PHP_EOL, Console::FG_RED);
+            $this->stdout('done (time: ' . sprintf('%.2f', microtime(true) - $start) . 's)' . PHP_EOL);
         } catch (Exception $exception) {
             Yii::error($exception);
             $this->stdout('failed' . PHP_EOL, Console::FG_RED);
