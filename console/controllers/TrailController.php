@@ -18,8 +18,7 @@ use yii\helpers\Console;
 class TrailController extends Controller
 {
     /**
-     * Removes trail records older than the application `trailLifetime`. As there is currently no index on created at
-     * we need to delete the records in batch.
+     * Removes trail records older than the application `trailLifetime`.
      */
     public function actionClear()
     {
@@ -64,16 +63,24 @@ class TrailController extends Controller
         $this->stdout(($totalCount ? "Deleted {$totalCount} expired trail records" : 'No expired trail records found') . PHP_EOL, Console::FG_GREEN);
 
         if ($totalCount) {
-            $this->stdout("Optimizing table ... ");
-            $start = microtime(true);
+            $this->actionOptimize();
+        }
+    }
 
-            try {
-                Yii::$app->getDb()->createCommand('OPTIMIZE TABLE ' . Trail::tableName());
-                $this->stdout('done (time: ' . sprintf('%.2f', microtime(true) - $start) . 's)' . PHP_EOL, Console::FG_RED);
-            } catch (Exception $exception) {
-                Yii::error($exception);
-                $this->stdout('failed' . PHP_EOL, Console::FG_RED);
-            }
+    /**
+     * Optimizes the trail table.
+     */
+    public function actionOptimize()
+    {
+        $this->stdout("Optimizing trail table ... ");
+        $start = microtime(true);
+
+        try {
+            Yii::$app->getDb()->createCommand('OPTIMIZE TABLE ' . Trail::tableName());
+            $this->stdout('done (time: ' . sprintf('%.2f', microtime(true) - $start) . 's)' . PHP_EOL, Console::FG_RED);
+        } catch (Exception $exception) {
+            Yii::error($exception);
+            $this->stdout('failed' . PHP_EOL, Console::FG_RED);
         }
     }
 
