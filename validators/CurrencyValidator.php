@@ -8,7 +8,7 @@ use Yii;
 use yii\web\JsExpression;
 
 /**
- * Class CurrencyValidator.
+ * Class CurrencyValidator
  * @package davidhirtz\yii2\skeleton\validators
  */
 class CurrencyValidator extends NumberValidator
