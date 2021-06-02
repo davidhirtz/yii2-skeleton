@@ -50,21 +50,24 @@ class RelationValidator extends Validator
     public function validateAttribute($model, $attribute)
     {
         $columnSchema = $model::getTableSchema()->getColumn($attribute);
-        $model->setAttribute($attribute, $value = $columnSchema->phpTypecast($model->getAttribute($attribute)));
+        $value = $columnSchema->phpTypecast($model->getAttribute($attribute));
+        $model->setAttribute($attribute, $value);
 
-        if ($value) {
-            /** @var ActiveRecord $record */
-            $related = $model->{$this->relation};
+        if ($model->isAttributeChanged($attribute)) {
+            if ($value) {
+                /** @var ActiveRecord $record */
+                $related = $model->{$this->relation};
 
-            if ((!$related || $related->getPrimaryKey() !== $value) && !$model->refreshRelation($this->relation)) {
-                $model->addInvalidAttributeError($attribute);
+                if ((!$related || $related->getPrimaryKey() !== $value) && !$model->refreshRelation($this->relation)) {
+                    $model->addInvalidAttributeError($attribute);
+                }
+            } else {
+                if ($this->required) {
+                    $model->addInvalidAttributeError($attribute);
+                }
+
+                $model->populateRelation($this->relation, null);
             }
-        } else {
-            if ($this->required) {
-                $model->addInvalidAttributeError($attribute);
-            }
-
-            $model->populateRelation($this->relation, null);
         }
     }
 
