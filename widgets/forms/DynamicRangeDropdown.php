@@ -41,7 +41,7 @@ class DynamicRangeDropdown extends InputWidget
      */
     public function run()
     {
-        if (count($items = $this->getItems()) > 1 || !$this->skipOnEmpty) {
+        if (count($items = $this->getItems()) > 1 || !$this->skipOnEmpty || isset($this->options['prompt'])) {
             echo Html::activeDropDownList($this->model, $this->attribute, $items, $this->options);
         }
     }
