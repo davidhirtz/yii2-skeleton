@@ -4,7 +4,6 @@ namespace davidhirtz\yii2\skeleton\modules\admin;
 
 use Yii;
 use yii\base\Action;
-use yii\helpers\Url;
 
 /**
  * Class Module
@@ -195,8 +194,7 @@ class Module extends \yii\base\Module
         $request = Yii::$app->getRequest();
 
         if ($request->getIsDraft() && !$request->getIsAjax()) {
-            $request->setHostInfo($request->getProductionHostInfo());
-            Yii::$app->getResponse()->redirect(Url::current([], true))->send();
+            Yii::$app->getResponse()->redirect($request->getProductionHostInfo() . $request->getUrl())->send();
         }
 
         return parent::beforeAction($action);
