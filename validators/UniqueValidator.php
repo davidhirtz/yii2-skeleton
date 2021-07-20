@@ -18,12 +18,12 @@ class UniqueValidator extends \yii\validators\UniqueValidator
     public function init()
     {
         if ($this->when === null) {
-            $this->when = function (ActiveRecord $model) {
+            $this->when = function (ActiveRecord $model, $attribute) {
                 if (is_array($this->targetAttribute) && count($this->targetAttribute) > 1) {
                     return count($model->getDirtyAttributes($this->targetAttribute)) > 0;
                 }
 
-                return $model->isAttributeChanged($this->targetAttribute);
+                return $model->isAttributeChanged($this->targetAttribute ?: $attribute);
             };
         }
 
