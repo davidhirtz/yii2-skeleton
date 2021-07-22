@@ -137,7 +137,11 @@ class UrlManager extends \yii\web\UrlManager
         }
 
         if ($this->i18nSubdomain && $language !== Yii::$app->language) {
-            $subdomain = $language == $this->defaultLanguage || !in_array($language, $this->languages) ? 'www' : $language;
+            $request = Yii::$app->getRequest();
+            $subdomain = $language == $this->defaultLanguage || !in_array($language, $this->languages) ?
+                ($request->getIsDraft() ? $request->draftSubdomain : 'www') :
+                ($request->getIsDraft() ? ($request->draftSubdomain . '.' . $language) : $language);
+
             return parse_url($this->getHostInfo(), PHP_URL_SCHEME) . '://' . $subdomain . $this->getI18nHostInfo() . $event->url;
         }
 
