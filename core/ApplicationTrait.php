@@ -75,6 +75,16 @@ trait ApplicationTrait
                             'class' => 'yii\log\FileTarget',
                             'levels' => ['error', 'warning'],
                             'fileMode' => 0770, // Make sure both web and console user can write to file
+                            'maskVars' => [
+                                '_SERVER.HTTP_AUTHORIZATION',
+                                '_SERVER.PHP_AUTH_USER',
+                                '_SERVER.PHP_AUTH_PW',
+                                '_POST.Login.password',
+                                '_POST.PasswordResetForm.newPassword',
+                                '_POST.PasswordResetForm.repeatPassword',
+                                '_POST.User.newPassword',
+                                '_POST.User.repeatPassword',
+                            ],
                             'except' => [
                                 'yii\web\HttpException:*',
                             ],
