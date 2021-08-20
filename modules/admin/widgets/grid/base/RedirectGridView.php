@@ -151,7 +151,7 @@ class RedirectGridView extends GridView
     {
         return [
             'attribute' => 'updated_at',
-            'headerOptions' => ['class' => 'd-none d-md-table-cell'],
+            'headerOptions' => ['class' => 'd-none d-md-table-cell text-nowrap'],
             'contentOptions' => ['class' => 'd-none d-md-table-cell text-nowrap'],
             'content' => function (Redirect $redirect) {
                 return Timeago::tag($redirect->updated_at);
