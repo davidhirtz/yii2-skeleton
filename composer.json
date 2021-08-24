@@ -27,9 +27,6 @@
 		"npm-asset/blueimp-file-upload": ">=10.2.0",
 		"npm-asset/bootbox":">=5"
 	},
-	"require-dev": {
-		"npm-asset/skeleton-router":">=1.1.18"
-	},
 	"autoload":{
 		"psr-4":{
 			"davidhirtz\\yii2\\skeleton\\":""
