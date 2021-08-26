@@ -138,7 +138,7 @@ $(function () {
         }
 
         for (i = 0; i < targets.length; i++) {
-            $(targets[i].match(/^[.#]/) ? targets[i] : ("#" + targets[i])).each(function() {
+            $(targets[i].match(/^[.#]/) ? targets[i] : ("#" + targets[i])).each(function () {
                 this[this.value !== undefined ? "value" : "innerHTML"] = values[i];
             });
         }
@@ -279,5 +279,12 @@ var Skeleton = {
             var isSelected = $checkboxes.filter(':checked').length > 0;
             $('#btn-selection').toggle(isSelected).closest('.hidden-if-inactive').toggleClass('active', isSelected);
         })
+    },
+
+    uploadProgress: function (e, data) {
+        var _ = this,
+            progress = parseInt(data.loaded / data.total * 100, 10);
+
+        $('#progress').toggle(progress < 100).find('.bar').css('width', progress + '%');
     }
 };

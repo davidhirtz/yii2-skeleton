@@ -11,7 +11,7 @@ use yii\web\JsExpression;
 use yii\widgets\InputWidget;
 
 /**
- * Class FileUpload.
+ * Class FileUpload
  * @package davidhirtz\yii2\skeleton\widgets\form
  *
  * @property ActiveRecord $model
@@ -72,6 +72,7 @@ class FileUpload extends InputWidget
 
         $defaultClientEvents = [
             'fileuploaddone' => $this->dropZone ? new JsExpression('function(e,x){$(\'' . $this->dropZone . '\').append(x.result)}') : null,
+            'fileuploadprogressall' => new JsExpression('Skeleton.uploadProgress'),
         ];
 
         $this->clientEvents = array_merge($defaultClientEvents, $this->clientEvents);
@@ -84,7 +85,9 @@ class FileUpload extends InputWidget
     public function run()
     {
         $this->registerClientScript();
-        echo $this->hasModel() ? Html::activeFileInput($this->model, $this->attribute, $this->options) : Html::fileInput($this->name, $this->value, $this->options);
+
+        return ($this->hasModel() ? Html::activeFileInput($this->model, $this->attribute, $this->options) : Html::fileInput($this->name, $this->value, $this->options)) .
+            '<div id="progress"><div class="bar"></div></div>';
     }
 
     /**

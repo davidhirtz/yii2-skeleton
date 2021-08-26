@@ -25,6 +25,19 @@ https://github.com/blueimp/jQuery-File-Upload
   cursor: pointer;
 }
 
+#progress {
+  display: none;
+  position: fixed;
+  top: $app-upload-progress-top;
+  left: 0;
+  width: 100%;
+
+  .bar {
+    background-color: $app-upload-progress-bg;
+    height: $app-upload-progress-height;
+  }
+}
+
 /*
 jQuery UI Sortable.
  */
@@ -185,6 +198,7 @@ jQuery UI Autocomplete
     background-color: $gray-300;
   }
 }
+
 .ui-helper-hidden-accessible {
   border: 0;
   clip: rect(0 0 0 0);

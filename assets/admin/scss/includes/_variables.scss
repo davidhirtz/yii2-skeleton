@@ -343,6 +343,13 @@ Icon.
 $app-icon-margin-x: 6px !default;
 
 /*
+Upload.
+ */
+$app-upload-progress-top: 51px !default;
+$app-upload-progress-height: 10px !default;
+$app-upload-progress-bg: $success !default;
+
+/*
 Datepicker.
  */
 $datepicker-spacer-y: $card-spacer-y !default;
