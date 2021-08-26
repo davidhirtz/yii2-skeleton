@@ -1,6 +1,6 @@
-//@each $color, $value in $theme-colors {
-//  @include text-emphasis-variant(".text-#{$color}", $value);
-//}
+@each $color, $value in $theme-colors {
+  @include text-emphasis-variant(".text-#{$color}", $value, true);
+}
 
 .text-muted {
   color: $text-muted !important;
