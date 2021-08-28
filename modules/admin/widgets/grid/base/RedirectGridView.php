@@ -136,7 +136,7 @@ class RedirectGridView extends GridView
         return [
             'attribute' => 'url',
             'content' => function (Redirect $redirect) {
-                $text = Html::iconText('external-link-alt', Html::markKeywords($redirect->url, $this->getSearchKeywords()), ['class' => 'text-nowrap']);
+                $text = Html::iconText('external-link-alt', Html::markKeywords($redirect->url ?: '/', $this->getSearchKeywords()), ['class' => 'text-nowrap']);
                 return Html::a($text, $redirect->getBaseUrl() . $redirect->url, [
                     'target' => '_blank',
                 ]);
