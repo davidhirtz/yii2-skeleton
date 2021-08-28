@@ -58,7 +58,7 @@ class Redirect extends ActiveRecord
                 'skipOnEmpty' => false,
             ],
             [
-                ['request_uri', 'url'],
+                ['request_uri'],
                 'required',
             ],
             [
@@ -168,7 +168,7 @@ class Redirect extends ActiveRecord
      */
     public static function sanitizeUrl($url)
     {
-        return $url ? preg_replace('/\s+/', '%20', trim($url, '/ ')) : false;
+        return $url ? preg_replace('/\s+/', '%20', trim($url, '/ ')) : '';
     }
 
     /**
