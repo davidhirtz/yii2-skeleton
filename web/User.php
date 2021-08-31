@@ -103,7 +103,7 @@ class User extends \yii\web\User
      */
     protected function afterLogin($identity, $cookieBased, $duration)
     {
-        // Update login count, cache previous login date in session and insert new record to login log.
+        // Update login count, cache previous login date in session and insert new record to login-log.
         $session = Yii::$app->getSession();
         $session->set('last_login_timestamp', $identity->last_login ? $identity->last_login->getTimestamp() : null);
 
@@ -197,7 +197,7 @@ class User extends \yii\web\User
             return false;
         }
 
-        return (!$this->disableRbacForOwner || !$this->identity->isOwner()) ? parent::can($permissionName, $params, $allowCaching) : true;
+        return !(!$this->disableRbacForOwner || !$this->identity->isOwner()) || parent::can($permissionName, $params, $allowCaching);
     }
 
     /**

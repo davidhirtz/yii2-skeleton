@@ -73,8 +73,7 @@ class Identity extends User implements IdentityInterface
     public function validateAuthKey($authKey): bool
     {
         $this->_authKey = SessionAuthKey::find()
-            ->where('[[id]]=:id AND [[user_id]]=:userId AND [[expire]]>:expired')
-            ->params([
+            ->where('[[id]]=:id AND [[user_id]]=:userId AND [[expire]]>:expired', [
                 'id' => $authKey,
                 'userId' => $this->id,
                 'expired' => time(),
@@ -104,7 +103,7 @@ class Identity extends User implements IdentityInterface
         }
 
         $columns = [
-            'id' => $this->_authKey ? $this->_authKey->id : Yii::$app->getSecurity()->generateRandomString(64),
+            'id' => $this->_authKey->id ?? Yii::$app->getSecurity()->generateRandomString(64),
             'user_id' => $this->id,
             'expire' => time() + $this->cookieLifetime,
         ];
