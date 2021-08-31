@@ -9,8 +9,10 @@
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\models\forms\GoogleAuthenticatorForm;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
 use davidhirtz\yii2\skeleton\models\forms\UserForm;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
@@ -50,9 +52,22 @@ if ($user->isUnconfirmed()) {
 ]);
 ?>
 
+<?php if (!$user->google_2fa_secret) {
+    echo Panel::widget([
+        'title' => Yii::t('skeleton', 'Google Authenticator'),
+        'content' => GoogleAuthenticatorActiveForm::widget([
+            'model' => new GoogleAuthenticatorForm([
+                'user' => $user,
+            ]),
+        ]),
+    ]);
+}
+?>
+
 <?php Panel::begin([
     'title' => Yii::t('skeleton', 'Clients'),
 ]) ?>
+
 <?php
 if ($user->authClients) {
     ?>

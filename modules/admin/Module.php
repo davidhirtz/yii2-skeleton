@@ -70,6 +70,9 @@ class Module extends \yii\base\Module
             'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController',
             'viewPath' => '@skeleton/modules/admin/views/auth',
         ],
+        'google-authenticator' => [
+            'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\GoogleAuthenticatorController',
+        ],
         'dashboard' => [
             'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\DashboardController',
             'viewPath' => '@skeleton/modules/admin/views/dashboard',

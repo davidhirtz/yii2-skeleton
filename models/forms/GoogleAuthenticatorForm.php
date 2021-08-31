@@ -3,9 +3,9 @@
 namespace davidhirtz\yii2\skeleton\models\forms;
 
 /**
- * Class LoginForm
+ * Class GoogleAuthenticatorForm
  * @package davidhirtz\yii2\skeleton\models\forms
  */
-class LoginForm extends base\LoginForm
+class GoogleAuthenticatorForm extends base\GoogleAuthenticatorForm
 {
 }

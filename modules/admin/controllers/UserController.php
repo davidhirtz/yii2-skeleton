@@ -14,6 +14,7 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 use yii\web\ServerErrorHttpException;
 use Yii;
 
@@ -87,7 +88,7 @@ class UserController extends Controller
     }
 
     /**
-     * @return string
+     * @return string|Response
      */
     public function actionCreate()
     {
@@ -117,7 +118,7 @@ class UserController extends Controller
 
     /**
      * @param int $id
-     * @return string
+     * @return string|Response
      */
     public function actionUpdate($id)
     {
@@ -138,7 +139,7 @@ class UserController extends Controller
 
     /**
      * @param int $id
-     * @return string
+     * @return string|Response
      */
     public function actionDeletePicture($id)
     {
@@ -154,7 +155,7 @@ class UserController extends Controller
 
     /**
      * @param int $id
-     * @return string
+     * @return string|Response
      */
     public function actionReset($id)
     {
@@ -170,7 +171,7 @@ class UserController extends Controller
 
     /**
      * @param int $id
-     * @return string
+     * @return string|Response
      */
     public function actionDelete($id)
     {
@@ -210,7 +211,7 @@ class UserController extends Controller
     /**
      * @param string $id
      * @param string $name
-     * @return string
+     * @return string|Response
      */
     public function actionDeauthorize($id, $name)
     {
@@ -247,7 +248,7 @@ class UserController extends Controller
     }
 
     /**
-     * @return string
+     * @return string|Response
      */
     public function actionOwnership()
     {

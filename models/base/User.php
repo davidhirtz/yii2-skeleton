@@ -41,6 +41,7 @@ use yii\web\UploadedFile;
  * @property string $timezone
  * @property string $email_confirmation_code
  * @property string $password_reset_code
+ * @property string $google_2fa_secret
  * @property int $is_owner
  * @property int $created_by_user_id
  * @property int $login_count
@@ -296,7 +297,7 @@ abstract class User extends ActiveRecord
 
         parent::afterSave($insert, $changedAttributes);
 
-        // Finally unset upload, so additional updates won't try to upload again.
+        // Finally, unset upload, so additional updates won't try to upload again.
         $this->upload = null;
     }
 
@@ -618,6 +619,7 @@ abstract class User extends ActiveRecord
             'password_salt',
             'email_confirmation_code',
             'password_reset_code',
+            'google_2fa_secret',
             'login_count',
             'last_login',
             'created_by_user_id',
