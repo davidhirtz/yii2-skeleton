@@ -63,13 +63,16 @@ class UserHelpPanel extends HelpPanel
         ]);
     }
 
+    /**
+     * @return string
+     */
     protected function getDisableGoogleAuthenticatorButton()
     {
         if (!$this->user->google_2fa_secret) {
             return '';
         }
 
-        return Html::a(Html::iconText('google', Yii::t('skeleton', 'Disable Google Authenticator')), ['delete-picture', 'id' => $this->user->id], [
+        return Html::a(Html::iconText('qrcode', Yii::t('skeleton', 'Disable 2FA')), ['disable-google-authenticator', 'id' => $this->user->id], [
             'class' => 'btn btn-primary',
             'data-method' => 'post',
         ]);

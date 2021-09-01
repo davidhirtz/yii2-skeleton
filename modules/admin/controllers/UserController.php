@@ -47,7 +47,7 @@ class UserController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['deauthorize', 'delete-picture', 'index', 'ownership', 'reset', 'update'],
+                        'actions' => ['deauthorize', 'delete-picture', 'disable-google-authenticator', 'index', 'ownership', 'reset', 'update'],
                         'roles' => ['userUpdate'],
                     ],
                     [
@@ -281,7 +281,7 @@ class UserController extends Controller
     private function updateUserAttributes($id, $attributes)
     {
         $user = $this->findUserForm($id, 'userUpdate');
-        $user->setAttributes($attributes);
+        $user->setAttributes($attributes, false);
 
         if ($user->update()) {
             $this->success(Yii::t('skeleton', 'The user was updated.'));

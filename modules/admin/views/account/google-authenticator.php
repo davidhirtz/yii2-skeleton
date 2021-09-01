@@ -27,7 +27,7 @@ $this->setTitle(Yii::t('skeleton', 'Google Authenticator'));
             'enableClientValidation' => false,
         ]);
 
-        echo $af->field($form, 'code', ['icon' => 'envelope', 'enableError' => false])->textInput([
+        echo $af->field($form, 'code', ['icon' => 'qrcode', 'enableError' => false])->textInput([
             'autofocus' => !$form->hasErrors(),
         ]);
         ?>

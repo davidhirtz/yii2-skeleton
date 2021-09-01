@@ -56,7 +56,7 @@ class GoogleAuthenticatorValidator extends StringValidator
     public function init()
     {
         if ($this->message === null) {
-            $this->message = Yii::t('app', '{attribute} is invalid.');
+            $this->message = Yii::t('yii', '{attribute} is invalid.');
         }
 
         parent::init();
