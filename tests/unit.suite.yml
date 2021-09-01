@@ -1,0 +1,7 @@
+suite_namespace: davidhirtz\yii2\skeleton\tests\unit
+actor: UnitTester
+bootstrap: false
+modules:
+  enabled:
+    - Yii2:
+        part: fixtures

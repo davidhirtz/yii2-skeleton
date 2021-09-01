@@ -149,7 +149,7 @@ trait ApplicationTrait
         }
 
         if (is_file($db = $path . 'db.php')) {
-            $config['components']['db'] = array_merge($config['components']['db'], require($db));
+            $config['components']['db'] = array_merge(require($db), $config['components']['db']);
         }
 
         $this->setFacebookClientComponent($config);

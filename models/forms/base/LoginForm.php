@@ -70,12 +70,12 @@ class LoginForm extends Model
                 'email',
             ],
             [
-                ['rememberMe'],
-                'boolean',
+                ['code'],
+                'string',
             ],
             [
-                ['code'],
-                'safe',
+                ['rememberMe'],
+                'boolean',
             ],
         ];
     }
@@ -119,7 +119,9 @@ class LoginForm extends Model
     public function validateGoogleAuthenticatorCode()
     {
         if ($this->isGoogleAuthenticatorCodeRequired() && ($user = $this->getUser())) {
-            $validator = new GoogleAuthenticatorValidator([
+            /** @var GoogleAuthenticatorValidator $validator */
+            $validator = Yii::createObject([
+                'class' => GoogleAuthenticatorValidator::class,
                 'secret' => $user->google_2fa_secret,
                 'datetime' => $user->last_login,
             ]);

@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\validators;
 
 use davidhirtz\yii2\datetime\DateTime;
+use Exception;
 use RobThree\Auth\TwoFactorAuth;
 use Yii;
 use yii\base\Model;
@@ -45,10 +46,10 @@ class GoogleAuthenticatorValidator extends StringValidator
     public $period = 30;
 
     /**
-     * @var int|null allows to check a code for a specific point in time. This argument has no real practical use but can be
-     * handy for unit testing. The default value, null, means: use the current time
+     * @var int|null allows to check a code for a specific point in time. This argument has no real practical use but is
+     * used for unit testing. The default value, null, means: use the current time
      */
-    public $time;
+    public $currentTime;
 
     /**
      * @inheritDoc
@@ -74,7 +75,7 @@ class GoogleAuthenticatorValidator extends StringValidator
             $auth = new TwoFactorAuth(null, $this->length, $this->period);
             $timestamp = $this->datetime ? (int)floor($this->datetime->getTimestamp() / $this->period) : 0;
 
-            if (!$auth->verifyCode($this->secret, $model->$attribute, $this->discrepancy, $this->time, $timeslice) || ($timeslice <= $timestamp)) {
+            if (!$auth->verifyCode($this->secret, $model->$attribute, $this->discrepancy, $this->currentTime, $timeslice) || ($timeslice <= $timestamp)) {
                 $this->addError($model, $attribute, $this->message);
             }
         }
