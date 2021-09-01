@@ -44,6 +44,11 @@ class User extends \yii\web\User
     public $enableAutoLogin = true;
 
     /**
+     * @var bool whether 2FA via Google authenticator should be available.
+     */
+    public $enableGoogleAuthenticator = true;
+
+    /**
      * @var bool whether the role based access management always returns `false` if user is not logged in
      */
     public $disableRbacForGuests = true;

@@ -52,14 +52,16 @@ if ($user->isUnconfirmed()) {
 ]);
 ?>
 
-<?= Panel::widget([
-    'title' => Yii::t('skeleton', 'Google Authenticator'),
-    'content' => GoogleAuthenticatorActiveForm::widget([
-        'model' => new GoogleAuthenticatorForm([
-            'user' => $user,
+<?php if (Yii::$app->getUser()->enableGoogleAuthenticator) {
+    echo Panel::widget([
+        'title' => Yii::t('skeleton', 'Google Authenticator'),
+        'content' => GoogleAuthenticatorActiveForm::widget([
+            'model' => new GoogleAuthenticatorForm([
+                'user' => $user,
+            ]),
         ]),
-    ]),
-]);
+    ]);
+}
 ?>
 
 <?php Panel::begin([

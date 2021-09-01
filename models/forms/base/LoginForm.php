@@ -157,7 +157,7 @@ class LoginForm extends Model
             $this->clearErrors('code');
         }
 
-        return ($user = $this->getUser()) && !empty($user->google_2fa_secret);
+        return Yii::$app->getUser()->enableGoogleAuthenticator && ($user = $this->getUser()) && !empty($user->google_2fa_secret);
     }
 
     /**
