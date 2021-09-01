@@ -41,7 +41,7 @@ class PasswordResetForm extends Model
     public $repeatPassword;
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function rules()
     {
@@ -50,10 +50,6 @@ class PasswordResetForm extends Model
                 ['email', 'code', 'newPassword', 'repeatPassword'],
                 'filter',
                 'filter' => 'trim',
-            ],
-            [
-                ['email'],
-                'validateUser',
             ],
             [
                 ['code'],
@@ -67,7 +63,7 @@ class PasswordResetForm extends Model
             [
                 ['newPassword'],
                 'string',
-                'min' => $this->getUser()->passwordMinLength,
+                'min' => User::instance()->passwordMinLength,
             ],
             [
                 ['repeatPassword'],
@@ -79,22 +75,28 @@ class PasswordResetForm extends Model
     }
 
     /**
-     * @return bool
-     * @see PasswordResetForm::rules()
+     * Validates user credentials and password reset code.
      */
-    public function validateUser()
+    public function afterValidate()
     {
-        $user = $this->getUser();
+        $this->validatePasswordResetCode();
+        $this->validateUserStatus();
 
-        if (!$user || $user->password_reset_code != $this->code) {
+        parent::afterValidate();
+    }
+
+    /**
+     * Validates password reset code if user was found by email.
+     * @return bool
+     */
+    public function validatePasswordResetCode(): bool
+    {
+        if (!$this->hasErrors() && (!($user = $this->getUser()) || $user->password_reset_code != $this->code)) {
             $this->addError('id', Yii::t('skeleton', 'The password recovery url is invalid.'));
-        } elseif ($user->isDisabled() && !$user->isOwner()) {
-            $this->addError('id', Yii::t('skeleton', 'Your account is currently disabled. Please contact an administrator!'));
         }
 
         return !$this->hasErrors();
     }
-
 
     /**
      * Hashes new password and logs in user if possible.

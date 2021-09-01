@@ -25,9 +25,9 @@ class PasswordRecoverForm extends Model
     public $email;
 
     /**
-     * @var string
+     * @var string the interval in which no new email will be sent as date time string.
      */
-    public $timeoutSpamProtection = '10 mins';
+    public $timeoutSpamProtection = '5 mins';
 
     /**
      * @inheritdoc
@@ -52,29 +52,33 @@ class PasswordRecoverForm extends Model
     }
 
     /**
-     * Validates user credentials.
+     * Validates user credentials and checks for spam protection.
      */
     public function afterValidate()
     {
-        if (!$this->hasErrors()) {
-            $user = $this->getUser();
-
-            if (!$user) {
-                $this->addError('email', Yii::t('skeleton', 'Your email was not found.'));
-            } elseif ($user->isDisabled() && !$user->isOwner()) {
-                $this->addError('email', Yii::t('skeleton', 'Your account is currently disabled. Please contact an administrator!'));
-            } elseif ($this->isAlreadySent()) {
-                $this->addError('email', Yii::t('skeleton', 'We have just sent a link to reset your password to {email}. Please check your inbox!', ['email' => $user->email]));
-            }
-        }
+        $this->validateUserEmail();
+        $this->validateUserStatus();
+        $this->validateSpamProtection();
 
         parent::afterValidate();
     }
 
     /**
+     * Validates spam protection.
+     */
+    public function validateSpamProtection()
+    {
+        if (!$this->hasErrors() && ($user = $this->getUser()) && $this->isAlreadySent()) {
+            $this->addError('email', Yii::t('skeleton', 'We have just sent a link to reset your password to {email}. Please check your inbox!', [
+                'email' => $user->email,
+            ]));
+        }
+    }
+
+    /**
      * @return bool
      */
-    public function recover()
+    public function recover(): bool
     {
         if ($this->validate()) {
             $user = $this->getUser();
@@ -91,30 +95,29 @@ class PasswordRecoverForm extends Model
     /**
      * Sends password reset code email.
      */
-    public function sendPasswordResetEmail()
+    public function sendPasswordResetEmail(): void
     {
-        $user = $this->getUser();
-
-        Yii::$app->getMailer()->compose('@skeleton/mail/account/recover', ['user' => $user])
-            ->setSubject(Yii::t('skeleton', 'Reset your password'))
-            ->setFrom(Yii::$app->params['email'])
-            ->setTo($user->email)
-            ->send();
+        if ($user = $this->getUser()) {
+            Yii::$app->getMailer()->compose('@skeleton/mail/account/recover', ['user' => $user])
+                ->setSubject(Yii::t('skeleton', 'Reset your password'))
+                ->setFrom(Yii::$app->params['email'])
+                ->setTo($user->email)
+                ->send();
+        }
     }
 
     /**
      * @return bool
      */
-    public function isAlreadySent()
+    public function isAlreadySent(): bool
     {
-        $user = $this->getUser();
-        return $user->password_reset_code && $user->updated_at->modify($this->timeoutSpamProtection) > new DateTime();
+        return ($user = $this->getUser()) && $user->password_reset_code && $user->updated_at->modify($this->timeoutSpamProtection) > new DateTime();
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'email' => Yii::t('skeleton', 'Email'),

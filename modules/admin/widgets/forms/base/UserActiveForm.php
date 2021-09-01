@@ -98,7 +98,7 @@ class UserActiveForm extends ActiveForm
      * @param array $options
      * @return ActiveField|string
      */
-    public function countryField($options = [])
+    public function countryField($options = ['options' => ['prompt' => '']])
     {
         return $this->field($this->model, 'country')->widget(DynamicRangeDropdown::class, $options);
     }

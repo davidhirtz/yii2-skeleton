@@ -143,14 +143,16 @@ class UserController extends Controller
      */
     public function actionDeletePicture($id)
     {
-        $user = $this->findUserForm($id, 'userUpdate');
-        $user->picture = null;
+        return $this->updateUserAttributes($id, ['picture' => null]);
+    }
 
-        if ($user->update()) {
-            $this->success(Yii::t('skeleton', 'The user was updated.'));
-        }
-
-        return $this->redirect(['update', 'id' => $user->id]);
+    /**
+     * @param int $id
+     * @return string|Response
+     */
+    public function actionDisableGoogleAuthenticator($id)
+    {
+        return $this->updateUserAttributes($id, ['google_2fa_secret' => null]);
     }
 
     /**
@@ -269,5 +271,22 @@ class UserController extends Controller
         return $this->render('ownership', [
             'form' => $form,
         ]);
+    }
+
+    /**
+     * @param int $id
+     * @param array $attributes
+     * @return string|Response
+     */
+    private function updateUserAttributes($id, $attributes)
+    {
+        $user = $this->findUserForm($id, 'userUpdate');
+        $user->setAttributes($attributes);
+
+        if ($user->update()) {
+            $this->success(Yii::t('skeleton', 'The user was updated.'));
+        }
+
+        return $this->redirect(['update', 'id' => $user->id]);
     }
 }

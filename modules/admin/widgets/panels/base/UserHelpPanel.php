@@ -42,6 +42,7 @@ class UserHelpPanel extends HelpPanel
     {
         return [
             $this->getDeletePictureButton(),
+            $this->getDisableGoogleAuthenticatorButton(),
             $this->getCreatePasswordResetLinkButton(),
             $this->getPasswordResetLinkButton(),
         ];
@@ -57,6 +58,18 @@ class UserHelpPanel extends HelpPanel
         }
 
         return Html::a(Html::iconText('portrait', Yii::t('skeleton', 'Delete picture')), ['delete-picture', 'id' => $this->user->id], [
+            'class' => 'btn btn-primary',
+            'data-method' => 'post',
+        ]);
+    }
+
+    protected function getDisableGoogleAuthenticatorButton()
+    {
+        if (!$this->user->google_2fa_secret) {
+            return '';
+        }
+
+        return Html::a(Html::iconText('google', Yii::t('skeleton', 'Disable Google Authenticator')), ['delete-picture', 'id' => $this->user->id], [
             'class' => 'btn btn-primary',
             'data-method' => 'post',
         ]);

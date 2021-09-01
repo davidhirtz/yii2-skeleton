@@ -21,6 +21,7 @@ class M210831105800GoogleAuthenticator extends Migration
     public function safeUp()
     {
         $this->addColumn(User::tableName(), 'google_2fa_secret', $this->string(16)->null()->after('password_reset_code'));
+//        $this->addColumn(User::tableName(), 'google_2fa_time', $this->integer()->unsigned()->null()->after('google_2fa_secret'));
     }
 
     /**

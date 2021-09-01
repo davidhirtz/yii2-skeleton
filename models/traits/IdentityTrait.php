@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\models\traits;
 
 use davidhirtz\yii2\skeleton\db\Identity;
+use Yii;
 
 /**
  * Class IdentityTrait
@@ -13,7 +14,7 @@ trait IdentityTrait
     /**
      * @var Identity
      */
-    private $_user = null;
+    private $_user;
 
     /**
      * @return Identity
@@ -21,10 +22,12 @@ trait IdentityTrait
     public function getUser()
     {
         if ($this->_user === null) {
-            $this->_user = Identity::findByEmail($this->email)
-                ->selectIdentityAttributes()
-                ->limit(1)
-                ->one();
+            if ($this->email) {
+                $this->_user = Identity::findByEmail($this->email)
+                    ->selectIdentityAttributes()
+                    ->limit(1)
+                    ->one();
+            }
         }
 
         return $this->_user;
@@ -38,6 +41,26 @@ trait IdentityTrait
         if ($user instanceof Identity) {
             $this->_user = $user;
             $this->email = $user->email;
+        }
+    }
+
+    /**
+     * Validates that user was found by email.
+     */
+    public function validateUserEmail()
+    {
+        if (!$this->hasErrors() && !$this->getUser()) {
+            $this->addError('id', Yii::t('skeleton', 'Your email was not found.'));
+        }
+    }
+
+    /**
+     * Validates user status, except for site owner.
+     */
+    public function validateUserStatus()
+    {
+        if (!$this->hasErrors() && ($user = $this->getUser()) && $user->isDisabled() && !$user->isOwner()) {
+            $this->addError('status', Yii::t('skeleton', 'Your account is currently disabled. Please contact an administrator!'));
         }
     }
 }

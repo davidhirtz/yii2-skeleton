@@ -3,11 +3,9 @@
 namespace davidhirtz\yii2\skeleton\models\forms\base;
 
 use davidhirtz\yii2\skeleton\db\Identity;
-use davidhirtz\yii2\skeleton\helpers\StringHelper;
-use davidhirtz\yii2\skeleton\models\traits\IdentityTrait;
 use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\skeleton\validators\GoogleAuthenticatorValidator;
+use RobThree\Auth\TwoFactorAuth;
 use Yii;
 use yii\base\Model;
 
@@ -31,11 +29,6 @@ class GoogleAuthenticatorForm extends Model
     public $code;
 
     /**
-     * @var int secret length
-     */
-    public $length = 16;
-
-    /**
      * @var string
      */
     private $_secret;
@@ -52,11 +45,6 @@ class GoogleAuthenticatorForm extends Model
             ],
             [
                 ['code'],
-                'string',
-                'length' => 6,
-            ],
-            [
-                ['code'],
                 GoogleAuthenticatorValidator::class,
                 'secret' => $this->getSecret(),
             ],
@@ -64,12 +52,27 @@ class GoogleAuthenticatorForm extends Model
     }
 
     /**
-     * Logs in a user using the provided email and password.
+     * Updates user with the generated secret.
      * @return bool
      */
     public function save()
     {
         if ($this->validate()) {
+            $this->user->google_2fa_secret = $this->getSecret();
+            return $this->user->update();
+        }
+
+        return false;
+    }
+
+    /**
+     * Removes secret from user.
+     */
+    public function delete()
+    {
+        if ($this->validate()) {
+            $this->user->google_2fa_secret = null;
+            return $this->user->update();
         }
 
         return false;
@@ -94,9 +97,7 @@ class GoogleAuthenticatorForm extends Model
      */
     protected function generateSecret(): void
     {
-        $this->_secret = Yii::$app->getSecurity()->generateRandomString($this->length);
-        Yii::$app->getSession()->set('google_2fa_secret', $this->_secret);
-
+        Yii::$app->getSession()->set('google_2fa_secret', $this->_secret = (new TwoFactorAuth())->createSecret());
         Yii::debug('New Google Authenticator secret generated');
     }
 

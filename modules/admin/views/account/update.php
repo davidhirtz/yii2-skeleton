@@ -52,16 +52,14 @@ if ($user->isUnconfirmed()) {
 ]);
 ?>
 
-<?php if (!$user->google_2fa_secret) {
-    echo Panel::widget([
-        'title' => Yii::t('skeleton', 'Google Authenticator'),
-        'content' => GoogleAuthenticatorActiveForm::widget([
-            'model' => new GoogleAuthenticatorForm([
-                'user' => $user,
-            ]),
+<?= Panel::widget([
+    'title' => Yii::t('skeleton', 'Google Authenticator'),
+    'content' => GoogleAuthenticatorActiveForm::widget([
+        'model' => new GoogleAuthenticatorForm([
+            'user' => $user,
         ]),
-    ]);
-}
+    ]),
+]);
 ?>
 
 <?php Panel::begin([

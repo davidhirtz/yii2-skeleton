@@ -1,7 +1,7 @@
 <?php
 /**
  * Login form.
- * @see davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController::actionLogin()
+ * @see davidhirtz\yii2\skeleton\controllers\AccountController::actionLogin()
  *
  * @var davidhirtz\yii2\skeleton\web\View $this
  * @var davidhirtz\yii2\skeleton\models\forms\LoginForm $form
@@ -50,7 +50,7 @@ $this->setTitle(Yii::t('skeleton', 'Login'));
         <div class="form-group">
             <?= Html::submitButton(Yii::t('skeleton', 'Login'), ['class' => 'btn btn-primary btn-block']) ?>
         </div>
-        <?php $af->end(); ?>
+        <?php $af::end(); ?>
         <?php Panel::end(); ?>
         <div class="list-group">
             <?php

@@ -7,6 +7,7 @@ use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\forms\AccountConfirmForm;
 use davidhirtz\yii2\skeleton\models\forms\AuthClientSignupForm;
 use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
+use davidhirtz\yii2\skeleton\models\forms\GoogleAuthenticatorForm;
 use davidhirtz\yii2\skeleton\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\models\forms\AccountResendConfirmForm;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
@@ -44,11 +45,15 @@ class AccountController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['deauthorize', 'delete', 'logout', 'picture', 'update'],
                 'rules' => [
                     [
                         'allow' => true,
+                        'actions' => ['deauthorize', 'delete', 'disable-google-authenticator', 'enable-google-authenticator', 'logout', 'picture', 'update'],
                         'roles' => ['@'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['auth', 'create', 'login', 'recover', 'reset'],
                     ],
                 ],
             ],
@@ -56,9 +61,11 @@ class AccountController extends Controller
                 'class' => VerbFilter::class,
                 'actions' => [
                     'deauthorize' => ['post'],
-                    'picture' => ['post'],
                     'delete' => ['post'],
+                    'disable-google-authenticator' => ['post'],
+                    'enable-google-authenticator' => ['post'],
                     'logout' => ['post'],
+                    'picture' => ['post'],
                 ],
             ],
         ];
@@ -78,7 +85,7 @@ class AccountController extends Controller
     }
 
     /**
-     * @return string
+     * @return string|Response
      */
     public function actionCreate()
     {
@@ -121,7 +128,7 @@ class AccountController extends Controller
 
     /**
      * Login.
-     * @return string
+     * @return string|Response
      */
     public function actionLogin()
     {
@@ -145,14 +152,14 @@ class AccountController extends Controller
         }
 
         /** @noinspection MissedViewInspection */
-        return $this->render('login', [
+        return $this->render($form->isGoogleAuthenticatorCodeRequired() ? 'google-authenticator' : 'login', [
             'form' => $form,
         ]);
     }
 
     /**
      * Logout.
-     * @return string
+     * @return string|Response
      */
     public function actionLogout()
     {
@@ -168,7 +175,7 @@ class AccountController extends Controller
      *
      * @param string $email
      * @param string $code
-     * @return string
+     * @return string|Response
      * @throws BadRequestHttpException
      */
     public function actionConfirm(string $email, string $code)
@@ -201,7 +208,7 @@ class AccountController extends Controller
      * If user is already logged in, skip form and directly populate
      * the model with the user identity.
      *
-     * @return string
+     * @return string|Response
      */
     public function actionResend()
     {
@@ -231,7 +238,7 @@ class AccountController extends Controller
     }
 
     /**
-     * @return string
+     * @return string|Response
      */
     public function actionRecover()
     {
@@ -261,7 +268,7 @@ class AccountController extends Controller
     /**
      * @param string $email
      * @param string $code
-     * @return string
+     * @return string|Response
      * @throws ForbiddenHttpException
      */
     public function actionReset($email, $code)
@@ -280,8 +287,9 @@ class AccountController extends Controller
                 $this->success(Yii::t('skeleton', 'Your password was updated.'));
                 return $this->goHome();
             }
-        } elseif (!$form->validateUser()) {
+        } elseif (!$form->validatePasswordResetCode()) {
             $this->error($form->getFirstErrors());
+            dump('hier');
             return $this->goHome();
         }
 
@@ -292,7 +300,7 @@ class AccountController extends Controller
     }
 
     /**
-     * @return string
+     * @return string|Response
      */
     public function actionUpdate()
     {
@@ -356,13 +364,53 @@ class AccountController extends Controller
     }
 
     /**
+     * @return Response
+     */
+    public function actionEnableGoogleAuthenticator()
+    {
+        $form = new GoogleAuthenticatorForm([
+            'user' => Yii::$app->getUser()->getIdentity(),
+        ]);
+
+        if ($form->load(Yii::$app->getRequest()->post()) && $form->save()) {
+            $this->success(Yii::t('skeleton', 'Two-factor authentication is now enabled on your account.'));
+        }
+
+        if ($errors = $form->getFirstErrors()) {
+            $this->error($errors);
+        }
+
+        return $this->redirect(['update']);
+    }
+
+    /**
+     * @return Response
+     */
+    public function actionDisableGoogleAuthenticator()
+    {
+        $form = new GoogleAuthenticatorForm([
+            'user' => Yii::$app->getUser()->getIdentity(),
+        ]);
+
+        if ($form->load(Yii::$app->getRequest()->post()) && $form->delete()) {
+            $this->success(Yii::t('skeleton', 'Two-factor authentication is now disabled on your account.'));
+        }
+
+        if ($errors = $form->getFirstErrors()) {
+            $this->error($errors);
+        }
+
+        return $this->redirect(['update']);
+    }
+
+    /**
      * Deletes a related auth client.
      *
      * @param string $id
      * @param string $name
      * @return Response
      */
-    public function actionDeauthorize(string $id, string $name)
+    public function actionDeauthorize($id, $name)
     {
         /**
          * @var $auth AuthClient
@@ -393,10 +441,10 @@ class AccountController extends Controller
 
     /**
      * @param ClientInterface $client
-     * @return string
+     * @return string|Response
      * @see \yii\authclient\AuthAction::$successCallback
      */
-    public function onAuthSuccess(ClientInterface $client)
+    public function onAuthSuccess($client)
     {
         $auth = AuthClient::findOrCreateFromClient($client);
 

@@ -5,6 +5,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms\base;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\forms\GoogleAuthenticatorForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
+use RobThree\Auth\TwoFactorAuth;
 use Yii;
 
 /**
@@ -16,11 +17,6 @@ use Yii;
 class GoogleAuthenticatorActiveForm extends ActiveForm
 {
     /**
-     * @var string[]
-     */
-    public $action = ['google-authenticator/create'];
-
-    /**
      * @var int
      */
     public $qrCodeSize = 150;
@@ -31,8 +27,13 @@ class GoogleAuthenticatorActiveForm extends ActiveForm
     public function init()
     {
         if (!$this->buttons) {
-            $this->buttons = [$this->button(Yii::t('skeleton', 'Activate'))];
+            $this->buttons = [$this->button($this->model->user->google_2fa_secret ? Yii::t('skeleton', 'Disable') : Yii::t('skeleton', 'Enable'))];
         }
+
+        if (!$this->action) {
+            $this->action = $this->model->user->google_2fa_secret ? ['account/disable-google-authenticator'] : ['account/enable-google-authenticator'];
+        }
+
         parent::init();
     }
 
@@ -41,8 +42,12 @@ class GoogleAuthenticatorActiveForm extends ActiveForm
      */
     public function renderHeader()
     {
-        echo $this->textRow(Yii::t('skeleton', 'To activate two-factor authentication please scan the QR code below with the Google Authenticator application and enter the 6-digit code. After completing this setup you will need to use the Google Authenticator for every login for extra security.'));
-        echo $this->row($this->offset($this->getQrCodeImage()));
+        if ($this->model->user->google_2fa_secret) {
+            echo $this->textRow(Yii::t('skeleton', 'Two-factor authentication is enabled. Please enter the 6-digit code provided by your Google Authenticator app below to disable it.'));
+        } else {
+            echo $this->textRow(Yii::t('skeleton', 'To activate two-factor authentication please scan the QR code below with your Google Authenticator app and enter the 6-digit code. After completing this setup you will need to use the Google Authenticator for every login for extra security.'));
+            echo $this->row($this->offset($this->getQrCodeImage()));
+        }
     }
 
     /**
@@ -71,17 +76,11 @@ class GoogleAuthenticatorActiveForm extends ActiveForm
      */
     protected function getQrImageUrl()
     {
-        $otpAuthUri = $this->getOTPAuthUri();
-        return "https://api.qrserver.com/v1/create-qr-code/?size={$this->qrCodeSize}x{$this->qrCodeSize}&data={$otpAuthUri}&ecc=M";
-    }
-
-    /**
-     * @return string
-     */
-    protected function getOTPAuthUri()
-    {
         $issuer = str_replace(':', '-', $this->getGoogleAuthenticatorIssuer());
-        return rawurlencode("otpauth://totp/{$issuer}:{$this->model->user->email}?secret={$this->model->getSecret()}&issuer={$issuer}");
+        $label = "{$issuer}:{$this->model->user->email}";
+        $auth = new TwoFactorAuth($issuer);
+
+        return $auth->getQrCodeProvider()->getUrl($auth->getQRText($label, $this->model->getSecret()), $this->qrCodeSize);
     }
 
     /**

@@ -33,6 +33,7 @@ class UserQuery extends ActiveQuery
             'timezone',
             'email_confirmation_code',
             'password_reset_code',
+            'google_2fa_secret',
             'is_owner',
             'login_count',
             'last_login',

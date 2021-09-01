@@ -162,7 +162,7 @@ class User extends \yii\web\User
         $session = Yii::$app->getSession();
 
         if ($session instanceof MultiFieldSession) {
-            Yii::$app->getSession()->writeCallback = function () {
+            $session->writeCallback = function () {
                 return [
                     'user_id' => null,
                 ];
