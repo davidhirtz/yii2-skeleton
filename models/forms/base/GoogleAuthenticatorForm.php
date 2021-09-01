@@ -84,7 +84,7 @@ class GoogleAuthenticatorForm extends Model
     public function getSecret(): string
     {
         if ($this->_secret === null) {
-            if (!($this->_secret = Yii::$app->getSession()->get('google_2fa_secret'))) {
+            if (!($this->_secret = $this->user->google_2fa_secret ?: Yii::$app->getSession()->get('google_2fa_secret'))) {
                 $this->generateSecret();
             }
         }
