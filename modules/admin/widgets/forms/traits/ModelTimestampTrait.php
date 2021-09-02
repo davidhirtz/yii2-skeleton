@@ -1,6 +1,6 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
+namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\Trail;
@@ -9,7 +9,7 @@ use Yii;
 
 /**
  * Class ModelTimestampTrait
- * @package davidhirtz\yii2\skeleton\modules\admin\widgets\forms
+ * @package davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits
  */
 trait ModelTimestampTrait
 {

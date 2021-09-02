@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
 use davidhirtz\yii2\skeleton\models\Redirect;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\ModelTimestampTrait;
 use davidhirtz\yii2\skeleton\widgets\forms\DynamicRangeDropdown;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
 use yii\widgets\ActiveField;
