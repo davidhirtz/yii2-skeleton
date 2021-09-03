@@ -62,7 +62,7 @@ class RelationValidator extends Validator
                     $model->addInvalidAttributeError($attribute);
                 }
             } else {
-                if ($this->required) {
+                if ($this->required || $model->isAttributeRequired($attribute)) {
                     $model->addInvalidAttributeError($attribute);
                 }
 
