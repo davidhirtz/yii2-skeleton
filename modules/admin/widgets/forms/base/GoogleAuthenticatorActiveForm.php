@@ -88,6 +88,6 @@ class GoogleAuthenticatorActiveForm extends ActiveForm
      */
     protected function getGoogleAuthenticatorIssuer(): string
     {
-        return Yii::$app->name;
+        return Yii::$app->params['googleAuthenticatorIssuer'] ?? Yii::$app->name;
     }
 }
