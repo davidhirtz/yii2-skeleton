@@ -53,7 +53,7 @@ class AccountController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['auth', 'create', 'login', 'recover', 'reset'],
+                        'actions' => ['auth', 'confirm', 'create', 'login', 'recover', 'resend', 'reset', 'token'],
                     ],
                 ],
             ],
