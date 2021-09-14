@@ -70,9 +70,6 @@ class Module extends \yii\base\Module
             'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController',
             'viewPath' => '@skeleton/modules/admin/views/auth',
         ],
-        'google-authenticator' => [
-            'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\GoogleAuthenticatorController',
-        ],
         'dashboard' => [
             'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\DashboardController',
             'viewPath' => '@skeleton/modules/admin/views/dashboard',
@@ -167,6 +164,8 @@ class Module extends \yii\base\Module
                     ],
                 ];
             }
+
+            $this->controllerMap = array_merge($this->defaultControllerMap, $this->controllerMap);
         }
 
         foreach (array_keys($this->getModules()) as $module) {
@@ -181,7 +180,6 @@ class Module extends \yii\base\Module
             }
         }
 
-        $this->controllerMap = array_merge($this->defaultControllerMap, $this->controllerMap);
         parent::init();
     }
 
