@@ -45,12 +45,12 @@ class UserForm extends User
                 'skipOnError' => true,
             ],
             [
-                ['newPassword', 'oldPassword'],
+                ['newPassword', 'repeatPassword', 'oldPassword'],
                 'filter',
                 'filter' => 'trim',
             ],
             [
-                ['newPassword', 'oldPassword'],
+                ['newPassword','repeatPassword', 'oldPassword'],
                 'string',
                 'min' => $this->passwordMinLength,
             ],
