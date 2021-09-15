@@ -21,6 +21,11 @@ class UserForm extends User
     /**
      * @var string
      */
+    public $repeatPassword;
+
+    /**
+     * @var string
+     */
     public $oldPassword;
 
     /**
@@ -36,7 +41,6 @@ class UserForm extends User
         return array_merge(parent::rules(), [
             [
                 ['email'],
-                /** {@see \davidhirtz\yii2\skeleton\models\forms\UserForm::validateEmail()} */
                 'validateEmail',
                 'skipOnError' => true,
             ],
@@ -52,9 +56,21 @@ class UserForm extends User
             ],
             [
                 ['newPassword'],
-                /** {@see \davidhirtz\yii2\skeleton\models\forms\UserForm::validateNewPassword()} */
                 'validateNewPassword',
                 'skipOnError' => true,
+            ],
+            [
+                ['repeatPassword'],
+                'required',
+                'when' => function (self $model) {
+                    return (bool)$model->newPassword;
+                },
+            ],
+            [
+                ['repeatPassword'],
+                'compare',
+                'compareAttribute' => 'newPassword',
+                'message' => Yii::t('skeleton', 'The password must match the new password.'),
             ],
         ]);
     }
@@ -162,6 +178,7 @@ class UserForm extends User
                 'last_name',
                 'name',
                 'newPassword',
+                'repeatPassword',
                 'oldPassword',
                 'timezone',
                 'upload',
@@ -176,6 +193,7 @@ class UserForm extends User
     {
         return array_merge(parent::attributeLabels(), [
             'newPassword' => Yii::t('skeleton', 'New password'),
+            'repeatPassword' => Yii::t('skeleton', 'Repeat password'),
             'oldPassword' => Yii::t('skeleton', 'Current password'),
         ]);
     }

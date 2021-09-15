@@ -65,8 +65,8 @@ class UserForm extends User
             [
                 ['repeatPassword'],
                 'required',
-                'when' => function () {
-                    return (bool)$this->newPassword;
+                'when' => function (self $model) {
+                    return (bool)$model->newPassword;
                 },
             ],
             [

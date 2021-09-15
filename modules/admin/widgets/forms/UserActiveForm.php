@@ -3,7 +3,7 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
 /**
- * Class UserActiveForm.
+ * Class UserActiveForm
  * @package davidhirtz\yii2\skeleton\modules\admin\widgets\forms
  */
 class UserActiveForm extends base\UserActiveForm

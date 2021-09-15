@@ -13,10 +13,10 @@ use Yii;
 use yii\widgets\ActiveField;
 
 /**
- * Class UserActiveForm.
+ * Class UserActiveForm
  * @package davidhirtz\yii2\skeleton\modules\admin\widgets\forms\base
  *
- * @property UserForm $model
+ * @property UserForm|\davidhirtz\yii2\skeleton\models\forms\UserForm $model
  */
 class UserActiveForm extends ActiveForm
 {
