@@ -230,9 +230,9 @@ abstract class User extends ActiveRecord
      * @param string $password
      * @return bool
      */
-    public function validatePassword(string $password): bool
+    public function validatePassword($password): bool
     {
-        return $this->password && Yii::$app->security->validatePassword($password . $this->password_salt, $this->password);
+        return $this->password && Yii::$app->getSecurity()->validatePassword($password . $this->password_salt, $this->password);
     }
 
     /**
@@ -242,7 +242,7 @@ abstract class User extends ActiveRecord
     public function beforeValidate(): bool
     {
         // Set defaults in case these were omitted in signup.
-        $this->status = $this->status === null ? static::STATUS_ENABLED : $this->status;
+        $this->status = $this->status?: static::STATUS_ENABLED;
         $this->timezone = $this->timezone ?: Yii::$app->getTimeZone();
 
         // Changes to the available app languages might be rare, but needs to be accounted for.

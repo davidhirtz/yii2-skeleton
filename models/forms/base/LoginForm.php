@@ -51,6 +51,11 @@ class LoginForm extends Model
     public $ipAddress;
 
     /**
+     * @var bool
+     */
+    private $_isGoogleAuthenticatorCodeRequired = false;
+
+    /**
      * @inheritdoc
      */
     public function rules()
@@ -94,11 +99,11 @@ class LoginForm extends Model
     }
 
     /**
-     * Validates password if user was found by email.
+     * Validates password if user was found by email. If any other error occurred during validation, don't even bother.
      */
     public function validateUserPassword()
     {
-        if (!$this->hasErrors() && (!($user = $this->getUser()) || !$user->validatePassword($this->password))) {
+        if (!$this->hasErrors() && !(($user = $this->getUser()) && $user->validatePassword($this->password))) {
             $this->addError('email', Yii::t('skeleton', 'Your email or password are incorrect.'));
         }
     }
@@ -118,7 +123,7 @@ class LoginForm extends Model
      */
     public function validateGoogleAuthenticatorCode()
     {
-        if ($this->isGoogleAuthenticatorCodeRequired() && ($user = $this->getUser())) {
+        if (Yii::$app->getUser()->enableGoogleAuthenticator && !$this->hasErrors() && ($user = $this->getUser()) && $user->google_2fa_secret) {
             /** @var GoogleAuthenticatorValidator $validator */
             $validator = Yii::createObject([
                 'class' => GoogleAuthenticatorValidator::class,
@@ -127,6 +132,7 @@ class LoginForm extends Model
             ]);
 
             $validator->validateAttribute($this, 'code');
+            $this->_isGoogleAuthenticatorCodeRequired = true;
         }
     }
 
@@ -145,27 +151,26 @@ class LoginForm extends Model
             return Yii::$app->getUser()->login($user, $this->rememberMe ? $user->cookieLifetime : 0);
         }
 
+        // Don't show empty error, if the user has not been able to enter it...
+        if ($this->hasErrors('code') && $this->code === null) {
+            $this->clearErrors('code');
+        }
+
         return false;
     }
 
     /**
-     * @param bool $clearErrors whether errors should be cleared if no code was set. This is useful if the login form and
-     * Google authenticator code are filled out in two separate steps.
      * @return bool
      */
-    public function isGoogleAuthenticatorCodeRequired($clearErrors = true): bool
+    public function isGoogleAuthenticatorCodeRequired(): bool
     {
-        if ($clearErrors && $this->hasErrors('code') && $this->code === null) {
-            $this->clearErrors('code');
-        }
-
-        return Yii::$app->getUser()->enableGoogleAuthenticator && ($user = $this->getUser()) && !empty($user->google_2fa_secret);
+        return $this->_isGoogleAuthenticatorCodeRequired;
     }
 
     /**
      * @return bool
      */
-    public function isFacebookLoginEnabled()
+    public function isFacebookLoginEnabled(): bool
     {
         return $this->enableFacebookLogin && Yii::$app->getAuthClientCollection()->hasClient('facebook');
     }

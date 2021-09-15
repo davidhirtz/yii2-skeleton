@@ -146,13 +146,19 @@ class AccountController extends Controller
                 return $this->goBack();
             }
 
+            if ($form->isGoogleAuthenticatorCodeRequired()) {
+                return $this->render('google-authenticator', [
+                    'form' => $form,
+                ]);
+            }
+
             Yii::$app->getSession()->set('email', $form->email);
         } else {
             $form->email = $request->get('email', Yii::$app->getSession()->get('email'));
         }
 
         /** @noinspection MissedViewInspection */
-        return $this->render($form->isGoogleAuthenticatorCodeRequired() ? 'google-authenticator' : 'login', [
+        return $this->render('login', [
             'form' => $form,
         ]);
     }
