@@ -5,7 +5,6 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms\base;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\forms\GoogleAuthenticatorForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
-use RobThree\Auth\TwoFactorAuth;
 use Yii;
 
 /**
@@ -68,26 +67,6 @@ class GoogleAuthenticatorActiveForm extends ActiveForm
             Html::addCssStyle($options, "width:{$this->qrCodeSize}px;height:{$this->qrCodeSize}px;");
         }
 
-        return Html::img($this->getQrImageUrl(), $options);
-    }
-
-    /**
-     * @return string
-     */
-    protected function getQrImageUrl()
-    {
-        $issuer = str_replace(':', '-', $this->getGoogleAuthenticatorIssuer());
-        $label = "{$issuer}:{$this->model->user->email}";
-        $auth = new TwoFactorAuth($issuer);
-
-        return $auth->getQrCodeProvider()->getUrl($auth->getQRText($label, $this->model->getSecret()), $this->qrCodeSize);
-    }
-
-    /**
-     * @return string
-     */
-    protected function getGoogleAuthenticatorIssuer(): string
-    {
-        return Yii::$app->params['googleAuthenticatorIssuer'] ?? Yii::$app->name;
+        return Html::img($this->model->getQrImageUrl($this->qrCodeSize), $options);
     }
 }

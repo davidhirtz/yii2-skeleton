@@ -93,12 +93,33 @@ class GoogleAuthenticatorForm extends Model
     }
 
     /**
+     * @param int|string $size
+     * @return string
+     */
+    public function getQrImageUrl($size)
+    {
+        $issuer = str_replace(':', '-', $this->getGoogleAuthenticatorIssuer());
+        $label = "{$issuer}:{$this->user->email}";
+        $auth = new TwoFactorAuth($issuer);
+
+        return $auth->getQrCodeProvider()->getUrl($auth->getQRText($label, $this->getSecret()), $size);
+    }
+
+    /**
      * Generates a new secret key and saves it to session.
      */
     protected function generateSecret(): void
     {
         Yii::$app->getSession()->set('google_2fa_secret', $this->_secret = (new TwoFactorAuth())->createSecret());
         Yii::debug('New Google Authenticator secret generated');
+    }
+
+    /**
+     * @return string
+     */
+    protected function getGoogleAuthenticatorIssuer(): string
+    {
+        return Yii::$app->params['googleAuthenticatorIssuer'] ?? Yii::$app->name;
     }
 
     /**
