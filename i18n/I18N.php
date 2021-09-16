@@ -95,7 +95,7 @@ class I18N extends \yii\i18n\I18N
             $language = Yii::$app->language;
         }
 
-        return rtrim($attribute . '_' . ($language != Yii::$app->sourceLanguage ? $language : ''), '_');
+        return rtrim($attribute . '_' . ($language != Yii::$app->sourceLanguage ? strtr('-', '_', mb_strtolower($language, Yii::$app->charset)) : ''), '_');
     }
 
     /**
@@ -116,7 +116,7 @@ class I18N extends \yii\i18n\I18N
 
         foreach ((array)$attributes as $attribute) {
             foreach ($languages as $language) {
-                $names[] = static::getAttributeName($attribute, $language);
+                $names[] = $this->getAttributeName($attribute, $language);
             }
         }
 
@@ -130,6 +130,6 @@ class I18N extends \yii\i18n\I18N
      */
     public function getTableName($tableName, $language = null)
     {
-        return '{{%' . static::getAttributeName($tableName, $language) . '}}';
+        return '{{%' . $this->getAttributeName($tableName, $language) . '}}';
     }
 }
