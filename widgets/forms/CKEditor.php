@@ -194,7 +194,7 @@ class CKEditor extends InputWidget
 
         // Language.
         if (Yii::$app->language != Yii::$app->sourceLanguage) {
-            $this->clientOptions['language'] = Yii::$app->language;
+            $this->clientOptions['language'] = mb_strtolower(Yii::$app->language, Yii::$app->charset);
         }
 
         parent::init();
