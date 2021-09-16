@@ -14,9 +14,9 @@ use Yii;
 trait TypeAttributeTrait
 {
     /**
-     * @var static[]
+     * @var static[][]
      */
-    private static $_instances;
+    private static $_instances = [];
 
     /**
      * @param array $row
@@ -28,12 +28,12 @@ trait TypeAttributeTrait
             return new $className(['type' => $row['type']]);
         }
 
-        /** @noinspection PhpUndefinedClassInspection */
+        /** @noinspection PhpMultipleClassDeclarationsInspection */
         return parent::instantiate($row);
     }
 
     /**
-     * Override this method to implement types. The type array is must consist of a unique type as key and a associative
+     * Override this method to implement types. The type array is must consist of a unique type as key and an associative
      * array containing at least a "name" key. Optional a "class" key can be set to instantiate a model on find and the
      * "icon" value will be used in {@link TypeGridViewTrait} on default.
      *
@@ -54,16 +54,16 @@ trait TypeAttributeTrait
      */
     public static function getTypeInstances()
     {
-        if (static::$_instances === null) {
-            static::$_instances = [];
+        if (!isset(static::$_instances[static::class])) {
+            static::$_instances[static::class] = [];
 
             foreach (static::getTypes() as $type => $typeOptions) {
-                static::$_instances[$type] = static::instantiate(['type' => $type]);
-                static::$_instances[$type]->type = $type;
+                static::$_instances[static::class][$type] = static::instantiate(['type' => $type]);
+                static::$_instances[static::class][$type]->type = $type;
             }
         }
 
-        return static::$_instances;
+        return static::$_instances[static::class];
     }
 
     /**
