@@ -33,19 +33,18 @@ class TrailSubmenu extends Submenu
         if (!$this->title) {
             if ($model = $this->getTrailModel()) {
                 $name = $model->getTrailModelName();
-                $this->title = ($route = $model->getTrailModelAdminRoute()) ? Html::a($name, $route) : $name;
+                $this->title = ($route = $this->getTrailModelAdminRoute()) ? Html::a($name, $route) : $name;
             } else {
                 $this->title = Html::a(Yii::t('skeleton', 'History'), ['index']);
             }
         }
 
         $this->setBreadcrumbs();
-
         parent::init();
     }
 
     /**
-     *
+     * Sets breadcrumbs.
      */
     public function setBreadcrumbs()
     {
@@ -61,6 +60,18 @@ class TrailSubmenu extends Submenu
         if ($model = $this->getTrailModel()) {
             $view->setBreadcrumb($model->getTrailModelType());
         }
+    }
+
+    /**
+     * @return array|false
+     */
+    public function getTrailModelAdminRoute()
+    {
+        if (($model = $this->getTrailModel()) && ($route = $model->getTrailModelAdminRoute())) {
+            return array_merge($route, ['language' => explode('::', $model->modelClass)[1] ?? null]);
+        }
+
+        return false;
     }
 
     /**
