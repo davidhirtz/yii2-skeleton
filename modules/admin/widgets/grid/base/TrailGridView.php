@@ -343,6 +343,6 @@ class TrailGridView extends GridView
      */
     protected function getTrailModelRoute($trail)
     {
-        return ['index', 'model' => implode(':', array_filter([$trail->model, $trail->model_id]))];
+        return ['index', 'model' => implode('@', array_filter([$trail->model, $trail->model_id]))];
     }
 }

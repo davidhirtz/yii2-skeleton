@@ -286,18 +286,30 @@ abstract class Trail extends ActiveRecord
     }
 
     /**
+     * Finds the model based on the given model string. If a model supports `i18n` tables, the corresponding language
+     * will be added to the model, separated by `::`. E.g. `\davidhirtz\yii2\cms\models\Entry::en_US`.
+     *
      * @param ActiveRecord|string $model
      * @param string $modelId
      * @return ActiveRecord
      */
     protected static function findModelById($model, $modelId)
     {
-        $instance = $model::instance();
+        $model = explode('::', $model);
+        $prevLanguage = Yii::$app->language;
+
+        if ($language = ($model[1] ?? false)) {
+            Yii::$app->language = $language;
+        }
+
+        $instance = $model[0]::instance();
 
         // Prevent PHP warnings if record has a primary key mismatch
         if ($keys = @array_combine($instance::primaryKey(), explode('-', $modelId))) {
-            return $model::findOne($keys) ?: $instance;
+            $instance = $model[0]::findOne($keys) ?: $instance;
         }
+
+        Yii::$app->language = $prevLanguage;
 
         return $instance;
     }
@@ -309,9 +321,11 @@ abstract class Trail extends ActiveRecord
      */
     public static function getAdminRouteByModel($model, $id = null)
     {
-        /** @var TrailBehavior $behavior */
-        $behavior = $model->getBehavior('TrailBehavior');
-        $model = $model ? implode(':', array_filter([$behavior->modelClass, $id ?: implode('-', $model->getPrimaryKey(true))])) : null;
+        if ($model) {
+            /** @var TrailBehavior $behavior */
+            $behavior = $model->getBehavior('TrailBehavior');
+            $model = implode('@', array_filter([$behavior->modelClass, $id ?: implode('-', $model->getPrimaryKey(true))]));
+        }
 
         return ['/admin/trail/index', 'model' => $model];
     }

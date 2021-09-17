@@ -40,7 +40,7 @@ class TrailController extends Controller
      */
     public function actionIndex($id = null, $model = null, $user = null)
     {
-        $model = explode(':', $model);
+        $model = explode('@', $model);
 
         $provider = new TrailActiveDataProvider([
             'user' => $user ? User::findOne($user) : null,
