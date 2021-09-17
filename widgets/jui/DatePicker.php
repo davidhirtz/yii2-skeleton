@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\jui;
 
+use davidhirtz\yii2\datetime\DateTime;
 use Yii;
 use yii\helpers\FormatConverter;
 use yii\helpers\Html;
@@ -46,7 +47,7 @@ class DatePicker extends InputWidget
         }
 
         if ($this->dateFormat === null) {
-            $this->dateFormat = 'short';
+            $this->dateFormat = Yii::$app->language == 'de' ? 'd.m.Y' : 'Y-m-d';
         }
 
         if (!$this->language) {
@@ -54,9 +55,7 @@ class DatePicker extends InputWidget
         }
 
         if (!isset($this->clientOptions['dateFormat'])) {
-            $this->clientOptions['dateFormat'] = strncmp($this->dateFormat, 'php:', 4) === 0 ?
-                FormatConverter::convertDatePhpToJui(substr($this->dateFormat, 4)) :
-                FormatConverter::convertDateIcuToJui($this->dateFormat);
+            $this->clientOptions['dateFormat'] = FormatConverter::convertDatePhpToJui($this->dateFormat);
         }
 
         if (!$this->constrainInput) {
@@ -71,42 +70,31 @@ class DatePicker extends InputWidget
      */
     public function run()
     {
-        if ($value = $this->hasModel() ? Html::getAttributeValue($this->model, $this->attribute) : $this->value) {
-            if ($this->dateFormat) {
-                try {
-                    if ($this->showTime) {
-                        // jQuery UI Datepicker does not support datetime formats.
-                        $date = Yii::$app->getFormatter()->asDate($value, $this->dateFormat);
-                        $dateLength = strlen($date);
-                        $time = substr(Yii::$app->getFormatter()->asDatetime($value, $this->dateFormat), $dateLength);
-                        $value = $date . $time;
+        $options = $this->options;
 
-                        if ($this->showTime) {
-                            // Unfortunately Datepicker's "instance.lastVal" is not updated when the widget is open, to improve the
-                            // functionality the current date is cached via jQuery data and the time part of string is added on select.
-                            $this->clientEvents['keyup'] = new JsExpression('function(e){$(this).data("value",$(this).val())}');
-                            $this->clientOptions['onSelect'] = new JsExpression('function(t,i){$(this).val(t+($(this).data("value")||i.lastVal).substring(' . $dateLength . ')).focus()}');
-                        }
+        /** @var DateTime $date */
+        if ($date = $this->hasModel() ? Html::getAttributeValue($this->model, $this->attribute) : $this->value) {
+            $options['value'] = $date->format($this->dateFormat);
 
-                    } else {
-                        $value = Yii::$app->getFormatter()->asDate($value, $this->dateFormat);
-                    }
-                } catch (\Exception $exception) {
-                }
+            if ($this->showTime) {
+                // jQuery UI Datepicker does not support datetime formats.
+                $dateLength = strlen($options['value']);
+                $options['value'] .= $date->format(' H:i');
+
+                // Unfortunately Datepicker's "instance.lastVal" is not updated when the widget is open, to improve the
+                // functionality the current date is cached via jQuery data and the time part of string is added on select.
+                $this->clientEvents['keyup'] = new JsExpression('function(e){$(this).data("value",$(this).val())}');
+                $this->clientOptions['onSelect'] = new JsExpression('function(t,i){$(this).val(t+($(this).data("value")||i.lastVal).substring(' . $dateLength . ')).focus()}');
             }
         }
-
-        $options = $this->options;
-        $options['value'] = $value;
 
         if ($this->hasModel()) {
             echo Html::activeTextInput($this->model, $this->attribute, $options);
         } else {
-            echo Html::textInput($this->name, $value, $options);
+            echo Html::textInput($this->name, $date, $options);
         }
 
         $this->clientEvents['keypress'] = new JsExpression('function(e){if(e.which==13)this.form.submit()}');
-
         $this->registerWidget('datepicker');
     }
 }
