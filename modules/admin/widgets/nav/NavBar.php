@@ -3,9 +3,9 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\nav;
 
 /**
- * Class NavBar.
+ * Class NavBar
  * @package davidhirtz\yii2\skeleton\modules\admin\widgets\nav
  */
-class NavBar extends \davidhirtz\yii2\skeleton\modules\admin\widgets\nav\base\NavBar
+class NavBar extends base\NavBar
 {
 }

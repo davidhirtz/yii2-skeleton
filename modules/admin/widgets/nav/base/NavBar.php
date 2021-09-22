@@ -14,6 +14,11 @@ use yii\helpers\Url;
 class NavBar extends \yii\bootstrap4\NavBar
 {
     /**
+     * @var array containing the route of the language dropdown. If not set, the current URL will be used.
+     */
+    public $languageRoute;
+
+    /**
      * @var array
      */
     public $options = [
@@ -85,7 +90,7 @@ class NavBar extends \yii\bootstrap4\NavBar
         foreach ($i18n->getLanguages() as $language) {
             $items[] = [
                 'label' => '<i class="i18n-icon ' . $language . '"></i><span class="i18n-label">' . $i18n->getLabel($language) . '</span>',
-                'url' => Url::current(['language' => $language]),
+                'url' => $this->languageRoute ? Url::toRoute(array_merge($this->languageRoute, ['language' => $language])) : Url::current(['language' => $language]),
                 'encode' => false,
             ];
         }

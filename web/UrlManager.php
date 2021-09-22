@@ -54,7 +54,7 @@ class UrlManager extends \yii\web\UrlManager
 
     /**
      * @var array containing hard redirects, either as request URI => URL pairs, which generate regular 301 redirects
-     * or as arrays containing the one ore many request URIs at first position, the target URL as the second and an
+     * or as arrays containing the request URIs at first position, the target URL as the second and an
      * optional third containing the redirect code (defaults to 301). If dynamic redirects are needed, please take
      * a look at {@link \davidhirtz\yii2\skeleton\models\Redirect}.
      */
