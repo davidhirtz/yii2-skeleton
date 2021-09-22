@@ -33,14 +33,21 @@ class Sitemap extends Component
     public $dependency;
 
     /**
-     * @var string[]|string list of factors that would cause the variation of the sitemap being cached.
-     * Each factor is a string representing a variation (e.g. the language, a GET parameter).
+     * @var callable|string[]|string list of factors that would cause the variation of the sitemap being cached.
+     * Each factor is a string representing a variation (e.g. the language, a GET parameter). This can be also a
+     * callable to configure it during application setup:
+     *
+     * `
+     * 'variations' => function () {
+     *       return [Yii::$app->language];
+     *   },
+     * `
      */
     public $variations;
 
     /**
      * @var bool whether sitemaps should be split into separate sitemap files. This is needed for a sitemaps which would
-     * exceed 50MB or 50.000 URLs.
+     * exceed 50 MB or 50.000 URLs.
      */
     public $useSitemapIndex = false;
 
@@ -85,6 +92,10 @@ class Sitemap extends Component
 
                 $model->attachBehaviors($behaviors);
             }
+        }
+
+        if (is_callable($this->variations)) {
+            $this->variations = call_user_func($this->variations);
         }
 
         parent::init();
