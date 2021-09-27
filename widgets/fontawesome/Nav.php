@@ -84,7 +84,7 @@ class Nav extends \yii\bootstrap4\Nav
             $items[] = $this->renderItem($item);
         }
 
-        return !$this->hideOneItem || count($items) > 1 ?  Html::tag('ul', implode('', $items), $this->options) : '';
+        return !$this->hideOneItem || count($items) > 1 ? Html::tag('ul', implode('', $items), $this->options) : '';
     }
 
     /**
@@ -141,9 +141,10 @@ class Nav extends \yii\bootstrap4\Nav
             }
         }
 
-        // If active is an array, treat its' elements as routes and check them  against the current controller route.
+        // If active is an array, treat the elements as routes and check them  against the current controller route.
         // If the route itself is an array, the key represents the route and the value either GET parameter names or
-        // name value pairs that must match with the request.
+        // name value pairs that must match with the request. Routes can be reserved to prevent activating an item on
+        // a hit by starting the route with "!".
         if (is_array($routes = $item['active'] ?? false)) {
             $request = Yii::$app->getRequest();
             $item['active'] = false;
@@ -154,6 +155,10 @@ class Nav extends \yii\bootstrap4\Nav
                         $route = $params;
                     }
 
+                    if ($shouldSkip = ($route[0] == '!')) {
+                        $route = substr($route, 1);
+                    }
+
                     if (preg_match("~{$route}~", Yii::$app->controller->route, $matches)) {
                         if (is_array($params)) {
                             foreach ($params as $key => $value) {
@@ -161,6 +166,10 @@ class Nav extends \yii\bootstrap4\Nav
                                     continue 2;
                                 }
                             }
+                        }
+
+                        if ($shouldSkip) {
+                            break;
                         }
 
                         $this->isActive = $item['active'] = true;
