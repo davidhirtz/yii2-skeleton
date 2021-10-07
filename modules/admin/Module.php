@@ -96,6 +96,8 @@ class Module extends \yii\base\Module
         ],
     ];
 
+    public const EVENT_AFTER_INIT = 'afterInit';
+
     /**
      * @inheritDoc
      */
@@ -180,6 +182,7 @@ class Module extends \yii\base\Module
             }
         }
 
+        $this->trigger(static::EVENT_AFTER_INIT);
         parent::init();
     }
 
