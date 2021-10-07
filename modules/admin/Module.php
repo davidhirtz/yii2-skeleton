@@ -11,6 +11,8 @@ use yii\base\Action;
  */
 class Module extends \yii\base\Module
 {
+    public const EVENT_AFTER_INIT = 'afterInit';
+
     /**
      * @var string the module display name, defaults to "Admin"
      */
@@ -95,8 +97,6 @@ class Module extends \yii\base\Module
             'viewPath' => '@skeleton/modules/admin/views/user-login',
         ],
     ];
-
-    public const EVENT_AFTER_INIT = 'afterInit';
 
     /**
      * @inheritDoc

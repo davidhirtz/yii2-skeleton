@@ -23,9 +23,6 @@ use yii\validators\NumberValidator;
  */
 class ActiveRecord extends \yii\db\ActiveRecord
 {
-    /**
-     * Constants.
-     */
     public const SCENARIO_INSERT = 'insert';
     public const SCENARIO_UPDATE = 'update';
 
