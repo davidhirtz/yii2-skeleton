@@ -295,7 +295,6 @@ class AccountController extends Controller
             }
         } elseif (!$form->validatePasswordResetCode()) {
             $this->error($form->getFirstErrors());
-            dump('hier');
             return $this->goHome();
         }
 
