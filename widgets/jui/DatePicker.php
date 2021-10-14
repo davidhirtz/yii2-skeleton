@@ -2,7 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\jui;
 
-use davidhirtz\yii2\datetime\DateTime;
+use DateTime;
 use Yii;
 use yii\helpers\FormatConverter;
 use yii\helpers\Html;
@@ -70,10 +70,10 @@ class DatePicker extends InputWidget
      */
     public function run()
     {
+        $date = $this->hasModel() ? Html::getAttributeValue($this->model, $this->attribute) : $this->value;
         $options = $this->options;
 
-        /** @var DateTime $date */
-        if ($date = $this->hasModel() ? Html::getAttributeValue($this->model, $this->attribute) : $this->value) {
+        if ($date instanceof DateTime) {
             $options['value'] = $date->format($this->dateFormat);
 
             if ($this->showTime) {
@@ -88,13 +88,9 @@ class DatePicker extends InputWidget
             }
         }
 
-        if ($this->hasModel()) {
-            echo Html::activeTextInput($this->model, $this->attribute, $options);
-        } else {
-            echo Html::textInput($this->name, $date, $options);
-        }
-
         $this->clientEvents['keypress'] = new JsExpression('function(e){if(e.which==13)this.form.submit()}');
         $this->registerWidget('datepicker');
+
+        echo $this->hasModel() ? Html::activeTextInput($this->model, $this->attribute, $options) : Html::textInput($this->name, $this->value, $options);
     }
 }
