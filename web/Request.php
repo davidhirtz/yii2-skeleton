@@ -4,6 +4,7 @@ namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Yii;
+use yii\web\Cookie;
 
 /**
  * Class Request
@@ -12,7 +13,7 @@ use Yii;
 class Request extends \yii\web\Request
 {
     /**
-     * @var bool whether user language should be saved for logged in users (db) and guests (cookie).
+     * @var bool whether user language should be saved for logged-in users (db) and guests (cookie).
      */
     public $setUserLanguage = true;
 
@@ -41,7 +42,7 @@ class Request extends \yii\web\Request
             $this->cookieValidationKey = Yii::$app->params['cookieValidationKey'];
         }
 
-        if ($this->draftSubdomain && strpos($hostInfo = $this->getHostInfo(), "//{$this->draftSubdomain}.") !== false) {
+        if ($this->draftSubdomain && strpos($this->getHostInfo(), "//{$this->draftSubdomain}.") !== false) {
             $this->_isDraft = 1;
         }
 
@@ -73,7 +74,7 @@ class Request extends \yii\web\Request
                             ]);
                         } elseif ($language != Yii::$app->sourceLanguage && $cookie !== $language) {
                             Yii::$app->getResponse()->getCookies()->add(Yii::createObject([
-                                'class' => \yii\web\Cookie::class,
+                                'class' => Cookie::class,
                                 'name' => $param,
                                 'value' => $language,
                             ]));
@@ -97,7 +98,7 @@ class Request extends \yii\web\Request
     }
 
     /**
-     * Returns whether this is a Ajax route request.
+     * Returns whether this is an Ajax route request.
      * @return bool
      */
     public function getIsAjaxRoute()
