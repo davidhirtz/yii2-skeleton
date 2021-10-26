@@ -5,9 +5,12 @@ namespace davidhirtz\yii2\skeleton\web;
 use davidhirtz\yii2\skeleton\auth\rbac\DbManager;
 use davidhirtz\yii2\skeleton\core\ApplicationTrait;
 use davidhirtz\yii2\skeleton\i18n\I18N;
+use Yii;
 use yii\authclient\Collection;
+use yii\base\Event;
 use yii\swiftmailer\Mailer;
 use yii\web\Cookie;
+use yii\web\Response;
 
 /**
  * Class Application
@@ -76,6 +79,16 @@ class Application extends \yii\web\Application
             ],
             'request' => [
                 'class' => 'davidhirtz\yii2\skeleton\web\Request',
+            ],
+            'response' => [
+                'class' => 'yii\web\Response',
+                'on beforeSend' => function (Event $event) {
+                    if ($this->getRequest()->getIsDraft()) {
+                        /** @var Response $response */
+                        $response = $event->sender;
+                        $response->getHeaders()->set('X-Robots-Tag', 'none');
+                    }
+                }
             ],
             'user' => [
                 'class' => 'davidhirtz\yii2\skeleton\web\User',
