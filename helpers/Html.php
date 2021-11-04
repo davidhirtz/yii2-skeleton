@@ -152,14 +152,14 @@ class Html extends BaseHtml
     /**
      * @param string $text
      * @param array|string $keywords
-     *
+     * @param bool $wordBoundary
      * @return string
      */
-    public static function markKeywords($text, $keywords)
+    public static function markKeywords($text, $keywords, $wordBoundary = false)
     {
         if ($keywords) {
             foreach ((array)$keywords as $keyword) {
-                $text = preg_replace('~(' . preg_quote($keyword) . ')~ui', '<mark>$1</mark>', $text);
+                $text = preg_replace('~(' . ($wordBoundary ? '\b' : '') . preg_quote($keyword) . ')~ui', '<mark>$1</mark>', $text);
             }
         }
 
