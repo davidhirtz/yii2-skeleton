@@ -30,11 +30,10 @@ CKEDITOR.plugins.add('extra', {
 });
 
 CKEDITOR.on('dialogDefinition', function (event) {
-    var dialogName = event.data.name,
-        dialogDefinition = event.data.definition;
+    var dialogName = event.data.name;
 
     if (dialogName === 'link') {
-        var infoTab = dialogDefinition.getContents('info'),
+        var dialogDefinition = event.data.definition, infoTab = dialogDefinition.getContents('info'),
             url = infoTab.get('url'),
             targetTab = dialogDefinition.getContents('target'),
             targetType = targetTab.get('linkTargetType');
@@ -45,8 +44,9 @@ CKEDITOR.on('dialogDefinition', function (event) {
         infoTab.remove('anchorOptions');
         infoTab.remove('browse');
 
-        // Cannot remove linkType without breaking the functionality...
+        // Cannot remove linkType and linkTargetName without breaking the functionality...
         infoTab.get('linkType').style = 'display: none';
+        targetTab.get('linkTargetName').style = 'display: none';
 
         url.onKeyUp = function (data) {
         };
@@ -58,14 +58,15 @@ CKEDITOR.on('dialogDefinition', function (event) {
             }
             this.allowOnChange = true;
         };
+
         url.commit = function (data) {
             data.url = {protocol: '', url: this.getValue()};
         };
 
         // Remove useless targets.
         targetType.items = [targetType.items[0], targetType.items[3]];
-        targetTab.remove('linkTargetName');
-        targetTab.remove('popupFeatures');
+
+        // targetTab.remove('popupFeatures');
         targetTab.elements[0].widths = ['100%'];
     }
 });
