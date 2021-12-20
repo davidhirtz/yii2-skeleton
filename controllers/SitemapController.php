@@ -136,7 +136,7 @@ class SitemapController extends Controller
                     $this->writer->writeElement('image:loc', Url::to(is_array($image) ? $image['loc'] : $image, true));
 
                     foreach (['caption', 'geo_location', 'license', 'title'] as $element) {
-                        if (isset($image[$element])) {
+                        if (!empty($image[$element])) {
                             $this->writer->writeElement('image:' . $element, $image[$element]);
                         }
                     }
