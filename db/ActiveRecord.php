@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\db;
 
+use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Yii;
 use yii\base\NotSupportedException;
@@ -137,6 +138,31 @@ class ActiveRecord extends \yii\db\ActiveRecord
     {
         $this->populateRelation($name, $related = $this->getRelation($name)->one());
         return $related;
+    }
+
+    /**
+     * Adds default values to `updated_by_user_id` and `updated_at` if found in values of `$attributes`.
+     *
+     * @param array $attributes
+     * @return int
+     */
+    public function updateAttributesBlameable($attributes)
+    {
+        foreach ($attributes as $name => $value) {
+            if (is_int($name)) {
+                if ($value == 'updated_by_user_id') {
+                    $attributes[$value] = Yii::$app->has('user') ? Yii::$app->getUser()->getId() : null;
+                    unset($name);
+                }
+
+                if ($value == 'updated_at') {
+                    $attributes[$value] = new DateTime();
+                    unset($name);
+                }
+            }
+        }
+
+        return $this->updateAttributes($attributes);
     }
 
     /**
