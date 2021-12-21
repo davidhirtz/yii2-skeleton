@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\web;
 
 use Yii;
+use yii\base\Model;
 use yii\helpers\Html;
 
 /**
@@ -55,7 +56,7 @@ class Controller extends \yii\web\Controller
     public function renderAjaxRouteScripts()
     {
         $view = $this->getView();
-        $view->registerJs('document.title="' . addslashes(preg_replace( "/[\r|\n]/", "", $view->getTitle())) . '";');
+        $view->registerJs('document.title="' . addslashes(preg_replace("/[\r|\n]/", "", $view->getTitle())) . '";');
 
         return implode('', $view->css) . Html::script(implode('', call_user_func_array('array_merge', $view->js)), ['type' => 'text/javascript']);
     }
@@ -75,24 +76,30 @@ class Controller extends \yii\web\Controller
     }
 
     /**
-     * Shorthand method for adding an error flash.
-     * @param array|string $message
+     * Shorthand method for adding an error flash. If `$value` is an instance of {@link Model} the first errors will be
+     * set if found.
+     *
+     * @param Model|array|string $value
      */
-    public function error($message)
+    public function error($value)
     {
-        if ($message) {
-            Yii::$app->getSession()->addFlash('error', $message);
+        if ($value instanceof Model) {
+            $value = $value->getFirstErrors();
+        }
+
+        if ($value) {
+            Yii::$app->getSession()->addFlash('error', $value);
         }
     }
 
     /**
      * Shorthand method for adding a success flash.
-     * @param array|string $message
+     * @param array|string $value
      */
-    public function success($message)
+    public function success($value)
     {
-        if ($message) {
-            Yii::$app->getSession()->addFlash('success', $message);
+        if ($value) {
+            Yii::$app->getSession()->addFlash('success', $value);
         }
     }
 }

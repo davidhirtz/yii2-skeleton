@@ -114,10 +114,9 @@ class RedirectController extends Controller
 
         if ($redirect->delete()) {
             $this->success(Yii::t('skeleton', 'The redirect rule was deleted.'));
-        } elseif ($errors = $redirect->getFirstErrors()) {
-            $this->error($errors);
         }
 
+        $this->error($redirect);
         return $this->redirect($previous ? ['update', 'id' => $previous] : array_merge(Yii::$app->getRequest()->get(), ['index']));
     }
 
@@ -138,9 +137,7 @@ class RedirectController extends Controller
                         $isDeleted = true;
                     }
 
-                    if ($redirect->hasErrors()) {
-                        $this->error($redirect->getFirstErrors());
-                    }
+                    $this->error($redirect);
                 }
             }
 

@@ -294,7 +294,7 @@ class AccountController extends Controller
                 return $this->goHome();
             }
         } elseif (!$form->validatePasswordResetCode()) {
-            $this->error($form->getFirstErrors());
+            $this->error($form);
             return $this->goHome();
         }
 
@@ -364,7 +364,8 @@ class AccountController extends Controller
             return $this->goHome();
         }
 
-        $this->error($form->getFirstErrors());
+        $this->error($form);
+
         return $this->redirect(['update']);
     }
 
@@ -381,9 +382,7 @@ class AccountController extends Controller
             $this->success(Yii::t('skeleton', 'Two-factor authentication is now enabled on your account.'));
         }
 
-        if ($errors = $form->getFirstErrors()) {
-            $this->error($errors);
-        }
+        $this->error($form);
 
         return $this->redirect(['update']);
     }
@@ -401,9 +400,7 @@ class AccountController extends Controller
             $this->success(Yii::t('skeleton', 'Two-factor authentication is now disabled on your account.'));
         }
 
-        if ($errors = $form->getFirstErrors()) {
-            $this->error($errors);
-        }
+        $this->error($form);
 
         return $this->redirect(['update']);
     }
@@ -469,7 +466,8 @@ class AccountController extends Controller
             ]));
         }
 
-        $this->error($auth->getFirstErrors());
+        $this->error($auth);
+
         return $this->redirect(['update']);
     }
 
@@ -514,7 +512,7 @@ class AccountController extends Controller
         $user->setClient($auth->getClientClass());
 
         if (!$user->save()) {
-            $this->error($user->getFirstErrors());
+            $this->error($user);
             return false;
         }
 

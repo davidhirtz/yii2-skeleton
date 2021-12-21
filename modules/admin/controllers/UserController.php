@@ -205,7 +205,7 @@ class UserController extends Controller
             }
         }
 
-        $this->error($form->getFirstErrors());
+        $this->error($form);
 
         return $this->redirect(['update', 'id' => $user->id]);
     }
