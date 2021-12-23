@@ -35,7 +35,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     public const TYPE_DEFAULT = 1;
 
     /**
-     * @var array containing a the attribute names of attributes which should be used with I18N features such as
+     * @var array containing the attribute names of attributes which should be used with I18N features such as
      * {@link ActiveRecord::getI18nAttribute()}, {@link ActiveRecord::getI18nRules()}, etc.
      */
     public $i18nAttributes = [];
@@ -196,7 +196,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
 
     /**
      * @param array $columns the column names
-     * @param array|null $rows the rows to be batch inserted into the table
+     * @param array|null $rows the rows to be batch-inserted into the table
      * @param bool $ignore whether records should be inserted regardless of previous errors or existing primary keys
      * @return int number of rows affected by the execution
      */

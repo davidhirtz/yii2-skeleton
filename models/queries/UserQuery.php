@@ -46,7 +46,14 @@ class UserQuery extends ActiveQuery
      */
     public function nameAttributesOnly()
     {
-        return $this->select(['id', 'status', 'name', 'first_name', 'last_name', 'is_owner']);
+        return $this->select($this->prefixColumns([
+            'id',
+            'status',
+            'name',
+            'first_name',
+            'last_name',
+            'is_owner',
+        ]));
     }
 
     /**
@@ -54,7 +61,7 @@ class UserQuery extends ActiveQuery
      */
     public function selectListAttributes()
     {
-        return $this->select([
+        return $this->select($this->prefixColumns([
             'id',
             'status',
             'name',
@@ -66,7 +73,7 @@ class UserQuery extends ActiveQuery
             'is_owner',
             'last_login',
             'created_at'
-        ]);
+        ]));
     }
 
     /**
