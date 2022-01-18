@@ -430,14 +430,13 @@ input[type="button"], input[type="submit"], button {
 //	background:$danger;
 //}
 
-.form-control.month {
+.form-control.month, .form-control.day {
   display: inline-block;
   margin-right: 2%;
   width: 48%;
 }
 
 .form-control.day {
-  @extend .form-control.month;
   width: 20%;
 }
 

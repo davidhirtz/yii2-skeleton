@@ -77,25 +77,21 @@ class SitemapController extends Controller
         ob_start();
         ob_implicit_flush(false);
 
-        try {
-            $headers = $response->getHeaders();
-            $headers->add('Content-Type', 'application/xml');
+        $headers = $response->getHeaders();
+        $headers->add('Content-Type', 'application/xml');
 
-            $this->writer = new XMLWriter();
-            $this->writer->openUri('php://output');
-            $this->writer->startDocument('1.0', 'UTF-8');
+        $this->writer = new XMLWriter();
+        $this->writer->openUri('php://output');
+        $this->writer->startDocument('1.0', 'UTF-8');
 
-            if ($sitemap->useSitemapIndex && $key === null) {
-                $this->writeUrlset(Yii::$app->sitemap->generateIndexUrls(), true);
-            } else {
-                $this->writeUrlset($sitemap->generateUrls($key, $offset));
-            }
-
-            $this->writer->endDocument();
-            $this->writer->flush();
-        } catch (Exception $exception) {
-            throw $exception;
+        if ($sitemap->useSitemapIndex && $key === null) {
+            $this->writeUrlset(Yii::$app->sitemap->generateIndexUrls(), true);
+        } else {
+            $this->writeUrlset($sitemap->generateUrls($key, $offset));
         }
+
+        $this->writer->endDocument();
+        $this->writer->flush();
 
         return ob_get_clean();
     }

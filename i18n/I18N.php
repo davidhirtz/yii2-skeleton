@@ -20,7 +20,8 @@ class I18N extends \yii\i18n\I18N
     public static $languageLabels = [
         'de' => 'Deutsch',
         'en-US' => 'English',
-        'zh-CN' => '汉语',
+        'zh-CN' => '简体中文', //  // zh-HANS
+        'zh-TW' => '繁體中文', // zh-HANT
     ];
 
     /**
