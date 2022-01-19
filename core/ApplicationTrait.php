@@ -92,6 +92,7 @@ trait ApplicationTrait
                     ],
                 ],
                 'mailer' => [
+                    'class' => 'yii\symfonymailer\Mailer',
                     'htmlLayout' => '@skeleton/mail/layouts/html',
                 ],
                 'maintenance' => [

@@ -7,7 +7,7 @@ use davidhirtz\yii2\skeleton\core\ApplicationTrait;
 use davidhirtz\yii2\skeleton\i18n\I18N;
 use yii\authclient\Collection;
 use yii\base\Event;
-use yii\swiftmailer\Mailer;
+use yii\symfonymailer\Mailer;
 use yii\web\Cookie;
 use yii\web\Response;
 
