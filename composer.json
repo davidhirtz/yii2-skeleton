@@ -22,7 +22,7 @@
 		"davidhirtz/yii2-datetime-behavior":"*",
 		"davidhirtz/yii2-timeago":"dev-master",
 		"davidhirtz/yii2-curl":"dev-master",
-		"davidhirtz/yii2-lazysizes":">=2.1",
+		"davidhirtz/yii2-lazysizes":">=2.2",
 		"jfcherng/php-diff": "^6.9",
 		"robthree/twofactorauth": "^1.8",
 		"npm-asset/blueimp-file-upload": ">=10.2.0",
