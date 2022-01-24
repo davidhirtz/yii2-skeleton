@@ -153,6 +153,10 @@ trait ApplicationTrait
             $config['components']['db'] = array_merge(require($db), $config['components']['db']);
         }
 
+        if ($mailerDsn = ($config['params']['mailerDsn'] ?? false)) {
+            $config['components']['mailer']['transport']['dsn'] = $mailerDsn;
+        }
+
         $this->setFacebookClientComponent($config);
     }
 
