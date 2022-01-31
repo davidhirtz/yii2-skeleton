@@ -114,4 +114,14 @@ class UserQuery extends ActiveQuery
     {
         return $this->orderBy(['name' => SORT_ASC]);
     }
+
+    /**
+     * Overrides default implementation to not use `whereStatus` as this might trigger the draft modus on modules such
+     * as `yii2-cms` or `yii2-media`.
+     * @return $this
+     */
+    public function enabled()
+    {
+        return $this->where(['>=', User::tableName() . '.status', User::STATUS_ENABLED]);
+    }
 }
