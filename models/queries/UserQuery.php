@@ -122,6 +122,6 @@ class UserQuery extends ActiveQuery
      */
     public function enabled()
     {
-        return $this->where(['>=', User::tableName() . '.status', User::STATUS_ENABLED]);
+        return $this->andWhere(['>=', User::tableName() . '.status', User::STATUS_ENABLED]);
     }
 }
