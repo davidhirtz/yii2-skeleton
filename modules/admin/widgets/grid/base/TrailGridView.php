@@ -192,6 +192,7 @@ class TrailGridView extends GridView
             }
         }
 
+
         return $this->renderTrailAttributes($rows, ['class' => 'trail-update']);
     }
 

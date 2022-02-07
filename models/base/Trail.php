@@ -304,9 +304,11 @@ abstract class Trail extends ActiveRecord
 
         $instance = $model[0]::instance();
 
-        // Prevent PHP warnings if record has a primary key mismatch
-        if ($keys = @array_combine($instance::primaryKey(), explode('-', $modelId))) {
-            $instance = $model[0]::findOne($keys) ?: $instance;
+        if ($instance instanceof ActiveRecord) {
+            // Prevent PHP warnings if record has a primary key mismatch
+            if ($keys = @array_combine($instance::primaryKey(), explode('-', $modelId))) {
+                $instance = $model[0]::findOne($keys) ?: $instance;
+            }
         }
 
         Yii::$app->language = $prevLanguage;

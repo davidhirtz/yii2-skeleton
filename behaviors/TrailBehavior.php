@@ -140,7 +140,7 @@ class TrailBehavior extends Behavior
     {
         $trail = new Trail();
         $trail->model = $this->modelClass;
-        $trail->model_id = $this->owner->getPrimaryKey(true);
+        $trail->model_id = $this->owner instanceof ActiveRecord ? $this->owner->getPrimaryKey(true) : null;
 
         /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         $trail->parents = $this->owner->getTrailParents();
