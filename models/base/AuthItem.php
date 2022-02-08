@@ -6,6 +6,7 @@ use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\db\TypeAttributeTrait;
 use davidhirtz\yii2\skeleton\models\queries\AuthItemQuery;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
+use davidhirtz\yii2\skeleton\models\User;
 use Yii;
 use yii\rbac\Item;
 
