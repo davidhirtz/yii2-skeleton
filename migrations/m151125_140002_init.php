@@ -153,22 +153,22 @@ class m151125_140002_init extends m140506_102106_rbac_init
         $ownerRule = new OwnerRule();
         $auth->add($ownerRule);
 
-        $authUpdate = $auth->createPermission('authUpdate');
+        $authUpdate = $auth->createPermission(User::AUTH_USER_ASSIGN);
         $authUpdate->description = Yii::t('skeleton', 'Assign and revoke user permissions', [], $sourceLanguage);
         $authUpdate->ruleName = $ownerRule->name;
         $auth->add($authUpdate);
 
-        $userUpdate = $auth->createPermission('userUpdate');
+        $userUpdate = $auth->createPermission(User::AUTH_USER_UPDATE);
         $userUpdate->description = Yii::t('skeleton', 'Update users', [], $sourceLanguage);
         $userUpdate->ruleName = $ownerRule->name;
         $auth->add($userUpdate);
 
-        $userCreate = $auth->createPermission('userCreate');
+        $userCreate = $auth->createPermission(User::AUTH_USER_CREATE);
         $userCreate->description = Yii::t('skeleton', 'Create new users', [], $sourceLanguage);
         $auth->add($userCreate);
         $auth->addChild($userCreate, $userUpdate);
 
-        $userDelete = $auth->createPermission('userDelete');
+        $userDelete = $auth->createPermission(User::AUTH_USER_DELETE);
         $userDelete->description = Yii::t('skeleton', 'Delete users', [], $sourceLanguage);
         $auth->add($userDelete);
         $auth->addChild($userDelete, $userUpdate);

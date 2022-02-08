@@ -65,7 +65,7 @@ class UserGridView extends GridView
                 [
                     [
                         'content' => $this->getCreateUserButton(),
-                        'visible' => Yii::$app->getUser()->can('userCreate'),
+                        'visible' => Yii::$app->getUser()->can(User::AUTH_USER_CREATE),
                         'options' => [
                             'class' => 'col-12',
                         ],
@@ -122,7 +122,7 @@ class UserGridView extends GridView
             'contentOptions' => ['class' => 'd-none d-md-table-cell'],
             'content' => function (User $user) {
                 $timeago = Timeago::tag($user->last_login);
-                return Yii::$app->getUser()->can('userUpdate', ['user' => $user]) ? Html::a($timeago, ['/admin/user-login/view', 'user' => $user->id]) : $timeago;
+                return Yii::$app->getUser()->can(User::AUTH_USER_UPDATE, ['user' => $user]) ? Html::a($timeago, ['/admin/user-login/view', 'user' => $user->id]) : $timeago;
             }
         ];
     }
@@ -174,7 +174,7 @@ class UserGridView extends GridView
             return Html::a(Icon::tag('wrench'), $route, ['class' => 'btn btn-primary']);
         }
 
-        if (Yii::$app->getUser()->can('authUpdate', ['user' => $user])) {
+        if (Yii::$app->getUser()->can(User::AUTH_USER_ASSIGN, ['user' => $user])) {
             return Html::a(Icon::tag('unlock-alt'), ['/admin/auth/view', 'user' => $user->id],
                 [
                     'class' => 'btn btn-primary',
@@ -193,7 +193,7 @@ class UserGridView extends GridView
      */
     protected function getRoute($model, $params = [])
     {
-        return Yii::$app->getUser()->can('userUpdate', ['user' => $model]) ? array_merge(['/admin/user/update', 'id' => $model->id], $params) : false;
+        return Yii::$app->getUser()->can(User::AUTH_USER_UPDATE, ['user' => $model]) ? array_merge(['/admin/user/update', 'id' => $model->id], $params) : false;
     }
 
     /**

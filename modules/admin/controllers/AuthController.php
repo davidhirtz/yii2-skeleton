@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
 use davidhirtz\yii2\skeleton\models\AuthItem;
+use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\traits\UserTrait;
 use davidhirtz\yii2\skeleton\web\Controller;
 use yii\data\ArrayDataProvider;
@@ -33,7 +34,7 @@ class AuthController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['assign', 'index', 'revoke', 'view'],
-                        'roles' => ['authUpdate'],
+                        'roles' => [User::AUTH_USER_ASSIGN],
                     ],
                 ],
             ],
@@ -74,7 +75,7 @@ class AuthController extends Controller
      */
     public function actionView($user)
     {
-        $user = $this->findUserForm($user, 'authUpdate');
+        $user = $this->findUserForm($user, User::AUTH_USER_ASSIGN);
 
         $items = AuthItem::find()
             ->select(['name', 'type', 'description'])
@@ -102,7 +103,7 @@ class AuthController extends Controller
      */
     public function actionAssign($id, $name, $type)
     {
-        $user = $this->findUserForm($id, 'authUpdate');
+        $user = $this->findUserForm($id, User::AUTH_USER_ASSIGN);
         $role = $this->getAuthItem($name, $type);
 
         if (!Yii::$app->getAuthManager()->assign($role, $user->id)) {
@@ -122,7 +123,7 @@ class AuthController extends Controller
      */
     public function actionRevoke($id, $name, $type)
     {
-        $user = $this->findUserForm($id, 'authUpdate');
+        $user = $this->findUserForm($id, User::AUTH_USER_ASSIGN);
         $role = $this->getAuthItem($name, $type);
 
         if (!Yii::$app->getAuthManager()->revoke($role, $user->id)) {

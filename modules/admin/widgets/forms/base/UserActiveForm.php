@@ -172,7 +172,7 @@ class UserActiveForm extends ActiveForm
             if ($this->model->created_by_user_id) {
                 $items[] = Yii::t('skeleton', 'Created by {user} {timestamp}', [
                     'timestamp' => Timeago::tag($this->model->created_at),
-                    'user' => Html::username($this->model->admin, Yii::$app->getUser()->can('userUpdate', ['user' => $this->model->admin]) ? ['/admin/user/update', 'id' => $this->model->id] : null),
+                    'user' => Html::username($this->model->admin, Yii::$app->getUser()->can(User::AUTH_USER_UPDATE, ['user' => $this->model->admin]) ? ['/admin/user/update', 'id' => $this->model->id] : null),
                 ]);
             } else {
                 $items[] = Yii::t('skeleton', 'Signed up {timestamp}', [

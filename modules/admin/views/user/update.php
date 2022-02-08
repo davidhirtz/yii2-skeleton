@@ -8,6 +8,7 @@
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\panels\UserHelpPanel;
 use davidhirtz\yii2\skeleton\web\View;
@@ -41,24 +42,22 @@ $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
 ]); ?>
 
 <?php
-if (Yii::$app->getUser()->can('userDelete')) {
-    if (!$user->isOwner()) {
-        echo Panel::widget([
-            'type' => 'danger',
-            'title' => Yii::t('skeleton', 'Delete User'),
-            'content' => DeleteActiveForm::widget([
-                'model' => $user,
-                'attribute' => 'email',
-                'message' => Yii::t('skeleton', 'Please type the user email in the text field below to delete this user. All related records and files will also be deleted. This cannot be undone, please be certain!')
-            ]),
-        ]);
-    } else {
-        ?>
-        <div class="alert alert-warning">
-            <?= Yii::t('skeleton', 'You cannot delete this user, because it is the owner of this website.'); ?>
-        </div>
-        <?php
-    }
+if ($user->isOwner()) {
+    ?>
+    <div class="alert alert-warning">
+        <?= Yii::t('skeleton', 'You cannot delete this user, because it is the owner of this website.'); ?>
+    </div>
+    <?php
+} elseif (Yii::$app->getUser()->can(User::AUTH_USER_DELETE, ['user' => $user])) {
+    echo Panel::widget([
+        'type' => 'danger',
+        'title' => Yii::t('skeleton', 'Delete User'),
+        'content' => DeleteActiveForm::widget([
+            'model' => $user,
+            'attribute' => 'email',
+            'message' => Yii::t('skeleton', 'Please type the user email in the text field below to delete this user. All related records and files will also be deleted. This cannot be undone, please be certain!')
+        ]),
+    ]);
 }
 ?>
 

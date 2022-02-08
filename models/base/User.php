@@ -72,6 +72,11 @@ abstract class User extends ActiveRecord
     public const EMAIL_CONFIRMATION_CODE_LENGTH = 30;
     public const PASSWORD_RESET_CODE_LENGTH = 30;
 
+    public const AUTH_USER_CREATE = 'userCreate';
+    public const AUTH_USER_DELETE = 'userDelete';
+    public const AUTH_USER_UPDATE = 'userUpdate';
+    public const AUTH_USER_ASSIGN = 'authUpdate';
+
     /**
      * @var bool whether uploads should be automatically rotated based on their EXIF data
      */

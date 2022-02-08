@@ -38,22 +38,22 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create'],
-                        'roles' => ['userCreate'],
+                        'roles' => [User::AUTH_USER_CREATE],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['delete'],
-                        'roles' => ['userDelete'],
+                        'roles' => [User::AUTH_USER_DELETE],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['deauthorize', 'delete-picture', 'disable-google-authenticator', 'index', 'ownership', 'reset', 'update'],
-                        'roles' => ['userUpdate'],
+                        'roles' => [User::AUTH_USER_UPDATE],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        'roles' => ['authUpdate'],
+                        'roles' => [User::AUTH_USER_ASSIGN],
                     ],
                 ],
             ],
@@ -95,7 +95,7 @@ class UserController extends Controller
         $user = new UserForm();
         $user->status = $user::STATUS_ENABLED;
 
-        if (!Yii::$app->getUser()->can('userCreate', ['user' => $user])) {
+        if (!Yii::$app->getUser()->can(User::AUTH_USER_CREATE, ['user' => $user])) {
             throw new ForbiddenHttpException();
         }
 
@@ -122,7 +122,7 @@ class UserController extends Controller
      */
     public function actionUpdate($id)
     {
-        $user = $this->findUserForm($id, 'userUpdate');
+        $user = $this->findUserForm($id, User::AUTH_USER_UPDATE);
 
         if ($user->load(Yii::$app->getRequest()->post())) {
             if ($user->update()) {
@@ -161,7 +161,7 @@ class UserController extends Controller
      */
     public function actionReset($id)
     {
-        $user = $this->findUserForm($id, 'userUpdate');
+        $user = $this->findUserForm($id, User::AUTH_USER_UPDATE);
         $user->generatePasswordResetCode();
 
         if ($user->update()) {
@@ -181,7 +181,7 @@ class UserController extends Controller
             throw new NotFoundHttpException();
         }
 
-        if (!Yii::$app->getUser()->can('userDelete', ['user' => $user])) {
+        if (!Yii::$app->getUser()->can(User::AUTH_USER_DELETE, ['user' => $user])) {
             throw new ForbiddenHttpException();
         }
 
@@ -231,7 +231,7 @@ class UserController extends Controller
             throw new NotFoundHttpException();
         }
 
-        if (!Yii::$app->getUser()->can('userUpdate', ['user' => $auth->identity])) {
+        if (!Yii::$app->getUser()->can(User::AUTH_USER_UPDATE, ['user' => $auth->identity])) {
             throw new ForbiddenHttpException();
         }
 
@@ -280,7 +280,7 @@ class UserController extends Controller
      */
     private function updateUserAttributes($id, $attributes)
     {
-        $user = $this->findUserForm($id, 'userUpdate');
+        $user = $this->findUserForm($id, User::AUTH_USER_UPDATE);
         $user->setAttributes($attributes, false);
 
         if ($user->update()) {

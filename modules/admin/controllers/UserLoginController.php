@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
+use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\traits\UserTrait;
 use yii\data\ActiveDataProvider;
@@ -29,7 +30,7 @@ class UserLoginController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index', 'view'],
-                        'roles' => ['userUpdate'],
+                        'roles' => [User::AUTH_USER_UPDATE],
                     ],
                 ],
             ],
@@ -69,7 +70,7 @@ class UserLoginController extends Controller
      */
     public function actionView($user)
     {
-        $user = $this->findUserForm($user, 'userUpdate');
+        $user = $this->findUserForm($user, User::AUTH_USER_UPDATE);
 
         $provider = new ActiveDataProvider([
             'sort' => false,

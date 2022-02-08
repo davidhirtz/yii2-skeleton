@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin;
 
+use davidhirtz\yii2\skeleton\models\User;
 use Yii;
 use yii\base\Action;
 
@@ -117,7 +118,7 @@ class Module extends \yii\base\Module
                         'icon' => 'users',
                         'url' => ['/admin/user/index'],
                         'active' => ['admin/auth', 'admin/login', 'admin/user'],
-                        'roles' => ['authUpdate', 'userUpdate'],
+                        'roles' => [User::AUTH_USER_ASSIGN, User::AUTH_USER_UPDATE],
                     ],
                 ];
             }
@@ -131,7 +132,7 @@ class Module extends \yii\base\Module
                                 'label' => Yii::t('skeleton', 'Create New User'),
                                 'url' => ['/admin/user/create'],
                                 'icon' => 'user-plus',
-                                'visible' => $user->can('userCreate'),
+                                'visible' => $user->can(User::AUTH_USER_CREATE),
                             ],
                             [
                                 'label' => Yii::t('skeleton', 'Your Account'),
