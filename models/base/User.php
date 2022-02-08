@@ -247,7 +247,7 @@ abstract class User extends ActiveRecord
     public function beforeValidate(): bool
     {
         // Set defaults in case these were omitted in signup.
-        $this->status = $this->status?: static::STATUS_ENABLED;
+        $this->status = $this->status ?? static::STATUS_ENABLED;
         $this->timezone = $this->timezone ?: Yii::$app->getTimeZone();
 
         // Changes to the available app languages might be rare, but needs to be accounted for.
