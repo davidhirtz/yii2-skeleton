@@ -28,12 +28,11 @@ class UserHelpPanel extends HelpPanel
         }
 
         if ($this->content === null) {
-            $this->content = $this->renderButtonToolbar($this->getButtons());
+            $this->content = $this->renderButtonToolbar(array_filter($this->getButtons()));
         }
 
         parent::init();
     }
-
 
     /**
      * @return array
