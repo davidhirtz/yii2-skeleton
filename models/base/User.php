@@ -76,6 +76,7 @@ abstract class User extends ActiveRecord
     public const AUTH_USER_DELETE = 'userDelete';
     public const AUTH_USER_UPDATE = 'userUpdate';
     public const AUTH_USER_ASSIGN = 'authUpdate';
+    public const AUTH_ROLE_ADMIN = 'admin';
 
     /**
      * @var bool whether uploads should be automatically rotated based on their EXIF data

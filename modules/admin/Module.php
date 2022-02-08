@@ -143,7 +143,7 @@ class Module extends \yii\base\Module
                                 'label' => Yii::t('skeleton', 'System Settings'),
                                 'url' => ['/admin/system/index'],
                                 'icon' => 'cog',
-                                'visible' => $user->can('admin'),
+                                'visible' => $user->can(User::AUTH_ROLE_ADMIN),
                             ],
                             [
                                 'label' => Yii::t('skeleton', 'History'),

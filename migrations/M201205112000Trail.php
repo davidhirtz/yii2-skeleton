@@ -4,6 +4,7 @@ namespace davidhirtz\yii2\skeleton\migrations;
 
 use davidhirtz\yii2\skeleton\db\MigrationTrait;
 use davidhirtz\yii2\skeleton\models\Trail;
+use davidhirtz\yii2\skeleton\models\User;
 use Yii;
 use yii\db\Migration;
 
@@ -37,7 +38,7 @@ class M201205112000Trail extends Migration
 
         $sourceLanguage = Yii::$app->sourceLanguage;
         $auth = Yii::$app->getAuthManager();
-        $admin = $auth->getRole('admin');
+        $admin = $auth->getRole(User::AUTH_ROLE_ADMIN);
 
         $trailIndex = $auth->createPermission('trailIndex');
         $trailIndex->description = Yii::t('skeleton', 'View history', [], $sourceLanguage);

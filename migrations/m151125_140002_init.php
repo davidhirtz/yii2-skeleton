@@ -173,7 +173,7 @@ class m151125_140002_init extends m140506_102106_rbac_init
         $auth->add($userDelete);
         $auth->addChild($userDelete, $userUpdate);
 
-        $admin = $auth->createRole('admin');
+        $admin = $auth->createRole(User::AUTH_ROLE_ADMIN);
         $auth->add($admin);
         $auth->addChild($admin, $authUpdate);
         $auth->addChild($admin, $userUpdate);

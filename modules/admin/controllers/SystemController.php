@@ -4,6 +4,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use davidhirtz\yii2\skeleton\models\Session;
+use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\LogDataProvider;
 use davidhirtz\yii2\skeleton\web\Controller;
 use Yii;
@@ -37,7 +38,7 @@ class SystemController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'flush', 'index', 'publish', 'session-gc', 'view'],
-                        'roles' => ['admin'],
+                        'roles' => [User::AUTH_ROLE_ADMIN],
                     ],
                 ],
             ],

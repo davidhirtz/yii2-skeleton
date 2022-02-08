@@ -4,6 +4,7 @@ namespace davidhirtz\yii2\skeleton\migrations;
 
 use davidhirtz\yii2\skeleton\db\MigrationTrait;
 use davidhirtz\yii2\skeleton\models\Redirect;
+use davidhirtz\yii2\skeleton\models\User;
 use Yii;
 use yii\db\Migration;
 
@@ -32,7 +33,7 @@ class M210224093845Redirect extends Migration
         ]);
 
         $auth = Yii::$app->getAuthManager();
-        $admin = $auth->getRole('admin');
+        $admin = $auth->getRole(User::AUTH_ROLE_ADMIN);
 
         $redirectCreate = $auth->createPermission('redirectCreate');
         $redirectCreate->description = Yii::t('skeleton', 'Create and update redirect rules', [], Yii::$app->sourceLanguage);
