@@ -22,7 +22,6 @@ $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['/admin/user/index']);
 <?= UserSubmenu::widget(['user' => $user]); ?>
 
 <?= Panel::widget([
-    'title' => $this->title,
     'content' => AuthItemGridView::widget([
         'dataProvider' => $provider,
         'user' => $user,
