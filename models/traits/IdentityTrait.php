@@ -12,6 +12,11 @@ use Yii;
 trait IdentityTrait
 {
     /**
+     * @var string
+     */
+    public $email;
+
+    /**
      * @var Identity
      */
     private $_user;

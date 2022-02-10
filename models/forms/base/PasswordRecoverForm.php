@@ -1,17 +1,21 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\models\forms;
+namespace davidhirtz\yii2\skeleton\models\forms\base;
 
 use davidhirtz\yii2\skeleton\models\traits\IdentityTrait;
+use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\datetime\DateTime;
 use Yii;
 use yii\base\Model;
 
 /**
- * Class AccountResendConfirmForm
- * @package davidhirtz\yii2\skeleton\models\forms
+ * Class PasswordRecoverForm
+ * @package davidhirtz\yii2\skeleton\models\forms\base
+ *
+ * @property User $user
+ * @see \davidhirtz\yii2\skeleton\models\forms\PasswordRecoverForm::getUser()
  */
-class AccountResendConfirmForm extends Model
+class PasswordRecoverForm extends Model
 {
     use IdentityTrait;
 
@@ -21,9 +25,9 @@ class AccountResendConfirmForm extends Model
     public $timeoutSpamProtection = '5 mins';
 
     /**
-     * @inheritdDoc
+     * @inheritdoc
      */
-    public function rules(): array
+    public function rules()
     {
         return [
             [
@@ -45,33 +49,22 @@ class AccountResendConfirmForm extends Model
     /**
      * Validates user credentials and checks for spam protection.
      */
-    public function afterValidate(): void
+    public function afterValidate()
     {
         $this->validateUserEmail();
         $this->validateUserStatus();
-        $this->validateUserConfirmationCode();
         $this->validateSpamProtection();
 
         parent::afterValidate();
     }
 
     /**
-     * Validates user credentials.
-     */
-    public function validateUserConfirmationCode(): void
-    {
-        if (!$this->hasErrors() && ($user = $this->getUser()) && !$user->email_confirmation_code) {
-            $this->addError('email', Yii::t('skeleton', 'Your account was already confirmed!'));
-        }
-    }
-
-    /**
      * Validates spam protection.
      */
-    public function validateSpamProtection(): void
+    public function validateSpamProtection()
     {
         if (!$this->hasErrors() && ($user = $this->getUser()) && $this->isAlreadySent()) {
-            $this->addError('email', Yii::t('skeleton', 'We have just sent a link to confirm your account to {email}. Please check your inbox!', [
+            $this->addError('email', Yii::t('skeleton', 'We have just sent a link to reset your password to {email}. Please check your inbox!', [
                 'email' => $user->email,
             ]));
         }
@@ -80,12 +73,14 @@ class AccountResendConfirmForm extends Model
     /**
      * @return bool
      */
-    public function resend(): bool
+    public function recover(): bool
     {
         if ($this->validate()) {
-            $this->sendConfirmEmail();
-            $this->getUser()->update();
+            $user = $this->getUser();
+            $user->generatePasswordResetCode();
+            $user->update();
 
+            $this->sendPasswordResetEmail();
             return true;
         }
 
@@ -93,13 +88,13 @@ class AccountResendConfirmForm extends Model
     }
 
     /**
-     * Sends email confirm code email.
+     * Sends password reset code email.
      */
-    public function sendConfirmEmail()
+    public function sendPasswordResetEmail(): void
     {
         if ($user = $this->getUser()) {
-            Yii::$app->getMailer()->compose('@skeleton/mail/account/confirm', ['user' => $user])
-                ->setSubject(Yii::t('skeleton', 'Confirm your account'))
+            Yii::$app->getMailer()->compose('@skeleton/mail/account/recover', ['user' => $user])
+                ->setSubject(Yii::t('skeleton', 'Reset your password'))
                 ->setFrom(Yii::$app->params['email'])
                 ->setTo($user->email)
                 ->send();
@@ -111,7 +106,7 @@ class AccountResendConfirmForm extends Model
      */
     public function isAlreadySent(): bool
     {
-        return ($user = $this->getUser()) && $user->email_confirmation_code && $user->updated_at->modify($this->timeoutSpamProtection) > new DateTime();
+        return ($user = $this->getUser()) && $user->password_reset_code && $user->updated_at->modify($this->timeoutSpamProtection) > new DateTime();
     }
 
     /**

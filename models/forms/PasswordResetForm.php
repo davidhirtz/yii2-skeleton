@@ -23,11 +23,6 @@ class PasswordResetForm extends Model
     /**
      * @var string
      */
-    public $email;
-
-    /**
-     * @var string
-     */
     public $code;
 
     /**

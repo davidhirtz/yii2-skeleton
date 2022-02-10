@@ -28,11 +28,6 @@ class LoginForm extends Model
     /**
      * @var string
      */
-    public $email;
-
-    /**
-     * @var string
-     */
     public $password;
 
     /**
