@@ -32,6 +32,10 @@
   [class*="col"] {
     padding-bottom: $app-grid-view-margin-y;
   }
+  
+  &:empty {
+    display: none;
+  }
 }
 
 .grid-view-buttons {
