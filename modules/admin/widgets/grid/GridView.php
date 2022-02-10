@@ -100,6 +100,11 @@ class GridView extends \yii\grid\GridView
     public $selectionRoute = ['update-all'];
 
     /**
+     * @var string
+     */
+    public $selectionButtonLabel;
+
+    /**
      * @var array containing the selection form html options
      */
     public $selectionColumn = [
@@ -141,6 +146,10 @@ class GridView extends \yii\grid\GridView
             $this->rowOptions = function ($record) {
                 return $record instanceof ActiveRecord ? ['id' => $this->getRowId($record)] : [];
             };
+        }
+
+        if ($this->selectionButtonLabel === null) {
+            $this->selectionButtonLabel = Yii::t('skeleton', 'Update Selected');
         }
 
         $this->tableOptions['id'] = $this->tableOptions['id'] ?? $this->getTableId();
@@ -373,7 +382,7 @@ class GridView extends \yii\grid\GridView
     {
         if ($items = $this->getSelectionButtonItems()) {
             return ButtonDropdown::widget([
-                'label' => Html::iconText('wrench', Yii::t('skeleton', 'Update Selected')),
+                'label' => Html::iconText('wrench', $this->selectionButtonLabel),
                 'buttonOptions' => ['class' => 'btn-submit'],
                 'options' => ['id' => 'btn-selection', 'style' => 'display:none'],
                 'direction' => ButtonDropdown::DIRECTION_UP,
