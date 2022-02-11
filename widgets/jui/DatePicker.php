@@ -5,7 +5,7 @@ namespace davidhirtz\yii2\skeleton\widgets\jui;
 use DateTime;
 use Yii;
 use yii\helpers\FormatConverter;
-use yii\helpers\Html;
+use davidhirtz\yii2\skeleton\helpers\Html;
 use yii\web\JsExpression;
 use yii\widgets\InputWidget;
 
