@@ -15,7 +15,7 @@
 }
 
 .alert-error {
-  background-color: $danger;
+  @extend .alert-danger;
 }
 
 .alert-info {
