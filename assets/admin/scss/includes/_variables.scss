@@ -371,7 +371,7 @@ $datepicker-link-hover-bg: $gray-400 !default;
 $datepicker-link-hover-color: $datepicker-link-color !default;
 $datepicker-link-current-bg: $gray-900 !default;
 $datepicker-link-current-color: $white !default;
-$datepicker-link-today-bg: $gray-500 !default;
+$datepicker-link-today-bg: $gray-500!important !default;
 $datepicker-link-today-color: $datepicker-link-color !default;
 
 
