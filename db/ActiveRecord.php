@@ -129,14 +129,16 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
-     * Reloads the relation and returns the record.
+     * Reloads the relation and returns the related record(s).
      *
      * @param string $name
-     * @return ActiveRecordInterface
+     * @return ActiveRecord|ActiveRecord[]
      */
     public function refreshRelation($name)
     {
-        $this->populateRelation($name, $related = $this->getRelation($name)->one());
+        $query = $this->getRelation($name);
+        $method = $query->multiple ? 'all' : 'one';
+        $this->populateRelation($name, $related = $query->{$method}());
         return $related;
     }
 
