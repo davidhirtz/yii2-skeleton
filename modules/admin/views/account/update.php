@@ -24,7 +24,7 @@ use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Account'));
 ?>
-
+    <h1 class="page-header"><?= $user->getUsername(); ?></h1>
 <?php
 if ($user->isUnconfirmed()) {
     ?>
