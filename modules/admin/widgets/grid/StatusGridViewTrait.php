@@ -14,7 +14,7 @@ use yii\helpers\Url;
  * Trait StatusGridViewTrait
  * @package davidhirtz\yii2\skeleton\modules\admin\widgets\grid
  *
- * @method ActiveRecord|StatusAttributeTrait getModel()
+ * @method ActiveRecord getModel()
  */
 trait StatusGridViewTrait
 {
