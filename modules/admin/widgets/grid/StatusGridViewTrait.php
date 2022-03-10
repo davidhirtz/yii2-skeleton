@@ -41,7 +41,6 @@ trait StatusGridViewTrait
         return [
             'contentOptions' => ['class' => 'text-center'],
             'content' => function ($model) {
-                /** @var ActiveRecord|StatusAttributeTrait $model */
                 $icon = $this->getStatusIcon($model);
                 return ($route = $this->getRoute($model)) ? Html::a($icon, $route) : $icon;
             }
@@ -53,11 +52,12 @@ trait StatusGridViewTrait
      */
     public function statusDropdown()
     {
-        $status = $this->getModel()::getStatuses()[$this->status] ?? false;
+        $items = $this->statusDropdownItems();
+        $active = $items[$this->status] ?? false;
 
         return ButtonDropdown::widget([
-            'label' => $status ? Html::tag('strong', $status['plural'] ?? $status['name']) : Yii::t('skeleton', 'Status'),
-            'items' => $this->statusDropdownItems(),
+            'label' => $active ? Html::tag('strong', $active['label']) : Yii::t('skeleton', 'Status'),
+            'items' => $items,
             'paramName' => $this->statusParamName,
             'defaultItem' => $this->defaultStatusItem,
         ]);
@@ -76,6 +76,9 @@ trait StatusGridViewTrait
     }
 
     /**
+     * Returns array index by `status`, containing `label` and `url` for {@link ButtonDropdown}. This method can be
+     * overridden to use other items or add additional statuses to the dropdown.
+     *
      * @return array
      */
     protected function statusDropdownItems(): array
@@ -83,7 +86,7 @@ trait StatusGridViewTrait
         $items = [];
 
         foreach ($this->getModel()::getStatuses() as $id => $status) {
-            $items[] = [
+            $items[$id] = [
                 'label' => $status['plural'] ?? $status['name'],
                 'url' => Url::current([$this->statusParamName => $id, 'page' => null]),
             ];
