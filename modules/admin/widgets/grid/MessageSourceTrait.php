@@ -3,16 +3,15 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\db\StatusAttributeTrait;
 use davidhirtz\yii2\skeleton\models\AuthItem;
 use Yii;
-use yii\i18n\MessageSource;
+use yii\i18n\PhpMessageSource;
 
 /**
  * Trait MessageSourceTrait
  * @package davidhirtz\yii2\skeleton\modules\admin\widgets\grid
  *
- * @method ActiveRecord|StatusAttributeTrait getModel()
+ * @method ActiveRecord getModel()
  */
 trait MessageSourceTrait
 {
@@ -37,14 +36,23 @@ trait MessageSourceTrait
 
             if (Yii::$app->language !== Yii::$app->sourceLanguage) {
                 $i18n = Yii::$app->getI18n();
-                $sources = array_keys($i18n->translations);
+                $sources = [];
+
+                // Make sure to only include sources that are actually available. This is needed because Yii adds an
+                // "app" category without making sure it actually is needed.
+                foreach (array_keys($i18n->translations) as $category) {
+                    $source = $i18n->getMessageSource($category);
+
+                    if (!$source instanceof PhpMessageSource || is_dir(Yii::getAlias($source->basePath . '/' . Yii::$app->language))) {
+                        $sources[$category] = $source;
+                    }
+                }
 
                 /** @var AuthItem $authItem */
                 foreach ($this->dataProvider->getModels() as $authItem) {
                     if ($message = $authItem->{$this->messageSourceAttribute}) {
-                        /** @var MessageSource $source */
-                        foreach ($sources as $source) {
-                            if ($translation = $i18n->getMessageSource($source)->translate($source, $message, Yii::$app->language)) {
+                        foreach ($sources as $category => $source) {
+                            if ($translation = $source->translate($category, $message, Yii::$app->language)) {
                                 $this->_translations[$message] = $translation;
                                 break;
                             }

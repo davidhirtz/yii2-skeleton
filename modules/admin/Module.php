@@ -198,7 +198,7 @@ class Module extends \yii\base\Module
     {
         $request = Yii::$app->getRequest();
 
-        if ($request->getIsDraft() && !$request->getIsAjax()) {
+        if (!$request->getIsConsoleRequest() && $request->getIsDraft() && !$request->getIsAjax()) {
             Yii::$app->getResponse()->redirect($request->getProductionHostInfo() . $request->getUrl())->send();
         }
 
