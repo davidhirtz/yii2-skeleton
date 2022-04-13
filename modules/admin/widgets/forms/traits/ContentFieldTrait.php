@@ -32,10 +32,37 @@ trait ContentFieldTrait
      */
     protected function getContentConfig(): array
     {
-        return [
+        $config = [
             'validator' => $this->model->htmlValidator,
             'clientOptions' => $this->model->htmlValidator !== false ? [] : [
                 'allowedContent' => true,
+            ],
+        ];
+
+        if (in_array('cta', $this->model->htmlValidator['allowedClasses'] ?? [])) {
+            $config = ArrayHelper::merge($config, $this->ctaButtonConfig());
+        }
+
+        return $config;
+    }
+
+    /**
+     * @return array
+     */
+    protected function ctaButtonConfig(): array
+    {
+        return [
+            'extraButtons' => [
+                [
+                    'name' => 'Button',
+                    'label' => 'Button',
+                    'toolbar' => [1 => 'Link'],
+                    'icon' => 'linkbutton',
+                    'definition' => [
+                        'element' => 'a',
+                        'attributes' => ['class' => 'cta'],
+                    ],
+                ],
             ],
         ];
     }

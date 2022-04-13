@@ -63,7 +63,22 @@
     padding: .5em;
     border: $cke-table-border;
   }
+
+  .cta {
+    display: $cke-cta-display;
+    padding: $cke-cta-padding;
+    color: $cke-cta-color;
+    background: $cke-cta-bg;
+    text-decoration: $cke-cta-text-decoration;
+    border: $cke-cta-border;
+    border-radius: $cke-cta-border-radius;
+
+    & + .cta {
+      margin-left: $cke-cta-group-margin;
+    }
+  }
 }
+
 .cke_source {
   font-family: 'Courier New', monospace;
   font-size: small;

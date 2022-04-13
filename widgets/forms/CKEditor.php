@@ -52,7 +52,7 @@ class CKEditor extends InputWidget
      * Important: Buttons will still be checked against CKEditor's Advanced Content Filter.
      *
      * Optional you can also set the "toolbar" name either as string or as array with the key
-     * representing the position and the value the toolbar name. Otherwise the button has to
+     * representing the position and the value the toolbar name. Otherwise, the button has to
      * be added to the toolbar via the config.
      *
      * [
@@ -94,11 +94,6 @@ class CKEditor extends InputWidget
     public $skinAssetBundle = CKEditorBootstrapAsset::class;
 
     /**
-     * @var
-     */
-    private static $isRegistered;
-
-    /**
      * @inheritdoc
      */
     public function init()
@@ -124,16 +119,12 @@ class CKEditor extends InputWidget
                     throw new InvalidConfigException('CKEditor buttons require name and element style definition.');
                 }
 
+                $button['label'] = $button['label'] ?? '';
+                $button['command'] = $button['command'] ?? strtolower($button['name']);
+                $button['icon'] = $button['icon'] ?? null;
+
                 if (!isset($button['label'])) {
                     $button['label'] = '';
-                }
-
-                if (!isset($button['command'])) {
-                    $button['command'] = strtolower($button['name']);
-                }
-
-                if (!isset($button['icon'])) {
-                    $button['icon'] = null;
                 }
 
                 if (isset($button['toolbar'])) {
@@ -161,11 +152,8 @@ class CKEditor extends InputWidget
         }
 
         if ($this->skinAssetBundle) {
-            $bundle = $this->skinAssetBundle::register($view = $this->getView());
-
-            if (!isset($this->clientOptions['skin'])) {
-                $this->clientOptions['skin'] = 'skeleton,' . $bundle->baseUrl . '/';
-            }
+            $bundle = $this->skinAssetBundle::register($this->getView());
+            $this->clientOptions['skin'] = $this->clientOptions['skin'] ?? ('skeleton,' . $bundle->baseUrl . '/');
         }
 
         $toolbar = [];
@@ -175,22 +163,11 @@ class CKEditor extends InputWidget
         }
 
         $this->clientOptions['toolbar'] = $toolbar;
+        $this->clientOptions['removeDialogTabs'] = $this->clientOptions['removeDialogTabs'] ?? 'link:advanced';
+        $this->clientOptions['stylesSet'] = $this->clientOptions['stylesSet'] ?? false;
+        $this->clientOptions['customConfig'] = $this->clientOptions['customConfig'] ?? '';
+        $this->clientOptions['height'] = $this->clientOptions['height'] ?? 300;
 
-        if (!isset($this->clientOptions['removeDialogTabs'])) {
-            $this->clientOptions['removeDialogTabs'] = 'link:advanced';
-        }
-
-        if (!isset($this->clientOptions['stylesSet'])) {
-            $this->clientOptions['stylesSet'] = false;
-        }
-
-        if (!isset($this->clientOptions['customConfig'])) {
-            $this->clientOptions['customConfig'] = '';
-        }
-
-        if (!isset($this->clientOptions['height'])) {
-            $this->clientOptions['height'] = 300;
-        }
 
         // Language.
         if (Yii::$app->language != Yii::$app->sourceLanguage) {
