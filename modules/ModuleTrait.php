@@ -5,7 +5,7 @@ namespace davidhirtz\yii2\skeleton\modules;
 use Yii;
 
 /**
- * Class ModuleTrait.
+ * Class ModuleTrait
  * @package davidhirtz\yii2\skeleton\modules\admin
  */
 trait ModuleTrait
