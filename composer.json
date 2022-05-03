@@ -17,7 +17,7 @@
 		"yiisoft/yii2-symfonymailer":"~2.0.0",
 		"yiisoft/yii2-imagine":">=2.1.0",
 		"guzzlehttp/guzzle":"~6.0",
-		"guzzlehttp/oauth-subscriber":"0.3.*",
+		"guzzlehttp/oauth-subscriber":"^0.5",
 		"seld/cli-prompt": "^1.0",
 		"davidhirtz/yii2-datetime-behavior":"*",
 		"davidhirtz/yii2-timeago":"*",
