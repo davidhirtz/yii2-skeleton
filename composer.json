@@ -1,41 +1,41 @@
 {
-	"name":"davidhirtz/yii2-skeleton",
-	"type":"yii2-extension",
-	"description":"Yii2 Skeleton",
-	"homepage":"https://www.davidhirtz.com/",
-	"minimum-stability":"dev",
-	"prefer-stable":true,
-	"require":{
-		"php":">=7.4",
-		"ext-json":"*",
-		"ext-openssl":"*",
-		"ext-simplexml":"*",
-		"ext-xmlwriter":"*",
-		"yiisoft/yii2":">=2.0.17",
-		"yiisoft/yii2-authclient":"*",
-		"yiisoft/yii2-bootstrap4":"*",
-		"yiisoft/yii2-symfonymailer":"~2.0.0",
-		"yiisoft/yii2-imagine":">=2.1.0",
-		"guzzlehttp/guzzle":"~6.0",
-		"guzzlehttp/oauth-subscriber":"^0.5",
-		"seld/cli-prompt": "^1.0",
-		"davidhirtz/yii2-datetime-behavior":"*",
-		"davidhirtz/yii2-timeago":"*",
-		"davidhirtz/yii2-lazysizes":">=2.2",
-		"jfcherng/php-diff": "^6.9",
-		"robthree/twofactorauth": "^1.8",
-		"npm-asset/blueimp-file-upload": ">=10.2.0",
-		"npm-asset/bootbox":">=5"
-	},
-	"autoload":{
-		"psr-4":{
-			"davidhirtz\\yii2\\skeleton\\":""
-		}
-	},
-	"repositories":[
-		{
-			"type":"composer",
-			"url":"https://asset-packagist.org"
-		}
-	]
+  "name": "davidhirtz/yii2-skeleton",
+  "type": "yii2-extension",
+  "description": "Yii2 Skeleton",
+  "homepage": "https://www.davidhirtz.com/",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": ">=7.4",
+    "ext-json": "*",
+    "ext-openssl": "*",
+    "ext-simplexml": "*",
+    "ext-xmlwriter": "*",
+    "yiisoft/yii2": ">=2.0.17",
+    "yiisoft/yii2-authclient": "*",
+    "yiisoft/yii2-bootstrap4": "*",
+    "yiisoft/yii2-symfonymailer": "~2.0.0",
+    "yiisoft/yii2-imagine": ">=2.1.0",
+    "guzzlehttp/guzzle": "^7.0",
+    "guzzlehttp/oauth-subscriber": "^0.5",
+    "seld/cli-prompt": "^1.0",
+    "davidhirtz/yii2-datetime-behavior": "*",
+    "davidhirtz/yii2-timeago": "*",
+    "davidhirtz/yii2-lazysizes": ">=2.2",
+    "jfcherng/php-diff": "^6.9",
+    "robthree/twofactorauth": "^1.8",
+    "npm-asset/blueimp-file-upload": ">=10.2.0",
+    "npm-asset/bootbox": ">=5"
+  },
+  "autoload": {
+    "psr-4": {
+      "davidhirtz\\yii2\\skeleton\\": ""
+    }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ]
 }
