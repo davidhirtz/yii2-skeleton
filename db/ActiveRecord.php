@@ -7,8 +7,9 @@ use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\AttributeTypecastBehavior;
-use yii\db\ActiveRecordInterface;
 use yii\db\Connection;
+use yii\helpers\Inflector;
+use yii\log\Logger;
 use yii\validators\BooleanValidator;
 use yii\validators\NumberValidator;
 
@@ -224,6 +225,27 @@ class ActiveRecord extends \yii\db\ActiveRecord
         }
 
         return $query->execute();
+    }
+
+
+    /**
+     * @param string|null $message
+     * @param int $level
+     * @param string $category
+     * @return void
+     */
+    public function logErrors($message = null, $level = Logger::LEVEL_WARNING, $category = 'application')
+    {
+        if (!$message) {
+            $modelName = Inflector::camel2words($this->formName());
+            $message = ("{$modelName} {$this->getPrimaryKey()} could not be " . ($this->getIsNewRecord() ? 'inserted.' : 'updated.'));
+        }
+
+        if ($errors = $this->getErrors()) {
+            $message .= "\n" . print_r($errors, true);
+        }
+
+        Yii::getLogger()->log($message, $level, $category);
     }
 
     /**
