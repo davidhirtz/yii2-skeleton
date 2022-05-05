@@ -464,7 +464,6 @@ class GridView extends \yii\grid\GridView
         return Html::tag('span', Icon::tag('arrows-alt'), ['class' => 'btn btn-secondary sortable-handle']);
     }
 
-
     /**
      * @param ActiveRecord $model
      * @return string

@@ -38,7 +38,6 @@ class DashboardController extends Controller
      */
     public function actionIndex()
     {
-        /** @noinspection MissedViewInspection */
         return $this->render('index', [
             'panels' => $this->module->panels,
         ]);

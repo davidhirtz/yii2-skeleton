@@ -12,6 +12,7 @@ use yii\helpers\Inflector;
 use yii\log\Logger;
 use yii\validators\BooleanValidator;
 use yii\validators\NumberValidator;
+use yii\validators\StringValidator;
 
 /**
  * Class ActiveRecord
@@ -118,6 +119,12 @@ class ActiveRecord extends \yii\db\ActiveRecord
             if ($validator instanceof BooleanValidator || ($validator instanceof NumberValidator && $validator->integerOnly)) {
                 foreach ((array)$validator->attributes as $attribute) {
                     $this->$attribute = (int)$this->$attribute;
+                }
+            }
+
+            if ($validator instanceof StringValidator) {
+                foreach ((array)$validator->attributes as $attribute) {
+                    $this->$attribute = (string)$this->$attribute;
                 }
             }
         }
@@ -246,6 +253,37 @@ class ActiveRecord extends \yii\db\ActiveRecord
         }
 
         Yii::getLogger()->log($message, $level, $category);
+    }
+
+    /**
+     * Extends the default functionality by checking for DateTime objects, which unfortunately cannot be compared by
+     * checking identical values using `===` as it always returns `true` even if the date was not changed.
+     *
+     * @param array $names
+     * @return array|void
+     */
+    public function getDirtyAttributes($names = null)
+    {
+        return array_filter(parent::getDirtyAttributes($names), function ($name) {
+            return !($attribute = $this->getAttribute($name)) instanceof \DateTime || $this->getOldAttribute($name) != $attribute;
+        }, ARRAY_FILTER_USE_KEY);
+    }
+
+    /**
+     * Extends the default functionality by setting $identical to `false` for DateTime objects, which unfortunately cannot
+     * be compared by checking identical values using `===` as it always returns `true` even if the date was not changed.
+     *
+     * @param string $name
+     * @param bool $identical
+     * @return bool
+     */
+    public function isAttributeChanged($name, $identical = true)
+    {
+        if ($this->getAttribute($name) instanceof \DateTime) {
+            $identical = false;
+        }
+
+        return parent::isAttributeChanged($name, $identical);
     }
 
     /**
