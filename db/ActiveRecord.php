@@ -2,9 +2,11 @@
 
 namespace davidhirtz\yii2\skeleton\db;
 
+use ArrayObject;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Yii;
+use yii\base\Model;
 use yii\base\NotSupportedException;
 use yii\behaviors\AttributeTypecastBehavior;
 use yii\db\Connection;
@@ -29,6 +31,8 @@ class ActiveRecord extends \yii\db\ActiveRecord
     public const SCENARIO_INSERT = 'insert';
     public const SCENARIO_UPDATE = 'update';
 
+    public const EVENT_CREATE_VALIDATORS = 'afterValidators';
+
     public const STATUS_DEFAULT = 3;
     public const STATUS_DISABLED = 0;
     public const STATUS_DRAFT = 1;
@@ -41,6 +45,11 @@ class ActiveRecord extends \yii\db\ActiveRecord
      * {@link ActiveRecord::getI18nAttribute()}, {@link ActiveRecord::getI18nRules()}, etc.
      */
     public $i18nAttributes = [];
+
+    /**
+     * @var ArrayObject
+     */
+    private $_validators;
 
     /**
      * @var array {@see ActiveRecord::activeAttributes()}
@@ -287,6 +296,26 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
+     * Overrides original method by triggering {@see ActiveRecord::EVENT_CREATE_VALIDATORS} event. This enables attached
+     * behaviors to manipulate {@see Model::rules()} by modifying the array object returned by
+     * {@see Model::getValidators()}.
+     *
+     * This would be more fitting in {@see Model::rules()}. I might add a pull request... If this is added to Yii2 the
+     * override can be removed. {@link https://github.com/yiisoft/yii2/issues/5438}
+     *
+     * @return ArrayObject
+     */
+    public function getValidators()
+    {
+        if ($this->_validators === null) {
+            $this->_validators = $this->createValidators();
+            $this->trigger(static::EVENT_CREATE_VALIDATORS);
+        }
+
+        return $this->_validators;
+    }
+
+    /**
      * This method is in place to avoid endless calls to {@link \yii\db\ActiveRecord::activeAttributes()}.
      * If this method's results are cached in a future Yii2 version, this can be removed.
      *
@@ -302,7 +331,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
-     * This method is in place to avoid endless calls to {@link \yii\db\ActiveRecord::safeAttributes()}.
+     * This method is in place to avoid excessive calls to {@link \yii\db\ActiveRecord::safeAttributes()}.
      * If this method's results are cached in a future Yii2 version, this can be removed.
      *
      * @return array
