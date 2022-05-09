@@ -177,7 +177,7 @@ trait ActiveFormTrait
         if (is_array($fieldConfig[0] ?? [])) {
             $methodName = lcfirst(Inflector::camelize($attribute)) . 'Field';
 
-            if (method_exists($this, $methodName)) {
+            if ($this->hasMethod($methodName)) {
                 return call_user_func_array([$this, $methodName], $fieldConfig);
             }
         }
