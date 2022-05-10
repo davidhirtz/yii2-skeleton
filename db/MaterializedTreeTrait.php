@@ -136,6 +136,14 @@ trait MaterializedTreeTrait
     }
 
     /**
+     * @return ActiveQuery
+     */
+    public function findSiblings()
+    {
+        return static::find()->where(['parent_id' => $this->parent_id]);
+    }
+
+    /**
      * @return array
      */
     public function getAncestorIds(): array
