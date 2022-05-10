@@ -7,12 +7,11 @@ use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\GridView;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\TypeGridViewTrait;
-use davidhirtz\yii2\timeago\Timeago;
+use davidhirtz\yii2\timeago\TimeagoColumn;
 use Yii;
 
 /**
- * Class RedirectGridView
- * @package davidhirtz\yii2\skeleton\modules\admin\widgets\grid\base
+ * The RedirectGridView widget is used to display data for {@see RedirectActiveDataProvider}.
  *
  * @property RedirectActiveDataProvider $dataProvider
  */
@@ -150,12 +149,10 @@ class RedirectGridView extends GridView
     public function updatedAtColumn()
     {
         return [
+            'class' => TimeagoColumn::class,
             'attribute' => 'updated_at',
-            'headerOptions' => ['class' => 'd-none d-md-table-cell text-nowrap'],
-            'contentOptions' => ['class' => 'd-none d-md-table-cell text-nowrap'],
-            'content' => function (Redirect $redirect) {
-                return Timeago::tag($redirect->updated_at);
-            }
+            'contentOptions' => ['class' => 'text-nowrap'],
+            'displayAtBreakpoint' => 'md',
         ];
     }
 

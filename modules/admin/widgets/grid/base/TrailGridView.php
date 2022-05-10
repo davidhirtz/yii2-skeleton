@@ -11,7 +11,7 @@ use davidhirtz\yii2\skeleton\modules\admin\data\TrailActiveDataProvider;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\GridView;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\MessageSourceTrait;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\TypeGridViewTrait;
-use davidhirtz\yii2\timeago\Timeago;
+use davidhirtz\yii2\timeago\TimeagoColumn;
 use Jfcherng\Diff\DiffHelper;
 use Yii;
 use yii\helpers\Url;
@@ -290,12 +290,10 @@ class TrailGridView extends GridView
     public function createdAtColumn()
     {
         return [
+            'class' => TimeagoColumn::class,
             'attribute' => 'created_at',
-            'headerOptions' => ['class' => 'd-none d-md-table-cell'],
-            'contentOptions' => ['class' => 'd-none d-md-table-cell text-nowrap'],
-            'content' => function (Trail $trail) {
-                return Timeago::tag($trail->created_at);
-            }
+            'contentOptions' => ['class' => 'text-nowrap'],
+            'displayAtBreakpoint' => 'md',
         ];
     }
 

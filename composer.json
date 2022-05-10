@@ -20,7 +20,7 @@
     "guzzlehttp/oauth-subscriber": "^0.5",
     "seld/cli-prompt": "^1.0",
     "davidhirtz/yii2-datetime-behavior": "*",
-    "davidhirtz/yii2-timeago": "*",
+    "davidhirtz/yii2-timeago": ">=1.2.0",
     "davidhirtz/yii2-lazysizes": ">=2.2",
     "jfcherng/php-diff": "^6.9",
     "robthree/twofactorauth": "^1.8",

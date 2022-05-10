@@ -9,6 +9,7 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\GridView;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\StatusGridViewTrait;
 use davidhirtz\yii2\timeago\Timeago;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
+use davidhirtz\yii2\timeago\TimeagoColumn;
 use Yii;
 
 /**
@@ -133,12 +134,9 @@ class UserGridView extends GridView
     public function createdAtColumn()
     {
         return [
+            'class' => TimeagoColumn::class,
             'attribute' => 'created_at',
-            'headerOptions' => ['class' => 'd-none d-md-table-cell'],
-            'contentOptions' => ['class' => 'd-none d-md-table-cell'],
-            'content' => function (User $user) {
-                return Timeago::tag($user->created_at);
-            }
+            'displayAtBreakpoint' => 'lg',
         ];
     }
 
