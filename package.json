@@ -1,5 +1,5 @@
 {
-	"name":"dmx2-gulp",
+	"name":"yii2-skeleton-gulp",
 	"version":"1.0.0",
 	"description":"Yii 2 gulp via yii asset command",
 	"author":"David Hirtz",
