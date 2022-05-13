@@ -157,6 +157,10 @@ trait ApplicationTrait
             $config['components']['mailer']['transport']['dsn'] = $mailerDsn;
         }
 
+        if ($cacheKeyPrefix = ($config['params']['cacheKeyPrefix'] ?? false)) {
+            $config['components']['cache']['keyPrefix'] = $cacheKeyPrefix;
+        }
+
         $this->setFacebookClientComponent($config);
     }
 
