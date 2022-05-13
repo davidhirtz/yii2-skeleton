@@ -8,8 +8,7 @@ use yii\db\BaseActiveRecord;
 use Yii;
 
 /**
- * Class UserForm
- * @package davidhirtz\yii2\skeleton\modules\admin\models\forms\base
+ * UserForm extends {@link User}. It is used to update user information by an authorized administrator.
  *
  * @method static \davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm findOne($condition)
  */
@@ -26,7 +25,7 @@ class UserForm extends User
     public $repeatPassword;
 
     /**
-     * @var bool
+     * @var bool whether the credentials should be sent to the user's email address
      */
     public $sendEmail;
 
@@ -106,11 +105,16 @@ class UserForm extends User
      */
     public function beforeSave($insert): bool
     {
-        if ($this->newPassword) {
-            $this->generatePasswordHash($this->newPassword);
+        if (parent::beforeSave($insert)) {
+            if ($this->newPassword) {
+                $this->generateAuthKey();
+                $this->generatePasswordHash($this->newPassword);
+            }
+
+            return true;
         }
 
-        return parent::beforeSave($insert);
+        return false;
     }
 
     /**
@@ -119,7 +123,7 @@ class UserForm extends User
     public function afterSave($insert, $changedAttributes)
     {
         if (!$insert) {
-            if (array_key_exists('password', $changedAttributes)) {
+            if (array_key_exists('password_hash', $changedAttributes)) {
                 $this->afterPasswordChange();
             }
         }

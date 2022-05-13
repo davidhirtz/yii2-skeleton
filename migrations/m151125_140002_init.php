@@ -6,7 +6,6 @@ use davidhirtz\yii2\skeleton\auth\rbac\OwnerRule;
 use davidhirtz\yii2\skeleton\db\MigrationTrait;
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\Session;
-use davidhirtz\yii2\skeleton\models\SessionAuthKey;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\skeleton\models\User;
 use m140506_102106_rbac_init;
@@ -26,28 +25,12 @@ class m151125_140002_init extends m140506_102106_rbac_init
      */
     public function up()
     {
-        /**
-         * Set file permissions to 0777. These should be changed to 0755 with
-         * the appropriate user and group rights.
-         */
-        @chmod(Yii::getAlias('@webroot/assets'), 0777);
-        @chmod(Yii::getAlias('@webroot/uploads'), 0777);
-        @chmod(Yii::getAlias('@runtime'), 0777);
 
-        /**
-         * Create auth tables.
-         */
         parent::up();
 
-        /**
-         * Vars.
-         */
         $auth = $this->getAuthManager();
 
-        /**
-         * Changes auth assignment user id to int so it can be
-         * used as foreign key constraint.
-         */
+        // Changes auth assignment user id to int, so it can be used as foreign key constraint.
         $this->alterColumn($auth->assignmentTable, 'user_id', 'int unsigned NOT NULL');
 
         /**
@@ -68,6 +51,7 @@ class m151125_140002_init extends m140506_102106_rbac_init
             'picture' => 'varchar(50) DEFAULT NULL',
             'language' => 'varchar(5) NOT NULL DEFAULT "en"',
             'timezone' => 'varchar(100) DEFAULT NULL',
+            'auth_key' => 'varchar(32) DEFAULT NOT NULL',
             'email_confirmation_code' => 'varchar(30) DEFAULT NULL',
             'password_reset_code' => 'varchar(30) DEFAULT NULL',
             'is_owner' => 'tinyint(1) unsigned NOT NULL DEFAULT "0"',
@@ -125,18 +109,6 @@ class m151125_140002_init extends m140506_102106_rbac_init
         ], $this->getTableOptions());
 
         /**
-         * Cookie authentication key.
-         */
-        $this->createTable(SessionAuthKey::tableName(), [
-            'id' => 'varchar(64) NOT NULL',
-            'user_id' => 'int(10) unsigned NOT NULL',
-            'expire' => 'int unsigned DEFAULT NULL',
-            'PRIMARY KEY ([[id]])',
-            'KEY [[user_id]] ([[user_id]])',
-            'KEY [[expire]] ([[expire]])',
-        ], $this->getTableOptions());
-
-        /**
          * Foreign keys.
          */
         $this->addForeignKey('auth_client_user_id_ibfk', AuthClient::tableName(), 'user_id', User::tableName(), 'id', 'CASCADE');
@@ -144,7 +116,6 @@ class m151125_140002_init extends m140506_102106_rbac_init
         $this->addForeignKey('auth_assignment_user_id_ibfk', $auth->assignmentTable, 'user_id', User::tableName(), 'id', 'CASCADE');
         $this->addForeignKey('login_user_id_ibfk', UserLogin::tableName(), 'user_id', User::tableName(), 'id', 'CASCADE');
         $this->addForeignKey('session_user_id_ibfk', Session::tableName(), 'user_id', User::tableName(), 'id', 'CASCADE');
-        $this->addForeignKey('session_auth_key_user_id_ibfk', SessionAuthKey::tableName(), 'user_id', User::tableName(), 'id', 'CASCADE');
 
         /**
          * Authentication data.
@@ -189,7 +160,6 @@ class m151125_140002_init extends m140506_102106_rbac_init
     public function down()
     {
         $this->dropTable(AuthClient::tableName());
-        $this->dropTable(SessionAuthKey::tableName());
         $this->dropTable(Session::tableName());
         $this->dropTable(UserLogin::tableName());
 

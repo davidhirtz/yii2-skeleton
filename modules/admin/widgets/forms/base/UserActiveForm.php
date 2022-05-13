@@ -13,9 +13,7 @@ use Yii;
 use yii\widgets\ActiveField;
 
 /**
- * Class UserActiveForm
- * @package davidhirtz\yii2\skeleton\modules\admin\widgets\forms\base
- *
+ * UserActiveForm is a widget that builds an interactive HTML form for {@link \davidhirtz\yii2\skeleton\models\forms\UserForm}.
  * @property UserForm|\davidhirtz\yii2\skeleton\models\forms\UserForm $model
  */
 class UserActiveForm extends ActiveForm
@@ -60,7 +58,7 @@ class UserActiveForm extends ActiveForm
      */
     public function oldPasswordField($options = [])
     {
-        return $this->model->password ? $this->field($this->model, 'oldPassword', ['enableClientValidation' => false])->passwordInput($options) : '';
+        return $this->model->password_hash ? $this->field($this->model, 'oldPassword', ['enableClientValidation' => false])->passwordInput($options) : '';
     }
 
     /**

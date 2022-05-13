@@ -17,9 +17,14 @@ class SignupForm extends Identity
     use SignupEmailTrait;
 
     /**
-     * @var bool
+     * @var bool whether Facebook should be enabled
      */
     public $enableFacebookSignup = true;
+
+    /**
+     * @var string
+     */
+    public $password;
 
     /**
      * @var string honeypot text field to mess with bots, the text field will have a random value
@@ -64,6 +69,11 @@ class SignupForm extends Identity
             [
                 ['password'],
                 'required',
+            ],
+            [
+                ['password'],
+                'string',
+                'min' => $this->passwordMinLength,
             ],
             [
                 ['terms'],
@@ -111,6 +121,7 @@ class SignupForm extends Identity
     public function validateIp()
     {
         if ($this->ipAddress && $this->spamProtectionInSeconds > 0) {
+            /** @var UserLogin $signup */
             $signup = UserLogin::find()
                 ->where(['type' => UserLogin::TYPE_SIGNUP, 'ip_address' => inet_pton($this->ipAddress)])
                 ->orderBy(['created_at' => SORT_DESC])
@@ -141,8 +152,7 @@ class SignupForm extends Identity
             $this->ipAddress = Yii::$app->getRequest()->getUserIP();
         }
 
-        // There were some cases in which the value set by the ajax call
-        // contained a leading space....
+        // There were some cases in which the value set by the ajax call contained a leading space....
         $this->token = trim($this->token);
 
         return parent::beforeValidate();
@@ -166,8 +176,8 @@ class SignupForm extends Identity
     public function beforeSave($insert): bool
     {
         if ($insert) {
-            $this->generatePasswordHash();
-            $this->generateEmailConfirmationCode();
+            $this->generatePasswordHash($this->password);
+            $this->generateVerificationToken();
         }
 
         return parent::beforeSave($insert);
@@ -235,6 +245,7 @@ class SignupForm extends Identity
     public function attributeLabels(): array
     {
         return array_merge(parent::attributeLabels(), [
+            'password' => Yii::t('skeleton', 'Password'),
             'terms' => Yii::t('skeleton', 'I accept the terms of service and privacy policy'),
         ]);
     }

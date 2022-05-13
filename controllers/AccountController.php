@@ -103,7 +103,7 @@ class AccountController extends Controller
                 return $this->goBack();
             }
 
-            $user->password = null;
+            $user->password_hash = null;
         } else {
             $user->email = $request->get('email', Yii::$app->session->get('email'));
             $user->honeypot = Yii::$app->getSecurity()->generateRandomString(10);

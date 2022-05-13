@@ -3,12 +3,11 @@
 namespace davidhirtz\yii2\skeleton\models\forms;
 
 use davidhirtz\yii2\skeleton\models\traits\IdentityTrait;
-use davidhirtz\yii2\skeleton\models\User;
 use yii\base\Model;
 use Yii;
 
 /**
- * Class AccountConfirmForm.
+ * Class AccountConfirmForm
  * @package davidhirtz\yii2\skeleton\models\forms
  */
 class AccountConfirmForm extends Model
@@ -38,7 +37,7 @@ class AccountConfirmForm extends Model
             [
                 ['code'],
                 'string',
-                'length' => User::EMAIL_CONFIRMATION_CODE_LENGTH,
+                'length' => 32,
                 'notEqual' => Yii::t('yii', '{attribute} is invalid.'),
                 'skipOnError' => true,
             ],
@@ -53,7 +52,7 @@ class AccountConfirmForm extends Model
         if (!$this->hasErrors()) {
             $user = $this->getUser();
 
-            if (!$user || $user->email_confirmation_code != $this->code) {
+            if (!$user || $user->verification_token != $this->code) {
                 $this->addError('code', Yii::t('yii', '{attribute} is invalid.', [
                     'attribute' => $this->getAttributeLabel('code'),
                 ]));
@@ -63,18 +62,14 @@ class AccountConfirmForm extends Model
         parent::afterValidate();
     }
 
-    /***********************************************************************
-     * Methods.
-     ***********************************************************************/
-
     /**
      * Logs in a user using the provided email and password.
-     * @return boolean
+     * @return bool
      */
     public function confirm()
     {
         if ($this->validate()) {
-            $this->getUser()->updateAttributes(['email_confirmation_code' => null]);
+            $this->getUser()->updateAttributes(['verification_token' => null]);
             return true;
         }
 
@@ -88,7 +83,7 @@ class AccountConfirmForm extends Model
     {
         return [
             'name' => Yii::t('skeleton', 'Username'),
-            'code' => Yii::t('skeleton', 'Email confirmation code'),
+            'code' => Yii::t('skeleton', 'Email verification code'),
         ];
     }
 }

@@ -14,8 +14,8 @@ use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
 
-$title = $form->user->password ? Yii::t('skeleton', 'Set New Password') : Yii::t('skeleton', 'Create Password');
-$description = $form->user->password ? Yii::t('skeleton', 'Please enter a new password below to update your account.') : Yii::t('skeleton', 'Please enter a password below to complete your account.');
+$title = $form->user->password_hash ? Yii::t('skeleton', 'Set New Password') : Yii::t('skeleton', 'Create Password');
+$description = $form->user->password_hash ? Yii::t('skeleton', 'Please enter a new password below to update your account.') : Yii::t('skeleton', 'Please enter a password below to complete your account.');
 $this->setTitle($title);
 ?>
 

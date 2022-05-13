@@ -84,7 +84,7 @@ return [
     'Edit User' => '',
     'Email' => '',
     'Email confirmation' => '',
-    'Email confirmation code' => '',
+    'Email verification code' => '',
     'Enable' => '',
     'Enabled' => '',
     'Enter the username of the user you want to make owner of this site. This will remove all your admin privileges and there is no going back. Please be certain!' => '',

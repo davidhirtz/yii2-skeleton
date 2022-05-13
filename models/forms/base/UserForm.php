@@ -6,8 +6,7 @@ use davidhirtz\yii2\skeleton\models\User;
 use Yii;
 
 /**
- * Class UserForm
- * @package davidhirtz\yii2\skeleton\models\forms\base
+ * UserForm extends {@link User}. It is used to update user information of the current webuser.
  *
  * @method static \davidhirtz\yii2\skeleton\models\forms\UserForm findOne($condition)
  */
@@ -50,7 +49,7 @@ class UserForm extends User
                 'filter' => 'trim',
             ],
             [
-                ['newPassword','repeatPassword', 'oldPassword'],
+                ['newPassword', 'repeatPassword', 'oldPassword'],
                 'string',
                 'min' => $this->passwordMinLength,
             ],
@@ -90,15 +89,20 @@ class UserForm extends User
      */
     public function beforeSave($insert): bool
     {
-        if ($this->isAttributeChanged('email')) {
-            $this->generateEmailConfirmationCode();
+        if (parent::beforeSave($insert)) {
+            if ($this->isAttributeChanged('email')) {
+                $this->generateVerificationToken();
+            }
+
+            if ($this->newPassword) {
+                $this->generateAuthKey();
+                $this->generatePasswordHash($this->newPassword);
+            }
+
+            return true;
         }
 
-        if ($this->newPassword) {
-            $this->generatePasswordHash($this->newPassword);
-        }
-
-        return parent::beforeSave($insert);
+        return false;
     }
 
     /**
@@ -123,8 +127,8 @@ class UserForm extends User
                 $this->sendEmailConfirmationEmail();
             }
 
-            if (isset($changedAttributes['password'])) {
-                $this->afterPasswordChange($session ? $session->getId() : null);
+            if (array_key_exists('password_hash', $changedAttributes)) {
+                $this->afterPasswordChange();
             }
         }
 

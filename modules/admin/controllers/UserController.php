@@ -162,7 +162,7 @@ class UserController extends Controller
     public function actionReset($id)
     {
         $user = $this->findUserForm($id, User::AUTH_USER_UPDATE);
-        $user->generatePasswordResetCode();
+        $user->generatePasswordResetToken();
 
         if ($user->update()) {
             $this->success(Yii::t('skeleton', 'The password reset link was updated.'));

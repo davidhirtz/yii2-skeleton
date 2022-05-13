@@ -2,7 +2,6 @@
 
 namespace davidhirtz\yii2\skeleton\db;
 
-use davidhirtz\yii2\skeleton\models\SessionAuthKey;
 use davidhirtz\yii2\skeleton\models\User;
 use yii\base\NotSupportedException;
 use yii\web\IdentityInterface;
@@ -28,11 +27,6 @@ class Identity extends User implements IdentityInterface
      * @var int
      */
     public $cookieLifetime = 2592000;
-
-    /**
-     * @var SessionAuthKey
-     */
-    private $_authKey;
 
     /**
      * @inheritDoc
@@ -64,23 +58,11 @@ class Identity extends User implements IdentityInterface
     }
 
     /**
-     * Validates the identity cookie with the given `authKey`. The session auth key won't be needed as a new key will be
-     * generated after the validation in {@link \davidhirtz\yii2\skeleton\web\User::getIdentityAndDurationFromCookie()}.
-     *
-     * @param string $authKey
-     * @return true
+     * @inheritDoc
      */
     public function validateAuthKey($authKey): bool
     {
-        $this->_authKey = SessionAuthKey::find()
-            ->where('[[id]]=:id AND [[user_id]]=:userId AND [[expire]]>:expired', [
-                'id' => $authKey,
-                'userId' => $this->id,
-                'expired' => time(),
-            ])
-            ->one();
-
-        return $this->_authKey !== null;
+        return $this->getAuthKey() === $authKey;
     }
 
     /**
@@ -92,26 +74,10 @@ class Identity extends User implements IdentityInterface
     }
 
     /**
-     * Updates the {@link SessionAuthKey::$expire} if the key was validated by {@link Identity::validateAuthKey()} or
-     * generates a new auth key otherwise.
+     * @return string|null
      */
     public function getAuthKey()
     {
-        if ($this->_authKey !== null) {
-            SessionAuthKey::updateAll(['expire' => time() + $this->cookieLifetime], ['id' => $this->_authKey->id]);
-            return $this->_authKey->id;
-        }
-
-        $columns = [
-            'id' => $this->_authKey->id ?? Yii::$app->getSecurity()->generateRandomString(64),
-            'user_id' => $this->id,
-            'expire' => time() + $this->cookieLifetime,
-        ];
-
-        Yii::$app->getDb()->createCommand()
-            ->insert(SessionAuthKey::tableName(), $columns)
-            ->execute();
-
-        return $columns['id'];
+        return $this->auth_key;
     }
 }

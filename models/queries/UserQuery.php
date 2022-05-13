@@ -6,8 +6,7 @@ use davidhirtz\yii2\skeleton\db\ActiveQuery;
 use davidhirtz\yii2\skeleton\models\User;
 
 /**
- * Class UserQuery.
- * @package davidhirtz\yii2\skeleton\models\queries
+ * UserQuery represents a DB query associated with an {@see User} class.
  *
  * @method User[] all($db = null)
  * @method User one($db = null)
@@ -19,26 +18,12 @@ class UserQuery extends ActiveQuery
      */
     public function selectIdentityAttributes()
     {
-        return $this->addSelect([
-            'id',
-            'status',
-            'name',
-            'email',
-            'password',
-            'password_salt',
-            'first_name',
-            'last_name',
-            'picture',
-            'language',
-            'timezone',
-            'email_confirmation_code',
-            'password_reset_code',
-            'google_2fa_secret',
-            'is_owner',
-            'login_count',
-            'last_login',
-            'updated_at'
-        ]);
+        return $this->addSelect($this->prefixColumns(array_diff($this->getModelInstance()->attributes(), [
+            'city',
+            'country',
+            'created_by_user_id',
+            'created_at',
+        ])));
     }
 
     /**

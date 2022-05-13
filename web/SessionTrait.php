@@ -2,7 +2,6 @@
 
 namespace davidhirtz\yii2\skeleton\web;
 
-use davidhirtz\yii2\skeleton\models\SessionAuthKey;
 use Yii;
 
 /**
@@ -36,10 +35,6 @@ trait SessionTrait
      */
     public function gcSession($maxLifetime)
     {
-        SessionAuthKey::deleteAll('[[expire]]<:expire', [
-            'expire' => time(),
-        ]);
-
         /** @noinspection PhpUndefinedClassInspection */
         return parent::gcSession($maxLifetime);
     }

@@ -77,7 +77,7 @@ class PasswordRecoverForm extends Model
     {
         if ($this->validate()) {
             $user = $this->getUser();
-            $user->generatePasswordResetCode();
+            $user->generatePasswordResetToken();
             $user->update();
 
             $this->sendPasswordResetEmail();
@@ -106,7 +106,7 @@ class PasswordRecoverForm extends Model
      */
     public function isAlreadySent(): bool
     {
-        return ($user = $this->getUser()) && $user->password_reset_code && $user->updated_at->modify($this->timeoutSpamProtection) > new DateTime();
+        return ($user = $this->getUser()) && $user->password_reset_token && $user->updated_at->modify($this->timeoutSpamProtection) > new DateTime();
     }
 
     /**

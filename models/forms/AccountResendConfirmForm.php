@@ -60,7 +60,7 @@ class AccountResendConfirmForm extends Model
      */
     public function validateUserConfirmationCode(): void
     {
-        if (!$this->hasErrors() && ($user = $this->getUser()) && !$user->email_confirmation_code) {
+        if (!$this->hasErrors() && ($user = $this->getUser()) && !$user->verification_token) {
             $this->addError('email', Yii::t('skeleton', 'Your account was already confirmed!'));
         }
     }
@@ -111,7 +111,7 @@ class AccountResendConfirmForm extends Model
      */
     public function isAlreadySent(): bool
     {
-        return ($user = $this->getUser()) && $user->email_confirmation_code && $user->updated_at->modify($this->timeoutSpamProtection) > new DateTime();
+        return ($user = $this->getUser()) && $user->verification_token && $user->updated_at->modify($this->timeoutSpamProtection) > new DateTime();
     }
 
     /**

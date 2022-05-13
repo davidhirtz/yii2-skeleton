@@ -49,7 +49,7 @@ class PasswordResetForm extends Model
             [
                 ['code'],
                 'string',
-                'length' => User::PASSWORD_RESET_CODE_LENGTH,
+                'length' => 32,
             ],
             [
                 ['newPassword', 'repeatPassword'],
@@ -86,7 +86,7 @@ class PasswordResetForm extends Model
      */
     public function validatePasswordResetCode(): bool
     {
-        if (!$this->hasErrors() && (!($user = $this->getUser()) || $user->password_reset_code != $this->code)) {
+        if (!$this->hasErrors() && (!($user = $this->getUser()) || $user->password_reset_token != $this->code)) {
             $this->addError('id', Yii::t('skeleton', 'The password recovery url is invalid.'));
         }
 
@@ -102,8 +102,9 @@ class PasswordResetForm extends Model
         if ($this->validate()) {
             $user = $this->getUser();
 
+            $user->generateAuthKey();
             $user->generatePasswordHash($this->newPassword);
-            $user->password_reset_code = null;
+            $user->password_reset_token = null;
 
             if (Yii::$app->getUser()->getIsGuest()) {
                 if (!$user->isUnconfirmed() || Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {

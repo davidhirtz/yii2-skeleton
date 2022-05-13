@@ -12,7 +12,6 @@ use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\datetime\DateTime;
-use davidhirtz\yii2\skeleton\models\Session;
 use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
 use davidhirtz\yii2\skeleton\web\StreamUploadedFile;
@@ -29,7 +28,7 @@ use yii\web\UploadedFile;
  * @property int $status
  * @property string $name
  * @property string $email
- * @property string $password
+ * @property string $password_hash
  * @property string $password_salt
  * @property string $first_name
  * @property string $last_name
@@ -39,8 +38,9 @@ use yii\web\UploadedFile;
  * @property string $picture
  * @property string $language
  * @property string $timezone
- * @property string $email_confirmation_code
- * @property string $password_reset_code
+ * @property string $auth_key
+ * @property string $verification_token
+ * @property string $password_reset_token
  * @property string $google_2fa_secret
  * @property int $is_owner
  * @property int $created_by_user_id
@@ -68,9 +68,6 @@ abstract class User extends ActiveRecord
     public const GENDER_UNKNOWN = 0;
     public const GENDER_FEMALE = 1;
     public const GENDER_MALE = 2;
-
-    public const EMAIL_CONFIRMATION_CODE_LENGTH = 30;
-    public const PASSWORD_RESET_CODE_LENGTH = 30;
 
     public const AUTH_USER_CREATE = 'userCreate';
     public const AUTH_USER_DELETE = 'userDelete';
@@ -150,7 +147,7 @@ abstract class User extends ActiveRecord
     {
         return [
             [
-                ['name', 'email', 'password', 'city', 'country', 'first_name', 'last_name'],
+                ['name', 'email', 'city', 'country', 'first_name', 'last_name'],
                 'trim',
             ],
             [
@@ -213,11 +210,6 @@ abstract class User extends ActiveRecord
                 }
             ],
             [
-                ['password'],
-                'string',
-                'min' => $this->passwordMinLength,
-            ],
-            [
                 ['city', 'first_name', 'last_name'],
                 'string',
                 'max' => 50,
@@ -238,7 +230,7 @@ abstract class User extends ActiveRecord
      */
     public function validatePassword($password): bool
     {
-        return $this->password && Yii::$app->getSecurity()->validatePassword($password . $this->password_salt, $this->password);
+        return $this->password_hash && Yii::$app->getSecurity()->validatePassword($password . $this->password_salt, $this->password_hash);
     }
 
     /**
@@ -275,15 +267,20 @@ abstract class User extends ActiveRecord
      */
     public function beforeSave($insert): bool
     {
-        if ($insert) {
-            $this->is_owner = !static::find()->exists();
+        if (parent::beforeSave($insert)) {
+            if ($insert) {
+                $this->is_owner = $this->is_owner ?? !static::find()->exists();
+                $this->generateAuthKey();
+            }
+
+            if ($this->upload) {
+                $this->generatePictureFilename();
+            }
+
+            return true;
         }
 
-        if ($this->upload) {
-            $this->generatePictureFilename();
-        }
-
-        return parent::beforeSave($insert);
+        return false;
     }
 
     /**
@@ -390,44 +387,15 @@ abstract class User extends ActiveRecord
     }
 
     /**
-     * @param string|null $except
+     * Creates a password change trail records.
      */
-    public function afterPasswordChange($except = null)
+    public function afterPasswordChange()
     {
         $trail = new Trail();
         $trail->model = \davidhirtz\yii2\skeleton\models\User::class;
         $trail->model_id = $this->id;
         $trail->type = Trail::TYPE_PASSWORD;
         $trail->insert();
-
-        $this->deleteAuthKeys();
-        $this->deleteActiveSessions($except);
-    }
-
-    /**
-     * Deletes all user related auth keys, rendering all auto login cookies invalid.
-     * @return int
-     */
-    public function deleteAuthKeys()
-    {
-        return static::getDb()->createCommand()
-            ->delete('{{%session_auth_key}}', '[[user_id]]=:userId', [':userId' => $this->id])
-            ->execute();
-    }
-
-    /**
-     * Deletes user sessions.
-     * @param string|null $except
-     * @return int
-     */
-    public function deleteActiveSessions($except = null)
-    {
-        return static::getDb()->createCommand()
-            ->delete(Session::tableName(), '[[user_id]]=:userId AND [[id]]!=:id', [
-                ':userId' => $this->id,
-                ':id' => (string)$except
-            ])
-            ->execute();
     }
 
     /**
@@ -485,28 +453,36 @@ abstract class User extends ActiveRecord
 
     /**
      * Generates password hash.
-     * @param string|null $password
+     * @param string $password
      */
-    public function generatePasswordHash(string $password = null)
+    public function generatePasswordHash($password)
     {
         $this->password_salt = Yii::$app->getSecurity()->generateRandomString(10);
-        $this->password = Yii::$app->getSecurity()->generatePasswordHash(($password ?: $this->password) . $this->password_salt);
+        $this->password_hash = Yii::$app->getSecurity()->generatePasswordHash($password . $this->password_salt);
     }
 
     /**
-     * Generates email confirmation code.
+     * Generates session auth key
      */
-    public function generateEmailConfirmationCode()
+    public function generateAuthKey()
     {
-        $this->email_confirmation_code = Yii::$app->getSecurity()->generateRandomString(static::EMAIL_CONFIRMATION_CODE_LENGTH);
+        $this->auth_key = Yii::$app->getSecurity()->generateRandomString();
     }
 
     /**
-     * Generates password code.
+     * Generates verification token.
      */
-    public function generatePasswordResetCode()
+    public function generateVerificationToken()
     {
-        $this->password_reset_code = Yii::$app->getSecurity()->generateRandomString(static::PASSWORD_RESET_CODE_LENGTH);
+        $this->verification_token = Yii::$app->getSecurity()->generateRandomString();
+    }
+
+    /**
+     * Generates password reset token.
+     */
+    public function generatePasswordResetToken()
+    {
+        $this->password_reset_token = Yii::$app->getSecurity()->generateRandomString();
     }
 
     /**
@@ -538,7 +514,7 @@ abstract class User extends ActiveRecord
      */
     public function getEmailConfirmationUrl()
     {
-        return $this->email_confirmation_code ? Url::to(['account/confirm', 'email' => $this->email, 'code' => $this->email_confirmation_code], true) : null;
+        return $this->verification_token ? Url::to(['account/confirm', 'email' => $this->email, 'code' => $this->verification_token], true) : null;
     }
 
     /**
@@ -546,7 +522,7 @@ abstract class User extends ActiveRecord
      */
     public function getPasswordResetUrl()
     {
-        return $this->password_reset_code ? Url::to(['account/reset', 'email' => $this->email, 'code' => $this->password_reset_code], true) : null;
+        return $this->password_reset_token ? Url::to(['account/reset', 'email' => $this->email, 'code' => $this->password_reset_token], true) : null;
     }
 
     /**
@@ -621,10 +597,11 @@ abstract class User extends ActiveRecord
     public function getTrailAttributes(): array
     {
         return array_diff($this->attributes(), [
-            'password',
+            'password_hash',
             'password_salt',
-            'email_confirmation_code',
-            'password_reset_code',
+            'auth_key',
+            'verification_token',
+            'password_reset_token',
             'google_2fa_secret',
             'login_count',
             'last_login',
@@ -680,7 +657,7 @@ abstract class User extends ActiveRecord
      */
     public function isUnconfirmed(): bool
     {
-        return !$this->isOwner() && !empty($this->email_confirmation_code);
+        return !$this->isOwner() && !empty($this->verification_token);
     }
 
     /**
@@ -736,7 +713,7 @@ abstract class User extends ActiveRecord
             'picture' => Yii::t('skeleton', 'Picture'),
             'language' => Yii::t('skeleton', 'Language'),
             'timezone' => Yii::t('skeleton', 'Timezone'),
-            'email_confirmation_code' => Yii::t('skeleton', 'Email confirmation code'),
+            'verification_token' => Yii::t('skeleton', 'Email verification code'),
             'login_count' => Yii::t('skeleton', 'Login count'),
             'last_login' => Yii::t('skeleton', 'Last login'),
             'is_owner' => Yii::t('skeleton', 'Website owner'),
