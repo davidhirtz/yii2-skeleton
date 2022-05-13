@@ -54,7 +54,7 @@ class UserQuery extends ActiveQuery
             'first_name',
             'last_name',
             'picture',
-            'email_confirmation_code',
+            'verification_token',
             'is_owner',
             'last_login',
             'created_at'
