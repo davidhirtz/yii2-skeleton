@@ -4,7 +4,6 @@ namespace davidhirtz\yii2\skeleton\controllers;
 
 use DateTime;
 use davidhirtz\yii2\skeleton\web\Controller;
-use Exception;
 use XMLWriter;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;

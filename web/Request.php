@@ -7,8 +7,8 @@ use Yii;
 use yii\web\Cookie;
 
 /**
- * Class Request
- * @package davidhirtz\yii2\skeleton\web
+ * The web Request class extends the default Yii class by a draft mode and the option to set the host info via application
+ * params and the application language based on the user's preferences.
  */
 class Request extends \yii\web\Request
 {
@@ -24,26 +24,39 @@ class Request extends \yii\web\Request
     public $draftSubdomain = 'draft';
 
     /**
-     * @var string|false
-     */
-    private $_draftHostInfo;
-
-    /**
      * @var bool
      */
     private $_isDraft = false;
 
     /**
-     * @inheritdoc
+     * @var string|null
+     */
+    private $_userHostInfo;
+
+    /**
+     * @var string|false
+     */
+    private $_draftHostInfo;
+
+    /** Sets the host info via params after draft mode is checked. Setting the host info manually can be useful if multiple
+     * domains link to a single website and the URLs (e.g., in the sitemap.xml) should be consistent or to prevent
+     * faked header attacks (see https://www.acunetix.com/vulnerabilities/web/host-header-attack). The original
+     * value of `$hostInfo` is still available via `Request::getRequestHostInfo()`.
      */
     public function init()
     {
-        if ($this->enableCookieValidation && !$this->cookieValidationKey && isset(Yii::$app->params['cookieValidationKey'])) {
-            $this->cookieValidationKey = Yii::$app->params['cookieValidationKey'];
+        if ($this->enableCookieValidation) {
+            $this->cookieValidationKey = $this->cookieValidationKey ?? Yii::$app->params['cookieValidationKey'] ?? null;
         }
 
-        if ($this->draftSubdomain && strpos($this->getHostInfo(), "//{$this->draftSubdomain}.") !== false) {
+        $this->_userHostInfo = $this->getHostInfo();
+
+        if ($this->draftSubdomain && strpos($this->_userHostInfo, "//{$this->draftSubdomain}.") !== false) {
             $this->_isDraft = 1;
+        }
+
+        if ($hostInfo = Yii::$app->params['hostInfo'] ?? false) {
+            $this->setHostInfo($hostInfo);
         }
 
         parent::init();
@@ -69,10 +82,9 @@ class Request extends \yii\web\Request
                 if (in_array($language, $languages)) {
                     if ($this->setUserLanguage) {
                         if ($identity) {
-                            $identity->updateAttributes([
-                                'language' => $language,
-                            ]);
+                            $identity->updateAttributes(['language' => $language]);
                         } elseif ($language != Yii::$app->sourceLanguage && $cookie !== $language) {
+                            /** @noinspection PhpParamsInspection */
                             Yii::$app->getResponse()->getCookies()->add(Yii::createObject([
                                 'class' => Cookie::class,
                                 'name' => $param,
@@ -115,6 +127,14 @@ class Request extends \yii\web\Request
     }
 
     /**
+     * @return string|null the host info as implemented by Yii's {@see \yii\web\Request::getHostInfo()}
+     */
+    public function getUserHostInfo()
+    {
+        return $this->_userHostInfo;
+    }
+
+    /**
      * Creates the draft URL by trying to replace existing "www" or adding the $draftSubdomain as
      * the first subdomain to the host.
      *
@@ -123,7 +143,8 @@ class Request extends \yii\web\Request
     public function getDraftHostInfo()
     {
         if ($this->_draftHostInfo === null) {
-            $this->_draftHostInfo = $this->getIsDraft() ? $this->getHostInfo() : ($this->draftSubdomain ? preg_replace('#^((https?://)(www.)?)#', "$2{$this->draftSubdomain}.", $this->getHostInfo()) : false);
+            $hostInfo = $this->getHostInfo();
+            $this->_draftHostInfo = $this->getIsDraft() && $this->draftSubdomain && strpos($hostInfo, $this->draftSubdomain) !== false ? $hostInfo : ($this->draftSubdomain ? preg_replace('#^((https?://)(www.)?)#', "$2{$this->draftSubdomain}.", $hostInfo) : false);
         }
 
         return $this->_draftHostInfo;
