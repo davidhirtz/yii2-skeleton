@@ -31,7 +31,7 @@ class Request extends \yii\web\Request
     /**
      * @var string|null
      */
-    private $_userHostInfo;
+    private $_serverHostInfo;
 
     /**
      * @var string|false
@@ -49,9 +49,9 @@ class Request extends \yii\web\Request
             $this->cookieValidationKey = $this->cookieValidationKey ?? Yii::$app->params['cookieValidationKey'] ?? null;
         }
 
-        $this->_userHostInfo = $this->getHostInfo();
+        $this->_serverHostInfo = $this->getHostInfo();
 
-        if ($this->draftSubdomain && strpos($this->_userHostInfo, "//{$this->draftSubdomain}.") !== false) {
+        if ($this->draftSubdomain && strpos($this->_serverHostInfo, "//{$this->draftSubdomain}.") !== false) {
             $this->_isDraft = 1;
         }
 
@@ -129,9 +129,9 @@ class Request extends \yii\web\Request
     /**
      * @return string|null the host info as implemented by Yii's {@see \yii\web\Request::getHostInfo()}
      */
-    public function getUserHostInfo()
+    public function getServerHostInfo()
     {
-        return $this->_userHostInfo;
+        return $this->_serverHostInfo;
     }
 
     /**
