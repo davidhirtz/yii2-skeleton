@@ -29,16 +29,12 @@ class Request extends \yii\web\Request
     private $_isDraft = false;
 
     /**
-     * @var string|null
-     */
-    private $_serverHostInfo;
-
-    /**
      * @var string|false
      */
     private $_draftHostInfo;
 
-    /** Sets the host info via params after draft mode is checked. Setting the host info manually can be useful if multiple
+    /**
+     * Sets the host info via params after draft mode is checked. Setting the host info manually can be useful if multiple
      * domains link to a single website and the URLs (e.g., in the sitemap.xml) should be consistent or to prevent
      * faked header attacks (see https://www.acunetix.com/vulnerabilities/web/host-header-attack). The original
      * value of `$hostInfo` is still available via `Request::getRequestHostInfo()`.
@@ -49,14 +45,8 @@ class Request extends \yii\web\Request
             $this->cookieValidationKey = $this->cookieValidationKey ?? Yii::$app->params['cookieValidationKey'] ?? null;
         }
 
-        $this->_serverHostInfo = $this->getHostInfo();
-
-        if ($this->draftSubdomain && strpos($this->_serverHostInfo, "//{$this->draftSubdomain}.") !== false) {
+        if ($this->draftSubdomain && strpos($this->getHostInfo(), "//{$this->draftSubdomain}.") !== false) {
             $this->_isDraft = 1;
-        }
-
-        if ($hostInfo = Yii::$app->params['hostInfo'] ?? false) {
-            $this->setHostInfo($hostInfo);
         }
 
         parent::init();
@@ -124,14 +114,6 @@ class Request extends \yii\web\Request
     public function getProductionHostInfo()
     {
         return $this->getIsDraft() ? str_replace("//{$this->draftSubdomain}.", '//', $this->getHostInfo()) : $this->getHostInfo();
-    }
-
-    /**
-     * @return string|null the host info as implemented by Yii's {@see \yii\web\Request::getHostInfo()}
-     */
-    public function getServerHostInfo()
-    {
-        return $this->_serverHostInfo;
     }
 
     /**
