@@ -259,10 +259,17 @@ class View extends \yii\web\View
     }
 
     /**
-     * @return string
+     * @return string the ISO 639-1 Language Codes
      */
     public static function getLanguage()
     {
+        switch (Yii::$app->language) {
+            case 'zh-TW':
+                return 'zh-Hant';
+            case 'zh-CN':
+                return 'zh-Hans';
+        }
+
         return substr(Yii::$app->language, 0, 2);
     }
 }
