@@ -64,7 +64,7 @@
     border: $cke-table-border;
   }
 
-  .cta {
+  .cta, .btn {
     display: $cke-cta-display;
     padding: $cke-cta-padding;
     color: $cke-cta-color;
@@ -72,10 +72,10 @@
     text-decoration: $cke-cta-text-decoration;
     border: $cke-cta-border;
     border-radius: $cke-cta-border-radius;
+  }
 
-    & + .cta {
-      margin-left: $cke-cta-group-margin;
-    }
+  .cta + .cta, .btn + .btn {
+    margin-left: $cke-cta-group-margin;
   }
 }
 

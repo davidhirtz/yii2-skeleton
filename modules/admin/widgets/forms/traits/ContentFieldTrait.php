@@ -6,11 +6,15 @@ use davidhirtz\yii2\skeleton\widgets\forms\CKEditor;
 use yii\helpers\ArrayHelper;
 
 /**
- * Trait ContentFieldTrait
- * @package davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits
+ * ContentFieldTrait provides methods to manipulate the CKEditor.
  */
 trait ContentFieldTrait
 {
+    /**
+     * @var string
+     */
+    public $ctaCssClassName = 'cta';
+
     /**
      * @param array $options
      * @return string
@@ -39,7 +43,7 @@ trait ContentFieldTrait
             ],
         ];
 
-        if (in_array('cta', $this->model->htmlValidator['allowedClasses'] ?? [])) {
+        if (in_array($this->ctaCssClassName, $this->model->htmlValidator['allowedClasses'] ?? [])) {
             $config = ArrayHelper::merge($config, $this->ctaButtonConfig());
         }
 
@@ -60,7 +64,7 @@ trait ContentFieldTrait
                     'icon' => 'linkbutton',
                     'definition' => [
                         'element' => 'a',
-                        'attributes' => ['class' => 'cta'],
+                        'attributes' => ['class' => $this->ctaCssClassName],
                     ],
                 ],
             ],
