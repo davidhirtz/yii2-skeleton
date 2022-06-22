@@ -25,12 +25,10 @@ class m151125_140002_init extends m140506_102106_rbac_init
      */
     public function up()
     {
-
         parent::up();
 
-        $auth = $this->getAuthManager();
-
         // Changes auth assignment user id to int, so it can be used as foreign key constraint.
+        $auth = $this->getAuthManager();
         $this->alterColumn($auth->assignmentTable, 'user_id', 'int unsigned NOT NULL');
 
         /**
@@ -51,7 +49,7 @@ class m151125_140002_init extends m140506_102106_rbac_init
             'picture' => 'varchar(50) DEFAULT NULL',
             'language' => 'varchar(5) NOT NULL DEFAULT "en"',
             'timezone' => 'varchar(100) DEFAULT NULL',
-            'auth_key' => 'varchar(32) DEFAULT NOT NULL',
+            'auth_key' => 'varchar(32) NOT NULL',
             'email_confirmation_code' => 'varchar(30) DEFAULT NULL',
             'password_reset_code' => 'varchar(30) DEFAULT NULL',
             'is_owner' => 'tinyint(1) unsigned NOT NULL DEFAULT "0"',
