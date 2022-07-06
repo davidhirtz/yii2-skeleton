@@ -2,15 +2,14 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use yii\bootstrap4\BootstrapAsset;
+use yii\bootstrap4\Widget;
 
 /**
- * Class ListGroup.
- * @package davidhirtz\yii2\skeleton\widgets\bootstrap
+ * The ListGroup widget renders a bootstrap 4 list of links.
  */
-class ListGroup extends \yii\bootstrap4\Widget
+class ListGroup extends Widget
 {
     /**
      * @var array
@@ -23,13 +22,14 @@ class ListGroup extends \yii\bootstrap4\Widget
     public $encodeLabels = true;
 
     /**
-     * Init.
+     * @var array containing global link HTML options
      */
-    public function init()
-    {
-        Html::addCssClass($this->options, ['widget' => 'list-group']);
-        parent::init();
-    }
+    public $linkOptions = ['class' => 'list-group-item list-group-item-action'];
+
+    /**
+     * @var array containing the list HTML options
+     */
+    public $options = ['class' => 'list-group list-unstyled'];
 
     /**
      * @return string
@@ -47,7 +47,7 @@ class ListGroup extends \yii\bootstrap4\Widget
     {
         $items = [];
 
-        foreach ($this->items as $i => $item) {
+        foreach ($this->items as $item) {
             if (isset($item['visible']) && !$item['visible']) {
                 continue;
             }
@@ -55,7 +55,7 @@ class ListGroup extends \yii\bootstrap4\Widget
             $items[] = $this->renderItem($item);
         }
 
-        return Html::tag('div', implode('', $items), $this->options);
+        return Html::ul($items, array_merge($this->options, ['encode' => false]));
     }
 
     /**
@@ -64,17 +64,13 @@ class ListGroup extends \yii\bootstrap4\Widget
      */
     protected function renderItem($item)
     {
-        $encodeLabel = isset($item['encode']) ? $item['encode'] : $this->encodeLabels;
+        $encodeLabel = $item['encode'] ?? $this->encodeLabels;
         $label = $encodeLabel ? Html::encode($item['label']) : $item['label'];
 
-        if (isset($item['icon'])) {
+        if (!empty($item['icon'])) {
             $label = Html::iconText($item['icon'], $label);
         }
 
-        $options = ArrayHelper::getValue($item, 'options', []);
-        $url = ArrayHelper::getValue($item, 'url', '#');
-
-        Html::addCssClass($options, ['list-group-item', 'list-group-item-action']);
-        return Html::a($label, $url, $options);
+        return Html::a($label, $item['url'] ?? '#', array_merge($this->linkOptions, $item['linkOptions'] ?? []));
     }
 }
