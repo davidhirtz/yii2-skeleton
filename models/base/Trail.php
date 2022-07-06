@@ -105,9 +105,7 @@ abstract class Trail extends ActiveRecord
     {
         if ($this->parents) {
             if ($type = static::getTypes()[$this->type]['parentType'] ?? false) {
-                if (!is_array($this->parents)) {
-                    $this->parents = [$this->parents];
-                }
+                $this->parents = array_filter(!is_array($this->parents) ? [$this->parents] : $this->parents);
 
                 foreach ($this->parents as $parent) {
                     if (!$parent->isDeleted()) {
