@@ -115,9 +115,25 @@
     opacity: 1;
   }
 
-  // This brings date forms to the same height as input fields
+  // This brings date forms to the same height as input fields for Safari
+  &::-webkit-datetime-edit-year-field,
+  &::-webkit-datetime-edit-month-field,
+  &::-webkit-datetime-edit-day-field,
+  &::-webkit-datetime-edit-hour-field,
+  &::-webkit-datetime-edit-minute-field,
+  &::-webkit-datetime-edit-second-field,
+  &::-webkit-datetime-edit-meridiem-field,
+    // This is needed for Chrome
   &::-webkit-calendar-picker-indicator {
     padding: 0;
+  }
+}
+
+.form-control {
+  &[type=date], &[type=time] {
+    height: $input-height; // Fixes height on Safari
+    -webkit-text-fill-color: $input-color; // Fixes color on Safari
+    opacity: 1; // Required for iOS Safari
   }
 }
 

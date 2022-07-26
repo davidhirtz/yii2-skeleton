@@ -218,6 +218,10 @@ tr.is-selected {
 }
 
 tr.disabled {
+  opacity: .3;
+}
+
+tr.invalid {
   text-decoration: line-through;
 }
 
