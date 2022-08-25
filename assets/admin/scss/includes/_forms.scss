@@ -220,9 +220,14 @@ select.form-control {
   option {
     margin: 0 (-$input-padding-x);
     padding: $input-padding-y 0 $input-padding-y $input-padding-x;
+    height: $input-height;
 
     &:first-child {
       margin-top: -$input-padding-y;
+    }
+
+    &:last-child {
+      margin-bottom: -$input-padding-y;
     }
   }
 }

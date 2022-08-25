@@ -24,7 +24,7 @@
     "davidhirtz/yii2-lazysizes": ">=2.2",
     "jfcherng/php-diff": "^6.9",
     "robthree/twofactorauth": "^1.8",
-    "npm-asset/blueimp-file-upload": ">=10.2.0",
+    "npm-asset/blueimp-file-upload": ">=10.32.0",
     "npm-asset/bootbox": ">=5"
   },
   "autoload": {

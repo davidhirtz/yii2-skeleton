@@ -20,6 +20,23 @@ class ActiveQuery extends \yii\db\ActiveQuery
     protected static $_status;
 
     /**
+     * @inheritDoc
+     */
+    public function findFor($name, $model)
+    {
+        // Makes sure only relations with any relational values are actually loaded, this gets rid of a lot of useless
+        // `WHERE 0=1` queries, which should not be executed in the first place.
+        // @see https://forum.yiiframework.com/t/question-about-activequery-findfor/134188
+        foreach ($this->link as $attribute) {
+            if ($model->$attribute) {
+                return parent::findFor($name, $model);
+            }
+        }
+
+        return $this->multiple ? [] : null;
+    }
+
+    /**
      * Selects all columns defined in {@link ActiveRecord::attributes()}.
      * @return $this
      */
@@ -112,7 +129,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
     public function whereStatus($status = null)
     {
         static::setStatus($status);
-        
+
         $model = $this->getModelInstance();
         return $this->andFilterWhere(['>=', $model::tableName() . '.status', static::$_status]);
     }
