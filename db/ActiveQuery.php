@@ -20,15 +20,16 @@ class ActiveQuery extends \yii\db\ActiveQuery
     protected static $_status;
 
     /**
-     * @inheritDoc
+     * Makes sure only relations with any relational values are actually loaded, this gets rid of a lot of useless
+     * `WHERE 0=1` queries, which should not be executed in the first place. If an attribute is set or the relation is
+     * requested via a junction table, the query is executed.
+     *
+     * @see https://forum.yiiframework.com/t/question-about-activequery-findfor/134188
      */
     public function findFor($name, $model)
     {
-        // Makes sure only relations with any relational values are actually loaded, this gets rid of a lot of useless
-        // `WHERE 0=1` queries, which should not be executed in the first place.
-        // @see https://forum.yiiframework.com/t/question-about-activequery-findfor/134188
         foreach ($this->link as $attribute) {
-            if ($model->$attribute) {
+            if ($model->$attribute || $this->via) {
                 return parent::findFor($name, $model);
             }
         }
