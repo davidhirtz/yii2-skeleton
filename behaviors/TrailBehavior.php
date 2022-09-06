@@ -5,7 +5,6 @@ namespace davidhirtz\yii2\skeleton\behaviors;
 
 use DateTime;
 use DateTimeZone;
-use davidhirtz\yii2\datetime\DateTimeValidator;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\models\Trail;
 use Exception;
@@ -107,14 +106,14 @@ class TrailBehavior extends Behavior
     }
 
     /**
-     * @param $insert
-     * @param $changedAttributes
+     * @param bool $insert
+     * @param array $changedAttributes
      */
     protected function afterSave($insert, $changedAttributes)
     {
         /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         $attributes = $this->owner->getTrailAttributes();
-        $attributeNames = is_array($attributes) ? array_intersect($attributes, array_keys($changedAttributes)) : array_keys($changedAttributes);
+        $attributeNames = $attributes ? array_intersect($attributes, array_keys($changedAttributes)) : array_keys($changedAttributes);
         $data = [];
 
         foreach ($attributeNames as $attributeName) {
@@ -173,7 +172,7 @@ class TrailBehavior extends Behavior
      *
      * @return array
      */
-    public function getTrailAttributes()
+    public function getTrailAttributes(): array
     {
         return array_diff($this->owner->attributes(), $this->exclude);
     }
@@ -229,7 +228,7 @@ class TrailBehavior extends Behavior
                 return $value ? Yii::t('yii', 'Yes') : Yii::t('yii', 'No');
 
             case static::VALUE_TYPE_DATETIME:
-                return isset($value['date']) ? Yii::$app->getFormatter()->asDatetime(new DateTime($value['date'], new DateTimeZone($date['timezone'] ?? Yii::$app->timeZone)), 'medium') : $value;
+                return isset($value['date']) ? Yii::$app->getFormatter()->asDatetime(new DateTime($value['date'], new DateTimeZone($value['timezone'] ?? Yii::$app->timeZone)), 'medium') : $value;
 
             case static::VALUE_TYPE_RANGE:
                 $method = 'get' . Inflector::camelize(Inflector::pluralize($attribute));
@@ -260,7 +259,6 @@ class TrailBehavior extends Behavior
 
             $types = [
                 static::VALUE_TYPE_BOOLEAN => BooleanValidator::class,
-                static::VALUE_TYPE_DATETIME => DateTimeValidator::class,
                 static::VALUE_TYPE_RANGE => RangeValidator::class,
             ];
 
@@ -271,6 +269,15 @@ class TrailBehavior extends Behavior
                             $attributes[$attribute] = $type;
                         }
                     }
+                }
+            }
+
+            $schema = Yii::$app->getDb()->getSchema();
+            $columns = $schema->getTableSchema($className::tableName())->columns;
+
+            foreach ($columns as $column) {
+                if (in_array($column->dbType, [$schema::TYPE_DATE, $schema::TYPE_DATETIME, $schema::TYPE_TIMESTAMP])) {
+                    $attributes[$column->name] = static::VALUE_TYPE_DATETIME;
                 }
             }
 
