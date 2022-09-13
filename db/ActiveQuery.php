@@ -29,7 +29,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
     public function findFor($name, $model)
     {
         foreach ($this->link as $attribute) {
-            if ($model->$attribute || $this->via) {
+            if ($this->via || $model->$attribute) {
                 return parent::findFor($name, $model);
             }
         }
