@@ -6,8 +6,8 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\TypeGridViewTrait;
 use Yii;
 
 /**
- * Class TypeAttributeTrait
- * @package davidhirtz\yii2\skeleton\db
+ * TypeAttributeTrait implements type attribute methods and validation and  for an active record. It can also instantiate
+ * a custom model class based on the `class` key defined in the type options of {@link static::getTypes()}.
  *
  * @property int $type
  */
@@ -19,17 +19,16 @@ trait TypeAttributeTrait
     private static $_instances = [];
 
     /**
+     * Instantiates a class based on the given `type`. In contrast to the original implementation, this can be used  for
+     * creating new records directly, as it also populates the model.
+     *
      * @param array $row
      * @return static
      */
     public static function instantiate($row)
     {
-        if ($className = static::getTypes()[$row['type'] ?? null]['class'] ?? false) {
-            return new $className(['type' => $row['type']]);
-        }
-
-        /** @noinspection PhpMultipleClassDeclarationsInspection */
-        return parent::instantiate($row);
+        $className = static::getTypes()[$row['type'] ?? null]['class'] ?? static::class;
+        return new $className($row);
     }
 
     /**
