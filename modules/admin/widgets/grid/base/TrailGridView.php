@@ -157,7 +157,7 @@ class TrailGridView extends GridView
                 if ($value = $this->formatTrailAttributeValue($model, $attribute, $value)) {
                     $rows[] = [
                         $model->getAttributeLabel($attribute),
-                        Html::encode($value),
+                        is_array($value) ? Html::ul($value, ['class' => 'list-unstyled']) : Html::encode($value),
                     ];
                 }
             }
