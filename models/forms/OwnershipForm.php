@@ -36,8 +36,7 @@ class OwnershipForm extends Model
         return [
             [
                 ['name'],
-                'filter',
-                'filter' => 'trim',
+                'trim',
             ],
             [
                 ['name'],

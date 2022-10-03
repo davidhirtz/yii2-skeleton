@@ -453,7 +453,7 @@ class GridView extends \yii\grid\GridView
      */
     public function getSearchKeywords(): array
     {
-        return array_filter(explode(' ', $this->search));
+        return $this->search ? array_filter(explode(' ', $this->search)) : [];
     }
 
     /**

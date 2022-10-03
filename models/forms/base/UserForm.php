@@ -45,8 +45,7 @@ class UserForm extends User
             ],
             [
                 ['newPassword', 'repeatPassword', 'oldPassword'],
-                'filter',
-                'filter' => 'trim',
+                'trim',
             ],
             [
                 ['newPassword', 'repeatPassword', 'oldPassword'],

@@ -3,9 +3,8 @@
 namespace davidhirtz\yii2\skeleton\models\forms;
 
 /**
- * Class SignupForm.
- * @package davidhirtz\yii2\skeleton\models\forms
+ * Override this class to add your own methods and properties.
  */
-class SignupForm extends \davidhirtz\yii2\skeleton\models\forms\base\SignupForm
+class SignupForm extends base\SignupForm
 {
 }

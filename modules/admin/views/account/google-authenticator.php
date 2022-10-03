@@ -28,6 +28,7 @@ $this->setTitle(Yii::t('skeleton', 'Google Authenticator'));
         ]);
 
         echo $af->field($form, 'code', ['icon' => 'qrcode', 'enableError' => false])->textInput([
+            'autocomplete' => 'one-time-code',
             'autofocus' => !$form->hasErrors(),
         ]);
         ?>

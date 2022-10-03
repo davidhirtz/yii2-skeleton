@@ -43,8 +43,7 @@ class PasswordResetForm extends Model
         return [
             [
                 ['email', 'code', 'newPassword', 'repeatPassword'],
-                'filter',
-                'filter' => 'trim',
+                'trim',
             ],
             [
                 ['code'],

@@ -58,8 +58,7 @@ class LoginForm extends Model
         return [
             [
                 ['email', 'password'],
-                'filter',
-                'filter' => 'trim',
+                'trim',
             ],
             [
                 ['email', 'password'],

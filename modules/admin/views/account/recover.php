@@ -29,8 +29,9 @@ $this->setTitle(Yii::t('skeleton', 'Recover Password'));
         ]);
         ?>
         <?= $af->field($form, 'email', ['icon' => 'envelope', 'enableError' => false])->textInput([
-            'type' => 'email',
+            'autocomplete' => 'username',
             'autofocus' => !$form->hasErrors(),
+            'type' => 'email',
         ]); ?>
         <div class="form-group">
             <?= Html::submitButton(Yii::t('skeleton', 'Send Email'), ['class' => 'btn btn-primary btn-block']) ?>

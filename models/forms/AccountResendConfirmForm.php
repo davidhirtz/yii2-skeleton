@@ -28,8 +28,7 @@ class AccountResendConfirmForm extends Model
         return [
             [
                 ['email'],
-                'filter',
-                'filter' => 'trim',
+                'trim',
             ],
             [
                 ['email'],

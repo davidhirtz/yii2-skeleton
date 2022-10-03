@@ -51,8 +51,12 @@ class ArrayHelper extends \yii\helpers\BaseArrayHelper
      * @param string $separator
      * @return array
      */
-    public static function cacheStringToArray($string, $values = [], $separator = ',')
+    public static function cacheStringToArray($string, $values = [], $separator = ','): array
     {
+        if (!$string) {
+            return [];
+        }
+
         if (!is_array($string)) {
             $string = explode($separator, $string);
         }
