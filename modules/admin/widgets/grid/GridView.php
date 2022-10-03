@@ -361,7 +361,7 @@ class GridView extends \yii\grid\GridView
         }
 
         if ($this->search === null) {
-            $this->search = trim(Yii::$app->getRequest()->get($this->searchParamName));
+            $this->search = ($search = Yii::$app->getRequest()->get($this->searchParamName)) ? trim($search) : null;
         }
 
         $options = [
