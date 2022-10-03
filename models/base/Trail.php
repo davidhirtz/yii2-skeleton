@@ -129,7 +129,10 @@ abstract class Trail extends ActiveRecord
             }
         }
 
-        $this->data = json_decode($this->data, true);
+        if ($this->data) {
+            $this->data = json_decode($this->data, true);
+        }
+
         parent::afterSave($insert, $changedAttributes);
     }
 

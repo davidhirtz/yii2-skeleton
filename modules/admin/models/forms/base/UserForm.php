@@ -52,8 +52,7 @@ class UserForm extends User
         return array_merge(parent::rules(), [
             [
                 ['newPassword'],
-                'filter',
-                'filter' => 'trim',
+                'trim',
             ],
             [
                 ['newPassword'],

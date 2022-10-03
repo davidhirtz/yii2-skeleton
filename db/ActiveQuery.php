@@ -166,9 +166,9 @@ class ActiveQuery extends \yii\db\ActiveQuery
      * @param string $search
      * @return string
      */
-    public function sanitizeSearchString($search)
+    public function sanitizeSearchString($search): string
     {
-        return trim(strtr($search, ['%' => '']));
+        return $search ? trim(strtr($search, ['%' => ''])) : '';
     }
 
     /**

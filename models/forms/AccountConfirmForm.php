@@ -27,8 +27,7 @@ class AccountConfirmForm extends Model
         return [
             [
                 ['email'],
-                'filter',
-                'filter' => 'trim',
+                'trim',
             ],
             [
                 ['email', 'code'],

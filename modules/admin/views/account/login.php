@@ -37,11 +37,14 @@ $this->setTitle(Yii::t('skeleton', 'Login'));
         ]);
 
         echo $af->field($form, 'email', ['icon' => 'envelope', 'enableError' => false])->textInput([
+            'autocomplete' => 'username',
             'autofocus' => !$form->hasErrors(),
             'type' => 'email',
         ]);
 
-        echo $af->field($form, 'password', ['icon' => 'key', 'enableError' => false])->passwordInput();
+        echo $af->field($form, 'password', ['icon' => 'key', 'enableError' => false])->passwordInput([
+            'autocomplete' => 'current-password',
+        ]);
 
         if (Yii::$app->getUser()->enableAutoLogin) {
             echo $af->field($form, 'rememberMe')->checkbox();

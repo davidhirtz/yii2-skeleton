@@ -32,8 +32,7 @@ class PasswordRecoverForm extends Model
         return [
             [
                 ['email'],
-                'filter',
-                'filter' => 'trim',
+                'trim',
             ],
             [
                 ['email'],
