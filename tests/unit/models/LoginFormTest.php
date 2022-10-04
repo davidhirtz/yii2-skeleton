@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\tests\unit\models;
 
+use Codeception\Test\Unit;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
 use davidhirtz\yii2\skeleton\tests\unit\fixtures\UserFixture;
 use davidhirtz\yii2\skeleton\validators\GoogleAuthenticatorValidator;
@@ -11,7 +12,7 @@ use Yii;
  * Class LoginFormTest
  * @package davidhirtz\yii2\skeleton\tests\unit\models
  */
-class LoginFormTest extends \Codeception\Test\Unit
+class LoginFormTest extends Unit
 {
     /**
      * @return array

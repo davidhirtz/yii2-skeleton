@@ -73,7 +73,7 @@ abstract class Trail extends ActiveRecord
      */
     public function afterFind()
     {
-        $this->data = json_decode($this->data, true);
+        $this->data = $this->data ? json_decode($this->data, true) : null;
         parent::afterFind();
     }
 
@@ -129,10 +129,7 @@ abstract class Trail extends ActiveRecord
             }
         }
 
-        if ($this->data) {
-            $this->data = json_decode($this->data, true);
-        }
-
+        $this->data = $this->data ? json_decode($this->data, true) : null;
         parent::afterSave($insert, $changedAttributes);
     }
 
