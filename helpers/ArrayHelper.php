@@ -2,11 +2,13 @@
 
 namespace davidhirtz\yii2\skeleton\helpers;
 
+use SimpleXMLElement;
+use yii\helpers\BaseArrayHelper;
+
 /**
- * Class ArrayHelper.
- * @package davidhirtz\yii2\skeleton\helpers
+ * Extends the default ArrayHelper class.
  */
-class ArrayHelper extends \yii\helpers\BaseArrayHelper
+class ArrayHelper extends BaseArrayHelper
 {
     /**
      * @param array $array
@@ -53,12 +55,8 @@ class ArrayHelper extends \yii\helpers\BaseArrayHelper
      */
     public static function cacheStringToArray($string, $values = [], $separator = ','): array
     {
-        if (!$string) {
-            return [];
-        }
-
         if (!is_array($string)) {
-            $string = explode($separator, $string);
+            $string = $string ? explode($separator, $string) : [];
         }
 
         if (!is_array($values)) {
@@ -85,7 +83,7 @@ class ArrayHelper extends \yii\helpers\BaseArrayHelper
     /**
      * Reads a SimpleXML object into an array.
      *
-     * @param \SimpleXMLElement $xml
+     * @param SimpleXMLElement $xml
      * @return array
      */
     public static function simpleXmlToArray($xml)
