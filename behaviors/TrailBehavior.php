@@ -272,12 +272,14 @@ class TrailBehavior extends Behavior
                 }
             }
 
-            $schema = Yii::$app->getDb()->getSchema();
-            $columns = $schema->getTableSchema($className::tableName())->columns;
+            if ($this->owner instanceof ActiveRecord) {
+                $schema = Yii::$app->getDb()->getSchema();
+                $columns = $schema->getTableSchema($className::tableName())->columns;
 
-            foreach ($columns as $column) {
-                if (in_array($column->dbType, [$schema::TYPE_DATE, $schema::TYPE_DATETIME, $schema::TYPE_TIMESTAMP])) {
-                    $attributes[$column->name] = static::VALUE_TYPE_DATETIME;
+                foreach ($columns as $column) {
+                    if (in_array($column->dbType, [$schema::TYPE_DATE, $schema::TYPE_DATETIME, $schema::TYPE_TIMESTAMP])) {
+                        $attributes[$column->name] = static::VALUE_TYPE_DATETIME;
+                    }
                 }
             }
 
