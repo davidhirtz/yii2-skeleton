@@ -109,6 +109,20 @@ class ActiveQuery extends \yii\db\ActiveQuery
     }
 
     /**
+     * @param string $attribute
+     * @param string|null $language
+     * @return string
+     */
+    public function getI18nAttributeName(string $attribute, $language = null)
+    {
+        /** @noinspection PhpUndefinedMethodInspection */
+        $attributeName = $this->getModelInstance()->getI18nAttributeName($attribute, $language);
+        list(, $alias) = $this->getTableNameAndAlias();
+
+        return "$alias.[[$attributeName]]";
+    }
+
+    /**
      * @param array $attributes
      * @return $this
      */
