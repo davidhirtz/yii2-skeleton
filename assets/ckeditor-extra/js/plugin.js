@@ -33,29 +33,43 @@ CKEDITOR.on('dialogDefinition', function (event) {
     var dialogName = event.data.name;
 
     if (dialogName === 'link') {
-        var dialogDefinition = event.data.definition, infoTab = dialogDefinition.getContents('info'),
+        var dialogDefinition = event.data.definition,
+            infoTab = dialogDefinition.getContents('info'),
             url = infoTab.get('url'),
+            linkType = infoTab.get('linkType'),
             targetTab = dialogDefinition.getContents('target'),
             targetType = targetTab.get('linkTargetType');
 
+        // Removes the "Protocol" dropdown from the "Link Info" tab.
         infoTab.remove('protocol');
-        infoTab.remove('emailOptions');
-        infoTab.remove('telOptions');
-        infoTab.remove('anchorOptions');
+
+        // Removes the "Browse Server" button from the "Link Info" tab.
         infoTab.remove('browse');
 
-        // Cannot remove linkType and linkTargetName without breaking the functionality...
-        infoTab.get('linkType').style = 'display: none';
-        targetTab.get('linkTargetName').style = 'display: none';
+        // Remove "Link to anchor in the text" option from the "Link Info" tab and uses the regular link type for anchors.
+        linkType.setup = function (data) {
+            if (data.type === 'anchor') {
+                data.url = {protocol: '', url: '#' + data.anchor.name};
+                data.type = 'url';
+            }
 
+            this.setValue(data.type || 'url');
+        }
+
+        linkType.items = [linkType.items[0], linkType.items[2], linkType.items[3]];
+        infoTab.remove('anchorOptions');
+
+        // Overrides the default url events.
         url.onKeyUp = function (data) {
         };
 
         url.setup = function (data) {
             this.allowOnChange = false;
+
             if (data.url) {
                 this.setValue((typeof data.url.protocol == 'string' ? data.url.protocol : '') + data.url.url);
             }
+
             this.allowOnChange = true;
         };
 
@@ -63,11 +77,11 @@ CKEDITOR.on('dialogDefinition', function (event) {
             data.url = {protocol: '', url: this.getValue()};
         };
 
-        // Remove useless targets.
+        // Only show <not set> and <_blank> targets from the "Target" tab.
         targetType.items = [targetType.items[0], targetType.items[3]];
 
-        // targetTab.remove('popupFeatures');
         targetTab.elements[0].widths = ['100%'];
+        targetTab.remove('popupFeatures');
     }
 });
 
