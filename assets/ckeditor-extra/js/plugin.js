@@ -82,6 +82,9 @@ CKEDITOR.on('dialogDefinition', function (event) {
 
         targetTab.elements[0].widths = ['100%'];
         targetTab.remove('popupFeatures');
+
+        // Hide link target name.
+        targetTab.get('linkTargetName').style = 'display: none';
     }
 });
 
