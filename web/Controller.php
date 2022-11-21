@@ -15,23 +15,36 @@ use yii\helpers\Html;
 class Controller extends \yii\web\Controller
 {
     /**
-     * @var bool
+     * @var bool whether spaces between HTML tags should be removed from the output.
      */
     public $spacelessOutput = false;
 
     /**
+     * @var string|false whether a Content-Security-Policy header should be sent, defaults to only allowing the current
+     * site to frame the content. To be more strict this can be changed to `frame-ancestors 'none'`.
+     * @link https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Clickjacking_Defense_Cheat_Sheet.md
+     */
+    public $contentSecurityPolicy = "frame-ancestors 'self'";
+
+    /**
      * Omits layout and asset rendering for AJAX route requests.
      *
-     * Remove spaces for output, this is not recommended for performance, but is currently
-     * a criteria for Google PageSpeed. IMPORTANT: This also removes white-spaces in text
-     * areas and <pre> tags.
+     * Remove spaces for output, this is not recommended for performance, but is currently a criteria for Google
+     * PageSpeed. IMPORTANT: This also removes white-spaces in text areas and <pre> tags.
      *
      * @param string $content
      * @return string
      */
     public function renderContent($content)
     {
-        $content = Yii::$app->getRequest()->getIsAjaxRoute() ? $this->renderAjaxRouteContent($content) : parent::renderContent($content);
+        if ($this->contentSecurityPolicy) {
+            Yii::$app->getResponse()->getHeaders()->set('Content-Security-Policy', $this->contentSecurityPolicy);
+        }
+
+        $content = Yii::$app->getRequest()->getIsAjaxRoute() ?
+            $this->renderAjaxRouteContent($content) :
+            parent::renderContent($content);
+
         return $this->spacelessOutput ? trim(preg_replace('/>\s+</', '><', $content)) : $content;
     }
 
