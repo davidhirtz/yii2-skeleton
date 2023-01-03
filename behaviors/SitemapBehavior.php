@@ -10,8 +10,9 @@ use yii\base\Behavior;
 use yii\base\InvalidConfigException;
 
 /**
- * Class SitemapBehavior.
- * @package davidhirtz\yii2\skeleton\behaviors
+ * SitemapBehavior implements the needed methods for an active records to be used in the sitemap component.
+ * All methods can be overwritten by the implementing model to customize the sitemap URL generation.
+ *
  * @see https://www.sitemaps.org/protocol.html
  *
  * @property ActiveRecord $owner
@@ -27,7 +28,8 @@ class SitemapBehavior extends Behavior
     public const CHANGE_FREQUENCY_NEVER = 'never';
 
     /**
-     * @var callable required method, that returns a single or nested array with sitemap URL or valid route as "loc" key.
+     * @var callable required method, that returns a single or nested array with sitemap URL or valid route as "loc"
+     *     key.
      */
     public $callback;
 
@@ -84,7 +86,8 @@ class SitemapBehavior extends Behavior
         $urls = [];
 
         if (Yii::$app->sitemap->useSitemapIndex) {
-            $query->limit($this->maxUrlCount)->offset($offset * $this->maxUrlCount);
+            $query->limit($this->maxUrlCount)
+                ->offset($offset * $this->maxUrlCount);
         }
 
         foreach ($query->each($this->batchSize) as $model) {
@@ -102,6 +105,17 @@ class SitemapBehavior extends Behavior
         }
 
         return $urls;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSitemapUrlCount(): int
+    {
+        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+        /** @var ActiveQuery $query */
+        $query = $this->owner->getSitemapQuery();
+        return $query->count();
     }
 
     /**

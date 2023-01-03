@@ -130,7 +130,7 @@ class Sitemap extends Component
     }
 
     /**
-     * Generates an index of sitemap file urls.
+     * Generates an index of sitemap.xml URLs.
      */
     public function generateIndexUrls()
     {
@@ -147,11 +147,10 @@ class Sitemap extends Component
         }
 
         foreach ($this->models as $key => $model) {
-            $offset = 0;
-
-            while ($urlset = $model->generateSitemapUrls($offset)) {
+            $total = ceil($model->getSitemapUrlCount() / $this->maxUrlCount);
+            for ($offset = 0; $offset < $total; $offset++) {
                 $sitemaps[] = [
-                    'loc' => ['sitemap/index', 'key' => $key, 'offset' => $offset++],
+                    'loc' => ['sitemap/index', 'key' => $key, 'offset' => $offset],
                     'lastmod' => $this->getMaxLastMod($urlset),
                 ];
             }
