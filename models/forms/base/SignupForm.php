@@ -153,7 +153,9 @@ class SignupForm extends Identity
         }
 
         // There were some cases in which the value set by the ajax call contained a leading space....
-        $this->token = trim($this->token);
+        if ($this->token) {
+            $this->token = trim($this->token);
+        }
 
         return parent::beforeValidate();
     }
