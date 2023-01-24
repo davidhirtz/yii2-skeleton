@@ -61,11 +61,11 @@ class Application extends \yii\web\Application
     {
         $this->setDefaultUrlManagerRules();
         $this->setDefaultCookieConfig();
-        $this->setDefaultEmail();
-
-        $this->checkMaintenanceStatus();
 
         parent::bootstrap();
+
+        $this->checkMaintenanceStatus();
+        $this->setDefaultEmail();
     }
 
     /**
@@ -136,7 +136,7 @@ class Application extends \yii\web\Application
      */
     protected function setDefaultEmail()
     {
-        $this->params['email'] = $this->params['email'] ?? ('hostmaster@' . $this->getRequest()->getServerName());
+        $this->params['email'] ??= ('hostmaster@' . $this->getRequest()->getServerName());
     }
     
     /**
@@ -151,7 +151,7 @@ class Application extends \yii\web\Application
             if ($domain = $this->params['cookieDomain'] ?? false) {
                 $hostInfo = trim($domain, '.');
 
-                if (substr($this->getRequest()->getHostInfo(), -strlen($hostInfo)) === $hostInfo) {
+                if (str_ends_with($this->getRequest()->getHostInfo(), $hostInfo)) {
                     $config['domain'] = $domain;
                 }
             }
