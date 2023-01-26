@@ -34,7 +34,10 @@ $(function () {
         var $link = $(this);
 
         if (!$link.data('confirm')) {
+            // Close tooltips as they might go rogue when elements change after the ajax request on click.
+            $('[data-toggle="tooltip"]').tooltip('hide');
             _ajaxLink($($link));
+
             e.preventDefault();
         }
     });
@@ -52,7 +55,7 @@ $(function () {
             url: $link.attr('href'),
             method: $link.data('method') || 'post',
             params: $link.data('params'),
-            success: function () {
+            success: function (content) {
                 if ($target.length) {
                     if (action === 'remove') {
                         $target.remove();
@@ -62,6 +65,10 @@ $(function () {
 
                     } else if (action === 'select') {
                         $target.toggleClass('is-selected');
+
+                    } else if (action === 'replace') {
+                        $target.html(content);
+                        Skeleton.initContent($target);
                     }
                 }
             }
@@ -282,9 +289,7 @@ var Skeleton = {
     },
 
     uploadProgress: function (e, data) {
-        var _ = this,
-            progress = parseInt(data.loaded / data.total * 100, 10);
-
+        var progress = parseInt(data.loaded / data.total * 100, 10);
         $('#progress').toggle(progress < 100).find('.bar').css('width', progress + '%');
     }
 };
