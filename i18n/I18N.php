@@ -9,8 +9,7 @@ use yii\helpers\ArrayHelper;
  * Class I18N.
  * @package davidhirtz\yii2\skeleton\i18n
  *
- * @property array $languages
- * @see \davidhirtz\yii2\skeleton\i18n\I18N::getLanguages()
+ * @property array $languages {@see I18N::getLanguages()}
  */
 class I18N extends \yii\i18n\I18N
 {
@@ -44,6 +43,24 @@ class I18N extends \yii\i18n\I18N
         }
 
         parent::init();
+    }
+
+    /**
+     * Calls the given callback with the given language set as application language.
+     *
+     * @param string $language
+     * @param callable $callback
+     * @return mixed
+     */
+    public function callback(string $language, callable $callback)
+    {
+        $prevLanguage = Yii::$app->language;
+        Yii::$app->language = $language;
+
+        $result = call_user_func($callback);
+
+        Yii::$app->language = $prevLanguage;
+        return $result;
     }
 
     /**
