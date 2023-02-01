@@ -397,7 +397,7 @@ trait ActiveFormTrait
      * ],
      *
      * @param array $fields
-     * @param array|null $languages
+     * @param array|null|false $languages If set to false, no I18N attributes will be added.
      * @return array
      */
     public function getToggleOptions($fields, $languages = null)
@@ -411,9 +411,14 @@ trait ActiveFormTrait
                 $attributes = [$name];
             }
 
+            if (method_exists($this->model, 'getI18nAttributesNames') && $languages !== false) {
+                $attributes = $this->model->getI18nAttributesNames($attributes, $languages);
+            }
+
             $selectors = [];
-            foreach (method_exists($this->model, 'getI18nAttributesNames') ? $this->model->getI18nAttributesNames($attributes, $languages) : $attributes as $attribute) {
-                $selectors[] = $this->model->hasAttribute($attribute) ? \yii\helpers\Html::getInputId($this->model, $attribute) : $attribute;
+
+            foreach ($attributes as $attribute) {
+                $selectors[] = $this->model->hasAttribute($attribute) ? Html::getInputId($this->model, $attribute) : $attribute;
             }
 
             $options[] = [$values, $selectors];
