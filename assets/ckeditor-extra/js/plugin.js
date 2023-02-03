@@ -79,12 +79,13 @@ CKEDITOR.on('dialogDefinition', function (event) {
 
         // Only show <not set> and <_blank> targets from the "Target" tab.
         targetType.items = [targetType.items[0], targetType.items[3]];
-
         targetTab.elements[0].widths = ['100%'];
-        targetTab.remove('popupFeatures');
+
+        // Cannot remove 'popupFeatures' without breaking the target="_blank" functionality, hiding it seems to solve it
+        targetTab.get('popupFeatures').style = 'display:none';
 
         // Hide link target name.
-        targetTab.get('linkTargetName').style = 'display: none';
+        targetTab.get('linkTargetName').style = 'display:none';
     }
 });
 
