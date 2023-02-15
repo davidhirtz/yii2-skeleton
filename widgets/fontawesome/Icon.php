@@ -6,15 +6,14 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
 /**
- * Class Icon
- * @package davidhirtz\yii2\skeleton\widgets\fontawesome;
+ * FontAwesome 5 Icon class.
  */
 class Icon
 {
     /**
      * @var array
      */
-    private $options = [];
+    private $options;
 
     /**
      * CSS class prefix
@@ -41,7 +40,8 @@ class Icon
      */
     public static function tag($name, $options = [])
     {
-        return static::solid($name, $options);
+        $method = ArrayHelper::remove($options, 'type', 'solid');
+        return static::$method($name, $options);
     }
 
     /**
@@ -82,7 +82,7 @@ class Icon
      */
     public function inverse()
     {
-        return $this->addCssClass(static::$cssClassPrefix .  'inverse');
+        return $this->addCssClass(static::$cssClassPrefix . 'inverse');
     }
 
     /**
@@ -90,7 +90,7 @@ class Icon
      */
     public function spin()
     {
-        return $this->addCssClass(static::$cssClassPrefix .  'spin');
+        return $this->addCssClass(static::$cssClassPrefix . 'spin');
     }
 
     /**
@@ -98,7 +98,7 @@ class Icon
      */
     public function pulse()
     {
-        return $this->addCssClass(static::$cssClassPrefix .  'pulse');
+        return $this->addCssClass(static::$cssClassPrefix . 'pulse');
     }
 
     /**
@@ -106,7 +106,7 @@ class Icon
      */
     public function fixedWidth()
     {
-        return $this->addCssClass(static::$cssClassPrefix .  'fw');
+        return $this->addCssClass(static::$cssClassPrefix . 'fw');
     }
 
     /**
@@ -114,7 +114,7 @@ class Icon
      */
     public function li()
     {
-        return $this->addCssClass(static::$cssClassPrefix .  'li');
+        return $this->addCssClass(static::$cssClassPrefix . 'li');
     }
 
     /**
@@ -122,7 +122,7 @@ class Icon
      */
     public function border()
     {
-        return $this->addCssClass(static::$cssClassPrefix .  'border');
+        return $this->addCssClass(static::$cssClassPrefix . 'border');
     }
 
     /**
@@ -130,7 +130,7 @@ class Icon
      */
     public function pullLeft()
     {
-        return $this->addCssClass(static::$cssClassPrefix .  'pull-left');
+        return $this->addCssClass(static::$cssClassPrefix . 'pull-left');
     }
 
     /**
@@ -138,7 +138,7 @@ class Icon
      */
     public function pullRight()
     {
-        return $this->addCssClass(static::$cssClassPrefix .  'pull-right');
+        return $this->addCssClass(static::$cssClassPrefix . 'pull-right');
     }
 
     /**
@@ -156,7 +156,7 @@ class Icon
      */
     public function rotate($value)
     {
-        return $this->addCssClass(static::$cssClassPrefix .  'rotate-' . $value);
+        return $this->addCssClass(static::$cssClassPrefix . 'rotate-' . $value);
     }
 
     /**
@@ -165,7 +165,7 @@ class Icon
      */
     public function flip($value)
     {
-        return $this->addCssClass(static::$cssClassPrefix .  'flip-' . $value);
+        return $this->addCssClass(static::$cssClassPrefix . 'flip-' . $value);
     }
 
     /**
