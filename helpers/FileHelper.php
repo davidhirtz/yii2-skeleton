@@ -123,7 +123,7 @@ EOL
         $filename = Yii::$app->security->generateRandomString($length);
 
         if ($extension) {
-            $filename .= '.' . (strpos($extension, '.') !== false ? strtolower(pathinfo($extension, PATHINFO_EXTENSION)) : $extension);
+            $filename .= '.' . (str_contains($extension, '.') ? strtolower(pathinfo($extension, PATHINFO_EXTENSION)) : $extension);
         }
 
         return $filename;
@@ -136,5 +136,20 @@ EOL
     public static function getExtensionFromUrl($url)
     {
         return strtolower(pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
+    }
+
+
+    /**
+     * @param string $url
+     * @return string
+     */
+    public static function encodeUrl(string $url): string
+    {
+        $parts = parse_url($url);
+        $pathParts = array_map('rawurldecode', explode('/', $parts['path']));
+
+        return $parts['scheme'] . '://' .
+            $parts['host'] .
+            implode('/', array_map('rawurlencode', $pathParts));
     }
 }

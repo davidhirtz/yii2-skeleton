@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
+use davidhirtz\yii2\skeleton\helpers\StringHelper;
 use Yii;
 use yii\web\UploadedFile;
 
@@ -52,7 +53,7 @@ class StreamUploadedFile extends UploadedFile
      */
     protected function loadTemporaryFile()
     {
-        if (!$this->url || !($contents = @file_get_contents($this->url))) {
+        if (!$this->url || !($contents = @file_get_contents(FileHelper::encodeUrl($this->url)))) {
             $this->error = UPLOAD_ERR_NO_FILE;
             return false;
         }
