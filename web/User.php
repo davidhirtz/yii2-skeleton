@@ -159,11 +159,19 @@ class User extends \yii\web\User
      */
     private function insertLogin($identity)
     {
+        if ($browser = Yii::$app->getRequest()->getUserAgent()) {
+            $browser = mb_substr($browser, 0, 255, Yii::$app->charset);
+        }
+
+        if ($ipAddress = ($identity->ipAddress ?: Yii::$app->getRequest()->getUserIP())) {
+            $ipAddress = inet_pton($ipAddress);
+        }
+
         $columns = [
             'user_id' => $identity->id,
             'type' => $identity->loginType,
-            'browser' => mb_substr(Yii::$app->getRequest()->getUserAgent(), 0, 255, Yii::$app->charset),
-            'ip_address' => inet_pton($identity->ipAddress ?: Yii::$app->getRequest()->getUserIP()),
+            'browser' => $browser,
+            'ip_address' => $ipAddress,
             'created_at' => $identity->last_login,
         ];
 

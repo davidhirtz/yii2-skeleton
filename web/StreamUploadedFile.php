@@ -3,7 +3,6 @@
 namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
-use davidhirtz\yii2\skeleton\helpers\StringHelper;
 use Yii;
 use yii\web\UploadedFile;
 
