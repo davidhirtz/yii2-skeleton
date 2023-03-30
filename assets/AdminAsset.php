@@ -29,6 +29,11 @@ class AdminAsset extends AssetBundle
     /**
      * @var array
      */
+    public array $faviconOptions = [];
+
+    /**
+     * @var array
+     */
     public $depends = [
         'yii\grid\GridViewAsset',
         'yii\bootstrap4\BootstrapPluginAsset',
@@ -51,9 +56,14 @@ class AdminAsset extends AssetBundle
     public function init()
     {
         Yii::$app->getAssetManager()->bundles['yii\bootstrap4\BootstrapAsset'] = [
-			'sourcePath'=>null,
-			'css'=>[],
+            'sourcePath' => null,
+            'css' => [],
         ];
+
+        if ($this->faviconOptions) {
+            $this->faviconOptions['rel'] ??= 'shortcut icon';
+            Yii::$app->getView()->registerLinkTag($this->faviconOptions, 'favicon');
+        }
 
         parent::init();
     }
