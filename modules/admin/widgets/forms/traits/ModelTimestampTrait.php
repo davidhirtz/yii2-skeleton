@@ -30,8 +30,11 @@ trait ModelTimestampTrait
                 ]);
             }
 
+            $hasTrailBehavior = Yii::$app->getUser()->can('trailIndex') &&
+                $this->model->getBehavior('TrailBehavior');
+
             return [
-                Yii::$app->getUser()->can('trailIndex') ? Html::a($text, Trail::getAdminRouteByModel($this->model)) : $text,
+                $hasTrailBehavior ? Html::a($text, Trail::getAdminRouteByModel($this->model)) : $text,
                 Yii::t('skeleton', 'Created {timestamp}', [
                     'timestamp' => Timeago::tag($this->model->created_at),
                 ]),
