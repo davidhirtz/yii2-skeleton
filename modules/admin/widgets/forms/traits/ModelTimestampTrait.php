@@ -19,7 +19,7 @@ trait ModelTimestampTrait
     protected function getTimestampItems(): array
     {
         if (!$this->model->getIsNewRecord()) {
-            if ($this->model->updated_by_user_id) {
+            if ($this->model->updated_by_user_id ?? false) {
                 $text = Yii::t('skeleton', 'Last updated by {user} {timestamp}', [
                     'timestamp' => Timeago::tag($this->model->updated_at),
                     'user' => Html::username($this->model->updated),
