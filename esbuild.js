@@ -45,6 +45,9 @@ let context = await esbuild.context({
         {
             in: 'assets/ckeditor-extra/js/plugin.js',
             out: 'assets/ckeditor-extra/js/plugin.min'
+        },{
+            in: 'assets/fontawesome/css/all.scss',
+            out: 'assets/fontawesome/css/all.min'
         },
         {
             in: 'assets/signup/js/signup.js',
