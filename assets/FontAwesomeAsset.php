@@ -2,16 +2,20 @@
 
 namespace davidhirtz\yii2\skeleton\assets;
 
+use yii\web\AssetBundle;
+
 /**
- * Class FontAwesomeAsset
- * @package davidhirtz\yii2\skeleton\assets
+ * Includes FontAwesome 5.15.4 CSS and WOFF2 files, everything es is excluded.
  */
-class FontAwesomeAsset extends \yii\web\AssetBundle
+class FontAwesomeAsset extends AssetBundle
 {
     /**
      * @var array
      */
-    public $css = [
-        'https://use.fontawesome.com/releases/v5.11.2/css/all.css',
-    ];
+    public $css = ['css/all.css'];
+
+    /**
+     * @var string
+     */
+    public $sourcePath = '@skeleton/assets/fontawesome';
 }

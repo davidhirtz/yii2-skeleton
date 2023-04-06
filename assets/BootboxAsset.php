@@ -6,22 +6,19 @@ use Yii;
 use yii\web\AssetBundle;
 
 /**
- * Class BootboxAsset.
- * @package davidhirtz\yii2\skeleton\assets
+ * Includes the Bootbox javascript library.
  */
 class BootboxAsset extends AssetBundle
 {
     /**
+     * @var array
+     */
+    public $js = ['bootbox.min.js'];
+
+    /**
      * @var string
      */
     public $sourcePath = '@npm/bootbox/dist';
-
-    /**
-     * @var array
-     */
-    public $js = [
-        'bootbox.min.js',
-    ];
 
     /**
      * Loads locale based on app language.
