@@ -3,19 +3,15 @@
 namespace davidhirtz\yii2\skeleton\assets;
 
 use Yii;
+use yii\bootstrap4\BootstrapPluginAsset;
+use yii\grid\GridViewAsset;
 use yii\web\AssetBundle;
 
 /**
- * Class AdminAsset.
- * @package davidhirtz\yii2\skeleton\assets
+ * Includes the default CSS and JS files for the admin area.
  */
 class AdminAsset extends AssetBundle
 {
-    /**
-     * @var string
-     */
-    public $sourcePath = '@skeleton/assets/admin';
-
     /**
      * @var array
      */
@@ -24,22 +20,27 @@ class AdminAsset extends AssetBundle
     /**
      * @var array
      */
-    public $js = ['js/admin.min.js'];
+    public $depends = [
+        GridViewAsset::class,
+        BootstrapPluginAsset::class,
+        BootboxAsset::class,
+        FontAwesomeAsset::class,
+    ];
 
     /**
-     * @var array
+     * @var array contains the options for the favicon link ta
      */
     public array $faviconOptions = [];
 
     /**
      * @var array
      */
-    public $depends = [
-        'yii\grid\GridViewAsset',
-        'yii\bootstrap4\BootstrapPluginAsset',
-        'davidhirtz\yii2\skeleton\assets\BootboxAsset',
-        'davidhirtz\yii2\skeleton\assets\FontAwesomeAsset',
-    ];
+    public $js = ['js/admin.min.js'];
+
+    /**
+     * @var string
+     */
+    public $sourcePath = '@skeleton/assets/admin';
 
     /**
      * @var array
@@ -55,11 +56,6 @@ class AdminAsset extends AssetBundle
      */
     public function init()
     {
-        Yii::$app->getAssetManager()->bundles['yii\bootstrap4\BootstrapAsset'] = [
-            'sourcePath' => null,
-            'css' => [],
-        ];
-
         if ($this->faviconOptions) {
             $this->faviconOptions['rel'] ??= 'shortcut icon';
             Yii::$app->getView()->registerLinkTag($this->faviconOptions, 'favicon');
