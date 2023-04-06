@@ -37,7 +37,6 @@ trait ApplicationTrait
             ],
             'components' => [
                 'assetManager' => [
-                    'class' => 'davidhirtz\yii2\skeleton\web\AssetManager',
                     'bundles' => [
                         'yii\bootstrap4\BootstrapAsset' => [
                             'sourcePath' => null,
