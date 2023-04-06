@@ -8,6 +8,7 @@ use davidhirtz\yii2\skeleton\models\forms\SignupForm;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
 use Yii;
 use yii\bootstrap4\ActiveField;
+use yii\helpers\Url;
 
 /**
  * SignupActiveForm is a widget that builds an interactive HTML form for {@link SignupForm}.
@@ -102,7 +103,7 @@ class SignupActiveForm extends ActiveForm
     {
         return Html::activeHiddenInput($this->model, 'token', [
             'id' => 'token',
-            'data-url' => Yii::$app->getUrlManager()->createUrl(['account/token']),
+            'data-url' => Url::toRoute(['account/token']),
         ]);
     }
 
