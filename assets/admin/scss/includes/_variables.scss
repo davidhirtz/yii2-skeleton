@@ -1,3 +1,5 @@
+@use "sass:math";
+
 /*
 Colors.
  */
@@ -235,8 +237,8 @@ $input-btn-focus-width: 1px !default;
 $input-focus-border-color: #66afe9 !default;
 
 $input-height-inner: $input-height !default;
-$input-height-inner-half: $input-height / 2 !default;
-$input-height-inner-quarter: $input-height / 4 !default;
+$input-height-inner-half: math.div($input-height, 2) !default;
+$input-height-inner-quarter: math.div($input-height, 4) !default;
 
 $app-form-label-padding-top: $input-padding-y + $input-border-width;
 $app-form-label-font-weight: bold !default;
