@@ -9,7 +9,6 @@
 		"watch": "node esbuild.js --watch"
 	},
 	"devDependencies": {
-		"@hail2u/css-mqpacker": "github:hail2u/node-css-mqpacker#v9.0.1",
 		"autoprefixer": "^10.4.12",
 		"esbuild": "^0.17.15",
 		"esbuild-sass-plugin": "^2.8.0",

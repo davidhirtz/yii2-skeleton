@@ -3,31 +3,28 @@
 namespace davidhirtz\yii2\skeleton\assets;
 
 use yii\web\AssetBundle;
+use yii\web\JqueryAsset;
 
 /**
- * Class SignupAsset.
- * @package davidhirtz\yii2\skeleton\assets
+ * Includes the signup.min.js file based on the timezone detected by jstimezonedetect.
  */
 class SignupAsset extends AssetBundle
 {
     /**
-     * @var string
-     */
-    public $sourcePath = '@skeleton/assets/signup';
-
-    /**
-     * @link https://github.com/libraryh3lp/jstimezonedetect
-     * @var array
-     */
-    public $js = [
-        'https://cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.6/jstz.min.js',
-        YII_DEBUG ? 'js/signup.js' : 'js/signup.min.js',
-    ];
-
-    /**
      * @var string[]
      */
     public $depends = [
-        'yii\web\JqueryAsset',
+        JqueryAsset::class,
+        TimeZoneDetectAsset::class,
     ];
+
+    /**
+     * @var array
+     */
+    public $js = ['js/signup.min.js'];
+
+    /**
+     * @var string
+     */
+    public $sourcePath = '@skeleton/assets/signup';
 }

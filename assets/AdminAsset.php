@@ -19,12 +19,12 @@ class AdminAsset extends AssetBundle
     /**
      * @var array
      */
-    public $css = [YII_DEBUG ? 'css/admin.css' : 'css/admin.min.css'];
+    public $css = ['css/admin.min.css'];
 
     /**
      * @var array
      */
-    public $js = [YII_DEBUG ? 'js/admin.js' : 'js/admin.min.js'];
+    public $js = ['js/admin.min.js'];
 
     /**
      * @var array
