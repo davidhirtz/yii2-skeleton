@@ -59,7 +59,7 @@ let context = await esbuild.context({
     outdir: './',
     plugins: [watchPlugin, sassPlugin({
         async transform(source) {
-            const {css} = await postcss([autoprefixer,]).process(source, {from: undefined});
+            const {css} = await postcss([autoprefixer]).process(source, {from: undefined});
             return css;
         }
     })],
