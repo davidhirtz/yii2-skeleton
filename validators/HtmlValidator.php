@@ -15,35 +15,35 @@ use yii\validators\Validator;
 class HtmlValidator extends Validator
 {
     /**
-     * @var array common tags are h1-h5 for format, table, th, td, tr for tables or
-     * blockquote, strike, u for font styles.
+     * @var array containing tags like h1-h5 for format, table, th, td, tr for tables or blockquote, strike, em for font
+     * styles.
      */
-    public $allowedHtmlTags = [];
+    public array $allowedHtmlTags = [];
 
     /**
      * @var array|string
      */
-    public $excludedHtmlTags = [];
+    public string|array $excludedHtmlTags = [];
 
     /**
      * @var array|string
      */
-    public $allowedCssProperties;
+    public string|array $allowedCssProperties = [];
 
     /**
      * @var array|string
      */
-    public $allowedClasses;
+    public string|array $allowedClasses = [];
 
     /**
      * @var array
      */
-    public $purifierOptions = [];
+    public array $purifierOptions = [];
 
     /**
      * Init.
      */
-    public function init()
+    public function init(): void
     {
         $this->purifierOptions = array_merge([
             'Attr.AllowedFrameTargets' => '_blank',
@@ -71,7 +71,7 @@ class HtmlValidator extends Validator
         ]);
 
         if ($this->allowedClasses) {
-            $this->purifierOptions['Attr.AllowedClasses'] = ArrayHelper::getValue($this->purifierOptions, 'Attr.AllowedClasses');
+            $this->purifierOptions['Attr.AllowedClasses'] ??= '';
             $this->purifierOptions['Attr.AllowedClasses'] .= implode(',', (array)$this->allowedClasses);
             $this->allowedHtmlTags[] = '*[class]';
         }
@@ -80,7 +80,7 @@ class HtmlValidator extends Validator
         $this->purifierOptions['HTML.Allowed'] = implode(',', $this->allowedHtmlTags);
 
         if ($this->allowedCssProperties) {
-            $this->purifierOptions['CSS.AllowedProperties'] = ArrayHelper::getValue($this->purifierOptions, 'CSS.AllowedProperties');
+            $this->purifierOptions['CSS.AllowedProperties'] ??= '';
             $this->purifierOptions['CSS.AllowedProperties'] .= implode(',', (array)$this->allowedCssProperties);
         }
 
@@ -93,7 +93,7 @@ class HtmlValidator extends Validator
      * @param ActiveRecord $model
      * @param string $attribute
      */
-    public function validateAttribute($model, $attribute)
+    public function validateAttribute($model, $attribute): void
     {
         // Set options.
         $html = $model->getAttribute($attribute);
@@ -136,8 +136,9 @@ class HtmlValidator extends Validator
         $html = preg_replace("#\n*\s*<p>\n*\s*#", "\n<p>", $html);
         $html = preg_replace("#\n*\s*</p>\n*\s*#", "</p>\n", $html);
 
-        // Remove empty elements at the end and beginning of tables.
+        // Remove empty elements and <br> added by the WYSIWYG editor at the end and beginning of tables.
         $html = preg_replace("#\n*\s*<table>#", '<table>', $html);
+        $html = preg_replace("#</table><br>\n*\s*#", '</table>', $html);
         $html = preg_replace("#</table>\n*\s*#", '</table>', $html);
 
         // Remove whitespaces in lists.
