@@ -79,6 +79,8 @@ trait ApplicationTrait
                                 '_POST.PasswordResetForm.newPassword',
                                 '_POST.PasswordResetForm.repeatPassword',
                                 '_POST.User.newPassword',
+                                '_POST.User.oldPassword',
+                                '_POST.User.password',
                                 '_POST.User.repeatPassword',
                             ],
                             'except' => [
