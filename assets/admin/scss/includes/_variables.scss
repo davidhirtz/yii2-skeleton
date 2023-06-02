@@ -132,8 +132,8 @@ $navbar-toggler-padding-x: 5px !default;
 $navbar-dark-toggler-border: 0 !default;
 
 // This fixes issue with the default value of Bootstrap 4 icon color, because the HEX color is not properly encoded.
-$navbar-dark-toggler-icon-hex-color: fff;
-$navbar-light-toggler-icon-hex-color: 000;
+$navbar-dark-toggler-icon-hex-color: fff !default;
+$navbar-light-toggler-icon-hex-color: 000 !default;
 $navbar-dark-toggler-icon-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'><path stroke='%23#{$navbar-dark-toggler-icon-hex-color}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>") !default;
 $navbar-light-toggler-icon-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'><path stroke='%23#{$navbar-light-toggler-icon-hex-color}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>") !default;
 
