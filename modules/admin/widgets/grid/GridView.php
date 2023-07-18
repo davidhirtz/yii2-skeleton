@@ -204,16 +204,16 @@ class GridView extends \yii\grid\GridView
     public function renderSummary(): string
     {
         $summary = $this->summary;
-        $options = $this->summaryOptions;
         $totalCount = $this->dataProvider->getTotalCount();
         $count = $this->dataProvider->getCount();
+        $pagination = $this->dataProvider->getPagination();
 
         $params = [
             'search' => $this->search,
             'totalCount' => $totalCount,
         ];
 
-        if (($pagination = $this->dataProvider->getPagination()) !== false) {
+        if ($pagination !== false) {
             $params['page'] = $pagination->getPage() + 1;
             $params['pageCount'] = $pagination->pageCount;
             $params['begin'] = $pagination->getPage() * $pagination->pageSize + 1;
@@ -223,66 +223,30 @@ class GridView extends \yii\grid\GridView
 
         if ($summary === null) {
             if ($this->search) {
-                switch ($count) {
-                    case 1:
-
-                        $summary = Yii::t('skeleton', 'Displaying the only result matching "{search}".', $params);
-                        break;
-
-                    case 0:
-
-                        $summary = Yii::t('skeleton', 'Sorry, no results found matching matching "{search}".', $params);
-                        break;
-
-                    case $pagination === false:
-                    case $totalCount:
-
-                        $summary = Yii::t('skeleton', 'Displaying all {totalCount, number} results matching "{search}".', $params);
-                        break;
-
-                    default:
-                        $summary = Yii::t('skeleton', 'Displaying {begin, number}-{end, number} of {totalCount, number} results matching "{search}".', $params);
-                        break;
-                }
+                $summary = match ($count) {
+                    1 => Yii::t('skeleton', 'Displaying the only result matching "{search}".', $params),
+                    0 => Yii::t('skeleton', 'Sorry, no results found matching matching "{search}".', $params),
+                    $pagination === false, $totalCount => Yii::t('skeleton', 'Displaying all {totalCount, number} results matching "{search}".', $params),
+                    default => Yii::t('skeleton', 'Displaying {begin, number}-{end, number} of {totalCount, number} results matching "{search}".', $params),
+                };
             } else {
-                switch ($count) {
-                    case 1:
-
-                        $summary = Yii::t('skeleton', 'Displaying the only record.', $params);
-                        break;
-
-                    case 0:
-
-                        $summary = Yii::t('skeleton', 'Sorry, no records found.', $params);
-                        break;
-
-                    case $pagination === false:
-                    case $totalCount:
-
-                        $summary = Yii::t('skeleton', 'Displaying all {totalCount, number} records.', $params);
-                        break;
-
-                    default:
-                        $summary = Yii::t('skeleton', 'Displaying {begin, number}-{end, number} of {totalCount, number} records.', $params);
-                        break;
-                }
+                $summary = match ($count) {
+                    1 => Yii::t('skeleton', 'Displaying the only record.', $params),
+                    0 => Yii::t('skeleton', 'Sorry, no records found.', $params),
+                    $pagination === false, $totalCount => Yii::t('skeleton', 'Displaying all {totalCount, number} records.', $params),
+                    default => Yii::t('skeleton', 'Displaying {begin, number}-{end, number} of {totalCount, number} records.', $params),
+                };
             }
         } else {
             $summary = Yii::$app->getI18n()->format($summary, $params, Yii::$app->language);
         }
 
-        $tag = ArrayHelper::remove($options, 'tag', 'div');
-        Html::addCssClass($options, $totalCount ? ['alert', 'alert-info'] : ['alert', 'alert-warning']);
+        $summaryOptions = $this->summaryOptions;
+        $summaryOptions['route'] = $this->search ? $this->searchUrl : null;
 
-        if ($this->search) {
-            Html::addCssClass($options, 'alert-dismissible');
-            $summary .= Html::a(Html::tag('span', '&times;', ['aria-hidden' => true]), $this->searchUrl, [
-                'class' => 'close',
-                'aria-label' => Yii::t('skeleton', 'Close')
-            ]);
-        }
+        Html::addCssClass($summaryOptions, $totalCount ? 'alert-info' : 'alert-warning');
 
-        return Html::tag($tag, $summary, $options);
+        return Html::alert($summary, $summaryOptions);
     }
 
     /**
@@ -339,16 +303,11 @@ class GridView extends \yii\grid\GridView
      */
     public function renderSection($name)
     {
-        switch ($name) {
-            case '{header}':
-                return $this->renderHeader();
-
-            case '{footer}':
-                return $this->renderFooter();
-
-            default:
-                return parent::renderSection($name);
-        }
+        return match ($name) {
+            '{header}' => $this->renderHeader(),
+            '{footer}' => $this->renderFooter(),
+            default => parent::renderSection($name),
+        };
     }
 
     /**

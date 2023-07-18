@@ -10,11 +10,35 @@ use yii\base\Model;
 use yii\helpers\BaseHtml;
 
 /**
- * Class Html.
- * @package davidhirtz\yii2\skeleton\helpers
+ * Extends the base HTML helper class by adding custom methods.
  */
 class Html extends BaseHtml
 {
+    /**
+     * @param string $content
+     * @param array $options
+     * @return string
+     */
+    public static function alert(string $content, array $options = []): string
+    {
+        if ($content) {
+            static::addCssClass($options, 'alert');
+
+            if ($route = ArrayHelper::remove($options, 'route', false)) {
+                static::addCssClass($options, 'alert-dismissible');
+
+                $content .= Html::a(Html::tag('span', '&times;', ['aria-hidden' => true]), $route, [
+                    'class' => 'close',
+                    'aria-label' => Yii::t('skeleton', 'Close'),
+                ]);
+            }
+
+            return static::tag('div', $content, $options);
+        }
+
+        return '';
+    }
+
     /**
      * @param string $content
      * @param array $options
@@ -41,18 +65,40 @@ class Html extends BaseHtml
     }
 
     /**
-     * @param string|array $buttons
+     * @param string $content
      * @param array $options
      * @return string
      */
-    public static function buttons($buttons, $options = [])
+    public static function info(string $content, array $options = []): string
+    {
+        static::addCssClass($options, 'alert-info');
+        return static::alert($content, $options);
+    }
+
+    /**
+     * @param array|string $buttons
+     * @param array $options
+     * @return string
+     */
+    public static function buttonList(array|string $buttons, array $options = []): string
+    {
+        static::addCssClass($options, 'btn-list');
+        return static::buttons($buttons, $options);
+    }
+
+    /**
+     * @param array|string $buttons
+     * @param array $options
+     * @return string
+     */
+    public static function buttons(array|string $buttons, array $options = []): string
     {
         if ($buttons) {
-            $buttons = implode('', (array)$buttons);
+            $buttons = is_array($buttons) ? implode('', $buttons) : $buttons;
             return $options ? static::tag('div', $buttons, $options) : $buttons;
         }
 
-        return null;
+        return '';
     }
 
     /**
@@ -183,5 +229,16 @@ class Html extends BaseHtml
         }
 
         return $user->getUsername();
+    }
+
+    /**
+     * @param string $content
+     * @param array $options
+     * @return string
+     */
+    public static function warning(string $content, array $options = []): string
+    {
+        static::addCssClass($options, 'alert-warning');
+        return static::alert($content, $options);
     }
 }
