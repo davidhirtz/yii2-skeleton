@@ -13,7 +13,13 @@ use Yii;
 trait I18nAttributesTrait
 {
     /**
-     * @see getI18nLabels()
+     * @see static::getI18nHints()
+     * @var array
+     */
+    private $_i18nHints;
+
+    /**
+     * @see static::getI18nLabels()
      * @var array
      */
     private $_i18nLabels;
@@ -94,6 +100,16 @@ trait I18nAttributesTrait
      * @param string $attribute
      * @return null
      */
+    public function getAttributeHint($attribute)
+    {
+        /** @noinspection PhpMultipleClassDeclarationsInspection */
+        return $this->getI18nHints()[$attribute] ?? parent::getAttributeHint($attribute);
+    }
+
+    /**
+     * @param string $attribute
+     * @return null
+     */
     public function getAttributeLabel($attribute)
     {
         if ($this->i18nAttributes) {
@@ -104,28 +120,51 @@ trait I18nAttributesTrait
             }
         }
 
-        /** @noinspection PhpUndefinedClassInspection */
+        /** @noinspection PhpMultipleClassDeclarationsInspection */
         return parent::getAttributeLabel($attribute);
     }
 
     /**
-     * @return array|null
+     * @return array
      */
-    public function getI18nLabels()
+    public function getI18nHints(): array
     {
-        if ($this->_i18nLabels === null) {
-            $this->_i18nLabels = [];
-            $i18N = Yii::$app->getI18n();
+        if ($this->_i18nHints === null) {
+            $i18n = Yii::$app->getI18n();
+            $this->_i18nHints = $this->attributeHints();
 
             foreach ($this->i18nAttributes as $attribute) {
-                foreach ($i18N->getLanguages() as $language) {
-                    /** @noinspection PhpUndefinedClassInspection */
+                foreach ($i18n->getLanguages() as $language) {
+                    $this->_i18nHints[$i18n->getAttributeName($attribute, $language)] ??= $this->_i18nHints[$attribute] ?? null;
+                }
+            }
+        }
+
+        return $this->_i18nHints;
+    }
+
+    /**
+     * @return array
+     */
+    public function getI18nLabels(): array
+    {
+        if ($this->_i18nLabels === null) {
+            $i18n = Yii::$app->getI18n();
+            $this->_i18nLabels = [];
+
+            foreach ($this->i18nAttributes as $attribute) {
+                foreach ($i18n->getLanguages() as $language) {
+                    /** @noinspection PhpMultipleClassDeclarationsInspection */
                     $label = parent::getAttributeLabel($attribute);
 
-                    $this->_i18nLabels[Yii::$app->getI18n()->getAttributeName($attribute, $language)] = $language == Yii::$app->language ? $label : Yii::t('skeleton', '{label} ({language})', [
-                        'label' => $label,
-                        'language' => strtoupper($language),
-                    ]);
+                    if ($language != Yii::$app->language) {
+                        $label = Yii::t('skeleton', '{label} ({language})', [
+                            'label' => $label,
+                            'language' => strtoupper($language),
+                        ]);
+                    }
+
+                    $this->_i18nLabels[$i18n->getAttributeName($attribute, $language)] = $label;
                 }
             }
         }
@@ -135,13 +174,13 @@ trait I18nAttributesTrait
 
     /**
      * @param array $rules
-     * @return mixed
+     * @return array
      */
     public function getI18nRules(array $rules)
     {
         if ($this->i18nAttributes) {
             foreach ($rules as $key => $rule) {
-                // If an i18n attribute has an unique validator with a targetAttribute all related
+                // If an i18n attribute has a unique validator with a targetAttribute all related
                 // attributes need their own rule translating the target attribute.
                 if ($rule[1] === 'unique' && !empty($rule['targetAttribute'])) {
                     $attribute = is_array($rule[0]) ? array_pop($rule[0]) : $rule[0];
@@ -160,9 +199,7 @@ trait I18nAttributesTrait
                             $rules[] = $i18nRule;
                         }
                     }
-
                 } else {
-
                     $attributes = [];
 
                     foreach ((array)$rule[0] as $attribute) {
@@ -175,7 +212,6 @@ trait I18nAttributesTrait
 
                     $rules[$key][0] = $attributes;
                 }
-
             }
         }
 
