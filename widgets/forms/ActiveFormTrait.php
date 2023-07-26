@@ -418,7 +418,7 @@ trait ActiveFormTrait
             $selectors = [];
 
             foreach ($attributes as $attribute) {
-                $selectors[] = isset($this->model->$attribute) ? Html::getInputId($this->model, $attribute) : $attribute;
+                $selectors[] = $this->model->hasProperty($attribute) ? Html::getInputId($this->model, $attribute) : $attribute;
             }
 
             $options[] = [$values, $selectors];
