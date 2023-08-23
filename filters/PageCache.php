@@ -16,6 +16,11 @@ class PageCache extends \yii\filters\PageCache
     public $enabled = null;
 
     /**
+     * @var string|false GET param name to disable caching, set to `false` to disable cache skipping
+     */
+    public string|false $noCacheParam = 'nocache';
+
+    /**
      * @var string[]
      */
     public $only = ['index', 'view'];
@@ -38,7 +43,9 @@ class PageCache extends \yii\filters\PageCache
             'reusable' => !$this->cacheCookies,
         ];
 
-        $this->enabled ??= Yii::$app->getRequest()->getIsGet() && Yii::$app->getUser()->getIsGuest();
+        $this->enabled ??= Yii::$app->getRequest()->getIsGet() &&
+            Yii::$app->getUser()->getIsGuest() &&
+            (!$this->noCacheParam || !$request->get($this->noCacheParam));
 
         if (!is_callable($this->variations)) {
             $this->variations ??= [];
