@@ -2,10 +2,9 @@
 /**
  * This view is used by console/controllers/MigrateController.php.
  *
- * The following variables are available in this view:
+ * @var string $className the new migration class name without namespace
+ * @var string $namespace the new migration class namespace
  */
-/* @var $className string the new migration class name without namespace */
-/* @var $namespace string the new migration class namespace */
 
 echo "<?php\n";
 if (!empty($namespace)) {
@@ -17,8 +16,6 @@ use davidhirtz\yii2\skeleton\db\MigrationTrait;
 use yii\db\Migration;
 
 /**
-* Class <?= $className . "\n" ?>
-* @package <?= $namespace . "\n" ?>
 * @noinspection PhpUnused
 */
 class <?= $className ?> extends Migration
@@ -28,7 +25,7 @@ class <?= $className ?> extends Migration
     /**
      * @inheritDoc
      */
-    public function safeUp()
+    public function safeUp(): void
     {
 
     }
@@ -36,7 +33,7 @@ class <?= $className ?> extends Migration
     /**
      * @inheritDoc
      */
-    public function safeDown()
+    public function safeDown(): void
     {
         echo "<?= $className ?> cannot be reverted.\n";
         return false;

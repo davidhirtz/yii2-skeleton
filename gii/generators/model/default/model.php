@@ -1,18 +1,19 @@
 <?php
 /**
  * This is the template for generating the model class of a specified table.
+ *
+ * @var yii\web\View $this
+ * @var yii\gii\generators\model\Generator $generator
+ * @var string  $tableName full table name
+ * @var string $className class name
+ * @var string $queryClassName query class name
+ * @var yii\db\TableSchema $tableSchema
+ * @var array  $properties list of properties (property => [type, name, comment])
+ * @var string[]  $labels list of attribute labels (name => label)
+ * @var string[] $rules list of validation rules
+ * @var array $relations list of relations (name => relation declaration)
+ * @var array $relationsClassHints list of class hints for relations (name => relation declaration)
  */
-
-/* @var $this yii\web\View */
-/* @var $generator yii\gii\generators\model\Generator */
-/* @var $tableName string full table name */
-/* @var $className string class name */
-/* @var $queryClassName string query class name */
-/* @var $tableSchema yii\db\TableSchema */
-/* @var $properties array list of properties (property => [type, name. comment]) */
-/* @var $labels string[] list of attribute labels (name => label) */
-/* @var $rules string[] list of validation rules */
-/* @var $relations array list of relations (name => relation declaration) */
 
 echo "<?php\n";
 ?>
@@ -23,7 +24,6 @@ use Yii;
 
 /**
  * <?= $className ."\n" ?>
- * @package <?= $generator->ns ."\n" ?>
  *
 <?php foreach ($properties as $property => $data): ?>
  * @property <?= "{$data['type']} \${$property}"  . ($data['comment'] ? ' ' . strtr($data['comment'], ["\n" => ' ']) : '') . "\n" ?>
@@ -31,7 +31,7 @@ use Yii;
 <?php if (!empty($relations)): ?>
  *
 <?php foreach ($relations as $name => $relation): ?>
- * @property <?= $relation[1] . ($relation[2] ? '[]' : '') . ' $' . lcfirst($name) . ' {@link ' . $className . '::get' . $name  . "()}\n" ?>
+ * @property-read <?= $relation[1] . ($relation[2] ? '[]' : '') . ' $' . lcfirst($name) . ' {@link ' . $className . '::get' . $name  . "()}\n" ?>
 <?php endforeach; ?>
 <?php endif; ?>
 */
@@ -49,7 +49,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     /**
      * @return <?= $relationsClassHints[$name] . "\n" ?>
      */
-    public function get<?= $name ?>()
+    public function get<?= $name ?>(): <?= $relationsClassHints[$name] ?>
     {
         <?= $relation[0] . "\n" ?>
     }
@@ -60,21 +60,11 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     echo "\n";
     ?>
     /**
-     * @return <?= $queryClassFullName ?>
+     * @return <?= "$queryClassFullName\n" ?>
      */
-    public static function find()
+    public static function find(): <?= "$queryClassFullName\n" ?>
     {
         return new <?= $queryClassFullName ?>(get_called_class());
-    }
-<?php endif; ?>
-<?php if ($generator->db !== 'db'): ?>
-
-    /**
-     * @return \yii\db\Connection
-     */
-    public static function getDb()
-    {
-        return Yii::$app->get('<?= $generator->db ?>');
     }
 <?php endif; ?>
 

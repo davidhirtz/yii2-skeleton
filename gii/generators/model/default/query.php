@@ -26,10 +26,11 @@ namespace <?= $generator->queryNs ?>;
 
 /**
  * <?= $className ."\n" ?>
- * @package <?= $generator->queryNs ."\n" ?>
- * @see <?= $modelFullClassName . "\n" ?>
+ *
+ * @property <?= $modelFullClassName . "\n" ?> $modelClass
  *
  * @method <?= $modelFullClassName ?>[] all($db = null)
+ * @method <?= $modelFullClassName ?>[] each($batchSize = 100, $db = null)
  * @method <?= $modelFullClassName ?> one($db = null)
  */
 class <?= $className ?> extends <?= '\\' . ltrim($generator->queryBaseClass, '\\') . "\n" ?>

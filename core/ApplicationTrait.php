@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\core;
 
+use Composer\InstalledVersions;
 use Yii;
 use yii\base\ActionEvent;
 use yii\base\InvalidConfigException;
@@ -122,7 +123,7 @@ trait ApplicationTrait
             ],
         ];
 
-        if (YII_ENV_DEV) {
+        if (!YII_ENV_PROD && InstalledVersions::isInstalled('yiisoft/yii2-gii')) {
             $core['bootstrap'][] = 'gii';
             $core['modules']['gii'] = [
                 'class' => 'yii\gii\Module',
