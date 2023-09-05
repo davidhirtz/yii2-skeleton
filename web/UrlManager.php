@@ -43,7 +43,8 @@ class UrlManager extends \yii\web\UrlManager
     public $languages;
 
     /**
-     * @var string the default language for which no language identifier should be added to path or subdomain.
+     * @var string|false the default language for which no language identifier should be added to the path or subdomain.
+     * Set to `false` to use the first matching language for the initial request.
      */
     public $defaultLanguage;
 
@@ -183,7 +184,7 @@ class UrlManager extends \yii\web\UrlManager
                     $location = $location[1];
                 }
 
-                if (strpos($location, '://') === false && is_string($location)) {
+                if (!str_contains($location, '://') && is_string($location)) {
                     $location = '/' . ltrim($location, '/');
                 }
 
@@ -200,6 +201,7 @@ class UrlManager extends \yii\web\UrlManager
         }
 
         if ($this->i18nUrl) {
+            // Check if the pathInfo starts with a language identifier.
             if (preg_match('#^(' . implode('|', $this->languages) . ')\b(/?)#i', $pathInfo, $matches)) {
                 $request->setPathInfo(mb_substr($pathInfo, mb_strlen($matches[0], Yii::$app->charset), null, Yii::$app->charset));
                 $language = array_search($matches[1], $this->languages);
@@ -212,8 +214,8 @@ class UrlManager extends \yii\web\UrlManager
 
                     Yii::$app->language = $language;
                 }
-            } elseif ($this->defaultLanguage) {
-                Yii::$app->language = $this->defaultLanguage;
+            } else {
+                Yii::$app->language = $this->defaultLanguage ?: $request->getPreferredLanguage(array_keys($this->languages));
             }
         }
 
