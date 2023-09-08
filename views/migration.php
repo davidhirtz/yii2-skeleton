@@ -27,7 +27,6 @@ class <?= $className ?> extends Migration
      */
     public function safeUp(): void
     {
-
     }
 
     /**
@@ -35,7 +34,5 @@ class <?= $className ?> extends Migration
      */
     public function safeDown(): void
     {
-        echo "<?= $className ?> cannot be reverted.\n";
-        return false;
     }
 }

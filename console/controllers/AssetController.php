@@ -26,7 +26,6 @@ class AssetController extends \yii\console\controllers\AssetController
         $manager = Yii::$app->getAssetManager();
         $manager->combineOptions['assetManager'] = $manager;
 
-        /** @noinspection PhpParamsInspection */
         $this->actionCompress($manager->combineOptions, Yii::getAlias($manager->combinedBundlesAlias));
     }
 

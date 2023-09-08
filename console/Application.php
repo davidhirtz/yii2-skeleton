@@ -55,6 +55,7 @@ class Application extends \yii\console\Application
         return array_merge(parent::coreCommands(), [
             'asset' => 'davidhirtz\yii2\skeleton\console\controllers\AssetController',
             'migrate' => 'davidhirtz\yii2\skeleton\console\controllers\MigrateController',
+            'maintenance' => 'davidhirtz\yii2\skeleton\console\controllers\MaintenanceController',
             'params' => 'davidhirtz\yii2\skeleton\console\controllers\ParamsController',
             'trail' => 'davidhirtz\yii2\skeleton\console\controllers\TrailController',
         ]);

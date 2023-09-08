@@ -1,0 +1,33 @@
+<?php
+
+// Check if the application is in maintenance mode...
+if (!file_exists($down = __DIR__ . '/maintenance.json')) {
+    return;
+}
+
+// Decode the "down" file's JSON...
+$data = json_decode(file_get_contents($down), true);
+
+// Redirect to the proper path if necessary...
+if (isset($data['redirect']) && $_SERVER['REQUEST_URI'] !== $data['redirect']) {
+    http_response_code(302);
+    header('Location: ' . $data['redirect']);
+    exit;
+}
+
+// Output the pre-rendered template...
+http_response_code($data['status'] ?? 503);
+
+if (!empty($data['retry'])) {
+    header('Retry-After: ' . $data['retry']);
+}
+
+if (!empty($data['refresh'])) {
+    header('Refresh: ' . $data['refresh']);
+}
+
+if (isset($data['template'])) {
+    echo $data['template'];
+}
+
+exit;

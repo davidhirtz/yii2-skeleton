@@ -13,11 +13,9 @@ use yii\web\Cookie;
 use yii\web\Response;
 
 /**
- * Class Application
- * @package davidhirtz\yii2\skeleton\web
+ * The extended web application class.
  *
  * @property Collection $authClientCollection
- * @property AssetManager $assetManager
  * @property DbManager $authManager
  * @property I18N $i18n
  * @property Request $request
@@ -27,7 +25,6 @@ use yii\web\Response;
  * @property User $user
  * @property View $view
  *
- * @method AssetManager getAssetManager()
  * @method DbManager getAuthManager()
  * @method I18N getI18n()
  * @method Mailer getMailer()
@@ -64,7 +61,6 @@ class Application extends \yii\web\Application
 
         parent::bootstrap();
 
-        $this->checkMaintenanceStatus();
         $this->setDefaultEmail();
     }
 
@@ -121,24 +117,13 @@ class Application extends \yii\web\Application
     }
 
     /**
-     * Checks if maintenance mode was set via config. If enabled this triggers {@link Maintenance::bootstrap()} on
-     * application bootstrap.
-     */
-    protected function checkMaintenanceStatus()
-    {
-        if (!empty($this->params['maintenance']) || !empty($this->getComponents()['maintenance']['enabled'])) {
-            $this->bootstrap[] = 'maintenance';
-        }
-    }
-
-    /**
-     * Sets default email account based on server name, this must be called after initialization.
+     * Sets default email address based on server name, this must be called after initialization.
      */
     protected function setDefaultEmail()
     {
         $this->params['email'] ??= ('hostmaster@' . $this->getRequest()->getServerName());
     }
-    
+
     /**
      * Sets default cookie `domain` and `sameSite` properties. The cookie domain can be set via `params` but must match
      * the actual host info, otherwise the session cookies cannot be registered.
