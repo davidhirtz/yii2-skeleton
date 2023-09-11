@@ -5,18 +5,18 @@ namespace davidhirtz\yii2\skeleton\validators;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use yii\base\InvalidConfigException;
 use yii\base\NotSupportedException;
+use yii\helpers\Inflector;
 use yii\validators\Validator;
 
 /**
- * Class RelationValidator
- * @package davidhirtz\yii2\skeleton\validators
+ * Validates a models relation.
  */
 class RelationValidator extends Validator
 {
     /**
-     * @var string the relation name
+     * @var string|null the relation name, leave empty to guess from attribute name.
      */
-    public $relation;
+    public ?string $relation = null;
 
     /**
      * @var bool whether validator should skip on empty. This defaults to `false` to typecast value and generate
@@ -27,28 +27,24 @@ class RelationValidator extends Validator
     /**
      * @var bool whether an error should be added when `attribute` is empty.
      */
-    public $required = false;
-
-    /**
-     * @inheritDoc
-     */
-    public function init()
-    {
-        if (!$this->relation) {
-            throw new InvalidConfigException('The "relation" property must be set.');
-        }
-
-        parent::init();
-    }
+    public bool $required = false;
 
     /**
      * Typecasts attribute and validates relation.
      *
      * @param ActiveRecord $model
      * @param string $attribute
+     * @throws InvalidConfigException
      */
-    public function validateAttribute($model, $attribute)
+    public function validateAttribute($model, $attribute): void
     {
+        $relation = $this->relation ?? lcfirst(Inflector::camelize(str_replace('_id', '', $attribute)));
+
+        if ($model->getRelation($relation, false) === null) {
+            $className = get_class($model);
+            throw new InvalidConfigException("Relation $relation not found in $className.");
+        }
+
         $columnSchema = $model::getTableSchema()->getColumn($attribute);
         $value = $columnSchema->phpTypecast($model->getAttribute($attribute));
         $model->setAttribute($attribute, $value);
@@ -56,9 +52,9 @@ class RelationValidator extends Validator
         if ($model->isAttributeChanged($attribute)) {
             if ($value) {
                 /** @var ActiveRecord $record */
-                $related = $model->{$this->relation};
+                $related = $model->{$relation};
 
-                if ((!$related || $related->getPrimaryKey() !== $value) && !$model->refreshRelation($this->relation)) {
+                if ((!$related || $related->getPrimaryKey() !== $value) && !$model->refreshRelation($relation)) {
                     $model->addInvalidAttributeError($attribute);
                 }
             } else {
@@ -66,15 +62,15 @@ class RelationValidator extends Validator
                     $model->addInvalidAttributeError($attribute);
                 }
 
-                $model->populateRelation($this->relation, null);
+                $model->populateRelation($relation, null);
             }
         }
     }
 
     /**
-     * @inheritDoc
+     * Not supported.
      */
-    public function validate($value, &$error = null)
+    public function validate($value, &$error = null): bool
     {
         throw new NotSupportedException(get_class($this) . ' does not support validate().');
     }
