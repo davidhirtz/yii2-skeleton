@@ -5,6 +5,6 @@
 </head>
 <body>
 <h1><?= Yii::t('skeleton', 'Maintenance'); ?></h1>
-<p><?= Yii::t('skeleton', 'We are currently performing a scheduled maintenance. Please try again in a few minutes.'); ?></p>
+<p><?= Yii::t('skeleton', 'This website is currently offline for a scheduled maintenance. Please try again in a few minutes.'); ?></p>
 </body>
 </html>
