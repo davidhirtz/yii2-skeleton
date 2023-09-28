@@ -19,12 +19,20 @@
   background-size: contain;
   vertical-align: middle;
 
+  &.de {
+    background-image: url(../images/flags/de.png);
+  }
+
   &.en-US {
     background-image: url(../images/flags/en-US.png);
   }
 
-  &.de {
-    background-image: url(../images/flags/de.png);
+  &.fr {
+    background-image: url(../images/flags/fr.png);
+  }
+
+  &.pt {
+    background-image: url(../images/flags/pt.png);
   }
 
   &.zh-CN {
