@@ -5,17 +5,9 @@ namespace davidhirtz\yii2\skeleton\db;
 use Yii;
 use yii\base\InvalidConfigException;
 
-/**
- * Class MigrationTrait
- * @package davidhirtz\yii2\skeleton\db
- */
 trait MigrationTrait
 {
-    /**
-     * @return string|null
-     * @throws InvalidConfigException
-     */
-    public function getTableOptions()
+    public function getTableOptions(): ?string
     {
         $db = Yii::$app->getDb();
 
@@ -26,25 +18,18 @@ trait MigrationTrait
         throw new InvalidConfigException();
     }
 
-    /**
-     * @param string $table
-     * @param array|string $attributes
-     * @param bool $allowNull
-     * @param mixed $except
-     */
-    public function addI18nColumns($table, $attributes, $allowNull = false, $except = null)
+    public function addI18nColumns(string $table, array $attributes, bool $allowNull = false, ?array $except = null): void
     {
         if ($attributes) {
             $schema = Yii::$app->getDb()->getSchema();
+            $tableSchema = $schema->getTableSchema($table);
             $i18n = Yii::$app->getI18n();
             $languages = $i18n->getLanguages();
 
-            if ($except === null) {
-                $except = [Yii::$app->sourceLanguage];
-            }
+            $except ??= [Yii::$app->sourceLanguage];
 
-            foreach ((array)$attributes as $attribute) {
-                $column = $schema->getTableSchema($table)->getColumn($attribute);
+            foreach ($attributes as $attribute) {
+                $column = $tableSchema->getColumn($attribute);
 
                 if ($column) {
                     $prevAttribute = $attribute;
@@ -63,7 +48,9 @@ trait MigrationTrait
                             $type->append("AFTER [[{$prevAttribute}]]");
                             $prevAttribute = $i18n->getAttributeName($attribute, $language);
 
-                            $this->addColumn($table, $prevAttribute, $type);
+                            if (!$tableSchema->getColumn($prevAttribute)) {
+                                $this->addColumn($table, $prevAttribute, $type);
+                            }
                         }
                     }
                 }
@@ -71,21 +58,19 @@ trait MigrationTrait
         }
     }
 
-    /**
-     * @param string $table
-     * @param array|string $attributes
-     * @param mixed $except
-     */
-    public function dropI18nColumns($table, $attributes, $except = null)
+    public function dropI18nColumns(string $table, array $attributes, ?array $except = []): void
     {
         if ($attributes) {
             $i18n = Yii::$app->getI18n();
             $languages = $i18n->getLanguages();
+            $tableSchema = Yii::$app->getDb()->getSchema()->getTableSchema($table);
 
-            foreach ((array)$attributes as $attribute) {
+            foreach ($attributes as $attribute) {
                 foreach ($languages as $language) {
-                    if (!$except || !in_array($language, $except)) {
-                        $this->dropColumn($table, $i18n->getAttributeName($attribute, $language));
+                    $column = $i18n->getAttributeName($attribute, $language);
+
+                    if (!in_array($language, $except) && $tableSchema->getColumn($column)) {
+                        $this->dropColumn($table, $column);
                     }
                 }
             }
