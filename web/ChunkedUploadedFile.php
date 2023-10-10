@@ -9,12 +9,9 @@ use Yii;
 use yii\web\UploadedFile;
 
 /**
- * Class ChunkedUploadedFile.
- * @package davidhirtz\yii2\skeleton\web
- *
  * @property string $partialName
  * @method static ChunkedUploadedFile getInstance($model, $attribute)
- * @method static ChunkedUploadedFile getInstanceByName($name)($name)
+ * @method static ChunkedUploadedFile getInstanceByName($name)
  */
 class ChunkedUploadedFile extends UploadedFile
 {
@@ -29,7 +26,7 @@ class ChunkedUploadedFile extends UploadedFile
     public $chunkSize;
 
     /**
-     * @var int temporary file life time in seconds
+     * @var int temporary file lifetime in seconds
      */
     public $lifetime = 86400;
 
@@ -72,7 +69,7 @@ class ChunkedUploadedFile extends UploadedFile
             $this->size = ArrayHelper::getValue($range, 3);
         }
 
-        // Unfortunately Yii initializes UploadedFile without checking the definitions first.
+        // Unfortunately, Yii initializes UploadedFile without checking the definitions first.
         if ($this->maxSize === null) {
             $this->maxSize = Yii::$container->getDefinitions()[static::class]['maxSize'] ?? null;
         }
