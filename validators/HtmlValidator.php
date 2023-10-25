@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\validators;
 
+use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\HtmlPurifier;
 use yii\validators\Validator;
@@ -20,8 +21,7 @@ class HtmlValidator extends Validator
     public array $excludedHtmlTags = [];
 
     /**
-     * @var array[] containing allowed HTML attributes, indexed by tag name. Use "*" as a key to allow the attributes on
-     * all tags.
+     * @var array[] containing allowed HTML attributes, indexed by tag name.
      */
     public array $allowedHtmlAttributes = [];
 
@@ -31,9 +31,9 @@ class HtmlValidator extends Validator
     public array $allowedCssProperties = [];
 
     /**
-     * @var array|string containing CSS classes that should be allowed.
+     * @var array containing CSS classes that should be allowed.
      */
-    public array|string $allowedClasses = [];
+    public array $allowedClasses = [];
 
     /**
      * @var bool whether images should be allowed. This is a shorthand for adding img[alt|height|src|title|width] to
@@ -79,7 +79,7 @@ class HtmlValidator extends Validator
         }
 
         // Sanitize user input
-        $this->allowedHtmlTags = array_filter($this->allowedHtmlTags);
+        $this->allowedHtmlTags = array_map('strtolower', array_filter($this->allowedHtmlTags));
 
         $defaultTags = [
             'a',
@@ -104,13 +104,13 @@ class HtmlValidator extends Validator
         }
 
         foreach ($defaultTags as $tag) {
-            if (!in_array($tag, $this->excludedHtmlTags)) {
+            if (!in_array($tag, $this->allowedHtmlTags) && !in_array($tag, $this->excludedHtmlTags)) {
                 $this->allowedHtmlTags[] = $tag;
             }
         }
 
         if (!isset($this->allowedHtmlAttributes['a']) && in_array('a', $this->allowedHtmlTags)) {
-            $this->allowedHtmlAttributes['a'] = ['href', 'title', 'target', 'rel'];
+            $this->allowedHtmlAttributes['a'] = ['href', 'rel', 'title', 'target'];
 
             if ($this->allowedClasses) {
                 $this->allowedHtmlAttributes['a'][] = 'class';
@@ -129,10 +129,15 @@ class HtmlValidator extends Validator
 
         foreach ($this->allowedHtmlTags as $tag) {
             if ($attributes = ($this->allowedHtmlAttributes[$tag] ?? false)) {
-                $tag .= '[' . (is_array($attributes) ? implode('|', $attributes) : $attributes) . ']';
+                if (is_array($attributes)) {
+                    sort($attributes);
+                    $attributes = implode('|', $attributes);
+                }
+
+                $tag .= "[$attributes]";
             }
 
-            $allowedHtmlTags[] = $tag . $attributes;
+            $allowedHtmlTags[] = $tag;
         }
 
         $this->purifierOptions['HTML.Allowed'] ??= $allowedHtmlTags;

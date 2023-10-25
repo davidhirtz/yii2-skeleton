@@ -20,7 +20,7 @@ class LoginFormTest extends Unit
         ];
     }
 
-    public function testLoginNoUser()
+    public function testLoginNoUser(): void
     {
         $form = new LoginForm([
             'email' => 'not_existing_email',
@@ -30,7 +30,7 @@ class LoginFormTest extends Unit
         static::assertFalse($form->validate(), 'model should not login user');
     }
 
-    public function testLoginWrongPassword()
+    public function testLoginWrongPassword(): void
     {
         $form = new LoginForm([
             'email' => 'owner@domain.com',
@@ -41,7 +41,7 @@ class LoginFormTest extends Unit
         static::assertArrayHasKey('email', $form->getErrors(), 'error message should be set');
     }
 
-    public function testLoginCorrect()
+    public function testLoginCorrect(): void
     {
         $form = new LoginForm([
             'email' => 'owner@domain.com',
@@ -52,7 +52,7 @@ class LoginFormTest extends Unit
         static::assertEmpty($form->getErrors(), 'error messages should not be set');
     }
 
-    public function testLoginWithGoogleAuthenticatorEmptyCode()
+    public function testLoginWithGoogleAuthenticatorEmptyCode(): void
     {
         $form = new LoginForm([
             'email' => 'f2a@domain.com',
@@ -63,7 +63,7 @@ class LoginFormTest extends Unit
         static::assertArrayHasKey('code', $form->getErrors(), 'error message should be set');
     }
 
-    public function testLoginWithGoogleAuthenticatorInvalidCode()
+    public function testLoginWithGoogleAuthenticatorInvalidCode(): void
     {
         $form = new LoginForm([
             'email' => 'f2a@domain.com',
@@ -75,7 +75,7 @@ class LoginFormTest extends Unit
         static::assertArrayHasKey('code', $form->getErrors(), 'error message should be set');
     }
 
-    public function testLoginWithGoogleAuthenticatorCorrect()
+    public function testLoginWithGoogleAuthenticatorCorrect(): void
     {
         Yii::$container->set(GoogleAuthenticatorValidator::class, [
             'currentTime' => 1609455600,

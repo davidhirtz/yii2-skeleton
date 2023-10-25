@@ -2,7 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
-use davidhirtz\yii2\skeleton\assets\CKEditorAsset;
+use davidhirtz\yii2\skeleton\assets\TinyMceAssetBundle;
 use davidhirtz\yii2\skeleton\assets\CKEditorBootstrapAsset;
 use davidhirtz\yii2\skeleton\assets\CKEditorExtraAsset;
 use davidhirtz\yii2\skeleton\validators\HtmlValidator;
@@ -256,7 +256,7 @@ class CKEditor extends InputWidget
 
         $view = $this->getView();
 
-        CKEditorAsset::register($view);
+        TinyMceAssetBundle::register($view);
         $view->registerJs('tinymce.init(' . Json::encode($options) . ')');
 
 //        $extraAsset = CKEditorExtraAsset::register($view);
