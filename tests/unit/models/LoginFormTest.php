@@ -8,16 +8,9 @@ use davidhirtz\yii2\skeleton\tests\unit\fixtures\UserFixture;
 use davidhirtz\yii2\skeleton\validators\GoogleAuthenticatorValidator;
 use Yii;
 
-/**
- * Class LoginFormTest
- * @package davidhirtz\yii2\skeleton\tests\unit\models
- */
 class LoginFormTest extends Unit
 {
-    /**
-     * @return array
-     */
-    public function _fixtures()
+    public function _fixtures(): array
     {
         return [
             'users' => [
