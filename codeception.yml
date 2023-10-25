@@ -1,4 +1,4 @@
-namespace: Tests
+namespace: davidhirtz\yii2\skeleton\tests
 bootstrap: _bootstrap.php
 support_namespace: Support
 paths:

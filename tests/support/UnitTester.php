@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Support;
+namespace davidhirtz\yii2\skeleton\tests\support;
 
 /**
  * Inherited Methods
@@ -19,9 +19,9 @@ namespace Tests\Support;
  *
  * @SuppressWarnings(PHPMD)
 */
-class AcceptanceTester extends \Codeception\Actor
+class UnitTester extends \Codeception\Actor
 {
-    use _generated\AcceptanceTesterActions;
+    use _generated\UnitTesterActions;
 
     /**
      * Define custom actions here
