@@ -196,13 +196,72 @@ class CKEditor extends InputWidget
      */
     protected function registerPlugin()
     {
-        $options = Json::encode($this->clientOptions);
+        //$options = $this->clientOptions;
+        $options = [];
+        $options['selector'] ??= '#' . $this->options['id'];
+        $options['promotion'] ??= false;
+        $options['statusbar'] ??= false;
+        $options['menubar'] ??= false;
+        $options['resize'] ??= true;
+
+        $options['toolbar'] ??= 'blockquote | styles |  h1 h2 h3 h4 bold italic underline strikethrough | link unlink | numlist bullist | table | code | fullscreen';
+        $options['plugins'] ??= ['code', 'fullscreen', 'link', 'lists', 'table'];
+
+        $options['link_class_list'] = [
+            [
+                'title' => 'NONE',
+                'value' => '',
+            ],
+            [
+                'title' => 'BTN',
+                'value' => 'btn',
+            ],
+        ];
+
+        $options['color_map_foreground'] = [
+            '000000', 'Black',
+            'FF0000', 'Red',
+            'FFFF00', 'Yellow',
+            '008000', 'Green',
+        ];
+
+        $options['custom_colors'] ??= false;
+
+        // Underline check
+        $options['formats']['underline'] = [
+            'inline' => 'u',
+            'exact' => true,
+        ];
+
+        $options['style_formats'] = [
+            [
+                'title' => 'Heading 1',
+                'format' => 'h1',
+            ],
+            [
+                'title' => 'Heading 2',
+                'format' => 'h2',
+            ],
+            [
+                'title' => 'Heading 3',
+                'format' => 'h3',
+            ],
+            [
+                'name' => 'green',
+                'title' => 'Green',
+                'inline' => 'span',
+                'classes' => ['green'],
+            ],
+        ];
+
         $view = $this->getView();
 
         CKEditorAsset::register($view);
-        $extraAsset = CKEditorExtraAsset::register($view);
+        $view->registerJs('tinymce.init(' . Json::encode($options) . ')');
 
-        $view->registerJs("CKEDITOR.replace('{$this->options['id']}', $options);");
-        $view->registerJs("CKEDITOR.plugins.addExternal( 'extra', '{$extraAsset->getPluginPath()}');CKEDITOR.buttons=" . Json::htmlEncode($this->extraButtons), $view::POS_READY, 'ckEditorExtra');
+//        $extraAsset = CKEditorExtraAsset::register($view);
+//
+//        $view->registerJs("CKEDITOR.replace('{$this->options['id']}', $options);");
+//        $view->registerJs("CKEDITOR.plugins.addExternal( 'extra', '{$extraAsset->getPluginPath()}');CKEDITOR.buttons=" . Json::htmlEncode($this->extraButtons), $view::POS_READY, 'ckEditorExtra');
     }
 }

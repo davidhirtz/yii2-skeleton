@@ -2,47 +2,55 @@
 
 namespace davidhirtz\yii2\skeleton\validators;
 
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
-use yii\base\InvalidConfigException;
 use yii\db\ActiveRecord;
 use yii\helpers\HtmlPurifier;
 use yii\validators\Validator;
 
-/**
- * Class HtmlValidator
- * @package davidhirtz\yii2\skeleton\validators
- */
 class HtmlValidator extends Validator
 {
     /**
-     * @var array containing tags like h1-h5 for format, table, th, td, tr for tables or blockquote, strike, em for font
-     * styles.
+     * @var array containing allowed HTML tags like h1-h5 for format, table, th, td, tr for tables or blockquote,
+     * strike, em for font styles.
      */
     public array $allowedHtmlTags = [];
 
     /**
-     * @var array|string
+     * @var array containing a list of excluded HTML tags. Use this to override the default allowedHtmlTags.
      */
-    public string|array $excludedHtmlTags = [];
+    public array $excludedHtmlTags = [];
 
     /**
-     * @var array|string
+     * @var array[] containing allowed HTML attributes, indexed by tag name. Use "*" as a key to allow the attributes on
+     * all tags.
      */
-    public string|array $allowedCssProperties = [];
+    public array $allowedHtmlAttributes = [];
 
     /**
-     * @var array|string
+     * @var array containing CSS properties that should be allowed.
      */
-    public string|array $allowedClasses = [];
+    public array $allowedCssProperties = [];
 
     /**
-     * @var array
+     * @var array|string containing CSS classes that should be allowed.
+     */
+    public array|string $allowedClasses = [];
+
+    /**
+     * @var bool whether images should be allowed. This is a shorthand for adding img[alt|height|src|title|width] to
+     * allowedHtmlTags.
+     */
+    public bool $allowImages = false;
+
+    /**
+     * @var bool whether tables should be allowed. This is a shorthand for adding table, th, td, tr to allowedHtmlTags.
+     */
+    public bool $allowTables = false;
+
+    /**
+     * @var array containing options for HtmlPurifier. This should not be needed in most cases.
      */
     public array $purifierOptions = [];
 
-    /**
-     * Init.
-     */
     public function init(): void
     {
         $this->purifierOptions = array_merge([
@@ -50,42 +58,98 @@ class HtmlValidator extends Validator
             'Attr.AllowedRel' => 'nofollow',
             'AutoFormat.RemoveEmpty' => true,
             'AutoFormat.AutoParagraph' => true,
-            'CSS.AllowedProperties' => 'text-decoration',
             'HTML.TargetBlank' => true,
         ], $this->purifierOptions);
 
-        if (isset($this->purifierOptions['HTML.Allowed'])) {
-            throw new InvalidConfigException('Please use HtmlValidator::$allowedHtmlTags instead of "HTML.Allowed"');
+        $this->setHtmlAllowed();
+        $this->setAllowedClasses();
+        $this->setAllowedProperties();
+
+        parent::init();
+    }
+
+    protected function setHtmlAllowed(): void
+    {
+        // Extract inline attributes for a tag (e.g. `a[href|rel]`) and add them to allowedHtmlAttributes.
+        foreach ($this->allowedHtmlTags as $key => $value) {
+            if (preg_match('/(\w+)\[([\w|]*)]/', $value, $matches)) {
+                $this->allowedHtmlTags[$key] = $matches[1];
+                $this->allowedHtmlAttributes[$matches[1]] ??= explode('|', $matches[2]);
+            }
         }
 
-        $this->allowedHtmlTags = ArrayHelper::merge($this->allowedHtmlTags, [
-            'a[href|rel|target]',
+        // Sanitize user input
+        $this->allowedHtmlTags = array_filter($this->allowedHtmlTags);
+
+        $defaultTags = [
+            'a',
             'br',
-            'div',
-            'img[alt|height|src|title|width]',
             'li',
             'ol',
             'p',
+            'span',
             'strong',
             'ul',
-        ]);
+        ];
 
+        if ($this->allowImages) {
+            $defaultTags[] = 'img';
+        }
+
+        if ($this->allowTables) {
+            $defaultTags[] = 'table';
+            $defaultTags[] = 'th';
+            $defaultTags[] = 'tr';
+            $defaultTags[] = 'td';
+        }
+
+        foreach ($defaultTags as $tag) {
+            if (!in_array($tag, $this->excludedHtmlTags)) {
+                $this->allowedHtmlTags[] = $tag;
+            }
+        }
+
+        if (!isset($this->allowedHtmlAttributes['a']) && in_array('a', $this->allowedHtmlTags)) {
+            $this->allowedHtmlAttributes['a'] = ['href', 'title', 'target', 'rel'];
+
+            if ($this->allowedClasses) {
+                $this->allowedHtmlAttributes['a'][] = 'class';
+            }
+        }
+
+        if (in_array('img', $this->allowedHtmlTags)) {
+            $this->allowedHtmlAttributes['img'] ??= ['alt', 'height', 'src', 'title', 'width'];
+        }
+
+        if (in_array('span', $this->allowedHtmlTags) && $this->allowedClasses) {
+            $this->allowedHtmlAttributes['span'] ??= ['class'];
+        }
+
+        $allowedHtmlTags = [];
+
+        foreach ($this->allowedHtmlTags as $tag) {
+            if ($attributes = ($this->allowedHtmlAttributes[$tag] ?? false)) {
+                $tag .= '[' . (is_array($attributes) ? implode('|', $attributes) : $attributes) . ']';
+            }
+
+            $allowedHtmlTags[] = $tag . $attributes;
+        }
+
+        $this->purifierOptions['HTML.Allowed'] ??= $allowedHtmlTags;
+    }
+
+    protected function setAllowedClasses(): void
+    {
         if ($this->allowedClasses) {
-            $this->purifierOptions['Attr.AllowedClasses'] ??= '';
-            $this->purifierOptions['Attr.AllowedClasses'] .= implode(',', (array)$this->allowedClasses);
-            $this->allowedHtmlTags[] = '*[class]';
+            $this->purifierOptions['Attr.AllowedClasses'] ??= $this->allowedClasses;
         }
+    }
 
-        $this->allowedHtmlTags = array_unique(array_filter(array_diff($this->allowedHtmlTags, $this->excludedHtmlTags)));
-        $this->purifierOptions['HTML.Allowed'] = implode(',', $this->allowedHtmlTags);
-
+    protected function setAllowedProperties(): void
+    {
         if ($this->allowedCssProperties) {
-            $this->purifierOptions['CSS.AllowedProperties'] ??= '';
-            $this->purifierOptions['CSS.AllowedProperties'] .= implode(',', (array)$this->allowedCssProperties);
+            $this->purifierOptions['CSS.AllowedProperties'] ??= $this->allowedCssProperties;
         }
-
-
-        parent::init();
     }
 
     /**
@@ -132,7 +196,7 @@ class HtmlValidator extends Validator
         $html = preg_replace('#(</?' . $blocks . '[^>]*>)\s*<br>#', '$1', $html);
         $html = preg_replace('#<br>(\s*</?(?:div|dd|dl|dt|li|ol|p|pre|table|tbody|td|th|ul)[^>]*>)#', '$1', $html);
 
-        // Remove empty elements at beginning and end of paragraphs.
+        // Remove empty elements at the beginning and end of paragraphs.
         $html = preg_replace("#\n*\s*<p>\n*\s*#", "\n<p>", $html);
         $html = preg_replace("#\n*\s*</p>\n*\s*#", "</p>\n", $html);
 

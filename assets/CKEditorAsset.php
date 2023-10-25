@@ -4,30 +4,16 @@ namespace davidhirtz\yii2\skeleton\assets;
 
 use yii\web\AssetBundle;
 
-/**
- * Class CKEditorAsset.
- * @package davidhirtz\yii2\skeleton\assets
- */
 class CKEditorAsset extends AssetBundle
 {
-    /**
-     * @var string
-     */
-    public $sourcePath = '@skeleton/assets/ckeditor/';
-
-    /**
-     * @var array
-     */
-    public $js = [
-        'ckeditor.js',
-        'adapters/jquery.js'
-    ];
-
-    /**
-     * @var array
-     */
-    public $depends = [
-        'yii\web\YiiAsset',
-        'yii\web\JqueryAsset'
+    public $sourcePath = '@vendor/tinymce/tinymce';
+    public $js = ['tinymce.min.js'];
+    public $publishOptions = [
+        'only' => [
+            'icons/',
+            'plugins/',
+            'skins/', // TODO can be removed with own skin
+            'tinymce.min.js',
+        ],
     ];
 }

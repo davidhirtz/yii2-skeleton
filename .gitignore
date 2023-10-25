@@ -1,5 +1,6 @@
-# Node
-node_modules
+# Development
+/node_modules
+/vendor
 
 # OS cache files
 Thumbs.db
