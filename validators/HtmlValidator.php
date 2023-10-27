@@ -2,13 +2,24 @@
 
 namespace davidhirtz\yii2\skeleton\validators;
 
-use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\HtmlPurifier;
 use yii\validators\Validator;
 
 class HtmlValidator extends Validator
 {
+    /**
+     * @var array|array[] containing CSS classes that should be allowed. Use tag name as a key and an array of allowed classes
+     * as value. Example: ['a' => ['btn', 'btn-primary']].
+     *
+     * Allowed classes can also have a human-readable name as key and the class name as value.
+     * Example: ['a' => ['Primary Button' => 'btn btn-primary']].
+     *
+     * For backwards compatibility, this can also be a simple array of allowed classes. These will be applied to link
+     * tags only
+     */
+    public array $allowedClasses = [];
+
     /**
      * @var array containing allowed HTML tags like h1-h5 for format, table, th, td, tr for tables or blockquote,
      * strike, em for font styles.
@@ -31,11 +42,6 @@ class HtmlValidator extends Validator
     public array $allowedCssProperties = [];
 
     /**
-     * @var array containing CSS classes that should be allowed.
-     */
-    public array $allowedClasses = [];
-
-    /**
      * @var bool whether images should be allowed. This is a shorthand for adding img[alt|height|src|title|width] to
      * allowedHtmlTags.
      */
@@ -53,6 +59,17 @@ class HtmlValidator extends Validator
 
     public function init(): void
     {
+        $this->setDefaultOptions();
+
+        $this->setHtmlAllowed();
+        $this->setAllowedClasses();
+        $this->setAllowedCssProperties();
+
+        parent::init();
+    }
+
+    protected function setDefaultOptions(): void
+    {
         $this->purifierOptions = array_merge([
             'Attr.AllowedFrameTargets' => '_blank',
             'Attr.AllowedRel' => 'nofollow',
@@ -60,12 +77,6 @@ class HtmlValidator extends Validator
             'AutoFormat.AutoParagraph' => true,
             'HTML.TargetBlank' => true,
         ], $this->purifierOptions);
-
-        $this->setHtmlAllowed();
-        $this->setAllowedClasses();
-        $this->setAllowedProperties();
-
-        parent::init();
     }
 
     protected function setHtmlAllowed(): void
@@ -80,6 +91,11 @@ class HtmlValidator extends Validator
 
         // Sanitize user input
         $this->allowedHtmlTags = array_map('strtolower', array_filter($this->allowedHtmlTags));
+
+        // Transform legacy allowedClasses to an array of allowed classes for the link tag.
+        if (key($this->allowedClasses) === 0) {
+            $this->allowedClasses = ['a' => $this->allowedClasses];
+        }
 
         $defaultTags = [
             'a',
@@ -111,18 +127,16 @@ class HtmlValidator extends Validator
 
         if (!isset($this->allowedHtmlAttributes['a']) && in_array('a', $this->allowedHtmlTags)) {
             $this->allowedHtmlAttributes['a'] = ['href', 'rel', 'title', 'target'];
-
-            if ($this->allowedClasses) {
-                $this->allowedHtmlAttributes['a'][] = 'class';
-            }
         }
 
         if (in_array('img', $this->allowedHtmlTags)) {
             $this->allowedHtmlAttributes['img'] ??= ['alt', 'height', 'src', 'title', 'width'];
         }
 
-        if (in_array('span', $this->allowedHtmlTags) && $this->allowedClasses) {
-            $this->allowedHtmlAttributes['span'] ??= ['class'];
+        foreach ($this->allowedClasses as $tag => $classes) {
+            if (in_array($tag, $this->allowedHtmlTags)) {
+                $this->allowedHtmlAttributes[$tag][] = 'class';
+            }
         }
 
         $allowedHtmlTags = [];
@@ -140,20 +154,22 @@ class HtmlValidator extends Validator
             $allowedHtmlTags[] = $tag;
         }
 
-        $this->purifierOptions['HTML.Allowed'] ??= $allowedHtmlTags;
+        $this->purifierOptions['HTML.Allowed'] ??= implode(',', $allowedHtmlTags);
     }
 
     protected function setAllowedClasses(): void
     {
         if ($this->allowedClasses) {
-            $this->purifierOptions['Attr.AllowedClasses'] ??= $this->allowedClasses;
+            $allowedClasses = array_unique(array_merge(...array_values($this->allowedClasses)));
+            $this->purifierOptions['Attr.AllowedClasses'] ??= array_values($allowedClasses);
         }
     }
 
-    protected function setAllowedProperties(): void
+    protected function setAllowedCssProperties(): void
     {
         if ($this->allowedCssProperties) {
-            $this->purifierOptions['CSS.AllowedProperties'] ??= $this->allowedCssProperties;
+            $allowedProperties = array_unique(array_merge(...array_values($this->allowedCssProperties)));
+            $this->purifierOptions['CSS.AllowedProperties'] ??= array_values($allowedProperties);
         }
     }
 
