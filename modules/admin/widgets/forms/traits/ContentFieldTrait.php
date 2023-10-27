@@ -11,15 +11,6 @@ use yii\helpers\ArrayHelper;
  */
 trait ContentFieldTrait
 {
-    /**
-     * @var string
-     */
-    public $ctaCssClassName = 'cta';
-
-    /**
-     * @param array $options
-     * @return string
-     */
     public function contentField($options = []): string
     {
         if ($this->model->contentType) {
