@@ -230,6 +230,9 @@ class TinyMceEditor extends InputWidget
             $this->clientOptions['style_formats'] ??= $this->stylesFormats;
 
             $this->toolbar[] = 'styles';
+        }
+
+        if ($this->toolbar) {
             $this->toolbar[] = '|';
         }
 
