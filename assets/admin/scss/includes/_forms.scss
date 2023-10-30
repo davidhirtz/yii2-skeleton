@@ -447,6 +447,7 @@ input[type="button"], input[type="submit"], button {
     padding-bottom: $app-form-sticky-padding-bottom;
     border-top: $app-form-sticky-border-width $border-style $border-color;
     background-color: $card-bg;
+    z-index: 2;
   }
 }
 
