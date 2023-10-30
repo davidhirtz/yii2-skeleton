@@ -4,6 +4,7 @@ namespace davidhirtz\yii2\skeleton\widgets\forms;
 
 use davidhirtz\yii2\skeleton\assets\AdminAsset;
 use davidhirtz\yii2\skeleton\assets\TinyMceAssetBundle;
+use davidhirtz\yii2\skeleton\assets\TinyMceLanguageAssetBundle;
 use davidhirtz\yii2\skeleton\assets\TinyMceSkinAssetBundle;
 use davidhirtz\yii2\skeleton\validators\HtmlValidator;
 use Yii;
@@ -40,7 +41,6 @@ class TinyMceEditor extends InputWidget
      * @var int the height of the editor in pixels.
      */
     public int $height = 400;
-
 
     /**
      * @var string|null the language to use, if null, the application's language will be used.
@@ -91,8 +91,12 @@ class TinyMceEditor extends InputWidget
         }
 
         $bundle = Yii::$app->getAssetManager()->getBundle(TinyMceSkinAssetBundle::class);
-        $this->skin ??= "$bundle->baseUrl/skins/ui/default";
-        $this->languageUrl ??= "$bundle->baseUrl/langs/";
+        $this->skin ??= "$bundle->baseUrl/ui/default";
+
+        if ($this->languageUrl === null) {
+            $bundle = Yii::$app->getAssetManager()->getBundle(TinyMceLanguageAssetBundle::class);
+            $this->languageUrl = $bundle->baseUrl;
+        }
 
         if (!$this->contentCss) {
             $bundle = Yii::$app->getAssetManager()->getBundle(AdminAsset::class);
@@ -133,6 +137,7 @@ class TinyMceEditor extends InputWidget
         $this->clientOptions['resize'] ??= true;
         $this->clientOptions['paste_block_drop'] ??= false;
         $this->clientOptions['height'] ??= $this->height;
+        $this->clientOptions['highlight_on_focus'] ??= true;
 
         if ($this->language !== Yii::$app->sourceLanguage) {
             $this->clientOptions['language'] ??= match ($this->language) {

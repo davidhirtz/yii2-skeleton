@@ -246,7 +246,8 @@ $input-height-inner: $input-height !default;
 $input-height-inner-half: math.div($input-height, 2) !default;
 $input-height-inner-quarter: math.div($input-height, 4) !default;
 
-$app-form-label-padding-top: $input-padding-y + $input-border-width;
+$app-form-label-padding-top: $input-padding-y + $input-border-width !default;
+$app-form-content-label-padding-top: $app-form-label-padding-top * 2 !default;
 $app-form-label-font-weight: bold !default;
 $caret-spacing: 8px !default;
 

@@ -4,9 +4,9 @@ namespace davidhirtz\yii2\skeleton\assets;
 
 use yii\web\AssetBundle;
 
-class TinyMceSkinAssetBundle extends AssetBundle
+class TinyMceLanguageAssetBundle extends AssetBundle
 {
-    public $sourcePath = '@skeleton/assets/tinymce/skins';
+    public $sourcePath = '@skeleton/assets/tinymce/langs';
 
     public $depends = [
         TinyMceAssetBundle::class,

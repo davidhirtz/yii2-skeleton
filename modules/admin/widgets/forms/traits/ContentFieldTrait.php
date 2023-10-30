@@ -15,6 +15,8 @@ trait ContentFieldTrait
     {
         if ($this->model->contentType) {
             $attribute = $this->model->getI18nAttributeName('content', ArrayHelper::remove($options, 'language'));
+            $options['labelOptions']['class'] ??= 'col-form-label col-form-content-label col-md-3';
+
             $field = $this->field($this->model, $attribute, $options);
 
             return $this->model->contentType === 'html' ? $field->widget(TinyMceEditor::class, $this->getContentConfig()) : $field->textarea();
