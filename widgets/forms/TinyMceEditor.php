@@ -29,7 +29,7 @@ class TinyMceEditor extends InputWidget
      * @var string|null containing additional content CSS styles.
      * @link https://www.tiny.cloud/docs/tinymce/6/add-css-options/#content_style
      */
-    public string|null $contentStyle = null;
+    public ?string $contentStyle = null;
 
     /**
      * @var array containing all TinyMCE formats, only set directly to override default behavior.
@@ -41,16 +41,28 @@ class TinyMceEditor extends InputWidget
      */
     public int $height = 400;
 
+
+    /**
+     * @var string|null the language to use, if null, the application's language will be used.
+     */
+    public ?string $language = null;
+
+    /**
+     * @var string|null the language URL to use, if null, the skin asset URL will be used.
+     */
+    public ?string $languageUrl = null;
+
     /**
      * @var array containing all TinyMCE plugins, only set directly to override default behavior.
      */
     public array $plugins = [];
 
     /**
-     * @var string|false the TinyMCE skin to use. If the string is a path, it will be resolved to the editor's `skin_url`.
+     * @var string|null|false the TinyMCE skin to use. If the string is a path, it will be resolved to the editor's
+     * `skin_url`. If false, no skin will be used.
      * @link https://www.tiny.cloud/docs/tinymce/6/editor-skin/#skin
      */
-    public string|false $skin = false;
+    public string|null|false $skin = null;
 
     /**
      * @var array containing all TinyMCE style dropdown options, only set directly to override default behavior.
@@ -74,10 +86,13 @@ class TinyMceEditor extends InputWidget
             $this->validator = Yii::createObject($this->validator);
         }
 
-        if (!$this->skin) {
-            $bundle = Yii::$app->getAssetManager()->getBundle(TinyMceSkinAssetBundle::class);
-            $this->skin = "$bundle->baseUrl/skins/ui/default";
+        if (!$this->language) {
+            $this->language = Yii::$app->language;
         }
+
+        $bundle = Yii::$app->getAssetManager()->getBundle(TinyMceSkinAssetBundle::class);
+        $this->skin ??= "$bundle->baseUrl/skins/ui/default";
+        $this->languageUrl ??= "$bundle->baseUrl/langs/";
 
         if (!$this->contentCss) {
             $bundle = Yii::$app->getAssetManager()->getBundle(AdminAsset::class);
@@ -118,6 +133,18 @@ class TinyMceEditor extends InputWidget
         $this->clientOptions['resize'] ??= true;
         $this->clientOptions['paste_block_drop'] ??= false;
         $this->clientOptions['height'] ??= $this->height;
+
+        if ($this->language !== Yii::$app->sourceLanguage) {
+            $this->clientOptions['language'] ??= match ($this->language) {
+                'fr' => 'fr_FR',
+                'pt' => 'pt_BR',
+                'zh-CN' => 'zh_Hans',
+                'zh-TW' => 'zh_Hant',
+                default => $this->language,
+            };
+
+            $this->clientOptions['language_url'] ??= "$this->languageUrl/{$this->clientOptions['language']}.js";
+        }
 
         if ($this->skin) {
             $this->clientOptions[str_contains($this->skin, '/') ? 'skin_url' : 'skin'] ??= $this->skin;

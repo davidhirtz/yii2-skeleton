@@ -19,13 +19,17 @@ body {
     background-color: $input-focus-bg;
   }
 
-  & *:first-child {
+  & > *:first-child {
     margin-top: 0 !important;
   }
 
-  & *:last-child {
+  & > *:last-child {
     margin-bottom: 0 !important;
   }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 1rem 0;
 }
 
 table {
