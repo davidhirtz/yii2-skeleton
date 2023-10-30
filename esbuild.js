@@ -31,21 +31,14 @@ let context = await esbuild.context({
             out: 'assets/admin/css/admin.min'
         },
         {
+            in: 'assets/admin/scss/tinymce.scss',
+            out: 'assets/admin/css/tinymce.min'
+        },
+        {
             in: 'assets/admin/js/admin.js',
             out: 'assets/admin/js/admin.min'
         },
         {
-            in: 'assets/ckeditor-bootstrap/scss/editor.scss',
-            out: 'assets/ckeditor-bootstrap/editor'
-        },
-        {
-            in: 'assets/ckeditor-bootstrap/scss/dialog.scss',
-            out: 'assets/ckeditor-bootstrap/dialog'
-        },
-        {
-            in: 'assets/ckeditor-extra/js/plugin.js',
-            out: 'assets/ckeditor-extra/js/plugin.min'
-        },{
             in: 'assets/fontawesome/css/all.css',
             out: 'assets/fontawesome/css/all.min'
         },

@@ -8,4 +8,8 @@ class TinyMceAssetBundle extends AssetBundle
 {
     public $sourcePath = '@vendor/tinymce/tinymce/';
     public $js = ['tinymce.min.js'];
+
+    public $depends = [
+        TinyMceSkinAssetBundle::class,
+    ];
 }

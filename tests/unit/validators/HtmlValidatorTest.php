@@ -3,29 +3,26 @@
 namespace davidhirtz\yii2\skeleton\tests\unit\validators;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\tests\support\UnitTester;
 use davidhirtz\yii2\skeleton\validators\HtmlValidator;
 
 class HtmlValidatorTest extends Unit
 {
-    protected UnitTester $tester;
-
     protected array $defaultAllowedHtmlTags = ['a', 'br', 'li', 'ol', 'p', 'span', 'strong', 'ul'];
     protected array $defaultAllowedHtmlAttributes = [
         'a' => ['href', 'title', 'target', 'rel'],
     ];
 
-    public function testDefaultConfig()
+    public function testDefaultConfig(): void
     {
         $validator = new HtmlValidator();
 
         static::assertEqualsCanonicalizing($this->defaultAllowedHtmlTags, $validator->allowedHtmlTags);
         static::assertEqualsCanonicalizing($this->defaultAllowedHtmlAttributes, $validator->allowedHtmlAttributes);
 
-        static::assertTrue(in_array('a[href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']));
+        static::assertStringContainsString('a[href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']);
     }
 
-    public function testSetAdditionalHtmlTags()
+    public function testSetAdditionalHtmlTags(): void
     {
         $additionalHtmlTags = ['h2', 'h3'];
         $allowedHtmlTags = array_merge($this->defaultAllowedHtmlTags, $additionalHtmlTags);
@@ -38,7 +35,7 @@ class HtmlValidatorTest extends Unit
         static::assertEqualsCanonicalizing($this->defaultAllowedHtmlAttributes, $validator->allowedHtmlAttributes);
     }
 
-    public function testSetAdditionalLegacyHtmlTags()
+    public function testSetAdditionalLegacyHtmlTags(): void
     {
         $validator = new HtmlValidator([
             'allowedHtmlTags' => ['a[href|target|rel]', 'H2'],
@@ -48,10 +45,10 @@ class HtmlValidatorTest extends Unit
 
         static::assertEqualsCanonicalizing($expectedAllowedHtmlTags, $validator->allowedHtmlTags);
         static::assertEqualsCanonicalizing(['href', 'rel', 'target'], $validator->allowedHtmlAttributes['a'] ?? []);
-        static::assertTrue(in_array('a[href|rel|target]', $validator->purifierOptions['HTML.Allowed']));
+        static::assertStringContainsString('a[href|rel|target]', $validator->purifierOptions['HTML.Allowed']);
     }
 
-    public function testSetExcludedHtmlTags()
+    public function testSetExcludedHtmlTags(): void
     {
         $excludedHtmlTags = ['a', 'strong'];
         $allowedHtmlTags = array_diff($this->defaultAllowedHtmlTags, $excludedHtmlTags);
@@ -61,10 +58,30 @@ class HtmlValidatorTest extends Unit
         ]);
 
         static::assertEqualsCanonicalizing($allowedHtmlTags, $validator->allowedHtmlTags);
-        static::assertFalse(in_array('a[href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']));
+        static::assertStringNotContainsString('a[href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']);
     }
 
-    public function testSetAllowedClasses()
+    public function testAllowedClasses(): void
+    {
+        $allowedClasses = [
+            'a' => ['btn', 'cta'],
+            'span' => [
+                'Named 1' => 'marked',
+                'Named 2' => 'highlight',
+            ],
+        ];
+
+        $validator = new HtmlValidator([
+            'allowedClasses' => $allowedClasses,
+        ]);
+
+        static::assertEqualsCanonicalizing(['marked', 'highlight'], $validator->allowedClasses['span'] ?? []);
+        static::assertEqualsCanonicalizing(['btn', 'cta', 'marked', 'highlight'], $validator->purifierOptions['Attr.AllowedClasses']);
+        static::assertStringContainsString('a[class|href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']);
+        static::assertStringContainsString('span[class]', $validator->purifierOptions['HTML.Allowed']);
+    }
+
+    public function testSetAllowedClassesLegacyLink(): void
     {
         $allowedClasses = ['btn', 'cta'];
 
@@ -72,12 +89,12 @@ class HtmlValidatorTest extends Unit
             'allowedClasses' => $allowedClasses,
         ]);
 
-        static::assertEqualsCanonicalizing($allowedClasses, $validator->allowedClasses);
-        static::assertTrue(in_array('a[class|href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']));
-        static::assertTrue(in_array('span[class]', $validator->purifierOptions['HTML.Allowed']));
+        static::assertEqualsCanonicalizing($validator->allowedClasses, ['a' => $allowedClasses]);
+        static::assertEqualsCanonicalizing($allowedClasses, $validator->purifierOptions['Attr.AllowedClasses']);
+        static::assertStringContainsString('a[class|href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']);
     }
 
-    public function testSetAllowImagesWithAttributes()
+    public function testSetAllowImagesWithAttributes(): void
     {
         $validator = new HtmlValidator([
             'allowImages' => true,
@@ -87,6 +104,6 @@ class HtmlValidatorTest extends Unit
         ]);
 
         static::assertEqualsCanonicalizing(['alt', 'src'], $validator->allowedHtmlAttributes['img'] ?? []);
-        static::assertTrue(in_array('img[alt|src]', $validator->purifierOptions['HTML.Allowed']));
+        static::assertStringContainsString('img[alt|src]', $validator->purifierOptions['HTML.Allowed']);
     }
 }

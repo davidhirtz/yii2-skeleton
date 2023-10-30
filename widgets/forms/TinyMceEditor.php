@@ -2,7 +2,9 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
+use davidhirtz\yii2\skeleton\assets\AdminAsset;
 use davidhirtz\yii2\skeleton\assets\TinyMceAssetBundle;
+use davidhirtz\yii2\skeleton\assets\TinyMceSkinAssetBundle;
 use davidhirtz\yii2\skeleton\validators\HtmlValidator;
 use Yii;
 use yii\helpers\Html;
@@ -15,12 +17,40 @@ class TinyMceEditor extends InputWidget
     /**
      * @var array containing all TinyMCE options, only set directly to override default behavior.
      */
-    public $clientOptions = [];
+    public array $clientOptions = [];
+
+    /**
+     * @var array|string containing TinyMCE content CSS files, if empty, the skin's content CSS file will be used.
+     * @link https://www.tiny.cloud/docs/tinymce/6/add-css-options/#content_css
+     */
+    public array|string $contentCss = [];
+
+    /**
+     * @var string|null containing additional content CSS styles.
+     * @link https://www.tiny.cloud/docs/tinymce/6/add-css-options/#content_style
+     */
+    public string|null $contentStyle = null;
+
+    /**
+     * @var array containing all TinyMCE formats, only set directly to override default behavior.
+     */
+    public array $formats = [];
+
+    /**
+     * @var int the height of the editor in pixels.
+     */
+    public int $height = 400;
 
     /**
      * @var array containing all TinyMCE plugins, only set directly to override default behavior.
      */
     public array $plugins = [];
+
+    /**
+     * @var string|false the TinyMCE skin to use. If the string is a path, it will be resolved to the editor's `skin_url`.
+     * @link https://www.tiny.cloud/docs/tinymce/6/editor-skin/#skin
+     */
+    public string|false $skin = false;
 
     /**
      * @var array containing all TinyMCE style dropdown options, only set directly to override default behavior.
@@ -42,6 +72,16 @@ class TinyMceEditor extends InputWidget
     {
         if ($this->validator && !$this->validator instanceof HtmlValidator) {
             $this->validator = Yii::createObject($this->validator);
+        }
+
+        if (!$this->skin) {
+            $bundle = Yii::$app->getAssetManager()->getBundle(TinyMceSkinAssetBundle::class);
+            $this->skin = "$bundle->baseUrl/skins/ui/default";
+        }
+
+        if (!$this->contentCss) {
+            $bundle = Yii::$app->getAssetManager()->getBundle(AdminAsset::class);
+            $this->contentCss = "$bundle->baseUrl/css/tinymce.min.css";
         }
 
         parent::init();
@@ -77,6 +117,19 @@ class TinyMceEditor extends InputWidget
         $this->clientOptions['menubar'] ??= false;
         $this->clientOptions['resize'] ??= true;
         $this->clientOptions['paste_block_drop'] ??= false;
+        $this->clientOptions['height'] ??= $this->height;
+
+        if ($this->skin) {
+            $this->clientOptions[str_contains($this->skin, '/') ? 'skin_url' : 'skin'] ??= $this->skin;
+        }
+
+        if ($this->contentCss) {
+            $this->clientOptions['content_css'] ??= $this->contentCss;
+        }
+
+        if ($this->contentStyle) {
+            $this->clientOptions['content_style'] ??= $this->contentStyle;
+        }
 
         if ($allowedElements = ($this->validator?->purifierOptions['HTML.Allowed'] ?? false)) {
             $this->clientOptions['valid_elements'] ??= $allowedElements;
@@ -88,6 +141,7 @@ class TinyMceEditor extends InputWidget
             foreach ($this->validator->allowedClasses as $tag => $classes) {
                 $allowedClasses[$tag] = array_values($classes);
             }
+
             $this->clientOptions['valid_classes'] ??= $allowedClasses;
         }
     }
@@ -145,6 +199,10 @@ class TinyMceEditor extends InputWidget
 
             $this->toolbar[] = 'styles';
             $this->toolbar[] = '|';
+        }
+
+        if ($this->formats) {
+            $this->clientOptions['formats'] ??= $this->formats;
         }
     }
 
