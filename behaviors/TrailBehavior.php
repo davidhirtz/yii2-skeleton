@@ -49,9 +49,8 @@ class TrailBehavior extends Behavior
 
     public function attach($owner): void
     {
-        if (!$this->modelClass) {
-            $this->modelClass = get_class($owner);
-        }
+        $this->modelClass ??= get_class($owner);
+        $this->sanitizeModelClass();
 
         parent::attach($owner);
     }
@@ -75,13 +74,6 @@ class TrailBehavior extends Behavior
     public function afterUpdate(AfterSaveEvent $event): void
     {
         $this->afterSave(false, $event->changedAttributes);
-    }
-
-    public function afterDelete(): void
-    {
-        $trail = $this->createTrail();
-        $trail->type = Trail::TYPE_DELETE;
-        $this->insertTrail($trail);
     }
 
     protected function afterSave($insert, $changedAttributes): void
@@ -108,6 +100,26 @@ class TrailBehavior extends Behavior
             $trail->type = $insert ? Trail::TYPE_CREATE : Trail::TYPE_UPDATE;
             $trail->data = $data;
             $this->insertTrail($trail);
+        }
+    }
+
+    public function afterDelete(): void
+    {
+        $trail = $this->createTrail();
+        $trail->type = Trail::TYPE_DELETE;
+        $this->insertTrail($trail);
+    }
+
+    /**
+     * Tries to find the original model class by the definition in the DI container
+     */
+    protected function sanitizeModelClass(): void
+    {
+        foreach (Yii::$container->getDefinitions() as $definition => $options) {
+            if ($options['class'] ?? null === $this->modelClass) {
+                $this->modelClass = $definition;
+                break;
+            }
         }
     }
 

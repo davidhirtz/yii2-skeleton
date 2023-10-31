@@ -47,7 +47,7 @@ trait ActiveFormTrait
     /**
      * @var bool whether bottom buttons should be sticky
      */
-    public $hasStickyButtons = false;
+    public bool $hasStickyButtons = false;
 
     /**
      * @var array containing a custom list of languages used for i18n aware attributes.

@@ -17,13 +17,10 @@ use yii\validators\NumberValidator;
 use yii\validators\StringValidator;
 
 /**
- * Class ActiveRecord
- * @package davidhirtz\yii2\skeleton\db
- *
  * @method ActiveQuery hasMany($class, array $link)
  * @method ActiveQuery hasOne($class, array $link)
- * @method static ActiveRecord|\yii\db\ActiveRecord findOne($condition)
- * @method static ActiveRecord[] findAll($condition)
+ * @method static static|null findOne($condition)
+ * @method static static[] findAll($condition)
  * @method static Connection getDb()
  */
 class ActiveRecord extends \yii\db\ActiveRecord
@@ -42,7 +39,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
 
     /**
      * @var array containing the attribute names of attributes which should be used with I18N features such as
-     * {@link ActiveRecord::getI18nAttribute()}, {@link ActiveRecord::getI18nRules()}, etc.
+     * {@link \davidhirtz\yii2\cms\models\ActiveRecord::getI18nAttribute()}, {@link \davidhirtz\yii2\cms\models\ActiveRecord::getI18nRules()}, etc.
      */
     public $i18nAttributes = [];
 
@@ -52,29 +49,29 @@ class ActiveRecord extends \yii\db\ActiveRecord
     private $_validators;
 
     /**
-     * @var array {@see ActiveRecord::activeAttributes()}
+     * @var array {@see \davidhirtz\yii2\cms\models\ActiveRecord::activeAttributes()}
      */
     private $_activeAttributes;
 
     /**
-     * @var array {@see ActiveRecord::safeAttributes()}
+     * @var array {@see \davidhirtz\yii2\cms\models\ActiveRecord::safeAttributes()}
      */
     private $_safeAttributes;
 
     /**
-     * @var array {@see ActiveRecord::scenarios()}
+     * @var array {@see \davidhirtz\yii2\cms\models\ActiveRecord::scenarios()}
      */
     private $_scenarios;
 
     /**
      * @var bool whether the current operation is part of a more complex process, this can be used to postpone conditional
-     * updates after save or delete. See {@link ActiveRecord::getIsBatch()}.
+     * updates after save or delete. See {@link \davidhirtz\yii2\cms\models\ActiveRecord::getIsBatch()}.
      */
     private $_isBatch = false;
 
     /**
-     * @var bool whether the record was deleted, this is set in {@link ActiveRecord::afterDelete()} and can be used
-     * via {@link ActiveRecord::isDeleted()}.
+     * @var bool whether the record was deleted, this is set in {@link \davidhirtz\yii2\cms\models\ActiveRecord::afterDelete()} and can be used
+     * via {@link \davidhirtz\yii2\cms\models\ActiveRecord::isDeleted()}.
      */
     private $_isDeleted = false;
 
@@ -298,7 +295,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
-     * Overrides original method by triggering {@see ActiveRecord::EVENT_CREATE_VALIDATORS} event. This enables attached
+     * Overrides original method by triggering {@see \davidhirtz\yii2\cms\models\ActiveRecord::EVENT_CREATE_VALIDATORS} event. This enables attached
      * behaviors to manipulate {@see Model::rules()} by modifying the array object returned by
      * {@see Model::getValidators()}.
      *

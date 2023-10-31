@@ -4,6 +4,7 @@ namespace davidhirtz\yii2\skeleton\i18n;
 
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\i18n\PhpMessageSource;
 
 /**
  * Class I18N.
@@ -13,10 +14,7 @@ use yii\helpers\ArrayHelper;
  */
 class I18N extends \yii\i18n\I18N
 {
-    /**
-     * @var array
-     */
-    public static $languageLabels = [
+    public static array $languageLabels = [
         'de' => 'Deutsch',
         'en-US' => 'English',
         'fr' => 'Français',
@@ -25,20 +23,13 @@ class I18N extends \yii\i18n\I18N
         'zh-TW' => '繁體中文', // zh-HANT
     ];
 
-    /**
-     * @var array
-     * @see getLanguages()
-     */
-    private $_languages;
+    private ?array $_languages = null;
 
-    /**
-     * @inheritdoc
-     */
-    public function init()
+    public function init(): void
     {
         if (!isset($this->translations['skeleton'])) {
             $this->translations['skeleton'] = [
-                'class' => 'yii\i18n\PhpMessageSource',
+                'class' => PhpMessageSource::class,
                 'sourceLanguage' => Yii::$app->sourceLanguage,
                 'basePath' => '@skeleton/messages',
             ];
@@ -49,12 +40,8 @@ class I18N extends \yii\i18n\I18N
 
     /**
      * Calls the given callback with the given language set as application language.
-     *
-     * @param string $language
-     * @param callable $callback
-     * @return mixed
      */
-    public function callback(string $language, callable $callback)
+    public function callback(string $language, callable $callback): mixed
     {
         $prevLanguage = Yii::$app->language;
         Yii::$app->language = $language;
@@ -65,10 +52,7 @@ class I18N extends \yii\i18n\I18N
         return $result;
     }
 
-    /**
-     * @return array|null
-     */
-    public function getLanguages()
+    public function getLanguages(): array
     {
         if ($this->_languages === null) {
             $this->_languages = [Yii::$app->language];
@@ -77,40 +61,27 @@ class I18N extends \yii\i18n\I18N
         return $this->_languages;
     }
 
-    /**
-     * @param array|string $languages
-     */
-    public function setLanguages($languages)
+    /** @noinspection PhpUnused */
+    public function setLanguages(array|string $languages): void
     {
         $this->_languages = array_unique((array)$languages);
     }
 
-    /**
-     * @param string $language
-     * @return mixed
-     */
-    public function getLabel($language)
+    public function getLabel(string $language): mixed
     {
         return ArrayHelper::getValue(static::$languageLabels, $language);
     }
 
-    /**
-     * @return string
-     */
-    public function getLanguageCode()
+    public function getLanguageCode(): string
     {
         return substr(Yii::$app->language, 0, 2);
     }
 
     /**
-     * Returns the translated attribute name for given language. If language is omitted
-     * the current application language is used.
-     *
-     * @param string $attribute
-     * @param string $language
-     * @return string
+     * Returns the translated attribute name for given language. If the language is omitted, the current application
+     * language is used.
      */
-    public function getAttributeName($attribute, $language = null)
+    public function getAttributeName(string $attribute, ?string $language = null): string
     {
         if (!$language) {
             $language = Yii::$app->language;
@@ -120,20 +91,13 @@ class I18N extends \yii\i18n\I18N
     }
 
     /**
-     * Returns a flat array with all translated attribute name for given languages.
-     * If languages is omitted all available languages are used.
-     *
-     * @param array|string $attributes
-     * @param array $languages
-     * @return array
+     * Returns a flat array with all translated attribute names for given languages. If languages are omitted, all
+     * available languages are used.
      */
-    public function getAttributeNames($attributes, $languages = null)
+    public function getAttributeNames(array|string $attributes, ?array $languages = null): array
     {
+        $languages ??= $this->getLanguages();
         $names = [];
-
-        if ($languages === null) {
-            $languages = $this->getLanguages();
-        }
 
         foreach ((array)$attributes as $attribute) {
             foreach ($languages as $language) {
@@ -144,12 +108,7 @@ class I18N extends \yii\i18n\I18N
         return $names;
     }
 
-    /**
-     * @param string $tableName
-     * @param string $language
-     * @return string
-     */
-    public function getTableName($tableName, $language = null)
+    public function getTableName(string $tableName, ?string $language = null): string
     {
         return '{{%' . $this->getAttributeName($tableName, $language) . '}}';
     }

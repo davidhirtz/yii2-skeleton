@@ -11,6 +11,7 @@ use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\TrailGridView;
 use ReflectionClass;
 use Yii;
+use yii\db\ActiveRecordInterface;
 
 /**
  * Class Trail
@@ -285,41 +286,28 @@ abstract class Trail extends ActiveRecord
 
     /**
      * Finds the model based on the given model string. If a model supports `i18n` tables, the corresponding language
-     * will be added to the model, separated by `::`. E.g. `\davidhirtz\yii2\cms\models\Entry::en_US`.
-     *
-     * @param ActiveRecord|string $model
-     * @param string $modelId
-     * @return ActiveRecord
+     * will be added to the model, separated by "::" like `\davidhirtz\yii2\cms\models\Entry::en_US`.
      */
-    protected static function findModelById($model, $modelId)
+    protected static function findModelById(string $model, int|string $modelId): ?ActiveRecord
     {
         $model = explode('::', $model);
-        $prevLanguage = Yii::$app->language;
+        $language = $model[1] ?? Yii::$app->language;
 
-        if ($language = ($model[1] ?? false)) {
-            Yii::$app->language = $language;
-        }
+        return Yii::$app->getI18n()->callback($language, function () use ($model, $modelId) {
+            $instance = Yii::createObject($model[0]);
 
-        $instance = $model[0]::instance();
-
-        if ($instance instanceof ActiveRecord) {
-            // Prevent PHP warnings if record has a primary key mismatch
-            if ($keys = @array_combine($instance::primaryKey(), explode('-', $modelId))) {
-                $instance = $model[0]::findOne($keys) ?: $instance;
+            if ($instance instanceof ActiveRecord) {
+                // Prevent PHP warnings if record has a primary key mismatch
+                if ($keys = @array_combine($instance::primaryKey(), explode('-', $modelId))) {
+                    $instance = $instance::findOne($keys) ?? $instance;
+                }
             }
-        }
 
-        Yii::$app->language = $prevLanguage;
-
-        return $instance;
+            return $instance;
+        });
     }
 
-    /**
-     * @param ActiveRecord|null $model
-     * @param int|string|null $id
-     * @return array
-     */
-    public static function getAdminRouteByModel($model, $id = null)
+    public static function getAdminRouteByModel(?ActiveRecord $model, int|string|null $id = null): array
     {
         if ($model) {
             /** @var TrailBehavior $behavior */
@@ -331,10 +319,8 @@ abstract class Trail extends ActiveRecord
     }
 
     /**
-     * The message translations are set via `Yii::t()` here so the translation controller will pick them up. The actual
+     * The message translations are set via `Yii::t()` so the translation controller will pick them up. The actual
      * translation will happen in {@link TrailGridView}.
-     *
-     * @return array[]
      */
     public static function getTypes(): array
     {
@@ -395,9 +381,6 @@ abstract class Trail extends ActiveRecord
         ];
     }
 
-    /**
-     * @inheritDoc
-     */
     public function attributeLabels(): array
     {
         return array_merge(parent::attributeLabels(), [
@@ -408,18 +391,12 @@ abstract class Trail extends ActiveRecord
         ]);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function formName()
+    public function formName(): string
     {
         return 'Trail';
     }
 
-    /**
-     * @inheritDoc
-     */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%trail}}';
     }
