@@ -5,18 +5,13 @@ namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\TrailActiveDataProvider;
 use davidhirtz\yii2\skeleton\web\Controller;
+use Yii;
 use yii\filters\AccessControl;
+use yii\web\Response;
 
-/**
- * Class TrailController
- * @package davidhirtz\yii2\skeleton\modules\admin\controllers
- */
 class TrailController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'access' => [
@@ -32,17 +27,11 @@ class TrailController extends Controller
         ];
     }
 
-    /**
-     * @param int $id
-     * @param string $model
-     * @param int $user
-     * @return string
-     */
-    public function actionIndex($id = null, $model = null, $user = null)
+    public function actionIndex(?int $id = null, ?string $model = null, ?int $user = null): Response|string
     {
         $model = $model ? explode('@', $model) : null;
 
-        $provider = new TrailActiveDataProvider([
+        $provider = Yii::$container->get(TrailActiveDataProvider::class, [], [
             'user' => $user ? User::findOne($user) : null,
             'model' => $model[0] ?? null,
             'modelId' => $model[1] ?? null,

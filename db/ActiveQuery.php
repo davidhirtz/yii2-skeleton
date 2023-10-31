@@ -12,9 +12,19 @@ use yii\db\Query;
 class ActiveQuery extends \yii\db\ActiveQuery
 {
     /**
-     * @var int
+     * @var int|null the global status to be used in WHERE clause with `whereStatus()`.
      */
-    protected static $_status;
+    protected static ?int $_status = null;
+
+    /**
+     * Makes sure the container instantiates the model class before calling parent constructor.
+     * Not sure why this is not part of the framework.
+     */
+    public function __construct($modelClass, $config = [])
+    {
+        $modelClass = Yii::createObject($modelClass)::class;
+        parent::__construct($modelClass, $config);
+    }
 
     /**
      * Makes sure only relations with any relational values are actually loaded. This gets rid of a lot of useless
@@ -51,7 +61,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
         list(, $alias) = $this->getTableNameAndAlias();
 
         foreach ($columns as &$column) {
-            $column = "{$alias}.[[{$column}]]";
+            $column = "$alias.[[$column]]";
         }
 
         return $columns;
@@ -83,7 +93,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
                         $attribute = isset($attributes[$column]) ? $column : array_search($column, $attributes);
 
                         if ($attribute) {
-                            $column = "{$alias}.[[" . $i18n->getAttributeName($attribute) . ']]';
+                            $column = "$alias.[[" . $i18n->getAttributeName($attribute) . ']]';
                             $this->select[$column] = $column;
                             unset($this->select[$key]);
                         }
@@ -109,7 +119,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
     public function whereLower(array $attributes): static
     {
         foreach ($attributes as $attribute => $value) {
-            $this->andWhere(["LOWER({$attribute})" => mb_strtolower($value, Yii::$app->charset)]);
+            $this->andWhere(["LOWER($attribute)" => mb_strtolower($value, Yii::$app->charset)]);
         }
 
         return $this;

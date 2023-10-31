@@ -6,7 +6,9 @@ use davidhirtz\yii2\skeleton\db\Identity;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\datetime\DateTime;
 use Yii;
+use yii\web\IdentityInterface;
 use yii\web\MultiFieldSession;
+use yii\web\Response;
 
 /**
  * Class User
@@ -20,22 +22,22 @@ class User extends \yii\web\User
     /**
      * @var bool whether users can log in
      */
-    public $enableLogin = true;
+    public bool $enableLogin = true;
 
     /**
      * @var bool whether the user can log in without a confirmed email address
      */
-    public $enableUnconfirmedEmailLogin = true;
+    public bool $enableUnconfirmedEmailLogin = true;
 
     /**
      * @var bool whether users can reset their password
      */
-    public $enablePasswordReset = true;
+    public bool $enablePasswordReset = true;
 
     /**
      * @var bool whether users can create new accounts
      */
-    public $enableSignup = false;
+    public bool $enableSignup = false;
 
     /**
      * @var bool whether login via cookie or long living access token is allowed
@@ -45,39 +47,25 @@ class User extends \yii\web\User
     /**
      * @var bool whether 2FA via Google authenticator should be available.
      */
-    public $enableGoogleAuthenticator = true;
+    public bool $enableGoogleAuthenticator = true;
 
     /**
-     * @var bool whether the role based access management always returns `false` if user is not logged in
+     * @var bool whether the role-based access management always returns `false` if user is not logged in
      */
-    public $disableRbacForGuests = true;
+    public bool $disableRbacForGuests = true;
 
     /**
-     * @var bool whether the role based access management always returns `true` if user is the site owner.
+     * @var bool whether the role-based access management always returns `true` if user is the site owner.
      * @see \davidhirtz\yii2\skeleton\models\User::isOwner()
      */
-    public $disableRbacForOwner = true;
+    public bool $disableRbacForOwner = true;
 
-    /**
-     * @var string
-     */
     public $identityClass = 'davidhirtz\yii2\skeleton\db\Identity';
-
-    /**
-     * @var array|null defaults to 403 error, if null admin module will set the correct
-     * login url.
-     */
     public $loginUrl = null;
 
-    /**
-     * @var int
-     */
-    private $_userCount;
+    private ?int $_userCount = null;
 
-    /**
-     * @inheritDoc
-     */
-    public function init()
+    public function init(): void
     {
         if (!$this->enableLogin) {
             $this->enableUnconfirmedEmailLogin = false;
@@ -87,10 +75,7 @@ class User extends \yii\web\User
         parent::init();
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function loginRequired($checkAjax = true, $checkAcceptHeader = true)
+    public function loginRequired($checkAjax = true, $checkAcceptHeader = true): ?Response
     {
         // Set flash message for required logins.
         if (!$checkAjax || !Yii::$app->getRequest()->getIsAjax()) {
@@ -100,14 +85,9 @@ class User extends \yii\web\User
         return parent::loginRequired($checkAjax, $checkAcceptHeader);
     }
 
-    /**
-     * @param Identity $identity
-     * @param bool $cookieBased
-     * @param int $duration
-     */
-    protected function afterLogin($identity, $cookieBased, $duration)
+    protected function afterLogin($identity, $cookieBased, $duration): void
     {
-        // Update login count, cache previous login date in session and insert new record to login-log.
+        // Update login count, cache previous login date in session and insert new record to logins log.
         $session = Yii::$app->getSession();
         $session->set('last_login_timestamp', $identity->last_login ? $identity->last_login->getTimestamp() : null);
 
@@ -139,7 +119,7 @@ class User extends \yii\web\User
      * Removes user id from session.
      * @param Identity $identity
      */
-    protected function afterLogout($identity)
+    protected function afterLogout($identity): void
     {
         $session = Yii::$app->getSession();
 
@@ -154,10 +134,7 @@ class User extends \yii\web\User
         parent::afterLogout($identity);
     }
 
-    /**
-     * @param Identity $identity
-     */
-    private function insertLogin($identity)
+    private function insertLogin(IdentityInterface $identity): void
     {
         if ($browser = Yii::$app->getRequest()->getUserAgent()) {
             $browser = mb_substr($browser, 0, 255, Yii::$app->charset);
@@ -178,10 +155,7 @@ class User extends \yii\web\User
         Yii::$app->getDb()->createCommand()->insert(UserLogin::tableName(), $columns)->execute();
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function can($permissionName, $params = [], $allowCaching = true)
+    public function can($permissionName, $params = [], $allowCaching = true): bool
     {
         if ($this->disableRbacForGuests && $this->getIsGuest()) {
             return false;
@@ -190,45 +164,31 @@ class User extends \yii\web\User
         return !(!$this->disableRbacForOwner || !$this->identity->isOwner()) || parent::can($permissionName, $params, $allowCaching);
     }
 
-    /**
-     * @return bool
-     */
-    public function isLoginEnabled()
+    /** @noinspection PhpUnused */
+    public function isLoginEnabled(): bool
     {
         return (bool)$this->enableLogin;
     }
 
-    /**
-     * @return bool
-     */
-    public function isUnconfirmedEmailLoginEnabled()
+    public function isUnconfirmedEmailLoginEnabled(): bool
     {
         return (bool)$this->enableUnconfirmedEmailLogin;
     }
 
-    /**
-     * @return bool
-     */
-    public function isPasswordResetEnabled()
+    public function isPasswordResetEnabled(): bool
     {
         return (bool)$this->enablePasswordReset;
     }
 
-    /**
-     * @return bool
-     */
-    public function isSignupEnabled()
+    public function isSignupEnabled(): bool
     {
         return $this->enableSignup || $this->getUserCount() == 0;
     }
 
-    /**
-     * @return int|string
-     */
-    public function getUserCount()
+    public function getUserCount(): int
     {
         if ($this->_userCount === null) {
-            $this->_userCount = \davidhirtz\yii2\skeleton\models\User::find()->count();
+            $this->_userCount = (int)\davidhirtz\yii2\skeleton\models\User::find()->count();
         }
 
         return $this->_userCount;

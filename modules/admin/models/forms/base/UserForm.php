@@ -119,7 +119,7 @@ class UserForm extends User
     /**
      * @inheritdoc
      */
-    public function afterSave($insert, $changedAttributes)
+    public function afterSave($insert, $changedAttributes): void
     {
         if (!$insert) {
             if (array_key_exists('password_hash', $changedAttributes)) {
@@ -181,7 +181,7 @@ class UserForm extends User
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return array_merge(parent::attributeLabels(), [
             'newPassword' => $this->getIsNewRecord() ? Yii::t('skeleton', 'Password') : Yii::t('skeleton', 'New password'),

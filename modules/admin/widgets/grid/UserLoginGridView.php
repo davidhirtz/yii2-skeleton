@@ -17,15 +17,9 @@ use yii\helpers\Html;
  */
 class UserLoginGridView extends GridView
 {
-    /**
-     * @var User
-     */
-    public $user;
+    public ?User $user = null;
 
-    /**
-     * Sets default columns.
-     */
-    public function init()
+    public function init(): void
     {
         if (!$this->columns) {
             $this->columns = [
@@ -51,7 +45,8 @@ class UserLoginGridView extends GridView
                     'attribute' => 'user',
                     'visible' => !$this->user,
                     'content' => function (UserLogin $login) {
-                        return $login->user ? Html::a(($name = $login->user->getUsername()) ?: Html::tag('span', Yii::t('skeleton', 'User'), ['class' => !$name ? 'text-muted' : null]), ['view', 'user' => $login->user_id]) : '';
+                        $name = $login->user->getUsername();
+                        return $login->user ? Html::a($name ?: Html::tag('span', Yii::t('skeleton', 'User'), ['class' => !$name ? 'text-muted' : null]), ['view', 'user' => $login->user_id]) : '';
                     }
                 ],
                 [

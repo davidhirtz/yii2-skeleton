@@ -163,7 +163,7 @@ class SignupForm extends Identity
     /**
      * Validates signup creation time and user credentials.
      */
-    public function afterValidate()
+    public function afterValidate(): void
     {
         if (!$this->hasErrors()) {
             $this->validateIp();
@@ -189,7 +189,7 @@ class SignupForm extends Identity
      * @param bool $insert
      * @param array $changedAttributes
      */
-    public function afterSave($insert, $changedAttributes)
+    public function afterSave($insert, $changedAttributes): void
     {
         if ($insert) {
             if (static::getSessionToken() !== null) {

@@ -107,7 +107,7 @@ class UserForm extends User
     /**
      * @inheritDoc
      */
-    public function afterSave($insert, $changedAttributes)
+    public function afterSave($insert, $changedAttributes): void
     {
         if (!$insert) {
             $session = Yii::$app->getSession();
@@ -192,7 +192,7 @@ class UserForm extends User
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return array_merge(parent::attributeLabels(), [
             'newPassword' => Yii::t('skeleton', 'New password'),

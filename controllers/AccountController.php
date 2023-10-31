@@ -508,7 +508,7 @@ class AccountController extends Controller
             throw new InvalidCallException();
         }
 
-        $user = new AuthClientSignupForm();
+        $user = AuthClientSignupForm::create();
         $user->setClient($auth->getClientClass());
 
         if (!$user->save()) {

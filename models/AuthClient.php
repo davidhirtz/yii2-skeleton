@@ -122,7 +122,7 @@ class AuthClient extends ActiveRecord
             ->one();
 
         if (!$auth) {
-            $auth = new AuthClient();
+            $auth = AuthClient::create();
             $auth->setAttributes($attributes, false);
         }
 

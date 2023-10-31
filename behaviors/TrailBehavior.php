@@ -30,35 +30,24 @@ class TrailBehavior extends Behavior
     private const VALUE_TYPE_DATETIME = 'datetime';
 
     /**
-     * @var string|null if not set, the default class of `owner` will be used
+     * @var class-string|null if not set, the default class of `owner` will be used
      */
-    public $modelClass;
+    public ?string $modelClass = null;
 
     /**
      * The excluded default attributes if the owner class does not override {@link TrailBehavior::getTrailAttributes()}
-     * @var string[]
      */
-    public $exclude = [
+    public array $exclude = [
         'position',
         'updated_by_user_id',
         'updated_at',
         'created_at',
     ];
 
-    /**
-     * @var string {@see TrailBehavior::getTrailModelName()}
-     */
-    private $_trailModelName;
+    private ?string $_trailModelName = null;
+    private static array $_modelAttributes = [];
 
-    /**
-     * @var array
-     */
-    private static $_modelAttributes = [];
-
-    /**
-     * @inheritDoc
-     */
-    public function attach($owner)
+    public function attach($owner): void
     {
         if (!$this->modelClass) {
             $this->modelClass = get_class($owner);
@@ -67,10 +56,7 @@ class TrailBehavior extends Behavior
         parent::attach($owner);
     }
 
-    /**
-     * @return array|string[]
-     */
-    public function events()
+    public function events(): array
     {
         return [
             ActiveRecord::EVENT_AFTER_INSERT => 'afterInsert',
@@ -79,37 +65,26 @@ class TrailBehavior extends Behavior
         ];
     }
 
-    /**
-     * @param AfterSaveEvent $event
-     */
-    public function afterInsert($event)
+    /** @noinspection PhpUnused */
+    public function afterInsert(AfterSaveEvent $event): void
     {
         $this->afterSave(true, $event->changedAttributes);
     }
 
-    /**
-     * @param AfterSaveEvent $event
-     */
-    public function afterUpdate($event)
+    /** @noinspection PhpUnused */
+    public function afterUpdate(AfterSaveEvent $event): void
     {
         $this->afterSave(false, $event->changedAttributes);
     }
 
-    /**
-     * @see TrailBehavior::events()
-     */
-    public function afterDelete()
+    public function afterDelete(): void
     {
         $trail = $this->createTrail();
         $trail->type = Trail::TYPE_DELETE;
         $this->insertTrail($trail);
     }
 
-    /**
-     * @param bool $insert
-     * @param array $changedAttributes
-     */
-    protected function afterSave($insert, $changedAttributes)
+    protected function afterSave($insert, $changedAttributes): void
     {
         /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         $attributes = $this->owner->getTrailAttributes();
@@ -136,12 +111,9 @@ class TrailBehavior extends Behavior
         }
     }
 
-    /**
-     * @return Trail
-     */
-    protected function createTrail()
+    protected function createTrail(): Trail
     {
-        $trail = new Trail();
+        $trail = Trail::create();
         $trail->model = $this->modelClass;
         $trail->model_id = $this->owner instanceof ActiveRecord ? $this->owner->getPrimaryKey(true) : null;
 
@@ -151,11 +123,7 @@ class TrailBehavior extends Behavior
         return $trail;
     }
 
-    /**
-     * Inserts trails in try/catch block.
-     * @param Trail $trail
-     */
-    protected function insertTrail($trail)
+    protected function insertTrail(Trail $trail): void
     {
         try {
             $trail->insert();
@@ -179,49 +147,38 @@ class TrailBehavior extends Behavior
 
     /**
      * This method can be overridden by the owner class to provide a more detailed description of the model
-     * @return string|null
      */
-    public function getTrailModelName()
+    public function getTrailModelName(): string
     {
-        if ($this->_trailModelName === null) {
-            $this->_trailModelName = (new ReflectionClass($this->owner))->getShortName();
-        }
-
+        $this->_trailModelName ??= (new ReflectionClass($this->owner))->getShortName();
         return $this->_trailModelName;
     }
 
     /**
      * This method can be overridden by the owner class to provide additional information about the model
-     * @return string|void
      */
-    public function getTrailModelType()
+    public function getTrailModelType(): ?string
     {
+        return null;
     }
 
     /**
      * This method can be overridden by the owner class to provide a route to the admin route of the model
-     * @return array|false
      */
-    public function getTrailModelAdminRoute()
+    public function getTrailModelAdminRoute(): array|false
     {
         return false;
     }
 
     /**
      * This method can be overridden by the owner class to provide a real parent class
-     * @return array|void
      */
-    public function getTrailParents()
+    public function getTrailParents(): ?array
     {
         return null;
     }
 
-    /**
-     * @param string $attribute
-     * @param mixed $value
-     * @return string
-     */
-    public function formatTrailAttributeValue($attribute, $value)
+    public function formatTrailAttributeValue(string $attribute, mixed $value): string
     {
         switch ($this->getDefaultAttributeValues()[$attribute] ?? false) {
             case static::VALUE_TYPE_BOOLEAN:
@@ -248,9 +205,8 @@ class TrailBehavior extends Behavior
 
     /**
      * Cycles through the owner model validators to detect default display values for attribute names.
-     * @return array
      */
-    protected function getDefaultAttributeValues()
+    protected function getDefaultAttributeValues(): array
     {
         $className = get_class($this->owner);
 

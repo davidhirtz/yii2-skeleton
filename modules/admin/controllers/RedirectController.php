@@ -54,13 +54,9 @@ class RedirectController extends Controller
         ]);
     }
 
-    /**
-     * @param int|null $type
-     * @return string|Response
-     */
-    public function actionCreate($type = null)
+    public function actionCreate(?int $type = null): Response|string
     {
-        $redirect = new Redirect();
+        $redirect = Redirect::create();
         $redirect->type = $type;
         $request = Yii::$app->getRequest();
 

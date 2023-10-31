@@ -55,12 +55,9 @@ class AuthItem extends ActiveRecord
             ->viaTable(Yii::$app->getAuthManager()->assignmentTable, ['item_name' => 'name']);
     }
 
-    /**
-     * @return AuthItemQuery
-     */
-    public static function find()
+    public static function find(): AuthItemQuery
     {
-        return new AuthItemQuery(get_called_class());
+        return Yii::createObject(AuthItemQuery::class, [get_called_class()]);
     }
 
     /**

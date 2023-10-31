@@ -52,7 +52,7 @@ class GridView extends \yii\grid\GridView
     /**
      * @var array the url route for sortable widget
      */
-    public $orderRoute = ['order'];
+    public array $orderRoute = ['order'];
 
     /**
      * @var array containing the table options
@@ -212,14 +212,14 @@ class GridView extends \yii\grid\GridView
                 $summary = match ($count) {
                     1 => Yii::t('skeleton', 'Displaying the only result matching "{search}".', $params),
                     0 => Yii::t('skeleton', 'Sorry, no results found matching matching "{search}".', $params),
-                    $pagination === false, $totalCount => Yii::t('skeleton', 'Displaying all {totalCount, number} results matching "{search}".', $params),
+                    $totalCount => Yii::t('skeleton', 'Displaying all {totalCount, number} results matching "{search}".', $params),
                     default => Yii::t('skeleton', 'Displaying {begin, number}-{end, number} of {totalCount, number} results matching "{search}".', $params),
                 };
             } else {
                 $summary = match ($count) {
                     1 => Yii::t('skeleton', 'Displaying the only record.', $params),
                     0 => Yii::t('skeleton', 'Sorry, no records found.', $params),
-                    $pagination === false, $totalCount => Yii::t('skeleton', 'Displaying all {totalCount, number} records.', $params),
+                    $totalCount => Yii::t('skeleton', 'Displaying all {totalCount, number} records.', $params),
                     default => Yii::t('skeleton', 'Displaying {begin, number}-{end, number} of {totalCount, number} records.', $params),
                 };
             }
@@ -235,22 +235,28 @@ class GridView extends \yii\grid\GridView
         return Html::alert($summary, $summaryOptions);
     }
 
-    /**
-     * @return string
-     */
+    protected function initHeader(): void
+    {
+    }
+
     public function renderHeader(): string
     {
+        $this->initHeader();
+
         $options = ArrayHelper::remove($this->header, 'options', []);
         Html::addCssClass($options, 'grid-view-header');
 
         return $this->header ? Html::tag('div', is_array($this->header) ? $this->renderRows($this->header) : $this->header, $options) : '';
     }
 
-    /**
-     * @return string
-     */
+    protected function initFooter(): void
+    {
+    }
+
     public function renderFooter(): string
     {
+        $this->initFooter();
+
         $options = ArrayHelper::remove($this->footer, 'options', []);
         Html::addCssClass($options, 'grid-view-footer');
 

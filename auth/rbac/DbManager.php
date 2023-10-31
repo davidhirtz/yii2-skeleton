@@ -47,15 +47,9 @@ class DbManager extends \yii\rbac\DbManager
         return false;
     }
 
-    /**
-     * @param int $type
-     * @param int $userId
-     * @param Assignment $assignment
-     * @return Trail
-     */
-    private function createTrail($type, $assignment, $userId)
+    private function createTrail(int $type, Assignment $assignment, int $userId): Trail
     {
-        $trail = new Trail();
+        $trail = Trail::create();
         $trail->type = $type;
         $trail->model = User::class;
         $trail->model_id = $userId;

@@ -11,6 +11,7 @@ use davidhirtz\yii2\timeago\Timeago;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use davidhirtz\yii2\timeago\TimeagoColumn;
 use Yii;
+use yii\db\ActiveRecordInterface;
 
 /**
  * Class UserGridView
@@ -23,10 +24,7 @@ class UserGridView extends GridView
 {
     use StatusGridViewTrait;
 
-    /**
-     * @inheritdoc
-     */
-    public function init()
+    public function init(): void
     {
         if (!$this->columns) {
             $this->columns = [
@@ -78,10 +76,7 @@ class UserGridView extends GridView
         parent::init();
     }
 
-    /**
-     * @return array
-     */
-    public function nameColumn()
+    public function nameColumn(): array
     {
         return [
             'attribute' => 'name',
@@ -92,10 +87,7 @@ class UserGridView extends GridView
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function emailColumn()
+    public function emailColumn(): array
     {
         return [
             'attribute' => 'email',
@@ -112,10 +104,7 @@ class UserGridView extends GridView
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function lastLoginColumn()
+    public function lastLoginColumn(): array
     {
         return [
             'attribute' => 'last_login',
@@ -128,10 +117,7 @@ class UserGridView extends GridView
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function createdAtColumn()
+    public function createdAtColumn(): array
     {
         return [
             'class' => TimeagoColumn::class,
@@ -140,10 +126,7 @@ class UserGridView extends GridView
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function buttonsColumn()
+    public function buttonsColumn(): array
     {
         return [
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
@@ -154,19 +137,12 @@ class UserGridView extends GridView
         ];
     }
 
-    /**
-     * @return string
-     */
-    protected function getCreateUserButton()
+    protected function getCreateUserButton(): string
     {
         return Html::a(Html::iconText('user-plus', Yii::t('skeleton', 'New User')), ['/admin/user/create'], ['class' => 'btn btn-primary']);
     }
 
-    /**
-     * @param $user
-     * @return array|string
-     */
-    protected function getRowButtons($user)
+    protected function getRowButtons(User $user): array|string
     {
         if ($route = $this->getRoute($user)) {
             return Html::a(Icon::tag('wrench'), $route, ['class' => 'btn btn-primary']);
@@ -186,18 +162,13 @@ class UserGridView extends GridView
 
     /**
      * @param User $model
-     * @param array $params
-     * @return array|false
      */
-    protected function getRoute($model, $params = [])
+    protected function getRoute(ActiveRecordInterface $model, array $params = []): array|false
     {
         return Yii::$app->getUser()->can(User::AUTH_USER_UPDATE, ['user' => $model]) ? array_merge(['/admin/user/update', 'id' => $model->id], $params) : false;
     }
 
-    /**
-     * @return User
-     */
-    public function getModel()
+    public function getModel(): User
     {
         return User::instance();
     }

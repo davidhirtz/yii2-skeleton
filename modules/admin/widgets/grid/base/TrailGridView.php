@@ -14,6 +14,7 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\TypeGridViewTrait;
 use davidhirtz\yii2\timeago\TimeagoColumn;
 use Jfcherng\Diff\DiffHelper;
 use Yii;
+use yii\db\ActiveRecordInterface;
 use yii\helpers\Url;
 
 /**
@@ -27,22 +28,13 @@ class TrailGridView extends GridView
     use MessageSourceTrait;
     use TypeGridViewTrait;
 
-    /**
-     * @var array
-     */
-    private $_trailModels;
+    private ?array $_trailModels = null;
 
-    /**
-     * @var string[]
-     */
     public $tableOptions = [
         'class' => 'table table-striped trail',
     ];
 
-    /**
-     * @inheritDoc
-     */
-    public function init()
+    public function init(): void
     {
         $this->rowOptions = function (Trail $trail) {
             return [
@@ -91,9 +83,6 @@ class TrailGridView extends GridView
         ];
     }
 
-    /**
-     * @return array
-     */
     public function dataColumn(): array
     {
         return [
@@ -102,11 +91,7 @@ class TrailGridView extends GridView
         ];
     }
 
-    /**
-     * @param Trail $trail
-     * @return mixed|string
-     */
-    public function dataColumnContent($trail)
+    public function dataColumnContent(Trail $trail): string
     {
         if ($trail->isAuthPermissionType()) {
             return $this->renderAuthPermissionContent($trail);
@@ -129,11 +114,7 @@ class TrailGridView extends GridView
         return $this->renderMessageContent($trail);
     }
 
-    /**
-     * @param Trail $trail
-     * @return string
-     */
-    protected function renderAuthPermissionContent($trail)
+    protected function renderAuthPermissionContent(Trail $trail): string
     {
         $params = [
             'permission' => Html::tag($trail->isAuthPermissionAssignType() ? 'ins' : 'del', $this->getTranslations()[$trail->message] ?? $trail->message),
@@ -143,11 +124,7 @@ class TrailGridView extends GridView
             Yii::t('skeleton', 'Permission {permission} revoked', $params);
     }
 
-    /**
-     * @param Trail $trail
-     * @return string
-     */
-    protected function renderCreateAttributesContent($trail)
+    protected function renderCreateAttributesContent(Trail $trail): string
     {
         $model = $trail->getModelClass();
         $rows = [];
@@ -166,11 +143,7 @@ class TrailGridView extends GridView
         return $this->renderTrailAttributes($rows, ['class' => 'trail-insert']);
     }
 
-    /**
-     * @param Trail $trail
-     * @return string
-     */
-    protected function renderUpdateAttributesContent($trail)
+    protected function renderUpdateAttributesContent(Trail $trail): string
     {
         $model = $trail->getModelClass();
         $rows = [];
@@ -196,31 +169,18 @@ class TrailGridView extends GridView
         return $this->renderTrailAttributes($rows, ['class' => 'trail-update']);
     }
 
-    /**
-     * @param array $rows
-     * @param array $options
-     * @return string
-     */
-    protected function renderTrailAttributes($rows, $options = []): string
+    protected function renderTrailAttributes(array $rows, array $options = []): string
     {
         Html::addCssClass($options, 'trail-table');
         return $rows ? Html::tag('table', Html::tableBody($rows), $options) : '';
     }
 
-    /**
-     * @param Trail $trail
-     * @return string
-     */
-    protected function renderDataModelContent($trail)
+    protected function renderDataModelContent(Trail $trail): string
     {
         return $this->renderI18nTrailMessage($trail, $trail->getDataModelClass());
     }
 
-    /**
-     * @param Trail $trail
-     * @return string
-     */
-    protected function renderMessageContent($trail)
+    protected function renderMessageContent(Trail $trail): string
     {
         if ($trail->message) {
             return trim(($this->getTranslations()[$trail->message] ?? $trail->message) . ' ' . $this->renderDataTrailLink($trail));
@@ -229,14 +189,10 @@ class TrailGridView extends GridView
         return $this->renderI18nTrailMessage($trail, $trail->getModelClass());
     }
 
-    /**
-     * @param Trail $trail
-     * @param ActiveRecord|TrailBehavior $model
-     * @return string
-     */
-    protected function renderI18nTrailMessage($trail, $model)
+    protected function renderI18nTrailMessage(Trail $trail, ?ActiveRecordInterface $model = null): string
     {
         if ($model) {
+            /** @var TrailBehavior $model */
             $name = $model->getTrailModelName();
             $model = ($route = $model->getTrailModelAdminRoute()) ? Html::a($name, $route) : $name;
         } else {
@@ -247,7 +203,7 @@ class TrailGridView extends GridView
         $message = '';
 
         if (isset($options['message'])) {
-            $message .= Yii::t($options['messageCategory'] ?? 'skeleton', $options['message'] ?? '', [
+            $message .= Yii::t($options['messageCategory'] ?? 'skeleton', $options['message'], [
                 'model' => $model,
             ]);
         }
@@ -255,10 +211,7 @@ class TrailGridView extends GridView
         return trim($message . ' ' . $this->renderDataTrailLink($trail));
     }
 
-    /**
-     * @return array
-     */
-    public function userColumn()
+    public function userColumn(): array
     {
         return [
             'attribute' => 'user_id',
@@ -284,10 +237,7 @@ class TrailGridView extends GridView
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function createdAtColumn()
+    public function createdAtColumn(): array
     {
         return [
             'class' => TimeagoColumn::class,
@@ -297,11 +247,7 @@ class TrailGridView extends GridView
         ];
     }
 
-    /**
-     * @param Trail $trail
-     * @return string
-     */
-    protected function renderDataTrailLink($trail)
+    protected function renderDataTrailLink(Trail $trail): string
     {
         if ($trailId = ($trail->data['trail_id'] ?? false)) {
             $link = isset($this->dataProvider->getModels()[$trailId]) ? Url::current(['#' => 'trail-' . $trailId]) : ['index', 'id' => $trailId];
@@ -314,33 +260,19 @@ class TrailGridView extends GridView
     /**
      * Wraps behavior method and makes sure value is cast to string to prevent {@link \Jfcherng\Diff\Differ} to throw
      * errors.
-     *
-     * @param ActiveRecord $model
-     * @param string $attribute
-     * @param string $value
-     * @return string
      */
-    protected function formatTrailAttributeValue($model, $attribute, $value)
+    protected function formatTrailAttributeValue(ActiveRecordInterface $model, string $attribute, mixed $value): array|string
     {
         /** @var TrailBehavior $model */
         return (string)$model->formatTrailAttributeValue($attribute, $value);
     }
 
-    /**
-     * @param Trail $model
-     * @param array $params
-     * @return array
-     */
-    protected function getRoute($model, $params = [])
+    protected function getRoute(ActiveRecordInterface $model, array $params = []): array|false
     {
-        return ['index', 'id' => $model->id];
+        return ['index', 'id' => $model->getPrimaryKey()];
     }
 
-    /**
-     * @param Trail $trail
-     * @return array|null
-     */
-    protected function getTrailModelRoute($trail)
+    protected function getTrailModelRoute(Trail $trail): ?array
     {
         return ['index', 'model' => implode('@', array_filter([$trail->model, $trail->model_id]))];
     }

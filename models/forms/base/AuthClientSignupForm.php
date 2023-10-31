@@ -88,7 +88,7 @@ class AuthClientSignupForm extends Identity
      * Overrides default email error to give user more context why the signup cannot completed
      * with this email address.
      */
-    public function afterValidate()
+    public function afterValidate(): void
     {
         if ($this->hasErrors('email')) {
             $this->clearErrors('email');
@@ -123,7 +123,7 @@ class AuthClientSignupForm extends Identity
     /**
      * @inheritDoc
      */
-    public function afterSave($insert, $changedAttributes)
+    public function afterSave($insert, $changedAttributes): void
     {
         parent::afterSave($insert, $changedAttributes);
 

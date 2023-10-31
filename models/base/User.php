@@ -60,14 +60,7 @@ abstract class User extends ActiveRecord
 {
     use StatusAttributeTrait;
 
-    /**
-     * Constants.
-     */
     public const STATUS_ENABLED = 1;
-
-    public const GENDER_UNKNOWN = 0;
-    public const GENDER_FEMALE = 1;
-    public const GENDER_MALE = 2;
 
     public const AUTH_USER_CREATE = 'userCreate';
     public const AUTH_USER_DELETE = 'userDelete';
@@ -78,52 +71,49 @@ abstract class User extends ActiveRecord
     /**
      * @var bool whether uploads should be automatically rotated based on their EXIF data
      */
-    public $autorotatePicture = true;
+    public bool $autorotatePicture = true;
 
     /**
      * @var int
      */
-    public $nameMinLength = 3;
+    public int $nameMinLength = 3;
 
     /**
      * @var int
      */
-    public $nameMaxLength = 32;
+    public int $nameMaxLength = 32;
 
     /**
      * @var string
      */
-    public $namePattern = '/^\d*[a-z][a-z0-9\.-]*[a-z0-9]$/si';
+    public string $namePattern = '/^\d*[a-z][a-z0-9\.-]*[a-z0-9]$/si';
 
     /**
      * @var int
      */
-    public $passwordMinLength = 5;
+    public int $passwordMinLength = 5;
+
+    public bool $requireName = true;
 
     /**
-     * @var int
+     * @var UploadedFile|StreamUploadedFile|null the profile picture upload
      */
-    public $requireName = true;
+    public UploadedFile|StreamUploadedFile|null $upload = null;
 
     /**
-     * @var UploadedFile|StreamUploadedFile
+     * @var array contains the allowed upload extensions for the profile picture
      */
-    public $upload;
+    public array $uploadExtensions = ['gif', 'jpg', 'jpeg', 'png'];
 
     /**
-     * @var array
+     * @var bool whether mimetype should check the upload extension
      */
-    public $uploadExtensions = ['gif', 'jpg', 'jpeg', 'png'];
-
-    /**
-     * @var bool
-     */
-    public $uploadCheckExtensionByMimeType = true;
+    public bool $uploadCheckExtensionByMimeType = true;
 
     /**
      * @var string|bool set false to disabled profile pictures
      */
-    private $_uploadPath = 'uploads/users/';
+    private string|false $_uploadPath = 'uploads/users/';
 
     /**
      * @inheritDoc
@@ -223,20 +213,11 @@ abstract class User extends ActiveRecord
         ];
     }
 
-    /**
-     * Checks password against stored password hash and salt.
-     * @param string $password
-     * @return bool
-     */
-    public function validatePassword($password): bool
+    public function validatePassword(string $password): bool
     {
         return $this->password_hash && Yii::$app->getSecurity()->validatePassword($password . $this->password_salt, $this->password_hash);
     }
 
-    /**
-     * Sets defaults, but does not run validations.
-     * @return bool
-     */
     public function beforeValidate(): bool
     {
         // Set defaults in case these were omitted in signup.
@@ -249,10 +230,7 @@ abstract class User extends ActiveRecord
         return parent::beforeValidate();
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function afterValidate()
+    public function afterValidate(): void
     {
         // Make sure empty name is null to prevent duplicate errors.
         if (!$this->requireName && !$this->name) {
@@ -262,9 +240,6 @@ abstract class User extends ActiveRecord
         parent::afterValidate();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function beforeSave($insert): bool
     {
         if (parent::beforeSave($insert)) {
@@ -283,10 +258,7 @@ abstract class User extends ActiveRecord
         return false;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function afterSave($insert, $changedAttributes)
+    public function afterSave($insert, $changedAttributes): void
     {
         if (!$insert) {
             if (isset($changedAttributes['picture'])) {
@@ -304,10 +276,7 @@ abstract class User extends ActiveRecord
         $this->upload = null;
     }
 
-    /**
-     * Deletes picture after delete.
-     */
-    public function afterDelete()
+    public function afterDelete(): void
     {
         if ($this->picture) {
             $this->deletePicture($this->picture);
@@ -316,55 +285,33 @@ abstract class User extends ActiveRecord
         parent::afterDelete();
     }
 
-    /**
-     * @return UserQuery
-     */
     public function getAdmin(): UserQuery
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->hasOne(\davidhirtz\yii2\skeleton\models\User::class, ['id' => 'created_by_user_id']);
+        return $this->hasOne(static::class, ['id' => 'created_by_user_id']);
     }
 
-    /**
-     * @return ActiveQuery
-     */
     public function getAuthClients(): ActiveQuery
     {
         return $this->hasMany(AuthClient::class, ['user_id' => 'id']);
     }
 
-    /**
-     * @return UserQuery
-     */
-    public static function find()
+    public static function find(): UserQuery
     {
-        return new UserQuery(get_called_class());
+        return Yii::createObject(UserQuery::class, [get_called_class()]);
     }
 
-    /**
-     * @param string $email
-     * @return UserQuery
-     */
     public static function findByEmail(string $email): UserQuery
     {
         return static::find()->whereLower([static::tableName() . '.[[email]]' => $email]);
     }
 
-    /**
-     * @param string $name
-     * @return UserQuery
-     */
     public static function findByName(string $name): UserQuery
     {
         return static::find()->whereLower([static::tableName() . '.[[name]]' => $name]);
     }
 
-    /**
-     * @param array $data
-     * @param null $formName
-     * @return bool
-     */
-    public function load($data, $formName = null)
+    public function load($data, $formName = null): bool
     {
         // First load form data, then override upload via instance.
         $hasData = parent::load($data, $formName);
@@ -373,10 +320,7 @@ abstract class User extends ActiveRecord
         return $hasData || $this->upload;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function delete()
+    public function delete(): false|int
     {
         if ($this->isOwner()) {
             $this->addError('id', Yii::t('skeleton', 'This user is the website owner. Please transfer ownership to another user before deleting this user.'));
@@ -386,22 +330,16 @@ abstract class User extends ActiveRecord
         return parent::delete();
     }
 
-    /**
-     * Creates a password change trail records.
-     */
-    public function afterPasswordChange()
+    public function afterPasswordChange(): void
     {
-        $trail = new Trail();
+        $trail = Trail::create();
         $trail->model = \davidhirtz\yii2\skeleton\models\User::class;
         $trail->model_id = $this->id;
         $trail->type = Trail::TYPE_PASSWORD;
         $trail->insert();
     }
 
-    /**
-     * Generates filename for picture upload.
-     */
-    public function generatePictureFilename()
+    public function generatePictureFilename(): void
     {
         $extension = $this->upload->extension ?? null;
 
@@ -414,19 +352,13 @@ abstract class User extends ActiveRecord
         $this->generatePictureFilenameInternal();
     }
 
-    /**
-     * Makes sure the generated picture filename is not used already.
-     */
-    private function generatePictureFilenameInternal()
+    private function generatePictureFilenameInternal(): void
     {
         if (is_file($this->getUploadPath() . $this->picture)) {
             $this->generatePictureFilename();
         }
     }
 
-    /**
-     * @return bool
-     */
     public function savePictureUpload(): bool
     {
         if (FileHelper::createDirectory($uploadPath = $this->getUploadPath())) {
@@ -442,126 +374,83 @@ abstract class User extends ActiveRecord
         return false;
     }
 
-    /**
-     * @param string $picture
-     * @return bool
-     */
-    public function deletePicture($picture): bool
+    public function deletePicture(?string $picture): bool
     {
         return $picture && FileHelper::removeFile($this->getUploadPath() . $picture);
     }
 
-    /**
-     * Generates password hash.
-     * @param string $password
-     */
-    public function generatePasswordHash($password)
+    public function generatePasswordHash(string $password): void
     {
         $this->password_salt = Yii::$app->getSecurity()->generateRandomString(10);
         $this->password_hash = Yii::$app->getSecurity()->generatePasswordHash($password . $this->password_salt);
     }
 
-    /**
-     * Generates session auth key
-     */
-    public function generateAuthKey()
+    public function generateAuthKey(): void
     {
         $this->auth_key = Yii::$app->getSecurity()->generateRandomString();
     }
 
-    /**
-     * Generates verification token.
-     */
-    public function generateVerificationToken()
+    public function generateVerificationToken(): void
     {
         $this->verification_token = Yii::$app->getSecurity()->generateRandomString();
     }
 
-    /**
-     * Generates password reset token.
-     */
-    public function generatePasswordResetToken()
+    public function generatePasswordResetToken(): void
     {
         $this->password_reset_token = Yii::$app->getSecurity()->generateRandomString();
     }
 
-    /**
-     * @return string
-     */
+    /** @noinspection PhpUnused */
     public function getFullName(): string
     {
         return trim($this->first_name . ' ' . $this->last_name);
     }
 
-    /**
-     * @return string
-     */
+    /** @noinspection PhpUnused */
     public function getInitials(): string
     {
         return $this->first_name && $this->last_name ? ($this->first_name[0] . $this->last_name[0]) : substr($this->name, 0, 2);
     }
 
-    /**
-     * @return string
-     */
-    public function getUsername()
+    public function getUsername(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
-    public function getEmailConfirmationUrl()
+    public function getEmailConfirmationUrl(): ?string
     {
         return $this->verification_token ? Url::to(['account/confirm', 'email' => $this->email, 'code' => $this->verification_token], true) : null;
     }
 
-    /**
-     * @return string
-     */
-    public function getPasswordResetUrl()
+    public function getPasswordResetUrl(): ?string
     {
         return $this->password_reset_token ? Url::to(['account/reset', 'email' => $this->email, 'code' => $this->password_reset_token], true) : null;
     }
 
-    /**
-     * @return string
-     */
-    public function getTimezoneOffset()
+    /** @noinspection PhpUnused */
+    public function getTimezoneOffset(): string
     {
         $date = new \DateTime('now');
         return 'GMT ' . $date->format('P');
     }
 
-    /**
-     * @return bool|false
-     */
-    public function getUploadPath()
+    public function getUploadPath(): string|false
     {
         return $this->_uploadPath ? (Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $this->_uploadPath) : false;
     }
 
-    /**
-     * @param string|false $uploadPath
-     */
-    public function setUploadPath($uploadPath)
+    /** @noinspection PhpUnused */
+    public function setUploadPath(string $uploadPath): void
     {
         $this->_uploadPath = trim($uploadPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
     }
 
-    /**
-     * @return bool|false
-     */
-    public function getBaseUrl()
+    public function getBaseUrl(): string
     {
         return '/' . ltrim(str_replace(DIRECTORY_SEPARATOR, '/', $this->_uploadPath), '/');
     }
 
-    /**
-     * @return array
-     */
-    public static function getStatuses()
+    public static function getStatuses(): array
     {
         return [
             static::STATUS_DISABLED => [
@@ -611,58 +500,39 @@ abstract class User extends ActiveRecord
         ]);
     }
 
-    /**
-     * @return string
-     */
-    public function getTrailModelName()
+    public function getTrailModelName(): string
     {
         return $this->id ? $this->getUsername() : $this->getTrailModelType();
     }
 
-    /**
-     * @return string
-     */
     public function getTrailModelType(): string
     {
         return Yii::t('skeleton', 'User');
     }
 
-    /**
-     * @return array|false
-     */
-    public function getTrailModelAdminRoute()
+    public function getTrailModelAdminRoute(): array|false
     {
         return $this->id ? ['/admin/user/update', 'id' => $this->id] : false;
     }
 
-    /**
-     * @param $clientName
-     * @return bool
-     */
-    public function hasAuthClient($clientName): bool
+    /** @noinspection PhpUnused */
+    public function hasAuthClient(string $clientName): bool
     {
         return (($authClients = $this->authClients)) && in_array($clientName, ArrayHelper::getColumn($authClients, 'name'));
     }
 
-    /**
-     * @return bool
-     */
     public function isOwner(): bool
     {
         return (bool)$this->is_owner;
     }
 
-    /**
-     * @return bool
-     */
     public function isUnconfirmed(): bool
     {
         return !$this->isOwner() && !empty($this->verification_token);
     }
 
     /**
-     * @return array
-     * @see DynamicRangeValidator
+     * @noinspection PhpUnused {@see DynamicRangeValidator::class}
      */
     public static function getCountries(): array
     {
@@ -670,8 +540,7 @@ abstract class User extends ActiveRecord
     }
 
     /**
-     * @return array
-     * @see DynamicRangeValidator
+     * @noinspection PhpUnused {@see DynamicRangeValidator::class}
      */
     public static function getLanguages(): array
     {
@@ -686,18 +555,14 @@ abstract class User extends ActiveRecord
     }
 
     /**
-     * @return array
-     * @see DynamicRangeValidator
+     * @noinspection PhpUnused {@see DynamicRangeValidator::class}
      */
-    public static function getTimezones()
+    public static function getTimezones(): array
     {
         return array_combine(DateTimeZone::listIdentifiers(), DateTimeZone::listIdentifiers());
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => Yii::t('skeleton', 'ID'),
@@ -723,18 +588,12 @@ abstract class User extends ActiveRecord
         ];
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function formName()
+    public function formName(): string
     {
         return 'User';
     }
 
-    /**
-     * @inheritDoc
-     */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%user}}';
     }

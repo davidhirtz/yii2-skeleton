@@ -109,12 +109,14 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return parent::beforeDelete();
     }
 
-    /**
-     * @return ActiveQuery
-     */
-    public static function find()
+    public static function create(): static
     {
-        return Yii::createObject(ActiveQuery::class, [get_called_class()]);
+        return Yii::createObject(static::class);
+    }
+
+    public static function find(): ActiveQuery
+    {
+        return Yii::createObject(ActiveQuery::class, [static::class]);
     }
 
     /**

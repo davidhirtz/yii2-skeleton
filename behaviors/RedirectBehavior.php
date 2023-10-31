@@ -87,13 +87,9 @@ class RedirectBehavior extends Behavior
         }
     }
 
-    /**
-     * Inserts a new {@link Redirect} record for given `url`.
-     * @param string $url
-     */
-    protected function insertRedirect($url)
+    protected function insertRedirect(string $url): void
     {
-        $redirect = new Redirect();
+        $redirect = Redirect::create();
         $redirect->request_uri = $this->prevUrl;
         $redirect->url = $url;
         $redirect->insert();
