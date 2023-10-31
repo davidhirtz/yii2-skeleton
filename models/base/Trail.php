@@ -11,12 +11,8 @@ use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\TrailGridView;
 use ReflectionClass;
 use Yii;
-use yii\db\ActiveRecordInterface;
 
 /**
- * Class Trail
- * @package davidhirtz\yii2\skeleton\models\base
- *
  * @property int $id
  * @property int $type
  * @property string $model
