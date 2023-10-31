@@ -12,46 +12,42 @@ use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
+use yii\db\ActiveRecordInterface;
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 use yii\helpers\Url;
 
-/**
- * Class GridView
- * @package davidhirtz\yii2\skeleton\modules\admin\widgets
- */
 class GridView extends \yii\grid\GridView
 {
     /**
-     * @var array|null
+     * @var array|null containing the header rows
      */
-    public $header;
+    public ?array $header = null;
 
     /**
-     * @var array|null
+     * @var array|null containing the footer rows
      */
-    public $footer;
+    public ?array $footer = null;
 
     /**
-     * @var string the search string, leave empty to set it via request param.
-     * @see $searchParamName
+     * @var string|null the search string, leave empty to set it via request param.
      */
-    public $search;
+    public ?string $search = null;
 
     /**
      * @var string the param name of the search query.
      */
-    public $searchParamName = 'q';
+    public string $searchParamName = 'q';
 
     /**
      * @var array search form option.
      */
-    public $searchFormOptions = [];
+    public array $searchFormOptions = [];
 
     /**
-     * @var string the default route used for search.
+     * @var string|null the default route used for search.
      */
-    public $searchUrl;
+    public ?string $searchUrl = null;
 
     /**
      * @var array the url route for sortable widget
@@ -80,9 +76,6 @@ class GridView extends \yii\grid\GridView
      */
     public $layout = '{header}{summary}{items}{pager}{footer}';
 
-    /**
-     * @var array containing the pager configuration
-     */
     public $pager = [
         'class' => '\davidhirtz\yii2\skeleton\widgets\pagers\LinkPager',
         'firstPageLabel' => true,
@@ -92,39 +85,32 @@ class GridView extends \yii\grid\GridView
     /**
      * @var bool whether the items should receive a {@link yii\grid\CheckboxColumn} and moved inside a wrapping form
      */
-    public $showSelection = false;
+    public bool $showSelection = false;
 
     /**
      * @var array the url route for selection update
      */
-    public $selectionRoute = ['update-all'];
+    public array $selectionRoute = ['update-all'];
 
     /**
-     * @var string
+     * @var string|null
      */
-    public $selectionButtonLabel;
+    public ?string $selectionButtonLabel = null;
 
     /**
      * @var array containing the selection form html options
      */
-    public $selectionColumn = [
+    public array $selectionColumn = [
         'class' => 'yii\grid\CheckboxColumn'
     ];
 
-    /**
-     * @var ActiveRecord
-     */
-    private $_model;
-
-    /**
-     * @var string
-     */
-    private $_formName;
+    private ?ActiveRecordInterface $_model = null;
+    private ?string $_formName = null;
 
     /**
      * @inheritDoc
      */
-    public function init()
+    public function init(): void
     {
         foreach ($this->columns as &$column) {
             if (is_string($column)) {
@@ -298,10 +284,7 @@ class GridView extends \yii\grid\GridView
         return implode('', $result);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function renderSection($name)
+    public function renderSection($name): string|false
     {
         return match ($name) {
             '{header}' => $this->renderHeader(),
@@ -310,9 +293,6 @@ class GridView extends \yii\grid\GridView
         };
     }
 
-    /**
-     * @return string
-     */
     public function getSearchInput(): string
     {
         if ($this->searchUrl === null) {
@@ -334,9 +314,6 @@ class GridView extends \yii\grid\GridView
             Html::endForm();
     }
 
-    /**
-     * @return string
-     */
     public function getSelectionButton(): string
     {
         if ($items = $this->getSelectionButtonItems()) {
@@ -352,18 +329,12 @@ class GridView extends \yii\grid\GridView
         return '';
     }
 
-    /**
-     * @return array
-     */
     protected function getSelectionButtonItems(): array
     {
         return [];
     }
 
-    /**
-     * @return string|null
-     */
-    public function getFormName()
+    public function getFormName(): ?string
     {
         if ($this->_formName === null) {
             if ($model = $this->getModel()) {
@@ -374,71 +345,45 @@ class GridView extends \yii\grid\GridView
         return $this->_formName;
     }
 
-    /**
-     * @param string $formName
-     */
-    public function setFormName(string $formName)
+    /** @noinspection PhpUnused */
+    public function setFormName(string $formName): void
     {
         $this->_formName = $formName;
     }
 
-    /**
-     * @return string
-     */
     protected function getSelectionFormId(): string
     {
         return $this->getFormName() . '-items';
     }
 
-    /**
-     * @return string
-     */
     public function getTableId(): string
     {
         return $this->getFormName() . '-table';
     }
 
-    /**
-     * @param ActiveRecord $record
-     * @return string
-     */
-    public function getRowId($record): string
+    public function getRowId(ActiveRecordInterface $record): string
     {
         return $this->getFormName() . '-' . implode('-', (array)$record->getPrimaryKey());
     }
 
-    /**
-     * @return array
-     */
     public function getSearchKeywords(): array
     {
         return $this->search ? array_filter(explode(' ', $this->search)) : [];
     }
 
-    /**
-     * @return string
-     */
     protected function getSortableButton(): string
     {
         return Html::tag('span', Icon::tag('arrows-alt'), ['class' => 'btn btn-secondary sortable-handle']);
     }
 
-    /**
-     * @param ActiveRecord $model
-     * @return string
-     */
-    protected function getUpdateButton($model): string
+    protected function getUpdateButton(ActiveRecordInterface $model): string
     {
         return Html::a(Icon::tag('wrench'), $this->getRoute($model), [
             'class' => 'btn btn-primary d-none d-md-inline-block',
         ]);
     }
 
-    /**
-     * @param ActiveRecord $model
-     * @return string
-     */
-    protected function getDeleteButton($model)
+    protected function getDeleteButton(ActiveRecordInterface $model): string
     {
         return Html::a(Icon::tag('trash'), $this->getDeleteRoute($model), [
             'class' => 'btn btn-danger',
@@ -448,30 +393,17 @@ class GridView extends \yii\grid\GridView
         ]);
     }
 
-    /**
-     * @param ActiveRecord $model
-     * @param array $params
-     * @return array|false
-     */
-    protected function getRoute($model, $params = [])
+    protected function getRoute(ActiveRecordInterface $model, array $params = []): array|false
     {
         return array_merge(['update', 'id' => $model->getPrimaryKey()], $params);
     }
 
-    /**
-     * @param ActiveRecord $model
-     * @param array $params
-     * @return array|false
-     */
-    protected function getDeleteRoute($model, $params = [])
+    protected function getDeleteRoute(ActiveRecordInterface $model, array $params = []): array
     {
         return array_merge(['delete', 'id' => $model->getPrimaryKey()], $params);
     }
 
-    /**
-     * @return ActiveRecord
-     */
-    public function getModel()
+    public function getModel(): ActiveRecordInterface
     {
         if (!$this->_model) {
             if ($this->dataProvider instanceof ActiveDataProvider) {
@@ -484,10 +416,7 @@ class GridView extends \yii\grid\GridView
         return $this->_model;
     }
 
-    /**
-     * @param ActiveRecord $model
-     */
-    public function setModel($model)
+    public function setModel(ActiveRecordInterface $model): void
     {
         $this->_model = $model;
     }
@@ -495,14 +424,11 @@ class GridView extends \yii\grid\GridView
     /**
      * @return ActiveRecord[]
      */
-    public function getModels()
+    public function getModels(): array
     {
         return $this->dataProvider->getModels();
     }
 
-    /**
-     * @return bool
-     */
     public function isSortedByPosition(): bool
     {
         return $this->dataProvider->getSort() === false && $this->dataProvider->getPagination() === false;

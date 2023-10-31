@@ -3,12 +3,9 @@
 namespace davidhirtz\yii2\skeleton\db;
 
 use Yii;
+use yii\db\Query;
 
 /**
- * Class ActiveQuery.
- * @package \davidhirtz\yii2\skeleton\db
- * @see ActiveRecord
- *
  * @method ActiveRecord[] all($db = null)
  * @method ActiveRecord one($db = null)
  */
@@ -20,13 +17,13 @@ class ActiveQuery extends \yii\db\ActiveQuery
     protected static $_status;
 
     /**
-     * Makes sure only relations with any relational values are actually loaded, this gets rid of a lot of useless
+     * Makes sure only relations with any relational values are actually loaded. This gets rid of a lot of useless
      * `WHERE 0=1` queries, which should not be executed in the first place. If an attribute is set or the relation is
      * requested via a junction table, the query is executed.
      *
-     * @see https://forum.yiiframework.com/t/question-about-activequery-findfor/134188
+     * @link https://forum.yiiframework.com/t/question-about-activequery-findfor/134188
      */
-    public function findFor($name, $model)
+    public function findFor($name, $model): array|ActiveRecord|null
     {
         foreach ($this->link as $attribute) {
             if ($this->via || $model->$attribute) {
@@ -39,9 +36,8 @@ class ActiveQuery extends \yii\db\ActiveQuery
 
     /**
      * Selects all columns defined in {@link ActiveRecord::attributes()}.
-     * @return $this
      */
-    public function selectAllColumns()
+    public function selectAllColumns(): static
     {
         $this->select = $this->prefixColumns($this->getModelInstance()->attributes());
         return $this;
@@ -49,11 +45,8 @@ class ActiveQuery extends \yii\db\ActiveQuery
 
     /**
      * Prefixes given `columns` with the table alias.
-     *
-     * @param array $columns
-     * @return array
      */
-    public function prefixColumns($columns): array
+    public function prefixColumns(array $columns): array
     {
         list(, $alias) = $this->getTableNameAndAlias();
 
@@ -65,12 +58,11 @@ class ActiveQuery extends \yii\db\ActiveQuery
     }
 
     /**
-     * @inheritDoc
+     * Override Yii2's default implementation of adding the anti-pattern `$alias.*` on empty select. This causes
+     * problems with `sql_mode=only_full_group_by`.
      */
-    public function prepare($builder)
+    public function prepare($builder): Query
     {
-        // Override Yii2's default implementation of adding the anti-pattern `$alias.*` on empty select. This causes
-        // problems with `sql_mode=only_full_group_by`.
         if (empty($this->select)) {
             $this->selectAllColumns();
         }
@@ -78,10 +70,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
         return parent::prepare($builder);
     }
 
-    /**
-     * @return $this
-     */
-    public function replaceI18nAttributes()
+    public function replaceI18nAttributes(): static
     {
         if (Yii::$app->language != Yii::$app->sourceLanguage) {
             if (is_array($this->select)) {
@@ -108,12 +97,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
         return $this;
     }
 
-    /**
-     * @param string $attribute
-     * @param string|null $language
-     * @return string
-     */
-    public function getI18nAttributeName(string $attribute, $language = null)
+    public function getI18nAttributeName(string $attribute, ?string $language = null): string
     {
         /** @noinspection PhpUndefinedMethodInspection */
         $attributeName = $this->getModelInstance()->getI18nAttributeName($attribute, $language);
@@ -122,11 +106,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
         return "$alias.[[$attributeName]]";
     }
 
-    /**
-     * @param array $attributes
-     * @return $this
-     */
-    public function whereLower($attributes)
+    public function whereLower(array $attributes): static
     {
         foreach ($attributes as $attribute => $value) {
             $this->andWhere(["LOWER({$attribute})" => mb_strtolower($value, Yii::$app->charset)]);
@@ -136,12 +116,9 @@ class ActiveQuery extends \yii\db\ActiveQuery
     }
 
     /**
-     * Alters where statement and sets static status that can be used by related queries.
-     *
-     * @param int|null $status
-     * @return $this
+     * Alters WHERE clause and sets static status that can be used by related queries.
      */
-    public function whereStatus($status = null)
+    public function whereStatus(?int $status = null): static
     {
         static::setStatus($status);
 
@@ -149,49 +126,32 @@ class ActiveQuery extends \yii\db\ActiveQuery
         return $this->andFilterWhere(['>=', $model::tableName() . '.status', static::$_status]);
     }
 
-    /**
-     * @param int $status
-     */
-    public static function setStatus($status): void
+    public static function setStatus(?int $status): void
     {
         if ($status !== null) {
             static::$_status = (int)$status;
         }
     }
 
-    /**
-     * @return $this
-     */
-    public function enabled()
+    public function enabled(): static
     {
         return $this->whereStatus($this->getModelInstance()::STATUS_ENABLED);
     }
 
-    /**
-     * @param string $search
-     * @return array
-     */
-    public function splitSearchString($search)
+    public function splitSearchString(?string $search): array
     {
         return array_filter(preg_split('/[\s,]+/', $this->sanitizeSearchString($search)));
     }
 
-    /**
-     * @param string $search
-     * @return string
-     */
-    public function sanitizeSearchString($search): string
+    public function sanitizeSearchString(?string $search): string
     {
         return $search ? trim(strtr($search, ['%' => ''])) : '';
     }
 
-    /**
-     * @return ActiveRecord
-     */
-    protected function getModelInstance()
+    protected function getModelInstance(): ActiveRecord
     {
-        /** @var ActiveRecord $model */
-        $model = $this->modelClass;
-        return $model::instance();
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        /** @noinspection PhpAccessStaticViaInstanceInspection */
+        return $this->modelClass::instance();
     }
 }

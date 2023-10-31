@@ -16,7 +16,7 @@ use yii\helpers\ArrayHelper;
  * @property int $lft
  * @property string $name
  *
- * @property ActiveRecord $parent
+ * @property-read ActiveRecord $parent
  * @method static ActiveQuery find()
  */
 trait NestedTreeTrait
@@ -33,9 +33,6 @@ trait NestedTreeTrait
      */
     private $_descendants;
 
-    /**
-     * @return array
-     */
     public function transactions(): array
     {
         return [
@@ -43,10 +40,7 @@ trait NestedTreeTrait
         ];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getParent()
+    public function getParent(): ActiveQuery
     {
         return $this->hasOne(static::class, ['id' => 'parent_id']);
     }
@@ -55,7 +49,7 @@ trait NestedTreeTrait
      * @param bool $refresh
      * @return ActiveRecord[]
      */
-    public function getAncestors($refresh = false)
+    public function getAncestors($refresh = false): array
     {
         if ($this->_ancestors === null || $refresh) {
             $this->_ancestors = [];
@@ -73,7 +67,7 @@ trait NestedTreeTrait
     /**
      * @param static[] $records
      */
-    public function setAncestors($records)
+    public function setAncestors(array $records): void
     {
         $this->_ancestors = [];
 
@@ -92,10 +86,7 @@ trait NestedTreeTrait
         }
     }
 
-    /**
-     * @return ActiveRecord|null
-     */
-    public function getFirstAncestor()
+    public function getFirstAncestor(): ?ActiveRecord
     {
         if ($this->parent_id) {
             $ancestors = $this->getAncestors();
@@ -108,7 +99,7 @@ trait NestedTreeTrait
     /**
      * @return ActiveQuery
      */
-    public function findAncestors()
+    public function findAncestors(): ActiveQuery
     {
         return static::find()->where('[[lft]]<:rgt AND [[rgt]]>:rgt', ['rgt' => $this->rgt]);
     }
@@ -117,7 +108,7 @@ trait NestedTreeTrait
      * @param bool $refresh
      * @return ActiveRecord[]
      */
-    public function getDescendants($refresh = false)
+    public function getDescendants(bool $refresh = false): array
     {
         if ($this->_descendants === null || $refresh) {
             $this->_descendants = [];
@@ -135,7 +126,7 @@ trait NestedTreeTrait
     /**
      * @param static[] $records
      */
-    public function setDescendants($records)
+    public function setDescendants(array $records): void
     {
         $this->_descendants = [];
 
@@ -151,7 +142,7 @@ trait NestedTreeTrait
     /**
      * @return ActiveQuery
      */
-    public function findDescendants()
+    public function findDescendants(): ActiveQuery
     {
         return static::find()->where('[[lft]]>:lft AND [[rgt]]<:rgt', ['lft' => $this->lft, 'rgt' => $this->rgt]);
     }
@@ -159,7 +150,7 @@ trait NestedTreeTrait
     /**
      * @return int
      */
-    public function getBranchCount()
+    public function getBranchCount(): int
     {
         return ($this->rgt - $this->lft - 1) / 2;
     }
@@ -167,7 +158,7 @@ trait NestedTreeTrait
     /**
      * Validation rule.
      */
-    public function validateParentId()
+    public function validateParentId(): void
     {
         if ($this->parent_id) {
             if ($this->isAttributeChanged('parent_id', false)) {
@@ -194,23 +185,16 @@ trait NestedTreeTrait
         }
     }
 
-    /**
-     * @param ActiveRecord $parent
-     */
-    public function populateParentRelation($parent)
+    public function populateParentRelation(?ActiveRecord $parent): void
     {
-        if ($parent) {
-            $this->populateRelation('parent', $parent);
-            $this->parent_id = (int)$parent->getPrimaryKey();
-        } else {
-            $this->parent_id = null;
-        }
+        $this->populateRelation('parent', $parent);
+        $this->parent_id = $parent ? (int)$parent->getPrimaryKey() : null;
     }
 
     /**
      * Updates tree before insert or update.
      */
-    public function updateTreeBeforeSave()
+    public function updateTreeBeforeSave(): void
     {
         if ($this->getIsNewRecord()) {
             if ($this->parent_id) {
@@ -289,7 +273,7 @@ trait NestedTreeTrait
     /**
      * Updates tree after delete.
      */
-    public function updateNestedTreeAfterDelete()
+    public function updateNestedTreeAfterDelete(): void
     {
         // Update branch, then right side.
         static::updateAllCounters(['rgt' => -2], '[[lft]]<:rgt AND [[rgt]]>:rgt', ['rgt' => $this->rgt]);
@@ -299,7 +283,7 @@ trait NestedTreeTrait
     /**
      * Deletes nested records one by one, triggering all related active record events.
      */
-    public function deleteNestedTreeItems()
+    public function deleteNestedTreeItems(): void
     {
         while (true) {
             $record = static::find()
@@ -320,9 +304,9 @@ trait NestedTreeTrait
      * @param ActiveRecord|null $parent
      * @param array $order
      */
-    public static function rebuildNestedTree($parent = null, $order = [])
+    public static function rebuildNestedTree(?ActiveRecord $parent = null, array $order = []): void
     {
-        $parentId = $parent ? $parent->getPrimaryKey() : null;
+        $parentId = $parent?->getPrimaryKey();
         $query = static::find();
 
         if ($parent) {
@@ -364,7 +348,7 @@ trait NestedTreeTrait
      *
      * @return array()
      */
-    private static function rebuildNestedTreeBranch($branch, &$lft, $parentId)
+    private static function rebuildNestedTreeBranch(array $branch, int &$lft, int $parentId): array
     {
         $tree = [];
 
@@ -387,7 +371,7 @@ trait NestedTreeTrait
      * @param string $indent
      * @return array
      */
-    public static function indentNestedTree($records, $attribute, $indent = '-')
+    public static function indentNestedTree(array $records, string $attribute, string $indent = '-'): array
     {
         $items = $cache = [];
         $padding = $rgt = 0;

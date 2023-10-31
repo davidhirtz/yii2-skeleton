@@ -13,10 +13,7 @@ use davidhirtz\yii2\skeleton\models\User;
  */
 class UserQuery extends ActiveQuery
 {
-    /**
-     * @return $this
-     */
-    public function selectIdentityAttributes()
+    public function selectIdentityAttributes(): static
     {
         return $this->addSelect($this->prefixColumns(array_diff($this->getModelInstance()->attributes(), [
             'city',
@@ -26,10 +23,7 @@ class UserQuery extends ActiveQuery
         ])));
     }
 
-    /**
-     * @return $this
-     */
-    public function nameAttributesOnly()
+    public function nameAttributesOnly(): static
     {
         return $this->select($this->prefixColumns([
             'id',
@@ -41,10 +35,7 @@ class UserQuery extends ActiveQuery
         ]));
     }
 
-    /**
-     * @return $this
-     */
-    public function selectListAttributes()
+    public function selectListAttributes(): static
     {
         return $this->select($this->prefixColumns([
             'id',
@@ -61,11 +52,7 @@ class UserQuery extends ActiveQuery
         ]));
     }
 
-    /**
-     * @param string $search
-     * @return $this
-     */
-    public function matching($search)
+    public function matching(?string $search): static
     {
         if ($keywords = $this->splitSearchString($search)) {
             $tableName = User::tableName();
@@ -75,7 +62,7 @@ class UserQuery extends ActiveQuery
 
                 if (is_numeric($keyword)) {
                     $this->andWhere("{$tableName}.[[id]]=:id", ['id' => $keyword]);
-                } elseif (strpos($keyword, '@') !== false) {
+                } elseif (str_contains($keyword, '@')) {
                     $this->andWhere("{$tableName}.[[email]] LIKE :search", ['search' => "%{$keyword}%"]);
                 } else {
                     $this->andWhere("{$tableName}.[[name]] LIKE :search OR {$tableName}.[[email]] LIKE :search OR {$tableName}.[[first_name]] LIKE :search OR {$tableName}.[[last_name]] LIKE :search", ['search' => "{$keyword}%"]);
@@ -93,19 +80,10 @@ class UserQuery extends ActiveQuery
     }
 
     /**
-     * @return $this
-     */
-    public function orderByName()
-    {
-        return $this->orderBy(['name' => SORT_ASC]);
-    }
-
-    /**
      * Overrides default implementation to not use `whereStatus` as this might trigger the draft modus on modules such
      * as `yii2-cms` or `yii2-media`.
-     * @return $this
      */
-    public function enabled()
+    public function enabled(): static
     {
         return $this->andWhere(['>=', User::tableName() . '.status', User::STATUS_ENABLED]);
     }

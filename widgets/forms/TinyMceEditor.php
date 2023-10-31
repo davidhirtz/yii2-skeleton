@@ -188,8 +188,7 @@ class TinyMceEditor extends InputWidget
             $this->configureAdditionalToolbarItems();
         }
 
-        $this->clientOptions['toolbar'] ??= implode(' ', $this->toolbar);//' table | code | fullscreen';
-
+        $this->clientOptions['toolbar'] ??= implode(' ', $this->toolbar);
     }
 
     /**
@@ -238,6 +237,17 @@ class TinyMceEditor extends InputWidget
 
         if ($this->formats) {
             $this->clientOptions['formats'] ??= $this->formats;
+        }
+
+        if ($this->validator) {
+            $this->clientOptions['formats']['removeformat'] ??= [
+                [
+                    'selector' => $this->validator->allowedHtmlTags,
+                    'remove' => 'all',
+                    'expand' => false,
+                    'block_expand' => true,
+                ]
+            ];
         }
     }
 
@@ -316,6 +326,9 @@ class TinyMceEditor extends InputWidget
         $this->toolbar[] = 'removeformat';
         $this->toolbar[] = 'code';
         $this->toolbar[] = 'fullscreen';
+        $this->toolbar[] = '|';
+        $this->toolbar[] = 'undo';
+        $this->toolbar[] = 'redo';
     }
 
     protected function configurePlugins(): void
