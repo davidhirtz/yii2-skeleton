@@ -26,8 +26,7 @@ class DeleteForm extends Model
             ],
             [
                 ['value'],
-                /** {@link DeleteForm::validateName()} */
-                'validateName',
+                $this->validateName(...),
             ],
         ];
     }

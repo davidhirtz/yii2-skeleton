@@ -54,13 +54,11 @@ class AuthClient extends ActiveRecord
             ],
             [
                 ['user_id'],
-                /** {@link AuthClient::validateUserId()} */
-                'validateUserId',
+                $this->validateUserId(...),
             ],
             [
                 ['data'],
-                /** {@link AuthClient::validateData()} */
-                'validateData',
+                $this->validateData(...),
             ]
         ];
     }

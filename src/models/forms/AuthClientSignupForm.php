@@ -29,8 +29,7 @@ class AuthClientSignupForm extends Identity
     {
         return [...parent::rules(), [
             ['externalPictureUrl'],
-            /** {@link AuthClientSignupForm::validateExternalPictureUrl()} */
-            'validateExternalPictureUrl',
+            $this->validateExternalPictureUrl(...),
         ]];
     }
 

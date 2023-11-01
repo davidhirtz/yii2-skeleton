@@ -3,10 +3,8 @@
 declare(strict_types=1);
 
 use Rector\CodeQuality\Rector\Class_\InlineConstructorDefaultToPropertyRector;
-use Rector\CodingStyle\Rector\ClassConst\RemoveFinalFromConstRector;
 use Rector\Config\RectorConfig;
 use Rector\Php55\Rector\String_\StringClassNameToClassConstantRector;
-use Rector\Php74\Rector\Property\RestoreDefaultNullToNullableTypePropertyRector;
 use Rector\Php81\Rector\ClassConst\FinalizePublicClassConstantRector;
 use Rector\Renaming\Rector\Name\RenameClassRector;
 use Rector\Set\ValueObject\LevelSetList;
@@ -19,27 +17,7 @@ use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromAssignsRector;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([
-        __DIR__ . '/assets',
-        __DIR__ . '/auth',
-        __DIR__ . '/behaviors',
-        __DIR__ . '/console',
-        __DIR__ . '/controllers',
-        __DIR__ . '/core',
-        __DIR__ . '/data',
-        __DIR__ . '/db',
-        __DIR__ . '/filters',
-        __DIR__ . '/gii',
-        __DIR__ . '/helpers',
-        __DIR__ . '/i18n',
-        __DIR__ . '/mail',
-        __DIR__ . '/models',
-        __DIR__ . '/modules',
-        __DIR__ . '/tasks',
-        __DIR__ . '/tests',
-        __DIR__ . '/validators',
-        __DIR__ . '/views',
-        __DIR__ . '/web',
-        __DIR__ . '/widgets',
+        __DIR__ . '/src',
     ]);
 
     $rectorConfig->ruleWithConfiguration(RenameClassRector::class, [
@@ -58,10 +36,6 @@ return static function (RectorConfig $rectorConfig): void {
         'davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu' => 'davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu',
     ]);
 
-    $rectorConfig->skip([
-        FinalizePublicClassConstantRector::class,
-    ]);
-
     $rectorConfig->rules([
         AddReturnTypeDeclarationBasedOnParentClassMethodRector::class,
         AddPropertyTypeDeclarationRector::class,
@@ -75,5 +49,10 @@ return static function (RectorConfig $rectorConfig): void {
 
     $rectorConfig->sets([
         LevelSetList::UP_TO_PHP_81
+    ]);
+
+    $rectorConfig->skip([
+        __DIR__ . '/messages',
+        FinalizePublicClassConstantRector::class,
     ]);
 };

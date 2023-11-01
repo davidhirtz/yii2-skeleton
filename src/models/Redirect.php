@@ -72,7 +72,7 @@ class Redirect extends ActiveRecord
             ],
             [
                 ['url'],
-                'validateUrl',
+                $this->validateUrl(...),
             ],
         ]);
     }
@@ -104,7 +104,6 @@ class Redirect extends ActiveRecord
 
     /**
      * Makes sure the url is not pointing to another redirect, to eliminate unneeded redirect loops.
-     * @noinspection PhpUnused {@see static::rules()}
      */
     public function validateUrl(): void
     {

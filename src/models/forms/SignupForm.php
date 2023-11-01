@@ -70,8 +70,7 @@ class SignupForm extends Identity
             'skipOnEmpty' => false,
         ], [
             ['token'],
-            /** {@see SignupForm::validateToken} */
-            'validateToken',
+            $this->validateToken(...),
         ], [
             ['honeypot'],
             'compare',

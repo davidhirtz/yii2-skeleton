@@ -21,8 +21,7 @@ class UserForm extends User
             ...parent::rules(),
             [
                 ['email'],
-                'validateEmail',
-                'skipOnError' => true,
+                $this->validateEmail(...),
             ], [
                 ['newPassword', 'repeatPassword', 'oldPassword'],
                 'trim',
@@ -32,7 +31,7 @@ class UserForm extends User
                 'min' => $this->passwordMinLength,
             ], [
                 ['newPassword'],
-                'validateNewPassword',
+                $this->validateNewPassword(...),
                 'skipOnError' => true,
             ], [
                 ['repeatPassword'],
@@ -103,9 +102,6 @@ class UserForm extends User
         parent::afterSave($insert, $changedAttributes);
     }
 
-    /**
-     * @noinspection PhpUnused {@see static::rules()}
-     */
     public function validateEmail(): void
     {
         if ($this->isAttributeChanged('email') && !$this->validatePassword($this->oldPassword)) {
@@ -113,9 +109,6 @@ class UserForm extends User
         }
     }
 
-    /**
-     * @noinspection PhpUnused {@see static::rules()}
-     */
     public function validateNewPassword(): void
     {
         if ($this->newPassword && !$this->validatePassword($this->oldPassword)) {

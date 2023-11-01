@@ -26,14 +26,11 @@ class OwnershipForm extends Model
             ],
             [
                 ['name'],
-                'validateUser',
+                $this->validateUser(...),
             ],
         ];
     }
 
-    /**
-     * @noinspection PhpUnused {@see static::rules()}
-     */
     public function validateUser(): bool
     {
         $user = $this->getUser();

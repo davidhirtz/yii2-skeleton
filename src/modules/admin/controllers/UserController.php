@@ -29,7 +29,7 @@ class UserController extends Controller
     /**
      * @inheritDoc
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'access' => [
