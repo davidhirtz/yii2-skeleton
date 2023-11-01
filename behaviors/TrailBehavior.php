@@ -49,7 +49,7 @@ class TrailBehavior extends Behavior
 
     public function attach($owner): void
     {
-        $this->modelClass ??= get_class($owner);
+        $this->modelClass ??= $owner::class;
         $this->sanitizeModelClass();
 
         parent::attach($owner);
@@ -220,7 +220,7 @@ class TrailBehavior extends Behavior
      */
     protected function getDefaultAttributeValues(): array
     {
-        $className = get_class($this->owner);
+        $className = $this->owner::class;
 
         if (!isset(static::$_modelAttributes[$className])) {
             $attributes = [];

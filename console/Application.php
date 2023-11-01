@@ -23,7 +23,7 @@ class Application extends \yii\console\Application
      */
     public function preInit(&$config)
     {
-        $config['basePath'] = $config['basePath'] ?? getcwd();
+        $config['basePath'] ??= getcwd();
         $this->preInitInternal($config);
 
         // Removes web components.

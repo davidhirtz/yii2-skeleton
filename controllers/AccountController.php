@@ -26,21 +26,11 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\web\ServerErrorHttpException;
 
-/**
- * Class AccountController
- * @package davidhirtz\yii2\skeleton\controllers
- */
 class AccountController extends Controller
 {
-    /**
-     * @var string
-     */
     public $defaultAction = 'update';
 
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'access' => [
@@ -71,23 +61,17 @@ class AccountController extends Controller
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function actions()
+    public function actions(): array
     {
         return [
             'auth' => [
                 'class' => 'yii\authclient\AuthAction',
-                'successCallback' => [$this, 'onAuthSuccess'],
+                'successCallback' => $this->onAuthSuccess(...),
             ],
         ];
     }
 
-    /**
-     * @return string|Response
-     */
-    public function actionCreate()
+    public function actionCreate(): Response|string
     {
         if (!Yii::$app->getUser()->getIsGuest()) {
             $this->error(Yii::t('skeleton', 'Please logout before creating another account'));
@@ -109,7 +93,6 @@ class AccountController extends Controller
             $user->honeypot = Yii::$app->getSecurity()->generateRandomString(10);
         }
 
-        /** @noinspection MissedViewInspection */
         return $this->render('create', [
             'user' => $user,
         ]);
@@ -118,19 +101,13 @@ class AccountController extends Controller
     /**
      * Returns JSON encoded string containing a signup token.
      * The token will only be every five minutes, to prevent multiple signups within one session.
-     *
-     * @return string
      */
-    public function actionToken()
+    public function actionToken(): string
     {
         return SignupForm::getSessionToken();
     }
 
-    /**
-     * Login.
-     * @return string|Response
-     */
-    public function actionLogin()
+    public function actionLogin(): Response|string
     {
         if (!Yii::$app->getUser()->getIsGuest()) {
             $this->error(Yii::t('skeleton', 'Please logout before logging in with another account'));
@@ -157,17 +134,12 @@ class AccountController extends Controller
             $form->email = $request->get('email', Yii::$app->getSession()->get('email'));
         }
 
-        /** @noinspection MissedViewInspection */
         return $this->render('login', [
             'form' => $form,
         ]);
     }
 
-    /**
-     * Logout.
-     * @return string|Response
-     */
-    public function actionLogout()
+    public function actionLogout(): Response|string
     {
         if (Yii::$app->getUser()->logout()) {
             $this->success(Yii::t('skeleton', 'You are now logged out! See you soon!'));
@@ -176,15 +148,7 @@ class AccountController extends Controller
         return $this->goHome();
     }
 
-    /**
-     * Confirm email.
-     *
-     * @param string $email
-     * @param string $code
-     * @return string|Response
-     * @throws BadRequestHttpException
-     */
-    public function actionConfirm(string $email, string $code)
+    public function actionConfirm(string $email, string $code): Response|string
     {
         $form = new AccountConfirmForm([
             'email' => $email,
@@ -208,15 +172,7 @@ class AccountController extends Controller
         return $this->goHome();
     }
 
-    /**
-     * Resend form.
-     *
-     * If user is already logged in, skip form and directly populate
-     * the model with the user identity.
-     *
-     * @return string|Response
-     */
-    public function actionResend()
+    public function actionResend(): Response|string
     {
         $form = new AccountResendConfirmForm();
         $request = Yii::$app->getRequest();
@@ -237,16 +193,12 @@ class AccountController extends Controller
             $form->email = $request->get('email', Yii::$app->getSession()->get('email'));
         }
 
-        /** @noinspection MissedViewInspection */
         return $this->render('resend', [
             'form' => $form,
         ]);
     }
 
-    /**
-     * @return string|Response
-     */
-    public function actionRecover()
+    public function actionRecover(): Response|string
     {
         if (!Yii::$app->getUser()->isPasswordResetEnabled()) {
             throw new ForbiddenHttpException();
@@ -265,19 +217,12 @@ class AccountController extends Controller
             $form->email = Yii::$app->getRequest()->get('email', Yii::$app->getSession()->get('email'));
         }
 
-        /** @noinspection MissedViewInspection */
         return $this->render('recover', [
             'form' => $form,
         ]);
     }
 
-    /**
-     * @param string $email
-     * @param string $code
-     * @return string|Response
-     * @throws ForbiddenHttpException
-     */
-    public function actionReset($email, $code)
+    public function actionReset(string $email, string $code): Response|string
     {
         if (!Yii::$app->getUser()->isPasswordResetEnabled()) {
             throw new ForbiddenHttpException();
@@ -298,16 +243,12 @@ class AccountController extends Controller
             return $this->goHome();
         }
 
-        /** @noinspection MissedViewInspection */
         return $this->render('reset', [
             'form' => $form,
         ]);
     }
 
-    /**
-     * @return string|Response
-     */
-    public function actionUpdate()
+    public function actionUpdate(): Response|string
     {
         $user = UserForm::findOne(Yii::$app->getUser()->getId());
 
@@ -322,17 +263,12 @@ class AccountController extends Controller
             }
         }
 
-        /** @noinspection MissedViewInspection */
         return $this->render('update', [
             'user' => $user,
         ]);
     }
 
-    /**
-     * Deletes profile picture.
-     * @return Response
-     */
-    public function actionPicture()
+    public function actionPicture(): Response|string
     {
         $user = UserForm::findOne(Yii::$app->getUser()->getId());
         $user->picture = null;
@@ -344,15 +280,9 @@ class AccountController extends Controller
         return $this->redirect(['update']);
     }
 
-    /**
-     * Deletes user account.
-     * @return Response
-     */
-    public function actionDelete()
+    public function actionDelete(): Response|string
     {
-        /** @var DeleteForm $form */
-        $form = Yii::createObject([
-            'class' => 'davidhirtz\yii2\skeleton\models\forms\DeleteForm',
+        $form = Yii::$container->get(DeleteForm::class, [], [
             'model' => UserForm::findOne(Yii::$app->getUser()->getId()),
             'attribute' => 'password',
         ]);
@@ -369,10 +299,7 @@ class AccountController extends Controller
         return $this->redirect(['update']);
     }
 
-    /**
-     * @return Response
-     */
-    public function actionEnableGoogleAuthenticator()
+    public function actionEnableGoogleAuthenticator(): Response|string
     {
         $form = new GoogleAuthenticatorForm([
             'user' => Yii::$app->getUser()->getIdentity(),
@@ -387,10 +314,7 @@ class AccountController extends Controller
         return $this->redirect(['update']);
     }
 
-    /**
-     * @return Response
-     */
-    public function actionDisableGoogleAuthenticator()
+    public function actionDisableGoogleAuthenticator(): Response|string
     {
         $form = new GoogleAuthenticatorForm([
             'user' => Yii::$app->getUser()->getIdentity(),
@@ -405,18 +329,9 @@ class AccountController extends Controller
         return $this->redirect(['update']);
     }
 
-    /**
-     * Deletes a related auth client.
-     *
-     * @param string $id
-     * @param string $name
-     * @return Response
-     */
-    public function actionDeauthorize($id, $name)
+    public function actionDeauthorize(string $id, string $name): Response|string
     {
-        /**
-         * @var $auth AuthClient
-         */
+        /** @var $auth AuthClient */
         $auth = AuthClient::find()
             ->where(['id' => $id, 'name' => $name, 'user_id' => Yii::$app->getUser()->getId()])
             ->limit(1)
@@ -442,11 +357,9 @@ class AccountController extends Controller
     }
 
     /**
-     * @param ClientInterface $client
-     * @return string|Response
      * @see \yii\authclient\AuthAction::$successCallback
      */
-    public function onAuthSuccess($client)
+    public function onAuthSuccess(ClientInterface $client): Response|string
     {
         $auth = AuthClient::findOrCreateFromClient($client);
 
@@ -471,10 +384,6 @@ class AccountController extends Controller
         return $this->redirect(['update']);
     }
 
-    /**
-     * @param AuthClient $auth
-     * @return bool
-     */
     private function loginWithAuthClient(AuthClient $auth): bool
     {
         if ($auth->getIsNewRecord()) {
@@ -498,10 +407,6 @@ class AccountController extends Controller
         return $auth->update();
     }
 
-    /**
-     * @param AuthClient $auth
-     * @return bool
-     */
     private function signupWithAuthClient(AuthClient $auth): bool
     {
         if (!$auth->getIsNewRecord()) {

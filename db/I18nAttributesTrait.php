@@ -5,58 +5,32 @@ namespace davidhirtz\yii2\skeleton\db;
 use Yii;
 
 /**
- * Class I18nAttributesTrait.
- * @package davidhirtz\yii2\skeleton\db
- *
  * @property array $i18nAttributes
  */
 trait I18nAttributesTrait
 {
-    /**
-     * @see static::getI18nHints()
-     * @var array
-     */
-    private $_i18nHints;
+    private ?array $_i18nHints = null;
+    private ?array $_i18nLabels = null;
 
-    /**
-     * @see static::getI18nLabels()
-     * @var array
-     */
-    private $_i18nLabels;
-
-    /**
-     * @param string $attribute
-     * @param string|null $language
-     * @return mixed
-     */
-    public function getI18nAttribute(string $attribute, $language = null)
+    public function getI18nAttribute(string $attribute, ?string $language = null): mixed
     {
         return $this->getAttribute($this->isI18nAttribute($attribute) ? $this->getI18nAttributeName($attribute, $language) : $attribute);
     }
 
     /**
-     * Returns the translated attribute name for given language. If language is omitted
-     * the current application language is used.
-     *
-     * @param string $attribute
-     * @param string|null $language
-     * @return string
+     * Returns the translated attribute name for given language. If language is omitted, the current application
+     * language is used.
      */
-    public function getI18nAttributeName(string $attribute, $language = null)
+    public function getI18nAttributeName(string $attribute, ?string $language = null): string
     {
         return $this->isI18nAttribute($attribute) ? Yii::$app->getI18n()->getAttributeName($attribute, $language) : $attribute;
     }
 
     /**
-     * Returns an array with all attribute variations indexed by language. If the attribute
-     * is not translated this method returns the attribute indexed by the current application
-     * language.
-     *
-     * @param string $attribute
-     * @param array|null $languages
-     * @return array
+     * Returns an array with all attribute variations indexed by language. If the attribute is not translated, this
+     * method returns the attribute indexed by the current application language.
      */
-    public function getI18nAttributeNames(string $attribute, $languages = null)
+    public function getI18nAttributeNames(string $attribute, ?string $languages = null): array
     {
         if ($this->isI18nAttribute($attribute)) {
             $i18n = Yii::$app->getI18n();
@@ -77,14 +51,10 @@ trait I18nAttributesTrait
     }
 
     /**
-     * Returns a flat array with all translated attribute name for given languages.
-     * If languages is omitted all available languages are used.
-     *
-     * @param array|string $attributes
-     * @param array|null $languages
-     * @return array
+     * Returns a flat array with all translated attribute names for given languages. If the languages are omitted, all
+     * available languages are used.
      */
-    public function getI18nAttributesNames($attributes, $languages = null)
+    public function getI18nAttributesNames(array|string $attributes, ?array $languages = null): array
     {
         $i18n = Yii::$app->getI18n();
         $names = [];
@@ -96,21 +66,13 @@ trait I18nAttributesTrait
         return $names;
     }
 
-    /**
-     * @param string $attribute
-     * @return null
-     */
-    public function getAttributeHint($attribute)
+    public function getAttributeHint($attribute): string
     {
         /** @noinspection PhpMultipleClassDeclarationsInspection */
         return $this->getI18nHints()[$attribute] ?? parent::getAttributeHint($attribute);
     }
 
-    /**
-     * @param string $attribute
-     * @return null
-     */
-    public function getAttributeLabel($attribute)
+    public function getAttributeLabel($attribute): string
     {
         if ($this->i18nAttributes) {
             $labels = $this->getI18nLabels();
@@ -124,9 +86,6 @@ trait I18nAttributesTrait
         return parent::getAttributeLabel($attribute);
     }
 
-    /**
-     * @return array
-     */
     public function getI18nHints(): array
     {
         if ($this->_i18nHints === null) {
@@ -143,9 +102,6 @@ trait I18nAttributesTrait
         return $this->_i18nHints;
     }
 
-    /**
-     * @return array
-     */
     public function getI18nLabels(): array
     {
         if ($this->_i18nLabels === null) {
@@ -160,7 +116,7 @@ trait I18nAttributesTrait
                     if ($language != Yii::$app->language) {
                         $label = Yii::t('skeleton', '{label} ({language})', [
                             'label' => $label,
-                            'language' => strtoupper($language),
+                            'language' => strtoupper((string) $language),
                         ]);
                     }
 
@@ -172,16 +128,12 @@ trait I18nAttributesTrait
         return $this->_i18nLabels;
     }
 
-    /**
-     * @param array $rules
-     * @return array
-     */
-    public function getI18nRules(array $rules)
+    public function getI18nRules(array $rules): array
     {
         if ($this->i18nAttributes) {
             foreach ($rules as $key => $rule) {
-                // If an i18n attribute has a unique validator with a targetAttribute all related
-                // attributes need their own rule translating the target attribute.
+                // If an i18n attribute has a unique validator with a "targetAttribute", all related attributes need
+                // their own rule translating the target attribute.
                 if ($rule[1] === 'unique' && !empty($rule['targetAttribute'])) {
                     $attribute = is_array($rule[0]) ? array_pop($rule[0]) : $rule[0];
                     foreach ($this->getI18nAttributesNames($attribute) as $i18nAttribute) {
@@ -218,10 +170,6 @@ trait I18nAttributesTrait
         return $rules;
     }
 
-    /**
-     * @param string $attribute
-     * @return bool
-     */
     public function isI18nAttribute(string $attribute): bool
     {
         return in_array($attribute, $this->i18nAttributes);

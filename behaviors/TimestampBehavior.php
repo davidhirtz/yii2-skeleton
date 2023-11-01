@@ -16,9 +16,7 @@ class TimestampBehavior extends \yii\behaviors\TimestampBehavior
     public function init()
     {
         if (!$this->value) {
-            $this->value = function () {
-                return new DateTime();
-            };
+            $this->value = fn() => new DateTime();
         }
 
         parent::init();

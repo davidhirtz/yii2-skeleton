@@ -96,8 +96,8 @@ class SitemapBehavior extends Behavior
             if ($result) {
                 foreach (is_int(key($result)) ? $result : [$result] as $data) {
                     if (isset($data['loc'])) {
-                        $data['changefreq'] = $data['changefreq'] ?? $this->defaultChangeFrequency;
-                        $data['priority'] = $data['priority'] ?? $this->defaultPriority;
+                        $data['changefreq'] ??= $this->defaultChangeFrequency;
+                        $data['priority'] ??= $this->defaultPriority;
                         $urls[] = array_filter($data);
                     }
                 }

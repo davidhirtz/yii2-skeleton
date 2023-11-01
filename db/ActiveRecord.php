@@ -41,45 +41,26 @@ class ActiveRecord extends \yii\db\ActiveRecord
      * @var array containing the attribute names of attributes which should be used with I18N features such as
      * {@link \davidhirtz\yii2\cms\models\ActiveRecord::getI18nAttribute()}, {@link \davidhirtz\yii2\cms\models\ActiveRecord::getI18nRules()}, etc.
      */
-    public $i18nAttributes = [];
+    public array $i18nAttributes = [];
 
-    /**
-     * @var ArrayObject
-     */
-    private $_validators;
-
-    /**
-     * @var array {@see \davidhirtz\yii2\cms\models\ActiveRecord::activeAttributes()}
-     */
-    private $_activeAttributes;
-
-    /**
-     * @var array {@see \davidhirtz\yii2\cms\models\ActiveRecord::safeAttributes()}
-     */
-    private $_safeAttributes;
-
-    /**
-     * @var array {@see \davidhirtz\yii2\cms\models\ActiveRecord::scenarios()}
-     */
-    private $_scenarios;
+    private ?ArrayObject $_validators = null;
+    private ?array $_activeAttributes = null;
+    private ?array $_safeAttributes = null;
+    private ?array $_scenarios = null;
 
     /**
      * @var bool whether the current operation is part of a more complex process, this can be used to postpone conditional
      * updates after save or delete. See {@link \davidhirtz\yii2\cms\models\ActiveRecord::getIsBatch()}.
      */
-    private $_isBatch = false;
+    private bool $_isBatch = false;
 
     /**
      * @var bool whether the record was deleted, this is set in {@link \davidhirtz\yii2\cms\models\ActiveRecord::afterDelete()} and can be used
      * via {@link \davidhirtz\yii2\cms\models\ActiveRecord::isDeleted()}.
      */
-    private $_isDeleted = false;
+    private bool $_isDeleted = false;
 
-    /**
-     * @param string $attribute
-     * @return false
-     */
-    public function addInvalidAttributeError($attribute): bool
+    public function addInvalidAttributeError(string $attribute): bool
     {
         $this->addError($attribute, Yii::t('yii', '{attribute} is invalid.', [
             'attribute' => $this->getAttributeLabel($attribute),
@@ -88,19 +69,13 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return false;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function beforeValidate()
+    public function beforeValidate(): bool
     {
         $this->typecastAttributes();
         return parent::beforeValidate();
     }
 
-    /**
-     * Sets deleted flag.
-     */
-    public function beforeDelete()
+    public function beforeDelete(): bool
     {
         $this->_isDeleted = true;
         return parent::beforeDelete();
@@ -119,9 +94,9 @@ class ActiveRecord extends \yii\db\ActiveRecord
     /**
      * Typecasts boolean and numeric validators. This is similar to {@link AttributeTypecastBehavior} but performs the
      * operation before the actual validation to allow the use of {@link \yii\db\ActiveRecord::isAttributeChanged()} in
-     * validation. As Yii2 represents floats and decimals as strings only integer values will be typecast.
+     * validation. As Yii2 represents floats and decimals, as strings only integer values will be typecast.
      */
-    public function typecastAttributes()
+    public function typecastAttributes(): void
     {
         foreach ($this->getValidators() as $validator) {
             if ($validator instanceof BooleanValidator || ($validator instanceof NumberValidator && $validator->integerOnly)) {
@@ -144,13 +119,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
         }
     }
 
-    /**
-     * Reloads the relation and returns the related record(s).
-     *
-     * @param string $name
-     * @return ActiveRecord|ActiveRecord[]
-     */
-    public function refreshRelation($name)
+    public function refreshRelation(string $name): ActiveRecord|array
     {
         $query = $this->getRelation($name);
         $method = $query->multiple ? 'all' : 'one';
@@ -160,11 +129,9 @@ class ActiveRecord extends \yii\db\ActiveRecord
 
     /**
      * Adds default values to `updated_by_user_id` and `updated_at` if found in values of `$attributes`.
-     *
-     * @param array $attributes
-     * @return int
+     * @noinspection PhpUnused
      */
-    public function updateAttributesBlameable($attributes)
+    public function updateAttributesBlameable(array $attributes): int
     {
         foreach ($attributes as $name => $value) {
             if (is_int($name)) {
@@ -185,18 +152,9 @@ class ActiveRecord extends \yii\db\ActiveRecord
 
     /**
      * Updates the order attribute of models by given order.
-     *
-     * ```php
-     * davidhirtz\yii2\skeleton\db\ActiveRecord::updatePosition($asset, array_flip(Yii::$app->getRequest()->post('param')))
-     * ```
-     *
      * @param ActiveRecord[] $models
-     * @param array $order containing the primary keys in new order
-     * @param string $attribute the order attribute
-     * @param string|null $index key attribute name
-     * @return int
      */
-    public static function updatePosition($models, $order = [], $attribute = 'position', $index = null)
+    public static function updatePosition(array $models, array $order = [], string $attribute = 'position', ?string $index = null): int
     {
         $rowsUpdated = 0;
 
@@ -218,7 +176,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
      * @param bool $ignore whether records should be inserted regardless of previous errors or existing primary keys
      * @return int number of rows affected by the execution
      */
-    public static function batchInsert($columns, $rows = null, $ignore = false)
+    public static function batchInsert(array $columns, ?array $rows = null, bool $ignore = false): int
     {
         if ($rows === null) {
             $rows = $columns;
@@ -230,7 +188,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
 
         if ($ignore) {
             if (static::getDb()->getDriverName() !== 'mysql') {
-                throw new NotSupportedException(static::class . "::batchInsert does not support the option `ignore` for this database driver.");
+                throw new NotSupportedException(static::class . '::batchInsert does not support the option `ignore` for this database driver.');
             }
 
             $sql = $query->getRawSql();
@@ -242,18 +200,11 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return $query->execute();
     }
 
-
-    /**
-     * @param string|null $message
-     * @param int $level
-     * @param string $category
-     * @return void
-     */
-    public function logErrors($message = null, $level = Logger::LEVEL_WARNING, $category = 'application')
+    public function logErrors(?string $message = null, int $level = Logger::LEVEL_WARNING, string $category = 'application'): void
     {
         if (!$message) {
             $modelName = Inflector::camel2words($this->formName());
-            $message = ("{$modelName} {$this->getPrimaryKey()} could not be " . ($this->getIsNewRecord() ? 'inserted.' : 'updated.'));
+            $message = ("$modelName {$this->getPrimaryKey()} could not be " . ($this->getIsNewRecord() ? 'inserted.' : 'updated.'));
         }
 
         if ($errors = $this->getErrors()) {
@@ -266,26 +217,18 @@ class ActiveRecord extends \yii\db\ActiveRecord
     /**
      * Extends the default functionality by checking for DateTime objects, which unfortunately cannot be compared by
      * checking identical values using `===` as it always returns `true` even if the date was not changed.
-     *
-     * @param array $names
-     * @return array|void
      */
-    public function getDirtyAttributes($names = null)
+    public function getDirtyAttributes($names = null): array
     {
-        return array_filter(parent::getDirtyAttributes($names), function ($name) {
-            return !($attribute = $this->getAttribute($name)) instanceof \DateTime || $this->getOldAttribute($name) != $attribute;
-        }, ARRAY_FILTER_USE_KEY);
+        return array_filter(parent::getDirtyAttributes($names), fn($name): bool => !($attribute = $this->getAttribute($name)) instanceof \DateTime || $this->getOldAttribute($name) != $attribute, ARRAY_FILTER_USE_KEY);
     }
 
     /**
-     * Extends the default functionality by setting $identical to `false` for DateTime objects, which unfortunately cannot
-     * be compared by checking identical values using `===` as it always returns `true` even if the date was not changed.
-     *
-     * @param string $name
-     * @param bool $identical
-     * @return bool
+     * Extends the default functionality by setting $identical to `false` for DateTime objects, which unfortunately
+     * cannot be compared by checking identical values using `===` as it always returns `true` even if the date was not
+     * changed.
      */
-    public function isAttributeChanged($name, $identical = true)
+    public function isAttributeChanged($name, $identical = true): bool
     {
         if ($this->getAttribute($name) instanceof \DateTime) {
             $identical = false;
@@ -295,16 +238,14 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
-     * Overrides original method by triggering {@see \davidhirtz\yii2\cms\models\ActiveRecord::EVENT_CREATE_VALIDATORS} event. This enables attached
-     * behaviors to manipulate {@see Model::rules()} by modifying the array object returned by
-     * {@see Model::getValidators()}.
+     * Overrides original method by triggering {@see \davidhirtz\yii2\cms\models\ActiveRecord::EVENT_CREATE_VALIDATORS}
+     * event. This enables attached behaviors to manipulate {@see Model::rules()} by modifying the array object returned
+     * by {@see Model::getValidators()}.
      *
-     * This would be more fitting in {@see Model::rules()}. I might add a pull request... If this is added to Yii2 the
+     * This would be more fitting in {@see Model::rules()}. I might add a pull request... If this is added to Yii2, the
      * override can be removed. {@link https://github.com/yiisoft/yii2/issues/5438}
-     *
-     * @return ArrayObject
      */
-    public function getValidators()
+    public function getValidators(): ArrayObject
     {
         if ($this->_validators === null) {
             $this->_validators = $this->createValidators();
@@ -317,52 +258,34 @@ class ActiveRecord extends \yii\db\ActiveRecord
     /**
      * This method is in place to avoid endless calls to {@link \yii\db\ActiveRecord::activeAttributes()}.
      * If this method's results are cached in a future Yii2 version, this can be removed.
-     *
-     * @return array
      */
-    public function activeAttributes()
+    public function activeAttributes(): array
     {
-        if ($this->_activeAttributes === null) {
-            $this->_activeAttributes = parent::activeAttributes();
-        }
-
+        $this->_activeAttributes ??= parent::activeAttributes();
         return $this->_activeAttributes;
     }
 
     /**
      * This method is in place to avoid excessive calls to {@link \yii\db\ActiveRecord::safeAttributes()}.
      * If this method's results are cached in a future Yii2 version, this can be removed.
-     *
-     * @return array
      */
-    public function safeAttributes()
+    public function safeAttributes(): array
     {
-        if ($this->_safeAttributes === null) {
-            $this->_safeAttributes = parent::safeAttributes();
-        }
-
+        $this->_safeAttributes ??= parent::safeAttributes();
         return $this->_safeAttributes;
     }
 
     /**
      * This method is in place to avoid endless calls to {@link \yii\db\ActiveRecord::scenarios()}.
      * If this method's results are cached in a future Yii2 version, this can be removed.
-     *
-     * @return array
      */
-    public function scenarios()
+    public function scenarios(): array
     {
-        if ($this->_scenarios === null) {
-            $this->_scenarios = parent::scenarios();
-        }
-
+        $this->_scenarios ??= parent::scenarios();
         return $this->_scenarios;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function setScenario($value)
+    public function setScenario($value): void
     {
         $this->_activeAttributes = null;
         $this->_safeAttributes = null;
@@ -371,34 +294,22 @@ class ActiveRecord extends \yii\db\ActiveRecord
         parent::setScenario($value);
     }
 
-    /**
-     * @param bool $isBatch
-     */
     public function setIsBatch(bool $isBatch): void
     {
         $this->_isBatch = $isBatch;
     }
 
-    /**
-     * @return bool
-     */
     public function getIsBatch(): bool
     {
         return $this->_isBatch;
     }
 
-    /**
-     * @return bool
-     */
     public function isDeleted(): bool
     {
         return $this->_isDeleted;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => Yii::t('skeleton', 'ID'),

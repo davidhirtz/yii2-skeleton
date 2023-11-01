@@ -120,7 +120,7 @@ class RedirectBehavior extends Behavior
     public function getUrl()
     {
         if (!method_exists($this->owner, 'getRoute')) {
-            throw new InvalidConfigException(get_class($this->owner) . ' needs to either implement a `getUrl` or `getRoute` method');
+            throw new InvalidConfigException($this->owner::class . ' needs to either implement a `getUrl` or `getRoute` method');
         }
 
         return ($route = $this->owner->getRoute()) ? Yii::$app->getUrlManager()->createUrl($route) : false;

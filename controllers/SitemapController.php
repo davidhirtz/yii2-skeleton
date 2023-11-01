@@ -8,22 +8,13 @@ use XMLWriter;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use Yii;
+use yii\web\Response;
 
-/**
- * Class SitemapController
- * @package davidhirtz\yii2\skeleton\controllers
- */
 class SitemapController extends Controller
 {
-    /**
-     * @var XMLWriter
-     */
-    private $writer;
+    private ?XMLWriter $writer = null;
 
-    /**
-     * Makes sure sitemap is installed.
-     */
-    public function init()
+    public function init(): void
     {
         if (!Yii::$app->has('sitemap')) {
             throw new NotFoundHttpException();
@@ -32,10 +23,7 @@ class SitemapController extends Controller
         parent::init();
     }
 
-    /**
-     * @return array
-     */
-    public function behaviors()
+    public function behaviors(): array
     {
         $behaviors = parent::behaviors();
         $sitemap = Yii::$app->sitemap;
@@ -61,17 +49,11 @@ class SitemapController extends Controller
         return $behaviors;
     }
 
-    /**
-     * Renders XML sitemaps.
-     *
-     * @param string|null $key
-     * @param int|null $offset
-     */
-    public function actionIndex($key = null, $offset = null)
+    public function actionIndex(?string $key = null, ?int $offset = null): string|bool
     {
         $sitemap = Yii::$app->sitemap;
         $response = Yii::$app->getResponse();
-        $response->format = $response::FORMAT_RAW;
+        $response->format = Response::FORMAT_RAW;
 
         ob_start();
         ob_implicit_flush(false);
@@ -95,11 +77,7 @@ class SitemapController extends Controller
         return ob_get_clean();
     }
 
-    /**
-     * @param array $urls
-     * @param bool $isIndex
-     */
-    private function writeUrlset($urls, $isIndex = false)
+    private function writeUrlset(array $urls, bool $isIndex = false): void
     {
         $this->writer->startElement($isIndex ? 'sitemapindex' : 'urlset');
         $this->writer->writeAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');

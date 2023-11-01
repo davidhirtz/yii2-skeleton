@@ -3,25 +3,19 @@
 namespace davidhirtz\yii2\skeleton\core;
 
 use Composer\InstalledVersions;
+use davidhirtz\yii2\skeleton\auth\clients\Facebook;
 use Yii;
 use yii\base\ActionEvent;
 use yii\base\InvalidConfigException;
 use yii\console\controllers\MigrateController;
 use yii\helpers\ArrayHelper;
 
-/**
- * Class ApplicationTrait
- * @package davidhirtz\yii2\skeleton\core
- */
 trait ApplicationTrait
 {
-    /**
-     * @param array $config
-     */
-    protected function preInitInternal(&$config)
+    protected function preInitInternal(&$config): void
     {
         if (!isset($config['basePath'])) {
-            throw new InvalidConfigException(__CLASS__ . '::$basePath must be defined');
+            throw new InvalidConfigException(self::class . '::$basePath must be defined');
         }
 
         Yii::setAlias('@skeleton', dirname(__FILE__, 2));
@@ -154,8 +148,8 @@ trait ApplicationTrait
             $config['components']['mailer']['transport']['dsn'] = $mailerDsn;
         }
 
-        // Make sure cache prefix via params is applied before application bootstrap, as a DB session might get started
-        // which could trigger the database schema cache.
+        // Make sure the cache prefix via params is applied before application bootstrap, as a DB session might get
+        // started which could trigger the database schema cache.
         if ($cacheKeyPrefix = ($config['params']['cacheKeyPrefix'] ?? false)) {
             $config['components']['cache']['keyPrefix'] = $cacheKeyPrefix;
         }
@@ -166,18 +160,18 @@ trait ApplicationTrait
     /**
      * Sets default url manager rules after configuration.
      */
-    protected function setDefaultUrlManagerRules()
+    protected function setDefaultUrlManagerRules(): void
     {
-        $alias = rtrim($this->getModules()['admin']['alias'], '/');
+        $alias = rtrim((string) $this->getModules()['admin']['alias'], '/');
 
         $this->getUrlManager()->addRules([
             '' => $this->defaultRoute,
             'application-health' => 'health/index',
             'sitemap.xml' => 'sitemap/index',
-            "{$alias}/<module>/<controller>/<view>" => 'admin/<module>/<controller>/<view>',
-            "{$alias}/<controller>/<view>" => 'admin/<controller>/<view>',
-            "{$alias}/<controller>" => 'admin/<controller>',
-            "{$alias}/?" => 'admin/',
+            "$alias/<module>/<controller>/<view>" => 'admin/<module>/<controller>/<view>',
+            "$alias/<controller>/<view>" => 'admin/<controller>/<view>',
+            "$alias/<controller>" => 'admin/<controller>',
+            "$alias/?" => 'admin/',
         ], false);
     }
 
@@ -185,63 +179,48 @@ trait ApplicationTrait
      * Detects Facebook client via config.
      * @param array $config
      */
-    protected function setFacebookClientComponent(&$config)
+    protected function setFacebookClientComponent(array &$config): void
     {
         if (isset($config['params']['facebookClientId'], $config['params']['facebookClientSecret'])) {
             $config['components']['authClientCollection']['clients']['facebook'] = [
-                'class' => 'davidhirtz\yii2\skeleton\auth\clients\Facebook',
+                'class' => Facebook::class,
             ];
         }
     }
 
     /**
      * Extends given application component.
-     *
-     * @param string $id
-     * @param array $definition
      */
-    public function extendComponent($id, $definition)
+    public function extendComponent(string $id, array $definition): void
     {
         $this->set($id, ArrayHelper::merge($this->getComponents()[$id] ?? [], $definition));
     }
 
     /**
      * Extends multiple application components.
-     *
-     * @param array $components
      */
-    public function extendComponents($components)
+    public function extendComponents(array $components): void
     {
         foreach ($components as $id => $definition) {
             $this->extendComponent($id, $definition);
         }
     }
 
-    /**
-     * @param string $id
-     * @param array $module
-     */
-    public function extendModule($id, $module)
+    public function extendModule(string $id, array $module): void
     {
         if ($module) {
             $this->setModule($id, ArrayHelper::merge($module, $this->getModules()[$id] ?? []));
         }
     }
 
-    /**
-     * @param array $modules
-     */
-    public function extendModules($modules)
+    public function extendModules(array $modules): void
     {
         foreach ($modules as $id => $config) {
             $this->extendModule($id, $config);
         }
     }
 
-    /**
-     * @param string $namespace
-     */
-    public function setMigrationNamespace($namespace)
+    public function setMigrationNamespace(string $namespace): void
     {
         if ($this->getRequest()->getIsConsoleRequest()) {
             $this->on(static::EVENT_BEFORE_ACTION, function (ActionEvent $event) {

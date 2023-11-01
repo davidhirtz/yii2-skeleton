@@ -24,10 +24,7 @@ class SerializedAttributesBehavior extends Behavior
      */
     public $encode = false;
 
-    /**
-     * @var array
-     */
-    private $oldAttributes = [];
+    private array $oldAttributes = [];
 
     /***********************************************************************
      * Events.

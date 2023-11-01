@@ -58,7 +58,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
      */
     public function prefixColumns(array $columns): array
     {
-        list(, $alias) = $this->getTableNameAndAlias();
+        [, $alias] = $this->getTableNameAndAlias();
 
         foreach ($columns as &$column) {
             $column = "$alias.[[$column]]";
@@ -86,7 +86,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
             if (is_array($this->select)) {
                 if ($attributes = $this->getModelInstance()->i18nAttributes) {
                     $attributes = array_combine($attributes, $this->prefixColumns($attributes));
-                    list(, $alias) = $this->getTableNameAndAlias();
+                    [, $alias] = $this->getTableNameAndAlias();
                     $i18n = Yii::$app->getI18n();
 
                     foreach ($this->select as $key => $column) {
@@ -111,7 +111,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
     {
         /** @noinspection PhpUndefinedMethodInspection */
         $attributeName = $this->getModelInstance()->getI18nAttributeName($attribute, $language);
-        list(, $alias) = $this->getTableNameAndAlias();
+        [, $alias] = $this->getTableNameAndAlias();
 
         return "$alias.[[$attributeName]]";
     }
@@ -119,7 +119,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
     public function whereLower(array $attributes): static
     {
         foreach ($attributes as $attribute => $value) {
-            $this->andWhere(["LOWER($attribute)" => mb_strtolower($value, Yii::$app->charset)]);
+            $this->andWhere(["LOWER($attribute)" => mb_strtolower((string) $value, Yii::$app->charset)]);
         }
 
         return $this;
@@ -161,7 +161,6 @@ class ActiveQuery extends \yii\db\ActiveQuery
     protected function getModelInstance(): ActiveRecord
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
-        /** @noinspection PhpAccessStaticViaInstanceInspection */
         return $this->modelClass::instance();
     }
 }
