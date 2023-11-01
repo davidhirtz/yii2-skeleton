@@ -13,9 +13,6 @@ use yii\helpers\ArrayHelper;
  */
 class Facebook extends \yii\authclient\clients\Facebook implements ClientInterface
 {
-    /**
-     * @var array
-     */
     public $attributeNames = [
         'id',
         'name',
@@ -33,11 +30,11 @@ class Facebook extends \yii\authclient\clients\Facebook implements ClientInterfa
     /**
      * Sets login information from application params.
      */
-    public function init()
+    public function init(): void
     {
         if (!$this->clientId) {
             if (!isset(Yii::$app->params['facebookClientId'])) {
-                throw new InvalidConfigException(__CLASS__ . '::$clientId must be defined');
+                throw new InvalidConfigException(self::class . '::$clientId must be defined');
             }
 
             $this->clientId = Yii::$app->params['facebookClientId'];
@@ -45,7 +42,7 @@ class Facebook extends \yii\authclient\clients\Facebook implements ClientInterfa
 
         if (!$this->clientSecret) {
             if (!isset(Yii::$app->params['facebookClientSecret'])) {
-                throw new InvalidConfigException(__CLASS__ . '::$clientSecret must be defined');
+                throw new InvalidConfigException(self::class . '::$clientSecret must be defined');
             }
 
             $this->clientSecret = Yii::$app->params['facebookClientSecret'];
@@ -54,10 +51,7 @@ class Facebook extends \yii\authclient\clients\Facebook implements ClientInterfa
         parent::init();
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getSafeUserAttributes()
+    public function getSafeUserAttributes(): array
     {
         $attributes = $this->getUserAttributes();
         $safe = [];
@@ -81,9 +75,9 @@ class Facebook extends \yii\authclient\clients\Facebook implements ClientInterfa
         }
 
         if (isset($attributes['location']['name'])) {
-            $pos = strpos($attributes['location']['name'], ',');
-            $safe['country'] = mb_substr($attributes['location']['name'], 0, $pos, Yii::$app->charset);
-            $safe['city'] = trim(mb_substr($attributes['location']['name'], $pos + 1, null, Yii::$app->charset));
+            $pos = strpos((string) $attributes['location']['name'], ',');
+            $safe['country'] = mb_substr((string) $attributes['location']['name'], 0, $pos, Yii::$app->charset);
+            $safe['city'] = trim(mb_substr((string) $attributes['location']['name'], $pos + 1, null, Yii::$app->charset));
         }
 
         if (isset($attributes['picture']['data']) && !$attributes['picture']['data']['is_silhouette']) {
@@ -93,10 +87,7 @@ class Facebook extends \yii\authclient\clients\Facebook implements ClientInterfa
         return $safe;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getAuthData()
+    public function getAuthData(): array|string
     {
         $attributes = $this->getUserAttributes();
 
@@ -107,18 +98,12 @@ class Facebook extends \yii\authclient\clients\Facebook implements ClientInterfa
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public static function getExternalUrl($client)
+    public static function getExternalUrl($client): string
     {
-        return "https://www.facebook.com/profile.php?{$client->id}";
+        return "https://www.facebook.com/profile.php?$client->id";
     }
 
-    /**
-     * @inheritdoc
-     */
-    public static function getDisplayName($client)
+    public static function getDisplayName($client): string
     {
         return "{$client->data['name']} ({$client->data['email']})";
     }
