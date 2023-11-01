@@ -7,9 +7,6 @@ use yii\helpers\ArrayHelper;
 use yii\i18n\PhpMessageSource;
 
 /**
- * Class I18N.
- * @package davidhirtz\yii2\skeleton\i18n
- *
  * @property array $languages {@see I18N::getLanguages()}
  */
 class I18N extends \yii\i18n\I18N
@@ -74,7 +71,7 @@ class I18N extends \yii\i18n\I18N
 
     public function getLanguageCode(): string
     {
-        return substr(Yii::$app->language, 0, 2);
+        return substr((string) Yii::$app->language, 0, 2);
     }
 
     /**
@@ -87,7 +84,7 @@ class I18N extends \yii\i18n\I18N
             $language = Yii::$app->language;
         }
 
-        return rtrim($attribute . '_' . ($language != Yii::$app->sourceLanguage ? strtr(mb_strtolower($language, Yii::$app->charset), '-', '_') : ''), '_');
+        return rtrim($attribute . '_' . ($language != Yii::$app->sourceLanguage ? strtr(mb_strtolower((string) $language, Yii::$app->charset), '-', '_') : ''), '_');
     }
 
     /**

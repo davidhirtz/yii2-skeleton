@@ -51,9 +51,7 @@ class LogGridView extends GridView
             'label' => Yii::t('skeleton', 'Date'),
             'headerOptions' => ['width' => '150'],
             'contentOptions' => ['class' => 'text-nowrap'],
-            'content' => function ($model) {
-                return Yii::$app->getFormatter()->asDatetime(new DateTime($model['date']), 'short');
-            }
+            'content' => fn($model) => Yii::$app->getFormatter()->asDatetime(new DateTime($model['date']), 'short')
         ];
     }
 
@@ -65,9 +63,7 @@ class LogGridView extends GridView
         return [
             'label' => Yii::t('skeleton', 'Level'),
             'headerOptions' => ['width' => '100'],
-            'content' => function ($model) {
-                return Html::tag('div', $model['level'], ['class' => $this->getLevelCssClass($model['level'])]);
-            }
+            'content' => fn($model) => Html::tag('div', $model['level'], ['class' => $this->getLevelCssClass($model['level'])])
         ];
     }
 
@@ -79,14 +75,14 @@ class LogGridView extends GridView
         return [
             'label' => Yii::t('yii', 'Error'),
             'content' => function ($model) {
-                $html = Html::tag('div', trim($model['message']), ['class' => 'strong']);
+                $html = Html::tag('div', trim((string) $model['message']), ['class' => 'strong']);
 
                 if (isset($model['category'])) {
                     $html .= Html::tag('div', $model['category'], ['class' => 'small']);
                 }
 
                 if (isset($model['vars'])) {
-                    $html .= Html::tag('pre', Html::encode(rtrim($model['vars'])), ['class' => 'small']);
+                    $html .= Html::tag('pre', Html::encode(rtrim((string) $model['vars'])), ['class' => 'small']);
                 }
 
                 return $html;
@@ -98,7 +94,7 @@ class LogGridView extends GridView
      * @param string $level
      * @return string
      */
-    protected function getLevelCssClass($level)
+    protected function getLevelCssClass($level): string
     {
         return 'btn btn-sm ' . ($level !== 'error' ? "bg-{$level}" : 'btn-danger');
     }

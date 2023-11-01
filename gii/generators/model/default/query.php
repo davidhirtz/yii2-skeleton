@@ -33,6 +33,6 @@ namespace <?= $generator->queryNs ?>;
  * @method <?= $modelFullClassName ?>[] each($batchSize = 100, $db = null)
  * @method <?= $modelFullClassName ?> one($db = null)
  */
-class <?= $className ?> extends <?= '\\' . ltrim($generator->queryBaseClass, '\\') . "\n" ?>
+class <?= $className ?> extends <?= '\\' . ltrim((string) $generator->queryBaseClass, '\\') . "\n" ?>
 {
 }

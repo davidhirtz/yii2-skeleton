@@ -3,30 +3,24 @@
 namespace davidhirtz\yii2\skeleton\validators;
 
 use davidhirtz\yii2\datetime\DateTime;
-use Exception;
 use RobThree\Auth\TwoFactorAuth;
 use Yii;
-use yii\base\Model;
 use yii\base\NotSupportedException;
 use yii\validators\StringValidator;
 
-/**
- * Class GoogleAuthenticatorValidator
- * @package davidhirtz\yii2\skeleton\validators
- */
 class GoogleAuthenticatorValidator extends StringValidator
 {
     /**
-     * @var string the Google authenticator secret key.
+     * @var string|null the Google authenticator secret key.
      */
-    public $secret;
+    public ?string $secret = null;
 
     /**
      * @var DateTime|null the previous datetime a code was matched. Only if the returned timeslice is greater than the last used
      * datetime for this user/secret this is the first time the code has been used. This is an effective defense against a
      * replay attack. If null, the check will not be performed.
      */
-    public $datetime;
+    public ?DateTime $datetime = null;
 
     /**
      * @var int
@@ -38,36 +32,26 @@ class GoogleAuthenticatorValidator extends StringValidator
      * For example, if a code with codePeriod = 60 is generated at 10:00:00, a discrepancy of 1 will allow a periodSize
      * of 30 seconds on either side of the codePeriod resulting in a valid code from 09:59:30 to 10:00:29.
      */
-    public $discrepancy = 1;
+    public int $discrepancy = 1;
 
     /**
      * @var int defines the period that a TOTP code will be valid for, in seconds. The default value is 30.
      */
-    public $period = 30;
+    public int $period = 30;
 
     /**
-     * @var int|null allows to check a code for a specific point in time. This argument has no real practical use but is
+     * @var int|null allows checking a code for a specific point in time. This argument has no real practical use but is
      * used for unit testing. The default value, null, means: use the current time
      */
-    public $currentTime;
+    public ?int $currentTime = null;
 
-    /**
-     * @inheritDoc
-     */
-    public function init()
+    public function init(): void
     {
-        if ($this->message === null) {
-            $this->message = Yii::t('yii', '{attribute} is invalid.');
-        }
-
+        $this->message ??= Yii::t('yii', '{attribute} is invalid.');
         parent::init();
     }
 
-    /**
-     * @param Model $model
-     * @param string $attribute
-     */
-    public function validateAttribute($model, $attribute)
+    public function validateAttribute($model, $attribute): void
     {
         parent::validateAttribute($model, $attribute);
 
@@ -87,6 +71,6 @@ class GoogleAuthenticatorValidator extends StringValidator
      */
     protected function validateValue($value)
     {
-        throw new NotSupportedException(__CLASS__ . ' does not support validateValue().');
+        throw new NotSupportedException(self::class . ' does not support validateValue().');
     }
 }

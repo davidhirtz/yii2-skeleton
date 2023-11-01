@@ -12,15 +12,9 @@ use yii\i18n\PhpMessageSource;
  */
 trait MessageSourceTrait
 {
-    /**
-     * @var string
-     */
-    public $messageSourceAttribute = 'description';
+    public string $messageSourceAttribute = 'description';
 
-    /**
-     * @var array
-     */
-    private $_translations;
+    private ?array $_translations = null;
 
     /**
      * Finds the correct translation source for the authItem description.
@@ -62,9 +56,6 @@ trait MessageSourceTrait
         return $this->_translations;
     }
 
-    /**
-     * @param array $translations
-     */
     public function setTranslations(array $translations): void
     {
         $this->_translations = $translations;

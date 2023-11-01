@@ -4,23 +4,19 @@ namespace davidhirtz\yii2\skeleton\helpers;
 
 use yii\helpers\BaseStringHelper;
 
-/**
- * Class StringHelper
- * @package davidhirtz\yii2\skeleton\helpers
- */
 class StringHelper extends BaseStringHelper
 {
     /**
      * Obfuscates email address for public display.
-     *
-     * @param string $email
-     * @param bool $obfuscateDomain
-     * @param int $length
-     * @param int $maxLength
-     * @param string $replacement
-     * @return string
+     * @noinspection PhpUnused
      */
-    public static function obfuscateEmail($email, $obfuscateDomain = true, $length = 2, $maxLength = 5, $replacement = '*')
+    public static function obfuscateEmail(
+        string $email,
+        bool $obfuscateDomain = true,
+        int $length = 2,
+        int $maxLength = 5,
+        string $replacement = '*'
+    ): string
     {
         $parts = explode('@', $email);
         $url = explode('.', $parts[1]);
@@ -34,14 +30,12 @@ class StringHelper extends BaseStringHelper
         return $email . implode('.', $url);
     }
 
-    /**
-     * @param string $text
-     * @param int $length
-     * @param int $maxLength
-     * @param string $replacement
-     * @return string
-     */
-    public static function obfuscateText($text, $length = 2, $maxLength = 5, $replacement = '*')
+    public static function obfuscateText(
+        string $text,
+        int $length = 2,
+        int $maxLength = 5,
+        string $replacement = '*'
+    ): string
     {
         $length = min($length, strlen($text));
         return substr($text, 0, $length) . str_repeat($replacement, min(strlen($text) - $length, $maxLength));

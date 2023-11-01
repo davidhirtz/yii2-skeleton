@@ -29,7 +29,7 @@ class AuthClient extends ActiveRecord
     /**
      * @inheritDoc
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'DateTimeBehavior' => DateTimeBehavior::class,

@@ -14,38 +14,33 @@ class SignupForm extends Identity
     /**
      * @var bool whether Facebook should be enabled
      */
-    public $enableFacebookSignup = true;
+    public bool $enableFacebookSignup = true;
 
     /**
-     * @var string
+     * @var string|null the password
      */
-    public $password;
+    public ?string $password = null;
 
     /**
-     * @var string honeypot text field to mess with bots, the text field will have a random value
-     * which will be removed by javascript on form submit.
+     * @var string|null honeypot text field to mess with bots, the text field will have a random value which will be
+     * removed by javascript before the form is submitted.
      */
-    public $honeypot;
+    public ?string $honeypot = null;
 
     /**
-     * @var bool whether user has accepted the terms of service.
+     * @var bool|string whether user has accepted the terms of service.
      */
-    public $terms;
+    public bool|string $terms = false;
 
     /**
-     * @var string token text field is set by ajax and checked against cookie.
+     * @var string|null token text field is set by ajax and checked against cookie.
      */
-    public $token;
-
-    /**
-     * @var int the web user ip.
-     */
-    public $ipAddress;
+    public ?string $token = null;
 
     /**
      * @var int
      */
-    public $spamProtectionInSeconds = 60;
+    public int $spamProtectionInSeconds = 60;
 
     /**
      * Cookie name.
@@ -60,41 +55,32 @@ class SignupForm extends Identity
      */
     public function rules(): array
     {
-        return array_merge(parent::rules(), [
-            [
-                ['password'],
-                'required',
-            ],
-            [
-                ['password'],
-                'string',
-                'min' => $this->passwordMinLength,
-            ],
-            [
-                ['terms'],
-                'compare',
-                'compareValue' => 1,
-                'message' => Yii::t('skeleton', 'Please accept the terms of service and privacy policy.'),
-                'skipOnEmpty' => false,
-            ],
-            [
-                ['token'],
-                /** {@see \davidhirtz\yii2\skeleton\models\forms\SignupForm::validateToken()} */
-                'validateToken',
-            ],
-            [
-                ['honeypot'],
-                'compare',
-                'compareValue' => '',
-                'message' => Yii::t('skeleton', 'Sign up could not be completed, please try again.'),
-            ],
-        ]);
+        return [...parent::rules(), [
+            ['password'],
+            'required',
+        ], [
+            ['password'],
+            'string',
+            'min' => $this->passwordMinLength,
+        ], [
+            ['terms'],
+            'compare',
+            'compareValue' => 1,
+            'message' => Yii::t('skeleton', 'Please accept the terms of service and privacy policy.'),
+            'skipOnEmpty' => false,
+        ], [
+            ['token'],
+            /** {@see SignupForm::validateToken} */
+            'validateToken',
+        ], [
+            ['honeypot'],
+            'compare',
+            'compareValue' => '',
+            'message' => Yii::t('skeleton', 'Sign up could not be completed, please try again.'),
+        ]];
     }
 
-    /**
-     * Validates token.
-     */
-    public function validateToken()
+    public function validateToken(): void
     {
         if (($token = static::getSessionToken()) !== null) {
             if ($this->token !== $token) {
@@ -113,7 +99,7 @@ class SignupForm extends Identity
     /**
      * Checks the IP address against the new signups.
      */
-    public function validateIp()
+    public function validateIp(): void
     {
         if ($this->ipAddress && $this->spamProtectionInSeconds > 0) {
             /** @var UserLogin $signup */
@@ -147,7 +133,7 @@ class SignupForm extends Identity
             $this->ipAddress = Yii::$app->getRequest()->getUserIP();
         }
 
-        // There were some cases in which the value set by the ajax call contained a leading space....
+        // There were some cases in which the value set by the ajax call contained a leading space…
         if ($this->token) {
             $this->token = trim($this->token);
         }
@@ -198,10 +184,7 @@ class SignupForm extends Identity
         parent::afterSave($insert, $changedAttributes);
     }
 
-    /**
-     * Creates user login record.
-     */
-    private function createUserLogin()
+    private function createUserLogin(): void
     {
         if (Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
             $this->loginType = UserLogin::TYPE_SIGNUP;
@@ -210,12 +193,10 @@ class SignupForm extends Identity
     }
 
     /**
-     * Generates a random token that is saved in the user session. Override this method to return
+     * Generates a random token saved in the user session. Override this method to return
      * null to disabled token check.
-     *
-     * @return string|null
      */
-    public static function getSessionToken()
+    public static function getSessionToken(): ?string
     {
         $time = time();
         $session = Yii::$app->getSession();
@@ -241,9 +222,6 @@ class SignupForm extends Identity
      */
     public function attributeLabels(): array
     {
-        return array_merge(parent::attributeLabels(), [
-            'password' => Yii::t('skeleton', 'Password'),
-            'terms' => Yii::t('skeleton', 'I accept the terms of service and privacy policy'),
-        ]);
+        return [...parent::attributeLabels(), 'password' => Yii::t('skeleton', 'Password'), 'terms' => Yii::t('skeleton', 'I accept the terms of service and privacy policy')];
     }
 }

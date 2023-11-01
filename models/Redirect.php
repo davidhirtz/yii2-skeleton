@@ -9,7 +9,6 @@ use davidhirtz\yii2\skeleton\behaviors\TimestampBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\db\TypeAttributeTrait;
-use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\models\traits\UpdatedByUserTrait;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\RedirectActiveForm;
 use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
@@ -81,7 +80,7 @@ class Redirect extends ActiveRecord
     /**
      * @return bool
      */
-    public function beforeValidate()
+    public function beforeValidate(): bool
     {
         if ($this->type === null) {
             $this->type = static::TYPE_DEFAULT;
@@ -93,10 +92,7 @@ class Redirect extends ActiveRecord
         return parent::beforeValidate();
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function beforeSave($insert)
+    public function beforeSave($insert): bool
     {
         $this->attachBehaviors([
             'BlameableBehavior' => BlameableBehavior::class,
@@ -108,9 +104,11 @@ class Redirect extends ActiveRecord
 
     /**
      * Makes sure the url is not pointing to another redirect, to eliminate unneeded redirect loops.
+     * @noinspection PhpUnused {@see static::rules()}
      */
-    public function validateUrl()
+    public function validateUrl(): void
     {
+        /** @var Redirect $redirect */
         $redirect = static::find()
             ->where(['request_uri' => $this->url])
             ->limit(1)
@@ -121,51 +119,34 @@ class Redirect extends ActiveRecord
         }
     }
 
-    /**
-     * @return array|false
-     */
-    public function getTrailModelAdminRoute()
+    public function getTrailModelAdminRoute(): array|false
     {
         return $this->getAdminRoute();
     }
 
     /**
-     * @return RedirectActiveForm
+     * @return class-string
      */
-    public function getActiveForm()
+    public function getActiveForm(): string
     {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return RedirectActiveForm::class;
     }
 
-    /**
-     * @return array|false
-     */
-    public function getAdminRoute()
+    public function getAdminRoute(): array|false
     {
         return $this->id ? ['/admin/redirect/update', 'id' => $this->id] : false;
     }
 
-    /**
-     * @return string
-     */
     public function getBaseUrl(): string
     {
         return !parse_url($this->url, PHP_URL_HOST) ? '/' : '';
     }
 
-    /**
-     * @param string $url
-     * @return string|false
-     */
-    public static function sanitizeUrl($url)
+    public static function sanitizeUrl(string $url): string
     {
         return $url ? preg_replace('/\s+/', '%20', trim($url, '/ ')) : '';
     }
 
-    /**
-     * @return array[]
-     */
     public static function getTypes(): array
     {
         return [
@@ -180,10 +161,7 @@ class Redirect extends ActiveRecord
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return array_merge(parent::attributeLabels(), [
             'request_uri' => Yii::t('skeleton', 'Request'),
@@ -191,18 +169,12 @@ class Redirect extends ActiveRecord
         ]);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function formName()
+    public function formName(): string
     {
         return 'Redirect';
     }
 
-    /**
-     * @return string
-     */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%redirect}}';
     }

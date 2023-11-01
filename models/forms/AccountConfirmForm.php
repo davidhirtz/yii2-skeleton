@@ -6,10 +6,6 @@ use davidhirtz\yii2\skeleton\models\traits\IdentityTrait;
 use yii\base\Model;
 use Yii;
 
-/**
- * Class AccountConfirmForm
- * @package davidhirtz\yii2\skeleton\models\forms
- */
 class AccountConfirmForm extends Model
 {
     use IdentityTrait;
@@ -17,12 +13,12 @@ class AccountConfirmForm extends Model
     /**
      * @var string
      */
-    public $code;
+    public string $code;
 
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [
@@ -43,10 +39,7 @@ class AccountConfirmForm extends Model
         ];
     }
 
-    /**
-     * Validates user credentials.
-     */
-    public function afterValidate()
+    public function afterValidate(): void
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
@@ -65,7 +58,7 @@ class AccountConfirmForm extends Model
      * Logs in a user using the provided email and password.
      * @return bool
      */
-    public function confirm()
+    public function confirm(): bool
     {
         if ($this->validate()) {
             $this->getUser()->updateAttributes(['verification_token' => null]);
@@ -75,10 +68,7 @@ class AccountConfirmForm extends Model
         return false;
     }
 
-    /**
-     * @return array
-     */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'name' => Yii::t('skeleton', 'Username'),

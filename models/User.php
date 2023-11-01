@@ -8,11 +8,9 @@ use davidhirtz\yii2\skeleton\db\StatusAttributeTrait;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use davidhirtz\yii2\skeleton\helpers\Image;
-use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\datetime\DateTime;
-use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
 use davidhirtz\yii2\skeleton\web\StreamUploadedFile;
 use yii\db\ActiveQuery;
@@ -46,11 +44,8 @@ use yii\web\UploadedFile;
  * @property DateTime $updated_at
  * @property DateTime $created_at
  *
- * @method static \davidhirtz\yii2\skeleton\models\User findOne($condition)
- * @method static \davidhirtz\yii2\skeleton\models\User[] findAll($condition)
- *
- * @property \davidhirtz\yii2\skeleton\models\User $admin {@link \davidhirtz\yii2\skeleton\models\User::getAdmin()}
- * @property AuthClient[] $authClients {@link \davidhirtz\yii2\skeleton\models\User::getAuthClients()}
+ * @property User $admin {@link User::getAdmin}
+ * @property AuthClient[] $authClients {@link User::getAuthClients}
  * @property string $uploadPath
  */
 class User extends ActiveRecord
@@ -122,7 +117,7 @@ class User extends ActiveRecord
             'TimestampBehavior' => 'davidhirtz\yii2\skeleton\behaviors\TimestampBehavior',
             'TrailBehavior' => [
                 'class' => 'davidhirtz\yii2\skeleton\behaviors\TrailBehavior',
-                'modelClass' => \davidhirtz\yii2\skeleton\models\User::class,
+                'modelClass' => User::class,
             ],
         ]);
     }
@@ -173,9 +168,7 @@ class User extends ActiveRecord
                 'unique',
                 'message' => Yii::t('skeleton', 'This username is already used by another user.'),
                 'skipOnError' => true,
-                'when' => function () {
-                    return $this->isAttributeChanged('name');
-                }
+                'when' => fn() => $this->isAttributeChanged('name')
             ],
             [
                 ['email'],
@@ -192,9 +185,7 @@ class User extends ActiveRecord
                 'unique',
                 'message' => Yii::t('skeleton', 'This email is already used by another user.'),
                 'skipOnError' => true,
-                'when' => function () {
-                    return $this->isAttributeChanged('email');
-                }
+                'when' => fn() => $this->isAttributeChanged('email')
             ],
             [
                 ['city', 'first_name', 'last_name'],
@@ -218,7 +209,7 @@ class User extends ActiveRecord
     public function beforeValidate(): bool
     {
         // Set defaults in case these were omitted in signup.
-        $this->status = $this->status ?? static::STATUS_ENABLED;
+        $this->status ??= static::STATUS_ENABLED;
         $this->timezone = $this->timezone ?: Yii::$app->getTimeZone();
 
         // Changes to the available app languages might be rare, but needs to be accounted for.
@@ -241,7 +232,7 @@ class User extends ActiveRecord
     {
         if (parent::beforeSave($insert)) {
             if ($insert) {
-                $this->is_owner = $this->is_owner ?? !static::find()->exists();
+                $this->is_owner ??= !static::find()->exists();
                 $this->generateAuthKey();
             }
 
@@ -295,7 +286,7 @@ class User extends ActiveRecord
 
     public static function find(): UserQuery
     {
-        return Yii::createObject(UserQuery::class, [get_called_class()]);
+        return Yii::createObject(UserQuery::class, [static::class]);
     }
 
     public static function findByEmail(string $email): UserQuery
@@ -330,7 +321,7 @@ class User extends ActiveRecord
     public function afterPasswordChange(): void
     {
         $trail = Trail::create();
-        $trail->model = \davidhirtz\yii2\skeleton\models\User::class;
+        $trail->model = User::class;
         $trail->model_id = $this->id;
         $trail->type = Trail::TYPE_PASSWORD;
         $trail->insert();

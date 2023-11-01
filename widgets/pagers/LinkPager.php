@@ -5,51 +5,18 @@ namespace davidhirtz\yii2\skeleton\widgets\pagers;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
 
-/**
- * Class LinkPager.
- * @package davidhirtz\yii2\skeleton\widgets\pagers
- */
 class LinkPager extends \yii\widgets\LinkPager
 {
-    /**
-     * @var array
-     */
-    public $pageOptions = [];
+    public array $pageOptions = [];
+    public string $linkCssClass = 'page-link';
+    public bool $renderDisabledLink = true;
 
-    /**
-     * @var int
-     */
     public $maxButtonCount = 7;
-
-    /**
-     * @var string
-     */
     public $pageCssClass = 'page-item';
-
-    /**
-     * @var string
-     */
-    public $linkCssClass = 'page-link';
-
-    /**
-     * @var bool
-     */
     public $firstPageLabel = true;
-
-    /**
-     * @var string|bool
-     */
     public $lastPageLabel = true;
 
-    /**
-     * @var bool
-     */
-    public $renderDisabledLink = true;
-
-    /**
-     * Adds page css class to option array.
-     */
-    public function init()
+    public function init(): void
     {
         if ($this->pageCssClass) {
             Html::addCssClass($this->pageOptions, $this->pageCssClass);
@@ -62,15 +29,12 @@ class LinkPager extends \yii\widgets\LinkPager
         parent::init();
     }
 
-    /**
-     * @inheritdoc
-     */
-    protected function renderPageButtons()
+    protected function renderPageButtons(): string
     {
         if ($this->pagination->getPageCount() > 1 || !$this->hideOnSinglePage) {
             $currentPage = $this->pagination->getPage();
             $lastPage = $this->pagination->getPageCount() - 1;
-            list($beginPage, $endPage) = $this->getPageRange();
+            [$beginPage, $endPage] = $this->getPageRange();
 
             $buttons = [];
             $buttons[] = $this->renderPrevPageButton();
@@ -94,13 +58,10 @@ class LinkPager extends \yii\widgets\LinkPager
             return Html::tag('ul', implode('', $buttons), $this->options);
         }
 
-        return null;
+        return '';
     }
 
-    /**
-     * @inheritdoc
-     */
-    protected function renderPageButton($label, $page, $class, $disabled, $active)
+    protected function renderPageButton($label, $page, $class, $disabled, $active): string
     {
         $options = $this->pageOptions;
         $tag = ArrayHelper::remove($options, 'tag', 'li');
@@ -127,33 +88,26 @@ class LinkPager extends \yii\widgets\LinkPager
         return Html::tag($tag, Html::a($label, $this->pagination->createUrl($page), $linkOptions), $options);
     }
 
-    /**
-     * @return string
-     */
-    public function renderFirstPageButton()
+    public function renderFirstPageButton(): string
     {
         $label = $this->firstPageLabel === true ? '1' : $this->firstPageLabel;
 
-        return ($label !== false && $this->pagination->getPage() > 0) ? $this->renderPageButton($label, 0, $this->firstPageCssClass, false, false) : null;
+        return ($label !== false && $this->pagination->getPage() > 0)
+            ? $this->renderPageButton($label, 0, $this->firstPageCssClass, false, false)
+            : '';
     }
 
-    /**
-     * @return string
-     */
-    public function renderLastPageButton()
+    public function renderLastPageButton(): string
     {
         $pageCount = $this->pagination->getPageCount();
         $label = $this->lastPageLabel === true ? $pageCount : $this->lastPageLabel;
 
-        return $label !== false ? $this->renderPageButton($label, $pageCount - 1, $this->lastPageCssClass, $this->pagination->getPage() >= $pageCount - 1, false) : null;
+        return $label !== false
+            ? $this->renderPageButton($label, $pageCount - 1, $this->lastPageCssClass, $this->pagination->getPage() >= $pageCount - 1, false)
+            : '';
     }
 
-    /**
-     * @param string $label
-     * @param string $cssClass
-     * @return string
-     */
-    public function renderPrevPageButton($label = null, $cssClass = null)
+    public function renderPrevPageButton(?string $label = null, ?string $cssClass = null): string
     {
         if (!$label) {
             $label = $this->prevPageLabel;
@@ -169,15 +123,10 @@ class LinkPager extends \yii\widgets\LinkPager
             return $this->renderPageButton($label, $page, $cssClass ?: $this->prevPageCssClass, $currentPage <= 0, false);
         }
 
-        return null;
+        return '';
     }
 
-    /**
-     * @param string $label
-     * @param string $cssClass
-     * @return string
-     */
-    public function renderNextPageButton($label = null, $cssClass = null)
+    public function renderNextPageButton(?string $label = null, ?string $cssClass = null): string
     {
         if (!$label) {
             $label = $this->nextPageLabel;
@@ -194,21 +143,16 @@ class LinkPager extends \yii\widgets\LinkPager
             return $this->renderPageButton($label, $page, $cssClass ?: $this->nextPageCssClass, $currentPage >= $pageCount - 1, false);
         }
 
-        return null;
+        return '';
     }
 
-    /**
-     * @param int $start
-     * @param int $stop
-     * @return string
-     */
-    public function renderRangeButton($start, $stop)
+    public function renderRangeButton(int $start, int $stop): string
     {
         if ($start < $stop - 1) {
             $ellipsis = $start < $stop - 2;
             return $this->renderPageButton($ellipsis ? '...' : $start + 2, $start + 1, '', $ellipsis, false);
         }
 
-        return null;
+        return '';
     }
 }

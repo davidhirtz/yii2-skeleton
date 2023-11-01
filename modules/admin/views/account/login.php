@@ -1,13 +1,17 @@
 <?php
 /**
- * Login form.
- * @see davidhirtz\yii2\skeleton\controllers\AccountController::actionLogin()
+ * @see AccountController::actionLogin()
+ * @see AccountController::actionResend()
+ * @see AccountController::actionRecover()
  *
- * @var davidhirtz\yii2\skeleton\web\View $this
- * @var davidhirtz\yii2\skeleton\models\forms\LoginForm $form
- * @var yii\bootstrap4\ActiveForm $af
+ * @var View $this
+ * @var LoginForm $form
+ * @var ActiveForm $af
  */
 
+use davidhirtz\yii2\skeleton\controllers\AccountController;
+use davidhirtz\yii2\skeleton\models\forms\LoginForm;
+use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;

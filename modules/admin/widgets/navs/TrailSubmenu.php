@@ -24,7 +24,7 @@ class TrailSubmenu extends Submenu
     /**
      * Initializes the nav items.
      */
-    public function init()
+    public function init(): void
     {
         if (!$this->title) {
             if ($model = $this->getTrailModel()) {

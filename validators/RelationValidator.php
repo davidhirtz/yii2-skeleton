@@ -41,7 +41,7 @@ class RelationValidator extends Validator
         $relation = $this->relation ?? lcfirst(Inflector::camelize(str_replace('_id', '', $attribute)));
 
         if ($model->getRelation($relation, false) === null) {
-            $className = get_class($model);
+            $className = $model::class;
             throw new InvalidConfigException("Relation $relation not found in $className.");
         }
 
@@ -72,6 +72,6 @@ class RelationValidator extends Validator
      */
     public function validate($value, &$error = null): bool
     {
-        throw new NotSupportedException(get_class($this) . ' does not support validate().');
+        throw new NotSupportedException(static::class . ' does not support validate().');
     }
 }

@@ -33,12 +33,10 @@ class TrailGridView extends GridView
 
     public function init(): void
     {
-        $this->rowOptions = function (Trail $trail) {
-            return [
-                'id' => 'trail-' . $trail->id,
-                'class' => $trail->isDeleteType() ? 'bg-danger' : '',
-            ];
-        };
+        $this->rowOptions = fn(Trail $trail) => [
+            'id' => 'trail-' . $trail->id,
+            'class' => $trail->isDeleteType() ? 'bg-danger' : '',
+        ];
 
         if (!$this->columns) {
             $this->columns = [
@@ -64,7 +62,7 @@ class TrailGridView extends GridView
             'attribute' => 'model',
             'contentOptions' => ['style' => 'width:300px'],
             'visible' => !$this->dataProvider->model,
-            'content' => function (Trail $trail) {
+            'content' => function (Trail $trail): string {
                 if ($trail->model) {
                     $model = $trail->getModelClass();
                     $isModel = $model instanceof ActiveRecord && !$model->getIsNewRecord();
@@ -84,7 +82,7 @@ class TrailGridView extends GridView
     {
         return [
             'attribute' => 'data',
-            'content' => [$this, 'dataColumnContent'],
+            'content' => $this->dataColumnContent(...),
         ];
     }
 

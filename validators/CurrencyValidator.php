@@ -36,14 +36,12 @@ class CurrencyValidator extends NumberValidator
         if (!$this->currencyPattern) {
             $format = Yii::$app->getFormatter()->asCurrency(1000);
 
-            if (preg_match('/^(.*)(1(.)000(.)00)(.*)$/u', $format, $matches)) {
+            if (preg_match('/^(.*)(1(.)000(.)00)(.*)$/u', (string) $format, $matches)) {
                 $this->decimalSeparator = $matches[4];
                 $this->thousandSeparator = $matches[3];
 
                 // Remove UTF-8 white spaces and quote for regular expression.
-                $matches = array_map(function ($v) {
-                    return preg_quote(preg_replace('/^[\pZ\pC]+|[\pZ\pC]+$/u', '', $v));
-                }, $matches);
+                $matches = array_map(fn($v): string => preg_quote(preg_replace('/^[\pZ\pC]+|[\pZ\pC]+$/u', '', (string) $v)), $matches);
                 $this->currencyPattern = "/^({$matches[1]})?\s*(-?(?:\d{1,3}(?:{$matches[3]}\d{3})+|(?!{$matches[3]})\d*(?!{$matches[3]}))(?:{$matches[4]}[0-9]+)?)\s*({$matches[5]})?$/iu";
             } else {
                 throw new InvalidConfigException("Currency format \"{$format}\" could not be parsed.");
@@ -67,7 +65,7 @@ class CurrencyValidator extends NumberValidator
     {
         $value = $model->$attribute;
 
-        if (preg_match($this->currencyPattern, $value, $matches)) {
+        if (preg_match($this->currencyPattern, (string) $value, $matches)) {
             $value = str_replace([$this->thousandSeparator, $this->decimalSeparator], ['', '.'], $matches[2]);
             $model->$attribute = floatval($value);
         }

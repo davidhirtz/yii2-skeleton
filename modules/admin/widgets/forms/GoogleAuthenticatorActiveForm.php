@@ -2,25 +2,25 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
+use davidhirtz\yii2\skeleton\controllers\AccountController;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\forms\GoogleAuthenticatorForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
 use Yii;
+use yii\widgets\ActiveField;
 
 /**
  * @property GoogleAuthenticatorForm $model
  */
 class GoogleAuthenticatorActiveForm extends ActiveForm
 {
-    /**
-     * @var int
-     */
-    public $qrCodeSize = 150;
+    public int $qrCodeSize = 150;
 
     /**
-     * @inheritDoc
+     * @see AccountController::actionEnableGoogleAuthenticator()
+     * @see AccountController::actionDisableGoogleAuthenticator()
      */
-    public function init()
+    public function init(): void
     {
         if (!$this->buttons) {
             $this->buttons = [$this->button($this->model->user->google_2fa_secret ? Yii::t('skeleton', 'Disable') : Yii::t('skeleton', 'Enable'))];
@@ -36,7 +36,7 @@ class GoogleAuthenticatorActiveForm extends ActiveForm
     /**
      * Renders the QR Code image
      */
-    public function renderHeader()
+    public function renderHeader(): void
     {
         if ($this->model->user->google_2fa_secret) {
             echo $this->textRow(Yii::t('skeleton', 'Two-factor authentication is enabled. Please enter the 6-digit code provided by your Google Authenticator app below to disable it.'));
@@ -46,19 +46,17 @@ class GoogleAuthenticatorActiveForm extends ActiveForm
         }
     }
 
-    /**
-     * @param array $options
-     */
-    public function renderFields($options = [])
+    public function renderFields(): void
     {
-        echo $this->field($this->model, 'code', $options);
+        echo $this->codeField();
     }
 
-    /**
-     * @param array $options
-     * @return string
-     */
-    public function getQrCodeImage($options = [])
+    public function codeField(array $options = []): ActiveField|string
+    {
+        return $this->field($this->model, 'code', $options);
+    }
+
+    public function getQrCodeImage(array $options = []): string
     {
         if ($this->qrCodeSize) {
             Html::addCssStyle($options, "width:{$this->qrCodeSize}px;height:{$this->qrCodeSize}px;");

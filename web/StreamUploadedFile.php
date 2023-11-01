@@ -7,33 +7,27 @@ use Yii;
 use yii\web\UploadedFile;
 
 /**
- * Class StreamUploadedFile
- * @package davidhirtz\yii2\skeleton\web
- *
  * @property string $partialName
  */
 class StreamUploadedFile extends UploadedFile
 {
     /**
-     * @var string the external url
+     * @var string|null the external url
      */
-    public $url;
+    public ?string $url = null;
 
     /**
-     * @var array containing a list of allowed extensions which will be filtered against the found mime-type of
+     * @var array|null containing a list of allowed extensions which will be filtered against the found mime-type of
      * the downloaded file. This will also determine the file ending. Leave empty to use url ending.
      */
-    public $allowedExtensions;
+    public ?array $allowedExtensions = null;
 
-    /**
-     * @var string
-     */
-    private $_temporaryUploadPath;
+    private ?string $_temporaryUploadPath = null;
 
     /**
      * Copies file from url.
      */
-    public function init()
+    public function init(): void
     {
         if (!$this->tempName) {
             $this->tempName = $this->getTemporaryUploadPath() . uniqid();
@@ -50,7 +44,7 @@ class StreamUploadedFile extends UploadedFile
     /**
      * @return bool
      */
-    protected function loadTemporaryFile()
+    protected function loadTemporaryFile(): bool
     {
         if (!$this->url || !($contents = @file_get_contents(FileHelper::encodeUrl($this->url)))) {
             $this->error = UPLOAD_ERR_NO_FILE;
@@ -65,10 +59,7 @@ class StreamUploadedFile extends UploadedFile
         return true;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function saveAs($file, $deleteTempFile = true)
+    public function saveAs($file, $deleteTempFile = true): bool
     {
         if ($this->error == UPLOAD_ERR_OK) {
             $file = Yii::getAlias($file);
@@ -78,10 +69,7 @@ class StreamUploadedFile extends UploadedFile
         return false;
     }
 
-    /**
-     * @return string
-     */
-    public function getExtension()
+    public function getExtension(): string
     {
         if ($this->allowedExtensions) {
             if ($mimeType = FileHelper::getMimeType($this->tempName)) {
@@ -96,10 +84,7 @@ class StreamUploadedFile extends UploadedFile
         return parent::getExtension();
     }
 
-    /**
-     * @return string
-     */
-    public function getTemporaryUploadPath()
+    public function getTemporaryUploadPath(): ?string
     {
         if ($this->_temporaryUploadPath === null) {
             $this->setTemporaryUploadPath('@runtime/uploads');
@@ -108,12 +93,9 @@ class StreamUploadedFile extends UploadedFile
         return $this->_temporaryUploadPath;
     }
 
-    /**
-     * @param string $path
-     */
-    public function setTemporaryUploadPath($path)
+    public function setTemporaryUploadPath(string $path): void
     {
-        $this->_temporaryUploadPath = rtrim(Yii::getAlias($path), '/') . '/';
+        $this->_temporaryUploadPath = rtrim((string) Yii::getAlias($path), '/') . '/';
         FileHelper::createDirectory($this->_temporaryUploadPath);
     }
 }

@@ -13,42 +13,25 @@ class AuthClientSignupForm extends Identity
 {
     use SignupEmailTrait;
 
-    /**
-     * @var ClientInterface
-     */
-    public $_client;
+    public ?ClientInterface $_client = null;
+    public string $externalPictureUrl;
 
-    /**
-     * @var string
-     */
-    public $externalPictureUrl;
-
-    /**
-     * @return array
-     */
     public function behaviors(): array
     {
-        return array_merge(parent::behaviors(), [
-            [
-                'class' => SluggableBehavior::class,
-                'attribute' => 'name',
-                'slugAttribute' => 'name',
-            ],
-        ]);
+        return [...parent::behaviors(), [
+            'class' => SluggableBehavior::class,
+            'attribute' => 'name',
+            'slugAttribute' => 'name',
+        ]];
     }
 
-    /**
-     * @return array
-     */
     public function rules(): array
     {
-        return array_merge(parent::rules(), [
-            [
-                ['externalPictureUrl'],
-                /** {@link AuthClientSignupForm::validateExternalPictureUrl()} */
-                'validateExternalPictureUrl',
-            ],
-        ]);
+        return [...parent::rules(), [
+            ['externalPictureUrl'],
+            /** {@link AuthClientSignupForm::validateExternalPictureUrl()} */
+            'validateExternalPictureUrl',
+        ]];
     }
 
     /**
@@ -58,9 +41,6 @@ class AuthClientSignupForm extends Identity
     {
     }
 
-    /**
-     * @inheritdoc
-     */
     public function beforeValidate(): bool
     {
         if (!Yii::$app->getUser()->isSignupEnabled()) {
@@ -80,8 +60,7 @@ class AuthClientSignupForm extends Identity
     }
 
     /**
-     * Overrides default email error to give user more context why the signup cannot completed
-     * with this email address.
+     * Overrides default email error to give user more context why the signup cannot be completed with this email.
      */
     public function afterValidate(): void
     {
@@ -97,10 +76,6 @@ class AuthClientSignupForm extends Identity
         parent::afterValidate();
     }
 
-    /**
-     * @param bool $insert
-     * @return bool
-     */
     public function beforeSave($insert): bool
     {
         if ($insert) {
@@ -115,9 +90,6 @@ class AuthClientSignupForm extends Identity
         return parent::beforeSave($insert);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function afterSave($insert, $changedAttributes): void
     {
         parent::afterSave($insert, $changedAttributes);
@@ -131,10 +103,7 @@ class AuthClientSignupForm extends Identity
         }
     }
 
-    /**
-     * @param ClientInterface $client
-     */
-    public function setClient($client)
+    public function setClient(ClientInterface $client): void
     {
         $this->setAttributes($client->getSafeUserAttributes());
         $this->loginType = $client->getName();
@@ -142,10 +111,7 @@ class AuthClientSignupForm extends Identity
         $this->_client = $client;
     }
 
-    /**
-     * @return ClientInterface
-     */
-    public function getClient()
+    public function getClient(): ?ClientInterface
     {
         return $this->_client;
     }

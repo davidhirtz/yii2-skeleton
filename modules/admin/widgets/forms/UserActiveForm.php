@@ -23,10 +23,7 @@ class UserActiveForm extends ActiveForm
      */
     public bool $hasStickyButtons = true;
 
-    /**
-     * @inheritDoc
-     */
-    public function init()
+    public function init(): void
     {
         if (!$this->fields) {
             $this->fields = [
@@ -52,29 +49,18 @@ class UserActiveForm extends ActiveForm
         parent::init();
     }
 
-    /**
-     * @param array $options
-     * @return ActiveField|string
-     */
-    public function oldPasswordField($options = [])
+    /** @noinspection PhpUnused */
+    public function oldPasswordField(array $options = []): ActiveField|string
     {
         return $this->model->password_hash ? $this->field($this->model, 'oldPassword', ['enableClientValidation' => false])->passwordInput($options) : '';
     }
 
-    /**
-     * @param array $options
-     * @return ActiveField|string
-     */
-    public function repeatPasswordField($options = [])
+    public function repeatPasswordField(array $options = []): ActiveField|string
     {
         return $this->field($this->model, 'repeatPassword', ['enableClientValidation' => false])->passwordInput($options);
     }
 
-    /**
-     * @param array $options
-     * @return ActiveField|string
-     */
-    public function statusField($options = [])
+    public function statusField(array $options = []): ActiveField|string
     {
         if ($this->model->isOwner()) {
             return '';
@@ -83,55 +69,32 @@ class UserActiveForm extends ActiveForm
         return $this->field($this->model, 'status')->widget(DynamicRangeDropdown::class, $options);
     }
 
-    /**
-     * @param array $options
-     * @return string
-     */
-    public function uploadField($options = [])
+    public function uploadField(array $options = []): ActiveField|string
     {
         return $this->getPicturePreview() . $this->field($this->model, 'upload')->fileInput($options);
     }
 
-    /**
-     * @param array $options
-     * @return ActiveField|string
-     */
-    public function countryField($options = ['options' => ['prompt' => '']])
+    public function countryField(array $options = ['options' => ['prompt' => '']]): ActiveField|string
     {
         return $this->field($this->model, 'country')->widget(DynamicRangeDropdown::class, $options);
     }
 
-    /**
-     * @param array $options
-     * @return ActiveField|string
-     */
-    public function languageField($options = [])
+    public function languageField(array $options = []): ActiveField|string
     {
         return $this->field($this->model, 'language')->widget(DynamicRangeDropdown::class, $options);
     }
 
-    /**
-     * @param array $options
-     * @return ActiveField|string
-     */
-    public function timezoneField($options = [])
+    public function timezoneField(array $options = []): ActiveField|string
     {
         return $this->field($this->model, 'timezone')->widget(DynamicRangeDropdown::class, $options);
     }
 
-    /**
-     * @param array $options
-     * @return ActiveField|string
-     */
-    public function sendEmailField($options = [])
+    public function sendEmailField(array $options = []): ActiveField|string
     {
         return $this->model->getIsNewRecord() ? $this->field($this->model, 'sendEmail')->checkbox($options) : '';
     }
 
-    /**
-     * @return string
-     */
-    protected function getPicturePreview()
+    protected function getPicturePreview(): string
     {
         if (!$this->model->picture) {
             return '';
@@ -140,10 +103,7 @@ class UserActiveForm extends ActiveForm
         return $this->row($this->offset(Html::img($this->model->getBaseUrl() . $this->model->picture, ['style' => 'max-width:150px'])));
     }
 
-    /**
-     * Renders user information footer.
-     */
-    public function renderFooter()
+    public function renderFooter(): void
     {
         if ($items = array_filter($this->getFooterItems())) {
             echo $this->listRow($items);

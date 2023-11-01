@@ -5,53 +5,38 @@ namespace davidhirtz\yii2\skeleton\web;
 use Yii;
 use yii\web\UrlRule;
 
-/**
- * Class UrlManager
- * @package davidhirtz\yii2\skeleton\web
- */
 class UrlManager extends \yii\web\UrlManager
 {
-    /**
-     * @var bool
-     */
     public $enablePrettyUrl = true;
-
-    /**
-     * @var bool
-     */
     public $enableStrictParsing = true;
-
-    /**
-     * @var bool
-     */
     public $showScriptName = false;
 
     /**
      * @var bool whether the language should be added to the URL via `languageParam`.
      */
-    public $i18nUrl = false;
+    public bool $i18nUrl = false;
 
     /**
      * @var bool whether the subdomain should be used as language identifier.
      */
-    public $i18nSubdomain = false;
+    public bool $i18nSubdomain = false;
 
     /**
-     * @var array containing the languages available for `i18nUrl` or `i18nSubdomain`, leave empty to use the languages
+     * @var array|null containing the languages available for `i18nUrl` or `i18nSubdomain`, leave empty to use languages
      * defined in `i18n` component.
      */
-    public $languages;
+    public ?array $languages = null;
 
     /**
      * @var string|false the default language for which no language identifier should be added to the path or subdomain.
      * Set to `false` to use the first matching language for the initial request.
      */
-    public $defaultLanguage;
+    public string|false|null $defaultLanguage = null;
 
     /**
-     * @var string
+     * @var string the name of the GET parameter that specifies the language.
      */
-    public $languageParam = 'language';
+    public string $languageParam = 'language';
 
     /**
      * @var array containing hard redirects, either as request URI => URL pairs, which generate regular 301 redirects
@@ -59,7 +44,7 @@ class UrlManager extends \yii\web\UrlManager
      * optional third containing the redirect code (defaults to 301). If dynamic redirects are needed, please take
      * a look at {@link \davidhirtz\yii2\skeleton\models\Redirect}.
      */
-    public $redirectMap = [];
+    public array $redirectMap = [];
 
     /**
      * Events.
@@ -70,7 +55,7 @@ class UrlManager extends \yii\web\UrlManager
     /**
      * @inheritdoc
      */
-    public function init()
+    public function init(): void
     {
         if (!$this->enablePrettyUrl) {
             $this->i18nUrl = false;
@@ -80,13 +65,11 @@ class UrlManager extends \yii\web\UrlManager
             $this->i18nSubdomain = false;
         }
 
-        if ($this->defaultLanguage === null) {
-            $this->defaultLanguage = Yii::$app->sourceLanguage;
-        }
+        $this->defaultLanguage ??= Yii::$app->sourceLanguage;
 
         if ($this->languages === null) {
             foreach (Yii::$app->getI18n()->getLanguages() as $language) {
-                $this->languages[$language] = strstr($language, '-', true) ?: $language;
+                $this->languages[$language] = strstr((string)$language, '-', true) ?: $language;
             }
         }
 
@@ -101,10 +84,7 @@ class UrlManager extends \yii\web\UrlManager
         parent::init();
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function createUrl($params)
+    public function createUrl($params): string
     {
         $language = Yii::$app->language;
         $i18nUrl = $this->i18nUrl;
@@ -121,9 +101,7 @@ class UrlManager extends \yii\web\UrlManager
             }
         }
 
-        $url = parent::createUrl(array_filter($params, function ($value) {
-            return !is_null($value);
-        }));
+        $url = parent::createUrl(array_filter($params, fn($value): bool => !is_null($value)));
 
         $this->trigger(static::EVENT_AFTER_CREATE, $event = new UrlManagerEvent([
             'url' => $url,
@@ -149,11 +127,7 @@ class UrlManager extends \yii\web\UrlManager
         return $event->url;
     }
 
-    /**
-     * @param array $params
-     * @return bool|string
-     */
-    public function createDraftUrl($params)
+    public function createDraftUrl(array $params): string|false
     {
         if ($hostInfo = Yii::$app->getRequest()->getDraftHostInfo()) {
             return $hostInfo . $this->createUrl($params);
@@ -164,9 +138,8 @@ class UrlManager extends \yii\web\UrlManager
 
     /**
      * @param Request $request
-     * @return array|bool
      */
-    public function parseRequest($request)
+    public function parseRequest($request): bool|array
     {
         $pathInfo = trim($request->getPathInfo(), '/');
         $response = Yii::$app->getResponse();
@@ -184,12 +157,12 @@ class UrlManager extends \yii\web\UrlManager
                     $location = $location[1];
                 }
 
-                if (!str_contains($location, '://') && is_string($location)) {
+                if (!str_contains((string)$location, '://') && is_string($location)) {
                     $location = '/' . ltrim($location, '/');
                 }
 
                 foreach ((array)$urlset as $url) {
-                    $url = trim($url, '/');
+                    $url = trim((string)$url, '/');
                     $wildcard = strpos($url, '*');
 
                     if ($url == $pathInfo || ($wildcard && substr($url, 0, $wildcard) == substr($pathInfo, 0, $wildcard))) {
@@ -233,10 +206,9 @@ class UrlManager extends \yii\web\UrlManager
 
     /**
      * Generates a list of rule parameters at given position. This can be used to validate dynamic slugs, etc.
-     * @param int $position
-     * @return array
+     * @noinspection PhpUnused
      */
-    public function getImmutableRuleParams($position = 0)
+    public function getImmutableRuleParams(int $position = 0): array
     {
         $params = [];
         foreach (Yii::$app->getUrlManager()->rules as $rule) {
@@ -253,10 +225,7 @@ class UrlManager extends \yii\web\UrlManager
         return array_unique($params);
     }
 
-    /**
-     * @return bool|string
-     */
-    public function getI18nHostInfo()
+    public function getI18nHostInfo(): string
     {
         $request = Yii::$app->getRequest();
 
@@ -264,13 +233,10 @@ class UrlManager extends \yii\web\UrlManager
             ($request->getIsDraft() ? $request->draftSubdomain : 'www') :
             ($request->getIsDraft() ? ($request->draftSubdomain . '.' . Yii::$app->language) : Yii::$app->language);
 
-        return substr(parse_url($this->getHostInfo(), PHP_URL_HOST), strlen($hostInfo));
+        return substr(parse_url($this->getHostInfo(), PHP_URL_HOST), strlen((string)$hostInfo));
     }
 
-    /**
-     * @return bool
-     */
-    public function hasI18nUrls()
+    public function hasI18nUrls(): bool
     {
         return $this->i18nUrl || $this->i18nSubdomain;
     }

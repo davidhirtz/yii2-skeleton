@@ -12,94 +12,66 @@ use Yii;
  */
 class UserForm extends User
 {
-    /**
-     * @var string
-     */
-    public $newPassword;
-
-    /**
-     * @var string
-     */
-    public $repeatPassword;
+    public ?string $newPassword = null;
+    public ?string $repeatPassword = null;
 
     /**
      * @var bool whether the credentials should be sent to the user's email address
      */
-    public $sendEmail;
+    public bool $sendEmail = false;
 
-    /**
-     * @return array
-     */
     public function behaviors(): array
     {
-        return array_merge(parent::behaviors(), [
-            'BlameableBehavior' => [
+        return [
+            ...parent::behaviors(), 'BlameableBehavior' => [
                 'class' => BlameableBehavior::class,
                 'attributes' => [
                     BaseActiveRecord::EVENT_BEFORE_INSERT => ['created_by_user_id'],
                 ],
-            ],
-        ]);
+            ]
+        ];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function rules(): array
     {
-        return array_merge(parent::rules(), [
+        return [
+            ...parent::rules(),
             [
                 ['newPassword'],
                 'trim',
-            ],
-            [
+            ], [
                 ['newPassword'],
                 'string',
                 'min' => $this->passwordMinLength,
                 'skipOnEmpty' => true,
-            ],
-            [
+            ], [
                 ['repeatPassword'],
                 'required',
-                'when' => function (self $model) {
-                    return (bool)$model->newPassword;
-                },
-            ],
-            [
+                'when' => fn(self $model): bool => (bool)$model->newPassword,
+            ], [
                 ['repeatPassword'],
                 'compare',
                 'compareAttribute' => 'newPassword',
                 'message' => Yii::t('skeleton', 'The password must match the new password.'),
-            ],
-            [
+            ], [
                 ['sendEmail'],
                 'boolean',
-            ],
-        ]);
+            ]
+        ];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function init()
+    public function init(): void
     {
         $this->setScenario(static::SCENARIO_INSERT);
         parent::init();
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function afterFind()
+    public function afterFind(): void
     {
         $this->setScenario(static::SCENARIO_UPDATE);
         parent::afterFind();
     }
 
-    /**
-     * @param bool $insert
-     * @return bool
-     */
     public function beforeSave($insert): bool
     {
         if (parent::beforeSave($insert)) {
@@ -114,9 +86,6 @@ class UserForm extends User
         return false;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function afterSave($insert, $changedAttributes): void
     {
         if (!$insert) {
@@ -132,10 +101,7 @@ class UserForm extends User
         parent::afterSave($insert, $changedAttributes);
     }
 
-    /**
-     * Sends user credentials via email.
-     */
-    public function sendCredentialsEmail()
+    public function sendCredentialsEmail(): void
     {
         $language = Yii::$app->language;
         Yii::$app->language = $this->language ?: $language;
@@ -149,10 +115,7 @@ class UserForm extends User
         Yii::$app->language = $language;
     }
 
-    /**
-     * @return array
-     */
-    public function scenarios()
+    public function scenarios(): array
     {
         $attributes = [
             'city',
@@ -176,15 +139,13 @@ class UserForm extends User
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function attributeLabels(): array
     {
-        return array_merge(parent::attributeLabels(), [
-            'newPassword' => $this->getIsNewRecord() ? Yii::t('skeleton', 'Password') : Yii::t('skeleton', 'New password'),
-            'repeatPassword' => Yii::t('skeleton', 'Repeat password'),
-            'sendEmail' => Yii::t('skeleton', 'Send user account details via email'),
-        ]);
+        return [
+            ...parent::attributeLabels(),
+            'newPassword' => $this->getIsNewRecord()
+                ? Yii::t('skeleton', 'Password')
+                : Yii::t('skeleton', 'New password'), 'repeatPassword' => Yii::t('skeleton', 'Repeat password'), 'sendEmail' => Yii::t('skeleton', 'Send user account details via email'),
+        ];
     }
 }

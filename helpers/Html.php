@@ -6,7 +6,6 @@ use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
-use yii\base\Model;
 use yii\helpers\BaseHtml;
 
 /**
@@ -14,11 +13,6 @@ use yii\helpers\BaseHtml;
  */
 class Html extends BaseHtml
 {
-    /**
-     * @param string $content
-     * @param array $options
-     * @return string
-     */
     public static function alert(string $content, array $options = []): string
     {
         if ($content) {
@@ -39,12 +33,7 @@ class Html extends BaseHtml
         return '';
     }
 
-    /**
-     * @param string $content
-     * @param array $options
-     * @return string
-     */
-    public static function formText($content, $options = [])
+    public static function formText(string $content, array $options = []): string
     {
         $tag = ArrayHelper::remove($options, 'tag', 'div');
         Html::addCssClass($options, 'form-text');
@@ -52,45 +41,25 @@ class Html extends BaseHtml
         return Html::tag($tag, $content, $options);
     }
 
-    /**
-     * @param string $icon
-     * @param string $content
-     * @param array $options
-     * @return string
-     */
-    public static function iconText($icon, $content, $options = [])
+    public static function iconText(string $icon, string $content, array $options = []): string
     {
         static::addCssClass($options, 'icon-text');
         return Html::tag('span', Icon::tag($icon, ['class' => 'fa-fw']) . Html::tag('span', $content), $options);
     }
 
-    /**
-     * @param string $content
-     * @param array $options
-     * @return string
-     */
     public static function info(string $content, array $options = []): string
     {
         static::addCssClass($options, 'alert-info');
         return static::alert($content, $options);
     }
 
-    /**
-     * @param array|string $buttons
-     * @param array $options
-     * @return string
-     */
+    /** @noinspection PhpUnused */
     public static function buttonList(array|string $buttons, array $options = []): string
     {
         static::addCssClass($options, 'btn-list');
         return static::buttons($buttons, $options);
     }
 
-    /**
-     * @param array|string $buttons
-     * @param array $options
-     * @return string
-     */
     public static function buttons(array|string $buttons, array $options = []): string
     {
         if ($buttons) {
@@ -101,34 +70,25 @@ class Html extends BaseHtml
         return '';
     }
 
-    /**
-     * @inheritdoc
-     */
-    public static function input($type, $name = null, $value = null, $options = [])
+    public static function input($type, $name = null, $value = null, $options = []): string
     {
         if (isset($options['prepend']) || isset($options['append'])) {
             if ($prepend = ArrayHelper::remove($options, 'prepend', '')) {
-                $prepend = "<div class=\"input-group-prepend\"><span class=\"input-group-text\">{$prepend}</span></div>";
+                $prepend = "<div class=\"input-group-prepend\"><span class=\"input-group-text\">$prepend</span></div>";
             }
 
             if ($append = ArrayHelper::remove($options, 'append', '')) {
-                $append = "<div class=\"input-group-append\"><span class=\"input-group-text\">{$append}</span></div>";
+                $append = "<div class=\"input-group-append\"><span class=\"input-group-text\">$append</span></div>";
             }
 
             $input = parent::input($type, $name, $value, $options);
-            return "<div class=\"input-group\">{$prepend}{$input}{$append}</div>";
+            return "<div class=\"input-group\">$prepend$input$append</div>";
         }
 
         return parent::input($type, $name, $value, $options);
     }
 
-    /**
-     * @param array $items
-     * @param array $rowOptions
-     * @param array $cellOptions
-     * @return string
-     */
-    public static function tableBody($items, $rowOptions = [], $cellOptions = []): string
+    public static function tableBody(array $items, array $rowOptions = [], array $cellOptions = []): string
     {
         $rows = [];
 
@@ -145,11 +105,7 @@ class Html extends BaseHtml
         return $rows ? Html::tag('tbody', implode('', $rows)) : '';
     }
 
-    /**
-     * @param Model|Model[] $models
-     * @inheritdoc
-     */
-    public static function errorSummary($models, $options = [])
+    public static function errorSummary($models, $options = []): string
     {
         if ($models instanceof ActiveRecord) {
             if (!isset($options['header'])) {
@@ -165,63 +121,39 @@ class Html extends BaseHtml
         return parent::errorSummary($models, $options);
     }
 
-    /**
-     * @param string $js
-     * @param array $params
-     *
-     * @return string
-     */
-    public static function formatInlineJs($js, $params = [])
+    /** @noinspection PhpUnused */
+    public static function formatInlineJs(string $js, array $params = []): string
     {
         $js = str_replace(["\r", "\n", "\t"], '', $js);
         return $params ? strtr($js, $params) : $js;
     }
 
-    /**
-     * @param string $text
-     * @return string
-     */
-    public static function nl2br($text)
+    public static function nl2br(string $text): string
     {
         return nl2br($text, false);
     }
 
-    /**
-     * @param string $html
-     * @return string
-     */
-    public static function minify($html)
+    /** @noinspection PhpUnused */
+    public static function minify(string $html): string
     {
         return trim(preg_replace('/>\s+</', '><', $html));
     }
 
-    /**
-     * @param string $text
-     * @param array|string $keywords
-     * @param bool $wordBoundary
-     * @return string
-     */
-    public static function markKeywords($text, $keywords, $wordBoundary = false)
+    public static function markKeywords(string $text, array|string $keywords, bool $wordBoundary = false): string
     {
         if ($keywords) {
             foreach ((array)$keywords as $keyword) {
-                $text = preg_replace('~(' . ($wordBoundary ? '\b' : '') . preg_quote($keyword) . ')~ui', '<mark>$1</mark>', $text);
+                $text = preg_replace('~(' . ($wordBoundary ? '\b' : '') . preg_quote((string)$keyword) . ')~ui', '<mark>$1</mark>', $text);
             }
         }
 
         return $text;
     }
 
-    /**
-     * @param User $user
-     * @param array|string|null $url
-     * @param array $options
-     * @return string
-     */
-    public static function username($user, $url = null, $options = [])
+    public static function username(?User $user, array|string|null $route = null, array $options = []): string
     {
-        if ($user && $url) {
-            return self::a($user->getUsername(), $url, $options);
+        if ($user && $route) {
+            return self::a($user->getUsername(), $route, $options);
         }
 
         if (!$user || $options) {
@@ -231,11 +163,6 @@ class Html extends BaseHtml
         return $user->getUsername();
     }
 
-    /**
-     * @param string $content
-     * @param array $options
-     * @return string
-     */
     public static function warning(string $content, array $options = []): string
     {
         static::addCssClass($options, 'alert-warning');

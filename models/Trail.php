@@ -7,10 +7,11 @@ use davidhirtz\yii2\skeleton\db\TypeAttributeTrait;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
-use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\TrailGridView;
+use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
 use ReflectionClass;
 use Yii;
+use yii\db\ActiveRecordInterface;
 
 /**
  * @property int $id
@@ -22,10 +23,10 @@ use Yii;
  * @property string|array|null $data
  * @property DateTime $created_at
  *
- * @property User $user {@link \davidhirtz\yii2\skeleton\models\Trail::getUser()}
+ * @property User $user {@link Trail::getUser}
  *
- * @method static \davidhirtz\yii2\skeleton\models\Trail findOne($condition)
- * @method static \davidhirtz\yii2\skeleton\models\Trail[] findAll($condition)
+ * @method static Trail findOne($condition)
+ * @method static Trail[] findAll($condition)
  */
 class Trail extends ActiveRecord
 {
@@ -42,43 +43,26 @@ class Trail extends ActiveRecord
     public const TYPE_ORDER = 11;
     public const TYPE_PASSWORD = 12;
 
-    /**
-     * @var ActiveRecord|ActiveRecord[]
-     */
-    public $parents;
+    public ActiveRecordInterface|array|null $parents = null;
+    private static ?array $_modelClasses = null;
 
-    /**
-     * @var ActiveRecord[]
-     */
-    private static $_modelClasses;
-
-    /**
-     * @return array|array[]
-     */
-    public function rules()
+    public function rules(): array
     {
         return [
             [
                 ['type'],
-                'davidhirtz\yii2\skeleton\validators\DynamicRangeValidator',
+                DynamicRangeValidator::class,
             ],
         ];
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function afterFind()
+    public function afterFind(): void
     {
-        $this->data = $this->data ? json_decode($this->data, true) : null;
+        $this->data = $this->data ? json_decode($this->data, true, 512, JSON_THROW_ON_ERROR) : null;
         parent::afterFind();
     }
 
-    /**
-     * @param bool $insert
-     * @return bool
-     */
-    public function beforeSave($insert)
+    public function beforeSave($insert): bool
     {
         if (Yii::$app->has('user')) {
             $this->user_id = Yii::$app->getUser()->getId();
@@ -88,17 +72,13 @@ class Trail extends ActiveRecord
             $this->model_id = implode('-', $this->model_id);
         }
 
-        $this->data = $this->data ? json_encode($this->data) : null;
+        $this->data = $this->data ? json_encode($this->data, JSON_THROW_ON_ERROR) : null;
         $this->created_at = new DateTime();
 
         return parent::beforeSave($insert);
     }
 
-    /**
-     * @param bool $insert
-     * @param array $changedAttributes
-     */
-    public function afterSave($insert, $changedAttributes)
+    public function afterSave($insert, $changedAttributes): void
     {
         if ($this->parents) {
             if ($type = static::getTypes()[$this->type]['parentType'] ?? false) {
@@ -126,23 +106,17 @@ class Trail extends ActiveRecord
             }
         }
 
-        $this->data = $this->data ? json_decode($this->data, true) : null;
+        $this->data = $this->data ? json_decode($this->data, true, 512, JSON_THROW_ON_ERROR) : null;
         parent::afterSave($insert, $changedAttributes);
     }
 
-    /**
-     * @return UserQuery
-     */
-    public function getUser()
+    public function getUser(): UserQuery
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 
-    /**
-     * @return string
-     */
-    public function getModelName()
+    public function getModelName(): string
     {
         if ($model = $this->getModelClass()) {
             if ($model->getBehavior('TrailBehavior')) {
@@ -156,10 +130,7 @@ class Trail extends ActiveRecord
         return $this->model;
     }
 
-    /**
-     * @return string|void|null
-     */
-    public function getModelType()
+    public function getModelType(): ?string
     {
         if (($model = $this->getModelClass()) && $model->getBehavior('TrailBehavior')) {
             /** @var TrailBehavior $model */
@@ -169,18 +140,12 @@ class Trail extends ActiveRecord
         return null;
     }
 
-    /**
-     * @return ActiveRecord|null
-     */
-    public function getModelClass()
+    public function getModelClass(): ?ActiveRecord
     {
         return static::getModelByTrail($this->model, $this->model_id);
     }
 
-    /**
-     * @return ActiveRecord|null
-     */
-    public function getDataModelClass()
+    public function getDataModelClass(): ?ActiveRecord
     {
         return static::getModelByTrail($this->data['model'] ?? null, $this->data['model_id'] ?? null);
     }
@@ -241,13 +206,7 @@ class Trail extends ActiveRecord
         return $this->getTypeOptions()['hasDataModel'] ?? false;
     }
 
-    /**
-     * @param ActiveRecord|null $model
-     * @param string|null $message
-     * @param array|null $data
-     * @return static
-     */
-    public static function createOrderTrail($model, $message = null, $data = [])
+    public static function createOrderTrail(?ActiveRecordInterface $model, ?string $message = null, array $data = []): static
     {
         $trail = new static();
         $trail->type = static::TYPE_ORDER;
@@ -266,12 +225,7 @@ class Trail extends ActiveRecord
         return $trail;
     }
 
-    /**
-     * @param string $model
-     * @param string $modelId
-     * @return mixed
-     */
-    public static function getModelByTrail($model, $modelId)
+    public static function getModelByTrail(string $model, string|int $modelId): ?ActiveRecord
     {
         if (!isset(static::$_modelClasses[$model][$modelId])) {
             static::$_modelClasses[$model][$modelId] = $model ? static::findModelById($model, $modelId) : null;
@@ -316,7 +270,7 @@ class Trail extends ActiveRecord
 
     /**
      * The message translations are set via `Yii::t()` so the translation controller will pick them up. The actual
-     * translation will happen in {@link \davidhirtz\yii2\skeleton\modules\admin\widgets\grids\TrailGridView}.
+     * translation will happen in {@link TrailGridView}.
      */
     public static function getTypes(): array
     {

@@ -7,31 +7,13 @@ use davidhirtz\yii2\skeleton\models\User;
 use Yii;
 use yii\base\Model;
 
-/**
- * Class OwnershipForm.
- * @package davidhirtz\yii2\skeleton\models\forms
- */
 class OwnershipForm extends Model
 {
-    /**
-     * @var string
-     */
-    public $name;
+    public ?string $name = null;
 
-    /**
-     * @var User
-     * @see OwnerForm::getUser()
-     */
-    private $_user;
+    private ?User $_user = null;
 
-    /***********************************************************************
-     * Validation.
-     ***********************************************************************/
-
-    /**
-     * @inheritdoc
-     */
-    public function rules()
+    public function rules(): array
     {
         return [
             [
@@ -50,10 +32,9 @@ class OwnershipForm extends Model
     }
 
     /**
-     * @see PasswordResetForm::rules()
-     * @return bool
+     * @noinspection PhpUnused {@see static::rules()}
      */
-    public function validateUser()
+    public function validateUser(): bool
     {
         $user = $this->getUser();
 
@@ -68,17 +49,13 @@ class OwnershipForm extends Model
         return !$this->hasErrors();
     }
 
-    /***********************************************************************
-     * Methods.
-     ***********************************************************************/
-
     /**
      * Transfers the website ownership to user.
      */
-    public function transfer()
+    public function transfer(): bool|int
     {
         if ($this->validate()) {
-            User::updateAll(['is_owner' => false, 'updated_at' => new DateTime], ['is_owner' => true]);
+            User::updateAll(['is_owner' => false, 'updated_at' => new DateTime()], ['is_owner' => true]);
 
             $user = $this->getUser();
             $user->is_owner = true;
@@ -89,14 +66,7 @@ class OwnershipForm extends Model
         return false;
     }
 
-    /***********************************************************************
-     * Getters / setters.
-     ***********************************************************************/
-
-    /**
-     * @return User
-     */
-    public function getUser()
+    public function getUser(): ?User
     {
         if ($this->_user === null) {
             $this->_user = User::findByName($this->name)
@@ -108,14 +78,7 @@ class OwnershipForm extends Model
         return $this->_user;
     }
 
-    /***********************************************************************
-     * Model.
-     ***********************************************************************/
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'name' => Yii::t('skeleton', 'Username'),

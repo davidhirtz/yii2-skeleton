@@ -7,43 +7,27 @@ use yii\bootstrap4\BootstrapAsset;
 use yii\bootstrap4\Widget;
 
 /**
- * The ListGroup widget renders a bootstrap 4 list of links.
+ * The ListGroup widget renders a Bootstrap 4 list of links.
  */
 class ListGroup extends Widget
 {
-    /**
-     * @var array
-     */
-    public $items = [];
-
-    /**
-     * @var bool
-     */
-    public $encodeLabels = true;
+    public array $items = [];
+    public bool $encodeLabels = true;
 
     /**
      * @var array containing global link HTML options
      */
-    public $linkOptions = ['class' => 'list-group-item list-group-item-action'];
+    public array $linkOptions = ['class' => 'list-group-item list-group-item-action'];
 
-    /**
-     * @var array containing the list HTML options
-     */
     public $options = ['class' => 'list-group list-unstyled'];
 
-    /**
-     * @return string
-     */
-    public function run()
+    public function run(): string
     {
         BootstrapAsset::register($this->getView());
         return $this->renderItems();
     }
 
-    /**
-     * @return string
-     */
-    public function renderItems()
+    public function renderItems(): string
     {
         $items = [];
 
@@ -55,14 +39,10 @@ class ListGroup extends Widget
             $items[] = $this->renderItem($item);
         }
 
-        return Html::ul($items, array_merge($this->options, ['encode' => false]));
+        return Html::ul($items, [...$this->options, 'encode' => false]);
     }
 
-    /**
-     * @param array $item
-     * @return string
-     */
-    protected function renderItem($item)
+    protected function renderItem(array $item): string
     {
         $encodeLabel = $item['encode'] ?? $this->encodeLabels;
         $label = $encodeLabel ? Html::encode($item['label']) : $item['label'];

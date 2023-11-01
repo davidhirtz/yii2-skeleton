@@ -7,16 +7,12 @@ use yii\base\Model;
 use yii\helpers\Inflector;
 use yii\validators\RangeValidator;
 
-/**
- * Class DynamicRangeValidator
- * @package davidhirtz\yii2\skeleton\validators
- */
 class DynamicRangeValidator extends RangeValidator
 {
     /**
      * @var bool whether numeric values should be cast to integer if validation was successful.
      */
-    public $integerOnly = true;
+    public bool $integerOnly = true;
 
     /**
      * @var array which will be dynamically overridden by {@link DynamicRangeValidator::getDynamicRange()}. Defaults to
@@ -27,7 +23,7 @@ class DynamicRangeValidator extends RangeValidator
     /**
      * @inheritDoc
      */
-    public function validateAttribute($model, $attribute)
+    public function validateAttribute($model, $attribute): void
     {
         $this->range = $this->getDynamicRange($model, $attribute);
         parent::validateAttribute($model, $attribute);
@@ -37,27 +33,18 @@ class DynamicRangeValidator extends RangeValidator
         }
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function clientValidateAttribute($model, $attribute, $view)
+    public function clientValidateAttribute($model, $attribute, $view): null|string
     {
         $this->range = $this->getDynamicRange($model, $attribute);
         return parent::clientValidateAttribute($model, $attribute, $view);
     }
 
-    /**
-     * @param Model $model
-     * @param string $attribute
-     * @return array
-     * @throws InvalidConfigException
-     */
-    public function getDynamicRange($model, $attribute)
+    public function getDynamicRange(Model $model, string $attribute): array
     {
         $method = 'get' . Inflector::camelize(Inflector::pluralize($attribute));
 
         if (!$model->hasMethod($method)) {
-            throw new InvalidConfigException(get_class($model) . '::' . $method . '() must be defined to use ' . __CLASS__ . '.');
+            throw new InvalidConfigException($model::class . '::' . $method . '() must be defined to use ' . self::class . '.');
         }
 
         return array_keys($model->{$method}());

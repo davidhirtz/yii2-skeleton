@@ -25,7 +25,7 @@ class HtmlValidatorTest extends Unit
     public function testSetAdditionalHtmlTags(): void
     {
         $additionalHtmlTags = ['h2', 'h3'];
-        $allowedHtmlTags = array_merge($this->defaultAllowedHtmlTags, $additionalHtmlTags);
+        $allowedHtmlTags = [...$this->defaultAllowedHtmlTags, ...$additionalHtmlTags];
 
         $validator = new HtmlValidator([
             'allowedHtmlTags' => $additionalHtmlTags,
@@ -41,7 +41,7 @@ class HtmlValidatorTest extends Unit
             'allowedHtmlTags' => ['a[href|target|rel]', 'H2'],
         ]);
 
-        $expectedAllowedHtmlTags = array_merge($this->defaultAllowedHtmlTags, ['h2']);
+        $expectedAllowedHtmlTags = [...$this->defaultAllowedHtmlTags, 'h2'];
 
         static::assertEqualsCanonicalizing($expectedAllowedHtmlTags, $validator->allowedHtmlTags);
         static::assertEqualsCanonicalizing(['href', 'rel', 'target'], $validator->allowedHtmlAttributes['a'] ?? []);

@@ -2,6 +2,8 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 
+use davidhirtz\yii2\skeleton\controllers\AccountController;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\DashboardController;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Nav;
 use Yii;
@@ -10,21 +12,15 @@ use yii\helpers\Url;
 class NavBar extends \yii\bootstrap4\NavBar
 {
     /**
-     * @var array containing the route of the language dropdown. If not set, the current URL will be used.
+     * @var array|null containing the route of the language dropdown. If not set, the current URL will be used.
      */
-    public $languageRoute;
+    public ?array $languageRoute = null;
 
-    /**
-     * @var array
-     */
     public $options = [
         'class' => 'navbar navbar-expand-md fixed-top',
     ];
 
-    /**
-     * @inheritDoc
-     */
-    public function run()
+    public function run(): void
     {
         echo Nav::widget([
             'items' => $this->getItems(),
@@ -45,9 +41,8 @@ class NavBar extends \yii\bootstrap4\NavBar
 
     /**
      * Sorts {@link Module::$navbarItems} by key and adds home button.
-     * @return array
      */
-    public function getItems()
+    public function getItems(): array
     {
         /** @var Module $module */
         $module = Yii::$app->getModule('admin');
@@ -58,9 +53,12 @@ class NavBar extends \yii\bootstrap4\NavBar
     }
 
     /**
-     * @return array
+     * @see AccountController::actionLogin()
+     * @see AccountController::actionCreate()
+     * @see AccountController::actionUpdate()
+     * @see AccountController::actionLogout()
      */
-    protected function getAccountItems()
+    protected function getAccountItems(): array
     {
         $user = Yii::$app->getUser();
 
@@ -120,9 +118,9 @@ class NavBar extends \yii\bootstrap4\NavBar
     }
 
     /**
-     * @return array
+     * @see DashboardController::actionIndex()
      */
-    protected function getHomeItems()
+    protected function getHomeItems(): array
     {
         return [
             [

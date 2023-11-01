@@ -16,20 +16,9 @@ use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
-/**
- * Class SystemController
- * @package davidhirtz\yii2\skeleton\modules\admin\controllers
- */
 class SystemController extends Controller
 {
-    /***********************************************************************
-     * Behaviors.
-     ***********************************************************************/
-
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'access' => [
@@ -54,14 +43,7 @@ class SystemController extends Controller
         ];
     }
 
-    /***********************************************************************
-     * Actions.
-     ***********************************************************************/
-
-    /**
-     * @return string
-     */
-    public function actionIndex()
+    public function actionIndex(): Response|string
     {
         // Assets.
         $assets = new ArrayDataProvider([
@@ -102,10 +84,8 @@ class SystemController extends Controller
         ]);
     }
 
-    /**
-     * @return Response
-     */
-    public function actionPublish()
+    /** @noinspection PhpUnused */
+    public function actionPublish(): Response|string
     {
         $basePath = Yii::$app->getAssetManager()->basePath;
         $assets = FileHelper::findDirectories($basePath, ['recursive' => false]);
@@ -118,11 +98,7 @@ class SystemController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * @param string $cache
-     * @return Response
-     */
-    public function actionFlush($cache)
+    public function actionFlush(string $cache): Response|string
     {
         if (!in_array($cache, array_keys($this->findCaches()))) {
             throw new NotFoundHttpException();
@@ -134,11 +110,8 @@ class SystemController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * @param string $db
-     * @return Response
-     */
-    public function actionSchema($db)
+    /** @noinspection PhpUnused */
+    public function actionSchema(string $db): Response|string
     {
         $connection = Yii::$app->get($db, false);
 
@@ -152,22 +125,14 @@ class SystemController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * @return Response
-     */
-    public function actionSessionGc()
+    public function actionSessionGc(): Response|string
     {
         Yii::$app->getSession()->gcSession(0);
         $this->success(Yii::t('skeleton', 'Expired sessions were deleted.'));
         return $this->redirect(['index']);
     }
 
-    /**
-     * @param string $log
-     * @param bool $raw
-     * @return Response|string
-     */
-    public function actionView($log, $raw = false)
+    public function actionView(string $log, bool $raw = false): Response|string
     {
         $provider = $this->getLogDataProvider($log);
 
@@ -187,11 +152,7 @@ class SystemController extends Controller
         ]);
     }
 
-    /**
-     * @param string $log
-     * @return Response
-     */
-    public function actionDelete($log)
+    public function actionDelete(string $log): Response|string
     {
         $provider = $this->getLogDataProvider($log);
 
@@ -203,22 +164,14 @@ class SystemController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * @param string|null $file
-     * @return LogDataProvider
-     */
-    protected function getLogDataProvider($file = null)
+    protected function getLogDataProvider(?string $file = null): LogDataProvider
     {
-        return $provider = Yii::createObject([
-            'class' => LogDataProvider::class,
+        return Yii::$container->get(LogDataProvider::class, [], [
             'file' => $file,
         ]);
     }
 
-    /**
-     * @return array
-     */
-    protected function findAssets()
+    protected function findAssets(): array
     {
         $manager = Yii::$app->getAssetManager();
         $basePath = $manager->basePath;
@@ -229,7 +182,7 @@ class SystemController extends Controller
 
         foreach ($directories as $directory) {
             $handle = @opendir($directory);
-            $basename = pathinfo($directory, PATHINFO_BASENAME);
+            $basename = pathinfo((string)$directory, PATHINFO_BASENAME);
             $files = [];
 
             while (($file = readdir($handle)) !== false) {
@@ -250,16 +203,13 @@ class SystemController extends Controller
         return $assets;
     }
 
-    /**
-     * @return array
-     */
-    protected function findCaches()
+    protected function findCaches(): array
     {
         $caches = [];
 
         foreach (Yii::$app->getComponents() as $name => $component) {
             if ($component instanceof Cache) {
-                $caches[$name] = get_class($component);
+                $caches[$name] = $component::class;
             } elseif (is_array($component) && isset($component['class']) && $this->isCacheClass($component['class'])) {
                 $caches[$name] = $component['class'];
             } elseif (is_string($component) && $this->isCacheClass($component)) {
@@ -271,12 +221,7 @@ class SystemController extends Controller
         return $caches;
     }
 
-    /**
-     * Checks if given class is a Cache class.
-     * @param string $className class name.
-     * @return bool
-     */
-    private function isCacheClass($className)
+    private function isCacheClass(string $className): bool
     {
         return is_subclass_of($className, Cache::class);
     }

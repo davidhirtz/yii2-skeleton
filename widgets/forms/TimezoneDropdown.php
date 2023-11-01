@@ -4,51 +4,35 @@ namespace davidhirtz\yii2\skeleton\widgets\forms;
 
 use DateTime;
 use DateTimeZone;
-use Exception;
 use yii\helpers\Html;
 use yii\widgets\InputWidget;
 
 /**
- * Class TimezoneDropDownList.
- * @package davidhirtz\yii2\skeleton\widgets\form
- *
  * @property array $timezones
  * @see TimezoneDropdown::getTimezones()
  */
 class TimezoneDropdown extends InputWidget
 {
-    /**
-     * @var array
-     */
     public $options = ['class' => 'form-control'];
 
-    /**
-     * @see TimezoneDropdown::getTimezones()
-     * @var array
-     */
-    private $_timezones;
+    private ?array $_timezones = null;
 
-    /**
-     * @inheritdoc
-     */
-    public function run()
+    public function run(): string
     {
         $timezones = $this->getTimezones();
-        return $this->hasModel() ? Html::activeDropDownList($this->model, $this->attribute, $timezones, $this->options) : Html::dropDownList($this->name, $this->value, $timezones, $this->options);
+        return $this->hasModel()
+            ? Html::activeDropDownList($this->model, $this->attribute, $timezones, $this->options)
+            : Html::dropDownList($this->name, $this->value, $timezones, $this->options);
     }
 
-    /**
-     * @return array
-     * @throws Exception
-     */
-    public function getTimezones()
+    public function getTimezones(): array
     {
         if ($this->_timezones === null) {
             $identifiers = DateTimeZone::listIdentifiers();
             $now = new DateTime('now', new DateTimeZone('GMT'));
             $list = [];
 
-            // Create a multi dimensional array to sort by offset first  and display name after.
+            // Create a multidimensional array to sort by offset first and display name after.
             foreach (DateTimeZone::listAbbreviations() as $timezones) {
                 foreach ($timezones as $tz) {
                     if (!empty($tz['timezone_id']) && in_array($tz['timezone_id'], $identifiers)) {
@@ -75,19 +59,13 @@ class TimezoneDropdown extends InputWidget
         return $this->_timezones;
     }
 
-    /**
-     * @param array $timezones
-     */
-    public function setTimezones($timezones)
+    /** @noinspection PhpUnused */
+    public function setTimezones(array $timezones): void
     {
         $this->_timezones = $timezones;
     }
 
-    /**
-     * @param int $offset
-     * @return string the formatted timezone offset.
-     */
-    private function formatTimezoneOffset($offset)
+    private function formatTimezoneOffset(int $offset): string
     {
         $hours = $offset / 3600;
         $remainder = $offset % 3600;
@@ -99,32 +77,17 @@ class TimezoneDropdown extends InputWidget
 
     }
 
-    /**
-     * @param string $name
-     * @return string the formatted timezone name.
-     */
-    private function formatTimezoneName($name)
+    private function formatTimezoneName(string $name): string
     {
-        switch ($name) {
-            case 'America/Anchorage':
-                return 'Alaska';
-            case 'America/Los_Angeles':
-                return 'Pacific Time (PST)';
-            case 'America/Denver':
-                return 'Mountain Time (MST)';
-            case 'America/Dawson_Creek':
-                return 'Arizona';
-            case 'America/Chicago':
-                return 'Central Time (CST)';
-            case 'America/New_York':
-                return 'Eastern Time (EST)';
-            case 'America/Campo_Grande':
-                return 'Brazil';
-        }
-
-        return strtr(preg_replace('#^(America|Arctic|Asia|Atlantic|Australia|Europe|Indian)/#', '', $name), array(
-            '_' => ' ',
-            '/' => ' | '
-        ));
+        return match ($name) {
+            'America/Anchorage' => 'Alaska',
+            'America/Los_Angeles' => 'Pacific Time (PST)',
+            'America/Denver' => 'Mountain Time (MST)',
+            'America/Dawson_Creek' => 'Arizona',
+            'America/Chicago' => 'Central Time (CST)',
+            'America/New_York' => 'Eastern Time (EST)',
+            'America/Campo_Grande' => 'Brazil',
+            default => strtr(preg_replace('#^(America|Arctic|Asia|Atlantic|Australia|Europe|Indian)/#', '', $name), ['_' => ' ', '/' => ' | ']),
+        };
     }
 }

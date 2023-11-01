@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\helpers;
 
+use Imagick;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Palette\Color\ColorInterface;
@@ -11,17 +12,9 @@ use yii\imagine\BaseImage;
 use Imagine\Image\Palette\RGB;
 use Yii;
 
-/**
- * Class Image
- * @package davidhirtz\yii2\skeleton\helpers
- */
 class Image extends BaseImage
 {
-    /**
-     * @param $image
-     * @return ImageInterface
-     */
-    public static function getImage($image)
+    public static function getImage(ImageInterface|string|null $image): ImageInterface
     {
         return static::ensureImageInterfaceInstance($image);
     }
@@ -29,13 +22,8 @@ class Image extends BaseImage
     /**
      * Replacement for Imagick's native `writeImages` as it doesn't support stream wrappers. Image format
      * can be set via options, otherwise the filename extension will be used.
-     *
-     * @param ImageInterface $image
-     * @param string $filename
-     * @param array $options
-     * @return false|int
      */
-    public static function saveImage($image, $filename, $options = [])
+    public static function saveImage(ImageInterface $image, string $filename, array $options = []): int|bool
     {
         if (!$format = ArrayHelper::remove($options, 'format')) {
             $format = pathinfo($filename, PATHINFO_EXTENSION);
@@ -46,17 +34,14 @@ class Image extends BaseImage
 
     /**
      * Resizes and crops image to exactly fit the given dimensions.
-     *
-     * @param string|resource|ImageInterface $image
-     * @param int $width
-     * @param int $height
-     * @param string|null $bgColor
-     * @param int|null $bgAlpha
-     *
-     * @return ImageInterface
      */
-    public static function fit($image, $width, $height, $bgColor = null, $bgAlpha = null)
-    {
+    public static function fit(
+        ImageInterface|string $image,
+        int $width,
+        int $height,
+        ?string $bgColor = null,
+        ?int $bgAlpha = null
+    ): ImageInterface {
         $image = static::ensureImageInterfaceInstance($image);
 
         if ($bgColor) {
@@ -92,59 +77,36 @@ class Image extends BaseImage
         return $image;
     }
 
-    /**
-     * Shortcut method.
-     *
-     * @param string|resource|ImageInterface $image
-     * @param int|null $width
-     * @param int|null $height
-     * @param bool $allowUpscaling
-     * @param string|null $bgColor
-     * @param int|null $bgAlpha
-     *
-     * @return ImageInterface
-     */
-    public static function smartResize($image, $width = null, $height = null, $allowUpscaling = false, $bgColor = null, $bgAlpha = null)
-    {
+    /** @noinspection PhpUnused */
+    public static function smartResize(
+        ImageInterface|string $image,
+        ?int $width = null,
+        ?int $height = null,
+        bool $allowUpscaling = false,
+        ?string $bgColor = null,
+        ?int $bgAlpha = null
+    ): ImageInterface {
         return (!$width || !$height) ? static::resize($image, $width, $height, true, $allowUpscaling) : static::fit($image, $width, $height, $bgColor, $bgAlpha);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public static function resize($image, $width, $height, $keepAspectRatio = true, $allowUpscaling = false)
+    public static function resize($image, $width, $height, $keepAspectRatio = true, $allowUpscaling = false): ImageInterface
     {
-        // Ensure actual implementation of "ensureImageInterfaceInstance".
-        return parent::resize(static::ensureImageInterfaceInstance($image), $width, $height, $keepAspectRatio, $allowUpscaling);
+        $image = static::ensureImageInterfaceInstance($image);
+        return parent::resize($image, $width, $height, $keepAspectRatio, $allowUpscaling);
     }
 
-    /**
-     * @param string|resource|ImageInterface $image
-     * @param int $angle
-     * @param ColorInterface|null $background
-     * @return ImageInterface
-     */
-    public static function rotate($image, $angle, $background = null)
+    public static function rotate(ImageInterface|string $image, int $angle, ?ColorInterface $background = null): ImageInterface
     {
-        return static::setImageRotation(static::ensureImageInterfaceInstance($image))->rotate($angle, $background);
+        $image = static::ensureImageInterfaceInstance($image);
+        return static::setImageRotation($image)->rotate($angle, $background);
     }
 
-    /**
-     * @param ImageInterface|resource|string $image
-     * @param string $color
-     * @return ImageInterface|resource|string
-     */
-    public static function autorotate($image, $color = '000000')
+    public static function autorotate($image, $color = '000000'): ImageInterface
     {
         return static::setImageRotation(parent::autorotate($image, $color));
     }
 
-    /**
-     * @param string $filename
-     * @param string|null $extension
-     * @return array|bool
-     */
-    public static function getImageSize($filename, $extension = null)
+    public static function getImageSize(string $filename, ?string $extension = null): array|bool
     {
         if (!$extension) {
             $extension = pathinfo($filename, PATHINFO_EXTENSION);
@@ -155,11 +117,8 @@ class Image extends BaseImage
 
     /**
      * Extracts width and height from SVG attributes including viewBox.
-     *
-     * @param string $filename
-     * @return array|bool
      */
-    public static function getSvgDimensions($filename)
+    public static function getSvgDimensions(string $filename): array|bool
     {
         try {
             $svg = simplexml_load_file($filename);
@@ -183,27 +142,17 @@ class Image extends BaseImage
         return false;
     }
 
-    /**
-     * Sets the EXIF image rotation.
-     *
-     * @param string|resource|ImageInterface $image
-     * @param int|null $rotation
-     * @return ImageInterface
-     */
-    public static function setImageRotation($image, $rotation = null)
+    public static function setImageRotation(ImageInterface|string $image, ?int $rotation = null): ImageInterface
     {
         if ($image instanceof \Imagine\Imagick\Image) {
             $imagick = $image->getImagick();
-            $imagick->setImageOrientation($rotation ?: $imagick::ORIENTATION_TOPLEFT);
+            $imagick->setImageOrientation($rotation ?: Imagick::ORIENTATION_TOPLEFT);
         }
 
         return $image;
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected static function ensureImageInterfaceInstance($image)
+    protected static function ensureImageInterfaceInstance($image): ImageInterface
     {
         // Prevent loading remote resources via Imagine as doesn't support stream wrappers
         // such as Amazon S3. This makes sure remote files are loaded via fopen.

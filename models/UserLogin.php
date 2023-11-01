@@ -36,7 +36,7 @@ class UserLogin extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'DateTimeBehavior' => DateTimeBehavior::class,
@@ -54,55 +54,35 @@ class UserLogin extends ActiveRecord
      */
     public function getTypeName()
     {
-        switch ($this->type) {
-            case static::TYPE_LOGIN:
-                return Yii::t('skeleton', 'Login');
-
-            case static::TYPE_COOKIE:
-                return Yii::t('skeleton', 'Cookie');
-
-            case static::TYPE_SIGNUP:
-                return Yii::t('skeleton', 'Sign up');
-
-            case static::TYPE_CONFIRM_EMAIL:
-                return Yii::t('skeleton', 'Email confirmation');
-
-            case static::TYPE_RESET_PASSWORD:
-                return Yii::t('skeleton', 'Password reset');
-        }
-
-        return ucfirst($this->type);
+        return match ($this->type) {
+            static::TYPE_LOGIN => Yii::t('skeleton', 'Login'),
+            static::TYPE_COOKIE => Yii::t('skeleton', 'Cookie'),
+            static::TYPE_SIGNUP => Yii::t('skeleton', 'Sign up'),
+            static::TYPE_CONFIRM_EMAIL => Yii::t('skeleton', 'Email confirmation'),
+            static::TYPE_RESET_PASSWORD => Yii::t('skeleton', 'Password reset'),
+            default => ucfirst($this->type),
+        };
     }
 
     /**
      * @return string
      */
-    public function getTypeIcon()
+    public function getTypeIcon(): ?string
     {
-        switch ($this->type) {
-            case static::TYPE_LOGIN:
-                return 'sign-in-alt';
-
-            case static::TYPE_COOKIE:
-                return 'heart';
-
-            case static::TYPE_SIGNUP:
-                return 'user-plus';
-
-            case static::TYPE_CONFIRM_EMAIL:
-                return 'envelope';
-
-            case static::TYPE_RESET_PASSWORD:
-                return 'unlock';
-        }
-
-        return null;
+        return match ($this->type) {
+            static::TYPE_LOGIN => 'sign-in-alt',
+            static::TYPE_COOKIE => 'heart',
+            static::TYPE_SIGNUP => 'user-plus',
+            static::TYPE_CONFIRM_EMAIL => 'envelope',
+            static::TYPE_RESET_PASSWORD => 'unlock',
+            default => null,
+        };
     }
 
     /**
      * @return string
      */
-    public function getDisplayIp()
+    public function getDisplayIp(): string
     {
         return inet_ntop($this->ip_address) ?: '';
     }
@@ -110,7 +90,7 @@ class UserLogin extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'typeName' => Yii::t('skeleton', 'Login'),

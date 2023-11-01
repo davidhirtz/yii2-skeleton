@@ -5,42 +5,24 @@ namespace davidhirtz\yii2\skeleton\models\forms;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
+use yii\db\ActiveRecordInterface;
 use yii\helpers\Inflector;
 use yii\web\NotFoundHttpException;
 
-/**
- * Class DeleteForm.
- * @package davidhirtz\yii2\skeleton\models\forms
- */
 class DeleteForm extends Model
 {
-    /**
-     * @var string
-     */
-    public $value;
+    public string $value;
+    public string $attribute = 'name';
 
-    /**
-     * @var string
-     */
-    public $attribute = 'name';
+    private ?ActiveRecordInterface $_model = null;
 
-    /**
-     * @var \davidhirtz\yii2\skeleton\db\ActiveRecord {@link DeleteForm::getModel()}
-     */
-    private $_model;
-
-    /**
-     * @inheritDoc
-     */
-    public function rules()
+    public function rules(): array
     {
         return [
             [
                 ['value'],
                 'required',
-                'when' => function () {
-                    return $this->attribute;
-                }
+                'when' => fn() => $this->attribute
             ],
             [
                 ['value'],
@@ -51,27 +33,25 @@ class DeleteForm extends Model
     }
 
     /**
-     * Checks for a validation method on parent model or compares the given value with the
-     * model attribute.
+     * Checks for a validation method on the parent model or compares the given value with the model attribute.
      */
-    public function validateName()
+    public function validateName(): void
     {
         $methodName = 'validate' . Inflector::camelize($this->attribute);
         $model = $this->getModel();
 
-        if (method_exists($model, $methodName) ? !call_user_func([$model, $methodName], $this->value) : $this->value !== $model->getAttribute($this->attribute)) {
+        $isValid = method_exists($model, $methodName)
+            ? !call_user_func([$model, $methodName], $this->value)
+            : $this->value !== $model->getAttribute($this->attribute);
+
+        if ($isValid) {
             $this->addError('name', Yii::t('yii', '{attribute} is invalid.', [
                 'attribute' => $this->getModel()->getAttributeLabel($this->attribute),
             ]));
         }
     }
 
-    /**
-     * @return bool
-     * @throws InvalidConfigException
-     * @throws \Throwable
-     */
-    public function delete()
+    public function delete(): bool
     {
         if ($this->validate()) {
             if (!$this->getModel()->delete()) {
@@ -83,42 +63,31 @@ class DeleteForm extends Model
         return !$this->hasErrors();
     }
 
-    /**
-     * @return mixed
-     */
-    public function getId()
+    public function getId(): array|int|string
     {
         return $this->getModel()->getPrimaryKey();
     }
 
-    /**
-     * @return \davidhirtz\yii2\skeleton\db\ActiveRecord
-     */
-    public function getModel()
+    public function getModel(): ?ActiveRecordInterface
     {
         if (!$this->_model) {
-            throw new InvalidConfigException;
+            throw new InvalidConfigException();
         }
 
         return $this->_model;
     }
 
-    /**
-     * @param \davidhirtz\yii2\skeleton\db\ActiveRecord $model
-     */
-    public function setModel($model)
+    /** @noinspection PhpUnused */
+    public function setModel(?ActiveRecordInterface $model): void
     {
         if (!$model) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         $this->_model = $model;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'value' => $this->getModel()->getAttributeLabel($this->attribute),

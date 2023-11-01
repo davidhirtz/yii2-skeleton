@@ -15,23 +15,23 @@ class Request extends \yii\web\Request
     /**
      * @var bool whether user language should be saved for logged-in users (db) and guests (cookie).
      */
-    public $setUserLanguage = true;
+    public bool $setUserLanguage = true;
 
     /**
      * @var string|false the subdomain indicating a draft version of the application. Further validation should
      * be done on the controller level.
      */
-    public $draftSubdomain = 'draft';
+    public string|false $draftSubdomain = 'draft';
 
     /**
      * @var bool
      */
-    private $_isDraft = false;
+    private bool $_isDraft = false;
 
     /**
      * @var string|false
      */
-    private $_draftHostInfo;
+    private string|false|null $_draftHostInfo = null;
 
     /**
      * Sets the host info via params after draft mode is checked. Setting the host info manually can be useful if multiple
@@ -39,13 +39,13 @@ class Request extends \yii\web\Request
      * faked header attacks (see https://www.acunetix.com/vulnerabilities/web/host-header-attack). The original
      * value of `$hostInfo` is still available via `Request::getRequestHostInfo()`.
      */
-    public function init()
+    public function init(): void
     {
         if ($this->enableCookieValidation) {
-            $this->cookieValidationKey = $this->cookieValidationKey ?? Yii::$app->params['cookieValidationKey'] ?? null;
+            $this->cookieValidationKey ??= Yii::$app->params['cookieValidationKey'] ?? null;
         }
 
-        if ($this->draftSubdomain && strpos($this->getHostInfo(), "//{$this->draftSubdomain}.") !== false) {
+        if ($this->draftSubdomain && str_contains($this->getHostInfo(), "//$this->draftSubdomain.")) {
             $this->_isDraft = 1;
         }
 
@@ -55,7 +55,7 @@ class Request extends \yii\web\Request
     /**
      * Sets application language based on request.
      */
-    public function resolve()
+    public function resolve(): array
     {
         if (count($languages = Yii::$app->getI18n()->getLanguages()) > 1) {
             $manager = Yii::$app->getUrlManager();
@@ -99,43 +99,33 @@ class Request extends \yii\web\Request
         return ArrayHelper::getValue($_SERVER, 'HTTP_X_FORWARDED_FOR', ArrayHelper::getValue($_SERVER, 'HTTP_CLIENT_IP', parent::getUserIP()));
     }
 
-    /**
-     * Returns whether this is an Ajax route request.
-     * @return bool
-     */
-    public function getIsAjaxRoute()
+    public function getIsAjaxRoute(): bool
     {
         return $this->getIsAjax() && ArrayHelper::getValue($_SERVER, 'HTTP_X_AJAX_REQUEST') == 'route';
     }
 
-    /**
-     * @return string
-     */
-    public function getProductionHostInfo()
+    public function getProductionHostInfo(): string
     {
-        return $this->getIsDraft() ? str_replace("//{$this->draftSubdomain}.", '//', $this->getHostInfo()) : $this->getHostInfo();
+        return $this->getIsDraft() ? str_replace("//$this->draftSubdomain.", '//', $this->getHostInfo()) : $this->getHostInfo();
     }
 
     /**
      * Creates the draft URL by trying to replace existing "www" or adding the $draftSubdomain as
      * the first subdomain to the host.
-     *
-     * @return string
      */
-    public function getDraftHostInfo()
+    public function getDraftHostInfo(): bool|string
     {
         if ($this->_draftHostInfo === null) {
             $hostInfo = $this->getHostInfo();
-            $this->_draftHostInfo = $this->getIsDraft() && $this->draftSubdomain && strpos($hostInfo, $this->draftSubdomain) !== false ? $hostInfo : ($this->draftSubdomain ? preg_replace('#^((https?://)(www.)?)#', "$2{$this->draftSubdomain}.", $hostInfo) : false);
+            $this->_draftHostInfo = $this->getIsDraft() && $this->draftSubdomain && str_contains($hostInfo, $this->draftSubdomain)
+                ? $hostInfo
+                : ($this->draftSubdomain ? preg_replace('#^((https?://)(www.)?)#', "$2$this->draftSubdomain.", $hostInfo) : false);
         }
 
         return $this->_draftHostInfo;
     }
 
-    /**
-     * @return bool
-     */
-    public function getIsDraft()
+    public function getIsDraft(): bool
     {
         return $this->_isDraft;
     }

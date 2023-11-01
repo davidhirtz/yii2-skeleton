@@ -8,9 +8,6 @@ use Yii;
 use yii\helpers\Url;
 
 /**
- * Class View
- * @package davidhirtz\yii2\skeleton\web
- *
  * @property string $description
  */
 class View extends \yii\web\View
@@ -21,32 +18,15 @@ class View extends \yii\web\View
     public const HREF_LANG_KEY = 'hreflang_';
     public const CANONICAL_KEY = 'canonical';
 
-    /**
-     * @var string
-     */
-    public $titleTemplate;
+    public ?string $titleTemplate = null;
+    private array $_breadcrumbs = [];
+    private string|array|null $_description = null;
 
-    /**
-     * @var array
-     */
-    private $_breadcrumbs = [];
-
-    /**
-     * @var string
-     */
-    private $_description;
-
-    /**
-     * @param $title
-     */
-    public function setTitle($title)
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string
     {
         if (!$this->titleTemplate) {
@@ -56,14 +36,10 @@ class View extends \yii\web\View
         return strtr($this->titleTemplate, ['{title}' => $this->title, '{app}' => Yii::$app->name]);
     }
 
-    /**
-     * @param $description
-     * @param bool $replace
-     */
-    public function setDescription($description, $replace = true)
+    public function setDescription(string $description, bool $replace = true): void
     {
         if (empty($this->metaTags['description']) || $replace) {
-            $this->_description = preg_replace("/\n+/", " ", Html::encode($description));
+            $this->_description = preg_replace("/\n+/", ' ', Html::encode($description));
             $this->registerMetaTag(['name' => 'description', 'content' => $this->_description], 'description');
         }
     }
@@ -76,10 +52,7 @@ class View extends \yii\web\View
         return $this->_description;
     }
 
-    /**
-     * @param array $breadcrumbs
-     */
-    public function setBreadcrumbs($breadcrumbs)
+    public function setBreadcrumbs(array $breadcrumbs): void
     {
         foreach ($breadcrumbs as $key => $value) {
             if (!is_numeric($key)) {
@@ -90,11 +63,7 @@ class View extends \yii\web\View
         }
     }
 
-    /**
-     * @param string $label
-     * @param mixed $url
-     */
-    public function setBreadcrumb($label, $url = null)
+    public function setBreadcrumb(string $label, array|string $url = null): void
     {
         $this->_breadcrumbs[] = ['label' => $label, 'url' => $url];
     }
@@ -107,12 +76,7 @@ class View extends \yii\web\View
         return $this->_breadcrumbs;
     }
 
-    /**
-     * @param string $card
-     * @param string|null $title
-     * @param string|null $description
-     */
-    public function registerTwitterCardMetaTags($card = 'summary_large_image', $title = null, $description = null)
+    public function registerTwitterCardMetaTags(string $card = 'summary_large_image', ?string $title = null, ?string $description = null): void
     {
         $this->registerMetaTag(['name' => 'twitter:card', 'content' => $card], 'twitter:card');
         $this->registerMetaTag([
@@ -132,12 +96,7 @@ class View extends \yii\web\View
         }
     }
 
-    /**
-     * @param string $type
-     * @param string|null $title
-     * @param string|null $description
-     */
-    public function registerOpenGraphMetaTags($type = 'website', $title = null, $description = null)
+    public function registerOpenGraphMetaTags(string $type = 'website', ?string $title = null, ?string $description = null): void
     {
         $this->registerMetaTag(['name' => 'og:title', 'content' => $title ?: $this->getTitle()], 'og:title');
         $this->registerMetaTag(['name' => 'og:description', 'content' => $description ?: $this->getDescription()], 'og:description');
@@ -147,13 +106,7 @@ class View extends \yii\web\View
         }
     }
 
-    /**
-     * @param string $url
-     * @param int|null $width
-     * @param int|null $height
-     * @param string|null $text
-     */
-    public function registerImageMetaTags($url, $width = null, $height = null, $text = null)
+    public function registerImageMetaTags(string $url, ?int $width = null, ?int $height = null, ?string $text = null): void
     {
         $url = Url::to($url, true);
 
@@ -175,18 +128,19 @@ class View extends \yii\web\View
         $this->registerLinkTag(['rel' => 'image_src', 'href' => $url]);
     }
 
-    /**
-     * @param array $data
-     */
-    public function registerStructuredData($data)
+    public function registerStructuredData(array $data): void
     {
-        echo Html::script(Json::htmlEncode(array_merge(['@context' => 'http://schema.org'], $data)), ['type' => 'application/ld+json']);
+        /** @noinspection HttpUrlsUsage */
+        echo Html::script(Json::htmlEncode(array_merge(['@context' => 'http://schema.org'], $data)), [
+            'type' => 'application/ld+json',
+        ]);
     }
 
     /**
-     * @param array $links can either be an array containing "name" and "item" as key and value or an associative array.
+     * @param array $links can either be an array containing "name" and "item" as a key and value or an associative array.
+     * @noinspection PhpUnused
      */
-    public function registerStructuredDataBreadcrumbs($links)
+    public function registerStructuredDataBreadcrumbs(array $links): void
     {
         $items = [];
         $pos = 1;
@@ -208,11 +162,8 @@ class View extends \yii\web\View
         }
     }
 
-    /**
-     * @param array $languages
-     * @param string|null $default
-     */
-    public function registerHrefLangLinkTags($languages = [], $default = null)
+    /** @noinspection PhpUnused */
+    public function registerHrefLangLinkTags(array $languages = [], ?string $default = null): void
     {
         if (!$languages) {
             $languages = Yii::$app->getUrlManager()->languages;
@@ -227,49 +178,36 @@ class View extends \yii\web\View
         }
     }
 
-    /**
-     * @param string $language
-     * @param string $url
-     */
-    public function registerHrefLangLinkTag($language, $url)
+    public function registerHrefLangLinkTag(string $language, string $url): void
     {
         $this->registerLinkTag(['rel' => 'alternate', 'hreflang' => $language, 'href' => $url], static::HREF_LANG_KEY . $language);
     }
 
-    /**
-     * @param string $url
-     */
-    public function registerCanonicalTag($url)
+    public function registerCanonicalTag(string $url): void
     {
         $this->registerLinkTag(['rel' => 'canonical', 'href' => $url], static::CANONICAL_KEY);
     }
 
-    /**
-     * @param string|null $language
-     */
-    public function registerDefaultHrefLangLinkTag($language = null)
+    public function registerDefaultHrefLangLinkTag(?string $language = null): void
     {
         if (!$language) {
             $language = Yii::$app->sourceLanguage;
         }
 
         if (isset($this->linkTags[static::HREF_LANG_KEY . $language])) {
-            $this->linkTags[static::HREF_LANG_KEY . 'default'] = str_replace('hreflang="' . $language . '"', 'hreflang="x-default"', $this->linkTags[static::HREF_LANG_KEY . $language]);
+            $this->linkTags[static::HREF_LANG_KEY . 'default'] = str_replace('hreflang="' . $language . '"', 'hreflang="x-default"', (string)$this->linkTags[static::HREF_LANG_KEY . $language]);
         }
     }
 
     /**
      * @return string the ISO 639-1 Language Codes
      */
-    public static function getLanguage()
+    public static function getLanguage(): string
     {
-        switch (Yii::$app->language) {
-            case 'zh-TW':
-                return 'zh-Hant';
-            case 'zh-CN':
-                return 'zh-Hans';
-        }
-
-        return substr(Yii::$app->language, 0, 2);
+        return match (Yii::$app->language) {
+            'zh-TW' => 'zh-Hant',
+            'zh-CN' => 'zh-Hans',
+            default => substr((string)Yii::$app->language, 0, 2),
+        };
     }
 }

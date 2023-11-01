@@ -5,31 +5,24 @@ namespace davidhirtz\yii2\skeleton\modules\admin\data;
 use Yii;
 use yii\data\ArrayDataProvider;
 
-/**
- * Class LogDataProvider
- * @package davidhirtz\yii2\skeleton\modules\admin\data
- */
 class LogDataProvider extends ArrayDataProvider
 {
     /**
-     * @var string the file path of the current error log
+     * @var string|null the file path of the current error log
      */
-    public $file;
+    public ?string $file = null;
 
     /**
      * @var string the regex pattern to explode error logs into single entries
      */
-    public $pattern = '/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) \[([^]]*)]\[([^]]*)]\[([^]]*)]\[([^]]*)]\[([^]]*)]/';
+    public string $pattern = '/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) \[([^]]*)]\[([^]]*)]\[([^]]*)]\[([^]]*)]\[([^]]*)]/';
 
     /**
      * @var string the path used for parsing error files
      */
-    public $basePath = '@app/runtime/logs/';
+    public string $basePath = '@app/runtime/logs/';
 
-    /**
-     * @inheritDoc
-     */
-    public function init()
+    public function init(): void
     {
         if ($this->allModels === null) {
             if ($this->file) {
@@ -43,10 +36,7 @@ class LogDataProvider extends ArrayDataProvider
         parent::init();
     }
 
-    /**
-     * @return array
-     */
-    protected function parseFile()
+    protected function parseFile(): array
     {
         $models = [];
         $log = [];
@@ -86,10 +76,7 @@ class LogDataProvider extends ArrayDataProvider
         return array_reverse($models);
     }
 
-    /**
-     * @return array
-     */
-    protected function findFiles()
+    protected function findFiles(): array
     {
         $files = [];
 
@@ -100,10 +87,7 @@ class LogDataProvider extends ArrayDataProvider
         return $files;
     }
 
-    /**
-     * @return bool
-     */
-    public function isFileValid()
+    public function isFileValid(): bool
     {
         return is_file($this->file);
     }

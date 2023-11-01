@@ -2,35 +2,14 @@
 
 namespace davidhirtz\yii2\skeleton\db;
 
+use JetBrains\PhpStorm\Deprecated;
 use Yii;
 
 /**
- * Class StatusAttributeTrait.
- * @package davidhirtz\yii2\skeleton\db
- *
  * @property int $status
  */
 trait StatusAttributeTrait
 {
-    /**
-     * Status validator
-     * @deprecated Please use {@link \davidhirtz\yii2\skeleton\validators\DynamicRangeValidator}
-     */
-    public function validateStatus()
-    {
-        if ($this->status === null) {
-            $this->status = static::STATUS_DEFAULT;
-
-        } elseif (!in_array($this->status, array_keys(static::getStatuses()))) {
-            $this->addInvalidAttributeError('status');
-        }
-
-        $this->status = (int)$this->status;
-    }
-
-    /**
-     * @return array
-     */
     public static function getStatuses(): array
     {
         return [
@@ -49,42 +28,27 @@ trait StatusAttributeTrait
         ];
     }
 
-    /**
-     * @return string|null
-     */
     public function getStatusName(): string
     {
         return static::getStatuses()[$this->status]['name'] ?? '';
     }
 
-    /**
-     * @return string|null
-     */
     public function getStatusIcon(): string
     {
         return static::getStatuses()[$this->status]['icon'] ?? '';
     }
 
-    /**
-     * @return bool
-     */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->status >= static::STATUS_ENABLED;
     }
 
-    /**
-     * @return bool
-     */
-    public function isDraft()
+    public function isDraft(): bool
     {
         return $this->status == static::STATUS_DRAFT;
     }
 
-    /**
-     * @return bool
-     */
-    public function isDisabled()
+    public function isDisabled(): bool
     {
         return $this->status == static::STATUS_DISABLED;
     }

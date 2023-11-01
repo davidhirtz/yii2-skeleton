@@ -34,9 +34,7 @@ class UserGridView extends GridView
         }
 
         if (!$this->rowOptions) {
-            $this->rowOptions = function (User $user) {
-                return ['class' => $user->isDisabled() ? 'disabled' : null];
-            };
+            $this->rowOptions = fn(User $user) => ['class' => $user->isDisabled() ? 'disabled' : null];
         }
 
         if ($this->header === null) {
@@ -127,9 +125,7 @@ class UserGridView extends GridView
         return [
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
             'contentOptions' => ['class' => 'd-none d-md-table-cell text-right'],
-            'content' => function (User $user) {
-                return Html::buttons($this->getRowButtons($user));
-            }
+            'content' => fn(User $user): string => Html::buttons($this->getRowButtons($user))
         ];
     }
 
@@ -161,7 +157,7 @@ class UserGridView extends GridView
      */
     protected function getRoute(ActiveRecordInterface $model, array $params = []): array|false
     {
-        return Yii::$app->getUser()->can(User::AUTH_USER_UPDATE, ['user' => $model]) ? array_merge(['/admin/user/update', 'id' => $model->id], $params) : false;
+        return Yii::$app->getUser()->can(User::AUTH_USER_UPDATE, ['user' => $model]) ? ['/admin/user/update', 'id' => $model->id, ...$params] : false;
     }
 
     public function getModel(): User

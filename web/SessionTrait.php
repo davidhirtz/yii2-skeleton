@@ -4,38 +4,20 @@ namespace davidhirtz\yii2\skeleton\web;
 
 use Yii;
 
-/**
- * Class SessionTrait
- * @package davidhirtz\yii2\skeleton\web
- */
 trait SessionTrait
 {
     /**
-     * @var string the optional cookie domain
+     * @var string|null the optional cookie domain
      */
-    public $cookieDomain;
+    public ?string $cookieDomain = null;
 
-    /**
-     * @return array
-     */
-    public function getCookieParams()
+    public function getCookieParams(): array
     {
-        if ($this->cookieDomain === null) {
-            $this->cookieDomain = Yii::$app->params['cookieDomain'] ?? null;
-        }
+        $this->cookieDomain ??= Yii::$app->params['cookieDomain'] ?? null;
 
-        /** @noinspection PhpUndefinedClassInspection */
+        /** @noinspection PhpMultipleClassDeclarationsInspection */
         return array_merge(parent::getCookieParams(), array_filter([
             'domain' => $this->cookieDomain,
         ]));
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function gcSession($maxLifetime)
-    {
-        /** @noinspection PhpUndefinedClassInspection */
-        return parent::gcSession($maxLifetime);
     }
 }

@@ -198,7 +198,7 @@ class TinyMceEditor extends InputWidget
     protected function configureStyleFormats(): void
     {
         $headlines = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
-        $tags = array_merge($headlines, ['p', 'span']);
+        $tags = [...$headlines, 'p', 'span'];
 
         foreach ($tags as $tag) {
             if ($this->isTagAllowed($tag)) {

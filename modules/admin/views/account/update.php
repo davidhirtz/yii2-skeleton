@@ -1,13 +1,15 @@
 <?php
 /**
- * Edit account form.
- * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController::actionUpdate()
+ * Edit account.
+ * @see AccountController::actionUpdate()
+ * @see AccountController::actionDeauthorize()
  *
  * @var View $this
  * @var UserForm $user
  * @var ActiveForm $form
  */
 
+use davidhirtz\yii2\skeleton\controllers\AccountController;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\forms\GoogleAuthenticatorForm;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;

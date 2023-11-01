@@ -7,31 +7,19 @@ use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
- * Class NestedTreeTrait.
- * @package davidhirtz\yii2\skeleton\db
- *
  * @property int $id
  * @property int $parent_id
  * @property int $rgt
  * @property int $lft
  * @property string $name
  *
- * @property-read ActiveRecord $parent
+ * @property-read ActiveRecord $parent {@see static::getParent()}
  * @method static ActiveQuery find()
  */
 trait NestedTreeTrait
 {
-    /**
-     * @var ActiveRecord[]
-     * @see getAncestors()
-     */
-    private $_ancestors;
-
-    /**
-     * @var ActiveRecord[]
-     * @see getDescendants()
-     */
-    private $_descendants;
+    private ?array $_ancestors = null;
+    private ?array $_descendants = null;
 
     public function transactions(): array
     {
@@ -46,10 +34,9 @@ trait NestedTreeTrait
     }
 
     /**
-     * @param bool $refresh
-     * @return ActiveRecord[]
+     * @return static[]
      */
-    public function getAncestors($refresh = false): array
+    public function getAncestors(bool $refresh = false): array
     {
         if ($this->_ancestors === null || $refresh) {
             $this->_ancestors = [];
@@ -86,7 +73,7 @@ trait NestedTreeTrait
         }
     }
 
-    public function getFirstAncestor(): ?ActiveRecord
+    public function getFirstAncestor(): ?static
     {
         if ($this->parent_id) {
             $ancestors = $this->getAncestors();
@@ -105,8 +92,7 @@ trait NestedTreeTrait
     }
 
     /**
-     * @param bool $refresh
-     * @return ActiveRecord[]
+     * @return static[]
      */
     public function getDescendants(bool $refresh = false): array
     {
@@ -155,9 +141,6 @@ trait NestedTreeTrait
         return ($this->rgt - $this->lft - 1) / 2;
     }
 
-    /**
-     * Validation rule.
-     */
     public function validateParentId(): void
     {
         if ($this->parent_id) {
@@ -198,7 +181,7 @@ trait NestedTreeTrait
     {
         if ($this->getIsNewRecord()) {
             if ($this->parent_id) {
-                // Update right hand side of tree to make room for item.
+                // Update the right-hand side of the tree to make room for item.
                 static::updateAllCounters(['lft' => 2, 'rgt' => 2], '[[lft]]>:rgt', [
                     'rgt' => $this->parent->getAttribute('rgt'),
                 ]);
@@ -230,7 +213,7 @@ trait NestedTreeTrait
                 'rgt' => $this->rgt,
             ]);
 
-            // Detach branch from right hand side of tree.
+            // Detach branch from the right-hand side of the tree.
             static::updateAllCounters(['lft' => -$diff, 'rgt' => -$diff], '[[lft]]>:rgt', [
                 'rgt' => $this->rgt,
             ]);
@@ -247,7 +230,7 @@ trait NestedTreeTrait
                 ])->andWhere(new Expression(':rgt BETWEEN [[lft]] AND [[rgt]]', ['rgt' => $this->parent->getAttribute('rgt')]));
                 static::updateAllCounters(['rgt' => $diff], $query->where);
 
-                // Update new right hand side of tree.
+                // Update the new right-hand side of the tree.
                 $query = (new Query())
                     ->where(['not in', 'id', $branchIds])
                     ->andWhere(new Expression('[[lft]]>:rgt', ['rgt' => $this->parent->getAttribute('rgt')]));
@@ -281,7 +264,7 @@ trait NestedTreeTrait
     }
 
     /**
-     * Deletes nested records one by one, triggering all related active record events.
+     * Deletes the nested records one by one, triggering all related active record events.
      */
     public function deleteNestedTreeItems(): void
     {
@@ -342,9 +325,6 @@ trait NestedTreeTrait
     }
 
     /**
-     * @param array $branch
-     * @param int $lft
-     * @param int $parentId
      *
      * @return array()
      */
@@ -367,9 +347,6 @@ trait NestedTreeTrait
 
     /**
      * @param ActiveRecord[] $records
-     * @param string $attribute
-     * @param string $indent
-     * @return array
      */
     public static function indentNestedTree(array $records, string $attribute, string $indent = '-'): array
     {

@@ -16,40 +16,15 @@ class LoginForm extends Model
 {
     use IdentityTrait;
 
-    /**
-     * @var bool
-     */
-    public $enableFacebookLogin = true;
+    public bool $enableFacebookLogin = true;
+    public ?string $password = null;
+    public ?string $code = null;
+    public bool|string $rememberMe = true;
+    public ?string $ipAddress = null;
 
-    /**
-     * @var string
-     */
-    public $password;
+    private bool $_isGoogleAuthenticatorCodeRequired = false;
 
-    /**
-     * @var string|null
-     */
-    public $code;
-
-    /**
-     * @var bool
-     */
-    public $rememberMe = true;
-
-    /**
-     * @var string
-     */
-    public $ipAddress;
-
-    /**
-     * @var bool
-     */
-    private $_isGoogleAuthenticatorCodeRequired = false;
-
-    /**
-     * @inheritdoc
-     */
-    public function rules()
+    public function rules(): array
     {
         return [
             [
@@ -78,7 +53,7 @@ class LoginForm extends Model
     /**
      * Validates user credentials and status and Google authenticator code if set.
      */
-    public function afterValidate()
+    public function afterValidate(): void
     {
         $this->validateUserPassword();
         $this->validateUserStatus();
@@ -89,9 +64,9 @@ class LoginForm extends Model
     }
 
     /**
-     * Validates password if user was found by email. If any other error occurred during validation, don't even bother.
+     * Validates password if email found user. If any other error occurred during validation, don't even bother.
      */
-    public function validateUserPassword()
+    public function validateUserPassword(): void
     {
         if (!$this->hasErrors() && !(($user = $this->getUser()) && $user->validatePassword($this->password))) {
             $this->addError('email', Yii::t('skeleton', 'Your email or password are incorrect.'));
@@ -101,7 +76,7 @@ class LoginForm extends Model
     /**
      * Validates the user status if unconfirmed users are not allowed to log in via email.
      */
-    public function validateLoginStatus()
+    public function validateLoginStatus(): void
     {
         if (($user = $this->getUser()) && $user->isUnconfirmed() && !Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
             $this->addError('status', Yii::t('skeleton', 'Your email address is not confirmed yet. You should find a confirmation email in your inbox.'));
@@ -111,7 +86,7 @@ class LoginForm extends Model
     /**
      * Validates the Google authenticator code if needed.
      */
-    public function validateGoogleAuthenticatorCode()
+    public function validateGoogleAuthenticatorCode(): void
     {
         if (Yii::$app->getUser()->enableGoogleAuthenticator && !$this->hasErrors() && ($user = $this->getUser()) && $user->google_2fa_secret) {
             /** @var GoogleAuthenticatorValidator $validator */
@@ -128,9 +103,8 @@ class LoginForm extends Model
 
     /**
      * Logs in a user using the provided email and password.
-     * @return bool
      */
-    public function login()
+    public function login(): bool
     {
         if ($this->validate()) {
             $user = $this->getUser();
@@ -141,7 +115,7 @@ class LoginForm extends Model
             return Yii::$app->getUser()->login($user, $this->rememberMe ? $user->cookieLifetime : 0);
         }
 
-        // Don't show empty error, if the user has not been able to enter it...
+        // Don't show empty error if the user has not been able to enter it...
         if ($this->hasErrors('code') && $this->code === null) {
             $this->clearErrors('code');
         }
@@ -149,34 +123,22 @@ class LoginForm extends Model
         return false;
     }
 
-    /**
-     * @return bool
-     */
     public function isGoogleAuthenticatorCodeRequired(): bool
     {
         return $this->_isGoogleAuthenticatorCodeRequired;
     }
 
-    /**
-     * @return bool
-     */
     public function isFacebookLoginEnabled(): bool
     {
         return $this->enableFacebookLogin && Yii::$app->getAuthClientCollection()->hasClient('facebook');
     }
 
-    /**
-     * @return string
-     */
     public function formName(): string
     {
         return 'Login';
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'code' => Yii::t('skeleton', 'Code'),

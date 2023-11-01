@@ -4,6 +4,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\Redirect;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
 use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\TypeGridViewTrait;
 use davidhirtz\yii2\timeago\TimeagoColumn;
@@ -24,6 +25,7 @@ class RedirectGridView extends GridView
 
     /**
      * @var array the url route for selection update
+     * @see RedirectController::actionDeleteAll()
      */
     public array $selectionRoute = ['delete-all'];
 
@@ -119,9 +121,7 @@ class RedirectGridView extends GridView
     {
         return [
             'attribute' => 'request_uri',
-            'content' => function (Redirect $redirect) {
-                return Html::a(Html::markKeywords($redirect->request_uri, $this->getSearchKeywords()), $this->getRoute($redirect));
-            }
+            'content' => fn(Redirect $redirect) => Html::a(Html::markKeywords($redirect->request_uri, $this->getSearchKeywords()), $this->getRoute($redirect))
         ];
     }
 
@@ -161,9 +161,7 @@ class RedirectGridView extends GridView
     {
         return [
             'contentOptions' => ['class' => 'text-right text-nowrap'],
-            'content' => function (Redirect $redirect) {
-                return Html::buttons($this->getRowButtons($redirect));
-            }
+            'content' => fn(Redirect $redirect): string => Html::buttons($this->getRowButtons($redirect))
         ];
     }
 
@@ -192,7 +190,7 @@ class RedirectGridView extends GridView
 
     protected function getDeleteRoute(ActiveRecordInterface $model, array $params = []): array
     {
-        return parent::getDeleteRoute($model, array_merge($params, ['previous' => $this->redirect->id ?? null]));
+        return parent::getDeleteRoute($model, [...$params, 'previous' => $this->redirect->id ?? null]);
     }
 
     protected function getRowButtons(Redirect $redirect): array|string

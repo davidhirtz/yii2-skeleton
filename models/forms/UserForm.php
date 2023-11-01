@@ -10,71 +10,44 @@ use Yii;
  */
 class UserForm extends User
 {
-    /**
-     * @var string
-     */
-    public $newPassword;
+    public ?string $newPassword = null;
+    public ?string $repeatPassword = null;
+    public ?string $oldPassword = null;
+    public ?string $oldEmail = null;
 
-    /**
-     * @var string
-     */
-    public $repeatPassword;
-
-    /**
-     * @var string
-     */
-    public $oldPassword;
-
-    /**
-     * @var string
-     */
-    public $oldEmail;
-
-    /**
-     * @inheritdoc
-     */
     public function rules(): array
     {
-        return array_merge(parent::rules(), [
+        return [
+            ...parent::rules(),
             [
                 ['email'],
                 'validateEmail',
                 'skipOnError' => true,
-            ],
-            [
+            ], [
                 ['newPassword', 'repeatPassword', 'oldPassword'],
                 'trim',
-            ],
-            [
+            ], [
                 ['newPassword', 'repeatPassword', 'oldPassword'],
                 'string',
                 'min' => $this->passwordMinLength,
-            ],
-            [
+            ], [
                 ['newPassword'],
                 'validateNewPassword',
                 'skipOnError' => true,
-            ],
-            [
+            ], [
                 ['repeatPassword'],
                 'required',
-                'when' => function (self $model) {
-                    return (bool)$model->newPassword;
-                },
-            ],
-            [
+                'when' => fn(self $model): bool => (bool)$model->newPassword,
+            ], [
                 ['repeatPassword'],
                 'compare',
                 'compareAttribute' => 'newPassword',
                 'message' => Yii::t('skeleton', 'The password must match the new password.'),
-            ],
-        ]);
+            ]
+        ];
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function afterFind()
+    public function afterFind(): void
     {
         $this->oldEmail = $this->email;
         parent::afterFind();
@@ -116,9 +89,7 @@ class UserForm extends User
                 if (!$user->isUnconfirmedEmailLoginEnabled()) {
                     $user->logout(false);
 
-                    if ($session) {
-                        $session->addFlash('success', Yii::t('skeleton', 'Please check your emails to confirm your new email address!'));
-                    }
+                    $session?->addFlash('success', Yii::t('skeleton', 'Please check your emails to confirm your new email address!'));
                 }
 
                 $this->sendEmailConfirmationEmail();
@@ -133,9 +104,9 @@ class UserForm extends User
     }
 
     /**
-     * Validates old password on email change.
+     * @noinspection PhpUnused {@see static::rules()}
      */
-    public function validateEmail()
+    public function validateEmail(): void
     {
         if ($this->isAttributeChanged('email') && !$this->validatePassword($this->oldPassword)) {
             $this->addInvalidAttributeError('oldPassword');
@@ -143,9 +114,9 @@ class UserForm extends User
     }
 
     /**
-     * Validates old password on password change.
+     * @noinspection PhpUnused {@see static::rules()}
      */
-    public function validateNewPassword()
+    public function validateNewPassword(): void
     {
         if ($this->newPassword && !$this->validatePassword($this->oldPassword)) {
             $this->addInvalidAttributeError('oldPassword');
@@ -155,7 +126,7 @@ class UserForm extends User
     /**
      * Sends email confirmation mail.
      */
-    public function sendEmailConfirmationEmail()
+    public function sendEmailConfirmationEmail(): void
     {
         Yii::$app->getMailer()->compose('@skeleton/mail/account/email', ['user' => $this])
             ->setSubject(Yii::t('skeleton', 'Please confirm your new email address'))
@@ -167,7 +138,7 @@ class UserForm extends User
     /**
      * @return array
      */
-    public function scenarios()
+    public function scenarios(): array
     {
         return [
             static::SCENARIO_DEFAULT => [
@@ -192,10 +163,6 @@ class UserForm extends User
      */
     public function attributeLabels(): array
     {
-        return array_merge(parent::attributeLabels(), [
-            'newPassword' => Yii::t('skeleton', 'New password'),
-            'repeatPassword' => Yii::t('skeleton', 'Repeat password'),
-            'oldPassword' => Yii::t('skeleton', 'Current password'),
-        ]);
+        return [...parent::attributeLabels(), 'newPassword' => Yii::t('skeleton', 'New password'), 'repeatPassword' => Yii::t('skeleton', 'Repeat password'), 'oldPassword' => Yii::t('skeleton', 'Current password')];
     }
 }

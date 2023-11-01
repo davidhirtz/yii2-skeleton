@@ -8,6 +8,7 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
+use yii\db\ActiveRecordInterface;
 use yii\helpers\Url;
 
 /**
@@ -15,41 +16,31 @@ use yii\helpers\Url;
  */
 trait TypeGridViewTrait
 {
-    /**
-     * @var int
-     */
-    public $type;
+    public ?int $type = null;
 
     /**
      * @var string the type parameter name
      */
-    public $typeParamName = 'type';
+    public string $typeParamName = 'type';
 
     /**
      * @var string|null whether the default item in the types dropdown should be shown
      */
-    public $defaultTypeItem = null;
+    public ?string $defaultTypeItem = null;
 
-    /**
-     * @return array
-     */
-    public function typeColumn()
+    public function typeColumn(): array
     {
         return [
             'attribute' => 'type',
             'contentOptions' => ['class' => 'text-nowrap'],
             'visible' => !$this->type && count($this->getModel()::getTypes()) > 1,
-            'content' => function ($model) {
+            'content' => fn($model) =>
                 /** @var ActiveRecord|TypeAttributeTrait $model */
-                return ($route = $this->getRoute($model)) ? Html::a($model->getTypeName(), $route) : $model->getTypeName();
-            }
+                ($route = $this->getRoute($model)) ? Html::a($model->getTypeName(), $route) : $model->getTypeName()
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function typeIconColumn()
+    public function typeIconColumn(): array
     {
         return [
             'visible' => !$this->type && count($this->getModel()::getTypes()) > 1,
@@ -62,10 +53,7 @@ trait TypeGridViewTrait
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function typeDropdown()
+    public function typeDropdown(): string
     {
         $typeOptions = $this->getModel()::getTypes()[$this->type] ?? false;
 
@@ -98,12 +86,9 @@ trait TypeGridViewTrait
         return $items;
     }
 
-    /**
-     * @param TypeAttributeTrait $model
-     * @return Icon
-     */
-    protected function getTypeIcon($model)
+    protected function getTypeIcon(ActiveRecordInterface $model): Icon
     {
+        /** @var TypeAttributeTrait $model */
         return Icon::tag($model->getTypeIcon(), [
             'data-toggle' => 'tooltip',
             'title' => $model->getTypeName(),

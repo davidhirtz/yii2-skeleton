@@ -7,31 +7,13 @@ use yii\base\NotSupportedException;
 use yii\web\IdentityInterface;
 use Yii;
 
-/**
- * Class Identity
- * @package davidhirtz\yii2\skeleton\db
- */
 class Identity extends User implements IdentityInterface
 {
-    /**
-     * @var int
-     */
-    public $loginType;
+    public ?string $loginType = null;
+    public ?string $ipAddress = null;
+    public int $cookieLifetime = 2592000;
 
-    /**
-     * @var string
-     */
-    public $ipAddress;
-
-    /**
-     * @var int
-     */
-    public $cookieLifetime = 2592000;
-
-    /**
-     * @inheritDoc
-     */
-    public static function findIdentity($id)
+    public static function findIdentity($id): ?IdentityInterface
     {
         /**
          * @var Identity $identity
@@ -49,34 +31,22 @@ class Identity extends User implements IdentityInterface
         return $identity;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public static function findIdentityByAccessToken($token, $type = null)
+    public static function findIdentityByAccessToken($token, $type = null): ?IdentityInterface
     {
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
 
-    /**
-     * @inheritDoc
-     */
     public function validateAuthKey($authKey): bool
     {
         return $this->getAuthKey() === $authKey;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getId()
+    public function getId(): mixed
     {
         return $this->getPrimaryKey();
     }
 
-    /**
-     * @return string|null
-     */
-    public function getAuthKey()
+    public function getAuthKey(): ?string
     {
         return $this->auth_key;
     }

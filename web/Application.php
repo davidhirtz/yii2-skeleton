@@ -41,9 +41,9 @@ class Application extends \yii\web\Application
     /**
      * @param array $config
      */
-    public function preInit(&$config)
+    public function preInit(&$config): void
     {
-        $config['basePath'] = $config['basePath'] ?? dirname($_SERVER['SCRIPT_FILENAME'], 2);
+        $config['basePath'] ??= dirname((string) $_SERVER['SCRIPT_FILENAME'], 2);
 
         $this->preInitInternal($config);
         $this->setDebugModuleConfig($config);
@@ -51,10 +51,7 @@ class Application extends \yii\web\Application
         parent::preInit($config);
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function bootstrap()
+    protected function bootstrap(): void
     {
         $this->setDefaultUrlManagerRules();
         $this->setDefaultCookieConfig();
@@ -64,20 +61,17 @@ class Application extends \yii\web\Application
         $this->setDefaultEmail();
     }
 
-    /**
-     * @return array
-     */
-    public function coreComponents()
+    public function coreComponents(): array
     {
         return array_merge(parent::coreComponents(), [
             'errorHandler' => [
-                'class' => 'davidhirtz\yii2\skeleton\web\ErrorHandler',
+                'class' => ErrorHandler::class,
             ],
             'request' => [
-                'class' => 'davidhirtz\yii2\skeleton\web\Request',
+                'class' => Request::class,
             ],
             'response' => [
-                'class' => 'yii\web\Response',
+                'class' => Response::class,
                 'on beforeSend' => function (Event $event) {
                     if ($this->getRequest()->getIsDraft()) {
                         /** @var Response $response */
@@ -87,15 +81,12 @@ class Application extends \yii\web\Application
                 }
             ],
             'user' => [
-                'class' => 'davidhirtz\yii2\skeleton\web\User',
+                'class' => User::class,
             ],
         ]);
     }
 
-    /**
-     * @return Collection|null
-     */
-    public function getAuthClientCollection()
+    public function getAuthClientCollection(): ?Collection
     {
         return $this->get('authClientCollection', false);
     }
@@ -104,22 +95,22 @@ class Application extends \yii\web\Application
      * Configures Yii2 debug module (which is currently only available for web applications) if `YII_DEBUG` is `true`.
      * @param array $config
      */
-    protected function setDebugModuleConfig(&$config)
+    protected function setDebugModuleConfig(array &$config): void
     {
         if (YII_DEBUG) {
             if (!in_array('debug', $config['bootstrap'] ?? [])) {
                 $config['bootstrap'][] = 'debug';
             }
 
-            $config['modules']['debug']['class'] = $config['modules']['debug']['class'] ?? 'yii\debug\Module';
-            $config['modules']['debug']['traceLine'] = $config['modules']['debug']['traceLine'] ?? '<a href="phpstorm://open?file={file}&line={line}">{file}:{line}</a>';
+            $config['modules']['debug']['class'] ??= 'yii\debug\Module';
+            $config['modules']['debug']['traceLine'] ??= '<a href="phpstorm://open?file={file}&line={line}">{file}:{line}</a>';
         }
     }
 
     /**
      * Sets default email address based on server name, this must be called after initialization.
      */
-    protected function setDefaultEmail()
+    protected function setDefaultEmail(): void
     {
         $this->params['email'] ??= ('hostmaster@' . $this->getRequest()->getServerName());
     }
@@ -128,13 +119,13 @@ class Application extends \yii\web\Application
      * Sets default cookie `domain` and `sameSite` properties. The cookie domain can be set via `params` but must match
      * the actual host info, otherwise the session cookies cannot be registered.
      */
-    protected function setDefaultCookieConfig()
+    protected function setDefaultCookieConfig(): void
     {
         if (!Yii::$container->has(Cookie::class)) {
             $config = ['sameSite' => Cookie::SAME_SITE_LAX];
 
             if ($domain = $this->params['cookieDomain'] ?? false) {
-                $hostInfo = trim($domain, '.');
+                $hostInfo = trim((string) $domain, '.');
 
                 if (str_ends_with($this->getRequest()->getHostInfo(), $hostInfo)) {
                     $config['domain'] = $domain;

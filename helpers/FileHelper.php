@@ -6,22 +6,15 @@ use Yii;
 use yii\helpers\BaseFileHelper;
 use yii\helpers\VarDumper;
 
-/**
- * Class FileHelper
- * @package davidhirtz\yii2\skeleton\helpers
- */
 class FileHelper extends BaseFileHelper
 {
     /**
      * Removes a file, logging warnings.
-     *
-     * @param string $filename
-     * @return bool
      */
-    public static function removeFile($filename)
+    public static function removeFile(string $filename): bool
     {
         if (@unlink($filename) === false) {
-            Yii::warning("Deleting file \"{$filename}\" failed.");
+            Yii::warning("Deleting file \"$filename\" failed.");
             return false;
         }
 
@@ -29,48 +22,35 @@ class FileHelper extends BaseFileHelper
     }
 
     /**
-     * This is a stream wrapper aware replacement to PHP's rename function. Renaming
-     * remote folders is not supported.
-     *
-     * @param string $source
-     * @param string $dest
-     *
-     * @return string the new file path.
+     * This is a stream-wrapper-aware replacement to PHP's rename function. Renaming remote folders is not supported.
      */
-    public static function rename($source, $dest)
+    public static function rename(string $source, string $dest): bool
     {
         if (stream_is_local($source) == stream_is_local($dest)) {
-            Yii::debug("Moving file \"{$source}\" to  \"{$dest}\"");
+            Yii::debug("Moving file \"$source\" to  \"$dest\"");
             return @rename($source, $dest);
         }
 
         if (is_dir($source)) {
-            Yii::warning("Unable to rename directory \"{$source}\"");
+            Yii::warning("Unable to rename directory \"$source\"");
             return false;
         }
 
         if (file_put_contents($dest, file_get_contents($source))) {
-            Yii::debug("Moving remote file \"{$source}\" to  \"{$dest}\"");
+            Yii::debug("Moving remote file \"$source\" to  \"$dest\"");
             return @unlink($source);
         }
 
         return false;
     }
 
-    /**
-     * @param string $path
-     * @return bool
-     */
-    public static function unlink($path)
+    public static function unlink($path): bool
     {
-        Yii::debug("Deleting file \"{$path}\"");
+        Yii::debug("Deleting file \"$path\"");
         return @parent::unlink($path);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public static function createDirectory($path, $mode = 0775, $recursive = true)
+    public static function createDirectory($path, $mode = 0775, $recursive = true): bool
     {
         // Yii integration does not work with stream wrappers such as Amazon S3, if stream
         // is not local, let the implementation work out the specifics.
@@ -82,13 +62,9 @@ class FileHelper extends BaseFileHelper
     }
 
     /**
-     * Creates a config PHP file from config array.
-     *
-     * @param string $file
-     * @param array $config
-     * @param array|string|null $phpdoc
+     * Creates a config PHP file from the config array.
      */
-    public static function createConfigFile($file, $config = [], $phpdoc = null)
+    public static function createConfigFile(string $file, array $config = [], array|string|null $phpdoc = null): void
     {
         $file = Yii::getAlias($file);
         $export = VarDumper::export($config);
@@ -112,13 +88,7 @@ EOL
         );
     }
 
-    /**
-     * @param string|null $extension
-     * @param int $length
-     *
-     * @return string
-     */
-    public static function generateRandomFilename($extension = null, $length = 8)
+    public static function generateRandomFilename(?string $extension = null, int $length = 8): string
     {
         $filename = Yii::$app->security->generateRandomString($length);
 
@@ -129,25 +99,18 @@ EOL
         return $filename;
     }
 
-    /**
-     * @param string $url
-     * @return string
-     */
-    public static function getExtensionFromUrl($url)
+    /** @noinspection PhpUnused */
+    public static function getExtensionFromUrl(string $url): string
     {
         return strtolower(pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
     }
 
 
-    /**
-     * @param string $url
-     * @return string
-     */
     public static function encodeUrl(string $url): string
     {
         $parts = parse_url($url);
 
-        // If URL is relative, return it as is.
+        // If the URL is relative, return it as is.
         if (!isset($parts['scheme'], $parts['host'])) {
             return $url;
         }

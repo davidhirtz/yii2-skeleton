@@ -9,15 +9,9 @@ use Yii;
 
 class UserSubmenu extends Submenu
 {
-    /**
-     * @var User
-     */
-    public $user;
+    public ?User $user = null;
 
-    /**
-     * Initializes the nav items.
-     */
-    public function init()
+    public function init(): void
     {
         if ($this->user && !$this->user->getIsNewRecord()) {
             if (!$this->title) {
@@ -25,47 +19,29 @@ class UserSubmenu extends Submenu
                 $this->title = Yii::$app->getUser()->can(User::AUTH_USER_UPDATE, ['user' => $this->user]) ? Html::a($name, ['/admin/user/update', 'id' => $this->user->id]) : $name;
             }
 
-            $this->items = array_merge($this->items, $this->getUserItems());
+            $this->items = [...$this->items, ...$this->getUserItems()];
 
         } else {
             if (!$this->title) {
                 $this->title = Html::a(Yii::t('skeleton', 'Users'), ['/admin/user/index']);
             }
 
-            $this->items = array_merge($this->items, $this->getDefaultItems());
+            $this->items = [...$this->items, ...$this->getDefaultItems()];
         }
 
         parent::init();
     }
 
-    /**
-     * @return array
-     */
     protected function getDefaultItems(): array
     {
-        return array_filter(array_merge(
-            $this->getUserGridViewItems(),
-            $this->getPermissionGridViewItems(),
-            $this->getLoginGridViewItems(),
-        ));
+        return array_filter([...$this->getUserGridViewItems(), ...$this->getPermissionGridViewItems(), ...$this->getLoginGridViewItems()]);
     }
 
-    /**
-     * @return array
-     */
     protected function getUserItems(): array
     {
-        return array_filter(array_merge(
-            $this->getUserFormItems(),
-            $this->getUserPermissionGridViewItems(),
-            $this->getUserLoginGridViewItems(),
-            $this->getUserTrailGridViewItems(),
-        ));
+        return array_filter([...$this->getUserFormItems(), ...$this->getUserPermissionGridViewItems(), ...$this->getUserLoginGridViewItems(), ...$this->getUserTrailGridViewItems()]);
     }
 
-    /**
-     * @return array
-     */
     protected function getUserGridViewItems(): array
     {
         return [
@@ -81,9 +57,6 @@ class UserSubmenu extends Submenu
         ];
     }
 
-    /**
-     * @return array
-     */
     protected function getPermissionGridViewItems(): array
     {
         return [
@@ -99,9 +72,6 @@ class UserSubmenu extends Submenu
         ];
     }
 
-    /**
-     * @return array
-     */
     protected function getLoginGridViewItems(): array
     {
         return [
@@ -117,9 +87,6 @@ class UserSubmenu extends Submenu
         ];
     }
 
-    /**
-     * @return array
-     */
     protected function getUserFormItems(): array
     {
         return [
@@ -135,9 +102,6 @@ class UserSubmenu extends Submenu
         ];
     }
 
-    /**
-     * @return array
-     */
     protected function getUserPermissionGridViewItems(): array
     {
         return [
@@ -153,9 +117,6 @@ class UserSubmenu extends Submenu
         ];
     }
 
-    /**
-     * @return array
-     */
     protected function getUserLoginGridViewItems(): array
     {
         return [
@@ -171,9 +132,6 @@ class UserSubmenu extends Submenu
         ];
     }
 
-    /**
-     * @return array
-     */
     protected function getUserTrailGridViewItems(): array
     {
         return [

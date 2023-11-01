@@ -7,42 +7,29 @@ use yii\base\InvalidConfigException;
 use yii\validators\Validator;
 use Yii;
 
-/**
- * Class TimeValidator
- * @package davidhirtz\yii2\skeleton\validators
- */
 class TimeValidator extends Validator
 {
     /**
      * @var string
      */
-    public $pattern = '/^([01]?[0-9]|2[0-3]):?([0-5][0-9])\s?(am|pm)?$/';
+    public string $pattern = '/^([01]?[0-9]|2[0-3]):?([0-5][0-9])\s?(am|pm)?$/';
 
-    /**
-     * @inheritdoc
-     */
-    public function init()
+    public function init(): void
     {
         if (!$this->pattern) {
             throw new InvalidConfigException('The "pattern" property must be set.');
         }
 
-        if ($this->message === null) {
-            $this->message = Yii::t('yii', '{attribute} is invalid.');
-        }
+        $this->message ??= Yii::t('yii', '{attribute} is invalid.');
 
         parent::init();
     }
 
-    /**
-     * @param \yii\base\Model $model
-     * @param string $attribute
-     */
-    public function validateAttribute($model, $attribute)
+    public function validateAttribute($model, $attribute): void
     {
         // Removes trailing seconds
-        $value = strlen($value = $model->$attribute) === 8 ? preg_replace('/:00$/', '', $value) : $value;
-        $strlen = strlen($model->$attribute);
+        $value = strlen((string)($value = $model->$attribute)) === 8 ? preg_replace('/:00$/', '', (string)$value) : $value;
+        $strlen = strlen((string)$model->$attribute);
 
         if ($strlen === 1) {
             $value = "0{$value}00";
@@ -50,7 +37,7 @@ class TimeValidator extends Validator
             $value = substr("{$value}00", 0, 4);
         }
 
-        if (!preg_match($this->pattern, $value, $match)) {
+        if (!preg_match($this->pattern, (string)$value, $match)) {
             $this->addError($model, $attribute, $this->message);
             return;
         }
@@ -63,6 +50,6 @@ class TimeValidator extends Validator
         }
 
         // Adds seconds for MySQL conform data format
-        $model->$attribute = "{$hours}:{$minutes}:00";
+        $model->$attribute = "$hours:$minutes:00";
     }
 }

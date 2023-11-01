@@ -118,16 +118,14 @@ class GridView extends \yii\grid\GridView
         }
 
         if (!$this->rowOptions) {
-            $this->rowOptions = function ($record) {
-                return $record instanceof ActiveRecord ? ['id' => $this->getRowId($record)] : [];
-            };
+            $this->rowOptions = fn($record) => $record instanceof ActiveRecord ? ['id' => $this->getRowId($record)] : [];
         }
 
         if ($this->selectionButtonLabel === null) {
             $this->selectionButtonLabel = Yii::t('skeleton', 'Update Selected');
         }
 
-        $this->tableOptions['id'] = $this->tableOptions['id'] ?? $this->getTableId();
+        $this->tableOptions['id'] ??= $this->getTableId();
 
         parent::init();
     }
@@ -240,7 +238,6 @@ class GridView extends \yii\grid\GridView
     }
 
     /**
-     * @param array $rows
      * @return string
      */
     public function renderRows(array $rows): string
@@ -282,7 +279,7 @@ class GridView extends \yii\grid\GridView
         }
 
         if ($this->search === null) {
-            $this->search = ($search = Yii::$app->getRequest()->get($this->searchParamName)) ? trim($search) : null;
+            $this->search = ($search = Yii::$app->getRequest()->get($this->searchParamName)) ? trim((string) $search) : null;
         }
 
         $options = [
@@ -292,7 +289,7 @@ class GridView extends \yii\grid\GridView
         ];
 
         return Html::beginForm($this->searchUrl, 'get') .
-            Html::input('search', $this->searchParamName, $this->search, array_merge($options, $this->searchFormOptions)) .
+            Html::input('search', $this->searchParamName, $this->search, [...$options, ...$this->searchFormOptions]) .
             Html::endForm();
     }
 
@@ -377,12 +374,12 @@ class GridView extends \yii\grid\GridView
 
     protected function getRoute(ActiveRecordInterface $model, array $params = []): array|false
     {
-        return array_merge(['update', 'id' => $model->getPrimaryKey()], $params);
+        return ['update', 'id' => $model->getPrimaryKey(), ...$params];
     }
 
     protected function getDeleteRoute(ActiveRecordInterface $model, array $params = []): array
     {
-        return array_merge(['delete', 'id' => $model->getPrimaryKey()], $params);
+        return ['delete', 'id' => $model->getPrimaryKey(), ...$params];
     }
 
     public function getModel(): ActiveRecordInterface

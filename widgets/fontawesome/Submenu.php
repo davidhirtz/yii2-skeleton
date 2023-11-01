@@ -4,34 +4,18 @@ namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 
 use yii\helpers\Html;
 
-/**
- * Class Submenu
- * @package davidhirtz\yii2\skeleton\widgets\fontawesome
- */
 class Submenu extends Nav
 {
-    /**
-     * @var string
-     */
-    public $title;
+    public ?string $title = null;
 
-    /**
-     * @var
-     */
-    public $cssClass = ['submenu', 'nav', 'nav-pills'];
+    public array $cssClass = ['submenu', 'nav', 'nav-pills'];
 
-    /**
-     * Sets nav pills class.
-     */
-    public function init()
+    public function init(): void
     {
         Html::addCssClass($this->options, $this->cssClass);
         parent::init();
     }
 
-    /**
-     * @return string
-     */
     public function run(): string
     {
         $content = parent::run();

@@ -12,16 +12,9 @@ use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
-/**
- * Class RedirectController
- * @package davidhirtz\yii2\skeleton\modules\admin\controllers
- */
 class RedirectController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'access' => [
@@ -37,12 +30,7 @@ class RedirectController extends Controller
         ];
     }
 
-    /**
-     * @param int $user
-     * @param string $q
-     * @return string
-     */
-    public function actionIndex($user = null, $q = null)
+    public function actionIndex(?int $user = null, ?string $q = null): Response|string
     {
         $provider = new RedirectActiveDataProvider([
             'user' => $user ? User::findOne((int)$user) : null,
@@ -75,11 +63,7 @@ class RedirectController extends Controller
         ]);
     }
 
-    /**
-     * @param int $id
-     * @return string|Response
-     */
-    public function actionUpdate(int $id)
+    public function actionUpdate(int $id): Response|string
     {
         $redirect = $this->findRedirect($id);
         $request = Yii::$app->getRequest();
@@ -99,12 +83,7 @@ class RedirectController extends Controller
         ]);
     }
 
-    /**
-     * @param int $id
-     * @param int|null $previous
-     * @return string|Response
-     */
-    public function actionDelete(int $id, $previous = null)
+    public function actionDelete(int $id, ?int $previous = null): Response|string
     {
         $redirect = $this->findRedirect($id);
 
@@ -116,10 +95,7 @@ class RedirectController extends Controller
         return $this->redirect($previous ? ['update', 'id' => $previous] : array_merge(Yii::$app->getRequest()->get(), ['index']));
     }
 
-    /**
-     * @return Response
-     */
-    public function actionDeleteAll()
+    public function actionDeleteAll(): Response|string
     {
         $request = Yii::$app->getRequest();
 
@@ -145,11 +121,7 @@ class RedirectController extends Controller
         return $this->redirect($request->get('redirect', array_merge($request->get(), ['index'])));
     }
 
-    /**
-     * @param int $id
-     * @return Redirect
-     */
-    protected function findRedirect($id)
+    protected function findRedirect(int $id): Redirect
     {
         if (!$redirect = Redirect::findOne((int)$id)) {
             throw new NotFoundHttpException();

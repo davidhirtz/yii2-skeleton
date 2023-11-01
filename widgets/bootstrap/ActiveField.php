@@ -2,40 +2,29 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
-
 use Yii;
 
-/**
- * Class ActiveField
- * @package davidhirtz\yii2\skeleton\widgets\bootstrap
- */
 class ActiveField extends \yii\bootstrap4\ActiveField
 {
     /**
-     * @var array containing a custom list of languages used for i18n aware attributes.
+     * @var array|null containing a custom list of languages used for i18n-aware attributes.
      * Leave empty to use default languages.
      */
-    public $languages;
+    public ?array $languages = null;
 
     /**
      * @var string input group with appended text.
      */
-    public $appendInputTemplate = '<div class="input-group">{input}<div class="input-group-append"><span class="input-group-text">{append}</span></div></div>';
+    public string $appendInputTemplate = '<div class="input-group">{input}<div class="input-group-append"><span class="input-group-text">{append}</span></div></div>';
 
     /**
      * @var string input group with prepended text.
      */
-    public $prependInputTemplate = '<div class="input-group"><div class="input-group-prepend"><span class="input-group-text">{prepend}</span></div>{input}</div>';
+    public string $prependInputTemplate = '<div class="input-group"><div class="input-group-prepend"><span class="input-group-text">{prepend}</span></div>{input}</div>';
 
-    /**
-     * @var string
-     */
     public $checkTemplate = '{beginWrapper}<div class="form-check-inline">{input}{label}{error}{hint}</div>{endWrapper}';
 
-    /**
-     * @inheritDoc
-     */
-    public function init()
+    public function init(): void
     {
         $this->checkHorizontalTemplate = $this->checkTemplate;
         parent::init();
@@ -43,29 +32,20 @@ class ActiveField extends \yii\bootstrap4\ActiveField
 
     /**
      * Makes sure that empty input fields are not rendered. This only applies if the '{input}' was explicitly set to
-     * an empty string (eg. from widgets).
-     *
-     * @param null $content
-     * @return string
+     * an empty string (e.g., from widgets).
      */
-    public function render($content = null)
+    public function render($content = null): string
     {
         return ($content === null && ($this->parts['{input}'] ?? false) !== '') ? parent::render($content) : '';
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function checkbox($options = [], $enclosedByLabel = false)
+    public function checkbox($options = [], $enclosedByLabel = false): static
     {
-        $this->labelOptions = []; // Removes label options, class can be removed when extension is fixed...
+        $this->labelOptions = []; // Removes label options, class can be removed when an extension is fixed...
         return parent::checkbox($options, $enclosedByLabel);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function fileInput($options = [])
+    public function fileInput($options = []): static
     {
         if (!isset($options['class'])) {
             $options['class'] = 'form-control-file';
@@ -74,57 +54,39 @@ class ActiveField extends \yii\bootstrap4\ActiveField
         return parent::fileInput($options);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function dropdownList($items, $options = [])
+    public function dropdownList($items, $options = []): static
     {
         if ($items || $this->model->isAttributeRequired($this->attribute)) {
             return parent::dropdownList($items, $options);
         }
 
-        // Don't render empty drop down list.
+        // Don't render an empty dropdown list.
         $this->parts['{input}'] = null;
         return $this;
     }
 
-    /**
-     * @param string $text
-     * @return $this
-     */
-    public function appendInput($text)
+    public function appendInput(string $text): static
     {
         $this->inputTemplate = strtr($this->appendInputTemplate, ['{append}' => $text]);
         return $this;
     }
 
-    /**
-     * @param string $text
-     * @return $this
-     */
-    public function prependInput($text)
+    public function prependInput(string $text): static
     {
         $this->inputTemplate = strtr($this->prependInputTemplate, ['{prepend}' => $text]);
         return $this;
     }
 
-    /**
-     * @param array $options
-     * @return $this
-     */
-    public function hexColor($options = [])
+    /** @noinspection PhpUnused */
+    public function hexColor(array $options = []): static
     {
         $options['maxlength'] = 6;
         return $this->input('text', $options)->prependInput('#');
     }
 
-    /**
-     * @param array $options
-     * @return $this
-     */
-    public function slug($options = [])
+    public function slug(array $options = []): static
     {
-        $baseUrl = $options['baseUrl'] ?? (rtrim(Yii::$app->getRequest()->getHostInfo(), '/') . '/');
+        $baseUrl = $options['baseUrl'] ?? (rtrim((string)Yii::$app->getRequest()->getHostInfo(), '/') . '/');
         unset($options['baseUrl']);
 
         return $this->input('text', $options)->prependInput($baseUrl);

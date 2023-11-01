@@ -11,55 +11,34 @@ use yii\web\JsExpression;
 use yii\widgets\InputWidget;
 
 /**
- * Class FileUpload
- * @package davidhirtz\yii2\skeleton\widgets\form
- *
  * @property ActiveRecord $model
  */
 class FileUpload extends InputWidget
 {
     /**
-     * @var string|array upload route
+     * @var array|string|null upload route
      */
-    public $url;
+    public array|string|null $url = null;
 
     /**
-     * @var array the plugin options. For more information see the jQuery File Upload options documentation.
+     * @var array the plugin options. For more information, see the jQuery File Upload options documentation.
      * @see https://github.com/blueimp/jQuery-File-Upload/wiki/Options
      */
-    public $clientOptions = [];
+    public array $clientOptions = [];
 
     /**
      * @var array the event handlers for the jQuery File Upload plugin.
      * Please refer to the jQuery File Upload plugin web page for possible options.
      * @see https://github.com/blueimp/jQuery-File-Upload/wiki/Options#callback-options
      */
-    public $clientEvents = [];
+    public array $clientEvents = [];
 
-    /**
-     * @var int
-     */
-    public $maxChunkSize = 2000000;
-
-    /**
-     * @var bool
-     */
-    public $multiple = true;
-
-    /**
-     * @var string
-     */
+    public int $maxChunkSize = 2_000_000;
+    public bool $multiple = true;
     public $attribute = 'upload';
+    public string $dropZone = '#files';
 
-    /**
-     * @var string
-     */
-    public $dropZone = '#files';
-
-    /**
-     * @inheritdoc
-     */
-    public function init()
+    public function init(): void
     {
         $defaultClientOptions = [
             'url' => Url::to($this->url),
@@ -67,7 +46,7 @@ class FileUpload extends InputWidget
             'maxChunkSize' => $this->maxChunkSize,
         ];
 
-        $this->clientOptions = array_merge($defaultClientOptions, $this->clientOptions);
+        $this->clientOptions = [...$defaultClientOptions, ...$this->clientOptions];
         $this->options['multiple'] = $this->multiple;
 
         $defaultClientEvents = [
@@ -75,7 +54,7 @@ class FileUpload extends InputWidget
             'fileuploadprogressall' => new JsExpression('Skeleton.uploadProgress'),
         ];
 
-        $this->clientEvents = array_merge($defaultClientEvents, $this->clientEvents);
+        $this->clientEvents = [...$defaultClientEvents, ...$this->clientEvents];
         parent::init();
     }
 
@@ -93,7 +72,7 @@ class FileUpload extends InputWidget
     /**
      * Registers required scripts.
      */
-    public function registerClientScript()
+    public function registerClientScript(): void
     {
         $view = $this->getView();
         FileUploadAsset::register($view);
@@ -101,11 +80,11 @@ class FileUpload extends InputWidget
         $options = Json::htmlEncode($this->clientOptions);
         $id = $this->options['id'];
 
-        $js[] = "$('#{$id}').fileupload({$options})";
+        $js[] = "$('#$id').fileupload($options)";
 
         if (!empty($this->clientEvents)) {
             foreach ($this->clientEvents as $event => $handler) {
-                $js[] = ".on('{$event}', {$handler})";
+                $js[] = ".on('$event', $handler)";
             }
         }
 

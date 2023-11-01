@@ -78,7 +78,7 @@ class LoginFormTest extends Unit
     public function testLoginWithGoogleAuthenticatorCorrect(): void
     {
         Yii::$container->set(GoogleAuthenticatorValidator::class, [
-            'currentTime' => 1609455600,
+            'currentTime' => 1_609_455_600,
         ]);
 
         $form = new LoginForm([

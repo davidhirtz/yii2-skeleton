@@ -5,6 +5,7 @@ namespace davidhirtz\yii2\skeleton\web;
 use Yii;
 use yii\base\Model;
 use yii\helpers\Html;
+use yii\web\Response;
 
 /**
  * Class Controller.
@@ -17,14 +18,14 @@ class Controller extends \yii\web\Controller
     /**
      * @var bool whether spaces between HTML tags should be removed from the output.
      */
-    public $spacelessOutput = false;
+    public bool $spacelessOutput = false;
 
     /**
      * @var string|false whether a Content-Security-Policy header should be sent, defaults to only allowing the current
-     * site to frame the content. To be more strict this can be changed to `frame-ancestors 'none'`.
+     * site to frame the content. To be more strict, this can be changed to `frame-ancestors 'none'`.
      * @link https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Clickjacking_Defense_Cheat_Sheet.md
      */
-    public $contentSecurityPolicy = "frame-ancestors 'self'";
+    public string|false $contentSecurityPolicy = "frame-ancestors 'self'";
 
     /**
      * Omits layout and asset rendering for AJAX route requests.
@@ -35,7 +36,7 @@ class Controller extends \yii\web\Controller
      * @param string $content
      * @return string
      */
-    public function renderContent($content)
+    public function renderContent($content): string
     {
         if ($this->contentSecurityPolicy) {
             Yii::$app->getResponse()->getHeaders()->set('Content-Security-Policy', $this->contentSecurityPolicy);
@@ -53,7 +54,7 @@ class Controller extends \yii\web\Controller
      * @param string $content
      * @return string
      */
-    public function renderAjaxRouteContent($content)
+    public function renderAjaxRouteContent(string $content): string
     {
         Yii::$app->getResponse()->getHeaders()
             ->set('Cache-Control', ['no-store, no-cache, must-revalidate, max-age=0', 'post-check=0, pre-check=0'])
@@ -66,10 +67,10 @@ class Controller extends \yii\web\Controller
      * Adds inline CSS and JS for AJAX route requests.
      * @return string
      */
-    public function renderAjaxRouteScripts()
+    public function renderAjaxRouteScripts(): string
     {
         $view = $this->getView();
-        $view->registerJs('document.title="' . addslashes(preg_replace("/[\r|\n]/", "", $view->getTitle())) . '";');
+        $view->registerJs('document.title="' . addslashes(preg_replace("/[\r|\n]/", '', $view->getTitle())) . '";');
 
         return implode('', $view->css) . Html::script(implode('', call_user_func_array('array_merge', $view->js)), ['type' => 'text/javascript']);
     }
@@ -77,11 +78,12 @@ class Controller extends \yii\web\Controller
     /**
      * Shorthand method for returning JSON data.
      * @param array $data
+     * @noinspection PhpUnused
      */
-    public function setJsonResponseData($data = [])
+    public function setJsonResponseData(array $data = []): void
     {
         $response = Yii::$app->getResponse();
-        $response->format = $response::FORMAT_JSON;
+        $response->format = Response::FORMAT_JSON;
 
         if ($data) {
             $response->data = is_array($response->data) ? array_merge($response->data, $data) : $data;
@@ -91,10 +93,8 @@ class Controller extends \yii\web\Controller
     /**
      * Shorthand method for adding an error flash. If `$value` is an instance of {@link Model} the first errors will be
      * set if found.
-     *
-     * @param Model|array|string $value
      */
-    public function error($value)
+    public function error(Model|array|string $value): void
     {
         if ($value instanceof Model) {
             $value = $value->getFirstErrors();
@@ -107,9 +107,8 @@ class Controller extends \yii\web\Controller
 
     /**
      * Shorthand method for adding a success flash.
-     * @param array|string $value
      */
-    public function success($value)
+    public function success(Model|array|string $value): void
     {
         if ($value) {
             Yii::$app->getSession()->addFlash('success', $value);

@@ -6,65 +6,50 @@ use davidhirtz\yii2\skeleton\models\User;
 use Yii;
 use yii\base\Action;
 
-/**
- * Class Module
- * @package davidhirtz\yii2\skeleton\modules\admin
- */
 class Module extends \yii\base\Module
 {
     public const EVENT_AFTER_INIT = 'afterInit';
 
     /**
-     * @var string the module display name, defaults to "Admin"
+     * @var string|null the module display name, defaults to "Admin"
      */
-    public $name;
+    public ?string $name = null;
 
     /**
-     * @var string the module base route, defaults to "admin"
+     * @var string|null the module base route, defaults to "admin"
      */
-    public $alias;
+    public ?string $alias = null;
 
     /**
-     * @var array|false|null containing the roles to access any admin module or controller, if not set the roles set
-     * via {@link Module::$navbarItems} will be used. If false the module role check is disabled.
+     * @var array|false|null containing the roles to access any admin module or controller, if not set roles set
+     * via {@link Module::$navbarItems} will be used. If false, the module role check is disabled.
      */
-    public $roles;
+    public array|false|null $roles = null;
 
     /**
      * @var int|null the time in seconds after which trail records should be deleted. Leave empty to never delete trail
      * records.
      */
-    public $trailLifetime;
+    public ?int $trailLifetime = null;
 
     /**
      * @var array containing the admin menu items
      */
-    public $navbarItems = [];
+    public array $navbarItems = [];
 
     /**
      * @var array containing the panel items
      */
-    public $panels = [];
+    public array $panels = [];
 
-    /**
-     * @var string
-     */
     public $defaultRoute = 'dashboard';
-
-    /**
-     * @var string
-     */
     public $controllerNamespace = 'app\modules\admin\controllers';
-
-    /**
-     * @var string
-     */
     public $layout = '@skeleton/modules/admin/views/layouts/main';
 
     /**
-     * @var array
+     * @var array the default controller map
      */
-    protected $defaultControllerMap = [
+    protected array $defaultControllerMap = [
         'account' => [
             'class' => 'davidhirtz\yii2\skeleton\controllers\AccountController',
             'viewPath' => '@skeleton/modules/admin/views/account',
@@ -99,10 +84,7 @@ class Module extends \yii\base\Module
         ],
     ];
 
-    /**
-     * @inheritDoc
-     */
-    public function init()
+    public function init(): void
     {
         if (!Yii::$app->getRequest()->getIsConsoleRequest()) {
             $user = Yii::$app->getUser();
@@ -168,7 +150,7 @@ class Module extends \yii\base\Module
                 ];
             }
 
-            $this->controllerMap = array_merge($this->defaultControllerMap, $this->controllerMap);
+            $this->controllerMap = [...$this->defaultControllerMap, ...$this->controllerMap];
         }
 
         foreach (array_keys($this->getModules()) as $module) {
@@ -194,7 +176,7 @@ class Module extends \yii\base\Module
      * @param Action $action
      * @return bool
      */
-    public function beforeAction($action)
+    public function beforeAction($action): bool
     {
         $request = Yii::$app->getRequest();
 

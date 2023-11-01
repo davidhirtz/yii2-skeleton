@@ -15,40 +15,26 @@ class AuthItemGridView extends GridView
 {
     use MessageSourceTrait;
 
-    /**
-     * @var User
-     */
-    public $user;
+    public ?User $user = null;
 
-    /**
-     * @var string[]
-     */
     public $summaryOptions = [
         'class' => 'summary alert alert-info',
     ];
 
-    /**
-     * @var string[]
-     */
     public $tableOptions = [
         'class' => 'table table-striped',
     ];
 
     /**
-     * @var string the previous rule name, needs to be `public` because it's called in content closure.
+     * @var string|null the previous rule name, needs to be `public` because it's called in content closure.
      */
-    public static $prevRuleName;
+    public static ?string $prevRuleName = null;
 
-    /**
-     * @inheritDoc
-     */
-    public function init()
+    public function init(): void
     {
         if (!$this->rowOptions) {
             if ($this->user) {
-                $this->rowOptions = function (AuthItem $authItem) {
-                    return ($authItem->isAssigned || $authItem->isInherited) ? ['class' => 'bg-success'] : null;
-                };
+                $this->rowOptions = fn(AuthItem $authItem) => ($authItem->isAssigned || $authItem->isInherited) ? ['class' => 'bg-success'] : null;
             }
         }
 
@@ -65,27 +51,19 @@ class AuthItemGridView extends GridView
         parent::init();
     }
 
-    /**
-     * @return array
-     */
-    public function typeColumn()
+    public function typeColumn(): array
     {
         return [
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
             'contentOptions' => ['class' => 'd-none d-md-table-cell text-center'],
-            'content' => function (AuthItem $authItem) {
-                return Icon::tag($authItem->getTypeIcon(), [
-                    'data-toggle' => 'tooltip',
-                    'title' => $authItem->getTypeName()
-                ]);
-            }
+            'content' => fn(AuthItem $authItem) => Icon::tag($authItem->getTypeIcon(), [
+                'data-toggle' => 'tooltip',
+                'title' => $authItem->getTypeName()
+            ])
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function nameColumn()
+    public function nameColumn(): array
     {
         return [
             'attribute' => 'name',
@@ -109,10 +87,7 @@ class AuthItemGridView extends GridView
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function descriptionColumn()
+    public function descriptionColumn(): array
     {
         return [
             'label' => Yii::t('skeleton', 'Inherited Permissions'),
@@ -132,10 +107,7 @@ class AuthItemGridView extends GridView
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function usersColumn()
+    public function usersColumn(): array
     {
         return [
             'label' => Yii::t('skeleton', 'Users'),
@@ -151,24 +123,15 @@ class AuthItemGridView extends GridView
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function buttonsColumn()
+    public function buttonsColumn(): array
     {
         return [
             'contentOptions' => ['class' => 'text-right text-nowrap'],
-            'content' => function (AuthItem $authItem) {
-                return Html::buttons($this->getRowButtons($authItem));
-            }
+            'content' => fn(AuthItem $authItem): string => Html::buttons($this->getRowButtons($authItem))
         ];
     }
 
-    /**
-     * @param AuthItem $authItem
-     * @return array|string
-     */
-    protected function getRowButtons($authItem)
+    protected function getRowButtons(AuthItem $authItem): array|string
     {
         $route = [$authItem->isAssigned ? 'revoke' : 'assign', 'id' => $this->user->id, 'name' => $authItem->name, 'type' => $authItem->type];
 

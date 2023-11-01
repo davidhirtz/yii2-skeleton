@@ -10,35 +10,23 @@ use yii\helpers\BaseArrayHelper;
  */
 class ArrayHelper extends BaseArrayHelper
 {
-    /**
-     * @param array $array
-     * @param string $value
-     * @param string $replacement
-     */
-    public static function replaceValue(&$array, $value, $replacement)
+    /** @noinspection PhpUnused */
+    public static function replaceValue(array &$array, string $value, mixed $replacement): void
     {
         if (($key = array_search($value, $array)) !== false) {
             $array[$key] = $replacement;
         }
     }
 
-    /**
-     * @param array $array
-     * @param string $key
-     * @param mixed $value
-     */
-    public static function setDefaultValue(&$array, $key, $value)
+    public static function setDefaultValue(array &$array, int|string $key, mixed $value): void
     {
         if (!static::keyExists($key, $array)) {
             $array[$key] = $value;
         }
     }
 
-    /**
-     * @param array $array
-     * @param array $values
-     */
-    public static function setDefaultValues(&$array, $values)
+    /** @noinspection PhpUnused */
+    public static function setDefaultValues(array &$array, array $values): void
     {
         foreach ($values as $key => $value) {
             static::setDefaultValue($array, $key, $value);
@@ -47,13 +35,8 @@ class ArrayHelper extends BaseArrayHelper
 
     /**
      * Adds unique keys to comma separated string.
-     *
-     * @param array|string $string
-     * @param array|string $values
-     * @param string $separator
-     * @return array
      */
-    public static function cacheStringToArray($string, $values = [], $separator = ','): array
+    public static function cacheStringToArray(array|string $string, array $values = [], string $separator = ','): array
     {
         if (!is_array($string)) {
             $string = $string ? explode($separator, $string) : [];
@@ -63,32 +46,24 @@ class ArrayHelper extends BaseArrayHelper
             $values = [$values];
         }
 
-        return array_unique(array_filter(array_merge($string, $values)));
+        return array_unique(array_filter([...$string, ...$values]));
     }
 
     /**
-     * Creates a comma separated cache string from array.
-     *
-     * @param array $array
-     * @param string $separator
-     * @param mixed $default
-     *
-     * @return string
+     * Creates a comma separated cache string from the given array.
      */
-    public static function createCacheString($array, $separator = ',', $default = null)
+    public static function createCacheString(array $array, string $separator = ',', ?string $default = null): ?string
     {
         return $array ? implode($separator, $array) : $default;
     }
 
     /**
      * Reads a SimpleXML object into an array.
-     *
-     * @param SimpleXMLElement $xml
-     * @return array
+     * @noinspection PhpUnused
      */
-    public static function simpleXmlToArray($xml)
+    public static function simpleXmlToArray(?SimpleXMLElement $xml): array
     {
-        $namespace = $xml->getDocNamespaces(true);
+        $namespace = $xml?->getDocNamespaces(true);
         $namespace[null] = null;
 
         $children = [];

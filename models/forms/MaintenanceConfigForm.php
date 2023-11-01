@@ -81,7 +81,7 @@ class MaintenanceConfigForm extends Model
                 $config['template'] = Yii::$app->getView()->renderFile(Yii::getAlias($this->viewFile));
             }
 
-            $data = json_encode(array_filter($config));
+            $data = json_encode(array_filter($config), JSON_THROW_ON_ERROR);
             return file_put_contents(Yii::getAlias(static::MAINTENANCE_CONFIG), $data);
         }
 

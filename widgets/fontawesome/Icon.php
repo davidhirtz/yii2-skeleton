@@ -2,74 +2,42 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 
+use Stringable;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
 /**
  * FontAwesome 5 Icon class.
  */
-class Icon
+class Icon implements Stringable
 {
-    /**
-     * @var array
-     */
-    private $options;
+    public static string $cssClassPrefix = 'fa-';
 
-    /**
-     * CSS class prefix
-     * @var string
-     */
-    public static $cssClassPrefix = 'fa-';
-
-    /**
-     * @param string $name
-     * @param array $options
-     */
-    public function __construct($name, $options = [])
+    public function __construct(string $name, private array $options = [])
     {
         Html::addCssClass($options, static::$cssClassPrefix . $name);
         $this->options = $options;
     }
-
-    /**
-     * Creates an Icon component.
-     *
-     * @param string $name
-     * @param array $options
-     * @return Icon
-     */
-    public static function tag($name, $options = [])
+    
+    public static function tag(string $name, array $options = []): static
     {
         $method = ArrayHelper::remove($options, 'type', 'solid');
         return static::$method($name, $options);
     }
 
-    /**
-     * @param string $name
-     * @param array $options
-     * @return Icon
-     */
-    public static function solid($name, $options = [])
+    public static function solid(string $name, array $options = []): static
     {
         Html::addCssClass($options, 'fas');
         return new static($name, $options);
     }
 
-    /**
-     * @param string $name
-     * @param array $options
-     * @return Icon
-     */
-    public static function brand($name, $options = [])
+    public static function brand(string $name, array $options = []): static
     {
         Html::addCssClass($options, 'fab');
         return new static($name, $options);
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         $options = $this->options;
         $tag = ArrayHelper::remove($options, 'tag', 'i');
@@ -77,102 +45,67 @@ class Icon
         return Html::tag($tag, null, $options);
     }
 
-    /**
-     * @return Icon
-     */
-    public function inverse()
+    public function inverse(): static
     {
         return $this->addCssClass(static::$cssClassPrefix . 'inverse');
     }
 
-    /**
-     * @return Icon
-     */
-    public function spin()
+    /** @noinspection PhpUnused */
+    public function spin(): static
     {
         return $this->addCssClass(static::$cssClassPrefix . 'spin');
     }
 
-    /**
-     * @return Icon
-     */
-    public function pulse()
+    /** @noinspection PhpUnused */
+    public function pulse(): static
     {
         return $this->addCssClass(static::$cssClassPrefix . 'pulse');
     }
 
-    /**
-     * @return Icon
-     */
-    public function fixedWidth()
+    /** @noinspection PhpUnused */
+    public function fixedWidth(): static
     {
         return $this->addCssClass(static::$cssClassPrefix . 'fw');
     }
 
-    /**
-     * @return Icon
-     */
-    public function li()
+    public function li(): static
     {
         return $this->addCssClass(static::$cssClassPrefix . 'li');
     }
 
-    /**
-     * @return Icon
-     */
-    public function border()
+    public function border(): static
     {
         return $this->addCssClass(static::$cssClassPrefix . 'border');
     }
 
-    /**
-     * @return Icon
-     */
-    public function pullLeft()
+    /** @noinspection PhpUnused */
+    public function pullLeft(): static
     {
         return $this->addCssClass(static::$cssClassPrefix . 'pull-left');
     }
 
-    /**
-     * @return Icon
-     */
-    public function pullRight()
+    /** @noinspection PhpUnused */
+    public function pullRight(): static
     {
         return $this->addCssClass(static::$cssClassPrefix . 'pull-right');
     }
 
-    /**
-     * @param string $value
-     * @return Icon
-     */
-    public function size($value)
+    public function size(string $value): static
     {
         return $this->addCssClass(static::$cssClassPrefix . $value);
     }
 
-    /**
-     * @param string $value
-     * @return Icon
-     */
-    public function rotate($value)
+    public function rotate(string $value): static
     {
         return $this->addCssClass(static::$cssClassPrefix . 'rotate-' . $value);
     }
 
-    /**
-     * @param string $value
-     * @return Icon
-     */
-    public function flip($value)
+    public function flip(string $value): static
     {
         return $this->addCssClass(static::$cssClassPrefix . 'flip-' . $value);
     }
 
-    /**
-     * @param string $class
-     * @return Icon
-     */
-    public function addCssClass($class)
+    public function addCssClass(string $class): static
     {
         Html::addCssClass($this->options, $class);
         return $this;

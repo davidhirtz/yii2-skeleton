@@ -9,9 +9,6 @@ use yii\helpers\Html;
 use Yii;
 
 /**
- * Class Nav
- * @package davidhirtz\yii2\skeleton\widgets\fontawesome
- *
  * @method View getView()
  */
 class Nav extends \yii\bootstrap4\Nav
@@ -19,37 +16,34 @@ class Nav extends \yii\bootstrap4\Nav
     /**
      * @var bool whether the widget should not be rendered if there is only a single item present.
      */
-    public $hideOneItem = true;
+    public bool $hideOneItem = true;
 
     /**
-     * @var string default item template, can be set individually by item option `template`.
+     * @var string default item template can be set individually by item option `template`.
      */
-    public $itemTemplate = '{icon} {label} {badge}';
+    public string $itemTemplate = '{icon} {label} {badge}';
 
     /**
      * @var array default link html options, can be set individually by item options `linkOptions`.
      */
-    public $linkOptions = [];
+    public array $linkOptions = [];
 
     /**
      * @var array default icon html options, can be set individually by item option `iconOptions`.
      */
-    public $iconOptions = ['class' => 'fa-fw'];
+    public array $iconOptions = ['class' => 'fa-fw'];
 
     /**
      * @var array default badge html options, can be set individually by item option `badgeOptions`.
      */
-    public $badgeOptions = ['class' => 'badge'];
+    public array $badgeOptions = ['class' => 'badge'];
 
     /**
-     * @var array default label html options, can be set individually by item option `labelOptions`.
+     * @var array default label html options can be set individually by item option `labelOptions`.
      */
-    public $labelOptions = [];
+    public array $labelOptions = [];
 
-    /**
-     * @var bool
-     */
-    private $isActive = false;
+    private bool $isActive = false;
 
     /**
      * Overrides default implementation for `roles` option to validate user access. And allows for the option to hide
@@ -106,10 +100,10 @@ class Nav extends \yii\bootstrap4\Nav
      *
      * @inheritdoc
      */
-    public function renderItem($item)
+    public function renderItem($item): string
     {
         if ($this->linkOptions) {
-            $item['linkOptions'] = $item['linkOptions'] ?? $this->linkOptions;
+            $item['linkOptions'] ??= $this->linkOptions;
         }
 
         // Icon & badge.
@@ -141,8 +135,8 @@ class Nav extends \yii\bootstrap4\Nav
             }
         }
 
-        // If active is an array, treat the elements as routes and check them  against the current controller route.
-        // If the route itself is an array, the key represents the route and the value either GET parameter names or
+        // If active is an array, treat the elements as routes and check them against the current controller route.
+        // If the route itself is an array, the key represents the route and the value either GETS parameter names or
         // name value pairs that must match with the request. Routes can be reserved to prevent activating an item on
         // a hit by starting the route with "!".
         if (is_array($routes = $item['active'] ?? false)) {
@@ -156,10 +150,10 @@ class Nav extends \yii\bootstrap4\Nav
                     }
 
                     if ($shouldSkip = ($route[0] == '!')) {
-                        $route = substr($route, 1);
+                        $route = substr((string) $route, 1);
                     }
 
-                    if (preg_match("~{$route}~", Yii::$app->controller->route, $matches)) {
+                    if (preg_match("~$route~", (string) Yii::$app->controller->route)) {
                         if (is_array($params)) {
                             foreach ($params as $key => $value) {
                                 if ((is_int($key) && !in_array($value, array_keys($request->get()))) || (is_string($key) && $request->get($key) != $value)) {

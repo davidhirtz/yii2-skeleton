@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
 use davidhirtz\yii2\skeleton\assets\SignupAsset;
+use davidhirtz\yii2\skeleton\controllers\AccountController;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\forms\SignupForm;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
@@ -15,25 +16,15 @@ use yii\helpers\Url;
  */
 class SignupActiveForm extends ActiveForm
 {
-    /**
-     * @var SignupForm
-     */
-    public $model;
+    public ?SignupForm $model = null;
 
-    /**
-     * @inheritDoc
-     */
-    public function init()
+    public function init(): void
     {
         $this->registerSignupClientScript();
         parent::init();
     }
 
-
-    /**
-     * @return string
-     */
-    public function run()
+    public function run(): string
     {
         echo $this->usernameField();
         echo $this->emailField();
@@ -49,20 +40,14 @@ class SignupActiveForm extends ActiveForm
         return parent::run();
     }
 
-    /**
-     * @return ActiveField
-     */
-    public function usernameField()
+    public function usernameField(): ActiveField|string
     {
         return $this->field($this->model, 'name', ['icon' => 'user'])->textInput([
             'autofocus' => !$this->model->hasErrors()
         ]);
     }
 
-    /**
-     * @return ActiveField
-     */
-    public function emailField()
+    public function emailField(): ActiveField|string
     {
         return $this->field($this->model, 'email', ['icon' => 'envelope'])->textInput([
             'autocomplete' => 'username',
@@ -70,36 +55,27 @@ class SignupActiveForm extends ActiveForm
         ]);
     }
 
-    /**
-     * @return ActiveField
-     */
-    public function passwordField()
+    public function passwordField(): ActiveField|string
     {
         return $this->field($this->model, 'password', ['icon' => 'key'])->passwordInput([
             'autocomplete' => 'new-password',
         ]);
     }
 
-    /**
-     * @return ActiveField
-     */
-    public function termsField()
+    public function termsField(): ActiveField|string
     {
         return $this->field($this->model, 'terms', ['enableError' => false])->checkbox();
     }
 
-    /**
-     * @return string
-     */
-    public function honeypotField()
+    public function honeypotField(): string
     {
         return Html::activeHiddenInput($this->model, 'honeypot', ['id' => 'honeypot']);
     }
 
     /**
-     * @return string
+     * @see AccountController::actionToken()
      */
-    public function tokenField()
+    public function tokenField(): string
     {
         return Html::activeHiddenInput($this->model, 'token', [
             'id' => 'token',
@@ -107,28 +83,19 @@ class SignupActiveForm extends ActiveForm
         ]);
     }
 
-    /**
-     * @return string
-     */
-    public function timeZoneField()
+    public function timeZoneField(): string
     {
         return Html::activeHiddenInput($this->model, 'timezone', ['id' => 'tz']);
     }
 
-    /**
-     * @return string
-     */
-    public function submitButton()
+    public function submitButton(): string
     {
         return Html::submitButton(Yii::t('skeleton', 'Create Account'), [
             'class' => 'btn btn-primary btn-block',
         ]);
     }
 
-    /**
-     * Registers the client script for the signup form.
-     */
-    public function registerSignupClientScript()
+    public function registerSignupClientScript(): void
     {
         SignupAsset::register($view = $this->getView());
         $view->registerJs("jQuery('#$this->id').signupForm();");

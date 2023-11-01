@@ -11,9 +11,6 @@ use yii\web\MultiFieldSession;
 use yii\web\Response;
 
 /**
- * Class User
- * @package davidhirtz\yii2\skeleton\web
- *
  * @property Identity $identity
  * @method Identity getIdentity($autoRenew = true)
  */
@@ -93,12 +90,10 @@ class User extends \yii\web\User
 
         // Updates session's user id.
         if ($session instanceof MultiFieldSession) {
-            $session->writeCallback = function () use ($identity) {
-                return [
-                    'ip_address' => inet_pton(Yii::$app->getRequest()->getUserIP()),
-                    'user_id' => $identity->id,
-                ];
-            };
+            $session->writeCallback = fn() => [
+                'ip_address' => inet_pton(Yii::$app->getRequest()->getUserIP()),
+                'user_id' => $identity->id,
+            ];
         }
 
         // Update user record and insert login log.
@@ -124,11 +119,9 @@ class User extends \yii\web\User
         $session = Yii::$app->getSession();
 
         if ($session instanceof MultiFieldSession) {
-            $session->writeCallback = function () {
-                return [
-                    'user_id' => null,
-                ];
-            };
+            $session->writeCallback = fn() => [
+                'user_id' => null,
+            ];
         }
 
         parent::afterLogout($identity);
@@ -137,7 +130,7 @@ class User extends \yii\web\User
     private function insertLogin(IdentityInterface $identity): void
     {
         if ($browser = Yii::$app->getRequest()->getUserAgent()) {
-            $browser = mb_substr($browser, 0, 255, Yii::$app->charset);
+            $browser = mb_substr((string) $browser, 0, 255, Yii::$app->charset);
         }
 
         if ($ipAddress = ($identity->ipAddress ?: Yii::$app->getRequest()->getUserIP())) {

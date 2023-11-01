@@ -6,10 +6,6 @@ use davidhirtz\yii2\skeleton\models\Redirect;
 use Yii;
 use yii\web\HttpException;
 
-/**
- * Class ErrorHandler
- * @package davidhirtz\yii2\skeleton\web
- */
 class ErrorHandler extends \yii\web\ErrorHandler
 {
     /**
@@ -20,12 +16,9 @@ class ErrorHandler extends \yii\web\ErrorHandler
     /**
      * @var bool whether the redirect table should be checked first on 404 errors, defaults to `true`.
      */
-    public $enableRedirect = true;
+    public bool $enableRedirect = true;
 
-    /**
-     * @inheritDoc
-     */
-    protected function renderException($exception)
+    protected function renderException($exception): void
     {
         if ($this->enableRedirect && $exception instanceof HttpException && $exception->statusCode == 404) {
             $this->checkRedirectRequestUri();
@@ -37,9 +30,9 @@ class ErrorHandler extends \yii\web\ErrorHandler
     /**
      * Exits application and redirects to target url if a matching {@link Redirect} record was found.
      */
-    protected function checkRedirectRequestUri()
+    protected function checkRedirectRequestUri(): void
     {
-        if ($url = trim(Yii::$app->getRequest()->getUrl(), '/')) {
+        if ($url = trim((string) Yii::$app->getRequest()->getUrl(), '/')) {
             if ($redirect = $this->findRedirectByRequestUri($url)) {
                 Yii::$app->getResponse()->redirect($redirect->getBaseUrl() . $redirect->url, $redirect->type);
                 Yii::$app->end();
@@ -47,12 +40,9 @@ class ErrorHandler extends \yii\web\ErrorHandler
         }
     }
 
-    /**
-     * @param string $url
-     * @return Redirect|null
-     */
-    protected function findRedirectByRequestUri($url)
+    protected function findRedirectByRequestUri(string $url): ?Redirect
     {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return Redirect::find()
             ->select(['type', 'url'])
             ->where(['request_uri' => $url])

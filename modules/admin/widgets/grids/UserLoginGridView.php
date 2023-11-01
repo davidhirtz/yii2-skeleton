@@ -39,23 +39,23 @@ class UserLoginGridView extends GridView
                     'attribute' => 'user',
                     'visible' => !$this->user,
                     'content' => function (UserLogin $login) {
-                        $name = $login->user->getUsername();
-                        return $login->user ? Html::a($name ?: Html::tag('span', Yii::t('skeleton', 'User'), ['class' => !$name ? 'text-muted' : null]), ['view', 'user' => $login->user_id]) : '';
+                        if ($login->user) {
+                            $name = $login->user->getUsername();
+                            $text = $name ?: Html::tag('span', Yii::t('skeleton', 'User'), ['class' => 'text-muted']);
+                            return Html::a($text, ['view', 'user' => $login->user_id]);
+                        }
+                        return '';
                     }
                 ],
                 [
                     'attribute' => 'browser',
                     'headerOptions' => ['class' => 'd-none d-md-table-cell', 'style' => 'width:45%;'],
                     'contentOptions' => ['class' => 'd-none d-md-table-cell'],
-                    'content' => function (UserLogin $login) {
-                        return $login->browser;
-                    }
+                    'content' => fn(UserLogin $login) => $login->browser
                 ],
                 [
                     'attribute' => 'created_at',
-                    'content' => function (UserLogin $login) {
-                        return Timeago::tag($login->created_at);
-                    }
+                    'content' => fn(UserLogin $login): string => Timeago::tag($login->created_at)
                 ],
             ];
         }

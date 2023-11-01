@@ -11,30 +11,20 @@ use yii\base\Component;
 use yii\caching\Cache;
 use yii\caching\Dependency;
 
-/**
- * Class Sitemap
- * @package davidhirtz\yii2\skeleton\web
- */
 class Sitemap extends Component
 {
-    /**
-     * @var Cache|string
-     */
-    public $cache = 'cache';
+    public Cache|string|null $cache = 'cache';
 
     /**
      * @var int
      */
-    public $duration = 86400;
+    public int $duration = 86400;
+
+    public array|Dependency|null $dependency = null;
 
     /**
-     * @var array|Dependency
-     */
-    public $dependency;
-
-    /**
-     * @var callable|string[]|string list of factors that would cause the variation of the sitemap being cached.
-     * Each factor is a string representing a variation (e.g. the language, a GET parameter). This can be also a
+     * @var callable|string[]|string the list of factors that would cause the variation of the sitemap being cached.
+     * Each factor is a string representing a variation (e.g., the language, a GET parameter). This can be also
      * callable to configure it during application setup:
      *
      * `
@@ -43,44 +33,41 @@ class Sitemap extends Component
      *   },
      * `
      */
-    public $variations;
+    public mixed $variations = null;
 
     /**
      * @var bool whether sitemaps should be split into separate sitemap files. This is needed for a sitemaps which would
      * exceed 50 MB or 50.000 URLs.
      */
-    public $useSitemapIndex = false;
+    public bool $useSitemapIndex = false;
 
     /**
      * @var int the maximum number of sitemap URLs per sitemap. This is used to split URLs into separate sitemaps when
      * `useSitemapIndex` is set to true.
      */
-    public $maxUrlCount = 50000;
+    public int $maxUrlCount = 50000;
 
     /**
-     * @var array containing the static views. Array keys "alias" for view path and "route" string for URL manager are
-     * required. Optional "params" for additional route params, "paramName" for the view param and "exclude" for files
-     * that should not be included.
+     * @var array containing the static views. Array keys "alias" for the view path and "route" string for URL manager
+     * are required. Optional "params" for additional route params, "paramName" for the view param and "exclude" for
+     * files that should not be included.
      */
-    public $views = [];
+    public array $views = [];
 
     /**
      * @var SitemapBehavior[]|array containing the class definitions of all {@link ActiveRecord} which should be used to
      * create sitemap URLs via the {@link SitemapBehavior} behavior. If `useSitemapIndex` is set to true, the key can
      * optionally be set to a string which is then used in the sitemap index url generation.
      */
-    public $models = [];
+    public array $models = [];
 
     /**
      * @var array containing additional sitemap URLs. Urls can be set as route or relative URL. If additional information
      * such as priority or last modified should be added, an array with the url as "loc" value can be used.
      */
-    public $urls = [];
+    public array $urls = [];
 
-    /**
-     * @inheritDoc
-     */
-    public function init()
+    public function init(): void
     {
         foreach ($this->models as &$model) {
             $model = Yii::createObject($model);
@@ -102,15 +89,11 @@ class Sitemap extends Component
     }
 
     /**
-     * Generates sitemap URLs from default URLs, views and models. Depending on whether `useSitemapIndex` is `true` this
-     * method either generates all URLs for a single sitemap or uses the given `key` (corresponding to the `model` array
-     * key) and `offset` to create only the requested URLs.
-     *
-     * @param string|int $key
-     * @param int $offset
-     * @return array
+     * Generates sitemap URLs from default URLs, views, and models. Depending on whether `useSitemapIndex` is `true`,
+     * this method either generates all URLs for a single sitemap or uses the given `key` (corresponding to the `model`
+     * array key) and `offset` to create only the requested URLs.
      */
-    public function generateUrls($key = null, $offset = 0)
+    public function generateUrls(string|int|null $key = null, int $offset = 0): array
     {
         if (!$this->useSitemapIndex) {
             $urls = $this->getUrlsInternal();
@@ -132,7 +115,7 @@ class Sitemap extends Component
     /**
      * Generates an index of sitemap.xml URLs.
      */
-    public function generateIndexUrls()
+    public function generateIndexUrls(): array
     {
         $urls = $this->getUrlsInternal();
         $sitemaps = [];
@@ -162,25 +145,10 @@ class Sitemap extends Component
     /**
      * Generates site maps from view files.
      *
-     * Required config parameters are "alias" and "route", optional "languages", "paramName",
-     * "defaultView" and "options" for FileHelper::findFiles.
-     *
-     * 'components' => [
-     *    'sitemap' => [
-     *        'views' => [
-     *            [
-     *                'alias' => '@app/views/site',
-     *                'route' => 'site/static',
-     *                'options' => [
-     *                    'except' => ['hidden.php'],
-     *                ],
-     *            ],
-     *        ],
-     *    ],
-     *
-     * @return array
+     * Required config parameters are "alias" and "route", optional "languages", "paramName", "defaultView" and
+     * "options" for FileHelper::findFiles.
      */
-    public function generateFileUrls()
+    public function generateFileUrls(): array
     {
         $manager = Yii::$app->getUrlManager();
         $defaultLanguages = ($manager->hasI18nUrls() ? array_keys($manager->languages) : [null]);
@@ -199,7 +167,7 @@ class Sitemap extends Component
 
             if (isset($view['alias'], $view['route'])) {
                 foreach (FileHelper::findFiles(Yii::getAlias($view['alias']), $options) as $file) {
-                    $name = $paramName !== false ? pathinfo($file, PATHINFO_FILENAME) : null;
+                    $name = $paramName !== false ? pathinfo((string) $file, PATHINFO_FILENAME) : null;
 
                     foreach ($languages as $language) {
                         $urls[] = [
@@ -214,19 +182,12 @@ class Sitemap extends Component
         return $urls;
     }
 
-    /**
-     * @return array
-     */
-    private function getUrlsInternal()
+    private function getUrlsInternal(): array
     {
         return $this->views ? array_merge($this->urls, $this->generateFileUrls()) : $this->urls;
     }
 
-    /**
-     * @param array $urls
-     * @return string|null
-     */
-    private function getMaxLastMod($urls)
+    private function getMaxLastMod(array $urls): ?string
     {
         $lastMod = null;
 

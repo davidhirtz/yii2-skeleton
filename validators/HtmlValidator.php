@@ -70,20 +70,14 @@ class HtmlValidator extends Validator
 
     protected function setDefaultOptions(): void
     {
-        $this->purifierOptions = array_merge([
-            'Attr.AllowedFrameTargets' => '_blank',
-            'Attr.AllowedRel' => 'nofollow',
-            'AutoFormat.RemoveEmpty' => true,
-            'AutoFormat.AutoParagraph' => true,
-            'HTML.TargetBlank' => true,
-        ], $this->purifierOptions);
+        $this->purifierOptions = ['Attr.AllowedFrameTargets' => '_blank', 'Attr.AllowedRel' => 'nofollow', 'AutoFormat.RemoveEmpty' => true, 'AutoFormat.AutoParagraph' => true, 'HTML.TargetBlank' => true, ...$this->purifierOptions];
     }
 
     protected function setHtmlAllowed(): void
     {
         // Extract inline attributes for a tag (e.g. `a[href|rel]`) and add them to allowedHtmlAttributes.
         foreach ($this->allowedHtmlTags as $key => $value) {
-            if (preg_match('/(\w+)\[([\w|]*)]/', $value, $matches)) {
+            if (preg_match('/(\w+)\[([\w|]*)]/', (string) $value, $matches)) {
                 $this->allowedHtmlTags[$key] = $matches[1];
                 $this->allowedHtmlAttributes[$matches[1]] ??= explode('|', $matches[2]);
             }
@@ -184,7 +178,7 @@ class HtmlValidator extends Validator
         $html = $model->getAttribute($attribute);
 
         // Unify line breaks..
-        $html = str_replace(["\r\n", "\r"], "\n", $html);
+        $html = str_replace(["\r\n", "\r"], "\n", (string) $html);
 
         // Fix HtmlPurifier AutoFormat.AutoParagraph removing <ul>...</ul> tags in some cases.
         // Additional line breaks seem to fix this.

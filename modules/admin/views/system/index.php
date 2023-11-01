@@ -1,22 +1,26 @@
 <?php
 /**
  * Assets list.
- * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController::actionIndex()
+ * @see SystemController::actionIndex()
+ * @see SystemController::actionSessionGc()
  *
- * @var \davidhirtz\yii2\skeleton\web\View $this
- * @var \yii\data\ArrayDataProvider $assets
- * @var \yii\data\ArrayDataProvider $caches
- * @var \yii\data\ArrayDataProvider $logs
+ * @var View $this
+ * @var ArrayDataProvider $assets
+ * @var ArrayDataProvider $caches
+ * @var ArrayDataProvider $logs
  * @var int $sessionCount
  * @var int $expiredSessionCount
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController;
+use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use davidhirtz\yii2\timeago\Timeago;
+use yii\data\ArrayDataProvider;
 use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'System'));
@@ -33,7 +37,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
             'columns' => [
                 [
                     'label' => Yii::t('skeleton', 'Name'),
-                    'content' => function ($modified, $name) {
+                    'content' => function ($modified, $name): string {
                         $html = Html::tag('div', Html::a($name, ['view', 'log' => $name]), ['class' => 'strong']);
                         $html .= Html::tag('div', Yii::t('skeleton', 'Last updated {timestamp}', ['timestamp' => Timeago::tag($modified)]), ['class' => 'small']);
 
@@ -42,17 +46,15 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                 ],
                 [
                     'contentOptions' => ['class' => 'text-right'],
-                    'content' => function ($modified, $name) {
-                        return Html::buttons([
-                            Html::a(Icon::tag('file'), ['view', 'log' => $name, 'raw' => 1], [
-                                'class' => 'btn btn-primary',
-                            ]),
-                            Html::a(Icon::tag('trash'), ['delete', 'log' => $name], [
-                                'class' => 'btn btn-danger',
-                                'data-method' => 'post',
-                            ]),
-                        ]);
-                    }
+                    'content' => fn($modified, $name): string => Html::buttons([
+                        Html::a(Icon::tag('file'), ['view', 'log' => $name, 'raw' => 1], [
+                            'class' => 'btn btn-primary',
+                        ]),
+                        Html::a(Icon::tag('trash'), ['delete', 'log' => $name], [
+                            'class' => 'btn btn-danger',
+                            'data-method' => 'post',
+                        ]),
+                    ])
                 ],
             ],
         ]),
@@ -72,7 +74,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
         'columns' => [
             [
                 'label' => Yii::t('skeleton', 'Name'),
-                'content' => function ($item) {
+                'content' => function ($item): string {
                     $links = [];
 
                     foreach ($item['files'] as $file => $link) {
@@ -86,9 +88,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
             [
                 'label' => Yii::t('skeleton', 'Updated'),
                 'contentOptions' => ['style' => 'vertical-align:top'],
-                'content' => function ($item) {
-                    return Timeago::tag($item['modified']);
-                }
+                'content' => fn($item): string => Timeago::tag($item['modified'])
             ]
         ],
         'footer' => [
@@ -116,19 +116,16 @@ $this->setTitle(Yii::t('skeleton', 'System'));
         'columns' => [
             [
                 'label' => Yii::t('skeleton', 'Name'),
-                'content' => function ($item) {
-                    return Html::tag('div', ucwords($item['name']), ['class' => 'strong']) .
-                        Html::tag('div', $item['class'], ['class' => 'small']);
-                }
+                'content' => fn($item): string => Html::tag('div', ucwords((string) $item['name']), ['class' => 'strong']) .
+                    Html::tag('div', $item['class'], ['class' => 'small'])
             ],
             [
                 'contentOptions' => ['class' => 'text-right'],
-                'content' => function ($item) {
-                    return Html::buttons(Html::a(Icon::tag('sync-alt'), ['flush', 'cache' => $item['name']], [
-                        'class' => 'btn btn-primary',
-                        'data-method' => 'post',
-                    ]));
-                }
+                /** @see SystemController::actionFlush() */
+                'content' => fn($item): string => Html::buttons(Html::a(Icon::tag('sync-alt'), ['flush', 'cache' => $item['name']], [
+                    'class' => 'btn btn-primary',
+                    'data-method' => 'post',
+                ]))
             ],
         ],
     ]),

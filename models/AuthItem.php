@@ -6,7 +6,6 @@ use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\db\TypeAttributeTrait;
 use davidhirtz\yii2\skeleton\models\queries\AuthItemQuery;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
-use davidhirtz\yii2\skeleton\models\User;
 use Yii;
 use yii\rbac\Item;
 
@@ -26,25 +25,22 @@ class AuthItem extends ActiveRecord
     use TypeAttributeTrait;
 
     /**
-     * @var bool
+     * @var bool whether the item is assigned to the current user.
      */
-    public $isAssigned = false;
+    public bool $isAssigned = false;
 
     /**
-     * @var bool
+     * @var bool whether the item is inherited by another item.
      */
-    public $isInherited = false;
+    public bool $isInherited = false;
 
     /**
-     * @see \davidhirtz\yii2\skeleton\models\queries\AuthItemQuery::allWithChildren()
+     * @see AuthItemQuery::allWithChildren
      * @var AuthItem[]
      */
-    public $children = [];
+    public array $children = [];
 
-    /**
-     * @return UserQuery
-     */
-    public function getUsers()
+    public function getUsers(): UserQuery
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->hasMany(User::class, ['id' => 'user_id'])
@@ -53,7 +49,7 @@ class AuthItem extends ActiveRecord
 
     public static function find(): AuthItemQuery
     {
-        return Yii::createObject(AuthItemQuery::class, [get_called_class()]);
+        return Yii::createObject(AuthItemQuery::class, [static::class]);
     }
 
     /**
@@ -72,10 +68,8 @@ class AuthItem extends ActiveRecord
         return $this->getTypeOptions()['icon'] ?? '';
     }
 
-    /**
-     * @return bool
-     */
-    public function hasPermission()
+    /** @noinspection PhpUnused */
+    public function hasPermission(): bool
     {
         foreach ($this->children as $authItem) {
             if ($authItem->isAssigned) {
