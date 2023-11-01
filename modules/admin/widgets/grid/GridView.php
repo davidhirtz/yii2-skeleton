@@ -17,6 +17,9 @@ use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 use yii\helpers\Url;
 
+/**
+ * @property ActiveDataProvider|ArrayDataProvider $dataProvider
+ */
 class GridView extends \yii\grid\GridView
 {
     /**
@@ -54,22 +57,11 @@ class GridView extends \yii\grid\GridView
      */
     public array $orderRoute = ['order'];
 
-    /**
-     * @var array containing the table options
-     */
     public $tableOptions = [
         'class' => 'table table-vertical table-striped table-hover',
     ];
 
-    /**
-     * @var string|false the content which should be shown on no results
-     */
     public $emptyText = false;
-
-    /**
-     * @var ActiveDataProvider|ArrayDataProvider
-     */
-    public $dataProvider;
 
     /**
      * @var string
@@ -107,9 +99,6 @@ class GridView extends \yii\grid\GridView
     private ?ActiveRecordInterface $_model = null;
     private ?string $_formName = null;
 
-    /**
-     * @inheritDoc
-     */
     public function init(): void
     {
         foreach ($this->columns as &$column) {
@@ -143,9 +132,6 @@ class GridView extends \yii\grid\GridView
         parent::init();
     }
 
-    /**
-     * @return string
-     */
     public function renderItems(): string
     {
         if ($this->dataProvider->getCount() || $this->emptyText) {
@@ -155,18 +141,11 @@ class GridView extends \yii\grid\GridView
         return '';
     }
 
-    /**
-     * @param string $items
-     * @return string
-     */
     protected function renderSelectionForm(string $items): string
     {
         return Html::beginForm($this->selectionRoute, 'post', ['id' => $this->getSelectionFormId()]) . $items . Html::endForm();
     }
 
-    /**
-     * @return string
-     */
     public function renderTableBody(): string
     {
         $tableBody = parent::renderTableBody();
@@ -184,9 +163,6 @@ class GridView extends \yii\grid\GridView
         return $tableBody;
     }
 
-    /**
-     * @return string
-     */
     public function renderSummary(): string
     {
         $summary = $this->summary;

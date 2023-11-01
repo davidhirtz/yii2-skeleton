@@ -31,7 +31,7 @@ class LogGridView extends GridView
     /**
      * @inheritDoc
      */
-    public function init()
+    public function init(): void
     {
         $this->columns = [
             $this->dateColumn(),

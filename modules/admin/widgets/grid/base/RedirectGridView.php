@@ -37,7 +37,7 @@ class RedirectGridView extends GridView
     /**
      * @inheritDoc
      */
-    public function init()
+    public function init(): void
     {
         if ($this->redirect) {
             $this->setDataProviderFromRedirect();

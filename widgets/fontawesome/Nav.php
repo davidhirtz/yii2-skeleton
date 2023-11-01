@@ -57,7 +57,7 @@ class Nav extends \yii\bootstrap4\Nav
      *
      * @return string
      */
-    public function renderItems()
+    public function renderItems(): string
     {
         $items = [];
 
