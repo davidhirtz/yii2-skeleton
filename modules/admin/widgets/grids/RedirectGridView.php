@@ -30,7 +30,7 @@ class RedirectGridView extends GridView
     public array $selectionRoute = ['delete-all'];
 
     /**
-     * @var Redirect the model used to display additional redirects
+     * @var Redirect|null the model used to display additional redirects
      */
     public ?Redirect $redirect = null;
 
@@ -87,7 +87,7 @@ class RedirectGridView extends GridView
     /**
      * Sets data provider.
      */
-    protected function setDataProviderFromRedirect()
+    protected function setDataProviderFromRedirect(): void
     {
         $this->dataProvider = new RedirectActiveDataProvider();
 
@@ -98,7 +98,7 @@ class RedirectGridView extends GridView
     /**
      * Sets options if `redirect` model is set.
      */
-    protected function setRedirectOptions()
+    protected function setRedirectOptions(): void
     {
         $this->showSelection = false;
         $this->layout = '{items}';
@@ -107,7 +107,7 @@ class RedirectGridView extends GridView
     /**
      * Runs the widget only if data is present.
      */
-    public function run()
+    public function run(): void
     {
         if (!$this->redirect || $this->dataProvider->getCount() > 0) {
             parent::run();
@@ -117,7 +117,7 @@ class RedirectGridView extends GridView
     /**
      * @return array
      */
-    public function requestUriColumn()
+    public function requestUriColumn(): array
     {
         return [
             'attribute' => 'request_uri',
@@ -125,10 +125,7 @@ class RedirectGridView extends GridView
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function urlColumn()
+    public function urlColumn(): array
     {
         return [
             'attribute' => 'url',
@@ -141,10 +138,7 @@ class RedirectGridView extends GridView
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function updatedAtColumn()
+    public function updatedAtColumn(): array
     {
         return [
             'class' => TimeagoColumn::class,
@@ -154,10 +148,7 @@ class RedirectGridView extends GridView
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function buttonsColumn()
+    public function buttonsColumn(): array
     {
         return [
             'contentOptions' => ['class' => 'text-right text-nowrap'],
@@ -165,18 +156,12 @@ class RedirectGridView extends GridView
         ];
     }
 
-    /**
-     * @return string
-     */
-    protected function getCreateButton()
+    protected function getCreateButton(): string
     {
         return Html::a(Html::iconText('plus', Yii::t('skeleton', 'New Redirect')), ['/admin/redirect/create'], ['class' => 'btn btn-primary']);
     }
 
-    /**
-     * @return string
-     */
-    protected function getDeleteAllButton()
+    protected function getDeleteAllButton(): string
     {
         return Html::button(Yii::t('skeleton', 'Delete selected'), [
             'id' => 'btn-selection',

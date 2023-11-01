@@ -2,116 +2,65 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
-use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
 use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
 use Yii;
-use yii\base\Model;
+use yii\db\ActiveRecord;
 
-/**
- * Class DeleteActiveForm.
- * @package davidhirtz\yii2\skeleton\widgets\forms
- */
 class DeleteActiveForm extends ActiveForm
 {
-    /**
-     * @var ActiveRecord
-     */
-    public $model;
+    public string|false $attribute = false;
 
-    /**
-     * @var string
-     */
-    public $attribute = false;
+    public ?string $message = null;
+    public ?string $label = null;
+    public array $fieldOptions = [];
+    private ?DeleteForm $_form = null;
 
-    /**
-     * @var string
-     */
-    public $message;
-
-    /**
-     * @var array|string
-     */
-    public $action;
-
-    /**
-     * @var array|string
-     */
-    public $label;
-
-    /**
-     * @var array
-     */
-    public $fieldOptions = [];
-
-    /**
-     * @var DeleteForm
-     */
-    private $_form;
-
-    /**
-     * @inheritdoc
-     */
-    public function init()
+    public function init(): void
     {
-        if ($this->action === null) {
+        if ($this->action === '' && $this->model instanceof ActiveRecord) {
             $this->action = ['delete', 'id' => $this->model->getPrimaryKey()];
         }
 
-        if (!$this->label) {
-            $this->label = Yii::t('skeleton', 'Delete');
+        $this->label ??= Yii::t('skeleton', 'Delete');
+
+        if ($this->attribute) {
+            $this->message ??= Yii::t('skeleton', 'Please type the exact {attribute} in the text field below to delete this record. All related files will also be unrecoverably deleted. This cannot be undone, please be certain!', [
+                'attribute' => $this->model->getAttributeLabel($this->attribute),
+            ]);
+        } else {
+            $this->message ??= Yii::t('skeleton', 'Warning: Deleting this record cannot be undone. All related files will also be unrecoverably deleted. Please be certain!');
         }
 
-        if ($this->message === null) {
-            if ($this->attribute) {
-                $this->message = Yii::t('skeleton', 'Please type the exact {attribute} in the text field below to delete this record. All related files will also be unrecoverably deleted. This cannot be undone, please be certain!', [
-                    'attribute' => $this->model->getAttributeLabel($this->attribute),
-                ]);
-            } else {
-                $this->message = Yii::t('skeleton', 'Warning: Deleting this record cannot be undone. All related files will also be unrecoverably deleted. Please be certain!');
-            }
-        }
-
-        if ($this->buttons === null) {
-            $this->buttons = [
-                $this->button($this->label, [
-                    'class' => 'btn-danger',
-                    'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
-                ])
-            ];
-        }
+        $this->buttons ??= [
+            $this->button($this->label, [
+                'class' => 'btn-danger',
+                'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+            ])
+        ];
 
         parent::init();
     }
 
-    /**
-     * @return DeleteForm
-     */
-    public function getForm()
+    public function getForm(): DeleteForm
     {
-        if ($this->_form === null) {
-            $this->_form = Yii::createObject([
-                'class' => 'davidhirtz\yii2\skeleton\models\forms\DeleteForm',
-                'model' => $this->model,
-                'attribute' => $this->attribute,
-            ]);
-        }
+        $this->_form ??= Yii::$container->get(DeleteForm::class, [], [
+            'model' => $this->model,
+            'attribute' => $this->attribute,
+        ]);
 
         return $this->_form;
     }
 
     /**
-     * @param Model $form
+     * @noinspection PhpUnused
      */
-    public function setForm($form)
+    public function setForm(DeleteForm $form): void
     {
         $this->_form = $form;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function renderFields()
+    public function renderFields(): void
     {
         if ($this->message) {
             echo $this->textRow($this->message);

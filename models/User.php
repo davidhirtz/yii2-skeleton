@@ -88,9 +88,9 @@ class User extends ActiveRecord
     public bool $requireName = true;
 
     /**
-     * @var UploadedFile|StreamUploadedFile|null the profile picture upload
+     * @var UploadedFile|StreamUploadedFile|string|null the profile picture upload
      */
-    public UploadedFile|StreamUploadedFile|null $upload = null;
+    public UploadedFile|StreamUploadedFile|string|null $upload = null;
 
     /**
      * @var array contains the allowed upload extensions for the profile picture

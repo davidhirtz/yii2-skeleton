@@ -27,12 +27,12 @@ class AuthItem extends ActiveRecord
     /**
      * @var bool whether the item is assigned to the current user.
      */
-    public bool $isAssigned = false;
+    public ?bool $isAssigned = null;
 
     /**
      * @var bool whether the item is inherited by another item.
      */
-    public bool $isInherited = false;
+    public ?bool $isInherited = null;
 
     /**
      * @see AuthItemQuery::allWithChildren

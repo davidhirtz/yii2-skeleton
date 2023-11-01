@@ -11,7 +11,7 @@ use yii\web\NotFoundHttpException;
 
 class DeleteForm extends Model
 {
-    public string $value;
+    public ?string $value = null;
     public string $attribute = 'name';
 
     private ?ActiveRecordInterface $_model = null;

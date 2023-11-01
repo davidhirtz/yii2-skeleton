@@ -237,9 +237,6 @@ class GridView extends \yii\grid\GridView
         return $this->footer ? Html::tag('div', is_array($this->footer) ? $this->renderRows($this->footer) : $this->footer, $options) : '';
     }
 
-    /**
-     * @return string
-     */
     public function renderRows(array $rows): string
     {
         $result = [];
@@ -382,13 +379,13 @@ class GridView extends \yii\grid\GridView
         return ['delete', 'id' => $model->getPrimaryKey(), ...$params];
     }
 
-    public function getModel(): ActiveRecordInterface
+    public function getModel(): ?ActiveRecordInterface
     {
-        if (!$this->_model) {
-            if ($this->dataProvider instanceof ActiveDataProvider) {
-                /**  @var ActiveQuery $query */
-                $query = $this->dataProvider->query;
-                $this->_model = new $query->modelClass();
+        if ($this->_model === null) {
+            if ($this->dataProvider instanceof ActiveDataProvider && $this->dataProvider->query instanceof ActiveQuery) {
+                /** @noinspection PhpFieldAssignmentTypeMismatchInspection */
+                /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+                $this->_model = Yii::createObject($this->dataProvider->query->modelClass);
             }
         }
 

@@ -9,25 +9,14 @@ use yii\db\Connection;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
-/**
- * Class AuthItemQuery
- * @package davidhirtz\yii2\skeleton\models\queries
- */
 class AuthItemQuery extends ActiveQuery
 {
-    /**
-     * @return $this
-     */
-    public function orderByType()
+    public function orderByType(): static
     {
         return $this->orderBy(['type' => SORT_ASC, 'name' => SORT_ASC]);
     }
 
-    /**
-     * @param int $userId
-     * @return $this
-     */
-    public function withAssignment($userId)
+    public function withAssignment(int $userId): static
     {
         $this->addSelect(['isAssigned' => '([[item_name]]=[[name]])']);
         $this->join('LEFT JOIN', Yii::$app->authManager->assignmentTable, '[[item_name]]=[[name]] AND [[user_id]]=:userId', ['userId' => $userId]);
@@ -35,10 +24,7 @@ class AuthItemQuery extends ActiveQuery
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function withUsers()
+    public function withUsers(): static
     {
         return $this->with([
             'users' => function (UserQuery $query) {
@@ -49,10 +35,9 @@ class AuthItemQuery extends ActiveQuery
     }
 
     /**
-     * @param Connection|null $db
-     * @return AuthItem[]|array
+     * @return AuthItem[]
      */
-    public function allWithChildren($db = null)
+    public function allWithChildren(?Connection$db = null): array
     {
         /**  @var AuthItem[] $items */
         $items = ArrayHelper::index(parent::all($db), 'name');
@@ -68,13 +53,7 @@ class AuthItemQuery extends ActiveQuery
         return $items;
     }
 
-    /**
-     * @param AuthItem[] $items
-     * @param array $relations
-     * @param string $parent
-     * @param string $child
-     */
-    private function setAuthItemChild(&$items, $relations, $parent, $child)
+    private function setAuthItemChild(array &$items, array $relations, string $parent, string$child): void
     {
         if (!$items[$child]->isInherited) {
             $items[$child]->isInherited = $items[$parent]->isAssigned;

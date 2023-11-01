@@ -49,17 +49,19 @@ class UserActiveForm extends ActiveForm
         parent::init();
     }
 
-    /** @noinspection PhpUnused */
+    /** @noinspection PhpUnused {@see static::$fields} */
     public function oldPasswordField(array $options = []): ActiveField|string
     {
         return $this->model->password_hash ? $this->field($this->model, 'oldPassword', ['enableClientValidation' => false])->passwordInput($options) : '';
     }
 
+    /** @noinspection PhpUnused {@see static::$fields} */
     public function repeatPasswordField(array $options = []): ActiveField|string
     {
         return $this->field($this->model, 'repeatPassword', ['enableClientValidation' => false])->passwordInput($options);
     }
 
+    /** @noinspection PhpUnused {@see static::$fields} */
     public function statusField(array $options = []): ActiveField|string
     {
         if ($this->model->isOwner()) {
@@ -69,26 +71,31 @@ class UserActiveForm extends ActiveForm
         return $this->field($this->model, 'status')->widget(DynamicRangeDropdown::class, $options);
     }
 
+    /** @noinspection PhpUnused {@see static::$fields} */
     public function uploadField(array $options = []): ActiveField|string
     {
         return $this->getPicturePreview() . $this->field($this->model, 'upload')->fileInput($options);
     }
 
+    /** @noinspection PhpUnused {@see static::$fields} */
     public function countryField(array $options = ['options' => ['prompt' => '']]): ActiveField|string
     {
         return $this->field($this->model, 'country')->widget(DynamicRangeDropdown::class, $options);
     }
 
+    /** @noinspection PhpUnused {@see static::$fields} */
     public function languageField(array $options = []): ActiveField|string
     {
         return $this->field($this->model, 'language')->widget(DynamicRangeDropdown::class, $options);
     }
 
+    /** @noinspection PhpUnused {@see static::$fields} */
     public function timezoneField(array $options = []): ActiveField|string
     {
         return $this->field($this->model, 'timezone')->widget(DynamicRangeDropdown::class, $options);
     }
 
+    /** @noinspection PhpUnused {@see static::$fields} */
     public function sendEmailField(array $options = []): ActiveField|string
     {
         return $this->model->getIsNewRecord() ? $this->field($this->model, 'sendEmail')->checkbox($options) : '';
