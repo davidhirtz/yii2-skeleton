@@ -63,7 +63,6 @@ class RedirectBehavior extends Behavior
 
     /**
      * Updates previous redirect URLs. This is not handled via `updateAll` to enable {@link Trail} records.
-     * @param string $url
      */
     protected function updatePreviousRedirectUrls(string $url): void
     {
@@ -89,8 +88,6 @@ class RedirectBehavior extends Behavior
     /**
      * Deletes redirect records matching given `attribute`. This is not handled via `deleteAll` to enable {@link Trail}
      * records.
-     *
-     * @param string $url
      */
     protected function deleteRedirects(string $url): void
     {

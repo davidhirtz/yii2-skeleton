@@ -26,7 +26,7 @@ class RedirectActiveForm extends ActiveForm
     /**
      * @inheritDoc
      */
-    public function init()
+    public function init(): void
     {
         if (!$this->fields) {
             $this->fields = [
@@ -51,7 +51,7 @@ class RedirectActiveForm extends ActiveForm
     /**
      * Renders user information footer.
      */
-    public function renderFooter()
+    public function renderFooter(): void
     {
         if ($items = array_filter($this->getFooterItems())) {
             echo $this->listRow($items);
