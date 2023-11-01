@@ -127,13 +127,13 @@ class UrlManager extends \yii\web\UrlManager
         return $event->url;
     }
 
-    public function createDraftUrl(array $params): string|false
+    public function createDraftUrl(array $params): string
     {
         if ($hostInfo = Yii::$app->getRequest()->getDraftHostInfo()) {
             return $hostInfo . $this->createUrl($params);
         }
 
-        return false;
+        return '';
     }
 
     /**
