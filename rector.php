@@ -9,6 +9,7 @@ use Rector\Php74\Rector\Property\RestoreDefaultNullToNullableTypePropertyRector;
 use Rector\Php81\Rector\ClassConst\FinalizePublicClassConstantRector;
 use Rector\Renaming\Rector\Name\RenameClassRector;
 use Rector\Set\ValueObject\LevelSetList;
+use Rector\TypeDeclaration\Rector\ClassMethod\AddReturnTypeDeclarationBasedOnParentClassMethodRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromStrictNativeCallRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromStrictScalarReturnExprRector;
 use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromAssignsRector;
@@ -60,6 +61,7 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
 
     $rectorConfig->rules([
+        AddReturnTypeDeclarationBasedOnParentClassMethodRector::class,
         InlineConstructorDefaultToPropertyRector::class,
         ReturnTypeFromStrictNativeCallRector::class,
         ReturnTypeFromStrictScalarReturnExprRector::class,
