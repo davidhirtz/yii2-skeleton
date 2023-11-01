@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 use Rector\CodeQuality\Rector\Class_\InlineConstructorDefaultToPropertyRector;
+use Rector\CodingStyle\Rector\ClassConst\RemoveFinalFromConstRector;
 use Rector\Config\RectorConfig;
+use Rector\Php81\Rector\ClassConst\FinalizePublicClassConstantRector;
 use Rector\Renaming\Rector\Name\RenameClassRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromStrictNativeCallRector;
@@ -51,6 +53,9 @@ return static function (RectorConfig $rectorConfig): void {
         'davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu' => 'davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu',
     ]);
 
+    $rectorConfig->skip([
+        FinalizePublicClassConstantRector::class,
+    ]);
 
     $rectorConfig->rules([
         InlineConstructorDefaultToPropertyRector::class,
