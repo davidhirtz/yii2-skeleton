@@ -1,6 +1,6 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid;
+namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\assets\JuiAsset;
 use davidhirtz\yii2\skeleton\db\ActiveQuery;

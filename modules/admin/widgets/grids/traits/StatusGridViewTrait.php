@@ -1,6 +1,6 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid;
+namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\db\StatusAttributeTrait;
@@ -11,9 +11,6 @@ use Yii;
 use yii\helpers\Url;
 
 /**
- * Trait StatusGridViewTrait
- * @package davidhirtz\yii2\skeleton\modules\admin\widgets\grid
- *
  * @method ActiveRecord getModel()
  */
 trait StatusGridViewTrait

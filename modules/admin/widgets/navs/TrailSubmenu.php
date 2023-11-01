@@ -1,6 +1,6 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\nav\base;
+namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 
 use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
@@ -9,10 +9,6 @@ use davidhirtz\yii2\skeleton\modules\admin\data\TrailActiveDataProvider;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
 use Yii;
 
-/**
- * Class TrailSubmenu
- * @package davidhirtz\yii2\skeleton\modules\admin\widgets\nav\base
- */
 class TrailSubmenu extends Submenu
 {
     /**

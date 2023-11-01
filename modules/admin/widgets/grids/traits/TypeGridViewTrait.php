@@ -1,6 +1,6 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid;
+namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\db\TypeAttributeTrait;
@@ -11,10 +11,7 @@ use Yii;
 use yii\helpers\Url;
 
 /**
- * Trait TypeGridViewTrait
- * @package davidhirtz\yii2\skeleton\modules\admin\widgets\grid
- *
- * @method TypeAttributeTrait getModel()
+ * @method ActiveRecord getModel()
  */
 trait TypeGridViewTrait
 {

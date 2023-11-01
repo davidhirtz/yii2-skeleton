@@ -1,16 +1,12 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\nav\base;
+namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Nav;
 use Yii;
 use yii\helpers\Url;
 
-/**
- * Class NavBar
- * @package davidhirtz\yii2\skeleton\modules\admin\widgets\nav\base
- */
 class NavBar extends \yii\bootstrap4\NavBar
 {
     /**

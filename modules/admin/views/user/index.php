@@ -8,9 +8,9 @@
  */
 
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\UserGridView;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\UserGridView;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\panels\UserOwnerPanel;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu;
 use yii\data\ActiveDataProvider;
 
 $this->setTitle(Yii::t('skeleton', 'Users'));

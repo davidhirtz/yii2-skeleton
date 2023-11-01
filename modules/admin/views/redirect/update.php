@@ -11,7 +11,7 @@
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\RedirectGridView;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\RedirectGridView;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;

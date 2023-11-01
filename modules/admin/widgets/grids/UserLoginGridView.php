@@ -1,6 +1,6 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid;
+namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\models\UserLogin;
@@ -9,12 +9,6 @@ use davidhirtz\yii2\timeago\Timeago;
 use Yii;
 use yii\helpers\Html;
 
-/**
- * Class LoginGridView.
- * @package app\modules\admin\components\widgets\grid
- *
- * @property User $model
- */
 class UserLoginGridView extends GridView
 {
     public ?User $user = null;

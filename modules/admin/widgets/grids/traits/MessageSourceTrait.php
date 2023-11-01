@@ -1,6 +1,6 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid;
+namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\models\AuthItem;
@@ -8,9 +8,6 @@ use Yii;
 use yii\i18n\PhpMessageSource;
 
 /**
- * Trait MessageSourceTrait
- * @package davidhirtz\yii2\skeleton\modules\admin\widgets\grid
- *
  * @method ActiveRecord getModel()
  */
 trait MessageSourceTrait

@@ -15,7 +15,7 @@ use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu;
 
 $this->setTitle(Yii::t('skeleton', 'Edit User'));
 $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);

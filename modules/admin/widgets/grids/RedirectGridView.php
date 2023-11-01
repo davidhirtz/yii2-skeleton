@@ -1,18 +1,16 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid\base;
+namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\GridView;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\TypeGridViewTrait;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\TypeGridViewTrait;
 use davidhirtz\yii2\timeago\TimeagoColumn;
 use Yii;
+use yii\db\ActiveRecordInterface;
 
 /**
- * The RedirectGridView widget is used to display data for {@see RedirectActiveDataProvider}.
- *
  * @property RedirectActiveDataProvider $dataProvider
  */
 class RedirectGridView extends GridView
@@ -22,17 +20,17 @@ class RedirectGridView extends GridView
     /**
      * @var bool
      */
-    public $showSelection = true;
+    public bool $showSelection = true;
 
     /**
      * @var array the url route for selection update
      */
-    public $selectionRoute = ['delete-all'];
+    public array $selectionRoute = ['delete-all'];
 
     /**
      * @var Redirect the model used to display additional redirects
      */
-    public $redirect;
+    public ?Redirect $redirect = null;
 
     /**
      * @inheritDoc
@@ -192,21 +190,12 @@ class RedirectGridView extends GridView
         ]);
     }
 
-    /**
-     * @param Redirect $model
-     * @param array $params
-     * @return array|false
-     */
-    protected function getDeleteRoute($model, $params = [])
+    protected function getDeleteRoute(ActiveRecordInterface $model, array $params = []): array
     {
         return parent::getDeleteRoute($model, array_merge($params, ['previous' => $this->redirect->id ?? null]));
     }
 
-    /**
-     * @param Redirect $redirect
-     * @return array|string
-     */
-    protected function getRowButtons($redirect)
+    protected function getRowButtons(Redirect $redirect): array|string
     {
         return [
             $this->getUpdateButton($redirect),
@@ -214,10 +203,7 @@ class RedirectGridView extends GridView
         ];
     }
 
-    /**
-     * @return Redirect
-     */
-    public function getModel()
+    public function getModel(): Redirect
     {
         return Redirect::instance();
     }

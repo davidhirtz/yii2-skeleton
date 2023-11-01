@@ -1,16 +1,12 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\nav\base;
+namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
 use Yii;
 
-/**
- * Class UserSubmenu
- * @package davidhirtz\yii2\skeleton\modules\admin\widgets\nav\base
- */
 class UserSubmenu extends Submenu
 {
     /**

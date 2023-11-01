@@ -1,16 +1,14 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid;
+namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\modules\admin\data\LogDataProvider;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\GridView;
 use Yii;
 
 /**
- * Class LogGridView
- * @package davidhirtz\yii2\skeleton\modules\admin\widgets
- *
  * @property LogDataProvider $dataProvider
  */
 class LogGridView extends GridView

@@ -1,6 +1,6 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid\base;
+namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
@@ -8,9 +8,9 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\TrailActiveDataProvider;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\GridView;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\MessageSourceTrait;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\TypeGridViewTrait;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\GridView;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\MessageSourceTrait;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\TypeGridViewTrait;
 use davidhirtz\yii2\timeago\TimeagoColumn;
 use Jfcherng\Diff\DiffHelper;
 use Yii;
@@ -18,9 +18,6 @@ use yii\db\ActiveRecordInterface;
 use yii\helpers\Url;
 
 /**
- * Class TrailGridView
- * @package davidhirtz\yii2\skeleton\modules\admin\widgets\grid\base
- *
  * @property TrailActiveDataProvider $dataProvider
  */
 class TrailGridView extends GridView

@@ -9,8 +9,8 @@
  */
 
 use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\AuthItemGridView;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\AuthItemGridView;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use yii\data\ActiveDataProvider;

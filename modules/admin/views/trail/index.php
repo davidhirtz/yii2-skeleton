@@ -8,9 +8,9 @@
  */
 
 use davidhirtz\yii2\skeleton\modules\admin\data\TrailActiveDataProvider;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\TrailGridView;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\TrailSubmenu;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\TrailGridView;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\TrailSubmenu;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 

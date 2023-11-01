@@ -14,7 +14,6 @@ use Yii;
 
 /**
  * Class AuthClient
- * @package davidhirtz\yii2\skeleton\models
  *
  * @property string $id
  * @property int $user_id

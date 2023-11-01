@@ -7,10 +7,10 @@
  * @var ActiveDataProvider $provider
  */
 
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\AuthItemGridView;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\AuthItemGridView;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\nav\UserSubmenu;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu;
 use yii\data\ActiveDataProvider;
 
 $this->setTitle(Yii::t('skeleton', 'Permissions'));

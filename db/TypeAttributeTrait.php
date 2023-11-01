@@ -2,7 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\db;
 
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\TypeGridViewTrait;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\TypeGridViewTrait;
 use Yii;
 
 /**
@@ -34,7 +34,7 @@ trait TypeAttributeTrait
     /**
      * Override this method to implement types. The type array is must consist of a unique type as key and an associative
      * array containing at least a "name" key. Optional a "class" key can be set to instantiate a model on find and the
-     * "icon" value will be used in {@link TypeGridViewTrait} on default.
+     * "icon" value will be used in {@link \davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\TypeGridViewTrait} on default.
      *
      * @return array
      */

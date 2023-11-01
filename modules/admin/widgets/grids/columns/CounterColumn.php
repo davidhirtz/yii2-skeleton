@@ -1,16 +1,12 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid;
+namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns;
 
 use Yii;
 use yii\base\Model;
 use yii\grid\DataColumn;
 use yii\helpers\Html;
 
-/**
- * Class CounterColumn
- * @package davidhirtz\yii2\skeleton\modules\admin\widgets\grid
- */
 class CounterColumn extends DataColumn
 {
     /**

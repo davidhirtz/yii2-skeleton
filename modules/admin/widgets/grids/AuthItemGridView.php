@@ -1,20 +1,16 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grid\base;
+namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\AuthItem;
 use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grid\MessageSourceTrait;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\MessageSourceTrait;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
 use yii\grid\GridView;
 
-/**
- * Class AuthItemGridView
- * @package davidhirtz\yii2\skeleton\modules\admin\widgets\grid\base
- */
 class AuthItemGridView extends GridView
 {
     use MessageSourceTrait;
