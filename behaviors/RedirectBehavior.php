@@ -11,22 +11,13 @@ use yii\base\Behavior;
 use yii\base\InvalidConfigException;
 
 /**
- * Class BlameableBehavior
- * @package davidhirtz\yii2\skeleton\behaviors
- *
  * @property ActiveRecord $owner
  */
 class RedirectBehavior extends Behavior
 {
-    /**
-     * @var string
-     */
-    private $prevUrl;
+    private ?string $prevUrl = null;
 
-    /**
-     * @return array|string[]
-     */
-    public function events()
+    public function events(): array
     {
         return [
             ActiveRecord::EVENT_AFTER_FIND => 'afterFind',
@@ -39,7 +30,7 @@ class RedirectBehavior extends Behavior
     /**
      * Caches the previous url
      */
-    public function afterFind()
+    public function afterFind(): void
     {
         /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         $this->prevUrl = !$this->owner->getIsNewRecord() ? Redirect::sanitizeUrl($this->owner->getUrl()) : false;
@@ -48,7 +39,7 @@ class RedirectBehavior extends Behavior
     /**
      * Inserts and updates related {@link Redirect} models on owner's `url` change.
      */
-    public function afterSave()
+    public function afterSave(): void
     {
         /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         $url = Redirect::sanitizeUrl($this->owner->getUrl());
@@ -60,9 +51,9 @@ class RedirectBehavior extends Behavior
     }
 
     /**
-     * Deletes all {@link Redirect} models pointing to owner's `url` on delete.
+     * Deletes all {@link Redirect} models pointing to owner's `url` on deleting.
      */
-    public function afterDelete()
+    public function afterDelete(): void
     {
         /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         if ($url = Redirect::sanitizeUrl($this->owner->getUrl())) {
@@ -74,7 +65,7 @@ class RedirectBehavior extends Behavior
      * Updates previous redirect URLs. This is not handled via `updateAll` to enable {@link Trail} records.
      * @param string $url
      */
-    protected function updatePreviousRedirectUrls($url)
+    protected function updatePreviousRedirectUrls(string $url): void
     {
         /** @var Redirect[] $redirects */
         $redirects = Redirect::find()
@@ -101,7 +92,7 @@ class RedirectBehavior extends Behavior
      *
      * @param string $url
      */
-    protected function deleteRedirects($url)
+    protected function deleteRedirects(string $url): void
     {
         /** @var Redirect[] $redirects */
         $redirects = Redirect::find()
@@ -114,10 +105,10 @@ class RedirectBehavior extends Behavior
     }
 
     /**
-     * This method tries to generate a URL from owner's `getUrl` method, if it does not implement a `getUrl` method.
+     * This method tries to generate a URL from owner's `getUrl` method if it does not implement a `getUrl` method.
      * @return false|string
      */
-    public function getUrl()
+    public function getUrl(): bool|string
     {
         if (!method_exists($this->owner, 'getRoute')) {
             throw new InvalidConfigException($this->owner::class . ' needs to either implement a `getUrl` or `getRoute` method');

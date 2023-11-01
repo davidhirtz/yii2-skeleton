@@ -93,7 +93,6 @@ class Application extends \yii\web\Application
 
     /**
      * Configures Yii2 debug module (which is currently only available for web applications) if `YII_DEBUG` is `true`.
-     * @param array $config
      */
     protected function setDebugModuleConfig(array &$config): void
     {

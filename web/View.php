@@ -131,7 +131,7 @@ class View extends \yii\web\View
     public function registerStructuredData(array $data): void
     {
         /** @noinspection HttpUrlsUsage */
-        echo Html::script(Json::htmlEncode(array_merge(['@context' => 'http://schema.org'], $data)), [
+        echo Html::script(Json::htmlEncode(['@context' => 'http://schema.org', ...$data]), [
             'type' => 'application/ld+json',
         ]);
     }

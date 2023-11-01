@@ -32,7 +32,6 @@ return static function (RectorConfig $rectorConfig): void {
         __DIR__ . '/helpers',
         __DIR__ . '/i18n',
         __DIR__ . '/mail',
-        __DIR__ . '/messages',
         __DIR__ . '/models',
         __DIR__ . '/modules',
         __DIR__ . '/tasks',

@@ -163,10 +163,11 @@ class Redirect extends ActiveRecord
 
     public function attributeLabels(): array
     {
-        return array_merge(parent::attributeLabels(), [
+        return [
+            ...parent::attributeLabels(),
             'request_uri' => Yii::t('skeleton', 'Request'),
             'url' => Yii::t('skeleton', 'Target URL'),
-        ]);
+        ];
     }
 
     public function formName(): string

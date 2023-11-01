@@ -51,7 +51,6 @@ class Controller extends \yii\web\Controller
 
     /**
      * Renders AJAX route requests.
-     * @param string $content
      * @return string
      */
     public function renderAjaxRouteContent(string $content): string
@@ -77,7 +76,6 @@ class Controller extends \yii\web\Controller
 
     /**
      * Shorthand method for returning JSON data.
-     * @param array $data
      * @noinspection PhpUnused
      */
     public function setJsonResponseData(array $data = []): void

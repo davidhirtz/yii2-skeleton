@@ -177,7 +177,6 @@ trait ApplicationTrait
 
     /**
      * Detects Facebook client via config.
-     * @param array $config
      */
     protected function setFacebookClientComponent(array &$config): void
     {

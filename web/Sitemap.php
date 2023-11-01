@@ -184,7 +184,7 @@ class Sitemap extends Component
 
     private function getUrlsInternal(): array
     {
-        return $this->views ? array_merge($this->urls, $this->generateFileUrls()) : $this->urls;
+        return $this->views ? [...$this->urls, ...$this->generateFileUrls()] : $this->urls;
     }
 
     private function getMaxLastMod(array $urls): ?string

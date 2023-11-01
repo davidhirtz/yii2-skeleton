@@ -333,12 +333,13 @@ class Trail extends ActiveRecord
 
     public function attributeLabels(): array
     {
-        return array_merge(parent::attributeLabels(), [
+        return [
+            ...parent::attributeLabels(),
             'model' => Yii::t('skeleton', 'Record'),
             'user_id' => Yii::t('skeleton', 'User'),
             'data' => Yii::t('skeleton', 'Updates'),
             'created_at' => Yii::t('skeleton', 'Time'),
-        ]);
+        ];
     }
 
     public function formName(): string

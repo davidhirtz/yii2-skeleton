@@ -11,7 +11,7 @@ class Identity extends User implements IdentityInterface
 {
     public ?string $loginType = null;
     public ?string $ipAddress = null;
-    public int $cookieLifetime = 2592000;
+    public int $cookieLifetime = 2_592_000;
 
     public static function findIdentity($id): ?IdentityInterface
     {

@@ -285,7 +285,6 @@ trait NestedTreeTrait
 
     /**
      * @param ActiveRecord|null $parent
-     * @param array $order
      */
     public static function rebuildNestedTree(?ActiveRecord $parent = null, array $order = []): void
     {
