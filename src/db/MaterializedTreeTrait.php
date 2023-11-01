@@ -5,49 +5,25 @@ namespace davidhirtz\yii2\skeleton\db;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 
 /**
- * Class MaterializedTreeTrait
- * @package davidhirtz\yii2\skeleton\db
- *
  * @property int $id
  * @property int $parent_id
  * @property string $path
  *
- * @property ActiveRecord $parent
- * @method static ActiveQuery find()
+ * @property-read static[] $ancestors {@see static::getAncestors()}
+ * @property-read static[] $children {@see static::getChildren()}
+ * @property-read static[] $descendants {@see static::getDescendants()}
+ * @property-read static $parent {@see static::getParent()}
  */
 trait MaterializedTreeTrait
 {
-    /**
-     * @var ActiveRecord[]
-     * @see getAncestors()
-     */
-    private $_ancestors;
+    private ?array $_ancestors = null;
+    private ?array $_descendants = null;
+    private ?array $_children = null;
 
     /**
-     * @var ActiveRecord[]
-     * @see getDescendants()
+     * @return static[]
      */
-    private $_descendants;
-
-    /**
-     * @var ActiveRecord[]
-     * @see getChildren()
-     */
-    private $_children;
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getParent()
-    {
-        return $this->hasOne(static::class, ['id' => 'parent_id']);
-    }
-
-    /**
-     * @param bool $refresh
-     * @return ActiveRecord[]
-     */
-    public function getAncestors($refresh = false)
+    public function getAncestors(bool $refresh = false): array
     {
         if ($this->_ancestors === null || $refresh) {
             $this->_ancestors = !$this->path ? [] : $this->findAncestors()
@@ -58,10 +34,7 @@ trait MaterializedTreeTrait
         return $this->_ancestors;
     }
 
-    /**
-     * @param ActiveRecord[]|null $ancestors
-     */
-    public function setAncestors($ancestors)
+    public function setAncestors(array $ancestors): void
     {
         $this->_ancestors = [];
 
@@ -76,33 +49,21 @@ trait MaterializedTreeTrait
         }
     }
 
-    /**
-     * @return ActiveRecord|null
-     */
-    public function getFirstAncestor()
+    public function getFirstAncestor(): ?static
     {
-        if ($this->parent_id) {
-            $ancestors = $this->getAncestors();
-            return current($ancestors);
-        }
-
-        return null;
+        return $this->parent_id ? current($this->ancestors) : null;
     }
 
-    /**
-     * @return ActiveQuery
-     */
-    public function findAncestors()
+    public function findAncestors(): ActiveQuery
     {
         return static::find()->where(['id' => $this->getAncestorIds()])
             ->orderBy(['path' => SORT_ASC]);
     }
 
     /**
-     * @param bool $refresh
-     * @return ActiveRecord[]
+     * @return static[]
      */
-    public function getChildren($refresh = false)
+    public function getChildren(bool $refresh = false): array
     {
         if ($this->_children === null || $refresh) {
             $this->_children = $this->findChildren()
@@ -113,10 +74,7 @@ trait MaterializedTreeTrait
         return $this->_children;
     }
 
-    /**
-     * @param static[] $children
-     */
-    public function setChildren($children)
+    public function setChildren(array $children): void
     {
         $this->_children = [];
 
@@ -127,35 +85,15 @@ trait MaterializedTreeTrait
         }
     }
 
-    /**
-     * @return ActiveQuery
-     */
-    public function findChildren()
+    public function findChildren(): ActiveQuery
     {
         return static::find()->where(['parent_id' => $this->id]);
     }
 
     /**
-     * @return ActiveQuery
+     * @return static[]
      */
-    public function findSiblings()
-    {
-        return static::find()->where(['parent_id' => $this->parent_id]);
-    }
-
-    /**
-     * @return array
-     */
-    public function getAncestorIds(): array
-    {
-        return ArrayHelper::cacheStringToArray($this->path);
-    }
-
-    /**
-     * @param bool $refresh
-     * @return ActiveRecord[]
-     */
-    public function getDescendants($refresh = false)
+    public function getDescendants(bool $refresh = false): array
     {
         if ($this->_descendants === null || $refresh) {
             $this->_descendants = $this->findDescendants()
@@ -166,10 +104,7 @@ trait MaterializedTreeTrait
         return $this->_descendants;
     }
 
-    /**
-     * @param static[] $descendants
-     */
-    public function setDescendants($descendants)
+    public function setDescendants(array $descendants): void
     {
         $this->_descendants = [];
         $length = strlen($this->path);
@@ -181,10 +116,7 @@ trait MaterializedTreeTrait
         }
     }
 
-    /**
-     * @return ActiveQuery
-     */
-    public function findDescendants()
+    public function findDescendants(): ActiveQuery
     {
         $path = ArrayHelper::createCacheString(array_merge($this->getAncestorIds(), [$this->id]));
         $fieldName = static::tableName() . '.[[path]]';
@@ -193,5 +125,20 @@ trait MaterializedTreeTrait
             'path' => $path,
             'like' => $path . ',%',
         ])->orderBy(['path' => SORT_ASC]);
+    }
+
+    public function getParent(): ActiveQuery
+    {
+        return $this->hasOne(static::class, ['id' => 'parent_id']);
+    }
+
+    public function findSiblings(): ActiveQuery
+    {
+        return static::find()->where(['parent_id' => $this->parent_id]);
+    }
+
+    public function getAncestorIds(): array
+    {
+        return ArrayHelper::cacheStringToArray($this->path);
     }
 }

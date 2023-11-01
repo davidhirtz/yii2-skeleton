@@ -19,7 +19,6 @@ use yii\validators\StringValidator;
 /**
  * @method ActiveQuery hasMany($class, array $link)
  * @method ActiveQuery hasOne($class, array $link)
- * @method static static|null findOne($condition)
  * @method static static[] findAll($condition)
  * @method static Connection getDb()
  */
@@ -89,6 +88,11 @@ class ActiveRecord extends \yii\db\ActiveRecord
     public static function find(): ActiveQuery
     {
         return Yii::createObject(ActiveQuery::class, [static::class]);
+    }
+
+    public static function findOne($condition): ?static
+    {
+        return $condition === null ? null : parent::findOne($condition);
     }
 
     /**

@@ -8,7 +8,9 @@ class Submenu extends Nav
 {
     public ?string $title = null;
 
+    public array $badgeOptions = ['class' => 'badge d-none d-md-inline-block'];
     public array $cssClass = ['submenu', 'nav', 'nav-pills'];
+    public array $labelOptions = ['class' => 'd-none d-md-inline'];
 
     public function init(): void
     {
@@ -19,6 +21,7 @@ class Submenu extends Nav
     public function run(): string
     {
         $content = parent::run();
-        return ($this->title ? Html::tag('h1', $this->title, ['class' => 'page-header']) : '') . ($content  ? Html::tag('nav', $content) : '');
+
+        return ($this->title ? Html::tag('h1', $this->title, ['class' => 'page-header']) : '') . ($content ? Html::tag('nav', $content) : '');
     }
 }

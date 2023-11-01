@@ -139,7 +139,7 @@ class Html extends BaseHtml
         return trim(preg_replace('/>\s+</', '><', $html));
     }
 
-    public static function markKeywords(string $text, array|string $keywords, bool $wordBoundary = false): string
+    public static function markKeywords(string $text, array|string|null $keywords, bool $wordBoundary = false): string
     {
         if ($keywords) {
             foreach ((array)$keywords as $keyword) {

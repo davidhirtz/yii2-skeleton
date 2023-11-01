@@ -23,10 +23,7 @@ use yii\db\ActiveRecordInterface;
  * @property string|array|null $data
  * @property DateTime $created_at
  *
- * @property User $user {@link Trail::getUser}
- *
- * @method static Trail findOne($condition)
- * @method static Trail[] findAll($condition)
+ * @property-read User $user {@link Trail::getUser}
  */
 class Trail extends ActiveRecord
 {

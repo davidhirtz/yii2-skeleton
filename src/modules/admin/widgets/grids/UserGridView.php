@@ -5,7 +5,6 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\UserActiveDataProvider;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\StatusGridViewTrait;
 use davidhirtz\yii2\timeago\Timeago;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
@@ -88,7 +87,10 @@ class UserGridView extends GridView
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
             'contentOptions' => ['class' => 'd-none d-md-table-cell'],
             'content' => function (User $user) {
-                $email = Html::markKeywords($user->email, $this->getSearchKeywords());
+                $email = $user->email
+                    ? Html::markKeywords(Html::encode($user->email), $this->getSearchKeywords())
+                    : '';
+
                 return !$user->isUnconfirmed() ? $email : Html::tag('span', $email, [
                     'class' => 'text-muted',
                     'data-toggle' => 'tooltip',

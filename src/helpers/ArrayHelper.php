@@ -36,7 +36,7 @@ class ArrayHelper extends BaseArrayHelper
     /**
      * Adds unique keys to comma separated string.
      */
-    public static function cacheStringToArray(array|string|null $string, array $values = [], string $separator = ','): array
+    public static function cacheStringToArray(array|string|null $string, array|int|string $values = [], string $separator = ','): array
     {
         if (!is_array($string)) {
             $string = $string ? explode($separator, $string) : [];
@@ -76,6 +76,7 @@ class ArrayHelper extends BaseArrayHelper
             $text = null;
         }
 
+        /** @noinspection PhpConditionAlreadyCheckedInspection */
         if (is_object($xml)) {
             foreach ($namespace as $ns => $nsUrl) {
                 // Attributes.
