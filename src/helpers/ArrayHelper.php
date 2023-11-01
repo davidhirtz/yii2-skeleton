@@ -36,7 +36,7 @@ class ArrayHelper extends BaseArrayHelper
     /**
      * Adds unique keys to comma separated string.
      */
-    public static function cacheStringToArray(array|string $string, array $values = [], string $separator = ','): array
+    public static function cacheStringToArray(array|string|null $string, array $values = [], string $separator = ','): array
     {
         if (!is_array($string)) {
             $string = $string ? explode($separator, $string) : [];
