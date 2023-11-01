@@ -39,7 +39,12 @@
     },
     "autoload": {
         "psr-4": {
-            "davidhirtz\\yii2\\skeleton\\": ""
+            "davidhirtz\\yii2\\skeleton\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "davidhirtz\\yii2\\skeleton\\tests\\": "tests"
         }
     },
     "config": {
