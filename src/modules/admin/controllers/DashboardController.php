@@ -5,18 +5,13 @@ namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\web\Controller;
 use yii\filters\AccessControl;
+use yii\web\Response;
 
 /**
- * Class DashboardController
- * @package app\controllers
- *
  * @property Module $module
  */
 class DashboardController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
     public function behaviors(): array
     {
         return [
@@ -33,10 +28,7 @@ class DashboardController extends Controller
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function actionIndex()
+    public function actionIndex(): Response|string
     {
         return $this->render('index', [
             'panels' => $this->module->panels,

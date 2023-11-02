@@ -14,17 +14,10 @@ use yii\rbac\Role;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
-/**
- * Class AuthController
- * @package davidhirtz\yii2\skeleton\modules\admin\controllers
- */
 class AuthController extends Controller
 {
     use UserTrait;
 
-    /**
-     * @inheritdoc
-     */
     public function behaviors(): array
     {
         return [
@@ -48,10 +41,7 @@ class AuthController extends Controller
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function actionIndex()
+    public function actionIndex(): Response|string
     {
         $items = AuthItem::find()
             ->orderByType()
@@ -63,17 +53,12 @@ class AuthController extends Controller
             'pagination' => false,
         ]);
 
-        /** @noinspection MissedViewInspection */
         return $this->render('index', [
             'provider' => $provider,
         ]);
     }
 
-    /**
-     * @param int $user
-     * @return string
-     */
-    public function actionView($user)
+    public function actionView(int $user): Response|string
     {
         $user = $this->findUserForm($user, User::AUTH_USER_ASSIGN);
 
@@ -88,20 +73,13 @@ class AuthController extends Controller
             'pagination' => false,
         ]);
 
-        /** @noinspection MissedViewInspection */
         return $this->render('view', [
             'provider' => $provider,
             'user' => $user,
         ]);
     }
 
-    /**
-     * @param int $id
-     * @param string $name
-     * @param int $type
-     * @return Response|string
-     */
-    public function actionAssign($id, $name, $type)
+    public function actionAssign(int $id, string $name, int $type): Response|string
     {
         $user = $this->findUserForm($id, User::AUTH_USER_ASSIGN);
         $role = $this->getAuthItem($name, $type);
@@ -115,13 +93,7 @@ class AuthController extends Controller
         return $this->redirect(['view', 'user' => $user->id]);
     }
 
-    /**
-     * @param int $id
-     * @param string $name
-     * @param int $type
-     * @return Response|string
-     */
-    public function actionRevoke($id, $name, $type)
+    public function actionRevoke(int $id, string $name, int $type): Response|string
     {
         $user = $this->findUserForm($id, User::AUTH_USER_ASSIGN);
         $role = $this->getAuthItem($name, $type);
@@ -135,12 +107,7 @@ class AuthController extends Controller
         return $this->redirect(['view', 'user' => $user->id]);
     }
 
-    /**
-     * @param string $name
-     * @param string $type
-     * @return Role
-     */
-    private function getAuthItem($name, $type)
+    private function getAuthItem(string $name, int $type): Role
     {
         $rbac = Yii::$app->getAuthManager();
         $role = null;

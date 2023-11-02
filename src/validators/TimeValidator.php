@@ -7,11 +7,12 @@ use yii\base\InvalidConfigException;
 use yii\validators\Validator;
 use Yii;
 
+/**
+ * @noinspection PhpUnused
+ */
+
 class TimeValidator extends Validator
 {
-    /**
-     * @var string
-     */
     public string $pattern = '/^([01]?[0-9]|2[0-3]):?([0-5][0-9])\s?(am|pm)?$/';
 
     public function init(): void

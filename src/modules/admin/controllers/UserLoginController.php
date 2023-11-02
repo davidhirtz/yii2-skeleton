@@ -9,19 +9,13 @@ use davidhirtz\yii2\skeleton\modules\admin\controllers\traits\UserTrait;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\web\Response;
 
-/**
- * Class UserLoginController
- * @package davidhirtz\yii2\skeleton\modules\admin\controllers
- */
 class UserLoginController extends Controller
 {
     use UserTrait;
 
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'access' => [
@@ -37,11 +31,7 @@ class UserLoginController extends Controller
         ];
     }
 
-    /**
-     * @param int $q
-     * @return string
-     */
-    public function actionIndex($q = null)
+    public function actionIndex(string $q = null): Response|string
     {
         $provider = new ActiveDataProvider([
             'sort' => false,
@@ -58,17 +48,12 @@ class UserLoginController extends Controller
         $provider->getPagination()->defaultPageSize = 50;
         $provider->setSort(false);
 
-        /** @noinspection MissedViewInspection */
         return $this->render('index', [
             'provider' => $provider,
         ]);
     }
 
-    /**
-     * @param int $user
-     * @return string
-     */
-    public function actionView($user)
+    public function actionView(int $user): Response|string
     {
         $user = $this->findUserForm($user, User::AUTH_USER_UPDATE);
 
@@ -79,7 +64,6 @@ class UserLoginController extends Controller
                 ->where(['user_id' => $user->id]),
         ]);
 
-        /** @noinspection MissedViewInspection */
         return $this->render('view', [
             'provider' => $provider,
             'user' => $user,

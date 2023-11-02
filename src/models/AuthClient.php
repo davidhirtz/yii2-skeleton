@@ -7,14 +7,13 @@ use davidhirtz\yii2\skeleton\auth\clients\ClientInterface;
 use davidhirtz\yii2\skeleton\behaviors\SerializedAttributesBehavior;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TimestampBehavior;
+use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\db\Identity;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use Yii;
 
 /**
- * Class AuthClient
- *
  * @property string $id
  * @property int $user_id
  * @property string $name
@@ -22,13 +21,10 @@ use Yii;
  * @property DateTime $updated_at
  * @property DateTime $created_at
  *
- * @property Identity $identity
+ * @property-read Identity $identity
  */
 class AuthClient extends ActiveRecord
 {
-    /**
-     * @inheritDoc
-     */
     public function behaviors(): array
     {
         return [
@@ -38,13 +34,10 @@ class AuthClient extends ActiveRecord
                 'attributes' => ['data'],
             ],
             'TimestampBehavior' => TimestampBehavior::class,
-            'TrailBehavior' => 'davidhirtz\yii2\skeleton\behaviors\TrailBehavior',
+            'TrailBehavior' => TrailBehavior::class,
         ];
     }
 
-    /**
-     * @return array
-     */
     public function rules(): array
     {
         return [
@@ -63,10 +56,7 @@ class AuthClient extends ActiveRecord
         ];
     }
 
-    /**
-     * Validates user id.
-     */
-    public function validateUserId()
+    public function validateUserId(): void
     {
         if (!$this->getIsNewRecord() && $this->isAttributeChanged('user_id')) {
             $this->addError('user_id', Yii::t('skeleton', 'A different user is already linked with this {client} account.', [
@@ -75,10 +65,7 @@ class AuthClient extends ActiveRecord
         }
     }
 
-    /**
-     * Validates data.
-     */
-    public function validateData()
+    public function validateData(): void
     {
         if (isset($this->data['email'])) {
             $emailIsAlreadyRegistered = User::findByEmail($this->data['email'])
@@ -93,20 +80,13 @@ class AuthClient extends ActiveRecord
         }
     }
 
-    /**
-     * @return UserQuery
-     */
-    public function getIdentity()
+    public function getIdentity(): UserQuery
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->hasOne(Identity::class, ['id' => 'user_id']);
     }
 
-    /**
-     * @param ClientInterface $client
-     * @return AuthClient
-     */
-    public static function findOrCreateFromClient($client)
+    public static function findOrCreateFromClient(ClientInterface $client): AuthClient
     {
         $attributes = [
             'id' => $client->getUserAttributes()['id'],
@@ -128,10 +108,7 @@ class AuthClient extends ActiveRecord
         return $auth;
     }
 
-    /**
-     * @return array
-     */
-    public function getTrailParents()
+    public function getTrailParents(): array
     {
         return [$this->identity];
     }
@@ -149,50 +126,36 @@ class AuthClient extends ActiveRecord
         ]);
     }
 
-    /**
-     * @return string
-     */
-    public function getTrailModelName()
+    public function getTrailModelName(): string
     {
         return $this->name ? $this->getClientClass()->getTitle() : $this->getTrailModelType();
     }
 
-    /**
-     * @return string
-     */
     public function getTrailModelType(): string
     {
         return Yii::t('skeleton', 'Client');
     }
 
-    /**
-     * @return string
-     */
-    public function getDisplayName()
+    public function getDisplayName(): string
     {
         return $this->getClientClass()::getDisplayName($this);
     }
 
     /**
-     * @return string
+     * @noinspection PhpUnused
      */
-    public function getExternalUrl()
+    public function getExternalUrl(): string
     {
         return $this->getClientClass()::getExternalUrl($this);
     }
 
-    /**
-     * @return ClientInterface|\yii\authclient\ClientInterface
-     */
-    public function getClientClass()
+    public function getClientClass(): ClientInterface
     {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return Yii::$app->getAuthClientCollection()->getClient($this->name);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%auth_client}}';
     }

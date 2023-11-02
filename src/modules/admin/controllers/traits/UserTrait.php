@@ -7,18 +7,9 @@ use Yii;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 
-/**
- * Trait UserTrait
- * @package davidhirtz\yii2\cms\modules\admin\controllers\traits
- */
 trait UserTrait
 {
-    /**
-     * @param int $id
-     * @param string|null $permissionName
-     * @return UserForm
-     */
-    protected function findUserForm($id, $permissionName = null)
+    protected function findUserForm(int $id, ?string $permissionName = null): UserForm
     {
         if (!$user = UserForm::findOne((int)$id)) {
             throw new NotFoundHttpException();

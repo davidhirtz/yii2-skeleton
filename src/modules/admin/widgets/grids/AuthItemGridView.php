@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\AuthItem;
 use davidhirtz\yii2\skeleton\models\User;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\MessageSourceTrait;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
@@ -131,6 +132,10 @@ class AuthItemGridView extends GridView
         ];
     }
 
+    /**
+     * @see AuthController::actionAssign()
+     * @see AuthController::actionRevoke()
+     */
     protected function getRowButtons(AuthItem $authItem): array|string
     {
         $route = [$authItem->isAssigned ? 'revoke' : 'assign', 'id' => $this->user->id, 'name' => $authItem->name, 'type' => $authItem->type];

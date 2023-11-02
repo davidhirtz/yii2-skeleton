@@ -4,35 +4,21 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\panels;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\panels\HelpPanel;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
 use Yii;
 
 class UserHelpPanel extends HelpPanel
 {
-    /**
-     * @var User
-     */
-    public $user;
+    public ?User $user = null;
 
-    /**
-     * @inheritDoc
-     */
-    public function init()
+    public function init(): void
     {
-        if ($this->title === null) {
-            $this->title = Yii::t('skeleton', 'Operations');
-        }
-
-        if ($this->content === null) {
-            $this->content = $this->renderButtonToolbar(array_filter($this->getButtons()));
-        }
+        $this->title ??= Yii::t('skeleton', 'Operations');
+        $this->content ??= $this->renderButtonToolbar(array_filter($this->getButtons()));
 
         parent::init();
     }
 
-    /**
-     * @return array
-     */
     protected function getButtons(): array
     {
         return [
@@ -43,10 +29,11 @@ class UserHelpPanel extends HelpPanel
         ];
     }
 
+
     /**
-     * @return string
+     * @see UserController::actionDeletePicture()
      */
-    protected function getDeletePictureButton()
+    protected function getDeletePictureButton(): string
     {
         if (!$this->user->picture) {
             return '';
@@ -59,9 +46,9 @@ class UserHelpPanel extends HelpPanel
     }
 
     /**
-     * @return string
+     * @see UserController::actionDisableGoogleAuthenticator()
      */
-    protected function getDisableGoogleAuthenticatorButton()
+    protected function getDisableGoogleAuthenticatorButton(): string
     {
         if (!$this->user->google_2fa_secret) {
             return '';
@@ -74,9 +61,9 @@ class UserHelpPanel extends HelpPanel
     }
 
     /**
-     * @return string
+     * @see UserController::actionReset()
      */
-    protected function getCreatePasswordResetLinkButton()
+    protected function getCreatePasswordResetLinkButton(): string
     {
         return Html::a(Html::iconText('key', Yii::t('skeleton', 'Create password link')), ['reset', 'id' => $this->user->id], [
             'class' => 'btn btn-primary',
@@ -85,10 +72,7 @@ class UserHelpPanel extends HelpPanel
         ]);
     }
 
-    /**
-     * @return string
-     */
-    protected function getPasswordResetLinkButton()
+    protected function getPasswordResetLinkButton(): string
     {
         if (!$this->user->password_reset_token) {
             return '';

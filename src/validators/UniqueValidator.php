@@ -23,9 +23,7 @@ class UniqueValidator extends \yii\validators\UniqueValidator
             };
         }
 
-        if ($this->message === null) {
-            $this->message = Yii::t('yii', '{attribute} "{value}" has already been taken.');
-        }
+        $this->message ??= Yii::t('yii', '{attribute} "{value}" has already been taken.');
 
         parent::init();
     }

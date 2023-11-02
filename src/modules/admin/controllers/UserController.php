@@ -18,17 +18,10 @@ use yii\web\Response;
 use yii\web\ServerErrorHttpException;
 use Yii;
 
-/**
- * Class UserController
- * @package app\controllers
- */
 class UserController extends Controller
 {
     use UserTrait;
 
-    /**
-     * @inheritDoc
-     */
     public function behaviors(): array
     {
         return [
@@ -69,28 +62,18 @@ class UserController extends Controller
         ];
     }
 
-    /**
-     * @param string|null $q
-     * @return string
-     */
-    public function actionIndex($q = null)
+    public function actionIndex(string $q = null): Response|string
     {
-        /** @var UserActiveDataProvider $provider */
-        $provider = Yii::createObject([
-            'class' => 'davidhirtz\yii2\skeleton\modules\admin\data\UserActiveDataProvider',
+        $provider = Yii::$container->get(UserActiveDataProvider::class, [], [
             'searchString' => $q,
         ]);
 
-        /** @noinspection MissedViewInspection */
         return $this->render('index', [
             'provider' => $provider,
         ]);
     }
 
-    /**
-     * @return string|Response
-     */
-    public function actionCreate()
+    public function actionCreate(): Response|string
     {
         $user = new UserForm();
         $user->status = $user::STATUS_ENABLED;
@@ -110,17 +93,12 @@ class UserController extends Controller
             $user->timezone = $identity->timezone;
         }
 
-        /** @noinspection MissedViewInspection */
         return $this->render('create', [
             'user' => $user,
         ]);
     }
 
-    /**
-     * @param int $id
-     * @return string|Response
-     */
-    public function actionUpdate($id)
+    public function actionUpdate(int $id): Response|string
     {
         $user = $this->findUserForm($id, User::AUTH_USER_UPDATE);
 
@@ -131,35 +109,22 @@ class UserController extends Controller
             }
         }
 
-        /** @noinspection MissedViewInspection */
         return $this->render('update', [
             'user' => $user,
         ]);
     }
 
-    /**
-     * @param int $id
-     * @return string|Response
-     */
-    public function actionDeletePicture($id)
+    public function actionDeletePicture(int $id): Response|string
     {
         return $this->updateUserAttributes($id, ['picture' => null]);
     }
 
-    /**
-     * @param int $id
-     * @return string|Response
-     */
-    public function actionDisableGoogleAuthenticator($id)
+    public function actionDisableGoogleAuthenticator(int $id): Response|string
     {
         return $this->updateUserAttributes($id, ['google_2fa_secret' => null]);
     }
 
-    /**
-     * @param int $id
-     * @return string|Response
-     */
-    public function actionReset($id)
+    public function actionReset(int $id): Response|string
     {
         $user = $this->findUserForm($id, User::AUTH_USER_UPDATE);
         $user->generatePasswordResetToken();
@@ -171,11 +136,7 @@ class UserController extends Controller
         return $this->redirect(['update', 'id' => $user->id]);
     }
 
-    /**
-     * @param int $id
-     * @return string|Response
-     */
-    public function actionDelete($id)
+    public function actionDelete(int $id): Response|string
     {
         if (!$user = User::findOne(['id' => $id])) {
             throw new NotFoundHttpException();
@@ -185,9 +146,7 @@ class UserController extends Controller
             throw new ForbiddenHttpException();
         }
 
-        /** @var DeleteForm $form */
-        $form = Yii::createObject([
-            'class' => 'davidhirtz\yii2\skeleton\models\forms\DeleteForm',
+        $form = Yii::$container->get(DeleteForm::class, [], [
             'model' => $user,
             'attribute' => 'email',
         ]);
@@ -210,12 +169,7 @@ class UserController extends Controller
         return $this->redirect(['update', 'id' => $user->id]);
     }
 
-    /**
-     * @param string $id
-     * @param string $name
-     * @return string|Response
-     */
-    public function actionDeauthorize($id, $name)
+    public function actionDeauthorize(string $id, string $name): Response|string
     {
         /** @var AuthClient $auth */
         $auth = AuthClient::find()
@@ -249,10 +203,7 @@ class UserController extends Controller
         throw new ServerErrorHttpException();
     }
 
-    /**
-     * @return string|Response
-     */
-    public function actionOwnership()
+    public function actionOwnership(): Response|string
     {
         if (!Yii::$app->getUser()->getIdentity()->isOwner()) {
             throw new ForbiddenHttpException();
@@ -267,18 +218,12 @@ class UserController extends Controller
             }
         }
 
-        /** @noinspection MissedViewInspection */
         return $this->render('ownership', [
             'form' => $form,
         ]);
     }
 
-    /**
-     * @param int $id
-     * @param array $attributes
-     * @return string|Response
-     */
-    private function updateUserAttributes($id, $attributes)
+    private function updateUserAttributes(int $id, array $attributes): Response|string
     {
         $user = $this->findUserForm($id, User::AUTH_USER_UPDATE);
         $user->setAttributes($attributes, false);
