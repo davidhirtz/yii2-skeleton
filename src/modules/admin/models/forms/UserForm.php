@@ -23,7 +23,8 @@ class UserForm extends User
     public function behaviors(): array
     {
         return [
-            ...parent::behaviors(), 'BlameableBehavior' => [
+            ...parent::behaviors(),
+            'BlameableBehavior' => [
                 'class' => BlameableBehavior::class,
                 'attributes' => [
                     BaseActiveRecord::EVENT_BEFORE_INSERT => ['created_by_user_id'],
@@ -39,21 +40,25 @@ class UserForm extends User
             [
                 ['newPassword'],
                 'trim',
-            ], [
+            ],
+            [
                 ['newPassword'],
                 'string',
                 'min' => $this->passwordMinLength,
                 'skipOnEmpty' => true,
-            ], [
+            ],
+            [
                 ['repeatPassword'],
                 'required',
                 'when' => fn(self $model): bool => (bool)$model->newPassword,
-            ], [
+            ],
+            [
                 ['repeatPassword'],
                 'compare',
                 'compareAttribute' => 'newPassword',
                 'message' => Yii::t('skeleton', 'The password must match the new password.'),
-            ], [
+            ],
+            [
                 ['sendEmail'],
                 'boolean',
             ]
@@ -145,7 +150,9 @@ class UserForm extends User
             ...parent::attributeLabels(),
             'newPassword' => $this->getIsNewRecord()
                 ? Yii::t('skeleton', 'Password')
-                : Yii::t('skeleton', 'New password'), 'repeatPassword' => Yii::t('skeleton', 'Repeat password'), 'sendEmail' => Yii::t('skeleton', 'Send user account details via email'),
+                : Yii::t('skeleton', 'New password'),
+            'repeatPassword' => Yii::t('skeleton', 'Repeat password'),
+            'sendEmail' => Yii::t('skeleton', 'Send user account details via email'),
         ];
     }
 }
