@@ -45,7 +45,7 @@ class CounterColumn extends DataColumn
             }
 
             $count = Yii::$app->getFormatter()->asInteger($count, $this->numberFormatterOptions, $this->numberFormatterTextOptions);
-            $route = is_callable($this->route) ? call_user_func($this->route, $model) : null;
+            $route = is_callable($this->route) ? call_user_func($this->route, $model) : $this->route;
 
             return $route ? Html::a($count, $route, $this->countHtmlOptions) : Html::tag('div', $count, $this->countHtmlOptions);
         };
