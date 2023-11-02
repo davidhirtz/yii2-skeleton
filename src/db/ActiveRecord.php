@@ -123,6 +123,14 @@ class ActiveRecord extends \yii\db\ActiveRecord
         }
     }
 
+    public function getRelationFromForeignKey(string $foreignKey, bool $throwException = false): ?ActiveQuery
+    {
+        $relation = lcfirst(Inflector::camelize(str_replace('_id', '', $foreignKey)));
+
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->getRelation($relation, $throwException);
+    }
+
     public function refreshRelation(string $name): ActiveRecord|array
     {
         $query = $this->getRelation($name);

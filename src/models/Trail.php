@@ -6,11 +6,13 @@ use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\db\TypeAttributeTrait;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\datetime\DateTime;
+use davidhirtz\yii2\skeleton\models\collections\TrailModelCollection;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\TrailGridView;
 use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
 use ReflectionClass;
 use Yii;
+use yii\base\Model;
 use yii\db\ActiveRecordInterface;
 
 /**
@@ -41,7 +43,6 @@ class Trail extends ActiveRecord
     public const TYPE_PASSWORD = 12;
 
     public ActiveRecordInterface|array|null $parents = null;
-    private static ?array $_modelClasses = null;
 
     public function rules(): array
     {
@@ -137,14 +138,18 @@ class Trail extends ActiveRecord
         return null;
     }
 
-    public function getModelClass(): ?ActiveRecord
+    public function getModelClass(): ?Model
     {
-        return static::getModelByTrail($this->model, $this->model_id);
+        return TrailModelCollection::getModelByNameAndId($this->model, $this->model_id);
     }
 
-    public function getDataModelClass(): ?ActiveRecord
+    public function getDataModelClass(): ?Model
     {
-        return static::getModelByTrail($this->data['model'] ?? null, $this->data['model_id'] ?? null);
+        if (empty($this->data['model'])) {
+            return null;
+        }
+
+        return TrailModelCollection::getModelByNameAndId($this->data['model'], $this->data['model_id'] ?? null);
     }
 
     /**
@@ -220,35 +225,6 @@ class Trail extends ActiveRecord
         $trail->insert();
 
         return $trail;
-    }
-
-    public static function getModelByTrail(string $model, string|int $modelId): ?ActiveRecord
-    {
-        static::$_modelClasses[$model][$modelId] ??= $model ? static::findModelById($model, $modelId) : null;
-        return static::$_modelClasses[$model][$modelId];
-    }
-
-    /**
-     * Finds the model based on the given model string. If a model supports `i18n` tables, the corresponding language
-     * will be added to the model, separated by "::" like `\davidhirtz\yii2\cms\models\Entry::en_US`.
-     */
-    protected static function findModelById(string $model, int|string $modelId): ?ActiveRecord
-    {
-        $model = explode('::', $model);
-        $language = $model[1] ?? Yii::$app->language;
-
-        return Yii::$app->getI18n()->callback($language, function () use ($model, $modelId) {
-            $instance = Yii::createObject($model[0]);
-
-            if ($instance instanceof ActiveRecord) {
-                // Prevent PHP warnings if record has a primary key mismatch
-                $values = explode('-', $modelId);
-                $keys = count($instance::primaryKey()) == count($values) ? array_combine($instance::primaryKey(), $values) : null;
-                $instance = $instance::findOne($keys) ?? $instance;
-            }
-
-            return $instance;
-        });
     }
 
     public static function getAdminRouteByModel(?ActiveRecord $model, int|string|null $id = null): array

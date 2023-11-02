@@ -9,6 +9,7 @@
 - Changed namespaces for `CounterColumn` to `davidhirtz\yii2\skeleton\admin\widgets\grids\columns`
 - Changed namespaces for `MessageSourceTrait`, `StatusGridViewTrait` and `TypeGridViewTrait`
   to `davidhirtz\yii2\skeleton\admin\widgets\grids\traits`
+- `TrailGridView` now tries to automatically load related models
 
 # Version v1.9.0
 

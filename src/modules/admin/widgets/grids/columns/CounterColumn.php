@@ -15,7 +15,7 @@ class CounterColumn extends DataColumn
     /**
      * @var callable|null a callback function that returns the route for the count link
      */
-    public mixed $route;
+    public mixed $route = null;
 
     /**
      * @var array {@see Formatter::$numberFormatterOptions}

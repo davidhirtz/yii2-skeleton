@@ -5,17 +5,13 @@ namespace davidhirtz\yii2\skeleton\validators;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use Yii;
 
-/**
- * Class UniqueValidator
- * @package davidhirtz\yii2\skeleton\validators
- */
 class UniqueValidator extends \yii\validators\UniqueValidator
 {
     /**
      * Extends the default `unique` validator by adding a default `when` check, that prevents database queries when
      * the attributes haven't changed.
      */
-    public function init()
+    public function init(): void
     {
         if ($this->when === null) {
             $this->when = function (ActiveRecord $model, $attribute): bool {

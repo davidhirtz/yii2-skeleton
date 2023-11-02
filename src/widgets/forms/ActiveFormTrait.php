@@ -29,10 +29,10 @@ trait ActiveFormTrait
     public bool $showUnsafeAttributes = false;
 
     /**
-     * @var array|null containing the button config for the button row.
+     * @var array|string|null containing the button config for the button row.
      * @see ActiveFormTrait::renderButtons()
      */
-    public ?array $buttons = null;
+    public array|string|null $buttons = null;
 
     /**
      * @var bool whether a default submit button should be displayed.
@@ -138,11 +138,11 @@ trait ActiveFormTrait
     /**
      * Renders i18n aware hidden input field for given attribute.
      */
-    public function hiddenInputField(ActiveRecord $model, string $attribute): string
+    public function hiddenInputField(Model $model, string $attribute): string
     {
         $fields = Html::activeHiddenInput($model, $attribute);
 
-        if (in_array($attribute, $model->i18nAttributes)) {
+        if ($model instanceof ActiveRecord && in_array($attribute, $model->i18nAttributes)) {
             foreach ($this->languages as $language) {
                 $fields .= Html::activeHiddenInput($model, Yii::$app->getI18n()->getAttributeName($attribute, $language));
             }

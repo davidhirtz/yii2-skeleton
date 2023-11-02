@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\behaviors;
 use DateTime;
 use DateTimeZone;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use davidhirtz\yii2\skeleton\models\collections\TrailModelCollection;
 use davidhirtz\yii2\skeleton\models\Trail;
 use Exception;
 use ReflectionClass;
@@ -17,9 +18,6 @@ use yii\validators\BooleanValidator;
 use yii\validators\RangeValidator;
 
 /**
- * Class TrailBehavior
- * @package davidhirtz\yii2\skeleton\behaviors
- *
  * @property string $trailModelName
  * @property ActiveRecord $owner
  */
@@ -35,7 +33,8 @@ class TrailBehavior extends Behavior
     public ?string $modelClass = null;
 
     /**
-     * The excluded default attributes if the owner class does not override {@link TrailBehavior::getTrailAttributes()}
+     * @array containing the excluded default attributes if the owner class does not override
+     * {@link TrailBehavior::getTrailAttributes()}
      */
     public array $exclude = [
         'position',
@@ -50,8 +49,6 @@ class TrailBehavior extends Behavior
     public function attach($owner): void
     {
         $this->modelClass ??= $owner::class;
-        $this->sanitizeModelClass();
-
         parent::attach($owner);
     }
 
@@ -110,19 +107,6 @@ class TrailBehavior extends Behavior
         $trail = $this->createTrail();
         $trail->type = Trail::TYPE_DELETE;
         $this->insertTrail($trail);
-    }
-
-    /**
-     * Tries to find the original model class by the definition in the DI container
-     */
-    protected function sanitizeModelClass(): void
-    {
-        foreach (Yii::$container->getDefinitions() as $definition => $options) {
-            if (($options['class'] ?? null) === $this->modelClass) {
-                $this->modelClass = $definition;
-                break;
-            }
-        }
     }
 
     protected function createTrail(): Trail
@@ -192,6 +176,10 @@ class TrailBehavior extends Behavior
         return null;
     }
 
+    /**
+     * This is the fallback method to format the value based on the attribute name. It can be overridden by the owner
+     * class to provide a more detailed description of the attribute value.
+     */
     public function formatTrailAttributeValue(string $attribute, mixed $value): mixed
     {
         switch ($this->getDefaultAttributeValues()[$attribute] ?? false) {
@@ -214,11 +202,8 @@ class TrailBehavior extends Behavior
                 return $value;
         }
 
-        // Tries to find a custom method to format the attribute value
-        $method = 'formatTrailAttribute' . ucfirst(Inflector::id2camel($attribute, '_'));
-
-        if ($this->owner->hasMethod($method)) {
-            return $this->owner->{$method}($value);
+        if ($relation = $this->owner->getRelationFromForeignKey($attribute)) {
+            return TrailModelCollection::getModelByNameAndId($relation->modelClass, $value);
         }
 
         return is_array($value) ? print_r($value, true) : (string)$value;

@@ -13,17 +13,39 @@ use yii\helpers\Console;
 
 /**
  * Manages trail garbage collection
- * @package davidhirtz\yii2\skeleton\console\controllers
  */
 class TrailController extends Controller
 {
     /**
-     * Removes trail records older than the application `trailLifetime`.
+     * Updates the model classes in the trail table to the current class names based on the container definitions.
      */
-    public function actionClear()
+    public function actionUpdateModels(string $filter = '\\models\\'): void
+    {
+        $classNames = [];
+
+        foreach (Yii::$container->getDefinitions() as $definition => $options) {
+            if (!$filter || str_contains($definition, $filter)) {
+                $classNames[$definition] = $options['class'];
+            }
+        }
+
+        foreach ($classNames as $oldName => $newName) {
+            $updated = Trail::updateAll(['model' => $newName], ['model' => $oldName]);
+
+            if ($updated) {
+                $updated = Yii::$app->getFormatter()->asInteger($updated);
+                $this->stdout("Updated $updated $newName trail records" . PHP_EOL, Console::FG_GREEN);
+            }
+        }
+    }
+
+    /**
+     * Removes trail records older than the threshold defined in the module configuration.
+     */
+    public function actionClear(): void
     {
         if ($this->getTrailLifeTime() < 1) {
-            throw new InvalidConfigException("Application `trailLifetime` must be set");
+            throw new InvalidConfigException('Application `trailLifetime` must be set');
         }
 
         $threshold = (string)(new DateTime())->setTimestamp(time() - $this->getTrailLifeTime());
@@ -49,7 +71,8 @@ class TrailController extends Controller
                 $deletedCount = Trail::deleteAll(['id' => $ids]);
                 $totalCount += $deletedCount;
 
-                $this->stdout(("Deleting records ... (" . Yii::$app->getFormatter()->asInteger($totalCount) . ")\r"));
+                $count = Yii::$app->getFormatter()->asInteger($totalCount);
+                $this->stdout("Deleting records ... ($count)\n");
 
                 if ($deletedCount == count($rows)) {
                     sleep(1);
@@ -60,7 +83,7 @@ class TrailController extends Controller
             break;
         }
 
-        $this->stdout(($totalCount ? "Deleted {$totalCount} expired trail records" : 'No expired trail records found') . PHP_EOL, Console::FG_GREEN);
+        $this->stdout(($totalCount ? "Deleted $totalCount expired trail records" : 'No expired trail records found') . PHP_EOL, Console::FG_GREEN);
 
         if ($totalCount) {
             $this->actionOptimize();
@@ -70,9 +93,9 @@ class TrailController extends Controller
     /**
      * Optimizes the trail table.
      */
-    public function actionOptimize()
+    public function actionOptimize(): void
     {
-        $this->stdout("Optimizing trail table ... ");
+        $this->stdout('Optimizing trail table ... ');
         $start = microtime(true);
 
         try {
@@ -84,10 +107,7 @@ class TrailController extends Controller
         }
     }
 
-    /**
-     * @return int|null
-     */
-    protected function getTrailLifeTime()
+    protected function getTrailLifeTime(): ?int
     {
         /** @var Module $module */
         $module = Yii::$app->getModule('admin');
