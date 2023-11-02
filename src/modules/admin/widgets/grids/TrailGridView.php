@@ -13,6 +13,7 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\TypeGridViewTrai
 use davidhirtz\yii2\timeago\TimeagoColumn;
 use Jfcherng\Diff\DiffHelper;
 use Yii;
+use yii\base\Model;
 use yii\db\ActiveRecordInterface;
 use yii\helpers\Url;
 
@@ -294,7 +295,7 @@ class TrailGridView extends GridView
      * Wraps behavior method and makes sure value is cast to string to prevent {@link \Jfcherng\Diff\Differ} to throw
      * errors.
      */
-    protected function formatTrailAttributeValue(ActiveRecordInterface $model, string $attribute, mixed $value): mixed
+    protected function formatTrailAttributeValue(Model $model, string $attribute, mixed $value): mixed
     {
         /** @var TrailBehavior $model */
         return $model->formatTrailAttributeValue($attribute, $value);

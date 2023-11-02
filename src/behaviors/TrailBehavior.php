@@ -12,6 +12,7 @@ use Exception;
 use ReflectionClass;
 use Yii;
 use yii\base\Behavior;
+use yii\base\Model;
 use yii\db\AfterSaveEvent;
 use yii\helpers\Inflector;
 use yii\validators\BooleanValidator;
@@ -19,7 +20,7 @@ use yii\validators\RangeValidator;
 
 /**
  * @property string $trailModelName
- * @property ActiveRecord $owner
+ * @property Model $owner
  */
 class TrailBehavior extends Behavior
 {
@@ -202,8 +203,10 @@ class TrailBehavior extends Behavior
                 return $value;
         }
 
-        if ($relation = $this->owner->getRelationFromForeignKey($attribute)) {
-            return TrailModelCollection::getModelByNameAndId($relation->modelClass, $value);
+        if ($this->owner instanceof ActiveRecord) {
+            if ($relation = $this->owner->getRelationFromForeignKey($attribute)) {
+                return TrailModelCollection::getModelByNameAndId($relation->modelClass, $value);
+            }
         }
 
         return is_array($value) ? print_r($value, true) : (string)$value;

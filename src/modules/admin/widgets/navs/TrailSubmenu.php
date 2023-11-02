@@ -54,7 +54,7 @@ class TrailSubmenu extends Submenu
         }
 
         if ($model = $this->getTrailModel()) {
-            $view->setBreadcrumb($model->getTrailModelType());
+            $view->setBreadcrumb($model->getTrailModelName());
         }
     }
 

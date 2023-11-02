@@ -13,6 +13,7 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\db\ActiveRecordInterface;
+use yii\grid\CheckboxColumn;
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 use yii\helpers\Url;
@@ -93,7 +94,7 @@ class GridView extends \yii\grid\GridView
      * @var array containing the selection form html options
      */
     public array $selectionColumn = [
-        'class' => 'yii\grid\CheckboxColumn'
+        'class' => CheckboxColumn::class,
     ];
 
     private ?ActiveRecordInterface $_model = null;

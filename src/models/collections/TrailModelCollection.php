@@ -18,17 +18,13 @@ class TrailModelCollection
      */
     public static function getModelByNameAndId(string $modelName, int|string|null $modelId): ?Model
     {
-        if (!$modelId) {
-            return null;
-        }
-
         $modelName = explode('::', $modelName);
         $language = $modelName[1] ?? Yii::$app->language;
 
         return Yii::$app->getI18n()->callback($language, function () use ($modelName, $modelId) {
             $instance = Yii::createObject($modelName[0]);
 
-            if ($instance instanceof ActiveRecord) {
+            if ($instance instanceof ActiveRecord && $modelId) {
                 $values = explode('-', $modelId);
                 $keys = count($instance::primaryKey()) == count($values) ? array_combine($instance::primaryKey(), $values) : null;
 
