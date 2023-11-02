@@ -227,12 +227,17 @@ class Trail extends ActiveRecord
         return $trail;
     }
 
-    public static function getAdminRouteByModel(?ActiveRecord $model, int|string|null $id = null): array
+    public static function getAdminRouteByModel(?Model $model, int|string|null $id = null): array
     {
         if ($model) {
             /** @var TrailBehavior $behavior */
             $behavior = $model->getBehavior('TrailBehavior');
-            $model = implode('@', array_filter([$behavior->modelClass, $id ?: implode('-', $model->getPrimaryKey(true))]));
+
+            if ($model instanceof ActiveRecord) {
+                $id ??= implode('-', $model->getPrimaryKey(true));
+            }
+
+            $model = implode('@', array_filter([$behavior->modelClass, $id]));
         }
 
         return ['/admin/trail/index', 'model' => $model];
