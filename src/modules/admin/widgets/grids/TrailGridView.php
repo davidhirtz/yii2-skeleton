@@ -8,7 +8,6 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\TrailActiveDataProvider;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\MessageSourceTrait;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\TypeGridViewTrait;
 use davidhirtz\yii2\timeago\TimeagoColumn;
@@ -129,13 +128,22 @@ class TrailGridView extends GridView
                 if ($value = $this->formatTrailAttributeValue($model, $attribute, $value)) {
                     $rows[] = [
                         $model->getAttributeLabel($attribute),
-                        is_array($value) ? Html::ul($value, ['class' => 'list-unstyled']) : Html::encode($value),
+                        $this->renderCreatedAttributeValue($value),
                     ];
                 }
             }
         }
 
         return $this->renderTrailAttributes($rows, ['class' => 'trail-insert']);
+    }
+
+    protected function renderCreatedAttributeValue(mixed $value): string
+    {
+        if ($value instanceof ActiveRecord) {
+            return $this->renderTrailActiveRecordAttribute($value);
+        }
+
+        return is_array($value) ? Html::ul($value, ['class' => 'list-unstyled']) : Html::encode($value);
     }
 
     protected function renderUpdateAttributesContent(Trail $trail): string
@@ -151,17 +159,47 @@ class TrailGridView extends GridView
                 if ($oldValue !== $newValue) {
                     $rows[] = [
                         $model->getAttributeLabel($attribute),
-                        DiffHelper::calculate($oldValue, $newValue, 'SideBySide', [], [
-                            'showHeader' => false,
-                            'lineNumbers' => false,
-                        ]),
+                        $this->renderUpdatedAttributeValues($oldValue, $newValue),
                     ];
                 }
             }
         }
 
-
         return $this->renderTrailAttributes($rows, ['class' => 'trail-update']);
+    }
+
+    protected function renderUpdatedAttributeValues(mixed $oldValue, mixed $newValue): string
+    {
+        if ($oldValue instanceof ActiveRecord || $newValue instanceof ActiveRecord) {
+            $cells = [
+                Html::tag('td', $this->renderTrailActiveRecordAttribute($oldValue), ['class' => 'old']),
+                Html::tag('td', $this->renderTrailActiveRecordAttribute($newValue), ['class' => 'new']),
+            ];
+
+            $content = Html::tag('tr', implode('', $cells));
+            $content = Html::tag('tbody', $content, ['class' => 'change change-rep']);
+
+            return Html::tag('table', $content, ['class' => 'diff-wrapper diff diff-html diff-side-by-side']);
+        }
+
+        return DiffHelper::calculate($oldValue, $newValue, 'SideBySide', [], [
+            'showHeader' => false,
+            'lineNumbers' => false,
+        ]);
+    }
+
+    protected function renderTrailActiveRecordAttribute(?ActiveRecord $model): string
+    {
+        if (!$model) {
+            return '';
+        }
+
+        /** @var ActiveRecord|TrailBehavior $model */
+        $name = $model->getBehavior('TrailBehavior')
+            ? $model->getTrailModelName()
+            : $model->getPrimaryKey();
+
+        return Html::a($name, Trail::getAdminRouteByModel($model), ['class' => 'strong']);
     }
 
     protected function renderTrailAttributes(array $rows, array $options = []): string
@@ -256,10 +294,10 @@ class TrailGridView extends GridView
      * Wraps behavior method and makes sure value is cast to string to prevent {@link \Jfcherng\Diff\Differ} to throw
      * errors.
      */
-    protected function formatTrailAttributeValue(ActiveRecordInterface $model, string $attribute, mixed $value): array|string
+    protected function formatTrailAttributeValue(ActiveRecordInterface $model, string $attribute, mixed $value): mixed
     {
         /** @var TrailBehavior $model */
-        return (string)$model->formatTrailAttributeValue($attribute, $value);
+        return $model->formatTrailAttributeValue($attribute, $value);
     }
 
     protected function getRoute(ActiveRecordInterface $model, array $params = []): array|false

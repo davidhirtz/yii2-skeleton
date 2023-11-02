@@ -224,10 +224,7 @@ class Trail extends ActiveRecord
 
     public static function getModelByTrail(string $model, string|int $modelId): ?ActiveRecord
     {
-        if (!isset(static::$_modelClasses[$model][$modelId])) {
-            static::$_modelClasses[$model][$modelId] = $model ? static::findModelById($model, $modelId) : null;
-        }
-
+        static::$_modelClasses[$model][$modelId] ??= $model ? static::findModelById($model, $modelId) : null;
         return static::$_modelClasses[$model][$modelId];
     }
 
@@ -245,9 +242,9 @@ class Trail extends ActiveRecord
 
             if ($instance instanceof ActiveRecord) {
                 // Prevent PHP warnings if record has a primary key mismatch
-                if ($keys = @array_combine($instance::primaryKey(), explode('-', $modelId))) {
-                    $instance = $instance::findOne($keys) ?? $instance;
-                }
+                $values = explode('-', $modelId);
+                $keys = count($instance::primaryKey()) == count($values) ? array_combine($instance::primaryKey(), $values) : null;
+                $instance = $instance::findOne($keys) ?? $instance;
             }
 
             return $instance;

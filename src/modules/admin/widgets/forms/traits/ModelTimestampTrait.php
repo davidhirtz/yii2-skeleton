@@ -7,10 +7,6 @@ use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\timeago\Timeago;
 use Yii;
 
-/**
- * Class ModelTimestampTrait
- * @package davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits
- */
 trait ModelTimestampTrait
 {
     /**

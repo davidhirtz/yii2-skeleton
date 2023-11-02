@@ -128,6 +128,7 @@ class Html extends BaseHtml
         return $params ? strtr($js, $params) : $js;
     }
 
+    /** @noinspection PhpUnused */
     public static function nl2br(string $text): string
     {
         return nl2br($text, false);

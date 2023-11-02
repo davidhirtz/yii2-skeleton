@@ -58,30 +58,32 @@ class TrailBehavior extends Behavior
     public function events(): array
     {
         return [
-            ActiveRecord::EVENT_AFTER_INSERT => 'afterInsert',
-            ActiveRecord::EVENT_AFTER_UPDATE => 'afterUpdate',
-            ActiveRecord::EVENT_AFTER_DELETE => 'afterDelete',
+            ActiveRecord::EVENT_AFTER_INSERT => $this->onAfterInsert(...),
+            ActiveRecord::EVENT_AFTER_UPDATE => $this->onAfterUpdate(...),
+            ActiveRecord::EVENT_AFTER_DELETE => $this->onAfterDelete(...),
         ];
     }
 
-    /** @noinspection PhpUnused */
-    public function afterInsert(AfterSaveEvent $event): void
+    public function onAfterInsert(AfterSaveEvent $event): void
     {
-        $this->afterSave(true, $event->changedAttributes);
+        $this->onAfterSave(true, $event->changedAttributes);
     }
 
-    /** @noinspection PhpUnused */
-    public function afterUpdate(AfterSaveEvent $event): void
+    public function onAfterUpdate(AfterSaveEvent $event): void
     {
-        $this->afterSave(false, $event->changedAttributes);
+        $this->onAfterSave(false, $event->changedAttributes);
     }
 
-    protected function afterSave($insert, $changedAttributes): void
+    protected function onAfterSave($insert, $changedAttributes): void
     {
-        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
-        $attributes = $this->owner->getTrailAttributes();
-        $attributeNames = $attributes ? array_intersect($attributes, array_keys($changedAttributes)) : array_keys($changedAttributes);
+        /** @var static $behavior */
+        $behavior = $this->owner;
         $data = [];
+
+        $attributes = $behavior->getTrailAttributes();
+        $attributeNames = $attributes
+            ? array_intersect($attributes, array_keys($changedAttributes))
+            : array_keys($changedAttributes);
 
         foreach ($attributeNames as $attributeName) {
             if ($insert) {
@@ -103,7 +105,7 @@ class TrailBehavior extends Behavior
         }
     }
 
-    public function afterDelete(): void
+    public function onAfterDelete(): void
     {
         $trail = $this->createTrail();
         $trail->type = Trail::TYPE_DELETE;
@@ -116,7 +118,7 @@ class TrailBehavior extends Behavior
     protected function sanitizeModelClass(): void
     {
         foreach (Yii::$container->getDefinitions() as $definition => $options) {
-            if ($options['class'] ?? null === $this->modelClass) {
+            if (($options['class'] ?? null) === $this->modelClass) {
                 $this->modelClass = $definition;
                 break;
             }
@@ -190,7 +192,7 @@ class TrailBehavior extends Behavior
         return null;
     }
 
-    public function formatTrailAttributeValue(string $attribute, mixed $value): string
+    public function formatTrailAttributeValue(string $attribute, mixed $value): mixed
     {
         switch ($this->getDefaultAttributeValues()[$attribute] ?? false) {
             case static::VALUE_TYPE_BOOLEAN:
@@ -210,6 +212,13 @@ class TrailBehavior extends Behavior
                 }
 
                 return $value;
+        }
+
+        // Tries to find a custom method to format the attribute value
+        $method = 'formatTrailAttribute' . ucfirst(Inflector::id2camel($attribute, '_'));
+
+        if ($this->owner->hasMethod($method)) {
+            return $this->owner->{$method}($value);
         }
 
         return is_array($value) ? print_r($value, true) : (string)$value;
@@ -242,7 +251,7 @@ class TrailBehavior extends Behavior
 
             if ($this->owner instanceof ActiveRecord) {
                 $schema = Yii::$app->getDb()->getSchema();
-                $columns = $schema->getTableSchema($className::tableName())->columns;
+                $columns = $schema->getTableSchema($this->owner::tableName())->columns;
 
                 foreach ($columns as $column) {
                     if (in_array($column->dbType, [$schema::TYPE_DATE, $schema::TYPE_DATETIME, $schema::TYPE_TIMESTAMP])) {
