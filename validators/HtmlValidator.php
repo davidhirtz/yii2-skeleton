@@ -215,7 +215,7 @@ class HtmlValidator extends Validator
         // Clean breaks.
         $html = preg_replace("#(?<!<br>)\s*\n#", "<br>\n", $html);
         $html = preg_replace('#(</?' . $blocks . '[^>]*>)\s*<br>#', '$1', $html);
-        $html = preg_replace('#<br>(\s*</?(?:div|dd|dl|dt|li|ol|p|pre|table|tbody|td|th|ul)[^>]*>)#', '$1', $html);
+        $html = preg_replace('#<br>(\s*</?(?:div|dd|dl|dt|li|ol|p|pre|table|tbody|td|th|tr|ul)[^>]*>)#', '$1', $html);
 
         // Remove empty elements at the beginning and end of paragraphs.
         $html = preg_replace("#\n*\s*<p>\n*\s*#", "\n<p>", $html);
