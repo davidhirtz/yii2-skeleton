@@ -188,7 +188,7 @@ trait ActiveFormTrait
         }
 
         if (($fieldConfig[0] ?? null) === 'hidden') {
-            return $this->hiddenInputField($this->model, $attribute);
+            return Html::activeHiddenInput($this->model, $attribute);
         }
 
         $options = isset($fieldConfig[0]) && is_array($fieldConfig[0]) ? array_shift($fieldConfig) : [];
