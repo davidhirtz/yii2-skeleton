@@ -75,10 +75,10 @@ class TinyMceEditor extends InputWidget
     public array $toolbar = [];
 
     /**
-     * @var array|class-string|HtmlValidator|false containing the validator configuration. If set to false, no
+     * @var array|class-string|HtmlValidator|null containing the validator configuration. If set to false, no
      * validation will be performed.
      */
-    public $validator = HtmlValidator::class;
+    public mixed $validator = HtmlValidator::class;
 
     public function init(): void
     {
@@ -135,6 +135,8 @@ class TinyMceEditor extends InputWidget
         $this->clientOptions['paste_block_drop'] ??= false;
         $this->clientOptions['height'] ??= $this->height;
         $this->clientOptions['highlight_on_focus'] ??= true;
+        $this->clientOptions['object_resizing'] ??= false;
+        $this->clientOptions['convert_urls'] ??= false;
 
         if ($this->language !== Yii::$app->sourceLanguage) {
             $this->clientOptions['language'] ??= match ($this->language) {
