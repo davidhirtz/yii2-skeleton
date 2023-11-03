@@ -10,7 +10,6 @@ use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\db\TypeAttributeTrait;
 use davidhirtz\yii2\skeleton\models\traits\UpdatedByUserTrait;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\RedirectActiveForm;
 use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
 use Yii;
 
@@ -19,7 +18,7 @@ use Yii;
  * @property int $type
  * @property string $request_uri
  * @property string $url
- * @property int $updated_by_user_id
+ * @property int|null $updated_by_user_id
  * @property DateTime $updated_at
  * @property DateTime $created_at
  */
@@ -28,16 +27,10 @@ class Redirect extends ActiveRecord
     use TypeAttributeTrait;
     use UpdatedByUserTrait;
 
-    /**
-     * Types.
-     */
     public const TYPE_DEFAULT = self::TYPE_MOVED_PERMANENTLY;
     public const TYPE_MOVED_PERMANENTLY = 301;
     public const TYPE_FOUND = 302;
 
-    /**
-     * @inheritDoc
-     */
     public function behaviors(): array
     {
         return array_merge(parent::behaviors(), [
@@ -46,9 +39,6 @@ class Redirect extends ActiveRecord
         ]);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function rules(): array
     {
         return array_merge(parent::rules(), [
@@ -77,9 +67,6 @@ class Redirect extends ActiveRecord
         ]);
     }
 
-    /**
-     * @return bool
-     */
     public function beforeValidate(): bool
     {
         if ($this->type === null) {
@@ -121,14 +108,6 @@ class Redirect extends ActiveRecord
     public function getTrailModelAdminRoute(): array|false
     {
         return $this->getAdminRoute();
-    }
-
-    /**
-     * @return class-string
-     */
-    public function getActiveForm(): string
-    {
-        return RedirectActiveForm::class;
     }
 
     public function getAdminRoute(): array|false

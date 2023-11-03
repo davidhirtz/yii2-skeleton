@@ -11,6 +11,8 @@
   to `davidhirtz\yii2\skeleton\admin\widgets\grids\traits`
 - `TrailGridView` now tries to automatically load related models
 - Added `IdentityActiveForm` for a better separation of admin and user forms
+- Removed `Redirect::getActiveForm()`, to override the active form use Yii's dependency injection
+  container
 
 ## 1.9.3  (Nov 3, 2023)
 
