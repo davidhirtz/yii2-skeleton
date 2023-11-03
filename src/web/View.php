@@ -63,9 +63,11 @@ class View extends \yii\web\View
         }
     }
 
-    public function setBreadcrumb(string $label, array|string $url = null): void
+    public function setBreadcrumb(?string $label, array|string $url = null): void
     {
-        $this->_breadcrumbs[] = ['label' => $label, 'url' => $url];
+        if ($label) {
+            $this->_breadcrumbs[] = ['label' => $label, 'url' => $url];
+        }
     }
 
     /**

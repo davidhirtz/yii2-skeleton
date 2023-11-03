@@ -102,17 +102,6 @@ class GridView extends \yii\grid\GridView
 
     public function init(): void
     {
-        foreach ($this->columns as &$column) {
-            if (is_string($column)) {
-                $methodName = lcfirst(Inflector::camelize($column)) . 'Column';
-                if (method_exists($this, $methodName)) {
-                    $column = call_user_func([$this, $methodName]);
-                }
-            }
-        }
-
-        $this->columns = array_filter($this->columns);
-
         if ($this->showSelection) {
             array_unshift($this->columns, $this->selectionColumn);
             $this->getView()->registerJs('Skeleton.initSelection("#' . $this->getSelectionFormId() . '")');
@@ -122,13 +111,27 @@ class GridView extends \yii\grid\GridView
             $this->rowOptions = fn($record) => $record instanceof ActiveRecord ? ['id' => $this->getRowId($record)] : [];
         }
 
-        if ($this->selectionButtonLabel === null) {
-            $this->selectionButtonLabel = Yii::t('skeleton', 'Update Selected');
-        }
-
+        $this->selectionButtonLabel ??= Yii::t('skeleton', 'Update Selected');
         $this->tableOptions['id'] ??= $this->getTableId();
 
         parent::init();
+    }
+
+    protected function initColumns(): void
+    {
+        foreach ($this->columns as &$column) {
+            if (is_string($column)) {
+                $methodName = lcfirst(Inflector::camelize($column)) . 'Column';
+
+                if (method_exists($this, $methodName)) {
+                    $column = call_user_func([$this, $methodName]);
+                }
+            }
+        }
+
+        $this->columns = array_filter($this->columns);
+
+        parent::initColumns();
     }
 
     public function renderItems(): string
@@ -277,7 +280,7 @@ class GridView extends \yii\grid\GridView
         }
 
         if ($this->search === null) {
-            $this->search = ($search = Yii::$app->getRequest()->get($this->searchParamName)) ? trim((string) $search) : null;
+            $this->search = ($search = Yii::$app->getRequest()->get($this->searchParamName)) ? trim((string)$search) : null;
         }
 
         $options = [

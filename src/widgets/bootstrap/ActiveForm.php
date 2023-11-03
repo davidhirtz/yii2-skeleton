@@ -5,9 +5,6 @@ namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveFormTrait;
 
 /**
- * Class ActiveForm.
- * @package davidhirtz\yii2\skeleton\widgets\bootstrap
- *
  * @method static ActiveForm begin($config = [])
  * @method ActiveField field($model, $attribute, $options = [])
  */
@@ -15,9 +12,6 @@ class ActiveForm extends \yii\bootstrap4\ActiveForm
 {
     use ActiveFormTrait;
 
-    /**
-     * @inheritdoc
-     */
     public $fieldConfig = [
         'horizontalCssClasses' => [
             'wrapper' => 'col-md-8',
@@ -27,18 +21,7 @@ class ActiveForm extends \yii\bootstrap4\ActiveForm
         ],
     ];
 
-    /**
-     * @inheritdoc
-     */
     public $layout = 'horizontal';
-
-    /**
-     * @var string
-     */
-    public $fieldClass = 'davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveField';
-
-    /**
-     * @inheritdoc
-     */
+    public $fieldClass = ActiveField::class;
     public $validationStateOn = self::VALIDATION_STATE_ON_CONTAINER;
 }

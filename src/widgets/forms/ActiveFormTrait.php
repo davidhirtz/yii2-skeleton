@@ -3,23 +3,21 @@
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveField;
 use Yii;
 use yii\base\Model;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
+use yii\widgets\ActiveField;
 
-/**
- * @method ActiveField field($model, $attribute, $options = [])
- */
 trait ActiveFormTrait
 {
     public ?Model $model = null;
 
     /**
-     * @var array|null containing a list of fields that will be auto-generated.
-     * @see ActiveFormTrait::renderFields()
+     * @var array|null containing a list of fields that will be auto-generated. This can either be a plain list of
+     * attribute names, a list of field configurations, a callback or a combination of those.
      */
     public ?array $fields = null;
 
@@ -51,20 +49,18 @@ trait ActiveFormTrait
     public ?array $languages = null;
 
     /**
-     * @var array|null containing a custom list of attribute names used for i18n-aware attributes.
-     * Leave empty to use default 18n attribute.
+     * @var array|null containing a custom list of attribute names used for i18n-aware attributes. Defaults to the
+     * model's i18nAttributes.
      */
     public ?array $i18nAttributes = null;
 
     public function init(): void
     {
         if ($this->model) {
-            if ($this->i18nAttributes === null) {
-                $this->i18nAttributes = $this->model instanceof ActiveRecord ? $this->model->i18nAttributes : [];
-            }
+            $this->i18nAttributes ??= $this->model instanceof ActiveRecord ? $this->model->i18nAttributes : [];
 
-            if ($this->languages === null && $this->i18nAttributes) {
-                $this->languages = Yii::$app->getI18n()->getLanguages();
+            if ($this->i18nAttributes) {
+                $this->languages ??= Yii::$app->getI18n()->getLanguages();
             }
 
             if (!$this->getId(false)) {
@@ -87,108 +83,97 @@ trait ActiveFormTrait
         return parent::run();
     }
 
-    /**
-     * Renders the configured form fields.
-     */
     public function renderFields(): void
     {
         if ($this->fields) {
-            $safeAttributes = $this->model->safeAttributes();
+            foreach ($this->fields as $form) {
+                $attribute = null;
 
-            foreach ($this->fields as $fieldConfig) {
-                if ($fieldConfig instanceof \yii\widgets\ActiveField) {
-                    if ($this->showUnsafeAttributes || in_array($fieldConfig->attribute, $safeAttributes)) {
-                        echo $fieldConfig;
+                if (is_callable($form)) {
+                    continue;
+                }
+
+                if (is_string($form)) {
+                    $form = [$form];
+                }
+
+                if (is_array($form)) {
+                    $attribute = array_shift($form);
+                }
+
+//                if ($form instanceof ActiveField) {
+//                    $attribute = $form->attribute;
+//                }
+
+                if (!$attribute) {
+                    continue;
+                }
+
+                if ($attribute == '-') {
+                    echo $this->horizontalLine();
+                    continue;
+                }
+
+                if (!$this->showUnsafeAttributes && !in_array($attribute, $this->model->safeAttributes())) {
+                    Yii::warning("Skipping unsafe attribute '$attribute'.", __METHOD__);
+                    continue;
+                }
+
+                if (is_array($form)) {
+                    $isVisible = !empty($form[0])
+                        ? ArrayHelper::remove($form[0], 'visible', true)
+                        : ArrayHelper::remove($form, 'visible', true);
+
+                    if (!$isVisible) {
                         continue;
                     }
                 }
 
-                $fieldConfig = (array)$fieldConfig;
-                $attribute = array_shift($fieldConfig);
+//                if (!($form instanceof ActiveField || ($form->parts['{input}'] ?? false))) {
+//                    continue;
+//                }
 
-                if ($attribute) {
-                    if (isset($fieldConfig[0]['visible'])) {
-                        if ($fieldConfig[0]['visible'] === false) {
-                            continue;
-                        }
+                $i18nAttributes = method_exists($this->model, 'getI18nAttributesNames')
+                    ? $this->model->getI18nAttributesNames($attribute)
+                    : [$attribute];
 
-                        unset($fieldConfig[0]['visible']);
-                    }
-
-                    if ($attribute == '-') {
-                        echo $this->horizontalLine();
-                        continue;
-                    }
-
-                    if ($this->showUnsafeAttributes || in_array($attribute, $safeAttributes)) {
-                        if (in_array($attribute, $this->i18nAttributes)) {
-                            foreach ($this->languages as $language) {
-                                $fieldConfig['options']['language'] = $language;
-                                echo $this->getAutogeneratedField($attribute, $fieldConfig);
-                            }
-                        } else {
-                            echo $this->getAutogeneratedField($attribute, $fieldConfig);
-                        }
-                    }
+                foreach ($i18nAttributes as $i18nAttribute) {
+                    $form['options']['attribute'] = $i18nAttribute;
+                    echo $this->createFieldInternal($attribute, $form);
                 }
             }
         }
     }
 
-    /**
-     * Renders i18n aware hidden input field for given attribute.
-     */
-    public function hiddenInputField(Model $model, string $attribute): string
+    protected function createFieldInternal(string $attribute, ?array $options): ActiveField|string
     {
-        $fields = Html::activeHiddenInput($model, $attribute);
+        $methodName = lcfirst(Inflector::camelize($attribute)) . 'Field';
 
-        if ($model instanceof ActiveRecord && in_array($attribute, $model->i18nAttributes)) {
-            foreach ($this->languages as $language) {
-                $fields .= Html::activeHiddenInput($model, Yii::$app->getI18n()->getAttributeName($attribute, $language));
-            }
+        if ($this->hasMethod($methodName)) {
+            return call_user_func_array([$this, $methodName], array_filter($options));
         }
 
-        return $fields;
-    }
+        $fieldOptions = isset($options[0]) && is_array($options[0]) ? array_shift($options) : [];
+        $type = isset($options[0]) ? array_shift($options) : 'text';
 
-    protected function getAutogeneratedField(string $attribute, array $fieldConfig = []): ActiveField|string
-    {
-        // Try to render field with custom method if the first field config is not a string or custom method.
-        if (is_array($fieldConfig[0] ?? [])) {
-            $methodName = lcfirst(Inflector::camelize($attribute)) . 'Field';
-
-            if ($this->hasMethod($methodName)) {
-                return call_user_func_array([$this, $methodName], array_filter($fieldConfig));
-            }
+        if ($type === 'hidden') {
+            $type = 'hiddenInput';
         }
 
-        if (isset($fieldConfig['options']['language'])) {
-            $attribute = Yii::$app->getI18n()->getAttributeName($attribute, $fieldConfig['options']['language']);
-            unset($fieldConfig['options']['language']);
-        }
-
-        if (($fieldConfig[0] ?? null) === 'hidden') {
-            return $this->hiddenInputField($this->model, $attribute);
-        }
-
-        $options = isset($fieldConfig[0]) && is_array($fieldConfig[0]) ? array_shift($fieldConfig) : [];
-        $type = isset($fieldConfig[0]) ? array_shift($fieldConfig) : 'text';
-
-        $field = $this->field($this->model, $attribute, $options);
-        $inputOptions = $fieldConfig[0] ?? [];
+        $field = $this->field($this->model, $attribute, $fieldOptions);
+        $inputOptions = $options[0] ?? [];
 
         if (in_array($type, ['email', 'number', 'password', 'text'])) {
             $field->input($type, $inputOptions);
         } elseif (method_exists($field, $type)) {
-            call_user_func_array([$field, $type], $fieldConfig);
+            call_user_func_array([$field, $type], $options);
         } elseif (method_exists($this, $type)) {
-            call_user_func_array([$this, $type], $fieldConfig);
+            call_user_func_array([$this, $type], $options);
         } else {
             $field->widget($type, $inputOptions);
         }
 
-        // This hides empty dropdowns, etc.
-        return $field->parts['{input}'] ? $field : '';
+        return $field;
     }
 
     public function renderButtons(): void
@@ -242,6 +227,12 @@ trait ActiveFormTrait
 
         Html::addCssClass($options, ['btn', 'btn-submit']);
         return Html::button($label, $options);
+    }
+
+    public function field($model, $attribute, $options = []): ActiveField
+    {
+        $attribute = ArrayHelper::remove($options, 'attribute', $attribute);
+        return parent::field($model, $attribute, $options);
     }
 
     public function label(string $content, array $options = []): string

@@ -19,7 +19,9 @@ trait ContentFieldTrait
 
             $field = $this->field($this->model, $attribute, $options);
 
-            return $this->model->contentType === 'html' ? $field->widget(TinyMceEditor::class, $this->getContentConfig()) : $field->textarea();
+            return $this->model->contentType === 'html'
+                ? $field->widget(TinyMceEditor::class, $this->getContentConfig())
+                : $field->textarea();
         }
 
         return '';

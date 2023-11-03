@@ -106,9 +106,6 @@ class TinyMceEditor extends InputWidget
         parent::init();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function run(): void
     {
         if ($this->hasModel()) {
