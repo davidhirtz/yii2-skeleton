@@ -25,26 +25,24 @@ class UserActiveForm extends ActiveForm
 
     public function init(): void
     {
-        if (!$this->fields) {
-            $this->fields = [
-                'status',
-                'name',
-                ['email', 'email'],
-                ['newPassword', 'password'],
-                'repeatPassword',
-                'oldPassword',
-                '-',
-                'language',
-                'timezone',
-                'upload',
-                '-',
-                'first_name',
-                'last_name',
-                'city',
-                'country',
-                'sendEmail',
-            ];
-        }
+        $this->fields ??= [
+            'status',
+            'name',
+            ['email', 'email'],
+            ['newPassword', 'password'],
+            'repeatPassword',
+            ['oldPassword', 'visible' => $this->model instanceof \davidhirtz\yii2\skeleton\models\forms\UserForm],
+            '-',
+            'language',
+            'timezone',
+            'upload',
+            '-',
+            'first_name',
+            'last_name',
+            'city',
+            'country',
+            'sendEmail',
+        ];
 
         parent::init();
     }

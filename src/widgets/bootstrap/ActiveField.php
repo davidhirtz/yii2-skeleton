@@ -54,10 +54,10 @@ class ActiveField extends \yii\bootstrap4\ActiveField
         return parent::fileInput($options);
     }
 
-    public function dropdownList($items, $options = []): static
+    public function dropDownList($items, $options = []): static
     {
         if ($items || $this->model->isAttributeRequired($this->attribute)) {
-            return parent::dropdownList($items, $options);
+            return parent::dropDownList($items, $options);
         }
 
         // Don't render an empty dropdown list.

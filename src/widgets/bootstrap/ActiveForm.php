@@ -4,10 +4,6 @@ namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveFormTrait;
 
-/**
- * @method static ActiveForm begin($config = [])
- * @method ActiveField field($model, $attribute, $options = [])
- */
 class ActiveForm extends \yii\bootstrap4\ActiveForm
 {
     use ActiveFormTrait;
