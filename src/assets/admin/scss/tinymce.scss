@@ -35,6 +35,7 @@ h1, h2, h3, h4, h5, h6 {
 
 table {
   border-collapse: collapse;
+  min-width: 100%;
 }
 
 /* Apply a default padding if legacy cellpadding attribute is missing */

@@ -78,12 +78,12 @@ class TinyMceEditor extends InputWidget
      * @var array|class-string|HtmlValidator|null containing the validator configuration. If set to false, no
      * validation will be performed.
      */
-    public mixed $validator = HtmlValidator::class;
+    public array|HtmlValidator|string|null $validator = HtmlValidator::class;
 
     public function init(): void
     {
-        if ($this->validator && !$this->validator instanceof HtmlValidator) {
-            $this->validator = Yii::createObject($this->validator);
+        if (!$this->validator instanceof HtmlValidator) {
+            $this->validator = $this->validator ? Yii::createObject($this->validator) : null;
         }
 
         if (!$this->language) {
