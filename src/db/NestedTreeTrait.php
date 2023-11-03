@@ -327,7 +327,7 @@ trait NestedTreeTrait
      *
      * @return array()
      */
-    private static function rebuildNestedTreeBranch(array $branch, int &$lft, int $parentId): array
+    private static function rebuildNestedTreeBranch(array $branch, int &$lft, ?int $parentId): array
     {
         $tree = [];
 
