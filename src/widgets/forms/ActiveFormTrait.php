@@ -186,12 +186,6 @@ trait ActiveFormTrait
             return $field->input($type, $options);
         }
 
-        Yii::debug($type);
-
-        if ($type instanceof ActiveField) {
-            dump('YOOOO', 1);
-        }
-
         $owner = method_exists($field, $type) ? $field : (method_exists($this, $type) ? $this : null);
 
         if ($owner) {
