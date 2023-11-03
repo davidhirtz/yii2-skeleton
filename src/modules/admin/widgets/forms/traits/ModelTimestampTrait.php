@@ -9,9 +9,18 @@ use Yii;
 
 trait ModelTimestampTrait
 {
-    /**
-     * @return array
-     */
+    public function renderFooter(): void
+    {
+        if ($items = array_filter($this->getFooterItems())) {
+            echo $this->listRow($items);
+        }
+    }
+
+    protected function getFooterItems(): array
+    {
+        return $this->getTimestampItems();
+    }
+
     protected function getTimestampItems(): array
     {
         if (!$this->model->getIsNewRecord()) {

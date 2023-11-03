@@ -1,14 +1,17 @@
 <?php
 /**
- * Create user form.
- * @see davidhirtz\yii2\skeleton\modules\admin\controllers\UserController::actionCreate()
+ * Create a user.
+ * @see UserController::actionCreate()
  *
- * @var \davidhirtz\yii2\skeleton\web\View $this
- * @var \davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm $user
+ * @var View $this
+ * @var UserForm $user
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
+use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
+use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu;
 

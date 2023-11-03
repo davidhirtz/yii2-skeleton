@@ -15,7 +15,7 @@ use davidhirtz\yii2\skeleton\models\forms\GoogleAuthenticatorForm;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
 use davidhirtz\yii2\skeleton\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorActiveForm;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\AccountActiveForm;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
@@ -48,7 +48,7 @@ if ($user->isUnconfirmed()) {
 
 <?= Panel::widget([
     'title' => $this->title,
-    'content' => UserActiveForm::widget([
+    'content' => AccountActiveForm::widget([
         'model' => $user,
     ]),
 ]);

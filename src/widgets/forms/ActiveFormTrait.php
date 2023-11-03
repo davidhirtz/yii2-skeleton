@@ -89,7 +89,6 @@ trait ActiveFormTrait
     {
         if ($this->fields) {
             foreach ($this->fields as $field) {
-                // Handle callbacks, matching only first-class callables and closures, not PHP functions.
                 if (!is_string($field) && is_callable($field)) {
                     $callback = $field;
                     $field = $callback();
@@ -106,8 +105,6 @@ trait ActiveFormTrait
                         if (in_array($field->attribute, $this->i18nAttributes)) {
                             $this->renderI18nCallback($callback);
                         }
-
-                        continue;
                     }
 
                     continue;
@@ -220,7 +217,7 @@ trait ActiveFormTrait
     public function field($model, $attribute, $options = []): ActiveField|string
     {
         if (method_exists($this->model, 'getI18nAttributeName')) {
-            $language = ArrayHelper::remove($options, 'language');
+            $language = ArrayHelper::remove($options, 'language', Yii::$app->sourceLanguage);
             $attribute = $this->model->getI18nAttributeName($attribute, $language);
         }
 
