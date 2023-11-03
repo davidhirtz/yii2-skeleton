@@ -8,15 +8,13 @@ use Yii;
 use yii\helpers\Url;
 
 /**
- * @property string $description
+ * @property string $description {@see static::setMetaDescription()}
  */
 class View extends \yii\web\View
 {
-    /**
-     * Keys.
-     */
     public const HREF_LANG_KEY = 'hreflang_';
     public const CANONICAL_KEY = 'canonical';
+    public const DESCRIPTION_KEY = 'description';
 
     public ?string $titleTemplate = null;
     private array $_breadcrumbs = [];
@@ -27,7 +25,7 @@ class View extends \yii\web\View
         $this->title = $title;
     }
 
-    public function getTitle(): string
+    public function getDocumentTitle(): string
     {
         if (!$this->titleTemplate) {
             return $this->title ?: Yii::$app->name;
@@ -36,18 +34,15 @@ class View extends \yii\web\View
         return strtr($this->titleTemplate, ['{title}' => $this->title, '{app}' => Yii::$app->name]);
     }
 
-    public function setDescription(string $description, bool $replace = true): void
+    public function setMetaDescription(string $description, bool $replace = true): void
     {
-        if (empty($this->metaTags['description']) || $replace) {
+        if (empty($this->metaTags[static::DESCRIPTION_KEY]) || $replace) {
             $this->_description = preg_replace("/\n+/", ' ', Html::encode($description));
-            $this->registerMetaTag(['name' => 'description', 'content' => $this->_description], 'description');
+            $this->registerMetaTag(['name' => 'description', 'content' => $this->_description], static::DESCRIPTION_KEY);
         }
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription(): string
+    public function getMetaDescription(): string
     {
         return $this->_description;
     }
@@ -70,9 +65,6 @@ class View extends \yii\web\View
         }
     }
 
-    /**
-     * @return array
-     */
     public function getBreadcrumbs(): array
     {
         return $this->_breadcrumbs;
@@ -83,11 +75,11 @@ class View extends \yii\web\View
         $this->registerMetaTag(['name' => 'twitter:card', 'content' => $card], 'twitter:card');
         $this->registerMetaTag([
             'name' => 'twitter:title',
-            'content' => $title ?: $this->getTitle()
+            'content' => $title ?: $this->getDocumentTitle()
         ], 'twitter:title');
         $this->registerMetaTag([
             'name' => 'twitter:description',
-            'content' => $description ?: $this->getDescription()
+            'content' => $description ?: $this->getMetaDescription()
         ], 'twitter:description');
 
         if (!empty(Yii::$app->params['twitter.siteName'])) {
@@ -100,8 +92,8 @@ class View extends \yii\web\View
 
     public function registerOpenGraphMetaTags(string $type = 'website', ?string $title = null, ?string $description = null): void
     {
-        $this->registerMetaTag(['name' => 'og:title', 'content' => $title ?: $this->getTitle()], 'og:title');
-        $this->registerMetaTag(['name' => 'og:description', 'content' => $description ?: $this->getDescription()], 'og:description');
+        $this->registerMetaTag(['name' => 'og:title', 'content' => $title ?: $this->getDocumentTitle()], 'og:title');
+        $this->registerMetaTag(['name' => 'og:description', 'content' => $description ?: $this->getMetaDescription()], 'og:description');
 
         if ($type) {
             $this->registerMetaTag(['name' => 'og:type', 'content' => $type], 'og:type');
@@ -132,8 +124,7 @@ class View extends \yii\web\View
 
     public function registerStructuredData(array $data): void
     {
-        /** @noinspection HttpUrlsUsage */
-        echo Html::script(Json::htmlEncode(['@context' => 'http://schema.org', ...$data]), [
+        echo Html::script(Json::htmlEncode(['@context' => 'https://schema.org', ...$data]), [
             'type' => 'application/ld+json',
         ]);
     }
@@ -201,15 +192,17 @@ class View extends \yii\web\View
         }
     }
 
-    /**
-     * @return string the ISO 639-1 Language Codes
-     */
-    public static function getLanguage(): string
+    public function getFilenameWithVersion(string $filename): string
+    {
+        return "/$filename?" . filemtime(Yii::getAlias('@webroot/' . $filename));
+    }
+
+    public function getHtmlLangAttribute(): string
     {
         return match (Yii::$app->language) {
             'zh-TW' => 'zh-Hant',
             'zh-CN' => 'zh-Hans',
-            default => substr((string)Yii::$app->language, 0, 2),
+            default => substr(Yii::$app->language, 0, 2),
         };
     }
 }
