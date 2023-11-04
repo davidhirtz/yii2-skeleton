@@ -7,7 +7,7 @@ use Yii;
 
 /**
  * TypeAttributeTrait implements type attribute methods and validation and for an active record. It can also instantiate
- * a custom model class based on the `class` key defined in the type options of {@link static::getTypes()}.
+ * a custom model class based on the `class` key defined in the type options of {@see static::getTypes()}.
  *
  * @property int $type
  */
@@ -35,7 +35,7 @@ trait TypeAttributeTrait
     /**
      * Override this method to implement types. The type array must consist of a unique type as key and an associative
      * array containing at least a "name" key. Optional a "class" key can be set to instantiate a model on find, and the
-     * "icon" value will be used in {@link TypeGridViewTrait} on default.
+     * "icon" value will be used in {@see TypeGridViewTrait} on default.
      *
      * @return array
      */

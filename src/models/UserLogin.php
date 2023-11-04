@@ -18,7 +18,7 @@ use yii\db\ActiveQuery;
  * @property int $ip_address
  * @property DateTime $created_at
  *
- * @property User $user {@link \davidhirtz\yii2\skeleton\models\UserLogin::getUser()}
+ * @property User $user {@see \davidhirtz\yii2\skeleton\models\UserLogin::getUser()}
  * @property-read string $typeName
  * @property-read string $displayIp
  */

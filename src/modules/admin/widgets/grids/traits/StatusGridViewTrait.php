@@ -73,7 +73,7 @@ trait StatusGridViewTrait
     }
 
     /**
-     * Returns array index by `status`, containing `label` and `url` for {@link ButtonDropdown}. This method can be
+     * Returns array index by `status`, containing `label` and `url` for {@see ButtonDropdown}. This method can be
      * overridden to use other items or add additional statuses to the dropdown.
      *
      * @return array
