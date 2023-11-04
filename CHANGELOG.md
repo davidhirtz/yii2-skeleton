@@ -1,4 +1,9 @@
+## 2.0.2 (Nov 4, 2023)
+
+- Added `Widget` abstract class, for minimal widget implementations
+
 ## 2.0.1 (Nov 4, 2023)
+
 - Removed default route from application and restored default value of `UrlManager::$enableStrictParsing`
 - Extracted AJAX Route functionality from controller to `davidhirtz\yii2\skeleton\controllers\traits\AjaxRouteTrait`
 - Renamed `View::getDescription()` to `View::getMetaDescription()`
