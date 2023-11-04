@@ -40,7 +40,7 @@ class NavBar extends \yii\bootstrap4\NavBar
     }
 
     /**
-     * Sorts {@link Module::$navbarItems} by key and adds home button.
+     * Sorts {@see Module::$navbarItems} by key and adds home button.
      */
     public function getItems(): array
     {

@@ -15,8 +15,8 @@ class DynamicRangeValidator extends RangeValidator
     public bool $integerOnly = true;
 
     /**
-     * @var array which will be dynamically overridden by {@link DynamicRangeValidator::getDynamicRange()}. Defaults to
-     * an empty array to prevent an exception thrown by {@link RangeValidator}.
+     * @var array which will be dynamically overridden by {@see DynamicRangeValidator::getDynamicRange()}. Defaults to
+     * an empty array to prevent an exception thrown by {@see RangeValidator}.
      */
     public $range = [];
 

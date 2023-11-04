@@ -35,7 +35,7 @@ class TrailBehavior extends Behavior
 
     /**
      * @array containing the excluded default attributes if the owner class does not override
-     * {@link TrailBehavior::getTrailAttributes()}
+     * {@see TrailBehavior::getTrailAttributes()}
      */
     public array $exclude = [
         'position',
@@ -132,8 +132,8 @@ class TrailBehavior extends Behavior
     }
 
     /**
-     * Returns the attributes that trigger a {@link Trail::TYPE_CREATE} or {@link Trail::TYPE_UPDATE} record. In the
-     * default implementation this includes all attributes except attributes defined in {@link TrailBehavior::$exclude}.
+     * Returns the attributes that trigger a {@see Trail::TYPE_CREATE} or {@see Trail::TYPE_UPDATE} record. In the
+     * default implementation this includes all attributes except attributes defined in {@see TrailBehavior::$exclude}.
      * This method can be overridden by the owner class to provide a more defined list of values which should be
      * logged.
      */

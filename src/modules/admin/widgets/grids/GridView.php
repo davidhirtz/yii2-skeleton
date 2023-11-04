@@ -76,7 +76,7 @@ class GridView extends \yii\grid\GridView
     ];
 
     /**
-     * @var bool whether the items should receive a {@link yii\grid\CheckboxColumn} and moved inside a wrapping form
+     * @var bool whether the items should receive a {@see yii\grid\CheckboxColumn} and moved inside a wrapping form
      */
     public bool $showSelection = false;
 

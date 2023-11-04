@@ -45,7 +45,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
     }
 
     /**
-     * Selects all columns defined in {@link ActiveRecord::attributes()}.
+     * Selects all columns defined in {@see ActiveRecord::attributes()}.
      */
     public function selectAllColumns(): static
     {

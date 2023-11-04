@@ -25,7 +25,7 @@ use yii\db\ActiveRecordInterface;
  * @property string|array|null $data
  * @property DateTime $created_at
  *
- * @property-read User $user {@link Trail::getUser}
+ * @property-read User $user {@see Trail::getUser}
  */
 class Trail extends ActiveRecord
 {
@@ -245,7 +245,7 @@ class Trail extends ActiveRecord
 
     /**
      * The message translations are set via `Yii::t()` so the translation controller will pick them up. The actual
-     * translation will happen in {@link TrailGridView}.
+     * translation will happen in {@see TrailGridView}.
      */
     public static function getTypes(): array
     {

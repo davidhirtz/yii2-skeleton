@@ -55,8 +55,8 @@ class Sitemap extends Component
     public array $views = [];
 
     /**
-     * @var SitemapBehavior[]|array containing the class definitions of all {@link ActiveRecord} which should be used to
-     * create sitemap URLs via the {@link SitemapBehavior} behavior. If `useSitemapIndex` is set to true, the key can
+     * @var SitemapBehavior[]|array containing the class definitions of all {@see ActiveRecord} which should be used to
+     * create sitemap URLs via the {@see SitemapBehavior} behavior. If `useSitemapIndex` is set to true, the key can
      * optionally be set to a string which is then used in the sitemap index url generation.
      */
     public array $models = [];

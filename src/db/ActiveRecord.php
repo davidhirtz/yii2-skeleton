@@ -37,8 +37,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     public const TYPE_DEFAULT = 1;
 
     /**
-     * @var array containing the attribute names of attributes which should be used with I18N features such as
-     * {@link \davidhirtz\yii2\cms\models\ActiveRecord::getI18nAttribute()}, {@link \davidhirtz\yii2\cms\models\ActiveRecord::getI18nRules()}, etc.
+     * @var array containing the attribute names of attributes which should be used with I18N features
      */
     public array $i18nAttributes = [];
 
@@ -49,13 +48,13 @@ class ActiveRecord extends \yii\db\ActiveRecord
 
     /**
      * @var bool whether the current operation is part of a more complex process, this can be used to postpone conditional
-     * updates after save or delete. See {@link \davidhirtz\yii2\cms\models\ActiveRecord::getIsBatch()}.
+     * updates after save or delete. See {@see \davidhirtz\yii2\cms\models\ActiveRecord::getIsBatch()}.
      */
     private bool $_isBatch = false;
 
     /**
-     * @var bool whether the record was deleted, this is set in {@link \davidhirtz\yii2\cms\models\ActiveRecord::afterDelete()} and can be used
-     * via {@link \davidhirtz\yii2\cms\models\ActiveRecord::isDeleted()}.
+     * @var bool whether the record was deleted, this is set in {@see \davidhirtz\yii2\cms\models\ActiveRecord::afterDelete()} and can be used
+     * via {@see \davidhirtz\yii2\cms\models\ActiveRecord::isDeleted()}.
      */
     private bool $_isDeleted = false;
 
@@ -96,8 +95,8 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
-     * Typecasts boolean and numeric validators. This is similar to {@link AttributeTypecastBehavior} but performs the
-     * operation before the actual validation to allow the use of {@link \yii\db\ActiveRecord::isAttributeChanged()} in
+     * Typecasts boolean and numeric validators. This is similar to {@see AttributeTypecastBehavior} but performs the
+     * operation before the actual validation to allow the use of {@see \yii\db\ActiveRecord::isAttributeChanged()} in
      * validation. As Yii2 represents floats and decimals, as strings only integer values will be typecast.
      */
     public function typecastAttributes(): void
@@ -268,7 +267,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
-     * This method is in place to avoid endless calls to {@link \yii\db\ActiveRecord::activeAttributes()}.
+     * This method is in place to avoid endless calls to {@see \yii\db\ActiveRecord::activeAttributes()}.
      * If this method's results are cached in a future Yii2 version, this can be removed.
      */
     public function activeAttributes(): array
@@ -278,7 +277,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
-     * This method is in place to avoid excessive calls to {@link \yii\db\ActiveRecord::safeAttributes()}.
+     * This method is in place to avoid excessive calls to {@see \yii\db\ActiveRecord::safeAttributes()}.
      * If this method's results are cached in a future Yii2 version, this can be removed.
      */
     public function safeAttributes(): array
@@ -288,7 +287,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
-     * This method is in place to avoid endless calls to {@link \yii\db\ActiveRecord::scenarios()}.
+     * This method is in place to avoid endless calls to {@see \yii\db\ActiveRecord::scenarios()}.
      * If this method's results are cached in a future Yii2 version, this can be removed.
      */
     public function scenarios(): array

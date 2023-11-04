@@ -35,7 +35,7 @@ class SitemapBehavior extends Behavior
 
     /**
      * @var int the maximum number rows selected by the default database query, if this is null the default value from
-     * {@link Sitemap} will be used. Change this value if one record produces more than one URL (for example for
+     * {@see Sitemap} will be used. Change this value if one record produces more than one URL (for example for
      * multiple languages).
      */
     public $maxUrlCount;

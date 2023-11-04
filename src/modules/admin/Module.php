@@ -22,7 +22,7 @@ class Module extends \yii\base\Module
 
     /**
      * @var array|false|null containing the roles to access any admin module or controller, if not set roles set
-     * via {@link Module::$navbarItems} will be used. If false, the module role check is disabled.
+     * via {@see Module::$navbarItems} will be used. If false, the module role check is disabled.
      */
     public array|false|null $roles = null;
 

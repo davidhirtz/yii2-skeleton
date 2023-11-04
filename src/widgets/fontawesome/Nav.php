@@ -95,7 +95,7 @@ class Nav extends \yii\bootstrap4\Nav
      * - items: array|callable allows submenu items to be callable
      * - label: string, optional, if icon is set, required if icon is empty.
      * - labelOptions: array, optional, additional html options for label tag
-     * - roles: array {@link Nav::renderItems()}
+     * - roles: array {@see Nav::renderItems()}
      * - template: string, optional, use format "{icon}{label}" to change label template.
      *
      * @inheritdoc

@@ -31,7 +31,7 @@ use Yii;
 <?php if (!empty($relations)): ?>
  *
 <?php foreach ($relations as $name => $relation): ?>
- * @property-read <?= $relation[1] . ($relation[2] ? '[]' : '') . ' $' . lcfirst($name) . ' {@link ' . $className . '::get' . $name  . "()}\n" ?>
+ * @property-read <?= $relation[1] . ($relation[2] ? '[]' : '') . ' $' . lcfirst($name) . ' {@see ' . $className . '::get' . $name  . "()}\n" ?>
 <?php endforeach; ?>
 <?php endif; ?>
 */

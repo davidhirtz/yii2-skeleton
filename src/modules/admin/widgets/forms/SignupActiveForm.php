@@ -12,7 +12,7 @@ use yii\bootstrap4\ActiveField;
 use yii\helpers\Url;
 
 /**
- * SignupActiveForm is a widget that builds an interactive HTML form for {@link SignupForm}.
+ * SignupActiveForm is a widget that builds an interactive HTML form for {@see SignupForm}.
  */
 class SignupActiveForm extends ActiveForm
 {

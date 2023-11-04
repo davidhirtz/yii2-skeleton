@@ -6,7 +6,7 @@ use davidhirtz\yii2\skeleton\models\User;
 use Yii;
 
 /**
- * UserForm extends {@link User}. It is used to update user information of the current webuser.
+ * UserForm extends {@see User}. It is used to update user information of the current webuser.
  */
 class UserForm extends User
 {

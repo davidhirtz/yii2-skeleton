@@ -44,8 +44,8 @@ use yii\web\UploadedFile;
  * @property DateTime $updated_at
  * @property DateTime $created_at
  *
- * @property User $admin {@link User::getAdmin}
- * @property AuthClient[] $authClients {@link User::getAuthClients}
+ * @property User $admin {@see User::getAdmin}
+ * @property AuthClient[] $authClients {@see User::getAuthClients}
  * @property string $uploadPath
  */
 class User extends ActiveRecord

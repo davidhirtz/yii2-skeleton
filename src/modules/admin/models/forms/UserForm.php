@@ -8,7 +8,7 @@ use yii\db\BaseActiveRecord;
 use Yii;
 
 /**
- * UserForm extends {@link User}. It is used to update user information by an authorized administrator.
+ * UserForm extends {@see User}. It is used to update user information by an authorized administrator.
  */
 class UserForm extends User
 {

@@ -28,7 +28,7 @@ class ErrorHandler extends \yii\web\ErrorHandler
     }
 
     /**
-     * Exits application and redirects to target url if a matching {@link Redirect} record was found.
+     * Exits application and redirects to target url if a matching {@see Redirect} record was found.
      */
     protected function checkRedirectRequestUri(): void
     {

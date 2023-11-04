@@ -37,7 +37,7 @@ class RedirectBehavior extends Behavior
     }
 
     /**
-     * Inserts and updates related {@link Redirect} models on owner's `url` change.
+     * Inserts and updates related {@see Redirect} models on owner's `url` change.
      */
     public function afterSave(): void
     {
@@ -51,7 +51,7 @@ class RedirectBehavior extends Behavior
     }
 
     /**
-     * Deletes all {@link Redirect} models pointing to owner's `url` on deleting.
+     * Deletes all {@see Redirect} models pointing to owner's `url` on deleting.
      */
     public function afterDelete(): void
     {
@@ -62,7 +62,7 @@ class RedirectBehavior extends Behavior
     }
 
     /**
-     * Updates previous redirect URLs. This is not handled via `updateAll` to enable {@link Trail} records.
+     * Updates previous redirect URLs. This is not handled via `updateAll` to enable {@see Trail} records.
      */
     protected function updatePreviousRedirectUrls(string $url): void
     {
@@ -86,7 +86,7 @@ class RedirectBehavior extends Behavior
     }
 
     /**
-     * Deletes redirect records matching given `attribute`. This is not handled via `deleteAll` to enable {@link Trail}
+     * Deletes redirect records matching given `attribute`. This is not handled via `deleteAll` to enable {@see Trail}
      * records.
      */
     protected function deleteRedirects(string $url): void

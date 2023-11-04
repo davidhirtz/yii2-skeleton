@@ -99,7 +99,7 @@ class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
     }
 
     /**
-     * Resets the options id back to widget id which is set to the button id in {@link \yii\bootstrap4\ButtonDropdown::run()}.
+     * Resets the options id back to widget id which is set to the button id in {@see \yii\bootstrap4\ButtonDropdown::run()}.
      * Otherwise Bootstrap events don't register on the correct element.
      */
     protected function registerClientEvents()

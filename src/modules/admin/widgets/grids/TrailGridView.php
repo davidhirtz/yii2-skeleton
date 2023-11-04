@@ -292,7 +292,7 @@ class TrailGridView extends GridView
     }
 
     /**
-     * Wraps behavior method and makes sure value is cast to string to prevent {@link \Jfcherng\Diff\Differ} to throw
+     * Wraps behavior method and makes sure value is cast to string to prevent {@see \Jfcherng\Diff\Differ} to throw
      * errors.
      */
     protected function formatTrailAttributeValue(Model $model, string $attribute, mixed $value): mixed
