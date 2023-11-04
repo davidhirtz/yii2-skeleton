@@ -92,7 +92,6 @@ class MaintenanceController extends Controller
 
     /**
      * Disables maintenance mode.
-     * @return void
      */
     public function actionDisable(): void
     {
@@ -104,8 +103,6 @@ class MaintenanceController extends Controller
     /**
      * Enables maintenance mode with the given configuration by copying the maintenance mode template to the runtime.
      * The configuration is saved in a JSON file in the runtime directory.
-     *
-     * @return void
      */
     protected function enableMaintenanceMode(bool $withConfig = false): void
     {
@@ -129,9 +126,8 @@ class MaintenanceController extends Controller
 
     /**
      * Disables maintenance mode by removing the maintenance mode template from the runtime. Keeping the config.
-     * @return void
      */
-    protected function disableMaintenanceMode()
+    protected function disableMaintenanceMode(): void
     {
         FileHelper::removeFile(Yii::getAlias(self::MAINTENANCE_FILE));
         $this->stdout('Maintenance mode disabled.' . PHP_EOL, Console::FG_GREEN);

@@ -9,6 +9,11 @@ trait ModuleTrait
     public bool $enableI18nTables = false;
     public string $tablePrefix = '';
 
+    public function getI18nClassName(string $class): string
+    {
+        return $class . ($this->enableI18nTables ? ('::' . Yii::$app->language) : '');
+    }
+
     public function getTableName(string $tableName): string
     {
         $tableName = $this->tablePrefix . $tableName;

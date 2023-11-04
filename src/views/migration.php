@@ -22,16 +22,10 @@ class <?= $className ?> extends Migration
 {
     use MigrationTrait;
 
-    /**
-     * @inheritDoc
-     */
     public function safeUp(): void
     {
     }
 
-    /**
-     * @inheritDoc
-     */
     public function safeDown(): void
     {
     }

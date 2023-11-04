@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\console\controllers;
 
 use davidhirtz\yii2\skeleton\console\controllers\traits\ConfigTrait;
+use Seld\CliPrompt\CliPrompt;
 use Yii;
 
 /**
@@ -13,55 +14,31 @@ class MigrateController extends \yii\console\controllers\MigrateController
 {
     use ConfigTrait;
 
-    /**
-     * @inheritdoc
-     */
     public $migrationPath = null;
 
-    /**
-     * @inheritdoc
-     */
     public $migrationNamespaces = [
         'app\migrations',
         'davidhirtz\yii2\skeleton\migrations',
     ];
 
-    /**
-     * @var string
-     */
-    public $dbFile = '@app/config/db.php';
-
-    /**
-     * @var string
-     */
+    public string $dbFile = '@app/config/db.php';
     public $templateFile = '@skeleton/views/migration.php';
 
-    /**
-     * @var array
-     */
-    private $_dbConfig;
+    private ?array $_dbConfig = null;
 
-    /**
-     * @param \yii\base\Action $action
-     * @return bool
-     * @throws \Exception
-     */
-    public function beforeAction($action)
+    public function beforeAction($action): bool
     {
         if ($this->interactive) {
             $this->actionConfig(false);
         }
 
-        return $this->getDbConfig() ? parent::beforeAction($action) : false;
+        return $this->getDbConfig() && parent::beforeAction($action);
     }
 
     /**
      * Creates database connection credentials.
-     *
-     * @param bool $replace
-     * @throws \Exception
      */
-    public function actionConfig($replace = true)
+    public function actionConfig(bool $replace = true): void
     {
         $db = $this->getDbConfig();
         $found = !empty($db);
@@ -77,7 +54,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
 
                 foreach ($dsn as $name => $value) {
                     if ($value) {
-                        $db['dsn'] .= ";{$name}={$value}";
+                        $db['dsn'] .= ";$name=$value";
                     }
                 }
 
@@ -86,7 +63,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
                 $db['username'] = $this->prompt('Enter username:', ['default' => $dsn['dbname'], 'required' => true]);
 
                 $this->stdout('Enter password: ');
-                $db['password'] = \Seld\CliPrompt\CliPrompt::hiddenPrompt();
+                $db['password'] = CliPrompt::hiddenPrompt();
 
                 $this->setConfig($this->dbFile, $db);
                 $this->_dbConfig = $db;
@@ -98,15 +75,9 @@ class MigrateController extends \yii\console\controllers\MigrateController
         }
     }
 
-    /**
-     * @return array
-     */
-    public function getDbConfig()
+    public function getDbConfig(): array
     {
-        if ($this->_dbConfig === null) {
-            $this->_dbConfig = $this->getConfig($this->dbFile);
-        }
-
+        $this->_dbConfig ??= $this->getConfig($this->dbFile);
         return $this->_dbConfig;
     }
 }

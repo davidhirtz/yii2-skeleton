@@ -15,9 +15,6 @@ class ParamsController extends Controller
 {
     use ConfigTrait;
 
-    /**
-     * @var string
-     */
     public string $config = '@app/config/params.php';
 
     /**
@@ -39,6 +36,9 @@ class ParamsController extends Controller
         }
     }
 
+    /**
+     * Generates cookie validation key.
+     */
     public function actionCookie(bool $replace = true): void
     {
         $params = $this->getConfig($this->config);
@@ -120,5 +120,4 @@ class ParamsController extends Controller
         $bytes = openssl_random_pseudo_bytes($length);
         return strtr(substr(base64_encode($bytes), 0, $length), '+/=', '_-.');
     }
-
 }
