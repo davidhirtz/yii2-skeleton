@@ -8,7 +8,6 @@ use yii\web\UrlRule;
 class UrlManager extends \yii\web\UrlManager
 {
     public $enablePrettyUrl = true;
-    public $enableStrictParsing = true;
     public $showScriptName = false;
 
     /**

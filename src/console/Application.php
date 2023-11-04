@@ -2,31 +2,25 @@
 
 namespace davidhirtz\yii2\skeleton\console;
 
+use davidhirtz\yii2\skeleton\console\controllers\AssetController;
+use davidhirtz\yii2\skeleton\console\controllers\MaintenanceController;
+use davidhirtz\yii2\skeleton\console\controllers\MigrateController;
+use davidhirtz\yii2\skeleton\console\controllers\ParamsController;
+use davidhirtz\yii2\skeleton\console\controllers\TrailController;
 use davidhirtz\yii2\skeleton\core\ApplicationTrait;
 use Yii;
 
-/**
- * Class Application
- * @package davidhirtz\yii2\skeleton\console
- */
 class Application extends \yii\console\Application
 {
     use ApplicationTrait;
 
-    /**
-     * @var string the namespace that command controller classes are located in.
-     */
     public $controllerNamespace = 'app\\commands';
 
-    /**
-     * @param array $config
-     */
-    public function preInit(&$config)
+    public function preInit(&$config): void
     {
         $config['basePath'] ??= getcwd();
         $this->preInitInternal($config);
 
-        // Removes web components.
         unset(
             $config['components']['errorHandler']['errorAction'],
             $config['components']['user'],
@@ -36,35 +30,27 @@ class Application extends \yii\console\Application
         parent::preInit($config);
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function bootstrap()
+    protected function bootstrap(): void
     {
         $this->setWebrootAliases();
-        $this->setDefaultUrlManagerRules();
 
         parent::bootstrap();
+
+        $this->setDefaultUrlManagerRules();
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function coreCommands()
+    public function coreCommands(): array
     {
         return array_merge(parent::coreCommands(), [
-            'asset' => 'davidhirtz\yii2\skeleton\console\controllers\AssetController',
-            'migrate' => 'davidhirtz\yii2\skeleton\console\controllers\MigrateController',
-            'maintenance' => 'davidhirtz\yii2\skeleton\console\controllers\MaintenanceController',
-            'params' => 'davidhirtz\yii2\skeleton\console\controllers\ParamsController',
-            'trail' => 'davidhirtz\yii2\skeleton\console\controllers\TrailController',
+            'asset' => AssetController::class,
+            'migrate' => MigrateController::class,
+            'maintenance' => MaintenanceController::class,
+            'params' => ParamsController::class ,
+            'trail' => TrailController::class,
         ]);
     }
 
-    /**
-     * Sets webroot aliases for console applications.
-     */
-    protected function setWebrootAliases()
+    protected function setWebrootAliases(): void
     {
         if (!Yii::getAlias('@webroot', false)) {
             Yii::setAlias('@webroot', '@app/web');

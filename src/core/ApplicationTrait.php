@@ -165,7 +165,6 @@ trait ApplicationTrait
         $alias = rtrim((string) $this->getModules()['admin']['alias'], '/');
 
         $this->getUrlManager()->addRules([
-            '' => $this->defaultRoute,
             'application-health' => 'health/index',
             'sitemap.xml' => 'sitemap/index',
             "$alias/<module>/<controller>/<view>" => 'admin/<module>/<controller>/<view>',

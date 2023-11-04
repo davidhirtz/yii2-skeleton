@@ -136,8 +136,6 @@ class TrailBehavior extends Behavior
      * default implementation this includes all attributes except attributes defined in {@link TrailBehavior::$exclude}.
      * This method can be overridden by the owner class to provide a more defined list of values which should be
      * logged.
-     *
-     * @return array
      */
     public function getTrailAttributes(): array
     {
