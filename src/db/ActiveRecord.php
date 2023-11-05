@@ -44,27 +44,8 @@ class ActiveRecord extends \yii\db\ActiveRecord
     private ?array $_activeAttributes = null;
     private ?array $_safeAttributes = null;
     private ?array $_scenarios = null;
-
-    /**
-     * @var bool whether the current operation is part of a more complex process, this can be used to postpone conditional
-     * updates after save or delete. See {@see \davidhirtz\yii2\cms\models\ActiveRecord::getIsBatch()}.
-     */
     private bool $_isBatch = false;
-
-    /**
-     * @var bool whether the record was deleted, this is set in {@see \davidhirtz\yii2\cms\models\ActiveRecord::afterDelete()} and can be used
-     * via {@see \davidhirtz\yii2\cms\models\ActiveRecord::isDeleted()}.
-     */
     private bool $_isDeleted = false;
-
-    public function addInvalidAttributeError(string $attribute): bool
-    {
-        $this->addError($attribute, Yii::t('yii', '{attribute} is invalid.', [
-            'attribute' => $this->getAttributeLabel($attribute),
-        ]));
-
-        return false;
-    }
 
     public function beforeValidate(): bool
     {
@@ -92,6 +73,23 @@ class ActiveRecord extends \yii\db\ActiveRecord
     {
         return $condition === null ? null : parent::findOne($condition);
     }
+
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    public function getRelationFromForeignKey(string $foreignKey, bool $throwException = false): ?ActiveQuery
+    {
+        $relation = lcfirst(Inflector::camelize(str_replace('_id', '', $foreignKey)));
+        return $this->getRelation($relation, $throwException);
+    }
+
+    public function refreshRelation(string $name): ActiveRecord|array
+    {
+        $query = $this->getRelation($name);
+        $method = $query->multiple ? 'all' : 'one';
+        $this->populateRelation($name, $related = $query->{$method}());
+
+        return $related;
+    }
+
 
     /**
      * Typecasts boolean and numeric validators. This is similar to {@see AttributeTypecastBehavior} but performs the
@@ -121,24 +119,16 @@ class ActiveRecord extends \yii\db\ActiveRecord
         }
     }
 
-    public function getRelationFromForeignKey(string $foreignKey, bool $throwException = false): ?ActiveQuery
+    public function addInvalidAttributeError(string $attribute): bool
     {
-        $relation = lcfirst(Inflector::camelize(str_replace('_id', '', $foreignKey)));
+        $this->addError($attribute, Yii::t('yii', '{attribute} is invalid.', [
+            'attribute' => $this->getAttributeLabel($attribute),
+        ]));
 
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->getRelation($relation, $throwException);
-    }
-
-    public function refreshRelation(string $name): ActiveRecord|array
-    {
-        $query = $this->getRelation($name);
-        $method = $query->multiple ? 'all' : 'one';
-        $this->populateRelation($name, $related = $query->{$method}());
-        return $related;
+        return false;
     }
 
     /**
-     * Adds default values to `updated_by_user_id` and `updated_at` if found in values of `$attributes`.
      * @noinspection PhpUnused
      */
     public function updateAttributesBlameable(array $attributes): int
