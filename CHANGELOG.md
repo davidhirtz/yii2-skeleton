@@ -1,6 +1,7 @@
 ## 2.0.2 (Nov 4, 2023)
 
 - Added `Widget` abstract class, for minimal widget implementations
+- Removed `ActiveRecord::updatePosition()`, use `\davidhirtz\yii2\skeleton\db\actions\ReorderActiveRecordsAction` instead
 
 ## 2.0.1 (Nov 4, 2023)
 

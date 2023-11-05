@@ -4,7 +4,6 @@ namespace davidhirtz\yii2\skeleton\db;
 
 use ArrayObject;
 use davidhirtz\yii2\datetime\DateTime;
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Yii;
 use yii\base\Model;
 use yii\base\NotSupportedException;
@@ -162,26 +161,6 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
-     * Updates the order attribute of models by given order.
-     * @param ActiveRecord[] $models
-     */
-    public static function updatePosition(array $models, array $order = [], string $attribute = 'position', ?string $index = null): int
-    {
-        $rowsUpdated = 0;
-
-        foreach ($models as $model) {
-            $primaryKey = $model->getPrimaryKey(true);
-            $position = ArrayHelper::getValue($order, $index ? $primaryKey[$index] : current($primaryKey), 0) + 1;
-
-            if ($position != $model->getAttribute($attribute)) {
-                $rowsUpdated += $model::updateAll([$attribute => $position], $primaryKey);
-            }
-        }
-
-        return $rowsUpdated;
-    }
-
-    /**
      * @param array $columns the column names
      * @param array|null $rows the rows to be batch-inserted into the table
      * @param bool $ignore whether records should be inserted regardless of previous errors or existing primary keys
@@ -231,7 +210,10 @@ class ActiveRecord extends \yii\db\ActiveRecord
      */
     public function getDirtyAttributes($names = null): array
     {
-        return array_filter(parent::getDirtyAttributes($names), fn($name): bool => !($attribute = $this->getAttribute($name)) instanceof \DateTime || $this->getOldAttribute($name) != $attribute, ARRAY_FILTER_USE_KEY);
+        return array_filter(parent::getDirtyAttributes($names), function ($name): bool {
+            $attribute = $this->getAttribute($name);
+            return !$attribute instanceof \DateTime || $this->getOldAttribute($name) != $attribute;
+        }, ARRAY_FILTER_USE_KEY);
     }
 
     /**

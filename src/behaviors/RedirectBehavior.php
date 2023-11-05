@@ -11,7 +11,7 @@ use yii\base\Behavior;
 use yii\base\InvalidConfigException;
 
 /**
- * @property ActiveRecord $owner
+ * @property ActiveRecord|static $owner
  */
 class RedirectBehavior extends Behavior
 {
@@ -20,19 +20,15 @@ class RedirectBehavior extends Behavior
     public function events(): array
     {
         return [
-            ActiveRecord::EVENT_AFTER_FIND => 'afterFind',
-            ActiveRecord::EVENT_AFTER_INSERT => 'afterSave',
-            ActiveRecord::EVENT_AFTER_UPDATE => 'afterSave',
-            ActiveRecord::EVENT_AFTER_DELETE => 'afterDelete',
+            ActiveRecord::EVENT_AFTER_FIND => $this->afterFind(...),
+            ActiveRecord::EVENT_AFTER_INSERT => $this->afterSave(...),
+            ActiveRecord::EVENT_AFTER_UPDATE => $this->afterSave(...),
+            ActiveRecord::EVENT_AFTER_DELETE => $this->afterDelete(...),
         ];
     }
 
-    /**
-     * Caches the previous url
-     */
     public function afterFind(): void
     {
-        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         $this->prevUrl = !$this->owner->getIsNewRecord() ? Redirect::sanitizeUrl($this->owner->getUrl()) : false;
     }
 
@@ -41,7 +37,6 @@ class RedirectBehavior extends Behavior
      */
     public function afterSave(): void
     {
-        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         $url = Redirect::sanitizeUrl($this->owner->getUrl());
 
         if ($url && $this->prevUrl && $this->prevUrl != $url) {
@@ -55,7 +50,6 @@ class RedirectBehavior extends Behavior
      */
     public function afterDelete(): void
     {
-        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         if ($url = Redirect::sanitizeUrl($this->owner->getUrl())) {
             $this->deleteRedirects($url);
         }
@@ -103,7 +97,6 @@ class RedirectBehavior extends Behavior
 
     /**
      * This method tries to generate a URL from owner's `getUrl` method if it does not implement a `getUrl` method.
-     * @return false|string
      */
     public function getUrl(): bool|string
     {

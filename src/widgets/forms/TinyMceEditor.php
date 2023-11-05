@@ -211,7 +211,7 @@ class TinyMceEditor extends InputWidget
             if ($this->isTagAllowed($tag)) {
                 if ($this->stylesFormats) {
                     $headlineStyles[] = [
-                        'title' => Yii::t('app', 'Heading {n}', ['n' => $i + 1]),
+                        'title' => Yii::t('skeleton', 'Heading {n}', ['n' => $i + 1]),
                         'format' => $tag,
                     ];
                 } else {
@@ -289,8 +289,8 @@ class TinyMceEditor extends InputWidget
             foreach ($this->validator?->allowedClasses['a'] ?? [] as $name => $cssClass) {
                 if (is_int($name)) {
                     $name = match ($cssClass) {
-                        'btn' => Yii::t('app', 'Button'),
-                        'cta' => Yii::t('app', 'Call to action'),
+                        'btn' => Yii::t('skeleton', 'Button'),
+                        'cta' => Yii::t('skeleton', 'Call to action'),
                         default => Inflector::humanize($cssClass),
                     };
                 }
@@ -303,7 +303,7 @@ class TinyMceEditor extends InputWidget
 
             if ($linkClassList) {
                 array_unshift($linkClassList, [
-                    'title' => Yii::t('app', 'None'),
+                    'title' => Yii::t('skeleton', 'None'),
                     'value' => '',
                 ]);
 

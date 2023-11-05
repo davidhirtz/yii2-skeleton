@@ -380,6 +380,6 @@ trait ActiveFormTrait
 
     public function isSafeAttribute(string $attribute): bool
     {
-        return !$this->showUnsafeAttributes || in_array($attribute, $this->model->safeAttributes());
+        return $this->showUnsafeAttributes || in_array($attribute, $this->model->safeAttributes());
     }
 }
