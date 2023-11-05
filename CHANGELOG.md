@@ -6,6 +6,8 @@
 - Moved `I18nAttributesTrait`, `MaterializedTreeTrait`, `NestedTreeTrait`, `StatusAttributeTrait`
   and `TypeAttributeTrait` to namespace `davidhirtz\yii2\skeleton\models\traits`
 - Moved `MigrationTrait` to namespace `davidhirtz\yii2\skeleton\db\traits`
+- Moved `OwnerRule` to namespace `davidhirtz\yii2\skeleton\rbac\rules`, migration `M231105142331OwnerRule` changes the
+  namespace of the rule in the database
 
 ## 2.0.1 (Nov 4, 2023)
 

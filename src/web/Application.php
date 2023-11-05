@@ -2,7 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\web;
 
-use davidhirtz\yii2\skeleton\auth\rbac\DbManager;
+use davidhirtz\yii2\skeleton\rbac\DbManager;
 use davidhirtz\yii2\skeleton\core\ApplicationTrait;
 use davidhirtz\yii2\skeleton\i18n\I18N;
 use Yii;

@@ -2,7 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\migrations;
 
-use davidhirtz\yii2\skeleton\auth\rbac\OwnerRule;
+use davidhirtz\yii2\skeleton\rbac\rules\OwnerRule;
 use davidhirtz\yii2\skeleton\db\traits\MigrationTrait;
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\Session;

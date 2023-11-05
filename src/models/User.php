@@ -4,6 +4,9 @@ namespace davidhirtz\yii2\skeleton\models;
 
 use DateTimeZone;
 use davidhirtz\yii2\datetime\Date;
+use davidhirtz\yii2\datetime\DateTimeBehavior;
+use davidhirtz\yii2\skeleton\behaviors\TimestampBehavior;
+use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\models\traits\StatusAttributeTrait;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
@@ -107,24 +110,18 @@ class User extends ActiveRecord
      */
     private string|false $_uploadPath = 'uploads/users/';
 
-    /**
-     * @inheritDoc
-     */
     public function behaviors(): array
     {
         return array_merge(parent::behaviors(), [
-            'DateTimeBehavior' => 'davidhirtz\yii2\datetime\DateTimeBehavior',
-            'TimestampBehavior' => 'davidhirtz\yii2\skeleton\behaviors\TimestampBehavior',
+            'DateTimeBehavior' => DateTimeBehavior::class,
+            'TimestampBehavior' => TimestampBehavior::class,
             'TrailBehavior' => [
-                'class' => 'davidhirtz\yii2\skeleton\behaviors\TrailBehavior',
+                'class' => TrailBehavior::class,
                 'modelClass' => User::class,
             ],
         ]);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function rules(): array
     {
         return [
@@ -138,11 +135,11 @@ class User extends ActiveRecord
             ],
             [
                 ['status', 'language', 'timezone'],
-                'davidhirtz\yii2\skeleton\validators\DynamicRangeValidator',
+                DynamicRangeValidator::class,
             ],
             [
                 ['country'],
-                'davidhirtz\yii2\skeleton\validators\DynamicRangeValidator',
+                DynamicRangeValidator::class,
                 'skipOnEmpty' => true,
             ],
             [

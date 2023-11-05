@@ -4,11 +4,24 @@ namespace davidhirtz\yii2\skeleton\core;
 
 use Composer\InstalledVersions;
 use davidhirtz\yii2\skeleton\auth\clients\Facebook;
-use Yii;
+use davidhirtz\yii2\skeleton\controllers\HealthController;
+use davidhirtz\yii2\skeleton\controllers\SitemapController;
+use davidhirtz\yii2\skeleton\i18n\I18N;
+use davidhirtz\yii2\skeleton\modules\admin\Module;
+use davidhirtz\yii2\skeleton\rbac\DbManager;
+use davidhirtz\yii2\skeleton\web\DbSession;
+use davidhirtz\yii2\skeleton\web\Sitemap;
+use davidhirtz\yii2\skeleton\web\UrlManager;
+use davidhirtz\yii2\skeleton\web\View;
+use yii\authclient\Collection;
 use yii\base\ActionEvent;
 use yii\base\InvalidConfigException;
+use yii\caching\FileCache;
 use yii\console\controllers\MigrateController;
+use yii\db\Connection;
 use yii\helpers\ArrayHelper;
+use yii\log\FileTarget;
+use Yii;
 
 trait ApplicationTrait
 {
@@ -43,27 +56,27 @@ trait ApplicationTrait
                     ],
                 ],
                 'authClientCollection' => [
-                    'class' => 'yii\authclient\Collection',
+                    'class' => Collection::class,
                 ],
                 'authManager' => [
-                    'class' => 'davidhirtz\yii2\skeleton\auth\rbac\DbManager',
+                    'class' => DbManager::class,
                 ],
                 'cache' => [
-                    'class' => 'yii\caching\FileCache',
+                    'class' => FileCache::class,
                 ],
                 'db' => [
-                    'class' => 'yii\db\Connection',
+                    'class' => Connection::class,
                     'enableSchemaCache' => true,
                     'charset' => 'utf8mb4',
                 ],
                 'i18n' => [
-                    'class' => 'davidhirtz\yii2\skeleton\i18n\I18N',
+                    'class' => I18N::class,
                 ],
                 'log' => [
                     'traceLevel' => YII_DEBUG ? 3 : 0,
                     'targets' => [
                         [
-                            'class' => 'yii\log\FileTarget',
+                            'class' => FileTarget::class,
                             'levels' => ['error', 'warning'],
                             'fileMode' => 0770, // Make sure both web and console user can write to file
                             'maskVars' => [
@@ -89,25 +102,25 @@ trait ApplicationTrait
                     'htmlLayout' => '@skeleton/mail/layouts/html',
                 ],
                 'session' => [
-                    'class' => 'davidhirtz\yii2\skeleton\web\DbSession',
+                    'class' => DbSession::class,
                 ],
                 'sitemap' => [
-                    'class' => 'davidhirtz\yii2\skeleton\web\Sitemap',
+                    'class' => Sitemap::class,
                 ],
                 'urlManager' => [
-                    'class' => 'davidhirtz\yii2\skeleton\web\UrlManager',
+                    'class' => UrlManager::class,
                 ],
                 'view' => [
-                    'class' => 'davidhirtz\yii2\skeleton\web\View',
+                    'class' => View::class,
                 ],
             ],
             'controllerMap' => [
-                'health' => 'davidhirtz\yii2\skeleton\controllers\HealthController',
-                'sitemap' => 'davidhirtz\yii2\skeleton\controllers\SitemapController',
+                'health' => HealthController::class,
+                'sitemap' => SitemapController::class,
             ],
             'modules' => [
                 'admin' => [
-                    'class' => 'davidhirtz\yii2\skeleton\modules\admin\Module',
+                    'class' => Module::class,
                     'alias' => 'admin',
                     'viewPath' => '@app/modules/admin/views',
                 ],
@@ -162,7 +175,7 @@ trait ApplicationTrait
      */
     protected function setDefaultUrlManagerRules(): void
     {
-        $alias = rtrim((string) $this->getModules()['admin']['alias'], '/');
+        $alias = rtrim((string)$this->getModules()['admin']['alias'], '/');
 
         $this->getUrlManager()->addRules([
             'application-health' => 'health/index',

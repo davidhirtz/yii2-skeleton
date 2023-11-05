@@ -86,7 +86,7 @@ class User extends \yii\web\User
     {
         // Update login count, cache previous login date in session and insert new record to logins log.
         $session = Yii::$app->getSession();
-        $session->set('last_login_timestamp', $identity->last_login ? $identity->last_login->getTimestamp() : null);
+        $session->set('last_login_timestamp', $identity->last_login?->getTimestamp());
 
         // Updates session's user id.
         if ($session instanceof MultiFieldSession) {

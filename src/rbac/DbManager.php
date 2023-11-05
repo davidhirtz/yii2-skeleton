@@ -1,26 +1,16 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\auth\rbac;
+namespace davidhirtz\yii2\skeleton\rbac;
 
 use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
 use yii\rbac\Assignment;
 
-/**
- * Class DbManager
- * @package davidhirtz\yii2\skeleton\auth\rbac
- */
 class DbManager extends \yii\rbac\DbManager
 {
-    /**
-     * @var string
-     */
     public $cache = 'cache';
 
-    /**
-     * @inheritDoc
-     */
-    public function assign($role, $userId)
+    public function assign($role, $userId): ?Assignment
     {
         $this->invalidateCache();
         $assignment = $this->getAssignment($role->name, $userId);
@@ -32,10 +22,7 @@ class DbManager extends \yii\rbac\DbManager
         return $assignment;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function revoke($role, $userId)
+    public function revoke($role, $userId): bool
     {
         $this->invalidateCache();
 
@@ -47,7 +34,7 @@ class DbManager extends \yii\rbac\DbManager
         return false;
     }
 
-    private function createTrail(int $type, Assignment $assignment, int $userId): Trail
+    protected function createTrail(int $type, Assignment $assignment, int $userId): Trail
     {
         $trail = Trail::create();
         $trail->type = $type;
