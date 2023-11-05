@@ -34,7 +34,7 @@ class DuplicateActiveRecordAction
     protected function beforeDuplicate(): bool
     {
         $event = new DuplicateActiveRecordEvent();
-        $event->newModel = $this->duplicate;
+        $event->duplicate = $this->duplicate;
 
         $this->model->trigger(static::EVENT_BEFORE_CLONE, $event);
         return $event->isValid;
@@ -43,7 +43,7 @@ class DuplicateActiveRecordAction
     protected function afterDuplicate(): void
     {
         $event = new DuplicateActiveRecordEvent();
-        $event->newModel = $this->duplicate;
+        $event->duplicate = $this->duplicate;
 
         $this->model->trigger(static::EVENT_AFTER_CLONE, $event);
     }

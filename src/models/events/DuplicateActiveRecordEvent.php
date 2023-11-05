@@ -7,5 +7,5 @@ use yii\base\ModelEvent;
 
 class DuplicateActiveRecordEvent extends ModelEvent
 {
-    public ?ActiveRecord $newModel = null;
+    public ?ActiveRecord $duplicate = null;
 }
