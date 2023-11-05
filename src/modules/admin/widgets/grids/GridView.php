@@ -54,9 +54,9 @@ class GridView extends \yii\grid\GridView
     public ?string $searchUrl = null;
 
     /**
-     * @var array the url route for sortable widget
+     * @var array|null the url route for sortable widget
      */
-    public array $orderRoute = ['order'];
+    public ?array $orderRoute = ['order'];
 
     public $tableOptions = [
         'class' => 'table table-vertical table-striped table-hover',
@@ -411,6 +411,8 @@ class GridView extends \yii\grid\GridView
 
     public function isSortedByPosition(): bool
     {
-        return $this->dataProvider->getSort() === false && $this->dataProvider->getPagination() === false;
+        return $this->dataProvider->getSort() === false
+            && $this->dataProvider->getPagination() === false
+            && $this->orderRoute !== null;
     }
 }

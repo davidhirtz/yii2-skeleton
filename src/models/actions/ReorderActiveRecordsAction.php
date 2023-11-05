@@ -74,4 +74,13 @@ class ReorderActiveRecordsAction
     {
         return $this->_totalRowsUpdated;
     }
+
+    public static function createFromPostRequest($paramName, $config = []): ?static
+    {
+        $order = array_map('intval', array_filter(Yii::$app->getRequest()->getBodyParam($paramName, [])));
+
+        return $order
+            ? Yii::createObject(static::class, [...array_values($config),  $order])
+            : null;
+    }
 }
