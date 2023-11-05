@@ -1,7 +1,11 @@
 ## 2.0.2 (Nov 4, 2023)
 
 - Added `Widget` abstract class, for minimal widget implementations
-- Removed `ActiveRecord::updatePosition()`, use `\davidhirtz\yii2\skeleton\db\actions\ReorderActiveRecordsAction` instead
+- Removed `ActiveRecord::updatePosition()`, use `\davidhirtz\yii2\skeleton\db\actions\ReorderActiveRecordsAction`
+  instead
+- Moved `I18nAttributesTrait`, `MaterializedTreeTrait`, `NestedTreeTrait`, `StatusAttributeTrait`
+  and `TypeAttributeTrait` to namespace `davidhirtz\yii2\skeleton\models\traits`
+- Moved `MigrationTrait` to namespace `davidhirtz\yii2\skeleton\db\traits`
 
 ## 2.0.1 (Nov 4, 2023)
 

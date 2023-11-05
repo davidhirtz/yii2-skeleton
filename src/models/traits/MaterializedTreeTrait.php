@@ -1,7 +1,8 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\db;
+namespace davidhirtz\yii2\skeleton\models\traits;
 
+use davidhirtz\yii2\skeleton\db\ActiveQuery;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 
 /**

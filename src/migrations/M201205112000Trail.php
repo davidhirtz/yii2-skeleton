@@ -2,7 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\migrations;
 
-use davidhirtz\yii2\skeleton\db\MigrationTrait;
+use davidhirtz\yii2\skeleton\db\traits\MigrationTrait;
 use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
 use Yii;

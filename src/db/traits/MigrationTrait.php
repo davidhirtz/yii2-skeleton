@@ -1,6 +1,6 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\db;
+namespace davidhirtz\yii2\skeleton\db\traits;
 
 use Yii;
 use yii\base\InvalidConfigException;
@@ -45,7 +45,7 @@ trait MigrationTrait
 
                     foreach ($languages as $language) {
                         if (!in_array($language, $except)) {
-                            $type->append("AFTER [[{$prevAttribute}]]");
+                            $type->append("AFTER [[$prevAttribute]]");
                             $prevAttribute = $i18n->getAttributeName($attribute, $language);
 
                             if (!$tableSchema->getColumn($prevAttribute)) {

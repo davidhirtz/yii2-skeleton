@@ -7,10 +7,6 @@ use davidhirtz\yii2\datetime\DateTime;
 use Yii;
 use yii\base\Model;
 
-/**
- * Class AccountResendConfirmForm
- * @package davidhirtz\yii2\skeleton\models\forms
- */
 class AccountResendConfirmForm extends Model
 {
     use IdentityTrait;
@@ -18,11 +14,8 @@ class AccountResendConfirmForm extends Model
     /**
      * @var string the interval in which no new email will be sent as date time string.
      */
-    public $timeoutSpamProtection = '5 mins';
+    public string $timeoutSpamProtection = '5 mins';
 
-    /**
-     * @inheritdDoc
-     */
     public function rules(): array
     {
         return [
@@ -38,15 +31,15 @@ class AccountResendConfirmForm extends Model
                 ['email'],
                 'email',
             ],
+            [
+                ['email'],
+                $this->validateUserEmail(...),
+            ],
         ];
     }
 
-    /**
-     * Validates user credentials and checks for spam protection.
-     */
     public function afterValidate(): void
     {
-        $this->validateUserEmail();
         $this->validateUserStatus();
         $this->validateUserConfirmationCode();
         $this->validateSpamProtection();
@@ -54,9 +47,6 @@ class AccountResendConfirmForm extends Model
         parent::afterValidate();
     }
 
-    /**
-     * Validates user credentials.
-     */
     public function validateUserConfirmationCode(): void
     {
         if (!$this->hasErrors() && ($user = $this->getUser()) && !$user->verification_token) {
@@ -64,9 +54,6 @@ class AccountResendConfirmForm extends Model
         }
     }
 
-    /**
-     * Validates spam protection.
-     */
     public function validateSpamProtection(): void
     {
         if (!$this->hasErrors() && ($user = $this->getUser()) && $this->isAlreadySent()) {
@@ -76,9 +63,6 @@ class AccountResendConfirmForm extends Model
         }
     }
 
-    /**
-     * @return bool
-     */
     public function resend(): bool
     {
         if ($this->validate()) {
@@ -91,10 +75,7 @@ class AccountResendConfirmForm extends Model
         return false;
     }
 
-    /**
-     * Sends email confirm code email.
-     */
-    public function sendConfirmEmail()
+    public function sendConfirmEmail(): void
     {
         if ($user = $this->getUser()) {
             Yii::$app->getMailer()->compose('@skeleton/mail/account/confirm', ['user' => $user])
@@ -105,17 +86,11 @@ class AccountResendConfirmForm extends Model
         }
     }
 
-    /**
-     * @return bool
-     */
     public function isAlreadySent(): bool
     {
         return ($user = $this->getUser()) && $user->verification_token && $user->updated_at->modify($this->timeoutSpamProtection) > new DateTime();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function attributeLabels(): array
     {
         return [

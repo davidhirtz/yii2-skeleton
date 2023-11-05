@@ -1,6 +1,6 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\db;
+namespace davidhirtz\yii2\skeleton\models\traits;
 
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\TypeGridViewTrait;
 use Yii;

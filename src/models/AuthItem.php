@@ -3,7 +3,7 @@
 namespace davidhirtz\yii2\skeleton\models;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\db\TypeAttributeTrait;
+use davidhirtz\yii2\skeleton\models\traits\TypeAttributeTrait;
 use davidhirtz\yii2\skeleton\models\queries\AuthItemQuery;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use Yii;

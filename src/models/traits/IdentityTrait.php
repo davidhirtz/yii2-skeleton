@@ -6,63 +6,39 @@ use davidhirtz\yii2\skeleton\db\Identity;
 use Yii;
 
 /**
- * Class IdentityTrait
- * @package davidhirtz\yii2\skeleton\models\traits
+ * @property Identity $user
  */
 trait IdentityTrait
 {
-    /**
-     * @var string
-     */
-    public $email;
+    public ?string $email = null;
+    private ?Identity $_user = null;
 
-    /**
-     * @var Identity
-     */
-    private $_user;
-
-    /**
-     * @return Identity
-     */
-    public function getUser()
+    public function getUser(): ?Identity
     {
-        if ($this->_user === null) {
-            if ($this->email) {
-                $this->_user = Identity::findByEmail($this->email)
-                    ->selectIdentityAttributes()
-                    ->limit(1)
-                    ->one();
-            }
+        if ($this->email) {
+            $this->_user ??= Identity::findByEmail($this->email)
+                ->selectIdentityAttributes()
+                ->limit(1)
+                ->one();
         }
 
         return $this->_user;
     }
 
-    /**
-     * @param Identity $user
-     */
-    public function setUser($user)
+    public function setUser(Identity $user): void
     {
-        if ($user instanceof Identity) {
-            $this->_user = $user;
-            $this->email = $user->email;
-        }
+        $this->_user = $user;
+        $this->email = $user->email;
     }
 
-    /**
-     * Validates that user was found by email.
-     */
-    public function validateUserEmail()
+    public function validateUserEmail(): void
     {
         if (!$this->hasErrors() && !$this->getUser()) {
             $this->addError('id', Yii::t('skeleton', 'Your email was not found.'));
         }
     }
 
-    /**
-     * Validates user status, except for site owner.
-     */
-    public function validateUserStatus()
+    public function validateUserStatus(): void
     {
         if (!$this->hasErrors() && ($user = $this->getUser()) && $user->isDisabled() && !$user->isOwner()) {
             $this->addError('status', Yii::t('skeleton', 'Your account is currently disabled. Please contact an administrator!'));

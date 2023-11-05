@@ -3,7 +3,7 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\db\TypeAttributeTrait;
+use davidhirtz\yii2\skeleton\models\traits\TypeAttributeTrait;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
@@ -35,7 +35,7 @@ trait TypeGridViewTrait
             'contentOptions' => ['class' => 'text-nowrap'],
             'visible' => !$this->type && count($this->getModel()::getTypes()) > 1,
             'content' => fn($model) =>
-                /** @var ActiveRecord|TypeAttributeTrait $model */
+                /** @var ActiveRecord|\davidhirtz\yii2\skeleton\models\traits\TypeAttributeTrait $model */
                 ($route = $this->getRoute($model)) ? Html::a($model->getTypeName(), $route) : $model->getTypeName()
         ];
     }
@@ -46,7 +46,7 @@ trait TypeGridViewTrait
             'visible' => !$this->type && count($this->getModel()::getTypes()) > 1,
             'contentOptions' => ['class' => 'text-center'],
             'content' => function ($model) {
-                /** @var ActiveRecord|TypeAttributeTrait $model */
+                /** @var ActiveRecord|\davidhirtz\yii2\skeleton\models\traits\TypeAttributeTrait $model */
                 $icon = $this->getTypeIcon($model);
                 return ($route = $this->getRoute($model)) ? Html::a($icon, $route) : $icon;
             }
@@ -88,7 +88,7 @@ trait TypeGridViewTrait
 
     protected function getTypeIcon(ActiveRecordInterface $model): Icon
     {
-        /** @var TypeAttributeTrait $model */
+        /** @var \davidhirtz\yii2\skeleton\models\traits\TypeAttributeTrait $model */
         return Icon::tag($model->getTypeIcon(), [
             'data-toggle' => 'tooltip',
             'title' => $model->getTypeName(),

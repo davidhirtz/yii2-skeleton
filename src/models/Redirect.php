@@ -8,7 +8,7 @@ use davidhirtz\yii2\skeleton\behaviors\BlameableBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TimestampBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\db\TypeAttributeTrait;
+use davidhirtz\yii2\skeleton\models\traits\TypeAttributeTrait;
 use davidhirtz\yii2\skeleton\models\traits\UpdatedByUserTrait;
 use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
 use Yii;

@@ -3,14 +3,10 @@
 namespace davidhirtz\yii2\skeleton\models\forms;
 
 use davidhirtz\yii2\skeleton\models\traits\IdentityTrait;
-use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\datetime\DateTime;
 use Yii;
 use yii\base\Model;
 
-/**
- * @property User $user
- */
 class PasswordRecoverForm extends Model
 {
     use IdentityTrait;
@@ -18,12 +14,9 @@ class PasswordRecoverForm extends Model
     /**
      * @var string the interval in which no new email will be sent as date time string.
      */
-    public $timeoutSpamProtection = '5 mins';
+    public string $timeoutSpamProtection = '5 mins';
 
-    /**
-     * @inheritdoc
-     */
-    public function rules()
+    public function rules(): array
     {
         return [
             [
@@ -38,25 +31,25 @@ class PasswordRecoverForm extends Model
                 ['email'],
                 'email',
             ],
+            [
+                ['email'],
+                $this->validateUserEmail(...),
+            ],
         ];
     }
 
     /**
      * Validates user credentials and checks for spam protection.
      */
-    public function afterValidate()
+    public function afterValidate(): void
     {
-        $this->validateUserEmail();
         $this->validateUserStatus();
         $this->validateSpamProtection();
 
         parent::afterValidate();
     }
 
-    /**
-     * Validates spam protection.
-     */
-    public function validateSpamProtection()
+    public function validateSpamProtection(): void
     {
         if (!$this->hasErrors() && ($user = $this->getUser()) && $this->isAlreadySent()) {
             $this->addError('email', Yii::t('skeleton', 'We have just sent a link to reset your password to {email}. Please check your inbox!', [

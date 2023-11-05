@@ -4,7 +4,7 @@ namespace davidhirtz\yii2\skeleton\models;
 
 use DateTimeZone;
 use davidhirtz\yii2\datetime\Date;
-use davidhirtz\yii2\skeleton\db\StatusAttributeTrait;
+use davidhirtz\yii2\skeleton\models\traits\StatusAttributeTrait;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use davidhirtz\yii2\skeleton\helpers\Image;

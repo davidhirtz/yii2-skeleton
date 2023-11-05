@@ -8,11 +8,11 @@
 
 echo "<?php\n";
 if (!empty($namespace)) {
-    echo "\nnamespace {$namespace};\n";
+    echo "\nnamespace $namespace;\n";
 }
 ?>
 
-use davidhirtz\yii2\skeleton\db\MigrationTrait;
+use davidhirtz\yii2\skeleton\db\traits\MigrationTrait;
 use yii\db\Migration;
 
 /**

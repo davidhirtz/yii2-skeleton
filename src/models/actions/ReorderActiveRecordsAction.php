@@ -1,6 +1,6 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\db\actions;
+namespace davidhirtz\yii2\skeleton\models\actions;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;

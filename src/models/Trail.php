@@ -3,7 +3,7 @@
 namespace davidhirtz\yii2\skeleton\models;
 
 use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
-use davidhirtz\yii2\skeleton\db\TypeAttributeTrait;
+use davidhirtz\yii2\skeleton\models\traits\TypeAttributeTrait;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\models\collections\TrailModelCollection;
