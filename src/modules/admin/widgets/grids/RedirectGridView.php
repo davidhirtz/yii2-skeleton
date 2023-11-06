@@ -34,9 +34,6 @@ class RedirectGridView extends GridView
      */
     public ?Redirect $redirect = null;
 
-    /**
-     * @inheritDoc
-     */
     public function init(): void
     {
         if ($this->redirect) {
@@ -54,59 +51,56 @@ class RedirectGridView extends GridView
             ];
         }
 
-        if ($this->header === null) {
-            $this->header = [
-                [
-                    [
-                        'content' => $this->getSearchInput(),
-                        'options' => [
-                            'class' => 'col-12 col-md-6',
-                        ],
-                    ],
-                    'options' => [
-                        'class' => 'justify-content-end',
-                    ],
-                ],
-            ];
-        }
-
-        if ($this->footer === null) {
-            $this->footer = [
-                [
-                    [
-                        'content' => $this->getCreateButton() . ($this->showSelection ? $this->getDeleteAllButton() : ''),
-                        'options' => ['class' => 'col'],
-                    ],
-                ],
-            ];
-        }
-
         parent::init();
     }
 
-    /**
-     * Sets data provider.
-     */
+    protected function initHeader(): void
+    {
+        $this->header ??= [
+            [
+                [
+                    'content' => $this->getSearchInput(),
+                    'options' => [
+                        'class' => 'col-12 col-md-6',
+                    ],
+                ],
+                'options' => [
+                    'class' => 'justify-content-end',
+                ],
+            ],
+        ];
+
+        parent::initHeader();
+    }
+
+    protected function initFooter(): void
+    {
+        $this->footer ??= [
+            [
+                [
+                    'content' => $this->getCreateButton() . ($this->showSelection ? $this->getDeleteAllButton() : ''),
+                    'options' => ['class' => 'col'],
+                ],
+            ],
+        ];
+
+        parent::initFooter();
+    }
+
     protected function setDataProviderFromRedirect(): void
     {
-        $this->dataProvider = new RedirectActiveDataProvider();
+        $this->dataProvider = Yii::createObject(RedirectActiveDataProvider::class);
 
         $this->dataProvider->query->andWhere(['url' => $this->redirect->getOldAttribute('url')])
             ->andWhere(['!=', 'id', $this->redirect->id]);
     }
 
-    /**
-     * Sets options if `redirect` model is set.
-     */
     protected function setRedirectOptions(): void
     {
         $this->showSelection = false;
         $this->layout = '{items}';
     }
 
-    /**
-     * Runs the widget only if data is present.
-     */
     public function run(): void
     {
         if (!$this->redirect || $this->dataProvider->getCount() > 0) {
@@ -114,9 +108,6 @@ class RedirectGridView extends GridView
         }
     }
 
-    /**
-     * @return array
-     */
     public function requestUriColumn(): array
     {
         return [

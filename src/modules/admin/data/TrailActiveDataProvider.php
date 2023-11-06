@@ -12,30 +12,12 @@ use yii\data\ActiveDataProvider;
  */
 class TrailActiveDataProvider extends ActiveDataProvider
 {
-    /**
-     * @var User
-     */
-    public $user;
+    public ?User $user = null;
+    public ?string $model = null;
+    public ?string $modelId = null;
+    public ?int $trailId = null;
 
-    /**
-     * @var string
-     */
-    public $model;
-
-    /**
-     * @var string
-     */
-    public $modelId;
-
-    /**
-     * @var int
-     */
-    public $trailId;
-
-    /**
-     * @inheritDoc
-     */
-    public function init()
+    public function init(): void
     {
         $this->query = Trail::find()
             ->orderBy(['id' => SORT_DESC])
@@ -69,10 +51,7 @@ class TrailActiveDataProvider extends ActiveDataProvider
         parent::init();
     }
 
-    /**
-     * @return Trail[]
-     */
-    protected function prepareModels()
+    protected function prepareModels(): array
     {
         /** @var Trail[] $models */
         $models = parent::prepareModels();

@@ -1,6 +1,5 @@
 <?php
 /**
- * Auth item list.
  * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController::actionIndex()
  *
  * @var View $this

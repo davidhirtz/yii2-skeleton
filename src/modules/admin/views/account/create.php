@@ -1,6 +1,5 @@
 <?php
 /**
- * Signup form.
  * @see davidhirtz\yii2\skeleton\controllers\UserController::actionCreate()
  *
  * @var davidhirtz\yii2\skeleton\web\View $this
@@ -9,7 +8,6 @@
  */
 
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\SignupActiveForm;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use davidhirtz\yii2\skeleton\helpers\Html;

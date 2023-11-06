@@ -1,13 +1,14 @@
 <?php
 /**
- * Resend confirmation form.
  * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController::actionResend()
  *
- * @var \davidhirtz\yii2\skeleton\web\View $this
- * @var \davidhirtz\yii2\skeleton\models\forms\AccountResendConfirmForm $form
+ * @var View $this
+ * @var AccountResendConfirmForm $form
  * @var \yii\bootstrap4\ActiveForm $af
  */
 
+use davidhirtz\yii2\skeleton\models\forms\AccountResendConfirmForm;
+use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;

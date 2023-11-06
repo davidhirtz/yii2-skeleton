@@ -17,6 +17,9 @@ class RedirectActiveForm extends ActiveForm
 
     public bool $hasStickyButtons = true;
 
+    /**
+     * @uses static::typeField()
+     */
     public function init(): void
     {
         $this->fields ??= [

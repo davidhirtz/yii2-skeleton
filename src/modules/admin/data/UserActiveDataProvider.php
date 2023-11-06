@@ -12,15 +12,9 @@ use yii\data\ActiveDataProvider;
  */
 class UserActiveDataProvider extends ActiveDataProvider
 {
-    /**
-     * @var string
-     */
-    public $searchString;
+    public ?string $searchString = null;
 
-    /**
-     * @inheritDoc
-     */
-    public function init()
+    public function init(): void
     {
         if (!$this->query) {
             $this->query = User::find();
@@ -30,20 +24,14 @@ class UserActiveDataProvider extends ActiveDataProvider
         parent::init();
     }
 
-    /**
-     * Inits query.
-     */
-    protected function initQuery()
+    protected function initQuery(): void
     {
         if ($this->searchString) {
             $this->query->matching($this->searchString);
         }
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function setSort($value)
+    public function setSort($value): void
     {
         if (is_array($value) && !isset($value['defaultOrder'])) {
             $value['defaultOrder'] = ['last_login' => SORT_DESC];
@@ -52,10 +40,7 @@ class UserActiveDataProvider extends ActiveDataProvider
         parent::setSort($value);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function setPagination($value)
+    public function setPagination($value): void
     {
         if (is_array($value) && !isset($value['defaultPageSize'])) {
             $value['defaultPageSize'] = 50;

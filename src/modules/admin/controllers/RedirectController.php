@@ -32,8 +32,8 @@ class RedirectController extends Controller
 
     public function actionIndex(?int $user = null, ?string $q = null): Response|string
     {
-        $provider = new RedirectActiveDataProvider([
-            'user' => $user ? User::findOne((int)$user) : null,
+        $provider = Yii::$container->get(RedirectActiveDataProvider::class, [], [
+            'user' => User::findOne($user),
             'search' => $q,
         ]);
 

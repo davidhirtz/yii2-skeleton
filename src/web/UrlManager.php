@@ -102,7 +102,7 @@ class UrlManager extends \yii\web\UrlManager
 
         $url = parent::createUrl(array_filter($params, fn($value): bool => !is_null($value)));
 
-        $this->trigger(static::EVENT_AFTER_CREATE, $event = new UrlManagerEvent([
+        $this->trigger(static::EVENT_AFTER_CREATE, $event = Yii::$container->get(UrlManagerEvent::class, [], [
             'url' => $url,
             'params' => $params,
         ]));
@@ -196,7 +196,7 @@ class UrlManager extends \yii\web\UrlManager
             Yii::$app->language = in_array($subdomain, $this->languages) ? $subdomain : $this->defaultLanguage;
         }
 
-        $this->trigger(static::EVENT_BEFORE_PARSE, $event = new UrlManagerEvent([
+        $this->trigger(static::EVENT_BEFORE_PARSE, $event = Yii::$container->get(UrlManagerEvent::class, [], [
             'request' => $request,
         ]));
 

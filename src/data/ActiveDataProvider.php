@@ -14,7 +14,7 @@ class ActiveDataProvider extends \yii\data\ActiveDataProvider
     /**
      * Triggers `init` event after initialization is done.
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
 

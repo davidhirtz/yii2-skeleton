@@ -5,6 +5,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
+use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\widgets\forms\DynamicRangeDropdown;
 use davidhirtz\yii2\skeleton\widgets\forms\TimezoneDropdown;
 use davidhirtz\yii2\timeago\Timeago;
@@ -30,11 +31,12 @@ trait UserFormTrait
         return $this->field($this->model, 'language')->widget(DynamicRangeDropdown::class, $options);
     }
 
-    public function newPassword(array $options = []): ActiveField|string
+    public function newPasswordField(array $options = []): ActiveField|string
     {
         return $this->field($this->model, 'email')->passwordInput($options);
     }
 
+    /** @uses UserForm::$repeatPassword */
     public function repeatPasswordField(array $options = []): ActiveField|string
     {
         return $this->field($this->model, 'repeatPassword', ['enableClientValidation' => false])->passwordInput($options);

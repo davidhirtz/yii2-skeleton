@@ -22,12 +22,16 @@ class GoogleAuthenticatorActiveForm extends ActiveForm
      */
     public function init(): void
     {
-        if (!$this->buttons) {
-            $this->buttons = [$this->button($this->model->user->google_2fa_secret ? Yii::t('skeleton', 'Disable') : Yii::t('skeleton', 'Enable'))];
-        }
+        $this->buttons ??= [
+            $this->button($this->model->user->google_2fa_secret
+                ? Yii::t('skeleton', 'Disable')
+                : Yii::t('skeleton', 'Enable')),
+        ];
 
         if (!$this->action) {
-            $this->action = $this->model->user->google_2fa_secret ? ['account/disable-google-authenticator'] : ['account/enable-google-authenticator'];
+            $this->action = $this->model->user->google_2fa_secret
+                ? ['account/disable-google-authenticator']
+                : ['account/enable-google-authenticator'];
         }
 
         parent::init();

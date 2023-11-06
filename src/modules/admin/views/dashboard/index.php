@@ -1,11 +1,11 @@
 <?php
 /**
- * Admin index.
  * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\DashboardController::actionIndex()
- * @var \davidhirtz\yii2\skeleton\web\View $this
+ * @var View $this
  * @var array $panels
  */
 
+use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ListGroup;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 

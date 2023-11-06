@@ -6,9 +6,6 @@ use davidhirtz\yii2\skeleton\validators\HtmlValidator;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveField;
 use davidhirtz\yii2\skeleton\widgets\forms\TinyMceEditor;
 
-/**
- * ContentFieldTrait provides methods to manipulate the CKEditor.
- */
 trait ContentFieldTrait
 {
     public function contentField($options = []): ActiveField|string

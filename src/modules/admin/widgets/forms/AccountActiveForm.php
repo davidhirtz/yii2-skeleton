@@ -16,6 +16,17 @@ class AccountActiveForm extends ActiveForm
 
     public bool $hasStickyButtons = true;
 
+    /**
+     * @uses static::statusField()
+     * @uses static::emailField()
+     * @uses static::newPasswordField()
+     * @uses static::repeatPasswordField()
+     * @uses static::oldPasswordField()
+     * @uses static::languageField()
+     * @uses static::timezoneField()
+     * @uses static::uploadField()
+     * @uses static::countryField()
+     */
     public function init(): void
     {
         $this->fields ??= [

@@ -194,7 +194,7 @@ return [
     'Target URL' => 'Zielseite',
     'Thank you for signing up! Please confirm your email address by clicking the link below.' => 'Vielen Dank für Ihre Registrierung! Bitte klicken Sie den folgenden Link, um Ihre Registrierung abzuschließen.',
     'Thank you!' => 'Vielen Dank!',
-    'The above error occurred while the Web server was processing your request.' => 'Der oben angezeigte Fehler ist bei Ihrer Anfrage aufgetreten.',
+    'The above error occurred while the webserver was processing your request.' => 'Der oben angezeigte Fehler ist bei Ihrer Anfrage aufgetreten.',
     'The password must match the new password.' => 'Das Passwort muss identisch mit dem neuen Passwort sein.',
     'The password recovery url is invalid.' => 'Ihr Link zum Zurücksetzen des Passworts ist nicht gültig.',
     'The password reset link was updated.' => 'Der Passwort-Link wurde ersetzt.',

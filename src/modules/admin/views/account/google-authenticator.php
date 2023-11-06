@@ -1,6 +1,5 @@
 <?php
 /**
- * Google Authenticator.
  * @see davidhirtz\yii2\skeleton\controllers\AccountController::actionLogin()
  *
  * @var davidhirtz\yii2\skeleton\web\View $this

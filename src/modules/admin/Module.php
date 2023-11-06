@@ -2,7 +2,15 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin;
 
+use davidhirtz\yii2\skeleton\controllers\AccountController;
 use davidhirtz\yii2\skeleton\models\User;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\DashboardController;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\TrailController;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\UserLoginController;
 use Yii;
 use yii\base\Action;
 
@@ -51,35 +59,35 @@ class Module extends \yii\base\Module
      */
     protected array $defaultControllerMap = [
         'account' => [
-            'class' => 'davidhirtz\yii2\skeleton\controllers\AccountController',
+            'class' => AccountController::class,
             'viewPath' => '@skeleton/modules/admin/views/account',
         ],
         'auth' => [
-            'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController',
+            'class' => AuthController::class,
             'viewPath' => '@skeleton/modules/admin/views/auth',
         ],
         'dashboard' => [
-            'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\DashboardController',
+            'class' => DashboardController::class,
             'viewPath' => '@skeleton/modules/admin/views/dashboard',
         ],
         'redirect' => [
-            'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController',
+            'class' => RedirectController::class,
             'viewPath' => '@skeleton/modules/admin/views/redirect',
         ],
         'system' => [
-            'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController',
+            'class' => SystemController::class,
             'viewPath' => '@skeleton/modules/admin/views/system',
         ],
         'trail' => [
-            'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\TrailController',
+            'class' => TrailController::class,
             'viewPath' => '@skeleton/modules/admin/views/trail',
         ],
         'user' => [
-            'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\UserController',
+            'class' => UserController::class,
             'viewPath' => '@skeleton/modules/admin/views/user',
         ],
         'user-login' => [
-            'class' => 'davidhirtz\yii2\skeleton\modules\admin\controllers\UserLoginController',
+            'class' => UserLoginController::class,
             'viewPath' => '@skeleton/modules/admin/views/user-login',
         ],
     ];
@@ -89,9 +97,8 @@ class Module extends \yii\base\Module
         if (!Yii::$app->getRequest()->getIsConsoleRequest()) {
             $user = Yii::$app->getUser();
 
-            if ($user->loginUrl === null) {
-                $user->loginUrl = ['/admin/account/login'];
-            }
+            $user->loginUrl ??= ['/admin/account/login'];
+            Yii::$app->getErrorHandler()->errorView = '@skeleton/modules/admin/views/dashboard/error.php';
 
             if (!$this->navbarItems) {
                 $this->navbarItems = [

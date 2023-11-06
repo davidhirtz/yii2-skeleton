@@ -204,12 +204,9 @@ trait ApplicationTrait
      */
     public function extendComponent(string $id, array $definition): void
     {
-        $this->set($id, ArrayHelper::merge($this->getComponents()[$id] ?? [], $definition));
+        $this->set($id, ArrayHelper::merge($definition, $this->getComponents()[$id] ?? []));
     }
 
-    /**
-     * Extends multiple application components.
-     */
     public function extendComponents(array $components): void
     {
         foreach ($components as $id => $definition) {

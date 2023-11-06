@@ -1,6 +1,5 @@
 <?php
 /**
- * Edit account.
  * @see AccountController::actionUpdate()
  * @see AccountController::actionDeauthorize()
  *

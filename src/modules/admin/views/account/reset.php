@@ -1,6 +1,5 @@
 <?php
 /**
- * Reset password form.
  * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController::actionReset()
  *
  * @var View $this

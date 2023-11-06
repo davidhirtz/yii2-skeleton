@@ -1,3 +1,7 @@
+## 2.0.4 (Nov 6, 2023)
+
+- Added `\davidhirtz\yii2\skeleton\widgets\AdminButton`
+
 ## 2.0.3 (Nov 6, 2023)
 
 - Removed unused `CountryDropdown` and `LanguageDropdown` widgets

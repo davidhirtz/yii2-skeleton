@@ -11,28 +11,18 @@ use yii\data\ActiveDataProvider;
  */
 class RedirectActiveDataProvider extends ActiveDataProvider
 {
-    /**
-     * @var User
-     */
-    public $user;
+    public ?User $user = null;
+    public ?string $search = null;
 
-    /**
-     * @var string
-     */
-    public $search;
-
-    /**
-     * @inheritDoc
-     */
-    public function init()
+    public function init(): void
     {
         $this->query = Redirect::find()
             ->orderBy(['updated_at' => SORT_DESC])
             ->indexBy('id');
 
         if ($search = $this->query->sanitizeSearchString($this->search)) {
-            $this->query->andWhere("[[request_uri]] LIKE :search OR [[url]] LIKE :search", [
-                'search' => "%{$search}%",
+            $this->query->andWhere('[[request_uri]] LIKE :search OR [[url]] LIKE :search', [
+                'search' => "%$search%",
             ]);
         }
 
@@ -50,7 +40,7 @@ class RedirectActiveDataProvider extends ActiveDataProvider
     /**
      * @return Redirect[]
      */
-    protected function prepareModels()
+    protected function prepareModels(): array
     {
         /** @var Redirect[] $models */
         $models = parent::prepareModels();

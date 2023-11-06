@@ -15,19 +15,16 @@ class Breadcrumbs extends \yii\widgets\Breadcrumbs
 
     public function init(): void
     {
-        if ($this->homeLink === null) {
-            $this->homeLink = [
-                'label' => Yii::$app->name,
-                'url' => Yii::$app->getHomeUrl(),
-            ];
-        }
+        $this->homeLink ??= [
+            'label' => Yii::$app->name,
+            'url' => Yii::$app->getHomeUrl(),
+        ];
 
         /** @var Module $module */
         $module = Yii::$app->getModule('admin');
 
         // Admin module breadcrumb.
         if (Yii::$app->controller->module instanceof Module || in_array(Yii::$app->controller->module, $module->getModules())) {
-
             if ($module->name !== false) {
                 $this->links = [['label' => $module->name ?: Yii::t('skeleton', 'Admin'), 'url' => ['/admin/dashboard/index']], ...$this->links];
             }

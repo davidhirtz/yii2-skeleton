@@ -7,19 +7,23 @@ use yii\bootstrap4\BootstrapPluginAsset;
 use yii\grid\GridViewAsset;
 use yii\web\AssetBundle;
 
-/**
- * Includes the default CSS and JS files for the admin area.
- */
 class AdminAsset extends AssetBundle
 {
     /**
-     * @var array
+     * @var array contains the options for the favicon link ta
      */
-    public $css = ['css/admin.min.css'];
+    public array $faviconOptions = [];
 
-    /**
-     * @var array
-     */
+    public $css = ['css/admin.min.css'];
+    public $js = ['js/admin.min.js'];
+    public $sourcePath = '@skeleton/assets/admin';
+
+    public $publishOptions = [
+        'except' => [
+            'scss/',
+        ],
+    ];
+
     public $depends = [
         GridViewAsset::class,
         BootstrapPluginAsset::class,
@@ -27,36 +31,9 @@ class AdminAsset extends AssetBundle
         FontAwesomeAsset::class,
     ];
 
-    /**
-     * @var array contains the options for the favicon link ta
-     */
-    public array $faviconOptions = [];
-
-    /**
-     * @var array
-     */
-    public $js = ['js/admin.min.js'];
-
-    /**
-     * @var string
-     */
-    public $sourcePath = '@skeleton/assets/admin';
-
-    /**
-     * @var array
-     */
-    public $publishOptions = [
-        'except' => [
-            'scss/',
-        ],
-    ];
-
-    /**
-     * @inheritDoc
-     */
-    public function init()
+    public function init(): void
     {
-        if ($this->faviconOptions) {
+        if ($this->faviconOptions['href'] ?? false) {
             $this->faviconOptions['rel'] ??= 'shortcut icon';
             Yii::$app->getView()->registerLinkTag($this->faviconOptions, 'favicon');
         }

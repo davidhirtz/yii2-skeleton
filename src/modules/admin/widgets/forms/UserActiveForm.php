@@ -9,7 +9,6 @@ use yii\widgets\ActiveField;
 
 /**
  * @property UserForm $model
-
  */
 class UserActiveForm extends ActiveForm
 {
@@ -17,6 +16,17 @@ class UserActiveForm extends ActiveForm
 
     public bool $hasStickyButtons = true;
 
+    /**
+     * @uses static::statusField()
+     * @uses static::emailField()
+     * @uses static::newPasswordField()
+     * @uses static::repeatPasswordField()
+     * @uses static::languageField()
+     * @uses static::timezoneField()
+     * @uses static::uploadField()
+     * @uses static::countryField()
+     * @uses static::sendEmailField()
+     */
     public function init(): void
     {
         $this->fields ??= [
@@ -40,7 +50,6 @@ class UserActiveForm extends ActiveForm
         parent::init();
     }
 
-    /** @noinspection PhpUnused {@see static::$fields} */
     public function sendEmailField(array $options = []): ActiveField|string
     {
         return $this->model->getIsNewRecord()

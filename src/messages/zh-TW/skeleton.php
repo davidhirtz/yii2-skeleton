@@ -194,7 +194,7 @@ return [
     'Target URL' => '',
     'Thank you for signing up! Please confirm your email address by clicking the link below.' => '',
     'Thank you!' => '',
-    'The above error occurred while the Web server was processing your request.' => '',
+    'The above error occurred while the webserver was processing your request.' => '',
     'The password must match the new password.' => '',
     'The password recovery url is invalid.' => '',
     'The password reset link was updated.' => '',

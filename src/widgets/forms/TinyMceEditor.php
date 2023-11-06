@@ -371,9 +371,6 @@ class TinyMceEditor extends InputWidget
         return !$this->validator || in_array($tag, $this->validator->allowedHtmlTags);
     }
 
-    /**
-     * Registers CKEditor plugin.
-     */
     protected function registerClientScript(): void
     {
         $view = $this->getView();

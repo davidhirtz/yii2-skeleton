@@ -1,6 +1,5 @@
 <?php
 /**
- * User permissions
  * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController::actionView()
  *
  * @var View $this
