@@ -2,7 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\models\events;
 
-use davidhirtz\yii2\cms\models\ActiveRecord;
+use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use yii\base\ModelEvent;
 
 class DuplicateActiveRecordEvent extends ModelEvent

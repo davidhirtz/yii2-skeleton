@@ -23,13 +23,6 @@ trait NestedTreeTrait
     private ?array $_ancestors = null;
     private ?array $_descendants = null;
 
-    public function transactions(): array
-    {
-        return [
-            self::SCENARIO_DEFAULT => self::OP_ALL,
-        ];
-    }
-
     public function getParent(): ActiveQuery
     {
         return $this->hasOne(static::class, ['id' => 'parent_id']);
@@ -367,5 +360,10 @@ trait NestedTreeTrait
         }
 
         return $items;
+    }
+
+    public function isTransactional($operation): bool
+    {
+        return $this->isAttributeChanged('parent_id') || parent::isAttributeRequired($operation);
     }
 }

@@ -7,7 +7,7 @@ use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Exception;
 use Yii;
 
-class ReorderActiveRecordsAction
+class ReorderActiveRecords
 {
     /**
      * @see static::getTotalRowsUpdated()
@@ -23,13 +23,19 @@ class ReorderActiveRecordsAction
         protected string $attribute = 'position',
         protected ?string $index = null
     ) {
+    }
+
+    public function run(): int|false
+    {
         if (!$this->beforeReorder()) {
-            return;
+            return false;
         }
 
         if ($this->reorderActiveRecords()) {
             $this->afterReorder();
         }
+
+        return $this->_totalRowsUpdated;
     }
 
     protected function reorderActiveRecords(): int
@@ -37,15 +43,7 @@ class ReorderActiveRecordsAction
         $transaction = Yii::$app->getDb()->beginTransaction();
 
         try {
-            foreach ($this->models as $model) {
-                $primaryKey = $model->getPrimaryKey(true);
-                $position = $this->getNewPosition($primaryKey);
-
-                if ($position != $model->getAttribute($this->attribute)) {
-                    $this->_totalRowsUpdated += $model::updateAll([$this->attribute => $position], $primaryKey);
-                }
-            }
-
+            $this->reorderActiveRecordsInternal();
             $transaction->commit();
         } catch (Exception $exception) {
             $transaction->rollBack();
@@ -53,6 +51,20 @@ class ReorderActiveRecordsAction
         }
 
         return $this->_totalRowsUpdated;
+    }
+
+    protected function reorderActiveRecordsInternal(): void
+    {
+        $this->_totalRowsUpdated = 0;
+
+        foreach ($this->models as $model) {
+            $primaryKey = $model->getPrimaryKey(true);
+            $position = $this->getNewPosition($primaryKey);
+
+            if ($position != $model->getAttribute($this->attribute)) {
+                $this->_totalRowsUpdated += $model::updateAll([$this->attribute => $position], $primaryKey);
+            }
+        }
     }
 
     protected function beforeReorder(): bool
@@ -75,12 +87,15 @@ class ReorderActiveRecordsAction
         return $this->_totalRowsUpdated;
     }
 
-    public static function createFromPostRequest($paramName, $config = []): ?static
+    public static function runWithBodyParam(string $paramName, array $config = []): int|false
     {
         $order = array_map('intval', array_filter(Yii::$app->getRequest()->getBodyParam($paramName, [])));
 
-        return $order
-            ? Yii::createObject(static::class, [...array_values($config),  $order])
-            : null;
+        if ($order) {
+            $action = Yii::createObject(static::class, [...array_values($config), $order]);
+            return $action->run();
+        }
+
+        return 0;
     }
 }
