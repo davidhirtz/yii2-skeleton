@@ -1,7 +1,6 @@
 ## 2.0.4 (Nov 6, 2023)
 
 - Added `davidhirtz\yii2\skeleton\widgets\AdminButton`
-- Moved `davidhirtz\yii2\skeleton\helpers\Html` to `davidhirtz\yii2\skeleton\modules\admin\helpers\Html`
 - Removed unused `BootstrapPluginAsset`
 
 ## 2.0.3 (Nov 6, 2023)
