@@ -5,10 +5,6 @@ use davidhirtz\yii2\skeleton\assets\JuiAsset;
 use davidhirtz\yii2\skeleton\web\View;
 use yii\helpers\Json;
 
-/**
- * Trait Widget
- * @package davidhirtz\yii2\skeleton\widgets\yui
- */
 trait JuiWidgetTrait
 {
     /**
@@ -19,19 +15,14 @@ trait JuiWidgetTrait
     /**
      * @var array the options for the jQuery UI widget
      */
-    public $clientOptions = [];
+    public array $clientOptions = [];
 
     /**
      * @var array the event handlers for the jQuery UI widget
      */
-    public $clientEvents = [];
+    public array $clientEvents = [];
 
-    /**
-     * Registers a specific jQuery UI widget asset bundle, initializes it with client options and registers related events
-     * @param string $name
-     * @param string $id
-     */
-    protected function registerWidget($name, $id = null)
+    protected function registerWidget(string $name, ?string $id = null): void
     {
         if ($id === null) {
             $id = $this->options['id'];
@@ -42,7 +33,7 @@ trait JuiWidgetTrait
 
         if (!empty($this->clientEvents)) {
             foreach ($this->clientEvents as $event => $handler) {
-                $js[] = ".on('{$event}', {$handler})";
+                $js[] = ".on('$event', $handler)";
             }
         }
 
@@ -50,5 +41,4 @@ trait JuiWidgetTrait
         JuiAsset::register($view = $this->getView());
         $view->registerJs(implode('', $js) . ';');
     }
-
 }

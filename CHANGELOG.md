@@ -1,3 +1,7 @@
+## 2.0.3 (Nov 6, 2023)
+
+- Removed unused `CountryDropdown`
+
 ## 2.0.2 (Nov 6, 2023)
 
 - Added `Widget` abstract class, for minimal widget implementations
