@@ -1,6 +1,6 @@
 ## 2.0.3 (Nov 6, 2023)
 
-- Removed unused `CountryDropdown`
+- Removed unused `CountryDropdown` and `LanguageDropdown` widgets
 
 ## 2.0.2 (Nov 6, 2023)
 
