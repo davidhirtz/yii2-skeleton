@@ -2,9 +2,6 @@
 
 - Added `davidhirtz\yii2\skeleton\widgets\AdminButton`
 - Removed unused `BootstrapPluginAsset`
-
-## 2.0.3 (Nov 6, 2023)
-
 - Removed unused `CountryDropdown` and `LanguageDropdown` widgets
 - Removed unused `User::hasAuthClient()`
 - Removed `Toolbar`
