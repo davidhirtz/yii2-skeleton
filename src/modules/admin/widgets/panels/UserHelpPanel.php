@@ -13,7 +13,6 @@ class UserHelpPanel extends HelpPanel
 
     public function init(): void
     {
-        $this->title ??= Yii::t('skeleton', 'Operations');
         $this->content ??= $this->renderButtonToolbar(array_filter($this->getButtons()));
 
         parent::init();

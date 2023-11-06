@@ -4,32 +4,22 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\panels;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
+use Yii;
 
-/**
- * Class HelpPanel
- * @package davidhirtz\yii2\skeleton\modules\admin\widgets\panels
- */
 class HelpPanel extends Panel
 {
-    /**
-     * @var array
-     */
-    public $wrapOptions = [
+    public array $wrapOptions = [
         'class' => 'row',
     ];
 
-    /**
-     * @var array
-     */
-    public $contentOptions = [
+    public array $contentOptions = [
         'class' => 'offset-md-3 col-md-8',
     ];
 
-    /**
-     * @inheritdoc
-     */
-    public function init()
+    public function init(): void
     {
+        $this->title ??= Yii::t('skeleton', 'Operations');
+
         if ($this->content) {
             $this->content = Html::tag('div', Html::tag('div', $this->content, $this->contentOptions), $this->wrapOptions);
         }
@@ -37,20 +27,12 @@ class HelpPanel extends Panel
         parent::init();
     }
 
-    /**
-     * @param string $text
-     * @return string
-     */
-    public function renderHelpBlock($text)
+    public function renderHelpBlock(string $text): string
     {
         return Html::tag('p', $text);
     }
 
-    /**
-     * @param array|string $buttons
-     * @return string
-     */
-    public function renderButtonToolbar($buttons)
+    public function renderButtonToolbar(array|string $buttons): string
     {
         return $buttons ? Html::tag('div', Html::buttons($buttons), ['class' => 'card-buttons']) : '';
     }

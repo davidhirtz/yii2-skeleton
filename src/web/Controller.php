@@ -37,7 +37,7 @@ class Controller extends \yii\web\Controller
         return $this->spacelessOutput ? trim(preg_replace('/>\s+</', '><', $content)) : $content;
     }
 
-    public function error(Model|array|string $value): void
+    public function error(Model|array|string $value): bool
     {
         if ($value instanceof Model) {
             $value = $value->getFirstErrors();
@@ -45,13 +45,23 @@ class Controller extends \yii\web\Controller
 
         if ($value) {
             Yii::$app->getSession()->addFlash('error', $value);
+            return true;
         }
+
+        return false;
     }
 
-    public function success(Model|array|string $value): void
+    public function success(Model|array|string $value, ?string $message = null): bool
     {
+        if ($value instanceof Model && !$value->hasErrors()) {
+            $value = $message;
+        }
+
         if ($value) {
             Yii::$app->getSession()->addFlash('success', $value);
+            return true;
         }
+
+        return false;
     }
 }

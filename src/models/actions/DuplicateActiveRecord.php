@@ -14,8 +14,8 @@ use Yii;
  */
 class DuplicateActiveRecord
 {
-    public const EVENT_AFTER_CLONE = 'afterClone';
-    public const EVENT_BEFORE_CLONE = 'beforeClone';
+    public const EVENT_AFTER_DUPLICATE = 'afterDuplicate';
+    public const EVENT_BEFORE_DUPLICATE = 'beforeDuplicate';
 
     public ActiveRecord $duplicate;
 
@@ -25,7 +25,7 @@ class DuplicateActiveRecord
         $this->duplicate->setAttributes([...$this->getSafeAttributes(), ...$attributes], false);
     }
 
-    public function duplicate(): ?ActiveRecord
+    public function duplicateActiveRecord(): ?ActiveRecord
     {
         if ($this->model::getDb()->getTransaction()) {
             return $this->duplicateInternal();
@@ -62,7 +62,7 @@ class DuplicateActiveRecord
         $event = new DuplicateActiveRecordEvent();
         $event->duplicate = $this->duplicate;
 
-        $this->model->trigger(static::EVENT_BEFORE_CLONE, $event);
+        $this->model->trigger(static::EVENT_BEFORE_DUPLICATE, $event);
         return $event->isValid;
     }
 
@@ -71,7 +71,7 @@ class DuplicateActiveRecord
         $event = new DuplicateActiveRecordEvent();
         $event->duplicate = $this->duplicate;
 
-        $this->model->trigger(static::EVENT_AFTER_CLONE, $event);
+        $this->model->trigger(static::EVENT_AFTER_DUPLICATE, $event);
     }
 
     protected function getSafeAttributes(): array
@@ -85,6 +85,6 @@ class DuplicateActiveRecord
     public static function create(array $params = []): ?ActiveRecord
     {
         $action = Yii::createObject(static::class, $params);
-        return $action->duplicate();
+        return $action->duplicateActiveRecord();
     }
 }

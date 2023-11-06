@@ -5,51 +5,44 @@ namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 use yii\base\Widget;
 use yii\helpers\Html;
 
-/**
- * Class Panel.
- * @package davidhirtz\yii2\skeleton\widgets\bootstrap
- */
 class Panel extends Widget
 {
     /**
-     * @var string
+     * @var string|null the panel title
      */
-    public $title;
+    public ?string $title = null;
 
     /**
-     * @var string
+     * @var string|null the panel content
      */
-    public $content;
+    public ?string $content = null;
 
     /**
-     * @var string
+     * @var string the panel type defining the color
      */
-    public $type = 'default';
+    public string $type = 'default';
 
     /**
-     * @var array
+     * @var array the HTML attributes for the panel container tag
      */
-    public $options = [];
+    public array $options = [];
 
     /**
-     * @var array
+     * @var array the HTML attributes for the panel body container tag
      */
-    public $bodyOptions = [];
+    public array $bodyOptions = [];
 
     /**
-     * @var bool
+     * @var bool whether the panel is collapsable
      */
-    public $isCollapsable = false;
+    public bool $isCollapsable = false;
 
     /**
-     * @var bool
+     * @var bool whether the panel is collapsed
      */
-    public $isCollapsed = true;
+    public bool $isCollapsed = true;
 
-    /**
-     * Sets default CSS class.
-     */
-    public function init()
+    public function init(): void
     {
         if ($this->getId(false)) {
             $this->options['id'] = $this->getId();
@@ -60,27 +53,22 @@ class Panel extends Widget
 
         parent::init();
 
-        if (!$this->content) {
+        if ($this->content === null) {
             ob_start();
             ob_implicit_flush(false);
         }
     }
 
-    /**
-     * Wraps content in panel.
-     */
-    public function run()
+    public function run(): void
     {
-        if (!$this->content) {
-            $this->content = ob_get_clean();
-        }
+        $this->content ??= ob_get_clean();
 
         if ($this->content) {
             $collapseId = $this->getId() . '-body';
             echo Html::beginTag('div', $this->options);
 
             if ($this->title) {
-                $title = $this->isCollapsable ? Html::a($this->title, "#{$collapseId}", ['data-toggle' => 'collapse']) : $this->title;
+                $title = $this->isCollapsable ? Html::a($this->title, "#$collapseId", ['data-toggle' => 'collapse']) : $this->title;
                 echo Html::tag('div', Html::tag('h2', $title, ['class' => 'card-title']), ['class' => 'card-header']);
             }
 
