@@ -2,7 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits;
 
-use davidhirtz\yii2\skeleton\modules\admin\helpers\Html;
+use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\timeago\Timeago;
 use Yii;

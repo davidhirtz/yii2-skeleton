@@ -6,10 +6,7 @@ use yii\helpers\BaseStringHelper;
 
 class StringHelper extends BaseStringHelper
 {
-    /**
-     * Obfuscates email address for public display.
-     * @noinspection PhpUnused
-     */
+    /** @noinspection PhpUnused */
     public static function obfuscateEmail(
         string $email,
         bool $obfuscateDomain = true,

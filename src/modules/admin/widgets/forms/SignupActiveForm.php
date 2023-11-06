@@ -4,7 +4,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
 use davidhirtz\yii2\skeleton\assets\SignupAsset;
 use davidhirtz\yii2\skeleton\controllers\AccountController;
-use davidhirtz\yii2\skeleton\modules\admin\helpers\Html;
+use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\forms\SignupForm;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
 use Yii;

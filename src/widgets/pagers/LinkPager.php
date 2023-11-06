@@ -3,7 +3,7 @@
 namespace davidhirtz\yii2\skeleton\widgets\pagers;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
-use davidhirtz\yii2\skeleton\modules\admin\helpers\Html;
+use davidhirtz\yii2\skeleton\helpers\Html;
 
 class LinkPager extends \yii\widgets\LinkPager
 {

@@ -2,7 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\panels;
 
-use davidhirtz\yii2\skeleton\modules\admin\helpers\Html;
+use davidhirtz\yii2\skeleton\helpers\Html;
 use Yii;
 
 class UserOwnerPanel extends HelpPanel

@@ -2,7 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\web;
 
-use davidhirtz\yii2\skeleton\modules\admin\helpers\Html;
+use davidhirtz\yii2\skeleton\helpers\Html;
 use yii\helpers\Json;
 use Yii;
 use yii\helpers\Url;

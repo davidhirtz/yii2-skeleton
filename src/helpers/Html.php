@@ -1,9 +1,8 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\modules\admin\helpers;
+namespace davidhirtz\yii2\skeleton\helpers;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;

@@ -5,9 +5,6 @@ namespace davidhirtz\yii2\skeleton\helpers;
 use SimpleXMLElement;
 use yii\helpers\BaseArrayHelper;
 
-/**
- * Extends the default ArrayHelper class.
- */
 class ArrayHelper extends BaseArrayHelper
 {
     /** @noinspection PhpUnused */
@@ -33,10 +30,11 @@ class ArrayHelper extends BaseArrayHelper
         }
     }
 
-    /**
-     * Adds unique keys to comma separated string.
-     */
-    public static function cacheStringToArray(array|string|null $string, array|int|string $values = [], string $separator = ','): array
+    public static function cacheStringToArray(
+        array|string|null $string,
+        array|int|string $values = [],
+        string $separator = ','
+    ): array
     {
         if (!is_array($string)) {
             $string = $string ? explode($separator, $string) : [];
@@ -49,18 +47,16 @@ class ArrayHelper extends BaseArrayHelper
         return array_unique(array_filter([...$string, ...$values]));
     }
 
-    /**
-     * Creates a comma separated cache string from the given array.
-     */
-    public static function createCacheString(array $array, string $separator = ',', ?string $default = null): ?string
+    public static function createCacheString(
+        array $array,
+        string $separator = ',',
+        ?string $default = null
+    ): ?string
     {
         return $array ? implode($separator, $array) : $default;
     }
 
-    /**
-     * Reads a SimpleXML object into an array.
-     * @noinspection PhpUnused
-     */
+    /** @noinspection PhpUnused */
     public static function simpleXmlToArray(?SimpleXMLElement $xml): array
     {
         $namespace = $xml?->getDocNamespaces(true);

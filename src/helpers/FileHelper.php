@@ -8,9 +8,6 @@ use yii\helpers\VarDumper;
 
 class FileHelper extends BaseFileHelper
 {
-    /**
-     * Removes a file, logging warnings.
-     */
     public static function removeFile(string $filename): bool
     {
         if (@unlink($filename) === false) {

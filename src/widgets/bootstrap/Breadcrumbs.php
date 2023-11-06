@@ -2,7 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
-use davidhirtz\yii2\skeleton\modules\admin\helpers\Html;
+use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use Yii;
 
