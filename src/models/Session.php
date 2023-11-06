@@ -5,9 +5,6 @@ namespace davidhirtz\yii2\skeleton\models;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 
 /**
- * Class Session
- * @package davidhirtz\yii2\skeleton\models
- *
  * @property string $id
  * @property int $user_id
  * @property string $ip_address
@@ -16,10 +13,7 @@ use davidhirtz\yii2\skeleton\db\ActiveRecord;
  */
 class Session extends ActiveRecord
 {
-    /**
-     * @return string
-     */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%session}}';
     }

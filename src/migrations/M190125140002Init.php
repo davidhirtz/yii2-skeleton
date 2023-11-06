@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace davidhirtz\yii2\skeleton\migrations;
 
@@ -10,21 +10,24 @@ use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\skeleton\models\User;
 use m140506_102106_rbac_init;
 use Yii;
+use yii\db\Query;
 
 require(Yii::getAlias('@yii/rbac/migrations') . '/m140506_102106_rbac_init.php');
 
 /**
- * Class m151125_140002_init.
+ * @noinspection PhpUnused
  */
-class m151125_140002_init extends m140506_102106_rbac_init
+
+class M190125140002Init extends m140506_102106_rbac_init
 {
     use MigrationTrait;
 
-    /**
-     * @inheritdoc
-     */
-    public function up()
+    public function up(): void
     {
+        if ($this->isMigrationApplied()) {
+            return;
+        }
+
         parent::up();
 
         // Changes auth assignment user id to int, so it can be used as foreign key constraint.
@@ -152,11 +155,12 @@ class m151125_140002_init extends m140506_102106_rbac_init
         echo "    > auth data inserted.\n";
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function down()
+    public function down(): void
     {
+        if ($this->isMigrationApplied()) {
+            return;
+        }
+
         $this->dropTable(AuthClient::tableName());
         $this->dropTable(Session::tableName());
         $this->dropTable(UserLogin::tableName());
@@ -164,5 +168,12 @@ class m151125_140002_init extends m140506_102106_rbac_init
         parent::down();
 
         $this->dropTable(User::tableName());
+    }
+
+    protected function isMigrationApplied(): bool
+    {
+        return (new Query())->from('{{%migration}}')
+            ->where(['version' => 'davidhirtz\yii2\skeleton\migrations\m151125_140002_init'])
+            ->exists();
     }
 }

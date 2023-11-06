@@ -2,6 +2,7 @@
 
 - Added `Widget` abstract class, for minimal widget implementations
 - Added action `DuplicateActiveRecord` and a related `DuplicateActiveRecordEvent` event
+- Change `m151125_140002_init` migration name to be consistent with all other migrations (non-breaking change)
 - Moved `I18nAttributesTrait`, `MaterializedTreeTrait`, `NestedTreeTrait`, `StatusAttributeTrait`
   and `TypeAttributeTrait` to namespace `davidhirtz\yii2\skeleton\models\traits`
 - Moved `MigrationTrait` to namespace `davidhirtz\yii2\skeleton\db\traits`
