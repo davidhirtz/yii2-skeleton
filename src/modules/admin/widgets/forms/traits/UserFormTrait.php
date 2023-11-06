@@ -12,6 +12,7 @@ use yii\widgets\ActiveField;
 
 trait UserFormTrait
 {
+    /** @uses User::getCountries() */
     public function countryField(array $options = ['options' => ['prompt' => '']]): ActiveField|string
     {
         return $this->field($this->model, 'country')->widget(DynamicRangeDropdown::class, $options);
@@ -22,6 +23,7 @@ trait UserFormTrait
         return $this->field($this->model, 'email')->input('email', $options);
     }
 
+    /** @uses User::getLanguages() */
     public function languageField(array $options = []): ActiveField|string
     {
         return $this->field($this->model, 'language')->widget(DynamicRangeDropdown::class, $options);
@@ -37,6 +39,7 @@ trait UserFormTrait
         return $this->field($this->model, 'repeatPassword', ['enableClientValidation' => false])->passwordInput($options);
     }
 
+    /** @uses User::getStatuses() */
     public function statusField(array $options = []): ActiveField|string
     {
         if ($this->model->isOwner()) {
@@ -46,6 +49,7 @@ trait UserFormTrait
         return $this->field($this->model, 'status')->widget(DynamicRangeDropdown::class, $options);
     }
 
+    /** @uses User::getTimezones() */
     public function timezoneField(array $options = []): ActiveField|string
     {
         return $this->field($this->model, 'timezone')->widget(DynamicRangeDropdown::class, $options);

@@ -500,12 +500,6 @@ class User extends ActiveRecord
         return $this->id ? ['/admin/user/update', 'id' => $this->id] : false;
     }
 
-    /** @noinspection PhpUnused */
-    public function hasAuthClient(string $clientName): bool
-    {
-        return (($authClients = $this->authClients)) && in_array($clientName, ArrayHelper::getColumn($authClients, 'name'));
-    }
-
     public function isOwner(): bool
     {
         return (bool)$this->is_owner;
@@ -516,17 +510,11 @@ class User extends ActiveRecord
         return !$this->isOwner() && !empty($this->verification_token);
     }
 
-    /**
-     * @noinspection PhpUnused {@see DynamicRangeValidator::class}
-     */
     public static function getCountries(): array
     {
         return require(Yii::getAlias('@skeleton/messages/') . Yii::$app->language . '/countries.php');
     }
 
-    /**
-     * @noinspection PhpUnused {@see DynamicRangeValidator::class}
-     */
     public static function getLanguages(): array
     {
         $i18n = Yii::$app->getI18n();
@@ -539,9 +527,6 @@ class User extends ActiveRecord
         return $languages;
     }
 
-    /**
-     * @noinspection PhpUnused {@see DynamicRangeValidator::class}
-     */
     public static function getTimezones(): array
     {
         return array_combine(DateTimeZone::listIdentifiers(), DateTimeZone::listIdentifiers());
