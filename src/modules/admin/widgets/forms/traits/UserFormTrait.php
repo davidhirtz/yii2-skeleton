@@ -6,6 +6,7 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\widgets\forms\DynamicRangeDropdown;
+use davidhirtz\yii2\skeleton\widgets\forms\TimezoneDropdown;
 use davidhirtz\yii2\timeago\Timeago;
 use Yii;
 use yii\widgets\ActiveField;
@@ -52,7 +53,7 @@ trait UserFormTrait
     /** @uses User::getTimezones() */
     public function timezoneField(array $options = []): ActiveField|string
     {
-        return $this->field($this->model, 'timezone')->widget(DynamicRangeDropdown::class, $options);
+        return $this->field($this->model, 'timezone')->widget(TimezoneDropdown::class, $options);
     }
 
     public function uploadField(array $options = []): ActiveField|string

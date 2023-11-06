@@ -2,6 +2,7 @@
 
 - Removed unused `CountryDropdown` and `LanguageDropdown` widgets
 - Removed unused `User::hasAuthClient()`
+- Removed `Toolbar`
 
 ## 2.0.2 (Nov 6, 2023)
 

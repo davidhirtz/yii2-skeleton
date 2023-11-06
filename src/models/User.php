@@ -8,7 +8,6 @@ use davidhirtz\yii2\datetime\DateTimeBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TimestampBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\models\traits\StatusAttributeTrait;
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use davidhirtz\yii2\skeleton\helpers\Image;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
@@ -47,9 +46,12 @@ use yii\web\UploadedFile;
  * @property DateTime $updated_at
  * @property DateTime $created_at
  *
- * @property User $admin {@see User::getAdmin}
- * @property AuthClient[] $authClients {@see User::getAuthClients}
- * @property string $uploadPath
+ * @property string $uploadPath {@see static::setUploadPath()}
+ *
+ * @property-read User $admin {@see static::getAdmin()}
+ * @property-read AuthClient[] $authClients {@see static::getAuthClients()}
+ *
+ * @mixin TrailBehavior
  */
 class User extends ActiveRecord
 {
@@ -69,25 +71,28 @@ class User extends ActiveRecord
     public bool $autorotatePicture = true;
 
     /**
-     * @var int
+     * @var int the minimum length for the username
      */
     public int $nameMinLength = 3;
 
     /**
-     * @var int
+     * @var int the maximum length for the username
      */
     public int $nameMaxLength = 32;
 
     /**
-     * @var string
+     * @var string the pattern for the username
      */
     public string $namePattern = '/^\d*[a-z][a-z0-9\.-]*[a-z0-9]$/si';
 
     /**
-     * @var int
+     * @var int the minimum length for the password
      */
     public int $passwordMinLength = 5;
 
+    /**
+     * @var bool whether the name is required
+     */
     public bool $requireName = true;
 
     /**
@@ -134,10 +139,18 @@ class User extends ActiveRecord
                 'required',
             ],
             [
+                /**
+                 * @see static::getStatuses()
+                 * @see static::getLanguages()
+                 * @see static::getTimezones()
+                 */
                 ['status', 'language', 'timezone'],
                 DynamicRangeValidator::class,
             ],
             [
+                /**
+                 * @see static::getCountries()
+                 */
                 ['country'],
                 DynamicRangeValidator::class,
                 'skipOnEmpty' => true,
@@ -205,19 +218,15 @@ class User extends ActiveRecord
 
     public function beforeValidate(): bool
     {
-        // Set defaults in case these were omitted in signup.
         $this->status ??= static::STATUS_ENABLED;
+        $this->language ??= Yii::$app->language;
         $this->timezone = $this->timezone ?: Yii::$app->getTimeZone();
-
-        // Changes to the available app languages might be rare, but needs to be accounted for.
-        $this->language = $this->language && count(Yii::$app->getI18n()->languages) > 1 ? $this->language : Yii::$app->language;
 
         return parent::beforeValidate();
     }
 
     public function afterValidate(): void
     {
-        // Make sure empty name is null to prevent duplicate errors.
         if (!$this->requireName && !$this->name) {
             $this->name = null;
         }
@@ -424,7 +433,6 @@ class User extends ActiveRecord
         return $this->_uploadPath ? (Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $this->_uploadPath) : false;
     }
 
-    /** @noinspection PhpUnused */
     public function setUploadPath(string $uploadPath): void
     {
         $this->_uploadPath = trim($uploadPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
@@ -449,25 +457,16 @@ class User extends ActiveRecord
         ];
     }
 
-    /**
-     * @return string
-     */
     public function getStatusName(): string
     {
         return !$this->isOwner() ? (static::getStatuses()[$this->status]['name'] ?? '') : Yii::t('skeleton', 'Site Owner');
     }
 
-    /**
-     * @return string
-     */
     public function getStatusIcon(): string
     {
         return !$this->isOwner() ? (static::getStatuses()[$this->status]['icon'] ?? '') : 'star';
     }
 
-    /**
-     * @return array
-     */
     public function getTrailAttributes(): array
     {
         return array_diff($this->attributes(), [

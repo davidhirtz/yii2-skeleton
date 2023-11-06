@@ -15,51 +15,43 @@ class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
     /**
      * @var string|false|null the default item label, set to `false` to disable the default item
      */
-    public $defaultItem;
+    public string|false|null $defaultItem = null;
 
     /**
-     * @var string the default item parameter value
+     * @var string|null the default item parameter value
      */
-    public $defaultValue;
+    public ?string $defaultValue = null;
 
     /**
-     * @var string the parameter name
+     * @var string|null the parameter name
      */
-    public $paramName;
+    public ?string $paramName = null;
 
     /**
      * @var array containing items as array with "label" and optional "url" keys
      */
-    public $items = [];
-
-    /**
-     * @var bool whether the label should be HTML-encoded.
-     */
-    public $encodeLabel = false;
-
+    public array $items = [];
     /**
      * @var bool whether the filter text field should be added to the dropdown
      */
-    public $showFilter = false;
+    public bool $showFilter = false;
 
     /**
-     * @var string the filter text field placeholder text
+     * @var string|null the filter text field placeholder text
      */
-    public $filterPlaceholder;
+    public ?string $filterPlaceholder = null;
 
     /**
      * @var bool whether dropdown is active, if `null` the request will be checked for `paramName`
      */
-    public $isActive;
+    public ?bool $isActive = null;
 
-    /**
-     * Sets default label and adds filter text field.
-     */
-    public function init()
+    public $encodeLabel = false;
+
+    public function init(): void
     {
-        if ($this->defaultItem === null) {
-            $this->defaultItem = Yii::t('skeleton', 'Show All');
-        }
+        $this->defaultItem ??= Yii::t('skeleton', 'Show All');
+        $this->isActive ??= $this->paramName && Yii::$app->getRequest()->get($this->paramName) !== null;
 
         if ($this->items) {
             $this->dropdown['items'] = $this->items;
@@ -74,10 +66,6 @@ class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
                 ['label' => Html::tag('input', null, ['class' => 'dropdown-filter form-control', 'placeholder' => $this->filterPlaceholder]), 'encode' => false],
                 '-'
             );
-        }
-
-        if ($this->isActive === null && $this->paramName) {
-            $this->isActive = Yii::$app->getRequest()->get($this->paramName) !== null;
         }
 
         if ($this->isActive) {
@@ -100,9 +88,9 @@ class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
 
     /**
      * Resets the options id back to widget id which is set to the button id in {@see \yii\bootstrap4\ButtonDropdown::run()}.
-     * Otherwise Bootstrap events don't register on the correct element.
+     * Otherwise, Bootstrap events don't register on the correct element.
      */
-    protected function registerClientEvents()
+    protected function registerClientEvents(): void
     {
         $this->options['id'] = $this->getId();
         parent::registerClientEvents();

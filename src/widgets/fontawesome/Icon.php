@@ -6,9 +6,6 @@ use Stringable;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
-/**
- * FontAwesome 5 Icon class.
- */
 class Icon implements Stringable
 {
     public static string $cssClassPrefix = 'fa-';
@@ -50,19 +47,16 @@ class Icon implements Stringable
         return $this->addCssClass(static::$cssClassPrefix . 'inverse');
     }
 
-    /** @noinspection PhpUnused */
     public function spin(): static
     {
         return $this->addCssClass(static::$cssClassPrefix . 'spin');
     }
 
-    /** @noinspection PhpUnused */
     public function pulse(): static
     {
         return $this->addCssClass(static::$cssClassPrefix . 'pulse');
     }
 
-    /** @noinspection PhpUnused */
     public function fixedWidth(): static
     {
         return $this->addCssClass(static::$cssClassPrefix . 'fw');
@@ -78,13 +72,11 @@ class Icon implements Stringable
         return $this->addCssClass(static::$cssClassPrefix . 'border');
     }
 
-    /** @noinspection PhpUnused */
     public function pullLeft(): static
     {
         return $this->addCssClass(static::$cssClassPrefix . 'pull-left');
     }
 
-    /** @noinspection PhpUnused */
     public function pullRight(): static
     {
         return $this->addCssClass(static::$cssClassPrefix . 'pull-right');

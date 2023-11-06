@@ -6,9 +6,6 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use yii\bootstrap4\BootstrapAsset;
 use yii\bootstrap4\Widget;
 
-/**
- * The ListGroup widget renders a Bootstrap 4 list of links.
- */
 class ListGroup extends Widget
 {
     public array $items = [];

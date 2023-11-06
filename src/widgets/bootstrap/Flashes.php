@@ -7,36 +7,29 @@ use Yii;
 use yii\base\Widget;
 use yii\bootstrap4\Html;
 
-/**
- * Class Flashes
- * @package davidhirtz\yii2\skeleton\widgets\bootstrap
- */
 class Flashes extends Widget
 {
     /**
-     * @var array containing message, leave empty for default implementation
+     * @var array|null containing message, leave empty for default implementation
      */
-    public $alerts;
+    public ?array $alerts = null;
 
     /**
      * @var array containing alert element HTML options
      */
-    public $options = ['class' => 'alert'];
+    public array $options = ['class' => 'alert'];
 
     /**
      * @var array containing wrapper element HTML options
      */
-    public $wrapperOptions = [];
+    public array $wrapperOptions = [];
 
     /**
      * @var string the status css class prefix
      */
-    public $statusCssClass = 'alert-';
+    public string $statusCssClass = 'alert-';
 
-    /**
-     * Loads alerts.
-     */
-    public function init()
+    public function init(): void
     {
         if ($this->alerts === null) {
             $this->alerts = Yii::$app->getSession()->getAllFlashes();
@@ -45,11 +38,7 @@ class Flashes extends Widget
         parent::init();
     }
 
-    /**
-     * Renders all alerts.
-     * @return string
-     */
-    public function run()
+    public function run(): string
     {
         $content = '';
 
@@ -71,15 +60,7 @@ class Flashes extends Widget
         return '';
     }
 
-    /**
-     * Renders alert.
-     *
-     * @param string $status
-     * @param string $message
-     *
-     * @return string
-     */
-    public function renderAlert($status, $message)
+    public function renderAlert(string $status, string $message): string
     {
         $options = $this->options;
 
