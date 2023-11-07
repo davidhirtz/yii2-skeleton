@@ -142,6 +142,7 @@ trait ApplicationTrait
                     'viewPath' => '@app/modules/admin/views',
                 ],
             ],
+            'viewPath' => '@views',
         ];
 
         if (!YII_ENV_PROD && InstalledVersions::isInstalled('yiisoft/yii2-gii')) {

@@ -1,3 +1,8 @@
+## 2.0.7 (Nov 7, 2023)
+
+- Changed the default view path to `@views` alias
+- Fixed bug in `davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\UserFormTrait`
+
 ## 2.0.6 (Nov 7, 2023)
 
 - Updated `modules/admin/views/dashboard/error.php` view

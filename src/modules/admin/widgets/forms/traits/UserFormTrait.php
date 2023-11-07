@@ -17,29 +17,32 @@ trait UserFormTrait
     /** @uses User::getCountries() */
     public function countryField(array $options = ['options' => ['prompt' => '']]): ActiveField|string
     {
-        return $this->field($this->model, 'country')->widget(DynamicRangeDropdown::class, $options);
+        $options['inputOptions']['prompt'] ??= '';
+        return $this->field($this->model, 'country', $options)->widget(DynamicRangeDropdown::class);
     }
 
     public function emailField(array $options = []): ActiveField|string
     {
-        return $this->field($this->model, 'email')->input('email', $options);
+        return $this->field($this->model, 'email', $options)->input('email');
     }
 
     /** @uses User::getLanguages() */
     public function languageField(array $options = []): ActiveField|string
     {
-        return $this->field($this->model, 'language')->widget(DynamicRangeDropdown::class, $options);
+        return $this->field($this->model, 'language', $options)->widget(DynamicRangeDropdown::class);
     }
 
     public function newPasswordField(array $options = []): ActiveField|string
     {
-        return $this->field($this->model, 'email')->passwordInput($options);
+        return $this->field($this->model, 'newPassword', $options)->passwordInput();
     }
 
     /** @uses UserForm::$repeatPassword */
     public function repeatPasswordField(array $options = []): ActiveField|string
     {
-        return $this->field($this->model, 'repeatPassword', ['enableClientValidation' => false])->passwordInput($options);
+        $options['enableClientValidation'] ??= false;
+        return $this->field($this->model, 'repeatPassword',$options)
+            ->passwordInput();
     }
 
     /** @uses User::getStatuses() */
@@ -49,18 +52,19 @@ trait UserFormTrait
             return '';
         }
 
-        return $this->field($this->model, 'status')->widget(DynamicRangeDropdown::class, $options);
+        return $this->field($this->model, 'status', $options)->widget(DynamicRangeDropdown::class);
     }
 
     /** @uses User::getTimezones() */
     public function timezoneField(array $options = []): ActiveField|string
     {
-        return $this->field($this->model, 'timezone')->widget(TimezoneDropdown::class, $options);
+        return $this->field($this->model, 'timezone', $options)->widget(TimezoneDropdown::class);
     }
 
     public function uploadField(array $options = []): ActiveField|string
     {
-        return $this->getPicturePreview() . $this->field($this->model, 'upload')->fileInput($options);
+        return $this->getPicturePreview()
+            . $this->field($this->model, 'upload')->fileInput($options);
     }
 
     protected function getPicturePreview(): string
