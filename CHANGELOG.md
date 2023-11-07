@@ -1,3 +1,7 @@
+## 2.0.5 (Nov 7, 2023)
+
+- Improved `\davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\TypeFieldTrait`
+
 ## 2.0.4 (Nov 7, 2023)
 
 - Added `davidhirtz\yii2\skeleton\widgets\AdminButton`

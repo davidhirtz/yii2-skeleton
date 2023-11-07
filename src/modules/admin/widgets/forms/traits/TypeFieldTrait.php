@@ -9,6 +9,8 @@ trait TypeFieldTrait
 {
     public function typeField(array $options = []): ActiveField|string
     {
+        $options['inputOptions'] ??= $this->getTypeToggleOptions();
+
         return count($types = $this->getTypes()) > 1
             ? $this->field($this->model, 'type', $options)->dropDownList($types)
             : '';
@@ -16,7 +18,14 @@ trait TypeFieldTrait
 
     protected function getTypes(): array
     {
-        return ArrayHelper::getColumn($this->model::getTypes(), 'name');
+        $types = array_filter($this->model::getTypes(), $this->filterByTypeOption(...));
+        return ArrayHelper::getColumn($types, 'name');
+    }
+
+    protected function filterByTypeOption(array $typeOptions): bool
+    {
+        $visible = $typeOptions['visible'] ?? true;
+        return is_callable($visible) ? call_user_func($visible, $this->model) : $visible;
     }
 
     public function getTypeToggleOptions(): array
