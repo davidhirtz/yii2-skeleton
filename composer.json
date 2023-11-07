@@ -1,6 +1,6 @@
 {
     "name": "davidhirtz/yii2-skeleton",
-    "description": "Admin panel based on the Yii2 framework",
+    "description": "Extended framework and admin panel based on Yii 2.0 framework",
     "license": "proprietary",
     "homepage": "https://www.github.com/davidhirtz/yii2-skeleton",
     "authors": [
