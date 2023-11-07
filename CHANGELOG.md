@@ -1,3 +1,7 @@
+## 2.0.8 (Nov 8, 2023)
+
+- Added `ViewContextInterface` to `Widget` for better view context handling
+
 ## 2.0.7 (Nov 7, 2023)
 
 - Changed the default view path to `@views` alias
