@@ -1,3 +1,7 @@
+## 2.0.5 (Nov 7, 2023)
+
+- Improved error view
+
 ## 2.0.4 (Nov 6, 2023)
 
 - Added `davidhirtz\yii2\skeleton\widgets\AdminButton`

@@ -6,7 +6,9 @@
  */
 
 use davidhirtz\yii2\skeleton\assets\AdminAsset;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\NavBar;
 use davidhirtz\yii2\skeleton\web\View;
+use davidhirtz\yii2\skeleton\widgets\bootstrap\Breadcrumbs;
 use yii\base\UserException;
 use yii\helpers\Html;
 use yii\web\ErrorHandler;
@@ -22,21 +24,9 @@ $message = $exception instanceof UserException
     ? $exception->getMessage()
     : Yii::t('yii', 'An internal server error occurred.');
 
-if (method_exists($this, 'beginPage')) {
-    $this->beginPage();
-}
-
-if ($this instanceof \yii\web\View) {
-    ?>
-
-    <?php
-}
-
 
 AdminAsset::register($this);
 
-$this->setTitle($name);
-dump($this->jsFiles);
 ?>
 <?php $this->beginPage() ?>
     <!DOCTYPE html>
@@ -45,17 +35,25 @@ dump($this->jsFiles);
         <meta charset="<?= Yii::$app->charset ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <?= Html::csrfMetaTags() ?>
-        <title><?= Html::encode($this->getDocumentTitle()); ?></title>
+        <title><?= $handler->htmlEncode($name); ?></title>
         <?php $this->head() ?>
     </head>
     <body>
     <?php $this->beginBody() ?>
     <div class="wrap">
+        <header>
+            <?php
+            if (!Yii::$app->getUser()->getIsGuest()) {
+                echo NavBar::widget();
+            }
+            ?>
+        </header>
         <main>
             <div class="container">
+                <?= !Yii::$app->getUser()->getIsGuest() ? Breadcrumbs::widget() : ''; ?>
                 <div class="site-error">
-                    <h1><?= $handler->htmlEncode($name) ?></h1>
-                    <h2><?= nl2br($handler->htmlEncode($message)) ?></h2>
+                    <h1><?= $handler->htmlEncode($message); ?></h1>
+                    <h2><?= nl2br($handler->htmlEncode($name)); ?></h2>
                     <p>
                         <?= Yii::t('skeleton', 'The above error occurred while the webserver was processing your request.'); ?>
                         <br>

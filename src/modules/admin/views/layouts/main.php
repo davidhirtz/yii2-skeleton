@@ -1,7 +1,5 @@
 <?php
 /**
- * Admin layout.
- *
  * @var View $this
  * @var string $content
  */
@@ -29,22 +27,11 @@ AdminAsset::register($this);
     <?php $this->beginBody() ?>
     <div class="wrap">
         <header>
-            <?php
-            if (!Yii::$app->getUser()->getIsGuest()) {
-                echo NavBar::widget();
-            }
-            ?>
+            <?= !Yii::$app->getUser()->getIsGuest() ? NavBar::widget() : ''; ?>
         </header>
         <main>
             <div class="container">
-                <?php
-                if (!Yii::$app->getUser()->getIsGuest()) {
-                    echo Breadcrumbs::widget([
-                        'links' => $this->getBreadcrumbs(),
-                        'cssClass' => 'd-none d-md-flex',
-                    ]);
-                }
-                ?>
+                <?= !Yii::$app->getUser()->getIsGuest() ? Breadcrumbs::widget() : ''; ?>
                 <?= Flashes::widget(); ?>
                 <?= $content ?>
             </div>
