@@ -1,6 +1,8 @@
 ## 2.0.5 (Nov 7, 2023)
 
 - Improved `\davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\TypeFieldTrait`
+- Removed unbound version constraints in third-party composer packages
+- Removed unnecessary composer requirements from Yii2 via "provide"  
 
 ## 2.0.4 (Nov 7, 2023)
 
