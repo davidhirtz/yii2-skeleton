@@ -1,3 +1,7 @@
+## 2.0.6 (Nov 7, 2023)
+
+- Updated `modules/admin/views/dashboard/error.php` view
+
 ## 2.0.5 (Nov 7, 2023)
 
 - Improved `\davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\TypeFieldTrait`

@@ -6,9 +6,7 @@
  */
 
 use davidhirtz\yii2\skeleton\assets\AdminAsset;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\NavBar;
 use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\Breadcrumbs;
 use yii\base\UserException;
 use yii\helpers\Html;
 use yii\web\ErrorHandler;
@@ -41,25 +39,18 @@ AdminAsset::register($this);
     <body>
     <?php $this->beginBody() ?>
     <div class="wrap">
-        <header>
-            <?php
-            if (!Yii::$app->getUser()->getIsGuest()) {
-                echo NavBar::widget();
-            }
-            ?>
-        </header>
         <main>
             <div class="container">
-                <?= !Yii::$app->getUser()->getIsGuest() ? Breadcrumbs::widget() : ''; ?>
-                <div class="site-error">
-                    <h1><?= $handler->htmlEncode($message); ?></h1>
-                    <h2><?= nl2br($handler->htmlEncode($name)); ?></h2>
-                    <p>
-                        <?= Yii::t('skeleton', 'The above error occurred while the webserver was processing your request.'); ?>
-                        <br>
-                        <?= Yii::t('skeleton', 'Please contact us if you think this is a server error. Thank you.'); ?>
-                    </p>
-                </div>
+                <ul class="breadcrumb d-none d-md-flex">
+                    <li class="breadcrumb-item"><a href="/"><?= Yii::$app->name; ?></a></li>
+                </ul>
+                <h1><?= $handler->htmlEncode($message); ?></h1>
+                <h2><?= nl2br($handler->htmlEncode($name)); ?></h2>
+                <p>
+                    <?= Yii::t('skeleton', 'The above error occurred while the webserver was processing your request.'); ?>
+                    <br>
+                    <?= Yii::t('skeleton', 'Please contact us if you think this is a server error. Thank you.'); ?>
+                </p>
             </div>
         </main>
     </div>

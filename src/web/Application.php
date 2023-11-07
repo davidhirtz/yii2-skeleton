@@ -43,7 +43,7 @@ class Application extends \yii\web\Application
      */
     public function preInit(&$config): void
     {
-        $config['basePath'] ??= dirname((string) $_SERVER['SCRIPT_FILENAME'], 2);
+        $config['basePath'] ??= dirname((string)$_SERVER['SCRIPT_FILENAME'], 2);
 
         $this->preInitInternal($config);
         $this->setDebugModuleConfig($config);
@@ -124,7 +124,7 @@ class Application extends \yii\web\Application
             $config = ['sameSite' => Cookie::SAME_SITE_LAX];
 
             if ($domain = $this->params['cookieDomain'] ?? false) {
-                $hostInfo = trim((string) $domain, '.');
+                $hostInfo = trim((string)$domain, '.');
 
                 if (str_ends_with($this->getRequest()->getHostInfo(), $hostInfo)) {
                     $config['domain'] = $domain;

@@ -8,7 +8,6 @@ use Yii;
 
 /**
  * Manages application migrations
- * @package davidhirtz\yii2\skeleton\console\controllers
  */
 class MigrateController extends \yii\console\controllers\MigrateController
 {

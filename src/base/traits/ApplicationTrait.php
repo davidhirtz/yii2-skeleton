@@ -17,6 +17,7 @@ use Yii;
 use yii\authclient\Collection;
 use yii\base\ActionEvent;
 use yii\base\InvalidConfigException;
+use yii\bootstrap4\BootstrapAsset;
 use yii\caching\FileCache;
 use yii\console\controllers\MigrateController;
 use yii\db\Connection;
@@ -24,6 +25,7 @@ use yii\helpers\ArrayHelper;
 use yii\i18n\PhpMessageSource;
 use yii\log\FileTarget;
 use yii\symfonymailer\Mailer;
+use yii\web\JqueryAsset;
 
 trait ApplicationTrait
 {
@@ -54,11 +56,11 @@ trait ApplicationTrait
             'components' => [
                 'assetManager' => [
                     'bundles' => [
-                        'yii\bootstrap4\BootstrapAsset' => [
+                        BootstrapAsset::class => [
                             'sourcePath' => null,
                             'css' => [],
                         ],
-                        'yii\web\JqueryAsset' => [
+                        JqueryAsset::class => [
                             'js' => ['jquery.min.js'],
                         ],
                     ],
