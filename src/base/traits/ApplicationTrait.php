@@ -1,6 +1,6 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\core;
+namespace davidhirtz\yii2\skeleton\base\traits;
 
 use Composer\InstalledVersions;
 use davidhirtz\yii2\skeleton\auth\clients\Facebook;
@@ -13,6 +13,7 @@ use davidhirtz\yii2\skeleton\web\DbSession;
 use davidhirtz\yii2\skeleton\web\Sitemap;
 use davidhirtz\yii2\skeleton\web\UrlManager;
 use davidhirtz\yii2\skeleton\web\View;
+use Yii;
 use yii\authclient\Collection;
 use yii\base\ActionEvent;
 use yii\base\InvalidConfigException;
@@ -20,8 +21,9 @@ use yii\caching\FileCache;
 use yii\console\controllers\MigrateController;
 use yii\db\Connection;
 use yii\helpers\ArrayHelper;
+use yii\i18n\PhpMessageSource;
 use yii\log\FileTarget;
-use Yii;
+use yii\symfonymailer\Mailer;
 
 trait ApplicationTrait
 {
@@ -31,12 +33,18 @@ trait ApplicationTrait
             throw new InvalidConfigException(self::class . '::$basePath must be defined');
         }
 
-        Yii::setAlias('@skeleton', dirname(__FILE__, 2));
         Yii::$classMap = array_merge(Yii::$classMap, ArrayHelper::remove($config, 'classMap', []));
 
         $core = [
             'id' => 'skeleton',
             'aliases' => [
+                '@root' => $config['basePath'],
+                '@skeleton' => dirname(__FILE__, 3),
+                '@app' => '@root/app',
+                '@config' => '@root/config',
+                '@messages' => '@root/messages',
+                '@resources' => '@root/resources',
+                '@views' => '@resources/views',
                 '@bower' => '@vendor/bower-asset',
                 '@npm' => '@vendor/npm-asset',
             ],
@@ -71,6 +79,13 @@ trait ApplicationTrait
                 ],
                 'i18n' => [
                     'class' => I18N::class,
+                    'translations' => [
+                        'app' => [
+                            'class' => PhpMessageSource::class,
+                            'sourceLanguage' => 'en-US',
+                            'basePath' => '@messages',
+                        ],
+                    ],
                 ],
                 'log' => [
                     'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -98,7 +113,7 @@ trait ApplicationTrait
                     ],
                 ],
                 'mailer' => [
-                    'class' => 'yii\symfonymailer\Mailer',
+                    'class' => Mailer::class,
                     'htmlLayout' => '@skeleton/mail/layouts/html',
                 ],
                 'session' => [
@@ -170,9 +185,6 @@ trait ApplicationTrait
         $this->setFacebookClientComponent($config);
     }
 
-    /**
-     * Sets default url manager rules after configuration.
-     */
     protected function setDefaultUrlManagerRules(): void
     {
         $alias = rtrim((string)$this->getModules()['admin']['alias'], '/');

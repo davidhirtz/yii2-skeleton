@@ -21,7 +21,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
         'davidhirtz\yii2\skeleton\migrations',
     ];
 
-    public string $dbFile = '@app/config/db.php';
+    public string $dbFile = '@config/db.php';
     public $templateFile = '@skeleton/views/migration.php';
 
     private ?array $_dbConfig = null;

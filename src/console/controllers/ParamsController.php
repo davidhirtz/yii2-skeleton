@@ -15,7 +15,7 @@ class ParamsController extends Controller
 {
     use ConfigTrait;
 
-    public string $config = '@app/config/params.php';
+    public string $config = '@config/params.php';
 
     /**
      * Setup application.

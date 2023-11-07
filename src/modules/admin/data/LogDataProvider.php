@@ -20,7 +20,7 @@ class LogDataProvider extends ArrayDataProvider
     /**
      * @var string the path used for parsing error files
      */
-    public string $basePath = '@app/runtime/logs/';
+    public string $basePath = '@runtime/logs/';
 
     public function init(): void
     {

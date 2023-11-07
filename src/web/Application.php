@@ -2,9 +2,9 @@
 
 namespace davidhirtz\yii2\skeleton\web;
 
-use davidhirtz\yii2\skeleton\rbac\DbManager;
-use davidhirtz\yii2\skeleton\core\ApplicationTrait;
+use davidhirtz\yii2\skeleton\base\traits\ApplicationTrait;
 use davidhirtz\yii2\skeleton\i18n\I18N;
+use davidhirtz\yii2\skeleton\rbac\DbManager;
 use Yii;
 use yii\authclient\Collection;
 use yii\base\Event;

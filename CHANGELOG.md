@@ -1,10 +1,9 @@
-## 2.0.5 (Nov 7, 2023)
-
-- Improved error view
-
-## 2.0.4 (Nov 6, 2023)
+## 2.0.4 (Nov 7, 2023)
 
 - Added `davidhirtz\yii2\skeleton\widgets\AdminButton`
+- Added default aliases for `@app`, `@config`, `@messages`, `@resources`, `@root` and `@views`
+- Moved `\davidhirtz\yii2\skeleton\core\ApplicationTrait` to `davidhirtz\yii2\skeleton\base\traits\ApplicationTrait`
+- Improved error view
 - Removed unused `BootstrapPluginAsset`
 - Removed unused `CountryDropdown` and `LanguageDropdown` widgets
 - Removed unused `User::hasAuthClient()`
