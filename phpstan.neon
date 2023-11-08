@@ -11,7 +11,8 @@ parameters:
     bootstrapFiles:
         - tests/_bootstrap.php
     stubFiles:
-        Yii:
+    earlyTerminatingMethodCalls:
+        Craft:
             - dd
         yii\base\Application:
             - end

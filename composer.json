@@ -71,5 +71,11 @@
             "type": "composer",
             "url": "https://asset-packagist.org"
         }
-    ]
+    ],
+    "scripts": {
+        "check-cs": "ecs check --ansi",
+        "fix-cs": "ecs check --ansi --fix",
+        "codecept-build": "codecept build",
+        "phpstan": "phpstan --memory-limit=1G"
+    }
 }
