@@ -5,8 +5,8 @@ namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 use Closure;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\web\View;
-use yii\helpers\Html;
 use Yii;
+use yii\helpers\Html;
 
 /**
  * @method View getView()
@@ -48,8 +48,6 @@ class Nav extends \yii\bootstrap4\Nav
     /**
      * Overrides default implementation for `roles` option to validate user access. And allows for the option to hide
      * nav, if only a single item is set.
-     *
-     * @return string
      */
     public function renderItems(): string
     {

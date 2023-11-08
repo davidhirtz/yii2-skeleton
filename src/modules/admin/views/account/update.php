@@ -13,13 +13,13 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\forms\GoogleAuthenticatorForm;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
 use davidhirtz\yii2\skeleton\models\forms\UserForm;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\AccountActiveForm;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorActiveForm;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
-use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
+use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
 use davidhirtz\yii2\timeago\Timeago;
 use yii\helpers\Url;
 
@@ -35,7 +35,7 @@ if ($user->isUnconfirmed()) {
             'email' => $user->email,
             'here' => Html::a(Yii::t('skeleton', 'here'), ['resend']),
         ]);
-        ?>
+    ?>
     </div>
     <?php
 }
@@ -102,7 +102,7 @@ if ($user->isUnconfirmed()) {
                 </tr>
                 <?php
             }
-            ?>
+        ?>
             </tbody>
         </table>
         <hr>
@@ -142,7 +142,7 @@ if ($user->isUnconfirmed()) {
                             </a>
                             <?php
                         }
-                        ?>
+    ?>
                     </div>
                 </div>
             </div>

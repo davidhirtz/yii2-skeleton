@@ -30,9 +30,7 @@ class GoogleAuthenticatorForm extends Model
      */
     private $_secret;
 
-    /**
-     * @inheritdoc
-     */
+    
     public function rules()
     {
         return [
@@ -75,9 +73,7 @@ class GoogleAuthenticatorForm extends Model
         return false;
     }
 
-    /**
-     * @return string
-     */
+    
     public function getSecret(): string
     {
         if ($this->_secret === null) {
@@ -111,25 +107,19 @@ class GoogleAuthenticatorForm extends Model
         Yii::debug('New Google Authenticator secret generated');
     }
 
-    /**
-     * @return string
-     */
+    
     protected function getGoogleAuthenticatorIssuer(): string
     {
         return Yii::$app->params['googleAuthenticatorIssuer'] ?? Yii::$app->name;
     }
 
-    /**
-     * @return string
-     */
+    
     public function formName(): string
     {
         return 'GoogleAuthenticator';
     }
 
-    /**
-     * @inheritdoc
-     */
+    
     public function attributeLabels()
     {
         return [

@@ -85,9 +85,7 @@ class GridView extends \yii\grid\GridView
      */
     public array $selectionRoute = ['update-all'];
 
-    /**
-     * @var string|null
-     */
+    
     public ?string $selectionButtonLabel = null;
 
     /**
@@ -108,7 +106,7 @@ class GridView extends \yii\grid\GridView
         }
 
         if (!$this->rowOptions) {
-            $this->rowOptions = fn($record) => $record instanceof ActiveRecord ? ['id' => $this->getRowId($record)] : [];
+            $this->rowOptions = fn ($record) => $record instanceof ActiveRecord ? ['id' => $this->getRowId($record)] : [];
         }
 
         $this->selectionButtonLabel ??= Yii::t('skeleton', 'Update Selected');
@@ -325,7 +323,9 @@ class GridView extends \yii\grid\GridView
         return $this->_formName;
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public function setFormName(string $formName): void
     {
         $this->_formName = $formName;

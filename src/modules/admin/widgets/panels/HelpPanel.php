@@ -37,4 +37,3 @@ class HelpPanel extends Panel
         return $buttons ? Html::tag('div', Html::buttons($buttons), ['class' => 'card-buttons']) : '';
     }
 }
-

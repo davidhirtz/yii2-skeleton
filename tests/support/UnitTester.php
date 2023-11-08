@@ -18,7 +18,7 @@ namespace davidhirtz\yii2\skeleton\tests\support;
  * @method void pause($vars = [])
  *
  * @SuppressWarnings(PHPMD)
-*/
+ */
 class UnitTester extends \Codeception\Actor
 {
     use _generated\UnitTesterActions;

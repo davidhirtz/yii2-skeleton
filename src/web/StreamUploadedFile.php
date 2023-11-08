@@ -41,9 +41,7 @@ class StreamUploadedFile extends UploadedFile
         parent::init();
     }
 
-    /**
-     * @return bool
-     */
+    
     protected function loadTemporaryFile(): bool
     {
         if (!$this->url || !($contents = @file_get_contents(FileHelper::encodeUrl($this->url)))) {

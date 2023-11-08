@@ -3,9 +3,9 @@
 namespace davidhirtz\yii2\skeleton\models;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\models\traits\TypeAttributeTrait;
 use davidhirtz\yii2\skeleton\models\queries\AuthItemQuery;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
+use davidhirtz\yii2\skeleton\models\traits\TypeAttributeTrait;
 use Yii;
 use yii\rbac\Item;
 
@@ -52,23 +52,21 @@ class AuthItem extends ActiveRecord
         return Yii::createObject(AuthItemQuery::class, [static::class]);
     }
 
-    /**
-     * @return string
-     */
+    
     public function getDisplayName(): string
     {
         return str_replace(' ', ' / ', $this->generateAttributeLabel($this->name));
     }
 
-    /**
-     * @return string
-     */
+    
     public function getTypeIcon(): string
     {
         return $this->getTypeOptions()['icon'] ?? '';
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public function hasPermission(): bool
     {
         foreach ($this->children as $authItem) {
@@ -80,25 +78,19 @@ class AuthItem extends ActiveRecord
         return $this->isAssigned;
     }
 
-    /**
-     * @return bool
-     */
+    
     public function isRole(): bool
     {
         return $this->type == Item::TYPE_ROLE;
     }
 
-    /**
-     * @return bool
-     */
+    
     public function isPermission(): bool
     {
         return $this->type == Item::TYPE_PERMISSION;
     }
 
-    /**
-     * @return array
-     */
+    
     public static function getTypes(): array
     {
         return [
@@ -113,9 +105,7 @@ class AuthItem extends ActiveRecord
         ];
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function attributeLabels(): array
     {
         return [
@@ -125,9 +115,7 @@ class AuthItem extends ActiveRecord
         ];
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public static function tableName(): string
     {
         return '{{%auth_item}}';

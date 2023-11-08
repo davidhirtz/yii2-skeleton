@@ -11,9 +11,9 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
 use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu;
 
 $this->setTitle(Yii::t('skeleton', 'Create New User'));
 ?>

@@ -17,9 +17,7 @@ class M210224093845Redirect extends Migration
 {
     use MigrationTrait;
 
-    /**
-     * @inheritDoc
-     */
+    
     public function safeUp()
     {
         $this->createTable(Redirect::tableName(), [
@@ -42,9 +40,7 @@ class M210224093845Redirect extends Migration
         $auth->addChild($admin, $redirectCreate);
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function safeDown()
     {
         $this->dropTable(Redirect::tableName());

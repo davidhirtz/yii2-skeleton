@@ -3,7 +3,6 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\models\traits\TypeAttributeTrait;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
@@ -34,7 +33,7 @@ trait TypeGridViewTrait
             'attribute' => 'type',
             'contentOptions' => ['class' => 'text-nowrap'],
             'visible' => !$this->type && count($this->getModel()::getTypes()) > 1,
-            'content' => fn($model) =>
+            'content' => fn ($model) =>
                 /** @var ActiveRecord|\davidhirtz\yii2\skeleton\models\traits\TypeAttributeTrait $model */
                 ($route = $this->getRoute($model)) ? Html::a($model->getTypeName(), $route) : $model->getTypeName()
         ];
@@ -69,9 +68,7 @@ trait TypeGridViewTrait
         ]);
     }
 
-    /**
-     * @return array
-     */
+    
     protected function typeDropdownItems(): array
     {
         $items = [];

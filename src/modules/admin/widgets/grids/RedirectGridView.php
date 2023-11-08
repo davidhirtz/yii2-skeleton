@@ -18,9 +18,7 @@ class RedirectGridView extends GridView
 {
     use TypeGridViewTrait;
 
-    /**
-     * @var bool
-     */
+    
     public bool $showSelection = true;
 
     /**
@@ -112,7 +110,7 @@ class RedirectGridView extends GridView
     {
         return [
             'attribute' => 'request_uri',
-            'content' => fn(Redirect $redirect) => Html::a(Html::markKeywords($redirect->request_uri, $this->getSearchKeywords()), $this->getRoute($redirect))
+            'content' => fn (Redirect $redirect) => Html::a(Html::markKeywords($redirect->request_uri, $this->getSearchKeywords()), $this->getRoute($redirect))
         ];
     }
 
@@ -143,7 +141,7 @@ class RedirectGridView extends GridView
     {
         return [
             'contentOptions' => ['class' => 'text-right text-nowrap'],
-            'content' => fn(Redirect $redirect): string => Html::buttons($this->getRowButtons($redirect))
+            'content' => fn (Redirect $redirect): string => Html::buttons($this->getRowButtons($redirect))
         ];
     }
 

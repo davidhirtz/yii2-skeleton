@@ -21,4 +21,3 @@ echo Submenu::widget([
 echo LogGridView::widget([
     'dataProvider' => $provider,
 ]);
-?>

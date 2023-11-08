@@ -19,7 +19,7 @@ class SerializedAttributesBehavior extends Behavior
     public $attributes = [];
 
     /**
-     * @var bool $encode serialized data to protect them from corruption (when your DB is not in UTF-8)
+     * @var bool serialized data to protect them from corruption (when your DB is not in UTF-8)
      * @see http://www.jackreichert.com/2014/02/02/handling-a-php-unserialize-offset-error/
      */
     public $encode = false;

@@ -77,7 +77,9 @@ class ActiveField extends \yii\bootstrap4\ActiveField
         return $this;
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public function hexColor(array $options = []): static
     {
         $options['maxlength'] = 6;

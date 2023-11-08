@@ -50,7 +50,9 @@ class Html extends BaseHtml
         return static::alert($content, $options);
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public static function buttonList(array|string $buttons, array $options = []): string
     {
         static::addCssClass($options, 'btn-list');
@@ -118,20 +120,26 @@ class Html extends BaseHtml
         return parent::errorSummary($models, $options);
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public static function formatInlineJs(string $js, array $params = []): string
     {
         $js = str_replace(["\r", "\n", "\t"], '', $js);
         return $params ? strtr($js, $params) : $js;
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public static function nl2br(string $text): string
     {
         return nl2br($text, false);
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public static function minify(string $html): string
     {
         return trim(preg_replace('/>\s+</', '><', $html));

@@ -7,10 +7,10 @@
  * @var \davidhirtz\yii2\skeleton\models\forms\OwnershipForm $form
  */
 
-use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
+use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
-use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 
 $this->setTitle(Yii::t('skeleton', 'Transfer Ownership'));
 ?>

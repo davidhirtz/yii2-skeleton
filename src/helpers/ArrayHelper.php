@@ -7,7 +7,9 @@ use yii\helpers\BaseArrayHelper;
 
 class ArrayHelper extends BaseArrayHelper
 {
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public static function replaceValue(array &$array, string $value, mixed $replacement): void
     {
         if (($key = array_search($value, $array)) !== false) {
@@ -22,7 +24,9 @@ class ArrayHelper extends BaseArrayHelper
         }
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public static function setDefaultValues(array &$array, array $values): void
     {
         foreach ($values as $key => $value) {
@@ -34,8 +38,7 @@ class ArrayHelper extends BaseArrayHelper
         array|string|null $string,
         array|int|string $values = [],
         string $separator = ','
-    ): array
-    {
+    ): array {
         if (!is_array($string)) {
             $string = $string ? explode($separator, $string) : [];
         }
@@ -51,12 +54,13 @@ class ArrayHelper extends BaseArrayHelper
         array $array,
         string $separator = ',',
         ?string $default = null
-    ): ?string
-    {
+    ): ?string {
         return $array ? implode($separator, $array) : $default;
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public static function simpleXmlToArray(?SimpleXMLElement $xml): array
     {
         $namespace = $xml?->getDocNamespaces(true);

@@ -61,7 +61,8 @@ CSS;
             $btnToggle = '';
         }
 
-        Yii::$app->getView()->registerCss(<<<CSS
+        Yii::$app->getView()->registerCss(
+            <<<CSS
 :root {
     --admin-btn: 40px;
     --admin-pos: 15px

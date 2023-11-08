@@ -2,8 +2,8 @@
 
 namespace davidhirtz\yii2\skeleton\models\forms;
 
-use davidhirtz\yii2\skeleton\models\traits\IdentityTrait;
 use davidhirtz\yii2\datetime\DateTime;
+use davidhirtz\yii2\skeleton\models\traits\IdentityTrait;
 use Yii;
 use yii\base\Model;
 
@@ -58,9 +58,7 @@ class PasswordRecoverForm extends Model
         }
     }
 
-    /**
-     * @return bool
-     */
+    
     public function recover(): bool
     {
         if ($this->validate()) {
@@ -89,17 +87,13 @@ class PasswordRecoverForm extends Model
         }
     }
 
-    /**
-     * @return bool
-     */
+    
     public function isAlreadySent(): bool
     {
         return ($user = $this->getUser()) && $user->password_reset_token && $user->updated_at->modify($this->timeoutSpamProtection) > new DateTime();
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function attributeLabels(): array
     {
         return [

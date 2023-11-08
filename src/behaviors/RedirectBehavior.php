@@ -2,7 +2,6 @@
 
 namespace davidhirtz\yii2\skeleton\behaviors;
 
-
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\models\Trail;

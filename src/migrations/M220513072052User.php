@@ -14,9 +14,7 @@ class M220513072052User extends Migration
 {
     use MigrationTrait;
 
-    /**
-     * @inheritDoc
-     */
+    
     public function safeUp()
     {
         $this->renameColumn(User::tableName(), 'password', 'password_hash');
@@ -39,9 +37,7 @@ class M220513072052User extends Migration
         }
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function safeDown()
     {
         $this->renameColumn(User::tableName(), 'password_hash', 'password');

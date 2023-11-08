@@ -74,7 +74,9 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return $condition === null ? null : parent::findOne($condition);
     }
 
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    /**
+     * @noinspection PhpIncompatibleReturnTypeInspection
+     */
     public function getRelationFromForeignKey(string $foreignKey, bool $throwException = false): ?ActiveQuery
     {
         $relation = lcfirst(Inflector::camelize(str_replace('_id', '', $foreignKey)));

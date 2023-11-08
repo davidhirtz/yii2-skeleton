@@ -25,7 +25,7 @@ echo "<?php\n";
 namespace <?= $generator->queryNs ?>;
 
 /**
- * <?= $className ."\n" ?>
+ * <?= $className . "\n" ?>
  *
  * @property <?= $modelFullClassName . "\n" ?> $modelClass
  *

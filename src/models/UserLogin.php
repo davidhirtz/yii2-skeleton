@@ -4,11 +4,9 @@ namespace davidhirtz\yii2\skeleton\models;
 
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
-use davidhirtz\yii2\skeleton\models\queries\UserQuery;
-use davidhirtz\yii2\skeleton\models\User;
-use Yii;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use yii\db\ActiveQuery;
+use davidhirtz\yii2\skeleton\models\queries\UserQuery;
+use Yii;
 
 /**
  * @property string $id
@@ -33,9 +31,7 @@ class UserLogin extends ActiveRecord
     public const TYPE_CONFIRM_EMAIL = 'email';
     public const TYPE_RESET_PASSWORD = 'password';
 
-    /**
-     * @inheritdoc
-     */
+    
     public function behaviors(): array
     {
         return [
@@ -64,9 +60,7 @@ class UserLogin extends ActiveRecord
         };
     }
 
-    /**
-     * @return string
-     */
+    
     public function getTypeIcon(): ?string
     {
         return match ($this->type) {
@@ -79,17 +73,13 @@ class UserLogin extends ActiveRecord
         };
     }
 
-    /**
-     * @return string
-     */
+    
     public function getDisplayIp(): string
     {
         return inet_ntop($this->ip_address) ?: '';
     }
 
-    /**
-     * @inheritdoc
-     */
+    
     public function attributeLabels(): array
     {
         return [
@@ -101,9 +91,7 @@ class UserLogin extends ActiveRecord
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    
     public static function tableName(): string
     {
         return '{{%user_login}}';

@@ -17,9 +17,7 @@ class HealthController extends Controller
      */
     public $enableCsrfValidation = false;
 
-    /**
-     *
-     */
+    
     public function actionIndex()
     {
         try {

@@ -18,7 +18,6 @@ trait MessageSourceTrait
 
     /**
      * Finds the correct translation source for the authItem description.
-     * @return array
      */
     public function getTranslations(): array
     {

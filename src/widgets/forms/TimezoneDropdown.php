@@ -53,13 +53,14 @@ class TimezoneDropdown extends InputWidget
             }
 
             asort($this->_timezones);
-
         }
 
         return $this->_timezones;
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public function setTimezones(array $timezones): void
     {
         $this->_timezones = $timezones;
@@ -74,7 +75,6 @@ class TimezoneDropdown extends InputWidget
         $minutes = (int)abs($remainder / 60);
 
         return 'GMT' . $sign . str_pad($hour, 2, '0', STR_PAD_LEFT) . ':' . str_pad($minutes, 2, '0');
-
     }
 
     private function formatTimezoneName(string $name): string

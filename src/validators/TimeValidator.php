@@ -3,9 +3,9 @@
 namespace davidhirtz\yii2\skeleton\validators;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
+use Yii;
 use yii\base\InvalidConfigException;
 use yii\validators\Validator;
-use Yii;
 
 /**
  * @noinspection PhpUnused

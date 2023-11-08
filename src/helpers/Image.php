@@ -6,11 +6,11 @@ use Imagick;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Palette\Color\ColorInterface;
+use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
+use Yii;
 use yii\db\Exception;
 use yii\imagine\BaseImage;
-use Imagine\Image\Palette\RGB;
-use Yii;
 
 class Image extends BaseImage
 {
@@ -77,7 +77,9 @@ class Image extends BaseImage
         return $image;
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public static function smartResize(
         ImageInterface|string $image,
         ?int $width = null,

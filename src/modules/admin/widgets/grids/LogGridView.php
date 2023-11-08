@@ -5,7 +5,6 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\modules\admin\data\LogDataProvider;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\GridView;
 use Yii;
 
 /**
@@ -26,9 +25,7 @@ class LogGridView extends GridView
         'style' => 'table-layout: fixed;',
     ];
 
-    /**
-     * @inheritDoc
-     */
+    
     public function init(): void
     {
         $this->columns = [
@@ -51,7 +48,7 @@ class LogGridView extends GridView
             'label' => Yii::t('skeleton', 'Date'),
             'headerOptions' => ['width' => '150'],
             'contentOptions' => ['class' => 'text-nowrap'],
-            'content' => fn($model) => Yii::$app->getFormatter()->asDatetime(new DateTime($model['date']), 'short')
+            'content' => fn ($model) => Yii::$app->getFormatter()->asDatetime(new DateTime($model['date']), 'short')
         ];
     }
 
@@ -63,7 +60,7 @@ class LogGridView extends GridView
         return [
             'label' => Yii::t('skeleton', 'Level'),
             'headerOptions' => ['width' => '100'],
-            'content' => fn($model) => Html::tag('div', $model['level'], ['class' => $this->getLevelCssClass($model['level'])])
+            'content' => fn ($model) => Html::tag('div', $model['level'], ['class' => $this->getLevelCssClass($model['level'])])
         ];
     }
 
@@ -92,7 +89,6 @@ class LogGridView extends GridView
 
     /**
      * @param string $level
-     * @return string
      */
     protected function getLevelCssClass($level): string
     {

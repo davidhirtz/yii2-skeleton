@@ -19,4 +19,3 @@ class UserOwnerPanel extends HelpPanel
         parent::init();
     }
 }
-

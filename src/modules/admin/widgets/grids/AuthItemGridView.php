@@ -2,7 +2,6 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
-
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\AuthItem;
 use davidhirtz\yii2\skeleton\models\User;
@@ -35,7 +34,7 @@ class AuthItemGridView extends GridView
     {
         if (!$this->rowOptions) {
             if ($this->user) {
-                $this->rowOptions = fn(AuthItem $authItem) => ($authItem->isAssigned || $authItem->isInherited) ? ['class' => 'bg-success'] : null;
+                $this->rowOptions = fn (AuthItem $authItem) => ($authItem->isAssigned || $authItem->isInherited) ? ['class' => 'bg-success'] : null;
             }
         }
 
@@ -57,7 +56,7 @@ class AuthItemGridView extends GridView
         return [
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
             'contentOptions' => ['class' => 'd-none d-md-table-cell text-center'],
-            'content' => fn(AuthItem $authItem) => Icon::tag($authItem->getTypeIcon(), [
+            'content' => fn (AuthItem $authItem) => Icon::tag($authItem->getTypeIcon(), [
                 'data-toggle' => 'tooltip',
                 'title' => $authItem->getTypeName()
             ])
@@ -128,7 +127,7 @@ class AuthItemGridView extends GridView
     {
         return [
             'contentOptions' => ['class' => 'text-right text-nowrap'],
-            'content' => fn(AuthItem $authItem): string => Html::buttons($this->getRowButtons($authItem))
+            'content' => fn (AuthItem $authItem): string => Html::buttons($this->getRowButtons($authItem))
         ];
     }
 

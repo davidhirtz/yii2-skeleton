@@ -23,14 +23,10 @@ class Request extends \yii\web\Request
      */
     public string|false $draftSubdomain = 'draft';
 
-    /**
-     * @var bool
-     */
+    
     private bool $_isDraft = false;
 
-    /**
-     * @var string|false
-     */
+    
     private string|false|null $_draftHostInfo = null;
 
     /**
@@ -91,9 +87,7 @@ class Request extends \yii\web\Request
         return parent::resolve();
     }
 
-    /**
-     * @inheritdoc
-     */
+    
     public function getUserIP()
     {
         return ArrayHelper::getValue($_SERVER, 'HTTP_X_FORWARDED_FOR', ArrayHelper::getValue($_SERVER, 'HTTP_CLIENT_IP', parent::getUserIP()));

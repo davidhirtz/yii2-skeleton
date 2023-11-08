@@ -37,9 +37,7 @@ class SignupForm extends Identity
      */
     public ?string $token = null;
 
-    /**
-     * @var int
-     */
+    
     public int $spamProtectionInSeconds = 60;
 
     /**
@@ -50,9 +48,7 @@ class SignupForm extends Identity
     public const SESSION_MIN_TIME = 2;
     public const SESSION_MAX_TIME = 1800;
 
-    /**
-     * @inheritdoc
-     */
+    
     public function rules(): array
     {
         return [...parent::rules(), [
@@ -114,9 +110,7 @@ class SignupForm extends Identity
         }
     }
 
-    /**
-     * @return bool
-     */
+    
     public function beforeValidate(): bool
     {
         if (!Yii::$app->getUser()->isSignupEnabled()) {
@@ -152,9 +146,7 @@ class SignupForm extends Identity
         parent::afterValidate();
     }
 
-    /**
-     * @inheritdoc
-     */
+    
     public function beforeSave($insert): bool
     {
         if ($insert) {
@@ -208,17 +200,13 @@ class SignupForm extends Identity
         return $session->get(static::SESSION_TOKEN_NAME, false);
     }
 
-    /**
-     * @return bool
-     */
+    
     public function isFacebookSignupEnabled(): bool
     {
         return $this->enableFacebookSignup && Yii::$app->getAuthClientCollection()->hasClient('facebook');
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function attributeLabels(): array
     {
         return [...parent::attributeLabels(), 'password' => Yii::t('skeleton', 'Password'), 'terms' => Yii::t('skeleton', 'I accept the terms of service and privacy policy')];

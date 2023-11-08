@@ -181,7 +181,6 @@ class Module extends \yii\base\Module
      * frontend implementations or REST APIs that use admin endpoints.
      *
      * @param Action $action
-     * @return bool
      */
     public function beforeAction($action): bool
     {

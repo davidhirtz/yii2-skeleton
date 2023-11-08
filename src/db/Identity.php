@@ -3,9 +3,9 @@
 namespace davidhirtz\yii2\skeleton\db;
 
 use davidhirtz\yii2\skeleton\models\User;
+use Yii;
 use yii\base\NotSupportedException;
 use yii\web\IdentityInterface;
-use Yii;
 
 class Identity extends User implements IdentityInterface
 {

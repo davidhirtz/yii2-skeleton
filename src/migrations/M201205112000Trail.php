@@ -17,9 +17,7 @@ class M201205112000Trail extends Migration
 {
     use MigrationTrait;
 
-    /**
-     * @inheritDoc
-     */
+    
     public function safeUp()
     {
         $this->createTable(Trail::tableName(), [
@@ -47,9 +45,7 @@ class M201205112000Trail extends Migration
         $auth->addChild($admin, $trailIndex);
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function safeDown()
     {
         $this->dropTable(Trail::tableName());

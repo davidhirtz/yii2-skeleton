@@ -2,9 +2,9 @@
 
 namespace davidhirtz\yii2\skeleton\web;
 
+use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\db\Identity;
 use davidhirtz\yii2\skeleton\models\UserLogin;
-use davidhirtz\yii2\datetime\DateTime;
 use Yii;
 use yii\web\IdentityInterface;
 use yii\web\MultiFieldSession;
@@ -90,7 +90,7 @@ class User extends \yii\web\User
 
         // Updates session's user id.
         if ($session instanceof MultiFieldSession) {
-            $session->writeCallback = fn() => [
+            $session->writeCallback = fn () => [
                 'ip_address' => inet_pton(Yii::$app->getRequest()->getUserIP()),
                 'user_id' => $identity->id,
             ];
@@ -119,7 +119,7 @@ class User extends \yii\web\User
         $session = Yii::$app->getSession();
 
         if ($session instanceof MultiFieldSession) {
-            $session->writeCallback = fn() => [
+            $session->writeCallback = fn () => [
                 'user_id' => null,
             ];
         }
@@ -157,7 +157,9 @@ class User extends \yii\web\User
         return !(!$this->disableRbacForOwner || !$this->identity->isOwner()) || parent::can($permissionName, $params, $allowCaching);
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public function isLoginEnabled(): bool
     {
         return (bool)$this->enableLogin;

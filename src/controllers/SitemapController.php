@@ -5,9 +5,9 @@ namespace davidhirtz\yii2\skeleton\controllers;
 use DateTime;
 use davidhirtz\yii2\skeleton\web\Controller;
 use XMLWriter;
+use Yii;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
-use Yii;
 use yii\web\Response;
 
 class SitemapController extends Controller

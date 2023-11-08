@@ -28,7 +28,7 @@ class GoogleAuthenticatorValidator extends StringValidator
     public $length = 6;
 
     /**
-     * @var int the factor of periodSize ($discrepancy * $periodSize) allowed on either side of the given codePeriod.
+     * @var int the factor of periodSize ($discrepancy *) allowed on either side of the given codePeriod.
      * For example, if a code with codePeriod = 60 is generated at 10:00:00, a discrepancy of 1 will allow a periodSize
      * of 30 seconds on either side of the codePeriod resulting in a valid code from 09:59:30 to 10:00:29.
      */

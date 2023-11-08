@@ -7,10 +7,10 @@
  * @var yii\bootstrap4\ActiveForm $af
  */
 
+use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
-use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use yii\helpers\Url;
 
@@ -27,27 +27,27 @@ $this->setTitle(Yii::t('skeleton', 'Recover Password'));
         $af = ActiveForm::begin([
             'enableClientValidation' => false,
         ]);
-        ?>
+?>
         <?= $af->field($form, 'email', ['icon' => 'envelope', 'enableError' => false])->textInput([
-            'autocomplete' => 'username',
-            'autofocus' => !$form->hasErrors(),
-            'type' => 'email',
-        ]); ?>
+    'autocomplete' => 'username',
+    'autofocus' => !$form->hasErrors(),
+    'type' => 'email',
+]); ?>
         <div class="form-group">
             <?= Html::submitButton(Yii::t('skeleton', 'Send Email'), ['class' => 'btn btn-primary btn-block']) ?>
         </div>
         <?php ActiveForm::end(); ?>
         <?php Panel::end(); ?>
         <?php
-        if (Yii::$app->getUser()->getIsGuest()) {
-            ?>
+if (Yii::$app->getUser()->getIsGuest()) {
+    ?>
             <div class="list-group">
                 <a href="<?php echo Url::to(['login']); ?>" class="list-group-item list-group-item-action">
                     <?= Icon::tag('sign-in-alt', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'Back to login'); ?>
                 </a>
             </div>
             <?php
-        }
-        ?>
+}
+?>
     </div>
 </div>

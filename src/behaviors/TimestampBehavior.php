@@ -10,13 +10,10 @@ use davidhirtz\yii2\datetime\DateTime;
  */
 class TimestampBehavior extends \yii\behaviors\TimestampBehavior
 {
-    /**
-     * @inheritDoc
-     */
     public function init()
     {
         if (!$this->value) {
-            $this->value = fn() => new DateTime();
+            $this->value = fn () => new DateTime();
         }
 
         parent::init();

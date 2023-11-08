@@ -3,8 +3,8 @@
 namespace davidhirtz\yii2\skeleton\console\controllers\traits;
 
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
-use yii\helpers\Console;
 use Yii;
+use yii\helpers\Console;
 
 trait ConfigTrait
 {

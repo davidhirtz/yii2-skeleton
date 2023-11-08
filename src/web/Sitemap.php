@@ -15,9 +15,7 @@ class Sitemap extends Component
 {
     public Cache|string|null $cache = 'cache';
 
-    /**
-     * @var int
-     */
+    
     public int $duration = 86400;
 
     public array|Dependency|null $dependency = null;

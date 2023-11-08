@@ -4,20 +4,20 @@ namespace davidhirtz\yii2\skeleton\models;
 
 use DateTimeZone;
 use davidhirtz\yii2\datetime\Date;
+use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TimestampBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
-use davidhirtz\yii2\skeleton\models\traits\StatusAttributeTrait;
+use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use davidhirtz\yii2\skeleton\helpers\Image;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
-use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\datetime\DateTime;
+use davidhirtz\yii2\skeleton\models\traits\StatusAttributeTrait;
 use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
 use davidhirtz\yii2\skeleton\web\StreamUploadedFile;
+use Yii;
 use yii\db\ActiveQuery;
 use yii\helpers\Url;
-use Yii;
 use yii\web\UploadedFile;
 
 /**
@@ -178,7 +178,7 @@ class User extends ActiveRecord
                 'unique',
                 'message' => Yii::t('skeleton', 'This username is already used by another user.'),
                 'skipOnError' => true,
-                'when' => fn() => $this->isAttributeChanged('name')
+                'when' => fn () => $this->isAttributeChanged('name')
             ],
             [
                 ['email'],
@@ -195,7 +195,7 @@ class User extends ActiveRecord
                 'unique',
                 'message' => Yii::t('skeleton', 'This email is already used by another user.'),
                 'skipOnError' => true,
-                'when' => fn() => $this->isAttributeChanged('email')
+                'when' => fn () => $this->isAttributeChanged('email')
             ],
             [
                 ['city', 'first_name', 'last_name'],
@@ -394,13 +394,17 @@ class User extends ActiveRecord
         $this->password_reset_token = Yii::$app->getSecurity()->generateRandomString();
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public function getFullName(): string
     {
         return trim($this->first_name . ' ' . $this->last_name);
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public function getInitials(): string
     {
         return $this->first_name && $this->last_name ? ($this->first_name[0] . $this->last_name[0]) : substr($this->name, 0, 2);
@@ -421,7 +425,9 @@ class User extends ActiveRecord
         return $this->password_reset_token ? Url::to(['account/reset', 'email' => $this->email, 'code' => $this->password_reset_token], true) : null;
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public function getTimezoneOffset(): string
     {
         $date = new \DateTime('now');

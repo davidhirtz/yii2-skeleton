@@ -6,15 +6,16 @@ use yii\helpers\BaseStringHelper;
 
 class StringHelper extends BaseStringHelper
 {
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public static function obfuscateEmail(
         string $email,
         bool $obfuscateDomain = true,
         int $length = 2,
         int $maxLength = 5,
         string $replacement = '*'
-    ): string
-    {
+    ): string {
         $parts = explode('@', $email);
         $url = explode('.', $parts[1]);
 
@@ -32,8 +33,7 @@ class StringHelper extends BaseStringHelper
         int $length = 2,
         int $maxLength = 5,
         string $replacement = '*'
-    ): string
-    {
+    ): string {
         $length = min($length, strlen($text));
         return substr($text, 0, $length) . str_repeat($replacement, min(strlen($text) - $length, $maxLength));
     }

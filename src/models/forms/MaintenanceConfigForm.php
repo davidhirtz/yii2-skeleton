@@ -34,9 +34,7 @@ class MaintenanceConfigForm extends Model
      */
     public string $viewFile = '@skeleton/views/maintenance.php';
 
-    /**
-     * @return array
-     */
+    
     public function rules(): array
     {
         return [
@@ -64,9 +62,7 @@ class MaintenanceConfigForm extends Model
         ];
     }
 
-    /**
-     * @return false|int
-     */
+    
     public function save(): false|int
     {
         if ($this->validate()) {
@@ -88,9 +84,7 @@ class MaintenanceConfigForm extends Model
         return false;
     }
 
-    /**
-     * @return bool
-     */
+    
     public function isConfigured(): bool
     {
         return file_exists(Yii::getAlias(static::MAINTENANCE_CONFIG));

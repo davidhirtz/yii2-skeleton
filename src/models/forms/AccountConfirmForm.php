@@ -3,21 +3,17 @@
 namespace davidhirtz\yii2\skeleton\models\forms;
 
 use davidhirtz\yii2\skeleton\models\traits\IdentityTrait;
-use yii\base\Model;
 use Yii;
+use yii\base\Model;
 
 class AccountConfirmForm extends Model
 {
     use IdentityTrait;
 
-    /**
-     * @var string
-     */
+    
     public string $code;
 
-    /**
-     * @inheritdoc
-     */
+    
     public function rules(): array
     {
         return [
@@ -56,7 +52,6 @@ class AccountConfirmForm extends Model
 
     /**
      * Logs in a user using the provided email and password.
-     * @return bool
      */
     public function confirm(): bool
     {

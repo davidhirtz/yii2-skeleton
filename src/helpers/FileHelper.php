@@ -75,7 +75,9 @@ class FileHelper extends BaseFileHelper
             $phpdoc = "\n * " . implode("\n * ", $phpdoc) . "\n *";
         }
 
-        file_put_contents($file, <<<EOL
+        file_put_contents(
+            $file,
+            <<<EOL
 <?php
 /**$phpdoc
  * @version $date
@@ -96,7 +98,9 @@ EOL
         return $filename;
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public static function getExtensionFromUrl(string $url): string
     {
         return strtolower(pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));

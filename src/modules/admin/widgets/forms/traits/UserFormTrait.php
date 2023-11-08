@@ -14,7 +14,9 @@ use yii\widgets\ActiveField;
 
 trait UserFormTrait
 {
-    /** @uses User::getCountries() */
+    /**
+     * @uses User::getCountries()
+     */
     public function countryField(array $options = ['options' => ['prompt' => '']]): ActiveField|string
     {
         $options['inputOptions']['prompt'] ??= '';
@@ -26,7 +28,9 @@ trait UserFormTrait
         return $this->field($this->model, 'email', $options)->input('email');
     }
 
-    /** @uses User::getLanguages() */
+    /**
+     * @uses User::getLanguages()
+     */
     public function languageField(array $options = []): ActiveField|string
     {
         return $this->field($this->model, 'language', $options)->widget(DynamicRangeDropdown::class);
@@ -37,15 +41,19 @@ trait UserFormTrait
         return $this->field($this->model, 'newPassword', $options)->passwordInput();
     }
 
-    /** @uses UserForm::$repeatPassword */
+    /**
+     * @uses UserForm::$repeatPassword
+     */
     public function repeatPasswordField(array $options = []): ActiveField|string
     {
         $options['enableClientValidation'] ??= false;
-        return $this->field($this->model, 'repeatPassword',$options)
+        return $this->field($this->model, 'repeatPassword', $options)
             ->passwordInput();
     }
 
-    /** @uses User::getStatuses() */
+    /**
+     * @uses User::getStatuses()
+     */
     public function statusField(array $options = []): ActiveField|string
     {
         if ($this->model->isOwner()) {
@@ -55,7 +63,9 @@ trait UserFormTrait
         return $this->field($this->model, 'status', $options)->widget(DynamicRangeDropdown::class);
     }
 
-    /** @uses User::getTimezones() */
+    /**
+     * @uses User::getTimezones()
+     */
     public function timezoneField(array $options = []): ActiveField|string
     {
         return $this->field($this->model, 'timezone', $options)->widget(TimezoneDropdown::class);

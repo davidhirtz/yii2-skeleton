@@ -2,7 +2,6 @@
 
 namespace davidhirtz\yii2\skeleton\behaviors;
 
-
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 
 /**
@@ -18,9 +17,7 @@ class BlameableBehavior extends \yii\behaviors\BlameableBehavior
      */
     public $overwriteChangedValues = false;
 
-    /**
-     * @inheritdoc
-     */
+    
     public function init()
     {
         if (!$this->attributes) {

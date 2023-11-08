@@ -8,8 +8,8 @@ use Yii;
 use yii\db\Migration;
 
 /**
-* @noinspection PhpUnused
-*/
+ * @noinspection PhpUnused
+ */
 class M231105142331OwnerRule extends Migration
 {
     use MigrationTrait;

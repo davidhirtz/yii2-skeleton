@@ -17,7 +17,6 @@ interface ClientInterface extends \yii\authclient\ClientInterface
     public function getAuthData();
 
     /**
-     *
      * @return array
      */
     public function getSafeUserAttributes();

@@ -20,7 +20,6 @@ class UserSubmenu extends Submenu
             }
 
             $this->items = [...$this->items, ...$this->getUserItems()];
-
         } else {
             if (!$this->title) {
                 $this->title = Html::a(Yii::t('skeleton', 'Users'), ['/admin/user/index']);

@@ -7,10 +7,10 @@
  * @var yii\bootstrap4\ActiveForm $af
  */
 
+use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\SignupActiveForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
-use davidhirtz\yii2\skeleton\helpers\Html;
 use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Sign up'));
@@ -44,7 +44,7 @@ $this->setTitle(Yii::t('skeleton', 'Sign up'));
                 </a>
                 <?php
             }
-            ?>
+?>
             <a href="<?php echo Url::to(['login']); ?>" class="list-group-item list-group-item-action">
                 <?= Icon::tag('sign-in-alt', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'Back to login'); ?>
             </a>

@@ -1,13 +1,15 @@
-<?php /** @noinspection PhpUnused */
+<?php
+
+/** @noinspection PhpUnused */
 
 namespace davidhirtz\yii2\skeleton\migrations;
 
-use davidhirtz\yii2\skeleton\rbac\rules\OwnerRule;
 use davidhirtz\yii2\skeleton\db\traits\MigrationTrait;
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\Session;
-use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\skeleton\models\User;
+use davidhirtz\yii2\skeleton\models\UserLogin;
+use davidhirtz\yii2\skeleton\rbac\rules\OwnerRule;
 use m140506_102106_rbac_init;
 use Yii;
 use yii\db\Query;

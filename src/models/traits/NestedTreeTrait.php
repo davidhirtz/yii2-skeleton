@@ -78,9 +78,7 @@ trait NestedTreeTrait
         return null;
     }
 
-    /**
-     * @return ActiveQuery
-     */
+    
     public function findAncestors(): ActiveQuery
     {
         return static::find()->where('[[lft]]<:rgt AND [[rgt]]>:rgt', ['rgt' => $this->rgt]);
@@ -120,17 +118,13 @@ trait NestedTreeTrait
         }
     }
 
-    /**
-     * @return ActiveQuery
-     */
+    
     public function findDescendants(): ActiveQuery
     {
         return static::find()->where('[[lft]]>:lft AND [[rgt]]<:rgt', ['lft' => $this->lft, 'rgt' => $this->rgt]);
     }
 
-    /**
-     * @return int
-     */
+    
     public function getBranchCount(): int
     {
         return ($this->rgt - $this->lft - 1) / 2;
@@ -278,9 +272,7 @@ trait NestedTreeTrait
         }
     }
 
-    /**
-     * @param ActiveRecord|null $parent
-     */
+    
     public static function rebuildNestedTree(?ActiveRecord $parent = null, array $order = []): void
     {
         $parentId = $parent?->getPrimaryKey();
@@ -319,7 +311,6 @@ trait NestedTreeTrait
     }
 
     /**
-     *
      * @return array()
      */
     private static function rebuildNestedTreeBranch(array $branch, int &$lft, ?int $parentId): array

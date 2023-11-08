@@ -2,7 +2,6 @@
 
 namespace davidhirtz\yii2\skeleton\behaviors;
 
-
 use DateTime;
 use DateTimeZone;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;

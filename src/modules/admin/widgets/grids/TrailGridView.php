@@ -33,7 +33,7 @@ class TrailGridView extends GridView
 
     public function init(): void
     {
-        $this->rowOptions = fn(Trail $trail) => [
+        $this->rowOptions = fn (Trail $trail) => [
             'id' => 'trail-' . $trail->id,
             'class' => $trail->isDeleteType() ? 'bg-danger' : '',
         ];
@@ -53,9 +53,7 @@ class TrailGridView extends GridView
         parent::init();
     }
 
-    /**
-     * @return array
-     */
+    
     public function modelColumn(): array
     {
         return [

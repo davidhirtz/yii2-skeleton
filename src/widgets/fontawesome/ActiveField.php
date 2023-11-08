@@ -4,9 +4,6 @@ namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 
 class ActiveField extends \davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveField
 {
-    /**
-     * @var string|null
-     */
     public ?string $icon = null;
 
     /**
@@ -14,9 +11,7 @@ class ActiveField extends \davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveFiel
      */
     public array $iconOptions = ['class' => 'fa-fw'];
 
-    /**
-     * @var string
-     */
+    
     public string $iconInputTemplate = '<div class="input-group"><div class="input-group-prepend"><span class="input-group-text">{icon}</span></div>{input}</div>';
 
     /**

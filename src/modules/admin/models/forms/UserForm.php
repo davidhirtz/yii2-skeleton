@@ -3,9 +3,9 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\models\forms;
 
 use davidhirtz\yii2\skeleton\models\User;
+use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\db\BaseActiveRecord;
-use Yii;
 
 /**
  * UserForm extends {@see User}. It is used to update user information by an authorized administrator.
@@ -50,7 +50,7 @@ class UserForm extends User
             [
                 ['repeatPassword'],
                 'required',
-                'when' => fn(self $model): bool => (bool)$model->newPassword,
+                'when' => fn (self $model): bool => (bool)$model->newPassword,
             ],
             [
                 ['repeatPassword'],

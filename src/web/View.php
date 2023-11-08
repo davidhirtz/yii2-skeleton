@@ -3,8 +3,8 @@
 namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
-use yii\helpers\Json;
 use Yii;
+use yii\helpers\Json;
 use yii\helpers\Url;
 
 /**
@@ -155,7 +155,9 @@ class View extends \yii\web\View
         }
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public function registerHrefLangLinkTags(array $languages = [], ?string $default = null): void
     {
         if (!$languages) {

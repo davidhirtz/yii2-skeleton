@@ -22,7 +22,7 @@ class DeleteForm extends Model
             [
                 ['value'],
                 'required',
-                'when' => fn() => $this->attribute
+                'when' => fn () => $this->attribute
             ],
             [
                 ['value'],
@@ -56,7 +56,6 @@ class DeleteForm extends Model
             if (!$this->getModel()->delete()) {
                 $this->addErrors($this->getModel()->getErrors());
             }
-
         }
 
         return !$this->hasErrors();
@@ -76,7 +75,9 @@ class DeleteForm extends Model
         return $this->_model;
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public function setModel(?ActiveRecordInterface $model): void
     {
         if (!$model) {

@@ -7,12 +7,12 @@
  * @var \yii\bootstrap4\ActiveForm $af
  */
 
+use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\forms\AccountResendConfirmForm;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
-use davidhirtz\yii2\skeleton\helpers\Html;
 use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Resend Account Confirmation'));
@@ -28,12 +28,12 @@ $this->setTitle(Yii::t('skeleton', 'Resend Account Confirmation'));
         $af = ActiveForm::begin([
             'enableClientValidation' => false,
         ]);
-        ?>
+?>
         <?= $af->field($form, 'email', [
-            'inputOptions' => ['type' => 'email', 'autofocus' => !$form->hasErrors()],
-            'icon' => 'envelope',
-            'enableError' => false
-        ]); ?>
+    'inputOptions' => ['type' => 'email', 'autofocus' => !$form->hasErrors()],
+    'icon' => 'envelope',
+    'enableError' => false
+]); ?>
         <div class="form-group">
             <?= Html::submitButton(Yii::t('skeleton', 'Send Email'), ['class' => 'btn btn-primary btn-block']) ?>
         </div>
@@ -50,5 +50,5 @@ $this->setTitle(Yii::t('skeleton', 'Resend Account Confirmation'));
         </div>
         <?php
     }
-    ?>
+?>
 </div>

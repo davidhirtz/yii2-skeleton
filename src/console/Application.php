@@ -45,7 +45,7 @@ class Application extends \yii\console\Application
             'asset' => AssetController::class,
             'migrate' => MigrateController::class,
             'maintenance' => MaintenanceController::class,
-            'params' => ParamsController::class ,
+            'params' => ParamsController::class,
             'trail' => TrailController::class,
         ]);
     }

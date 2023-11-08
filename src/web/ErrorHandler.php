@@ -8,9 +8,6 @@ use yii\web\HttpException;
 
 class ErrorHandler extends \yii\web\ErrorHandler
 {
-    /**
-     * @inheritDoc
-     */
     public $traceLine = '<a href="phpstorm://open?file={file}&line={line}">{html}</a>';
 
     /**

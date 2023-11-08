@@ -58,9 +58,7 @@ class FileUpload extends InputWidget
         parent::init();
     }
 
-    /**
-     * @inheritdoc
-     */
+    
     public function run()
     {
         $this->registerClientScript();

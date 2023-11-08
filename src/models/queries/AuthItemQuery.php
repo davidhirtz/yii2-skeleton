@@ -66,6 +66,5 @@ class AuthItemQuery extends ActiveQuery
                 $this->setAuthItemChild($items, $relations, $parent, $relation['child']);
             }
         }
-
     }
 }

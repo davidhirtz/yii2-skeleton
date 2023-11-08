@@ -81,7 +81,6 @@ class MaintenanceController extends Controller
 
     /**
      * Enables maintenance mode with the given configuration. Run `yii help maintenance/enable` for more information.
-     * @return void
      */
     public function actionEnable(): void
     {

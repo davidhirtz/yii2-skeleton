@@ -51,11 +51,11 @@ class UserLoginGridView extends GridView
                     'attribute' => 'browser',
                     'headerOptions' => ['class' => 'd-none d-md-table-cell', 'style' => 'width:45%;'],
                     'contentOptions' => ['class' => 'd-none d-md-table-cell'],
-                    'content' => fn(UserLogin $login) => $login->browser
+                    'content' => fn (UserLogin $login) => $login->browser
                 ],
                 [
                     'attribute' => 'created_at',
-                    'content' => fn(UserLogin $login): string => Timeago::tag($login->created_at)
+                    'content' => fn (UserLogin $login): string => Timeago::tag($login->created_at)
                 ],
             ];
         }

@@ -31,10 +31,10 @@ $this->setTitle($title);
             'enableClientValidation' => false,
         ]);
 
-        echo $af->field($form, 'email', ['inputOptions' => ['readonly' => true], 'icon' => 'envelope']);
-        echo $af->field($form, 'newPassword', ['icon' => 'key'])->passwordInput(['autofocus' => !$form->hasErrors()]);
-        echo $af->field($form, 'repeatPassword', ['icon' => 'key'])->passwordInput();
-        ?>
+echo $af->field($form, 'email', ['inputOptions' => ['readonly' => true], 'icon' => 'envelope']);
+echo $af->field($form, 'newPassword', ['icon' => 'key'])->passwordInput(['autofocus' => !$form->hasErrors()]);
+echo $af->field($form, 'repeatPassword', ['icon' => 'key'])->passwordInput();
+?>
         <div class="form-group">
             <?= Html::submitButton(Yii::t('skeleton', 'Save New Password'), ['class' => 'btn btn-primary btn-block']) ?>
         </div>

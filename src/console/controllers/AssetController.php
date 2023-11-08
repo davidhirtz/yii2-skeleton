@@ -2,8 +2,8 @@
 
 namespace davidhirtz\yii2\skeleton\console\controllers;
 
-use yii\console\Exception;
 use Yii;
+use yii\console\Exception;
 use yii\helpers\Console;
 use yii\helpers\FileHelper;
 

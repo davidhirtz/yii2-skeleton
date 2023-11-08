@@ -2,8 +2,8 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
-use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
 use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
+use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
 use Yii;
 use yii\db\ActiveRecord;
 

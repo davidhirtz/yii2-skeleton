@@ -2,12 +2,12 @@
 
 namespace davidhirtz\yii2\skeleton\models;
 
-use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
-use davidhirtz\yii2\skeleton\models\traits\TypeAttributeTrait;
-use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\datetime\DateTime;
+use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
+use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\models\collections\TrailModelCollection;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
+use davidhirtz\yii2\skeleton\models\traits\TypeAttributeTrait;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\TrailGridView;
 use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
 use ReflectionClass;
@@ -152,57 +152,43 @@ class Trail extends ActiveRecord
         return TrailModelCollection::getModelByNameAndId($this->data['model'], $this->data['model_id'] ?? null);
     }
 
-    /**
-     * @return bool
-     */
+    
     public function isAuthPermissionType(): bool
     {
         return in_array($this->type, [static::TYPE_ASSIGN, static::TYPE_REVOKE]);
     }
 
-    /**
-     * @return bool
-     */
+    
     public function isAuthPermissionAssignType(): bool
     {
         return $this->type == static::TYPE_ASSIGN;
     }
 
-    /**
-     * @return bool
-     */
+    
     public function isDeleteType(): bool
     {
         return in_array($this->type, [static::TYPE_DELETE, static::TYPE_CHILD_DELETE]);
     }
 
-    /**
-     * @return bool
-     */
+    
     public function isCreateType(): bool
     {
         return $this->type == static::TYPE_CREATE;
     }
 
-    /**
-     * @return bool
-     */
+    
     public function isUpdateType(): bool
     {
         return $this->type == static::TYPE_UPDATE;
     }
 
-    /**
-     * @return bool
-     */
+    
     public function hasAttributesEnabled(): bool
     {
         return $this->isCreateType() || $this->isUpdateType();
     }
 
-    /**
-     * @return bool
-     */
+    
     public function hasDataModelEnabled(): bool
     {
         return $this->getTypeOptions()['hasDataModel'] ?? false;

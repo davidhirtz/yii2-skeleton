@@ -7,7 +7,6 @@ namespace davidhirtz\yii2\skeleton\data;
  */
 class ActiveDataProvider extends \yii\data\ActiveDataProvider
 {
-
     public const EVENT_INIT = 'init';
     public const EVENT_AFTER_PREPARE = 'afterPrepare';
 

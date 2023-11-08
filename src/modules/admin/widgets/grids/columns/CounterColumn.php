@@ -32,9 +32,7 @@ class CounterColumn extends DataColumn
      */
     public array $countHtmlOptions = ['class' => 'badge'];
 
-    /**
-     * @var string
-     */
+    
     public string $emptyValue = '';
 
     public function init(): void
@@ -52,6 +50,4 @@ class CounterColumn extends DataColumn
 
         parent::init();
     }
-
-
 }

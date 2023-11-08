@@ -6,8 +6,8 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\UserActiveDataProvider;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\StatusGridViewTrait;
-use davidhirtz\yii2\timeago\Timeago;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
+use davidhirtz\yii2\timeago\Timeago;
 use davidhirtz\yii2\timeago\TimeagoColumn;
 use Yii;
 use yii\db\ActiveRecordInterface;
@@ -33,7 +33,7 @@ class UserGridView extends GridView
         }
 
         if (!$this->rowOptions) {
-            $this->rowOptions = fn(User $user) => ['class' => $user->isDisabled() ? 'disabled' : null];
+            $this->rowOptions = fn (User $user) => ['class' => $user->isDisabled() ? 'disabled' : null];
         }
 
         if ($this->header === null) {
@@ -127,7 +127,7 @@ class UserGridView extends GridView
         return [
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
             'contentOptions' => ['class' => 'd-none d-md-table-cell text-right'],
-            'content' => fn(User $user): string => Html::buttons($this->getRowButtons($user))
+            'content' => fn (User $user): string => Html::buttons($this->getRowButtons($user))
         ];
     }
 
@@ -143,12 +143,15 @@ class UserGridView extends GridView
         }
 
         if (Yii::$app->getUser()->can(User::AUTH_USER_ASSIGN, ['user' => $user])) {
-            return Html::a(Icon::tag('unlock-alt'), ['/admin/auth/view', 'user' => $user->id],
+            return Html::a(
+                Icon::tag('unlock-alt'),
+                ['/admin/auth/view', 'user' => $user->id],
                 [
                     'class' => 'btn btn-primary',
                     'data-toggle' => 'tooltip',
                     'title' => Yii::t('skeleton', 'Permissions'),
-                ]);
+                ]
+            );
         }
 
         return [];

@@ -3,9 +3,9 @@
 namespace davidhirtz\yii2\skeleton\widgets\jui;
 
 use DateTime;
+use davidhirtz\yii2\skeleton\helpers\Html;
 use Yii;
 use yii\helpers\FormatConverter;
-use davidhirtz\yii2\skeleton\helpers\Html;
 use yii\web\JsExpression;
 use yii\widgets\InputWidget;
 

@@ -56,9 +56,7 @@ class SitemapBehavior extends Behavior
      */
     public $defaultPriority;
 
-    /**
-     * @inheritDoc
-     */
+    
     public function init()
     {
         if (!is_callable($this->callback)) {
@@ -107,9 +105,7 @@ class SitemapBehavior extends Behavior
         return $urls;
     }
 
-    /**
-     * @return int
-     */
+    
     public function getSitemapUrlCount(): int
     {
         /** @noinspection PhpPossiblePolymorphicInvocationInspection */

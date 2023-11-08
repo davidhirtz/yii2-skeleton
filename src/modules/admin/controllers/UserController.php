@@ -2,21 +2,21 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
-use davidhirtz\yii2\skeleton\modules\admin\controllers\traits\UserTrait;
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
 use davidhirtz\yii2\skeleton\models\forms\OwnershipForm;
 use davidhirtz\yii2\skeleton\models\User;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\traits\UserTrait;
 use davidhirtz\yii2\skeleton\modules\admin\data\UserActiveDataProvider;
 use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\web\Controller;
+use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\web\ServerErrorHttpException;
-use Yii;
 
 class UserController extends Controller
 {

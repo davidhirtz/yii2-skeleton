@@ -3,9 +3,9 @@
 namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
+use Yii;
 use yii\base\InvalidCallException;
 use yii\helpers\ArrayHelper;
-use Yii;
 use yii\web\UploadedFile;
 
 /**
@@ -166,8 +166,6 @@ class ChunkedUploadedFile extends UploadedFile
     /**
      * Returns true if the file size matches the `size` set by HTTP headers on chunked uploads.
      * Stat cache needs to be refreshed before returning the accurate file size.
-     *
-     * @return bool
      */
     public function isCompleted(): bool
     {
@@ -179,9 +177,7 @@ class ChunkedUploadedFile extends UploadedFile
         return filesize($tempName) == $this->size;
     }
 
-    /**
-     * @return bool
-     */
+    
     public function isPartial(): bool
     {
         return $this->chunkSize !== null && $this->error === UPLOAD_ERR_PARTIAL;

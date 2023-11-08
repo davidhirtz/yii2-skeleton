@@ -58,7 +58,9 @@ class I18N extends \yii\i18n\I18N
         return $this->_languages;
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public function setLanguages(array|string $languages): void
     {
         $this->_languages = array_unique((array)$languages);

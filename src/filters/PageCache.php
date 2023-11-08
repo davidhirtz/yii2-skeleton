@@ -30,9 +30,7 @@ class PageCache extends \yii\filters\PageCache
      */
     public array $params = [];
 
-    /**
-     * @return void
-     */
+    
     public function init(): void
     {
         $request = Yii::$app->getRequest();

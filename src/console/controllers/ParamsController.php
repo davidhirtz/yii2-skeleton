@@ -5,8 +5,8 @@ namespace davidhirtz\yii2\skeleton\console\controllers;
 use davidhirtz\yii2\skeleton\console\controllers\traits\ConfigTrait;
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use Exception;
-use yii\console\Controller;
 use Yii;
+use yii\console\Controller;
 
 /**
  * Manages application parameters.

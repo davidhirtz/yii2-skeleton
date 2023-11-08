@@ -84,7 +84,9 @@ class SystemController extends Controller
         ]);
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public function actionPublish(): Response|string
     {
         $basePath = Yii::$app->getAssetManager()->basePath;
@@ -110,7 +112,9 @@ class SystemController extends Controller
         return $this->redirect(['index']);
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public function actionSchema(string $db): Response|string
     {
         $connection = Yii::$app->get($db, false);

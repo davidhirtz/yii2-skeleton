@@ -23,15 +23,15 @@ namespace <?= $generator->ns ?>;
 use Yii;
 
 /**
- * <?= $className ."\n" ?>
+ * <?= $className . "\n" ?>
  *
 <?php foreach ($properties as $property => $data): ?>
- * @property <?= "{$data['type']} \${$property}"  . ($data['comment'] ? ' ' . strtr($data['comment'], ["\n" => ' ']) : '') . "\n" ?>
+ * @property <?= "{$data['type']} \${$property}" . ($data['comment'] ? ' ' . strtr($data['comment'], ["\n" => ' ']) : '') . "\n" ?>
 <?php endforeach; ?>
 <?php if (!empty($relations)): ?>
  *
 <?php foreach ($relations as $name => $relation): ?>
- * @property-read <?= $relation[1] . ($relation[2] ? '[]' : '') . ' $' . lcfirst($name) . ' {@see ' . $className . '::get' . $name  . "()}\n" ?>
+ * @property-read <?= $relation[1] . ($relation[2] ? '[]' : '') . ' $' . lcfirst($name) . ' {@see ' . $className . '::get' . $name . "()}\n" ?>
 <?php endforeach; ?>
 <?php endif; ?>
 */

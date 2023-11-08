@@ -50,7 +50,9 @@ class AccountActiveForm extends ActiveForm
         parent::init();
     }
 
-    /** @noinspection PhpUnused {@see static::$fields} */
+    /**
+     * @noinspection PhpUnused {@see static::$fields}
+     */
     public function oldPasswordField(array $options = []): ActiveField|string
     {
         return $this->model->password_hash

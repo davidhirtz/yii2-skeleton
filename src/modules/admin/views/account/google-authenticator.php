@@ -7,9 +7,9 @@
  * @var yii\bootstrap4\ActiveForm $af
  */
 
+use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
-use davidhirtz\yii2\skeleton\helpers\Html;
 
 $this->setTitle(Yii::t('skeleton', 'Google Authenticator'));
 ?>
@@ -26,11 +26,11 @@ $this->setTitle(Yii::t('skeleton', 'Google Authenticator'));
             'enableClientValidation' => false,
         ]);
 
-        echo $af->field($form, 'code', ['icon' => 'qrcode', 'enableError' => false])->textInput([
-            'autocomplete' => 'one-time-code',
-            'autofocus' => !$form->hasErrors(),
-        ]);
-        ?>
+echo $af->field($form, 'code', ['icon' => 'qrcode', 'enableError' => false])->textInput([
+    'autocomplete' => 'one-time-code',
+    'autofocus' => !$form->hasErrors(),
+]);
+?>
         <div class="form-group">
             <?= Html::submitButton(Yii::t('skeleton', 'Login'), ['class' => 'btn btn-primary btn-block']) ?>
         </div>

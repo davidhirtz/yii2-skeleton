@@ -2,8 +2,8 @@
 
 namespace davidhirtz\yii2\skeleton\models\forms;
 
-use davidhirtz\yii2\skeleton\models\traits\IdentityTrait;
 use davidhirtz\yii2\datetime\DateTime;
+use davidhirtz\yii2\skeleton\models\traits\IdentityTrait;
 use Yii;
 use yii\base\Model;
 

@@ -14,11 +14,11 @@
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\GridView;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
+use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
 use davidhirtz\yii2\timeago\Timeago;
 use yii\data\ArrayDataProvider;
 use yii\helpers\Url;
@@ -46,7 +46,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                 ],
                 [
                     'contentOptions' => ['class' => 'text-right'],
-                    'content' => fn($modified, $name): string => Html::buttons([
+                    'content' => fn ($modified, $name): string => Html::buttons([
                         Html::a(Icon::tag('file'), ['view', 'log' => $name, 'raw' => 1], [
                             'class' => 'btn btn-primary',
                         ]),
@@ -88,7 +88,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
             [
                 'label' => Yii::t('skeleton', 'Updated'),
                 'contentOptions' => ['style' => 'vertical-align:top'],
-                'content' => fn($item): string => Timeago::tag($item['modified'])
+                'content' => fn ($item): string => Timeago::tag($item['modified'])
             ]
         ],
         'footer' => [
@@ -116,13 +116,13 @@ $this->setTitle(Yii::t('skeleton', 'System'));
         'columns' => [
             [
                 'label' => Yii::t('skeleton', 'Name'),
-                'content' => fn($item): string => Html::tag('div', ucwords((string) $item['name']), ['class' => 'strong']) .
+                'content' => fn ($item): string => Html::tag('div', ucwords((string) $item['name']), ['class' => 'strong']) .
                     Html::tag('div', $item['class'], ['class' => 'small'])
             ],
             [
                 'contentOptions' => ['class' => 'text-right'],
                 /** @see SystemController::actionFlush() */
-                'content' => fn($item): string => Html::buttons(Html::a(Icon::tag('sync-alt'), ['flush', 'cache' => $item['name']], [
+                'content' => fn ($item): string => Html::buttons(Html::a(Icon::tag('sync-alt'), ['flush', 'cache' => $item['name']], [
                     'class' => 'btn btn-primary',
                     'data-method' => 'post',
                 ]))

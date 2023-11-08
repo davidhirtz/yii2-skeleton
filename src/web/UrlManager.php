@@ -51,9 +51,7 @@ class UrlManager extends \yii\web\UrlManager
     public const EVENT_AFTER_CREATE = 'afterCreate';
     public const EVENT_BEFORE_PARSE = 'beforeParse';
 
-    /**
-     * @inheritdoc
-     */
+    
     public function init(): void
     {
         if (!$this->enablePrettyUrl) {
@@ -100,7 +98,7 @@ class UrlManager extends \yii\web\UrlManager
             }
         }
 
-        $url = parent::createUrl(array_filter($params, fn($value): bool => !is_null($value)));
+        $url = parent::createUrl(array_filter($params, fn ($value): bool => !is_null($value)));
 
         $this->trigger(static::EVENT_AFTER_CREATE, $event = Yii::$container->get(UrlManagerEvent::class, [], [
             'url' => $url,

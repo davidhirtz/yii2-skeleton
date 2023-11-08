@@ -26,5 +26,5 @@ $this->setTitle(Yii::t('skeleton', 'Admin'));
         </div>
         <?php
     }
-    ?>
+?>
 </div>

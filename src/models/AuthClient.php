@@ -3,9 +3,9 @@
 namespace davidhirtz\yii2\skeleton\models;
 
 use davidhirtz\yii2\datetime\DateTime;
+use davidhirtz\yii2\datetime\DateTimeBehavior;
 use davidhirtz\yii2\skeleton\auth\clients\ClientInterface;
 use davidhirtz\yii2\skeleton\behaviors\SerializedAttributesBehavior;
-use davidhirtz\yii2\datetime\DateTimeBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TimestampBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
@@ -113,9 +113,7 @@ class AuthClient extends ActiveRecord
         return [$this->identity];
     }
 
-    /**
-     * @return array
-     */
+    
     public function getTrailAttributes(): array
     {
         return array_diff($this->attributes(), [

@@ -4,8 +4,8 @@ namespace davidhirtz\yii2\skeleton\models\forms;
 
 use davidhirtz\yii2\skeleton\db\Identity;
 use davidhirtz\yii2\skeleton\models\traits\IdentityTrait;
-use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\skeleton\models\User;
+use davidhirtz\yii2\skeleton\models\UserLogin;
 use Yii;
 use yii\base\Model;
 
@@ -35,9 +35,7 @@ class PasswordResetForm extends Model
      */
     public $repeatPassword;
 
-    /**
-     * @inheritDoc
-     */
+    
     public function rules()
     {
         return [
@@ -81,7 +79,6 @@ class PasswordResetForm extends Model
 
     /**
      * Validates password reset code if user was found by email.
-     * @return bool
      */
     public function validatePasswordResetCode(): bool
     {
@@ -122,9 +119,7 @@ class PasswordResetForm extends Model
         return false;
     }
 
-    /**
-     * @inheritdoc
-     */
+    
     public function attributeLabels()
     {
         $user = $this->getUser();

@@ -62,7 +62,8 @@ class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
                 $this->filterPlaceholder = Yii::t('skeleton', 'Filter');
             }
 
-            array_unshift($this->dropdown['items'],
+            array_unshift(
+                $this->dropdown['items'],
                 ['label' => Html::tag('input', null, ['class' => 'dropdown-filter form-control', 'placeholder' => $this->filterPlaceholder]), 'encode' => false],
                 '-'
             );
@@ -70,7 +71,8 @@ class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
 
         if ($this->isActive) {
             if ($this->defaultItem !== false && isset($this->dropdown['items'])) {
-                array_unshift($this->dropdown['items'],
+                array_unshift(
+                    $this->dropdown['items'],
                     ['label' => $this->defaultItem, 'url' => Url::current([$this->paramName => $this->defaultValue])],
                     '-'
                 );

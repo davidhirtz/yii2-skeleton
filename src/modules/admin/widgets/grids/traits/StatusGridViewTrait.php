@@ -3,7 +3,6 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\models\traits\StatusAttributeTrait;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
@@ -75,8 +74,6 @@ trait StatusGridViewTrait
     /**
      * Returns array index by `status`, containing `label` and `url` for {@see ButtonDropdown}. This method can be
      * overridden to use other items or add additional statuses to the dropdown.
-     *
-     * @return array
      */
     protected function statusDropdownItems(): array
     {
@@ -94,7 +91,6 @@ trait StatusGridViewTrait
 
     /**
      * @param \davidhirtz\yii2\skeleton\models\traits\StatusAttributeTrait|null $model
-     * @return array
      */
     protected function statusSelectionButtonItems($model = null): array
     {
