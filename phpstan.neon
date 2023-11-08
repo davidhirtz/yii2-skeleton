@@ -1,0 +1,19 @@
+parameters:
+    level: 5
+    paths:
+        - src
+        - tests
+    excludePaths:
+        - app/views/*
+        - tests/_output/*
+        - tests/support/_generated/
+    scanFiles:
+    bootstrapFiles:
+        - tests/_bootstrap.php
+    stubFiles:
+        Yii:
+            - dd
+        yii\base\Application:
+            - end
+        yii\base\ErrorHandler:
+            - convertExceptionToError
