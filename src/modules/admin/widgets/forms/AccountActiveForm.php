@@ -17,7 +17,6 @@ class AccountActiveForm extends ActiveForm
     public bool $hasStickyButtons = true;
 
     /**
-     * @uses static::statusField()
      * @uses static::emailField()
      * @uses static::newPasswordField()
      * @uses static::repeatPasswordField()
@@ -30,11 +29,11 @@ class AccountActiveForm extends ActiveForm
     public function init(): void
     {
         $this->fields ??= [
-            'status',
             'name',
             'email',
             'newPassword',
             'repeatPassword',
+            '-',
             'oldPassword',
             '-',
             'language',

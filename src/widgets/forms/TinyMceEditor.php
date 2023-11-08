@@ -352,7 +352,7 @@ class TinyMceEditor extends InputWidget
 
     protected function setStylesFormArray(string $tag, array $styles = []): void
     {
-        foreach ($styles ?? [] as $name => $cssClass) {
+        foreach ($styles as $name => $cssClass) {
             if (is_int($name)) {
                 $name = Inflector::humanize($cssClass);
             }

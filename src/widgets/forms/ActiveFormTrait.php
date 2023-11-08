@@ -170,8 +170,14 @@ trait ActiveFormTrait
     {
         $attribute = ArrayHelper::remove($options, 'attribute');
 
+        $fieldOptions = isset($options[0]) && is_array($options[0]) ? array_shift($options) : [];
         $type = is_string($options[0] ?? null) ? array_shift($options) : 'text';
-        $field = $this->field($this->model, $attribute, $options);
+
+        if($options[0] ?? null) {
+            $options = $options[0];
+        }
+
+        $field = $this->field($this->model, $attribute, $fieldOptions);
 
         if ($type == 'hidden') {
             Yii::debug("Rendering hidden input for '$attribute'.");
@@ -245,15 +251,19 @@ trait ActiveFormTrait
     }
 
     /**
+     * @return string
      * @deprecated as the "render" methods should echo instead of return, please use
      * {@see ActiveFormTrait::horizontalLine()} instead.
+     *
      */
     public function renderHorizontalLine(): string
     {
         return '<hr>';
     }
 
-    
+    /**
+     * @return string
+     */
     public function horizontalLine(): string
     {
         return '<hr>';

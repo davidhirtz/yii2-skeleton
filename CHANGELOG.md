@@ -1,3 +1,8 @@
+## 2.0.9 – under development
+- Added `davidhirtz\yii2\skeleton\models\traits\IconFilenameAttributeTrait`
+- Added `StringHelper::humanizeFilename()`
+- Enhanced `davidhirtz\yii2\skeleton\widgets\forms\ActiveFormTrait`
+
 ## 2.0.8 (Nov 8, 2023)
 
 - Added `ViewContextInterface` to `Widget` for better view context handling

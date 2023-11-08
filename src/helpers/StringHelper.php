@@ -6,6 +6,11 @@ use yii\helpers\BaseStringHelper;
 
 class StringHelper extends BaseStringHelper
 {
+    public static function humanizeFilename(string $filename): string
+    {
+        return static::mb_ucfirst(str_replace(['.', '_', '-'], ' ', (pathinfo($filename, PATHINFO_FILENAME))));
+    }
+
     /**
      * @noinspection PhpUnused
      */
