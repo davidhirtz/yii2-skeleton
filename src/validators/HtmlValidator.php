@@ -174,7 +174,6 @@ class HtmlValidator extends Validator
      */
     public function validateAttribute($model, $attribute): void
     {
-        
         $html = $model->getAttribute($attribute);
 
         // Unify line breaks..

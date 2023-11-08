@@ -7,7 +7,6 @@ use davidhirtz\yii2\skeleton\models\UserLogin;
 use yii\db\Expression;
 use yii\db\Migration;
 
-
 class M200414113006Ip extends Migration
 {
     /**
