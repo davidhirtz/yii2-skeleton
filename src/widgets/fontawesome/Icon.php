@@ -6,7 +6,7 @@ use Stringable;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
-class Icon implements Stringable
+final class Icon implements Stringable
 {
     public static string $cssClassPrefix = 'fa-';
 

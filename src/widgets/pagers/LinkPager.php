@@ -45,7 +45,7 @@ class LinkPager extends \yii\widgets\LinkPager
             }
 
             for ($i = $beginPage; $i <= $endPage; ++$i) {
-                $buttons[] = $this->renderPageButton($i + 1, $i, null, false, $i == $currentPage);
+                $buttons[] = $this->renderPageButton((string)($i + 1), $i, '', false, $i == $currentPage);
             }
 
             if ($endPage < $lastPage) {
@@ -107,43 +107,39 @@ class LinkPager extends \yii\widgets\LinkPager
             : '';
     }
 
-    public function renderPrevPageButton(?string $label = null, ?string $cssClass = null): string
+    public function renderPrevPageButton(string|false|null $label = null, ?string $cssClass = null): string
     {
+        $label ??= $this->prevPageLabel;
+
         if (!$label) {
-            $label = $this->prevPageLabel;
+            return '';
         }
 
-        if ($label !== false) {
-            $currentPage = $this->pagination->getPage();
+        $currentPage = $this->pagination->getPage();
 
-            if (($page = $currentPage - 1) < 0) {
-                $page = 0;
-            }
-
-            return $this->renderPageButton($label, $page, $cssClass ?: $this->prevPageCssClass, $currentPage <= 0, false);
+        if (($page = $currentPage - 1) < 0) {
+            $page = 0;
         }
 
-        return '';
+        return $this->renderPageButton($label, $page, $cssClass ?: $this->prevPageCssClass, $currentPage <= 0, false);
     }
 
-    public function renderNextPageButton(?string $label = null, ?string $cssClass = null): string
+    public function renderNextPageButton(string|false|null $label = null, ?string $cssClass = null): string
     {
+        $label ??= $this->nextPageLabel;
+
         if (!$label) {
-            $label = $this->nextPageLabel;
+            return '';
         }
 
-        if ($label !== false) {
-            $currentPage = $this->pagination->getPage();
-            $pageCount = $this->pagination->getPageCount();
+        $currentPage = $this->pagination->getPage();
+        $pageCount = $this->pagination->getPageCount();
 
-            if (($page = $currentPage + 1) >= $pageCount - 1) {
-                $page = $pageCount - 1;
-            }
-
-            return $this->renderPageButton($label, $page, $cssClass ?: $this->nextPageCssClass, $currentPage >= $pageCount - 1, false);
+        if (($page = $currentPage + 1) >= $pageCount - 1) {
+            $page = $pageCount - 1;
         }
 
-        return '';
+        return $this->renderPageButton($label, $page, $cssClass ?: $this->nextPageCssClass, $currentPage >= $pageCount - 1, false);
     }
 
     public function renderRangeButton(int $start, int $stop): string

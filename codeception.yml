@@ -1,11 +1,11 @@
 namespace: davidhirtz\yii2\skeleton\tests
 bootstrap: _bootstrap.php
-support_namespace: Support
+support_namespace: support
 paths:
   tests: tests
   output: tests/_output
-  data: tests/Support/Data
-  support: tests/Support
+  data: tests/support/Data
+  support: tests/support
   envs: tests/_envs
 actor_suffix: Tester
 extensions:

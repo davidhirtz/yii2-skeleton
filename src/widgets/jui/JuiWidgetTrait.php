@@ -25,9 +25,7 @@ trait JuiWidgetTrait
 
     protected function registerWidget(string $name, ?string $id = null): void
     {
-        if ($id === null) {
-            $id = $this->options['id'];
-        }
+        $id ??= $this->options['id'];
 
         $options = $this->clientOptions ? Json::htmlEncode($this->clientOptions) : '';
         $js[] = "$('#$id').$name($options)";
@@ -38,8 +36,9 @@ trait JuiWidgetTrait
             }
         }
 
-        /** @var View $view */
-        JuiAsset::register($view = $this->getView());
+        $view = $this->getView();
+
+        JuiAsset::register($view);
         $view->registerJs(implode('', $js) . ';');
     }
 }
