@@ -9,6 +9,7 @@ use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
+use davidhirtz\yii2\skeleton\widgets\pagers\LinkPager;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
@@ -70,7 +71,7 @@ class GridView extends \yii\grid\GridView
     public $layout = '{header}{summary}{items}{pager}{footer}';
 
     public $pager = [
-        'class' => '\davidhirtz\yii2\skeleton\widgets\pagers\LinkPager',
+        'class' => LinkPager::class,
         'firstPageLabel' => true,
         'lastPageLabel' => true,
     ];
