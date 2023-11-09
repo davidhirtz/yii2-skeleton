@@ -4,6 +4,7 @@ namespace davidhirtz\yii2\skeleton\models\traits;
 
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use davidhirtz\yii2\skeleton\helpers\StringHelper;
+use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
 use Yii;
 
 trait IconFilenameAttributeTrait
@@ -11,6 +12,26 @@ trait IconFilenameAttributeTrait
     private static ?array $_iconFilenames = null;
 
     protected string $iconFilenameAttribute = 'icon_filename';
+
+    /**
+     * @uses static::getIconFilenames()
+     */
+    public function getIconFilenameAttributeTraitRules(): array
+    {
+        return [
+            [
+                [$this->iconFilenameAttribute],
+                DynamicRangeValidator::class,
+            ]
+        ];
+    }
+
+    public function getIconFilenameAttributeTraitAttributeLabels(): array
+    {
+        return [
+            $this->iconFilenameAttribute => Yii::t('app', 'Icon'),
+        ];
+    }
 
     public static function getIconFilenames(): array
     {
