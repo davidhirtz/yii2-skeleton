@@ -71,6 +71,6 @@ trait IconFilenameAttributeTrait
 
     public static function getIconPath(): string
     {
-        return '@web/images/icons/';
+        return '@webroot/images/icons/';
     }
 }
