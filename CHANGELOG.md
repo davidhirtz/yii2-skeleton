@@ -1,9 +1,11 @@
 ## 2.0.9 (Nov 9, 2023)
+
 - Added `ActiveRecord::getTraitRules()` and `ActiveRecord::getTraitAttributeLabels()`
 - Added `davidhirtz\yii2\skeleton\models\traits\IconFilenameAttributeTrait`
 - Added `StringHelper::humanizeFilename()`
 - Added `Html::truncateText()`
 - Enhanced `davidhirtz\yii2\skeleton\widgets\forms\ActiveFormTrait`
+- Improved `AccountActiveForm::oldPasswordField()`
 - Removed `@config` alias as it is interfering with `yii2-config` module
 
 ## 2.0.8 (Nov 8, 2023)
@@ -23,7 +25,7 @@
 
 - Improved `\davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\TypeFieldTrait`
 - Removed unbound version constraints in third-party composer packages
-- Removed unnecessary composer requirements from Yii2 via "provide"  
+- Removed unnecessary composer requirements from Yii2 via "provide"
 
 ## 2.0.4 (Nov 7, 2023)
 
