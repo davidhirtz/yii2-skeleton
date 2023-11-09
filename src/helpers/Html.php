@@ -104,6 +104,17 @@ class Html extends BaseHtml
         return $rows ? Html::tag('tbody', implode('', $rows)) : '';
     }
 
+    public static function truncateText(string $text, int|false $maxLength, string $ellipsis = '…'): string
+    {
+        if ($maxLength !== false && mb_strlen($text) > $maxLength) {
+            return Html::tag('span', mb_substr($text, 0, $maxLength - 3) . $ellipsis, [
+                'title' => $text,
+            ]);
+        }
+
+        return $text;
+    }
+
     public static function errorSummary($models, $options = []): string
     {
         if ($models instanceof ActiveRecord) {

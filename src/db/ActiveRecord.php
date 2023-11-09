@@ -5,6 +5,7 @@ namespace davidhirtz\yii2\skeleton\db;
 use ArrayObject;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\db\commands\BatchInsertQueryBuild;
+use ReflectionClass;
 use Yii;
 use yii\base\Model;
 use yii\behaviors\AttributeTypecastBehavior;
@@ -198,6 +199,28 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return parent::isAttributeChanged($name, $identical);
     }
 
+    public function getTraitRules(): array
+    {
+        $rules = [];
+
+        foreach ($this->getTraitNames() as $traitName) {
+            $method = "get{$traitName}Rules";
+
+            if (method_exists($this, $method)) {
+                $rules = [...$rules, ...$this->{$method}()];
+            }
+        }
+
+        return $rules;
+    }
+
+
+    public function getTraitNames(): array
+    {
+        $traitNames = (new ReflectionClass($this))->getTraitNames();
+        return array_map(fn($name) => substr($name, strrpos($name, '\\') + 1), $traitNames);
+    }
+
     /**
      * Overrides original method by triggering {@see \davidhirtz\yii2\cms\models\ActiveRecord::EVENT_CREATE_VALIDATORS}
      * event. This enables attached behaviors to manipulate {@see Model::rules()} by modifying the array object returned
@@ -215,6 +238,8 @@ class ActiveRecord extends \yii\db\ActiveRecord
 
         return $this->_validators;
     }
+
+
 
     /**
      * This method is in place to avoid endless calls to {@see \yii\db\ActiveRecord::activeAttributes()}.
@@ -268,6 +293,21 @@ class ActiveRecord extends \yii\db\ActiveRecord
     public function isDeleted(): bool
     {
         return $this->_isDeleted;
+    }
+
+    public function getTraitAttributeLabels(): array
+    {
+        $attributeLabels = [];
+
+        foreach ($this->getTraitNames() as $traitName) {
+            $method = "get{$traitName}AttributeLabels";
+
+            if (method_exists($this, $method)) {
+                $attributeLabels = [...$attributeLabels, ...$this->{$method}()];
+            }
+        }
+
+        return $attributeLabels;
     }
 
     public function attributeLabels(): array

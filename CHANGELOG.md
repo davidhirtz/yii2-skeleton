@@ -1,7 +1,10 @@
-## 2.0.9 – under development
+## 2.0.9 (Nov 9, 2023)
+- Added `ActiveRecord::getTraitRules()` and `ActiveRecord::getTraitAttributeLabels()`
 - Added `davidhirtz\yii2\skeleton\models\traits\IconFilenameAttributeTrait`
 - Added `StringHelper::humanizeFilename()`
+- Added `Html::truncateText()`
 - Enhanced `davidhirtz\yii2\skeleton\widgets\forms\ActiveFormTrait`
+- Removed `@config` alias as it is interfering with `yii2-config` module
 
 ## 2.0.8 (Nov 8, 2023)
 

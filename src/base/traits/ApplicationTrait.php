@@ -43,7 +43,6 @@ trait ApplicationTrait
                 '@root' => $config['basePath'],
                 '@skeleton' => dirname(__FILE__, 3),
                 '@app' => '@root/app',
-                '@config' => '@root/config',
                 '@messages' => '@root/messages',
                 '@resources' => '@root/resources',
                 '@views' => '@resources/views',
