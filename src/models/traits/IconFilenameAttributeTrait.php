@@ -54,7 +54,9 @@ trait IconFilenameAttributeTrait
             'only' => ['*.svg']
         ];
 
-        return FileHelper::findFiles(Yii::getAlias(static::getIconPath()), $options);
+        $dir = Yii::getAlias('@webroot') . static::getIconPath();
+
+        return FileHelper::findFiles($dir, $options);
     }
 
     protected static function humanizeIconFilename(string $filename): string
@@ -71,6 +73,6 @@ trait IconFilenameAttributeTrait
 
     public static function getIconPath(): string
     {
-        return '@webroot/images/icons/';
+        return '/images/icons/';
     }
 }
