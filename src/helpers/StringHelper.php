@@ -8,7 +8,7 @@ class StringHelper extends BaseStringHelper
 {
     public static function humanizeFilename(string $filename): string
     {
-        return static::mb_ucfirst(str_replace(['.', '_', '-'], ' ', (pathinfo($filename, PATHINFO_FILENAME))));
+        return static::mb_ucwords(str_replace(['.', '_', '-'], ' ', (pathinfo($filename, PATHINFO_FILENAME))));
     }
 
     /**

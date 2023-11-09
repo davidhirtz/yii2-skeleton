@@ -36,12 +36,10 @@ trait IconFilenameAttributeTrait
     public static function getIconFilenames(): array
     {
         if (static::$_iconFilenames === null) {
-            $path = Yii::getAlias('@webroot') . '/' . static::getIconPath();
             static::$_iconFilenames = [];
 
             foreach (static::findIconFiles() as $filename) {
-                $filename = str_replace($path, '', $filename);
-                static::$_iconFilenames[$filename] = static::humanizeIconFilename($filename);
+                static::$_iconFilenames[basename($filename)] = static::humanizeIconFilename($filename);
             }
 
             natcasesort(static::$_iconFilenames);
@@ -56,7 +54,7 @@ trait IconFilenameAttributeTrait
             'only' => ['*.svg']
         ];
 
-        return FileHelper::findFiles(static::getIconPath(), $options);
+        return FileHelper::findFiles(Yii::getAlias(static::getIconPath()), $options);
     }
 
     protected static function humanizeIconFilename(string $filename): string

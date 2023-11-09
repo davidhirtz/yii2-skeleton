@@ -1,3 +1,7 @@
+## 2.0.10 (Nov 9, 2023)
+
+- Enhanced `IconFilenameAttributeTrait::getIconFilenames()` to also accept aliases
+
 ## 2.0.9 (Nov 9, 2023)
 
 - Added `ActiveRecord::getTraitRules()` and `ActiveRecord::getTraitAttributeLabels()`
