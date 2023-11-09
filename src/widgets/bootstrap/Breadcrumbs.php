@@ -14,6 +14,8 @@ class Breadcrumbs extends \yii\widgets\Breadcrumbs
     public $itemTemplate = "<li class=\"breadcrumb-item\">{link}</li>\n";
     public $activeItemTemplate = "<li class=\"breadcrumb-item active\">{link}</li>\n";
 
+    public $links = null;
+
     public function init(): void
     {
         $this->homeLink ??= [

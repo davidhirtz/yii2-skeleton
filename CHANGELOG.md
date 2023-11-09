@@ -1,3 +1,7 @@
+## 2.0.11 (Nov 9, 2023)
+
+- Fixed automatic links from breadcrumbs
+
 ## 2.0.10 (Nov 9, 2023)
 
 - Enhanced `IconFilenameAttributeTrait::getIconFilenames()` to also accept aliases
