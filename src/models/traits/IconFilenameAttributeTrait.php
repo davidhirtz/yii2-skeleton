@@ -29,7 +29,7 @@ trait IconFilenameAttributeTrait
     public function getIconFilenameAttributeTraitAttributeLabels(): array
     {
         return [
-            $this->iconFilenameAttribute => Yii::t('app', 'Icon'),
+            $this->iconFilenameAttribute => Yii::t('skeleton', 'Icon'),
         ];
     }
 

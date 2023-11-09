@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Message translations.
  *
@@ -108,6 +109,7 @@ return [
     'I forgot my password' => 'Passwort vergessen',
     'ID' => 'ID',
     'IP' => 'IP',
+    'Icon' => 'Symbol',
     'If you have not requested a new password, please ignore this message!' => 'Falls Sie kein neues Passwort angefordert haben, können Sie diese E-Mail ignorieren!',
     'Inherited Permissions' => 'Vererbte Benutzerrechte',
     'JavaScript is disabled on your browser.' => 'Ihr Browser scheint kein Javascript zu unterstützen.',
@@ -133,6 +135,7 @@ return [
     'New User' => 'Neuer Benutzer',
     'New password' => 'Neues Passwort',
     'None' => 'Keine',
+    'Only needed, if you want to change your password' => 'Nur notwendig, wenn Sie Ihr Passwort ändern wollen',
     'Operations' => 'Operationen',
     'Ordered' => 'Sortiert',
     'Password' => 'Passwort',
