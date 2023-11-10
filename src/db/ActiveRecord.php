@@ -189,9 +189,21 @@ class ActiveRecord extends \yii\db\ActiveRecord
      * Extends the default functionality by setting $identical to `false` for DateTime objects, which unfortunately
      * cannot be compared by checking identical values using `===` as it always returns `true` even if the date was not
      * changed.
+     *
+     * Furthermore, this method now accepts an array to allow checking multiple attributes at once.
      */
     public function isAttributeChanged($name, $identical = true): bool
     {
+        if (is_array($name)) {
+            foreach ($name as $attribute) {
+                if ($this->isAttributeChanged($attribute, $identical)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         if ($this->getAttribute($name) instanceof \DateTime) {
             $identical = false;
         }
@@ -238,7 +250,6 @@ class ActiveRecord extends \yii\db\ActiveRecord
 
         return $this->_validators;
     }
-
 
 
     /**

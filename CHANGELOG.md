@@ -1,3 +1,7 @@
+## 2.0.13 (Nov 10, 2023)
+
+- Extended `ActiveRecord::isAttributeChanged()` to also accept arrays of attributes
+
 ## 2.0.12 (Nov 10, 2023)
 
 - Fixed a bug in `ActiveFormTrait` where the attribute name would be set for existing field methods
