@@ -1,3 +1,7 @@
+## 2.0.12 (Nov 10, 2023)
+
+- Fixed a bug in `ActiveFormTrait` where the attribute name would be set for existing field methods
+
 ## 2.0.11 (Nov 9, 2023)
 
 - Fixed automatic links from breadcrumbs
