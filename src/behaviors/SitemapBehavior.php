@@ -29,35 +29,35 @@ class SitemapBehavior extends Behavior
 
     /**
      * @var callable required method, that returns a single or nested array with sitemap URL or valid route as "loc"
-     *     key.
+     * key.
      */
     public $callback;
 
     /**
-     * @var int the maximum number rows selected by the default database query, if this is null the default value from
+     * @var int|null the maximum number rows selected by the default database query, if this is null the default value from
      * {@see Sitemap} will be used. Change this value if one record produces more than one URL (for example for
      * multiple languages).
      */
-    public $maxUrlCount;
+    public ?int $maxUrlCount = null;
 
     /**
      * @var int the batch size for the default database query.
      */
-    public $batchSize = 100;
+    public int $batchSize = 100;
 
     /**
-     * @var string the default change frequency, leave empty to omit.
+     * @var string|null the default change frequency, leave empty to omit.
      */
-    public $defaultChangeFrequency;
+    public ?string $defaultChangeFrequency = null;
 
     /**
-     * @var float the default priority frequency, leave empty to omit. Valid values range from 0.0 to 1.0, the default
+     * @var float|null the default priority frequency, leave empty to omit. Valid values range from 0.0 to 1.0, the default
      * of a page is 0.5.
      */
-    public $defaultPriority;
+    public ?float $defaultPriority = null;
 
-    
-    public function init()
+
+    public function init(): void
     {
         if (!is_callable($this->callback)) {
             throw new InvalidConfigException('SitemapBehavior::$callback must be callable.');
@@ -70,13 +70,7 @@ class SitemapBehavior extends Behavior
         parent::init();
     }
 
-    /**
-     * Generates XML site map urls from record.
-     *
-     * @param int $offset
-     * @return array
-     */
-    public function generateSitemapUrls($offset = 0)
+    public function generateSitemapUrls(int $offset = 0): array
     {
         /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         /** @var ActiveQuery $query */
@@ -105,7 +99,7 @@ class SitemapBehavior extends Behavior
         return $urls;
     }
 
-    
+
     public function getSitemapUrlCount(): int
     {
         /** @noinspection PhpPossiblePolymorphicInvocationInspection */
@@ -114,10 +108,8 @@ class SitemapBehavior extends Behavior
         return $query->count();
     }
 
-    /**
-     * @return ActiveQuery
-     */
-    public function getSitemapQuery()
+    /** @noinspection PhpUnused */
+    public function getSitemapQuery(): ActiveQuery
     {
         return $this->owner::find();
     }

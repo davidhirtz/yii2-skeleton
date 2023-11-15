@@ -49,7 +49,7 @@ class SitemapController extends Controller
         return $behaviors;
     }
 
-    public function actionIndex(?string $key = null, ?int $offset = null): string|bool
+    public function actionIndex(?string $key = null, int $offset = 0): string|bool
     {
         $sitemap = Yii::$app->sitemap;
         $response = Yii::$app->getResponse();

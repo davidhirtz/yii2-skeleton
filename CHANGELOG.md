@@ -1,3 +1,7 @@
+## 2.0.14 (Nov 15, 2023)
+
+- Fixed a bug in `Sitemap` URL generation
+
 ## 2.0.13 (Nov 10, 2023)
 
 - Extended `ActiveRecord::isAttributeChanged()` to also accept arrays of attributes
