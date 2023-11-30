@@ -3,10 +3,14 @@
  * New email mail.
  *
  * @var yii\web\View $this
- * @var \yii\mail\MessageInterface $message
- * @var \davidhirtz\yii2\skeleton\models\forms\UserForm $user
+ * @var MessageInterface $message
+ * @var UserForm $user
  * @var string $oldEmail
  */
+
+use davidhirtz\yii2\skeleton\models\forms\UserForm;
+use yii\mail\MessageInterface;
+
 $this->title = Yii::t('skeleton', 'Email confirmation');
 ?>
 <p><?= Yii::t('skeleton', 'Hi {name}, ', ['name' => $user->getUsername()]); ?></p>

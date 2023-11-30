@@ -3,12 +3,14 @@
  * Transfer ownership form.
  * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\UserController::actionOwnership()
  *
- * @var \davidhirtz\yii2\skeleton\web\View $this
- * @var \davidhirtz\yii2\skeleton\models\forms\OwnershipForm $form
+ * @var View $this
+ * @var OwnershipForm $form
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\models\forms\OwnershipForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu;
+use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 

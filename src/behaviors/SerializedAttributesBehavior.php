@@ -9,7 +9,7 @@ use yii\base\Behavior;
  * Class SerializedAttributesBehavior.
  * @package davidhirtz\yii2\skeleton\behaviors
  *
- * @property \davidhirtz\yii2\skeleton\db\ActiveRecord $owner
+ * @property ActiveRecord $owner
  */
 class SerializedAttributesBehavior extends Behavior
 {

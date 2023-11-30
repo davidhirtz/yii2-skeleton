@@ -16,7 +16,7 @@ use Yii;
  * @property int $ip_address
  * @property DateTime $created_at
  *
- * @property User $user {@see \davidhirtz\yii2\skeleton\models\UserLogin::getUser()}
+ * @property User $user {@see UserLogin::getUser}
  * @property-read string $typeName
  * @property-read string $displayIp
  */

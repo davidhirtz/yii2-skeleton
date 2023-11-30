@@ -3,9 +3,12 @@
  * Resend confirm mail.
  *
  * @var yii\web\View $this
- * @var \yii\mail\MessageInterface $message
+ * @var MessageInterface $message
  * @var \davidhirtz\yii2\skeleton\models\User $user
  */
+
+use yii\mail\MessageInterface;
+
 $this->title = Yii::t('skeleton', 'Confirm your account');
 ?>
 <p><?= Yii::t('skeleton', 'Hi {name}, ', ['name' => $user->getUsername()]); ?></p>

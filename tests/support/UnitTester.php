@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\tests\support;
 
+use Codeception\Actor;
+
 /**
  * Inherited Methods
  * @method void wantTo($text)
@@ -19,7 +21,7 @@ namespace davidhirtz\yii2\skeleton\tests\support;
  *
  * @SuppressWarnings(PHPMD)
  */
-class UnitTester extends \Codeception\Actor
+class UnitTester extends Actor
 {
     use _generated\UnitTesterActions;
 

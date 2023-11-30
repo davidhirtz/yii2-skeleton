@@ -3,9 +3,12 @@
  * Password recover mail.
  *
  * @var yii\web\View $this
- * @var \yii\mail\MessageInterface $message
+ * @var MessageInterface $message
  * @var \davidhirtz\yii2\skeleton\models\User $user
  */
+
+use yii\mail\MessageInterface;
+
 $this->title = Yii::t('skeleton', 'Reset your password');
 ?>
 <p><?= Yii::t('skeleton', 'Hi {name}, ', ['name' => $user->getUsername()]); ?></p>
