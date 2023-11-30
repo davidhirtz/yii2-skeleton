@@ -6,10 +6,6 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use Yii;
 use yii\helpers\Url;
 
-/**
- * Class ButtonDropdown
- * @package davidhirtz\yii2\skeleton\widgets\bootstrap
- */
 class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
 {
     /**
@@ -62,9 +58,14 @@ class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
                 $this->filterPlaceholder = Yii::t('skeleton', 'Filter');
             }
 
+            $label = Html::tag('input', '', [
+                'class' => 'dropdown-filter form-control',
+                'placeholder' => $this->filterPlaceholder,
+            ]);
+
             array_unshift(
                 $this->dropdown['items'],
-                ['label' => Html::tag('input', null, ['class' => 'dropdown-filter form-control', 'placeholder' => $this->filterPlaceholder]), 'encode' => false],
+                ['label' => $label, 'encode' => false],
                 '-'
             );
         }
@@ -89,8 +90,8 @@ class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
     }
 
     /**
-     * Resets the options id back to widget id which is set to the button id in {@see \yii\bootstrap4\ButtonDropdown::run()}.
-     * Otherwise, Bootstrap events don't register on the correct element.
+     * Resets the options id back to widget id which is set to the button id in
+     * {@see \yii\bootstrap4\ButtonDropdown::run()}. Otherwise, Bootstrap events don't register on the correct element.
      */
     protected function registerClientEvents(): void
     {

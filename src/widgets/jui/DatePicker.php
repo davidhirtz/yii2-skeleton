@@ -9,6 +9,9 @@ use yii\helpers\FormatConverter;
 use yii\web\JsExpression;
 use yii\widgets\InputWidget;
 
+/**
+ * @property array|string|DateTime $value
+ */
 class DatePicker extends InputWidget
 {
     use JuiWidgetTrait;

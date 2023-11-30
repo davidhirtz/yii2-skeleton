@@ -74,7 +74,9 @@ class TimezoneDropdown extends InputWidget
         $hour = (int)abs($hours);
         $minutes = (int)abs($remainder / 60);
 
-        return 'GMT' . $sign . str_pad($hour, 2, '0', STR_PAD_LEFT) . ':' . str_pad($minutes, 2, '0');
+        return "GMT$sign"
+            . str_pad((string)$hour, 2, '0', STR_PAD_LEFT)
+            . ':' . str_pad((string)$minutes, 2, '0');
     }
 
     private function formatTimezoneName(string $name): string

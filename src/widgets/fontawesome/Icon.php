@@ -39,7 +39,7 @@ final class Icon implements Stringable
         $options = $this->options;
         $tag = ArrayHelper::remove($options, 'tag', 'i');
 
-        return Html::tag($tag, null, $options);
+        return Html::tag($tag, '', $options);
     }
 
     public function inverse(): static
