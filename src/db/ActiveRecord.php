@@ -9,7 +9,6 @@ use ReflectionClass;
 use Yii;
 use yii\base\Model;
 use yii\behaviors\AttributeTypecastBehavior;
-use yii\db\Connection;
 use yii\helpers\Inflector;
 use yii\log\Logger;
 use yii\validators\BooleanValidator;
@@ -20,7 +19,6 @@ use yii\validators\StringValidator;
  * @method ActiveQuery hasMany($class, array $link)
  * @method ActiveQuery hasOne($class, array $link)
  * @method static static[] findAll($condition)
- * @method static Connection getDb()
  */
 class ActiveRecord extends \yii\db\ActiveRecord
 {
@@ -65,6 +63,9 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return Yii::createObject(static::class);
     }
 
+    /**
+     * @return ActiveQuery<static>
+     */
     public static function find(): ActiveQuery
     {
         return Yii::createObject(ActiveQuery::class, [static::class]);
@@ -234,9 +235,9 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
-     * Overrides original method by triggering {@see \davidhirtz\yii2\cms\models\ActiveRecord::EVENT_CREATE_VALIDATORS}
-     * event. This enables attached behaviors to manipulate {@see Model::rules()} by modifying the array object returned
-     * by {@see Model::getValidators()}.
+     * Overrides original method by triggering {@see static::EVENT_CREATE_VALIDATORS} event. This enables attached
+     * behaviors to manipulate {@see Model::rules()} by modifying the array object returned by
+     * {@see Model::getValidators()}.
      *
      * This would be more fitting in {@see Model::rules()}. I might add a pull request... If this is added to Yii2, the
      * override can be removed. {@link https://github.com/yiisoft/yii2/issues/5438}

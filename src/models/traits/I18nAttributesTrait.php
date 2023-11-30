@@ -2,10 +2,12 @@
 
 namespace davidhirtz\yii2\skeleton\models\traits;
 
+use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use Yii;
 
 /**
  * @property array $i18nAttributes
+ * @mixin ActiveRecord
  */
 trait I18nAttributesTrait
 {
@@ -68,7 +70,6 @@ trait I18nAttributesTrait
 
     public function getAttributeHint($attribute): string
     {
-        /** @noinspection PhpMultipleClassDeclarationsInspection */
         return $this->getI18nHints()[$attribute] ?? parent::getAttributeHint($attribute);
     }
 
@@ -82,7 +83,6 @@ trait I18nAttributesTrait
             }
         }
 
-        /** @noinspection PhpMultipleClassDeclarationsInspection */
         return parent::getAttributeLabel($attribute);
     }
 
@@ -110,7 +110,6 @@ trait I18nAttributesTrait
 
             foreach ($this->i18nAttributes as $attribute) {
                 foreach ($i18n->getLanguages() as $language) {
-                    /** @noinspection PhpMultipleClassDeclarationsInspection */
                     $label = parent::getAttributeLabel($attribute);
 
                     if ($language != Yii::$app->language) {

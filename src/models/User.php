@@ -25,25 +25,25 @@ use yii\web\UploadedFile;
  * @property int $status
  * @property string $name
  * @property string $email
- * @property string $password_hash
- * @property string $password_salt
- * @property string $first_name
- * @property string $last_name
- * @property Date $birthdate
- * @property string $city
- * @property string $country
- * @property string $picture
+ * @property string|null $password_hash
+ * @property string|null $password_salt
+ * @property string|null $first_name
+ * @property string|null $last_name
+ * @property Date|null $birthdate
+ * @property string|null $city
+ * @property string|null $country
+ * @property string|null $picture
  * @property string $language
- * @property string $timezone
- * @property string $auth_key
- * @property string $verification_token
- * @property string $password_reset_token
- * @property string $google_2fa_secret
+ * @property string|null $timezone
+ * @property string|null $auth_key
+ * @property string|null $verification_token
+ * @property string|null $password_reset_token
+ * @property string|null $google_2fa_secret
  * @property int $is_owner
  * @property int $created_by_user_id
  * @property int $login_count
- * @property DateTime $last_login
- * @property DateTime $updated_at
+ * @property DateTime|null $last_login
+ * @property DateTime|null $updated_at
  * @property DateTime $created_at
  *
  * @property string $uploadPath {@see static::setUploadPath()}
@@ -290,6 +290,9 @@ class User extends ActiveRecord
         return $this->hasMany(AuthClient::class, ['user_id' => 'id']);
     }
 
+    /**
+     * @return UserQuery<static>
+     */
     public static function find(): UserQuery
     {
         return Yii::createObject(UserQuery::class, [static::class]);

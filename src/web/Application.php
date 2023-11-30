@@ -8,39 +8,28 @@ use davidhirtz\yii2\skeleton\rbac\DbManager;
 use Yii;
 use yii\authclient\Collection;
 use yii\base\Event;
+use yii\base\InvalidConfigException;
 use yii\symfonymailer\Mailer;
 use yii\web\Cookie;
 use yii\web\Response;
 
 /**
- * The extended web application class.
- *
  * @property Collection $authClientCollection
  * @property DbManager $authManager
- * @property I18N $i18n
  * @property Request $request
  * @property DbSession $session
- * @property Sitemap $sitemap
- * @property UrlManager $urlManager
  * @property User $user
- * @property View $view
  *
  * @method DbManager getAuthManager()
- * @method I18N getI18n()
  * @method Mailer getMailer()
  * @method Request getRequest()
  * @method CacheSession|DbSession getSession()
- * @method UrlManager getUrlManager()
  * @method User getUser()
- * @method View getView()
  */
 class Application extends \yii\web\Application
 {
     use ApplicationTrait;
 
-    /**
-     * @param array $config
-     */
     public function preInit(&$config): void
     {
         $config['basePath'] ??= dirname((string)$_SERVER['SCRIPT_FILENAME'], 2);

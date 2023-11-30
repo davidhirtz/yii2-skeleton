@@ -9,9 +9,12 @@ use davidhirtz\yii2\skeleton\controllers\SitemapController;
 use davidhirtz\yii2\skeleton\i18n\I18N;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\rbac\DbManager;
+use davidhirtz\yii2\skeleton\web\CacheSession;
 use davidhirtz\yii2\skeleton\web\DbSession;
+use davidhirtz\yii2\skeleton\web\Request;
 use davidhirtz\yii2\skeleton\web\Sitemap;
 use davidhirtz\yii2\skeleton\web\UrlManager;
+use davidhirtz\yii2\skeleton\web\User;
 use davidhirtz\yii2\skeleton\web\View;
 use Yii;
 use yii\authclient\Collection;
@@ -27,6 +30,20 @@ use yii\log\FileTarget;
 use yii\symfonymailer\Mailer;
 use yii\web\JqueryAsset;
 
+/**
+ *
+ * @property DbManager $authManager
+ * @property I18N $i18n
+ * @property Sitemap $sitemap
+ * @property UrlManager $urlManager
+ * @property View $view
+ *
+ * @method DbManager getAuthManager()
+ * @method I18N getI18n()
+ * @method Mailer getMailer()
+ * @method UrlManager getUrlManager()
+ * @method View getView()
+ */
 trait ApplicationTrait
 {
     protected function preInitInternal(&$config): void

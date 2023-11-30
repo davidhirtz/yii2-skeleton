@@ -98,7 +98,7 @@ class Html extends BaseHtml
                 $cells[] = static::tag('td', $cell, $cellOptions);
             }
 
-            $rows[] .= static::tag('tr', implode('', $cells), $rowOptions);
+            $rows[] = static::tag('tr', implode('', $cells), $rowOptions);
         }
 
         return $rows ? Html::tag('tbody', implode('', $rows)) : '';

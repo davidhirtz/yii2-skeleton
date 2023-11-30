@@ -6,7 +6,6 @@ use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\db\Identity;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use Yii;
-use yii\web\IdentityInterface;
 use yii\web\MultiFieldSession;
 use yii\web\Response;
 
@@ -82,6 +81,9 @@ class User extends \yii\web\User
         return parent::loginRequired($checkAjax, $checkAcceptHeader);
     }
 
+    /**
+     * @param Identity $identity
+     */
     protected function afterLogin($identity, $cookieBased, $duration): void
     {
         // Update login count, cache previous login date in session and insert new record to logins log.
@@ -127,10 +129,10 @@ class User extends \yii\web\User
         parent::afterLogout($identity);
     }
 
-    private function insertLogin(IdentityInterface $identity): void
+    private function insertLogin(Identity $identity): void
     {
         if ($browser = Yii::$app->getRequest()->getUserAgent()) {
-            $browser = mb_substr((string) $browser, 0, 255, Yii::$app->charset);
+            $browser = mb_substr($browser, 0, 255, Yii::$app->charset);
         }
 
         if ($ipAddress = ($identity->ipAddress ?: Yii::$app->getRequest()->getUserIP())) {
@@ -162,17 +164,17 @@ class User extends \yii\web\User
      */
     public function isLoginEnabled(): bool
     {
-        return (bool)$this->enableLogin;
+        return !!$this->enableLogin;
     }
 
     public function isUnconfirmedEmailLoginEnabled(): bool
     {
-        return (bool)$this->enableUnconfirmedEmailLogin;
+        return !!$this->enableUnconfirmedEmailLogin;
     }
 
     public function isPasswordResetEnabled(): bool
     {
-        return (bool)$this->enablePasswordReset;
+        return !!$this->enablePasswordReset;
     }
 
     public function isSignupEnabled(): bool

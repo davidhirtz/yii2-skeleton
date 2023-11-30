@@ -57,7 +57,6 @@ class RedirectController extends Controller
             return $this->redirect(array_merge($request->get(), ['index']));
         }
 
-        /** @noinspection MissedViewInspection */
         return $this->render('create', [
             'redirect' => $redirect,
         ]);
@@ -123,7 +122,7 @@ class RedirectController extends Controller
 
     protected function findRedirect(int $id): Redirect
     {
-        if (!$redirect = Redirect::findOne((int)$id)) {
+        if (!$redirect = Redirect::findOne($id)) {
             throw new NotFoundHttpException();
         }
 

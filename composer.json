@@ -11,6 +11,7 @@
         }
     ],
     "require": {
+        "ext-imagick": "*",
         "ext-json": "*",
         "ext-openssl": "*",
         "ext-simplexml": "*",

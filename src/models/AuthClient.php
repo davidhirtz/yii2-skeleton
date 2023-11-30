@@ -21,7 +21,7 @@ use Yii;
  * @property DateTime $updated_at
  * @property DateTime $created_at
  *
- * @property-read Identity $identity
+ * @property-read Identity|null $identity {@see static::getIdentity()}
  */
 class AuthClient extends ActiveRecord
 {

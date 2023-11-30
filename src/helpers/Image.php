@@ -51,8 +51,8 @@ class Image extends BaseImage
             $palette = new RGB();
             $thumb = static::getImagine()->create(new Box($width, $height), $palette->color($bgColor, $bgAlpha));
 
-            $x = ceil(($width - $size->getWidth()) / 2);
-            $y = ceil(($height - $size->getHeight()) / 2);
+            $x = (int)ceil(($width - $size->getWidth()) / 2);
+            $y = (int)ceil(($height - $size->getHeight()) / 2);
 
             return $thumb->paste($image, new Point($x, $y));
         }
@@ -62,14 +62,14 @@ class Image extends BaseImage
         $size = $image->getSize();
         $ratio = max($width / $size->getWidth(), $height / $size->getHeight());
 
-        $newWidth = ceil($size->getWidth() * $ratio);
-        $newHeight = ceil($size->getHeight() * $ratio);
+        $newWidth = (int)ceil($size->getWidth() * $ratio);
+        $newHeight = (int)ceil($size->getHeight() * $ratio);
 
         $image->resize(new Box($newWidth, $newHeight));
 
         if ($newWidth != $width || $newHeight != $height) {
-            $x = ceil(($newWidth - $width) / 2);
-            $y = ceil(($newHeight - $height) / 2);
+            $x = (int)ceil(($newWidth - $width) / 2);
+            $y = (int)ceil(($newHeight - $height) / 2);
 
             $image->crop(new Point($x, $y), new Box($width, $height));
         }

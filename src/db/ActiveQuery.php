@@ -2,15 +2,47 @@
 
 namespace davidhirtz\yii2\skeleton\db;
 
+use Iterator;
 use Yii;
 use yii\db\Query;
 
 /**
- * @method ActiveRecord[] all($db = null)
- * @method ActiveRecord one($db = null)
+ * @template T
+ * @property class-string<T> $modelClass
  */
 class ActiveQuery extends \yii\db\ActiveQuery
 {
+    /**
+     * PHPStorm currently does not support "@method" annotations for generic methods.
+     * @link https://youtrack.jetbrains.com/issue/WI-64921/method-does-not-support-template-declaration
+     * @return array|T[]
+     */
+    public function all($db = null): array
+    {
+        return parent::all($db);
+    }
+
+    /**
+     * PHPStorm currently does not support "@method" annotations for generic methods.
+     * @link https://youtrack.jetbrains.com/issue/WI-64921/method-does-not-support-template-declaration
+     * @return Iterator<int, T>
+     * @noinspection PhpMissingReturnTypeInspection
+     */
+    public function each($batchSize = 100, $db = null)
+    {
+        return parent::each($batchSize, $db);
+    }
+
+    /**
+     * PHPStorm currently does not support "@method" annotations for generic methods.
+     * @link https://youtrack.jetbrains.com/issue/WI-64921/method-does-not-support-template-declaration
+     * @return T|null
+     */
+    public function one($db = null)
+    {
+        return parent::one($db);
+    }
+
     /**
      * @var int|null the global status to be used in WHERE clause with `whereStatus()`.
      */
@@ -19,8 +51,9 @@ class ActiveQuery extends \yii\db\ActiveQuery
     /**
      * Makes sure the container instantiates the model class before calling parent constructor.
      * Not sure why this is not part of the framework.
+     * @param class-string<T> $modelClass
      */
-    public function __construct($modelClass, $config = [])
+    public function __construct(string $modelClass, array $config = [])
     {
         $modelClass = Yii::createObject($modelClass)::class;
         parent::__construct($modelClass, $config);
@@ -58,7 +91,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
      */
     public function prefixColumns(array $columns): array
     {
-        [, $alias] = $this->getTableNameAndAlias();
+        $alias = $this->getTableAlias();
 
         foreach ($columns as &$column) {
             $column = "$alias.[[$column]]";
@@ -86,7 +119,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
             if (is_array($this->select)) {
                 if ($attributes = $this->getModelInstance()->i18nAttributes) {
                     $attributes = array_combine($attributes, $this->prefixColumns($attributes));
-                    [, $alias] = $this->getTableNameAndAlias();
+                    $alias = $this->getTableAlias();
                     $i18n = Yii::$app->getI18n();
 
                     foreach ($this->select as $key => $column) {
@@ -107,19 +140,30 @@ class ActiveQuery extends \yii\db\ActiveQuery
         return $this;
     }
 
+    /**
+     * @uses \davidhirtz\yii2\skeleton\models\traits\I18nAttributesTrait::getI18nAttributeName()
+     */
     public function getI18nAttributeName(string $attribute, ?string $language = null): string
     {
-        /** @noinspection PhpUndefinedMethodInspection */
-        $attributeName = $this->getModelInstance()->getI18nAttributeName($attribute, $language);
-        [, $alias] = $this->getTableNameAndAlias();
+        $instance = $this->getModelInstance();
 
-        return "$alias.[[$attributeName]]";
+        if(method_exists($instance, 'getI18nAttributeName')) {
+            $attribute = $instance->getI18nAttributeName($attribute, $language);
+        }
+
+        return "{$this->getTableAlias()}.[[$attribute]]";
+    }
+
+    public function getTableAlias(): string
+    {
+        [, $alias] = $this->getTableNameAndAlias();
+        return $alias;
     }
 
     public function whereLower(array $attributes): static
     {
         foreach ($attributes as $attribute => $value) {
-            $this->andWhere(["LOWER($attribute)" => mb_strtolower((string) $value, Yii::$app->charset)]);
+            $this->andWhere(["LOWER($attribute)" => mb_strtolower((string)$value, Yii::$app->charset)]);
         }
 
         return $this;
@@ -158,9 +202,11 @@ class ActiveQuery extends \yii\db\ActiveQuery
         return $search ? trim(strtr($search, ['%' => ''])) : '';
     }
 
+    /**
+     * @return ActiveRecord<T>
+     */
     protected function getModelInstance(): ActiveRecord
     {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->modelClass::instance();
     }
 }

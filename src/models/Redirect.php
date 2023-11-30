@@ -94,7 +94,6 @@ class Redirect extends ActiveRecord
      */
     public function validateUrl(): void
     {
-        /** @var Redirect $redirect */
         $redirect = static::find()
             ->where(['request_uri' => $this->url])
             ->limit(1)

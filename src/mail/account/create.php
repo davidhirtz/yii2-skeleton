@@ -7,7 +7,7 @@
  * @var SignupForm $user
  */
 
-use davidhirtz\yii2\skeleton\models\forms\user\SignupForm;
+use davidhirtz\yii2\skeleton\models\forms\SignupForm;
 use yii\mail\MessageInterface;
 
 $this->title = Yii::t('skeleton', 'Sign up confirmation');

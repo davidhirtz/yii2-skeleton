@@ -15,16 +15,13 @@ class Identity extends User implements IdentityInterface
 
     public static function findIdentity($id): ?IdentityInterface
     {
-        /**
-         * @var Identity $identity
-         */
         $identity = static::find()
             ->where(['id' => $id])
             ->selectIdentityAttributes()
             ->enabled()
             ->one();
 
-        if ($identity && $identity->timezone) {
+        if ($identity?->timezone) {
             Yii::$app->timeZone = $identity->timezone;
         }
 

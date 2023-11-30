@@ -6,10 +6,8 @@ use davidhirtz\yii2\skeleton\db\ActiveQuery;
 use davidhirtz\yii2\skeleton\models\User;
 
 /**
- * UserQuery represents a DB query associated with an {@see User} class.
- *
- * @method User[] all($db = null)
- * @method User one($db = null)
+ * @template T
+ * @template-implements ActiveQuery<T>
  */
 class UserQuery extends ActiveQuery
 {
