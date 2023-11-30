@@ -240,20 +240,7 @@ trait ActiveFormTrait
     {
     }
 
-    /**
-     * @return string
-     * @deprecated as the "render" methods should echo instead of return, please use
-     * {@see ActiveFormTrait::horizontalLine()} instead.
-     *
-     */
-    public function renderHorizontalLine(): string
-    {
-        return '<hr>';
-    }
-
-    /**
-     * @return string
-     */
+    
     public function horizontalLine(): string
     {
         return '<hr>';

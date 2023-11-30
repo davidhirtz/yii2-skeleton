@@ -108,7 +108,9 @@ class SitemapBehavior extends Behavior
         return $query->count();
     }
 
-    /** @noinspection PhpUnused */
+    /**
+     * @noinspection PhpUnused
+     */
     public function getSitemapQuery(): ActiveQuery
     {
         return $this->owner::find();

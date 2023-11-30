@@ -3,7 +3,6 @@
 namespace davidhirtz\yii2\skeleton\widgets\jui;
 
 use davidhirtz\yii2\skeleton\assets\JuiAsset;
-use davidhirtz\yii2\skeleton\web\View;
 use yii\helpers\Json;
 
 trait JuiWidgetTrait
