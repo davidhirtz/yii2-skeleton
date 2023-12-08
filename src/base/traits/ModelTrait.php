@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\base\traits;
 
 use ArrayObject;
+use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use Yii;
 
 trait ModelTrait
@@ -72,7 +73,7 @@ trait ModelTrait
     {
         if ($this->_validators === null) {
             $this->_validators = $this->createValidators();
-            $this->trigger(static::EVENT_CREATE_VALIDATORS);
+            $this->trigger(ActiveRecord::EVENT_CREATE_VALIDATORS);
         }
 
         return $this->_validators;
