@@ -10,8 +10,8 @@ use yii\web\MultiFieldSession;
 use yii\web\Response;
 
 /**
- * @property Identity $identity
- * @method Identity getIdentity($autoRenew = true)
+ * @property Identity|null $identity
+ * @method Identity|null getIdentity($autoRenew = true)
  */
 class User extends \yii\web\User
 {

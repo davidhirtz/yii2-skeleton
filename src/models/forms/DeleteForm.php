@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\models\forms;
 
+use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
@@ -66,7 +67,7 @@ class DeleteForm extends Model
         return $this->getModel()->getPrimaryKey();
     }
 
-    public function getModel(): ?ActiveRecordInterface
+    public function getModel(): ?ActiveRecord
     {
         if (!$this->_model) {
             throw new InvalidConfigException();

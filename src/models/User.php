@@ -23,7 +23,7 @@ use yii\web\UploadedFile;
 /**
  * @property int $id
  * @property int $status
- * @property string $name
+ * @property string|null $name
  * @property string $email
  * @property string|null $password_hash
  * @property string|null $password_salt
@@ -111,7 +111,7 @@ class User extends ActiveRecord
     public bool $uploadCheckExtensionByMimeType = true;
 
     /**
-     * @var string|bool set false to disabled profile pictures
+     * @var string|false set false to disabled profile pictures
      */
     private string|false $_uploadPath = 'uploads/users/';
 
@@ -281,7 +281,6 @@ class User extends ActiveRecord
 
     public function getAdmin(): UserQuery
     {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->hasOne(static::class, ['id' => 'created_by_user_id']);
     }
 
@@ -331,7 +330,7 @@ class User extends ActiveRecord
     {
         $trail = Trail::create();
         $trail->model = User::class;
-        $trail->model_id = $this->id;
+        $trail->model_id = (string)$this->id;
         $trail->type = Trail::TYPE_PASSWORD;
         $trail->insert();
     }

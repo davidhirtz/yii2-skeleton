@@ -72,7 +72,6 @@ class SitemapBehavior extends Behavior
 
     public function generateSitemapUrls(int $offset = 0): array
     {
-        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         /** @var ActiveQuery $query */
         $query = $this->owner->getSitemapQuery();
         $urls = [];
@@ -102,7 +101,6 @@ class SitemapBehavior extends Behavior
 
     public function getSitemapUrlCount(): int
     {
-        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         /** @var ActiveQuery $query */
         $query = $this->owner->getSitemapQuery();
         return $query->count();

@@ -57,9 +57,11 @@ class ChunkedUploadedFile extends UploadedFile
         // Content-Range: bytes {int:start}-{int:end}/{int:total}
         if ($range = ArrayHelper::getValue($_SERVER, 'HTTP_CONTENT_RANGE')) {
             $range = preg_split('/[^0-9]+/', (string)$range);
-            $this->chunkOffset = ArrayHelper::getValue($range, 1);
-            $this->chunkSize = ArrayHelper::getValue($range, 2);
-            $this->size = ArrayHelper::getValue($range, 3);
+            $range = array_map('intval', $range);
+
+            $this->chunkOffset = $range[1] ?? null;
+            $this->chunkSize = $range[2] ?? null;
+            $this->size = $range[3] ?? null;
         }
 
         // Unfortunately, Yii initializes UploadedFile without checking the definitions first.

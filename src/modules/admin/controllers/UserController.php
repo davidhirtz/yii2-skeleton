@@ -171,7 +171,6 @@ class UserController extends Controller
 
     public function actionDeauthorize(string $id, string $name): Response|string
     {
-        /** @var AuthClient $auth */
         $auth = AuthClient::find()
             ->where([
                 AuthClient::tableName() . '.[[id]]' => $id,
@@ -223,7 +222,7 @@ class UserController extends Controller
         ]);
     }
 
-    private function updateUserAttributes(int $id, array $attributes): Response|string
+    private function updateUserAttributes(int $id, array $attributes): Response
     {
         $user = $this->findUserForm($id, User::AUTH_USER_UPDATE);
         $user->setAttributes($attributes, false);

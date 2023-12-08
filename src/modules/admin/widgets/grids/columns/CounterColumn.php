@@ -32,21 +32,25 @@ class CounterColumn extends DataColumn
      */
     public array $countHtmlOptions = ['class' => 'badge'];
 
-    
+    /**
+     * @var string the value to be displayed when the count is 0
+     */
     public string $emptyValue = '';
 
     public function init(): void
     {
-        $this->content ??= function (Model $model, mixed $key, int $index) {
-            if (!($count = $this->getDataCellValue($model, $key, $index))) {
-                return $this->emptyValue;
-            }
+        if (!is_callable($this->content)) {
+            $this->content = function (Model $model, mixed $key, int $index) {
+                if (!($count = $this->getDataCellValue($model, $key, $index))) {
+                    return $this->emptyValue;
+                }
 
-            $count = Yii::$app->getFormatter()->asInteger($count, $this->numberFormatterOptions, $this->numberFormatterTextOptions);
-            $route = is_callable($this->route) ? call_user_func($this->route, $model) : $this->route;
+                $count = Yii::$app->getFormatter()->asInteger($count, $this->numberFormatterOptions, $this->numberFormatterTextOptions);
+                $route = is_callable($this->route) ? call_user_func($this->route, $model) : $this->route;
 
-            return $route ? Html::a($count, $route, $this->countHtmlOptions) : Html::tag('div', $count, $this->countHtmlOptions);
-        };
+                return $route ? Html::a($count, $route, $this->countHtmlOptions) : Html::tag('div', $count, $this->countHtmlOptions);
+            };
+        }
 
         parent::init();
     }

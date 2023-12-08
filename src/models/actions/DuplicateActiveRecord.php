@@ -8,7 +8,7 @@ use Exception;
 use Yii;
 
 /**
- * @template T
+ * @template T of ActiveRecord
  * @property T $model
  * @property T $duplicate
  */
@@ -80,7 +80,7 @@ class DuplicateActiveRecord
     }
 
     /**
-     * @return T|null
+     * @return ActiveRecord|null
      */
     public static function create(array $params = []): ?ActiveRecord
     {

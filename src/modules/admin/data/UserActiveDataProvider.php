@@ -7,7 +7,7 @@ use davidhirtz\yii2\skeleton\models\User;
 use yii\data\ActiveDataProvider;
 
 /**
- * @property UserQuery $query
+ * @property UserQuery|null $query
  * @method User[] getModels()
  */
 class UserActiveDataProvider extends ActiveDataProvider
@@ -16,11 +16,9 @@ class UserActiveDataProvider extends ActiveDataProvider
 
     public function init(): void
     {
-        if (!$this->query) {
-            $this->query = User::find();
-        }
-
+        $this->query ??= User::find();
         $this->initQuery();
+
         parent::init();
     }
 

@@ -16,7 +16,7 @@ trait AjaxRouteTrait
     public function renderAjaxRouteContent(string $content): string
     {
         Yii::$app->getResponse()->getHeaders()
-            ->set('Cache-Control', ['no-store, no-cache, must-revalidate, max-age=0', 'post-check=0, pre-check=0'])
+            ->set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
             ->set('Pragma', 'no-cache');
 
         return $content

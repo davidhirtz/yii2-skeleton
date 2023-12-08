@@ -13,7 +13,7 @@ use Yii;
  * @property int $user_id
  * @property string $type
  * @property string $browser
- * @property int $ip_address
+ * @property string $ip_address
  * @property DateTime $created_at
  *
  * @property User $user {@see UserLogin::getUser}
@@ -45,10 +45,7 @@ class UserLogin extends ActiveRecord
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 
-    /**
-     * @return string
-     */
-    public function getTypeName()
+    public function getTypeName(): string
     {
         return match ($this->type) {
             static::TYPE_LOGIN => Yii::t('skeleton', 'Login'),
@@ -60,7 +57,6 @@ class UserLogin extends ActiveRecord
         };
     }
 
-    
     public function getTypeIcon(): ?string
     {
         return match ($this->type) {

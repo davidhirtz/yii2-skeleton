@@ -5,6 +5,7 @@ namespace davidhirtz\yii2\skeleton\models\forms;
 use davidhirtz\yii2\skeleton\db\Identity;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\validators\GoogleAuthenticatorValidator;
+use RobThree\Auth\Providers\Qr\QRServerProvider;
 use RobThree\Auth\TwoFactorAuth;
 use Yii;
 use yii\base\Model;
@@ -15,23 +16,12 @@ use yii\base\Model;
  */
 class GoogleAuthenticatorForm extends Model
 {
-    /**
-     * @var User
-     */
-    public $user;
+    public ?User $user = null;
+    public ?string $code = null;
+    private ?string $_secret = null;
 
-    /**
-     * @var string
-     */
-    public $code;
 
-    /**
-     * @var string
-     */
-    private $_secret;
-
-    
-    public function rules()
+    public function rules(): array
     {
         return [
             [
@@ -46,11 +36,7 @@ class GoogleAuthenticatorForm extends Model
         ];
     }
 
-    /**
-     * Updates user with the generated secret.
-     * @return bool
-     */
-    public function save()
+    public function save(): bool
     {
         if ($this->validate()) {
             $this->user->google_2fa_secret = $this->getSecret();
@@ -60,10 +46,7 @@ class GoogleAuthenticatorForm extends Model
         return false;
     }
 
-    /**
-     * Removes secret from user.
-     */
-    public function delete()
+    public function delete(): false|int
     {
         if ($this->validate()) {
             $this->user->google_2fa_secret = null;
@@ -73,29 +56,27 @@ class GoogleAuthenticatorForm extends Model
         return false;
     }
 
-    
     public function getSecret(): string
     {
-        if ($this->_secret === null) {
-            if (!($this->_secret = $this->user->google_2fa_secret ?: Yii::$app->getSession()->get('google_2fa_secret'))) {
-                $this->generateSecret();
-            }
+        $this->_secret ??= $this->user->google_2fa_secret ?: Yii::$app->getSession()->get('google_2fa_secret');
+
+        if (!$this->_secret) {
+            $this->generateSecret();
         }
 
         return $this->_secret;
     }
 
-    /**
-     * @param int|string $size
-     * @return string
-     */
-    public function getQrImageUrl($size)
+    public function getQrImageUrl(int|string $size): string
     {
         $issuer = str_replace(':', '-', $this->getGoogleAuthenticatorIssuer());
-        $label = "{$issuer}:{$this->user->email}";
+        $label = "$issuer:{$this->user->email}";
         $auth = new TwoFactorAuth($issuer);
 
-        return $auth->getQrCodeProvider()->getUrl($auth->getQRText($label, $this->getSecret()), $size);
+        /** @var QRServerProvider $qrProvider */
+        $qrProvider = $auth->getQrCodeProvider();
+
+        return $qrProvider->getUrl($auth->getQRText($label, $this->getSecret()), $size);
     }
 
     /**
@@ -107,20 +88,20 @@ class GoogleAuthenticatorForm extends Model
         Yii::debug('New Google Authenticator secret generated');
     }
 
-    
+
     protected function getGoogleAuthenticatorIssuer(): string
     {
         return Yii::$app->params['googleAuthenticatorIssuer'] ?? Yii::$app->name;
     }
 
-    
+
     public function formName(): string
     {
         return 'GoogleAuthenticator';
     }
 
-    
-    public function attributeLabels()
+
+    public function attributeLabels(): array
     {
         return [
             'code' => Yii::t('skeleton', 'Code'),

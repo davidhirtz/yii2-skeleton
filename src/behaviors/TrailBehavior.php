@@ -4,6 +4,9 @@ namespace davidhirtz\yii2\skeleton\behaviors;
 
 use DateTime;
 use DateTimeZone;
+use davidhirtz\yii2\skeleton\behaviors\stubs\TrailBehaviorActiveRecord;
+use davidhirtz\yii2\skeleton\behaviors\stubs\TrailBehaviorModel;
+use davidhirtz\yii2\skeleton\behaviors\stubs\TrailBehaviorTrait;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\models\collections\TrailModelCollection;
 use davidhirtz\yii2\skeleton\models\Trail;
@@ -19,7 +22,7 @@ use yii\validators\RangeValidator;
 
 /**
  * @property string $trailModelName
- * @property Model $owner
+ * @property TrailBehaviorActiveRecord|TrailBehaviorModel $owner
  */
 class TrailBehavior extends Behavior
 {
@@ -113,9 +116,11 @@ class TrailBehavior extends Behavior
     {
         $trail = Trail::create();
         $trail->model = $this->modelClass;
-        $trail->model_id = $this->owner instanceof ActiveRecord ? $this->owner->getPrimaryKey(true) : null;
 
-        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+        if($this->owner instanceof ActiveRecord) {
+            $trail->model_id = $this->owner->getPrimaryKey(true);
+        }
+
         $trail->parents = $this->owner->getTrailParents();
 
         return $trail;
@@ -181,13 +186,13 @@ class TrailBehavior extends Behavior
     public function formatTrailAttributeValue(string $attribute, mixed $value): mixed
     {
         switch ($this->getDefaultAttributeValues()[$attribute] ?? false) {
-            case static::VALUE_TYPE_BOOLEAN:
+            case self::VALUE_TYPE_BOOLEAN:
                 return $value ? Yii::t('yii', 'Yes') : Yii::t('yii', 'No');
 
-            case static::VALUE_TYPE_DATETIME:
+            case self::VALUE_TYPE_DATETIME:
                 return isset($value['date']) ? Yii::$app->getFormatter()->asDatetime(new DateTime($value['date'], new DateTimeZone($value['timezone'] ?? Yii::$app->timeZone)), 'medium') : $value;
 
-            case static::VALUE_TYPE_RANGE:
+            case self::VALUE_TYPE_RANGE:
                 $method = 'get' . Inflector::camelize(Inflector::pluralize($attribute));
 
                 if ($this->owner->hasMethod($method)) {
@@ -216,12 +221,12 @@ class TrailBehavior extends Behavior
     {
         $className = $this->owner::class;
 
-        if (!isset(static::$_modelAttributes[$className])) {
+        if (!isset(self::$_modelAttributes[$className])) {
             $attributes = [];
 
             $types = [
-                static::VALUE_TYPE_BOOLEAN => BooleanValidator::class,
-                static::VALUE_TYPE_RANGE => RangeValidator::class,
+                self::VALUE_TYPE_BOOLEAN => BooleanValidator::class,
+                self::VALUE_TYPE_RANGE => RangeValidator::class,
             ];
 
             foreach ($this->owner->getValidators() as $validator) {
@@ -240,14 +245,14 @@ class TrailBehavior extends Behavior
 
                 foreach ($columns as $column) {
                     if (in_array($column->dbType, [$schema::TYPE_DATE, $schema::TYPE_DATETIME, $schema::TYPE_TIMESTAMP])) {
-                        $attributes[$column->name] = static::VALUE_TYPE_DATETIME;
+                        $attributes[$column->name] = self::VALUE_TYPE_DATETIME;
                     }
                 }
             }
 
-            static::$_modelAttributes[$className] = $attributes;
+            self::$_modelAttributes[$className] = $attributes;
         }
 
-        return static::$_modelAttributes[$className];
+        return self::$_modelAttributes[$className];
     }
 }

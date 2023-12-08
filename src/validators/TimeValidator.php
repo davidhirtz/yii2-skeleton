@@ -2,7 +2,6 @@
 
 namespace davidhirtz\yii2\skeleton\validators;
 
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\validators\Validator;
@@ -46,7 +45,7 @@ class TimeValidator extends Validator
         $hours = $match[1] ?? 0;
         $minutes = $match[2] ?? 0;
 
-        if (ArrayHelper::getValue($match, 3) == 'pm' && $hours < 12) {
+        if (($match['3'] ?? false) == 'pm' && $hours < 12) {
             $hours += 12;
         }
 

@@ -16,6 +16,7 @@ parameters:
         - tests
 
     excludePaths:
+        - src/gii/*
         - tests/_output/*
         - tests/support/_generated/
 

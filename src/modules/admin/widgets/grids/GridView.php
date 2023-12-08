@@ -3,7 +3,6 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\assets\JuiAsset;
-use davidhirtz\yii2\skeleton\db\ActiveQuery;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
@@ -86,7 +85,7 @@ class GridView extends \yii\grid\GridView
      */
     public array $selectionRoute = ['update-all'];
 
-    
+
     public ?string $selectionButtonLabel = null;
 
     /**
@@ -96,7 +95,7 @@ class GridView extends \yii\grid\GridView
         'class' => CheckboxColumn::class,
     ];
 
-    private ?ActiveRecordInterface $_model = null;
+    private ?ActiveRecord $_model = null;
     private ?string $_formName = null;
 
     public function init(): void
@@ -107,7 +106,7 @@ class GridView extends \yii\grid\GridView
         }
 
         if (!$this->rowOptions) {
-            $this->rowOptions = fn ($record) => $record instanceof ActiveRecord ? ['id' => $this->getRowId($record)] : [];
+            $this->rowOptions = fn($record) => $record instanceof ActiveRecord ? ['id' => $this->getRowId($record)] : [];
         }
 
         $this->selectionButtonLabel ??= Yii::t('skeleton', 'Update Selected');
@@ -184,7 +183,7 @@ class GridView extends \yii\grid\GridView
             $params['begin'] = min($params['begin'], $params['end']);
         }
 
-        if ($summary === null) {
+        if (!$summary) {
             if ($this->search) {
                 $summary = match ($count) {
                     1 => Yii::t('skeleton', 'Displaying the only result matching "{search}".', $params),
@@ -223,7 +222,9 @@ class GridView extends \yii\grid\GridView
         $options = ArrayHelper::remove($this->header, 'options', []);
         Html::addCssClass($options, 'grid-view-header');
 
-        return $this->header ? Html::tag('div', is_array($this->header) ? $this->renderRows($this->header) : $this->header, $options) : '';
+        return $this->header
+            ? Html::tag('div', $this->renderRows($this->header), $options)
+            : '';
     }
 
     protected function initFooter(): void
@@ -237,7 +238,9 @@ class GridView extends \yii\grid\GridView
         $options = ArrayHelper::remove($this->footer, 'options', []);
         Html::addCssClass($options, 'grid-view-footer');
 
-        return $this->footer ? Html::tag('div', is_array($this->footer) ? $this->renderRows($this->footer) : $this->footer, $options) : '';
+        return $this->footer
+            ? Html::tag('div', $this->renderRows($this->footer), $options)
+            : '';
     }
 
     public function renderRows(array $rows): string
@@ -384,20 +387,17 @@ class GridView extends \yii\grid\GridView
         return ['delete', 'id' => $model->getPrimaryKey(), ...$params];
     }
 
-    public function getModel(): ?ActiveRecordInterface
+    public function getModel(): ?ActiveRecord
     {
         if ($this->_model === null) {
-            if ($this->dataProvider instanceof ActiveDataProvider && $this->dataProvider->query instanceof ActiveQuery) {
-                /** @noinspection PhpFieldAssignmentTypeMismatchInspection */
-                /** @noinspection PhpPossiblePolymorphicInvocationInspection */
-                $this->_model = Yii::createObject($this->dataProvider->query->modelClass);
-            }
+            $model = $this->dataProvider->query?->modelClass ?? null;
+            $this->_model = $model ? Yii::createObject($model) : null;
         }
 
         return $this->_model;
     }
 
-    public function setModel(ActiveRecordInterface $model): void
+    public function setModel(ActiveRecord $model): void
     {
         $this->_model = $model;
     }

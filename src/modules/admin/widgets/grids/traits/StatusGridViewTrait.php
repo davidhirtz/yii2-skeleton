@@ -8,6 +8,7 @@ use davidhirtz\yii2\skeleton\models\traits\StatusAttributeTrait;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
+use yii\base\Model;
 use yii\helpers\Url;
 
 /**
@@ -60,12 +61,9 @@ trait StatusGridViewTrait
         ]);
     }
 
-    /**
-     * @param StatusAttributeTrait $model
-     * @return Icon
-     */
-    protected function getStatusIcon($model)
+    protected function getStatusIcon(Model $model): Icon
     {
+        /** @var StatusAttributeTrait $model */
         return Icon::tag($model->getStatusIcon(), [
             'data-toggle' => 'tooltip',
             'title' => $model->getStatusName()

@@ -7,15 +7,15 @@ use Yii;
 use yii\db\Query;
 
 /**
- * @template T
- * @property class-string<T> $modelClass
+ * @template TActiveRecord
+ * @property class-string<TActiveRecord> $modelClass
  */
 class ActiveQuery extends \yii\db\ActiveQuery
 {
     /**
      * PHPStorm currently does not support "@method" annotations for generic methods.
      * @link https://youtrack.jetbrains.com/issue/WI-64921/method-does-not-support-template-declaration
-     * @return array|T[]
+     * @return array|TActiveRecord[]
      */
     public function all($db = null): array
     {
@@ -25,7 +25,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
     /**
      * PHPStorm currently does not support "@method" annotations for generic methods.
      * @link https://youtrack.jetbrains.com/issue/WI-64921/method-does-not-support-template-declaration
-     * @return Iterator<int, T>
+     * @return Iterator<int, TActiveRecord>
      * @noinspection PhpMissingReturnTypeInspection
      */
     public function each($batchSize = 100, $db = null)
@@ -36,7 +36,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
     /**
      * PHPStorm currently does not support "@method" annotations for generic methods.
      * @link https://youtrack.jetbrains.com/issue/WI-64921/method-does-not-support-template-declaration
-     * @return T|null
+     * @return TActiveRecord|null
      */
     public function one($db = null)
     {
@@ -51,7 +51,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
     /**
      * Makes sure the container instantiates the model class before calling parent constructor.
      * Not sure why this is not part of the framework.
-     * @param class-string<T> $modelClass
+     * @param class-string<TActiveRecord> $modelClass
      */
     public function __construct(string $modelClass, array $config = [])
     {
@@ -203,7 +203,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
     }
 
     /**
-     * @return ActiveRecord<T>
+     * @return ActiveRecord<TActiveRecord>
      */
     protected function getModelInstance(): ActiveRecord
     {

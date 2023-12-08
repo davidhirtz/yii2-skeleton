@@ -2,9 +2,9 @@
 
 namespace davidhirtz\yii2\skeleton\widgets;
 
-use davidhirtz\yii2\skeleton\web\View;
 use Yii;
 use yii\base\BaseObject;
+use yii\base\View;
 use yii\base\ViewContextInterface;
 
 /**

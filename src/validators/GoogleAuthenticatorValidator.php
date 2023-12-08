@@ -16,9 +16,9 @@ class GoogleAuthenticatorValidator extends StringValidator
     public ?string $secret = null;
 
     /**
-     * @var DateTime|null the previous datetime a code was matched. Only if the returned timeslice is greater than the last used
-     * datetime for this user/secret this is the first time the code has been used. This is an effective defense against a
-     * replay attack. If null, the check will not be performed.
+     * @var DateTime|null the previous datetime a code was matched. Only if the returned timeslice is greater than the
+     * last used datetime for this user/secret this is the first time the code has been used. This is an effective
+     * defense against a replay attack. If null, the check will not be performed.
      */
     public ?DateTime $datetime = null;
 
@@ -47,7 +47,10 @@ class GoogleAuthenticatorValidator extends StringValidator
 
     public function init(): void
     {
-        $this->message ??= Yii::t('yii', '{attribute} is invalid.');
+        if (!$this->message) {
+            $this->message = Yii::t('yii', '{attribute} is invalid.');
+        }
+
         parent::init();
     }
 

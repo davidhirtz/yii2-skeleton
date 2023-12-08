@@ -97,7 +97,6 @@ class SignupForm extends Identity
     public function validateIp(): void
     {
         if ($this->ipAddress && $this->spamProtectionInSeconds > 0) {
-            /** @var UserLogin $signup */
             $signup = UserLogin::find()
                 ->where(['type' => UserLogin::TYPE_SIGNUP, 'ip_address' => inet_pton($this->ipAddress)])
                 ->orderBy(['created_at' => SORT_DESC])
@@ -118,18 +117,11 @@ class SignupForm extends Identity
             return false;
         }
 
-        if ($this->status === null) {
-            $this->status = static::STATUS_ENABLED;
-        }
-
-        if (!$this->ipAddress === null) {
-            $this->ipAddress = Yii::$app->getRequest()->getUserIP();
-        }
+        $this->status ??= static::STATUS_ENABLED;
+        $this->ipAddress ??= Yii::$app->getRequest()->getUserIP();
 
         // There were some cases in which the value set by the ajax call contained a leading space…
-        if ($this->token) {
-            $this->token = trim($this->token);
-        }
+        $this->token = $this->token ? trim($this->token) : null;
 
         return parent::beforeValidate();
     }

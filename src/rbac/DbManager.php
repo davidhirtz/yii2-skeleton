@@ -15,7 +15,8 @@ class DbManager extends \yii\rbac\DbManager
         $this->invalidateCache();
         $assignment = $this->getAssignment($role->name, $userId);
 
-        if (!$assignment && ($assignment = parent::assign($role, $userId))) {
+        if (!$assignment) {
+            $assignment = parent::assign($role, $userId);
             $this->createTrail(Trail::TYPE_ASSIGN, $assignment, $userId);
         }
 
@@ -34,12 +35,12 @@ class DbManager extends \yii\rbac\DbManager
         return false;
     }
 
-    protected function createTrail(int $type, Assignment $assignment, int $userId): Trail
+    protected function createTrail(int $type, Assignment $assignment, int|string $userId): Trail
     {
         $trail = Trail::create();
         $trail->type = $type;
         $trail->model = User::class;
-        $trail->model_id = $userId;
+        $trail->model_id = (string)$userId;
         $trail->message = $this->getItem($assignment->roleName)->description ?? $assignment->roleName;
         $trail->insert();
 

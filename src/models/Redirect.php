@@ -69,9 +69,7 @@ class Redirect extends ActiveRecord
 
     public function beforeValidate(): bool
     {
-        if ($this->type === null) {
-            $this->type = static::TYPE_DEFAULT;
-        }
+        $this->type ??= static::TYPE_DEFAULT;
 
         $this->request_uri = static::sanitizeUrl($this->request_uri);
         $this->url = static::sanitizeUrl($this->url);
@@ -103,7 +101,6 @@ class Redirect extends ActiveRecord
             $this->url = $redirect->url;
         }
     }
-
     public function getTrailModelAdminRoute(): array|false
     {
         return $this->getAdminRoute();

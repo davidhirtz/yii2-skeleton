@@ -13,17 +13,17 @@ class UniqueValidator extends \yii\validators\UniqueValidator
      */
     public function init(): void
     {
-        if ($this->when === null) {
-            $this->when = function (ActiveRecord $model, $attribute): bool {
-                if (is_array($this->targetAttribute) && count($this->targetAttribute) > 1) {
-                    return count($model->getDirtyAttributes($this->targetAttribute)) > 0;
-                }
+        $this->when ??= function (ActiveRecord $model, $attribute): bool {
+            if (is_array($this->targetAttribute) && count($this->targetAttribute) > 1) {
+                return count($model->getDirtyAttributes($this->targetAttribute)) > 0;
+            }
 
-                return $model->isAttributeChanged($this->targetAttribute ?: $attribute);
-            };
+            return $model->isAttributeChanged($this->targetAttribute ?: $attribute);
+        };
+
+        if (!$this->message) {
+            $this->message = Yii::t('yii', '{attribute} "{value}" has already been taken.');
         }
-
-        $this->message ??= Yii::t('yii', '{attribute} "{value}" has already been taken.');
 
         parent::init();
     }

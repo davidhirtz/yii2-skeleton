@@ -2,32 +2,26 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 
+use davidhirtz\yii2\skeleton\behaviors\stubs\TrailBehaviorActiveRecord;
 use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
-use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\modules\admin\data\TrailActiveDataProvider;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
 use Yii;
+use yii\base\Model;
 
 class TrailSubmenu extends Submenu
 {
-    /**
-     * @var TrailActiveDataProvider
-     */
-    public $dataProvider;
+    public ?TrailActiveDataProvider $dataProvider = null;
+    private ?Model $_trailModel = null;
 
-    /**
-     * @var ActiveRecord
-     */
-    private $_trailModel;
-
-    /**
-     * Initializes the nav items.
-     */
     public function init(): void
     {
         if (!$this->title) {
-            if ($model = $this->getTrailModel()) {
+            /** @var TrailBehaviorActiveRecord|null $model */
+            $model = $this->getTrailModel();
+
+            if ($model) {
                 $name = $model->getTrailModelName();
                 $this->title = ($route = $this->getTrailModelAdminRoute()) ? Html::a($name, $route) : $name;
             } else {
@@ -39,10 +33,7 @@ class TrailSubmenu extends Submenu
         parent::init();
     }
 
-    /**
-     * Sets breadcrumbs.
-     */
-    public function setBreadcrumbs()
+    public function setBreadcrumbs(): void
     {
         $view = $this->getView();
 
@@ -53,30 +44,38 @@ class TrailSubmenu extends Submenu
             ]));
         }
 
-        if ($model = $this->getTrailModel()) {
+        /** @var TrailBehaviorActiveRecord|null $model */
+        $model = $this->getTrailModel();
+
+        if ($model) {
             $view->setBreadcrumb($model->getTrailModelName());
         }
     }
 
-    /**
-     * @return array|false
-     */
-    public function getTrailModelAdminRoute()
+    public function getTrailModelAdminRoute(): array|false
     {
-        if (($model = $this->getTrailModel()) && ($route = $model->getTrailModelAdminRoute())) {
-            return array_merge($route, ['language' => explode('::', $model->modelClass)[1] ?? null]);
+        /** @var TrailBehaviorActiveRecord|null $model */
+        $model = $this->getTrailModel();
+
+        if ($route = $model?->getTrailModelAdminRoute()) {
+            /** @var TrailBehavior $behavior */
+            $behavior = $model->getBehavior('TrailBehavior');
+
+            return [
+                ...$route,
+                'language' => explode('::', $behavior->modelClass)[1] ?? null
+            ];
         }
 
         return false;
     }
 
-    /**
-     * @return TrailBehavior
-     */
-    public function getTrailModel()
+    public function getTrailModel(): ?Model
     {
-        if ($this->_trailModel === null && $this->dataProvider->model) {
-            $this->_trailModel = $this->dataProvider->getModels() ? current($this->dataProvider->getModels())->getModelClass() : null;
+        if ($this->dataProvider->model) {
+            $this->_trailModel ??= $this->dataProvider->getModels()
+                ? current($this->dataProvider->getModels())->getModelClass()
+                : null;
         }
 
         return $this->_trailModel;

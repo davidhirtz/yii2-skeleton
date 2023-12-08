@@ -331,7 +331,6 @@ class AccountController extends Controller
 
     public function actionDeauthorize(string $id, string $name): Response|string
     {
-        /** @var $auth AuthClient */
         $auth = AuthClient::find()
             ->where(['id' => $id, 'name' => $name, 'user_id' => Yii::$app->getUser()->getId()])
             ->limit(1)

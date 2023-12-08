@@ -52,16 +52,16 @@ trait TypeAttributeTrait
      */
     public static function getTypeInstances(): array
     {
-        if (!isset(static::$_instances[static::class])) {
-            static::$_instances[static::class] = [];
+        if (!isset(self::$_instances[static::class])) {
+            self::$_instances[static::class] = [];
 
             foreach (static::getTypes() as $type => $typeOptions) {
-                static::$_instances[static::class][$type] = static::instantiate(['type' => $type]);
-                static::$_instances[static::class][$type]->type = $type;
+                self::$_instances[static::class][$type] = static::instantiate(['type' => $type]);
+                self::$_instances[static::class][$type]->type = $type;
             }
         }
 
-        return static::$_instances[static::class];
+        return self::$_instances[static::class];
     }
 
     public function getTypeName(): string

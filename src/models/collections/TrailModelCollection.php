@@ -28,8 +28,8 @@ class TrailModelCollection
                 $values = explode('-', $modelId);
                 $keys = count($instance::primaryKey()) == count($values) ? array_combine($instance::primaryKey(), $values) : null;
 
-                static::$_modelClasses[$instance::tableName()][$modelId] ??= $instance::findOne($keys) ?? $instance;
-                return static::$_modelClasses[$instance::tableName()][$modelId];
+                self::$_modelClasses[$instance::tableName()][$modelId] ??= $instance::findOne($keys) ?? $instance;
+                return self::$_modelClasses[$instance::tableName()][$modelId];
             }
 
             return $instance;

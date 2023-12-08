@@ -15,7 +15,7 @@ class Sitemap extends Component
 {
     public Cache|string|null $cache = 'cache';
 
-    
+
     public int $duration = 86400;
 
     public array|Dependency|null $dependency = null;
@@ -60,8 +60,9 @@ class Sitemap extends Component
     public array $models = [];
 
     /**
-     * @var array containing additional sitemap URLs. Urls can be set as route or relative URL. If additional information
-     * such as priority or last modified should be added, an array with the url as "loc" value can be used.
+     * @var array containing additional sitemap URLs. Urls can be set as route or relative URL. If additional
+     *     information such as priority or last modified should be added, an array with the url as "loc" value can be
+     *     used.
      */
     public array $urls = [];
 
@@ -70,9 +71,9 @@ class Sitemap extends Component
         foreach ($this->models as &$model) {
             $model = Yii::createObject($model);
 
-            if ($behaviors = ($modelName['behaviors'] ?? false)) {
-                if (isset($behaviors['sitemap']) && empty($behaviors['sitemap']['class'])) {
-                    $behaviors['sitemap']['class'] = SitemapBehavior::class;
+            if ($behaviors = ($model['behaviors'] ?? false)) {
+                if (isset($behaviors['sitemap'])) {
+                    $behaviors['sitemap']['class'] ??= SitemapBehavior::class;
                 }
 
                 $model->attachBehaviors($behaviors);
@@ -107,7 +108,9 @@ class Sitemap extends Component
             return array_slice($this->getUrlsInternal(), $offset * $this->maxUrlCount, $this->maxUrlCount);
         }
 
-        return ($model = $this->models[$key]) ? $model->generateSitemapUrls($offset) : [];
+        $model = $this->models[$key] ?? null;
+
+        return $model?->generateSitemapUrls($offset) ?? [];
     }
 
     /**
@@ -165,7 +168,7 @@ class Sitemap extends Component
 
             if (isset($view['alias'], $view['route'])) {
                 foreach (FileHelper::findFiles(Yii::getAlias($view['alias']), $options) as $file) {
-                    $name = $paramName !== false ? pathinfo((string) $file, PATHINFO_FILENAME) : null;
+                    $name = $paramName !== false ? pathinfo((string)$file, PATHINFO_FILENAME) : null;
 
                     foreach ($languages as $language) {
                         $urls[] = [

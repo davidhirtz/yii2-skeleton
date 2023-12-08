@@ -42,7 +42,6 @@ class Application extends \yii\console\Application
     public function coreCommands(): array
     {
         return array_merge(parent::coreCommands(), [
-            'asset' => AssetController::class,
             'migrate' => MigrateController::class,
             'maintenance' => MaintenanceController::class,
             'params' => ParamsController::class,

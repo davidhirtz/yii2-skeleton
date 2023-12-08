@@ -14,8 +14,6 @@ class Breadcrumbs extends \yii\widgets\Breadcrumbs
     public $itemTemplate = "<li class=\"breadcrumb-item\">{link}</li>\n";
     public $activeItemTemplate = "<li class=\"breadcrumb-item active\">{link}</li>\n";
 
-    public $links = null;
-
     public function init(): void
     {
         $this->homeLink ??= [
@@ -25,7 +23,7 @@ class Breadcrumbs extends \yii\widgets\Breadcrumbs
 
         if (!$this->links) {
             $view = $this->getView();
-            $this->links ??= $view instanceof View ? $view->getBreadcrumbs() : [];
+            $this->links = $view instanceof View ? $view->getBreadcrumbs() : [];
         }
 
         /** @var Module $module */

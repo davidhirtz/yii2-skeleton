@@ -37,12 +37,12 @@ class Request extends \yii\web\Request
      */
     public function init(): void
     {
-        if ($this->enableCookieValidation) {
-            $this->cookieValidationKey ??= Yii::$app->params['cookieValidationKey'] ?? null;
+        if ($this->enableCookieValidation && !$this->cookieValidationKey) {
+            $this->cookieValidationKey = Yii::$app->params['cookieValidationKey'] ?? '';
         }
 
         if ($this->draftSubdomain && str_contains($this->getHostInfo(), "//$this->draftSubdomain.")) {
-            $this->_isDraft = 1;
+            $this->_isDraft = true;
         }
 
         parent::init();
@@ -61,7 +61,7 @@ class Request extends \yii\web\Request
                 $cookie = $this->getCookies()->getValue($param);
                 $identity = Yii::$app->getUser()->getIdentity();
 
-                if (!$language = $this->post($manager->languageParam, $this->get($param, $identity ? $identity->language : $cookie))) {
+                if (!$language = $this->post($manager->languageParam, $this->get($param, $identity?->language ?? $cookie))) {
                     $language = $this->getPreferredLanguage($languages);
                 }
 

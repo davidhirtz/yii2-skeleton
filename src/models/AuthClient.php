@@ -82,7 +82,6 @@ class AuthClient extends ActiveRecord
 
     public function getIdentity(): UserQuery
     {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->hasOne(Identity::class, ['id' => 'user_id']);
     }
 

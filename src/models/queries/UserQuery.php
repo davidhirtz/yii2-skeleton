@@ -7,7 +7,7 @@ use davidhirtz\yii2\skeleton\models\User;
 
 /**
  * @template T
- * @template-implements ActiveQuery<T>
+ * @extends ActiveQuery<T>
  */
 class UserQuery extends ActiveQuery
 {
@@ -60,7 +60,7 @@ class UserQuery extends ActiveQuery
 
                 if (is_numeric($keyword)) {
                     $this->andWhere("$tableName.[[id]]=:id", ['id' => $keyword]);
-                } elseif (str_contains((string) $keyword, '@')) {
+                } elseif (str_contains((string)$keyword, '@')) {
                     $this->andWhere("$tableName.[[email]] LIKE :search", ['search' => "%$keyword%"]);
                 } else {
                     $this->andWhere("$tableName.[[name]] LIKE :search OR $tableName.[[email]] LIKE :search OR $tableName.[[first_name]] LIKE :search OR $tableName.[[last_name]] LIKE :search", ['search' => "$keyword%"]);

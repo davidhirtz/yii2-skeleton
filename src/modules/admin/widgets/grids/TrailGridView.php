@@ -25,8 +25,6 @@ class TrailGridView extends GridView
     use MessageSourceTrait;
     use TypeGridViewTrait;
 
-    private ?array $_trailModels = null;
-
     public $tableOptions = [
         'class' => 'table table-striped trail',
     ];
@@ -222,7 +220,7 @@ class TrailGridView extends GridView
         return $this->renderI18nTrailMessage($trail, $trail->getModelClass());
     }
 
-    protected function renderI18nTrailMessage(Trail $trail, ?ActiveRecordInterface $model = null): string
+    protected function renderI18nTrailMessage(Trail $trail, ?Model $model = null): string
     {
         if ($model) {
             /** @var TrailBehavior $model */
@@ -307,6 +305,6 @@ class TrailGridView extends GridView
 
     protected function getTrailModelRoute(Trail $trail): ?array
     {
-        return ['index', 'model' => implode('@', array_filter([$trail->model, $trail->model_id]))];
+        return ['index', 'model' => implode('@', array_filter([$trail->model, (string)$trail->model_id]))];
     }
 }

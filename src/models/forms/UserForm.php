@@ -85,7 +85,7 @@ class UserForm extends User
                 if (!$user->isUnconfirmedEmailLoginEnabled()) {
                     $user->logout(false);
 
-                    $session?->addFlash('success', Yii::t('skeleton', 'Please check your emails to confirm your new email address!'));
+                    $session->addFlash('success', Yii::t('skeleton', 'Please check your emails to confirm your new email address!'));
                 }
 
                 $this->sendEmailConfirmationEmail();

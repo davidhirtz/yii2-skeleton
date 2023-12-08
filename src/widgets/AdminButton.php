@@ -41,11 +41,11 @@ class AdminButton extends Widget
 
     public function registerCss(): void
     {
-        if (static::$is_Registered) {
+        if (self::$is_Registered) {
             return;
         }
 
-        static::$is_Registered = true;
+        self::$is_Registered = true;
 
         if ($this->toggleButtonOpacity) {
             $btnToggle = <<<CSS

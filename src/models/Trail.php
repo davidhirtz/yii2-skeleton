@@ -19,13 +19,13 @@ use yii\db\ActiveRecordInterface;
  * @property int $id
  * @property int $type
  * @property string $model
- * @property string $model_id
+ * @property array|string|null $model_id
  * @property int|null $user_id
  * @property string $message
  * @property string|array|null $data
  * @property DateTime $created_at
  *
- * @property-read User $user {@see Trail::getUser}
+ * @property-read User|null $user {@see Trail::getUser}
  */
 class Trail extends ActiveRecord
 {
@@ -86,7 +86,7 @@ class Trail extends ActiveRecord
                     if (!$parent->isDeleted()) {
                         /** @var TrailBehavior $behavior */
                         if ($behavior = $parent->getBehavior('TrailBehavior')) {
-                            $trail = new static();
+                            $trail = static::create();
                             $trail->model = $behavior->modelClass;
                             $trail->model_id = $parent->getPrimaryKey(true);
                             $trail->type = $type;
@@ -194,9 +194,9 @@ class Trail extends ActiveRecord
         return $this->getTypeOptions()['hasDataModel'] ?? false;
     }
 
-    public static function createOrderTrail(?ActiveRecordInterface $model, ?string $message = null, array $data = []): static
+    public static function createOrderTrail(?ActiveRecord $model, ?string $message = null, array $data = []): static
     {
-        $trail = new static();
+        $trail = static::create();
         $trail->type = static::TYPE_ORDER;
 
         if ($model) {
