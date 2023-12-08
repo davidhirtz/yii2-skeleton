@@ -1,3 +1,10 @@
+## 2.0.14 (Dec 8, 2023)
+
+- Extracted shared model methods from `ActiveRecord` to `ModelTrait`
+- Removed `ActiveRecord::logErrors` and replaced it with `\davidhirtz\yii2\skeleton\log\ActiveRecordErrorLogger::log()`
+- Reverted `ActiveRecord::isAttributeChanged()` to also accept arrays of attributes,
+  added `ActiveRecord::hasChangedAttributes()` instead
+
 ## 2.0.13 (Nov 15, 2023)
 
 - Extended `ActiveRecord::isAttributeChanged()` to also accept arrays of attributes

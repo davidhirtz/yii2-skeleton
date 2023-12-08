@@ -41,7 +41,7 @@ class M190125140002Init extends m140506_102106_rbac_init
          */
         $this->createTable(User::tableName(), [
             'id' => 'int unsigned NOT NULL AUTO_INCREMENT',
-            'status' => 'tinyint(1) NOT NULL DEFAULT "1"',
+            'status' => $this->tinyInteger(1)->notNull()->defaultValue(User::STATUS_DEFAULT),
             'name' => 'varchar(32) NOT NULL',
             'email' => 'varchar(100) NOT NULL',
             'password' => 'varchar(100) DEFAULT NULL',

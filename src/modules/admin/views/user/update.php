@@ -9,6 +9,7 @@
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\User;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
 use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu;
@@ -49,6 +50,7 @@ if ($user->isOwner()) {
     </div>
     <?php
 } elseif (Yii::$app->getUser()->can(User::AUTH_USER_DELETE, ['user' => $user])) {
+    /** @see UserController::actionDelete() */
     echo Panel::widget([
         'type' => 'danger',
         'title' => Yii::t('skeleton', 'Delete User'),

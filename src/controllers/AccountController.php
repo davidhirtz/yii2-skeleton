@@ -17,6 +17,7 @@ use davidhirtz\yii2\skeleton\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\skeleton\web\Controller;
 use Yii;
+use yii\authclient\AuthAction;
 use yii\base\InvalidCallException;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -65,7 +66,7 @@ class AccountController extends Controller
     {
         return [
             'auth' => [
-                'class' => 'yii\authclient\AuthAction',
+                'class' => AuthAction::class,
                 'successCallback' => $this->onAuthSuccess(...),
             ],
         ];
