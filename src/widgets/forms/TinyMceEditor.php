@@ -166,7 +166,7 @@ class TinyMceEditor extends InputWidget
             $this->clientOptions['valid_elements'] ??= $allowedElements;
         }
 
-        if ($this->validator?->allowedClasses) {
+        if ($this->validator?->allowedClasses ?? false) {
             $allowedClasses = [];
 
             foreach ($this->validator->allowedClasses as $tag => $classes) {
