@@ -4,10 +4,22 @@ namespace davidhirtz\yii2\skeleton\db\traits;
 
 use Yii;
 use yii\base\InvalidConfigException;
+use yii\rbac\DbManager;
 
 trait MigrationTrait
 {
-    public function getTableOptions(): ?string
+    protected function getAuthManager(): DbManager
+    {
+        $authManager = Yii::$app->getAuthManager();
+
+        if (!$authManager instanceof DbManager) {
+            throw new InvalidConfigException('You should configure "authManager" component to use database before executing this migration.');
+        }
+
+        return $authManager;
+    }
+
+    protected function getTableOptions(): ?string
     {
         $db = Yii::$app->getDb();
 
@@ -18,7 +30,7 @@ trait MigrationTrait
         throw new InvalidConfigException();
     }
 
-    public function addI18nColumns(string $table, array $attributes, bool $allowNull = false, ?array $except = null): void
+    protected function addI18nColumns(string $table, array $attributes, bool $allowNull = false, ?array $except = null): void
     {
         if ($attributes) {
             $schema = Yii::$app->getDb()->getSchema();
@@ -58,7 +70,7 @@ trait MigrationTrait
         }
     }
 
-    public function dropI18nColumns(string $table, array $attributes, ?array $except = []): void
+    protected function dropI18nColumns(string $table, array $attributes, ?array $except = []): void
     {
         if ($attributes) {
             $i18n = Yii::$app->getI18n();

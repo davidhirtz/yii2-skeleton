@@ -110,8 +110,9 @@ class Trail extends ActiveRecord
 
     public function getUser(): UserQuery
     {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->hasOne(User::class, ['id' => 'user_id']);
+        /** @var UserQuery $query */
+        $query = $this->hasOne(User::class, ['id' => 'user_id']);
+        return $query;
     }
 
     public function getModelName(): string

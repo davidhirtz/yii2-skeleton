@@ -11,18 +11,20 @@ class PageCache extends \yii\filters\PageCache
     public const TAG_DEPENDENCY_KEY = 'page-cache';
 
     /**
-     * @var bool|null leave null to use default value
+     * @var bool whether to cache the response for logged-in users
      */
-    public $enabled = null;
+    public bool $disableForUsers = true;
+
+    /**
+     * @var bool whether to cache the response for POST requests
+     */
+    public bool $disableForPostRequests = true;
 
     /**
      * @var string|false GET param name to disable caching, set to `false` to disable cache skipping
      */
     public string|false $noCacheParam = 'nocache';
 
-    /**
-     * @var string[]
-     */
     public $only = ['index', 'view'];
 
     /**
@@ -30,23 +32,32 @@ class PageCache extends \yii\filters\PageCache
      */
     public array $params = [];
 
-    
+    /**
+     * @var bool whether to use the tag dependency as a dependency
+     */
+    public bool $useTagDependency = true;
+
     public function init(): void
     {
         $request = Yii::$app->getRequest();
 
-        $this->dependency ??= [
-            'class' => TagDependency::class,
-            'tags' => [self::TAG_DEPENDENCY_KEY],
-            'reusable' => !$this->cacheCookies,
-        ];
 
-        $this->enabled ??= Yii::$app->getRequest()->getIsGet() &&
-            Yii::$app->getUser()->getIsGuest() &&
-            (!$this->noCacheParam || !$request->get($this->noCacheParam));
+        if ($this->enabled) {
+            $this->enabled = (!$this->disableForPostRequests || Yii::$app->getRequest()->getIsGet())
+                && (!$this->disableForUsers || Yii::$app->getUser()->getIsGuest())
+                && (!$this->noCacheParam || !$request->get($this->noCacheParam));
+        }
+
+        if ($this->useTagDependency) {
+            $this->dependency = [
+                'class' => TagDependency::class,
+                'tags' => [self::TAG_DEPENDENCY_KEY],
+                'reusable' => !$this->cacheCookies,
+            ];
+        }
 
         if (!is_callable($this->variations)) {
-            $this->variations ??= [];
+            $this->variations = $this->variations ?: [];
             $this->variations[] = $request->getIsAjaxRoute();
             $this->variations[] = Yii::$app->language;
 

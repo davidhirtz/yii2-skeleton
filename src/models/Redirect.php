@@ -19,7 +19,7 @@ use Yii;
  * @property string $request_uri
  * @property string $url
  * @property int|null $updated_by_user_id
- * @property DateTime $updated_at
+ * @property DateTime|null $updated_at
  * @property DateTime $created_at
  */
 class Redirect extends ActiveRecord

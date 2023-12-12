@@ -3,7 +3,6 @@
 namespace davidhirtz\yii2\skeleton\console\controllers;
 
 use Yii;
-use yii\console\Exception;
 use yii\helpers\Console;
 use yii\helpers\FileHelper;
 
@@ -11,14 +10,14 @@ class AssetController extends \yii\console\controllers\AssetController
 {
     /**
      * Removes all published assets.
+     * @noinspection PhpUnused
      */
-    public function actionClear()
+    public function actionClear(): void
     {
         $basePath = Yii::$app->getAssetManager()->basePath;
         $assets = FileHelper::findDirectories($basePath, ['recursive' => false]);
 
         $total = count($assets);
-        $errors = 0;
         $done = 0;
 
         if (!$total) {
@@ -34,10 +33,6 @@ class AssetController extends \yii\console\controllers\AssetController
             }
 
             Console::endProgress();
-
-            if ($errors) {
-                $this->stdout("{$errors} assets could not be cleared.\n", Console::FG_RED);
-            }
         }
     }
 }

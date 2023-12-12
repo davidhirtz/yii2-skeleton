@@ -282,7 +282,9 @@ class User extends ActiveRecord
 
     public function getAdmin(): UserQuery
     {
-        return $this->hasOne(static::class, ['id' => 'created_by_user_id']);
+        /** @var UserQuery $query */
+        $query = $this->hasOne(static::class, ['id' => 'created_by_user_id']);
+        return $query;
     }
 
     public function getAuthClients(): ActiveQuery

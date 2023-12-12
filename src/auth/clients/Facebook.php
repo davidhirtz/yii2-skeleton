@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\auth\clients;
 
 use davidhirtz\yii2\datetime\Date;
+use davidhirtz\yii2\skeleton\models\AuthClient;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
@@ -87,7 +88,7 @@ class Facebook extends \yii\authclient\clients\Facebook implements ClientInterfa
         return $safe;
     }
 
-    public function getAuthData(): array|string
+    public function getAuthData(): array
     {
         $attributes = $this->getUserAttributes();
 
@@ -98,12 +99,12 @@ class Facebook extends \yii\authclient\clients\Facebook implements ClientInterfa
         ];
     }
 
-    public static function getExternalUrl($client): string
+    public static function getExternalUrl(AuthClient $client): string
     {
         return "https://www.facebook.com/profile.php?$client->id";
     }
 
-    public static function getDisplayName($client): string
+    public static function getDisplayName(AuthClient $client): string
     {
         return "{$client->data['name']} ({$client->data['email']})";
     }

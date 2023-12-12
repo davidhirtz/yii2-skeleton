@@ -13,8 +13,9 @@ trait UpdatedByUserTrait
 {
     public function getUpdated(): UserQuery
     {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->hasOne(User::class, ['id' => 'updated_by_user_id']);
+        /** @var UserQuery $query */
+        $query = $this->hasOne(User::class, ['id' => 'updated_by_user_id']);
+        return $query;
     }
 
     public function populateUpdatedRelation(?User $user): void

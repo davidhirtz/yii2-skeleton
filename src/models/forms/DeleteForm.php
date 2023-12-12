@@ -6,7 +6,6 @@ use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
-use yii\db\ActiveRecordInterface;
 use yii\helpers\Inflector;
 use yii\web\NotFoundHttpException;
 
@@ -15,7 +14,7 @@ class DeleteForm extends Model
     public ?string $value = null;
     public string $attribute = 'name';
 
-    private ?ActiveRecordInterface $_model = null;
+    private ?ActiveRecord $_model = null;
 
     public function rules(): array
     {
@@ -76,10 +75,7 @@ class DeleteForm extends Model
         return $this->_model;
     }
 
-    /**
-     * @noinspection PhpUnused
-     */
-    public function setModel(?ActiveRecordInterface $model): void
+    public function setModel(?ActiveRecord $model): void
     {
         if (!$model) {
             throw new NotFoundHttpException();

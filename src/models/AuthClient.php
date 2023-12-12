@@ -17,11 +17,13 @@ use Yii;
  * @property string $id
  * @property int $user_id
  * @property string $name
- * @property array $data
- * @property DateTime $updated_at
+ * @property array|null $data
+ * @property DateTime|null $updated_at
  * @property DateTime $created_at
  *
  * @property-read Identity|null $identity {@see static::getIdentity()}
+ *
+ * @mixin TrailBehavior
  */
 class AuthClient extends ActiveRecord
 {
@@ -82,7 +84,9 @@ class AuthClient extends ActiveRecord
 
     public function getIdentity(): UserQuery
     {
-        return $this->hasOne(Identity::class, ['id' => 'user_id']);
+        /** @var UserQuery $query */
+        $query = $this->hasOne(Identity::class, ['id' => 'user_id']);
+        return $query;
     }
 
     public static function findOrCreateFromClient(ClientInterface $client): AuthClient
@@ -112,7 +116,6 @@ class AuthClient extends ActiveRecord
         return [$this->identity];
     }
 
-    
     public function getTrailAttributes(): array
     {
         return array_diff($this->attributes(), [
@@ -148,8 +151,9 @@ class AuthClient extends ActiveRecord
 
     public function getClientClass(): ClientInterface
     {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return Yii::$app->getAuthClientCollection()->getClient($this->name);
+        /** @var ClientInterface $client */
+        $client = Yii::$app->getAuthClientCollection()->getClient($this->name);
+        return $client;
     }
 
     public static function tableName(): string

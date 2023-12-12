@@ -51,7 +51,7 @@ class RelationValidator extends Validator
 
         if ($model->isAttributeChanged($attribute)) {
             if ($value) {
-                /** @var ActiveRecord $record */
+                /** @var ActiveRecord|null $related */
                 $related = $model->{$relation};
 
                 if ((!$related || $related->getPrimaryKey() !== $value) && !$model->refreshRelation($relation)) {

@@ -42,9 +42,11 @@ class AuthItem extends ActiveRecord
 
     public function getUsers(): UserQuery
     {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->hasMany(User::class, ['id' => 'user_id'])
+        /** @var UserQuery $query */
+        $query = $this->hasMany(User::class, ['id' => 'user_id'])
             ->viaTable(Yii::$app->getAuthManager()->assignmentTable, ['item_name' => 'name']);
+
+        return $query;
     }
 
     public static function find(): AuthItemQuery

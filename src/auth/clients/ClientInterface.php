@@ -13,25 +13,11 @@ use davidhirtz\yii2\skeleton\models\AuthClient;
  */
 interface ClientInterface extends \yii\authclient\ClientInterface
 {
-    /**
-     * @return string
-     */
-    public function getAuthData();
+    public function getAuthData(): array;
 
-    /**
-     * @return array
-     */
-    public function getSafeUserAttributes();
+    public function getSafeUserAttributes(): array;
 
-    /**
-     * @param AuthClient $client
-     * @return string
-     */
-    public static function getDisplayName($client);
+    public static function getDisplayName(AuthClient $client): string;
 
-    /**
-     * @param AuthClient $client
-     * @return string
-     */
-    public static function getExternalUrl($client);
+    public static function getExternalUrl(AuthClient $client): string;
 }

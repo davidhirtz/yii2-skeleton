@@ -31,7 +31,7 @@ class UserLogin extends ActiveRecord
     public const TYPE_CONFIRM_EMAIL = 'email';
     public const TYPE_RESET_PASSWORD = 'password';
 
-    
+
     public function behaviors(): array
     {
         return [
@@ -41,8 +41,9 @@ class UserLogin extends ActiveRecord
 
     public function getUser(): UserQuery
     {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->hasOne(User::class, ['id' => 'user_id']);
+        /** @var UserQuery $query */
+        $query = $this->hasOne(User::class, ['id' => 'user_id']);
+        return $query;
     }
 
     public function getTypeName(): string
@@ -69,13 +70,13 @@ class UserLogin extends ActiveRecord
         };
     }
 
-    
+
     public function getDisplayIp(): string
     {
         return inet_ntop($this->ip_address) ?: '';
     }
 
-    
+
     public function attributeLabels(): array
     {
         return [
@@ -87,7 +88,7 @@ class UserLogin extends ActiveRecord
         ];
     }
 
-    
+
     public static function tableName(): string
     {
         return '{{%user_login}}';

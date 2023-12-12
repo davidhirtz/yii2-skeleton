@@ -67,19 +67,24 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return $condition === null ? null : parent::findOne($condition);
     }
 
-    /**
-     * @noinspection PhpIncompatibleReturnTypeInspection
-     */
     public function getRelationFromForeignKey(string $foreignKey, bool $throwException = false): ?ActiveQuery
     {
-        $relation = lcfirst(Inflector::camelize(str_replace('_id', '', $foreignKey)));
-        return $this->getRelation($relation, $throwException);
+        /** @var ActiveQuery|null $query */
+        $query = $this->getRelation($this->getRelationNameFromForeignKey($foreignKey), $throwException);
+        return $query;
+    }
+
+    public function getRelationNameFromForeignKey(string $foreignKey): string
+    {
+        return lcfirst(Inflector::camelize(str_replace('_id', '', $foreignKey)));
     }
 
     public function refreshRelation(string $name): ActiveRecord|array
     {
+        /** @var ActiveQuery $query */
         $query = $this->getRelation($name);
         $method = $query->multiple ? 'all' : 'one';
+
         $this->populateRelation($name, $related = $query->{$method}());
 
         return $related;

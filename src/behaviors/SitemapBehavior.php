@@ -2,8 +2,8 @@
 
 namespace davidhirtz\yii2\skeleton\behaviors;
 
+use davidhirtz\yii2\skeleton\behaviors\stubs\SitemapBehaviorActiveRecord;
 use davidhirtz\yii2\skeleton\db\ActiveQuery;
-use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\web\Sitemap;
 use Yii;
 use yii\base\Behavior;
@@ -15,20 +15,12 @@ use yii\base\InvalidConfigException;
  *
  * @see https://www.sitemaps.org/protocol.html
  *
- * @property ActiveRecord $owner
+ * @property SitemapBehaviorActiveRecord $owner
  */
 class SitemapBehavior extends Behavior
 {
-    public const CHANGE_FREQUENCY_ALWAYS = 'always';
-    public const CHANGE_FREQUENCY_HOURLY = 'hourly';
-    public const CHANGE_FREQUENCY_DAILY = 'daily';
-    public const CHANGE_FREQUENCY_WEEKLY = 'weekly';
-    public const CHANGE_FREQUENCY_MONTHLY = 'monthly';
-    public const CHANGE_FREQUENCY_YEARLY = 'yearly';
-    public const CHANGE_FREQUENCY_NEVER = 'never';
-
     /**
-     * @var callable required method, that returns a single or nested array with sitemap URL or valid route as "loc"
+     * @var callable required method, which returns a single or nested array with sitemap URL or valid route as "loc"
      * key.
      */
     public $callback;
@@ -56,7 +48,6 @@ class SitemapBehavior extends Behavior
      */
     public ?float $defaultPriority = null;
 
-
     public function init(): void
     {
         if (!is_callable($this->callback)) {
@@ -72,7 +63,6 @@ class SitemapBehavior extends Behavior
 
     public function generateSitemapUrls(int $offset = 0): array
     {
-        /** @var ActiveQuery $query */
         $query = $this->owner->getSitemapQuery();
         $urls = [];
 
@@ -101,14 +91,10 @@ class SitemapBehavior extends Behavior
 
     public function getSitemapUrlCount(): int
     {
-        /** @var ActiveQuery $query */
         $query = $this->owner->getSitemapQuery();
         return $query->count();
     }
 
-    /**
-     * @noinspection PhpUnused
-     */
     public function getSitemapQuery(): ActiveQuery
     {
         return $this->owner::find();
