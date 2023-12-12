@@ -2,20 +2,19 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits;
 
-use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\models\traits\TypeAttributeTrait;
+use davidhirtz\yii2\skeleton\models\stubs\TypeAttributeActiveRecord;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
 use yii\db\ActiveRecordInterface;
 use yii\helpers\Url;
 
-/**
- * @method ActiveRecord getModel()
- */
 trait TypeGridViewTrait
 {
+    /**
+     * @var int|null the current type
+     */
     public ?int $type = null;
 
     /**
@@ -32,21 +31,24 @@ trait TypeGridViewTrait
     {
         return [
             'attribute' => 'type',
+            'visible' => $this->hasVisibleTypes(),
             'contentOptions' => ['class' => 'text-nowrap'],
-            'visible' => !$this->type && count($this->getModel()::getTypes()) > 1,
-            'content' => fn ($model) =>
-                /** @var ActiveRecord|TypeAttributeTrait $model */
-                ($route = $this->getRoute($model)) ? Html::a($model->getTypeName(), $route) : $model->getTypeName()
+            'content' => function ($model) {
+                /** @var TypeAttributeActiveRecord $model */
+                $route = $this->getRoute($model);
+                return $route ? Html::a($model->getTypeName(), $route) : $model->getTypeName();
+            },
         ];
     }
 
     public function typeIconColumn(): array
     {
+
         return [
-            'visible' => !$this->type && count($this->getModel()::getTypes()) > 1,
+            'visible' => $this->hasVisibleTypes(),
             'contentOptions' => ['class' => 'text-center'],
             'content' => function ($model) {
-                /** @var ActiveRecord|TypeAttributeTrait $model */
+                /** @var TypeAttributeActiveRecord $model */
                 $icon = $this->getTypeIcon($model);
                 return ($route = $this->getRoute($model)) ? Html::a($icon, $route) : $icon;
             }
@@ -55,10 +57,14 @@ trait TypeGridViewTrait
 
     public function typeDropdown(): string
     {
-        $typeOptions = $this->getModel()::getTypes()[$this->type] ?? false;
+        /** @var TypeAttributeActiveRecord $model */
+        $model = $this->getModel();
+        $typeOptions = $model::getTypes()[$this->type] ?? false;
 
         if ($typeOptions) {
-            $name = isset($typeOptions['class']) ? $this->getModel()::instantiate(['type' => $this->type])->getTypeName() : ($typeOptions['plural'] ?? $typeOptions['name']);
+            $name = isset($typeOptions['class'])
+                ? $model::instantiate(['type' => $this->type])->getTypeName()
+                : ($typeOptions['plural'] ?? $typeOptions['name']);
         }
 
         return ButtonDropdown::widget([
@@ -69,14 +75,20 @@ trait TypeGridViewTrait
         ]);
     }
 
-    
+
     protected function typeDropdownItems(): array
     {
+        /** @var TypeAttributeActiveRecord $model */
+        $model = $this->getModel();
         $items = [];
 
-        foreach ($this->getModel()::getTypes() as $type => $typeOptions) {
+        foreach ($model::getTypes() as $type => $typeOptions) {
+            $label = isset($typeOptions['class'])
+                ? $model::instantiate(['type' => $type])->getTypeName()
+                : ($typeOptions['plural'] ?? $typeOptions['name']);
+
             $items[] = [
-                'label' => isset($typeOptions['class']) ? $this->getModel()::instantiate(['type' => $type])->getTypeName() : ($typeOptions['plural'] ?? $typeOptions['name']),
+                'label' => $label,
                 'url' => Url::current([$this->typeParamName => $type, 'page' => null]),
             ];
         }
@@ -86,10 +98,18 @@ trait TypeGridViewTrait
 
     protected function getTypeIcon(ActiveRecordInterface $model): Icon
     {
-        /** @var TypeAttributeTrait $model */
+        /** @var TypeAttributeActiveRecord $model */
         return Icon::tag($model->getTypeIcon(), [
             'data-toggle' => 'tooltip',
             'title' => $model->getTypeName(),
         ]);
+    }
+
+    protected function hasVisibleTypes(): bool
+    {
+        /** @var TypeAttributeActiveRecord $model */
+        $model = $this->getModel();
+
+        return !$this->type && count($model::getTypes()) > 1;
     }
 }

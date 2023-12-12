@@ -4,37 +4,31 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\models\traits\StatusAttributeTrait;
+use davidhirtz\yii2\skeleton\models\stubs\StatusAttributeActiveRecord;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
-use yii\base\Model;
+use yii\db\ActiveRecordInterface;
 use yii\helpers\Url;
 
-/**
- * @method ActiveRecord getModel()
- */
 trait StatusGridViewTrait
 {
     /**
-     * @var int
+     * @var int|null the current status
      */
-    public $status;
+    public ?int $status = null;
 
     /**
      * @var string the status parameter name
      */
-    public $statusParamName = 'status';
+    public string $statusParamName = 'status';
 
     /**
      * @var string|null whether the default item in the status dropdown should be shown
      */
-    public $defaultStatusItem = null;
+    public ?string $defaultStatusItem = null;
 
-    /**
-     * @return array
-     */
-    public function statusColumn()
+    public function statusColumn(): array
     {
         return [
             'contentOptions' => ['class' => 'text-center'],
@@ -45,10 +39,7 @@ trait StatusGridViewTrait
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function statusDropdown()
+    public function statusDropdown(): string
     {
         $items = $this->statusDropdownItems();
         $active = $items[$this->status] ?? false;
@@ -61,9 +52,9 @@ trait StatusGridViewTrait
         ]);
     }
 
-    protected function getStatusIcon(Model $model): Icon
+    protected function getStatusIcon(ActiveRecordInterface $model): Icon
     {
-        /** @var StatusAttributeTrait $model */
+        /** @var StatusAttributeActiveRecord $model */
         return Icon::tag($model->getStatusIcon(), [
             'data-toggle' => 'tooltip',
             'title' => $model->getStatusName()
@@ -76,9 +67,11 @@ trait StatusGridViewTrait
      */
     protected function statusDropdownItems(): array
     {
+        /** @var StatusAttributeActiveRecord $model */
+        $model = $this->getModel();
         $items = [];
 
-        foreach ($this->getModel()::getStatuses() as $id => $status) {
+        foreach ($model::getStatuses() as $id => $status) {
             $items[$id] = [
                 'label' => $status['plural'] ?? $status['name'],
                 'url' => Url::current([$this->statusParamName => $id, 'page' => null]),
@@ -89,14 +82,11 @@ trait StatusGridViewTrait
     }
 
     /**
-     * @param StatusAttributeTrait|null $model
+     * @param StatusAttributeActiveRecord|null $model
      */
-    protected function statusSelectionButtonItems($model = null): array
+    protected function statusSelectionButtonItems(?ActiveRecord $model = null): array
     {
-        if (!$model) {
-            $model = $this->getModel();
-        }
-
+        $model ??= $this->getModel();
         $items = [];
 
         foreach ($model::getStatuses() as $id => $status) {
