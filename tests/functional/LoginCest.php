@@ -7,6 +7,7 @@ namespace davidhirtz\yii2\skeleton\tests\functional;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
+use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\LoginActiveForm;
 use davidhirtz\yii2\skeleton\tests\fixtures\UserFixture;
 use FunctionalTester;
@@ -27,7 +28,11 @@ class LoginCest extends BaseCest
     public function _before(FunctionalTester $I): void
     {
         parent::_before($I);
-        $I->amOnRoute('admin/account/login');
+
+        /** @var Module $module */
+        $module = Yii::$app->getModule('admin');
+
+        $I->amOnPage("/$module->alias");
     }
 
     public function submitEmptyLoginForm(FunctionalTester $I): void

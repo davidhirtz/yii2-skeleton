@@ -18,15 +18,6 @@ class ControllerCest extends BaseCest
         $I->seeResponseCodeIsSuccessful();
     }
 
-    public function checkAdminRedirectToLogin(FunctionalTester $I): void
-    {
-        /** @var Module $module */
-        $module = Yii::$app->getModule('admin');
-
-        $I->amOnPage("/$module->alias");
-        $I->canSeeInCurrentUrl('login');
-    }
-
     public function checkSitemapXML(FunctionalTester $I): void
     {
         $I->amOnPage('/sitemap.xml');
