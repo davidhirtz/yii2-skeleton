@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1d59e4dfcead07a53ad1c7ba6361da67",
+    "content-hash": "7b34bb8b5948b2176986f8f59144579e",
     "packages": [
         {
             "name": "bower-asset/jquery",
@@ -3601,6 +3601,58 @@
                 "source": "https://github.com/Codeception/module-asserts/tree/3.0.0"
             },
             "time": "2022-02-16T19:48:08+00:00"
+        },
+        {
+            "name": "codeception/module-filesystem",
+            "version": "3.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Codeception/module-filesystem.git",
+                "reference": "0fd78cf941cb72dc2a650c6132c5999c26ad4f9a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Codeception/module-filesystem/zipball/0fd78cf941cb72dc2a650c6132c5999c26ad4f9a",
+                "reference": "0fd78cf941cb72dc2a650c6132c5999c26ad4f9a",
+                "shasum": ""
+            },
+            "require": {
+                "codeception/codeception": "*@dev",
+                "php": "^8.0",
+                "symfony/finder": "^4.4 || ^5.4 || ^6.0 || ^7.0"
+            },
+            "conflict": {
+                "codeception/codeception": "<5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Bodnarchuk"
+                },
+                {
+                    "name": "Gintautas Miselis"
+                }
+            ],
+            "description": "Codeception module for testing local filesystem",
+            "homepage": "https://codeception.com/",
+            "keywords": [
+                "codeception",
+                "filesystem"
+            ],
+            "support": {
+                "issues": "https://github.com/Codeception/module-filesystem/issues",
+                "source": "https://github.com/Codeception/module-filesystem/tree/3.0.1"
+            },
+            "time": "2023-12-08T19:23:28+00:00"
         },
         {
             "name": "codeception/module-phpbrowser",

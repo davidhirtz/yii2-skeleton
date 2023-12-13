@@ -22,7 +22,8 @@ class LoginFormTest extends Unit
 
     public function testLoginNoUser(): void
     {
-        $form = new LoginForm([
+        $form = Yii::createObject([
+            'class' => LoginForm::class,
             'email' => 'not_existing_email',
             'password' => 'not_existing_password',
         ]);
@@ -32,7 +33,8 @@ class LoginFormTest extends Unit
 
     public function testLoginWrongPassword(): void
     {
-        $form = new LoginForm([
+        $form = Yii::createObject([
+            'class' => LoginForm::class,
             'email' => 'owner@domain.com',
             'password' => 'wrong_password',
         ]);
@@ -43,7 +45,8 @@ class LoginFormTest extends Unit
 
     public function testLoginCorrect(): void
     {
-        $form = new LoginForm([
+        $form = Yii::createObject([
+            'class' => LoginForm::class,
             'email' => 'owner@domain.com',
             'password' => 'password',
         ]);
@@ -54,7 +57,8 @@ class LoginFormTest extends Unit
 
     public function testLoginWithGoogleAuthenticatorEmptyCode(): void
     {
-        $form = new LoginForm([
+        $form = Yii::createObject([
+            'class' => LoginForm::class,
             'email' => 'f2a@domain.com',
             'password' => 'password',
         ]);
@@ -65,7 +69,8 @@ class LoginFormTest extends Unit
 
     public function testLoginWithGoogleAuthenticatorInvalidCode(): void
     {
-        $form = new LoginForm([
+        $form = Yii::createObject([
+            'class' => LoginForm::class,
             'email' => 'f2a@domain.com',
             'password' => 'password',
             'code' => 123456,
@@ -81,7 +86,8 @@ class LoginFormTest extends Unit
             'currentTime' => 1_609_455_600,
         ]);
 
-        $form = new LoginForm([
+        $form = Yii::createObject([
+            'class' => LoginForm::class,
             'email' => 'f2a@domain.com',
             'password' => 'password',
             'code' => '492042',

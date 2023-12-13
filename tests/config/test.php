@@ -14,5 +14,8 @@ return [
         'request' => [
             'cookieValidationKey' => 'test',
         ],
+        'urlManager' => [
+            'showScriptName' => false,
+        ],
     ],
 ];

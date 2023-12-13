@@ -1,4 +1,4 @@
-suite_namespace: davidhirtz\yii2\skeleton\tests\unit
+actor: UnitTester
 modules:
   enabled:
     - Yii2:
