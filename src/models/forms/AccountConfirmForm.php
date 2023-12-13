@@ -10,9 +10,7 @@ class AccountConfirmForm extends Model
 {
     use IdentityTrait;
 
-    
     public string $code;
-
     
     public function rules(): array
     {

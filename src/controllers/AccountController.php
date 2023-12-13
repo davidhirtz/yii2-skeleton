@@ -39,12 +39,29 @@ class AccountController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['deauthorize', 'delete', 'disable-google-authenticator', 'enable-google-authenticator', 'logout', 'picture', 'update'],
+                        'actions' => [
+                            'deauthorize',
+                            'delete',
+                            'disable-google-authenticator',
+                            'enable-google-authenticator',
+                            'logout',
+                            'picture',
+                            'update',
+                        ],
                         'roles' => ['@'],
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['auth', 'confirm', 'create', 'login', 'recover', 'resend', 'reset', 'token'],
+                        'actions' => [
+                            'auth',
+                            'confirm',
+                            'create',
+                            'login',
+                            'recover',
+                            'resend',
+                            'reset',
+                            'token',
+                        ],
                     ],
                 ],
             ],
@@ -79,7 +96,7 @@ class AccountController extends Controller
             return $this->goHome();
         }
 
-        $user = new SignupForm();
+        $user = SignupForm::create();
         $request = Yii::$app->getRequest();
 
         if ($user->load($request->post())) {
@@ -105,7 +122,7 @@ class AccountController extends Controller
      */
     public function actionToken(): string
     {
-        return SignupForm::getSessionToken();
+        return SignupForm::create()::getSessionToken();
     }
 
     public function actionLogin(): Response|string
@@ -115,7 +132,7 @@ class AccountController extends Controller
             return $this->goHome();
         }
 
-        $form = new LoginForm();
+        $form = Yii::createObject(LoginForm::class);
         $request = Yii::$app->getRequest();
 
         if ($form->load($request->post())) {
@@ -151,7 +168,8 @@ class AccountController extends Controller
 
     public function actionConfirm(string $email, string $code): Response|string
     {
-        $form = new AccountConfirmForm([
+        $form = Yii::createObject([
+            'class' => AccountConfirmForm::class,
             'email' => $email,
             'code' => $code,
         ]);
@@ -175,7 +193,7 @@ class AccountController extends Controller
 
     public function actionResend(): Response|string
     {
-        $form = new AccountResendConfirmForm();
+        $form = Yii::createObject(AccountResendConfirmForm::class);
         $request = Yii::$app->getRequest();
 
         if (!Yii::$app->getUser()->getIsGuest() || $form->load($request->post())) {
@@ -205,7 +223,7 @@ class AccountController extends Controller
             throw new ForbiddenHttpException();
         }
 
-        $form = new PasswordRecoverForm();
+        $form = Yii::createObject(PasswordRecoverForm::class);
 
         if ($form->load(Yii::$app->getRequest()->post())) {
             if ($form->recover()) {
@@ -229,7 +247,8 @@ class AccountController extends Controller
             throw new ForbiddenHttpException();
         }
 
-        $form = new PasswordResetForm([
+        $form = Yii::createObject([
+            'class' => PasswordResetForm::class,
             'email' => $email,
             'code' => $code,
         ]);
@@ -283,7 +302,8 @@ class AccountController extends Controller
 
     public function actionDelete(): Response|string
     {
-        $form = Yii::$container->get(DeleteForm::class, [], [
+        $form = Yii::createObject([
+            'class' => DeleteForm::class,
             'model' => UserForm::findOne(Yii::$app->getUser()->getId()),
             'attribute' => 'password',
         ]);
@@ -302,7 +322,8 @@ class AccountController extends Controller
 
     public function actionEnableGoogleAuthenticator(): Response|string
     {
-        $form = new GoogleAuthenticatorForm([
+        $form = Yii::createObject([
+            'class' => GoogleAuthenticatorForm::class,
             'user' => Yii::$app->getUser()->getIdentity(),
         ]);
 
@@ -317,7 +338,8 @@ class AccountController extends Controller
 
     public function actionDisableGoogleAuthenticator(): Response|string
     {
-        $form = new GoogleAuthenticatorForm([
+        $form = Yii::createObject([
+            'class' => GoogleAuthenticatorForm::class,
             'user' => Yii::$app->getUser()->getIdentity(),
         ]);
 
@@ -357,7 +379,7 @@ class AccountController extends Controller
     }
 
     /**
-     * @see \yii\authclient\AuthAction::$successCallback
+     * @see AuthAction::successCallback()
      */
     public function onAuthSuccess(ClientInterface $client): Response|string
     {

@@ -8,6 +8,7 @@ use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TimestampBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
+use davidhirtz\yii2\skeleton\controllers\AccountController;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use davidhirtz\yii2\skeleton\helpers\Image;
@@ -418,11 +419,17 @@ class User extends ActiveRecord implements StatusAttributeInterface
         return $this->name;
     }
 
+    /**
+     * @see AccountController::actionConfirm()
+     */
     public function getEmailConfirmationUrl(): ?string
     {
         return $this->verification_token ? Url::to(['account/confirm', 'email' => $this->email, 'code' => $this->verification_token], true) : null;
     }
 
+    /**
+     * @see AccountController::actionReset()
+     */
     public function getPasswordResetUrl(): ?string
     {
         return $this->password_reset_token ? Url::to(['account/reset', 'email' => $this->email, 'code' => $this->password_reset_token], true) : null;
