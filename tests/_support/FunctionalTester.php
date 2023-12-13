@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use Codeception\Actor;
-
 /**
  * Inherited Methods
  * @method void wantTo($text)
@@ -18,10 +16,10 @@ use Codeception\Actor;
  * @method void pause($vars = [])
  *
  * @SuppressWarnings(PHPMD)
- */
-class UnitTester extends Actor
+*/
+class FunctionalTester extends \Codeception\Actor
 {
-    use _generated\UnitTesterActions;
+    use _generated\FunctionalTesterActions;
 
     /**
      * Define custom actions here

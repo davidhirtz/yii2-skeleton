@@ -7,9 +7,8 @@ modules:
     Yii2:
       applicationClass: "davidhirtz\\yii2\\skeleton\\web\\Application"
       configFile: "tests/config/test.php"
-namespace: davidhirtz\yii2\skeleton\tests
 paths:
-  tests  : tests
-  data   : tests/_data
-  support: tests/_support
-  output : tests/_output
+  tests: tests
+  data: tests/_data
+  helpers: tests/_support
+  output: tests/_output
