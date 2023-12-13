@@ -3,12 +3,11 @@
 namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\base\traits\ApplicationTrait;
-use davidhirtz\yii2\skeleton\i18n\I18N;
 use davidhirtz\yii2\skeleton\rbac\DbManager;
 use Yii;
 use yii\authclient\Collection;
 use yii\base\Event;
-use yii\base\InvalidConfigException;
+use yii\debug\Module;
 use yii\symfonymailer\Mailer;
 use yii\web\Cookie;
 use yii\web\Response;
@@ -90,7 +89,7 @@ class Application extends \yii\web\Application
                 $config['bootstrap'][] = 'debug';
             }
 
-            $config['modules']['debug']['class'] ??= 'yii\debug\Module';
+            $config['modules']['debug']['class'] ??= Module::class;
             $config['modules']['debug']['traceLine'] ??= '<a href="phpstorm://open?file={file}&line={line}">{file}:{line}</a>';
         }
     }

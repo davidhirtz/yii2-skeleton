@@ -1,5 +1,7 @@
 <?php
 
+use yii\debug\Module;
+
 return [
     'id' => 'yii2-skeleton',
     'aliases' => [
@@ -7,6 +9,9 @@ return [
         '@davidhirtz/yii2/skeleton' => __DIR__ . '/../../src/',
     ],
     'components' => [
+        'assetManager' => [
+            'linkAssets' => true,
+        ],
         'db' => require(__DIR__ . '/db.php'),
         'mailer' => [
             'useFileTransport' => true,

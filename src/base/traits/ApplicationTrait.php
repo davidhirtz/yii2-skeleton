@@ -206,6 +206,7 @@ trait ApplicationTrait
 
     protected function setDefaultUrlManagerRules(): void
     {
+        /** @see Module::$alias */
         $alias = rtrim((string)$this->getModules()['admin']['alias'], '/');
 
         $this->getUrlManager()->addRules([

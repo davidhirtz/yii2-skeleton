@@ -54,6 +54,8 @@ class Application extends \yii\console\Application
             Yii::setAlias('@webroot', '@root/web');
         }
 
-        Yii::setAlias('@web', '@root');
+        if (!Yii::getAlias('@web', false)) {
+            Yii::setAlias('@web', '@root');
+        }
     }
 }

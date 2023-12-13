@@ -23,11 +23,11 @@ class FunctionalTester extends \Codeception\Actor
 
     public function seeValidationError(string $message): void
     {
-        $this->see($message, '.invalid-feedback');
+        $this->see($message, '.alert-error');
     }
 
     public function dontSeeValidationError(string $message): void
     {
-        $this->dontSee($message, '.invalid-feedback');
+        $this->dontSee($message, '.alert-error');
     }
 }

@@ -15,7 +15,9 @@ class LoginActiveForm extends ActiveForm
 
     public function init(): void
     {
-        $this->setId($this->getId(false) ?? 'login-form');
+        $this->id = $this->getId(false) ?? 'login-form';
+        $this->model ??= Yii::createObject(LoginForm::class);
+
         parent::init();
     }
 

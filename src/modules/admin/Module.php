@@ -24,9 +24,9 @@ class Module extends \yii\base\Module
     public ?string $name = null;
 
     /**
-     * @var string|null the module base route, defaults to "admin"
+     * @var string the module base route
      */
-    public ?string $alias = null;
+    public string $alias = 'admin';
 
     /**
      * @var array|false|null containing the roles to access any admin module or controller, if not set roles set
@@ -94,10 +94,10 @@ class Module extends \yii\base\Module
 
     public function init(): void
     {
-        if (!Yii::$app->getRequest()->getIsConsoleRequest()) {
+        if (Yii::$app->has('user')) {
             $user = Yii::$app->getUser();
-
             $user->loginUrl ??= ['/admin/account/login'];
+
             Yii::$app->getErrorHandler()->errorView = '@skeleton/modules/admin/views/dashboard/error.php';
 
             if (!$this->navbarItems) {
@@ -156,9 +156,9 @@ class Module extends \yii\base\Module
                     ],
                 ];
             }
-
-            $this->controllerMap = [...$this->defaultControllerMap, ...$this->controllerMap];
         }
+
+        $this->controllerMap = [...$this->defaultControllerMap, ...$this->controllerMap];
 
         foreach (array_keys($this->getModules()) as $module) {
             $this->getModule($module);
