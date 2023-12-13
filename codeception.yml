@@ -1,17 +1,15 @@
-namespace: davidhirtz\yii2\skeleton\tests
-bootstrap: _bootstrap.php
-support_namespace: support
-paths:
-  tests: tests
-  output: tests/_output
-  data: tests/support/Data
-  support: tests/support
-  envs: tests/_envs
-actor_suffix: Tester
+bootstrap: bootstrap.php
 extensions:
   enabled:
     - Codeception\Extension\RunFailed
 modules:
   config:
     Yii2:
-      configFile: "../../../config/test.php"
+      applicationClass: "davidhirtz\\yii2\\skeleton\\web\\Application"
+      configFile: "tests/config/test.php"
+namespace: davidhirtz\yii2\skeleton\tests
+paths:
+  tests  : tests
+  data   : tests/_data
+  support: tests/_support
+  output : tests/_output

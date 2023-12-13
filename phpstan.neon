@@ -1,6 +1,6 @@
 parameters:
     bootstrapFiles:
-        - tests/_bootstrap.php
+        - tests/bootstrap.php
 
     dynamicConstantNames:
         - YII_DEBUG
@@ -18,7 +18,7 @@ parameters:
     excludePaths:
         - src/gii/*
         - tests/_output/*
-        - tests/support/_generated/
+        - tests/_support/*
 
     scanFiles:
         - Yii.php

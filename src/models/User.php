@@ -11,6 +11,7 @@ use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use davidhirtz\yii2\skeleton\helpers\Image;
+use davidhirtz\yii2\skeleton\models\interfaces\StatusAttributeInterface;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\models\traits\StatusAttributeTrait;
 use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
@@ -53,12 +54,9 @@ use yii\web\UploadedFile;
  *
  * @mixin TrailBehavior
  */
-class User extends ActiveRecord
+class User extends ActiveRecord implements StatusAttributeInterface
 {
     use StatusAttributeTrait;
-
-    public const STATUS_ENABLED = 1;
-    public const STATUS_DEFAULT = self::STATUS_ENABLED;
 
     public const AUTH_USER_CREATE = 'userCreate';
     public const AUTH_USER_DELETE = 'userDelete';
@@ -545,8 +543,8 @@ class User extends ActiveRecord
     public function attributeLabels(): array
     {
         return [
+            ...parent::attributeLabels(),
             'id' => Yii::t('skeleton', 'ID'),
-            'status' => Yii::t('skeleton', 'Status'),
             'name' => Yii::t('skeleton', 'Username'),
             'email' => Yii::t('skeleton', 'Email'),
             'password' => Yii::t('skeleton', 'Password'),

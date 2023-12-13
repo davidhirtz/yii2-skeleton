@@ -1,5 +1,6 @@
 # Development
 /node_modules
+/tests/config/db.php
 /vendor
 .idea
 

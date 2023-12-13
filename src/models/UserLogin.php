@@ -12,8 +12,8 @@ use Yii;
  * @property string $id
  * @property int $user_id
  * @property string $type
- * @property string $browser
- * @property string $ip_address
+ * @property string|null $browser
+ * @property string|null $ip_address
  * @property DateTime $created_at
  *
  * @property User $user {@see UserLogin::getUser}
@@ -22,15 +22,11 @@ use Yii;
  */
 class UserLogin extends ActiveRecord
 {
-    /**
-     * Type codes.
-     */
     public const TYPE_COOKIE = 'auto';
     public const TYPE_LOGIN = 'login';
     public const TYPE_SIGNUP = 'signup';
     public const TYPE_CONFIRM_EMAIL = 'email';
     public const TYPE_RESET_PASSWORD = 'password';
-
 
     public function behaviors(): array
     {
@@ -70,12 +66,10 @@ class UserLogin extends ActiveRecord
         };
     }
 
-
     public function getDisplayIp(): string
     {
-        return inet_ntop($this->ip_address) ?: '';
+        return $this->ip_address ?? inet_ntop($this->ip_address) ?: '';
     }
-
 
     public function attributeLabels(): array
     {
@@ -87,7 +81,6 @@ class UserLogin extends ActiveRecord
             'created_at' => Yii::t('skeleton', 'Login'),
         ];
     }
-
 
     public static function tableName(): string
     {

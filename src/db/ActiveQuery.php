@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\db;
 
+use davidhirtz\yii2\skeleton\models\interfaces\StatusAttributeInterface;
 use Iterator;
 use Yii;
 use yii\db\Query;
@@ -189,7 +190,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
 
     public function enabled(): static
     {
-        return $this->whereStatus($this->getModelInstance()::STATUS_ENABLED);
+        return $this->whereStatus(StatusAttributeInterface::STATUS_ENABLED);
     }
 
     public function splitSearchString(?string $search): array

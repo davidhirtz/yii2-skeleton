@@ -2,13 +2,12 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits;
 
-use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\models\stubs\StatusAttributeActiveRecord;
+use davidhirtz\yii2\skeleton\models\interfaces\StatusAttributeInterface;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
-use yii\db\ActiveRecordInterface;
+use yii\base\Model;
 use yii\helpers\Url;
 
 trait StatusGridViewTrait
@@ -52,9 +51,8 @@ trait StatusGridViewTrait
         ]);
     }
 
-    protected function getStatusIcon(ActiveRecordInterface $model): Icon
+    protected function getStatusIcon(StatusAttributeInterface $model): Icon
     {
-        /** @var StatusAttributeActiveRecord $model */
         return Icon::tag($model->getStatusIcon(), [
             'data-toggle' => 'tooltip',
             'title' => $model->getStatusName()
@@ -67,7 +65,7 @@ trait StatusGridViewTrait
      */
     protected function statusDropdownItems(): array
     {
-        /** @var StatusAttributeActiveRecord $model */
+        /** @var StatusAttributeInterface $model */
         $model = $this->getModel();
         $items = [];
 
@@ -81,22 +79,20 @@ trait StatusGridViewTrait
         return $items;
     }
 
-    /**
-     * @param StatusAttributeActiveRecord|null $model
-     */
-    protected function statusSelectionButtonItems(?ActiveRecord $model = null): array
+    protected function statusSelectionButtonItems(?StatusAttributeInterface $model = null): array
     {
         $model ??= $this->getModel();
+        $paramName = $model instanceof Model ? Html::getInputName($model, 'status') : $this->statusParamName;
         $items = [];
 
-        foreach ($model::getStatuses() as $id => $status) {
+        foreach ($model::getStatuses() as $status => $statusOptions) {
             $items[] = [
-                'label' => $status['name'],
+                'label' => $statusOptions['name'],
                 'url' => '#',
                 'linkOptions' => [
                     'data-method' => 'post',
                     'data-form' => $this->getSelectionFormId(),
-                    'data-params' => [Html::getInputName($model, 'status') => $id],
+                    'data-params' => [$paramName => $status],
                 ],
             ];
         }

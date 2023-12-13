@@ -9,9 +9,8 @@ use Yii;
 
 trait IconFilenameAttributeTrait
 {
+    public string $iconFilenameAttribute = 'icon_filename';
     private static ?array $_iconFilenames = null;
-
-    protected string $iconFilenameAttribute = 'icon_filename';
 
     /**
      * @uses static::getIconFilenames()

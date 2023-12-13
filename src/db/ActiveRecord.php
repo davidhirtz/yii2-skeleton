@@ -27,11 +27,6 @@ class ActiveRecord extends \yii\db\ActiveRecord
 
     public const EVENT_CREATE_VALIDATORS = 'afterValidators';
 
-    public const STATUS_DISABLED = 0;
-    public const STATUS_DRAFT = 1;
-    public const STATUS_ENABLED = 3;
-    public const STATUS_DEFAULT = self::STATUS_ENABLED;
-
     public const TYPE_DEFAULT = 1;
 
     /**
@@ -93,7 +88,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     /**
      * Typecasts boolean and numeric validators. This is similar to {@see AttributeTypecastBehavior} but performs the
      * operation before the actual validation to allow the use of {@see \yii\db\ActiveRecord::isAttributeChanged()} in
-     * validation. As Yii2 represents floats and decimals, as strings only integer values will be typecast.
+     * validation. As Yii2 represents floats and decimals as strings, only integer values will be typecast.
      */
     public function typecastAttributes(): void
     {

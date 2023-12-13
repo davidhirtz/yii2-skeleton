@@ -3,7 +3,6 @@
 namespace davidhirtz\yii2\skeleton\console;
 
 use davidhirtz\yii2\skeleton\base\traits\ApplicationTrait;
-use davidhirtz\yii2\skeleton\console\controllers\AssetController;
 use davidhirtz\yii2\skeleton\console\controllers\MaintenanceController;
 use davidhirtz\yii2\skeleton\console\controllers\MigrateController;
 use davidhirtz\yii2\skeleton\console\controllers\ParamsController;

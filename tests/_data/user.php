@@ -10,6 +10,7 @@ return [
         'email' => 'owner@domain.com',
         'password_hash' => '$2y$13$fsHsH/ZbpVdOY85BaAsW8uWv12zR7NuzHYtgYE0qBtPzQmcjB.a1a', // password
         'password_salt' => 'tVe8JqR-jI',
+        'google_2fa_secret' => null,
         'auth_key' => Yii::$app->getSecurity()->generateRandomString(),
         'is_owner' => 1,
         'created_at' => new Expression('UTC_TIMESTAMP()'),
@@ -20,7 +21,9 @@ return [
         'email' => 'disabled@domain.com',
         'password_hash' => '$2y$13$fsHsH/ZbpVdOY85BaAsW8uWv12zR7NuzHYtgYE0qBtPzQmcjB.a1a', // password
         'password_salt' => 'tVe8JqR-jI',
+        'google_2fa_secret' => null,
         'auth_key' => Yii::$app->getSecurity()->generateRandomString(),
+        'is_owner' => 0,
         'created_at' => new Expression('UTC_TIMESTAMP()'),
     ],
     'f2a' => [
@@ -31,6 +34,7 @@ return [
         'password_salt' => 'tVe8JqR-jI',
         'google_2fa_secret' => 'AX7CR435GC575V4C',
         'auth_key' => Yii::$app->getSecurity()->generateRandomString(),
+        'is_owner' => 0,
         'created_at' => new Expression('UTC_TIMESTAMP()'),
     ],
 ];

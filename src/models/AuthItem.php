@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\models;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use davidhirtz\yii2\skeleton\models\interfaces\TypeAttributeInterface;
 use davidhirtz\yii2\skeleton\models\queries\AuthItemQuery;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\models\traits\TypeAttributeTrait;
@@ -12,15 +13,15 @@ use yii\rbac\Item;
 /**
  * @property string $name
  * @property int $type
- * @property string $description
- * @property string $rule_name
- * @property string $data
+ * @property string|null $description
+ * @property string|null $rule_name
+ * @property string|null $data
+ * @property int|null $updated_at
  * @property int $created_at
- * @property int $updated_at
  *
  * @property User[] $users {@see AuthItem::getUsers()}
  */
-class AuthItem extends ActiveRecord
+class AuthItem extends ActiveRecord implements TypeAttributeInterface
 {
     use TypeAttributeTrait;
 

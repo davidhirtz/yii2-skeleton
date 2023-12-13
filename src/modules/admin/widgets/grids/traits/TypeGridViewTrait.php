@@ -3,11 +3,10 @@
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\models\stubs\TypeAttributeActiveRecord;
+use davidhirtz\yii2\skeleton\models\interfaces\TypeAttributeInterface;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
-use yii\db\ActiveRecordInterface;
 use yii\helpers\Url;
 
 trait TypeGridViewTrait
@@ -34,7 +33,6 @@ trait TypeGridViewTrait
             'visible' => $this->hasVisibleTypes(),
             'contentOptions' => ['class' => 'text-nowrap'],
             'content' => function ($model) {
-                /** @var TypeAttributeActiveRecord $model */
                 $route = $this->getRoute($model);
                 return $route ? Html::a($model->getTypeName(), $route) : $model->getTypeName();
             },
@@ -43,12 +41,10 @@ trait TypeGridViewTrait
 
     public function typeIconColumn(): array
     {
-
         return [
             'visible' => $this->hasVisibleTypes(),
             'contentOptions' => ['class' => 'text-center'],
             'content' => function ($model) {
-                /** @var TypeAttributeActiveRecord $model */
                 $icon = $this->getTypeIcon($model);
                 return ($route = $this->getRoute($model)) ? Html::a($icon, $route) : $icon;
             }
@@ -57,7 +53,7 @@ trait TypeGridViewTrait
 
     public function typeDropdown(): string
     {
-        /** @var TypeAttributeActiveRecord $model */
+        /** @var TypeAttributeInterface $model */
         $model = $this->getModel();
         $typeOptions = $model::getTypes()[$this->type] ?? false;
 
@@ -78,7 +74,7 @@ trait TypeGridViewTrait
 
     protected function typeDropdownItems(): array
     {
-        /** @var TypeAttributeActiveRecord $model */
+        /** @var TypeAttributeInterface $model */
         $model = $this->getModel();
         $items = [];
 
@@ -96,9 +92,8 @@ trait TypeGridViewTrait
         return $items;
     }
 
-    protected function getTypeIcon(ActiveRecordInterface $model): Icon
+    protected function getTypeIcon(TypeAttributeInterface $model): Icon
     {
-        /** @var TypeAttributeActiveRecord $model */
         return Icon::tag($model->getTypeIcon(), [
             'data-toggle' => 'tooltip',
             'title' => $model->getTypeName(),
@@ -107,9 +102,8 @@ trait TypeGridViewTrait
 
     protected function hasVisibleTypes(): bool
     {
-        /** @var TypeAttributeActiveRecord $model */
+        /** @var TypeAttributeInterface $model */
         $model = $this->getModel();
-
         return !$this->type && count($model::getTypes()) > 1;
     }
 }

@@ -16,10 +16,6 @@ trait StatusAttributeTrait
                 'name' => Yii::t('skeleton', 'Enabled'),
                 'icon' => 'globe',
             ],
-            static::STATUS_DRAFT => [
-                'name' => Yii::t('skeleton', 'Draft'),
-                'icon' => 'edit',
-            ],
             static::STATUS_DISABLED => [
                 'name' => Yii::t('skeleton', 'Disabled'),
                 'icon' => 'exclamation-triangle',
@@ -40,11 +36,6 @@ trait StatusAttributeTrait
     public function isEnabled(): bool
     {
         return $this->status >= static::STATUS_ENABLED;
-    }
-
-    public function isDraft(): bool
-    {
-        return $this->status == static::STATUS_DRAFT;
     }
 
     public function isDisabled(): bool

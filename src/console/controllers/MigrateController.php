@@ -5,6 +5,7 @@ namespace davidhirtz\yii2\skeleton\console\controllers;
 use davidhirtz\yii2\skeleton\console\controllers\traits\ConfigTrait;
 use Seld\CliPrompt\CliPrompt;
 use Yii;
+use yii\helpers\Console;
 
 /**
  * Manages application migrations
@@ -27,11 +28,18 @@ class MigrateController extends \yii\console\controllers\MigrateController
 
     public function beforeAction($action): bool
     {
-        if ($this->interactive) {
+        $dsn = Yii::$app->getDb()->dsn;
+
+        if (!$dsn) {
+            if (!$this->interactive) {
+                $this->stderr('Database connection not configured.', Console::FG_RED);
+                return false;
+            }
+
             $this->actionConfig(false);
         }
 
-        return $this->getDbConfig() && parent::beforeAction($action);
+        return $dsn && parent::beforeAction($action);
     }
 
     /**

@@ -8,6 +8,7 @@ use davidhirtz\yii2\skeleton\behaviors\BlameableBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TimestampBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use davidhirtz\yii2\skeleton\models\interfaces\TypeAttributeInterface;
 use davidhirtz\yii2\skeleton\models\traits\TypeAttributeTrait;
 use davidhirtz\yii2\skeleton\models\traits\UpdatedByUserTrait;
 use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
@@ -22,7 +23,7 @@ use Yii;
  * @property DateTime|null $updated_at
  * @property DateTime $created_at
  */
-class Redirect extends ActiveRecord
+class Redirect extends ActiveRecord implements TypeAttributeInterface
 {
     use TypeAttributeTrait;
     use UpdatedByUserTrait;

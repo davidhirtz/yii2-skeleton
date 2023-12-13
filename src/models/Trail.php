@@ -6,6 +6,7 @@ use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\models\collections\TrailModelCollection;
+use davidhirtz\yii2\skeleton\models\interfaces\TypeAttributeInterface;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\models\traits\TypeAttributeTrait;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\TrailGridView;
@@ -27,7 +28,7 @@ use yii\db\ActiveRecordInterface;
  *
  * @property-read User|null $user {@see Trail::getUser}
  */
-class Trail extends ActiveRecord
+class Trail extends ActiveRecord implements TypeAttributeInterface
 {
     use TypeAttributeTrait;
 

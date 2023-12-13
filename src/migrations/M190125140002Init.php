@@ -46,8 +46,8 @@ class M190125140002Init extends Migration
             'description' => $this->text(),
             'rule_name' => $this->string(64),
             'data' => $this->binary(),
-            'created_at' => $this->integer(),
-            'updated_at' => $this->integer(),
+            'updated_at' => $this->integer()->null(),
+            'created_at' => $this->integer()->notNull(),
         ], $tableOptions);
 
         $this->addPrimaryKey('name', $authManager->itemTable, 'name');
