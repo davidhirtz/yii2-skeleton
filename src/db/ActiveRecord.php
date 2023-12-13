@@ -27,8 +27,6 @@ class ActiveRecord extends \yii\db\ActiveRecord
 
     public const EVENT_CREATE_VALIDATORS = 'afterValidators';
 
-    public const TYPE_DEFAULT = 1;
-
     /**
      * @var array containing the attribute names of attributes which should be used with I18N features
      */
@@ -74,13 +72,14 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return lcfirst(Inflector::camelize(str_replace('_id', '', $foreignKey)));
     }
 
-    public function refreshRelation(string $name): ActiveRecord|array
+    public function refreshRelation(string $name): ActiveRecord|array|null
     {
         /** @var ActiveQuery $query */
         $query = $this->getRelation($name);
         $method = $query->multiple ? 'all' : 'one';
 
-        $this->populateRelation($name, $related = $query->{$method}());
+        $related = $query->{$method}();
+        $this->populateRelation($name, $related);
 
         return $related;
     }
@@ -113,9 +112,6 @@ class ActiveRecord extends \yii\db\ActiveRecord
         }
     }
 
-    /**
-     * @noinspection PhpUnused
-     */
     public function updateAttributesBlameable(array $attributes): int
     {
         foreach ($attributes as $name => $value) {
@@ -167,9 +163,6 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return parent::isAttributeChanged($name, $identical);
     }
 
-    /**
-     * @noinspection PhpUnused
-     */
     public function hasChangedAttributes(array $attributeNames, bool $identical = true): bool
     {
         foreach ($attributeNames as $attribute) {
@@ -181,9 +174,6 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return false;
     }
 
-    /**
-     * @noinspection PhpUnused
-     */
     public function getTraitRules(): array
     {
         $rules = [];

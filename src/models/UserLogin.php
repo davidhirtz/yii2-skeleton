@@ -6,6 +6,7 @@ use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
+use davidhirtz\yii2\skeleton\validators\RelationValidator;
 use Yii;
 
 /**
@@ -27,6 +28,21 @@ class UserLogin extends ActiveRecord
     public const TYPE_SIGNUP = 'signup';
     public const TYPE_CONFIRM_EMAIL = 'email';
     public const TYPE_RESET_PASSWORD = 'password';
+
+    public function rules(): array
+    {
+        return [
+            [
+                ['user_id'],
+                RelationValidator::class,
+                'required' => true,
+            ],
+            [
+                ['type'],
+                'required',
+            ],
+        ];
+    }
 
     public function behaviors(): array
     {
