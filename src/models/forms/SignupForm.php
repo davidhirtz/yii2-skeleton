@@ -109,7 +109,6 @@ class SignupForm extends Identity
         }
     }
 
-    
     public function beforeValidate(): bool
     {
         if (!Yii::$app->getUser()->isSignupEnabled()) {
@@ -126,9 +125,6 @@ class SignupForm extends Identity
         return parent::beforeValidate();
     }
 
-    /**
-     * Validates signup creation time and user credentials.
-     */
     public function afterValidate(): void
     {
         if (!$this->hasErrors()) {

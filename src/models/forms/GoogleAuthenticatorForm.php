@@ -20,7 +20,6 @@ class GoogleAuthenticatorForm extends Model
     public ?string $code = null;
     private ?string $_secret = null;
 
-
     public function rules(): array
     {
         return [
@@ -88,18 +87,15 @@ class GoogleAuthenticatorForm extends Model
         Yii::debug('New Google Authenticator secret generated');
     }
 
-
     protected function getGoogleAuthenticatorIssuer(): string
     {
         return Yii::$app->params['googleAuthenticatorIssuer'] ?? Yii::$app->name;
     }
 
-
     public function formName(): string
     {
         return 'GoogleAuthenticator';
     }
-
 
     public function attributeLabels(): array
     {

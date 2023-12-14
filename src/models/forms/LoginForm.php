@@ -50,6 +50,16 @@ class LoginForm extends Model
         ];
     }
 
+    public function beforeValidate(): bool
+    {
+        if (!Yii::$app->getUser()->isLoginEnabled()) {
+            $this->addError('id', Yii::t('skeleton', 'Sorry, logging in is currently disabled!'));
+            return false;
+        }
+
+        return parent::beforeValidate();
+    }
+
     /**
      * Validates user credentials and status and Google authenticator code if set.
      */

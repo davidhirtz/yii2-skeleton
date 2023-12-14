@@ -98,7 +98,9 @@ class Module extends \yii\base\Module
             $user = Yii::$app->getUser();
             $user->loginUrl ??= ['/admin/account/login'];
 
-            Yii::$app->getErrorHandler()->errorView = '@skeleton/modules/admin/views/dashboard/error.php';
+            if (!YII_DEBUG) {
+                Yii::$app->getErrorHandler()->errorView = '@skeleton/modules/admin/views/dashboard/error.php';
+            }
 
             if (!$this->navbarItems) {
                 $this->navbarItems = [

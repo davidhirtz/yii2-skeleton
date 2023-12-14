@@ -1,6 +1,7 @@
 <?php
 
 use yii\debug\Module;
+use yii\web\Session;
 
 return [
     'id' => 'yii2-skeleton',
@@ -18,6 +19,9 @@ return [
         ],
         'request' => [
             'cookieValidationKey' => 'test',
+        ],
+        'session' => [
+            'class' => Session::class,
         ],
         'urlManager' => [
             'showScriptName' => false,

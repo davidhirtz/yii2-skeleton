@@ -6,11 +6,14 @@
 namespace davidhirtz\yii2\skeleton\tests\functional;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\models\forms\LoginForm;
+use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorLoginActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\LoginActiveForm;
 use davidhirtz\yii2\skeleton\tests\fixtures\UserFixture;
+use davidhirtz\yii2\skeleton\validators\GoogleAuthenticatorValidator;
 use FunctionalTester;
+use RobThree\Auth\TwoFactorAuth;
 use Yii;
 
 class LoginCest extends BaseCest
@@ -32,29 +35,94 @@ class LoginCest extends BaseCest
         /** @var Module $module */
         $module = Yii::$app->getModule('admin');
 
+        Yii::$app->getUser()->enableLogin = true;
+        Yii::$app->getUser()->enableGoogleAuthenticator = true;
+
         $I->amOnPage("/$module->alias");
     }
 
-    public function submitEmptyLoginForm(FunctionalTester $I): void
+    public function checkLoginWithEmptyCredentials(FunctionalTester $I): void
     {
         $this->submitLoginForm($I, '', '');
         $I->seeValidationError('Email cannot be blank.');
         $I->seeValidationError('Password cannot be blank.');
     }
 
-    public function submitWrongPassword(FunctionalTester $I): void
+    public function checkLoginWithWrongPassword(FunctionalTester $I): void
     {
         $this->submitLoginForm($I, 'owner@domain.com', 'wrong');
         $I->seeValidationError(Yii::t('skeleton', 'Your email or password are incorrect.'));
     }
 
-    public function submitDisabledCredentials(FunctionalTester $I): void
+    public function checkLoginWithDisabledAccount(FunctionalTester $I): void
     {
         $this->submitLoginForm($I, 'disabled@domain.com', 'password');
         $I->seeValidationError(Yii::t('skeleton', 'Your account is currently disabled. Please contact an administrator!'));
     }
 
-    // Todo successful login test
+    public function checkLoginWithoutAdminPermission(FunctionalTester $I): void
+    {
+        Yii::$app->getUser()->disableRbacForOwner = false;
+
+        $this->submitLoginForm($I, 'owner@domain.com', 'password');
+        $I->seeResponseCodeIs(403);
+    }
+
+    public function checkLoginWithAdminPermission(FunctionalTester $I): void
+    {
+        Yii::$app->getUser()->disableRbacForOwner = false;
+
+        $user = $I->grabFixture('user', 'owner');
+        $this->assignAdminRole($user['id']);
+
+        $this->submitLoginForm($I, 'owner@domain.com', 'password');
+        $I->seeLink(Yii::t('skeleton', 'Logout'));
+    }
+
+    public function checkLoginAsOwner(FunctionalTester $I): void
+    {
+        Yii::$app->getUser()->disableRbacForOwner = true;
+
+        $this->submitLoginForm($I, 'owner@domain.com', 'password');
+        $I->seeLink(Yii::t('skeleton', 'Logout'));
+    }
+
+    public function checkTwoFactorLoginWithEmptyCredentials(FunctionalTester $I): void
+    {
+        $this->submitLoginForm($I, 'f2a@domain.com', 'password');
+        $this->submitGoogleAuthenticatorForm($I, '');
+
+        $I->seeValidationError(Yii::t('skeleton', 'Code should contain 6 characters.'));
+    }
+
+    public function checkTwoFactorLoginWithWrongCode(FunctionalTester $I): void
+    {
+        $this->submitLoginForm($I, 'f2a@domain.com', 'password');
+        $this->submitGoogleAuthenticatorForm($I, '000000');
+
+        $I->seeValidationError(Yii::t('skeleton', 'Code is invalid.'));
+    }
+
+    public function checkTwoFactorLoginWithCorrectCode(FunctionalTester $I): void
+    {
+        $this->submitLoginForm($I, 'f2a@domain.com', 'password');
+
+        $user = $I->grabFixture('user', 'admin');
+        $this->assignAdminRole($user['id']);
+
+        $validator = Yii::createObject(GoogleAuthenticatorValidator::class);
+        $auth = new TwoFactorAuth(null, $validator->length, $validator->period);
+
+        $this->submitGoogleAuthenticatorForm($I, $auth->getCode($user['google_2fa_secret']));
+        $I->seeLink(Yii::t('skeleton', 'Logout'));
+    }
+
+    public function checkDisabledLogin(FunctionalTester $I): void
+    {
+        Yii::$app->getUser()->enableLogin = false;
+        $this->submitLoginForm($I, 'owner@domain.com', 'password');
+        $I->seeValidationError(Yii::t('skeleton', 'Sorry, logging in is currently disabled!'));
+    }
 
     protected function submitLoginForm(FunctionalTester $I, string $email, string $password): void
     {
@@ -64,5 +132,20 @@ class LoginCest extends BaseCest
             Html::getInputName($widget->model, 'email') => $email,
             Html::getInputName($widget->model, 'password') => $password,
         ]);
+    }
+
+    protected function submitGoogleAuthenticatorForm(FunctionalTester $I, string $code): void
+    {
+        $widget = Yii::createObject(GoogleAuthenticatorLoginActiveForm::class);
+
+        $I->submitForm("#$widget->id", [
+            Html::getInputName($widget->model, 'code') => $code,
+        ]);
+    }
+
+    protected function assignAdminRole(int $userId): void
+    {
+        $role = Yii::$app->getAuthManager()->getRole(User::AUTH_ROLE_ADMIN);
+        Yii::$app->getAuthManager()->assign($role, $userId);
     }
 }

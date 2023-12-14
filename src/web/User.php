@@ -92,7 +92,7 @@ class User extends \yii\web\User
 
         // Updates session's user id.
         if ($session instanceof MultiFieldSession) {
-            $session->writeCallback = fn () => [
+            $session->writeCallback = fn() => [
                 'ip_address' => inet_pton(Yii::$app->getRequest()->getUserIP()),
                 'user_id' => $identity->id,
             ];
@@ -121,7 +121,7 @@ class User extends \yii\web\User
         $session = Yii::$app->getSession();
 
         if ($session instanceof MultiFieldSession) {
-            $session->writeCallback = fn () => [
+            $session->writeCallback = fn() => [
                 'user_id' => null,
             ];
         }
@@ -159,9 +159,6 @@ class User extends \yii\web\User
         return !(!$this->disableRbacForOwner || !$this->identity->isOwner()) || parent::can($permissionName, $params, $allowCaching);
     }
 
-    /**
-     * @noinspection PhpUnused
-     */
     public function isLoginEnabled(): bool
     {
         return !!$this->enableLogin;
@@ -184,10 +181,7 @@ class User extends \yii\web\User
 
     public function getUserCount(): int
     {
-        if ($this->_userCount === null) {
-            $this->_userCount = (int)\davidhirtz\yii2\skeleton\models\User::find()->count();
-        }
-
+        $this->_userCount ??= (int)\davidhirtz\yii2\skeleton\models\User::find()->count();
         return $this->_userCount;
     }
 }

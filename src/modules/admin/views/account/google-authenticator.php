@@ -8,6 +8,7 @@
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorLoginActiveForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
 
@@ -20,23 +21,11 @@ $this->setTitle(Yii::t('skeleton', 'Google Authenticator'));
 
 <div class="container">
     <div class="centered">
-        <?php Panel::begin(['title' => $this->title]); ?>
-        <?php
-        $af = ActiveForm::begin([
-            'enableClientValidation' => false,
-        ]);
-
-echo $af->field($form, 'code', ['icon' => 'qrcode', 'enableError' => false])->textInput([
-    'autocomplete' => 'one-time-code',
-    'autofocus' => !$form->hasErrors(),
-]);
-?>
-        <div class="form-group">
-            <?= Html::submitButton(Yii::t('skeleton', 'Login'), ['class' => 'btn btn-primary btn-block']) ?>
-        </div>
-        <?= Html::activeHiddenInput($form, 'email'); ?>
-        <?= Html::activeHiddenInput($form, 'password'); ?>
-        <?php $af::end(); ?>
-        <?php Panel::end(); ?>
+        <?= Panel::widget([
+            'title' => $this->title,
+            'content' => GoogleAuthenticatorLoginActiveForm::widget([
+                'model' => $form,
+            ]),
+        ]); ?>
     </div>
 </div>
