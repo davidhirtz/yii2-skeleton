@@ -79,9 +79,7 @@ class DuplicateActiveRecord
         return $this->model->getAttributes($this->model->safeAttributes());
     }
 
-    /**
-     * @return ActiveRecord|null
-     */
+    
     public static function create(array $params = []): ?ActiveRecord
     {
         $action = Yii::createObject(static::class, $params);

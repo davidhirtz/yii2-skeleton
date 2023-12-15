@@ -1,6 +1,5 @@
 <?php
 
-use yii\debug\Module;
 use yii\web\Session;
 
 return [
@@ -13,7 +12,7 @@ return [
         'assetManager' => [
             'linkAssets' => true,
         ],
-        'db' => require(__DIR__ . '/db.php'),
+        'db' => require (__DIR__ . '/db.php'),
         'mailer' => [
             'useFileTransport' => true,
         ],

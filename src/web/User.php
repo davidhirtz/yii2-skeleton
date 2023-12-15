@@ -92,7 +92,7 @@ class User extends \yii\web\User
 
         // Updates session's user id.
         if ($session instanceof MultiFieldSession) {
-            $session->writeCallback = fn() => [
+            $session->writeCallback = fn () => [
                 'ip_address' => inet_pton(Yii::$app->getRequest()->getUserIP()),
                 'user_id' => $identity->id,
             ];
@@ -121,7 +121,7 @@ class User extends \yii\web\User
         $session = Yii::$app->getSession();
 
         if ($session instanceof MultiFieldSession) {
-            $session->writeCallback = fn() => [
+            $session->writeCallback = fn () => [
                 'user_id' => null,
             ];
         }

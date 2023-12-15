@@ -11,5 +11,4 @@ interface DraftStatusAttributeInterface extends StatusAttributeInterface
     public const STATUS_DEFAULT = self::STATUS_ENABLED;
 
     public function isDraft(): bool;
-
 }

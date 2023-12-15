@@ -60,7 +60,6 @@ class GoogleAuthenticatorLoginActiveForm extends ActiveForm
 
     public function passwordField(): ActiveField|string
     {
-
         return Html::activeHiddenInput($this->model, 'password');
     }
 

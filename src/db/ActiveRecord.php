@@ -192,7 +192,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     public function getTraitNames(): array
     {
         $traitNames = (new ReflectionClass($this))->getTraitNames();
-        return array_map(fn($name) => substr($name, strrpos($name, '\\') + 1), $traitNames);
+        return array_map(fn ($name) => substr($name, strrpos($name, '\\') + 1), $traitNames);
     }
 
     public function setIsBatch(bool $isBatch): void

@@ -26,7 +26,7 @@ trait ConfigTrait
     protected function getConfig(string $file, array $default = []): array
     {
         $file = Yii::getAlias($file);
-        return is_file($file) ? require($file) : $default;
+        return is_file($file) ? require ($file) : $default;
     }
 
     protected function setConfig(string $file, array $config): void

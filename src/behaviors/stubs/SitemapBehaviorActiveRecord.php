@@ -11,5 +11,5 @@ abstract class SitemapBehaviorActiveRecord extends ActiveRecord
     /**
      * @see SitemapBehavior::getSitemapQuery()
      */
-    public abstract function getSitemapQuery(): ActiveQuery;
+    abstract public function getSitemapQuery(): ActiveQuery;
 }

@@ -148,7 +148,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
     {
         $instance = $this->getModelInstance();
 
-        if(method_exists($instance, 'getI18nAttributeName')) {
+        if (method_exists($instance, 'getI18nAttributeName')) {
             $attribute = $instance->getI18nAttributeName($attribute, $language);
         }
 

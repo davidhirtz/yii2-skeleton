@@ -9,9 +9,7 @@ use davidhirtz\yii2\skeleton\controllers\SitemapController;
 use davidhirtz\yii2\skeleton\i18n\I18N;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\rbac\DbManager;
-use davidhirtz\yii2\skeleton\web\CacheSession;
 use davidhirtz\yii2\skeleton\web\DbSession;
-use davidhirtz\yii2\skeleton\web\Request;
 use davidhirtz\yii2\skeleton\web\Sitemap;
 use davidhirtz\yii2\skeleton\web\UrlManager;
 use davidhirtz\yii2\skeleton\web\User;
@@ -31,7 +29,6 @@ use yii\symfonymailer\Mailer;
 use yii\web\JqueryAsset;
 
 /**
- *
  * @property DbManager $authManager
  * @property I18N $i18n
  * @property Sitemap $sitemap
@@ -183,11 +180,11 @@ trait ApplicationTrait
         $config = ArrayHelper::merge($core, $config);
 
         if (is_file($params = $path . 'params.php')) {
-            $config['params'] = array_merge($config['params'] ?? [], require($params));
+            $config['params'] = array_merge($config['params'] ?? [], require ($params));
         }
 
         if (is_file($db = $path . 'db.php')) {
-            $config['components']['db'] = array_merge(require($db), $config['components']['db']);
+            $config['components']['db'] = array_merge(require ($db), $config['components']['db']);
         }
 
         // Mailer transport DSN might need to be set via params (eg. yii2-config module)

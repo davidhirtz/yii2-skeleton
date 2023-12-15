@@ -6,7 +6,6 @@ use DateTime;
 use DateTimeZone;
 use davidhirtz\yii2\skeleton\behaviors\stubs\TrailBehaviorActiveRecord;
 use davidhirtz\yii2\skeleton\behaviors\stubs\TrailBehaviorModel;
-use davidhirtz\yii2\skeleton\behaviors\stubs\TrailBehaviorTrait;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\models\collections\TrailModelCollection;
 use davidhirtz\yii2\skeleton\models\Trail;
@@ -117,7 +116,7 @@ class TrailBehavior extends Behavior
         $trail = Trail::create();
         $trail->model = $this->modelClass;
 
-        if($this->owner instanceof ActiveRecord) {
+        if ($this->owner instanceof ActiveRecord) {
             $trail->model_id = $this->owner->getPrimaryKey(true);
         }
 

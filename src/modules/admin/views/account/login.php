@@ -75,7 +75,7 @@ $this->setTitle(Yii::t('skeleton', 'Login'));
                 </a>
                 <?php
             }
-            ?>
+?>
         </div>
     </div>
 </div>

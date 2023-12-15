@@ -6,9 +6,7 @@
 
 namespace davidhirtz\yii2\skeleton\tests\functional;
 
-use davidhirtz\yii2\skeleton\modules\admin\Module;
 use FunctionalTester;
-use Yii;
 
 class ControllerCest extends BaseCest
 {

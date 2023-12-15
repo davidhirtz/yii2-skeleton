@@ -10,7 +10,6 @@
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorLoginActiveForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
 
 $this->setTitle(Yii::t('skeleton', 'Google Authenticator'));
 ?>

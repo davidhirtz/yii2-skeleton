@@ -18,5 +18,4 @@ interface StatusAttributeInterface
     public function isEnabled(): bool;
 
     public function isDisabled(): bool;
-
 }

@@ -37,17 +37,17 @@ class UserLoginGridView extends GridView
                 [
                     'attribute' => 'user',
                     'visible' => !$this->user,
-                    'content' => fn(UserLogin $login) => Html::username($login->user, ['view', 'user' => $login->user_id])
+                    'content' => fn (UserLogin $login) => Html::username($login->user, ['view', 'user' => $login->user_id])
                 ],
                 [
                     'attribute' => 'browser',
                     'headerOptions' => ['class' => 'd-none d-md-table-cell', 'style' => 'width:45%;'],
                     'contentOptions' => ['class' => 'd-none d-md-table-cell'],
-                    'content' => fn(UserLogin $login) => $login->browser
+                    'content' => fn (UserLogin $login) => $login->browser
                 ],
                 [
                     'attribute' => 'created_at',
-                    'content' => fn(UserLogin $login): string => Timeago::tag($login->created_at)
+                    'content' => fn (UserLogin $login): string => Timeago::tag($login->created_at)
                 ],
             ];
         }

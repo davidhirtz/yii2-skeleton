@@ -106,7 +106,7 @@ class GridView extends \yii\grid\GridView
         }
 
         if (!$this->rowOptions) {
-            $this->rowOptions = fn($record) => $record instanceof ActiveRecord ? ['id' => $this->getRowId($record)] : [];
+            $this->rowOptions = fn ($record) => $record instanceof ActiveRecord ? ['id' => $this->getRowId($record)] : [];
         }
 
         $this->selectionButtonLabel ??= Yii::t('skeleton', 'Update Selected');

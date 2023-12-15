@@ -178,7 +178,7 @@ class User extends ActiveRecord implements StatusAttributeInterface
                 'unique',
                 'message' => Yii::t('skeleton', 'This username is already used by another user.'),
                 'skipOnError' => true,
-                'when' => fn() => $this->isAttributeChanged('name')
+                'when' => fn () => $this->isAttributeChanged('name')
             ],
             [
                 ['email'],
@@ -195,7 +195,7 @@ class User extends ActiveRecord implements StatusAttributeInterface
                 'unique',
                 'message' => Yii::t('skeleton', 'This email is already used by another user.'),
                 'skipOnError' => true,
-                'when' => fn() => $this->isAttributeChanged('email')
+                'when' => fn () => $this->isAttributeChanged('email')
             ],
             [
                 ['city', 'first_name', 'last_name'],

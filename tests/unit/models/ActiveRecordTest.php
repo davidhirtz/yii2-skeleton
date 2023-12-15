@@ -72,7 +72,7 @@ class ActiveRecordTest extends Unit
 
     public function testTraitAttributeLabels(): void
     {
-        $record = new class extends ActiveRecord {
+        $record = new class() extends ActiveRecord {
             use IconFilenameAttributeTrait;
 
             public function attributeLabels(): array
@@ -90,7 +90,7 @@ class ActiveRecordTest extends Unit
 
     public function testTraitRules(): void
     {
-        $record = new class extends ActiveRecord {
+        $record = new class() extends ActiveRecord {
             use IconFilenameAttributeTrait;
 
             public string $other = '';

@@ -52,13 +52,15 @@ class M190125140002Init extends Migration
 
         $this->addPrimaryKey('name', $authManager->itemTable, 'name');
 
-        $this->addForeignKey('auth_item_rule_name_ibfk',
+        $this->addForeignKey(
+            'auth_item_rule_name_ibfk',
             $authManager->itemTable,
             'rule_name',
             $authManager->ruleTable,
             'name',
             'SET NULL',
-            'CASCADE');
+            'CASCADE'
+        );
 
         $this->createIndex('type', $authManager->itemTable, 'type');
 
@@ -68,21 +70,25 @@ class M190125140002Init extends Migration
             'PRIMARY KEY ([[parent]], [[child]])',
         ], $tableOptions);
 
-        $this->addForeignKey('auth_item_child_parent_ibfk',
+        $this->addForeignKey(
+            'auth_item_child_parent_ibfk',
             $authManager->itemChildTable,
             'parent',
             $authManager->itemTable,
             'name',
             'CASCADE',
-            'CASCADE');
+            'CASCADE'
+        );
 
-        $this->addForeignKey('auth_item_child_child_ibfk',
+        $this->addForeignKey(
+            'auth_item_child_child_ibfk',
             $authManager->itemChildTable,
             'child',
             $authManager->itemTable,
             'name',
             'CASCADE',
-            'CASCADE');
+            'CASCADE'
+        );
 
         $this->createTable($authManager->assignmentTable, [
             'item_name' => $this->string(64)->notNull(),
@@ -91,13 +97,15 @@ class M190125140002Init extends Migration
             'PRIMARY KEY ([[item_name]], [[user_id]])',
         ], $tableOptions);
 
-        $this->addForeignKey('auth_assignment_item_name_ibfk',
+        $this->addForeignKey(
+            'auth_assignment_item_name_ibfk',
             $authManager->assignmentTable,
             'item_name',
             $authManager->itemTable,
             'name',
             'CASCADE',
-            'CASCADE');
+            'CASCADE'
+        );
 
         /**
          * User.
@@ -173,7 +181,7 @@ class M190125140002Init extends Migration
             'id' => $this->char(64)->notNull(),
             'user_id' => $this->integer()->unsigned()->null(),
             'ip_address' => 'varbinary(16) NULL',
-            'expire' =>$this->integer()->unsigned()->null(),
+            'expire' => $this->integer()->unsigned()->null(),
             'data' => 'longblob',
         ], $tableOptions);
 
@@ -184,40 +192,50 @@ class M190125140002Init extends Migration
         /**
          * Foreign keys.
          */
-        $this->addForeignKey('auth_client_user_id_ibfk',
+        $this->addForeignKey(
+            'auth_client_user_id_ibfk',
             AuthClient::tableName(),
             'user_id',
             User::tableName(),
             'id',
-            'CASCADE');
+            'CASCADE'
+        );
 
-        $this->addForeignKey('user_created_by_user_id_ibfk',
+        $this->addForeignKey(
+            'user_created_by_user_id_ibfk',
             User::tableName(),
             'created_by_user_id',
             User::tableName(),
             'id',
-            'SET NULL');
+            'SET NULL'
+        );
 
-        $this->addForeignKey('auth_assignment_user_id_ibfk',
+        $this->addForeignKey(
+            'auth_assignment_user_id_ibfk',
             $authManager->assignmentTable,
             'user_id',
             User::tableName(),
             'id',
-            'CASCADE');
+            'CASCADE'
+        );
 
-        $this->addForeignKey('login_user_id_ibfk',
+        $this->addForeignKey(
+            'login_user_id_ibfk',
             UserLogin::tableName(),
             'user_id',
             User::tableName(),
             'id',
-            'CASCADE');
+            'CASCADE'
+        );
 
-        $this->addForeignKey('session_user_id_ibfk',
+        $this->addForeignKey(
+            'session_user_id_ibfk',
             Session::tableName(),
             'user_id',
             User::tableName(),
             'id',
-            'CASCADE');
+            'CASCADE'
+        );
 
         /**
          * Authentication data.
