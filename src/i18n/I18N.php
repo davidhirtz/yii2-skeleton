@@ -51,16 +51,10 @@ class I18N extends \yii\i18n\I18N
 
     public function getLanguages(): array
     {
-        if ($this->_languages === null) {
-            $this->_languages = [Yii::$app->language];
-        }
-
+        $this->_languages ??= [Yii::$app->language];
         return $this->_languages;
     }
 
-    /**
-     * @noinspection PhpUnused
-     */
     public function setLanguages(array|string $languages): void
     {
         $this->_languages = array_unique((array)$languages);
@@ -73,7 +67,7 @@ class I18N extends \yii\i18n\I18N
 
     public function getLanguageCode(): string
     {
-        return substr((string) Yii::$app->language, 0, 2);
+        return substr(Yii::$app->language, 0, 2);
     }
 
     /**
@@ -86,7 +80,7 @@ class I18N extends \yii\i18n\I18N
             $language = Yii::$app->language;
         }
 
-        return rtrim($attribute . '_' . ($language != Yii::$app->sourceLanguage ? strtr(mb_strtolower((string) $language, Yii::$app->charset), '-', '_') : ''), '_');
+        return rtrim($attribute . '_' . ($language != Yii::$app->sourceLanguage ? strtr(mb_strtolower((string)$language, Yii::$app->charset), '-', '_') : ''), '_');
     }
 
     /**

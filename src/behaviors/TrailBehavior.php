@@ -13,7 +13,6 @@ use Exception;
 use ReflectionClass;
 use Yii;
 use yii\base\Behavior;
-use yii\base\Model;
 use yii\db\AfterSaveEvent;
 use yii\helpers\Inflector;
 use yii\validators\BooleanValidator;

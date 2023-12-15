@@ -1,4 +1,10 @@
 bootstrap: bootstrap.php
+coverage:
+  enabled: true
+  include:
+    - src/*
+  exclude:
+    - src/messages/*
 extensions:
   enabled:
     - Codeception\Extension\RunFailed

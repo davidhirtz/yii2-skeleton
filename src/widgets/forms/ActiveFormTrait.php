@@ -59,7 +59,7 @@ trait ActiveFormTrait
     public function init(): void
     {
         if ($this->model) {
-            $this->i18nAttributes ??= $this->model instanceof ActiveRecord ? $this->model->i18nAttributes : [];
+            $this->i18nAttributes ??= property_exists($this->model, 'i18nAttributes') ? $this->model->i18nAttributes : [];
 
             if ($this->i18nAttributes) {
                 $this->languages ??= Yii::$app->getI18n()->getLanguages();
@@ -240,7 +240,7 @@ trait ActiveFormTrait
     {
     }
 
-    
+
     public function horizontalLine(): string
     {
         return '<hr>';

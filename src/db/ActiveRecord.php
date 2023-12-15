@@ -27,11 +27,6 @@ class ActiveRecord extends \yii\db\ActiveRecord
 
     public const EVENT_CREATE_VALIDATORS = 'afterValidators';
 
-    /**
-     * @var array containing the attribute names of attributes which should be used with I18N features
-     */
-    public array $i18nAttributes = [];
-
     private bool $_isBatch = false;
     private bool $_isDeleted = false;
 

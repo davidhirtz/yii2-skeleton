@@ -1,4 +1,7 @@
 <?php
+/**
+ * @noinspection PhpUnused
+ */
 
 namespace davidhirtz\yii2\skeleton\console\controllers;
 
@@ -10,7 +13,6 @@ class AssetController extends \yii\console\controllers\AssetController
 {
     /**
      * Removes all published assets.
-     * @noinspection PhpUnused
      */
     public function actionClear(): void
     {

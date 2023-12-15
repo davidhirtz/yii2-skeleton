@@ -2,21 +2,43 @@
 
 namespace davidhirtz\yii2\skeleton\models\traits;
 
+use davidhirtz\yii2\skeleton\db\ActiveQuery;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use davidhirtz\yii2\skeleton\db\I18nActiveQuery;
 use Yii;
 
 /**
+ * @template TActiveRecord
+ * @property class-string<TActiveRecord> $modelClass
+ *
  * @property array $i18nAttributes
  * @mixin ActiveRecord
  */
 trait I18nAttributesTrait
 {
+    /**
+     * @var array containing the attribute names of attributes which should be used with I18N features
+     */
+    public array $i18nAttributes = [];
+
     private ?array $_i18nHints = null;
     private ?array $_i18nLabels = null;
 
+    /**
+     * @return ActiveQuery<static>
+     */
+    public static function find(): ActiveQuery
+    {
+        return Yii::createObject(I18nActiveQuery::class, [static::class]);
+    }
+
     public function getI18nAttribute(string $attribute, ?string $language = null): mixed
     {
-        return $this->getAttribute($this->isI18nAttribute($attribute) ? $this->getI18nAttributeName($attribute, $language) : $attribute);
+        if ($this->isI18nAttribute($attribute)) {
+            $attribute = $this->getI18nAttributeName($attribute, $language);
+        }
+
+        return $this->$attribute;
     }
 
     /**
@@ -115,7 +137,7 @@ trait I18nAttributesTrait
                     if ($language != Yii::$app->language) {
                         $label = Yii::t('skeleton', '{label} ({language})', [
                             'label' => $label,
-                            'language' => strtoupper((string) $language),
+                            'language' => strtoupper((string)$language),
                         ]);
                     }
 
