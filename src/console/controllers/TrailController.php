@@ -24,7 +24,7 @@ class TrailController extends Controller
         $classNames = [];
 
         foreach (Yii::$container->getDefinitions() as $definition => $options) {
-            if (!$filter || str_contains($definition, $filter)) {
+            if (!$filter || str_contains((string) $definition, $filter)) {
                 $classNames[$definition] = $options['class'];
             }
         }

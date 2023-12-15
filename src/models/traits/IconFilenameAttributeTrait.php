@@ -38,7 +38,7 @@ trait IconFilenameAttributeTrait
             static::$_iconFilenames = [];
 
             foreach (static::findIconFiles() as $filename) {
-                static::$_iconFilenames[basename($filename)] = static::humanizeIconFilename($filename);
+                static::$_iconFilenames[basename((string) $filename)] = static::humanizeIconFilename($filename);
             }
 
             natcasesort(static::$_iconFilenames);

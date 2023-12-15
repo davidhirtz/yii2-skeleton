@@ -17,7 +17,7 @@ class AdminButton extends Widget
 
     public string $overlayBackgroundColor = '#f8afaf80';
 
-    private static $is_Registered = false;
+    private static bool $is_Registered = false;
 
     /**
      * @var bool whether to toggle the button opacity on hover, if `false` the button will always be visible

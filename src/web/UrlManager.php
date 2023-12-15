@@ -108,7 +108,7 @@ class UrlManager extends \yii\web\UrlManager
         if ($i18nUrl) {
             if (isset($this->languages[$language]) && $language !== $this->defaultLanguage) {
                 $position = strlen($this->showScriptName ? $this->getScriptUrl() : $this->getBaseUrl());
-                return rtrim(substr_replace($event->url, '/' . $this->languages[$language], $position, 0), '/');
+                return rtrim(substr_replace((string) $event->url, '/' . $this->languages[$language], $position, 0), '/');
             }
         }
 
