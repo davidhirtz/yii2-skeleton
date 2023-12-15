@@ -1,3 +1,7 @@
+## 2.1.0 - under development
+
+- Added `I18nActiveQuery` and extracted `ActiveRecord::$i18nAttributes` to `I18nAttributesTrait`
+
 ## 2.0.14 (Dec 8, 2023)
 
 - Extracted shared model methods from `ActiveRecord` to `ModelTrait`

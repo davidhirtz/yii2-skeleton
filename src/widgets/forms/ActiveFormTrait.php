@@ -123,7 +123,7 @@ trait ActiveFormTrait
                 }
 
                 if (!$this->isSafeAttribute($attribute)) {
-                    Yii::warning("Skipping unsafe attribute '{$attribute}'.");
+                    Yii::warning("Skipping unsafe attribute '$attribute'.");
                     continue;
                 }
 
@@ -143,7 +143,7 @@ trait ActiveFormTrait
                 $methodName = lcfirst(Inflector::camelize($attribute)) . 'Field';
 
                 if ($this->hasMethod($methodName)) {
-                    Yii::debug("Rendering '{$attribute}' field with method '$methodName'");
+                    Yii::debug("Rendering '$attribute' field with method '$methodName'");
                     $callable = $this->$methodName(...);
                 } else {
                     $options['attribute'] = $attribute;

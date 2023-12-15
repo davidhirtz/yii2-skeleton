@@ -2,7 +2,6 @@
 
 namespace davidhirtz\yii2\skeleton\db;
 
-use davidhirtz\yii2\skeleton\models\traits\I18nAttributesTrait;
 use Yii;
 
 class I18nActiveQuery extends ActiveQuery

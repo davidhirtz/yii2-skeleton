@@ -109,7 +109,6 @@ class I18nTest extends Unit
             {
                 return '{{%test}}';
             }
-
         };
 
         Yii::$app->language = 'de';
