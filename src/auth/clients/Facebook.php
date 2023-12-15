@@ -8,10 +8,6 @@ use Yii;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 
-/**
- * Class Facebook.
- * @package davidhirtz\yii2\skeleton\auth\clients
- */
 class Facebook extends \yii\authclient\clients\Facebook implements ClientInterface
 {
     public $attributeNames = [
@@ -28,9 +24,6 @@ class Facebook extends \yii\authclient\clients\Facebook implements ClientInterfa
         'picture.width(2000).height(2000)',
     ];
 
-    /**
-     * Sets login information from application params.
-     */
     public function init(): void
     {
         if (!$this->clientId) {
