@@ -114,7 +114,7 @@ class ActiveRecordTest extends Unit
     public function testTypecastAttributesBeforeValidate(): void
     {
         $model = new UserLogin();
-        $model->user_id = '1';
+        $model->setAttribute('user_id', '1');
         $model->type = $model::TYPE_LOGIN;
         $model->browser = '';
         $model->ip_address = '';
