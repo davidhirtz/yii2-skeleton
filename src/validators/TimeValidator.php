@@ -6,10 +6,6 @@ use Yii;
 use yii\base\InvalidConfigException;
 use yii\validators\Validator;
 
-/**
- * @noinspection PhpUnused
- */
-
 class TimeValidator extends Validator
 {
     public string $pattern = '/^([01]?[0-9]|2[0-3]):?([0-5][0-9])\s?(am|pm)?$/';
@@ -28,8 +24,9 @@ class TimeValidator extends Validator
     public function validateAttribute($model, $attribute): void
     {
         // Removes trailing seconds
-        $value = strlen((string)($value = $model->$attribute)) === 8 ? preg_replace('/:00$/', '', (string)$value) : $value;
-        $strlen = strlen((string)$model->$attribute);
+        $value = (string)$model->$attribute;
+        $value = strlen($value) === 8 ? preg_replace('/:00$/', '', $value) : $value;
+        $strlen = strlen($value);
 
         if ($strlen === 1) {
             $value = "0{$value}00";
@@ -50,6 +47,10 @@ class TimeValidator extends Validator
         }
 
         // Adds seconds for MySQL conform data format
-        $model->$attribute = "$hours:$minutes:00";
+        $model->$attribute = implode(':', [
+            str_pad($hours, 2, '0', STR_PAD_LEFT),
+            str_pad($minutes, 2, '0', STR_PAD_LEFT),
+            '00',
+        ]);
     }
 }
