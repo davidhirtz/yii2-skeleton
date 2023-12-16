@@ -36,7 +36,7 @@ class UserForm extends User
             ], [
                 ['repeatPassword'],
                 'required',
-                'when' => fn (self $model): bool => (bool)$model->newPassword,
+                'when' => fn(self $model): bool => (bool)$model->newPassword,
             ], [
                 ['repeatPassword'],
                 'compare',
@@ -73,7 +73,6 @@ class UserForm extends User
         return false;
     }
 
-    
     public function afterSave($insert, $changedAttributes): void
     {
         if (!$insert) {
@@ -125,7 +124,7 @@ class UserForm extends User
             ->send();
     }
 
-    
+
     public function scenarios(): array
     {
         return [
@@ -146,9 +145,12 @@ class UserForm extends User
         ];
     }
 
-    
     public function attributeLabels(): array
     {
-        return [...parent::attributeLabels(), 'newPassword' => Yii::t('skeleton', 'New password'), 'repeatPassword' => Yii::t('skeleton', 'Repeat password'), 'oldPassword' => Yii::t('skeleton', 'Current password')];
+        return [...parent::attributeLabels(),
+            'newPassword' => Yii::t('skeleton', 'New password'),
+            'repeatPassword' => Yii::t('skeleton', 'Repeat password'),
+            'oldPassword' => Yii::t('skeleton', 'Current password'),
+        ];
     }
 }
