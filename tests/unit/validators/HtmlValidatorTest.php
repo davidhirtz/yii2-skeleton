@@ -22,7 +22,7 @@ class HtmlValidatorTest extends Unit
         static::assertStringContainsString('a[href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']);
     }
 
-    public function testSetAdditionalHtmlTags(): void
+    public function testConfigWithAdditionalHtmlTags(): void
     {
         $additionalHtmlTags = ['h2', 'h3'];
         $allowedHtmlTags = [...$this->defaultAllowedHtmlTags, ...$additionalHtmlTags];
@@ -35,7 +35,7 @@ class HtmlValidatorTest extends Unit
         static::assertEqualsCanonicalizing($this->defaultAllowedHtmlAttributes, $validator->allowedHtmlAttributes);
     }
 
-    public function testSetAdditionalLegacyHtmlTags(): void
+    public function testConfigWithAdditionalLegacyHtmlTags(): void
     {
         $validator = new HtmlValidator([
             'allowedHtmlTags' => ['a[href|target|rel]', 'H2'],
@@ -48,7 +48,7 @@ class HtmlValidatorTest extends Unit
         static::assertStringContainsString('a[href|rel|target]', $validator->purifierOptions['HTML.Allowed']);
     }
 
-    public function testSetExcludedHtmlTags(): void
+    public function testConfigWithExcludedHtmlTags(): void
     {
         $excludedHtmlTags = ['a', 'strong'];
         $allowedHtmlTags = array_diff($this->defaultAllowedHtmlTags, $excludedHtmlTags);
@@ -61,7 +61,7 @@ class HtmlValidatorTest extends Unit
         static::assertStringNotContainsString('a[href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']);
     }
 
-    public function testAllowedClasses(): void
+    public function testConfigWithAllowedClasses(): void
     {
         $allowedClasses = [
             'a' => ['btn', 'cta'],
@@ -81,7 +81,7 @@ class HtmlValidatorTest extends Unit
         static::assertStringContainsString('span[class]', $validator->purifierOptions['HTML.Allowed']);
     }
 
-    public function testSetAllowedClassesLegacyLink(): void
+    public function testConfigWithAllowedClassesLegacyLink(): void
     {
         $allowedClasses = ['btn', 'cta'];
 
@@ -94,7 +94,7 @@ class HtmlValidatorTest extends Unit
         static::assertStringContainsString('a[class|href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']);
     }
 
-    public function testSetAllowImagesWithAttributes(): void
+    public function testConfigWithAllowImagesWithAttributes(): void
     {
         $validator = new HtmlValidator([
             'allowImages' => true,

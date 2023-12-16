@@ -8,9 +8,6 @@ use yii\base\NotSupportedException;
 use yii\helpers\Inflector;
 use yii\validators\Validator;
 
-/**
- * Validates a models relation.
- */
 class RelationValidator extends Validator
 {
     /**
