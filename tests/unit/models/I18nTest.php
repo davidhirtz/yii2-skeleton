@@ -6,8 +6,10 @@ use Codeception\Test\Unit;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\db\I18nActiveQuery;
 use davidhirtz\yii2\skeleton\models\traits\I18nAttributesTrait;
+use davidhirtz\yii2\skeleton\modules\ModuleTrait;
 use Yii;
 use yii\base\Model;
+use yii\base\Module;
 
 class I18nTest extends Unit
 {
@@ -132,4 +134,31 @@ class I18nTest extends Unit
         $name = Yii::$app->getI18n()->getTableName('test', 'de');
         $this->assertEquals('{{%test_de}}', $name);
     }
+
+    public function testModuleWithTranslatedTables(): void
+    {
+        Yii::$app->setModule('test', [
+            'class' => TestModule::class,
+        ]);
+
+        $module = Yii::$app->getModule('test');
+        Yii::$app->language = 'de';
+
+        $this->assertEquals('{{%prefix_test_de}}', $module->getTableName('test'));
+        $this->assertEquals('app\\models\\Test::de', $module->getI18nClassName('app\\models\\Test'));
+    }
 }
+
+class TestModule extends Module
+{
+    use ModuleTrait;
+
+    public function init(): void
+    {
+        $this->enableI18nTables = true;
+        $this->tablePrefix = 'prefix_';
+        parent::init();
+    }
+}
+
+;

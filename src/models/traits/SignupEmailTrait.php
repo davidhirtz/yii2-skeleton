@@ -5,17 +5,11 @@ namespace davidhirtz\yii2\skeleton\models\traits;
 use Yii;
 
 /**
- * Class SignupEmailTrait
- * @package davidhirtz\yii2\skeleton\models\traits
- *
  * @property string $email
  */
 trait SignupEmailTrait
 {
-    /**
-     * Sends email confirmation.
-     */
-    public function sendSignupEmail()
+    public function sendSignupEmail(): void
     {
         $mail = Yii::$app->getMailer()->compose('@skeleton/mail/account/create', [
             'user' => $this,

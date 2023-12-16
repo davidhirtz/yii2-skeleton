@@ -52,6 +52,9 @@ class TimeValidatorTest extends Unit
         $this->assertTrue($model->validate());
         $this->assertEquals('22:00:00', $model->time);
 
+        $model->time = '24:01';
+        $this->assertFalse($model->validate());
+
         $model->time = 'invalid';
         $this->assertFalse($model->validate());
     }

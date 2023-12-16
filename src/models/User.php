@@ -16,6 +16,7 @@ use davidhirtz\yii2\skeleton\models\interfaces\StatusAttributeInterface;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\models\traits\StatusAttributeTrait;
 use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
+use davidhirtz\yii2\skeleton\validators\UniqueValidator;
 use davidhirtz\yii2\skeleton\web\StreamUploadedFile;
 use Yii;
 use yii\db\ActiveQuery;
@@ -175,10 +176,8 @@ class User extends ActiveRecord implements StatusAttributeInterface
             ],
             [
                 ['name'],
-                'unique',
+                UniqueValidator::class,
                 'message' => Yii::t('skeleton', 'This username is already used by another user.'),
-                'skipOnError' => true,
-                'when' => fn () => $this->isAttributeChanged('name')
             ],
             [
                 ['email'],

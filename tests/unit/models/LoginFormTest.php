@@ -28,7 +28,7 @@ class LoginFormTest extends Unit
             'password' => 'not_existing_password',
         ]);
 
-        static::assertFalse($form->validate(), 'model should not login user');
+        static::assertFalse($form->validate(), 'Model should not login user');
     }
 
     public function testLoginWrongPassword(): void
@@ -39,8 +39,8 @@ class LoginFormTest extends Unit
             'password' => 'wrong_password',
         ]);
 
-        static::assertFalse($form->validate(), 'model should not login user');
-        static::assertArrayHasKey('email', $form->getErrors(), 'error message should be set');
+        static::assertFalse($form->validate(), 'Model should not login user');
+        static::assertArrayHasKey('email', $form->getErrors(), 'Error message should be set');
     }
 
     public function testLoginCorrect(): void
@@ -51,8 +51,8 @@ class LoginFormTest extends Unit
             'password' => 'password',
         ]);
 
-        static::assertTrue($form->validate(), 'model should login user');
-        static::assertEmpty($form->getErrors(), 'error messages should not be set');
+        static::assertTrue($form->validate(), 'Model should login user');
+        static::assertEmpty($form->getErrors(), 'Error messages should not be set');
     }
 
     public function testLoginWithGoogleAuthenticatorEmptyCode(): void
@@ -63,8 +63,8 @@ class LoginFormTest extends Unit
             'password' => 'password',
         ]);
 
-        static::assertFalse($form->validate(), 'model should not login user');
-        static::assertArrayHasKey('code', $form->getErrors(), 'error message should be set');
+        static::assertFalse($form->validate(), 'Model should not login user');
+        static::assertArrayHasKey('code', $form->getErrors(), 'Error message should be set');
     }
 
     public function testLoginWithGoogleAuthenticatorInvalidCode(): void
@@ -76,8 +76,8 @@ class LoginFormTest extends Unit
             'code' => 123456,
         ]);
 
-        static::assertFalse($form->validate(), 'model should not login user');
-        static::assertArrayHasKey('code', $form->getErrors(), 'error message should be set');
+        static::assertFalse($form->validate(), 'Model should not login user');
+        static::assertArrayHasKey('code', $form->getErrors(), 'Error message should be set');
     }
 
     public function testLoginWithGoogleAuthenticatorCorrect(): void
@@ -93,7 +93,7 @@ class LoginFormTest extends Unit
             'code' => '492042',
         ]);
 
-        static::assertTrue($form->validate(), 'model should login user');
-        static::assertEmpty($form->getErrors(), 'error messages should not be set');
+        static::assertTrue($form->validate(), 'Model should login user');
+        static::assertEmpty($form->getErrors(), 'Error messages should not be set');
     }
 }
