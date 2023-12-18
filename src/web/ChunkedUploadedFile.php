@@ -10,8 +10,8 @@ use yii\web\UploadedFile;
 
 /**
  * @property string $partialName
- * @method static ChunkedUploadedFile getInstance($model, $attribute)
- * @method static ChunkedUploadedFile getInstanceByName($name)
+ * @method static ChunkedUploadedFile|null getInstance($model, $attribute)
+ * @method static ChunkedUploadedFile|null getInstanceByName($name)
  */
 class ChunkedUploadedFile extends UploadedFile
 {

@@ -10,13 +10,15 @@ use yii\helpers\ArrayHelper;
 
 /**
  * @property int $id
- * @property int $parent_id
+ * @property int|null $parent_id
  * @property int $rgt
  * @property int $lft
  * @property string $name
  *
- * @property-read ActiveRecord $parent {@see static::getParent()}
+ * @property-read ActiveRecord $parent|null {@see static::getParent()}
  * @method static ActiveQuery find()
+ *
+ * @mixin ActiveRecord
  */
 trait NestedTreeTrait
 {

@@ -13,7 +13,7 @@ use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
  * @property-read static[] $ancestors {@see static::getAncestors()}
  * @property-read static[] $children {@see static::getChildren()}
  * @property-read static[] $descendants {@see static::getDescendants()}
- * @property-read static $parent {@see static::getParent()}
+ * @property-read static|null $parent {@see static::getParent()}
  */
 trait MaterializedTreeTrait
 {

@@ -6,7 +6,7 @@ use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\models\User;
 
 /**
- * @property int $updated_by_user_id
+ * @property int|null $updated_by_user_id
  * @property-read User $updated {@see static::getUpdated()}
  */
 trait UpdatedByUserTrait

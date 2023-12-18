@@ -52,7 +52,7 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
 
     $rectorConfig->skip([
-        __DIR__ . '/messages',
+        __DIR__ . '/src/messages',
         FinalizePublicClassConstantRector::class,
     ]);
 };

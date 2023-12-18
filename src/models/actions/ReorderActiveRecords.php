@@ -2,10 +2,10 @@
 
 namespace davidhirtz\yii2\skeleton\models\actions;
 
-use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Exception;
 use Yii;
+use yii\db\ActiveRecordInterface;
 
 class ReorderActiveRecords
 {
@@ -15,7 +15,7 @@ class ReorderActiveRecords
     private int $_totalRowsUpdated = 0;
 
     /**
-     * @param ActiveRecord[] $models
+     * @param ActiveRecordInterface[] $models
      */
     public function __construct(
         protected array $models,

@@ -4,6 +4,10 @@ namespace davidhirtz\yii2\skeleton\db;
 
 use Yii;
 
+/**
+ * @template TActiveRecord
+ * @template-extends ActiveQuery<TActiveRecord>
+ */
 class I18nActiveQuery extends ActiveQuery
 {
     public function getI18nAttributeName(string $attribute, ?string $language = null): string

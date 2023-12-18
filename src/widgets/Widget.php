@@ -2,9 +2,9 @@
 
 namespace davidhirtz\yii2\skeleton\widgets;
 
+use davidhirtz\yii2\skeleton\web\View;
 use Yii;
 use yii\base\BaseObject;
-use yii\base\View;
 use yii\base\ViewContextInterface;
 
 /**
@@ -23,7 +23,9 @@ abstract class Widget extends BaseObject implements ViewContextInterface
     public function getView(): View
     {
         if ($this->_viewPath === null) {
-            $this->setView(Yii::$app->controller->getView());
+            /** @var View $view */
+            $view = Yii::$app->controller->getView();
+            $this->setView($view);
         }
 
         return $this->_view;

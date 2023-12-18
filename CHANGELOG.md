@@ -1,3 +1,7 @@
+## 2.1.1 (Dec 18, 2023)
+
+- Minor PHPDoc updates for static analysis of `yii2-media` and `yii2-cms` packages
+
 ## 2.1.0 (Dec 18, 2023)
 
 - Added Codeception test suite
