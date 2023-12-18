@@ -11,8 +11,8 @@ use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorLoginActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\LoginActiveForm;
 use davidhirtz\yii2\skeleton\tests\fixtures\UserFixture;
-use davidhirtz\yii2\skeleton\validators\GoogleAuthenticatorValidator;
 use davidhirtz\yii2\skeleton\tests\support\FunctionalTester;
+use davidhirtz\yii2\skeleton\validators\GoogleAuthenticatorValidator;
 use RobThree\Auth\TwoFactorAuth;
 use Yii;
 

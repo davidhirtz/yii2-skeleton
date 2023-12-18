@@ -29,6 +29,8 @@ use yii\symfonymailer\Mailer;
 use yii\web\JqueryAsset;
 
 /**
+ * @property string $language
+ * 
  * @property DbManager $authManager
  * @property I18N $i18n
  * @property Sitemap $sitemap
