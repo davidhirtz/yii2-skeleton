@@ -24,7 +24,6 @@ class CurrencyValidatorTest extends Unit
         $model->currency = '10.00';
         $this->assertTrue($model->validate());
         $this->assertEquals('10.00', $model->currency);
-
     }
 
     public function testLocalizedCurrencyAttribute()
@@ -38,7 +37,8 @@ class CurrencyValidatorTest extends Unit
     }
 }
 
-class CurrencyValidatorTestModel extends Model {
+class CurrencyValidatorTestModel extends Model
+{
     public string|float|int|null $currency = null;
 
     public function rules(): array

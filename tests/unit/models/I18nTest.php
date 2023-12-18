@@ -50,7 +50,7 @@ class I18nTest extends Unit
         $this->assertEquals(['translated', 'translated_de', 'untranslated'], $model->getI18nAttributesNames(['translated', 'untranslated']));
         $this->assertEquals(['translated_de', 'untranslated'], $model->getI18nAttributesNames(['translated', 'untranslated'], ['de']));
 
-        Yii::$app->getI18n()->callback('de', fn() => $this->assertEquals('translated_de', $model->getI18nAttributeName('translated')));
+        Yii::$app->getI18n()->callback('de', fn () => $this->assertEquals('translated_de', $model->getI18nAttributeName('translated')));
 
         Yii::$app->language = 'de';
         $this->assertEquals('translated_de', $model->getI18nAttributeName('translated'));
@@ -61,7 +61,9 @@ class I18nTest extends Unit
         $model = new class() extends Model {
             use I18nAttributesTrait;
 
-            /** @noinspection PhpUnused */
+            /**
+             * @noinspection PhpUnused
+             */
             public ?string $translated_de = '';
             public ?string $translated = 'translated';
 

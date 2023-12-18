@@ -36,7 +36,7 @@ class UserForm extends User
             ], [
                 ['repeatPassword'],
                 'required',
-                'when' => fn(self $model): bool => (bool)$model->newPassword,
+                'when' => fn (self $model): bool => (bool)$model->newPassword,
             ], [
                 ['repeatPassword'],
                 'compare',

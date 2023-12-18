@@ -20,7 +20,7 @@ return [
             ),
             'username' => getenv('MYSQL_USER') ?: 'root',
             'password' => getenv('MYSQL_PASSWORD') ?: '',
-            ...is_file(__DIR__ . '/db.php') ? require(__DIR__ . '/db.php') : [],
+            ...is_file(__DIR__ . '/db.php') ? require (__DIR__ . '/db.php') : [],
         ],
         'mailer' => [
             'useFileTransport' => true,
