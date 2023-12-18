@@ -1,3 +1,4 @@
+actor: FunctionalTester
 modules:
   enabled:
     - Filesystem

@@ -1,4 +1,4 @@
-actor: support\UnitTester
+actor: UnitTester
 modules:
   enabled:
     - Yii2:
