@@ -1,6 +1,7 @@
-## 2.1.0 - under development
+## 2.1.0 (Dec 18, 2023)
 
 - Added Codeception test suite
+- Added GitHub Actions CI workflow
 - Added `I18nActiveQuery` and extracted `ActiveRecord::$i18nAttributes` to `I18nAttributesTrait`
 
 ## 2.0.14 (Dec 8, 2023)
