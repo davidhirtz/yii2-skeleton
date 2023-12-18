@@ -60,9 +60,13 @@ jobs:
 
       - name: Prepare the application
         run: php tests/yii migrate --interactive=0
+        env:
+          MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.mysql.ports['3306'] }};dbname=yii2_skeleton_test
 
       - name: Run Tests
         run: vendor/bin/codecept run
+        env:
+          MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.mysql.ports['3306'] }};dbname=yii2_skeleton_test
 
       - name: Run Static Code Analysis
         run: vendor/bin/phpstan --memory-limit=1G
