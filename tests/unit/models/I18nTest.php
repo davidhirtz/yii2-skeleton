@@ -141,6 +141,7 @@ class I18nTest extends Unit
             'class' => TestModule::class,
         ]);
 
+        /** @var TestModule $module */
         $module = Yii::$app->getModule('test');
         Yii::$app->language = 'de';
 
