@@ -16,7 +16,7 @@ class ActiveRecordTest extends Unit
 {
     public function testBatchInsert(): void
     {
-        $data = require __DIR__ . '/../../_data/user.php';
+        $data = require __DIR__ . '/../../data/user.php';
         $expected = count($data);
 
         $count = User::batchInsert($data);

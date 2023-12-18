@@ -1,6 +1,0 @@
-actor: FunctionalTester
-modules:
-  enabled:
-    - Filesystem
-    - Yii2
-    - Asserts

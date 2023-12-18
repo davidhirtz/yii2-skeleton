@@ -6,7 +6,7 @@
 
 namespace davidhirtz\yii2\skeleton\tests\functional;
 
-use FunctionalTester;
+use davidhirtz\yii2\skeleton\tests\support\FunctionalTester;
 
 class ControllerCest extends BaseCest
 {

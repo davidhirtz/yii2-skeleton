@@ -3,7 +3,7 @@
 namespace davidhirtz\yii2\skeleton\tests\functional;
 
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
-use FunctionalTester;
+use davidhirtz\yii2\skeleton\tests\support\FunctionalTester;
 use Yii;
 
 abstract class BaseCest

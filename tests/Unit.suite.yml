@@ -1,0 +1,5 @@
+actor: davidhirtz\yii2\skeleton\tests\support\UnitTester
+modules:
+  enabled:
+    - Yii2:
+        part: fixtures

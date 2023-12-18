@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+namespace davidhirtz\yii2\skeleton\tests\support;
+
+use _generated;
+use Codeception\Actor;
+
 /**
  * Inherited Methods
  * @method void wantTo($text)
@@ -17,17 +22,11 @@ declare(strict_types=1);
  *
  * @SuppressWarnings(PHPMD)
  */
-class FunctionalTester extends \Codeception\Actor
+class UnitTester extends Actor
 {
-    use _generated\FunctionalTesterActions;
+    use _generated\UnitTesterActions;
 
-    public function seeValidationError(string $message): void
-    {
-        $this->see($message, '.alert-error');
-    }
-
-    public function dontSeeValidationError(string $message): void
-    {
-        $this->dontSee($message, '.alert-error');
-    }
+    /**
+     * Define custom actions here
+     */
 }

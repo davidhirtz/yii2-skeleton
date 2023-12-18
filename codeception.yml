@@ -13,8 +13,10 @@ modules:
     Yii2:
       applicationClass: "davidhirtz\\yii2\\skeleton\\web\\Application"
       configFile: "tests/config/test.php"
+namespace: tests
 paths:
   tests: tests
-  data: tests/_data
-  helpers: tests/_support
   output: tests/_output
+  data: tests/support/data
+  support: tests/support
+support_namespace: tests\support

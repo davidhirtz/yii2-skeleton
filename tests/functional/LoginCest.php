@@ -12,7 +12,7 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorLogi
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\LoginActiveForm;
 use davidhirtz\yii2\skeleton\tests\fixtures\UserFixture;
 use davidhirtz\yii2\skeleton\validators\GoogleAuthenticatorValidator;
-use FunctionalTester;
+use davidhirtz\yii2\skeleton\tests\support\FunctionalTester;
 use RobThree\Auth\TwoFactorAuth;
 use Yii;
 
