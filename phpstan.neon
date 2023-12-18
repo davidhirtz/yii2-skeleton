@@ -10,7 +10,7 @@ parameters:
         - YII_ENV_TEST
 
     ignoreErrors:
-        - '#PHPDoc tag @throws with type _generated\\ModuleException is not subtype of Throwable#'
+        - '#PHPDoc tag @throws with type davidhirtz\\yii2\\skeleton\\tests\\support\\_generated\\ModuleException is not subtype of Throwable#'
 
     level: 5
 
