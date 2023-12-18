@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\tests\support;
 
 use _generated;
+use Codeception\Actor;
 
 /**
  * Inherited Methods
@@ -21,7 +22,7 @@ use _generated;
  *
  * @SuppressWarnings(PHPMD)
  */
-class FunctionalTester extends \Codeception\Actor
+class FunctionalTester extends Actor
 {
     use _generated\FunctionalTesterActions;
 

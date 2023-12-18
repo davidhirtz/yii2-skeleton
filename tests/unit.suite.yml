@@ -1,4 +1,4 @@
-actor: davidhirtz\yii2\skeleton\tests\support\UnitTester
+actor: support\UnitTester
 modules:
   enabled:
     - Yii2:

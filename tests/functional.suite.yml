@@ -1,4 +1,3 @@
-actor: davidhirtz\yii2\skeleton\tests\support\FunctionalTester
 modules:
   enabled:
     - Filesystem
