@@ -10,18 +10,16 @@ jobs:
   yii:
     name: Yii2 (PHP ${{ matrix.php-versions }})
     runs-on: ubuntu-latest
-    env:
-      MYSQL_USER: root
-      MYSQL_PASSWORD: test
 
     # Docs: https://docs.github.com/en/actions/using-containerized-services
     services:
       mysql:
         image: mysql:latest
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: false
-          MYSQL_ROOT_PASSWORD: test
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
           MYSQL_DATABASE: yii2_skeleton_test
+        ports:
+          - 3306/tcp
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     strategy:
       fail-fast: false
@@ -58,9 +56,13 @@ jobs:
 
       - name: Prepare the application
         run: php tests/yii migrate --interactive=0
+        env:
+          MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.mysql.ports['3306'] }};dbname=yii2_skeleton_test
 
       - name: Run Tests
         run: vendor/bin/codecept run
+        env:
+          MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.mysql.ports['3306'] }};dbname=yii2_skeleton_test
 
       - name: Run Static Code Analysis
         run: vendor/bin/phpstan --memory-limit=1G
