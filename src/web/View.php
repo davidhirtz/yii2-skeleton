@@ -204,7 +204,7 @@ class View extends \yii\web\View
         return match (Yii::$app->language) {
             'zh-TW' => 'zh-Hant',
             'zh-CN' => 'zh-Hans',
-            default => substr(Yii::$app->language, 0, 2),
+            default => Yii::$app->getI18n()->getLanguageCode(),
         };
     }
 }
