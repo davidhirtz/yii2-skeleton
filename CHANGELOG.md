@@ -1,3 +1,7 @@
+## 2.1.2 (Dec 19, 2023)
+
+- Changed `Yii::configure()` calls with arrays back to `Yii::$container->get()` for better IDE support
+
 ## 2.1.1 (Dec 18, 2023)
 
 - Minor PHPDoc updates for static analysis of `yii2-media` and `yii2-cms` packages

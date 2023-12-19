@@ -7,8 +7,8 @@ use Yii;
 use yii\web\Cookie;
 
 /**
- * The web Request class extends the default Yii class by a draft mode and the option to set the host info via application
- * params and the application language based on the user's preferences.
+ * The web Request class extends the default Yii class by a draft mode and the option to set the host info via
+ * application params and the application language based on the user's preferences.
  */
 class Request extends \yii\web\Request
 {
@@ -23,16 +23,16 @@ class Request extends \yii\web\Request
      */
     public string|false $draftSubdomain = 'draft';
 
-    
+
     private bool $_isDraft = false;
 
-    
+
     private string|false|null $_draftHostInfo = null;
 
     /**
-     * Sets the host info via params after draft mode is checked. Setting the host info manually can be useful if multiple
-     * domains link to a single website and the URLs (e.g., in the sitemap.xml) should be consistent or to prevent
-     * faked header attacks (see https://www.acunetix.com/vulnerabilities/web/host-header-attack). The original
+     * Sets the host info via params after draft mode is checked. Setting the host info manually can be useful if
+     * multiple domains link to a single website and the URLs (e.g., in the sitemap.xml) should be consistent or to
+     * prevent faked header attacks (see https://www.acunetix.com/vulnerabilities/web/host-header-attack). The original
      * value of `$hostInfo` is still available via `Request::getRequestHostInfo()`.
      */
     public function init(): void
@@ -70,12 +70,12 @@ class Request extends \yii\web\Request
                         if ($identity) {
                             $identity->updateAttributes(['language' => $language]);
                         } elseif ($language != Yii::$app->sourceLanguage && $cookie !== $language) {
-                            /** @noinspection PhpParamsInspection */
-                            Yii::$app->getResponse()->getCookies()->add(Yii::createObject([
-                                'class' => Cookie::class,
+                            $cookie = Yii::$container->get(Cookie::class, [], [
                                 'name' => $param,
                                 'value' => $language,
-                            ]));
+                            ]);
+
+                            Yii::$app->getResponse()->getCookies()->add($cookie);
                         }
                     }
 
@@ -87,7 +87,7 @@ class Request extends \yii\web\Request
         return parent::resolve();
     }
 
-    
+
     public function getUserIP()
     {
         return ArrayHelper::getValue($_SERVER, 'HTTP_X_FORWARDED_FOR', ArrayHelper::getValue($_SERVER, 'HTTP_CLIENT_IP', parent::getUserIP()));

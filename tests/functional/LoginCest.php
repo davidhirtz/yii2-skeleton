@@ -6,7 +6,6 @@
 namespace davidhirtz\yii2\skeleton\tests\functional;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorLoginActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\LoginActiveForm;
@@ -73,7 +72,7 @@ class LoginCest extends BaseCest
         Yii::$app->getUser()->disableRbacForOwner = false;
 
         $user = $I->grabFixture('user', 'owner');
-        $this->assignAdminRole($user['id']);
+        $this->assignRole($user['id']);
 
         $this->submitLoginForm($I, 'owner@domain.com', 'password');
         $I->seeLink(Yii::t('skeleton', 'Logout'));
@@ -108,7 +107,7 @@ class LoginCest extends BaseCest
         $this->submitLoginForm($I, 'f2a@domain.com', 'password');
 
         $user = $I->grabFixture('user', 'admin');
-        $this->assignAdminRole($user['id']);
+        $this->assignRole($user['id']);
 
         $validator = Yii::createObject(GoogleAuthenticatorValidator::class);
         $auth = new TwoFactorAuth(null, $validator->length, $validator->period);
@@ -141,11 +140,5 @@ class LoginCest extends BaseCest
         $I->submitForm("#$widget->id", [
             Html::getInputName($widget->model, 'code') => $code,
         ]);
-    }
-
-    protected function assignAdminRole(int $userId): void
-    {
-        $role = Yii::$app->getAuthManager()->getRole(User::AUTH_ROLE_ADMIN);
-        Yii::$app->getAuthManager()->assign($role, $userId);
     }
 }

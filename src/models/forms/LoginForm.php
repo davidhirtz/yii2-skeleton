@@ -99,9 +99,7 @@ class LoginForm extends Model
     public function validateGoogleAuthenticatorCode(): void
     {
         if (Yii::$app->getUser()->enableGoogleAuthenticator && !$this->hasErrors() && ($user = $this->getUser()) && $user->google_2fa_secret) {
-            /** @var GoogleAuthenticatorValidator $validator */
-            $validator = Yii::createObject([
-                'class' => GoogleAuthenticatorValidator::class,
+            $validator = Yii::$container->get(GoogleAuthenticatorValidator::class, [], [
                 'secret' => $user->google_2fa_secret,
                 'datetime' => $user->last_login,
             ]);

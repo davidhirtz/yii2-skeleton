@@ -168,8 +168,7 @@ class AccountController extends Controller
 
     public function actionConfirm(string $email, string $code): Response|string
     {
-        $form = Yii::createObject([
-            'class' => AccountConfirmForm::class,
+        $form = Yii::$container->get(AccountConfirmForm::class, [], [
             'email' => $email,
             'code' => $code,
         ]);
@@ -247,8 +246,7 @@ class AccountController extends Controller
             throw new ForbiddenHttpException();
         }
 
-        $form = Yii::createObject([
-            'class' => PasswordResetForm::class,
+        $form = Yii::$container->get(PasswordResetForm::class, [], [
             'email' => $email,
             'code' => $code,
         ]);
@@ -302,8 +300,7 @@ class AccountController extends Controller
 
     public function actionDelete(): Response|string
     {
-        $form = Yii::createObject([
-            'class' => DeleteForm::class,
+        $form = Yii::$container->get(DeleteForm::class, [], [
             'model' => UserForm::findOne(Yii::$app->getUser()->getId()),
             'attribute' => 'password',
         ]);
@@ -322,8 +319,7 @@ class AccountController extends Controller
 
     public function actionEnableGoogleAuthenticator(): Response|string
     {
-        $form = Yii::createObject([
-            'class' => GoogleAuthenticatorForm::class,
+        $form = Yii::$container->get(GoogleAuthenticatorForm::class, [], [
             'user' => Yii::$app->getUser()->getIdentity(),
         ]);
 
@@ -338,8 +334,7 @@ class AccountController extends Controller
 
     public function actionDisableGoogleAuthenticator(): Response|string
     {
-        $form = Yii::createObject([
-            'class' => GoogleAuthenticatorForm::class,
+        $form = Yii::$container->get(GoogleAuthenticatorForm::class, [], [
             'user' => Yii::$app->getUser()->getIdentity(),
         ]);
 

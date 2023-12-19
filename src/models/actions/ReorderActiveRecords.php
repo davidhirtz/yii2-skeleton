@@ -7,6 +7,10 @@ use Exception;
 use Yii;
 use yii\db\ActiveRecordInterface;
 
+/**
+ * @template TActiveRecord of ActiveRecordInterface
+ * @property TActiveRecord[] $models
+ */
 class ReorderActiveRecords
 {
     /**
@@ -15,7 +19,7 @@ class ReorderActiveRecords
     private int $_totalRowsUpdated = 0;
 
     /**
-     * @param ActiveRecordInterface[] $models
+     * @param TActiveRecord[] $models
      */
     public function __construct(
         protected array $models,

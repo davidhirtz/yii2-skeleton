@@ -14,6 +14,11 @@ use yii\db\Query;
 class ActiveQuery extends \yii\db\ActiveQuery
 {
     /**
+     * @var int|null the global status to be used in WHERE clause with `whereStatus()`.
+     */
+    protected static ?int $_status = null;
+
+    /**
      * PHPStorm currently does not support "@method" annotations for generic methods.
      * @link https://youtrack.jetbrains.com/issue/WI-64921/method-does-not-support-template-declaration
      * @return array|TActiveRecord[]
@@ -43,11 +48,6 @@ class ActiveQuery extends \yii\db\ActiveQuery
     {
         return parent::one($db);
     }
-
-    /**
-     * @var int|null the global status to be used in WHERE clause with `whereStatus()`.
-     */
-    protected static ?int $_status = null;
 
     /**
      * Makes sure the container instantiates the model class before calling parent constructor.
