@@ -1,6 +1,6 @@
 ## 2.1.2 (Dec 19, 2023)
 
-- Changed `Yii::configure()` calls with arrays back to `Yii::$container->get()` for better IDE support
+- Changed `Yii::createObject()` calls with arrays back to `Yii::$container->get()` for better IDE support
 
 ## 2.1.1 (Dec 18, 2023)
 
