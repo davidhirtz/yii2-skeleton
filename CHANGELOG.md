@@ -1,3 +1,8 @@
+## 2.1.3 (Dec 19, 2023)
+
+- Enhanced `DuplicateActiveRecord` to work with generic template
+- Fixed `NestedTreeTrait::isTransactional()`
+
 ## 2.1.2 (Dec 19, 2023)
 
 - Changed `Yii::createObject()` calls with arrays back to `Yii::$container->get()` for better IDE support

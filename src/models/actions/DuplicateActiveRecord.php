@@ -25,7 +25,7 @@ class DuplicateActiveRecord
         $this->duplicate->setAttributes([...$this->getSafeAttributes(), ...$attributes], false);
     }
 
-    public function duplicateActiveRecord(): ?ActiveRecord
+    public function duplicateActiveRecord(): bool
     {
         if ($this->model::getDb()->getTransaction()) {
             return $this->duplicateInternal();
@@ -34,27 +34,26 @@ class DuplicateActiveRecord
         $transaction = $this->model::getDb()->beginTransaction();
 
         try {
-            $duplicate = $this->duplicateInternal();
-            $transaction->commit();
+            if ($this->duplicateInternal()) {
+                $transaction->commit();
+                return true;
+            }
         } catch (Exception $exception) {
             $transaction->rollBack();
             throw $exception;
         }
 
-        return $duplicate;
+        return false;
     }
 
-    protected function duplicateInternal(): ?ActiveRecord
+    protected function duplicateInternal(): bool
     {
-        if (!$this->beforeDuplicate()) {
-            return null;
-        }
-
-        if ($this->duplicate->insert()) {
+        if ($this->beforeDuplicate() && $this->duplicate->insert()) {
             $this->afterDuplicate();
+            return true;
         }
 
-        return $this->duplicate;
+        return false;
     }
 
     protected function beforeDuplicate(): bool
@@ -79,10 +78,13 @@ class DuplicateActiveRecord
         return $this->model->getAttributes($this->model->safeAttributes());
     }
 
-    
+    /**
+     * @return T|null
+     * @noinspection PhpDocSignatureInspection
+     */
     public static function create(array $params = []): ?ActiveRecord
     {
         $action = Yii::createObject(static::class, $params);
-        return $action->duplicateActiveRecord();
+        return $action->duplicateActiveRecord() ? $action->duplicate : null;
     }
 }

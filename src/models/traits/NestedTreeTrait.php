@@ -15,8 +15,7 @@ use yii\helpers\ArrayHelper;
  * @property int $lft
  * @property string $name
  *
- * @property-read ActiveRecord $parent|null {@see static::getParent()}
- * @method static ActiveQuery find()
+ * @property-read static|null $parent {@see static::getParent()}
  *
  * @mixin ActiveRecord
  */
@@ -80,7 +79,6 @@ trait NestedTreeTrait
         return null;
     }
 
-    
     public function findAncestors(): ActiveQuery
     {
         return static::find()->where('[[lft]]<:rgt AND [[rgt]]>:rgt', ['rgt' => $this->rgt]);
@@ -120,13 +118,13 @@ trait NestedTreeTrait
         }
     }
 
-    
+
     public function findDescendants(): ActiveQuery
     {
         return static::find()->where('[[lft]]>:lft AND [[rgt]]<:rgt', ['lft' => $this->lft, 'rgt' => $this->rgt]);
     }
 
-    
+
     public function getBranchCount(): int
     {
         return ($this->rgt - $this->lft - 1) / 2;
@@ -136,9 +134,10 @@ trait NestedTreeTrait
     {
         if ($this->parent_id) {
             if ($this->isAttributeChanged('parent_id', false)) {
-                $parent = static::findOne([
-                    'id' => $this->parent_id,
-                ]);
+                $parent = static::find()
+                    ->where(['id' => $this->parent_id])
+                    ->limit(1)
+                    ->one();
 
                 if (!$parent) {
                     $this->addInvalidAttributeError('parent_id');
@@ -274,7 +273,6 @@ trait NestedTreeTrait
         }
     }
 
-    
     public static function rebuildNestedTree(?ActiveRecord $parent = null, array $order = []): void
     {
         $parentId = $parent?->getPrimaryKey();
@@ -287,7 +285,6 @@ trait NestedTreeTrait
             ]);
         }
 
-        /** @var static[] $models */
         $models = $query->select(['id', 'parent_id', 'lft', 'rgt'])
             ->orderBy(['lft' => SORT_ASC, 'position' => SORT_ASC])
             ->indexBy('id')
@@ -312,9 +309,6 @@ trait NestedTreeTrait
         }
     }
 
-    /**
-     * @return array()
-     */
     private static function rebuildNestedTreeBranch(array $branch, int &$lft, ?int $parentId): array
     {
         $tree = [];
@@ -357,6 +351,6 @@ trait NestedTreeTrait
 
     public function isTransactional($operation): bool
     {
-        return $this->isAttributeChanged('parent_id') || parent::isAttributeRequired($operation);
+        return $this->isAttributeChanged('parent_id') || parent::isTransactional($operation);
     }
 }
