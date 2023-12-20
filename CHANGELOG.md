@@ -1,3 +1,7 @@
+## 2.1.4 (Dec 19, 2023)
+
+- Enhanced `GridView` annotations for static analysis
+
 ## 2.1.3 (Dec 19, 2023)
 
 - Enhanced `DuplicateActiveRecord` to work with generic template

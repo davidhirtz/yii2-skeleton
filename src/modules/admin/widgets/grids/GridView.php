@@ -19,7 +19,7 @@ use yii\helpers\StringHelper;
 use yii\helpers\Url;
 
 /**
- * @property ActiveDataProvider|ArrayDataProvider $dataProvider
+ * @property ActiveDataProvider|ArrayDataProvider|null $dataProvider
  */
 class GridView extends \yii\grid\GridView
 {
