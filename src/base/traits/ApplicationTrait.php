@@ -176,15 +176,15 @@ trait ApplicationTrait
             ];
         }
 
-        $path = $config['basePath'] . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR;
+        $path = "{$config['basePath']}/config/";
         $config = ArrayHelper::merge($core, $config);
 
         if (is_file($params = $path . 'params.php')) {
-            $config['params'] = array_merge($config['params'] ?? [], require ($params));
+            $config['params'] = array_merge($config['params'] ?? [], require($params));
         }
 
         if (is_file($db = $path . 'db.php')) {
-            $config['components']['db'] = array_merge(require ($db), $config['components']['db']);
+            $config['components']['db'] = array_merge(require($db), $config['components']['db']);
         }
 
         // Mailer transport DSN might need to be set via params (eg. yii2-config module)
