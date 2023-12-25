@@ -67,7 +67,7 @@ class I18N extends \yii\i18n\I18N
 
     public function getLanguageCode(): string
     {
-        return substr((string) Yii::$app->language, 0, 2);
+        return substr(Yii::$app->language, 0, 2);
     }
 
     /**

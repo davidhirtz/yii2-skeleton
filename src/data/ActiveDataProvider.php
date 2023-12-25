@@ -24,7 +24,7 @@ class ActiveDataProvider extends \yii\data\ActiveDataProvider
     /**
      * Additional method to allow behaviors attached on `init` to manipulate the `query`.
      */
-    public function prepareQuery()
+    public function prepareQuery(): void
     {
         $this->trigger(static::EVENT_AFTER_PREPARE);
     }

@@ -69,7 +69,7 @@ class ArrayHelper extends BaseArrayHelper
         $children = [];
         $attributes = [];
 
-        $name = (string)$xml->getName();
+        $name = $xml->getName();
         $text = trim((string)$xml);
 
         if (strlen($text) <= 0) {
@@ -83,7 +83,7 @@ class ArrayHelper extends BaseArrayHelper
                 $_attributes = $xml->attributes($ns, true);
 
                 foreach ($_attributes as $attribute => $value) {
-                    $attribute = trim((string)$attribute);
+                    $attribute = trim($attribute);
                     $value = trim((string)$value);
 
                     if (!empty($ns)) {
@@ -97,8 +97,6 @@ class ArrayHelper extends BaseArrayHelper
                 $_children = $xml->children($ns, true);
 
                 foreach ($_children as $child => $value) {
-                    $child = (string)$child;
-
                     if (!empty($ns)) {
                         $child = $ns . ':' . $child;
                     }

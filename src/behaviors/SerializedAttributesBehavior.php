@@ -13,27 +13,17 @@ use yii\base\Behavior;
  */
 class SerializedAttributesBehavior extends Behavior
 {
-    /**
-     * @var string[]
-     */
-    public $attributes = [];
+    public array $attributes = [];
 
     /**
      * @var bool serialized data to protect them from corruption (when your DB is not in UTF-8)
      * @see http://www.jackreichert.com/2014/02/02/handling-a-php-unserialize-offset-error/
      */
-    public $encode = false;
+    public bool $encode = false;
 
     private array $oldAttributes = [];
 
-    /***********************************************************************
-     * Events.
-     ***********************************************************************/
-
-    /**
-     * @return array
-     */
-    public function events()
+    public function events(): array
     {
         return [
             ActiveRecord::EVENT_BEFORE_INSERT => 'serializeAttributes',
@@ -44,10 +34,7 @@ class SerializedAttributesBehavior extends Behavior
         ];
     }
 
-    /**
-     * Serializes attributes.
-     */
-    public function serializeAttributes()
+    public function serializeAttributes(): void
     {
         foreach ($this->attributes as $attribute) {
             if (isset($this->oldAttributes[$attribute])) {
@@ -66,10 +53,7 @@ class SerializedAttributesBehavior extends Behavior
         }
     }
 
-    /**
-     * Unserializes attributes.
-     */
-    public function unserializeAttributes()
+    public function unserializeAttributes(): void
     {
         foreach ($this->attributes as $attribute) {
             $this->oldAttributes[$attribute] = $this->owner->getOldAttribute($attribute);
