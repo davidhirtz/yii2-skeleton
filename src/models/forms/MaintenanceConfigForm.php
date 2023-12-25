@@ -2,11 +2,14 @@
 
 namespace davidhirtz\yii2\skeleton\models\forms;
 
+use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
 use Yii;
 use yii\base\Model;
 
 class MaintenanceConfigForm extends Model
 {
+    use ModelTrait;
+
     public const MAINTENANCE_CONFIG = '@runtime/maintenance.json';
 
     /**

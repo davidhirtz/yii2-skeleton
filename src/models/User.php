@@ -373,7 +373,7 @@ class User extends ActiveRecord implements StatusAttributeInterface
 
     public function deletePicture(?string $picture): bool
     {
-        return $picture && FileHelper::removeFile($this->getUploadPath() . $picture);
+        return $picture && FileHelper::unlink($this->getUploadPath() . $picture);
     }
 
     public function generatePasswordHash(string $password): void

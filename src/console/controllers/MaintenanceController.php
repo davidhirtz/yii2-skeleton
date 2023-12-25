@@ -105,7 +105,7 @@ class MaintenanceController extends Controller
      */
     protected function enableMaintenanceMode(bool $withConfig = false): void
     {
-        $form = new MaintenanceConfigForm();
+        $form = MaintenanceConfigForm::create();
 
         if ($withConfig || !$form->isConfigured()) {
             foreach ($this->configProperties as $property) {
@@ -128,7 +128,7 @@ class MaintenanceController extends Controller
      */
     protected function disableMaintenanceMode(): void
     {
-        FileHelper::removeFile(Yii::getAlias(self::MAINTENANCE_FILE));
+        FileHelper::unlink(Yii::getAlias(self::MAINTENANCE_FILE));
         $this->stdout('Maintenance mode disabled.' . PHP_EOL, Console::FG_GREEN);
     }
 

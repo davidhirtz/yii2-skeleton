@@ -164,7 +164,7 @@ class SystemController extends Controller
             throw new NotFoundHttpException();
         }
 
-        FileHelper::removeFile($provider->file);
+        FileHelper::unlink($provider->file);
         return $this->redirect(['index']);
     }
 
