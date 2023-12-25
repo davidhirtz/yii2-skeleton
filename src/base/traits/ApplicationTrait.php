@@ -12,7 +12,6 @@ use davidhirtz\yii2\skeleton\rbac\DbManager;
 use davidhirtz\yii2\skeleton\web\DbSession;
 use davidhirtz\yii2\skeleton\web\Sitemap;
 use davidhirtz\yii2\skeleton\web\UrlManager;
-use davidhirtz\yii2\skeleton\web\User;
 use davidhirtz\yii2\skeleton\web\View;
 use Yii;
 use yii\authclient\Collection;

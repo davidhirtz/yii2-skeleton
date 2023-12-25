@@ -56,7 +56,7 @@ class User extends \yii\web\User
      */
     public bool $disableRbacForOwner = true;
 
-    public $identityClass = 'davidhirtz\yii2\skeleton\db\Identity';
+    public $identityClass = Identity::class;
     public $loginUrl = null;
 
     private ?int $_userCount = null;
@@ -132,7 +132,7 @@ class User extends \yii\web\User
     private function insertLogin(Identity $identity): void
     {
         if ($browser = Yii::$app->getRequest()->getUserAgent()) {
-            $browser = mb_substr((string) $browser, 0, 255, Yii::$app->charset);
+            $browser = mb_substr($browser, 0, 255, Yii::$app->charset);
         }
 
         if ($ipAddress = ($identity->ipAddress ?: Yii::$app->getRequest()->getUserIP())) {

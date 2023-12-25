@@ -1,6 +1,6 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\tests\functional;
+namespace davidhirtz\yii2\skeleton\codeception;
 
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use davidhirtz\yii2\skeleton\models\User;
@@ -17,8 +17,13 @@ abstract class BaseCest
         Yii::$app->getAssetManager()->basePath = $path;
     }
 
+    /**
+     * @noinspection PhpUnused
+     * @noinspection PhpUnusedParameterInspection
+     */
     public function _after(FunctionalTester $I): void
     {
+        Yii::$app->getUser()->logout();
         FileHelper::removeDirectory($this->getAssetPath());
     }
 
@@ -27,7 +32,18 @@ abstract class BaseCest
         return Yii::getAlias('@runtime/assets');
     }
 
-    protected function assignRole(int $userId, string $role = User::AUTH_ROLE_ADMIN): void
+    protected function assignAdminRole(int $userId): void
+    {
+        $this->assignRole($userId, User::AUTH_ROLE_ADMIN);
+    }
+
+    protected function assignPermission(int $userId, string $permission): void
+    {
+        $permission = Yii::$app->getAuthManager()->getPermission($permission);
+        Yii::$app->getAuthManager()->assign($permission, $userId);
+    }
+
+    protected function assignRole(int $userId, string $role): void
     {
         $role = Yii::$app->getAuthManager()->getRole($role);
         Yii::$app->getAuthManager()->assign($role, $userId);

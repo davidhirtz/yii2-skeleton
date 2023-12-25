@@ -6,19 +6,11 @@ use davidhirtz\yii2\skeleton\web\Controller;
 use Exception;
 use Yii;
 
-/**
- * Class HealthController
- * @package davidhirtz\yii2\skeleton\controllers
- */
 class HealthController extends Controller
 {
-    /**
-     * @var bool
-     */
     public $enableCsrfValidation = false;
 
-    
-    public function actionIndex()
+    public function actionIndex(): void
     {
         try {
             Yii::$app->getDb()->open();
