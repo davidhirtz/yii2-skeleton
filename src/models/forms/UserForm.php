@@ -5,9 +5,6 @@ namespace davidhirtz\yii2\skeleton\models\forms;
 use davidhirtz\yii2\skeleton\models\User;
 use Yii;
 
-/**
- * UserForm extends {@see User}. It is used to update user information of the current webuser.
- */
 class UserForm extends User
 {
     public ?string $newPassword = null;
@@ -22,27 +19,32 @@ class UserForm extends User
             [
                 ['email'],
                 $this->validateEmail(...),
-            ], [
+            ],
+            [
                 ['newPassword', 'repeatPassword', 'oldPassword'],
                 'trim',
-            ], [
-                ['newPassword', 'repeatPassword', 'oldPassword'],
+            ],
+            [
+                ['newPassword', 'repeatPassword'],
                 'string',
                 'min' => $this->passwordMinLength,
-            ], [
+            ],
+            [
                 ['newPassword'],
                 $this->validateNewPassword(...),
                 'skipOnError' => true,
-            ], [
+            ],
+            [
                 ['repeatPassword'],
                 'required',
                 'when' => fn (self $model): bool => (bool)$model->newPassword,
-            ], [
+            ],
+            [
                 ['repeatPassword'],
                 'compare',
                 'compareAttribute' => 'newPassword',
                 'message' => Yii::t('skeleton', 'The password must match the new password.'),
-            ]
+            ],
         ];
     }
 
@@ -52,9 +54,6 @@ class UserForm extends User
         parent::afterFind();
     }
 
-    /**
-     * @param bool $insert
-     */
     public function beforeSave($insert): bool
     {
         if (parent::beforeSave($insert)) {
@@ -112,9 +111,6 @@ class UserForm extends User
         }
     }
 
-    /**
-     * Sends email confirmation mail.
-     */
     public function sendEmailConfirmationEmail(): void
     {
         Yii::$app->getMailer()->compose('@skeleton/mail/account/email', ['user' => $this])
@@ -123,7 +119,6 @@ class UserForm extends User
             ->setTo($this->email)
             ->send();
     }
-
 
     public function scenarios(): array
     {
@@ -147,7 +142,8 @@ class UserForm extends User
 
     public function attributeLabels(): array
     {
-        return [...parent::attributeLabels(),
+        return [
+            ...parent::attributeLabels(),
             'newPassword' => Yii::t('skeleton', 'New password'),
             'repeatPassword' => Yii::t('skeleton', 'Repeat password'),
             'oldPassword' => Yii::t('skeleton', 'Current password'),

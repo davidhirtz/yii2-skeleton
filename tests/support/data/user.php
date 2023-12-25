@@ -9,6 +9,7 @@ return [
         'status' => User::STATUS_ENABLED,
         'name' => 'owner',
         'email' => 'owner@domain.com',
+        'timezone' => null,
         'password_hash' => '$2y$13$fsHsH/ZbpVdOY85BaAsW8uWv12zR7NuzHYtgYE0qBtPzQmcjB.a1a', // password
         'password_salt' => 'tVe8JqR-jI',
         'google_2fa_secret' => null,
@@ -21,6 +22,7 @@ return [
         'status' => User::STATUS_DISABLED,
         'name' => 'disabled',
         'email' => 'disabled@domain.com',
+        'timezone' => null,
         'password_hash' => '$2y$13$fsHsH/ZbpVdOY85BaAsW8uWv12zR7NuzHYtgYE0qBtPzQmcjB.a1a', // password
         'password_salt' => 'tVe8JqR-jI',
         'google_2fa_secret' => null,
@@ -33,6 +35,7 @@ return [
         'status' => User::STATUS_ENABLED,
         'name' => 'admin',
         'email' => 'f2a@domain.com',
+        'timezone' => 'Europe/Berlin',
         'password_hash' => '$2y$13$fsHsH/ZbpVdOY85BaAsW8uWv12zR7NuzHYtgYE0qBtPzQmcjB.a1a', // password
         'password_salt' => 'tVe8JqR-jI',
         'google_2fa_secret' => 'AX7CR435GC575V4C', // 123456

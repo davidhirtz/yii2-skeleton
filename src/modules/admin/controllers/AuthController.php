@@ -107,7 +107,7 @@ class AuthController extends Controller
         return $this->redirect(['view', 'user' => $user->id]);
     }
 
-    private function getAuthItem(string $name, int $type): Role
+    protected function getAuthItem(string $name, int $type): Role
     {
         $rbac = Yii::$app->getAuthManager();
         $role = null;

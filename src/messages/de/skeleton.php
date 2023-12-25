@@ -216,7 +216,7 @@ return [
     'The user was updated.' => 'Der Benutzer wurde erfolgreich aktualisiert.',
     'The user {name} was not found.' => 'Der Benutzer {user} wurde nicht gefunden.',
     'The website ownership was successful transferred!' => 'Der Besitzer der Webseite wurde erfolgreich geändert!',
-    'This email is already used by another user.' => 'Diese E-Mail-Adresse wird bereits von einem anderen Benutzer verwendet.',
+    'This email address is already used by another user.' => 'Diese E-Mail-Adresse wird bereits von einem anderen Benutzer verwendet.',
     'This permission was already assigned to user {name}.' => 'Diese Rechte wurden bereits {name} erteilt.',
     'This permission was not assigned to user {name}.' => 'Diese Rechte wurden {name} noch nicht erteilt.',
     'This user is already the owner of the website!' => 'Dieser Benutzer ist bereits der Besitzer der Webseite!',

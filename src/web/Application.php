@@ -84,7 +84,7 @@ class Application extends \yii\web\Application
      */
     protected function setDebugModuleConfig(array &$config): void
     {
-        if (YII_DEBUG) {
+        if (YII_DEBUG && !YII_ENV_TEST) {
             if (!in_array('debug', $config['bootstrap'] ?? [])) {
                 $config['bootstrap'][] = 'debug';
             }

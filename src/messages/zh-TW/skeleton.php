@@ -215,7 +215,7 @@ return [
     'The user was updated.' => '',
     'The user {name} was not found.' => '',
     'The website ownership was successful transferred!' => '',
-    'This email is already used by another user.' => '',
+    'This email address is already used by another user.' => '',
     'This permission was already assigned to user {name}.' => '',
     'This permission was not assigned to user {name}.' => '',
     'This user is already the owner of the website!' => '',

@@ -17,8 +17,8 @@ class StreamUploadedFile extends UploadedFile
     public ?string $url = null;
 
     /**
-     * @var array|null containing a list of allowed extensions which will be filtered against the found mime-type of
-     * the downloaded file. This will also determine the file ending. Leave empty to use url ending.
+     * @var array|null containing a list of allowed extensions which will be filtered against the found mime-type only
+     * after the file was downloaded. This will also determine the file ending. Leave empty to use url ending.
      */
     public ?array $allowedExtensions = null;
 

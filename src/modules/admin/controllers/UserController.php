@@ -222,7 +222,7 @@ class UserController extends Controller
         ]);
     }
 
-    private function updateUserAttributes(int $id, array $attributes): Response
+    protected function updateUserAttributes(int $id, array $attributes): Response
     {
         $user = $this->findUserForm($id, User::AUTH_USER_UPDATE);
         $user->setAttributes($attributes, false);

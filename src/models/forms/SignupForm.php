@@ -37,47 +37,54 @@ class SignupForm extends Identity
      */
     public ?string $token = null;
 
-    
+    /**
+     * @var int the time in seconds in which a new signup is not allowed from the same IP address.
+     */
     public int $spamProtectionInSeconds = 60;
 
-    /**
-     * Cookie name.
-     */
     public const SESSION_TOKEN_NAME = 'signup_token';
     public const SESSION_TIMESTAMP_NAME = 'signup_timestamp';
     public const SESSION_MIN_TIME = 2;
     public const SESSION_MAX_TIME = 1800;
 
-    
     public function rules(): array
     {
-        return [...parent::rules(), [
-            ['password'],
-            'required',
-        ], [
-            ['password'],
-            'string',
-            'min' => $this->passwordMinLength,
-        ], [
-            ['terms'],
-            'compare',
-            'compareValue' => 1,
-            'message' => Yii::t('skeleton', 'Please accept the terms of service and privacy policy.'),
-            'skipOnEmpty' => false,
-        ], [
-            ['token'],
-            $this->validateToken(...),
-        ], [
-            ['honeypot'],
-            'compare',
-            'compareValue' => '',
-            'message' => Yii::t('skeleton', 'Sign up could not be completed, please try again.'),
-        ]];
+        return [
+            ...parent::rules(),
+            [
+                ['password'],
+                'required',
+            ],
+            [
+                ['password'],
+                'string',
+                'min' => $this->passwordMinLength,
+            ],
+            [
+                ['terms'],
+                'compare',
+                'compareValue' => 1,
+                'message' => Yii::t('skeleton', 'Please accept the terms of service and privacy policy.'),
+                'skipOnEmpty' => false,
+            ],
+            [
+                ['token'],
+                $this->validateToken(...),
+            ],
+            [
+                ['honeypot'],
+                'compare',
+                'compareValue' => '',
+                'message' => Yii::t('skeleton', 'Sign up could not be completed, please try again.'),
+            ],
+        ];
     }
 
     public function validateToken(): void
     {
-        if (($token = static::getSessionToken()) !== null) {
+        $token = static::getSessionToken();
+
+        if ($token !== null) {
             if ($this->token !== $token) {
                 $this->addError('token', Yii::t('skeleton', 'Sign up could not be completed, please try again.'));
             }
@@ -87,24 +94,6 @@ class SignupForm extends Identity
                 if ($timestamp < static::SESSION_MIN_TIME && $timestamp > static::SESSION_MAX_TIME) {
                     $this->addError('token', Yii::t('skeleton', 'Sign up could not be completed, please try again.'));
                 }
-            }
-        }
-    }
-
-    /**
-     * Checks the IP address against the new signups.
-     */
-    public function validateIp(): void
-    {
-        if ($this->ipAddress && $this->spamProtectionInSeconds > 0) {
-            $signup = UserLogin::find()
-                ->where(['type' => UserLogin::TYPE_SIGNUP, 'ip_address' => inet_pton($this->ipAddress)])
-                ->orderBy(['created_at' => SORT_DESC])
-                ->limit(1)
-                ->one();
-
-            if ($signup && $signup->created_at->getTimestamp() > time() - $this->spamProtectionInSeconds) {
-                $this->addError('id', Yii::t('skeleton', 'You have just created a new user account. Please wait a few minutes!'));
             }
         }
     }
@@ -125,6 +114,21 @@ class SignupForm extends Identity
         return parent::beforeValidate();
     }
 
+    public function validateIp(): void
+    {
+        if ($this->ipAddress && $this->spamProtectionInSeconds > 0) {
+            $signup = UserLogin::find()
+                ->where(['type' => UserLogin::TYPE_SIGNUP, 'ip_address' => inet_pton($this->ipAddress)])
+                ->orderBy(['created_at' => SORT_DESC])
+                ->limit(1)
+                ->one();
+
+            if ($signup && $signup->created_at->getTimestamp() > time() - $this->spamProtectionInSeconds) {
+                $this->addError('id', Yii::t('skeleton', 'You have just created a new user account. Please wait a few minutes!'));
+            }
+        }
+    }
+
     public function afterValidate(): void
     {
         if (!$this->hasErrors()) {
@@ -134,7 +138,6 @@ class SignupForm extends Identity
         parent::afterValidate();
     }
 
-    
     public function beforeSave($insert): bool
     {
         if ($insert) {
@@ -145,10 +148,6 @@ class SignupForm extends Identity
         return parent::beforeSave($insert);
     }
 
-    /**
-     * @param bool $insert
-     * @param array $changedAttributes
-     */
     public function afterSave($insert, $changedAttributes): void
     {
         if ($insert) {
@@ -172,8 +171,7 @@ class SignupForm extends Identity
     }
 
     /**
-     * Generates a random token saved in the user session. Override this method to return
-     * null to disabled token check.
+     * Generates a random token saved in the user session. Override this method to return null to disabled token check.
      */
     public static function getSessionToken(): ?string
     {
@@ -188,15 +186,17 @@ class SignupForm extends Identity
         return $session->get(static::SESSION_TOKEN_NAME, false);
     }
 
-    
     public function isFacebookSignupEnabled(): bool
     {
         return $this->enableFacebookSignup && Yii::$app->getAuthClientCollection()->hasClient('facebook');
     }
 
-    
     public function attributeLabels(): array
     {
-        return [...parent::attributeLabels(), 'password' => Yii::t('skeleton', 'Password'), 'terms' => Yii::t('skeleton', 'I accept the terms of service and privacy policy')];
+        return [
+            ...parent::attributeLabels(),
+            'password' => Yii::t('skeleton', 'Password'),
+            'terms' => Yii::t('skeleton', 'I accept the terms of service and privacy policy'),
+        ];
     }
 }

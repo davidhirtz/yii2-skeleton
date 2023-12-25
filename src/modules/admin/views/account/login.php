@@ -39,7 +39,7 @@ $this->setTitle(Yii::t('skeleton', 'Login'));
             'title' => $this->title,
             'content' => LoginActiveForm::widget([
                 'model' => $form,
-            ])
+            ]),
         ]) ?>
         <div class="list-group">
             <?php
@@ -74,8 +74,7 @@ $this->setTitle(Yii::t('skeleton', 'Login'));
                     <?= Icon::tag('key', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'I forgot my password'); ?>
                 </a>
                 <?php
-            }
-?>
+            } ?>
         </div>
     </div>
 </div>

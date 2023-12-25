@@ -129,6 +129,7 @@ trait ApplicationTrait
                 'mailer' => [
                     'class' => Mailer::class,
                     'htmlLayout' => '@skeleton/mail/layouts/html',
+                    'useFileTransport' => YII_DEBUG,
                 ],
                 'session' => [
                     'class' => DbSession::class,

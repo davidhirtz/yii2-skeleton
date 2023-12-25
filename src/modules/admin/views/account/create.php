@@ -43,8 +43,7 @@ $this->setTitle(Yii::t('skeleton', 'Sign up'));
                     <?= Yii::t('skeleton', 'Sign up with Facebook'); ?>
                 </a>
                 <?php
-            }
-?>
+            } ?>
             <a href="<?php echo Url::to(['login']); ?>" class="list-group-item list-group-item-action">
                 <?= Icon::tag('sign-in-alt', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'Back to login'); ?>
             </a>

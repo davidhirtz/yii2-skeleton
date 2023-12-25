@@ -2,10 +2,9 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\data;
 
+use davidhirtz\yii2\skeleton\data\ActiveDataProvider;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\models\User;
-use yii\data\ActiveDataProvider;
-
 /**
  * @property UserQuery|null $query
  * @method User[] getModels()

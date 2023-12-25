@@ -20,7 +20,6 @@ use davidhirtz\yii2\skeleton\validators\UniqueValidator;
 use davidhirtz\yii2\skeleton\web\StreamUploadedFile;
 use Yii;
 use yii\db\ActiveQuery;
-use yii\helpers\Url;
 use yii\web\UploadedFile;
 
 /**
@@ -192,7 +191,7 @@ class User extends ActiveRecord implements StatusAttributeInterface
             [
                 ['email'],
                 'unique',
-                'message' => Yii::t('skeleton', 'This email is already used by another user.'),
+                'message' => Yii::t('skeleton', 'This email address is already used by another user.'),
                 'skipOnError' => true,
                 'when' => fn () => $this->isAttributeChanged('email')
             ],
@@ -397,17 +396,11 @@ class User extends ActiveRecord implements StatusAttributeInterface
         $this->password_reset_token = Yii::$app->getSecurity()->generateRandomString();
     }
 
-    /**
-     * @noinspection PhpUnused
-     */
     public function getFullName(): string
     {
         return trim($this->first_name . ' ' . $this->last_name);
     }
 
-    /**
-     * @noinspection PhpUnused
-     */
     public function getInitials(): string
     {
         return $this->first_name && $this->last_name ? ($this->first_name[0] . $this->last_name[0]) : substr($this->name, 0, 2);
@@ -418,39 +411,48 @@ class User extends ActiveRecord implements StatusAttributeInterface
         return $this->name;
     }
 
-    /**
-     * @see AccountController::actionConfirm()
-     */
     public function getEmailConfirmationUrl(): ?string
     {
-        return $this->verification_token ? Url::to(['account/confirm', 'email' => $this->email, 'code' => $this->verification_token], true) : null;
+        if (!$this->verification_token) {
+            return null;
+        }
+
+        /** @see AccountController::actionConfirm() */
+        return Yii::$app->getUrlManager()->createAbsoluteUrl([
+            'account/confirm',
+            'email' => $this->email,
+            'code' => $this->verification_token,
+        ]);
     }
 
-    /**
-     * @see AccountController::actionReset()
-     */
     public function getPasswordResetUrl(): ?string
     {
-        return $this->password_reset_token ? Url::to(['account/reset', 'email' => $this->email, 'code' => $this->password_reset_token], true) : null;
+        if (!$this->password_reset_token) {
+            return null;
+        }
+
+        /** @see AccountController::actionReset() */
+        return Yii::$app->getUrlManager()->createAbsoluteUrl([
+            'account/reset',
+            'email' => $this->email,
+            'code' => $this->password_reset_token,
+        ]);
     }
 
-    /**
-     * @noinspection PhpUnused
-     */
     public function getTimezoneOffset(): string
     {
-        $date = new \DateTime('now');
+        $date = new \DateTime('now', new DateTimeZone($this->timezone ?? Yii::$app->getTimeZone()));
         return 'GMT ' . $date->format('P');
     }
 
     public function getUploadPath(): string|false
     {
-        return $this->_uploadPath ? (Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $this->_uploadPath) : false;
+        return $this->_uploadPath ? Yii::getAlias("@webroot/$this->_uploadPath") : false;
     }
 
     public function setUploadPath(string $uploadPath): void
     {
-        $this->_uploadPath = trim($uploadPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        $this->_uploadPath = trim($uploadPath, '/') . '/';
     }
 
     public function getBaseUrl(): string
@@ -474,7 +476,11 @@ class User extends ActiveRecord implements StatusAttributeInterface
 
     public function getStatusName(): string
     {
-        return !$this->isOwner() ? (static::getStatuses()[$this->status]['name'] ?? '') : Yii::t('skeleton', 'Site Owner');
+        if ($this->isOwner()) {
+            return Yii::t('skeleton', 'Site Owner');
+        }
+
+        return static::getStatuses()[$this->status]['name'] ?? '';
     }
 
     public function getStatusIcon(): string
