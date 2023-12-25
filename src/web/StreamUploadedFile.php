@@ -30,44 +30,40 @@ class StreamUploadedFile extends UploadedFile
             $this->tempName = $this->getTemporaryUploadPath() . uniqid();
         }
 
-        if ($this->loadTemporaryFile()) {
-            $this->name = basename(parse_url($this->url, PHP_URL_PATH));
-        }
+        $this->loadTemporaryFile();
 
         parent::init();
     }
 
-    protected function loadTemporaryFile(): bool
+    protected function loadTemporaryFile(): void
     {
         if (!$this->url) {
             $this->error = UPLOAD_ERR_NO_FILE;
-            return false;
+            return;
         }
 
-        $contents = @file_get_contents(FileHelper::encodeUrl($this->url));
+        $this->url = FileHelper::encodeUrl($this->url);
+        $contents = @file_get_contents($this->url);
 
         if (!$contents) {
             $this->error = UPLOAD_ERR_NO_FILE;
-            return false;
+            return;
         }
 
-        $this->size = file_put_contents($this->tempName, $contents);
+        $this->size = @file_put_contents($this->tempName, $contents);
 
         if (!$this->size) {
             $this->error = UPLOAD_ERR_CANT_WRITE;
-            return false;
+            return;
         }
 
+        $this->name = basename(parse_url($this->url, PHP_URL_PATH));
         $this->type = FileHelper::getMimeType($this->tempName);
 
         if ($this->allowedExtensions && !in_array($this->getExtension(), $this->allowedExtensions)) {
             $this->error = UPLOAD_ERR_EXTENSION;
             @unlink($this->tempName);
-
-            return false;
         }
-
-        return true;
     }
 
     public function saveAs($file, $deleteTempFile = true): bool

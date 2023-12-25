@@ -113,15 +113,6 @@ EOL
 
     public static function encodeUrl(string $url): string
     {
-        $parts = parse_url($url);
-
-        // If the URL is relative, return it as is.
-        if (!isset($parts['scheme'], $parts['host'])) {
-            return $url;
-        }
-
-        $path = array_map('rawurldecode', explode('/', $parts['path']));
-
-        return "{$parts['scheme']}://{$parts['host']}" . implode('/', array_map('rawurlencode', $path));
+        return str_replace(['%2F', '%3A'], ['/', ':'], rawurlencode(rawurldecode($url)));
     }
 }
