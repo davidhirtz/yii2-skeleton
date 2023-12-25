@@ -1,3 +1,7 @@
+## 2.1.5 (Dec 26, 2023)
+
+- Enhanced test suite and simplified test configuration
+
 ## 2.1.4 (Dec 19, 2023)
 
 - Enhanced `GridView` annotations for static analysis
