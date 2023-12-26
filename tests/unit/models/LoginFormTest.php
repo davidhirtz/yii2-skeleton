@@ -3,8 +3,8 @@
 namespace davidhirtz\yii2\skeleton\tests\unit\models;
 
 use Codeception\Test\Unit;
+use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixture;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
-use davidhirtz\yii2\skeleton\tests\fixtures\UserFixture;
 use davidhirtz\yii2\skeleton\validators\GoogleAuthenticatorValidator;
 use Yii;
 

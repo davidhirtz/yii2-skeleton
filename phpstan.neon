@@ -21,6 +21,7 @@ parameters:
     excludePaths:
         - src/gii/*
         - tests/_output/*
+        - tests/support/*
 
     scanFiles:
         - Yii.php

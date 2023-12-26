@@ -3,4 +3,4 @@ modules:
   enabled:
     - Asserts
     - Filesystem
-    - Yii2
+    - davidhirtz\yii2\skeleton\codeception\Yii2

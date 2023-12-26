@@ -5,33 +5,22 @@
 
 namespace davidhirtz\yii2\skeleton\tests\functional;
 
-use davidhirtz\yii2\skeleton\codeception\BaseCest;
+use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorLoginActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\LoginActiveForm;
-use davidhirtz\yii2\skeleton\tests\fixtures\UserFixture;
 use davidhirtz\yii2\skeleton\tests\support\FunctionalTester;
 use davidhirtz\yii2\skeleton\validators\GoogleAuthenticatorValidator;
 use RobThree\Auth\TwoFactorAuth;
 use Yii;
 
-class LoginCest extends BaseCest
+class LoginCest
 {
-    public function _fixtures(): array
-    {
-        return [
-            'user' => [
-                'class' => UserFixture::class,
-                'dataFile' => codecept_data_dir() . 'user.php',
-            ],
-        ];
-    }
+    use UserFixtureTrait;
 
     public function _before(FunctionalTester $I): void
     {
-        parent::_before($I);
-
         /** @var Module $module */
         $module = Yii::$app->getModule('admin');
 
