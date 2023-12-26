@@ -60,7 +60,7 @@ class Application extends \yii\web\Application
             ],
             'response' => [
                 'class' => Response::class,
-                'on beforeSend' => function (Event $event) {
+                'on beforeSend' => function (Event $event): void {
                     if ($this->getRequest()->getIsDraft()) {
                         /** @var Response $response */
                         $response = $event->sender;

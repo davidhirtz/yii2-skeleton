@@ -69,7 +69,7 @@ class PasswordResetForm extends Model
     /**
      * Validates user credentials and password reset code.
      */
-    public function afterValidate()
+    public function afterValidate(): void
     {
         $this->validatePasswordResetCode();
         $this->validateUserStatus();

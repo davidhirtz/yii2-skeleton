@@ -18,7 +18,7 @@ class M201205112000Trail extends Migration
     use MigrationTrait;
 
     
-    public function safeUp()
+    public function safeUp(): void
     {
         $this->createTable(Trail::tableName(), [
             'id' => $this->primaryKey()->unsigned(),
@@ -46,7 +46,7 @@ class M201205112000Trail extends Migration
     }
 
     
-    public function safeDown()
+    public function safeDown(): void
     {
         $this->dropTable(Trail::tableName());
 

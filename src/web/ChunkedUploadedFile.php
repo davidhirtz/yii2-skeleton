@@ -189,7 +189,7 @@ class ChunkedUploadedFile extends UploadedFile
      * Multiple uploads are not supported for chunked uploads.
      * @noinspection PhpDocSignatureInspection
      */
-    public static function getInstances($model, $attribute)
+    public static function getInstances($model, $attribute): void
     {
         throw new InvalidCallException();
     }
@@ -198,7 +198,7 @@ class ChunkedUploadedFile extends UploadedFile
      * Multiple uploads are not supported for chunked uploads.
      * @noinspection PhpDocSignatureInspection
      */
-    public static function getInstancesByName($name)
+    public static function getInstancesByName($name): void
     {
         throw new InvalidCallException();
     }

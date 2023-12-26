@@ -31,7 +31,7 @@ class TrailActiveDataProvider extends ActiveDataProvider
             $this->query->andWhere(['user_id' => $this->user->id]);
         } else {
             $this->query->with([
-                'user' => function (UserQuery $query) {
+                'user' => function (UserQuery $query): void {
                     $query->selectListAttributes();
                 }
             ]);

@@ -68,7 +68,7 @@ class FileHelper extends BaseFileHelper
     {
         $file = Yii::getAlias($file);
 
-        if(!static::createDirectory(dirname($file))) {
+        if(!static::createDirectory(dirname((string) $file))) {
             return false;
         }
 

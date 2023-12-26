@@ -260,7 +260,7 @@ trait ApplicationTrait
     public function setMigrationNamespace(string $namespace): void
     {
         if ($this->getRequest()->getIsConsoleRequest()) {
-            $this->on(static::EVENT_BEFORE_ACTION, function (ActionEvent $event) {
+            $this->on(static::EVENT_BEFORE_ACTION, function (ActionEvent $event): void {
                 $controller = $event->action->controller;
 
                 if ($controller instanceof MigrateController) {

@@ -23,7 +23,7 @@ class BootboxAsset extends AssetBundle
     /**
      * Loads locale based on app language.
      */
-    public function init()
+    public function init(): void
     {
         if (Yii::$app->language !== Yii::$app->sourceLanguage) {
             $this->js = ['bootbox.all.min.js'];

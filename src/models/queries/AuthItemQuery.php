@@ -27,7 +27,7 @@ class AuthItemQuery extends ActiveQuery
     public function withUsers(): static
     {
         return $this->with([
-            'users' => function (UserQuery $query) {
+            'users' => function (UserQuery $query): void {
                 $query->selectListAttributes()
                     ->orderBy(['name' => SORT_ASC]);
             }

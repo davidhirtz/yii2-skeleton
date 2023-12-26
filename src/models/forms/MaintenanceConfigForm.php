@@ -51,7 +51,7 @@ class MaintenanceConfigForm extends Model
             ],
             [
                 ['viewFile'],
-                function ($attribute) {
+                function ($attribute): void {
                     if ($this->$attribute && !file_exists(Yii::getAlias($this->$attribute))) {
                         $this->addError($attribute, 'The view file does not exist.');
                     }

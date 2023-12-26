@@ -36,7 +36,7 @@ class AuthClientSignupForm extends Identity
     /**
      * Override to implement validation if needed.
      */
-    public function validateExternalPictureUrl()
+    public function validateExternalPictureUrl(): void
     {
     }
 

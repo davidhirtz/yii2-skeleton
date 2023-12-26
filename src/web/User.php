@@ -132,7 +132,7 @@ class User extends \yii\web\User
     private function insertLogin(Identity $identity): void
     {
         if ($browser = Yii::$app->getRequest()->getUserAgent()) {
-            $browser = mb_substr($browser, 0, 255, Yii::$app->charset);
+            $browser = mb_substr((string) $browser, 0, 255, Yii::$app->charset);
         }
 
         if ($ipAddress = ($identity->ipAddress ?: Yii::$app->getRequest()->getUserIP())) {

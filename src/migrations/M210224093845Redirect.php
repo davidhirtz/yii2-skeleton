@@ -18,7 +18,7 @@ class M210224093845Redirect extends Migration
     use MigrationTrait;
 
     
-    public function safeUp()
+    public function safeUp(): void
     {
         $this->createTable(Redirect::tableName(), [
             'id' => $this->primaryKey()->unsigned(),
@@ -41,7 +41,7 @@ class M210224093845Redirect extends Migration
     }
 
     
-    public function safeDown()
+    public function safeDown(): void
     {
         $this->dropTable(Redirect::tableName());
 

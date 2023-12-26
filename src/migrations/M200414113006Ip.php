@@ -13,7 +13,7 @@ class M200414113006Ip extends Migration
      * Changes IPv4 fields "ip" to "ip_address" for implementations prior to
      * these changes in April 2020. Has no effect on newer versions.
      */
-    public function safeUp()
+    public function safeUp(): void
     {
         foreach ([UserLogin::tableName(), Session::tableName()] as $table) {
             if ($this->getDb()->getSchema()->getTableSchema($table)->getColumn('ip')) {

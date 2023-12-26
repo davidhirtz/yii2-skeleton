@@ -39,7 +39,7 @@ class UserLoginController extends Controller
                 ->orderBy(['created_at' => SORT_DESC])
                 ->filterWhere(['ip_address' => $q ? inet_pton($q) : null])
                 ->with([
-                    'user' => function (UserQuery $query) {
+                    'user' => function (UserQuery $query): void {
                         $query->nameAttributesOnly();
                     }
                 ])
