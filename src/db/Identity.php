@@ -9,7 +9,7 @@ use yii\web\IdentityInterface;
 
 class Identity extends User implements IdentityInterface
 {
-    public ?string $loginType = null;
+    public string $loginType = 'unknown';
     public ?string $ipAddress = null;
     public int $cookieLifetime = 2_592_000;
 

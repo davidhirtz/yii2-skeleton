@@ -13,7 +13,8 @@ return [
         'password_hash' => '$2y$13$fsHsH/ZbpVdOY85BaAsW8uWv12zR7NuzHYtgYE0qBtPzQmcjB.a1a', // password
         'password_salt' => 'tVe8JqR-jI',
         'google_2fa_secret' => null,
-        'auth_key' => Yii::$app->getSecurity()->generateRandomString(),
+        'auth_key' => 'h0rrnZTn0qKf2mWAxfzb6-cp0XuZRnUh',
+        'verification_token' => null,
         'is_owner' => 1,
         'created_at' => new Expression('UTC_TIMESTAMP()'),
     ],
@@ -26,7 +27,8 @@ return [
         'password_hash' => '$2y$13$fsHsH/ZbpVdOY85BaAsW8uWv12zR7NuzHYtgYE0qBtPzQmcjB.a1a', // password
         'password_salt' => 'tVe8JqR-jI',
         'google_2fa_secret' => null,
-        'auth_key' => Yii::$app->getSecurity()->generateRandomString(),
+        'auth_key' => 'h0rrnZTn0qKf2mWAxfzb6-cp0XuZRnUh',
+        'verification_token' => null,
         'is_owner' => 0,
         'created_at' => new Expression('UTC_TIMESTAMP()'),
     ],
@@ -39,7 +41,8 @@ return [
         'password_hash' => '$2y$13$fsHsH/ZbpVdOY85BaAsW8uWv12zR7NuzHYtgYE0qBtPzQmcjB.a1a', // password
         'password_salt' => 'tVe8JqR-jI',
         'google_2fa_secret' => 'AX7CR435GC575V4C', // 123456
-        'auth_key' => Yii::$app->getSecurity()->generateRandomString(),
+        'auth_key' => 'h0rrnZTn0qKf2mWAxfzb6-cp0XuZRnUh',
+        'verification_token' => 'fLZHyuassSUGwwuFiWHt_NwBXxM3zsSh',
         'is_owner' => 0,
         'created_at' => new Expression('UTC_TIMESTAMP()'),
     ],

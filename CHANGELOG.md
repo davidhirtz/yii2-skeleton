@@ -1,4 +1,4 @@
-## 2.1.6 - under development
+## 2.1.6 (Dec 29, 2023)
 
 - Enhanced Yii2 codeception test module to create and destroy the assets folder for each test
 - Removed `BaseCest` in favor of `UserFixtureTrait` trait
