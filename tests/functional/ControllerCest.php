@@ -12,7 +12,7 @@ class ControllerCest
 {
     public function checkApplicationHealth(FunctionalTester $I): void
     {
-        $I->amOnPage('/health');
+        $I->amOnPage('/application-health');
         $I->seeResponseCodeIsSuccessful();
     }
 
