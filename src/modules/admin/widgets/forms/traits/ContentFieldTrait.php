@@ -11,11 +11,15 @@ trait ContentFieldTrait
     public function contentField($options = []): ActiveField|string
     {
         if ($this->model->contentType) {
-            $options['labelOptions']['class'] ??= 'col-form-label col-form-content-label col-md-3';
+            $isHtml = $this->model->contentType === 'html';
+
+            if ($isHtml) {
+                $options['labelOptions']['class'] ??= 'col-form-label col-form-content-label col-md-3';
+            }
 
             $field = $this->field($this->model, 'content', $options);
 
-            return $this->model->contentType === 'html'
+            return $isHtml
                 ? $field->widget(TinyMceEditor::class, $this->getContentConfig())
                 : $field->textarea();
         }
