@@ -1,4 +1,8 @@
-## 2.1.7 (Jan 8, 2023)
+## 2.1.8 (Jan 8, 2024)
+
+- Added PHPDoc template to `GridView`
+
+## 2.1.7 (Jan 8, 2024)
 
 - Added `LinkDataColumn`
 - Changed `CounterColumn::$countHtmlOptions` to `CounterColumn::$wrapperOptions` to be consistent with `LinkDataColumn`

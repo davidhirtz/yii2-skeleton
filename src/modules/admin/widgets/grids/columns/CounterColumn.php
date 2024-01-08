@@ -7,8 +7,13 @@ use yii\base\Model;
 
 class CounterColumn extends LinkDataColumn
 {
-    public $headerOptions = ['class' => 'd-none d-md-table-cell text-center'];
-    public $contentOptions = ['class' => 'd-none d-md-table-cell text-center'];
+    public $headerOptions = [
+        'class' => 'd-none d-md-table-cell text-center',
+    ];
+
+    public $contentOptions = [
+        'class' => 'd-none d-md-table-cell text-center',
+    ];
 
     /**
      * @var array {@see Formatter::$numberFormatterOptions}
@@ -26,7 +31,7 @@ class CounterColumn extends LinkDataColumn
     public array $wrapperOptions = ['class' => 'badge'];
 
     /**
-     * @var string the value to be displayed when the count is 0
+     * @var string the value to be displayed when the count is 0 or not set
      */
     public string $emptyValue = '';
 

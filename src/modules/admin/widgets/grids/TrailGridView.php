@@ -18,6 +18,7 @@ use yii\db\ActiveRecordInterface;
 use yii\helpers\Url;
 
 /**
+ * @extends GridView<Trail>
  * @property TrailActiveDataProvider $dataProvider
  */
 class TrailGridView extends GridView
@@ -51,7 +52,7 @@ class TrailGridView extends GridView
         parent::init();
     }
 
-    
+
     public function modelColumn(): array
     {
         return [
@@ -300,7 +301,7 @@ class TrailGridView extends GridView
 
     protected function getRoute(ActiveRecordInterface $model, array $params = []): array|false
     {
-        return ['index', 'id' => $model->getPrimaryKey()];
+        return ['index', 'id' => $model->id];
     }
 
     protected function getTrailModelRoute(Trail $trail): ?array

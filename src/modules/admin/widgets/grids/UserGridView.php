@@ -13,6 +13,7 @@ use Yii;
 use yii\db\ActiveRecordInterface;
 
 /**
+ * @extends GridView<User>
  * @property UserActiveDataProvider $dataProvider
  */
 class UserGridView extends GridView
@@ -36,37 +37,39 @@ class UserGridView extends GridView
             $this->rowOptions = fn (User $user) => ['class' => $user->isDisabled() ? 'disabled' : null];
         }
 
-        if ($this->header === null) {
-            $this->header = [
-                [
-                    [
-                        'content' => $this->getSearchInput(),
-                        'options' => [
-                            'class' => 'col-12 col-md-6',
-                        ],
-                    ],
-                    'options' => [
-                        'class' => 'justify-content-end',
-                    ],
-                ],
-            ];
-        }
-
-        if ($this->footer === null) {
-            $this->footer = [
-                [
-                    [
-                        'content' => $this->getCreateUserButton(),
-                        'visible' => Yii::$app->getUser()->can(User::AUTH_USER_CREATE),
-                        'options' => [
-                            'class' => 'col-12',
-                        ],
-                    ],
-                ],
-            ];
-        }
-
         parent::init();
+    }
+
+    protected function initHeader(): void
+    {
+        $this->header ??= [
+            [
+                [
+                    'content' => $this->getSearchInput(),
+                    'options' => [
+                        'class' => 'col-12 col-md-6',
+                    ],
+                ],
+                'options' => [
+                    'class' => 'justify-content-end',
+                ],
+            ],
+        ];
+    }
+
+    protected function initFooter(): void
+    {
+        $this->footer ??= [
+            [
+                [
+                    'content' => $this->getCreateUserButton(),
+                    'visible' => Yii::$app->getUser()->can(User::AUTH_USER_CREATE),
+                    'options' => [
+                        'class' => 'col-12',
+                    ],
+                ],
+            ],
+        ];
     }
 
     public function nameColumn(): array
@@ -157,9 +160,6 @@ class UserGridView extends GridView
         return [];
     }
 
-    /**
-     * @param User $model
-     */
     protected function getRoute(ActiveRecordInterface $model, array $params = []): array|false
     {
         return Yii::$app->getUser()->can(User::AUTH_USER_UPDATE, ['user' => $model]) ? ['/admin/user/update', 'id' => $model->id, ...$params] : false;

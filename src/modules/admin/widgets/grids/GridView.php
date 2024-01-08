@@ -19,6 +19,7 @@ use yii\helpers\StringHelper;
 use yii\helpers\Url;
 
 /**
+ * @template T of ActiveRecord
  * @property ActiveDataProvider|ArrayDataProvider|null $dataProvider
  */
 class GridView extends \yii\grid\GridView
@@ -345,9 +346,12 @@ class GridView extends \yii\grid\GridView
         return $this->getFormName() . '-table';
     }
 
-    public function getRowId(ActiveRecordInterface $record): string
+    /**
+     * @param T $model
+     */
+    public function getRowId(ActiveRecordInterface $model): string
     {
-        return $this->getFormName() . '-' . implode('-', (array)$record->getPrimaryKey());
+        return $this->getFormName() . '-' . implode('-', (array)$model->getPrimaryKey());
     }
 
     public function getSearchKeywords(): array
@@ -360,6 +364,9 @@ class GridView extends \yii\grid\GridView
         return Html::tag('span', Icon::tag('arrows-alt'), ['class' => 'btn btn-secondary sortable-handle']);
     }
 
+    /**
+     * @param T $model
+     */
     protected function getUpdateButton(ActiveRecordInterface $model): string
     {
         return Html::a(Icon::tag('wrench'), $this->getRoute($model), [
@@ -367,6 +374,9 @@ class GridView extends \yii\grid\GridView
         ]);
     }
 
+    /**
+     * @param T $model
+     */
     protected function getDeleteButton(ActiveRecordInterface $model): string
     {
         return Html::a(Icon::tag('trash'), $this->getDeleteRoute($model), [
@@ -377,16 +387,25 @@ class GridView extends \yii\grid\GridView
         ]);
     }
 
+    /**
+     * @param T $model
+     */
     protected function getRoute(ActiveRecordInterface $model, array $params = []): array|false
     {
         return ['update', 'id' => $model->getPrimaryKey(), ...$params];
     }
 
+    /**
+     * @param T $model
+     */
     protected function getDeleteRoute(ActiveRecordInterface $model, array $params = []): array
     {
         return ['delete', 'id' => $model->getPrimaryKey(), ...$params];
     }
 
+    /**
+     * @return T|null
+     */
     public function getModel(): ?ActiveRecord
     {
         if ($this->_model === null) {
@@ -397,13 +416,16 @@ class GridView extends \yii\grid\GridView
         return $this->_model;
     }
 
+    /**
+     * @param T $model
+     */
     public function setModel(ActiveRecord $model): void
     {
         $this->_model = $model;
     }
 
     /**
-     * @return ActiveRecord[]
+     * @return T[]
      */
     public function getModels(): array
     {

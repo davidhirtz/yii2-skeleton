@@ -8,6 +8,9 @@ use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use davidhirtz\yii2\timeago\Timeago;
 
+/**
+ * @extends GridView<UserLogin>
+ */
 class UserLoginGridView extends GridView
 {
     public ?User $user = null;

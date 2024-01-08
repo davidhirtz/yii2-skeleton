@@ -12,37 +12,28 @@ use Yii;
  */
 class LogGridView extends GridView
 {
-    /**
-     * @var string
-     */
     public $layout = '{items}';
-
-    /**
-     * @var array containing the table options
-     */
     public $tableOptions = [
         'class' => 'table table-striped',
         'style' => 'table-layout: fixed;',
     ];
 
-    
     public function init(): void
     {
-        $this->columns = [
-            $this->dateColumn(),
-            $this->levelColumn(),
-            $this->messageColumn(),
-        ];
+        if (!$this->columns) {
+            $this->columns = [
+                $this->dateColumn(),
+                $this->levelColumn(),
+                $this->messageColumn(),
+            ];
+        }
 
         $this->getView()->registerCss('pre{margin-top: 20px; max-height:200px;}');
 
         parent::init();
     }
 
-    /**
-     * @return array
-     */
-    public function dateColumn()
+    public function dateColumn(): array
     {
         return [
             'label' => Yii::t('skeleton', 'Date'),
@@ -52,10 +43,7 @@ class LogGridView extends GridView
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function levelColumn()
+    public function levelColumn(): array
     {
         return [
             'label' => Yii::t('skeleton', 'Level'),
@@ -64,22 +52,19 @@ class LogGridView extends GridView
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function messageColumn()
+    public function messageColumn(): array
     {
         return [
             'label' => Yii::t('yii', 'Error'),
             'content' => function ($model) {
-                $html = Html::tag('div', trim((string) $model['message']), ['class' => 'strong']);
+                $html = Html::tag('div', trim((string)$model['message']), ['class' => 'strong']);
 
                 if (isset($model['category'])) {
                     $html .= Html::tag('div', $model['category'], ['class' => 'small']);
                 }
 
                 if (isset($model['vars'])) {
-                    $html .= Html::tag('pre', Html::encode(rtrim((string) $model['vars'])), ['class' => 'small']);
+                    $html .= Html::tag('pre', Html::encode(rtrim((string)$model['vars'])), ['class' => 'small']);
                 }
 
                 return $html;
@@ -87,11 +72,8 @@ class LogGridView extends GridView
         ];
     }
 
-    /**
-     * @param string $level
-     */
-    protected function getLevelCssClass($level): string
+    protected function getLevelCssClass(string $level): string
     {
-        return 'btn btn-sm ' . ($level !== 'error' ? "bg-{$level}" : 'btn-danger');
+        return 'btn btn-sm ' . ($level !== 'error' ? "bg-$level" : 'btn-danger');
     }
 }

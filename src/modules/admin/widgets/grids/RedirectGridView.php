@@ -12,6 +12,7 @@ use Yii;
 use yii\db\ActiveRecordInterface;
 
 /**
+ * @extends GridView<Redirect>
  * @property RedirectActiveDataProvider $dataProvider
  */
 class RedirectGridView extends GridView
