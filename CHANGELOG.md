@@ -1,3 +1,8 @@
+## 2.1.7 (Jan 8, 2023)
+
+- Added `LinkDataColumn`
+- Changed `CounterColumn::$countHtmlOptions` to `CounterColumn::$wrapperOptions` to be consistent with `LinkDataColumn`
+
 ## 2.1.6 (Dec 29, 2023)
 
 - Enhanced Yii2 codeception test module to create and destroy the assets folder for each test
