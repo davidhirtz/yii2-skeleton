@@ -1,3 +1,8 @@
+## 2.1.9 (Jan 8, 2024)
+
+- Fixed `GridView` PHPDoc block
+- Updated dependencies
+
 ## 2.1.8 (Jan 8, 2024)
 
 - Added PHPDoc template to `GridView`

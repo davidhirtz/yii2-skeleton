@@ -346,9 +346,6 @@ class GridView extends \yii\grid\GridView
         return $this->getFormName() . '-table';
     }
 
-    /**
-     * @param T $model
-     */
     public function getRowId(ActiveRecordInterface $model): string
     {
         return $this->getFormName() . '-' . implode('-', (array)$model->getPrimaryKey());
