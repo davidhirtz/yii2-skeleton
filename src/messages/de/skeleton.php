@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Message translations.
  *
@@ -93,6 +92,7 @@ return [
     'Enter the username of the user you want to make owner of this site. This will remove all your admin privileges and there is no going back. Please be certain!' => 'Bitte geben Sie den Benutzernamen des Benutzers an, den Sie zum Besitzer der Webseite machen wollen. Wichtig: Durch einen Transfer des Webseitenbesitzers verlieren Sie alle globalen Administrationsrechte!',
     'Enter your email address and we will send you another email to confirm your account.' => 'Bitte geben Sie Ihre E-Mail-Adresse an. Sie erhalten daraufhin in Kürze eine E-Mail, mit der Sie Ihren Account bestätigen können.',
     'Enter your email address and we will send you instructions how to reset your password.' => 'Bitte geben Sie Ihre E-Mail-Adresse an. Sie erhalten daraufhin in Kürze eine E-Mail, mit der Sie Ihre Passwort zurücksetzen können.',
+    'Error' => 'Fehler',
     'Expired sessions' => 'Abgelaufene Sitzungen',
     'Expired sessions were deleted.' => 'Die abgelaufenen Sitzungen wurden gelöscht',
     'Filter' => 'Filter',
@@ -112,6 +112,7 @@ return [
     'Icon' => 'Symbol',
     'If you have not requested a new password, please ignore this message!' => 'Falls Sie kein neues Passwort angefordert haben, können Sie diese E-Mail ignorieren!',
     'Inherited Permissions' => 'Vererbte Benutzerrechte',
+    'Internal Server Error' => 'Interner Serverfehler',
     'JavaScript is disabled on your browser.' => 'Ihr Browser scheint kein Javascript zu unterstützen.',
     'Keep me logged in' => 'Eingeloggt bleiben',
     'Language' => 'Sprache',
@@ -138,11 +139,13 @@ return [
     'Only needed, if you want to change your password' => 'Nur notwendig, wenn Sie Ihr Passwort ändern wollen',
     'Operations' => 'Operationen',
     'Ordered' => 'Sortiert',
+    'Page not found' => 'Seite nicht gefunden',
     'Password' => 'Passwort',
     'Password changed' => 'Passwort geändert',
     'Password reset' => 'Passwort zurücksetzen',
     'Permission' => 'Benutzerrecht',
     'Permission assigned' => 'Benutzerrecht erteilt',
+    'Permission denied' => 'Zugriff verweigert',
     'Permission revoked' => 'Benutzerrecht entzogen',
     'Permission {permission} assigned' => 'Benutzerrecht {permission} erteilt',
     'Permission {permission} revoked' => 'Benutzerrecht {permission} entzogen',
@@ -158,6 +161,7 @@ return [
     'Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to sign up.' => 'Bitte aktivieren Sie Javascript oder aktualisieren Sie Ihren Internetbrowser, um sich zu registrieren.',
     'Please enter a new password below to update your account.' => 'Bitte wählen Sie ein neues Passwort, um Ihren Account zu aktualisieren.',
     'Please enter a password below to complete your account.' => 'Bitte wählen Sie ein neues Passwort, um Ihren Account zu vervollständigen.',
+    'Please get in touch with {email}' => 'Bitte kontaktieren Sie uns unter {email}',
     'Please logout before creating another account' => 'Bitte loggen Sie sich aus bevor Sie einen neuen Account erstellen.',
     'Please logout before logging in with another account' => 'Bitte loggen Sie sich aus bevor Sie sich mit einem anderen Account einloggen',
     'Please type the exact {attribute} in the text field below to delete this record. All related files will also be unrecoverably deleted. This cannot be undone, please be certain!' => 'Bitte bestätigen Sie mit dem Feld "{attribute}" die Löschung des Datensatzes. Bitte beachten Sie, dass auch alle dazugehörigen Daten unwiderruflich gelöscht werden!',
@@ -188,6 +192,7 @@ return [
     'Sign up with {client} completed.' => 'Registrierung mit {client} erfolgreich.',
     'Signed up {timestamp}' => 'Registriert {timestamp}',
     'Site Owner' => 'Besitzer der Webseite',
+    'Sorry, logging in is currently disabled!' => 'Leider ist momentan kein Login möglich!',
     'Sorry, no records found.' => 'Leider wurden keine Ergebnisse gefunden.',
     'Sorry, no results found matching matching "{search}".' => 'Leider wurden keine Ergebnisse für die Suchanfrage "{search}" gefunden.',
     'Sorry, signing up is currently disabled!' => 'Leider ist momentan keine Registrierung möglich!',
@@ -207,6 +212,7 @@ return [
     'The redirect rule was created.' => 'Die Weiterleitung wurde erstellt. ',
     'The redirect rule was deleted.' => 'Die Weiterleitung wurde gelöscht. ',
     'The redirect rule was updated.' => 'Die Weiterleitung wurde aktualisiert.',
+    'The requested page was not found' => 'Die angeforderte Seite wurde nicht gefunden',
     'The selected redirect rules were deleted.' => 'Die ausgewählten Weiterleitungen wurden gelöscht.',
     'The site ownership could not be transferred' => 'Der Webseitenbesitzer konnte nicht geändert werden',
     'The user could not be created' => 'Der Benutzer konnte nicht erstellt werden',

@@ -1,3 +1,7 @@
+## 2.1.11 (Jan 9, 2024)
+
+- Added `ErrorController`
+
 ## 2.1.10 (Jan 9, 2024)
 
 - Fixed Rector (Issue #14)
