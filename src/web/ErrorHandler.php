@@ -39,7 +39,6 @@ class ErrorHandler extends \yii\web\ErrorHandler
 
     protected function findRedirectByRequestUri(string $url): ?Redirect
     {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return Redirect::find()
             ->select(['type', 'url'])
             ->where(['request_uri' => $url])

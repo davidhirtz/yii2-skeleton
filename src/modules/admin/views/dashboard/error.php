@@ -1,8 +1,8 @@
 <?php
 /**
  * @var View|null $this
- * @var  Throwable $exception
- * @var  ErrorHandler $handler
+ * @var Throwable $exception
+ * @var ErrorHandler $handler
  */
 
 use davidhirtz\yii2\skeleton\assets\AdminAsset;

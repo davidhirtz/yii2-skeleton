@@ -4,7 +4,6 @@ namespace davidhirtz\yii2\skeleton\base\traits;
 
 use Composer\InstalledVersions;
 use davidhirtz\yii2\skeleton\auth\clients\Facebook;
-use davidhirtz\yii2\skeleton\controllers\ErrorController;
 use davidhirtz\yii2\skeleton\controllers\HealthController;
 use davidhirtz\yii2\skeleton\controllers\SitemapController;
 use davidhirtz\yii2\skeleton\i18n\I18N;
@@ -146,7 +145,6 @@ trait ApplicationTrait
                 ],
             ],
             'controllerMap' => [
-                'error' => ErrorController::class,
                 'health' => HealthController::class,
                 'sitemap' => SitemapController::class,
             ],
