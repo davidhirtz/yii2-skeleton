@@ -11,6 +11,6 @@
 	"devDependencies": {
 		"autoprefixer": "^10.4.12",
 		"esbuild": "^0.19.5",
-		"esbuild-sass-plugin": "^2.8.0"
+		"esbuild-sass-plugin": "^2.16.1"
 	}
 }
