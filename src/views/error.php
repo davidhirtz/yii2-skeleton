@@ -3,7 +3,6 @@
  * @see ErrorAction::renderHtmlResponse()
  *
  * @var View $this
- * @var int|string|null $code
  * @var string $email
  * @var Exception $exception
  * @var string $message

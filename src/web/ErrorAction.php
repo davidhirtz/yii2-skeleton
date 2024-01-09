@@ -3,7 +3,6 @@
 namespace davidhirtz\yii2\skeleton\web;
 
 use Yii;
-use yii\web\HttpException;
 
 class ErrorAction extends \yii\web\ErrorAction
 {
@@ -47,8 +46,6 @@ class ErrorAction extends \yii\web\ErrorAction
 
     protected function getExceptionMessage(): string
     {
-        $code = $this->exception instanceof HttpException ? $this->exception->statusCode : null;
-
         return match ($this->getExceptionCode()) {
             403 => Yii::t('skeleton', 'Permission denied'),
             404 => Yii::t('skeleton', 'The requested page was not found'),
@@ -60,9 +57,6 @@ class ErrorAction extends \yii\web\ErrorAction
     {
         return [
             ...parent::getViewRenderParams(),
-            'name' => $this->getExceptionName(),
-            'message' => $this->getExceptionMessage(),
-            'exception' => $this->exception,
             'email' => $this->email,
         ];
     }
