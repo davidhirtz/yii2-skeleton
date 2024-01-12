@@ -58,7 +58,9 @@ class AttributeTypecastBehavior extends \yii\behaviors\AttributeTypecastBehavior
         $attributes = [];
 
         if ($owner instanceof ActiveRecord) {
-            foreach ($owner::getDb()->getSchema()->getTableSchema($owner::tableName())->columns as $column) {
+            $columns = $owner::getDb()->getSchema()->getTableSchema($owner::tableName())?->columns ?? [];
+
+            foreach ($columns as $column) {
                 if ($column->allowNull) {
                     $attributes[] = $column->name;
                 }
