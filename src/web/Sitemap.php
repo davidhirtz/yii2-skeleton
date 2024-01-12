@@ -152,7 +152,7 @@ class Sitemap extends Component
     public function generateFileUrls(): array
     {
         $manager = Yii::$app->getUrlManager();
-        $defaultLanguages = ($manager->hasI18nUrls() ? array_keys($manager->languages) : [null]);
+        $defaultLanguages = $manager->hasI18nUrls() ? array_keys($manager->languages) : [null];
         $urls = [];
 
         foreach ($this->views as $view) {

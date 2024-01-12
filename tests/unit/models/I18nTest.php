@@ -96,7 +96,7 @@ class I18nTest extends Unit
         $this->assertEquals('This value is required in all languages.', $model->getAttributeHint('translated_de'));
     }
 
-    public function testTranslatedActiveQuery()
+    public function testTranslatedActiveQuery(): void
     {
         $model = new class() extends ActiveRecord {
             use I18nAttributesTrait;
@@ -160,8 +160,7 @@ class TestModule extends Module
     {
         $this->enableI18nTables = true;
         $this->tablePrefix = 'prefix_';
+
         parent::init();
     }
 }
-
-;

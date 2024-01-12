@@ -13,6 +13,18 @@ use yii\web\Cookie;
  */
 class UserLanguageBehavior extends Behavior
 {
+    /**
+     * @var bool whether to set the application language from the user identity. If `null`, the application language
+     * is only set if the language was not already set by the URL Manager.
+     */
+    public ?bool $setApplicationLanguage = null;
+
+    public function init(): void
+    {
+        $this->setApplicationLanguage ??= Yii::$app->getUrlManager()->hasI18nUrls();
+        parent::init();
+    }
+
     public function events(): array
     {
         return [
@@ -50,7 +62,7 @@ class UserLanguageBehavior extends Behavior
             }
         }
 
-        if ($identity && !Yii::$app->getUrlManager()->hasI18nUrls()) {
+        if ($identity && !$this->setApplicationLanguage) {
             Yii::$app->language = $identity->language;
         }
     }

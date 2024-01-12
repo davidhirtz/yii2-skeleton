@@ -18,12 +18,6 @@ class AttributeTypecastBehavior extends \yii\behaviors\AttributeTypecastBehavior
      */
     public ?array $nullableAttributes = null;
 
-    public function attach($owner): void
-    {
-        $this->nullableAttributes ??= $this->detectedNullableAttributes($owner);
-        parent::attach($owner);
-    }
-
     public function events(): array
     {
         $events = parent::events();
@@ -46,19 +40,21 @@ class AttributeTypecastBehavior extends \yii\behaviors\AttributeTypecastBehavior
         parent::typecastAttributes($attributeNames);
     }
 
-    protected function typecastNullableAttributes(): void
+    public function typecastNullableAttributes(): void
     {
+        $this->nullableAttributes ??= $this->detectedNullableAttributes();
+
         foreach ($this->nullableAttributes as $attribute) {
             $this->owner->$attribute = $this->owner->$attribute ?: null;
         }
     }
 
-    protected function detectedNullableAttributes($owner): array
+    protected function detectedNullableAttributes(): array
     {
         $attributes = [];
 
-        if ($owner instanceof ActiveRecord) {
-            $columns = $owner::getDb()->getSchema()->getTableSchema($owner::tableName())?->columns ?? [];
+        if ($this->owner instanceof ActiveRecord) {
+            $columns = $this->owner::getDb()->getSchema()->getTableSchema($this->owner::tableName())?->columns ?? [];
 
             foreach ($columns as $column) {
                 if ($column->allowNull) {

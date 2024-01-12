@@ -1,3 +1,8 @@
+## 2.1.14 (Jan 12, 2024)
+
+- Extracted `ActiveRecord::getTraitAttributeLabels()`, `ActiveRecord::getTraitRules()`
+  and `ActiveRecord::getTraitNames()` to `ModelTrait`
+
 ## 2.1.13 (Jan 12, 2024)
 
 - Added `UserLanguageBehavior` to better control when the user language should be set and updated

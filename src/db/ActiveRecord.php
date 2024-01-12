@@ -6,7 +6,6 @@ use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
 use davidhirtz\yii2\skeleton\behaviors\AttributeTypecastBehavior;
 use davidhirtz\yii2\skeleton\db\commands\BatchInsertQueryBuild;
-use ReflectionClass;
 use Yii;
 use yii\helpers\Inflector;
 
@@ -140,27 +139,6 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return false;
     }
 
-    public function getTraitRules(): array
-    {
-        $rules = [];
-
-        foreach ($this->getTraitNames() as $traitName) {
-            $method = "get{$traitName}Rules";
-
-            if (method_exists($this, $method)) {
-                $rules = [...$rules, ...$this->{$method}()];
-            }
-        }
-
-        return $rules;
-    }
-
-    public function getTraitNames(): array
-    {
-        $traitNames = (new ReflectionClass($this))->getTraitNames();
-        return array_map(fn ($name) => substr($name, strrpos($name, '\\') + 1), $traitNames);
-    }
-
     public function setIsBatch(bool $isBatch): void
     {
         $this->_isBatch = $isBatch;
@@ -174,21 +152,6 @@ class ActiveRecord extends \yii\db\ActiveRecord
     public function isDeleted(): bool
     {
         return $this->_isDeleted;
-    }
-
-    public function getTraitAttributeLabels(): array
-    {
-        $attributeLabels = [];
-
-        foreach ($this->getTraitNames() as $traitName) {
-            $method = "get{$traitName}AttributeLabels";
-
-            if (method_exists($this, $method)) {
-                $attributeLabels = [...$attributeLabels, ...$this->{$method}()];
-            }
-        }
-
-        return $attributeLabels;
     }
 
     public function attributeLabels(): array

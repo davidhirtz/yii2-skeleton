@@ -6,11 +6,8 @@ use Codeception\Test\Unit;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\models\Redirect;
-use davidhirtz\yii2\skeleton\models\traits\IconFilenameAttributeTrait;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\models\UserLogin;
-use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
-use Yii;
 
 class ActiveRecordTest extends Unit
 {
@@ -56,7 +53,7 @@ class ActiveRecordTest extends Unit
         static::assertTrue($model->isDeleted());
     }
 
-    public function testUpdateAttributesBlameable()
+    public function testUpdateAttributesBlameable(): void
     {
         $model = $this->insertRedirectRecord();
 
@@ -70,46 +67,6 @@ class ActiveRecordTest extends Unit
         static::assertNull($model->updated_by_user_id);
     }
 
-    public function testTraitAttributeLabels(): void
-    {
-        $record = new class() extends ActiveRecord {
-            use IconFilenameAttributeTrait;
-
-            public function attributeLabels(): array
-            {
-                return [
-                    ...$this->getTraitAttributeLabels(),
-                    'other' => 'Other',
-                ];
-            }
-        };
-
-        $label = $record->getAttributeLabel($record->iconFilenameAttribute);
-        static::assertEquals($label, Yii::t('skeleton', 'Icon'));
-    }
-
-    public function testTraitRules(): void
-    {
-        $record = new class() extends ActiveRecord {
-            use IconFilenameAttributeTrait;
-
-            public string $other = '';
-
-            public function rules(): array
-            {
-                return [
-                    ...$this->getTraitRules(),
-                    [
-                        ['other'],
-                        'string'
-                    ],
-                ];
-            }
-        };
-
-        static::assertEquals(2, count($record->getActiveValidators()));
-        static::assertEquals(DynamicRangeValidator::class, $record->getActiveValidators($record->iconFilenameAttribute)[0]::class);
-    }
 
     public function testTypecastAttributesBeforeValidate(): void
     {

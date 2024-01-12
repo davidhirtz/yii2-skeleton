@@ -19,7 +19,7 @@ trait IconFilenameAttributeTrait
     {
         return [
             [
-                [$this->iconFilenameAttribute],
+                $this->iconFilenameAttribute,
                 DynamicRangeValidator::class,
             ]
         ];

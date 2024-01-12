@@ -4,6 +4,7 @@ namespace davidhirtz\yii2\skeleton\base\traits;
 
 use ArrayObject;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use ReflectionClass;
 use Yii;
 
 trait ModelTrait
@@ -77,6 +78,45 @@ trait ModelTrait
         }
 
         return $this->_validators;
+    }
+
+    public function getTraitAttributeLabels(): array
+    {
+        $attributeLabels = [];
+
+        foreach ($this->getTraitNames() as $traitName) {
+            $method = "get{$traitName}AttributeLabels";
+
+            if (method_exists($this, $method)) {
+                $attributeLabels = [...$attributeLabels, ...$this->{$method}()];
+            }
+        }
+
+        return $attributeLabels;
+    }
+
+    public function getTraitRules(): array
+    {
+        $rules = [];
+
+        foreach ($this->getTraitNames() as $traitName) {
+            $method = "get{$traitName}Rules";
+
+            if (method_exists($this, $method)) {
+                $rules = [
+                    ...$rules,
+                    ...$this->{$method}(),
+                ];
+            }
+        }
+
+        return $rules;
+    }
+
+    public function getTraitNames(): array
+    {
+        $traitNames = (new ReflectionClass($this))->getTraitNames();
+        return array_map(fn ($name) => substr($name, strrpos($name, '\\') + 1), $traitNames);
     }
 
     public static function create(): static

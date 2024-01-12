@@ -13,7 +13,6 @@ use davidhirtz\yii2\skeleton\modules\admin\controllers\TrailController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\UserLoginController;
 use Yii;
-use yii\base\Action;
 
 class Module extends \yii\base\Module
 {
@@ -182,21 +181,22 @@ class Module extends \yii\base\Module
         parent::init();
     }
 
-    /**
-     * Redirects draft URLs for the backend, but only if it's not an AJAX to prevent breaking existing frontend
-     * implementations or REST APIs that use admin endpoints.
-     *
-     * @param Action $action
-     */
     public function beforeAction($action): bool
     {
         $request = Yii::$app->getRequest();
 
-        if (!$request->getIsConsoleRequest() && $request->getIsDraft() && !$request->getIsAjax()) {
-            Yii::$app->getResponse()->redirect($request->getProductionHostInfo() . $request->getUrl())->send();
-        }
+        if (!$request->getIsConsoleRequest()) {
+            //  Redirects draft URLs for the backend, but only if it's not an AJAX to prevent breaking frontend
+            // implementations or REST APIs that use admin endpoints.
+            if ($request->getIsDraft() && !$request->getIsAjax()) {
+                Yii::$app->getResponse()->redirect($request->getProductionHostInfo() . $request->getUrl())->send();
+            }
 
-        $action->controller->attachBehavior('UserLanguageBehavior', UserLanguageBehavior::class);
+            $action->controller->attachBehavior('UserLanguageBehavior', [
+                'class' => UserLanguageBehavior::class,
+                'setApplicationLanguage' => true,
+            ]);
+        }
 
         return parent::beforeAction($action);
     }
