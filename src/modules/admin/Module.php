@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin;
 
+use davidhirtz\yii2\skeleton\behaviors\UserLanguageBehavior;
 use davidhirtz\yii2\skeleton\controllers\AccountController;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController;
@@ -123,7 +124,7 @@ class Module extends \yii\base\Module
                                 'label' => Yii::t('skeleton', 'Create New User'),
                                 'url' => ['/admin/user/create'],
                                 'icon' => 'user-plus',
-                                'visible' => $user->can(User::AUTH_USER_CREATE),
+                                'roles' => [User::AUTH_USER_CREATE],
                             ],
                             [
                                 'label' => Yii::t('skeleton', 'Your Account'),
@@ -134,19 +135,19 @@ class Module extends \yii\base\Module
                                 'label' => Yii::t('skeleton', 'System Settings'),
                                 'url' => ['/admin/system/index'],
                                 'icon' => 'cog',
-                                'visible' => $user->can(User::AUTH_ROLE_ADMIN),
+                                'roles' => [User::AUTH_ROLE_ADMIN],
                             ],
                             [
                                 'label' => Yii::t('skeleton', 'History'),
                                 'url' => ['/admin/trail/index'],
                                 'icon' => 'history',
-                                'visible' => $user->can('trailIndex'),
+                                'roles' => ['trailIndex'],
                             ],
                             [
                                 'label' => Yii::t('skeleton', 'Redirects'),
                                 'url' => ['/admin/redirect/index'],
                                 'icon' => 'forward',
-                                'visible' => $user->can('redirectCreate'),
+                                'roles' => ['redirectCreate'],
                             ],
                             [
                                 'label' => Yii::t('skeleton', 'Homepage'),
@@ -160,7 +161,10 @@ class Module extends \yii\base\Module
             }
         }
 
-        $this->controllerMap = [...$this->defaultControllerMap, ...$this->controllerMap];
+        $this->controllerMap = [
+            ...$this->defaultControllerMap,
+            ...$this->controllerMap,
+        ];
 
         foreach (array_keys($this->getModules()) as $module) {
             $this->getModule($module);
@@ -179,8 +183,8 @@ class Module extends \yii\base\Module
     }
 
     /**
-     * Redirects draft URLs for the backend, but only if it's not an AJAX to prevent breaking existing
-     * frontend implementations or REST APIs that use admin endpoints.
+     * Redirects draft URLs for the backend, but only if it's not an AJAX to prevent breaking existing frontend
+     * implementations or REST APIs that use admin endpoints.
      *
      * @param Action $action
      */
@@ -191,6 +195,8 @@ class Module extends \yii\base\Module
         if (!$request->getIsConsoleRequest() && $request->getIsDraft() && !$request->getIsAjax()) {
             Yii::$app->getResponse()->redirect($request->getProductionHostInfo() . $request->getUrl())->send();
         }
+
+        $action->controller->attachBehavior('UserLanguageBehavior', UserLanguageBehavior::class);
 
         return parent::beforeAction($action);
     }

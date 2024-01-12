@@ -17,7 +17,6 @@ trait IdentityTrait
     {
         if ($this->email) {
             $this->_user ??= Identity::findByEmail($this->email)
-                ->selectIdentityAttributes()
                 ->limit(1)
                 ->one();
         }

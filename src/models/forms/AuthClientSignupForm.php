@@ -18,11 +18,14 @@ class AuthClientSignupForm extends Identity
 
     public function behaviors(): array
     {
-        return [...parent::behaviors(), [
-            'class' => SluggableBehavior::class,
-            'attribute' => 'name',
-            'slugAttribute' => 'name',
-        ]];
+        return [
+            ...parent::behaviors(),
+            'SluggableBehavior' => [
+                'class' => SluggableBehavior::class,
+                'attribute' => 'name',
+                'slugAttribute' => 'name',
+            ],
+        ];
     }
 
     public function rules(): array
@@ -47,9 +50,8 @@ class AuthClientSignupForm extends Identity
             return false;
         }
 
-        if ($this->name === null) {
-            $this->name = mb_strtolower($this->first_name . $this->last_name, Yii::$app->charset) ?: explode('@', $this->email)[0];
-        }
+        $this->name ??= mb_strtolower($this->first_name . $this->last_name, Yii::$app->charset)
+            ?: explode('@', $this->email)[0];
 
         if (!in_array($this->language, Yii::$app->getI18n()->languages)) {
             $this->language = Yii::$app->language;

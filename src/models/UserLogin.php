@@ -47,6 +47,7 @@ class UserLogin extends ActiveRecord
     public function behaviors(): array
     {
         return [
+            ...parent::behaviors(),
             'DateTimeBehavior' => DateTimeBehavior::class,
         ];
     }

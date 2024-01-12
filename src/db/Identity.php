@@ -17,12 +17,11 @@ class Identity extends User implements IdentityInterface
     {
         $identity = static::find()
             ->where(['id' => $id])
-            ->selectIdentityAttributes()
             ->enabled()
             ->one();
 
         if ($identity?->timezone) {
-            Yii::$app->timeZone = $identity->timezone;
+            Yii::$app->setTimeZone($identity->timezone);
         }
 
         return $identity;

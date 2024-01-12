@@ -90,6 +90,7 @@ class Application extends \yii\web\Application
             }
 
             $config['modules']['debug']['class'] ??= Module::class;
+            $config['modules']['debug']['panels'] ??= ['user' => false];
             $config['modules']['debug']['traceLine'] ??= '<a href="phpstorm://open?file={file}&line={line}">{file}:{line}</a>';
         }
     }

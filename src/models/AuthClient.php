@@ -30,6 +30,7 @@ class AuthClient extends ActiveRecord
     public function behaviors(): array
     {
         return [
+            ...parent::behaviors(),
             'DateTimeBehavior' => DateTimeBehavior::class,
             'SerializedAttributesBehavior' => [
                 'class' => SerializedAttributesBehavior::class,

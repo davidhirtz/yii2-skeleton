@@ -117,14 +117,15 @@ class User extends ActiveRecord implements StatusAttributeInterface
 
     public function behaviors(): array
     {
-        return array_merge(parent::behaviors(), [
+        return [
+            ...parent::behaviors(),
             'DateTimeBehavior' => DateTimeBehavior::class,
             'TimestampBehavior' => TimestampBehavior::class,
             'TrailBehavior' => [
                 'class' => TrailBehavior::class,
                 'modelClass' => User::class,
             ],
-        ]);
+        ];
     }
 
     public function rules(): array
@@ -217,7 +218,6 @@ class User extends ActiveRecord implements StatusAttributeInterface
     public function beforeValidate(): bool
     {
         $this->status ??= static::STATUS_ENABLED;
-        $this->language ??= Yii::$app->language;
         $this->timezone = $this->timezone ?: Yii::$app->getTimeZone();
 
         return parent::beforeValidate();

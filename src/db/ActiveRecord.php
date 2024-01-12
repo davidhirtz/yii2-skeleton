@@ -4,14 +4,11 @@ namespace davidhirtz\yii2\skeleton\db;
 
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
+use davidhirtz\yii2\skeleton\behaviors\AttributeTypecastBehavior;
 use davidhirtz\yii2\skeleton\db\commands\BatchInsertQueryBuild;
 use ReflectionClass;
 use Yii;
-use yii\behaviors\AttributeTypecastBehavior;
 use yii\helpers\Inflector;
-use yii\validators\BooleanValidator;
-use yii\validators\NumberValidator;
-use yii\validators\StringValidator;
 
 /**
  * @method ActiveQuery hasMany($class, array $link)
@@ -30,10 +27,12 @@ class ActiveRecord extends \yii\db\ActiveRecord
     private bool $_isBatch = false;
     private bool $_isDeleted = false;
 
-    public function beforeValidate(): bool
+    public function behaviors(): array
     {
-        $this->typecastAttributes();
-        return parent::beforeValidate();
+        return [
+            ...parent::behaviors(),
+            'AttributeTypecastBehavior' => AttributeTypecastBehavior::class,
+        ];
     }
 
     public function beforeDelete(): bool
@@ -77,34 +76,6 @@ class ActiveRecord extends \yii\db\ActiveRecord
         $this->populateRelation($name, $related);
 
         return $related;
-    }
-
-    /**
-     * Typecasts boolean and numeric validators. This is similar to {@see AttributeTypecastBehavior} but performs the
-     * operation before the actual validation to allow the use of {@see \yii\db\ActiveRecord::isAttributeChanged()} in
-     * validation. As Yii2 represents floats and decimals as strings, only integer values will be typecast.
-     */
-    public function typecastAttributes(): void
-    {
-        foreach ($this->getValidators() as $validator) {
-            if ($validator instanceof BooleanValidator || ($validator instanceof NumberValidator && $validator->integerOnly)) {
-                foreach ((array)$validator->attributes as $attribute) {
-                    $this->$attribute = (int)$this->$attribute;
-                }
-            }
-
-            if ($validator instanceof StringValidator) {
-                foreach ((array)$validator->attributes as $attribute) {
-                    $this->$attribute = (string)$this->$attribute;
-                }
-            }
-        }
-
-        foreach (static::getDb()->getSchema()->getTableSchema(static::tableName())->columns as $column) {
-            if ($column->allowNull && !$this->{$column->name}) {
-                $this->{$column->name} = null;
-            }
-        }
     }
 
     public function updateAttributesBlameable(array $attributes): int

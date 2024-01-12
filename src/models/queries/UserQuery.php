@@ -11,16 +11,6 @@ use davidhirtz\yii2\skeleton\models\User;
  */
 class UserQuery extends ActiveQuery
 {
-    public function selectIdentityAttributes(): static
-    {
-        return $this->addSelect($this->prefixColumns(array_diff($this->getModelInstance()->attributes(), [
-            'city',
-            'country',
-            'created_by_user_id',
-            'created_at',
-        ])));
-    }
-
     public function nameAttributesOnly(): static
     {
         return $this->select($this->prefixColumns([

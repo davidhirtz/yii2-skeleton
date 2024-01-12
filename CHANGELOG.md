@@ -1,3 +1,10 @@
+## 2.1.13 (Jan 12, 2024)
+
+- Added `UserLanguageBehavior` to better control when the user language should be set and updated
+- Removed `ActiveRecord::typecastAttributes()` in favor
+  of `davidhirtz\yii2\skeleton\behaviors\AttributeTypecastBehavior`
+- Removed `UserQuery::selectIdentityAttribute`
+
 ## 2.1.12 (Jan 9, 2024)
 
 - Removed `ErrorController` introduced in 2.1.11 in favor of `davidhirtz\yii2\skeleton\web\ErrorAction`

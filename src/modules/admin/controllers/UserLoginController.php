@@ -18,6 +18,7 @@ class UserLoginController extends Controller
     public function behaviors(): array
     {
         return [
+            ...parent::behaviors(),
             'access' => [
                 'class' => AccessControl::class,
                 'rules' => [

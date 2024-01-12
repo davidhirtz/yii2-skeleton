@@ -15,6 +15,7 @@ class DashboardController extends Controller
     public function behaviors(): array
     {
         return [
+            ...parent::behaviors(),
             'access' => [
                 'class' => AccessControl::class,
                 'only' => ['index', 'error'],

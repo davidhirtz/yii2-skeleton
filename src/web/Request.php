@@ -4,7 +4,6 @@ namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Yii;
-use yii\web\Cookie;
 
 /**
  * The web Request class extends the default Yii class by a draft mode and the option to set the host info via
@@ -13,21 +12,19 @@ use yii\web\Cookie;
 class Request extends \yii\web\Request
 {
     /**
-     * @var bool whether user language should be saved for logged-in users (db) and guests (cookie).
-     */
-    public bool $setUserLanguage = true;
-
-    /**
      * @var string|false the subdomain indicating a draft version of the application. Further validation should
      * be done on the controller level.
      */
     public string|false $draftSubdomain = 'draft';
 
+    /**
+     * @var string the name of the GET parameter that specifies the language.
+     */
+    public string $languageParam = 'language';
 
     private bool $_isDraft = false;
-
-
     private string|false|null $_draftHostInfo = null;
+    private ?string $_language = null;
 
     /**
      * Sets the host info via params after draft mode is checked. Setting the host info manually can be useful if
@@ -48,49 +45,23 @@ class Request extends \yii\web\Request
         parent::init();
     }
 
-    /**
-     * Sets application language based on request.
-     */
-    public function resolve(): array
+    public function getLanguage(): ?string
     {
-        if (count($languages = Yii::$app->getI18n()->getLanguages()) > 1) {
-            $manager = Yii::$app->getUrlManager();
+        $this->_language ??= $this->post($this->languageParam);
+        $this->_language ??= $this->get($this->languageParam);
+        $this->_language ??= $this->getLanguageFromCookie();
 
-            if (!$manager->i18nUrl && !$manager->i18nSubdomain) {
-                $param = $manager->languageParam;
-                $cookie = $this->getCookies()->getValue($param);
-                $identity = Yii::$app->getUser()->getIdentity();
-
-                if (!$language = $this->post($manager->languageParam, $this->get($param, $identity?->language ?? $cookie))) {
-                    $language = $this->getPreferredLanguage($languages);
-                }
-
-                if (in_array($language, $languages)) {
-                    if ($this->setUserLanguage) {
-                        if ($identity) {
-                            $identity->updateAttributes(['language' => $language]);
-                        } elseif ($language != Yii::$app->sourceLanguage && $cookie !== $language) {
-                            $cookie = Yii::$container->get(Cookie::class, [], [
-                                'name' => $param,
-                                'value' => $language,
-                            ]);
-
-                            Yii::$app->getResponse()->getCookies()->add($cookie);
-                        }
-                    }
-
-                    Yii::$app->language = $language;
-                }
-            }
-        }
-
-        return parent::resolve();
+        return $this->_language;
     }
 
-
-    public function getUserIP()
+    public function getLanguageFromCookie(): ?string
     {
-        return ArrayHelper::getValue($_SERVER, 'HTTP_X_FORWARDED_FOR', ArrayHelper::getValue($_SERVER, 'HTTP_CLIENT_IP', parent::getUserIP()));
+        return $this->getCookies()->getValue($this->languageParam);
+    }
+
+    public function getRemoteIP(): ?string
+    {
+        return $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['HTTP_CLIENT_IP'] ?? parent::getRemoteIP();
     }
 
     public function getIsAjaxRoute(): bool
@@ -100,21 +71,20 @@ class Request extends \yii\web\Request
 
     public function getProductionHostInfo(): string
     {
-        return $this->getIsDraft() ? str_replace("//$this->draftSubdomain.", '//', $this->getHostInfo()) : $this->getHostInfo();
+        return $this->getIsDraft()
+            ? str_replace("//$this->draftSubdomain.", '//', $this->getHostInfo())
+            : $this->getHostInfo();
     }
 
     /**
-     * Creates the draft URL by trying to replace existing "www" or adding the $draftSubdomain as
-     * the first subdomain to the host.
+     * Creates the draft URL by trying to replace existing "www" or adding the $draftSubdomain as the first subdomain to
+     * the host.
      */
     public function getDraftHostInfo(): bool|string
     {
-        if ($this->_draftHostInfo === null) {
-            $hostInfo = $this->getHostInfo();
-            $this->_draftHostInfo = $this->getIsDraft() && $this->draftSubdomain && str_contains($hostInfo, $this->draftSubdomain)
-                ? $hostInfo
-                : ($this->draftSubdomain ? preg_replace('#^((https?://)(www.)?)#', "$2$this->draftSubdomain.", $hostInfo) : false);
-        }
+        $this->_draftHostInfo ??= $this->getIsDraft() && $this->draftSubdomain && str_contains($this->getHostInfo(), $this->draftSubdomain)
+            ? $this->getHostInfo()
+            : ($this->draftSubdomain ? preg_replace('#^((https?://)(www.)?)#', "$2$this->draftSubdomain.", $this->getHostInfo()) : false);
 
         return $this->_draftHostInfo;
     }
