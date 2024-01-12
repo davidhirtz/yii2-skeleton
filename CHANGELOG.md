@@ -1,3 +1,9 @@
+## 2.1.15 (Jan 12, 2024)
+
+- Removed `View::registerTwitterCardMetaTags()`
+- Removed `View::registerStructuredDataBreadcrumbs()` and `View::registerStructuredData()` in favor
+  of `davidhirtz\yii2\skeleton\helpers\StructuredData`
+
 ## 2.1.14 (Jan 12, 2024)
 
 - Extracted `ActiveRecord::getTraitAttributeLabels()`, `ActiveRecord::getTraitRules()`

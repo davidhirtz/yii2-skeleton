@@ -4,12 +4,8 @@ namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use Yii;
-use yii\helpers\Json;
 use yii\helpers\Url;
 
-/**
- * @property string $description {@see static::setMetaDescription()}
- */
 class View extends \yii\web\View
 {
     public const HREF_LANG_KEY = 'hreflang_';
@@ -42,7 +38,7 @@ class View extends \yii\web\View
         }
     }
 
-    public function getMetaDescription(): string
+    public function getMetaDescription(): ?string
     {
         return $this->_description;
     }
@@ -70,37 +66,23 @@ class View extends \yii\web\View
         return $this->_breadcrumbs;
     }
 
-    public function registerTwitterCardMetaTags(string $card = 'summary_large_image', ?string $title = null, ?string $description = null): void
+    public function registerOpenGraphMetaTags(?string $type = 'website', ?string $title = null, ?string $description = null): void
     {
-        $this->registerMetaTag(['name' => 'twitter:card', 'content' => $card], 'twitter:card');
-        $this->registerMetaTag([
-            'name' => 'twitter:title',
-            'content' => $title ?: $this->getDocumentTitle()
-        ], 'twitter:title');
-        $this->registerMetaTag([
-            'name' => 'twitter:description',
-            'content' => $description ?: $this->getMetaDescription()
-        ], 'twitter:description');
+        $title ??= $this->getDocumentTitle();
+        $description ??= $this->getMetaDescription();
 
-        if (!empty(Yii::$app->params['twitter.siteName'])) {
-            $this->registerMetaTag([
-                'name' => 'twitter:site',
-                'content' => Yii::$app->params['twitter.siteName']
-            ], 'twitter:site');
+        $this->registerMetaTag(['name' => 'og:title', 'content' => $title], 'og:title');
+
+        if ($description) {
+            $this->registerMetaTag(['name' => 'og:description', 'content' => $description], 'og:description');
         }
-    }
-
-    public function registerOpenGraphMetaTags(string $type = 'website', ?string $title = null, ?string $description = null): void
-    {
-        $this->registerMetaTag(['name' => 'og:title', 'content' => $title ?: $this->getDocumentTitle()], 'og:title');
-        $this->registerMetaTag(['name' => 'og:description', 'content' => $description ?: $this->getMetaDescription()], 'og:description');
 
         if ($type) {
             $this->registerMetaTag(['name' => 'og:type', 'content' => $type], 'og:type');
         }
     }
 
-    public function registerImageMetaTags(string $url, ?int $width = null, ?int $height = null, ?string $text = null): void
+    public function registerImageMetaTags(string $url, ?int $width = null, ?int $height = null): void
     {
         $url = Url::to($url, true);
 
@@ -114,51 +96,10 @@ class View extends \yii\web\View
             $this->registerMetaTag(['property' => 'og:image:height', 'content' => $height]);
         }
 
-        if ($text) {
-            $this->registerMetaTag(['property' => 'twitter:image:alt', 'content' => $text]);
-        }
-
-        $this->registerMetaTag(['name' => 'twitter:image', 'content' => $url]);
         $this->registerLinkTag(['rel' => 'image_src', 'href' => $url]);
     }
 
-    public function registerStructuredData(array $data): void
-    {
-        echo Html::script(Json::htmlEncode(['@context' => 'https://schema.org', ...$data]), [
-            'type' => 'application/ld+json',
-        ]);
-    }
-
-    /**
-     * @param array $links can either be an array containing "name" and "item" as a key and value or an associative array.
-     * @noinspection PhpUnused
-     */
-    public function registerStructuredDataBreadcrumbs(array $links): void
-    {
-        $items = [];
-        $pos = 1;
-
-        foreach ($links as $name => $item) {
-            if (!isset($item['item'])) {
-                $item = [
-                    'name' => $name,
-                    'item' => $item,
-                ];
-            }
-
-            $item['item'] = Url::to($item['item'], true);
-            $items[] = array_merge(['@type' => 'ListItem', 'position' => $pos++], $item);
-        }
-
-        if ($items) {
-            $this->registerStructuredData(['@type' => 'BreadcrumbList', 'itemListElement' => $items]);
-        }
-    }
-
-    /**
-     * @noinspection PhpUnused
-     */
-    public function registerHrefLangLinkTags(array $languages = [], ?string $default = null): void
+    public function registerHrefLangLinkTags(array $languages = [], string|false|null $default = null): void
     {
         if (!$languages) {
             $languages = Yii::$app->getUrlManager()->languages;
@@ -180,14 +121,13 @@ class View extends \yii\web\View
 
     public function registerCanonicalTag(string $url): void
     {
+        $url = Url::to($url, true);
         $this->registerLinkTag(['rel' => 'canonical', 'href' => $url], static::CANONICAL_KEY);
     }
 
     public function registerDefaultHrefLangLinkTag(?string $language = null): void
     {
-        if (!$language) {
-            $language = Yii::$app->sourceLanguage;
-        }
+        $language ??= Yii::$app->sourceLanguage;
 
         if (isset($this->linkTags[static::HREF_LANG_KEY . $language])) {
             $this->linkTags[static::HREF_LANG_KEY . 'default'] = str_replace('hreflang="' . $language . '"', 'hreflang="x-default"', (string)$this->linkTags[static::HREF_LANG_KEY . $language]);
@@ -196,6 +136,7 @@ class View extends \yii\web\View
 
     public function getFilenameWithVersion(string $filename): string
     {
+        $filename = trim($filename, '/');
         return "/$filename?" . filemtime(Yii::getAlias('@webroot/' . $filename));
     }
 
