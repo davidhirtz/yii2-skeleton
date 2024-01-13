@@ -39,7 +39,7 @@ class ErrorActionTest extends Unit
     public function testNotFoundTranslated(): void
     {
         Yii::$app->language = 'de';
-        $error = Yii::t('skeleton', 'Error') . ' 404';
+        $error = Yii::t('yii', 'Error') . ' 404';
 
         $result = $this->runErrorAction([
             'layout' => '@tests/data/views/layouts/main',
