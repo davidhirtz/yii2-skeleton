@@ -63,10 +63,14 @@ $(function () {
                     } else if (action === 'success') {
                         $target.toggleClass('bg-success');
 
+                    } else if (action === 'add') {
+                        $target.addClass('is-selected');
+
                     } else if (action === 'select') {
                         $target.toggleClass('is-selected');
 
-                    } else if (action === 'replace') {
+                    }
+                    else if (action === 'replace') {
                         $target.html(content);
                         Skeleton.initContent($target);
                     }
