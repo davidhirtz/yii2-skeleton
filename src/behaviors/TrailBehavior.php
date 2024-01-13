@@ -4,8 +4,6 @@ namespace davidhirtz\yii2\skeleton\behaviors;
 
 use DateTime;
 use DateTimeZone;
-use davidhirtz\yii2\skeleton\behaviors\stubs\TrailBehaviorActiveRecord;
-use davidhirtz\yii2\skeleton\behaviors\stubs\TrailBehaviorModel;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\models\collections\TrailModelCollection;
 use davidhirtz\yii2\skeleton\models\Trail;
@@ -13,6 +11,7 @@ use Exception;
 use ReflectionClass;
 use Yii;
 use yii\base\Behavior;
+use yii\base\Model;
 use yii\db\AfterSaveEvent;
 use yii\helpers\Inflector;
 use yii\validators\BooleanValidator;
@@ -20,7 +19,8 @@ use yii\validators\RangeValidator;
 
 /**
  * @property string $trailModelName
- * @property TrailBehaviorActiveRecord|TrailBehaviorModel $owner
+ * @property ActiveRecord|TrailBehavior $owner
+ * @mixin Model
  */
 class TrailBehavior extends Behavior
 {
@@ -74,11 +74,9 @@ class TrailBehavior extends Behavior
 
     protected function onAfterSave($insert, $changedAttributes): void
     {
-        /** @var static $behavior */
-        $behavior = $this->owner;
         $data = [];
 
-        $attributes = $behavior->getTrailAttributes();
+        $attributes = $this->owner->getTrailAttributes();
         $attributeNames = $attributes
             ? array_intersect($attributes, array_keys($changedAttributes))
             : array_keys($changedAttributes);
