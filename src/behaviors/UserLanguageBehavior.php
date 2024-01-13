@@ -21,7 +21,7 @@ class UserLanguageBehavior extends Behavior
 
     public function init(): void
     {
-        $this->setApplicationLanguage ??= Yii::$app->getUrlManager()->hasI18nUrls();
+        $this->setApplicationLanguage ??= !Yii::$app->getUrlManager()->hasI18nUrls();
         parent::init();
     }
 

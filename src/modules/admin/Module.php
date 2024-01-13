@@ -192,10 +192,12 @@ class Module extends \yii\base\Module
                 Yii::$app->getResponse()->redirect($request->getProductionHostInfo() . $request->getUrl())->send();
             }
 
-            $action->controller->attachBehavior('UserLanguageBehavior', [
-                'class' => UserLanguageBehavior::class,
-                'setApplicationLanguage' => true,
-            ]);
+            if (count(Yii::$app->getI18n()->getLanguages()) > 1) {
+                $action->controller->attachBehavior('UserLanguageBehavior', [
+                    'class' => UserLanguageBehavior::class,
+                    'setApplicationLanguage' => true,
+                ]);
+            }
         }
 
         return parent::beforeAction($action);

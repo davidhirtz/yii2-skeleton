@@ -128,7 +128,10 @@ class UrlManager extends \yii\web\UrlManager
     public function parseRequest($request): bool|array
     {
         $this->parseRedirectMap($request, $this->redirectMap);
-        $this->setApplicationLanguage($request);
+
+        if (count($this->languages) > 1) {
+            $this->setApplicationLanguage($request);
+        }
 
         $event = $this->getBeforeParseEvent($request);
 
