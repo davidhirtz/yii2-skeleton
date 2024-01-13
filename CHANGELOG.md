@@ -1,3 +1,10 @@
+## 2.1.16 (Jan 13, 2024)
+
+- Added `'data-method'=>'add'` (Issue #15)
+- Added `UserDeletePanel`
+- Fixed `UrlManager` to only apply the default language when the I18N component is configured with more than one
+  language
+
 ## 2.1.15 (Jan 12, 2024)
 
 - Removed `View::registerTwitterCardMetaTags()`

@@ -7,6 +7,9 @@ use yii\helpers\Html;
 
 class Panel extends Widget
 {
+    public const TYPE_DEFAULT = 'default';
+    public const TYPE_DANGER = 'danger';
+
     /**
      * @var string|null the panel title
      */
@@ -20,7 +23,7 @@ class Panel extends Widget
     /**
      * @var string the panel type defining the color
      */
-    public string $type = 'default';
+    public string $type = self::TYPE_DEFAULT;
 
     /**
      * @var array the HTML attributes for the panel container tag
