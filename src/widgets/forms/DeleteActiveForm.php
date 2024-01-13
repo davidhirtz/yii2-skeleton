@@ -7,13 +7,34 @@ use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
 use Yii;
 use yii\db\ActiveRecord;
 
+/**
+ * @property DeleteForm $form {@see static::setForm()}
+ */
 class DeleteActiveForm extends ActiveForm
 {
     public string|false $attribute = false;
 
+    /**
+     * @var string|null the message to display above the "delete" button, defaults to a generic warning message
+     */
     public ?string $message = null;
+
+    /**
+     * @var string|null the label of the "delete" button, defaults to "Delete"
+     */
     public ?string $label = null;
+
+    /**
+     * @var string|null the confirmation message to display when the "delete" button is clicked, defaults to generic
+     * confirmation message
+     */
+    public ?string $confirm = null;
+
+    /**
+     * @var array the options for the "delete" text field
+     */
     public array $fieldOptions = [];
+
     private ?DeleteForm $_form = null;
 
     public function init(): void
@@ -32,10 +53,12 @@ class DeleteActiveForm extends ActiveForm
             $this->message ??= Yii::t('skeleton', 'Warning: Deleting this record cannot be undone. All related files will also be unrecoverably deleted. Please be certain!');
         }
 
+        $this->confirm ??= Yii::t('yii', 'Are you sure you want to delete this item?');
+
         $this->buttons ??= [
             $this->button($this->label, [
                 'class' => 'btn-danger',
-                'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+                'data-confirm' => $this->confirm,
             ])
         ];
 
@@ -52,9 +75,6 @@ class DeleteActiveForm extends ActiveForm
         return $this->_form;
     }
 
-    /**
-     * @noinspection PhpUnused
-     */
     public function setForm(DeleteForm $form): void
     {
         $this->_form = $form;

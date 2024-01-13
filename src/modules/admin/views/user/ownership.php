@@ -1,8 +1,6 @@
 <?php
 /**
- * Transfer ownership form.
- * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\UserController::actionOwnership()
- *
+ * @see UserController::actionOwnership()
  * @var View $this
  * @var OwnershipForm $form
  */
