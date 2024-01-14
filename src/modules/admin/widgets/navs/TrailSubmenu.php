@@ -2,7 +2,6 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 
-use davidhirtz\yii2\skeleton\behaviors\stubs\TrailBehaviorActiveRecord;
 use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\modules\admin\data\TrailActiveDataProvider;
@@ -17,8 +16,7 @@ class TrailSubmenu extends Submenu
 
     public function init(): void
     {
-        if (!$this->title) {
-            /** @var TrailBehaviorActiveRecord|null $model */
+        if ($this->title === null) {
             $model = $this->getTrailModel();
 
             if ($model) {
@@ -44,7 +42,6 @@ class TrailSubmenu extends Submenu
             ]));
         }
 
-        /** @var TrailBehaviorActiveRecord|null $model */
         $model = $this->getTrailModel();
 
         if ($model) {
@@ -54,7 +51,6 @@ class TrailSubmenu extends Submenu
 
     public function getTrailModelAdminRoute(): array|false
     {
-        /** @var TrailBehaviorActiveRecord|null $model */
         $model = $this->getTrailModel();
 
         if ($route = $model?->getTrailModelAdminRoute()) {
@@ -70,7 +66,10 @@ class TrailSubmenu extends Submenu
         return false;
     }
 
-    public function getTrailModel(): ?Model
+    /**
+     * @return TrailBehavior|Model|null
+     */
+    public function getTrailModel(): mixed
     {
         if ($this->dataProvider->model) {
             $this->_trailModel ??= $this->dataProvider->getModels()

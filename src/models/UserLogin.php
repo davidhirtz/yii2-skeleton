@@ -85,7 +85,7 @@ class UserLogin extends ActiveRecord
 
     public function getDisplayIp(): string
     {
-        return $this->ip_address ?? inet_ntop($this->ip_address) ?: '';
+        return $this->ip_address ? (inet_ntop($this->ip_address) ?: '-') : '';
     }
 
     public function attributeLabels(): array

@@ -2,8 +2,8 @@
 
 namespace davidhirtz\yii2\skeleton\behaviors;
 
-use davidhirtz\yii2\skeleton\behaviors\stubs\SitemapBehaviorActiveRecord;
 use davidhirtz\yii2\skeleton\db\ActiveQuery;
+use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\web\Sitemap;
 use Yii;
 use yii\base\Behavior;
@@ -15,7 +15,8 @@ use yii\base\InvalidConfigException;
  *
  * @see https://www.sitemaps.org/protocol.html
  *
- * @property SitemapBehaviorActiveRecord $owner
+ * @property ActiveRecord&SitemapBehavior $owner
+ * @mixin ActiveRecord
  */
 class SitemapBehavior extends Behavior
 {
