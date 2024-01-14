@@ -18,6 +18,8 @@ class AttributeTypecastBehavior extends \yii\behaviors\AttributeTypecastBehavior
      */
     public ?array $nullableAttributes = null;
 
+    private static array $_autoDetectedNullableAttributes = [];
+
     public function events(): array
     {
         $events = parent::events();
@@ -36,8 +38,8 @@ class AttributeTypecastBehavior extends \yii\behaviors\AttributeTypecastBehavior
 
     public function typecastAttributes($attributeNames = null): void
     {
-        $this->typecastNullableAttributes();
         parent::typecastAttributes($attributeNames);
+        $this->typecastNullableAttributes();
     }
 
     public function typecastNullableAttributes(): void
@@ -51,18 +53,25 @@ class AttributeTypecastBehavior extends \yii\behaviors\AttributeTypecastBehavior
 
     protected function detectedNullableAttributes(): array
     {
-        $attributes = [];
+        if (!isset(self::$_autoDetectedNullableAttributes[$this->owner::class])) {
+            if ($this->owner instanceof ActiveRecord) {
+                $columns = $this->owner::getDb()->getSchema()->getTableSchema($this->owner::tableName())?->columns ?? [];
+                self::$_autoDetectedNullableAttributes[$this->owner::class] = [];
 
-        if ($this->owner instanceof ActiveRecord) {
-            $columns = $this->owner::getDb()->getSchema()->getTableSchema($this->owner::tableName())?->columns ?? [];
-
-            foreach ($columns as $column) {
-                if ($column->allowNull) {
-                    $attributes[] = $column->name;
+                foreach ($columns as $column) {
+                    if ($column->allowNull) {
+                        self::$_autoDetectedNullableAttributes[$this->owner::class][] = $column->name;
+                    }
                 }
             }
         }
 
-        return $attributes;
+        return self::$_autoDetectedNullableAttributes[$this->owner::class];
+    }
+
+    public static function clearAutoDetectedAttributeTypes(): void
+    {
+        self::$_autoDetectedNullableAttributes = [];
+        parent::clearAutoDetectedAttributeTypes();
     }
 }

@@ -6,9 +6,6 @@ use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use yii\base\Behavior;
 
 /**
- * Class SerializedAttributesBehavior.
- * @package davidhirtz\yii2\skeleton\behaviors
- *
  * @property ActiveRecord $owner
  */
 class SerializedAttributesBehavior extends Behavior
