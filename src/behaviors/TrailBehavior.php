@@ -164,7 +164,7 @@ class TrailBehavior extends Behavior
      */
     public function getTrailModelAdminRoute(): array|false
     {
-        return false;
+        return method_exists($this->owner, 'getAdminRoute') ? $this->owner->getAdminRoute() : false;
     }
 
     /**

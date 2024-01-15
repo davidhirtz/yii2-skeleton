@@ -3,8 +3,6 @@
 namespace davidhirtz\yii2\skeleton\console\controllers;
 
 use davidhirtz\yii2\skeleton\console\controllers\traits\ConfigTrait;
-use davidhirtz\yii2\skeleton\helpers\FileHelper;
-use Exception;
 use Yii;
 use yii\console\Controller;
 
@@ -18,21 +16,35 @@ class ParamsController extends Controller
     public string $config = '@root/config/params.php';
 
     /**
-     * Setup application.
+     * List application parameters.
      */
     public function actionIndex(): void
     {
-        $params = $this->getConfig($this->config);
-
-        if (empty($params['cookieValidationKey'])) {
-            $this->actionPermissions();
+        if (empty(Yii::$app->params['cookieValidationKey'])) {
             $this->actionCookie();
-        } else {
-            foreach ($params as $name => $value) {
-                $this->stdout("$name => ");
-                $this->stdoutVar($value);
-                $this->stdout(PHP_EOL);
+        }
+
+        $config = $this->getConfig($this->config);
+        $params = Yii::$app->params;
+        $maxLength = 0;
+
+        ksort($params);
+
+        foreach (Yii::$app->params as $name => $value) {
+            if (!array_key_exists($name, $config)) {
+                unset($params[$name]);
+
+                $name = "*$name*";
+                $params[$name] = $value;
             }
+
+            $maxLength = max($maxLength, strlen($name));
+        }
+
+        foreach ($params as $name => $value) {
+            $this->stdout(str_pad("- $name  ", $maxLength + 4));
+            $this->stdoutVar($value);
+            $this->stdout(PHP_EOL);
         }
     }
 
@@ -45,7 +57,9 @@ class ParamsController extends Controller
         $found = !empty($params['cookieValidationKey']);
 
         if (!$found || $replace) {
-            if ($this->confirm($found ? 'Override existing cookie validation key?' : 'Generate cookie validation key?', !$found)) {
+            $message = $found ? 'Override existing cookie validation key?' : 'Generate cookie validation key?';
+
+            if (!$this->interactive || $this->confirm($message, !$found)) {
                 $params['cookieValidationKey'] = static::generateCookieValidationKey();
                 $this->setConfig($this->config, $params);
             }
@@ -59,12 +73,13 @@ class ParamsController extends Controller
     {
         $params = $this->getConfig($this->config);
 
-        if (!isset($params[$param]) || $this->confirm('Parameter already exists, override?')) {
+        if (!isset($params[$param])
+            || !$this->interactive
+            || $this->confirm('Parameter already exists, override?')) {
             $params[$param] = $this->filterUserInput($value);
             $this->setConfig($this->config, $params);
         }
     }
-
 
     /**
      * Adds or updates give parameter in config.
@@ -88,36 +103,16 @@ class ParamsController extends Controller
         $params = $this->getConfig($this->config);
 
         if (isset($params[$param])) {
-            unset($params[$param]);
+            unset(Yii::$app->params[$param], $params[$param]);
             $this->setConfig($this->config, $params);
-        }
-    }
-
-    /**
-     * Sets permissions for application folders.
-     */
-    public function actionPermissions(): void
-    {
-        FileHelper::createDirectory(Yii::getAlias('@webroot/css'));
-        FileHelper::createDirectory(Yii::getAlias('@webroot/js'));
-
-        foreach (['@webroot/assets', '@webroot/uploads', '@runtime'] as $path) {
-            try {
-                chmod(Yii::getAlias($path), 0777);
-            } catch (Exception $e) {
-                $this->stderr("Failed to change permissions for directory \"$path\": " . $e->getMessage());
-                $this->stdout(PHP_EOL);
-            }
         }
     }
 
     protected static function generateCookieValidationKey(): string
     {
-        if (!extension_loaded('openssl')) {
-            throw new Exception('The OpenSSL PHP extension is required by Yii2.');
-        }
         $length = 32;
         $bytes = openssl_random_pseudo_bytes($length);
+
         return strtr(substr(base64_encode($bytes), 0, $length), '+/=', '_-.');
     }
 }

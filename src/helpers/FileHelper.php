@@ -61,6 +61,18 @@ class FileHelper extends BaseFileHelper
         return parent::createDirectory($path, $mode, $recursive);
     }
 
+    public static function removeDirectory($dir, $options = []): void
+    {
+        $dir = Yii::getAlias($dir);
+        parent::removeDirectory($dir, $options);
+    }
+
+    public static function findDirectories($dir, $options = []): array
+    {
+        $dir = Yii::getAlias($dir);
+        return parent::findDirectories($dir, $options);
+    }
+
     /**
      * Creates a config PHP file from the config array.
      */

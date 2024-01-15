@@ -89,7 +89,6 @@ class SitemapBehavior extends Behavior
         return $urls;
     }
 
-
     public function getSitemapUrlCount(): int
     {
         $query = $this->owner->getSitemapQuery();

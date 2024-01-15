@@ -6,9 +6,10 @@
 
 namespace davidhirtz\yii2\skeleton\tests\functional;
 
+use davidhirtz\yii2\skeleton\codeception\functional\BaseCest;
 use davidhirtz\yii2\skeleton\tests\support\FunctionalTester;
 
-class ControllerCest
+class ControllerCest extends BaseCest
 {
     public function checkApplicationHealth(FunctionalTester $I): void
     {

@@ -8,17 +8,24 @@ use yii\helpers\Console;
 
 trait ConfigTrait
 {
-    protected function filterUserInput(string $value): int|string
+    protected function filterUserInput(string $value): int|string|bool|null
     {
+        $value = trim($value, '\'" ');
+
+        if ($value === 'null') {
+            return null;
+        }
+
         $boolean = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-        return $boolean ?? (string)$value;
+        return $boolean ?? $value;
     }
 
-    protected function stdoutVar(mixed $value): bool|int|string
+    protected function stdoutVar(mixed $value): bool|int
     {
         return match (gettype($value)) {
             'boolean' => $this->stdout($value ? 'true' : 'false', Console::BOLD),
-            'integer', 'double' => $value,
+            'integer', 'double' => $this->stdout((string)$value),
+            'NULL' => $this->stdout('null', Console::BOLD),
             default => $this->stdout("'$value'", Console::FG_GREEN),
         };
     }
@@ -31,7 +38,16 @@ trait ConfigTrait
 
     protected function setConfig(string $file, array $config): void
     {
-        FileHelper::createConfigFile($file, $config);
-        $this->stdout($file . ' was updated.' . PHP_EOL, Console::FG_GREEN);
+        if (!FileHelper::createConfigFile($file, $config)) {
+            $this->stderr("Unable to create config file." . PHP_EOL, Console::FG_RED);
+            return;
+        }
+
+        Yii::$app->params = [
+            ...Yii::$app->params,
+            ...$config,
+        ];
+
+        $this->stdout('Application parameters were updated.' . PHP_EOL, Console::FG_GREEN);
     }
 }

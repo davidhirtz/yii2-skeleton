@@ -396,6 +396,11 @@ class User extends ActiveRecord implements StatusAttributeInterface
         $this->password_reset_token = Yii::$app->getSecurity()->generateRandomString();
     }
 
+    public function getAdminRoute(): array|false
+    {
+        return $this->id ? ['/admin/user/update', 'id' => $this->id] : false;
+    }
+
     public function getFullName(): string
     {
         return trim($this->first_name . ' ' . $this->last_name);
@@ -513,11 +518,6 @@ class User extends ActiveRecord implements StatusAttributeInterface
     public function getTrailModelType(): string
     {
         return Yii::t('skeleton', 'User');
-    }
-
-    public function getTrailModelAdminRoute(): array|false
-    {
-        return $this->id ? ['/admin/user/update', 'id' => $this->id] : false;
     }
 
     public function isOwner(): bool

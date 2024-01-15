@@ -22,6 +22,8 @@ use Yii;
  * @property int|null $updated_by_user_id
  * @property DateTime|null $updated_at
  * @property DateTime $created_at
+ *
+ * @mixin TrailBehavior
  */
 class Redirect extends ActiveRecord implements TypeAttributeInterface
 {
@@ -102,10 +104,6 @@ class Redirect extends ActiveRecord implements TypeAttributeInterface
         if ($redirect) {
             $this->url = $redirect->url;
         }
-    }
-    public function getTrailModelAdminRoute(): array|false
-    {
-        return $this->getAdminRoute();
     }
 
     public function getAdminRoute(): array|false

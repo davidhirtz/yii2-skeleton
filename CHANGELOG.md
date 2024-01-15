@@ -1,6 +1,8 @@
 ## 2.1.17 - under construction
 
 - Fixed `UserLogin::getDisplayIp()`
+- Fixed `RedirectBehavior` to also set the previous URL when on insert
+- Moved asset manager setup in tests from `Yii2` module to `AssetDirectoryTrait` and `BaseCest`
 
 ## 2.1.16 (Jan 13, 2024)
 

@@ -22,15 +22,14 @@ class AttributeTypecastBehaviorTest extends Unit
             'nullable' => 'string null default null',
         ];
 
-        Yii::$app->getDb()->createCommand()->createTable(ActiveRecordAttributeTypecast::tableName(), $columns)->execute();
+        Yii::$app->getDb()->createCommand()->createTable(AttributeTypecastActiveRecord::tableName(), $columns)->execute();
 
         parent::_before();
     }
 
     protected function _after(): void
     {
-        Yii::$app->getDb()->createCommand()->dropTable(ActiveRecordAttributeTypecast::tableName())->execute();
-
+        Yii::$app->getDb()->createCommand()->dropTable(AttributeTypecastActiveRecord::tableName())->execute();
         AttributeTypecastBehavior::clearAutoDetectedAttributeTypes();
 
         parent::_after();
@@ -38,7 +37,7 @@ class AttributeTypecastBehaviorTest extends Unit
 
     public function testTypecast(): void
     {
-        $model = new ActiveRecordAttributeTypecast();
+        $model = new AttributeTypecastActiveRecord();
 
         $model->name = 123; // @phpstan-ignore-line
         $model->amount = '58'; // @phpstan-ignore-line
@@ -59,7 +58,7 @@ class AttributeTypecastBehaviorTest extends Unit
 
     public function testSkipNull(): void
     {
-        $model = new ActiveRecordAttributeTypecast();
+        $model = new AttributeTypecastActiveRecord();
         $model->getAttributeTypecastBehavior()->skipOnNull = true;
 
         $model->name = null; // @phpstan-ignore-line
@@ -91,7 +90,7 @@ class AttributeTypecastBehaviorTest extends Unit
 
     public function testBeforeValidateEvent(): void
     {
-        $model = new class() extends ActiveRecordAttributeTypecast {
+        $model = new class() extends AttributeTypecastActiveRecord {
             public bool $typecastBeforeValidate = true;
 
             public function rules(): array
@@ -124,7 +123,7 @@ class AttributeTypecastBehaviorTest extends Unit
 
     public function testAfterFindEvent(): void
     {
-        $model = new ActiveRecordAttributeTypecast();
+        $model = new AttributeTypecastActiveRecord();
 
         $model->name = 'name';
         $model->amount = 1;
@@ -142,7 +141,7 @@ class AttributeTypecastBehaviorTest extends Unit
 
     public function testDirtyAttributesAreEmptyAfterFind(): void
     {
-        $model = new ActiveRecordAttributeTypecast();
+        $model = new AttributeTypecastActiveRecord();
 
         $model->name = 123; // @phpstan-ignore-line
         $model->amount = '58'; // @phpstan-ignore-line
@@ -153,14 +152,14 @@ class AttributeTypecastBehaviorTest extends Unit
 
         $model->save(false);
 
-        $model = ActiveRecordAttributeTypecast::find()->one();
+        $model = AttributeTypecastActiveRecord::find()->one();
 
         $this->assertEmpty($model->getDirtyAttributes());
     }
 
     public function testAfterValidateEvent(): void
     {
-        $model = new ActiveRecordAttributeTypecast();
+        $model = new AttributeTypecastActiveRecord();
 
         $model->callback = 'validate';
         $model->validate();
@@ -169,7 +168,7 @@ class AttributeTypecastBehaviorTest extends Unit
 
     public function testBeforeSaveEvent(): void
     {
-        $model = new ActiveRecordAttributeTypecast();
+        $model = new AttributeTypecastActiveRecord();
         $beforeInsertHappened = false;
 
         $model->name = 'name';
@@ -178,7 +177,7 @@ class AttributeTypecastBehaviorTest extends Unit
         $model->is_active = true;
         $model->callback = 'insert';
 
-        $model->on(ActiveRecordAttributeTypecast::EVENT_BEFORE_INSERT, function () use (&$beforeInsertHappened): void {
+        $model->on(AttributeTypecastActiveRecord::EVENT_BEFORE_INSERT, function () use (&$beforeInsertHappened): void {
             $beforeInsertHappened = true;
         });
 
@@ -190,7 +189,7 @@ class AttributeTypecastBehaviorTest extends Unit
         $beforeUpdateHappened = false;
         $model->callback = 'update';
 
-        $model->on(ActiveRecordAttributeTypecast::EVENT_BEFORE_UPDATE, function () use (&$beforeUpdateHappened): void {
+        $model->on(AttributeTypecastActiveRecord::EVENT_BEFORE_UPDATE, function () use (&$beforeUpdateHappened): void {
             $beforeUpdateHappened = true;
         });
 
@@ -202,7 +201,7 @@ class AttributeTypecastBehaviorTest extends Unit
 
     public function testAfterSaveEvent(): void
     {
-        $model = new ActiveRecordAttributeTypecast([
+        $model = new AttributeTypecastActiveRecord([
             'typecastAfterSave' => true
         ]);
 
@@ -214,13 +213,13 @@ class AttributeTypecastBehaviorTest extends Unit
 
         $beforeInsertHappened = false;
 
-        $model->on(ActiveRecordAttributeTypecast::EVENT_BEFORE_INSERT, function () use (&$beforeInsertHappened): void {
+        $model->on(AttributeTypecastActiveRecord::EVENT_BEFORE_INSERT, function () use (&$beforeInsertHappened): void {
             $beforeInsertHappened = true;
         });
 
         $afterInsertHappened = false;
 
-        $model->on(ActiveRecordAttributeTypecast::EVENT_AFTER_INSERT, function () use (&$afterInsertHappened): void {
+        $model->on(AttributeTypecastActiveRecord::EVENT_AFTER_INSERT, function () use (&$afterInsertHappened): void {
             $afterInsertHappened = true;
         });
 
@@ -236,13 +235,13 @@ class AttributeTypecastBehaviorTest extends Unit
         $model->callback = 'update';
         $beforeUpdateHappened = false;
 
-        $model->on(ActiveRecordAttributeTypecast::EVENT_BEFORE_UPDATE, function () use (&$beforeUpdateHappened): void {
+        $model->on(AttributeTypecastActiveRecord::EVENT_BEFORE_UPDATE, function () use (&$beforeUpdateHappened): void {
             $beforeUpdateHappened = true;
         });
 
         $afterUpdateHappened = false;
 
-        $model->on(ActiveRecordAttributeTypecast::EVENT_AFTER_UPDATE, function () use (&$afterUpdateHappened): void {
+        $model->on(AttributeTypecastActiveRecord::EVENT_AFTER_UPDATE, function () use (&$afterUpdateHappened): void {
             $afterUpdateHappened = true;
         });
 
@@ -288,7 +287,7 @@ class AttributeTypecastBehaviorTest extends Unit
 
     public function testSkipNotSelectedAttribute(): void
     {
-        $model = new ActiveRecordAttributeTypecast();
+        $model = new AttributeTypecastActiveRecord();
 
         $model->name = 'skip-not-selected';
         $model->amount = '58'; // @phpstan-ignore-line
@@ -299,7 +298,7 @@ class AttributeTypecastBehaviorTest extends Unit
 
         $model->save(false);
 
-        $model = ActiveRecordAttributeTypecast::find()
+        $model = AttributeTypecastActiveRecord::find()
             ->select(['id', 'name'])
             ->limit(1)
             ->one();
@@ -323,7 +322,7 @@ class AttributeTypecastBehaviorTest extends Unit
  *
  * @property AttributeTypecastBehavior $attributeTypecastBehavior
  */
-class ActiveRecordAttributeTypecast extends ActiveRecord
+class AttributeTypecastActiveRecord extends ActiveRecord
 {
     public bool $typecastBeforeValidate = false;
     public bool $typecastAfterSave = false;

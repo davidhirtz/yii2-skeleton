@@ -6,6 +6,7 @@
 namespace davidhirtz\yii2\skeleton\tests\functional;
 
 use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
+use davidhirtz\yii2\skeleton\codeception\functional\BaseCest;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorLoginActiveForm;
@@ -15,24 +16,22 @@ use davidhirtz\yii2\skeleton\validators\GoogleAuthenticatorValidator;
 use RobThree\Auth\TwoFactorAuth;
 use Yii;
 
-class LoginCest
+class LoginCest extends BaseCest
 {
     use UserFixtureTrait;
 
-    public function _before(FunctionalTester $I): void
+    public function _before(): void
     {
-        /** @var Module $module */
-        $module = Yii::$app->getModule('admin');
-
         Yii::$app->getUser()->enableLogin = true;
         Yii::$app->getUser()->enableGoogleAuthenticator = true;
 
-        $I->amOnPage("/$module->alias");
+        parent::_before();
     }
 
     public function checkLoginWithEmptyCredentials(FunctionalTester $I): void
     {
         $this->submitLoginForm($I, '', '');
+
         $I->seeValidationError('Email cannot be blank.');
         $I->seeValidationError('Password cannot be blank.');
     }
@@ -40,12 +39,14 @@ class LoginCest
     public function checkLoginWithWrongPassword(FunctionalTester $I): void
     {
         $this->submitLoginForm($I, 'owner@domain.com', 'wrong');
+
         $I->seeValidationError(Yii::t('skeleton', 'Your email or password are incorrect.'));
     }
 
     public function checkLoginWithDisabledAccount(FunctionalTester $I): void
     {
         $this->submitLoginForm($I, 'disabled@domain.com', 'password');
+
         $I->seeValidationError(Yii::t('skeleton', 'Your account is currently disabled. Please contact an administrator!'));
     }
 
@@ -54,6 +55,7 @@ class LoginCest
         Yii::$app->getUser()->disableRbacForOwner = false;
 
         $this->submitLoginForm($I, 'owner@domain.com', 'password');
+
         $I->seeResponseCodeIs(403);
     }
 
@@ -65,6 +67,7 @@ class LoginCest
         $this->assignAdminRole($user['id']);
 
         $this->submitLoginForm($I, 'owner@domain.com', 'password');
+
         $I->seeLink(Yii::t('skeleton', 'Logout'));
     }
 
@@ -73,6 +76,7 @@ class LoginCest
         Yii::$app->getUser()->disableRbacForOwner = true;
 
         $this->submitLoginForm($I, 'owner@domain.com', 'password');
+
         $I->seeLink(Yii::t('skeleton', 'Logout'));
     }
 
@@ -109,12 +113,17 @@ class LoginCest
     public function checkDisabledLogin(FunctionalTester $I): void
     {
         Yii::$app->getUser()->enableLogin = false;
+
         $this->submitLoginForm($I, 'owner@domain.com', 'password');
         $I->seeValidationError(Yii::t('skeleton', 'Sorry, logging in is currently disabled!'));
     }
 
     protected function submitLoginForm(FunctionalTester $I, string $email, string $password): void
     {
+        /** @var Module $module */
+        $module = Yii::$app->getModule('admin');
+        $I->amOnPage("/$module->alias");
+
         $widget = Yii::createObject(LoginActiveForm::class);
 
         $I->submitForm("#$widget->id", [

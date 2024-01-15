@@ -5,36 +5,36 @@
 
 namespace davidhirtz\yii2\skeleton\console\controllers;
 
+use davidhirtz\yii2\skeleton\console\controllers\traits\ControllerTrait;
+use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use Yii;
 use yii\helpers\Console;
-use yii\helpers\FileHelper;
 
 class AssetController extends \yii\console\controllers\AssetController
 {
+    use ControllerTrait;
+
     /**
      * Removes all published assets.
      */
     public function actionClear(): void
     {
-        $basePath = Yii::$app->getAssetManager()->basePath;
-        $assets = FileHelper::findDirectories($basePath, ['recursive' => false]);
+        $assets = FileHelper::findDirectories(Yii::$app->getAssetManager()->basePath, [
+            'recursive' => false,
+        ]);
 
         $total = count($assets);
-        $done = 0;
 
         if (!$total) {
-            $this->stdout("All assets are already cleared\n", Console::FG_GREEN);
+            $this->stdout('All assets are already cleared' . PHP_EOL, Console::FG_GREEN);
         } else {
-            $prefix = 'Published assets deleted: ';
-
-            Console::startProgress($done, $total, $prefix);
+            $this->interactiveStartStdout('Removing ' . ($total == 1 ? 'one asset bundle' : "$total asset bundles") . '... ');
 
             foreach ($assets as $asset) {
                 FileHelper::removeDirectory($asset);
-                Console::updateProgress(++$done, $total, $prefix);
             }
 
-            Console::endProgress();
+            $this->interactiveDoneStdout();
         }
     }
 }

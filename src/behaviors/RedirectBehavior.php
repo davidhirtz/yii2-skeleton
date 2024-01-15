@@ -42,6 +42,8 @@ class RedirectBehavior extends Behavior
             $this->updatePreviousRedirectUrls($url);
             $this->insertRedirect($url);
         }
+
+        $this->prevUrl = $url;
     }
 
     /**

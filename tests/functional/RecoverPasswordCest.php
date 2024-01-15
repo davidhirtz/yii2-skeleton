@@ -6,6 +6,7 @@
 namespace davidhirtz\yii2\skeleton\tests\functional;
 
 use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
+use davidhirtz\yii2\skeleton\codeception\functional\BaseCest;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
@@ -14,17 +15,19 @@ use davidhirtz\yii2\skeleton\tests\support\FunctionalTester;
 use Symfony\Component\Mime\Email;
 use Yii;
 
-class RecoverPasswordCest
+class RecoverPasswordCest extends BaseCest
 {
     use UserFixtureTrait;
 
     private ?Module $module = null;
 
-    public function _before(FunctionalTester $I): void
+    public function _before(): void
     {
         /** @var Module $module */
         $module = Yii::$app->getModule('admin');
         $this->module = $module;
+
+        parent::_before();
     }
 
     public function checkPasswordRecoverLink(FunctionalTester $I): void

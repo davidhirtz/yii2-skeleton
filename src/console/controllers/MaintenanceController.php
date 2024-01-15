@@ -17,8 +17,12 @@ use yii\helpers\Console;
  */
 class MaintenanceController extends Controller
 {
-    public const MAINTENANCE_STUB_FILE = '@skeleton/console/controllers/stubs/maintenance.stub';
-    public const MAINTENANCE_FILE = '@runtime/maintenance.php';
+    final public const MAINTENANCE_FILE = '@runtime/maintenance.php';
+
+    /**
+     * @var string path to the maintenance mode template stub
+     */
+    public string $maintenanceStubFile = '@skeleton/console/controllers/stubs/maintenance.stub';
 
     /**
      * @var string|null optional redirect URL
@@ -102,6 +106,12 @@ class MaintenanceController extends Controller
     /**
      * Enables maintenance mode with the given configuration by copying the maintenance mode template to the runtime.
      * The configuration is saved in a JSON file in the runtime directory.
+     *
+     * @uses $redirect
+     * @uses $retry
+     * @uses $refresh
+     * @uses $statusCode
+     * @uses $viewFile
      */
     protected function enableMaintenanceMode(bool $withConfig = false): void
     {
@@ -113,12 +123,12 @@ class MaintenanceController extends Controller
             }
 
             if (!$form->save()) {
-                echo Console::errorSummary($form) . PHP_EOL;
+                $this->stdout(Console::errorSummary($form) . PHP_EOL);
                 return;
             }
         }
 
-        if (copy(Yii::getAlias(static::MAINTENANCE_STUB_FILE), Yii::getAlias(self::MAINTENANCE_FILE))) {
+        if (copy(Yii::getAlias($this->maintenanceStubFile), Yii::getAlias(self::MAINTENANCE_FILE))) {
             $this->stdout('Maintenance mode enabled.' . PHP_EOL, Console::FG_GREEN);
         }
     }
@@ -132,7 +142,7 @@ class MaintenanceController extends Controller
         $this->stdout('Maintenance mode disabled.' . PHP_EOL, Console::FG_GREEN);
     }
 
-    private function isMaintenanceMode(): bool
+    protected function isMaintenanceMode(): bool
     {
         return file_exists(Yii::getAlias(self::MAINTENANCE_FILE));
     }
