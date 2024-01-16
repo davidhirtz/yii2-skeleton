@@ -19,6 +19,12 @@ class TrailController extends Controller
     use ControllerTrait;
 
     /**
+     * @var int The number of seconds to sleep between batches when deleting records to prevent a database shutdown
+     * while deleting huge amounts of trail records, defaults to 1 second.
+     */
+    public int $sleep = 1;
+
+    /**
      * Updates the model classes in the trail table to the current class names based on the container definitions.
      */
     public function actionUpdateModels(?string $filter = '\\models\\'): void
@@ -46,7 +52,8 @@ class TrailController extends Controller
      * in seconds can be passed as an argument.
      *
      * This method orders the records by their primary key and deletes them in batches of 100 records. This is done to
-     * prevent locking the table for too long or applying an SQL query with a too large `WHERE` clause.
+     * prevent locking the table for too long or applying an SQL query with a too large `WHERE` clause. This means that
+     * the ID must be an auto-incrementing integer, with the oldest records having the lowest IDs.
      */
     public function actionClear(?int $lifetime = null): void
     {
@@ -84,10 +91,8 @@ class TrailController extends Controller
                 $this->stdout("Deleting records ... ($count)\n");
 
                 if ($deletedCount == count($rows)) {
-                    // If all records were deleted, we can continue with the next batch, to prevent a database shutdown
-                    // for super large tables, we wait a second before continuing.
-                    if (count($rows) == $limit) {
-                        sleep(1);
+                    if ($this->sleep && count($rows) == $limit) {
+                        sleep($this->sleep);
                     }
 
                     continue;

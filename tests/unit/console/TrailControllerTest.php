@@ -54,6 +54,26 @@ class TrailControllerTest extends Unit
         $this->assertEquals(4, Trail::find()->count());
     }
 
+    public function testActionClearWithManyRecords(): void
+    {
+        $date = gmdate('Y-m-d H:i:s', strtotime('-2 years'));
+
+        Trail::batchInsert(array_fill(0, 100, [
+            'type' => Trail::TYPE_CREATE,
+            'created_at' => $date,
+        ]));
+
+        $this->assertEquals(105, Trail::find()->count());
+
+        $controller = $this->createTrailController();
+        $controller->sleep = 0;
+
+        $controller->actionClear(1);
+        $this->assertStringContainsString('Deleted 105 expired trail records', $controller->flushStdOutBuffer());
+
+        $this->assertEmpty(Trail::find()->count());
+    }
+
     public function testActionOptimize(): void
     {
         $controller = $this->createTrailController();
