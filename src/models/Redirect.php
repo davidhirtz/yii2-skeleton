@@ -106,6 +106,11 @@ class Redirect extends ActiveRecord implements TypeAttributeInterface
         }
     }
 
+    public static function sanitizeUrl(string $url): string
+    {
+        return $url ? preg_replace('/\s+/', '%20', trim($url, '/ ')) : '';
+    }
+
     public function getAdminRoute(): array|false
     {
         return $this->id ? ['/admin/redirect/update', 'id' => $this->id] : false;
@@ -114,11 +119,6 @@ class Redirect extends ActiveRecord implements TypeAttributeInterface
     public function getBaseUrl(): string
     {
         return !parse_url($this->url, PHP_URL_HOST) ? '/' : '';
-    }
-
-    public static function sanitizeUrl(string $url): string
-    {
-        return $url ? preg_replace('/\s+/', '%20', trim($url, '/ ')) : '';
     }
 
     public static function getTypes(): array

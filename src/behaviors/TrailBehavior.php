@@ -38,6 +38,7 @@ class TrailBehavior extends Behavior
      * {@see TrailBehavior::getTrailAttributes()}
      */
     public array $exclude = [
+        'id',
         'position',
         'updated_by_user_id',
         'updated_at',
