@@ -36,7 +36,7 @@ trait ConfigTrait
         return is_file($file) ? require ($file) : $default;
     }
 
-    protected function setConfig(string $file, array $config): void
+    protected function setConfig(string $file, array $config, ?string $message = null): void
     {
         if (!FileHelper::createConfigFile($file, $config)) {
             $this->stderr("Unable to create config file." . PHP_EOL, Console::FG_RED);
@@ -48,6 +48,8 @@ trait ConfigTrait
             ...$config,
         ];
 
-        $this->stdout('Application parameters were updated.' . PHP_EOL, Console::FG_GREEN);
+        if ($message) {
+            $this->stdout($message . PHP_EOL, Console::FG_GREEN);
+        }
     }
 }

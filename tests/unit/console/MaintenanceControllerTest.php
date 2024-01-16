@@ -56,8 +56,6 @@ class MaintenanceControllerTest extends Unit
         $this->assertEquals(500, $config['status']);
 
         $template = file_get_contents(Yii::getAlias($controller->viewFile));
-        codecept_debug($controller->viewFile);
-        codecept_debug($template);
 
         $this->assertEquals($template, $config['template']);
 

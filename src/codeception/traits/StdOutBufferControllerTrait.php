@@ -16,6 +16,12 @@ trait StdOutBufferControllerTrait
         return true;
     }
 
+    public function stderr($string): bool|int
+    {
+        $this->stdOutBuffer .= $string;
+        return true;
+    }
+
     public function stdout($string): bool|int
     {
         $this->stdOutBuffer .= $string;

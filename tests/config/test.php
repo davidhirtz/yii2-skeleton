@@ -5,6 +5,10 @@ if (is_file(__DIR__ . '/db.php')) {
 }
 
 return [
+    'aliases' => [
+        // This is a fix for the broken aliasing of `BaseMigrateController::getNamespacePath()`
+        '@davidhirtz/yii2/skeleton' => __DIR__ . '/../../src/',
+    ],
     'components' => [
         'db' => [
             'dsn' => getenv('MYSQL_DSN') ?: 'mysql:host=127.0.0.1;dbname=yii2_skeleton_test',

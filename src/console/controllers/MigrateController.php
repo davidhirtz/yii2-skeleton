@@ -28,9 +28,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
 
     public function beforeAction($action): bool
     {
-        $dsn = Yii::$app->getDb()->dsn;
-
-        if (!$dsn) {
+        if (!Yii::$app->getDb()->dsn) {
             if (!$this->interactive) {
                 $this->stderr('Database connection not configured.', Console::FG_RED);
                 return false;
@@ -39,7 +37,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
             $this->actionConfig(false);
         }
 
-        return $dsn && parent::beforeAction($action);
+        return Yii::$app->getDb()->dsn && parent::beforeAction($action);
     }
 
     /**
@@ -70,9 +68,9 @@ class MigrateController extends \yii\console\controllers\MigrateController
                 $db['username'] = $this->prompt('Enter username:', ['default' => $dsn['dbname'], 'required' => true]);
 
                 $this->stdout('Enter password: ');
-                $db['password'] = CliPrompt::hiddenPrompt();
+                $db['password'] = $this->hiddenPasswordPrompt();
 
-                $this->setConfig($this->dbFile, $db);
+                $this->setConfig($this->dbFile, $db, 'Database connection credentials saved.');
                 $this->_dbConfig = $db;
 
                 Yii::$app->setComponents([
@@ -80,6 +78,11 @@ class MigrateController extends \yii\console\controllers\MigrateController
                 ]);
             }
         }
+    }
+
+    protected function hiddenPasswordPrompt(): string
+    {
+        return CliPrompt::hiddenPrompt();
     }
 
     public function getDbConfig(): array

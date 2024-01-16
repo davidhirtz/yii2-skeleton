@@ -8,7 +8,7 @@ trait ConsoleApplicationTrait
 {
     protected function createConsoleApplicationMock(): void
     {
-        $config = require(__DIR__ . '/../../../config/test.php');
+        $config = require(__DIR__ . '/../../../tests/config/test.php');
         (new Application($config));
     }
 }

@@ -61,7 +61,7 @@ class ParamsController extends Controller
 
             if (!$this->interactive || $this->confirm($message, !$found)) {
                 $params['cookieValidationKey'] = static::generateCookieValidationKey();
-                $this->setConfig($this->config, $params);
+                $this->setConfig($this->config, $params, 'Cookie validation key generated.');
             }
         }
     }
@@ -72,12 +72,15 @@ class ParamsController extends Controller
     public function actionCreate(string $param, string $value): void
     {
         $params = $this->getConfig($this->config);
+        $isNew = !isset($params[$param]);
 
-        if (!isset($params[$param])
+        if ($isNew
             || !$this->interactive
             || $this->confirm('Parameter already exists, override?')) {
             $params[$param] = $this->filterUserInput($value);
-            $this->setConfig($this->config, $params);
+            $this->setConfig($this->config, $params, $isNew
+                ? 'Application parameter added.'
+                : 'Application parameter updated.');
         }
     }
 
@@ -91,7 +94,7 @@ class ParamsController extends Controller
 
         if (!isset($params[$param]) || $params[$param] !== $value) {
             $params[$param] = $value;
-            $this->setConfig($this->config, $params);
+            $this->setConfig($this->config, $params, 'Application parameter updated.');
         }
     }
 
@@ -104,7 +107,7 @@ class ParamsController extends Controller
 
         if (isset($params[$param])) {
             unset(Yii::$app->params[$param], $params[$param]);
-            $this->setConfig($this->config, $params);
+            $this->setConfig($this->config, $params, 'Application parameters removed');
         }
     }
 

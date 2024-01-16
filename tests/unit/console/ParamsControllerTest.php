@@ -51,9 +51,10 @@ class ParamsControllerTest extends Unit
     {
         $controller = $this->createParamsController();
         $controller->interactive = false;
+
         $controller->actionCookie();
 
-        $this->assertEquals('Application parameters were updated.' . PHP_EOL, $controller->flushStdOutBuffer());
+        $this->assertEquals('Cookie validation key generated.' . PHP_EOL, $controller->flushStdOutBuffer());
         $this->assertNotEquals('test', Yii::$app->params['cookieValidationKey']);
 
         $filename = Yii::getAlias("$this->configPath/params.php");
@@ -67,9 +68,10 @@ class ParamsControllerTest extends Unit
     {
         $controller = $this->createParamsController();
         $controller->interactive = false;
+
         $controller->actionCreate('test', 'test');
 
-        $this->assertEquals('Application parameters were updated.' . PHP_EOL, $controller->flushStdOutBuffer());
+        $this->assertEquals('Application parameter added.' . PHP_EOL, $controller->flushStdOutBuffer());
         $this->assertEquals('test', Yii::$app->params['test']);
 
         $filename = Yii::getAlias("$this->configPath/params.php");
