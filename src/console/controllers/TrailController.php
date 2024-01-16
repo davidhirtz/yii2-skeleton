@@ -2,7 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\console\controllers;
 
-use davidhirtz\yii2\datetime\DateTime;
+use davidhirtz\yii2\skeleton\console\controllers\traits\ControllerTrait;
 use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use Exception;
@@ -12,19 +12,21 @@ use yii\console\Controller;
 use yii\helpers\Console;
 
 /**
- * Manages trail garbage collection
+ * Manages trail garbage collection.
  */
 class TrailController extends Controller
 {
+    use ControllerTrait;
+
     /**
      * Updates the model classes in the trail table to the current class names based on the container definitions.
      */
-    public function actionUpdateModels(string $filter = '\\models\\'): void
+    public function actionUpdateModels(?string $filter = '\\models\\'): void
     {
         $classNames = [];
 
         foreach (Yii::$container->getDefinitions() as $definition => $options) {
-            if (!$filter || str_contains((string) $definition, $filter)) {
+            if (!$filter || str_contains((string)$definition, $filter)) {
                 $classNames[$definition] = $options['class'];
             }
         }
@@ -40,21 +42,28 @@ class TrailController extends Controller
     }
 
     /**
-     * Removes trail records older than the threshold defined in the module configuration.
+     * Removes trail records older than the threshold defined in the module configuration. Alternatively, the lifetime
+     * in seconds can be passed as an argument.
+     *
+     * This method orders the records by their primary key and deletes them in batches of 100 records. This is done to
+     * prevent locking the table for too long or applying an SQL query with a too large `WHERE` clause.
      */
-    public function actionClear(): void
+    public function actionClear(?int $lifetime = null): void
     {
-        if ($this->getTrailLifeTime() < 1) {
+        $lifetime ??= $this->getTrailLifeTime();
+
+        if (!$lifetime) {
             throw new InvalidConfigException('Application `trailLifetime` must be set');
         }
 
-        $threshold = (string)(new DateTime())->setTimestamp(time() - $this->getTrailLifeTime());
+        $threshold = gmdate('Y-m-d H:i:s', time() - $lifetime);
         $totalCount = 0;
+        $limit = 100;
 
         $query = Trail::find()
             ->select(['id', 'created_at'])
             ->orderBy(['id' => SORT_ASC])
-            ->limit(100)
+            ->limit($limit)
             ->asArray();
 
         while (true) {
@@ -75,7 +84,12 @@ class TrailController extends Controller
                 $this->stdout("Deleting records ... ($count)\n");
 
                 if ($deletedCount == count($rows)) {
-                    sleep(1);
+                    // If all records were deleted, we can continue with the next batch, to prevent a database shutdown
+                    // for super large tables, we wait a second before continuing.
+                    if (count($rows) == $limit) {
+                        sleep(1);
+                    }
+
                     continue;
                 }
             }
@@ -83,7 +97,10 @@ class TrailController extends Controller
             break;
         }
 
-        $this->stdout(($totalCount ? "Deleted $totalCount expired trail records" : 'No expired trail records found') . PHP_EOL, Console::FG_GREEN);
+        $formattedCount = Yii::$app->getFormatter()->asInteger($totalCount);
+        $message = $totalCount ? "Deleted $formattedCount expired trail records" : 'No expired trail records found';
+
+        $this->stdout($message . PHP_EOL, Console::FG_GREEN);
 
         if ($totalCount) {
             $this->actionOptimize();
@@ -95,16 +112,17 @@ class TrailController extends Controller
      */
     public function actionOptimize(): void
     {
-        $this->stdout('Optimizing trail table ... ');
-        $start = microtime(true);
+        $this->interactiveStartStdout('Optimizing trail table... ');
+        $success = false;
 
         try {
             Yii::$app->getDb()->createCommand('OPTIMIZE TABLE ' . Trail::tableName());
-            $this->stdout('done (time: ' . sprintf('%.2f', microtime(true) - $start) . 's)' . PHP_EOL);
+            $success = true;
         } catch (Exception $exception) {
             Yii::error($exception);
-            $this->stdout('failed' . PHP_EOL, Console::FG_RED);
         }
+
+        $this->interactiveDoneStdout($success);
     }
 
     protected function getTrailLifeTime(): ?int
