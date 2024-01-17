@@ -444,6 +444,7 @@ class AccountController extends Controller
         ]));
 
         $auth->user_id = $user->id;
+
         return $auth->insert();
     }
 }

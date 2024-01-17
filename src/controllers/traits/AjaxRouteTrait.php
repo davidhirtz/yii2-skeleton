@@ -33,14 +33,24 @@ trait AjaxRouteTrait
     {
         $this->registerAjaxRouteDocumentTitle();
 
-        $js = implode('', call_user_func_array('array_merge', $this->getView()->js));
-        return "<script>$js</script>";
+        $js = [];
+
+        foreach ($this->getView()->js as $jsArray) {
+            foreach ($jsArray as $jsString) {
+                $js[] = rtrim((string)$jsString, ';');
+            }
+        }
+
+        $js = implode(';', $js);
+
+        return $js ? "<script>$js</script>" : '';
     }
 
     protected function registerAjaxRouteDocumentTitle(): void
     {
         $view = $this->getView();
+
         $title = addslashes(preg_replace("/[\r|\n]/", '', $view->getDocumentTitle()));
-        $this->getView()->registerJs("document.title='$title';");
+        $view->registerJs("document.title=\"$title\";", $view::POS_END);
     }
 }
