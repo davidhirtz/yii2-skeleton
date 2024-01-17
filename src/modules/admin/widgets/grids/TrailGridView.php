@@ -123,11 +123,13 @@ class TrailGridView extends GridView
 
         if (is_array($trail->data)) {
             foreach ($trail->data as $attribute => $value) {
-                if ($value = $this->formatTrailAttributeValue($model, $attribute, $value)) {
-                    $rows[] = [
-                        $model->getAttributeLabel($attribute),
-                        $this->renderCreatedAttributeValue($value),
-                    ];
+                if ($model) {
+                    $attribute = $model->getAttributeLabel($attribute);
+                    $value = $this->formatTrailAttributeValue($model, $attribute, $value);
+                }
+
+                if ($value) {
+                    $rows[] = [$attribute, $value];
                 }
             }
         }
@@ -151,14 +153,13 @@ class TrailGridView extends GridView
 
         if (is_array($trail->data)) {
             foreach ($trail->data as $attribute => $values) {
-                $oldValue = $this->formatTrailAttributeValue($model, $attribute, $values[0]);
-                $newValue = $this->formatTrailAttributeValue($model, $attribute, $values[1]);
+                if ($model) {
+                    $attribute = $model->getAttributeLabel($attribute);
+                    $values = array_map(fn ($value) => $this->formatTrailAttributeValue($model, $attribute, $value), $values);
+                }
 
-                if ($oldValue !== $newValue) {
-                    $rows[] = [
-                        $model->getAttributeLabel($attribute),
-                        $this->renderUpdatedAttributeValues($oldValue, $newValue),
-                    ];
+                if ($values[0] !== $values[1]) {
+                    $rows[] = [$attribute, $this->renderUpdatedAttributeValues($values[0], $values[1])];
                 }
             }
         }
@@ -179,7 +180,6 @@ class TrailGridView extends GridView
 
             return Html::tag('table', $content, ['class' => 'diff-wrapper diff diff-html diff-side-by-side']);
         }
-
 
         return DiffHelper::calculate((string)$oldValue, (string)$newValue, 'SideBySide', [], [
             'showHeader' => false,

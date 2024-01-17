@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\models\collections;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use Throwable;
 use Yii;
 use yii\base\Model;
 
@@ -22,17 +23,21 @@ class TrailModelCollection
         $language = $modelName[1] ?? Yii::$app->language;
 
         return Yii::$app->getI18n()->callback($language, function () use ($modelName, $modelId) {
-            $instance = Yii::createObject($modelName[0]);
+            try {
+                $instance = Yii::createObject($modelName[0]);
 
-            if ($instance instanceof ActiveRecord && $modelId) {
-                $values = explode('-', $modelId);
-                $keys = count($instance::primaryKey()) == count($values) ? array_combine($instance::primaryKey(), $values) : null;
+                if ($instance instanceof ActiveRecord && $modelId) {
+                    $values = explode('-', $modelId);
+                    $keys = count($instance::primaryKey()) == count($values) ? array_combine($instance::primaryKey(), $values) : null;
 
-                self::$_modelClasses[$instance::tableName()][$modelId] ??= $instance::findOne($keys) ?? $instance;
-                return self::$_modelClasses[$instance::tableName()][$modelId];
+                    self::$_modelClasses[$instance::tableName()][$modelId] ??= $instance::findOne($keys) ?? $instance;
+                    return self::$_modelClasses[$instance::tableName()][$modelId];
+                }
+
+                return $instance;
+            } catch (Throwable) {
+                return null;
             }
-
-            return $instance;
         });
     }
 }
