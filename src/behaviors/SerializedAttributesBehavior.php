@@ -23,11 +23,11 @@ class SerializedAttributesBehavior extends Behavior
     public function events(): array
     {
         return [
-            ActiveRecord::EVENT_BEFORE_INSERT => 'serializeAttributes',
-            ActiveRecord::EVENT_BEFORE_UPDATE => 'serializeAttributes',
-            ActiveRecord::EVENT_AFTER_INSERT => 'unserializeAttributes',
-            ActiveRecord::EVENT_AFTER_UPDATE => 'unserializeAttributes',
-            ActiveRecord::EVENT_AFTER_FIND => 'unserializeAttributes',
+            ActiveRecord::EVENT_BEFORE_INSERT => $this->serializeAttributes(...),
+            ActiveRecord::EVENT_BEFORE_UPDATE => $this->serializeAttributes(...),
+            ActiveRecord::EVENT_AFTER_INSERT => $this->unserializeAttributes(...),
+            ActiveRecord::EVENT_AFTER_UPDATE => $this->unserializeAttributes(...),
+            ActiveRecord::EVENT_AFTER_FIND => $this->unserializeAttributes(...),
         ];
     }
 

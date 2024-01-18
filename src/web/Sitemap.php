@@ -15,7 +15,6 @@ class Sitemap extends Component
 {
     public Cache|string|null $cache = 'cache';
 
-
     public int $duration = 86400;
 
     public array|Dependency|null $dependency = null;
@@ -61,8 +60,8 @@ class Sitemap extends Component
 
     /**
      * @var array containing additional sitemap URLs. Urls can be set as route or relative URL. If additional
-     *     information such as priority or last modified should be added, an array with the url as "loc" value can be
-     *     used.
+     * information such as priority or last modified should be added, an array with the url as "loc" value can be
+     * used.
      */
     public array $urls = [];
 

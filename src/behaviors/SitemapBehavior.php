@@ -27,7 +27,8 @@ class SitemapBehavior extends Behavior
     public $callback;
 
     /**
-     * @var int|null the maximum number rows selected by the default database query, if this is null the default value from
+     * @var int|null the maximum number rows selected by the default database query, if this is null the default value
+     *     from
      * {@see Sitemap} will be used. Change this value if one record produces more than one URL (for example for
      * multiple languages).
      */
@@ -44,8 +45,8 @@ class SitemapBehavior extends Behavior
     public ?string $defaultChangeFrequency = null;
 
     /**
-     * @var float|null the default priority frequency, leave empty to omit. Valid values range from 0.0 to 1.0, the default
-     * of a page is 0.5.
+     * @var float|null the default priority frequency, leave empty to omit. Valid values range from 0.0 to 1.0, the
+     * default of a page is 0.5.
      */
     public ?float $defaultPriority = null;
 
