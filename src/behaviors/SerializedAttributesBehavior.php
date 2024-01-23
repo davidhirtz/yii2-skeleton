@@ -10,6 +10,9 @@ use yii\base\Behavior;
  */
 class SerializedAttributesBehavior extends Behavior
 {
+    /**
+     * @var array containing the attributes to be serialized
+     */
     public array $attributes = [];
 
     /**
@@ -38,11 +41,11 @@ class SerializedAttributesBehavior extends Behavior
                 $this->owner->setOldAttribute($attribute, $this->oldAttributes[$attribute]);
             }
 
-            if (is_array($this->owner->{$attribute}) && count($this->owner->{$attribute}) > 0) {
-                $this->owner->{$attribute} = serialize($this->owner->{$attribute});
+            if ($this->owner->$attribute) {
+                $this->owner->$attribute = serialize($this->owner->$attribute);
 
                 if ($this->encode) {
-                    $this->owner->{$attribute} = base64_encode($this->owner->{$attribute});
+                    $this->owner->$attribute = base64_encode($this->owner->$attribute);
                 }
             } else {
                 $this->owner->$attribute = null;
@@ -55,9 +58,9 @@ class SerializedAttributesBehavior extends Behavior
         foreach ($this->attributes as $attribute) {
             $this->oldAttributes[$attribute] = $this->owner->getOldAttribute($attribute);
 
-            if (is_scalar($this->owner->{$attribute})) {
+            if (is_scalar($this->owner->$attribute)) {
                 if ($this->encode) {
-                    $this->owner->$attribute = base64_decode($this->owner->{$attribute});
+                    $this->owner->$attribute = base64_decode($this->owner->$attribute);
                 }
 
                 $value = @unserialize($this->owner->$attribute);
