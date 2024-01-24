@@ -97,14 +97,15 @@ class MigrationControllerMock extends MigrateController
     private ?string $dbUsername = null;
     private ?string $dbPassword = null;
     private ?string $dbName = null;
+    private ?string $dbPort = null;
 
     public function resetDbCredentials(): void
     {
         $this->dbUsername = Yii::$app->getDb()->username;
         $this->dbPassword = Yii::$app->getDb()->password;
 
-        $dbname = preg_replace('/^.*dbname=([^;]+).*$/i', '$1', (string) Yii::$app->getDb()->dsn);
-        $this->dbName = $dbname;
+        $this->dbName = preg_replace('/^.*dbname=([^;]+).*$/i', '$1', (string) Yii::$app->getDb()->dsn);
+        $this->dbPort = preg_replace('/^.*port=([^;]+).*$/i', '$1', (string) Yii::$app->getDb()->dsn);
 
         Yii::$app->getDb()->dsn = '';
     }
@@ -121,13 +122,9 @@ class MigrationControllerMock extends MigrateController
 
     public function prompt($text, $options = []): string
     {
-        // grab dbname= from dsn
-        $dbname = preg_replace('/^.*dbname=([^;]+).*$/i', '$1', (string) Yii::$app->getDb()->dsn);
-        codecept_debug("dbname: $dbname");
-
         return match ($text) {
             'Enter database host:' => 'localhost',
-            'Enter port or leave empty:' => '',
+            'Enter port or leave empty:' => $this->dbPort,
             'Enter database name:' => $this->dbName,
             'Enter username:' => $this->dbUsername,
             default => parent::prompt($text, $options),
