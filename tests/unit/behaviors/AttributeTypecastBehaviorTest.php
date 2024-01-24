@@ -38,6 +38,7 @@ class AttributeTypecastBehaviorTest extends Unit
     public function testTypecast(): void
     {
         $model = new AttributeTypecastActiveRecord();
+        $model->getAttributeTypecastBehavior()->castBooleansAsInt = false;
 
         $model->name = 123; // @phpstan-ignore-line
         $model->amount = '58'; // @phpstan-ignore-line
@@ -83,7 +84,7 @@ class AttributeTypecastBehaviorTest extends Unit
         $this->assertSame('', $model->name);
         $this->assertSame(0, $model->amount);
         $this->assertSame(0.0, $model->price);
-        $this->assertFalse($model->is_active);
+        $this->assertSame(0, $model->is_active);
         $this->assertSame('callback: ', $model->callback);
         $this->assertNull($model->nullable);
     }

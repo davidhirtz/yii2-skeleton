@@ -13,6 +13,12 @@ class AttributeTypecastBehavior extends \yii\behaviors\AttributeTypecastBehavior
     public bool $typecastBeforeValidate = true;
 
     /**
+     * @var bool whether to typecast boolean values as integers. Defaults to `true` which matches boolean values after
+     * they have been retrieved from the database.
+     */
+    public bool $castBooleansAsInt = true;
+
+    /**
      * @var array|null the list of nullable attributes to be typecast to `null` if empty. If `null`, nullable
      * attributes will be auto-detected from the table schema.
      */
@@ -40,6 +46,12 @@ class AttributeTypecastBehavior extends \yii\behaviors\AttributeTypecastBehavior
     {
         parent::typecastAttributes($attributeNames);
         $this->typecastNullableAttributes();
+    }
+
+    protected function typecastValue($value, $type)
+    {
+        $value = parent::typecastValue($value, $type);
+        return $this->castBooleansAsInt && $type === self::TYPE_BOOLEAN ? (int)$value : $value;
     }
 
     public function typecastNullableAttributes(): void

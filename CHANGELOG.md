@@ -1,5 +1,6 @@
-## 2.1.17 - under construction
+## 2.1.17 (Jan 24, 2024)
 
+- Added `AttributeTypecastBehavior::$castBooleansAsInt` to allow casting booleans as integers
 - Fixed `UserLogin::getDisplayIp()`
 - Fixed `RedirectBehavior` to also set the previous URL when on insert
 - Moved asset manager setup in tests from `Yii2` module to `AssetDirectoryTrait` and `BaseCest`

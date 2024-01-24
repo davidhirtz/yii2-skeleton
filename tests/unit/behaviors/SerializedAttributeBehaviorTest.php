@@ -5,7 +5,6 @@ namespace davidhirtz\yii2\skeleton\tests\unit\behaviors;
 use Codeception\Test\Unit;
 use davidhirtz\yii2\skeleton\behaviors\SerializedAttributesBehavior;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\models\Redirect;
 use Yii;
 
 class SerializedAttributeBehaviorTest extends Unit
@@ -17,15 +16,18 @@ class SerializedAttributeBehaviorTest extends Unit
             'data' => 'blob null',
         ];
 
-        Yii::$app->getDb()->createCommand()->createTable(SerializedAttributesActiveRecord::tableName(), $columns)->execute();
+        Yii::$app->getDb()->createCommand()
+            ->createTable(SerializedAttributesActiveRecord::tableName(), $columns)
+            ->execute();
 
         parent::_before();
     }
 
     protected function _after(): void
     {
-        Yii::$app->getDb()->createCommand()->dropTable(SerializedAttributesActiveRecord::tableName())->execute();
-        Redirect::deleteAll();
+        Yii::$app->getDb()->createCommand()
+            ->dropTable(SerializedAttributesActiveRecord::tableName())
+            ->execute();
 
         parent::_after();
     }
