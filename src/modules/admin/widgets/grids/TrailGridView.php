@@ -124,12 +124,12 @@ class TrailGridView extends GridView
         if (is_array($trail->data)) {
             foreach ($trail->data as $attribute => $value) {
                 if ($model) {
-                    $attribute = $model->getAttributeLabel($attribute);
                     $value = $this->formatTrailAttributeValue($model, $attribute, $value);
+                    $attribute = $model->getAttributeLabel($attribute);
                 }
 
                 if ($value) {
-                    $rows[] = [$attribute, $value];
+                    $rows[] = [$attribute, $this->renderCreatedAttributeValue($value)];
                 }
             }
         }
@@ -154,8 +154,8 @@ class TrailGridView extends GridView
         if (is_array($trail->data)) {
             foreach ($trail->data as $attribute => $values) {
                 if ($model) {
-                    $attribute = $model->getAttributeLabel($attribute);
                     $values = array_map(fn ($value) => $this->formatTrailAttributeValue($model, $attribute, $value), $values);
+                    $attribute = $model->getAttributeLabel($attribute);
                 }
 
                 if ($values[0] !== $values[1]) {
