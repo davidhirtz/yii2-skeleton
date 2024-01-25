@@ -1,6 +1,7 @@
-## 2.1.8 - under development
+## 2.1.18 (Jan 25, 2024)
 
 - Fixed `TinyMceEditor` table button
+- Fixed `Trail::renderCreatedAttributeValue()` (Issue #17)
 
 ## 2.1.17 (Jan 24, 2024)
 
