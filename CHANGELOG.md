@@ -1,3 +1,7 @@
+## 2.1.8 - under development
+
+- Fixed `TinyMceEditor` table button
+
 ## 2.1.17 (Jan 24, 2024)
 
 - Added `AttributeTypecastBehavior::$castBooleansAsInt` to allow casting booleans as integers

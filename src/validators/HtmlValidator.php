@@ -168,7 +168,6 @@ class HtmlValidator extends Validator
     }
 
     /**
-     * Purifies html.
      * @param ActiveRecord $model
      * @param string $attribute
      */

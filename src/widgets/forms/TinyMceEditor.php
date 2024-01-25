@@ -260,7 +260,6 @@ class TinyMceEditor extends InputWidget
             'ul' => 'bullist',
             'ol' => 'numlist',
             'blockquote' => 'blockquote',
-            'table' => 'table',
         ];
 
         $hasStyles = false;
