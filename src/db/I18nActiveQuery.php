@@ -13,6 +13,7 @@ class I18nActiveQuery extends ActiveQuery
     public function getI18nAttributeName(string $attribute, ?string $language = null): string
     {
         $instance = $this->getModelInstance();
+
         $attribute = method_exists($instance, 'getI18nAttributeName')
             ? $instance->getI18nAttributeName($attribute, $language)
             : $attribute;

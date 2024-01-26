@@ -2,7 +2,6 @@
 
 namespace davidhirtz\yii2\skeleton\models\traits;
 
-use davidhirtz\yii2\skeleton\db\ActiveQuery;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\db\I18nActiveQuery;
 use Yii;
@@ -25,9 +24,9 @@ trait I18nAttributesTrait
     private ?array $_i18nLabels = null;
 
     /**
-     * @return ActiveQuery<static>
+     * @return I18nActiveQuery<static>
      */
-    public static function find(): ActiveQuery
+    public static function find(): I18nActiveQuery
     {
         return Yii::createObject(I18nActiveQuery::class, [static::class]);
     }

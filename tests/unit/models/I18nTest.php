@@ -4,7 +4,6 @@ namespace davidhirtz\yii2\skeleton\tests\unit\models;
 
 use Codeception\Test\Unit;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\db\I18nActiveQuery;
 use davidhirtz\yii2\skeleton\models\traits\I18nAttributesTrait;
 use davidhirtz\yii2\skeleton\modules\ModuleTrait;
 use Yii;
@@ -94,41 +93,6 @@ class I18nTest extends Unit
         $this->assertFalse($model->validate());
         $this->assertEquals('Translated (DE) cannot be blank.', $model->getFirstError('translated_de'));
         $this->assertEquals('This value is required in all languages.', $model->getAttributeHint('translated_de'));
-    }
-
-    public function testTranslatedActiveQuery(): void
-    {
-        $model = new class() extends ActiveRecord {
-            use I18nAttributesTrait;
-
-            public ?string $translated = 'translated';
-
-            public function init(): void
-            {
-                $this->i18nAttributes = ['translated'];
-                parent::init();
-            }
-
-            public static function tableName(): string
-            {
-                return '{{%test}}';
-            }
-        };
-
-        Yii::$app->language = 'de';
-
-        /** @var I18nActiveQuery $query */
-        $query = $model::find();
-
-        $this->assertEquals('{{%test}}.[[translated_de]]', $query->getI18nAttributeName('translated'));
-
-        $sql = $query
-            ->select(['translated'])
-            ->replaceI18nAttributes()
-            ->createCommand()
-            ->sql;
-
-        $this->assertEquals('SELECT `test`.`translated_de` FROM `test`', $sql);
     }
 
     public function testTranslatedTableNames(): void

@@ -29,6 +29,14 @@ class I18nAttributesTraitTest extends Unit
             ->createTable(I18nActiveRecord::tableName(), $columns)
             ->execute();
 
+        Yii::$app->getDb()->createCommand()
+            ->createIndex('slug', I18nActiveRecord::tableName(), ['slug', 'parent_slug'], true)
+            ->execute();
+
+        Yii::$app->getDb()->createCommand()
+            ->createIndex('slug_de', I18nActiveRecord::tableName(), ['slug_de', 'parent_slug_de'], true)
+            ->execute();
+
         parent::_before();
     }
 
@@ -73,7 +81,12 @@ class I18nAttributesTraitTest extends Unit
         $model->name_de = 'Test Name DE';
         $model->slug_de = 'test-name-de';
 
-        $this->assertTrue($model->validate());
+        $this->assertTrue($model->save());
+
+        $newModel = new I18nActiveRecord($model->getAttributes(except: ['id']));
+
+        $this->assertFalse($newModel->save());
+        $this->assertEquals(['slug', 'slug_de'], array_keys($newModel->getErrors()));
     }
 
     public function testI18nRulesWithUniqueTargetAttribute(): void
@@ -156,7 +169,6 @@ class I18nActiveRecord extends ActiveRecord
         return 'i18n_test';
     }
 }
-
 
 /**
  * @property string|null $parent_slug
