@@ -188,7 +188,7 @@ trait I18nAttributesTrait
      *
      * Override this method if a custom unique validator is used.
      */
-    protected function isUniqueRule(string $ruleName): bool
+    protected function isUniqueRule(mixed $ruleName): bool
     {
         return $ruleName === 'unique';
     }

@@ -1,3 +1,7 @@
+## 2.1.20 (Jan 26, 2024)
+
+- Changed the signature of `I18nAttributesTrait::isUniqueRule()` to accept any argument
+
 ## 2.1.19 (Jan 26, 2024)
 
 - Fixed `I18nAttributesTrait::getI18nRules()` to correctly set the `targetAttributes` of translated attributes
