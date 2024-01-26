@@ -1,3 +1,7 @@
+## 2.1.19 (Jan 26, 2024)
+
+- Fixed `I18nAttributesTrait::getI18nRules()` to correctly set the `targetAttributes` of translated attributes
+
 ## 2.1.18 (Jan 25, 2024)
 
 - Fixed `TinyMceEditor` table button

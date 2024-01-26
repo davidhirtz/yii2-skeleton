@@ -47,7 +47,9 @@ trait I18nAttributesTrait
      */
     public function getI18nAttributeName(string $attribute, ?string $language = null): string
     {
-        return $this->isI18nAttribute($attribute) ? Yii::$app->getI18n()->getAttributeName($attribute, $language) : $attribute;
+        return $this->isI18nAttribute($attribute)
+            ? Yii::$app->getI18n()->getAttributeName($attribute, $language)
+            : $attribute;
     }
 
     /**
@@ -56,19 +58,19 @@ trait I18nAttributesTrait
      */
     public function getI18nAttributeNames(string $attribute, ?string $languages = null): array
     {
-        if ($this->isI18nAttribute($attribute)) {
-            $i18n = Yii::$app->getI18n();
-            $names = [];
+        if (!$this->isI18nAttribute($attribute)) {
+            return [Yii::$app->language => $attribute];
+        }
 
-            if (!$languages) {
-                $languages = $i18n->getLanguages();
-            }
+        $i18n = Yii::$app->getI18n();
+        $names = [];
 
-            foreach ($languages as $language) {
-                $names[$language] = $i18n->getAttributeName($attribute, $language);
-            }
-        } else {
-            $names[Yii::$app->language] = $attribute;
+        if (!$languages) {
+            $languages = $i18n->getLanguages();
+        }
+
+        foreach ($languages as $language) {
+            $names[$language] = $i18n->getAttributeName($attribute, $language);
         }
 
         return $names;
@@ -84,7 +86,9 @@ trait I18nAttributesTrait
         $names = [];
 
         foreach ((array)$attributes as $attribute) {
-            $names = array_merge($names, $this->isI18nAttribute($attribute) ? $i18n->getAttributeNames($attribute, $languages) : [$attribute]);
+            $names = array_merge($names, $this->isI18nAttribute($attribute)
+                ? $i18n->getAttributeNames($attribute, $languages)
+                : [$attribute]);
         }
 
         return $names;
@@ -153,42 +157,40 @@ trait I18nAttributesTrait
     {
         if ($this->i18nAttributes) {
             foreach ($rules as $key => $rule) {
-                // If an i18n attribute has a unique validator with a "targetAttribute", all related attributes need
-                // their own rule translating the target attribute.
-                if ($rule[1] === 'unique' && !empty($rule['targetAttribute'])) {
+                if ($this->isUniqueRule($rule[1])) {
                     $attribute = is_array($rule[0]) ? array_pop($rule[0]) : $rule[0];
-                    foreach ($this->getI18nAttributesNames($attribute) as $i18nAttribute) {
+
+                    foreach ($this->getI18nAttributeNames($attribute) as $language => $i18nAttribute) {
                         if ($attribute !== $i18nAttribute) {
                             $i18nRule = $rule;
                             $i18nRule[0] = $i18nAttribute;
-                            $i18nRule['targetAttribute'] = (array)$i18nRule['targetAttribute'];
 
-                            foreach ((array)$i18nRule['targetAttribute'] as $targetKey => $targetAttribute) {
-                                if ($targetAttribute === $attribute) {
-                                    $i18nRule['targetAttribute'][$targetKey] = $i18nAttribute;
-                                }
-                            }
+                            $targetAttribute = (array)($i18nRule['targetAttribute'] ?? $attribute);
+                            $i18nRule['targetAttribute'] = $this->getI18nAttributesNames($targetAttribute, [$language]);
 
                             $rules[] = $i18nRule;
                         }
                     }
-                } else {
-                    $attributes = [];
 
-                    foreach ((array)$rule[0] as $attribute) {
-                        if ($attribute) {
-                            foreach ($this->getI18nAttributesNames($attribute) as $i18nAttribute) {
-                                $attributes[] = $i18nAttribute;
-                            }
-                        }
-                    }
-
-                    $rules[$key][0] = $attributes;
+                    continue;
                 }
+
+                $rules[$key][0] = $this->getI18nAttributesNames($rule[0]);
             }
         }
 
         return $rules;
+    }
+
+    /**
+     * If an i18n attribute has a unique validator with a "targetAttribute", all related attributes need their own rule
+     * translating the target attribute.
+     *
+     * Override this method if a custom unique validator is used.
+     */
+    protected function isUniqueRule(string $ruleName): bool
+    {
+        return $ruleName === 'unique';
     }
 
     public function isI18nAttribute(string $attribute): bool
