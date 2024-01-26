@@ -34,10 +34,7 @@ trait I18nAttributesTrait
 
     public function getI18nAttribute(string $attribute, ?string $language = null): mixed
     {
-        if ($this->isI18nAttribute($attribute)) {
-            $attribute = $this->getI18nAttributeName($attribute, $language);
-        }
-
+        $attribute = $this->getI18nAttributeName($attribute, $language);
         return $this->$attribute;
     }
 

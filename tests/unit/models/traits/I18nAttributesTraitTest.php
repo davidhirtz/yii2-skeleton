@@ -6,6 +6,7 @@ use Codeception\Test\Unit;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\models\traits\I18nAttributesTrait;
 use Yii;
+use yii\base\Model;
 
 class I18nAttributesTraitTest extends Unit
 {
@@ -40,6 +41,21 @@ class I18nAttributesTraitTest extends Unit
         parent::_after();
     }
 
+    public function testI18nAttributes(): void
+    {
+        $model = new I18nActiveRecord();
+        $model->name = 'Test Name';
+        $model->name_de = 'Test Name DE';
+
+        $this->assertEquals($model->name, $model->getI18nAttribute('name'));
+        $this->assertEquals($model->name_de, $model->getI18nAttribute('name', 'de'));
+
+        $this->assertEquals(['en-US' => 'name', 'de' => 'name_de'], $model->getI18nAttributeNames('name'));
+
+        $this->assertEquals('untranslated', $model->getI18nAttributeName('untranslated'));
+        $this->assertEquals(['en-US' => 'untranslated'], $model->getI18nAttributeNames('untranslated'));
+    }
+
     public function testI18nRules(): void
     {
         $model = new I18nActiveRecord();
@@ -67,6 +83,25 @@ class I18nAttributesTraitTest extends Unit
 
         $this->assertEquals(['slug', 'parent_slug'], $rules[2]['targetAttribute']);
         $this->assertEquals(['slug_de', 'parent_slug_de'], $rules[3]['targetAttribute']);
+    }
+
+    public function testI18nAttributeHints()
+    {
+        $model = new I18nActiveRecord();
+
+        $this->assertEquals('Part of the URL', $model->getAttributeHint('slug'));
+        $this->assertEquals('Part of the URL', $model->getAttributeHint('slug_de'));
+    }
+
+    public function testEmptyI18nAttributes()
+    {
+        $model = new class () extends Model {
+            use I18nAttributesTrait;
+
+            public string $name = '';
+        };
+
+        $this->assertEquals('Name', $model->getAttributeLabel('name'));
     }
 }
 
@@ -107,6 +142,13 @@ class I18nActiveRecord extends ActiveRecord
                 'targetAttribute' => $this->slugTargetAttribute,
             ],
         ]);
+    }
+
+    public function attributeHints(): array
+    {
+        return [
+            'slug' => 'Part of the URL',
+        ];
     }
 
     public static function tableName(): string
