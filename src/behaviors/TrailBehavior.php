@@ -182,12 +182,14 @@ class TrailBehavior extends Behavior
      */
     public function formatTrailAttributeValue(string $attribute, mixed $value): mixed
     {
-        switch ($this->getDefaultAttributeValues()[$attribute] ?? false) {
+        switch ($this->getDefaultAttributeValues()[$attribute] ?? null) {
             case self::VALUE_TYPE_BOOLEAN:
                 return $value ? Yii::t('yii', 'Yes') : Yii::t('yii', 'No');
 
             case self::VALUE_TYPE_DATETIME:
-                return isset($value['date']) ? Yii::$app->getFormatter()->asDatetime(new DateTime($value['date'], new DateTimeZone($value['timezone'] ?? Yii::$app->timeZone)), 'medium') : $value;
+                return is_array($value) && isset($value['date'])
+                    ? Yii::$app->getFormatter()->asDatetime(new DateTime($value['date'], new DateTimeZone($value['timezone'] ?? Yii::$app->timeZone)), 'medium')
+                    : $value;
 
             case self::VALUE_TYPE_RANGE:
                 $method = 'get' . Inflector::camelize(Inflector::pluralize($attribute));
@@ -240,8 +242,14 @@ class TrailBehavior extends Behavior
                 $schema = Yii::$app->getDb()->getSchema();
                 $columns = $schema->getTableSchema($this->owner::tableName())->columns;
 
+                $dateTypes = [
+                    $schema::TYPE_DATE,
+                    $schema::TYPE_DATETIME,
+                    $schema::TYPE_TIMESTAMP,
+                ];
+
                 foreach ($columns as $column) {
-                    if (in_array($column->dbType, [$schema::TYPE_DATE, $schema::TYPE_DATETIME, $schema::TYPE_TIMESTAMP])) {
+                    if (in_array($column->dbType, $dateTypes)) {
                         $attributes[$column->name] = self::VALUE_TYPE_DATETIME;
                     }
                 }
