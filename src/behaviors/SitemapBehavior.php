@@ -28,9 +28,9 @@ class SitemapBehavior extends Behavior
 
     /**
      * @var int|null the maximum number rows selected by the default database query, if this is null the default value
-     *     from
-     * {@see Sitemap} will be used. Change this value if one record produces more than one URL (for example for
-     * multiple languages).
+     * from {@see Sitemap} will be used.
+     *
+     * Change this value if one record produces more than one URL (for example for multiple languages).
      */
     public ?int $maxUrlCount = null;
 
@@ -56,9 +56,7 @@ class SitemapBehavior extends Behavior
             throw new InvalidConfigException('SitemapBehavior::$callback must be callable.');
         }
 
-        if (!$this->maxUrlCount) {
-            $this->maxUrlCount = Yii::$app->sitemap->maxUrlCount;
-        }
+        $this->maxUrlCount ??= Yii::$app->sitemap->maxUrlCount;
 
         parent::init();
     }
@@ -78,11 +76,13 @@ class SitemapBehavior extends Behavior
 
             if ($result) {
                 foreach (is_int(key($result)) ? $result : [$result] as $data) {
-                    if (isset($data['loc'])) {
-                        $data['changefreq'] ??= $this->defaultChangeFrequency;
-                        $data['priority'] ??= $this->defaultPriority;
-                        $urls[] = array_filter($data);
+                    if (!isset($data['loc'])) {
+                        throw new InvalidConfigException('SitemapBehavior::$callback must return an array with a "loc" key.');
                     }
+
+                    $data['changefreq'] ??= $this->defaultChangeFrequency;
+                    $data['priority'] ??= $this->defaultPriority;
+                    $urls[] = array_filter($data);
                 }
             }
         }
