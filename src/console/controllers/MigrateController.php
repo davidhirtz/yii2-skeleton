@@ -30,7 +30,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
     {
         if (!Yii::$app->getDb()->dsn) {
             if (!$this->interactive) {
-                $this->stderr('Database connection not configured.', Console::FG_RED);
+                $this->stderr('Database connection not configured.' . PHP_EOL, Console::FG_RED);
                 return false;
             }
 

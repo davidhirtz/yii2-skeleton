@@ -49,7 +49,7 @@ class MigrationControllerTest extends Unit
         /**  @covers MigrateController::actionConfig() */
         $controller->runAction('up');
 
-        $this->assertEquals('Database connection not configured.', $controller->flushStdOutBuffer());
+        $this->assertEquals('Database connection not configured.' . PHP_EOL, $controller->flushStdOutBuffer());
     }
 
     public function testActionConfig(): void
