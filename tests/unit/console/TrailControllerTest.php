@@ -28,7 +28,7 @@ class TrailControllerTest extends Unit
         $controller = $this->createTrailController();
         $controller->actionUpdateModels();
 
-        $this->assertEquals('Updated 1 davidhirtz\yii2\skeleton\models\Trail trail records' . PHP_EOL, $controller->flushStdOutBuffer());
+        self::assertEquals('Updated 1 davidhirtz\yii2\skeleton\models\Trail trail records' . PHP_EOL, $controller->flushStdOutBuffer());
     }
 
     public function testActionClearWithoutOffset(): void
@@ -45,13 +45,13 @@ class TrailControllerTest extends Unit
 
         $twoYears = 60 * 60 * 24 * 365 * 2;
         $controller->actionClear($twoYears);
-        $this->assertEquals('No expired trail records found' . PHP_EOL, $controller->flushStdOutBuffer());
-        $this->assertEquals(5, Trail::find()->count());
+        self::assertEquals('No expired trail records found' . PHP_EOL, $controller->flushStdOutBuffer());
+        self::assertEquals(5, Trail::find()->count());
 
         $sevenMonths = 60 * 60 * 24 * 30 * 7;
         $controller->actionClear($sevenMonths);
-        $this->assertStringContainsString('Deleted 1 expired trail records', $controller->flushStdOutBuffer());
-        $this->assertEquals(4, Trail::find()->count());
+        self::assertStringContainsString('Deleted 1 expired trail records', $controller->flushStdOutBuffer());
+        self::assertEquals(4, Trail::find()->count());
     }
 
     public function testActionClearWithManyRecords(): void
@@ -63,15 +63,15 @@ class TrailControllerTest extends Unit
             'created_at' => $date,
         ]));
 
-        $this->assertEquals(105, Trail::find()->count());
+        self::assertEquals(105, Trail::find()->count());
 
         $controller = $this->createTrailController();
         $controller->sleep = 0;
 
         $controller->actionClear(1);
-        $this->assertStringContainsString('Deleted 105 expired trail records', $controller->flushStdOutBuffer());
+        self::assertStringContainsString('Deleted 105 expired trail records', $controller->flushStdOutBuffer());
 
-        $this->assertEmpty(Trail::find()->count());
+        self::assertEmpty(Trail::find()->count());
     }
 
     public function testActionOptimize(): void
@@ -79,7 +79,7 @@ class TrailControllerTest extends Unit
         $controller = $this->createTrailController();
         $controller->actionOptimize();
 
-        $this->assertStringStartsWith('Optimizing trail table...  done', $controller->flushStdOutBuffer());
+        self::assertStringStartsWith('Optimizing trail table...  done', $controller->flushStdOutBuffer());
     }
 
     protected function createTrailController(): TrailControllerMock

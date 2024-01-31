@@ -114,7 +114,6 @@ class ActiveQuery extends \yii\db\ActiveQuery
         return parent::prepare($builder);
     }
 
-
     public function getTableAlias(): string
     {
         [, $alias] = $this->getTableNameAndAlias();

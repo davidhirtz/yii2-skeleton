@@ -14,16 +14,16 @@ class CurrencyValidatorTest extends Unit
         $model = new CurrencyValidatorTestModel();
 
         $model->currency = 10;
-        $this->assertTrue($model->validate());
-        $this->assertEquals('10.00', $model->currency);
+        self::assertTrue($model->validate());
+        self::assertEquals('10.00', $model->currency);
 
         $model->currency = 10.00;
-        $this->assertTrue($model->validate());
-        $this->assertEquals('10.00', $model->currency);
+        self::assertTrue($model->validate());
+        self::assertEquals('10.00', $model->currency);
 
         $model->currency = '10.00';
-        $this->assertTrue($model->validate());
-        $this->assertEquals('10.00', $model->currency);
+        self::assertTrue($model->validate());
+        self::assertEquals('10.00', $model->currency);
     }
 
     public function testLocalizedCurrencyAttribute()
@@ -32,8 +32,8 @@ class CurrencyValidatorTest extends Unit
         $model = new CurrencyValidatorTestModel();
 
         $model->currency = '10,00';
-        $this->assertTrue($model->validate());
-        $this->assertEquals('10.00', $model->currency);
+        self::assertTrue($model->validate());
+        self::assertEquals('10.00', $model->currency);
     }
 }
 

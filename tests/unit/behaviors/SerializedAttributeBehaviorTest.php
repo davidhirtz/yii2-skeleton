@@ -39,7 +39,7 @@ class SerializedAttributeBehaviorTest extends Unit
         $model->data = $data;
         $model->beforeSave(true);
 
-        $this->assertEquals(serialize($data), $model->data);
+        self::assertEquals(serialize($data), $model->data);
     }
 
     public function testAfterSaveEvent(): void
@@ -49,7 +49,7 @@ class SerializedAttributeBehaviorTest extends Unit
         $model->data = $data;
         $model->save();
 
-        $this->assertEquals($data, $model->data);
+        self::assertEquals($data, $model->data);
     }
 
     public function testBeforeUpdateEvent(): void
@@ -62,7 +62,7 @@ class SerializedAttributeBehaviorTest extends Unit
         $model->data = $data;
         $model->beforeSave(true);
 
-        $this->assertEquals(serialize($data), $model->data);
+        self::assertEquals(serialize($data), $model->data);
     }
 
     public function testAfterUpdateEvent(): void
@@ -75,7 +75,7 @@ class SerializedAttributeBehaviorTest extends Unit
         $model->data = $data;
         $model->update();
 
-        $this->assertEquals($data, $model->data);
+        self::assertEquals($data, $model->data);
     }
 
 
@@ -88,7 +88,7 @@ class SerializedAttributeBehaviorTest extends Unit
 
         $model = SerializedAttributesActiveRecord::findOne($model->id);
 
-        $this->assertEquals($data, $model->data);
+        self::assertEquals($data, $model->data);
     }
 
     public function testEncodedOption(): void
@@ -99,11 +99,11 @@ class SerializedAttributeBehaviorTest extends Unit
         $model->data = $data;
         $model->beforeSave(true);
 
-        $this->assertEquals(base64_encode(serialize($data)), $model->data);
+        self::assertEquals(base64_encode(serialize($data)), $model->data);
 
         $model->afterSave(true, ['data' => $model->data]);
 
-        $this->assertEquals($data, $model->data);
+        self::assertEquals($data, $model->data);
     }
 
     public function testEmptyValue(): void
@@ -112,11 +112,11 @@ class SerializedAttributeBehaviorTest extends Unit
         $model->data = '';
         $model->beforeSave(true);
 
-        $this->assertNull($model->data);
+        self::assertNull($model->data);
 
         $model->afterSave(true, ['data' => $model->data]);
 
-        $this->assertEquals([], $model->data);
+        self::assertEquals([], $model->data);
     }
 }
 

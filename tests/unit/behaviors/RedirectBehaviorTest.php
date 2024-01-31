@@ -38,7 +38,7 @@ class RedirectBehaviorTest extends Unit
     public function testCreateUrl(): void
     {
         $model = $this->createRedirectActiveRecord();
-        $this->assertEquals('/test/test-query-1', $model->getUrl());
+        self::assertEquals('/test/test-query-1', $model->getUrl());
     }
 
     public function testAfterSaveEvent(): void
@@ -49,8 +49,8 @@ class RedirectBehaviorTest extends Unit
 
         $redirect = Redirect::find()->one();
 
-        $this->assertEquals('test/test-query-1', $redirect->request_uri);
-        $this->assertEquals('test/test-query-2', $redirect->url);
+        self::assertEquals('test/test-query-1', $redirect->request_uri);
+        self::assertEquals('test/test-query-2', $redirect->url);
     }
 
     public function testAfterSaveEventWithCustomUrl(): void
@@ -69,8 +69,8 @@ class RedirectBehaviorTest extends Unit
         $model->save();
 
         $redirect = Redirect::find()->one();
-        $this->assertEquals('custom/test-query-1', $redirect->request_uri);
-        $this->assertEquals('custom/test-query-2', $redirect->url);
+        self::assertEquals('custom/test-query-1', $redirect->request_uri);
+        self::assertEquals('custom/test-query-2', $redirect->url);
     }
 
     public function testAfterFindEvent(): void
@@ -83,8 +83,8 @@ class RedirectBehaviorTest extends Unit
 
         $redirect = Redirect::find()->one();
 
-        $this->assertEquals('test/test-query-1', $redirect->request_uri);
-        $this->assertEquals('test/test-query-2', $redirect->url);
+        self::assertEquals('test/test-query-1', $redirect->request_uri);
+        self::assertEquals('test/test-query-2', $redirect->url);
     }
 
     public function testAfterDeleteEvent(): void
@@ -93,11 +93,11 @@ class RedirectBehaviorTest extends Unit
         $model->query = 'test-query-2';
         $model->save();
 
-        $this->assertTrue(Redirect::find()->exists());
+        self::assertTrue(Redirect::find()->exists());
 
         $model->delete();
 
-        $this->assertFalse(Redirect::find()->exists());
+        self::assertFalse(Redirect::find()->exists());
     }
 
     public function testUpdatePreviousRedirectUrls(): void
@@ -112,11 +112,11 @@ class RedirectBehaviorTest extends Unit
 
         $redirects = Redirect::find()->all();
 
-        $this->assertEquals('test/test-query-1', $redirects[0]->request_uri);
-        $this->assertEquals('test/test-query-3', $redirects[0]->url);
+        self::assertEquals('test/test-query-1', $redirects[0]->request_uri);
+        self::assertEquals('test/test-query-3', $redirects[0]->url);
 
-        $this->assertEquals('test/test-query-2', $redirects[1]->request_uri);
-        $this->assertEquals('test/test-query-3', $redirects[1]->url);
+        self::assertEquals('test/test-query-2', $redirects[1]->request_uri);
+        self::assertEquals('test/test-query-3', $redirects[1]->url);
     }
 
     public function testMissingRouteMethod(): void

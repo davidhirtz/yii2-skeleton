@@ -49,12 +49,12 @@ class AttributeTypecastBehaviorTest extends Unit
 
         $model->getAttributeTypecastBehavior()->typecastAttributes();
 
-        $this->assertSame('123', $model->name);
-        $this->assertSame(58, $model->amount);
-        $this->assertSame(100.8, $model->price);
-        $this->assertTrue($model->is_active);
-        $this->assertSame('callback: foo', $model->callback);
-        $this->assertNull($model->nullable);
+        self::assertSame('123', $model->name);
+        self::assertSame(58, $model->amount);
+        self::assertSame(100.8, $model->price);
+        self::assertTrue($model->is_active);
+        self::assertSame('callback: foo', $model->callback);
+        self::assertNull($model->nullable);
     }
 
     public function testSkipNull(): void
@@ -71,22 +71,22 @@ class AttributeTypecastBehaviorTest extends Unit
 
         $model->getAttributeTypecastBehavior()->typecastAttributes();
 
-        $this->assertNull($model->name);
-        $this->assertNull($model->amount);
-        $this->assertNull($model->price);
-        $this->assertNull($model->is_active);
-        $this->assertNull($model->callback);
-        $this->assertNull($model->nullable);
+        self::assertNull($model->name);
+        self::assertNull($model->amount);
+        self::assertNull($model->price);
+        self::assertNull($model->is_active);
+        self::assertNull($model->callback);
+        self::assertNull($model->nullable);
 
         $model->getAttributeTypecastBehavior()->skipOnNull = false;
         $model->getAttributeTypecastBehavior()->typecastAttributes();
 
-        $this->assertSame('', $model->name);
-        $this->assertSame(0, $model->amount);
-        $this->assertSame(0.0, $model->price);
-        $this->assertSame(0, $model->is_active);
-        $this->assertSame('callback: ', $model->callback);
-        $this->assertNull($model->nullable);
+        self::assertSame('', $model->name);
+        self::assertSame(0, $model->amount);
+        self::assertSame(0.0, $model->price);
+        self::assertSame(0, $model->is_active);
+        self::assertSame('callback: ', $model->callback);
+        self::assertNull($model->nullable);
     }
 
     public function testBeforeValidateEvent(): void
@@ -119,7 +119,7 @@ class AttributeTypecastBehaviorTest extends Unit
         $model->save();
 
         $model->amount = '1'; // @phpstan-ignore-line
-        $this->assertTrue($model->validate());
+        self::assertTrue($model->validate());
     }
 
     public function testAfterFindEvent(): void
@@ -137,7 +137,7 @@ class AttributeTypecastBehaviorTest extends Unit
 
         $model->updateAll(['callback' => 'find']);
         $model->refresh();
-        $this->assertSame('callback: find', $model->callback);
+        self::assertSame('callback: find', $model->callback);
     }
 
     public function testDirtyAttributesAreEmptyAfterFind(): void
@@ -155,7 +155,7 @@ class AttributeTypecastBehaviorTest extends Unit
 
         $model = AttributeTypecastActiveRecord::find()->one();
 
-        $this->assertEmpty($model->getDirtyAttributes());
+        self::assertEmpty($model->getDirtyAttributes());
     }
 
     public function testAfterValidateEvent(): void
@@ -164,7 +164,7 @@ class AttributeTypecastBehaviorTest extends Unit
 
         $model->callback = 'validate';
         $model->validate();
-        $this->assertSame('callback: validate', $model->callback);
+        self::assertSame('callback: validate', $model->callback);
     }
 
     public function testBeforeSaveEvent(): void
@@ -183,8 +183,8 @@ class AttributeTypecastBehaviorTest extends Unit
         });
 
         $model->save(false);
-        $this->assertSame('callback: insert', $model->callback);
-        $this->assertTrue($beforeInsertHappened);
+        self::assertSame('callback: insert', $model->callback);
+        self::assertTrue($beforeInsertHappened);
         $beforeInsertHappened = false;
 
         $beforeUpdateHappened = false;
@@ -195,9 +195,9 @@ class AttributeTypecastBehaviorTest extends Unit
         });
 
         $model->save(false);
-        $this->assertSame('callback: update', $model->callback);
-        $this->assertTrue($beforeUpdateHappened);
-        $this->assertFalse($beforeInsertHappened);
+        self::assertSame('callback: update', $model->callback);
+        self::assertTrue($beforeUpdateHappened);
+        self::assertFalse($beforeInsertHappened);
     }
 
     public function testAfterSaveEvent(): void
@@ -226,9 +226,9 @@ class AttributeTypecastBehaviorTest extends Unit
 
         $model->save(false);
 
-        $this->assertTrue($beforeInsertHappened);
-        $this->assertTrue($afterInsertHappened);
-        $this->assertSame('callback: callback: insert', $model->callback);
+        self::assertTrue($beforeInsertHappened);
+        self::assertTrue($afterInsertHappened);
+        self::assertSame('callback: callback: insert', $model->callback);
 
         $beforeInsertHappened = false;
         $afterInsertHappened = false;
@@ -248,11 +248,11 @@ class AttributeTypecastBehaviorTest extends Unit
 
         $model->save(false);
 
-        $this->assertSame('callback: callback: update', $model->callback);
-        $this->assertTrue($beforeUpdateHappened);
-        $this->assertTrue($afterUpdateHappened);
-        $this->assertFalse($beforeInsertHappened);
-        $this->assertFalse($afterInsertHappened);
+        self::assertSame('callback: callback: update', $model->callback);
+        self::assertTrue($beforeUpdateHappened);
+        self::assertTrue($afterUpdateHappened);
+        self::assertFalse($beforeInsertHappened);
+        self::assertFalse($afterInsertHappened);
     }
 
     public function testAutoDetectAttributeTypes(): void
@@ -283,7 +283,7 @@ class AttributeTypecastBehaviorTest extends Unit
             'nullable' => AttributeTypecastBehavior::TYPE_STRING,
         ];
 
-        $this->assertEquals($expectedAttributeTypes, $behavior->attributeTypes);
+        self::assertEquals($expectedAttributeTypes, $behavior->attributeTypes);
     }
 
     public function testSkipNotSelectedAttribute(): void
@@ -308,7 +308,7 @@ class AttributeTypecastBehaviorTest extends Unit
         $model->save(false);
 
         $model->refresh();
-        $this->assertSame(58, $model->amount);
+        self::assertSame(58, $model->amount);
     }
 }
 

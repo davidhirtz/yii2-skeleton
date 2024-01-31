@@ -6,6 +6,7 @@ use DateTime;
 use davidhirtz\yii2\skeleton\web\Controller;
 use XMLWriter;
 use Yii;
+use yii\filters\PageCache;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -37,7 +38,7 @@ class SitemapController extends Controller
             }
 
             $behaviors[] = [
-                'class' => 'yii\filters\PageCache',
+                'class' => PageCache::class,
                 'only' => ['index'],
                 'cache' => $sitemap->cache,
                 'duration' => $sitemap->duration,

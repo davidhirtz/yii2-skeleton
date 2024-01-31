@@ -38,7 +38,7 @@ class UserLanguageBehavior extends Behavior
         $language = Yii::$app->getRequest()->getLanguage();
 
         if ($language) {
-            if ($identity?->language != $language) {
+            if ($identity && $identity->language != $language) {
                 Yii::debug("Updating user language to $language");
 
                 $identity->language = $language;
@@ -62,7 +62,7 @@ class UserLanguageBehavior extends Behavior
             }
         }
 
-        if ($identity && !$this->setApplicationLanguage) {
+        if ($identity && $this->setApplicationLanguage) {
             Yii::$app->language = $identity->language;
         }
     }

@@ -36,23 +36,23 @@ class I18nTest extends Unit
             }
         };
 
-        $this->assertTrue($model->isI18nAttribute('translated'));
-        $this->assertFalse($model->isI18nAttribute('untranslated'));
+        self::assertTrue($model->isI18nAttribute('translated'));
+        self::assertFalse($model->isI18nAttribute('untranslated'));
 
-        $this->assertEquals($model->translated, $model->getI18nAttribute('translated'));
-        $this->assertEquals($model->untranslated, $model->getI18nAttribute('untranslated'));
-        $this->assertEquals($model->translated_de, $model->getI18nAttribute('translated', 'de'));
+        self::assertEquals($model->translated, $model->getI18nAttribute('translated'));
+        self::assertEquals($model->untranslated, $model->getI18nAttribute('untranslated'));
+        self::assertEquals($model->translated_de, $model->getI18nAttribute('translated', 'de'));
 
         $expected = ['en-US' => 'translated', 'de' => 'translated_de'];
-        $this->assertEquals($expected, $model->getI18nAttributeNames('translated'));
+        self::assertEquals($expected, $model->getI18nAttributeNames('translated'));
 
-        $this->assertEquals(['translated', 'translated_de', 'untranslated'], $model->getI18nAttributesNames(['translated', 'untranslated']));
-        $this->assertEquals(['translated_de', 'untranslated'], $model->getI18nAttributesNames(['translated', 'untranslated'], ['de']));
+        self::assertEquals(['translated', 'translated_de', 'untranslated'], $model->getI18nAttributesNames(['translated', 'untranslated']));
+        self::assertEquals(['translated_de', 'untranslated'], $model->getI18nAttributesNames(['translated', 'untranslated'], ['de']));
 
-        Yii::$app->getI18n()->callback('de', fn () => $this->assertEquals('translated_de', $model->getI18nAttributeName('translated')));
+        Yii::$app->getI18n()->callback('de', fn () => self::assertEquals('translated_de', $model->getI18nAttributeName('translated')));
 
         Yii::$app->language = 'de';
-        $this->assertEquals('translated_de', $model->getI18nAttributeName('translated'));
+        self::assertEquals('translated_de', $model->getI18nAttributeName('translated'));
     }
 
     public function testTranslatedHintsAndRules(): void
@@ -90,15 +90,15 @@ class I18nTest extends Unit
             }
         };
 
-        $this->assertFalse($model->validate());
-        $this->assertEquals('Translated (DE) cannot be blank.', $model->getFirstError('translated_de'));
-        $this->assertEquals('This value is required in all languages.', $model->getAttributeHint('translated_de'));
+        self::assertFalse($model->validate());
+        self::assertEquals('Translated (DE) cannot be blank.', $model->getFirstError('translated_de'));
+        self::assertEquals('This value is required in all languages.', $model->getAttributeHint('translated_de'));
     }
 
     public function testTranslatedTableNames(): void
     {
         $name = Yii::$app->getI18n()->getTableName('test', 'de');
-        $this->assertEquals('{{%test_de}}', $name);
+        self::assertEquals('{{%test_de}}', $name);
     }
 
     public function testModuleWithTranslatedTables(): void
@@ -111,8 +111,8 @@ class I18nTest extends Unit
         $module = Yii::$app->getModule('test');
         Yii::$app->language = 'de';
 
-        $this->assertEquals('{{%prefix_test_de}}', $module->getTableName('test'));
-        $this->assertEquals('app\\models\\Test::de', $module->getI18nClassName('app\\models\\Test'));
+        self::assertEquals('{{%prefix_test_de}}', $module->getTableName('test'));
+        self::assertEquals('app\\models\\Test::de', $module->getI18nClassName('app\\models\\Test'));
     }
 }
 

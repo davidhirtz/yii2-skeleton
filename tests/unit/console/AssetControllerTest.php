@@ -38,10 +38,10 @@ class AssetControllerTest extends Unit
         $controller = new AssetControllerMock('asset', Yii::$app);
 
         $controller->actionClear();
-        $this->assertStringStartsWith('Removing ', $controller->flushStdOutBuffer());
+        self::assertStringStartsWith('Removing ', $controller->flushStdOutBuffer());
 
         $controller->actionClear();
-        $this->assertStringStartsWith('All assets are already cleared', $controller->flushStdOutBuffer());
+        self::assertStringStartsWith('All assets are already cleared', $controller->flushStdOutBuffer());
     }
 }
 

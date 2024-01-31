@@ -13,7 +13,7 @@ class AjaxRouteTraitTest extends Unit
     public function testRegularRequest(): void
     {
         $controller = new AjaxRouteControllerMock('test', Yii::$app);
-        $this->assertStringStartsWith('<!DOCTYPE html>', $controller->actionIndex());
+        self::assertStringStartsWith('<!DOCTYPE html>', $controller->actionIndex());
     }
 
     public function testAjaxRequest(): void
@@ -21,7 +21,7 @@ class AjaxRouteTraitTest extends Unit
         Yii::$app->getRequest()->getHeaders()->set('X-Requested-With', 'XMLHttpRequest');
 
         $controller = new AjaxRouteControllerMock('test', Yii::$app);
-        $this->assertStringStartsWith('<!DOCTYPE html>', $controller->actionIndex());
+        self::assertStringStartsWith('<!DOCTYPE html>', $controller->actionIndex());
     }
 
     public function testAjaxRouteRequest(): void
@@ -31,7 +31,7 @@ class AjaxRouteTraitTest extends Unit
         $controller = new AjaxRouteControllerMock('test', Yii::$app);
 
         $expected = '<div class="container">Test content</div><script>document.title="Test title"</script>';
-        $this->assertEquals($expected, $controller->actionIndex());
+        self::assertEquals($expected, $controller->actionIndex());
     }
 
     public function testAjaxRouteRequestWithAssets(): void
@@ -44,8 +44,8 @@ class AjaxRouteTraitTest extends Unit
         $controller = new AjaxRouteControllerMock('test', Yii::$app);
         $content = $controller->actionIndex();
 
-        $this->assertStringContainsString('<style>body{background:#000;}</style>', $content);
-        $this->assertStringContainsString('<script>alert("test");document.title="Test title"</script>', $content);
+        self::assertStringContainsString('<style>body{background:#000;}</style>', $content);
+        self::assertStringContainsString('<script>alert("test");document.title="Test title"</script>', $content);
     }
 
     protected function setAjaxRouteMock(): void

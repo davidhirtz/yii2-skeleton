@@ -18,8 +18,8 @@ class ErrorActionTest extends Unit
 
         $result = $this->runErrorAction();
 
-        $this->assertStringContainsString('An internal server error occurred.', $result);
-        $this->assertStringNotContainsString($message, $result);
+        self::assertStringContainsString('An internal server error occurred.', $result);
+        self::assertStringNotContainsString($message, $result);
     }
 
     public function testUserException(): void
@@ -27,13 +27,13 @@ class ErrorActionTest extends Unit
         $message = 'User can see this error message';
         Yii::$app->getErrorHandler()->exception = new UserException($message);
 
-        $this->assertStringContainsString($message, $this->runErrorAction());
+        self::assertStringContainsString($message, $this->runErrorAction());
     }
 
     public function testForbiddenException(): void
     {
         Yii::$app->getErrorHandler()->exception = new ForbiddenHttpException();
-        $this->assertStringContainsString('Permission denied', $this->runErrorAction());
+        self::assertStringContainsString('Permission denied', $this->runErrorAction());
     }
 
     public function testNotFoundTranslated(): void
@@ -45,21 +45,21 @@ class ErrorActionTest extends Unit
             'layout' => '@tests/data/views/layouts/main',
         ]);
 
-        $this->assertStringContainsString(Yii::t('skeleton', 'The requested page was not found'), $result);
-        $this->assertEquals(404, Yii::$app->getResponse()->getStatusCode());
-        $this->assertStringContainsString("<title>$error</title>", $result);
+        self::assertStringContainsString(Yii::t('skeleton', 'The requested page was not found'), $result);
+        self::assertEquals(404, Yii::$app->getResponse()->getStatusCode());
+        self::assertStringContainsString("<title>$error</title>", $result);
     }
 
     public function testAjaxRequest(): void
     {
         Yii::$app->getRequest()->getHeaders()->set('X-Requested-With', 'XMLHttpRequest');
-        $this->assertEquals('The requested page was not found', $this->runErrorAction());
+        self::assertEquals('The requested page was not found', $this->runErrorAction());
     }
 
     public function testNoExceptionInHandler(): void
     {
-        $this->assertStringContainsString('The requested page was not found', $this->runErrorAction());
-        $this->assertEquals(404, Yii::$app->getResponse()->getStatusCode());
+        self::assertStringContainsString('The requested page was not found', $this->runErrorAction());
+        self::assertEquals(404, Yii::$app->getResponse()->getStatusCode());
     }
 
     public function testInvalidView(): void

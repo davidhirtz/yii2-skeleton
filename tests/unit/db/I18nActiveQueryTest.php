@@ -40,11 +40,11 @@ class I18nActiveQueryTest extends Unit
         $model = new I18nActiveRecord();
         $tableName = $model::tableName();
 
-        $this->assertEquals("$tableName.[[id]]", $model::find()->getI18nAttributeName('id'));
-        $this->assertEquals("$tableName.[[content]]", $model::find()->getI18nAttributeName('content'));
+        self::assertEquals("$tableName.[[id]]", $model::find()->getI18nAttributeName('id'));
+        self::assertEquals("$tableName.[[content]]", $model::find()->getI18nAttributeName('content'));
 
         Yii::$app->language = 'de';
-        $this->assertEquals("$tableName.[[content_de]]", $model::find()->getI18nAttributeName('content'));
+        self::assertEquals("$tableName.[[content_de]]", $model::find()->getI18nAttributeName('content'));
 
     }
 
@@ -58,7 +58,7 @@ class I18nActiveQueryTest extends Unit
             ->createCommand()
             ->sql;
 
-        $this->assertEquals("SELECT `id` FROM `i18n_test`", $sql);
+        self::assertEquals("SELECT `id` FROM `i18n_test`", $sql);
 
         $sql = $model::find()
             ->select(['id', 'content'])
@@ -66,7 +66,7 @@ class I18nActiveQueryTest extends Unit
             ->createCommand()
             ->sql;
 
-        $this->assertEquals("SELECT `id`, `content` FROM `i18n_test`", $sql);
+        self::assertEquals("SELECT `id`, `content` FROM `i18n_test`", $sql);
 
         Yii::$app->language = 'de';
 
@@ -76,7 +76,7 @@ class I18nActiveQueryTest extends Unit
             ->createCommand()
             ->sql;
 
-        $this->assertEquals("SELECT `i18n_test`.`id`, `i18n_test`.`content_de` FROM `i18n_test`", $sql);
+        self::assertEquals("SELECT `i18n_test`.`id`, `i18n_test`.`content_de` FROM `i18n_test`", $sql);
     }
 }
 

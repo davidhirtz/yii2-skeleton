@@ -36,7 +36,7 @@ class MigrationControllerTest extends Unit
         /**  @covers MigrateController::actionUp() */
         $controller->runAction('up');
 
-        $this->assertStringContainsString('No new migrations found. Your system is up-to-date.', $controller->flushStdOutBuffer());
+        self::assertStringContainsString('No new migrations found. Your system is up-to-date.', $controller->flushStdOutBuffer());
     }
 
     public function testActionUpWithoutDsn(): void
@@ -49,7 +49,7 @@ class MigrationControllerTest extends Unit
         /**  @covers MigrateController::actionConfig() */
         $controller->runAction('up');
 
-        $this->assertEquals('Database connection not configured.' . PHP_EOL, $controller->flushStdOutBuffer());
+        self::assertEquals('Database connection not configured.' . PHP_EOL, $controller->flushStdOutBuffer());
     }
 
     public function testActionConfig(): void
@@ -60,7 +60,7 @@ class MigrationControllerTest extends Unit
         /**  @covers MigrateController::actionConfig() */
         $controller->runAction('config');
 
-        $this->assertStringContainsString('Generate database connection credentials?', $controller->flushStdOutBuffer());
+        self::assertStringContainsString('Generate database connection credentials?', $controller->flushStdOutBuffer());
     }
 
     public function testActionConfigWithCredentials(): void
@@ -76,10 +76,10 @@ class MigrationControllerTest extends Unit
 
         $stdout = $controller->flushStdOutBuffer();
 
-        $this->assertStringContainsString('Database connection credentials saved.', $stdout);
-        $this->assertStringContainsString('No new migrations found. Your system is up-to-date.', $stdout);
+        self::assertStringContainsString('Database connection credentials saved.', $stdout);
+        self::assertStringContainsString('No new migrations found. Your system is up-to-date.', $stdout);
 
-        $this->assertFileExists(Yii::getAlias($controller->dbFile));
+        self::assertFileExists(Yii::getAlias($controller->dbFile));
     }
 
     protected function createMigrationController(): MigrationControllerMock

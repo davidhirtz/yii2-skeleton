@@ -54,14 +54,14 @@ class TrailBehaviorTest extends Unit
     public function testAfterInsertEvent(): void
     {
         $model = $this->createTrailActiveRecord();
-        $this->assertTrue($model->insert());
+        self::assertTrue($model->insert());
 
         $trail = Trail::findOne([
             'model' => $model::class,
             'model_id' => $model->id,
         ]);
 
-        $this->assertEquals(Trail::TYPE_CREATE, $trail->type);
+        self::assertEquals(Trail::TYPE_CREATE, $trail->type);
     }
 
     public function testAfterInsertEventWithoutTrailAttributes(): void
@@ -78,8 +78,8 @@ class TrailBehaviorTest extends Unit
 
         $trail = $this->findLatestTrailForActiveRecord($model);
 
-        $this->assertEquals(Trail::TYPE_CREATE, $trail->type);
-        $this->assertArrayHasKey('excluded', $trail->data);
+        self::assertEquals(Trail::TYPE_CREATE, $trail->type);
+        self::assertArrayHasKey('excluded', $trail->data);
     }
 
     public function testAfterUpdateEvent(): void
@@ -90,13 +90,13 @@ class TrailBehaviorTest extends Unit
         $model->name = 'test name updated';
         $model->excluded = 'test excluded updated';
 
-        $this->assertEquals(1, $model->update());
+        self::assertEquals(1, $model->update());
 
         $trail = $this->findLatestTrailForActiveRecord($model);
 
-        $this->assertEquals(Trail::TYPE_UPDATE, $trail->type);
-        $this->assertEquals(['test name', 'test name updated'], $trail->data['name']);
-        $this->assertNotContains('excluded', $trail->data);
+        self::assertEquals(Trail::TYPE_UPDATE, $trail->type);
+        self::assertEquals(['test name', 'test name updated'], $trail->data['name']);
+        self::assertNotContains('excluded', $trail->data);
     }
 
     public function testAfterDeleteEvent(): void
@@ -104,10 +104,10 @@ class TrailBehaviorTest extends Unit
         $model = $this->createTrailActiveRecord();
         $model->insert();
 
-        $this->assertEquals(1, $model->delete());
+        self::assertEquals(1, $model->delete());
 
         $trail = $this->findLatestTrailForActiveRecord($model);
-        $this->assertEquals(Trail::TYPE_DELETE, $trail->type);
+        self::assertEquals(Trail::TYPE_DELETE, $trail->type);
     }
 
     public function testFailedInsertTrail()
@@ -122,18 +122,18 @@ class TrailBehaviorTest extends Unit
         };
 
         $model->name = 'test';
-        $this->assertTrue($model->insert());
+        self::assertTrue($model->insert());
     }
 
     public function testTrailModelName(): void
     {
         $name = (new ReflectionClass(TrailActiveRecord::class))->getShortName();
-        $this->assertEquals($name, TrailActiveRecord::instance()->getTrailModelName());
+        self::assertEquals($name, TrailActiveRecord::instance()->getTrailModelName());
     }
 
     public function testTrailModelType(): void
     {
-        $this->assertNull(TrailActiveRecord::instance()->getTrailModelType());
+        self::assertNull(TrailActiveRecord::instance()->getTrailModelType());
     }
 
     public function testTrailModelAdminRoute(): void
@@ -145,13 +145,13 @@ class TrailBehaviorTest extends Unit
             }
         };
 
-        $this->assertFalse(TrailActiveRecord::instance()->getTrailModelAdminRoute());
-        $this->assertEquals($model->getAdminRoute(), $model->getTrailBehavior()->getTrailModelAdminRoute());
+        self::assertFalse(TrailActiveRecord::instance()->getTrailModelAdminRoute());
+        self::assertEquals($model->getAdminRoute(), $model->getTrailBehavior()->getTrailModelAdminRoute());
     }
 
     public function testTrailParents(): void
     {
-        $this->assertNull(TrailActiveRecord::instance()->getTrailParents());
+        self::assertNull(TrailActiveRecord::instance()->getTrailParents());
     }
 
     public function testFormatTrailAttributeValue(): void
@@ -162,18 +162,18 @@ class TrailBehaviorTest extends Unit
 
         $trail = $this->findLatestTrailForActiveRecord($model);
 
-        $this->assertEquals('Yes', $model->formatTrailAttributeValue('boolean', $trail->data['boolean']));
-        $this->assertEquals('three', $model->formatTrailAttributeValue('range', $trail->data['range']));
+        self::assertEquals('Yes', $model->formatTrailAttributeValue('boolean', $trail->data['boolean']));
+        self::assertEquals('three', $model->formatTrailAttributeValue('range', $trail->data['range']));
 
         $expected = Yii::$app->getFormatter()->asDatetime($model->datetime, 'medium');
-        $this->assertEquals($expected, $model->formatTrailAttributeValue('datetime', $trail->data['datetime']));
+        self::assertEquals($expected, $model->formatTrailAttributeValue('datetime', $trail->data['datetime']));
 
         $user = $model->formatTrailAttributeValue('user_id', $trail->data['user_id']);
-        $this->assertIsObject($user);
-        $this->assertEquals(1, $user->id);
+        self::assertIsObject($user);
+        self::assertEquals(1, $user->id);
 
         $data = ['one', 'two'];
-        $this->assertEquals(print_r($data, true), $model->formatTrailAttributeValue('name', $data));
+        self::assertEquals(print_r($data, true), $model->formatTrailAttributeValue('name', $data));
     }
 
     public function testFormatTrailAttributeValueWithoutRange(): void
@@ -202,7 +202,7 @@ class TrailBehaviorTest extends Unit
 
         /** @var TrailBehavior $behavior */
         $behavior = $model->getBehavior('TrailBehavior');
-        $this->assertEquals(2, $behavior->formatTrailAttributeValue('value', 2));
+        self::assertEquals(2, $behavior->formatTrailAttributeValue('value', 2));
     }
 
     private function createTrailActiveRecord(): TrailActiveRecord

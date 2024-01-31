@@ -49,14 +49,14 @@ class SitemapBehaviorTest extends Unit
 
     public function testSitemapUrlCount(): void
     {
-        $this->assertEquals(6, SitemapActiveRecord::instance()->getSitemapBehavior()->getSitemapUrlCount());
+        self::assertEquals(6, SitemapActiveRecord::instance()->getSitemapBehavior()->getSitemapUrlCount());
     }
 
     public function testGenerateSitemapUrls(): void
     {
         $behavior = SitemapActiveRecord::instance()->getSitemapBehavior();
-        $this->assertEquals('https://www.test.com', $behavior->generateSitemapUrls()[0]['loc']);
-        $this->assertEquals(date('c', $this->now), $behavior->generateSitemapUrls()[0]['lastmod']);
+        self::assertEquals('https://www.test.com', $behavior->generateSitemapUrls()[0]['loc']);
+        self::assertEquals(date('c', $this->now), $behavior->generateSitemapUrls()[0]['lastmod']);
     }
 
     public function testGenerateSitemapUrlsWithOffset(): void
@@ -72,10 +72,10 @@ class SitemapBehaviorTest extends Unit
         };
 
         $behavior = $model->getSitemapBehavior();
-        $this->assertCount(2, $behavior->generateSitemapUrls());
+        self::assertCount(2, $behavior->generateSitemapUrls());
 
         $urls = $behavior->generateSitemapUrls(1);
-        $this->assertEquals('https://www.test.com/one-month-ago', $urls[0]['loc']);
+        self::assertEquals('https://www.test.com/one-month-ago', $urls[0]['loc']);
     }
 
     public function testMissingCallback()

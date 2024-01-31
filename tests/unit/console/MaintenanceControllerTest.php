@@ -26,10 +26,10 @@ class MaintenanceControllerTest extends Unit
         $controller = $this->createMaintenanceController();
 
         $controller->actionIndex();
-        $this->assertMaintenanceModeEnabled($controller);
+        self::assertMaintenanceModeEnabled($controller);
 
         $controller->actionIndex();
-        $this->assertMaintenanceModeDisabled($controller);
+        self::assertMaintenanceModeDisabled($controller);
     }
 
     public function testActionEnableAndDisable(): void
@@ -43,36 +43,36 @@ class MaintenanceControllerTest extends Unit
         $controller->viewFile = '@tests/data/views/maintenance.php';
 
         $controller->actionEnable();
-        $this->assertMaintenanceModeEnabled($controller);
+        self::assertMaintenanceModeEnabled($controller);
 
         $config = Yii::getAlias(MaintenanceConfigForm::MAINTENANCE_CONFIG);
-        $this->assertFileExists($config);
+        self::assertFileExists($config);
 
         $config = json_decode(file_get_contents($config), true);
 
-        $this->assertEquals('https://example.com', $config['redirect']);
-        $this->assertEquals(1, $config['retry']);
-        $this->assertEquals(2, $config['refresh']);
-        $this->assertEquals(500, $config['status']);
+        self::assertEquals('https://example.com', $config['redirect']);
+        self::assertEquals(1, $config['retry']);
+        self::assertEquals(2, $config['refresh']);
+        self::assertEquals(500, $config['status']);
 
         $template = file_get_contents(Yii::getAlias($controller->viewFile));
 
-        $this->assertEquals($template, $config['template']);
+        self::assertEquals($template, $config['template']);
 
         $controller->actionDisable();
-        $this->assertMaintenanceModeDisabled($controller);
+        self::assertMaintenanceModeDisabled($controller);
     }
 
     protected function assertMaintenanceModeEnabled(MaintenanceControllerMock $controller): void
     {
-        $this->assertEquals('Maintenance mode enabled.' . PHP_EOL, $controller->flushStdOutBuffer());
-        $this->assertFileExists(Yii::getAlias(MaintenanceController::MAINTENANCE_FILE));
+        self::assertEquals('Maintenance mode enabled.' . PHP_EOL, $controller->flushStdOutBuffer());
+        self::assertFileExists(Yii::getAlias(MaintenanceController::MAINTENANCE_FILE));
     }
 
     protected function assertMaintenanceModeDisabled(MaintenanceControllerMock $controller): void
     {
-        $this->assertEquals('Maintenance mode disabled.' . PHP_EOL, $controller->flushStdOutBuffer());
-        $this->assertFileNotExists(Yii::getAlias(MaintenanceController::MAINTENANCE_FILE));
+        self::assertEquals('Maintenance mode disabled.' . PHP_EOL, $controller->flushStdOutBuffer());
+        self::assertFileNotExists(Yii::getAlias(MaintenanceController::MAINTENANCE_FILE));
     }
 
     protected function createMaintenanceController(): MaintenanceControllerMock

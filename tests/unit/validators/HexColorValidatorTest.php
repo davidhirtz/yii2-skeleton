@@ -25,12 +25,12 @@ class HexColorValidatorTest extends Unit
         };
 
         $model->color = 'fff';
-        $this->assertTrue($model->validate());
+        self::assertTrue($model->validate());
 
         $model->color = '000000';
-        $this->assertTrue($model->validate());
+        self::assertTrue($model->validate());
 
         $model->color = 'invalid';
-        $this->assertFalse($model->validate());
+        self::assertFalse($model->validate());
     }
 }

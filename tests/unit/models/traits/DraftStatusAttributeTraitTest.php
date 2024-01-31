@@ -1,6 +1,6 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\tests\unit\models;
+namespace davidhirtz\yii2\skeleton\tests\unit\models\traits;
 
 use Codeception\Test\Unit;
 use davidhirtz\yii2\skeleton\models\interfaces\DraftStatusAttributeInterface;
@@ -8,7 +8,7 @@ use davidhirtz\yii2\skeleton\models\traits\DraftStatusAttributeTrait;
 use Yii;
 use yii\base\Model;
 
-class DraftStatusAttributeModelTest extends Unit
+class DraftStatusAttributeTraitTest extends Unit
 {
     public function testDraftStatus()
     {
@@ -19,12 +19,12 @@ class DraftStatusAttributeModelTest extends Unit
         };
 
         $model->status = $model::STATUS_DRAFT;
-        $this->assertTrue($model->isDraft());
+        self::assertTrue($model->isDraft());
 
-        $this->assertEquals(Yii::t('skeleton', 'Draft'), $model->getStatusName());
-        $this->assertEquals('edit', $model->getStatusIcon());
+        self::assertEquals(Yii::t('skeleton', 'Draft'), $model->getStatusName());
+        self::assertEquals('edit', $model->getStatusIcon());
 
         $model->status = $model::STATUS_DISABLED;
-        $this->assertTrue($model->isDisabled());
+        self::assertTrue($model->isDisabled());
     }
 }

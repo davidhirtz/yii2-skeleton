@@ -13,8 +13,8 @@ class FileHelperTest extends Unit
         $folder = Yii::getAlias('@runtime/file-helper');
 
         $filename = FileHelper::generateRandomFilename('php', 20);
-        $this->assertStringEndsWith('.php', $filename);
-        $this->assertEquals(20 + 4, strlen($filename));
+        self::assertStringEndsWith('.php', $filename);
+        self::assertEquals(20 + 4, strlen($filename));
 
         $config = [
             'string' => 'this is a string',
@@ -23,38 +23,38 @@ class FileHelperTest extends Unit
         ];
 
         $result = FileHelper::createConfigFile("$folder/$filename", $config, 'Test config file');
-        $this->assertIsInt($result);
+        self::assertIsInt($result);
 
         $path = Yii::getAlias("$folder/$filename");
-        $this->assertFileExists($path);
+        self::assertFileExists($path);
 
         $loadedConfig = require($path);
-        $this->assertEquals($config, $loadedConfig);
+        self::assertEquals($config, $loadedConfig);
 
         $extension = FileHelper::getExtensionFromUrl($filename);
-        $this->assertEquals('php', $extension);
+        self::assertEquals('php', $extension);
 
         $newPath = "$folder/renamed.$extension";
         FileHelper::rename($path, $newPath);
-        $this->assertFileExists($newPath);
+        self::assertFileExists($newPath);
 
         FileHelper::removeDirectory($folder);
-        $this->assertFileDoesNotExist($folder);
+        self::assertFileDoesNotExist($folder);
     }
 
     public function testUnlinkInvalidFile(): void
     {
-        $this->assertFalse(FileHelper::unlink('@runtime/invalid-file'));
+        self::assertFalse(FileHelper::unlink('@runtime/invalid-file'));
     }
 
     public function testEncodeUrl()
     {
         $url = 'https://www.example.com/test file.txt';
         $encodedUrl = FileHelper::encodeUrl($url);
-        $this->assertEquals('https://www.example.com/test%20file.txt', $encodedUrl);
+        self::assertEquals('https://www.example.com/test%20file.txt', $encodedUrl);
 
         $url = '/üöä';
         $encodedUrl = FileHelper::encodeUrl($url);
-        $this->assertEquals('/%C3%BC%C3%B6%C3%A4', $encodedUrl);
+        self::assertEquals('/%C3%BC%C3%B6%C3%A4', $encodedUrl);
     }
 }

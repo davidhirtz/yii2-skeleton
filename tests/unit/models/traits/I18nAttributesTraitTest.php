@@ -26,15 +26,15 @@ class I18nAttributesTraitTest extends Unit
         ];
 
         Yii::$app->getDb()->createCommand()
-            ->createTable(I18nActiveRecord::tableName(), $columns)
+            ->createTable(TestI18nActiveRecord::tableName(), $columns)
             ->execute();
 
         Yii::$app->getDb()->createCommand()
-            ->createIndex('slug', I18nActiveRecord::tableName(), ['slug', 'parent_slug'], true)
+            ->createIndex('slug', TestI18nActiveRecord::tableName(), ['slug', 'parent_slug'], true)
             ->execute();
 
         Yii::$app->getDb()->createCommand()
-            ->createIndex('slug_de', I18nActiveRecord::tableName(), ['slug_de', 'parent_slug_de'], true)
+            ->createIndex('slug_de', TestI18nActiveRecord::tableName(), ['slug_de', 'parent_slug_de'], true)
             ->execute();
 
         parent::_before();
@@ -43,7 +43,7 @@ class I18nAttributesTraitTest extends Unit
     protected function _after(): void
     {
         Yii::$app->getDb()->createCommand()
-            ->dropTable(I18nActiveRecord::tableName())
+            ->dropTable(TestI18nActiveRecord::tableName())
             ->execute();
 
         parent::_after();
@@ -51,59 +51,59 @@ class I18nAttributesTraitTest extends Unit
 
     public function testI18nAttributes(): void
     {
-        $model = new I18nActiveRecord();
+        $model = new TestI18nActiveRecord();
         $model->name = 'Test Name';
         $model->name_de = 'Test Name DE';
 
-        $this->assertEquals($model->name, $model->getI18nAttribute('name'));
-        $this->assertEquals($model->name_de, $model->getI18nAttribute('name', 'de'));
+        self::assertEquals($model->name, $model->getI18nAttribute('name'));
+        self::assertEquals($model->name_de, $model->getI18nAttribute('name', 'de'));
 
-        $this->assertEquals(['en-US' => 'name', 'de' => 'name_de'], $model->getI18nAttributeNames('name'));
+        self::assertEquals(['en-US' => 'name', 'de' => 'name_de'], $model->getI18nAttributeNames('name'));
 
-        $this->assertEquals('untranslated', $model->getI18nAttributeName('untranslated'));
-        $this->assertEquals(['en-US' => 'untranslated'], $model->getI18nAttributeNames('untranslated'));
+        self::assertEquals('untranslated', $model->getI18nAttributeName('untranslated'));
+        self::assertEquals(['en-US' => 'untranslated'], $model->getI18nAttributeNames('untranslated'));
     }
 
     public function testI18nRules(): void
     {
-        $model = new I18nActiveRecord();
+        $model = new TestI18nActiveRecord();
         $rules = $model->rules();
 
-        $this->assertEquals(['name', 'name_de', 'slug', 'slug_de'], $rules[0][0]);
-        $this->assertEquals(['name', 'name_de', 'slug', 'slug_de', 'untranslated'], $rules[1][0]);
-        $this->assertEquals(['slug_de'], $rules[3]['targetAttribute']);
+        self::assertEquals(['name', 'name_de', 'slug', 'slug_de'], $rules[0][0]);
+        self::assertEquals(['name', 'name_de', 'slug', 'slug_de', 'untranslated'], $rules[1][0]);
+        self::assertEquals(['slug_de'], $rules[3]['targetAttribute']);
 
         $model->name = 'Test Name';
         $model->slug = 'test-name';
 
-        $this->assertFalse($model->validate());
+        self::assertFalse($model->validate());
 
         $model->name_de = 'Test Name DE';
         $model->slug_de = 'test-name-de';
 
-        $this->assertTrue($model->save());
+        self::assertTrue($model->save());
 
-        $newModel = new I18nActiveRecord($model->getAttributes(except: ['id']));
+        $newModel = new TestI18nActiveRecord($model->getAttributes(except: ['id']));
 
-        $this->assertFalse($newModel->save());
-        $this->assertEquals(['slug', 'slug_de'], array_keys($newModel->getErrors()));
+        self::assertFalse($newModel->save());
+        self::assertEquals(['slug', 'slug_de'], array_keys($newModel->getErrors()));
     }
 
     public function testI18nRulesWithUniqueTargetAttribute(): void
     {
-        $model = new I18nParentSlugActiveRecord();
+        $model = new TestI18nParentSlugActiveRecord();
         $rules = $model->rules();
 
-        $this->assertEquals(['slug', 'parent_slug'], $rules[2]['targetAttribute']);
-        $this->assertEquals(['slug_de', 'parent_slug_de'], $rules[3]['targetAttribute']);
+        self::assertEquals(['slug', 'parent_slug'], $rules[2]['targetAttribute']);
+        self::assertEquals(['slug_de', 'parent_slug_de'], $rules[3]['targetAttribute']);
     }
 
     public function testI18nAttributeHints()
     {
-        $model = new I18nActiveRecord();
+        $model = new TestI18nActiveRecord();
 
-        $this->assertEquals('Part of the URL', $model->getAttributeHint('slug'));
-        $this->assertEquals('Part of the URL', $model->getAttributeHint('slug_de'));
+        self::assertEquals('Part of the URL', $model->getAttributeHint('slug'));
+        self::assertEquals('Part of the URL', $model->getAttributeHint('slug_de'));
     }
 
     public function testEmptyI18nAttributes()
@@ -114,7 +114,7 @@ class I18nAttributesTraitTest extends Unit
             public string $name = '';
         };
 
-        $this->assertEquals('Name', $model->getAttributeLabel('name'));
+        self::assertEquals('Name', $model->getAttributeLabel('name'));
     }
 }
 
@@ -126,7 +126,7 @@ class I18nAttributesTraitTest extends Unit
  * @property string $slug_de
  * @property string $untranslated
  */
-class I18nActiveRecord extends ActiveRecord
+class TestI18nActiveRecord extends ActiveRecord
 {
     use I18nAttributesTrait;
 
@@ -174,7 +174,7 @@ class I18nActiveRecord extends ActiveRecord
  * @property string|null $parent_slug
  * @property string|null $parent_slug_de
  */
-class I18nParentSlugActiveRecord extends I18nActiveRecord
+class TestI18nParentSlugActiveRecord extends TestI18nActiveRecord
 {
     public function init(): void
     {

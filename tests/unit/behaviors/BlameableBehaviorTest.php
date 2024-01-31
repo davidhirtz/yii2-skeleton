@@ -41,8 +41,8 @@ class BlameableBehaviorTest extends Unit
         $model->name = __METHOD__;
         $model->beforeSave(true);
 
-        $this->assertNull($model->created_by_user_id);
-        $this->assertNull($model->updated_by_user_id);
+        self::assertNull($model->created_by_user_id);
+        self::assertNull($model->updated_by_user_id);
     }
 
     public function testInsertUserIsNotGuest(): void
@@ -51,8 +51,8 @@ class BlameableBehaviorTest extends Unit
         $model->name = __METHOD__;
         $model->beforeSave(true);
 
-        $this->assertNull($model->created_by_user_id);
-        $this->assertEquals(10, $model->updated_by_user_id);
+        self::assertNull($model->created_by_user_id);
+        self::assertEquals(10, $model->updated_by_user_id);
     }
 
     public function testUpdateUserIsNotGuest(): void
@@ -66,8 +66,8 @@ class BlameableBehaviorTest extends Unit
         $model->name = self::class;
         $model->save();
 
-        $this->assertNull($model->created_by_user_id);
-        $this->assertEquals(20, $model->updated_by_user_id);
+        self::assertNull($model->created_by_user_id);
+        self::assertEquals(20, $model->updated_by_user_id);
     }
 
     public function testInsertCustomValue(): void
@@ -85,8 +85,8 @@ class BlameableBehaviorTest extends Unit
         $model->getBlameableBehavior()->value = 42;
         $model->beforeSave(true);
 
-        $this->assertEquals(42, $model->created_by_user_id);
-        $this->assertEquals(42, $model->updated_by_user_id);
+        self::assertEquals(42, $model->created_by_user_id);
+        self::assertEquals(42, $model->updated_by_user_id);
     }
 
     public function testInsertClosure(): void
@@ -98,7 +98,7 @@ class BlameableBehaviorTest extends Unit
 
         $model->beforeSave(true);
 
-        $this->assertEquals(strlen($model->name), $model->updated_by_user_id);
+        self::assertEquals(strlen($model->name), $model->updated_by_user_id);
     }
 
     public function testCustomAttributesAndEvents(): void
@@ -115,32 +115,32 @@ class BlameableBehaviorTest extends Unit
 
         $model->name = __METHOD__;
 
-        $this->assertNull($model->created_by_user_id);
-        $this->assertNull($model->updated_by_user_id);
+        self::assertNull($model->created_by_user_id);
+        self::assertNull($model->updated_by_user_id);
 
         $this->getUser()->login(20);
 
         $model->beforeSave(true);
-        $this->assertEquals(20, $model->created_by_user_id);
-        $this->assertEquals(20, $model->updated_by_user_id);
+        self::assertEquals(20, $model->created_by_user_id);
+        self::assertEquals(20, $model->updated_by_user_id);
 
         $model->save();
 
-        $this->assertEquals(20, $model->created_by_user_id);
-        $this->assertEquals(20, $model->updated_by_user_id);
+        self::assertEquals(20, $model->created_by_user_id);
+        self::assertEquals(20, $model->updated_by_user_id);
 
         $this->getUser()->login(30);
 
         $model->update();
 
-        $this->assertEquals(20, $model->created_by_user_id);
-        $this->assertEquals(20, $model->updated_by_user_id);
+        self::assertEquals(20, $model->created_by_user_id);
+        self::assertEquals(20, $model->updated_by_user_id);
 
         $model->name = 'new name';
         $model->update();
 
-        $this->assertEquals(20, $model->created_by_user_id);
-        $this->assertEquals(30, $model->updated_by_user_id);
+        self::assertEquals(20, $model->created_by_user_id);
+        self::assertEquals(30, $model->updated_by_user_id);
     }
 
     public function testDefaultValue(): void
@@ -157,8 +157,8 @@ class BlameableBehaviorTest extends Unit
         $model->name = __METHOD__;
         $model->insert();
 
-        $this->assertNull($model->created_by_user_id);
-        $this->assertEquals(2, $model->updated_by_user_id);
+        self::assertNull($model->created_by_user_id);
+        self::assertEquals(2, $model->updated_by_user_id);
     }
 
     private function getUser(): UserMock

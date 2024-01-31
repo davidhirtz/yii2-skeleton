@@ -25,37 +25,37 @@ class TimeValidatorTest extends Unit
         };
 
         $model->time = '1';
-        $this->assertTrue($model->validate());
-        $this->assertEquals('01:00:00', $model->time);
+        self::assertTrue($model->validate());
+        self::assertEquals('01:00:00', $model->time);
 
         $model->time = '22';
-        $this->assertTrue($model->validate());
-        $this->assertEquals('22:00:00', $model->time);
+        self::assertTrue($model->validate());
+        self::assertEquals('22:00:00', $model->time);
 
         $model->time = '1:00';
-        $this->assertTrue($model->validate());
-        $this->assertEquals('01:00:00', $model->time);
+        self::assertTrue($model->validate());
+        self::assertEquals('01:00:00', $model->time);
 
         $model->time = '1:23';
-        $this->assertTrue($model->validate());
-        $this->assertEquals('01:23:00', $model->time);
+        self::assertTrue($model->validate());
+        self::assertEquals('01:23:00', $model->time);
 
         $model->time = '1:00 am';
-        $this->assertTrue($model->validate());
-        $this->assertEquals('01:00:00', $model->time);
+        self::assertTrue($model->validate());
+        self::assertEquals('01:00:00', $model->time);
 
         $model->time = '1:00 pm';
-        $this->assertTrue($model->validate());
-        $this->assertEquals('13:00:00', $model->time);
+        self::assertTrue($model->validate());
+        self::assertEquals('13:00:00', $model->time);
 
         $model->time = '10:00 pm';
-        $this->assertTrue($model->validate());
-        $this->assertEquals('22:00:00', $model->time);
+        self::assertTrue($model->validate());
+        self::assertEquals('22:00:00', $model->time);
 
         $model->time = '24:01';
-        $this->assertFalse($model->validate());
+        self::assertFalse($model->validate());
 
         $model->time = 'invalid';
-        $this->assertFalse($model->validate());
+        self::assertFalse($model->validate());
     }
 }
