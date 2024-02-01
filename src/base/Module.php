@@ -1,0 +1,14 @@
+<?php
+
+namespace davidhirtz\yii2\skeleton\base;
+
+class Module extends \yii\base\Module
+{
+    public const EVENT_INIT = 'init';
+
+    public function init(): void
+    {
+        $this->trigger(self::EVENT_INIT);
+        parent::init();
+    }
+}

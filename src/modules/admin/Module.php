@@ -14,10 +14,8 @@ use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\UserLoginController;
 use Yii;
 
-class Module extends \yii\base\Module
+class Module extends \davidhirtz\yii2\skeleton\base\Module
 {
-    public const EVENT_AFTER_INIT = 'afterInit';
-
     /**
      * @var string|null the module display name, defaults to "Admin"
      */
@@ -177,7 +175,6 @@ class Module extends \yii\base\Module
             }
         }
 
-        $this->trigger(static::EVENT_AFTER_INIT);
         parent::init();
     }
 

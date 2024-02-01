@@ -1,3 +1,7 @@
+## 2.1.22 (Feb 1, 2024)
+
+- Added `Module::EVENT_INIT` for better module manipulation from extensions
+
 ## 2.1.21 (Feb 1, 2024)
 
 - Added `CreateValidatorsEvent` to simplify the creation of validators from behaviors
