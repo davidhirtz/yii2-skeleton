@@ -18,7 +18,7 @@ class UniqueValidator extends \yii\validators\UniqueValidator
                 return count($model->getDirtyAttributes($this->targetAttribute)) > 0;
             }
 
-            return $model->isAttributeChanged($this->targetAttribute ?: $attribute);
+            return $model->hasChangedAttributes((array)($this->targetAttribute ?: $attribute));
         };
 
         if (!$this->message) {

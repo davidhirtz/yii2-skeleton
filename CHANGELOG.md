@@ -1,3 +1,7 @@
+## 2.1.23 (Feb 1, 2024)
+
+- Fixed `UniqueValidator` (Issue #18)
+
 ## 2.1.22 (Feb 1, 2024)
 
 - Added `Module::EVENT_INIT` for better module manipulation from extensions
