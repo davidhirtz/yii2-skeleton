@@ -55,13 +55,18 @@ class I18nAttributesTraitTest extends Unit
         $model->name = 'Test Name';
         $model->name_de = 'Test Name DE';
 
+        self::assertTrue($model->isI18nAttribute('name'));
+
         self::assertEquals($model->name, $model->getI18nAttribute('name'));
         self::assertEquals($model->name_de, $model->getI18nAttribute('name', 'de'));
 
         self::assertEquals(['en-US' => 'name', 'de' => 'name_de'], $model->getI18nAttributeNames('name'));
 
+        self::assertFalse($model->isI18nAttribute('untranslated'));
         self::assertEquals('untranslated', $model->getI18nAttributeName('untranslated'));
         self::assertEquals(['en-US' => 'untranslated'], $model->getI18nAttributeNames('untranslated'));
+
+        Yii::$app->getI18n()->callback('de', fn () => self::assertEquals('name_de', $model->getI18nAttributeName('name')));
     }
 
     public function testI18nRules(): void
@@ -77,6 +82,7 @@ class I18nAttributesTraitTest extends Unit
         $model->slug = 'test-name';
 
         self::assertFalse($model->validate());
+        self::assertEquals('Name (DE) cannot be blank.', $model->getFirstError('name_de'));
 
         $model->name_de = 'Test Name DE';
         $model->slug_de = 'test-name-de';

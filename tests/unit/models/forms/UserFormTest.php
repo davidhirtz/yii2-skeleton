@@ -1,6 +1,6 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\tests\unit\models;
+namespace davidhirtz\yii2\skeleton\tests\unit\models\forms;
 
 use Codeception\Test\Unit;
 use DateTime;
