@@ -31,9 +31,7 @@ class Flashes extends Widget
 
     public function init(): void
     {
-        if ($this->alerts === null) {
-            $this->alerts = Yii::$app->getSession()->getAllFlashes();
-        }
+        $this->alerts ??= Yii::$app->getSession()->getAllFlashes();
 
         parent::init();
     }

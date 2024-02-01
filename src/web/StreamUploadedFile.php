@@ -42,7 +42,10 @@ class StreamUploadedFile extends UploadedFile
             return;
         }
 
-        $this->url = FileHelper::encodeUrl($this->url);
+        $this->url = parse_url($this->url, PHP_URL_HOST) !== null
+            ? FileHelper::encodeUrl($this->url)
+            : $this->url;
+
         $contents = @file_get_contents($this->url);
 
         if (!$contents) {

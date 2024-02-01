@@ -14,7 +14,7 @@ class Controller extends \yii\web\Controller
      * @var bool whether spaces between HTML tags should be removed from the output.
      */
     public bool $spacelessOutput = false;
-    
+
     /**
      * @var string|false whether a Content-Security-Policy header should be sent, defaults to only allowing the current
      * site to frame the content. To be more strict, this can be changed to `frame-ancestors 'none'`.
@@ -63,5 +63,10 @@ class Controller extends \yii\web\Controller
         }
 
         return false;
+    }
+
+    public function errorOrSuccess(Model $model, ?string $message = null): void
+    {
+        $model->hasErrors() ? $this->error($model) : $this->success($message);
     }
 }

@@ -1,5 +1,8 @@
 ## 2.1.23 (Feb 1, 2024)
 
+- Added `Controller::errorOrSuccess()`
+- Changed `DuplicateActiveRecord` to always return the new model
+- Fixed `StreamUploadedFile` to correctly handle local files
 - Fixed `UniqueValidator` (Issue #18)
 
 ## 2.1.22 (Feb 1, 2024)

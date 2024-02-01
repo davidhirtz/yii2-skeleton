@@ -79,12 +79,14 @@ class DuplicateActiveRecord
     }
 
     /**
-     * @return T|null
+     * @return T
      * @noinspection PhpDocSignatureInspection
      */
-    public static function create(array $params = []): ?ActiveRecord
+    public static function create(array $params = []): ActiveRecord
     {
         $action = Yii::createObject(static::class, $params);
-        return $action->duplicateActiveRecord() ? $action->duplicate : null;
+        $action->duplicateActiveRecord();
+
+        return $action->duplicate;
     }
 }
