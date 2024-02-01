@@ -21,8 +21,6 @@ class ActiveRecord extends \yii\db\ActiveRecord
     public const SCENARIO_INSERT = 'insert';
     public const SCENARIO_UPDATE = 'update';
 
-    public const EVENT_CREATE_VALIDATORS = 'afterValidators';
-
     private bool $_isBatch = false;
     private bool $_isDeleted = false;
 

@@ -1,3 +1,7 @@
+## 2.1.21 (Feb 1, 2024)
+
+- Added `CreateValidatorsEvent` to simplify the creation of validators from behaviors
+
 ## 2.1.20 (Jan 26, 2024)
 
 - Changed the signature of `I18nAttributesTrait::isUniqueRule()` to accept any argument

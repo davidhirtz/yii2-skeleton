@@ -3,7 +3,7 @@
 namespace davidhirtz\yii2\skeleton\base\traits;
 
 use ArrayObject;
-use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use davidhirtz\yii2\skeleton\models\events\CreateValidatorsEvent;
 use ReflectionClass;
 use Yii;
 
@@ -12,7 +12,6 @@ trait ModelTrait
     private ?array $_activeAttributes = null;
     private ?array $_safeAttributes = null;
     private ?array $_scenarios = null;
-    private ?ArrayObject $_validators = null;
 
     public function addInvalidAttributeError(string $attribute): bool
     {
@@ -62,22 +61,14 @@ trait ModelTrait
         parent::setScenario($value);
     }
 
-    /**
-     * Overrides original method by triggering {@see static::EVENT_CREATE_VALIDATORS} event. This enables attached
-     * behaviors to manipulate {@see Model::rules()} by modifying the array object returned by
-     * {@see Model::getValidators()}.
-     *
-     * This would be more fitting in {@see Model::rules()}. I might add a pull request... If this is added to Yii2, the
-     * override can be removed. {@link https://github.com/yiisoft/yii2/issues/5438}
-     */
-    public function getValidators(): ArrayObject
+    public function createValidators(): ArrayObject
     {
-        if ($this->_validators === null) {
-            $this->_validators = $this->createValidators();
-            $this->trigger(ActiveRecord::EVENT_CREATE_VALIDATORS);
-        }
+        $event = new CreateValidatorsEvent();
+        $event->validators = parent::createValidators();
 
-        return $this->_validators;
+        $this->trigger($event::EVENT_CREATE_VALIDATORS, $event);
+
+        return $event->validators;
     }
 
     public function getTraitAttributeLabels(): array
