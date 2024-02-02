@@ -3,10 +3,14 @@
 namespace davidhirtz\yii2\skeleton\tests\unit\behaviors;
 
 use Codeception\Test\Unit;
+use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
 use davidhirtz\yii2\skeleton\behaviors\AttributeTypecastBehavior;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use davidhirtz\yii2\skeleton\models\events\CreateValidatorsEvent;
 use Yii;
+use yii\base\Behavior;
 use yii\base\DynamicModel;
+use yii\validators\NumberValidator;
 
 class AttributeTypecastBehaviorTest extends Unit
 {
@@ -38,14 +42,14 @@ class AttributeTypecastBehaviorTest extends Unit
     public function testTypecast(): void
     {
         $model = new AttributeTypecastActiveRecord();
-        $model->getAttributeTypecastBehavior()->castBooleansAsInt = false;
+        $model->getAttributeTypecastBehavior()->typecastBooleanAsInteger = false;
 
-        $model->name = 123; // @phpstan-ignore-line
-        $model->amount = '58'; // @phpstan-ignore-line
-        $model->price = '100.8'; // @phpstan-ignore-line
-        $model->is_active = 1; // @phpstan-ignore-line
-        $model->callback = 'foo';
-        $model->nullable = '';
+        $model->setAttribute('name', 123);
+        $model->setAttribute('amount', '58');
+        $model->setAttribute('price', '100.8');
+        $model->setAttribute('is_active', 1);
+        $model->setAttribute('callback', 'foo');
+        $model->setAttribute('nullable', '');
 
         $model->getAttributeTypecastBehavior()->typecastAttributes();
 
@@ -62,12 +66,12 @@ class AttributeTypecastBehaviorTest extends Unit
         $model = new AttributeTypecastActiveRecord();
         $model->getAttributeTypecastBehavior()->skipOnNull = true;
 
-        $model->name = null; // @phpstan-ignore-line
-        $model->amount = null; // @phpstan-ignore-line
-        $model->price = null; // @phpstan-ignore-line
-        $model->is_active = null; // @phpstan-ignore-line
-        $model->callback = null; // @phpstan-ignore-line
-        $model->nullable = null;
+        $model->setAttribute('name', null);
+        $model->setAttribute('amount', null);
+        $model->setAttribute('price', null);
+        $model->setAttribute('is_active', null);
+        $model->setAttribute('callback', null);
+        $model->setAttribute('nullable', null);
 
         $model->getAttributeTypecastBehavior()->typecastAttributes();
 
@@ -118,7 +122,7 @@ class AttributeTypecastBehaviorTest extends Unit
 
         $model->save();
 
-        $model->amount = '1'; // @phpstan-ignore-line
+        $model->setAttribute('amount', '1');
         self::assertTrue($model->validate());
     }
 
@@ -140,16 +144,16 @@ class AttributeTypecastBehaviorTest extends Unit
         self::assertSame('callback: find', $model->callback);
     }
 
-    public function testDirtyAttributesAreEmptyAfterFind(): void
+    public function testEmptyDirtyAttributesAfterFind(): void
     {
         $model = new AttributeTypecastActiveRecord();
 
-        $model->name = 123; // @phpstan-ignore-line
-        $model->amount = '58'; // @phpstan-ignore-line
-        $model->price = '100.8'; // @phpstan-ignore-line
-        $model->is_active = 1; // @phpstan-ignore-line
-        $model->callback = 'foo';
-        $model->nullable = '';
+        $model->setAttribute('name', 123);
+        $model->setAttribute('amount', '58');
+        $model->setAttribute('price', '100.8');
+        $model->setAttribute('is_active', 1);
+        $model->setAttribute('callback', 'foo');
+        $model->setAttribute('nullable', '');
 
         $model->save(false);
 
@@ -195,6 +199,7 @@ class AttributeTypecastBehaviorTest extends Unit
         });
 
         $model->save(false);
+
         self::assertSame('callback: update', $model->callback);
         self::assertTrue($beforeUpdateHappened);
         self::assertFalse($beforeInsertHappened);
@@ -264,6 +269,7 @@ class AttributeTypecastBehaviorTest extends Unit
             'is_active' => null,
             'nullable' => null,
         ];
+
         $model = (new DynamicModel($attributes))
             ->addRule('name', 'string')
             ->addRule('amount', 'integer')
@@ -286,16 +292,58 @@ class AttributeTypecastBehaviorTest extends Unit
         self::assertEquals($expectedAttributeTypes, $behavior->attributeTypes);
     }
 
+    public function testAutoDetectAttributeTypesFromBehaviors()
+    {
+        $model = new class() extends AttributeTypecastActiveRecord {
+            use ModelTrait;
+
+            public function behaviors(): array
+            {
+                $behaviors = parent::behaviors();
+                $behaviors['AttributeTypecastBehavior']['attributeTypes'] = null;
+
+                return $behaviors;
+            }
+
+            public function rules(): array
+            {
+                return [];
+            }
+        };
+
+        $behavior = new class extends Behavior {
+            public function events(): array
+            {
+                return [
+                    CreateValidatorsEvent::EVENT_CREATE_VALIDATORS => function (CreateValidatorsEvent $event) {
+                        $event->validators->append(new NumberValidator([
+                            'attributes' => ['name'],
+                            'integerOnly' => true,
+                        ]));
+                    },
+                ];
+            }
+        };
+
+        $behavior->attach($model);
+        $model->name = '01';
+
+        $model->validate();
+
+        self::assertIsInt($model->name);
+    }
+
     public function testSkipNotSelectedAttribute(): void
     {
         $model = new AttributeTypecastActiveRecord();
 
         $model->name = 'skip-not-selected';
-        $model->amount = '58'; // @phpstan-ignore-line
-        $model->price = '100.8'; // @phpstan-ignore-line
-        $model->is_active = 1; // @phpstan-ignore-line
         $model->callback = 'foo';
         $model->nullable = '';
+
+        $model->setAttribute('amount', '58');
+        $model->setAttribute('price', '100.8');
+        $model->setAttribute('is_active', 1);
 
         $model->save(false);
 
