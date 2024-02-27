@@ -7,7 +7,7 @@ use davidhirtz\yii2\skeleton\models\User;
 
 /**
  * @property int|null $updated_by_user_id
- * @property-read User $updated {@see static::getUpdated()}
+ * @property-read User|null $updated {@see static::getUpdated()}
  */
 trait UpdatedByUserTrait
 {
