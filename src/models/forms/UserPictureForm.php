@@ -46,13 +46,11 @@ class UserPictureForm extends Model
             return false;
         }
 
-        codecept_debug('Path exists');
-
         if (!$this->validate()) {
             return false;
         }
 
-        codecept_debug('Validate ok');
+        $this->generatePictureFilename();
 
         if ($this->upload->saveAs($uploadPath . $this->filename)) {
             if ($this->autorotatePicture) {
@@ -62,10 +60,8 @@ class UserPictureForm extends Model
             $this->user->picture = $this->filename;
             $this->upload = null;
 
-            codecept_debug('Save ok');
             return true;
         }
-        codecept_debug('Save failed');
 
         return false;
     }

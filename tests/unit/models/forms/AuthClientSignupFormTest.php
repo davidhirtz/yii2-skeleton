@@ -5,6 +5,7 @@ namespace davidhirtz\yii2\skeleton\tests\unit\models\forms;
 use Codeception\Test\Unit;
 use davidhirtz\yii2\skeleton\auth\clients\ClientInterface;
 use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
+use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\forms\AuthClientSignupForm;
 use davidhirtz\yii2\skeleton\tests\support\UnitTester;
@@ -71,6 +72,7 @@ class AuthClientSignupFormTest extends Unit
         self::assertNotNull($form->user->picture);
         self::assertFileExists($form->user->getUploadPath() . $form->user->picture);
 
+        FileHelper::removeDirectory(Yii::getAlias('@runtime/uploads'));
     }
 
     public function testAuthClientWithExistingUsername(): void
