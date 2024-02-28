@@ -64,19 +64,11 @@ class SignupForm extends Model
     {
         return [
             [
-                ['email', 'name', 'password'],
+                ['email', 'name'],
                 'trim',
             ],
             [
                 ['email', 'name', 'password'],
-                'required',
-            ],
-            [
-                ['email'],
-                'email',
-            ],
-            [
-                ['password'],
                 'required',
             ],
             [

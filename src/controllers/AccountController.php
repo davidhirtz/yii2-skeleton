@@ -438,8 +438,7 @@ class AccountController extends Controller
             throw new InvalidCallException();
         }
 
-        $form = AuthClientSignupForm::create();
-        $form->setClient($auth->getClientClass());
+        $form = AuthClientSignupForm::create(['client' => $auth->getClientClass()]);
 
         if (!$form->insert()) {
             $this->error($form);
@@ -447,10 +446,10 @@ class AccountController extends Controller
         }
 
         $this->success(Yii::t('skeleton', 'Sign up with {client} completed.', [
-            'client' => $auth->getClientClass()->getTitle(),
+            'client' => $form->client->getTitle(),
         ]));
 
-        $auth->user_id = $form->getUser()->id;
+        $auth->user_id = $form->user->id;
 
         return $auth->insert();
     }

@@ -10,27 +10,31 @@ use davidhirtz\yii2\skeleton\web\StreamUploadedFile;
 use Yii;
 use yii\base\Model;
 
-/**
- * @property ClientInterface|null $client {@see static::getClient()}
- */
 class AuthClientSignupForm extends Model
 {
     use ModelTrait;
     use SignupEmailTrait;
 
     public ?string $externalPictureUrl = null;
-    public ?User $user = null;
 
     /**
      * @var string|false the pattern for all characters that should be removed, set false to disable filter
      */
     public string|false $namePatternFilter = '/[^a-z0-9.-]/';
 
-    private ?ClientInterface $_client = null;
+    public function __construct(
+        public ClientInterface $client,
+        public ?User $user = null,
+        $config = [])
+    {
+        parent::__construct($config);
+    }
 
     public function init(): void
     {
         $this->user ??= User::create();
+        $this->user->setAttributes($this->client->getSafeUserAttributes());
+
         parent::init();
     }
 
@@ -93,7 +97,7 @@ class AuthClientSignupForm extends Model
     protected function addContextToEmailError(): void
     {
         $this->addError('email', Yii::t('skeleton', 'A user with email {email} already exists but is not linked to this {client} account. Login using email first to link it.', [
-            'client' => $this->getClient()->getTitle(),
+            'client' => $this->client->getTitle(),
             'email' => $this->user->email,
         ]));
     }
@@ -132,23 +136,13 @@ class AuthClientSignupForm extends Model
 
     public function afterInsert(): void
     {
-        if (!$this->user->isUnconfirmed() || Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
-            Yii::$app->getUser()->login($this->user);
+        $webuser = Yii::$app->getUser();
+
+        if (!$this->user->isUnconfirmed() || $webuser->isUnconfirmedEmailLoginEnabled()) {
+            $webuser->loginType = $this->client->getName();
+            $webuser->login($this->user);
         }
 
         $this->sendSignupEmail();
-    }
-
-    public function setClient(ClientInterface $client): void
-    {
-        $this->user->setAttributes($client->getSafeUserAttributes());
-        Yii::$app->getUser()->loginType = $client->getName();
-
-        $this->_client = $client;
-    }
-
-    public function getClient(): ?ClientInterface
-    {
-        return $this->_client;
     }
 }

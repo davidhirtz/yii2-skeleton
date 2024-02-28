@@ -101,10 +101,7 @@ class AuthClientSignupFormTest extends Unit
         $client = new TestAuthClient();
         $client->userAttributes = $attributes;
 
-        $form = AuthClientSignupForm::create();
-        $form->setClient($client);
-
-        return $form;
+        return AuthClientSignupForm::create(['client' => $client]);
     }
 }
 
