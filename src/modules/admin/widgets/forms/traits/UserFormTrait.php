@@ -83,7 +83,7 @@ trait UserFormTrait
             return '';
         }
 
-        return $this->row($this->offset(Html::img($this->model->getBaseUrl() . $this->model->picture, [
+        return $this->row($this->offset(Html::img($this->model->getPictureUrl(), [
             'style' => 'max-width:150px',
         ])));
     }

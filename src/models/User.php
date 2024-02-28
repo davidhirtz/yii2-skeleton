@@ -11,18 +11,15 @@ use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\controllers\AccountController;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
-use davidhirtz\yii2\skeleton\helpers\Image;
 use davidhirtz\yii2\skeleton\models\interfaces\StatusAttributeInterface;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\models\traits\StatusAttributeTrait;
 use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
 use davidhirtz\yii2\skeleton\validators\UniqueValidator;
-use davidhirtz\yii2\skeleton\web\StreamUploadedFile;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\db\ActiveQuery;
 use yii\web\IdentityInterface;
-use yii\web\UploadedFile;
 
 /**
  * @property int $id
@@ -57,7 +54,7 @@ use yii\web\UploadedFile;
  *
  * @mixin TrailBehavior
  */
-class User extends ActiveRecord implements  IdentityInterface, StatusAttributeInterface
+class User extends ActiveRecord implements IdentityInterface, StatusAttributeInterface
 {
     use StatusAttributeTrait;
 
@@ -66,11 +63,6 @@ class User extends ActiveRecord implements  IdentityInterface, StatusAttributeIn
     final public const AUTH_USER_UPDATE = 'userUpdate';
     final public const AUTH_USER_ASSIGN = 'authUpdate';
     final public const AUTH_ROLE_ADMIN = 'admin';
-
-    /**
-     * @var bool whether uploads should be automatically rotated based on their EXIF data
-     */
-    public bool $autorotatePicture = true;
 
     /**
      * @var int the minimum length for the username
@@ -83,9 +75,9 @@ class User extends ActiveRecord implements  IdentityInterface, StatusAttributeIn
     public int $nameMaxLength = 32;
 
     /**
-     * @var string the pattern for the username
+     * @var string|false the pattern for the username, set false to disable pattern validation
      */
-    public string $namePattern = '/^\d*[a-z][a-z0-9\.-]*[a-z0-9]$/si';
+    public string|false $namePattern = '/^\d*[a-z][a-z0-9\.-]*[a-z0-9]$/si';
 
     /**
      * @var int the minimum length for the password
@@ -96,21 +88,6 @@ class User extends ActiveRecord implements  IdentityInterface, StatusAttributeIn
      * @var bool whether the name is required
      */
     public bool $requireName = true;
-
-    /**
-     * @var UploadedFile|StreamUploadedFile|string|null the profile picture upload
-     */
-    public UploadedFile|StreamUploadedFile|string|null $upload = null;
-
-    /**
-     * @var array contains the allowed upload extensions for the profile picture
-     */
-    public array $uploadExtensions = ['gif', 'jpg', 'jpeg', 'png'];
-
-    /**
-     * @var bool whether mimetype should check the upload extension
-     */
-    public bool $uploadCheckExtensionByMimeType = true;
 
     /**
      * @var string|false set false to disabled profile pictures
@@ -175,6 +152,7 @@ class User extends ActiveRecord implements  IdentityInterface, StatusAttributeIn
                 'pattern' => $this->namePattern,
                 'message' => Yii::t('skeleton', 'Username must only contain alphanumeric characters.'),
                 'skipOnError' => true,
+                'when' => fn () => $this->namePattern !== false,
             ],
             [
                 ['name'],
@@ -203,12 +181,6 @@ class User extends ActiveRecord implements  IdentityInterface, StatusAttributeIn
                 'string',
                 'max' => 50,
             ],
-            [
-                ['upload'],
-                'file',
-                'checkExtensionByMimeType' => $this->uploadCheckExtensionByMimeType,
-                'extensions' => $this->uploadExtensions,
-            ],
         ];
     }
 
@@ -227,16 +199,9 @@ class User extends ActiveRecord implements  IdentityInterface, StatusAttributeIn
         $this->status ??= static::STATUS_ENABLED;
         $this->timezone = $this->timezone ?: Yii::$app->getTimeZone();
 
+        $this->name = $this->name ? mb_strtolower($this->name, Yii::$app->charset) : null;
+
         return parent::beforeValidate();
-    }
-
-    public function afterValidate(): void
-    {
-        if (!$this->requireName && !$this->name) {
-            $this->name = null;
-        }
-
-        parent::afterValidate();
     }
 
     public function beforeSave($insert): bool
@@ -247,10 +212,6 @@ class User extends ActiveRecord implements  IdentityInterface, StatusAttributeIn
                 $this->generateAuthKey();
             }
 
-            if ($this->upload) {
-                $this->generatePictureFilename();
-            }
-
             return true;
         }
 
@@ -259,20 +220,21 @@ class User extends ActiveRecord implements  IdentityInterface, StatusAttributeIn
 
     public function afterSave($insert, $changedAttributes): void
     {
-        if (!$insert) {
-            if (isset($changedAttributes['picture'])) {
-                $this->deletePicture($changedAttributes['picture']);
-            }
-        }
-
-        if ($this->upload) {
-            $this->savePictureUpload();
+        if (!$insert && !empty($changedAttributes['picture'])) {
+            $this->deletePicture($changedAttributes['picture']);
         }
 
         parent::afterSave($insert, $changedAttributes);
+    }
 
-        // Finally, unset upload, so additional updates won't try to upload again.
-        $this->upload = null;
+    public function delete(): false|int
+    {
+        if ($this->isOwner()) {
+            $this->addError('id', Yii::t('skeleton', 'This user is the website owner. Please transfer ownership to another user before deleting this user.'));
+            return false;
+        }
+
+        return parent::delete();
     }
 
     public function afterDelete(): void
@@ -326,24 +288,14 @@ class User extends ActiveRecord implements  IdentityInterface, StatusAttributeIn
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
 
-    public function load($data, $formName = null): bool
-    {
-        // First load form data, then override upload via instance.
-        $hasData = parent::load($data, $formName);
-        $this->upload = $this->getUploadPath() ? UploadedFile::getInstance($this, 'upload') : null;
-
-        return $hasData || $this->upload;
-    }
-
-    public function delete(): false|int
-    {
-        if ($this->isOwner()) {
-            $this->addError('id', Yii::t('skeleton', 'This user is the website owner. Please transfer ownership to another user before deleting this user.'));
-            return false;
-        }
-
-        return parent::delete();
-    }
+//    public function load($data, $formName = null): bool
+//    {
+//        // First load form data, then override upload via instance.
+//        $hasData = parent::load($data, $formName);
+//        $this->upload = $this->getUploadPath() ? UploadedFile::getInstance($this, 'upload') : null;
+//
+//        return $hasData || $this->upload;
+//    }
 
     public function afterPasswordChange(): void
     {
@@ -352,41 +304,6 @@ class User extends ActiveRecord implements  IdentityInterface, StatusAttributeIn
         $trail->model_id = (string)$this->id;
         $trail->type = Trail::TYPE_PASSWORD;
         $trail->insert();
-    }
-
-    public function generatePictureFilename(): void
-    {
-        $extension = $this->upload->extension ?? null;
-
-        if (!$extension) {
-            $extensions = array_intersect($this->uploadExtensions, FileHelper::getExtensionsByMimeType($this->upload->type ?? false));
-            $extension = $extensions ? current($extensions) : null;
-        }
-
-        $this->picture = FileHelper::generateRandomFilename($extension, 12);
-        $this->generatePictureFilenameInternal();
-    }
-
-    private function generatePictureFilenameInternal(): void
-    {
-        if (is_file($this->getUploadPath() . $this->picture)) {
-            $this->generatePictureFilename();
-        }
-    }
-
-    public function savePictureUpload(): bool
-    {
-        if (FileHelper::createDirectory($uploadPath = $this->getUploadPath())) {
-            if ($this->upload->saveAs($uploadPath . $this->picture)) {
-                if ($this->autorotatePicture) {
-                    Image::autorotate($uploadPath . $this->picture)->save();
-                }
-
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public function deletePicture(?string $picture): bool
@@ -440,11 +357,6 @@ class User extends ActiveRecord implements  IdentityInterface, StatusAttributeIn
         return $this->first_name && $this->last_name ? ($this->first_name[0] . $this->last_name[0]) : substr($this->name, 0, 2);
     }
 
-    public function getUsername(): ?string
-    {
-        return $this->name;
-    }
-
     public function getEmailConfirmationUrl(): ?string
     {
         if (!$this->verification_token) {
@@ -489,9 +401,18 @@ class User extends ActiveRecord implements  IdentityInterface, StatusAttributeIn
         $this->_uploadPath = trim($uploadPath, '/') . '/';
     }
 
-    public function getBaseUrl(): string
+    public function getUsername(): ?string
     {
-        return '/' . ltrim(str_replace(DIRECTORY_SEPARATOR, '/', $this->_uploadPath), '/');
+        return $this->name;
+    }
+
+    public function getPictureUrl(): string|false
+    {
+        if (!$this->picture) {
+            return false;
+        }
+
+        return '/' . ltrim($this->_uploadPath, '/') . $this->picture;
     }
 
     public static function getStatuses(): array

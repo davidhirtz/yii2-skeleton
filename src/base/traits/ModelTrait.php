@@ -110,8 +110,8 @@ trait ModelTrait
         return array_map(fn ($name) => substr($name, strrpos($name, '\\') + 1), $traitNames);
     }
 
-    public static function create(): static
+    public static function create(array $params = []): static
     {
-        return Yii::createObject(static::class);
+        return Yii::createObject(static::class, $params);
     }
 }

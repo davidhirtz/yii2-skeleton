@@ -14,7 +14,7 @@ trait SignupEmailTrait
 
         $mail->setSubject(Yii::t('skeleton', 'Sign up confirmation'))
             ->setFrom(Yii::$app->params['email'])
-            ->setTo($this->email)
+            ->setTo($this->user->email)
             ->send();
     }
 }

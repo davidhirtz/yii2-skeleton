@@ -1,7 +1,5 @@
 <?php
 /**
- * User sign up mail.
- *
  * @var View $this
  * @var MessageInterface $message
  * @var User $user

@@ -150,9 +150,11 @@ class User extends \yii\web\User
             $ipAddress = inet_pton($ipAddress);
         }
 
+        $type = mb_substr($this->loginType, 0, 12, Yii::$app->charset);
+
         $columns = [
             'user_id' => $user->id,
-            'type' => $this->loginType,
+            'type' => $type,
             'browser' => $browser,
             'ip_address' => $ipAddress,
             'created_at' => $user->last_login,
