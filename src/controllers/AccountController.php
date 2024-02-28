@@ -322,7 +322,7 @@ class AccountController extends Controller
 
     public function actionEnableGoogleAuthenticator(): Response|string
     {
-        $form = Yii::$container->get(GoogleAuthenticatorForm::class, [], [
+        $form = GoogleAuthenticatorForm::create([
             'user' => Yii::$app->getUser()->getIdentity(),
         ]);
 
@@ -337,7 +337,7 @@ class AccountController extends Controller
 
     public function actionDisableGoogleAuthenticator(): Response|string
     {
-        $form = Yii::$container->get(GoogleAuthenticatorForm::class, [], [
+        $form = GoogleAuthenticatorForm::create([
             'user' => Yii::$app->getUser()->getIdentity(),
         ]);
 

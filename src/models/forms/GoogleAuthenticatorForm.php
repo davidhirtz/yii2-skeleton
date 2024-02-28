@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\models\forms;
 
+use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\validators\GoogleAuthenticatorValidator;
 use RobThree\Auth\Providers\Qr\QRServerProvider;
@@ -9,15 +10,17 @@ use RobThree\Auth\TwoFactorAuth;
 use Yii;
 use yii\base\Model;
 
-/**
- * @property User $user
- * @see LoginForm::getUser()
- */
 class GoogleAuthenticatorForm extends Model
 {
-    public ?User $user = null;
+    use ModelTrait;
+
     public ?string $code = null;
     private ?string $_secret = null;
+
+    public function __construct(public User $user, array $config = [])
+    {
+        parent::__construct($config);
+    }
 
     public function rules(): array
     {
