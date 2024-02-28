@@ -3,18 +3,32 @@
 namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\datetime\DateTime;
-use davidhirtz\yii2\skeleton\db\Identity;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use Yii;
 use yii\web\MultiFieldSession;
 use yii\web\Response;
 
 /**
- * @property Identity|null $identity
- * @method Identity|null getIdentity($autoRenew = true)
+ * @property-read \davidhirtz\yii2\skeleton\models\User|null $identity {@see static::getIdentity()}
+ * @method \davidhirtz\yii2\skeleton\models\User|null getIdentity($autoRenew = true)
  */
 class User extends \yii\web\User
 {
+    /**
+     * @var int the cookie lifetime in seconds
+     */
+    public int $cookieLifetime = 2_592_000;
+
+    /**
+     * @var bool whether the role-based access management always returns `false` if user is not logged in
+     */
+    public bool $disableRbacForGuests = true;
+
+    /**
+     * @var bool whether the role-based access management always returns `true` if user is the site owner
+     */
+    public bool $disableRbacForOwner = true;
+
     /**
      * @var bool whether users can log in
      */
@@ -36,27 +50,22 @@ class User extends \yii\web\User
     public bool $enableSignup = false;
 
     /**
-     * @var bool whether login via cookie or long living access token is allowed
-     */
-    public $enableAutoLogin = true;
-
-    /**
      * @var bool whether 2FA via Google authenticator should be available.
      */
     public bool $enableGoogleAuthenticator = true;
 
     /**
-     * @var bool whether the role-based access management always returns `false` if user is not logged in
+     * @var string|null the IP address of the user
      */
-    public bool $disableRbacForGuests = true;
+    public ?string $ipAddress = null;
 
     /**
-     * @var bool whether the role-based access management always returns `true` if user is the site owner.
-     * @see \davidhirtz\yii2\skeleton\models\User::isOwner()
+     * @var string the login type
      */
-    public bool $disableRbacForOwner = true;
+    public string $loginType = 'unknown';
 
-    public $identityClass = Identity::class;
+    public $enableAutoLogin = true;
+    public $identityClass = \davidhirtz\yii2\skeleton\models\User::class;
     public $loginUrl = null;
 
     private ?int $_userCount = null;
@@ -67,6 +76,8 @@ class User extends \yii\web\User
             $this->enableUnconfirmedEmailLogin = false;
             $this->enableAutoLogin = false;
         }
+
+        $this->ipAddress ??= Yii::$app->getRequest()->getUserIP();
 
         parent::init();
     }
@@ -82,7 +93,7 @@ class User extends \yii\web\User
     }
 
     /**
-     * @param Identity $identity
+     * @param \davidhirtz\yii2\skeleton\models\User $identity
      */
     protected function afterLogin($identity, $cookieBased, $duration): void
     {
@@ -103,7 +114,7 @@ class User extends \yii\web\User
         $identity->last_login = new DateTime();
 
         if ($cookieBased) {
-            $identity->loginType = UserLogin::TYPE_COOKIE;
+            $this->loginType = UserLogin::TYPE_COOKIE;
         }
 
         $this->insertLogin($identity);
@@ -114,7 +125,7 @@ class User extends \yii\web\User
 
     /**
      * Removes user id from session.
-     * @param Identity $identity
+     * @param \davidhirtz\yii2\skeleton\models\User $identity
      */
     protected function afterLogout($identity): void
     {
@@ -129,22 +140,22 @@ class User extends \yii\web\User
         parent::afterLogout($identity);
     }
 
-    private function insertLogin(Identity $identity): void
+    private function insertLogin(\davidhirtz\yii2\skeleton\models\User $user): void
     {
         if ($browser = Yii::$app->getRequest()->getUserAgent()) {
-            $browser = mb_substr((string) $browser, 0, 255, Yii::$app->charset);
+            $browser = mb_substr($browser, 0, 255, Yii::$app->charset);
         }
 
-        if ($ipAddress = ($identity->ipAddress ?: Yii::$app->getRequest()->getUserIP())) {
+        if ($ipAddress = ($this->ipAddress ?: Yii::$app->getRequest()->getUserIP())) {
             $ipAddress = inet_pton($ipAddress);
         }
 
         $columns = [
-            'user_id' => $identity->id,
-            'type' => $identity->loginType,
+            'user_id' => $user->id,
+            'type' => $this->loginType,
             'browser' => $browser,
             'ip_address' => $ipAddress,
-            'created_at' => $identity->last_login,
+            'created_at' => $user->last_login,
         ];
 
         Yii::$app->getDb()->createCommand()->insert(UserLogin::tableName(), $columns)->execute();

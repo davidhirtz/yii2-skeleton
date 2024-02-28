@@ -1,3 +1,9 @@
+## 2.2.0 (Feb 28, 2024)
+
+- Changed `AuthClientSignupForm`  to extend from `Model` instead of `User`
+- Removed `Identity` class and replaced it with `User` class (Issue #20)
+- Removed `User::findByEmail()` and `User::findByName()` for corresponding `UserQuery` methods
+
 ## 2.1.23 (Feb 1, 2024)
 
 - Added `Controller::errorOrSuccess()`

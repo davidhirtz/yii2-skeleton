@@ -19,7 +19,9 @@ use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
 use davidhirtz\yii2\skeleton\validators\UniqueValidator;
 use davidhirtz\yii2\skeleton\web\StreamUploadedFile;
 use Yii;
+use yii\base\NotSupportedException;
 use yii\db\ActiveQuery;
+use yii\web\IdentityInterface;
 use yii\web\UploadedFile;
 
 /**
@@ -55,15 +57,15 @@ use yii\web\UploadedFile;
  *
  * @mixin TrailBehavior
  */
-class User extends ActiveRecord implements StatusAttributeInterface
+class User extends ActiveRecord implements  IdentityInterface, StatusAttributeInterface
 {
     use StatusAttributeTrait;
 
-    public const AUTH_USER_CREATE = 'userCreate';
-    public const AUTH_USER_DELETE = 'userDelete';
-    public const AUTH_USER_UPDATE = 'userUpdate';
-    public const AUTH_USER_ASSIGN = 'authUpdate';
-    public const AUTH_ROLE_ADMIN = 'admin';
+    final public const AUTH_USER_CREATE = 'userCreate';
+    final public const AUTH_USER_DELETE = 'userDelete';
+    final public const AUTH_USER_UPDATE = 'userUpdate';
+    final public const AUTH_USER_ASSIGN = 'authUpdate';
+    final public const AUTH_ROLE_ADMIN = 'admin';
 
     /**
      * @var bool whether uploads should be automatically rotated based on their EXIF data
@@ -210,6 +212,11 @@ class User extends ActiveRecord implements StatusAttributeInterface
         ];
     }
 
+    public function validateAuthKey($authKey): bool
+    {
+        return $this->getAuthKey() === $authKey;
+    }
+
     public function validatePassword(string $password): bool
     {
         return $this->password_hash && Yii::$app->getSecurity()->validatePassword($password . $this->password_salt, $this->password_hash);
@@ -277,6 +284,9 @@ class User extends ActiveRecord implements StatusAttributeInterface
         parent::afterDelete();
     }
 
+    /**
+     * @return UserQuery<static>
+     */
     public function getAdmin(): UserQuery
     {
         /** @var UserQuery $query */
@@ -297,14 +307,23 @@ class User extends ActiveRecord implements StatusAttributeInterface
         return Yii::createObject(UserQuery::class, [static::class]);
     }
 
-    public static function findByEmail(string $email): UserQuery
+    public static function findIdentity($id): ?static
     {
-        return static::find()->whereLower([static::tableName() . '.[[email]]' => $email]);
+        $identity = static::find()
+            ->where(['id' => $id])
+            ->enabled()
+            ->one();
+
+        if ($identity?->timezone) {
+            Yii::$app->setTimeZone($identity->timezone);
+        }
+
+        return $identity;
     }
 
-    public static function findByName(string $name): UserQuery
+    public static function findIdentityByAccessToken($token, $type = null): ?static
     {
-        return static::find()->whereLower([static::tableName() . '.[[name]]' => $name]);
+        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
 
     public function load($data, $formName = null): bool
@@ -401,9 +420,19 @@ class User extends ActiveRecord implements StatusAttributeInterface
         return $this->id ? ['/admin/user/update', 'id' => $this->id] : false;
     }
 
+    public function getAuthKey(): ?string
+    {
+        return $this->auth_key;
+    }
+
     public function getFullName(): string
     {
         return trim($this->first_name . ' ' . $this->last_name);
+    }
+
+    public function getId(): mixed
+    {
+        return $this->getPrimaryKey();
     }
 
     public function getInitials(): string

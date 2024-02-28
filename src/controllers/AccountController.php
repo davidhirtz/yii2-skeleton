@@ -97,23 +97,25 @@ class AccountController extends Controller
             return $this->goHome();
         }
 
-        $user = SignupForm::create();
+        $form = SignupForm::create();
         $request = Yii::$app->getRequest();
 
-        if ($user->load($request->post())) {
-            if ($user->save()) {
+        if ($form->load($request->post())) {
+            if ($form->insert()) {
                 $this->success(Yii::t('skeleton', 'Sign up completed. Please check your inbox to confirm your email address.'));
                 return $this->goBack();
             }
-
-            $user->password_hash = null;
         } else {
-            $user->email = $request->get('email', Yii::$app->session->get('email'));
-            $user->honeypot = Yii::$app->getSecurity()->generateRandomString(10);
+            $form->email = $request->get('email', Yii::$app->getSession()->get('email'));
+            $form->honeypot = Yii::$app->getSecurity()->generateRandomString(10);
+        }
+
+        if ($form->hasErrors()) {
+            $form->user->password_hash = null;
         }
 
         return $this->render('create', [
-            'user' => $user,
+            'form' => $form,
         ]);
     }
 
@@ -382,7 +384,11 @@ class AccountController extends Controller
         $auth = AuthClient::findOrCreateFromClient($client);
 
         if (Yii::$app->getUser()->getIsGuest()) {
-            if (($auth->getIsNewRecord() ? $this->signupWithAuthClient($auth) : $this->loginWithAuthClient($auth)) === false) {
+            $success = $auth->getIsNewRecord()
+                ? $this->signupWithAuthClient($auth)
+                : $this->loginWithAuthClient($auth);
+
+            if (!$success) {
                 return $this->redirect(['login']);
             }
 
@@ -410,7 +416,7 @@ class AccountController extends Controller
 
         $user = $auth->identity;
 
-        if (!$user || $user->isDisabled()) {
+        if (!$user?->isEnabled()) {
             $this->error(Yii::t('skeleton', 'Your account is currently disabled. Please contact an administrator!'));
             return false;
         }
@@ -419,10 +425,11 @@ class AccountController extends Controller
             'name' => $user->getUsername(),
         ]));
 
-        $user->loginType = $auth->getClientClass()->getName();
-        Yii::$app->getUser()->login($user, $user->cookieLifetime);
+        $webuser = Yii::$app->getUser();
+        $webuser->loginType = $auth->getClientClass()->getName();
+        $webuser->login($user, $webuser->cookieLifetime);
 
-        return $auth->update();
+        return $auth->update() !== false;
     }
 
     private function signupWithAuthClient(AuthClient $auth): bool
@@ -431,11 +438,11 @@ class AccountController extends Controller
             throw new InvalidCallException();
         }
 
-        $user = AuthClientSignupForm::create();
-        $user->setClient($auth->getClientClass());
+        $form = AuthClientSignupForm::create();
+        $form->setClient($auth->getClientClass());
 
-        if (!$user->save()) {
-            $this->error($user);
+        if (!$form->insert()) {
+            $this->error($form);
             return false;
         }
 
@@ -443,7 +450,7 @@ class AccountController extends Controller
             'client' => $auth->getClientClass()->getTitle(),
         ]));
 
-        $auth->user_id = $user->id;
+        $auth->user_id = $form->getUser()->id;
 
         return $auth->insert();
     }

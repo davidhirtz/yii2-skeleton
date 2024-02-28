@@ -2,15 +2,15 @@
 
 namespace davidhirtz\yii2\skeleton\models\forms;
 
-use davidhirtz\yii2\skeleton\db\Identity;
 use davidhirtz\yii2\skeleton\models\traits\IdentityTrait;
+use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\skeleton\validators\GoogleAuthenticatorValidator;
 use Yii;
 use yii\base\Model;
 
 /**
- * @property Identity $user
+ * @property User $user
  */
 class LoginForm extends Model
 {
@@ -20,7 +20,6 @@ class LoginForm extends Model
     public ?string $password = null;
     public ?string $code = null;
     public bool|string $rememberMe = true;
-    public ?string $ipAddress = null;
 
     private bool $_isGoogleAuthenticatorCodeRequired = false;
 
@@ -115,12 +114,13 @@ class LoginForm extends Model
     public function login(): bool
     {
         if ($this->validate()) {
+            $webuser = Yii::$app->getUser();
+            $webuser->loginType = UserLogin::TYPE_LOGIN;
+
             $user = $this->getUser();
             $user->generatePasswordHash($this->password);
-            $user->loginType = UserLogin::TYPE_LOGIN;
-            $user->ipAddress = $this->ipAddress;
 
-            return Yii::$app->getUser()->login($user, $this->rememberMe ? $user->cookieLifetime : 0);
+            return Yii::$app->getUser()->login($user, $this->rememberMe ? $webuser->cookieLifetime : 0);
         }
 
         // Don't show empty error if the user has not been able to enter it...

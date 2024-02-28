@@ -45,7 +45,7 @@
       display: block;
     }
 
-    .form-check, .col-form-label, .form-check-label, & + .custom-control-label {
+    .form-check, .col-form-label, .form-check-label, & + .custom-control-label, & .custom-control-label {
       color: $color;
     }
   }

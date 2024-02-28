@@ -11,6 +11,9 @@ use davidhirtz\yii2\skeleton\models\User;
  */
 trait UpdatedByUserTrait
 {
+    /**
+     * @return UserQuery<User>
+     */
     public function getUpdated(): UserQuery
     {
         /** @var UserQuery $query */

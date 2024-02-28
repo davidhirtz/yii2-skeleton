@@ -2,13 +2,14 @@
 /**
  * User sign up mail.
  *
- * @var yii\web\View $this
+ * @var View $this
  * @var MessageInterface $message
- * @var SignupForm $user
+ * @var User $user
  */
 
-use davidhirtz\yii2\skeleton\models\forms\SignupForm;
+use davidhirtz\yii2\skeleton\models\User;
 use yii\mail\MessageInterface;
+use yii\web\View;
 
 $this->title = Yii::t('skeleton', 'Sign up confirmation');
 ?>

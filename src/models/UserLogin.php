@@ -52,6 +52,9 @@ class UserLogin extends ActiveRecord
         ];
     }
 
+    /**
+     * @return UserQuery<User>
+     */
     public function getUser(): UserQuery
     {
         /** @var UserQuery $query */

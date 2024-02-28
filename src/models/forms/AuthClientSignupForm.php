@@ -3,14 +3,19 @@
 namespace davidhirtz\yii2\skeleton\models\forms;
 
 use davidhirtz\yii2\skeleton\auth\clients\ClientInterface;
-use davidhirtz\yii2\skeleton\db\Identity;
+use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
+use davidhirtz\yii2\skeleton\models\traits\IdentityTrait;
 use davidhirtz\yii2\skeleton\models\traits\SignupEmailTrait;
+use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\web\StreamUploadedFile;
 use Yii;
+use yii\base\Model;
 use yii\behaviors\SluggableBehavior;
 
-class AuthClientSignupForm extends Identity
+class AuthClientSignupForm extends Model
 {
+    use IdentityTrait;
+    use ModelTrait;
     use SignupEmailTrait;
 
     public ?ClientInterface $_client = null;
@@ -30,15 +35,14 @@ class AuthClientSignupForm extends Identity
 
     public function rules(): array
     {
-        return [...parent::rules(), [
-            ['externalPictureUrl'],
-            $this->validateExternalPictureUrl(...),
-        ]];
+        return [
+            [
+                ['externalPictureUrl'],
+                $this->validateExternalPictureUrl(...),
+            ],
+        ];
     }
 
-    /**
-     * Override to implement validation if needed.
-     */
     public function validateExternalPictureUrl(): void
     {
     }
@@ -50,64 +54,90 @@ class AuthClientSignupForm extends Identity
             return false;
         }
 
-        $this->name ??= mb_strtolower($this->first_name . $this->last_name, Yii::$app->charset)
-            ?: explode('@', $this->email)[0];
+        $user = $this->getUser();
 
-        if (!in_array($this->language, Yii::$app->getI18n()->languages)) {
-            $this->language = Yii::$app->language;
+        $user->name ??= mb_strtolower($user->first_name . $user->last_name, Yii::$app->charset)
+            ?: explode('@', $user->email)[0];
+
+        if (!in_array($user->language, Yii::$app->getI18n()->languages)) {
+            $user->language = Yii::$app->language;
         }
 
         return parent::beforeValidate();
     }
 
-    /**
-     * Overrides default email error to give user more context why the signup cannot be completed with this email.
-     */
     public function afterValidate(): void
     {
+        if (!$this->hasErrors()) {
+            $user = $this->getUser();
+
+            if (!$user->validate()) {
+                $this->addErrors($user->getErrors());
+            }
+        }
+
         if ($this->hasErrors('email')) {
             $this->clearErrors('email');
-
-            $this->addError('email', Yii::t('skeleton', 'A user with email {email} already exists but is not linked to this {client} account. Login using email first to link it.', [
-                'client' => $this->getClient()->getTitle(),
-                'email' => $this->email,
-            ]));
+            $this->addContextToEmailError();
         }
 
         parent::afterValidate();
     }
 
-    public function beforeSave($insert): bool
+    protected function addContextToEmailError(): void
     {
-        if ($insert) {
-            if ($this->externalPictureUrl) {
-                $this->upload = new StreamUploadedFile([
-                    'allowedExtensions' => $this->uploadExtensions,
-                    'url' => $this->externalPictureUrl,
-                ]);
-            }
-        }
-
-        return parent::beforeSave($insert);
+        $this->addError('email', Yii::t('skeleton', 'A user with email {email} already exists but is not linked to this {client} account. Login using email first to link it.', [
+            'client' => $this->getClient()->getTitle(),
+            'email' => $this->email,
+        ]));
     }
 
-    public function afterSave($insert, $changedAttributes): void
+    public function insert(): bool
     {
-        parent::afterSave($insert, $changedAttributes);
-
-        if ($insert) {
-            if (!$this->isUnconfirmed() || Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
-                Yii::$app->getUser()->login($this);
-            }
-
-            $this->sendSignupEmail();
+        if (!$this->validate() || !$this->beforeInsert()) {
+            return false;
         }
+
+        if ($this->getUser()->insert(false)) {
+            $this->afterInsert();
+            return true;
+        }
+
+        return false;
+    }
+
+    public function beforeInsert(): bool
+    {
+        $user = $this->getUser();
+
+        if ($this->externalPictureUrl) {
+            $user->upload = new StreamUploadedFile([
+                'allowedExtensions' => $user->uploadExtensions,
+                'url' => $this->externalPictureUrl,
+            ]);
+        }
+
+        return true;
+    }
+
+    public function afterInsert(): void
+    {
+        $user = $this->getUser();
+
+        if (!$user->isUnconfirmed() || Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
+            Yii::$app->getUser()->login($user);
+        }
+
+        $this->sendSignupEmail();
     }
 
     public function setClient(ClientInterface $client): void
     {
-        $this->setAttributes($client->getSafeUserAttributes());
-        $this->loginType = $client->getName();
+        $user = User::create();
+        $user->setAttributes($client->getSafeUserAttributes());
+        $this->setUser($user);
+
+        Yii::$app->getUser()->loginType = $client->getName();
 
         $this->_client = $client;
     }

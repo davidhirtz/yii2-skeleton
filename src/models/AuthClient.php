@@ -9,7 +9,6 @@ use davidhirtz\yii2\skeleton\behaviors\SerializedAttributesBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TimestampBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\db\Identity;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use Yii;
 
@@ -21,7 +20,7 @@ use Yii;
  * @property DateTime|null $updated_at
  * @property DateTime $created_at
  *
- * @property-read Identity|null $identity {@see static::getIdentity()}
+ * @property-read User|null $identity {@see static::getIdentity()}
  *
  * @mixin TrailBehavior
  */
@@ -71,7 +70,8 @@ class AuthClient extends ActiveRecord
     public function validateData(): void
     {
         if (isset($this->data['email'])) {
-            $emailIsAlreadyRegistered = User::findByEmail($this->data['email'])
+            $emailIsAlreadyRegistered = User::find()
+                ->andWhereEmail($this->data['email'])
                 ->andWhere(['!=', 'id', $this->user_id])
                 ->exists();
 
@@ -83,10 +83,13 @@ class AuthClient extends ActiveRecord
         }
     }
 
+    /**
+     * @return UserQuery<User>
+     */
     public function getIdentity(): UserQuery
     {
         /** @var UserQuery $query */
-        $query = $this->hasOne(Identity::class, ['id' => 'user_id']);
+        $query = $this->hasOne(Yii::$app->getUser()->identityClass, ['id' => 'user_id']);
         return $query;
     }
 

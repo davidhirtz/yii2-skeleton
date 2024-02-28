@@ -3,7 +3,7 @@
  * @see davidhirtz\yii2\skeleton\controllers\UserController::actionCreate()
  *
  * @var davidhirtz\yii2\skeleton\web\View $this
- * @var davidhirtz\yii2\skeleton\models\forms\SignupForm $user
+ * @var davidhirtz\yii2\skeleton\models\forms\SignupForm $form
  * @var yii\bootstrap4\ActiveForm $af
  */
 
@@ -16,7 +16,7 @@ use yii\helpers\Url;
 $this->setTitle(Yii::t('skeleton', 'Sign up'));
 ?>
 
-<?= Html::errorSummary($user, [
+<?= Html::errorSummary($form, [
     'header' => Yii::t('skeleton', 'Your account could not be created'),
 ]); ?>
 
@@ -31,12 +31,12 @@ $this->setTitle(Yii::t('skeleton', 'Sign up'));
         <?= Panel::widget([
             'title' => $this->title,
             'content' => SignupActiveForm::widget([
-                'model' => $user,
+                'model' => $form,
             ]),
         ]); ?>
         <div class="list-group">
             <?php
-            if ($user->isFacebookSignupEnabled()) {
+            if ($form->isFacebookSignupEnabled()) {
                 ?>
                 <a href="<?= Url::to(['auth', 'authclient' => 'facebook']); ?>" class="list-group-item list-group-item-action">
                     <?= Icon::brand('facebook-f', ['class' => 'fa-fw']); ?>

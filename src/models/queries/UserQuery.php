@@ -11,6 +11,16 @@ use davidhirtz\yii2\skeleton\models\User;
  */
 class UserQuery extends ActiveQuery
 {
+    public function andWhereEmail(string $email): static
+    {
+        return $this->whereLower([User::tableName() . '.[[email]]' => $email]);
+    }
+
+    public function andWhereName(string $name): static
+    {
+        return $this->whereLower([User::tableName() . '.[[name]]' => $name]);
+    }
+
     public function nameAttributesOnly(): static
     {
         return $this->select($this->prefixColumns([

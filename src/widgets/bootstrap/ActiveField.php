@@ -57,7 +57,9 @@ class ActiveField extends \yii\bootstrap4\ActiveField
     public function dropDownList($items, $options = []): static
     {
         if ($items || $this->model->isAttributeRequired($this->attribute)) {
-            return parent::dropDownList($items, $options);
+            // The parent method has an incorrect method name, this can be changed to "dropDownList" once the parent
+            // method is fixed.
+            return parent::dropdownList($items, $options);
         }
 
         // Don't render an empty dropdown list.

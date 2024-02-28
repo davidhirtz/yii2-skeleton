@@ -2,14 +2,27 @@
 
 namespace davidhirtz\yii2\skeleton\models\forms;
 
-use davidhirtz\yii2\skeleton\db\Identity;
+use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
 use davidhirtz\yii2\skeleton\models\traits\SignupEmailTrait;
+use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use Yii;
+use yii\base\Model;
 
-class SignupForm extends Identity
+class SignupForm extends Model
 {
+    use ModelTrait;
     use SignupEmailTrait;
+
+    final public const SESSION_TOKEN_NAME = 'signup_token';
+    final public const SESSION_TIMESTAMP_NAME = 'signup_timestamp';
+    public const SESSION_MIN_TIME = 2;
+    public const SESSION_MAX_TIME = 1800;
+
+    public ?string $email = null;
+    public ?string $name = null;
+    public ?string $password = null;
+    public ?string $timezone = null;
 
     /**
      * @var bool whether Facebook should be enabled
@@ -17,15 +30,15 @@ class SignupForm extends Identity
     public bool $enableFacebookSignup = true;
 
     /**
-     * @var string|null the password
-     */
-    public ?string $password = null;
-
-    /**
      * @var string|null honeypot text field to mess with bots, the text field will have a random value which will be
      * removed by javascript before the form is submitted.
      */
     public ?string $honeypot = null;
+
+    /**
+     * @var int the time in seconds in which a new signup is not allowed from the same IP address.
+     */
+    public int $spamProtectionInSeconds = 60;
 
     /**
      * @var bool|string whether user has accepted the terms of service.
@@ -37,20 +50,31 @@ class SignupForm extends Identity
      */
     public ?string $token = null;
 
-    /**
-     * @var int the time in seconds in which a new signup is not allowed from the same IP address.
-     */
-    public int $spamProtectionInSeconds = 60;
+    public ?User $user = null;
 
-    public const SESSION_TOKEN_NAME = 'signup_token';
-    public const SESSION_TIMESTAMP_NAME = 'signup_timestamp';
-    public const SESSION_MIN_TIME = 2;
-    public const SESSION_MAX_TIME = 1800;
+    public function init(): void
+    {
+        $this->user ??= User::create();
+        $this->user->setScenario($this->user::SCENARIO_INSERT);
+
+        parent::init();
+    }
 
     public function rules(): array
     {
         return [
-            ...parent::rules(),
+            [
+                ['email', 'name', 'password'],
+                'trim',
+            ],
+            [
+                ['email', 'name', 'password'],
+                'required',
+            ],
+            [
+                ['email'],
+                'email',
+            ],
             [
                 ['password'],
                 'required',
@@ -58,7 +82,7 @@ class SignupForm extends Identity
             [
                 ['password'],
                 'string',
-                'min' => $this->passwordMinLength,
+                'min' => $this->user->passwordMinLength,
             ],
             [
                 ['terms'],
@@ -77,7 +101,70 @@ class SignupForm extends Identity
                 'compareValue' => '',
                 'message' => Yii::t('skeleton', 'Sign up could not be completed, please try again.'),
             ],
+            [
+                ['timezone'],
+                'string',
+            ],
         ];
+    }
+
+    protected function setUserAttributes(): void
+    {
+        $this->user->status ??= User::STATUS_ENABLED;
+        $this->user->email = $this->email;
+        $this->user->name = $this->name;
+        $this->user->timezone = $this->timezone;
+    }
+
+    public function beforeValidate(): bool
+    {
+        if (!Yii::$app->getUser()->isSignupEnabled()) {
+            $this->addError('id', Yii::t('skeleton', 'Sorry, signing up is currently disabled!'));
+            return false;
+        }
+
+        // There were some cases in which the value set by the ajax call contained a leading space...
+        $this->token = $this->token ? trim($this->token) : null;
+
+        return parent::beforeValidate();
+    }
+
+    public function afterValidate(): void
+    {
+        if (!$this->hasErrors()) {
+            $this->setUserAttributes();
+
+            if (!$this->user->validate()) {
+                $this->addErrors($this->user->getErrors());
+            }
+
+            $this->validateIp();
+        }
+
+        parent::afterValidate();
+    }
+
+    public function validateIp(): void
+    {
+        if (!Yii::$app->has('user') || !$this->spamProtectionInSeconds) {
+            return;
+        }
+
+        $webuser = Yii::$app->getUser();
+
+        if ($webuser->ipAddress) {
+            $signup = UserLogin::find()
+                ->where(['type' => UserLogin::TYPE_SIGNUP, 'ip_address' => inet_pton($webuser->ipAddress)])
+                ->orderBy(['created_at' => SORT_DESC])
+                ->limit(1)
+                ->one();
+
+            $duration = time() - $this->spamProtectionInSeconds;
+
+            if ($signup?->created_at->getTimestamp() > $duration) {
+                $this->addError('id', Yii::t('skeleton', 'You have just created a new user account. Please wait a few minutes!'));
+            }
+        }
     }
 
     public function validateToken(): void
@@ -91,6 +178,7 @@ class SignupForm extends Identity
 
             if (!$this->hasErrors('token')) {
                 $timestamp = time() - Yii::$app->getSession()->get(static::SESSION_TIMESTAMP_NAME, 0);
+
                 if ($timestamp < static::SESSION_MIN_TIME && $timestamp > static::SESSION_MAX_TIME) {
                     $this->addError('token', Yii::t('skeleton', 'Sign up could not be completed, please try again.'));
                 }
@@ -98,75 +186,45 @@ class SignupForm extends Identity
         }
     }
 
-    public function beforeValidate(): bool
+    public function insert(): bool
     {
-        if (!Yii::$app->getUser()->isSignupEnabled()) {
-            $this->addError('id', Yii::t('skeleton', 'Sorry, signing up is currently disabled!'));
+        if (!$this->validate() || !$this->beforeInsert()) {
             return false;
         }
 
-        $this->status ??= static::STATUS_ENABLED;
-        $this->ipAddress ??= Yii::$app->getRequest()->getUserIP();
-
-        // There were some cases in which the value set by the ajax call contained a leading space…
-        $this->token = $this->token ? trim($this->token) : null;
-
-        return parent::beforeValidate();
-    }
-
-    public function validateIp(): void
-    {
-        if ($this->ipAddress && $this->spamProtectionInSeconds > 0) {
-            $signup = UserLogin::find()
-                ->where(['type' => UserLogin::TYPE_SIGNUP, 'ip_address' => inet_pton($this->ipAddress)])
-                ->orderBy(['created_at' => SORT_DESC])
-                ->limit(1)
-                ->one();
-
-            if ($signup && $signup->created_at->getTimestamp() > time() - $this->spamProtectionInSeconds) {
-                $this->addError('id', Yii::t('skeleton', 'You have just created a new user account. Please wait a few minutes!'));
-            }
-        }
-    }
-
-    public function afterValidate(): void
-    {
-        if (!$this->hasErrors()) {
-            $this->validateIp();
+        if ($this->user->insert(false)) {
+            $this->afterInsert();
+            return true;
         }
 
-        parent::afterValidate();
+        return false;
     }
 
-    public function beforeSave($insert): bool
+    public function beforeInsert(): bool
     {
-        if ($insert) {
-            $this->generatePasswordHash($this->password);
-            $this->generateVerificationToken();
-        }
+        $this->user->generatePasswordHash($this->password);
+        $this->user->generateVerificationToken();
 
-        return parent::beforeSave($insert);
+        return true;
     }
 
-    public function afterSave($insert, $changedAttributes): void
+    public function afterInsert(): void
     {
-        if ($insert) {
-            if (static::getSessionToken() !== null) {
-                Yii::$app->getSession()->set(static::SESSION_TOKEN_NAME, '');
-            }
-
-            $this->createUserLogin();
-            $this->sendSignupEmail();
+        if (static::getSessionToken() !== null) {
+            Yii::$app->getSession()->set(static::SESSION_TOKEN_NAME, '');
         }
 
-        parent::afterSave($insert, $changedAttributes);
+        $this->createUserLogin();
+        $this->sendSignupEmail();
     }
 
     private function createUserLogin(): void
     {
-        if (Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
-            $this->loginType = UserLogin::TYPE_SIGNUP;
-            Yii::$app->getUser()->login($this);
+        $webuser = Yii::$app->getUser();
+
+        if ($webuser->isUnconfirmedEmailLoginEnabled()) {
+            $webuser->loginType = UserLogin::TYPE_SIGNUP;
+            $webuser->login($this->user);
         }
     }
 

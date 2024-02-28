@@ -2,7 +2,6 @@
 
 namespace davidhirtz\yii2\skeleton\models\forms;
 
-use davidhirtz\yii2\skeleton\db\Identity;
 use davidhirtz\yii2\skeleton\models\traits\IdentityTrait;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\models\UserLogin;
@@ -10,33 +9,17 @@ use Yii;
 use yii\base\Model;
 
 /**
- * Class PasswordResetForm.
- * @package davidhirtz\yii2\skeleton\models\forms
- *
- * @property Identity $user
- * @see PasswordResetForm::getUser()
+ * @property User $user {@see PasswordResetForm::getUser()}
  */
 class PasswordResetForm extends Model
 {
     use IdentityTrait;
 
-    /**
-     * @var string
-     */
-    public $code;
+    public ?string $code = null;
+    public ?string $newPassword = null;
+    public ?string $repeatPassword = null;
 
-    /**
-     * @var string
-     */
-    public $newPassword;
-
-    /**
-     * @var string
-     */
-    public $repeatPassword;
-
-    
-    public function rules()
+    public function rules(): array
     {
         return [
             [
@@ -66,9 +49,6 @@ class PasswordResetForm extends Model
         ];
     }
 
-    /**
-     * Validates user credentials and password reset code.
-     */
     public function afterValidate(): void
     {
         $this->validatePasswordResetCode();
@@ -92,10 +72,13 @@ class PasswordResetForm extends Model
     /**
      * Hashes new password and logs in user if possible.
      * This method also deletes all cookie auth keys for this user, so auto login cookies are not working anymore.
+     *
+     * The login takes care of updating the user record.
      */
-    public function reset()
+    public function reset(): bool|int
     {
         if ($this->validate()) {
+            $webuser = Yii::$app->getUser();
             $user = $this->getUser();
 
             $user->generateAuthKey();
@@ -103,13 +86,11 @@ class PasswordResetForm extends Model
             $user->password_reset_token = null;
 
             if (Yii::$app->getUser()->getIsGuest()) {
-                if (!$user->isUnconfirmed() || Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
-                    $user->loginType = UserLogin::TYPE_RESET_PASSWORD;
-
+                if (!$user->isUnconfirmed() ||$webuser->isUnconfirmedEmailLoginEnabled()) {
+                    $webuser->loginType = UserLogin::TYPE_RESET_PASSWORD;
                     $user->afterPasswordChange();
 
-                    // Login also takes care of updating the user record.
-                    return Yii::$app->getUser()->login($user);
+                    return $webuser->login($user);
                 }
             }
 
@@ -120,7 +101,7 @@ class PasswordResetForm extends Model
     }
 
     
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         $user = $this->getUser();
 

@@ -18,6 +18,8 @@ class LogoutCest extends BaseCest
     public function checkLogoutFromDashboard(FunctionalTester $I): void
     {
         $user = $I->grabFixture('user', 'admin');
+        $this->assignAdminRole($user->id);
+
         $I->amLoggedInAs($user);
 
         /** @var Module $module */

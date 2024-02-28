@@ -2,21 +2,22 @@
 
 namespace davidhirtz\yii2\skeleton\models\traits;
 
-use davidhirtz\yii2\skeleton\db\Identity;
+use davidhirtz\yii2\skeleton\models\User;
 use Yii;
 
 /**
- * @property Identity $user
+ * @property User $user {@see static::getUser()}
  */
 trait IdentityTrait
 {
     public ?string $email = null;
-    private ?Identity $_user = null;
+    private ?User $_user = null;
 
-    public function getUser(): ?Identity
+    public function getUser(): ?User
     {
         if ($this->email) {
-            $this->_user ??= Identity::findByEmail($this->email)
+            $this->_user ??= User::find()
+                ->andWhereEmail($this->email)
                 ->limit(1)
                 ->one();
         }
@@ -24,7 +25,7 @@ trait IdentityTrait
         return $this->_user;
     }
 
-    public function setUser(Identity $user): void
+    public function setUser(User $user): void
     {
         $this->_user = $user;
         $this->email = $user->email;

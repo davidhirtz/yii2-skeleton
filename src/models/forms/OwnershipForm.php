@@ -66,8 +66,9 @@ class OwnershipForm extends Model
     public function getUser(): ?User
     {
         if ($this->_user === null) {
-            $this->_user = User::findByName($this->name)
+            $this->_user = User::find()
                 ->select(['id', 'status', 'name', 'is_owner', 'updated_at'])
+                ->andWhereName($this->name)
                 ->limit(1)
                 ->one();
         }

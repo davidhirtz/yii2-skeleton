@@ -109,6 +109,9 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         parent::afterSave($insert, $changedAttributes);
     }
 
+    /**
+     * @return UserQuery<User>
+     */
     public function getUser(): UserQuery
     {
         /** @var UserQuery $query */
