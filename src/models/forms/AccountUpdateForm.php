@@ -29,14 +29,13 @@ class AccountUpdateForm extends Model
     public function rules(): array
     {
         return [
-            ...parent::rules(),
+            [
+                ['name', 'email', 'newPassword', 'repeatPassword', 'oldPassword'],
+                'trim',
+            ],
             [
                 ['email'],
                 $this->validateEmail(...),
-            ],
-            [
-                ['newPassword', 'repeatPassword', 'oldPassword'],
-                'trim',
             ],
             [
                 ['newPassword', 'repeatPassword'],

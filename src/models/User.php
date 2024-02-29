@@ -190,6 +190,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
     {
         $this->status ??= static::STATUS_ENABLED;
         $this->timezone = $this->timezone ?: Yii::$app->getTimeZone();
+        $this->language = $this->language ?: Yii::$app->language;
 
         return parent::beforeValidate();
     }

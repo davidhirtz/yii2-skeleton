@@ -3,14 +3,16 @@
 namespace davidhirtz\yii2\skeleton\models\forms;
 
 use davidhirtz\yii2\datetime\DateTime;
+use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
 use davidhirtz\yii2\skeleton\models\User;
 use Yii;
 use yii\base\Model;
 
 class OwnershipForm extends Model
 {
-    public ?string $name = null;
+    use ModelTrait;
 
+    public ?string $name = null;
     private ?User $_user = null;
 
     public function rules(): array
@@ -49,7 +51,7 @@ class OwnershipForm extends Model
     /**
      * Transfers the website ownership to user.
      */
-    public function transfer(): bool|int
+    public function update(): bool|int
     {
         if ($this->validate()) {
             User::updateAll(['is_owner' => false, 'updated_at' => new DateTime()], ['is_owner' => true]);
@@ -65,13 +67,10 @@ class OwnershipForm extends Model
 
     public function getUser(): ?User
     {
-        if ($this->_user === null) {
-            $this->_user = User::find()
-                ->select(['id', 'status', 'name', 'is_owner', 'updated_at'])
-                ->andWhereName($this->name)
-                ->limit(1)
-                ->one();
-        }
+        $this->_user ??= User::find()
+            ->andWhereName($this->name)
+            ->limit(1)
+            ->one();
 
         return $this->_user;
     }

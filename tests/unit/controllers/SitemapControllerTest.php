@@ -9,7 +9,77 @@ use Yii;
 
 class SitemapControllerTest extends Unit
 {
-    protected function _before(): void
+    public function testIndexWithNoUrls(): void
+    {
+        $result = $this->runIndexAction();
+
+        self::assertStringContainsString('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"/>', $result);
+
+        $xml = new SimpleXMLElement($result);
+
+        self::assertCount(0, $xml->children());
+    }
+
+    public function testIndexWithUrls(): void
+    {
+        $this->setSitemapUrls();
+
+        $result = $this->runIndexAction();
+        $xml = new SimpleXMLElement($result);
+
+        self::assertUrlset($xml);
+        self::assertCount(3, $xml->children());
+    }
+
+    public function testIndexWithSitemapIndex(): void
+    {
+        $this->setSitemapUrls();
+        $this->setUseSitemapIndex();
+
+        $result = $this->runIndexAction();
+
+        self::assertStringStartsWith('<?xml version="1.0" encoding="UTF-8"?>', $result);
+
+        $xml = new SimpleXMLElement($result);
+
+        self::assertEquals('sitemapindex', $xml->getName());
+        self::assertEquals('http://www.sitemaps.org/schemas/sitemap/0.9', $xml->getNamespaces()['']);
+        self::assertCount(2, $xml->children());
+
+        $child = $xml->children()->children();
+
+        self::assertEquals('http://localhost/sitemap.xml?key=urls&offset=0', $child->loc[0]);
+        self::assertEquals('2024-01-01 10:00:00', $child->lastmod[0]);
+    }
+
+    public function testIndexWithSitemapIndexAndKey(): void
+    {
+        $this->setSitemapUrls();
+        $this->setUseSitemapIndex();
+
+        $result = $this->runIndexAction('urls');
+
+        $xml = new SimpleXMLElement($result);
+
+        self::assertUrlset($xml);
+        self::assertCount(2, $xml->children());
+    }
+
+    public function testIndexWithSitemapIndexAndKeyCached(): void
+    {
+        $this->setSitemapUrls();
+        Yii::$app->sitemap->cache = 'cache';
+
+        $this->runIndexAction('urls');
+        $result = $this->runIndexAction('urls');
+
+        $xml = new SimpleXMLElement($result);
+
+        self::assertUrlset($xml);
+        self::assertCount(3, $xml->children());
+    }
+
+    private function setSitemapUrls(): void
     {
         Yii::$app->sitemap->urls = [
             [
@@ -34,58 +104,6 @@ class SitemapControllerTest extends Unit
                 'loc' => 'https://example.com/page-3',
             ],
         ];
-
-        parent::_before();
-    }
-
-    public function testUrlset(): void
-    {
-        $result = $this->runIndexAction();
-        $xml = new SimpleXMLElement($result);
-
-        self::assertUrlset($xml);
-        self::assertCount(3, $xml->children());
-    }
-
-    public function testUrlsetWithIndex(): void
-    {
-        $this->setUseSitemapIndex();
-        $result = $this->runIndexAction('urls');
-
-        $xml = new SimpleXMLElement($result);
-
-        self::assertUrlset($xml);
-        self::assertCount(2, $xml->children());
-    }
-
-    public function testUrlsetWithCache(): void
-    {
-        Yii::$app->sitemap->cache = 'cache';
-        $result = $this->runIndexAction('urls');
-
-        $xml = new SimpleXMLElement($result);
-
-        self::assertUrlset($xml);
-        self::assertCount(3, $xml->children());
-    }
-
-    public function testSitemapIndex(): void
-    {
-        $this->setUseSitemapIndex();
-        $result = $this->runIndexAction();
-
-        self::assertStringStartsWith('<?xml version="1.0" encoding="UTF-8"?>', $result);
-
-        $xml = new SimpleXMLElement($result);
-
-        self::assertEquals('sitemapindex', $xml->getName());
-        self::assertEquals('http://www.sitemaps.org/schemas/sitemap/0.9', $xml->getNamespaces()['']);
-        self::assertCount(2, $xml->children());
-
-        $child = $xml->children()->children();
-
-        self::assertEquals('http://localhost/sitemap.xml?key=urls&offset=0', $child->loc[0]);
-        self::assertEquals('2024-01-01 10:00:00', $child->lastmod[0]);
     }
 
     private function runIndexAction(?string $key = null): string
@@ -113,6 +131,5 @@ class SitemapControllerTest extends Unit
         $image = $xml->url[0]->children('http://www.google.com/schemas/sitemap-image/1.1')->image;
         self::assertEquals('https://example.com/test-1.jpg', $image->loc[0]);
         self::assertEquals('Test', $image->caption[0]);
-
     }
 }

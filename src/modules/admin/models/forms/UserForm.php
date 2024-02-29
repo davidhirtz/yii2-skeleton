@@ -14,7 +14,6 @@ class UserForm extends Model
     use UserFormTrait;
     use ModelTrait;
 
-    public User $user;
 
     public string|int|null $status = null;
     public ?string $newPassword = null;
@@ -24,18 +23,15 @@ class UserForm extends Model
      */
     public bool $sendEmail = false;
 
-    public function __construct(?User $user = null, array $config = [])
+    public function __construct(public User $user, array $config = [])
     {
-        if (!$user) {
-            $user = User::create();
-            $user->status = User::STATUS_ENABLED;
-        }
-
-        $this->user = $user;
-
         $this->setScenario($user->getIsNewRecord()
             ? ActiveRecord::SCENARIO_INSERT
             : ActiveRecord::SCENARIO_UPDATE);
+
+        if ($user->getIsNewRecord()) {
+            $user->status = User::STATUS_ENABLED;
+        }
 
         $this->setAttributesFromUser();
 
@@ -46,13 +42,17 @@ class UserForm extends Model
     {
         return [
             [
-                ['status'],
+                ['status', 'email'],
                 'required',
-                'when' => fn (): bool => $this->user->isOwner(),
+            ],
+            [
+                ['newPassword', 'repeatPassword'],
+                'trim',
             ],
             [
                 ['newPassword'],
-                'trim',
+                'required',
+                'on' => ActiveRecord::SCENARIO_INSERT,
             ],
             [
                 ['newPassword'],
@@ -138,14 +138,12 @@ class UserForm extends Model
     {
         $this->setAttributesFromUser();
 
-        if (!$this->getIsNewRecord()) {
-            if ($this->newPassword) {
-                $this->user->afterPasswordChange();
+        if (!$this->getIsNewRecord() && $this->newPassword) {
+            $this->user->afterPasswordChange();
+        }
 
-                if ($this->sendEmail) {
-                    $this->sendCredentialsEmail();
-                }
-            }
+        if ($this->sendEmail) {
+            $this->sendCredentialsEmail();
         }
     }
 

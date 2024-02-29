@@ -5,7 +5,6 @@ namespace davidhirtz\yii2\skeleton\tests\unit\models\forms;
 use Codeception\Test\Unit;
 use DateTime;
 use DateTimeZone;
-use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixture;
 use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
 use davidhirtz\yii2\skeleton\models\forms\AccountUpdateForm;
 use davidhirtz\yii2\skeleton\models\Trail;

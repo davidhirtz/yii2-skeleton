@@ -207,10 +207,10 @@ class UserController extends Controller
             throw new ForbiddenHttpException();
         }
 
-        $form = new OwnershipForm();
+        $form = OwnershipForm::create();
 
         if ($form->load(Yii::$app->request->post())) {
-            if ($form->transfer()) {
+            if ($form->update()) {
                 $this->success(Yii::t('skeleton', 'The website ownership was successful transferred!'));
                 return $this->goHome();
             }

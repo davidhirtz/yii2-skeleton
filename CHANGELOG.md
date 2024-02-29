@@ -1,6 +1,7 @@
 ## 2.2.0 (Feb 28, 2024)
 
-- Changed `AuthClientSignupForm` to extend from `Model` instead of `User`
+- Changed `AuthClientSignupForm` and `davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm` to extend
+  from `Model` instead of `User` (Issue #21)
 - Extracted user picture upload methods and options to `UserPictureForm`
 - Removed `Identity` class and replaced it with `User` class (Issue #20)
 - Removed `User::findByEmail()` and `User::findByName()` for corresponding `UserQuery` methods

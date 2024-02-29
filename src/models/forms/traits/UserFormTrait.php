@@ -35,6 +35,11 @@ trait UserFormTrait
         parent::afterValidate();
     }
 
+    public function isAttributeRequired($attribute): bool
+    {
+        return parent::isAttributeRequired($attribute) || $this->user->isAttributeRequired($attribute);
+    }
+
     public function setAttributesFromUser(): void
     {
         foreach ($this->safeAttributes() as $attribute) {
