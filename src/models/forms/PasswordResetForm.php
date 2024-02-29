@@ -86,7 +86,7 @@ class PasswordResetForm extends Model
             $user->password_reset_token = null;
 
             if (Yii::$app->getUser()->getIsGuest()) {
-                if (!$user->isUnconfirmed() ||$webuser->isUnconfirmedEmailLoginEnabled()) {
+                if (!$user->isUnconfirmed() || $webuser->isUnconfirmedEmailLoginEnabled()) {
                     $webuser->loginType = UserLogin::TYPE_RESET_PASSWORD;
                     $user->afterPasswordChange();
 

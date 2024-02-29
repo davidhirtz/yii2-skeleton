@@ -25,8 +25,8 @@ class AuthClientSignupForm extends Model
     public function __construct(
         public ClientInterface $client,
         public ?User $user = null,
-        $config = [])
-    {
+        $config = []
+    ) {
         parent::__construct($config);
     }
 

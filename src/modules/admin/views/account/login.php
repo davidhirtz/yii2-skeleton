@@ -53,28 +53,28 @@ $this->setTitle(Yii::t('skeleton', 'Login'));
                 <?php
             }
 
-            if (Yii::$app->getUser()->isSignupEnabled()) {
-                ?>
+if (Yii::$app->getUser()->isSignupEnabled()) {
+    ?>
                 <a href="<?= Url::to(['create']); ?>" class="list-group-item list-group-item-action">
                     <?= Icon::tag('user', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'Create new account'); ?>
                 </a>
                 <?php
-            }
+}
 
-            if (Yii::$app->getUser()->isPasswordResetEnabled()) {
-                if (!Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
-                    ?>
+if (Yii::$app->getUser()->isPasswordResetEnabled()) {
+    if (!Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
+        ?>
                     <a href="<?= Url::to(['resend']); ?>" class="list-group-item list-group-item-action">
                         <?= Icon::tag('envelope', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'Resend email confirmation'); ?>
                     </a>
                     <?php
-                }
-                ?>
+    }
+    ?>
                 <a href="<?= Url::to(['recover']); ?>" class="list-group-item list-group-item-action">
                     <?= Icon::tag('key', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'I forgot my password'); ?>
                 </a>
                 <?php
-            } ?>
+} ?>
         </div>
     </div>
 </div>

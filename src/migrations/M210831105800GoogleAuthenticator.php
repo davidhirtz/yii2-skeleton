@@ -7,7 +7,6 @@ use davidhirtz\yii2\skeleton\models\User;
 use yii\db\Migration;
 
 /**
- * Class M210831105800GoogleAuthenticator
  * @package davidhirtz\yii2\skeleton\migrations
  * @noinspection PhpUnused
  */

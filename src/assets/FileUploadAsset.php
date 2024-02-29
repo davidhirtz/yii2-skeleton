@@ -5,7 +5,6 @@ namespace davidhirtz\yii2\skeleton\assets;
 use yii\web\AssetBundle;
 
 /**
- * Class FileUploadAsset
  * @package davidhirtz\yii2\skeleton\assets
  */
 class FileUploadAsset extends AssetBundle

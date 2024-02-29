@@ -45,7 +45,6 @@ class I18nActiveQueryTest extends Unit
 
         Yii::$app->language = 'de';
         self::assertEquals("$tableName.[[content_de]]", $model::find()->getI18nAttributeName('content'));
-
     }
 
     public function testReplaceI18nAttributes()

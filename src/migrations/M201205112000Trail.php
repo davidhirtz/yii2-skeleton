@@ -9,7 +9,6 @@ use Yii;
 use yii\db\Migration;
 
 /**
- * Class M201205112000Trail
  * @package davidhirtz\yii2\skeleton\migrations
  * @noinspection PhpUnused
  */

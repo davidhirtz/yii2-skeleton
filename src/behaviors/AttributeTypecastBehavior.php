@@ -2,7 +2,6 @@
 
 namespace davidhirtz\yii2\skeleton\behaviors;
 
-use Yii;
 use yii\base\Behavior;
 use yii\base\Event;
 use yii\base\InvalidArgumentException;
@@ -37,10 +36,10 @@ use yii\validators\StringValidator;
  */
 class AttributeTypecastBehavior extends Behavior
 {
-    final const TYPE_INTEGER = 'integer';
-    final const TYPE_FLOAT = 'float';
-    final const TYPE_BOOLEAN = 'boolean';
-    final const TYPE_STRING = 'string';
+    final public const TYPE_INTEGER = 'integer';
+    final public const TYPE_FLOAT = 'float';
+    final public const TYPE_BOOLEAN = 'boolean';
+    final public const TYPE_STRING = 'string';
 
     /**
      * @var bool whether to skip typecasting of `null` values
@@ -242,10 +241,8 @@ class AttributeTypecastBehavior extends Behavior
 
             if ($validator instanceof BooleanValidator) {
                 $type = self::TYPE_BOOLEAN;
-
             } elseif ($validator instanceof NumberValidator) {
                 $type = $validator->integerOnly ? self::TYPE_INTEGER : self::TYPE_FLOAT;
-
             } elseif ($validator instanceof StringValidator) {
                 $type = self::TYPE_STRING;
             }

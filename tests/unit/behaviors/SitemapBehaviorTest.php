@@ -63,7 +63,7 @@ class SitemapBehaviorTest extends Unit
     {
         Yii::$app->sitemap->useSitemapIndex = true;
 
-        $model = new class extends SitemapActiveRecord {
+        $model = new class() extends SitemapActiveRecord {
             public function init(): void
             {
                 $this->maxUrlCount = 2;
@@ -83,7 +83,7 @@ class SitemapBehaviorTest extends Unit
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('SitemapBehavior::$callback must be callable.');
 
-        new class () extends ActiveRecord {
+        new class() extends ActiveRecord {
             public function behaviors(): array
             {
                 return [
@@ -95,7 +95,7 @@ class SitemapBehaviorTest extends Unit
 
     public function testInvalidUrl()
     {
-        $model = new class () extends SitemapActiveRecord {
+        $model = new class() extends SitemapActiveRecord {
             public function generateSitemapUrl(SitemapActiveRecord $model): array
             {
                 return ['url' => $model->url];

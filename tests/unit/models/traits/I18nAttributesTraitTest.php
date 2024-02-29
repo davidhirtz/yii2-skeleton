@@ -114,7 +114,7 @@ class I18nAttributesTraitTest extends Unit
 
     public function testEmptyI18nAttributes()
     {
-        $model = new class () extends Model {
+        $model = new class() extends Model {
             use I18nAttributesTrait;
 
             public string $name = '';

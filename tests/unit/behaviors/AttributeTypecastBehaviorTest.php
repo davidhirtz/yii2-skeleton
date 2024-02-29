@@ -311,7 +311,7 @@ class AttributeTypecastBehaviorTest extends Unit
             }
         };
 
-        $behavior = new class extends Behavior {
+        $behavior = new class() extends Behavior {
             public function events(): array
             {
                 return [

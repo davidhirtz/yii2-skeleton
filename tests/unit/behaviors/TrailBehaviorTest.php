@@ -66,7 +66,7 @@ class TrailBehaviorTest extends Unit
 
     public function testAfterInsertEventWithoutTrailAttributes(): void
     {
-        $model = new class extends TrailActiveRecord {
+        $model = new class() extends TrailActiveRecord {
             public function getTrailAttributes(): array
             {
                 return [];
@@ -112,7 +112,7 @@ class TrailBehaviorTest extends Unit
 
     public function testFailedInsertTrail()
     {
-        $model = new class extends TrailActiveRecord {
+        $model = new class() extends TrailActiveRecord {
             public function behaviors(): array
             {
                 return [
@@ -138,7 +138,7 @@ class TrailBehaviorTest extends Unit
 
     public function testTrailModelAdminRoute(): void
     {
-        $model = new class extends TrailActiveRecord {
+        $model = new class() extends TrailActiveRecord {
             public function getAdminRoute(): array|false
             {
                 return ['/admin/test'];
@@ -178,7 +178,7 @@ class TrailBehaviorTest extends Unit
 
     public function testFormatTrailAttributeValueWithoutRange(): void
     {
-        $model = new class extends Model {
+        $model = new class() extends Model {
             public ?int $value = null;
 
             public function behaviors(): array
@@ -316,7 +316,7 @@ class TrailBehaviorMock extends TrailBehavior
 {
     protected function insertTrail(Trail $trail): void
     {
-        $trail = new class extends Trail {
+        $trail = new class() extends Trail {
             public function insert($runValidation = true, $attributes = null)
             {
                 throw new Exception("Mocked error message");

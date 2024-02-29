@@ -9,7 +9,6 @@ use Yii;
 use yii\db\Migration;
 
 /**
- * Class M210224093845Redirect
  * @package davidhirtz\yii2\skeleton\migrations
  * @noinspection PhpUnused
  */
