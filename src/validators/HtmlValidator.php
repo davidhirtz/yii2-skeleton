@@ -183,48 +183,48 @@ class HtmlValidator extends Validator
         $html = preg_replace("#\n?<(blockquote|ol|ul)>#i", "\n\n<$1>", $html);
 
         //Fix HtmlPurifier "AutoFormat.AutoParagraph" not applying paragraphs to rows consisting of whitespaces.
-        $html = preg_replace("#\n\s+\n#i", "\n\n", $html);
+        $html = preg_replace("#\n\s+\n#i", "\n\n", (string) $html);
 
         // Process html.
         $html = HtmlPurifier::process($html, $this->purifierOptions);
 
         // Change invalid break tags.
         $html = preg_replace('#<br />#', '<br>', $html);
-        $html = preg_replace('#\s<br>#', '<br>', $html);
+        $html = preg_replace('#\s<br>#', '<br>', (string) $html);
 
         // Add break tags.
         $blocks = '(?:div|dl|dd|dt|ul|ol|li|pre|blockquote|address|style|p|h[1-6]|hr|legend|section|article|aside)';
 
-        $html = preg_replace("#(<'.$blocks.'[^>]*>)#", "\n$1", $html);
-        $html = preg_replace("#(</'.$blocks.'>)#", "$1\n\n", $html);
+        $html = preg_replace("#(<'.$blocks.'[^>]*>)#", "\n$1", (string) $html);
+        $html = preg_replace("#(</'.$blocks.'>)#", "$1\n\n", (string) $html);
 
         // Remove multiple breaking whitespaces.
-        $html = preg_replace('#\s{2,}#', ' ', $html);
+        $html = preg_replace('#\s{2,}#', ' ', (string) $html);
 
         // Make sure no empty paragraphs were generated.
-        $html = preg_replace('#<p>\s*</p>#', '', $html);
+        $html = preg_replace('#<p>\s*</p>#', '', (string) $html);
 
         // Clean breaks.
-        $html = preg_replace("#(?<!<br>)\s*\n#", "<br>\n", $html);
-        $html = preg_replace('#(</?' . $blocks . '[^>]*>)\s*<br>#', '$1', $html);
-        $html = preg_replace('#<br>(\s*</?(?:div|dd|dl|dt|li|ol|p|pre|table|tbody|td|th|tr|ul)[^>]*>)#', '$1', $html);
+        $html = preg_replace("#(?<!<br>)\s*\n#", "<br>\n", (string) $html);
+        $html = preg_replace('#(</?' . $blocks . '[^>]*>)\s*<br>#', '$1', (string) $html);
+        $html = preg_replace('#<br>(\s*</?(?:div|dd|dl|dt|li|ol|p|pre|table|tbody|td|th|tr|ul)[^>]*>)#', '$1', (string) $html);
 
         // Remove empty elements at the beginning and end of paragraphs.
-        $html = preg_replace("#\n*\s*<p>\n*\s*#", "\n<p>", $html);
-        $html = preg_replace("#\n*\s*</p>\n*\s*#", "</p>\n", $html);
+        $html = preg_replace("#\n*\s*<p>\n*\s*#", "\n<p>", (string) $html);
+        $html = preg_replace("#\n*\s*</p>\n*\s*#", "</p>\n", (string) $html);
 
         // Remove empty elements and <br> added by the WYSIWYG editor at the end and beginning of tables.
-        $html = preg_replace("#\n*\s*<table>#", '<table>', $html);
-        $html = preg_replace("#</table><br>\n*\s*#", '</table>', $html);
-        $html = preg_replace("#</table>\n*\s*#", '</table>', $html);
+        $html = preg_replace("#\n*\s*<table>#", '<table>', (string) $html);
+        $html = preg_replace("#</table><br>\n*\s*#", '</table>', (string) $html);
+        $html = preg_replace("#</table>\n*\s*#", '</table>', (string) $html);
 
         // Remove whitespaces in lists.
-        $html = preg_replace("#\n*<li>\s*\n*(.*)\s*\n*</li>#i", "\n<li>$1</li>", $html);
+        $html = preg_replace("#\n*<li>\s*\n*(.*)\s*\n*</li>#i", "\n<li>$1</li>", (string) $html);
 
         // Add line breaks to closing list tags.
-        $html = preg_replace("#\n*(</?ul>|</?ol>)\n*#i", "\n$1\n", $html);
+        $html = preg_replace("#\n*(</?ul>|</?ol>)\n*#i", "\n$1\n", (string) $html);
 
         // Done.
-        $model->setAttribute($attribute, trim($html));
+        $model->setAttribute($attribute, trim((string) $html));
     }
 }

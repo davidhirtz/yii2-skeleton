@@ -143,7 +143,7 @@ class User extends \yii\web\User
     private function insertLogin(\davidhirtz\yii2\skeleton\models\User $user): void
     {
         if ($browser = Yii::$app->getRequest()->getUserAgent()) {
-            $browser = mb_substr($browser, 0, 255, Yii::$app->charset);
+            $browser = mb_substr((string) $browser, 0, 255, Yii::$app->charset);
         }
 
         if ($ipAddress = ($this->ipAddress ?: Yii::$app->getRequest()->getUserIP())) {

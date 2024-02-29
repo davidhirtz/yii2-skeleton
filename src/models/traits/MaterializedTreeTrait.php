@@ -133,7 +133,7 @@ trait MaterializedTreeTrait
         $this->_descendants = [];
 
         foreach ($descendants as $descendant) {
-            $path = $descendant->path ? substr($descendant->path, 0, $length) : null;
+            $path = $descendant->path ? substr((string) $descendant->path, 0, $length) : null;
 
             if ($path === $this->path) {
                 $this->_descendants[$descendant->id] = $descendant;

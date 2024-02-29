@@ -120,7 +120,7 @@ EOL
 
     public static function getExtensionFromUrl(string $url): string
     {
-        return strtolower(pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
+        return strtolower(pathinfo((string) parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
     }
 
     public static function encodeUrl(string $url): string

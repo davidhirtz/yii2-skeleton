@@ -153,14 +153,14 @@ class Html extends BaseHtml
      */
     public static function minify(string $html): string
     {
-        return trim(preg_replace('/>\s+</', '><', $html));
+        return trim((string) preg_replace('/>\s+</', '><', $html));
     }
 
     public static function markKeywords(string $text, array|string|null $keywords, bool $wordBoundary = false): string
     {
         if ($keywords) {
             foreach ((array)$keywords as $keyword) {
-                $text = preg_replace('~(' . ($wordBoundary ? '\b' : '') . preg_quote((string)$keyword) . ')~ui', '<mark>$1</mark>', $text);
+                $text = preg_replace('~(' . ($wordBoundary ? '\b' : '') . preg_quote((string)$keyword) . ')~ui', '<mark>$1</mark>', (string) $text);
             }
         }
 

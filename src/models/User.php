@@ -336,7 +336,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
 
     public function getInitials(): string
     {
-        return $this->first_name && $this->last_name ? ($this->first_name[0] . $this->last_name[0]) : substr($this->name, 0, 2);
+        return $this->first_name && $this->last_name ? ($this->first_name[0] . $this->last_name[0]) : substr((string) $this->name, 0, 2);
     }
 
     public function getEmailConfirmationUrl(): ?string

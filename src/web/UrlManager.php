@@ -198,7 +198,7 @@ class UrlManager extends \yii\web\UrlManager
 
         if ($this->i18nSubdomain) {
             $host = parse_url($this->getHostInfo(), PHP_URL_HOST);
-            $subdomain = explode('.', $host)[$request->getIsDraft() ? 1 : 0];
+            $subdomain = explode('.', (string) $host)[$request->getIsDraft() ? 1 : 0];
 
             if (in_array($subdomain, $this->languages)) {
                 Yii::$app->language = $subdomain;
@@ -243,7 +243,7 @@ class UrlManager extends \yii\web\UrlManager
 
         foreach (Yii::$app->getUrlManager()->rules as $rule) {
             if ($rule instanceof UrlRule) {
-                $param = explode('/', $rule->name)[$position];
+                $param = explode('/', (string) $rule->name)[$position];
                 if (preg_match('/^\w+$/', $param)) {
                     $params[] = $param;
                 } elseif (preg_match('/^<\w+:([\w|]+)>$/', $param, $matches)) {
@@ -263,7 +263,7 @@ class UrlManager extends \yii\web\UrlManager
             ($request->getIsDraft() ? $request->draftSubdomain : 'www') :
             ($request->getIsDraft() ? ($request->draftSubdomain . '.' . Yii::$app->language) : Yii::$app->language);
 
-        return substr(parse_url($this->getHostInfo(), PHP_URL_HOST), strlen((string)$hostInfo));
+        return substr((string) parse_url($this->getHostInfo(), PHP_URL_HOST), strlen((string)$hostInfo));
     }
 
     public function hasI18nUrls(): bool

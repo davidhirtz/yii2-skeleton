@@ -59,7 +59,7 @@ class TrailSubmenu extends Submenu
 
             return [
                 ...$route,
-                'language' => explode('::', $behavior->modelClass)[1] ?? null
+                'language' => explode('::', (string) $behavior->modelClass)[1] ?? null
             ];
         }
 

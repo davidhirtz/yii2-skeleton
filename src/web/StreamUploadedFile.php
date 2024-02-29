@@ -60,7 +60,7 @@ class StreamUploadedFile extends UploadedFile
             return;
         }
 
-        $this->name = basename(parse_url($this->url, PHP_URL_PATH));
+        $this->name = basename((string) parse_url($this->url, PHP_URL_PATH));
         $this->type = FileHelper::getMimeType($this->tempName);
 
         if ($this->allowedExtensions && !in_array($this->getExtension(), $this->allowedExtensions)) {

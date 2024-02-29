@@ -26,7 +26,7 @@ class TimeValidator extends Validator
         // Removes trailing seconds
         $value = (string)$model->$attribute;
         $value = strlen($value) === 8 ? preg_replace('/:00$/', '', $value) : $value;
-        $strlen = strlen($value);
+        $strlen = strlen((string) $value);
 
         if ($strlen === 1) {
             $value = "0{$value}00";

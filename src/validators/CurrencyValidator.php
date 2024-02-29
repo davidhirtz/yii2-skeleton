@@ -23,7 +23,7 @@ class CurrencyValidator extends NumberValidator
                 $this->thousandSeparator = $matches[3];
 
                 // Remove UTF-8 whitespaces and quote for regular expression.
-                $matches = array_map(fn ($v): string => preg_quote(preg_replace('/^[\pZ\pC]+|[\pZ\pC]+$/u', '', (string)$v)), $matches);
+                $matches = array_map(fn ($v): string => preg_quote((string) preg_replace('/^[\pZ\pC]+|[\pZ\pC]+$/u', '', (string)$v)), $matches);
                 $this->currencyPattern = "/^($matches[1])?\s*(-?(?:\d{1,3}(?:$matches[3]\d{3})+|(?!$matches[3])\d*(?!$matches[3]))(?:$matches[4][0-9]+)?)\s*($matches[5])?$/iu";
             } else {
                 throw new InvalidConfigException("Currency format \"$format\" could not be parsed.");

@@ -38,7 +38,7 @@ class Request extends \yii\web\Request
             $this->cookieValidationKey = Yii::$app->params['cookieValidationKey'] ?? '';
         }
 
-        if ($this->draftSubdomain && str_contains($this->getHostInfo(), "//$this->draftSubdomain.")) {
+        if ($this->draftSubdomain && str_contains((string) $this->getHostInfo(), "//$this->draftSubdomain.")) {
             $this->_isDraft = true;
         }
 
@@ -72,7 +72,7 @@ class Request extends \yii\web\Request
     public function getProductionHostInfo(): string
     {
         return $this->getIsDraft()
-            ? str_replace("//$this->draftSubdomain.", '//', $this->getHostInfo())
+            ? str_replace("//$this->draftSubdomain.", '//', (string) $this->getHostInfo())
             : $this->getHostInfo();
     }
 
@@ -82,9 +82,9 @@ class Request extends \yii\web\Request
      */
     public function getDraftHostInfo(): bool|string
     {
-        $this->_draftHostInfo ??= $this->getIsDraft() && $this->draftSubdomain && str_contains($this->getHostInfo(), $this->draftSubdomain)
+        $this->_draftHostInfo ??= $this->getIsDraft() && $this->draftSubdomain && str_contains((string) $this->getHostInfo(), $this->draftSubdomain)
             ? $this->getHostInfo()
-            : ($this->draftSubdomain ? preg_replace('#^((https?://)(www.)?)#', "$2$this->draftSubdomain.", $this->getHostInfo()) : false);
+            : ($this->draftSubdomain ? preg_replace('#^((https?://)(www.)?)#', "$2$this->draftSubdomain.", (string) $this->getHostInfo()) : false);
 
         return $this->_draftHostInfo;
     }

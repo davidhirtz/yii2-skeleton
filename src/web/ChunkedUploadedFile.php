@@ -50,7 +50,7 @@ class ChunkedUploadedFile extends UploadedFile
     {
         // Try to get file name from header if it was not set via FILES.
         if (!$this->name) {
-            $this->name = rawurldecode(preg_replace('/(^[^"]+")|("$)/', '', (string)ArrayHelper::getValue($_SERVER, 'HTTP_CONTENT_DISPOSITION')));
+            $this->name = rawurldecode((string) preg_replace('/(^[^"]+")|("$)/', '', (string)ArrayHelper::getValue($_SERVER, 'HTTP_CONTENT_DISPOSITION')));
         }
 
         // Parse the Content-Range header, which is formatted like this:

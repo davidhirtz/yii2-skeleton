@@ -50,7 +50,7 @@ trait AjaxRouteTrait
     {
         $view = $this->getView();
 
-        $title = addslashes(preg_replace("/[\r|\n]/", '', $view->getDocumentTitle()));
+        $title = addslashes((string) preg_replace("/[\r|\n]/", '', $view->getDocumentTitle()));
         $view->registerJs("document.title=\"$title\";", $view::POS_END);
     }
 }

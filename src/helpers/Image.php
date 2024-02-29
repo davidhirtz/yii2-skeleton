@@ -130,7 +130,7 @@ class Image extends BaseImage
             if ($attributes->width && $attributes->height) {
                 $dimensions[0] = (int)$attributes->width;
                 $dimensions[1] = (int)$attributes->height;
-            } elseif (preg_match('/(\d+(\.\d+)?) (\d+(\.\d+)?)$/', $attributes->viewBox, $match)) {
+            } elseif (preg_match('/(\d+(\.\d+)?) (\d+(\.\d+)?)$/', (string) $attributes->viewBox, $match)) {
                 $viewBox = explode(' ', $match[0]);
                 $dimensions[0] = (int)$viewBox[0];
                 $dimensions[1] = (int)$viewBox[1];

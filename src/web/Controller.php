@@ -34,7 +34,7 @@ class Controller extends \yii\web\Controller
     public function render($view, $params = []): string
     {
         $content = parent::render($view, $params);
-        return $this->spacelessOutput ? trim(preg_replace('/>\s+</', '><', $content)) : $content;
+        return $this->spacelessOutput ? trim((string) preg_replace('/>\s+</', '><', $content)) : $content;
     }
 
     public function error(Model|array|string $value): bool
