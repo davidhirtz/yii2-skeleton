@@ -119,18 +119,10 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
                 'required',
             ],
             [
-                /**
-                 * @see static::getStatuses()
-                 * @see static::getLanguages()
-                 * @see static::getTimezones()
-                 */
                 ['status', 'language', 'timezone'],
                 DynamicRangeValidator::class,
             ],
             [
-                /**
-                 * @see static::getCountries()
-                 */
                 ['country'],
                 DynamicRangeValidator::class,
                 'skipOnEmpty' => true,
@@ -198,8 +190,6 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
     {
         $this->status ??= static::STATUS_ENABLED;
         $this->timezone = $this->timezone ?: Yii::$app->getTimeZone();
-
-        $this->name = $this->name ? mb_strtolower($this->name, Yii::$app->charset) : null;
 
         return parent::beforeValidate();
     }
@@ -287,15 +277,6 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
     {
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
-
-//    public function load($data, $formName = null): bool
-//    {
-//        // First load form data, then override upload via instance.
-//        $hasData = parent::load($data, $formName);
-//        $this->upload = $this->getUploadPath() ? UploadedFile::getInstance($this, 'upload') : null;
-//
-//        return $hasData || $this->upload;
-//    }
 
     public function afterPasswordChange(): void
     {

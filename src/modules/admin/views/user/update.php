@@ -4,7 +4,7 @@
  * @see davidhirtz\yii2\skeleton\modules\admin\controllers\UserController::actionUpdate()
  *
  * @var View $this
- * @var UserForm $user
+ * @var UserForm $form
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
@@ -22,27 +22,27 @@ $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
 ?>
 
 <?= UserSubmenu::widget([
-    'user' => $user,
+    'user' => $form->user,
 ]); ?>
 
-<?= Html::errorSummary($user, [
+<?= Html::errorSummary($form, [
     'title' => Yii::t('skeleton', 'The user could not be updated'),
 ]); ?>
 
 <?= Panel::widget([
     'title' => $this->title,
     'content' => UserActiveForm::widget([
-        'model' => $user,
+        'model' => $form,
     ]),
 ]);
 ?>
 
 <?= UserHelpPanel::widget([
-    'user' => $user,
+    'user' => $form->user,
 ]); ?>
 
-<?php if (Yii::$app->getUser()->can(User::AUTH_USER_DELETE, ['user' => $user])) {
+<?php if (Yii::$app->getUser()->can(User::AUTH_USER_DELETE, ['user' => $form])) {
     echo UserDeletePanel::widget([
-        'user' => $user,
+        'user' => $form->user,
     ]);
 } ?>

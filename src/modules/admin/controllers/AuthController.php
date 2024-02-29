@@ -61,7 +61,7 @@ class AuthController extends Controller
 
     public function actionView(int $user): Response|string
     {
-        $user = $this->findUserForm($user, User::AUTH_USER_ASSIGN);
+        $user = $this->findUser($user, User::AUTH_USER_ASSIGN);
 
         $items = AuthItem::find()
             ->select(['name', 'type', 'description'])
@@ -82,7 +82,7 @@ class AuthController extends Controller
 
     public function actionAssign(int $id, string $name, int $type): Response|string
     {
-        $user = $this->findUserForm($id, User::AUTH_USER_ASSIGN);
+        $user = $this->findUser($id, User::AUTH_USER_ASSIGN);
         $role = $this->getAuthItem($name, $type);
 
         if (!Yii::$app->getAuthManager()->assign($role, $user->id)) {
@@ -96,7 +96,7 @@ class AuthController extends Controller
 
     public function actionRevoke(int $id, string $name, int $type): Response|string
     {
-        $user = $this->findUserForm($id, User::AUTH_USER_ASSIGN);
+        $user = $this->findUser($id, User::AUTH_USER_ASSIGN);
         $role = $this->getAuthItem($name, $type);
 
         if (!Yii::$app->getAuthManager()->revoke($role, $user->id)) {

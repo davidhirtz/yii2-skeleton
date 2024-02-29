@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\behaviors;
 
+use Yii;
 use yii\base\Behavior;
 use yii\base\Event;
 use yii\base\InvalidArgumentException;
@@ -42,20 +43,20 @@ class AttributeTypecastBehavior extends Behavior
     final const TYPE_STRING = 'string';
 
     /**
+     * @var bool whether to skip typecasting of `null` values
+     */
+    public bool $skipOnNull = true;
+
+    /**
      * @var bool whether to typecast the attributes before validation.
      * This allows the use of {@see ActiveRecord::isAttributeChanged()} in validation.
      */
     public bool $typecastBeforeValidate = true;
 
     /**
-     * @var bool whether to skip typecasting of `null` values
-     */
-    public bool $skipOnNull = true;
-
-    /**
      * @var bool whether to perform typecasting after owner model validation.
      */
-    public bool $typecastAfterValidate = false;
+    public bool $typecastAfterValidate = true;
 
     /**
      * @var bool whether to perform typecasting before saving the owner model (insert or update).

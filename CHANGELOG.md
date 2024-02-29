@@ -1,9 +1,10 @@
 ## 2.2.0 (Feb 28, 2024)
 
-- Changed `AuthClientSignupForm`  to extend from `Model` instead of `User`
+- Changed `AuthClientSignupForm` to extend from `Model` instead of `User`
 - Extracted user picture upload methods and options to `UserPictureForm`
 - Removed `Identity` class and replaced it with `User` class (Issue #20)
 - Removed `User::findByEmail()` and `User::findByName()` for corresponding `UserQuery` methods
+- Renamed `UserForm` to `AccountUpdateForm`, it now extends `Model` instead of `User`
 
 ## 2.1.23 (Feb 1, 2024)
 

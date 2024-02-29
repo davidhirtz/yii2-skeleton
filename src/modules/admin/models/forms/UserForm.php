@@ -2,41 +2,54 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\models\forms;
 
+use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
+use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use davidhirtz\yii2\skeleton\models\forms\traits\UserFormTrait;
 use davidhirtz\yii2\skeleton\models\User;
 use Yii;
-use yii\behaviors\BlameableBehavior;
-use yii\db\BaseActiveRecord;
+use yii\base\Model;
 
-/**
- * UserForm extends {@see User}. It is used to update user information by an authorized administrator.
- */
-class UserForm extends User
+class UserForm extends Model
 {
+    use UserFormTrait;
+    use ModelTrait;
+
+    public User $user;
+
+    public string|int|null $status = null;
     public ?string $newPassword = null;
-    public ?string $repeatPassword = null;
 
     /**
      * @var bool whether the credentials should be sent to the user's email address
      */
     public bool $sendEmail = false;
 
-    public function behaviors(): array
+    public function __construct(?User $user = null, array $config = [])
     {
-        return [
-            ...parent::behaviors(),
-            'BlameableBehavior' => [
-                'class' => BlameableBehavior::class,
-                'attributes' => [
-                    BaseActiveRecord::EVENT_BEFORE_INSERT => ['created_by_user_id'],
-                ],
-            ]
-        ];
+        if (!$user) {
+            $user = User::create();
+            $user->status = User::STATUS_ENABLED;
+        }
+
+        $this->user = $user;
+
+        $this->setScenario($user->getIsNewRecord()
+            ? ActiveRecord::SCENARIO_INSERT
+            : ActiveRecord::SCENARIO_UPDATE);
+
+        $this->setAttributesFromUser();
+
+        parent::__construct($config);
     }
 
     public function rules(): array
     {
         return [
-            ...parent::rules(),
+            [
+                ['status'],
+                'required',
+                'when' => fn (): bool => $this->user->isOwner(),
+            ],
             [
                 ['newPassword'],
                 'trim',
@@ -44,7 +57,7 @@ class UserForm extends User
             [
                 ['newPassword'],
                 'string',
-                'min' => $this->passwordMinLength,
+                'min' => $this->user->passwordMinLength,
                 'skipOnEmpty' => true,
             ],
             [
@@ -61,63 +74,8 @@ class UserForm extends User
             [
                 ['sendEmail'],
                 'boolean',
-            ]
+            ],
         ];
-    }
-
-    public function init(): void
-    {
-        $this->setScenario(static::SCENARIO_INSERT);
-        parent::init();
-    }
-
-    public function afterFind(): void
-    {
-        $this->setScenario(static::SCENARIO_UPDATE);
-        parent::afterFind();
-    }
-
-    public function beforeSave($insert): bool
-    {
-        if (parent::beforeSave($insert)) {
-            if ($this->newPassword) {
-                $this->generateAuthKey();
-                $this->generatePasswordHash($this->newPassword);
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    public function afterSave($insert, $changedAttributes): void
-    {
-        if (!$insert) {
-            if (array_key_exists('password_hash', $changedAttributes)) {
-                $this->afterPasswordChange();
-            }
-        }
-
-        if ($this->sendEmail) {
-            $this->sendCredentialsEmail();
-        }
-
-        parent::afterSave($insert, $changedAttributes);
-    }
-
-    public function sendCredentialsEmail(): void
-    {
-        $language = Yii::$app->language;
-        Yii::$app->language = $this->language ?: $language;
-
-        Yii::$app->getMailer()->compose('@skeleton/mail/account/credentials', ['user' => $this])
-            ->setSubject(Yii::t('skeleton', 'Your {name} Account', ['name' => Yii::$app->name]))
-            ->setFrom(Yii::$app->params['email'])
-            ->setTo($this->email)
-            ->send();
-
-        Yii::$app->language = $language;
     }
 
     public function scenarios(): array
@@ -132,23 +90,89 @@ class UserForm extends User
             'name',
             'newPassword',
             'repeatPassword',
-            'sendEmail',
-            'status',
             'timezone',
-            'upload',
         ];
 
+        if (!$this->user->isOwner()) {
+            $attributes[] = 'status';
+        }
+
         return [
-            static::SCENARIO_INSERT => $attributes,
-            static::SCENARIO_UPDATE => $attributes,
+            ActiveRecord::SCENARIO_INSERT => [
+                ...$attributes,
+                'sendEmail',
+            ],
+            ActiveRecord::SCENARIO_UPDATE => $attributes,
         ];
+    }
+
+    public function save(): bool
+    {
+        if (!$this->validate() || !$this->beforeSave()) {
+            return false;
+        }
+
+        if ($this->user->save(false)) {
+            $this->afterSave();
+            return true;
+        }
+
+        return false;
+    }
+
+    public function beforeSave(): bool
+    {
+        if ($this->getIsNewRecord()) {
+            $this->user->created_by_user_id = Yii::$app->getUser()->getId();
+        }
+
+        if ($this->newPassword) {
+            $this->user->generateAuthKey();
+            $this->user->generatePasswordHash($this->newPassword);
+        }
+
+        return true;
+    }
+
+    public function afterSave(): void
+    {
+        $this->setAttributesFromUser();
+
+        if (!$this->getIsNewRecord()) {
+            if ($this->newPassword) {
+                $this->user->afterPasswordChange();
+
+                if ($this->sendEmail) {
+                    $this->sendCredentialsEmail();
+                }
+            }
+        }
+    }
+
+    public function sendCredentialsEmail(): void
+    {
+        $language = Yii::$app->language;
+        Yii::$app->language = $this->language ?: $language;
+
+        Yii::$app->getMailer()->compose('@skeleton/mail/account/credentials', ['form' => $this])
+            ->setSubject(Yii::t('skeleton', 'Your {name} Account', ['name' => Yii::$app->name]))
+            ->setFrom(Yii::$app->params['email'])
+            ->setTo($this->email)
+            ->send();
+
+        Yii::$app->language = $language;
+    }
+
+    public function getIsNewRecord(): bool
+    {
+        return $this->scenario == ActiveRecord::SCENARIO_INSERT;
     }
 
     public function attributeLabels(): array
     {
         return [
             ...parent::attributeLabels(),
-            'newPassword' => $this->getIsNewRecord()
+            'newPassword' => $this->user->getIsNewRecord()
                 ? Yii::t('skeleton', 'Password')
                 : Yii::t('skeleton', 'New password'),
             'repeatPassword' => Yii::t('skeleton', 'Repeat password'),

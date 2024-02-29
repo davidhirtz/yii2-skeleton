@@ -4,19 +4,17 @@
  * @see AccountController::actionDeauthorize()
  *
  * @var View $this
- * @var UserForm $user
- * @var ActiveForm $form
+ * @var AccountUpdateForm $form
  */
 
 use davidhirtz\yii2\skeleton\controllers\AccountController;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\forms\GoogleAuthenticatorForm;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
-use davidhirtz\yii2\skeleton\models\forms\UserForm;
+use davidhirtz\yii2\skeleton\models\forms\AccountUpdateForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\AccountActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorActiveForm;
 use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
@@ -25,14 +23,14 @@ use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Account'));
 ?>
-    <h1 class="page-header"><?= $user->getUsername(); ?></h1>
+    <h1 class="page-header"><?= $form->user->getUsername(); ?></h1>
 <?php
-if ($user->isUnconfirmed()) {
+if ($form->user->isUnconfirmed()) {
     ?>
     <div class="alert alert-warning">
         <?php
         echo Yii::t('skeleton', 'Your email address "{email}" was not yet confirmed. Please check your inbox or click {here} to request a new confirmation email.', [
-            'email' => $user->email,
+            'email' => $form->email,
             'here' => Html::a(Yii::t('skeleton', 'here'), ['resend']),
         ]);
     ?>
@@ -41,14 +39,14 @@ if ($user->isUnconfirmed()) {
 }
 ?>
 
-<?= Html::errorSummary($user, [
+<?= Html::errorSummary($form, [
     'header' => Yii::t('skeleton', 'Your account could not be updated'),
 ]); ?>
 
 <?= Panel::widget([
     'title' => $this->title,
     'content' => AccountActiveForm::widget([
-        'model' => $user,
+        'model' => $form,
     ]),
 ]);
 ?>
@@ -58,7 +56,7 @@ if ($user->isUnconfirmed()) {
         'title' => Yii::t('skeleton', 'Google Authenticator'),
         'content' => GoogleAuthenticatorActiveForm::widget([
             'model' => GoogleAuthenticatorForm::create([
-                'user' => $user,
+                'user' => $form->user,
             ]),
         ]),
     ]);
@@ -70,7 +68,7 @@ if ($user->isUnconfirmed()) {
         'title' => Yii::t('skeleton', 'Clients'),
     ]);
 
-    if ($user->authClients) {
+    if ($form->user->authClients) {
         ?>
         <table class="table table-vertical table-striped">
             <thead>
@@ -84,7 +82,7 @@ if ($user->isUnconfirmed()) {
             </thead>
             <tbody>
             <?php
-            foreach ($user->authClients as $auth) {
+            foreach ($form->user->authClients as $auth) {
                 $client = $auth->getClientClass();
                 $url = $client::getExternalUrl($auth);
                 $title = $client->getTitle();
@@ -111,7 +109,7 @@ if ($user->isUnconfirmed()) {
     ?>
     <p>
         <?= Yii::t('skeleton', 'Click {here} to add {clientCount, plural, =0{an external client} other{additional clients}} to your account.', [
-            'clientCount' => count($user->authClients),
+            'clientCount' => count($form->user->authClients),
             'here' => Html::a(Yii::t('skeleton', 'here'), '#', [
                 'data-toggle' => 'modal',
                 'data-target' => '#auth-client-modal'
@@ -152,12 +150,12 @@ if ($user->isUnconfirmed()) {
 } ?>
 
 <?php
-if (!$user->isOwner()) {
+if (!$form->user->isOwner()) {
     echo Panel::widget([
         'type' => 'danger',
         'title' => Yii::t('skeleton', 'Delete Account'),
         'content' => DeleteActiveForm::widget([
-            'model' => $user,
+            'model' => $form,
             'attribute' => 'password',
             'action' => ['delete'],
             'message' => Yii::t('skeleton', 'Type your password in the text field below to delete your account, all related items and uploaded files. This cannot be undone, please be certain!'),

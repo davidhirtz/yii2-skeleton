@@ -1,10 +1,9 @@
 <?php
 /**
- * Create a user.
  * @see UserController::actionCreate()
  *
  * @var View $this
- * @var UserForm $user
+ * @var UserForm $form
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
@@ -19,17 +18,17 @@ $this->setTitle(Yii::t('skeleton', 'Create New User'));
 ?>
 
 <?= UserSubmenu::widget([
-    'user' => $user,
+    'user' => $form->user,
 ]); ?>
 
-<?= Html::errorSummary($user, [
+<?= Html::errorSummary($form, [
     'header' => Yii::t('skeleton', 'The user could not be created'),
 ]); ?>
 
 <?= Panel::widget([
     'title' => $this->title,
     'content' => UserActiveForm::widget([
-        'model' => $user,
+        'model' => $form,
     ]),
 ]);
 ?>

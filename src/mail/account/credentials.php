@@ -4,7 +4,7 @@
  *
  * @var yii\web\View $this
  * @var MessageInterface $message
- * @var UserForm $user
+ * @var UserForm $form
  */
 
 use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
@@ -13,18 +13,18 @@ use yii\mail\MessageInterface;
 
 $this->title = Yii::t('skeleton', 'Your Account');
 ?>
-<p><?= Yii::t('skeleton', 'Hi {name}, ', ['name' => $user->getUsername()]); ?></p>
+<p><?= Yii::t('skeleton', 'Hi {name}, ', ['name' => $form->user->getUsername()]); ?></p>
 <p><?= Yii::t('skeleton', 'Here is your login information for {name}.', ['name' => Yii::$app->name]); ?></p>
 <table>
     <tbody>
     <tr>
         <td><?= Yii::t('skeleton', 'Email'); ?></td>
-        <td><?= $user->email; ?></td>
+        <td><?= $form->email; ?></td>
     </tr>
-    <?php if ($user->newPassword) { ?>
+    <?php if ($form->newPassword) { ?>
         <tr>
             <td><?= Yii::t('skeleton', 'Password'); ?></td>
-            <td><?= $user->newPassword; ?></td>
+            <td><?= $form->newPassword; ?></td>
         </tr>
     <?php } ?>
     </tbody>

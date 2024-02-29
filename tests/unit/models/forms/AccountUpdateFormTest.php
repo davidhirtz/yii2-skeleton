@@ -6,34 +6,28 @@ use Codeception\Test\Unit;
 use DateTime;
 use DateTimeZone;
 use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixture;
-use davidhirtz\yii2\skeleton\models\forms\UserForm;
+use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
+use davidhirtz\yii2\skeleton\models\forms\AccountUpdateForm;
 use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\tests\support\UnitTester;
 use Symfony\Component\Mime\Email;
 use Yii;
 
-/**
- * @property UnitTester $tester
- */
-class UserFormTest extends Unit
+class AccountUpdateFormTest extends Unit
 {
-    public function _fixtures(): array
-    {
-        return [
-            'users' => [
-                'class' => UserFixture::class,
-                'dataFile' => codecept_data_dir() . 'user.php'
-            ],
-        ];
-    }
+    use UserFixtureTrait;
+
+    public UnitTester $tester;
 
     public function testUpdateEmailAddress(): void
     {
-        $form = UserForm::findOne(3);
+        $form = AccountUpdateForm::create([
+            'user' => User::findOne(3),
+        ]);
 
         $form->email = 'invalid_email';
-        self::assertFalse($form->save());
+        self::assertFalse($form->update());
 
         $expected = Yii::t('yii', '{attribute} is not a valid email address.', [
             'attribute' => $form->getAttributeLabel('email'),
@@ -42,46 +36,51 @@ class UserFormTest extends Unit
         self::assertEquals($expected, $form->getFirstError('email'));
 
         $form->email = 'owner@domain.com';
-        self::assertFalse($form->save());
+        self::assertFalse($form->update());
+
+        $expected = Yii::t('yii', '{attribute} is invalid.', [
+            'attribute' => $form->getAttributeLabel('oldPassword'),
+        ]);
+
+        self::assertEquals($expected, $form->getFirstError('oldPassword'));
+
+        $form->oldPassword = 'password';
+
+        self::assertFalse($form->update());
 
         $expected = Yii::t('skeleton', 'This email address is already used by another user.');
         self::assertEquals($expected, $form->getFirstError('email'));
 
         $form->email = 'valid@domain.com';
-        self::assertFalse($form->save());
 
-        $expected = Yii::t('yii', '{attribute} is invalid.', [
-            'attribute' => $form->getAttributeLabel('oldPassword'),
-        ]);
-
-        self::assertEquals($expected, $form->getFirstError('oldPassword'));
-
-        $form->oldPassword = 'password';
-        self::assertTrue($form->save());
-        self::assertNotEmpty($form->verification_token);
+        self::assertTrue($form->update());
+        self::assertNotEmpty($form->user->verification_token);
 
         /** @var Email $email */
         $email = $this->tester->grabLastSentEmail();
-        self::assertStringContainsString($form->getEmailConfirmationUrl(), $email->getHtmlBody());
+        self::assertStringContainsString($form->user->getEmailConfirmationUrl(), $email->getHtmlBody());
     }
 
     public function testUpdatePassword(): void
     {
-        $form = UserForm::findOne(3);
-        $form->passwordMinLength = strlen('new_password');
+        $form = AccountUpdateForm::create([
+            'user' => User::findOne(3),
+        ]);
+
+        $form->user->passwordMinLength = strlen('new_password');
 
         $form->newPassword = 'short';
-        self::assertFalse($form->save());
+        self::assertFalse($form->update());
 
         $expected = Yii::t('yii', '{attribute} should contain at least {min, number} {min, plural, one{character} other{characters}}.', [
             'attribute' => $form->getAttributeLabel('newPassword'),
-            'min' => $form->passwordMinLength,
+            'min' => $form->user->passwordMinLength,
         ]);
 
         self::assertEquals($expected, $form->getFirstError('newPassword'));
 
         $form->newPassword = 'new_password';
-        self::assertFalse($form->save());
+        self::assertFalse($form->update());
 
         $expected = Yii::t('yii', '{attribute} is invalid.', [
             'attribute' => $form->getAttributeLabel('oldPassword'),
@@ -90,7 +89,7 @@ class UserFormTest extends Unit
         self::assertEquals($expected, $form->getFirstError('oldPassword'));
 
         $form->oldPassword = 'password';
-        self::assertFalse($form->save());
+        self::assertFalse($form->update());
 
         $expected = Yii::t('yii', '{attribute} cannot be blank.', [
             'attribute' => $form->getAttributeLabel('repeatPassword'),
@@ -100,13 +99,13 @@ class UserFormTest extends Unit
 
         $form->repeatPassword = 'wrong_new_password';
         $form->oldPassword = 'password';
-        self::assertFalse($form->save());
+        self::assertFalse($form->update());
 
         $expected = Yii::t('skeleton', 'The password must match the new password.');
         self::assertEquals($expected, $form->getFirstError('repeatPassword'));
 
         $form->repeatPassword = 'new_password';
-        self::assertTrue($form->save());
+        self::assertTrue($form->update());
 
         $trail = $this->getLastTrailRecord();
 
@@ -116,18 +115,20 @@ class UserFormTest extends Unit
 
     public function testUpdateNameAttributes(): void
     {
-        $form = UserForm::findOne(3);
+        $form = AccountUpdateForm::create([
+            'user' => User::findOne(3),
+        ]);
 
         $form->name = '';
-        self::assertFalse($form->save());
+        self::assertFalse($form->update());
 
         $form->name = '\\!//';
-        self::assertFalse($form->save());
+        self::assertFalse($form->update());
         $expects = Yii::t('skeleton', 'Username must only contain alphanumeric characters.');
         self::assertEquals($expects, $form->getFirstError('name'));
 
         $form->name = 'disabled';
-        self::assertFalse($form->save());
+        self::assertFalse($form->update());
 
         $expects = Yii::t('skeleton', 'This username is already used by another user.');
         self::assertEquals($expects, $form->getFirstError('name'));
@@ -136,10 +137,10 @@ class UserFormTest extends Unit
         $form->first_name = ' Test ';
         $form->last_name = 'User';
 
-        self::assertTrue($form->save());
+        self::assertTrue($form->update());
         self::assertEquals('Test', $form->first_name);
-        self::assertEquals('Test User', $form->getFullName());
-        self::assertEquals('TU', $form->getInitials());
+        self::assertEquals('Test User', $form->user->getFullName());
+        self::assertEquals('TU', $form->user->getInitials());
 
         $trail = $this->getLastTrailRecord();
 
@@ -152,21 +153,23 @@ class UserFormTest extends Unit
 
         /** @var User $user */
         $user = $trail->getModelClass();
-        self::assertEquals($user->getTrailModelName(), $form->getTrailModelName());
+        self::assertEquals($user->getTrailModelName(), $form->user->getTrailModelName());
     }
 
     public function testUpdateTimezoneAttribute(): void
     {
-        $form = UserForm::findOne(3);
+        $form = AccountUpdateForm::create([
+            'user' => User::findOne(3),
+        ]);
 
         $form->timezone = 'invalid_timezone';
-        self::assertFalse($form->save());
+        self::assertFalse($form->update());
 
         $form->timezone = 'America/New_York';
-        self::assertTrue($form->save());
+        self::assertTrue($form->update());
 
         $dateTime = new DateTime('now', new DateTimeZone($form->timezone));
-        self::assertEquals('GMT ' . $dateTime->format('P'), $form->getTimezoneOffset());
+        self::assertEquals('GMT ' . $dateTime->format('P'), $form->user->getTimezoneOffset());
 
         $trail = $this->getLastTrailRecord();
 
@@ -175,7 +178,10 @@ class UserFormTest extends Unit
 
     public function testUpdateUnsafeAttributes(): void
     {
-        $form = UserForm::findOne(2);
+        $form = AccountUpdateForm::create([
+            'user' => User::findOne(2),
+        ]);
+
         Yii::$app->getI18n()->setLanguages(['de', 'en-US']);
 
         $form->load([
@@ -187,14 +193,14 @@ class UserFormTest extends Unit
             ],
         ]);
 
-        self::assertFalse($form->isOwner());
-        self::assertFalse($form->isEnabled());
-        self::assertTrue($form->save());
+        self::assertFalse($form->user->isOwner());
+        self::assertFalse($form->user->isEnabled());
+        self::assertTrue($form->update());
 
         $trail = $this->getLastTrailRecord();
 
         self::assertArrayNotHasKey('status', $trail->data);
-        self::assertEquals([], array_diff(array_keys($trail->data), $form->getTrailAttributes()));
+        self::assertEquals([], array_diff(array_keys($trail->data), $form->user->getTrailAttributes()));
     }
 
     protected function getLastTrailRecord(): Trail

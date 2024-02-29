@@ -13,7 +13,7 @@ use davidhirtz\yii2\skeleton\models\forms\LoginForm;
 use davidhirtz\yii2\skeleton\models\forms\PasswordRecoverForm;
 use davidhirtz\yii2\skeleton\models\forms\PasswordResetForm;
 use davidhirtz\yii2\skeleton\models\forms\SignupForm;
-use davidhirtz\yii2\skeleton\models\forms\UserForm;
+use davidhirtz\yii2\skeleton\models\forms\AccountUpdateForm;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\skeleton\web\Controller;
 use Yii;
@@ -271,27 +271,31 @@ class AccountController extends Controller
 
     public function actionUpdate(): Response|string
     {
-        $user = UserForm::findOne(Yii::$app->getUser()->getId());
+        $form = AccountUpdateForm::create([
+            'user' => Yii::$app->getUser()->getIdentity(),
+        ]);
 
-        if ($user->load(Yii::$app->getRequest()->post())) {
-            if ($user->update()) {
+        if ($form->load(Yii::$app->getRequest()->post())) {
+            if ($form->update()) {
                 $this->success(Yii::t('skeleton', 'Your account was updated.'));
             }
 
-            if (!$user->hasErrors()) {
-                $user->newPassword = $user->oldPassword = null;
+            if (!$form->hasErrors()) {
+                $form->newPassword = null;
+                $form->oldPassword = null;
+
                 return $this->refresh();
             }
         }
 
         return $this->render('update', [
-            'user' => $user,
+            'form' => $form,
         ]);
     }
 
     public function actionPicture(): Response|string
     {
-        $user = UserForm::findOne(Yii::$app->getUser()->getId());
+        $user = Yii::$app->getUser()->getIdentity();
         $user->picture = null;
 
         if ($user->update()) {
@@ -304,7 +308,7 @@ class AccountController extends Controller
     public function actionDelete(): Response|string
     {
         $form = Yii::$container->get(DeleteForm::class, [], [
-            'model' => UserForm::findOne(Yii::$app->getUser()->getId()),
+            'model' => Yii::$app->getUser()->getIdentity(),
             'attribute' => 'password',
         ]);
 

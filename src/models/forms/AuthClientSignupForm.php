@@ -121,12 +121,12 @@ class AuthClientSignupForm extends Model
         if ($this->externalPictureUrl) {
             $form = UserPictureForm::create(['user' => $this->user]);
 
-            $form->upload = new StreamUploadedFile([
+            $form->file = new StreamUploadedFile([
                 'allowedExtensions' => $form->uploadExtensions,
                 'url' => $this->externalPictureUrl,
             ]);
 
-            $form->save();
+            $form->upload();
         }
 
         $this->user->generateVerificationToken();

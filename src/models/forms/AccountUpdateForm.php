@@ -2,15 +2,29 @@
 
 namespace davidhirtz\yii2\skeleton\models\forms;
 
+use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
+use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use davidhirtz\yii2\skeleton\models\forms\traits\UserFormTrait;
 use davidhirtz\yii2\skeleton\models\User;
 use Yii;
+use yii\base\Model;
 
-class UserForm extends User
+class AccountUpdateForm extends Model
 {
+    use ModelTrait;
+    use UserFormTrait;
+
     public ?string $newPassword = null;
-    public ?string $repeatPassword = null;
     public ?string $oldPassword = null;
     public ?string $oldEmail = null;
+
+    public function __construct(public User $user, array $config = [])
+    {
+        $this->oldEmail = $user->email;
+        $this->setAttributesFromUser();
+
+        parent::__construct($config);
+    }
 
     public function rules(): array
     {
@@ -27,7 +41,7 @@ class UserForm extends User
             [
                 ['newPassword', 'repeatPassword'],
                 'string',
-                'min' => $this->passwordMinLength,
+                'min' => $this->user->passwordMinLength,
             ],
             [
                 ['newPassword'],
@@ -48,72 +62,73 @@ class UserForm extends User
         ];
     }
 
-    public function afterFind(): void
+    public function update(): bool
     {
-        $this->oldEmail = $this->email;
-        parent::afterFind();
-    }
+        if (!$this->validate() || !$this->beforeUpdate()) {
+            return false;
+        }
 
-    public function beforeSave($insert): bool
-    {
-        if (parent::beforeSave($insert)) {
-            if ($this->isAttributeChanged('email')) {
-                $this->generateVerificationToken();
-            }
-
-            if ($this->newPassword) {
-                $this->generateAuthKey();
-                $this->generatePasswordHash($this->newPassword);
-            }
-
+        if ($this->user->update(false)) {
+            $this->afterUpdate();
             return true;
         }
 
         return false;
     }
 
-    public function afterSave($insert, $changedAttributes): void
+    public function beforeUpdate(): bool
     {
-        if (!$insert) {
-            $session = Yii::$app->getSession();
-
-            if (array_key_exists('email', $changedAttributes)) {
-                $user = Yii::$app->getUser();
-
-                if (!$user->isUnconfirmedEmailLoginEnabled()) {
-                    $user->logout(false);
-
-                    $session->addFlash('success', Yii::t('skeleton', 'Please check your emails to confirm your new email address!'));
-                }
-
-                $this->sendEmailConfirmationEmail();
-            }
-
-            if (array_key_exists('password_hash', $changedAttributes)) {
-                $this->afterPasswordChange();
-            }
+        if ($this->user->isAttributeChanged('email')) {
+            $this->user->generateVerificationToken();
         }
 
-        parent::afterSave($insert, $changedAttributes);
+        if ($this->newPassword) {
+            $this->user->generateAuthKey();
+            $this->user->generatePasswordHash($this->newPassword);
+        }
+
+        return true;
+    }
+
+    public function afterUpdate(): void
+    {
+        $this->setAttributesFromUser();
+
+        if ($this->oldEmail !== $this->user->email) {
+            $session = Yii::$app->getSession();
+            $webuser = Yii::$app->getUser();
+
+            if (!$webuser->isUnconfirmedEmailLoginEnabled()) {
+                $webuser->logout(false);
+
+                $session->addFlash('success', Yii::t('skeleton', 'Please check your emails to confirm your new email address!'));
+            }
+
+            $this->sendEmailConfirmationEmail();
+        }
+
+        if ($this->newPassword) {
+            $this->user->afterPasswordChange();
+        }
     }
 
     public function validateEmail(): void
     {
-        if ($this->isAttributeChanged('email') && !$this->validatePassword($this->oldPassword)) {
+        if ($this->user->isAttributeChanged('email') && !$this->user->validatePassword($this->oldPassword)) {
             $this->addInvalidAttributeError('oldPassword');
         }
     }
 
     public function validateNewPassword(): void
     {
-        if ($this->newPassword && !$this->validatePassword($this->oldPassword)) {
+        if ($this->newPassword && !$this->user->validatePassword($this->oldPassword)) {
             $this->addInvalidAttributeError('oldPassword');
         }
     }
 
     public function sendEmailConfirmationEmail(): void
     {
-        Yii::$app->getMailer()->compose('@skeleton/mail/account/email', ['user' => $this])
+        Yii::$app->getMailer()->compose('@skeleton/mail/account/email', ['form' => $this])
             ->setSubject(Yii::t('skeleton', 'Please confirm your new email address'))
             ->setFrom(Yii::$app->params['email'])
             ->setTo($this->email)
@@ -123,7 +138,7 @@ class UserForm extends User
     public function scenarios(): array
     {
         return [
-            static::SCENARIO_DEFAULT => [
+            ActiveRecord::SCENARIO_DEFAULT => [
                 'city',
                 'country',
                 'email',
@@ -135,7 +150,6 @@ class UserForm extends User
                 'repeatPassword',
                 'oldPassword',
                 'timezone',
-                'upload',
             ],
         ];
     }
@@ -143,7 +157,7 @@ class UserForm extends User
     public function attributeLabels(): array
     {
         return [
-            ...parent::attributeLabels(),
+            ...$this->user->attributeLabels(),
             'newPassword' => Yii::t('skeleton', 'New password'),
             'repeatPassword' => Yii::t('skeleton', 'Repeat password'),
             'oldPassword' => Yii::t('skeleton', 'Current password'),

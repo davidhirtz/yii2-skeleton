@@ -56,7 +56,7 @@ class UserLoginController extends Controller
 
     public function actionView(int $user): Response|string
     {
-        $user = $this->findUserForm($user, User::AUTH_USER_UPDATE);
+        $user = $this->findUser($user, User::AUTH_USER_UPDATE);
 
         $provider = new ActiveDataProvider([
             'sort' => false,

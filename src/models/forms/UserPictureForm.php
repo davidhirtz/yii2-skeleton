@@ -15,7 +15,7 @@ class UserPictureForm extends Model
     use ModelTrait;
 
     public bool $autorotatePicture = true;
-    public UploadedFile|StreamUploadedFile|string|null $upload = null;
+    public UploadedFile|StreamUploadedFile|string|null $file = null;
     public array $uploadExtensions = ['gif', 'jpg', 'jpeg', 'png'];
     public bool $uploadCheckExtensionByMimeType = true;
 
@@ -30,7 +30,7 @@ class UserPictureForm extends Model
     {
         return [
             [
-                ['upload'],
+                ['file'],
                 'file',
                 'checkExtensionByMimeType' => $this->uploadCheckExtensionByMimeType,
                 'extensions' => $this->uploadExtensions,
@@ -38,11 +38,11 @@ class UserPictureForm extends Model
         ];
     }
 
-    public function save(): bool
+    public function upload(): bool
     {
         $uploadPath = $this->user->getUploadPath();
 
-        if (!$uploadPath || !FileHelper::createDirectory($uploadPath)) {
+        if (!$this->file || !$uploadPath || !FileHelper::createDirectory($uploadPath)) {
             return false;
         }
 
@@ -52,13 +52,13 @@ class UserPictureForm extends Model
 
         $this->generatePictureFilename();
 
-        if ($this->upload->saveAs($uploadPath . $this->filename)) {
+        if ($this->file->saveAs($uploadPath . $this->filename)) {
             if ($this->autorotatePicture) {
                 Image::autorotate($uploadPath . $this->filename)->save();
             }
 
             $this->user->picture = $this->filename;
-            $this->upload = null;
+            $this->file = null;
 
             return true;
         }
@@ -68,10 +68,10 @@ class UserPictureForm extends Model
 
     public function generatePictureFilename(): void
     {
-        $extension = $this->upload->extension ?? null;
+        $extension = $this->file->extension ?? null;
 
         if (!$extension) {
-            $extensions = array_intersect($this->uploadExtensions, FileHelper::getExtensionsByMimeType($this->upload->type ?? false));
+            $extensions = array_intersect($this->uploadExtensions, FileHelper::getExtensionsByMimeType($this->file->type ?? false));
             $extension = $extensions ? current($extensions) : null;
         }
 

@@ -2,8 +2,9 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
+use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\UserFormTrait;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\UserActiveFormTrait;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
 use yii\widgets\ActiveField;
 
@@ -12,7 +13,7 @@ use yii\widgets\ActiveField;
  */
 class UserActiveForm extends ActiveForm
 {
-    use UserFormTrait;
+    use UserActiveFormTrait;
 
     public bool $hasStickyButtons = true;
 
@@ -50,10 +51,14 @@ class UserActiveForm extends ActiveForm
         parent::init();
     }
 
+    public function statusField(array $options = []): ActiveField|string
+    {
+        $items = ArrayHelper::getColumn($this->model->user::getStatuses(), 'name');
+        return $this->field($this->model, 'status', $options)->dropDownList($items);
+    }
+
     public function sendEmailField(array $options = []): ActiveField|string
     {
-        return $this->model->getIsNewRecord()
-            ? $this->field($this->model, 'sendEmail')->checkbox($options)
-            : '';
+        return $this->field($this->model, 'sendEmail')->checkbox($options);
     }
 }

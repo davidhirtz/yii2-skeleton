@@ -2,19 +2,19 @@
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
-use davidhirtz\yii2\skeleton\models\forms\UserForm;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\UserFormTrait;
+use davidhirtz\yii2\skeleton\models\forms\AccountUpdateForm;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\UserActiveFormTrait;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
 use yii\widgets\ActiveField;
 
 /**
- * @property UserForm $model
+ * @property AccountUpdateForm $model
  */
 class AccountActiveForm extends ActiveForm
 {
-    use UserFormTrait;
+    use UserActiveFormTrait;
 
     public bool $hasStickyButtons = true;
 
@@ -51,12 +51,9 @@ class AccountActiveForm extends ActiveForm
         parent::init();
     }
 
-    /**
-     * @noinspection PhpUnused {@see static::$fields}
-     */
     public function oldPasswordField(array $options = []): ActiveField|string
     {
-        if (!$this->model->password_hash) {
+        if (!$this->model->user->password_hash) {
             return '';
         }
 

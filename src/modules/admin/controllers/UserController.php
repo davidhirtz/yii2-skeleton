@@ -76,42 +76,40 @@ class UserController extends Controller
 
     public function actionCreate(): Response|string
     {
-        $user = new UserForm();
-        $user->status = $user::STATUS_ENABLED;
+        $form = UserForm::create();
 
-        if (!Yii::$app->getUser()->can(User::AUTH_USER_CREATE, ['user' => $user])) {
+        if (!Yii::$app->getUser()->can(User::AUTH_USER_CREATE, ['user' => $form->user])) {
             throw new ForbiddenHttpException();
         }
 
-        if ($user->load(Yii::$app->getRequest()->post())) {
-            if ($user->insert()) {
+        if ($form->load(Yii::$app->getRequest()->post())) {
+            if ($form->save()) {
                 $this->success(Yii::t('skeleton', 'The user was created.'));
-                return $this->redirect(['update', 'id' => $user->id]);
+                return $this->redirect(['update', 'id' => $form->user->id]);
             }
         } else {
             $identity = Yii::$app->getUser()->getIdentity();
-            $user->language = $identity->language;
-            $user->timezone = $identity->timezone;
+            $form->language = $identity->language;
+            $form->timezone = $identity->timezone;
         }
 
         return $this->render('create', [
-            'user' => $user,
+            'form' => $form,
         ]);
     }
 
     public function actionUpdate(int $id): Response|string
     {
-        $user = $this->findUserForm($id, User::AUTH_USER_UPDATE);
+        $user = $this->findUser($id, User::AUTH_USER_UPDATE);
+        $form = UserForm::create(['user' => $user]);
 
-        if ($user->load(Yii::$app->getRequest()->post())) {
-            if ($user->update()) {
-                $this->success(Yii::t('skeleton', 'The user was updated.'));
-                return $this->refresh();
-            }
+        if ($form->load(Yii::$app->getRequest()->post()) && $form->save()) {
+            $this->success(Yii::t('skeleton', 'The user was updated.'));
+            return $this->refresh();
         }
 
         return $this->render('update', [
-            'user' => $user,
+            'form' => $form,
         ]);
     }
 
@@ -127,10 +125,10 @@ class UserController extends Controller
 
     public function actionReset(int $id): Response|string
     {
-        $user = $this->findUserForm($id, User::AUTH_USER_UPDATE);
+        $user = $this->findUser($id, User::AUTH_USER_UPDATE);
         $user->generatePasswordResetToken();
 
-        if ($user->update()) {
+        if ($user->save()) {
             $this->success(Yii::t('skeleton', 'The password reset link was updated.'));
         }
 
@@ -225,10 +223,10 @@ class UserController extends Controller
 
     protected function updateUserAttributes(int $id, array $attributes): Response
     {
-        $user = $this->findUserForm($id, User::AUTH_USER_UPDATE);
+        $user = $this->findUser($id, User::AUTH_USER_UPDATE);
         $user->setAttributes($attributes, false);
 
-        if ($user->update()) {
+        if ($user->save()) {
             $this->success(Yii::t('skeleton', 'The user was updated.'));
         }
 
