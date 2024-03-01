@@ -56,6 +56,7 @@
 .form-control {
   display: block;
   width: 100%;
+  padding-block: 0; // Fix for Chrome padding issue
   padding: $input-padding-y $input-padding-x;
   font-size: $font-size-base;
   line-height: $input-line-height;
