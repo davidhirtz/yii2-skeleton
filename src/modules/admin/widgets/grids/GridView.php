@@ -45,9 +45,9 @@ class GridView extends \yii\grid\GridView
     public string $searchParamName = 'q';
 
     /**
-     * @var array search form option.
+     * @var array containing the search input options.
      */
-    public array $searchFormOptions = [];
+    public array $searchInputOptions = [];
 
     /**
      * @var string|null the default route used for search.
@@ -113,6 +113,8 @@ class GridView extends \yii\grid\GridView
         $this->selectionButtonLabel ??= Yii::t('skeleton', 'Update Selected');
         $this->tableOptions['id'] ??= $this->getTableId();
 
+        $this->search ??= Yii::$app->request->get($this->searchParamName);
+
         parent::init();
     }
 
@@ -144,7 +146,9 @@ class GridView extends \yii\grid\GridView
 
     protected function renderSelectionForm(string $items): string
     {
-        return Html::beginForm($this->selectionRoute, 'post', ['id' => $this->getSelectionFormId()]) . $items . Html::endForm();
+        return Html::beginForm($this->selectionRoute, 'post', ['id' => $this->getSelectionFormId()])
+            . $items
+            . Html::endForm();
     }
 
     public function renderTableBody(): string
@@ -169,20 +173,7 @@ class GridView extends \yii\grid\GridView
         $summary = $this->summary;
         $totalCount = $this->dataProvider->getTotalCount();
         $count = $this->dataProvider->getCount();
-        $pagination = $this->dataProvider->getPagination();
-
-        $params = [
-            'search' => $this->search,
-            'totalCount' => $totalCount,
-        ];
-
-        if ($pagination !== false) {
-            $params['page'] = $pagination->getPage() + 1;
-            $params['pageCount'] = $pagination->pageCount;
-            $params['begin'] = $pagination->getPage() * $pagination->pageSize + 1;
-            $params['end'] = $params['begin'] + $count - 1;
-            $params['begin'] = min($params['begin'], $params['end']);
-        }
+        $params = $this->getSummaryParams();
 
         if (!$summary) {
             if ($this->search) {
@@ -210,6 +201,26 @@ class GridView extends \yii\grid\GridView
         Html::addCssClass($summaryOptions, $totalCount ? 'alert-info' : 'alert-warning');
 
         return Html::alert($summary, $summaryOptions);
+    }
+
+    protected function getSummaryParams(): array
+    {
+        $params = [
+            'search' => $this->search,
+            'totalCount' => $this->dataProvider->getTotalCount(),
+        ];
+
+        $pagination = $this->dataProvider->getPagination();
+
+        if ($pagination !== false) {
+            $params['page'] = $pagination->getPage() + 1;
+            $params['pageCount'] = $pagination->pageCount;
+            $params['begin'] = $pagination->getPage() * $pagination->pageSize + 1;
+            $params['end'] = $params['begin'] + $this->dataProvider->getCount() - 1;
+            $params['begin'] = min($params['begin'], $params['end']);
+        }
+
+        return $params;
     }
 
     protected function initHeader(): void
@@ -278,23 +289,21 @@ class GridView extends \yii\grid\GridView
 
     public function getSearchInput(): string
     {
-        if ($this->searchUrl === null) {
-            $this->searchUrl = Url::current([$this->searchParamName => null]);
-        }
+        $search = $this->search ? trim($this->search) : null;
+        $searchUrl = $this->searchUrl ?? Url::current([$this->searchParamName => null]);
 
-        if ($this->search === null) {
-            $this->search = ($search = Yii::$app->getRequest()->get($this->searchParamName)) ? trim((string)$search) : null;
-        }
+        $icon = ArrayHelper::remove($this->searchInputOptions, 'icon', 'search');
 
         $options = [
             'class' => 'form-control',
-            'prepend' => Html::submitButton(Icon::tag(ArrayHelper::remove($this->searchFormOptions, 'icon', 'search'), ['class' => 'fa-fw']), ['class' => 'btn-transparent']),
+            'prepend' => Html::submitButton(Icon::tag($icon, ['class' => 'fa-fw']), ['class' => 'btn-transparent']),
             'placeholder' => Yii::t('skeleton', 'Search ...'),
+            ...$this->searchInputOptions
         ];
 
-        return Html::beginForm($this->searchUrl, 'get') .
-            Html::input('search', $this->searchParamName, $this->search, [...$options, ...$this->searchFormOptions]) .
-            Html::endForm();
+        return Html::beginForm($searchUrl, 'get')
+            . Html::input('search', $this->searchParamName, $search, $options)
+            . Html::endForm();
     }
 
     public function getSelectionButton(): string

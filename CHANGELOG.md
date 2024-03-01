@@ -4,6 +4,7 @@
 - Added additional field types to auto-generated fields in `ActiveFormTrait`
 - Added `padding-block: 0` to `.form-control` to fix the padding issues with date inputs
 - Changed return type of `StatusGridViewTrait::getStatusIcon()` and `TypeGridViewTrait::getTypeIcon()` to `string`
+- Renamed `GridView::$searchFormOptions` to `GridView::$searchInputOptions`
 
 ## 2.2.0 (Feb 29, 2024)
 
