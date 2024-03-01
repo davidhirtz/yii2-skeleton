@@ -1,3 +1,9 @@
+## 2.2.1 (Mar 1, 2024)
+
+- Added `AccountResendConfirmActiveForm` and `PasswordResetActiveForm`
+- Added additional field types to auto-generated fields in `ActiveFormTrait`
+- Changed return type of `StatusGridViewTrait::getStatusIcon()` and `TypeGridViewTrait::getTypeIcon()` to `string`
+
 ## 2.2.0 (Feb 29, 2024)
 
 - Changed `AuthClientSignupForm` and `davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm` to extend

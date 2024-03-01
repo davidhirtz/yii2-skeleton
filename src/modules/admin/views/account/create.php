@@ -1,6 +1,6 @@
 <?php
 /**
- * @see davidhirtz\yii2\skeleton\controllers\UserController::actionCreate()
+ * @see davidhirtz\yii2\skeleton\controllers\AccountController::actionCreate()
  *
  * @var davidhirtz\yii2\skeleton\web\View $this
  * @var davidhirtz\yii2\skeleton\models\forms\SignupForm $form

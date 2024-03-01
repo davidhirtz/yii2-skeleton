@@ -190,7 +190,23 @@ trait ActiveFormTrait
             return $field->hiddenInput()->parts['{input}'];
         }
 
-        if (in_array($type, ['email', 'number', 'password', 'text'])) {
+        $fieldTypes = [
+            'color',
+            'date',
+            'datetime-local',
+            'email',
+            'month',
+            'number',
+            'password',
+            'range',
+            'tel',
+            'text',
+            'time',
+            'url',
+            'week',
+        ];
+
+        if (in_array($type, $fieldTypes)) {
             Yii::debug("Rendering '$attribute' active $type field");
             return $field->input($type);
         }

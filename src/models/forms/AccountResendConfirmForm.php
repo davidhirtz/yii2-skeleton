@@ -14,7 +14,7 @@ class AccountResendConfirmForm extends Model
     /**
      * @var string the interval in which no new email will be sent as date time string.
      */
-    public string $timeoutSpamProtection = '5 mins';
+    public string $timeoutSpamProtection = '1 min';
 
     public function rules(): array
     {
@@ -88,7 +88,7 @@ class AccountResendConfirmForm extends Model
 
     public function isAlreadySent(): bool
     {
-        return ($user = $this->getUser()) && $user->verification_token && $user->updated_at->modify($this->timeoutSpamProtection) > new DateTime();
+        return ($user = $this->getUser()) && $user->verification_token && $user->updated_at?->modify($this->timeoutSpamProtection) > new DateTime();
     }
 
     public function attributeLabels(): array

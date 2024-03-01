@@ -1,6 +1,6 @@
 <?php
 /**
- * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController::actionRecover()
+ * @see \davidhirtz\yii2\skeleton\controllers\AccountController::actionRecover()
  *
  * @var View $this
  * @var davidhirtz\yii2\skeleton\models\forms\LoginForm $form
@@ -8,7 +8,7 @@
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\PasswordRecoverFormActiveForm;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\PasswordRecoverActiveForm;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
@@ -23,10 +23,11 @@ $this->setTitle(Yii::t('skeleton', 'Recover Password'));
     <div class="centered">
         <?= Panel::widget([
             'title' => $this->title,
-            'content' => PasswordRecoverFormActiveForm::widget([
+            'content' => PasswordRecoverActiveForm::widget([
                 'model' => $form,
             ]),
         ]); ?>
+
         <?php if (Yii::$app->getUser()->getIsGuest()) {
             ?>
             <div class="list-group">

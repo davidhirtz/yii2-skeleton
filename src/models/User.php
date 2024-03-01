@@ -347,7 +347,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
 
         /** @see AccountController::actionConfirm() */
         return Yii::$app->getUrlManager()->createAbsoluteUrl([
-            'account/confirm',
+            '/admin/account/confirm',
             'email' => $this->email,
             'code' => $this->verification_token,
         ]);
@@ -361,7 +361,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
 
         /** @see AccountController::actionReset() */
         return Yii::$app->getUrlManager()->createAbsoluteUrl([
-            'account/reset',
+            '/admin/account/reset',
             'email' => $this->email,
             'code' => $this->password_reset_token,
         ]);

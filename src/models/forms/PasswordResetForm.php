@@ -84,29 +84,28 @@ class PasswordResetForm extends Model
             $user->generateAuthKey();
             $user->generatePasswordHash($this->newPassword);
             $user->password_reset_token = null;
+            $user->afterPasswordChange();
 
-            if (Yii::$app->getUser()->getIsGuest()) {
-                if (!$user->isUnconfirmed() || $webuser->isUnconfirmedEmailLoginEnabled()) {
-                    $webuser->loginType = UserLogin::TYPE_RESET_PASSWORD;
-                    $user->afterPasswordChange();
-
-                    return $webuser->login($user);
-                }
+            if ($webuser->getIsGuest() && (!$user->isUnconfirmed() || $webuser->isUnconfirmedEmailLoginEnabled())) {
+                $webuser->loginType = UserLogin::TYPE_RESET_PASSWORD;
+                return $webuser->login($user);
             }
 
-            return $user->update(false);
+            return $user->update();
         }
 
         return false;
     }
 
-    
+
     public function attributeLabels(): array
     {
         $user = $this->getUser();
 
         return [
-            'newPassword' => $user && $user->login_count ? Yii::t('skeleton', 'New password') : Yii::t('skeleton', 'Password'),
+            'newPassword' => $user?->login_count
+                ? Yii::t('skeleton', 'New password')
+                : Yii::t('skeleton', 'Password'),
             'repeatPassword' => Yii::t('skeleton', 'Repeat password'),
         ];
     }

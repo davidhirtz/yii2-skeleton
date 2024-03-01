@@ -92,7 +92,7 @@ trait TypeGridViewTrait
         return $items;
     }
 
-    protected function getTypeIcon(TypeAttributeInterface $model): Icon
+    protected function getTypeIcon(TypeAttributeInterface $model): string
     {
         return Icon::tag($model->getTypeIcon(), [
             'data-toggle' => 'tooltip',

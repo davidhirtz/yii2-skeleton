@@ -10,7 +10,7 @@ use davidhirtz\yii2\skeleton\codeception\functional\BaseCest;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\PasswordRecoverFormActiveForm;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\PasswordRecoverActiveForm;
 use davidhirtz\yii2\skeleton\tests\support\FunctionalTester;
 use Symfony\Component\Mime\Email;
 use Yii;
@@ -76,7 +76,7 @@ class RecoverPasswordCest extends BaseCest
 
     protected function submitPasswordRecoverForm(FunctionalTester $I, string $email): void
     {
-        $widget = Yii::createObject(PasswordRecoverFormActiveForm::class);
+        $widget = Yii::createObject(PasswordRecoverActiveForm::class);
 
         $I->submitForm("#$widget->id", [
             Html::getInputName($widget->model, 'email') => $email,

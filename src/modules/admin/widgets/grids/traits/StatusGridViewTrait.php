@@ -51,7 +51,7 @@ trait StatusGridViewTrait
         ]);
     }
 
-    protected function getStatusIcon(StatusAttributeInterface $model): Icon
+    protected function getStatusIcon(StatusAttributeInterface $model): string
     {
         return Icon::tag($model->getStatusIcon(), [
             'data-toggle' => 'tooltip',
