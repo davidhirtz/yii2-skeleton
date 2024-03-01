@@ -238,24 +238,24 @@ trait ActiveFormTrait
 
     public function renderButtons(): void
     {
-        $buttonRow = $this->buttonRow($this->buttons ?: ($this->showSubmitButton ? $this->button() : null));
-        echo $buttonRow && $this->hasStickyButtons ? Html::tag('div', $buttonRow, ['class' => 'form-group-sticky']) : $buttonRow;
+        $buttons = $this->buttons ?: ($this->showSubmitButton ? $this->button() : null);
+
+        if ($buttons) {
+            $buttonRow = $this->buttonRow($buttons);
+
+            echo $this->hasStickyButtons
+                ? Html::tag('div', $buttonRow, ['class' => 'form-group-sticky'])
+                : $buttonRow;
+        }
     }
 
-    /**
-     * Renders the footer.
-     */
     public function renderHeader(): void
     {
     }
 
-    /**
-     * Renders the footer.
-     */
     public function renderFooter(): void
     {
     }
-
 
     public function horizontalLine(): string
     {
