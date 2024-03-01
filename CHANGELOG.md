@@ -1,3 +1,7 @@
+## 2.2.2 (Mar 2, 2024)
+
+- Fixed `ActiveFormTrait::$showSubmitButton` to correctly hide the submit button when set to `false`
+
 ## 2.2.1 (Mar 1, 2024)
 
 - Added `AccountResendConfirmActiveForm` and `PasswordResetActiveForm`
