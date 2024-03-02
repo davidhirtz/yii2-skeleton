@@ -44,8 +44,11 @@ class UserActiveForm extends ActiveForm
             'last_name',
             'city',
             'country',
-            'sendEmail',
         ];
+
+        if ($this->model->user->getIsNewRecord()) {
+            $this->fields[] = 'sendEmail';
+        }
 
         parent::init();
     }
