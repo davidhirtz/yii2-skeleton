@@ -213,6 +213,7 @@ return [
     'The requested page was not found' => 'Die angeforderte Seite wurde nicht gefunden',
     'The selected redirect rules were deleted.' => 'Die ausgewählten Weiterleitungen wurden gelöscht.',
     'The site ownership could not be transferred' => 'Der Webseitenbesitzer konnte nicht geändert werden',
+    'The user cannot be deleted.' => 'Der Benutzer kann nicht gelöscht werden.',
     'The user could not be created' => 'Der Benutzer konnte nicht erstellt werden',
     'The user could not be updated' => 'Der Benutzer konnte nicht aktualisiert werden',
     'The user was created.' => 'Der neue Benutzer wurde erstellt.',

@@ -150,12 +150,12 @@ if ($form->user->isUnconfirmed()) {
 } ?>
 
 <?php
-if (!$form->user->isOwner()) {
+if ($form->user->isDeletable()) {
     echo Panel::widget([
         'type' => 'danger',
         'title' => Yii::t('skeleton', 'Delete Account'),
         'content' => DeleteActiveForm::widget([
-            'model' => $form,
+            'model' => $form->user,
             'attribute' => 'password',
             'action' => ['delete'],
             'message' => Yii::t('skeleton', 'Type your password in the text field below to delete your account, all related items and uploaded files. This cannot be undone, please be certain!'),

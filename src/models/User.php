@@ -220,8 +220,11 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
 
     public function delete(): false|int
     {
-        if ($this->isOwner()) {
-            $this->addError('id', Yii::t('skeleton', 'This user is the website owner. Please transfer ownership to another user before deleting this user.'));
+        if (!$this->isDeletable()) {
+            $this->addError('id', $this->isOwner()
+                ? Yii::t('skeleton', 'This user is the website owner. Please transfer ownership to another user before deleting this user.')
+                : Yii::t('skeleton', 'The user cannot be deleted.'));
+
             return false;
         }
 
@@ -336,7 +339,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
 
     public function getInitials(): string
     {
-        return $this->first_name && $this->last_name ? ($this->first_name[0] . $this->last_name[0]) : substr((string) $this->name, 0, 2);
+        return $this->first_name && $this->last_name ? ($this->first_name[0] . $this->last_name[0]) : substr((string)$this->name, 0, 2);
     }
 
     public function getEmailConfirmationUrl(): ?string
@@ -450,6 +453,11 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
     public function getTrailModelType(): string
     {
         return Yii::t('skeleton', 'User');
+    }
+
+    public function isDeletable(): bool
+    {
+        return !$this->isOwner();
     }
 
     public function isOwner(): bool

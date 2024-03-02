@@ -213,6 +213,7 @@ return [
     'The requested page was not found' => '',
     'The selected redirect rules were deleted.' => '',
     'The site ownership could not be transferred' => '',
+    'The user cannot be deleted.' => '',
     'The user could not be created' => '',
     'The user could not be updated' => '',
     'The user was created.' => '',
