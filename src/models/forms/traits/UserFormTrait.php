@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\models\forms\traits;
 
 use davidhirtz\yii2\skeleton\models\forms\UserPictureForm;
+use davidhirtz\yii2\skeleton\web\StreamUploadedFile;
 use yii\web\UploadedFile;
 
 trait UserFormTrait
@@ -17,6 +18,7 @@ trait UserFormTrait
     public ?string $timezone = null;
 
     public ?string $repeatPassword = null;
+    public UploadedFile|StreamUploadedFile|string|null $upload = null;
 
     public function afterValidate(): void
     {

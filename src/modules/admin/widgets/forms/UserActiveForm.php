@@ -39,7 +39,6 @@ class UserActiveForm extends ActiveForm
             '-',
             'language',
             'timezone',
-            'upload',
             '-',
             'first_name',
             'last_name',

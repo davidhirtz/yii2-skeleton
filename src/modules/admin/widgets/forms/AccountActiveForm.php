@@ -25,7 +25,6 @@ class AccountActiveForm extends ActiveForm
      * @uses static::oldPasswordField()
      * @uses static::languageField()
      * @uses static::timezoneField()
-     * @uses static::uploadField()
      * @uses static::countryField()
      */
     public function init(): void
@@ -40,7 +39,6 @@ class AccountActiveForm extends ActiveForm
             '-',
             'language',
             'timezone',
-            'upload',
             '-',
             'first_name',
             'last_name',

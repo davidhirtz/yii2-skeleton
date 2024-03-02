@@ -1,6 +1,7 @@
 ## 2.2.2 (Mar 2, 2024)
 
-- Fixed `ActiveFormTrait::$showSubmitButton` to correctly hide the submit button when set to `false`
+- Fixed `ActiveFormTrait::$showSubmitButton` to correctly hide the submitting button when set to `false`
+- Fixed `user/update.php` view to correctly display the user delete form
 
 ## 2.2.1 (Mar 1, 2024)
 

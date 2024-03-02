@@ -41,7 +41,7 @@ $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
     'user' => $form->user,
 ]); ?>
 
-<?php if (Yii::$app->getUser()->can(User::AUTH_USER_DELETE, ['user' => $form])) {
+<?php if (Yii::$app->getUser()->can(User::AUTH_USER_DELETE, ['user' => $form->user])) {
     echo UserDeletePanel::widget([
         'user' => $form->user,
     ]);

@@ -14,7 +14,6 @@ class UserForm extends Model
     use UserFormTrait;
     use ModelTrait;
 
-
     public string|int|null $status = null;
     public ?string $newPassword = null;
 
@@ -91,6 +90,7 @@ class UserForm extends Model
             'newPassword',
             'repeatPassword',
             'timezone',
+            'upload',
         ];
 
         if (!$this->user->isOwner()) {
