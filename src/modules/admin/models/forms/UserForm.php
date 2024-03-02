@@ -169,7 +169,7 @@ class UserForm extends Model
     public function attributeLabels(): array
     {
         return [
-            ...parent::attributeLabels(),
+            ...$this->user->attributeLabels(),
             'newPassword' => $this->user->getIsNewRecord()
                 ? Yii::t('skeleton', 'Password')
                 : Yii::t('skeleton', 'New password'),
