@@ -183,11 +183,18 @@ trait ActiveFormTrait
         $type = ArrayHelper::remove($options, 'type');
         $type ??= is_string($options[0] ?? null) ? array_shift($options) : 'text';
 
-        $field = $this->field($this->model, $attribute, $options);
+        $fieldOptions = ArrayHelper::remove($options, 'fieldOptions', []);
+        $field = $this->field($this->model, $attribute, $fieldOptions);
 
         if ($type == 'hidden') {
             Yii::debug("Rendering hidden input for '$attribute'");
             return $field->hiddenInput()->parts['{input}'];
+        }
+
+        if (in_array($type, ['dropDownList', 'select'])) {
+            Yii::debug("Rendering select input for '$attribute'");
+            $items = ArrayHelper::remove($options, 'items', array_shift($options));
+            return $field->dropDownList($items, $options);
         }
 
         $fieldTypes = [
@@ -208,7 +215,7 @@ trait ActiveFormTrait
 
         if (in_array($type, $fieldTypes)) {
             Yii::debug("Rendering '$attribute' active $type field");
-            return $field->input($type);
+            return $field->input($type, $options);
         }
 
         $owner = method_exists($field, $type) ? $field : (method_exists($this, $type) ? $this : null);

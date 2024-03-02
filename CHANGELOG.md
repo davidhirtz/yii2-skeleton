@@ -1,6 +1,7 @@
 ## 2.2.2 (Mar 2, 2024)
 
 - Added `User::isDeletable()`
+- Enhanced `ActiveFormTrait` to better distinguish between `fieldOptions` and `inputOptions`
 - Fixed `ActiveFormTrait::$showSubmitButton` to correctly hide the submitting button when set to `false`
 - Fixed `user/update.php` view to correctly display the user delete form
 
