@@ -125,7 +125,7 @@ class M190125140002Init extends Migration
             'city' => $this->string(50)->null(),
             'country' => $this->string(2)->null(),
             'picture' => $this->string(50)->null(),
-            'language' => $this->string(5)->notNull()->defaultValue(Yii::$app->sourceLanguage),
+            'language' => $this->string(5)->notNull()->defaultValue(Yii::$app->language),
             'timezone' => $this->string(100)->null(),
             'auth_key' => $this->string(32)->notNull(),
             'email_confirmation_code' => $this->string(30)->null(),
