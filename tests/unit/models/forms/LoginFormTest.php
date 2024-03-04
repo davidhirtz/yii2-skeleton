@@ -3,22 +3,14 @@
 namespace davidhirtz\yii2\skeleton\tests\unit\models\forms;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixture;
+use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
 use davidhirtz\yii2\skeleton\validators\GoogleAuthenticatorValidator;
 use Yii;
 
 class LoginFormTest extends Unit
 {
-    public function _fixtures(): array
-    {
-        return [
-            'users' => [
-                'class' => UserFixture::class,
-                'dataFile' => codecept_data_dir() . 'user.php'
-            ],
-        ];
-    }
+    use UserFixtureTrait;
 
     public function testLoginNoUser(): void
     {

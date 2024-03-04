@@ -125,7 +125,7 @@ class AccountController extends Controller
      */
     public function actionToken(): string
     {
-        return SignupForm::create()::getSessionToken();
+        return SignupForm::create()->getSessionToken();
     }
 
     public function actionLogin(): Response|string

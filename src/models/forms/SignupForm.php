@@ -16,8 +16,8 @@ class SignupForm extends Model
 
     final public const SESSION_TOKEN_NAME = 'signup_token';
     final public const SESSION_TIMESTAMP_NAME = 'signup_timestamp';
-    public const SESSION_MIN_TIME = 2;
-    public const SESSION_MAX_TIME = 1800;
+    public const SESSION_TOKEN_MIN_TIME = 5;
+    public const SESSION_TOKEN_MAX_TIME = 1800;
 
     public ?string $email = null;
     public ?string $name = null;
@@ -50,14 +50,12 @@ class SignupForm extends Model
      */
     public ?string $token = null;
 
-    public ?User $user = null;
+    public readonly User $user;
 
-    public function init(): void
+    public function __construct(?User $user = null, $config = [])
     {
-        $this->user ??= User::create();
-        $this->user->setScenario($this->user::SCENARIO_INSERT);
-
-        parent::init();
+        $this->user = $user ?? User::create();
+        parent::__construct($config);
     }
 
     public function rules(): array
@@ -86,6 +84,7 @@ class SignupForm extends Model
             [
                 ['token'],
                 $this->validateToken(...),
+                'skipOnEmpty' => false,
             ],
             [
                 ['honeypot'],
@@ -159,19 +158,25 @@ class SignupForm extends Model
         }
     }
 
+    /**
+     * Validates the token against the session token and the time the token was set. If the token was generated less
+     * than 2 seconds ago or more than 30 minutes ago, the token is considered invalid.
+     */
     public function validateToken(): void
     {
-        $token = static::getSessionToken();
+        $token = $this->getSessionToken();
 
         if ($token !== null) {
-            if ($this->token !== $token) {
+            $tokenCreatedAt = Yii::$app->getSession()->get(self::SESSION_TIMESTAMP_NAME);
+
+            if ($this->token !== $token || $tokenCreatedAt === null) {
                 $this->addError('token', Yii::t('skeleton', 'Sign up could not be completed, please try again.'));
             }
 
             if (!$this->hasErrors('token')) {
-                $timestamp = time() - Yii::$app->getSession()->get(static::SESSION_TIMESTAMP_NAME, 0);
+                $timestamp = time() - $tokenCreatedAt;
 
-                if ($timestamp < static::SESSION_MIN_TIME && $timestamp > static::SESSION_MAX_TIME) {
+                if ($timestamp < static::SESSION_TOKEN_MIN_TIME || $timestamp > static::SESSION_TOKEN_MAX_TIME) {
                     $this->addError('token', Yii::t('skeleton', 'Sign up could not be completed, please try again.'));
                 }
             }
@@ -202,7 +207,7 @@ class SignupForm extends Model
 
     public function afterInsert(): void
     {
-        if (static::getSessionToken() !== null) {
+        if ($this->getSessionToken() !== null) {
             Yii::$app->getSession()->set(static::SESSION_TOKEN_NAME, '');
         }
 
@@ -221,19 +226,23 @@ class SignupForm extends Model
     }
 
     /**
-     * Generates a random token saved in the user session. Override this method to return null to disabled token check.
+     * Generates a random token saved in the user session. If the token is not set or expired, a new token is generated.
+     *
+     * Override this method to return null to disabled token check.
      */
-    public static function getSessionToken(): ?string
+    public function getSessionToken(): ?string
     {
-        $time = time();
         $session = Yii::$app->getSession();
+        $time = time();
 
-        if ($session->get(static::SESSION_TIMESTAMP_NAME, 0) < $time - 300 || !$session->get(static::SESSION_TOKEN_NAME)) {
-            $session->set(static::SESSION_TOKEN_NAME, Yii::$app->getSecurity()->generateRandomString(20));
-            $session->set(static::SESSION_TIMESTAMP_NAME, $time);
+        $isExpired = $session->get(self::SESSION_TIMESTAMP_NAME, 0) < $time - static::SESSION_TOKEN_MAX_TIME;
+
+        if ($isExpired || !$session->get(self::SESSION_TOKEN_NAME)) {
+            $session->set(self::SESSION_TOKEN_NAME, Yii::$app->getSecurity()->generateRandomString(20));
+            $session->set(self::SESSION_TIMESTAMP_NAME, $time);
         }
 
-        return $session->get(static::SESSION_TOKEN_NAME, false);
+        return $session->get(self::SESSION_TOKEN_NAME, false);
     }
 
     public function isFacebookSignupEnabled(): bool

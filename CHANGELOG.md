@@ -1,3 +1,7 @@
+## 2.2.4 (Mar 4, 2024)
+
+- Enhanced `SignupForm` to better handle the token validation
+
 ## 2.2.3 (Mar 4, 2024)
 
 - Fixed an issue in `UserLanguageBehavior` where a previous language cookie would override the user language even when
