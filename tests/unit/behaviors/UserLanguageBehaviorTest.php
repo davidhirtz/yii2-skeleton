@@ -33,7 +33,7 @@ class UserLanguageBehaviorTest extends Unit
         $user = User::findOne(1);
 
         self::assertEquals('de', $user->language);
-        self::assertNull($this->getLanguageCookieValue());
+        self::assertEmpty($this->getLanguageCookieValue());
     }
 
     public function testGetIdentityLanguage()

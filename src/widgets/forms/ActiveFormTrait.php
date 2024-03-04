@@ -183,10 +183,12 @@ trait ActiveFormTrait
         $type = ArrayHelper::remove($options, 'type');
         $type ??= is_string($options[0] ?? null) ? array_shift($options) : 'text';
 
+        $fieldOptions = ArrayHelper::remove($options, 'fieldOptions', []);
         $language = ArrayHelper::remove($options, 'language');
 
-        $fieldOptions = ArrayHelper::remove($options, 'fieldOptions', []);
-        $fieldOptions['language'] ??= $language;
+        if ($language) {
+            $fieldOptions['language'] ??= $language;
+        }
 
         $field = $this->field($this->model, $attribute, $fieldOptions);
 
