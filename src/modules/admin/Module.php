@@ -190,9 +190,7 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module
             }
 
             if (count(Yii::$app->getI18n()->getLanguages()) > 1) {
-                $action->controller->attachBehavior('UserLanguageBehavior', [
-                    'class' => UserLanguageBehavior::class,
-                ]);
+                $action->controller->attachBehavior('UserLanguageBehavior', UserLanguageBehavior::class);
             }
         }
 
