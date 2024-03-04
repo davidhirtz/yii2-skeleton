@@ -1,3 +1,8 @@
+## 2.2.3 (Mar 4, 2024)
+
+- Fixed an issue in `UserLanguageBehavior` where a previous language cookie would override the user language even when
+  logged in
+
 ## 2.2.2 (Mar 2, 2024)
 
 - Added `User::isDeletable()`

@@ -38,32 +38,42 @@ class UserLanguageBehavior extends Behavior
         $language = Yii::$app->getRequest()->getLanguage();
 
         if ($language) {
-            if ($identity && $identity->language != $language) {
-                Yii::debug("Updating user language to $language");
-
-                $identity->language = $language;
-                $identity->update();
-                return;
-            }
-
-            $isNewCookieLanguage = !in_array($language, [
-                Yii::$app->getRequest()->getLanguageFromCookie(),
-                Yii::$app->sourceLanguage,
-            ]);
-
-            if ($isNewCookieLanguage) {
-                $cookie = Yii::$container->get(Cookie::class, [], [
-                    'name' => Yii::$app->getRequest()->languageParam,
-                    'value' => $language,
-                ]);
-
-                Yii::$app->getResponse()->getCookies()->add($cookie);
-                return;
-            }
+            $this->saveLanguage($language);
         }
 
         if ($identity && $this->setApplicationLanguage) {
             Yii::$app->language = $identity->language;
+        }
+    }
+
+    protected function saveLanguage(string $language): void
+    {
+        $identity = Yii::$app->getUser()->getIdentity();
+        $request = Yii::$app->getRequest();
+
+        if ($identity && $identity->language != $language) {
+            Yii::debug("Updating user language to $language");
+
+            $identity->language = $language;
+            $identity->update();
+
+            Yii::$app->getResponse()->getCookies()->remove($request->languageParam);
+
+            return;
+        }
+
+        $isNewCookieLanguage = !in_array($language, [
+            $request->getLanguageFromCookie(),
+            Yii::$app->sourceLanguage,
+        ]);
+
+        if ($isNewCookieLanguage) {
+            $cookie = Yii::$container->get(Cookie::class, [], [
+                'name' => $request->languageParam,
+                'value' => $language,
+            ]);
+
+            Yii::$app->getResponse()->getCookies()->add($cookie);
         }
     }
 }
