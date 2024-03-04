@@ -93,7 +93,12 @@ if ($form->user->isUnconfirmed()) {
                     <td class="d-none d-table-cell-md"><?= Timeago::tag($auth->updated_at); ?>
                     <td class="d-none d-table-cell-lg"><?= Timeago::tag($auth->created_at); ?>
                     <td class="text-right">
-                        <a href="<?= Url::to(['deauthorize', 'id' => $auth->id, 'name' => $auth->name]) ?>" data-method="post" data-confirm="<?= Yii::t('skeleton', 'Are you sure your want to remove your {client} account?', ['client' => $title]); ?>" data-toggle="tooltip" title="<?= Yii::t('skeleton', 'Remove {client}', ['client' => $title]); ?>" class="btn btn-danger">
+                        <a href="<?= Url::to(['deauthorize', 'id' => $auth->id, 'name' => $auth->name]) ?>"
+                           data-method="post"
+                           data-confirm="<?= Yii::t('skeleton', 'Are you sure your want to remove your {client} account?', ['client' => $title]); ?>"
+                           data-toggle="tooltip"
+                           title="<?= Yii::t('skeleton', 'Remove {client}', ['client' => $title]); ?>"
+                           class="btn btn-danger">
                             <?= Icon::tag('trash-alt'); ?>
                         </a>
                     </td>
@@ -134,7 +139,8 @@ if ($form->user->isUnconfirmed()) {
                         <?php
                         if ((new LoginForm())->isFacebookLoginEnabled()) {
                             ?>
-                            <a href="<?= Url::to(['auth', 'authclient' => 'facebook']); ?>" class="list-group-item list-group-item-action">
+                            <a href="<?= Url::to(['auth', 'authclient' => 'facebook']); ?>"
+                               class="list-group-item list-group-item-action">
                                 <?= Icon::brand('facebook-f', ['class' => 'fa-fw']); ?>
                                 <?= Yii::t('skeleton', 'Login with Facebook'); ?>
                             </a>
@@ -149,8 +155,7 @@ if ($form->user->isUnconfirmed()) {
     <?php
 } ?>
 
-<?php
-if ($form->user->isDeletable()) {
+<?php if ($form->user->isDeletable()) {
     echo Panel::widget([
         'type' => 'danger',
         'title' => Yii::t('skeleton', 'Delete Account'),
@@ -166,11 +171,7 @@ if ($form->user->isDeletable()) {
             ],
         ])
     ]);
-} else {
-    ?>
-    <div class="alert alert-warning">
-        <?= Yii::t('skeleton', 'You cannot delete your account, because you are the owner of this website.'); ?>
-    </div>
-    <?php
+} elseif ($form->user->isOwner()) {
+    echo Html::warning(Yii::t('skeleton', 'You cannot delete your account, because you are the owner of this website.'));
 }
 ?>
