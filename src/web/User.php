@@ -169,7 +169,8 @@ class User extends \yii\web\User
             return false;
         }
 
-        return !(!$this->disableRbacForOwner || !$this->identity->isOwner()) || parent::can($permissionName, $params, $allowCaching);
+        return ($this->disableRbacForOwner && $this->identity?->isOwner())
+            || parent::can($permissionName, $params, $allowCaching);
     }
 
     public function isLoginEnabled(): bool

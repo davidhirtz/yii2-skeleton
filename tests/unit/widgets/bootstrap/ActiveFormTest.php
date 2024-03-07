@@ -105,7 +105,6 @@ class TestActiveForm extends ActiveForm
      */
     public function customField($options = []): ActiveField|string
     {
-        codecept_debug($options);
         return $this->field($this->model, 'custom', $options);
     }
 }

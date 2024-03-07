@@ -42,7 +42,7 @@ class Nav extends \yii\bootstrap4\Nav
      */
     public array $labelOptions = [];
 
-    private bool $_isActive = false;
+    private bool $_hasActiveItem = false;
 
     /**
      * Overrides default implementation for `roles` option to validate user access. And allows for the option to hide
@@ -57,7 +57,7 @@ class Nav extends \yii\bootstrap4\Nav
                 $hasAccess = false;
 
                 foreach ((array)$roles as $role) {
-                    if (Yii::$app->getUser()->can($role)) {
+                    if ($role === '*' || Yii::$app->getUser()->can($role)) {
                         $hasAccess = true;
                         break;
                     }
@@ -75,7 +75,9 @@ class Nav extends \yii\bootstrap4\Nav
             $items[] = $this->renderItem($item);
         }
 
-        return !$this->hideOneItem || count($items) > 1 ? Html::tag('ul', implode('', $items), $this->options) : '';
+        return $items && (!$this->hideOneItem || count($items) > 1)
+            ? Html::tag('ul', implode('', $items), $this->options) :
+            '';
     }
 
     /**
@@ -84,7 +86,7 @@ class Nav extends \yii\bootstrap4\Nav
      *
      * Changed item options:
      *
-     * - active: boolean|array allows a multiple array that is checked against controller and module
+     * - active: boolean|array|callable allows a multiple array that is checked against controller and module
      * - badge: string, optional, adds badge to item label
      * - badgeOptions: array, optional, additional html options for badge tag.
      * - icon: string, optional, the Font Awesome icon name.
@@ -145,6 +147,10 @@ class Nav extends \yii\bootstrap4\Nav
      */
     protected function isItemActive($item): bool
     {
+        if ($this->_hasActiveItem) {
+            return false;
+        }
+
         $item['active'] ??= null;
 
         if (is_callable($item['active'])) {
@@ -156,40 +162,38 @@ class Nav extends \yii\bootstrap4\Nav
             $request = Yii::$app->getRequest();
             $item['active'] = false;
 
-            if (!$this->_isActive) {
-                foreach ($routes as $route => $params) {
-                    if (is_int($route)) {
-                        $route = $params;
-                    }
+            foreach ($routes as $route => $params) {
+                if (is_int($route)) {
+                    $route = is_array($params) ? array_shift($params) : $params;
+                }
 
-                    $shouldSkip = ($route[0] == '!');
+                $shouldSkip = ($route[0] == '!');
 
-                    if ($shouldSkip) {
-                        $route = substr((string)$route, 1);
-                    }
+                if ($shouldSkip) {
+                    $route = substr((string)$route, 1);
+                }
 
-                    if (preg_match("~$route~", (string)Yii::$app->controller->route)) {
-                        if (is_array($params)) {
-                            foreach ($params as $key => $value) {
-                                if ((is_int($key) && !in_array($value, array_keys($request->get())))
-                                    || (is_string($key) && $request->get($key) != $value)) {
-                                    continue 2;
-                                }
+                if (preg_match("~$route~", (string)Yii::$app->controller->route)) {
+                    if (is_array($params)) {
+                        foreach ($params as $key => $value) {
+                            if ((is_int($key) && !in_array($value, array_keys($request->get())))
+                                || (is_string($key) && $request->get($key) != $value)) {
+                                continue 2;
                             }
                         }
-
-                        if ($shouldSkip) {
-                            break;
-                        }
-
-                        $this->_isActive = true;
-                        $item['active'] = true;
-                        break;
                     }
+
+                    if ($shouldSkip) {
+                        return false;
+                    }
+
+                    $this->_hasActiveItem = true;
+                    return true;
                 }
             }
         }
 
-        return parent::isItemActive($item);
+        $this->_hasActiveItem = parent::isItemActive($item);
+        return $this->_hasActiveItem;
     }
 }
