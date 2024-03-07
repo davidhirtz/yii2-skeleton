@@ -1,5 +1,6 @@
-## 2.2.4 (Mar 4, 2024)
+## 2.2.4 (under development)
 
+- Enhanced `Nav` to allow for `active` callables
 - Enhanced `SignupForm` to better handle the token validation
 
 ## 2.2.3 (Mar 4, 2024)

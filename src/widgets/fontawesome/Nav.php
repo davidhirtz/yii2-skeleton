@@ -2,7 +2,6 @@
 
 namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 
-use Closure;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\web\View;
 use Yii;
@@ -43,7 +42,7 @@ class Nav extends \yii\bootstrap4\Nav
      */
     public array $labelOptions = [];
 
-    private bool $isActive = false;
+    private bool $_isActive = false;
 
     /**
      * Overrides default implementation for `roles` option to validate user access. And allows for the option to hide
@@ -128,33 +127,52 @@ class Nav extends \yii\bootstrap4\Nav
         }
 
         if ($items = $item['items'] ?? []) {
-            if ($items instanceof Closure) {
+            if (is_callable($items)) {
                 $item['items'] = call_user_func($items) ?: null;
             }
         }
 
-        // If active is an array, treat the elements as routes and check them against the current controller route.
-        // If the route itself is an array, the key represents the route and the value either GETS parameter names or
-        // name value pairs that must match with the request. Routes can be reserved to prevent activating an item on
-        // a hit by starting the route with "!".
-        if (is_array($routes = $item['active'] ?? false)) {
+        return parent::renderItem($item);
+    }
+
+    /**
+     * Extends the default behavior to allow for a callable `active` option and to check against multiple routes, when
+     * the `active` key is an array.
+     *
+     * If a given route is an array, the key represents the route and the value either GETS parameter names or name
+     * value pairs that must match with the request. Routes can be reserved to prevent activating an item on a hit by
+     * starting the route with "!".
+     */
+    protected function isItemActive($item): bool
+    {
+        $item['active'] ??= null;
+
+        if (is_callable($item['active'])) {
+            $item['active'] = call_user_func($item['active']);
+        }
+
+        if (is_array($item['active'])) {
+            $routes = $item['active'];
             $request = Yii::$app->getRequest();
             $item['active'] = false;
 
-            if (!$this->isActive) {
+            if (!$this->_isActive) {
                 foreach ($routes as $route => $params) {
                     if (is_int($route)) {
                         $route = $params;
                     }
 
-                    if ($shouldSkip = ($route[0] == '!')) {
-                        $route = substr((string) $route, 1);
+                    $shouldSkip = ($route[0] == '!');
+
+                    if ($shouldSkip) {
+                        $route = substr((string)$route, 1);
                     }
 
-                    if (preg_match("~$route~", (string) Yii::$app->controller->route)) {
+                    if (preg_match("~$route~", (string)Yii::$app->controller->route)) {
                         if (is_array($params)) {
                             foreach ($params as $key => $value) {
-                                if ((is_int($key) && !in_array($value, array_keys($request->get()))) || (is_string($key) && $request->get($key) != $value)) {
+                                if ((is_int($key) && !in_array($value, array_keys($request->get())))
+                                    || (is_string($key) && $request->get($key) != $value)) {
                                     continue 2;
                                 }
                             }
@@ -164,13 +182,14 @@ class Nav extends \yii\bootstrap4\Nav
                             break;
                         }
 
-                        $this->isActive = $item['active'] = true;
+                        $this->_isActive = true;
+                        $item['active'] = true;
                         break;
                     }
                 }
             }
         }
 
-        return parent::renderItem($item);
+        return parent::isItemActive($item);
     }
 }
