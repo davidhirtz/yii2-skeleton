@@ -47,7 +47,7 @@ class NavBar extends \yii\bootstrap4\NavBar
         /** @var Module $module */
         $module = Yii::$app->getModule('admin');
         $items = $module->navbarItems;
-        ksort($items);
+        $this->sortItemsByOrder($items);
 
         return array_merge($this->getHomeItems(), $items);
     }
@@ -129,5 +129,19 @@ class NavBar extends \yii\bootstrap4\NavBar
                 'url' => ['/admin/dashboard/index'],
             ],
         ];
+    }
+
+    /**
+     * Sorts items by array key `order` and if not set by array key.
+     */
+    protected function sortItemsByOrder(array &$items): void
+    {
+        $orderByKeys = array_flip(array_keys($items));
+
+        uksort($items, static function ($a, $b) use ($items, $orderByKeys) {
+            $a = $items[$a]['order'] ?? $orderByKeys[$a];
+            $b = $items[$b]['order'] ?? $orderByKeys[$b];
+            return $a <=> $b;
+        });
     }
 }
