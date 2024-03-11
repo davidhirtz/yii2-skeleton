@@ -50,12 +50,15 @@ class ChunkedUploadedFile extends UploadedFile
     {
         // Try to get file name from header if it was not set via FILES.
         if (!$this->name) {
-            $this->name = rawurldecode((string) preg_replace('/(^[^"]+")|("$)/', '', (string)ArrayHelper::getValue($_SERVER, 'HTTP_CONTENT_DISPOSITION')));
+            $subject = (string)ArrayHelper::getValue($_SERVER, 'HTTP_CONTENT_DISPOSITION');
+            $this->name = rawurldecode((string)preg_replace('/(^[^"]+")|("$)/', '', $subject));
         }
 
         // Parse the Content-Range header, which is formatted like this:
         // Content-Range: bytes {int:start}-{int:end}/{int:total}
-        if ($range = ArrayHelper::getValue($_SERVER, 'HTTP_CONTENT_RANGE')) {
+        $range = ArrayHelper::getValue($_SERVER, 'HTTP_CONTENT_RANGE');
+
+        if ($range) {
             $range = preg_split('/[^0-9]+/', (string)$range);
             $range = array_map('intval', $range);
 
@@ -65,9 +68,7 @@ class ChunkedUploadedFile extends UploadedFile
         }
 
         // Unfortunately, Yii initializes UploadedFile without checking the definitions first.
-        if ($this->maxSize === null) {
-            $this->maxSize = Yii::$container->getDefinitions()[static::class]['maxSize'] ?? null;
-        }
+        $this->maxSize ??= Yii::$container->getDefinitions()[static::class]['maxSize'] ?? null;
 
         if ($this->maxSize > 0 && $this->size > $this->maxSize) {
             $this->error = UPLOAD_ERR_FORM_SIZE;
@@ -80,7 +81,11 @@ class ChunkedUploadedFile extends UploadedFile
                 @unlink($tempName);
             }
 
-            if (file_put_contents($tempName, fopen($this->tempName, 'r'), FILE_APPEND) === false) {
+            $data = fopen($this->tempName, 'r');
+
+            if ($data === false) {
+                $this->error = UPLOAD_ERR_NO_FILE;
+            } elseif (file_put_contents($tempName, $data, FILE_APPEND) === false) {
                 $this->error = UPLOAD_ERR_CANT_WRITE;
             } else {
                 if (!$this->isCompleted()) {
@@ -100,7 +105,11 @@ class ChunkedUploadedFile extends UploadedFile
      */
     public function saveAs($file, $deleteTempFile = true): bool
     {
-        if ($deleteTempFile && random_int(1, 10000) <= $this->gcProbability * 100) {
+        if ($deleteTempFile) {
+            $deleteTempFile = random_int(1, 10000) <= $this->gcProbability * 100;
+        }
+
+        if ($deleteTempFile) {
             $this->removeAbortedFiles();
         }
 
@@ -179,7 +188,7 @@ class ChunkedUploadedFile extends UploadedFile
         return filesize($tempName) == $this->size;
     }
 
-    
+
     public function isPartial(): bool
     {
         return $this->chunkSize !== null && $this->error === UPLOAD_ERR_PARTIAL;
