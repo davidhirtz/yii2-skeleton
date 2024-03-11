@@ -36,7 +36,9 @@ class ActiveField extends \yii\bootstrap4\ActiveField
      */
     public function render($content = null): string
     {
-        return ($content === null && ($this->parts['{input}'] ?? false) !== '') ? parent::render($content) : '';
+        return ($content === null && ($this->parts['{input}'] ?? false) !== '')
+            ? parent::render($content) :
+            '';
     }
 
     public function checkbox($options = [], $enclosedByLabel = false): static
@@ -47,10 +49,7 @@ class ActiveField extends \yii\bootstrap4\ActiveField
 
     public function fileInput($options = []): static
     {
-        if (!isset($options['class'])) {
-            $options['class'] = 'form-control-file';
-        }
-
+        $options['class'] ??= 'form-control-file';
         return parent::fileInput($options);
     }
 
@@ -79,13 +78,13 @@ class ActiveField extends \yii\bootstrap4\ActiveField
         return $this;
     }
 
-    /**
-     * @noinspection PhpUnused
-     */
     public function hexColor(array $options = []): static
     {
-        $options['maxlength'] = 6;
-        return $this->input('text', $options)->prependInput('#');
+        if (!str_starts_with($this->model->{$this->attribute}, '#')) {
+            $options['value'] ??= '#' . $this->model->{$this->attribute};
+        }
+
+        return $this->input('color', $options);
     }
 
     public function slug(array $options = []): static
