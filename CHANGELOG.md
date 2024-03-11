@@ -1,4 +1,4 @@
-## 2.2.4 (under development)
+## 2.2.4 (Mar 11, 2024)
 
 - Added mailer transport DSN fallback (Issues #24) 
 - Added support for `color`  type input fields (Issue #22)
