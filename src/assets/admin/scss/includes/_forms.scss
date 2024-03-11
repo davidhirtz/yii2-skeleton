@@ -128,6 +128,20 @@
   &::-webkit-calendar-picker-indicator {
     padding: 0;
   }
+
+  &[type="color"] {
+    padding: 0;
+    width: 38px;
+    height: 38px;
+
+    &::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    &::-webkit-color-swatch {
+      border: none;
+    }
+  }
 }
 
 .form-control {
@@ -243,15 +257,16 @@ select[multiple].form-control {
 }
 
 // Removes weird whitespace in FF and adds padding to options on multiple.
-@-moz-document url-prefix() {
-  select.form-control {
-    text-indent: -2px;
-  }
+// This is not needed anymore (2024)
+//@-moz-document url-prefix() {
+  //select.form-control {
+  //  text-indent: -2px;
+  //}
 
   //select[size].form-control option, select[multiple].form-control option {
   //  text-indent: -3px;
   //}
-}
+//}
 
 textarea.form-control {
   height: auto;
