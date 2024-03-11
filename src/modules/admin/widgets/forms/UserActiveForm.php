@@ -42,7 +42,7 @@ class UserActiveForm extends ActiveForm
             '-',
             'first_name',
             'last_name',
-            ['city', 'color'],
+            'city',
             'country',
         ];
 
