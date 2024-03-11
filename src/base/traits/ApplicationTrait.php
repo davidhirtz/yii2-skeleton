@@ -188,9 +188,7 @@ trait ApplicationTrait
         }
 
         // Mailer transport DSN might need to be set via params (eg. yii2-config module)
-        if ($mailerDsn = ($config['params']['mailerDsn'] ?? false)) {
-            $config['components']['mailer']['transport']['dsn'] = $mailerDsn;
-        }
+        $config['components']['mailer']['transport']['dsn'] ??= $config['params']['mailerDsn'] ?? 'sendmail://default';
 
         // Make sure the cache prefix via params is applied before application bootstrap, as a DB session might get
         // started which could trigger the database schema cache.
