@@ -136,7 +136,10 @@ class NavBar extends \yii\bootstrap4\NavBar
      */
     protected function sortItemsByOrder(array &$items): void
     {
-        $orderByKeys = array_flip(array_keys($items));
+        $keys = array_keys($items);
+        sort($keys);
+
+        $orderByKeys = array_flip($keys);
 
         uksort($items, static function ($a, $b) use ($items, $orderByKeys) {
             $a = $items[$a]['order'] ?? $orderByKeys[$a];

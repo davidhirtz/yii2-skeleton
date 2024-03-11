@@ -1,3 +1,8 @@
+## 2.2.6 (Mar 11, 2024)
+
+- Changed default navbar order for admin module
+- Fixed empty value bug in `ActiveField::hexColor()`
+
 ## 2.2.5 (Mar 11, 2024)
 
 - Fixed `color` test

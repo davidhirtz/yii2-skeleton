@@ -80,8 +80,10 @@ class ActiveField extends \yii\bootstrap4\ActiveField
 
     public function hexColor(array $options = []): static
     {
-        if (!str_starts_with($this->model->{$this->attribute}, '#')) {
-            $options['value'] ??= '#' . $this->model->{$this->attribute};
+        $value = $options['value'] ?? $this->model->{$this->attribute};
+
+        if ($value && !str_starts_with($value, '#')) {
+            $options['value'] ??= "#$value";
         }
 
         return $this->input('color', $options);
