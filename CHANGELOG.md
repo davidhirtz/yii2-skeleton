@@ -1,6 +1,10 @@
+## 2.2.5 (Mar 11, 2024)
+
+- Fixed `color` test
+
 ## 2.2.4 (Mar 11, 2024)
 
-- Added mailer transport DSN fallback (Issues #24) 
+- Added mailer transport DSN fallback (Issues #24)
 - Added support for `color`  type input fields (Issue #22)
 - Enhanced `Nav` to allow for `active` callables
 - Enhanced `Navbar` item sorting by introducing an optional `order` array key
