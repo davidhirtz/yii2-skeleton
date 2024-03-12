@@ -1,6 +1,5 @@
 <?php
 /**
- * Login list.
  * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\UserLoginController::actionIndex()
  *
  * @var View $this
