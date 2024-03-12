@@ -13,6 +13,7 @@ use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use yii\data\ActiveDataProvider;
 
 $this->setTitle(Yii::t('skeleton', 'Permissions'));
+$this->setBreadcrumb(Yii::t('skeleton', 'Permissions'), ['index']);
 ?>
 
 <?= UserSubmenu::widget(); ?>

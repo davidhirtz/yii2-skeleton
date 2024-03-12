@@ -14,6 +14,7 @@ use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use yii\data\ActiveDataProvider;
 
 $this->setTitle(Yii::t('skeleton', 'Logins'));
+$this->setBreadcrumb(Yii::t('skeleton', 'Logins'), ['index']);
 ?>
 
 <?= UserSubmenu::widget(); ?>

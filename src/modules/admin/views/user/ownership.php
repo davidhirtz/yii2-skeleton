@@ -13,6 +13,7 @@ use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 
 $this->setTitle(Yii::t('skeleton', 'Transfer Ownership'));
+$this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
 ?>
 
 <?= UserSubmenu::widget(); ?>

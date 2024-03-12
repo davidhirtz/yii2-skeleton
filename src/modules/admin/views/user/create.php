@@ -15,6 +15,7 @@ use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 
 $this->setTitle(Yii::t('skeleton', 'Create New User'));
+$this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
 ?>
 
 <?= UserSubmenu::widget([
