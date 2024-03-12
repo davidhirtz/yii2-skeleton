@@ -11,12 +11,12 @@ trait TypeFieldTrait
     {
         $options['inputOptions'] ??= $this->getTypeToggleOptions();
 
-        return count($types = $this->getTypes()) > 1
+        return count($types = $this->getTypeItems()) > 1
             ? $this->field($this->model, 'type', $options)->dropDownList($types)
             : '';
     }
 
-    protected function getTypes(): array
+    protected function getTypeItems(): array
     {
         $types = array_filter($this->model::getTypes(), $this->filterByTypeOption(...));
         return ArrayHelper::getColumn($types, 'name');

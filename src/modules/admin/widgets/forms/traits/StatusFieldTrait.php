@@ -9,12 +9,12 @@ trait StatusFieldTrait
 {
     public function statusField(array $options = []): ActiveField|string
     {
-        return count($statuses = $this->getStatuses()) > 1
+        return count($statuses = $this->getStatusItems()) > 1
             ? $this->field($this->model, 'status', $options)->dropDownList($statuses)
             : '';
     }
 
-    protected function getStatuses(): array
+    protected function getStatusItems(): array
     {
         return ArrayHelper::getColumn($this->model::getStatuses(), 'name');
     }

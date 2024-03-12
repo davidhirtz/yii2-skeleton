@@ -1,3 +1,10 @@
+## 2.2.7 (under development)
+
+- Renamed `StatusFieldTrait::getStatuses()` to `getStatusItems()`
+- Renamed `StatusGridViewTrait::$defaultStatusItem` to `StatusGridViewTrait::$statusDefaultItem`
+- Renamed `TypeFieldTrait::getTypes()` to `getTypeItems()`
+- Renamed `TypeGridViewTrait::$defaultTypeItem` to `TypeGridViewTrait::$typeDefaultItem`
+
 ## 2.2.6 (Mar 11, 2024)
 
 - Changed default navbar order for admin module

@@ -24,7 +24,7 @@ trait TypeGridViewTrait
     /**
      * @var string|null whether the default item in the types dropdown should be shown
      */
-    public ?string $defaultTypeItem = null;
+    public ?string $typeDefaultItem = null;
 
     public function typeColumn(): array
     {
@@ -67,10 +67,9 @@ trait TypeGridViewTrait
             'label' => $name ?? Yii::t('skeleton', 'Type'),
             'items' => $this->typeDropdownItems(),
             'paramName' => $this->typeParamName,
-            'defaultItem' => $this->defaultTypeItem,
+            'defaultItem' => $this->typeDefaultItem,
         ]);
     }
-
 
     protected function typeDropdownItems(): array
     {

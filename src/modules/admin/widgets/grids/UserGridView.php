@@ -77,7 +77,10 @@ class UserGridView extends GridView
         return [
             'attribute' => 'name',
             'content' => function (User $user) {
-                $name = ($name = $user->getUsername()) ? Html::markKeywords($name, $this->getSearchKeywords()) : Html::tag('span', Yii::t('skeleton', 'User'), ['class' => 'text-muted']);
+                $name = ($name = $user->getUsername())
+                    ? Html::markKeywords($name, $this->getSearchKeywords())
+                    : Html::tag('span', Yii::t('skeleton', 'User'), ['class' => 'text-muted']);
+
                 return ($route = $this->getRoute($user)) ? Html::a($name, $route) : $name;
             }
         ];
@@ -94,7 +97,11 @@ class UserGridView extends GridView
                     ? Html::markKeywords(Html::encode($user->email), $this->getSearchKeywords())
                     : '';
 
-                return !$user->isUnconfirmed() ? $email : Html::tag('span', $email, [
+                if (!$user->isUnconfirmed()) {
+                    return $email;
+                }
+
+                return Html::tag('span', $email, [
                     'class' => 'text-muted',
                     'data-toggle' => 'tooltip',
                     'title' => Yii::t('skeleton', 'Unconfirmed email'),
@@ -111,7 +118,10 @@ class UserGridView extends GridView
             'contentOptions' => ['class' => 'd-none d-md-table-cell'],
             'content' => function (User $user) {
                 $timeago = Timeago::tag($user->last_login);
-                return Yii::$app->getUser()->can(User::AUTH_USER_UPDATE, ['user' => $user]) ? Html::a($timeago, ['/admin/user-login/view', 'user' => $user->id]) : $timeago;
+
+                return Yii::$app->getUser()->can(User::AUTH_USER_UPDATE, ['user' => $user])
+                    ? Html::a($timeago, ['/admin/user-login/view', 'user' => $user->id])
+                    : $timeago;
             }
         ];
     }
@@ -153,7 +163,7 @@ class UserGridView extends GridView
                     'class' => 'btn btn-primary',
                     'data-toggle' => 'tooltip',
                     'title' => Yii::t('skeleton', 'Permissions'),
-                ]
+                ],
             );
         }
 
@@ -162,7 +172,9 @@ class UserGridView extends GridView
 
     protected function getRoute(ActiveRecordInterface $model, array $params = []): array|false
     {
-        return Yii::$app->getUser()->can(User::AUTH_USER_UPDATE, ['user' => $model]) ? ['/admin/user/update', 'id' => $model->id, ...$params] : false;
+        return Yii::$app->getUser()->can(User::AUTH_USER_UPDATE, ['user' => $model])
+            ? ['/admin/user/update', 'id' => $model->id, ...$params]
+            : false;
     }
 
     public function getModel(): User
