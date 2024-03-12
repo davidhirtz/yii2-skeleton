@@ -51,7 +51,7 @@ class Controller extends \yii\web\Controller
         return false;
     }
 
-    public function success(Model|array|string $value, ?string $message = null): bool
+    public function success(Model|array|string|null $value, ?string $message = null): bool
     {
         if ($value instanceof Model && !$value->hasErrors()) {
             $value = $message;
