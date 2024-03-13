@@ -1,5 +1,6 @@
 ## 2.2.7 (under development)
 
+- Enhanced `ActiveFormTrait::plainTextRow()` to accept more options
 - Renamed `StatusFieldTrait::getStatuses()` to `getStatusItems()`
 - Renamed `StatusGridViewTrait::$defaultStatusItem` to `StatusGridViewTrait::$statusDefaultItem`
 - Renamed `TypeFieldTrait::getTypes()` to `getTypeItems()`

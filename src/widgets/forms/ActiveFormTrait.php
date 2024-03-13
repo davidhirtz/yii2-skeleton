@@ -291,8 +291,10 @@ trait ActiveFormTrait
 
     public function label(string $content, array $options = []): string
     {
+        $tag = ArrayHelper::remove($options, 'tag', 'div');
         Html::addCssClass($options, $this->fieldConfig['horizontalCssClasses']['label']);
-        return Html::tag('div', $content, $options);
+
+        return Html::tag($tag, $content, $options);
     }
 
     public function input(string $content, array $options = []): string
@@ -333,8 +335,15 @@ trait ActiveFormTrait
 
     public function plainTextRow(string $label, string $content, array $options = []): string
     {
-        return $this->row($this->label($label)
-            . $this->wrapper(Html::tag('div', $content, ['class' => 'form-control-plaintext'])), $options);
+        $labelOptions = ArrayHelper::remove($options, 'labelOptions', []);
+        $label = $this->label($label, $labelOptions);
+
+        $wrapperOptions = ArrayHelper::remove($options, 'wrapperOptions', []);
+
+        $content = Html::tag('div', $content, ['class' => 'form-control-plaintext']);
+        $wrapper = $this->wrapper($content, $wrapperOptions);
+
+        return $this->row($label . $wrapper, $options);
     }
 
     public function listRow(array $items, array $options = []): string
