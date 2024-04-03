@@ -1,10 +1,11 @@
-## 2.2.7 (under development)
+## 2.2.7 (Apr 3, 2024)
 
 - Enhanced `ActiveFormTrait::plainTextRow()` to accept more options
 - Renamed `StatusFieldTrait::getStatuses()` to `getStatusItems()`
 - Renamed `StatusGridViewTrait::$defaultStatusItem` to `StatusGridViewTrait::$statusDefaultItem`
 - Renamed `TypeFieldTrait::getTypes()` to `getTypeItems()`
 - Renamed `TypeGridViewTrait::$defaultTypeItem` to `TypeGridViewTrait::$typeDefaultItem`
+- Upgraded TinyMCE to version 7.0 (CVE-2024-29881)
 
 ## 2.2.6 (Mar 11, 2024)
 

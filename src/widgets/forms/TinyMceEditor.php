@@ -137,6 +137,7 @@ class TinyMceEditor extends InputWidget
         $this->clientOptions['highlight_on_focus'] ??= true;
         $this->clientOptions['object_resizing'] ??= false;
         $this->clientOptions['convert_urls'] ??= false;
+        $this->clientOptions['license_key'] ??= 'gpl';
 
         if ($this->language !== Yii::$app->sourceLanguage) {
             $this->clientOptions['language'] ??= match ($this->language) {
