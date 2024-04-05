@@ -60,17 +60,20 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
     {
         $request = Yii::$app->getRequest();
 
-        if (!$request->getIsConsoleRequest()) {
+        if (Yii::$app->has('user')) {
             Yii::$app->getUser()->loginUrl ??= ['/admin/account/login'];
 
             if (!YII_DEBUG) {
                 Yii::$app->getErrorHandler()->errorView = '@skeleton/modules/admin/views/dashboard/error.php';
             }
+        }
 
+        if (!$request->getIsConsoleRequest()) {
             //  Redirects draft URLs for the backend, but only if it's not an AJAX to prevent breaking frontend
             // implementations or REST APIs that use admin endpoints.
             if ($request->getIsDraft() && !$request->getIsAjax()) {
-                Yii::$app->getResponse()->redirect($request->getProductionHostInfo() . $request->getUrl())->send();
+                $url = $request->getProductionHostInfo() . $request->getUrl();
+                Yii::$app->getResponse()->redirect($url)->send();
             }
 
             if (count(Yii::$app->getI18n()->getLanguages()) > 1) {
