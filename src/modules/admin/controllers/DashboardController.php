@@ -8,10 +8,37 @@ use yii\filters\AccessControl;
 use yii\web\Response;
 
 /**
+ * @property array $panels {@see self::getPanels()}
  * @property Module $module
  */
 class DashboardController extends Controller
 {
+    public ?array $_panels = null;
+    public ?array $roles = null;
+
+    public function init(): void
+    {
+        if ($this->roles === null) {
+            $this->roles = [];
+
+            foreach ($this->panels as $panel) {
+                foreach ($panel['items'] ?? [] as $item) {
+                    $roles = $item['roles'] ?? null;
+
+                    if ($roles) {
+                        $this->roles = [...$this->roles, ...$roles];
+                    }
+                }
+            }
+
+            if (!$this->roles) {
+                $this->roles = ['@'];
+            }
+        }
+
+        parent::init();
+    }
+
     public function behaviors(): array
     {
         return [
@@ -22,7 +49,7 @@ class DashboardController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => $this->module->roles ?: ['@'],
+                        'roles' => $this->roles,
                     ],
                 ],
             ],
@@ -32,7 +59,13 @@ class DashboardController extends Controller
     public function actionIndex(): Response|string
     {
         return $this->render('index', [
-            'panels' => $this->module->panels,
+            'panels' => $this->panels,
         ]);
+    }
+
+    protected function getPanels(): array
+    {
+        $this->_panels ??= $this->module->getDashboardPanels();
+        return $this->_panels;
     }
 }

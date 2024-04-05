@@ -39,14 +39,12 @@ class LoginCest extends BaseCest
     public function checkLoginWithWrongPassword(FunctionalTester $I): void
     {
         $this->submitLoginForm($I, 'owner@domain.com', 'wrong');
-
         $I->seeValidationError(Yii::t('skeleton', 'Your email or password are incorrect.'));
     }
 
     public function checkLoginWithDisabledAccount(FunctionalTester $I): void
     {
         $this->submitLoginForm($I, 'disabled@domain.com', 'password');
-
         $I->seeValidationError(Yii::t('skeleton', 'Your account is currently disabled. Please contact an administrator!'));
     }
 

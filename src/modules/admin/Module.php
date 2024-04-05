@@ -4,6 +4,9 @@ namespace davidhirtz\yii2\skeleton\modules\admin;
 
 use davidhirtz\yii2\skeleton\behaviors\UserLanguageBehavior;
 use davidhirtz\yii2\skeleton\controllers\AccountController;
+use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
+use davidhirtz\yii2\skeleton\models\Redirect;
+use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\DashboardController;
@@ -14,7 +17,7 @@ use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\UserLoginController;
 use Yii;
 
-class Module extends \davidhirtz\yii2\skeleton\base\Module
+class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInterface
 {
     /**
      * @var string|null the module display name, defaults to "Admin"
@@ -27,153 +30,28 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module
     public string $alias = 'admin';
 
     /**
-     * @var array|false|null containing the roles to access any admin module or controller, if not set roles set
-     * via {@see Module::$navbarItems} will be used. If false, the module role check is disabled.
-     */
-    public array|false|null $roles = null;
-
-    /**
-     * @var int|null the time in seconds after which trail records should be deleted. Leave empty to never delete trail
-     * records.
+     * @var int|null the time in seconds after which trail records should be deleted.
+     * Leave empty to never delete trail records.
      */
     public ?int $trailLifetime = null;
-
-    /**
-     * @var array containing the admin menu items
-     */
-    public array $navbarItems = [];
-
-    /**
-     * @var array containing the panel items
-     */
-    public array $panels = [];
 
     public $defaultRoute = 'dashboard';
     public $controllerNamespace = 'app\modules\admin\controllers';
     public $layout = '@skeleton/modules/admin/views/layouts/main';
 
-    /**
-     * @var array the default controller map
-     */
-    protected array $defaultControllerMap = [
-        'account' => [
-            'class' => AccountController::class,
-            'viewPath' => '@skeleton/modules/admin/views/account',
-        ],
-        'auth' => [
-            'class' => AuthController::class,
-            'viewPath' => '@skeleton/modules/admin/views/auth',
-        ],
-        'dashboard' => [
-            'class' => DashboardController::class,
-            'viewPath' => '@skeleton/modules/admin/views/dashboard',
-        ],
-        'redirect' => [
-            'class' => RedirectController::class,
-            'viewPath' => '@skeleton/modules/admin/views/redirect',
-        ],
-        'system' => [
-            'class' => SystemController::class,
-            'viewPath' => '@skeleton/modules/admin/views/system',
-        ],
-        'trail' => [
-            'class' => TrailController::class,
-            'viewPath' => '@skeleton/modules/admin/views/trail',
-        ],
-        'user' => [
-            'class' => UserController::class,
-            'viewPath' => '@skeleton/modules/admin/views/user',
-        ],
-        'user-login' => [
-            'class' => UserLoginController::class,
-            'viewPath' => '@skeleton/modules/admin/views/user-login',
-        ],
-    ];
+    private ?array $_dashboardPanels = null;
+    private ?array $_navBarItems = null;
 
     public function init(): void
     {
-        if (Yii::$app->has('user')) {
-            $user = Yii::$app->getUser();
-            $user->loginUrl ??= ['/admin/account/login'];
+        $controllerMap = [];
 
-            if (!YII_DEBUG) {
-                Yii::$app->getErrorHandler()->errorView = '@skeleton/modules/admin/views/dashboard/error.php';
-            }
-
-            if (!$this->navbarItems) {
-                $this->navbarItems = [
-                    'users' => [
-                        'label' => Yii::t('skeleton', 'Users'),
-                        'icon' => 'users',
-                        'url' => ['/admin/user/index'],
-                        'active' => ['admin/auth', 'admin/login', 'admin/user'],
-                        'roles' => [User::AUTH_USER_ASSIGN, User::AUTH_USER_UPDATE],
-                    ],
-                ];
-            }
-
-            if (!$this->panels) {
-                $this->panels = [
-                    'skeleton' => [
-                        'name' => $this->name ?: Yii::t('skeleton', 'Administration'),
-                        'items' => [
-                            [
-                                'label' => Yii::t('skeleton', 'Create New User'),
-                                'url' => ['/admin/user/create'],
-                                'icon' => 'user-plus',
-                                'roles' => [User::AUTH_USER_CREATE],
-                            ],
-                            [
-                                'label' => Yii::t('skeleton', 'Your Account'),
-                                'url' => ['/admin/account/update'],
-                                'icon' => 'user',
-                            ],
-                            [
-                                'label' => Yii::t('skeleton', 'System Settings'),
-                                'url' => ['/admin/system/index'],
-                                'icon' => 'cog',
-                                'roles' => [User::AUTH_ROLE_ADMIN],
-                            ],
-                            [
-                                'label' => Yii::t('skeleton', 'History'),
-                                'url' => ['/admin/trail/index'],
-                                'icon' => 'history',
-                                'roles' => ['trailIndex'],
-                            ],
-                            [
-                                'label' => Yii::t('skeleton', 'Redirects'),
-                                'url' => ['/admin/redirect/index'],
-                                'icon' => 'forward',
-                                'roles' => ['redirectCreate'],
-                            ],
-                            [
-                                'label' => Yii::t('skeleton', 'Homepage'),
-                                'url' => '/',
-                                'icon' => 'globe',
-                                'options' => ['target' => '_blank'],
-                            ],
-                        ],
-                    ],
-                ];
-            }
+        foreach ($this->getSubmodules() as $submodule) {
+            $controllerMap = ArrayHelper::merge($controllerMap, $submodule->controllerMap);
         }
 
-        $this->controllerMap = [
-            ...$this->defaultControllerMap,
-            ...$this->controllerMap,
-        ];
-
-        foreach (array_keys($this->getModules()) as $module) {
-            $this->getModule($module);
-        }
-
-        if ($this->roles === null) {
-            $this->roles = [];
-
-            foreach ($this->navbarItems as $item) {
-                $this->roles = array_filter(array_merge($this->roles, $item['roles'] ?? []));
-            }
-        }
+        $controllerMap = ArrayHelper::merge($this->getCoreControllerMap(), $controllerMap);
+        $this->controllerMap = ArrayHelper::merge($controllerMap, $this->controllerMap);
 
         parent::init();
     }
@@ -183,6 +61,12 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module
         $request = Yii::$app->getRequest();
 
         if (!$request->getIsConsoleRequest()) {
+            Yii::$app->getUser()->loginUrl ??= ['/admin/account/login'];
+
+            if (!YII_DEBUG) {
+                Yii::$app->getErrorHandler()->errorView = '@skeleton/modules/admin/views/dashboard/error.php';
+            }
+
             //  Redirects draft URLs for the backend, but only if it's not an AJAX to prevent breaking frontend
             // implementations or REST APIs that use admin endpoints.
             if ($request->getIsDraft() && !$request->getIsAjax()) {
@@ -195,5 +79,163 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module
         }
 
         return parent::beforeAction($action);
+    }
+
+    protected function getCoreControllerMap(): array
+    {
+        return [
+            'account' => [
+                'class' => AccountController::class,
+                'viewPath' => '@skeleton/modules/admin/views/account',
+            ],
+            'auth' => [
+                'class' => AuthController::class,
+                'viewPath' => '@skeleton/modules/admin/views/auth',
+            ],
+            'dashboard' => [
+                'class' => DashboardController::class,
+                'viewPath' => '@skeleton/modules/admin/views/dashboard',
+            ],
+            'redirect' => [
+                'class' => RedirectController::class,
+                'viewPath' => '@skeleton/modules/admin/views/redirect',
+            ],
+            'system' => [
+                'class' => SystemController::class,
+                'viewPath' => '@skeleton/modules/admin/views/system',
+            ],
+            'trail' => [
+                'class' => TrailController::class,
+                'viewPath' => '@skeleton/modules/admin/views/trail',
+            ],
+            'user' => [
+                'class' => UserController::class,
+                'viewPath' => '@skeleton/modules/admin/views/user',
+            ],
+            'user-login' => [
+                'class' => UserLoginController::class,
+                'viewPath' => '@skeleton/modules/admin/views/user-login',
+            ],
+        ];
+    }
+
+    public function getDashboardPanels(): array
+    {
+        $panels = $this->getDefaultDashboardPanels();
+
+        foreach ($this->getSubmodules() as $module) {
+            $panels = ArrayHelper::merge($panels, $module->getDashboardPanels());
+        }
+
+        if ($this->_dashboardPanels) {
+            $panels = ArrayHelper::merge($panels, $this->_dashboardPanels);
+        }
+
+        return $panels;
+    }
+
+    protected function getDefaultDashboardPanels(): array
+    {
+        return [
+            'skeleton' => [
+                'name' => $this->name ?: Yii::t('skeleton', 'Administration'),
+                'items' => [
+                    'user' => [
+                        'label' => Yii::t('skeleton', 'Create New User'),
+                        'url' => ['/admin/user/create'],
+                        'icon' => 'user-plus',
+                        'roles' => [User::AUTH_USER_CREATE],
+                    ],
+                    'account' => [
+                        'label' => Yii::t('skeleton', 'Your Account'),
+                        'url' => ['/admin/account/update'],
+                        'icon' => 'user',
+                    ],
+                    'system' => [
+                        'label' => Yii::t('skeleton', 'System Settings'),
+                        'url' => ['/admin/system/index'],
+                        'icon' => 'cog',
+                        'roles' => [User::AUTH_ROLE_ADMIN],
+                    ],
+                    'trail' => [
+                        'label' => Yii::t('skeleton', 'History'),
+                        'url' => ['/admin/trail/index'],
+                        'icon' => 'history',
+                        'roles' => [Trail::AUTH_TRAIL_INDEX],
+                    ],
+                    'redirect' => [
+                        'label' => Yii::t('skeleton', 'Redirects'),
+                        'url' => ['/admin/redirect/index'],
+                        'icon' => 'forward',
+                        'roles' => [Redirect::AUTH_REDIRECT_CREATE],
+                    ],
+                    'homepage' => [
+                        'label' => Yii::t('skeleton', 'Homepage'),
+                        'url' => '/',
+                        'icon' => 'globe',
+                        'options' => ['target' => '_blank'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    public function setDashboardPanels(array $panels = []): void
+    {
+        $this->_dashboardPanels = $panels;
+    }
+
+    public function getNavBarItems(): array
+    {
+        $items = $this->getDefaultNavBarItems();
+
+        foreach ($this->getSubmodules() as $module) {
+            $items = ArrayHelper::merge($items, $module->getNavBarItems());
+        }
+
+        if ($this->_navBarItems) {
+            $items = ArrayHelper::merge($items, $this->_navBarItems);
+        }
+
+        return $items;
+    }
+
+    protected function getDefaultNavBarItems(): array
+    {
+        return [
+            'users' => [
+                'label' => Yii::t('skeleton', 'Users'),
+                'icon' => 'users',
+                'url' => ['/admin/user/index'],
+                'active' => ['admin/auth', 'admin/login', 'admin/user'],
+                'roles' => [
+                    User::AUTH_USER_ASSIGN,
+                    User::AUTH_USER_UPDATE,
+                ],
+            ],
+        ];
+    }
+
+    public function setNavBarItems(array $items = []): void
+    {
+        $this->_navBarItems = $items;
+    }
+
+    /**
+     * @return ModuleInterface[]
+     */
+    public function getSubmodules(): array
+    {
+        $modules = [];
+
+        foreach (array_keys($this->getModules()) as $moduleName) {
+            $module = $this->getModule($moduleName);
+
+            if ($module instanceof ModuleInterface) {
+                $modules[] = $module;
+            }
+        }
+
+        return $modules;
     }
 }

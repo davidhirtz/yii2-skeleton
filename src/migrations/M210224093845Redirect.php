@@ -32,7 +32,7 @@ class M210224093845Redirect extends Migration
         $auth = Yii::$app->getAuthManager();
         $admin = $auth->getRole(User::AUTH_ROLE_ADMIN);
 
-        $redirectCreate = $auth->createPermission('redirectCreate');
+        $redirectCreate = $auth->createPermission(Redirect::AUTH_REDIRECT_CREATE);
         $redirectCreate->description = Yii::t('skeleton', 'Create and update redirect rules', [], Yii::$app->sourceLanguage);
         $auth->add($redirectCreate);
 
@@ -45,6 +45,6 @@ class M210224093845Redirect extends Migration
         $this->dropTable(Redirect::tableName());
 
         $auth = Yii::$app->getAuthManager();
-        $this->delete($auth->itemTable, ['name' => 'redirectCreate']);
+        $this->delete($auth->itemTable, ['name' => Redirect::AUTH_REDIRECT_CREATE]);
     }
 }

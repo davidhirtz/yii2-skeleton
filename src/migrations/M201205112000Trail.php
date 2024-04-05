@@ -37,7 +37,7 @@ class M201205112000Trail extends Migration
         $auth = Yii::$app->getAuthManager();
         $admin = $auth->getRole(User::AUTH_ROLE_ADMIN);
 
-        $trailIndex = $auth->createPermission('trailIndex');
+        $trailIndex = $auth->createPermission(Trail::AUTH_TRAIL_INDEX);
         $trailIndex->description = Yii::t('skeleton', 'View history', [], $sourceLanguage);
         $auth->add($trailIndex);
 
@@ -50,6 +50,6 @@ class M201205112000Trail extends Migration
         $this->dropTable(Trail::tableName());
 
         $auth = Yii::$app->getAuthManager();
-        $this->delete($auth->itemTable, ['name' => 'trailIndex']);
+        $this->delete($auth->itemTable, ['name' => Trail::AUTH_TRAIL_INDEX]);
     }
 }

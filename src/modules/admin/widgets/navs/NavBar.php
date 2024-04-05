@@ -44,12 +44,18 @@ class NavBar extends \yii\bootstrap4\NavBar
      */
     public function getItems(): array
     {
+        return [...$this->getHomeItems(), ...$this->getModuleItems()];
+    }
+
+    protected function getModuleItems(): array
+    {
         /** @var Module $module */
         $module = Yii::$app->getModule('admin');
-        $items = $module->navbarItems;
+        $items = $module->getNavBarItems();
+
         $this->sortItemsByOrder($items);
 
-        return array_merge($this->getHomeItems(), $items);
+        return $items;
     }
 
     /**

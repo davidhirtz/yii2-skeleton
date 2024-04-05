@@ -1,3 +1,11 @@
+## 2.3.0 (Apr 5, 2024)
+
+- Added `DashboardController::$roles` to allow adjusting the admin dashboard roles, defaults to the roles used in the
+  dashboard panels
+- Fixed `UrlMananger::$languages` to accept `false` to disable the application language being set via URLs
+- Removed public properties `$roles`, `$navbarItems` and `$panels` from `davidhirtz\yii2\skeleton\modules\admin\Module`
+  in favor of the new methods to add navbar items and dashboard panels as described in new `ModuleInterface`.
+
 ## 2.2.7 (Apr 3, 2024)
 
 - Enhanced `ActiveFormTrait::plainTextRow()` to accept more options

@@ -32,16 +32,18 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
 {
     use TypeAttributeTrait;
 
-    public const TYPE_CREATE = 1;
-    public const TYPE_UPDATE = 2;
-    public const TYPE_DELETE = 3;
-    public const TYPE_ASSIGN = 6;
-    public const TYPE_REVOKE = 7;
-    public const TYPE_CHILD_CREATE = 8;
-    public const TYPE_CHILD_UPDATE = 9;
-    public const TYPE_CHILD_DELETE = 10;
-    public const TYPE_ORDER = 11;
-    public const TYPE_PASSWORD = 12;
+    final public const AUTH_TRAIL_INDEX = 'trailIndex';
+
+    final public const TYPE_CREATE = 1;
+    final public const TYPE_UPDATE = 2;
+    final public const TYPE_DELETE = 3;
+    final public const TYPE_ASSIGN = 6;
+    final public const TYPE_REVOKE = 7;
+    final public const TYPE_CHILD_CREATE = 8;
+    final public const TYPE_CHILD_UPDATE = 9;
+    final public const TYPE_CHILD_DELETE = 10;
+    final public const TYPE_ORDER = 11;
+    final public const TYPE_PASSWORD = 12;
 
     public ActiveRecordInterface|array|null $parents = null;
 

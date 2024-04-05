@@ -30,9 +30,11 @@ class Redirect extends ActiveRecord implements TypeAttributeInterface
     use TypeAttributeTrait;
     use UpdatedByUserTrait;
 
-    public const TYPE_DEFAULT = self::TYPE_MOVED_PERMANENTLY;
-    public const TYPE_MOVED_PERMANENTLY = 301;
-    public const TYPE_FOUND = 302;
+    final public const AUTH_REDIRECT_CREATE = 'redirectCreate';
+
+    final public const TYPE_DEFAULT = self::TYPE_MOVED_PERMANENTLY;
+    final public const TYPE_MOVED_PERMANENTLY = 301;
+    final public const TYPE_FOUND = 302;
 
     public function behaviors(): array
     {

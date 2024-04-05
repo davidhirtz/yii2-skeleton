@@ -24,7 +24,7 @@ class RedirectController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create', 'delete', 'delete-all', 'index', 'update'],
-                        'roles' => ['redirectCreate'],
+                        'roles' => [Redirect::AUTH_REDIRECT_CREATE],
                     ],
                 ],
             ],
