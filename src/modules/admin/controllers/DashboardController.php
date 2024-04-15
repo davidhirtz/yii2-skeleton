@@ -8,7 +8,6 @@ use yii\filters\AccessControl;
 use yii\web\Response;
 
 /**
- * @property array $panels {@see self::getPanels()}
  * @property Module $module
  */
 class DashboardController extends Controller
@@ -21,7 +20,7 @@ class DashboardController extends Controller
         if ($this->roles === null) {
             $this->roles = [];
 
-            foreach ($this->panels as $panel) {
+            foreach ($this->getPanels() as $panel) {
                 foreach ($panel['items'] ?? [] as $item) {
                     $roles = $item['roles'] ?? null;
 
@@ -59,11 +58,11 @@ class DashboardController extends Controller
     public function actionIndex(): Response|string
     {
         return $this->render('index', [
-            'panels' => $this->panels,
+            'panels' => $this->getPanels(),
         ]);
     }
 
-    protected function getPanels(): array
+    public function getPanels(): array
     {
         $this->_panels ??= $this->module->getDashboardPanels();
         return $this->_panels;
