@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
+use davidhirtz\yii2\skeleton\helpers\Url;
 use Yii;
 
 /**
@@ -82,18 +83,7 @@ class Request extends \yii\web\Request
      */
     public function getDraftHostInfo(): false|string
     {
-        if (!$this->draftSubdomain) {
-            return false;
-        }
-
-        if ($this->_draftHostInfo === null) {
-            $hostInfo = (string)$this->getHostInfo();
-
-            $this->_draftHostInfo = !$this->getIsDraft() || !str_contains($hostInfo, $this->draftSubdomain)
-                ? preg_replace('#^((https?://)(www.)?)#', "$2$this->draftSubdomain.", $hostInfo)
-                : $this->getHostInfo();
-        }
-
+        $this->_draftHostInfo ??= Url::draft((string)$this->getHostInfo());
         return $this->_draftHostInfo;
     }
 

@@ -1,3 +1,7 @@
+## 2.3.1 (Apr 15, 2024)
+
+- Extracted draft domain creating from `Request` to `Url::draft()`
+
 ## 2.3.0 (Apr 5, 2024)
 
 - Added `DashboardController::$roles` to allow adjusting the admin dashboard roles, defaults to the roles used in the
