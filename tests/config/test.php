@@ -1,9 +1,5 @@
 <?php
 
-if (is_file(__DIR__ . '/db.php')) {
-    require(__DIR__ . '/db.php');
-}
-
 return [
     'aliases' => [
         // This is a fix for the broken aliasing of `BaseMigrateController::getNamespacePath()`
@@ -15,6 +11,9 @@ return [
             'username' => getenv('MYSQL_USER') ?: 'root',
             'password' => getenv('MYSQL_PASSWORD') ?: '',
             'charset' => 'utf8',
+        ],
+        'request' => [
+            'hostInfo' => 'https://www.example.com',
         ],
     ],
     'params' => [

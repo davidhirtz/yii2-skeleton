@@ -69,10 +69,6 @@ class UrlManager extends \yii\web\UrlManager
             $this->i18nUrl = false;
         }
 
-        if (Yii::$app instanceof \davidhirtz\yii2\skeleton\console\Application) {
-            $this->setBaseUrl(Yii::$app->params['baseUrl'] ?? '');
-        }
-
         parent::init();
     }
 
@@ -81,6 +77,8 @@ class UrlManager extends \yii\web\UrlManager
         $request = Yii::$app->getRequest();
         $language = Yii::$app->language;
         $i18nUrl = $this->i18nUrl;
+
+        $params = (array)$params;
 
         if (!empty($params['i18n'])) {
             $i18nUrl = $this->enablePrettyUrl;
@@ -114,7 +112,7 @@ class UrlManager extends \yii\web\UrlManager
         return $url;
     }
 
-    public function createDraftUrl(array $params): string
+    public function createDraftUrl(array|string $params): string
     {
         if ($hostInfo = Yii::$app->getRequest()->getDraftHostInfo()) {
             return $hostInfo . $this->createUrl($params);
@@ -242,13 +240,17 @@ class UrlManager extends \yii\web\UrlManager
     {
         $params = [];
 
-        foreach (Yii::$app->getUrlManager()->rules as $rule) {
+        foreach ($this->rules as $rule) {
             if ($rule instanceof UrlRule) {
                 $param = explode('/', (string)$rule->name)[$position];
+
                 if (preg_match('/^\w+$/', $param)) {
                     $params[] = $param;
-                } elseif (preg_match('/^<\w+:([\w|]+)>$/', $param, $matches)) {
-                    $params = array_merge($params, explode('|', $matches[1]));
+                } elseif (preg_match('/^<\w+:\(?([\w_\-|]+)\)?>$/', $param, $matches)) {
+                    $params = [
+                        ...$params,
+                        ...explode('|', $matches[1])
+                    ];
                 }
             }
         }

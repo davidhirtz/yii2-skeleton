@@ -48,7 +48,7 @@ class SitemapControllerTest extends Unit
 
         $child = $xml->children()->children();
 
-        self::assertEquals('http://localhost/sitemap.xml?key=urls&offset=0', $child->loc[0]);
+        self::assertEquals('https://www.example.com/sitemap.xml?key=urls&offset=0', $child->loc[0]);
         self::assertEquals('2024-01-01 10:00:00', $child->lastmod[0]);
     }
 

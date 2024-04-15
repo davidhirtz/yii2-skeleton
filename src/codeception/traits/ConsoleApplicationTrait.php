@@ -9,6 +9,8 @@ trait ConsoleApplicationTrait
     protected function createConsoleApplicationMock(): void
     {
         $config = require(__DIR__ . '/../../../tests/config/test.php');
+        unset($config['components']['request']['hostInfo']);
+
         (new Application($config));
     }
 }

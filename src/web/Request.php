@@ -38,7 +38,7 @@ class Request extends \yii\web\Request
             $this->cookieValidationKey = Yii::$app->params['cookieValidationKey'] ?? '';
         }
 
-        if ($this->draftSubdomain && str_contains((string) $this->getHostInfo(), "//$this->draftSubdomain.")) {
+        if ($this->draftSubdomain && str_contains((string)$this->getHostInfo(), "//$this->draftSubdomain.")) {
             $this->_isDraft = true;
         }
 
@@ -72,7 +72,7 @@ class Request extends \yii\web\Request
     public function getProductionHostInfo(): string
     {
         return $this->getIsDraft()
-            ? str_replace("//$this->draftSubdomain.", '//', (string) $this->getHostInfo())
+            ? str_replace("//$this->draftSubdomain.", '//', (string)$this->getHostInfo())
             : $this->getHostInfo();
     }
 
@@ -80,11 +80,19 @@ class Request extends \yii\web\Request
      * Creates the draft URL by trying to replace existing "www" or adding the $draftSubdomain as the first subdomain to
      * the host.
      */
-    public function getDraftHostInfo(): bool|string
+    public function getDraftHostInfo(): false|string
     {
-        $this->_draftHostInfo ??= $this->getIsDraft() && $this->draftSubdomain && str_contains((string) $this->getHostInfo(), $this->draftSubdomain)
-            ? $this->getHostInfo()
-            : ($this->draftSubdomain ? preg_replace('#^((https?://)(www.)?)#', "$2$this->draftSubdomain.", (string) $this->getHostInfo()) : false);
+        if (!$this->draftSubdomain) {
+            return false;
+        }
+
+        if ($this->_draftHostInfo === null) {
+            $hostInfo = (string)$this->getHostInfo();
+
+            $this->_draftHostInfo = !$this->getIsDraft() || !str_contains($hostInfo, $this->draftSubdomain)
+                ? preg_replace('#^((https?://)(www.)?)#', "$2$this->draftSubdomain.", $hostInfo)
+                : $this->getHostInfo();
+        }
 
         return $this->_draftHostInfo;
     }
