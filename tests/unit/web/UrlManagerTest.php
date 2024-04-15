@@ -109,11 +109,6 @@ class UrlManagerTest extends Unit
 
     protected function getUrlManager($config = []): UrlManager
     {
-        return new UrlManager([
-            'baseUrl' => '',
-            'scriptUrl' => '/index.php',
-            'cache' => null,
-            ...$config
-        ]);
+        return new UrlManager($config);
     }
 }

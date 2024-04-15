@@ -12,9 +12,6 @@ return [
             'password' => getenv('MYSQL_PASSWORD') ?: '',
             'charset' => 'utf8',
         ],
-        'request' => [
-            'hostInfo' => 'https://www.example.com',
-        ],
     ],
     'params' => [
         'cookieValidationKey' => 'test',
