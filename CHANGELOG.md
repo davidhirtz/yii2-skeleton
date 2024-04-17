@@ -1,6 +1,7 @@
 ## 2.3.2 (under development)
 
 - Added `MigrationTrait::dropColumnIfExists()` and `MigrationTrait:dropIndexIfExists()`
+- Enhanced `NavBar::$languageRoute` to be merged with query parameters
 - Enhanced `UrlManager` to accept a `defaultLanguage` for each URL created
 
 ## 2.3.1 (Apr 15, 2024)

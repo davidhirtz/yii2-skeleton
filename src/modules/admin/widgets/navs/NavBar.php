@@ -86,10 +86,15 @@ class NavBar extends \yii\bootstrap4\NavBar
 
         foreach ($i18n->getLanguages() as $language) {
             $label = $i18n->getLabel($language);
+
             $items[] = [
                 'label' => "<i class=\"i18n-icon$language\"></i><span class=\"i18n-label\">$label</span>",
                 'url' => $this->languageRoute
-                    ? Url::toRoute(array_merge($this->languageRoute, ['language' => $language]))
+                    ? Url::toRoute([
+                        ...Yii::$app->getRequest()->getQueryParams(),
+                        ...$this->languageRoute,
+                        'language' => $language,
+                    ])
                     : Url::current(['language' => $language]),
                 'encode' => false,
             ];
