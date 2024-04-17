@@ -186,7 +186,7 @@ class UrlManager extends \yii\web\UrlManager
 
                 if ($language) {
                     if ($language == $this->defaultLanguage) {
-                        $url = preg_replace('#(/' . preg_quote($language) . ')(/|$)#', '$2', $request->getAbsoluteUrl());
+                        $url = preg_replace('#(/' . preg_quote($matches[1]) . ')(/|$)#', '$2', $request->getAbsoluteUrl());
                         Yii::$app->getResponse()->redirect($url, 301);
                         Yii::$app->end();
                     }
