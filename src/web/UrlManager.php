@@ -80,11 +80,6 @@ class UrlManager extends \yii\web\UrlManager
 
         $params = (array)$params;
 
-        if (!empty($params['i18n'])) {
-            $i18nUrl = $this->enablePrettyUrl;
-            unset($params['i18n']);
-        }
-
         if ($i18nUrl || $this->i18nSubdomain) {
             $language = ArrayHelper::remove($params, $request->languageParam, $language);
             $defaultLanguage = ArrayHelper::remove($params, 'defaultLanguage');
