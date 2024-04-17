@@ -104,7 +104,7 @@ trait MigrationTrait
         try {
             $this->dropIndex($name, $table);
         } catch (Exception) {
-            echo "    > skipped dropping index $name on table $table\n";
+            echo " skipped\n";
         }
     }
 }
