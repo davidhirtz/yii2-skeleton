@@ -1,6 +1,11 @@
+## 2.3.2 (under development)
+
+- Added `MigrationTrait::dropColumnIfExists()` and `MigrationTrait:dropIndexIfExists()`
+
 ## 2.3.1 (Apr 15, 2024)
 
 - Extracted draft domain creating from `Request` to `Url::draft()`
+- Moved host info configuration to `davidhirtz\yii2\skeleton\codeception\Yii2` for testing
 
 ## 2.3.0 (Apr 5, 2024)
 

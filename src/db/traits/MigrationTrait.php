@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\db\traits;
 
+use Exception;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\rbac\DbManager;
@@ -13,7 +14,7 @@ trait MigrationTrait
         $authManager = Yii::$app->getAuthManager();
 
         if (!$authManager instanceof DbManager) {
-            throw new InvalidConfigException('You should configure "authManager" component to use database before executing this migration.');
+            throw new InvalidConfigException('Component "authManager" must be configured before running migration.');
         }
 
         return $authManager;
@@ -24,7 +25,9 @@ trait MigrationTrait
         $db = Yii::$app->getDb();
 
         if ($db->getDriverName() == 'mysql') {
-            return $db->charset == 'utf8mb4' ? 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE InnoDB' : 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE InnoDB';
+            return $db->charset == 'utf8mb4'
+                ? 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE InnoDB'
+                : 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE InnoDB';
         }
 
         throw new InvalidConfigException();
@@ -70,6 +73,13 @@ trait MigrationTrait
         }
     }
 
+    protected function dropColumnIfExists(string $table, string $column): void
+    {
+        if ($this->getDb()->getTableSchema($table)->getColumn($column)) {
+            $this->dropColumn($table, $column);
+        }
+    }
+
     protected function dropI18nColumns(string $table, array $attributes, ?array $except = []): void
     {
         if ($attributes) {
@@ -86,6 +96,15 @@ trait MigrationTrait
                     }
                 }
             }
+        }
+    }
+
+    protected function dropIndexIfExists(string $name, string $table): void
+    {
+        try {
+            $this->dropIndex($name, $table);
+        } catch (Exception) {
+            echo "    > skipped dropping index $name on table $table\n";
         }
     }
 }
