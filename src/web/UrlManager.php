@@ -76,9 +76,14 @@ class UrlManager extends \yii\web\UrlManager
     {
         $request = Yii::$app->getRequest();
         $language = Yii::$app->language;
-        $i18nUrl = $this->i18nUrl && $this->enablePrettyUrl;
+        $i18nUrl = $this->i18nUrl;
 
         $params = (array)$params;
+
+        if (!empty($params['i18n'])) {
+            $i18nUrl = $this->enablePrettyUrl;
+            unset($params['i18n']);
+        }
 
         if ($i18nUrl || $this->i18nSubdomain) {
             $language = ArrayHelper::remove($params, $request->languageParam, $language);
@@ -181,7 +186,7 @@ class UrlManager extends \yii\web\UrlManager
 
                 if ($language) {
                     if ($language == $this->defaultLanguage) {
-                        $url = $request->getHostInfo() . '/' . $request->getPathInfo();
+                        $url = preg_replace('#(/' . preg_quote($language) . ')(/|$)#', '$2', $request->getAbsoluteUrl());
                         Yii::$app->getResponse()->redirect($url, 301);
                         Yii::$app->end();
                     }
