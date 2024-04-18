@@ -1,6 +1,7 @@
 ## 2.3.2 (under development)
 
 - Added `MigrationTrait::dropColumnIfExists()` and `MigrationTrait:dropIndexIfExists()`
+- Enhanced `ErrorAction` to allow for custom error messages for 404 and 403 errors
 - Enhanced `NavBar::$languageRoute` to be merged with query parameters
 - Enhanced `UrlManager` to accept a `defaultLanguage` for each URL created
 - Fixed `UrlManager::setApplicationLanguage()` to keep the query parameters when redirecting default language URLs
