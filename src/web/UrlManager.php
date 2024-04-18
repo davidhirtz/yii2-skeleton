@@ -241,8 +241,9 @@ class UrlManager extends \yii\web\UrlManager
         foreach ($this->rules as $rule) {
             if ($rule instanceof UrlRule) {
                 $param = explode('/', (string)$rule->name)[$position];
+                dump($param);
 
-                if (preg_match('/^\w+$/', $param)) {
+                if (preg_match('/^[\w_\-.]+$/', $param)) {
                     $params[] = $param;
                 } elseif (preg_match('/^<\w+:\(?([\w_\-|]+)\)?>$/', $param, $matches)) {
                     $params = [
