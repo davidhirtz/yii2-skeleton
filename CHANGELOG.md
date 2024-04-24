@@ -1,3 +1,7 @@
+## 2.3.3 (Apr 24, 2024)
+
+- Extracted new `MessageController` actions to their own package `davidhirtz/yii2-translation`
+
 ## 2.3.2 (Apr 24, 2024)
 
 - Added `MessageController` extending the default framework controller by two methods `export-csv` and `export-csv`
