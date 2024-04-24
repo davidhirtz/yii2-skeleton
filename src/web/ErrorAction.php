@@ -47,8 +47,8 @@ class ErrorAction extends \yii\web\ErrorAction
     protected function getExceptionMessage(): string
     {
         return parent::getExceptionMessage() ?: match ($this->getExceptionCode()) {
-            403 => Yii::t('skeleton', 'Permission denied'),
-            404 => Yii::t('skeleton', 'The requested page was not found'),
+            403 => Yii::t('skeleton', 'Permission denied.'),
+            404 => Yii::t('yii', 'Page not found.'),
             default => Yii::t('yii', 'Error'),
         };
     }

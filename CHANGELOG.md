@@ -1,5 +1,6 @@
-## 2.3.2 (under development)
+## 2.3.2 (Apr 24, 2024)
 
+- Added `MessageController` extending the default framework controller by two methods `export-csv` and `export-csv`
 - Added `MigrationTrait::dropColumnIfExists()` and `MigrationTrait:dropIndexIfExists()`
 - Enhanced `ErrorAction` to allow for custom error messages for 404 and 403 errors
 - Enhanced `NavBar::$languageRoute` to be merged with query parameters

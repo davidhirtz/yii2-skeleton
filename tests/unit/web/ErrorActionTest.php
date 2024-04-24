@@ -33,7 +33,7 @@ class ErrorActionTest extends Unit
     public function testForbiddenException(): void
     {
         Yii::$app->getErrorHandler()->exception = new ForbiddenHttpException();
-        self::assertStringContainsString('Permission denied', $this->runErrorAction());
+        self::assertStringContainsString('Permission denied.', $this->runErrorAction());
     }
 
     public function testNotFoundTranslated(): void
@@ -45,7 +45,7 @@ class ErrorActionTest extends Unit
             'layout' => '@tests/data/views/layouts/main',
         ]);
 
-        self::assertStringContainsString(Yii::t('skeleton', 'The requested page was not found'), $result);
+        self::assertStringContainsString(Yii::t('yii', 'Page not found.'), $result);
         self::assertEquals(404, Yii::$app->getResponse()->getStatusCode());
         self::assertStringContainsString("<title>$error</title>", $result);
     }
@@ -53,12 +53,12 @@ class ErrorActionTest extends Unit
     public function testAjaxRequest(): void
     {
         Yii::$app->getRequest()->getHeaders()->set('X-Requested-With', 'XMLHttpRequest');
-        self::assertEquals('The requested page was not found', $this->runErrorAction());
+        self::assertEquals('Page not found.', $this->runErrorAction());
     }
 
     public function testNoExceptionInHandler(): void
     {
-        self::assertStringContainsString('The requested page was not found', $this->runErrorAction());
+        self::assertStringContainsString('Page not found.', $this->runErrorAction());
         self::assertEquals(404, Yii::$app->getResponse()->getStatusCode());
     }
 
