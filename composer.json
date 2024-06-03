@@ -48,9 +48,9 @@
         "yiisoft/yii2-debug": "^2.1"
     },
     "provide": {
-        "bower-asset/inputmask": "~3.2.2|~3.3.5",
-        "bower-asset/punycode": "1.3.*",
-        "bower-asset/yii2-pjax": "~2.0.1"
+        "bower-asset/inputmask": "*",
+        "bower-asset/punycode": "*",
+        "bower-asset/yii2-pjax": "*"
     },
     "autoload": {
         "psr-4": {

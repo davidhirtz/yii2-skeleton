@@ -1,3 +1,7 @@
+## 2.3.3 (under development)
+
+- Updated dependencies
+
 ## 2.3.2 (Apr 24, 2024)
 
 - Added `MessageController` extending the default framework controller by two methods `export-csv` and `export-csv`
