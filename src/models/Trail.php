@@ -23,7 +23,7 @@ use yii\db\ActiveRecordInterface;
  * @property array|string|null $model_id
  * @property int|null $user_id
  * @property string $message
- * @property string|array|null $data
+ * @property array|null $data
  * @property DateTime $created_at
  *
  * @property-read User|null $user {@see Trail::getUser}

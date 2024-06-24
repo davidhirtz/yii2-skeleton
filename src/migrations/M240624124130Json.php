@@ -25,6 +25,7 @@ class M240624124130Json extends Migration
         $updatedCount = 0;
 
         foreach ($query->each() as $trail) {
+            // @phpstan-ignore-next-line
             if (is_string($trail->data)) {
                 $trail->updateAttributes(['data' => json_decode($trail->data, true)]);
                 $updatedCount++;
