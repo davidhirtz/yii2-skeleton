@@ -152,7 +152,7 @@ class NavBar extends \yii\bootstrap4\NavBar
 
         $orderByKeys = array_flip($keys);
 
-        uksort($items, static function ($a, $b) use ($items, $orderByKeys) {
+        uksort($items, static function ($a, $b) use ($items, $orderByKeys): int {
             $a = $items[$a]['order'] ?? $orderByKeys[$a];
             $b = $items[$b]['order'] ?? $orderByKeys[$b];
             return $a <=> $b;

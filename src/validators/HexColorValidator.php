@@ -13,7 +13,7 @@ class HexColorValidator extends RegularExpressionValidator
         parent::validateAttribute($model, $attribute);
 
         if (!$model->hasErrors($attribute)) {
-            $model->$attribute = ltrim($model->$attribute, '#');
+            $model->$attribute = ltrim((string) $model->$attribute, '#');
         }
     }
 }

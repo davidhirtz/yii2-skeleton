@@ -43,8 +43,8 @@ class MessageController extends \yii\console\controllers\MessageController
         $messages = [];
 
         foreach ($files as $file) {
-            $category = pathinfo($file, PATHINFO_FILENAME);
-            $language = pathinfo(dirname($file), PATHINFO_FILENAME);
+            $category = pathinfo((string) $file, PATHINFO_FILENAME);
+            $language = pathinfo(dirname((string) $file), PATHINFO_FILENAME);
             $messages[$category][$language] = require $file;
         }
 
@@ -118,10 +118,10 @@ class MessageController extends \yii\console\controllers\MessageController
         while (($row = fgetcsv($file)) !== false) {
             foreach ($row as $key => $value) {
                 if ($key === 0) {
-                    $source = trim($value);
+                    $source = trim((string) $value);
                     $messages[Yii::$app->sourceLanguage][$source] = '';
                 } else {
-                    $messages[$languages[$key]][$source] = trim($value);
+                    $messages[$languages[$key]][$source] = trim((string) $value);
                 }
             }
         }
