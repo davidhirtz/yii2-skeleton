@@ -6,6 +6,7 @@ use Composer\InstalledVersions;
 use davidhirtz\yii2\skeleton\auth\clients\Facebook;
 use davidhirtz\yii2\skeleton\controllers\HealthController;
 use davidhirtz\yii2\skeleton\controllers\SitemapController;
+use davidhirtz\yii2\skeleton\db\mysql\ColumnSchema;
 use davidhirtz\yii2\skeleton\i18n\I18N;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\rbac\DbManager;
@@ -21,6 +22,7 @@ use yii\bootstrap4\BootstrapAsset;
 use yii\caching\FileCache;
 use yii\console\controllers\MigrateController;
 use yii\db\Connection;
+use yii\db\mysql\Schema;
 use yii\helpers\ArrayHelper;
 use yii\i18n\PhpMessageSource;
 use yii\log\FileTarget;
@@ -147,6 +149,13 @@ trait ApplicationTrait
             'controllerMap' => [
                 'health' => HealthController::class,
                 'sitemap' => SitemapController::class,
+            ],
+            'container' => [
+                'definitions' => [
+                    Schema::class => [
+                        'columnSchemaClass' => ColumnSchema::class,
+                    ],
+                ],
             ],
             'modules' => [
                 'admin' => [

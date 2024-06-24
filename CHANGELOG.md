@@ -1,6 +1,6 @@
-## 2.3.3 (under development)
+## 2.3.3 (Jun 24, 2024)
 
-- Updated dependencies
+- Updated to Yii 2.0.50 which introduces JSON column support for MariaDB.
 
 ## 2.3.2 (Apr 24, 2024)
 

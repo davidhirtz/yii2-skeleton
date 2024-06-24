@@ -57,12 +57,6 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         ];
     }
 
-    public function afterFind(): void
-    {
-        $this->data = $this->data ? json_decode($this->data, true, 512, JSON_THROW_ON_ERROR) : null;
-        parent::afterFind();
-    }
-
     public function beforeSave($insert): bool
     {
         if (Yii::$app->has('user')) {
@@ -73,7 +67,6 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
             $this->model_id = implode('-', $this->model_id);
         }
 
-        $this->data = $this->data ? json_encode($this->data, JSON_THROW_ON_ERROR) : null;
         $this->created_at = new DateTime();
 
         return parent::beforeSave($insert);
@@ -107,7 +100,6 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
             }
         }
 
-        $this->data = $this->data ? json_decode($this->data, true, 512, JSON_THROW_ON_ERROR) : null;
         parent::afterSave($insert, $changedAttributes);
     }
 
