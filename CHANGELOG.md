@@ -1,3 +1,8 @@
+## 2.3.4 (Jun 24, 2024)
+
+- Fixed MySQL JSON columns bug via migration. This normalizes JSON columns for MariaDB and MySQL with the introduction
+  of JSON support in Yii 2.0.49.
+- 
 ## 2.3.3 (Apr 24, 2024)
 
 - Extracted new `MessageController` actions to their own package `davidhirtz/yii2-translation`
