@@ -1,6 +1,7 @@
 ## 2.3.3 (Jun 24, 2024)
 
-- Updated to Yii 2.0.50 which introduces JSON column support for MariaDB.
+- Fixed MySQL JSON columns bug via migration. This normalizes JSON columns for MariaDB and MySQL with the introduction
+ of JSON support in Yii 2.0.49.
 
 ## 2.3.2 (Apr 24, 2024)
 
