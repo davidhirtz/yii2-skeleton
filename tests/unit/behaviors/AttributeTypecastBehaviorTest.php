@@ -10,6 +10,7 @@ use davidhirtz\yii2\skeleton\models\events\CreateValidatorsEvent;
 use Yii;
 use yii\base\Behavior;
 use yii\base\DynamicModel;
+use yii\base\Model;
 use yii\validators\NumberValidator;
 
 class AttributeTypecastBehaviorTest extends Unit
@@ -59,6 +60,79 @@ class AttributeTypecastBehaviorTest extends Unit
         self::assertTrue($model->is_active);
         self::assertSame('callback: foo', $model->callback);
         self::assertNull($model->nullable);
+    }
+
+    public function testTypecastModelProperties(): void
+    {
+        $model = new class() extends Model {
+            public int|string|null $int = null;
+            public float|null $float = null;
+            public bool|null $bool = null;
+            public string|null $string = null;
+
+            public function behaviors(): array
+            {
+                return [
+                    'AttributeTypecastBehavior' => [
+                        'class' => AttributeTypecastBehavior::class,
+                        'nullableAttributes' => ['int', 'float', 'bool', 'string'],
+                    ],
+                ];
+            }
+
+            public function rules(): array
+            {
+                return [
+                    [
+                        ['int'],
+                        'number',
+                        'integerOnly' => true,
+                    ],
+                    [
+                        ['float'],
+                        'number',
+                    ],
+                    [
+                        ['bool'],
+                        'boolean',
+                    ],
+                    [
+                        ['string'],
+                        'string',
+                    ],
+                ];
+            }
+        };
+
+        /** @var AttributeTypecastBehavior $behavior */
+        $behavior = $model->getBehavior('AttributeTypecastBehavior');
+
+        $model->int = 0;
+        $model->float = 0.0;
+        $model->bool = false;
+        $model->string = '';
+
+        self::assertNotNull($model->int);
+        self::assertNotNull($model->float);
+        self::assertNotNull($model->bool);
+        self::assertNotNull($model->string);
+
+        $behavior->typecastAttributes();
+
+        self::assertNotNull($model->int);
+        self::assertNotNull($model->float);
+        self::assertNotNull($model->bool);
+        self::assertNull($model->string);
+
+        $model->int = '0';
+        $behavior->typecastAttributes();
+
+        self::assertEquals(0, $model->int);
+
+        $model->int = '';
+        $behavior->typecastAttributes();
+
+        self::assertNull($model->int);
     }
 
     public function testSkipNull(): void
