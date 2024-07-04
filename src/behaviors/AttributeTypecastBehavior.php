@@ -197,23 +197,30 @@ class AttributeTypecastBehavior extends Behavior
         $type = $this->getAttributeTypes()[$attributeName] ?? null;
         $value = $this->owner->$attributeName;
 
-        if (is_scalar($type)) {
-            if (is_object($value) && method_exists($value, '__toString')) {
-                $value = $value->__toString();
-            }
-
-            $value = match ($type) {
-                self::TYPE_INTEGER => (int)$value,
-                self::TYPE_FLOAT => (float)$value,
-                self::TYPE_BOOLEAN => $this->typecastBooleanAsInteger ? (int)$value : (bool)$value,
-                self::TYPE_STRING => is_float($value) ? StringHelper::floatToString($value) : (string)$value,
-                default => throw new InvalidArgumentException("Unsupported type '$type'"),
-            };
-        } elseif ($type) {
-            $value = call_user_func($type, $value);
+        if (!is_scalar($type)) {
+            return $type ? call_user_func($type, $value) : $value;
         }
 
-        return $value ?: (in_array($attributeName, $this->getNullableAttributes()) ? null : $value);
+        if (is_object($value) && method_exists($value, '__toString')) {
+            $value = $value->__toString();
+        }
+
+        if ($this->isEmpty($value) && in_array($attributeName, $this->getNullableAttributes())) {
+            return null;
+        }
+
+        return match ($type) {
+            self::TYPE_INTEGER => (int)$value,
+            self::TYPE_FLOAT => (float)$value,
+            self::TYPE_BOOLEAN => $this->typecastBooleanAsInteger ? (int)$value : (bool)$value,
+            self::TYPE_STRING => is_float($value) ? StringHelper::floatToString($value) : (string)$value,
+            default => throw new InvalidArgumentException("Unsupported type '$type'"),
+        };
+    }
+
+    protected function isEmpty(mixed $value): bool
+    {
+        return $value === null || $value === [] || $value === '';
     }
 
     public function getAttributeTypes(): ?array

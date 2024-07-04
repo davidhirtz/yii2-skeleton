@@ -1,3 +1,7 @@
+## 2.3.5 (Jun 28, 2024)
+
+- Fixed `AttributeTypecastBehavior` to cast integer "0" values to `0` not `null` 
+
 ## 2.3.4 (Jun 24, 2024)
 
 - Fixed MySQL JSON columns bug via migration. This normalizes JSON columns for MariaDB and MySQL with the introduction
