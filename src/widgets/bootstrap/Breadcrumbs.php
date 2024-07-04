@@ -31,8 +31,14 @@ class Breadcrumbs extends \yii\widgets\Breadcrumbs
 
         // Admin module breadcrumb.
         if (Yii::$app->controller->module instanceof Module || in_array(Yii::$app->controller->module, $module->getModules())) {
-            if ($module->name !== false) {
-                $this->links = [['label' => $module->name ?: Yii::t('skeleton', 'Admin'), 'url' => ['/admin/dashboard/index']], ...$this->links];
+            if ($module->showInBreadcrumbs) {
+                $this->links = [
+                    [
+                        'label' => $module->getName(),
+                        'url' => [$module->defaultRoute],
+                    ],
+                    ...$this->links
+                ];
             }
         }
 

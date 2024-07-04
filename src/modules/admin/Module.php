@@ -20,11 +20,6 @@ use Yii;
 class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInterface
 {
     /**
-     * @var string|null the module display name, defaults to "Admin"
-     */
-    public ?string $name = null;
-
-    /**
      * @var string the module base route
      */
     public string $alias = 'admin';
@@ -35,7 +30,12 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
      */
     public ?int $trailLifetime = null;
 
-    public $defaultRoute = 'dashboard';
+    /**
+     * @var bool whether to show the admin module in the breadcrumbs
+     */
+    public bool $showInBreadcrumbs = true;
+
+    public $defaultRoute = '/admin/dashboard/';
     public $controllerNamespace = 'app\modules\admin\controllers';
     public $layout = '@skeleton/modules/admin/views/layouts/main';
 
@@ -141,7 +141,7 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
     {
         return [
             'skeleton' => [
-                'name' => $this->name ?: Yii::t('skeleton', 'Administration'),
+                'name' => Yii::t('skeleton', 'Administration'),
                 'items' => [
                     'user' => [
                         'label' => Yii::t('skeleton', 'Create New User'),
@@ -186,6 +186,11 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
     public function setDashboardPanels(array $panels = []): void
     {
         $this->_dashboardPanels = $panels;
+    }
+
+    public function getName(): string
+    {
+        return Yii::t('skeleton', 'Admin');
     }
 
     public function getNavBarItems(): array
