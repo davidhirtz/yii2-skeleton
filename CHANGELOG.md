@@ -1,6 +1,7 @@
 ## 2.3.6 (under development)
 
 - Added `View::POS_MODULE` constant to handle module scripts and JavaScript files
+- Added support for JS and CSS files in `AjaxRouteTrait`
 - Changed `davidhirtz\yii2\skeleton\modules\admin\Module::$name` to `Module::getName()` to prevent translation issues
   (Issue #28)
 

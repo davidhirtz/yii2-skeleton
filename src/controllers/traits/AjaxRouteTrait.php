@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\controllers\traits;
 
+use davidhirtz\yii2\skeleton\web\View;
 use Yii;
 
 trait AjaxRouteTrait
@@ -26,31 +27,54 @@ trait AjaxRouteTrait
 
     protected function renderAjaxRouteCss(): string
     {
-        return implode('', $this->getView()->css);
+        $view = $this->getView();
+        return implode('', $view->cssFiles) . implode('', $view->css);
     }
 
     protected function renderAjaxRouteScripts(): string
     {
+        $view = $this->getView();
         $this->registerAjaxRouteDocumentTitle();
 
+        $html = '';
+        $modules = [];
         $js = [];
 
-        foreach ($this->getView()->js as $jsArray) {
-            foreach ($jsArray as $jsString) {
-                $js[] = rtrim((string)$jsString, ';');
+        foreach ($view->jsFiles as $jsFiles) {
+            $html .= implode('', $jsFiles);
+        }
+
+        foreach ($view->js as $position => $scripts) {
+            foreach ($scripts as $script) {
+                $script = rtrim((string)$script, ';');
+
+                if ($position == View::POS_MODULE) {
+                    $modules[] = $script;
+                } else {
+                    $js[] = $script;
+                }
             }
         }
 
+        $modules = implode(';', $modules);
         $js = implode(';', $js);
 
-        return $js ? "<script>$js</script>" : '';
+        if ($modules) {
+            $html .= "<script type='module'>$modules</script>";
+        }
+
+        if ($js) {
+            $html .= "<script>$js</script>";
+        }
+
+        return $html;
     }
 
     protected function registerAjaxRouteDocumentTitle(): void
     {
         $view = $this->getView();
 
-        $title = addslashes((string) preg_replace("/[\r|\n]/", '', $view->getDocumentTitle()));
+        $title = addslashes((string)preg_replace("/[\r|\n]/", '', $view->getDocumentTitle()));
         $view->registerJs("document.title=\"$title\";", $view::POS_END);
     }
 }
