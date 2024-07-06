@@ -8,13 +8,31 @@ use yii\helpers\Url;
 
 class View extends \yii\web\View
 {
-    public const HREF_LANG_KEY = 'hreflang_';
-    public const CANONICAL_KEY = 'canonical';
-    public const DESCRIPTION_KEY = 'description';
+    final public const HREF_LANG_KEY = 'hreflang_';
+    final public const CANONICAL_KEY = 'canonical';
+    final public const DESCRIPTION_KEY = 'description';
+    final public const POS_MODULE = 6;
 
+    /**
+     * @var string|null the title template that will be used to generate the page title.
+     */
     public ?string $titleTemplate = null;
+
     private array $_breadcrumbs = [];
     private string|array|null $_description = null;
+
+    protected function renderBodyEndHtml($ajaxMode): string
+    {
+        $html = parent::renderBodyEndHtml($ajaxMode);
+
+        if ($scripts = ($this->js[self::POS_MODULE] ?? null)) {
+            $html .= Html::script(implode('', $scripts), [
+                'type' => 'module',
+            ]);
+        }
+
+        return $html;
+    }
 
     public function setTitle(string $title): void
     {

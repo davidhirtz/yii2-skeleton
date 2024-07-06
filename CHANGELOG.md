@@ -1,6 +1,7 @@
 ## 2.3.6 (under development)
 
-- Changed `davidhirtz\yii2\skeleton\modules\admin\Module::$name` to `Module::getName()` to prevent translation issues 
+- Added `View::POS_MODULE` constant to handle module scripts and JavaScript files
+- Changed `davidhirtz\yii2\skeleton\modules\admin\Module::$name` to `Module::getName()` to prevent translation issues
   (Issue #28)
 
 ## 2.3.5 (Jun 28, 2024)
