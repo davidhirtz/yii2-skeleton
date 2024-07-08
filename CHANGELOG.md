@@ -1,4 +1,4 @@
-## 2.3.6 (under development)
+## 2.3.6 (Jul 8, 2024)
 
 - Added `View::POS_MODULE` constant to handle module scripts and JavaScript files
 - Added support for JS and CSS files in `AjaxRouteTrait`

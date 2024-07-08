@@ -35,7 +35,7 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
      */
     public bool $showInBreadcrumbs = true;
 
-    public $defaultRoute = '/admin/dashboard/';
+    public $defaultRoute = 'dashboard';
     public $controllerNamespace = 'app\modules\admin\controllers';
     public $layout = '@skeleton/modules/admin/views/layouts/main';
 
