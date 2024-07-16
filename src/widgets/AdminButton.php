@@ -72,6 +72,8 @@ CSS;
     position: fixed;
     bottom: var(--admin-pos);
     $this->buttonPosition: var(--admin-pos);
+    width: var(--admin-btn);
+    height: var(--admin-btn);
     border-radius: 50%;
     background-color: $this->buttonColor;
     transition: background-color .2s, opacity .2s;
@@ -79,8 +81,8 @@ CSS;
 }
 
 .admin-btn svg {
-    width: var(--admin-btn);
-    height: var(--admin-btn)
+    width: 100%;
+    height: 100%
 }
 
 .admin-btn path {

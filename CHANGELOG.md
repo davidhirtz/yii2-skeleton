@@ -1,3 +1,7 @@
+## 2.3.7 (Jul 16, 2024)
+
+- Fixed `davidhirtz\yii2\skeleton\widgets\AdminButton` CSS width and height attributes 
+
 ## 2.3.6 (Jul 8, 2024)
 
 - Added `View::POS_MODULE` constant to handle module scripts and JavaScript files
