@@ -1,6 +1,10 @@
+## 2.3.8 (Jul 23, 2024)
+
+- Fixed `Module::$defaultRoute` to correctly set the default route for the admin module
+
 ## 2.3.7 (Jul 16, 2024)
 
-- Fixed `davidhirtz\yii2\skeleton\widgets\AdminButton` CSS width and height attributes 
+- Fixed `davidhirtz\yii2\skeleton\widgets\AdminButton` CSS width and height attributes
 
 ## 2.3.6 (Jul 8, 2024)
 

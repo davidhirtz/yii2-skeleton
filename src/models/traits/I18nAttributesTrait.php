@@ -10,7 +10,6 @@ use Yii;
  * @template TActiveRecord
  * @property class-string<TActiveRecord> $modelClass
  *
- * @property array $i18nAttributes
  * @mixin ActiveRecord
  */
 trait I18nAttributesTrait
