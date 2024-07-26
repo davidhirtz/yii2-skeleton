@@ -1,3 +1,7 @@
+## 1.9.6 (Jul 26, 2024)
+
+- Updated `yii2-symfonymailer` to Version 4
+
 ## 1.9.5 (Jul 26, 2024)
 
 - Removed double-JSON encoding (since Yii 2.0.50)
