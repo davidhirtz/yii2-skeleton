@@ -6,6 +6,11 @@
         <Configuration>
           <option name="namespace" value="davidhirtz\yii2\skeleton\tests" />
           <option name="path" value="$PROJECT_DIR$/tests" />
+          <option name="mySuiteNamespaces">
+            <map>
+              <entry key="unit" value="davidhirtz\yii2\skeleton\tests\unit" />
+            </map>
+          </option>
         </Configuration>
       </list>
     </option>

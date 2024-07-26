@@ -10,20 +10,20 @@
         "ext-openssl": "*",
         "ext-simplexml": "*",
         "ext-xmlwriter": "*",
-        "davidhirtz/yii2-datetime-behavior": ">=1.1.5",
-        "davidhirtz/yii2-timeago": ">=1.2.0",
+        "davidhirtz/yii2-datetime-behavior": "^1.1.5",
+        "davidhirtz/yii2-timeago": "^1.2.0",
         "guzzlehttp/guzzle": "^7.0",
         "guzzlehttp/oauth-subscriber": "^0.5",
         "jfcherng/php-diff": "^6.9",
-        "npm-asset/blueimp-file-upload": ">=10.32.0",
+        "npm-asset/blueimp-file-upload": "^10.32.0",
         "npm-asset/bootbox": "^5",
         "npm-asset/jstimezonedetect": "^1.0",
         "robthree/twofactorauth": "^1.8",
         "seld/cli-prompt": "^1.0",
-        "yiisoft/yii2": ">=2.0.49",
-        "yiisoft/yii2-authclient": ">=2.2.14",
-        "yiisoft/yii2-bootstrap4": ">=2.0.11",
-        "yiisoft/yii2-imagine": ">=2.1.0",
+        "yiisoft/yii2": "^2.0.50",
+        "yiisoft/yii2-authclient": "^2.2.14",
+        "yiisoft/yii2-bootstrap4": "^2.0.11",
+        "yiisoft/yii2-imagine": "^2.1.0",
         "yiisoft/yii2-symfonymailer": "~2.0.0",
         "tinymce/tinymce": "^6.7"
     },
@@ -34,7 +34,8 @@
         "phpunit/phpunit": "^9",
         "codeception/module-yii2": "^1.1",
         "codeception/module-phpbrowser": "*",
-        "codeception/module-asserts": "*"
+        "codeception/module-asserts": "*",
+        "yiisoft/yii2-debug": "^2.1"
     },
     "autoload": {
         "psr-4": {
