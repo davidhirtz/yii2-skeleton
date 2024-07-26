@@ -3,6 +3,7 @@
 /vendor
 
 # Yii
+/tests/_output
 /runtime
 
 # OS cache files

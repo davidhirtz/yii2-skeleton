@@ -69,15 +69,6 @@ abstract class Trail extends ActiveRecord
     }
 
     /**
-     * @inheritDoc
-     */
-    public function afterFind()
-    {
-        $this->data = $this->data ? json_decode($this->data, true) : null;
-        parent::afterFind();
-    }
-
-    /**
      * @param bool $insert
      * @return bool
      */
@@ -91,7 +82,6 @@ abstract class Trail extends ActiveRecord
             $this->model_id = implode('-', $this->model_id);
         }
 
-        $this->data = $this->data ? json_encode($this->data) : null;
         $this->created_at = new DateTime();
 
         return parent::beforeSave($insert);
@@ -129,7 +119,6 @@ abstract class Trail extends ActiveRecord
             }
         }
 
-        $this->data = $this->data ? json_decode($this->data, true) : null;
         parent::afterSave($insert, $changedAttributes);
     }
 
