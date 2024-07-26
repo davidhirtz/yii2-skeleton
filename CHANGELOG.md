@@ -1,3 +1,7 @@
+## 2.3.9 (Jul 26, 2024)
+
+- Fixed `AuthController::getAuthItem()` return type
+
 ## 2.3.8 (Jul 23, 2024)
 
 - Fixed `Module::$defaultRoute` to correctly set the default route for the admin module

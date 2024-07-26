@@ -10,6 +10,7 @@ use Yii;
 use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\rbac\Permission;
 use yii\rbac\Role;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -108,20 +109,15 @@ class AuthController extends Controller
         return $this->redirect(['view', 'user' => $user->id]);
     }
 
-    protected function getAuthItem(string $name, int $type): Role
+    protected function getAuthItem(string $name, int $type): Permission|Role
     {
         $rbac = Yii::$app->getAuthManager();
-        $role = null;
 
-        switch ($type) {
-            case Role::TYPE_ROLE:
-                $role = $rbac->getRole($name);
-                break;
-
-            case Role::TYPE_PERMISSION:
-                $role = $rbac->getPermission($name);
-                break;
-        }
+        $role = match ($type) {
+            Role::TYPE_ROLE => $rbac->getRole($name),
+            Role::TYPE_PERMISSION => $rbac->getPermission($name),
+            default => null,
+        };
 
         if (!$role) {
             throw new NotFoundHttpException();
