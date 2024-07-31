@@ -10,8 +10,8 @@ use davidhirtz\yii2\skeleton\models\forms\AccountUpdateForm;
 use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\tests\support\UnitTester;
-use Symfony\Component\Mime\Email;
 use Yii;
+use yii\symfonymailer\Message;
 
 class AccountUpdateFormTest extends Unit
 {
@@ -55,9 +55,9 @@ class AccountUpdateFormTest extends Unit
         self::assertTrue($form->update());
         self::assertNotEmpty($form->user->verification_token);
 
-        /** @var Email $email */
-        $email = $this->tester->grabLastSentEmail();
-        self::assertStringContainsString($form->user->getEmailConfirmationUrl(), $email->getHtmlBody());
+        /** @var Message $message */
+        $message = $this->tester->grabLastSentEmail();
+        self::assertStringContainsString($form->user->getEmailConfirmationUrl(), $message->getSymfonyEmail()->getHtmlBody());
     }
 
     public function testUpdatePassword(): void

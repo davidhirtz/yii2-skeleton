@@ -2,15 +2,12 @@
 
 namespace davidhirtz\yii2\skeleton\models\traits;
 
-use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\db\I18nActiveQuery;
 use Yii;
 
 /**
  * @template TActiveRecord
  * @property class-string<TActiveRecord> $modelClass
- *
- * @mixin ActiveRecord
  */
 trait I18nAttributesTrait
 {

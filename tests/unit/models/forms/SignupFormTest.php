@@ -6,8 +6,8 @@ use Codeception\Test\Unit;
 use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
 use davidhirtz\yii2\skeleton\models\forms\SignupForm;
 use davidhirtz\yii2\skeleton\tests\support\UnitTester;
-use Symfony\Component\Mime\Email;
 use Yii;
+use yii\symfonymailer\Message;
 
 /**
  * @property UnitTester $tester
@@ -76,9 +76,9 @@ class SignupFormTest extends Unit
         self::assertFalse($form->user->getIsNewRecord());
         self::assertFalse(Yii::$app->getUser()->getIsGuest());
 
-        /** @var Email $email */
-        $email = $this->tester->grabLastSentEmail();
-        self::assertStringContainsString($form->user->getEmailConfirmationUrl(), $email->getHtmlBody());
+        /** @var Message $message */
+        $message = $this->tester->grabLastSentEmail();
+        self::assertStringContainsString($form->user->getEmailConfirmationUrl(), $message->getSymfonyEmail()->getHtmlBody());
     }
 
     public function testSignupWithIpSpamProtection(): void

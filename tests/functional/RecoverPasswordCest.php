@@ -12,8 +12,8 @@ use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\PasswordRecoverActiveForm;
 use davidhirtz\yii2\skeleton\tests\support\FunctionalTester;
-use Symfony\Component\Mime\Email;
 use Yii;
+use yii\symfonymailer\Message;
 
 class RecoverPasswordCest extends BaseCest
 {
@@ -68,10 +68,10 @@ class RecoverPasswordCest extends BaseCest
             'email' => $user->email,
         ]));
 
-        /** @var Email $email */
-        $email = $I->grabLastSentEmail();
-        $I->assertEquals(key($email->getTo()), $user->email);
-        $I->assertStringContainsString($user->getPasswordResetUrl(), $email->getHtmlBody());
+        /** @var Message $message */
+        $message = $I->grabLastSentEmail();
+        $I->assertEquals(key($message->getTo()), $user->email);
+        $I->assertStringContainsString($user->getPasswordResetUrl(), $message->getSymfonyEmail()->getHtmlBody());
     }
 
     protected function submitPasswordRecoverForm(FunctionalTester $I, string $email): void

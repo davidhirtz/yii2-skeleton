@@ -12,8 +12,8 @@ use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\AccountResendConfirmActiveForm;
 use davidhirtz\yii2\skeleton\tests\support\FunctionalTester;
-use Symfony\Component\Mime\Email;
 use Yii;
+use yii\symfonymailer\Message;
 
 class AccountResendConfirmCest extends BaseCest
 {
@@ -73,10 +73,10 @@ class AccountResendConfirmCest extends BaseCest
 
         $I->seeValidationError($error);
 
-        /** @var Email $email */
+        /** @var Message $email */
         $email = $I->grabLastSentEmail();
         $I->assertEquals(key($email->getTo()), $user->email);
-        $I->assertStringContainsString($user->getEmailConfirmationUrl(), $email->getHtmlBody());
+        $I->assertStringContainsString($user->getEmailConfirmationUrl(), $email->getSymfonyEmail()->getHtmlBody());
     }
 
     protected function submitAccountResendConfirmForm(FunctionalTester $I, string $email): void

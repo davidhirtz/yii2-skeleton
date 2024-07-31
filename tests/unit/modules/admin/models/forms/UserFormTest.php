@@ -8,8 +8,8 @@ use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\tests\support\UnitTester;
-use Symfony\Component\Mime\Email;
 use Yii;
+use yii\symfonymailer\Message;
 
 class UserFormTest extends Unit
 {
@@ -62,13 +62,14 @@ class UserFormTest extends Unit
 
         self::assertTrue($form->save());
 
-        /** @var Email $email */
-        $email = $this->tester->grabLastSentEmail();
 
         $subject = Yii::t('skeleton', 'Your {name} Account', ['name' => Yii::$app->name]);
 
-        self::assertStringContainsString($subject, $email->getSubject());
-        self::assertStringContainsString($form->newPassword, $email->getHtmlBody());
+        /** @var Message $message */
+        $message = $this->tester->grabLastSentEmail();
+
+        self::assertStringContainsString($subject, $message->getSubject());
+        self::assertStringContainsString($form->newPassword, $message->getSymfonyEmail()->getHtmlBody());
     }
 
     public function testUpdatePassword(): void

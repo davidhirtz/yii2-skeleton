@@ -9,9 +9,9 @@ use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\forms\AuthClientSignupForm;
 use davidhirtz\yii2\skeleton\tests\support\UnitTester;
-use Symfony\Component\Mime\Email;
 use Yii;
 use yii\authclient\BaseClient;
+use yii\symfonymailer\Message;
 
 class AuthClientSignupFormTest extends Unit
 {
@@ -52,9 +52,9 @@ class AuthClientSignupFormTest extends Unit
         self::assertTrue($form->insert());
         self::assertEquals('test-client', $form->user->name);
 
-        /** @var Email $email */
-        $email = $this->tester->grabLastSentEmail();
-        self::assertStringContainsString($form->user->getEmailConfirmationUrl(), $email->getHtmlBody());
+        /** @var Message $message */
+        $message = $this->tester->grabLastSentEmail();
+        self::assertStringContainsString($form->user->getEmailConfirmationUrl(), $message->getSymfonyEmail()->getHtmlBody());
     }
 
     public function testAuthClientWithExternalPicture(): void
