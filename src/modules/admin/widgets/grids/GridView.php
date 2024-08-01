@@ -114,6 +114,10 @@ class GridView extends \yii\grid\GridView
         $this->tableOptions['id'] ??= $this->getTableId();
 
         $this->search ??= Yii::$app->request->get($this->searchParamName);
+        $this->searchUrl ??= $this->searchUrl ?? Url::current([
+            $this->searchParamName => null,
+            'page' => null,
+        ]);
 
         parent::init();
     }
@@ -290,7 +294,6 @@ class GridView extends \yii\grid\GridView
     public function getSearchInput(): string
     {
         $search = $this->search ? trim($this->search) : null;
-        $searchUrl = $this->searchUrl ?? Url::current([$this->searchParamName => null]);
 
         $icon = ArrayHelper::remove($this->searchInputOptions, 'icon', 'search');
 
@@ -301,7 +304,7 @@ class GridView extends \yii\grid\GridView
             ...$this->searchInputOptions
         ];
 
-        return Html::beginForm($searchUrl, 'get')
+        return Html::beginForm($this->searchUrl, 'get')
             . Html::input('search', $this->searchParamName, $search, $options)
             . Html::endForm();
     }

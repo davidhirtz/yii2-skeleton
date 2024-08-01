@@ -1,3 +1,7 @@
+## 2.3.10 (under development)
+
+- Fixed `GridView::$searchUrl` to reset current page on default
+
 ## 2.3.9 (Jul 26, 2024)
 
 - Fixed `AuthController::getAuthItem()` return type
