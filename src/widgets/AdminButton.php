@@ -15,6 +15,7 @@ class AdminButton extends Widget
     public string $iconColor = '#fff';
     public string $iconColorActive = '#000';
 
+    public string $adminLinkZIndex = '3';
     public string $overlayBackgroundColor = '#f8afaf80';
 
     private static bool $is_Registered = false;
@@ -106,7 +107,7 @@ CSS;
 .is-admin .admin {
     display: block;
     background-color: $this->overlayBackgroundColor;
-    z-index: 3
+    z-index: $this->adminLinkZIndex
 }
 
 @media (min-width: 768px) {
