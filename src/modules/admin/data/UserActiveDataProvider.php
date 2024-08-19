@@ -8,18 +8,22 @@ use davidhirtz\yii2\skeleton\models\User;
 
 /**
  * @property UserQuery|null $query
- * @method User[] getModels()
+ * @extends ActiveDataProvider<User>
  */
 class UserActiveDataProvider extends ActiveDataProvider
 {
     public ?string $searchString = null;
 
-    public function init(): void
+    public function __construct($config = [])
     {
-        $this->query ??= User::find();
-        $this->initQuery();
+        $this->query = User::find();
+        parent::__construct($config);
+    }
 
-        parent::init();
+    protected function prepareQuery(): void
+    {
+        $this->initQuery();
+        parent::prepareQuery();
     }
 
     protected function initQuery(): void
@@ -31,8 +35,8 @@ class UserActiveDataProvider extends ActiveDataProvider
 
     public function setSort($value): void
     {
-        if (is_array($value) && !isset($value['defaultOrder'])) {
-            $value['defaultOrder'] = ['last_login' => SORT_DESC];
+        if (is_array($value)) {
+            $value['defaultOrder'] ??= ['last_login' => SORT_DESC];
         }
 
         parent::setSort($value);
@@ -40,8 +44,8 @@ class UserActiveDataProvider extends ActiveDataProvider
 
     public function setPagination($value): void
     {
-        if (is_array($value) && !isset($value['defaultPageSize'])) {
-            $value['defaultPageSize'] = 50;
+        if (is_array($value)) {
+            $value['defaultPageSize'] ??= 50;
         }
 
         parent::setPagination($value);

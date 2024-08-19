@@ -1,6 +1,7 @@
 ## 2.3.10 (under development)
 
 - Added `AdminButton::$adminLinkZIndex` (still defaults to '3')
+- Changed `ActiveDataProvider::prepareQuery()` visibility to `protected`
 - Fixed `GridView::$searchUrl` to reset current page on default
 
 ## 2.3.9 (Jul 26, 2024)
