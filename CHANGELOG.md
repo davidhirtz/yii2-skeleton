@@ -1,6 +1,7 @@
-## 2.3.10 (under development)
+## 2.3.10 (Aug 19, 2024)
 
 - Added `AdminButton::$adminLinkZIndex` (still defaults to '3')
+- Added `davidhirtz\yii2\skeleton\models\interfaces\SitemapInterface` (Issue #30)
 - Changed `ActiveDataProvider::prepareQuery()` visibility to `protected`
 - Fixed `GridView::$searchUrl` to reset current page on default
 
