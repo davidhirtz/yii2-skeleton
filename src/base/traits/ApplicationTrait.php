@@ -207,14 +207,21 @@ trait ApplicationTrait
         /** @see Module::$alias */
         $alias = rtrim((string)$this->getModules()['admin']['alias'], '/');
 
-        $this->getUrlManager()->addRules([
+        $this->addUrlManagerRules([
             'application-health' => 'health/index',
             'sitemap.xml' => 'sitemap/index',
             "$alias/<module>/<controller>/<view>" => 'admin/<module>/<controller>/<view>',
             "$alias/<controller>/<view>" => 'admin/<controller>/<view>',
             "$alias/<controller>" => 'admin/<controller>',
             "$alias/?" => 'admin/',
-        ], false);
+        ]);
+    }
+
+    public function addUrlManagerRules(array $rules): void
+    {
+        $component = $this->getComponents()['urlManager'];
+        $component['rules'] = array_merge($component['rules'] ?? [], $rules);
+        $this->set('urlManager', $component);
     }
 
     /**

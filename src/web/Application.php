@@ -41,8 +41,8 @@ class Application extends \yii\web\Application
 
     protected function bootstrap(): void
     {
-        $this->setDefaultUrlManagerRules();
         $this->setDefaultCookieConfig();
+        $this->setDefaultUrlManagerRules();
 
         parent::bootstrap();
 

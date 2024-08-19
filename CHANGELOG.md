@@ -1,3 +1,8 @@
+## 2.3.11 (Aug 19, 2024)
+
+- Added `ApplicationTrait::addUrlManagerRules()` to prevent the initialization of the URL manager before the bootstrap
+  is completed
+
 ## 2.3.10 (Aug 19, 2024)
 
 - Added `AdminButton::$adminLinkZIndex` (still defaults to '3')

@@ -34,10 +34,9 @@ class Application extends \yii\console\Application
     protected function bootstrap(): void
     {
         $this->setWebrootAliases();
+        $this->setDefaultUrlManagerRules();
 
         parent::bootstrap();
-
-        $this->setDefaultUrlManagerRules();
     }
 
     public function coreCommands(): array
