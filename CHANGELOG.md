@@ -1,6 +1,7 @@
 ## 2.3.12 (in development)
 
 - Enhanced `HtmlValidator::$allowedClasses` to allow multiple CSS classes per element
+- Fixed upload progress bar z-index (Issue #25)
 
 ## 2.3.11 (Aug 19, 2024)
 

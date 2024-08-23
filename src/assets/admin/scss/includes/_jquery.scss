@@ -31,6 +31,7 @@ https://github.com/blueimp/jQuery-File-Upload
   top: $app-upload-progress-top;
   left: 0;
   width: 100%;
+  z-index: 1040;
 
   .bar {
     background-color: $app-upload-progress-bg;

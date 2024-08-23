@@ -38,6 +38,8 @@ class FileUpload extends InputWidget
     public $attribute = 'upload';
     public string $dropZone = '#files';
 
+    private static bool $isRegistered = false;
+
     public function init(): void
     {
         $defaultClientOptions = [
@@ -58,13 +60,14 @@ class FileUpload extends InputWidget
         parent::init();
     }
 
-    
-    public function run()
+
+    public function run(): string
     {
         $this->registerClientScript();
 
-        return ($this->hasModel() ? Html::activeFileInput($this->model, $this->attribute, $this->options) : Html::fileInput($this->name, $this->value, $this->options)) .
-            '<div id="progress"><div class="bar"></div></div>';
+        return ($this->hasModel()
+            ? Html::activeFileInput($this->model, $this->attribute, $this->options)
+            : Html::fileInput($this->name, $this->value, $this->options));
     }
 
     /**
@@ -77,6 +80,12 @@ class FileUpload extends InputWidget
 
         $options = Json::htmlEncode($this->clientOptions);
         $id = $this->options['id'];
+        $js = [];
+
+        if (!self::$isRegistered) {
+            $js[] = '$("body").append(\'<div id="progress"><div class="bar"></div></div>\');';
+            self::$isRegistered = true;
+        }
 
         $js[] = "$('#$id').fileupload($options)";
 
