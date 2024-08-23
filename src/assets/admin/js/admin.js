@@ -1,205 +1,212 @@
 $(function () {
-    /**
-     * Extend jQuery to filter case insensitive.
-     */
-    $.expr[":"].contains = $.expr.createPseudo(function (arg) {
-        return function (e) {
-            return $(e).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+        /**
+         * Extend jQuery to filter case insensitive.
+         */
+        $.expr[":"].contains = $.expr.createPseudo(function (arg) {
+            return function (e) {
+                return $(e).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+            };
+        });
+
+        /**
+         * Use Bootbox for yii confirm dialogs.
+         */
+        yii.confirm = function (message, ok, cancel) {
+            var $link = $(this);
+
+            bootbox.confirm({
+                message: message,
+                callback: function (result) {
+                    if (result) {
+                        if ($link.data('ajax')) {
+                            _ajaxLink($link);
+                        } else {
+                            !ok || ok();
+                        }
+                    } else {
+                        !cancel || cancel();
+                    }
+                },
+                onShown: function () {
+                    $('.modal-footer').find('button').eq(0).focus();
+                }
+            });
         };
-    });
 
-    /**
-     * Use Bootbox for yii confirm dialogs.
-     */
-    yii.confirm = function (message, ok, cancel) {
-        var $link = $(this);
+        /**
+         * Use same functionality as yii.confirm for regular data-ajax links.
+         */
+        $('[data-ajax]').click(function (e) {
+            var $link = $(this);
 
-        bootbox.confirm(message, function (result) {
-            if (result) {
-                if ($link.data('ajax')) {
-                    _ajaxLink($link);
-                } else {
-                    !ok || ok();
-                }
-            } else {
-                !cancel || cancel();
-            }
-        });
-    };
+            if (!$link.data('confirm')) {
+                // Close tooltips as they might go rogue when elements change after the ajax request on click.
+                $('[data-toggle="tooltip"]').tooltip('hide');
+                _ajaxLink($($link));
 
-    /**
-     * Use same functionality as yii.confirm for regular data-ajax links.
-     */
-    $('[data-ajax]').click(function (e) {
-        var $link = $(this);
-
-        if (!$link.data('confirm')) {
-            // Close tooltips as they might go rogue when elements change after the ajax request on click.
-            $('[data-toggle="tooltip"]').tooltip('hide');
-            _ajaxLink($($link));
-
-            e.preventDefault();
-        }
-    });
-
-    /**
-     * Helper function for yii.confirm and regular data-ajax links.
-     * @param $link
-     * @private
-     */
-    function _ajaxLink($link) {
-        var $target = $($link.data('target')),
-            action = $link.data('ajax');
-
-        $.ajax({
-            url: $link.attr('href'),
-            method: $link.data('method') || 'post',
-            params: $link.data('params'),
-            success: function (content) {
-                if ($target.length) {
-                    if (action === 'remove') {
-                        $target.remove();
-
-                    } else if (action === 'success') {
-                        $target.toggleClass('bg-success');
-
-                    } else if (action === 'add') {
-                        $target.addClass('is-selected');
-
-                    } else if (action === 'select') {
-                        $target.toggleClass('is-selected');
-
-                    }
-                    else if (action === 'replace') {
-                        $target.html(content);
-                        Skeleton.initContent($target);
-                    }
-                }
-            }
-        });
-    }
-
-    /**
-     * Toggle form groups based on "data-form-toggle" attribute.
-     *
-     * The first array position  represent all possible values on which all target elements listed
-     * in the second array position will be hidden. Elements can be either a class or id selector
-     * or the name of the field in which case the corresponding row will be hidden.
-     *
-     * [
-     *     [
-     *         [3,6],
-     *         ["section-content_de","section-content"]
-     *     ],
-     * ]
-     */
-    $('[data-form-toggle]').change(function () {
-        var $input = $(this),
-            $option = $input.find('option:selected'),
-            $targets = $input.data('targets');
-
-        if ($targets) {
-            $targets.show().find('[data-form-toggle]').trigger('change');
-        }
-
-        $targets = $();
-
-        $.each($input.data('form-toggle'), function (x, data) {
-            var values = $.isArray(data[0]) ? data[0] : [data[0]],
-                targets = $.isArray(data[1]) ? data[1] : [data[1]],
-                matches,
-                value,
-                z;
-
-            value = String($option.length ?
-                ((matches = String(values[0]).match(/^data-([\w-]+)/)) ? $option.data(matches[1]) : $input.val()) :
-                ($input.prop('checked') ? $input.val() : 0));
-
-            for (x = 0; x < values.length; x++) {
-                if (String(values[x]) === value) {
-                    for (z = 0; z < targets.length; z++) {
-                        $targets = $targets.add($(targets[z].match(/^[.#]/) ? targets[z] : ('.field-' + targets[z])).hide());
-                    }
-
-                    break;
-                }
+                e.preventDefault();
             }
         });
 
-        $input.data('targets', $targets);
-        Skeleton.toggleHr();
+        /**
+         * Helper function for yii.confirm and regular data-ajax links.
+         * @param $link
+         * @private
+         */
+        function _ajaxLink($link) {
+            var $target = $($link.data('target')),
+                action = $link.data('ajax');
 
-    }).filter(':visible').trigger('change');
+            $.ajax({
+                url: $link.attr('href'),
+                method: $link.data('method') || 'post',
+                params: $link.data('params'),
+                success: function (content) {
+                    if ($target.length) {
+                        if (action === 'remove') {
+                            $target.remove();
 
-    /**
-     * Toggle form groups based on "data-form-toggle" tag.
-     */
-    $('[data-form-target]').change(function () {
-        var $input = $(this),
-            values = $input.find('option:selected').data('value'),
-            targets = $input.data('form-target'),
-            i;
+                        } else if (action === 'success') {
+                            $target.toggleClass('bg-success');
 
-        if (!$.isArray(values)) {
-            values = [values];
-        }
+                        } else if (action === 'add') {
+                            $target.addClass('is-selected');
 
-        if (!$.isArray(targets)) {
-            targets = [targets];
-        }
+                        } else if (action === 'select') {
+                            $target.toggleClass('is-selected');
 
-        for (i = 0; i < targets.length; i++) {
-            $(targets[i].match(/^[.#]/) ? targets[i] : ("#" + targets[i])).each(function () {
-                this[this.value !== undefined ? "value" : "innerHTML"] = values[i];
+                        } else if (action === 'replace') {
+                            $target.html(content);
+                            Skeleton.initContent($target);
+                        }
+                    }
+                }
             });
         }
 
-        Skeleton.toggleHr();
+        /**
+         * Toggle form groups based on "data-form-toggle" attribute.
+         *
+         * The first array position  represent all possible values on which all target elements listed
+         * in the second array position will be hidden. Elements can be either a class or id selector
+         * or the name of the field in which case the corresponding row will be hidden.
+         *
+         * [
+         *     [
+         *         [3,6],
+         *         ["section-content_de","section-content"]
+         *     ],
+         * ]
+         */
+        $('[data-form-toggle]').change(function () {
+            var $input = $(this),
+                $option = $input.find('option:selected'),
+                $targets = $input.data('targets');
 
-    }).filter(':visible').trigger('change');
+            if ($targets) {
+                $targets.show().find('[data-form-toggle]').trigger('change');
+            }
 
-    /**
-     * Enables filter in ButtonDropdown.
-     */
-    $.fn.dropdownFilter = function () {
-        var $dropdown = $(this),
-            $filter = $dropdown.find('.dropdown-filter'),
-            $items = $filter.parent().next().nextAll();
+            $targets = $();
 
-        $dropdown.on('shown.bs.dropdown', function () {
-            $filter.focus();
-        });
+            $.each($input.data('form-toggle'), function (x, data) {
+                var values = $.isArray(data[0]) ? data[0] : [data[0]],
+                    targets = $.isArray(data[1]) ? data[1] : [data[1]],
+                    matches,
+                    value,
+                    z;
 
-        $filter.keyup(function (e) {
-            var val = $filter.val(),
-                $target;
+                value = String($option.length ?
+                    ((matches = String(values[0]).match(/^data-([\w-]+)/)) ? $option.data(matches[1]) : $input.val()) :
+                    ($input.prop('checked') ? $input.val() : 0));
 
-            $items.show();
+                for (x = 0; x < values.length; x++) {
+                    if (String(values[x]) === value) {
+                        for (z = 0; z < targets.length; z++) {
+                            $targets = $targets.add($(targets[z].match(/^[.#]/) ? targets[z] : ('.field-' + targets[z])).hide());
+                        }
 
-            if (val !== '') {
-                $items.not(':contains("' + val + '")').hide();
-
-                if (e.which === 13) {
-                    $target = $items.filter('a:visible').eq(0);
-
-                    if ($target.length) {
-                        window.location.href = $target.attr('href');
+                        break;
                     }
                 }
+            });
+
+            $input.data('targets', $targets);
+            Skeleton.toggleHr();
+
+        }).filter(':visible').trigger('change');
+
+        /**
+         * Toggle form groups based on "data-form-toggle" tag.
+         */
+        $('[data-form-target]').change(function () {
+            var $input = $(this),
+                values = $input.find('option:selected').data('value'),
+                targets = $input.data('form-target'),
+                i;
+
+            if (!$.isArray(values)) {
+                values = [values];
+            }
+
+            if (!$.isArray(targets)) {
+                targets = [targets];
+            }
+
+            for (i = 0; i < targets.length; i++) {
+                $(targets[i].match(/^[.#]/) ? targets[i] : ("#" + targets[i])).each(function () {
+                    this[this.value !== undefined ? "value" : "innerHTML"] = values[i];
+                });
+            }
+
+            Skeleton.toggleHr();
+
+        }).filter(':visible').trigger('change');
+
+        /**
+         * Enables filter in ButtonDropdown.
+         */
+        $.fn.dropdownFilter = function () {
+            var $dropdown = $(this),
+                $filter = $dropdown.find('.dropdown-filter'),
+                $items = $filter.parent().next().nextAll();
+
+            $dropdown.on('shown.bs.dropdown', function () {
+                $filter.focus();
+            });
+
+            $filter.keyup(function (e) {
+                var val = $filter.val(),
+                    $target;
+
+                $items.show();
+
+                if (val !== '') {
+                    $items.not(':contains("' + val + '")').hide();
+
+                    if (e.which === 13) {
+                        $target = $items.filter('a:visible').eq(0);
+
+                        if ($target.length) {
+                            window.location.href = $target.attr('href');
+                        }
+                    }
+                }
+            });
+        };
+
+        $(document).ajaxError(function (e, data) {
+            var error = data.responseText;
+
+            if (error) {
+                bootbox.alert(error);
             }
         });
-    };
 
-    $(document).ajaxError(function (e, data) {
-        var error = data.responseText;
-
-        if (error) {
-            bootbox.alert(error);
-        }
-    });
-
-    Skeleton.initContent();
-});
+        Skeleton.initContent();
+    }
+)
+;
 
 var Skeleton = {
     /**
