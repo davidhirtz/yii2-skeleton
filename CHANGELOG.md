@@ -1,4 +1,4 @@
-## 2.3.12 (in development)
+## 2.3.12 (Aug 23, 2024)
 
 - Enhanced `HtmlValidator::$allowedClasses` to allow multiple CSS classes per element
 - Enhanced Bootbox confirms making the first button focused by default (Issue #29)
