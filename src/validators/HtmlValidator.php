@@ -9,8 +9,8 @@ use yii\validators\Validator;
 class HtmlValidator extends Validator
 {
     /**
-     * @var array|array[] containing CSS classes that should be allowed. Use tag name as a key and an array of allowed classes
-     * as value. Example: ['a' => ['btn', 'btn-primary']].
+     * @var array|array[] containing CSS classes that should be allowed. Use tag name as a key and an array of allowed
+     *     classes as value. Example: ['a' => ['btn', 'btn-primary']].
      *
      * Allowed classes can also have a human-readable name as key and the class name as value.
      * Example: ['a' => ['Primary Button' => 'btn btn-primary']].
@@ -53,7 +53,7 @@ class HtmlValidator extends Validator
     public bool $allowTables = false;
 
     /**
-     * @var array containing options for HtmlPurifier. This should not be needed in most cases.
+     * @var array containing options for HtmlPurifier. This should not be necessary in most cases.
      */
     public array $purifierOptions = [];
 
@@ -77,7 +77,7 @@ class HtmlValidator extends Validator
     {
         // Extract inline attributes for a tag (e.g. `a[href|rel]`) and add them to allowedHtmlAttributes.
         foreach ($this->allowedHtmlTags as $key => $value) {
-            if (preg_match('/(\w+)\[([\w|]*)]/', (string) $value, $matches)) {
+            if (preg_match('/(\w+)\[([\w|]*)]/', (string)$value, $matches)) {
                 $this->allowedHtmlTags[$key] = $matches[1];
                 $this->allowedHtmlAttributes[$matches[1]] ??= explode('|', $matches[2]);
             }
@@ -154,8 +154,18 @@ class HtmlValidator extends Validator
     protected function setAllowedClasses(): void
     {
         if ($this->allowedClasses) {
-            $allowedClasses = array_unique(array_merge(...array_values($this->allowedClasses)));
-            $this->purifierOptions['Attr.AllowedClasses'] ??= array_values($allowedClasses);
+            $allowedClasses = [];
+
+            foreach ($this->allowedClasses as $values) {
+                foreach ($values as $classes) {
+                    $allowedClasses = [
+                        ...$allowedClasses,
+                        ...explode(' ', $classes),
+                    ];
+                }
+            }
+
+            $this->purifierOptions['Attr.AllowedClasses'] ??= array_values(array_unique($allowedClasses));
         }
     }
 
@@ -176,55 +186,55 @@ class HtmlValidator extends Validator
         $html = $model->getAttribute($attribute);
 
         // Unify line breaks..
-        $html = str_replace(["\r\n", "\r"], "\n", (string) $html);
+        $html = str_replace(["\r\n", "\r"], "\n", (string)$html);
 
         // Fix HtmlPurifier AutoFormat.AutoParagraph removing <ul>...</ul> tags in some cases.
         // Additional line breaks seem to fix this.
         $html = preg_replace("#\n?<(blockquote|ol|ul)>#i", "\n\n<$1>", $html);
 
         //Fix HtmlPurifier "AutoFormat.AutoParagraph" not applying paragraphs to rows consisting of whitespaces.
-        $html = preg_replace("#\n\s+\n#i", "\n\n", (string) $html);
+        $html = preg_replace("#\n\s+\n#i", "\n\n", (string)$html);
 
         // Process html.
         $html = HtmlPurifier::process($html, $this->purifierOptions);
 
         // Change invalid break tags.
         $html = preg_replace('#<br />#', '<br>', $html);
-        $html = preg_replace('#\s<br>#', '<br>', (string) $html);
+        $html = preg_replace('#\s<br>#', '<br>', (string)$html);
 
         // Add break tags.
         $blocks = '(?:div|dl|dd|dt|ul|ol|li|pre|blockquote|address|style|p|h[1-6]|hr|legend|section|article|aside)';
 
-        $html = preg_replace("#(<'.$blocks.'[^>]*>)#", "\n$1", (string) $html);
-        $html = preg_replace("#(</'.$blocks.'>)#", "$1\n\n", (string) $html);
+        $html = preg_replace("#(<'.$blocks.'[^>]*>)#", "\n$1", (string)$html);
+        $html = preg_replace("#(</'.$blocks.'>)#", "$1\n\n", (string)$html);
 
         // Remove multiple breaking whitespaces.
-        $html = preg_replace('#\s{2,}#', ' ', (string) $html);
+        $html = preg_replace('#\s{2,}#', ' ', (string)$html);
 
         // Make sure no empty paragraphs were generated.
-        $html = preg_replace('#<p>\s*</p>#', '', (string) $html);
+        $html = preg_replace('#<p>\s*</p>#', '', (string)$html);
 
         // Clean breaks.
-        $html = preg_replace("#(?<!<br>)\s*\n#", "<br>\n", (string) $html);
-        $html = preg_replace('#(</?' . $blocks . '[^>]*>)\s*<br>#', '$1', (string) $html);
-        $html = preg_replace('#<br>(\s*</?(?:div|dd|dl|dt|li|ol|p|pre|table|tbody|td|th|tr|ul)[^>]*>)#', '$1', (string) $html);
+        $html = preg_replace("#(?<!<br>)\s*\n#", "<br>\n", (string)$html);
+        $html = preg_replace('#(</?' . $blocks . '[^>]*>)\s*<br>#', '$1', (string)$html);
+        $html = preg_replace('#<br>(\s*</?(?:div|dd|dl|dt|li|ol|p|pre|table|tbody|td|th|tr|ul)[^>]*>)#', '$1', (string)$html);
 
         // Remove empty elements at the beginning and end of paragraphs.
-        $html = preg_replace("#\n*\s*<p>\n*\s*#", "\n<p>", (string) $html);
-        $html = preg_replace("#\n*\s*</p>\n*\s*#", "</p>\n", (string) $html);
+        $html = preg_replace("#\n*\s*<p>\n*\s*#", "\n<p>", (string)$html);
+        $html = preg_replace("#\n*\s*</p>\n*\s*#", "</p>\n", (string)$html);
 
         // Remove empty elements and <br> added by the WYSIWYG editor at the end and beginning of tables.
-        $html = preg_replace("#\n*\s*<table>#", '<table>', (string) $html);
-        $html = preg_replace("#</table><br>\n*\s*#", '</table>', (string) $html);
-        $html = preg_replace("#</table>\n*\s*#", '</table>', (string) $html);
+        $html = preg_replace("#\n*\s*<table>#", '<table>', (string)$html);
+        $html = preg_replace("#</table><br>\n*\s*#", '</table>', (string)$html);
+        $html = preg_replace("#</table>\n*\s*#", '</table>', (string)$html);
 
         // Remove whitespaces in lists.
-        $html = preg_replace("#\n*<li>\s*\n*(.*)\s*\n*</li>#i", "\n<li>$1</li>", (string) $html);
+        $html = preg_replace("#\n*<li>\s*\n*(.*)\s*\n*</li>#i", "\n<li>$1</li>", (string)$html);
 
         // Add line breaks to closing list tags.
-        $html = preg_replace("#\n*(</?ul>|</?ol>)\n*#i", "\n$1\n", (string) $html);
+        $html = preg_replace("#\n*(</?ul>|</?ol>)\n*#i", "\n$1\n", (string)$html);
 
         // Done.
-        $model->setAttribute($attribute, trim((string) $html));
+        $model->setAttribute($attribute, trim((string)$html));
     }
 }
