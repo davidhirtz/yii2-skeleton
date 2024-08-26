@@ -115,6 +115,7 @@ trait ApplicationTrait
                                 '_POST.Login.password',
                                 '_POST.PasswordResetForm.newPassword',
                                 '_POST.PasswordResetForm.repeatPassword',
+                                '_POST.SignupForm.password',
                                 '_POST.User.newPassword',
                                 '_POST.User.oldPassword',
                                 '_POST.User.password',

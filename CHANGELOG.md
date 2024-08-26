@@ -1,3 +1,7 @@
+## 2.3.13 (in development)
+
+- Added `_POST.SignupForm.password` to `Log::$maskVars`
+
 ## 2.3.12 (Aug 23, 2024)
 
 - Enhanced `HtmlValidator::$allowedClasses` to allow multiple CSS classes per element
