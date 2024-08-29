@@ -4,6 +4,9 @@ namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
 use Yii;
 
+/**
+ * @property ActiveForm $form
+ */
 class ActiveField extends \yii\bootstrap4\ActiveField
 {
     /**
@@ -82,7 +85,7 @@ class ActiveField extends \yii\bootstrap4\ActiveField
     {
         $value = $options['value'] ?? $this->model->{$this->attribute};
 
-        if ($value && !str_starts_with((string) $value, '#')) {
+        if ($value && !str_starts_with((string)$value, '#')) {
             $options['value'] ??= "#$value";
         }
 
