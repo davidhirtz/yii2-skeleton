@@ -1,8 +1,11 @@
 ## 2.3.13 (in development)
 
+- Added `UserController::actionCreate()` console command to create a new user, this will now be called after migrations
+  if no other user exists
 - Added `_POST.SignupForm.password` to `Log::$maskVars`
 - Enhanced `SessionTrait::$cookieDomain` to use the default cookie domain from the container definition rahter than from
   the application parameters
+- Removed the user count check from `davidhirtz\yii2\skeleton\web::isSignupEnabled()`
 
 ## 2.3.12 (Aug 23, 2024)
 
