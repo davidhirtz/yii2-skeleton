@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\web;
 
 use Yii;
+use yii\web\Cookie;
 
 trait SessionTrait
 {
@@ -13,11 +14,14 @@ trait SessionTrait
 
     public function getCookieParams(): array
     {
-        $this->cookieDomain ??= Yii::$app->params['cookieDomain'] ?? null;
+        if ($this->cookieDomain === null) {
+            $cookie = Yii::createObject(Cookie::class);
+            $this->cookieDomain = $cookie->domain;
+        }
 
         /** @noinspection PhpMultipleClassDeclarationsInspection */
-        return array_merge(parent::getCookieParams(), array_filter([
+        return array_merge(parent::getCookieParams(), [
             'domain' => $this->cookieDomain,
-        ]));
+        ]);
     }
 }

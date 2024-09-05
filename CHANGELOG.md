@@ -1,6 +1,8 @@
 ## 2.3.13 (in development)
 
 - Added `_POST.SignupForm.password` to `Log::$maskVars`
+- Enhanced `SessionTrait::$cookieDomain` to use the default cookie domain from the container definition rahter than from
+  the application parameters
 
 ## 2.3.12 (Aug 23, 2024)
 
