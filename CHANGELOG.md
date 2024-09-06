@@ -1,4 +1,4 @@
-## 2.3.13 (in development)
+## 2.3.13 (Sep 6, 2024)
 
 - Added `UserController::actionCreate()` console command to create a new user, this will now be called after migrations
   if no other user exists
