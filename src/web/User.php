@@ -68,8 +68,6 @@ class User extends \yii\web\User
     public $identityClass = \davidhirtz\yii2\skeleton\models\User::class;
     public $loginUrl = null;
 
-    private ?int $_userCount = null;
-
     public function init(): void
     {
         if (!$this->enableLogin) {
@@ -190,12 +188,6 @@ class User extends \yii\web\User
 
     public function isSignupEnabled(): bool
     {
-        return $this->enableSignup || $this->getUserCount() == 0;
-    }
-
-    public function getUserCount(): int
-    {
-        $this->_userCount ??= (int)\davidhirtz\yii2\skeleton\models\User::find()->count();
-        return $this->_userCount;
+        return $this->enableSignup;
     }
 }

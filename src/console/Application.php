@@ -9,6 +9,7 @@ use davidhirtz\yii2\skeleton\console\controllers\MessageController;
 use davidhirtz\yii2\skeleton\console\controllers\MigrateController;
 use davidhirtz\yii2\skeleton\console\controllers\ParamsController;
 use davidhirtz\yii2\skeleton\console\controllers\TrailController;
+use davidhirtz\yii2\skeleton\console\controllers\UserController;
 use Yii;
 
 class Application extends \yii\console\Application
@@ -48,6 +49,7 @@ class Application extends \yii\console\Application
             'migrate' => MigrateController::class,
             'params' => ParamsController::class,
             'trail' => TrailController::class,
+            'user' => UserController::class,
         ]);
     }
 

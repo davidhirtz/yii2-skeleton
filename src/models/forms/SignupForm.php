@@ -31,7 +31,7 @@ class SignupForm extends Model
 
     /**
      * @var string|null honeypot text field to mess with bots, the text field will have a random value which will be
-     * removed by javascript before the form is submitted.
+     * removed by JavaScript before the form is submitted.
      */
     public ?string $honeypot = null;
 

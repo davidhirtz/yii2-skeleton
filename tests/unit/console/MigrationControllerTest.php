@@ -69,7 +69,7 @@ class MigrationControllerTest extends Unit
         $controller->resetDbCredentials();
 
         $controller->dbFile = "$this->configPath/db.php";
-        $controller->autoConfirm = true;
+        $controller->confirmCreateDbCredentialsPrompt = true;
 
         /**  @covers MigrateController::actionUp() */
         $controller->runAction('up');
@@ -92,7 +92,7 @@ class MigrationControllerMock extends MigrateController
 {
     use StdOutBufferControllerTrait;
 
-    public bool $autoConfirm = false;
+    public bool $confirmCreateDbCredentialsPrompt = false;
 
     private ?string $dbHost = null;
     private ?string $dbName = null;
@@ -116,8 +116,16 @@ class MigrationControllerMock extends MigrateController
 
     public function confirm($message, $default = false): bool
     {
-        if ($this->autoConfirm) {
-            return true;
+        switch ($message) {
+            case 'Override existing database connection credentials?':
+            case 'Generate database connection credentials?':
+                if ($this->confirmCreateDbCredentialsPrompt) {
+                    return true;
+                }
+                break;
+
+            case 'Create owner user account?':
+                return false;
         }
 
         $this->stdout($message);

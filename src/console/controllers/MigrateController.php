@@ -3,6 +3,7 @@
 namespace davidhirtz\yii2\skeleton\console\controllers;
 
 use davidhirtz\yii2\skeleton\console\controllers\traits\ConfigTrait;
+use davidhirtz\yii2\skeleton\models\User;
 use Seld\CliPrompt\CliPrompt;
 use Yii;
 use yii\helpers\Console;
@@ -38,6 +39,19 @@ class MigrateController extends \yii\console\controllers\MigrateController
         }
 
         return Yii::$app->getDb()->dsn && parent::beforeAction($action);
+    }
+
+    public function afterAction($action, $result): mixed
+    {
+        if (
+            $this->interactive
+            && !User::find()->exists()
+            && $this->confirm('Create owner user account?', true)
+        ) {
+            $this->run('user/create');
+        }
+
+        return parent::afterAction($action, $result);
     }
 
     /**
