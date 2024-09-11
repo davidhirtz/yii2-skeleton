@@ -57,6 +57,11 @@ class HtmlValidator extends Validator
      */
     public array $purifierOptions = [];
 
+    /**
+     * @var bool whether to remove unnecessary span tags.
+     */
+    public bool $removeUnnecessarySpanTags = true;
+
     public function init(): void
     {
         $this->setDefaultOptions();
@@ -194,6 +199,13 @@ class HtmlValidator extends Validator
 
         //Fix HtmlPurifier "AutoFormat.AutoParagraph" not applying paragraphs to rows consisting of whitespaces.
         $html = preg_replace("#\n\s+\n#i", "\n\n", (string)$html);
+
+        // CkEditor adds <span> tags to empty paragraphs when span classes are allowed.
+        if ($this->removeUnnecessarySpanTags) {
+            while (preg_match('#<span>(.+)</span>#', $html)) {
+                $html = preg_replace('#<span>(.+)</span>#', '$1', $html);
+            }
+        }
 
         // Process html.
         $html = HtmlPurifier::process($html, $this->purifierOptions);

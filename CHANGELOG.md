@@ -1,3 +1,7 @@
+## 2.3.15 (in development)
+
+- Added the option to remove empty span `tags` from HtmlValidator output, defaults to true
+
 ## 2.3.14 (Sep 11, 2024)
 
 - Fixed an issue with `TinyMceEditor` not whitelisting combined CSS classes
@@ -7,7 +11,7 @@
 - Added `UserController::actionCreate()` console command to create a new user, this will now be called after migrations
   if no other user exists
 - Added `_POST.SignupForm.password` to `Log::$maskVars`
-- Enhanced `SessionTrait::$cookieDomain` to use the default cookie domain from the container definition rahter than from
+- Enhanced `SessionTrait::$cookieDomain` to use the default cookie domain from the container definition rater than from
   the application parameters
 - Removed the user count check from `davidhirtz\yii2\skeleton\web::isSignupEnabled()`
 
