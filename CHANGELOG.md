@@ -1,3 +1,7 @@
+## 2.3.14 (Sep 11, 2024)
+
+- Fixed an issue with `TinyMceEditor` not whitelisting combined CSS classes
+
 ## 2.3.13 (Sep 6, 2024)
 
 - Added `UserController::actionCreate()` console command to create a new user, this will now be called after migrations

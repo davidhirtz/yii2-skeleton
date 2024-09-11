@@ -167,11 +167,20 @@ class TinyMceEditor extends InputWidget
             $this->clientOptions['valid_elements'] ??= $allowedElements;
         }
 
+        // Client option `valid_classes` needs every class per tag to be defined on their own.
         if ($this->validator?->allowedClasses ?? false) {
             $allowedClasses = [];
 
             foreach ($this->validator->allowedClasses as $tag => $classes) {
-                $allowedClasses[$tag] = array_values($classes);
+                $allowedClasses[$tag] = [];
+
+                foreach ($classes as $class) {
+                    foreach (explode(' ', $class) as $className) {
+                        if (!in_array($className, $allowedClasses[$tag])) {
+                            $allowedClasses[$tag][] = $className;
+                        }
+                    }
+                }
             }
 
             $this->clientOptions['valid_classes'] ??= $allowedClasses;
