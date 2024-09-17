@@ -1,6 +1,6 @@
-## 2.3.15 (in development)
+## 2.3.15 (Sep 17, 2024)
 
-- Added the option to remove empty span `tags` from HtmlValidator output, defaults to true
+- Added the option to remove empty span `tags` from HtmlValidator output, defaults to false
 
 ## 2.3.14 (Sep 11, 2024)
 

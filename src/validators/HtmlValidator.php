@@ -60,7 +60,7 @@ class HtmlValidator extends Validator
     /**
      * @var bool whether to remove unnecessary span tags.
      */
-    public bool $removeUnnecessarySpanTags = true;
+    public bool $removeUnnecessarySpanTags = false;
 
     public function init(): void
     {
@@ -190,7 +190,7 @@ class HtmlValidator extends Validator
     {
         $html = $model->getAttribute($attribute);
 
-        // Unify line breaks..
+        // Unify line breaks.
         $html = str_replace(["\r\n", "\r"], "\n", (string)$html);
 
         // Fix HtmlPurifier AutoFormat.AutoParagraph removing <ul>...</ul> tags in some cases.
@@ -202,8 +202,8 @@ class HtmlValidator extends Validator
 
         // CkEditor adds <span> tags to empty paragraphs when span classes are allowed.
         if ($this->removeUnnecessarySpanTags) {
-            while (preg_match('#<span>(.+)</span>#', $html)) {
-                $html = preg_replace('#<span>(.+)</span>#', '$1', $html);
+            while (preg_match('#<span>(.*?)(?=</span>)</span>#', $html)) {
+                $html = preg_replace('#<span>(.*?)(?=</span>)</span>#', '$1', $html);
             }
         }
 
