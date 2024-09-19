@@ -114,7 +114,7 @@ class GridView extends \yii\grid\GridView
         $this->tableOptions['id'] ??= $this->getTableId();
 
         $this->search ??= Yii::$app->request->get($this->searchParamName);
-        $this->searchUrl ??= $this->searchUrl ?? Url::current([
+        $this->searchUrl ??= Url::current([
             $this->searchParamName => null,
             'page' => null,
         ]);
@@ -309,6 +309,9 @@ class GridView extends \yii\grid\GridView
             . Html::endForm();
     }
 
+    /**
+     * @noinspection PhpUnused
+     */
     public function getSelectionButton(): string
     {
         if ($items = $this->getSelectionButtonItems()) {
@@ -368,6 +371,9 @@ class GridView extends \yii\grid\GridView
         return $this->search ? array_filter(explode(' ', $this->search)) : [];
     }
 
+    /**
+     * @noinspection PhpUnused
+     */
     protected function getSortableButton(): string
     {
         return Html::tag('span', Icon::tag('arrows-alt'), ['class' => 'btn btn-secondary sortable-handle']);
