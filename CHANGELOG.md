@@ -1,6 +1,7 @@
 ## 2.3.15 (Sep 17, 2024)
 
 - Added the option to remove empty span `tags` from HtmlValidator output, defaults to false
+- Enhanced `MigrationController` to not offer to create a new user if an error occured during migration
 
 ## 2.3.14 (Sep 11, 2024)
 
