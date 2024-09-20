@@ -24,28 +24,26 @@ trait MessageSourceTrait
         if ($this->_translations === null) {
             $this->_translations = [];
 
-            if (Yii::$app->language !== Yii::$app->sourceLanguage) {
-                $i18n = Yii::$app->getI18n();
-                $sources = [];
+            $i18n = Yii::$app->getI18n();
+            $sources = [];
 
-                // Make sure to only include sources that are actually available. This is needed because Yii adds an
-                // "app" category without making sure it actually is needed.
-                foreach (array_keys($i18n->translations) as $category) {
-                    $source = $i18n->getMessageSource($category);
+            // Make sure to only include sources that are actually available. This is necessary because Yii adds an
+            // "app" category without making sure it actually is necessary.
+            foreach (array_keys($i18n->translations) as $category) {
+                $source = $i18n->getMessageSource($category);
 
-                    if (!$source instanceof PhpMessageSource || is_dir(Yii::getAlias($source->basePath . '/' . Yii::$app->language))) {
-                        $sources[$category] = $source;
-                    }
+                if (!$source instanceof PhpMessageSource || is_dir(Yii::getAlias($source->basePath . '/' . Yii::$app->language))) {
+                    $sources[$category] = $source;
                 }
+            }
 
-                /** @var AuthItem $authItem */
-                foreach ($this->dataProvider->getModels() as $authItem) {
-                    if ($message = $authItem->{$this->messageSourceAttribute}) {
-                        foreach ($sources as $category => $source) {
-                            if ($translation = $source->translate($category, $message, Yii::$app->language)) {
-                                $this->_translations[$message] = $translation;
-                                break;
-                            }
+            /** @var AuthItem $authItem */
+            foreach ($this->dataProvider->getModels() as $authItem) {
+                if ($message = $authItem->{$this->messageSourceAttribute}) {
+                    foreach ($sources as $category => $source) {
+                        if ($translation = $source->translate($category, $message, Yii::$app->language)) {
+                            $this->_translations[$message] = $translation;
+                            break;
                         }
                     }
                 }
