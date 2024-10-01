@@ -2,6 +2,7 @@
 
 - Added optional parameter `prepend` to `ApplicationTrait::addUrlManagerRules()` to prepend the rules to the beginning
   of the `UrlManager` rules array
+- Added `.text-invalid` CSS class
 - Improved `RedirectBehavior` to be disabled for console if `UrlManager` was not properly configured
 
 ## 2.3.15 (Sep 17, 2024)
