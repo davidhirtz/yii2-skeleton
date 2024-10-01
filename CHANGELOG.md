@@ -1,9 +1,12 @@
-# 2.3.16 (Oct 1, 2024)
+## 2.3.17 (Oct 2, 2024)
+
+- Added `.text-invalid` CSS class
+- Improved `RedirectBehavior` to be disabled for console if `UrlManager` was not properly configured
+
+## 2.3.16 (Oct 1, 2024)
 
 - Added optional parameter `prepend` to `ApplicationTrait::addUrlManagerRules()` to prepend the rules to the beginning
   of the `UrlManager` rules array
-- Added `.text-invalid` CSS class
-- Improved `RedirectBehavior` to be disabled for console if `UrlManager` was not properly configured
 
 ## 2.3.15 (Sep 17, 2024)
 
