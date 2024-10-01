@@ -108,7 +108,7 @@ class Redirect extends ActiveRecord implements TypeAttributeInterface
         }
     }
 
-    public static function sanitizeUrl(string $url): string
+    public static function sanitizeUrl(false|string $url): string
     {
         return $url ? preg_replace('/\s+/', '%20', trim($url, '/ ')) : '';
     }

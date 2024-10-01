@@ -23,7 +23,7 @@ class UrlManager extends \yii\web\UrlManager
 
     /**
      * @var array|false|null containing the languages available for `i18nUrl` or `i18nSubdomain`, the language
-     * identifier as key and the language param as value (e.g. ['en-US' => 'en']). Defaults to languages set in the
+     * identifier as key and the language param as value (e.g. ['en-US' ⇒ 'en']). Defaults to languages set in the
      * I18n component.
      */
     public array|false|null $languages = null;
@@ -35,9 +35,9 @@ class UrlManager extends \yii\web\UrlManager
     public string|false|null $defaultLanguage = null;
 
     /**
-     * @var array containing hard redirects, either as request URI => URL pairs, which generate regular 301 redirects
+     * @var array containing hard redirects, either as request URI ⇒ URL pairs, which generate regular 301 redirects
      * or as arrays containing the request URIs at first position, the target URL as the second and an
-     * optional third containing the redirect code (defaults to 301). If dynamic redirects are needed, please take
+     * optional third containing the redirect code (defaults to 301). If dynamic redirects are necessary, please take
      * a look at {@see \davidhirtz\yii2\skeleton\models\Redirect}.
      */
     public array $redirectMap = [];

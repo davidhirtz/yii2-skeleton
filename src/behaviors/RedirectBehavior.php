@@ -5,6 +5,7 @@ namespace davidhirtz\yii2\skeleton\behaviors;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\models\Trail;
+use Exception;
 use Yii;
 use yii\base\Behavior;
 use yii\base\InvalidConfigException;
@@ -18,12 +19,25 @@ class RedirectBehavior extends Behavior
 
     public function events(): array
     {
-        return [
-            ActiveRecord::EVENT_AFTER_FIND => $this->afterFind(...),
-            ActiveRecord::EVENT_AFTER_INSERT => $this->afterSave(...),
-            ActiveRecord::EVENT_AFTER_UPDATE => $this->afterSave(...),
-            ActiveRecord::EVENT_AFTER_DELETE => $this->afterDelete(...),
-        ];
+        return $this->hasUrlManagerConfigured()
+            ? [
+                ActiveRecord::EVENT_AFTER_FIND => $this->afterFind(...),
+                ActiveRecord::EVENT_AFTER_INSERT => $this->afterSave(...),
+                ActiveRecord::EVENT_AFTER_UPDATE => $this->afterSave(...),
+                ActiveRecord::EVENT_AFTER_DELETE => $this->afterDelete(...),
+            ]
+            : [];
+    }
+
+    protected function hasUrlManagerConfigured(): bool
+    {
+        try {
+            Yii::$app->getUrlManager()->getBaseUrl();
+        } catch (Exception) {
+            return false;
+        }
+
+        return true;
     }
 
     public function afterFind(): void
@@ -99,7 +113,7 @@ class RedirectBehavior extends Behavior
     /**
      * This method tries to generate a URL from owner's `getUrl` method if it does not implement a `getUrl` method.
      */
-    public function getUrl(): bool|string
+    public function getUrl(): false|string
     {
         if (!method_exists($this->owner, 'getRoute')) {
             throw new InvalidConfigException($this->owner::class . ' needs to either implement a `getUrl` or `getRoute` method');
