@@ -1,3 +1,8 @@
+# 2.3.16 (Oct 1, 2024)
+
+- Added optional parameter `prepend` to `ApplicationTrait::addUrlManagerRules()` to prepend the rules to the beginning of
+  the `UrlManager` rules array
+
 ## 2.3.15 (Sep 17, 2024)
 
 - Added the option to remove empty span `tags` from HtmlValidator output, defaults to false

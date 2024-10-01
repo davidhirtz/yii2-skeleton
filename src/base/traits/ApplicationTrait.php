@@ -218,10 +218,13 @@ trait ApplicationTrait
         ]);
     }
 
-    public function addUrlManagerRules(array $rules): void
+    public function addUrlManagerRules(array $rules, bool $prepend = false): void
     {
         $component = $this->getComponents()['urlManager'];
-        $component['rules'] = array_merge($component['rules'] ?? [], $rules);
+
+        $component['rules'] ??= [];
+        $component['rules'] = $prepend ? [...$rules, ...$component['rules']] : [...$component['rules'], ...$rules];
+
         $this->set('urlManager', $component);
     }
 
