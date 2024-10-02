@@ -20,7 +20,6 @@ class DynamicRangeValidator extends RangeValidator
      */
     public $range = [];
 
-    
     public function validateAttribute($model, $attribute): void
     {
         $this->range = $this->getDynamicRange($model, $attribute);

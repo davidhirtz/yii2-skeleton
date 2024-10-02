@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\skeleton\behaviors;
 
+use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
 use yii\base\Behavior;
 use yii\base\Event;
 use yii\base\InvalidArgumentException;
@@ -250,6 +251,8 @@ class AttributeTypecastBehavior extends Behavior
                 $type = self::TYPE_BOOLEAN;
             } elseif ($validator instanceof NumberValidator) {
                 $type = $validator->integerOnly ? self::TYPE_INTEGER : self::TYPE_FLOAT;
+            } elseif ($validator instanceof DynamicRangeValidator) {
+                $type = $validator->integerOnly ? self::TYPE_INTEGER : self::TYPE_STRING;
             } elseif ($validator instanceof StringValidator) {
                 $type = self::TYPE_STRING;
             }

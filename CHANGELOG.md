@@ -1,3 +1,7 @@
+## 2.3.18 (in development)
+
+- Added `DynamicRangeValidator` type detection to `AttributeTypecastBehavior`
+
 ## 2.3.17 (Oct 2, 2024)
 
 - Added `.text-invalid` CSS class
