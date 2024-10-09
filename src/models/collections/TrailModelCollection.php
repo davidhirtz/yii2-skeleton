@@ -27,8 +27,11 @@ class TrailModelCollection
                 $instance = Yii::createObject($modelName[0]);
 
                 if ($instance instanceof ActiveRecord && $modelId) {
+                    $primaryKey = $instance::primaryKey();
                     $values = explode('-', $modelId);
-                    $keys = count($instance::primaryKey()) == count($values) ? array_combine($instance::primaryKey(), $values) : null;
+                    $keys = count($primaryKey) > 1 && count($primaryKey) === count($values)
+                        ? array_combine($primaryKey, $values)
+                        : array_combine($primaryKey, [$modelId]);
 
                     self::$_modelClasses[$instance::tableName()][$modelId] ??= $instance::findOne($keys) ?? $instance;
                     return self::$_modelClasses[$instance::tableName()][$modelId];

@@ -1,6 +1,7 @@
 ## 2.3.18 (in development)
 
 - Added `DynamicRangeValidator` type detection to `AttributeTypecastBehavior`
+- Fixed `TrailModelCollection` to allow primary keys with "-" characters 
 
 ## 2.3.17 (Oct 2, 2024)
 
