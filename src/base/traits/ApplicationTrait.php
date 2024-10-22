@@ -188,14 +188,6 @@ trait ApplicationTrait
             $config['components']['db'] = array_merge(require ($db), $config['components']['db']);
         }
 
-        if (
-            !isset($config['components']['mailer']['transport'])
-            || is_array($config['components']['mailer']['transport'])
-        ) {
-            $config['components']['mailer']['transport']['dsn'] = $config['params']['mailerDsn']
-                ?? $config['components']['mailer']['transport']['dsn']
-                ?? 'sendmail://default';
-        }
 
         // Make sure the cache prefix via params is applied before application bootstrap, as a DB session might get
         // started which could trigger the database schema cache.
@@ -203,7 +195,23 @@ trait ApplicationTrait
             $config['components']['cache']['keyPrefix'] = $cacheKeyPrefix;
         }
 
+        $this->setDefaultMailerDsn($config);
         $this->setFacebookClientComponent($config);
+    }
+
+    protected function setDefaultMailerDsn(&$config): void
+    {
+        if (!empty($config['components']['mailer']['useFileTransport'])) {
+            return;
+        }
+
+        if (isset($config['components']['mailer']['transport']) && !is_array($config['components']['mailer']['transport'])) {
+            return;
+        }
+
+        $config['components']['mailer']['transport']['dsn'] = $config['params']['mailerDsn']
+            ?? $config['components']['mailer']['transport']['dsn']
+            ?? 'sendmail://default';
     }
 
     protected function setDefaultUrlManagerRules(): void
