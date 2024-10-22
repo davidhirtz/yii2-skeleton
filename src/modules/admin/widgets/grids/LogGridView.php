@@ -57,10 +57,10 @@ class LogGridView extends GridView
         return [
             'label' => Yii::t('yii', 'Error'),
             'content' => function ($model) {
-                $html = Html::tag('div', trim((string)$model['message']), ['class' => 'strong']);
+                $html = Html::tag('div', Html::encode(trim((string)$model['message'])), ['class' => 'strong']);
 
                 if (isset($model['category'])) {
-                    $html .= Html::tag('div', $model['category'], ['class' => 'small']);
+                    $html .= Html::tag('div', Html::encode($model['category']), ['class' => 'small']);
                 }
 
                 if (isset($model['vars'])) {
