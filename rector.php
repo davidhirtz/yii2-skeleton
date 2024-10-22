@@ -11,7 +11,6 @@ use Rector\TypeDeclaration\Rector\ClassMethod\AddReturnTypeDeclarationBasedOnPar
 use Rector\TypeDeclaration\Rector\ClassMethod\AddReturnTypeDeclarationRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\AddVoidReturnTypeWhereNoReturnRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromStrictNativeCallRector;
-use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromStrictScalarReturnExprRector;
 use Rector\TypeDeclaration\Rector\Property\AddPropertyTypeDeclarationRector;
 use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromAssignsRector;
 
@@ -28,7 +27,6 @@ return static function (RectorConfig $rectorConfig): void {
         AddVoidReturnTypeWhereNoReturnRector::class,
         InlineConstructorDefaultToPropertyRector::class,
         ReturnTypeFromStrictNativeCallRector::class,
-        ReturnTypeFromStrictScalarReturnExprRector::class,
         StringClassNameToClassConstantRector::class,
         TypedPropertyFromAssignsRector::class,
     ]);

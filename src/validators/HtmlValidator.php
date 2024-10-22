@@ -165,7 +165,7 @@ class HtmlValidator extends Validator
                 foreach ($values as $classes) {
                     $allowedClasses = [
                         ...$allowedClasses,
-                        ...explode(' ', $classes),
+                        ...explode(' ', (string) $classes),
                     ];
                 }
             }
@@ -202,8 +202,8 @@ class HtmlValidator extends Validator
 
         // CkEditor adds <span> tags to empty paragraphs when span classes are allowed.
         if ($this->removeUnnecessarySpanTags) {
-            while (preg_match('#<span>(.*?)(?=</span>)</span>#', $html)) {
-                $html = preg_replace('#<span>(.*?)(?=</span>)</span>#', '$1', $html);
+            while (preg_match('#<span>(.*?)(?=</span>)</span>#', (string) $html)) {
+                $html = preg_replace('#<span>(.*?)(?=</span>)</span>#', '$1', (string) $html);
             }
         }
 
