@@ -123,15 +123,9 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
                 DynamicRangeValidator::class,
             ],
             [
-                ['language', 'timezone'],
+                ['country', 'language', 'timezone'],
                 DynamicRangeValidator::class,
                 'integerOnly' => false,
-            ],
-            [
-                ['country'],
-                DynamicRangeValidator::class,
-                'integerOnly' => false,
-                'skipOnEmpty' => true,
             ],
             [
                 ['name'],

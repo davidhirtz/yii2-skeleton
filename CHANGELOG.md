@@ -1,10 +1,12 @@
-## 2.3.18 (in development)
+## 2.3.18 (Oct 22. 2024)
 
 - Added `DynamicRangeValidator` type detection to `AttributeTypecastBehavior`
 - Enhanced default mailer DSN settings (Issue #32)
 - Enhanced `LogGridView` by HTML encoding the message column (Issue #31)
-- Fixed `TrailModelCollection` to allow primary keys with "-" characters 
-- Fixed `User` dynamic range validation for language and timezone attributes 
+- Fixed `TrailModelCollection` to allow primary keys with "-" characters
+- Fixed `User` dynamic range validation for language and timezone attributes
+- Fixed a bug in `AccountResendConfirmForm` where the `User::$updated_at` was not updated on sending the confirmation
+  email
 
 ## 2.3.17 (Oct 2, 2024)
 

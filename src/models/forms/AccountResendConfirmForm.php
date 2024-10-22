@@ -56,9 +56,9 @@ class AccountResendConfirmForm extends Model
 
     public function validateSpamProtection(): void
     {
-        if (!$this->hasErrors() && ($user = $this->getUser()) && $this->isAlreadySent()) {
+        if (!$this->hasErrors() && $this->isAlreadySent()) {
             $this->addError('email', Yii::t('skeleton', 'We have just sent a link to confirm your account to {email}. Please check your inbox!', [
-                'email' => $user->email,
+                'email' => $this->getUser()->email,
             ]));
         }
     }
@@ -67,7 +67,10 @@ class AccountResendConfirmForm extends Model
     {
         if ($this->validate()) {
             $this->sendConfirmEmail();
-            $this->getUser()->update();
+
+            $this->getUser()->updateAttributes([
+                'updated_at' => new DateTime(),
+            ]);
 
             return true;
         }
@@ -88,7 +91,9 @@ class AccountResendConfirmForm extends Model
 
     public function isAlreadySent(): bool
     {
-        return ($user = $this->getUser()) && $user->verification_token && $user->updated_at?->modify($this->timeoutSpamProtection) > new DateTime();
+        return ($user = $this->getUser())
+            && $user->verification_token
+            && $user->updated_at?->modify($this->timeoutSpamProtection) > new DateTime();
     }
 
     public function attributeLabels(): array
