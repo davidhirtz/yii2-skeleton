@@ -51,6 +51,7 @@ class Redirect extends ActiveRecord implements TypeAttributeInterface
             [
                 ['type'],
                 DynamicRangeValidator::class,
+                'integerOnly' => false,
                 'skipOnEmpty' => false,
             ],
             [
