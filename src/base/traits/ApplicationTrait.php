@@ -188,10 +188,13 @@ trait ApplicationTrait
             $config['components']['db'] = array_merge(require ($db), $config['components']['db']);
         }
 
-        // Mailer transport DSN might need to be set via params (e.g., `yii2-config` module), but only set it if
-        // `useFileTransport` is not active.
-        if (!($config['components']['mailer']['useFileTransport'] ?? false)) {
-            $config['components']['mailer']['transport']['dsn'] = $config['params']['mailerDsn'] ?? 'sendmail://default';
+        if (
+            !isset($config['components']['mailer']['transport'])
+            || is_array($config['components']['mailer']['transport'])
+        ) {
+            $config['components']['mailer']['transport']['dsn'] = $config['params']['mailerDsn']
+                ?? $config['components']['mailer']['transport']['dsn']
+                ?? 'sendmail://default';
         }
 
         // Make sure the cache prefix via params is applied before application bootstrap, as a DB session might get

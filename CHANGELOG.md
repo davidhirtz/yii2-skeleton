@@ -1,6 +1,7 @@
 ## 2.3.18 (in development)
 
 - Added `DynamicRangeValidator` type detection to `AttributeTypecastBehavior`
+- Enhanced default mailer DSN settings (Issue #32)
 - Fixed `TrailModelCollection` to allow primary keys with "-" characters 
 
 ## 2.3.17 (Oct 2, 2024)
