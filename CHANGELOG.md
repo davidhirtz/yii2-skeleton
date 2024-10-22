@@ -4,6 +4,7 @@
 - Enhanced default mailer DSN settings (Issue #32)
 - Enhanced `LogGridView` by HTML encoding the message column (Issue #31)
 - Fixed `TrailModelCollection` to allow primary keys with "-" characters 
+- Fixed `User` dynamic range validation for language and timezone attributes 
 
 ## 2.3.17 (Oct 2, 2024)
 
