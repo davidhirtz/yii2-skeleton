@@ -1,3 +1,7 @@
+## 2.3.19 (in development)
+
+- Fixed `UserActiveForm` button label
+
 ## 2.3.18 (Oct 22. 2024)
 
 - Added `DynamicRangeValidator` type detection to `AttributeTypecastBehavior`

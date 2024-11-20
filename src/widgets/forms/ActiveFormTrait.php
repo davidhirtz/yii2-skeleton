@@ -278,7 +278,7 @@ trait ActiveFormTrait
     public function button(?string $label = null, array $options = ['class' => 'btn-primary']): string
     {
         if (!$label) {
-            $label = $this->model instanceof ActiveRecord && $this->model->getIsNewRecord() ? Yii::t('skeleton', 'Create') : Yii::t('skeleton', 'Update');
+            $label = $this->isNewRecord() ? Yii::t('skeleton', 'Create') : Yii::t('skeleton', 'Update');
         }
 
         if (!isset($options['type'])) {
@@ -397,6 +397,11 @@ trait ActiveFormTrait
         }
 
         return ['data-form-toggle' => Json::htmlEncode($options)];
+    }
+
+    protected function isNewRecord(): bool
+    {
+        return $this->model instanceof ActiveRecord && $this->model->getIsNewRecord();
     }
 
     public function isSafeAttribute(string $attribute): bool

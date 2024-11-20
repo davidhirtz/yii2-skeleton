@@ -63,4 +63,9 @@ class UserActiveForm extends ActiveForm
     {
         return $this->field($this->model, 'sendEmail')->checkbox($options);
     }
+
+    protected function isNewRecord(): bool
+    {
+        return $this->model->user->getIsNewRecord();
+    }
 }
