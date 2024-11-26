@@ -21,7 +21,8 @@ trait IconFilenameAttributeTrait
             [
                 $this->iconFilenameAttribute,
                 DynamicRangeValidator::class,
-            ]
+                'integerOnly' => false,
+            ],
         ];
     }
 

@@ -1,6 +1,7 @@
-## 2.3.19 (in development)
+## 2.3.19 (Nov 26, 2024)
 
 - Fixed `UserActiveForm` button label
+- Fixed `IconFilenameAttributeTrait` range validator
 
 ## 2.3.18 (Oct 22. 2024)
 
