@@ -107,4 +107,10 @@ trait MigrationTrait
             echo " skipped\n";
         }
     }
+
+    protected function getForeignKeyName(string $tableName, string $column): string
+    {
+        $tableName = $this->getDb()->getSchema()->getRawTableName($tableName);
+        return $tableName . '_' . $column;
+    }
 }

@@ -1,7 +1,8 @@
 ## 2.3.20 (in development)
 
-- Added `StatusGridViewTrait::$statusIsActive` to manually set the status dropdown state
 - Added `ModuleTrait::getLanguages()`
+- Added `MigrationTrait::getForeignKeyName()`
+- Added `StatusGridViewTrait::$statusIsActive` to manually set the status dropdown state
 - Updated `StatusGridViewTrait::$statusDefaultItem` to allow `false` and `StatusGridViewTrait::$statusParamName` to null
 
 ## 2.3.19 (Nov 26, 2024)
