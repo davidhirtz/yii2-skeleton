@@ -14,6 +14,11 @@ trait ModuleTrait
         return $class . ($this->enableI18nTables ? ('::' . Yii::$app->language) : '');
     }
 
+    public function getLanguages(): array
+    {
+        return $this->enableI18nTables ? Yii::$app->getI18n()->getLanguages() : [Yii::$app->sourceLanguage];
+    }
+
     public function getTableName(string $tableName): string
     {
         $tableName = $this->tablePrefix . $tableName;
