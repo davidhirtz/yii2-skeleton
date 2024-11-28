@@ -23,9 +23,14 @@ trait StatusGridViewTrait
     public string $statusParamName = 'status';
 
     /**
-     * @var string|null whether the default item in the status dropdown should be shown
+     * @var bool|null set to manually set the status dropdown state
      */
-    public ?string $statusDefaultItem = null;
+    public ?bool $statusIsActive = null;
+
+    /**
+     * @var string|null|false the default status item label, set to `false` to disable the default item
+     */
+    public string|null|false $statusDefaultItem = null;
 
     public function statusColumn(): array
     {
@@ -46,6 +51,7 @@ trait StatusGridViewTrait
         return ButtonDropdown::widget([
             'label' => $label ? Html::tag('strong', $label) : Yii::t('skeleton', 'Status'),
             'items' => $items,
+            'isActive' => $this->statusIsActive,
             'paramName' => $this->statusParamName,
             'defaultItem' => $this->statusDefaultItem,
         ]);
