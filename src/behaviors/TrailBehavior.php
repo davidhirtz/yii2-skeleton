@@ -184,6 +184,12 @@ class TrailBehavior extends Behavior
      */
     public function formatTrailAttributeValue(string $attribute, mixed $value): mixed
     {
+        if ($this->owner instanceof ActiveRecord) {
+            if ($relation = $this->owner->getRelationFromForeignKey($attribute)) {
+                return TrailModelCollection::getModelByNameAndId($relation->modelClass, $value);
+            }
+        }
+
         switch ($this->getDefaultAttributeValues()[$attribute] ?? null) {
             case self::VALUE_TYPE_BOOLEAN:
                 return $value ? Yii::t('yii', 'Yes') : Yii::t('yii', 'No');
@@ -204,12 +210,6 @@ class TrailBehavior extends Behavior
                 }
 
                 return $value;
-        }
-
-        if ($this->owner instanceof ActiveRecord) {
-            if ($relation = $this->owner->getRelationFromForeignKey($attribute)) {
-                return TrailModelCollection::getModelByNameAndId($relation->modelClass, $value);
-            }
         }
 
         return is_array($value) ? print_r($value, true) : (string)$value;

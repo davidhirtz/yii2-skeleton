@@ -4,7 +4,8 @@
   GridView::getSelectionButton() to accept an array of options
 - Enforced strict types
 - Fixed empty name and email sanitization in `AuthClientSignupForm`
-- Fixed nullable IP address
+- Fixed `User` nullable IP address
+- Fixed `MaterializedTreeTrait` with an empty path
 
 ## 2.3.20 (Nov 28, 2024)
 

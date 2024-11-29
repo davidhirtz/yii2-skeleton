@@ -30,7 +30,7 @@ class TrailModelCollection
 
                 if ($instance instanceof ActiveRecord && $modelId) {
                     $primaryKey = $instance::primaryKey();
-                    $values = explode('-', $modelId);
+                    $values = is_string($modelId) ? explode('-', $modelId) : $modelId;
                     $keys = count($primaryKey) > 1 && count($primaryKey) === count($values)
                         ? array_combine($primaryKey, $values)
                         : array_combine($primaryKey, [$modelId]);

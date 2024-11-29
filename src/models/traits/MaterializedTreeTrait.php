@@ -131,11 +131,11 @@ trait MaterializedTreeTrait
 
     public function setDescendants(array $descendants): void
     {
-        $length = strlen($this->path);
+        $length = $this->path ? strlen($this->path) : 0;
         $this->_descendants = [];
 
         foreach ($descendants as $descendant) {
-            $path = $descendant->path ? substr((string) $descendant->path, 0, $length) : null;
+            $path = $descendant->path ? substr((string)$descendant->path, 0, $length) : null;
 
             if ($path === $this->path) {
                 $this->_descendants[$descendant->id] = $descendant;

@@ -78,6 +78,7 @@ class AttributeTypecastBehaviorTest extends Unit
                     'AttributeTypecastBehavior' => [
                         'class' => AttributeTypecastBehavior::class,
                         'nullableAttributes' => ['int', 'float', 'bool', 'string'],
+                        'typecastBooleanAsInteger' => false,
                     ],
                 ];
             }
