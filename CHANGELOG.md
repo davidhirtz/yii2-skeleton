@@ -1,4 +1,4 @@
-## 2.4.0 (in development)
+## 2.4.0 (Nov 29, 2024)
 
 - Changed signature of `GridView::getUpdateButton`, `GridView::getDeleteButton`, `GridView::getSortableButton` and `
   GridView::getSelectionButton() to accept an array of options
