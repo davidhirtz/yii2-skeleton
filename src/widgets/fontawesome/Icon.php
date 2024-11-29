@@ -14,23 +14,23 @@ final class Icon implements Stringable
 
     public function __construct(string $name, private array $options = [])
     {
-        Html::addCssClass($options, static::$cssClassPrefix . $name);
+        Html::addCssClass($options, self::$cssClassPrefix . $name);
         $this->options = $options;
     }
     
-    public static function tag(string $name, array $options = []): static
+    public static function tag(string $name, array $options = []): self
     {
         $method = ArrayHelper::remove($options, 'type', 'solid');
-        return static::$method($name, $options);
+        return self::$method($name, $options);
     }
 
-    public static function solid(string $name, array $options = []): static
+    public static function solid(string $name, array $options = []): self
     {
         Html::addCssClass($options, 'fas');
         return new static($name, $options);
     }
 
-    public static function brand(string $name, array $options = []): static
+    public static function brand(string $name, array $options = []): self
     {
         Html::addCssClass($options, 'fab');
         return new static($name, $options);
@@ -44,62 +44,62 @@ final class Icon implements Stringable
         return Html::tag($tag, '', $options);
     }
 
-    public function inverse(): static
+    public function inverse(): self
     {
-        return $this->addCssClass(static::$cssClassPrefix . 'inverse');
+        return $this->addCssClass(self::$cssClassPrefix . 'inverse');
     }
 
-    public function spin(): static
+    public function spin(): self
     {
-        return $this->addCssClass(static::$cssClassPrefix . 'spin');
+        return $this->addCssClass(self::$cssClassPrefix . 'spin');
     }
 
-    public function pulse(): static
+    public function pulse(): self
     {
-        return $this->addCssClass(static::$cssClassPrefix . 'pulse');
+        return $this->addCssClass(self::$cssClassPrefix . 'pulse');
     }
 
-    public function fixedWidth(): static
+    public function fixedWidth(): self
     {
-        return $this->addCssClass(static::$cssClassPrefix . 'fw');
+        return $this->addCssClass(self::$cssClassPrefix . 'fw');
     }
 
-    public function li(): static
+    public function li(): self
     {
-        return $this->addCssClass(static::$cssClassPrefix . 'li');
+        return $this->addCssClass(self::$cssClassPrefix . 'li');
     }
 
-    public function border(): static
+    public function border(): self
     {
-        return $this->addCssClass(static::$cssClassPrefix . 'border');
+        return $this->addCssClass(self::$cssClassPrefix . 'border');
     }
 
-    public function pullLeft(): static
+    public function pullLeft(): self
     {
-        return $this->addCssClass(static::$cssClassPrefix . 'pull-left');
+        return $this->addCssClass(self::$cssClassPrefix . 'pull-left');
     }
 
-    public function pullRight(): static
+    public function pullRight(): self
     {
-        return $this->addCssClass(static::$cssClassPrefix . 'pull-right');
+        return $this->addCssClass(self::$cssClassPrefix . 'pull-right');
     }
 
-    public function size(string $value): static
+    public function size(string $value): self
     {
-        return $this->addCssClass(static::$cssClassPrefix . $value);
+        return $this->addCssClass(self::$cssClassPrefix . $value);
     }
 
-    public function rotate(string $value): static
+    public function rotate(string $value): self
     {
-        return $this->addCssClass(static::$cssClassPrefix . 'rotate-' . $value);
+        return $this->addCssClass(self::$cssClassPrefix . 'rotate-' . $value);
     }
 
-    public function flip(string $value): static
+    public function flip(string $value): self
     {
-        return $this->addCssClass(static::$cssClassPrefix . 'flip-' . $value);
+        return $this->addCssClass(self::$cssClassPrefix . 'flip-' . $value);
     }
 
-    public function addCssClass(string $class): static
+    public function addCssClass(string $class): self
     {
         Html::addCssClass($this->options, $class);
         return $this;

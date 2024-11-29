@@ -92,7 +92,7 @@ class GridView extends \yii\grid\GridView
     public ?string $selectionButtonLabel = null;
 
     /**
-     * @var array containing the selection form html options
+     * @var array containing the selection form HTML options
      */
     public array $selectionColumn = [
         'class' => CheckboxColumn::class,
@@ -314,14 +314,18 @@ class GridView extends \yii\grid\GridView
     /**
      * @noinspection PhpUnused
      */
-    public function getSelectionButton(): string
+    public function getSelectionButton(array $options = []): string
     {
         if ($items = $this->getSelectionButtonItems()) {
             return ButtonDropdown::widget([
                 'label' => Html::iconText('wrench', $this->selectionButtonLabel),
                 'buttonOptions' => ['class' => 'btn-submit'],
-                'options' => ['id' => 'btn-selection', 'style' => 'display:none'],
+                'options' => [
+                    'id' => 'btn-selection',
+                    'style' => 'display:none',
+                ],
                 'direction' => ButtonDropdown::DIRECTION_UP,
+                ...$options,
                 'items' => $items,
             ]);
         }
@@ -376,31 +380,42 @@ class GridView extends \yii\grid\GridView
     /**
      * @noinspection PhpUnused
      */
-    protected function getSortableButton(): string
+    protected function getSortableButton(array $options = []): string
     {
-        return Html::tag('span', (string)Icon::tag('arrows-alt'), ['class' => 'btn btn-secondary sortable-handle']);
-    }
+        $icon = ArrayHelper::remove($options, 'icon', 'arrows-alt');
 
-    /**
-     * @param T $model
-     */
-    protected function getUpdateButton(ActiveRecordInterface $model): string
-    {
-        return Html::a((string)Icon::tag('wrench'), $this->getRoute($model), [
-            'class' => 'btn btn-primary d-none d-md-inline-block',
+        return Html::tag('span', (string)Icon::tag($icon), [
+            'class' => 'btn btn-secondary sortable-handle',
+            ...$options,
         ]);
     }
 
     /**
      * @param T $model
      */
-    protected function getDeleteButton(ActiveRecordInterface $model): string
+    protected function getUpdateButton(ActiveRecordInterface $model, array $options = []): string
     {
-        return Html::a((string)Icon::tag('trash'), $this->getDeleteRoute($model), [
+        $icon = ArrayHelper::remove($options, 'icon', 'wrench');
+
+        return Html::a((string)Icon::tag($icon), $this->getRoute($model), [
+            'class' => 'btn btn-primary d-none d-md-inline-block',
+            ...$options,
+        ]);
+    }
+
+    /**
+     * @param T $model
+     */
+    protected function getDeleteButton(ActiveRecordInterface $model, array $options = []): string
+    {
+        $icon = ArrayHelper::remove($options, 'icon', 'trash');
+
+        return Html::a((string)Icon::tag($icon), $this->getDeleteRoute($model), [
             'class' => 'btn btn-danger',
             'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
             'data-ajax' => 'remove',
             'data-target' => '#' . $this->getRowId($model),
+            ...$options,
         ]);
     }
 
@@ -435,6 +450,7 @@ class GridView extends \yii\grid\GridView
 
     /**
      * @param T $model
+     * @noinspection PhpUnused
      */
     public function setModel(ActiveRecord $model): void
     {

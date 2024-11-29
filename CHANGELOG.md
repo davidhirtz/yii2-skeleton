@@ -1,5 +1,9 @@
 ## 2.4.0 (in development)
 
+- Changed signature of `GridView::getUpdateButton`, `GridView::getDeleteButton`, `GridView::getSortableButton` and `
+  GridView::getSelectionButton() to accept an array of options
+- Enforced strict types
+
 ## 2.3.20 (Nov 28, 2024)
 
 - Added `ModuleTrait::getLanguages()`
