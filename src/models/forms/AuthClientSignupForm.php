@@ -73,8 +73,14 @@ class AuthClientSignupForm extends Model
     protected function sanitizeName(): void
     {
         if (!$this->user->name && $this->user->requireName) {
-            $fullName = implode('-', array_filter([$this->user->first_name, $this->user->last_name]));
-            $this->user->name = mb_strtolower($fullName, Yii::$app->charset) ?: explode('@', $this->user->email)[0];
+            $name = implode('-', array_filter([$this->user->first_name, $this->user->last_name]));
+            $name = mb_strtolower($name, Yii::$app->charset);
+
+            if (!$name && $this->user->email) {
+                $name = explode('@', $this->user->email)[0];
+            }
+
+            $this->user->name = $name;
         }
 
         if ($this->user->name && $this->namePatternFilter) {
