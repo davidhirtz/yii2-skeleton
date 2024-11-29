@@ -2,6 +2,7 @@
 
 - Changed signature of `GridView::getUpdateButton`, `GridView::getDeleteButton`, `GridView::getSortableButton` and `
   GridView::getSelectionButton() to accept an array of options
+- Changed unsafe field warning in `ActiveFormTrait` to debug level
 - Enforced strict types
 - Fixed empty name and email sanitization in `AuthClientSignupForm`
 - Fixed `User` nullable IP address

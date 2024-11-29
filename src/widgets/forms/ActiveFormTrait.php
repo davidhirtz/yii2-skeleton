@@ -98,7 +98,7 @@ trait ActiveFormTrait
                     if ($options instanceof \yii\widgets\ActiveField) {
                         if (!$this->isSafeAttribute($options->attribute)) {
                             $methodName = (new ReflectionFunction($callback))->getName();
-                            Yii::warning("Skipping unsafe attribute '$options->attribute' set by '$methodName'.");
+                            Yii::debug("Skipping unsafe attribute '$options->attribute' set by '$methodName'.");
                             continue;
                         }
 
