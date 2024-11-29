@@ -104,7 +104,7 @@ class User extends \yii\web\User
         // Updates session's user id.
         if ($session instanceof MultiFieldSession) {
             $session->writeCallback = fn () => [
-                'ip_address' => inet_pton(Yii::$app->getRequest()->getUserIP()),
+                'ip_address' => ($ipAddress = Yii::$app->getRequest()->getUserIP()) ? inet_pton($ipAddress) : null,
                 'user_id' => $identity->id,
             ];
         }
@@ -143,12 +143,11 @@ class User extends \yii\web\User
     private function insertLogin(\davidhirtz\yii2\skeleton\models\User $user): void
     {
         if ($browser = Yii::$app->getRequest()->getUserAgent()) {
-            $browser = mb_substr((string) $browser, 0, 255, Yii::$app->charset);
+            $browser = mb_substr($browser, 0, 255, Yii::$app->charset);
         }
 
-        if ($ipAddress = ($this->ipAddress ?: Yii::$app->getRequest()->getUserIP())) {
-            $ipAddress = inet_pton($ipAddress);
-        }
+        $ipAddress = $this->ipAddress ?: Yii::$app->getRequest()->getUserIP();
+        $ipAddress = $ipAddress ? inet_pton($ipAddress) : null;
 
         $type = mb_substr($this->loginType, 0, 12, Yii::$app->charset);
 

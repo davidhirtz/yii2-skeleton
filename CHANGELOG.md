@@ -3,6 +3,7 @@
 - Changed signature of `GridView::getUpdateButton`, `GridView::getDeleteButton`, `GridView::getSortableButton` and `
   GridView::getSelectionButton() to accept an array of options
 - Enforced strict types
+- Fixed nullable IP address
 
 ## 2.3.20 (Nov 28, 2024)
 
