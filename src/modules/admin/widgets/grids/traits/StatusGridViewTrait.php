@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
@@ -59,7 +61,7 @@ trait StatusGridViewTrait
 
     protected function getStatusIcon(StatusAttributeInterface $model): string
     {
-        return Icon::tag($model->getStatusIcon(), [
+        return (string)Icon::tag($model->getStatusIcon(), [
             'data-toggle' => 'tooltip',
             'title' => $model->getStatusName()
         ]);

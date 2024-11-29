@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
@@ -139,7 +141,7 @@ class AuthItemGridView extends GridView
     {
         $route = [$authItem->isAssigned ? 'revoke' : 'assign', 'id' => $this->user->id, 'name' => $authItem->name, 'type' => $authItem->type];
 
-        return Html::a(Icon::tag($authItem->isAssigned ? 'ban' : 'star'), $route, [
+        return Html::a((string)Icon::tag($authItem->isAssigned ? 'ban' : 'star'), $route, [
             'class' => 'btn btn-primary',
             'data-method' => 'post',
         ]);

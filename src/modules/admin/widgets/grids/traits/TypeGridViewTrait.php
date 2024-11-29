@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
@@ -93,7 +95,7 @@ trait TypeGridViewTrait
 
     protected function getTypeIcon(TypeAttributeInterface $model): string
     {
-        return Icon::tag($model->getTypeIcon(), [
+        return (string)Icon::tag($model->getTypeIcon(), [
             'data-toggle' => 'tooltip',
             'title' => $model->getTypeName(),
         ]);

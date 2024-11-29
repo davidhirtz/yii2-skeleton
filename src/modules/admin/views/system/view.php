@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Error log.
  * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController::actionView()

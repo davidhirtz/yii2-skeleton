@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\skeleton\tests\unit\modules\admin;
 
 use Codeception\Test\Unit;

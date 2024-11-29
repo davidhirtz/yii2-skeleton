@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\skeleton\console\controllers;
 
 use davidhirtz\yii2\skeleton\console\controllers\traits\ControllerTrait;
@@ -124,7 +126,7 @@ class TrailController extends Controller
             Yii::$app->getDb()->createCommand('OPTIMIZE TABLE ' . Trail::tableName());
             $success = true;
         } catch (Exception $exception) {
-            Yii::error($exception);
+            Yii::error($exception->getMessage());
         }
 
         $this->interactiveDoneStdout($success);

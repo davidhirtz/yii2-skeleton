@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\assets\JuiAsset;
@@ -299,7 +301,7 @@ class GridView extends \yii\grid\GridView
 
         $options = [
             'class' => 'form-control',
-            'prepend' => Html::submitButton(Icon::tag($icon, ['class' => 'fa-fw']), ['class' => 'btn-transparent']),
+            'prepend' => Html::submitButton((string)Icon::tag($icon, ['class' => 'fa-fw']), ['class' => 'btn-transparent']),
             'placeholder' => Yii::t('skeleton', 'Search ...'),
             ...$this->searchInputOptions
         ];
@@ -376,7 +378,7 @@ class GridView extends \yii\grid\GridView
      */
     protected function getSortableButton(): string
     {
-        return Html::tag('span', Icon::tag('arrows-alt'), ['class' => 'btn btn-secondary sortable-handle']);
+        return Html::tag('span', (string)Icon::tag('arrows-alt'), ['class' => 'btn btn-secondary sortable-handle']);
     }
 
     /**
@@ -384,7 +386,7 @@ class GridView extends \yii\grid\GridView
      */
     protected function getUpdateButton(ActiveRecordInterface $model): string
     {
-        return Html::a(Icon::tag('wrench'), $this->getRoute($model), [
+        return Html::a((string)Icon::tag('wrench'), $this->getRoute($model), [
             'class' => 'btn btn-primary d-none d-md-inline-block',
         ]);
     }
@@ -394,7 +396,7 @@ class GridView extends \yii\grid\GridView
      */
     protected function getDeleteButton(ActiveRecordInterface $model): string
     {
-        return Html::a(Icon::tag('trash'), $this->getDeleteRoute($model), [
+        return Html::a((string)Icon::tag('trash'), $this->getDeleteRoute($model), [
             'class' => 'btn btn-danger',
             'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
             'data-ajax' => 'remove',

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 
 class ActiveField extends \davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveField

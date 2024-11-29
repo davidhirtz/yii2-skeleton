@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\skeleton\models\collections;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Redirect list
  * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController::actionIndex()

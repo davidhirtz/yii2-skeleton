@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\skeleton\helpers;
 
 use Imagick;
@@ -138,7 +140,7 @@ class Image extends BaseImage
 
             return $dimensions;
         } /** @noinspection PhpRedundantCatchClauseInspection */ catch (Exception $exception) {
-            Yii::error($exception);
+            Yii::error($exception->getMessage());
         }
 
         return false;

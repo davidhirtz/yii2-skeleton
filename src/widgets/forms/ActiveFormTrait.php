@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
@@ -246,7 +248,9 @@ trait ActiveFormTrait
             $attribute = $this->model->getI18nAttributeName($attribute, $language);
         }
 
-        return parent::field($model, $attribute, $options);
+        /** @var ActiveField|string $field */
+        $field = parent::field($model, $attribute, $options);
+        return $field;
     }
 
     public function renderButtons(): void

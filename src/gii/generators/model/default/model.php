@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * This is the template for generating the model class of a specified table.
  *

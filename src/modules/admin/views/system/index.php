@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
+
 /**
- * Assets list.
  * @see SystemController::actionIndex()
  * @see SystemController::actionSessionGc()
  *
@@ -47,10 +48,10 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                 [
                     'contentOptions' => ['class' => 'text-right'],
                     'content' => fn ($modified, $name): string => Html::buttons([
-                        Html::a(Icon::tag('file'), ['view', 'log' => $name, 'raw' => 1], [
+                        Html::a((string)Icon::tag('file'), ['view', 'log' => $name, 'raw' => 1], [
                             'class' => 'btn btn-primary',
                         ]),
-                        Html::a(Icon::tag('trash'), ['delete', 'log' => $name], [
+                        Html::a((string)Icon::tag('trash'), ['delete', 'log' => $name], [
                             'class' => 'btn btn-danger',
                             'data-method' => 'post',
                         ]),
@@ -122,7 +123,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
             [
                 'contentOptions' => ['class' => 'text-right'],
                 /** @see SystemController::actionFlush() */
-                'content' => fn ($item): string => Html::buttons(Html::a(Icon::tag('sync-alt'), ['flush', 'cache' => $item['name']], [
+                'content' => fn ($item): string => Html::buttons(Html::a((string)Icon::tag('sync-alt'), ['flush', 'cache' => $item['name']], [
                     'class' => 'btn btn-primary',
                     'data-method' => 'post',
                 ]))

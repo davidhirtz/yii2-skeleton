@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\skeleton\behaviors;
 
 use DateTime;
@@ -128,7 +130,7 @@ class TrailBehavior extends Behavior
         try {
             $trail->insert();
         } catch (Exception $exception) {
-            Yii::error($exception);
+            Yii::error($exception->getMessage());
         }
     }
 

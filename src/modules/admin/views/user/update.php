@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Admin user form
  * @see davidhirtz\yii2\skeleton\modules\admin\controllers\UserController::actionUpdate()

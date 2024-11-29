@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\skeleton\migrations;
 
 use davidhirtz\yii2\skeleton\db\traits\MigrationTrait;

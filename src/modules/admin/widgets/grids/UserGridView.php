@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
@@ -152,12 +154,12 @@ class UserGridView extends GridView
     protected function getRowButtons(User $user): array|string
     {
         if ($route = $this->getRoute($user)) {
-            return Html::a(Icon::tag('wrench'), $route, ['class' => 'btn btn-primary']);
+            return Html::a((string)Icon::tag('wrench'), $route, ['class' => 'btn btn-primary']);
         }
 
         if (Yii::$app->getUser()->can(User::AUTH_USER_ASSIGN, ['user' => $user])) {
             return Html::a(
-                Icon::tag('unlock-alt'),
+                (string)Icon::tag('unlock-alt'),
                 ['/admin/auth/view', 'user' => $user->id],
                 [
                     'class' => 'btn btn-primary',

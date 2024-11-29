@@ -1,3 +1,5 @@
+## 2.4.0 (in development)
+
 ## 2.3.20 (Nov 28, 2024)
 
 - Added `ModuleTrait::getLanguages()`

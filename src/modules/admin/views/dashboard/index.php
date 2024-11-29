@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\DashboardController::actionIndex()
  * @var View $this

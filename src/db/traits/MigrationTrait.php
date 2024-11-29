@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\skeleton\db\traits;
 
 use Exception;
@@ -64,7 +66,7 @@ trait MigrationTrait
                             $prevAttribute = $i18n->getAttributeName($attribute, $language);
 
                             if (!$tableSchema->getColumn($prevAttribute)) {
-                                $this->addColumn($table, $prevAttribute, $type);
+                                $this->addColumn($table, $prevAttribute, (string)$type);
                             }
                         }
                     }

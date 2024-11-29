@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Trail list
  * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\TrailController::actionIndex()

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @see AccountController::actionLogin()
  * @see AccountController::actionResend()
