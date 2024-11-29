@@ -46,7 +46,13 @@ class LogDataProvider extends ArrayDataProvider
         if ($file = @fopen($this->file, 'r')) {
             while (!feof($file)) {
                 $line = fgets($file);
+
+                if ($line === false) {
+                    continue;
+                }
+
                 preg_match($this->pattern, $line, $logInfo);
+
 
                 if (count($logInfo) === 7) {
                     if (!empty($log)) {
