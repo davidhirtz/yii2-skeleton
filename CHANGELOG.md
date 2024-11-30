@@ -1,3 +1,7 @@
+## 2.4.1 (in development)
+
+- Changed `AssetDirectoryTrait::$assetPath` default value to `@runtime/tests/assets`
+
 ## 2.4.0 (Nov 29, 2024)
 
 - Changed signature of `GridView::getUpdateButton`, `GridView::getDeleteButton`, `GridView::getSortableButton` and `

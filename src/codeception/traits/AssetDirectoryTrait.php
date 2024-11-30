@@ -9,7 +9,7 @@ use Yii;
 
 trait AssetDirectoryTrait
 {
-    protected string $assetPath = '@runtime/assets';
+    protected string $assetPath = '@runtime/tests/assets';
 
     protected function createAssetDirectory(): void
     {
