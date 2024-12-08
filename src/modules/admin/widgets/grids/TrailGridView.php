@@ -191,7 +191,7 @@ class TrailGridView extends GridView
 
     protected function renderTrailActiveRecordAttribute(?ActiveRecord $model): string
     {
-        if (!$model) {
+        if (!$model?->getPrimaryKey()) {
             return '';
         }
 

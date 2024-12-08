@@ -1,6 +1,7 @@
 ## 2.4.1 (in development)
 
 - Changed `AssetDirectoryTrait::$assetPath` default value to `@runtime/tests/assets`
+- Fixed `TrailGridView::renderTrailActiveRecordAttribute()` for empty relations
 
 ## 2.4.0 (Nov 29, 2024)
 

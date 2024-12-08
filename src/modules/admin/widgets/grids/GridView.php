@@ -115,7 +115,8 @@ class GridView extends \yii\grid\GridView
         $this->selectionButtonLabel ??= Yii::t('skeleton', 'Update Selected');
         $this->tableOptions['id'] ??= $this->getTableId();
 
-        $this->search ??= Yii::$app->request->get($this->searchParamName);
+        $this->search ??= Yii::$app->getRequest()->get($this->searchParamName);
+
         $this->searchUrl ??= Url::current([
             $this->searchParamName => null,
             'page' => null,
