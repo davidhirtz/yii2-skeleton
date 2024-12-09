@@ -1,5 +1,6 @@
 ## 2.4.1 (in development)
 
+- Added `Yii2::setDraftHttpHost()` and `Yii2::setProductionHttpHost()` for codeception tests
 - Changed `AssetDirectoryTrait::$assetPath` default value to `@runtime/tests/assets`
 - Fixed `TrailGridView::renderTrailActiveRecordAttribute()` for empty relations
 
