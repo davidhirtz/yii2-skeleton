@@ -40,12 +40,12 @@ class ControllerCest extends BaseCest
 
     public function checkDraftSubdomain(FunctionalTester $I): void
     {
-        $I->setDraftSubdomain();
+        $I->setDraftHttpHost();
         $I->amOnPage('/application-health');
 
         $I->assertTrue(Yii::$app->request->getIsDraft());
 
-        $I->setProductionSubdomain();
+        $I->setProductionHttpHost();
         $I->amOnPage('/application-health');
 
         $I->assertFalse(Yii::$app->request->getIsDraft());
