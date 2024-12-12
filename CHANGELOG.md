@@ -1,4 +1,4 @@
-## 2.4.1 (in development)
+## 2.4.1 (Dec 12, 2024)
 
 - Added `Yii2::setDraftHttpHost()` and `Yii2::setProductionHttpHost()` for codeception tests
 - Changed `AssetDirectoryTrait::$assetPath` default value to `@runtime/tests/assets`
