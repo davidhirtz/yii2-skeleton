@@ -125,7 +125,7 @@ trait ActiveFormTrait
                 }
 
                 if (!$this->isSafeAttribute($attribute)) {
-                    Yii::warning("Skipping unsafe attribute '$attribute'.");
+                    Yii::debug("Skipping unsafe attribute '$attribute'.");
                     continue;
                 }
 

@@ -1,3 +1,7 @@
+## 2.4.2 (in development)
+
+- Changed `Skipping unsafe attribute` log level to `debug`
+
 ## 2.4.1 (Dec 12, 2024)
 
 - Added `Yii2::setDraftHttpHost()` and `Yii2::setProductionHttpHost()` for codeception tests
