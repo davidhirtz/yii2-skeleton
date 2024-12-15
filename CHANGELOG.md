@@ -1,6 +1,7 @@
 ## 2.4.2 (in development)
 
 - Changed `Skipping unsafe attribute` log level to `debug`
+- Fixed `RelationValidator` to also cast `null` relations on new records
 
 ## 2.4.1 (Dec 12, 2024)
 

@@ -48,7 +48,7 @@ class RelationValidator extends Validator
         $value = $columnSchema->phpTypecast($model->getAttribute($attribute));
         $model->setAttribute($attribute, $value);
 
-        if ($model->isAttributeChanged($attribute)) {
+        if ($model->getIsNewRecord() || $model->isAttributeChanged($attribute)) {
             if ($value) {
                 /** @var ActiveRecord|null $related */
                 $related = $model->{$relation};
