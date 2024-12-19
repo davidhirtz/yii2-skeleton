@@ -6,11 +6,12 @@
 	],
 	"scripts": {
 		"build": "node esbuild.js",
-		"watch": "node esbuild.js --watch"
+		"dev": "node esbuild.js --watch"
 	},
 	"devDependencies": {
 		"autoprefixer": "^10.4.20",
-		"esbuild": "^0.19.5",
-		"esbuild-sass-plugin": "^2.16.1"
+		"bootstrap": "^5.3.3",
+		"esbuild": "^0.24.0",
+		"esbuild-sass-plugin": "^3.3.1"
 	}
 }
