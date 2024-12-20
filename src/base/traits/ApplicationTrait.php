@@ -19,7 +19,7 @@ use Yii;
 use yii\authclient\Collection;
 use yii\base\ActionEvent;
 use yii\base\InvalidConfigException;
-use yii\bootstrap4\BootstrapAsset;
+use yii\bootstrap5\BootstrapAsset;
 use yii\caching\FileCache;
 use yii\console\controllers\MigrateController;
 use yii\db\Connection;

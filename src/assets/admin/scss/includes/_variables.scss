@@ -1,14 +1,5 @@
-@use "sass:math";
-
-/*
-Colors.
- */
-$green: #a3cba3 !default;
-$red: #e18982 !default;
+// Color system
 $white: #fff !default;
-$black: #000 !default;
-$cyan: #d9edf7 !default;
-
 $gray-100: #f9f9f9 !default;
 $gray-200: #f5f5f5 !default;
 $gray-300: #eee !default;
@@ -18,379 +9,372 @@ $gray-600: #9d9d9d !default;
 $gray-700: #555 !default;
 $gray-800: #333 !default;
 $gray-900: #222 !default;
+$black: #fff !default;
 
-$body-bg: $gray-100 !default;
-$body-text: $gray-900 !default;
+$blue: #0d6efd !default;
+$indigo: #6610f2 !default;
+$purple: #6f42c1 !default;
+$pink: #d63384 !default;
+$red: #e18982 !default;
+$orange: #fd7e14 !default;
+$yellow: #ffc107 !default;
+$green: #a3cba3 !default;
+$teal: #20c997 !default;
+$cyan: #d9edf7 !default;
 
 $primary: $gray-900 !default;
 $secondary: $gray-400 !default;
-
-$dark: $primary !default;
-$yiq-text-dark: $primary !default;
-$danger: $red !default;
-$error: $red !default;
 $success: $green !default;
 $info: $cyan !default;
-$app-info-text: #31708f !default;
+$warning: $yellow !default;
+$danger: $red !default;
+$light: $gray-100 !default;
+$dark: $primary !default;
 
-$component-active-bg: $primary !default;
-$component-active-color: $white !default;
+//$app-info-text: #31708f !default;
 
-/*
-Grid.
- */
+// Body
+$body-color: $gray-900 !default;
+$body-bg: $gray-100 !default;
+
+// Typography
+$font-family-sans-serif: "Open Sans", sans-serif !default;
+$font-size-base: 0.875rem !default;
+$font-size-sm: 0.75rem !default;
+$font-size-lg: 1rem !default;
+
+$h1-font-size: 2.25em !default;
+$h2-font-size: 1.125em !default;
+
+$small-font-size: $font-size-sm;
+
+// Grid breakpoints
 $grid-breakpoints: (
         xs: 0,
+        sm: 576px,
         md: 768px,
-        lg: 1024px
-) !default;
-
-$container-max-widths: (
+        lg: 1024px,
         xl: 1400px
 ) !default;
 
-/*
-Spacers.
- */
-$app-margin-bottom: 20px !default;
-$app-padding-y: 15px !default;
-$app-padding-x: 15px !default;
-$app-body-padding: 70px 0 !default;
+// Grid containers
+$container-max-widths: (
+        xs: 1400px
+) !default;
 
-/*
-Body.
- */
-$body-bg: $white !default;
-$body-color: #000 !default;
+$container-padding-x: .5rem !default;
 
-/*
-Border.
- */
-$border-radius: 3px !default;
-$border-radius-sm: $border-radius !default;
-
-$border-width: 1px !default;
-$border-style: solid !default;
+$border-radius: 0.25rem !default;
 $border-color: $gray-400 !default;
 
-/*
-Text.
- */
-$font-family-base: "Open Sans", sans-serif !default;
-$app-default-font: "Open Sans", sans-serif;
 
-$font-size-base: 14px !default;
-$font-size-sm: 12px !default;
-$font-size-lg: 16px !default;
-$line-height-base: 1.4 !default;
+// Layout
+$app-html-scroll-padding: 5rem !default;
+$app-body-padding: $app-html-scroll-padding 0 1rem !default;
 
-$h1-font-size: 36px !default;
-$h2-font-size: 18px !default;
-$small-font-size: $font-size-sm !default;
+$app-margin-bottom: 1.25rem !default;
+$app-padding-y: 0.75rem !default;
+$app-padding-x: 0.75rem !default;
 
-$app-header-margin: 40px 0 $app-margin-bottom !default;
-$app-header-padding-bottom: 10px !default;
+$app-header-margin: 2.5rem 0 $app-margin-bottom !default;
+$app-header-padding-bottom: $app-padding-y !default;
 $app-header-text-align: center !default;
 $app-header-border-bottom: 1px solid $gray-300 !default;
 $app-header-line-height: 1.5 !default;
 
-$link-color: $primary !default;
-
 $mark-bg: $success !default;
 $mark-padding: 0 !default;
+$caret-width: 0.25rem !default;
 
-$caret-width: 4px !default;
+//$app-submenu-link-margin: 0 0.125rem $app-padding-x !default;
+//$app-submenu-margin-bottom: $app-margin-bottom !default;
+//$app-submenu-justify-content: center !default;
+//$app-submenu-hover-bg: $gray-300 !default;
+//$app-submenu-hover-color: $gray-900 !default;
 
-/*
-Navs.
- */
-$nav-link-padding-y: 10px !default;
-$nav-link-padding-x: $app-padding-x !default;
-$app-submenu-link-margin: 0 2px 10px !default;
-$app-submenu-margin-bottom: $app-margin-bottom !default;
-$app-submenu-justify-content: center !default;
-$app-submenu-hover-bg: $gray-300 !default;
-$app-submenu-hover-color: $body-text !default;
+// Nav
+$app-nav-link-gap: 0.5rem !default;
+$nav-link-padding-y: 0 !default;
+$nav-link-padding-x: 0.75rem !default;
+$nav-link-height: 3rem !default;
 
-/*
-Navbar.
- */
+// Navbar
 $app-navbar-expand-breakpoint: md !default;
+$app-navbar-light-bg: $dark !default;
+
+$app-navbar-light-hover-bg: #090909 !default;
+$app-navbar-light-active-bg: $app-navbar-light-hover-bg !default;
+
 $navbar-padding-y: 0 !default;
 $navbar-padding-x: 0 !default;
-$app-navbar-nav-link-padding-y: 15px !default;
-$navbar-nav-link-padding-x: 12px !default;
-$navbar-dark-color: $gray-500 !default;
-$app-navbar-background: $dark !default;
-$navbar-dark-hover-color: $white !default;
-$app-navbar-dark-hover-bg: #090909 !default;
-$navbar-dark-active-bg: $app-navbar-dark-hover-bg !default;
-$navbar-border: 1px solid $navbar-dark-active-bg !default;
+$navbar-light-color: $gray-400 !default;
+$navbar-light-hover-color: $white !default;
+$navbar-light-active-color: $gray-100 !default;
+$navbar-light-disabled-color: $gray-600 !default;
 
-$navbar-toggler-padding-y: 5px !default;
-$navbar-toggler-padding-x: 5px !default;
-$navbar-dark-toggler-border: 0 !default;
+$navbar-border: 1px solid $app-navbar-light-active-bg !default;
 
-// This fixes issue with the default value of Bootstrap 4 icon color, because the HEX color is not properly encoded.
-$navbar-dark-toggler-icon-hex-color: fff !default;
-$navbar-light-toggler-icon-hex-color: 000 !default;
-$navbar-dark-toggler-icon-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'><path stroke='%23#{$navbar-dark-toggler-icon-hex-color}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>") !default;
-$navbar-light-toggler-icon-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'><path stroke='%23#{$navbar-light-toggler-icon-hex-color}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>") !default;
+$app-navbar-toggler-margin-y: .75rem !default;
+$navbar-toggler-padding-y: .25rem !default;
+$navbar-toggler-padding-x: .5rem !default;
 
-/*
-Breadcrumbs.
- */
-$breadcrumb-padding-y: $app-padding-y !default;
-$breadcrumb-padding-x: $app-padding-x !default;
-$breadcrumb-margin-bottom: $app-margin-bottom !default;
-$breadcrumb-item-padding: 5px !default;
-$breadcrumb-bg: $gray-200 !default;
-$breadcrumb-divider-color: $gray-400 !default;
-
-$hr-margin-y: 15px !default;
-$hr-border-color: $border-color !default;
-
-/*
-Alert.
- */
-$alert-padding-y: $app-padding-y !default;
-$alert-padding-x: $app-padding-x !default;
-$alert-margin-bottom: $app-margin-bottom !default;
-
-/*
-Card.
- */
-$card-bg: $white !default;
-$card-color: $body-color !default;
-$card-spacer-y: $app-padding-y !default;
-$card-spacer-x: $app-padding-x !default;
-$card-cap-color: null !default;
-$card-cap-bg: $gray-200 !default;
-$card-border-width: $border-width !default;
-$card-border-color: $border-color !default;
-$card-inner-border-radius: 0 !default;
-$app-card-margin-bottom: $app-margin-bottom !default;
-
-$card-danger-bg: #f2dede !default;
-$card-danger-border: #ebccd1 !default;
-$card-danger-color: $card-color !default;
-
-/*
-Grid view.
- */
-$app-grid-view-footer-position: sticky !default;
-
-$app-grid-view-margin-y: 15px !default;
-$app-grid-view-border: 1px solid $border-color !default;
-$app-grid-view-buttons-top: 6px !default;
-
-/*
-Buttons.
- */
-$btn-primary-bg: $primary !default;
-$btn-primary-hover-bg: darken($btn-primary-bg, 7.5%) !default;
-$btn-primary-active-bg: darken($btn-primary-bg, 10%) !default;
-$btn-primary-border-color: $primary !default;
-$btn-primary-hover-border-color: $btn-primary-border-color !default;
-$btn-primary-active-border-color: $btn-primary-border-color !default;
-
-$btn-secondary-bg: $white !default;
-$btn-secondary-hover-bg: $gray-200 !default;
-$btn-secondary-active-bg: $gray-300 !default;
-$btn-secondary-border-color: $border-color !default;
-$btn-secondary-hover-border-color: $btn-secondary-border-color !default;
-$btn-secondary-active-border-color: $btn-secondary-border-color !default;
-
-$btn-padding-y-sm: 4px !default;
-$btn-padding-x-sm: 6px !default;
-$btn-line-height-sm: 1 !default;
-
-
-/*
-Input.
- */
-$app-form-sticky-position: sticky !default;
-$app-form-sticky-border-width: $border-width !default;
-$app-form-sticky-padding-bottom: $card-spacer-y !default;
-
-$form-group-margin-bottom: $card-spacer-y !default;
-$app-form-group-buttons-margin-top: $card-spacer-y !default;
-$form-text-margin-top: 6px !default;
-
-$form-check-inline-margin-x: 20px !default;
-$form-check-inline-input-margin-x: 10px !default;
-
-$input-btn-padding-y: 8px !default;
-$input-btn-padding-x: 12px !default;
-$input-height: 38px !default;
-
-$input-btn-focus-width: 1px !default;
-$input-btn-padding-y-sm: $input-btn-padding-y !default;
-$input-btn-padding-x-sm: $input-btn-padding-x !default;
-$input-btn-padding-y-lg: $input-btn-padding-y !default;
-$input-btn-padding-x-lg: $input-btn-padding-x !default;
-$input-btn-border-width: $border-width !default;
-
-$custom-select-indicator-padding: 10px;
-
-$input-padding-y: $input-btn-padding-y !default;
-$input-padding-x: $input-btn-padding-x !default;
-$input-color: $gray-700 !default;
-$input-border-width: $input-btn-border-width !default;
-$input-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075) !default;
-$input-focus-color: $body-text !default;
-$input-btn-focus-width: 1px !default;
-$input-focus-border-color: #66afe9 !default;
-$input-line-height: 20px !default;
-
-$input-height-inner: $input-height !default;
-$input-height-inner-half: math.div($input-height, 2) !default;
-$input-height-inner-quarter: math.div($input-height, 4) !default;
-
-$app-form-label-padding-top: $input-padding-y + $input-border-width !default;
-$app-form-content-label-padding-top: $app-form-label-padding-top * 2 !default;
-$app-form-label-font-weight: bold !default;
-$caret-spacing: 8px !default;
-
-/*
-List group.
- */
-$list-group-border-color: $border-color !default;
-$list-group-item-padding-y: $app-padding-y !default;
-$list-group-item-padding-x: $app-padding-x !default;
-
-/*
-Tables.
- */
-$app-table-margin-bottom: 0 !default;
-$table-border-width: 1px !default;
-$table-border-color: transparent !default;
-$app-table-th-border-width: 1px !default;
-$app-table-th-border-color: $table-border-color !default;
-$table-cell-padding: 12px !default;
-$table-accent-bg: $gray-100 !default;
-$table-hover-bg: $gray-200 !default;
-$app-table-th-active-font-style: normal !default;
-$app-table-th-active-text-decoration: underline !default;
-$app-table-th-selected-bg: $info !default;
-
-/*
-Pagination.
- */
-$app-pagination-justify-content: center !default;
-$app-pagination-margin: 30px 0 0 !default;
-$app-pagination-padding: 20px 0 10px !default;
-$app-pagination-border-top: 1px solid $border-color !default;
-
-$pagination-padding-y: $input-btn-padding-y !default;
-$pagination-padding-x: $input-btn-padding-x !default;
-$pagination-line-height: $line-height-base !default;
-
-$pagination-border-color: $border-color !default;
-$pagination-hover-border-color: $border-color !default;
-
-$pagination-focus-box-shadow: none !default;
-
-/*
-Dropdown.
- */
-$dropdown-min-width: 160px !default;
-$dropdown-padding-y: 5px !default;
-$dropdown-spacer: 2px !default;
-$dropdown-bg: #fff !default;
-$dropdown-border-color: $border-color !default;
-$dropdown-divider-bg: $border-color !default;
-
-$app-dropdown-button-bg: $gray-100 !default;
-$app-dropdown-button-color: $body-text !default;
-$app-dropdown-button-border-color: $border-color !default;
-
-$app-dropdown-button-active-bg: $gray-300 !default;
-$app-dropdown-button-active-color: $app-dropdown-button-color !default;
-$app-dropdown-button-active-border-color: $app-dropdown-button-border-color !default;
-
-$dropdown-link-color: $link-color !default;
-$dropdown-link-hover-color: $link-color !default;
-$dropdown-item-padding-y: $input-btn-padding-y !default;
-$dropdown-item-padding-x: $input-btn-padding-x !default;
-
-$app-dropdown-header-padding-y: $dropdown-item-padding-y !default;
-$app-dropdown-header-padding-x: $dropdown-item-padding-x !default;
-
-/*
-Badge.
- */
-$badge-font-size: 12px !default;
-$app-badge-bg: $gray-600 !default;
-$app-badge-color: $white !important !default;
-$app-badge-active-bg: $component-active-color !default;
-$app-badge-active-color: $component-active-bg !important !default;
-$badge-font-weight: normal !default;
-$badge-padding-y: 3px !default;
-$badge-padding-x: 7px !default;
-$badge-border-radius: 10px !default;
-
-/*
-Toolbar.
- */
-$app-toolbar-padding-y: $app-padding-y !default;
-$app-toolbar-padding-x: $app-padding-x !default;
-$app-toolbar-background: $body-bg !default;
-$app-toolbar-border: 1px solid $border-color !default;
-
-
-/*
-Tooltip.
- */
-$tooltip-max-width: 200px !default;
-$tooltip-min-width: 80px !default;
-
-/**
-Thumbnail.
- */
-$thumbnail-padding: $app-padding-y !default;
-$thumbnail-caption-padding: $app-padding-x !default;
-
-/*
-Icon.
- */
-$app-icon-margin-x: 6px !default;
-
-/*
-Upload.
- */
-$app-upload-progress-top: 51px !default;
-$app-upload-progress-height: 10px !default;
-$app-upload-progress-bg: $success !default;
-
-/*
-Datepicker.
- */
-$datepicker-spacer-y: $card-spacer-y !default;
-$datepicker-spacer-x: $card-spacer-x !default;
-$datepicker-spacer: $datepicker-spacer-y $datepicker-spacer-x !default;
-$datepicker-bg: $card-bg !default;
-$datepicker-color: $card-color !default;
-$datepicker-header-margin: -10px -15px 10px !default;
-$datepicker-header-padding: $datepicker-spacer !default;
-$datepicker-border: $card-border-width solid $card-border-color !default;
-$datepicker-header-bg: $card-cap-bg !default;
-$datepicker-header-color: $card-cap-color !default;
-$datepicker-td-padding: 0 !default;
-$datepicker-td-border: $card-border-width solid $card-border-color !default;
-$datepicker-link-padding: 6px !default;
-$datepicker-link-bg: $gray-200 !default;
-$datepicker-link-color: $input-color !default;
-$datepicker-link-hover-bg: $gray-400 !default;
-$datepicker-link-hover-color: $datepicker-link-color !default;
-$datepicker-link-current-bg: $gray-900 !default;
-$datepicker-link-current-color: $white !default;
-$datepicker-link-today-bg: $gray-500 !important !default;
-$datepicker-link-today-color: $datepicker-link-color !default;
-
-/*
-Trail.
- */
-$trail-del-bg: $danger !default;
-$trail-ins-bg: $success !default;
-$trail-cell-padding: 6px !default;
+$navbar-light-toggler-border-color: $white !default;
+$navbar-light-icon-color: $white;
+//$navbar-light-toggler-icon-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'><path stroke='#222' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>") !default;
+//
+///*
+//Breadcrumbs.
+// */
+//$breadcrumb-padding-y: $app-padding-y !default;
+//$breadcrumb-padding-x: $app-padding-x !default;
+//$breadcrumb-margin-bottom: $app-margin-bottom !default;
+//$breadcrumb-item-padding: 5px !default;
+//$breadcrumb-bg: $gray-200 !default;
+//$breadcrumb-divider-color: $gray-400 !default;
+//
+//$hr-margin-y: 15px !default;
+//$hr-border-color: $border-color !default;
+//
+///*
+//Alert.
+// */
+//$alert-padding-y: $app-padding-y !default;
+//$alert-padding-x: $app-padding-x !default;
+//$alert-margin-bottom: $app-margin-bottom !default;
+//
+///*
+//Card.
+// */
+//$card-bg: $white !default;
+//$card-color: $body-color !default;
+//$card-spacer-y: $app-padding-y !default;
+//$card-spacer-x: $app-padding-x !default;
+//$card-cap-color: null !default;
+//$card-cap-bg: $gray-200 !default;
+//$card-border-width: $border-width !default;
+//$card-border-color: $border-color !default;
+//$card-inner-border-radius: 0 !default;
+//$app-card-margin-bottom: $app-margin-bottom !default;
+//
+//$card-danger-bg: #f2dede !default;
+//$card-danger-border: #ebccd1 !default;
+//$card-danger-color: $card-color !default;
+//
+///*
+//Grid view.
+// */
+//$app-grid-view-footer-position: sticky !default;
+//
+//$app-grid-view-margin-y: 15px !default;
+//$app-grid-view-border: 1px solid $border-color !default;
+//$app-grid-view-buttons-top: 6px !default;
+//
+///*
+//Buttons.
+// */
+//$btn-primary-bg: $primary !default;
+//$btn-primary-hover-bg: darken($btn-primary-bg, 7.5%) !default;
+//$btn-primary-active-bg: darken($btn-primary-bg, 10%) !default;
+//$btn-primary-border-color: $primary !default;
+//$btn-primary-hover-border-color: $btn-primary-border-color !default;
+//$btn-primary-active-border-color: $btn-primary-border-color !default;
+//
+//$btn-secondary-bg: $white !default;
+//$btn-secondary-hover-bg: $gray-200 !default;
+//$btn-secondary-active-bg: $gray-300 !default;
+//$btn-secondary-border-color: $border-color !default;
+//$btn-secondary-hover-border-color: $btn-secondary-border-color !default;
+//$btn-secondary-active-border-color: $btn-secondary-border-color !default;
+//
+//$btn-padding-y-sm: 4px !default;
+//$btn-padding-x-sm: 6px !default;
+//$btn-line-height-sm: 1 !default;
+//
+//
+///*
+//Input.
+// */
+//$app-form-sticky-position: sticky !default;
+//$app-form-sticky-border-width: $border-width !default;
+//$app-form-sticky-padding-bottom: $card-spacer-y !default;
+//
+//$form-group-margin-bottom: $card-spacer-y !default;
+//$app-form-group-buttons-margin-top: $card-spacer-y !default;
+//$form-text-margin-top: 6px !default;
+//
+//$form-check-inline-margin-x: 20px !default;
+//$form-check-inline-input-margin-x: 10px !default;
+//
+//$input-btn-padding-y: 8px !default;
+//$input-btn-padding-x: 12px !default;
+//$input-height: 38px !default;
+//
+//$input-btn-focus-width: 1px !default;
+//$input-btn-padding-y-sm: $input-btn-padding-y !default;
+//$input-btn-padding-x-sm: $input-btn-padding-x !default;
+//$input-btn-padding-y-lg: $input-btn-padding-y !default;
+//$input-btn-padding-x-lg: $input-btn-padding-x !default;
+//$input-btn-border-width: $border-width !default;
+//
+//$custom-select-indicator-padding: 10px;
+//
+//$input-padding-y: $input-btn-padding-y !default;
+//$input-padding-x: $input-btn-padding-x !default;
+//$input-color: $gray-700 !default;
+//$input-border-width: $input-btn-border-width !default;
+//$input-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075) !default;
+//$input-focus-color: $body-text !default;
+//$input-btn-focus-width: 1px !default;
+//$input-focus-border-color: #66afe9 !default;
+//
+//$input-height-inner: $input-height !default;
+//$input-height-inner-half: math.div($input-height, 2) !default;
+//$input-height-inner-quarter: math.div($input-height, 4) !default;
+//
+//$app-form-label-padding-top: $input-padding-y + $input-border-width !default;
+//$app-form-content-label-padding-top: $app-form-label-padding-top * 2 !default;
+//$app-form-label-font-weight: bold !default;
+//$caret-spacing: 8px !default;
+//
+///*
+//List group.
+// */
+//$list-group-border-color: $border-color !default;
+//$list-group-item-padding-y: $app-padding-y !default;
+//$list-group-item-padding-x: $app-padding-x !default;
+//
+///*
+//Tables.
+// */
+//$app-table-margin-bottom: 0 !default;
+//$table-border-width: 1px !default;
+//$table-border-color: transparent !default;
+//$app-table-th-border-width: 1px !default;
+//$app-table-th-border-color: $table-border-color !default;
+//$table-cell-padding: 12px !default;
+//$table-accent-bg: $gray-100 !default;
+//$table-hover-bg: $gray-200 !default;
+//$app-table-th-active-font-style: normal !default;
+//$app-table-th-active-text-decoration: underline !default;
+//$app-table-th-selected-bg: $info !default;
+//
+///*
+//Pagination.
+// */
+//$app-pagination-justify-content: center !default;
+//$app-pagination-margin: 30px 0 0 !default;
+//$app-pagination-padding: 20px 0 10px !default;
+//$app-pagination-border-top: 1px solid $border-color !default;
+//
+//$pagination-padding-y: $input-btn-padding-y !default;
+//$pagination-padding-x: $input-btn-padding-x !default;
+//$pagination-line-height: $line-height-base !default;
+//
+//$pagination-border-color: $border-color !default;
+//$pagination-hover-border-color: $border-color !default;
+//
+//$pagination-focus-box-shadow: none !default;
+//
+///*
+//Dropdown.
+// */
+//$dropdown-min-width: 160px !default;
+//$dropdown-padding-y: 5px !default;
+//$dropdown-spacer: 2px !default;
+//$dropdown-bg: #fff !default;
+//$dropdown-border-color: $border-color !default;
+//$dropdown-divider-bg: $border-color !default;
+//
+//$app-dropdown-button-bg: $gray-100 !default;
+//$app-dropdown-button-color: $body-text !default;
+//$app-dropdown-button-border-color: $border-color !default;
+//
+//$app-dropdown-button-active-bg: $gray-300 !default;
+//$app-dropdown-button-active-color: $app-dropdown-button-color !default;
+//$app-dropdown-button-active-border-color: $app-dropdown-button-border-color !default;
+//
+//$dropdown-link-color: $link-color !default;
+//$dropdown-link-hover-color: $link-color !default;
+//$dropdown-item-padding-y: $input-btn-padding-y !default;
+//$dropdown-item-padding-x: $input-btn-padding-x !default;
+//
+//$app-dropdown-header-padding-y: $dropdown-item-padding-y !default;
+//$app-dropdown-header-padding-x: $dropdown-item-padding-x !default;
+//
+///*
+//Badge.
+// */
+//$badge-font-size: 12px !default;
+//$app-badge-bg: $gray-600 !default;
+//$app-badge-color: $white !important !default;
+//$app-badge-active-bg: $component-active-color !default;
+//$app-badge-active-color: $component-active-bg !important !default;
+//$badge-font-weight: normal !default;
+//$badge-padding-y: 3px !default;
+//$badge-padding-x: 7px !default;
+//$badge-border-radius: 10px !default;
+//
+///*
+//Toolbar.
+// */
+//$app-toolbar-padding-y: $app-padding-y !default;
+//$app-toolbar-padding-x: $app-padding-x !default;
+//$app-toolbar-background: $body-bg !default;
+//$app-toolbar-border: 1px solid $border-color !default;
+//
+//
+///*
+//Tooltip.
+// */
+//$tooltip-max-width: 200px !default;
+//$tooltip-min-width: 80px !default;
+//
+///**
+//Thumbnail.
+// */
+//$thumbnail-padding: $app-padding-y !default;
+//$thumbnail-caption-padding: $app-padding-x !default;
+//
+///*
+//Icon.
+// */
+//$app-icon-margin-x: 6px !default;
+//
+///*
+//Upload.
+// */
+//$app-upload-progress-top: 51px !default;
+//$app-upload-progress-height: 10px !default;
+//$app-upload-progress-bg: $success !default;
+//
+///*
+//Datepicker.
+// */
+//$datepicker-spacer-y: $card-spacer-y !default;
+//$datepicker-spacer-x: $card-spacer-x !default;
+//$datepicker-spacer: $datepicker-spacer-y $datepicker-spacer-x !default;
+//$datepicker-bg: $card-bg !default;
+//$datepicker-color: $card-color !default;
+//$datepicker-header-margin: -10px -15px 10px !default;
+//$datepicker-header-padding: $datepicker-spacer !default;
+//$datepicker-border: $card-border-width solid $card-border-color !default;
+//$datepicker-header-bg: $card-cap-bg !default;
+//$datepicker-header-color: $card-cap-color !default;
+//$datepicker-td-padding: 0 !default;
+//$datepicker-td-border: $card-border-width solid $card-border-color !default;
+//$datepicker-link-padding: 6px !default;
+//$datepicker-link-bg: $gray-200 !default;
+//$datepicker-link-color: $input-color !default;
+//$datepicker-link-hover-bg: $gray-400 !default;
+//$datepicker-link-hover-color: $datepicker-link-color !default;
+//$datepicker-link-current-bg: $gray-900 !default;
+//$datepicker-link-current-color: $white !default;
+//$datepicker-link-today-bg: $gray-500 !important !default;
+//$datepicker-link-today-color: $datepicker-link-color !default;
+//
+///*
+//Trail.
+// */
+//$trail-del-bg: $danger !default;
+//$trail-ins-bg: $success !default;
+//$trail-cell-padding: 6px !default;

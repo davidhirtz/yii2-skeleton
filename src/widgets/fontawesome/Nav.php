@@ -12,7 +12,7 @@ use yii\helpers\Html;
 /**
  * @method View getView()
  */
-class Nav extends \yii\bootstrap4\Nav
+class Nav extends \yii\bootstrap5\Nav
 {
     /**
      * @var bool whether the widget should not be rendered if there is only a single item present.
@@ -22,25 +22,25 @@ class Nav extends \yii\bootstrap4\Nav
     /**
      * @var string default item template can be set individually by item option `template`.
      */
-    public string $itemTemplate = '{icon} {label} {badge}';
+    public string $itemTemplate = '{icon}{label}{badge}';
 
     /**
-     * @var array default link html options, can be set individually by item options `linkOptions`.
+     * @var array default link HTML options, can be set individually by item options `linkOptions`.
      */
     public array $linkOptions = [];
 
     /**
-     * @var array default icon html options, can be set individually by item option `iconOptions`.
+     * @var array default icon HTML options, can be set individually by item option `iconOptions`.
      */
     public array $iconOptions = ['class' => 'fa-fw'];
 
     /**
-     * @var array default badge html options, can be set individually by item option `badgeOptions`.
+     * @var array default badge HTML options, can be set individually by item option `badgeOptions`.
      */
     public array $badgeOptions = ['class' => 'badge'];
 
     /**
-     * @var array default label html options can be set individually by item option `labelOptions`.
+     * @var array default label HTML options can be set individually by item option `labelOptions`.
      */
     public array $labelOptions = [];
 

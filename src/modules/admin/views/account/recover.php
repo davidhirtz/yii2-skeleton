@@ -6,7 +6,7 @@ declare(strict_types=1);
  *
  * @var View $this
  * @var davidhirtz\yii2\skeleton\models\forms\LoginForm $form
- * @var yii\bootstrap4\ActiveForm $af
+ * @var yii\bootstrap5\ActiveForm $af
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;

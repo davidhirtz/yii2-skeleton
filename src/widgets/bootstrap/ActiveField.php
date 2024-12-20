@@ -9,7 +9,7 @@ use Yii;
 /**
  * @property ActiveForm $form
  */
-class ActiveField extends \yii\bootstrap4\ActiveField
+class ActiveField extends \yii\bootstrap5\ActiveField
 {
     /**
      * @var array|null containing a custom list of languages used for i18n-aware attributes.

@@ -87,7 +87,7 @@
 
 .table-hover {
   tbody tr {
-    @include hover {
+    @media (hover: hover) {
       background-color: $table-hover-bg;
     }
   }

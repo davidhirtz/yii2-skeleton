@@ -27,26 +27,29 @@ const watchPlugin = {
 let context = await esbuild.context({
     entryPoints: [
         {
-            in: 'src/assets/admin/scss/admin.scss',
-            out: 'src/assets/admin/css/admin.min'
+            in: 'src/assets/admin/scss/bootstrap.scss',
+            out: 'src/assets/admin/css/bootstrap.min'
         },
-        {
-            in: 'src/assets/admin/scss/tinymce.scss',
-            out: 'src/assets/admin/css/tinymce.min'
-        },
-        {
-            in: 'src/assets/admin/js/admin.js',
-            out: 'src/assets/admin/js/admin.min'
-        },
-        {
-            in: 'src/assets/fontawesome/css/all.css',
-            out: 'src/assets/fontawesome/css/all.min'
-        },
-        {
-            in: 'src/assets/signup/js/signup.js',
-            out: 'src/assets/signup/js/signup.min'
-        },
-
+        // {
+        //     in: 'src/assets/admin/scss/admin.scss',
+        //     out: 'src/assets/admin/css/admin.min'
+        // },
+        // {
+        //     in: 'src/assets/admin/scss/tinymce.scss',
+        //     out: 'src/assets/admin/css/tinymce.min'
+        // },
+        // {
+        //     in: 'src/assets/admin/js/admin.js',
+        //     out: 'src/assets/admin/js/admin.min'
+        // },
+        // {
+        //     in: 'src/assets/fontawesome/css/all.css',
+        //     out: 'src/assets/fontawesome/css/all.min'
+        // },
+        // {
+        //     in: 'src/assets/signup/js/signup.js',
+        //     out: 'src/assets/signup/js/signup.min'
+        // },
     ],
     minify: true,
     outdir: './',

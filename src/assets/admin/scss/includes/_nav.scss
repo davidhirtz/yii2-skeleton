@@ -1,16 +1,176 @@
-/**
- * Nav.
- */
-.submenu {
-  margin-bottom: $app-submenu-margin-bottom;
-  justify-content: $app-submenu-justify-content;
+//@import "../../../../../node_modules/bootstrap/scss/nav";
 
-  .nav-link {
-    margin: $app-submenu-link-margin;
+.nav {
+  --#{$prefix}nav-link-bg: #{$app-navbar-light-bg};
+  --#{$prefix}nav-link-hover-bg: #{$app-navbar-light-hover-bg};
+  --#{$prefix}nav-link-color: #{$nav-link-color};
+  --#{$prefix}nav-link-hover-color: #{$nav-link-hover-color};
+  --#{$prefix}nav-link-disabled-color: #{$nav-link-disabled-color};
+  --#{$prefix}nav-link-active-bg: #{$nav-pills-link-active-color};
+  --#{$prefix}nav-link-active-color: #{$nav-pills-link-active-color};
 
-    @include hover-focus {
-      color: $app-submenu-hover-color;
-      background-color: $app-submenu-hover-bg;
-    }
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: $app-nav-link-gap;
+  padding: $nav-link-padding-y $nav-link-padding-x;
+  @include font-size($nav-link-font-size);
+  font-weight: $nav-link-font-weight;
+  color: var(--#{$prefix}nav-link-color);
+  height: $nav-link-height;
+  text-decoration: none;
+  background: none;
+  border: 0;
+  @include transition($nav-link-transition);
+
+
+  &.active,
+  &.show {
+    background: var(--#{$prefix}nav-link-active-bg);
+    color: var(--#{$prefix}nav-link-active-color);
+  }
+
+  &:hover,
+  &:focus {
+    background: var(--#{$prefix}nav-link-hover-bg);
+    color: var(--#{$prefix}nav-link-hover-color);
+  }
+
+  &:focus-visible {
+    outline: 0;
+    box-shadow: $nav-link-focus-box-shadow;
+  }
+
+  // Disabled state lightens text
+  &.disabled,
+  &:disabled {
+    color: var(--#{$prefix}nav-link-disabled-color);
+    pointer-events: none;
+    cursor: default;
   }
 }
+
+//
+// Tabs
+//
+
+//.nav-tabs {
+//  // scss-docs-start nav-tabs-css-vars
+//  --#{$prefix}nav-tabs-border-width: #{$nav-tabs-border-width};
+//  --#{$prefix}nav-tabs-border-color: #{$nav-tabs-border-color};
+//  --#{$prefix}nav-tabs-border-radius: #{$nav-tabs-border-radius};
+//  --#{$prefix}nav-tabs-link-hover-border-color: #{$nav-tabs-link-hover-border-color};
+//  --#{$prefix}nav-tabs-link-active-color: #{$nav-tabs-link-active-color};
+//  --#{$prefix}nav-tabs-link-active-bg: #{$nav-tabs-link-active-bg};
+//  --#{$prefix}nav-tabs-link-active-border-color: #{$nav-tabs-link-active-border-color};
+//  // scss-docs-end nav-tabs-css-vars
+//
+//  border-bottom: var(--#{$prefix}nav-tabs-border-width) solid var(--#{$prefix}nav-tabs-border-color);
+//
+//  .nav-link {
+//    margin-bottom: calc(-1 * var(--#{$prefix}nav-tabs-border-width)); // stylelint-disable-line function-disallowed-list
+//    border: var(--#{$prefix}nav-tabs-border-width) solid transparent;
+//    @include border-top-radius(var(--#{$prefix}nav-tabs-border-radius));
+//
+//    &:hover,
+//    &:focus {
+//      // Prevents active .nav-link tab overlapping focus outline of previous/next .nav-link
+//      isolation: isolate;
+//      border-color: var(--#{$prefix}nav-tabs-link-hover-border-color);
+//    }
+//  }
+//
+//  .nav-link.active,
+//  .nav-item.show .nav-link {
+//    color: var(--#{$prefix}nav-tabs-link-active-color);
+//    background-color: var(--#{$prefix}nav-tabs-link-active-bg);
+//    border-color: var(--#{$prefix}nav-tabs-link-active-border-color);
+//  }
+//
+//  .dropdown-menu {
+//    // Make dropdown border overlap tab border
+//    margin-top: calc(-1 * var(--#{$prefix}nav-tabs-border-width)); // stylelint-disable-line function-disallowed-list
+//    // Remove the top rounded corners here since there is a hard edge above the menu
+//    @include border-top-radius(0);
+//  }
+//}
+
+
+//
+// Pills
+//
+
+.nav-pills {
+  --#{$prefix}nav-link-active-color: #{$nav-pills-link-active-color};
+  --#{$prefix}nav-pills-link-active-bg: #{$nav-pills-link-active-bg};
+
+  .nav-link {
+    @include border-radius($nav-pills-border-radius);
+  }
+}
+
+
+
+//
+// Justified variants
+//
+
+.nav-fill {
+  > .nav-link,
+  .nav-item {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+}
+
+.nav-justified {
+  > .nav-link,
+  .nav-item {
+    flex-basis: 0;
+    flex-grow: 1;
+    text-align: center;
+  }
+}
+
+.nav-fill,
+.nav-justified {
+  .nav-item .nav-link {
+    width: 100%; // Make sure button will grow
+  }
+}
+
+
+// Tabbable tabs
+//
+// Hide tabbable panes to start, show them when `.active`
+
+.tab-content {
+  > .tab-pane {
+    display: none;
+  }
+
+  > .active {
+    display: block;
+  }
+}
+
+
+//.submenu {
+//  margin-bottom: $app-submenu-margin-bottom;
+//  justify-content: $app-submenu-justify-content;
+//
+//  .nav-link {
+//    margin: $app-submenu-link-margin;
+//
+//    @include hover-focus {
+//      color: $app-submenu-hover-color;
+//      background-color: $app-submenu-hover-bg;
+//    }
+//  }
+//}

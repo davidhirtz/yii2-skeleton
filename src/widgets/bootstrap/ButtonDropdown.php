@@ -8,7 +8,7 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use Yii;
 use yii\helpers\Url;
 
-class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
+class ButtonDropdown extends \yii\bootstrap5\ButtonDropdown
 {
     /**
      * @var string|false|null the default item label, set to `false` to disable the default item
@@ -26,7 +26,7 @@ class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
     public ?string $paramName = null;
 
     /**
-     * @var array containing items as array with "label" and optional "url" keys
+     * @var array containing items as an array with "label" and optional "url" keys
      */
     public array $items = [];
     /**
@@ -93,9 +93,9 @@ class ButtonDropdown extends \yii\bootstrap4\ButtonDropdown
 
     /**
      * Resets the options id back to widget id which is set to the button id in
-     * {@see \yii\bootstrap4\ButtonDropdown::run()}. Otherwise, Bootstrap events don't register on the correct element.
+     * {@see \yii\bootstrap5\ButtonDropdown::run()}. Otherwise, Bootstrap events don't register on the correct element.
      */
-    protected function registerClientEvents(): void
+    protected function registerClientEvents(string $name = null): void
     {
         $this->options['id'] = $this->getId();
         parent::registerClientEvents();

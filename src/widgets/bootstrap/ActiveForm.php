@@ -6,7 +6,7 @@ namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveFormTrait;
 
-class ActiveForm extends \yii\bootstrap4\ActiveForm
+class ActiveForm extends \yii\bootstrap5\ActiveForm
 {
     use ActiveFormTrait;
 

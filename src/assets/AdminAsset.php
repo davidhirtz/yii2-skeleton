@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\assets;
 
 use Yii;
-use yii\bootstrap4\BootstrapPluginAsset;
 use yii\grid\GridViewAsset;
 use yii\web\AssetBundle;
 
@@ -16,7 +15,8 @@ class AdminAsset extends AssetBundle
      */
     public array $faviconOptions = [];
 
-    public $css = ['css/admin.min.css'];
+    public $css = ['css/bootstrap.min.css'];
+    //    public $css = ['css/bootstrap.original.css'];
     public $js = ['js/admin.min.js'];
     public $sourcePath = '@skeleton/assets/admin';
 
@@ -28,7 +28,6 @@ class AdminAsset extends AssetBundle
 
     public $depends = [
         GridViewAsset::class,
-        BootstrapPluginAsset::class,
         BootboxAsset::class,
         FontAwesomeAsset::class,
     ];

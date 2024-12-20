@@ -46,6 +46,6 @@ class FileUploadAsset extends AssetBundle
      */
     public $depends = [
         'davidhirtz\yii2\skeleton\assets\JuiAsset',
-        'yii\bootstrap4\BootstrapAsset',
+        'yii\bootstrap5\BootstrapAsset',
     ];
 }

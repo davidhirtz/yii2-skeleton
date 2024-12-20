@@ -11,16 +11,14 @@ use davidhirtz\yii2\skeleton\widgets\fontawesome\Nav;
 use Yii;
 use yii\helpers\Url;
 
-class NavBar extends \yii\bootstrap4\NavBar
+class NavBar extends \yii\bootstrap5\NavBar
 {
     /**
      * @var array|null containing the route of the language dropdown. If not set, the current URL will be used.
      */
     public ?array $languageRoute = null;
 
-    public $options = [
-        'class' => 'navbar navbar-expand-md fixed-top',
-    ];
+    public $options = ['class' => 'navbar'];
 
     public function run(): void
     {
@@ -33,7 +31,7 @@ class NavBar extends \yii\bootstrap4\NavBar
         if ($items = $this->getAccountItems()) {
             echo Nav::widget([
                 'items' => $items,
-                'options' => ['class' => 'navbar-nav'],
+                'options' => ['class' => 'navbar-nav navbar-account-nav'],
                 'hideOneItem' => false,
             ]);
         }
@@ -90,7 +88,7 @@ class NavBar extends \yii\bootstrap4\NavBar
             $label = $i18n->getLabel($language);
 
             $items[] = [
-                'label' => "<i class=\"i18n-icon$language\"></i><span class=\"i18n-label\">$label</span>",
+                'label' => "<i class=\"i18n-icon $language\"></i><span class=\"i18n-label\">$label</span>",
                 'url' => $this->languageRoute
                     ? Url::toRoute([
                         ...Yii::$app->getRequest()->getQueryParams(),
@@ -106,12 +104,14 @@ class NavBar extends \yii\bootstrap4\NavBar
             [
                 'label' => '<i class="i18n-icon ' . Yii::$app->language . '"></i>',
                 'icon' => false,
-                'url' => '#', // Bootstrap 4.2 fix
                 'visible' => count($items) > 1,
                 'encode' => false,
                 'items' => $items,
+                'dropdownOptions' => [
+                    'class' => 'dropdown-menu dropdown-menu-end',
+                ],
                 'options' => [
-                    'class' => 'i18n-dropdown',
+                    'class' => 'navbar-i18n-dropdown',
                 ],
             ],
             [

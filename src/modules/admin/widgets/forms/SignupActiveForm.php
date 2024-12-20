@@ -10,7 +10,7 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\forms\SignupForm;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
 use Yii;
-use yii\bootstrap4\ActiveField;
+use yii\bootstrap5\ActiveField;
 use yii\helpers\Url;
 
 class SignupActiveForm extends ActiveForm
