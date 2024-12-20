@@ -50,6 +50,10 @@ $small-font-size: $font-size-sm;
 
 $link-decoration: none !default;
 
+$mark-bg: $success !default;
+$mark-padding: 0 !default;
+$caret-width: 0.25rem !default;
+
 // Grid breakpoints
 $grid-breakpoints: (
         xs: 0,
@@ -69,35 +73,25 @@ $container-padding-x: .5rem !default;
 $border-radius: 0.25rem !default;
 $border-color: $gray-400 !default;
 
+$app-margin-y: 1.25rem !default;
+$app-padding-y: 0.75rem !default;
+$app-padding-x: 0.75rem !default;
+
 // Layout
 $app-html-scroll-padding: 5rem !default;
 $app-body-padding: $app-html-scroll-padding 0 1rem !default;
 
-$app-margin-bottom: 1.25rem !default;
-$app-padding-y: 0.75rem !default;
-$app-padding-x: 0.75rem !default;
-
-$app-header-margin: 2.5rem 0 $app-margin-bottom !default;
-$app-header-padding-bottom: $app-padding-y !default;
-$app-header-text-align: center !default;
-$app-header-border-bottom: 1px solid $gray-300 !default;
-$app-header-line-height: 1.5 !default;
-
-$mark-bg: $success !default;
-$mark-padding: 0 !default;
-$caret-width: 0.25rem !default;
-
-//$app-submenu-link-margin: 0 0.125rem $app-padding-x !default;
-//$app-submenu-margin-bottom: $app-margin-bottom !default;
-//$app-submenu-justify-content: center !default;
-//$app-submenu-hover-bg: $gray-300 !default;
-//$app-submenu-hover-color: $gray-900 !default;
-
 // Nav
-$app-nav-link-gap: 0.5rem !default;
 $nav-link-padding-y: 0 !default;
 $nav-link-padding-x: 0.75rem !default;
 $nav-link-height: 3rem !default;
+
+$app-nav-pills-gap: .5rem !default;
+$app-nav-pills-link-hover-bg: $gray-300 !default;
+$app-nav-pills-link-hover-color: $dark !default;
+$nav-pills-link-active-color: $white !default;
+$nav-pills-link-active-bg: $dark !default;
+$nav-pills-border-radius: $border-radius !default;
 
 // Navbar
 $app-navbar-expand-breakpoint: md !default;
@@ -118,18 +112,27 @@ $navbar-border: 1px solid $app-navbar-light-active-bg !default;
 $app-navbar-toggler-margin-y: .75rem !default;
 $navbar-toggler-padding-y: .25rem !default;
 $navbar-toggler-padding-x: .5rem !default;
-
 $navbar-light-toggler-border-color: $white !default;
 $navbar-light-icon-color: $white;
 
 // Breadcrumbs
 $breadcrumb-padding-y: $app-padding-y !default;
 $breadcrumb-padding-x: $app-padding-x !default;
-$breadcrumb-margin-bottom: $app-margin-bottom !default;
+$breadcrumb-margin-bottom: $app-margin-y !default;
 $breadcrumb-item-padding: 5px !default;
 $breadcrumb-bg: $gray-200 !default;
 $breadcrumb-divider-color: $gray-400 !default;
 
+// Header
+$app-header-margin: ($app-margin-y * 2) 0 $app-margin-y !default;
+$app-header-padding-bottom: $app-padding-y !default;
+$app-header-text-align: center !default;
+$app-header-border-bottom: 1px solid $gray-300 !default;
+$app-header-line-height: 1.5 !default;
+
+$app-submenu-link-margin: 0 0.125rem $app-padding-x !default;
+$app-submenu-margin: 0 0 $app-margin-y !default;
+$app-submenu-justify-content: center !default;
 //
 //$hr-margin-y: 15px !default;
 //$hr-border-color: $border-color !default;
@@ -139,7 +142,7 @@ $breadcrumb-divider-color: $gray-400 !default;
 // */
 //$alert-padding-y: $app-padding-y !default;
 //$alert-padding-x: $app-padding-x !default;
-//$alert-margin-bottom: $app-margin-bottom !default;
+//$alert-margin-bottom: $app-margin-y !default;
 //
 ///*
 //Card.
@@ -153,7 +156,7 @@ $breadcrumb-divider-color: $gray-400 !default;
 //$card-border-width: $border-width !default;
 //$card-border-color: $border-color !default;
 //$card-inner-border-radius: 0 !default;
-//$app-card-margin-bottom: $app-margin-bottom !default;
+//$app-card-margin-bottom: $app-margin-y !default;
 //
 //$card-danger-bg: #f2dede !default;
 //$card-danger-border: #ebccd1 !default;
@@ -337,7 +340,7 @@ $breadcrumb-divider-color: $gray-400 !default;
 ///*
 //Icon.
 // */
-//$app-icon-margin-x: 6px !default;
+$app-icon-gap-x: .5rem !default;
 //
 ///*
 //Upload.

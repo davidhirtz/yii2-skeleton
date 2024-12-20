@@ -13,8 +13,10 @@
 // Layout & components
 @import "../../../../node_modules/bootstrap/scss/root";
 @import "../../../../node_modules/bootstrap/scss/reboot";
-@import "../../../../node_modules/bootstrap/scss/type";
-//@import "includes/type";
+
+@import "includes/html";
+@import "includes/type";
+
 @import "../../../../node_modules/bootstrap/scss/images";
 //@import "includes/images";
 //@import "../../../../node_modules/bootstrap/scss/containers";
@@ -33,8 +35,7 @@
 @import "includes/nav";
 @import "includes/navbar";
 
-@import "includes/language";
-@import "includes/layout";
+@import "includes/header";
 
 @import "../../../../node_modules/bootstrap/scss/card";
 //@import "includes/card";

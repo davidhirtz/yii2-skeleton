@@ -6,7 +6,7 @@
     background-color: $app-dropdown-button-bg;
     color: $app-dropdown-button-color;
     border-color: $app-dropdown-button-border-color;
-    @extend .text-overflow;
+    @extend .text-truncate;
   }
 
   &.is-active > .btn {
@@ -33,7 +33,7 @@
   overflow-y: auto;
 
   & > a {
-    @extend .text-overflow;
+    @extend .text-truncate;
   }
 }
 

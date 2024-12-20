@@ -1,12 +1,3 @@
-html {
-  scroll-padding-top: $app-html-scroll-padding;
-}
-
-body {
-  padding: $app-body-padding;
-  overflow-y: scroll;
-}
-
 .page-header {
   margin: $app-header-margin;
   padding-bottom: $app-header-padding-bottom;
@@ -17,4 +8,9 @@ body {
   a:hover {
     text-decoration: none;
   }
+}
+
+.submenu {
+  margin: $app-submenu-margin;
+  justify-content: $app-submenu-justify-content;
 }

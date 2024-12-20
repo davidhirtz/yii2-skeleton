@@ -13,7 +13,6 @@ use davidhirtz\yii2\skeleton\models\forms\AccountResendConfirmForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\AccountResendConfirmActiveForm;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Resend Account Confirmation'));
@@ -34,7 +33,7 @@ $this->setTitle(Yii::t('skeleton', 'Resend Account Confirmation'));
             ?>
             <div class="list-group">
                 <a href="<?php echo Url::to(['login']); ?>" class="list-group-item list-group-item-action">
-                    <?= Icon::tag('sign-in-alt', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'Back to login'); ?>
+                    <?= Html::iconText('sign-in-alt', Yii::t('skeleton', 'Back to login')); ?>
                 </a>
             </div>
             <?php

@@ -47,7 +47,7 @@ $this->setTitle(Yii::t('skeleton', 'Sign up'));
                 <?php
             } ?>
             <a href="<?php echo Url::to(['login']); ?>" class="list-group-item list-group-item-action">
-                <?= Icon::tag('sign-in-alt', ['class' => 'fa-fw icon-left']); ?><?= Yii::t('skeleton', 'Back to login'); ?>
+                <?= Html::iconText('sign-in-alt', Yii::t('skeleton', 'Back to login')); ?>
             </a>
         </div>
     </div>

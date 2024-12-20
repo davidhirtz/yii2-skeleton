@@ -1,26 +1,9 @@
-.text-overflow {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.text-right {
-  text-align: right;
-}
-
-.icon-left {
-  margin-right: $app-icon-margin-x;
-}
+@import "../../../../../node_modules/bootstrap/scss/type";
 
 .icon-text {
-  span{
-    display: inline-block;
-    margin-left: $app-icon-margin-x;
-  }
+  display: inline-flex;
+  align-items: center;
+  gap: $app-icon-gap-x;
 }
 
 .list-unstyled:last-child {
@@ -30,7 +13,3 @@
 .strong {
   font-weight: bold;
 }
-
-//@each $color, $value in $theme-colors {
-//  @include text-emphasis-variant(".text-#{$color}", $value);
-//}

@@ -22,7 +22,7 @@ class Nav extends \yii\bootstrap5\Nav
     /**
      * @var string default item template can be set individually by item option `template`.
      */
-    public string $itemTemplate = '{icon}{label}{badge}';
+    public string $itemTemplate = '<div class="icon-text">{icon}{label}{badge}</div>';
 
     /**
      * @var array default link HTML options, can be set individually by item options `linkOptions`.
