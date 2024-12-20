@@ -4,7 +4,6 @@
 @import "../../../../node_modules/bootstrap/scss/functions";
 
 @import "includes/variables";
-@import "../../../../node_modules/bootstrap/scss/variables";
 
 @import "../../../../node_modules/bootstrap/scss/variables-dark";
 @import "../../../../node_modules/bootstrap/scss/maps";
@@ -40,8 +39,7 @@
 @import "../../../../node_modules/bootstrap/scss/card";
 //@import "includes/card";
 @import "../../../../node_modules/bootstrap/scss/accordion";
-@import "../../../../node_modules/bootstrap/scss/breadcrumb";
-//@import "includes/breadcrumb";
+@import "includes/breadcrumb";
 @import "../../../../node_modules/bootstrap/scss/pagination";
 //@import "includes/pagination";
 @import "../../../../node_modules/bootstrap/scss/badge";

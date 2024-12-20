@@ -48,6 +48,8 @@ $h2-font-size: 1.125em !default;
 
 $small-font-size: $font-size-sm;
 
+$link-decoration: none !default;
+
 // Grid breakpoints
 $grid-breakpoints: (
         xs: 0,
@@ -66,7 +68,6 @@ $container-padding-x: .5rem !default;
 
 $border-radius: 0.25rem !default;
 $border-color: $gray-400 !default;
-
 
 // Layout
 $app-html-scroll-padding: 5rem !default;
@@ -120,17 +121,15 @@ $navbar-toggler-padding-x: .5rem !default;
 
 $navbar-light-toggler-border-color: $white !default;
 $navbar-light-icon-color: $white;
-//$navbar-light-toggler-icon-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'><path stroke='#222' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>") !default;
-//
-///*
-//Breadcrumbs.
-// */
-//$breadcrumb-padding-y: $app-padding-y !default;
-//$breadcrumb-padding-x: $app-padding-x !default;
-//$breadcrumb-margin-bottom: $app-margin-bottom !default;
-//$breadcrumb-item-padding: 5px !default;
-//$breadcrumb-bg: $gray-200 !default;
-//$breadcrumb-divider-color: $gray-400 !default;
+
+// Breadcrumbs
+$breadcrumb-padding-y: $app-padding-y !default;
+$breadcrumb-padding-x: $app-padding-x !default;
+$breadcrumb-margin-bottom: $app-margin-bottom !default;
+$breadcrumb-item-padding: 5px !default;
+$breadcrumb-bg: $gray-200 !default;
+$breadcrumb-divider-color: $gray-400 !default;
+
 //
 //$hr-margin-y: 15px !default;
 //$hr-border-color: $border-color !default;
@@ -378,3 +377,5 @@ $navbar-light-icon-color: $white;
 //$trail-del-bg: $danger !default;
 //$trail-ins-bg: $success !default;
 //$trail-cell-padding: 6px !default;
+
+@import "../../../../../node_modules/bootstrap/scss/variables";

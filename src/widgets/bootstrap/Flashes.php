@@ -7,7 +7,7 @@ namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Yii;
 use yii\base\Widget;
-use yii\bootstrap4\Html;
+use yii\bootstrap5\Html;
 
 class Flashes extends Widget
 {

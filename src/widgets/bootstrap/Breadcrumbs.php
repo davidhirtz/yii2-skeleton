@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
-use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\web\View;
 use Yii;
 
 class Breadcrumbs extends \yii\widgets\Breadcrumbs
 {
-    public ?string $cssClass = 'd-none d-md-flex';
-
     public $itemTemplate = "<li class=\"breadcrumb-item\">{link}</li>\n";
     public $activeItemTemplate = "<li class=\"breadcrumb-item active\">{link}</li>\n";
 
@@ -42,10 +39,6 @@ class Breadcrumbs extends \yii\widgets\Breadcrumbs
                     ...$this->links
                 ];
             }
-        }
-
-        if ($this->cssClass) {
-            Html::addCssClass($this->options, $this->cssClass);
         }
 
         parent::init();
