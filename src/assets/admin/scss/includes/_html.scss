@@ -6,3 +6,7 @@ body {
   padding: $app-body-padding;
   overflow-y: scroll;
 }
+
+hr {
+  border-color: $border-color;
+}

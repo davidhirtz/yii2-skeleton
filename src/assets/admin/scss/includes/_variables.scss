@@ -1,3 +1,5 @@
+$prefix: null;
+
 // Color system
 $white: #fff !default;
 $gray-100: #f9f9f9 !default;
@@ -37,6 +39,12 @@ $dark: $primary !default;
 $body-color: $gray-900 !default;
 $body-bg: $gray-100 !default;
 
+$body-secondary-color:      rgba($body-color, .75) !default;
+$body-secondary-bg:         $gray-200 !default;
+$body-tertiary-color:       rgba($body-color, .5) !default;
+$body-tertiary-bg:          $gray-100 !default;
+$body-emphasis-color:       $black !default;
+
 // Typography
 $font-family-sans-serif: "Open Sans", sans-serif !default;
 $font-size-base: .875rem !default;
@@ -73,12 +81,12 @@ $container-max-widths: (
 $container-padding-x: .5rem !default;
 
 $border-width: 1px !default;
-$border-radius: 0.25rem !default;
+$border-radius: 0.1875rem !default;
 $border-color: $gray-400 !default;
 
-$app-margin-y: 1.25rem !default;
-$app-padding-y: 0.75rem !default;
-$app-padding-x: 0.75rem !default;
+$app-margin-y: 2rem !default;
+$app-padding-y: 1rem !default;
+$app-padding-x: 1rem !default;
 
 // Layout
 $app-html-scroll-padding: 5rem !default;
@@ -110,7 +118,7 @@ $navbar-padding-y: 0 !default;
 $navbar-padding-x: 0 !default;
 $navbar-light-color: $gray-400 !default;
 $navbar-light-hover-color: $white !default;
-$navbar-light-active-color: $gray-100 !default;
+$navbar-light-active-color: $body-tertiary-bg !default;
 $navbar-light-disabled-color: $gray-600 !default;
 
 $navbar-border: 1px solid $app-navbar-light-active-bg !default;
@@ -157,23 +165,24 @@ $card-bg: $white !default;
 $card-color: $body-color !default;
 $card-spacer-y: $app-padding-y !default;
 $card-spacer-x: $app-padding-x !default;
+$card-cap-padding-y: $app-padding-y !default;
 $card-cap-color: null !default;
 $card-cap-bg: $gray-200 !default;
-$card-border-width: $border-width !default;
+$card-border-width: 0 !default;
 $card-border-color: $border-color !default;
 $card-inner-border-radius: 0 !default;
 $app-card-margin-bottom: $app-margin-y !default;
 
-$card-danger-bg: #f2dede !default;
-$card-danger-border: #ebccd1 !default;
-$card-danger-color: $card-color !default;
+$app-card-danger-bg: #f2dede !default;
+$app-card-danger-border-color: #ebccd1 !default;
+$app-card-danger-color: $card-color !default;
 //
 
 // Grid
 $grid-gutter-width: 1rem !default;
 
 $app-grid-view-footer-position: sticky !default;
-$app-grid-view-margin-y: 1rem !default;
+$app-grid-view-margin-y: $app-padding-y !default;
 $app-grid-view-border: 1px solid $border-color !default;
 $app-grid-view-buttons-top: 0.5rem !default;
 
@@ -200,15 +209,14 @@ $app-grid-view-buttons-top: 0.5rem !default;
 //$btn-line-height-sm: 1 !default;
 //
 //
-///*
-//Input.
-// */
-//$app-form-sticky-position: sticky !default;
-//$app-form-sticky-border-width: $border-width !default;
-//$app-form-sticky-padding-bottom: $card-spacer-y !default;
-//
-//$form-group-margin-bottom: $card-spacer-y !default;
-//$app-form-group-buttons-margin-top: $card-spacer-y !default;
+
+// Forms
+$app-form-group-padding-bottom: $card-spacer-y !default;
+$app-form-group-buttons-margin-top: $card-spacer-y !default;
+
+$app-form-sticky-position: sticky !default;
+$app-form-sticky-border-width: $border-width !default;
+
 //$form-text-margin-top: 6px !default;
 //
 //$form-check-inline-margin-x: 20px !default;
@@ -216,40 +224,25 @@ $app-grid-view-buttons-top: 0.5rem !default;
 //
 $input-font-size: 1rem !default;
 $input-line-height: 1.5 !default;
-$input-padding-y: 0.375rem !default;
+$input-padding-y: 0.5rem !default;
 $input-padding-x: 0.75rem !default;
 
 //$input-height: 38px !default;
 //
 $input-btn-padding-y: 0.59375rem !default;
 $input-btn-padding-x: .75rem !default;
-//$input-btn-line-height: 2.8577 !default;
-//$input-btn-focus-width: 1px !default;
-//$input-btn-padding-y-sm: $input-btn-padding-y !default;
-//$input-btn-padding-x-sm: $input-btn-padding-x !default;
-//$input-btn-padding-y-lg: $input-btn-padding-y !default;
-//$input-btn-padding-x-lg: $input-btn-padding-x !default;
-//$input-btn-border-width: $border-width !default;
-//
-//$custom-select-indicator-padding: 10px;
-//
-//$input-padding-y: $input-btn-padding-y !default;
-//$input-padding-x: $input-btn-padding-x !default;
-//$input-color: $gray-700 !default;
-//$input-border-width: $input-btn-border-width !default;
-//$input-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075) !default;
-//$input-focus-color: $body-color !default;
-//$input-btn-focus-width: 1px !default;
-//$input-focus-border-color: #66afe9 !default;
-//
-//$input-height-inner: $input-height !default;
-//$input-height-inner-half: math.div($input-height, 2) !default;
-//$input-height-inner-quarter: math.div($input-height, 4) !default;
+$input-bg: $white !default;
+$input-focus-color: $body-color;
+$input-focus-bg: $white !default;
+$input-focus-border-color: $primary !default;
+$input-focus-box-shadow: none !default;
+$form-select-focus-box-shadow: none !default;
 //
 //$app-form-label-padding-top: $input-padding-y + $input-border-width !default;
 //$app-form-content-label-padding-top: $app-form-label-padding-top * 2 !default;
-//$app-form-label-font-weight: bold !default;
+$form-label-font-weight: bold !default;
 
+$hr-opacity: 1;
 //
 ///*
 //List group.
@@ -267,7 +260,7 @@ $input-btn-padding-x: .75rem !default;
 //$app-table-th-border-width: 1px !default;
 //$app-table-th-border-color: $table-border-color !default;
 //$table-cell-padding: 12px !default;
-//$table-accent-bg: $gray-100 !default;
+//$table-accent-bg: $body-tertiary-bg !default;
 //$table-hover-bg: $gray-200 !default;
 //$app-table-th-active-font-style: normal !default;
 //$app-table-th-active-text-decoration: underline !default;
@@ -301,10 +294,10 @@ $dropdown-border-color: $border-color !default;
 $dropdown-divider-bg: $border-color !default;
 $dropdown-divider-margin-y: 0 !default;
 $dropdown-item-padding-y: .6563rem !default;
-$dropdown-link-hover-bg: $gray-100 !default;
-$dropdown-link-active-bg: $gray-100 !default;
+$dropdown-link-hover-bg: $body-tertiary-bg !default;
+$dropdown-link-active-bg: $body-tertiary-bg !default;
 
-$app-dropdown-button-bg: $gray-100 !default;
+$app-dropdown-button-bg: $body-tertiary-bg !default;
 $app-dropdown-button-border-color: $border-color !default;
 $app-dropdown-button-active-bg: $app-dropdown-button-bg !default;
 $app-dropdown-button-active-border-color: $dark !default;
@@ -316,7 +309,7 @@ $dropdown-item-padding-x: $input-btn-padding-x !default;
 $dropdown-link-color: $link-color !default;
 $dropdown-link-hover-color: $link-color !default;
 $dropdown-link-active-color: inherit !default;
-$dropdown-link-active-bg: $gray-100 !default;
+$dropdown-link-active-bg: $body-tertiary-bg !default;
 
 $app-dropdown-header-padding-y: $dropdown-item-padding-y !default;
 $app-dropdown-header-padding-x: $dropdown-item-padding-x !default;

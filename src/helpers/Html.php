@@ -75,11 +75,11 @@ class Html extends BaseHtml
     {
         if (isset($options['prepend']) || isset($options['append'])) {
             if ($prepend = ArrayHelper::remove($options, 'prepend', '')) {
-                $prepend = "<div class=\"input-group-prepend\"><span class=\"input-group-text\">$prepend</span></div>";
+                $prepend = "<div class=\"input-group-prepend input-group-text\">$prepend</div>";
             }
 
             if ($append = ArrayHelper::remove($options, 'append', '')) {
-                $append = "<div class=\"input-group-append\"><span class=\"input-group-text\">$append</span></div>";
+                $append = "<div class=\"input-group-append input-group-text\">$append</div>";
             }
 
             $input = parent::input($type, $name, $value, $options);

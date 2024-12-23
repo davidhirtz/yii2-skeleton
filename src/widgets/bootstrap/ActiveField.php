@@ -20,14 +20,14 @@ class ActiveField extends \yii\bootstrap5\ActiveField
     /**
      * @var string input group with appended text.
      */
-    public string $appendInputTemplate = '<div class="input-group">{input}<div class="input-group-append"><span class="input-group-text">{append}</span></div></div>';
+    public string $appendInputTemplate = '<div class="input-group">{input}<div class="input-group-append input-group-text">{append}</div></div>';
 
     /**
      * @var string input group with prepended text.
      */
-    public string $prependInputTemplate = '<div class="input-group"><div class="input-group-prepend"><span class="input-group-text">{prepend}</span></div>{input}</div>';
+    public string $prependInputTemplate = '<div class="input-group"><div class="input-group-prepend input-group-text">{prepend}</div>{input}</div>';
 
-    public $checkTemplate = '{beginWrapper}<div class="form-check-inline">{input}{label}{error}{hint}</div>{endWrapper}';
+    public $checkTemplate = '{beginWrapper}<div class="form-check form-check-inline">{input}{label}{error}{hint}</div>{endWrapper}';
 
     public function init(): void
     {

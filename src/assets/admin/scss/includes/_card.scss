@@ -5,13 +5,9 @@
 }
 
 .card-danger {
-  border-color: $card-danger-border;
-
-  .card-header {
-    background-color: $card-danger-bg;
-    color: $card-danger-color;
-    border-color: $card-danger-border;
-  }
+  --#{$prefix}card-border-color: #{$app-card-danger-border-color};
+  --#{$prefix}card-cap-bg: #{$app-card-danger-bg};
+  --#{$prefix}card-cap-color: #{$app-card-danger-color};
 }
 
 .card-title {
