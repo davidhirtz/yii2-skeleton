@@ -43,7 +43,7 @@ class Html extends BaseHtml
     public static function iconText(string $icon, string $content, array $options = []): string
     {
         static::addCssClass($options, 'icon-text');
-        return Html::tag('span', Icon::tag($icon, ['class' => 'fa-fw']) . Html::tag('span', $content), $options);
+        return Html::tag('div', Icon::tag($icon, ['class' => 'fa-fw']) . Html::tag('span', $content), $options);
     }
 
     public static function info(string $content, array $options = []): string
@@ -155,14 +155,20 @@ class Html extends BaseHtml
      */
     public static function minify(string $html): string
     {
-        return trim((string) preg_replace('/>\s+</', '><', $html));
+        return trim((string)preg_replace('/>\s+</', '><', $html));
     }
 
     public static function markKeywords(string $text, array|string|null $keywords, bool $wordBoundary = false): string
     {
         if ($keywords) {
             foreach ((array)$keywords as $keyword) {
-                $text = preg_replace('~(' . ($wordBoundary ? '\b' : '') . preg_quote((string)$keyword) . ')~ui', '<mark>$1</mark>', (string) $text);
+                $keyword = preg_quote((string)$keyword);
+
+                if ($wordBoundary) {
+                    $keyword = "\b$keyword";
+                }
+
+                $text = preg_replace("#($keyword)#ui", '<mark>$1</mark>', (string)$text);
             }
         }
 

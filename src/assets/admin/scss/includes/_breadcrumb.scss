@@ -8,6 +8,7 @@
   display: none;
   padding: $breadcrumb-padding-y $breadcrumb-padding-x;
   margin-bottom: $breadcrumb-margin-bottom;
+  font-size: $breadcrumb-font-size;
   list-style: none;
   background-color: var(--#{$prefix}breadcrumb-bg);
   @include border-radius($breadcrumb-border-radius);

@@ -1,10 +1,18 @@
-.thumb {
+//@import "../../../../../node_modules/bootstrap/scss/images";
+
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+.img-thumbnail {
   display: block;
-  padding-top: 80%;
+  aspect-ratio: 5 / 4;
   background: no-repeat left;
   background-size: contain;
 }
 
 .img-transparent {
+  //noinspection CssUnknownTarget
   background: url(../images/transparent.svg);
 }

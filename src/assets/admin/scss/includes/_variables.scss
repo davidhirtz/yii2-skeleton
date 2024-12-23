@@ -39,7 +39,7 @@ $body-bg: $gray-100 !default;
 
 // Typography
 $font-family-sans-serif: "Open Sans", sans-serif !default;
-$font-size-base: 0.875rem !default;
+$font-size-base: .875rem !default;
 $font-size-sm: 0.75rem !default;
 $font-size-lg: 1rem !default;
 
@@ -48,28 +48,31 @@ $h2-font-size: 1.125em !default;
 
 $small-font-size: $font-size-sm;
 
+$link-color: $primary !default;
 $link-decoration: none !default;
 
 $mark-bg: $success !default;
 $mark-padding: 0 !default;
 $caret-width: 0.25rem !default;
+$caret-spacing: 0.5rem !default;
 
 // Grid breakpoints
 $grid-breakpoints: (
         xs: 0,
-        sm: 576px,
-        md: 768px,
-        lg: 1024px,
-        xl: 1400px
+        sm: 36rem,
+        md: 48rem,
+        lg: 64rem,
+        xl: 80rem
 ) !default;
 
 // Grid containers
 $container-max-widths: (
-        xs: 1400px
+        xs: 100rem
 ) !default;
 
 $container-padding-x: .5rem !default;
 
+$border-width: 1px !default;
 $border-radius: 0.25rem !default;
 $border-color: $gray-400 !default;
 
@@ -147,29 +150,30 @@ $app-submenu-justify-content: center !default;
 ///*
 //Card.
 // */
-//$card-bg: $white !default;
-//$card-color: $body-color !default;
-//$card-spacer-y: $app-padding-y !default;
-//$card-spacer-x: $app-padding-x !default;
-//$card-cap-color: null !default;
-//$card-cap-bg: $gray-200 !default;
-//$card-border-width: $border-width !default;
-//$card-border-color: $border-color !default;
-//$card-inner-border-radius: 0 !default;
-//$app-card-margin-bottom: $app-margin-y !default;
+$card-bg: $white !default;
+$card-color: $body-color !default;
+$card-spacer-y: $app-padding-y !default;
+$card-spacer-x: $app-padding-x !default;
+$card-cap-color: null !default;
+$card-cap-bg: $gray-200 !default;
+$card-border-width: $border-width !default;
+$card-border-color: $border-color !default;
+$card-inner-border-radius: 0 !default;
+$app-card-margin-bottom: $app-margin-y !default;
+
+$card-danger-bg: #f2dede !default;
+$card-danger-border: #ebccd1 !default;
+$card-danger-color: $card-color !default;
 //
-//$card-danger-bg: #f2dede !default;
-//$card-danger-border: #ebccd1 !default;
-//$card-danger-color: $card-color !default;
-//
-///*
-//Grid view.
-// */
-//$app-grid-view-footer-position: sticky !default;
-//
-//$app-grid-view-margin-y: 15px !default;
-//$app-grid-view-border: 1px solid $border-color !default;
-//$app-grid-view-buttons-top: 6px !default;
+
+// Grid
+$grid-gutter-width: 1rem !default;
+
+$app-grid-view-footer-position: sticky !default;
+$app-grid-view-margin-y: 1rem !default;
+$app-grid-view-border: 1px solid $border-color !default;
+$app-grid-view-buttons-top: 0.5rem !default;
+
 //
 ///*
 //Buttons.
@@ -207,10 +211,16 @@ $app-submenu-justify-content: center !default;
 //$form-check-inline-margin-x: 20px !default;
 //$form-check-inline-input-margin-x: 10px !default;
 //
-//$input-btn-padding-y: 8px !default;
-//$input-btn-padding-x: 12px !default;
+$input-font-size: 1rem !default;
+$input-line-height: 1.5 !default;
+$input-padding-y: 0.375rem !default;
+$input-padding-x: 0.75rem !default;
+
 //$input-height: 38px !default;
 //
+$input-btn-padding-y: 0.59375rem !default;
+$input-btn-padding-x: .75rem !default;
+//$input-btn-line-height: 2.8577 !default;
 //$input-btn-focus-width: 1px !default;
 //$input-btn-padding-y-sm: $input-btn-padding-y !default;
 //$input-btn-padding-x-sm: $input-btn-padding-x !default;
@@ -225,7 +235,7 @@ $app-submenu-justify-content: center !default;
 //$input-color: $gray-700 !default;
 //$input-border-width: $input-btn-border-width !default;
 //$input-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075) !default;
-//$input-focus-color: $body-text !default;
+//$input-focus-color: $body-color !default;
 //$input-btn-focus-width: 1px !default;
 //$input-focus-border-color: #66afe9 !default;
 //
@@ -236,7 +246,7 @@ $app-submenu-justify-content: center !default;
 //$app-form-label-padding-top: $input-padding-y + $input-border-width !default;
 //$app-form-content-label-padding-top: $app-form-label-padding-top * 2 !default;
 //$app-form-label-font-weight: bold !default;
-//$caret-spacing: 8px !default;
+
 //
 ///*
 //List group.
@@ -277,32 +287,32 @@ $app-submenu-justify-content: center !default;
 //
 //$pagination-focus-box-shadow: none !default;
 //
-///*
-//Dropdown.
-// */
-//$dropdown-min-width: 160px !default;
-//$dropdown-padding-y: 5px !default;
-//$dropdown-spacer: 2px !default;
-//$dropdown-bg: #fff !default;
-//$dropdown-border-color: $border-color !default;
-//$dropdown-divider-bg: $border-color !default;
-//
+
+
+// Dropdown
+$dropdown-min-width: 10rem !default;
+$dropdown-padding-y: 0.25rem !default;
+$dropdown-spacer: 2px !default;
+$dropdown-bg: $gray-100 !default;
+$dropdown-border-color: $border-color !default;
+$dropdown-divider-bg: $border-color !default;
+
 //$app-dropdown-button-bg: $gray-100 !default;
-//$app-dropdown-button-color: $body-text !default;
-//$app-dropdown-button-border-color: $border-color !default;
-//
+//$app-dropdown-button-color: $body-color !default;
+$app-dropdown-button-border-color: $border-color !default;
 //$app-dropdown-button-active-bg: $gray-300 !default;
 //$app-dropdown-button-active-color: $app-dropdown-button-color !default;
-//$app-dropdown-button-active-border-color: $app-dropdown-button-border-color !default;
-//
-//$dropdown-link-color: $link-color !default;
-//$dropdown-link-hover-color: $link-color !default;
-//$dropdown-item-padding-y: $input-btn-padding-y !default;
-//$dropdown-item-padding-x: $input-btn-padding-x !default;
-//
-//$app-dropdown-header-padding-y: $dropdown-item-padding-y !default;
-//$app-dropdown-header-padding-x: $dropdown-item-padding-x !default;
-//
+$app-dropdown-button-hover-border-color: $gray-400 !default;
+$app-dropdown-button-active-border-color: $gray-400 !default;
+
+$dropdown-link-color: $link-color !default;
+$dropdown-link-hover-color: $link-color !default;
+$dropdown-item-padding-y: $input-btn-padding-y !default;
+$dropdown-item-padding-x: $input-btn-padding-x !default;
+
+$app-dropdown-header-padding-y: $dropdown-item-padding-y !default;
+$app-dropdown-header-padding-x: $dropdown-item-padding-x !default;
+
 ///*
 //Badge.
 // */
@@ -382,3 +392,4 @@ $app-icon-gap-x: .5rem !default;
 //$trail-cell-padding: 6px !default;
 
 @import "../../../../../node_modules/bootstrap/scss/variables";
+//@import "../../../../../node_modules/bootstrap/scss/variables-dark";
