@@ -2,25 +2,17 @@
 
 .dropdown, .dropup {
 
-  &.is-active > .btn {
-    //background-color: $app-dropdown-button-active-bg;
-    //color: $app-dropdown-button-active-color;
-    //border-color: $app-dropdown-button-active-border-color;
-  }
-
-  //& > .btn-submit {
-  //  background-color: $btn-primary-bg;
-  //  color: color-contrast($btn-primary-bg);
-  //  border-color: $btn-primary-border-color;
-  //}
-
   .grid-view-header & {
     width: 100%;
   }
 }
 
 .dropdown-toggle {
+  --#{$prefix}btn-bg: #{$app-dropdown-button-bg};
   --#{$prefix}btn-border-color: #{$app-dropdown-button-border-color};
+  --#{$prefix}btn-active-bg: #{$app-dropdown-button-active-bg};
+  --#{$prefix}btn-active-border-color: #{$app-dropdown-button-active-border-color};
+  --#{$prefix}btn-hover-bg: #{$app-dropdown-button-hover-bg};
   --#{$prefix}btn-hover-border-color: #{$app-dropdown-button-hover-border-color};
 
   width: 100%;

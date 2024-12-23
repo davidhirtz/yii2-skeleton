@@ -49,16 +49,14 @@ class ButtonDropdown extends \yii\bootstrap5\ButtonDropdown
     public function init(): void
     {
         $this->defaultItem ??= Yii::t('skeleton', 'Show All');
-        $this->isActive ??= $this->paramName && Yii::$app->getRequest()->get($this->paramName) !== null;
+        $this->isActive ??= !$this->defaultItem || ($this->paramName && Yii::$app->getRequest()->get($this->paramName) !== null);
 
         if ($this->items) {
             $this->dropdown['items'] = $this->items;
         }
 
         if ($this->showFilter) {
-            if ($this->filterPlaceholder === null) {
-                $this->filterPlaceholder = Yii::t('skeleton', 'Filter');
-            }
+            $this->filterPlaceholder ??= Yii::t('skeleton', 'Filter');
 
             $label = Html::tag('input', '', [
                 'class' => 'dropdown-filter form-control',
@@ -76,12 +74,29 @@ class ButtonDropdown extends \yii\bootstrap5\ButtonDropdown
             if ($this->defaultItem !== false && isset($this->dropdown['items'])) {
                 array_unshift(
                     $this->dropdown['items'],
-                    ['label' => $this->defaultItem, 'url' => Url::current([$this->paramName => $this->defaultValue])],
+                    [
+                        'label' => $this->defaultItem,
+                        'url' => Url::current([$this->paramName => $this->defaultValue]),
+                    ],
                     '-'
                 );
             }
 
-            Html::addCssClass($this->options, 'is-active');
+            $currentUrl = Url::current();
+            $isActive = false;
+
+            foreach ($this->dropdown['items'] as $key => $item) {
+                if ($currentUrl === ($item['url'] ?? null)) {
+                    $this->dropdown['items'][$key]['active'] = true;
+                    $isActive = true;
+                }
+            }
+
+            if (!$isActive && $this->defaultItem === false) {
+                $this->dropdown['items'][0]['active'] = true;
+            }
+
+            Html::addCssClass($this->buttonOptions, 'active');
         }
 
         parent::init();

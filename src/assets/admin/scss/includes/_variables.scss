@@ -291,24 +291,29 @@ $input-btn-padding-x: .75rem !default;
 
 // Dropdown
 $dropdown-min-width: 10rem !default;
-$dropdown-padding-y: 0.25rem !default;
+$dropdown-padding-y: 0 !default;
 $dropdown-spacer: 2px !default;
-$dropdown-bg: $gray-100 !default;
+$dropdown-bg: $white !default;
 $dropdown-border-color: $border-color !default;
 $dropdown-divider-bg: $border-color !default;
+$dropdown-divider-margin-y: 0 !default;
+$dropdown-item-padding-y: .6563rem !default;
+$dropdown-link-hover-bg: $gray-100 !default;
+$dropdown-link-active-bg: $gray-100 !default;
 
-//$app-dropdown-button-bg: $gray-100 !default;
-//$app-dropdown-button-color: $body-color !default;
+$app-dropdown-button-bg: $gray-100 !default;
 $app-dropdown-button-border-color: $border-color !default;
-//$app-dropdown-button-active-bg: $gray-300 !default;
-//$app-dropdown-button-active-color: $app-dropdown-button-color !default;
-$app-dropdown-button-hover-border-color: $gray-400 !default;
-$app-dropdown-button-active-border-color: $gray-400 !default;
+$app-dropdown-button-active-bg: $app-dropdown-button-bg !default;
+$app-dropdown-button-active-border-color: $dark !default;
+$app-dropdown-button-hover-bg: $gray-200 !default;
+$app-dropdown-button-hover-border-color: $dark !default;
 
-$dropdown-link-color: $link-color !default;
-$dropdown-link-hover-color: $link-color !default;
 $dropdown-item-padding-y: $input-btn-padding-y !default;
 $dropdown-item-padding-x: $input-btn-padding-x !default;
+$dropdown-link-color: $link-color !default;
+$dropdown-link-hover-color: $link-color !default;
+$dropdown-link-active-color: inherit !default;
+$dropdown-link-active-bg: $gray-100 !default;
 
 $app-dropdown-header-padding-y: $dropdown-item-padding-y !default;
 $app-dropdown-header-padding-x: $dropdown-item-padding-x !default;
