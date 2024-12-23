@@ -84,6 +84,9 @@ $app-padding-x: 0.75rem !default;
 $app-html-scroll-padding: 5rem !default;
 $app-body-padding: $app-html-scroll-padding 0 1rem !default;
 
+$component-active-bg: $gray-400 !default;
+$component-active-color: $white !default;
+
 // Nav
 $nav-link-padding-y: 0 !default;
 $nav-link-padding-x: 0.75rem !default;
@@ -318,18 +321,16 @@ $dropdown-link-active-bg: $gray-100 !default;
 $app-dropdown-header-padding-y: $dropdown-item-padding-y !default;
 $app-dropdown-header-padding-x: $dropdown-item-padding-x !default;
 
-///*
-//Badge.
-// */
-//$badge-font-size: 12px !default;
-//$app-badge-bg: $gray-600 !default;
-//$app-badge-color: $white !important !default;
-//$app-badge-active-bg: $component-active-color !default;
-//$app-badge-active-color: $component-active-bg !important !default;
-//$badge-font-weight: normal !default;
-//$badge-padding-y: 3px !default;
-//$badge-padding-x: 7px !default;
-//$badge-border-radius: 10px !default;
+// Badge
+$badge-font-size: 0.75rem !default;
+$badge-color: $white !important !default;
+$app-badge-bg: $gray-600 !default;
+$app-badge-active-bg: $white !default;
+$app-badge-active-color: $dark !important !default;
+$badge-font-weight: normal !default;
+$badge-padding-y: 0.25rem !default;
+$badge-padding-x: 0.5rem !default;
+$badge-border-radius: 0.5rem !default;
 //
 ///*
 //Toolbar.
