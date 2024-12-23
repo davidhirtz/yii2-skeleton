@@ -55,3 +55,15 @@
   vertical-align: top; // Fixes 0.5px margin issue in links
   gap: $app-icon-gap-x;
 }
+
+.text-muted {
+  color: $text-muted !important;
+
+  a:not(:hover) {
+    color: inherit;
+  }
+}
+
+.text-invalid {
+  text-decoration: line-through;
+}
