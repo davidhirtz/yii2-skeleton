@@ -17,7 +17,7 @@ $blue: #0d6efd !default;
 $indigo: #6610f2 !default;
 $purple: #6f42c1 !default;
 $pink: #d63384 !default;
-$red: #e18982 !default;
+$red: #d76259 !default;
 $orange: #fd7e14 !default;
 $yellow: #ffc107 !default;
 $green: #a3cba3 !default;
@@ -148,20 +148,15 @@ $app-header-line-height: 1.5 !default;
 $app-submenu-link-margin: 0 0.125rem $app-padding-x !default;
 $app-submenu-margin: 0 0 $app-margin-y !default;
 $app-submenu-justify-content: center !default;
-//
-//$hr-margin-y: 15px !default;
-//$hr-border-color: $border-color !default;
-//
+
 ///*
 //Alert.
 // */
 //$alert-padding-y: $app-padding-y !default;
 //$alert-padding-x: $app-padding-x !default;
 //$alert-margin-bottom: $app-margin-y !default;
-//
-///*
-//Card.
-// */
+
+// Card
 $card-bg: $white !default;
 $card-color: $body-color !default;
 $card-spacer-y: $app-padding-y !default;
@@ -177,7 +172,6 @@ $app-card-margin-bottom: $app-margin-y !default;
 $app-card-danger-bg: #f2dede !default;
 $app-card-danger-border-color: #ebccd1 !default;
 $app-card-danger-color: $card-color !default;
-//
 
 // Grid
 $grid-gutter-width: 1rem !default;
@@ -201,6 +195,14 @@ $app-btn-secondary-border-color: $border-color !default;
 $app-btn-secondary-hover-bg: $white !default;
 $app-btn-secondary-hover-color: $body-color !default;
 $app-btn-secondary-hover-border-color: $primary !default;
+
+$app-btn-danger-bg: $danger !default;
+$app-btn-danger-color: $white !default;
+$app-btn-danger-border-color: $app-btn-danger-bg !default;
+$app-btn-danger-hover-bg: darken($danger, 10%) !default;
+$app-btn-danger-hover-color: $white !default;
+$app-btn-danger-hover-border-color: $app-btn-danger-hover-bg !default;
+
 
 $btn-padding-y-sm: 0.25rem !default;
 $btn-padding-x-sm: 0.375rem !default;
@@ -234,9 +236,6 @@ $input-focus-bg: $white !default;
 $input-focus-border-color: $primary !default;
 $input-focus-box-shadow: none !default;
 $form-select-focus-box-shadow: none !default;
-//
-//$app-form-label-padding-top: $input-padding-y + $input-border-width !default;
-//$app-form-content-label-padding-top: $app-form-label-padding-top * 2 !default;
 $form-label-font-weight: bold !default;
 
 $hr-opacity: 1;

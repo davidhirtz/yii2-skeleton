@@ -141,6 +141,14 @@
   --#{$prefix}btn-hover-border-color: #{$app-btn-secondary-hover-border-color};
 }
 
+.btn-danger {
+  --#{$prefix}btn-bg: #{$app-btn-danger-bg};
+  --#{$prefix}btn-color: #{$app-btn-danger-color};
+  --#{$prefix}btn-border-color: #{$app-btn-danger-border-color};
+  --#{$prefix}btn-hover-bg: #{$app-btn-danger-hover-bg};
+  --#{$prefix}btn-hover-color: #{$app-btn-danger-hover-color};
+  --#{$prefix}btn-hover-border-color: #{$app-btn-danger-hover-border-color};
+}
 
 //
 // Link buttons
