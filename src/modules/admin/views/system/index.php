@@ -46,7 +46,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                     }
                 ],
                 [
-                    'contentOptions' => ['class' => 'text-right'],
+                    'contentOptions' => ['class' => 'text-end'],
                     'content' => fn ($modified, $name): string => Html::buttons([
                         Html::a((string)Icon::tag('file'), ['view', 'log' => $name, 'raw' => 1], [
                             'class' => 'btn btn-primary',
@@ -99,7 +99,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                         'class' => 'btn btn-primary',
                         'data-method' => 'post'
                     ]),
-                    'options' => ['class' => 'col text-right'],
+                    'options' => ['class' => 'col text-end'],
                 ]
             ],
         ],
@@ -121,7 +121,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                     Html::tag('div', $item['class'], ['class' => 'small'])
             ],
             [
-                'contentOptions' => ['class' => 'text-right'],
+                'contentOptions' => ['class' => 'text-end'],
                 /** @see SystemController::actionFlush() */
                 'content' => fn ($item): string => Html::buttons(Html::a((string)Icon::tag('sync-alt'), ['flush', 'cache' => $item['name']], [
                     'class' => 'btn btn-primary',
@@ -139,7 +139,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
 <div class="card card-default">
     <div class="card-body">
         <div class="grid-view">
-            <table class="table table-vertical table-striped table-hover">
+            <table class="table table-striped table-hover">
                 <thead>
                 <tr>
                     <th>Sessions</th>
@@ -156,7 +156,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                             <?= Yii::t('skeleton', 'Total sessions'); ?>: <?= $sessionCount; ?> / <?= Yii::t('skeleton', 'Garbage collection probability'); ?>: <?= Yii::$app->getSession()->getGCProbability(); ?>
                         </div>
                     </td>
-                    <td class="text-right">
+                    <td class="text-end">
                         <a class="btn btn-primary" href="<?= Url::toRoute(['/admin/system/session-gc']) ?>" data-method="post"><i class="fas fa-trash"></i></a>
                     </td>
                 </tr>

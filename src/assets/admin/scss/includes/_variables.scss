@@ -1,4 +1,4 @@
-$prefix: null;
+$prefix: '';
 
 // Color system
 $white: #fff !default;
@@ -17,7 +17,7 @@ $blue: #0d6efd !default;
 $indigo: #6610f2 !default;
 $purple: #6f42c1 !default;
 $pink: #d63384 !default;
-$red: #d76259 !default;
+$red: #da8888 !default;
 $orange: #fd7e14 !default;
 $yellow: #ffc107 !default;
 $green: #a3cba3 !default;
@@ -169,9 +169,9 @@ $card-border-color: $border-color !default;
 $card-inner-border-radius: 0 !default;
 $app-card-margin-bottom: $app-margin-y !default;
 
-$app-card-danger-bg: #f2dede !default;
-$app-card-danger-border-color: #ebccd1 !default;
-$app-card-danger-color: $card-color !default;
+$app-card-danger-bg: $danger !default;
+$app-card-danger-border-color: $danger !default;
+$app-card-danger-color: $white !default;
 
 // Grid
 $grid-gutter-width: 1rem !default;
@@ -247,20 +247,33 @@ $hr-opacity: 1;
 //$list-group-item-padding-y: $app-padding-y !default;
 //$list-group-item-padding-x: $app-padding-x !default;
 //
-///*
-//Tables.
-// */
-//$app-table-margin-bottom: 0 !default;
-//$table-border-width: 1px !default;
-//$table-border-color: transparent !default;
-//$app-table-th-border-width: 1px !default;
-//$app-table-th-border-color: $table-border-color !default;
-//$table-cell-padding: 12px !default;
-//$table-accent-bg: $body-tertiary-bg !default;
-//$table-hover-bg: $gray-200 !default;
-//$app-table-th-active-font-style: normal !default;
-//$app-table-th-active-text-decoration: underline !default;
-//$app-table-th-selected-bg: $info !default;
+
+// Tables
+$table-bg: $white !default;
+$table-color: $body-color !default;
+$table-border-width: 1px !default;
+$table-border-color: transparent !default;
+$table-accent-bg: $white !default;
+$table-hover-bg: $gray-300 !default;
+$table-striped-bg: $gray-100 !default;
+$table-striped-bg: $white !default;
+$table-striped-color: $body-color !default;
+$table-cell-padding-y: 0.75rem !default;
+$table-cell-padding-x: 0.75rem !default;
+
+$app-table-margin-bottom: 0 !default;
+$app-table-th-active-font-style: normal !default;
+$app-table-th-active-text-decoration: underline !default;
+$app-table-th-border-width: 1px !default;
+$app-table-th-border-color: $table-border-color !default;
+
+$app-table-selected-color: $body-color !default;
+$app-table-selected-bg: $info !default;
+$app-table-selected-border-color: $white !default;
+$app-table-selected-hover-color: $body-color !default;
+$app-table-selected-hover-bg: darken($info, 10%) !default;
+$app-table-selected-hover-border-color: $white !default;
+
 //
 ///*
 //Pagination.

@@ -62,7 +62,7 @@ class GridView extends \yii\grid\GridView
     public ?array $orderRoute = ['order'];
 
     public $tableOptions = [
-        'class' => 'table table-vertical table-striped table-hover',
+        'class' => 'table table-striped table-hover',
     ];
 
     public $emptyText = false;
@@ -442,7 +442,7 @@ class GridView extends \yii\grid\GridView
     public function getModel(): ?ActiveRecord
     {
         if ($this->_model === null) {
-            $model = $this->dataProvider->query?->modelClass ?? null;
+            $model = $this->dataProvider?->query->modelClass ?? null;
             $this->_model = $model ? Yii::createObject($model) : null;
         }
 

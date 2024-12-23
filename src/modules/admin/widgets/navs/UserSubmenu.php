@@ -18,16 +18,24 @@ class UserSubmenu extends Submenu
         if ($this->user && !$this->user->getIsNewRecord()) {
             if (!$this->title) {
                 $name = $this->user->getUsername();
-                $this->title = Yii::$app->getUser()->can(User::AUTH_USER_UPDATE, ['user' => $this->user]) ? Html::a($name, ['/admin/user/update', 'id' => $this->user->id]) : $name;
+                $this->title = Yii::$app->getUser()->can(User::AUTH_USER_UPDATE, ['user' => $this->user])
+                    ? Html::a($name, $this->user->getAdminRoute())
+                    : $name;
             }
 
-            $this->items = [...$this->items, ...$this->getUserItems()];
+            $this->items = [
+                ...$this->items,
+                ...$this->getUserItems(),
+            ];
         } else {
             if (!$this->title) {
                 $this->title = Html::a(Yii::t('skeleton', 'Users'), ['/admin/user/index']);
             }
 
-            $this->items = [...$this->items, ...$this->getDefaultItems()];
+            $this->items = [
+                ...$this->items,
+                ...$this->getDefaultItems(),
+            ];
         }
 
         parent::init();
