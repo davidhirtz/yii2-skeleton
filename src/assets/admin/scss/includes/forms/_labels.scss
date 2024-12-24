@@ -9,7 +9,7 @@
 }
 
 .col-form-label {
-  padding-bottom: $input-padding-y;
+  padding-bottom: 0;
   margin-bottom: 0;
   @include font-size(inherit);
   font-style: $form-label-font-style;

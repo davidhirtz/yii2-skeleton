@@ -225,7 +225,7 @@ $btn-border-radius-sm: $border-radius !default;
 $app-btn-min-width: 2.625rem !default;
 
 // Forms
-$app-form-group-padding-bottom: $card-spacer-y !default;
+$app-form-group-padding-bottom: .5rem !default;
 $app-form-group-buttons-margin-top: $card-spacer-y !default;
 
 $app-form-sticky-position: sticky !default;
@@ -286,6 +286,7 @@ $app-table-th-active-text-decoration: underline !default;
 $app-table-th-border-width: 1px !default;
 $app-table-th-border-color: $table-border-color !default;
 
+$app-table-border-radius: $border-radius !default;
 $app-table-selected-color: $body-color !default;
 $app-table-selected-bg: $success !default;
 $app-table-selected-border-color: $white !default;
@@ -295,7 +296,7 @@ $app-table-selected-hover-border-color: $white !default;
 
 // Pagination
 $app-pagination-justify-content: center !default;
-$app-pagination-margin: 0 !default;
+$app-pagination-margin: $spacer 0 !default;
 $app-pagination-padding: 0 !default;
 $app-pagination-border-top: 0 !default;
 

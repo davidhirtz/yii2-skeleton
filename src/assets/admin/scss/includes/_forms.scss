@@ -20,6 +20,7 @@
   position: $app-form-sticky-position;
 
   @if ($app-grid-view-footer-position == 'sticky') {
+    margin-top: $app-form-group-buttons-margin-top;
     bottom: 0;
     border-top: $app-form-sticky-border;
     background-color: $card-bg;

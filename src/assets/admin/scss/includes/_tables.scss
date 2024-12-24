@@ -13,7 +13,6 @@
   --#{$prefix}table-hover-bg: #{$table-hover-bg};
 
   width: 100%;
-  margin-bottom: $spacer;
   vertical-align: $table-cell-vertical-align;
   border-color: var(--#{$prefix}table-border-color);
 
@@ -64,6 +63,11 @@ tr.is-selected {
   --#{$prefix}table-hover-bg: #{$app-table-selected-hover-bg};
   --#{$prefix}table-striped-color: #{$app-table-selected-color};
   --#{$prefix}table-striped-bg: #{$app-table-selected-bg};
+
+  .badge {
+    --#{$prefix}badge-bg: #{$app-badge-active-bg};
+    --#{$prefix}badge-color: #{$app-badge-active-color};
+  }
 }
 
 
@@ -91,6 +95,28 @@ tr.disabled {
 
 tr.invalid {
   text-decoration: line-through;
+}
+
+@if $app-table-border-radius {
+  tr:first-child {
+    td:first-child {
+      border-top-left-radius: $app-table-border-radius;
+    }
+
+    td:last-child {
+      border-top-right-radius: $app-table-border-radius;
+    }
+  }
+
+  tr:last-child {
+    td:first-child {
+      border-bottom-left-radius: $app-table-border-radius;
+    }
+
+    td:last-child {
+      border-bottom-right-radius: $app-table-border-radius;
+    }
+  }
 }
 
 a.asc:after, a.desc:after {

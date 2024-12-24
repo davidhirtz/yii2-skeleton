@@ -39,6 +39,12 @@
   }
 }
 
+
+// Textual addons
+//
+// Serves as a catch-all element for any text or radio/checkbox input you wish
+// to prepend or append to an input.
+
 .input-group-text {
   display: flex;
   align-items: center;
@@ -59,12 +65,14 @@
 // stylelint-disable-next-line no-duplicate-selectors
 .input-group {
   &:not(.has-validation) {
+    > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu),
     > .dropdown-toggle:nth-last-child(n + 3){
       @include border-end-radius(0);
     }
   }
 
   &.has-validation {
+    > :nth-last-child(n + 3):not(.dropdown-toggle):not(.dropdown-menu),
     > .dropdown-toggle:nth-last-child(n + 4) {
       @include border-end-radius(0);
     }

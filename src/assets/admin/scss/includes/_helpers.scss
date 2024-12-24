@@ -18,3 +18,8 @@
 .justify-center {
   justify-content: center;
 }
+
+// Currently needed for yii2-datetime extension
+.col-6 {
+  width: 50%;
+}

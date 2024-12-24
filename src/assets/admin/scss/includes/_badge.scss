@@ -1,6 +1,11 @@
 //@import "../../../../../node_modules/bootstrap/scss/badge";
 
 .badge {
+  --#{$prefix}badge-bg: #{$app-badge-bg};
+  --#{$prefix}badge-color: #{$badge-color};
+  --#{$prefix}badge-active-bg: #{$app-badge-active-bg};
+  --#{$prefix}badge-active-color: #{$app-badge-active-color};
+
   display: inline-block;
   padding: $badge-padding-y $badge-padding-x;
   font-size: $badge-font-size;
@@ -10,8 +15,8 @@
   white-space: nowrap;
   vertical-align: baseline;
   @include border-radius($badge-border-radius);
-  background-color: $app-badge-bg;
-  color: $badge-color;
+  background-color: var(--#{$prefix}badge-bg);
+  color: var(--#{$prefix}badge-color);
   text-decoration: none !important;
 
   // Empty badges collapse automatically
@@ -21,6 +26,6 @@
 }
 
 .active .badge {
-  background-color: $app-badge-active-bg;
-  color: $app-badge-active-color;
+  background-color: var(--#{$prefix}badge-active-bg);
+  color: var(--#{$prefix}badge-active-color);
 }
