@@ -111,6 +111,10 @@
   }
 }
 
+.navbar-logout{
+  --#{$prefix}nav-link-hover-bg: #{$app-btn-danger-bg};
+}
+
 //noinspection ALL
 .i18n-icon {
   display: inline-block;
@@ -148,35 +152,3 @@
 .i18n-label {
   margin-left: .5em;
 }
-
-// scss-docs-end navbar-expand-loop
-//
-//// Navbar themes
-////
-//// Styles for switching between navbars with light or dark background.
-//
-//.navbar-light {
-//  @include deprecate("`.navbar-light`", "v5.2.0", "v6.0.0", true);
-//}
-//
-//.navbar-dark,
-//.navbar[data-bs-theme="dark"] {
-//  // scss-docs-start navbar-dark-css-vars
-//  --color: #{$navbar-dark-color};
-//  --hover-color: #{$navbar-dark-hover-color};
-//  --disabled-color: #{$navbar-dark-disabled-color};
-//  --active-color: #{$navbar-dark-active-color};
-//  --brand-color: #{$navbar-dark-brand-color};
-//  --brand-hover-color: #{$navbar-dark-brand-hover-color};
-//  --toggler-border-color: #{$navbar-dark-toggler-border-color};
-//  --toggler-icon-bg: #{escape-svg($navbar-dark-toggler-icon-bg)};
-//  // scss-docs-end navbar-dark-css-vars
-//}
-//
-//@if $enable-dark-mode {
-//  @include color-mode(dark) {
-//    .navbar-toggler-icon {
-//      --toggler-icon-bg: #{escape-svg($navbar-dark-toggler-icon-bg)};
-//    }
-//  }
-//}

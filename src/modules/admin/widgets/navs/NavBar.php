@@ -124,6 +124,7 @@ class NavBar extends \yii\bootstrap5\NavBar
                 'icon' => 'sign-out-alt',
                 'url' => ['/admin/account/logout'],
                 'linkOptions' => [
+                    'class' => 'navbar-logout',
                     'data-method' => 'post',
                 ],
             ],

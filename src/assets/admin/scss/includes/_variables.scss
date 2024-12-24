@@ -252,14 +252,14 @@ $form-select-focus-box-shadow: none !default;
 $form-label-font-weight: bold !default;
 
 $hr-opacity: 1;
-//
-///*
-//List group.
-// */
-//$list-group-border-color: $border-color !default;
-//$list-group-item-padding-y: $app-spacer-y !default;
-//$list-group-item-padding-x: $app-spacer-x !default;
-//
+
+// List group
+$list-group-border-color: $white !default;
+$list-group-item-padding-y: $app-spacer-y !default;
+$list-group-item-padding-x: $app-spacer-x !default;
+$list-group-border-radius: $border-radius !default;
+$list-group-bg: $gray-100 !default;
+$list-group-hover-bg: $gray-300 !default;
 
 // Tables
 $table-bg: $white !default;
