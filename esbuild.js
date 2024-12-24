@@ -60,7 +60,7 @@ let context = await esbuild.context({
         }
     })],
     sourcemap: true,
-    target: 'es5',
+    target: 'es6',
 })
 
 if (isWatch) {

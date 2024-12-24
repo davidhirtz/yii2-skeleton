@@ -40,7 +40,6 @@ $theme-colors: (
         "danger": $danger,
 ) !default;
 
-
 // Body
 $body-color: $gray-900 !default;
 $body-bg: $gray-100 !default;
@@ -525,3 +524,20 @@ $trail-cell-padding: 0.5rem !default;
 
 @import "../../../../../node_modules/bootstrap/scss/variables";
 //@import "../../../../../node_modules/bootstrap/scss/variables-dark";
+
+$theme-colors-bg-subtle: (
+        "success": $success-bg-subtle,
+        "info": $info-bg-subtle,
+        "warning": $warning-bg-subtle,
+        "danger": $danger-bg-subtle,
+) !default;
+
+$theme-colors-border-subtle: (
+        "success": $success-border-subtle,
+        "info": $info-border-subtle,
+        "warning": $warning-border-subtle,
+        "danger": $danger-border-subtle,
+) !default;
+
+
+@import "../../../../../node_modules/bootstrap/scss/maps";
