@@ -13,7 +13,7 @@ class LinkPager extends \yii\widgets\LinkPager
     public string $linkCssClass = 'page-link';
     public bool $renderDisabledLink = true;
 
-    public $maxButtonCount = 7;
+    public $maxButtonCount = 5;
     public $pageCssClass = 'page-item';
     public $firstPageLabel = true;
     public $lastPageLabel = true;
@@ -85,7 +85,6 @@ class LinkPager extends \yii\widgets\LinkPager
         }
 
         $linkOptions = $this->linkOptions;
-        $linkOptions['data-page'] = $page;
 
         return Html::tag($tag, Html::a($label, $this->pagination->createUrl($page), $linkOptions), $options);
     }

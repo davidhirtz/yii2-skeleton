@@ -289,25 +289,23 @@ $app-table-selected-hover-color: $body-color !default;
 $app-table-selected-hover-bg: darken($info, 10%) !default;
 $app-table-selected-hover-border-color: $white !default;
 
-//
-///*
-//Pagination.
-// */
-//$app-pagination-justify-content: center !default;
-//$app-pagination-margin: 30px 0 0 !default;
-//$app-pagination-padding: 20px 0 10px !default;
-//$app-pagination-border-top: 1px solid $border-color !default;
-//
-//$pagination-padding-y: $input-btn-padding-y !default;
-//$pagination-padding-x: $input-btn-padding-x !default;
-//$pagination-line-height: $line-height-base !default;
-//
-//$pagination-border-color: $border-color !default;
-//$pagination-hover-border-color: $border-color !default;
-//
-//$pagination-focus-box-shadow: none !default;
-//
+// Pagination
+$app-pagination-justify-content: center !default;
+$app-pagination-margin: 0 !default;
+$app-pagination-padding: 0 !default;
+$app-pagination-border-top: 0 !default;
 
+$pagination-padding-y: $input-btn-padding-y !default;
+$pagination-padding-x: 1rem !default;
+
+$pagination-border-color: $border-color !default;
+$pagination-active-bg: $primary !default;
+$pagination-active-color: $white !default;
+$pagination-active-border-color: $primary !default;
+$pagination-hover-bg: $gray-200 !default;
+$pagination-hover-border-color: $primary !default;
+
+$pagination-focus-box-shadow: none !default;
 
 // Dropdown
 $dropdown-min-width: 10rem !default;

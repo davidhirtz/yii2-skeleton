@@ -26,6 +26,7 @@
     bottom: 0;
     background-color: $card-bg;
     padding-bottom: $app-grid-view-footer-spacer-y;
+    z-index: 1000;
   }
 
   [class*="col"] {
