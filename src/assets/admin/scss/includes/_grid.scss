@@ -1,4 +1,17 @@
-@import "../../../../../node_modules/bootstrap/scss/grid";
+//@import "../../../../../node_modules/bootstrap/scss/grid";
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 calc(-.5 * $grid-gutter-width);
+
+  > * {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    padding: 0 calc(.5 * $grid-gutter-width);
+  }
+}
 
 .grid-view-header {
   margin-bottom: $app-grid-view-header-spacer-y;

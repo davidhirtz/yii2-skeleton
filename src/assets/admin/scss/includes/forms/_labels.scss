@@ -8,12 +8,10 @@
   color: $form-label-color;
 }
 
-// For use with horizontal and inline forms, when you need the label (or legend)
-// text to align with the form controls.
 .col-form-label {
   padding-bottom: $input-padding-y;
-  margin-bottom: 0; // Override the `<legend>` default
-  @include font-size(inherit); // Override the `<legend>` default
+  margin-bottom: 0;
+  @include font-size(inherit);
   font-style: $form-label-font-style;
   font-weight: $form-label-font-weight;
   line-height: $input-line-height;
@@ -26,6 +24,23 @@
   @include media-breakpoint-up(md) {
     padding-top: add($input-padding-y, $input-border-width);
     padding-bottom: add($input-padding-y, $input-border-width);
-    text-align: right;
+    text-align: $app-form-label-text-align-md;
+
+    @include media-breakpoint-up(md) {
+      flex: 0 0 auto;
+      width: 25%;
+    }
+  }
+}
+
+.col-form-content {
+  @include media-breakpoint-up(md) {
+    flex: 0 0 auto;
+    width: 75%;
+    margin-left: auto;
+  }
+
+  @include media-breakpoint-up(xl) {
+    padding-right: 10%;
   }
 }

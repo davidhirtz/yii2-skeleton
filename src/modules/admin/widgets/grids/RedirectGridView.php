@@ -143,7 +143,7 @@ class RedirectGridView extends GridView
     public function buttonsColumn(): array
     {
         return [
-            'contentOptions' => ['class' => 'text-end text-nowrap'],
+            'contentOptions' => ['class' => 'text-right text-nowrap'],
             'content' => fn (Redirect $redirect): string => Html::buttons($this->getRowButtons($redirect))
         ];
     }

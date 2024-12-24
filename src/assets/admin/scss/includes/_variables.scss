@@ -246,6 +246,7 @@ $input-focus-box-shadow: none !default;
 $form-select-focus-box-shadow: none !default;
 $form-select-indicator-color: $primary !default;
 $form-label-font-weight: bold !default;
+$app-form-label-text-align-md: right !default;
 
 $form-check-input-border-radius: $border-radius !default;
 $form-check-input-width: 1.25rem !default;
@@ -351,16 +352,7 @@ $badge-font-weight: normal !default;
 $badge-padding-y: 0.25rem !default;
 $badge-padding-x: 0.5rem !default;
 $badge-border-radius: 0.5rem !default;
-//
-///*
-//Toolbar.
-// */
-//$app-toolbar-padding-y: $app-spacer-y !default;
-//$app-toolbar-padding-x: $app-spacer-x !default;
-//$app-toolbar-background: $body-bg !default;
-//$app-toolbar-border: 1px solid $border-color !default;
-//
-//
+
 ///*
 //Tooltip.
 // */
@@ -385,30 +377,6 @@ $app-icon-gap-x: .5rem !default;
 //$app-upload-progress-bg: $success !default;
 //
 ///*
-//Datepicker.
-// */
-//$datepicker-spacer-y: $card-spacer-y !default;
-//$datepicker-spacer-x: $card-spacer-x !default;
-//$datepicker-spacer: $datepicker-spacer-y $datepicker-spacer-x !default;
-//$datepicker-bg: $card-bg !default;
-//$datepicker-color: $card-color !default;
-//$datepicker-header-margin: -10px -15px 10px !default;
-//$datepicker-header-padding: $datepicker-spacer !default;
-//$datepicker-border: $card-border-width solid $card-border-color !default;
-//$datepicker-header-bg: $card-cap-bg !default;
-//$datepicker-header-color: $card-cap-color !default;
-//$datepicker-td-padding: 0 !default;
-//$datepicker-td-border: $card-border-width solid $card-border-color !default;
-//$datepicker-link-padding: 6px !default;
-//$datepicker-link-bg: $gray-200 !default;
-//$datepicker-link-color: $input-color !default;
-//$datepicker-link-hover-bg: $gray-400 !default;
-//$datepicker-link-hover-color: $datepicker-link-color !default;
-//$datepicker-link-current-bg: $gray-900 !default;
-//$datepicker-link-current-color: $white !default;
-//$datepicker-link-today-bg: $gray-500 !important !default;
-//$datepicker-link-today-color: $datepicker-link-color !default;
-//
 
 $utilities: (
         "align":null,
