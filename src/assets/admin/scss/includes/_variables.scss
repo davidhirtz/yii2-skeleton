@@ -150,7 +150,7 @@ $breadcrumb-divider-color: $gray-400 !default;
 $breadcrumb-border-radius: $border-radius !default;
 
 // Header
-$app-header-margin: ($app-margin-y * 2) 0 $app-margin-y !default;
+$app-header-margin: $app-margin-y 0 !default;
 $app-header-padding-bottom: $app-spacer-y !default;
 $app-header-text-align: center !default;
 $app-header-border-bottom: 1px solid $gray-300 !default;
@@ -198,7 +198,7 @@ $app-grid-view-buttons-top: 0.5rem !default;
 // Buttons
 $app-btn-primary-color: $white !default;
 $app-btn-primary-bg: $primary !default;
-$app-btn-primary-border-color: $primary !default;
+$app-btn-primary-border-color: $app-btn-primary-bg !default;
 $app-btn-primary-hover-bg: $black !default;
 $app-btn-primary-hover-color: $white !default;
 $app-btn-primary-hover-border-color: $app-btn-primary-border-color !default;
@@ -230,18 +230,10 @@ $app-form-group-buttons-margin-top: $card-spacer-y !default;
 $app-form-sticky-position: sticky !default;
 $app-form-sticky-border: $border-width solid $primary !default;
 
-//$form-text-margin-top: 6px !default;
-//
-$form-check-inline-margin-x: 20px !default;
-$form-check-inline-input-margin-x: 10px !default;
-//
 $input-font-size: 1rem !default;
 $input-line-height: 1.5 !default;
 $input-padding-y: 0.5rem !default;
 $input-padding-x: 0.75rem !default;
-
-//$input-height: 38px !default;
-//
 $input-btn-padding-y: 0.59375rem !default;
 $input-btn-padding-x: .75rem !default;
 $input-btn-border-width: $border-width !default;
@@ -252,6 +244,15 @@ $input-focus-border-color: $primary !default;
 $input-focus-box-shadow: none !default;
 $form-select-focus-box-shadow: none !default;
 $form-label-font-weight: bold !default;
+
+$form-check-input-border-radius: $border-radius !default;
+$form-check-input-width: 1.25rem !default;
+$form-check-min-height: 1.25rem !default;
+$form-check-padding-start: 0 !default;
+$form-check-margin-bottom: 0 !default;
+$form-check-input-focus-box-shadow: none !default;
+$form-check-input-checked-bg-color: $primary !default;
+$app-form-check-gap: 0.75rem !default;
 
 $hr-opacity: 1;
 

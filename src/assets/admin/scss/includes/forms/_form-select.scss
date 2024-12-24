@@ -57,11 +57,3 @@
     text-shadow: 0 0 0 $form-select-color;
   }
 }
-
-@if $enable-dark-mode {
-  @include color-mode(dark) {
-    .form-select {
-      --#{$prefix}form-select-bg-img: #{escape-svg($form-select-indicator-dark)};
-    }
-  }
-}
