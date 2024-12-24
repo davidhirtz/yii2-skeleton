@@ -64,6 +64,10 @@ class Flashes extends Widget
     {
         $options = $this->options;
 
+        if ($status === 'error') {
+            $status = 'danger';
+        }
+
         $tag = ArrayHelper::remove($options, 'tag', 'div');
         Html::addCssClass($options, $this->statusCssClass . $status);
 

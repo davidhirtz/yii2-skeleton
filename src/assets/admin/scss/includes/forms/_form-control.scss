@@ -20,6 +20,21 @@
   @include box-shadow($input-box-shadow);
   @include transition($input-transition);
 
+  &[type="color"] {
+    padding: 0;
+    width: calc($input-line-height * 1rem + $input-padding-y * 2 + $input-border-width * 2);
+    height: auto;
+    aspect-ratio: 1;
+
+    &::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    &::-webkit-color-swatch {
+      border: none;
+    }
+  }
+
   &[type="file"] {
     overflow: hidden; // prevent pseudo element button overlap
 

@@ -22,7 +22,7 @@ $orange: #fd7e14 !default;
 $yellow: #ffc107 !default;
 $green: #a3cba3 !default;
 $teal: #20c997 !default;
-$cyan: #d9edf7 !default;
+$cyan: #798fc3 !default;
 
 $primary: $gray-900 !default;
 $secondary: $gray-400 !default;
@@ -33,7 +33,13 @@ $danger: $red !default;
 $light: $gray-100 !default;
 $dark: $primary !default;
 
-//$app-info-text: #31708f !default;
+$theme-colors: (
+        "success":    $success,
+        "info":       $info,
+        "warning":    $warning,
+        "danger":     $danger,
+) !default;
+
 
 // Body
 $body-color: $gray-900 !default;
@@ -139,6 +145,7 @@ $breadcrumb-margin-bottom: $app-margin-y !default;
 $breadcrumb-item-padding: 5px !default;
 $breadcrumb-bg: $gray-200 !default;
 $breadcrumb-divider-color: $gray-400 !default;
+$breadcrumb-border-radius: $border-radius !default;
 
 // Header
 $app-header-margin: ($app-margin-y * 2) 0 $app-margin-y !default;
@@ -223,8 +230,8 @@ $app-form-sticky-border: $border-width solid $primary !default;
 
 //$form-text-margin-top: 6px !default;
 //
-//$form-check-inline-margin-x: 20px !default;
-//$form-check-inline-input-margin-x: 10px !default;
+$form-check-inline-margin-x: 20px !default;
+$form-check-inline-input-margin-x: 10px !default;
 //
 $input-font-size: 1rem !default;
 $input-line-height: 1.5 !default;
@@ -235,6 +242,7 @@ $input-padding-x: 0.75rem !default;
 //
 $input-btn-padding-y: 0.59375rem !default;
 $input-btn-padding-x: .75rem !default;
+$input-btn-border-width: $border-width !default;
 $input-bg: $white !default;
 $input-focus-color: $body-color;
 $input-focus-bg: $white !default;

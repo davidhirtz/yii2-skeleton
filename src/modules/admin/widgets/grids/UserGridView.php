@@ -49,11 +49,8 @@ class UserGridView extends GridView
                 [
                     'content' => $this->getSearchInput(),
                     'options' => [
-                        'class' => 'col-12 col-md-6',
+                        'class' => 'col-12 col-sm-6 col-md-3 ms-auto',
                     ],
-                ],
-                'options' => [
-                    'class' => 'justify-content-end',
                 ],
             ],
         ];
