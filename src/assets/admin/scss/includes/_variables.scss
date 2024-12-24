@@ -34,10 +34,10 @@ $light: $gray-100 !default;
 $dark: $primary !default;
 
 $theme-colors: (
-        "success":    $success,
-        "info":       $info,
-        "warning":    $warning,
-        "danger":     $danger,
+        "success": $success,
+        "info": $info,
+        "warning": $warning,
+        "danger": $danger,
 ) !default;
 
 
@@ -70,6 +70,8 @@ $mark-bg: $success !default;
 $mark-padding: 0 !default;
 $caret-width: 0.25rem !default;
 $caret-spacing: 0.5rem !default;
+
+$text-muted: $gray-600 !default;
 
 // Grid breakpoints
 $grid-breakpoints: (
@@ -406,6 +408,116 @@ $app-icon-gap-x: .5rem !default;
 //$datepicker-link-today-color: $datepicker-link-color !default;
 //
 
+$utilities: (
+        "align":null,
+        "float": null,
+        "object-fit": null,
+        "opacity": null,
+        "overflow": null,
+        "overflow-x": null,
+        "overflow-y": null,
+        "display": (
+                responsive: true,
+                print: true,
+                property: display,
+                class: d,
+                values: inline inline-block block grid flex inline-flex table-cell none
+        ),
+        "shadow": null,
+        "focus-ring": null,
+        "position": (
+                property: position,
+                values: static relative absolute fixed sticky
+        ),
+        "top": null,
+        "bottom": null,
+        "start": null,
+        "end": null,
+        "translate-middle": null,
+        "border": null,
+        "border-top": null,
+        "border-end": null,
+        "border-bottom": null,
+        "border-start": null,
+        "border-color": null,
+        "subtle-border-color": null,
+        "border-width": null,
+        "border-opacity": null,
+        "width": null,
+        "max-width": null,
+        "viewport-width": null,
+        "min-viewport-width": null,
+        "height": null,
+        "max-height": null,
+        "viewport-height": null,
+        "min-viewport-height": null,
+        "flex-shrink": null,
+        "flex-wrap": (
+                responsive: true,
+                property: flex-wrap,
+                class: flex,
+                values: wrap nowrap
+        ),
+        "align-items": (
+                responsive: true,
+                property: align-items,
+                values: (
+                        start: flex-start,
+                        end: flex-end,
+                        center: center,
+                )
+        ),
+        "align-content": null,
+        "align-self": (
+                responsive: true,
+                property: align-self,
+                values: (
+                        start: flex-start,
+                        end: flex-end,
+                        center: center,
+                )
+        ),
+        "order": null,
+        "negative-margin": null,
+        "negative-margin-x": null,
+        "negative-margin-y": null,
+        "negative-margin-top": null,
+        "negative-margin-end": null,
+        "negative-margin-bottom": null,
+        "negative-margin-start": null,
+        "row-gap": null,
+        "column-gap": null,
+        "font-family":null,
+        "font-size": null,
+        "font-style": null,
+        "font-weight": null,
+        "line-height": null,
+        "color": null,
+        "text-opacity": null,
+        "link-opacity": null,
+        "link-offset": null,
+        "link-underline": null,
+        "link-underline-opacity": null,
+        "background-color": null,
+        "bg-opacity": null,
+        "subtle-background-color": null,
+        "gradient": null,
+        "user-select": null,
+        "rounded": null,
+        "rounded-top": null,
+        "rounded-end": null,
+        "rounded-bottom": null,
+        "rounded-start": null,
+        "visibility": (
+                property: visibility,
+                class: null,
+                values: (
+                        visible: visible,
+                        invisible: hidden,
+                )
+        ),
+        "z-index": null,
+);
 
 // Trail
 $trail-del-bg: $danger !default;
