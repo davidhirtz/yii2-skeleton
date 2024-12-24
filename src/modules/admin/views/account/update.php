@@ -94,7 +94,7 @@ if ($form->user->isUnconfirmed()) {
                     <td><?= $url ? Html::a($auth->getDisplayName(), $url, ['target' => '_blank']) : $auth->getDisplayName(); ?></td>
                     <td class="d-none d-table-cell-md"><?= Timeago::tag($auth->updated_at); ?>
                     <td class="d-none d-table-cell-lg"><?= Timeago::tag($auth->created_at); ?>
-                    <td class="text-right">
+                    <td class="text-end">
                         <a href="<?= Url::to(['deauthorize', 'id' => $auth->id, 'name' => $auth->name]) ?>"
                            data-method="post"
                            data-confirm="<?= Yii::t('skeleton', 'Are you sure your want to remove your {client} account?', ['client' => $title]); ?>"

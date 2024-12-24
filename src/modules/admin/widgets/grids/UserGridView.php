@@ -130,7 +130,7 @@ class UserGridView extends GridView
     {
         return [
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
-            'contentOptions' => ['class' => 'd-none d-md-table-cell text-right'],
+            'contentOptions' => ['class' => 'd-none d-md-table-cell text-end'],
             'content' => fn (User $user): string => Html::buttons($this->getRowButtons($user))
         ];
     }
