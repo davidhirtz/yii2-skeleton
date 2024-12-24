@@ -20,8 +20,8 @@ class Html extends BaseHtml
             if ($route = ArrayHelper::remove($options, 'route', false)) {
                 static::addCssClass($options, 'alert-dismissible');
 
-                $content .= Html::a(Html::tag('span', '&times;', ['aria-hidden' => true]), $route, [
-                    'class' => 'close',
+                $content .= Html::a(Html::tag('span', '', ['aria-hidden' => true]), $route, [
+                    'class' => 'btn-close',
                     'aria-label' => Yii::t('skeleton', 'Close'),
                 ]);
             }
