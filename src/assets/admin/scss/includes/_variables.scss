@@ -287,10 +287,10 @@ $app-table-th-border-width: 1px !default;
 $app-table-th-border-color: $table-border-color !default;
 
 $app-table-selected-color: $body-color !default;
-$app-table-selected-bg: $info !default;
+$app-table-selected-bg: $success !default;
 $app-table-selected-border-color: $white !default;
 $app-table-selected-hover-color: $body-color !default;
-$app-table-selected-hover-bg: darken($info, 10%) !default;
+$app-table-selected-hover-bg: darken($success, 10%) !default;
 $app-table-selected-hover-border-color: $white !default;
 
 // Pagination
@@ -391,7 +391,7 @@ $utilities: (
                 print: true,
                 property: display,
                 class: d,
-                values: block flex table-cell none
+                values: block inline flex table-cell none
         ),
         "shadow": null,
         "focus-ring": null,

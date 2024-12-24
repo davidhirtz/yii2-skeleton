@@ -62,6 +62,8 @@ tr.is-selected {
   --#{$prefix}table-bg: #{$app-table-selected-bg};
   --#{$prefix}table-hover-color: #{$app-table-selected-hover-color};
   --#{$prefix}table-hover-bg: #{$app-table-selected-hover-bg};
+  --#{$prefix}table-striped-color: #{$app-table-selected-color};
+  --#{$prefix}table-striped-bg: #{$app-table-selected-bg};
 }
 
 
