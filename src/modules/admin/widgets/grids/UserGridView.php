@@ -46,12 +46,7 @@ class UserGridView extends GridView
     {
         $this->header ??= [
             [
-                [
-                    'content' => $this->getSearchInput(),
-                    'options' => [
-                        'class' => 'col-12 col-sm-6 col-md-3 ms-auto',
-                    ],
-                ],
+                $this->getSearchInputHeaderColumn(),
             ],
         ];
     }
@@ -63,9 +58,6 @@ class UserGridView extends GridView
                 [
                     'content' => $this->getCreateUserButton(),
                     'visible' => Yii::$app->getUser()->can(User::AUTH_USER_CREATE),
-                    'options' => [
-                        'class' => 'col-12',
-                    ],
                 ],
             ],
         ];

@@ -59,15 +59,7 @@ class RedirectGridView extends GridView
     {
         $this->header ??= [
             [
-                [
-                    'content' => $this->getSearchInput(),
-                    'options' => [
-                        'class' => 'col-12 col-md-6',
-                    ],
-                ],
-                'options' => [
-                    'class' => 'justify-content-end',
-                ],
+                $this->getSearchInputHeaderColumn(),
             ],
         ];
 

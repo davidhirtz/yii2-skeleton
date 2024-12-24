@@ -15,7 +15,7 @@ class HelpPanel extends Panel
     ];
 
     public array $contentOptions = [
-        'class' => 'offset-md-3 col-md-8',
+        'class' => 'col-form-content',
     ];
 
     public function init(): void

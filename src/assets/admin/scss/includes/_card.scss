@@ -8,7 +8,6 @@
   --#{$prefix}card-box-shadow: #{$card-box-shadow};
   --#{$prefix}card-cap-bg: #{$card-cap-bg};
   --#{$prefix}card-cap-color: #{$card-cap-color};
-  --#{$prefix}card-height: #{$card-height};
   --#{$prefix}card-color: #{$card-color};
   --#{$prefix}card-bg: #{$card-bg};
   --#{$prefix}card-img-overlay-padding: #{$card-img-overlay-padding};
@@ -19,7 +18,6 @@
   display: flex;
   flex-direction: column;
   min-width: 0; // See https://github.com/twbs/bootstrap/pull/22740#issuecomment-305868106
-  height: var(--#{$prefix}card-height);
   color: var(--#{$prefix}body-color);
   word-wrap: break-word;
   background-color: var(--#{$prefix}card-bg);

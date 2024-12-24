@@ -277,7 +277,7 @@ class GridView extends \yii\grid\GridView
             }
 
             if ($items) {
-                Html::addCssClass($options, ['row']);
+                Html::addCssClass($options, 'row');
                 $result[] = Html::tag('div', implode('', $items), $options);
             }
         }
@@ -310,6 +310,16 @@ class GridView extends \yii\grid\GridView
         return Html::beginForm($this->searchUrl, 'get')
             . Html::input('search', $this->searchParamName, $search, $options)
             . Html::endForm();
+    }
+
+    public function getSearchInputHeaderColumn(): array
+    {
+        return [
+            'content' => $this->getSearchInput(),
+            'options' => [
+                'class' => 'ms-auto',
+            ],
+        ];
     }
 
     /**

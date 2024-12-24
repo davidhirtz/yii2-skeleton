@@ -14,11 +14,10 @@ use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 $this->setTitle(Yii::t('skeleton', 'Admin'));
 ?>
 <h1 class="page-header"><?= Yii::$app->name; ?></h1>
-<div class="row justify-content-center">
-    <?php
-    foreach ($panels as $panel) {
+<div class="row justify-center">
+    <?php foreach ($panels as $panel) {
         ?>
-        <div class="col-12 col-md-6 col-lg-4">
+        <div class="dashboard-card">
             <?= Panel::widget([
                 'title' => $panel['name'],
                 'content' => ListGroup::widget([

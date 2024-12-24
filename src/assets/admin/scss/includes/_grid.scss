@@ -3,13 +3,13 @@
 .row {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 calc(-.5 * $grid-gutter-width);
+  margin: calc(-.5 * $grid-gutter-width);
 
   > * {
     flex-shrink: 0;
     width: 100%;
     max-width: 100%;
-    padding: 0 calc(.5 * $grid-gutter-width);
+    padding: calc(.5 * $grid-gutter-width);
   }
 }
 
@@ -17,8 +17,20 @@
   margin-bottom: $app-grid-view-header-spacer-y;
   border-bottom: $app-grid-view-header-border;
 
-  [class*="col"] {
+  .row {
     padding-bottom: $app-spacer-y;
+
+    & > * {
+
+      @include media-breakpoint-up(sm) {
+        width: 50%;
+      }
+
+      @include media-breakpoint-up(md) {
+        flex: 0 0 auto;
+        max-width: 25%;
+      }
+    }
   }
 
   &:empty {
@@ -42,7 +54,12 @@
     z-index: 1000;
   }
 
-  [class*="col"] {
+  .row {
     padding-top: $app-spacer-y;
+    justify-content: space-between;
+
+    & > * {
+      width: auto;
+    }
   }
 }

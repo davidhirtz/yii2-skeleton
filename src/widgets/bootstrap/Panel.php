@@ -9,8 +9,8 @@ use yii\helpers\Html;
 
 class Panel extends Widget
 {
-    public const TYPE_DEFAULT = 'default';
-    public const TYPE_DANGER = 'danger';
+    final public const TYPE_DEFAULT = 'default';
+    final public const TYPE_DANGER = 'danger';
 
     /**
      * @var string|null the panel title
@@ -53,7 +53,7 @@ class Panel extends Widget
             $this->options['id'] = $this->getId();
         }
 
-        Html::addCssClass($this->options, 'card card-' . $this->type);
+        Html::addCssClass($this->options, "card card-$this->type");
         Html::addCssClass($this->bodyOptions, 'card-body');
 
         parent::init();

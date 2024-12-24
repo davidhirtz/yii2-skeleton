@@ -173,7 +173,7 @@ $card-spacer-y: $app-spacer-y !default;
 $card-spacer-x: $app-spacer-x !default;
 $card-cap-padding-y: $app-spacer-y !default;
 $card-cap-color: null !default;
-$card-cap-bg: $gray-200 !default;
+$card-cap-bg: $gray-300 !default;
 $card-border-width: 0 !default;
 $card-border-color: $border-color !default;
 $card-inner-border-radius: $border-radius !default;
@@ -391,14 +391,11 @@ $utilities: (
                 print: true,
                 property: display,
                 class: d,
-                values: inline inline-block block grid flex inline-flex table-cell none
+                values: block flex table-cell none
         ),
         "shadow": null,
         "focus-ring": null,
-        "position": (
-                property: position,
-                values: static relative absolute fixed sticky
-        ),
+        "position": null,
         "top": null,
         "bottom": null,
         "start": null,
@@ -421,33 +418,23 @@ $utilities: (
         "max-height": null,
         "viewport-height": null,
         "min-viewport-height": null,
+        "flex": null,
+        "flex-direction": null,
+        "flex-grow": null,
         "flex-shrink": null,
-        "flex-wrap": (
-                responsive: true,
-                property: flex-wrap,
-                class: flex,
-                values: wrap nowrap
-        ),
-        "align-items": (
-                responsive: true,
-                property: align-items,
-                values: (
-                        start: flex-start,
-                        end: flex-end,
-                        center: center,
-                )
-        ),
+        "flex-wrap": null,
+        "justify-content": null,
+        "align-items": null,
         "align-content": null,
-        "align-self": (
-                responsive: true,
-                property: align-self,
-                values: (
-                        start: flex-start,
-                        end: flex-end,
-                        center: center,
-                )
-        ),
+        "align-self": null,
         "order": null,
+        "margin": null,
+        "margin-x": null,
+        "margin-y": null,
+        "margin-top": null,
+        "margin-end": null,
+        "margin-bottom": null,
+        "margin-start": null,
         "negative-margin": null,
         "negative-margin-x": null,
         "negative-margin-y": null,
@@ -455,6 +442,14 @@ $utilities: (
         "negative-margin-end": null,
         "negative-margin-bottom": null,
         "negative-margin-start": null,
+        "padding": null,
+        "padding-x": null,
+        "padding-y": null,
+        "padding-top": null,
+        "padding-end": null,
+        "padding-bottom": null,
+        "padding-start": null,
+        "gap": null,
         "row-gap": null,
         "column-gap": null,
         "font-family":null,
@@ -478,14 +473,7 @@ $utilities: (
         "rounded-end": null,
         "rounded-bottom": null,
         "rounded-start": null,
-        "visibility": (
-                property: visibility,
-                class: null,
-                values: (
-                        visible: visible,
-                        invisible: hidden,
-                )
-        ),
+        "visibility": null,
         "z-index": null,
 );
 
