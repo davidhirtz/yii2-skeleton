@@ -15,8 +15,7 @@ class AdminAsset extends AssetBundle
      */
     public array $faviconOptions = [];
 
-    public $css = ['css/bootstrap.min.css'];
-    //    public $css = ['css/bootstrap.original.css'];
+    public $css = ['css/admin.min.css'];
     public $js = ['js/admin.min.js'];
     public $sourcePath = '@skeleton/assets/admin';
 

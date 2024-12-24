@@ -1,8 +1,8 @@
 @import "includes/variables";
 @import "includes/fonts";
-@import "../../../../vendor/npm-asset/bootstrap/scss/functions";
-@import "../../../../vendor/npm-asset/bootstrap/scss/variables";
-@import "../../../../vendor/npm-asset/bootstrap/scss/mixins";
+
+@import "../../../../node_modules/bootstrap/scss/functions";
+@import "../../../../node_modules/bootstrap/scss/mixins";
 
 body {
   padding: $input-padding-y $input-padding-x;
