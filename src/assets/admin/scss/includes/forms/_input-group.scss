@@ -39,12 +39,6 @@
   }
 }
 
-
-// Textual addons
-//
-// Serves as a catch-all element for any text or radio/checkbox input you wish
-// to prepend or append to an input.
-
 .input-group-text {
   display: flex;
   align-items: center;
@@ -65,19 +59,13 @@
 // stylelint-disable-next-line no-duplicate-selectors
 .input-group {
   &:not(.has-validation) {
-    > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu):not(.form-floating),
-    > .dropdown-toggle:nth-last-child(n + 3),
-    > .form-floating:not(:last-child) > .form-control,
-    > .form-floating:not(:last-child) > .form-select {
+    > .dropdown-toggle:nth-last-child(n + 3){
       @include border-end-radius(0);
     }
   }
 
   &.has-validation {
-    > :nth-last-child(n + 3):not(.dropdown-toggle):not(.dropdown-menu):not(.form-floating),
-    > .dropdown-toggle:nth-last-child(n + 4),
-    > .form-floating:nth-last-child(n + 3) > .form-control,
-    > .form-floating:nth-last-child(n + 3) > .form-select {
+    > .dropdown-toggle:nth-last-child(n + 4) {
       @include border-end-radius(0);
     }
   }
@@ -89,11 +77,6 @@
 
   > :not(:first-child):not(.dropdown-menu)#{$validation-messages} {
     margin-left: calc(#{$input-border-width} * -1); // stylelint-disable-line function-disallowed-list
-    @include border-start-radius(0);
-  }
-
-  > .form-floating:not(:first-child) > .form-control,
-  > .form-floating:not(:first-child) > .form-select {
     @include border-start-radius(0);
   }
 }
