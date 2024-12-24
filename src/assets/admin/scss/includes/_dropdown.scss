@@ -17,6 +17,10 @@
 
   width: 100%;
   @extend .text-truncate;
+
+  &.active {
+    font-weight: $app-dropdown-button-active-font-weight;
+  }
 }
 
 .dropdown-menu {

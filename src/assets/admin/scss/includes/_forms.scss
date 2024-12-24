@@ -21,7 +21,7 @@
 
   @if ($app-grid-view-footer-position == 'sticky') {
     bottom: 0;
-    border-top: $app-form-sticky-border-width $border-style $border-color;
+    border-top: $app-form-sticky-border;
     background-color: $card-bg;
     z-index: 2;
   }

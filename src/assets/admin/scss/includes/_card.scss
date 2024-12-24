@@ -1,7 +1,80 @@
-@import "../../../../../node_modules/bootstrap/scss/card";
+//@import "../../../../../node_modules/bootstrap/scss/card";
 
 .card {
-  margin-bottom: $app-card-margin-bottom;
+  // scss-docs-start card-css-vars
+  --#{$prefix}card-title-color: #{$card-title-color};
+  --#{$prefix}card-subtitle-color: #{$card-subtitle-color};
+  --#{$prefix}card-border-color: #{$card-border-color};
+  --#{$prefix}card-box-shadow: #{$card-box-shadow};
+  --#{$prefix}card-cap-bg: #{$card-cap-bg};
+  --#{$prefix}card-cap-color: #{$card-cap-color};
+  --#{$prefix}card-height: #{$card-height};
+  --#{$prefix}card-color: #{$card-color};
+  --#{$prefix}card-bg: #{$card-bg};
+  --#{$prefix}card-img-overlay-padding: #{$card-img-overlay-padding};
+  --#{$prefix}card-group-margin: #{$card-group-margin};
+  // scss-docs-end card-css-vars
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; // See https://github.com/twbs/bootstrap/pull/22740#issuecomment-305868106
+  height: var(--#{$prefix}card-height);
+  color: var(--#{$prefix}body-color);
+  word-wrap: break-word;
+  background-color: var(--#{$prefix}card-bg);
+  background-clip: border-box;
+  border: $card-border-width solid var(--#{$prefix}card-border-color);
+  @include border-radius($card-border-radius);
+  @include box-shadow(var(--#{$prefix}card-box-shadow));
+
+  &:not(:last-child) {
+    margin-bottom: $app-card-margin-bottom;
+  }
+}
+
+.card-body {
+  // Enable `flex-grow: 1` for decks and groups so that card blocks take up
+  // as much space as possible, ensuring footers are aligned to the bottom.
+  flex: 1 1 auto;
+  padding: $card-spacer-y $card-spacer-x;
+  color: var(--#{$prefix}card-color);
+
+  &:has(.grid-view-footer:last-child) {
+    padding-bottom: 0;
+  }
+}
+
+.card-title {
+  margin-bottom: $card-title-spacer-y;
+  color: var(--#{$prefix}card-title-color);
+}
+
+.card-header {
+  padding: $card-cap-padding-y $card-cap-padding-x;
+  margin-bottom: 0; // Removes the default margin-bottom of <hN>
+  color: var(--#{$prefix}card-cap-color);
+  background-color: var(--#{$prefix}card-cap-bg);
+  border-bottom: $card-border-width solid var(--#{$prefix}card-border-color);
+}
+
+.card-header, .card-body {
+  &:first-child {
+    @include border-radius($card-inner-border-radius $card-inner-border-radius 0 0);
+  }
+}
+
+.card-footer {
+  padding: $card-cap-padding-y $card-cap-padding-x;
+  color: var(--#{$prefix}card-cap-color);
+  background-color: var(--#{$prefix}card-cap-bg);
+  border-top: $card-border-width solid var(--#{$prefix}card-border-color);
+}
+
+.card-footer, .card-body {
+  &:last-child {
+    @include border-radius(0 0 $card-inner-border-radius $card-inner-border-radius);
+  }
 }
 
 .card-danger {
@@ -11,13 +84,12 @@
 }
 
 .card-title {
-
   &:last-child {
     margin-bottom: 0;
   }
 }
 
-.centered {
+.card-centered {
   margin: 0 auto;
-  max-width: 400px;
+  max-width: $app-card-centered-max-width;
 }

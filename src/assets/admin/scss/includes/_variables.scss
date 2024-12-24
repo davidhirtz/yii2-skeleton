@@ -85,9 +85,11 @@ $border-width: 1px !default;
 $border-radius: 0.1875rem !default;
 $border-color: $gray-400 !default;
 
+$spacer: 1rem !default;
+
 $app-margin-y: 2rem !default;
-$app-padding-y: 1rem !default;
-$app-padding-x: 1rem !default;
+$app-spacer-y: $spacer !default;
+$app-spacer-x: $spacer !default;
 
 // Layout
 $app-html-scroll-padding: 5rem !default;
@@ -131,8 +133,8 @@ $navbar-light-toggler-border-color: $white !default;
 $navbar-light-icon-color: $white;
 
 // Breadcrumbs
-$breadcrumb-padding-y: $app-padding-y !default;
-$breadcrumb-padding-x: $app-padding-x !default;
+$breadcrumb-padding-y: $app-spacer-y !default;
+$breadcrumb-padding-x: $app-spacer-x !default;
 $breadcrumb-margin-bottom: $app-margin-y !default;
 $breadcrumb-item-padding: 5px !default;
 $breadcrumb-bg: $gray-200 !default;
@@ -140,45 +142,48 @@ $breadcrumb-divider-color: $gray-400 !default;
 
 // Header
 $app-header-margin: ($app-margin-y * 2) 0 $app-margin-y !default;
-$app-header-padding-bottom: $app-padding-y !default;
+$app-header-padding-bottom: $app-spacer-y !default;
 $app-header-text-align: center !default;
 $app-header-border-bottom: 1px solid $gray-300 !default;
 $app-header-line-height: 1.5 !default;
 
-$app-submenu-link-margin: 0 0.125rem $app-padding-x !default;
+$app-submenu-link-margin: 0 0.125rem $app-spacer-x !default;
 $app-submenu-margin: 0 0 $app-margin-y !default;
 $app-submenu-justify-content: center !default;
 
 ///*
 //Alert.
 // */
-//$alert-padding-y: $app-padding-y !default;
-//$alert-padding-x: $app-padding-x !default;
+//$alert-padding-y: $app-spacer-y !default;
+//$alert-padding-x: $app-spacer-x !default;
 //$alert-margin-bottom: $app-margin-y !default;
 
 // Card
 $card-bg: $white !default;
 $card-color: $body-color !default;
-$card-spacer-y: $app-padding-y !default;
-$card-spacer-x: $app-padding-x !default;
-$card-cap-padding-y: $app-padding-y !default;
+$card-spacer-y: $app-spacer-y !default;
+$card-spacer-x: $app-spacer-x !default;
+$card-cap-padding-y: $app-spacer-y !default;
 $card-cap-color: null !default;
 $card-cap-bg: $gray-200 !default;
 $card-border-width: 0 !default;
 $card-border-color: $border-color !default;
-$card-inner-border-radius: 0 !default;
+$card-inner-border-radius: $border-radius !default;
 $app-card-margin-bottom: $app-margin-y !default;
 
 $app-card-danger-bg: $danger !default;
 $app-card-danger-border-color: $danger !default;
 $app-card-danger-color: $white !default;
+$app-card-centered-max-width: 25rem !default;
 
 // Grid
 $grid-gutter-width: 1rem !default;
 
 $app-grid-view-footer-position: sticky !default;
-$app-grid-view-margin-y: $app-padding-y !default;
-$app-grid-view-border: 1px solid $border-color !default;
+$app-grid-view-header-border: none !default;
+$app-grid-view-header-spacer-y: 0 !default;
+$app-grid-view-footer-border: 1px solid $primary !default;
+$app-grid-view-footer-spacer-y: $app-spacer-y !default;
 $app-grid-view-buttons-top: 0.5rem !default;
 
 // Buttons
@@ -214,7 +219,7 @@ $app-form-group-padding-bottom: $card-spacer-y !default;
 $app-form-group-buttons-margin-top: $card-spacer-y !default;
 
 $app-form-sticky-position: sticky !default;
-$app-form-sticky-border-width: $border-width !default;
+$app-form-sticky-border: $border-width solid $primary !default;
 
 //$form-text-margin-top: 6px !default;
 //
@@ -244,8 +249,8 @@ $hr-opacity: 1;
 //List group.
 // */
 //$list-group-border-color: $border-color !default;
-//$list-group-item-padding-y: $app-padding-y !default;
-//$list-group-item-padding-x: $app-padding-x !default;
+//$list-group-item-padding-y: $app-spacer-y !default;
+//$list-group-item-padding-x: $app-spacer-x !default;
 //
 
 // Tables
@@ -308,8 +313,9 @@ $dropdown-link-active-bg: $body-tertiary-bg !default;
 
 $app-dropdown-button-bg: $body-tertiary-bg !default;
 $app-dropdown-button-border-color: $border-color !default;
-$app-dropdown-button-active-bg: $app-dropdown-button-bg !default;
+$app-dropdown-button-active-bg: $gray-200 !default;
 $app-dropdown-button-active-border-color: $dark !default;
+$app-dropdown-button-active-font-weight: bold !default;
 $app-dropdown-button-hover-bg: $gray-200 !default;
 $app-dropdown-button-hover-border-color: $dark !default;
 
@@ -337,8 +343,8 @@ $badge-border-radius: 0.5rem !default;
 ///*
 //Toolbar.
 // */
-//$app-toolbar-padding-y: $app-padding-y !default;
-//$app-toolbar-padding-x: $app-padding-x !default;
+//$app-toolbar-padding-y: $app-spacer-y !default;
+//$app-toolbar-padding-x: $app-spacer-x !default;
 //$app-toolbar-background: $body-bg !default;
 //$app-toolbar-border: 1px solid $border-color !default;
 //
@@ -352,8 +358,8 @@ $badge-border-radius: 0.5rem !default;
 ///**
 //Thumbnail.
 // */
-//$thumbnail-padding: $app-padding-y !default;
-//$thumbnail-caption-padding: $app-padding-x !default;
+//$thumbnail-padding: $app-spacer-y !default;
+//$thumbnail-caption-padding: $app-spacer-x !default;
 //
 
 // Icon

@@ -6,3 +6,4 @@
 - Renamed `$app-margin-bottom` to `$app-margin-y`
 - Renamed `.thumb` to `.img-thumbnail`
 - Renamed `.text-right` to `.text-end`
+- Renamed `.centered` to `.card-centered`
