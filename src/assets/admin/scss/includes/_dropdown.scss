@@ -162,6 +162,7 @@
 
 .dropdown-toggle {
   --#{$prefix}btn-bg: #{$app-dropdown-button-bg};
+  --#{$prefix}btn-color: #{$app-dropdown-button-color};
   --#{$prefix}btn-border-color: #{$app-dropdown-button-border-color};
   --#{$prefix}btn-active-bg: #{$app-dropdown-button-active-bg};
   --#{$prefix}btn-active-border-color: #{$app-dropdown-button-active-border-color};
