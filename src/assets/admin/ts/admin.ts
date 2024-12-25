@@ -1,39 +1,40 @@
 import {intlFormatDistance} from 'date-fns'
 
 window.customElements.define('x-timeago', class extends HTMLElement {
-    timeout: number | null = null;
-    date: Date;
+    t: number | null = null;
+    d: Date;
+    l: string;
 
     // noinspection JSUnusedGlobalSymbols
     connectedCallback() {
-        this.date = new Date(this.dataset.datetime);
-        console.log('connectedCallback', this.date);
+        try {
+            this.d = new Date(this.dataset.datetime);
+            this.l = this.dataset.locale || document.documentElement.lang || new Intl.DateTimeFormat().resolvedOptions().locale;
+        } catch (e) {
+            console.error(e);
+            return;
+        }
 
         if (!this.title) {
-            const locale = this.dataset.locale || document.documentElement.lang || new Intl.DateTimeFormat().resolvedOptions().locale;
-            this.title = this.date.toLocaleString(locale);
+            this.title = this.d.toLocaleString(this.l);
         }
 
-        this.setRelativeTime();
-
-        this.onclick = () => {
-            this.remove();
-        }
+        this.set();
     }
 
     // noinspection JSUnusedGlobalSymbols
     disconnectedCallback() {
-        clearTimeout(this.timeout);
+        clearTimeout(this.t);
     }
 
-    setRelativeTime() {
+    set() {
         const now = new Date();
-        const diff = Math.abs(now.getTime() - this.date.getTime());
+        const diff = Math.abs(now.getTime() - this.d.getTime());
 
-        this.textContent = intlFormatDistance(this.date, now, {
-            locale: document.documentElement.lang,
+        this.textContent = intlFormatDistance(this.d, now, {
+            locale: this.l,
         });
 
-        this.timeout = setTimeout(() => this.setRelativeTime(), diff < 60000 ? 1000 : 60000);
+        this.t = setTimeout(() => this.set(), diff < 60000 ? 1000 : 60000);
     }
 });
