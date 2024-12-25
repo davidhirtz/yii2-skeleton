@@ -6,7 +6,6 @@ namespace davidhirtz\yii2\skeleton\assets;
 
 use Yii;
 use yii\web\AssetBundle;
-use yii\web\YiiAsset;
 
 class AdminAsset extends AssetBundle
 {
@@ -17,17 +16,17 @@ class AdminAsset extends AssetBundle
 
     public $css = ['css/admin.min.css'];
     public $js = ['js/admin.min.js'];
+    public $jsOptions = ['type' => 'module'];
     public $sourcePath = '@skeleton/assets/admin';
 
     public $publishOptions = [
         'except' => [
-            'scss/',
+            'scss',
+            'ts',
         ],
     ];
 
     public $depends = [
-        YiiAsset::class,
-        BootboxAsset::class,
         FontAwesomeAsset::class,
     ];
 
