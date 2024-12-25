@@ -43,8 +43,8 @@ let context = await esbuild.context({
         //     out: 'src/assets/fontawesome/css/all.min'
         // },
         {
-            in: 'src/assets/signup/js/signup.js',
-            out: 'src/assets/signup/js/signup.min'
+            in: 'src/assets/signup/src/signup.ts',
+            out: 'src/assets/signup/dist/signup'
         },
     ],
     minify: true,

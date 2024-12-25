@@ -98,7 +98,6 @@ class SignupActiveForm extends ActiveForm
 
     public function registerSignupClientScript(): void
     {
-        SignupAsset::register($view = $this->getView());
-        $view->registerJs("jQuery('#$this->id').signupForm();");
+        SignupAsset::registerModule("#$this->id");
     }
 }

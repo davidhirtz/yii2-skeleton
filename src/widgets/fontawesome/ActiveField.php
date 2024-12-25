@@ -11,7 +11,9 @@ class ActiveField extends \davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveFiel
     public array $iconOptions = ['class' => 'fa-fw'];
     public string $iconInputTemplate = '<div class="input-group"><div class="input-group-prepend input-group-text">{icon}</div>{input}</div>';
 
+    public $enableClientValidation = false;
     public $options = ['class' => 'form-group'];
+    public $enableError = false;
 
     public function init(): void
     {

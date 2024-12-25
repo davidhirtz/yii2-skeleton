@@ -15,12 +15,13 @@
   }
 
   ul {
-    margin: $alert-padding-y $alert-padding-x 0 0;
-    list-style-type: square;
+    margin: .5rem 0 0;
+    padding: 0;
+    list-style-type: none;
   }
 
   li {
-    padding-bottom: $alert-padding-y;
+    padding-top: .25rem;
     font-weight: normal;
   }
 }
@@ -46,6 +47,6 @@
   }
 }
 
-.alert-heading{
-    font-weight: $app-alert-heading-font-weight;
+.alert-heading {
+  font-weight: $app-alert-heading-font-weight;
 }
