@@ -117,7 +117,7 @@ class Application extends \yii\web\Application
             if ($domain = $this->params['cookieDomain'] ?? false) {
                 $hostInfo = trim((string)$domain, '.');
 
-                if (str_ends_with((string) $this->getRequest()->getHostInfo(), $hostInfo)) {
+                if (str_ends_with((string)$this->getRequest()->getHostInfo(), $hostInfo)) {
                     $config['domain'] = $domain;
                 }
             }

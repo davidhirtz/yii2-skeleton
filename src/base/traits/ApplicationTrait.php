@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\base\traits;
 
 use Composer\InstalledVersions;
+use davidhirtz\yii2\skeleton\assets\EmptyAssetBundle;
 use davidhirtz\yii2\skeleton\auth\clients\Facebook;
 use davidhirtz\yii2\skeleton\controllers\HealthController;
 use davidhirtz\yii2\skeleton\controllers\SitemapController;
@@ -23,6 +24,7 @@ use yii\bootstrap5\BootstrapAsset;
 use yii\caching\FileCache;
 use yii\console\controllers\MigrateController;
 use yii\db\Connection;
+use yii\grid\GridViewAsset;
 use yii\helpers\ArrayHelper;
 use yii\i18n\PhpMessageSource;
 use yii\log\FileTarget;
@@ -73,6 +75,9 @@ trait ApplicationTrait
                         BootstrapAsset::class => [
                             'sourcePath' => null,
                             'css' => [],
+                        ],
+                        GridViewAsset::class => [
+                            'class' => EmptyAssetBundle::class,
                         ],
                         JqueryAsset::class => [
                             'js' => ['jquery.min.js'],

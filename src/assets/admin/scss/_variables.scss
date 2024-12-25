@@ -247,6 +247,7 @@ $input-transition: border-color .15s ease-in-out, color .15s ease-in-out !defaul
 $app-input-placeholder-opacity: 0.6 !default;
 $form-select-focus-box-shadow: none !default;
 $form-select-indicator-color: $primary !default;
+$form-label-color: var(--#{$prefix}body-color) !default;
 $form-label-font-weight: bold !default;
 $app-form-label-text-align-md: right !default;
 

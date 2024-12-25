@@ -10,6 +10,8 @@ class ActiveForm extends \yii\bootstrap5\ActiveForm
 {
     use ActiveFormTrait;
 
+    public $enableClientScript = false;
+    public $fieldClass = ActiveField::class;
     public $fieldConfig = [
         'horizontalCssClasses' => [
             'wrapper' => 'col-form-content',
@@ -18,8 +20,5 @@ class ActiveForm extends \yii\bootstrap5\ActiveForm
             'offset' => 'col-form-content',
         ],
     ];
-
     public $layout = 'horizontal';
-    public $fieldClass = ActiveField::class;
-    public $validationStateOn = self::VALIDATION_STATE_ON_CONTAINER;
 }

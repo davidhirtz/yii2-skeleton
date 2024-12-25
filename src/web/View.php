@@ -21,10 +21,13 @@ class View extends \yii\web\View
     public ?string $titleTemplate = null;
 
     private array $_breadcrumbs = [];
-    private string|array|null $_description = null;
+    private string|null $_description = null;
 
     protected function renderBodyEndHtml($ajaxMode): string
     {
+        // jQuery is no longer supported
+        unset($this->js[self::POS_READY], $this->js[self::POS_LOAD]);
+
         $html = parent::renderBodyEndHtml($ajaxMode);
 
         if ($scripts = ($this->js[self::POS_MODULE] ?? null)) {

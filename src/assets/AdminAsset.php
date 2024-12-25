@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\assets;
 
 use Yii;
-use yii\grid\GridViewAsset;
 use yii\web\AssetBundle;
+use yii\web\YiiAsset;
 
 class AdminAsset extends AssetBundle
 {
@@ -26,7 +26,7 @@ class AdminAsset extends AssetBundle
     ];
 
     public $depends = [
-        GridViewAsset::class,
+        YiiAsset::class,
         BootboxAsset::class,
         FontAwesomeAsset::class,
     ];

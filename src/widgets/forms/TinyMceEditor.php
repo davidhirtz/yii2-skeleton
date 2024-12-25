@@ -170,7 +170,7 @@ class TinyMceEditor extends InputWidget
         }
 
         // Client option `valid_classes` needs every class per tag to be defined on their own.
-        if ($this->validator?->allowedClasses ?? false) {
+        if ($this->validator?->allowedClasses) {
             $allowedClasses = [];
 
             foreach ($this->validator->allowedClasses as $tag => $classes) {
@@ -387,6 +387,6 @@ class TinyMceEditor extends InputWidget
         $view = $this->getView();
         TinyMceAssetBundle::register($view);
 
-        $view->registerJs('tinymce.init(' . Json::encode($this->clientOptions) . ')');
+        $view->registerJs('tinymce.init(' . Json::encode($this->clientOptions) . ');', $view::POS_END);
     }
 }

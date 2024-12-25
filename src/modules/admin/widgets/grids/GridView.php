@@ -66,10 +66,6 @@ class GridView extends \yii\grid\GridView
     ];
 
     public $emptyText = false;
-
-    /**
-     * @var string
-     */
     public $layout = '{header}{summary}{items}{pager}{footer}';
 
     public $pager = [
@@ -97,6 +93,8 @@ class GridView extends \yii\grid\GridView
     public array $selectionColumn = [
         'class' => CheckboxColumn::class,
     ];
+
+    public bool $registerClientScript = false;
 
     private ?ActiveRecord $_model = null;
     private ?string $_formName = null;
@@ -141,7 +139,7 @@ class GridView extends \yii\grid\GridView
 
         parent::initColumns();
     }
-
+    
     public function renderItems(): string
     {
         if ($this->dataProvider->getCount() || $this->emptyText) {
