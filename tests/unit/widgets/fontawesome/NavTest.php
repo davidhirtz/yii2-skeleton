@@ -125,7 +125,7 @@ class NavTest extends Unit
             ],
         ]);
 
-        self::assertStringContainsString('<a class="nav-link active" href="/site/index"><i class="fa-fw fas fa-fas fa-home"></i> <span>Home</span> <span class="test">New</span></a>', $content);
+        self::assertStringContainsString('<a class="nav-link active" href="/site/index"><div class="icon-text"><i class="fa-fw fas fa-fas fa-home"></i><span>Home</span><span class="test">New</span></div></a>', $content);
     }
 
     public function testDropdownItemsCallback()
@@ -207,7 +207,6 @@ class NavTest extends Unit
             ],
         ]);
 
-        codecept_debug($content);
         self::assertStringContainsString('<a class="nav-link active" href="/site/index">Test</a>', $content);
     }
 

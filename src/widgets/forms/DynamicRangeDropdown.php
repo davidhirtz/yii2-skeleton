@@ -28,6 +28,10 @@ class DynamicRangeDropdown extends InputWidget
             throw new InvalidConfigException("Properties 'model' and 'attribute' must be specified.");
         }
 
+        if (($this->options['class'] ?? null) == 'form-control') {
+            $this->options['class'] = 'form-select';
+        }
+
         parent::init();
     }
 

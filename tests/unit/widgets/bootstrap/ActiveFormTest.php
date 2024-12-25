@@ -73,11 +73,15 @@ class ActiveFormTest extends Unit
 
         $content = TestActiveForm::widget([
             'fields' => [
-                ['value', 'dropDownList', 'items' => ArrayHelper::getColumn(TestModel::getValues(), 'name')],
+                [
+                    'value',
+                    'dropDownList',
+                    'items' => ArrayHelper::getColumn(TestModel::getValues(), 'name'),
+                ],
             ],
         ]);
 
-        $needle = "<select id=\"testmodel-value\" class=\"form-control\" name=\"TestModel[value]\">\n<option value=\"value1\">Value 1</option>";
+        $needle = "<select id=\"testmodel-value\" class=\"form-select\" name=\"TestModel[value]\">\n<option value=\"value1\">Value 1</option>";
         self::assertStringContainsString($needle, $content);
 
 
