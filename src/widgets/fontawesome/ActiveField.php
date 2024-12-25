@@ -8,13 +8,10 @@ class ActiveField extends \davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveFiel
 {
     public ?string $icon = null;
 
-    /**
-     * @var array default icon html options
-     */
     public array $iconOptions = ['class' => 'fa-fw'];
+    public string $iconInputTemplate = '<div class="input-group"><div class="input-group-prepend input-group-text">{icon}</div>{input}</div>';
 
-    
-    public string $iconInputTemplate = '<div class="input-group"><div class="input-group-prepend"><span class="input-group-text">{icon}</span></div>{input}</div>';
+    public $options = ['class' => 'form-group'];
 
     /**
      * Wraps text field with an input group and adds font awesome icon.

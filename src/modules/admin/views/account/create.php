@@ -29,7 +29,7 @@ $this->setTitle(Yii::t('skeleton', 'Sign up'));
 </noscript>
 
 <div class="container">
-    <div class="centered">
+    <div class="card-centered">
         <?= Panel::widget([
             'title' => $this->title,
             'content' => SignupActiveForm::widget([

@@ -159,12 +159,8 @@ $app-submenu-link-margin: 0 0.125rem $app-spacer-x !default;
 $app-submenu-margin: 0 0 $app-margin-y !default;
 $app-submenu-justify-content: center !default;
 
-///*
-//Alert.
-// */
-//$alert-padding-y: $app-spacer-y !default;
-//$alert-padding-x: $app-spacer-x !default;
-//$alert-margin-bottom: $app-margin-y !default;
+// Alert
+$app-alert-heading-font-weight: bold !default;
 
 // Card
 $card-bg: $white !default;
@@ -182,7 +178,8 @@ $app-card-margin-bottom: $app-margin-y !default;
 $app-card-danger-bg: $danger !default;
 $app-card-danger-border-color: $danger !default;
 $app-card-danger-color: $white !default;
-$app-card-centered-max-width: 25rem !default;
+$app-card-centered-max-width: 28rem !default;
+$app-card-title-font-weight: bold !default;
 
 // Grid
 $grid-gutter-width: 1rem !default;
@@ -226,7 +223,7 @@ $app-btn-min-width: 2.625rem !default;
 
 // Forms
 $app-form-group-padding-bottom: .5rem !default;
-$app-form-group-buttons-margin-top: $card-spacer-y !default;
+$app-form-group-buttons-margin-top: $app-form-group-padding-bottom !default;
 
 $app-form-sticky-position: sticky !default;
 $app-form-sticky-border: $border-width solid $primary !default;
@@ -264,7 +261,7 @@ $list-group-border-color: $white !default;
 $list-group-item-padding-y: $app-spacer-y !default;
 $list-group-item-padding-x: $app-spacer-x !default;
 $list-group-border-radius: $border-radius !default;
-$list-group-bg: $gray-100 !default;
+$list-group-bg: $gray-200 !default;
 $list-group-hover-bg: $gray-300 !default;
 
 // Tables
@@ -485,6 +482,13 @@ $trail-cell-padding: 0.5rem !default;
 
 @import "../../../../../node_modules/bootstrap/scss/variables";
 //@import "../../../../../node_modules/bootstrap/scss/variables-dark";
+
+$theme-colors-text: (
+        "success": $success-text-emphasis,
+        "info": $info-text-emphasis,
+        "warning": $warning-text-emphasis,
+        "danger": $danger-text-emphasis,
+) !default;
 
 $theme-colors-bg-subtle: (
         "success": $success-bg-subtle,

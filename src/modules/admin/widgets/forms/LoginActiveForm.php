@@ -14,8 +14,7 @@ class LoginActiveForm extends ActiveForm
 {
     use SubmitButtonTrait;
 
-    public ?LoginForm $model = null;
-
+    public LoginForm $model;
     public $enableClientValidation = false;
 
     public function init(): void

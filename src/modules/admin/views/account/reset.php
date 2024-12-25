@@ -24,7 +24,7 @@ $this->setTitle($form->user->password_hash
 ]); ?>
 
 <div class="container">
-    <div class="centered">
+    <div class="card-centered">
         <?= Panel::widget([
             'title' => $this->title,
             'content' => PasswordResetActiveForm::widget([

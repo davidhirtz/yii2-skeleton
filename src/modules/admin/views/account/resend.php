@@ -21,7 +21,7 @@ $this->setTitle(Yii::t('skeleton', 'Resend Account Confirmation'));
     'header' => Yii::t('skeleton', 'Your confirmation could not be resend'),
 ]); ?>
 <div class="container">
-    <div class="centered">
+    <div class="card-centered">
         <?= Panel::widget([
             'title' => $this->title,
             'content' => AccountResendConfirmActiveForm::widget([

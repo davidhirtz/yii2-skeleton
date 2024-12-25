@@ -92,11 +92,6 @@
     opacity: 1;
   }
 
-  // Disabled inputs
-  //
-  // HTML5 says that controls under a fieldset > legend:first-child won't be
-  // disabled if the fieldset is disabled. Due to implementation difficulty, we
-  // don't honor that edge case; we style them as disabled anyway.
   &:disabled {
     color: $input-disabled-color;
     background-color: $input-disabled-bg;
@@ -105,7 +100,6 @@
     opacity: 1;
   }
 
-  // File input buttons theming
   &::file-selector-button {
     padding: $input-padding-y $input-padding-x;
     margin: (-$input-padding-y) (-$input-padding-x);
@@ -126,11 +120,6 @@
   }
 }
 
-// Readonly controls as plain text
-//
-// Apply class to a readonly input to make it appear like regular plain
-// text (without any border, background color, focus indicator)
-
 .form-control-plaintext {
   display: block;
   width: 100%;
@@ -144,11 +133,5 @@
 
   &:focus {
     outline: 0;
-  }
-
-  &.form-control-sm,
-  &.form-control-lg {
-    padding-right: 0;
-    padding-left: 0;
   }
 }

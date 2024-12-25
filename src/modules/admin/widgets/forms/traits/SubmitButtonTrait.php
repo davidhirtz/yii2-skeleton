@@ -20,7 +20,7 @@ trait SubmitButtonTrait
         $wrapOptions = ArrayHelper::remove($options, 'wrapOptions', []);
 
         Html::addCssClass($options, ['btn', 'btn-primary', 'btn-block']);
-        Html::addCssClass($wrapOptions, 'form-group');
+        Html::addCssClass($wrapOptions, 'form-group-buttons form-group');
 
         $button = Html::submitButton($label, $options);
         return Html::tag('div', $button, $wrapOptions);

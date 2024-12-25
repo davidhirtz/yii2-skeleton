@@ -15,7 +15,7 @@ use yii\helpers\Url;
 
 class SignupActiveForm extends ActiveForm
 {
-    public ?SignupForm $model = null;
+    public SignupForm $model;
 
     public function init(): void
     {
@@ -89,9 +89,11 @@ class SignupActiveForm extends ActiveForm
 
     public function submitButton(): string
     {
-        return Html::submitButton(Yii::t('skeleton', 'Create Account'), [
+        $button = Html::submitButton(Yii::t('skeleton', 'Create Account'), [
             'class' => 'btn btn-primary btn-block',
         ]);
+
+        return Html::tag('div', $button, ['class' => 'form-group-buttons form-group']);
     }
 
     public function registerSignupClientScript(): void

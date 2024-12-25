@@ -203,7 +203,7 @@ $(function () {
             }
         });
 
-        Skeleton.initContent();
+        // Skeleton.initContent();
     }
 )
 ;

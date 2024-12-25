@@ -21,7 +21,7 @@ $this->setTitle(Yii::t('skeleton', 'Google Authenticator'));
 ]); ?>
 
 <div class="container">
-    <div class="centered">
+    <div class="card-centered">
         <?= Panel::widget([
             'title' => $this->title,
             'content' => GoogleAuthenticatorLoginActiveForm::widget([

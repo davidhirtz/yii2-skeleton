@@ -126,10 +126,10 @@ class Html extends BaseHtml
         }
 
         if (isset($options['header'])) {
-            $options['header'] = static::tag('div', $options['header'], ['class' => 'alert-heading']) . '<hr>';
+            $options['header'] = static::tag('div', $options['header'], ['class' => 'alert-heading']);
         }
 
-        self::addCssClass($options, ['alert', 'alert-error']);
+        self::addCssClass($options, ['alert', 'alert-danger']);
         return parent::errorSummary($models, $options);
     }
 

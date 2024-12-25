@@ -3,7 +3,6 @@
 .card {
   // scss-docs-start card-css-vars
   --#{$prefix}card-title-color: #{$card-title-color};
-  --#{$prefix}card-subtitle-color: #{$card-subtitle-color};
   --#{$prefix}card-border-color: #{$card-border-color};
   --#{$prefix}card-box-shadow: #{$card-box-shadow};
   --#{$prefix}card-cap-bg: #{$card-cap-bg};
@@ -67,7 +66,8 @@
 
 .card-title {
   margin-bottom: $card-title-spacer-y;
-  color: var(--#{$prefix}card-title-color);
+  color: var(--#{$prefix}card-title-color, inherit);
+  font-weight: $app-card-title-font-weight;
 }
 
 .card-header {

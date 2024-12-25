@@ -1,9 +1,5 @@
 //@import "../../../../../node_modules/bootstrap/scss/buttons";
 
-//
-// Base styles
-//
-
 .btn {
   --#{$prefix}btn-color: #{$btn-color};
   --#{$prefix}btn-bg: transparent;
@@ -169,6 +165,11 @@
   &:hover {
     color: var(--#{$prefix}btn-hover-color);
   }
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
 }
 
 .btn-sm {

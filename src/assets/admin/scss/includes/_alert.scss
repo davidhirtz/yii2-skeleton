@@ -1,23 +1,17 @@
 //@import "../../../../../node_modules/bootstrap/scss/alert";
 
 .alert {
-  --#{$prefix}alert-bg: transparent;
-  --#{$prefix}alert-color: inherit;
-  --#{$prefix}alert-border-color: transparent;
-  --#{$prefix}alert-link-color: inherit;
-  // scss-docs-end alert-css-vars
-
   position: relative;
   padding: $alert-padding-x $alert-padding-y;
   margin-bottom: $alert-margin-bottom;
-  color: var(--#{$prefix}alert-color);
-  background-color: var(--#{$prefix}alert-bg);
-  border: var($alert-border-width solid var(--#{$prefix}alert-border-color));
+  color: var(--#{$prefix}alert-color, inherit);
+  background-color: var(--#{$prefix}alert-bg, transparent);
+  border: $alert-border-width solid var(--#{$prefix}alert-border-color, transparent);
   @include border-radius($alert-border-radius);
 
   a {
     font-weight: $alert-link-font-weight;
-    color: var(--#{$prefix}alert-link-color);
+    color: var(--#{$prefix}alert-link-color, inherit);
   }
 
   ul {
@@ -43,7 +37,6 @@
   }
 }
 
-
 @each $state in map-keys($theme-colors) {
   .alert-#{$state} {
     --#{$prefix}alert-color: var(--#{$prefix}#{$state}-text-emphasis);
@@ -51,4 +44,8 @@
     --#{$prefix}alert-border-color: var(--#{$prefix}#{$state}-border-subtle);
     --#{$prefix}alert-link-color: var(--#{$prefix}#{$state}-text-emphasis);
   }
+}
+
+.alert-heading{
+    font-weight: $app-alert-heading-font-weight;
 }

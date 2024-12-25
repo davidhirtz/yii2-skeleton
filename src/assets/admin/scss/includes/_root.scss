@@ -22,13 +22,13 @@
   //  --#{$prefix}#{$color}-text-emphasis: #{$value};
   //}
 
-  @each $color, $value in $theme-colors-bg-subtle {
-    --#{$prefix}#{$color}-bg-subtle: #{$value};
-  }
+  //@each $color, $value in $theme-colors-bg-subtle {
+  //  --#{$prefix}#{$color}-bg-subtle: #{$value};
+  //}
 
-  @each $color, $value in $theme-colors-border-subtle {
-    --#{$prefix}#{$color}-border-subtle: #{$value};
-  }
+  //@each $color, $value in $theme-colors-border-subtle {
+  //  --#{$prefix}#{$color}-border-subtle: #{$value};
+  //}
 
   //--#{$prefix}white-rgb: #{to-rgb($white)};
   //--#{$prefix}black-rgb: #{to-rgb($black)};
@@ -55,23 +55,38 @@
   }
 
   --#{$prefix}body-color: #{$body-color};
-  --#{$prefix}body-color-rgb: #{to-rgb($body-color)};
+  //--#{$prefix}body-color-rgb: #{to-rgb($body-color)};
   --#{$prefix}body-bg: #{$body-bg};
-  --#{$prefix}body-bg-rgb: #{to-rgb($body-bg)};
+  //--#{$prefix}body-bg-rgb: #{to-rgb($body-bg)};
 
   --#{$prefix}emphasis-color: #{$body-emphasis-color};
-  --#{$prefix}emphasis-color-rgb: #{to-rgb($body-emphasis-color)};
+  //--#{$prefix}emphasis-color-rgb: #{to-rgb($body-emphasis-color)};
 
   --#{$prefix}secondary-color: #{$body-secondary-color};
-  --#{$prefix}secondary-color-rgb: #{to-rgb($body-secondary-color)};
+  //--#{$prefix}secondary-color-rgb: #{to-rgb($body-secondary-color)};
   --#{$prefix}secondary-bg: #{$body-secondary-bg};
-  --#{$prefix}secondary-bg-rgb: #{to-rgb($body-secondary-bg)};
+  //--#{$prefix}secondary-bg-rgb: #{to-rgb($body-secondary-bg)};
 
   //--#{$prefix}tertiary-color: #{$body-tertiary-color};
   //--#{$prefix}tertiary-color-rgb: #{to-rgb($body-tertiary-color)};
   //--#{$prefix}tertiary-bg: #{$body-tertiary-bg};
   //--#{$prefix}tertiary-bg-rgb: #{to-rgb($body-tertiary-bg)};
-  // scss-docs-end root-body-variables
+
+  --#{$prefix}success-text-emphasis: #{$success-text-emphasis};
+  --#{$prefix}success-bg-subtle: #{$success-bg-subtle};
+  --#{$prefix}success-border-subtle: #{$success-border-subtle};
+
+  --#{$prefix}info-text-emphasis: #{$info-text-emphasis};
+  --#{$prefix}info-bg-subtle: #{$info-bg-subtle};
+  --#{$prefix}info-border-subtle: #{$info-border-subtle};
+
+  --#{$prefix}warning-text-emphasis: #{$warning-text-emphasis};
+  --#{$prefix}warning-bg-subtle: #{$warning-bg-subtle};
+  --#{$prefix}warning-border-subtle: #{$warning-border-subtle};
+
+  --#{$prefix}danger-text-emphasis: #{$danger-text-emphasis};
+  --#{$prefix}danger-bg-subtle: #{$danger-bg-subtle};
+  --#{$prefix}danger-border-subtle: #{$danger-border-subtle};
 
   --#{$prefix}heading-color: #{$headings-color};
 
@@ -117,12 +132,10 @@
   //--#{$prefix}focus-ring-color: #{$focus-ring-color};
   // scss-docs-end root-focus-variables
 
-  // scss-docs-start root-form-validation-variables
   --#{$prefix}form-valid-color: #{$form-valid-color};
   --#{$prefix}form-valid-border-color: #{$form-valid-border-color};
   --#{$prefix}form-invalid-color: #{$form-invalid-color};
   --#{$prefix}form-invalid-border-color: #{$form-invalid-border-color};
-  // scss-docs-end root-form-validation-variables
 }
 
 //@if $enable-dark-mode {

@@ -21,7 +21,7 @@ $this->setTitle(Yii::t('skeleton', 'Recover Password'));
 <?= Html::errorSummary($form, ['header' => Yii::t('skeleton', 'Your password could not be reset')]); ?>
 
 <div class="container">
-    <div class="centered">
+    <div class="card-centered">
         <?= Panel::widget([
             'title' => $this->title,
             'content' => PasswordRecoverActiveForm::widget([

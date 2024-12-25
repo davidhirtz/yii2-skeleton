@@ -8,7 +8,7 @@
 @import "./forms/input-group";
 @import "../../../../../node_modules/bootstrap/scss/forms/validation";
 
-.form-group{
+.form-group:not(:last-child) {
     padding-bottom: $app-form-group-padding-bottom;
 }
 
