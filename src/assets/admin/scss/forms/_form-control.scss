@@ -13,6 +13,8 @@
   background-color: $input-bg;
   background-clip: padding-box;
   border: $input-border-width solid $input-border-color;
+  //noinspection CssUnknownProperty
+  field-sizing: content;
 
   // Note: This has no effect on <select>s in some browsers, due to the limited stylability of `<select>`s in CSS.
   @include border-radius($input-border-radius, 0);
@@ -80,6 +82,7 @@
 
   // Prevent excessive date input height in Webkit
   // https://github.com/twbs/bootstrap/issues/34433
+  //noinspection CssInvalidPseudoSelector
   &::-webkit-datetime-edit {
     display: block;
     padding: 0;

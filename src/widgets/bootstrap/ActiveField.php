@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
 use Yii;
+use yii\validators\NumberValidator;
+use yii\validators\StringValidator;
 
 /**
  * @property ActiveForm $form
@@ -31,6 +33,19 @@ class ActiveField extends \yii\bootstrap5\ActiveField
 
     public function init(): void
     {
+        foreach ($this->model->getActiveValidators($this->attribute) as $validator) {
+            if ($validator instanceof StringValidator) {
+                $this->inputOptions['maxlength'] ??= $validator->max;
+                break;
+            }
+
+            if ($validator instanceof NumberValidator) {
+                $this->inputOptions['min'] ??= $validator->min;
+                $this->inputOptions['max'] ??= $validator->max;
+                break;
+            }
+        }
+
         $this->checkHorizontalTemplate = $this->checkTemplate;
         parent::init();
     }

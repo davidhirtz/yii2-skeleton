@@ -8,8 +8,12 @@
 @import "forms/input-group";
 @import "forms/validation";
 
-.form-group:not(:last-child) {
+.form-group {
+  align-items: flex-start;
+
+  &:not(:last-child) {
     padding-bottom: $app-form-group-padding-bottom;
+  }
 }
 
 .form-group-buttons {

@@ -38,7 +38,8 @@
     filter: $form-check-input-active-filter;
   }
 
-  &:focus {
+  &:focus,
+  &:hover{
     border-color: $form-check-input-focus-border;
     outline: 0;
     box-shadow: $form-check-input-focus-box-shadow;
