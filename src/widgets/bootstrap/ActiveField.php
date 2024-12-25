@@ -29,7 +29,7 @@ class ActiveField extends \yii\bootstrap5\ActiveField
      */
     public string $prependInputTemplate = '<div class="input-group"><div class="input-group-prepend input-group-text">{prepend}</div>{input}</div>';
 
-    public $checkTemplate = '{beginWrapper}<div class="form-check form-check-inline">{input}{label}{error}{hint}</div>{endWrapper}';
+    public $checkTemplate = '{beginWrapper}<div class="form-check form-check-inline">{input}{label}</div>{error}{hint}{endWrapper}';
 
     public function init(): void
     {
