@@ -35,6 +35,15 @@ class ActiveField extends \yii\bootstrap5\ActiveField
         parent::init();
     }
 
+    protected function addAriaAttributes(&$options): void
+    {
+        parent::addAriaAttributes($options);
+
+        if (!empty($options['aria-required'])) {
+            $options['required'] ??= true;
+        }
+    }
+
     /**
      * Makes sure that empty input fields are not rendered. This only applies if the '{input}' was explicitly set to
      * an empty string (e.g., from widgets).

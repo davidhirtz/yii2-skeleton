@@ -13,9 +13,6 @@ class ActiveField extends \davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveFiel
 
     public $options = ['class' => 'form-group'];
 
-    /**
-     * Wraps text field with an input group and adds font awesome icon.
-     */
     public function init(): void
     {
         if ($this->icon) {
@@ -23,10 +20,7 @@ class ActiveField extends \davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveFiel
                 '{icon}' => Icon::tag($this->icon, $this->iconOptions),
             ]);
 
-            if (!isset($this->inputOptions['placeholder'])) {
-                $this->inputOptions['placeholder'] = $this->model->getAttributeLabel($this->attribute);
-            }
-
+            $this->inputOptions['placeholder'] ??= $this->model->getAttributeLabel($this->attribute);
             $this->labelOptions['class'] = 'sr-only';
         }
 

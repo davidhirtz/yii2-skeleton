@@ -1,4 +1,4 @@
-//@import "../../../../../node_modules/bootstrap/scss/root";
+//@import "../../../../node_modules/bootstrap/scss/root";
 
 :root,
 [data-bs-theme="light"] {
@@ -132,8 +132,8 @@
   //--#{$prefix}focus-ring-color: #{$focus-ring-color};
   // scss-docs-end root-focus-variables
 
-  --#{$prefix}form-valid-color: #{$form-valid-color};
-  --#{$prefix}form-valid-border-color: #{$form-valid-border-color};
+  //--#{$prefix}form-valid-color: #{$form-valid-color};
+  //--#{$prefix}form-valid-border-color: #{$form-valid-border-color};
   --#{$prefix}form-invalid-color: #{$form-invalid-color};
   --#{$prefix}form-invalid-border-color: #{$form-invalid-border-color};
 }

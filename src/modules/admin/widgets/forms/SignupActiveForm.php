@@ -63,7 +63,7 @@ class SignupActiveForm extends ActiveForm
 
     public function termsField(): ActiveField|string
     {
-        return $this->field($this->model, 'terms', ['enableError' => false])->checkbox();
+        return $this->field($this->model, 'terms')->checkbox();
     }
 
     public function honeypotField(): string

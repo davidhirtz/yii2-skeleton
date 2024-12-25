@@ -1,6 +1,5 @@
 $prefix: '';
 
-// Color system
 $white: #fff !default;
 $gray-100: #f9f9f9 !default;
 $gray-200: #f5f5f5 !default;
@@ -65,12 +64,14 @@ $link-color: $body-color !default;
 $link-hover-color: $primary !default;
 $link-decoration: none !default;
 
+$text-muted: $gray-600 !default;
+
 $mark-bg: $success !default;
 $mark-padding: 0 !default;
 $caret-width: 0.25rem !default;
 $caret-spacing: 0.5rem !default;
 
-$text-muted: $gray-600 !default;
+$hr-opacity: 1;
 
 // Grid breakpoints
 $grid-breakpoints: (
@@ -164,7 +165,7 @@ $app-alert-heading-font-weight: bold !default;
 
 // Card
 $card-bg: $white !default;
-$card-color: $body-color !default;
+$card-color: var(--#{$prefix}body-color) !default;
 $card-spacer-y: $app-spacer-y !default;
 $card-spacer-x: $app-spacer-x !default;
 $card-cap-padding-y: $app-spacer-y !default;
@@ -222,7 +223,7 @@ $btn-border-radius-sm: $border-radius !default;
 $app-btn-min-width: 2.625rem !default;
 
 // Forms
-$app-form-group-padding-bottom: .5rem !default;
+$app-form-group-padding-bottom: .75rem !default;
 $app-form-group-buttons-margin-top: $app-form-group-padding-bottom !default;
 
 $app-form-sticky-position: sticky !default;
@@ -232,6 +233,7 @@ $input-font-size: 1rem !default;
 $input-line-height: 1.5 !default;
 $input-padding-y: 0.5rem !default;
 $input-padding-x: 0.75rem !default;
+$input-border-radius: $border-radius !default;
 $input-btn-padding-y: 0.59375rem !default;
 $input-btn-padding-x: .75rem !default;
 $input-btn-border-width: $border-width !default;
@@ -240,6 +242,9 @@ $input-focus-color: $body-color;
 $input-focus-bg: $white !default;
 $input-focus-border-color: $primary !default;
 $input-focus-box-shadow: none !default;
+$input-placeholder-color: var(--#{$prefix}body-color) !default;
+$input-transition: border-color .15s ease-in-out, color .15s ease-in-out !default;
+$app-input-placeholder-opacity: 0.6 !default;
 $form-select-focus-box-shadow: none !default;
 $form-select-indicator-color: $primary !default;
 $form-label-font-weight: bold !default;
@@ -252,9 +257,11 @@ $form-check-padding-start: 0 !default;
 $form-check-margin-bottom: 0 !default;
 $form-check-input-focus-box-shadow: none !default;
 $form-check-input-checked-bg-color: $primary !default;
+$form-check-label-color: var(--#{$prefix}body-color) !default;
 $app-form-check-gap: 0.75rem !default;
 
-$hr-opacity: 1;
+$form-invalid-color: $danger !default;
+$form-invalid-border-color: $danger !default;
 
 // List group
 $list-group-border-color: $white !default;
@@ -480,8 +487,8 @@ $trail-del-bg: $danger !default;
 $trail-ins-bg: $success !default;
 $trail-cell-padding: 0.5rem !default;
 
-@import "../../../../../node_modules/bootstrap/scss/variables";
-//@import "../../../../../node_modules/bootstrap/scss/variables-dark";
+@import "../../../../node_modules/bootstrap/scss/variables";
+//@import "../../../../node_modules/bootstrap/scss/variables-dark";
 
 $theme-colors-text: (
         "success": $success-text-emphasis,
@@ -505,4 +512,4 @@ $theme-colors-border-subtle: (
 ) !default;
 
 
-@import "../../../../../node_modules/bootstrap/scss/maps";
+@import "../../../../node_modules/bootstrap/scss/maps";

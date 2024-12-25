@@ -1,52 +1,52 @@
-@import "includes/fonts";
+@import "fonts";
 
 // Configuration
 @import "../../../../node_modules/bootstrap/scss/functions";
-@import "includes/variables";
+@import "variables";
 
 @import "../../../../node_modules/bootstrap/scss/mixins";
 @import "../../../../node_modules/bootstrap/scss/utilities";
 
 // Layout & components
-@import "includes/root";
+@import "root";
 @import "../../../../node_modules/bootstrap/scss/reboot";
 
-@import "includes/html";
-@import "includes/type";
+@import "html";
+@import "type";
 
-@import "includes/images";
-@import "includes/containers";
-@import "includes/grid";
+@import "images";
+@import "containers";
+@import "grid";
 
-@import "includes/tables";
-@import "includes/forms";
-@import "includes/buttons";
+@import "tables";
+@import "forms";
+@import "buttons";
 @import "../../../../node_modules/bootstrap/scss/transitions";
-@import "includes/dropdown";
-@import "includes/button-group";
-@import "includes/nav";
-@import "includes/navbar";
+@import "dropdown";
+@import "button-group";
+@import "nav";
+@import "navbar";
 
-@import "includes/header";
+@import "header";
 
-@import "includes/card";
+@import "card";
 //@import "../../../../node_modules/bootstrap/scss/accordion";
-@import "includes/breadcrumb";
-@import "includes/pagination";
-@import "includes/badge";
-@import "includes/alert";
-@import "includes/list-group";
-@import "includes/close";
+@import "breadcrumb";
+@import "pagination";
+@import "badge";
+@import "alert";
+@import "list-group";
+@import "close";
 //@import "../../../../node_modules/bootstrap/scss/toasts";
 //@import "../../../../node_modules/bootstrap/scss/modal";
 //@import "../../../../node_modules/bootstrap/scss/tooltip";
 //@import "../../../../node_modules/bootstrap/scss/popover";
 
-@import "includes/dashboard";
-@import "includes/trail";
+@import "dashboard";
+@import "trail";
 
 // Helpers
-@import "includes/helpers";
+@import "helpers";
 
 // Utilities
 @import "../../../../node_modules/bootstrap/scss/utilities/api";

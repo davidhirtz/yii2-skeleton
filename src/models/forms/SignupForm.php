@@ -68,7 +68,7 @@ class SignupForm extends Model
                 'trim',
             ],
             [
-                ['email', 'name', 'password'],
+                ['email', 'name', 'password', 'terms'],
                 'required',
             ],
             [
