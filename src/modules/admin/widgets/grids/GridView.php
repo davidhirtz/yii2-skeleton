@@ -81,6 +81,8 @@ class GridView extends \yii\grid\GridView
 
     public function init(): void
     {
+        $this->options['hx-swap-oob'] ??= 'true';
+
         if ($this->showSelection) {
             array_unshift($this->columns, $this->selectionColumn);
             $this->getView()->registerJs('Skeleton.initSelection("#' . $this->getSelectionFormId() . '")');
@@ -111,7 +113,7 @@ class GridView extends \yii\grid\GridView
         }
 
         $this->columns = array_filter($this->columns);
-
+        
         parent::initColumns();
     }
 

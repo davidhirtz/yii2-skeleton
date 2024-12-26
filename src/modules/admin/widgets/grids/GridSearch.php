@@ -53,19 +53,15 @@ class GridSearch extends BaseObject
     protected function setAjaxFormOptions(): void
     {
         $this->formOptions = [
-            'action' => $this->url,
             'hx-get' => $this->url,
             'hx-push-url' => 'true',
-            //'hx-trigger' => 'keyup delay:500ms changed',
-            'hx-swap' => "",
-            'hx-target' => "#{$this->owner->id}",
             ...$this->formOptions,
         ];
     }
 
     public function render(): string
     {
-        return Html::beginTag('form', $this->formOptions) . $this->renderInput() . Html::endTag('form');
+        return Html::beginForm($this->url, 'get', $this->formOptions) . $this->renderInput() . Html::endForm();
     }
 
     protected function renderInput(): string
