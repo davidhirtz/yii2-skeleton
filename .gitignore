@@ -1,7 +1,6 @@
 # Development
 .idea
 node_modules
-tests/config/db.php
 tests/_output/coverage.xml
 tests/_output/coverage.serialized
 vendor

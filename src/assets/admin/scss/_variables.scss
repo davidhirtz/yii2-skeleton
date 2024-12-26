@@ -23,7 +23,7 @@ $green: #a3cba3 !default;
 $teal: #20c997 !default;
 $cyan: #798fc3 !default;
 
-$primary: $gray-900 !default;
+$primary: $gray-800 !default;
 $secondary: $gray-400 !default;
 $success: $green !default;
 $info: $cyan !default;
@@ -40,7 +40,7 @@ $theme-colors: (
 ) !default;
 
 // Body
-$body-color: $gray-900 !default;
+$body-color: $primary !default;
 $body-bg: $gray-100 !default;
 
 $body-secondary-color: rgba($body-color, .75) !default;

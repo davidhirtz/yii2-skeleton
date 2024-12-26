@@ -41,19 +41,6 @@
   --#{$prefix}font-monospace: #{inspect($font-family-monospace)};
   --#{$prefix}gradient: #{$gradient};
 
-  // Root and body
-  // scss-docs-start root-body-variables
-  @if $font-size-root != null {
-    --#{$prefix}root-font-size: #{$font-size-root};
-  }
-  --#{$prefix}body-font-family: #{inspect($font-family-base)};
-  @include rfs($font-size-base, --#{$prefix}body-font-size);
-  --#{$prefix}body-font-weight: #{$font-weight-base};
-  --#{$prefix}body-line-height: #{$line-height-base};
-  @if $body-text-align != null {
-    --#{$prefix}body-text-align: #{$body-text-align};
-  }
-
   --#{$prefix}body-color: #{$body-color};
   //--#{$prefix}body-color-rgb: #{to-rgb($body-color)};
   --#{$prefix}body-bg: #{$body-bg};

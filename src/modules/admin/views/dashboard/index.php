@@ -14,6 +14,7 @@ use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 $this->setTitle(Yii::t('skeleton', 'Admin'));
 ?>
 <h1 class="page-header"><?= Yii::$app->name; ?></h1>
+
 <div class="row justify-center">
     <?php foreach ($panels as $panel) {
         ?>

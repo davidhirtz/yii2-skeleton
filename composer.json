@@ -17,7 +17,7 @@
         "ext-simplexml": "*",
         "ext-xmlwriter": "*",
         "davidhirtz/yii2-datetime-behavior": "^1.1",
-        "davidhirtz/yii2-timeago": "^1.2",
+        "davidhirtz/yii2-timeago": "^2.0",
         "guzzlehttp/guzzle": "^7.0",
         "guzzlehttp/oauth-subscriber": "^0.5",
         "jfcherng/php-diff": "^6.9",
