@@ -6,7 +6,6 @@ namespace davidhirtz\yii2\skeleton\i18n;
 
 use Yii;
 use yii\helpers\ArrayHelper;
-use yii\i18n\GettextMessageSource;
 use yii\i18n\PhpMessageSource;
 
 /**
@@ -27,19 +26,10 @@ class I18N extends \yii\i18n\I18N
 
     public function init(): void
     {
-        if (!isset($this->translations['skeleton'])) {
-            $this->translations['skeleton'] = [
-                'class' => PhpMessageSource::class,
-                'sourceLanguage' => Yii::$app->sourceLanguage,
-                'basePath' => '@skeleton/messages',
-            ];
-        }
-
-        // Todo: This does not belong here. I don't know why the packages is not working...
-        $this->translations['yii/bootstrap5'] = [
-            'class' => GettextMessageSource::class,
-            'sourceLanguage' => 'en-US',
-            'basePath' => '@yii/bootstrap5/messages'
+        $this->translations['skeleton'] ??= [
+            'class' => PhpMessageSource::class,
+            'sourceLanguage' => Yii::$app->sourceLanguage,
+            'basePath' => '@skeleton/messages',
         ];
 
         parent::init();
@@ -77,7 +67,7 @@ class I18N extends \yii\i18n\I18N
 
     public function getLanguageCode(): string
     {
-        return substr((string) Yii::$app->language, 0, 2);
+        return substr(Yii::$app->language, 0, 2);
     }
 
     /**

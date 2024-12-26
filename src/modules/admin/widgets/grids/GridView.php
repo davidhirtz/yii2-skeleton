@@ -36,25 +36,7 @@ class GridView extends \yii\grid\GridView
      */
     public ?array $footer = null;
 
-    /**
-     * @var string|null the search string, leave empty to set it via request param.
-     */
-    public ?string $search = null;
-
-    /**
-     * @var string the param name of the search query.
-     */
-    public string $searchParamName = 'q';
-
-    /**
-     * @var array containing the search input options.
-     */
-    public array $searchInputOptions = [];
-
-    /**
-     * @var string|null the default route used for search.
-     */
-    public ?string $searchUrl = null;
+    public GridSearch $search;
 
     /**
      * @var array|null the url route for sortable widget
@@ -94,8 +76,6 @@ class GridView extends \yii\grid\GridView
         'class' => CheckboxColumn::class,
     ];
 
-    public bool $registerClientScript = false;
-
     private ?ActiveRecord $_model = null;
     private ?string $_formName = null;
 
@@ -113,12 +93,7 @@ class GridView extends \yii\grid\GridView
         $this->selectionButtonLabel ??= Yii::t('skeleton', 'Update Selected');
         $this->tableOptions['id'] ??= $this->getTableId();
 
-        $this->search ??= Yii::$app->getRequest()->get($this->searchParamName);
-
-        $this->searchUrl ??= Url::current([
-            $this->searchParamName => null,
-            'page' => null,
-        ]);
+        $this->search ??= Yii::$container->get(GridSearch::class, [$this]);
 
         parent::init();
     }
@@ -139,7 +114,7 @@ class GridView extends \yii\grid\GridView
 
         parent::initColumns();
     }
-    
+
     public function renderItems(): string
     {
         if ($this->dataProvider->getCount() || $this->emptyText) {
@@ -181,7 +156,7 @@ class GridView extends \yii\grid\GridView
         $params = $this->getSummaryParams();
 
         if (!$summary) {
-            if ($this->search) {
+            if ($this->search->value) {
                 $summary = match ($count) {
                     1 => Yii::t('skeleton', 'Displaying the only result matching "{search}".', $params),
                     0 => Yii::t('skeleton', 'Sorry, no results found matching matching "{search}".', $params),
@@ -201,7 +176,7 @@ class GridView extends \yii\grid\GridView
         }
 
         $summaryOptions = $this->summaryOptions;
-        $summaryOptions['route'] = $this->search ? $this->searchUrl : null;
+        $summaryOptions['route'] ??= $this->search->url;
 
         Html::addCssClass($summaryOptions, $totalCount ? 'alert-info' : 'alert-warning');
 
@@ -211,7 +186,7 @@ class GridView extends \yii\grid\GridView
     protected function getSummaryParams(): array
     {
         $params = [
-            'search' => $this->search,
+            'search' => $this->search->value,
             'totalCount' => $this->dataProvider->getTotalCount(),
         ];
 
@@ -292,34 +267,6 @@ class GridView extends \yii\grid\GridView
         };
     }
 
-    public function getSearchInput(): string
-    {
-        $search = $this->search ? trim($this->search) : null;
-
-        $icon = ArrayHelper::remove($this->searchInputOptions, 'icon', 'search');
-
-        $options = [
-            'class' => 'form-control',
-            'prepend' => Html::submitButton((string)Icon::tag($icon, ['class' => 'fa-fw']), ['class' => 'btn-transparent']),
-            'placeholder' => Yii::t('skeleton', 'Search ...'),
-            ...$this->searchInputOptions
-        ];
-
-        return Html::beginForm($this->searchUrl, 'get')
-            . Html::input('search', $this->searchParamName, $search, $options)
-            . Html::endForm();
-    }
-
-    public function getSearchInputHeaderColumn(): array
-    {
-        return [
-            'content' => $this->getSearchInput(),
-            'options' => [
-                'class' => 'ms-auto',
-            ],
-        ];
-    }
-
     /**
      * @noinspection PhpUnused
      */
@@ -379,11 +326,6 @@ class GridView extends \yii\grid\GridView
     public function getRowId(ActiveRecordInterface $model): string
     {
         return $this->getFormName() . '-' . implode('-', (array)$model->getPrimaryKey());
-    }
-
-    public function getSearchKeywords(): array
-    {
-        return $this->search ? array_filter(explode(' ', $this->search)) : [];
     }
 
     /**

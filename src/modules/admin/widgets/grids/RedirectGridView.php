@@ -59,7 +59,7 @@ class RedirectGridView extends GridView
     {
         $this->header ??= [
             [
-                $this->getSearchInputHeaderColumn(),
+                $this->search->getColumn(),
             ],
         ];
 
@@ -105,7 +105,7 @@ class RedirectGridView extends GridView
     {
         return [
             'attribute' => 'request_uri',
-            'content' => fn (Redirect $redirect) => Html::a(Html::markKeywords($redirect->request_uri, $this->getSearchKeywords()), $this->getRoute($redirect))
+            'content' => fn (Redirect $redirect) => Html::a(Html::markKeywords($redirect->request_uri, $this->search->getKeywords()), $this->getRoute($redirect))
         ];
     }
 
@@ -114,7 +114,7 @@ class RedirectGridView extends GridView
         return [
             'attribute' => 'url',
             'content' => function (Redirect $redirect) {
-                $text = Html::iconText('external-link-alt', Html::markKeywords($redirect->url ?: '/', $this->getSearchKeywords()), ['class' => 'text-nowrap']);
+                $text = Html::iconText('external-link-alt', Html::markKeywords($redirect->url ?: '/', $this->search->getKeywords()), ['class' => 'text-nowrap']);
                 return Html::a($text, $redirect->getBaseUrl() . $redirect->url, [
                     'target' => '_blank',
                 ]);

@@ -24,6 +24,8 @@ class UserGridView extends GridView
 
     public function init(): void
     {
+        $this->setId($this->getId(false) ?? 'users');
+
         if (!$this->columns) {
             $this->columns = [
                 $this->statusColumn(),
@@ -46,7 +48,7 @@ class UserGridView extends GridView
     {
         $this->header ??= [
             [
-                $this->getSearchInputHeaderColumn(),
+                $this->search->getColumn(),
             ],
         ];
     }
@@ -69,7 +71,7 @@ class UserGridView extends GridView
             'attribute' => 'name',
             'content' => function (User $user) {
                 $name = ($name = $user->getUsername())
-                    ? Html::tag('strong', Html::markKeywords($name, $this->getSearchKeywords()))
+                    ? Html::tag('strong', Html::markKeywords($name, $this->search->getKeywords()))
                     : Html::tag('span', Yii::t('skeleton', 'User'), ['class' => 'text-muted']);
 
                 return ($route = $this->getRoute($user)) ? Html::a($name, $route) : $name;
@@ -85,7 +87,7 @@ class UserGridView extends GridView
             'contentOptions' => ['class' => 'd-none d-md-table-cell'],
             'content' => function (User $user) {
                 $email = $user->email
-                    ? Html::markKeywords(Html::encode($user->email), $this->getSearchKeywords())
+                    ? Html::markKeywords(Html::encode($user->email), $this->search->getKeywords())
                     : '';
 
                 if (!$user->isUnconfirmed()) {

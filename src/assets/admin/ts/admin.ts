@@ -1,1 +1,1 @@
-console.log('Hello, world!');
+import "htmx.org"
