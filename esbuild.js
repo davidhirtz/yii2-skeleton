@@ -27,19 +27,11 @@ const watchPlugin = (type) => {
 };
 
 const scripts = await esbuild.context({
-    entryPoints: [
-        {
-            in: 'src/assets/admin/ts/admin.ts',
-            out: 'src/assets/admin/js/admin.min'
-        },
-        {
-            in: 'src/assets/signup/src/signup.ts',
-            out: 'src/assets/signup/dist/signup'
-        },
-    ],
+    entryPoints: ['src/assets/ts/*.ts'],
     bundle: true,
+    format: 'esm',
     minify: true,
-    outdir: './',
+    outdir: 'src/assets/dist/js',
     plugins: [watchPlugin('scripts')],
     sourcemap: true,
     target: 'es6',
@@ -66,7 +58,7 @@ const styles = await esbuild.context({
         watchPlugin('styles'),
         sassPlugin({
             async transform(source) {
-                const {css} = await postcss([autoprefixer]).process(source);
+                const {css} = await postcss([autoprefixer]).process(source, {from: undefined});
                 return css;
             }
         })
