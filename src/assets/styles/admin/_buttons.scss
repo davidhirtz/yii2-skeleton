@@ -12,8 +12,8 @@
   padding: $btn-padding-y $btn-padding-x;
   font-family: $btn-font-family;
   @include font-size($btn-font-size);
-  font-weight: var($btn-font-weight);
-  line-height: var($btn-line-height);
+  font-weight: $btn-font-weight;
+  line-height: $btn-line-height;
   color: var(--#{$prefix}btn-color);
   text-align: center;
   text-decoration: if($link-decoration == none, null, none);

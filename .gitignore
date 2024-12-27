@@ -1,6 +1,7 @@
 # Development
 .idea
 node_modules
+src/assets/dist/**/*.map
 tests/_output/coverage.xml
 tests/_output/coverage.serialized
 vendor

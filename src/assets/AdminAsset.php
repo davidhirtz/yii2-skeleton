@@ -14,17 +14,10 @@ class AdminAsset extends AssetBundle
      */
     public array $faviconOptions = [];
 
-    public $css = ['css/admin.min.css'];
-    public $js = ['js/admin.min.js'];
+    public $css = ['css/admin.css'];
+    public $js = ['js/admin.js'];
     public $jsOptions = ['type' => 'module'];
-    public $sourcePath = '@skeleton/assets/admin';
-
-    public $publishOptions = [
-        'except' => [
-            'scss',
-            'ts',
-        ],
-    ];
+    public $sourcePath = '@skeleton/assets/dist';
 
     public $depends = [
         FontAwesomeAsset::class,

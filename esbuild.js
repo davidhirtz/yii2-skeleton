@@ -27,7 +27,7 @@ const watchPlugin = (type) => {
 };
 
 const scripts = await esbuild.context({
-    entryPoints: ['src/assets/ts/*.ts'],
+    entryPoints: ['src/assets/scripts/*'],
     bundle: true,
     format: 'esm',
     minify: true,
@@ -38,22 +38,9 @@ const scripts = await esbuild.context({
 })
 
 const styles = await esbuild.context({
-    entryPoints: [
-        {
-            in: 'src/assets/admin/scss/admin.scss',
-            out: 'src/assets/admin/css/admin.min'
-        },
-        // {
-        //     in: 'src/assets/admin/scss/tinymce.scss',
-        //     out: 'src/assets/admin/css/tinymce.min'
-        // },
-        // {
-        //     in: 'src/assets/fontawesome/css/all.css',
-        //     out: 'src/assets/fontawesome/css/all.min'
-        // },
-    ],
+    entryPoints: ['src/assets/styles/*'],
     minify: true,
-    outdir: './',
+    outdir: 'src/assets/dist/css',
     plugins: [
         watchPlugin('styles'),
         sassPlugin({

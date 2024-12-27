@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../src/signup.ts"],
-  "sourcesContent": ["export default (selector: string) => {\n    const $form = document.querySelector(selector) as HTMLFormElement;\n    const $token = $form.querySelector('#token') as HTMLInputElement;\n    const $honeypot = $form.querySelector('#honeypot') as HTMLInputElement;\n    const $timeZone = $form.querySelector('#tz') as HTMLInputElement;\n\n    $timeZone.value = new Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';\n\n    $form.onsubmit = (e: SubmitEvent) => {\n        if (!$token.value) {\n            fetch($token.dataset.url)\n                .then(response => response.text())\n                .then(data => $token.value = data)\n                .then(() => {\n                    $honeypot.value = '';\n                    ($form).submit()\n                });\n\n            e.preventDefault();\n        }\n    };\n}"],
-  "mappings": "AAAA,IAAOA,EAASC,GAAqB,CACjC,IAAMC,EAAQ,SAAS,cAAcD,CAAQ,EACvCE,EAASD,EAAM,cAAc,QAAQ,EACrCE,EAAYF,EAAM,cAAc,WAAW,EAC3CG,EAAYH,EAAM,cAAc,KAAK,EAE3CG,EAAU,MAAQ,IAAI,KAAK,eAAe,EAAE,gBAAgB,EAAE,UAAY,MAE1EH,EAAM,SAAYI,GAAmB,CAC5BH,EAAO,QACR,MAAMA,EAAO,QAAQ,GAAG,EACnB,KAAKI,GAAYA,EAAS,KAAK,CAAC,EAChC,KAAKC,GAAQL,EAAO,MAAQK,CAAI,EAChC,KAAK,IAAM,CACRJ,EAAU,MAAQ,GACjBF,EAAO,OAAO,CACnB,CAAC,EAELI,EAAE,eAAe,EAEzB,CACJ",
-  "names": ["signup_default", "selector", "$form", "$token", "$honeypot", "$timeZone", "e", "response", "data"]
-}

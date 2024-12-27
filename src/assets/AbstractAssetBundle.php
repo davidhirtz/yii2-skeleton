@@ -1,11 +1,13 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\assets\traits;
+namespace davidhirtz\yii2\skeleton\assets;
 
 use Yii;
+use yii\web\AssetBundle;
 
-trait AssetModuleTrait
+abstract class AbstractAssetBundle extends AssetBundle
 {
+    public string $filename;
     public $sourcePath = '@skeleton/assets/dist';
 
     public function getModuleUrl(): string
@@ -17,7 +19,7 @@ trait AssetModuleTrait
     {
         $view = Yii::$app->getView();
         $asset = static::register($view);
-        $view->registerJsModule($asset->baseUrl . '/' . $asset->filename, $options);
+        $view->registerJsModule($asset->getModuleUrl(), $options);
 
         return $asset;
     }

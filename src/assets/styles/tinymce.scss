@@ -1,8 +1,9 @@
-@import "includes/variables";
-@import "includes/fonts";
+@import "admin/fonts";
 
-@import "../../../../node_modules/bootstrap/scss/functions";
-@import "../../../../node_modules/bootstrap/scss/mixins";
+@import "../../../node_modules/bootstrap/scss/functions";
+@import "admin/variables";
+
+@import "../../../node_modules/bootstrap/scss/mixins";
 
 body {
   padding: $input-padding-y $input-padding-x;
@@ -104,21 +105,6 @@ code {
     margin-right: 1.5rem;
     padding-right: 1rem;
   }
-}
-
-// Buttons.
-.btn, .cta {
-  display: inline-block;
-  font-weight: $btn-font-weight;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  user-select: none;
-  border: $btn-border-width solid transparent;
-  text-decoration: none;
-
-  @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $font-size-base, $btn-line-height, $btn-border-radius-sm);
-  @include button-variant($btn-primary-bg, $btn-primary-border-color, $btn-primary-hover-bg, $btn-primary-hover-border-color, $btn-primary-active-bg, $btn-primary-active-border-color);
 }
 
 h1 {

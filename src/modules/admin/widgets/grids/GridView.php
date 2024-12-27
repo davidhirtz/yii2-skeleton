@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
-use davidhirtz\yii2\skeleton\assets\JuiAsset;
+use davidhirtz\yii2\skeleton\assets\SortableAssetBundle;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
@@ -145,7 +145,7 @@ class GridView extends \yii\grid\GridView
             ];
 
             $tableBody = preg_replace('/^<tbody/', '<tbody ' . Html::renderTagAttributes($attributes), $tableBody);
-            JuiAsset::register($this->getView());
+            SortableAssetBundle::registerModule("#$this->id tbody");
         }
 
         return $tableBody;

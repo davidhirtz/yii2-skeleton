@@ -45,7 +45,6 @@ class FileUploadAsset extends AssetBundle
      * @var array
      */
     public $depends = [
-        'davidhirtz\yii2\skeleton\assets\JuiAsset',
-        'yii\bootstrap5\BootstrapAsset',
+        AdminAsset::class,
     ];
 }

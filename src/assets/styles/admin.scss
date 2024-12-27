@@ -1,0 +1,52 @@
+@import "admin/fonts";
+
+// Configuration
+@import "../../../node_modules/bootstrap/scss/functions";
+@import "admin/variables";
+
+@import "../../../node_modules/bootstrap/scss/mixins";
+@import "../../../node_modules/bootstrap/scss/utilities";
+
+// Layout & components
+@import "admin/root";
+@import "admin/reboot";
+
+@import "admin/html";
+@import "admin/type";
+
+@import "admin/images";
+@import "admin/containers";
+@import "admin/grid";
+
+@import "admin/tables";
+@import "admin/forms";
+@import "admin/buttons";
+@import "../../../node_modules/bootstrap/scss/transitions";
+@import "admin/dropdown";
+@import "admin/button-group";
+@import "admin/nav";
+@import "admin/navbar";
+
+@import "admin/card";
+//@import "../../../node_modules/bootstrap/scss/accordion";
+@import "admin/breadcrumb";
+@import "admin/pagination";
+@import "admin/badge";
+@import "admin/alert";
+@import "admin/list-group";
+@import "admin/close";
+//@import "../../../node_modules/bootstrap/scss/toasts";
+//@import "../../../node_modules/bootstrap/scss/modal";
+//@import "../../../node_modules/bootstrap/scss/tooltip";
+//@import "../../../node_modules/bootstrap/scss/popover";
+
+@import "admin/header";
+@import "admin/sortable";
+@import "admin/dashboard";
+@import "admin/trail";
+
+// Helpers
+@import "admin/helpers";
+
+// Utilities
+@import "../../../node_modules/bootstrap/scss/utilities/api";

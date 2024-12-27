@@ -13,5 +13,6 @@ package.json export-ignore
 package-lock.json export-ignore
 phpstan.neon export-ignore
 rector.php export-ignore
-src/assets/**/scss/ export-ignore
+src/assets/scripts/ export-ignore
+src/assets/styles/ export-ignore
 tests/ export-ignore
