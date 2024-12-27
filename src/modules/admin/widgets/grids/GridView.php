@@ -113,7 +113,7 @@ class GridView extends \yii\grid\GridView
         }
 
         $this->columns = array_filter($this->columns);
-        
+
         parent::initColumns();
     }
 
@@ -216,9 +216,7 @@ class GridView extends \yii\grid\GridView
         $options = ArrayHelper::remove($this->header, 'options', []);
         Html::addCssClass($options, 'grid-view-header');
 
-        return $this->header
-            ? Html::tag('div', $this->renderRows($this->header), $options)
-            : '';
+        return $this->header ? Html::tag('div', $this->renderRows($this->header), $options) : '';
     }
 
     protected function initFooter(): void
