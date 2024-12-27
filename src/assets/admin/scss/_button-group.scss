@@ -1,10 +1,11 @@
 //@import "../../../node_modules/bootstrap/scss/button-group";
 
-.btn-group,
-.btn-group-vertical {
+.btn-group {
   position: relative;
   display: inline-flex;
   vertical-align: middle;
+
+  @include border-radius($btn-border-radius);
 
   > .btn {
     position: relative;
@@ -20,21 +21,6 @@
   > .btn.active {
     z-index: 1;
   }
-}
-
-// Optional: Group multiple button groups together for a toolbar
-.btn-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-
-  .input-group {
-    width: auto;
-  }
-}
-
-.btn-group {
-  @include border-radius($btn-border-radius);
 
   // Prevent double borders when buttons are next to each other
   > :not(.btn-check:first-child) + .btn,
@@ -86,5 +72,28 @@
   // Show no shadow for `.btn-link` since it has no other button styles.
   &.btn-link {
     @include box-shadow(none);
+  }
+}
+
+.btn-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: $app-btn-toolbar-spacer;
+
+  &:not(:first-child) {
+    margin-top: $app-btn-toolbar-spacer;
+  }
+
+  .input-group {
+    width: auto;
+  }
+
+  .text-end & {
+    justify-content: flex-end;
+  }
+
+  .text-nowrap & {
+    flex-wrap: nowrap;
   }
 }

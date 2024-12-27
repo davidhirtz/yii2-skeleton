@@ -120,7 +120,8 @@ class GridView extends \yii\grid\GridView
     public function renderItems(): string
     {
         if ($this->dataProvider->getCount() || $this->emptyText) {
-            return $this->showSelection ? $this->renderSelectionForm(parent::renderItems()) : parent::renderItems();
+            $table = $this->showSelection ? $this->renderSelectionForm(parent::renderItems()) : parent::renderItems();
+            return Html::tag('div', $table, ['class' => 'table-responsive']);
         }
 
         return '';

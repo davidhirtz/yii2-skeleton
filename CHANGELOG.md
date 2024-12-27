@@ -2,6 +2,7 @@
 
 - Added `GridSearch` and moved properties `search`, `searchParamName`, `searchInputOptions` and `searchUrl` as well as
   methods `getSearchInput`, and `getSearchKeywords` to the new `GridView::$search` property
+- Removed `Html::buttonList()`, use `Html::buttons()` instead
 
 ## 2.4.2 (Dec 17, 2024)
 

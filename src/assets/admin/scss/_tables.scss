@@ -33,10 +33,6 @@
   }
 }
 
-.caption-top {
-  caption-side: top;
-}
-
 .table-striped {
   > tbody > tr:nth-of-type(#{$table-striped-order}) > * {
     --#{$prefix}table-color: var(--#{$prefix}table-striped-color);
@@ -54,6 +50,11 @@
     --#{$prefix}table-color: var(--#{$prefix}table-hover-color);
     --#{$prefix}table-bg: var(--#{$prefix}table-hover-bg);
   }
+}
+
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 tr.is-selected {

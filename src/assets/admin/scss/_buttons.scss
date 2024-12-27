@@ -178,14 +178,6 @@
   @include font-size($btn-font-size-sm);
 }
 
-.btn-list:not(:first-child) {
-  margin-top: 0.5rem;
-}
-
-.btn + .btn {
-  margin-left: 0.5rem;
-}
-
 .btn-transparent {
   padding: 0;
   border: 0;

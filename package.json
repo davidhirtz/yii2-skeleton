@@ -9,11 +9,13 @@
 		"dev": "node esbuild.js --watch"
 	},
 	"devDependencies": {
+		"@types/sortablejs": "^1.15.8",
 		"autoprefixer": "^10.4.20",
 		"bootstrap": "^5.3.3",
 		"esbuild": "^0.24.0",
 		"esbuild-sass-plugin": "^3.3.1",
 		"htmx.org": "^2.0.4",
-		"postcss": "^8.4.49"
+		"postcss": "^8.4.49",
+		"sortablejs": "^1.15.6"
 	}
 }

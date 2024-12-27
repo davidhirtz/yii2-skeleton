@@ -52,20 +52,15 @@ class Html extends BaseHtml
         return static::alert($content, $options);
     }
 
-    /**
-     * @noinspection PhpUnused
-     */
-    public static function buttonList(array|string $buttons, array $options = []): string
-    {
-        static::addCssClass($options, 'btn-list');
-        return static::buttons($buttons, $options);
-    }
-
     public static function buttons(array|string $buttons, array $options = []): string
     {
+        if (is_array($buttons)) {
+            $buttons = implode('', $buttons);
+        }
+
         if ($buttons) {
-            $buttons = is_array($buttons) ? implode('', $buttons) : $buttons;
-            return $options ? static::tag('div', $buttons, $options) : $buttons;
+            static::addCssClass($options, 'btn-toolbar');
+            return static::tag('div', $buttons, $options);
         }
 
         return '';

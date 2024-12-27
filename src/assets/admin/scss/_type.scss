@@ -67,3 +67,8 @@
 .text-invalid {
   text-decoration: line-through;
 }
+
+// Deprecated, use .text-end instead
+.text-right {
+  text-align: right;
+}
