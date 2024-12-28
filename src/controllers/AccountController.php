@@ -164,9 +164,9 @@ class AccountController extends Controller
 
     public function actionLogout(): Response|string
     {
-        //        if (Yii::$app->getUser()->logout()) {
-        //            $this->success(Yii::t('skeleton', 'You are now logged out! See you soon!'));
-        //        }
+        if (Yii::$app->getUser()->logout()) {
+            $this->success(Yii::t('skeleton', 'You are now logged out! See you soon!'));
+        }
 
         return $this->goHome();
     }
