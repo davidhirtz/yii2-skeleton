@@ -16,14 +16,17 @@ trait IconTextTrait
 
     public function icon(string $icon): self
     {
-        $this->icon = Icon::tag($icon);
-        return $this;
+        $new = clone $this;
+        $new->icon = Icon::tag($icon);
+        return $new;
     }
 
     public function text(string|null $text): self
     {
         if ($text !== null) {
-            $this->text = Html::encode($text);
+            $new = clone $this;
+            $new->text = Html::encode($text);
+            return $new;
         }
 
         return $this;
