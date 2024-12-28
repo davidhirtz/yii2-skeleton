@@ -14,10 +14,9 @@ final class Icon implements Stringable
 
     public function __construct(string $name, private array $options = [])
     {
-        Html::addCssClass($options, self::$cssClassPrefix . $name);
-        $this->options = $options;
+        Html::addCssClass($this->options, self::$cssClassPrefix . $name);
     }
-    
+
     public static function tag(string $name, array $options = []): self
     {
         $method = ArrayHelper::remove($options, 'type', 'solid');
@@ -27,21 +26,26 @@ final class Icon implements Stringable
     public static function solid(string $name, array $options = []): self
     {
         Html::addCssClass($options, 'fas');
-        return new static($name, $options);
+        return new self($name, $options);
     }
 
     public static function brand(string $name, array $options = []): self
     {
         Html::addCssClass($options, 'fab');
-        return new static($name, $options);
+        return new self($name, $options);
     }
 
-    public function __toString(): string
+    public function render(): string
     {
         $options = $this->options;
         $tag = ArrayHelper::remove($options, 'tag', 'i');
 
         return Html::tag($tag, '', $options);
+    }
+
+    public function __toString(): string
+    {
+        return $this->render();
     }
 
     public function inverse(): self

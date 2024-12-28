@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -15,15 +16,14 @@ declare(strict_types=1);
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\helpers\html\Btn;
+use davidhirtz\yii2\skeleton\helpers\html\BtnToolbar;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
 use davidhirtz\yii2\timeago\Timeago;
 use yii\data\ArrayDataProvider;
-use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'System'));
 ?>
@@ -48,15 +48,14 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                 ],
                 [
                     'contentOptions' => ['class' => 'text-end'],
-                    'content' => fn ($modified, $name): string => Html::buttons([
-                        Html::a((string)Icon::tag('file'), ['view', 'log' => $name, 'raw' => 1], [
-                            'class' => 'btn btn-primary',
-                        ]),
-                        Html::a((string)Icon::tag('trash'), ['delete', 'log' => $name], [
-                            'class' => 'btn btn-danger',
-                            'data-method' => 'post',
-                        ]),
-                    ])
+                    'content' => fn ($modified, $name): string => BtnToolbar::tag()
+                        ->addButton(Btn::primary()
+                            ->href(['view', 'log' => $name, 'raw' => 1])
+                            ->icon('file'))
+                        ->addButton(Btn::danger()
+                            ->icon('trash')
+                            ->post(['delete', 'log' => $name]))
+                        ->render(),
                 ],
             ],
         ]),
@@ -96,10 +95,11 @@ $this->setTitle(Yii::t('skeleton', 'System'));
         'footer' => [
             [
                 [
-                    'content' => Btn::tag()
-                        ->text(Yii::t('skeleton', 'Refresh'))
-                        ->class('btn btn-primary'),
-                    'options' => ['class' => 'col ms-auto'],
+                    /** @see SystemController::actionPublish() */
+                    'content' => Btn::primary(Yii::t('skeleton', 'Refresh'))
+                        ->icon('sync-alt')
+                        ->post(['publish']),
+                    'options' => ['class' => 'ms-auto'],
                 ]
             ],
         ],
@@ -123,10 +123,10 @@ $this->setTitle(Yii::t('skeleton', 'System'));
             [
                 'contentOptions' => ['class' => 'text-end'],
                 /** @see SystemController::actionFlush() */
-                'content' => fn ($item): string => Html::buttons(Html::a((string)Icon::tag('sync-alt'), ['flush', 'cache' => $item['name']], [
-                    'class' => 'btn btn-primary',
-                    'data-method' => 'post',
-                ]))
+                'content' => fn (array $item): string => Btn::primary()
+                    ->icon('sync-alt')
+                    ->post(['flush', 'cache' => $item['name']])
+                    ->render()
             ],
         ],
     ]),
@@ -157,7 +157,11 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                         </div>
                     </td>
                     <td class="text-end">
-                        <a class="btn btn-primary" href="<?= Url::toRoute(['/admin/system/session-gc']) ?>" data-method="post"><i class="fas fa-trash"></i></a>
+                        <?= Btn::primary()
+                            ->icon('trash')
+                            ->post(['/admin/system/session-gc'])
+                            ->tooltip(Yii::t('skeleton', 'Delete expired sessions'))
+                            ->render(); ?>
                     </td>
                 </tr>
                 </tbody>

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 use davidhirtz\yii2\skeleton\controllers\AccountController;
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\helpers\html\Btn;
 use davidhirtz\yii2\skeleton\models\forms\AccountUpdateForm;
 use davidhirtz\yii2\skeleton\models\forms\GoogleAuthenticatorForm;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
@@ -25,7 +26,7 @@ use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Account'));
 ?>
-    <h1 class="page-header"><?= $form->user->getUsername(); ?></h1>
+<h1 class="page-header"><?= $form->user->getUsername(); ?></h1>
 <?php
 if ($form->user->isUnconfirmed()) {
     ?>
@@ -95,14 +96,12 @@ if ($form->user->isUnconfirmed()) {
                     <td class="d-none d-table-cell-md"><?= Timeago::tag($auth->updated_at); ?>
                     <td class="d-none d-table-cell-lg"><?= Timeago::tag($auth->created_at); ?>
                     <td class="text-end">
-                        <a href="<?= Url::to(['deauthorize', 'id' => $auth->id, 'name' => $auth->name]) ?>"
-                           data-method="post"
-                           data-confirm="<?= Yii::t('skeleton', 'Are you sure your want to remove your {client} account?', ['client' => $title]); ?>"
-                           data-toggle="tooltip"
-                           title="<?= Yii::t('skeleton', 'Remove {client}', ['client' => $title]); ?>"
-                           class="btn btn-danger">
-                            <?= Icon::tag('trash-alt'); ?>
-                        </a>
+                        <?= Btn::danger()
+                            ->icon('trash-alt')
+                            ->post(['deauthorize', 'id' => $auth->id, 'name' => $auth->name])
+                            ->tooltip(Yii::t('skeleton', 'Remove {client}', ['client' => $title]))
+                            ->confirm(Yii::t('skeleton', 'Are you sure your want to remove your {client} account?', ['client' => $title]))
+                            ->render(); ?>
                     </td>
                 </tr>
                 <?php

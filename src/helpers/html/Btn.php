@@ -1,41 +1,59 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\skeleton\helpers\html;
 
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
-use Yiisoft\Html\Html;
+use davidhirtz\yii2\skeleton\helpers\html\traits\AjaxAttributeTrait;
+use davidhirtz\yii2\skeleton\helpers\html\traits\IconTextTrait;
+use davidhirtz\yii2\skeleton\helpers\html\traits\TooltipAttributeTrait;
+use davidhirtz\yii2\skeleton\helpers\Url;
 use Yiisoft\Html\Tag\Base\NormalTag;
-use Yiisoft\Html\Tag\Span;
 
 final class Btn extends NormalTag
 {
-    private string $text = '';
-    private ?Icon $icon = null;
+    use AjaxAttributeTrait;
+    use IconTextTrait;
+    use TooltipAttributeTrait;
 
-    public function icon(string $icon): self
+    public static function primary(?string $text = null): self
     {
-        $this->icon = Icon::tag($icon);
-        return $this->addClass('icon-text');
+        return self::tag()->addClass('btn btn-primary')->text($text);
     }
 
-    public function text(string $text): self
+    public static function secondary(?string $text = null): self
     {
-        $this->text = Html::encode($text);
+        return self::tag()->addClass('btn btn-secondary')->text($text);
+    }
+
+    public static function success(?string $text = null): self
+    {
+        return self::tag()->addClass('btn btn-success')->text($text);
+    }
+
+    public static function danger(?string $text = null): self
+    {
+        return self::tag()->addClass('btn btn-danger')->text($text);
+    }
+
+    public function href(string|array|null $route): self
+    {
+        if ($route !== null) {
+            $new = clone $this;
+            $new->attributes['href'] = Url::to($route);
+            return $new;
+        }
+
         return $this;
     }
 
     protected function generateContent(): string
     {
-        return $this->icon ? Span::tag()->content($this->text)->render() : $this->text;
-    }
-
-    protected function prepend(): string
-    {
-        return $this->icon?->__toString() ?? '';
+        return $this->generateIconTextContent();
     }
 
     protected function getName(): string
     {
-        return 'button';
+        return !empty($this->attributes['href']) ? 'a' : 'button';
     }
 }

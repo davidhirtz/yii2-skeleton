@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
@@ -38,7 +40,7 @@ class GridSearch extends BaseObject
         parent::init();
 
         $this->value ??= Yii::$app->request->get($this->paramName);
-        $this->value = $this->value ? trim($this->value) : null;
+        $this->value = $this->value ? trim((string) $this->value) : null;
 
         $this->url = $this->route ? Url::to($this->route) : Url::current([
             $this->paramName => null,

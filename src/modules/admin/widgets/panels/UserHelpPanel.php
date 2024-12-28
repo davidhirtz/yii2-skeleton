@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\panels;
 
-use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\helpers\html\Btn;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
 use Yii;
+use Yiisoft\Html\Tag\Div;
 
 class UserHelpPanel extends HelpPanel
 {
@@ -40,10 +41,10 @@ class UserHelpPanel extends HelpPanel
             return '';
         }
 
-        return Html::a(Html::iconText('portrait', Yii::t('skeleton', 'Delete picture')), ['delete-picture', 'id' => $this->user->id], [
-            'class' => 'btn btn-primary',
-            'data-method' => 'post',
-        ]);
+        return Btn::primary(Yii::t('skeleton', 'Delete picture'))
+            ->icon('portrait')
+            ->post(['delete-picture', 'id' => $this->user->id])
+            ->render();
     }
 
     /**
@@ -55,10 +56,10 @@ class UserHelpPanel extends HelpPanel
             return '';
         }
 
-        return Html::a(Html::iconText('qrcode', Yii::t('skeleton', 'Disable 2FA')), ['disable-google-authenticator', 'id' => $this->user->id], [
-            'class' => 'btn btn-primary',
-            'data-method' => 'post',
-        ]);
+        return Btn::primary(Yii::t('skeleton', 'Disable 2FA'))
+            ->icon('qrcode')
+            ->post(['disable-google-authenticator', 'id' => $this->user->id])
+            ->render();
     }
 
     /**
@@ -66,11 +67,11 @@ class UserHelpPanel extends HelpPanel
      */
     protected function getCreatePasswordResetLinkButton(): string
     {
-        return Html::a(Html::iconText('key', Yii::t('skeleton', 'Create password link')), ['reset', 'id' => $this->user->id], [
-            'class' => 'btn btn-primary',
-            'data-confirm' => $this->user->password_reset_token ? Yii::t('skeleton', 'Are you sure you want to create a new password reset link? The current link will be invalidated.') : null,
-            'data-method' => 'post',
-        ]);
+        return Btn::primary(Yii::t('skeleton', 'Create password link'))
+            ->icon('key')
+            ->confirm($this->user->password_reset_token ? Yii::t('skeleton', 'Are you sure you want to create a new password reset link? The current link will be invalidated.') : null)
+            ->post(['reset', 'id' => $this->user->id])
+            ->render();
     }
 
     protected function getPasswordResetLinkButton(): string
@@ -79,9 +80,12 @@ class UserHelpPanel extends HelpPanel
             return '';
         }
 
-        return Html::button(Html::iconText('clipboard', Yii::t('skeleton', 'Show password link')), [
-            'class' => 'btn btn-secondary',
-            'data-confirm' => Html::tag('div', $this->user->getPasswordResetUrl(), ['class' => 'text-break']),
-        ]);
+        return Btn::primary(Yii::t('skeleton', 'Show password link'))
+            ->icon('clipboard')
+            ->confirm(Div::tag()
+                ->content($this->user->getPasswordResetUrl())
+                ->class('text-break')
+                ->render())
+            ->render();
     }
 }

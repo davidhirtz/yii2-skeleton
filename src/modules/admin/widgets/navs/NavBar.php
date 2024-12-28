@@ -122,10 +122,12 @@ class NavBar extends \yii\bootstrap5\NavBar
             [
                 'label' => Yii::t('skeleton', 'Logout'),
                 'icon' => 'sign-out-alt',
-                'url' => ['/admin/account/logout'],
+                'url' => '',
                 'linkOptions' => [
                     'class' => 'navbar-logout',
-                    'data-method' => 'post',
+                    'hx-post' => Url::toRoute(['/admin/account/logout']),
+                    'hx-push-url' => 'true',
+                    'hx-target' => 'body',
                 ],
             ],
         ];

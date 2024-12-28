@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\helpers\html\Btn;
 use davidhirtz\yii2\skeleton\models\AuthItem;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController;
@@ -141,9 +142,9 @@ class AuthItemGridView extends GridView
     {
         $route = [$authItem->isAssigned ? 'revoke' : 'assign', 'id' => $this->user->id, 'name' => $authItem->name, 'type' => $authItem->type];
 
-        return Html::a((string)Icon::tag($authItem->isAssigned ? 'ban' : 'star'), $route, [
-            'class' => 'btn btn-primary',
-            'data-method' => 'post',
-        ]);
+        return Btn::primary()
+            ->icon($authItem->isAssigned ? 'ban' : 'star')
+            ->post($route)
+            ->render();
     }
 }
