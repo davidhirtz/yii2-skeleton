@@ -14,6 +14,7 @@ declare(strict_types=1);
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\helpers\html\Btn;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\web\View;
@@ -95,11 +96,10 @@ $this->setTitle(Yii::t('skeleton', 'System'));
         'footer' => [
             [
                 [
-                    'content' => Html::a(Yii::t('skeleton', 'Refresh'), ['publish'], [
-                        'class' => 'btn btn-primary',
-                        'data-method' => 'post'
-                    ]),
-                    'options' => ['class' => 'col text-end'],
+                    'content' => Btn::tag()
+                        ->text(Yii::t('skeleton', 'Refresh'))
+                        ->class('btn btn-primary'),
+                    'options' => ['class' => 'col ms-auto'],
                 ]
             ],
         ],
@@ -117,7 +117,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
         'columns' => [
             [
                 'label' => Yii::t('skeleton', 'Name'),
-                'content' => fn ($item): string => Html::tag('div', ucwords((string) $item['name']), ['class' => 'strong']) .
+                'content' => fn ($item): string => Html::tag('div', ucwords((string)$item['name']), ['class' => 'strong']) .
                     Html::tag('div', $item['class'], ['class' => 'small'])
             ],
             [

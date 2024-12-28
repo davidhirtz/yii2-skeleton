@@ -30,7 +30,8 @@
         "yiisoft/yii2-authclient": "^2.2",
         "yiisoft/yii2-imagine": "^2.1",
         "yiisoft/yii2-symfonymailer": "^4.0",
-        "yiisoft/yii2-bootstrap5": "^2.0"
+        "yiisoft/yii2-bootstrap5": "^2.0",
+        "yiisoft/html": "^3.9"
     },
     "require-dev": {
         "codeception/codeception": "^5.0",
