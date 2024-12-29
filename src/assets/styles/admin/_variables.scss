@@ -361,11 +361,8 @@ $badge-padding-y: 0.25rem !default;
 $badge-padding-x: 0.5rem !default;
 $badge-border-radius: 0.5rem !default;
 
-///*
-//Tooltip.
-// */
-//$tooltip-max-width: 200px !default;
-//$tooltip-min-width: 80px !default;
+// Tooltip
+$tooltip-max-width: 12rem !default;
 //
 ///**
 //Thumbnail.
@@ -396,7 +393,7 @@ $utilities: (
         "overflow-y": null,
         "display": (
                 responsive: true,
-                print: true,
+                //print: true,
                 property: display,
                 class: d,
                 values: block inline inline-block flex table-cell none

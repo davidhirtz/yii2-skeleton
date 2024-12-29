@@ -21,6 +21,7 @@ use yii\authclient\Collection;
 use yii\base\ActionEvent;
 use yii\base\InvalidConfigException;
 use yii\bootstrap5\BootstrapAsset;
+use yii\bootstrap5\BootstrapPluginAsset;
 use yii\caching\FileCache;
 use yii\console\controllers\MigrateController;
 use yii\db\Connection;
@@ -73,14 +74,16 @@ trait ApplicationTrait
                 'assetManager' => [
                     'bundles' => [
                         BootstrapAsset::class => [
-                            'sourcePath' => null,
-                            'css' => [],
+                            'class' => EmptyAssetBundle::class,
+                        ],
+                        BootstrapPluginAsset::class => [
+                            'class' => EmptyAssetBundle::class,
                         ],
                         GridViewAsset::class => [
                             'class' => EmptyAssetBundle::class,
                         ],
                         JqueryAsset::class => [
-                            'js' => ['jquery.min.js'],
+                            'class' => EmptyAssetBundle::class,
                         ],
                     ],
                 ],

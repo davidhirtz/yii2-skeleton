@@ -1,4 +1,4 @@
-@import "../../../../../node_modules/bootstrap/scss/forms/input-group";
+//@import "../../../../../node_modules/bootstrap/scss/forms/input-group";
 
 .input-group {
   position: relative;
@@ -39,17 +39,11 @@
   }
 }
 
-
-// Textual addons
-//
-// Serves as a catch-all element for any text or radio/checkbox input you wish
-// to prepend or append to an input.
-
 .input-group-text {
   display: flex;
   align-items: center;
   padding: $input-group-addon-padding-y $input-group-addon-padding-x;
-  @include font-size($input-font-size); // Match inputs
+  @include font-size($input-font-size);
   font-weight: $input-group-addon-font-weight;
   line-height: $input-line-height;
   color: $input-group-addon-color;
@@ -62,29 +56,28 @@
   @include transition($input-transition);
 }
 
-// stylelint-disable-next-line no-duplicate-selectors
-.input-group {
-  &:not(.has-validation) {
-    > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu),
-    > .dropdown-toggle:nth-last-child(n + 3){
-      @include border-end-radius(0);
-    }
-  }
-
-  &.has-validation {
-    > :nth-last-child(n + 3):not(.dropdown-toggle):not(.dropdown-menu),
-    > .dropdown-toggle:nth-last-child(n + 4) {
-      @include border-end-radius(0);
-    }
-  }
-
-  $validation-messages: "";
-  @each $state in map-keys($form-validation-states) {
-    $validation-messages: $validation-messages + ":not(." + unquote($state) + "-tooltip)" + ":not(." + unquote($state) + "-feedback)";
-  }
-
-  > :not(:first-child):not(.dropdown-menu)#{$validation-messages} {
-    margin-left: calc(#{$input-border-width} * -1); // stylelint-disable-line function-disallowed-list
-    @include border-start-radius(0);
-  }
-}
+//.input-group {
+//  &:not(.has-validation) {
+//    > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu),
+//    > .dropdown-toggle:nth-last-child(n + 3){
+//      @include border-end-radius(0);
+//    }
+//  }
+//
+//  &.has-validation {
+//    > :nth-last-child(n + 3):not(.dropdown-toggle):not(.dropdown-menu),
+//    > .dropdown-toggle:nth-last-child(n + 4) {
+//      @include border-end-radius(0);
+//    }
+//  }
+//
+//  $validation-messages: "";
+//  @each $state in map-keys($form-validation-states) {
+//    $validation-messages: $validation-messages + ":not(." + unquote($state) + "-tooltip)" + ":not(." + unquote($state) + "-feedback)";
+//  }
+//
+//  > :not(:first-child):not(.dropdown-menu)#{$validation-messages} {
+//    margin-left: calc(#{$input-border-width} * -1); // stylelint-disable-line function-disallowed-list
+//    @include border-start-radius(0);
+//  }
+//}

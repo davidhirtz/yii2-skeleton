@@ -1,10 +1,16 @@
-import "htmx.org"
+import {Dropdown, Tooltip} from 'bootstrap';
+import "htmx.org";
 
-const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+const doc = document;
+const csrfToken = doc.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
-document.body.addEventListener('htmx:configRequest', (event: CustomEvent) => {
+doc.body.addEventListener('htmx:configRequest', (event: CustomEvent) => {
     event.detail.headers['X-CSRF-Token'] = csrfToken;
 });
+
+doc.querySelectorAll('[data-toggle="tooltip"]').forEach(($el: Element) => new Tooltip($el));
+doc.querySelectorAll('.dropdown-toggle').forEach(($el: Element) => new Dropdown($el));
+
 
 // document.addEventListener('click', (event: MouseEvent) => {
 //     const link = (event.target as HTMLElement).closest('a');

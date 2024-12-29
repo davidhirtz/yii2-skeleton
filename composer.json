@@ -48,6 +48,7 @@
         "yiisoft/yii2-debug": "^2.1"
     },
     "provide": {
+        "bower-asset/bootstrap": "*",
         "bower-asset/inputmask": "*",
         "bower-asset/punycode": "*",
         "bower-asset/yii2-pjax": "*"
