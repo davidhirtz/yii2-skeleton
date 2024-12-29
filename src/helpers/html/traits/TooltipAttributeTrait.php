@@ -9,6 +9,7 @@ trait TooltipAttributeTrait
     public function tooltip(string $tooltip): self
     {
         $new = clone $this;
+        $new->attributes['data-toggle'] = 'tooltip';
         $new->attributes['title'] = $tooltip;
         return $new;
     }

@@ -2,14 +2,14 @@ import {Dropdown, Tooltip} from 'bootstrap';
 import "htmx.org";
 
 const doc = document;
-const csrfToken = doc.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+const csrfToken = doc.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 doc.body.addEventListener('htmx:configRequest', (event: CustomEvent) => {
     event.detail.headers['X-CSRF-Token'] = csrfToken;
 });
 
-doc.querySelectorAll('[data-toggle="tooltip"]').forEach(($el: Element) => new Tooltip($el));
 doc.querySelectorAll('.dropdown-toggle').forEach(($el: Element) => new Dropdown($el));
+doc.querySelectorAll('[data-toggle="tooltip"]').forEach(($el: Element) => new Tooltip($el));
 
 
 // document.addEventListener('click', (event: MouseEvent) => {
