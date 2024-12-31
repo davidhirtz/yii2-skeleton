@@ -361,8 +361,45 @@ $badge-padding-y: 0.25rem !default;
 $badge-padding-x: 0.5rem !default;
 $badge-border-radius: 0.5rem !default;
 
+// Modal
+$modal-footer-margin-between: .5rem !default;
+
+$modal-dialog-margin: .5rem !default;
+$modal-dialog-margin-y-sm-up: 1.75rem !default;
+
+$modal-content-color: null !default;
+$modal-content-bg: $card-bg !default;
+$modal-content-border-color: var(--#{$prefix}border-color) !default;
+$modal-content-border-width: 0 !default;
+$modal-content-border-radius: $border-radius !default;
+$modal-content-inner-border-radius: subtract($modal-content-border-radius, $modal-content-border-width) !default;
+
+$modal-backdrop-bg: $black !default;
+$modal-backdrop-opacity: .5 !default;
+
+$modal-header-border-color: var(--#{$prefix}border-color) !default;
+$modal-header-border-width: $modal-content-border-width !default;
+$app-modal-header-bg: $card-cap-bg !default;
+$app-modal-title-font-weight: bold !default;
+//$modal-header-padding-y: $modal-inner-padding !default;
+//$modal-header-padding-x: $modal-inner-padding !default;
+//$modal-header-padding: $modal-header-padding-y $modal-header-padding-x !default; // Keep this for backwards compatibility
+
+$modal-footer-bg: null !default;
+$modal-footer-border-color: $modal-header-border-color !default;
+$modal-footer-border-width: $modal-header-border-width !default;
+
+$modal-fade-transform: translate(0, -50px) !default;
+$modal-show-transform: none !default;
+$modal-transition: transform .3s ease-out !default;
+$modal-scale-transform: scale(1.02) !default;
+
+$modal-md: 28rem !default;
+
 // Tooltip
 $tooltip-max-width: 12rem !default;
+
+
 //
 ///**
 //Thumbnail.
@@ -393,7 +430,7 @@ $utilities: (
         "overflow-y": null,
         "display": (
                 responsive: true,
-                //print: true,
+          //print: true,
                 property: display,
                 class: d,
                 values: block inline inline-block flex table-cell none

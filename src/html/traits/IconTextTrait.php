@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\helpers\html\traits;
+namespace davidhirtz\yii2\skeleton\html\traits;
 
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
+use davidhirtz\yii2\skeleton\html\Icon;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Span;
@@ -14,10 +14,10 @@ trait IconTextTrait
     private string $text = '';
     private ?Icon $icon = null;
 
-    public function icon(string $icon): self
+    public function icon(string $icon, string $collection = 'fa'): self
     {
         $new = clone $this;
-        $new->icon = Icon::tag($icon);
+        $new->icon = Icon::tag()->icon($icon)->collection($collection);
         return $new;
     }
 

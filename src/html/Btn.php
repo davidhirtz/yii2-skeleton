@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\helpers\html;
+namespace davidhirtz\yii2\skeleton\html;
 
-use davidhirtz\yii2\skeleton\helpers\html\traits\AjaxAttributeTrait;
-use davidhirtz\yii2\skeleton\helpers\html\traits\IconTextTrait;
-use davidhirtz\yii2\skeleton\helpers\html\traits\TooltipAttributeTrait;
 use davidhirtz\yii2\skeleton\helpers\Url;
+use davidhirtz\yii2\skeleton\html\traits\AjaxAttributeTrait;
+use davidhirtz\yii2\skeleton\html\traits\IconTextTrait;
+use davidhirtz\yii2\skeleton\html\traits\TooltipAttributeTrait;
 use Yiisoft\Html\Tag\Base\NormalTag;
 
 final class Btn extends NormalTag

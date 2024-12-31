@@ -1,11 +1,11 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\helpers\html;
+namespace davidhirtz\yii2\skeleton\html;
 
 use Yiisoft\Html\Tag\Base\NormalTag;
 use Yiisoft\Html\Tag\Base\TagContentTrait;
 
-class BtnToolbar extends NormalTag
+final class BtnToolbar extends NormalTag
 {
     use TagContentTrait;
 

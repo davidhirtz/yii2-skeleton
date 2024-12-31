@@ -11,12 +11,14 @@ declare(strict_types=1);
 
 use davidhirtz\yii2\skeleton\controllers\AccountController;
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\helpers\html\Btn;
+use davidhirtz\yii2\skeleton\html\Btn;
+use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\models\forms\AccountUpdateForm;
 use davidhirtz\yii2\skeleton\models\forms\GoogleAuthenticatorForm;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\AccountActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorActiveForm;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\panels\AuthClientListGroup;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
@@ -123,7 +125,12 @@ if ($form->user->isUnconfirmed()) {
         ]); ?>
     </p>
     <?php Panel::end(); ?>
-    <div class="modal fade" id="auth-client-modal" tabindex="-1" role="dialog" aria-labelledby="resize-modal-label">
+    <?= Modal::tag()
+        ->id('auth-client-modal')
+        ->title(Yii::t('skeleton', 'Clients'))
+        ->body(AuthClientListGroup::widget())
+        ->render(); ?>
+    <div class="fade" id="auth-client-modal" tabindex="-1" role="dialog" aria-labelledby="resize-modal-label">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

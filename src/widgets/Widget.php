@@ -17,11 +17,6 @@ abstract class Widget extends BaseObject implements ViewContextInterface
     private ?View $_view = null;
     private ?string $_viewPath = null;
 
-    public function run(): string
-    {
-        return '';
-    }
-
     public function getView(): View
     {
         if ($this->_viewPath === null) {
@@ -57,4 +52,6 @@ abstract class Widget extends BaseObject implements ViewContextInterface
     {
         return Yii::$container->get(static::class, [], $config)->run();
     }
+
+    abstract public function run(): string;
 }

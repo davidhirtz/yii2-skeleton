@@ -15,8 +15,8 @@ declare(strict_types=1);
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\helpers\html\Btn;
-use davidhirtz\yii2\skeleton\helpers\html\BtnToolbar;
+use davidhirtz\yii2\skeleton\html\Btn;
+use davidhirtz\yii2\skeleton\html\BtnToolbar;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\web\View;
