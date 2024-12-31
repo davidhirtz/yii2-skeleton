@@ -8,6 +8,8 @@ use davidhirtz\yii2\skeleton\assets\SortableAssetBundle;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Btn;
+use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use davidhirtz\yii2\skeleton\widgets\pagers\LinkPager;
@@ -349,10 +351,12 @@ class GridView extends \yii\grid\GridView
     {
         $icon = ArrayHelper::remove($options, 'icon', 'wrench');
 
-        return Html::a((string)Icon::tag($icon), $this->getRoute($model), [
-            'class' => 'btn btn-primary d-none d-md-inline-block',
-            ...$options,
-        ]);
+        return Btn::primary()
+            ->icon($icon)
+            ->href($this->getRoute($model))
+            ->addClass('d-none d-md-inline-block')
+            ->addAttributes($options)
+            ->render();
     }
 
     /**
@@ -361,14 +365,33 @@ class GridView extends \yii\grid\GridView
     protected function getDeleteButton(ActiveRecordInterface $model, array $options = []): string
     {
         $icon = ArrayHelper::remove($options, 'icon', 'trash');
+        $message = ArrayHelper::remove($options, 'message', Yii::t('yii', 'Are you sure you want to delete this item?'));
+        $id = 'delete-' . $this->getRowId($model);
 
-        return Html::a((string)Icon::tag($icon), $this->getDeleteRoute($model), [
-            'class' => 'btn btn-danger',
-            'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
-            'data-ajax' => 'remove',
-            'data-target' => '#' . $this->getRowId($model),
-            ...$options,
-        ]);
+        $modal = Modal::tag()
+            ->id($id)
+            ->title($message)
+            ->action(Btn::danger()
+                ->text(Yii::t('yii', 'Delete'))
+                ->post($this->getDeleteRoute($model))
+                ->swap('delete')
+                ->target('#' . $this->getRowId($model)));
+
+        $btn = Btn::danger()
+            ->icon($icon)
+            ->attribute('data-modal', '#' . $id)
+            ->addAttributes($options)
+            ->render();
+
+        return $modal . $btn;
+
+        //        return Html::a((string)Icon::tag($icon), $this->getDeleteRoute($model), [
+        //            'class' => 'btn btn-danger',
+        //            'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+        //            'data-ajax' => 'remove',
+        //            'data-target' => '#' . $this->getRowId($model),
+        //            ...$options,
+        //        ]);
     }
 
     /**

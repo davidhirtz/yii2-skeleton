@@ -16,24 +16,43 @@ final class Btn extends NormalTag
     use IconTextTrait;
     use TooltipAttributeTrait;
 
+    protected array $attributes = [
+        'type' => 'button',
+    ];
+
+    public static function danger(?string $text = null): self
+    {
+        return self::tag()
+            ->class('btn btn-danger')
+            ->text($text);
+    }
+
     public static function primary(?string $text = null): self
     {
-        return self::tag()->addClass('btn btn-primary')->text($text);
+        return self::tag()
+            ->class('btn btn-primary')
+            ->text($text);
     }
 
     public static function secondary(?string $text = null): self
     {
-        return self::tag()->addClass('btn btn-secondary')->text($text);
+        return self::tag()
+            ->class('btn btn-secondary')
+            ->text($text);
     }
 
     public static function success(?string $text = null): self
     {
-        return self::tag()->addClass('btn btn-success')->text($text);
+        return self::tag()
+            ->class('btn btn-success')
+            ->text($text);
     }
 
-    public static function danger(?string $text = null): self
+    public static function transparent(?string $text = null): self
     {
-        return self::tag()->addClass('btn btn-danger')->text($text);
+        return self::tag()
+            ->class('btn-transparent')
+            ->text($text);
     }
 
     public function href(string|array|null $route): self
@@ -45,6 +64,22 @@ final class Btn extends NormalTag
         }
 
         return $this;
+    }
+
+    public function type(?string $type): self
+    {
+        $new = clone $this;
+        $new->attributes['type'] = $type;
+        return $new;
+    }
+
+    protected function prepareAttributes(): void
+    {
+        if (!empty($this->attributes['href'])) {
+            unset($this->attributes['type']);
+        }
+
+        parent::prepareAttributes();
     }
 
     protected function generateContent(): string

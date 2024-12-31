@@ -10,9 +10,12 @@ final class ListGroup extends NormalTag
     protected array $attributes = ['class' => 'list-group list-unstyled'];
     private array $items = [];
 
-    public function link(ListGroupItemAction $link): self
+    public function item(ListGroupItemAction $link): self
     {
-        $this->items[] = Li::tag()->content($link)->render();
+        if ($link->isVisible()) {
+            $this->items[] = Li::tag()->content($link)->render();
+        }
+
         return $this;
     }
 

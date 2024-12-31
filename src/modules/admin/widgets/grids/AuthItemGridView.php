@@ -6,11 +6,11 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Btn;
+use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\AuthItem;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\MessageSourceTrait;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
 use yii\grid\GridView;
 
@@ -59,10 +59,10 @@ class AuthItemGridView extends GridView
         return [
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
             'contentOptions' => ['class' => 'd-none d-md-table-cell text-center'],
-            'content' => fn (AuthItem $authItem) => Icon::tag($authItem->getTypeIcon(), [
-                'data-toggle' => 'tooltip',
-                'title' => $authItem->getTypeName()
-            ])
+            'content' => fn (AuthItem $authItem) => Icon::tag()
+                ->icon($authItem->getTypeIcon())
+                ->tooltip($authItem->getTypeName())
+                ->render(),
         ];
     }
 

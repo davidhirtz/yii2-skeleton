@@ -18,6 +18,7 @@ final class Modal extends NormalTag
     private ?Div $title = null;
     private ?Div $body = null;
     private string|false|null $dismiss = null;
+    private array $footer = [];
 
     public function body(string $html): self
     {
@@ -50,6 +51,12 @@ final class Modal extends NormalTag
         return $this;
     }
 
+    public function action(NormalTag|string $button): self
+    {
+        $this->footer[] = $button instanceof Btn ? $button->attribute('data-bs-dismiss', 'modal') : $button;
+        return $this;
+    }
+
     protected function generateContent(): string
     {
         $content = Div::tag()->addClass('modal-content');
@@ -62,12 +69,15 @@ final class Modal extends NormalTag
             }
 
             if ($this->dismiss !== false) {
-                $header = $header->addContent(Button::tag()
-                    ->attributes([
-                        'aria-label' => $this->dismiss ?? Yii::t('yii', 'Close'),
+                $header = $header->addContent(Button::button('')
+                    ->addAttributes([
+                        'aria-label' => $this->dismiss ?? Yii::t('skeleton', 'Close'),
                         'class' => 'btn-close',
                         'data-bs-dismiss' => 'modal',
                     ]));
+
+                array_unshift($this->footer, Btn::secondary(Yii::t('skeleton', 'Cancel'))
+                    ->attribute('data-bs-dismiss', 'modal'));
             }
 
             $content = $content->addContent($header);
@@ -75,6 +85,16 @@ final class Modal extends NormalTag
 
         if ($this->body) {
             $content = $content->addContent($this->body);
+        }
+
+        if ($this->footer) {
+            $footer = Div::tag()->addClass('modal-footer');
+
+            foreach ($this->footer as $button) {
+                $footer = $footer->addContent($button);
+            }
+
+            $content = $content->addContent($footer);
         }
 
         return Div::tag()

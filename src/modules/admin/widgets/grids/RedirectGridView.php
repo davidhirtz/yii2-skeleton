@@ -128,6 +128,7 @@ class RedirectGridView extends GridView
             'class' => TimeagoColumn::class,
             'attribute' => 'updated_at',
             'contentOptions' => ['class' => 'text-nowrap'],
+            'headerOptions' => ['class' => 'text-nowrap'],
             'displayAtBreakpoint' => 'md',
         ];
     }

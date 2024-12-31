@@ -119,8 +119,7 @@ if ($form->user->isUnconfirmed()) {
         <?= Yii::t('skeleton', 'Click {here} to add {clientCount, plural, =0{an external client} other{additional clients}} to your account.', [
             'clientCount' => count($form->user->authClients),
             'here' => Html::a(Yii::t('skeleton', 'here'), '#', [
-                'data-toggle' => 'modal',
-                'data-target' => '#auth-client-modal'
+                'data-modal' => '#auth-client-modal'
             ]),
         ]); ?>
     </p>

@@ -8,19 +8,18 @@ doc.body.addEventListener('htmx:configRequest', (event: CustomEvent) => {
     event.detail.headers['X-CSRF-Token'] = csrfToken;
 });
 
-doc.querySelectorAll('.dropdown-toggle').forEach(($el: Element) => new Dropdown($el));
+doc.body.addEventListener('htmx:load', () => {
 
-doc.querySelectorAll('[data-toggle="modal"]').forEach(($el: HTMLElement) => $el.addEventListener('click', (e) => {
-    const $target = doc.querySelector($el.dataset.target);
+    doc.querySelectorAll('.dropdown-toggle').forEach(($el: Element) => new Dropdown($el));
 
-    if ($target) {
-        new Modal($target).show();
-    }
+    doc.querySelectorAll('[data-modal]').forEach(($el: HTMLElement) => $el.onclick = (e) => {
+        const $target = doc.querySelector($el.dataset.modal) as HTMLElement;
+        Modal.getOrCreateInstance($target).toggle();
+        e.preventDefault();
+    });
 
-    e.preventDefault();
-}));
-
-doc.querySelectorAll('[data-toggle="tooltip"]').forEach(($el: Element) => new Tooltip($el));
+    doc.querySelectorAll('[data-toggle="tooltip"]').forEach(($el: Element) => new Tooltip($el));
+});
 
 
 // document.addEventListener('click', (event: MouseEvent) => {

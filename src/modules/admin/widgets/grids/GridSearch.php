@@ -6,7 +6,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
+use davidhirtz\yii2\skeleton\html\Btn;
 use Yii;
 use yii\base\BaseObject;
 use yii\base\Widget;
@@ -40,7 +40,7 @@ class GridSearch extends BaseObject
         parent::init();
 
         $this->value ??= Yii::$app->request->get($this->paramName);
-        $this->value = $this->value ? trim((string) $this->value) : null;
+        $this->value = $this->value ? trim((string)$this->value) : null;
 
         $this->url = $this->route ? Url::to($this->route) : Url::current([
             $this->paramName => null,
@@ -69,13 +69,16 @@ class GridSearch extends BaseObject
     protected function renderInput(): string
     {
         $icon = ArrayHelper::remove($this->inputOptions, 'icon', 'search');
-        $icon = (string)Icon::tag($icon, ['class' => 'fa-fw']);
-
         $type = ArrayHelper::remove($this->inputOptions, 'type', 'search');
+
+        $btn = Btn::transparent()
+            ->icon($icon)
+            ->type('submit')
+            ->render();
 
         $options = [
             'class' => 'form-control',
-            'prepend' => Html::submitButton($icon, ['class' => 'btn-transparent']),
+            'prepend' => $btn,
             'placeholder' => Yii::t('skeleton', 'Search ...'),
             ...$this->inputOptions
         ];

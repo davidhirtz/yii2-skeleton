@@ -2,11 +2,14 @@
 
 namespace davidhirtz\yii2\skeleton\html;
 
+use davidhirtz\yii2\skeleton\html\traits\TooltipAttributeTrait;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Base\NormalTag;
 
 class Icon extends NormalTag
 {
+    use TooltipAttributeTrait;
+
     private string $icon = '';
     private string $collection = 'fas';
 

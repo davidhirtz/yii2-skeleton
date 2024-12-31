@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 use davidhirtz\yii2\skeleton\controllers\AccountController;
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\ListGroup;
+use davidhirtz\yii2\skeleton\html\ListGroupItemAction;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\LoginActiveForm;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
-use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Login'));
 ?>
@@ -43,39 +43,27 @@ $this->setTitle(Yii::t('skeleton', 'Login'));
                 'model' => $form,
             ]),
         ]) ?>
-        <div class="list-group">
-            <?php
-            if ($form->isFacebookLoginEnabled()) {
-                ?>
-                <a href="<?= Url::to(['auth', 'authclient' => 'facebook']); ?>" class="list-group-item list-group-item-action">
-                    <?= Icon::brand('facebook-f', ['class' => 'fa-fw']); ?>
-                    <?= Yii::t('skeleton', 'Login with Facebook'); ?>
-                </a>
-                <?php
-            } ?>
-
-            <?php if (Yii::$app->getUser()->isSignupEnabled()) {
-                ?>
-                <a href="<?= Url::to(['create']); ?>" class="list-group-item list-group-item-action">
-                    <?= Html::iconText('user', Yii::t('skeleton', 'Create new account')); ?>
-                </a>
-                <?php
-            } ?>
-
-            <?php if (Yii::$app->getUser()->isPasswordResetEnabled()) {
-                if (!Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
-                    ?>
-                    <a href="<?= Url::to(['resend']); ?>" class="list-group-item list-group-item-action">
-                        <?= Html::iconText('envelope', Yii::t('skeleton', 'Resend email confirmation')); ?>
-                    </a>
-                    <?php
-                }
-                ?>
-                <a href="<?= Url::to(['recover']); ?>" class="list-group-item list-group-item-action">
-                    <?= Html::iconText('key', Yii::t('skeleton', 'I forgot my password')); ?>
-                </a>
-                <?php
-            } ?>
-        </div>
+        <?= ListGroup::tag()
+            ->item(ListGroupItemAction::tag()
+                ->text(Yii::t('skeleton', 'Login with Facebook'))
+                ->icon('facebook', 'fab')
+                ->href(['auth', 'authclient' => 'facebook'])
+                ->visible($form->isFacebookLoginEnabled()))
+            ->item(ListGroupItemAction::tag()
+                ->text(Yii::t('skeleton', 'Create new account'))
+                ->icon('user')
+                ->href(['create'])
+                ->visible(Yii::$app->getUser()->isSignupEnabled()))
+            ->item(ListGroupItemAction::tag()
+                ->text(Yii::t('skeleton', 'Resend email confirmation'))
+                ->icon('envelope')
+                ->href(['resend'])
+                ->visible(Yii::$app->getUser()->isPasswordResetEnabled() && !Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()))
+            ->item(ListGroupItemAction::tag()
+                ->text(Yii::t('skeleton', 'I forgot my password'))
+                ->icon('key')
+                ->href(['recover'])
+                ->visible(Yii::$app->getUser()->isPasswordResetEnabled()))
+            ->render(); ?>
     </div>
 </div>

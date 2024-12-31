@@ -3,11 +3,13 @@
 namespace davidhirtz\yii2\skeleton\html;
 
 use davidhirtz\yii2\skeleton\helpers\Url;
+use davidhirtz\yii2\skeleton\html\traits\ConditionalRenderTrait;
 use davidhirtz\yii2\skeleton\html\traits\IconTextTrait;
 use Yiisoft\Html\Tag\Base\NormalTag;
 
 class ListGroupItemAction extends NormalTag
 {
+    use ConditionalRenderTrait;
     use IconTextTrait;
 
     protected array $attributes = [
