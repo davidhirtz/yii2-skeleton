@@ -12,7 +12,6 @@ final class Modal extends NormalTag
 {
     protected array $attributes = [
         'class' => 'modal',
-        'tabindex' => -1,
     ];
 
     private ?Div $title = null;
@@ -20,11 +19,15 @@ final class Modal extends NormalTag
     private string|false|null $dismiss = null;
     private array $footer = [];
 
-    public function body(string $html): self
+    public function body(string $html, array $attributes = []): self
     {
         $this->body ??= Div::tag()
             ->addClass('modal-body')
             ->encode(false);
+
+        if ($attributes) {
+            $this->body = $this->body->addAttributes($attributes);
+        }
 
         $this->body = $this->body->content($html);
 
@@ -37,9 +40,15 @@ final class Modal extends NormalTag
         return $this;
     }
 
-    public function text(string $text): self
+    public function text(string $text, array $attributes = []): self
     {
-        return $this->body(P::tag()->content($text)->render());
+        $p = P::tag()->content($text);
+
+        if ($attributes) {
+            $p = $p->addAttributes($attributes);
+        }
+
+        return $this->body($p->render());
     }
 
     public function title(string $title): self
@@ -59,7 +68,7 @@ final class Modal extends NormalTag
 
     protected function generateContent(): string
     {
-        $content = Div::tag()->addClass('modal-content');
+        $html = '';
 
         if ($this->title || $this->dismiss !== false) {
             $header = Div::tag()->addClass('modal-header');
@@ -73,18 +82,18 @@ final class Modal extends NormalTag
                     ->addAttributes([
                         'aria-label' => $this->dismiss ?? Yii::t('skeleton', 'Close'),
                         'class' => 'btn-close',
-                        'data-bs-dismiss' => 'modal',
+                        'onclick' => 'this.closest(".modal").close()',
                     ]));
 
                 array_unshift($this->footer, Btn::secondary(Yii::t('skeleton', 'Cancel'))
-                    ->attribute('data-bs-dismiss', 'modal'));
+                    ->attribute('onclick', 'this.closest(".modal").close()'));
             }
 
-            $content = $content->addContent($header);
+            $html .= $header->render();
         }
 
         if ($this->body) {
-            $content = $content->addContent($this->body);
+            $html .= $this->body->render();
         }
 
         if ($this->footer) {
@@ -94,16 +103,14 @@ final class Modal extends NormalTag
                 $footer = $footer->addContent($button);
             }
 
-            $content = $content->addContent($footer);
+            $html .= $footer->render();
         }
 
-        return Div::tag()
-            ->addClass('modal-dialog modal-dialog-centered modal-dialog-scrollable')
-            ->addContent($content);
+        return $html;
     }
 
     protected function getName(): string
     {
-        return 'div';
+        return 'dialog';
     }
 }

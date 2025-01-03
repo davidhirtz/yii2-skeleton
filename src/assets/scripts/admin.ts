@@ -1,4 +1,4 @@
-import {Dropdown, Modal, Tooltip} from 'bootstrap';
+import {Dropdown, Tooltip} from 'bootstrap';
 import "htmx.org";
 
 const doc = document;
@@ -14,8 +14,11 @@ doc.body.addEventListener('htmx:load', () => {
 
     doc.querySelectorAll('[data-modal]').forEach(($el: HTMLElement) => $el.onclick = (e) => {
         const $target = doc.querySelector($el.dataset.modal) as HTMLElement;
-        Modal.getOrCreateInstance($target).toggle();
-        e.preventDefault();
+
+        if ($target) {
+            // @ts-ignore
+            $target.showModal();
+        }
     });
 
     doc.querySelectorAll('[data-toggle="tooltip"]').forEach(($el: Element) => new Tooltip($el));

@@ -9,148 +9,64 @@
   --#{$prefix}modal-footer-bg: #{$modal-footer-bg};
   --#{$prefix}modal-footer-border-color: #{$modal-footer-border-color};
 
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: $zindex-modal;
-  display: none;
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
-  // Prevent Chrome on Windows from adding a focus outline. For details, see
-  // https://github.com/twbs/bootstrap/pull/10951.
-  outline: 0;
-  // We deliberately don't use `-webkit-overflow-scrolling: touch;` due to a
-  // gnarly iOS Safari bug: https://bugs.webkit.org/show_bug.cgi?id=158342
-  // See also https://github.com/twbs/bootstrap/issues/17695
-}
-
-.modal-dialog {
-  position: relative;
-  width: auto;
-  margin: $modal-dialog-margin;
-  pointer-events: none;
-
-  .modal.fade & {
-    transform: $modal-fade-transform;
-    @include transition($modal-transition);
-  }
-  .modal.show & {
-    transform: $modal-show-transform;
-  }
-
-  .modal.modal-static & {
-    transform: $modal-scale-transform;
-  }
-}
-
-.modal-dialog-scrollable {
-  height: calc(100% - $modal-dialog-margin * 2);
-
-  .modal-content {
-    max-height: 100%;
-    overflow: hidden;
-  }
-
-  .modal-body {
-    overflow-y: auto;
-  }
-}
-
-.modal-dialog-centered {
-  display: flex;
-  align-items: center;
-  min-height: calc(100% - $modal-dialog-margin * 2);
-}
-
-// Actual modal
-.modal-content {
-  position: relative;
-  display: flex;
   flex-direction: column;
-  width: 100%;
+  padding: 0;
+  border: 0;
   color: var(--#{$prefix}modal-color);
-  pointer-events: auto;
   background-color: var(--#{$prefix}modal-bg);
-  background-clip: padding-box;
   border: $modal-content-border-width solid var(--#{$prefix}modal-border-color);
+  outline: 0;
+  text-align: left;
+  white-space: normal; // Reset the white-space: nowrap; from parent element
   @include border-radius($modal-content-border-radius);
   @include box-shadow($modal-content-box-shadow-xs);
-  // Remove focus outline from opened modal
-  outline: 0;
+
+  &[open] {
+    display: flex;
+
+    &::backdrop {
+      background: $modal-backdrop-bg
+    }
+  }
+
+  @include media-breakpoint-up(md) {
+      max-width: $app-card-centered-max-width;
+  }
 }
 
-// Modal background
-.modal-backdrop {
-  // scss-docs-start modal-backdrop-css-vars
-  --#{$prefix}backdrop-zindex: #{$zindex-modal-backdrop};
-  --#{$prefix}backdrop-bg: #{$modal-backdrop-bg};
-  --#{$prefix}backdrop-opacity: #{$modal-backdrop-opacity};
-  // scss-docs-end modal-backdrop-css-vars
-
-  @include overlay-backdrop(var(--#{$prefix}backdrop-zindex), var(--#{$prefix}backdrop-bg), var(--#{$prefix}backdrop-opacity));
-}
-
-// Modal header
-// Top section of the modal w/ title and dismiss
 .modal-header {
   display: flex;
   flex-shrink: 0;
-  align-items: center;
+  justify-content: space-between;
   padding: $modal-header-padding-y $modal-header-padding-x;
+  gap: $modal-header-padding-x;
   border-bottom: $modal-header-border-width solid var(--#{$prefix}modal-header-border-color);
   background-color: var(--#{$prefix}modal-header-bg);
   @include border-top-radius($modal-content-inner-border-radius);
-
-  .btn-close {
-    padding: calc($modal-header-padding-y * .5) calc($modal-header-padding-x * .5);
-    margin: calc(-.5 * $modal-header-padding-y) calc(-.5 * $modal-header-padding-x) calc(-.5 * $modal-header-padding-y) auto;
-  }
 }
 
-// Title text within header
 .modal-title {
   margin-bottom: 0;
   line-height: $modal-title-line-height;
   font-weight: $app-modal-title-font-weight;
 }
 
-// Modal body
-// Where all modal content resides (sibling of .modal-header and .modal-footer)
 .modal-body {
   position: relative;
-  // Enable `flex-grow: 1` so that the body take up as much space as possible
-  // when there should be a fixed height on `.modal-dialog`.
   flex: 1 1 auto;
   padding: $modal-header-padding-y $modal-header-padding-x;
+  overflow-y: auto;
 }
 
-// Footer (for actions)
 .modal-footer {
   display: flex;
   flex-shrink: 0;
   flex-wrap: wrap;
-  align-items: center; // vertically center
-  justify-content: flex-end; // Right align buttons with flex property because text-align doesn't work on flex items
+  align-items: center;
+  justify-content: flex-end;
   padding: $modal-header-padding-y $modal-header-padding-x;
   background-color: var(--#{$prefix}modal-footer-bg);
   border-top: $modal-footer-border-width solid var(--#{$prefix}modal-footer-border-color);
-  gap:$modal-footer-margin-between;
+  gap: $modal-footer-margin-between;
   @include border-bottom-radius($modal-content-inner-border-radius);
-}
-
-// Scale up the modal
-@include media-breakpoint-up(sm) {
-  .modal {
-    --#{$prefix}modal-margin: #{$modal-dialog-margin-y-sm-up};
-    --#{$prefix}modal-box-shadow: #{$modal-content-box-shadow-sm-up};
-  }
-
-  // Automatically set modal's width for larger viewports
-  .modal-dialog {
-    max-width: $modal-md;
-    margin-right: auto;
-    margin-left: auto;
-  }
 }

@@ -10,6 +10,7 @@ use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\AuthItem;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\ButtonColumn;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\MessageSourceTrait;
 use Yii;
 use yii\grid\GridView;
@@ -25,7 +26,7 @@ class AuthItemGridView extends GridView
     ];
 
     public $tableOptions = [
-        'class' => 'table table-striped',
+        'class' => 'table table-striped table-hover',
     ];
 
     /**
@@ -37,7 +38,9 @@ class AuthItemGridView extends GridView
     {
         if (!$this->rowOptions) {
             if ($this->user) {
-                $this->rowOptions = fn (AuthItem $authItem) => ($authItem->isAssigned || $authItem->isInherited) ? ['class' => 'bg-success'] : null;
+                $this->rowOptions = fn (AuthItem $authItem) => ($authItem->isAssigned || $authItem->isInherited)
+                    ? ['class' => 'is-selected']
+                    : null;
             }
         }
 
@@ -129,8 +132,8 @@ class AuthItemGridView extends GridView
     public function buttonsColumn(): array
     {
         return [
-            'contentOptions' => ['class' => 'text-end text-nowrap'],
-            'content' => fn (AuthItem $authItem): string => Html::buttons($this->getRowButtons($authItem))
+            'class' => ButtonColumn::class,
+            'content' => fn (AuthItem $authItem) => $this->getRowButtons($authItem),
         ];
     }
 

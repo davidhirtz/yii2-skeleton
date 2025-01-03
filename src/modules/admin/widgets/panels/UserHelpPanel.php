@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\panels;
 
 use davidhirtz\yii2\skeleton\html\Btn;
+use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
 use Yii;
-use Yiisoft\Html\Tag\Div;
+use Yiisoft\Json\Json;
 
 class UserHelpPanel extends HelpPanel
 {
@@ -80,12 +81,24 @@ class UserHelpPanel extends HelpPanel
             return '';
         }
 
-        return Btn::primary(Yii::t('skeleton', 'Show password link'))
-            ->icon('clipboard')
-            ->confirm(Div::tag()
-                ->content($this->user->getPasswordResetUrl())
-                ->class('text-break')
-                ->render())
+        $url = $this->user->getPasswordResetUrl();
+        $id = 'password-reset-link';
+
+        $action = Btn::primary(Yii::t('skeleton', 'Copy link'))
+            ->attribute('onclick', 'navigator.clipboard.writeText(' . Json::htmlEncode($url) . ')');
+
+        $modal = Modal::tag()
+            ->id($id)
+            ->title(Yii::t('skeleton', 'Password reset link'))
+            ->text($url, ['class' => 'text-break'])
+            ->action($action)
             ->render();
+
+        $btn = Btn::primary(Yii::t('skeleton', 'Show password link'))
+            ->icon('clipboard')
+            ->modal($id)
+            ->render();
+
+        return $modal . $btn;
     }
 }

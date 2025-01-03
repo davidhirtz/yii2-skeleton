@@ -379,7 +379,7 @@ class GridView extends \yii\grid\GridView
 
         $btn = Btn::danger()
             ->icon($icon)
-            ->attribute('data-modal', '#' . $id)
+            ->modal($id)
             ->addAttributes($options)
             ->render();
 

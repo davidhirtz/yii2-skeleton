@@ -39,6 +39,15 @@ $theme-colors: (
         "danger": $danger,
 ) !default;
 
+$primary-bg-subtle: tint-color($primary, 80%) !default;
+$secondary-bg-subtle: tint-color($secondary, 80%) !default;
+$success-bg-subtle: tint-color($success, 80%) !default;
+$info-bg-subtle: tint-color($info, 80%) !default;
+$warning-bg-subtle: tint-color($warning, 80%) !default;
+$danger-bg-subtle: tint-color($danger, 80%) !default;
+$light-bg-subtle: mix($gray-100, $white) !default;
+$dark-bg-subtle: $gray-400 !default;
+
 // Body
 $body-color: $primary !default;
 $body-bg: $gray-100 !default;
@@ -295,10 +304,10 @@ $app-table-th-border-color: $table-border-color !default;
 
 $app-table-border-radius: $border-radius !default;
 $app-table-selected-color: $body-color !default;
-$app-table-selected-bg: $success !default;
+$app-table-selected-bg: $success-bg-subtle !default;
 $app-table-selected-border-color: $white !default;
 $app-table-selected-hover-color: $body-color !default;
-$app-table-selected-hover-bg: darken($success, 10%) !default;
+$app-table-selected-hover-bg: darken($success-bg-subtle, 10%) !default;
 $app-table-selected-hover-border-color: $white !default;
 
 // Pagination
@@ -374,27 +383,18 @@ $modal-content-border-width: 0 !default;
 $modal-content-border-radius: $border-radius !default;
 $modal-content-inner-border-radius: subtract($modal-content-border-radius, $modal-content-border-width) !default;
 
-$modal-backdrop-bg: $black !default;
+$modal-backdrop-bg: rgba(0, 0, 0, .2) !default;
 $modal-backdrop-opacity: .5 !default;
 
 $modal-header-border-color: var(--#{$prefix}border-color) !default;
 $modal-header-border-width: $modal-content-border-width !default;
 $app-modal-header-bg: $card-cap-bg !default;
 $app-modal-title-font-weight: bold !default;
-//$modal-header-padding-y: $modal-inner-padding !default;
-//$modal-header-padding-x: $modal-inner-padding !default;
-//$modal-header-padding: $modal-header-padding-y $modal-header-padding-x !default; // Keep this for backwards compatibility
 
 $modal-footer-bg: null !default;
 $modal-footer-border-color: $modal-header-border-color !default;
 $modal-footer-border-width: $modal-header-border-width !default;
 
-$modal-fade-transform: translate(0, -50px) !default;
-$modal-show-transform: none !default;
-$modal-transition: transform .3s ease-out !default;
-$modal-scale-transform: scale(1.02) !default;
-
-$modal-md: 28rem !default;
 
 // Tooltip
 $tooltip-max-width: 12rem !default;

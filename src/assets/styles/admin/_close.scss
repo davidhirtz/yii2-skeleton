@@ -5,10 +5,8 @@
   --#{$prefix}btn-close-bg: #{ escape-svg($btn-close-bg) };
   --#{$prefix}btn-close-opacity: #{$btn-close-opacity};
   --#{$prefix}btn-close-hover-opacity: #{$btn-close-hover-opacity};
-  --#{$prefix}btn-close-focus-shadow: #{$btn-close-focus-shadow};
   --#{$prefix}btn-close-focus-opacity: #{$btn-close-focus-opacity};
   --#{$prefix}btn-close-disabled-opacity: #{$btn-close-disabled-opacity};
-  --#{$prefix}btn-close-white-filter: #{$btn-close-white-filter};
 
   box-sizing: content-box;
   width: $btn-close-width;
@@ -29,7 +27,6 @@
 
   &:focus {
     outline: 0;
-    box-shadow: var(--#{$prefix}btn-close-focus-shadow);
     opacity: var(--#{$prefix}btn-close-focus-opacity);
   }
 
@@ -38,17 +35,5 @@
     pointer-events: none;
     user-select: none;
     opacity: var(--#{$prefix}btn-close-disabled-opacity);
-  }
-}
-
-@mixin btn-close-white() {
-  filter: var(--#{$prefix}btn-close-white-filter);
-}
-
-@if $enable-dark-mode {
-  @include color-mode(dark) {
-    .btn-close {
-      @include btn-close-white();
-    }
   }
 }

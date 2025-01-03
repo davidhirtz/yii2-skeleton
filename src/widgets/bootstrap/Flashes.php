@@ -12,22 +12,27 @@ use yii\bootstrap5\Html;
 class Flashes extends Widget
 {
     /**
-     * @var array|null containing message, leave empty for default implementation
+     * @var array|null containing a message, leave empty for default implementation
      */
     public ?array $alerts = null;
 
     /**
      * @var array containing alert element HTML options
      */
-    public array $options = ['class' => 'alert'];
+    public array $options = [
+        'class' => 'alert',
+    ];
 
     /**
      * @var array containing wrapper element HTML options
      */
-    public array $wrapperOptions = [];
+    public array $wrapperOptions = [
+        'id' => 'flashes',
+        'hx-swap-oob' => 'true',
+    ];
 
     /**
-     * @var string the status css class prefix
+     * @var string the status CSS class prefix
      */
     public string $statusCssClass = 'alert-';
 
@@ -52,12 +57,8 @@ class Flashes extends Widget
             }
         }
 
-        if ($content) {
-            $tag = ArrayHelper::remove($this->wrapperOptions, 'tag', 'div');
-            return $this->wrapperOptions ? Html::tag($tag, $content, $this->wrapperOptions) : $content;
-        }
-
-        return '';
+        $tag = ArrayHelper::remove($this->wrapperOptions, 'tag', 'div');
+        return $this->wrapperOptions ? Html::tag($tag, $content, $this->wrapperOptions) : $content;
     }
 
     public function renderAlert(string $status, string $message): string

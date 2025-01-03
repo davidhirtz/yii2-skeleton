@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
+use davidhirtz\yii2\skeleton\html\Btn;
+use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
 use Yii;
@@ -15,6 +17,7 @@ use yii\db\ActiveRecord;
 class DeleteActiveForm extends ActiveForm
 {
     public string|false $attribute = false;
+    public DeleteForm $form;
 
     /**
      * @var string|null the message to display above the "delete" button, defaults to a generic warning message
@@ -27,20 +30,23 @@ class DeleteActiveForm extends ActiveForm
     public ?string $label = null;
 
     /**
-     * @var string|null the confirmation message to display when the "delete" button is clicked, defaults to generic
-     * confirmation message
+     * @var string|false|null the confirmation message to display when the "delete" button is clicked, defaults to a
+     * generic confirmation message, set to `false` to disable confirmation
      */
-    public ?string $confirm = null;
+    public string|false|null $confirm = null;
 
     /**
      * @var array the options for the "delete" text field
      */
     public array $fieldOptions = [];
 
-    private ?DeleteForm $_form = null;
-
     public function init(): void
     {
+        $this->form ??= Yii::$container->get(DeleteForm::class, [], [
+            'model' => $this->model,
+            'attribute' => $this->attribute,
+        ]);
+
         if ($this->action === '' && $this->model instanceof ActiveRecord) {
             $this->action = ['delete', 'id' => $this->model->getPrimaryKey()];
         }
@@ -57,29 +63,14 @@ class DeleteActiveForm extends ActiveForm
 
         $this->confirm ??= Yii::t('yii', 'Are you sure you want to delete this item?');
 
-        $this->buttons ??= [
-            $this->button($this->label, [
-                'class' => 'btn-danger',
-                'data-confirm' => $this->confirm,
-            ])
-        ];
+        $btn = Btn::danger($this->label);
+
+        $this->buttons ??= ($this->confirm
+            ? $btn->modal("modal-$this->id")
+            : $btn->type('submit'))
+            ->render();
 
         parent::init();
-    }
-
-    public function getForm(): DeleteForm
-    {
-        $this->_form ??= Yii::$container->get(DeleteForm::class, [], [
-            'model' => $this->model,
-            'attribute' => $this->attribute,
-        ]);
-
-        return $this->_form;
-    }
-
-    public function setForm(DeleteForm $form): void
-    {
-        $this->_form = $form;
     }
 
     public function renderFields(): void
@@ -89,7 +80,19 @@ class DeleteActiveForm extends ActiveForm
         }
 
         if ($this->attribute) {
-            echo $this->field($this->getForm(), 'value', $this->fieldOptions);
+            echo $this->field($this->form, 'value', $this->fieldOptions);
+        }
+
+        if ($this->confirm) {
+            $id = $this->getId();
+
+            echo Modal::tag()
+                ->id("modal-$id")
+                ->title($this->confirm)
+                ->action(Btn::danger($this->label)
+                    ->type('submit')
+                    ->attribute('form', "$id"))
+                ->render();
         }
     }
 }

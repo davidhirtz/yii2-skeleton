@@ -88,13 +88,13 @@ class RedirectController extends Controller
     public function actionDelete(int $id, ?int $previous = null): Response|string
     {
         $redirect = $this->findRedirect($id);
+        $redirect->delete();
 
-        if ($redirect->delete()) {
-            $this->success(Yii::t('skeleton', 'The redirect rule was deleted.'));
-        }
+        $this->errorOrSuccess($redirect, Yii::t('skeleton', 'The redirect rule was deleted.'));
 
-        $this->error($redirect);
-        return $this->redirect($previous ? ['update', 'id' => $previous] : array_merge(Yii::$app->getRequest()->get(), ['index']));
+        return $this->redirect($previous
+            ? ['update', 'id' => $previous]
+            : array_merge(Yii::$app->getRequest()->get(), ['index']));
     }
 
     public function actionDeleteAll(): Response|string
