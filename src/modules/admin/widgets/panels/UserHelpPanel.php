@@ -32,7 +32,6 @@ class UserHelpPanel extends HelpPanel
         ];
     }
 
-
     /**
      * @see UserController::actionDeletePicture()
      */
@@ -68,11 +67,21 @@ class UserHelpPanel extends HelpPanel
      */
     protected function getCreatePasswordResetLinkButton(): string
     {
-        return Btn::primary(Yii::t('skeleton', 'Create password link'))
-            ->icon('key')
-            ->confirm($this->user->password_reset_token ? Yii::t('skeleton', 'Are you sure you want to create a new password reset link? The current link will be invalidated.') : null)
-            ->post(['reset', 'id' => $this->user->id])
+        $modal = Modal::tag()
+            ->id('password-reset')
+            ->title(Yii::t('skeleton', 'Create password link'))
+            ->text(Yii::t('skeleton', 'Are you sure you want to create a new password reset link? The current link will be invalidated.'))
+            ->action(Btn::primary(Yii::t('skeleton', 'Create password link'))
+                ->icon('key')
+                ->post(['reset', 'id' => $this->user->id]))
             ->render();
+
+        $btn = Btn::primary(Yii::t('skeleton', 'Create password link'))
+            ->icon('key')
+            ->modal('password-reset')
+            ->render();
+
+        return $modal . $btn;
     }
 
     protected function getPasswordResetLinkButton(): string
@@ -85,6 +94,7 @@ class UserHelpPanel extends HelpPanel
         $id = 'password-reset-link';
 
         $action = Btn::primary(Yii::t('skeleton', 'Copy link'))
+            ->icon('clipboard')
             ->attribute('onclick', 'navigator.clipboard.writeText(' . Json::htmlEncode($url) . ')');
 
         $modal = Modal::tag()

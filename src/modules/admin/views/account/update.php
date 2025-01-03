@@ -102,7 +102,6 @@ if ($form->user->isUnconfirmed()) {
                             ->icon('trash-alt')
                             ->post(['deauthorize', 'id' => $auth->id, 'name' => $auth->name])
                             ->tooltip(Yii::t('skeleton', 'Remove {client}', ['client' => $title]))
-                            ->confirm(Yii::t('skeleton', 'Are you sure your want to remove your {client} account?', ['client' => $title]))
                             ->render(); ?>
                     </td>
                 </tr>

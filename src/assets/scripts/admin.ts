@@ -12,14 +12,16 @@ doc.body.addEventListener('htmx:load', () => {
 
     doc.querySelectorAll('.dropdown-toggle').forEach(($el: Element) => new Dropdown($el));
 
-    doc.querySelectorAll('[data-modal]').forEach(($el: HTMLElement) => $el.onclick = (e) => {
-        const $target = doc.querySelector($el.dataset.modal) as HTMLElement;
+    doc.querySelectorAll('[data-modal]').forEach(($el: HTMLElement) => $el.addEventListener('click', () => {
+        const selector = $el.dataset.modal;
+        const $target = selector
+            ? (doc.querySelector(selector) as HTMLElement)
+            : $el.closest('[open]');
 
         if ($target) {
-            // @ts-ignore
-            $target.showModal();
+            $target[selector ? 'showModal' : 'close']();
         }
-    });
+    }));
 
     doc.querySelectorAll('[data-toggle="tooltip"]').forEach(($el: Element) => new Tooltip($el));
 });

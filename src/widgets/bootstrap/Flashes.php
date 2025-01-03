@@ -28,7 +28,6 @@ class Flashes extends Widget
      */
     public array $wrapperOptions = [
         'id' => 'flashes',
-        'hx-swap-oob' => 'true',
     ];
 
     /**

@@ -8,10 +8,15 @@ use davidhirtz\yii2\skeleton\helpers\Url;
 
 trait AjaxAttributeTrait
 {
-    public function confirm(?string $message): self
+    public function delete(string|array $url): self
     {
-        // todo: implement
-        return $this;
+        $new = clone $this;
+
+        $new->attributes['hx-post'] = Url::to($url);
+        $new->attributes['hx-select-oob'] ??= '#flashes';
+        $new->attributes['hx-swap'] ??= 'delete';
+
+        return $new;
     }
 
     public function get(string|array $url): self
@@ -27,7 +32,8 @@ trait AjaxAttributeTrait
 
         $new->attributes['hx-post'] = Url::to($url);
         $new->attributes['hx-swap'] ??= 'show:top';
-        $new->attributes['hx-target'] ??= 'body';
+        $new->attributes['hx-select'] ??= 'main';
+        $new->attributes['hx-target'] ??= 'main';
 
         return $new;
     }

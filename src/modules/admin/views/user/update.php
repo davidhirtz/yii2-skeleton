@@ -28,7 +28,7 @@ $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
 ]); ?>
 
 <?= Html::errorSummary($form, [
-    'title' => Yii::t('skeleton', 'The user could not be updated'),
+    'header' => Yii::t('skeleton', 'The user could not be updated'),
 ]); ?>
 
 <?= Panel::widget([

@@ -62,7 +62,7 @@ final class Modal extends NormalTag
 
     public function action(NormalTag|string $button): self
     {
-        $this->footer[] = $button instanceof Btn ? $button->attribute('data-bs-dismiss', 'modal') : $button;
+        $this->footer[] = $button instanceof Btn ? $button->attribute('data-modal', '') : $button;
         return $this;
     }
 
@@ -82,11 +82,12 @@ final class Modal extends NormalTag
                     ->addAttributes([
                         'aria-label' => $this->dismiss ?? Yii::t('skeleton', 'Close'),
                         'class' => 'btn-close',
-                        'onclick' => 'this.closest(".modal").close()',
+                        'data-modal' => '',
                     ]));
 
                 array_unshift($this->footer, Btn::secondary(Yii::t('skeleton', 'Cancel'))
-                    ->attribute('onclick', 'this.closest(".modal").close()'));
+                    ->attribute('data-modal', '')
+                    ->attribute('autofocus', true));
             }
 
             $html .= $header->render();

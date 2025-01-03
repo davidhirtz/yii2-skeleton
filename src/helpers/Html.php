@@ -115,12 +115,12 @@ class Html extends BaseHtml
     public static function errorSummary($models, $options = []): string
     {
         if ($models instanceof ActiveRecord) {
-            if (!isset($options['header'])) {
-                $options['header'] = $models->getIsNewRecord() ? Yii::t('skeleton', 'The record could not be created:') : Yii::t('skeleton', 'The record could not be updated:');
-            }
+            $options['header'] ??= $models->getIsNewRecord()
+                ? Yii::t('skeleton', 'The record could not be created:')
+                : Yii::t('skeleton', 'The record could not be updated:');
         }
 
-        if (isset($options['header'])) {
+        if (($options['header'] ?? false) !== false) {
             $options['header'] = static::tag('div', $options['header'], ['class' => 'alert-heading']);
         }
 

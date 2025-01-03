@@ -373,8 +373,7 @@ class GridView extends \yii\grid\GridView
             ->title($message)
             ->action(Btn::danger()
                 ->text(Yii::t('yii', 'Delete'))
-                ->post($this->getDeleteRoute($model))
-                ->swap('delete')
+                ->delete($this->getDeleteRoute($model))
                 ->target('#' . $this->getRowId($model)));
 
         $btn = Btn::danger()
