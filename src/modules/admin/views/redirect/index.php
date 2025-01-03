@@ -1,13 +1,12 @@
 <?php
-declare(strict_types=1);
-
 /**
- * Redirect list
  * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController::actionIndex()
  *
  * @var View $this
  * @var RedirectActiveDataProvider $provider
  */
+
+declare(strict_types=1);
 
 use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\RedirectGridView;

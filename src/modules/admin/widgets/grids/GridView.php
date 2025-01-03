@@ -371,14 +371,14 @@ class GridView extends \yii\grid\GridView
         $modal = Modal::tag()
             ->id($id)
             ->title($message)
-            ->action(Btn::danger()
+            ->footer(Btn::danger()
                 ->text(Yii::t('yii', 'Delete'))
                 ->delete($this->getDeleteRoute($model))
                 ->target('#' . $this->getRowId($model)));
 
         $btn = Btn::danger()
             ->icon($icon)
-            ->modal($id)
+            ->modal("#$id")
             ->addAttributes($options)
             ->render();
 

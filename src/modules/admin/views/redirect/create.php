@@ -1,12 +1,12 @@
 <?php
-declare(strict_types=1);
-
 /**
  * @see RedirectController::actionCreate()
  *
  * @var View $this
  * @var Redirect $redirect
  */
+
+declare(strict_types=1);
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\Redirect;

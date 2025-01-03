@@ -10,7 +10,7 @@ use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\AuthItem;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\ButtonColumn;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\ButtonsColumn;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\MessageSourceTrait;
 use Yii;
 use yii\grid\GridView;
@@ -132,7 +132,7 @@ class AuthItemGridView extends GridView
     public function buttonsColumn(): array
     {
         return [
-            'class' => ButtonColumn::class,
+            'class' => ButtonsColumn::class,
             'content' => fn (AuthItem $authItem) => $this->getRowButtons($authItem),
         ];
     }

@@ -5,7 +5,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use yii\grid\Column;
 
-class ButtonColumn extends Column
+class ButtonsColumn extends Column
 {
     public $contentOptions = [
         'class' => 'text-end text-nowrap',

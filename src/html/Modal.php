@@ -60,7 +60,7 @@ final class Modal extends NormalTag
         return $this;
     }
 
-    public function action(NormalTag|string $button): self
+    public function footer(NormalTag|string $button): self
     {
         $this->footer[] = $button instanceof Btn ? $button->attribute('data-modal', '') : $button;
         return $this;

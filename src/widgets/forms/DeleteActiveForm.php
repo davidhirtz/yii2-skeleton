@@ -66,7 +66,7 @@ class DeleteActiveForm extends ActiveForm
         $btn = Btn::danger($this->label);
 
         $this->buttons ??= ($this->confirm
-            ? $btn->modal("modal-$this->id")
+            ? $btn->modal("#modal-$this->id")
             : $btn->type('submit'))
             ->render();
 
@@ -89,7 +89,7 @@ class DeleteActiveForm extends ActiveForm
             echo Modal::tag()
                 ->id("modal-$id")
                 ->title($this->confirm)
-                ->action(Btn::danger($this->label)
+                ->footer(Btn::danger($this->label)
                     ->type('submit')
                     ->attribute('form', "$id"))
                 ->render();

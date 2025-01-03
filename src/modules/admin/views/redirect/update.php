@@ -1,6 +1,4 @@
 <?php
-declare(strict_types=1);
-
 /**
  * @see RedirectController::actionUpdate()
  *
@@ -8,6 +6,8 @@ declare(strict_types=1);
  * @var Redirect $redirect
  * @var RedirectActiveDataProvider $provider
  */
+
+declare(strict_types=1);
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\Redirect;

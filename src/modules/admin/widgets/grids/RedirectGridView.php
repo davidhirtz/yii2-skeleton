@@ -9,7 +9,7 @@ use davidhirtz\yii2\skeleton\html\Btn;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
 use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\ButtonColumn;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\ButtonsColumn;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\TypeGridViewTrait;
 use davidhirtz\yii2\timeago\TimeagoColumn;
 use Yii;
@@ -138,7 +138,7 @@ class RedirectGridView extends GridView
     public function buttonsColumn(): array
     {
         return [
-            'class' => ButtonColumn::class,
+            'class' => ButtonsColumn::class,
             'content' => fn (Redirect $redirect) => $this->getRowButtons($redirect),
         ];
     }

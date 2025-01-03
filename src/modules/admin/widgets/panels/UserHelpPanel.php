@@ -71,14 +71,14 @@ class UserHelpPanel extends HelpPanel
             ->id('password-reset')
             ->title(Yii::t('skeleton', 'Create password link'))
             ->text(Yii::t('skeleton', 'Are you sure you want to create a new password reset link? The current link will be invalidated.'))
-            ->action(Btn::primary(Yii::t('skeleton', 'Create password link'))
+            ->footer(Btn::primary(Yii::t('skeleton', 'Create password link'))
                 ->icon('key')
                 ->post(['reset', 'id' => $this->user->id]))
             ->render();
 
         $btn = Btn::primary(Yii::t('skeleton', 'Create password link'))
             ->icon('key')
-            ->modal('password-reset')
+            ->modal('#password-reset')
             ->render();
 
         return $modal . $btn;
@@ -101,12 +101,12 @@ class UserHelpPanel extends HelpPanel
             ->id($id)
             ->title(Yii::t('skeleton', 'Password reset link'))
             ->text($url, ['class' => 'text-break'])
-            ->action($action)
+            ->footer($action)
             ->render();
 
         $btn = Btn::primary(Yii::t('skeleton', 'Show password link'))
             ->icon('clipboard')
-            ->modal($id)
+            ->modal("#$id")
             ->render();
 
         return $modal . $btn;

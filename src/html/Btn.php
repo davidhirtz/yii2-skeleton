@@ -69,7 +69,7 @@ final class Btn extends NormalTag
     public function modal(string $id): self
     {
         $new = clone $this;
-        $new->attributes['data-modal'] = str_starts_with('#', $id) ? $id : "#$id";
+        $new->attributes['data-modal'] = $id;
         return $new;
     }
 
