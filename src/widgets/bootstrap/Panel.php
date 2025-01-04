@@ -73,6 +73,7 @@ class Panel extends Widget
             echo Html::beginTag('div', $this->options);
 
             if ($this->title) {
+                // @Todo
                 $title = $this->isCollapsable ? Html::a($this->title, "#$collapseId", ['data-toggle' => 'collapse']) : $this->title;
                 echo Html::tag('div', Html::tag('h2', $title, ['class' => 'card-title']), ['class' => 'card-header']);
             }
