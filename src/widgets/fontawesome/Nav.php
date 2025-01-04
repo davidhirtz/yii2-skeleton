@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
+use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\web\View;
 use Yii;
 use yii\helpers\Html;
@@ -124,7 +125,7 @@ class Nav extends \yii\bootstrap5\Nav
             }
 
             $item['label'] = strtr($template, [
-                '{icon}' => $icon ? Icon::tag($icon, $iconOptions) : '',
+                '{icon}' => $icon ? Icon::tag($icon, $iconOptions)->render() : '',
                 '{badge}' => $badge !== false ? Html::tag('span', $badge, $badgeOptions) : '',
                 '{label}' => $label ? Html::tag('span', $label, $item['labelOptions'] ?? $this->labelOptions) : '',
             ]);

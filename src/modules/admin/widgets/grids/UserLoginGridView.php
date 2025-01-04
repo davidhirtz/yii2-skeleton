@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\models\UserLogin;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use davidhirtz\yii2\timeago\Timeago;
 
 /**
@@ -23,14 +23,9 @@ class UserLoginGridView extends GridView
             $this->columns = [
                 [
                     'contentOptions' => ['class' => 'text-center'],
-                    'content' => function (UserLogin $login) {
-                        $options = [
-                            'data-toggle' => 'tooltip',
-                            'title' => $login->getTypeName()
-                        ];
-
-                        return ($icon = $login->getTypeIcon()) ? Icon::tag($icon, $options) : Icon::brand($login->type, $options);
-                    }
+                    'content' => fn (UserLogin $login) => Icon::tag($login->getTypeIcon() ?? "brand:$login->type")
+                        ->tooltip($login->getTypeName())
+                        ->render(),
                 ],
                 [
                     'attribute' => 'ip_address',

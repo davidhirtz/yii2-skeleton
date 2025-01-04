@@ -11,7 +11,7 @@ final class BtnToolbar extends NormalTag
 
     protected array $attributes = ['class' => 'btn-toolbar'];
 
-    public function addButton(Btn $btn): self
+    public function button(Btn $btn): self
     {
         $this->content[] = $btn;
         return $this;

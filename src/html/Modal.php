@@ -19,6 +19,8 @@ final class Modal extends NormalTag
     private string|false|null $dismiss = null;
     private array $footer = [];
 
+    private static int $counter = 0;
+
     public function body(string $html, array $attributes = []): self
     {
         $this->body ??= Div::tag()
@@ -38,6 +40,11 @@ final class Modal extends NormalTag
     {
         $this->dismiss = $dismiss;
         return $this;
+    }
+
+    public function getId(): string
+    {
+        return $this->attributes['id'] ??= 'modal-' . ++self::$counter;
     }
 
     public function text(string $text, array $attributes = []): self
@@ -60,10 +67,16 @@ final class Modal extends NormalTag
         return $this;
     }
 
-    public function footer(NormalTag|string $button): self
+    public function footer(Btn|string $button): self
     {
         $this->footer[] = $button instanceof Btn ? $button->attribute('data-modal', '') : $button;
         return $this;
+    }
+
+    protected function prepareAttributes(): void
+    {
+        $this->getId();
+        parent::prepareAttributes();
     }
 
     protected function generateContent(): string

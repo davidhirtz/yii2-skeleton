@@ -49,10 +49,10 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                 [
                     'contentOptions' => ['class' => 'text-end'],
                     'content' => fn ($modified, $name): string => BtnToolbar::tag()
-                        ->addButton(Btn::primary()
+                        ->button(Btn::primary()
                             ->href(['view', 'log' => $name, 'raw' => 1])
                             ->icon('file'))
-                        ->addButton(Btn::danger()
+                        ->button(Btn::danger()
                             ->icon('trash')
                             ->post(['delete', 'log' => $name]))
                         ->render(),

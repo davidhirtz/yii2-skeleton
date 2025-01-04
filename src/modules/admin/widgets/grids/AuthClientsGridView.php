@@ -51,20 +51,15 @@ class AuthClientsGridView extends GridView
 
     protected function renderCreateButton(): string
     {
-        $id = 'auth-client-modal';
-
         $modal = Modal::tag()
-            ->id($id)
+            ->id('auth-client-modal')
             ->title(Yii::t('skeleton', 'Clients'))
-            ->body(AuthClientListGroup::widget())
-            ->render();
+            ->body(AuthClientListGroup::widget());
 
-        $btn = Btn::primary(Yii::t('skeleton', 'Add account'))
+        return Btn::primary(Yii::t('skeleton', 'Add account'))
             ->icon('plus')
-            ->modal("#$id")
+            ->modal($modal)
             ->render();
-
-        return $modal . $btn;
     }
 
     protected function accountColumn(): array
@@ -89,16 +84,13 @@ class AuthClientsGridView extends GridView
                     ->body(Yii::t('skeleton', 'Are you sure your want to remove your {client} account?', ['client' => $title]))
                     ->footer(Btn::danger(Yii::t('skeleton', 'Remove'))
                         ->icon('trash-alt')
-                        ->post(['deauthorize', 'id' => $auth->id, 'name' => $auth->name]))
-                    ->render();
+                        ->post(['deauthorize', 'id' => $auth->id, 'name' => $auth->name]));
 
-                $btn = Btn::danger()
+                return Btn::danger()
                     ->icon('trash-alt')
+                    ->modal($modal)
                     ->tooltip(Yii::t('skeleton', 'Remove {client}', ['client' => $title]))
-                    ->modal("#$id")
                     ->render();
-
-                return $modal . $btn;
             }
         ];
     }

@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Btn;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\UserActiveDataProvider;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\ButtonsColumn;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\StatusGridViewTrait;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use davidhirtz\yii2\timeago\Timeago;
 use davidhirtz\yii2\timeago\TimeagoColumn;
 use Yii;
@@ -131,9 +132,8 @@ class UserGridView extends GridView
     public function buttonsColumn(): array
     {
         return [
-            'headerOptions' => ['class' => 'd-none d-md-table-cell'],
-            'contentOptions' => ['class' => 'd-none d-md-table-cell text-end'],
-            'content' => fn (User $user): string => Html::buttons($this->getRowButtons($user))
+            'class' => ButtonsColumn::class,
+            'content' => fn (User $user) => $this->getRowButtons($user),
         ];
     }
 
@@ -145,19 +145,18 @@ class UserGridView extends GridView
     protected function getRowButtons(User $user): array|string
     {
         if ($route = $this->getRoute($user)) {
-            return Html::a((string)Icon::tag('wrench'), $route, ['class' => 'btn btn-primary']);
+            return Btn::primary()
+                ->href($route)
+                ->icon('wrench')
+                ->render();
         }
 
         if (Yii::$app->getUser()->can(User::AUTH_USER_ASSIGN, ['user' => $user])) {
-            return Html::a(
-                (string)Icon::tag('unlock-alt'),
-                ['/admin/auth/view', 'user' => $user->id],
-                [
-                    'class' => 'btn btn-primary',
-                    'data-toggle' => 'tooltip',
-                    'title' => Yii::t('skeleton', 'Permissions'),
-                ],
-            );
+            return Btn::primary()
+                ->href(['/admin/auth/assign', 'user' => $user->id])
+                ->icon('unlock-alt')
+                ->tooltip(Yii::t('skeleton', 'Permissions'))
+                ->render();
         }
 
         return [];

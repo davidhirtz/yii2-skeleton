@@ -65,10 +65,19 @@ class DeleteActiveForm extends ActiveForm
 
         $btn = Btn::danger($this->label);
 
-        $this->buttons ??= ($this->confirm
-            ? $btn->modal("#modal-$this->id")
-            : $btn->type('submit'))
-            ->render();
+        if ($this->confirm) {
+            $id = $this->getId();
+            $btn = $btn->modal(Modal::tag()
+                ->id("modal-$id")
+                ->title($this->confirm)
+                ->footer(Btn::danger($this->label)
+                    ->type('submit')
+                    ->attribute('form', "$id")));
+        } else {
+            $btn = $btn->type('submit');
+        }
+
+        $this->buttons ??= $btn->render();
 
         parent::init();
     }
@@ -81,18 +90,6 @@ class DeleteActiveForm extends ActiveForm
 
         if ($this->attribute) {
             echo $this->field($this->form, 'value', $this->fieldOptions);
-        }
-
-        if ($this->confirm) {
-            $id = $this->getId();
-
-            echo Modal::tag()
-                ->id("modal-$id")
-                ->title($this->confirm)
-                ->footer(Btn::danger($this->label)
-                    ->type('submit')
-                    ->attribute('form', "$id"))
-                ->render();
         }
     }
 }

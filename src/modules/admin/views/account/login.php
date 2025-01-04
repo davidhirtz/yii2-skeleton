@@ -46,7 +46,7 @@ $this->setTitle(Yii::t('skeleton', 'Login'));
         <?= ListGroup::tag()
             ->item(ListGroupItemAction::tag()
                 ->text(Yii::t('skeleton', 'Login with Facebook'))
-                ->icon('facebook', 'fab')
+                ->icon('brand:facebook')
                 ->href(['auth', 'authclient' => 'facebook'])
                 ->visible($form->isFacebookLoginEnabled()))
             ->item(ListGroupItemAction::tag()

@@ -6,18 +6,18 @@ namespace davidhirtz\yii2\skeleton\html\traits;
 
 use davidhirtz\yii2\skeleton\html\Icon;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Base\Tag;
 use Yiisoft\Html\Tag\Div;
-use Yiisoft\Html\Tag\Span;
 
 trait IconTextTrait
 {
     private string $text = '';
     private ?Icon $icon = null;
 
-    public function icon(string $icon, string $collection = 'fa'): self
+    public function icon(string $icon): self
     {
         $new = clone $this;
-        $new->icon = Icon::tag()->icon($icon)->collection($collection);
+        $new->icon = Icon::tag($icon);
         return $new;
     }
 
@@ -32,17 +32,15 @@ trait IconTextTrait
         return $this;
     }
 
-    protected function generateIconTextContent(): string
+    protected function generateIconTextContent(): string|Tag
     {
         if ($this->icon && $this->text) {
             return Div::tag()
-                ->addContent($this->icon->render())
-                ->addContent(Span::tag()->content($this->text)->render())
-                ->addClass('icon-text')
-                ->encode(false)
-                ->render();
+                ->addContent($this->icon)
+                ->addContent(Div::tag()->content($this->text))
+                ->addClass('icon-text');
         }
 
-        return $this->icon?->render() ?? $this->text;
+        return $this->icon ?? $this->text;
     }
 }

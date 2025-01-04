@@ -10,9 +10,9 @@ declare(strict_types=1);
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\SignupActiveForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Sign up'));
@@ -41,7 +41,7 @@ $this->setTitle(Yii::t('skeleton', 'Sign up'));
             if ($form->isFacebookSignupEnabled()) {
                 ?>
                 <a href="<?= Url::to(['auth', 'authclient' => 'facebook']); ?>" class="list-group-item list-group-item-action">
-                    <?= Icon::brand('facebook-f', ['class' => 'fa-fw']); ?>
+                    <?= Icon::tag('brand:facebook-f', ['class' => 'fa-fw'])->render(); ?>
                     <?= Yii::t('skeleton', 'Sign up with Facebook'); ?>
                 </a>
                 <?php

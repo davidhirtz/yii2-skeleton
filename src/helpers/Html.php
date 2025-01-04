@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\helpers;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
 use yii\helpers\BaseHtml;
 
@@ -43,7 +43,7 @@ class Html extends BaseHtml
     public static function iconText(string $icon, string $content, array $options = []): string
     {
         static::addCssClass($options, 'icon-text');
-        return Html::tag('div', Icon::tag($icon, ['class' => 'fa-fw']) . Html::tag('span', $content), $options);
+        return Html::tag('div', Icon::tag($icon, ['class' => 'fa-fw'])->render() . Html::tag('span', $content), $options);
     }
 
     public static function info(string $content, array $options = []): string

@@ -71,8 +71,7 @@ class AccountActiveForm extends ActiveForm
 
     protected function getOldPasswordFieldIcon(array $options = []): string
     {
-        return Icon::tag()
-            ->icon('info-circle')
+        return Icon::tag('info-circle')
             ->tooltip(Yii::t('skeleton', 'Only needed, if you want to change your password'))
             ->addAttributes($options)
             ->render();

@@ -9,9 +9,9 @@ use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Btn;
+use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use davidhirtz\yii2\skeleton\widgets\pagers\LinkPager;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -366,31 +366,20 @@ class GridView extends \yii\grid\GridView
     {
         $icon = ArrayHelper::remove($options, 'icon', 'trash');
         $message = ArrayHelper::remove($options, 'message', Yii::t('yii', 'Are you sure you want to delete this item?'));
-        $id = 'delete-' . $this->getRowId($model);
 
         $modal = Modal::tag()
-            ->id($id)
+            ->id('modal-' . $this->getRowId($model))
             ->title($message)
             ->footer(Btn::danger()
                 ->text(Yii::t('yii', 'Delete'))
                 ->delete($this->getDeleteRoute($model))
                 ->target('#' . $this->getRowId($model)));
 
-        $btn = Btn::danger()
+        return Btn::danger()
             ->icon($icon)
-            ->modal("#$id")
+            ->modal($modal)
             ->addAttributes($options)
             ->render();
-
-        return $modal . $btn;
-
-        //        return Html::a((string)Icon::tag($icon), $this->getDeleteRoute($model), [
-        //            'class' => 'btn btn-danger',
-        //            'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
-        //            'data-ajax' => 'remove',
-        //            'data-target' => '#' . $this->getRowId($model),
-        //            ...$options,
-        //        ]);
     }
 
     /**

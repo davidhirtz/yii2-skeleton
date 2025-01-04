@@ -8,94 +8,104 @@ use davidhirtz\yii2\skeleton\helpers\Url;
 use davidhirtz\yii2\skeleton\html\traits\AjaxAttributeTrait;
 use davidhirtz\yii2\skeleton\html\traits\IconTextTrait;
 use davidhirtz\yii2\skeleton\html\traits\TooltipAttributeTrait;
-use Yiisoft\Html\Tag\Base\NormalTag;
+use Yii;
+use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\Base\Tag;
+use Yiisoft\Html\Tag\Button;
 
-final class Btn extends NormalTag
+class Btn extends Tag
 {
     use AjaxAttributeTrait;
     use IconTextTrait;
     use TooltipAttributeTrait;
 
-    protected array $attributes = [
-        'type' => 'button',
-    ];
+    private A|Button $tag;
+    private ?Modal $modal = null;
 
     public static function danger(?string $text = null): self
     {
-        return self::tag()
-            ->class('btn btn-danger')
-            ->text($text);
+        return self::create($text, 'btn btn-danger');
     }
 
     public static function primary(?string $text = null): self
     {
-        return self::tag()
-            ->class('btn btn-primary')
-            ->text($text);
+        return self::create($text, 'btn btn-primary');
     }
 
     public static function secondary(?string $text = null): self
     {
-        return self::tag()
-            ->class('btn btn-secondary')
-            ->text($text);
+        return self::create($text, 'btn btn-secondary');
     }
 
     public static function success(?string $text = null): self
     {
-        return self::tag()
-            ->class('btn btn-success')
-            ->text($text);
+        return self::create($text, 'btn btn-success');
     }
 
     public static function transparent(?string $text = null): self
     {
-        return self::tag()
-            ->class('btn-transparent')
-            ->text($text);
+        return self::create($text, 'btn btn-transparent');
+    }
+
+    private static function create(?string $text, string $class): self
+    {
+        $self = Yii::createObject(self::class);
+
+        $self->tag = Button::tag()->type('button');
+        $self->attributes = ['class' => $class];
+        $self->text = $text ?? '';
+
+        return $self;
     }
 
     public function href(string|array|null $route): self
     {
-        if ($route !== null) {
-            $new = clone $this;
-            $new->attributes['href'] = Url::to($route);
-            return $new;
-        }
+        $this->tag = A::tag()->attributes([
+            ...$this->attributes,
+            'href' => $route !== null ? Url::to($route) : null,
+            'type' => null,
+        ]);
 
         return $this;
     }
 
-    public function modal(string $id): self
+    public function modal(Modal $modal): self
     {
-        $new = clone $this;
-        $new->attributes['data-modal'] = $id;
-        return $new;
+        $this->modal = $modal;
+        return $this;
     }
 
     public function type(?string $type): self
     {
-        $new = clone $this;
-        $new->attributes['type'] = $type;
-        return $new;
+        $this->tag = Button::tag()->attributes([
+            ...$this->attributes,
+            'href' => null,
+            'type' => $type,
+        ]);
+
+        return $this;
     }
 
-    protected function prepareAttributes(): void
+    protected function before(): string
     {
-        if (!empty($this->attributes['href'])) {
-            unset($this->attributes['type']);
+        if ($this->modal) {
+            $this->attributes['data-modal'] ??= '#' . $this->modal->getId();
+            return $this->modal->render();
         }
 
-        parent::prepareAttributes();
+        return '';
     }
 
-    protected function generateContent(): string
+    protected function renderTag(): string
     {
-        return $this->generateIconTextContent();
+        return $this->tag
+            ->addAttributes($this->attributes)
+            ->content($this->generateIconTextContent())
+            ->render();
     }
 
     protected function getName(): string
     {
-        return !empty($this->attributes['href']) ? 'a' : 'button';
+        return '';
     }
 }

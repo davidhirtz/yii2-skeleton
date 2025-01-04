@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\interfaces\StatusAttributeInterface;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
 use yii\base\Model;
 use yii\helpers\Url;
@@ -61,10 +61,9 @@ trait StatusGridViewTrait
 
     protected function getStatusIcon(StatusAttributeInterface $model): string
     {
-        return (string)Icon::tag($model->getStatusIcon(), [
-            'data-toggle' => 'tooltip',
-            'title' => $model->getStatusName()
-        ]);
+        return Icon::tag($model->getStatusIcon())
+            ->tooltip($model->getStatusName())
+            ->render();
     }
 
     /**
@@ -73,7 +72,6 @@ trait StatusGridViewTrait
      */
     protected function statusDropdownItems(): array
     {
-        /** @var StatusAttributeInterface $model */
         $model = $this->getModel();
         $items = [];
 

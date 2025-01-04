@@ -3,62 +3,32 @@
 namespace davidhirtz\yii2\skeleton\html;
 
 use davidhirtz\yii2\skeleton\html\traits\TooltipAttributeTrait;
+use Yii;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Base\NormalTag;
+use Yiisoft\Html\Tag\Base\Tag;
 
-class Icon extends NormalTag
+class Icon extends Tag
 {
     use TooltipAttributeTrait;
 
-    private string $icon = '';
-    private string $collection = 'fas';
-
-    public static function solid(string $name, array $attributes = []): self
+    public static function tag(string $name, array $attributes = []): self
     {
-        $new = self::tag();
-        $new->icon = $name;
-        $new->attributes = $attributes;
+        $class = str_starts_with('brand:', $name) ? 'fab fa-' . substr($name, 6) : "fas fa-$name";
+        Html::addCssClass($attributes, $class);
 
-        return $new;
-    }
+        $instance = Yii::$container->get(self::class);
+        $instance->attributes = $attributes;
 
-    public static function brand(string $name, array $attributes = []): self
-    {
-        $new = self::tag();
-        $new->attributes = $attributes;
-        $new->collection = 'fab';
-        $new->icon = $name;
-
-        return $new;
-    }
-
-    public function icon(string $icon): self
-    {
-        $new = clone $this;
-        $new->icon = $icon;
-        return $new;
-    }
-
-    public function collection(string $collection): self
-    {
-        $new = clone $this;
-        $new->collection = $collection;
-        return $new;
-    }
-
-    protected function prepareAttributes(): void
-    {
-        Html::addCssClass($this->attributes, "$this->collection fa-$this->icon");
-        parent::prepareAttributes();
-    }
-
-    protected function generateContent(): string
-    {
-        return '';
+        return $instance;
     }
 
     protected function getName(): string
     {
         return 'i';
+    }
+
+    protected function renderTag(): string
+    {
+        return '<' . $this->getName() . $this->renderAttributes() . '></' . $this->getName() . '>';
     }
 }

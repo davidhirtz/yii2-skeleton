@@ -114,7 +114,7 @@ class UserForm extends Model
             return false;
         }
 
-        if ($this->user->save(false)) {
+        if ($this->user->upsert(false)) {
             $this->afterSave();
             return true;
         }

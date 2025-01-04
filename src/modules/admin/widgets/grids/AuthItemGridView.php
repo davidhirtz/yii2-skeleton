@@ -62,8 +62,7 @@ class AuthItemGridView extends GridView
         return [
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
             'contentOptions' => ['class' => 'd-none d-md-table-cell text-center'],
-            'content' => fn (AuthItem $authItem) => Icon::tag()
-                ->icon($authItem->getTypeIcon())
+            'content' => fn (AuthItem $authItem) => Icon::tag($authItem->getTypeIcon())
                 ->tooltip($authItem->getTypeName())
                 ->render(),
         ];

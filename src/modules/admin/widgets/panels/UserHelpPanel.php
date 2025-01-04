@@ -73,15 +73,12 @@ class UserHelpPanel extends HelpPanel
             ->text(Yii::t('skeleton', 'Are you sure you want to create a new password reset link? The current link will be invalidated.'))
             ->footer(Btn::primary(Yii::t('skeleton', 'Create password link'))
                 ->icon('key')
-                ->post(['reset', 'id' => $this->user->id]))
-            ->render();
+                ->post(['reset', 'id' => $this->user->id]));
 
-        $btn = Btn::primary(Yii::t('skeleton', 'Create password link'))
+        return Btn::primary(Yii::t('skeleton', 'Create password link'))
             ->icon('key')
-            ->modal('#password-reset')
+            ->modal($modal)
             ->render();
-
-        return $modal . $btn;
     }
 
     protected function getPasswordResetLinkButton(): string
@@ -91,24 +88,20 @@ class UserHelpPanel extends HelpPanel
         }
 
         $url = $this->user->getPasswordResetUrl();
-        $id = 'password-reset-link';
 
         $action = Btn::primary(Yii::t('skeleton', 'Copy link'))
             ->icon('clipboard')
             ->attribute('onclick', 'navigator.clipboard.writeText(' . Json::htmlEncode($url) . ')');
 
         $modal = Modal::tag()
-            ->id($id)
+            ->id('password-reset-link')
             ->title(Yii::t('skeleton', 'Password reset link'))
             ->text($url, ['class' => 'text-break'])
-            ->footer($action)
-            ->render();
+            ->footer($action);
 
-        $btn = Btn::primary(Yii::t('skeleton', 'Show password link'))
+        return Btn::primary(Yii::t('skeleton', 'Show password link'))
             ->icon('clipboard')
-            ->modal("#$id")
+            ->modal($modal)
             ->render();
-
-        return $modal . $btn;
     }
 }
