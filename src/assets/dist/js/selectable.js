@@ -1,0 +1,2 @@
+var s=d=>{let a=document.querySelector(d),c=a.querySelectorAll('[data-id="check"]'),t=a.querySelector('[data-id="check-all"]');t&&(t.onchange=()=>c.forEach(e=>e.checked=t.checked)),c.forEach(e=>e.onchange=()=>{if(!t)e.checked&&c.forEach(l=>l.checked=l===e);else{let l=a.querySelectorAll('[data-id="check-button"]'),n="none";c.forEach(o=>{o.checked&&(n="block")}),l.forEach(o=>o.style.display=n)}})};export{s as default};
+//# sourceMappingURL=selectable.js.map

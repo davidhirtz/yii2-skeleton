@@ -51,12 +51,11 @@
     bottom: 0;
     background-color: $card-bg;
     padding-bottom: $app-grid-view-footer-spacer-y;
-    z-index: 1000;
+    z-index: 100;
   }
 
   .row {
     padding-top: $app-spacer-y;
-    justify-content: space-between;
 
     & > * {
       width: auto;

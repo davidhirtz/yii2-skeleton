@@ -30,7 +30,7 @@ class GridSearch extends BaseObject
     public string $url;
     public ?string $value = null;
 
-    public function __construct(public readonly Widget $owner, $config = [])
+    public function __construct(public readonly Widget $grid, $config = [])
     {
         parent::__construct($config);
     }
@@ -47,6 +47,11 @@ class GridSearch extends BaseObject
             'page' => null,
         ]);
 
+        if ($this->value) {
+            $this->inputOptions['autofocus'] ??= true;
+            $this->inputOptions['onfocus'] ??= 'this.setSelectionRange(this.value.length,this.value.length);';
+        }
+
         if ($this->enableAjax) {
             $this->setAjaxFormOptions();
         }
@@ -57,6 +62,9 @@ class GridSearch extends BaseObject
         $this->formOptions = [
             'hx-get' => $this->url,
             'hx-push-url' => 'true',
+            'hx-select' => 'main',
+            'hx-swap' => 'outerHTML',
+            'hx-target' => 'main',
             ...$this->formOptions,
         ];
     }

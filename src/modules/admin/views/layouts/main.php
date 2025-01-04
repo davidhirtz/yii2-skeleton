@@ -37,9 +37,9 @@ AdminAsset::register($this);
             <?= Flashes::widget(); ?>
             <?= $content ?>
         </div>
+        <?php $this->endBody() ?>
     </main>
 </div>
-<?php $this->endBody() ?>
 </body>
 </html>
 <?php $this->endPage() ?>

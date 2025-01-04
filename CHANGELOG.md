@@ -2,7 +2,10 @@
 
 - Added `GridSearch` and moved properties `search`, `searchParamName`, `searchInputOptions` and `searchUrl` as well as
   methods `getSearchInput`, and `getSearchKeywords` to the new `GridView::$search` property
+- Changed `GridView::isSortedByPosition()` to `GridView::isSortable()`
 - Removed `Html::buttonList()`, use `Html::buttons()` instead
+- Removed `GridView::renderSelectionForm()` and corresponding `GridView::$selectionRoute`, instead use the action on
+  the selection menu items
 
 ## 2.4.2 (Dec 17, 2024)
 

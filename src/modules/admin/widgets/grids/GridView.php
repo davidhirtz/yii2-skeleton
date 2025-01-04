@@ -10,6 +10,7 @@ use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Btn;
 use davidhirtz\yii2\skeleton\html\Modal;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\CheckboxColumn;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use davidhirtz\yii2\skeleton\widgets\pagers\LinkPager;
@@ -17,7 +18,6 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\db\ActiveRecordInterface;
-use yii\grid\CheckboxColumn;
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 use yii\helpers\Url;
@@ -63,11 +63,6 @@ class GridView extends \yii\grid\GridView
      */
     public bool $showSelection = false;
 
-    /**
-     * @var array the url route for selection update
-     */
-    public array $selectionRoute = ['update-all'];
-
 
     public ?string $selectionButtonLabel = null;
 
@@ -83,8 +78,6 @@ class GridView extends \yii\grid\GridView
 
     public function init(): void
     {
-        $this->options['hx-swap-oob'] ??= 'true';
-
         if ($this->showSelection) {
             array_unshift($this->columns, $this->selectionColumn);
             $this->getView()->registerJs('Skeleton.initSelection("#' . $this->getSelectionFormId() . '")');
@@ -122,25 +115,17 @@ class GridView extends \yii\grid\GridView
     public function renderItems(): string
     {
         if ($this->dataProvider->getCount() || $this->emptyText) {
-            $table = $this->showSelection ? $this->renderSelectionForm(parent::renderItems()) : parent::renderItems();
-            return Html::tag('div', $table, ['class' => 'table-responsive']);
+            return Html::tag('div', parent::renderItems(), ['class' => 'table-responsive']);
         }
 
         return '';
-    }
-
-    protected function renderSelectionForm(string $items): string
-    {
-        return Html::beginForm($this->selectionRoute, 'post', ['id' => $this->getSelectionFormId()])
-            . $items
-            . Html::endForm();
     }
 
     public function renderTableBody(): string
     {
         $tableBody = parent::renderTableBody();
 
-        if ($this->isSortedByPosition()) {
+        if ($this->isSortable()) {
             $attributes = [
                 'class' => 'sortable',
                 'data-sort-url' => Url::to($this->orderRoute),
@@ -215,11 +200,15 @@ class GridView extends \yii\grid\GridView
     public function renderHeader(): string
     {
         $this->initHeader();
+        $header = $this->header ? $this->renderRows($this->header) : '';
 
-        $options = ArrayHelper::remove($this->header, 'options', []);
-        Html::addCssClass($options, 'grid-view-header');
+        if ($header) {
+            $options = $this->header['options'] ?? [];
+            Html::addCssClass($options, 'grid-view-header');
+            $header = Html::tag('div', $header, $options);
+        }
 
-        return $this->header ? Html::tag('div', $this->renderRows($this->header), $options) : '';
+        return $header;
     }
 
     protected function initFooter(): void
@@ -229,13 +218,15 @@ class GridView extends \yii\grid\GridView
     public function renderFooter(): string
     {
         $this->initFooter();
+        $footer = $this->footer ? $this->renderRows($this->footer) : '';
 
-        $options = ArrayHelper::remove($this->footer, 'options', []);
-        Html::addCssClass($options, 'grid-view-footer');
+        if ($footer) {
+            $options = $this->footer['options'] ?? [];
+            Html::addCssClass($options, 'grid-view-footer');
+            $footer = Html::tag('div', $footer, $options);
+        }
 
-        return $this->footer
-            ? Html::tag('div', $this->renderRows($this->footer), $options)
-            : '';
+        return $footer;
     }
 
     public function renderRows(array $rows): string
@@ -243,17 +234,20 @@ class GridView extends \yii\grid\GridView
         $result = [];
 
         foreach ($rows as $row) {
-            $options = ArrayHelper::remove($row, 'options', []);
             $items = [];
 
             foreach ($row as $item) {
-                if (ArrayHelper::getValue($item, 'visible', true) && $content = ArrayHelper::getValue($item, 'content')) {
-                    $items[] = Html::tag(ArrayHelper::getValue($item, 'tag', 'div'), $content, ArrayHelper::getValue($item, 'options', []));
+                if (is_string($item)) {
+                    $items[] = Html::tag('div', $item);
+                } elseif (($item['visible'] ?? true) && ($item['content'] ?? null)) {
+                    $items[] = Html::tag($item['tag'] ?? 'div', $item['content'], $item['options'] ?? []);
                 }
             }
 
             if ($items) {
+                $options = $row['options'] ?? [];
                 Html::addCssClass($options, 'row');
+
                 $result[] = Html::tag('div', implode('', $items), $options);
             }
         }
@@ -270,19 +264,14 @@ class GridView extends \yii\grid\GridView
         };
     }
 
-    /**
-     * @noinspection PhpUnused
-     */
-    public function getSelectionButton(array $options = []): string
+    protected function getSelectionButton(array $options = []): string
     {
         if ($items = $this->getSelectionButtonItems()) {
+            $options['options']['data-id'] = 'check-button';
+            $options['options']['style']['display'] ??= 'none';
+
             return ButtonDropdown::widget([
                 'label' => Html::iconText('wrench', $this->selectionButtonLabel),
-                'buttonOptions' => ['class' => 'btn-submit'],
-                'options' => [
-                    'id' => 'btn-selection',
-                    'style' => 'display:none',
-                ],
                 'direction' => ButtonDropdown::DIRECTION_UP,
                 ...$options,
                 'items' => $items,
@@ -430,10 +419,11 @@ class GridView extends \yii\grid\GridView
         return $this->dataProvider->getModels();
     }
 
-    public function isSortedByPosition(): bool
+    protected function isSortable(): bool
     {
         return $this->dataProvider->getSort() === false
             && $this->dataProvider->getPagination() === false
+            && $this->search->value
             && $this->orderRoute !== null;
     }
 }

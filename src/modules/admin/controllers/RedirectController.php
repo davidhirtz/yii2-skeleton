@@ -97,14 +97,14 @@ class RedirectController extends Controller
 
     public function actionDeleteAll(): Response|string
     {
-        $request = Yii::$app->getRequest();
+        Yii::debug($this->request->post());
 
-        if ($redirectIds = array_map('intval', $request->post('selection', []))) {
+        if ($redirectIds = array_map('intval', $this->request->post('selection', []))) {
             $redirects = Redirect::findAll(['id' => $redirectIds]);
             $isDeleted = false;
 
             foreach ($redirects as $redirect) {
-                if (Yii::$app->getUser()->can('redirectUpdate', ['redirect' => $redirect])) {
+                if (Yii::$app->getUser()->can(Redirect::AUTH_REDIRECT_CREATE, ['redirect' => $redirect])) {
                     if ($redirect->delete()) {
                         $isDeleted = true;
                     }
@@ -118,7 +118,7 @@ class RedirectController extends Controller
             }
         }
 
-        return $this->redirect($request->get('redirect', array_merge($request->get(), ['index'])));
+        return $this->redirect($this->request->getReferrer() ?? ['index']);
     }
 
     protected function findRedirect(int $id): Redirect
@@ -127,7 +127,7 @@ class RedirectController extends Controller
             throw new NotFoundHttpException();
         }
 
-        if (!Yii::$app->getUser()->can('redirectCreate', ['redirect' => $redirect])) {
+        if (!Yii::$app->getUser()->can(Redirect::AUTH_REDIRECT_CREATE, ['redirect' => $redirect])) {
             throw new ForbiddenHttpException();
         }
 

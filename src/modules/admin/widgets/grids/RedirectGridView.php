@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Btn;
+use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
 use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
@@ -23,14 +24,7 @@ class RedirectGridView extends GridView
 {
     use TypeGridViewTrait;
 
-
     public bool $showSelection = true;
-
-    /**
-     * @var array the url route for selection update
-     * @see RedirectController::actionDeleteAll()
-     */
-    public array $selectionRoute = ['delete-all'];
 
     /**
      * @var Redirect|null the model used to display additional redirects
@@ -39,6 +33,8 @@ class RedirectGridView extends GridView
 
     public function init(): void
     {
+        $this->setId($this->getId(false) ?? 'redirects');
+
         if ($this->redirect) {
             $this->setDataProviderFromRedirect();
             $this->setRedirectOptions();
@@ -72,10 +68,8 @@ class RedirectGridView extends GridView
     {
         $this->footer ??= [
             [
-                [
-                    'content' => $this->getCreateButton() . ($this->showSelection ? $this->getDeleteAllButton() : ''),
-                    'options' => ['class' => 'col'],
-                ],
+                $this->getCreateButton(),
+                $this->showSelection ? $this->getSelectionButton() : '',
             ],
         ];
 
@@ -152,18 +146,27 @@ class RedirectGridView extends GridView
     }
 
     /**
-     * @todo
+     * @see RedirectController::actionDeleteAll()
      */
-    protected function getDeleteAllButton(): string
+    protected function getSelectionButton(array $options = []): string
     {
-        return Html::button(Yii::t('skeleton', 'Delete selected'), [
-            'id' => 'btn-selection',
-            'class' => 'btn btn-danger',
-            'style' => 'display:none',
-            'data-method' => 'post',
-            'data-confirm' => Yii::t('skeleton', 'Are you sure you want to delete all selected items?'),
-            'data-form' => $this->getSelectionFormId(),
-        ]);
+        $modal = Modal::tag()
+            ->title(Yii::t('skeleton', 'Delete selected'))
+            ->body(Yii::t('skeleton', 'Are you sure you want to delete all selected items?'))
+            ->footer(
+                Btn::danger(Yii::t('skeleton', 'Delete selected'))
+                    ->icon('trash')
+                    ->post(['/admin/redirect/delete-all'])
+                    ->attribute('hx-include', '[data-id="check"]:checked')
+                //                    ->target('#' . $this->getId())
+            );
+
+        return Btn::danger(Yii::t('skeleton', 'Delete selected'))
+            ->icon('trash')
+            ->attribute('data-id', 'check-button')
+            ->attribute('style', 'display:none')
+            ->modal($modal)
+            ->render();
     }
 
     protected function getDeleteRoute(ActiveRecordInterface $model, array $params = []): array
