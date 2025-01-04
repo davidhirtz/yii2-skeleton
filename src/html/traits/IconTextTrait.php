@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\html\traits;
 
-use davidhirtz\yii2\skeleton\html\Icon;
+use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Base\Tag;
 use Yiisoft\Html\Tag\Div;

@@ -10,24 +10,21 @@
 
 .form-group {
   align-items: flex-start;
-
-  &:not(:last-child) {
-    padding-bottom: $app-form-group-padding-bottom;
-  }
-}
-
-.form-group-buttons {
-  margin-top: $app-form-group-buttons-margin-top;
+  margin: 0 $grid-gutter-width / -2;
 }
 
 .form-group-sticky {
   position: $app-form-sticky-position;
 
   @if ($app-grid-view-footer-position == 'sticky') {
-    margin-top: $app-form-group-buttons-margin-top;
+    margin-top: $grid-gutter-width;
     bottom: 0;
     border-top: $app-form-sticky-border;
     background-color: $card-bg;
     z-index: 2;
+
+    .form-group-buttons {
+      padding: $grid-gutter-width / 2 0;
+    }
   }
 }

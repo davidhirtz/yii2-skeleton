@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\helpers;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\User;
+use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
 use yii\helpers\BaseHtml;
 

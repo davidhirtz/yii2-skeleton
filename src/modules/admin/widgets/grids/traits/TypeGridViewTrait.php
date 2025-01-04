@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\interfaces\TypeAttributeInterface;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
+use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
 use yii\helpers\Url;
 

@@ -10,9 +10,9 @@ declare(strict_types=1);
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\SignupActiveForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
+use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Sign up'));

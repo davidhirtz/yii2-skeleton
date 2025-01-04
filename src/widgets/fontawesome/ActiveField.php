@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 
-use davidhirtz\yii2\skeleton\html\Icon;
-
 class ActiveField extends \davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveField
 {
     public ?string $icon = null;

@@ -1,6 +1,6 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\html;
+namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 
 use davidhirtz\yii2\skeleton\html\traits\TooltipAttributeTrait;
 use Yii;
