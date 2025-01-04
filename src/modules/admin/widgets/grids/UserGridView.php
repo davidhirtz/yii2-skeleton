@@ -14,7 +14,6 @@ use davidhirtz\yii2\timeago\Timeago;
 use davidhirtz\yii2\timeago\TimeagoColumn;
 use Yii;
 use yii\db\ActiveRecordInterface;
-use Yiisoft\Html\Tag\Span;
 
 /**
  * @extends GridView<User>
@@ -96,8 +95,10 @@ class UserGridView extends GridView
                     return $email;
                 }
 
-                $tag = Span::tag()->content($email)->class('text-muted');
-                return Html::tooltip($tag, Yii::t('skeleton', 'Unconfirmed email'))->render();
+                $options = ['class' => 'text-muted'];
+                Html::addTooltip($options, Yii::t('skeleton', 'Unconfirmed email'));
+
+                return Html::tag('span', $email, $options);
             }
         ];
     }

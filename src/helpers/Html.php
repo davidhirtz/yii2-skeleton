@@ -9,7 +9,6 @@ use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
 use yii\helpers\BaseHtml;
-use Yiisoft\Html\Tag\Base\Tag;
 
 class Html extends BaseHtml
 {
@@ -184,12 +183,10 @@ class Html extends BaseHtml
         return $user->getUsername();
     }
 
-    public static function tooltip(Tag $tag, string $content): Tag
+    public static function addTooltip(&$options, ?string $tooltip = null): void
     {
-        return $tag->addAttributes([
-            'data-toggle' => 'tooltip',
-            'title' => $content,
-        ]);
+        $options['data-toggle'] = 'tooltip';
+        $options['title'] = $tooltip ?? $options['title'] ?? '';
     }
 
     public static function warning(string $content, array $options = []): string

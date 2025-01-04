@@ -398,7 +398,7 @@ trait ActiveFormTrait
             $options[] = [$values, $selectors];
         }
 
-        return ['data-form-toggle' => Json::htmlEncode($options)];
+        return $options ? ['data-form-toggle' => Json::htmlEncode($options)] : [];
     }
 
     protected function isNewRecord(): bool

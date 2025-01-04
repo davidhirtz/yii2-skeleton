@@ -10,8 +10,8 @@ trait TooltipAttributeTrait
 {
     public function tooltip(string $tooltip): self
     {
-        /** @var self $new */
-        $new = Html::tooltip($this, $tooltip);
+        $new = clone $this;
+        Html::addTooltip($new->attributes['data-toggle'], $tooltip);
         return $new;
     }
 }
