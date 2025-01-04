@@ -62,9 +62,6 @@ class GridSearch extends BaseObject
         $this->formOptions = [
             'hx-get' => $this->url,
             'hx-push-url' => 'true',
-            'hx-select' => 'main',
-            'hx-swap' => 'outerHTML',
-            'hx-target' => 'main',
             ...$this->formOptions,
         ];
     }

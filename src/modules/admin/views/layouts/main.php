@@ -31,7 +31,7 @@ AdminAsset::register($this);
     <header>
         <?= !Yii::$app->getUser()->getIsGuest() ? NavBar::widget() : ''; ?>
     </header>
-    <main>
+    <main hx-select="main" hx-swap="outerHTML show:top" hx-target="this">
         <div class="container">
             <?= !Yii::$app->getUser()->getIsGuest() ? Breadcrumbs::widget() : ''; ?>
             <?= Flashes::widget(); ?>

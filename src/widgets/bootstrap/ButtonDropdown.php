@@ -102,6 +102,7 @@ class ButtonDropdown extends \yii\bootstrap5\ButtonDropdown
         parent::init();
 
         if ($this->showFilter) {
+            // @todo
             $this->getView()->registerJs("$('#{$this->options['id']}').dropdownFilter();");
         }
     }

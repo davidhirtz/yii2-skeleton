@@ -31,9 +31,6 @@ trait AjaxAttributeTrait
         $new = clone $this;
 
         $new->attributes['hx-post'] = Url::to($url);
-        $new->attributes['hx-swap'] ??= 'outerHTML show:top';
-        $new->attributes['hx-select'] ??= 'main';
-        $new->attributes['hx-target'] ??= 'main';
 
         return $new;
     }

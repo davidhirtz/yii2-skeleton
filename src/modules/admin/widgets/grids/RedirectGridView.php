@@ -158,7 +158,6 @@ class RedirectGridView extends GridView
                     ->icon('trash')
                     ->post(['/admin/redirect/delete-all'])
                     ->attribute('hx-include', '[data-id="check"]:checked')
-                //                    ->target('#' . $this->getId())
             );
 
         return Btn::danger(Yii::t('skeleton', 'Delete selected'))

@@ -28,29 +28,24 @@ use yii\helpers\Url;
  */
 class GridView extends \yii\grid\GridView
 {
-    /**
-     * @var array|null containing the header rows
-     */
-    public ?array $header = null;
+    public $emptyText = false;
 
     /**
      * @var array|null containing the footer rows
      */
     public ?array $footer = null;
 
-    public GridSearch $search;
+    /**
+     * @var array|null containing the header rows
+     */
+    public ?array $header = null;
+
+    public $layout = '{header}{summary}{items}{pager}{footer}';
 
     /**
      * @var array|null the url route for sortable widget
      */
     public ?array $orderRoute = ['order'];
-
-    public $tableOptions = [
-        'class' => 'table table-striped table-hover',
-    ];
-
-    public $emptyText = false;
-    public $layout = '{header}{summary}{items}{pager}{footer}';
 
     public $pager = [
         'class' => LinkPager::class,
@@ -58,19 +53,21 @@ class GridView extends \yii\grid\GridView
         'lastPageLabel' => true,
     ];
 
+    public GridSearch $search;
+
     /**
      * @var bool whether the items should receive a {@see yii\grid\CheckboxColumn} and moved inside a wrapping form
      */
     public bool $showSelection = false;
-
-
     public ?string $selectionButtonLabel = null;
+    public array $selectionRoute = ['update-all'];
 
-    /**
-     * @var array containing the selection form HTML options
-     */
     public array $selectionColumn = [
         'class' => CheckboxColumn::class,
+    ];
+
+    public $tableOptions = [
+        'class' => 'table table-striped table-hover',
     ];
 
     private ?ActiveRecord $_model = null;
@@ -423,7 +420,7 @@ class GridView extends \yii\grid\GridView
     {
         return $this->dataProvider->getSort() === false
             && $this->dataProvider->getPagination() === false
-            && $this->search->value
+            && !$this->search->value
             && $this->orderRoute !== null;
     }
 }
