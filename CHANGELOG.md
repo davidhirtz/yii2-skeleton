@@ -6,6 +6,10 @@
 - Removed `Html::buttonList()`, use `Html::buttons()` instead
 - Removed `GridView::renderSelectionForm()`
 
+## 2.4.3 (in development)
+
+- Enhanced 2FA secret generation
+
 ## 2.4.2 (Dec 17, 2024)
 
 - Changed `Skipping unsafe attribute` log level to `debug`
