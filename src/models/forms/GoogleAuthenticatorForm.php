@@ -52,7 +52,6 @@ class GoogleAuthenticatorForm extends Model
     public function delete(): false|int
     {
         if ($this->validate()) {
-            Yii::$app->getSession()->set('google_2fa_secret', null);
             $this->user->google_2fa_secret = null;
             return $this->user->update();
         }
