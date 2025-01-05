@@ -185,7 +185,7 @@ class Html extends BaseHtml
 
     public static function addTooltip(&$options, ?string $tooltip = null): void
     {
-        $options['data-toggle'] = 'tooltip';
+        $options['data-tooltip'] = '';
         $options['title'] = $tooltip ?? $options['title'] ?? '';
     }
 

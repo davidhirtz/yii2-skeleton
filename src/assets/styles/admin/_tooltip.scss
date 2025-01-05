@@ -1,5 +1,6 @@
 //@import "../../../../node_modules/bootstrap/scss/tooltip";
 
+
 .tooltip {
   --#{$prefix}tooltip-color: #{$tooltip-color};
   --#{$prefix}tooltip-bg: #{$tooltip-bg};
@@ -7,15 +8,8 @@
   width: max-content;
   position: absolute;
   word-wrap: break-word;
-  //opacity: 0;
   z-index: $zindex-tooltip;
   margin: $tooltip-margin;
-  @include reset-text();
-  @include font-size($tooltip-font-size);
-
-  &.show {
-    opacity: $tooltip-opacity;
-  }
 }
 
 .tooltip-arrow {
@@ -40,5 +34,7 @@
   background-color: var(--#{$prefix}tooltip-bg);
   color: var(--#{$prefix}tooltip-color);
   text-align: center;
+  font-weight: normal;
+  @include font-size($tooltip-font-size);
   @include border-radius($tooltip-border-radius);
 }

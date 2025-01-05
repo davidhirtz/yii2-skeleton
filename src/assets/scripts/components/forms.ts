@@ -30,62 +30,54 @@ const toggleHr = (form: HTMLFormElement) => {
     });
 }
 
-export const toggleTargetsOnChange = ($selects: NodeListOf<HTMLSelectElement | HTMLInputElement>) => {
-    $selects.forEach(($input) => {
-        let allSelectors: string[][] = [];
-        let allValues: string[][] = [];
-        let $targets: Set<HTMLElement>;
+export const toggleTargetsOnChange = ($input: HTMLSelectElement | HTMLInputElement) => {
+    let allSelectors: string[][] = [];
+    let allValues: string[][] = [];
+    let $targets: Set<HTMLElement>;
 
-        JSON.parse($input.dataset.formToggle).forEach((data: object) => {
-            let [values, selectors] = Object.values(data);
-            allValues.push(!Array.isArray(values) ? [String(values)] : values.map(String));
+    JSON.parse($input.dataset.formToggle).forEach((data: object) => {
+        let [values, selectors] = Object.values(data);
+        allValues.push(!Array.isArray(values) ? [String(values)] : values.map(String));
 
-            allSelectors.push((!Array.isArray(selectors) ? [selectors] : selectors).map((selector: string) => {
-                return selector.match(/^[.#]/) ? selector : `.field-${selector}`;
-            }));
+        allSelectors.push((!Array.isArray(selectors) ? [selectors] : selectors).map((selector: string) => {
+            return selector.match(/^[.#]/) ? selector : `.field-${selector}`;
+        }));
+    });
+
+    const onChange = () => {
+        const selected = $input.type.toLowerCase() !== 'checkbox' || ($input as HTMLInputElement).checked
+            ? String($input.value)
+            : '0';
+
+        if ($targets) {
+            $targets.forEach(($el: HTMLElement) => $el.classList.remove('d-none'));
+        }
+
+        $targets = new Set();
+
+        allValues.forEach((values: string[], key: number) => {
+            values.forEach((value: string) => {
+                if (String(value) === selected) {
+                    allSelectors[key].forEach((selector: string) => {
+                        const $target = document.querySelector(selector) as HTMLElement;
+
+                        if ($target) {
+                            $targets.add($target);
+                            $target.classList.add('d-none');
+                        }
+                    });
+                }
+            });
         });
 
-        console.log(allSelectors);
+        toggleHr($input.form);
+    }
 
-        const onChange = () => {
-            const selected = $input.type.toLowerCase() !== 'checkbox' || ($input as HTMLInputElement).checked
-                ? String($input.value)
-                : '0';
+    $input.addEventListener('change', onChange);
 
-//         value = String($option.length ?
-//             ((matches = String(values[0]).match(/^data-([\w-]+)/)) ? $option.data(matches[1]) : $input.val()) :
-//             ($input.prop('checked') ? $input.val() : 0));
-
-            if ($targets) {
-                $targets.forEach(($el: HTMLElement) => $el.classList.remove('d-none'));
-            }
-
-            $targets = new Set();
-
-            allValues.forEach((values: string[], key: number) => {
-                values.forEach((value: string) => {
-                    if (String(value) === selected) {
-                        allSelectors[key].forEach((selector: string) => {
-                            const $target = document.querySelector(selector) as HTMLElement;
-
-                            if ($target) {
-                                $targets.add($target);
-                                $target.classList.add('d-none');
-                            }
-                        });
-                    }
-                });
-            });
-
-            toggleHr($input.form);
-        }
-
-        $input.addEventListener('change', onChange);
-
-        if ($input.checkVisibility()) {
-            onChange();
-        }
-    });
+    if ($input.checkVisibility()) {
+        onChange();
+    }
 };
 
 
