@@ -9,6 +9,7 @@
 		"dev": "node esbuild.js --watch"
 	},
 	"devDependencies": {
+		"@floating-ui/dom": "^1.6.12",
 		"@types/bootstrap": "^5.2.10",
 		"@types/sortablejs": "^1.15.8",
 		"autoprefixer": "^10.4.20",

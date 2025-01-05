@@ -11,7 +11,7 @@ trait TooltipAttributeTrait
     public function tooltip(string $tooltip): self
     {
         $new = clone $this;
-        Html::addTooltip($new->attributes['data-toggle'], $tooltip);
+        Html::addTooltip($new->attributes, $tooltip);
         return $new;
     }
 }

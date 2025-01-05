@@ -1,5 +1,6 @@
-import {Dropdown, Tooltip} from 'bootstrap';
+// import {Dropdown, Tooltip} from 'bootstrap';
 import modals from "./components/modals";
+import tooltips from "./components/tooltips";
 import {toggleTargetsOnChange} from "./components/forms";
 import "htmx.org";
 
@@ -11,16 +12,18 @@ doc.body.addEventListener('htmx:configRequest', (event: CustomEvent) => {
 });
 
 doc.body.addEventListener('htmx:load', () => {
-    doc.querySelectorAll('.dropdown-toggle').forEach(($el: Element) => new Dropdown($el));
-    doc.querySelectorAll('[data-toggle="tooltip"]').forEach(($el: Element) => new Tooltip($el));
+    // doc.querySelectorAll('.dropdown-toggle').forEach(($el: Element) => new Dropdown($el));
+    // doc.querySelectorAll('[data-toggle="tooltip"]').forEach(($el: Element) => new Tooltip($el));
 
-    doc.querySelectorAll('[data-collapse]').forEach(($el: HTMLButtonElement) => $el.onclick = () => {
-        const $target = doc.querySelector($el.dataset.collapse) as HTMLElement;
+    // doc.querySelectorAll('[data-collapse]').forEach(($el: HTMLButtonElement) => $el.onclick = () => {
+    //     const $target = doc.querySelector($el.dataset.collapse) as HTMLElement;
+    //
+    //     if ($target) {
+    //         $target.ariaExpanded = $target.classList.toggle('d-none') ? 'false' : 'true';
+    //     }
+    // });
 
-        if ($target) {
-            $target.ariaExpanded = $target.classList.toggle('d-none') ? 'false' : 'true';
-        }
-    });
+    tooltips(doc.querySelectorAll('[data-toggle="tooltip"]'));
 
     modals(doc.querySelectorAll('[data-modal]'));
 

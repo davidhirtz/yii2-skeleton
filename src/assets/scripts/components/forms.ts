@@ -30,13 +30,13 @@ const toggleHr = (form: HTMLFormElement) => {
     });
 }
 
-export const toggleTargetsOnChange = ($selects: NodeListOf<HTMLSelectElement>) => {
-    $selects.forEach(($select: HTMLSelectElement | HTMLInputElement) => {
+export const toggleTargetsOnChange = ($selects: NodeListOf<HTMLSelectElement | HTMLInputElement>) => {
+    $selects.forEach(($input) => {
         let allSelectors: string[][] = [];
         let allValues: string[][] = [];
         let $targets: Set<HTMLElement>;
 
-        JSON.parse($select.dataset.formToggle).forEach((data: object) => {
+        JSON.parse($input.dataset.formToggle).forEach((data: object) => {
             let [values, selectors] = Object.values(data);
             allValues.push(!Array.isArray(values) ? [String(values)] : values.map(String));
 
@@ -48,7 +48,9 @@ export const toggleTargetsOnChange = ($selects: NodeListOf<HTMLSelectElement>) =
         console.log(allSelectors);
 
         const onChange = () => {
-            const selected = String($select.value);
+            const selected = $input.type.toLowerCase() !== 'checkbox' || ($input as HTMLInputElement).checked
+                ? String($input.value)
+                : '0';
 
 //         value = String($option.length ?
 //             ((matches = String(values[0]).match(/^data-([\w-]+)/)) ? $option.data(matches[1]) : $input.val()) :
@@ -59,7 +61,6 @@ export const toggleTargetsOnChange = ($selects: NodeListOf<HTMLSelectElement>) =
             }
 
             $targets = new Set();
-
 
             allValues.forEach((values: string[], key: number) => {
                 values.forEach((value: string) => {
@@ -76,54 +77,18 @@ export const toggleTargetsOnChange = ($selects: NodeListOf<HTMLSelectElement>) =
                 });
             });
 
-            toggleHr($select.form);
+            toggleHr($input.form);
         }
 
-        $select.onchange = () => onChange();
+        $input.addEventListener('change', onChange);
 
-        if ($select.checkVisibility()) {
+        if ($input.checkVisibility()) {
             onChange();
         }
     });
 };
 
-// $('[data-form-toggle]').change(function () {
-//     var $input = $(this),
-//         $option = $input.find('option:selected'),
-//         $targets = $input.data('targets');
-//
-//     if ($targets) {
-//         $targets.show().find('[data-form-toggle]').trigger('change');
-//     }
-//
-//     $targets = $();
-//
-//     $.each($input.data('form-toggle'), function (x, data) {
-//         var values = $.isArray(data[0]) ? data[0] : [data[0]],
-//             targets = $.isArray(data[1]) ? data[1] : [data[1]],
-//             matches,
-//             value,
-//             z;
-//
-//         value = String($option.length ?
-//             ((matches = String(values[0]).match(/^data-([\w-]+)/)) ? $option.data(matches[1]) : $input.val()) :
-//             ($input.prop('checked') ? $input.val() : 0));
-//
-//         for (x = 0; x < values.length; x++) {
-//             if (String(values[x]) === value) {
-//                 for (z = 0; z < targets.length; z++) {
-//                     $targets = $targets.add($(targets[z].match(/^[.#]/) ? targets[z] : ('.field-' + targets[z])).hide());
-//                 }
-//
-//                 break;
-//             }
-//         }
-//     });
-//
-//     $input.data('targets', $targets);
-//     Skeleton.toggleHr();
-//
-// }).filter(':visible').trigger('change');
+
 //
 // /**
 //  * Toggle form groups based on "data-form-toggle" tag.

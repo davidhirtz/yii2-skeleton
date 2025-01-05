@@ -59,8 +59,8 @@ class Card extends BaseTag
             $this->body->attributes['id'] ??= 'card-' . ++self::$counter;
             $this->body->attributes['aria-expanded'] ??= $this->collapse ? 'false' : 'true';
 
-            if ($this->collapse) {
-                Html::addCssClass($this->attributes, 'd-none');
+            if (!$this->collapse) {
+                Html::addCssClass($this->attributes, 'show');
             }
         }
 
@@ -73,13 +73,14 @@ class Card extends BaseTag
                     ->class('card-title')
                     ->content(
                         $this->collapse !== null
-                        ? Button::button($this->title)
+                            ? Button::button($this->title)
                             ->attributes([
                                 'aria-label' => Yii::t('skeleton', 'Collapse'),
                                 'class' => 'btn btn-link',
-                                'data-collapse' => '#' . $this->body->attributes['id'],
+                                'data-bs-toggle' => 'toggle',
+                                'data-bs-target' => '#' . $this->body->attributes['id'],
                             ])
-                        : $this->title
+                            : $this->title
                     ));
         }
 
