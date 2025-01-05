@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -6,12 +7,12 @@ declare(strict_types=1);
  *
  * @var davidhirtz\yii2\skeleton\web\View $this
  * @var davidhirtz\yii2\skeleton\models\forms\LoginForm $form
- * @var yii\bootstrap5\ActiveForm $af
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Card;
+use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorLoginActiveForm;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 
 $this->setTitle(Yii::t('skeleton', 'Google Authenticator'));
 ?>
@@ -20,11 +21,11 @@ $this->setTitle(Yii::t('skeleton', 'Google Authenticator'));
     'header' => Yii::t('skeleton', 'Login unsuccessful'),
 ]); ?>
 
-<div class="container container-centered">
-    <?= Panel::widget([
-        'title' => $this->title,
-        'content' => GoogleAuthenticatorLoginActiveForm::widget([
+<?= Container::tag()
+    ->content(Card::tag()
+        ->title($this->title)
+        ->body(GoogleAuthenticatorLoginActiveForm::widget([
             'model' => $form,
-        ]),
-    ]); ?>
-</div>
+        ])))
+    ->centered()
+    ->render(); ?>

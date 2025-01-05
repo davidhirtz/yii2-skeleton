@@ -46,7 +46,7 @@ class Controller extends \yii\web\Controller
         }
 
         if ($value) {
-            Yii::$app->getSession()->addFlash('error', $value);
+            Yii::$app->getSession()->addFlash('danger', $value);
             return true;
         }
 

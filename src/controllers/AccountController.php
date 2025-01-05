@@ -332,11 +332,10 @@ class AccountController extends Controller
             'user' => Yii::$app->getUser()->getIdentity(),
         ]);
 
-        if ($form->load(Yii::$app->getRequest()->post()) && $form->save()) {
-            $this->success(Yii::t('skeleton', 'Two-factor authentication is now enabled on your account.'));
+        if ($form->load(Yii::$app->getRequest()->post())) {
+            $form->save();
+            $this->errorOrSuccess($form, Yii::t('skeleton', 'Two-factor authentication is now enabled on your account.'));
         }
-
-        $this->error($form);
 
         return $this->redirect(['update']);
     }
@@ -347,11 +346,10 @@ class AccountController extends Controller
             'user' => Yii::$app->getUser()->getIdentity(),
         ]);
 
-        if ($form->load(Yii::$app->getRequest()->post()) && $form->delete()) {
-            $this->success(Yii::t('skeleton', 'Two-factor authentication is now disabled on your account.'));
+        if ($form->load(Yii::$app->getRequest()->post())) {
+            $form->delete();
+            $this->errorOrSuccess($form, Yii::t('skeleton', 'Two-factor authentication is now disabled on your account.'));
         }
-
-        $this->error($form);
 
         return $this->redirect(['update']);
     }
