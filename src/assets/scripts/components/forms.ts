@@ -1,3 +1,35 @@
+const toggleHr = (form: HTMLFormElement) => {
+    form.querySelectorAll('hr').forEach(($hr: HTMLElement) => {
+        let visible = false;
+        let $el = $hr.previousElementSibling;
+
+        while ($el && $el.tagName !== 'HR') {
+            if ($el.checkVisibility()) {
+                visible = true;
+                break;
+            }
+
+            $el = $el.previousElementSibling;
+        }
+
+        if (visible) {
+            $el = $hr.nextElementSibling;
+            visible = false;
+
+            while ($el && !$el.classList.contains('form-group-sticky')) {
+                if ($el.classList.contains('form-group') && $el.checkVisibility()) {
+                    visible = true;
+                    break;
+                }
+
+                $el = $el.nextElementSibling;
+            }
+        }
+
+        $hr.classList.toggle('d-none', !visible);
+    });
+}
+
 export const toggleTargetsOnChange = ($selects: NodeListOf<HTMLSelectElement>) => {
     $selects.forEach(($select: HTMLSelectElement | HTMLInputElement) => {
         let allSelectors: string[][] = [];
@@ -43,6 +75,8 @@ export const toggleTargetsOnChange = ($selects: NodeListOf<HTMLSelectElement>) =
                     }
                 });
             });
+
+            toggleHr($select.form);
         }
 
         $select.onchange = () => onChange();
