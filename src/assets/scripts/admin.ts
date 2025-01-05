@@ -14,6 +14,14 @@ doc.body.addEventListener('htmx:load', () => {
     doc.querySelectorAll('.dropdown-toggle').forEach(($el: Element) => new Dropdown($el));
     doc.querySelectorAll('[data-toggle="tooltip"]').forEach(($el: Element) => new Tooltip($el));
 
+    doc.querySelectorAll('[data-collapse]').forEach(($el: HTMLButtonElement) => $el.onclick = () => {
+        const $target = doc.querySelector($el.dataset.collapse) as HTMLElement;
+
+        if ($target) {
+            $target.ariaExpanded = $target.classList.toggle('d-none') ? 'false' : 'true';
+        }
+    });
+
     modals(doc.querySelectorAll('[data-modal]'));
 
     toggleTargetsOnChange(doc.querySelectorAll('[data-form-toggle]'));

@@ -43,7 +43,7 @@ class GoogleAuthenticatorForm extends Model
     {
         if ($this->validate()) {
             $this->user->google_2fa_secret = $this->getSecret();
-            return $this->user->update();
+            return $this->user->update() === 1;
         }
 
         return false;

@@ -97,6 +97,7 @@ $container-max-widths: (
 ) !default;
 
 $container-padding-x: .5rem !default;
+$app-container-centered-max-width: 28rem !default;
 
 $border-width: 1px !default;
 $border-radius: 0.25rem !default;
@@ -188,12 +189,10 @@ $app-card-margin-bottom: $app-margin-y !default;
 $app-card-danger-bg: $danger !default;
 $app-card-danger-border-color: $danger !default;
 $app-card-danger-color: $white !default;
-$app-card-centered-max-width: 28rem !default;
 $app-card-title-font-weight: bold !default;
 
 // Grid
-$grid-gutter-width: 1rem !default;
-$grid-row-columns: 0 !default;
+$grid-gutter-width: $spacer !default;
 
 $app-grid-view-footer-position: sticky !default;
 $app-grid-view-header-border: none !default;
@@ -269,8 +268,9 @@ $form-check-input-checked-bg-color: $primary !default;
 $form-check-label-color: var(--#{$prefix}body-color) !default;
 $app-form-check-gap: 0.75rem !default;
 
-$form-invalid-color: $danger !default;
+$app-form-invalid-bg: $white !default;
 $form-invalid-border-color: $danger !default;
+$form-invalid-color: $danger !default;
 
 // List group
 $list-group-border-color: $white !default;

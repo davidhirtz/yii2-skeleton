@@ -30,7 +30,7 @@
   }
 
   @include media-breakpoint-up(md) {
-      width: $app-card-centered-max-width;
+      width: $app-container-centered-max-width;
   }
 }
 

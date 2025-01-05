@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import "forms/labels";
 //@import "../../../../node_modules/bootstrap/scss/forms/form-text";
 @import "forms/form-control";
@@ -10,7 +12,10 @@
 
 .form-group {
   align-items: flex-start;
-  margin: 0 $grid-gutter-width / -2;
+
+  &:not(:last-child) {
+    margin-bottom: $grid-gutter-width;
+  }
 }
 
 .form-group-sticky {
@@ -24,7 +29,7 @@
     z-index: 2;
 
     .form-group-buttons {
-      padding: $grid-gutter-width / 2 0;
+      padding: math.div($grid-gutter-width, 2) 0;
     }
   }
 }

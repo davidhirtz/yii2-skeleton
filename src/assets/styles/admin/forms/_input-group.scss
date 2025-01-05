@@ -33,9 +33,11 @@
     }
   }
 
-  &:focus-within,
-  &:hover {
-    --#{$prefix}border-color: #{$input-focus-border-color};
+  &:not(:has(.is-invalid,:user-invalid)):focus-within,
+  &:not(:has(.is-invalid,:user-invalid)):hover {
+    --#{$prefix}input-bg: #{$input-focus-bg};
+    --#{$prefix}input-border-color: #{$input-focus-border-color};
+    --#{$prefix}input-color: #{$input-focus-color};
   }
 }
 
@@ -46,11 +48,11 @@
   @include font-size($input-font-size);
   font-weight: $input-group-addon-font-weight;
   line-height: $input-line-height;
-  color: $input-group-addon-color;
+  color: var(--#{$prefix}input-color);
   text-align: center;
   white-space: nowrap;
-  background-color: $input-group-addon-bg;
-  border: $input-border-width solid $input-group-addon-border-color;
+  background-color: var(--#{$prefix}input-bg);
+  border: $input-border-width solid var(--#{$prefix}input-border-color);
   @include border-radius($input-border-radius);
 
   @include transition($input-transition);

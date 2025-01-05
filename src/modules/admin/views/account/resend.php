@@ -9,10 +9,13 @@ declare(strict_types=1);
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Card;
+use davidhirtz\yii2\skeleton\html\Container;
+use davidhirtz\yii2\skeleton\html\ListGroup;
+use davidhirtz\yii2\skeleton\html\ListGroupItemAction;
 use davidhirtz\yii2\skeleton\models\forms\AccountResendConfirmForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\AccountResendConfirmActiveForm;
 use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Resend Account Confirmation'));
@@ -20,24 +23,20 @@ $this->setTitle(Yii::t('skeleton', 'Resend Account Confirmation'));
 <?= Html::errorSummary($form, [
     'header' => Yii::t('skeleton', 'Your confirmation could not be resend'),
 ]); ?>
-<div class="container">
-    <div class="card-centered">
-        <?= Panel::widget([
-            'title' => $this->title,
-            'content' => AccountResendConfirmActiveForm::widget([
-                'model' => $form,
-            ]),
-        ]); ?>
 
-        <?php if (Yii::$app->getUser()->getIsGuest()) {
-            ?>
-            <div class="list-group">
-                <a href="<?php echo Url::to(['login']); ?>" class="list-group-item list-group-item-action">
-                    <?= Html::iconText('sign-in-alt', Yii::t('skeleton', 'Back to login')); ?>
-                </a>
-            </div>
-            <?php
-        }
-?>
-    </div>
-</div>
+<?= Container::tag()
+    ->addContent(Card::tag()
+        ->title($this->title)
+        ->body(AccountResendConfirmActiveForm::widget([
+            'model' => $form,
+        ])))
+    ->addContent(ListGroup::tag()
+        ->item(
+            ListGroupItemAction::tag()
+            ->text(Yii::t('skeleton', 'Back to login'))
+            ->icon('sign-in-alt')
+            ->visible(Yii::$app->getUser()->getIsGuest())
+            ->href(Url::to(['login']))
+        ))
+    ->centered()
+    ->render(); ?>

@@ -9,10 +9,11 @@ declare(strict_types=1);
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Card;
+use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\models\forms\PasswordResetForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\PasswordResetActiveForm;
 use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 
 $this->setTitle($form->user->password_hash
     ? Yii::t('skeleton', 'Set New Password')
@@ -23,13 +24,11 @@ $this->setTitle($form->user->password_hash
     'header' => Yii::t('skeleton', 'Your password could not be saved'),
 ]); ?>
 
-<div class="container">
-    <div class="card-centered">
-        <?= Panel::widget([
-            'title' => $this->title,
-            'content' => PasswordResetActiveForm::widget([
-                'model' => $form,
-            ]),
-        ]); ?>
-    </div>
-</div>
+<?= Container::tag()
+    ->content(Card::tag()
+        ->title($this->title)
+        ->body(PasswordResetActiveForm::widget([
+            'model' => $form,
+        ])))
+    ->centered()
+    ->render(); ?>

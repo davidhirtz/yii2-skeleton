@@ -1,0 +1,9 @@
+//@import "../../../../node_modules/bootstrap/scss/transitions";
+
+.fade {
+  @include transition($transition-fade);
+
+  &:not(.show) {
+    opacity: 0;
+  }
+}

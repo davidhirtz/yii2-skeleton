@@ -8,7 +8,7 @@ use Yiisoft\Html\Tag\Button;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\P;
 
-final class Modal extends NormalTag
+class Modal extends NormalTag
 {
     protected array $attributes = [
         'class' => 'modal',

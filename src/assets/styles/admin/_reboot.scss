@@ -309,12 +309,10 @@ button,
 [type="reset"],
 [type="submit"] {
   -webkit-appearance: button;
+}
 
-  @if $enable-button-pointers {
-    &:not(:disabled) {
-      cursor: pointer; // 3
-    }
-  }
+button:not(:disabled) {
+  cursor: pointer;
 }
 
 ::-moz-focus-inner {

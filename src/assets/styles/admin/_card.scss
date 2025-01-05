@@ -38,7 +38,7 @@
       @include border-top-radius(var(--#{$prefix}card-inner-border-radius));
     }
 
-    &:last-child  {
+    &:last-child {
       border-bottom-width: 0;
       @include border-bottom-radius(var(--#{$prefix}card-inner-border-radius));
     }
@@ -78,9 +78,23 @@
   border-bottom: $card-border-width solid var(--#{$prefix}card-border-color);
 }
 
-.card-header, .card-body {
-  &:first-child {
-    @include border-radius($card-inner-border-radius $card-inner-border-radius 0 0);
+@if ($card-inner-border-radius) {
+  .card-header, .card-body {
+    &:first-child {
+      @include border-radius($card-inner-border-radius $card-inner-border-radius 0 0);
+    }
+  }
+
+  .card-footer, .card-body {
+    &:last-child {
+      @include border-radius(0 0 $card-inner-border-radius $card-inner-border-radius);
+    }
+  }
+
+  .card:has(.card-body.d-none):not(:has(.card-footer)) {
+    .card-header {
+      @include border-radius($card-inner-border-radius);
+    }
   }
 }
 
@@ -89,12 +103,6 @@
   color: var(--#{$prefix}card-cap-color);
   background-color: var(--#{$prefix}card-cap-bg);
   border-top: $card-border-width solid var(--#{$prefix}card-border-color);
-}
-
-.card-footer, .card-body {
-  &:last-child {
-    @include border-radius(0 0 $card-inner-border-radius $card-inner-border-radius);
-  }
 }
 
 .card-danger {
@@ -107,9 +115,4 @@
   &:last-child {
     margin-bottom: 0;
   }
-}
-
-.card-centered {
-  margin: 0 auto;
-  max-width: $app-card-centered-max-width;
 }

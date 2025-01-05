@@ -5,8 +5,6 @@
   --#{$prefix}btn-bg: transparent;
   --#{$prefix}btn-border-color: transparent;
   --#{$prefix}btn-hover-border-color: transparent;
-  --#{$prefix}btn-box-shadow: #{$btn-box-shadow};
-  --#{$prefix}btn-focus-box-shadow: 0 0 0 #{$btn-focus-width} rgba(var(--#{$prefix}btn-focus-shadow-rgb), .5);
 
   display: inline-block;
   padding: $btn-padding-y $btn-padding-x;
@@ -26,7 +24,6 @@
 
   @include border-radius($btn-border-radius);
   @include gradient-bg(var(--#{$prefix}btn-bg));
-  @include box-shadow(var(--#{$prefix}btn-box-shadow));
   @include transition($btn-transition);
 
   &:hover {
@@ -47,23 +44,11 @@
     @include gradient-bg(var(--#{$prefix}btn-hover-bg));
     border-color: var(--#{$prefix}btn-hover-border-color);
     outline: 0;
-
-    @if $enable-shadows {
-      box-shadow: var(--#{$prefix}btn-box-shadow), var(--#{$prefix}btn-focus-box-shadow);
-    } @else {
-      box-shadow: var(--#{$prefix}btn-focus-box-shadow);
-    }
   }
 
   .btn-check:focus-visible + & {
     border-color: var(--#{$prefix}btn-hover-border-color);
     outline: 0;
-
-    @if $enable-shadows {
-      box-shadow: var(--#{$prefix}btn-box-shadow), var(--#{$prefix}btn-focus-box-shadow);
-    } @else {
-      box-shadow: var(--#{$prefix}btn-focus-box-shadow);
-    }
   }
 
   .btn-check:checked + &,
@@ -75,23 +60,7 @@
     background-color: var(--#{$prefix}btn-active-bg);
     background-image: if($enable-gradients, none, null);
     border-color: var(--#{$prefix}btn-active-border-color);
-    @include box-shadow(var(--#{$prefix}btn-active-shadow));
 
-    &:focus-visible {
-      @if $enable-shadows {
-        box-shadow: var(--#{$prefix}btn-active-shadow), var(--#{$prefix}btn-focus-box-shadow);
-      } @else {
-        box-shadow: var(--#{$prefix}btn-focus-box-shadow);
-      }
-    }
-  }
-
-  .btn-check:checked:focus-visible + & {
-    @if $enable-shadows {
-      box-shadow: var(--#{$prefix}btn-active-shadow), var(--#{$prefix}btn-focus-box-shadow);
-    } @else {
-      box-shadow: var(--#{$prefix}btn-focus-box-shadow);
-    }
   }
 
   &:disabled,
@@ -102,7 +71,6 @@
     background-color: var(--#{$prefix}btn-disabled-bg);
     border-color: var(--#{$prefix}btn-disabled-border-color);
     opacity: $btn-disabled-opacity;
-    @include box-shadow(none);
   }
 }
 
@@ -134,7 +102,6 @@
 }
 
 .btn-link {
-  --#{$prefix}btn-font-weight: #{$font-weight-normal};
   --#{$prefix}btn-color: #{$btn-link-color};
   --#{$prefix}btn-bg: transparent;
   --#{$prefix}btn-border-color: transparent;
@@ -144,14 +111,14 @@
   --#{$prefix}btn-active-border-color: transparent;
   --#{$prefix}btn-disabled-color: #{$btn-link-disabled-color};
   --#{$prefix}btn-disabled-border-color: transparent;
-  --#{$prefix}btn-box-shadow: 0 0 0 #000; // Can't use `none` as keyword negates all values when used with multiple shadows
-  --#{$prefix}btn-focus-shadow-rgb: #{$btn-link-focus-shadow-rgb};
 
+  margin: 0;
+  padding: 0;
+  border: 0;
   text-decoration: $link-decoration;
-
-  @if $enable-gradients {
-    background-image: none;
-  }
+  line-height: inherit;
+  font-weight: inherit;
+  vertical-align: inherit;
 
   &:hover,
   &:focus-visible {

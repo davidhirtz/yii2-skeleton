@@ -2,13 +2,19 @@
 
 namespace davidhirtz\yii2\skeleton\html;
 
-use Yiisoft\Html\Tag\Base\NormalTag;
+use Yiisoft\Html\Tag\Base\Tag;
 use Yiisoft\Html\Tag\Li;
 
-final class ListGroup extends NormalTag
+final class ListGroup extends Tag
 {
-    protected array $attributes = ['class' => 'list-group list-unstyled'];
     private array $items = [];
+
+    public static function tag(): self
+    {
+        $self = new self();
+        $self->attributes['class'] = 'list-group list-unstyled';
+        return $self;
+    }
 
     public function item(ListGroupItemAction $link): self
     {
@@ -19,13 +25,13 @@ final class ListGroup extends NormalTag
         return $this;
     }
 
-    protected function generateContent(): string
-    {
-        return implode('', $this->items);
-    }
-
     protected function getName(): string
     {
         return 'ul';
+    }
+
+    protected function renderTag(): string
+    {
+        return $this->items ? '<' . $this->getName() . $this->renderAttributes() . '>' . implode('', $this->items) . '</' . $this->getName() . '>' : '';
     }
 }

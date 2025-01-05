@@ -13,7 +13,7 @@ class Icon extends Tag
 
     public static function tag(string $name, array $attributes = []): self
     {
-        $class = str_starts_with('brand:', $name) ? 'fab fa-' . substr($name, 6) : "fas fa-$name";
+        $class = str_starts_with($name, 'brand:') ? ('fab fa-' . substr($name, 6)) : "fas fa-$name";
         Html::addCssClass($attributes, $class);
 
         $instance = Yii::$container->get(self::class);

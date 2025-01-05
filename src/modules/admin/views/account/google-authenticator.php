@@ -20,13 +20,11 @@ $this->setTitle(Yii::t('skeleton', 'Google Authenticator'));
     'header' => Yii::t('skeleton', 'Login unsuccessful'),
 ]); ?>
 
-<div class="container">
-    <div class="card-centered">
-        <?= Panel::widget([
-            'title' => $this->title,
-            'content' => GoogleAuthenticatorLoginActiveForm::widget([
-                'model' => $form,
-            ]),
-        ]); ?>
-    </div>
+<div class="container container-centered">
+    <?= Panel::widget([
+        'title' => $this->title,
+        'content' => GoogleAuthenticatorLoginActiveForm::widget([
+            'model' => $form,
+        ]),
+    ]); ?>
 </div>

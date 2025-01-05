@@ -8,18 +8,17 @@ declare(strict_types=1);
  *
  * @var View $this
  * @var LoginForm $form
- * @var ActiveForm $af
  */
 
 use davidhirtz\yii2\skeleton\controllers\AccountController;
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Card;
+use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\html\ListGroup;
 use davidhirtz\yii2\skeleton\html\ListGroupItemAction;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\LoginActiveForm;
 use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
 
 $this->setTitle(Yii::t('skeleton', 'Login'));
 ?>
@@ -35,35 +34,34 @@ $this->setTitle(Yii::t('skeleton', 'Login'));
     </div>
 </noscript>
 
-<div class="container">
-    <div class="card-centered">
-        <?= Panel::widget([
-            'title' => $this->title,
-            'content' => LoginActiveForm::widget([
-                'model' => $form,
-            ]),
-        ]) ?>
-        <?= ListGroup::tag()
-            ->item(ListGroupItemAction::tag()
-                ->text(Yii::t('skeleton', 'Login with Facebook'))
-                ->icon('brand:facebook')
-                ->href(['auth', 'authclient' => 'facebook'])
-                ->visible($form->isFacebookLoginEnabled()))
-            ->item(ListGroupItemAction::tag()
-                ->text(Yii::t('skeleton', 'Create new account'))
-                ->icon('user')
-                ->href(['create'])
-                ->visible(Yii::$app->getUser()->isSignupEnabled()))
-            ->item(ListGroupItemAction::tag()
-                ->text(Yii::t('skeleton', 'Resend email confirmation'))
-                ->icon('envelope')
-                ->href(['resend'])
-                ->visible(Yii::$app->getUser()->isPasswordResetEnabled() && !Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()))
-            ->item(ListGroupItemAction::tag()
-                ->text(Yii::t('skeleton', 'I forgot my password'))
-                ->icon('key')
-                ->href(['recover'])
-                ->visible(Yii::$app->getUser()->isPasswordResetEnabled()))
-            ->render(); ?>
-    </div>
-</div>
+<?= Container::tag()
+    ->addContent(Card::tag()
+        ->title($this->title)
+        ->body(LoginActiveForm::widget([
+            'model' => $form,
+        ])))
+    ->addContent(
+        ListGroup::tag()
+        ->item(ListGroupItemAction::tag()
+            ->text(Yii::t('skeleton', 'Login with Facebook'))
+            ->icon('brand:facebook')
+            ->href(['auth', 'authclient' => 'facebook'])
+            ->visible($form->isFacebookLoginEnabled()))
+        ->item(ListGroupItemAction::tag()
+            ->text(Yii::t('skeleton', 'Create new account'))
+            ->icon('user')
+            ->href(['create'])
+            ->visible(Yii::$app->getUser()->isSignupEnabled()))
+        ->item(ListGroupItemAction::tag()
+            ->text(Yii::t('skeleton', 'Resend email confirmation'))
+            ->icon('envelope')
+            ->href(['resend'])
+            ->visible(Yii::$app->getUser()->isPasswordResetEnabled() && !Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()))
+        ->item(ListGroupItemAction::tag()
+            ->text(Yii::t('skeleton', 'I forgot my password'))
+            ->icon('key')
+            ->href(['recover'])
+            ->visible(Yii::$app->getUser()->isPasswordResetEnabled()))
+    )
+    ->centered()
+    ->render(); ?>
