@@ -95,10 +95,11 @@ class UserGridView extends GridView
                     return $email;
                 }
 
-                $options = ['class' => 'text-muted'];
-                Html::addTooltip($options, Yii::t('skeleton', 'Unconfirmed email'));
-
-                return Html::tag('span', $email, $options);
+                return Html::tag('span', $email, [
+                    'class' => 'text-muted',
+                    'data-tooltip' => '',
+                    'title' => Yii::t('skeleton', 'Unconfirmed email'),
+                ]);
             }
         ];
     }

@@ -183,12 +183,6 @@ class Html extends BaseHtml
         return $user->getUsername();
     }
 
-    public static function addTooltip(&$options, ?string $tooltip = null): void
-    {
-        $options['data-tooltip'] = '';
-        $options['title'] = $tooltip ?? $options['title'] ?? '';
-    }
-
     public static function warning(string $content, array $options = []): string
     {
         static::addCssClass($options, 'alert-warning');

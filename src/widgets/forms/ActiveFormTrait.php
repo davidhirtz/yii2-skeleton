@@ -66,10 +66,6 @@ trait ActiveFormTrait
             if ($this->i18nAttributes) {
                 $this->languages ??= Yii::$app->getI18n()->getLanguages();
             }
-
-            if (!$this->getId(false)) {
-                $this->setId(strtolower($this->model->formName()));
-            }
         }
 
         parent::init();

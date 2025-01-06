@@ -27,9 +27,9 @@
     border-top: $app-form-sticky-border;
     background-color: $card-bg;
     z-index: 2;
+  }
 
-    .form-group-buttons {
-      padding: math.div($grid-gutter-width, 2) 0;
-    }
+  .row {
+    padding-top: $grid-gutter-width;
   }
 }

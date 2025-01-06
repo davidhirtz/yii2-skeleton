@@ -272,6 +272,9 @@ $app-form-invalid-bg: $white !default;
 $form-invalid-border-color: $danger !default;
 $form-invalid-color: $danger !default;
 
+$input-group-addon-color: var(--#{$prefix}body-color) !default;
+$input-group-addon-bg: var(--#{$prefix}secondary-bg) !default;
+
 // List group
 $list-group-border-color: $white !default;
 $list-group-item-padding-y: $app-spacer-y !default;

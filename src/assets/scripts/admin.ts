@@ -1,7 +1,7 @@
 // import {Dropdown, Tooltip} from 'bootstrap';
 import modal from "./components/modals";
 import tooltip from "./components/tooltips";
-import {toggleTargetsOnChange} from "./components/forms";
+import {toggleTargetsOnChange, updateTargetsOnChange} from "./components/forms";
 import "htmx.org";
 
 const doc = document;
@@ -29,5 +29,6 @@ doc.body.addEventListener('htmx:load', () => {
 
     queryAll('[data-modal]', modal);
     queryAll('[data-tooltip]', tooltip);
+    queryAll('[data-form-target]', updateTargetsOnChange);
     queryAll('[data-form-toggle]', toggleTargetsOnChange);
 });
