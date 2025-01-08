@@ -4,6 +4,7 @@
 - Added `GridSearch` and moved properties `search`, `searchParamName`, `searchInputOptions` and `searchUrl` as well as
   methods `getSearchInput`, and `getSearchKeywords` to the new `GridView::$search` property
 - Changed `GridView::isSortedByPosition()` to `GridView::isSortable()`
+- Refactored `TrailBehavior::formatTrailAttributeValue` to `TrailModelCollection::formatAttributeValue`
 - Removed `Html::buttonList()`, use `Html::buttons()` instead
 - Removed `GridView::renderSelectionForm()`
 

@@ -107,13 +107,16 @@ class ButtonDropdown extends \yii\bootstrap5\ButtonDropdown
         }
     }
 
-    /**
-     * Resets the options id back to widget id which is set to the button id in
-     * {@see \yii\bootstrap5\ButtonDropdown::run()}. Otherwise, Bootstrap events don't register on the correct element.
-     */
-    protected function registerClientEvents(string $name = null): void
+    protected function renderDropdown(): string
     {
-        $this->options['id'] = $this->getId();
-        parent::registerClientEvents();
+        return Html::tag('dialog', str_replace('class="dropdown-menu"', '', parent::renderDropdown()), [
+            'class' => 'dropdown-menu',
+        ]);
+    }
+
+    public function run(): string
+    {
+        $content = parent::run();
+        return str_replace('data-bs-toggle="dropdown"', 'data-dropdown', $content);
     }
 }
