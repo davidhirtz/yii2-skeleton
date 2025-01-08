@@ -5,13 +5,13 @@ namespace davidhirtz\yii2\skeleton\html;
 use Yiisoft\Html\Tag\Base\NormalTag;
 use Yiisoft\Html\Tag\Base\TagContentTrait;
 
-final class BtnToolbar extends NormalTag
+class BtnToolbar extends NormalTag
 {
     use TagContentTrait;
 
     protected array $attributes = ['class' => 'btn-toolbar'];
 
-    public function button(Btn $btn): self
+    public function button(Button $btn): self
     {
         $this->content[] = $btn;
         return $this;

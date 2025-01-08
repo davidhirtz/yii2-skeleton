@@ -4,7 +4,6 @@ namespace davidhirtz\yii2\skeleton\html;
 
 use Yii;
 use Yiisoft\Html\Tag\Base\NormalTag;
-use Yiisoft\Html\Tag\Button;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\P;
 
@@ -67,9 +66,9 @@ class Modal extends NormalTag
         return $this;
     }
 
-    public function footer(Btn|string $button): self
+    public function footer(Button|string $button): self
     {
-        $this->footer[] = $button instanceof Btn ? $button->attribute('data-modal', '') : $button;
+        $this->footer[] = $button instanceof Button ? $button->attribute('data-modal', '') : $button;
         return $this;
     }
 
@@ -91,14 +90,14 @@ class Modal extends NormalTag
             }
 
             if ($this->dismiss !== false) {
-                $header = $header->addContent(Button::button('')
+                $header = $header->addContent(Button::tag()
                     ->addAttributes([
                         'aria-label' => $this->dismiss ?? Yii::t('skeleton', 'Close'),
                         'class' => 'btn-close',
                         'data-modal' => '',
                     ]));
 
-                array_unshift($this->footer, Btn::secondary(Yii::t('skeleton', 'Cancel'))
+                array_unshift($this->footer, Button::secondary(Yii::t('skeleton', 'Cancel'))
                     ->attribute('data-modal', '')
                     ->attribute('autofocus', true));
             }

@@ -14,7 +14,7 @@ use yii\db\Command;
  */
 class BatchInsertQueryBuild
 {
-    private ?Command $_command;
+    public readonly Command $command;
 
     /**
      * @param class-string<ActiveRecord> $modelClass
@@ -30,22 +30,19 @@ class BatchInsertQueryBuild
         }
 
         $db = $modelClass::getDb();
-        $this->_command = $db->createCommand()->batchInsert($modelClass::tableName(), $columns, $rows);
+        $command = $db->createCommand()->batchInsert($modelClass::tableName(), $columns, $rows);
 
         if ($ignore) {
             if ($db->getDriverName() !== 'mysql') {
                 throw new NotSupportedException($modelClass . '::batchInsert does not support the option `ignore` for this database driver.');
             }
 
-            $sql = $this->_command->getRawSql();
+            $sql = $command->getRawSql();
             $sql = 'INSERT IGNORE' . mb_substr($sql, strlen('INSERT'), null, Yii::$app->charset);
 
-            $this->_command = $db->createCommand($sql);
+            $command = $db->createCommand($sql);
         }
-    }
 
-    public function getCommand(): ?Command
-    {
-        return $this->_command;
+        $this->command = $command;
     }
 }

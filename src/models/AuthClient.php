@@ -11,7 +11,9 @@ use davidhirtz\yii2\skeleton\behaviors\SerializedAttributesBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TimestampBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use davidhirtz\yii2\skeleton\models\interfaces\TrailModelInterface;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
+use davidhirtz\yii2\skeleton\models\traits\TrailModelTrait;
 use Yii;
 
 /**
@@ -26,8 +28,10 @@ use Yii;
  *
  * @mixin TrailBehavior
  */
-class AuthClient extends ActiveRecord
+class AuthClient extends ActiveRecord implements TrailModelInterface
 {
+    use TrailModelTrait;
+
     public function behaviors(): array
     {
         return [

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\html\Btn;
+use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\UserActiveDataProvider;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\ButtonsColumn;
@@ -145,14 +145,14 @@ class UserGridView extends GridView
     protected function getRowButtons(User $user): array|string
     {
         if ($route = $this->getRoute($user)) {
-            return Btn::primary()
+            return Button::primary()
                 ->href($route)
                 ->icon('wrench')
                 ->render();
         }
 
         if (Yii::$app->getUser()->can(User::AUTH_USER_ASSIGN, ['user' => $user])) {
-            return Btn::primary()
+            return Button::primary()
                 ->href(['/admin/auth/assign', 'user' => $user->id])
                 ->icon('unlock-alt')
                 ->tooltip(Yii::t('skeleton', 'Permissions'))

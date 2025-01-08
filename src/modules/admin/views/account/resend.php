@@ -34,7 +34,7 @@ $this->setTitle(Yii::t('skeleton', 'Resend Account Confirmation'));
     ->addContent(ListGroup::tag()
         ->item(
             ListGroupItemAction::tag()
-            ->text(Yii::t('skeleton', 'Back to login'))
+            ->content(Yii::t('skeleton', 'Back to login'))
             ->icon('sign-in-alt')
             ->visible(Yii::$app->getUser()->getIsGuest())
             ->href(Url::to(['login']))

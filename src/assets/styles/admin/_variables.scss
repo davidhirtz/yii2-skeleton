@@ -80,6 +80,7 @@ $mark-padding: 0 !default;
 $caret-width: 0.25rem !default;
 $caret-spacing: 0.5rem !default;
 
+$hr-border-color: var(--#{$prefix}border-color) !default;
 $hr-opacity: 1;
 
 // Grid breakpoints
@@ -329,7 +330,7 @@ $pagination-hover-border-color: $primary !default;
 $pagination-focus-box-shadow: none !default;
 
 // Dropdown
-$dropdown-min-width: 10rem !default;
+$dropdown-min-width: 12rem !default;
 $dropdown-padding-y: 0 !default;
 $dropdown-spacer: 2px !default;
 $dropdown-bg: $white !default;

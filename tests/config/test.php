@@ -8,6 +8,9 @@ return [
         '@davidhirtz/yii2/skeleton' => __DIR__ . '/../../src/',
     ],
     'components' => [
+//        'assetManager' => [
+//            'basePath' => __DIR__ . '/../runtime/assets',
+//        ],
         'db' => [
             'dsn' => getenv('MYSQL_DSN') ?: 'mysql:host=127.0.0.1;dbname=yii2_skeleton_test',
             'username' => getenv('MYSQL_USER') ?: 'root',

@@ -6,24 +6,20 @@ namespace davidhirtz\yii2\skeleton\tests\unit\console;
 
 use Codeception\Test\Unit;
 use davidhirtz\yii2\skeleton\assets\AdminAsset;
+use davidhirtz\yii2\skeleton\codeception\traits\AssetDirectoryTrait;
 use davidhirtz\yii2\skeleton\codeception\traits\ConsoleApplicationTrait;
 use davidhirtz\yii2\skeleton\codeception\traits\StdOutBufferControllerTrait;
 use davidhirtz\yii2\skeleton\console\controllers\AssetController;
-use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use Yii;
 
 class AssetControllerTest extends Unit
 {
+    use AssetDirectoryTrait;
     use ConsoleApplicationTrait;
-
-    protected string $assetBasePath = '@runtime/assets';
-
     protected function _before(): void
     {
-        FileHelper::createDirectory($this->assetBasePath);
-
         $this->createConsoleApplicationMock();
-        Yii::$app->getAssetManager()->basePath = Yii::getAlias($this->assetBasePath);
+        $this->createAssetDirectory();
         AdminAsset::register(Yii::$app->getView());
 
         parent::_before();
@@ -31,7 +27,7 @@ class AssetControllerTest extends Unit
 
     protected function _after(): void
     {
-        FileHelper::removeDirectory($this->assetBasePath);
+        $this->removeAssetDirectory();
         parent::_after();
     }
 

@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\models\traits;
 
+use davidhirtz\yii2\skeleton\models\interfaces\DraftStatusAttributeInterface;
 use Yii;
 
+/**
+ * @mixin DraftStatusAttributeInterface
+ */
 trait DraftStatusAttributeTrait
 {
     use StatusAttributeTrait;

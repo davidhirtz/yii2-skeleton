@@ -8,11 +8,11 @@ use davidhirtz\yii2\skeleton\assets\SortableAssetBundle;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\html\Btn;
+use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\html\Dropdown;
+use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\CheckboxColumn;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use davidhirtz\yii2\skeleton\widgets\pagers\LinkPager;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -77,7 +77,6 @@ class GridView extends \yii\grid\GridView
     {
         if ($this->showSelection) {
             array_unshift($this->columns, $this->selectionColumn);
-            $this->getView()->registerJs('Skeleton.initSelection("#' . $this->getSelectionFormId() . '")');
         }
 
         if (!$this->rowOptions) {
@@ -267,12 +266,13 @@ class GridView extends \yii\grid\GridView
             $options['options']['data-id'] = 'check-button';
             $options['options']['style']['display'] ??= 'none';
 
-            return ButtonDropdown::widget([
-                'label' => Html::iconText('wrench', $this->selectionButtonLabel),
-                'direction' => ButtonDropdown::DIRECTION_UP,
-                ...$options,
-                'items' => $items,
-            ]);
+            return Dropdown::tag()
+                ->button(Button::secondary($this->selectionButtonLabel)
+                    ->class('btn dropdown-toggle')
+                    ->icon('wrench'))
+                ->items(...$items)
+                ->dropup()
+                ->render();
         }
 
         return '';
@@ -337,7 +337,7 @@ class GridView extends \yii\grid\GridView
     {
         $icon = ArrayHelper::remove($options, 'icon', 'wrench');
 
-        return Btn::primary()
+        return Button::primary()
             ->icon($icon)
             ->href($this->getRoute($model))
             ->addClass('d-none d-md-inline-block')
@@ -356,12 +356,11 @@ class GridView extends \yii\grid\GridView
         $modal = Modal::tag()
             ->id('modal-' . $this->getRowId($model))
             ->title($message)
-            ->footer(Btn::danger()
-                ->text(Yii::t('yii', 'Delete'))
-                ->delete($this->getDeleteRoute($model))
-                ->target('#' . $this->getRowId($model)));
+            ->footer(Button::danger()
+                ->content(Yii::t('yii', 'Delete'))
+                ->delete($this->getDeleteRoute($model), '#' . $this->getRowId($model)));
 
-        return Btn::danger()
+        return Button::danger()
             ->icon($icon)
             ->modal($modal)
             ->addAttributes($options)

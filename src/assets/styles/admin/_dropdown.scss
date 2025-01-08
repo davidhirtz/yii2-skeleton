@@ -1,6 +1,5 @@
 //@import "../../../../node_modules/bootstrap/scss/dropdown";
 
-.dropup,
 .dropdown {
   position: relative;
 
@@ -29,12 +28,11 @@
   --#{$prefix}dropdown-header-color: #{$dropdown-header-color};
 
   position: absolute;
-  z-index: $zindex-dropdown;
   display: none;
   min-width: $dropdown-min-width;
   padding: $dropdown-padding-y $dropdown-padding-x;
   margin: 0;
-  width: 100%;
+  //width: 100%;
   max-height: 50vh;
   overflow-y: auto;
   @include font-size($dropdown-font-size);
@@ -44,17 +42,23 @@
   background-color: var(--#{$prefix}dropdown-bg);
   background-clip: padding-box;
   border: $dropdown-border-width solid var(--#{$prefix}dropdown-border-color);
+  z-index: $zindex-dropdown;
   @include border-radius($dropdown-border-radius);
   @include box-shadow(var(--#{$prefix}dropdown-box-shadow));
 
-  & > a {
-    @extend .text-truncate;
+  &[open] {
+    display: block;
   }
 
-  &[data-bs-popper] {
-    top: 100%;
-    left: 0;
-    margin-top: $dropdown-spacer
+  .dropdown-menu-end {
+    & {
+      left: auto;
+      right: 0;
+    }
+  }
+
+  & > ul {
+    @extend .list-unstyled;
   }
 
   @if $dropdown-padding-y == 0 {
@@ -67,38 +71,10 @@
       @include border-bottom-radius($dropdown-inner-border-radius);
     }
   }
-
-  &.show {
-    display: block;
-  }
 }
 
-.dropdown-menu-start {
-  --bs-position: start;
-
-  &[data-bs-popper] {
-    right: auto;
-    left: 0;
-  }
-}
-
-.dropdown-menu-end {
-  --bs-position: end;
-
-  &[data-bs-popper] {
-    right: 0;
-    left: auto;
-  }
-}
 
 .dropup {
-  .dropdown-menu[data-bs-popper] {
-    top: auto;
-    bottom: 100%;
-    margin-top: 0;
-    margin-bottom: $dropdown-spacer
-  }
-
   .dropdown-toggle {
     @include caret(up);
   }
@@ -109,28 +85,26 @@
   margin: $dropdown-divider-margin-y 0;
   overflow: hidden;
   border-top: 1px solid var(--#{$prefix}dropdown-divider-bg);
-  opacity: 1; // Revisit in v6 to de-dupe styles that conflict with <hr> element
+  opacity: 1;
 }
-
 
 .dropdown-item {
   display: block;
-  width: 100%;
+  width: 100%; // Buttons...
   padding: $dropdown-item-padding-x $dropdown-item-padding-y;
-  clear: both;
   font-weight: $font-weight-normal;
   color: var(--#{$prefix}dropdown-link-color);
   text-align: inherit;
-  text-decoration: if($link-decoration == none, null, none);
-  white-space: nowrap; // prevent links from randomly breaking onto new lines
   background-color: transparent;
   border: 0;
   @include border-radius(var(--#{$prefix}dropdown-item-border-radius, 0));
+  @extend .text-truncate;
 
   &:hover,
   &:focus {
     color: var(--#{$prefix}dropdown-link-hover-color);
     text-decoration: if($link-hover-decoration == underline, none, null);
+    outline: 0;
     @include gradient-bg(var(--#{$prefix}dropdown-link-hover-bg));
   }
 
@@ -149,15 +123,6 @@
     // Remove CSS gradients if they're enabled
     background-image: if($enable-gradients, none, null);
   }
-}
-
-.dropdown-header {
-  display: block;
-  padding: $dropdown-header-padding-y $dropdown-header-padding-x;
-  margin-bottom: 0;
-  color: var(--#{$prefix}dropdown-header-color);
-  cursor: default;
-  white-space: nowrap;
 }
 
 .dropdown-toggle {

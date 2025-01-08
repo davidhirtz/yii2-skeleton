@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
+use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\web\View;
 use Yii;
 use yii\helpers\Html;
@@ -55,6 +56,11 @@ class Nav extends \yii\bootstrap5\Nav
         $items = [];
 
         foreach ($this->items as $item) {
+            if (is_string($item)) {
+                $items[] = Html::tag('li', $item);
+                continue;
+            }
+
             if ($roles = ArrayHelper::remove($item, 'roles')) {
                 $hasAccess = false;
 

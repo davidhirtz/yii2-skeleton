@@ -120,12 +120,10 @@ trait NestedTreeTrait
         }
     }
 
-
     public function findDescendants(): ActiveQuery
     {
         return static::find()->where('[[lft]]>:lft AND [[rgt]]<:rgt', ['lft' => $this->lft, 'rgt' => $this->rgt]);
     }
-
 
     public function getBranchCount(): int
     {
@@ -167,7 +165,7 @@ trait NestedTreeTrait
     }
 
     /**
-     * Updates tree before insert or update.
+     * Updates the tree before insert or update.
      */
     public function updateTreeBeforeSave(): void
     {
@@ -246,7 +244,7 @@ trait NestedTreeTrait
     }
 
     /**
-     * Updates tree after delete.
+     * Updates the tree after delete.
      */
     public function updateNestedTreeAfterDelete(): void
     {
@@ -295,7 +293,7 @@ trait NestedTreeTrait
         $tree = [];
 
         foreach ($models as $model) {
-            $tree[$model->parent_id][] = (int)$model->id;
+            $tree[$model->parent_id][] = $model->id;
         }
 
         if ($order) {
@@ -304,7 +302,7 @@ trait NestedTreeTrait
         }
 
         $lft = $parent ? $parent->getAttribute('lft') + 1 : 1;
-        $tree = static::rebuildNestedTreeBranch($tree, $lft, $parentId);
+        $tree = self::rebuildNestedTreeBranch($tree, $lft, $parentId);
 
         foreach ($models as $model) {
             $model->updateAttributes($tree[$model->id]);
@@ -319,7 +317,7 @@ trait NestedTreeTrait
             $tree[$id]['lft'] = $lft++;
 
             if (isset($branch[$id])) {
-                $tree += static::rebuildNestedTreeBranch($branch, $lft, $id);
+                $tree += self::rebuildNestedTreeBranch($branch, $lft, $id);
             }
 
             $tree[$id]['rgt'] = $lft++;

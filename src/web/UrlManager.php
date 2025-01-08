@@ -92,7 +92,10 @@ class UrlManager extends \yii\web\UrlManager
         $url = parent::createUrl(array_filter($params, fn ($value): bool => !is_null($value)));
 
         $event = $this->getAfterCreateEvent($url, $params);
-        $url = $event?->url ?? $url;
+
+        if ($event) {
+            $url = $event->url;
+        }
 
         if ($i18nUrl) {
             if (isset($this->languages[$language]) && $language !== $defaultLanguage) {
@@ -134,7 +137,11 @@ class UrlManager extends \yii\web\UrlManager
 
         $event = $this->getBeforeParseEvent($request);
 
-        return parent::parseRequest($event?->request ?? $request);
+        if ($event) {
+            $request = $event->request;
+        }
+
+        return parent::parseRequest($request);
     }
 
     protected function parseRedirectMap(Request $request, array $redirectMap): void

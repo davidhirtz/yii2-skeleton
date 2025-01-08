@@ -10,8 +10,10 @@ use davidhirtz\yii2\datetime\DateTimeValidator;
 use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use davidhirtz\yii2\skeleton\models\interfaces\TrailModelInterface;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\models\Trail;
+use davidhirtz\yii2\skeleton\models\traits\TrailModelTrait;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\tests\support\UnitTester;
 use ReflectionClass;
@@ -140,15 +142,17 @@ class TrailBehaviorTest extends Unit
 
     public function testTrailModelAdminRoute(): void
     {
+        $model = TrailActiveRecord::create();
+        self::assertFalse($model->getTrailModelAdminRoute());
+
         $model = new class() extends TrailActiveRecord {
-            public function getAdminRoute(): array|false
+            public function getAdminRoute(): array
             {
                 return ['/admin/test'];
             }
         };
 
-        self::assertFalse(TrailActiveRecord::instance()->getTrailModelAdminRoute());
-        self::assertEquals($model->getAdminRoute(), $model->getTrailBehavior()->getTrailModelAdminRoute());
+        self::assertEquals($model->getAdminRoute(), $model->getTrailModelAdminRoute());
     }
 
     public function testTrailParents(): void
@@ -180,7 +184,9 @@ class TrailBehaviorTest extends Unit
 
     public function testFormatTrailAttributeValueWithoutRange(): void
     {
-        $model = new class() extends Model {
+        $model = new class() extends Model implements TrailModelInterface {
+            use TrailModelTrait;
+
             public ?int $value = null;
 
             public function behaviors(): array
@@ -202,9 +208,7 @@ class TrailBehaviorTest extends Unit
             }
         };
 
-        /** @var TrailBehavior $behavior */
-        $behavior = $model->getBehavior('TrailBehavior');
-        self::assertEquals(2, $behavior->formatTrailAttributeValue('value', 2));
+        self::assertEquals(2, $model->formatTrailAttributeValue('value', 2));
     }
 
     private function createTrailActiveRecord(): TrailActiveRecord
@@ -244,8 +248,10 @@ class TrailBehaviorTest extends Unit
  *
  * @mixin TrailBehavior
  */
-class TrailActiveRecord extends ActiveRecord
+class TrailActiveRecord extends ActiveRecord implements TrailModelInterface
 {
+    use TrailModelTrait;
+
     public function behaviors(): array
     {
         return [
@@ -299,13 +305,6 @@ class TrailActiveRecord extends ActiveRecord
             2 => 'two',
             3 => 'three',
         ];
-    }
-
-    public function getTrailBehavior(): TrailBehavior
-    {
-        /** @var TrailBehavior $behavior */
-        $behavior = $this->getBehavior('TrailBehavior');
-        return $behavior;
     }
 
     public static function tableName(): string

@@ -143,12 +143,15 @@ class HtmlValidator extends Validator
         $allowedHtmlTags = [];
 
         foreach ($this->allowedHtmlTags as $tag) {
-            if ($attributes = ($this->allowedHtmlAttributes[$tag] ?? false)) {
-                if (is_array($attributes)) {
-                    sort($attributes);
-                    $attributes = implode('|', $attributes);
-                }
+            /** @var array|string|null $attributes */
+            $attributes = $this->allowedHtmlAttributes[$tag] ?? null;
 
+            if (is_array($attributes)) {
+                sort($attributes);
+                $attributes = implode('|', $attributes);
+            }
+
+            if ($attributes) {
                 $tag .= "[$attributes]";
             }
 

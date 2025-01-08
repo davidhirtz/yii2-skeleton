@@ -12,18 +12,18 @@ use yii\base\Behavior;
 use yii\base\InvalidConfigException;
 
 /**
- * SitemapBehavior implements the needed methods for an active records to be used in the sitemap component.
+ * SitemapBehavior implements the necessary methods for an active records to be used in the sitemap component.
  * All methods can be overwritten by the implementing model to customize the sitemap URL generation.
  *
  * @see https://www.sitemaps.org/protocol.html
  *
- * @property ActiveRecord&SitemapBehavior $owner
+ * @property SitemapBehavior $owner
  * @mixin ActiveRecord
  */
 class SitemapBehavior extends Behavior
 {
     /**
-     * @var callable required method, which returns a single or nested array with sitemap URL or valid route as "loc"
+     * @var callable|null required method, which returns a single or nested array with sitemap URL or valid route as "loc"
      * key.
      */
     public $callback;

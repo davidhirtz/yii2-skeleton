@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 
 use davidhirtz\yii2\skeleton\controllers\AccountController;
+use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\html\Dropdown;
+use davidhirtz\yii2\skeleton\html\Icon;
+use davidhirtz\yii2\skeleton\html\Link;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\DashboardController;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Nav;
@@ -82,38 +86,31 @@ class NavBar extends \yii\bootstrap5\NavBar
         }
 
         $i18n = Yii::$app->getI18n();
-        $items = [];
+
+        $dropdown = Dropdown::tag()
+            ->dropend()
+            ->button(Button::tag()
+                ->class('nav-link')
+                ->content(Icon::tag(Yii::$app->language)->collection('flag')));
 
         foreach ($i18n->getLanguages() as $language) {
             $label = $i18n->getLabel($language);
 
-            $items[] = [
-                'label' => "<i class=\"i18n-icon $language\"></i><span class=\"i18n-label\">$label</span>",
-                'url' => $this->languageRoute
-                    ? Url::toRoute([
-                        ...Yii::$app->getRequest()->getQueryParams(),
-                        ...$this->languageRoute,
-                        'language' => $language,
-                    ])
-                    : Url::current(['language' => $language]),
-                'encode' => false,
-            ];
+            $link = Link::tag()
+                ->content($label)
+                ->icon("flag:$language");
+
+            $dropdown = $this->languageRoute
+                ? $dropdown->item($link->href([
+                    ...Yii::$app->getRequest()->getQueryParams(),
+                    ...$this->languageRoute,
+                    'language' => $language,
+                ]))
+                : $dropdown->item($link->current(['language' => $language]));
         }
 
         return [
-            [
-                'label' => '<i class="i18n-icon ' . Yii::$app->language . '"></i>',
-                'icon' => false,
-                'visible' => count($items) > 1,
-                'encode' => false,
-                'items' => $items,
-                'dropdownOptions' => [
-                    'class' => 'dropdown-menu dropdown-menu-end',
-                ],
-                'options' => [
-                    'class' => 'navbar-i18n-dropdown',
-                ],
-            ],
+            $dropdown->render(),
             [
                 'label' => $user->getIdentity()->getUsername(),
                 'icon' => 'user',

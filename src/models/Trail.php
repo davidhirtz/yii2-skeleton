@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\models;
 
 use davidhirtz\yii2\datetime\DateTime;
-use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\models\collections\TrailModelCollection;
+use davidhirtz\yii2\skeleton\models\interfaces\TrailModelInterface;
 use davidhirtz\yii2\skeleton\models\interfaces\TypeAttributeInterface;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\models\traits\TypeAttributeTrait;
@@ -82,11 +82,10 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
 
                 foreach ($this->parents as $parent) {
                     if (!$parent->isDeleted()) {
-                        /** @var TrailBehavior $behavior */
-                        if ($behavior = $parent->getBehavior('TrailBehavior')) {
+                        if ($parent instanceof TrailModelInterface) {
                             $trail = static::create();
-                            $trail->model = $behavior->modelClass;
-                            $trail->model_id = $parent->getPrimaryKey(true);
+                            $trail->model = $parent->getTrailBehavior()->modelClass;
+                            $trail->model_id = $parent instanceof ActiveRecordInterface ? $parent->getPrimaryKey(true) : null;
                             $trail->type = $type;
 
                             $trail->data = [
@@ -118,12 +117,9 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
     public function getModelName(): string
     {
         if ($model = $this->getModelClass()) {
-            if ($model->getBehavior('TrailBehavior')) {
-                /** @var TrailBehavior $model */
-                return $model->getTrailModelName();
-            }
-
-            return (new ReflectionClass($model))->getShortName();
+            return $model instanceof TrailModelInterface
+                ? $model->getTrailModelName()
+                : (new ReflectionClass($model))->getShortName();
         }
 
         return $this->model;
@@ -131,12 +127,8 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
 
     public function getModelType(): ?string
     {
-        if (($model = $this->getModelClass()) && $model->getBehavior('TrailBehavior')) {
-            /** @var TrailBehavior $model */
-            return $model->getTrailModelType();
-        }
-
-        return null;
+        $model = $this->getModelClass();
+        return $model instanceof TrailModelInterface ? $model->getTrailModelType() : null;
     }
 
     public function getModelClass(): ?Model
@@ -194,16 +186,14 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         return $this->getTypeOptions()['hasDataModel'] ?? false;
     }
 
-    public static function createOrderTrail(?ActiveRecord $model, ?string $message = null, array $data = []): static
+    public static function createOrderTrail(?TrailModelInterface $model, ?string $message = null, array $data = []): static
     {
         $trail = static::create();
         $trail->type = static::TYPE_ORDER;
 
         if ($model) {
-            /** @var TrailBehavior $behavior */
-            $behavior = $model->getBehavior('TrailBehavior');
-            $trail->model = $behavior->modelClass;
-            $trail->model_id = $model->getPrimaryKey(true);
+            $trail->model = $model->getTrailBehavior()->modelClass;
+            $trail->model_id = $model instanceof ActiveRecordInterface ? $model->getPrimaryKey(true) : null;
         }
 
         $trail->message = $message;
@@ -215,15 +205,12 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
 
     public static function getAdminRouteByModel(?Model $model, int|string|null $id = null): array
     {
-        if ($model) {
-            /** @var TrailBehavior $behavior */
-            $behavior = $model->getBehavior('TrailBehavior');
-
+        if ($model instanceof TrailModelInterface) {
             if ($model instanceof ActiveRecord) {
                 $id ??= implode('-', $model->getPrimaryKey(true));
             }
 
-            $model = implode('@', array_filter([$behavior->modelClass, $id]));
+            $model = implode('@', array_filter([$model->getTrailBehavior()->modelClass, $id]));
         }
 
         return ['/admin/trail/index', 'model' => $model];

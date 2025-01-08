@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\html\Btn;
+use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\interfaces\StatusAttributeInterface;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
 use yii\base\Model;
 use yii\helpers\Url;
@@ -93,13 +93,12 @@ trait StatusGridViewTrait
         $items = [];
 
         foreach ($model::getStatuses() as $status => $statusOptions) {
-            $items[] = Btn::transparent($statusOptions['name'])
+            $items[] = Button::tag()
+                ->content($statusOptions['name'])
                 ->post($this->selectionRoute)
-                ->addClass('dropdown-item')
                 ->attribute('hx-include', '[data-id="check"]:checked')
-                ->attribute('name', $paramName)
-                ->attribute('value', $status)
-                ->render();
+                ->name($paramName)
+                ->value($status);
         }
 
         return $items;

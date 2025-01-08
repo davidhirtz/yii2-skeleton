@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
-use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\models\collections\TrailModelCollection;
+use davidhirtz\yii2\skeleton\models\interfaces\TrailModelInterface;
 use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\TrailActiveDataProvider;
@@ -195,10 +196,7 @@ class TrailGridView extends GridView
             return '';
         }
 
-        /** @var ActiveRecord|TrailBehavior $model */
-        $name = $model->getBehavior('TrailBehavior')
-            ? $model->getTrailModelName()
-            : $model->getPrimaryKey();
+        $name = $model instanceof TrailModelInterface ? $model->getTrailModelName() : $model->getPrimaryKey();
 
         return Html::a($name, Trail::getAdminRouteByModel($model), ['class' => 'strong']);
     }
@@ -225,8 +223,7 @@ class TrailGridView extends GridView
 
     protected function renderI18nTrailMessage(Trail $trail, ?Model $model = null): string
     {
-        if ($model) {
-            /** @var TrailBehavior $model */
+        if ($model instanceof TrailModelInterface) {
             $name = $model->getTrailModelName();
             $model = ($route = $model->getTrailModelAdminRoute()) ? Html::a($name, $route) : $name;
         } else {
@@ -297,8 +294,9 @@ class TrailGridView extends GridView
      */
     protected function formatTrailAttributeValue(Model $model, string $attribute, mixed $value): mixed
     {
-        /** @var TrailBehavior $model */
-        return $model->formatTrailAttributeValue($attribute, $value);
+        return $model instanceof TrailModelInterface
+            ? $model->formatTrailAttributeValue($attribute, $value)
+            : TrailModelCollection::formatAttributeValue($model, $attribute, $value);
     }
 
     protected function getRoute(ActiveRecordInterface $model, array $params = []): array|false

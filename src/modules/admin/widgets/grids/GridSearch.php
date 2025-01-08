@@ -6,7 +6,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\html\Btn;
+use davidhirtz\yii2\skeleton\html\Button;
 use Yii;
 use yii\base\BaseObject;
 use yii\base\Widget;
@@ -76,7 +76,7 @@ class GridSearch extends BaseObject
         $icon = ArrayHelper::remove($this->inputOptions, 'icon', 'search');
         $type = ArrayHelper::remove($this->inputOptions, 'type', 'search');
 
-        $btn = Btn::transparent()
+        $btn = Button::transparent()
             ->icon($icon)
             ->type('submit')
             ->render();

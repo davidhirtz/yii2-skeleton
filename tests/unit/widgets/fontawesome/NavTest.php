@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\tests\unit\widgets\fontawesome;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\helpers\FileHelper;
+use davidhirtz\yii2\skeleton\codeception\traits\AssetDirectoryTrait;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\tests\support\UnitTester;
 use davidhirtz\yii2\skeleton\web\Controller;
@@ -17,12 +17,11 @@ use Yii;
  */
 class NavTest extends Unit
 {
-    protected string $assetBasePath = '@runtime/assets';
+    use AssetDirectoryTrait;
 
     protected function _before(): void
     {
-        FileHelper::createDirectory($this->assetBasePath);
-        Yii::$app->getAssetManager()->basePath = Yii::getAlias($this->assetBasePath);
+        $this->createAssetDirectory();
 
         Yii::$app->controllerMap['site'] = TestSiteController::class;
         $this->tester->amOnRoute('site/index');
@@ -32,7 +31,7 @@ class NavTest extends Unit
 
     protected function _after(): void
     {
-        FileHelper::removeDirectory($this->assetBasePath);
+        $this->removeAssetDirectory();
         parent::_after();
     }
 

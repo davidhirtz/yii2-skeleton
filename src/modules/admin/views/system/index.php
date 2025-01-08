@@ -15,8 +15,8 @@ declare(strict_types=1);
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\html\Btn;
 use davidhirtz\yii2\skeleton\html\BtnToolbar;
+use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\web\View;
@@ -49,10 +49,10 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                 [
                     'contentOptions' => ['class' => 'text-end'],
                     'content' => fn ($modified, $name): string => BtnToolbar::tag()
-                        ->button(Btn::primary()
+                        ->button(Button::primary()
                             ->href(['view', 'log' => $name, 'raw' => 1])
                             ->icon('file'))
-                        ->button(Btn::danger()
+                        ->button(Button::danger()
                             ->icon('trash')
                             ->post(['delete', 'log' => $name]))
                         ->render(),
@@ -96,7 +96,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
             [
                 [
                     /** @see SystemController::actionPublish() */
-                    'content' => Btn::primary(Yii::t('skeleton', 'Refresh'))
+                    'content' => Button::primary(Yii::t('skeleton', 'Refresh'))
                         ->icon('sync-alt')
                         ->post(['publish']),
                     'options' => ['class' => 'ms-auto'],
@@ -123,7 +123,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
             [
                 'contentOptions' => ['class' => 'text-end'],
                 /** @see SystemController::actionFlush() */
-                'content' => fn (array $item): string => Btn::primary()
+                'content' => fn (array $item): string => Button::primary()
                     ->icon('sync-alt')
                     ->post(['flush', 'cache' => $item['name']])
                     ->render()
@@ -157,7 +157,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                         </div>
                     </td>
                     <td class="text-end">
-                        <?= Btn::primary()
+                        <?= Button::primary()
                             ->icon('trash')
                             ->post(['/admin/system/session-gc'])
                             ->tooltip(Yii::t('skeleton', 'Delete expired sessions'))

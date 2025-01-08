@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
-use davidhirtz\yii2\skeleton\html\Btn;
+use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
@@ -63,14 +63,14 @@ class DeleteActiveForm extends ActiveForm
 
         $this->confirm ??= Yii::t('yii', 'Are you sure you want to delete this item?');
 
-        $btn = Btn::danger($this->label);
+        $btn = Button::danger($this->label);
 
         if ($this->confirm) {
             $id = $this->getId();
             $btn = $btn->modal(Modal::tag()
                 ->id("modal-$id")
                 ->title($this->confirm)
-                ->footer(Btn::danger($this->label)
+                ->footer(Button::danger($this->label)
                     ->type('submit')
                     ->attribute('form', "$id")));
         } else {

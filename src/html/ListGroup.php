@@ -5,7 +5,7 @@ namespace davidhirtz\yii2\skeleton\html;
 use Yiisoft\Html\Tag\Base\Tag;
 use Yiisoft\Html\Tag\Li;
 
-final class ListGroup extends Tag
+class ListGroup extends Tag
 {
     private array $items = [];
 

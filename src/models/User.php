@@ -14,8 +14,10 @@ use davidhirtz\yii2\skeleton\controllers\AccountController;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use davidhirtz\yii2\skeleton\models\interfaces\StatusAttributeInterface;
+use davidhirtz\yii2\skeleton\models\interfaces\TrailModelInterface;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\models\traits\StatusAttributeTrait;
+use davidhirtz\yii2\skeleton\models\traits\TrailModelTrait;
 use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
 use davidhirtz\yii2\skeleton\validators\UniqueValidator;
 use Yii;
@@ -49,16 +51,17 @@ use yii\web\IdentityInterface;
  * @property DateTime|null $updated_at
  * @property DateTime $created_at
  *
- * @property string $uploadPath {@see static::setUploadPath()}
+ * @property string $uploadPath {@see static::getUploadPath()}
  *
  * @property-read User $admin {@see static::getAdmin()}
  * @property-read AuthClient[] $authClients {@see static::getAuthClients()}
  *
  * @mixin TrailBehavior
  */
-class User extends ActiveRecord implements IdentityInterface, StatusAttributeInterface
+class User extends ActiveRecord implements IdentityInterface, StatusAttributeInterface, TrailModelInterface
 {
     use StatusAttributeTrait;
+    use TrailModelTrait;
 
     final public const AUTH_USER_CREATE = 'userCreate';
     final public const AUTH_USER_DELETE = 'userDelete';
@@ -383,9 +386,9 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
         return $this->_uploadPath ? Yii::getAlias("@webroot/$this->_uploadPath") : false;
     }
 
-    public function setUploadPath(string $uploadPath): void
+    public function setUploadPath(string|false $uploadPath): void
     {
-        $this->_uploadPath = trim($uploadPath, '/') . '/';
+        $this->_uploadPath = $uploadPath ? (trim($uploadPath, '/') . '/') : false;
     }
 
     public function getUsername(): ?string

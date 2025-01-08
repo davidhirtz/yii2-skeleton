@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 
-use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\models\interfaces\TrailModelInterface;
 use davidhirtz\yii2\skeleton\modules\admin\data\TrailActiveDataProvider;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
 use Yii;
@@ -55,23 +55,17 @@ class TrailSubmenu extends Submenu
     {
         $model = $this->getTrailModel();
 
-        if ($route = $model?->getTrailModelAdminRoute()) {
-            /** @var TrailBehavior $behavior */
-            $behavior = $model->getBehavior('TrailBehavior');
-
+        if ($model instanceof TrailModelInterface) {
             return [
-                ...$route,
-                'language' => explode('::', (string) $behavior->modelClass)[1] ?? null
+                ...$model->getTrailModelAdminRoute(),
+                'language' => explode('::', (string) $model->getTrailBehavior()->modelClass)[1] ?? null
             ];
         }
 
         return false;
     }
 
-    /**
-     * @return TrailBehavior|Model|null
-     */
-    public function getTrailModel(): mixed
+    public function getTrailModel(): TrailModelInterface|Model|null
     {
         if ($this->dataProvider->model) {
             $this->_trailModel ??= $this->dataProvider->getModels()

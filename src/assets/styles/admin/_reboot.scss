@@ -16,8 +16,13 @@
   }
 }
 
+html {
+  scroll-padding-top: $app-html-scroll-padding;
+}
+
 body {
   margin: 0;
+  padding: $app-body-padding;
   font-family: inspect($font-family-base);
   @include font-size($font-size-base);
   font-weight: $font-weight-base;
@@ -25,8 +30,13 @@ body {
   color: var(--#{$prefix}body-color);
   text-align: $body-text-align;
   background-color: var(--#{$prefix}body-bg);
+  overflow-y: scroll;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba($black, 0);
+
+  &:has(dialog[open]) {
+    overflow: hidden;
+  }
 }
 
 hr {

@@ -45,16 +45,8 @@
   margin: 0;
   list-style: none;
 
-  .dropdown-menu {
-    position: static;
-  }
-
   @include media-breakpoint-up($app-navbar-expand-breakpoint) {
     flex-direction: row;
-
-    .dropdown-menu {
-      position: absolute;
-    }
   }
 }
 
@@ -104,10 +96,6 @@
 
   @include media-breakpoint-up($app-navbar-expand-breakpoint) {
     display: block;
-  }
-
-  .dropdown-toggle::after {
-    display: none;
   }
 }
 

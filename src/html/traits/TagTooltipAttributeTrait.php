@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\html\traits;
 
-trait TooltipAttributeTrait
+trait TagTooltipAttributeTrait
 {
     public function tooltip(string $tooltip): self
     {

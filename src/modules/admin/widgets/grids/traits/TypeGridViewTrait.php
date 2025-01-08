@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\interfaces\TypeAttributeInterface;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
+use yii\base\Model;
 use yii\helpers\Url;
 
 trait TypeGridViewTrait
@@ -55,7 +56,7 @@ trait TypeGridViewTrait
 
     public function typeDropdown(): string
     {
-        /** @var TypeAttributeInterface $model */
+        /** @var Model&TypeAttributeInterface $model */
         $model = $this->getModel();
         $typeOptions = $model::getTypes()[$this->type] ?? false;
 
@@ -75,7 +76,7 @@ trait TypeGridViewTrait
 
     protected function typeDropdownItems(): array
     {
-        /** @var TypeAttributeInterface $model */
+        /** @var Model&TypeAttributeInterface $model */
         $model = $this->getModel();
         $items = [];
 
@@ -102,7 +103,7 @@ trait TypeGridViewTrait
 
     protected function hasVisibleTypes(): bool
     {
-        /** @var TypeAttributeInterface $model */
+        /** @var Model&TypeAttributeInterface $model */
         $model = $this->getModel();
         return !$this->type && count($model::getTypes()) > 1;
     }

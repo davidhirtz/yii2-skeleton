@@ -10,7 +10,9 @@ use davidhirtz\yii2\skeleton\behaviors\BlameableBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TimestampBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use davidhirtz\yii2\skeleton\models\interfaces\TrailModelInterface;
 use davidhirtz\yii2\skeleton\models\interfaces\TypeAttributeInterface;
+use davidhirtz\yii2\skeleton\models\traits\TrailModelTrait;
 use davidhirtz\yii2\skeleton\models\traits\TypeAttributeTrait;
 use davidhirtz\yii2\skeleton\models\traits\UpdatedByUserTrait;
 use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
@@ -24,12 +26,11 @@ use Yii;
  * @property int|null $updated_by_user_id
  * @property DateTime|null $updated_at
  * @property DateTime $created_at
- *
- * @mixin TrailBehavior
  */
-class Redirect extends ActiveRecord implements TypeAttributeInterface
+class Redirect extends ActiveRecord implements TypeAttributeInterface, TrailModelInterface
 {
     use TypeAttributeTrait;
+    use TrailModelTrait;
     use UpdatedByUserTrait;
 
     final public const AUTH_REDIRECT_CREATE = 'redirectCreate';

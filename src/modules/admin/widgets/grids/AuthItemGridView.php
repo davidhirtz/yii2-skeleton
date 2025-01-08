@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\html\Btn;
+use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\AuthItem;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\ButtonsColumn;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\MessageSourceTrait;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Icon;
 use Yii;
 use yii\grid\GridView;
 
@@ -144,7 +144,7 @@ class AuthItemGridView extends GridView
     {
         $route = [$authItem->isAssigned ? 'revoke' : 'assign', 'id' => $this->user->id, 'name' => $authItem->name, 'type' => $authItem->type];
 
-        return Btn::primary()
+        return Button::primary()
             ->icon($authItem->isAssigned ? 'ban' : 'star')
             ->post($route)
             ->render();

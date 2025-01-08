@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\html\Btn;
+use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
@@ -139,7 +139,7 @@ class RedirectGridView extends GridView
 
     protected function getCreateButton(): string
     {
-        return Btn::primary(Yii::t('skeleton', 'New Redirect'))
+        return Button::primary(Yii::t('skeleton', 'New Redirect'))
             ->icon('plus')
             ->get(['/admin/redirect/create'])
             ->render();
@@ -153,14 +153,12 @@ class RedirectGridView extends GridView
         $modal = Modal::tag()
             ->title(Yii::t('skeleton', 'Delete selected'))
             ->body(Yii::t('skeleton', 'Are you sure you want to delete all selected items?'))
-            ->footer(
-                Btn::danger(Yii::t('skeleton', 'Delete selected'))
-                    ->icon('trash')
-                    ->post(['/admin/redirect/delete-all'])
-                    ->attribute('hx-include', '[data-id="check"]:checked')
-            );
+            ->footer(Button::danger(Yii::t('skeleton', 'Delete selected'))
+                ->icon('trash')
+                ->post(['/admin/redirect/delete-all'])
+                ->attribute('hx-include', '[data-id="check"]:checked'));
 
-        return Btn::danger(Yii::t('skeleton', 'Delete selected'))
+        return Button::danger(Yii::t('skeleton', 'Delete selected'))
             ->icon('trash')
             ->attribute('data-id', 'check-button')
             ->attribute('style', 'display:none')

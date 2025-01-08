@@ -34,8 +34,8 @@ class AuthClientListGroup extends Widget
     {
         if ((new LoginForm())->isFacebookLoginEnabled()) {
             $this->list->item(ListGroupItemAction::tag()
-                ->icon('facebook', 'fab')
-                ->text('Facebook')
+                ->content('Facebook')
+                ->icon('brand:facebook')
                 ->href(Url::toRoute(['/admin/user/auth', 'authclient' => 'facebook'])));
         }
     }

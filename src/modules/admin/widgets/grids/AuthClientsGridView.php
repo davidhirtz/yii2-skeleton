@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\html\Btn;
+use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\User;
@@ -56,7 +56,7 @@ class AuthClientsGridView extends GridView
             ->title(Yii::t('skeleton', 'Clients'))
             ->body(AuthClientListGroup::widget());
 
-        return Btn::primary(Yii::t('skeleton', 'Add account'))
+        return Button::primary(Yii::t('skeleton', 'Add account'))
             ->icon('plus')
             ->modal($modal)
             ->render();
@@ -82,11 +82,11 @@ class AuthClientsGridView extends GridView
                     ->id($id)
                     ->title(Yii::t('skeleton', 'Remove {client}', ['client' => $title]))
                     ->body(Yii::t('skeleton', 'Are you sure your want to remove your {client} account?', ['client' => $title]))
-                    ->footer(Btn::danger(Yii::t('skeleton', 'Remove'))
+                    ->footer(Button::danger(Yii::t('skeleton', 'Remove'))
                         ->icon('trash-alt')
                         ->post(['deauthorize', 'id' => $auth->id, 'name' => $auth->name]));
 
-                return Btn::danger()
+                return Button::danger()
                     ->icon('trash-alt')
                     ->modal($modal)
                     ->tooltip(Yii::t('skeleton', 'Remove {client}', ['client' => $title]))

@@ -106,7 +106,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     public static function batchInsert(array $columns, ?array $rows = null, bool $ignore = false): int
     {
         $query = Yii::createObject(BatchInsertQueryBuild::class, [static::class, ...func_get_args()]);
-        return $query->getCommand()->execute();
+        return $query->command->execute();
     }
 
     /**

@@ -19,7 +19,7 @@ class TrailControllerTest extends Unit
         return [
             'trail' => [
                 'class' => TrailFixture::class,
-                'dataFile' => codecept_data_dir() . 'trail.php',
+                'dataFile' => codecept_data_dir() . 'trails.php',
             ],
         ];
     }
