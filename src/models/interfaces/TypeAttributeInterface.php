@@ -14,7 +14,14 @@ interface TypeAttributeInterface
 
     public function getTypeName(): string;
 
+    public function getTypePlural(): string;
+
     public function getTypeOptions(): array;
 
     public static function instantiate($row): static;
+
+    /**
+     * @return static[]
+     */
+    public static function getTypeInstances(): array;
 }

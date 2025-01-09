@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\html;
 
+use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
+
 class Dropdown extends Tag
 {
+    use TagContentTrait;
+
     protected array $attributes = ['class' => 'dropdown'];
+
     private Button $button;
     private array $items = [];
 
@@ -54,6 +59,7 @@ class Dropdown extends Tag
 
     protected function renderContent(): string
     {
-        return $this->button->render() . '<dialog class="dropdown-menu"><ul>' . implode('', $this->items) . '</ul></dialog>';
+        $content = implode('', $this->content) . '<ul>' . implode('', $this->items) . '</ul>';
+        return $this->button->render() . '<dialog class="dropdown-menu">' . $content . '</dialog>';
     }
 }

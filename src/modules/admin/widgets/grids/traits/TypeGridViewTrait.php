@@ -7,27 +7,15 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\interfaces\TypeAttributeInterface;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\ButtonDropdown;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\FilterDropdown;
 use Yii;
 use yii\base\Model;
-use yii\helpers\Url;
 
 trait TypeGridViewTrait
 {
-    /**
-     * @var int|null the current type
-     */
-    public ?int $type = null;
-
-    /**
-     * @var string the type parameter name
-     */
-    public string $typeParamName = 'type';
-
-    /**
-     * @var string|null whether the default item in the types dropdown should be shown
-     */
-    public ?string $typeDefaultItem = null;
+    protected ?int $type = null;
+    protected ?string $typeDefaultItem = null;
+    protected string $typeParamName = 'type';
 
     public function typeColumn(): array
     {
@@ -54,44 +42,27 @@ trait TypeGridViewTrait
         ];
     }
 
-    public function typeDropdown(): string
+    public function typeDropdown(): ?FilterDropdown
     {
-        /** @var Model&TypeAttributeInterface $model */
-        $model = $this->getModel();
-        $typeOptions = $model::getTypes()[$this->type] ?? false;
-
-        if ($typeOptions) {
-            $name = isset($typeOptions['class'])
-                ? $model::instantiate(['type' => $this->type])->getTypeName()
-                : ($typeOptions['plural'] ?? $typeOptions['name']);
+        if (!$this->hasVisibleTypes()) {
+            return null;
         }
 
-        return ButtonDropdown::widget([
-            'label' => $name ?? Yii::t('skeleton', 'Type'),
-            'items' => $this->typeDropdownItems(),
-            'paramName' => $this->typeParamName,
-            'defaultItem' => $this->typeDefaultItem,
-        ]);
+        $dropdown = FilterDropdown::make();
+        $dropdown->label = Yii::t('skeleton', 'Type');
+        $dropdown->paramName = $this->typeParamName;
+        $dropdown->defaultItem = $this->typeDefaultItem;
+        $dropdown->items = $this->typeDropdownItems();
+
+        return $dropdown;
     }
 
     protected function typeDropdownItems(): array
     {
         /** @var Model&TypeAttributeInterface $model */
         $model = $this->getModel();
-        $items = [];
 
-        foreach ($model::getTypes() as $type => $typeOptions) {
-            $label = isset($typeOptions['class'])
-                ? $model::instantiate(['type' => $type])->getTypeName()
-                : ($typeOptions['plural'] ?? $typeOptions['name']);
-
-            $items[] = [
-                'label' => $label,
-                'url' => Url::current([$this->typeParamName => $type, 'page' => null]),
-            ];
-        }
-
-        return $items;
+        return array_map(fn ($model) => $model->getTypePlural(), $model::getTypeInstances());
     }
 
     protected function getTypeIcon(TypeAttributeInterface $model): string

@@ -8,6 +8,9 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use Yii;
 use yii\helpers\Url;
 
+/**
+ * @deprecated
+ */
 class ButtonDropdown extends \yii\bootstrap5\ButtonDropdown
 {
     /**

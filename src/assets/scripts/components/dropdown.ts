@@ -7,14 +7,9 @@ export default ($btn: HTMLElement) => {
         : $btn.parentElement.querySelector('dialog');
 
     const keydownEvent = (event: KeyboardEvent) => {
-        const $current = document.activeElement.closest('li');
-
-        if ($current) {
-            if (event.key === 'ArrowDown') {
-                (($current.nextElementSibling || $current.parentElement.firstElementChild).firstElementChild as HTMLButtonElement).focus();
-            } else if (event.key === 'ArrowUp') {
-                (($current.previousElementSibling || $current.parentElement.lastElementChild).firstElementChild as HTMLButtonElement).focus();
-            }
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+            selected = (selected + (event.key === 'ArrowDown' ? 1 : -1) + $items.length) % $items.length;
+            $items[selected].focus();
         }
     }
 
@@ -24,12 +19,19 @@ export default ($btn: HTMLElement) => {
         }
     }
 
+    const $items = $dialog.querySelectorAll('a:not([inert],.disabled),button:not([inert],:disabled,.disabled),input:not([inert],:disabled,.disabled)') as NodeListOf<HTMLElement>;
+
     let cleanup: () => void;
+    let selected = 0;
 
     $btn.addEventListener('click', () => {
         $dialog.showModal();
-        $dialog.addEventListener('keydown', keydownEvent);
         $dialog.addEventListener('click', clickOutsideEvent);
+
+        if ($items) {
+            $dialog.addEventListener('keydown', keydownEvent);
+            $items[selected].focus();
+        }
 
         cleanup = autoUpdate($btn, $dialog, () => {
             computePosition($btn, $dialog, {

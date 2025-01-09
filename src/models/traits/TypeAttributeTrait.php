@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\models\traits;
 
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\TypeGridViewTrait;
 use Yii;
+use yii\helpers\Inflector;
 
 /**
  * TypeAttributeTrait implements type attribute methods and validation and for an active record. It can also instantiate
@@ -69,6 +70,11 @@ trait TypeAttributeTrait
     public function getTypeName(): string
     {
         return $this->getTypeOptions()['name'] ?? '';
+    }
+
+    public function getTypePlural(): string
+    {
+        return $this->getTypeOptions()['plural'] ?? Inflector::pluralize($this->getTypeName());
     }
 
     public function getTypeIcon(): string

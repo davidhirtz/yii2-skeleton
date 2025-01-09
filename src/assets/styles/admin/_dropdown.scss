@@ -14,19 +14,6 @@
 }
 
 .dropdown-menu {
-  --#{$prefix}dropdown-color: #{$dropdown-color};
-  --#{$prefix}dropdown-bg: #{$dropdown-bg};
-  --#{$prefix}dropdown-border-color: #{$dropdown-border-color};
-  --#{$prefix}dropdown-divider-bg: #{$dropdown-divider-bg};
-  --#{$prefix}dropdown-box-shadow: #{$dropdown-box-shadow};
-  --#{$prefix}dropdown-link-color: #{$dropdown-link-color};
-  --#{$prefix}dropdown-link-hover-color: #{$dropdown-link-hover-color};
-  --#{$prefix}dropdown-link-hover-bg: #{$dropdown-link-hover-bg};
-  --#{$prefix}dropdown-link-active-color: #{$dropdown-link-active-color};
-  --#{$prefix}dropdown-link-active-bg: #{$dropdown-link-active-bg};
-  --#{$prefix}dropdown-link-disabled-color: #{$dropdown-link-disabled-color};
-  --#{$prefix}dropdown-header-color: #{$dropdown-header-color};
-
   position: absolute;
   display: none;
   min-width: $dropdown-min-width;
@@ -36,15 +23,14 @@
   max-height: 50vh;
   overflow-y: auto;
   @include font-size($dropdown-font-size);
-  color: var(--#{$prefix}dropdown-color);
+  color: $dropdown-color;
   text-align: left; // Ensures proper alignment if parent has it changed (e.g., modal footer)
   list-style: none;
-  background-color: var(--#{$prefix}dropdown-bg);
+  background-color: $dropdown-bg;
   background-clip: padding-box;
-  border: $dropdown-border-width solid var(--#{$prefix}dropdown-border-color);
+  border: $dropdown-border-width solid $dropdown-border-color;
   z-index: $zindex-dropdown;
   @include border-radius($dropdown-border-radius);
-  @include box-shadow(var(--#{$prefix}dropdown-box-shadow));
 
   &[open] {
     display: block;
@@ -73,18 +59,21 @@
   }
 }
 
-
 .dropup {
   .dropdown-toggle {
     @include caret(up);
   }
 }
 
+.dropdown-header {
+  padding: $dropdown-header-padding-y $dropdown-header-padding-x;
+}
+
 .dropdown-divider {
   height: 0;
   margin: $dropdown-divider-margin-y 0;
   overflow: hidden;
-  border-top: 1px solid var(--#{$prefix}dropdown-divider-bg);
+  border-top: 1px solid $dropdown-divider-bg;
   opacity: 1;
 }
 
@@ -93,35 +82,31 @@
   width: 100%; // Buttons...
   padding: $dropdown-item-padding-x $dropdown-item-padding-y;
   font-weight: $font-weight-normal;
-  color: var(--#{$prefix}dropdown-link-color);
+  color: $dropdown-link-color;
   text-align: inherit;
   background-color: transparent;
   border: 0;
   @include border-radius(var(--#{$prefix}dropdown-item-border-radius, 0));
   @extend .text-truncate;
 
-  &:hover,
-  &:focus {
-    color: var(--#{$prefix}dropdown-link-hover-color);
-    text-decoration: if($link-hover-decoration == underline, none, null);
-    outline: 0;
-    @include gradient-bg(var(--#{$prefix}dropdown-link-hover-bg));
+  &.active {
+    color: $dropdown-link-active-color;
+    background-color: $dropdown-link-active-bg;
+    font-weight: $app-dropdown-button-active-font-weight;
   }
 
-  &.active,
-  &:active {
-    color: var(--#{$prefix}dropdown-link-active-color);
-    text-decoration: none;
-    @include gradient-bg(var(--#{$prefix}dropdown-link-active-bg));
+  &:hover,
+  &:focus {
+    color: $dropdown-link-hover-color;
+    background-color: $dropdown-link-hover-bg;
+    outline: 0;
   }
 
   &.disabled,
   &:disabled {
-    color: var(--#{$prefix}dropdown-link-disabled-color);
+    color: $dropdown-link-disabled-color;
     pointer-events: none;
     background-color: transparent;
-    // Remove CSS gradients if they're enabled
-    background-image: if($enable-gradients, none, null);
   }
 }
 
@@ -137,7 +122,7 @@
   width: 100%;
   @extend .text-truncate;
 
-  &.active {
+  .active > & {
     font-weight: $app-dropdown-button-active-font-weight;
   }
 }

@@ -348,10 +348,10 @@ $dropdown-border-color: $border-color !default;
 $dropdown-divider-bg: $border-color !default;
 $dropdown-divider-margin-y: 0 !default;
 $dropdown-item-padding-y: .6563rem !default;
-$dropdown-link-hover-bg: $body-tertiary-bg !default;
-$dropdown-link-active-bg: $body-tertiary-bg !default;
+$dropdown-link-hover-bg: var(--#{$prefix}secondary-bg) !default;
+$dropdown-link-active-bg: var(--#{$prefix}tertiary-bg) !default;
 
-$app-dropdown-button-bg: $body-tertiary-bg !default;
+$app-dropdown-button-bg: var(--#{$prefix}tertiary-bg) !default;
 $app-dropdown-button-color: $body-color !default;
 $app-dropdown-button-border-color: $border-color !default;
 $app-dropdown-button-active-bg: $gray-200 !default;
@@ -366,6 +366,9 @@ $dropdown-link-color: $link-color !default;
 $dropdown-link-hover-color: $link-color !default;
 $dropdown-link-active-color: inherit !default;
 $dropdown-link-active-bg: $body-tertiary-bg !default;
+
+$dropdown-header-padding-y: $dropdown-item-padding-y !default;
+$dropdown-header-padding-x: $dropdown-item-padding-x !default;
 
 $app-dropdown-header-padding-y: $dropdown-item-padding-y !default;
 $app-dropdown-header-padding-x: $dropdown-item-padding-x !default;
