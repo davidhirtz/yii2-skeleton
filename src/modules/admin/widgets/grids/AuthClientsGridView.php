@@ -53,7 +53,7 @@ class AuthClientsGridView extends GridView
     {
         $modal = Modal::make()
             ->title(Yii::t('skeleton', 'Clients'))
-            ->html(AuthClientListGroup::widget());
+            ->html(AuthClientListGroup::make());
 
         return Button::primary(Yii::t('skeleton', 'Add account'))
             ->icon('plus')

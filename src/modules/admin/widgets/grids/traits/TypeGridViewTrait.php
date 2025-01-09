@@ -49,10 +49,10 @@ trait TypeGridViewTrait
         }
 
         $dropdown = FilterDropdown::make();
-        $dropdown->label = Yii::t('skeleton', 'Type');
-        $dropdown->paramName = $this->typeParamName;
         $dropdown->defaultItem = $this->typeDefaultItem;
         $dropdown->items = $this->typeDropdownItems();
+        $dropdown->label = Yii::t('skeleton', 'Type');
+        $dropdown->paramName = $this->typeParamName;
 
         return $dropdown;
     }

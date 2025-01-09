@@ -17,17 +17,17 @@ class AuthClientListGroup extends Widget
     public function init(): void
     {
         $this->list = ListGroup::make();
-        $this->setLinks();
+        $this->setItems();
 
         parent::init();
     }
 
-    public function run(): string
+    public function render(): string
     {
         return $this->list->render();
     }
 
-    protected function setLinks(): void
+    protected function setItems(): void
     {
         $this->setFacebookLoginLink();
     }

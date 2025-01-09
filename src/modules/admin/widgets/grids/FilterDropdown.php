@@ -5,10 +5,10 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 use davidhirtz\yii2\skeleton\html\Dropdown;
 use davidhirtz\yii2\skeleton\html\Input;
 use davidhirtz\yii2\skeleton\html\Link;
-use Stringable;
+use davidhirtz\yii2\skeleton\widgets\Widget;
 use Yii;
 
-class FilterDropdown implements Stringable
+class FilterDropdown extends Widget
 {
     public string|false|null $defaultItem = null;
     public bool $filter = false;
@@ -25,7 +25,7 @@ class FilterDropdown implements Stringable
 
     private Dropdown $dropdown;
 
-    public function __construct()
+    public function init(): void
     {
         $this->dropdown = Dropdown::make();
     }
@@ -46,7 +46,7 @@ class FilterDropdown implements Stringable
             $this->addFilterInput();
         }
 
-        if ($this->defaultItem && array_key_exists($this->value, $this->items)) {
+        if ($this->defaultItem && $this->hasActiveItem()) {
             $this->addDefaultItem();
         }
 
@@ -91,13 +91,8 @@ class FilterDropdown implements Stringable
         }
     }
 
-    public static function make(): self
+    protected function hasActiveItem(): bool
     {
-        return new self();
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
+        return array_key_exists($this->value, $this->items);
     }
 }
