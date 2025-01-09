@@ -8,23 +8,24 @@ use davidhirtz\yii2\skeleton\helpers\Url;
 
 trait TagAjaxAttributeTrait
 {
-    public function delete(string|array $url, string $target): self
+    public function delete(string|array $url, string $target): static
     {
-        return $this->addAttributes([
-            'hx-post' => Url::to($url),
-            'hx-select-oob' => '#flashes',
-            'hx-swap' => 'delete',
-            'hx-target' => $target,
-        ]);
+        $this->attributes['hx-post'] = Url::to($url);
+        $this->attributes['hx-select-oob'] = '#flashes';
+        $this->attributes['hx-swap'] = 'delete';
+        $this->attributes['hx-target'] = $target;
+        return $this;
     }
 
-    public function get(string|array $url): self
+    public function get(string|array $url): static
     {
-        return $this->attribute('hx-get', Url::to($url));
+        $this->attributes['hx-get'] = Url::to($url);
+        return $this;
     }
 
-    public function post(string|array $url): self
+    public function post(string|array $url): static
     {
-        return $this->attribute('hx-post', Url::to($url));
+        $this->attributes['hx-post'] = Url::to($url);
+        return $this;
     }
 }

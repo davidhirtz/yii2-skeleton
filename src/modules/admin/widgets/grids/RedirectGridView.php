@@ -150,9 +150,9 @@ class RedirectGridView extends GridView
      */
     protected function getSelectionButton(array $options = []): string
     {
-        $modal = Modal::tag()
+        $modal = Modal::make()
             ->title(Yii::t('skeleton', 'Delete selected'))
-            ->body(Yii::t('skeleton', 'Are you sure you want to delete all selected items?'))
+            ->text(Yii::t('skeleton', 'Are you sure you want to delete all selected items?'))
             ->footer(Button::danger(Yii::t('skeleton', 'Delete selected'))
                 ->icon('trash')
                 ->post(['/admin/redirect/delete-all'])

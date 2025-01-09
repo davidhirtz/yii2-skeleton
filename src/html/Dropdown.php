@@ -1,71 +1,59 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\skeleton\html;
 
-use Stringable;
-use Yiisoft\Html\Tag\Base\NormalTag;
-use Yiisoft\Html\Tag\Base\Tag;
-use Yiisoft\Html\Tag\CustomTag;
-use Yiisoft\Html\Tag\Li;
-use Yiisoft\Html\Tag\Ul;
-
-class Dropdown extends NormalTag
+class Dropdown extends Tag
 {
     protected array $attributes = ['class' => 'dropdown'];
     private Button $button;
     private array $items = [];
 
-    public function button(string|Stringable $content): self
+    public function button(Button $button): static
     {
-        $this->button = ($content instanceof Button
-            ? $content
-            : Button::tag()
-                ->class('btn dropdown-toggle')
-                ->content($content))
-            ->attribute('data-dropdown', '');
-
+        $this->button = $button->attribute('data-dropdown', '');
         return $this;
     }
 
-    public function dropend(): self
+    public function label(string $text): static
+    {
+        return $this->button(Button::make()->class('btn dropdown-toggle')->text($text));
+    }
+
+    public function dropend(): static
     {
         return $this->addClass('dropdown-menu-end');
     }
 
-    public function dropup(): self
+    public function dropup(): static
     {
         return $this->addClass('dropup');
     }
 
-    public function item(Tag $item): self
+    public function addItem(Tag ...$items): static
     {
-        $new = clone $this;
-        $new->items[] = Li::tag()->content($item->addClass('dropdown-item'));
-        return $new;
-    }
-
-    public function items(Tag ...$items): self
-    {
-        $new = clone $this;
-        $new->items = [];
-
         foreach ($items as $item) {
-            $new = $new->item($item);
+            $this->items[] = '<li>' . $item->addClass('dropdown-item')->render() . '</li>';
         }
 
-        return $new;
+        return $this;
     }
 
-    protected function generateContent(): string
+    public function items(Tag ...$items): static
     {
-        return $this->button->render() . CustomTag::name('dialog')
-                ->class('dropdown-menu')
-                ->content(Ul::tag()
-                    ->items(...$this->items));
+        $this->items = [];
+        return $this->addItem(...$items);
     }
 
-    protected function getName(): string
+    public function divider(): static
     {
-        return 'div';
+        $this->items[] = '<li><div class="dropdown-divider"></div></li>';
+        return $this;
+    }
+
+    protected function renderContent(): string
+    {
+        return $this->button->render() . '<dialog class="dropdown-menu"><ul>' . implode('', $this->items) . '</ul></dialog>';
     }
 }

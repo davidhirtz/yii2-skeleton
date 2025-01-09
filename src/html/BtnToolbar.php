@@ -1,24 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\skeleton\html;
 
-use Yiisoft\Html\Tag\Base\NormalTag;
-use Yiisoft\Html\Tag\Base\TagContentTrait;
-
-class BtnToolbar extends NormalTag
+class BtnToolbar extends Tag
 {
-    use TagContentTrait;
+    protected array $attributes = [
+        'class' => 'btn-toolbar',
+    ];
 
-    protected array $attributes = ['class' => 'btn-toolbar'];
+    private array $buttons = [];
 
-    public function button(Button $btn): self
+    public function button(Button $btn): static
     {
-        $this->content[] = $btn;
+        $this->buttons[] = $btn;
         return $this;
     }
 
-    protected function getName(): string
+    public function buttons(Button ...$buttons): static
     {
-        return 'div';
+        $this->buttons = $buttons;
+        return $this;
+    }
+
+    protected function renderContent(): string
+    {
+        return implode('', $this->buttons);
     }
 }

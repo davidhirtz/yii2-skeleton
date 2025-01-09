@@ -5,32 +5,28 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\html\traits;
 
 use davidhirtz\yii2\skeleton\html\Icon;
-use Yiisoft\Html\Tag\Base\TagContentTrait;
 
 trait TagIconTextTrait
 {
-    use TagContentTrait {
-        generateContent as generateContentTrait;
-    }
+    use TagContentTrait;
 
-    private string $text = '';
     private ?Icon $icon = null;
 
-    public function icon(string $icon): self
+    public function icon(string $icon): static
     {
         $new = clone $this;
         $new->icon = Icon::tag($icon);
         return $new;
     }
 
-    protected function generateContent(): string
+    protected function renderContent(): string
     {
-        $text = $this->generateContentTrait();
+        $html = implode('', $this->content);
 
-        if ($this->icon && $text) {
-            return '<div class="icon-text">' . $this->icon->render() . "<div>$text</div></div>";
+        if ($this->icon && $html) {
+            return '<div class="icon-text">' . $this->icon->render() . "<div>$html</div></div>";
         }
 
-        return $this->icon?->render() ?? $text;
+        return $this->icon?->render() ?? $html;
     }
 }

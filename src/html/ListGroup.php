@@ -1,37 +1,38 @@
 <?php
 
-namespace davidhirtz\yii2\skeleton\html;
+declare(strict_types=1);
 
-use Yiisoft\Html\Tag\Base\Tag;
-use Yiisoft\Html\Tag\Li;
+namespace davidhirtz\yii2\skeleton\html;
 
 class ListGroup extends Tag
 {
+    protected array $attributes = [
+        'class' => 'list-group list-unstyled',
+    ];
+
     private array $items = [];
 
-    public static function tag(): self
-    {
-        $self = new self();
-        $self->attributes['class'] = 'list-group list-unstyled';
-        return $self;
-    }
-
-    public function item(ListGroupItemAction $link): self
+    public function item(ListGroupItemLink $link): static
     {
         if ($link->isVisible()) {
-            $this->items[] = Li::tag()->content($link)->render();
+            $this->items[] = '<li>' . $link->render() . '</li>';
         }
 
         return $this;
     }
 
-    protected function getName(): string
+    protected function renderContent(): string
     {
-        return 'ul';
+        return implode('', $this->items);
     }
 
     protected function renderTag(): string
     {
-        return $this->items ? '<' . $this->getName() . $this->renderAttributes() . '>' . implode('', $this->items) . '</' . $this->getName() . '>' : '';
+        return $this->items ? parent::renderTag() : '';
+    }
+
+    protected function getName(): string
+    {
+        return 'ul';
     }
 }

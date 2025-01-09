@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\skeleton\html;
 
-use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Base\TagContentTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
 
-class Container extends BaseTag
+class Container extends Tag
 {
     use TagContentTrait;
 
@@ -13,10 +14,8 @@ class Container extends BaseTag
         'class' => 'container',
     ];
 
-    public function centered(): self
+    public function centered(): static
     {
-        $new = clone $this;
-        Html::addCssClass($new->attributes, 'container-centered');
-        return $new;
+        return $this->addClass('container-centered');
     }
 }

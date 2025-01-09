@@ -54,8 +54,7 @@
   .btn-check:checked + &,
   :not(.btn-check) + &:active,
   &:first-child:active,
-  &.active,
-  &.show {
+  &.active {
     color: var(--#{$prefix}btn-active-color);
     background-color: var(--#{$prefix}btn-active-bg);
     background-image: if($enable-gradients, none, null);

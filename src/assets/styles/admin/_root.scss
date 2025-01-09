@@ -129,4 +129,6 @@
 
   //--#{$prefix}form-valid-color: #{$form-valid-color};
   //--#{$prefix}form-valid-border-color: #{$form-valid-border-color};
+
+  --#{$prefix}arrow-down-bg: #{escape-svg($app-arrow-down-bg)};
 }

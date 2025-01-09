@@ -46,18 +46,18 @@
 
   // Due to specificity of the above selector (`.card > .list-group`), we must
   // use a child selector here to prevent double borders.
-  > .card-header + .list-group,
-  > .list-group + .card-footer {
+  > .card-header + .list-group {
     border-top: 0;
   }
 }
 
 .card-body {
-  // Enable `flex-grow: 1` for decks and groups so that card blocks take up
-  // as much space as possible, ensuring footers are aligned to the bottom.
-  flex: 1 1 auto;
   padding: $card-spacer-y $card-spacer-x;
   color: var(--#{$prefix}card-color);
+
+  .collapsed > & {
+    display: none;
+  }
 
   &:has(.grid-view-footer:last-child) {
     padding-bottom: 0;
@@ -65,7 +65,9 @@
 }
 
 .card-title {
-  margin-bottom: $card-title-spacer-y;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   color: var(--#{$prefix}card-title-color, inherit);
   font-weight: $app-card-title-font-weight;
 }
@@ -85,24 +87,17 @@
     }
   }
 
-  .card-footer, .card-body {
+  .card-body {
     &:last-child {
       @include border-radius(0 0 $card-inner-border-radius $card-inner-border-radius);
     }
   }
 
-  .card:has(.card-body.d-none):not(:has(.card-footer)) {
+  .card.collapsed {
     .card-header {
       @include border-radius($card-inner-border-radius);
     }
   }
-}
-
-.card-footer {
-  padding: $card-cap-padding-y $card-cap-padding-x;
-  color: var(--#{$prefix}card-cap-color);
-  background-color: var(--#{$prefix}card-cap-bg);
-  border-top: $card-border-width solid var(--#{$prefix}card-border-color);
 }
 
 .card-danger {

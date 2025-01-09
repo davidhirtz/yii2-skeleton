@@ -9,71 +9,60 @@ use davidhirtz\yii2\skeleton\html\traits\TagIconTextTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagLinkTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagModalTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagTooltipAttributeTrait;
-use Yiisoft\Html\Tag\Base\NormalTag;
 
-class Button extends NormalTag
+class Button extends Tag
 {
     use TagAjaxAttributeTrait;
     use TagIconTextTrait;
     use TagLinkTrait;
     use TagModalTrait;
     use TagTooltipAttributeTrait;
-
+    
     protected array $attributes = [
         'type' => 'button',
     ];
 
-    public static function danger(string $content = ''): self
+    public static function danger(string $text = ''): static
     {
-        $new = self::tag()->content($content);
-        $new->attributes['class'] = 'btn btn-danger';
-        return $new;
+        return static::make()->class('btn btn-danger')->text($text);
     }
 
-    public static function primary(string $content = ''): self
+    public static function primary(string $text = ''): static
     {
-        $new = self::tag()->content($content);
-        $new->attributes['class'] = 'btn btn-primary';
-        return $new;
+        return static::make()->class('btn btn-primary')->text($text);
     }
 
-    public static function secondary(string $content = ''): self
+    public static function secondary(string $text = ''): static
     {
-        $new = self::tag()->content($content);
-        $new->attributes['class'] = 'btn btn-secondary';
-        return $new;
+        return static::make()->class('btn btn-secondary')->text($text);
     }
 
-    public static function success(string $content = ''): self
+    public static function success(string $text = ''): static
     {
-        $new = self::tag()->content($content);
-        $new->attributes['class'] = 'btn btn-success';
-        return $new;
+        return static::make()->class('btn btn-success')->text($text);
     }
 
-    public static function transparent(string $content = ''): self
+    public static function transparent(string $text = ''): static
     {
-        $new = self::tag()->content($content);
-        $new->attributes['class'] = 'btn btn-transparent';
-        return $new;
+        return static::make()->class('btn btn-transparent')->text($text);
     }
 
-    public function disabled(bool $disabled = true): self
+    public function disabled(bool $disabled = true): static
     {
         return $this->attribute('disabled', $disabled);
     }
 
-    public function name(?string $name): self
+    public function name(?string $name): static
     {
         return $this->attribute('name', $name);
     }
 
-    public function type(?string $type): self
+    public function type(?string $type): static
     {
         return $this->attribute('type', $type);
     }
 
-    public function value(mixed $value): self
+    public function value(mixed $value): static
     {
         return $this->attribute('value', $value);
     }

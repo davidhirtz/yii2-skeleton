@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns;
 
 use davidhirtz\yii2\skeleton\helpers\Html;

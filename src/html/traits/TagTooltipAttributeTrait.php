@@ -6,11 +6,11 @@ namespace davidhirtz\yii2\skeleton\html\traits;
 
 trait TagTooltipAttributeTrait
 {
-    public function tooltip(string $tooltip): self
+    public function tooltip(string $tooltip): static
     {
-        $new = clone $this;
-        $new->attributes['data-tooltip'] = '';
-        $new->attributes['title'] = $tooltip;
-        return $new;
+        return $this->addAttributes([
+            'data-tooltip' => '',
+            'title' => $tooltip,
+        ]);
     }
 }

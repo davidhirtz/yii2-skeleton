@@ -4,6 +4,7 @@ import tooltip from "./components/tooltips";
 import {toggleTargetsOnChange, updateTargetsOnChange} from "./components/forms";
 
 import "htmx.org";
+import collapse from "./components/collapse";
 
 const doc = document;
 const csrfToken = doc.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -17,6 +18,7 @@ doc.body.addEventListener('htmx:configRequest', (event: CustomEvent) => {
 });
 
 doc.body.addEventListener('htmx:load', () => {
+    queryAll('[data-collapse]', collapse);
     queryAll('[data-dropdown]', dropdown);
     queryAll('[data-modal]', modal);
     queryAll('[data-tooltip]', tooltip);

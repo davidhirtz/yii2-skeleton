@@ -266,7 +266,7 @@ class GridView extends \yii\grid\GridView
             $options['options']['data-id'] = 'check-button';
             $options['options']['style']['display'] ??= 'none';
 
-            return Dropdown::tag()
+            return Dropdown::make()
                 ->button(Button::secondary($this->selectionButtonLabel)
                     ->class('btn dropdown-toggle')
                     ->icon('wrench'))
@@ -353,11 +353,10 @@ class GridView extends \yii\grid\GridView
         $icon = ArrayHelper::remove($options, 'icon', 'trash');
         $message = ArrayHelper::remove($options, 'message', Yii::t('yii', 'Are you sure you want to delete this item?'));
 
-        $modal = Modal::tag()
-            ->id('modal-' . $this->getRowId($model))
+        $modal = Modal::make()
             ->title($message)
             ->footer(Button::danger()
-                ->content(Yii::t('yii', 'Delete'))
+                ->text(Yii::t('yii', 'Delete'))
                 ->delete($this->getDeleteRoute($model), '#' . $this->getRowId($model)));
 
         return Button::danger()

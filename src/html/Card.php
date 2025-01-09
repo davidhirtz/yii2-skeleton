@@ -1,91 +1,81 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\skeleton\html;
 
+use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
 use Yii;
-use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Button;
-use Yiisoft\Html\Tag\Div;
 
-class Card extends BaseTag
+class Card extends Tag
 {
+    use TagContentTrait;
+
     protected array $attributes = [
         'class' => 'card card-default',
     ];
 
-    private ?string $title = null;
-    private Div $body;
-    private ?bool $collapse = null;
+    protected ?bool $collapse = null;
+    protected ?string $title = null;
 
-    private static int $counter = 0;
-
-    public static function danger(): self
+    public static function danger(): static
     {
-        $new = static::tag();
-        $new->attributes['class'] = 'card card-danger';
-        return $new;
+        return static::make()->class('card card-danger');
     }
 
-    public function body(string $html, array $attributes = []): self
+    public function title(string $title): static
     {
-        $this->body ??= Div::tag()
-            ->addClass('card-body')
-            ->encode(false);
-
-        if ($attributes) {
-            $this->body = $this->body->addAttributes($attributes);
-        }
-
-        $this->body = $this->body->content($html);
-
+        $this->title = Html::encode($title);
         return $this;
     }
 
-    public function title(string $title): self
-    {
-        $this->title = $title;
-        return $this;
-    }
-
-    public function collapse(?bool $collapse): self
+    public function collapse(?bool $collapse): static
     {
         $this->collapse = $collapse;
         return $this;
     }
 
-    protected function generateContent(): string
+    protected function prepareAttributes(): void
     {
         if ($this->collapse !== null) {
-            $this->body->attributes['id'] ??= 'card-' . ++self::$counter;
-            $this->body->attributes['aria-expanded'] ??= $this->collapse ? 'false' : 'true';
+            $this->attribute('aria-expanded', $this->collapse);
 
-            if (!$this->collapse) {
-                Html::addCssClass($this->attributes, 'show');
+            if ($this->collapse) {
+                $this->addClass('collapsed');
             }
+
+            $this->getId();
         }
 
+        parent::prepareAttributes();
+    }
+
+    protected function renderContent(): string
+    {
         $content = [];
 
         if ($this->title) {
-            $content[] = Div::tag()
-                ->class('card-header')
-                ->content(Div::tag()
-                    ->class('card-title')
-                    ->content(
-                        $this->collapse !== null
-                            ? Button::button($this->title)
-                            ->attributes([
-                                'aria-label' => Yii::t('skeleton', 'Collapse'),
-                                'class' => 'btn btn-link',
-                                'data-bs-toggle' => 'toggle',
-                                'data-bs-target' => '#' . $this->body->attributes['id'],
-                            ])
-                            : $this->title
-                    ));
+            $header = [];
+
+            if ($this->collapse !== null) {
+                $header[] = Button::make()
+                    ->attribute('data-collapse', '#' . $this->getId())
+                    ->class('btn btn-link')
+                    ->html($this->title);
+
+                $header[] = Button::make()
+                    ->attribute('aria-label', Yii::t('skeleton', 'Toggle'))
+                    ->attribute('data-collapse', $this->getId())
+                    ->class('btn-collapse');
+            } else {
+                $header[] = $this->title;
+            }
+
+            $content[] = '<div class="card-header"><div class="card-title">' . implode('', $header) . '</div></div>';
         }
 
-        $content[] = $this->body;
-
+        $content[] = '<div class="card-body">' . implode('', $this->content) . '</div>';
 
         return implode('', $content);
     }

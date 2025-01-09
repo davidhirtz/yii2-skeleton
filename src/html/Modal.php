@@ -1,125 +1,78 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\skeleton\html;
 
+use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
 use Yii;
-use Yiisoft\Html\Tag\Base\NormalTag;
-use Yiisoft\Html\Tag\Div;
-use Yiisoft\Html\Tag\P;
 
-class Modal extends NormalTag
+class Modal extends Tag
 {
+    use TagContentTrait;
+
     protected array $attributes = [
         'class' => 'modal',
     ];
 
-    private ?Div $title = null;
-    private ?Div $body = null;
+    private ?string $title = null;
     private string|false|null $dismiss = null;
     private array $footer = [];
 
-    private static int $counter = 0;
-
-    public function body(string $html, array $attributes = []): self
-    {
-        $this->body ??= Div::tag()
-            ->addClass('modal-body')
-            ->encode(false);
-
-        if ($attributes) {
-            $this->body = $this->body->addAttributes($attributes);
-        }
-
-        $this->body = $this->body->content($html);
-
-        return $this;
-    }
-
-    public function dismiss(string|false|null $dismiss): self
+    public function dismiss(string|false|null $dismiss): static
     {
         $this->dismiss = $dismiss;
         return $this;
     }
 
-    public function getId(): string
-    {
-        return $this->attributes['id'] ??= 'modal-' . ++self::$counter;
-    }
-
-    public function text(string $text, array $attributes = []): self
-    {
-        $p = P::tag()->content($text);
-
-        if ($attributes) {
-            $p = $p->addAttributes($attributes);
-        }
-
-        return $this->body($p->render());
-    }
-
-    public function title(string $title): self
-    {
-        $this->title = Div::tag()
-            ->addClass('modal-title')
-            ->content($title);
-
-        return $this;
-    }
-
-    public function footer(Button|string $button): self
+    public function footer(Button|string $button): static
     {
         $this->footer[] = $button instanceof Button ? $button->attribute('data-modal', '') : $button;
         return $this;
     }
 
-    protected function prepareAttributes(): void
+    public function title(string $title): static
     {
-        $this->getId();
-        parent::prepareAttributes();
+        $this->title = Html::encode($title);
+        return $this;
     }
 
-    protected function generateContent(): string
+    protected function renderContent(): string
     {
-        $html = '';
+        $content = [];
 
         if ($this->title || $this->dismiss !== false) {
-            $header = Div::tag()->addClass('modal-header');
+            $header = [];
 
             if ($this->title) {
-                $header = $header->addContent($this->title);
+                $header[] = $this->title;
             }
 
             if ($this->dismiss !== false) {
-                $header = $header->addContent(Button::tag()
-                    ->addAttributes([
-                        'aria-label' => $this->dismiss ?? Yii::t('skeleton', 'Close'),
-                        'class' => 'btn-close',
-                        'data-modal' => '',
-                    ]));
+                $header[] = Button::make()->attributes([
+                    'aria-label' => $this->dismiss ?? Yii::t('skeleton', 'Close'),
+                    'class' => 'btn-close',
+                    'data-modal' => '',
+                ]);
 
                 array_unshift($this->footer, Button::secondary(Yii::t('skeleton', 'Cancel'))
                     ->attribute('data-modal', '')
                     ->attribute('autofocus', true));
             }
 
-            $html .= $header->render();
+            $content[] = '<div class="modal-header">' . implode('', $header) . '</div>';
         }
 
-        if ($this->body) {
-            $html .= $this->body->render();
+        if ($this->content) {
+            $content[] = '<div class="modal-body">' . implode('', $this->content) . '</div>';
         }
 
         if ($this->footer) {
-            $footer = Div::tag()->addClass('modal-footer');
-
-            foreach ($this->footer as $button) {
-                $footer = $footer->addContent($button);
-            }
-
-            $html .= $footer->render();
+            $content[] = '<div class="modal-footer">' . implode('', $this->footer) . '</div>';
         }
 
-        return $html;
+        return implode('', $content);
     }
 
     protected function getName(): string

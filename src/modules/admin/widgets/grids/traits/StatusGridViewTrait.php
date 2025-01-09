@@ -93,11 +93,11 @@ trait StatusGridViewTrait
         $items = [];
 
         foreach ($model::getStatuses() as $status => $statusOptions) {
-            $items[] = Button::tag()
-                ->content($statusOptions['name'])
-                ->post($this->selectionRoute)
+            $items[] = Button::make()
                 ->attribute('hx-include', '[data-id="check"]:checked')
                 ->name($paramName)
+                ->post($this->selectionRoute)
+                ->text($statusOptions['name'])
                 ->value($status);
         }
 

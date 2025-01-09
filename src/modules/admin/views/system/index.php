@@ -48,13 +48,15 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                 ],
                 [
                     'contentOptions' => ['class' => 'text-end'],
-                    'content' => fn ($modified, $name): string => BtnToolbar::tag()
-                        ->button(Button::primary()
-                            ->href(['view', 'log' => $name, 'raw' => 1])
-                            ->icon('file'))
-                        ->button(Button::danger()
-                            ->icon('trash')
-                            ->post(['delete', 'log' => $name]))
+                    'content' => fn ($modified, $name): string => BtnToolbar::make()
+                        ->buttons(
+                            Button::primary()
+                                ->href(['view', 'log' => $name, 'raw' => 1])
+                                ->icon('file'),
+                            Button::danger()
+                                ->icon('trash')
+                                ->post(['delete', 'log' => $name])
+                        )
                         ->render(),
                 ],
             ],

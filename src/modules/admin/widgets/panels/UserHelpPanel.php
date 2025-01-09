@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\panels;
 
+use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
 use Yii;
-use Yiisoft\Json\Json;
+use yii\helpers\Json;
 
 class UserHelpPanel extends HelpPanel
 {
@@ -67,8 +68,7 @@ class UserHelpPanel extends HelpPanel
      */
     protected function getCreatePasswordResetLinkButton(): string
     {
-        $modal = Modal::tag()
-            ->id('password-reset')
+        $modal = Modal::make()
             ->title(Yii::t('skeleton', 'Create password link'))
             ->text(Yii::t('skeleton', 'Are you sure you want to create a new password reset link? The current link will be invalidated.'))
             ->footer(Button::primary(Yii::t('skeleton', 'Create password link'))
@@ -93,10 +93,9 @@ class UserHelpPanel extends HelpPanel
             ->icon('clipboard')
             ->attribute('onclick', 'navigator.clipboard.writeText(' . Json::htmlEncode($url) . ')');
 
-        $modal = Modal::tag()
-            ->id('password-reset-link')
+        $modal = Modal::make()
             ->title(Yii::t('skeleton', 'Password reset link'))
-            ->text($url, ['class' => 'text-break'])
+            ->html(Html::tag('div', $url, ['class' => 'text-break']))
             ->footer($action);
 
         return Button::primary(Yii::t('skeleton', 'Show password link'))

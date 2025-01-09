@@ -87,26 +87,30 @@ class NavBar extends \yii\bootstrap5\NavBar
 
         $i18n = Yii::$app->getI18n();
 
-        $dropdown = Dropdown::tag()
+        $dropdown = Dropdown::make()
             ->dropend()
-            ->button(Button::tag()
+            ->button(Button::make()
                 ->class('nav-link')
-                ->content(Icon::tag(Yii::$app->language)->collection('flag')));
+                ->html(Icon::tag(Yii::$app->language)->collection('flag')));
 
         foreach ($i18n->getLanguages() as $language) {
             $label = $i18n->getLabel($language);
 
-            $link = Link::tag()
-                ->content($label)
+            $link = Link::make()
+                ->text($label)
                 ->icon("flag:$language");
 
-            $dropdown = $this->languageRoute
-                ? $dropdown->item($link->href([
+            if ($this->languageRoute) {
+                $link->href([
                     ...Yii::$app->getRequest()->getQueryParams(),
                     ...$this->languageRoute,
                     'language' => $language,
-                ]))
-                : $dropdown->item($link->current(['language' => $language]));
+                ]);
+            } else {
+                $link->current(['language' => $language]);
+            }
+
+            $dropdown->items($link);
         }
 
         return [

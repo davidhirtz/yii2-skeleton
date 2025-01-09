@@ -35,8 +35,7 @@
     color: var(--#{$prefix}nav-link-hover-color);
   }
 
-  &.active,
-  &.show {
+  &.active {
     background: var(--#{$prefix}nav-link-active-bg);
     color: var(--#{$prefix}nav-link-active-color);
   }

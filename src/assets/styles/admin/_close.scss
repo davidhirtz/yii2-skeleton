@@ -8,7 +8,6 @@
   --#{$prefix}btn-close-focus-opacity: #{$btn-close-focus-opacity};
   --#{$prefix}btn-close-disabled-opacity: #{$btn-close-disabled-opacity};
 
-  box-sizing: content-box;
   width: $btn-close-width;
   height: $btn-close-height;
   padding: $btn-close-padding-y $btn-close-padding-x;
@@ -35,5 +34,15 @@
     pointer-events: none;
     user-select: none;
     opacity: var(--#{$prefix}btn-close-disabled-opacity);
+  }
+}
+
+.btn-collapse {
+  @extend .btn-close;
+  background: var(--#{$prefix}arrow-down-bg);
+  transition: rotate 0.2s;
+
+  .collapsed & {
+    rotate: -90deg;
   }
 }

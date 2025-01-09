@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\assets;
 
 use Yii;
-use yii\web\AssetBundle;
 
-class AdminAsset extends AssetBundle
+class AdminAsset extends AbstractAssetBundle
 {
     /**
      * @var array contains the options for the favicon link ta
@@ -16,8 +15,6 @@ class AdminAsset extends AssetBundle
 
     public $css = ['css/admin.css'];
     public $js = ['js/admin.js'];
-    public $jsOptions = ['type' => 'module'];
-    public $sourcePath = '@skeleton/assets/dist';
 
     public $depends = [
         FontAwesomeAsset::class,

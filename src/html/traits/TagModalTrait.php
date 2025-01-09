@@ -10,18 +10,18 @@ trait TagModalTrait
 {
     private ?Modal $modal = null;
 
-    public function modal(Modal $modal): self
+    public function modal(Modal $modal): static
     {
-        $new = clone $this;
-        $new->modal = $modal;
-
-        return $new;
+        $this->modal = $modal;
+        return $this;
     }
 
     protected function before(): string
     {
         if ($this->modal) {
             $this->attributes['data-modal'] ??= '#' . $this->modal->getId();
+            unset($this->attributes['type']);
+
             return $this->modal->render();
         }
 

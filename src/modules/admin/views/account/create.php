@@ -13,7 +13,7 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Card;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\html\ListGroup;
-use davidhirtz\yii2\skeleton\html\ListGroupItemAction;
+use davidhirtz\yii2\skeleton\html\ListGroupItemLink;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\SignupActiveForm;
 
 $this->setTitle(Yii::t('skeleton', 'Sign up'));
@@ -29,23 +29,23 @@ $this->setTitle(Yii::t('skeleton', 'Sign up'));
         </div>
     </noscript>
 
-<?= Container::tag()
-    ->addContent(Card::tag()
-        ->title($this->title)
-        ->body(SignupActiveForm::widget([
-            'model' => $form,
-        ])))
-    ->addContent(
-        ListGroup::tag()
-        ->item(ListGroupItemAction::tag()
-            ->content(Yii::t('skeleton', 'Sign up with Facebook'))
-            ->icon('brand:facebook')
-            ->href(['auth', 'authclient' => 'facebook'])
-            ->visible($form->isFacebookSignupEnabled()))
-        ->item(ListGroupItemAction::tag()
-            ->content(Yii::t('skeleton', 'Back to login'))
-            ->href(['login'])
-            ->icon('sign-in-alt'))
+<?= Container::make()
+    ->html(
+        Card::make()
+            ->title($this->title)
+            ->html(SignupActiveForm::widget([
+                'model' => $form,
+            ])),
+        ListGroup::make()
+            ->item(ListGroupItemLink::make()
+                ->text(Yii::t('skeleton', 'Sign up with Facebook'))
+                ->icon('brand:facebook')
+                ->href(['auth', 'authclient' => 'facebook'])
+                ->visible($form->isFacebookSignupEnabled()))
+            ->item(ListGroupItemLink::make()
+                ->text(Yii::t('skeleton', 'Back to login'))
+                ->href(['login'])
+                ->icon('sign-in-alt'))
     )
     ->centered()
     ->render(); ?>

@@ -25,10 +25,10 @@ $this->setTitle($form->user->password_hash
     'header' => Yii::t('skeleton', 'Your password could not be saved'),
 ]); ?>
 
-<?= Container::tag()
-    ->content(Card::tag()
+<?= Container::make()
+    ->html(Card::make()
         ->title($this->title)
-        ->body(PasswordResetActiveForm::widget([
+        ->html(PasswordResetActiveForm::widget([
             'model' => $form,
         ])))
     ->centered()
