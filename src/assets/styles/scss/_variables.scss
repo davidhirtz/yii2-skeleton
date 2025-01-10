@@ -10,7 +10,7 @@ $secondary-bg: #b6b9e0 !default;
 $secondary-border-color: #dbdcef !default;
 $secondary-color: #a4a8d8 !default;
 
-$tertiary: #ddd !default;
+$tertiary: #c5c5c5 !default;
 $tertiary-bg: #e4e4e4 !default;
 $tertiary-border-color: #f1f1f1 !default;
 $tertiary-color: #585858 !default;
@@ -54,6 +54,7 @@ $body-text-align: null !default;
 
 $spacer: 1rem !default;
 
+$enable-caret: true !default;
 $enable-important-utilities: true !default;
 $enable-reduced-motion: true !default;
 $enable-rounded: true !default;
@@ -145,6 +146,7 @@ $border-radius: 0.25rem !default;
 
 $caret-width: 0.25rem !default;
 $caret-spacing: 0.5rem !default;
+$caret-vertical-align: $caret-width * .85 !default;
 
 $hr-margin-y: $spacer !default;
 $hr-border-width: $border-width;
@@ -510,37 +512,42 @@ $pagination-focus-box-shadow: none !default;
 
 // Dropdown
 $dropdown-min-width: 12rem !default;
+$dropdown-padding-x: 0 !default;
 $dropdown-padding-y: 0 !default;
 $dropdown-spacer: 2px !default;
-$dropdown-bg: var(--#{$prefix}light) !default;
-$dropdown-border-color: $border-color !default;
-$dropdown-divider-bg: $border-color !default;
+$dropdown-bg: var(--#{$prefix}light-bg) !default;
+$dropdown-color: var(--#{$prefix}body-color) !default;
+$dropdown-border-width: $border-width !default;
+$dropdown-border-radius: $border-radius !default;
+$dropdown-border-color: var(--#{$prefix}border) !default;
+$dropdown-inner-border-radius: calc(#{$dropdown-border-radius} - #{$dropdown-border-width}) !default; // stylelint-disable-line function-disallowed-list
+$dropdown-divider-bg: var(--#{$prefix}border) !default;
 $dropdown-divider-margin-y: 0 !default;
-$dropdown-item-padding-y: .6563rem !default;
-$dropdown-link-hover-bg: var(--#{$prefix}secondary-bg) !default;
-$dropdown-link-active-bg: var(--#{$prefix}tertiary-bg) !default;
 
 $dropdown-button-bg: var(--#{$prefix}tertiary-bg) !default;
 $dropdown-button-color: var(--#{$prefix}body-color) !default;
 $dropdown-button-border-color: $border-color !default;
-$dropdown-button-active-bg: var(--#{$prefix}light-border) !default;
-$dropdown-button-active-border-color: $dark !default;
+$dropdown-button-active-bg: var(--#{$prefix}tertiary) !default;
+$dropdown-button-active-border-color: var(--#{$prefix}tertiary-border) !default;
 $dropdown-button-active-font-weight: bold !default;
-$dropdown-button-hover-bg: var(--#{$prefix}light-border) !default;
-$dropdown-button-hover-border-color: $dark !default;
+$dropdown-button-hover-bg: var(--#{$prefix}tertiary) !default;
+$dropdown-button-hover-border-color: var(--#{$prefix}tertiary) !default;
 
-$dropdown-item-padding-y: 0.59375rem !default;
+$dropdown-item-padding-y: 0.6565rem !default;
 $dropdown-item-padding-x: .75rem !default;
-$dropdown-link-color: $link-color !default;
-$dropdown-link-hover-color: $link-color !default;
+$dropdown-link-color: var(--body-color) !default;
+$dropdown-link-hover-bg: var(--#{$prefix}dark-bg) !default;
+$dropdown-link-hover-color: var(--body-color) !default;
 $dropdown-link-active-color: inherit !default;
-$dropdown-link-active-bg: $body-tertiary-bg !default;
+$dropdown-link-active-bg: var(--#{$prefix}light) !default;
+$dropdown-link-disabled-color: var(--#{$prefix}tertiary-color) !default;
 
 $dropdown-header-padding-y: $dropdown-item-padding-y !default;
 $dropdown-header-padding-x: $dropdown-item-padding-x !default;
 
 $dropdown-header-padding-y: $dropdown-item-padding-y !default;
 $dropdown-header-padding-x: $dropdown-item-padding-x !default;
+$zindex-dropdown: 1000 !default;
 
 // Badge
 $badge-font-size: 0.75rem !default;

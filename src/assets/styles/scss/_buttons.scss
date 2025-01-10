@@ -4,7 +4,10 @@
   --#{$prefix}btn-color: #{$btn-color};
   --#{$prefix}btn-bg: transparent;
   --#{$prefix}btn-border: transparent;
+  --#{$prefix}btn-active-bg: transparent;
+  --#{$prefix}btn-active-border: transparent;
   --#{$prefix}btn-hover-border: transparent;
+  --#{$prefix}btn-hover-color: #{$btn-color};
 
   display: inline-block;
   padding: $btn-padding-y $btn-padding-x;
@@ -25,6 +28,11 @@
 
   @include border-radius($btn-border-radius);
   @include transition($btn-transition);
+
+  &.active {
+    background: var(--#{$prefix}btn-active-bg);
+    border-color: var(--#{$prefix}btn-active-border);
+  }
 
   &:hover {
     color: var(--#{$prefix}btn-hover-color);

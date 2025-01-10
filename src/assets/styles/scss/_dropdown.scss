@@ -19,10 +19,8 @@
   min-width: $dropdown-min-width;
   padding: $dropdown-padding-y $dropdown-padding-x;
   margin: 0;
-  //width: 100%;
   max-height: 50vh;
   overflow-y: auto;
-  @include font-size($dropdown-font-size);
   color: $dropdown-color;
   text-align: left; // Ensures proper alignment if parent has it changed (e.g., modal footer)
   list-style: none;
@@ -80,13 +78,12 @@
 .dropdown-item {
   display: block;
   width: 100%; // Buttons...
-  padding: $dropdown-item-padding-x $dropdown-item-padding-y;
+  padding: $dropdown-item-padding-y $dropdown-item-padding-x;
   font-weight: $font-weight-normal;
   color: $dropdown-link-color;
   text-align: inherit;
   background-color: transparent;
   border: 0;
-  @include border-radius(var(--#{$prefix}dropdown-item-border-radius, 0));
   @extend .text-truncate;
 
   &.active {
