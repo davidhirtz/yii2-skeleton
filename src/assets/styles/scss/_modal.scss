@@ -19,7 +19,6 @@
   text-align: left;
   white-space: normal; // Reset the white-space: nowrap; from parent element
   @include border-radius($modal-content-border-radius);
-  @include box-shadow($modal-content-box-shadow-xs);
 
   &[open] {
     display: flex;

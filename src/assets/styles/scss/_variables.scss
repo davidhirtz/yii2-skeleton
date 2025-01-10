@@ -451,6 +451,12 @@ $btn-toolbar-spacer: .5rem !default;
 
 $btn-close-width: 1rem !default;
 $btn-close-height: $btn-close-width !default;
+$btn-close-color: var(--#{$prefix}body-color) !default;
+$btn-close-bg:               url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$btn-close-color}'><path d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/></svg>") !default;
+$btn-close-opacity:          .5 !default;
+$btn-close-hover-opacity:    .75 !default;
+$btn-close-focus-opacity:    1 !default;
+$btn-close-disabled-opacity: .25 !default;
 $btn-close-padding-x: 0 !default;
 $btn-close-padding-y: $btn-close-padding-x !default;
 
@@ -589,6 +595,10 @@ $badge-border-radius: 0.5rem !default;
 // Modal
 $modal-footer-margin-between: .5rem !default;
 
+$modal-inner-padding:               $spacer !default;
+$modal-header-padding-y:            $modal-inner-padding !default;
+$modal-header-padding-x:            $modal-inner-padding !default;
+
 $modal-dialog-margin: .5rem !default;
 $modal-dialog-margin-y-sm-up: 1.75rem !default;
 
@@ -605,6 +615,7 @@ $modal-backdrop-opacity: .5 !default;
 $modal-header-border-color: var(--#{$prefix}border-color) !default;
 $modal-header-border-width: $modal-content-border-width !default;
 $modal-header-bg: $card-cap-bg !default;
+$modal-title-line-height:           $line-height-base !default;
 $modal-title-font-weight: bold !default;
 
 $modal-footer-bg: null !default;
