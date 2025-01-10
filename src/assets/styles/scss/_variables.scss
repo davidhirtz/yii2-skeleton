@@ -30,7 +30,7 @@ $success: $green !default;
 $info: $cyan !default;
 $warning: $yellow !default;
 $danger: $red !default;
-$light: $white !default;
+$light: $gray-100 !default;
 $dark: $black !default;
 
 $primary-text-emphasis: $black !default; //shade-color($primary, 60%) !default;
@@ -50,7 +50,7 @@ $success-bg-subtle: tint-color($success, 80%) !default;
 $info-bg-subtle: tint-color($info, 80%) !default;
 $warning-bg-subtle: tint-color($warning, 80%) !default;
 $danger-bg-subtle: tint-color($danger, 80%) !default;
-$light-bg-subtle: mix($gray-100, $white) !default;
+$light-bg-subtle: $white !default;
 $dark-bg-subtle: $gray-400 !default;
 
 $primary-border-subtle: tint-color($primary, 60%) !default;
@@ -121,7 +121,7 @@ $theme-colors-border-subtle: (
 ) !default;
 
 $body-color: $black !default;
-$body-bg: var(--#{$prefix}secondary-bg) !default;
+$body-bg: var(--#{$prefix}light) !default;
 
 // Typography
 $font-family-sans-serif: "Open Sans", sans-serif !default;
@@ -231,7 +231,7 @@ $nav-link-padding-x: 0.75rem !default;
 $nav-link-height: 3rem !default;
 
 $app-nav-pills-gap: .5rem !default;
-$app-nav-pills-link-hover-bg: $gray-300 !default;
+$app-nav-pills-link-hover-bg: var(--#{$prefix}secondary) !default;
 $app-nav-pills-link-hover-color: $dark !default;
 $nav-pills-link-active-color: $white !default;
 $nav-pills-link-active-bg: $dark !default;
@@ -263,16 +263,17 @@ $navbar-light-icon-color: $white;
 $breadcrumb-padding-y: $app-spacer-y !default;
 $breadcrumb-padding-x: $app-spacer-x !default;
 $breadcrumb-margin-bottom: $app-margin-y !default;
-$breadcrumb-item-padding: 5px !default;
-$breadcrumb-bg: $gray-200 !default;
-$breadcrumb-divider-color: $gray-400 !default;
+$breadcrumb-item-padding-x: 0.5rem !default;
+$breadcrumb-bg: var(--#{$prefix}light-bg) !default;
+$breadcrumb-divider-color: var(--#{$prefix}secondary-border-color) !default;
+$breadcrumb-active-color: var(--#{$prefix}tertiary-color) !default;
 $breadcrumb-border-radius: $border-radius !default;
 
 // Header
 $app-header-margin: $app-margin-y 0 !default;
 $app-header-padding-bottom: $app-spacer-y !default;
 $app-header-text-align: center !default;
-$app-header-border-bottom: 1px solid $gray-300 !default;
+$app-header-border-bottom: 1px solid var(--#{$prefix}secondary) !default;
 $app-header-line-height: 1.5 !default;
 
 $app-submenu-link-margin: 0 0.125rem $app-spacer-x !default;
@@ -290,7 +291,7 @@ $card-spacer-y: $app-spacer-y !default;
 $card-spacer-x: $app-spacer-x !default;
 $card-cap-padding-y: $app-spacer-y !default;
 $card-cap-color: null !default;
-$card-cap-bg: $gray-300 !default;
+$card-cap-bg: var(--#{$prefix}secondary) !default;
 $card-border-width: 0 !default;
 $card-border-color: $border-color !default;
 $card-inner-border-radius: $border-radius !default;
@@ -396,7 +397,7 @@ $list-group-item-padding-y: $app-spacer-y !default;
 $list-group-item-padding-x: $app-spacer-x !default;
 $list-group-border-radius: $border-radius !default;
 $list-group-bg: $gray-200 !default;
-$list-group-hover-bg: $gray-300 !default;
+$list-group-hover-bg: var(--#{$prefix}secondary) !default;
 
 // Tables
 $table-bg: $white !default;
@@ -404,7 +405,7 @@ $table-color: $body-color !default;
 $table-border-width: 1px !default;
 $table-border-color: transparent !default;
 $table-accent-bg: $white !default;
-$table-hover-bg: $gray-300 !default;
+$table-hover-bg: var(--#{$prefix}secondary) !default;
 $table-striped-bg: $gray-100 !default;
 $table-striped-bg: $white !default;
 $table-striped-color: $body-color !default;

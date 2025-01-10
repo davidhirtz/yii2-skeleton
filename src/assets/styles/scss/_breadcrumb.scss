@@ -3,12 +3,10 @@
 .breadcrumb {
   --#{$prefix}breadcrumb-bg: #{$breadcrumb-bg};
   --#{$prefix}breadcrumb-divider-color: #{$breadcrumb-divider-color};
-  --#{$prefix}breadcrumb-item-active-color: #{$breadcrumb-active-color};
 
   display: none;
   padding: $breadcrumb-padding-y $breadcrumb-padding-x;
   margin-bottom: $breadcrumb-margin-bottom;
-  font-size: $breadcrumb-font-size;
   list-style: none;
   background-color: var(--#{$prefix}breadcrumb-bg);
   @include border-radius($breadcrumb-border-radius);
@@ -25,7 +23,6 @@
     max-width: 10rem;
   }
 
-  // The separator between breadcrumbs (by default, a forward-slash: "/")
   + .breadcrumb-item {
     padding-left: $breadcrumb-item-padding-x;
 
@@ -35,10 +32,6 @@
       color: var(--#{$prefix}breadcrumb-divider-color);
       content: var(--#{$prefix}breadcrumb-divider, escape-svg($breadcrumb-divider)) #{"/* rtl:"} var(--#{$prefix}breadcrumb-divider, escape-svg($breadcrumb-divider-flipped)) #{"*/"};
     }
-  }
-
-  &.active {
-    color: var(--#{$prefix}breadcrumb-item-active-color);
   }
 
   a {
