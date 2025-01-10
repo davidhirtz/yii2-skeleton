@@ -3,8 +3,8 @@
 .btn {
   --#{$prefix}btn-color: #{$btn-color};
   --#{$prefix}btn-bg: transparent;
-  --#{$prefix}btn-border-color: transparent;
-  --#{$prefix}btn-hover-border-color: transparent;
+  --#{$prefix}btn-border: transparent;
+  --#{$prefix}btn-hover-border: transparent;
 
   display: inline-block;
   padding: $btn-padding-y $btn-padding-x;
@@ -13,41 +13,34 @@
   font-weight: $btn-font-weight;
   line-height: $btn-line-height;
   color: var(--#{$prefix}btn-color);
+  background: var(--#{$prefix}btn-bg);
   text-align: center;
   text-decoration: if($link-decoration == none, null, none);
   white-space: $btn-white-space;
   vertical-align: middle;
   cursor: pointer;
   user-select: none;
-  border: $btn-border-width solid var(--#{$prefix}btn-border-color);
+  border: $btn-border-width solid var(--#{$prefix}btn-border);
   min-width: $btn-min-width;
 
   @include border-radius($btn-border-radius);
-  @include gradient-bg(var(--#{$prefix}btn-bg));
   @include transition($btn-transition);
 
   &:hover {
     color: var(--#{$prefix}btn-hover-color);
     text-decoration: if($link-hover-decoration == underline, none, null);
     background-color: var(--#{$prefix}btn-hover-bg);
-    border-color: var(--#{$prefix}btn-hover-border-color);
-  }
-
-  .btn-check + &:hover {
-    color: var(--#{$prefix}btn-color);
-    background-color: var(--#{$prefix}btn-bg);
-    border-color: var(--#{$prefix}btn-border-color);
+    border-color: var(--#{$prefix}btn-hover-border);
   }
 
   &:focus-visible {
     color: var(--#{$prefix}btn-hover-color);
-    @include gradient-bg(var(--#{$prefix}btn-hover-bg));
-    border-color: var(--#{$prefix}btn-hover-border-color);
+    border-color: var(--#{$prefix}btn-hover-border);
     outline: 0;
   }
 
   .btn-check:focus-visible + & {
-    border-color: var(--#{$prefix}btn-hover-border-color);
+    border-color: var(--#{$prefix}btn-hover-border);
     outline: 0;
   }
 
@@ -61,28 +54,28 @@
 
 .btn-primary {
   --#{$prefix}btn-bg: #{$btn-primary-bg};
-  --#{$prefix}btn-border-color: #{$btn-primary-border-color};
+  --#{$prefix}btn-border: #{$btn-primary-border-color};
   --#{$prefix}btn-color: #{$btn-primary-color};
   --#{$prefix}btn-hover-bg: #{$btn-primary-hover-bg};
-  --#{$prefix}btn-hover-border-color: #{$btn-primary-hover-border-color};
+  --#{$prefix}btn-hover-border: #{$btn-primary-hover-border-color};
   --#{$prefix}btn-hover-color: #{$btn-primary-hover-color};
 }
 
 .btn-secondary {
   --#{$prefix}btn-bg: #{$btn-secondary-bg};
-  --#{$prefix}btn-border-color: #{$btn-secondary-border-color};
+  --#{$prefix}btn-border: #{$btn-secondary-border-color};
   --#{$prefix}btn-color: #{$btn-secondary-color};
   --#{$prefix}btn-hover-bg: #{$btn-secondary-hover-bg};
-  --#{$prefix}btn-hover-border-color: #{$btn-secondary-hover-border-color};
+  --#{$prefix}btn-hover-border: #{$btn-secondary-hover-border-color};
   --#{$prefix}btn-hover-color: #{$btn-secondary-hover-color};
 }
 
 .btn-danger {
   --#{$prefix}btn-bg: #{$btn-danger-bg};
-  --#{$prefix}btn-border-color: #{$btn-danger-border-color};
+  --#{$prefix}btn-border: #{$btn-danger-border-color};
   --#{$prefix}btn-color: #{$btn-danger-color};
   --#{$prefix}btn-hover-bg: #{$btn-danger-hover-bg};
-  --#{$prefix}btn-hover-border-color: #{$btn-danger-hover-border-color};
+  --#{$prefix}btn-hover-border: #{$btn-danger-hover-border-color};
   --#{$prefix}btn-hover-color: #{$btn-danger-hover-color};
 }
 
