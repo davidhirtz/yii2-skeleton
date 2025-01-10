@@ -23,14 +23,59 @@ $green: #a3cba3 !default;
 $teal: #20c997 !default;
 $cyan: #798fc3 !default;
 
-$primary: $gray-800 !default;
+$primary: #39455b !default; //$gray-800 !default;
 $secondary: $gray-400 !default;
+$tertiary: $gray-600 !default;
 $success: $green !default;
 $info: $cyan !default;
 $warning: $yellow !default;
 $danger: $red !default;
-$light: $gray-100 !default;
-$dark: $primary !default;
+$light: $white !default;
+$dark: $black !default;
+
+$primary-text-emphasis: $black !default; //shade-color($primary, 60%) !default;
+$secondary-text-emphasis: shade-color($secondary, 60%) !default;
+$tertiary-color-text-emphasis: shade-color($tertiary, 60%) !default;
+$success-text-emphasis: shade-color($success, 80%) !default;
+$info-text-emphasis: shade-color($info, 60%) !default;
+$warning-text-emphasis: shade-color($warning, 60%) !default;
+$danger-text-emphasis: shade-color($danger, 60%) !default;
+$light-text-emphasis: $gray-700 !default;
+$dark-text-emphasis: $gray-700 !default;
+
+$primary-bg-subtle: $black !default;
+$secondary-bg-subtle: tint-color($secondary, 80%) !default;
+$tertiary-bg-subtle: tint-color($tertiary, 80%) !default;
+$success-bg-subtle: tint-color($success, 80%) !default;
+$info-bg-subtle: tint-color($info, 80%) !default;
+$warning-bg-subtle: tint-color($warning, 80%) !default;
+$danger-bg-subtle: tint-color($danger, 80%) !default;
+$light-bg-subtle: mix($gray-100, $white) !default;
+$dark-bg-subtle: $gray-400 !default;
+
+$primary-border-subtle: tint-color($primary, 60%) !default;
+$secondary-border-subtle: tint-color($secondary, 60%) !default;
+$tertiary-border-subtle: tint-color($tertiary, 60%) !default;
+$success-border-subtle: tint-color($success, 60%) !default;
+$info-border-subtle: tint-color($info, 60%) !default;
+$warning-border-subtle: tint-color($warning, 60%) !default;
+$danger-border-subtle: tint-color($danger, 60%) !default;
+$light-border-subtle: $gray-200 !default;
+$dark-border-subtle: $gray-500 !default;
+
+//$body-secondary-color: var() !default;
+//$body-secondary-bg: $gray-200 !default;
+//$body-tertiary-color: rgba($body-color, .5) !default;
+//$body-tertiary-bg: $gray-100 !default;
+//$body-emphasis-color: $black !default;
+
+$colors: (
+        "primary": $primary,
+        "secondary": $secondary,
+        "tertiary": $tertiary,
+        "light": $light,
+        "dark": $dark,
+) !default;
 
 $theme-colors: (
         "success": $success,
@@ -39,43 +84,92 @@ $theme-colors: (
         "danger": $danger,
 ) !default;
 
-$primary-bg-subtle: tint-color($primary, 80%) !default;
-$secondary-bg-subtle: tint-color($secondary, 80%) !default;
-$success-bg-subtle: tint-color($success, 80%) !default;
-$info-bg-subtle: tint-color($info, 80%) !default;
-$warning-bg-subtle: tint-color($warning, 80%) !default;
-$danger-bg-subtle: tint-color($danger, 80%) !default;
-$light-bg-subtle: mix($gray-100, $white) !default;
-$dark-bg-subtle: $gray-400 !default;
+$theme-colors-text: (
+        "primary": $primary-text-emphasis,
+        "secondary": $secondary-text-emphasis,
+        "tertiary": $tertiary-color-text-emphasis,
+        "success": $success-text-emphasis,
+        "info": $info-text-emphasis,
+        "warning": $warning-text-emphasis,
+        "danger": $danger-text-emphasis,
+        "light": $light-text-emphasis,
+        "dark": $dark-text-emphasis,
+) !default;
 
-// Body
-$body-color: $primary !default;
-$body-bg: $gray-100 !default;
+$theme-colors-bg-subtle: (
+        "primary": $primary-bg-subtle,
+        "secondary": $secondary-bg-subtle,
+        "tertiary": $tertiary-bg-subtle,
+        "success": $success-bg-subtle,
+        "info": $info-bg-subtle,
+        "warning": $warning-bg-subtle,
+        "danger": $danger-bg-subtle,
+        "light": $light-bg-subtle,
+        "dark": $dark-bg-subtle,
+) !default;
 
-$body-secondary-color: rgba($body-color, .75) !default;
-$body-secondary-bg: $gray-200 !default;
-$body-tertiary-color: rgba($body-color, .5) !default;
-$body-tertiary-bg: $gray-100 !default;
-$body-emphasis-color: $black !default;
+$theme-colors-border-subtle: (
+        "primary": $primary-border-subtle,
+        "secondary": $secondary-border-subtle,
+        "tertiary": $tertiary-border-subtle,
+        "success": $success-border-subtle,
+        "info": $info-border-subtle,
+        "warning": $warning-border-subtle,
+        "danger": $danger-border-subtle,
+        "light": $light-border-subtle,
+        "dark": $dark-border-subtle,
+) !default;
+
+$body-color: $black !default;
+$body-bg: var(--#{$prefix}secondary-bg) !default;
 
 // Typography
 $font-family-sans-serif: "Open Sans", sans-serif !default;
+$font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+//$font-family-base: var(--#{$prefix}font-sans-serif) !default;
+//$font-family-code: var(--#{$prefix}font-monospace) !default;
+
 $font-size-base: .875rem !default;
 $font-size-sm: 0.75rem !default;
 $font-size-lg: 1rem !default;
 
+$font-weight-lighter: lighter !default;
+$font-weight-light: 300 !default;
+$font-weight-normal: 400 !default;
+$font-weight-medium: 500 !default;
+$font-weight-semibold: 600 !default;
+$font-weight-bold: 700 !default;
+$font-weight-bolder: bolder !default;
+
+$font-weight-base: $font-weight-normal !default;
+
+$line-height-base: 1.5 !default;
+$line-height-sm: 1.25 !default;
+$line-height-lg: 2 !default;
+
+
 $h1-font-size: 2.25em !default;
 $h2-font-size: 1.125em !default;
+//$h3-font-size: $font-size-base * 1.75 !default;
+//$h4-font-size: $font-size-base * 1.5 !default;
+//$h5-font-size: $font-size-base * 1.25 !default;
+//$h6-font-size: $font-size-base !default;
 
 $small-font-size: $font-size-sm;
 
+// Links
 $link-color: $body-color !default;
 $link-hover-color: $primary !default;
 $link-decoration: none !default;
+//$link-shade-percentage:                   20% !default;
+//$link-hover-color:                        shift-color($link-color, $link-shade-percentage) !default;
+$link-hover-decoration: null !default;
+$stretched-link-pseudo-element: after !default;
+$stretched-link-z-index: 1 !default;
 
 $text-muted: $gray-600 !default;
 
-$mark-bg: $success !default;
+$mark-bg: var(--#{$prefix}success) !default;
 $mark-padding: 0 !default;
 $caret-width: 0.25rem !default;
 $caret-spacing: 0.5rem !default;
@@ -117,10 +211,19 @@ $app-body-padding: $app-html-scroll-padding 0 1rem !default;
 $component-active-bg: $gray-400 !default;
 $component-active-color: $white !default;
 
-// Shared
+// Mixins
 $app-arrow-down-bg-color: $gray-800 !default;
 $app-arrow-down-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$app-arrow-down-bg-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>") !default;
 
+// Alert
+$alert-padding-y: $spacer !default;
+$alert-padding-x: $spacer !default;
+$alert-margin-bottom: $spacer !default;
+$alert-border-radius: $border-radius !default;
+$alert-link-font-weight: normal !default;
+$alert-link-text-decoration: underline !default;
+$alert-border-width: $border-width !default;
+$alert-dismissible-padding-r: $alert-padding-x * 3 !default; // 3x covers width of x plus default padding on either side
 
 // Nav
 $nav-link-padding-y: 0 !default;
@@ -145,7 +248,7 @@ $navbar-padding-y: 0 !default;
 $navbar-padding-x: 0 !default;
 $navbar-light-color: $gray-400 !default;
 $navbar-light-hover-color: $white !default;
-$navbar-light-active-color: $body-tertiary-bg !default;
+$navbar-light-active-color: var(--#{$prefix}tertiary-color) !default;
 $navbar-light-disabled-color: $gray-600 !default;
 
 $navbar-border: 1px solid $app-navbar-light-active-bg !default;
@@ -177,7 +280,8 @@ $app-submenu-margin: 0 0 $app-margin-y !default;
 $app-submenu-justify-content: center !default;
 
 // Alert
-$app-alert-heading-font-weight: bold !default;
+$alert-heading-font-weight: bold !default;
+$alert-heading-margin-bottom: .5rem !default;
 
 // Card
 $card-bg: $white !default;
@@ -208,12 +312,12 @@ $app-grid-view-footer-spacer-y: $app-spacer-y !default;
 $app-grid-view-buttons-top: 0.5rem !default;
 
 // Buttons
-$app-btn-primary-color: $white !default;
-$app-btn-primary-bg: $primary !default;
+$app-btn-primary-color: var(--#{$prefix}light) !default;
+$app-btn-primary-bg: var(--#{$prefix}primary) !default;
 $app-btn-primary-border-color: $app-btn-primary-bg !default;
-$app-btn-primary-hover-bg: $black !default;
-$app-btn-primary-hover-color: $white !default;
-$app-btn-primary-hover-border-color: $app-btn-primary-border-color !default;
+$app-btn-primary-hover-bg: var(--#{$prefix}dark) !default;
+$app-btn-primary-hover-color: $app-btn-primary-color !default;
+$app-btn-primary-hover-border-color: $app-btn-primary-hover-bg !default;
 
 $app-btn-secondary-bg: $gray-100 !default;
 $app-btn-secondary-color: $body-color !default;
@@ -375,10 +479,10 @@ $app-dropdown-header-padding-x: $dropdown-item-padding-x !default;
 
 // Badge
 $badge-font-size: 0.75rem !default;
-$badge-color: $white !important !default;
-$app-badge-bg: $gray-600 !default;
-$app-badge-active-bg: $white !default;
-$app-badge-active-color: $dark !important !default;
+$badge-color: var(--#{$prefix}light) !default;
+$app-badge-bg: var(--#{$prefix}tertiary) !default;
+$badge-active-bg: var(--#{$prefix}light) !default;
+$badge-active-color: var(--#{$prefix}dark) !important !default;
 $badge-font-weight: normal !default;
 $badge-padding-y: 0.25rem !default;
 $badge-padding-x: 0.5rem !default;
@@ -436,104 +540,6 @@ $app-icon-gap-x: .5rem !default;
 //
 ///*
 
-$utilities: (
-        "align":null,
-        "float": null,
-        "object-fit": null,
-        "opacity": null,
-        "overflow": null,
-        "overflow-x": null,
-        "overflow-y": null,
-        "display": (
-                responsive: true,
-          //print: true,
-                property: display,
-                class: d,
-                values: block inline inline-block flex table-cell none
-        ),
-        "shadow": null,
-        "focus-ring": null,
-        "position": null,
-        "top": null,
-        "bottom": null,
-        "start": null,
-        "end": null,
-        "translate-middle": null,
-        "border": null,
-        "border-top": null,
-        "border-end": null,
-        "border-bottom": null,
-        "border-start": null,
-        "border-color": null,
-        "subtle-border-color": null,
-        "border-width": null,
-        "border-opacity": null,
-        "width": null,
-        "max-width": null,
-        "viewport-width": null,
-        "min-viewport-width": null,
-        "height": null,
-        "max-height": null,
-        "viewport-height": null,
-        "min-viewport-height": null,
-        "flex": null,
-        "flex-direction": null,
-        "flex-grow": null,
-        "flex-shrink": null,
-        "flex-wrap": null,
-        "justify-content": null,
-        "align-items": null,
-        "align-content": null,
-        "align-self": null,
-        "order": null,
-        "margin": null,
-        "margin-x": null,
-        "margin-y": null,
-        "margin-top": null,
-        "margin-end": null,
-        "margin-bottom": null,
-        "margin-start": null,
-        "negative-margin": null,
-        "negative-margin-x": null,
-        "negative-margin-y": null,
-        "negative-margin-top": null,
-        "negative-margin-end": null,
-        "negative-margin-bottom": null,
-        "negative-margin-start": null,
-        "padding": null,
-        "padding-x": null,
-        "padding-y": null,
-        "padding-top": null,
-        "padding-end": null,
-        "padding-bottom": null,
-        "padding-start": null,
-        "gap": null,
-        "row-gap": null,
-        "column-gap": null,
-        "font-family":null,
-        "font-size": null,
-        "font-style": null,
-        "font-weight": null,
-        "line-height": null,
-        "color": null,
-        "text-opacity": null,
-        "link-opacity": null,
-        "link-offset": null,
-        "link-underline": null,
-        "link-underline-opacity": null,
-        "background-color": null,
-        "bg-opacity": null,
-        "subtle-background-color": null,
-        "gradient": null,
-        "user-select": null,
-        "rounded": null,
-        "rounded-top": null,
-        "rounded-end": null,
-        "rounded-bottom": null,
-        "rounded-start": null,
-        "visibility": null,
-        "z-index": null,
-);
 
 // Trail
 $trail-del-bg: $danger !default;
@@ -541,28 +547,3 @@ $trail-ins-bg: $success !default;
 $trail-cell-padding: 0.5rem !default;
 
 @import "../../../../node_modules/bootstrap/scss/variables";
-//@import "../../../../node_modules/bootstrap/scss/variables-dark";
-
-$theme-colors-text: (
-        "success": $success-text-emphasis,
-        "info": $info-text-emphasis,
-        "warning": $warning-text-emphasis,
-        "danger": $danger-text-emphasis,
-) !default;
-
-$theme-colors-bg-subtle: (
-        "success": $success-bg-subtle,
-        "info": $info-bg-subtle,
-        "warning": $warning-bg-subtle,
-        "danger": $danger-bg-subtle,
-) !default;
-
-$theme-colors-border-subtle: (
-        "success": $success-border-subtle,
-        "info": $info-border-subtle,
-        "warning": $warning-border-subtle,
-        "danger": $danger-border-subtle,
-) !default;
-
-
-@import "../../../../node_modules/bootstrap/scss/maps";

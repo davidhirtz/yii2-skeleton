@@ -1,0 +1,47 @@
+//@import "../../../../node_modules/bootstrap/scss/utilities";
+
+$utilities: (
+        "display": (
+                responsive: true,
+                property: display,
+                class: d,
+                values: block inline inline-block flex table-cell none
+        ),
+        "text-align": (
+                property: text-align,
+                class: text,
+                values: (
+                        start: left,
+                        end: right,
+                        center: center,
+                )
+        ),
+        "text-decoration": (
+                property: text-decoration,
+                values: none underline line-through
+        ),
+        "text-transform": (
+                property: text-transform,
+                class: text,
+                values: lowercase uppercase capitalize
+        ),
+        "white-space": (
+                property: white-space,
+                class: text,
+                values: (
+                        wrap: normal,
+                        nowrap: nowrap,
+                )
+        ),
+        "word-wrap": (
+                property: word-wrap word-break,
+                class: text,
+                values: (break: break-word),
+                rtl: false
+        ),
+        "text-color": (
+                property: color,
+                class: text,
+                values: $theme-colors-text
+        ),
+);

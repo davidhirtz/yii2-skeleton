@@ -1,0 +1,79 @@
+//@import "../../../../node_modules/bootstrap/scss/root";
+
+:root {
+
+  @each $color, $value in $colors {
+    --#{$prefix}#{$color}: #{$value};
+  }
+
+  @each $color, $value in $theme-colors {
+    --#{$prefix}#{$color}: #{$value};
+  }
+
+  @each $color, $value in $theme-colors-text {
+    --#{$prefix}#{$color}-text: #{$value};
+  }
+
+  @each $color, $value in $theme-colors-bg-subtle {
+    --#{$prefix}#{$color}-bg: #{$value};
+  }
+
+  @each $color, $value in $theme-colors-border-subtle {
+    --#{$prefix}#{$color}-border: #{$value};
+  }
+
+  // Variables
+
+  --#{$prefix}body-color: #{$body-color};
+  --#{$prefix}body-bg: #{$body-bg};
+  //
+  //--#{$prefix}emphasis-color: #{$body-emphasis-color};
+  //
+  //--#{$prefix}secondary-color: #{$body-secondary-color};
+  //--#{$prefix}secondary-bg: #{$body-secondary-bg};
+  //
+  //--#{$prefix}tertiary-bg: #{$body-tertiary-bg};
+  //--#{$prefix}tertiary-color: #{$body-tertiary-color};
+
+  --#{$prefix}border-color: #{$border-color};
+
+  --#{$prefix}input-bg: #{$input-bg};
+  --#{$prefix}input-border-color: #{$input-border-color};
+  --#{$prefix}input-color: #{$input-color};
+
+  --#{$prefix}form-invalid-bg: #{$app-form-invalid-bg};
+  --#{$prefix}form-invalid-border-color: #{$form-invalid-border-color};
+  --#{$prefix}form-invalid-color: #{$form-invalid-color};
+
+  --#{$prefix}success-bg-subtle: #{$success-bg-subtle};
+  --#{$prefix}success-border-subtle: #{$success-border-subtle};
+  --#{$prefix}success-text-emphasis: #{$success-text-emphasis};
+
+  --#{$prefix}info-bg-subtle: #{$info-bg-subtle};
+  --#{$prefix}info-border-subtle: #{$info-border-subtle};
+  --#{$prefix}info-text-emphasis: #{$info-text-emphasis};
+
+  --#{$prefix}warning-bg-subtle: #{$warning-bg-subtle};
+  --#{$prefix}warning-border-subtle: #{$warning-border-subtle};
+  --#{$prefix}warning-text-emphasis: #{$warning-text-emphasis};
+
+  --#{$prefix}danger-bg-subtle: #{$danger-bg-subtle};
+  --#{$prefix}danger-border-subtle: #{$danger-border-subtle};
+  --#{$prefix}danger-text-emphasis: #{$danger-text-emphasis};
+
+  --#{$prefix}heading-color: #{$headings-color};
+
+  --#{$prefix}link-color: #{$link-color};
+  --#{$prefix}link-color-rgb: #{to-rgb($link-color)};
+  --#{$prefix}link-decoration: #{$link-decoration};
+
+  --#{$prefix}link-hover-color: #{$link-hover-color};
+  --#{$prefix}link-hover-color-rgb: #{to-rgb($link-hover-color)};
+
+  --#{$prefix}highlight-color: #{$mark-color};
+  --#{$prefix}highlight-bg: #{$mark-bg};
+
+  --#{$prefix}border-color: #{$border-color};
+
+  --#{$prefix}arrow-down-bg: #{escape-svg($app-arrow-down-bg)};
+}

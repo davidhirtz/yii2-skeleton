@@ -1,51 +1,48 @@
-@import "admin/fonts";
+@import "scss/fonts";
 
 // Configuration
-@import "../../../node_modules/bootstrap/scss/functions";
-@import "admin/variables";
+@import "scss/functions";
+@import "scss/variables";
 
-@import "../../../node_modules/bootstrap/scss/mixins";
-@import "../../../node_modules/bootstrap/scss/utilities";
+@import "scss/mixins";
+@import "scss/utilities";
 
 // Layout & components
-@import "admin/root";
-@import "admin/reboot";
+@import "scss/root";
+@import "scss/reboot";
 
-@import "admin/type";
+@import "scss/type";
 
-@import "admin/images";
-@import "admin/containers";
-@import "admin/grid";
+@import "scss/images";
+@import "scss/containers";
+@import "scss/grid";
 
-@import "admin/tables";
-@import "admin/forms";
-@import "admin/buttons";
-@import "admin/transitions";
-@import "admin/dropdown";
-@import "admin/button-group";
-@import "admin/nav";
-@import "admin/navbar";
+@import "scss/tables";
+@import "scss/forms";
+@import "scss/buttons";
+@import "scss/transitions";
+@import "scss/dropdown";
+@import "scss/button-group";
+@import "scss/nav";
+@import "scss/navbar";
 
-@import "admin/card";
-//@import "../../../node_modules/bootstrap/scss/accordion";
-@import "admin/breadcrumb";
-@import "admin/pagination";
-@import "admin/badge";
-@import "admin/alert";
-@import "admin/list-group";
-@import "admin/close";
-//@import "../../../node_modules/bootstrap/scss/toasts";
-@import "admin/modal";
-@import "admin/tooltip";
-//@import "../../../node_modules/bootstrap/scss/popover";
+@import "scss/card";
+@import "scss/breadcrumb";
+@import "scss/pagination";
+@import "scss/badge";
+@import "scss/alert";
+@import "scss/list-group";
+@import "scss/close";
+@import "scss/modal";
+@import "scss/tooltip";
 
-@import "admin/header";
-@import "admin/sortable";
-@import "admin/dashboard";
-@import "admin/trail";
+@import "scss/header";
+@import "scss/sortable";
+@import "scss/dashboard";
+@import "scss/trail";
 
 // Helpers
-@import "admin/helpers";
+@import "scss/helpers";
 
 // Utilities
-@import "../../../node_modules/bootstrap/scss/utilities/api";
+@import "scss/utilities/api";
