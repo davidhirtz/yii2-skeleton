@@ -23,9 +23,9 @@ $green: #a3cba3 !default;
 $teal: #20c997 !default;
 $cyan: #798fc3 !default;
 
-$primary: #39455b !default; //$gray-800 !default;
-$secondary: $gray-400 !default;
-$tertiary: $gray-600 !default;
+$primary: $gray-800 !default;
+$secondary: #a4a8d8 !default; //$gray-600 !default;
+$tertiary: $gray-400 !default;
 $success: $green !default;
 $info: $cyan !default;
 $warning: $yellow !default;
@@ -34,24 +34,24 @@ $light: $gray-100 !default;
 $dark: $black !default;
 
 $primary-text-emphasis: $black !default; //shade-color($primary, 60%) !default;
-$secondary-text-emphasis: shade-color($secondary, 60%) !default;
+$secondary-text-emphasis: shade-color($secondary, 20%) !default;
 $tertiary-color-text-emphasis: shade-color($tertiary, 60%) !default;
 $success-text-emphasis: shade-color($success, 80%) !default;
 $info-text-emphasis: shade-color($info, 60%) !default;
 $warning-text-emphasis: shade-color($warning, 60%) !default;
-$danger-text-emphasis: shade-color($danger, 60%) !default;
-$light-text-emphasis: $gray-700 !default;
+$danger-text-emphasis: shade-color($danger, 20%) !default;
+$light-text-emphasis: $white !default;
 $dark-text-emphasis: $gray-700 !default;
 
 $primary-bg-subtle: $black !default;
-$secondary-bg-subtle: tint-color($secondary, 80%) !default;
-$tertiary-bg-subtle: tint-color($tertiary, 80%) !default;
+$secondary-bg-subtle: tint-color($secondary, 20%) !default;
+$tertiary-bg-subtle: tint-color($tertiary, 20%) !default;
 $success-bg-subtle: tint-color($success, 80%) !default;
 $info-bg-subtle: tint-color($info, 80%) !default;
 $warning-bg-subtle: tint-color($warning, 80%) !default;
-$danger-bg-subtle: tint-color($danger, 80%) !default;
+$danger-bg-subtle: tint-color($danger, 20%) !default;
 $light-bg-subtle: $white !default;
-$dark-bg-subtle: $gray-400 !default;
+$dark-bg-subtle: $gray-300 !default;
 
 $primary-border-subtle: tint-color($primary, 60%) !default;
 $secondary-border-subtle: tint-color($secondary, 60%) !default;
@@ -297,9 +297,9 @@ $card-border-color: $border-color !default;
 $card-inner-border-radius: $border-radius !default;
 $app-card-margin-bottom: $app-margin-y !default;
 
-$app-card-danger-bg: $danger !default;
-$app-card-danger-border-color: $danger !default;
-$app-card-danger-color: $white !default;
+$app-card-danger-bg: var(--#{$prefix}danger-bg) !default;
+$app-card-danger-border-color: var(--#{$prefix}danger-border) !default;
+$app-card-danger-color: var(--#{$prefix}light-text) !default;
 $app-card-title-font-weight: bold !default;
 
 // Grid
@@ -312,42 +312,6 @@ $app-grid-view-footer-border: 1px solid $primary !default;
 $app-grid-view-footer-spacer-y: $app-spacer-y !default;
 $app-grid-view-buttons-top: 0.5rem !default;
 
-// Buttons
-$app-btn-primary-color: var(--#{$prefix}light) !default;
-$app-btn-primary-bg: var(--#{$prefix}primary) !default;
-$app-btn-primary-border-color: $app-btn-primary-bg !default;
-$app-btn-primary-hover-bg: var(--#{$prefix}dark) !default;
-$app-btn-primary-hover-color: $app-btn-primary-color !default;
-$app-btn-primary-hover-border-color: $app-btn-primary-hover-bg !default;
-
-$app-btn-secondary-bg: $gray-100 !default;
-$app-btn-secondary-color: $body-color !default;
-$app-btn-secondary-border-color: $border-color !default;
-$app-btn-secondary-hover-bg: $white !default;
-$app-btn-secondary-hover-color: $body-color !default;
-$app-btn-secondary-hover-border-color: $primary !default;
-
-$app-btn-danger-bg: $danger !default;
-$app-btn-danger-color: $white !default;
-$app-btn-danger-border-color: $app-btn-danger-bg !default;
-$app-btn-danger-hover-bg: darken($danger, 10%) !default;
-$app-btn-danger-hover-color: $white !default;
-$app-btn-danger-hover-border-color: $app-btn-danger-hover-bg !default;
-
-$btn-padding-y-sm: 0.25rem !default;
-$btn-padding-x-sm: 0.375rem !default;
-$btn-border-radius: $border-radius !default;
-$btn-border-radius-sm: $border-radius !default;
-$btn-white-space: nowrap !default;
-$app-btn-min-width: 2.625rem !default;
-
-$app-btn-toolbar-spacer: .5rem !default;
-
-$btn-close-width: 1rem !default;
-$btn-close-height: $btn-close-width !default;
-$btn-close-padding-x: 0 !default;
-$btn-close-padding-y: $btn-close-padding-x !default;
-
 // Forms
 $app-form-sticky-position: sticky !default;
 $app-form-sticky-border: $border-width solid $primary !default;
@@ -359,6 +323,9 @@ $input-padding-x: 0.75rem !default;
 $input-border-radius: $border-radius !default;
 $input-btn-padding-y: 0.59375rem !default;
 $input-btn-padding-x: .75rem !default;
+$input-btn-font-family: null !default;
+$input-btn-font-size: $font-size-base !default;
+$input-btn-line-height: $line-height-base !default;
 $input-btn-border-width: $border-width !default;
 $input-bg: $white !default;
 $input-focus-color: $body-color;
@@ -391,6 +358,53 @@ $form-invalid-color: $danger !default;
 $input-group-addon-color: var(--#{$prefix}body-color) !default;
 $input-group-addon-bg: var(--#{$prefix}secondary-bg) !default;
 
+// Buttons
+$btn-padding-y: $input-btn-padding-y !default;
+$btn-padding-x: $input-btn-padding-x !default;
+$btn-font-family: $input-btn-font-family !default;
+$btn-font-size: $input-btn-font-size !default;
+$btn-line-height: $input-btn-line-height !default;
+$btn-font-weight: $font-weight-normal !default;
+$btn-white-space: null !default;
+$btn-padding-y-sm: 0.25rem !default;
+$btn-padding-x-sm: 0.375rem !default;
+$btn-border-radius: $border-radius !default;
+$btn-border-radius-sm: $border-radius !default;
+$btn-white-space: nowrap !default;
+$btn-border-width: $input-btn-border-width !default;
+$app-btn-min-width: 2.625rem !default;
+$btn-transition: color .15s, background-color .15s, border-color .15s;
+$btn-disabled-opacity:        .5 !default;
+
+$app-btn-primary-bg: var(--#{$prefix}primary) !default;
+$app-btn-primary-border-color: var(--#{$prefix}primary) !default;
+$app-btn-primary-color: var(--#{$prefix}light-text) !default;
+$app-btn-primary-hover-bg: var(--#{$prefix}primary-bg) !default;
+$app-btn-primary-hover-border-color: var(--#{$prefix}primary-bg) !default;
+$app-btn-primary-hover-color: var(--#{$prefix}light-text) !default;
+
+$app-btn-secondary-bg: var(--#{$prefix}secondary) !default;
+$app-btn-secondary-border-color: var(--#{$prefix}secondary) !default;
+$app-btn-secondary-color: var(--#{$prefix}light-text) !default;
+$app-btn-secondary-hover-bg: var(--#{$prefix}secondary-text) !default;
+$app-btn-secondary-hover-border-color: var(--#{$prefix}secondary-text) !default;
+$app-btn-secondary-hover-color: var(--#{$prefix}light-text) !default;
+
+$app-btn-danger-bg: var(--#{$prefix}danger) !default;
+$app-btn-danger-border-color: var(--#{$prefix}danger) !default;
+$app-btn-danger-color: var(--#{$prefix}light-text) !default;
+$app-btn-danger-hover-bg: var(--#{$prefix}danger-text) !default;
+$app-btn-danger-hover-border-color: var(--#{$prefix}danger-text) !default;
+$app-btn-danger-hover-color: var(--#{$prefix}light-text) !default;
+
+$app-btn-toolbar-spacer: .5rem !default;
+
+$btn-close-width: 1rem !default;
+$btn-close-height: $btn-close-width !default;
+$btn-close-padding-x: 0 !default;
+$btn-close-padding-y: $btn-close-padding-x !default;
+
+
 // List group
 $list-group-border-color: $white !default;
 $list-group-item-padding-y: $app-spacer-y !default;
@@ -405,9 +419,8 @@ $table-color: $body-color !default;
 $table-border-width: 1px !default;
 $table-border-color: transparent !default;
 $table-accent-bg: $white !default;
-$table-hover-bg: var(--#{$prefix}secondary) !default;
-$table-striped-bg: $gray-100 !default;
-$table-striped-bg: $white !default;
+$table-hover-bg: var(--#{$prefix}dark-bg) !default;
+$table-striped-bg: var(--#{$prefix}light) !default;
 $table-striped-color: $body-color !default;
 $table-cell-padding-y: 0.75rem !default;
 $table-cell-padding-x: 0.75rem !default;

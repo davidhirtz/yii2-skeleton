@@ -76,7 +76,7 @@ class GridSearch extends BaseObject
         $icon = ArrayHelper::remove($this->inputOptions, 'icon', 'search');
         $type = ArrayHelper::remove($this->inputOptions, 'type', 'search');
 
-        $btn = Button::transparent()
+        $btn = Button::link()
             ->icon($icon)
             ->type('submit')
             ->render();

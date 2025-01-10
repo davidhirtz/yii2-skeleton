@@ -44,9 +44,9 @@ class Button extends Tag
         return static::make()->class('btn btn-success')->text($text);
     }
 
-    public static function transparent(string $text = ''): static
+    public static function link(string $text = ''): static
     {
-        return static::make()->class('btn btn-transparent')->text($text);
+        return static::make()->class('btn btn-link')->text($text);
     }
 
     protected function getName(): string

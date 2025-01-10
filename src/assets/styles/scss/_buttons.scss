@@ -17,7 +17,7 @@
   text-decoration: if($link-decoration == none, null, none);
   white-space: $btn-white-space;
   vertical-align: middle;
-  cursor: if($enable-button-pointers, pointer, null);
+  cursor: pointer;
   user-select: none;
   border: $btn-border-width solid var(--#{$prefix}btn-border-color);
   min-width: $app-btn-min-width;
@@ -51,69 +51,47 @@
     outline: 0;
   }
 
-  .btn-check:checked + &,
-  :not(.btn-check) + &:active,
-  &:first-child:active,
-  &.active {
-    color: var(--#{$prefix}btn-active-color);
-    background-color: var(--#{$prefix}btn-active-bg);
-    background-image: if($enable-gradients, none, null);
-    border-color: var(--#{$prefix}btn-active-border-color);
-
-  }
-
   &:disabled,
   &.disabled,
   fieldset:disabled & {
-    color: var(--#{$prefix}btn-disabled-color);
     pointer-events: none;
-    background-color: var(--#{$prefix}btn-disabled-bg);
-    border-color: var(--#{$prefix}btn-disabled-border-color);
     opacity: $btn-disabled-opacity;
   }
 }
 
 .btn-primary {
   --#{$prefix}btn-bg: #{$app-btn-primary-bg};
-  --#{$prefix}btn-color: #{$app-btn-primary-color};
   --#{$prefix}btn-border-color: #{$app-btn-primary-border-color};
+  --#{$prefix}btn-color: #{$app-btn-primary-color};
   --#{$prefix}btn-hover-bg: #{$app-btn-primary-hover-bg};
-  --#{$prefix}btn-hover-color: #{$app-btn-primary-hover-color};
   --#{$prefix}btn-hover-border-color: #{$app-btn-primary-hover-border-color};
+  --#{$prefix}btn-hover-color: #{$app-btn-primary-hover-color};
 }
 
 .btn-secondary {
   --#{$prefix}btn-bg: #{$app-btn-secondary-bg};
-  --#{$prefix}btn-color: #{$app-btn-secondary-color};
   --#{$prefix}btn-border-color: #{$app-btn-secondary-border-color};
+  --#{$prefix}btn-color: #{$app-btn-secondary-color};
   --#{$prefix}btn-hover-bg: #{$app-btn-secondary-hover-bg};
-  --#{$prefix}btn-hover-color: #{$app-btn-secondary-hover-color};
   --#{$prefix}btn-hover-border-color: #{$app-btn-secondary-hover-border-color};
+  --#{$prefix}btn-hover-color: #{$app-btn-secondary-hover-color};
 }
 
 .btn-danger {
   --#{$prefix}btn-bg: #{$app-btn-danger-bg};
-  --#{$prefix}btn-color: #{$app-btn-danger-color};
   --#{$prefix}btn-border-color: #{$app-btn-danger-border-color};
+  --#{$prefix}btn-color: #{$app-btn-danger-color};
   --#{$prefix}btn-hover-bg: #{$app-btn-danger-hover-bg};
-  --#{$prefix}btn-hover-color: #{$app-btn-danger-hover-color};
   --#{$prefix}btn-hover-border-color: #{$app-btn-danger-hover-border-color};
+  --#{$prefix}btn-hover-color: #{$app-btn-danger-hover-color};
 }
 
 .btn-link {
-  --#{$prefix}btn-color: #{$btn-link-color};
-  --#{$prefix}btn-bg: transparent;
-  --#{$prefix}btn-border-color: transparent;
-  --#{$prefix}btn-hover-color: #{$btn-link-hover-color};
-  --#{$prefix}btn-hover-border-color: transparent;
-  --#{$prefix}btn-active-color: #{$btn-link-hover-color};
-  --#{$prefix}btn-active-border-color: transparent;
-  --#{$prefix}btn-disabled-color: #{$btn-link-disabled-color};
-  --#{$prefix}btn-disabled-border-color: transparent;
-
+  background: transparent !important;
   margin: 0;
   padding: 0;
-  border: 0;
+  border: 0 !important;
+  min-width: auto;
   text-decoration: $link-decoration;
   line-height: inherit;
   font-weight: inherit;
@@ -142,13 +120,4 @@
   padding: $btn-padding-y-sm $btn-padding-x-sm;
   border-radius: $btn-border-radius-sm;
   @include font-size($btn-font-size-sm);
-}
-
-.btn-transparent {
-  padding: 0;
-  border: 0;
-  min-width: auto;
-  outline: 0 !important;
-  background: transparent;
-  color: inherit;
 }
