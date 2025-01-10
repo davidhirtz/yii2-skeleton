@@ -14,7 +14,7 @@
   vertical-align: top;
   appearance: none;
   background-color: $form-check-input-bg;
-  background-image: var(--#{$prefix}form-check-bg-image);
+  background-image: var(--#{$prefix}form-check-bg-image, transparent);
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;

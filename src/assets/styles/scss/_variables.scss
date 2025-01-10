@@ -47,7 +47,7 @@ $dark-color: #555 !default;
 
 $body-color: #000 !default;
 $body-bg: var(--#{$prefix}light) !default;
-$border-color: var(--#{$prefix}light-border) !default;
+$border-color: #ddd !default;
 $body-text-align: null !default;
 
 // Global
@@ -150,7 +150,7 @@ $caret-vertical-align: $caret-width * .85 !default;
 
 $hr-margin-y: $spacer !default;
 $hr-border-width: $border-width;
-$hr-color: var(--#{$prefix}border-color) !default;
+$hr-color: var(--#{$prefix}border) !default;
 $hr-opacity: 1;
 
 $legend-margin-bottom: .5rem !default;
@@ -237,7 +237,7 @@ $breadcrumb-divider: quote("/") !default;
 $header-margin: $margin-y 0 !default;
 $header-padding-bottom: $spacer-y !default;
 $header-text-align: center !default;
-$header-border-bottom: 1px solid var(--#{$prefix}secondary) !default;
+$header-border-bottom: 1px solid var(--#{$prefix}primary-border) !default;
 $header-line-height: 1.5 !default;
 
 $submenu-link-margin: 0 0.125rem $spacer-x !default;
@@ -275,7 +275,7 @@ $grid-gutter-width: $spacer !default;
 $grid-view-footer-position: sticky !default;
 $grid-view-header-border: none !default;
 $grid-view-header-spacer-y: 0 !default;
-$grid-view-footer-border: 1px solid $primary !default;
+$grid-view-footer-border: 1px solid var(--#{$prefix}primary-border) !default;
 $grid-view-footer-spacer-y: $spacer-y !default;
 $grid-view-buttons-top: 0.5rem !default;
 
@@ -369,11 +369,11 @@ $form-check-input-active-filter: brightness(90%) !default;
 $form-check-gap: 0.75rem !default;
 
 $form-check-input-bg: $input-bg !default;
-$form-check-input-border: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color) !default;
+$form-check-input-border: $border-width solid var(--#{$prefix}border) !default;
 $form-check-radio-border-radius: 50% !default;
 $form-check-input-focus-border: $input-focus-border-color !default;
 
-$form-check-input-checked-color: $component-active-color !default;
+$form-check-input-checked-color: $body-color !default;
 $form-check-input-checked-border-color: $form-check-input-checked-bg-color !default;
 $form-check-input-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#{$form-check-input-checked-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/></svg>") !default;
 $form-check-radio-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='2' fill='#{$form-check-input-checked-color}'/></svg>") !default;
@@ -464,7 +464,7 @@ $btn-close-padding-y: $btn-close-padding-x !default;
 // List group
 $list-group-color: var(--#{$prefix}body-color) !default;
 $list-group-bg: var(--#{$prefix}light) !default;
-$list-group-border-color: var(--#{$prefix}border-color) !default;
+$list-group-border-color: var(--#{$prefix}border) !default;
 $list-group-border-width: $border-width !default;
 $list-group-border-radius: $border-radius !default;
 
@@ -480,10 +480,10 @@ $list-group-action-active-bg: var(--#{$prefix}secondary-bg) !default;
 
 
 // Tables
-$table-bg: var(--#{$prefix}body-bg) !default;
+$table-bg: var(--#{$prefix}light-bg) !default;
 $table-border-width: $border-width !default;
 $table-border-color: transparent !default;
-$table-striped-bg: var(--#{$prefix}light-bg) !default;
+$table-striped-bg: var(--#{$prefix}body-bg) !default;
 $table-striped-order: odd !default;
 $table-striped-color: var(--#{$prefix}body-color) !default;
 $table-hover-color: var(--#{$prefix}body-color) !default;
@@ -536,7 +536,7 @@ $pagination-border-width: $border-width !default;
 $pagination-margin-start: calc(#{$pagination-border-width} * -1) !default; // stylelint-disable-line function-disallowed-list
 
 $pagination-hover-color: var(--#{$prefix}link-hover-color) !default;
-$pagination-hover-border-color: var(--#{$prefix}border-color) !default; // Todo in v6: remove this?
+$pagination-hover-border-color: var(--#{$prefix}border) !default; // Todo in v6: remove this?
 
 $pagination-disabled-opacity: .5 !default;
 
@@ -549,7 +549,7 @@ $dropdown-min-width: 12rem !default;
 $dropdown-max-height: 50vh !default;
 $dropdown-bg: var(--#{$prefix}light-bg) !default;
 $dropdown-color: var(--#{$prefix}body-color) !default;
-$dropdown-border-color: var(--#{$prefix}border-color) !default;
+$dropdown-border-color: var(--#{$prefix}border) !default;
 $dropdown-border-radius: $border-radius !default;
 $dropdown-border-width: 0 !default;
 $dropdown-inner-border-radius: $border-radius !default;
@@ -558,7 +558,7 @@ $dropdown-divider-margin-y: 0 !default;
 
 $dropdown-button-bg: var(--#{$prefix}tertiary-bg) !default;
 $dropdown-button-color: var(--#{$prefix}body-color) !default;
-$dropdown-button-border-color: var(--#{$prefix}border-color) !default;
+$dropdown-button-border-color: var(--#{$prefix}border) !default;
 $dropdown-button-active-bg: var(--#{$prefix}tertiary) !default;
 $dropdown-button-active-border-color: var(--#{$prefix}tertiary-border) !default;
 $dropdown-button-active-font-weight: bold !default;
@@ -603,7 +603,7 @@ $modal-dialog-margin-y-sm-up: 1.75rem !default;
 
 $modal-content-color: null !default;
 $modal-content-bg: $card-bg !default;
-$modal-content-border-color: var(--#{$prefix}border-color) !default;
+$modal-content-border-color: var(--#{$prefix}border) !default;
 $modal-content-border-width: 0 !default;
 $modal-content-border-radius: $border-radius !default;
 $modal-content-inner-border-radius: subtract($modal-content-border-radius, $modal-content-border-width) !default;
@@ -611,7 +611,7 @@ $modal-content-inner-border-radius: subtract($modal-content-border-radius, $moda
 $modal-backdrop-bg: rgba(0, 0, 0, .4) !default;
 $modal-backdrop-opacity: .5 !default;
 
-$modal-header-border-color: var(--#{$prefix}border-color) !default;
+$modal-header-border-color: var(--#{$prefix}border) !default;
 $modal-header-border-width: $modal-content-border-width !default;
 $modal-header-bg: $card-cap-bg !default;
 $modal-title-line-height: $line-height-base !default;
