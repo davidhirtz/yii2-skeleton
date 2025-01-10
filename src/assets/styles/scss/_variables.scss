@@ -47,7 +47,7 @@ $dark-color: #555 !default;
 
 $body-color: #000 !default;
 $body-bg: var(--#{$prefix}light) !default;
-$border-color: #ddd !default;
+$border-color: var(--#{$prefix}light-border) !default;
 $body-text-align: null !default;
 
 // Global
@@ -452,10 +452,10 @@ $btn-toolbar-spacer: .5rem !default;
 $btn-close-width: 1rem !default;
 $btn-close-height: $btn-close-width !default;
 $btn-close-color: var(--#{$prefix}body-color) !default;
-$btn-close-bg:               url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$btn-close-color}'><path d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/></svg>") !default;
-$btn-close-opacity:          .5 !default;
-$btn-close-hover-opacity:    .75 !default;
-$btn-close-focus-opacity:    1 !default;
+$btn-close-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$btn-close-color}'><path d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/></svg>") !default;
+$btn-close-opacity: .5 !default;
+$btn-close-hover-opacity: .75 !default;
+$btn-close-focus-opacity: 1 !default;
 $btn-close-disabled-opacity: .25 !default;
 $btn-close-padding-x: 0 !default;
 $btn-close-padding-y: $btn-close-padding-x !default;
@@ -543,22 +543,22 @@ $pagination-disabled-opacity: .5 !default;
 $pagination-transition: color .15s, background-color .15s, border-color .15s !default;
 
 // Dropdown
-$dropdown-min-width: 12rem !default;
 $dropdown-padding-x: 0 !default;
 $dropdown-padding-y: 0 !default;
-$dropdown-spacer: 2px !default;
+$dropdown-min-width: 12rem !default;
+$dropdown-max-height: 50vh !default;
 $dropdown-bg: var(--#{$prefix}light-bg) !default;
 $dropdown-color: var(--#{$prefix}body-color) !default;
-$dropdown-border-width: $border-width !default;
+$dropdown-border-color: var(--#{$prefix}border-color) !default;
 $dropdown-border-radius: $border-radius !default;
-$dropdown-border-color: var(--#{$prefix}border) !default;
-$dropdown-inner-border-radius: calc(#{$dropdown-border-radius} - #{$dropdown-border-width}) !default; // stylelint-disable-line function-disallowed-list
+$dropdown-border-width: 0 !default;
+$dropdown-inner-border-radius: $border-radius !default;
 $dropdown-divider-bg: var(--#{$prefix}border) !default;
 $dropdown-divider-margin-y: 0 !default;
 
 $dropdown-button-bg: var(--#{$prefix}tertiary-bg) !default;
 $dropdown-button-color: var(--#{$prefix}body-color) !default;
-$dropdown-button-border-color: $border-color !default;
+$dropdown-button-border-color: var(--#{$prefix}border-color) !default;
 $dropdown-button-active-bg: var(--#{$prefix}tertiary) !default;
 $dropdown-button-active-border-color: var(--#{$prefix}tertiary-border) !default;
 $dropdown-button-active-font-weight: bold !default;
@@ -568,10 +568,10 @@ $dropdown-button-hover-border-color: var(--#{$prefix}tertiary) !default;
 $dropdown-item-padding-y: 0.6565rem !default;
 $dropdown-item-padding-x: .75rem !default;
 $dropdown-link-color: var(--body-color) !default;
-$dropdown-link-hover-bg: var(--#{$prefix}dark-bg) !default;
+$dropdown-link-hover-bg: var(--#{$prefix}light) !default;
 $dropdown-link-hover-color: var(--body-color) !default;
+$dropdown-link-active-bg: var(--#{$prefix}dark-bg) !default;
 $dropdown-link-active-color: inherit !default;
-$dropdown-link-active-bg: var(--#{$prefix}light) !default;
 $dropdown-link-disabled-color: var(--#{$prefix}tertiary-color) !default;
 
 $dropdown-header-padding-y: $dropdown-item-padding-y !default;
@@ -579,7 +579,6 @@ $dropdown-header-padding-x: $dropdown-item-padding-x !default;
 
 $dropdown-header-padding-y: $dropdown-item-padding-y !default;
 $dropdown-header-padding-x: $dropdown-item-padding-x !default;
-$zindex-dropdown: 1000 !default;
 
 // Badge
 $badge-font-size: 0.75rem !default;
@@ -595,9 +594,9 @@ $badge-border-radius: 0.5rem !default;
 // Modal
 $modal-footer-margin-between: .5rem !default;
 
-$modal-inner-padding:               $spacer !default;
-$modal-header-padding-y:            $modal-inner-padding !default;
-$modal-header-padding-x:            $modal-inner-padding !default;
+$modal-inner-padding: $spacer !default;
+$modal-header-padding-y: $modal-inner-padding !default;
+$modal-header-padding-x: $modal-inner-padding !default;
 
 $modal-dialog-margin: .5rem !default;
 $modal-dialog-margin-y-sm-up: 1.75rem !default;
@@ -615,7 +614,7 @@ $modal-backdrop-opacity: .5 !default;
 $modal-header-border-color: var(--#{$prefix}border-color) !default;
 $modal-header-border-width: $modal-content-border-width !default;
 $modal-header-bg: $card-cap-bg !default;
-$modal-title-line-height:           $line-height-base !default;
+$modal-title-line-height: $line-height-base !default;
 $modal-title-font-weight: bold !default;
 
 $modal-footer-bg: null !default;
@@ -624,18 +623,18 @@ $modal-footer-border-width: $modal-header-border-width !default;
 
 
 // Tooltip
-$tooltip-color:                     var(--#{$prefix}body-bg) !default;
-$tooltip-bg:                        var(--#{$prefix}body-color) !default;
-$tooltip-border-radius:             $border-radius !default;
+$tooltip-color: var(--#{$prefix}body-bg) !default;
+$tooltip-bg: var(--#{$prefix}body-color) !default;
+$tooltip-border-radius: $border-radius !default;
 
-$zindex-tooltip:                    1080 !default;
+$zindex-tooltip: 1080 !default;
 
 $tooltip-max-width: 12rem !default;
 $tooltip-arrow-width: 0.5rem !default;
 $tooltip-arrow-height: $tooltip-arrow-width !default;
-$tooltip-padding-y:                 $spacer * .25 !default;
-$tooltip-padding-x:                 $spacer * .5 !default;
-$tooltip-font-size:                 $font-size-sm !default;
+$tooltip-padding-y: $spacer * .25 !default;
+$tooltip-padding-x: $spacer * .5 !default;
+$tooltip-font-size: $font-size-sm !default;
 
 
 //

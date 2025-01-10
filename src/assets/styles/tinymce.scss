@@ -1,9 +1,9 @@
 @import "scss/fonts";
 
-@import "../../../node_modules/bootstrap/scss/functions";
+@import "scss/functions";
 @import "scss/variables";
 
-@import "../../../node_modules/bootstrap/scss/mixins";
+@import "scss/mixins";
 
 body {
   padding: $input-padding-y $input-padding-x;

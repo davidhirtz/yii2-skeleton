@@ -156,7 +156,7 @@ sup {
 // Links
 
 a {
-  color: rgba(var(--#{$prefix}link-color-rgb), var(--#{$prefix}link-opacity, 1));
+  color: var(--#{$prefix}link-color);
   text-decoration: $link-decoration;
 
   &:hover {

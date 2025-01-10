@@ -9,12 +9,6 @@
   vertical-align: $table-cell-vertical-align;
   border-color: $table-border-color;
 
-  > :not(caption) > * > * {
-    padding: $table-cell-padding-y $table-cell-padding-x;
-    // Following the precept of cascades: https://codepen.io/miriamsuzanne/full/vYNgodb
-    background: var(--#{$prefix}table-bg);
-    border-bottom-width: $table-border-width;
-  }
 
   > tbody {
     vertical-align: inherit;
@@ -22,6 +16,13 @@
 
   > thead {
     vertical-align: bottom;
+  }
+
+  td {
+    padding: $table-cell-padding-y $table-cell-padding-x;
+    // Following the precept of cascades: https://codepen.io/miriamsuzanne/full/vYNgodb
+    background: var(--#{$prefix}table-bg);
+    border-bottom-width: $table-border-width;
   }
 }
 
