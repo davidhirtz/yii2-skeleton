@@ -2,18 +2,14 @@
 
 .card {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  //min-width: 0; // See https://github.com/twbs/bootstrap/pull/22740#issuecomment-305868106
   color: var(--#{$prefix}body-color);
   word-wrap: break-word;
   background-color: $card-bg;
-  background-clip: border-box;
   border: $card-border-width solid $card-border-color;
   @include border-radius($card-border-radius);
 
   &:not(:last-child) {
-    margin-bottom: $app-card-margin-bottom;
+    margin-bottom: $card-margin-bottom;
   }
 
   //> .list-group {
@@ -50,7 +46,7 @@
   align-items: center;
   justify-content: space-between;
   color: $card-title-color;
-  font-weight: $app-card-title-font-weight;
+  font-weight: $card-title-font-weight;
 }
 
 .card-header {
@@ -82,11 +78,11 @@
 }
 
 .card-danger {
-  border-color: $app-card-danger-border-color;
+  border-color: $card-danger-border-color;
 
   .card-header {
-    background: $app-card-danger-bg;
-    color: $app-card-danger-color;
+    background: $card-danger-bg;
+    color: $card-danger-color;
   }
 }
 

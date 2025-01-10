@@ -69,9 +69,9 @@
   --#{$prefix}input-border: #{$input-border-color};
   --#{$prefix}input-color: #{$input-color};
 
-  --#{$prefix}form-invalid-bg: #{$app-form-invalid-bg};
+  --#{$prefix}form-invalid-bg: #{$form-invalid-bg};
   --#{$prefix}form-invalid-border: #{$form-invalid-border-color};
   --#{$prefix}form-invalid-color: #{$form-invalid-color};
 
-  --#{$prefix}arrow-down-bg: #{escape-svg($app-arrow-down-bg)};
+  --#{$prefix}arrow-down-bg: #{escape-svg($arrow-down-bg)};
 }

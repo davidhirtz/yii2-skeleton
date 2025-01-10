@@ -1,7 +1,7 @@
 //@import "../../../../node_modules/bootstrap/scss/navbar";
 
 .navbar {
-  --#{$prefix}bg: #{$app-navbar-light-bg};
+  --#{$prefix}bg: #{$navbar-light-bg};
   --#{$prefix}toggler-border-color: #{$navbar-light-toggler-border-color};
   --#{$prefix}toggler-icon-bg: #{escape-svg($navbar-light-toggler-icon-bg)};
 
@@ -14,7 +14,7 @@
   padding: $navbar-padding-y $navbar-padding-x;
   background: var(--#{$prefix}bg);
 
-  @include media-breakpoint-up($app-navbar-expand-breakpoint) {
+  @include media-breakpoint-up($navbar-expand-breakpoint) {
     flex-wrap: nowrap;
     justify-content: flex-start;
   }
@@ -26,7 +26,7 @@
     flex-wrap: wrap;
   }
 
-  @include media-breakpoint-up($app-navbar-expand-breakpoint) {
+  @include media-breakpoint-up($navbar-expand-breakpoint) {
     display: flex;
     align-items: center;
   }
@@ -34,18 +34,18 @@
 
 .navbar-nav {
   --#{$prefix}nav-link-color: #{$navbar-light-color};
-  --#{$prefix}nav-link-hover-bg: #{$app-navbar-light-hover-bg};
+  --#{$prefix}nav-link-hover-bg: #{$navbar-light-hover-bg};
   --#{$prefix}nav-link-hover-color: #{$navbar-light-hover-color};
   --#{$prefix}nav-link-disabled-color: #{$navbar-light-disabled-color};
   --#{$prefix}nav-link-active-color: #{$navbar-light-active-color};
-  --#{$prefix}nav-link-active-bg: #{$app-navbar-light-active-bg};
+  --#{$prefix}nav-link-active-bg: #{$navbar-light-active-bg};
 
   display: flex;
   flex-direction: column;
   margin: 0;
   list-style: none;
 
-  @include media-breakpoint-up($app-navbar-expand-breakpoint) {
+  @include media-breakpoint-up($navbar-expand-breakpoint) {
     flex-direction: row;
   }
 }
@@ -55,7 +55,7 @@
   flex-grow: 1;
   align-items: center;
 
-  @include media-breakpoint-up($app-navbar-expand-breakpoint) {
+  @include media-breakpoint-up($navbar-expand-breakpoint) {
     display: flex !important;
     align-items: flex-start;
     justify-content: space-between;
@@ -63,7 +63,7 @@
 }
 
 .navbar-toggler {
-  margin: $app-navbar-toggler-margin-y 0;
+  margin: $navbar-toggler-margin-y 0;
   padding: $navbar-toggler-padding-y $navbar-toggler-padding-x;
   background-color: transparent;
   border: $border-width solid var(--#{$prefix}toggler-border-color);
@@ -73,7 +73,7 @@
     text-decoration: none;
   }
 
-  @include media-breakpoint-up($app-navbar-expand-breakpoint) {
+  @include media-breakpoint-up($navbar-expand-breakpoint) {
     display: none;
   }
 }
@@ -86,7 +86,7 @@
 }
 
 .navbar-account-nav {
-  @include media-breakpoint-up($app-navbar-expand-breakpoint) {
+  @include media-breakpoint-up($navbar-expand-breakpoint) {
     flex-wrap: nowrap;
   }
 }
@@ -94,13 +94,13 @@
 .navbar-i18n-dropdown {
   display: none;
 
-  @include media-breakpoint-up($app-navbar-expand-breakpoint) {
+  @include media-breakpoint-up($navbar-expand-breakpoint) {
     display: block;
   }
 }
 
 .navbar-logout{
-  --#{$prefix}nav-link-hover-bg: #{$app-btn-danger-bg};
+  --#{$prefix}nav-link-hover-bg: #{$btn-danger-bg};
 }
 
 //noinspection ALL

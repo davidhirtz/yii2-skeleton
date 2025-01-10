@@ -20,7 +20,7 @@
   cursor: pointer;
   user-select: none;
   border: $btn-border-width solid var(--#{$prefix}btn-border-color);
-  min-width: $app-btn-min-width;
+  min-width: $btn-min-width;
 
   @include border-radius($btn-border-radius);
   @include gradient-bg(var(--#{$prefix}btn-bg));
@@ -60,30 +60,30 @@
 }
 
 .btn-primary {
-  --#{$prefix}btn-bg: #{$app-btn-primary-bg};
-  --#{$prefix}btn-border-color: #{$app-btn-primary-border-color};
-  --#{$prefix}btn-color: #{$app-btn-primary-color};
-  --#{$prefix}btn-hover-bg: #{$app-btn-primary-hover-bg};
-  --#{$prefix}btn-hover-border-color: #{$app-btn-primary-hover-border-color};
-  --#{$prefix}btn-hover-color: #{$app-btn-primary-hover-color};
+  --#{$prefix}btn-bg: #{$btn-primary-bg};
+  --#{$prefix}btn-border-color: #{$btn-primary-border-color};
+  --#{$prefix}btn-color: #{$btn-primary-color};
+  --#{$prefix}btn-hover-bg: #{$btn-primary-hover-bg};
+  --#{$prefix}btn-hover-border-color: #{$btn-primary-hover-border-color};
+  --#{$prefix}btn-hover-color: #{$btn-primary-hover-color};
 }
 
 .btn-secondary {
-  --#{$prefix}btn-bg: #{$app-btn-secondary-bg};
-  --#{$prefix}btn-border-color: #{$app-btn-secondary-border-color};
-  --#{$prefix}btn-color: #{$app-btn-secondary-color};
-  --#{$prefix}btn-hover-bg: #{$app-btn-secondary-hover-bg};
-  --#{$prefix}btn-hover-border-color: #{$app-btn-secondary-hover-border-color};
-  --#{$prefix}btn-hover-color: #{$app-btn-secondary-hover-color};
+  --#{$prefix}btn-bg: #{$btn-secondary-bg};
+  --#{$prefix}btn-border-color: #{$btn-secondary-border-color};
+  --#{$prefix}btn-color: #{$btn-secondary-color};
+  --#{$prefix}btn-hover-bg: #{$btn-secondary-hover-bg};
+  --#{$prefix}btn-hover-border-color: #{$btn-secondary-hover-border-color};
+  --#{$prefix}btn-hover-color: #{$btn-secondary-hover-color};
 }
 
 .btn-danger {
-  --#{$prefix}btn-bg: #{$app-btn-danger-bg};
-  --#{$prefix}btn-border-color: #{$app-btn-danger-border-color};
-  --#{$prefix}btn-color: #{$app-btn-danger-color};
-  --#{$prefix}btn-hover-bg: #{$app-btn-danger-hover-bg};
-  --#{$prefix}btn-hover-border-color: #{$app-btn-danger-hover-border-color};
-  --#{$prefix}btn-hover-color: #{$app-btn-danger-hover-color};
+  --#{$prefix}btn-bg: #{$btn-danger-bg};
+  --#{$prefix}btn-border-color: #{$btn-danger-border-color};
+  --#{$prefix}btn-color: #{$btn-danger-color};
+  --#{$prefix}btn-hover-bg: #{$btn-danger-hover-bg};
+  --#{$prefix}btn-hover-border-color: #{$btn-danger-hover-border-color};
+  --#{$prefix}btn-hover-color: #{$btn-danger-hover-color};
 }
 
 .btn-link {

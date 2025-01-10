@@ -1,12 +1,12 @@
 .page-header {
-  margin: $app-header-margin;
-  padding-bottom: $app-header-padding-bottom;
-  text-align: $app-header-text-align;
-  border-bottom: $app-header-border-bottom;
-  line-height: $app-header-line-height;
+  margin: $header-margin;
+  padding-bottom: $header-padding-bottom;
+  text-align: $header-text-align;
+  border-bottom: $header-border-bottom;
+  line-height: $header-line-height;
 }
 
 .submenu {
-  margin: $app-submenu-margin;
-  justify-content: $app-submenu-justify-content;
+  margin: $submenu-margin;
+  justify-content: $submenu-justify-content;
 }

@@ -1,7 +1,7 @@
 //@import "../../../../node_modules/bootstrap/scss/badge";
 
 .badge {
-  --#{$prefix}badge-bg: #{$app-badge-bg};
+  --#{$prefix}badge-bg: #{$badge-bg};
   --#{$prefix}badge-color: #{$badge-color};
 
   display: inline-block;

@@ -11,12 +11,12 @@
 }
 
 html {
-  scroll-padding-top: $app-html-scroll-padding;
+  scroll-padding-top: $html-scroll-padding;
 }
 
 body {
   margin: 0;
-  padding: $app-body-padding;
+  padding: $body-padding;
   font-family: $font-family-sans-serif;
   @include font-size($font-size-base);
   font-weight: $font-weight-base;
@@ -66,7 +66,7 @@ h3 {
   @include font-size($h3-font-size);
 }
 
-h4 {
+h4, h5, h6 {
   @extend %heading;
   @include font-size($h4-font-size);
 }
@@ -179,7 +179,7 @@ code,
 kbd,
 samp {
   font-family: $font-family-code;
-  @include font-size(1em); // Correct the odd `em` font sizing in all browsers.
+  @include font-size(1em);
 }
 
 pre {
@@ -190,7 +190,6 @@ pre {
   @include font-size($code-font-size);
   color: $pre-color;
 
-  // Account for some code outputs that place code tags in pre tags
   code {
     @include font-size(inherit);
     color: inherit;
@@ -357,7 +356,8 @@ legend {
 ::-webkit-datetime-edit-hour-field,
 ::-webkit-datetime-edit-day-field,
 ::-webkit-datetime-edit-month-field,
-::-webkit-datetime-edit-year-field {
+::-webkit-datetime-edit-year-field,
+::-webkit-color-swatch-wrapper {
   padding: 0;
 }
 
@@ -375,13 +375,9 @@ legend {
   -webkit-appearance: none;
 }
 
-::-webkit-color-swatch-wrapper {
-  padding: 0;
-}
-
 ::file-selector-button {
-  font: inherit; // 1
-  -webkit-appearance: button; // 2
+  font: inherit;
+  -webkit-appearance: button;
 }
 
 output {
@@ -393,7 +389,7 @@ iframe {
 }
 
 summary {
-  display: list-item; // 1
+  display: list-item;
   cursor: pointer;
 }
 

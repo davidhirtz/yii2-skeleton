@@ -42,10 +42,10 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  gap: $app-btn-toolbar-spacer;
+  gap: $btn-toolbar-spacer;
 
   &:not(:first-child) {
-    margin-top: $app-btn-toolbar-spacer;
+    margin-top: $btn-toolbar-spacer;
   }
 
   .input-group {

@@ -19,12 +19,12 @@
 }
 
 .form-group-sticky {
-  position: $app-form-sticky-position;
+  position: $form-sticky-position;
 
-  @if ($app-grid-view-footer-position == 'sticky') {
+  @if ($grid-view-footer-position == 'sticky') {
     margin-top: $grid-gutter-width;
     bottom: 0;
-    border-top: $app-form-sticky-border;
+    border-top: $form-sticky-border;
     background-color: $card-bg;
     z-index: 2;
   }

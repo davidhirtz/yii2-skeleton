@@ -92,7 +92,7 @@
   &.active {
     color: $dropdown-link-active-color;
     background-color: $dropdown-link-active-bg;
-    font-weight: $app-dropdown-button-active-font-weight;
+    font-weight: $dropdown-button-active-font-weight;
   }
 
   &:hover,
@@ -111,18 +111,18 @@
 }
 
 .dropdown-toggle {
-  --#{$prefix}btn-bg: #{$app-dropdown-button-bg};
-  --#{$prefix}btn-color: #{$app-dropdown-button-color};
-  --#{$prefix}btn-border-color: #{$app-dropdown-button-border-color};
-  --#{$prefix}btn-active-bg: #{$app-dropdown-button-active-bg};
-  --#{$prefix}btn-active-border-color: #{$app-dropdown-button-active-border-color};
-  --#{$prefix}btn-hover-bg: #{$app-dropdown-button-hover-bg};
-  --#{$prefix}btn-hover-border-color: #{$app-dropdown-button-hover-border-color};
+  --#{$prefix}btn-bg: #{$dropdown-button-bg};
+  --#{$prefix}btn-color: #{$dropdown-button-color};
+  --#{$prefix}btn-border-color: #{$dropdown-button-border-color};
+  --#{$prefix}btn-active-bg: #{$dropdown-button-active-bg};
+  --#{$prefix}btn-active-border-color: #{$dropdown-button-active-border-color};
+  --#{$prefix}btn-hover-bg: #{$dropdown-button-hover-bg};
+  --#{$prefix}btn-hover-border-color: #{$dropdown-button-hover-border-color};
 
   width: 100%;
   @extend .text-truncate;
 
   .active > & {
-    font-weight: $app-dropdown-button-active-font-weight;
+    font-weight: $dropdown-button-active-font-weight;
   }
 }

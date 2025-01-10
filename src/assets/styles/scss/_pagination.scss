@@ -18,10 +18,10 @@
   --#{$prefix}pagination-disabled-border-color: #{$pagination-disabled-border-color};
 
   display: flex;
-  margin: $app-pagination-margin;
-  padding: $app-pagination-padding;
-  justify-content: $app-pagination-justify-content;
-  border-top: $app-pagination-border-top;
+  margin: $pagination-margin;
+  padding: $pagination-padding;
+  justify-content: $pagination-justify-content;
+  border-top: $pagination-border-top;
 
   @include list-unstyled();
 }

@@ -13,11 +13,13 @@
 
 @import "scss/type";
 
-//@import "scss/images";
-//@import "scss/containers";
-//@import "scss/grid";
-//
-//@import "scss/tables";
+@import "scss/images";
+@import "scss/containers";
+@import "scss/grid";
+
+
+@import "scss/card";
+@import "scss/tables";
 //@import "scss/forms";
 //@import "scss/buttons";
 //@import "scss/transitions";
@@ -26,7 +28,6 @@
 //@import "scss/nav";
 //@import "scss/navbar";
 //
-//@import "scss/card";
 //@import "scss/breadcrumb";
 //@import "scss/pagination";
 //@import "scss/badge";

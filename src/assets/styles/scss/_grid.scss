@@ -14,11 +14,11 @@
 }
 
 .grid-view-header {
-  margin-bottom: $app-grid-view-header-spacer-y;
-  border-bottom: $app-grid-view-header-border;
+  margin-bottom: $grid-view-header-spacer-y;
+  border-bottom: $grid-view-header-border;
 
   .row {
-    padding-bottom: $app-spacer-y;
+    padding-bottom: $spacer-y;
 
     & > * {
 
@@ -39,23 +39,23 @@
 }
 
 .grid-view-buttons {
-  margin-top: $app-grid-view-buttons-top;
+  margin-top: $grid-view-buttons-top;
 }
 
 .grid-view-footer {
-  position: $app-grid-view-footer-position;
-  margin-top: $app-grid-view-footer-spacer-y;
-  border-top: $app-grid-view-footer-border;
+  position: $grid-view-footer-position;
+  margin-top: $grid-view-footer-spacer-y;
+  border-top: $grid-view-footer-border;
 
-  @if ($app-grid-view-footer-position == 'sticky') {
+  @if ($grid-view-footer-position == 'sticky') {
     bottom: 0;
     background-color: $card-bg;
-    padding-bottom: $app-grid-view-footer-spacer-y;
+    padding-bottom: $grid-view-footer-spacer-y;
     z-index: 100;
   }
 
   .row {
-    padding-top: $app-spacer-y;
+    padding-top: $spacer-y;
 
     & > * {
       width: auto;

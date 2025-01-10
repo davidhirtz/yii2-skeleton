@@ -4,7 +4,7 @@
   --#{$prefix}modal-color: #{$modal-content-color};
   --#{$prefix}modal-bg: #{$modal-content-bg};
   --#{$prefix}modal-border-color: #{$modal-content-border-color};
-  --#{$prefix}modal-header-bg: #{$app-modal-header-bg};
+  --#{$prefix}modal-header-bg: #{$modal-header-bg};
   --#{$prefix}modal-header-border-color: #{$modal-header-border-color};
   --#{$prefix}modal-footer-bg: #{$modal-footer-bg};
   --#{$prefix}modal-footer-border-color: #{$modal-footer-border-color};
@@ -30,7 +30,7 @@
   }
 
   @include media-breakpoint-up(md) {
-      width: $app-container-centered-max-width;
+      width: $container-centered-max-width;
   }
 }
 
@@ -48,7 +48,7 @@
 .modal-title {
   margin-bottom: 0;
   line-height: $modal-title-line-height;
-  font-weight: $app-modal-title-font-weight;
+  font-weight: $modal-title-font-weight;
 }
 
 .modal-body {

@@ -1,8 +1,8 @@
 //@import "../../../../node_modules/bootstrap/scss/nav";
 
 .nav {
-  --#{$prefix}nav-link-bg: #{$app-navbar-light-bg};
-  --#{$prefix}nav-link-hover-bg: #{$app-navbar-light-hover-bg};
+  --#{$prefix}nav-link-bg: #{$navbar-light-bg};
+  --#{$prefix}nav-link-hover-bg: #{$navbar-light-hover-bg};
   --#{$prefix}nav-link-color: #{$nav-link-color};
   --#{$prefix}nav-link-hover-color: #{$nav-link-hover-color};
   --#{$prefix}nav-link-disabled-color: #{$nav-link-disabled-color};
@@ -55,12 +55,12 @@
 }
 
 .nav-pills {
-  --#{$prefix}nav-link-hover-bg: #{$app-nav-pills-link-hover-bg};
-  --#{$prefix}nav-link-hover-color: #{$app-nav-pills-link-hover-color};
+  --#{$prefix}nav-link-hover-bg: #{$nav-pills-link-hover-bg};
+  --#{$prefix}nav-link-hover-color: #{$nav-pills-link-hover-color};
   --#{$prefix}nav-link-active-color: #{$nav-pills-link-active-color};
   --#{$prefix}nav-link-active-bg: #{$nav-pills-link-active-bg};
 
-  gap: $app-nav-pills-gap;
+  gap: $nav-pills-gap;
 
   .nav-link {
     @include border-radius($nav-pills-border-radius);

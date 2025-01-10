@@ -1,26 +1,18 @@
 //@import "../../../../node_modules/bootstrap/scss/tables";
 
 .table {
-  --#{$prefix}table-color: #{$table-color};
   --#{$prefix}table-bg: #{$table-bg};
-  --#{$prefix}table-border-color: #{$table-border-color};
-  --#{$prefix}table-accent-bg: #{$table-accent-bg};
-  --#{$prefix}table-striped-color: #{$table-striped-color};
   --#{$prefix}table-striped-bg: #{$table-striped-bg};
-  --#{$prefix}table-active-color: #{$table-active-color};
-  --#{$prefix}table-active-bg: #{$table-active-bg};
-  --#{$prefix}table-hover-color: #{$table-hover-color};
   --#{$prefix}table-hover-bg: #{$table-hover-bg};
 
   width: 100%;
   vertical-align: $table-cell-vertical-align;
-  border-color: var(--#{$prefix}table-border-color);
+  border-color: $table-border-color;
 
   > :not(caption) > * > * {
     padding: $table-cell-padding-y $table-cell-padding-x;
     // Following the precept of cascades: https://codepen.io/miriamsuzanne/full/vYNgodb
-    color: var(--#{$prefix}table-color);
-    background-color: var(--#{$prefix}table-bg);
+    background: var(--#{$prefix}table-bg);
     border-bottom-width: $table-border-width;
   }
 
@@ -35,19 +27,13 @@
 
 .table-striped {
   > tbody > tr:nth-of-type(#{$table-striped-order}) > * {
-    --#{$prefix}table-color: var(--#{$prefix}table-striped-color);
     --#{$prefix}table-bg: var(--#{$prefix}table-striped-bg);
   }
 }
 
-.table-active {
-  --#{$prefix}table-color: var(--#{$prefix}table-active-color);
-  --#{$prefix}table-bg: var(--#{$prefix}table-active-bg);
-}
-
 .table-hover {
   > tbody > tr:hover > * {
-    --#{$prefix}table-color: var(--#{$prefix}table-hover-color);
+    color: $table-hover-color;
     --#{$prefix}table-bg: var(--#{$prefix}table-hover-bg);
   }
 }
@@ -58,12 +44,11 @@
 }
 
 tr.is-selected {
-  --#{$prefix}table-color: #{$app-table-selected-color};
-  --#{$prefix}table-bg: #{$app-table-selected-bg};
-  --#{$prefix}table-hover-color: #{$app-table-selected-hover-color};
-  --#{$prefix}table-hover-bg: #{$app-table-selected-hover-bg};
-  --#{$prefix}table-striped-color: #{$app-table-selected-color};
-  --#{$prefix}table-striped-bg: #{$app-table-selected-bg};
+  --#{$prefix}table-color: #{$table-selected-color};
+  --#{$prefix}table-bg: #{$table-selected-bg};
+  --#{$prefix}table-hover-color: #{$table-selected-hover-color};
+  --#{$prefix}table-hover-bg: #{$table-selected-hover-bg};
+  --#{$prefix}table-striped-bg: #{$table-selected-bg};
 
   .badge {
     --#{$prefix}badge-bg: #{$badge-active-bg};
@@ -82,8 +67,8 @@ th > a, th > a:hover {
 
 th > a.asc, th > a.desc {
   position: relative;
-  font-style: $app-table-th-active-font-style;
-  text-decoration: $app-table-th-active-text-decoration;
+  font-style: $table-th-active-font-style;
+  text-decoration: $table-th-active-text-decoration;
 }
 
 .is-selected .is-selected-hidden, tr:not(.is-selected) .is-selected-block {
@@ -98,24 +83,24 @@ tr.invalid {
   text-decoration: line-through;
 }
 
-@if $app-table-border-radius {
+@if $table-border-radius {
   tr:first-child {
     td:first-child {
-      border-top-left-radius: $app-table-border-radius;
+      border-top-left-radius: $table-border-radius;
     }
 
     td:last-child {
-      border-top-right-radius: $app-table-border-radius;
+      border-top-right-radius: $table-border-radius;
     }
   }
 
   tr:last-child {
     td:first-child {
-      border-bottom-left-radius: $app-table-border-radius;
+      border-bottom-left-radius: $table-border-radius;
     }
 
     td:last-child {
-      border-bottom-right-radius: $app-table-border-radius;
+      border-bottom-right-radius: $table-border-radius;
     }
   }
 }
