@@ -39,9 +39,4 @@ $utilities: (
                 values: (break: break-word),
                 rtl: false
         ),
-        "text-color": (
-                property: color,
-                class: text,
-                values: $theme-colors-text
-        ),
 );

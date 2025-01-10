@@ -1,59 +1,40 @@
 //@import "../../../../node_modules/bootstrap/scss/card";
 
 .card {
-  // scss-docs-start card-css-vars
-  --#{$prefix}card-title-color: #{$card-title-color};
-  --#{$prefix}card-border-color: #{$card-border-color};
-  --#{$prefix}card-box-shadow: #{$card-box-shadow};
-  --#{$prefix}card-cap-bg: #{$card-cap-bg};
-  --#{$prefix}card-cap-color: #{$card-cap-color};
-  --#{$prefix}card-color: #{$card-color};
-  --#{$prefix}card-bg: #{$card-bg};
-  --#{$prefix}card-img-overlay-padding: #{$card-img-overlay-padding};
-  --#{$prefix}card-group-margin: #{$card-group-margin};
-  // scss-docs-end card-css-vars
-
   position: relative;
   display: flex;
   flex-direction: column;
-  min-width: 0; // See https://github.com/twbs/bootstrap/pull/22740#issuecomment-305868106
+  //min-width: 0; // See https://github.com/twbs/bootstrap/pull/22740#issuecomment-305868106
   color: var(--#{$prefix}body-color);
   word-wrap: break-word;
-  background-color: var(--#{$prefix}card-bg);
+  background-color: $card-bg;
   background-clip: border-box;
-  border: $card-border-width solid var(--#{$prefix}card-border-color);
+  border: $card-border-width solid $card-border-color;
   @include border-radius($card-border-radius);
-  @include box-shadow(var(--#{$prefix}card-box-shadow));
 
   &:not(:last-child) {
     margin-bottom: $app-card-margin-bottom;
   }
 
-  > .list-group {
-    border-top: inherit;
-    border-bottom: inherit;
-
-    &:first-child {
-      border-top-width: 0;
-      @include border-top-radius(var(--#{$prefix}card-inner-border-radius));
-    }
-
-    &:last-child {
-      border-bottom-width: 0;
-      @include border-bottom-radius(var(--#{$prefix}card-inner-border-radius));
-    }
-  }
-
-  // Due to specificity of the above selector (`.card > .list-group`), we must
-  // use a child selector here to prevent double borders.
-  > .card-header + .list-group {
-    border-top: 0;
-  }
+  //> .list-group {
+  //  border-top: inherit;
+  //  border-bottom: inherit;
+  //
+  //  &:first-child {
+  //    border-top-width: 0;
+  //    @include border-top-radius($card-inner-border-radius);
+  //  }
+  //
+  //  &:last-child {
+  //    border-bottom-width: 0;
+  //    @include border-bottom-radius($card-inner-border-radius);
+  //  }
+  //}
 }
 
 .card-body {
   padding: $card-spacer-y $card-spacer-x;
-  color: var(--#{$prefix}card-color);
+  color: $card-color;
 
   .collapsed > & {
     display: none;
@@ -68,16 +49,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: var(--#{$prefix}card-title-color, inherit);
+  color: $card-title-color;
   font-weight: $app-card-title-font-weight;
 }
 
 .card-header {
   padding: $card-cap-padding-y $card-cap-padding-x;
-  margin-bottom: 0; // Removes the default margin-bottom of <hN>
-  color: var(--#{$prefix}card-cap-color);
-  background-color: var(--#{$prefix}card-cap-bg);
-  border-bottom: $card-border-width solid var(--#{$prefix}card-border-color);
+  margin-bottom: 0;
+  color: $card-cap-color;
+  background: $card-cap-bg;
+  border-bottom: $card-border-width solid $card-border-color;
 }
 
 @if ($card-inner-border-radius) {
@@ -101,9 +82,12 @@
 }
 
 .card-danger {
-  --#{$prefix}card-border-color: #{$app-card-danger-border-color};
-  --#{$prefix}card-cap-bg: #{$app-card-danger-bg};
-  --#{$prefix}card-cap-color: #{$app-card-danger-color};
+  border-color: $app-card-danger-border-color;
+
+  .card-header {
+    background: $app-card-danger-bg;
+    color: $app-card-danger-color;
+  }
 }
 
 .card-title {

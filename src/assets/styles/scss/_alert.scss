@@ -43,9 +43,9 @@
 
 @each $state in map-keys($theme-colors) {
   .alert-#{$state} {
-    --#{$prefix}alert-color: var(--#{$prefix}#{$state}-text-emphasis);
-    --#{$prefix}alert-bg: var(--#{$prefix}#{$state}-bg-subtle);
-    --#{$prefix}alert-border-color: var(--#{$prefix}#{$state}-border-subtle);
-    --#{$prefix}link-color: var(--#{$prefix}#{$state}-text-emphasis);
+    --#{$prefix}alert-color: var(--#{$prefix}#{$state}-text);
+    --#{$prefix}alert-bg: var(--#{$prefix}#{$state}-bg);
+    --#{$prefix}alert-border-color: var(--#{$prefix}#{$state}-border);
+    --#{$prefix}link-color: var(--#{$prefix}#{$state}-text);
   }
 }

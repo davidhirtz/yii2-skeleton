@@ -41,7 +41,7 @@ $diff-bg-color-none-block-alternative: mix($diff-bg-color, $diff-table-sidebar-c
   & > tbody > tr > td:first-child {
     width: 140px;
     text-align: right;
-    background-color: $gray-300;
+    //background-color: $gray-300;
   }
 }
 
@@ -118,7 +118,7 @@ $diff-bg-color-none-block-alternative: mix($diff-bg-color, $diff-table-sidebar-c
   .change-eq {
     .old,
     .new {
-      background: $gray-300;
+      //background: $gray-300;
     }
   }
 

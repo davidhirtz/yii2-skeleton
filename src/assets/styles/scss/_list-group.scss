@@ -1,88 +1,45 @@
 //@import "../../../../node_modules/bootstrap/scss/list-group";
 
 .list-group {
-  --#{$prefix}list-group-color: #{$list-group-color};
-  --#{$prefix}list-group-bg: #{$list-group-bg};
-  --#{$prefix}list-group-border-color: #{$list-group-border-color};
-  --#{$prefix}list-group-border-radius: #{$list-group-border-radius};
-  --#{$prefix}list-group-action-color: #{$list-group-action-color};
-  --#{$prefix}list-group-action-hover-color: #{$list-group-action-hover-color};
-  --#{$prefix}list-group-action-hover-bg: #{$list-group-hover-bg};
-  --#{$prefix}list-group-action-active-color: #{$list-group-action-active-color};
-  --#{$prefix}list-group-action-active-bg: #{$list-group-action-active-bg};
-  --#{$prefix}list-group-disabled-color: #{$list-group-disabled-color};
-  --#{$prefix}list-group-disabled-bg: #{$list-group-disabled-bg};
-  --#{$prefix}list-group-active-color: #{$list-group-active-color};
-  --#{$prefix}list-group-active-bg: #{$list-group-active-bg};
-  --#{$prefix}list-group-active-border-color: #{$list-group-active-border-color};
-
   display: flex;
   flex-direction: column;
 
-  padding-left: 0; // reset padding because ul and ol
+  padding-left: 0;
   margin-bottom: 0;
-  @include border-radius(var(--#{$prefix}list-group-border-radius));
-}
-
-
-.list-group-item-action {
-  width: 100%; // For `<button>`s (anchors become 100% by default though)
-  color: var(--#{$prefix}list-group-action-color);
-  text-align: inherit; // For `<button>`s (anchors inherit)
-
-  // Hover state
-  &:hover,
-  &:focus {
-    z-index: 1; // Place hover/focus items above their siblings for proper border styling
-    color: var(--#{$prefix}list-group-action-hover-color);
-    text-decoration: none;
-    background-color: var(--#{$prefix}list-group-action-hover-bg);
-  }
-
-  &:active {
-    color: var(--#{$prefix}list-group-action-active-color);
-    background-color: var(--#{$prefix}list-group-action-active-bg);
-  }
 }
 
 .list-group-item {
   position: relative;
   display: block;
-  padding: $list-group-item-padding-y $list-group-item-padding-x;
-  color: var(--#{$prefix}list-group-color);
   text-decoration: if($link-decoration == none, null, none);
-  background-color: var(--#{$prefix}list-group-bg);
-  border: $list-group-border-width solid var(--#{$prefix}list-group-border-color);
+  border: $list-group-border-width solid $list-group-border-color;
+  overflow: hidden;
 
   &:first-child {
-    @include border-top-radius(inherit);
+    @include border-top-radius($list-group-border-radius);
   }
 
   &:last-child {
-    @include border-bottom-radius(inherit);
+    @include border-bottom-radius($list-group-border-radius);
   }
 
-  &.disabled,
-  &:disabled {
-    color: var(--#{$prefix}list-group-disabled-color);
-    pointer-events: none;
-    background-color: var(--#{$prefix}list-group-disabled-bg);
-  }
-
-  &.active {
-    z-index: 2; // Place active items above their siblings for proper border styling
-    color: var(--#{$prefix}list-group-active-color);
-    background-color: var(--#{$prefix}list-group-active-bg);
-    border-color: var(--#{$prefix}list-group-active-border-color);
-  }
-
-  // stylelint-disable-next-line scss/selector-no-redundant-nesting-selector
   & + .list-group-item {
     border-top-width: 0;
+  }
+}
 
-    &.active {
-      margin-top: calc(-1 * var(--#{$prefix}list-group-border-width)); // stylelint-disable-line function-disallowed-list
-      border-top-width: var(--#{$prefix}list-group-border-width);
-    }
+.list-group-item-action {
+  display: block;
+  width: 100%;
+  padding: $list-group-action-padding-y $list-group-action-padding-x;
+  color: $list-group-action-color;
+  background: $list-group-action-bg;
+  text-align: inherit;
+
+  &:hover,
+  &:focus {
+    background: $list-group-action-hover-bg;
+    color: $list-group-action-hover-color;
+    text-decoration: none;
   }
 }

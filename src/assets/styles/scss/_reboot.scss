@@ -5,14 +5,8 @@
 }
 
 :root {
-  @if $font-size-root != null {
-    @include font-size(var(--#{$prefix}root-font-size));
-  }
-
-  @if $enable-smooth-scroll {
-    @media (prefers-reduced-motion: no-preference) {
-      scroll-behavior: smooth;
-    }
+  @media (prefers-reduced-motion: no-preference) {
+    scroll-behavior: smooth;
   }
 }
 
@@ -29,10 +23,10 @@ body {
   line-height: $line-height-base;
   color: var(--#{$prefix}body-color);
   text-align: $body-text-align;
-  background-color: var(--#{$prefix}body-bg);
+  background: var(--#{$prefix}body-bg);
   overflow-y: scroll;
   -webkit-text-size-adjust: 100%;
-  -webkit-tap-highlight-color: rgba($black, 0);
+  -webkit-tap-highlight-color: rgba(#000, 0);
 
   &:has(dialog[open]) {
     overflow: hidden;
@@ -43,7 +37,7 @@ hr {
   margin: $hr-margin-y 0;
   color: $hr-color; // 1
   border: 0;
-  border-top: $hr-border-width solid $hr-border-color;
+  border-top: $hr-border-width solid $hr-color;
   opacity: $hr-opacity;
 }
 
@@ -220,7 +214,7 @@ kbd {
   @include font-size($kbd-font-size);
   color: $kbd-color;
   background-color: $kbd-bg;
-  @include border-radius($border-radius-sm);
+  @include border-radius($border-radius);
 
   kbd {
     padding: 0;
