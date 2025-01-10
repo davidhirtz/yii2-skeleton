@@ -2,21 +2,17 @@
 
 
 .tooltip {
-  --#{$prefix}tooltip-color: #{$tooltip-color};
-  --#{$prefix}tooltip-bg: #{$tooltip-bg};
-
   width: max-content;
   position: absolute;
   word-wrap: break-word;
   z-index: $zindex-tooltip;
-  margin: $tooltip-margin;
 }
 
 .tooltip-arrow {
   position: absolute;
   width: $tooltip-arrow-width;
   height: $tooltip-arrow-height;
-  background-color: var(--#{$prefix}tooltip-bg);
+  background-color: $tooltip-bg;
   transform: rotate(45deg);
 
   &::before {
@@ -31,8 +27,8 @@
   position: relative;
   max-width: $tooltip-max-width;
   padding: $tooltip-padding-y $tooltip-padding-x;
-  background-color: var(--#{$prefix}tooltip-bg);
-  color: var(--#{$prefix}tooltip-color);
+  background-color: $tooltip-bg;
+  color: $tooltip-color;
   text-align: center;
   font-weight: normal;
   @include font-size($tooltip-font-size);

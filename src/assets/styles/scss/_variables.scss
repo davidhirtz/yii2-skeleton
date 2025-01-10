@@ -624,9 +624,18 @@ $modal-footer-border-width: $modal-header-border-width !default;
 
 
 // Tooltip
+$tooltip-color:                     var(--#{$prefix}body-bg) !default;
+$tooltip-bg:                        var(--#{$prefix}body-color) !default;
+$tooltip-border-radius:             $border-radius !default;
+
+$zindex-tooltip:                    1080 !default;
+
 $tooltip-max-width: 12rem !default;
 $tooltip-arrow-width: 0.5rem !default;
 $tooltip-arrow-height: $tooltip-arrow-width !default;
+$tooltip-padding-y:                 $spacer * .25 !default;
+$tooltip-padding-x:                 $spacer * .5 !default;
+$tooltip-font-size:                 $font-size-sm !default;
 
 
 //
