@@ -6,41 +6,53 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 
 use davidhirtz\yii2\skeleton\controllers\AccountController;
 use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\html\Dropdown;
 use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\html\Link;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\DashboardController;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Nav;
+use davidhirtz\yii2\skeleton\widgets\Widget;
 use Yii;
 use yii\helpers\Url;
 
-class NavBar extends \yii\bootstrap5\NavBar
+class NavBar extends Widget
 {
+    public array $attributes = ['class' => 'navbar'];
     /**
      * @var array|null containing the route of the language dropdown. If not set, the current URL will be used.
      */
     public ?array $languageRoute = null;
 
-    public $options = ['class' => 'navbar'];
-
-    public function run(): void
+    public function render(): string
     {
-        echo Nav::widget([
-            'items' => $this->getItems(),
-            'options' => ['class' => 'navbar-nav'],
-            'hideOneItem' => false,
-        ]);
+        $id = 'navbar';
+
+        $container = Container::make()
+            ->html(
+                Nav::widget([
+                    'id' => $id,
+                    'items' => $this->getItems(),
+                    'options' => ['class' => 'navbar-nav'],
+                    'hideOneItem' => false,
+                ]),
+                Button::make()
+                    ->class('navbar-toggler')
+                    ->attribute('data-collapse', "#$id")
+                    ->attribute('aria-label', Yii::t('skeleton', 'Toggle navigation'))
+                    ->html('<span class="navbar-toggler-icon"></span>')
+            );
 
         if ($items = $this->getAccountItems()) {
-            echo Nav::widget([
+            $container->addHtml(Nav::widget([
                 'items' => $items,
                 'options' => ['class' => 'navbar-nav navbar-account-nav'],
                 'hideOneItem' => false,
-            ]);
+            ]));
         }
 
-        parent::run();
+        return '<div class="navbar">' . $container->render() . '</div>';
     }
 
     public function getItems(): array
