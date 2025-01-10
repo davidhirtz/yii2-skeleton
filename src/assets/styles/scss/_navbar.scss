@@ -1,10 +1,6 @@
 //@import "../../../../node_modules/bootstrap/scss/navbar";
 
 .navbar {
-  --#{$prefix}bg: #{$navbar-light-bg};
-  --#{$prefix}toggler-border-color: #{$navbar-light-toggler-border-color};
-  --#{$prefix}toggler-icon-bg: #{escape-svg($navbar-light-toggler-icon-bg)};
-
   position: fixed;
   top: 0;
   left: 0;
@@ -12,7 +8,7 @@
   z-index: 1100;
 
   padding: $navbar-padding-y $navbar-padding-x;
-  background: var(--#{$prefix}bg);
+  background: $navbar-light-bg;
 
   @include media-breakpoint-up($navbar-expand-breakpoint) {
     flex-wrap: nowrap;
@@ -66,7 +62,7 @@
   margin: $navbar-toggler-margin-y 0;
   padding: $navbar-toggler-padding-y $navbar-toggler-padding-x;
   background-color: transparent;
-  border: $border-width solid var(--#{$prefix}toggler-border-color);
+  border: $border-width solid #{$navbar-light-toggler-border-color};
   @include border-radius($navbar-toggler-border-radius);
 
   &:hover {
@@ -82,7 +78,7 @@
   display: block;
   width: 1em;
   height: 1em;
-  background: var(--#{$prefix}toggler-icon-bg) no-repeat center;
+  background: #{escape-svg($navbar-light-toggler-icon-bg)} no-repeat center;
 }
 
 .navbar-account-nav {
@@ -99,7 +95,7 @@
   }
 }
 
-.navbar-logout{
+.navbar-logout {
   --#{$prefix}nav-link-hover-bg: #{$btn-danger-bg};
 }
 

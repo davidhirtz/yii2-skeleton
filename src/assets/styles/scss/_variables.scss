@@ -182,35 +182,45 @@ $alert-dismissible-padding-r: $alert-padding-x * 3 !default; // 3x covers width 
 $nav-link-padding-y: 0 !default;
 $nav-link-padding-x: 0.75rem !default;
 $nav-link-height: 3rem !default;
+$nav-link-font-size: null !default;
+$nav-link-font-weight: null !default;
+$nav-link-color: var(--#{$prefix}link-color) !default;
+$nav-link-hover-color: var(--#{$prefix}link-hover-color) !default;
+$nav-link-transition: color .15s, background-color .15s, border-color .15s !default;
+$nav-link-disabled-color: var(--#{$prefix}secondary-color) !default;
+$nav-link-focus-box-shadow: none !default;
 
 $nav-pills-gap: .5rem !default;
-$nav-pills-link-hover-bg: var(--#{$prefix}secondary) !default;
-$nav-pills-link-hover-color: $dark !default;
-$nav-pills-link-active-color: var(--#{$prefix}light) !default;
-$nav-pills-link-active-bg: $dark !default;
+$nav-pills-link-hover-bg: var(--#{$prefix}primary) !default;
+$nav-pills-link-hover-color: var(--#{$prefix}light-color) !default;
+$nav-pills-link-active-bg: var(--#{$prefix}primary-bg) !default;
+$nav-pills-link-active-color: var(--#{$prefix}light-color) !default;
 $nav-pills-border-radius: $border-radius !default;
 
 // Navbar
 $navbar-expand-breakpoint: md !default;
-$navbar-light-bg: $dark !default;
+$navbar-light-bg: var(--#{$prefix}primary-bg) !default;
 
-$navbar-light-hover-bg: #090909 !default;
+$navbar-light-hover-bg: var(--#{$prefix}primary) !default;
 $navbar-light-active-bg: $navbar-light-hover-bg !default;
 
 $navbar-padding-y: 0 !default;
 $navbar-padding-x: 0 !default;
 $navbar-light-color: var(--#{$prefix}light-color) !default;
-$navbar-light-hover-color: var(--#{$prefix}light) !default;
-$navbar-light-active-color: var(--#{$prefix}tertiary-color) !default;
+$navbar-light-active-color: var(--#{$prefix}light-color) !default;
 $navbar-light-disabled-color: var(--#{$prefix}light-color) !default;
+$navbar-light-hover-color: var(--#{$prefix}light-color) !default;
 
 $navbar-border: 1px solid $navbar-light-active-bg !default;
 
 $navbar-toggler-margin-y: .75rem !default;
 $navbar-toggler-padding-y: .25rem !default;
 $navbar-toggler-padding-x: .5rem !default;
+$navbar-toggler-border-radius:      $border-radius !default;
 $navbar-light-toggler-border-color: var(--#{$prefix}light) !default;
 $navbar-light-icon-color: var(--#{$prefix}light) !default;
+$navbar-light-toggler-icon-bg:      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='#{$navbar-light-icon-color}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>") !default;
+
 
 // Breadcrumbs
 $breadcrumb-padding-y: $spacer-y !default;
