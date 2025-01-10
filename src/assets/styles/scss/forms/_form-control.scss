@@ -12,7 +12,7 @@
   background-color: var(--#{$prefix}input-bg);
   color: var(--#{$prefix}input-color);
   background-clip: padding-box;
-  border: $input-border-width solid var(--#{$prefix}input-border-color);
+  border: $input-border-width solid var(--#{$prefix}input-border);
   //noinspection CssUnknownProperty
   field-sizing: content;
   outline: 0;
@@ -50,7 +50,7 @@
   &:not(.is-invalid,:user-invalid):hover,
   &:not(.is-invalid,:user-invalid):focus {
     --#{$prefix}input-bg: #{$input-focus-bg};
-    --#{$prefix}input-border-color: #{$input-focus-border-color};
+    --#{$prefix}input-border: #{$input-focus-border-color};
     --#{$prefix}input-color: #{$input-focus-color};
 
     @if $enable-shadows {
@@ -108,7 +108,6 @@
     margin: (-$input-padding-y) (-$input-padding-x);
     margin-inline-end: $input-padding-x;
     color: $form-file-button-color;
-    @include gradient-bg($form-file-button-bg);
     pointer-events: none;
     border-color: inherit;
     border-style: solid;

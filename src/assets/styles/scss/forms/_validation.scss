@@ -3,7 +3,7 @@
 .is-invalid,
 .form-group:has(.is-invalid,:user-invalid), {
   --#{$prefix}input-bg: var(--#{$prefix}form-invalid-bg);
-  --#{$prefix}input-border-color: var(--#{$prefix}form-invalid-border-color);
+  --#{$prefix}input-border-color: var(--#{$prefix}form-invalid-border);
   --#{$prefix}input-color: var(--#{$prefix}form-invalid-color);
 }
 
