@@ -2,9 +2,7 @@
   position: relative;
   padding: $alert-padding-x $alert-padding-y;
   margin-bottom: $alert-margin-bottom;
-  color: var(--#{$prefix}alert-color, inherit);
-  background-color: var(--#{$prefix}alert-bg, transparent);
-  border: $alert-border-width solid var(--#{$prefix}alert-border-color, transparent);
+  border: $alert-border-width solid transparent;
   @include border-radius($alert-border-radius);
 
   a {
@@ -41,11 +39,26 @@
   font-weight: $alert-heading-font-weight;
 }
 
-@each $state in map-keys($theme-colors) {
-  .alert-#{$state} {
-    --#{$prefix}alert-color: var(--#{$prefix}#{$state}-text);
-    --#{$prefix}alert-bg: var(--#{$prefix}#{$state}-bg);
-    --#{$prefix}alert-border-color: var(--#{$prefix}#{$state}-border);
-    --#{$prefix}link-color: var(--#{$prefix}#{$state}-text);
-  }
+.alert-success {
+  background: var(--#{$prefix}success-bg);
+  border-color: var(--#{$prefix}success-border);
+  color: var(--#{$prefix}success-color);
+}
+
+.alert-info {
+  background: var(--#{$prefix}info-bg);
+  border-color: var(--#{$prefix}info-border);
+  color: var(--#{$prefix}info-color);
+}
+
+.alert-warning {
+  background: var(--#{$prefix}warning-bg);
+  border-color: var(--#{$prefix}warning-border);
+  color: var(--#{$prefix}warning-color);
+}
+
+.alert-danger {
+  background: var(--#{$prefix}danger-bg);
+  border-color: var(--#{$prefix}danger-border);
+  color: var(--#{$prefix}danger-color);
 }
