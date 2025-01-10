@@ -54,8 +54,7 @@ $body-text-align: null !default;
 
 $spacer: 1rem !default;
 $enable-rounded: true !default;
-$enable-important-utilities:  true !default;
-
+$enable-important-utilities: true !default;
 
 // Typography
 $font-family-sans-serif: "Open Sans", sans-serif !default;
@@ -94,6 +93,9 @@ $headings-color: inherit !default;
 
 $paragraph-margin-bottom: 1rem !default;
 $dt-font-weight: $font-weight-bold !default;
+$list-inline-padding: .5rem !default;
+$lead-font-size: $font-size-base * 1.25 !default;
+$lead-font-weight: 300 !default;
 $small-font-size: $font-size-sm;
 $sub-sup-font-size: .75em !default;
 
