@@ -12,11 +12,10 @@ trait TagIconTextTrait
 
     private ?Icon $icon = null;
 
-    public function icon(string $icon): static
+    public function icon(?string $icon): static
     {
-        $new = clone $this;
-        $new->icon = Icon::tag($icon);
-        return $new;
+        $this->icon = $icon ? Icon::tag($icon) : null;
+        return $this;
     }
 
     protected function renderContent(): string

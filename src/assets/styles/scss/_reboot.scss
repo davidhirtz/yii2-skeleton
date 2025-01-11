@@ -160,7 +160,7 @@ a {
   text-decoration: $link-decoration;
 
   &:hover {
-    --#{$prefix}link-color-rgb: var(--#{$prefix}link-hover-color-rgb);
+    color: var(--#{$prefix}link-hover-color);
     text-decoration: $link-hover-decoration;
   }
 }

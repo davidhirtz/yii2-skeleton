@@ -462,21 +462,21 @@ $btn-close-padding-y: $btn-close-padding-x !default;
 
 
 // List group
-$list-group-color: var(--#{$prefix}body-color) !default;
-$list-group-bg: var(--#{$prefix}light) !default;
-$list-group-border-color: var(--#{$prefix}border) !default;
+$list-group-border-color: transparent !default;
 $list-group-border-width: $border-width !default;
 $list-group-border-radius: $border-radius !default;
 
 $list-group-action-padding-x: $spacer-x !default;
 $list-group-action-padding-y: $spacer-y !default;
-$list-group-action-color: var(--#{$prefix}secondary-color) !default;
-$list-group-action-bg: var(--#{$prefix}light) !default;
-$list-group-action-hover-bg: var(--#{$prefix}light-bg) !default;
-$list-group-action-hover-color: var(--#{$prefix}body-color) !default;
+$list-group-action-color: null !default;
+$list-group-action-bg: var(--#{$prefix}light-bg) !default;
+$list-group-action-hover-bg: var(--#{$prefix}dark-bg) !default;
+$list-group-action-hover-color: null !default;
 
-$list-group-action-active-color: var(--#{$prefix}body-color) !default;
-$list-group-action-active-bg: var(--#{$prefix}secondary-bg) !default;
+$list-group-card-action-color: null !default;
+$list-group-card-action-bg: var(--#{$prefix}body-bg) !default;
+$list-group-card-action-hover-bg: var(--#{$prefix}dark-bg) !default;
+$list-group-card-action-hover-color: null !default;
 
 
 // Tables

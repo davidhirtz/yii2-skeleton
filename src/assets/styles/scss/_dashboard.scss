@@ -1,17 +1,10 @@
-.dashboard-card {
+.dashboard-item {
+
   @include media-breakpoint-up(sm) {
-    width: 50%;
-
-    .card{
-      height: 100%;
-    }
+    max-width: min(24rem, 100%);
   }
 
-  @include media-breakpoint-up(md) {
-    max-width: 33.3%;
-  }
-
-  @include media-breakpoint-up(xl) {
-    max-width: 25%;
+  .card {
+    height: 100%;
   }
 }

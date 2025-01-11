@@ -1,9 +1,6 @@
 //@import "../../../../node_modules/bootstrap/scss/list-group";
 
 .list-group {
-  display: flex;
-  flex-direction: column;
-
   padding-left: 0;
   margin-bottom: 0;
 }
@@ -12,8 +9,15 @@
   position: relative;
   display: block;
   text-decoration: if($link-decoration == none, null, none);
-  border: $list-group-border-width solid $list-group-border-color;
-  overflow: hidden;
+
+  @if ($list-group-border-width) {
+    border: $list-group-border-width solid $list-group-border-color;
+    overflow: hidden;
+
+    & + .list-group-item {
+      border-top: 0;
+    }
+  }
 
   &:first-child {
     @include border-top-radius($list-group-border-radius);
@@ -22,18 +26,14 @@
   &:last-child {
     @include border-bottom-radius($list-group-border-radius);
   }
-
-  & + .list-group-item {
-    border-top-width: 0;
-  }
 }
 
 .list-group-item-action {
   display: block;
   width: 100%;
   padding: $list-group-action-padding-y $list-group-action-padding-x;
-  color: $list-group-action-color;
   background: $list-group-action-bg;
+  color: $list-group-action-color;
   text-align: inherit;
 
   &:hover,
@@ -41,5 +41,18 @@
     background: $list-group-action-hover-bg;
     color: $list-group-action-hover-color;
     text-decoration: none;
+  }
+}
+
+.card {
+  .list-group-item-action {
+    background: $list-group-card-action-bg;
+    color: $list-group-card-action-color;
+  }
+
+  .list-group-item-action:hover,
+  .list-group-item-action:focus {
+    background: $list-group-card-action-hover-bg;
+    color: $list-group-card-action-hover-color;
   }
 }

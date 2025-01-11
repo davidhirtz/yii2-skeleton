@@ -7,9 +7,10 @@ declare(strict_types=1);
  * @var array $panels
  */
 
+use davidhirtz\yii2\skeleton\html\Card;
+use davidhirtz\yii2\skeleton\html\ListGroup;
+use davidhirtz\yii2\skeleton\html\ListGroupItemLink;
 use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\ListGroup;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 
 $this->setTitle(Yii::t('skeleton', 'Admin'));
 ?>
@@ -18,13 +19,23 @@ $this->setTitle(Yii::t('skeleton', 'Admin'));
 <div class="row justify-center">
     <?php foreach ($panels as $panel) {
         ?>
-        <div class="dashboard-card">
-            <?= Panel::widget([
-                'title' => $panel['name'],
-                'content' => ListGroup::widget([
-                    'items' => $panel['items'],
-                ]),
-            ]); ?>
+        <div class="dashboard-item">
+            <?php
+            $list = ListGroup::make();
+
+        foreach ($panel['items'] as $item) {
+            $list->item(ListGroupItemLink::make()
+                ->text($item['label'])
+                ->href($item['url'])
+                ->icon($item['icon'] ?? null));
+        }
+
+        echo Card::make()
+            ->addClass('dashboard-card')
+            ->title($panel['name'])
+            ->html($list)
+            ->render();
+        ?>
         </div>
         <?php
     }
