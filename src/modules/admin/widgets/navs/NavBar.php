@@ -10,6 +10,7 @@ use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\html\Dropdown;
 use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\html\Link;
+use davidhirtz\yii2\skeleton\html\NavLink;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\DashboardController;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Nav;
@@ -31,26 +32,19 @@ class NavBar extends Widget
 
         $container = Container::make()
             ->html(
-                Nav::widget([
-                    'id' => $id,
-                    'items' => $this->getItems(),
-                    'options' => ['class' => 'navbar-nav'],
-                    'hideOneItem' => false,
-                ]),
                 Button::make()
                     ->class('navbar-toggler')
                     ->attribute('data-collapse', "#$id")
-                    ->attribute('aria-label', Yii::t('skeleton', 'Toggle navigation'))
-                    ->html('<span class="navbar-toggler-icon"></span>')
+                    ->attribute('aria-label', Yii::t('skeleton', 'Toggle navigation')),
+                Nav::widget([
+                    'id' => $id,
+                    'items' => $this->getItems(),
+                    'options' => ['class' => 'navbar-nav navbar-left'],
+                    'hideOneItem' => false,
+                ])
             );
 
-        if ($items = $this->getAccountItems()) {
-            $container->addHtml(Nav::widget([
-                'items' => $items,
-                'options' => ['class' => 'navbar-nav navbar-account-nav'],
-                'hideOneItem' => false,
-            ]));
-        }
+        $container->addHtml($this->getAccountItems()->render());
 
         return '<div class="navbar">' . $container->render() . '</div>';
     }
@@ -77,25 +71,29 @@ class NavBar extends Widget
      * @see AccountController::actionUpdate()
      * @see AccountController::actionLogout()
      */
-    protected function getAccountItems(): array
+    protected function getAccountItems(): \davidhirtz\yii2\skeleton\html\Nav
     {
+        $nav = \davidhirtz\yii2\skeleton\html\Nav::make()
+            ->addClass('navbar-nav navbar-right')
+            ->hideSingleItem(false);
+
         $user = Yii::$app->getUser();
 
-        if ($user->getIsGuest()) {
-            return [
-                [
-                    'label' => Yii::t('skeleton', 'Login'),
-                    'icon' => 'sign-in-alt',
-                    'url' => $user->loginUrl,
-                ],
-                [
-                    'label' => Yii::t('skeleton', 'Sign up'),
-                    'icon' => 'plus-circle',
-                    'url' => ['/admin/account/create'],
-                    'visible' => Yii::$app->getUser()->isSignupEnabled(),
-                ],
-            ];
-        }
+        //        if ($user->getIsGuest()) {
+        //            return [
+        //                [
+        //                    'label' => Yii::t('skeleton', 'Login'),
+        //                    'icon' => 'sign-in-alt',
+        //                    'url' => $user->loginUrl,
+        //                ],
+        //                [
+        //                    'label' => Yii::t('skeleton', 'Sign up'),
+        //                    'icon' => 'plus-circle',
+        //                    'url' => ['/admin/account/create'],
+        //                    'visible' => Yii::$app->getUser()->isSignupEnabled(),
+        //                ],
+        //            ];
+        //        }
 
         $i18n = Yii::$app->getI18n();
 
@@ -122,28 +120,23 @@ class NavBar extends Widget
                 $link->current(['language' => $language]);
             }
 
-            $dropdown->items($link);
+            $dropdown->addItem($link);
         }
 
-        return [
-            $dropdown->render(),
-            [
-                'label' => $user->getIdentity()->getUsername(),
-                'icon' => 'user',
-                'url' => ['/admin/account/update'],
-            ],
-            [
-                'label' => Yii::t('skeleton', 'Logout'),
-                'icon' => 'sign-out-alt',
-                'url' => '',
-                'linkOptions' => [
-                    'class' => 'navbar-logout',
+        return $nav->addItem($dropdown)
+            ->addItem(NavLink::make()
+                ->href(['/admin/account/update'])
+                ->icon('user')
+                ->label($user->getIdentity()->getUsername()))
+            ->addItem(NavLink::make()
+                ->addAttributes([
                     'hx-post' => Url::toRoute(['/admin/account/logout']),
                     'hx-push-url' => 'true',
                     'hx-target' => 'body',
-                ],
-            ],
-        ];
+                ])
+                ->addClass('navbar-logout')
+                ->icon('sign-out-alt')
+                ->label(Yii::t('skeleton', 'Logout')));
     }
 
     /**

@@ -10,21 +10,15 @@
   padding: $navbar-padding-y $navbar-padding-x;
   background: $navbar-light-bg;
 
-  @include media-breakpoint-up($navbar-expand-breakpoint) {
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-  }
 
   > .container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
+    display: grid;
+    grid-template-areas: "toggler right" "left left";
 
-  @include media-breakpoint-up($navbar-expand-breakpoint) {
-    display: flex;
-    align-items: center;
+    @include media-breakpoint-up($navbar-expand-breakpoint) {
+      display: flex;
+      justify-content: space-between;
+    }
   }
 }
 
@@ -36,54 +30,40 @@
   --#{$prefix}nav-link-active-color: #{$navbar-light-active-color};
   --#{$prefix}nav-link-active-bg: #{$navbar-light-active-bg};
 
-  display: flex;
-  flex-direction: column;
   margin: 0;
   list-style: none;
+}
+
+.navbar-left {
+  display: none;
+  grid-area: left;
+
+  &.collapsed {
+    display: block;
+  }
 
   @include media-breakpoint-up($navbar-expand-breakpoint) {
-    flex-direction: row;
+    display: flex;
   }
 }
 
-.navbar-collapse {
-  flex-basis: 100%;
-  flex-grow: 1;
-  align-items: center;
-
-  @include media-breakpoint-up($navbar-expand-breakpoint) {
-    display: flex !important;
-    align-items: flex-start;
-    justify-content: space-between;
-  }
+.navbar-right {
+  grid-area: right;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
 }
 
 .navbar-toggler {
-  margin: $navbar-toggler-margin-y 0;
-  padding: $navbar-toggler-padding-y $navbar-toggler-padding-x;
-  background-color: transparent;
-  border: $border-width solid #{$navbar-light-toggler-border-color};
+  align-self: center;
+  width: $navbar-toggler-width;
+  height: $navbar-toggler-height;
+  background: #{escape-svg($navbar-toggler-bg)} no-repeat center;
+  border: 0;
+  grid-area: toggler;
   @include border-radius($navbar-toggler-border-radius);
-
-  &:hover {
-    text-decoration: none;
-  }
 
   @include media-breakpoint-up($navbar-expand-breakpoint) {
     display: none;
-  }
-}
-
-.navbar-toggler-icon {
-  display: block;
-  width: 1em;
-  height: 1em;
-  background: #{escape-svg($navbar-light-toggler-icon-bg)} no-repeat center;
-}
-
-.navbar-account-nav {
-  @include media-breakpoint-up($navbar-expand-breakpoint) {
-    flex-wrap: nowrap;
   }
 }
 

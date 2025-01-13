@@ -213,14 +213,11 @@ $navbar-light-hover-color: var(--#{$prefix}light-color) !default;
 
 $navbar-border: 1px solid $navbar-light-active-bg !default;
 
-$navbar-toggler-margin-y: .75rem !default;
-$navbar-toggler-padding-y: .25rem !default;
-$navbar-toggler-padding-x: .5rem !default;
-$navbar-toggler-border-radius: $border-radius !default;
-$navbar-light-toggler-border-color: var(--#{$prefix}light) !default;
-$navbar-light-icon-color: var(--#{$prefix}light) !default;
-$navbar-light-toggler-icon-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='#{$navbar-light-icon-color}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>") !default;
-
+$navbar-toggler-width: 1.25rem !default;
+$navbar-toggler-height: $navbar-toggler-width !default;
+$navbar-toggler-border-radius: 0 !default;
+$navbar-icon-hex-color: #fff !default;
+$navbar-toggler-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='#{$navbar-icon-hex-color}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>") !default;
 
 // Breadcrumbs
 $breadcrumb-padding-y: $spacer-y !default;

@@ -23,7 +23,7 @@ trait TagIconTextTrait
         $html = implode('', $this->content);
 
         if ($this->icon && $html) {
-            return '<div class="icon-text">' . $this->icon->render() . "<div>$html</div></div>";
+            return '<div class="icon-text">' . $this->icon->render() . "$html</div>";
         }
 
         return $this->icon?->render() ?? $html;

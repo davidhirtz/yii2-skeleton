@@ -12,7 +12,7 @@ class ListGroup extends Tag
 
     private array $items = [];
 
-    public function item(ListGroupItemLink $link): static
+    public function addItem(ListGroupItemLink $link): static
     {
         if ($link->isVisible()) {
             $this->items[] = '<li class="list-group-item">' . $link->render() . '</li>';
@@ -33,6 +33,6 @@ class ListGroup extends Tag
 
     protected function getName(): string
     {
-        return 'div';
+        return 'ul';
     }
 }
