@@ -16,7 +16,7 @@ $this->setTitle(Yii::t('skeleton', 'Admin'));
 ?>
 <h1 class="page-header"><?= Yii::$app->name; ?></h1>
 
-<div class="row justify-center">
+<div class="row flex-wrap justify-center">
     <?php foreach ($panels as $panel) {
         ?>
         <div class="dashboard-item">

@@ -1,4 +1,5 @@
 .dashboard-item {
+  width: 100%;
 
   @include media-breakpoint-up(sm) {
     max-width: min(24rem, 100%);

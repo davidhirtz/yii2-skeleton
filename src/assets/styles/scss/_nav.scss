@@ -32,11 +32,21 @@
   &:focus {
     background: var(--#{$prefix}nav-link-hover-bg);
     color: var(--#{$prefix}nav-link-hover-color);
+
+    .badge {
+      background: var(--#{$prefix}nav-link-hover-color);
+      color: var(--#{$prefix}nav-link-hover-bg);
+    }
   }
 
   &.active {
     background: var(--#{$prefix}nav-link-active-bg);
     color: var(--#{$prefix}nav-link-active-color);
+
+    .badge {
+      background: var(--#{$prefix}nav-link-active-color);
+      color: var(--#{$prefix}nav-link-active-bg);
+    }
   }
 
   &:focus-visible {

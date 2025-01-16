@@ -52,8 +52,8 @@ tr.is-selected {
   --#{$prefix}table-striped-bg: #{$table-selected-bg};
 
   .badge {
-    --#{$prefix}badge-bg: #{$badge-active-bg};
-    --#{$prefix}badge-color: #{$badge-active-color};
+    background: #{$badge-active-bg};
+    color: #{$badge-active-color};
   }
 }
 

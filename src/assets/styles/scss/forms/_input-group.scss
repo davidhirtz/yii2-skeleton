@@ -58,6 +58,10 @@
   @include transition($input-transition);
 }
 
+.input-group-prepend {
+  max-width: 30%;
+}
+
 .input-group {
   &:not(.has-validation) {
     > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu),

@@ -10,6 +10,10 @@
       max-width: $container-max-width;
     }
   }
+
+  @include media-breakpoint-up(md) {
+    padding: 0 $container-padding-x-md;
+  }
 }
 
 .container-centered {

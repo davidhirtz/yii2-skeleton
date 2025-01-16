@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
+use davidhirtz\yii2\skeleton\helpers\Html;
 use Yii;
 use yii\validators\NumberValidator;
 use yii\validators\StringValidator;
@@ -22,14 +23,14 @@ class ActiveField extends \yii\bootstrap5\ActiveField
     /**
      * @var string input group with appended text.
      */
-    public string $appendInputTemplate = '<div class="input-group">{input}<div class="input-group-append input-group-text">{append}</div></div>';
+    public string $appendInputTemplate = '<div class="input-group">{input}{append}</div>';
 
     /**
      * @var string input group with prepended text.
      */
-    public string $prependInputTemplate = '<div class="input-group"><div class="input-group-prepend input-group-text">{prepend}</div>{input}</div>';
+    public string $prependInputTemplate = '<div class="input-group">{prepend}{input}</div>';
 
-    public $checkTemplate = '{beginWrapper}<div class="form-check form-check-inline">{input}{label}</div>{error}{hint}{endWrapper}';
+    public $checkTemplate = '{beginWrapper}<div class="form-check">{input}{label}</div>{error}{hint}{endWrapper}';
 
     public function init(): void
     {
@@ -46,7 +47,9 @@ class ActiveField extends \yii\bootstrap5\ActiveField
             }
         }
 
+        $this->template = '<div class="col-form-label">{label}</div>{beginWrapper}{input}{error}{hint}{endWrapper}';
         $this->checkHorizontalTemplate = $this->checkTemplate;
+
         parent::init();
     }
 
@@ -95,21 +98,29 @@ class ActiveField extends \yii\bootstrap5\ActiveField
         return $this;
     }
 
-    public function appendInput(string $text): static
+    public function appendInput(string $text, array $options = []): static
     {
-        $this->inputTemplate = strtr($this->appendInputTemplate, ['{append}' => $text]);
+        Html::addCssClass($options, 'input-group-append input-group-text');
+        $content = Html::tag('div', $text, $options);
+
+        $this->inputTemplate = strtr($this->appendInputTemplate, ['{append}' => $content]);
         return $this;
     }
 
-    public function prependInput(string $text): static
+    public function prependInput(string $text, array $options = []): static
     {
-        $this->inputTemplate = strtr($this->prependInputTemplate, ['{prepend}' => $text]);
+        Html::addCssClass($options, 'input-group-prepend input-group-text');
+        $content = Html::tag('div', $text, $options);
+
+        $this->inputTemplate = strtr($this->prependInputTemplate, ['{prepend}' => $content]);
+
         return $this;
     }
 
     public function hexColor(array $options = []): static
     {
-        $value = $options['value'] ?? $this->model->{$this->attribute};
+        $value = $options['value'] ?? $this->model->{
+        $this->attribute};
 
         if ($value && !str_starts_with((string)$value, '#')) {
             $options['value'] ??= "#$value";

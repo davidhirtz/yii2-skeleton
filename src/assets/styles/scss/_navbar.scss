@@ -44,6 +44,8 @@
 
   @include media-breakpoint-up($navbar-expand-breakpoint) {
     display: flex;
+    flex-wrap: nowrap;
+    overflow: auto;
   }
 }
 

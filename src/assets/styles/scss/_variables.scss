@@ -114,7 +114,7 @@ $link-hover-decoration: null !default;
 $stretched-link-pseudo-element: after !default;
 $stretched-link-z-index: 1 !default;
 
-$text-muted: var(--#{$prefix}light-color) !default;
+$text-muted: var(--#{$prefix}tertiary-color) !default;
 
 $mark-bg: var(--#{$prefix}success) !default;
 $mark-color: var(--#{$prefix}body-color) !default;
@@ -131,10 +131,11 @@ $grid-breakpoints: (
 
 // Grid containers
 $container-max-widths: (
-        xs: 100rem
+        xl: 100rem
 ) !default;
 
 $container-padding-x: .5rem !default;
+$container-padding-x-md: 1rem !default;
 $container-centered-max-width: 28rem !default;
 
 $margin-y: 2rem !default;
@@ -220,11 +221,11 @@ $navbar-icon-hex-color: #fff !default;
 $navbar-toggler-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='#{$navbar-icon-hex-color}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>") !default;
 
 // Breadcrumbs
-$breadcrumb-padding-y: $spacer-y !default;
+$breadcrumb-padding-y: 0 !default;
 $breadcrumb-padding-x: $spacer-x !default;
 $breadcrumb-margin-bottom: $margin-y !default;
 $breadcrumb-item-padding-x: 0.5rem !default;
-$breadcrumb-bg: var(--#{$prefix}light-bg) !default;
+$breadcrumb-bg: transparent !default;
 $breadcrumb-divider-color: var(--#{$prefix}secondary-border-color) !default;
 $breadcrumb-active-color: var(--#{$prefix}tertiary-color) !default;
 $breadcrumb-border-radius: $border-radius !default;
@@ -267,19 +268,17 @@ $card-danger-color: var(--#{$prefix}light-color) !default;
 $card-title-font-weight: bold !default;
 
 // Grid
-$grid-gutter-width: $spacer !default;
+$grid-spacer: .5rem !default;
 
-$grid-view-footer-position: sticky !default;
 $grid-view-header-border: none !default;
-$grid-view-header-spacer-y: 0 !default;
+$grid-view-spacer: $grid-spacer !default;
 $grid-view-footer-border: 1px solid var(--#{$prefix}primary-border) !default;
-$grid-view-footer-spacer-y: $spacer-y !default;
-$grid-view-buttons-top: 0.5rem !default;
 
 // Forms
 $form-sticky-position: sticky !default;
 $form-sticky-border: $border-width solid var(--#{$prefix}border) !default;
 
+$form-group-spacer: $spacer !default;
 
 $input-padding-y: 0.5rem !default;
 $input-padding-x: 0.75rem !default;
@@ -345,24 +344,18 @@ $form-select-focus-box-shadow: 0 0 0 $form-select-focus-width $input-btn-focus-c
 
 $form-select-transition: $input-transition !default;
 
-$form-label-margin-bottom: .5rem !default;
+$form-label-padding-bottom: .5rem !default;
 $form-label-font-size: null !default;
 $form-label-font-style: null !default;
 $form-label-color: var(--#{$prefix}body-color) !default;
 $form-label-font-weight: bold !default;
-$form-label-text-align-md: right !default;
 
 $form-check-input-border-radius: $border-radius !default;
 $form-check-input-width: 1.25rem !default;
-$form-check-min-height: 1.25rem !default;
-$form-check-padding-start: 0 !default;
-$form-check-margin-bottom: 0 !default;
 $form-check-input-focus-box-shadow: none !default;
-$form-check-input-checked-bg-color: var(--#{$prefix}light-bg) !default;
 $form-check-label-color: var(--#{$prefix}body-color) !default;
 $form-check-label-cursor: null !default;
 $form-check-transition: null !default;
-$form-check-input-active-filter: brightness(90%) !default;
 $form-check-gap: 0.75rem !default;
 
 $form-check-input-bg: $input-bg !default;
@@ -370,15 +363,11 @@ $form-check-input-border: $border-width solid var(--#{$prefix}border) !default;
 $form-check-radio-border-radius: 50% !default;
 $form-check-input-focus-border: $input-focus-border-color !default;
 
+$form-check-input-checked-bg-color: var(--#{$prefix}light-bg) !default;
 $form-check-input-checked-color: $body-color !default;
-$form-check-input-checked-border-color: $form-check-input-checked-bg-color !default;
+$form-check-input-checked-border-color: var(--#{$prefix}border) !default;
 $form-check-input-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#{$form-check-input-checked-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/></svg>") !default;
 $form-check-radio-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='2' fill='#{$form-check-input-checked-color}'/></svg>") !default;
-
-$form-check-input-indeterminate-color: $component-active-color !default;
-$form-check-input-indeterminate-bg-color: $component-active-bg !default;
-$form-check-input-indeterminate-border-color: $form-check-input-indeterminate-bg-color !default;
-$form-check-input-indeterminate-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#{$form-check-input-indeterminate-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10h8'/></svg>") !default;
 
 $form-check-input-disabled-opacity: .5 !default;
 $form-check-label-disabled-opacity: $form-check-input-disabled-opacity !default;
@@ -582,7 +571,7 @@ $badge-font-size: 0.75rem !default;
 $badge-color: var(--#{$prefix}light) !default;
 $badge-bg: var(--#{$prefix}tertiary) !default;
 $badge-active-bg: var(--#{$prefix}light) !default;
-$badge-active-color: var(--#{$prefix}dark) !important !default;
+$badge-active-color: var(--#{$prefix}primary) !important !default;
 $badge-font-weight: normal !default;
 $badge-padding-y: 0.25rem !default;
 $badge-padding-x: 0.5rem !default;

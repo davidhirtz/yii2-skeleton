@@ -1,9 +1,6 @@
 //@import "../../../../node_modules/bootstrap/scss/badge";
 
 .badge {
-  --#{$prefix}badge-bg: #{$badge-bg};
-  --#{$prefix}badge-color: #{$badge-color};
-
   display: inline-block;
   padding: $badge-padding-y $badge-padding-x;
   font-size: $badge-font-size;
@@ -13,16 +10,17 @@
   white-space: nowrap;
   vertical-align: baseline;
   @include border-radius($badge-border-radius);
-  background: var(--#{$prefix}badge-bg);
-  color: var(--#{$prefix}badge-color);
+  background: $badge-bg;
+  color: $badge-color;
   text-decoration: none !important;
+  transition: background .2s, color .2s;
 
   &:empty {
     display: none;
   }
+}
 
-  .active & {
-    --#{$prefix}badge-bg: #{$badge-active-bg};
-    --#{$prefix}badge-color: #{$badge-active-color};
-  }
+a.badge:hover {
+  background: $badge-active-bg;
+  color: $badge-active-color;
 }

@@ -1,17 +1,15 @@
 //@import "../../../../../../../node_modules/bootstrap/scss/forms/labels";
 
 .form-check {
-  display: block;
-  min-height: $form-check-min-height;
-  padding-left: $form-check-padding-start;
-  margin-bottom: $form-check-margin-bottom;
+  display: inline-flex;
+  margin-right: $form-check-inline-margin-end;
+  gap: $form-check-gap;
 }
 
 .form-check-input {
   flex-shrink: 0;
   width: $form-check-input-width;
   height: $form-check-input-width;
-  vertical-align: top;
   appearance: none;
   background-color: $form-check-input-bg;
   background-image: var(--#{$prefix}form-check-bg-image, transparent);
@@ -27,12 +25,7 @@
   }
 
   &[type="radio"] {
-    // stylelint-disable-next-line property-disallowed-list
     border-radius: $form-check-radio-border-radius;
-  }
-
-  &:active {
-    filter: $form-check-input-active-filter;
   }
 
   &:focus,
@@ -55,24 +48,15 @@
     }
   }
 
-  &[type="checkbox"]:indeterminate {
-    background-color: $form-check-input-indeterminate-bg-color;
-    border-color: $form-check-input-indeterminate-border-color;
-    --#{$prefix}form-check-bg-image: #{escape-svg($form-check-input-indeterminate-bg-image)};
-  }
-
   &:disabled {
     pointer-events: none;
     filter: none;
     opacity: $form-check-input-disabled-opacity;
   }
 
-  // Use disabled attribute in addition of :disabled pseudo-class
-  // See: https://github.com/twbs/bootstrap/issues/28247
   &[disabled],
   &:disabled {
     ~ .form-check-label {
-      cursor: default;
       opacity: $form-check-label-disabled-opacity;
     }
   }
@@ -81,10 +65,4 @@
 .form-check-label {
   color: $form-check-label-color;
   cursor: $form-check-label-cursor;
-}
-
-.form-check-inline {
-  display: inline-flex;
-  margin-right: $form-check-inline-margin-end;
-  gap: $form-check-gap;
 }

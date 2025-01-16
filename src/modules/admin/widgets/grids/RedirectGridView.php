@@ -13,6 +13,7 @@ use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\ButtonsColumn;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\TypeGridViewTrait;
 use davidhirtz\yii2\timeago\TimeagoColumn;
+use Stringable;
 use Yii;
 use yii\db\ActiveRecordInterface;
 
@@ -148,7 +149,7 @@ class RedirectGridView extends GridView
     /**
      * @see RedirectController::actionDeleteAll()
      */
-    protected function getSelectionButton(array $options = []): string
+    protected function getSelectionButton(): Stringable|string
     {
         $modal = Modal::make()
             ->title(Yii::t('skeleton', 'Delete selected'))
@@ -162,8 +163,7 @@ class RedirectGridView extends GridView
             ->icon('trash')
             ->attribute('data-id', 'check-button')
             ->attribute('style', 'display:none')
-            ->modal($modal)
-            ->render();
+            ->modal($modal);
     }
 
     protected function getDeleteRoute(ActiveRecordInterface $model, array $params = []): array

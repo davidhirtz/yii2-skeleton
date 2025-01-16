@@ -11,25 +11,21 @@
 @import "forms/validation";
 
 .form-group {
-  align-items: flex-start;
-
   &:not(:last-child) {
-    margin-bottom: $grid-gutter-width;
+    margin-bottom: $form-group-spacer;
+  }
+
+  @include media-breakpoint-up(md) {
+    display: flex;
   }
 }
 
 .form-group-sticky {
   position: $form-sticky-position;
-
-  @if ($grid-view-footer-position == 'sticky') {
-    margin-top: $grid-gutter-width;
-    bottom: 0;
-    border-top: $form-sticky-border;
-    background-color: $card-bg;
-    z-index: 2;
-  }
-
-  .row {
-    padding-top: $grid-gutter-width;
-  }
+  margin-top: $form-group-spacer;
+  padding: $form-group-spacer 0;
+  bottom: 0;
+  border-top: $form-sticky-border;
+  background-color: $card-bg;
+  z-index: 2;
 }

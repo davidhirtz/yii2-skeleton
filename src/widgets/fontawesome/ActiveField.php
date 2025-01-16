@@ -6,7 +6,7 @@ namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 
 use davidhirtz\yii2\skeleton\html\Icon;
 
-class ActiveField extends \davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveField
+class ActiveField extends \yii\bootstrap5\ActiveField
 {
     public ?string $icon = null;
 
@@ -16,6 +16,7 @@ class ActiveField extends \davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveFiel
     public $enableClientValidation = false;
     public $options = ['class' => 'form-group'];
     public $enableError = false;
+    public $template = "{input}{hint}{error}";
 
     public function init(): void
     {
@@ -25,7 +26,6 @@ class ActiveField extends \davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveFiel
             ]);
 
             $this->inputOptions['placeholder'] ??= $this->model->getAttributeLabel($this->attribute);
-            $this->labelOptions['class'] = 'sr-only';
         }
 
         parent::init();

@@ -14,6 +14,7 @@ use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\CheckboxColumn;
 use davidhirtz\yii2\skeleton\widgets\pagers\LinkPager;
+use Stringable;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
@@ -193,9 +194,10 @@ class GridView extends \yii\grid\GridView
     {
     }
 
-    public function renderHeader(): string
+    protected function renderHeader(): string
     {
         $this->initHeader();
+
         $header = $this->header ? $this->renderRows($this->header) : '';
 
         if ($header) {
@@ -211,9 +213,10 @@ class GridView extends \yii\grid\GridView
     {
     }
 
-    public function renderFooter(): string
+    protected function renderFooter(): string
     {
         $this->initFooter();
+
         $footer = $this->footer ? $this->renderRows($this->footer) : '';
 
         if ($footer) {
@@ -225,7 +228,7 @@ class GridView extends \yii\grid\GridView
         return $footer;
     }
 
-    public function renderRows(array $rows): string
+    protected function renderRows(array $rows): string
     {
         $result = [];
 
@@ -233,8 +236,12 @@ class GridView extends \yii\grid\GridView
             $items = [];
 
             foreach ($row as $item) {
-                if (is_string($item)) {
-                    $items[] = Html::tag('div', $item);
+                if (is_string($item) || $item instanceof Stringable) {
+                    $content = (string)$item;
+
+                    if ($content) {
+                        $items[] = Html::tag('div', $content);
+                    }
                 } elseif (($item['visible'] ?? true) && ($item['content'] ?? null)) {
                     $items[] = Html::tag($item['tag'] ?? 'div', $item['content'], $item['options'] ?? []);
                 }
@@ -260,19 +267,17 @@ class GridView extends \yii\grid\GridView
         };
     }
 
-    protected function getSelectionButton(array $options = []): string
+    protected function getSelectionButton(): Stringable|string
     {
         if ($items = $this->getSelectionButtonItems()) {
-            $options['options']['data-id'] = 'check-button';
-            $options['options']['style']['display'] ??= 'none';
-
             return Dropdown::make()
+                ->attribute('data-id', 'check-button')
+                ->attribute('style', 'display:none')
                 ->button(Button::secondary($this->selectionButtonLabel)
                     ->class('btn dropdown-toggle')
                     ->icon('wrench'))
                 ->items(...$items)
-                ->dropup()
-                ->render();
+                ->dropup();
         }
 
         return '';
