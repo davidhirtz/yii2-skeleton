@@ -334,6 +334,7 @@ class AttributeTypecastBehaviorTest extends Unit
         self::assertTrue($afterUpdateHappened);
     }
 
+
     public function testAutoDetectAttributeTypes(): void
     {
         $attributes = [

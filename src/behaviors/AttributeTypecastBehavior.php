@@ -66,7 +66,7 @@ class AttributeTypecastBehavior extends Behavior
     public bool $typecastBeforeSave = false;
 
     /**
-     * @var bool whether to perform typecasting after saving the owner model (insert or update).
+     * @var bool whether to perform typecasting after saving owner model (insert or update).
      */
     public bool $typecastAfterSave = false;
 
@@ -288,14 +288,13 @@ class AttributeTypecastBehavior extends Behavior
             return [];
         }
 
-        $schema = $this->owner::getDb()->getSchema()->getTableSchema($this->owner::tableName());
+        $table = $this->owner::getDb()->getSchema()->getTableSchema($this->owner::tableName());
+        $columns = $table->columns ?? [];
         $nullableAttributes = [];
 
-        if ($schema) {
-            foreach ($schema->columns as $column) {
-                if ($column->allowNull) {
-                    $nullableAttributes[] = $column->name;
-                }
+        foreach ($columns as $column) {
+            if ($column->allowNull) {
+                $nullableAttributes[] = $column->name;
             }
         }
 
