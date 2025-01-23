@@ -1,6 +1,7 @@
-## 2.4.3 (in development)
+## 2.4.3 (Jan 23, 2025)
 
 - Enhanced 2FA secret generation
+- Updated composer dependencies
 
 ## 2.4.2 (Dec 17, 2024)
 

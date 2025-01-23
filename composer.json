@@ -19,7 +19,7 @@
         "davidhirtz/yii2-datetime-behavior": "^1.1",
         "davidhirtz/yii2-timeago": "^1.2",
         "guzzlehttp/guzzle": "^7.0",
-        "guzzlehttp/oauth-subscriber": "^0.5",
+        "guzzlehttp/oauth-subscriber": "^0.8.1",
         "jfcherng/php-diff": "^6.9",
         "npm-asset/blueimp-file-upload": "^10.32",
         "npm-asset/bootbox": "^5",
@@ -43,7 +43,7 @@
         "codeception/verify": "^3.0",
         "phpro/grumphp-shim": "^2.4",
         "phpunit/phpunit": "^9",
-        "rector/rector": "^1.1",
+        "rector/rector": "^2.0",
         "symplify/easy-coding-standard": "^12.0",
         "yiisoft/yii2-debug": "^2.1"
     },
