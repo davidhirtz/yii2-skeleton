@@ -442,8 +442,10 @@ class GridView extends \yii\grid\GridView
     public function getModel(): ?ActiveRecord
     {
         if ($this->_model === null) {
-            $model = $this->dataProvider->query?->modelClass ?? null;
-            $this->_model = $model ? Yii::createObject($model) : null;
+            if ($this->dataProvider instanceof ActiveDataProvider) {
+                $model = $this->dataProvider->query->modelClass ?? null;
+                $this->_model = $model ? Yii::createObject($model) : null;
+            }
         }
 
         return $this->_model;

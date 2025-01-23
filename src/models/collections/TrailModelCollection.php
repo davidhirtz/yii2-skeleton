@@ -11,7 +11,7 @@ use yii\base\Model;
 
 class TrailModelCollection
 {
-    private static ?array $_modelClasses = [];
+    private static array $_modelClasses = [];
 
     /**
      * Finds the model based on the given model string. If a model supports `i18n` tables, the corresponding language

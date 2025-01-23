@@ -120,6 +120,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         if ($model = $this->getModelClass()) {
             if ($model->getBehavior('TrailBehavior')) {
                 /** @var TrailBehavior $model */
+                // @phpstan-ignore varTag.nativeType
                 return $model->getTrailModelName();
             }
 
@@ -133,6 +134,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
     {
         if (($model = $this->getModelClass()) && $model->getBehavior('TrailBehavior')) {
             /** @var TrailBehavior $model */
+            // @phpstan-ignore varTag.nativeType
             return $model->getTrailModelType();
         }
 

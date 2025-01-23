@@ -383,9 +383,9 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
         return $this->_uploadPath ? Yii::getAlias("@webroot/$this->_uploadPath") : false;
     }
 
-    public function setUploadPath(string $uploadPath): void
+    public function setUploadPath(string|false $uploadPath): void
     {
-        $this->_uploadPath = trim($uploadPath, '/') . '/';
+        $this->_uploadPath = $uploadPath ? (trim($uploadPath, '/') . '/') : false;
     }
 
     public function getUsername(): ?string

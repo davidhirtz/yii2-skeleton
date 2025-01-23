@@ -196,6 +196,7 @@ class TrailGridView extends GridView
         }
 
         /** @var ActiveRecord|TrailBehavior $model */
+        // @phpstan-ignore varTag.nativeType
         $name = $model->getBehavior('TrailBehavior')
             ? $model->getTrailModelName()
             : $model->getPrimaryKey();
@@ -227,6 +228,7 @@ class TrailGridView extends GridView
     {
         if ($model) {
             /** @var TrailBehavior $model */
+            // @phpstan-ignore varTag.nativeType
             $name = $model->getTrailModelName();
             $model = ($route = $model->getTrailModelAdminRoute()) ? Html::a($name, $route) : $name;
         } else {
@@ -298,6 +300,7 @@ class TrailGridView extends GridView
     protected function formatTrailAttributeValue(Model $model, string $attribute, mixed $value): mixed
     {
         /** @var TrailBehavior $model */
+        // @phpstan-ignore varTag.nativeType
         return $model->formatTrailAttributeValue($attribute, $value);
     }
 

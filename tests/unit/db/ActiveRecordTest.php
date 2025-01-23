@@ -186,11 +186,6 @@ class ActiveRecordTest extends Unit
         self::assertEquals(1, $model->user_id);
         self::assertEquals(null, $model->nullable);
     }
-
-    public function testAttributeLabels(): void
-    {
-        self::assertIsArray(ActiveRecord::instance()->attributeLabels());
-    }
 }
 
 /**

@@ -14,7 +14,7 @@ use yii\db\Command;
  */
 class BatchInsertQueryBuild
 {
-    private ?Command $_command;
+    private Command $_command;
 
     /**
      * @param class-string<ActiveRecord> $modelClass

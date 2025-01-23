@@ -85,6 +85,7 @@ class SitemapBehaviorTest extends Unit
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('SitemapBehavior::$callback must be callable.');
 
+        /** @phpstan-ignore-next-line  */
         new class() extends ActiveRecord {
             public function behaviors(): array
             {

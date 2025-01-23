@@ -162,7 +162,13 @@ class Html extends BaseHtml
     {
         if ($keywords) {
             foreach ((array)$keywords as $keyword) {
-                $text = preg_replace('~(' . ($wordBoundary ? '\b' : '') . preg_quote((string)$keyword) . ')~ui', '<mark>$1</mark>', (string) $text);
+                $keyword = preg_quote((string)$keyword);
+
+                if ($wordBoundary) {
+                    $keyword = "\b$keyword";
+                }
+
+                $text = preg_replace("#($keyword)#ui", '<mark>$1</mark>', (string)$text);
             }
         }
 

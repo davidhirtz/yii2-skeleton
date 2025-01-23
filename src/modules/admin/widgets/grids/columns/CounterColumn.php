@@ -39,7 +39,7 @@ class CounterColumn extends LinkDataColumn
 
     public function init(): void
     {
-        if (!is_callable($this->content)) {
+        if ($this->content === null) {
             $this->content = function (Model $model, mixed $key, int $index) {
                 $count = $this->getDataCellValue($model, $key, $index);
 

@@ -129,18 +129,16 @@ trait ActiveFormTrait
                     continue;
                 }
 
-                if (is_array($options)) {
-                    $isVisible = is_array($options[0] ?? null)
-                        ? ArrayHelper::remove($options[0], 'visible', true)
-                        : ArrayHelper::remove($options, 'visible', true);
+                $isVisible = is_array($options[0] ?? null)
+                    ? ArrayHelper::remove($options[0], 'visible', true)
+                    : ArrayHelper::remove($options, 'visible', true);
 
 
-                    if (!$isVisible) {
-                        continue;
-                    }
-
-                    $options = array_filter($options);
+                if (!$isVisible) {
+                    continue;
                 }
+
+                $options = array_filter($options);
 
                 $methodName = lcfirst(Inflector::camelize($attribute)) . 'Field';
 

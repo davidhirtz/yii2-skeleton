@@ -21,7 +21,7 @@ class View extends \yii\web\View
     public ?string $titleTemplate = null;
 
     private array $_breadcrumbs = [];
-    private string|array|null $_description = null;
+    private string|null $_description = null;
 
     protected function renderBodyEndHtml($ajaxMode): string
     {

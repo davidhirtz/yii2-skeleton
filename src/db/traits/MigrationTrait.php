@@ -13,13 +13,7 @@ trait MigrationTrait
 {
     protected function getAuthManager(): DbManager
     {
-        $authManager = Yii::$app->getAuthManager();
-
-        if (!$authManager instanceof DbManager) {
-            throw new InvalidConfigException('Component "authManager" must be configured before running migration.');
-        }
-
-        return $authManager;
+        return Yii::$app->getAuthManager();
     }
 
     protected function getTableOptions(): ?string

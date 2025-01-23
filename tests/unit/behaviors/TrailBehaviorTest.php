@@ -140,15 +140,17 @@ class TrailBehaviorTest extends Unit
 
     public function testTrailModelAdminRoute(): void
     {
+        $model = TrailActiveRecord::create();
+        self::assertFalse($model->getTrailModelAdminRoute());
+
         $model = new class() extends TrailActiveRecord {
-            public function getAdminRoute(): array|false
+            public function getAdminRoute(): array
             {
                 return ['/admin/test'];
             }
         };
 
-        self::assertFalse(TrailActiveRecord::instance()->getTrailModelAdminRoute());
-        self::assertEquals($model->getAdminRoute(), $model->getTrailBehavior()->getTrailModelAdminRoute());
+        self::assertEquals($model->getAdminRoute(), $model->getTrailModelAdminRoute());
     }
 
     public function testTrailParents(): void

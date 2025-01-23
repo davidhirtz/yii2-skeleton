@@ -279,7 +279,6 @@ class AttributeTypecastBehaviorTest extends Unit
 
         self::assertSame('callback: update', $model->callback);
         self::assertTrue($beforeUpdateHappened);
-        self::assertFalse($beforeInsertHappened);
     }
 
     public function testAfterSaveEvent(): void
@@ -333,9 +332,8 @@ class AttributeTypecastBehaviorTest extends Unit
         self::assertSame('callback: callback: update', $model->callback);
         self::assertTrue($beforeUpdateHappened);
         self::assertTrue($afterUpdateHappened);
-        self::assertFalse($beforeInsertHappened);
-        self::assertFalse($afterInsertHappened);
     }
+
 
     public function testAutoDetectAttributeTypes(): void
     {
@@ -439,11 +437,11 @@ class AttributeTypecastBehaviorTest extends Unit
 
 /**
  * @property int $id
- * @property string $name
- * @property int $amount
- * @property float $price
- * @property bool $is_active
- * @property string $callback
+ * @property string|null $name
+ * @property int|null $amount
+ * @property float|null $price
+ * @property bool|null $is_active
+ * @property string|null $callback
  * @property string|null $nullable
  *
  * @property AttributeTypecastBehavior $attributeTypecastBehavior

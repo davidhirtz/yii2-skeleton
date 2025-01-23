@@ -56,6 +56,7 @@ trait TypeGridViewTrait
     public function typeDropdown(): string
     {
         /** @var TypeAttributeInterface $model */
+        // @phpstan-ignore varTag.nativeType
         $model = $this->getModel();
         $typeOptions = $model::getTypes()[$this->type] ?? false;
 
@@ -76,6 +77,7 @@ trait TypeGridViewTrait
     protected function typeDropdownItems(): array
     {
         /** @var TypeAttributeInterface $model */
+        // @phpstan-ignore varTag.nativeType
         $model = $this->getModel();
         $items = [];
 
@@ -104,6 +106,7 @@ trait TypeGridViewTrait
     protected function hasVisibleTypes(): bool
     {
         /** @var TypeAttributeInterface $model */
+        // @phpstan-ignore varTag.nativeType
         $model = $this->getModel();
         return !$this->type && count($model::getTypes()) > 1;
     }

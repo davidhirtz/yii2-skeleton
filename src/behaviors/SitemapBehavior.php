@@ -17,13 +17,13 @@ use yii\base\InvalidConfigException;
  *
  * @see https://www.sitemaps.org/protocol.html
  *
- * @property ActiveRecord&SitemapBehavior $owner
+ * @property SitemapBehavior $owner
  * @mixin ActiveRecord
  */
 class SitemapBehavior extends Behavior
 {
     /**
-     * @var callable required method, which returns a single or nested array with sitemap URL or valid route as "loc"
+     * @var callable|null required method, which returns a single or nested array with sitemap URL or valid route as "loc"
      * key.
      */
     public $callback;

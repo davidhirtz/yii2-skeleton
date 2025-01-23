@@ -288,7 +288,8 @@ class AttributeTypecastBehavior extends Behavior
             return [];
         }
 
-        $columns = $this->owner::getDb()->getSchema()->getTableSchema($this->owner::tableName())?->columns ?? [];
+        $table = $this->owner::getDb()->getSchema()->getTableSchema($this->owner::tableName());
+        $columns = $table->columns ?? [];
         $nullableAttributes = [];
 
         foreach ($columns as $column) {

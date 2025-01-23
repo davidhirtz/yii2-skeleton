@@ -74,6 +74,7 @@ trait StatusGridViewTrait
     protected function statusDropdownItems(): array
     {
         /** @var StatusAttributeInterface $model */
+        // @phpstan-ignore varTag.nativeType
         $model = $this->getModel();
         $items = [];
 
