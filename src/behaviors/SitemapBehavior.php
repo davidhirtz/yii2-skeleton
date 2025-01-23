@@ -100,6 +100,6 @@ class SitemapBehavior extends Behavior
 
     public function getSitemapQuery(): ActiveQuery
     {
-        return $this->owner::find();
+        return (new $this->owner())->find();
     }
 }

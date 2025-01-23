@@ -17,7 +17,7 @@ class Url extends BaseUrl
             return $url;
         }
 
-        return !$request->getIsDraft() || !str_contains($url, $request->draftSubdomain)
+        return !$request->getIsDraft() || !str_contains($url, (string) $request->draftSubdomain)
             ? preg_replace('#^((https?://)(www.)?)#', "$2$request->draftSubdomain.", $url)
             : $url;
     }

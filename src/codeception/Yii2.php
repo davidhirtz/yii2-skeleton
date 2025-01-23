@@ -28,7 +28,7 @@ class Yii2 extends \Codeception\Module\Yii2
 
     public function setProductionHttpHost(): void
     {
-        $host = parse_url($this->backupConfig['entryUrl'], PHP_URL_HOST);
+        $host = parse_url((string) $this->backupConfig['entryUrl'], PHP_URL_HOST);
 
         $this->haveServerParameter('HTTP_HOST', $host);
     }

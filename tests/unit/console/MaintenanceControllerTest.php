@@ -42,7 +42,7 @@ class MaintenanceControllerTest extends Unit
         $controller->retry = 1;
         $controller->refresh = 2;
         $controller->statusCode = 500;
-        $controller->viewFile = '@tests/data/views/maintenance.php';
+        $controller->viewFile = '@tests/data/views/maintenance.html';
 
         $controller->actionEnable();
         self::assertMaintenanceModeEnabled($controller);

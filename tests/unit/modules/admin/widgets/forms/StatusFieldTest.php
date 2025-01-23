@@ -43,7 +43,7 @@ class TestStatusFieldModel extends Model
             [
                 ['status'],
                 'in',
-                'range' => self::getStatuses(),
+                'range' => array_keys(self::getStatuses()),
             ],
         ];
     }
