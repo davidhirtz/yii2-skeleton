@@ -23,7 +23,7 @@ class Sitemap extends Component
     public array|Dependency|null $dependency = null;
 
     /**
-     * @var callable|string[]|string the list of factors that would cause the variation of the sitemap being cached.
+     * @var callable|string[]|string|null the list of factors that would cause the variation of the sitemap being cached.
      * Each factor is a string representing a variation (e.g., the language, a GET parameter). This can be also
      * callable to configure it during application setup:
      *

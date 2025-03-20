@@ -8,6 +8,14 @@
 - Removed `Html::buttonList()`, use `Html::buttons()` instead
 - Removed `GridView::renderSelectionForm()`
 
+## 2.4.5 (Mar 20, 2025)
+
+- Added `EmailController` command to send test emails
+
+## 2.4.4 (Jan 26, 2025)
+
+- Fixed `maintenance.php` stub file
+
 ## 2.4.3 (Jan 23, 2025)
 
 - Enhanced 2FA secret generation
