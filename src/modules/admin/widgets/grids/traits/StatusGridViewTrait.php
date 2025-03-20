@@ -78,10 +78,10 @@ trait StatusGridViewTrait
         $model = $this->getModel();
         $items = [];
 
-        foreach ($model::getStatuses() as $id => $status) {
-            $items[$id] = [
-                'label' => $status['plural'] ?? $status['name'],
-                'url' => Url::current([$this->statusParamName => $id, 'page' => null]),
+        foreach ($model::getStatuses() as $status => $statusOptions) {
+            $items[$status] = [
+                'label' => $statusOptions['plural'] ?? $statusOptions['name'],
+                'url' => Url::current([$this->statusParamName => $status, 'page' => null]),
             ];
         }
 

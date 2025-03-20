@@ -1,6 +1,7 @@
 ## 2.4.7 (in development)
 
 - Enhanced `TypeGridViewTrait::$typeDefaultItem` to also accept `false`
+- Enhanced `TypeGridViewTrait::typeDropdownItems()` to use type as index
 
 ## 2.4.6 (Mar 20, 2025)
 

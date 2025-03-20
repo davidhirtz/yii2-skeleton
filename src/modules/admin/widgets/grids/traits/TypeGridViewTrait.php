@@ -86,7 +86,7 @@ trait TypeGridViewTrait
                 ? $model::instantiate(['type' => $type])->getTypeName()
                 : ($typeOptions['plural'] ?? $typeOptions['name']);
 
-            $items[] = [
+            $items[$type] = [
                 'label' => $label,
                 'url' => Url::current([$this->typeParamName => $type, 'page' => null]),
             ];
