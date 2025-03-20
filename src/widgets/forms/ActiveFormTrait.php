@@ -7,6 +7,7 @@ namespace davidhirtz\yii2\skeleton\widgets\forms;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\validators\SensitiveAttributeValidator;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveField;
 use ReflectionFunction;
 use Yii;
@@ -14,6 +15,7 @@ use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
+use yii\validators\EmailValidator;
 
 trait ActiveFormTrait
 {
@@ -57,6 +59,8 @@ trait ActiveFormTrait
      * model's i18nAttributes.
      */
     public ?array $i18nAttributes = null;
+
+    private ?array $fieldTypes = null;
 
     public function init(): void
     {
@@ -176,8 +180,9 @@ trait ActiveFormTrait
     {
         $attribute = ArrayHelper::remove($options, 'attribute');
 
-        $type = ArrayHelper::remove($options, 'type');
-        $type ??= is_string($options[0] ?? null) ? array_shift($options) : 'text';
+        $type = ArrayHelper::remove($options, 'type', is_string($options[0] ?? null)
+            ? array_shift($options)
+            : $this->getAttributeFieldType($attribute));
 
         $fieldOptions = ArrayHelper::remove($options, 'fieldOptions', []);
         $language = ArrayHelper::remove($options, 'language');
@@ -188,7 +193,7 @@ trait ActiveFormTrait
 
         $field = $this->field($this->model, $attribute, $fieldOptions);
 
-        if ($type == 'hidden') {
+        if ($type === 'hidden') {
             Yii::debug("Rendering hidden input for '$attribute'");
             return $field->hiddenInput()->parts['{input}'];
         }
@@ -235,7 +240,33 @@ trait ActiveFormTrait
         return $field->parts['{input}'] ? $field : '';
     }
 
-    public function field($model, $attribute, $options = []): ActiveField
+    protected function getAttributeFieldType(string $attribute): string
+    {
+        return $this->getFieldTypes()[$attribute] ?? 'text';
+    }
+
+    protected function getFieldTypes(): array
+    {
+        if ($this->fieldTypes === null) {
+            $this->fieldTypes = [];
+
+            foreach ($this->model->getActiveValidators() as $validator) {
+                if ($validator instanceof SensitiveAttributeValidator) {
+                    foreach ($validator->attributes as $attribute) {
+                        $this->fieldTypes[$attribute] = 'password';
+                    }
+                } elseif ($validator instanceof EmailValidator) {
+                    foreach ($validator->attributes as $attribute) {
+                        $this->fieldTypes[$attribute] ??= 'email';
+                    }
+                }
+            }
+        }
+
+        return $this->fieldTypes;
+    }
+
+    public function field($model, $attribute, $options = []): ActiveField|string
     {
         if (method_exists($this->model, 'getI18nAttributeName')) {
             $language = ArrayHelper::remove($options, 'language', Yii::$app->sourceLanguage);
