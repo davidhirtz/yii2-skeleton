@@ -1,3 +1,7 @@
+## 2.4.7 (in development)
+
+- Enhanced `TypeGridViewTrait::$typeDefaultItem` to also accept `false`
+
 ## 2.4.6 (Mar 20, 2025)
 
 - Added `SensitiveAttributeValidator` for auto-generated password fields

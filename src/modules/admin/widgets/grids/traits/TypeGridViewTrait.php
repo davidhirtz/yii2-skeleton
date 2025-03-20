@@ -24,9 +24,9 @@ trait TypeGridViewTrait
     public string $typeParamName = 'type';
 
     /**
-     * @var string|null whether the default item in the types dropdown should be shown
+     * @var string|false|null whether the default item in the types dropdown should be shown
      */
-    public ?string $typeDefaultItem = null;
+    public string|false|null $typeDefaultItem = null;
 
     public function typeColumn(): array
     {
