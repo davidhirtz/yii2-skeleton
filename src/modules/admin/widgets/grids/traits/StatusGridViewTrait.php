@@ -15,7 +15,7 @@ use yii\base\Model;
 trait StatusGridViewTrait
 {
     protected ?int $status = null;
-    protected string|null|false $statusDefaultItem = null;
+    protected string|false|null $statusDefaultItem = null;
     protected string $statusParamName = 'status';
 
     public function statusColumn(): array

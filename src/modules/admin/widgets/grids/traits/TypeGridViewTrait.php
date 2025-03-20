@@ -14,7 +14,7 @@ use yii\base\Model;
 trait TypeGridViewTrait
 {
     protected ?int $type = null;
-    protected ?string $typeDefaultItem = null;
+    protected string|false|null $typeDefaultItem = null;
     protected string $typeParamName = 'type';
 
     public function typeColumn(): array
