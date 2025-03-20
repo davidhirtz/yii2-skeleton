@@ -1,3 +1,7 @@
+## 2.4.6 (Mar 20, 2025)
+
+- Added `SensitiveAttributeValidator` for auto-generated password fields
+
 ## 2.4.5 (Mar 20, 2025)
 
 - Added `EmailController` command to send test emails
