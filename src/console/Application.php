@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\console;
 
 use davidhirtz\yii2\skeleton\base\traits\ApplicationTrait;
 use davidhirtz\yii2\skeleton\console\controllers\AssetController;
+use davidhirtz\yii2\skeleton\console\controllers\EmailController;
 use davidhirtz\yii2\skeleton\console\controllers\MaintenanceController;
 use davidhirtz\yii2\skeleton\console\controllers\MessageController;
 use davidhirtz\yii2\skeleton\console\controllers\MigrateController;
@@ -46,6 +47,7 @@ class Application extends \yii\console\Application
     {
         return array_merge(parent::coreCommands(), [
             'asset' => AssetController::class,
+            'email' => EmailController::class,
             'maintenance' => MaintenanceController::class,
             'message' => MessageController::class,
             'migrate' => MigrateController::class,

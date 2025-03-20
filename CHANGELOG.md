@@ -1,3 +1,7 @@
+## 2.4.5 (Jan 26, 2025)
+
+- Added `EmailController` command to send test emails
+
 ## 2.4.4 (Jan 26, 2025)
 
 - Fixed `maintenance.php` stub file
