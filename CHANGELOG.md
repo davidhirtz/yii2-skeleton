@@ -1,4 +1,4 @@
-## 2.4.5 (Jan 26, 2025)
+## 2.4.5 (Mar 20, 2025)
 
 - Added `EmailController` command to send test emails
 
