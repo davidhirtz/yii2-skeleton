@@ -7,6 +7,7 @@ namespace davidhirtz\yii2\skeleton\widgets\forms;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\validators\HexColorValidator;
 use davidhirtz\yii2\skeleton\validators\SensitiveAttributeValidator;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveField;
 use ReflectionFunction;
@@ -202,6 +203,11 @@ trait ActiveFormTrait
             return $field->hiddenInput()->parts['{input}'];
         }
 
+        if ($type === 'color') {
+            Yii::debug("Rendering color input for '$attribute'");
+            return $field->hexColor($options);
+        }
+
         if (in_array($type, ['dropDownList', 'select'])) {
             Yii::debug("Rendering select input for '$attribute'");
             $items = ArrayHelper::remove($options, 'items', array_shift($options));
@@ -209,7 +215,6 @@ trait ActiveFormTrait
         }
 
         $fieldTypes = [
-            'color',
             'date',
             'datetime-local',
             'email',
@@ -262,6 +267,10 @@ trait ActiveFormTrait
                 } elseif ($validator instanceof EmailValidator) {
                     foreach ($validator->attributes as $attribute) {
                         $this->fieldTypes[$attribute] ??= 'email';
+                    }
+                } elseif ($validator instanceof HexColorValidator) {
+                    foreach ($validator->attributes as $attribute) {
+                        $this->fieldTypes[$attribute] ??= 'color';
                     }
                 }
             }

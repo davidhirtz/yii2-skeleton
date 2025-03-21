@@ -1,5 +1,6 @@
 ## 2.4.7 (in development)
 
+- Added auto-generated color fields for `HexColorValidator`
 - Enhanced `TypeGridViewTrait::$typeDefaultItem` to also accept `false`
 - Enhanced `TypeGridViewTrait::typeDropdownItems()` to use type as index
 
