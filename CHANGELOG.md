@@ -1,4 +1,4 @@
-## 2.4.7 (in development)
+## 2.4.7 (Mar 24, 2025)
 
 - Added auto-generated color fields for `HexColorValidator`
 - Enhanced `TypeGridViewTrait::$typeDefaultItem` to also accept `false`
