@@ -8,9 +8,11 @@
 - Removed `Html::buttonList()`, use `Html::buttons()` instead
 - Removed `GridView::renderSelectionForm()`
 
-## 2.4.7 (in development)
+## 2.4.7 (Mar 24, 2025)
 
+- Added auto-generated color fields for `HexColorValidator`
 - Enhanced `TypeGridViewTrait::$typeDefaultItem` to also accept `false`
+- Enhanced `TypeGridViewTrait::typeDropdownItems()` to use type as index
 
 ## 2.4.6 (Mar 20, 2025)
 
