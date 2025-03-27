@@ -1,3 +1,7 @@
+## 2.4.8 (in development)
+
+- Fixed loading default values for `User` creation via console
+
 ## 2.4.7 (Mar 24, 2025)
 
 - Added auto-generated color fields for `HexColorValidator`

@@ -22,6 +22,8 @@ class ConsoleSignupForm extends Model
     public function __construct($config = [])
     {
         $this->user = User::create();
+        $this->user->loadDefaultValues();
+
         parent::__construct($config);
     }
 
