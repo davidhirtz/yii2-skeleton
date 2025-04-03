@@ -5,6 +5,7 @@ namespace davidhirtz\yii2\skeleton\console\controllers;
 use davidhirtz\yii2\skeleton\console\controllers\traits\ControllerTrait;
 use Yii;
 use yii\console\Controller;
+use yii\helpers\Console;
 
 /**
  * Tests the email functionality.
@@ -17,6 +18,11 @@ class EmailController extends Controller
 
     public function actionTest(string $email): void
     {
+        if (empty(Yii::$app->params['email'])) {
+            $this->stderr('No email address configured. Please set the "email" parameter in your config file.' . PHP_EOL, Console::FG_RED);
+            return;
+        }
+
         $this->interactiveStartStdout('Testing email functionality ...');
 
         $success = Yii::$app->getMailer()
