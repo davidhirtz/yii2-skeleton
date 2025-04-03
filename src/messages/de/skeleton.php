@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Message translations.
  *
@@ -208,6 +206,8 @@ return [
     'The password recovery url is invalid.' => 'Ihr Link zum Zurücksetzen des Passworts ist nicht gültig.',
     'The password reset link was updated.' => 'Der Passwort-Link wurde ersetzt.',
     'The password was changed' => 'Das Passwort wurde geändert',
+    'The permission was assigned.' => 'Die Benutzerrechte wurden erteilt.',
+    'The permission was removed.' => 'Die Benutzerrechte wurden entzogen.',
     'The record could not be created:' => 'Der Datensatz konnte nicht erstellt werden:',
     'The record could not be updated:' => 'Der Datensatz konnte nicht aktualisiert werden:',
     'The redirect rule was created.' => 'Die Weiterleitung wurde erstellt. ',

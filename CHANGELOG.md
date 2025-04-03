@@ -1,7 +1,8 @@
 ## 2.4.8 (in development)
 
-- Added error message in `EmailController::actionTest` when email is not set (#36)
-- Fixed loading default values for `User` creation via console (#35)
+- Added error message in `EmailController::actionTest` when email is not set (Issue #36)
+- Add flash success messages for adding or revoking users' RBAC (Issue #33)
+- Fixed loading default values for `User` creation via console (Issue #35)
 
 ## 2.4.7 (Mar 24, 2025)
 
