@@ -17,6 +17,7 @@ class ConsoleSignupFormTest extends Unit
     public function testSignup(): void
     {
         Yii::$app->language = 'de';
+        Yii::$app->getI18n()->setLanguages(Yii::$app->language);
 
         $form = ConsoleSignupForm::create();
         $form->name = 'Testname';
@@ -25,6 +26,6 @@ class ConsoleSignupFormTest extends Unit
 
         self::assertTrue($form->insert());
         self::assertTrue($form->user->isOwner());
-        self::assertEquals('de', $form->user->language);
+        self::assertEquals(Yii::$app->language, $form->user->language);
     }
 }
