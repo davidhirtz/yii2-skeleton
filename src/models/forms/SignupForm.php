@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\models\forms;
 
-use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
 use davidhirtz\yii2\skeleton\models\traits\SignupEmailTrait;
-use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use Yii;
-use yii\base\Model;
 
-class SignupForm extends Model
+class SignupForm extends AbstractSignupForm
 {
-    use ModelTrait;
     use SignupEmailTrait;
 
     final public const SESSION_TOKEN_NAME = 'signup_token';
@@ -21,9 +17,6 @@ class SignupForm extends Model
     public const SESSION_TOKEN_MIN_TIME = 5;
     public const SESSION_TOKEN_MAX_TIME = 1800;
 
-    public ?string $email = null;
-    public ?string $name = null;
-    public ?string $password = null;
     public ?string $timezone = null;
 
     /**
@@ -51,14 +44,6 @@ class SignupForm extends Model
      * @var string|null token text field is set by ajax and checked against cookie.
      */
     public ?string $token = null;
-
-    public readonly User $user;
-
-    public function __construct(?User $user = null, $config = [])
-    {
-        $this->user = $user ?? User::create();
-        parent::__construct($config);
-    }
 
     public function rules(): array
     {
@@ -103,9 +88,7 @@ class SignupForm extends Model
 
     protected function setUserAttributes(): void
     {
-        $this->user->status ??= User::STATUS_ENABLED;
-        $this->user->email = $this->email;
-        $this->user->name = $this->name;
+        parent::setUserAttributes();
         $this->user->timezone = $this->timezone;
     }
 
@@ -185,28 +168,6 @@ class SignupForm extends Model
         }
     }
 
-    public function insert(): bool
-    {
-        if (!$this->validate() || !$this->beforeInsert()) {
-            return false;
-        }
-
-        if ($this->user->insert(false)) {
-            $this->afterInsert();
-            return true;
-        }
-
-        return false;
-    }
-
-    public function beforeInsert(): bool
-    {
-        $this->user->generatePasswordHash($this->password);
-        $this->user->generateVerificationToken();
-
-        return true;
-    }
-
     public function afterInsert(): void
     {
         if ($this->getSessionToken() !== null) {
@@ -256,7 +217,6 @@ class SignupForm extends Model
     {
         return [
             ...parent::attributeLabels(),
-            'password' => Yii::t('skeleton', 'Password'),
             'terms' => Yii::t('skeleton', 'I accept the terms of service and privacy policy'),
         ];
     }

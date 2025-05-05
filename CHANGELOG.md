@@ -1,4 +1,4 @@
-## 2.4.8 (in development)
+## 2.4.8 (May 5, 2025)
 
 - Added error message in `EmailController::actionTest` when email is not set (Issue #36)
 - Add flash success messages for adding or revoking users' RBAC (Issue #33)
