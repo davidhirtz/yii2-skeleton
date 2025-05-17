@@ -22,7 +22,7 @@ class I18N extends \yii\i18n\I18N
         'zh-TW' => '繁體中文', // zh-HANT
     ];
 
-    private ?array $_languages = null;
+    private array $_languages;
 
     public function init(): void
     {
@@ -31,6 +31,8 @@ class I18N extends \yii\i18n\I18N
             'sourceLanguage' => Yii::$app->sourceLanguage,
             'basePath' => '@skeleton/messages',
         ];
+
+        $this->_languages ??= [Yii::$app->language];
 
         parent::init();
     }
@@ -51,7 +53,6 @@ class I18N extends \yii\i18n\I18N
 
     public function getLanguages(): array
     {
-        $this->_languages ??= [Yii::$app->language];
         return $this->_languages;
     }
 
@@ -67,7 +68,7 @@ class I18N extends \yii\i18n\I18N
 
     public function getLanguageCode(): string
     {
-        return substr(Yii::$app->language, 0, 2);
+        return substr((string)Yii::$app->language, 0, 2);
     }
 
     /**

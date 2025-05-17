@@ -31,6 +31,7 @@ class UserForm extends Model
             : ActiveRecord::SCENARIO_UPDATE);
 
         if ($user->getIsNewRecord()) {
+            $user->loadDefaultValues();
             $user->status = User::STATUS_ENABLED;
         }
 

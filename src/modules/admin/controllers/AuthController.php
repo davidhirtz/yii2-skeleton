@@ -88,7 +88,9 @@ class AuthController extends Controller
         $user = $this->findUser($id, User::AUTH_USER_ASSIGN);
         $role = $this->getAuthItem($name, $type);
 
-        if (!Yii::$app->getAuthManager()->assign($role, $user->id)) {
+        if (Yii::$app->getAuthManager()->assign($role, $user->id)) {
+            $this->success(Yii::t('skeleton', 'The permission was assigned.'));
+        } else {
             $this->error(Yii::t('skeleton', 'This permission was already assigned to user {name}.', [
                 'name' => $user->getUsername(),
             ]));
@@ -102,7 +104,9 @@ class AuthController extends Controller
         $user = $this->findUser($id, User::AUTH_USER_ASSIGN);
         $role = $this->getAuthItem($name, $type);
 
-        if (!Yii::$app->getAuthManager()->revoke($role, $user->id)) {
+        if (Yii::$app->getAuthManager()->revoke($role, $user->id)) {
+            $this->success(Yii::t('skeleton', 'The permission was removed.'));
+        } else {
             $this->error(Yii::t('skeleton', 'This permission was not assigned to user {name}.', [
                 'name' => $user->getUsername(),
             ]));

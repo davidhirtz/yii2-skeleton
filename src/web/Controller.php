@@ -36,7 +36,12 @@ class Controller extends \yii\web\Controller
     public function render($view, $params = []): string
     {
         $content = parent::render($view, $params);
-        return $this->spacelessOutput ? trim((string) preg_replace('/>\s+</', '><', $content)) : $content;
+        return $this->spacelessOutput ? $this->stripWhitespaceFromHtml($content) : $content;
+    }
+
+    protected function stripWhitespaceFromHtml(string $html): string
+    {
+        return trim((string) preg_replace('/>\s+</', '><', $html));
     }
 
     public function error(Model|array|string $value): bool

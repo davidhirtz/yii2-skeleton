@@ -44,7 +44,7 @@ use yii\web\IdentityInterface;
  * @property string|null $verification_token
  * @property string|null $password_reset_token
  * @property string|null $google_2fa_secret
- * @property int $is_owner
+ * @property bool|int $is_owner
  * @property int $created_by_user_id
  * @property int $login_count
  * @property DateTime|null $last_login
@@ -191,27 +191,13 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
         return $this->password_hash && Yii::$app->getSecurity()->validatePassword($password . $this->password_salt, $this->password_hash);
     }
 
-    public function beforeValidate(): bool
-    {
-        $this->status ??= static::STATUS_ENABLED;
-        $this->timezone = $this->timezone ?: Yii::$app->getTimeZone();
-        $this->language = $this->language ?: Yii::$app->language;
-
-        return parent::beforeValidate();
-    }
-
     public function beforeSave($insert): bool
     {
-        if (parent::beforeSave($insert)) {
-            if ($insert) {
-                $this->is_owner ??= !static::find()->exists();
-                $this->generateAuthKey();
-            }
-
-            return true;
+        if ($insert) {
+            $this->generateAuthKey();
         }
 
-        return false;
+        return parent::beforeSave($insert);
     }
 
     public function afterSave($insert, $changedAttributes): void

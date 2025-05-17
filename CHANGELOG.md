@@ -1,3 +1,15 @@
+## 2.4.9 (May 5, 2025)
+
+- Enhanced default `I18N::getLanguages()` initialization, to prevent a temporary language setting to lock in the
+  available languages before the `I18N` component was configured
+
+## 2.4.8 (May 5, 2025)
+
+- Added error message in `EmailController::actionTest` when email is not set (Issue #36)
+- Add flash success messages for adding or revoking users' RBAC (Issue #33)
+- Extracted `Controller::$spacelessOutput` to `Controller::stripWhitespaceFromHtml()` method
+- Fixed loading default values for `User` creation via console (Issue #35)
+
 ## 3.0.0 (in development)
 
 - Added `TrailModelInterface` and `TrailModelTrait` to better handle static analysis of trail models
