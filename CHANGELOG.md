@@ -1,3 +1,13 @@
+## 3.0.0 (in development)
+
+- Added `TrailModelInterface` and `TrailModelTrait` to better handle static analysis of trail models
+- Added `GridSearch` and moved properties `search`, `searchParamName`, `searchInputOptions` and `searchUrl` as well as
+  methods `getSearchInput`, and `getSearchKeywords` to the new `GridView::$search` property
+- Changed `GridView::isSortedByPosition()` to `GridView::isSortable()`
+- Refactored `TrailBehavior::formatTrailAttributeValue` to `TrailModelCollection::formatAttributeValue`
+- Removed `Html::buttonList()`, use `Html::buttons()` instead
+- Removed `GridView::renderSelectionForm()`
+
 ## 2.4.9 (May 5, 2025)
 
 - Enhanced default `I18N::getLanguages()` initialization, to prevent a temporary language setting to lock in the
@@ -9,17 +19,6 @@
 - Add flash success messages for adding or revoking users' RBAC (Issue #33)
 - Extracted `Controller::$spacelessOutput` to `Controller::stripWhitespaceFromHtml()` method
 - Fixed loading default values for `User` creation via console (Issue #35)
-
-## 3.0.0 (in development)
-
-- Added `TrailModelInterface` and `TrailModelTrait` to better handle static analysis of trail models
-- Added `GridSearch` and moved properties `search`, `searchParamName`, `searchInputOptions` and `searchUrl` as well as
-  methods `getSearchInput`, and `getSearchKeywords` to the new `GridView::$search` property
-- Changed `GridView::isSortedByPosition()` to `GridView::isSortable()`
-- Refactored `TrailBehavior::formatTrailAttributeValue` to `TrailModelCollection::formatAttributeValue`
-- Removed `Html::buttonList()`, use `Html::buttons()` instead
-- Removed `GridView::renderSelectionForm()`
-
 ## 2.4.7 (Mar 24, 2025)
 
 - Added auto-generated color fields for `HexColorValidator`
