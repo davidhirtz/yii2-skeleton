@@ -93,4 +93,9 @@ class Request extends \yii\web\Request
     {
         return $this->_isDraft;
     }
+
+    public function setIsDraft(bool $isDraft): void
+    {
+        $this->_isDraft = $isDraft;
+    }
 }

@@ -1,3 +1,7 @@
+## 2.4.10 (May 21, 2025)
+
+- Added `Request::setIsDraft()` for custom draft detectionÏ
+
 ## 2.4.9 (May 5, 2025)
 
 - Enhanced default `I18N::getLanguages()` initialization, to prevent a temporary language setting to lock in the

@@ -8,6 +8,7 @@ use Yii;
 use yii\base\Model;
 
 /**
+ * @property Request $request
  * @method View getView()
  */
 class Controller extends \yii\web\Controller
