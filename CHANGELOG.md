@@ -1,3 +1,8 @@
+# 2.5.0 (in development)
+
+- Added `View::registerJsModules()` to register JS modules
+
+
 ## 2.4.10 (May 21, 2025)
 
 - Added `Request::setIsDraft()` for custom draft detectionÏ

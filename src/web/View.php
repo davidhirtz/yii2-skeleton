@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use Yii;
+use yii\helpers\Json;
 use yii\helpers\Url;
 
 class View extends \yii\web\View
@@ -13,7 +14,9 @@ class View extends \yii\web\View
     final public const HREF_LANG_KEY = 'hreflang_';
     final public const CANONICAL_KEY = 'canonical';
     final public const DESCRIPTION_KEY = 'description';
+
     final public const POS_MODULE = 6;
+    final public const POS_IMPORT = 7;
 
     /**
      * @var string|null the title template that will be used to generate the page title.
@@ -22,18 +25,22 @@ class View extends \yii\web\View
 
     private array $_breadcrumbs = [];
     private string|null $_description = null;
+    private string $alias = 'a';
 
     protected function renderBodyEndHtml($ajaxMode): string
     {
         $html = parent::renderBodyEndHtml($ajaxMode);
-
-        if ($scripts = ($this->js[self::POS_MODULE] ?? null)) {
-            $html .= Html::script(implode('', $scripts), [
-                'type' => 'module',
-            ]);
-        }
+        $html .= $this->renderJsModules();
 
         return $html;
+    }
+
+    protected function renderJsModules(): string
+    {
+        $scripts = implode('', $this->js[self::POS_IMPORT] ?? []);
+        $scripts .= implode('', $this->js[self::POS_MODULE] ?? []);
+
+        return $scripts ? Html::script($scripts, ['type' => 'module']) : '';
     }
 
     public function setTitle(string $title): void
@@ -84,6 +91,25 @@ class View extends \yii\web\View
     public function getBreadcrumbs(): array
     {
         return $this->_breadcrumbs;
+    }
+
+    public function registerJsModule(string $filename, array|string|null $options = null, string|null|false $alias = null, ?string $key = null): void
+    {
+        $alias ??= $this->alias++;
+
+        $this->registerJs(
+            $alias ? "import $alias from '$filename';" : "import '$filename';",
+            self::POS_IMPORT,
+            $key
+        );
+
+        if ($alias) {
+            $this->registerJs(
+                "$alias(" . ($options ? Json::htmlEncode($options) : '') . ");",
+                self::POS_MODULE,
+                $key
+            );
+        }
     }
 
     public function registerOpenGraphMetaTags(?string $type = 'website', ?string $title = null, ?string $description = null): void

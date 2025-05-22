@@ -9,6 +9,7 @@ use davidhirtz\yii2\skeleton\helpers\StructuredData;
 use davidhirtz\yii2\skeleton\web\Controller;
 use davidhirtz\yii2\skeleton\web\View;
 use Yii;
+use yii\helpers\Json;
 
 class ViewTest extends Unit
 {
@@ -97,5 +98,21 @@ class ViewTest extends Unit
         $view = new View();
         $actual = $view->getFilenameWithVersion($filename);
         static::assertEquals("$filename?$time", $actual);
+    }
+
+    public function testRegisterJsModule(): void
+    {
+        $view = new View();
+
+        $options = ['key' => 'value'];
+        $view->registerJsModule('/test.js', $options);
+
+        self::assertContains('a(' . Json::htmlEncode($options) . ');', $view->js[$view::POS_MODULE]);
+        self::assertContains("import a from '/test.js';", $view->js[$view::POS_IMPORT]);
+
+        $view = new View();
+        $view->registerJsModule('/test.js', alias: false, key: 'test');
+
+        self::assertEquals("import '/test.js';", $view->js[$view::POS_IMPORT]['test']);
     }
 }
