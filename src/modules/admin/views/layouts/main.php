@@ -14,7 +14,6 @@ use davidhirtz\yii2\skeleton\web\View;
 use yii\helpers\Html;
 
 AdminAsset::register($this);
-$this->setBreadcrumb('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut');
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
