@@ -7,10 +7,10 @@ declare(strict_types=1);
  */
 
 use davidhirtz\yii2\skeleton\assets\AdminAsset;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\Flashes;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\Breadcrumbs;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\NavBar;
 use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\Flashes;
 use yii\helpers\Html;
 
 AdminAsset::register($this);

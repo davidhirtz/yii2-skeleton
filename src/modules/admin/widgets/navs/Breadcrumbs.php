@@ -19,7 +19,7 @@ class Breadcrumbs extends Widget
     public bool $alwaysShowHomeLink = false;
     public bool $encodeLabels = true;
     public array|null|false $homeLink = null;
-    public array $links = [];
+    public array $links;
 
     public array $attributes = [
         'class' => 'breadcrumb',
@@ -35,10 +35,7 @@ class Breadcrumbs extends Widget
 
     public function init(): void
     {
-        if (!$this->links) {
-            $this->setLinksFromView();
-        }
-
+        $this->links ??= $this->getView()->getBreadcrumbs();
         $this->addLinksFromModules();
 
         if ($this->homeLink !== false && ($this->links || $this->alwaysShowHomeLink)) {
@@ -54,11 +51,6 @@ class Breadcrumbs extends Widget
             'label' => Yii::$app->name,
             'url' => Yii::$app->getHomeUrl(),
         ]);
-    }
-
-    protected function setLinksFromView(): void
-    {
-        $this->links = $this->getView()->getBreadcrumbs();
     }
 
     protected function addLinksFromModules(): void
