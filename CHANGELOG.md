@@ -1,7 +1,7 @@
 # 2.5.0 (in development)
 
 - Added `View::registerJsModules()` to register JS modules
-
+- Added `declare(strict_types=1);` to migration template (Issue #43)
 
 ## 2.4.10 (May 21, 2025)
 
