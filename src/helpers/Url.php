@@ -11,14 +11,6 @@ class Url extends BaseUrl
 {
     public static function draft(string $url): string
     {
-        $request = Yii::$app->getRequest();
-
-        if ($request->draftSubdomain === false) {
-            return $url;
-        }
-
-        return !$request->getIsDraft() || !str_contains($url, (string) $request->draftSubdomain)
-            ? preg_replace('#^((https?://)(www.)?)#', "$2$request->draftSubdomain.", $url)
-            : $url;
+        return Yii::$app->getUrlManager()->createDraftUrl($url);
     }
 }

@@ -74,7 +74,7 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
             //  Redirects draft URLs for the backend, but only if it's not an AJAX to prevent breaking frontend
             // implementations or REST APIs that use admin endpoints.
             if ($request->getIsDraft() && !$request->getIsAjax()) {
-                $url = $request->getProductionHostInfo() . $request->getUrl();
+                $url = Yii::$app->getUrlManager()->getProductionHostInfo() . $request->getUrl();
                 Yii::$app->getResponse()->redirect($url)->send();
             }
 

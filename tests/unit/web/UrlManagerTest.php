@@ -66,6 +66,52 @@ class UrlManagerTest extends Unit
 
         $url = $manager->createDraftUrl('post/view');
         self::assertEquals('https://draft.example.com/post/view', $url);
+
+        $manager->draftSubdomain = 'preview';
+
+        $url = $manager->createDraftUrl('post/view');
+        self::assertEquals('https://preview.example.com/post/view', $url);
+
+        Yii::$app->getRequest()->setIsDraft(true);
+        $manager->draftSubdomain = false;
+
+        $url = $manager->createDraftUrl('post/view');
+        self::assertEquals('https://www.example.com/post/view', $url);
+    }
+
+    public function testI18nSubdomain(): void
+    {
+        $manager = $this->getUrlManager([
+            'i18nSubdomain' => true,
+            'languages' => ['en-US', 'de'],
+        ]);
+
+        self::assertEquals('.example.com', $manager->getI18nHostInfo());
+
+        $manager->setHostInfo('https://de.example.com');
+        Yii::$app->language = 'de';
+
+        self::assertEquals('.example.com', $manager->getI18nHostInfo());
+
+        $url = $manager->createAbsoluteUrl(['test']);
+        self::assertEquals('https://de.example.com/test', $url);
+
+        $url = $manager->createDraftUrl(['test']);
+        self::assertEquals('https://draft.de.example.com/test', $url);
+
+        $url = $manager->createAbsoluteUrl(['test', 'language' => 'en-US']);
+        self::assertEquals('https://www.example.com/test', $url);
+
+        $url = $manager->createDraftUrl(['test', 'language' => 'en-US']);
+        self::assertEquals('https://draft.example.com/test', $url);
+
+        $manager->setHostInfo('https://www.example.com');
+        Yii::$app->language = 'en-US';
+
+        codecept_debug($manager->getHostInfo());
+
+        $url = $manager->createAbsoluteUrl(['test', 'language' => 'de']);
+        self::assertEquals('https://de.example.com/test', $url);
     }
 
     public function testBaseUrl(): void
@@ -111,6 +157,11 @@ class UrlManagerTest extends Unit
 
     protected function getUrlManager($config = []): UrlManager
     {
-        return new UrlManager($config);
+        Yii::$app->set('urlManager', [
+            'class' => UrlManager::class,
+            ...$config,
+        ]);
+
+        return Yii::$app->getUrlManager();
     }
 }
