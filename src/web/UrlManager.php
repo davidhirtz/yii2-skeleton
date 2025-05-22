@@ -252,15 +252,6 @@ class UrlManager extends \yii\web\UrlManager
         return $event;
     }
 
-    public function getProductionHostInfo(): string
-    {
-        $hostInfo = $this->getHostInfo();
-
-        return $this->draftSubdomain
-            ? str_replace("//$this->draftSubdomain.", '//', $hostInfo)
-            : $hostInfo;
-    }
-
     /**
      * Generates a list of rule parameters at given position. This can be used to validate dynamic slugs, etc.
      */
@@ -286,6 +277,15 @@ class UrlManager extends \yii\web\UrlManager
         return array_unique($params);
     }
 
+    public function getProductionHostInfo(): string
+    {
+        $hostInfo = $this->getHostInfo();
+
+        return $this->draftSubdomain
+            ? str_replace("//$this->draftSubdomain.", '//', $hostInfo)
+            : $hostInfo;
+    }
+
     public function getDraftHostInfo(): false|string
     {
         $hostInfo = $this->getHostInfo();
@@ -301,11 +301,11 @@ class UrlManager extends \yii\web\UrlManager
         $language = Yii::$app->language;
         $hasDraftSubdomain = $request->getIsDraft() && $this->draftSubdomain;
 
-        $hostInfo = $language == $this->defaultLanguage ?
+        $subdomain = $language == $this->defaultLanguage ?
             ($hasDraftSubdomain ? $this->draftSubdomain : 'www') :
             ($hasDraftSubdomain ? "$this->draftSubdomain.$language" : $language);
 
-        return substr((string)parse_url($this->getHostInfo(), PHP_URL_HOST), strlen((string)$hostInfo));
+        return substr((string)parse_url($this->getHostInfo(), PHP_URL_HOST), strlen((string)$subdomain));
     }
 
     public function hasI18nUrls(): bool

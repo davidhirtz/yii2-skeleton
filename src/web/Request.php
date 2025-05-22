@@ -18,7 +18,7 @@ class Request extends \yii\web\Request
      */
     public string $languageParam = 'language';
 
-    private bool $_isDraft = false;
+    private bool $_isDraft;
     private ?string $_language = null;
 
     /**
@@ -33,11 +33,7 @@ class Request extends \yii\web\Request
             $this->cookieValidationKey = Yii::$app->params['cookieValidationKey'] ?? '';
         }
 
-        $subdomain = Yii::$app->getUrlManager()->draftSubdomain;
-
-        if ($subdomain && str_contains((string)$this->getHostInfo(), "//$subdomain.")) {
-            $this->_isDraft = true;
-        }
+        $this->setIsDraft($this->isDraftRequest());
 
         parent::init();
     }
@@ -64,6 +60,12 @@ class Request extends \yii\web\Request
     public function getIsAjaxRoute(): bool
     {
         return $this->getIsAjax() && ArrayHelper::getValue($_SERVER, 'HTTP_X_AJAX_REQUEST') == 'route';
+    }
+
+    public function isDraftRequest(): bool
+    {
+        $subdomain = Yii::$app->getUrlManager()->draftSubdomain;
+        return $subdomain && str_contains((string)$this->getHostInfo(), "//$subdomain.");
     }
 
     public function getIsDraft(): bool

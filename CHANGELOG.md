@@ -2,6 +2,7 @@
 
 - Added `View::registerJsModules()` to register JS modules
 - Added `declare(strict_types=1);` to migration template (Issue #43)
+- Added `Request::isDraftRequest()` to check if the current request is a draft request
 - Moved `Request::$draftSubdomain`, `Request::getDraftHostInfo()` and `Request::getProductionHostInfo()` to `UrlManager` (Issue #42)
 
 ## 2.4.10 (May 21, 2025)
