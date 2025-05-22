@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\tests\unit\web;
 
 use Codeception\Test\Unit;
+use davidhirtz\yii2\skeleton\web\Request;
 use davidhirtz\yii2\skeleton\web\UrlManager;
 use Yii;
 
@@ -83,15 +84,23 @@ class UrlManagerTest extends Unit
     {
         $manager = $this->getUrlManager([
             'i18nSubdomain' => true,
-            'languages' => ['en-US', 'de'],
+            'languages' => [
+                'en-US' => 'www',
+                'de' => 'de',
+            ],
         ]);
 
-        self::assertEquals('.example.com', $manager->getI18nHostInfo());
+        self::assertEquals('https://www.example.com', $manager->getHostInfo());
 
-        $manager->setHostInfo('https://de.example.com');
-        Yii::$app->language = 'de';
+        $request = $this->getRequest([
+            'hostInfo' => 'https://de.example.com',
+            'url' => '/',
+        ]);
 
-        self::assertEquals('.example.com', $manager->getI18nHostInfo());
+        $manager->parseRequest($request);
+
+        self::assertEquals('https://www.example.com', $manager->getHostInfo());
+        self::assertEquals('de', Yii::$app->language);
 
         $url = $manager->createAbsoluteUrl(['test']);
         self::assertEquals('https://de.example.com/test', $url);
@@ -105,10 +114,12 @@ class UrlManagerTest extends Unit
         $url = $manager->createDraftUrl(['test', 'language' => 'en-US']);
         self::assertEquals('https://draft.example.com/test', $url);
 
-        $manager->setHostInfo('https://www.example.com');
-        Yii::$app->language = 'en-US';
+        $request = $this->getRequest([
+            'hostInfo' => 'https://www.example.com',
+            'url' => '/',
+        ]);
 
-        codecept_debug($manager->getHostInfo());
+        $manager->parseRequest($request);
 
         $url = $manager->createAbsoluteUrl(['test', 'language' => 'de']);
         self::assertEquals('https://de.example.com/test', $url);
@@ -153,6 +164,16 @@ class UrlManagerTest extends Unit
         ]);
 
         self::assertEquals(['new-posts', 'old_posts'], $manager->getImmutableRuleParams());
+    }
+
+    protected function getRequest($config = []): Request
+    {
+        Yii::$app->set('request', [
+            'class' => Request::class,
+            ...$config,
+        ]);
+
+        return Yii::$app->getRequest();
     }
 
     protected function getUrlManager($config = []): UrlManager

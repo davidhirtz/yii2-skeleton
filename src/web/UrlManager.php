@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
-use davidhirtz\yii2\skeleton\helpers\Url;
 use Yii;
 use yii\web\UrlRule;
 
@@ -66,16 +65,14 @@ class UrlManager extends \yii\web\UrlManager
 
         $this->defaultLanguage ??= Yii::$app->sourceLanguage;
 
-        if ($this->languages === null) {
-            $this->languages = [];
-
-            foreach (Yii::$app->getI18n()->getLanguages() as $language) {
-                $this->languages[$language] = strstr((string)$language, '-', true) ?: $language;
-            }
-        }
+        $this->languages ??= array_map(
+            fn (string $language): string => strstr((string)$language, '-', true) ?: $language,
+            Yii::$app->getI18n()->getLanguages()
+        );
 
         if (!$this->languages) {
             $this->i18nUrl = false;
+            $this->i18nSubdomain = false;
         }
 
         parent::init();
@@ -110,12 +107,9 @@ class UrlManager extends \yii\web\UrlManager
             }
         }
 
-        if ($this->i18nSubdomain && $language !== Yii::$app->language) {
-            $subdomain = $language === $defaultLanguage || !in_array($language, $this->languages) ? 'www' : $language;
-            $scheme = parse_url($this->getHostInfo(), PHP_URL_SCHEME);
-            $hostInfo = $this->getI18nHostInfo();
-
-            return "$scheme://$subdomain$hostInfo$url";
+        if ($this->i18nSubdomain && $language !== $this->defaultLanguage) {
+            $subdomain = $this->languages[$language] ?? '';
+            return $this->replaceSubdomain($subdomain, $this->getHostInfo()) . $url;
         }
 
         return $url;
@@ -126,14 +120,17 @@ class UrlManager extends \yii\web\UrlManager
         if ($this->draftSubdomain) {
             $url = $this->createUrl($params);
 
-            if (str_starts_with($url, 'http')) {
-                return preg_replace('#^((https?://)(www.)?)#', "$2$this->draftSubdomain.", $url);
-            }
-
-            return $this->getDraftHostInfo() . $url;
+            return str_starts_with($url, 'http')
+                ? $this->replaceSubdomain($this->draftSubdomain, $url)
+                : $this->getDraftHostInfo() . $url;
         }
 
         return $this->createAbsoluteUrl($params);
+    }
+
+    private function replaceSubdomain(string $replacement, string $url): string
+    {
+        return preg_replace('#^((https?://)(www.)?)#', "$2$replacement.", $url);
     }
 
     /**
@@ -142,6 +139,11 @@ class UrlManager extends \yii\web\UrlManager
     public function parseRequest($request): bool|array
     {
         $this->parseRedirectMap($request, $this->redirectMap);
+        $this->setHostInfo($request->getHostInfo());
+
+        if ($this->draftSubdomain) {
+            $this->setDraftStatus($request);
+        }
 
         if (count($this->languages) > 1) {
             $this->setApplicationLanguage($request);
@@ -190,10 +192,19 @@ class UrlManager extends \yii\web\UrlManager
         }
     }
 
+    protected function setDraftStatus(Request $request): void
+    {
+        $hostInfo = $this->getHostInfo();
+
+        if (str_contains($hostInfo, "//$this->draftSubdomain.")) {
+            $this->setHostInfo(str_replace("//$this->draftSubdomain.", '//', $hostInfo));
+            $request->setIsDraft(true);
+        }
+    }
+
     protected function setApplicationLanguage(Request $request): void
     {
         if ($this->i18nUrl) {
-            // Check if the pathInfo starts with a language identifier.
             $pathInfo = trim($request->getPathInfo(), '/');
 
             if (preg_match('#^(' . implode('|', $this->languages) . ')\b(/?)#i', $pathInfo, $matches)) {
@@ -216,9 +227,11 @@ class UrlManager extends \yii\web\UrlManager
 
         if ($this->i18nSubdomain) {
             $host = parse_url($this->getHostInfo(), PHP_URL_HOST);
-            $subdomain = explode('.', (string)$host)[$request->getIsDraft() ? 1 : 0];
+            $subdomain = explode('.', (string)$host)[0];
 
             if (in_array($subdomain, $this->languages)) {
+                $replace = $this->languages[$this->defaultLanguage] ?? '';
+                $this->setHostInfo(str_replace("//$subdomain", "//$replace", $this->getHostInfo()));
                 Yii::$app->language = $subdomain;
                 return;
             }
@@ -277,35 +290,9 @@ class UrlManager extends \yii\web\UrlManager
         return array_unique($params);
     }
 
-    public function getProductionHostInfo(): string
-    {
-        $hostInfo = $this->getHostInfo();
-
-        return $this->draftSubdomain
-            ? str_replace("//$this->draftSubdomain.", '//', $hostInfo)
-            : $hostInfo;
-    }
-
     public function getDraftHostInfo(): false|string
     {
-        $hostInfo = $this->getHostInfo();
-
-        return $this->draftSubdomain && !str_contains($hostInfo, "//$this->draftSubdomain")
-            ? preg_replace('#^((https?://)(www.)?)#', "$2$this->draftSubdomain.", $hostInfo)
-            : $hostInfo;
-    }
-
-    public function getI18nHostInfo(): string
-    {
-        $request = Yii::$app->getRequest();
-        $language = Yii::$app->language;
-        $hasDraftSubdomain = $request->getIsDraft() && $this->draftSubdomain;
-
-        $subdomain = $language == $this->defaultLanguage ?
-            ($hasDraftSubdomain ? $this->draftSubdomain : 'www') :
-            ($hasDraftSubdomain ? "$this->draftSubdomain.$language" : $language);
-
-        return substr((string)parse_url($this->getHostInfo(), PHP_URL_HOST), strlen((string)$subdomain));
+        return $this->replaceSubdomain($this->draftSubdomain, $this->getHostInfo());
     }
 
     public function hasI18nUrls(): bool

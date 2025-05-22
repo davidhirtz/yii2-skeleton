@@ -18,7 +18,7 @@ class Request extends \yii\web\Request
      */
     public string $languageParam = 'language';
 
-    private bool $_isDraft;
+    private bool $_isDraft = false;
     private ?string $_language = null;
 
     /**
@@ -32,8 +32,6 @@ class Request extends \yii\web\Request
         if ($this->enableCookieValidation && !$this->cookieValidationKey) {
             $this->cookieValidationKey = Yii::$app->params['cookieValidationKey'] ?? '';
         }
-
-        $this->setIsDraft($this->isDraftRequest());
 
         parent::init();
     }
