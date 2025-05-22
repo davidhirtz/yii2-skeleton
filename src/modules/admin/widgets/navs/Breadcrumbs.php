@@ -29,6 +29,10 @@ class Breadcrumbs extends Widget
         'class' => 'breadcrumb-item',
     ];
 
+    public array $linkAttributes = [
+        'class' => 'breadcrumb-link',
+    ];
+
     public function init(): void
     {
         if (!$this->links) {
@@ -121,13 +125,10 @@ class Breadcrumbs extends Widget
             $content = Html::encode($content);
         }
 
-        if ($url) {
-            $content = Link::make()
-                ->addHtml($content)
-                ->href($url)
-                ->render();
-        }
-
-        return $content;
+        return Link::make()
+            ->addHtml($content)
+            ->attributes($this->linkAttributes)
+            ->href($url)
+            ->render();
     }
 }

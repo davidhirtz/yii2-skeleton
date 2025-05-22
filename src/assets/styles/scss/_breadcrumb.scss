@@ -4,37 +4,32 @@
   --#{$prefix}breadcrumb-bg: #{$breadcrumb-bg};
   --#{$prefix}breadcrumb-divider-color: #{$breadcrumb-divider-color};
 
-  display: none;
-  padding: $breadcrumb-padding-y $breadcrumb-padding-x;
-  margin-bottom: $breadcrumb-margin-bottom;
+  display: flex;
+  margin: $breadcrumb-margin;
+  padding: $breadcrumb-padding;
+  gap: $breadcrumb-gap-x;
   list-style: none;
+  overflow-x: auto;
   background-color: var(--#{$prefix}breadcrumb-bg);
   @include border-radius($breadcrumb-border-radius);
-
-  @include media-breakpoint-up(sm) {
-    display: flex;
-    flex-wrap: wrap;
-  }
 }
 
 .breadcrumb-item {
-  &:not(.active):not(:last-child) a {
-    display: inline-block;
-    max-width: 10rem;
+  display: flex;
+  gap: $breadcrumb-gap-x;
+  max-width: $breadcrumb-item-min-width;
+
+  &:last-child {
+    max-width: $breadcrumb-item-max-width;
   }
 
-  + .breadcrumb-item {
-    padding-left: $breadcrumb-item-padding-x;
-
-    &::before {
-      float: left; // Suppress inline spacings and underlining of the separator
-      padding-right: $breadcrumb-item-padding-x;
-      color: var(--#{$prefix}breadcrumb-divider-color);
-      content:  escape-svg($breadcrumb-divider);
-    }
+  &:not(:first-child)::before {
+    color: var(--#{$prefix}breadcrumb-divider-color);
+    content: escape-svg($breadcrumb-divider);
   }
+}
 
-  a {
-    @extend .text-truncate;
-  }
+.breadcrumb-link {
+  display: block;
+  @extend .text-truncate;
 }

@@ -233,12 +233,13 @@ $navbar-icon-hex-color: #fff !default;
 $navbar-toggler-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='#{$navbar-icon-hex-color}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>") !default;
 
 // Breadcrumbs
-$breadcrumb-padding-y: 0 !default;
-$breadcrumb-padding-x: $spacer-x !default;
-$breadcrumb-margin-bottom: $margin-y !default;
-$breadcrumb-item-padding-x: 0.5rem !default;
+$breadcrumb-margin: 0 0 $margin-y !default;
+$breadcrumb-padding: 0 !default;
+$breadcrumb-gap-x: 0.5rem !default;
+$breadcrumb-item-min-width: 10rem !default;
+$breadcrumb-item-max-width: 30rem !default;
 $breadcrumb-bg: transparent !default;
-$breadcrumb-divider-color: var(--#{$prefix}secondary-border-color) !default;
+$breadcrumb-divider-color: var(--#{$prefix}secondary-border) !default;
 $breadcrumb-active-color: var(--#{$prefix}tertiary-color) !default;
 $breadcrumb-border-radius: $border-radius !default;
 $breadcrumb-divider: quote("/") !default;
