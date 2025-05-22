@@ -18,7 +18,8 @@
 .nav-link {
   display: flex;
   align-items: center;
-  padding: $nav-link-padding-y $nav-link-padding-x;
+  padding: $nav-link-padding;
+  min-width: $nav-link-min-width;
   @include font-size($nav-link-font-size);
   font-weight: $nav-link-font-weight;
   color: var(--#{$prefix}nav-link-color);

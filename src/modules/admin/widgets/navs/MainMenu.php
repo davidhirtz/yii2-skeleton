@@ -13,7 +13,7 @@ use Yii;
 class MainMenu extends Widget
 {
     public array $attributes = [
-        'id' => 'main-menu',
+        'id' => 'menu',
         'class' => 'navbar-nav navbar-left nav',
     ];
 
