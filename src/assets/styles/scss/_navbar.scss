@@ -9,16 +9,15 @@
 
   padding: $navbar-padding-y $navbar-padding-x;
   background: $navbar-light-bg;
+}
 
 
-  > .container {
-    display: grid;
-    grid-template-areas: "toggler right" "left left";
+.navbar-container {
+  display: grid;
+  grid-template-areas: "toggler right" "left left";
 
-    @include media-breakpoint-up($navbar-expand-breakpoint) {
-      display: flex;
-      justify-content: space-between;
-    }
+  @include media-breakpoint-up($navbar-expand-breakpoint) {
+    display: flex;
   }
 }
 
@@ -53,6 +52,7 @@
   grid-area: right;
   justify-content: flex-end;
   flex-wrap: nowrap;
+  flex-grow: 1;
 }
 
 .navbar-toggler {

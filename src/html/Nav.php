@@ -19,6 +19,17 @@ class Nav extends Tag
         return $this;
     }
 
+    public function addItems(array $items): static
+    {
+        foreach ($items as $item) {
+            if ($item instanceof Tag) {
+                $this->addItem($item);
+            }
+        }
+
+        return $this;
+    }
+
     public function hideSingleItem(bool $hideSingleItem = true): static
     {
         $this->hideSingleItem = $hideSingleItem;

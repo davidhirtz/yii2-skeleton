@@ -35,7 +35,7 @@ class AuthClientListGroup extends Widget
     protected function setFacebookLoginLink(): void
     {
         if ((new LoginForm())->isFacebookLoginEnabled()) {
-            $this->list->addItem(ListGroupItemLink::make()
+            $this->list->addLink(ListGroupItemLink::make()
                 ->text('Facebook')
                 ->icon('brand:facebook')
                 ->href(Url::toRoute(['/admin/user/auth', 'authclient' => 'facebook'])));

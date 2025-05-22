@@ -4,35 +4,22 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\html;
 
-class ListGroup extends Tag
+class ListGroup extends Ul
 {
     protected array $attributes = [
-        'class' => 'list-group list-unstyled',
+        'class' => 'list-group',
     ];
 
-    private array $items = [];
+    protected array $itemAttributes = [
+        'class' => 'list-group-item',
+    ];
 
-    public function addItem(ListGroupItemLink $link): static
+    public function addLink(ListGroupItemLink $link): static
     {
         if ($link->isVisible()) {
-            $this->items[] = '<li class="list-group-item">' . $link->render() . '</li>';
+            $this->addItem($link->render(), $this->itemAttributes);
         }
 
         return $this;
-    }
-
-    protected function renderContent(): string
-    {
-        return implode('', $this->items);
-    }
-
-    protected function renderTag(): string
-    {
-        return $this->items ? parent::renderTag() : '';
-    }
-
-    protected function getName(): string
-    {
-        return 'ul';
     }
 }

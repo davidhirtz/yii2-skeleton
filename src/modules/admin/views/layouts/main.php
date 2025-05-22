@@ -7,9 +7,9 @@ declare(strict_types=1);
  */
 
 use davidhirtz\yii2\skeleton\assets\AdminAsset;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\Breadcrumbs;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\NavBar;
 use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\Breadcrumbs;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Flashes;
 use yii\helpers\Html;
 
@@ -27,19 +27,13 @@ AdminAsset::register($this);
 </head>
 <body>
 <?php $this->beginBody() ?>
-<div class="wrap">
-    <header>
-        <?= !Yii::$app->getUser()->getIsGuest() ? NavBar::widget() : ''; ?>
-    </header>
-    <main hx-select="main" hx-swap="outerHTML show:top" hx-target="this">
-        <div class="container">
-            <?= !Yii::$app->getUser()->getIsGuest() ? Breadcrumbs::widget() : ''; ?>
-            <?= Flashes::widget(); ?>
-            <?= $content ?>
-        </div>
-        <?php $this->endBody() ?>
-    </main>
-</div>
+<?= NavBar::widget(); ?>
+<main hx-select="main" hx-swap="outerHTML show:top" hx-target="this">
+    <?= Breadcrumbs::widget(); ?>
+    <?= Flashes::widget(); ?>
+    <?= $content ?>
+    <?php $this->endBody() ?>
+</main>
 </body>
 </html>
 <?php $this->endPage() ?>

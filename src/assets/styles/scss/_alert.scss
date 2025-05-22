@@ -40,25 +40,25 @@
 }
 
 .alert-success {
-  background: var(--#{$prefix}success-bg);
-  border-color: var(--#{$prefix}success-border);
-  color: var(--#{$prefix}success-color);
+  background: $alert-success-bg;
+  border-color: $alert-success-border-color;
+  color: $alert-success-color;
 }
 
 .alert-info {
-  background: var(--#{$prefix}info-bg);
-  border-color: var(--#{$prefix}info-border);
-  color: var(--#{$prefix}info-color);
+  background: $alert-success-bg;
+  border-color: $alert-info-border-color;
+  color: $alert-info-color;
 }
 
 .alert-warning {
-  background: var(--#{$prefix}warning-bg);
-  border-color: var(--#{$prefix}warning-border);
-  color: var(--#{$prefix}warning-color);
+  background: $alert-warning-bg;
+  border-color: $alert-warning-border-color;
+  color: $alert-warning-color;
 }
 
 .alert-danger {
-  background: var(--#{$prefix}danger-bg);
-  border-color: var(--#{$prefix}danger-border);
-  color: var(--#{$prefix}danger-color);
+  background: $alert-danger-bg;
+  border-color: $alert-danger-border-color;
+  color: $alert-danger-color;
 }

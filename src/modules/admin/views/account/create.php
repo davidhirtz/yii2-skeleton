@@ -37,12 +37,12 @@ $this->setTitle(Yii::t('skeleton', 'Sign up'));
                 'model' => $form,
             ])),
         ListGroup::make()
-            ->addItem(ListGroupItemLink::make()
+            ->addLink(ListGroupItemLink::make()
                 ->text(Yii::t('skeleton', 'Sign up with Facebook'))
                 ->icon('brand:facebook')
                 ->href(['auth', 'authclient' => 'facebook'])
                 ->visible($form->isFacebookSignupEnabled()))
-            ->addItem(ListGroupItemLink::make()
+            ->addLink(ListGroupItemLink::make()
                 ->text(Yii::t('skeleton', 'Back to login'))
                 ->href(['login'])
                 ->icon('sign-in-alt'))

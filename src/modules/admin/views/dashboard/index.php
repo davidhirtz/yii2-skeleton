@@ -24,7 +24,7 @@ $this->setTitle(Yii::t('skeleton', 'Admin'));
             $list = ListGroup::make();
 
         foreach ($panel['items'] as $item) {
-            $list->addItem(ListGroupItemLink::make()
+            $list->addLink(ListGroupItemLink::make()
                 ->text($item['label'])
                 ->href($item['url'])
                 ->icon($item['icon'] ?? null));

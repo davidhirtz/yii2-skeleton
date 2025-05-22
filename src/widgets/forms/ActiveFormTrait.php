@@ -40,7 +40,7 @@ trait ActiveFormTrait
     public array|string|null $buttons = null;
 
     /**
-     * @var bool whether a default submit button should be displayed.
+     * @var bool whether a default submit-button should be displayed.
      */
     public bool $showSubmitButton = true;
 
@@ -275,7 +275,7 @@ trait ActiveFormTrait
         return $this->fieldTypes;
     }
 
-    public function field($model, $attribute, $options = []): ActiveField|string
+    public function field($model, $attribute, $options = []): ActiveField
     {
         if (method_exists($this->model, 'getI18nAttributeName')) {
             $language = ArrayHelper::remove($options, 'language', Yii::$app->sourceLanguage);
@@ -402,13 +402,13 @@ trait ActiveFormTrait
     }
 
     /**
-     * Encodes data toggle options of input fields. Attribute names can either be set via the fields key or as an array
+     * Encodes data toggle options of input fields. Attribute names can either be set via the fields' key or as an array
      * with the values being the first value and the field names the second. Set languages to `false` to disable i18n.
      *
      * [
      *     'content' => [Section::TYPE_VISUAL],
      *     [[Section::TYPE_VISUAL], ['content'],
-     * ],
+     * ]
      */
     public function getToggleOptions(array $fields, array|false|null $languages = null): array
     {

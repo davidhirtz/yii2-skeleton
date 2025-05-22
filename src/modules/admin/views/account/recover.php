@@ -31,7 +31,7 @@ $this->setTitle(Yii::t('skeleton', 'Recover Password'));
             'model' => $form,
         ])),
         ListGroup::make()
-            ->addItem(
+            ->addLink(
                 ListGroupItemLink::make()
                     ->icon('sign-in-alt')
                     ->href(Url::to(['login']))

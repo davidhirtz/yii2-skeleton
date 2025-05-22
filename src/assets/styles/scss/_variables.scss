@@ -16,7 +16,7 @@ $tertiary-border-color: #f1f1f1 !default;
 $tertiary-color: #585858 !default;
 
 $success: #a3cba3 !default;
-$success-bg: #edf5ed !default;
+$success-bg: #d9f6d9 !default;
 $success-border-color: #daeada !default;
 $success-color: #212921 !default;
 
@@ -178,10 +178,22 @@ $alert-link-font-weight: normal !default;
 $alert-link-text-decoration: underline !default;
 $alert-border-width: $border-width !default;
 $alert-dismissible-padding-r: $alert-padding-x * 3 !default; // 3x covers width of x plus default padding on either side
+$alert-success-bg: var(--#{$prefix}success-bg) !default;
+$alert-success-border-color: var(--#{$prefix}success-border) !default;
+$alert-success-color: var(--#{$prefix}success-color) !default;
+$alert-info-bg: var(--#{$prefix}info-bg) !default;
+$alert-info-border-color: var(--#{$prefix}info-border) !default;
+$alert-info-color: var(--#{$prefix}info-color) !default;
+$alert-warning-bg: var(--#{$prefix}warning-bg) !default;
+$alert-warning-border-color: var(--#{$prefix}warning-border) !default;
+$alert-warning-color: var(--#{$prefix}warning-color) !default;
+$alert-danger-bg: var(--#{$prefix}danger-bg) !default;
+$alert-danger-border-color: var(--#{$prefix}danger-border) !default;
+$alert-danger-color: var(--#{$prefix}light-color) !default;
 
 // Nav
 $nav-link-padding-y: 0 !default;
-$nav-link-padding-x: 0.75rem !default;
+$nav-link-padding-x: 1rem !default;
 $nav-link-height: 3rem !default;
 $nav-link-font-size: null !default;
 $nav-link-font-weight: null !default;

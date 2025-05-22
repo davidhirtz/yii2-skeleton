@@ -33,7 +33,7 @@ $this->setTitle(Yii::t('skeleton', 'Resend Account Confirmation'));
             'model' => $form,
         ])),
         ListGroup::make()
-        ->addItem(
+        ->addLink(
             ListGroupItemLink::make()
             ->text(Yii::t('skeleton', 'Back to login'))
             ->icon('sign-in-alt')
