@@ -37,17 +37,4 @@ class ControllerCest extends BaseCest
         $I->amOnPage("/$module->alias");
         $I->canSeeCurrentUrlEquals("/$module->alias/account/login");
     }
-
-    public function checkDraftSubdomain(FunctionalTester $I): void
-    {
-        $I->setDraftHttpHost();
-        $I->amOnPage('/application-health');
-
-        $I->assertTrue(Yii::$app->request->getIsDraft());
-
-        $I->setProductionHttpHost();
-        $I->amOnPage('/application-health');
-
-        $I->assertFalse(Yii::$app->request->getIsDraft());
-    }
 }

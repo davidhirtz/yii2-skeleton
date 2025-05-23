@@ -1,11 +1,13 @@
-# 2.5.0 (in development)
+## 2.5.0 (in development)
 
+- Added minimum PHP requirements to PHP 8.3
 - Added wildcard support for `UrlManager::$redirectMap`
 - Added `View::registerJsModules()` to register JS modules
 - Added `declare(strict_types=1);` to migration template (Issue #43)
 - Added `Request::isDraftRequest()` to check if the current request is a draft request
 - Moved `Request::$draftSubdomain` and `Request::getDraftHostInfo()` to `UrlManager` (Issue #42)
 - Removed `Request::getProductionHostInfo()`
+- Updated Codeception to version 5
 
 ## 2.4.10 (May 21, 2025)
 

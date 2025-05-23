@@ -34,17 +34,16 @@
         "yiisoft/yii2-symfonymailer": "^4.0"
     },
     "require-dev": {
-        "codeception/codeception": "^5.0",
-        "codeception/module-asserts": "^3.0",
+        "codeception/codeception": "^5.3",
+        "codeception/module-asserts": "^3.2",
         "codeception/module-filesystem": "^3.0",
         "codeception/module-phpbrowser": "^3.0",
-        "codeception/module-yii2": "^1.1",
+        "codeception/module-yii2": "^v2.0",
         "codeception/specify": "^2.0",
         "codeception/verify": "^3.0",
         "phpro/grumphp-shim": "^2.4",
-        "phpunit/phpunit": "^9",
         "rector/rector": "^2.0",
-        "symplify/easy-coding-standard": "^12.0",
+        "symplify/easy-coding-standard": "^12.5",
         "yiisoft/yii2-debug": "^2.1"
     },
     "provide": {
@@ -64,7 +63,7 @@
     },
     "config": {
         "platform": {
-            "php": "8.1"
+            "php": "8.3"
         },
         "allow-plugins": {
             "yiisoft/yii2-composer": true,
