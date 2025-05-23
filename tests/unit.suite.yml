@@ -1,4 +1,5 @@
 actor: UnitTester
 modules:
   enabled:
+    - Asserts
     - davidhirtz\yii2\skeleton\codeception\Yii2

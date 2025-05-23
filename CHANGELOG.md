@@ -1,5 +1,6 @@
 # 2.5.0 (in development)
 
+- Added wildcard support for `UrlManager::$redirectMap`
 - Added `View::registerJsModules()` to register JS modules
 - Added `declare(strict_types=1);` to migration template (Issue #43)
 - Added `Request::isDraftRequest()` to check if the current request is a draft request

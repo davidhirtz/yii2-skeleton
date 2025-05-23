@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\tests\unit\web;
 
 use Codeception\Test\Unit;
+use davidhirtz\yii2\skeleton\tests\support\UnitTester;
 use davidhirtz\yii2\skeleton\web\Request;
 use davidhirtz\yii2\skeleton\web\UrlManager;
 use Yii;
+use yii\web\UrlNormalizerRedirectException;
 
 class UrlManagerTest extends Unit
 {
+    protected UnitTester $tester;
+
     public function testCreateUrl(): void
     {
         $manager = $this->getUrlManager();
@@ -190,6 +194,48 @@ class UrlManagerTest extends Unit
         self::assertEquals('https://www.example.com', $manager->getHostInfo());
         self::assertEquals('de', Yii::$app->language);
         self::assertTrue($request->getIsDraft());
+    }
+
+    public function testRedirectMap(): void
+    {
+        $manager = $this->getUrlManager([
+            'redirectMap' => [
+                'old-url' => 'https://www.new-domain.com/new-url',
+                'old/*' => 'new/'
+            ],
+        ]);
+
+        $request = $this->getRequest([
+            'hostInfo' => 'https://www.example.com',
+            'url' => '/',
+        ]);
+
+        $manager->parseRequest($request);
+        self::assertEquals('https://www.example.com', $manager->getHostInfo());
+
+        $request = $this->getRequest([
+            'hostInfo' => 'https://www.example.com',
+            'url' => '/old-url',
+        ]);
+
+        try {
+            $manager->parseRequest($request);
+            self::fail('UrlNormalizerRedirectException not thrown');
+        } catch (UrlNormalizerRedirectException $e) {
+            self::assertEquals('https://www.new-domain.com/new-url', $e->url);
+        }
+
+        $request = $this->getRequest([
+            'hostInfo' => 'https://www.example.com',
+            'url' => '/old/test',
+        ]);
+
+        try {
+            $manager->parseRequest($request);
+            self::fail('UrlNormalizerRedirectException not thrown');
+        } catch (UrlNormalizerRedirectException $e) {
+            self::assertEquals('/new/test', $e->url);
+        }
     }
 
     public function testBaseUrl(): void

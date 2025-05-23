@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Yii;
+use yii\web\UrlNormalizerRedirectException;
 use yii\web\UrlRule;
 
 class UrlManager extends \yii\web\UrlManager
@@ -180,11 +181,18 @@ class UrlManager extends \yii\web\UrlManager
 
                 foreach ((array)$urlset as $url) {
                     $url = trim((string)$url, '/');
-                    $wildcard = strpos($url, '*');
 
-                    if ($url == $pathInfo || ($wildcard && substr($url, 0, $wildcard) == substr($pathInfo, 0, $wildcard))) {
-                        Yii::$app->getResponse()->redirect($location, $statusCode);
-                        Yii::$app->end();
+                    if ($url === $pathInfo) {
+                        throw new UrlNormalizerRedirectException($location, $statusCode);
+                    }
+
+                    if (str_contains($url, '*')) {
+                        $prefix = strstr($url, '*', true);
+
+                        if ($prefix !== false && str_starts_with($pathInfo, $prefix)) {
+                            $newUrl = $location . substr($pathInfo, strlen($prefix));
+                            throw new UrlNormalizerRedirectException($newUrl, $statusCode);
+                        }
                     }
                 }
             }
