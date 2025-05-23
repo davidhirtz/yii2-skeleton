@@ -80,6 +80,62 @@ class UrlManagerTest extends Unit
         self::assertEquals('https://www.example.com/post/view', $url);
     }
 
+    public function testI18nUrl(): void
+    {
+        $manager = $this->getUrlManager([
+            'i18nUrl' => true,
+            'languages' => [
+                'en-US' => 'www',
+                'de' => 'de',
+            ],
+        ]);
+
+        self::assertEquals('https://www.example.com', $manager->getHostInfo());
+
+        $request = $this->getRequest([
+            'hostInfo' => 'https://www.example.com',
+            'url' => '/de',
+        ]);
+
+        $manager->parseRequest($request);
+
+        self::assertEquals('https://www.example.com', $manager->getHostInfo());
+        self::assertEquals('de', Yii::$app->language);
+
+        $url = $manager->createAbsoluteUrl(['test']);
+        self::assertEquals('https://www.example.com/de/test', $url);
+
+        $url = $manager->createDraftUrl(['test']);
+        self::assertEquals('https://draft.example.com/de/test', $url);
+
+        $url = $manager->createAbsoluteUrl(['test', 'language' => 'en-US']);
+        self::assertEquals('https://www.example.com/test', $url);
+
+        $url = $manager->createDraftUrl(['test', 'language' => 'en-US']);
+        self::assertEquals('https://draft.example.com/test', $url);
+
+        $request = $this->getRequest([
+            'hostInfo' => 'https://www.example.com',
+            'url' => '/',
+        ]);
+
+        $manager->parseRequest($request);
+
+        $url = $manager->createAbsoluteUrl(['test', 'language' => 'de']);
+        self::assertEquals('https://www.example.com/de/test', $url);
+
+        $request = $this->getRequest([
+            'hostInfo' => 'https://draft.example.com',
+            'url' => '/de',
+        ]);
+
+        $manager->parseRequest($request);
+
+        self::assertEquals('https://example.com', $manager->getHostInfo());
+        self::assertEquals('de', Yii::$app->language);
+        self::assertTrue($request->getIsDraft());
+    }
+
     public function testI18nSubdomain(): void
     {
         $manager = $this->getUrlManager([
@@ -123,6 +179,17 @@ class UrlManagerTest extends Unit
 
         $url = $manager->createAbsoluteUrl(['test', 'language' => 'de']);
         self::assertEquals('https://de.example.com/test', $url);
+
+        $request = $this->getRequest([
+            'hostInfo' => 'https://draft.de.example.com',
+            'url' => '/',
+        ]);
+
+        $manager->parseRequest($request);
+
+        self::assertEquals('https://www.example.com', $manager->getHostInfo());
+        self::assertEquals('de', Yii::$app->language);
+        self::assertTrue($request->getIsDraft());
     }
 
     public function testBaseUrl(): void

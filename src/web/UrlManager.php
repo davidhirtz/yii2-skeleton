@@ -82,11 +82,10 @@ class UrlManager extends \yii\web\UrlManager
     {
         $request = Yii::$app->getRequest();
         $language = Yii::$app->language;
-        $i18nUrl = $this->i18nUrl;
 
         $params = (array)$params;
 
-        if ($i18nUrl || $this->i18nSubdomain) {
+        if ($this->i18nUrl || $this->i18nSubdomain) {
             $language = ArrayHelper::remove($params, $request->languageParam, $language);
             $defaultLanguage = ArrayHelper::remove($params, 'defaultLanguage');
         }
@@ -100,7 +99,7 @@ class UrlManager extends \yii\web\UrlManager
             $url = $event->url;
         }
 
-        if ($i18nUrl) {
+        if ($this->i18nUrl) {
             if (isset($this->languages[$language]) && $language !== $defaultLanguage) {
                 $position = strlen($this->showScriptName ? $this->getScriptUrl() : $this->getBaseUrl());
                 return rtrim(substr_replace($url, '/' . $this->languages[$language], $position, 0), '/');
