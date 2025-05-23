@@ -89,7 +89,7 @@ class UrlManagerTest extends Unit
         $manager = $this->getUrlManager([
             'i18nUrl' => true,
             'languages' => [
-                'en-US' => 'www',
+                'en-US' => 'en',
                 'de' => 'de',
             ],
         ]);
@@ -120,10 +120,15 @@ class UrlManagerTest extends Unit
 
         $request = $this->getRequest([
             'hostInfo' => 'https://www.example.com',
-            'url' => '/',
+            'url' => '/en/test',
         ]);
 
-        $manager->parseRequest($request);
+        try {
+            $manager->parseRequest($request);
+            self::fail('UrlNormalizerRedirectException not thrown');
+        } catch (UrlNormalizerRedirectException $e) {
+            self::assertEquals('https://www.example.com/test', $e->url);
+        }
 
         $url = $manager->createAbsoluteUrl(['test', 'language' => 'de']);
         self::assertEquals('https://www.example.com/de/test', $url);
@@ -201,7 +206,11 @@ class UrlManagerTest extends Unit
         $manager = $this->getUrlManager([
             'redirectMap' => [
                 'old-url' => 'https://www.new-domain.com/new-url',
-                'old/*' => 'new/'
+                [
+                    'request' => ['old/*'],
+                    'url' => 'temp/',
+                    'code' => 302,
+                ],
             ],
         ]);
 
@@ -234,8 +243,30 @@ class UrlManagerTest extends Unit
             $manager->parseRequest($request);
             self::fail('UrlNormalizerRedirectException not thrown');
         } catch (UrlNormalizerRedirectException $e) {
-            self::assertEquals('/new/test', $e->url);
+            self::assertEquals('/temp/test', $e->url);
+            self::assertEquals(302, $e->statusCode);
         }
+    }
+
+    public function testLanguageUrl(): void
+    {
+        $manager = $this->getUrlManager([
+            'languages' => [
+                'en-US' => 'en',
+                'de' => 'de',
+            ],
+        ]);
+
+        $request = $this->getRequest([
+            'hostInfo' => 'https://www.example.com',
+            'url' => '/',
+            'bodyParams' => [
+                'language' => 'de',
+            ],
+        ]);
+
+        $manager->parseRequest($request);
+        self::assertEquals('de', Yii::$app->language);
     }
 
     public function testBaseUrl(): void

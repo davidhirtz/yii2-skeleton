@@ -45,9 +45,10 @@ class UrlManager extends \yii\web\UrlManager
 
     /**
      * @var array containing hard redirects, either as request URI ⇒ URL pairs, which generate regular 301 redirects
-     * or as arrays containing the request URIs at first position, the target URL as the second and an
-     * optional third containing the redirect code (defaults to 301). If dynamic redirects are necessary, please take
-     * a look at {@see \davidhirtz\yii2\skeleton\models\Redirect}.
+     * or as arrays containing the request URIs as an array in array key `request`, the target URL as the key `url`
+     * and optional the redirect code (defaults to 301) as `status`.
+     *
+     * If dynamic redirects are necessary, please take a look at {@see \davidhirtz\yii2\skeleton\models\Redirect}.
      */
     public array $redirectMap = [];
 
@@ -167,12 +168,13 @@ class UrlManager extends \yii\web\UrlManager
                 $statusCode = 301;
 
                 if (is_array($location)) {
-                    if (isset($location[2]) && $location[2] == 302) {
-                        $statusCode = $location[2];
+                    if (!isset($location['url'])) {
+                        throw new \InvalidArgumentException('Missing location key in redirect map.');
                     }
 
-                    $urlset = $location[0];
-                    $location = $location[1];
+                    $urlset = $location['request'] ?? $urlset;
+                    $statusCode = $location['code'] ?? $statusCode;
+                    $location = $location['url'];
                 }
 
                 if (!str_contains((string)$location, '://') && is_string($location)) {
@@ -221,8 +223,7 @@ class UrlManager extends \yii\web\UrlManager
                 if ($language) {
                     if ($language == $this->defaultLanguage) {
                         $url = preg_replace('#(/' . preg_quote($matches[1]) . ')(/|$)#', '$2', $request->getAbsoluteUrl());
-                        Yii::$app->getResponse()->redirect($url, 301);
-                        Yii::$app->end();
+                        throw new UrlNormalizerRedirectException($url, 301);
                     }
 
                     Yii::$app->language = $language;
