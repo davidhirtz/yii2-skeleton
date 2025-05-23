@@ -232,7 +232,7 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
     }
 
     /**
-     * @return ModuleInterface[]
+     * @return (\yii\base\Module&ModuleInterface)[]
      */
     public function getSubmodules(): array
     {

@@ -1,10 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * @noinspection PhpUnused
  */
+
+declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\tests\functional;
 
@@ -49,6 +49,7 @@ class AccountResendConfirmCest extends BaseCest
 
     public function checkResendConfirmAsConfirmedUser(FunctionalTester $I): void
     {
+        /** @var User $user */
         $user = $I->grabFixture('user', 'owner');
 
         $I->amOnPage("/{$this->module->alias}/account/resend");
@@ -59,6 +60,7 @@ class AccountResendConfirmCest extends BaseCest
 
     public function checkResendConfirmWithValidEmail(FunctionalTester $I): void
     {
+        /** @var User $user */
         $user = $I->grabFixture('user', 'admin');
 
         $I->amOnPage("/{$this->module->alias}/account/resend");

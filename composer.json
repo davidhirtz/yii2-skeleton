@@ -1,86 +1,87 @@
 {
-    "name": "davidhirtz/yii2-skeleton",
-    "description": "Extended framework and admin panel based on Yii 2.0 framework",
-    "license": "proprietary",
-    "type": "yii2-extension",
-    "homepage": "https://www.github.com/davidhirtz/yii2-skeleton",
-    "authors": [
-        {
-            "name": "David Hirtz",
-            "homepage": "https://www.davidhirtz.com/"
-        }
-    ],
-    "require": {
-        "ext-imagick": "*",
-        "ext-json": "*",
-        "ext-openssl": "*",
-        "ext-simplexml": "*",
-        "ext-xmlwriter": "*",
-        "davidhirtz/yii2-datetime-behavior": "^1.1",
-        "davidhirtz/yii2-timeago": "^1.2",
-        "guzzlehttp/guzzle": "^7.0",
-        "guzzlehttp/oauth-subscriber": "^0.8.1",
-        "jfcherng/php-diff": "^6.9",
-        "npm-asset/blueimp-file-upload": "^10.32",
-        "npm-asset/bootbox": "^5",
-        "npm-asset/jstimezonedetect": "^1.0",
-        "robthree/twofactorauth": "^1.8",
-        "seld/cli-prompt": "^1.0",
-        "tinymce/tinymce": "^7.0",
-        "yiisoft/yii2": "^2.0",
-        "yiisoft/yii2-authclient": "^2.2",
-        "yiisoft/yii2-bootstrap4": "^2.0",
-        "yiisoft/yii2-imagine": "^2.1",
-        "yiisoft/yii2-symfonymailer": "^4.0"
-    },
-    "require-dev": {
-        "codeception/codeception": "^5.3",
-        "codeception/module-asserts": "^3.2",
-        "codeception/module-filesystem": "^3.0",
-        "codeception/module-phpbrowser": "^3.0",
-        "codeception/module-yii2": "^v2.0",
-        "codeception/specify": "^2.0",
-        "codeception/verify": "^3.0",
-        "phpro/grumphp-shim": "^2.4",
-        "rector/rector": "^2.0",
-        "symplify/easy-coding-standard": "^12.5",
-        "yiisoft/yii2-debug": "^2.1"
-    },
-    "provide": {
-        "bower-asset/inputmask": "*",
-        "bower-asset/punycode": "*",
-        "bower-asset/yii2-pjax": "*"
-    },
-    "autoload": {
-        "psr-4": {
-            "davidhirtz\\yii2\\skeleton\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "davidhirtz\\yii2\\skeleton\\tests\\": "tests"
-        }
-    },
-    "config": {
-        "platform": {
-            "php": "8.3"
-        },
-        "allow-plugins": {
-            "yiisoft/yii2-composer": true,
-            "phpro/grumphp-shim": true
-        }
-    },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://asset-packagist.org"
-        }
-    ],
-    "scripts": {
-        "check-cs": "ecs check --ansi",
-        "fix-cs": "ecs check --ansi --fix",
-        "phpstan": "phpstan --memory-limit=1G",
-        "rector": "rector",
-        "test": "codecept run"
+  "name": "davidhirtz/yii2-skeleton",
+  "description": "Extended framework and admin panel based on Yii 2.0 framework",
+  "license": "proprietary",
+  "type": "yii2-extension",
+  "homepage": "https://www.github.com/davidhirtz/yii2-skeleton",
+  "authors": [
+    {
+      "name": "David Hirtz",
+      "homepage": "https://www.davidhirtz.com/"
     }
+  ],
+  "require": {
+    "php": "^8.3",
+    "ext-imagick": "*",
+    "ext-json": "*",
+    "ext-openssl": "*",
+    "ext-simplexml": "*",
+    "ext-xmlwriter": "*",
+    "davidhirtz/yii2-datetime-behavior": "^1.1",
+    "davidhirtz/yii2-timeago": "^1.2",
+    "guzzlehttp/guzzle": "^7.0",
+    "guzzlehttp/oauth-subscriber": "^0.8.1",
+    "jfcherng/php-diff": "^6.9",
+    "npm-asset/blueimp-file-upload": "^10.32",
+    "npm-asset/bootbox": "^5",
+    "npm-asset/jstimezonedetect": "^1.0",
+    "robthree/twofactorauth": "^1.8",
+    "seld/cli-prompt": "^1.0",
+    "tinymce/tinymce": "^7.0",
+    "yiisoft/yii2": "^2.0",
+    "yiisoft/yii2-authclient": "^2.2",
+    "yiisoft/yii2-bootstrap4": "^2.0",
+    "yiisoft/yii2-imagine": "^2.1",
+    "yiisoft/yii2-symfonymailer": "^4.0"
+  },
+  "require-dev": {
+    "codeception/codeception": "^5.3",
+    "codeception/module-asserts": "^3.2",
+    "codeception/module-filesystem": "^3.0",
+    "codeception/module-phpbrowser": "^3.0",
+    "codeception/module-yii2": "^v2.0",
+    "codeception/specify": "^2.0",
+    "codeception/verify": "^3.0",
+    "phpro/grumphp-shim": "^2.4",
+    "rector/rector": "^2.0",
+    "symplify/easy-coding-standard": "^12.5",
+    "yiisoft/yii2-debug": "^2.1"
+  },
+  "provide": {
+    "bower-asset/inputmask": "*",
+    "bower-asset/punycode": "*",
+    "bower-asset/yii2-pjax": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "davidhirtz\\yii2\\skeleton\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "davidhirtz\\yii2\\skeleton\\tests\\": "tests"
+    }
+  },
+  "config": {
+    "platform": {
+      "php": "8.3"
+    },
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true,
+      "phpro/grumphp-shim": true
+    }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ],
+  "scripts": {
+    "check-cs": "ecs check --ansi",
+    "fix-cs": "ecs check --ansi --fix",
+    "phpstan": "phpstan --memory-limit=1G",
+    "rector": "rector",
+    "test": "codecept run"
+  }
 }
