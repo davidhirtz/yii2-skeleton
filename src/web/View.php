@@ -11,12 +11,12 @@ use yii\helpers\Url;
 
 class View extends \yii\web\View
 {
-    final public const HREF_LANG_KEY = 'hreflang_';
-    final public const CANONICAL_KEY = 'canonical';
-    final public const DESCRIPTION_KEY = 'description';
+    final public const string HREF_LANG_KEY = 'hreflang_';
+    final public const string CANONICAL_KEY = 'canonical';
+    final public const string DESCRIPTION_KEY = 'description';
 
-    final public const POS_MODULE = 6;
-    final public const POS_IMPORT = 7;
+    final public const int POS_MODULE = 6;
+    final public const int POS_IMPORT = 7;
 
     /**
      * @var string|null the title template that will be used to generate the page title.

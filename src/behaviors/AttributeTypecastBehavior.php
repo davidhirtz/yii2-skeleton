@@ -39,10 +39,10 @@ use yii\validators\StringValidator;
  */
 class AttributeTypecastBehavior extends Behavior
 {
-    final public const TYPE_INTEGER = 'integer';
-    final public const TYPE_FLOAT = 'float';
-    final public const TYPE_BOOLEAN = 'boolean';
-    final public const TYPE_STRING = 'string';
+    final public const string TYPE_INTEGER = 'integer';
+    final public const string TYPE_FLOAT = 'float';
+    final public const string TYPE_BOOLEAN = 'boolean';
+    final public const string TYPE_STRING = 'string';
 
     /**
      * @var bool whether to skip typecasting of `null` values

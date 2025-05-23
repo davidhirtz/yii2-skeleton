@@ -60,11 +60,11 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
 {
     use StatusAttributeTrait;
 
-    final public const AUTH_USER_CREATE = 'userCreate';
-    final public const AUTH_USER_DELETE = 'userDelete';
-    final public const AUTH_USER_UPDATE = 'userUpdate';
-    final public const AUTH_USER_ASSIGN = 'authUpdate';
-    final public const AUTH_ROLE_ADMIN = 'admin';
+    final public const string AUTH_USER_CREATE = 'userCreate';
+    final public const string AUTH_USER_DELETE = 'userDelete';
+    final public const string AUTH_USER_UPDATE = 'userUpdate';
+    final public const string AUTH_USER_ASSIGN = 'authUpdate';
+    final public const string AUTH_ROLE_ADMIN = 'admin';
 
     /**
      * @var int the minimum length for the username

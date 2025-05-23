@@ -26,9 +26,9 @@ use yii\validators\RangeValidator;
  */
 class TrailBehavior extends Behavior
 {
-    private const VALUE_TYPE_BOOLEAN = 'bool';
-    private const VALUE_TYPE_RANGE = 'range';
-    private const VALUE_TYPE_DATETIME = 'datetime';
+    private const string VALUE_TYPE_BOOLEAN = 'bool';
+    private const string VALUE_TYPE_RANGE = 'range';
+    private const string VALUE_TYPE_DATETIME = 'datetime';
 
     /**
      * @var class-string|null if not set, the default class of `owner` will be used
