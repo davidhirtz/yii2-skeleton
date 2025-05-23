@@ -104,7 +104,7 @@
 ## 2.3.15 (Sep 17, 2024)
 
 - Added the option to remove empty span `tags` from HtmlValidator output, defaults to false
-- Enhanced `MigrationController` to not offer to create a new user if an error occured during migration
+- Enhanced `MigrationController` to not offer to create a new user if an error occurred during migration
 - Fixed translations in `AuthItemGridView` for message sources with `forceTranslation` set to `true`
 
 ## 2.3.14 (Sep 11, 2024)
