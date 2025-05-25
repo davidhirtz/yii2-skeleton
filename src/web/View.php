@@ -23,9 +23,9 @@ class View extends \yii\web\View
      */
     public ?string $titleTemplate = null;
 
-    private array $_breadcrumbs = [];
-    private string|null $_description = null;
-    private string $alias = 'a';
+    private array $breadcrumbs = [];
+    private string|null $description = null;
+    private string $jsImportName = 'a';
 
     protected function renderBodyEndHtml($ajaxMode): string
     {
@@ -60,14 +60,14 @@ class View extends \yii\web\View
     public function setMetaDescription(string $description, bool $replace = true): void
     {
         if (empty($this->metaTags[static::DESCRIPTION_KEY]) || $replace) {
-            $this->_description = preg_replace("/\n+/", ' ', Html::encode($description));
-            $this->registerMetaTag(['name' => 'description', 'content' => $this->_description], static::DESCRIPTION_KEY);
+            $this->description = preg_replace("/\n+/", ' ', Html::encode($description));
+            $this->registerMetaTag(['name' => 'description', 'content' => $this->description], static::DESCRIPTION_KEY);
         }
     }
 
     public function getMetaDescription(): ?string
     {
-        return $this->_description;
+        return $this->description;
     }
 
     public function setBreadcrumbs(array $breadcrumbs): void
@@ -84,32 +84,35 @@ class View extends \yii\web\View
     public function setBreadcrumb(?string $label, array|string $url = null): void
     {
         if ($label) {
-            $this->_breadcrumbs[] = ['label' => $label, 'url' => $url];
+            $this->breadcrumbs[] = ['label' => $label, 'url' => $url];
         }
     }
 
     public function getBreadcrumbs(): array
     {
-        return $this->_breadcrumbs;
+        return $this->breadcrumbs;
     }
 
-    public function registerJsModule(string $filename, array|string|null $options = null, string|null|false $alias = null, ?string $key = null): void
+    public function registerJsModule(string $filename, array|string|null $arguments = null, string|null|false $importName = null, ?string $key = null): void
     {
-        $alias ??= $this->alias++;
+        $importName ??= $this->jsImportName++;
+        $js = $importName ? "import $importName from '$filename';" : "import '$filename';";
 
-        $this->registerJs(
-            $alias ? "import $alias from '$filename';" : "import '$filename';",
-            self::POS_IMPORT,
-            $key
-        );
+        $this->registerJs($js, self::POS_IMPORT, $key);
 
-        if ($alias) {
-            $this->registerJs(
-                "$alias(" . ($options ? Json::htmlEncode($options) : '') . ");",
-                self::POS_MODULE,
-                $key
-            );
+        if ($importName && $importName !== '*') {
+            $arguments = $this->prepareJsArguments($arguments);
+            $this->registerJs("$importName($arguments);", self::POS_MODULE, $key);
         }
+    }
+
+    protected function prepareJsArguments(array|string|null $arguments = null): string
+    {
+        if (array_is_list($arguments)) {
+            return implode(', ', array_map(fn ($value) => Json::htmlEncode($value), $arguments));
+        }
+
+        return $arguments ? Json::htmlEncode($arguments) : '';
     }
 
     public function registerOpenGraphMetaTags(?string $type = 'website', ?string $title = null, ?string $description = null): void

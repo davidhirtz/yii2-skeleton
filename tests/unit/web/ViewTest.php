@@ -9,7 +9,6 @@ use davidhirtz\yii2\skeleton\helpers\StructuredData;
 use davidhirtz\yii2\skeleton\web\Controller;
 use davidhirtz\yii2\skeleton\web\View;
 use Yii;
-use yii\helpers\Json;
 
 class ViewTest extends Unit
 {
@@ -107,12 +106,14 @@ class ViewTest extends Unit
         $options = ['key' => 'value'];
         $view->registerJsModule('/test.js', $options);
 
-        self::assertContains('a(' . Json::htmlEncode($options) . ');', $view->js[$view::POS_MODULE]);
         self::assertContains("import a from '/test.js';", $view->js[$view::POS_IMPORT]);
+        self::assertContains('a({"key":"value"});', $view->js[$view::POS_MODULE]);
 
-        $view = new View();
-        $view->registerJsModule('/test.js', alias: false, key: 'test');
-
+        $view->registerJsModule('/test.js', importName: false, key: 'test');
         self::assertEquals("import '/test.js';", $view->js[$view::POS_IMPORT]['test']);
+
+        $view->registerJsModule('/test.js', ['param1', 'param2'], key: 'test');
+        self::assertContains("import b from '/test.js';", $view->js[$view::POS_IMPORT]);
+        self::assertContains('b("param1", "param2");', $view->js[$view::POS_MODULE]);
     }
 }
