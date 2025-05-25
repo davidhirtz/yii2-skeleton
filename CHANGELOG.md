@@ -1,3 +1,13 @@
+## 3.0.0 (in development)
+
+- Added `TrailModelInterface` and `TrailModelTrait` to better handle static analysis of trail models
+- Added `GridSearch` and moved properties `search`, `searchParamName`, `searchInputOptions` and `searchUrl` as well as
+  methods `getSearchInput`, and `getSearchKeywords` to the new `GridView::$search` property
+- Changed `GridView::isSortedByPosition()` to `GridView::isSortable()`
+- Refactored `TrailBehavior::formatTrailAttributeValue` to `TrailModelCollection::formatAttributeValue`
+- Removed `Html::buttonList()`, use `Html::buttons()` instead
+- Removed `GridView::renderSelectionForm()`
+
 ## 2.5.0 (May 25, 2025)
 
 - Added minimum PHP requirements to PHP 8.3
@@ -12,16 +22,6 @@
 ## 2.4.10 (May 21, 2025)
 
 - Added `Request::setIsDraft()` for custom draft detectionÏ
-
-## 3.0.0 (in development)
-
-- Added `TrailModelInterface` and `TrailModelTrait` to better handle static analysis of trail models
-- Added `GridSearch` and moved properties `search`, `searchParamName`, `searchInputOptions` and `searchUrl` as well as
-  methods `getSearchInput`, and `getSearchKeywords` to the new `GridView::$search` property
-- Changed `GridView::isSortedByPosition()` to `GridView::isSortable()`
-- Refactored `TrailBehavior::formatTrailAttributeValue` to `TrailModelCollection::formatAttributeValue`
-- Removed `Html::buttonList()`, use `Html::buttons()` instead
-- Removed `GridView::renderSelectionForm()`
 
 ## 2.4.9 (May 5, 2025)
 

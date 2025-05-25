@@ -29,12 +29,11 @@ class View extends \yii\web\View
 
     protected function renderBodyEndHtml($ajaxMode): string
     {
-        $html = parent::renderBodyEndHtml($ajaxMode);
-        $html .= $this->renderJsModules();
         // jQuery is no longer supported
         unset($this->js[self::POS_READY], $this->js[self::POS_LOAD]);
-        return parent::renderBodyEndHtml($ajaxMode) . $this->renderJsModules();
-    }
+
+        $html = parent::renderBodyEndHtml($ajaxMode);
+        $html .= $this->renderJsModules();
 
         return $html;
     }
@@ -169,15 +168,6 @@ class View extends \yii\web\View
         }
 
         $this->registerLinkTag(['rel' => 'image_src', 'href' => $url]);
-    }
-
-    public function registerDefaultHrefLangLinkTag(?string $language = null): void
-    {
-        $language ??= Yii::$app->sourceLanguage;
-
-        if ($options !== null) {
-            $this->registerJs("$alias(" . Json::htmlEncode($options) . ");", self::POS_MODULE, $key);
-        }
     }
 
     public function registerOpenGraphMetaTags(?string $type = 'website', ?string $title = null, ?string $description = null): void
