@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
-use davidhirtz\yii2\skeleton\helpers\Url;
 use Yii;
 
 /**
@@ -15,18 +14,11 @@ use Yii;
 class Request extends \yii\web\Request
 {
     /**
-     * @var string|false the subdomain indicating a draft version of the application. Further validation should
-     * be done on the controller level.
-     */
-    public string|false $draftSubdomain = 'draft';
-
-    /**
      * @var string the name of the GET parameter that specifies the language.
      */
     public string $languageParam = 'language';
 
     private bool $_isDraft = false;
-    private string|false|null $_draftHostInfo = null;
     private ?string $_language = null;
 
     /**
@@ -39,10 +31,6 @@ class Request extends \yii\web\Request
     {
         if ($this->enableCookieValidation && !$this->cookieValidationKey) {
             $this->cookieValidationKey = Yii::$app->params['cookieValidationKey'] ?? '';
-        }
-
-        if ($this->draftSubdomain && str_contains((string)$this->getHostInfo(), "//$this->draftSubdomain.")) {
-            $this->_isDraft = true;
         }
 
         parent::init();
@@ -72,25 +60,19 @@ class Request extends \yii\web\Request
         return $this->getIsAjax() && ArrayHelper::getValue($_SERVER, 'HTTP_X_AJAX_REQUEST') == 'route';
     }
 
-    public function getProductionHostInfo(): string
+    public function isDraftRequest(): bool
     {
-        return $this->getIsDraft()
-            ? str_replace("//$this->draftSubdomain.", '//', (string)$this->getHostInfo())
-            : $this->getHostInfo();
-    }
-
-    /**
-     * Creates the draft URL by trying to replace existing "www" or adding the $draftSubdomain as the first subdomain to
-     * the host.
-     */
-    public function getDraftHostInfo(): false|string
-    {
-        $this->_draftHostInfo ??= Url::draft((string)$this->getHostInfo());
-        return $this->_draftHostInfo;
+        $subdomain = Yii::$app->getUrlManager()->draftSubdomain;
+        return $subdomain && str_contains((string)$this->getHostInfo(), "//$subdomain.");
     }
 
     public function getIsDraft(): bool
     {
         return $this->_isDraft;
+    }
+
+    public function setIsDraft(bool $isDraft): void
+    {
+        $this->_isDraft = $isDraft;
     }
 }

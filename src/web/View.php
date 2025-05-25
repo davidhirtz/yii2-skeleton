@@ -11,33 +11,39 @@ use yii\helpers\Url;
 
 class View extends \yii\web\View
 {
-    final public const HREF_LANG_KEY = 'hreflang_';
-    final public const CANONICAL_KEY = 'canonical';
-    final public const DESCRIPTION_KEY = 'description';
+    final public const string HREF_LANG_KEY = 'hreflang_';
+    final public const string CANONICAL_KEY = 'canonical';
+    final public const string DESCRIPTION_KEY = 'description';
 
-    final public const POS_MODULE = 6;
-    final public const POS_IMPORT = 7;
+    final public const int POS_MODULE = 6;
+    final public const int POS_IMPORT = 7;
 
     /**
      * @var string|null the title template that will be used to generate the page title.
      */
     public ?string $titleTemplate = null;
 
-    private array $_breadcrumbs = [];
-    private string|null $_description = null;
-    private string $alias = 'a';
+    private array $breadcrumbs = [];
+    private string|null $description = null;
+    private string $jsImportName = 'a';
 
     protected function renderBodyEndHtml($ajaxMode): string
     {
+        $html = parent::renderBodyEndHtml($ajaxMode);
+        $html .= $this->renderJsModules();
         // jQuery is no longer supported
         unset($this->js[self::POS_READY], $this->js[self::POS_LOAD]);
         return parent::renderBodyEndHtml($ajaxMode) . $this->renderJsModules();
+    }
+
+        return $html;
     }
 
     protected function renderJsModules(): string
     {
         $scripts = implode('', $this->js[self::POS_IMPORT] ?? []);
         $scripts .= implode('', $this->js[self::POS_MODULE] ?? []);
+
         return $scripts ? Html::script($scripts, ['type' => 'module']) : '';
     }
 
@@ -58,14 +64,14 @@ class View extends \yii\web\View
     public function setMetaDescription(string $description, bool $replace = true): void
     {
         if (empty($this->metaTags[static::DESCRIPTION_KEY]) || $replace) {
-            $this->_description = preg_replace("/\n+/", ' ', Html::encode($description));
-            $this->registerMetaTag(['name' => 'description', 'content' => $this->_description], static::DESCRIPTION_KEY);
+            $this->description = preg_replace("/\n+/", ' ', Html::encode($description));
+            $this->registerMetaTag(['name' => 'description', 'content' => $this->description], static::DESCRIPTION_KEY);
         }
     }
 
     public function getMetaDescription(): ?string
     {
-        return $this->_description;
+        return $this->description;
     }
 
     public function setBreadcrumbs(array $breadcrumbs): void
@@ -82,13 +88,35 @@ class View extends \yii\web\View
     public function setBreadcrumb(?string $label, array|string $url = null): void
     {
         if ($label) {
-            $this->_breadcrumbs[] = ['label' => $label, 'url' => $url];
+            $this->breadcrumbs[] = ['label' => $label, 'url' => $url];
         }
     }
 
     public function getBreadcrumbs(): array
     {
-        return $this->_breadcrumbs;
+        return $this->breadcrumbs;
+    }
+
+    public function registerJsModule(string $filename, array|string|null $arguments = null, string|null|false $importName = null, ?string $key = null): void
+    {
+        $importName ??= $this->jsImportName++;
+        $js = $importName ? "import $importName from '$filename';" : "import '$filename';";
+
+        $this->registerJs($js, self::POS_IMPORT, $key);
+
+        if ($importName && $importName !== '*') {
+            $arguments = $this->prepareJsArguments($arguments);
+            $this->registerJs("$importName($arguments);", self::POS_MODULE, $key);
+        }
+    }
+
+    protected function prepareJsArguments(array|string|null $arguments = null): string
+    {
+        if (array_is_list($arguments)) {
+            return implode(', ', array_map(fn ($value) => Json::htmlEncode($value), $arguments));
+        }
+
+        return $arguments ? Json::htmlEncode($arguments) : '';
     }
 
     public function registerCanonicalTag(string $url): void
@@ -143,11 +171,9 @@ class View extends \yii\web\View
         $this->registerLinkTag(['rel' => 'image_src', 'href' => $url]);
     }
 
-    public function registerJsModule(string $filename, array|string|null $options = null, ?string $alias = null, ?string $key = null): void
+    public function registerDefaultHrefLangLinkTag(?string $language = null): void
     {
-        $alias ??= $this->alias++;
-
-        $this->registerJs("import $alias from '$filename';", self::POS_IMPORT, $key);
+        $language ??= Yii::$app->sourceLanguage;
 
         if ($options !== null) {
             $this->registerJs("$alias(" . Json::htmlEncode($options) . ");", self::POS_MODULE, $key);

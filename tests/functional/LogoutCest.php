@@ -1,15 +1,16 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * @noinspection PhpUnused
  */
+
+declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\tests\functional;
 
 use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
 use davidhirtz\yii2\skeleton\codeception\functional\BaseCest;
+use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\tests\support\FunctionalTester;
 use Yii;
@@ -20,6 +21,7 @@ class LogoutCest extends BaseCest
 
     public function checkLogoutFromDashboard(FunctionalTester $I): void
     {
+        /** @var User $user */
         $user = $I->grabFixture('user', 'admin');
         $this->assignAdminRole($user->id);
 

@@ -19,7 +19,7 @@ use yii\helpers\Console;
  */
 class MaintenanceController extends Controller
 {
-    final public const MAINTENANCE_FILE = '@runtime/maintenance.php';
+    final public const string MAINTENANCE_FILE = '@runtime/maintenance.php';
 
     /**
      * @var string path to the maintenance mode template stub

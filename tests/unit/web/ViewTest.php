@@ -98,4 +98,22 @@ class ViewTest extends Unit
         $actual = $view->getFilenameWithVersion($filename);
         static::assertEquals("$filename?$time", $actual);
     }
+
+    public function testRegisterJsModule(): void
+    {
+        $view = new View();
+
+        $options = ['key' => 'value'];
+        $view->registerJsModule('/test.js', $options);
+
+        self::assertContains("import a from '/test.js';", $view->js[$view::POS_IMPORT]);
+        self::assertContains('a({"key":"value"});', $view->js[$view::POS_MODULE]);
+
+        $view->registerJsModule('/test.js', importName: false, key: 'test');
+        self::assertEquals("import '/test.js';", $view->js[$view::POS_IMPORT]['test']);
+
+        $view->registerJsModule('/test.js', ['param1', 'param2'], key: 'test');
+        self::assertContains("import b from '/test.js';", $view->js[$view::POS_IMPORT]);
+        self::assertContains('b("param1", "param2");', $view->js[$view::POS_MODULE]);
+    }
 }

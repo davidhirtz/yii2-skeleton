@@ -5,11 +5,16 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\tests\unit\web;
 
 use Codeception\Test\Unit;
+use davidhirtz\yii2\skeleton\tests\support\UnitTester;
+use davidhirtz\yii2\skeleton\web\Request;
 use davidhirtz\yii2\skeleton\web\UrlManager;
 use Yii;
+use yii\web\UrlNormalizerRedirectException;
 
 class UrlManagerTest extends Unit
 {
+    protected UnitTester $tester;
+
     public function testCreateUrl(): void
     {
         $manager = $this->getUrlManager();
@@ -66,6 +71,202 @@ class UrlManagerTest extends Unit
 
         $url = $manager->createDraftUrl('post/view');
         self::assertEquals('https://draft.example.com/post/view', $url);
+
+        $manager->draftSubdomain = 'preview';
+
+        $url = $manager->createDraftUrl('post/view');
+        self::assertEquals('https://preview.example.com/post/view', $url);
+
+        Yii::$app->getRequest()->setIsDraft(true);
+        $manager->draftSubdomain = false;
+
+        $url = $manager->createDraftUrl('post/view');
+        self::assertEquals('https://www.example.com/post/view', $url);
+    }
+
+    public function testI18nUrl(): void
+    {
+        $manager = $this->getUrlManager([
+            'i18nUrl' => true,
+            'languages' => [
+                'en-US' => 'en',
+                'de' => 'de',
+            ],
+        ]);
+
+        self::assertEquals('https://www.example.com', $manager->getHostInfo());
+
+        $request = $this->getRequest([
+            'hostInfo' => 'https://www.example.com',
+            'url' => '/de',
+        ]);
+
+        $manager->parseRequest($request);
+
+        self::assertEquals('https://www.example.com', $manager->getHostInfo());
+        self::assertEquals('de', Yii::$app->language);
+
+        $url = $manager->createAbsoluteUrl(['test']);
+        self::assertEquals('https://www.example.com/de/test', $url);
+
+        $url = $manager->createDraftUrl(['test']);
+        self::assertEquals('https://draft.example.com/de/test', $url);
+
+        $url = $manager->createAbsoluteUrl(['test', 'language' => 'en-US']);
+        self::assertEquals('https://www.example.com/test', $url);
+
+        $url = $manager->createDraftUrl(['test', 'language' => 'en-US']);
+        self::assertEquals('https://draft.example.com/test', $url);
+
+        $request = $this->getRequest([
+            'hostInfo' => 'https://www.example.com',
+            'url' => '/en/test',
+        ]);
+
+        try {
+            $manager->parseRequest($request);
+            self::fail('UrlNormalizerRedirectException not thrown');
+        } catch (UrlNormalizerRedirectException $e) {
+            self::assertEquals('https://www.example.com/test', $e->url);
+        }
+
+        $url = $manager->createAbsoluteUrl(['test', 'language' => 'de']);
+        self::assertEquals('https://www.example.com/de/test', $url);
+
+        $request = $this->getRequest([
+            'hostInfo' => 'https://draft.example.com',
+            'url' => '/de',
+        ]);
+
+        $manager->parseRequest($request);
+
+        self::assertEquals('https://example.com', $manager->getHostInfo());
+        self::assertEquals('de', Yii::$app->language);
+        self::assertTrue($request->getIsDraft());
+    }
+
+    public function testI18nSubdomain(): void
+    {
+        $manager = $this->getUrlManager([
+            'i18nSubdomain' => true,
+            'languages' => [
+                'en-US' => 'www',
+                'de' => 'de',
+            ],
+        ]);
+
+        self::assertEquals('https://www.example.com', $manager->getHostInfo());
+
+        $request = $this->getRequest([
+            'hostInfo' => 'https://de.example.com',
+            'url' => '/',
+        ]);
+
+        $manager->parseRequest($request);
+
+        self::assertEquals('https://www.example.com', $manager->getHostInfo());
+        self::assertEquals('de', Yii::$app->language);
+
+        $url = $manager->createAbsoluteUrl(['test']);
+        self::assertEquals('https://de.example.com/test', $url);
+
+        $url = $manager->createDraftUrl(['test']);
+        self::assertEquals('https://draft.de.example.com/test', $url);
+
+        $url = $manager->createAbsoluteUrl(['test', 'language' => 'en-US']);
+        self::assertEquals('https://www.example.com/test', $url);
+
+        $url = $manager->createDraftUrl(['test', 'language' => 'en-US']);
+        self::assertEquals('https://draft.example.com/test', $url);
+
+        $request = $this->getRequest([
+            'hostInfo' => 'https://www.example.com',
+            'url' => '/',
+        ]);
+
+        $manager->parseRequest($request);
+
+        $url = $manager->createAbsoluteUrl(['test', 'language' => 'de']);
+        self::assertEquals('https://de.example.com/test', $url);
+
+        $request = $this->getRequest([
+            'hostInfo' => 'https://draft.de.example.com',
+            'url' => '/',
+        ]);
+
+        $manager->parseRequest($request);
+
+        self::assertEquals('https://www.example.com', $manager->getHostInfo());
+        self::assertEquals('de', Yii::$app->language);
+        self::assertTrue($request->getIsDraft());
+    }
+
+    public function testRedirectMap(): void
+    {
+        $manager = $this->getUrlManager([
+            'redirectMap' => [
+                'old-url' => 'https://www.new-domain.com/new-url',
+                [
+                    'request' => ['old/*'],
+                    'url' => 'temp/',
+                    'code' => 302,
+                ],
+            ],
+        ]);
+
+        $request = $this->getRequest([
+            'hostInfo' => 'https://www.example.com',
+            'url' => '/',
+        ]);
+
+        $manager->parseRequest($request);
+        self::assertEquals('https://www.example.com', $manager->getHostInfo());
+
+        $request = $this->getRequest([
+            'hostInfo' => 'https://www.example.com',
+            'url' => '/old-url',
+        ]);
+
+        try {
+            $manager->parseRequest($request);
+            self::fail('UrlNormalizerRedirectException not thrown');
+        } catch (UrlNormalizerRedirectException $e) {
+            self::assertEquals('https://www.new-domain.com/new-url', $e->url);
+        }
+
+        $request = $this->getRequest([
+            'hostInfo' => 'https://www.example.com',
+            'url' => '/old/test',
+        ]);
+
+        try {
+            $manager->parseRequest($request);
+            self::fail('UrlNormalizerRedirectException not thrown');
+        } catch (UrlNormalizerRedirectException $e) {
+            self::assertEquals('/temp/test', $e->url);
+            self::assertEquals(302, $e->statusCode);
+        }
+    }
+
+    public function testLanguageUrl(): void
+    {
+        $manager = $this->getUrlManager([
+            'languages' => [
+                'en-US' => 'en',
+                'de' => 'de',
+            ],
+        ]);
+
+        $request = $this->getRequest([
+            'hostInfo' => 'https://www.example.com',
+            'url' => '/',
+            'bodyParams' => [
+                'language' => 'de',
+            ],
+        ]);
+
+        $manager->parseRequest($request);
+        self::assertEquals('de', Yii::$app->language);
     }
 
     public function testBaseUrl(): void
@@ -109,8 +310,23 @@ class UrlManagerTest extends Unit
         self::assertEquals(['new-posts', 'old_posts'], $manager->getImmutableRuleParams());
     }
 
+    protected function getRequest($config = []): Request
+    {
+        Yii::$app->set('request', [
+            'class' => Request::class,
+            ...$config,
+        ]);
+
+        return Yii::$app->getRequest();
+    }
+
     protected function getUrlManager($config = []): UrlManager
     {
-        return new UrlManager($config);
+        Yii::$app->set('urlManager', [
+            'class' => UrlManager::class,
+            ...$config,
+        ]);
+
+        return Yii::$app->getUrlManager();
     }
 }

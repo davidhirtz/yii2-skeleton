@@ -1,3 +1,18 @@
+## 2.5.0 (May 25, 2025)
+
+- Added minimum PHP requirements to PHP 8.3
+- Added wildcard support for `UrlManager::$redirectMap`
+- Added `View::registerJsModules()` to register JS modules
+- Added `declare(strict_types=1);` to migration template (Issue #43)
+- Added `Request::isDraftRequest()` to check if the current request is a draft request
+- Moved `Request::$draftSubdomain` and `Request::getDraftHostInfo()` to `UrlManager` (Issue #42)
+- Removed `Request::getProductionHostInfo()`
+- Updated Codeception
+
+## 2.4.10 (May 21, 2025)
+
+- Added `Request::setIsDraft()` for custom draft detectionÏ
+
 ## 3.0.0 (in development)
 
 - Added `TrailModelInterface` and `TrailModelTrait` to better handle static analysis of trail models
@@ -19,6 +34,7 @@
 - Add flash success messages for adding or revoking users' RBAC (Issue #33)
 - Extracted `Controller::$spacelessOutput` to `Controller::stripWhitespaceFromHtml()` method
 - Fixed loading default values for `User` creation via console (Issue #35)
+
 ## 2.4.7 (Mar 24, 2025)
 
 - Added auto-generated color fields for `HexColorValidator`

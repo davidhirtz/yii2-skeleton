@@ -33,11 +33,11 @@ class Redirect extends ActiveRecord implements TypeAttributeInterface, TrailMode
     use TrailModelTrait;
     use UpdatedByUserTrait;
 
-    final public const AUTH_REDIRECT_CREATE = 'redirectCreate';
+    final public const string AUTH_REDIRECT_CREATE = 'redirectCreate';
 
     final public const TYPE_DEFAULT = self::TYPE_MOVED_PERMANENTLY;
-    final public const TYPE_MOVED_PERMANENTLY = 301;
-    final public const TYPE_FOUND = 302;
+    final public const int TYPE_MOVED_PERMANENTLY = 301;
+    final public const int TYPE_FOUND = 302;
 
     public function behaviors(): array
     {

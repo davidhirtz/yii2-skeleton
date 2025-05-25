@@ -7,6 +7,7 @@ namespace davidhirtz\yii2\skeleton\tests\unit\models\forms;
 use Codeception\Test\Unit;
 use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
 use davidhirtz\yii2\skeleton\models\forms\SignupForm;
+use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\tests\support\UnitTester;
 use Yii;
 use yii\symfonymailer\Message;
@@ -41,6 +42,7 @@ class SignupFormTest extends Unit
         self::assertTrue($form->hasErrors('token'));
         self::assertTrue($form->hasErrors('honeypot'));
 
+        /** @var User $user */
         $user = $this->tester->grabFixture('user', 'admin');
 
         $form->name = 'Testname';
@@ -128,5 +130,5 @@ class SignupFormTest extends Unit
 
 class TestSignupForm extends SignupForm
 {
-    public const SESSION_TOKEN_MIN_TIME = 0;
+    public const int SESSION_TOKEN_MIN_TIME = 0;
 }

@@ -6,12 +6,19 @@ namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use Yii;
+use yii\web\UrlNormalizerRedirectException;
 use yii\web\UrlRule;
 
 class UrlManager extends \yii\web\UrlManager
 {
     public const EVENT_AFTER_CREATE = 'afterCreate';
     public const EVENT_BEFORE_PARSE = 'beforeParse';
+
+    /**
+     * @var string|false the subdomain indicating a draft version of the application. Further validation should
+     * be done on the controller level.
+     */
+    public string|false $draftSubdomain = 'draft';
 
     /**
      * @var bool whether the language should be added to the URL via `languageParam`.
@@ -38,9 +45,10 @@ class UrlManager extends \yii\web\UrlManager
 
     /**
      * @var array containing hard redirects, either as request URI ⇒ URL pairs, which generate regular 301 redirects
-     * or as arrays containing the request URIs at first position, the target URL as the second and an
-     * optional third containing the redirect code (defaults to 301). If dynamic redirects are necessary, please take
-     * a look at {@see \davidhirtz\yii2\skeleton\models\Redirect}.
+     * or as arrays containing the request URIs as an array in array key `request`, the target URL as the key `url`
+     * and optional the redirect code (defaults to 301) as `status`.
+     *
+     * If dynamic redirects are necessary, please take a look at {@see \davidhirtz\yii2\skeleton\models\Redirect}.
      */
     public array $redirectMap = [];
 
@@ -59,16 +67,14 @@ class UrlManager extends \yii\web\UrlManager
 
         $this->defaultLanguage ??= Yii::$app->sourceLanguage;
 
-        if ($this->languages === null) {
-            $this->languages = [];
-
-            foreach (Yii::$app->getI18n()->getLanguages() as $language) {
-                $this->languages[$language] = strstr((string)$language, '-', true) ?: $language;
-            }
-        }
+        $this->languages ??= array_map(
+            fn (string $language): string => strstr((string)$language, '-', true) ?: $language,
+            Yii::$app->getI18n()->getLanguages()
+        );
 
         if (!$this->languages) {
             $this->i18nUrl = false;
+            $this->i18nSubdomain = false;
         }
 
         parent::init();
@@ -78,11 +84,10 @@ class UrlManager extends \yii\web\UrlManager
     {
         $request = Yii::$app->getRequest();
         $language = Yii::$app->language;
-        $i18nUrl = $this->i18nUrl;
 
         $params = (array)$params;
 
-        if ($i18nUrl || $this->i18nSubdomain) {
+        if ($this->i18nUrl || $this->i18nSubdomain) {
             $language = ArrayHelper::remove($params, $request->languageParam, $language);
             $defaultLanguage = ArrayHelper::remove($params, 'defaultLanguage');
         }
@@ -90,26 +95,22 @@ class UrlManager extends \yii\web\UrlManager
         $defaultLanguage ??= $this->defaultLanguage;
 
         $url = parent::createUrl(array_filter($params, fn ($value): bool => !is_null($value)));
-
         $event = $this->getAfterCreateEvent($url, $params);
 
         if ($event) {
             $url = $event->url;
         }
 
-        if ($i18nUrl) {
+        if ($this->i18nUrl) {
             if (isset($this->languages[$language]) && $language !== $defaultLanguage) {
                 $position = strlen($this->showScriptName ? $this->getScriptUrl() : $this->getBaseUrl());
                 return rtrim(substr_replace($url, '/' . $this->languages[$language], $position, 0), '/');
             }
         }
 
-        if ($this->i18nSubdomain && $language !== Yii::$app->language) {
-            $subdomain = $language == $defaultLanguage || !in_array($language, $this->languages)
-                ? ($request->getIsDraft() ? $request->draftSubdomain : 'www')
-                : ($request->getIsDraft() ? ($request->draftSubdomain . '.' . $language) : $language);
-
-            return parse_url($this->getHostInfo(), PHP_URL_SCHEME) . '://' . $subdomain . $this->getI18nHostInfo() . $url;
+        if ($this->i18nSubdomain && $language !== $this->defaultLanguage) {
+            $subdomain = $this->languages[$language] ?? '';
+            return $this->replaceSubdomain($subdomain, $this->getHostInfo()) . $url;
         }
 
         return $url;
@@ -117,11 +118,20 @@ class UrlManager extends \yii\web\UrlManager
 
     public function createDraftUrl(array|string $params): string
     {
-        if ($hostInfo = Yii::$app->getRequest()->getDraftHostInfo()) {
-            return $hostInfo . $this->createUrl($params);
+        if ($this->draftSubdomain) {
+            $url = $this->createUrl($params);
+
+            return str_starts_with($url, 'http')
+                ? $this->replaceSubdomain($this->draftSubdomain, $url)
+                : $this->getDraftHostInfo() . $url;
         }
 
-        return '';
+        return $this->createAbsoluteUrl($params);
+    }
+
+    private function replaceSubdomain(string $replacement, string $url): string
+    {
+        return preg_replace('#^((https?://)(www.)?)#', "$2$replacement.", $url);
     }
 
     /**
@@ -130,6 +140,11 @@ class UrlManager extends \yii\web\UrlManager
     public function parseRequest($request): bool|array
     {
         $this->parseRedirectMap($request, $this->redirectMap);
+        $this->setHostInfo($request->getHostInfo());
+
+        if ($this->draftSubdomain) {
+            $this->setDraftStatus($request);
+        }
 
         if (count($this->languages) > 1) {
             $this->setApplicationLanguage($request);
@@ -153,12 +168,13 @@ class UrlManager extends \yii\web\UrlManager
                 $statusCode = 301;
 
                 if (is_array($location)) {
-                    if (isset($location[2]) && $location[2] == 302) {
-                        $statusCode = $location[2];
+                    if (!isset($location['url'])) {
+                        throw new \InvalidArgumentException('Missing location key in redirect map.');
                     }
 
-                    $urlset = $location[0];
-                    $location = $location[1];
+                    $urlset = $location['request'] ?? $urlset;
+                    $statusCode = $location['code'] ?? $statusCode;
+                    $location = $location['url'];
                 }
 
                 if (!str_contains((string)$location, '://') && is_string($location)) {
@@ -167,21 +183,37 @@ class UrlManager extends \yii\web\UrlManager
 
                 foreach ((array)$urlset as $url) {
                     $url = trim((string)$url, '/');
-                    $wildcard = strpos($url, '*');
 
-                    if ($url == $pathInfo || ($wildcard && substr($url, 0, $wildcard) == substr($pathInfo, 0, $wildcard))) {
-                        Yii::$app->getResponse()->redirect($location, $statusCode);
-                        Yii::$app->end();
+                    if ($url === $pathInfo) {
+                        throw new UrlNormalizerRedirectException($location, $statusCode);
+                    }
+
+                    if (str_contains($url, '*')) {
+                        $prefix = strstr($url, '*', true);
+
+                        if ($prefix !== false && str_starts_with($pathInfo, $prefix)) {
+                            $newUrl = $location . substr($pathInfo, strlen($prefix));
+                            throw new UrlNormalizerRedirectException($newUrl, $statusCode);
+                        }
                     }
                 }
             }
         }
     }
 
+    protected function setDraftStatus(Request $request): void
+    {
+        $hostInfo = $this->getHostInfo();
+
+        if (str_contains($hostInfo, "//$this->draftSubdomain.")) {
+            $this->setHostInfo(str_replace("//$this->draftSubdomain.", '//', $hostInfo));
+            $request->setIsDraft(true);
+        }
+    }
+
     protected function setApplicationLanguage(Request $request): void
     {
         if ($this->i18nUrl) {
-            // Check if the pathInfo starts with a language identifier.
             $pathInfo = trim($request->getPathInfo(), '/');
 
             if (preg_match('#^(' . implode('|', $this->languages) . ')\b(/?)#i', $pathInfo, $matches)) {
@@ -191,8 +223,7 @@ class UrlManager extends \yii\web\UrlManager
                 if ($language) {
                     if ($language == $this->defaultLanguage) {
                         $url = preg_replace('#(/' . preg_quote($matches[1]) . ')(/|$)#', '$2', $request->getAbsoluteUrl());
-                        Yii::$app->getResponse()->redirect($url, 301);
-                        Yii::$app->end();
+                        throw new UrlNormalizerRedirectException($url, 301);
                     }
 
                     Yii::$app->language = $language;
@@ -204,9 +235,11 @@ class UrlManager extends \yii\web\UrlManager
 
         if ($this->i18nSubdomain) {
             $host = parse_url($this->getHostInfo(), PHP_URL_HOST);
-            $subdomain = explode('.', (string)$host)[$request->getIsDraft() ? 1 : 0];
+            $subdomain = explode('.', (string)$host)[0];
 
             if (in_array($subdomain, $this->languages)) {
+                $replace = $this->languages[$this->defaultLanguage] ?? '';
+                $this->setHostInfo(str_replace("//$subdomain", "//$replace", $this->getHostInfo()));
                 Yii::$app->language = $subdomain;
                 return;
             }
@@ -265,15 +298,9 @@ class UrlManager extends \yii\web\UrlManager
         return array_unique($params);
     }
 
-    public function getI18nHostInfo(): string
+    public function getDraftHostInfo(): false|string
     {
-        $request = Yii::$app->getRequest();
-
-        $hostInfo = Yii::$app->language == $this->defaultLanguage ?
-            ($request->getIsDraft() ? $request->draftSubdomain : 'www') :
-            ($request->getIsDraft() ? ($request->draftSubdomain . '.' . Yii::$app->language) : Yii::$app->language);
-
-        return substr((string)parse_url($this->getHostInfo(), PHP_URL_HOST), strlen((string)$hostInfo));
+        return $this->replaceSubdomain($this->draftSubdomain, $this->getHostInfo());
     }
 
     public function hasI18nUrls(): bool

@@ -73,8 +73,8 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
         if (!$request->getIsConsoleRequest()) {
             //  Redirects draft URLs for the backend, but only if it's not an AJAX to prevent breaking frontend
             // implementations or REST APIs that use admin endpoints.
-            if ($request->getIsDraft() && !$request->getIsAjax()) {
-                $url = $request->getProductionHostInfo() . $request->getUrl();
+            if ($request->isDraftRequest() && !$request->getIsAjax()) {
+                $url = Yii::$app->getUrlManager()->createAbsoluteUrl($request->getUrl());
                 Yii::$app->getResponse()->redirect($url)->send();
             }
 
@@ -232,7 +232,7 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
     }
 
     /**
-     * @return ModuleInterface[]
+     * @return (\yii\base\Module&ModuleInterface)[]
      */
     public function getSubmodules(): array
     {

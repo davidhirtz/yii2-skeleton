@@ -12,8 +12,8 @@ class SignupForm extends AbstractSignupForm
 {
     use SignupEmailTrait;
 
-    final public const SESSION_TOKEN_NAME = 'signup_token';
-    final public const SESSION_TIMESTAMP_NAME = 'signup_timestamp';
+    final public const string SESSION_TOKEN_NAME = 'signup_token';
+    final public const string SESSION_TIMESTAMP_NAME = 'signup_timestamp';
     public const SESSION_TOKEN_MIN_TIME = 5;
     public const SESSION_TOKEN_MAX_TIME = 1800;
 

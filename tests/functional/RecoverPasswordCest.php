@@ -1,10 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * @noinspection PhpUnused
  */
+
+declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\tests\functional;
 
@@ -56,6 +56,7 @@ class RecoverPasswordCest extends BaseCest
 
     public function checkPasswordRecoverWithValidEmail(FunctionalTester $I): void
     {
+        /** @var User $user */
         $user = $I->grabFixture('user', 'admin');
 
         $I->amOnPage("/{$this->module->alias}/account/recover");
