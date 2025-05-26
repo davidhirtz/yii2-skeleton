@@ -1,7 +1,7 @@
 ## 2.5.1 (in development)
 
 - Enhanced `StreamUploadedFile` to also set file name from URL on error
-- 
+- Fixed `View::prepareJsArguments` to properly handle non-arrays
 
 ## 2.5.0 (May 25, 2025)
 

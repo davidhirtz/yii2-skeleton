@@ -108,7 +108,7 @@ class View extends \yii\web\View
 
     protected function prepareJsArguments(array|string|null $arguments = null): string
     {
-        if (array_is_list($arguments)) {
+        if (is_array($arguments) && array_is_list($arguments)) {
             return implode(', ', array_map(fn ($value) => Json::htmlEncode($value), $arguments));
         }
 
