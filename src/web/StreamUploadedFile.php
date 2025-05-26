@@ -48,6 +48,8 @@ class StreamUploadedFile extends UploadedFile
             ? FileHelper::encodeUrl($this->url)
             : $this->url;
 
+        $this->name = basename((string) parse_url($this->url, PHP_URL_PATH));
+
         $contents = @file_get_contents($this->url);
 
         if (!$contents) {
@@ -62,7 +64,6 @@ class StreamUploadedFile extends UploadedFile
             return;
         }
 
-        $this->name = basename((string) parse_url($this->url, PHP_URL_PATH));
         $this->type = FileHelper::getMimeType($this->tempName);
 
         if ($this->allowedExtensions && !in_array($this->getExtension(), $this->allowedExtensions)) {

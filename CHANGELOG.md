@@ -1,6 +1,11 @@
+## 2.5.1 (in development)
+
+- Enhanced `StreamUploadedFile` to also set file name from URL on error
+- 
+
 ## 2.5.0 (May 25, 2025)
 
-- Added minimum PHP requirements to PHP 8.3
+- Requires PHP 8.3+
 - Added wildcard support for `UrlManager::$redirectMap`
 - Added `View::registerJsModules()` to register JS modules
 - Added `declare(strict_types=1);` to migration template (Issue #43)
