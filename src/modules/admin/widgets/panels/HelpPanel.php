@@ -11,7 +11,7 @@ use Yii;
 class HelpPanel extends Panel
 {
     public array $wrapOptions = [
-        'class' => 'row',
+        'class' => 'form-group-buttons form-group',
     ];
 
     public array $contentOptions = [

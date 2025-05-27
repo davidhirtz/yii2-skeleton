@@ -5,7 +5,7 @@
   width: max-content;
   position: absolute;
   word-wrap: break-word;
-  z-index: $zindex-tooltip;
+  z-index: $tooltip-z-index;
 }
 
 .tooltip-arrow {

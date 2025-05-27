@@ -9,23 +9,3 @@
 //@import "../../../../node_modules/bootstrap/scss/forms/floating-labels";
 @import "forms/input-group";
 @import "forms/validation";
-
-.form-group {
-  &:not(:last-child) {
-    margin-bottom: $form-group-spacer;
-  }
-
-  @include media-breakpoint-up(md) {
-    display: flex;
-  }
-}
-
-.form-group-sticky {
-  position: $form-sticky-position;
-  margin-top: $form-group-spacer;
-  padding: $form-group-spacer 0;
-  bottom: 0;
-  border-top: $form-sticky-border;
-  background-color: $card-bg;
-  z-index: 2;
-}

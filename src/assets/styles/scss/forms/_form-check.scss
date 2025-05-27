@@ -2,67 +2,67 @@
 
 .form-check {
   display: inline-flex;
-  margin-right: $form-check-inline-margin-end;
-  gap: $form-check-gap;
+  margin-right: $checkbox-inline-margin-end;
+  gap: $checkbox-gap;
 }
 
 .form-check-input {
   flex-shrink: 0;
-  width: $form-check-input-width;
-  height: $form-check-input-width;
+  width: $checkbox-input-width;
+  height: $checkbox-input-height;
   appearance: none;
-  background-color: $form-check-input-bg;
+  background-color: $checkbox-input-bg;
   background-image: var(--#{$prefix}form-check-bg-image, transparent);
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
-  border: $form-check-input-border;
+  border: $checkbox-input-border;
   print-color-adjust: exact; // Keep themed appearance for print
-  @include transition($form-check-transition);
+  @include transition($checkbox-transition);
 
   &[type="checkbox"] {
-    @include border-radius($form-check-input-border-radius);
+    @include border-radius($checkbox-input-border-radius);
   }
 
   &[type="radio"] {
-    border-radius: $form-check-radio-border-radius;
+    border-radius: $checkbox-radio-border-radius;
   }
 
   &:focus,
   &:hover {
-    border-color: $form-check-input-focus-border;
+    border-color: $checkbox-input-focus-border;
     outline: 0;
-    box-shadow: $form-check-input-focus-box-shadow;
+    box-shadow: $checkbox-input-focus-box-shadow;
   }
 
   &:checked {
-    background-color: $form-check-input-checked-bg-color;
-    border-color: $form-check-input-checked-border-color;
+    background-color: $checkbox-input-checked-bg-color;
+    border-color: $checkbox-input-checked-border-color;
 
     &[type="checkbox"] {
-      --#{$prefix}form-check-bg-image: #{escape-svg($form-check-input-checked-bg-image)};
+      --#{$prefix}form-check-bg-image: #{escape-svg($checkbox-input-checked-bg-image)};
     }
 
     &[type="radio"] {
-      --#{$prefix}form-check-bg-image: #{escape-svg($form-check-radio-checked-bg-image)};
+      --#{$prefix}form-check-bg-image: #{escape-svg($checkbox-radio-checked-bg-image)};
     }
   }
 
   &:disabled {
     pointer-events: none;
     filter: none;
-    opacity: $form-check-input-disabled-opacity;
+    opacity: $checkbox-input-disabled-opacity;
   }
 
   &[disabled],
   &:disabled {
     ~ .form-check-label {
-      opacity: $form-check-label-disabled-opacity;
+      opacity: $checkbox-label-disabled-opacity;
     }
   }
 }
 
 .form-check-label {
-  color: $form-check-label-color;
-  cursor: $form-check-label-cursor;
+  color: $checkbox-label-color;
+  cursor: $checkbox-label-cursor;
 }

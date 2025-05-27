@@ -1,42 +1,54 @@
 //@import "../../../../../../../node_modules/bootstrap/scss/forms/labels";
 
+.form-group {
+  display: grid;
+  gap: $form-group-gap-xs;
+
+  &:not(:last-child) {
+    margin-bottom: $form-group-spacer;
+  }
+
+  @include media-breakpoint-up(md) {
+    grid-template-columns: $form-group-template-columns;
+
+    @if($form-group-gap-md != $form-group-gap-xs) {
+      gap: $form-group-gap-md;
+    }
+  }
+}
+
+.form-group-sticky {
+  position: $form-sticky-position;
+  margin-top: $form-group-spacer;
+  padding: $form-group-spacer 0;
+  bottom: 0;
+  border-top: $form-sticky-border;
+  background-color: $card-bg;
+  z-index: 2;
+}
 
 .form-label {
   @include font-size($form-label-font-size);
   font-style: $form-label-font-style;
   font-weight: $form-label-font-weight;
   color: $form-label-color;
-}
-
-.col-form-label {
-  padding-bottom: $form-label-padding-bottom;
-  margin: 0;
-  @include font-size(inherit);
-  font-style: $form-label-font-style;
-  font-weight: $form-label-font-weight;
-  line-height: $input-line-height;
-  color: $form-label-color;
 
   .required &:after {
     content: " *";
   }
+}
 
+.col-form-label {
   @include media-breakpoint-up(md) {
-    padding: calc(($input-padding-y + $form-group-spacer) / 2 + $input-border-width) $form-group-spacer 0 0;
+    padding: $form-label-padding-y $form-label-padding-x;
+    align-self: flex-start;
     text-align: right;
-
-    @include media-breakpoint-up(md) {
-      flex: 0 0 auto;
-      width: 30%;
-    }
   }
 }
 
 .col-form-content {
   @include media-breakpoint-up(md) {
-    flex: 0 0 auto;
-    width: 70%;
-    margin-left: auto;
+    grid-column-start: 2;
 
     > * {
       max-width: 60rem;

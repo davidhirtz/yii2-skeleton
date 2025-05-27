@@ -92,7 +92,7 @@ $h4-font-size: 0.875em !default;
 $headings-margin-bottom: .5rem !default;
 $headings-font-family: null !default;
 $headings-font-style: null !default;
-$headings-font-weight: 500 !default;
+$headings-font-weight: $font-weight-medium !default;
 $headings-line-height: 1.2 !default;
 $headings-color: inherit !default;
 
@@ -288,122 +288,6 @@ $grid-view-header-border: none !default;
 $grid-view-spacer: $grid-spacer !default;
 $grid-view-footer-border: 1px solid var(--#{$prefix}primary-border) !default;
 
-// Forms
-$form-sticky-position: sticky !default;
-$form-sticky-border: $border-width solid var(--#{$prefix}border) !default;
-
-$form-group-spacer: $spacer !default;
-
-$input-padding-y: 0.5rem !default;
-$input-padding-x: 0.75rem !default;
-$input-font-size: 1rem !default;
-$input-font-weight: $font-weight-base !default;
-$input-line-height: 1.5 !default;
-$input-font-family: null !default;
-$input-color: var(--#{$prefix}body-color) !default;
-$input-border-color: var(--#{$prefix}border) !default;
-$input-border-width: $border-width !default;
-$input-border-radius: $border-radius !default;
-$input-bg: var(--#{$prefix}light-bg) !default;
-$input-box-shadow: none !default;
-
-$input-disabled-bg: var(--#{$prefix}secondary-bg) !default;
-$input-disabled-color: null !default;
-$input-disabled-border-color: null !default;
-
-$input-focus-color: var(--#{$prefix}body-color) !default;
-$input-focus-bg: var(--#{$prefix}light) !default;
-$input-focus-border-color: var(--#{$prefix}primary) !default;
-$input-focus-width: .25rem !default;
-$input-focus-box-shadow: none !default;
-
-$input-placeholder-color: var(--#{$prefix}body-color) !default;
-$input-placeholder-opacity: 0.6 !default;
-$input-plaintext-color: var(--#{$prefix}body-color) !default;
-$input-transition: border-color .15s ease-in-out, color .15s ease-in-out !default;
-
-$form-select-padding-y: $input-padding-y !default;
-$form-select-padding-x: $input-padding-x !default;
-$form-select-font-family: $input-font-family !default;
-$form-select-font-size: $input-font-size !default;
-$form-select-indicator-padding: $form-select-padding-x * 3 !default; // Extra padding for background-image
-$form-select-font-weight: $input-font-weight !default;
-$form-select-line-height: $input-line-height !default;
-$form-select-color: $input-color !default;
-$form-select-bg: $input-bg !default;
-$form-select-disabled-color: null !default;
-$form-select-disabled-bg: $input-disabled-bg !default;
-$form-select-disabled-border-color: $input-disabled-border-color !default;
-$form-select-bg-position: right $form-select-padding-x center !default;
-$form-select-bg-size: 16px 12px !default;
-$form-select-indicator-color: $border-color !default;
-$form-select-indicator: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$form-select-indicator-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>") !default;
-
-$form-select-focus-box-shadow: none !default;
-
-$form-select-feedback-icon-padding-end: $form-select-padding-x * 2.5 + $form-select-indicator-padding !default;
-$form-select-feedback-icon-position: center right $form-select-indicator-padding !default;
-
-$input-height-inner-half: add($input-line-height * .5em, $input-padding-y) !default;
-$form-select-feedback-icon-size: $input-height-inner-half $input-height-inner-half !default;
-
-$form-select-border-width: $input-border-width !default;
-$form-select-border-color: $input-border-color !default;
-$form-select-border-radius: $input-border-radius !default;
-$form-select-box-shadow: var(--#{$prefix}box-shadow-inset) !default;
-
-$form-select-focus-border-color: $input-focus-border-color !default;
-$form-select-focus-width: $input-focus-width !default;
-$form-select-focus-box-shadow: 0 0 0 $form-select-focus-width $input-btn-focus-color !default;
-
-$form-select-transition: $input-transition !default;
-
-$form-label-padding-bottom: .5rem !default;
-$form-label-font-size: null !default;
-$form-label-font-style: null !default;
-$form-label-color: var(--#{$prefix}body-color) !default;
-$form-label-font-weight: bold !default;
-
-$form-check-input-border-radius: $border-radius !default;
-$form-check-input-width: 1.25rem !default;
-$form-check-input-focus-box-shadow: none !default;
-$form-check-label-color: var(--#{$prefix}body-color) !default;
-$form-check-label-cursor: null !default;
-$form-check-transition: null !default;
-$form-check-gap: 0.75rem !default;
-
-$form-check-input-bg: $input-bg !default;
-$form-check-input-border: $border-width solid var(--#{$prefix}border) !default;
-$form-check-radio-border-radius: 50% !default;
-$form-check-input-focus-border: $input-focus-border-color !default;
-
-$form-check-input-checked-bg-color: var(--#{$prefix}light-bg) !default;
-$form-check-input-checked-color: $body-color !default;
-$form-check-input-checked-border-color: var(--#{$prefix}border) !default;
-$form-check-input-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#{$form-check-input-checked-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/></svg>") !default;
-$form-check-radio-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='2' fill='#{$form-check-input-checked-color}'/></svg>") !default;
-
-$form-check-input-disabled-opacity: .5 !default;
-$form-check-label-disabled-opacity: $form-check-input-disabled-opacity !default;
-$form-check-btn-check-disabled-opacity: .5 !default;
-
-$form-check-inline-margin-end: 1rem !default;
-
-$form-invalid-bg: var(--#{$prefix}light) !default;
-$form-invalid-border-color: var(--#{$prefix}danger-border) !default;
-$form-invalid-color: var(--#{$prefix}danger-color) !default;
-
-$input-group-addon-padding-y: $input-padding-y !default;
-$input-group-addon-padding-x: $input-padding-x !default;
-$input-group-addon-font-weight: $input-font-weight !default;
-$input-group-addon-color: var(--#{$prefix}body-color) !default;
-$input-group-addon-bg: var(--#{$prefix}light) !default;
-$input-group-addon-border-color: $input-border-color !default;
-
-$form-file-button-color: $input-color !default;
-$form-file-button-bg: var(--#{$prefix}tertiary-bg) !default;
-$form-file-button-hover-bg: var(--#{$prefix}secondary-bg) !default;
-
 // Buttons
 $btn-color: var(--#{$prefix}body-color) !default;
 $btn-padding-y: 0.59375rem !default;
@@ -411,7 +295,7 @@ $btn-padding-x: 0.75rem !default;
 $btn-font-family: null !default;
 $btn-font-size: $font-size-base !default;
 $btn-line-height: $line-height-base !default;
-$btn-font-weight: $font-weight-normal !default;
+$btn-font-weight: $font-weight-medium !default;
 $btn-white-space: null !default;
 
 $btn-padding-y-sm: 0.25rem !default;
@@ -459,6 +343,125 @@ $btn-close-focus-opacity: 1 !default;
 $btn-close-disabled-opacity: .25 !default;
 $btn-close-padding-x: 0 !default;
 $btn-close-padding-y: $btn-close-padding-x !default;
+
+// Forms
+$form-sticky-position: sticky !default;
+$form-sticky-border: $border-width solid var(--#{$prefix}border) !default;
+
+$form-group-spacer: $spacer !default;
+$form-group-template-columns: 1fr 3fr !default;
+$form-group-gap-xs: .5rem !default;
+$form-group-gap-md: 1rem !default;
+
+$form-invalid-bg: var(--#{$prefix}light) !default;
+$form-invalid-border-color: var(--#{$prefix}danger-border) !default;
+$form-invalid-color: var(--#{$prefix}danger-color) !default;
+
+$input-padding-y: .5rem !default;
+$input-padding-x: .75rem !default;
+$input-font-size: 1rem !default;
+$input-font-weight: $font-weight-base !default;
+$input-line-height: 1.5 !default;
+$input-font-family: null !default;
+$input-color: var(--#{$prefix}body-color) !default;
+$input-border-color: var(--#{$prefix}border) !default;
+$input-border-width: $border-width !default;
+$input-border-radius: $border-radius !default;
+$input-bg: var(--#{$prefix}light-bg) !default;
+$input-box-shadow: none !default;
+$input-height-inner-half: add($input-line-height * .5em, $input-padding-y) !default;
+
+$input-disabled-bg: var(--#{$prefix}secondary-bg) !default;
+$input-disabled-color: null !default;
+$input-disabled-border-color: null !default;
+
+$input-focus-color: var(--#{$prefix}body-color) !default;
+$input-focus-bg: var(--#{$prefix}light) !default;
+$input-focus-border-color: var(--#{$prefix}primary) !default;
+$input-focus-width: .25rem !default;
+$input-focus-box-shadow: none !default;
+
+$input-placeholder-color: var(--#{$prefix}body-color) !default;
+$input-placeholder-opacity: 0.6 !default;
+$input-plaintext-color: var(--#{$prefix}body-color) !default;
+$input-transition: border-color .15s ease-in-out, color .15s ease-in-out !default;
+
+$input-group-addon-padding-y: $input-padding-y !default;
+$input-group-addon-padding-x: $input-padding-x !default;
+$input-group-addon-font-weight: $input-font-weight !default;
+$input-group-addon-color: var(--#{$prefix}body-color) !default;
+$input-group-addon-bg: var(--#{$prefix}light) !default;
+$input-group-addon-border-color: $input-border-color !default;
+
+$select-padding-y: $input-padding-y !default;
+$select-padding-x: $input-padding-x !default;
+$select-font-family: $input-font-family !default;
+$select-font-size: $input-font-size !default;
+$select-indicator-padding: $select-padding-x * 3 !default; // Extra padding for background-image
+$select-font-weight: $input-font-weight !default;
+$select-line-height: $input-line-height !default;
+$select-color: $input-color !default;
+$select-bg: $input-bg !default;
+$select-border-width: $input-border-width !default;
+$select-border-color: $input-border-color !default;
+$select-border-radius: $input-border-radius !default;
+$select-box-shadow: var(--#{$prefix}box-shadow-inset) !default;
+$select-disabled-color: null !default;
+$select-disabled-bg: $input-disabled-bg !default;
+$select-disabled-border-color: $input-disabled-border-color !default;
+$select-bg-position: right $select-padding-x center !default;
+$select-bg-size: 16px 12px !default;
+$select-indicator-color: $border-color !default;
+$select-indicator: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$select-indicator-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>") !default;
+
+$select-focus-box-shadow: none !default;
+
+$select-feedback-icon-padding-end: $select-padding-x * 2.5 + $select-indicator-padding !default;
+$select-feedback-icon-position: center right $select-indicator-padding !default;
+$select-feedback-icon-size: $input-height-inner-half $input-height-inner-half !default;
+
+$select-focus-border-color: $input-focus-border-color !default;
+$select-focus-width: $input-focus-width !default;
+$select-focus-box-shadow: 0 0 0 $select-focus-width $input-btn-focus-color !default;
+
+$select-transition: $input-transition !default;
+
+$form-label-font-size: null !default;
+$form-label-font-style: null !default;
+$form-label-color: var(--#{$prefix}body-color) !default;
+$form-label-font-weight: $font-weight-medium !default;
+$form-label-padding-y: calc($btn-padding-y + $input-border-width) !default;
+$form-label-padding-x: 0 !default;
+
+$checkbox-input-border-radius: $border-radius !default;
+$checkbox-input-width: 1.5rem !default;
+$checkbox-input-height: $checkbox-input-width !default;
+$checkbox-input-focus-box-shadow: none !default;
+$checkbox-label-color: var(--#{$prefix}body-color) !default;
+$checkbox-label-cursor: null !default;
+$checkbox-transition: null !default;
+$checkbox-gap: 0.75rem !default;
+
+$checkbox-input-bg: $input-bg !default;
+$checkbox-input-border: $border-width solid var(--#{$prefix}border) !default;
+$checkbox-radio-border-radius: 50% !default;
+$checkbox-input-focus-border: $input-focus-border-color !default;
+
+$checkbox-input-checked-bg-color: var(--#{$prefix}light-bg) !default;
+$checkbox-input-checked-color: $body-color !default;
+$checkbox-input-checked-border-color: var(--#{$prefix}border) !default;
+$checkbox-input-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#{$checkbox-input-checked-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/></svg>") !default;
+$checkbox-radio-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='2' fill='#{$checkbox-input-checked-color}'/></svg>") !default;
+
+$checkbox-input-disabled-opacity: .5 !default;
+$checkbox-label-disabled-opacity: $checkbox-input-disabled-opacity !default;
+$checkbox-btn-check-disabled-opacity: .5 !default;
+
+$checkbox-inline-margin-end: 1rem !default;
+
+$form-file-button-color: $input-color !default;
+$form-file-button-bg: var(--#{$prefix}tertiary-bg) !default;
+$form-file-button-hover-bg: var(--#{$prefix}secondary-bg) !default;
 
 
 // List group
@@ -627,7 +630,7 @@ $tooltip-color: var(--#{$prefix}body-bg) !default;
 $tooltip-bg: var(--#{$prefix}body-color) !default;
 $tooltip-border-radius: $border-radius !default;
 
-$zindex-tooltip: 1080 !default;
+$tooltip-z-index: 1080 !default;
 
 $tooltip-max-width: 12rem !default;
 $tooltip-arrow-width: 0.5rem !default;

@@ -8,50 +8,50 @@
 .form-select {
   display: block;
   width: 100%;
-  padding: $form-select-padding-y $form-select-indicator-padding $form-select-padding-y $form-select-padding-x;
-  font-family: $form-select-font-family;
-  @include font-size($form-select-font-size);
-  font-weight: $form-select-font-weight;
-  line-height: $form-select-line-height;
-  color: $form-select-color;
+  padding: $select-padding-y $select-indicator-padding $select-padding-y $select-padding-x;
+  font-family: $select-font-family;
+  @include font-size($select-font-size);
+  font-weight: $select-font-weight;
+  line-height: $select-line-height;
+  color: $select-color;
   appearance: none;
-  background-color: $form-select-bg;
+  background-color: $select-bg;
   background-image: var(--#{$prefix}arrow-down-bg, none);
   background-repeat: no-repeat;
-  background-position: $form-select-bg-position;
-  background-size: $form-select-bg-size;
-  border: $form-select-border-width solid $form-select-border-color;
-  @include border-radius($form-select-border-radius, 0);
-  @include box-shadow($form-select-box-shadow);
-  @include transition($form-select-transition);
+  background-position: $select-bg-position;
+  background-size: $select-bg-size;
+  border: $select-border-width solid $select-border-color;
+  @include border-radius($select-border-radius, 0);
+  @include box-shadow($select-box-shadow);
+  @include transition($select-transition);
 
   &:focus,
   &:hover {
-    border-color: $form-select-focus-border-color;
+    border-color: $select-focus-border-color;
     outline: 0;
     @if $enable-shadows {
-      @include box-shadow($form-select-box-shadow, $form-select-focus-box-shadow);
+      @include box-shadow($select-box-shadow, $select-focus-box-shadow);
     } @else {
       // Avoid using mixin so we can pass custom focus shadow properly
-      box-shadow: $form-select-focus-box-shadow;
+      box-shadow: $select-focus-box-shadow;
     }
   }
 
   &[multiple],
   &[size]:not([size="1"]) {
-    padding-right: $form-select-padding-x;
+    padding-right: $select-padding-x;
     background-image: none;
   }
 
   &:disabled {
-    color: $form-select-disabled-color;
-    background-color: $form-select-disabled-bg;
-    border-color: $form-select-disabled-border-color;
+    color: $select-disabled-color;
+    background-color: $select-disabled-bg;
+    border-color: $select-disabled-border-color;
   }
 
   // Remove outline from select box in FF
   &:-moz-focusring {
     color: transparent;
-    text-shadow: 0 0 0 $form-select-color;
+    text-shadow: 0 0 0 $select-color;
   }
 }
