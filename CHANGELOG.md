@@ -2,6 +2,7 @@
 
 - Enhanced `StreamUploadedFile` to also set file name from URL on error
 - Fixed `View::prepareJsArguments` to properly handle non-arrays
+- Fixed default `UrlManager::$languages` initialization
 
 ## 2.5.0 (May 25, 2025)
 

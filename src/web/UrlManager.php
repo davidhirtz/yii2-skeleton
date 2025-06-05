@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
+use InvalidArgumentException;
 use Yii;
 use yii\web\UrlNormalizerRedirectException;
 use yii\web\UrlRule;
 
 class UrlManager extends \yii\web\UrlManager
 {
-    public const EVENT_AFTER_CREATE = 'afterCreate';
-    public const EVENT_BEFORE_PARSE = 'beforeParse';
+    public const string EVENT_AFTER_CREATE = 'afterCreate';
+    public const string EVENT_BEFORE_PARSE = 'beforeParse';
 
     /**
      * @var string|false the subdomain indicating a draft version of the application. Further validation should
@@ -67,12 +68,15 @@ class UrlManager extends \yii\web\UrlManager
 
         $this->defaultLanguage ??= Yii::$app->sourceLanguage;
 
-        $this->languages ??= array_map(
-            fn (string $language): string => strstr((string)$language, '-', true) ?: $language,
-            Yii::$app->getI18n()->getLanguages()
-        );
+        if ($this->languages === null) {
+            $this->languages = [];
 
-        if (!$this->languages) {
+            foreach (Yii::$app->getI18n()->getLanguages() as $language) {
+                $this->languages[$language] = strstr((string)$language, '-', true) ?: $language;
+            }
+        }
+
+        if (count($this->languages) < 2) {
             $this->i18nUrl = false;
             $this->i18nSubdomain = false;
         }
@@ -169,7 +173,7 @@ class UrlManager extends \yii\web\UrlManager
 
                 if (is_array($location)) {
                     if (!isset($location['url'])) {
-                        throw new \InvalidArgumentException('Missing location key in redirect map.');
+                        throw new InvalidArgumentException('Missing location key in redirect map.');
                     }
 
                     $urlset = $location['request'] ?? $urlset;

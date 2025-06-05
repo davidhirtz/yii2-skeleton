@@ -310,6 +310,14 @@ class UrlManagerTest extends Unit
         self::assertEquals(['new-posts', 'old_posts'], $manager->getImmutableRuleParams());
     }
 
+    public function testLanguages(): void
+    {
+        Yii::$app->getI18n()->setLanguages(['de', 'en-US']);
+        $manager = $this->getUrlManager();
+
+        self::assertEquals(['de' => 'de', 'en-US' => 'en'], $manager->languages);
+    }
+
     protected function getRequest($config = []): Request
     {
         Yii::$app->set('request', [
