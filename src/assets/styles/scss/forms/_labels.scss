@@ -2,6 +2,8 @@
 
 .form-group {
   display: grid;
+  max-width: $form-group-max-width;
+  margin: 0 auto;
   gap: $form-group-gap-xs;
 
   &:not(:last-child) {
@@ -11,7 +13,7 @@
   @include media-breakpoint-up(md) {
     grid-template-columns: $form-group-template-columns;
 
-    @if($form-group-gap-md != $form-group-gap-xs) {
+    @if ($form-group-gap-md != $form-group-gap-xs) {
       gap: $form-group-gap-md;
     }
   }
@@ -30,6 +32,7 @@
 .form-label {
   @include font-size($form-label-font-size);
   font-style: $form-label-font-style;
+  line-height: $form-label-line-height;
   font-weight: $form-label-font-weight;
   color: $form-label-color;
 
@@ -40,18 +43,18 @@
 
 .col-form-label {
   @include media-breakpoint-up(md) {
-    padding: $form-label-padding-y $form-label-padding-x;
+    padding: $border-width 0;
     align-self: flex-start;
     text-align: right;
+
+    .form-label {
+      padding: $form-label-padding-y $form-label-padding-x;
+    }
   }
 }
 
 .col-form-content {
   @include media-breakpoint-up(md) {
     grid-column-start: 2;
-
-    > * {
-      max-width: 60rem;
-    }
   }
 }

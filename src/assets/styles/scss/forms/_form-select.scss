@@ -15,8 +15,8 @@
   line-height: $select-line-height;
   color: $select-color;
   appearance: none;
-  background-color: $select-bg;
-  background-image: var(--#{$prefix}arrow-down-bg, none);
+  background-color: $select-bg-color;
+  background-image: $select-bg-image;
   background-repeat: no-repeat;
   background-position: $select-bg-position;
   background-size: $select-bg-size;
@@ -25,9 +25,12 @@
   @include box-shadow($select-box-shadow);
   @include transition($select-transition);
 
-  &:focus,
-  &:hover {
-    border-color: $select-focus-border-color;
+  &:not(.is-invalid,:user-invalid,:disabled):hover,
+  &:not(.is-invalid,:user-invalid):focus {
+    --#{$prefix}input-bg: #{$input-focus-bg};
+    --#{$prefix}input-border: #{$input-focus-border-color};
+    --#{$prefix}input-color: #{$input-focus-color};
+    background-image: $select-focus-bg-image;
     outline: 0;
     @if $enable-shadows {
       @include box-shadow($select-box-shadow, $select-focus-box-shadow);

@@ -67,9 +67,10 @@ $font-family-monospace: "Courier New", monospace !default;
 $font-family-base: $font-family-sans-serif !default;
 $font-family-code: $font-family-monospace !default;
 
-$font-size-base: .875rem !default;
-$font-size-sm: 0.75rem !default;
-$font-size-lg: 1rem !default;
+$font-size-xs: 0.75rem !default;
+$font-size-sm: .875rem !default;
+$font-size-base: 1rem !default;
+$font-size-lg: 1.125rem !default;
 
 $font-weight-lighter: lighter !default;
 $font-weight-light: 300 !default;
@@ -82,8 +83,8 @@ $font-weight-bolder: bolder !default;
 $font-weight-base: $font-weight-normal !default;
 
 $line-height-base: 1.5 !default;
-$line-height-sm: 1.25 !default;
-$line-height-lg: 2 !default;
+$line-height-xs: .75 !default;
+$line-height-sm: calc(1.25 / .875) !default;
 
 $h1-font-size: 2.25em !default;
 $h2-font-size: 1.125em !default;
@@ -101,7 +102,6 @@ $dt-font-weight: $font-weight-bold !default;
 $list-inline-padding: .5rem !default;
 $lead-font-size: $font-size-base * 1.25 !default;
 $lead-font-weight: 300 !default;
-$small-font-size: $font-size-sm;
 $sub-sup-font-size: .75em !default;
 
 // Links
@@ -166,8 +166,10 @@ $component-active-bg: var(--#{$prefix}light-bg) !default;
 $component-active-color: var(--#{$prefix}light-color) !default;
 
 // Mixins
-$arrow-down-bg-color: $body-color !default;
-$arrow-down-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$arrow-down-bg-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>") !default;
+$arrow-down-stroke-color: $border-color !default;
+$arrow-down-stroke-active-color: $body-color !default;
+$arrow-down-bg-image: var(--#{$prefix}arrow-down-bg) !default;
+$arrow-down-active-bg-image: var(--#{$prefix}arrow-down-active-bg) !default;
 
 // Alert
 $alert-padding-y: $spacer !default;
@@ -290,11 +292,11 @@ $grid-view-footer-border: 1px solid var(--#{$prefix}primary-border) !default;
 
 // Buttons
 $btn-color: var(--#{$prefix}body-color) !default;
-$btn-padding-y: 0.59375rem !default;
-$btn-padding-x: 0.75rem !default;
+$btn-padding-x: var(--#{$prefix}form-padding-x) !default;
+$btn-padding-y: var(--#{$prefix}form-padding-y) !default;
 $btn-font-family: null !default;
-$btn-font-size: $font-size-base !default;
-$btn-line-height: $line-height-base !default;
+$btn-font-size: var(--#{$prefix}form-font-size) !default;
+$btn-line-height: var(--#{$prefix}form-line-height) !default;
 $btn-font-weight: $font-weight-medium !default;
 $btn-white-space: null !default;
 
@@ -348,6 +350,7 @@ $btn-close-padding-y: $btn-close-padding-x !default;
 $form-sticky-position: sticky !default;
 $form-sticky-border: $border-width solid var(--#{$prefix}border) !default;
 
+$form-group-max-width: 76rem !default;
 $form-group-spacer: $spacer !default;
 $form-group-template-columns: 1fr 3fr !default;
 $form-group-gap-xs: .5rem !default;
@@ -357,11 +360,12 @@ $form-invalid-bg: var(--#{$prefix}light) !default;
 $form-invalid-border-color: var(--#{$prefix}danger-border) !default;
 $form-invalid-color: var(--#{$prefix}danger-color) !default;
 
-$input-padding-y: .5rem !default;
-$input-padding-x: .75rem !default;
-$input-font-size: 1rem !default;
+// Inputs
+$input-padding-x: var(--#{$prefix}form-padding-x) !default;
+$input-padding-y: var(--#{$prefix}form-padding-y) !default;
+$input-font-size: var(--#{$prefix}form-font-size) !default;
+$input-line-height: var(--#{$prefix}form-line-height) !default;
 $input-font-weight: $font-weight-base !default;
-$input-line-height: 1.5 !default;
 $input-font-family: null !default;
 $input-color: var(--#{$prefix}body-color) !default;
 $input-border-color: var(--#{$prefix}border) !default;
@@ -369,9 +373,9 @@ $input-border-width: $border-width !default;
 $input-border-radius: $border-radius !default;
 $input-bg: var(--#{$prefix}light-bg) !default;
 $input-box-shadow: none !default;
-$input-height-inner-half: add($input-line-height * .5em, $input-padding-y) !default;
+$input-height-inner-half: calc(1.5 / #{$input-font-size}) !default; // todo
 
-$input-disabled-bg: var(--#{$prefix}secondary-bg) !default;
+$input-disabled-bg: var(--#{$prefix}light) !default;
 $input-disabled-color: null !default;
 $input-disabled-border-color: null !default;
 
@@ -397,13 +401,14 @@ $select-padding-y: $input-padding-y !default;
 $select-padding-x: $input-padding-x !default;
 $select-font-family: $input-font-family !default;
 $select-font-size: $input-font-size !default;
-$select-indicator-padding: $select-padding-x * 3 !default; // Extra padding for background-image
+$select-indicator-padding: calc($select-padding-x * 3) !default; // Extra padding for background-image
 $select-font-weight: $input-font-weight !default;
 $select-line-height: $input-line-height !default;
+$select-bg-color: $input-bg !default;
+$select-bg-image: $arrow-down-bg-image !default;
 $select-color: $input-color !default;
-$select-bg: $input-bg !default;
-$select-border-width: $input-border-width !default;
 $select-border-color: $input-border-color !default;
+$select-border-width: $input-border-width !default;
 $select-border-radius: $input-border-radius !default;
 $select-box-shadow: var(--#{$prefix}box-shadow-inset) !default;
 $select-disabled-color: null !default;
@@ -415,10 +420,11 @@ $select-indicator-color: $border-color !default;
 $select-indicator: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$select-indicator-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>") !default;
 
 $select-focus-box-shadow: none !default;
+$select-focus-bg-image: $arrow-down-active-bg-image !default;
 
-$select-feedback-icon-padding-end: $select-padding-x * 2.5 + $select-indicator-padding !default;
+$select-feedback-icon-padding-end: calc($select-padding-x * 2.5 + $select-indicator-padding) !default;
 $select-feedback-icon-position: center right $select-indicator-padding !default;
-$select-feedback-icon-size: $input-height-inner-half $input-height-inner-half !default;
+$select-feedback-icon-size: 0.75rem !default; // todo
 
 $select-focus-border-color: $input-focus-border-color !default;
 $select-focus-width: $input-focus-width !default;
@@ -426,17 +432,20 @@ $select-focus-box-shadow: 0 0 0 $select-focus-width $input-btn-focus-color !defa
 
 $select-transition: $input-transition !default;
 
-$form-label-font-size: null !default;
+$form-label-font-size: $font-size-sm !default;
+$form-label-line-height: $line-height-sm !default;
 $form-label-font-style: null !default;
 $form-label-color: var(--#{$prefix}body-color) !default;
 $form-label-font-weight: $font-weight-medium !default;
-$form-label-padding-y: calc($btn-padding-y + $input-border-width) !default;
+$form-label-padding-y: $btn-padding-y !default;
 $form-label-padding-x: 0 !default;
 
 $checkbox-input-border-radius: $border-radius !default;
 $checkbox-input-width: 1.5rem !default;
 $checkbox-input-height: $checkbox-input-width !default;
 $checkbox-input-focus-box-shadow: none !default;
+$checkbox-label-font-size: $font-size-sm !default;
+$checkbox-label-line-height: $line-height-sm !default;
 $checkbox-label-color: var(--#{$prefix}body-color) !default;
 $checkbox-label-cursor: null !default;
 $checkbox-transition: null !default;
@@ -670,7 +679,7 @@ $trail-cell-padding: 0.5rem !default;
 
 // Code
 
-$code-font-size: $small-font-size !default;
+$code-font-size: $font-size-xs !default;
 $code-color: var(--#{$prefix}body-color) !default;
 
 $kbd-padding-y: .1875rem !default;

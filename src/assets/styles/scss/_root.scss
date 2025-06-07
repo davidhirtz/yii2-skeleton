@@ -59,6 +59,11 @@
   --#{$prefix}highlight-bg: #{$mark-bg};
   --#{$prefix}highlight-color: #{$mark-color};
 
+  --#{$prefix}form-padding-x: 0.75rem;
+  --#{$prefix}form-padding-y: 0.5625rem;
+  --#{$prefix}form-font-size: #{$font-size-sm};
+  --#{$prefix}form-line-height: #{$line-height-sm};
+
   --#{$prefix}input-bg: #{$input-bg};
   --#{$prefix}input-border: #{$input-border-color};
   --#{$prefix}input-color: #{$input-color};
@@ -67,5 +72,12 @@
   --#{$prefix}form-invalid-border: #{$form-invalid-border-color};
   --#{$prefix}form-invalid-color: #{$form-invalid-color};
 
-  --#{$prefix}arrow-down-bg: #{escape-svg($arrow-down-bg)};
+  --#{$prefix}arrow-down-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$arrow-down-stroke-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
+  --#{$prefix}arrow-down-active-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$arrow-down-stroke-active-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
+
+  @include media-breakpoint-down(md) {
+    --#{$prefix}form-padding-y: 0.4375rem;
+    --#{$prefix}form-font-size: #{$font-size-base};
+    --#{$prefix}form-line-height: #{$line-height-base};
+  }
 }

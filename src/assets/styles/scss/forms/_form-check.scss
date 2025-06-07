@@ -63,6 +63,8 @@
 }
 
 .form-check-label {
+  font-size: $checkbox-label-font-size;
+  line-height: $checkbox-label-line-height;
   color: $checkbox-label-color;
   cursor: $checkbox-label-cursor;
 }

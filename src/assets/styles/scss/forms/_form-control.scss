@@ -47,7 +47,7 @@
   }
 
   // Customize the `:focus` state to imitate native WebKit styles.
-  &:not(.is-invalid,:user-invalid):hover,
+  &:not(.is-invalid,:user-invalid,:disabled):hover,
   &:not(.is-invalid,:user-invalid):focus {
     --#{$prefix}input-bg: #{$input-focus-bg};
     --#{$prefix}input-border: #{$input-focus-border-color};
@@ -73,7 +73,7 @@
     // https://github.com/twbs/bootstrap/issues/23307
     // TODO: we can remove this workaround once https://bugs.webkit.org/show_bug.cgi?id=198959 is resolved
     // Multiply line-height by 1em if it has no unit
-    height: if(unit($input-line-height) == "", $input-line-height * 1em, $input-line-height);
+    //height: if(unit($input-line-height) == "", $input-line-height * 1em, $input-line-height);
 
     // Android Chrome type="date" is taller than the other inputs
     // because of "margin: 1px 24px 1px 4px" inside the shadow DOM
@@ -105,7 +105,7 @@
 
   &::file-selector-button {
     padding: $input-padding-y $input-padding-x;
-    margin: (-$input-padding-y) (-$input-padding-x);
+    //margin: (-$input-padding-y) (-$input-padding-x); // todo
     margin-inline-end: $input-padding-x;
     color: $form-file-button-color;
     pointer-events: none;

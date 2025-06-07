@@ -39,7 +39,7 @@
 
 .btn-collapse {
   @extend .btn-close;
-  background: var(--#{$prefix}arrow-down-bg);
+  background: var(--#{$prefix}arrow-down-active-bg);
   transition: rotate 0.2s;
 
   .collapsed & {
