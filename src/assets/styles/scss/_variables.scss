@@ -162,13 +162,14 @@ $nav-pills-border-radius: $border-radius !default;
 
 // Navbar
 $navbar-expand-breakpoint: md !default;
-$navbar-light-bg: var(--primary-bg) !default;
 
 $navbar-light-hover-bg: var(--primary) !default;
 $navbar-light-active-bg: $navbar-light-hover-bg !default;
 
 $navbar-padding-y: 0 !default;
 $navbar-padding-x: 0 !default;
+$navbar-font-size : $font-size-sm !default;
+$navbar-line-height: $line-height-sm !default;
 $navbar-light-color: var(--light-color) !default;
 $navbar-light-active-color: var(--light-color) !default;
 $navbar-light-disabled-color: var(--light-color) !default;

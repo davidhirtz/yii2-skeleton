@@ -8,7 +8,9 @@
   z-index: 1100;
 
   padding: $navbar-padding-y $navbar-padding-x;
-  background: $navbar-light-bg;
+  background: var(--navbar-bg);
+  font-size: $navbar-font-size;
+  line-height: $navbar-line-height;
 }
 
 
