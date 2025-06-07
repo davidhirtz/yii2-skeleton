@@ -2,10 +2,10 @@
 
 .card {
   position: relative;
-  color: var(--body-color);
-  word-wrap: break-word;
+  color: $card-color;
   background-color: $card-bg;
   border: $card-border-width solid $card-border-color;
+  word-wrap: break-word;
   @include border-radius($card-border-radius);
 
   &:not(:last-child) {
@@ -30,7 +30,6 @@
 
 .card-body {
   padding: $card-spacer-y $card-spacer-x;
-  color: $card-color;
 
   .collapsed > & {
     display: none;
