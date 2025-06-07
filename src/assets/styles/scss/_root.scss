@@ -150,8 +150,8 @@
   --body-color: var(--primary);
   --border-color: var(--dark);
 
-  --link-color: var(--primary);
-  --link-hover-color: var(--secondary);
+  --link-color: var(--body-color);
+  --link-hover-color: var(--color-gray-900);
 
   --highlight-bg: var(--success);
   --highlight-color: var(--body-color);
@@ -187,6 +187,12 @@
   // Breadcrumb
   --breadcrumb-bg: transparent;
   --breadcrumb-divider-color: var(--secondary-border);
+  --breadcrumb-link-color: var(--link-color);
+  --breadcrumb-link-hover-color: var(--link-hover-color);
+
+  --card-color: var(--color-black);
+  --card-bg: var(--color-white);
+  --card-border: var(--color-gray-200);
 
   // Form
   --form-padding-x: 0.75rem;
@@ -223,6 +229,8 @@
   --navbar-link-color: var(--body-bg);
   --navbar-link-hover-bg: var(--color-gray-800);
   --navbar-link-hover-color: var(--body-bg);
+
+  --submenu-border-color: var(--color-gray-700);
 
   --arrow-down-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#ddd' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
   --arrow-down-active-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};

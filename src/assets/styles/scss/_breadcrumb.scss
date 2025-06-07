@@ -1,15 +1,13 @@
-//@import "../../../../node_modules/bootstrap/scss/breadcrumb";
-
 .breadcrumb {
+  background-color: var(--breadcrumb-bg);
   display: flex;
-  margin: $breadcrumb-margin;
-  padding: $breadcrumb-padding;
-  gap: $breadcrumb-gap-x;
   font-size: $breadcrumb-font-size;
+  gap: $breadcrumb-gap-x;
   line-height: $breadcrumb-line-height;
   list-style: none;
+  margin: $breadcrumb-margin;
   overflow-x: auto;
-  background-color: $breadcrumb-bg-color;
+  padding: $breadcrumb-padding-y $breadcrumb-padding-x;
   @include border-radius($breadcrumb-border-radius);
 }
 
@@ -29,7 +27,8 @@
 }
 
 .breadcrumb-link {
-  display: block;
-  color: $breadcrumb-link-color;
   @extend .text-truncate;
+  --link-color: var(--breadcrumb-link-color);
+  --link-hover-color: var(--breadcrumb-link-hover-color);
+  display: block;
 }

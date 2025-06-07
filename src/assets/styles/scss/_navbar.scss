@@ -2,7 +2,6 @@
 
 .navbar {
   position: fixed;
-  padding: $navbar-padding-y $navbar-padding-x;
   top: 0;
   left: 0;
   width: 100%;
@@ -12,6 +11,7 @@
 
 .navbar-container {
   display: grid;
+  padding: $navbar-padding-y $navbar-padding-x;
   grid-template-areas: "toggler right" "left left";
 
   @include media-breakpoint-up($navbar-expand-breakpoint) {

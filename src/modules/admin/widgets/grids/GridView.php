@@ -92,6 +92,23 @@ class GridView extends \yii\grid\GridView
         parent::init();
     }
 
+    public function run(): string
+    {
+        $content = ($this->showOnEmpty || $this->dataProvider->getCount() > 0)
+            ? $this->renderSections()
+            : $this->renderEmpty();
+
+        return $content ? Html::tag('div', $content, $this->options) : '';
+    }
+
+    protected function renderSections(): string
+    {
+        return preg_replace_callback('/{\\w+}/', function ($matches) {
+            $content = $this->renderSection($matches[0]);
+            return $content === false ? $matches[0] : $content;
+        }, $this->layout);
+    }
+
     protected function initColumns(): void
     {
         foreach ($this->columns as &$column) {

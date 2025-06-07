@@ -39,6 +39,7 @@ class RedirectGridView extends GridView
         if ($this->redirect) {
             $this->setDataProviderFromRedirect();
             $this->setRedirectOptions();
+            $this->showOnEmpty = true;
         }
 
         if (!$this->columns) {
@@ -89,13 +90,6 @@ class RedirectGridView extends GridView
     {
         $this->showSelection = false;
         $this->layout = '{items}';
-    }
-
-    public function run(): void
-    {
-        if (!$this->redirect || $this->dataProvider->getCount() > 0) {
-            parent::run();
-        }
     }
 
     public function requestUriColumn(): array

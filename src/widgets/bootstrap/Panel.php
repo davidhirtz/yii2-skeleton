@@ -9,8 +9,8 @@ use yii\helpers\Html;
 
 class Panel extends Widget
 {
-    final public const TYPE_DEFAULT = 'default';
-    final public const TYPE_DANGER = 'danger';
+    final public const string TYPE_DEFAULT = 'default';
+    final public const string TYPE_DANGER = 'danger';
 
     /**
      * @var string|null the panel title
@@ -70,6 +70,7 @@ class Panel extends Widget
 
         if ($this->content) {
             $collapseId = $this->getId() . '-body';
+            echo Html::beginTag('div', ['class' => 'container']);
             echo Html::beginTag('div', $this->options);
 
             if ($this->title) {
@@ -84,6 +85,7 @@ class Panel extends Widget
             $body = Html::tag('div', $this->content, $this->bodyOptions);
             echo $this->isCollapsable ? Html::tag('div', $body, ['class' => $this->isCollapsed ? 'collapse' : 'collapse show', 'id' => $collapseId]) : $body;
 
+            echo Html::endTag('div');
             echo Html::endTag('div');
         }
     }

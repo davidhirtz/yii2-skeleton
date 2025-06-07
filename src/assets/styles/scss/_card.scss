@@ -2,9 +2,9 @@
 
 .card {
   position: relative;
-  color: $card-color;
-  background-color: $card-bg;
-  border: $card-border-width solid $card-border-color;
+  color: var(--card-color);
+  background: var(--card-bg);
+  border: $card-border-width solid var(--card-border-color);
   word-wrap: break-word;
   @include border-radius($card-border-radius);
 

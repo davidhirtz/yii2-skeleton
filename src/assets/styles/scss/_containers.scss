@@ -2,7 +2,7 @@
 
 .container {
   margin: 0 auto;
-  padding: 0 $container-padding-x;
+  padding: $container-padding-y $container-padding-x;
   width: 100%;
 
   @each $breakpoint, $container-max-width in $container-max-widths {
@@ -11,9 +11,6 @@
     }
   }
 
-  @include media-breakpoint-up(md) {
-    padding: 0 $container-padding-x-md;
-  }
 }
 
 .container-centered {

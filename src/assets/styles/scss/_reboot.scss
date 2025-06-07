@@ -10,13 +10,13 @@
   }
 }
 
-html {
+html:has(.navbar) {
   scroll-padding-top: $html-scroll-padding;
 }
 
 body {
   margin: 0;
-  padding: $body-padding;
+  padding: $body-padding-y $body-padding-x;
   font-family: $font-family-sans-serif;
   @include font-size($font-size-base);
   font-weight: $font-weight-base;
@@ -29,6 +29,10 @@ body {
   -webkit-tap-highlight-color: rgba(#000, 0);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+
+  &:has(.navbar) {
+    padding-top: $html-scroll-padding;
+  }
 
   &:has(dialog[open]) {
     overflow: hidden;
