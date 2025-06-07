@@ -35,9 +35,9 @@
 
   &:not(:has(.is-invalid,:user-invalid)):focus-within,
   &:not(:has(.is-invalid,:user-invalid)):hover {
-    --#{$prefix}input-bg: #{$input-focus-bg};
-    --#{$prefix}input-border: #{$input-focus-border-color};
-    --#{$prefix}input-color: #{$input-focus-color};
+    --input-bg: #{$input-focus-bg};
+    --input-border: #{$input-focus-border-color};
+    --input-color: #{$input-focus-color};
   }
 }
 

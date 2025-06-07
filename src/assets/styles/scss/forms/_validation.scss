@@ -2,9 +2,9 @@
 
 .is-invalid,
 .form-group:has(.is-invalid,:user-invalid), {
-  --#{$prefix}input-bg: #{$form-invalid-bg};
-  --#{$prefix}input-border: #{$form-invalid-border-color};
-  --#{$prefix}input-color: #{$form-invalid-color};
+  --input-bg: #{$form-invalid-bg};
+  --input-border: #{$form-invalid-border-color};
+  --input-color: #{$form-invalid-color};
 }
 
 .invalid-feedback {

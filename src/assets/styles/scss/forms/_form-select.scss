@@ -27,9 +27,9 @@
 
   &:not(.is-invalid,:user-invalid,:disabled):hover,
   &:not(.is-invalid,:user-invalid):focus {
-    --#{$prefix}input-bg: #{$input-focus-bg};
-    --#{$prefix}input-border: #{$input-focus-border-color};
-    --#{$prefix}input-color: #{$input-focus-color};
+    --input-bg: #{$input-focus-bg};
+    --input-border: #{$input-focus-border-color};
+    --input-color: #{$input-focus-color};
     background-image: $select-focus-bg-image;
     outline: 0;
     @if $enable-shadows {

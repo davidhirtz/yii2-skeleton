@@ -1,88 +1,88 @@
 //@import "../../../../node_modules/bootstrap/scss/root";
 
 :root {
-  --#{$prefix}primary: #{$primary};
-  --#{$prefix}primary-bg: #{$primary-bg};
-  --#{$prefix}primary-border: #{$primary-border-color};
-  --#{$prefix}primary-color: #{$primary-color};
+  --primary: #{$primary};
+  --primary-bg: #{$primary-bg};
+  --primary-border: #{$primary-border-color};
+  --primary-color: #{$primary-color};
 
-  --#{$prefix}secondary: #{$secondary};
-  --#{$prefix}secondary-bg: #{$secondary-bg};
-  --#{$prefix}secondary-border: #{$secondary-border-color};
-  --#{$prefix}secondary-color: #{$secondary-color};
+  --secondary: #{$secondary};
+  --secondary-bg: #{$secondary-bg};
+  --secondary-border: #{$secondary-border-color};
+  --secondary-color: #{$secondary-color};
 
-  --#{$prefix}tertiary: #{$tertiary};
-  --#{$prefix}tertiary-bg: #{$tertiary-bg};
-  --#{$prefix}tertiary-border: #{$tertiary-border-color};
-  --#{$prefix}tertiary-color: #{$tertiary-color};
+  --tertiary: #{$tertiary};
+  --tertiary-bg: #{$tertiary-bg};
+  --tertiary-border: #{$tertiary-border-color};
+  --tertiary-color: #{$tertiary-color};
 
-  --#{$prefix}success: #{$success};
-  --#{$prefix}success-bg: #{$success-bg};
-  --#{$prefix}success-border: #{$success-border-color};
-  --#{$prefix}success-color: #{$success-color};
+  --success: #{$success};
+  --success-bg: #{$success-bg};
+  --success-border: #{$success-border-color};
+  --success-color: #{$success-color};
 
-  --#{$prefix}info: #{$info};
-  --#{$prefix}info-bg: #{$info-bg};
-  --#{$prefix}info-border: #{$info-border-color};
-  --#{$prefix}info-color: #{$info-color};
+  --info: #{$info};
+  --info-bg: #{$info-bg};
+  --info-border: #{$info-border-color};
+  --info-color: #{$info-color};
 
-  --#{$prefix}warning: #{$warning};
-  --#{$prefix}warning-bg: #{$warning-bg};
-  --#{$prefix}warning-border: #{$warning-border-color};
-  --#{$prefix}warning-color: #{$warning-color};
+  --warning: #{$warning};
+  --warning-bg: #{$warning-bg};
+  --warning-border: #{$warning-border-color};
+  --warning-color: #{$warning-color};
 
-  --#{$prefix}danger: #{$danger};
-  --#{$prefix}danger-bg: #{$danger-bg};
-  --#{$prefix}danger-border: #{$danger-border-color};
-  --#{$prefix}danger-color: #{$danger-color};
+  --danger: #{$danger};
+  --danger-bg: #{$danger-bg};
+  --danger-border: #{$danger-border-color};
+  --danger-color: #{$danger-color};
 
-  --#{$prefix}light: #{$light};
-  --#{$prefix}light-bg: #{$light-bg};
-  --#{$prefix}light-border: #{$light-border-color};
-  --#{$prefix}light-color: #{$light-color};
+  --light: #{$light};
+  --light-bg: #{$light-bg};
+  --light-border: #{$light-border-color};
+  --light-color: #{$light-color};
 
-  --#{$prefix}dark: #{$dark};
-  --#{$prefix}dark-bg: #{$dark-bg};
-  --#{$prefix}dark-border: #{$dark-border-color};
-  --#{$prefix}dark-color: #{$dark-color};
+  --dark: #{$dark};
+  --dark-bg: #{$dark-bg};
+  --dark-border: #{$dark-border-color};
+  --dark-color: #{$dark-color};
 
-  --#{$prefix}body-bg: #{$body-bg};
-  --#{$prefix}body-color: #{$body-color};
+  --body-bg: #{$body-bg};
+  --body-color: #{$body-color};
 
-  --#{$prefix}border: #{$border-color};
+  --border: #{$border-color};
 
-  --#{$prefix}link-color: #{$link-color};
-  --#{$prefix}link-hover-color: #{$link-hover-color};
+  --link-color: #{$link-color};
+  --link-hover-color: #{$link-hover-color};
 
-  --#{$prefix}heading-color: #{$headings-color};
+  --heading-color: #{$headings-color};
 
-  --#{$prefix}highlight-bg: #{$mark-bg};
-  --#{$prefix}highlight-color: #{$mark-color};
+  --highlight-bg: #{$mark-bg};
+  --highlight-color: #{$mark-color};
 
   // Breadcrumb
-  --#{$prefix}breadcrumb-bg:transparent;
-  --#{$prefix}breadcrumb-divider-color: var(--#{$prefix}secondary-border);
+  --breadcrumb-bg:transparent;
+  --breadcrumb-divider-color: var(--secondary-border);
 
 
-  --#{$prefix}form-padding-x: 0.75rem;
-  --#{$prefix}form-padding-y: 0.5625rem;
-  --#{$prefix}form-font-size: #{$font-size-sm};
-  --#{$prefix}form-line-height: calc(1.25 / .875);
+  --form-padding-x: 0.75rem;
+  --form-padding-y: 0.5625rem;
+  --form-font-size: #{$font-size-sm};
+  --form-line-height: calc(1.25 / .875);
 
-  --#{$prefix}input-bg: var(--#{$prefix}light-bg);
-  --#{$prefix}input-border: var(--#{$prefix}border);
-  --#{$prefix}input-color: var(--#{$prefix}body-color);
+  --input-bg: var(--light-bg);
+  --input-border: var(--border);
+  --input-color: var(--body-color);
 
-  --#{$prefix}form-invalid-bg: var(--#{$prefix}light);
-  --#{$prefix}form-invalid-border: var(--#{$prefix}danger-border);
-  --#{$prefix}form-invalid-color: var(--#{$prefix}danger-color);
+  --form-invalid-bg: var(--light);
+  --form-invalid-border: var(--danger-border);
+  --form-invalid-color: var(--danger-color);
 
-  --#{$prefix}arrow-down-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$arrow-down-stroke-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
-  --#{$prefix}arrow-down-active-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$arrow-down-stroke-active-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
+  --arrow-down-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$arrow-down-stroke-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
+  --arrow-down-active-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$arrow-down-stroke-active-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
 
   @include media-breakpoint-down(md) {
-    --#{$prefix}form-padding-y: 0.4375rem;
-    --#{$prefix}form-font-size: #{$font-size-base};
-    --#{$prefix}form-line-height: #{$line-height-base};
+    --form-padding-y: 0.4375rem;
+    --form-font-size: #{$font-size-base};
+    --form-line-height: #{$line-height-base};
   }
 }

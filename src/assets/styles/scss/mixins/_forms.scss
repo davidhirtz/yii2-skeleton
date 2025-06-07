@@ -96,7 +96,7 @@
       @if $enable-validation-icons {
         &:not([multiple]):not([size]),
         &:not([multiple])[size="1"] {
-          --#{$prefix}form-select-bg-icon: #{escape-svg($icon)};
+          --form-select-bg-icon: #{escape-svg($icon)};
           padding-right: $select-feedback-icon-padding-end;
           background-position: $select-bg-position, $select-feedback-icon-position;
           background-size: $select-bg-size, $select-feedback-icon-size;

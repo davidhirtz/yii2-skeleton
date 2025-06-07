@@ -108,13 +108,13 @@
 }
 
 .dropdown-toggle {
-  --#{$prefix}btn-bg: #{$dropdown-button-bg};
-  --#{$prefix}btn-color: #{$dropdown-button-color};
-  --#{$prefix}btn-border-color: #{$dropdown-button-border-color};
-  --#{$prefix}btn-active-bg: #{$dropdown-button-active-bg};
-  --#{$prefix}btn-active-border-color: #{$dropdown-button-active-border-color};
-  --#{$prefix}btn-hover-bg: #{$dropdown-button-hover-bg};
-  --#{$prefix}btn-hover-border-color: #{$dropdown-button-hover-border-color};
+  --btn-bg: #{$dropdown-button-bg};
+  --btn-color: #{$dropdown-button-color};
+  --btn-border-color: #{$dropdown-button-border-color};
+  --btn-active-bg: #{$dropdown-button-active-bg};
+  --btn-active-border-color: #{$dropdown-button-active-border-color};
+  --btn-hover-bg: #{$dropdown-button-hover-bg};
+  --btn-hover-border-color: #{$dropdown-button-hover-border-color};
 
   width: 100%;
   @extend .text-truncate;

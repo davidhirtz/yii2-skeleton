@@ -21,9 +21,9 @@ body {
   @include font-size($font-size-base);
   font-weight: $font-weight-base;
   line-height: $line-height-base;
-  color: var(--#{$prefix}body-color);
+  color: var(--body-color);
   text-align: $body-text-align;
-  background: var(--#{$prefix}body-bg);
+  background: var(--body-bg);
   overflow-y: scroll;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(#000, 0);
@@ -50,7 +50,7 @@ hr {
   font-style: $headings-font-style;
   font-weight: $headings-font-weight;
   line-height: $headings-line-height;
-  color: var(--#{$prefix}heading-color);
+  color: var(--heading-color);
 }
 
 h1 {
@@ -133,8 +133,8 @@ small {
 
 mark {
   padding: $mark-padding;
-  color: var(--#{$prefix}highlight-color);
-  background-color: var(--#{$prefix}highlight-bg);
+  color: var(--highlight-color);
+  background-color: var(--highlight-bg);
 }
 
 
@@ -158,11 +158,11 @@ sup {
 // Links
 
 a {
-  color: var(--#{$prefix}link-color);
+  color: var(--link-color);
   text-decoration: $link-decoration;
 
   &:hover {
-    color: var(--#{$prefix}link-hover-color);
+    color: var(--link-hover-color);
     text-decoration: $link-hover-decoration;
   }
 }
@@ -201,7 +201,7 @@ pre {
 
 code {
   @include font-size($code-font-size);
-  color: var(--#{$prefix}code-color);
+  color: var(--code-color);
   word-wrap: break-word;
 
   // Streamline the style when inside anchors to avoid broken underline and more

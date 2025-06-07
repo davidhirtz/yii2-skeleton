@@ -1,13 +1,13 @@
 //@import "../../../../node_modules/bootstrap/scss/buttons";
 
 .btn {
-  --#{$prefix}btn-color: #{$btn-color};
-  --#{$prefix}btn-bg: transparent;
-  --#{$prefix}btn-border: transparent;
-  --#{$prefix}btn-active-bg: transparent;
-  --#{$prefix}btn-active-border: transparent;
-  --#{$prefix}btn-hover-border: transparent;
-  --#{$prefix}btn-hover-color: #{$btn-color};
+  --btn-color: #{$btn-color};
+  --btn-bg: transparent;
+  --btn-border: transparent;
+  --btn-active-bg: transparent;
+  --btn-active-border: transparent;
+  --btn-hover-border: transparent;
+  --btn-hover-color: #{$btn-color};
 
   display: inline-block;
   padding: $btn-padding-y $btn-padding-x;
@@ -15,40 +15,40 @@
   @include font-size($btn-font-size);
   font-weight: $btn-font-weight;
   line-height: $btn-line-height;
-  color: var(--#{$prefix}btn-color);
-  background: var(--#{$prefix}btn-bg);
+  color: var(--btn-color);
+  background: var(--btn-bg);
   text-align: center;
   text-decoration: if($link-decoration == none, null, none);
   white-space: $btn-white-space;
   vertical-align: middle;
   cursor: pointer;
   user-select: none;
-  border: $btn-border-width solid var(--#{$prefix}btn-border);
+  border: $btn-border-width solid var(--btn-border);
   min-width: $btn-min-width;
 
   @include border-radius($btn-border-radius);
   @include transition($btn-transition);
 
   &.active {
-    background: var(--#{$prefix}btn-active-bg);
-    border-color: var(--#{$prefix}btn-active-border);
+    background: var(--btn-active-bg);
+    border-color: var(--btn-active-border);
   }
 
   &:hover {
-    color: var(--#{$prefix}btn-hover-color);
+    color: var(--btn-hover-color);
     text-decoration: if($link-hover-decoration == underline, none, null);
-    background-color: var(--#{$prefix}btn-hover-bg);
-    border-color: var(--#{$prefix}btn-hover-border);
+    background-color: var(--btn-hover-bg);
+    border-color: var(--btn-hover-border);
   }
 
   &:focus-visible {
-    color: var(--#{$prefix}btn-hover-color);
-    border-color: var(--#{$prefix}btn-hover-border);
+    color: var(--btn-hover-color);
+    border-color: var(--btn-hover-border);
     outline: 0;
   }
 
   .btn-check:focus-visible + & {
-    border-color: var(--#{$prefix}btn-hover-border);
+    border-color: var(--btn-hover-border);
     outline: 0;
   }
 
@@ -61,30 +61,30 @@
 }
 
 .btn-primary {
-  --#{$prefix}btn-bg: #{$btn-primary-bg};
-  --#{$prefix}btn-border: #{$btn-primary-border-color};
-  --#{$prefix}btn-color: #{$btn-primary-color};
-  --#{$prefix}btn-hover-bg: #{$btn-primary-hover-bg};
-  --#{$prefix}btn-hover-border: #{$btn-primary-hover-border-color};
-  --#{$prefix}btn-hover-color: #{$btn-primary-hover-color};
+  --btn-bg: #{$btn-primary-bg};
+  --btn-border: #{$btn-primary-border-color};
+  --btn-color: #{$btn-primary-color};
+  --btn-hover-bg: #{$btn-primary-hover-bg};
+  --btn-hover-border: #{$btn-primary-hover-border-color};
+  --btn-hover-color: #{$btn-primary-hover-color};
 }
 
 .btn-secondary {
-  --#{$prefix}btn-bg: #{$btn-secondary-bg};
-  --#{$prefix}btn-border: #{$btn-secondary-border-color};
-  --#{$prefix}btn-color: #{$btn-secondary-color};
-  --#{$prefix}btn-hover-bg: #{$btn-secondary-hover-bg};
-  --#{$prefix}btn-hover-border: #{$btn-secondary-hover-border-color};
-  --#{$prefix}btn-hover-color: #{$btn-secondary-hover-color};
+  --btn-bg: #{$btn-secondary-bg};
+  --btn-border: #{$btn-secondary-border-color};
+  --btn-color: #{$btn-secondary-color};
+  --btn-hover-bg: #{$btn-secondary-hover-bg};
+  --btn-hover-border: #{$btn-secondary-hover-border-color};
+  --btn-hover-color: #{$btn-secondary-hover-color};
 }
 
 .btn-danger {
-  --#{$prefix}btn-bg: #{$btn-danger-bg};
-  --#{$prefix}btn-border: #{$btn-danger-border-color};
-  --#{$prefix}btn-color: #{$btn-danger-color};
-  --#{$prefix}btn-hover-bg: #{$btn-danger-hover-bg};
-  --#{$prefix}btn-hover-border: #{$btn-danger-hover-border-color};
-  --#{$prefix}btn-hover-color: #{$btn-danger-hover-color};
+  --btn-bg: #{$btn-danger-bg};
+  --btn-border: #{$btn-danger-border-color};
+  --btn-color: #{$btn-danger-color};
+  --btn-hover-bg: #{$btn-danger-hover-bg};
+  --btn-hover-border: #{$btn-danger-hover-border-color};
+  --btn-hover-color: #{$btn-danger-hover-color};
 }
 
 .btn-link {
@@ -104,11 +104,11 @@
   }
 
   &:focus-visible {
-    color: var(--#{$prefix}btn-color);
+    color: var(--btn-color);
   }
 
   &:hover {
-    color: var(--#{$prefix}btn-hover-color);
+    color: var(--btn-hover-color);
   }
 }
 

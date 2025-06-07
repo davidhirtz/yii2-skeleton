@@ -1,9 +1,9 @@
 //@import "../../../../node_modules/bootstrap/scss/tables";
 
 .table {
-  --#{$prefix}table-bg: #{$table-bg};
-  --#{$prefix}table-striped-bg: #{$table-striped-bg};
-  --#{$prefix}table-hover-bg: #{$table-hover-bg};
+  --table-bg: #{$table-bg};
+  --table-striped-bg: #{$table-striped-bg};
+  --table-hover-bg: #{$table-hover-bg};
 
   width: 100%;
   vertical-align: $table-cell-vertical-align;
@@ -21,21 +21,21 @@
   th, td {
     padding: $table-cell-padding-y $table-cell-padding-x;
     // Following the precept of cascades: https://codepen.io/miriamsuzanne/full/vYNgodb
-    background: var(--#{$prefix}table-bg);
+    background: var(--table-bg);
     border-bottom-width: $table-border-width;
   }
 }
 
 .table-striped {
   > tbody > tr:nth-of-type(#{$table-striped-order}) > * {
-    --#{$prefix}table-bg: var(--#{$prefix}table-striped-bg);
+    --table-bg: var(--table-striped-bg);
   }
 }
 
 .table-hover {
   > tbody > tr:hover > * {
     color: $table-hover-color;
-    --#{$prefix}table-bg: var(--#{$prefix}table-hover-bg);
+    --table-bg: var(--table-hover-bg);
   }
 }
 
@@ -45,11 +45,11 @@
 }
 
 tr.is-selected {
-  --#{$prefix}table-color: #{$table-selected-color};
-  --#{$prefix}table-bg: #{$table-selected-bg};
-  --#{$prefix}table-hover-color: #{$table-selected-hover-color};
-  --#{$prefix}table-hover-bg: #{$table-selected-hover-bg};
-  --#{$prefix}table-striped-bg: #{$table-selected-bg};
+  --table-color: #{$table-selected-color};
+  --table-bg: #{$table-selected-bg};
+  --table-hover-color: #{$table-selected-hover-color};
+  --table-hover-bg: #{$table-selected-hover-bg};
+  --table-striped-bg: #{$table-selected-bg};
 
   .badge {
     background: #{$badge-active-bg};

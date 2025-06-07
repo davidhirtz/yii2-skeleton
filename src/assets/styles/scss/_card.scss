@@ -2,7 +2,7 @@
 
 .card {
   position: relative;
-  color: var(--#{$prefix}body-color);
+  color: var(--body-color);
   word-wrap: break-word;
   background-color: $card-bg;
   border: $card-border-width solid $card-border-color;

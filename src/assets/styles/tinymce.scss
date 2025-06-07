@@ -11,8 +11,8 @@ body {
   @include font-size($input-font-size);
   font-weight: $input-font-weight;
   line-height: $input-line-height;
-  color: var(--#{$prefix}input-color);
-  background-color: var(--#{$prefix}input-bg);
+  color: var(--input-color);
+  background-color: var(--input-bg);
   margin: 0;
 
   &:focus {

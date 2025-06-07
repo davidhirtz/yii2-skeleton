@@ -1,12 +1,12 @@
 //@import "../../../../node_modules/bootstrap/scss/nav";
 
 .nav {
-  --#{$prefix}nav-link-hover-bg: transparent;
-  --#{$prefix}nav-link-color: #{$nav-link-color};
-  --#{$prefix}nav-link-hover-color: #{$nav-link-hover-color};
-  --#{$prefix}nav-link-disabled-color: #{$nav-link-disabled-color};
-  --#{$prefix}nav-link-active-bg: #{$nav-pills-link-active-color};
-  --#{$prefix}nav-link-active-color: #{$nav-pills-link-active-color};
+  --nav-link-hover-bg: transparent;
+  --nav-link-color: #{$nav-link-color};
+  --nav-link-hover-color: #{$nav-link-hover-color};
+  --nav-link-disabled-color: #{$nav-link-disabled-color};
+  --nav-link-active-bg: #{$nav-pills-link-active-color};
+  --nav-link-active-color: #{$nav-pills-link-active-color};
 
   display: flex;
   flex-wrap: wrap;
@@ -22,7 +22,7 @@
   min-width: $nav-link-min-width;
   @include font-size($nav-link-font-size);
   font-weight: $nav-link-font-weight;
-  color: var(--#{$prefix}nav-link-color);
+  color: var(--nav-link-color);
   height: $nav-link-height;
   text-decoration: none;
   background: none;
@@ -31,22 +31,22 @@
 
   &:hover,
   &:focus {
-    background: var(--#{$prefix}nav-link-hover-bg);
-    color: var(--#{$prefix}nav-link-hover-color);
+    background: var(--nav-link-hover-bg);
+    color: var(--nav-link-hover-color);
 
     .badge {
-      background: var(--#{$prefix}nav-link-hover-color);
-      color: var(--#{$prefix}nav-link-hover-bg);
+      background: var(--nav-link-hover-color);
+      color: var(--nav-link-hover-bg);
     }
   }
 
   &.active {
-    background: var(--#{$prefix}nav-link-active-bg);
-    color: var(--#{$prefix}nav-link-active-color);
+    background: var(--nav-link-active-bg);
+    color: var(--nav-link-active-color);
 
     .badge {
-      background: var(--#{$prefix}nav-link-active-color);
-      color: var(--#{$prefix}nav-link-active-bg);
+      background: var(--nav-link-active-color);
+      color: var(--nav-link-active-bg);
     }
   }
 
@@ -58,17 +58,17 @@
   // Disabled state lightens text
   &.disabled,
   &:disabled {
-    color: var(--#{$prefix}nav-link-disabled-color);
+    color: var(--nav-link-disabled-color);
     pointer-events: none;
     cursor: default;
   }
 }
 
 .nav-pills {
-  --#{$prefix}nav-link-hover-bg: #{$nav-pills-link-hover-bg};
-  --#{$prefix}nav-link-hover-color: #{$nav-pills-link-hover-color};
-  --#{$prefix}nav-link-active-color: #{$nav-pills-link-active-color};
-  --#{$prefix}nav-link-active-bg: #{$nav-pills-link-active-bg};
+  --nav-link-hover-bg: #{$nav-pills-link-hover-bg};
+  --nav-link-hover-color: #{$nav-pills-link-hover-color};
+  --nav-link-active-color: #{$nav-pills-link-active-color};
+  --nav-link-active-bg: #{$nav-pills-link-active-bg};
 
   gap: $nav-pills-gap;
 

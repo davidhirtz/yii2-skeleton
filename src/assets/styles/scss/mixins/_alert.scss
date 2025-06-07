@@ -2,17 +2,17 @@
 
 // scss-docs-start alert-variant-mixin
 @mixin alert-variant($background, $border, $color) {
-  --#{$prefix}alert-color: #{$color};
-  --#{$prefix}alert-bg: #{$background};
-  --#{$prefix}alert-border-color: #{$border};
-  --#{$prefix}alert-link-color: #{shade-color($color, 20%)};
+  --alert-color: #{$color};
+  --alert-bg: #{$background};
+  --alert-border-color: #{$border};
+  --alert-link-color: #{shade-color($color, 20%)};
 
   @if $enable-gradients {
-    background-image: var(--#{$prefix}gradient);
+    background-image: var(--gradient);
   }
 
   .alert-link {
-    color: var(--#{$prefix}alert-link-color);
+    color: var(--alert-link-color);
   }
 }
 // scss-docs-end alert-variant-mixin

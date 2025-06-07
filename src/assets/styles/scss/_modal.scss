@@ -1,20 +1,20 @@
 //@import "../../../../node_modules/bootstrap/scss/modal";
 
 .modal {
-  --#{$prefix}modal-color: #{$modal-content-color};
-  --#{$prefix}modal-bg: #{$modal-content-bg};
-  --#{$prefix}modal-border-color: #{$modal-content-border-color};
-  --#{$prefix}modal-header-bg: #{$modal-header-bg};
-  --#{$prefix}modal-header-border-color: #{$modal-header-border-color};
-  --#{$prefix}modal-footer-bg: #{$modal-footer-bg};
-  --#{$prefix}modal-footer-border-color: #{$modal-footer-border-color};
+  --modal-color: #{$modal-content-color};
+  --modal-bg: #{$modal-content-bg};
+  --modal-border-color: #{$modal-content-border-color};
+  --modal-header-bg: #{$modal-header-bg};
+  --modal-header-border-color: #{$modal-header-border-color};
+  --modal-footer-bg: #{$modal-footer-bg};
+  --modal-footer-border-color: #{$modal-footer-border-color};
 
   flex-direction: column;
   padding: 0;
   border: 0;
-  color: var(--#{$prefix}modal-color);
-  background-color: var(--#{$prefix}modal-bg);
-  border: $modal-content-border-width solid var(--#{$prefix}modal-border-color);
+  color: var(--modal-color);
+  background-color: var(--modal-bg);
+  border: $modal-content-border-width solid var(--modal-border-color);
   outline: 0;
   text-align: left;
   white-space: normal; // Reset the white-space: nowrap; from parent element
@@ -39,8 +39,8 @@
   justify-content: space-between;
   padding: $modal-header-padding-y $modal-header-padding-x;
   gap: $modal-header-padding-x;
-  border-bottom: $modal-header-border-width solid var(--#{$prefix}modal-header-border-color);
-  background-color: var(--#{$prefix}modal-header-bg);
+  border-bottom: $modal-header-border-width solid var(--modal-header-border-color);
+  background-color: var(--modal-header-bg);
   @include border-top-radius($modal-content-inner-border-radius);
 }
 
@@ -63,8 +63,8 @@
   align-items: center;
   justify-content: flex-end;
   padding: $modal-header-padding-y $modal-header-padding-x;
-  background-color: var(--#{$prefix}modal-footer-bg);
-  border-top: $modal-footer-border-width solid var(--#{$prefix}modal-footer-border-color);
+  background-color: var(--modal-footer-bg);
+  border-top: $modal-footer-border-width solid var(--modal-footer-border-color);
   gap: $modal-footer-margin-between;
   @include border-bottom-radius($modal-content-inner-border-radius);
 }

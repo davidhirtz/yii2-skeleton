@@ -5,6 +5,8 @@
   margin: $breadcrumb-margin;
   padding: $breadcrumb-padding;
   gap: $breadcrumb-gap-x;
+  font-size: $breadcrumb-font-size;
+  line-height: $breadcrumb-line-height;
   list-style: none;
   overflow-x: auto;
   background-color: $breadcrumb-bg-color;
@@ -28,5 +30,6 @@
 
 .breadcrumb-link {
   display: block;
+  color: $breadcrumb-link-color;
   @extend .text-truncate;
 }

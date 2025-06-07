@@ -22,12 +22,12 @@
 }
 
 .navbar-nav {
-  --#{$prefix}nav-link-color: #{$navbar-light-color};
-  --#{$prefix}nav-link-hover-bg: #{$navbar-light-hover-bg};
-  --#{$prefix}nav-link-hover-color: #{$navbar-light-hover-color};
-  --#{$prefix}nav-link-disabled-color: #{$navbar-light-disabled-color};
-  --#{$prefix}nav-link-active-color: #{$navbar-light-active-color};
-  --#{$prefix}nav-link-active-bg: #{$navbar-light-active-bg};
+  --nav-link-color: #{$navbar-light-color};
+  --nav-link-hover-bg: #{$navbar-light-hover-bg};
+  --nav-link-hover-color: #{$navbar-light-hover-color};
+  --nav-link-disabled-color: #{$navbar-light-disabled-color};
+  --nav-link-active-color: #{$navbar-light-active-color};
+  --nav-link-active-bg: #{$navbar-light-active-bg};
 
   margin: 0;
   list-style: none;
@@ -78,7 +78,7 @@
 }
 
 .navbar-logout {
-  --#{$prefix}nav-link-hover-bg: #{$btn-danger-bg};
+  --nav-link-hover-bg: #{$btn-danger-bg};
 }
 
 //noinspection ALL
