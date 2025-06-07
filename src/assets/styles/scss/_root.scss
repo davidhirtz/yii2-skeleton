@@ -1,66 +1,63 @@
 //@import "../../../../node_modules/bootstrap/scss/root";
 
 :root {
-  --primary: #{$primary};
-  --primary-bg: #{$primary-bg};
-  --primary-border: #{$primary-border-color};
-  --primary-color: #{$primary-color};
+  --primary: #000;
+  --primary-bg: #333;
+  --primary-border: #000;
+  --primary-color: #333;
 
-  --secondary: #{$secondary};
-  --secondary-bg: #{$secondary-bg};
-  --secondary-border: #{$secondary-border-color};
-  --secondary-color: #{$secondary-color};
+  --secondary: #8386ad;
+  --secondary-bg: #b6b9e0;
+  --secondary-border: #dbdce;
+  --secondary-color: #a4a8d8;
 
-  --tertiary: #{$tertiary};
-  --tertiary-bg: #{$tertiary-bg};
-  --tertiary-border: #{$tertiary-border-color};
-  --tertiary-color: #{$tertiary-color};
+  --tertiary: #c5c5c5;
+  --tertiary-bg: #e4e4e4;
+  --tertiary-border: #f1f1f1;
+  --tertiary-color: #585858;
 
-  --success: #{$success};
-  --success-bg: #{$success-bg};
-  --success-border: #{$success-border-color};
-  --success-color: #{$success-color};
+  --success: #a3cba3;
+  --success-bg: #d9f6d9;
+  --success-border: #daeada;
+  --success-color: #212921;
 
-  --info: #{$info};
-  --info-bg: #{$info-bg};
-  --info-border: #{$info-border-color};
-  --info-color: #{$info-color};
+  --info: #798fc3;
+  --info-bg: #e4e9f3;
+  --info-border: #c9d2e7;
+  --info-color: #30394e;
 
-  --warning: #{$warning};
-  --warning-bg: #{$warning-bg};
-  --warning-border: #{$warning-border-color};
-  --warning-color: #{$warning-color};
+  --warning: #ffc107;
+  --warning-bg: #fff3cd;
+  --warning-border: #ffe69c;
+  --warning-color: #664d03;
 
-  --danger: #{$danger};
-  --danger-bg: #{$danger-bg};
-  --danger-border: #{$danger-border-color};
-  --danger-color: #{$danger-color};
+  --danger: #e43c3c;
+  --danger-bg: #d89090;
+  --danger-border: #f0cfcf;
+  --danger-color: #da8888;
 
-  --light: #{$light};
-  --light-bg: #{$light-bg};
-  --light-border: #{$light-border-color};
-  --light-color: #{$light-color};
+  --light: #f9f9f9;
+  --light-bg: #fff;
+  --light-border: #f5f5f5;
+  --light-color: #fff;
 
-  --dark: #{$dark};
-  --dark-bg: #{$dark-bg};
-  --dark-border: #{$dark-border-color};
-  --dark-color: #{$dark-color};
+  --dark: #ddd;
+  --dark-bg: #e4e4e4;
+  --dark-border: #ccc;
+  --dark-color: #555;
 
-  --body-bg: #{$body-bg};
-  --body-color: #{$body-color};
+  --body-bg: var(--light-bg);
+  --body-color: var(--primary);
+  --border-color: var(--dark);
 
-  --border: #{$border-color};
+  --link-color: var(--primary);
+  --link-hover-color: var(--secondary);
 
-  --link-color: #{$link-color};
-  --link-hover-color: #{$link-hover-color};
-
-  --heading-color: #{$headings-color};
-
-  --highlight-bg: #{$mark-bg};
-  --highlight-color: #{$mark-color};
+  --highlight-bg: var(--success);
+  --highlight-color: var(--body-color);
 
   // Breadcrumb
-  --breadcrumb-bg:transparent;
+  --breadcrumb-bg: transparent;
   --breadcrumb-divider-color: var(--secondary-border);
 
 
@@ -70,15 +67,15 @@
   --form-line-height: calc(1.25 / .875);
 
   --input-bg: var(--light-bg);
-  --input-border: var(--border);
+  --input-border: var(--border-color);
   --input-color: var(--body-color);
 
   --form-invalid-bg: var(--light);
   --form-invalid-border: var(--danger-border);
   --form-invalid-color: var(--danger-color);
 
-  --arrow-down-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$arrow-down-stroke-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
-  --arrow-down-active-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$arrow-down-stroke-active-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
+  --arrow-down-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#ddd' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
+  --arrow-down-active-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
 
   @include media-breakpoint-down(md) {
     --form-padding-y: 0.4375rem;
