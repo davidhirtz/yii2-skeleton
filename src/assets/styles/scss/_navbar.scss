@@ -78,7 +78,7 @@
 }
 
 .navbar-logout {
-  --nav-link-hover-bg: #{$btn-danger-bg};
+  --nav-link-hover-bg: var(--btn-danger-bg);
 }
 
 //noinspection ALL

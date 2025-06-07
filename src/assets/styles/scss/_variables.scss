@@ -33,8 +33,8 @@ $font-weight-bolder: bolder !default;
 $font-weight-base: $font-weight-normal !default;
 
 $line-height-base: 1.5 !default;
-$line-height-xs: .75 !default;
-$line-height-sm: var(--form-line-height) !default;
+$line-height-xs: 1.125rem !default;
+$line-height-sm: calc(1.25 / .875) !default;
 
 $h1-font-size: 2.25em !default;
 $h2-font-size: 1.125em !default;
@@ -187,8 +187,8 @@ $navbar-toggler-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/s
 $breadcrumb-margin: 0 0 $margin-y !default;
 $breadcrumb-padding: 0 $spacer-x !default;
 $breadcrumb-gap-x: 0.5em !default;
-$breadcrumb-font-size: var(--font-size-xs) !default;
-$breadcrumb-line-height: var(--line-height-xs) !default;
+$breadcrumb-font-size: $font-size-sm !default;
+$breadcrumb-line-height: $line-height-sm !default;
 $breadcrumb-font-weight: normal !default;
 $breadcrumb-item-min-width: 10em !default;
 $breadcrumb-item-max-width: 30em !default;
@@ -263,26 +263,6 @@ $btn-min-width: 2.625rem !default;
 $btn-transition: color .15s, background-color .15s, border-color .15s;
 $btn-disabled-opacity: .5 !default;
 
-$btn-primary-bg: var(--primary-color) !default;
-$btn-primary-border-color: var(--primary-color) !default;
-$btn-primary-color: var(--light-color) !default;
-$btn-primary-hover-bg: var(--primary) !default;
-$btn-primary-hover-border-color: var(--primary) !default;
-$btn-primary-hover-color: var(--light-color) !default;
-
-$btn-secondary-bg: var(--secondary-color) !default;
-$btn-secondary-border-color: var(--secondary-color) !default;
-$btn-secondary-color: var(--light-color) !default;
-$btn-secondary-hover-bg: var(--secondary) !default;
-$btn-secondary-hover-border-color: var(--secondary) !default;
-$btn-secondary-hover-color: var(--light-color) !default;
-
-$btn-danger-bg: var(--danger-color) !default;
-$btn-danger-border-color: var(--danger-color) !default;
-$btn-danger-color: var(--light-color) !default;
-$btn-danger-hover-bg: var(--danger) !default;
-$btn-danger-hover-border-color: var(--danger) !default;
-$btn-danger-hover-color: var(--light-color) !default;
 
 $btn-toolbar-spacer: .5rem !default;
 

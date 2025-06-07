@@ -1,54 +1,46 @@
 //@import "../../../../node_modules/bootstrap/scss/buttons";
 
 .btn {
-  --btn-color: #{$btn-color};
-  --btn-bg: transparent;
-  --btn-border: transparent;
-  --btn-active-bg: transparent;
-  --btn-active-border: transparent;
-  --btn-hover-border: transparent;
-  --btn-hover-color: #{$btn-color};
-
   display: inline-block;
   padding: $btn-padding-y $btn-padding-x;
   font-family: $btn-font-family;
   @include font-size($btn-font-size);
   font-weight: $btn-font-weight;
   line-height: $btn-line-height;
-  color: var(--btn-color);
-  background: var(--btn-bg);
+  color: var(--btn-color, var(--body-color));
+  background: var(--btn-bg, transparent);
   text-align: center;
   text-decoration: if($link-decoration == none, null, none);
   white-space: $btn-white-space;
   vertical-align: middle;
   cursor: pointer;
   user-select: none;
-  border: $btn-border-width solid var(--btn-border);
+  border: $btn-border-width solid var(--btn-border, transparent);
   min-width: $btn-min-width;
 
   @include border-radius($btn-border-radius);
   @include transition($btn-transition);
 
   &.active {
-    background: var(--btn-active-bg);
-    border-color: var(--btn-active-border);
+    background: var(--btn-active-bg, transparent);
+    border-color: var(--btn-active-border, transparent);
   }
 
   &:hover {
-    color: var(--btn-hover-color);
+    color: var(--btn-hover-color, inherit);
     text-decoration: if($link-hover-decoration == underline, none, null);
     background-color: var(--btn-hover-bg);
-    border-color: var(--btn-hover-border);
+    border-color: var(--btn-hover-border, inherit);
   }
 
   &:focus-visible {
     color: var(--btn-hover-color);
-    border-color: var(--btn-hover-border);
+    border-color: var(--btn-hover-border, inherit);
     outline: 0;
   }
 
   .btn-check:focus-visible + & {
-    border-color: var(--btn-hover-border);
+    border-color: var(--btn-hover-border, inherit);
     outline: 0;
   }
 
@@ -61,30 +53,30 @@
 }
 
 .btn-primary {
-  --btn-bg: #{$btn-primary-bg};
-  --btn-border: #{$btn-primary-border-color};
-  --btn-color: #{$btn-primary-color};
-  --btn-hover-bg: #{$btn-primary-hover-bg};
-  --btn-hover-border: #{$btn-primary-hover-border-color};
-  --btn-hover-color: #{$btn-primary-hover-color};
+  --btn-bg: var(--btn-primary-bg);
+  --btn-border: var(--btn-primary-border-color);
+  --btn-color: var(--btn-primary-color);
+  --btn-hover-bg: var(--btn-primary-hover-bg);
+  --btn-hover-border: var(--btn-primary-hover-border-color);
+  --btn-hover-color: var(--btn-primary-hover-color);
 }
 
 .btn-secondary {
-  --btn-bg: #{$btn-secondary-bg};
-  --btn-border: #{$btn-secondary-border-color};
-  --btn-color: #{$btn-secondary-color};
-  --btn-hover-bg: #{$btn-secondary-hover-bg};
-  --btn-hover-border: #{$btn-secondary-hover-border-color};
-  --btn-hover-color: #{$btn-secondary-hover-color};
+  --btn-bg: var(--btn-secondary-bg);
+  --btn-border: var(--btn-secondary-border-color);
+  --btn-color: var(--btn-secondary-color);
+  --btn-hover-bg: var(--btn-secondary-hover-bg);
+  --btn-hover-border: var(--btn-secondary-hover-border-color);
+  --btn-hover-color: var(--btn-secondary-hover-color);
 }
 
 .btn-danger {
-  --btn-bg: #{$btn-danger-bg};
-  --btn-border: #{$btn-danger-border-color};
-  --btn-color: #{$btn-danger-color};
-  --btn-hover-bg: #{$btn-danger-hover-bg};
-  --btn-hover-border: #{$btn-danger-hover-border-color};
-  --btn-hover-color: #{$btn-danger-hover-color};
+  --btn-bg: var(--btn-danger-bg);
+  --btn-border: var(--btn-danger-border-color);
+  --btn-color: var(--btn-danger-color);
+  --btn-hover-bg: var(--btn-danger-hover-bg);
+  --btn-hover-border: var(--btn-danger-hover-border-color);
+  --btn-hover-color: var(--btn-danger-hover-color);
 }
 
 .btn-link {

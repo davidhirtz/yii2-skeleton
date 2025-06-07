@@ -17,8 +17,9 @@
   font-weight: $lead-font-weight;
 }
 
-.small {
-  @extend small;
+.small, .text-xs {
+  @include font-size($font-size-xs);
+  line-height: $line-height-xs;
 }
 
 .strong {

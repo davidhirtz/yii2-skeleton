@@ -56,6 +56,28 @@
   --highlight-bg: var(--success);
   --highlight-color: var(--body-color);
 
+  // Button
+  --btn-primary-bg: var(--primary-color);
+  --btn-primary-border-color: var(--primary-color);
+  --btn-primary-color: var(--light-color);
+  --btn-primary-hover-bg: var(--primary);
+  --btn-primary-hover-border-color: var(--primary);
+  --btn-primary-hover-color: var(--light-color);
+  
+  --btn-secondary-bg: var(--secondary-color);
+  --btn-secondary-border-color: var(--secondary-color);
+  --btn-secondary-color: var(--light-color);
+  --btn-secondary-hover-bg: var(--secondary);
+  --btn-secondary-hover-border-color: var(--secondary);
+  --btn-secondary-hover-color: var(--light-color);
+
+  --btn-danger-bg: var(--danger-color);
+  --btn-danger-border-color: var(--danger-color);
+  --btn-danger-color: var(--light-color);
+  --btn-danger-hover-bg: var(--danger);
+  --btn-danger-hover-border-color: var(--danger);
+  --btn-danger-hover-color: var(--light-color);
+
   // Breadcrumb
   --breadcrumb-bg: transparent;
   --breadcrumb-divider-color: var(--secondary-border);
@@ -63,8 +85,8 @@
 
   --form-padding-x: 0.75rem;
   --form-padding-y: 0.5625rem;
-  --form-font-size: #{$font-size-sm};
-  --form-line-height: calc(1.25 / .875);
+  --form-font-size: #{--font-size-sm};
+  --form-line-height: #{--line-height-sm};
 
   --input-bg: var(--light-bg);
   --input-border: var(--border-color);
@@ -79,7 +101,7 @@
 
   @include media-breakpoint-down(md) {
     --form-padding-y: 0.4375rem;
-    --form-font-size: #{$font-size-base};
-    --form-line-height: #{$line-height-base};
+    --form-font-size: #{--font-size-base};
+    --form-line-height: #{--line-height-base};
   }
 }

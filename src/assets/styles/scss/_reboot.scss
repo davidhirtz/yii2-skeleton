@@ -126,11 +126,6 @@ strong {
   font-weight: $font-weight-bolder;
 }
 
-
-small {
-  @include font-size($font-size-xs);
-}
-
 mark {
   padding: $mark-padding;
   color: var(--highlight-color);
