@@ -84,7 +84,7 @@ $font-weight-base: $font-weight-normal !default;
 
 $line-height-base: 1.5 !default;
 $line-height-xs: .75 !default;
-$line-height-sm: calc(1.25 / .875) !default;
+$line-height-sm: var(--#{$prefix}form-line-height) !default;
 
 $h1-font-size: 2.25em !default;
 $h2-font-size: 1.125em !default;
@@ -241,9 +241,8 @@ $breadcrumb-padding: 0 $spacer-x !default;
 $breadcrumb-gap-x: 0.5em !default;
 $breadcrumb-item-min-width: 10em !default;
 $breadcrumb-item-max-width: 30em !default;
-$breadcrumb-bg: transparent !default;
-$breadcrumb-divider-color: var(--#{$prefix}secondary-border) !default;
-$breadcrumb-active-color: var(--#{$prefix}tertiary-color) !default;
+$breadcrumb-bg-color: var(--#{$prefix}breadcrumb-bg) !default;
+$breadcrumb-divider-color: var(--#{$prefix}breadcrumb-divider-color) !default;
 $breadcrumb-border-radius: $border-radius !default;
 $breadcrumb-divider: quote("/") !default;
 
@@ -356,9 +355,9 @@ $form-group-template-columns: 1fr 3fr !default;
 $form-group-gap-xs: .5rem !default;
 $form-group-gap-md: 1rem !default;
 
-$form-invalid-bg: var(--#{$prefix}light) !default;
-$form-invalid-border-color: var(--#{$prefix}danger-border) !default;
-$form-invalid-color: var(--#{$prefix}danger-color) !default;
+$form-invalid-bg: var(--#{$prefix}form-invalid-bg) !default;
+$form-invalid-border-color: var(--#{$prefix}form-invalid-border) !default;
+$form-invalid-color: var(--#{$prefix}form-invalid-color) !default;
 
 // Inputs
 $input-padding-x: var(--#{$prefix}form-padding-x) !default;
@@ -367,11 +366,12 @@ $input-font-size: var(--#{$prefix}form-font-size) !default;
 $input-line-height: var(--#{$prefix}form-line-height) !default;
 $input-font-weight: $font-weight-base !default;
 $input-font-family: null !default;
-$input-color: var(--#{$prefix}body-color) !default;
-$input-border-color: var(--#{$prefix}border) !default;
+$input-bg-color: var(--#{$prefix}input-bg) !default;
+$input-color: var(--#{$prefix}input-color) !default;
+$input-border-color: var(--#{$prefix}input-border) !default;
 $input-border-width: $border-width !default;
 $input-border-radius: $border-radius !default;
-$input-bg: var(--#{$prefix}light-bg) !default;
+$input-bg: var(--#{$prefix}input-bg) !default;
 $input-box-shadow: none !default;
 $input-height-inner-half: calc(1.5 / #{$input-font-size}) !default; // todo
 
@@ -440,21 +440,27 @@ $form-label-font-weight: $font-weight-medium !default;
 $form-label-padding-y: $btn-padding-y !default;
 $form-label-padding-x: 0 !default;
 
-$checkbox-input-border-radius: $border-radius !default;
-$checkbox-input-width: 1.5rem !default;
-$checkbox-input-height: $checkbox-input-width !default;
-$checkbox-input-focus-box-shadow: none !default;
+// Checkbox
 $checkbox-label-font-size: $font-size-sm !default;
 $checkbox-label-line-height: $line-height-sm !default;
 $checkbox-label-color: var(--#{$prefix}body-color) !default;
 $checkbox-label-cursor: null !default;
 $checkbox-transition: null !default;
+
+$checkbox-input-border-radius: $border-radius !default;
+$checkbox-input-width: 1.5rem !default;
+$checkbox-input-height: $checkbox-input-width !default;
+$checkbox-input-bg-color: $input-bg !default;
+$checkbox-input-bg-image: var(--#{$prefix}form-check-bg-image);
+$checkbox-input-border: $border-width solid var(--#{$prefix}border) !default;
+
 $checkbox-gap: 0.75rem !default;
 
-$checkbox-input-bg: $input-bg !default;
-$checkbox-input-border: $border-width solid var(--#{$prefix}border) !default;
 $checkbox-radio-border-radius: 50% !default;
+
+$checkbox-input-focus-box-shadow: none !default;
 $checkbox-input-focus-border: $input-focus-border-color !default;
+$checkbox-input-focus-outline: 0 !default;
 
 $checkbox-input-checked-bg-color: var(--#{$prefix}light-bg) !default;
 $checkbox-input-checked-color: $body-color !default;

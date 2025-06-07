@@ -59,18 +59,23 @@
   --#{$prefix}highlight-bg: #{$mark-bg};
   --#{$prefix}highlight-color: #{$mark-color};
 
+  // Breadcrumb
+  --#{$prefix}breadcrumb-bg:transparent;
+  --#{$prefix}breadcrumb-divider-color: var(--#{$prefix}secondary-border);
+
+
   --#{$prefix}form-padding-x: 0.75rem;
   --#{$prefix}form-padding-y: 0.5625rem;
   --#{$prefix}form-font-size: #{$font-size-sm};
-  --#{$prefix}form-line-height: #{$line-height-sm};
+  --#{$prefix}form-line-height: calc(1.25 / .875);
 
-  --#{$prefix}input-bg: #{$input-bg};
-  --#{$prefix}input-border: #{$input-border-color};
-  --#{$prefix}input-color: #{$input-color};
+  --#{$prefix}input-bg: var(--#{$prefix}light-bg);
+  --#{$prefix}input-border: var(--#{$prefix}border);
+  --#{$prefix}input-color: var(--#{$prefix}body-color);
 
-  --#{$prefix}form-invalid-bg: #{$form-invalid-bg};
-  --#{$prefix}form-invalid-border: #{$form-invalid-border-color};
-  --#{$prefix}form-invalid-color: #{$form-invalid-color};
+  --#{$prefix}form-invalid-bg: var(--#{$prefix}light);
+  --#{$prefix}form-invalid-border: var(--#{$prefix}danger-border);
+  --#{$prefix}form-invalid-color: var(--#{$prefix}danger-color);
 
   --#{$prefix}arrow-down-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$arrow-down-stroke-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
   --#{$prefix}arrow-down-active-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$arrow-down-stroke-active-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};

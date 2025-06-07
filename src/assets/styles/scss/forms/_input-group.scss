@@ -52,7 +52,7 @@
   text-align: center;
   white-space: nowrap;
   background-color: $input-group-addon-bg;
-  border: $input-border-width solid var(--#{$prefix}input-border);
+  border: $input-border-width solid $input-border-color;
   @include border-radius($input-border-radius);
 
   @include transition($input-transition);

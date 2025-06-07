@@ -1,16 +1,13 @@
 //@import "../../../../node_modules/bootstrap/scss/breadcrumb";
 
 .breadcrumb {
-  --#{$prefix}breadcrumb-bg: #{$breadcrumb-bg};
-  --#{$prefix}breadcrumb-divider-color: #{$breadcrumb-divider-color};
-
   display: flex;
   margin: $breadcrumb-margin;
   padding: $breadcrumb-padding;
   gap: $breadcrumb-gap-x;
   list-style: none;
   overflow-x: auto;
-  background-color: var(--#{$prefix}breadcrumb-bg);
+  background-color: $breadcrumb-bg-color;
   @include border-radius($breadcrumb-border-radius);
 }
 
@@ -24,7 +21,7 @@
   }
 
   &:not(:first-child)::before {
-    color: var(--#{$prefix}breadcrumb-divider-color);
+    color: $breadcrumb-divider-color;
     content: escape-svg($breadcrumb-divider);
   }
 }

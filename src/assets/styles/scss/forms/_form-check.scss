@@ -11,10 +11,7 @@
   width: $checkbox-input-width;
   height: $checkbox-input-height;
   appearance: none;
-  background-color: $checkbox-input-bg;
-  background-image: var(--#{$prefix}form-check-bg-image, transparent);
-  background-repeat: no-repeat;
-  background-position: center;
+  background: $checkbox-input-bg-color $checkbox-input-bg-image no-repeat center;
   background-size: contain;
   border: $checkbox-input-border;
   print-color-adjust: exact; // Keep themed appearance for print
@@ -28,10 +25,10 @@
     border-radius: $checkbox-radio-border-radius;
   }
 
-  &:focus,
-  &:hover {
+  &:not(.is-invalid,:user-invalid,:disabled):hover,
+  &:not(.is-invalid,:user-invalid):focus {
     border-color: $checkbox-input-focus-border;
-    outline: 0;
+    outline: $checkbox-input-focus-outline;
     box-shadow: $checkbox-input-focus-box-shadow;
   }
 
