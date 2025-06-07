@@ -158,9 +158,9 @@
 
   // Badge.
   --badge-color: var(--body-color);
-  --badge-bg: var(--color-gray-100);
-  --badge-active-bg: var(--color-gray-200);
-  --badge-active-color: var(--body-color);
+  --badge-bg: var(--color-gray-50);
+  --badge-active-bg: var(--color-gray-700);
+  --badge-active-color: var(--body-bg);
 
   // Button
   --btn-primary-bg: var(--primary-color);
@@ -191,8 +191,8 @@
   // Form
   --form-padding-x: 0.75rem;
   --form-padding-y: 0.5625rem;
-  --form-font-size: #{--font-size-sm};
-  --form-line-height: #{--line-height-sm};
+  --form-font-size: #{$font-size-sm};
+  --form-line-height: #{$line-height-sm};
 
   --form-invalid-bg: var(--light);
   --form-invalid-border: var(--danger-border);
@@ -203,6 +203,8 @@
   --input-color: var(--body-color);
 
   // Nav
+  --nav-link-active-badge-bg: var(--light-color);
+  --nav-link-active-badge-color: var(--body-color);
   --nav-link-active-bg: var(--light-color);
   --nav-link-active-color: var(--light-color);
   --nav-link-color: var(--link-color);
@@ -213,7 +215,6 @@
   --nav-pills-link-active-color: var(--body-bg);
   --nav-pills-link-hover-bg: var(--color-gray-200);
   --nav-pills-link-hover-color: var(--body-color);
-
 
   // Navbar
   --navbar-bg: var(--color-gray-700);
@@ -229,7 +230,7 @@
 
   @include media-breakpoint-down(md) {
     --form-padding-y: 0.4375rem;
-    --form-font-size: #{--font-size-base};
-    --form-line-height: #{--line-height-base};
+    --form-font-size: #{$font-size-base};
+    --form-line-height: #{$line-height-base};
   }
 }

@@ -24,15 +24,13 @@
 
   &:hover,
   &:focus {
-    --badge-bg: var(--nav-link-hover-color);
-    --badge-color: var(--nav-link-hover-bg);
     background: var(--nav-link-hover-bg, transparent);
     color: var(--nav-link-hover-color);
   }
 
   &.active {
-    --badge-bg: var(--nav-link-active-color); // Todo
-    --badge-color: var(--nav-link-active-bg);
+    --badge-bg: var(--nav-link-active-badge-bg);
+    --badge-color: var(--nav-link-active-badge-color);
     background: var(--nav-link-active-bg);
     color: var(--nav-link-active-color);
   }

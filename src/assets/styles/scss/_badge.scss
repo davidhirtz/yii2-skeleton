@@ -21,6 +21,6 @@
 }
 
 a.badge:hover {
-  --badge-bg: var(--badge-hover-bg, inherit);
-  --badge-color: var(--badge-hover-color, inherit);
+  --badge-bg: var(--badge-active-bg);
+  --link-hover-color: var(--badge-active-color);
 }
