@@ -24,23 +24,17 @@
 
   &:hover,
   &:focus {
+    --badge-bg: var(--nav-link-hover-color);
+    --badge-color: var(--nav-link-hover-bg);
     background: var(--nav-link-hover-bg, transparent);
     color: var(--nav-link-hover-color);
-
-    .badge {
-      background: var(--nav-link-hover-color);
-      color: var(--nav-link-hover-bg);
-    }
   }
 
   &.active {
+    --badge-bg: var(--nav-link-active-color); // Todo
+    --badge-color: var(--nav-link-active-bg);
     background: var(--nav-link-active-bg);
     color: var(--nav-link-active-color);
-
-    .badge {
-      background: var(--nav-link-active-color);
-      color: var(--nav-link-active-bg);
-    }
   }
 
   &:focus-visible {
@@ -58,11 +52,11 @@
 }
 
 .nav-pills {
+  --nav-link-active-bg: var(--nav-pills-link-active-bg);
+  --nav-link-active-color: var(--nav-pills-link-active-color);
   --nav-link-bg: var(--nav-pills-link-bg, transparent);
   --nav-link-hover-bg: var(--nav-pills-link-hover-bg);
   --nav-link-hover-color: var(--nav-pills-link-hover-color);
-  --nav-link-active-color: var(--nav-pills-link-active-color);
-  --nav-link-active-bg: var(--nav-pills-link-active-bg);
 
   gap: $nav-pills-gap;
 

@@ -516,11 +516,8 @@ $dropdown-header-padding-y: $dropdown-item-padding-y !default;
 $dropdown-header-padding-x: $dropdown-item-padding-x !default;
 
 // Badge
-$badge-font-size: 0.75rem !default;
-$badge-color: var(--light) !default;
-$badge-bg: var(--tertiary) !default;
-$badge-active-bg: var(--light) !default;
-$badge-active-color: var(--primary) !important !default;
+$badge-font-size: $font-size-xs !default;
+$bade-line-height: $line-height-xs !default;
 $badge-font-weight: normal !default;
 $badge-padding-y: 0.25rem !default;
 $badge-padding-x: 0.5rem !default;

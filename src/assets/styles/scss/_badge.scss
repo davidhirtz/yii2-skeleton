@@ -10,8 +10,8 @@
   white-space: nowrap;
   vertical-align: baseline;
   @include border-radius($badge-border-radius);
-  background: $badge-bg;
-  color: $badge-color;
+  background: var(--badge-bg);
+  color: var(--badge-color);
   text-decoration: none !important;
   transition: background .2s, color .2s;
 
@@ -21,6 +21,6 @@
 }
 
 a.badge:hover {
-  background: $badge-active-bg;
-  color: $badge-active-color;
+  --badge-bg: var(--badge-hover-bg, inherit);
+  --badge-color: var(--badge-hover-color, inherit);
 }

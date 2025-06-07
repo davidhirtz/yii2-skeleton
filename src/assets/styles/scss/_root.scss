@@ -156,6 +156,12 @@
   --highlight-bg: var(--success);
   --highlight-color: var(--body-color);
 
+  // Badge.
+  --badge-color: var(--body-color);
+  --badge-bg: var(--color-gray-100);
+  --badge-active-bg: var(--color-gray-200);
+  --badge-active-color: var(--body-color);
+
   // Button
   --btn-primary-bg: var(--primary-color);
   --btn-primary-border-color: var(--primary-color);
@@ -206,7 +212,7 @@
   --nav-pills-link-active-bg: var(--color-gray-700);
   --nav-pills-link-active-color: var(--body-bg);
   --nav-pills-link-hover-bg: var(--color-gray-200);
-  --nav-pills-link-hover-color: inherit;
+  --nav-pills-link-hover-color: var(--body-color);
 
 
   // Navbar
