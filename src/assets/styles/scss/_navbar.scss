@@ -2,17 +2,13 @@
 
 .navbar {
   position: fixed;
+  padding: $navbar-padding-y $navbar-padding-x;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1100;
-
-  padding: $navbar-padding-y $navbar-padding-x;
   background: var(--navbar-bg);
-  font-size: $navbar-font-size;
-  line-height: $navbar-line-height;
 }
-
 
 .navbar-container {
   display: grid;
@@ -24,12 +20,11 @@
 }
 
 .navbar-nav {
-  --nav-link-color: #{$navbar-light-color};
-  --nav-link-hover-bg: #{$navbar-light-hover-bg};
-  --nav-link-hover-color: #{$navbar-light-hover-color};
-  --nav-link-disabled-color: #{$navbar-light-disabled-color};
-  --nav-link-active-color: #{$navbar-light-active-color};
-  --nav-link-active-bg: #{$navbar-light-active-bg};
+  --nav-link-color: var(--navbar-link-color);
+  --nav-link-hover-bg: var(--navbar-link-hover-bg);
+  --nav-link-hover-color: var(--navbar-link-hover-color);
+  --nav-link-active-color: var(--navbar-link-active-color);
+  --nav-link-active-bg: var(--navbar-link-active-bg);
 
   margin: 0;
   list-style: none;

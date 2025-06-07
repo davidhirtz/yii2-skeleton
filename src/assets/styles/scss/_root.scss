@@ -196,8 +196,26 @@
   --input-border: var(--border-color);
   --input-color: var(--body-color);
 
+  // Nav
+  --nav-link-active-bg: var(--light-color);
+  --nav-link-active-color: var(--light-color);
+  --nav-link-color: var(--link-color);
+  --nav-link-disabled-color: var(--color-gray-300);
+  --nav-link-hover-color: var(--link-hover-color);
+
+  --nav-pills-link-active-bg: var(--color-gray-700);
+  --nav-pills-link-active-color: var(--body-bg);
+  --nav-pills-link-hover-bg: var(--color-gray-200);
+  --nav-pills-link-hover-color: inherit;
+
+
   // Navbar
   --navbar-bg: var(--color-gray-700);
+  --navbar-link-active-bg: var(--color-gray-900);
+  --navbar-link-active-color: var(--body-bg);
+  --navbar-link-color: var(--body-bg);
+  --navbar-link-hover-bg: var(--color-gray-800);
+  --navbar-link-hover-color: var(--body-bg);
 
   --arrow-down-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#ddd' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
   --arrow-down-active-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
