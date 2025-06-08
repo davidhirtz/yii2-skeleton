@@ -198,6 +198,25 @@
   --card-color: var(--color-black);
   --card-bg: var(--color-white);
   --card-border: var(--color-gray-200);
+  
+  // Dropdown
+  --dropdown-bg: var(--light-bg);
+  --dropdown-border-color: var(--border-color);
+  --dropdown-color: var(--color-black);
+  --dropdown-divider-bg: var(--border-color);
+  --dropdown-link-active-bg: var(--dark-bg);
+  --dropdown-link-active-color: inherit;
+  --dropdown-link-color: var(--color-black);
+  --dropdown-link-disabled-color: var(--tertiary-color);
+  --dropdown-link-hover-bg: var(--light);
+  --dropdown-link-hover-color: var(--color-black);
+  --dropdown-button-bg: var(--tertiary-bg);
+  --dropdown-button-color: var(--color-black);
+  --dropdown-button-border-color: var(--border-color);
+  --dropdown-button-active-bg: var(--tertiary);
+  --dropdown-button-active-border-color: var(--tertiary-border);
+  --dropdown-button-hover-bg: var(--tertiary);
+  --dropdown-button-hover-border-color: var(--tertiary);
 
   // Form
   --form-padding-x: 0.75rem;

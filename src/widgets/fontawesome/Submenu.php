@@ -23,10 +23,7 @@ class Submenu extends Nav
 
     public function run(): string
     {
-        $html = parent::run();
-        $html = $html ? Html::tag('nav', $html) : '';
-        $html = $this->renderTitle() . $html;
-
+        $html = $this->renderTitle() . $this->renderItems();
         return $html ? Container::make()->html($html)->render() : '';
     }
 

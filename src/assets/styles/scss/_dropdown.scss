@@ -12,23 +12,21 @@
 }
 
 .dropdown-menu {
-  position: absolute;
+  background-color: var(--dropdown-bg);
+  border-radius: $dropdown-border-radius;
+  border: $dropdown-border-width solid var(--dropdown-border-color);
+  color: var(--dropdown-color);
   display: none;
-  min-width: $dropdown-min-width;
-  max-height: $dropdown-max-height;
-  padding: $dropdown-padding-y $dropdown-padding-x;
+  font-size: $dropdown-font-size;
+  line-height: $dropdown-line-height;
   margin: 0;
+  max-height: $dropdown-max-height;
+  min-width: $dropdown-min-width;
   overflow-y: auto;
-  color: $dropdown-color;
+  padding: $dropdown-padding-y $dropdown-padding-x;
+  position: absolute;
   text-align: left; // Ensures proper alignment if parent has it changed (e.g., modal footer)
-  background-color: $dropdown-bg;
-
-  @if ($dropdown-border-width) {
-    border: $dropdown-border-width solid $dropdown-border-color;
-  }
-
   z-index: 1000;
-  @include border-radius($dropdown-border-radius);
 
   &[open] {
     display: block;
@@ -45,15 +43,15 @@
     @extend .list-unstyled;
   }
 
-    > .dropdown-item:first-child,
-    > li:first-child .dropdown-item {
-      @include border-top-radius($dropdown-inner-border-radius);
-    }
+  > .dropdown-item:first-child,
+  > li:first-child .dropdown-item {
+    @include border-top-radius($dropdown-inner-border-radius);
+  }
 
-    > .dropdown-item:last-child,
-    > li:last-child .dropdown-item {
-      @include border-bottom-radius($dropdown-inner-border-radius);
-    }
+  > .dropdown-item:last-child,
+  > li:last-child .dropdown-item {
+    @include border-bottom-radius($dropdown-inner-border-radius);
+  }
 }
 
 .dropup {
@@ -64,14 +62,14 @@
 
 .dropdown-header {
   padding: $dropdown-header-padding-y $dropdown-header-padding-x;
-  border-bottom: 1px solid $dropdown-divider-bg;
+  border-bottom: 1px solid var(--dropdown-divider-bg);
 }
 
 .dropdown-divider {
   height: 0;
   margin: $dropdown-divider-margin-y 0;
   overflow: hidden;
-  border-top: 1px solid $dropdown-divider-bg;
+  border-top: 1px solid var(--dropdown-divider-bg);
   opacity: 1;
 }
 
@@ -80,41 +78,41 @@
   width: 100%; // Buttons...
   padding: $dropdown-item-padding-y $dropdown-item-padding-x;
   font-weight: $font-weight-normal;
-  color: $dropdown-link-color;
+  color: var(--dropdown-link-color);
   text-align: inherit;
   background-color: transparent;
   border: 0;
   @extend .text-truncate;
 
   &.active {
-    color: $dropdown-link-active-color;
-    background-color: $dropdown-link-active-bg;
+    color: var(--dropdown-link-active-color);
+    background-color: var(--dropdown-link-active-bg);
     font-weight: $dropdown-button-active-font-weight;
   }
 
   &:hover,
   &:focus {
-    color: $dropdown-link-hover-color;
-    background-color: $dropdown-link-hover-bg;
+    color: var(--dropdown-link-hover-color);
+    background-color: var(--dropdown-link-hover-bg);
     outline: 0;
   }
 
   &.disabled,
   &:disabled {
-    color: $dropdown-link-disabled-color;
+    color: var(--dropdown-link-disabled-color);
     pointer-events: none;
     background-color: transparent;
   }
 }
 
 .dropdown-toggle {
-  --btn-bg: #{$dropdown-button-bg};
-  --btn-color: #{$dropdown-button-color};
-  --btn-border-color: #{$dropdown-button-border-color};
-  --btn-active-bg: #{$dropdown-button-active-bg};
-  --btn-active-border-color: #{$dropdown-button-active-border-color};
-  --btn-hover-bg: #{$dropdown-button-hover-bg};
-  --btn-hover-border-color: #{$dropdown-button-hover-border-color};
+  --btn-bg: var(--dropdown-button-bg);
+  --btn-color: var(--dropdown-button-color);
+  --btn-border-color: var(--dropdown-button-border-color);
+  --btn-active-bg: var(--dropdown-button-active-bg);
+  --btn-active-border-color: var(--dropdown-button-active-border-color);
+  --btn-hover-bg: var(--dropdown-button-hover-bg);
+  --btn-hover-border-color: var(--dropdown-button-hover-border-color);
 
   width: 100%;
   @extend .text-truncate;

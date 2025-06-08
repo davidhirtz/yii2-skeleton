@@ -470,42 +470,21 @@ $pagination-disabled-opacity: .5 !default;
 $pagination-transition: color .15s, background-color .15s, border-color .15s !default;
 
 // Dropdown
+$dropdown-border-radius: $border-radius !default;
+$dropdown-border-width: $border-width !default;
+$dropdown-button-active-font-weight: 500 !default;
+$dropdown-divider-margin-y: 0 !default;
+$dropdown-font-size: $font-size-sm !default;
+$dropdown-header-padding-x: var(--form-padding-x) !default;
+$dropdown-header-padding-y: var(--form-padding-y) !default;
+$dropdown-inner-border-radius: $border-radius !default;
+$dropdown-item-padding-x: var(--form-padding-x) !default;
+$dropdown-item-padding-y: var(--form-padding-y) !default;
+$dropdown-line-height: $line-height-sm !default;
+$dropdown-max-height: 50vh !default;
+$dropdown-min-width: 12rem !default;
 $dropdown-padding-x: 0 !default;
 $dropdown-padding-y: 0 !default;
-$dropdown-min-width: 12rem !default;
-$dropdown-max-height: 50vh !default;
-$dropdown-bg: var(--light-bg) !default;
-$dropdown-color: var(--color-black) !default;
-$dropdown-border-color: var(--border-color) !default;
-$dropdown-border-radius: $border-radius !default;
-$dropdown-border-width: 0 !default;
-$dropdown-inner-border-radius: $border-radius !default;
-$dropdown-divider-bg: var(--border-color) !default;
-$dropdown-divider-margin-y: 0 !default;
-
-$dropdown-button-bg: var(--tertiary-bg) !default;
-$dropdown-button-color: var(--color-black) !default;
-$dropdown-button-border-color: var(--border-color) !default;
-$dropdown-button-active-bg: var(--tertiary) !default;
-$dropdown-button-active-border-color: var(--tertiary-border) !default;
-$dropdown-button-active-font-weight: bold !default;
-$dropdown-button-hover-bg: var(--tertiary) !default;
-$dropdown-button-hover-border-color: var(--tertiary) !default;
-
-$dropdown-item-padding-y: 0.6565rem !default;
-$dropdown-item-padding-x: .75rem !default;
-$dropdown-link-color: var(--color-black) !default;
-$dropdown-link-hover-bg: var(--light) !default;
-$dropdown-link-hover-color: var(--color-black) !default;
-$dropdown-link-active-bg: var(--dark-bg) !default;
-$dropdown-link-active-color: inherit !default;
-$dropdown-link-disabled-color: var(--tertiary-color) !default;
-
-$dropdown-header-padding-y: $dropdown-item-padding-y !default;
-$dropdown-header-padding-x: $dropdown-item-padding-x !default;
-
-$dropdown-header-padding-y: $dropdown-item-padding-y !default;
-$dropdown-header-padding-x: $dropdown-item-padding-x !default;
 
 // Badge
 $badge-font-size: $font-size-xs !default;
