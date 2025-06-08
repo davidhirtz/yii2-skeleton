@@ -200,7 +200,7 @@ $card-border-radius: $border-radius !default;
 $card-border-width: $border-width !default;
 $card-header-border-bottom: $border-width solid var(--card-border-color, transparent) !default;
 $card-header-padding-x: $spacer-x !default;
-$card-header-padding-y: $spacer-y !default;
+$card-header-padding-y: .75rem !default;
 $card-inner-border-radius: $border-radius !default;
 $card-margin-bottom: $margin-y !default;
 $card-spacer-x: $spacer-x !default;
@@ -227,11 +227,12 @@ $form-line-height: $line-height-sm !default;
 $form-sticky-position: sticky !default;
 $form-sticky-border: $border-width solid var(--border-color) !default;
 
-$form-group-max-width: 76rem !default;
+$form-group-gap: .5rem !default;
 $form-group-spacer: $spacer !default;
-$form-group-template-columns: 1fr 3fr !default;
-$form-group-gap-xs: .5rem !default;
-$form-group-gap-md: 1rem !default;
+
+$form-group-horizontal-gap: 1rem !default;
+$form-group-horizontal-max-width: 76rem !default;
+$form-group-horizontal-template-columns: 1fr 3fr !default;
 
 $form-invalid-bg: var(--form-invalid-bg) !default;
 $form-invalid-border-color: var(--form-invalid-border) !default;
@@ -489,7 +490,7 @@ $badge-border-radius: 0.25rem !default;
 $modal-dialog-margin: .5rem !default;
 $modal-backdrop-opacity: .5 !default;
 
-$modal-header-border-width: $border-width !default;
+$modal-header-border-width: 0 !default;
 $modal-header-padding-x: $spacer !default;
 $modal-header-padding-y: $spacer !default;
 
@@ -498,10 +499,10 @@ $modal-title-line-height: $line-height-base !default;
 
 $modal-content-border-color: var(--border-color) !default;
 $modal-content-border-radius: $border-radius !default;
-$modal-content-border-width: $border-width !default;
+$modal-content-border-width: 0 !default;
 $modal-content-inner-border-radius: subtract($modal-content-border-radius, $modal-content-border-width) !default;
 
-$modal-footer-border-width: $modal-header-border-width !default;
+$modal-footer-border-width: 0 !default;
 $modal-footer-gap: .5rem !default;
 
 

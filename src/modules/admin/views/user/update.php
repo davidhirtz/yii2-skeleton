@@ -23,14 +23,6 @@ $this->setTitle(Yii::t('skeleton', 'Edit User'));
 $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
 ?>
 
-<div class="alert alert-success">
-    <div class="alert-heading"><?= Yii::t('skeleton', 'The user will be logged out after saving the form.') ?></div>
-    <ul>
-        <li>First error message because of email</li>
-        <li>Second error <a href="/">message because of password</a></li>
-    </ul>
-</div>
-
 <?= UserSubmenu::widget([
     'user' => $form->user,
 ]); ?>

@@ -15,7 +15,7 @@ use Yii;
  */
 class UserDeletePanel extends Panel
 {
-    public ?User $user = null;
+    public User $user;
 
     /**
      * @var string|null the message to display above the "delete" button
@@ -45,9 +45,9 @@ class UserDeletePanel extends Panel
         parent::init();
     }
 
-    public function render($view, $params = []): string
+    public function renderContent(): string
     {
-        return $this->user->isOwner() ? $this->renderOwnerWarning() : parent::render($view, $params);
+        return $this->user->isOwner() ? $this->renderOwnerWarning() : parent::renderContent();
     }
 
     protected function renderOwnerWarning(): string

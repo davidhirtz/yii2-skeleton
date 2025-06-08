@@ -138,7 +138,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
     'title' => Yii::t('skeleton', 'Sessions'),
 ]); ?>
 
-<div class="card card-default">
+<div class="card">
     <div class="card-body">
         <div class="grid-view">
             <table class="table table-striped table-hover">

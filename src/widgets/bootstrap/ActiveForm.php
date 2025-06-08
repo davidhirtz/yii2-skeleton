@@ -15,11 +15,11 @@ class ActiveForm extends \yii\widgets\ActiveForm
     public $fieldConfig = [
         'horizontalCssClasses' => [
             'wrapper' => 'col-form-content',
-            'field' => 'form-group',
+            'field' => 'form-group form-group-horizontal',
             'label' => 'form-label',
             'offset' => 'col-form-content',
         ],
     ];
     public string $layout = 'horizontal';
-    public $options = ['class' => 'form-horizontal'];
+    public $options = ['class' => 'wrap'];
 }

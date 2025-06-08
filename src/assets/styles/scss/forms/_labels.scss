@@ -2,22 +2,20 @@
 
 .form-group {
   display: grid;
-  max-width: $form-group-max-width;
-  margin: 0 auto;
-  gap: $form-group-gap-xs;
+  gap: $form-group-gap;
 
   &:not(:last-child) {
     margin-bottom: $form-group-spacer;
   }
+}
 
+.form-group-horizontal {
   @include media-breakpoint-up(md) {
-    .form-horizontal & {
-      grid-template-columns: $form-group-template-columns;
-
-      @if ($form-group-gap-md != $form-group-gap-xs) {
-        gap: $form-group-gap-md;
-      }
-    }
+    gap: $form-group-horizontal-gap;
+    grid-template-columns: $form-group-horizontal-template-columns;
+    margin: 0 auto;
+    max-width: $form-group-horizontal-max-width;
+    width: 100%;
   }
 }
 

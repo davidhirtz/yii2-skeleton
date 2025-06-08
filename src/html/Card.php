@@ -13,20 +13,20 @@ class Card extends Tag
     use TagContentTrait;
 
     protected array $attributes = [
-        'class' => 'card card-default',
+        'class' => 'card',
     ];
 
     protected ?bool $collapse = null;
     protected ?string $title = null;
 
-    public static function danger(): static
+    public function danger(): static
     {
-        return static::make()->class('card card-danger');
+        return $this->addClass('card-danger');
     }
 
-    public function title(string $title): static
+    public function title(string|null $title): static
     {
-        $this->title = Html::encode($title);
+        $this->title = $title ? Html::encode($title) : null;
         return $this;
     }
 

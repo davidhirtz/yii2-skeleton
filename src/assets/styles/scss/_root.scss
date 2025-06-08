@@ -168,8 +168,8 @@
   --highlight-color: var(--color-black);
 
   // Text
-  --text-h1: 2rem;
-  --text-h2: 1rem;
+  --text-h1: 1.5rem;
+  --text-h2: 1.125rem;
   --text-h3: 1rem;
   --text-h4: .875rem;
 
@@ -296,5 +296,9 @@
     --form-padding-y: #{$form-padding-y-sm};
     --form-font-size: #{$font-size-base};
     --form-line-height: #{$line-height-base};
+  }
+
+  @include media-breakpoint-up(lg) {
+    --text-h1: 2rem;
   }
 }
