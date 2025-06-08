@@ -36,10 +36,6 @@ $line-height-base: 1.5 !default;
 $line-height-xs: 1.125rem !default;
 $line-height-sm: calc(1.25 / .875) !default;
 
-$h1-font-size: 2.25em !default;
-$h2-font-size: 1.125em !default;
-$h3-font-size: 1em !default;
-$h4-font-size: 0.875em !default;
 $headings-margin-bottom: .5rem !default;
 $headings-font-family: null !default;
 $headings-font-style: null !default;
@@ -88,7 +84,7 @@ $container-padding-y: 0 !default;
 $container-padding-x: 1rem !default;
 $container-centered-max-width: 28rem !default;
 
-$margin-y: 2rem !default;
+$margin-y: 1rem !default;
 $spacer-y: $spacer !default;
 $spacer-x: $spacer !default;
 
@@ -184,7 +180,7 @@ $breadcrumb-padding-x: 0 !default;
 $breadcrumb-padding-y: 0 !default;
 
 // Header
-$header-margin: $margin-y 0 !default;
+$header-margin: $margin-y 0 $margin-y * 2 !default;
 $header-text-align: center !default;
 $header-line-height: 1.4 !default;
 

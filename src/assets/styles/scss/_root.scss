@@ -1,6 +1,6 @@
-//@import "../../../../node_modules/bootstrap/scss/root";
-
 :root {
+
+  // Colors
   --color-red-50: oklch(97.1% 0.013 17.38);
   --color-red-100: oklch(93.6% 0.032 17.717);
   --color-red-200: oklch(88.5% 0.062 18.334);
@@ -100,7 +100,6 @@
   --color-black: #000;
   --color-white: #fff;
 
-
   --primary: #000;
   --primary-bg: #333;
   --primary-border: #000;
@@ -155,6 +154,12 @@
 
   --highlight-bg: var(--success);
   --highlight-color: var(--color-black);
+
+  // Text
+  --text-h1: 2em;
+  --text-h2: 1.125em;
+  --text-h3: 1em;
+  --text-h4: 0.875em;
 
   // Badge.
   --badge-color: var(--color-black);
