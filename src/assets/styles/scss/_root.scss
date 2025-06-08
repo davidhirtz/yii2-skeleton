@@ -73,6 +73,18 @@
   --color-violet-900: oklch(38% 0.189 293.745);
   --color-violet-950: oklch(28.3% 0.141 291.089);
 
+  --color-rose-50: oklch(96.9% 0.015 12.422);
+  --color-rose-100: oklch(94.1% 0.03 12.58);
+  --color-rose-200: oklch(89.2% 0.058 10.001);
+  --color-rose-300: oklch(81% 0.117 11.638);
+  --color-rose-400: oklch(71.2% 0.194 13.428);
+  --color-rose-500: oklch(64.5% 0.246 16.439);
+  --color-rose-600: oklch(58.6% 0.253 17.585);
+  --color-rose-700: oklch(51.4% 0.222 16.935);
+  --color-rose-800: oklch(45.5% 0.188 13.697);
+  --color-rose-900: oklch(41% 0.159 10.272);
+  --color-rose-950: oklch(27.1% 0.105 12.094);
+
   --color-slate-50: oklch(98.4% 0.003 247.858);
   --color-slate-100: oklch(96.8% 0.007 247.896);
   --color-slate-200: oklch(92.9% 0.013 255.508);
@@ -156,10 +168,10 @@
   --highlight-color: var(--color-black);
 
   // Text
-  --text-h1: 2em;
-  --text-h2: 1.125em;
-  --text-h3: 1em;
-  --text-h4: 0.875em;
+  --text-h1: 2rem;
+  --text-h2: 1rem;
+  --text-h3: 1rem;
+  --text-h4: .875rem;
 
   // Badge.
   --badge-color: var(--color-black);
@@ -168,26 +180,28 @@
   --badge-active-color: var(--color-white);
 
   // Button
+  --btn-focus-border-color: var(--color-black);
+
   --btn-primary-bg: var(--primary-color);
   --btn-primary-border-color: var(--primary-color);
-  --btn-primary-color: var(--light-color);
+  --btn-primary-color: var(--color-white);
   --btn-primary-hover-bg: var(--primary);
   --btn-primary-hover-border-color: var(--primary);
-  --btn-primary-hover-color: var(--light-color);
+  --btn-primary-hover-color: var(--color-white);
 
   --btn-secondary-bg: var(--secondary-color);
   --btn-secondary-border-color: var(--secondary-color);
-  --btn-secondary-color: var(--light-color);
+  --btn-secondary-color: var(--color-white);
   --btn-secondary-hover-bg: var(--secondary);
   --btn-secondary-hover-border-color: var(--secondary);
-  --btn-secondary-hover-color: var(--light-color);
+  --btn-secondary-hover-color: var(--color-white);
 
-  --btn-danger-bg: var(--danger-color);
-  --btn-danger-border-color: var(--danger-color);
-  --btn-danger-color: var(--light-color);
-  --btn-danger-hover-bg: var(--danger);
-  --btn-danger-hover-border-color: var(--danger);
-  --btn-danger-hover-color: var(--light-color);
+  --btn-danger-bg: var(--color-red-400);
+  --btn-danger-border-color: var(--btn-danger-bg);
+  --btn-danger-color: var(--color-white);
+  --btn-danger-hover-bg: var(--color-red-600);
+  --btn-danger-hover-border-color: var(--btn-danger-hover-bg);
+  --btn-danger-hover-color: var(--color-white);
 
   // Breadcrumb
   --breadcrumb-bg: transparent;
@@ -195,12 +209,19 @@
   --breadcrumb-link-color: var(--link-color);
   --breadcrumb-link-hover-color: var(--link-hover-color);
 
-  --card-color: var(--color-black);
+  // Card
+  --card-border-color: transparent;
   --card-bg: var(--color-white);
-  --card-border: var(--color-gray-200);
-  
+  --card-color: var(--color-black);
+  --card-header-bg: var(--color-slate-400);
+  --card-header-color: var(--color-white);
+  --card-danger-bg: var(--color-red-300);
+  --card-danger-color: var(--color-white);
+  --card-list-group-action-bg: var(--color-gray-100);
+  --card-list-group-action-hover-bg: var(--color-gray-200);
+
   // Dropdown
-  --dropdown-bg: var(--light-bg);
+  --dropdown-bg: var(--color-gray-100);
   --dropdown-border-color: var(--border-color);
   --dropdown-color: var(--color-black);
   --dropdown-divider-bg: var(--border-color);
@@ -210,33 +231,44 @@
   --dropdown-link-disabled-color: var(--tertiary-color);
   --dropdown-link-hover-bg: var(--light);
   --dropdown-link-hover-color: var(--color-black);
-  --dropdown-button-bg: var(--tertiary-bg);
-  --dropdown-button-color: var(--color-black);
-  --dropdown-button-border-color: var(--border-color);
-  --dropdown-button-active-bg: var(--tertiary);
-  --dropdown-button-active-border-color: var(--tertiary-border);
-  --dropdown-button-hover-bg: var(--tertiary);
-  --dropdown-button-hover-border-color: var(--tertiary);
+  --dropdown-btn-bg: var(--color-gray-100);
+  --dropdown-btn-color: var(--color-black);
+  --dropdown-btn-border-color: var(--border-color);
+  --dropdown-btn-active-bg: var(--color-gray-300);
+  --dropdown-btn-active-border-color: var(--color-gray-300);
+  --dropdown-btn-hover-bg: var(--color-gray-200);
+  --dropdown-btn-hover-border-color: var(--color-gray-200);
 
   // Form
-  --form-padding-x: 0.75rem;
-  --form-padding-y: 0.5625rem;
-  --form-font-size: #{$font-size-sm};
-  --form-line-height: #{$line-height-sm};
+  --form-padding-x: #{$form-padding-x};
+  --form-padding-y: #{$form-padding-y};
+  --form-font-size: #{$form-font-size};
+  --form-line-height: #{$form-line-height};
 
   --form-invalid-bg: var(--light);
   --form-invalid-border: var(--danger-border);
   --form-invalid-color: var(--danger-color);
 
-  --input-bg: var(--light-bg);
+  --input-bg: var(--color-white);
   --input-border: var(--border-color);
   --input-color: var(--color-black);
 
+  // List
+  --list-group-action-bg: var(--color-white);
+  --list-group-action-hover-bg: var(--color-gray-300);
+
+
+  // Modal
+  --modal-border-color: transparent;
+  --modal-bg: var(--color-white);
+  --modal-header-bg: var(--color-gray-200);
+  --modal-backdrop-bg: rgba(0, 0, 0, .4);
+
   // Nav
-  --nav-link-active-badge-bg: var(--light-color);
+  --nav-link-active-badge-bg: var(--color-white);
   --nav-link-active-badge-color: var(--color-black);
-  --nav-link-active-bg: var(--light-color);
-  --nav-link-active-color: var(--light-color);
+  --nav-link-active-bg: var(--color-white);
+  --nav-link-active-color: var(--color-white);
   --nav-link-color: var(--link-color);
   --nav-link-disabled-color: var(--color-gray-300);
   --nav-link-hover-color: var(--link-hover-color);
@@ -261,7 +293,7 @@
 
 
   @include media-breakpoint-down(md) {
-    --form-padding-y: 0.4375rem;
+    --form-padding-y: #{$form-padding-y-sm};
     --form-font-size: #{$font-size-base};
     --form-line-height: #{$line-height-base};
   }

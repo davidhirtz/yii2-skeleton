@@ -11,10 +11,12 @@
   }
 
   @include media-breakpoint-up(md) {
-    grid-template-columns: $form-group-template-columns;
+    .form-horizontal & {
+      grid-template-columns: $form-group-template-columns;
 
-    @if ($form-group-gap-md != $form-group-gap-xs) {
-      gap: $form-group-gap-md;
+      @if ($form-group-gap-md != $form-group-gap-xs) {
+        gap: $form-group-gap-md;
+      }
     }
   }
 }

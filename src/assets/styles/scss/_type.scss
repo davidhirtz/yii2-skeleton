@@ -1,15 +1,48 @@
 //@import "../../../../node_modules/bootstrap/scss/type";
 
-.h1 {
-  @extend h1;
+h1, .h1,
+h2, .h2,
+h3, .h3,
+h4, .h4,
+h5,
+h6 {
+  margin-top: 0;
+  margin-bottom: $headings-margin-bottom;
+  font-family: $headings-font-family;
+  font-style: $headings-font-style;
+  font-weight: $headings-font-weight;
+  line-height: $headings-line-height;
+  color: var(--heading-color, inherit);
 }
 
-.h2 {
-  @extend h2;
+h1 {
+  font-size: var(--text-h1);
 }
 
-.h3 {
-  @extend h3;
+h2 {
+  font-size: var(--text-h2);
+}
+
+h3 {
+  font-size: var(--text-h3);
+}
+
+h4, h5, h6 {
+  font-size: var(--text-h4);
+}
+
+p {
+  margin: 0;
+
+  &:not(:last-child) {
+    margin-bottom: $paragraph-margin-bottom;
+  }
+}
+
+abbr[title] {
+  text-decoration: underline dotted;
+  cursor: help;
+  text-decoration-skip-ink: none;
 }
 
 .lead {

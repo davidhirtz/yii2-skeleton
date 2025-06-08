@@ -1,18 +1,8 @@
-//@import "../../../../node_modules/bootstrap/scss/modal";
-
 .modal {
-  --modal-color: #{$modal-content-color};
-  --modal-bg: #{$modal-content-bg};
-  --modal-border-color: #{$modal-content-border-color};
-  --modal-header-bg: #{$modal-header-bg};
-  --modal-header-border-color: #{$modal-header-border-color};
-  --modal-footer-bg: #{$modal-footer-bg};
-  --modal-footer-border-color: #{$modal-footer-border-color};
-
   flex-direction: column;
   padding: 0;
   border: 0;
-  color: var(--modal-color);
+  color: var(--modal-color, inherit);
   background-color: var(--modal-bg);
   border: $modal-content-border-width solid var(--modal-border-color);
   outline: 0;
@@ -24,7 +14,7 @@
     display: flex;
 
     &::backdrop {
-      background: $modal-backdrop-bg
+      background: var(--modal-backdrop-bg);
     }
   }
 
@@ -39,7 +29,7 @@
   justify-content: space-between;
   padding: $modal-header-padding-y $modal-header-padding-x;
   gap: $modal-header-padding-x;
-  border-bottom: $modal-header-border-width solid var(--modal-header-border-color);
+  border-bottom: $modal-header-border-width solid var(--modal-header-border-color, var(--modal-border-color));
   background-color: var(--modal-header-bg);
   @include border-top-radius($modal-content-inner-border-radius);
 }
@@ -63,8 +53,8 @@
   align-items: center;
   justify-content: flex-end;
   padding: $modal-header-padding-y $modal-header-padding-x;
-  background-color: var(--modal-footer-bg);
-  border-top: $modal-footer-border-width solid var(--modal-footer-border-color);
-  gap: $modal-footer-margin-between;
+  background-color: var(--modal-footer-bg, transparent);
+  border-top: $modal-footer-border-width solid var(--modal-footer-border-color, var(--modal-border-color));
+  gap: $modal-footer-gap;
   @include border-bottom-radius($modal-content-inner-border-radius);
 }

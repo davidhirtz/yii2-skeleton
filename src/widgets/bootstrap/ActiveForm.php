@@ -6,7 +6,7 @@ namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveFormTrait;
 
-class ActiveForm extends \yii\bootstrap5\ActiveForm
+class ActiveForm extends \yii\widgets\ActiveForm
 {
     use ActiveFormTrait;
 
@@ -20,5 +20,6 @@ class ActiveForm extends \yii\bootstrap5\ActiveForm
             'offset' => 'col-form-content',
         ],
     ];
-    public $layout = 'horizontal';
+    public string $layout = 'horizontal';
+    public $options = ['class' => 'form-horizontal'];
 }

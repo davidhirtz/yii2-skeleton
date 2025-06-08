@@ -1,8 +1,12 @@
-// Global
+// Setup
+$grid-breakpoints: (
+        xs: 0,
+        sm: 36rem,
+        md: 48rem,
+        lg: 64rem,
+        xl: 80rem
+) !default;
 
-$spacer: 1rem !default;
-
-$body-text-align: null !default;
 
 $enable-caret: true !default;
 $enable-important-utilities: true !default;
@@ -39,7 +43,7 @@ $line-height-sm: calc(1.25 / .875) !default;
 $headings-margin-bottom: .5rem !default;
 $headings-font-family: null !default;
 $headings-font-style: null !default;
-$headings-font-weight: $font-weight-medium !default;
+$headings-font-weight: $font-weight-base !default;
 $headings-line-height: 1.2 !default;
 $headings-color: inherit !default;
 
@@ -66,27 +70,23 @@ $mark-bg: var(--highlight-bg) !default;
 $mark-color: var(--highlight-color) !default;
 $mark-padding: 0 !default;
 
-// Grid breakpoints
-$grid-breakpoints: (
-        xs: 0,
-        sm: 36rem,
-        md: 48rem,
-        lg: 64rem,
-        xl: 80rem
-) !default;
+$spacer: 1rem !default;
 
-// Grid containers
 $container-max-widths: (
         xl: 100rem
 ) !default;
 
-$container-padding-y: 0 !default;
-$container-padding-x: 1rem !default;
-$container-centered-max-width: 28rem !default;
-
-$margin-y: 1rem !default;
+$margin-y: $spacer !default;
 $spacer-y: $spacer !default;
 $spacer-x: $spacer !default;
+
+$container-padding-x: $spacer !default;
+$container-padding-y: 0 !default;
+
+$container-centered-max-width: 28rem !default;
+$container-centered-padding-x: 0;
+$container-centered-padding-y: 10vh !default;
+
 
 $border-width: 1px !default;
 $border-radius: 0.25rem !default;
@@ -106,11 +106,13 @@ $legend-font-weight: null !default;
 
 // Layout
 $html-scroll-padding: 4rem !default;
-$body-padding-x: 0 !default;
-$body-padding-y: 1rem !default;
+$body-text-align: null !default;
+$main-padding-x: 0 !default;
+$main-padding-y: 1rem !default;
+$main-gap-y: $spacer !default;
 
 $component-active-bg: var(--light-bg) !default;
-$component-active-color: var(--light-color) !default;
+$component-active-color: var(--color-white) !default;
 
 // Mixins
 $arrow-down-bg-image: var(--arrow-down-bg) !default;
@@ -136,7 +138,7 @@ $alert-warning-border-color: var(--warning-border) !default;
 $alert-warning-color: var(--warning-color) !default;
 $alert-danger-bg: var(--danger-bg) !default;
 $alert-danger-border-color: var(--danger-border) !default;
-$alert-danger-color: var(--light-color) !default;
+$alert-danger-color: var(--color-white) !default;
 
 // Nav
 $nav-link-disabled-opacity: .5 !default;
@@ -194,21 +196,19 @@ $alert-heading-font-weight: bold !default;
 $alert-heading-margin-bottom: .5rem !default;
 
 // Card
-$card-spacer-y: $spacer-y !default;
-$card-spacer-x: $spacer-x !default;
-$card-cap-padding-y: $spacer-y !default;
-$card-cap-padding-x: $card-spacer-x !default;
-$card-cap-color: null !default;
-$card-cap-bg: var(--dark-bg) !default;
-$card-title-color: null !default;
-$card-border-width: 0 !default;
 $card-border-radius: $border-radius !default;
+$card-border-width: $border-width !default;
+$card-header-border-bottom: $border-width solid var(--card-border-color, transparent) !default;
+$card-header-padding-x: $spacer-x !default;
+$card-header-padding-y: $spacer-y !default;
 $card-inner-border-radius: $border-radius !default;
 $card-margin-bottom: $margin-y !default;
+$card-spacer-x: $spacer-x !default;
+$card-spacer-y: $spacer-y !default;
 
 $card-danger-bg: var(--danger-bg) !default;
 $card-danger-border-color: var(--danger-border) !default;
-$card-danger-color: var(--light-color) !default;
+$card-danger-color: var(--color-white) !default;
 $card-title-font-weight: 500 !default;
 
 // Grid
@@ -218,13 +218,32 @@ $grid-view-header-border: none !default;
 $grid-view-spacer: $grid-spacer !default;
 $grid-view-footer-border: 1px solid var(--primary-border) !default;
 
+// Forms
+$form-padding-x: 0.75rem !default;
+$form-padding-y: 0.5625rem !default;
+$form-padding-y-sm: 0.4375rem !default;
+$form-font-size: $font-size-sm !default;
+$form-line-height: $line-height-sm !default;
+$form-sticky-position: sticky !default;
+$form-sticky-border: $border-width solid var(--border-color) !default;
+
+$form-group-max-width: 76rem !default;
+$form-group-spacer: $spacer !default;
+$form-group-template-columns: 1fr 3fr !default;
+$form-group-gap-xs: .5rem !default;
+$form-group-gap-md: 1rem !default;
+
+$form-invalid-bg: var(--form-invalid-bg) !default;
+$form-invalid-border-color: var(--form-invalid-border) !default;
+$form-invalid-color: var(--form-invalid-color) !default;
+
 // Buttons
 $btn-color: var(--color-black) !default;
-$btn-padding-x: var(--form-padding-x) !default;
-$btn-padding-y: var(--form-padding-y) !default;
+$btn-padding-x: $form-padding-x !default;
+$btn-padding-y: $form-padding-y !default;
 $btn-font-family: null !default;
-$btn-font-size: var(--form-font-size) !default;
-$btn-line-height: var(--form-line-height) !default;
+$btn-font-size: $font-size-sm !default;
+$btn-line-height: $line-height-sm !default;
 $btn-font-weight: $font-weight-medium !default;
 $btn-white-space: null !default;
 
@@ -254,92 +273,70 @@ $btn-close-disabled-opacity: .25 !default;
 $btn-close-padding-x: 0 !default;
 $btn-close-padding-y: $btn-close-padding-x !default;
 
-// Forms
-$form-sticky-position: sticky !default;
-$form-sticky-border: $border-width solid var(--border-color) !default;
-
-$form-group-max-width: 76rem !default;
-$form-group-spacer: $spacer !default;
-$form-group-template-columns: 1fr 3fr !default;
-$form-group-gap-xs: .5rem !default;
-$form-group-gap-md: 1rem !default;
-
-$form-invalid-bg: var(--form-invalid-bg) !default;
-$form-invalid-border-color: var(--form-invalid-border) !default;
-$form-invalid-color: var(--form-invalid-color) !default;
-
 // Inputs
+$input-bg-color: var(--input-bg) !default;
+$input-bg: var(--input-bg) !default;
+$input-border-color: var(--input-border) !default;
+$input-border-radius: $border-radius !default;
+$input-border-width: $border-width !default;
+$input-box-shadow: none !default;
+$input-color: var(--input-color) !default;
+$input-font-family: null !default;
+$input-font-size: var(--form-font-size) !default;
+$input-font-weight: $font-weight-base !default;
+$input-height-inner-half: calc(1.5 / #{$input-font-size}) !default; // todo
+$input-line-height: var(--form-line-height) !default;
 $input-padding-x: var(--form-padding-x) !default;
 $input-padding-y: var(--form-padding-y) !default;
-$input-font-size: var(--form-font-size) !default;
-$input-line-height: var(--form-line-height) !default;
-$input-font-weight: $font-weight-base !default;
-$input-font-family: null !default;
-$input-bg-color: var(--input-bg) !default;
-$input-color: var(--input-color) !default;
-$input-border-color: var(--input-border) !default;
-$input-border-width: $border-width !default;
-$input-border-radius: $border-radius !default;
-$input-bg: var(--input-bg) !default;
-$input-box-shadow: none !default;
-$input-height-inner-half: calc(1.5 / #{$input-font-size}) !default; // todo
+$input-transition: border-color .15s ease-in-out, color .15s ease-in-out !default;
 
 $input-disabled-bg: var(--light) !default;
-$input-disabled-color: null !default;
 $input-disabled-border-color: null !default;
+$input-disabled-color: null !default;
 
-$input-focus-color: var(--color-black) !default;
 $input-focus-bg: var(--light) !default;
 $input-focus-border-color: var(--primary) !default;
-$input-focus-width: .25rem !default;
 $input-focus-box-shadow: none !default;
+$input-focus-color: var(--color-black) !default;
+$input-focus-width: .25rem !default;
 
 $input-placeholder-color: var(--color-black) !default;
 $input-placeholder-opacity: 0.6 !default;
 $input-plaintext-color: var(--color-black) !default;
-$input-transition: border-color .15s ease-in-out, color .15s ease-in-out !default;
 
-$input-group-addon-padding-y: $input-padding-y !default;
-$input-group-addon-padding-x: $input-padding-x !default;
-$input-group-addon-font-weight: $input-font-weight !default;
-$input-group-addon-color: var(--color-black) !default;
 $input-group-addon-bg: var(--light) !default;
 $input-group-addon-border-color: $input-border-color !default;
+$input-group-addon-color: var(--color-black) !default;
+$input-group-addon-font-weight: $input-font-weight !default;
+$input-group-addon-padding-x: $input-padding-x !default;
+$input-group-addon-padding-y: $input-padding-y !default;
 
-$select-padding-y: $input-padding-y !default;
-$select-padding-x: $input-padding-x !default;
-$select-font-family: $input-font-family !default;
-$select-font-size: $input-font-size !default;
-$select-indicator-padding: calc($select-padding-x * 3) !default; // Extra padding for background-image
-$select-font-weight: $input-font-weight !default;
-$select-line-height: $input-line-height !default;
 $select-bg-color: $input-bg !default;
 $select-bg-image: $arrow-down-bg-image !default;
-$select-color: $input-color !default;
+$select-bg-position: right $input-padding-x center !default;
+$select-bg-size: 16px 12px !default;
 $select-border-color: $input-border-color !default;
-$select-border-width: $input-border-width !default;
 $select-border-radius: $input-border-radius !default;
+$select-border-width: $input-border-width !default;
 $select-box-shadow: var(--box-shadow-inset) !default;
+$select-color: $input-color !default;
+$select-font-family: $input-font-family !default;
+$select-font-size: $input-font-size !default;
+$select-font-weight: $input-font-weight !default;
+$select-indicator-padding: calc($input-padding-x * 3) !default; // Extra padding for background-image
+$select-line-height: $input-line-height !default;
+$select-padding-x: $input-padding-x !default;
+$select-padding-y: $input-padding-y !default;
+$select-transition: $input-transition !default;
+
 $select-disabled-color: null !default;
 $select-disabled-bg: $input-disabled-bg !default;
 $select-disabled-border-color: $input-disabled-border-color !default;
-$select-bg-position: right $select-padding-x center !default;
-$select-bg-size: 16px 12px !default;
-$select-indicator-color: var(--border-color) !default;
-$select-indicator: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$select-indicator-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>") !default;
 
-$select-focus-box-shadow: none !default;
 $select-focus-bg-image: $arrow-down-active-bg-image !default;
-
-$select-feedback-icon-padding-end: calc($select-padding-x * 2.5 + $select-indicator-padding) !default;
-$select-feedback-icon-position: center right $select-indicator-padding !default;
-$select-feedback-icon-size: 0.75rem !default; // todo
-
 $select-focus-border-color: $input-focus-border-color !default;
+$select-focus-box-shadow: none !default;
 $select-focus-width: $input-focus-width !default;
-$select-focus-box-shadow: 0 0 0 $select-focus-width $input-btn-focus-color !default;
-
-$select-transition: $input-transition !default;
 
 $form-label-font-size: $font-size-sm !default;
 $form-label-line-height: $line-height-sm !default;
@@ -350,10 +347,11 @@ $form-label-padding-y: $btn-padding-y !default;
 $form-label-padding-x: 0 !default;
 
 // Checkbox
-$checkbox-label-font-size: $font-size-sm !default;
-$checkbox-label-line-height: $line-height-sm !default;
 $checkbox-label-color: var(--color-black) !default;
 $checkbox-label-cursor: null !default;
+$checkbox-label-font-size: $font-size-sm !default;
+$checkbox-label-line-height: $line-height-sm !default;
+$checkbox-label-padding-top: 0.125rem !default;
 $checkbox-transition: null !default;
 
 $checkbox-input-border-radius: $border-radius !default;
@@ -390,21 +388,14 @@ $form-file-button-hover-bg: var(--secondary-bg) !default;
 
 // List group
 $list-group-border-color: transparent !default;
-$list-group-border-width: $border-width !default;
 $list-group-border-radius: $border-radius !default;
+$list-group-border-width: $border-width !default;
+$list-group-font-size: $font-size-sm !default;
+$list-group-font-weight: $font-weight-medium !default;
+$list-group-line-height: $line-height-sm !default;
 
 $list-group-action-padding-x: $spacer-x !default;
 $list-group-action-padding-y: $spacer-y !default;
-$list-group-action-color: null !default;
-$list-group-action-bg: var(--light-bg) !default;
-$list-group-action-hover-bg: var(--dark-bg) !default;
-$list-group-action-hover-color: null !default;
-
-$list-group-card-action-color: null !default;
-$list-group-card-action-bg: var(--color-white) !default;
-$list-group-card-action-hover-bg: var(--dark-bg) !default;
-$list-group-card-action-hover-color: null !default;
-
 
 // Tables
 $table-bg: var(--light-bg) !default;
@@ -447,7 +438,7 @@ $pagination-padding-x: 1rem !default;
 
 $pagination-border-color: var(--border-color) !default;
 
-$pagination-active-color: var(--light-color) !default;
+$pagination-active-color: var(--color-white) !default;
 $pagination-active-border-color: var(--primary) !default;
 $pagination-active-bg: var(--primary) !default;
 
@@ -475,11 +466,11 @@ $dropdown-border-width: $border-width !default;
 $dropdown-button-active-font-weight: 500 !default;
 $dropdown-divider-margin-y: 0 !default;
 $dropdown-font-size: $font-size-sm !default;
-$dropdown-header-padding-x: var(--form-padding-x) !default;
-$dropdown-header-padding-y: var(--form-padding-y) !default;
+$dropdown-header-padding-x: $form-padding-x !default;
+$dropdown-header-padding-y: $form-padding-y !default;
 $dropdown-inner-border-radius: $border-radius !default;
-$dropdown-item-padding-x: var(--form-padding-x) !default;
-$dropdown-item-padding-y: var(--form-padding-y) !default;
+$dropdown-item-padding-x: $form-padding-x !default;
+$dropdown-item-padding-y: $form-padding-y !default;
 $dropdown-line-height: $line-height-sm !default;
 $dropdown-max-height: 50vh !default;
 $dropdown-min-width: 12rem !default;
@@ -495,34 +486,23 @@ $badge-padding-x: 0.5rem !default;
 $badge-border-radius: 0.25rem !default;
 
 // Modal
-$modal-footer-margin-between: .5rem !default;
-
-$modal-inner-padding: $spacer !default;
-$modal-header-padding-y: $modal-inner-padding !default;
-$modal-header-padding-x: $modal-inner-padding !default;
-
 $modal-dialog-margin: .5rem !default;
-$modal-dialog-margin-y-sm-up: 1.75rem !default;
-
-$modal-content-color: null !default;
-$modal-content-bg: var(--color-white) !default; // todo
-$modal-content-border-color: var(--border-color) !default;
-$modal-content-border-width: 0 !default;
-$modal-content-border-radius: $border-radius !default;
-$modal-content-inner-border-radius: subtract($modal-content-border-radius, $modal-content-border-width) !default;
-
-$modal-backdrop-bg: rgba(0, 0, 0, .4) !default;
 $modal-backdrop-opacity: .5 !default;
 
-$modal-header-border-color: var(--border-color) !default;
-$modal-header-border-width: $modal-content-border-width !default;
-$modal-header-bg: $card-cap-bg !default;
-$modal-title-line-height: $line-height-base !default;
-$modal-title-font-weight: bold !default;
+$modal-header-border-width: $border-width !default;
+$modal-header-padding-x: $spacer !default;
+$modal-header-padding-y: $spacer !default;
 
-$modal-footer-bg: null !default;
-$modal-footer-border-color: $modal-header-border-color !default;
+$modal-title-font-weight: $font-weight-medium !default;
+$modal-title-line-height: $line-height-base !default;
+
+$modal-content-border-color: var(--border-color) !default;
+$modal-content-border-radius: $border-radius !default;
+$modal-content-border-width: $border-width !default;
+$modal-content-inner-border-radius: subtract($modal-content-border-radius, $modal-content-border-width) !default;
+
 $modal-footer-border-width: $modal-header-border-width !default;
+$modal-footer-gap: .5rem !default;
 
 
 // Tooltip

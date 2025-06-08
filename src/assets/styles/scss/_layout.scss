@@ -1,3 +1,15 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: $main-padding-y $main-padding-x;
+  gap: $main-gap-y;
+
+  .navbar ~ & {
+    padding-top: $html-scroll-padding;
+  }
+}
+
 .page-header {
   margin: $header-margin;
   text-align: $header-text-align;

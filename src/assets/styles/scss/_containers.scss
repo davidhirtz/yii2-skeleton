@@ -14,5 +14,6 @@
 }
 
 .container-centered {
+  padding: $container-centered-padding-y $container-centered-padding-x;
   max-width: $container-centered-max-width;
 }

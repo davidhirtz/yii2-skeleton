@@ -19,26 +19,26 @@
   @include border-radius($btn-border-radius);
   @include transition($btn-transition);
 
-  &.active {
-    background: var(--btn-active-bg, transparent);
-    border-color: var(--btn-active-border, transparent);
-  }
-
   &:hover {
     color: var(--btn-hover-color, inherit);
     text-decoration: if($link-hover-decoration == underline, none, null);
     background-color: var(--btn-hover-bg);
-    border-color: var(--btn-hover-border, inherit);
-  }
-
-  &:focus-visible {
-    color: var(--btn-hover-color);
-    border-color: var(--btn-hover-border, inherit);
-    outline: 0;
+    border-color: var(--btn-hover-border-color, inherit);
   }
 
   .btn-check:focus-visible + & {
-    border-color: var(--btn-hover-border, inherit);
+    border-color: var(--btn-hover-border-color, inherit);
+    outline: 0;
+  }
+
+  &.active {
+    background: var(--btn-active-bg, transparent);
+    border-color: var(--btn-active-border-color, transparent);
+    color: var(--btn-active-color, inherit);
+  }
+
+  &:focus-visible {
+    border-color: var(--btn-focus-border-color, inherit);
     outline: 0;
   }
 
@@ -55,7 +55,7 @@
   --btn-border: var(--btn-primary-border-color);
   --btn-color: var(--btn-primary-color);
   --btn-hover-bg: var(--btn-primary-hover-bg);
-  --btn-hover-border: var(--btn-primary-hover-border-color);
+  --btn-hover-border-color: var(--btn-primary-hover-border-color);
   --btn-hover-color: var(--btn-primary-hover-color);
 }
 
@@ -64,7 +64,7 @@
   --btn-border: var(--btn-secondary-border-color);
   --btn-color: var(--btn-secondary-color);
   --btn-hover-bg: var(--btn-secondary-hover-bg);
-  --btn-hover-border: var(--btn-secondary-hover-border-color);
+  --btn-hover-border-color: var(--btn-secondary-hover-border-color);
   --btn-hover-color: var(--btn-secondary-hover-color);
 }
 
@@ -73,7 +73,7 @@
   --btn-border: var(--btn-danger-border-color);
   --btn-color: var(--btn-danger-color);
   --btn-hover-bg: var(--btn-danger-hover-bg);
-  --btn-hover-border: var(--btn-danger-hover-border-color);
+  --btn-hover-border-color: var(--btn-danger-hover-border-color);
   --btn-hover-color: var(--btn-danger-hover-color);
 }
 

@@ -106,13 +106,14 @@
 }
 
 .dropdown-toggle {
-  --btn-bg: var(--dropdown-button-bg);
-  --btn-color: var(--dropdown-button-color);
-  --btn-border-color: var(--dropdown-button-border-color);
-  --btn-active-bg: var(--dropdown-button-active-bg);
-  --btn-active-border-color: var(--dropdown-button-active-border-color);
-  --btn-hover-bg: var(--dropdown-button-hover-bg);
-  --btn-hover-border-color: var(--dropdown-button-hover-border-color);
+  --btn-bg: var(--dropdown-btn-bg);
+  --btn-color: var(--dropdown-btn-color);
+  --btn-border-color: var(--dropdown-btn-border-color);
+  --btn-active-bg: var(--dropdown-btn-active-bg);
+  --btn-active-border-color: var(--dropdown-btn-active-border-color);
+  --btn-active-color: var(--dropdown-btn-active-color, inherit);
+  --btn-hover-bg: var(--dropdown-btn-hover-bg);
+  --btn-hover-border-color: var(--dropdown-btn-hover-border-color);
 
   width: 100%;
   @extend .text-truncate;
