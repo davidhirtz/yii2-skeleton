@@ -174,8 +174,8 @@
   --text-h4: .875rem;
 
   // Badge.
-  --badge-color: var(--color-black);
-  --badge-bg: var(--color-slate-300);
+  --badge-color: var(--color-white);
+  --badge-bg: var(--color-slate-400);
   --badge-active-bg: var(--color-gray-700);
   --badge-active-color: var(--color-white);
 
@@ -189,9 +189,9 @@
   --btn-primary-hover-border-color: var(--color-black);
   --btn-primary-hover-color: var(--color-white);
 
-  --btn-secondary-bg: var(--color-slate-300);
+  --btn-secondary-bg: var(--color-slate-400);
   --btn-secondary-border-color: var(--btn-secondary-bg);
-  --btn-secondary-color: var(--color-black);
+  --btn-secondary-color: var(--color-white);
   --btn-secondary-hover-bg: var(--color-gray-800);
   --btn-secondary-hover-border-color: var(--btn-secondary-hover-bg);
   --btn-secondary-hover-color: var(--color-white);

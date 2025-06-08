@@ -108,9 +108,11 @@
 }
 
 .btn-sm {
-  padding: $btn-padding-y-sm $btn-padding-x-sm;
   border-radius: $btn-border-radius-sm;
-  @include font-size($btn-font-size-sm);
+  font-size: $btn-font-size-sm;
+  font-weight: $btn-font-weight-sm;
+  line-height: $btn-line-height-sm;
+  padding: $btn-padding-y-sm $btn-padding-x-sm;
 }
 
 .btn-upload {
