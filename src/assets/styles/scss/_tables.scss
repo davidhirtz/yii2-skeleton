@@ -1,13 +1,7 @@
-//@import "../../../../node_modules/bootstrap/scss/tables";
-
 .table {
-  --table-bg: #{$table-bg};
-  --table-striped-bg: #{$table-striped-bg};
-  --table-hover-bg: #{$table-hover-bg};
-
   width: 100%;
   vertical-align: $table-cell-vertical-align;
-  border-color: $table-border-color;
+  border-color: var(--table-border-color, transparent);
 
 
   > tbody {
@@ -34,7 +28,7 @@
 
 .table-hover {
   > tbody > tr:hover > * {
-    color: $table-hover-color;
+    color: var(--table-hover-color);
     --table-bg: var(--table-hover-bg);
   }
 }
@@ -45,11 +39,11 @@
 }
 
 tr.is-selected {
-  --table-color: #{$table-selected-color};
-  --table-bg: #{$table-selected-bg};
-  --table-hover-color: #{$table-selected-hover-color};
-  --table-hover-bg: #{$table-selected-hover-bg};
-  --table-striped-bg: #{$table-selected-bg};
+  --table-color: var(--table-selected-color, inherit);
+  --table-bg: var(--table-selected-bg);
+  --table-hover-color: var(--table-selected-hover-color);
+  --table-hover-bg: var(--table-selected-hover-bg);
+  --table-striped-bg: var(--table-selected-bg);
 
   .badge {
     --badge-bg: var(--badge-active-bg);

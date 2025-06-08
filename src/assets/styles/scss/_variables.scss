@@ -348,7 +348,6 @@ $form-label-padding-y: $btn-padding-y !default;
 $form-label-padding-x: 0 !default;
 
 // Checkbox
-$checkbox-label-color: var(--color-black) !default;
 $checkbox-label-cursor: null !default;
 $checkbox-label-font-size: $font-size-sm !default;
 $checkbox-label-line-height: $line-height-sm !default;
@@ -357,24 +356,14 @@ $checkbox-transition: null !default;
 
 $checkbox-input-border-radius: $border-radius !default;
 $checkbox-input-width: 1.5rem !default;
+$checkbox-border-width: $border-width !default;
 $checkbox-input-height: $checkbox-input-width !default;
-$checkbox-input-bg-color: $input-bg !default;
-$checkbox-input-bg-image: var(--form-check-bg-image);
-$checkbox-input-border: $border-width solid var(--border-color) !default;
-
 $checkbox-gap: 0.75rem !default;
 
 $checkbox-radio-border-radius: 50% !default;
 
 $checkbox-input-focus-box-shadow: none !default;
-$checkbox-input-focus-border: $input-focus-border-color !default;
 $checkbox-input-focus-outline: 0 !default;
-
-$checkbox-input-checked-bg-color: var(--light-bg) !default;
-$checkbox-input-checked-color: var(--color-black) !default;
-$checkbox-input-checked-border-color: var(--border-color) !default;
-$checkbox-input-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#{$checkbox-input-checked-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/></svg>") !default;
-$checkbox-radio-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='2' fill='#{$checkbox-input-checked-color}'/></svg>") !default;
 
 $checkbox-input-disabled-opacity: .5 !default;
 $checkbox-label-disabled-opacity: $checkbox-input-disabled-opacity !default;
@@ -399,14 +388,8 @@ $list-group-action-padding-x: $spacer-x !default;
 $list-group-action-padding-y: $spacer-y !default;
 
 // Tables
-$table-bg: var(--light-bg) !default;
 $table-border-width: $border-width !default;
-$table-border-color: transparent !default;
-$table-striped-bg: var(--color-white) !default;
 $table-striped-order: odd !default;
-$table-striped-color: var(--color-black) !default;
-$table-hover-color: var(--color-black) !default;
-$table-hover-bg: var(--dark-bg) !default;
 $table-cell-padding-y: 0.75rem !default;
 $table-cell-padding-x: 0.75rem !default;
 $table-cell-vertical-align: top !default;
@@ -415,18 +398,8 @@ $table-th-font-weight: null !default;
 $table-margin-bottom: 0 !default;
 $table-th-active-font-style: normal !default;
 $table-th-active-text-decoration: underline !default;
-$table-th-border-width: 1px !default;
-$table-th-border-color: $table-border-color !default;
 
 $table-border-radius: $border-radius !default;
-$table-selected-color: var(--color-black) !default;
-$table-selected-bg: var(--success-bg) !default;
-$table-selected-border-color: var(--light) !default;
-$table-selected-hover-color: var(--color-black) !default;
-$table-selected-hover-bg: rgb(var(--success-bg) / 1.1) !default;
-$table-selected-hover-border-color: var(--light) !default;
-$table-group-separator-color: currentcolor !default;
-$table-caption-color: var(--secondary-color) !default;
 
 // Pagination
 $pagination-justify-content: center !default;
@@ -481,7 +454,7 @@ $dropdown-padding-y: 0 !default;
 // Badge
 $badge-font-size: $font-size-xs !default;
 $bade-line-height: $line-height-xs !default;
-$badge-font-weight: normal !default;
+$badge-font-weight: $font-weight-medium !default;
 $badge-padding-y: 0.25rem !default;
 $badge-padding-x: 0.5rem !default;
 $badge-border-radius: 0.25rem !default;

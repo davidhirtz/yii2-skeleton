@@ -11,37 +11,37 @@
   width: $checkbox-input-width;
   height: $checkbox-input-height;
   appearance: none;
-  background: $checkbox-input-bg-color $checkbox-input-bg-image no-repeat center;
   background-size: contain;
-  border: $checkbox-input-border;
+  border: $checkbox-border-width solid var(--input-border);
   print-color-adjust: exact; // Keep themed appearance for print
   @include transition($checkbox-transition);
 
   &[type="checkbox"] {
+    background: var(--checkbox-bg);
     @include border-radius($checkbox-input-border-radius);
   }
 
   &[type="radio"] {
-    border-radius: $checkbox-radio-border-radius;
+    background: var(--radio-bg);
+    @include border-radius($checkbox-radio-border-radius);
   }
 
   &:not(.is-invalid,:user-invalid,:disabled):hover,
   &:not(.is-invalid,:user-invalid):focus {
-    border-color: $checkbox-input-focus-border;
+    border-color: var(--checkbox-input-focus-border, var(--input-focus-border));
     outline: $checkbox-input-focus-outline;
     box-shadow: $checkbox-input-focus-box-shadow;
   }
 
   &:checked {
-    background-color: $checkbox-input-checked-bg-color;
-    border-color: $checkbox-input-checked-border-color;
-
     &[type="checkbox"] {
-      --form-check-bg-image: #{escape-svg($checkbox-input-checked-bg-image)};
+      --input-border: var(--checkbox-checked-border, inherit);
+      --checkbox-bg: var(--checkbox-checked-bg);
     }
 
     &[type="radio"] {
-      --form-check-bg-image: #{escape-svg($checkbox-radio-checked-bg-image)};
+      --input-border: var(--radio-checked-border, inherit);
+      --radio-bg: var(--radio-checked-bg);
     }
   }
 
@@ -63,6 +63,6 @@
   padding-top: $checkbox-label-padding-top;
   font-size: $checkbox-label-font-size;
   line-height: $checkbox-label-line-height;
-  color: $checkbox-label-color;
+  color: var(--checkbox-label-color, inherit);
   cursor: $checkbox-label-cursor;
 }

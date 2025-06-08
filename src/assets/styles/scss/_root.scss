@@ -175,25 +175,25 @@
 
   // Badge.
   --badge-color: var(--color-black);
-  --badge-bg: var(--color-gray-50);
+  --badge-bg: var(--color-slate-300);
   --badge-active-bg: var(--color-gray-700);
   --badge-active-color: var(--color-white);
 
   // Button
   --btn-focus-border-color: var(--color-black);
 
-  --btn-primary-bg: var(--primary-color);
-  --btn-primary-border-color: var(--primary-color);
+  --btn-primary-bg: var(--color-gray-700);
+  --btn-primary-border-color: var(--btn-primary-bg);
   --btn-primary-color: var(--color-white);
-  --btn-primary-hover-bg: var(--primary);
-  --btn-primary-hover-border-color: var(--primary);
+  --btn-primary-hover-bg: var(--color-black);
+  --btn-primary-hover-border-color: var(--color-black);
   --btn-primary-hover-color: var(--color-white);
 
-  --btn-secondary-bg: var(--secondary-color);
-  --btn-secondary-border-color: var(--secondary-color);
-  --btn-secondary-color: var(--color-white);
-  --btn-secondary-hover-bg: var(--secondary);
-  --btn-secondary-hover-border-color: var(--secondary);
+  --btn-secondary-bg: var(--color-slate-300);
+  --btn-secondary-border-color: var(--btn-secondary-bg);
+  --btn-secondary-color: var(--color-black);
+  --btn-secondary-hover-bg: var(--color-gray-800);
+  --btn-secondary-hover-border-color: var(--btn-secondary-hover-bg);
   --btn-secondary-hover-color: var(--color-white);
 
   --btn-danger-bg: var(--color-red-400);
@@ -253,6 +253,12 @@
   --input-border: var(--border-color);
   --input-color: var(--color-black);
 
+  --checkbox-bg: var(--color-white);
+  --checkbox-checked-bg: var(--color-white) #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#000' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/></svg>"))} no-repeat center;
+
+  --radio-bg: var(--color-white);
+  --radio-checked-bg: var(--color-white) #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='2' fill='#000'/></svg>"))} no-repeat center;
+
   // List
   --list-group-action-bg: var(--color-white);
   --list-group-action-hover-bg: var(--color-gray-300);
@@ -286,7 +292,20 @@
   --navbar-link-hover-bg: var(--color-gray-800);
   --navbar-link-hover-color: var(--color-white);
 
+  // Submenu
   --submenu-border-color: var(--color-gray-700);
+
+  // Table
+  --table-bg: var(--color-white);
+  --table-striped-bg: var(--color-gray-50);
+  --table-hover-bg: var(--color-gray-200);
+  --table-striped-color: var(--color-black);
+  --table-hover-color: var(--color-black);
+
+  --table-selected-bg: var(--success-bg);
+  --table-selected-hover-color: var(--color-black);
+  --table-selected-hover-bg: rgb(var(--success-bg) / 1.1);
+
 
   --arrow-down-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#ddd' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
   --arrow-down-active-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
