@@ -5,7 +5,7 @@
   @include font-size($btn-font-size);
   font-weight: $btn-font-weight;
   line-height: $btn-line-height;
-  color: var(--btn-color, var(--body-color));
+  color: var(--btn-color, var(--color-black));
   background: var(--btn-bg, transparent);
   text-align: center;
   text-decoration: if($link-decoration == none, null, none);

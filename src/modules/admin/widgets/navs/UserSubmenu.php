@@ -60,7 +60,7 @@ class UserSubmenu extends Submenu
                 'icon' => 'users',
                 'active' => ['user/(index|owner|create)'],
                 'labelOptions' => [
-                    'class' => 'd-none d-md-inline'
+                    'class' => 'd-none d-md-block d-active-block'
                 ],
             ]
         ];

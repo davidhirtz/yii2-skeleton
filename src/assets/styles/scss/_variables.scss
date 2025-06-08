@@ -55,7 +55,7 @@ $lead-font-weight: 300 !default;
 $sub-sup-font-size: .75em !default;
 
 // Links
-$link-color: var(--body-color) !default;
+$link-color: var(--color-black) !default;
 $link-hover-color: var(--link-hover-color) !default;
 $link-decoration: none !default;
 //$link-shade-percentage:                   20% !default;
@@ -185,10 +185,8 @@ $breadcrumb-padding-y: 0 !default;
 
 // Header
 $header-margin: $margin-y 0 !default;
-$header-padding-bottom: $spacer-y !default;
 $header-text-align: center !default;
-$header-border-bottom: 1px solid var(--primary-border) !default;
-$header-line-height: 1.5 !default;
+$header-line-height: 1.4 !default;
 
 $submenu-border-bottom-width: 2px !default;
 $submenu-link-margin: 0 0.125rem $spacer-x !default;
@@ -225,7 +223,7 @@ $grid-view-spacer: $grid-spacer !default;
 $grid-view-footer-border: 1px solid var(--primary-border) !default;
 
 // Buttons
-$btn-color: var(--body-color) !default;
+$btn-color: var(--color-black) !default;
 $btn-padding-x: var(--form-padding-x) !default;
 $btn-padding-y: var(--form-padding-y) !default;
 $btn-font-family: null !default;
@@ -251,7 +249,7 @@ $btn-toolbar-spacer: .5rem !default;
 
 $btn-close-width: 1rem !default;
 $btn-close-height: $btn-close-width !default;
-$btn-close-color: var(--body-color) !default;
+$btn-close-color: var(--color-black) !default;
 $btn-close-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$btn-close-color}'><path d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/></svg>") !default;
 $btn-close-opacity: .5 !default;
 $btn-close-hover-opacity: .75 !default;
@@ -294,21 +292,21 @@ $input-disabled-bg: var(--light) !default;
 $input-disabled-color: null !default;
 $input-disabled-border-color: null !default;
 
-$input-focus-color: var(--body-color) !default;
+$input-focus-color: var(--color-black) !default;
 $input-focus-bg: var(--light) !default;
 $input-focus-border-color: var(--primary) !default;
 $input-focus-width: .25rem !default;
 $input-focus-box-shadow: none !default;
 
-$input-placeholder-color: var(--body-color) !default;
+$input-placeholder-color: var(--color-black) !default;
 $input-placeholder-opacity: 0.6 !default;
-$input-plaintext-color: var(--body-color) !default;
+$input-plaintext-color: var(--color-black) !default;
 $input-transition: border-color .15s ease-in-out, color .15s ease-in-out !default;
 
 $input-group-addon-padding-y: $input-padding-y !default;
 $input-group-addon-padding-x: $input-padding-x !default;
 $input-group-addon-font-weight: $input-font-weight !default;
-$input-group-addon-color: var(--body-color) !default;
+$input-group-addon-color: var(--color-black) !default;
 $input-group-addon-bg: var(--light) !default;
 $input-group-addon-border-color: $input-border-color !default;
 
@@ -350,7 +348,7 @@ $select-transition: $input-transition !default;
 $form-label-font-size: $font-size-sm !default;
 $form-label-line-height: $line-height-sm !default;
 $form-label-font-style: null !default;
-$form-label-color: var(--body-color) !default;
+$form-label-color: var(--color-black) !default;
 $form-label-font-weight: $font-weight-medium !default;
 $form-label-padding-y: $btn-padding-y !default;
 $form-label-padding-x: 0 !default;
@@ -358,7 +356,7 @@ $form-label-padding-x: 0 !default;
 // Checkbox
 $checkbox-label-font-size: $font-size-sm !default;
 $checkbox-label-line-height: $line-height-sm !default;
-$checkbox-label-color: var(--body-color) !default;
+$checkbox-label-color: var(--color-black) !default;
 $checkbox-label-cursor: null !default;
 $checkbox-transition: null !default;
 
@@ -378,7 +376,7 @@ $checkbox-input-focus-border: $input-focus-border-color !default;
 $checkbox-input-focus-outline: 0 !default;
 
 $checkbox-input-checked-bg-color: var(--light-bg) !default;
-$checkbox-input-checked-color: var(--body-color) !default;
+$checkbox-input-checked-color: var(--color-black) !default;
 $checkbox-input-checked-border-color: var(--border-color) !default;
 $checkbox-input-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#{$checkbox-input-checked-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/></svg>") !default;
 $checkbox-radio-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='2' fill='#{$checkbox-input-checked-color}'/></svg>") !default;
@@ -407,7 +405,7 @@ $list-group-action-hover-bg: var(--dark-bg) !default;
 $list-group-action-hover-color: null !default;
 
 $list-group-card-action-color: null !default;
-$list-group-card-action-bg: var(--body-bg) !default;
+$list-group-card-action-bg: var(--color-white) !default;
 $list-group-card-action-hover-bg: var(--dark-bg) !default;
 $list-group-card-action-hover-color: null !default;
 
@@ -416,10 +414,10 @@ $list-group-card-action-hover-color: null !default;
 $table-bg: var(--light-bg) !default;
 $table-border-width: $border-width !default;
 $table-border-color: transparent !default;
-$table-striped-bg: var(--body-bg) !default;
+$table-striped-bg: var(--color-white) !default;
 $table-striped-order: odd !default;
-$table-striped-color: var(--body-color) !default;
-$table-hover-color: var(--body-color) !default;
+$table-striped-color: var(--color-black) !default;
+$table-hover-color: var(--color-black) !default;
 $table-hover-bg: var(--dark-bg) !default;
 $table-cell-padding-y: 0.75rem !default;
 $table-cell-padding-x: 0.75rem !default;
@@ -433,10 +431,10 @@ $table-th-border-width: 1px !default;
 $table-th-border-color: $table-border-color !default;
 
 $table-border-radius: $border-radius !default;
-$table-selected-color: var(--body-color) !default;
+$table-selected-color: var(--color-black) !default;
 $table-selected-bg: var(--success-bg) !default;
 $table-selected-border-color: var(--light) !default;
-$table-selected-hover-color: var(--body-color) !default;
+$table-selected-hover-color: var(--color-black) !default;
 $table-selected-hover-bg: rgb(var(--success-bg) / 1.1) !default;
 $table-selected-hover-border-color: var(--light) !default;
 $table-group-separator-color: currentcolor !default;
@@ -463,7 +461,7 @@ $pagination-hover-border-color: var(--border-color) !default;
 $pagination-font-size: $font-size-base !default;
 
 $pagination-color: var(--link-color) !default;
-$pagination-bg: var(--body-bg) !default;
+$pagination-bg: var(--color-white) !default;
 $pagination-border-radius: $border-radius !default;
 $pagination-border-width: $border-width !default;
 $pagination-margin-start: calc(#{$pagination-border-width} * -1) !default; // stylelint-disable-line function-disallowed-list
@@ -481,7 +479,7 @@ $dropdown-padding-y: 0 !default;
 $dropdown-min-width: 12rem !default;
 $dropdown-max-height: 50vh !default;
 $dropdown-bg: var(--light-bg) !default;
-$dropdown-color: var(--body-color) !default;
+$dropdown-color: var(--color-black) !default;
 $dropdown-border-color: var(--border-color) !default;
 $dropdown-border-radius: $border-radius !default;
 $dropdown-border-width: 0 !default;
@@ -490,7 +488,7 @@ $dropdown-divider-bg: var(--border-color) !default;
 $dropdown-divider-margin-y: 0 !default;
 
 $dropdown-button-bg: var(--tertiary-bg) !default;
-$dropdown-button-color: var(--body-color) !default;
+$dropdown-button-color: var(--color-black) !default;
 $dropdown-button-border-color: var(--border-color) !default;
 $dropdown-button-active-bg: var(--tertiary) !default;
 $dropdown-button-active-border-color: var(--tertiary-border) !default;
@@ -500,9 +498,9 @@ $dropdown-button-hover-border-color: var(--tertiary) !default;
 
 $dropdown-item-padding-y: 0.6565rem !default;
 $dropdown-item-padding-x: .75rem !default;
-$dropdown-link-color: var(--body-color) !default;
+$dropdown-link-color: var(--color-black) !default;
 $dropdown-link-hover-bg: var(--light) !default;
-$dropdown-link-hover-color: var(--body-color) !default;
+$dropdown-link-hover-color: var(--color-black) !default;
 $dropdown-link-active-bg: var(--dark-bg) !default;
 $dropdown-link-active-color: inherit !default;
 $dropdown-link-disabled-color: var(--tertiary-color) !default;
@@ -532,7 +530,7 @@ $modal-dialog-margin: .5rem !default;
 $modal-dialog-margin-y-sm-up: 1.75rem !default;
 
 $modal-content-color: null !default;
-$modal-content-bg: $card-bg !default;
+$modal-content-bg: var(--color-white) !default; // todo
 $modal-content-border-color: var(--border-color) !default;
 $modal-content-border-width: 0 !default;
 $modal-content-border-radius: $border-radius !default;
@@ -553,8 +551,8 @@ $modal-footer-border-width: $modal-header-border-width !default;
 
 
 // Tooltip
-$tooltip-color: var(--body-bg) !default;
-$tooltip-bg: var(--body-color) !default;
+$tooltip-color: var(--color-white) !default;
+$tooltip-bg: var(--color-black) !default;
 $tooltip-border-radius: $border-radius !default;
 
 $tooltip-z-index: 1080 !default;
@@ -598,13 +596,13 @@ $trail-cell-padding: 0.5rem !default;
 // Code
 
 $code-font-size: $font-size-xs !default;
-$code-color: var(--body-color) !default;
+$code-color: var(--color-black) !default;
 
 $kbd-padding-y: .1875rem !default;
 $kbd-padding-x: .375rem !default;
 $kbd-font-size: $code-font-size !default;
-$kbd-color: var(--body-bg) !default;
-$kbd-bg: var(--body-color) !default;
+$kbd-color: var(--color-white) !default;
+$kbd-bg: var(--color-black) !default;
 $nested-kbd-font-weight: null !default; // Deprecated in v5.2.0, removing in v6
 
 $pre-color: null !default;

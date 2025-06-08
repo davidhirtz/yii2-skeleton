@@ -146,21 +146,21 @@
   --dark-border: #ccc;
   --dark-color: #555;
 
-  --body-bg: var(--light-bg);
-  --body-color: var(--primary);
-  --border-color: var(--dark);
+  --body-bg: var(--color-gray-50);
+  --body-color: var(--color-black);
+  --border-color: var(--color-gray-200);
 
-  --link-color: var(--body-color);
+  --link-color: var(--color-black);
   --link-hover-color: var(--color-gray-900);
 
   --highlight-bg: var(--success);
-  --highlight-color: var(--body-color);
+  --highlight-color: var(--color-black);
 
   // Badge.
-  --badge-color: var(--body-color);
+  --badge-color: var(--color-black);
   --badge-bg: var(--color-gray-50);
   --badge-active-bg: var(--color-gray-700);
-  --badge-active-color: var(--body-bg);
+  --badge-active-color: var(--color-white);
 
   // Button
   --btn-primary-bg: var(--primary-color);
@@ -206,11 +206,11 @@
 
   --input-bg: var(--light-bg);
   --input-border: var(--border-color);
-  --input-color: var(--body-color);
+  --input-color: var(--color-black);
 
   // Nav
   --nav-link-active-badge-bg: var(--light-color);
-  --nav-link-active-badge-color: var(--body-color);
+  --nav-link-active-badge-color: var(--color-black);
   --nav-link-active-bg: var(--light-color);
   --nav-link-active-color: var(--light-color);
   --nav-link-color: var(--link-color);
@@ -218,17 +218,17 @@
   --nav-link-hover-color: var(--link-hover-color);
 
   --nav-pills-link-active-bg: var(--color-gray-700);
-  --nav-pills-link-active-color: var(--body-bg);
+  --nav-pills-link-active-color: var(--color-white);
   --nav-pills-link-hover-bg: var(--color-gray-200);
-  --nav-pills-link-hover-color: var(--body-color);
+  --nav-pills-link-hover-color: var(--color-black);
 
   // Navbar
   --navbar-bg: var(--color-gray-700);
   --navbar-link-active-bg: var(--color-gray-900);
-  --navbar-link-active-color: var(--body-bg);
-  --navbar-link-color: var(--body-bg);
+  --navbar-link-active-color: var(--color-white);
+  --navbar-link-color: var(--color-white);
   --navbar-link-hover-bg: var(--color-gray-800);
-  --navbar-link-hover-color: var(--body-bg);
+  --navbar-link-hover-color: var(--color-white);
 
   --submenu-border-color: var(--color-gray-700);
 

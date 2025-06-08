@@ -25,7 +25,7 @@
   padding: $form-group-spacer 0;
   bottom: 0;
   border-top: $form-sticky-border;
-  background-color: $card-bg;
+  background: var(--card-bg);
   z-index: 2;
 }
 

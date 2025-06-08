@@ -48,7 +48,7 @@
 .grid-view-footer {
   position: sticky;
   bottom: 0;
-  background-color: $card-bg;
+  background: var(--card-bg);
   padding-bottom: $spacer-y;
   z-index: 100;
 
