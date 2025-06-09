@@ -50,26 +50,26 @@ class Modal extends Tag
             }
 
             if ($this->dismiss !== false) {
-                $header[] = Button::make()->attributes([
-                    'aria-label' => $this->dismiss ?? Yii::t('skeleton', 'Close'),
-                    'class' => 'btn-close',
-                    'data-modal' => '',
-                ]);
+                $header[] = Button::make()
+                    ->attribute('aria-label', $this->dismiss ?? Yii::t('skeleton', 'Close'))
+                    ->attribute('data-modal', '')
+                    ->class('btn-icon')
+                    ->icon('xmark');
 
                 array_unshift($this->footer, Button::secondary(Yii::t('skeleton', 'Cancel'))
                     ->attribute('data-modal', '')
                     ->attribute('autofocus', true));
             }
 
-            $content[] = '<div class="modal-header">' . implode('', $header) . '</div>';
+            $content[] = Div::make()->class('modal-header')->html(...$header);
         }
 
         if ($this->content) {
-            $content[] = '<div class="modal-body">' . implode('', $this->content) . '</div>';
+            $content[] = Div::make()->class('modal-body')->html(...$this->content);
         }
 
         if ($this->footer) {
-            $content[] = '<div class="modal-footer">' . implode('', $this->footer) . '</div>';
+            $content[] = Div::make()->class('modal-footer')->html(...$this->footer);
         }
 
         return implode('', $content);

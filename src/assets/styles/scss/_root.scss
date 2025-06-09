@@ -171,6 +171,7 @@
 
   --arrow-down-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#ddd' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
   --arrow-down-active-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
+  --close-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 2 12 12M14 2 2 14'/></svg>"))};
 
   // Text
   --text-h1: 1.5rem;
@@ -228,6 +229,8 @@
   --btn-danger-hover-bg: var(--color-red-600);
   --btn-danger-hover-border-color: var(--btn-danger-hover-bg);
   --btn-danger-hover-color: var(--color-white);
+
+  --btn-close-bg: var(--close-bg);
 
   // Breadcrumb
   --breadcrumb-bg: transparent;
@@ -323,7 +326,7 @@
   // Table
   --table-bg: var(--color-white);
   --table-striped-bg: var(--color-gray-50);
-  --table-hover-bg: var(--color-gray-200);
+  --table-hover-bg: var(--color-gray-100);
   --table-striped-color: var(--color-black);
   --table-hover-color: var(--color-black);
 
@@ -333,6 +336,10 @@
 
   --table-td-border-color: var(--border-color);
   --table-th-border-color: var(--color-gray-700);
+
+  // Tooltip
+  --tooltip-bg: var(--color-gray-700);
+  --tooltip-color: var(--color-white);
 
   @include media-breakpoint-down(md) {
     --form-padding-y: #{$form-padding-y-sm};

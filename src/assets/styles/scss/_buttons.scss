@@ -107,6 +107,19 @@
   width: 100%;
 }
 
+.btn-icon {
+  background: transparent;
+  border: 0;
+  color: inherit;
+  flex-shrink: 0;
+  font-weight: inherit;
+  height: 1.25rem;
+  line-height: inherit;
+  min-width: 1.25rem;
+  place-content: center;
+  text-align: center;
+}
+
 .btn-sm {
   border-radius: $btn-border-radius-sm;
   font-size: $btn-font-size-sm;

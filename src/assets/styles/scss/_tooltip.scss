@@ -2,8 +2,8 @@
 
 
 .tooltip {
-  width: max-content;
   position: absolute;
+  width: max-content;
   word-wrap: break-word;
   z-index: $tooltip-z-index;
 }
@@ -12,7 +12,7 @@
   position: absolute;
   width: $tooltip-arrow-width;
   height: $tooltip-arrow-height;
-  background-color: $tooltip-bg;
+  background-color: var(--tooltip-bg);
   transform: rotate(45deg);
 
   &::before {
@@ -24,13 +24,14 @@
 }
 
 .tooltip-inner {
-  position: relative;
+  @include border-radius($tooltip-border-radius);
+  background-color: var(--tooltip-bg);
+  color: var(--tooltip-color);
+  font-size: $tooltip-font-size;
+  font-weight: normal;
+  line-height: $tooltip-line-height;
   max-width: $tooltip-max-width;
   padding: $tooltip-padding-y $tooltip-padding-x;
-  background-color: $tooltip-bg;
-  color: $tooltip-color;
+  position: relative;
   text-align: center;
-  font-weight: normal;
-  @include font-size($tooltip-font-size);
-  @include border-radius($tooltip-border-radius);
 }

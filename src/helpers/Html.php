@@ -18,7 +18,7 @@ class Html extends BaseHtml
             static::addCssClass($options, 'alert');
 
             if ($route = ArrayHelper::remove($options, 'route', false)) {
-                static::addCssClass($options, 'alert-dismissible');
+                static::addCssClass($options, 'alert-interactive');
 
                 $content .= Html::a(Html::tag('span', '', ['aria-hidden' => true]), $route, [
                     'class' => 'btn-close',
@@ -46,11 +46,6 @@ class Html extends BaseHtml
         return Html::tag('div', Icon::tag($icon, ['class' => 'fa-fw'])->render() . Html::tag('span', $content), $options);
     }
 
-    public static function info(string $content, array $options = []): string
-    {
-        static::addCssClass($options, 'alert-info');
-        return static::alert($content, $options);
-    }
 
     public static function buttons(array|string $buttons, array $options = []): string
     {

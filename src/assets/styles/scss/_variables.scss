@@ -126,7 +126,6 @@ $alert-border-radius: $border-radius !default;
 $alert-link-font-weight: normal !default;
 $alert-link-text-decoration: null !default;
 $alert-border-width: $border-width !default;
-$alert-dismissible-padding-r: $alert-padding-x * 3 !default; // 3x covers width of x plus default padding on either side
 $alert-ul-padding-left: 1rem !default;
 $alert-ul-list-style-type: square !default;
 
@@ -184,6 +183,7 @@ $submenu-justify-content: center !default;
 // Alert
 $alert-heading-font-weight: bold !default;
 $alert-heading-margin-bottom: .5rem !default;
+$alert-interactive-gap: $spacer-x !default;
 
 // Card
 $card-border-radius: $border-radius !default;
@@ -257,16 +257,15 @@ $btn-disabled-opacity: .5 !default;
 
 $btn-toolbar-spacer: .5rem !default;
 
-$btn-close-width: 1rem !default;
-$btn-close-height: $btn-close-width !default;
+$btn-close-border-radius: null !default;
 $btn-close-color: var(--color-black) !default;
-$btn-close-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$btn-close-color}'><path d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/></svg>") !default;
-$btn-close-opacity: .5 !default;
-$btn-close-hover-opacity: .75 !default;
-$btn-close-focus-opacity: 1 !default;
 $btn-close-disabled-opacity: .25 !default;
+$btn-close-focus-opacity: 1 !default;
+$btn-close-hover-opacity: .75 !default;
+$btn-close-opacity: .5 !default;
 $btn-close-padding-x: 0 !default;
 $btn-close-padding-y: $btn-close-padding-x !default;
+$btn-close-width: 1rem !default;
 
 // Inputs
 $input-bg-color: var(--input-bg) !default;
@@ -473,18 +472,15 @@ $modal-footer-gap: .5rem !default;
 
 
 // Tooltip
-$tooltip-color: var(--color-white) !default;
-$tooltip-bg: var(--color-black) !default;
-$tooltip-border-radius: $border-radius !default;
-
-$tooltip-z-index: 1080 !default;
-
-$tooltip-max-width: 12rem !default;
+$tooltip-arrow-height: 0.5rem !default;
 $tooltip-arrow-width: 0.5rem !default;
-$tooltip-arrow-height: $tooltip-arrow-width !default;
-$tooltip-padding-y: $spacer * .25 !default;
+$tooltip-border-radius: $border-radius !default;
+$tooltip-font-size: $font-size-xs !default;
+$tooltip-line-height: $line-height-xs !default;
+$tooltip-max-width: 12rem !default;
 $tooltip-padding-x: $spacer * .5 !default;
-$tooltip-font-size: $font-size-sm !default;
+$tooltip-padding-y: $spacer * .25 !default;
+$tooltip-z-index: 1080 !default;
 
 
 //

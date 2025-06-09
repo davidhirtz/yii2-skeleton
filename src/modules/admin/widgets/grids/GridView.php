@@ -8,9 +8,11 @@ use davidhirtz\yii2\skeleton\assets\SortableAssetBundle;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Alert;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Dropdown;
 use davidhirtz\yii2\skeleton\html\Icon;
+use davidhirtz\yii2\skeleton\html\Link;
 use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\CheckboxColumn;
 use davidhirtz\yii2\skeleton\widgets\pagers\LinkPager;
@@ -154,6 +156,25 @@ class GridView extends \yii\grid\GridView
 
     public function renderSummary(): string
     {
+        $alert = Alert::make()
+            ->html($this->getSummaryText())
+            ->status($this->dataProvider->getTotalCount() ? 'info' : 'warning');
+
+        if ($this->search->value) {
+            $alert->actions(
+                Link::make()
+                    ->class('btn-icon')
+                    ->href($this->search->url)
+                    ->tooltip(Yii::t('skeleton', 'Clear Search'))
+                    ->icon('xmark')
+            );
+        }
+
+        return $alert->render();
+    }
+
+    protected function getSummaryText(): string
+    {
         $summary = $this->summary;
         $totalCount = $this->dataProvider->getTotalCount();
         $count = $this->dataProvider->getCount();
@@ -161,30 +182,23 @@ class GridView extends \yii\grid\GridView
 
         if (!$summary) {
             if ($this->search->value) {
-                $summary = match ($count) {
+                return match ($count) {
                     1 => Yii::t('skeleton', 'Displaying the only result matching "{search}".', $params),
                     0 => Yii::t('skeleton', 'Sorry, no results found matching matching "{search}".', $params),
                     $totalCount => Yii::t('skeleton', 'Displaying all {totalCount, number} results matching "{search}".', $params),
                     default => Yii::t('skeleton', 'Displaying {begin, number}-{end, number} of {totalCount, number} results matching "{search}".', $params),
                 };
-            } else {
-                $summary = match ($count) {
-                    1 => Yii::t('skeleton', 'Displaying the only record.', $params),
-                    0 => Yii::t('skeleton', 'Sorry, no records found.', $params),
-                    $totalCount => Yii::t('skeleton', 'Displaying all {totalCount, number} records.', $params),
-                    default => Yii::t('skeleton', 'Displaying {begin, number}-{end, number} of {totalCount, number} records.', $params),
-                };
             }
-        } else {
-            $summary = Yii::$app->getI18n()->format($summary, $params, Yii::$app->language);
+
+            return match ($count) {
+                1 => Yii::t('skeleton', 'Displaying the only record.', $params),
+                0 => Yii::t('skeleton', 'Sorry, no records found.', $params),
+                $totalCount => Yii::t('skeleton', 'Displaying all {totalCount, number} records.', $params),
+                default => Yii::t('skeleton', 'Displaying {begin, number}-{end, number} of {totalCount, number} records.', $params),
+            };
         }
 
-        $summaryOptions = $this->summaryOptions;
-        $summaryOptions['route'] ??= $this->search->url;
-
-        Html::addCssClass($summaryOptions, $totalCount ? 'alert-info' : 'alert-warning');
-
-        return Html::alert($summary, $summaryOptions);
+        return Yii::$app->getI18n()->format($summary, $params, Yii::$app->language);
     }
 
     protected function getSummaryParams(): array

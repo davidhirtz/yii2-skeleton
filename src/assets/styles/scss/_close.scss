@@ -1,39 +1,30 @@
-//@import "../../../../node_modules/bootstrap/scss/close";
-
 .btn-close {
-  --btn-close-color: #{$btn-close-color};
-  --btn-close-bg: #{ escape-svg($btn-close-bg) };
-  --btn-close-opacity: #{$btn-close-opacity};
-  --btn-close-hover-opacity: #{$btn-close-hover-opacity};
-  --btn-close-focus-opacity: #{$btn-close-focus-opacity};
-  --btn-close-disabled-opacity: #{$btn-close-disabled-opacity};
-
-  width: $btn-close-width;
-  height: $btn-close-height;
-  padding: $btn-close-padding-y $btn-close-padding-x;
-  color: var(--btn-close-color);
-  background: transparent var(--btn-close-bg) center / $btn-close-width auto no-repeat;
+  @include border-radius($btn-close-border-radius);
+  aspect-ratio: 1;
+  text-align: center;
   border: 0;
-  @include border-radius();
-  opacity: var(--btn-close-opacity);
+  background: transparent;
+  flex-shrink: 0;
+  padding: $btn-close-padding-y $btn-close-padding-x;
+  width: $btn-close-width;
 
   // Override <a>'s hover style
   &:hover {
     color: var(--btn-close-color);
     text-decoration: none;
-    opacity: var(--btn-close-hover-opacity);
+    opacity: $btn-close-hover-opacity;
   }
 
   &:focus {
     outline: 0;
-    opacity: var(--btn-close-focus-opacity);
+    opacity: $btn-close-focus-opacity;
   }
 
   &:disabled,
   &.disabled {
     pointer-events: none;
     user-select: none;
-    opacity: var(--btn-close-disabled-opacity);
+    opacity: $btn-close-disabled-opacity;
   }
 }
 

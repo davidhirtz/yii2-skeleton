@@ -23,16 +23,11 @@
   }
 }
 
-.alert-dismissible {
-  padding-right: $alert-dismissible-padding-r;
-
-  .btn-close {
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: $stretched-link-z-index + 1;
-    padding: $alert-padding-y * 1.25 $alert-padding-x;
-  }
+.alert-interactive {
+  align-items: flex-start;
+  display: flex;
+  gap: $alert-interactive-gap;
+  justify-content: space-between;
 }
 
 .alert-heading {
