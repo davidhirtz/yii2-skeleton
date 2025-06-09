@@ -91,7 +91,7 @@ abbr[title] {
 }
 
 .text-muted {
-  color: $text-muted !important;
+  color: var(--muted-color) !important;
 
   a:not(:hover) {
     color: inherit;

@@ -111,7 +111,7 @@ class UserGridView extends GridView
         return [
             'attribute' => 'last_login',
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
-            'contentOptions' => ['class' => 'd-none d-md-table-cell'],
+            'contentOptions' => ['class' => 'd-none d-md-table-cell text-nowrap'],
             'content' => function (User $user) {
                 $timeago = Timeago::tag($user->last_login);
 
@@ -128,6 +128,9 @@ class UserGridView extends GridView
             'class' => TimeagoColumn::class,
             'attribute' => 'created_at',
             'displayAtBreakpoint' => 'lg',
+            'contentOptions' => [
+                'class' => 'text-nowrap',
+            ],
         ];
     }
 

@@ -9,7 +9,7 @@
 .form-check-input {
   flex-shrink: 0;
   width: $checkbox-input-width;
-  height: $checkbox-input-height;
+  aspect-ratio: 1;
   appearance: none;
   background-size: contain;
   border: $checkbox-border-width solid var(--input-border);
@@ -60,7 +60,6 @@
 }
 
 .form-check-label {
-  padding-top: $checkbox-label-padding-top;
   font-size: $checkbox-label-font-size;
   line-height: $checkbox-label-line-height;
   color: var(--checkbox-label-color, inherit);

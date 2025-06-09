@@ -1,23 +1,20 @@
-.alerts{
-
-}
-
 .alert {
-  position: relative;
-  padding: $alert-padding-x $alert-padding-y;
-  margin-bottom: $alert-margin-bottom;
-  border: $alert-border-width solid transparent;
+  background: var(--alert-bg);
   @include border-radius($alert-border-radius);
+  border: $alert-border-width solid var(--alert-border-color);
+  color: var(--alert-color);
+  padding: $alert-padding-x $alert-padding-y;
+  position: relative;
 
   a {
     font-weight: $alert-link-font-weight;
     text-decoration: $alert-link-text-decoration;
+    color: var(--alert-link-color);
   }
 
   ul {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
+    padding-left: $alert-ul-padding-left;
+    list-style-type: $alert-ul-list-style-type;
   }
 
   li {
@@ -44,25 +41,29 @@
 }
 
 .alert-success {
-  background: $alert-success-bg;
-  border-color: $alert-success-border-color;
-  color: $alert-success-color;
+  --alert-bg: var(--alert-success-bg);
+  --alert-border-color: var(--alert-success-border-color);
+  --alert-color: var(--alert-success-color);
+  --alert-link-color: var(--alert-success-link-color);
 }
 
 .alert-info {
-  background: $alert-success-bg;
-  border-color: $alert-info-border-color;
-  color: $alert-info-color;
+  --alert-bg: var(--alert-info-bg);
+  --alert-border-color: var(--alert-info-border-color);
+  --alert-color: var(--alert-info-color);
+  --alert-link-color: var(--alert-info-link-color);
 }
 
 .alert-warning {
-  background: $alert-warning-bg;
-  border-color: $alert-warning-border-color;
-  color: $alert-warning-color;
+  --alert-bg: var(--alert-warning-bg);
+  --alert-border-color: var(--alert-warning-border-color);
+  --alert-color: var(--alert-warning-color);
+  --alert-link-color: var(--alert-warning-link-color);
 }
 
 .alert-danger {
-  background: $alert-danger-bg;
-  border-color: $alert-danger-border-color;
-  color: $alert-danger-color;
+  --alert-bg: var(--alert-danger-bg);
+  --alert-border-color: var(--alert-danger-border-color);
+  --alert-color: var(--alert-danger-color);
+  --alert-link-color: var(--alert-danger-link-color);
 }

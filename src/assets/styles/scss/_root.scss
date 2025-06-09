@@ -38,7 +38,8 @@
   --color-yellow-950: oklch(28.6% 0.066 53.813);
 
   --color-green-50: oklch(98.2% 0.018 155.826);
-  --color-green-100: oklch(96.2% 0.044 156.743);
+  //--color-green-100: oklch(96.2% 0.044 156.743);
+  --color-green-100: oklch(94.4% 0.049 145.173);
   --color-green-200: oklch(92.5% 0.084 155.995);
   --color-green-300: oklch(87.1% 0.15 154.449);
   --color-green-400: oklch(79.2% 0.209 151.711);
@@ -128,7 +129,7 @@
   --tertiary-color: #585858;
 
   --success: #a3cba3;
-  --success-bg: #d9f6d9;
+  --success-bg: oklch(0.944 0.049 145.173);
   --success-border: #daeada;
   --success-color: #212921;
 
@@ -166,6 +167,10 @@
 
   --highlight-bg: var(--success);
   --highlight-color: var(--color-black);
+  --muted-color: var(--color-gray-500);
+
+  --arrow-down-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#ddd' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
+  --arrow-down-active-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
 
   // Text
   --text-h1: 1.5rem;
@@ -173,7 +178,28 @@
   --text-h3: 1rem;
   --text-h4: .875rem;
 
-  // Badge.
+  // Alert
+  --alert-success-bg: var(--color-green-100);
+  --alert-success-border-color: var(--alert-success-bg);
+  --alert-success-color: var(--color-green-900);
+  --alert-success-link-color: var(--color-green-500);
+
+  --alert-info-bg: var(--color-blue-50);
+  --alert-info-border-color: var(--alert-info-bg);
+  --alert-info-color: var(--color-blue-900);
+  --alert-info-link-color: var(--color-blue-500);
+
+  --alert-warning-bg: var(--color-yellow-100);
+  --alert-warning-border-color: var(--alert-warning-bg);
+  --alert-warning-color: var(--color-yellow-900);
+  --alert-warning-link-color: var(--color-yellow-500);
+
+  --alert-danger-bg: var(--color-red-100);
+  --alert-danger-border-color: var(--alert-danger-bg);
+  --alert-danger-color: var(--color-red-900);
+  --alert-danger-link-color: var(--color-red-500);
+
+  // Badge
   --badge-color: var(--color-white);
   --badge-bg: var(--color-slate-400);
   --badge-active-bg: var(--color-gray-700);
@@ -263,7 +289,6 @@
   --list-group-action-bg: var(--color-white);
   --list-group-action-hover-bg: var(--color-gray-300);
 
-
   // Modal
   --modal-border-color: transparent;
   --modal-bg: var(--color-white);
@@ -306,10 +331,8 @@
   --table-selected-hover-color: var(--color-black);
   --table-selected-hover-bg: rgb(var(--success-bg) / 1.1);
 
-
-  --arrow-down-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#ddd' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
-  --arrow-down-active-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
-
+  --table-td-border-color: var(--border-color);
+  --table-th-border-color: var(--color-gray-700);
 
   @include media-breakpoint-down(md) {
     --form-padding-y: #{$form-padding-y-sm};

@@ -3,7 +3,6 @@
   vertical-align: $table-cell-vertical-align;
   border-color: var(--table-border-color, transparent);
 
-
   > tbody {
     vertical-align: inherit;
   }
@@ -16,7 +15,11 @@
     padding: $table-cell-padding-y $table-cell-padding-x;
     // Following the precept of cascades: https://codepen.io/miriamsuzanne/full/vYNgodb
     background: var(--table-bg);
-    border-bottom-width: $table-border-width;
+    border-bottom: $table-border-width solid var(--table-td-border-color);
+  }
+
+  th, tr:last-child td{
+    border-bottom-color: var(--table-th-border-color);
   }
 }
 

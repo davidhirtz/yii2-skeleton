@@ -71,6 +71,7 @@ $mark-color: var(--highlight-color) !default;
 $mark-padding: 0 !default;
 
 $spacer: 1rem !default;
+$grid-spacer: .5rem !default;
 
 $container-max-widths: (
         xl: 100rem
@@ -121,24 +122,13 @@ $arrow-down-active-bg-image: var(--arrow-down-active-bg) !default;
 // Alert
 $alert-padding-y: $spacer !default;
 $alert-padding-x: $spacer !default;
-$alert-margin-bottom: $spacer !default;
 $alert-border-radius: $border-radius !default;
 $alert-link-font-weight: normal !default;
-$alert-link-text-decoration: underline !default;
+$alert-link-text-decoration: null !default;
 $alert-border-width: $border-width !default;
 $alert-dismissible-padding-r: $alert-padding-x * 3 !default; // 3x covers width of x plus default padding on either side
-$alert-success-bg: var(--success-bg) !default;
-$alert-success-border-color: var(--success-border) !default;
-$alert-success-color: var(--success-color) !default;
-$alert-info-bg: var(--info-bg) !default;
-$alert-info-border-color: var(--info-border) !default;
-$alert-info-color: var(--info-color) !default;
-$alert-warning-bg: var(--warning-bg) !default;
-$alert-warning-border-color: var(--warning-border) !default;
-$alert-warning-color: var(--warning-color) !default;
-$alert-danger-bg: var(--danger-bg) !default;
-$alert-danger-border-color: var(--danger-border) !default;
-$alert-danger-color: var(--color-white) !default;
+$alert-ul-padding-left: 1rem !default;
+$alert-ul-list-style-type: square !default;
 
 // Nav
 $nav-link-disabled-opacity: .5 !default;
@@ -212,11 +202,13 @@ $card-danger-color: var(--color-white) !default;
 $card-title-font-weight: 500 !default;
 
 // Grid
-$grid-spacer: .5rem !default;
 
+$grid-view-font-size: $font-size-sm !default;
+$grid-view-line-height: $line-height-sm !default;
 $grid-view-header-border: none !default;
 $grid-view-spacer: $grid-spacer !default;
-$grid-view-footer-border: 1px solid var(--primary-border) !default;
+$grid-view-footer-margin-top: -1px !default;
+$grid-view-footer-border-width: $border-width !default;
 
 // Forms
 $form-padding-x: 0.75rem !default;
@@ -353,11 +345,10 @@ $form-label-padding-x: 0 !default;
 $checkbox-label-cursor: null !default;
 $checkbox-label-font-size: $font-size-sm !default;
 $checkbox-label-line-height: $line-height-sm !default;
-$checkbox-label-padding-top: 0.125rem !default;
 $checkbox-transition: null !default;
 
 $checkbox-input-border-radius: $border-radius !default;
-$checkbox-input-width: 1.5rem !default;
+$checkbox-input-width: 1.25rem !default;
 $checkbox-border-width: $border-width !default;
 $checkbox-input-height: $checkbox-input-width !default;
 $checkbox-gap: 0.75rem !default;
@@ -393,7 +384,7 @@ $list-group-action-padding-y: $spacer-y !default;
 $table-border-width: $border-width !default;
 $table-striped-order: odd !default;
 $table-cell-padding-y: 0.75rem !default;
-$table-cell-padding-x: 0.75rem !default;
+$table-cell-padding-x: 1rem !default;
 $table-cell-vertical-align: top !default;
 $table-th-font-weight: null !default;
 

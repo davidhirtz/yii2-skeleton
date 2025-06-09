@@ -1,5 +1,6 @@
 //@import "../../../../node_modules/bootstrap/scss/grid";
 
+
 .row {
   display: flex;
   margin: calc(-.5 * $grid-spacer);
@@ -12,8 +13,13 @@
   }
 }
 
-.flex-wrap {
-  flex-wrap: wrap;
+.grid-view {
+  font-size: $grid-view-font-size;
+  line-height: $grid-view-line-height;
+
+  .alert{
+    margin-bottom: $spacer-y;
+  }
 }
 
 .grid-view-header {
@@ -53,9 +59,9 @@
   z-index: 100;
 
   &:not(:first-child) {
-    margin-top: $grid-view-spacer;
+    margin-top: $grid-view-footer-margin-top;
     padding-top: $grid-view-spacer;
-    border-top: $grid-view-footer-border;
+    border-top: $grid-view-footer-border-width solid var(--table-th-border-color);
   }
 
   .row {
