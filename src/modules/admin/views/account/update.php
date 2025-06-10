@@ -27,36 +27,23 @@ $this->setTitle(Yii::t('skeleton', 'Account'));
 <h1 class="page-header"><?= $form->user->getUsername(); ?></h1>
 <?php
 if ($form->user->isUnconfirmed()) {
-    ?>
-    <div class="alert alert-warning">
-        <?php
-        echo Yii::t('skeleton', 'Your email address "{email}" was not yet confirmed. Please check your inbox or click {here} to request a new confirmation email.', [
-            'email' => $form->email,
-            'here' => Html::a(Yii::t('skeleton', 'here'), ['resend']),
-        ]);
-    ?>
-    </div>
-    <?php
+    echo Html::warning(Yii::t('skeleton', 'Your email address "{email}" was not yet confirmed. Please check your inbox or click {here} to request a new confirmation email.', [
+        'email' => $form->email,
+        'here' => Html::a(Yii::t('skeleton', 'here'), ['resend']),
+    ]));
 }
-?>
 
-<?php
-echo ErrorSummary::make()
-    ->models($form)
-    ->title(Yii::t('skeleton', 'Your account could not be updated'))
-    ->render();
+echo ErrorSummary::forModel($form)
+    ->title(Yii::t('skeleton', 'Your account could not be updated'));
 
-?>
-
-<?= Panel::widget([
+echo Panel::widget([
     'title' => $this->title,
     'content' => AccountActiveForm::widget([
         'model' => $form,
     ]),
 ]);
-?>
 
-<?php if (Yii::$app->getUser()->enableGoogleAuthenticator) {
+if (Yii::$app->getUser()->enableGoogleAuthenticator) {
     echo Panel::widget([
         'title' => Yii::t('skeleton', 'Google Authenticator'),
         'content' => GoogleAuthenticatorActiveForm::widget([
@@ -66,18 +53,16 @@ echo ErrorSummary::make()
         ]),
     ]);
 }
-?>
 
-<?php if (Yii::$app->getAuthClientCollection()->clients) {
+if (Yii::$app->getAuthClientCollection()->clients) {
     echo Panel::widget([
         'title' => Yii::t('skeleton', 'Clients'),
         'content' => AuthClientsGridView::widget([
             'user' => $form->user,
         ]),
     ]);
-} ?>
-
-<?php if ($form->user->isDeletable()) {
+}
+if ($form->user->isDeletable()) {
     echo Panel::widget([
         'type' => 'danger',
         'title' => Yii::t('skeleton', 'Delete Account'),

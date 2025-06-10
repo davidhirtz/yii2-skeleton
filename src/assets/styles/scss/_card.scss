@@ -11,10 +11,6 @@
   color: var(--card-color);
   position: relative;
   word-wrap: break-word;
-
-  &:not(:last-child) {
-    margin-bottom: $card-margin-bottom;
-  }
 }
 
 .card-header {

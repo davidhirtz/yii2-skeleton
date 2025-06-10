@@ -16,16 +16,13 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorLogi
 
 $this->setTitle(Yii::t('skeleton', 'Google Authenticator'));
 
-echo ErrorSummary::make()
-    ->models($form)
-    ->title(Yii::t('skeleton', 'Login unsuccessful'))
-    ->render();
+echo ErrorSummary::forModel($form)
+    ->title(Yii::t('skeleton', 'Login unsuccessful'));
 
 echo Container::make()
+    ->centered()
     ->html(Card::make()
         ->title($this->title)
         ->html(GoogleAuthenticatorLoginActiveForm::widget([
             'model' => $form,
-        ])))
-    ->centered()
-    ->render();
+        ])));

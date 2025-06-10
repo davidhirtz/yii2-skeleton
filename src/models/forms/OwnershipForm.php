@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\models\forms;
 
-use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
 use davidhirtz\yii2\skeleton\models\User;
 use Yii;
@@ -15,7 +14,7 @@ class OwnershipForm extends Model
     use ModelTrait;
 
     public ?string $name = null;
-    private ?User $_user = null;
+    private ?User $user = null;
 
     public function rules(): array
     {
@@ -35,46 +34,57 @@ class OwnershipForm extends Model
         ];
     }
 
-    public function validateUser(): bool
+    public function beforeValidate(): bool
     {
-        $user = $this->getUser();
-
-        if (!$user) {
-            $this->addError('name', Yii::t('skeleton', 'The user {name} was not found.', ['name' => $this->name]));
-        } elseif ($user->isDisabled()) {
-            $this->addError('name', Yii::t('skeleton', 'This user is currently disabled and thus can not be made website owner!'));
-        } elseif ($user->isOwner()) {
-            $this->addError('name', Yii::t('skeleton', 'This user is already the owner of the website!'));
-        }
-
-        return !$this->hasErrors();
-    }
-
-    /**
-     * Transfers the website ownership to user.
-     */
-    public function update(): bool|int
-    {
-        if ($this->validate()) {
-            User::updateAll(['is_owner' => false, 'updated_at' => new DateTime()], ['is_owner' => true]);
-
-            $user = $this->getUser();
-            $user->is_owner = true;
-
-            return $user->update(false);
-        }
-
-        return false;
-    }
-
-    public function getUser(): ?User
-    {
-        $this->_user ??= User::find()
+        $this->user ??= User::find()
             ->andWhereName($this->name)
             ->limit(1)
             ->one();
 
-        return $this->_user;
+        return parent::beforeValidate();
+    }
+
+    protected function validateUser(): bool
+    {
+        if (!$this->user) {
+            $this->addError('name', Yii::t('skeleton', 'The user {name} was not found.', [
+                'name' => $this->name,
+            ]));
+            return false;
+        }
+
+        if ($this->user->isDisabled()) {
+            $this->addError('name', Yii::t('skeleton', 'This user is currently disabled and thus can not be made website owner!'));
+            return false;
+        }
+
+        if ($this->user->isOwner()) {
+            $this->addError('name', Yii::t('skeleton', 'This user is already the owner of the website!'));
+            return false;
+        }
+
+        return true;
+    }
+
+    public function update(): bool|int
+    {
+        if ($this->validate()) {
+            $owners = User::find()
+                ->andWhere(['is_owner' => true])
+                ->all();
+
+            foreach ($owners as $owner) {
+                $owner->is_owner = false;
+                $owner->update();
+            }
+
+            if ($this->user) {
+                $this->user->is_owner = true;
+                return $this->user->update(false);
+            }
+        }
+
+        return false;
     }
 
     public function attributeLabels(): array

@@ -24,9 +24,7 @@ $this->setBreadcrumb(Yii::t('skeleton', 'Redirects'), ['index']);
     </h1>
 
 <?php
-echo ErrorSummary::make()
-    ->models($redirect)
-    ->render();
+echo ErrorSummary::forModel($redirect);
 
 echo Panel::widget([
     'title' => $this->title,

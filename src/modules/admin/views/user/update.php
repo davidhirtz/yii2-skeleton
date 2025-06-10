@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 /**
- * Admin user form
  * @see davidhirtz\yii2\skeleton\modules\admin\controllers\UserController::actionUpdate()
  *
  * @var View $this
@@ -27,10 +26,8 @@ echo UserSubmenu::widget([
     'user' => $form->user,
 ]);
 
-echo ErrorSummary::make()
-    ->models($form)
-    ->title(Yii::t('skeleton', 'The user could not be updated'))
-    ->render();
+echo ErrorSummary::forModel($form)
+    ->title(Yii::t('skeleton', 'The user could not be updated'));
 
 echo Panel::widget([
     'title' => $this->title,

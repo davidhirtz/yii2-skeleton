@@ -12,7 +12,7 @@ declare(strict_types=1);
  */
 
 use davidhirtz\yii2\skeleton\controllers\AccountController;
-use davidhirtz\yii2\skeleton\html\Alert;
+use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Card;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\html\ListGroup;
@@ -25,18 +25,15 @@ use davidhirtz\yii2\skeleton\web\View;
 $this->setTitle(Yii::t('skeleton', 'Login'));
 ?>
 
-<?= ErrorSummary::make()
-    ->models($form)
-    ->title(Yii::t('skeleton', 'Login unsuccessful'))
-    ->render(); ?>
+<?= ErrorSummary::forModel($form)
+    ->title(Yii::t('skeleton', 'Login unsuccessful')); ?>
 
 <noscript>
-    <?= Alert::make()
-        ->danger()
-        ->html(Yii::t('skeleton', 'Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to sign up.')); ?>
+    <?= Html::danger(Yii::t('skeleton', 'Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to sign up.')); ?>
 </noscript>
 
 <?= Container::make()
+    ->centered()
     ->html(
         Card::make()
             ->title($this->title)
@@ -64,6 +61,4 @@ $this->setTitle(Yii::t('skeleton', 'Login'));
                 ->icon('key')
                 ->href(['recover'])
                 ->visible(Yii::$app->getUser()->isPasswordResetEnabled()))
-    )
-    ->centered()
-    ->render(); ?>
+    ); ?>

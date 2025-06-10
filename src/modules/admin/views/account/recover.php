@@ -20,10 +20,8 @@ use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Recover Password'));
 
-echo ErrorSummary::make()
-    ->models($form)
-    ->title(Yii::t('skeleton', 'Your password could not be reset'))
-    ->render();
+echo ErrorSummary::forModel($form)
+    ->title(Yii::t('skeleton', 'Your password could not be reset'));
 
 echo Container::make()
     ->centered()
@@ -41,5 +39,4 @@ echo Container::make()
                     ->text(Yii::t('skeleton', 'Back to login'))
                     ->visible(Yii::$app->getUser()->getIsGuest())
             )
-    )
-    ->render();
+    );

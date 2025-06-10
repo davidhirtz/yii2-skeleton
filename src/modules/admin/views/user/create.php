@@ -24,10 +24,8 @@ echo UserSubmenu::widget([
     'user' => $form->user,
 ]);
 
-echo ErrorSummary::make()
-    ->models($form)
-    ->title(Yii::t('skeleton', 'The user could not be created'))
-    ->render();
+echo ErrorSummary::forModel($form)
+    ->title(Yii::t('skeleton', 'The user could not be created'));
 
 echo Panel::widget([
     'title' => $this->title,

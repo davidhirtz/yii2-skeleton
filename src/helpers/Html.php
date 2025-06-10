@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\helpers;
 
+use davidhirtz\yii2\skeleton\html\Alert;
+use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\ErrorSummary;
@@ -12,24 +14,23 @@ use yii\helpers\BaseHtml;
 
 class Html extends BaseHtml
 {
-    public static function alert(string $content, array $options = []): string
+    public static function alert(string $html, string $status): string
     {
-        if ($content) {
-            static::addCssClass($options, 'alert');
-
-            if ($route = ArrayHelper::remove($options, 'route', false)) {
-                static::addCssClass($options, 'alert-interactive');
-
-                $content .= Html::a(Html::tag('span', '', ['aria-hidden' => true]), $route, [
-                    'class' => 'btn-close',
-                    'aria-label' => Yii::t('skeleton', 'Close'),
-                ]);
-            }
-
-            return static::tag('div', $content, $options);
+        if (!$html) {
+            return '';
         }
 
-        return '';
+        return (string)Container::make()->html(
+            Alert::make()
+                ->html($html)
+                ->icon('check-circle')
+                ->status('danger')
+        );
+    }
+
+    public static function danger(string $html): string
+    {
+        return static::alert($html, 'danger');
     }
 
     public static function formText(string $content, array $options = []): string
@@ -114,10 +115,9 @@ class Html extends BaseHtml
     {
         $title = ArrayHelper::remove($options, 'header');
 
-        return ErrorSummary::make()
+        return (string)ErrorSummary::make()
             ->models($models)
-            ->title($title)
-            ->render();
+            ->title($title);
     }
 
     /**
@@ -175,9 +175,8 @@ class Html extends BaseHtml
         return $user->getUsername();
     }
 
-    public static function warning(string $content, array $options = []): string
+    public static function warning(string $html): string
     {
-        static::addCssClass($options, 'alert-warning');
-        return static::alert($content, $options);
+        return static::alert($html, 'warning');
     }
 }

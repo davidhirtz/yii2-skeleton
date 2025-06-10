@@ -24,8 +24,7 @@ $html = OwnershipActiveForm::widget([
 
 echo UserSubmenu::widget();
 
-echo ErrorSummary::make()
-    ->models($form)
+echo ErrorSummary::forModel($form)
     ->title(Yii::t('skeleton', 'The site ownership could not be transferred'));
 
 echo Card::make()

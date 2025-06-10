@@ -21,10 +21,8 @@ use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Resend Account Confirmation'));
 
-echo ErrorSummary::make()
-    ->models($form)
-    ->title(Yii::t('skeleton', 'Your confirmation could not be resend'))
-    ->render();
+echo ErrorSummary::forModel($form)
+    ->title(Yii::t('skeleton', 'Your confirmation could not be resend'));
 
 echo Container::make()
     ->centered()
@@ -42,5 +40,4 @@ echo Container::make()
                     ->visible(Yii::$app->getUser()->getIsGuest())
                     ->href(Url::to(['login']))
             )
-    )
-    ->render();
+    );
