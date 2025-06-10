@@ -18,12 +18,12 @@ class ErrorSummary extends Widget
     public ?string $icon = 'exclamation-triangle';
     public array $errors = [];
     public bool $showAllErrors = true;
-    public string|false|null $title = null;
+    protected string|false|null $title = null;
 
     /**
      * @var Model[]
      */
-    private array $models = [];
+    protected array $models = [];
 
     public function render(): string
     {
@@ -53,7 +53,7 @@ class ErrorSummary extends Widget
         return array_values($errors);
     }
 
-    public function setModels(array|Model $model): void
+    public function models(array|Model $model): static
     {
         if ($model instanceof ActiveRecord) {
             $this->title ??= $model->getIsNewRecord()
@@ -62,6 +62,13 @@ class ErrorSummary extends Widget
         }
 
         $this->models = is_array($model) ? $model : [$model];
+        return $this;
+    }
+
+    public function title(string|false|null $title): static
+    {
+        $this->title = $title;
+        return $this;
     }
 
     protected function renderAlert(): string

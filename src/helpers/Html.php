@@ -114,10 +114,10 @@ class Html extends BaseHtml
     {
         $title = ArrayHelper::remove($options, 'header');
 
-        return ErrorSummary::widget([
-            'models' => $models,
-            'title' => $title,
-        ]);
+        return ErrorSummary::make()
+            ->models($models)
+            ->title($title)
+            ->render();
     }
 
     /**

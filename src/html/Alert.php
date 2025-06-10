@@ -31,16 +31,36 @@ class Alert extends Tag
         return $this;
     }
 
+    public function danger(): static
+    {
+        return $this->icon('check-circle')->status('danger');
+    }
+
     public function icon(?string $icon): static
     {
         $this->icon = $icon ? Icon::tag($icon) : null;
         return $this;
     }
 
+    public function info(): static
+    {
+        return $this->icon('info-circle')->status('info');
+    }
+
     public function status(string $status): static
     {
         $this->status = $status;
         return $this;
+    }
+
+    public function success(): static
+    {
+        return $this->icon('check-circle')->status('success');
+    }
+
+    public function warning(): static
+    {
+        return $this->icon('exclamation-triangle')->status('warning');
     }
 
     protected function prepareAttributes(): void

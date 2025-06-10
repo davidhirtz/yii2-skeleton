@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -7,34 +8,27 @@ declare(strict_types=1);
  * @var OwnershipForm $form
  */
 
-use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Card;
 use davidhirtz\yii2\skeleton\models\forms\OwnershipForm;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\ErrorSummary;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\OwnershipActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu;
 use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 
 $this->setTitle(Yii::t('skeleton', 'Transfer Ownership'));
 $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
-?>
 
-<?= UserSubmenu::widget(); ?>
-
-<?= Html::errorSummary($form, [
-    'header' => Yii::t('skeleton', 'The site ownership could not be transferred'),
-]); ?>
-
-<?php
-Panel::begin([
-    'title' => $this->title,
-    'type' => 'danger',
+$html = OwnershipActiveForm::widget([
+    'model' => $form,
 ]);
 
-$af = ActiveForm::begin();
+echo UserSubmenu::widget();
 
-echo $af->textRow(Yii::t('skeleton', 'Enter the username of the user you want to make owner of this site. This will remove all your admin privileges and there is no going back. Please be certain!'));
-echo $af->field($form, 'name');
-echo $af->buttonRow($af->button(Yii::t('skeleton', 'Transfer'), ['class' => 'btn-danger']));
+echo ErrorSummary::make()
+    ->models($form)
+    ->title(Yii::t('skeleton', 'The site ownership could not be transferred'));
 
-ActiveForm::end();
-Panel::end(); ?>
+echo Card::make()
+    ->danger()
+    ->title($this->title)
+    ->html($html);

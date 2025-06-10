@@ -12,27 +12,28 @@ declare(strict_types=1);
  */
 
 use davidhirtz\yii2\skeleton\controllers\AccountController;
-use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Alert;
 use davidhirtz\yii2\skeleton\html\Card;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\html\ListGroup;
 use davidhirtz\yii2\skeleton\html\ListGroupItemLink;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\ErrorSummary;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\LoginActiveForm;
 use davidhirtz\yii2\skeleton\web\View;
 
 $this->setTitle(Yii::t('skeleton', 'Login'));
 ?>
 
-<?= Html::errorSummary($form, [
-    'header' => Yii::t('skeleton', 'Login unsuccessful'),
-]); ?>
+<?= ErrorSummary::make()
+    ->models($form)
+    ->title(Yii::t('skeleton', 'Login unsuccessful'))
+    ->render(); ?>
 
 <noscript>
-    <div class="alert alert-danger">
-        <div class="alert-heading"><?= Yii::t('skeleton', 'JavaScript is disabled on your browser.'); ?></div>
-        <p><?= Yii::t('skeleton', 'Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to sign up.'); ?></p>
-    </div>
+    <?= Alert::make()
+        ->danger()
+        ->html(Yii::t('skeleton', 'Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to sign up.')); ?>
 </noscript>
 
 <?= Container::make()

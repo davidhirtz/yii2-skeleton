@@ -14,6 +14,7 @@ use davidhirtz\yii2\skeleton\controllers\AccountController;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\forms\AccountUpdateForm;
 use davidhirtz\yii2\skeleton\models\forms\GoogleAuthenticatorForm;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\ErrorSummary;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\AccountActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\AuthClientsGridView;
@@ -39,9 +40,13 @@ if ($form->user->isUnconfirmed()) {
 }
 ?>
 
-<?= Html::errorSummary($form, [
-    'header' => Yii::t('skeleton', 'Your account could not be updated'),
-]); ?>
+<?php
+echo ErrorSummary::make()
+    ->models($form)
+    ->title(Yii::t('skeleton', 'Your account could not be updated'))
+    ->render();
+
+?>
 
 <?= Panel::widget([
     'title' => $this->title,

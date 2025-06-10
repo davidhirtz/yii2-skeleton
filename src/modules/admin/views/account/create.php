@@ -9,24 +9,27 @@ declare(strict_types=1);
  * @var davidhirtz\yii2\skeleton\models\forms\SignupForm $form
  */
 
-use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Alert;
 use davidhirtz\yii2\skeleton\html\Card;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\html\ListGroup;
 use davidhirtz\yii2\skeleton\html\ListGroupItemLink;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\ErrorSummary;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\SignupActiveForm;
 
 $this->setTitle(Yii::t('skeleton', 'Sign up'));
 ?>
 
-<?= Html::errorSummary($form, [
-    'header' => Yii::t('skeleton', 'Your account could not be created'),
-]); ?>
+<?= ErrorSummary::make()
+    ->models($form)
+    ->title(Yii::t('skeleton', 'Your account could not be created'))
+    ->render(); ?>
 
     <noscript>
-        <div class="alert alert-danger">
-            <p><?php echo Yii::t('skeleton', 'Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to sign up.'); ?></p>
-        </div>
+        <?= Alert::make()
+            ->danger()
+            ->html(Yii::t('skeleton', 'Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to sign up.'))
+            ->render(); ?>
     </noscript>
 
 <?= Container::make()

@@ -9,27 +9,30 @@ declare(strict_types=1);
  * @var davidhirtz\yii2\skeleton\models\forms\LoginForm $form
  */
 
-use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Card;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\html\ListGroup;
 use davidhirtz\yii2\skeleton\html\ListGroupItemLink;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\ErrorSummary;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\PasswordRecoverActiveForm;
 use davidhirtz\yii2\skeleton\web\View;
 use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Recover Password'));
-?>
 
-<?= Html::errorSummary($form, ['header' => Yii::t('skeleton', 'Your password could not be reset')]); ?>
+echo ErrorSummary::make()
+    ->models($form)
+    ->title(Yii::t('skeleton', 'Your password could not be reset'))
+    ->render();
 
-<?= Container::make()
+echo Container::make()
+    ->centered()
     ->html(
         Card::make()
-        ->title($this->title)
-        ->html(PasswordRecoverActiveForm::widget([
-            'model' => $form,
-        ])),
+            ->title($this->title)
+            ->html(PasswordRecoverActiveForm::widget([
+                'model' => $form,
+            ])),
         ListGroup::make()
             ->addLink(
                 ListGroupItemLink::make()
@@ -39,5 +42,4 @@ $this->setTitle(Yii::t('skeleton', 'Recover Password'));
                     ->visible(Yii::$app->getUser()->getIsGuest())
             )
     )
-    ->centered()
-    ->render(); ?>
+    ->render();

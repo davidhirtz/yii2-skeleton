@@ -9,23 +9,23 @@ declare(strict_types=1);
  * @var davidhirtz\yii2\skeleton\models\forms\LoginForm $form
  */
 
-use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Card;
 use davidhirtz\yii2\skeleton\html\Container;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\ErrorSummary;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorLoginActiveForm;
 
 $this->setTitle(Yii::t('skeleton', 'Google Authenticator'));
-?>
 
-<?= Html::errorSummary($form, [
-    'header' => Yii::t('skeleton', 'Login unsuccessful'),
-]); ?>
+echo ErrorSummary::make()
+    ->models($form)
+    ->title(Yii::t('skeleton', 'Login unsuccessful'))
+    ->render();
 
-<?= Container::make()
+echo Container::make()
     ->html(Card::make()
         ->title($this->title)
         ->html(GoogleAuthenticatorLoginActiveForm::widget([
             'model' => $form,
         ])))
     ->centered()
-    ->render(); ?>
+    ->render();

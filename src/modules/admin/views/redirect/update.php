@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 
-use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
 use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\ErrorSummary;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\RedirectActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\RedirectGridView;
 use davidhirtz\yii2\skeleton\web\View;
@@ -27,26 +27,29 @@ $this->setBreadcrumb(Yii::t('skeleton', 'Redirects'), ['index']);
     <a href="<?= Url::toRoute(['index']) ?>"><?= Yii::t('skeleton', 'Redirects'); ?></a>
 </h1>
 
-<?= Html::errorSummary($redirect); ?>
+<?php
+echo ErrorSummary::make()
+    ->models($redirect)
+    ->render();
 
-<?= Panel::widget([
+echo Panel::widget([
     'title' => $this->title,
     'content' => RedirectActiveForm::widget([
         'model' => $redirect,
     ]),
-]); ?>
+]);
 
-<?= Panel::widget([
+echo Panel::widget([
     'title' => Yii::t('skeleton', 'Additional Redirects'),
     'content' => RedirectGridView::widget([
         'redirect' => $redirect,
     ]),
-]); ?>
+]);
 
-<?= Panel::widget([
+echo Panel::widget([
     'type' => 'danger',
     'title' => Yii::t('skeleton', 'Delete Redirect'),
     'content' => DeleteActiveForm::widget([
         'model' => $redirect,
     ]),
-]); ?>
+]);
