@@ -64,10 +64,10 @@ class Flashes extends Widget
     public function getStatusIcon(string $status): ?string
     {
         return match ($status) {
-            'success' => 'check',
+            'success' => 'check-circle',
             'info' => 'info-circle',
             'warning' => 'exclamation-triangle',
-            'danger' => 'times-circle',
+            'danger' => 'exclamation-circle',
             default => null,
         };
     }
