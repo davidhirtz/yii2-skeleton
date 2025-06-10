@@ -161,11 +161,13 @@ class AuthItemGridView extends GridView
             'type' => $authItem->type,
         ];
 
+        $tooltip = $authItem->isAssigned
+            ? Yii::t('skeleton', 'Revoke {auth}', ['auth' => $authItem->getTypeName()])
+            : Yii::t('skeleton', 'Assign {auth}', ['auth' => $authItem->getTypeName()]);
+
         return (string)Button::primary()
             ->icon($authItem->isAssigned ? 'ban' : 'star')
-            ->tooltip($authItem->isAssigned
-                ? Yii::t('skeleton', 'Revoke {name}', ['name' => $authItem->getTypeName()])
-                : Yii::t('skeleton', 'Assign {name}', ['name' => $authItem->getTypeName()]))
+            ->tooltip($tooltip)
             ->post($route);
     }
 
