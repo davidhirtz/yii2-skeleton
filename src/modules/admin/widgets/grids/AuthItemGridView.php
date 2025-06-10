@@ -111,7 +111,7 @@ class AuthItemGridView extends GridView
             $description = $this->getTranslations()[$child->description] ?? $child->description;
             $isActive = $this->user && !$authItem->isAssigned && ($child->isAssigned || $child->isInherited);
 
-            $items[] = $isActive ? Html::tag('span', $description, ['class' => 'bg-success']) : $description;
+            $items[] = $isActive ? Html::tag('mark', $description) : $description;
         }
 
 
@@ -163,6 +163,9 @@ class AuthItemGridView extends GridView
 
         return (string)Button::primary()
             ->icon($authItem->isAssigned ? 'ban' : 'star')
+            ->tooltip($authItem->isAssigned
+                ? Yii::t('skeleton', 'Revoke {name}', ['name' => $authItem->getTypeName()])
+                : Yii::t('skeleton', 'Assign {name}', ['name' => $authItem->getTypeName()]))
             ->post($route);
     }
 

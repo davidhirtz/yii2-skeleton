@@ -38,8 +38,8 @@
   --color-yellow-950: oklch(28.6% 0.066 53.813);
 
   --color-green-50: oklch(98.2% 0.018 155.826);
-  //--color-green-100: oklch(96.2% 0.044 156.743);
-  --color-green-100: oklch(94.4% 0.049 145.173);
+  --color-green-100: oklch(96.2% 0.044 156.743);
+  //--color-green-100: oklch(94.4% 0.049 145.173);
   --color-green-200: oklch(92.5% 0.084 155.995);
   --color-green-300: oklch(87.1% 0.15 154.449);
   --color-green-400: oklch(79.2% 0.209 151.711);
@@ -336,9 +336,8 @@
   --table-striped-color: var(--color-black);
   --table-hover-color: var(--color-black);
 
-  --table-selected-bg: var(--success-bg);
-  --table-selected-hover-color: var(--color-black);
-  --table-selected-hover-bg: rgb(var(--success-bg) / 1.1);
+  --table-selected-bg: var(--color-blue-50);
+  --table-selected-hover-bg: var(--color-blue-100);
 
   --table-td-border-color: var(--border-color);
   --table-th-border-color: var(--color-gray-700);

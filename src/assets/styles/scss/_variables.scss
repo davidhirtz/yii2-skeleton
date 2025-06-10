@@ -254,18 +254,7 @@ $btn-min-width: 2.625rem !default;
 $btn-transition: color .15s, background-color .15s, border-color .15s;
 $btn-disabled-opacity: .5 !default;
 
-
 $btn-toolbar-gap: .5rem !default;
-
-$btn-close-border-radius: null !default;
-$btn-close-color: var(--color-black) !default;
-$btn-close-disabled-opacity: .25 !default;
-$btn-close-focus-opacity: 1 !default;
-$btn-close-hover-opacity: .75 !default;
-$btn-close-opacity: .5 !default;
-$btn-close-padding-x: 0 !default;
-$btn-close-padding-y: $btn-close-padding-x !default;
-$btn-close-width: 1rem !default;
 
 // Inputs
 $input-bg-color: var(--input-bg) !default;
