@@ -12,8 +12,7 @@ use Yii;
 class Flashes extends Widget
 {
     public array $alerts;
-
-    public bool $showIcon = true;
+    public bool $showStatusIcon = true;
 
     public function init(): void
     {
@@ -52,7 +51,7 @@ class Flashes extends Widget
             $status = 'danger';
         }
 
-        $icon = $this->showIcon ? $this->getStatusIcon($status) : null;
+        $icon = $this->showStatusIcon ? $this->getStatusIcon($status) : null;
 
         return Alert::make()
             ->html($message)

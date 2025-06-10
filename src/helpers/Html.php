@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\helpers;
 
-use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\User;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\ErrorSummary;
 use Yii;
 use yii\helpers\BaseHtml;
 
@@ -107,20 +107,17 @@ class Html extends BaseHtml
         return $text;
     }
 
+    /**
+     * @deprecated use {@link ErrorSummary} directly instead.
+     */
     public static function errorSummary($models, $options = []): string
     {
-        if ($models instanceof ActiveRecord) {
-            $options['header'] ??= $models->getIsNewRecord()
-                ? Yii::t('skeleton', 'The record could not be created:')
-                : Yii::t('skeleton', 'The record could not be updated:');
-        }
+        $title = ArrayHelper::remove($options, 'header');
 
-        if (($options['header'] ?? false) !== false) {
-            $options['header'] = static::tag('div', $options['header'], ['class' => 'alert-heading']);
-        }
-
-        self::addCssClass($options, ['alert', 'alert-danger']);
-        return parent::errorSummary($models, $options);
+        return ErrorSummary::widget([
+            'models' => $models,
+            'title' => $title,
+        ]);
     }
 
     /**

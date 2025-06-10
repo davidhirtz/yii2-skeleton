@@ -18,6 +18,15 @@ class Ul extends Tag
         return $this;
     }
 
+    public function items(array $items, array $attributes = []): static
+    {
+        foreach ($items as $item) {
+            $this->addItem($item, $attributes);
+        }
+
+        return $this;
+    }
+
     protected function renderContent(): string
     {
         return implode('', $this->items);
