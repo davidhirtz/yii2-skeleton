@@ -7,6 +7,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Icon;
+use davidhirtz\yii2\skeleton\html\Ul;
 use davidhirtz\yii2\skeleton\models\AuthItem;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController;
@@ -57,7 +58,7 @@ class AuthItemGridView extends GridView
         parent::init();
     }
 
-    public function typeColumn(): array
+    protected function typeColumn(): array
     {
         return [
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
@@ -68,7 +69,7 @@ class AuthItemGridView extends GridView
         ];
     }
 
-    public function nameColumn(): array
+    protected function nameColumn(): array
     {
         return [
             'attribute' => 'name',
@@ -92,43 +93,54 @@ class AuthItemGridView extends GridView
         ];
     }
 
-    public function descriptionColumn(): array
+    protected function descriptionColumn(): array
     {
         return [
             'label' => Yii::t('skeleton', 'Inherited Permissions'),
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
             'contentOptions' => ['class' => 'd-none d-md-table-cell'],
-            'content' => function (AuthItem $authItem) {
-                $items = [];
-
-                foreach ($authItem->children as $child) {
-                    $description = $this->getTranslations()[$child->description] ?? $child->description;
-                    $isActive = $this->user && !$authItem->isAssigned && ($child->isAssigned || $child->isInherited);
-                    $items[] = $isActive ? Html::tag('span', $description, ['class' => 'bg-success']) : $description;
-                }
-
-                return Html::ul(array_filter($items), ['class' => 'list-unstyled', 'encode' => false]);
-            }
+            'content' => fn (AuthItem $authItem) => $this->getDescriptionFormItem($authItem),
         ];
     }
 
-    public function usersColumn(): array
+    protected function getDescriptionFormItem(AuthItem $authItem): string
+    {
+        $items = [];
+
+        foreach ($authItem->children as $child) {
+            $description = $this->getTranslations()[$child->description] ?? $child->description;
+            $isActive = $this->user && !$authItem->isAssigned && ($child->isAssigned || $child->isInherited);
+
+            $items[] = $isActive ? Html::tag('span', $description, ['class' => 'bg-success']) : $description;
+        }
+
+
+        return (string)Ul::make()
+            ->class('list-unstyled')
+            ->items(array_filter($items));
+    }
+
+    protected function usersColumn(): array
     {
         return [
             'label' => Yii::t('skeleton', 'Users'),
-            'content' => function (AuthItem $authItem) {
-                $items = [];
-
-                foreach ($authItem->users as $user) {
-                    $items[$user->id] = Html::a($user->getUsername(), ['auth/view', 'user' => $user->id]);
-                }
-
-                return Html::ul(array_filter($items), ['class' => 'list-unstyled', 'encode' => false]);
-            }
+            'content' => fn (AuthItem $authItem) => $this->getUsersForItem($authItem),
         ];
     }
 
-    public function buttonsColumn(): array
+    protected function getUsersForItem(AuthItem $authItem): string
+    {
+        $items = array_map(
+            fn (User $user) => Html::a($user->getUsername(), ['auth/view', 'user' => $user->id]),
+            $authItem->users
+        );
+
+        return (string)Ul::make()
+            ->class('list-unstyled')
+            ->items($items);
+    }
+
+    protected function buttonsColumn(): array
     {
         return [
             'class' => ButtonsColumn::class,
@@ -140,13 +152,28 @@ class AuthItemGridView extends GridView
      * @see AuthController::actionAssign()
      * @see AuthController::actionRevoke()
      */
-    protected function getRowButtons(AuthItem $authItem): array|string
+    protected function getRowButtons(AuthItem $authItem): string
     {
-        $route = [$authItem->isAssigned ? 'revoke' : 'assign', 'id' => $this->user->id, 'name' => $authItem->name, 'type' => $authItem->type];
+        $route = [
+            $authItem->isAssigned ? 'revoke' : 'assign',
+            'id' => $this->user->id,
+            'name' => $authItem->name,
+            'type' => $authItem->type,
+        ];
 
-        return Button::primary()
+        return (string)Button::primary()
             ->icon($authItem->isAssigned ? 'ban' : 'star')
-            ->post($route)
-            ->render();
+            ->post($route);
+    }
+
+    public function renderSummary(): string
+    {
+        $summary = new GridSummary(
+            $this->summary,
+            $this->dataProvider->getCount(),
+            $this->dataProvider->getTotalCount(),
+        );
+
+        return $summary->render();
     }
 }

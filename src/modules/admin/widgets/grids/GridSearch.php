@@ -8,11 +8,10 @@ use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
 use Yii;
-use yii\base\BaseObject;
 use yii\base\Widget;
 use yii\helpers\Url;
 
-class GridSearch extends BaseObject
+class GridSearch
 {
     public array $columnOptions = [
         'options' => [
@@ -21,25 +20,17 @@ class GridSearch extends BaseObject
     ];
 
     public bool $enableAjax = true;
-
     public array $formOptions = [];
     public array $inputOptions = [];
 
+    public ?string $value = null;
     public string $paramName = 'q';
     public array|string|null $route = null;
-    public string $url;
-    public ?string $value = null;
+    public readonly string $url;
 
-    public function __construct(public readonly Widget $grid, $config = [])
+    public function __construct(protected Widget $grid)
     {
-        parent::__construct($config);
-    }
-
-    public function init(): void
-    {
-        parent::init();
-
-        $this->value ??= Yii::$app->request->get($this->paramName);
+        $this->value ??= Yii::$app->getRequest()->get($this->paramName);
         $this->value = $this->value ? trim((string)$this->value) : null;
 
         $this->url = $this->route ? Url::to($this->route) : Url::current([

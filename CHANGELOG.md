@@ -2,6 +2,7 @@
 
 - Added `TrailModelInterface` and `TrailModelTrait` to better handle static analysis of trail models
 - Added `GridSearch` and moved properties `search`, `searchParamName`, `searchInputOptions` and `searchUrl` as well as
+- Added `GridSummary`
   methods `getSearchInput`, and `getSearchKeywords` to the new `GridView::$search` property
 - Changed `GridView::isSortedByPosition()` to `GridView::isSortable()`
 - Refactored `TrailBehavior::formatTrailAttributeValue` to `TrailModelCollection::formatAttributeValue`
