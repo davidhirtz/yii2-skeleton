@@ -15,8 +15,8 @@ declare(strict_types=1);
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\html\BtnToolbar;
 use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\html\ButtonToolbar;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\web\View;
@@ -48,7 +48,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                 ],
                 [
                     'contentOptions' => ['class' => 'text-end'],
-                    'content' => fn ($modified, $name): string => BtnToolbar::make()
+                    'content' => fn ($modified, $name): string => ButtonToolbar::make()
                         ->buttons(
                             Button::primary()
                                 ->href(['view', 'log' => $name, 'raw' => 1])

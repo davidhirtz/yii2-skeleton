@@ -69,6 +69,7 @@ class FilterDropdown extends Widget
     protected function addDefaultItem(): void
     {
         $this->dropdown->addItem(Link::make()
+            ->class('dropdown-default-item')
             ->current([...$this->params, $this->paramName => null])
             ->text($this->defaultItem));
 

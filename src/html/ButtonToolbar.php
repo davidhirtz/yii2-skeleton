@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\html;
 
-class BtnToolbar extends Tag
+class ButtonToolbar extends Tag
 {
     protected array $attributes = [
         'class' => 'btn-toolbar',

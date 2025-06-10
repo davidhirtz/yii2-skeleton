@@ -12,7 +12,6 @@ use davidhirtz\yii2\skeleton\html\Alert;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Dropdown;
 use davidhirtz\yii2\skeleton\html\Icon;
-use davidhirtz\yii2\skeleton\html\Link;
 use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\CheckboxColumn;
 use davidhirtz\yii2\skeleton\widgets\pagers\LinkPager;
@@ -161,13 +160,11 @@ class GridView extends \yii\grid\GridView
             ->status($this->dataProvider->getTotalCount() ? 'info' : 'warning');
 
         if ($this->search->value) {
-            $alert->actions(
-                Link::make()
-                    ->class('btn-icon')
-                    ->href($this->search->url)
-                    ->tooltip(Yii::t('skeleton', 'Clear Search'))
-                    ->icon('xmark')
-            );
+            $alert->button(Button::make()
+                ->class('btn-icon')
+                ->href($this->search->url)
+                ->tooltip(Yii::t('skeleton', 'Clear Search'))
+                ->icon('xmark'));
         }
 
         return $alert->render();

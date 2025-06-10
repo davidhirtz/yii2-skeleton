@@ -19,11 +19,15 @@
   }
 
   @include media-breakpoint-up(md) {
-      width: $container-centered-max-width;
+    width: $container-centered-max-width;
   }
 }
 
 .modal-header {
+  --btn-icon-bg: var(--modal-btn-icon-bg, transparent);
+  --btn-icon-hover-bg: var(--modal-btn-icon-hover-bg);
+  --btn-icon-focus-bg: var(--modal-btn-icon-focus-bg);
+
   display: flex;
   flex-shrink: 0;
   justify-content: space-between;

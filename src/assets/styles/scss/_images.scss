@@ -1,4 +1,11 @@
-//@import "../../../../node_modules/bootstrap/scss/images";
+.icon {
+  display: grid;
+  flex-shrink: 0;
+  height: 1lh;
+  min-width: 1lh;
+  place-items: center;
+  text-align: center;
+}
 
 .img-thumbnail {
   display: block;

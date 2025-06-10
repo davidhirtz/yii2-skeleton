@@ -13,6 +13,8 @@ class Flashes extends Widget
 {
     public array $alerts;
 
+    public bool $showIcon = true;
+
     public function init(): void
     {
         $this->alerts ??= Yii::$app->getSession()->getAllFlashes();
@@ -50,9 +52,23 @@ class Flashes extends Widget
             $status = 'danger';
         }
 
+        $icon = $this->showIcon ? $this->getStatusIcon($status) : null;
+
         return Alert::make()
             ->html($message)
+            ->icon($icon)
             ->status($status)
             ->render();
+    }
+
+    public function getStatusIcon(string $status): ?string
+    {
+        return match ($status) {
+            'success' => 'check',
+            'info' => 'info-circle',
+            'warning' => 'exclamation-triangle',
+            'danger' => 'times-circle',
+            default => null,
+        };
     }
 }

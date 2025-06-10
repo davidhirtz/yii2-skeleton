@@ -318,13 +318,7 @@ legend {
   height: auto;
 }
 
-// https://github.com/twbs/bootstrap/issues/11586
-[type="search"] {
-  -webkit-appearance: textfield;
-  outline-offset: -2px;
-}
-
-::-webkit-search-decoration {
+::-webkit-search-decoration, ::-webkit-search-cancel-button {
   -webkit-appearance: none;
 }
 

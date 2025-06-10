@@ -11,27 +11,42 @@ class Alert extends Tag
 {
     use TagContentTrait;
 
-    private ?Tag $actions = null;
-
     protected array $attributes = [
         'class' => 'alert',
     ];
 
-    public function actions(Tag|null $html): static
+    private array $buttons = [];
+    private ?Icon $icon = null;
+    private ?string $status = null;
+
+    public function button(Button $btn): static
     {
-        $this->actions = $html;
+        $this->buttons[] = $btn;
+        return $this;
+    }
+
+    public function buttons(Button ...$buttons): static
+    {
+        $this->buttons = $buttons;
+        return $this;
+    }
+
+    public function icon(?string $icon): static
+    {
+        $this->icon = $icon ? Icon::tag($icon) : null;
         return $this;
     }
 
     public function status(string $status): static
     {
-        return $this->addClass("alert-$status");
+        $this->status = $status;
+        return $this;
     }
 
     protected function prepareAttributes(): void
     {
-        if ($this->actions) {
-            Html::addCssClass($this->attributes, 'alert-interactive');
+        if ($this->status) {
+            Html::addCssClass($this->attributes, "alert-$this->status");
         }
 
         parent::prepareAttributes();
@@ -39,10 +54,19 @@ class Alert extends Tag
 
     protected function renderContent(): string
     {
-        $content = implode('', $this->content);
+        $content = Div::make()
+            ->class('grow')
+            ->html(...$this->content)
+            ->render();
 
-        if ($this->actions) {
-            $content = Div::make()->html($content)->render() . $this->actions->render();
+        if ($this->icon) {
+            $content = Div::make()->class('icon')->html($this->icon) . $content;
+        }
+
+        if ($this->buttons) {
+            $content .= Div::make()
+                ->html(...$this->buttons)
+                ->addClass('alert-buttons');
         }
 
         return $content;

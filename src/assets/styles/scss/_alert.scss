@@ -1,15 +1,20 @@
 .alert {
-  background: var(--alert-bg);
+  --link-color: var(--alert-link-color);
+  --link-hover-color: var(--alert-link-hover-color);
+
+  align-items: flex-start;
   @include border-radius($alert-border-radius);
+  background: var(--alert-bg);
   border: $alert-border-width solid var(--alert-border-color);
   color: var(--alert-color);
+  display: flex;
+  gap: $alert-gap;
   padding: $alert-padding-x $alert-padding-y;
   position: relative;
 
   a {
     font-weight: $alert-link-font-weight;
     text-decoration: $alert-link-text-decoration;
-    color: var(--alert-link-color);
   }
 
   ul {
@@ -23,11 +28,11 @@
   }
 }
 
-.alert-interactive {
-  align-items: flex-start;
+.alert-buttons {
   display: flex;
-  gap: $alert-interactive-gap;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: $alert-buttons-gap;
+  justify-content: flex-end;
 }
 
 .alert-heading {
@@ -40,6 +45,7 @@
   --alert-border-color: var(--alert-success-border-color);
   --alert-color: var(--alert-success-color);
   --alert-link-color: var(--alert-success-link-color);
+  --alert-link-hover-color: var(--alert-success-link-hover-color);
 }
 
 .alert-info {
@@ -47,6 +53,7 @@
   --alert-border-color: var(--alert-info-border-color);
   --alert-color: var(--alert-info-color);
   --alert-link-color: var(--alert-info-link-color);
+  --alert-link-hover-color: var(--alert-info-link-hover-color);
 }
 
 .alert-warning {
@@ -54,6 +61,7 @@
   --alert-border-color: var(--alert-warning-border-color);
   --alert-color: var(--alert-warning-color);
   --alert-link-color: var(--alert-warning-link-color);
+  --alert-link-hover-color: var(--alert-warning-link-hover-color);
 }
 
 .alert-danger {
@@ -61,4 +69,5 @@
   --alert-border-color: var(--alert-danger-border-color);
   --alert-color: var(--alert-danger-color);
   --alert-link-color: var(--alert-danger-link-color);
+  --alert-link-hover-color: var(--alert-danger-link-hover-color);
 }

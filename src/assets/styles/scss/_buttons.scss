@@ -2,7 +2,7 @@
   display: inline-block;
   padding: $btn-padding-y $btn-padding-x;
   font-family: $btn-font-family;
-  @include font-size($btn-font-size);
+  font-size: $btn-font-size;
   font-weight: $btn-font-weight;
   line-height: $btn-line-height;
   color: var(--btn-color, var(--color-black));
@@ -108,16 +108,21 @@
 }
 
 .btn-icon {
-  background: transparent;
+  background: var(--btn-icon-bg, transparent);
   border: 0;
   color: inherit;
-  flex-shrink: 0;
-  font-weight: inherit;
-  height: 1.25rem;
-  line-height: inherit;
-  min-width: 1.25rem;
-  place-content: center;
-  text-align: center;
+  @include border-radius($btn-border-radius);
+  @include transition($btn-transition);
+  @extend .icon;
+
+  &:hover {
+    background: var(--btn-icon-hover-bg, inherit);
+  }
+
+  &:focus-visible {
+    background: var(--btn-icon-focus-bg, inherit);
+    outline: 0;
+  }
 }
 
 .btn-sm {

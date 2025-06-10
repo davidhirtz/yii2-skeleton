@@ -183,7 +183,8 @@ $submenu-justify-content: center !default;
 // Alert
 $alert-heading-font-weight: bold !default;
 $alert-heading-margin-bottom: .5rem !default;
-$alert-interactive-gap: $spacer-x !default;
+$alert-gap: $spacer-x !default;
+$alert-buttons-gap: .5rem !default;
 
 // Card
 $card-border-radius: $border-radius !default;
@@ -255,7 +256,7 @@ $btn-transition: color .15s, background-color .15s, border-color .15s;
 $btn-disabled-opacity: .5 !default;
 
 
-$btn-toolbar-spacer: .5rem !default;
+$btn-toolbar-gap: .5rem !default;
 
 $btn-close-border-radius: null !default;
 $btn-close-color: var(--color-black) !default;
@@ -430,18 +431,23 @@ $pagination-transition: color .15s, background-color .15s, border-color .15s !de
 $dropdown-border-radius: $border-radius !default;
 $dropdown-border-width: $border-width !default;
 $dropdown-button-active-font-weight: 500 !default;
+$dropdown-divider-border-width: $border-width !default;
 $dropdown-divider-margin-y: 0 !default;
 $dropdown-font-size: $font-size-sm !default;
-$dropdown-header-padding-x: $form-padding-x !default;
-$dropdown-header-padding-y: $form-padding-y !default;
 $dropdown-inner-border-radius: $border-radius !default;
-$dropdown-item-padding-x: $form-padding-x !default;
-$dropdown-item-padding-y: $form-padding-y !default;
 $dropdown-line-height: $line-height-sm !default;
 $dropdown-max-height: 50vh !default;
 $dropdown-min-width: 12rem !default;
 $dropdown-padding-x: 0 !default;
 $dropdown-padding-y: 0 !default;
+
+$dropdown-header-border-width: $border-width !default;
+$dropdown-header-padding-x: 1rem !default;
+$dropdown-header-padding-y: 1rem !default;
+
+$dropdown-item-default-font-weight: $font-weight-medium !default;
+$dropdown-item-padding-x: 1rem !default;
+$dropdown-item-padding-y: 1rem !default;
 
 // Badge
 $badge-font-size: $font-size-xs !default;

@@ -162,10 +162,10 @@
   --body-color: var(--color-black);
   --border-color: var(--color-gray-200);
 
-  --link-color: var(--color-black);
-  --link-hover-color: var(--color-gray-900);
+  --link-color: var(--color-gray-900);
+  --link-hover-color: var(--color-black);
 
-  --highlight-bg: var(--success);
+  --highlight-bg: var(--color-blue-100);
   --highlight-color: var(--color-black);
   --muted-color: var(--color-gray-500);
 
@@ -184,21 +184,25 @@
   --alert-success-border-color: var(--alert-success-bg);
   --alert-success-color: var(--color-green-900);
   --alert-success-link-color: var(--color-green-500);
+  --alert-success-link-hover-color: var(--color-green-600);
 
   --alert-info-bg: var(--color-blue-50);
   --alert-info-border-color: var(--alert-info-bg);
   --alert-info-color: var(--color-blue-900);
   --alert-info-link-color: var(--color-blue-500);
+  --alert-info-link-hover-color: var(--color-blue-600);
 
   --alert-warning-bg: var(--color-yellow-100);
   --alert-warning-border-color: var(--alert-warning-bg);
   --alert-warning-color: var(--color-yellow-900);
   --alert-warning-link-color: var(--color-yellow-500);
+  --alert-warning-link-hover-color: var(--color-yellow-600);
 
   --alert-danger-bg: var(--color-red-100);
   --alert-danger-border-color: var(--alert-danger-bg);
   --alert-danger-color: var(--color-red-900);
   --alert-danger-link-color: var(--color-red-500);
+  --alert-danger-link-hover-color: var(--color-red-600);
 
   // Badge
   --badge-color: var(--color-white);
@@ -230,8 +234,6 @@
   --btn-danger-hover-border-color: var(--btn-danger-hover-bg);
   --btn-danger-hover-color: var(--color-white);
 
-  --btn-close-bg: var(--close-bg);
-
   // Breadcrumb
   --breadcrumb-bg: transparent;
   --breadcrumb-divider-color: var(--secondary-border);
@@ -250,23 +252,25 @@
   --card-list-group-action-hover-bg: var(--color-gray-200);
 
   // Dropdown
-  --dropdown-bg: var(--color-gray-100);
+  --dropdown-bg: var(--color-white);
   --dropdown-border-color: var(--border-color);
   --dropdown-color: var(--color-black);
-  --dropdown-divider-bg: var(--border-color);
-  --dropdown-link-active-bg: var(--dark-bg);
-  --dropdown-link-active-color: inherit;
-  --dropdown-link-color: var(--color-black);
-  --dropdown-link-disabled-color: var(--tertiary-color);
-  --dropdown-link-hover-bg: var(--light);
-  --dropdown-link-hover-color: var(--color-black);
-  --dropdown-btn-bg: var(--color-gray-100);
-  --dropdown-btn-color: var(--color-black);
-  --dropdown-btn-border-color: var(--border-color);
+  --dropdown-divider-color: var(--border-color);
+
   --dropdown-btn-active-bg: var(--color-gray-300);
   --dropdown-btn-active-border-color: var(--color-gray-300);
+  --dropdown-btn-bg: var(--color-gray-100);
+  --dropdown-btn-border-color: var(--border-color);
+  --dropdown-btn-color: var(--color-black);
   --dropdown-btn-hover-bg: var(--color-gray-200);
   --dropdown-btn-hover-border-color: var(--color-gray-200);
+
+  --dropdown-link-active-bg: var(--color-gray-100);
+  --dropdown-link-active-color: inherit;
+  --dropdown-link-color: var(--color-black);
+  --dropdown-link-disabled-color: var(--color-gray-300);
+  --dropdown-link-hover-bg: var(--color-gray-50);
+  --dropdown-link-hover-color: inherit;
 
   // Form
   --form-padding-x: #{$form-padding-x};
@@ -274,7 +278,7 @@
   --form-font-size: #{$form-font-size};
   --form-line-height: #{$form-line-height};
 
-  --form-invalid-bg: var(--light);
+  --form-invalid-bg: var(--color-white);
   --form-invalid-border: var(--danger-border);
   --form-invalid-color: var(--danger-color);
 
@@ -293,10 +297,12 @@
   --list-group-action-hover-bg: var(--color-gray-300);
 
   // Modal
-  --modal-border-color: transparent;
-  --modal-bg: var(--color-white);
-  --modal-header-bg: var(--color-gray-200);
   --modal-backdrop-bg: rgba(0, 0, 0, .4);
+  --modal-bg: var(--color-white);
+  --modal-border-color: transparent;
+  --modal-btn-icon-focus-bg: var(--color-gray-100);
+  --modal-btn-icon-hover-bg: var(--color-gray-100);
+  --modal-header-bg: var(--color-gray-200);
 
   // Nav
   --nav-link-active-badge-bg: var(--color-white);
