@@ -43,12 +43,21 @@ class UserSubmenu extends Submenu
 
     protected function getDefaultItems(): array
     {
-        return array_filter([...$this->getUserGridViewItems(), ...$this->getPermissionGridViewItems(), ...$this->getLoginGridViewItems()]);
+        return array_filter([
+            ...$this->getUserGridViewItems(),
+            ...$this->getPermissionGridViewItems(),
+            ...$this->getLoginGridViewItems(),
+        ]);
     }
 
     protected function getUserItems(): array
     {
-        return array_filter([...$this->getUserFormItems(), ...$this->getUserPermissionGridViewItems(), ...$this->getUserLoginGridViewItems(), ...$this->getUserTrailGridViewItems()]);
+        return array_filter([
+            ...$this->getUserFormItems(),
+            ...$this->getUserPermissionGridViewItems(),
+            ...$this->getUserLoginGridViewItems(),
+            ...$this->getUserTrailGridViewItems(),
+        ]);
     }
 
     protected function getUserGridViewItems(): array

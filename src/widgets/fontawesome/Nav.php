@@ -155,53 +155,86 @@ class Nav extends \yii\bootstrap5\Nav
      */
     protected function isItemActive($item): bool
     {
-        if ($this->_hasActiveItem) {
+        if (!$this->activateItems || $this->_hasActiveItem) {
             return false;
         }
 
-        $item['active'] ??= null;
+        if (isset($item['active'])) {
+            if (is_callable($item['active'])) {
+                $item['active'] = call_user_func($item['active']);
+            }
 
-        if (is_callable($item['active'])) {
-            $item['active'] = call_user_func($item['active']);
-        }
+            if (is_array($item['active'])) {
+                $routes = $item['active'];
+                $request = Yii::$app->getRequest();
+                $item['active'] = false;
 
-        if (is_array($item['active'])) {
-            $routes = $item['active'];
-            $request = Yii::$app->getRequest();
-            $item['active'] = false;
-
-            foreach ($routes as $route => $params) {
-                if (is_int($route)) {
-                    $route = is_array($params) ? array_shift($params) : $params;
-                }
-
-                $shouldSkip = ($route[0] == '!');
-
-                if ($shouldSkip) {
-                    $route = substr((string)$route, 1);
-                }
-
-                if (preg_match("~$route~", (string)Yii::$app->controller->route)) {
-                    if (is_array($params)) {
-                        foreach ($params as $key => $value) {
-                            if ((is_int($key) && !in_array($value, array_keys($request->get())))
-                                || (is_string($key) && $request->get($key) != $value)) {
-                                continue 2;
-                            }
-                        }
+                foreach ($routes as $route => $params) {
+                    if (is_int($route)) {
+                        $route = is_array($params) ? array_shift($params) : $params;
                     }
+
+                    $shouldSkip = ($route[0] == '!');
 
                     if ($shouldSkip) {
-                        return false;
+                        $route = substr((string)$route, 1);
                     }
 
-                    $this->_hasActiveItem = true;
-                    return true;
+                    if (preg_match("~$route~", (string)Yii::$app->controller->route)) {
+                        if (is_array($params)) {
+                            foreach ($params as $key => $value) {
+                                if ((is_int($key) && !in_array($value, array_keys($request->get())))
+                                    || (is_string($key) && $request->get($key) != $value)) {
+                                    continue 2;
+                                }
+                            }
+                        }
+
+                        if ($shouldSkip) {
+                            return false;
+                        }
+
+                        return $this->_hasActiveItem = true;
+                    }
+                }
+            }
+
+            if ($item['active']) {
+                return $this->_hasActiveItem = true;
+            }
+        }
+
+        if (isset($item['url'][0]) && is_array($item['url'])) {
+            return $this->_hasActiveItem = $this->compareRoute($item['url']);
+        }
+
+        return false;
+    }
+
+    protected function compareRoute(array $params): bool
+    {
+        $route = $params[0];
+
+        if (!str_starts_with($route, '/')) {
+            $route = Yii::$app->controller->module->getUniqueId() . '/' . $route;
+        }
+
+        if (ltrim($route, '/') !== $this->route) {
+            return false;
+        }
+
+        unset($params['#']);
+
+        if (count($params) > 1) {
+            unset($params[0]);
+
+            foreach ($params as $name => $value) {
+                if ($value !== null && (!isset($this->params[$name]) || $this->params[$name] != $value)) {
+                    return false;
                 }
             }
         }
 
-        $this->_hasActiveItem = parent::isItemActive($item);
-        return $this->_hasActiveItem;
+        return true;
     }
 }
