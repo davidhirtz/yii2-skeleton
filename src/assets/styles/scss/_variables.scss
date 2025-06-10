@@ -85,7 +85,7 @@ $container-padding-x: $spacer !default;
 $container-padding-y: 0 !default;
 
 $container-centered-max-width: 28rem !default;
-$container-centered-padding-x: 0;
+$container-centered-padding-x: $container-padding-x;
 $container-centered-padding-y: 10vh !default;
 
 
@@ -166,7 +166,7 @@ $breadcrumb-gap-x: 0.5em !default;
 $breadcrumb-item-max-width: 30em !default;
 $breadcrumb-item-min-width: 10em !default;
 $breadcrumb-line-height: $line-height-sm !default;
-$breadcrumb-margin: 0 0 $margin-y !default;
+$breadcrumb-margin: 0 !default;
 $breadcrumb-padding-x: 0 !default;
 $breadcrumb-padding-y: 0 !default;
 

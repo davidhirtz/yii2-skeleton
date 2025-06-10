@@ -12,7 +12,7 @@ use yii\validators\StringValidator;
 /**
  * @property ActiveForm $form
  */
-class ActiveField extends \yii\bootstrap5\ActiveField
+class ActiveField extends \davidhirtz\yii2\skeleton\widgets\forms\ActiveField
 {
     /**
      * @var array|null containing a custom list of languages used for i18n-aware attributes.
@@ -51,15 +51,6 @@ class ActiveField extends \yii\bootstrap5\ActiveField
         $this->checkHorizontalTemplate = $this->checkTemplate;
 
         parent::init();
-    }
-
-    protected function addAriaAttributes(&$options): void
-    {
-        parent::addAriaAttributes($options);
-
-        if (!empty($options['aria-required'])) {
-            $options['required'] ??= true;
-        }
     }
 
     /**
