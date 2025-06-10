@@ -10,7 +10,6 @@ use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\forms\AuthClientSignupForm;
-use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\tests\support\UnitTester;
 use Yii;
 use yii\authclient\BaseClient;
@@ -80,8 +79,7 @@ class AuthClientSignupFormTest extends Unit
 
     public function testAuthClientWithExistingUsername(): void
     {
-        /** @var User $user */
-        $user = $this->tester->grabFixture('user', 'admin');
+        $user = $this->tester->grabUserFixture('admin');
         Yii::$app->getUser()->enableSignup = true;
 
         $form = $this->createAuthClientSignupForm([

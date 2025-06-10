@@ -64,7 +64,7 @@ class LoginCest extends BaseCest
     {
         Yii::$app->getUser()->disableRbacForOwner = false;
 
-        $user = $I->grabFixture('user', 'owner');
+        $user = $I->grabUserFixture();
         $this->assignAdminRole($user['id']);
 
         $this->submitLoginForm($I, 'owner@domain.com', 'password');
@@ -101,7 +101,7 @@ class LoginCest extends BaseCest
     {
         $this->submitLoginForm($I, 'f2a@domain.com', 'password');
 
-        $user = $I->grabFixture('user', 'admin');
+        $user = $I->grabUserFixture('admin');
         $this->assignAdminRole($user['id']);
 
         $validator = Yii::createObject(GoogleAuthenticatorValidator::class);

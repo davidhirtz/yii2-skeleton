@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\tests\support;
 
 use Codeception\Actor;
+use davidhirtz\yii2\skeleton\models\User;
 
 /**
  * Inherited Methods
@@ -24,6 +25,7 @@ use Codeception\Actor;
 class FunctionalTester extends Actor
 {
     use _generated\FunctionalTesterActions;
+    use TesterTrait;
 
     public function seeValidationError(string $message): void
     {

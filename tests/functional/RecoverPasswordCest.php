@@ -57,7 +57,7 @@ class RecoverPasswordCest extends BaseCest
     public function checkPasswordRecoverWithValidEmail(FunctionalTester $I): void
     {
         /** @var User $user */
-        $user = $I->grabFixture('user', 'admin');
+        $user = $I->grabUserFixture('admin');
 
         $I->amOnPage("/{$this->module->alias}/account/recover");
         $this->submitPasswordRecoverForm($I, $user->email);

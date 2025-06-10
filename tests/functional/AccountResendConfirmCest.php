@@ -49,8 +49,7 @@ class AccountResendConfirmCest extends BaseCest
 
     public function checkResendConfirmAsConfirmedUser(FunctionalTester $I): void
     {
-        /** @var User $user */
-        $user = $I->grabFixture('user', 'owner');
+        $user = $I->grabUserFixture();
 
         $I->amOnPage("/{$this->module->alias}/account/resend");
         $this->submitAccountResendConfirmForm($I, $user->email);
@@ -60,8 +59,7 @@ class AccountResendConfirmCest extends BaseCest
 
     public function checkResendConfirmWithValidEmail(FunctionalTester $I): void
     {
-        /** @var User $user */
-        $user = $I->grabFixture('user', 'admin');
+        $user = $I->grabUserFixture('admin');
 
         $I->amOnPage("/{$this->module->alias}/account/resend");
         $this->submitAccountResendConfirmForm($I, $user->email);

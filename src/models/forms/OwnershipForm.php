@@ -34,39 +34,29 @@ class OwnershipForm extends Model
         ];
     }
 
-    public function beforeValidate(): bool
+    protected function validateUser(): void
     {
         $this->user ??= User::find()
             ->andWhereName($this->name)
             ->limit(1)
             ->one();
 
-        return parent::beforeValidate();
-    }
-
-    protected function validateUser(): bool
-    {
         if (!$this->user) {
             $this->addError('name', Yii::t('skeleton', 'The user {name} was not found.', [
                 'name' => $this->name,
             ]));
-            return false;
         }
 
-        if ($this->user->isDisabled()) {
+        if ($this->user?->isDisabled()) {
             $this->addError('name', Yii::t('skeleton', 'This user is currently disabled and thus can not be made website owner!'));
-            return false;
         }
 
-        if ($this->user->isOwner()) {
+        if ($this->user?->isOwner()) {
             $this->addError('name', Yii::t('skeleton', 'This user is already the owner of the website!'));
-            return false;
         }
-
-        return true;
     }
 
-    public function update(): bool|int
+    public function update(): bool
     {
         if ($this->validate()) {
             $owners = User::find()
@@ -80,7 +70,7 @@ class OwnershipForm extends Model
 
             if ($this->user) {
                 $this->user->is_owner = true;
-                return $this->user->update(false);
+                return (bool)$this->user->update(false);
             }
         }
 

@@ -7,7 +7,6 @@ namespace davidhirtz\yii2\skeleton\tests\unit\modules\admin\models\forms;
 use Codeception\Test\Unit;
 use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
 use davidhirtz\yii2\skeleton\models\Trail;
-use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\tests\support\UnitTester;
 use Yii;
@@ -37,8 +36,7 @@ class UserFormTest extends Unit
 
         self::assertEquals($expected, $form->getFirstError('email'));
 
-        /** @var User $admin */
-        $admin = $this->tester->grabFixture('user', 'admin');
+        $admin = $this->tester->grabUserFixture('admin');
         $form->email = $admin->email;
 
         self::assertFalse($form->save());
@@ -77,7 +75,7 @@ class UserFormTest extends Unit
     public function testUpdatePassword(): void
     {
         $form = UserForm::create([
-            'user' => $this->tester->grabFixture('user', 'admin'),
+            'user' => $this->tester->grabUserFixture('admin'),
         ]);
 
         $form->newPassword = 'new_password';
