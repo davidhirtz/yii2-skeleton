@@ -188,8 +188,8 @@ $alert-buttons-gap: .5rem !default;
 
 // Card
 $card-border-radius: $border-radius !default;
-$card-border-width: $border-width !default;
-$card-header-border-bottom: $border-width solid var(--card-border-color, transparent) !default;
+$card-border-width: 0 !default;
+$card-header-border-bottom-width: 0 !default;
 $card-header-padding-x: $spacer-x !default;
 $card-header-padding-y: .75rem !default;
 $card-inner-border-radius: $border-radius !default;

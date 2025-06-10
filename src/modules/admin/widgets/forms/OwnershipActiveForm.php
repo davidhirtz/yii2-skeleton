@@ -20,6 +20,8 @@ class OwnershipActiveForm extends ActiveForm
             Button::danger(Yii::t('skeleton', 'Transfer'))
             ->type('submit')
         ];
+
+        parent::init();
     }
 
     public function renderFields(): void

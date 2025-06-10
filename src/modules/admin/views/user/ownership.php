@@ -9,6 +9,7 @@ declare(strict_types=1);
  */
 
 use davidhirtz\yii2\skeleton\html\Card;
+use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\models\forms\OwnershipForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\ErrorSummary;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\OwnershipActiveForm;
@@ -18,16 +19,17 @@ use davidhirtz\yii2\skeleton\web\View;
 $this->setTitle(Yii::t('skeleton', 'Transfer Ownership'));
 $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
 
-$html = OwnershipActiveForm::widget([
-    'model' => $form,
-]);
 
 echo UserSubmenu::widget();
 
 echo ErrorSummary::forModel($form)
     ->title(Yii::t('skeleton', 'The site ownership could not be transferred'));
 
-echo Card::make()
-    ->danger()
-    ->title($this->title)
-    ->html($html);
+
+echo Container::make()
+    ->html(Card::make()
+        ->danger()
+        ->title($this->title)
+        ->html(OwnershipActiveForm::widget([
+            'model' => $form,
+        ])));
