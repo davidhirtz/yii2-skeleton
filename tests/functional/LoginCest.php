@@ -1,10 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * @noinspection PhpUnused
  */
+
+declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\tests\functional;
 
@@ -68,8 +68,7 @@ class LoginCest extends BaseCest
         $this->assignAdminRole($user['id']);
 
         $this->submitLoginForm($I, 'owner@domain.com', 'password');
-
-        $I->seeLink(Yii::t('skeleton', 'Logout'));
+        $I->seeElement('.navbar-logout');
     }
 
     public function checkLoginAsOwner(FunctionalTester $I): void
@@ -77,8 +76,7 @@ class LoginCest extends BaseCest
         Yii::$app->getUser()->disableRbacForOwner = true;
 
         $this->submitLoginForm($I, 'owner@domain.com', 'password');
-
-        $I->seeLink(Yii::t('skeleton', 'Logout'));
+        $I->seeElement('.navbar-logout');
     }
 
     public function checkTwoFactorLoginWithEmptyCredentials(FunctionalTester $I): void
@@ -108,7 +106,7 @@ class LoginCest extends BaseCest
         $auth = new TwoFactorAuth(null, $validator->length, $validator->period);
 
         $this->submitGoogleAuthenticatorForm($I, $auth->getCode($user['google_2fa_secret']));
-        $I->seeLink(Yii::t('skeleton', 'Logout'));
+        $I->seeElement('.navbar-logout');
     }
 
     public function checkDisabledLogin(FunctionalTester $I): void

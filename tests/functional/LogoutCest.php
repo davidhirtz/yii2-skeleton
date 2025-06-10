@@ -28,8 +28,7 @@ class LogoutCest extends BaseCest
         /** @var Module $module */
         $module = Yii::$app->getModule('admin');
         $I->amOnPage("/$module->alias");
-
-        $I->seeLink('Logout');
+        $I->seeElement('.navbar-logout');
 
         $I->sendAjaxPostRequest("/$module->alias/account/logout", [
             '_csrf' => Yii::$app->getRequest()->getCsrfToken(),
