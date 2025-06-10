@@ -14,6 +14,7 @@
 }
 
 .card-header {
+  --btn-color: var(--card-header-color);
   padding: $card-header-padding-y $card-header-padding-x;
   color: var(--card-header-color);
   background: var(--card-header-bg);

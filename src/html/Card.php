@@ -16,7 +16,7 @@ class Card extends Tag
         'class' => 'card',
     ];
 
-    protected ?bool $collapse = null;
+    protected ?bool $collapsed = null;
     protected ?string $title = null;
 
     public function danger(): static
@@ -30,18 +30,18 @@ class Card extends Tag
         return $this;
     }
 
-    public function collapse(?bool $collapse): static
+    public function collapsed(?bool $collapsed): static
     {
-        $this->collapse = $collapse;
+        $this->collapsed = $collapsed;
         return $this;
     }
 
     protected function prepareAttributes(): void
     {
-        if ($this->collapse !== null) {
-            $this->attribute('aria-expanded', $this->collapse);
+        if ($this->collapsed !== null) {
+            $this->attribute('aria-expanded', $this->collapsed);
 
-            if ($this->collapse) {
+            if ($this->collapsed) {
                 $this->addClass('collapsed');
             }
 
@@ -58,7 +58,7 @@ class Card extends Tag
         if ($this->title) {
             $header = [];
 
-            if ($this->collapse !== null) {
+            if ($this->collapsed !== null) {
                 $header[] = Button::make()
                     ->attribute('data-collapse', '#' . $this->getId())
                     ->class('btn btn-link')
@@ -66,16 +66,23 @@ class Card extends Tag
 
                 $header[] = Button::make()
                     ->attribute('aria-label', Yii::t('skeleton', 'Toggle'))
-                    ->attribute('data-collapse', $this->getId())
-                    ->class('btn-collapse');
+                    ->attribute('data-collapse', '#' . $this->getId())
+                    ->class('btn-collapse', 'btn-icon')
+                    ->icon('chevron-down');
             } else {
                 $header[] = $this->title;
             }
 
-            $content[] = '<div class="card-header"><div class="card-title">' . implode('', $header) . '</div></div>';
+            $content[] = Div::make()
+                ->class('card-header')
+                ->html(Div::make()
+                    ->class('card-title')
+                    ->html(...$header));
         }
 
-        $content[] = '<div class="card-body">' . implode('', $this->content) . '</div>';
+        $content[] = Div::make()
+            ->class('card-body')
+            ->html(...$this->content);
 
         return implode('', $content);
     }

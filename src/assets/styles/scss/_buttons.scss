@@ -125,6 +125,14 @@
   }
 }
 
+.btn-collapse {
+  transition: rotate 0.2s;
+
+  .collapsed & {
+    rotate: -90deg;
+  }
+}
+
 .btn-sm {
   border-radius: $btn-border-radius-sm;
   font-size: $btn-font-size-sm;

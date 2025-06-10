@@ -35,7 +35,7 @@ class Panel extends Widget
         $card = Card::make()
             ->title($this->title)
             ->html($this->content)
-            ->collapse($this->collapse);
+            ->collapsed($this->collapse);
 
         if ($this->type === self::TYPE_DANGER) {
             $card->danger();
