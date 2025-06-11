@@ -21,5 +21,4 @@ class ActiveForm extends \yii\widgets\ActiveForm
         ],
     ];
     public string $layout = 'horizontal';
-    public $options = ['class' => 'wrap'];
 }

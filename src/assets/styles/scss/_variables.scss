@@ -45,7 +45,6 @@ $headings-font-family: null !default;
 $headings-font-style: null !default;
 $headings-font-weight: $font-weight-base !default;
 $headings-line-height: 1.2 !default;
-$headings-color: inherit !default;
 
 $paragraph-margin-bottom: 1rem !default;
 $dt-font-weight: $font-weight-bold !default;
@@ -55,19 +54,11 @@ $lead-font-weight: 300 !default;
 $sub-sup-font-size: .75em !default;
 
 // Links
-$link-color: var(--color-black) !default;
-$link-hover-color: var(--link-hover-color) !default;
 $link-decoration: none !default;
-//$link-shade-percentage:                   20% !default;
-//$link-hover-color:                        shift-color($link-color, $link-shade-percentage) !default;
 $link-hover-decoration: null !default;
 $stretched-link-pseudo-element: after !default;
 $stretched-link-z-index: 1 !default;
 
-$text-muted: var(--tertiary-color) !default;
-
-$mark-bg: var(--highlight-bg) !default;
-$mark-color: var(--highlight-color) !default;
 $mark-padding: 0 !default;
 
 $spacer: 1rem !default;
@@ -89,7 +80,6 @@ $container-centered-padding-x: $container-padding-x;
 $container-centered-padding-y: 0 !default;
 $container-centered-gap: $spacer !default;
 
-
 $border-width: 1px !default;
 $border-radius: 0.25rem !default;
 
@@ -99,7 +89,6 @@ $caret-vertical-align: $caret-width * .85 !default;
 
 $hr-margin-y: $spacer !default;
 $hr-border-width: $border-width;
-$hr-color: var(--border-color) !default;
 $hr-opacity: 1;
 
 $legend-margin-bottom: .5rem !default;
@@ -337,7 +326,6 @@ $form-file-button-hover-bg: var(--secondary-bg) !default;
 
 
 // List group
-$list-group-border-color: transparent !default;
 $list-group-border-radius: $border-radius !default;
 $list-group-border-width: $border-width !default;
 $list-group-font-size: null !default;
@@ -435,7 +423,6 @@ $modal-header-padding-y: $spacer !default;
 $modal-title-font-weight: $font-weight-medium !default;
 $modal-title-line-height: $line-height-base !default;
 
-$modal-content-border-color: var(--border-color) !default;
 $modal-content-border-radius: $border-radius !default;
 $modal-content-border-width: 0 !default;
 $modal-content-inner-border-radius: subtract($modal-content-border-radius, $modal-content-border-width) !default;
