@@ -8,6 +8,14 @@ class Ul extends Tag
 {
     private array $items = [];
 
+    public static function tag(array $items, array $attributes = []): string
+    {
+        return static::make()
+            ->attributes($attributes)
+            ->items($items)
+            ->render();
+    }
+
     public function addItem(string $html, array $attributes = []): static
     {
         $this->items[] = Li::make()

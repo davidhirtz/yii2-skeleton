@@ -18,11 +18,11 @@ abstract class AbstractAssetBundle extends AssetBundle
         return $this->baseUrl . '/js/' . $this->filename;
     }
 
-    public static function registerModule(string|array|null $options = null): static
+    public static function registerModule(string|array|null $arguments = null): static
     {
         $view = Yii::$app->getView();
         $asset = static::register($view);
-        $view->registerJsModule($asset->getModuleUrl(), $options);
+        $view->registerJsModule($asset->getModuleUrl(), $arguments);
 
         return $asset;
     }

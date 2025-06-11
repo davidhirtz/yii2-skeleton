@@ -58,6 +58,7 @@ class SignupActiveForm extends ActiveForm
     {
         return $this->field($this->model, 'password', ['icon' => 'key'])->passwordInput([
             'autocomplete' => 'new-password',
+            'minlength' => $this->model->user->passwordMinLength,
         ]);
     }
 

@@ -10,6 +10,14 @@ class Div extends Tag
 {
     use TagContentTrait;
 
+    public static function tag(string $html, array $attributes = []): string
+    {
+        return static::make()
+            ->attributes($attributes)
+            ->html($html)
+            ->render();
+    }
+
     protected function getName(): string
     {
         return 'div';

@@ -86,7 +86,8 @@ $container-padding-y: 0 !default;
 
 $container-centered-max-width: 28rem !default;
 $container-centered-padding-x: $container-padding-x;
-$container-centered-padding-y: 10vh !default;
+$container-centered-padding-y: 0 !default;
+$container-centered-gap: $spacer !default;
 
 
 $border-width: 1px !default;
@@ -107,6 +108,10 @@ $legend-font-weight: null !default;
 
 // Layout
 $html-scroll-padding: 4rem !default;
+$body-font-family: $font-family-sans-serif !default;
+$body-font-size: $font-size-sm !default;
+$body-line-height: $line-height-sm !default;
+$body-font-weight: $font-weight-normal !default;
 $body-text-align: null !default;
 $main-padding-x: 0 !default;
 $main-padding-y: 1rem !default;
@@ -132,10 +137,10 @@ $alert-ul-list-style-type: square !default;
 // Nav
 $nav-link-disabled-opacity: .5 !default;
 $nav-link-focus-box-shadow: none !default;
-$nav-link-font-size: $font-size-sm !default;
-$nav-link-line-height: $line-height-sm !default;
+$nav-link-font-size: null !default;
 $nav-link-font-weight: null !default;
 $nav-link-height: 3rem !default;
+$nav-link-line-height: null !default;
 $nav-link-min-width: 3rem !default;
 $nav-link-padding: 0 1rem !default;
 $nav-link-transition: color .15s, background-color .15s, border-color .15s !default;
@@ -160,12 +165,12 @@ $navbar-toggler-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/s
 $breadcrumb-border-radius: $border-radius !default;
 $breadcrumb-divider-color: var(--breadcrumb-divider-color) !default;
 $breadcrumb-divider: quote("/") !default;
-$breadcrumb-font-size: $font-size-sm !default;
+$breadcrumb-font-size: null !default;
 $breadcrumb-font-weight: normal !default;
 $breadcrumb-gap-x: 0.5em !default;
 $breadcrumb-item-max-width: 30em !default;
 $breadcrumb-item-min-width: 10em !default;
-$breadcrumb-line-height: $line-height-sm !default;
+$breadcrumb-line-height: null !default;
 $breadcrumb-margin: 0 !default;
 $breadcrumb-padding-x: 0 !default;
 $breadcrumb-padding-y: 0 !default;
@@ -203,8 +208,8 @@ $card-title-font-weight: 500 !default;
 
 // Grid
 
-$grid-view-font-size: $font-size-sm !default;
-$grid-view-line-height: $line-height-sm !default;
+$grid-view-font-size: null !default;
+$grid-view-line-height: null !default;
 $grid-view-header-border: none !default;
 $grid-view-spacer: $grid-spacer !default;
 $grid-view-footer-margin-top: -1px !default;
@@ -236,7 +241,7 @@ $btn-padding-x: $form-padding-x !default;
 $btn-padding-y: $form-padding-y !default;
 $btn-font-family: null !default;
 $btn-font-size: $font-size-sm !default;
-$btn-line-height: $line-height-sm !default;
+$btn-line-height: null !default;
 $btn-font-weight: $font-weight-medium !default;
 $btn-white-space: null !default;
 
@@ -321,8 +326,8 @@ $select-focus-border-color: $input-focus-border-color !default;
 $select-focus-box-shadow: none !default;
 $select-focus-width: $input-focus-width !default;
 
-$form-label-font-size: $font-size-sm !default;
-$form-label-line-height: $line-height-sm !default;
+$form-label-font-size: null !default;
+$form-label-line-height: null !default;
 $form-label-font-style: null !default;
 $form-label-color: var(--color-black) !default;
 $form-label-font-weight: $font-weight-medium !default;
@@ -331,7 +336,7 @@ $form-label-padding-x: 0 !default;
 
 // Checkbox
 $checkbox-label-cursor: null !default;
-$checkbox-label-font-size: $font-size-sm !default;
+$checkbox-label-font-size: null !default;
 $checkbox-label-line-height: $line-height-sm !default;
 $checkbox-transition: null !default;
 
@@ -361,7 +366,7 @@ $form-file-button-hover-bg: var(--secondary-bg) !default;
 $list-group-border-color: transparent !default;
 $list-group-border-radius: $border-radius !default;
 $list-group-border-width: $border-width !default;
-$list-group-font-size: $font-size-sm !default;
+$list-group-font-size: null !default;
 $list-group-font-weight: $font-weight-medium !default;
 $list-group-line-height: $line-height-sm !default;
 
@@ -421,9 +426,9 @@ $dropdown-border-width: $border-width !default;
 $dropdown-button-active-font-weight: 500 !default;
 $dropdown-divider-border-width: $border-width !default;
 $dropdown-divider-margin-y: 0 !default;
-$dropdown-font-size: $font-size-sm !default;
+$dropdown-font-size: null !default;
 $dropdown-inner-border-radius: $border-radius !default;
-$dropdown-line-height: $line-height-sm !default;
+$dropdown-line-height: null !default;
 $dropdown-max-height: 50vh !default;
 $dropdown-min-width: 12rem !default;
 $dropdown-padding-x: 0 !default;

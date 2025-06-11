@@ -14,8 +14,8 @@ class SignupForm extends AbstractSignupForm
 
     final public const string SESSION_TOKEN_NAME = 'signup_token';
     final public const string SESSION_TIMESTAMP_NAME = 'signup_timestamp';
-    public const SESSION_TOKEN_MIN_TIME = 5;
-    public const SESSION_TOKEN_MAX_TIME = 1800;
+    public const int SESSION_TOKEN_MIN_TIME = 5;
+    public const int SESSION_TOKEN_MAX_TIME = 1800;
 
     public ?string $timezone = null;
 

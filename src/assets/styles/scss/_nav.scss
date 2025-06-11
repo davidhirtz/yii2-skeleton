@@ -5,22 +5,22 @@
   flex-wrap: wrap;
   list-style: none;
   padding: 0;
-  @include font-size($nav-link-font-size);
-  line-height: $nav-link-line-height;
 }
 
 .nav-link {
-  display: flex;
+  @include transition($nav-link-transition);
   align-items: center;
-  padding: $nav-link-padding;
-  min-width: $nav-link-min-width;
-  font-weight: $nav-link-font-weight;
-  color: var(--nav-link-color);
-  height: $nav-link-height;
-  text-decoration: none;
   background: var(--nav-link-bg, transparent);
   border: 0;
-  @include transition($nav-link-transition);
+  color: var(--nav-link-color);
+  display: flex;
+  font-size: $nav-link-font-size;
+  font-weight: $nav-link-font-weight;
+  height: $nav-link-height;
+  line-height: $nav-link-line-height;
+  min-width: $nav-link-min-width;
+  padding: $nav-link-padding;
+  text-decoration: none;
 
   &:hover,
   &:focus {

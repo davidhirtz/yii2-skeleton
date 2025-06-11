@@ -14,9 +14,11 @@
 }
 
 .container-centered {
+  flex-direction: column;
+  justify-content: center;
+  display: flex;
+  flex-grow: 1;
+  gap: $container-centered-gap;
   max-width: $container-centered-max-width;
-
-  @include media-breakpoint-up(sm) {
-    padding: $container-centered-padding-y $container-centered-padding-x;
-  }
+  padding: $container-centered-padding-y $container-centered-padding-x;
 }
