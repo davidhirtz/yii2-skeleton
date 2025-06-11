@@ -2,8 +2,8 @@
 
 .is-invalid,
 .form-group:has(.is-invalid,:user-invalid), {
-  --input-bg: #{$form-invalid-bg};
-  --input-border: #{$form-invalid-border-color};
+  --input-bg-color: #{$form-invalid-bg};
+  --input-border-color: #{$form-invalid-border-color};
   --input-color: #{$form-invalid-color};
 }
 

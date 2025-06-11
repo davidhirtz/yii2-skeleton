@@ -279,9 +279,18 @@
   --form-invalid-border: var(--danger-border);
   --form-invalid-color: var(--danger-color);
 
-  --input-bg: var(--color-white);
-  --input-border: var(--border-color);
+  --input-bg-color: var(--color-white);
+  --input-border-color: var(--border-color);
   --input-color: var(--color-black);
+  --input-focus-bg-color: var(--light);
+  --input-focus-border-color: var(--color-black);
+  --input-focus-color: var(--color-black);
+
+  --input-disabled-bg-color: var(--color-gray-100);
+  --input-disabled-border-color: var(--border-color);
+  --input-disabled-color: var(--color-gray-700);
+
+  --input-group-bg: var(--input-bg-color);
 
   --select-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#ddd' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
   --select-hover-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};

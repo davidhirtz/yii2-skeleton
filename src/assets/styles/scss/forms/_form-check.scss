@@ -12,7 +12,7 @@
   aspect-ratio: 1;
   appearance: none;
   background-size: contain;
-  border: $checkbox-border-width solid var(--input-border);
+  border: $checkbox-border-width solid var(--input-border-color);
   print-color-adjust: exact; // Keep themed appearance for print
   @include transition($checkbox-transition);
 
@@ -35,12 +35,12 @@
 
   &:checked {
     &[type="checkbox"] {
-      --input-border: var(--checkbox-checked-border, inherit);
+      --input-border-color: var(--checkbox-checked-border, inherit);
       --checkbox-bg: var(--checkbox-checked-bg);
     }
 
     &[type="radio"] {
-      --input-border: var(--radio-checked-border, inherit);
+      --input-border-color: var(--radio-checked-border, inherit);
       --radio-bg: var(--radio-checked-bg);
     }
   }

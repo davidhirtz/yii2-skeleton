@@ -1,37 +1,31 @@
-//@import "../../../../../node_modules/bootstrap/scss/forms/form-select";
-
-// Select
-//
-// Replaces the browser default select with a custom one, mostly pulled from
-// https://primer.github.io/.
-
 .form-select {
   display: block;
   width: 100%;
   padding: $select-padding-y $select-indicator-padding $select-padding-y $select-padding-x;
   font-family: $select-font-family;
-  @include font-size($select-font-size);
+  font-size:$select-font-size;
   font-weight: $select-font-weight;
   line-height: $select-line-height;
-  color: $select-color;
+  color: var(--input-color);
   appearance: none;
-  background-color: $select-bg-color;
+  background-color: var(--input-bg-color);
   background-image: var(--select-bg);
   background-repeat: no-repeat;
   background-position: $select-bg-position;
   background-size: $select-bg-size;
-  border: $select-border-width solid $select-border-color;
+  border: $select-border-width solid var(--input-border-color);
   @include border-radius($select-border-radius, 0);
   @include box-shadow($select-box-shadow);
   @include transition($select-transition);
 
   &:not(.is-invalid,:user-invalid,:disabled):hover,
   &:not(.is-invalid,:user-invalid):focus {
-    --input-bg: #{$input-focus-bg};
-    --input-border: #{$input-focus-border-color};
-    --input-color: #{$input-focus-color};
+    --input-bg-color: var(--input-focus-bg-color);
+    --input-border-color: var(--input-focus-border-color);
+    --input-color: var(--input-focus-color);
     --select-bg: var(--select-hover-bg);
     outline: 0;
+
     @if $enable-shadows {
       @include box-shadow($select-box-shadow, $select-focus-box-shadow);
     } @else {
@@ -47,14 +41,14 @@
   }
 
   &:disabled {
-    color: $select-disabled-color;
-    background-color: $select-disabled-bg;
-    border-color: $select-disabled-border-color;
+    color: var(--input-disabled-color);
+    background-color: var(--input-disabled-bg-color);
+    border-color: var(--input-disabled-border-color);
   }
 
   // Remove outline from select box in FF
   &:-moz-focusring {
     color: transparent;
-    text-shadow: 0 0 0 $select-color;
+    text-shadow: 0 0 0 var(--input-color);
   }
 }

@@ -12,21 +12,8 @@ body {
   font-weight: $input-font-weight;
   line-height: $input-line-height;
   color: var(--input-color);
-  background-color: var(--input-bg);
+  background-color: var(--input-bg-color);
   margin: 0;
-
-  &:focus {
-    color: $input-focus-color;
-    background-color: $input-focus-bg;
-  }
-
-  & > *:first-child {
-    margin-top: 0 !important;
-  }
-
-  & > *:last-child {
-    margin-bottom: 0 !important;
-  }
 }
 
 h1, h2, h3, h4, h5, h6 {

@@ -259,9 +259,7 @@ $btn-disabled-opacity: .5 !default;
 $btn-toolbar-gap: .5rem !default;
 
 // Inputs
-$input-bg-color: var(--input-bg) !default;
-$input-bg: var(--input-bg) !default;
-$input-border-color: var(--input-border) !default;
+$input-border-color: var(--input-border-color) !default;
 $input-border-radius: $border-radius !default;
 $input-border-width: $border-width !default;
 $input-box-shadow: none !default;
@@ -275,35 +273,22 @@ $input-padding-x: var(--form-padding-x) !default;
 $input-padding-y: var(--form-padding-y) !default;
 $input-transition: border-color .15s ease-in-out, color .15s ease-in-out !default;
 
-$input-disabled-bg: var(--light) !default;
-$input-disabled-border-color: null !default;
-$input-disabled-color: null !default;
-
-$input-focus-bg: var(--light) !default;
-$input-focus-border-color: var(--primary) !default;
 $input-focus-box-shadow: none !default;
-$input-focus-color: var(--color-black) !default;
 $input-focus-width: .25rem !default;
 
 $input-placeholder-color: var(--color-black) !default;
 $input-placeholder-opacity: 0.6 !default;
 $input-plaintext-color: var(--color-black) !default;
 
-$input-group-addon-bg: var(--light) !default;
-$input-group-addon-border-color: $input-border-color !default;
-$input-group-addon-color: var(--color-black) !default;
 $input-group-addon-font-weight: $input-font-weight !default;
 $input-group-addon-padding-x: $input-padding-x !default;
 $input-group-addon-padding-y: $input-padding-y !default;
 
-$select-bg-color: $input-bg !default;
 $select-bg-position: right $input-padding-x center !default;
 $select-bg-size: 16px 12px !default;
-$select-border-color: $input-border-color !default;
 $select-border-radius: $input-border-radius !default;
 $select-border-width: $input-border-width !default;
-$select-box-shadow: var(--box-shadow-inset) !default;
-$select-color: $input-color !default;
+$select-box-shadow: null !default;
 $select-font-family: $input-font-family !default;
 $select-font-size: $input-font-size !default;
 $select-font-weight: $input-font-weight !default;
@@ -312,10 +297,6 @@ $select-line-height: $input-line-height !default;
 $select-padding-x: $input-padding-x !default;
 $select-padding-y: $input-padding-y !default;
 $select-transition: $input-transition !default;
-
-$select-disabled-color: null !default;
-$select-disabled-bg: $input-disabled-bg !default;
-$select-disabled-border-color: $input-disabled-border-color !default;
 
 $select-focus-box-shadow: none !default;
 

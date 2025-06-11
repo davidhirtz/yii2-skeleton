@@ -35,9 +35,9 @@
 
   &:not(:has(.is-invalid,:user-invalid)):focus-within,
   &:not(:has(.is-invalid,:user-invalid)):hover {
-    --input-bg: #{$input-focus-bg};
-    --input-border: #{$input-focus-border-color};
-    --input-color: #{$input-focus-color};
+    --input-bg-color: var(--input-focus-bg-color);
+    --input-border-color: var(--input-focus-border-color);
+    --input-color: var(--input-focus-color);
   }
 }
 
@@ -45,14 +45,14 @@
   display: flex;
   align-items: center;
   padding: $input-group-addon-padding-y $input-group-addon-padding-x;
-  @include font-size($input-font-size);
+  font-size:$input-font-size;
   font-weight: $input-group-addon-font-weight;
   line-height: $input-line-height;
-  color: $input-group-addon-color;
+  color: var(--input-color);
   text-align: center;
   white-space: nowrap;
-  background-color: $input-group-addon-bg;
-  border: $input-border-width solid $input-border-color;
+  background: var(--input-group-bg);
+  border: $input-border-width solid var(--input-border-color);
   @include border-radius($input-border-radius);
 
   @include transition($input-transition);
