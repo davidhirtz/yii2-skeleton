@@ -16,7 +16,7 @@
   color: $select-color;
   appearance: none;
   background-color: $select-bg-color;
-  background-image: $select-bg-image;
+  background-image: var(--select-bg);
   background-repeat: no-repeat;
   background-position: $select-bg-position;
   background-size: $select-bg-size;
@@ -30,7 +30,7 @@
     --input-bg: #{$input-focus-bg};
     --input-border: #{$input-focus-border-color};
     --input-color: #{$input-focus-color};
-    background-image: $select-focus-bg-image;
+    --select-bg: var(--select-hover-bg);
     outline: 0;
     @if $enable-shadows {
       @include box-shadow($select-box-shadow, $select-focus-box-shadow);

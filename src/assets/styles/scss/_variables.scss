@@ -120,10 +120,6 @@ $main-gap-y: $spacer !default;
 $component-active-bg: var(--light-bg) !default;
 $component-active-color: var(--color-white) !default;
 
-// Mixins
-$arrow-down-bg-image: var(--arrow-down-bg) !default;
-$arrow-down-active-bg-image: var(--arrow-down-active-bg) !default;
-
 // Alert
 $alert-padding-y: $spacer !default;
 $alert-padding-x: $spacer !default;
@@ -221,8 +217,9 @@ $form-padding-y: 0.5625rem !default;
 $form-padding-y-sm: 0.4375rem !default;
 $form-font-size: $font-size-sm !default;
 $form-line-height: $line-height-sm !default;
+
 $form-sticky-position: sticky !default;
-$form-sticky-border: $border-width solid var(--border-color) !default;
+$form-sticky-border-width: $border-width !default;
 
 $form-group-gap: .5rem !default;
 $form-group-spacer: $spacer !default;
@@ -300,7 +297,6 @@ $input-group-addon-padding-x: $input-padding-x !default;
 $input-group-addon-padding-y: $input-padding-y !default;
 
 $select-bg-color: $input-bg !default;
-$select-bg-image: $arrow-down-bg-image !default;
 $select-bg-position: right $input-padding-x center !default;
 $select-bg-size: 16px 12px !default;
 $select-border-color: $input-border-color !default;
@@ -321,10 +317,7 @@ $select-disabled-color: null !default;
 $select-disabled-bg: $input-disabled-bg !default;
 $select-disabled-border-color: $input-disabled-border-color !default;
 
-$select-focus-bg-image: $arrow-down-active-bg-image !default;
-$select-focus-border-color: $input-focus-border-color !default;
 $select-focus-box-shadow: none !default;
-$select-focus-width: $input-focus-width !default;
 
 $form-label-font-size: null !default;
 $form-label-line-height: null !default;

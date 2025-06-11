@@ -24,7 +24,7 @@
   margin-top: $form-group-spacer;
   padding: $form-group-spacer 0;
   bottom: 0;
-  border-top: $form-sticky-border;
+  border-top: $form-sticky-border-width solid var(--form-sticky-border-color);
   background: var(--card-bg);
   z-index: 2;
 }

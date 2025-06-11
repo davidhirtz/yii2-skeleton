@@ -169,10 +169,6 @@
   --highlight-color: var(--color-black);
   --muted-color: var(--color-gray-500);
 
-  --arrow-down-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#ddd' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
-  --arrow-down-active-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
-  --close-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 2 12 12M14 2 2 14'/></svg>"))};
-
   // Text
   --text-h1: 1.5rem;
   --text-h2: 1.125rem;
@@ -277,6 +273,7 @@
   --form-padding-y: #{$form-padding-y};
   --form-font-size: #{$form-font-size};
   --form-line-height: #{$form-line-height};
+  --form-sticky-border-color: var(--color-gray-700);
 
   --form-invalid-bg: var(--color-white);
   --form-invalid-border: var(--danger-border);
@@ -285,6 +282,9 @@
   --input-bg: var(--color-white);
   --input-border: var(--border-color);
   --input-color: var(--color-black);
+
+  --select-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#ddd' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
+  --select-hover-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"))};
 
   --checkbox-bg: var(--color-white);
   --checkbox-checked-bg: var(--color-white) #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#000' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/></svg>"))} no-repeat center;
