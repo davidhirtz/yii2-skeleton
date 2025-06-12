@@ -1,3 +1,7 @@
+## 2.5.2 (Jun 12, 2025)
+
+- Fixed `AjaxRouteTrait`
+- 
 ## 2.5.1 (Jun 5, 2025)
 
 - Enhanced `StreamUploadedFile` to also set file name from URL on error
