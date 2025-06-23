@@ -5,41 +5,40 @@
   margin: $pagination-margin;
   padding: $pagination-padding;
   justify-content: $pagination-justify-content;
-  border-top: $pagination-border-top;
+  gap: $pagination-gap;
 
   @include list-unstyled();
 }
 
 .page-link {
-  position: relative;
   display: block;
-  padding: $pagination-padding-y $pagination-padding-x;
-  @include font-size($pagination-font-size);
-  color: $pagination-color;
-  background-color: $pagination-bg;
-  border: $pagination-border-width solid $pagination-border-color;
-  @include transition($pagination-transition);
+  padding: $page-link-padding-y $page-link-padding-x;
+  font-size: $page-link-font-size;
+  color: var(--page-link-color);
+  background: var(--page-link-bg);
+  border: $page-link-border-width solid var(--page-link-border-color);
+  border-radius: $page-link-border-radius;
+  line-height: $page-link-line-height;
+  @include transition($page-link-transition);
 
   &:hover,
   &:focus {
-    color: $pagination-hover-color;
-    text-decoration: if($link-hover-decoration == underline, none, null);
-    background-color: $pagination-hover-bg;
-    border-color: $pagination-hover-border-color;
-    z-index: 2;
+    color: var(--page-link-hover-color);
+    background-color: var(--page-link-hover-bg);
+    border-color: var(--page-link-hover-border-color);
   }
 
   &.active,
   .active > & {
-    color: $pagination-active-color;
-    background-color: $pagination-active-bg;
-    border-color: $pagination-active-border-color;
+    color: var(--page-link-active-color);
+    background-color: var(--page-link-active-bg);
+    border-color: var(--page-link-active-border-color);
     z-index: 3;
   }
 
   &.disabled,
   .disabled > & {
-    color: $pagination-disabled-opacity;
+    opacity: $page-link-disabled-opacity;
     pointer-events: none;
   }
 }
@@ -48,29 +47,6 @@
   @include media-breakpoint-down(sm) {
     &:not(.active,.prev,.next) {
       display: none;
-    }
-  }
-
-  &:not(:first-child) .page-link {
-    margin-left: $pagination-margin-start;
-  }
-
-  @if $pagination-margin-start == calc(#{$pagination-border-width} * -1) {
-    &:first-child {
-      .page-link {
-        @include border-start-radius($pagination-border-radius);
-      }
-    }
-
-    &:last-child {
-      .page-link {
-        @include border-end-radius($pagination-border-radius);
-      }
-    }
-  } @else {
-    // Add border-radius to all pageLinks in case they have left margin
-    .page-link {
-      @include border-radius($pagination-border-radius);
     }
   }
 }

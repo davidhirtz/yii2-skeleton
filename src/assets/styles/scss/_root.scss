@@ -335,6 +335,17 @@
   --navbar-link-hover-bg: var(--color-gray-800);
   --navbar-link-hover-color: var(--color-white);
 
+  // Pagination
+  --page-link-bg: var(--color-gray-100);
+  --page-link-border-color: var(--color-gray-100);
+  --page-link-color: var(--color-black);
+  --page-link-hover-bg: var(--color-gray-200);
+  --page-link-hover-border-color: var(--color-gray-200);
+  --page-link-hover-color: var(--color-black);
+  --page-link-active-bg: var(--color-gray-700);
+  --page-link-active-border-color: var(--color-gray-700);
+  --page-link-active-color: var(--color-white);
+
   // Submenu
   --submenu-border-color: var(--color-gray-700);
 

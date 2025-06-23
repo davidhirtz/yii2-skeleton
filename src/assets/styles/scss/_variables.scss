@@ -350,37 +350,19 @@ $table-th-active-text-decoration: underline !default;
 $table-border-radius: $border-radius !default;
 
 // Pagination
+$pagination-gap: 0.5rem !default;
 $pagination-justify-content: center !default;
 $pagination-margin: $spacer 0 !default;
 $pagination-padding: 0 !default;
-$pagination-border-top: 0 !default;
 
-$pagination-padding-y: 0.59375rem !default;
-$pagination-padding-x: 1rem !default;
-
-$pagination-border-color: var(--border-color) !default;
-
-$pagination-active-color: var(--color-white) !default;
-$pagination-active-border-color: var(--primary) !default;
-$pagination-active-bg: var(--primary) !default;
-
-$pagination-hover-bg: var(--dark-bg) !default;
-$pagination-hover-border-color: var(--border-color) !default;
-
-$pagination-font-size: $font-size-base !default;
-
-$pagination-color: var(--link-color) !default;
-$pagination-bg: var(--color-white) !default;
-$pagination-border-radius: $border-radius !default;
-$pagination-border-width: $border-width !default;
-$pagination-margin-start: calc(#{$pagination-border-width} * -1) !default; // stylelint-disable-line function-disallowed-list
-
-$pagination-hover-color: var(--link-hover-color) !default;
-$pagination-hover-border-color: var(--border-color) !default; // Todo in v6: remove this?
-
-$pagination-disabled-opacity: .5 !default;
-
-$pagination-transition: color .15s, background-color .15s, border-color .15s !default;
+$page-link-border-radius: $border-radius !default;
+$page-link-border-width: 0 !default;
+$page-link-disabled-opacity: .5 !default;
+$page-link-font-size: $font-size-sm !default;
+$page-link-padding-x: 1rem !default;
+$page-link-line-height: $line-height-sm !default;
+$page-link-padding-y: $btn-padding-y !default;
+$page-link-transition: color .15s, background-color .15s, border-color .15s !default;
 
 // Dropdown
 $dropdown-border-radius: $border-radius !default;
