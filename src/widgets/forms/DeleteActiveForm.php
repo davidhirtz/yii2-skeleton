@@ -64,7 +64,7 @@ class DeleteActiveForm extends ActiveForm
         $this->confirm ??= Yii::t('yii', 'Are you sure you want to delete this item?');
 
         $btn = Button::danger($this->label)
-            ->type('submit');
+            ->type('button');
 
         if ($this->confirm) {
             $modal = Modal::make()

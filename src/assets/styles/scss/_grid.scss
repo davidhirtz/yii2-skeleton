@@ -17,7 +17,7 @@
   font-size: $grid-view-font-size;
   line-height: $grid-view-line-height;
 
-  .alert{
+  .alert:not(:last-child) {
     margin-bottom: $spacer-y;
   }
 }

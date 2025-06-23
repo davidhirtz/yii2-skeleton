@@ -397,12 +397,12 @@ $dropdown-padding-x: 0 !default;
 $dropdown-padding-y: 0 !default;
 
 $dropdown-header-border-width: $border-width !default;
-$dropdown-header-padding-x: 1rem !default;
-$dropdown-header-padding-y: 1rem !default;
+$dropdown-header-padding-x: 0.75rem !default;
+$dropdown-header-padding-y: 0.625rem !default;
 
 $dropdown-item-default-font-weight: $font-weight-medium !default;
-$dropdown-item-padding-x: 1rem !default;
-$dropdown-item-padding-y: 1rem !default;
+$dropdown-item-padding-x: $dropdown-header-padding-x !default;
+$dropdown-item-padding-y: $dropdown-header-padding-y !default;
 
 // Badge
 $badge-font-size: $font-size-xs !default;
