@@ -31,7 +31,7 @@
     outline: 0;
   }
 
-  &.active {
+  &.active, .active > & {
     background: var(--btn-active-bg, transparent);
     border-color: var(--btn-active-border-color, transparent);
     color: var(--btn-active-color, inherit);

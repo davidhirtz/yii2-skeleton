@@ -384,7 +384,7 @@ $pagination-transition: color .15s, background-color .15s, border-color .15s !de
 
 // Dropdown
 $dropdown-border-radius: $border-radius !default;
-$dropdown-border-width: $border-width !default;
+$dropdown-border-width: 0 !default;
 $dropdown-button-active-font-weight: 500 !default;
 $dropdown-divider-border-width: $border-width !default;
 $dropdown-divider-margin-y: 0 !default;
