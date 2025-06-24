@@ -1,3 +1,7 @@
+## 2.5.3 (Jun 24, 2025)
+
+- Updated country names for all supported languages
+
 ## 2.5.2 (Jun 12, 2025)
 
 - Fixed `AjaxRouteTrait`
