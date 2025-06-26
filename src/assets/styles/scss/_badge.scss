@@ -24,3 +24,18 @@ a.badge:hover {
   --badge-bg: var(--badge-active-bg);
   --link-hover-color: var(--badge-active-color);
 }
+
+.badge-info {
+  --badge-bg: var(--badge-info-bg);
+  --badge-color: var(--badge-info-color);
+}
+
+.badge-error {
+  --badge-bg: var(--badge-error-bg);
+  --badge-color: var(--badge-error-color);
+}
+
+.badge-warning {
+  --badge-bg: var(--badge-warning-bg);
+  --badge-color: var(--badge-warning-color);
+}

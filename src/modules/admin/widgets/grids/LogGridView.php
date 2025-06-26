@@ -7,6 +7,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\modules\admin\data\LogDataProvider;
+use Override;
 use Yii;
 
 /**
@@ -20,7 +21,7 @@ class LogGridView extends GridView
         'style' => 'table-layout: fixed;',
     ];
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         if (!$this->columns) {
@@ -51,7 +52,9 @@ class LogGridView extends GridView
         return [
             'label' => Yii::t('skeleton', 'Level'),
             'headerOptions' => ['width' => '100'],
-            'content' => fn ($model) => Html::tag('div', $model['level'], ['class' => $this->getLevelCssClass($model['level'])])
+            'content' => fn ($model) => Html::tag('div', ucfirst($model['level']), [
+                'class' => $this->getLevelCssClass($model['level']),
+            ])
         ];
     }
 
@@ -77,6 +80,6 @@ class LogGridView extends GridView
 
     protected function getLevelCssClass(string $level): string
     {
-        return 'btn btn-sm ' . ($level !== 'error' ? "bg-$level" : 'btn-danger');
+        return "badge badge-$level";
     }
 }

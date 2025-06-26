@@ -112,21 +112,6 @@
   --color-black: #000;
   --color-white: #fff;
 
-  --primary: #000;
-  --primary-bg: #333;
-  --primary-border: #000;
-  --primary-color: #333;
-
-  --secondary: #8386ad;
-  --secondary-bg: #b6b9e0;
-  --secondary-border: #dbdce;
-  --secondary-color: #a4a8d8;
-
-  --tertiary: #c5c5c5;
-  --tertiary-bg: #e4e4e4;
-  --tertiary-border: #f1f1f1;
-  --tertiary-color: #585858;
-
   --body-bg: var(--color-gray-50);
   --body-color: var(--color-black);
   --border-color: var(--color-gray-200);
@@ -174,6 +159,12 @@
   --badge-bg: var(--color-slate-400);
   --badge-active-bg: var(--color-gray-700);
   --badge-active-color: var(--color-white);
+  --badge-info-bg: var(--color-blue-50);
+  --badge-info-color: var(--color-blue-900);
+  --badge-error-bg: var(--color-red-100);
+  --badge-error-color: var(--color-red-900);
+  --badge-warning-bg: var(--color-yellow-100);
+  --badge-warning-color: var(--color-yellow-900);
 
   // Button
   --btn-focus-border-color: var(--color-black);
@@ -201,7 +192,7 @@
 
   // Breadcrumb
   --breadcrumb-bg: transparent;
-  --breadcrumb-divider-color: var(--secondary-border);
+  --breadcrumb-divider-color: var(--body-color);
   --breadcrumb-link-color: var(--link-color);
   --breadcrumb-link-hover-color: var(--link-hover-color);
 
