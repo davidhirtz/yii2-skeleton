@@ -20,6 +20,7 @@ class LogGridView extends GridView
         'style' => 'table-layout: fixed;',
     ];
 
+    #[\Override]
     public function init(): void
     {
         if (!$this->columns) {

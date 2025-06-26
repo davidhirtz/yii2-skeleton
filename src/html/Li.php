@@ -10,6 +10,7 @@ class Li extends Tag
 {
     use TagContentTrait;
 
+    #[\Override]
     protected function getName(): string
     {
         return 'li';

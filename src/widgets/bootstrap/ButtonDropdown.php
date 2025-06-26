@@ -49,6 +49,7 @@ class ButtonDropdown extends \yii\bootstrap5\ButtonDropdown
 
     public $encodeLabel = false;
 
+    #[\Override]
     public function init(): void
     {
         $this->defaultItem ??= Yii::t('skeleton', 'Show All');
@@ -110,6 +111,7 @@ class ButtonDropdown extends \yii\bootstrap5\ButtonDropdown
         }
     }
 
+    #[\Override]
     protected function renderDropdown(): string
     {
         return Html::tag('dialog', str_replace('class="dropdown-menu"', '', parent::renderDropdown()), [
@@ -117,6 +119,7 @@ class ButtonDropdown extends \yii\bootstrap5\ButtonDropdown
         ]);
     }
 
+    #[\Override]
     public function run(): string
     {
         $content = parent::run();

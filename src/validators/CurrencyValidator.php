@@ -15,6 +15,7 @@ class CurrencyValidator extends NumberValidator
     public ?string $decimalSeparator = null;
     public ?string $thousandSeparator = null;
 
+    #[\Override]
     public function init(): void
     {
         if (!$this->currencyPattern) {
@@ -37,6 +38,7 @@ class CurrencyValidator extends NumberValidator
         parent::init();
     }
 
+    #[\Override]
     public function validateAttribute($model, $attribute): void
     {
         $value = $model->$attribute;
@@ -49,6 +51,7 @@ class CurrencyValidator extends NumberValidator
         parent::validateAttribute($model, $attribute);
     }
 
+    #[\Override]
     public function getClientOptions($model, $attribute): array
     {
         return array_merge(parent::getClientOptions($model, $attribute), [

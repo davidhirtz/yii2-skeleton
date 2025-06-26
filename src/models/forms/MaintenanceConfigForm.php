@@ -40,6 +40,7 @@ class MaintenanceConfigForm extends Model
     public string $viewFile = '@skeleton/views/maintenance.php';
 
     
+    #[\Override]
     public function rules(): array
     {
         return [

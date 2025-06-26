@@ -32,6 +32,7 @@ class AuthClient extends ActiveRecord implements TrailModelInterface
 {
     use TrailModelTrait;
 
+    #[\Override]
     public function behaviors(): array
     {
         return [
@@ -46,6 +47,7 @@ class AuthClient extends ActiveRecord implements TrailModelInterface
         ];
     }
 
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -166,6 +168,7 @@ class AuthClient extends ActiveRecord implements TrailModelInterface
         return $client;
     }
 
+    #[\Override]
     public static function tableName(): string
     {
         return '{{%auth_client}}';

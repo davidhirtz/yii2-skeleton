@@ -40,6 +40,7 @@ class UserForm extends Model
         parent::__construct($config);
     }
 
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -80,6 +81,7 @@ class UserForm extends Model
         ];
     }
 
+    #[\Override]
     public function scenarios(): array
     {
         $attributes = [
@@ -169,6 +171,7 @@ class UserForm extends Model
         return $this->scenario == ActiveRecord::SCENARIO_INSERT;
     }
 
+    #[\Override]
     public function attributeLabels(): array
     {
         return [

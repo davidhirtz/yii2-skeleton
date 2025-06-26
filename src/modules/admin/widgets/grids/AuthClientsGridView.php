@@ -20,6 +20,7 @@ class AuthClientsGridView extends GridView
     public $layout = '{items}{footer}';
     public User $user;
 
+    #[\Override]
     public function init(): void
     {
         $this->dataProvider = new ArrayDataProvider([

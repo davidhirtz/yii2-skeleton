@@ -13,6 +13,7 @@ class UniqueValidator extends \yii\validators\UniqueValidator
      * Extends the default `unique` validator by adding a default `when` check, that prevents database queries when
      * the attributes haven't changed.
      */
+    #[\Override]
     public function init(): void
     {
         $this->when ??= function (ActiveRecord $model, $attribute): bool {

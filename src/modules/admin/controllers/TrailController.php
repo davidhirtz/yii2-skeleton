@@ -13,6 +13,7 @@ use yii\web\Response;
 
 class TrailController extends Controller
 {
+    #[\Override]
     public function behaviors(): array
     {
         return [

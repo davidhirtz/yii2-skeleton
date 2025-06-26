@@ -57,6 +57,7 @@ class ActiveField extends \davidhirtz\yii2\skeleton\widgets\forms\ActiveField
      * Makes sure that empty input fields are not rendered. This only applies if the '{input}' was explicitly set to
      * an empty string (e.g., from widgets).
      */
+    #[\Override]
     public function render($content = null): string
     {
         return ($content === null && ($this->parts['{input}'] ?? false) !== '')
@@ -64,18 +65,21 @@ class ActiveField extends \davidhirtz\yii2\skeleton\widgets\forms\ActiveField
             '';
     }
 
+    #[\Override]
     public function checkbox($options = [], $enclosedByLabel = false): static
     {
         $this->labelOptions = []; // Removes label options, class can be removed when an extension is fixed...
         return parent::checkbox($options, $enclosedByLabel);
     }
 
+    #[\Override]
     public function fileInput($options = []): static
     {
         $options['class'] ??= 'form-control-file';
         return parent::fileInput($options);
     }
 
+    #[\Override]
     public function dropDownList($items, $options = []): static
     {
         if ($items || $this->model->isAttributeRequired($this->attribute)) {

@@ -62,6 +62,7 @@ class MaintenanceController extends Controller
         'viewFile',
     ];
 
+    #[\Override]
     public function options($actionID): array
     {
         $options = parent::options($actionID);

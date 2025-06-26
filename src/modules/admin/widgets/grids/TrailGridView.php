@@ -15,6 +15,7 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\MessageSourceTra
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\TypeGridViewTrait;
 use davidhirtz\yii2\timeago\TimeagoColumn;
 use Jfcherng\Diff\DiffHelper;
+use Override;
 use Yii;
 use yii\base\Model;
 use yii\db\ActiveRecordInterface;
@@ -33,6 +34,7 @@ class TrailGridView extends GridView
         'class' => 'table table-striped trail',
     ];
 
+    #[\Override]
     public function init(): void
     {
         $this->rowOptions = fn (Trail $trail) => [
@@ -299,6 +301,7 @@ class TrailGridView extends GridView
             : TrailModelCollection::formatAttributeValue($model, $attribute, $value);
     }
 
+    #[Override]
     protected function getRoute(ActiveRecordInterface $model, array $params = []): array|false
     {
         return ['index', 'id' => $model->id];

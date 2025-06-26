@@ -68,6 +68,7 @@ class ModelTimestampTest extends Unit
  */
 class TestTimestampActiveRecord extends ActiveRecord
 {
+    #[\Override]
     public function behaviors(): array
     {
         return [
@@ -77,6 +78,7 @@ class TestTimestampActiveRecord extends ActiveRecord
         ];
     }
 
+    #[\Override]
     public static function tableName(): string
     {
         return 'test_timestamp_table';

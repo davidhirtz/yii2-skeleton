@@ -17,6 +17,7 @@ class UserLoginGridView extends GridView
 {
     public ?User $user = null;
 
+    #[\Override]
     public function init(): void
     {
         if (!$this->columns) {

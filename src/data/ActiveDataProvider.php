@@ -14,6 +14,7 @@ class ActiveDataProvider extends \yii\data\ActiveDataProvider
     public const EVENT_INIT = 'init';
     public const EVENT_AFTER_PREPARE = 'afterPrepare';
 
+    #[\Override]
     public function init(): void
     {
         parent::init();
@@ -30,6 +31,7 @@ class ActiveDataProvider extends \yii\data\ActiveDataProvider
     /**
      * @return T[]
      */
+    #[\Override]
     public function getModels(): array
     {
         return parent::getModels();

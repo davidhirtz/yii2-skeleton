@@ -26,6 +26,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     private bool $_isBatch = false;
     private bool $_isDeleted = false;
 
+    #[\Override]
     public function behaviors(): array
     {
         return [
@@ -34,6 +35,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
         ];
     }
 
+    #[\Override]
     public function beforeDelete(): bool
     {
         $this->_isDeleted = true;
@@ -43,11 +45,13 @@ class ActiveRecord extends \yii\db\ActiveRecord
     /**
      * @return ActiveQuery<static>
      */
+    #[\Override]
     public static function find(): ActiveQuery
     {
         return Yii::createObject(ActiveQuery::class, [static::class]);
     }
 
+    #[\Override]
     public static function findOne($condition): ?static
     {
         return $condition === null ? null : parent::findOne($condition);
@@ -113,6 +117,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
      * Extends the default functionality by checking for DateTime objects, which unfortunately cannot be compared by
      * checking identical values using `===` as it always returns `true` even if the date was not changed.
      */
+    #[\Override]
     public function getDirtyAttributes($names = null): array
     {
         return array_filter(parent::getDirtyAttributes($names), function ($name): bool {
@@ -126,6 +131,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
      * cannot be compared by checking identical values using `===` as it always returns `true` even if the date was not
      * changed.
      */
+    #[\Override]
     public function isAttributeChanged($name, $identical = true): bool
     {
         if ($this->getAttribute($name) instanceof \DateTime) {
@@ -161,6 +167,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return $this->_isDeleted;
     }
 
+    #[\Override]
     public function attributeLabels(): array
     {
         return [

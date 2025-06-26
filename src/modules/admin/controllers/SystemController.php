@@ -20,6 +20,7 @@ use yii\web\Response;
 
 class SystemController extends Controller
 {
+    #[\Override]
     public function behaviors(): array
     {
         return [

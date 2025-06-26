@@ -90,12 +90,14 @@ class I18nActiveRecord extends ActiveRecord
 {
     use I18nAttributesTrait;
 
+    #[\Override]
     public function init(): void
     {
         $this->i18nAttributes = ['content'];
         parent::init();
     }
 
+    #[\Override]
     public static function tableName(): string
     {
         return '{{%i18n_test}}';

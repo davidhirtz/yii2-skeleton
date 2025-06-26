@@ -37,6 +37,7 @@ class CounterColumn extends LinkDataColumn
      */
     public string $emptyValue = '';
 
+    #[\Override]
     public function init(): void
     {
         if ($this->content === null) {

@@ -13,6 +13,7 @@ class UserSubmenu extends Submenu
 {
     public ?User $user = null;
 
+    #[\Override]
     public function init(): void
     {
         if ($this->user && !$this->user->getIsNewRecord()) {

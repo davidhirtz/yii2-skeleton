@@ -79,6 +79,7 @@ class UserLanguageBehaviorTest extends Unit
 
 class UserLanguageController extends Controller
 {
+    #[\Override]
     public function behaviors(): array
     {
         return [

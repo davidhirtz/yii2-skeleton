@@ -36,16 +36,19 @@ class Nav extends Tag
         return $this;
     }
 
+    #[\Override]
     protected function renderContent(): string
     {
         return implode('', $this->items);
     }
 
+    #[\Override]
     protected function renderTag(): string
     {
         return $this->items && (!$this->hideSingleItem || count($this->items) > 1) ? parent::renderTag() : '';
     }
 
+    #[\Override]
     protected function getName(): string
     {
         return 'ul';

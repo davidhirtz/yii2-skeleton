@@ -27,6 +27,7 @@ class View extends \yii\web\View
     private string|null $description = null;
     private string $jsImportName = 'a';
 
+    #[\Override]
     protected function renderBodyEndHtml($ajaxMode): string
     {
         // jQuery is no longer supported

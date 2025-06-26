@@ -12,6 +12,7 @@ class UserOwnerPanel extends HelpPanel
 {
     public string $type = self::TYPE_DANGER;
 
+    #[\Override]
     public function init(): void
     {
         $this->title ??= Yii::t('skeleton', 'Transfer Ownership');

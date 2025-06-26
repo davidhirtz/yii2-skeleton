@@ -16,6 +16,7 @@ use yii\web\Response;
 
 class RedirectController extends Controller
 {
+    #[\Override]
     public function behaviors(): array
     {
         return [

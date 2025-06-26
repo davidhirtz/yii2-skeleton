@@ -36,6 +36,7 @@ class FileHelper extends BaseFileHelper
         return false;
     }
 
+    #[\Override]
     public static function unlink($path): bool
     {
         $path = Yii::getAlias($path);
@@ -50,6 +51,7 @@ class FileHelper extends BaseFileHelper
         return true;
     }
 
+    #[\Override]
     public static function createDirectory($path, $mode = 0775, $recursive = true): bool
     {
         $path = Yii::getAlias($path);
@@ -63,12 +65,14 @@ class FileHelper extends BaseFileHelper
         return parent::createDirectory($path, $mode, $recursive);
     }
 
+    #[\Override]
     public static function removeDirectory($dir, $options = []): void
     {
         $dir = Yii::getAlias($dir);
         parent::removeDirectory($dir, $options);
     }
 
+    #[\Override]
     public static function findDirectories($dir, $options = []): array
     {
         $dir = Yii::getAlias($dir);

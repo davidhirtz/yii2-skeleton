@@ -52,6 +52,7 @@ class AuthItem extends ActiveRecord implements TypeAttributeInterface
         return $query;
     }
 
+    #[\Override]
     public static function find(): AuthItemQuery
     {
         return Yii::createObject(AuthItemQuery::class, [static::class]);
@@ -111,6 +112,7 @@ class AuthItem extends ActiveRecord implements TypeAttributeInterface
     }
 
     
+    #[\Override]
     public function attributeLabels(): array
     {
         return [
@@ -121,6 +123,7 @@ class AuthItem extends ActiveRecord implements TypeAttributeInterface
     }
 
     
+    #[\Override]
     public static function tableName(): string
     {
         return '{{%auth_item}}';

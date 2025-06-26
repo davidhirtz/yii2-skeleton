@@ -40,6 +40,7 @@ class AuthClientSignupForm extends Model
         parent::init();
     }
 
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -54,6 +55,7 @@ class AuthClientSignupForm extends Model
     {
     }
 
+    #[\Override]
     public function beforeValidate(): bool
     {
         if (!Yii::$app->getUser()->isSignupEnabled()) {
@@ -88,6 +90,7 @@ class AuthClientSignupForm extends Model
         }
     }
 
+    #[\Override]
     public function afterValidate(): void
     {
         if (!$this->hasErrors() && !$this->user->validate()) {

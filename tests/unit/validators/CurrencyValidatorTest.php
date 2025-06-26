@@ -43,6 +43,7 @@ class CurrencyValidatorTestModel extends Model
 {
     public string|float|int|null $currency = null;
 
+    #[\Override]
     public function rules(): array
     {
         return [

@@ -31,6 +31,7 @@ class UserLogin extends ActiveRecord
     public const TYPE_CONFIRM_EMAIL = 'email';
     public const TYPE_RESET_PASSWORD = 'password';
 
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -46,6 +47,7 @@ class UserLogin extends ActiveRecord
         ];
     }
 
+    #[\Override]
     public function behaviors(): array
     {
         return [
@@ -93,6 +95,7 @@ class UserLogin extends ActiveRecord
         return $this->ip_address ? (inet_ntop($this->ip_address) ?: '-') : '';
     }
 
+    #[\Override]
     public function attributeLabels(): array
     {
         return [
@@ -104,6 +107,7 @@ class UserLogin extends ActiveRecord
         ];
     }
 
+    #[\Override]
     public static function tableName(): string
     {
         return '{{%user_login}}';

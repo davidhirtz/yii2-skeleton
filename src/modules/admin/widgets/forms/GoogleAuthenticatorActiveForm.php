@@ -22,6 +22,7 @@ class GoogleAuthenticatorActiveForm extends ActiveForm
      * @see AccountController::actionEnableGoogleAuthenticator()
      * @see AccountController::actionDisableGoogleAuthenticator()
      */
+    #[\Override]
     public function init(): void
     {
         $this->buttons ??= [

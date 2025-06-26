@@ -13,6 +13,7 @@ class ButtonsColumn extends Column
         'class' => 'text-end text-nowrap',
     ];
 
+    #[\Override]
     protected function renderDataCellContent($model, $key, $index): string
     {
         if ($this->content !== null) {

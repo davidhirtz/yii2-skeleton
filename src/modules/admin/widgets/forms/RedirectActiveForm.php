@@ -22,6 +22,7 @@ class RedirectActiveForm extends ActiveForm
     /**
      * @uses static::typeField()
      */
+    #[\Override]
     public function init(): void
     {
         $this->fields ??= [

@@ -70,6 +70,7 @@ class User extends \yii\web\User
     public $identityClass = \davidhirtz\yii2\skeleton\models\User::class;
     public $loginUrl = null;
 
+    #[\Override]
     public function init(): void
     {
         if (!$this->enableLogin) {
@@ -82,6 +83,7 @@ class User extends \yii\web\User
         parent::init();
     }
 
+    #[\Override]
     public function loginRequired($checkAjax = true, $checkAcceptHeader = true): ?Response
     {
         // Set flash message for required logins.
@@ -95,6 +97,7 @@ class User extends \yii\web\User
     /**
      * @param \davidhirtz\yii2\skeleton\models\User $identity
      */
+    #[\Override]
     protected function afterLogin($identity, $cookieBased, $duration): void
     {
         // Update login count, cache previous login date in session and insert new record to logins log.
@@ -127,6 +130,7 @@ class User extends \yii\web\User
      * Removes user id from session.
      * @param \davidhirtz\yii2\skeleton\models\User $identity
      */
+    #[\Override]
     protected function afterLogout($identity): void
     {
         $session = Yii::$app->getSession();
@@ -162,6 +166,7 @@ class User extends \yii\web\User
         Yii::$app->getDb()->createCommand()->insert(UserLogin::tableName(), $columns)->execute();
     }
 
+    #[\Override]
     public function can($permissionName, $params = [], $allowCaching = true): bool
     {
         if ($this->disableRbacForGuests && $this->getIsGuest()) {

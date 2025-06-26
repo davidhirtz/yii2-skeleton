@@ -22,6 +22,7 @@ class DynamicRangeValidator extends RangeValidator
      */
     public $range = [];
 
+    #[\Override]
     public function validateAttribute($model, $attribute): void
     {
         $this->range = $this->getDynamicRange($model, $attribute);
@@ -32,6 +33,7 @@ class DynamicRangeValidator extends RangeValidator
         }
     }
 
+    #[\Override]
     public function clientValidateAttribute($model, $attribute, $view): null|string
     {
         $this->range = $this->getDynamicRange($model, $attribute);

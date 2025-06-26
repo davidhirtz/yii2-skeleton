@@ -31,6 +31,7 @@ class Application extends \yii\web\Application
 {
     use ApplicationTrait;
 
+    #[\Override]
     public function preInit(&$config): void
     {
         $config['basePath'] ??= dirname((string)$_SERVER['SCRIPT_FILENAME'], 2);
@@ -41,6 +42,7 @@ class Application extends \yii\web\Application
         parent::preInit($config);
     }
 
+    #[\Override]
     protected function bootstrap(): void
     {
         $this->setDefaultCookieConfig();
@@ -51,6 +53,7 @@ class Application extends \yii\web\Application
         $this->setDefaultEmail();
     }
 
+    #[\Override]
     public function coreComponents(): array
     {
         return array_merge(parent::coreComponents(), [

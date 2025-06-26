@@ -19,6 +19,7 @@ class RedirectBehavior extends Behavior
 {
     private ?string $prevUrl = null;
 
+    #[\Override]
     public function events(): array
     {
         return $this->hasUrlManagerConfigured()

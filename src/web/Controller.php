@@ -25,6 +25,7 @@ class Controller extends \yii\web\Controller
      */
     public string|false $contentSecurityPolicy = "frame-ancestors 'self'";
 
+    #[\Override]
     public function beforeAction($action): bool
     {
         if ($this->contentSecurityPolicy) {
@@ -34,6 +35,7 @@ class Controller extends \yii\web\Controller
         return parent::beforeAction($action);
     }
 
+    #[\Override]
     public function render($view, $params = []): string
     {
         $content = parent::render($view, $params);

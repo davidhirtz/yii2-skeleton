@@ -15,12 +15,14 @@ class Submenu extends Nav
     public array $cssClass = ['submenu', 'nav', 'nav-pills'];
     public array $labelOptions = ['class' => 'd-none d-md-inline'];
 
+    #[\Override]
     public function init(): void
     {
         Html::addCssClass($this->options, $this->cssClass);
         parent::init();
     }
 
+    #[\Override]
     public function run(): string
     {
         $html = $this->renderTitle() . $this->renderItems();

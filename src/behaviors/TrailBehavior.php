@@ -36,12 +36,14 @@ class TrailBehavior extends Behavior
         'created_at',
     ];
 
+    #[\Override]
     public function attach($owner): void
     {
         $this->modelClass ??= $owner::class;
         parent::attach($owner);
     }
 
+    #[\Override]
     public function events(): array
     {
         return [

@@ -10,6 +10,7 @@ class ErrorAction extends \yii\web\ErrorAction
 {
     public ?string $email = null;
 
+    #[\Override]
     public function init(): void
     {
         $this->email ??= Yii::$app->params['email'];
@@ -18,6 +19,7 @@ class ErrorAction extends \yii\web\ErrorAction
         parent::init();
     }
 
+    #[\Override]
     public function run(): string
     {
         if ($this->layout !== null) {
@@ -33,11 +35,13 @@ class ErrorAction extends \yii\web\ErrorAction
         return $this->renderHtmlResponse();
     }
 
+    #[\Override]
     protected function renderAjaxResponse(): string
     {
         return $this->getExceptionMessage();
     }
 
+    #[\Override]
     protected function getExceptionName(): string
     {
         return match ($code = $this->getExceptionCode()) {
@@ -46,6 +50,7 @@ class ErrorAction extends \yii\web\ErrorAction
         };
     }
 
+    #[\Override]
     protected function getExceptionMessage(): string
     {
         return parent::getExceptionMessage() ?: match ($this->getExceptionCode()) {
@@ -55,6 +60,7 @@ class ErrorAction extends \yii\web\ErrorAction
         };
     }
 
+    #[\Override]
     protected function getViewRenderParams(): array
     {
         return [

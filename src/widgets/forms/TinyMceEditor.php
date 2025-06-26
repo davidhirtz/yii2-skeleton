@@ -82,6 +82,7 @@ class TinyMceEditor extends InputWidget
      */
     public array|HtmlValidator|string|null $validator = HtmlValidator::class;
 
+    #[\Override]
     public function init(): void
     {
         if (!$this->validator instanceof HtmlValidator) {

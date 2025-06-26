@@ -125,6 +125,7 @@ class TestAuthClient extends BaseClient implements ClientInterface
         return $this->getUserAttributes();
     }
 
+    #[\Override]
     public function getViewOptions(): array
     {
         return [];

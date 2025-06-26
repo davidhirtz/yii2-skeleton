@@ -14,6 +14,7 @@ class AccountConfirmForm extends Model
 
     public string $code;
     
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -35,6 +36,7 @@ class AccountConfirmForm extends Model
         ];
     }
 
+    #[\Override]
     public function afterValidate(): void
     {
         if (!$this->hasErrors()) {
@@ -63,6 +65,7 @@ class AccountConfirmForm extends Model
         return false;
     }
 
+    #[\Override]
     public function attributeLabels(): array
     {
         return [

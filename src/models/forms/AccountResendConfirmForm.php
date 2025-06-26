@@ -18,6 +18,7 @@ class AccountResendConfirmForm extends Model
      */
     public string $timeoutSpamProtection = '1 min';
 
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -40,6 +41,7 @@ class AccountResendConfirmForm extends Model
         ];
     }
 
+    #[\Override]
     public function afterValidate(): void
     {
         $this->validateUserStatus();
@@ -98,6 +100,7 @@ class AccountResendConfirmForm extends Model
             && $user->updated_at?->modify($this->timeoutSpamProtection) > new DateTime();
     }
 
+    #[\Override]
     public function attributeLabels(): array
     {
         return [

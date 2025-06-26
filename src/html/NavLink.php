@@ -85,6 +85,7 @@ class NavLink extends Link
         parent::prepareAttributes();
     }
 
+    #[\Override]
     protected function getName(): string
     {
         return array_key_exists('href', $this->attributes) ? 'a' : 'button';

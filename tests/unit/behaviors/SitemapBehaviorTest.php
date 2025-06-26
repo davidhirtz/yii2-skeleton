@@ -125,6 +125,7 @@ class SitemapActiveRecord extends ActiveRecord
     public ?float $defaultPriority = null;
     public ?int $maxUrlCount = null;
 
+    #[\Override]
     public function behaviors(): array
     {
         return [
@@ -153,6 +154,7 @@ class SitemapActiveRecord extends ActiveRecord
         ];
     }
 
+    #[\Override]
     public static function tableName(): string
     {
         return 'sitemap_test';

@@ -45,6 +45,7 @@ class SignupForm extends AbstractSignupForm
      */
     public ?string $token = null;
 
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -86,12 +87,14 @@ class SignupForm extends AbstractSignupForm
         ];
     }
 
+    #[\Override]
     protected function setUserAttributes(): void
     {
         parent::setUserAttributes();
         $this->user->timezone = $this->timezone;
     }
 
+    #[\Override]
     public function beforeValidate(): bool
     {
         if (!Yii::$app->getUser()->isSignupEnabled()) {
@@ -105,6 +108,7 @@ class SignupForm extends AbstractSignupForm
         return parent::beforeValidate();
     }
 
+    #[\Override]
     public function afterValidate(): void
     {
         if (!$this->hasErrors()) {
@@ -213,6 +217,7 @@ class SignupForm extends AbstractSignupForm
         return $this->enableFacebookSignup && Yii::$app->getAuthClientCollection()->hasClient('facebook');
     }
 
+    #[\Override]
     public function attributeLabels(): array
     {
         return [

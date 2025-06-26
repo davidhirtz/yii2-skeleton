@@ -22,6 +22,7 @@ class DynamicRangeDropdown extends InputWidget
      */
     public $name = 'name';
 
+    #[\Override]
     public function init(): void
     {
         if (!$this->hasModel()) {

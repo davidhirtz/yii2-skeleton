@@ -140,12 +140,14 @@ class TestI18nActiveRecord extends ActiveRecord
 
     public array|string|null $slugTargetAttribute = null;
 
+    #[\Override]
     public function init(): void
     {
         $this->i18nAttributes = ['name', 'slug', 'parent_slug'];
         parent::init();
     }
 
+    #[\Override]
     public function rules(): array
     {
         return $this->getI18nRules([
@@ -165,6 +167,7 @@ class TestI18nActiveRecord extends ActiveRecord
         ]);
     }
 
+    #[\Override]
     public function attributeHints(): array
     {
         return [
@@ -172,6 +175,7 @@ class TestI18nActiveRecord extends ActiveRecord
         ];
     }
 
+    #[\Override]
     public static function tableName(): string
     {
         return 'i18n_test';
@@ -184,6 +188,7 @@ class TestI18nActiveRecord extends ActiveRecord
  */
 class TestI18nParentSlugActiveRecord extends TestI18nActiveRecord
 {
+    #[\Override]
     public function init(): void
     {
         $this->slugTargetAttribute = ['slug', 'parent_slug'];

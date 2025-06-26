@@ -451,6 +451,7 @@ class AttributeTypecastActiveRecord extends ActiveRecord
     public bool $typecastBeforeValidate = false;
     public bool $typecastAfterSave = false;
 
+    #[\Override]
     public function behaviors(): array
     {
         return [
@@ -474,11 +475,13 @@ class AttributeTypecastActiveRecord extends ActiveRecord
         ];
     }
 
+    #[\Override]
     public static function tableName(): string
     {
         return 'test_attribute_typecast';
     }
 
+    #[\Override]
     public function rules(): array
     {
         return [

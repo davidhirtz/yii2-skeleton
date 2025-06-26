@@ -200,6 +200,7 @@ class TestActiveRecord extends ActiveRecord
 {
     use UpdatedByUserTrait;
 
+    #[\Override]
     public function behaviors(): array
     {
         return [
@@ -208,6 +209,7 @@ class TestActiveRecord extends ActiveRecord
         ];
     }
 
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -231,6 +233,7 @@ class TestActiveRecord extends ActiveRecord
         return $query;
     }
 
+    #[\Override]
     public static function tableName(): string
     {
         return 'test_active_record';

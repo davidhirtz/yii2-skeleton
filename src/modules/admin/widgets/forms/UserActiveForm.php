@@ -30,6 +30,7 @@ class UserActiveForm extends ActiveForm
      * @uses static::countryField()
      * @uses static::sendEmailField()
      */
+    #[\Override]
     public function init(): void
     {
         $this->fields ??= [

@@ -44,6 +44,7 @@ class TestModule extends Module
 {
     use ModuleTrait;
 
+    #[\Override]
     public function init(): void
     {
         $this->enableI18nTables = true;

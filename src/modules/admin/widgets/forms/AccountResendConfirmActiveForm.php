@@ -21,12 +21,14 @@ class AccountResendConfirmActiveForm extends ActiveForm
         parent::__construct($config);
     }
 
+    #[\Override]
     public function init(): void
     {
         $this->id = $this->getId(false) ?? 'account-resend-confirm-form';
         parent::init();
     }
 
+    #[\Override]
     public function run(): string
     {
         $this->renderFields();

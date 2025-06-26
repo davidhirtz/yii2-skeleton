@@ -20,6 +20,7 @@ class AdminAsset extends AbstractAssetBundle
         FontAwesomeAsset::class,
     ];
 
+    #[\Override]
     public function init(): void
     {
         if ($this->faviconOptions['href'] ?? false) {

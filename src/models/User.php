@@ -99,6 +99,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
      */
     private string|false $_uploadPath = 'uploads/users/';
 
+    #[\Override]
     public function behaviors(): array
     {
         return [
@@ -112,6 +113,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
         ];
     }
 
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -191,6 +193,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
         return $this->password_hash && Yii::$app->getSecurity()->validatePassword($password . $this->password_salt, $this->password_hash);
     }
 
+    #[\Override]
     public function beforeSave($insert): bool
     {
         if ($insert) {
@@ -200,6 +203,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
         return parent::beforeSave($insert);
     }
 
+    #[\Override]
     public function afterSave($insert, $changedAttributes): void
     {
         if (!$insert && !empty($changedAttributes['picture'])) {
@@ -209,6 +213,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
         parent::afterSave($insert, $changedAttributes);
     }
 
+    #[\Override]
     public function delete(): false|int
     {
         if (!$this->isDeletable()) {
@@ -222,6 +227,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
         return parent::delete();
     }
 
+    #[\Override]
     public function afterDelete(): void
     {
         if ($this->picture) {
@@ -249,6 +255,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
     /**
      * @return UserQuery<static>
      */
+    #[\Override]
     public static function find(): UserQuery
     {
         return Yii::createObject(UserQuery::class, [static::class]);
@@ -483,6 +490,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
         return array_combine(DateTimeZone::listIdentifiers(), DateTimeZone::listIdentifiers());
     }
 
+    #[\Override]
     public function attributeLabels(): array
     {
         return [
@@ -509,11 +517,13 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
         ];
     }
 
+    #[\Override]
     public function formName(): string
     {
         return 'User';
     }
 
+    #[\Override]
     public static function tableName(): string
     {
         return '{{%user}}';

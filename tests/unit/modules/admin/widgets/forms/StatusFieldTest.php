@@ -37,6 +37,7 @@ class TestStatusFieldModel extends Model
 {
     public ?int $status = null;
 
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -71,6 +72,7 @@ class TestStatusFieldActiveForm extends ActiveForm
 {
     use StatusFieldTrait;
 
+    #[\Override]
     public function init(): void
     {
         $this->action = '/';

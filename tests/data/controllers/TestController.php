@@ -13,6 +13,7 @@ class TestController extends Controller
 
     public array $config = [];
 
+    #[\Override]
     public function actions(): array
     {
         return [

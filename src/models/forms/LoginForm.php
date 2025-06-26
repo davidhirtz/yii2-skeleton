@@ -25,6 +25,7 @@ class LoginForm extends Model
 
     private bool $_isGoogleAuthenticatorCodeRequired = false;
 
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -51,6 +52,7 @@ class LoginForm extends Model
         ];
     }
 
+    #[\Override]
     public function beforeValidate(): bool
     {
         if (!Yii::$app->getUser()->isLoginEnabled()) {
@@ -64,6 +66,7 @@ class LoginForm extends Model
     /**
      * Validates user credentials and status and Google authenticator code if set.
      */
+    #[\Override]
     public function afterValidate(): void
     {
         $this->validateUserPassword();
@@ -143,11 +146,13 @@ class LoginForm extends Model
         return $this->enableFacebookLogin && Yii::$app->getAuthClientCollection()->hasClient('facebook');
     }
 
+    #[\Override]
     public function formName(): string
     {
         return 'Login';
     }
 
+    #[\Override]
     public function attributeLabels(): array
     {
         return [

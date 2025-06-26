@@ -28,6 +28,7 @@ class UserPictureForm extends Model
         parent::__construct($config);
     }
 
+    #[\Override]
     public function rules(): array
     {
         return [

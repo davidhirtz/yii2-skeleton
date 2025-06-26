@@ -130,6 +130,7 @@ class SerializedAttributeBehaviorTest extends Unit
  */
 class SerializedAttributesActiveRecord extends ActiveRecord
 {
+    #[\Override]
     public function behaviors(): array
     {
         return [
@@ -148,6 +149,7 @@ class SerializedAttributesActiveRecord extends ActiveRecord
         return $behavior;
     }
 
+    #[\Override]
     public static function tableName(): string
     {
         return 'test_serialized';

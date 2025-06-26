@@ -12,6 +12,7 @@ class TimeValidator extends Validator
 {
     public string $pattern = '/^([01]?[0-9]|2[0-3]):?([0-5][0-9])\s?(am|pm)?$/';
 
+    #[\Override]
     public function init(): void
     {
         if (!$this->pattern) {
@@ -23,6 +24,7 @@ class TimeValidator extends Validator
         parent::init();
     }
 
+    #[\Override]
     public function validateAttribute($model, $attribute): void
     {
         // Removes trailing seconds

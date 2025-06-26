@@ -252,6 +252,7 @@ class TrailActiveRecord extends ActiveRecord implements TrailModelInterface
 {
     use TrailModelTrait;
 
+    #[\Override]
     public function behaviors(): array
     {
         return [
@@ -265,6 +266,7 @@ class TrailActiveRecord extends ActiveRecord implements TrailModelInterface
         ];
     }
 
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -307,6 +309,7 @@ class TrailActiveRecord extends ActiveRecord implements TrailModelInterface
         ];
     }
 
+    #[\Override]
     public static function tableName(): string
     {
         return 'trail_test';
@@ -315,6 +318,7 @@ class TrailActiveRecord extends ActiveRecord implements TrailModelInterface
 
 class TrailBehaviorMock extends TrailBehavior
 {
+    #[\Override]
     protected function insertTrail(Trail $trail): void
     {
         $trail = new class() extends Trail {

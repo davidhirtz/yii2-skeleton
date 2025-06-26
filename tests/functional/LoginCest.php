@@ -23,6 +23,7 @@ class LoginCest extends BaseCest
 {
     use UserFixtureTrait;
 
+    #[\Override]
     public function _before(): void
     {
         Yii::$app->getUser()->enableLogin = true;

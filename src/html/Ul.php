@@ -35,16 +35,19 @@ class Ul extends Tag
         return $this;
     }
 
+    #[\Override]
     protected function renderContent(): string
     {
         return implode('', $this->items);
     }
 
+    #[\Override]
     protected function renderTag(): string
     {
         return $this->items ? parent::renderTag() : '';
     }
 
+    #[\Override]
     protected function getName(): string
     {
         return 'ul';

@@ -44,6 +44,7 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
     private ?array $_dashboardPanels = null;
     private ?array $_navBarItems = null;
 
+    #[\Override]
     public function init(): void
     {
         $controllerMap = [];
@@ -58,6 +59,7 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
         parent::init();
     }
 
+    #[\Override]
     public function beforeAction($action): bool
     {
         $request = Yii::$app->getRequest();

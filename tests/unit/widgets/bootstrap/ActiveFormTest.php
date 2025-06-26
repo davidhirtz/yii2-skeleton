@@ -97,6 +97,7 @@ class ActiveFormTest extends Unit
 
 class TestActiveForm extends ActiveForm
 {
+    #[\Override]
     public function init(): void
     {
         $this->action = '/test';
@@ -120,6 +121,7 @@ class TestModel extends Model
     public ?string $custom = null;
     public ?string $value = null;
 
+    #[\Override]
     public function safeAttributes(): array
     {
         return array_keys($this->attributes);

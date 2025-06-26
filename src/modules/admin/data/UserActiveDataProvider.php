@@ -22,6 +22,7 @@ class UserActiveDataProvider extends ActiveDataProvider
         parent::__construct($config);
     }
 
+    #[\Override]
     protected function prepareQuery(): void
     {
         $this->initQuery();
@@ -35,6 +36,7 @@ class UserActiveDataProvider extends ActiveDataProvider
         }
     }
 
+    #[\Override]
     public function setSort($value): void
     {
         if (is_array($value)) {
@@ -44,6 +46,7 @@ class UserActiveDataProvider extends ActiveDataProvider
         parent::setSort($value);
     }
 
+    #[\Override]
     public function setPagination($value): void
     {
         if (is_array($value)) {

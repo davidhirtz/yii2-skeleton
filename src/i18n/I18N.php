@@ -24,6 +24,7 @@ class I18N extends \yii\i18n\I18N
 
     private array $_languages;
 
+    #[\Override]
     public function init(): void
     {
         $this->translations['skeleton'] ??= [

@@ -27,6 +27,7 @@ class UserLanguageBehavior extends Behavior
         parent::init();
     }
 
+    #[\Override]
     public function events(): array
     {
         return [

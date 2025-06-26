@@ -19,6 +19,7 @@ class TrailActiveDataProvider extends ActiveDataProvider
     public ?string $modelId = null;
     public ?int $trailId = null;
 
+    #[\Override]
     public function init(): void
     {
         $this->query = Trail::find()
@@ -53,6 +54,7 @@ class TrailActiveDataProvider extends ActiveDataProvider
         parent::init();
     }
 
+    #[\Override]
     protected function prepareModels(): array
     {
         /** @var Trail[] $models */

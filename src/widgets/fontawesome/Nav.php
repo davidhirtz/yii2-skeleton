@@ -51,6 +51,7 @@ class Nav extends \yii\bootstrap5\Nav
      * Overrides default implementation for `roles` option to validate user access. And allows for the option to hide
      * nav, if only a single item is set.
      */
+    #[\Override]
     public function renderItems(): string
     {
         $items = [];
@@ -107,6 +108,7 @@ class Nav extends \yii\bootstrap5\Nav
      *
      * @inheritdoc
      */
+    #[\Override]
     public function renderItem($item): string
     {
         if ($this->linkOptions) {
@@ -153,6 +155,7 @@ class Nav extends \yii\bootstrap5\Nav
      * value pairs that must match with the request. Routes can be reserved to prevent activating an item on a hit by
      * starting the route with "!".
      */
+    #[\Override]
     protected function isItemActive($item): bool
     {
         if (!$this->activateItems || $this->_hasActiveItem) {
@@ -215,11 +218,11 @@ class Nav extends \yii\bootstrap5\Nav
     {
         $route = $params[0];
 
-        if (!str_starts_with($route, '/')) {
+        if (!str_starts_with((string) $route, '/')) {
             $route = Yii::$app->controller->module->getUniqueId() . '/' . $route;
         }
 
-        if (ltrim($route, '/') !== $this->route) {
+        if (ltrim((string) $route, '/') !== $this->route) {
             return false;
         }
 

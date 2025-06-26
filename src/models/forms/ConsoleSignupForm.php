@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\models\forms;
 
 class ConsoleSignupForm extends AbstractSignupForm
 {
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -25,6 +26,7 @@ class ConsoleSignupForm extends AbstractSignupForm
         ];
     }
 
+    #[\Override]
     protected function beforeInsert(): bool
     {
         $this->user->is_owner = !$this->user::find()->exists();

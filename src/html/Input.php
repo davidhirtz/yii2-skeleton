@@ -20,11 +20,13 @@ class Input extends Tag
         return $this->attribute('placeholder', $placeholder);
     }
 
+    #[\Override]
     protected function renderTag(): string
     {
         return '<' . $this->getName() . $this->renderAttributes() . '>';
     }
 
+    #[\Override]
     protected function getName(): string
     {
         return 'input';

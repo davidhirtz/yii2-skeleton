@@ -17,6 +17,7 @@ class DashboardController extends Controller
     public ?array $_panels = null;
     public ?array $roles = null;
 
+    #[\Override]
     public function init(): void
     {
         if ($this->roles === null) {
@@ -40,6 +41,7 @@ class DashboardController extends Controller
         parent::init();
     }
 
+    #[\Override]
     public function behaviors(): array
     {
         return [

@@ -42,6 +42,7 @@ class Icon extends Tag
         });
     }
 
+    #[\Override]
     protected function getName(): string
     {
         return 'i';

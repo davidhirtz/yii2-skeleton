@@ -15,6 +15,7 @@ use davidhirtz\yii2\skeleton\db\ActiveRecord;
  */
 class Session extends ActiveRecord
 {
+    #[\Override]
     public static function tableName(): string
     {
         return '{{%session}}';

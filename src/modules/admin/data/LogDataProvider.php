@@ -24,6 +24,7 @@ class LogDataProvider extends ArrayDataProvider
      */
     public string $basePath = '@runtime/logs/';
 
+    #[\Override]
     public function init(): void
     {
         if ($this->allModels === null) {

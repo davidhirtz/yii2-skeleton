@@ -39,6 +39,7 @@ class PageCache extends \yii\filters\PageCache
      */
     public bool $useTagDependency = true;
 
+    #[\Override]
     public function init(): void
     {
         $request = Yii::$app->getRequest();

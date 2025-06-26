@@ -13,12 +13,14 @@ class CheckboxColumn extends \yii\grid\CheckboxColumn
         'class' => 'form-check-input',
     ];
 
+    #[\Override]
     public function init(): void
     {
         $this->checkboxOptions['data-id'] = 'check';
         parent::init();
     }
 
+    #[\Override]
     protected function renderHeaderCellContent(): string
     {
         if ($this->header !== null || !$this->multiple) {
@@ -31,6 +33,7 @@ class CheckboxColumn extends \yii\grid\CheckboxColumn
         ]);
     }
 
+    #[\Override]
     public function registerClientScript(): void
     {
         SelectableAssetBundle::registerModule('#' . $this->grid->getId());

@@ -8,6 +8,7 @@ use Yii;
 
 class MessageController extends \yii\console\controllers\MessageController
 {
+    #[\Override]
     public function actionExtract($configFile = null): void
     {
         $configFile ??= $this->getDefaultConfigPath();

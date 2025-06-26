@@ -16,6 +16,7 @@ class RedirectActiveDataProvider extends ActiveDataProvider
     public ?User $user = null;
     public ?string $search = null;
 
+    #[\Override]
     public function init(): void
     {
         $this->query = Redirect::find()
@@ -42,6 +43,7 @@ class RedirectActiveDataProvider extends ActiveDataProvider
     /**
      * @return Redirect[]
      */
+    #[\Override]
     protected function prepareModels(): array
     {
         /** @var Redirect[] $models */

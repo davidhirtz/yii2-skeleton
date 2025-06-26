@@ -105,6 +105,7 @@ class ChunkedUploadedFile extends UploadedFile
     /**
      * Saves the chunked uploaded file and returns bool whether saving the file was successful.
      */
+    #[\Override]
     public function saveAs($file, $deleteTempFile = true): bool
     {
         if ($deleteTempFile) {
@@ -200,6 +201,7 @@ class ChunkedUploadedFile extends UploadedFile
      * Multiple uploads are not supported for chunked uploads.
      * @noinspection PhpDocSignatureInspection
      */
+    #[\Override]
     public static function getInstances($model, $attribute): void
     {
         throw new InvalidCallException();
@@ -209,6 +211,7 @@ class ChunkedUploadedFile extends UploadedFile
      * Multiple uploads are not supported for chunked uploads.
      * @noinspection PhpDocSignatureInspection
      */
+    #[\Override]
     public static function getInstancesByName($name): void
     {
         throw new InvalidCallException();

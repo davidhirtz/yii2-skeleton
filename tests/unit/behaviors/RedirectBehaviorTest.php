@@ -148,6 +148,7 @@ class RedirectBehaviorTest extends Unit
  */
 class BaseRedirectActiveRecord extends ActiveRecord
 {
+    #[\Override]
     public function behaviors(): array
     {
         return [
@@ -156,6 +157,7 @@ class BaseRedirectActiveRecord extends ActiveRecord
         ];
     }
 
+    #[\Override]
     public static function tableName(): string
     {
         return 'test_redirect';

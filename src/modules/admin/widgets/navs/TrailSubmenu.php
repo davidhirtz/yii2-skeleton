@@ -16,6 +16,7 @@ class TrailSubmenu extends Submenu
     public ?TrailActiveDataProvider $dataProvider = null;
     private ?Model $_trailModel = null;
 
+    #[\Override]
     public function init(): void
     {
         if ($this->title === null) {

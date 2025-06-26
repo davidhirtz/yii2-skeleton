@@ -16,6 +16,7 @@ class OwnershipForm extends Model
     public ?string $name = null;
     private ?User $user = null;
 
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -77,6 +78,7 @@ class OwnershipForm extends Model
         return false;
     }
 
+    #[\Override]
     public function attributeLabels(): array
     {
         return [

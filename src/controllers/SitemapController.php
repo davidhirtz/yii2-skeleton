@@ -17,6 +17,7 @@ class SitemapController extends Controller
 {
     private ?XMLWriter $writer = null;
 
+    #[\Override]
     public function init(): void
     {
         if (!Yii::$app->has('sitemap')) {
@@ -26,6 +27,7 @@ class SitemapController extends Controller
         parent::init();
     }
 
+    #[\Override]
     public function behaviors(): array
     {
         $behaviors = parent::behaviors();

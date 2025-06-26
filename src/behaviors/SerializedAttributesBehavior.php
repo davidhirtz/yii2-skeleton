@@ -25,6 +25,7 @@ class SerializedAttributesBehavior extends Behavior
 
     private array $oldAttributes = [];
 
+    #[\Override]
     public function events(): array
     {
         return [

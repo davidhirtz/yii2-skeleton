@@ -35,6 +35,7 @@ class RelationValidator extends Validator
      * @param string $attribute
      * @throws InvalidConfigException
      */
+    #[\Override]
     public function validateAttribute($model, $attribute): void
     {
         $relation = $this->relation ?? lcfirst(Inflector::camelize(str_replace('_id', '', $attribute)));
@@ -69,6 +70,7 @@ class RelationValidator extends Validator
     /**
      * Not supported.
      */
+    #[\Override]
     public function validate($value, &$error = null): bool
     {
         throw new NotSupportedException(static::class . ' does not support validate().');

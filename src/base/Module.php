@@ -8,6 +8,7 @@ class Module extends \yii\base\Module
 {
     public const EVENT_INIT = 'init';
 
+    #[\Override]
     public function init(): void
     {
         $this->trigger(self::EVENT_INIT);

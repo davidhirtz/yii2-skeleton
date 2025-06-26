@@ -28,7 +28,7 @@ return RectorConfig::configure()
     ->withPaths([
         __DIR__ . '/src',
         __DIR__ . '/tests',
-    ])->withSkip([
-        AddOverrideAttributeToOverriddenMethodsRector::class,
-        __DIR__ .'/src/messages',
+    ])
+    ->withSkip([
+        __DIR__ . '/src/messages',
     ]);

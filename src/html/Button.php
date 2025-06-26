@@ -49,6 +49,7 @@ class Button extends Tag
         return static::make()->class('btn btn-link')->text($text);
     }
 
+    #[\Override]
     protected function getName(): string
     {
         return isset($this->attributes['href']) ? 'a' : 'button';

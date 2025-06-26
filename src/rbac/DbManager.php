@@ -12,6 +12,7 @@ class DbManager extends \yii\rbac\DbManager
 {
     public $cache = 'cache';
 
+    #[\Override]
     public function assign($role, $userId): ?Assignment
     {
         $this->invalidateCache();
@@ -25,6 +26,7 @@ class DbManager extends \yii\rbac\DbManager
         return $assignment;
     }
 
+    #[\Override]
     public function revoke($role, $userId): bool
     {
         $this->invalidateCache();

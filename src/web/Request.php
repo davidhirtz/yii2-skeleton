@@ -50,6 +50,7 @@ class Request extends \yii\web\Request
         return $this->getCookies()->getValue($this->languageParam);
     }
 
+    #[\Override]
     public function getRemoteIP(): ?string
     {
         return $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['HTTP_CLIENT_IP'] ?? parent::getRemoteIP();

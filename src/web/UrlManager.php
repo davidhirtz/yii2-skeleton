@@ -56,6 +56,7 @@ class UrlManager extends \yii\web\UrlManager
     public $enablePrettyUrl = true;
     public $showScriptName = false;
 
+    #[\Override]
     public function init(): void
     {
         if (!$this->enablePrettyUrl) {
@@ -84,6 +85,7 @@ class UrlManager extends \yii\web\UrlManager
         parent::init();
     }
 
+    #[\Override]
     public function createUrl($params): string
     {
         $request = Yii::$app->getRequest();
@@ -141,6 +143,7 @@ class UrlManager extends \yii\web\UrlManager
     /**
      * @param Request $request
      */
+    #[\Override]
     public function parseRequest($request): bool|array
     {
         $this->parseRedirectMap($request, $this->redirectMap);

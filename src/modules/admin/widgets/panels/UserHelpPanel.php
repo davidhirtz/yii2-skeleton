@@ -16,6 +16,7 @@ class UserHelpPanel extends HelpPanel
 {
     public ?User $user = null;
 
+    #[\Override]
     public function init(): void
     {
         $this->content ??= $this->renderButtonToolbar(array_filter($this->getButtons()));

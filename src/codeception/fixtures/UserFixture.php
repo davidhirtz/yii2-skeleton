@@ -12,6 +12,7 @@ class UserFixture extends ActiveFixture
 {
     public $modelClass = User::class;
 
+    #[\Override]
     public function unload(): void
     {
         // Logout user before unloading fixture to prevent MySQL constraint error

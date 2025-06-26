@@ -29,6 +29,7 @@ class AccountActiveForm extends ActiveForm
      * @uses static::timezoneField()
      * @uses static::countryField()
      */
+    #[\Override]
     public function init(): void
     {
         $this->fields ??= [

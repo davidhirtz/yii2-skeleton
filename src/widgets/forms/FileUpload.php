@@ -42,6 +42,7 @@ class FileUpload extends InputWidget
 
     private static bool $isRegistered = false;
 
+    #[\Override]
     public function init(): void
     {
         $defaultClientOptions = [

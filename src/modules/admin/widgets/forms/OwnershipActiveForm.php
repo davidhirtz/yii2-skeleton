@@ -14,6 +14,7 @@ use Yii;
  */
 class OwnershipActiveForm extends ActiveForm
 {
+    #[\Override]
     public function init(): void
     {
         $this->buttons ??= [

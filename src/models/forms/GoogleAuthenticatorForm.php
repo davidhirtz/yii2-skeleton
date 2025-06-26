@@ -24,6 +24,7 @@ class GoogleAuthenticatorForm extends Model
         parent::__construct($config);
     }
 
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -97,11 +98,13 @@ class GoogleAuthenticatorForm extends Model
         return Yii::$app->params['googleAuthenticatorIssuer'] ?? Yii::$app->name;
     }
 
+    #[\Override]
     public function formName(): string
     {
         return 'GoogleAuthenticator';
     }
 
+    #[\Override]
     public function attributeLabels(): array
     {
         return [

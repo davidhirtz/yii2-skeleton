@@ -74,6 +74,7 @@ class GridView extends \yii\grid\GridView
     private ?ActiveRecord $_model = null;
     private ?string $_formName = null;
 
+    #[\Override]
     public function init(): void
     {
         if ($this->showSelection) {
@@ -92,6 +93,7 @@ class GridView extends \yii\grid\GridView
         parent::init();
     }
 
+    #[\Override]
     public function run(): string
     {
         $content = ($this->showOnEmpty || $this->dataProvider->getCount() > 0)
@@ -109,6 +111,7 @@ class GridView extends \yii\grid\GridView
         }, $this->layout);
     }
 
+    #[\Override]
     protected function initColumns(): void
     {
         foreach ($this->columns as &$column) {
@@ -126,6 +129,7 @@ class GridView extends \yii\grid\GridView
         parent::initColumns();
     }
 
+    #[\Override]
     public function renderItems(): string
     {
         if ($this->dataProvider->getCount() || $this->emptyText) {
@@ -135,6 +139,7 @@ class GridView extends \yii\grid\GridView
         return '';
     }
 
+    #[\Override]
     public function renderTableBody(): string
     {
         $tableBody = parent::renderTableBody();
@@ -152,6 +157,7 @@ class GridView extends \yii\grid\GridView
         return $tableBody;
     }
 
+    #[\Override]
     public function renderSummary(): string
     {
         $summary = new GridSummary(
@@ -233,6 +239,7 @@ class GridView extends \yii\grid\GridView
         return implode('', $result);
     }
 
+    #[\Override]
     public function renderSection($name): string|false
     {
         return match ($name) {
@@ -244,18 +251,20 @@ class GridView extends \yii\grid\GridView
 
     protected function getSelectionButton(): Stringable|string
     {
-        if ($items = $this->getSelectionButtonItems()) {
-            return Dropdown::make()
-                ->attribute('data-id', 'check-button')
-                ->attribute('style', 'display:none')
-                ->button(Button::secondary($this->selectionButtonLabel)
-                    ->class('btn dropdown-toggle')
-                    ->icon('wrench'))
-                ->items(...$items)
-                ->dropup();
+        $items = $this->getSelectionButtonItems();
+
+        if (!$items) {
+            return '';
         }
 
-        return '';
+        return Dropdown::make()
+            ->attribute('data-id', 'check-button')
+            ->attribute('style', 'display:none')
+            ->button(Button::secondary($this->selectionButtonLabel)
+                ->class('btn dropdown-toggle')
+                ->icon('wrench'))
+            ->items(...$items)
+            ->dropup();
     }
 
     protected function getSelectionButtonItems(): array
@@ -280,11 +289,6 @@ class GridView extends \yii\grid\GridView
     public function setFormName(string $formName): void
     {
         $this->_formName = $formName;
-    }
-
-    protected function getSelectionFormId(): string
-    {
-        return $this->getFormName() . '-items';
     }
 
     public function getTableId(): string

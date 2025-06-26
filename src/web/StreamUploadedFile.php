@@ -72,6 +72,7 @@ class StreamUploadedFile extends UploadedFile
         }
     }
 
+    #[\Override]
     public function saveAs($file, $deleteTempFile = true): bool
     {
         if (!$this->error) {
@@ -82,6 +83,7 @@ class StreamUploadedFile extends UploadedFile
         return false;
     }
 
+    #[\Override]
     public function getExtension(): string
     {
         $potentialExtensions = $this->type ? FileHelper::getExtensionsByMimeType($this->type) : [];

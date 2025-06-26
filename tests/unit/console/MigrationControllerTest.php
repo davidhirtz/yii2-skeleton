@@ -116,6 +116,7 @@ class MigrationControllerMock extends MigrateController
         Yii::$app->getDb()->dsn = '';
     }
 
+    #[\Override]
     public function confirm($message, $default = false): bool
     {
         switch ($message) {
@@ -134,6 +135,7 @@ class MigrationControllerMock extends MigrateController
         return false;
     }
 
+    #[\Override]
     public function prompt($text, $options = []): string
     {
         return match ($text) {
@@ -145,6 +147,7 @@ class MigrationControllerMock extends MigrateController
         };
     }
 
+    #[\Override]
     public function hiddenPasswordPrompt(): string
     {
         return $this->dbPassword;

@@ -57,6 +57,7 @@ class Dropdown extends Tag
         return $this;
     }
 
+    #[\Override]
     protected function renderContent(): string
     {
         $content = implode('', $this->content) . '<ul>' . implode('', $this->items) . '</ul>';

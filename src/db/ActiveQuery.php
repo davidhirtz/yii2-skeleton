@@ -25,6 +25,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
      * @link https://youtrack.jetbrains.com/issue/WI-64921/method-does-not-support-template-declaration
      * @return array|TActiveRecord[]
      */
+    #[\Override]
     public function all($db = null): array
     {
         return parent::all($db);
@@ -36,6 +37,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
      * @return Iterator<int, TActiveRecord>
      * @noinspection PhpMissingReturnTypeInspection
      */
+    #[\Override]
     public function each($batchSize = 100, $db = null)
     {
         return parent::each($batchSize, $db);
@@ -46,6 +48,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
      * @link https://youtrack.jetbrains.com/issue/WI-64921/method-does-not-support-template-declaration
      * @return TActiveRecord|null
      */
+    #[\Override]
     public function one($db = null)
     {
         return parent::one($db);
@@ -107,6 +110,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
      * Override Yii2's default implementation of adding the anti-pattern `$alias.*` on empty select. This causes
      * problems with `sql_mode=only_full_group_by`.
      */
+    #[\Override]
     public function prepare($builder): Query
     {
         if (empty($this->select)) {

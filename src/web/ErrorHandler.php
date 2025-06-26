@@ -17,6 +17,7 @@ class ErrorHandler extends \yii\web\ErrorHandler
      */
     public bool $enableRedirect = true;
 
+    #[\Override]
     protected function renderException($exception): void
     {
         if ($this->enableRedirect && $exception instanceof HttpException && $exception->statusCode == 404) {

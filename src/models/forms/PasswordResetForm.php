@@ -21,6 +21,7 @@ class PasswordResetForm extends Model
     public ?string $newPassword = null;
     public ?string $repeatPassword = null;
 
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -51,6 +52,7 @@ class PasswordResetForm extends Model
         ];
     }
 
+    #[\Override]
     public function afterValidate(): void
     {
         $this->validatePasswordResetCode();
@@ -100,6 +102,7 @@ class PasswordResetForm extends Model
     }
 
 
+    #[\Override]
     public function attributeLabels(): array
     {
         $user = $this->getUser();

@@ -8,6 +8,7 @@ use davidhirtz\yii2\datetime\DateTime;
 
 class TimestampBehavior extends \yii\behaviors\TimestampBehavior
 {
+    #[\Override]
     public function init(): void
     {
         if (!$this->value) {

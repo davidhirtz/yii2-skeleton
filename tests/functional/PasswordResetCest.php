@@ -23,6 +23,7 @@ class PasswordResetCest extends BaseCest
 
     private ?Module $module = null;
 
+    #[\Override]
     public function _before(): void
     {
         /** @var Module $module */

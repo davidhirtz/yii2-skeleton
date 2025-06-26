@@ -62,6 +62,7 @@ class Html extends BaseHtml
         return '';
     }
 
+    #[\Override]
     public static function input($type, $name = null, $value = null, $options = []): string
     {
         if (isset($options['prepend']) || isset($options['append'])) {
@@ -111,6 +112,7 @@ class Html extends BaseHtml
     /**
      * @deprecated use {@link ErrorSummary} directly instead.
      */
+    #[\Override]
     public static function errorSummary($models, $options = []): string
     {
         $title = ArrayHelper::remove($options, 'header');

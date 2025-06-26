@@ -12,6 +12,7 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\ButtonsColumn;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\StatusGridViewTrait;
 use davidhirtz\yii2\timeago\Timeago;
 use davidhirtz\yii2\timeago\TimeagoColumn;
+use Override;
 use Yii;
 use yii\db\ActiveRecordInterface;
 
@@ -23,6 +24,7 @@ class UserGridView extends GridView
 {
     use StatusGridViewTrait;
 
+    #[\Override]
     public function init(): void
     {
         $this->setId($this->getId(false) ?? 'users');
@@ -167,6 +169,7 @@ class UserGridView extends GridView
         return [];
     }
 
+    #[Override]
     protected function getRoute(ActiveRecordInterface $model, array $params = []): array|false
     {
         return Yii::$app->getUser()->can(User::AUTH_USER_UPDATE, ['user' => $model])
@@ -174,6 +177,7 @@ class UserGridView extends GridView
             : false;
     }
 
+    #[\Override]
     public function getModel(): User
     {
         return User::instance();

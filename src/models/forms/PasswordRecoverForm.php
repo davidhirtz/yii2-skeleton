@@ -18,6 +18,7 @@ class PasswordRecoverForm extends Model
      */
     public string $timeoutSpamProtection = '5 mins';
 
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -43,6 +44,7 @@ class PasswordRecoverForm extends Model
     /**
      * Validates user credentials and checks for spam protection.
      */
+    #[\Override]
     public function afterValidate(): void
     {
         $this->validateUserStatus();
@@ -96,6 +98,7 @@ class PasswordRecoverForm extends Model
     }
 
     
+    #[\Override]
     public function attributeLabels(): array
     {
         return [

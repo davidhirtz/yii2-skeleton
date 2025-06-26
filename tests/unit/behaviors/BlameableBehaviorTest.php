@@ -176,6 +176,7 @@ class BlameableBehaviorTest extends Unit
  */
 class ActiveRecordBlameable extends ActiveRecord
 {
+    #[\Override]
     public function behaviors(): array
     {
         return [
@@ -183,6 +184,7 @@ class ActiveRecordBlameable extends ActiveRecord
         ];
     }
 
+    #[\Override]
     public static function tableName(): string
     {
         return 'test_blame';
@@ -195,6 +197,7 @@ class ActiveRecordBlameable extends ActiveRecord
         return $behavior;
     }
 
+    #[\Override]
     public static function primaryKey(): array
     {
         return ['name'];

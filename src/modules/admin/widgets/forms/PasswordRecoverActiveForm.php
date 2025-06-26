@@ -21,12 +21,14 @@ class PasswordRecoverActiveForm extends ActiveForm
         parent::__construct($config);
     }
 
+    #[\Override]
     public function init(): void
     {
         $this->id = $this->getId(false) ?? 'password-recover-form';
         parent::init();
     }
 
+    #[\Override]
     public function run(): string
     {
         $this->renderFields();

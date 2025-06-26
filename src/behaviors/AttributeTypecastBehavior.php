@@ -96,6 +96,7 @@ class AttributeTypecastBehavior extends Behavior
     private static array $_autoDetectedAttributeTypes = [];
     private static array $_autoDetectedNullableAttributes = [];
 
+    #[\Override]
     public function events(): array
     {
         $events = [];

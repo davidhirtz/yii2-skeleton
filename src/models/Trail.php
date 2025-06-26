@@ -49,6 +49,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
 
     public ActiveRecordInterface|array|null $parents = null;
 
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -59,6 +60,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         ];
     }
 
+    #[\Override]
     public function beforeSave($insert): bool
     {
         if (Yii::$app->has('user')) {
@@ -74,6 +76,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         return parent::beforeSave($insert);
     }
 
+    #[\Override]
     public function afterSave($insert, $changedAttributes): void
     {
         if ($this->parents) {
@@ -279,6 +282,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         ];
     }
 
+    #[\Override]
     public function attributeLabels(): array
     {
         return [
@@ -290,11 +294,13 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         ];
     }
 
+    #[\Override]
     public function formName(): string
     {
         return 'Trail';
     }
 
+    #[\Override]
     public static function tableName(): string
     {
         return '{{%trail}}';

@@ -18,6 +18,7 @@ class LinkPager extends \yii\widgets\LinkPager
     public $firstPageLabel = true;
     public $lastPageLabel = true;
 
+    #[\Override]
     public function init(): void
     {
         if ($this->pageCssClass) {
@@ -31,6 +32,7 @@ class LinkPager extends \yii\widgets\LinkPager
         parent::init();
     }
 
+    #[\Override]
     protected function renderPageButtons(): string
     {
         if ($this->pagination->getPageCount() > 1 || !$this->hideOnSinglePage) {
@@ -63,6 +65,7 @@ class LinkPager extends \yii\widgets\LinkPager
         return '';
     }
 
+    #[\Override]
     protected function renderPageButton($label, $page, $class, $disabled, $active): string
     {
         $options = $this->pageOptions;

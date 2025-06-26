@@ -18,6 +18,7 @@ class Div extends Tag
             ->render();
     }
 
+    #[\Override]
     protected function getName(): string
     {
         return 'div';

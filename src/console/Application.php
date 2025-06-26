@@ -21,6 +21,7 @@ class Application extends \yii\console\Application
 
     public $controllerNamespace = 'app\\commands';
 
+    #[\Override]
     public function preInit(&$config): void
     {
         $config['basePath'] ??= getcwd();
@@ -35,6 +36,7 @@ class Application extends \yii\console\Application
         parent::preInit($config);
     }
 
+    #[\Override]
     protected function bootstrap(): void
     {
         $this->setWebrootAliases();
@@ -43,6 +45,7 @@ class Application extends \yii\console\Application
         parent::bootstrap();
     }
 
+    #[\Override]
     public function coreCommands(): array
     {
         return array_merge(parent::coreCommands(), [

@@ -18,6 +18,7 @@ class Link extends Tag
     use TagModalTrait;
     use TagTooltipAttributeTrait;
 
+    #[\Override]
     protected function getName(): string
     {
         return 'a';

@@ -51,6 +51,7 @@ class Card extends Tag
         parent::prepareAttributes();
     }
 
+    #[\Override]
     protected function renderContent(): string
     {
         $content = [];

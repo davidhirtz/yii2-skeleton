@@ -64,6 +64,7 @@ class HtmlValidator extends Validator
      */
     public bool $removeUnnecessarySpanTags = false;
 
+    #[\Override]
     public function init(): void
     {
         $this->setDefaultOptions();
@@ -191,6 +192,7 @@ class HtmlValidator extends Validator
      * @param ActiveRecord $model
      * @param string $attribute
      */
+    #[\Override]
     public function validateAttribute($model, $attribute): void
     {
         $html = $model->getAttribute($attribute);

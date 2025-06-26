@@ -34,6 +34,7 @@ abstract class AbstractSignupForm extends Model
         $this->user->language = Yii::$app->language;
     }
 
+    #[\Override]
     public function afterValidate(): void
     {
         if (!$this->hasErrors()) {
@@ -73,6 +74,7 @@ abstract class AbstractSignupForm extends Model
     {
     }
 
+    #[\Override]
     public function attributeLabels(): array
     {
         return [

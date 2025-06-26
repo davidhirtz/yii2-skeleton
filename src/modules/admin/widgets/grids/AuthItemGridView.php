@@ -35,6 +35,7 @@ class AuthItemGridView extends GridView
      */
     public static ?string $prevRuleName = null;
 
+    #[\Override]
     public function init(): void
     {
         if (!$this->rowOptions) {
@@ -171,6 +172,7 @@ class AuthItemGridView extends GridView
             ->post($route);
     }
 
+    #[\Override]
     public function renderSummary(): string
     {
         $summary = new GridSummary(

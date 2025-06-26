@@ -83,6 +83,7 @@ class TestNestedTreeActiveRecord extends ActiveRecord
 {
     use NestedTreeTrait;
 
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -97,18 +98,21 @@ class TestNestedTreeActiveRecord extends ActiveRecord
         ];
     }
 
+    #[\Override]
     public function beforeSave($insert): bool
     {
         $this->updateTreeBeforeSave();
         return parent::beforeSave($insert);
     }
 
+    #[\Override]
     public function afterDelete(): void
     {
         $this->updateNestedTreeAfterDelete();
         parent::afterDelete();
     }
 
+    #[\Override]
     public static function tableName(): string
     {
         return 'test_nested_tree';

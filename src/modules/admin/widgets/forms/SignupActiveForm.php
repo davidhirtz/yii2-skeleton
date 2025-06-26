@@ -17,12 +17,14 @@ class SignupActiveForm extends ActiveForm
 {
     public SignupForm $model;
 
+    #[\Override]
     public function init(): void
     {
         $this->registerSignupClientScript();
         parent::init();
     }
 
+    #[\Override]
     public function run(): string
     {
         echo $this->usernameField();

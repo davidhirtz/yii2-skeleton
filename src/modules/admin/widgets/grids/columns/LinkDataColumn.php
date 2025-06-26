@@ -19,6 +19,7 @@ class LinkDataColumn extends DataColumn
      */
     public array $wrapperOptions = [];
 
+    #[\Override]
     protected function renderDataCellContent($model, $key, $index): string
     {
         $route = is_callable($this->route) ? call_user_func($this->route, $model) : $this->route;

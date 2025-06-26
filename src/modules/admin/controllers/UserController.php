@@ -24,6 +24,7 @@ class UserController extends Controller
 {
     use UserTrait;
 
+    #[\Override]
     public function behaviors(): array
     {
         return [

@@ -93,6 +93,7 @@ class Image extends BaseImage
         return (!$width || !$height) ? static::resize($image, $width, $height, true, $allowUpscaling) : static::fit($image, $width, $height, $bgColor, $bgAlpha);
     }
 
+    #[\Override]
     public static function resize($image, $width, $height, $keepAspectRatio = true, $allowUpscaling = false): ImageInterface
     {
         $image = static::ensureImageInterfaceInstance($image);
@@ -105,6 +106,7 @@ class Image extends BaseImage
         return static::setImageRotation($image)->rotate($angle, $background);
     }
 
+    #[\Override]
     public static function autorotate($image, $color = '000000'): ImageInterface
     {
         return static::setImageRotation(parent::autorotate($image, $color));
@@ -156,6 +158,7 @@ class Image extends BaseImage
         return $image;
     }
 
+    #[\Override]
     protected static function ensureImageInterfaceInstance($image): ImageInterface
     {
         // Prevent loading remote resources via Imagine as doesn't support stream wrappers

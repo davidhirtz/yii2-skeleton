@@ -40,6 +40,7 @@ class DeleteActiveForm extends ActiveForm
      */
     public array $fieldOptions = [];
 
+    #[\Override]
     public function init(): void
     {
         $this->form ??= Yii::$container->get(DeleteForm::class, [], [

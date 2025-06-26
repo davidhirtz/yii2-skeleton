@@ -33,6 +33,7 @@ class AccountController extends Controller
 {
     public $defaultAction = 'update';
 
+    #[\Override]
     public function behaviors(): array
     {
         return [
@@ -82,6 +83,7 @@ class AccountController extends Controller
         ];
     }
 
+    #[\Override]
     public function actions(): array
     {
         return [

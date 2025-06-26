@@ -42,6 +42,7 @@ class TestContentFieldModel extends Model
     public string $contentType = 'html';
     public ?string $content = null;
 
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -60,6 +61,7 @@ class TestContentFieldActiveForm extends ActiveForm
 {
     use ContentFieldTrait;
 
+    #[\Override]
     public function init(): void
     {
         $this->action = '/';

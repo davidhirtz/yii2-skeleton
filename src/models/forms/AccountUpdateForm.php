@@ -28,6 +28,7 @@ class AccountUpdateForm extends Model
         parent::__construct($config);
     }
 
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -136,6 +137,7 @@ class AccountUpdateForm extends Model
             ->send();
     }
 
+    #[\Override]
     public function scenarios(): array
     {
         return [
@@ -155,6 +157,7 @@ class AccountUpdateForm extends Model
         ];
     }
 
+    #[\Override]
     public function attributeLabels(): array
     {
         return [

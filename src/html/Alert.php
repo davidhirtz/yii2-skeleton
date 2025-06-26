@@ -52,6 +52,7 @@ class Alert extends Tag
         parent::prepareAttributes();
     }
 
+    #[\Override]
     protected function renderContent(): string
     {
         $content = Div::make()

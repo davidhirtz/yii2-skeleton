@@ -45,6 +45,7 @@ class UserDeletePanel extends Panel
         parent::init();
     }
 
+    #[\Override]
     public function renderContent(): string
     {
         return $this->user->isOwner() ? $this->renderOwnerWarning() : parent::renderContent();

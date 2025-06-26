@@ -17,6 +17,7 @@ class LoginActiveForm extends ActiveForm
     public LoginForm $model;
     public $enableClientValidation = false;
 
+    #[\Override]
     public function init(): void
     {
         $this->id = $this->getId(false) ?? 'login-form';
@@ -25,6 +26,7 @@ class LoginActiveForm extends ActiveForm
         parent::init();
     }
 
+    #[\Override]
     public function run(): string
     {
         $this->renderFields();

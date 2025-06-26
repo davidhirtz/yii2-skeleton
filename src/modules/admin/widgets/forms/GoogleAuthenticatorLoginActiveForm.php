@@ -19,6 +19,7 @@ class GoogleAuthenticatorLoginActiveForm extends ActiveForm
 
     public $enableClientValidation = false;
 
+    #[\Override]
     public function init(): void
     {
         $this->id = $this->getId(false) ?? 'google-authenticator-login-form';
@@ -27,6 +28,7 @@ class GoogleAuthenticatorLoginActiveForm extends ActiveForm
         parent::init();
     }
 
+    #[\Override]
     public function run(): string
     {
         $this->renderFields();

@@ -38,6 +38,7 @@ class Modal extends Tag
         return $this;
     }
 
+    #[\Override]
     protected function renderContent(): string
     {
         $content = [];
@@ -75,6 +76,7 @@ class Modal extends Tag
         return implode('', $content);
     }
 
+    #[\Override]
     protected function getName(): string
     {
         return 'dialog';

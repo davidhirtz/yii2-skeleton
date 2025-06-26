@@ -18,6 +18,7 @@ class DeleteForm extends Model
 
     private ?ActiveRecord $_model = null;
 
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -86,6 +87,7 @@ class DeleteForm extends Model
         $this->_model = $model;
     }
 
+    #[\Override]
     public function attributeLabels(): array
     {
         return [

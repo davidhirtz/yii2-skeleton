@@ -199,6 +199,7 @@ class TestMaterializedTreeActiveRecord extends ActiveRecord
 {
     use MaterializedTreeTrait;
 
+    #[\Override]
     public static function tableName(): string
     {
         return '{{%test_materialized_tree}}';

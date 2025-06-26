@@ -47,6 +47,7 @@ class GoogleAuthenticatorValidator extends StringValidator
      */
     public ?int $currentTime = null;
 
+    #[\Override]
     public function init(): void
     {
         if (!$this->message) {
@@ -56,6 +57,7 @@ class GoogleAuthenticatorValidator extends StringValidator
         parent::init();
     }
 
+    #[\Override]
     public function validateAttribute($model, $attribute): void
     {
         parent::validateAttribute($model, $attribute);
@@ -74,6 +76,7 @@ class GoogleAuthenticatorValidator extends StringValidator
      * @param mixed $value
      * @return array|bool|void
      */
+    #[\Override]
     protected function validateValue($value)
     {
         throw new NotSupportedException(self::class . ' does not support validateValue().');

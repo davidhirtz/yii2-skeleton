@@ -30,6 +30,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
 
     private ?array $_dbConfig = null;
 
+    #[\Override]
     public function beforeAction($action): bool
     {
         if (!Yii::$app->getDb()->dsn) {
@@ -44,6 +45,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
         return Yii::$app->getDb()->dsn && parent::beforeAction($action);
     }
 
+    #[\Override]
     public function actionUp($limit = 0): int
     {
         $result = parent::actionUp($limit);
