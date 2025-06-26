@@ -13,15 +13,13 @@ trait TagModalTrait
     public function modal(Modal $modal): static
     {
         $this->modal = $modal;
-        return $this;
+        return $this->type('button');
     }
 
     protected function before(): string
     {
         if ($this->modal) {
             $this->attributes['data-modal'] ??= '#' . $this->modal->getId();
-            unset($this->attributes['type']);
-
             return $this->modal->render();
         }
 

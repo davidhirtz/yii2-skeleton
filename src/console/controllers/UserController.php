@@ -14,7 +14,6 @@ class UserController extends Controller
     private ?string $name = null;
     private ?string $email = null;
 
-
     public function actionCreate(): void
     {
         $form = ConsoleSignupForm::create();

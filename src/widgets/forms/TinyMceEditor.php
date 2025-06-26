@@ -9,6 +9,7 @@ use davidhirtz\yii2\skeleton\assets\TinyMceAssetBundle;
 use davidhirtz\yii2\skeleton\assets\TinyMceLanguageAssetBundle;
 use davidhirtz\yii2\skeleton\assets\TinyMceSkinAssetBundle;
 use davidhirtz\yii2\skeleton\validators\HtmlValidator;
+use Override;
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
@@ -82,7 +83,7 @@ class TinyMceEditor extends InputWidget
      */
     public array|HtmlValidator|string|null $validator = HtmlValidator::class;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         if (!$this->validator instanceof HtmlValidator) {

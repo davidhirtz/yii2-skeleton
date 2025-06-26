@@ -39,7 +39,6 @@
 
   --color-green-50: oklch(98.2% 0.018 155.826);
   --color-green-100: oklch(96.2% 0.044 156.743);
-  //--color-green-100: oklch(94.4% 0.049 145.173);
   --color-green-200: oklch(92.5% 0.084 155.995);
   --color-green-300: oklch(87.1% 0.15 154.449);
   --color-green-400: oklch(79.2% 0.209 151.711);
@@ -128,36 +127,6 @@
   --tertiary-border: #f1f1f1;
   --tertiary-color: #585858;
 
-  --success: #a3cba3;
-  --success-bg: oklch(0.944 0.049 145.173);
-  --success-border: #daeada;
-  --success-color: #212921;
-
-  --info: #798fc3;
-  --info-bg: #e4e9f3;
-  --info-border: #c9d2e7;
-  --info-color: #30394e;
-
-  --warning: #ffc107;
-  --warning-bg: #fff3cd;
-  --warning-border: #ffe69c;
-  --warning-color: #664d03;
-
-  --danger: #e43c3c;
-  --danger-bg: #d89090;
-  --danger-border: #f0cfcf;
-  --danger-color: #da8888;
-
-  --light: #f9f9f9;
-  --light-bg: #fff;
-  --light-border: #f5f5f5;
-  --light-color: #fff;
-
-  --dark: #ddd;
-  --dark-bg: #e4e4e4;
-  --dark-border: #ccc;
-  --dark-color: #555;
-
   --body-bg: var(--color-gray-50);
   --body-color: var(--color-black);
   --border-color: var(--color-gray-200);
@@ -223,10 +192,10 @@
   --btn-secondary-hover-border-color: var(--btn-secondary-hover-bg);
   --btn-secondary-hover-color: var(--color-white);
 
-  --btn-danger-bg: var(--color-red-400);
+  --btn-danger-bg: var(--color-red-600);
   --btn-danger-border-color: var(--btn-danger-bg);
   --btn-danger-color: var(--color-white);
-  --btn-danger-hover-bg: var(--color-red-600);
+  --btn-danger-hover-bg: var(--color-red-800);
   --btn-danger-hover-border-color: var(--btn-danger-hover-bg);
   --btn-danger-hover-color: var(--color-white);
 
@@ -242,7 +211,7 @@
   --card-color: var(--color-black);
   --card-header-bg: var(--color-slate-400);
   --card-header-color: var(--color-white);
-  --card-danger-bg: var(--color-red-300);
+  --card-danger-bg: var(--color-red-600);
   --card-danger-color: var(--color-white);
   --card-list-group-action-bg: var(--color-gray-100);
   --card-list-group-action-hover-bg: var(--color-gray-200);
@@ -276,13 +245,13 @@
   --form-sticky-border-color: var(--color-gray-700);
 
   --form-invalid-bg: var(--color-white);
-  --form-invalid-border: var(--danger-border);
-  --form-invalid-color: var(--danger-color);
+  --form-invalid-border: var(--color-rose-200);
+  --form-invalid-color: var(--color-rose-300);
 
   --input-bg-color: var(--color-white);
   --input-border-color: var(--border-color);
   --input-color: var(--color-black);
-  --input-focus-bg-color: var(--light);
+  --input-focus-bg-color: var(--color-gray-50);
   --input-focus-border-color: var(--color-black);
   --input-focus-color: var(--color-black);
 
@@ -311,7 +280,7 @@
   --modal-border-color: transparent;
   --modal-btn-icon-focus-bg: var(--color-gray-100);
   --modal-btn-icon-hover-bg: var(--color-gray-100);
-  --modal-header-bg: var(--color-gray-200);
+  --modal-header-bg: var(--color-white);
 
   // Nav
   --nav-link-active-badge-bg: var(--color-white);

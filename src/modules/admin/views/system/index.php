@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 /**
  * @see SystemController::actionIndex()
- * @see SystemController::actionSessionGc()
  *
  * @var View $this
  * @var ArrayDataProvider $assets
  * @var ArrayDataProvider $caches
  * @var ArrayDataProvider $logs
- * @var int $sessionCount
- * @var int $expiredSessionCount
+ * @var ArrayDataProvider $sessions
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
@@ -138,36 +136,34 @@ $this->setTitle(Yii::t('skeleton', 'System'));
     'title' => Yii::t('skeleton', 'Sessions'),
 ]); ?>
 
-<div class="card">
-    <div class="card-body">
-        <div class="grid-view">
-            <table class="table table-striped table-hover">
-                <thead>
-                <tr>
-                    <th>Sessions</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>
-                        <div>
-                            <span class="strong"><?= Yii::t('skeleton', 'Expired sessions'); ?>: <?= $expiredSessionCount; ?></span>
-                        </div>
-                        <div class="small">
-                            <?= Yii::t('skeleton', 'Total sessions'); ?>: <?= $sessionCount; ?> / <?= Yii::t('skeleton', 'Garbage collection probability'); ?>: <?= Yii::$app->getSession()->getGCProbability(); ?>
-                        </div>
-                    </td>
-                    <td class="text-end">
-                        <?= Button::primary()
-                            ->icon('trash')
-                            ->post(['/admin/system/session-gc'])
-                            ->tooltip(Yii::t('skeleton', 'Delete expired sessions'))
-                            ->render(); ?>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+<?= Panel::widget([
+    'content' => GridView::widget([
+        'dataProvider' => $sessions,
+        'layout' => '{items}{footer}',
+        'columns' => [
+            [
+                'label' => Yii::t('skeleton', 'Sessions'),
+                'content' => function ($item): string {
+                    $title = Yii::t('skeleton', 'Expired sessions: {count,number}', [
+                        'count' => $item['expiredSessionCount'],
+                    ]);
+                    $content = Yii::t('app', 'Total sessions: {sessionCount,number} / Garbage collection probability: {probability}', [
+                        'sessionCount' => $item['sessionCount'],
+                        'probability' => Yii::$app->getSession()->getGCProbability(),
+                    ]);
+
+                    return Html::tag('div', $title, ['class' => 'strong']) . Html::tag('div', $content, ['class' => 'small']);
+                }
+            ],
+            [
+                'contentOptions' => ['class' => 'text-end'],
+                /** @see SystemController::actionSessionGc() */
+                'content' => fn (array $item): string => Button::primary()
+                    ->icon('trash')
+                    ->post(['/admin/system/session-gc'])
+                    ->tooltip(Yii::t('skeleton', 'Delete expired sessions'))
+                    ->render()
+            ],
+        ],
+    ]),
+]); ?>

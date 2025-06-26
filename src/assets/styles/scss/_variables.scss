@@ -106,9 +106,6 @@ $main-padding-x: 0 !default;
 $main-padding-y: 1rem !default;
 $main-gap-y: $spacer !default;
 
-$component-active-bg: var(--light-bg) !default;
-$component-active-color: var(--color-white) !default;
-
 // Alert
 $alert-padding-y: $spacer !default;
 $alert-padding-x: $spacer !default;
@@ -185,14 +182,9 @@ $card-header-padding-y: .75rem !default;
 $card-inner-border-radius: $border-radius !default;
 $card-spacer-x: $spacer-x !default;
 $card-spacer-y: $spacer-y !default;
-
-$card-danger-bg: var(--danger-bg) !default;
-$card-danger-border-color: var(--danger-border) !default;
-$card-danger-color: var(--color-white) !default;
 $card-title-font-weight: 500 !default;
 
 // Grid
-
 $grid-view-font-size: null !default;
 $grid-view-line-height: null !default;
 $grid-view-header-border: none !default;
@@ -320,10 +312,6 @@ $checkbox-btn-check-disabled-opacity: .5 !default;
 
 $checkbox-inline-margin-end: 1rem !default;
 
-$form-file-button-color: $input-color !default;
-$form-file-button-bg: var(--tertiary-bg) !default;
-$form-file-button-hover-bg: var(--secondary-bg) !default;
-
 
 // List group
 $list-group-border-radius: $border-radius !default;
@@ -412,7 +400,6 @@ $modal-content-inner-border-radius: subtract($modal-content-border-radius, $moda
 $modal-footer-border-width: 0 !default;
 $modal-footer-gap: .5rem !default;
 
-
 // Tooltip
 $tooltip-arrow-height: 0.5rem !default;
 $tooltip-arrow-width: 0.5rem !default;
@@ -424,14 +411,6 @@ $tooltip-padding-x: $spacer * .5 !default;
 $tooltip-padding-y: $spacer * .25 !default;
 $tooltip-z-index: 1080 !default;
 
-
-//
-///**
-//Thumbnail.
-// */
-//$thumbnail-padding: $spacer-y !default;
-//$thumbnail-caption-padding: $spacer-x !default;
-//
 
 // Icon
 $icon-gap-x: .5rem !default;
@@ -450,10 +429,6 @@ $icon-gap-x: .5rem !default;
 $trail-del-bg: #e43c3c !default;
 $trail-ins-bg: #a3cba3 !default;
 $trail-cell-padding: 0.5rem !default;
-
-//@import "../../../../node_modules/bootstrap/scss/variables";
-
-// Code
 
 $code-font-size: $font-size-xs !default;
 $code-color: var(--color-black) !default;

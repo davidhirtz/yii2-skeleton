@@ -49,14 +49,12 @@ class SystemController extends Controller
 
     public function actionIndex(): Response|string
     {
-        // Assets.
         $assets = new ArrayDataProvider([
             'allModels' => $this->findAssets(),
             'pagination' => false,
             'sort' => false,
         ]);
 
-        // Caches.
         $caches = [];
 
         foreach ($this->findCaches() as $name => $class) {
@@ -72,19 +70,24 @@ class SystemController extends Controller
             'sort' => false,
         ]);
 
-        // Sessions.
-        $sessionCount = Session::find()->count();
-        $expiredSessionCount = Session::find()
-            ->where(['<', 'expire', time()])
-            ->count();
+        $sessions = new ArrayDataProvider([
+            'allModels' => [
+                [
+                    'sessionCount' => Session::find()->count(),
+                    'expiredSessionCount' => Session::find()
+                        ->where(['<', 'expire', time()])
+                        ->count(),
+                ],
+            ],
+            'pagination' => false,
+            'sort' => false,
+        ]);
 
-        /** @noinspection MissedViewInspection */
         return $this->render('index', [
             'assets' => $assets,
             'caches' => $caches,
             'logs' => $this->getLogDataProvider(),
-            'sessionCount' => $sessionCount,
-            'expiredSessionCount' => $expiredSessionCount,
+            'sessions' => $sessions,
         ]);
     }
 

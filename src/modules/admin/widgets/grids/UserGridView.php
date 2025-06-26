@@ -44,8 +44,6 @@ class UserGridView extends GridView
             $this->rowOptions = fn (User $user) => ['class' => $user->isDisabled() ? 'disabled' : null];
         }
 
-        $this->dataProvider->pagination->pageSize = 2;
-
         parent::init();
     }
 
