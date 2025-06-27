@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\db;
 
 use davidhirtz\yii2\skeleton\models\interfaces\StatusAttributeInterface;
-use Iterator;
 use Yii;
+use yii\db\ActiveRecord;
 use yii\db\Query;
 
 /**
- * @template TActiveRecord
- * @property class-string<TActiveRecord> $modelClass
+ * @template T of ActiveRecord
+ * @template-extends  \yii\db\ActiveQuery<T>
+ *
+ * @property class-string<T> $modelClass
  */
 class ActiveQuery extends \yii\db\ActiveQuery
 {
@@ -21,40 +23,9 @@ class ActiveQuery extends \yii\db\ActiveQuery
     protected static ?int $_status = null;
 
     /**
-     * PHPStorm currently does not support "@method" annotations for generic methods.
-     * @link https://youtrack.jetbrains.com/issue/WI-64921/method-does-not-support-template-declaration
-     * @return array|TActiveRecord[]
-     */
-    public function all($db = null): array
-    {
-        return parent::all($db);
-    }
-
-    /**
-     * PHPStorm currently does not support "@method" annotations for generic methods.
-     * @link https://youtrack.jetbrains.com/issue/WI-64921/method-does-not-support-template-declaration
-     * @return Iterator<int, TActiveRecord>
-     * @noinspection PhpMissingReturnTypeInspection
-     */
-    public function each($batchSize = 100, $db = null)
-    {
-        return parent::each($batchSize, $db);
-    }
-
-    /**
-     * PHPStorm currently does not support "@method" annotations for generic methods.
-     * @link https://youtrack.jetbrains.com/issue/WI-64921/method-does-not-support-template-declaration
-     * @return TActiveRecord|null
-     */
-    public function one($db = null)
-    {
-        return parent::one($db);
-    }
-
-    /**
      * Makes sure the container instantiates the model class before calling parent constructor.
      * Not sure why this is not part of the framework.
-     * @param class-string<TActiveRecord> $modelClass
+     * @param class-string<T> $modelClass
      */
     public function __construct(string $modelClass, array $config = [])
     {
@@ -165,7 +136,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
     }
 
     /**
-     * @return ActiveRecord<TActiveRecord>
+     * @return ActiveRecord<T>
      */
     protected function getModelInstance(): ActiveRecord
     {

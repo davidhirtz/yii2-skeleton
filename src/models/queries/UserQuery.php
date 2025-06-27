@@ -8,8 +8,8 @@ use davidhirtz\yii2\skeleton\db\ActiveQuery;
 use davidhirtz\yii2\skeleton\models\User;
 
 /**
- * @template T
- * @extends ActiveQuery<T>
+ * @template T of User
+ * @template-extends ActiveQuery<T>
  */
 class UserQuery extends ActiveQuery
 {

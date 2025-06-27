@@ -6,10 +6,11 @@ namespace davidhirtz\yii2\skeleton\models\traits;
 
 use davidhirtz\yii2\skeleton\db\I18nActiveQuery;
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
- * @template TActiveRecord
- * @property class-string<TActiveRecord> $modelClass
+ * @template T of ActiveRecord
+ * @property class-string<T> $modelClass
  */
 trait I18nAttributesTrait
 {

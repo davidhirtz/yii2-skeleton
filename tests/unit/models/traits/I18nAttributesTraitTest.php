@@ -8,7 +8,6 @@ use Codeception\Test\Unit;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\models\traits\I18nAttributesTrait;
 use Yii;
-use yii\base\Model;
 
 class I18nAttributesTraitTest extends Unit
 {
@@ -116,7 +115,7 @@ class I18nAttributesTraitTest extends Unit
 
     public function testEmptyI18nAttributes()
     {
-        $model = new class() extends Model {
+        $model = new class() extends ActiveRecord {
             use I18nAttributesTrait;
 
             public string $name = '';
