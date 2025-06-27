@@ -6,7 +6,6 @@ namespace davidhirtz\yii2\skeleton\db;
 
 use davidhirtz\yii2\skeleton\models\interfaces\StatusAttributeInterface;
 use Yii;
-use yii\db\ActiveRecord;
 use yii\db\Query;
 
 /**
