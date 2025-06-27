@@ -2,8 +2,6 @@
 declare(strict_types=1);
 
 /**
- * This view is used by console/controllers/MigrateController.php.
- *
  * @var string $className the new migration class name without namespace
  * @var string $namespace the new migration class namespace
  */
@@ -19,9 +17,9 @@ use davidhirtz\yii2\skeleton\db\traits\MigrationTrait;
 use yii\db\Migration;
 
 /**
-* @noinspection PhpUnused
-*/
-class <?= $className ?> extends Migration
+ * @noinspection PhpUnused
+ */
+final class <?= $className ?> extends Migration
 {
     use MigrationTrait;
 

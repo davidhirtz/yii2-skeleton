@@ -68,9 +68,9 @@ class FileUpload extends InputWidget
     {
         $this->registerClientScript();
 
-        return ($this->hasModel()
+        return $this->hasModel()
             ? Html::activeFileInput($this->model, $this->attribute, $this->options)
-            : Html::fileInput($this->name, $this->value, $this->options));
+            : Html::fileInput($this->name, $this->value, $this->options);
     }
 
     /**

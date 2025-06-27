@@ -41,7 +41,7 @@ class AuthItemQuery extends ActiveQuery
      */
     public function allWithChildren(?Connection$db = null): array
     {
-        /**  @var AuthItem[] $items */
+        /** @var AuthItem[] $items */
         $items = ArrayHelper::index(parent::all($db), 'name');
 
         $relations = (new Query())->select('*')
