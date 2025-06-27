@@ -1,3 +1,7 @@
+## 2.5.4 (Jun 27, 2025)
+
+- Annotation changes for static analysis (Yii 2.0.53)
+
 ## 2.5.3 (Jun 24, 2025)
 
 - Updated country names for all supported languages
