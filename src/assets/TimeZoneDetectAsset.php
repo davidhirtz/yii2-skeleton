@@ -12,13 +12,6 @@ use yii\web\AssetBundle;
  */
 class TimeZoneDetectAsset extends AssetBundle
 {
-    /**
-     * @var array
-     */
     public $js = ['jstz.min.js'];
-
-    /**
-     * @var string
-     */
     public $sourcePath = '@npm/jstimezonedetect/dist';
 }

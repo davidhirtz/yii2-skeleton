@@ -338,11 +338,11 @@ class AttributeTypecastBehaviorTest extends Unit
     public function testAutoDetectAttributeTypes(): void
     {
         $attributes = [
-            'name' => null,
-            'amount' => null,
-            'price' => null,
-            'is_active' => null,
-            'nullable' => null,
+            'name' => '',
+            'amount' => '',
+            'price' => '',
+            'is_active' => '',
+            'nullable' => '',
         ];
 
         $model = (new DynamicModel($attributes))

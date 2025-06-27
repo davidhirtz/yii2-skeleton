@@ -12,21 +12,11 @@ use yii\web\JqueryAsset;
  */
 class SignupAsset extends AssetBundle
 {
-    /**
-     * @var string[]
-     */
     public $depends = [
         JqueryAsset::class,
         TimeZoneDetectAsset::class,
     ];
 
-    /**
-     * @var array
-     */
     public $js = ['js/signup.min.js'];
-
-    /**
-     * @var string
-     */
     public $sourcePath = '@skeleton/assets/signup';
 }

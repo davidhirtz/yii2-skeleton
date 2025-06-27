@@ -4,36 +4,23 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\assets;
 
+use yii\bootstrap4\BootstrapAsset;
 use yii\web\AssetBundle;
 
-/**
- * @package davidhirtz\yii2\skeleton\assets
- */
 class FileUploadAsset extends AssetBundle
 {
-    /**
-     * @var string
-     */
-    public $sourcePath = '@npm/blueimp-file-upload';
+    public $css = ['css/jquery.fileupload.css'];
 
-    /**
-     * @var array
-     */
-    public $css = [
-        'css/jquery.fileupload.css'
+    public $depends = [
+        JuiAsset::class,
+        BootstrapAsset::class,
     ];
 
-    /**
-     * @var array
-     */
     public $js = [
         'js/jquery.iframe-transport.js',
         'js/jquery.fileupload.js'
     ];
 
-    /**
-     * @var array
-     */
     public $publishOptions = [
         'except' => [
             'server/*',
@@ -41,11 +28,5 @@ class FileUploadAsset extends AssetBundle
         ],
     ];
 
-    /**
-     * @var array
-     */
-    public $depends = [
-        'davidhirtz\yii2\skeleton\assets\JuiAsset',
-        'yii\bootstrap4\BootstrapAsset',
-    ];
+    public $sourcePath = '@npm/blueimp-file-upload';
 }

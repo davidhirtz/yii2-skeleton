@@ -12,14 +12,7 @@ use yii\web\AssetBundle;
  */
 class BootboxAsset extends AssetBundle
 {
-    /**
-     * @var array
-     */
     public $js = ['bootbox.min.js'];
-
-    /**
-     * @var string
-     */
     public $sourcePath = '@npm/bootbox/dist';
 
     /**
