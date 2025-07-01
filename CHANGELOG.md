@@ -1,3 +1,7 @@
+## 2.5.5 (Jul 1, 2025)
+
+- Fixed `ActiveRecordErrorLogger` default message with composite primary keys
+
 ## 2.5.4 (Jun 27, 2025)
 
 - Annotation changes for static analysis (Yii 2.0.53)

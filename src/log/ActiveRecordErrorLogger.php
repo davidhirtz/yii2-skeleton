@@ -26,7 +26,8 @@ class ActiveRecordErrorLogger extends BaseObject
         if (!$this->message) {
             $modelName = Inflector::camel2words($this->model->formName());
             $verb = $this->model->getIsNewRecord() ? 'inserted' : 'updated';
-            $this->message = ("$modelName record with ID {$this->model->getPrimaryKey()} could not be $verb");
+            $id = implode('-', $this->model->getPrimaryKey(true));
+            $this->message = ("$modelName record with ID $id could not be $verb");
         }
 
         parent::init();
