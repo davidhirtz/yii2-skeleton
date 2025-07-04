@@ -183,10 +183,10 @@
   --btn-secondary-hover-border-color: var(--btn-secondary-hover-bg);
   --btn-secondary-hover-color: var(--color-white);
 
-  --btn-danger-bg: var(--color-red-600);
+  --btn-danger-bg: var(--color-red-400);
   --btn-danger-border-color: var(--btn-danger-bg);
   --btn-danger-color: var(--color-white);
-  --btn-danger-hover-bg: var(--color-red-800);
+  --btn-danger-hover-bg: var(--color-red-600);
   --btn-danger-hover-border-color: var(--btn-danger-hover-bg);
   --btn-danger-hover-color: var(--color-white);
 
@@ -202,7 +202,7 @@
   --card-color: var(--color-black);
   --card-header-bg: var(--color-slate-400);
   --card-header-color: var(--color-white);
-  --card-danger-bg: var(--color-red-600);
+  --card-danger-bg: var(--color-red-400);
   --card-danger-color: var(--color-white);
   --card-list-group-action-bg: var(--color-gray-100);
   --card-list-group-action-hover-bg: var(--color-gray-200);
