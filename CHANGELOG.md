@@ -1,3 +1,7 @@
+## 2.5.6 (in development)
+
+- Enhanced `Controller::errorOrSuccess()` to also accept arrays and strings
+
 ## 2.5.5 (Jul 1, 2025)
 
 - Fixed `ActiveRecordErrorLogger` default message with composite primary keys
@@ -13,7 +17,8 @@
 ## 2.5.2 (Jun 12, 2025)
 
 - Fixed `AjaxRouteTrait`
-- 
+-
+
 ## 2.5.1 (Jun 5, 2025)
 
 - Enhanced `StreamUploadedFile` to also set file name from URL on error
