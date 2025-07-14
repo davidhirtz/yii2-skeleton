@@ -183,6 +183,14 @@ class TrailGridView extends GridView
             return Html::tag('table', $content, ['class' => 'diff-wrapper diff diff-html diff-side-by-side']);
         }
 
+        if (is_array($oldValue)) {
+            $oldValue = implode("\n", $oldValue);
+        }
+
+        if (is_array($newValue)) {
+            $newValue = implode("\n", $newValue);
+        }
+
         return DiffHelper::calculate((string)$oldValue, (string)$newValue, 'SideBySide', [], [
             'showHeader' => false,
             'lineNumbers' => false,

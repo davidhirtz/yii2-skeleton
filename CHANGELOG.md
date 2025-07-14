@@ -1,6 +1,7 @@
 ## 2.5.6 (in development)
 
 - Enhanced `Controller::errorOrSuccess()` to also accept arrays and strings
+- Fixed error for array values in `TrailGridView::renderUpdatedAttributeValues()`
 
 ## 2.5.5 (Jul 1, 2025)
 
