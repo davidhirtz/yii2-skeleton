@@ -277,6 +277,24 @@ class UrlManager extends \yii\web\UrlManager
         return $event;
     }
 
+    protected function buildRules($ruleDeclarations): array
+    {
+        $orderedRuleDeclarations = [];
+        $i = 1;
+
+        foreach ($ruleDeclarations as $key => &$rule) {
+            $orderedRuleDeclarations[$key] = ArrayHelper::remove($rule, 'position', $i++);
+        }
+
+        asort($orderedRuleDeclarations, SORT_NUMERIC);
+
+        foreach ($orderedRuleDeclarations as $key => &$value) {
+            $value = $ruleDeclarations[$key];
+        }
+
+        return parent::buildRules($orderedRuleDeclarations);
+    }
+
     /**
      * Generates a list of rule parameters at given position. This can be used to validate dynamic slugs, etc.
      */

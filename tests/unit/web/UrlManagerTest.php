@@ -10,6 +10,7 @@ use davidhirtz\yii2\skeleton\web\Request;
 use davidhirtz\yii2\skeleton\web\UrlManager;
 use Yii;
 use yii\web\UrlNormalizerRedirectException;
+use yii\web\UrlRule;
 
 class UrlManagerTest extends Unit
 {
@@ -316,6 +317,27 @@ class UrlManagerTest extends Unit
         $manager = $this->getUrlManager();
 
         self::assertEquals(['de' => 'de', 'en-US' => 'en'], $manager->languages);
+    }
+
+    public function testUrlRuleWithPosition(): void
+    {
+        $urlManager = $this->getUrlManager();
+
+        $config = [
+            'pattern' => 'first-position',
+            'route' => 'site/index',
+        ];
+
+        $urlManager->addRules([
+            [
+                ...$config,
+                'position' => 0,
+            ],
+        ]);
+
+        $urlRule = new UrlRule($config);
+
+        self::assertEquals($urlRule->route, $urlManager->rules[0]->route);
     }
 
     protected function getRequest($config = []): Request

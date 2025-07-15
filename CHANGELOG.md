@@ -1,5 +1,6 @@
 ## 2.5.6 (in development)
 
+- Added `position` array key to `UrlManager` rules definition to allow for custom position of rules
 - Enhanced `Controller::errorOrSuccess()` to also accept arrays and strings
 - Fixed error for array values in `TrailGridView::renderUpdatedAttributeValues()`
 
