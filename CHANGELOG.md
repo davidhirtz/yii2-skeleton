@@ -1,4 +1,4 @@
-## 2.5.6 (in development)
+## 2.5.6 (Jul 15, 2025)
 
 - Added `position` array key to `UrlManager` rules definition to allow for custom position of rules
 - Enhanced `Controller::errorOrSuccess()` to also accept arrays and strings
