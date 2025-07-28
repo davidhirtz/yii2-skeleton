@@ -9,13 +9,13 @@ use Throwable;
 use Yii;
 use yii\base\Model;
 
-class TrailModelCollection
+final class TrailModelCollection
 {
-    private static array $_modelClasses = [];
+    private static array $records = [];
 
     /**
      * Finds the model based on the given model string. If a model supports `i18n` tables, the corresponding language
-     * will be added to the model, separated by "::" like `\davidhirtz\yii2\cms\models\Entry::en_US`.
+     * will be added to the model, separated by "::" like `\app\models\Entry::en_US`.
      *
      * For this reason, the cache key is the table name, rather than the model class name.
      */
@@ -28,21 +28,29 @@ class TrailModelCollection
             try {
                 $instance = Yii::createObject($modelName[0]);
 
-                if ($instance instanceof ActiveRecord && $modelId) {
-                    $primaryKey = $instance::primaryKey();
-                    $values = is_string($modelId) ? explode('-', $modelId) : $modelId;
-                    $keys = count($primaryKey) > 1 && count($primaryKey) === count($values)
-                        ? array_combine($primaryKey, $values)
-                        : array_combine($primaryKey, [$modelId]);
-
-                    self::$_modelClasses[$instance::tableName()][$modelId] ??= $instance::findOne($keys) ?? $instance;
-                    return self::$_modelClasses[$instance::tableName()][$modelId];
-                }
-
-                return $instance;
+                return $instance instanceof ActiveRecord && $modelId
+                    ? self::getOrFindActiveRecord($instance, $modelId)
+                    : $instance;
             } catch (Throwable) {
                 return null;
             }
         });
+    }
+
+    private static function getOrFindActiveRecord(ActiveRecord $instance, int|string $id): ActiveRecord
+    {
+        $tableName = $instance::tableName();
+
+        if (!isset(self::$records[$tableName][$id])) {
+            $primaryKey = $instance::primaryKey();
+            $values = is_string($id) ? explode('-', $id) : $id;
+            $keys = count($primaryKey) > 1 && count($primaryKey) === count($values)
+                ? array_combine($primaryKey, $values)
+                : array_combine($primaryKey, [$id]);
+
+            self::$records[$tableName][$id] = $instance::findOne($keys) ?? new $instance($keys);
+        }
+
+        return self::$records[$tableName][$id] ?? $instance;
     }
 }

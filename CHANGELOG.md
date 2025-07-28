@@ -1,3 +1,7 @@
+## 2.5.7 (in development)
+
+- Enhanced `TrailModelCollection` display of deleted active records
+
 ## 2.5.6 (Jul 15, 2025)
 
 - Added `position` array key to `UrlManager` rules definition to allow for custom position of rules
