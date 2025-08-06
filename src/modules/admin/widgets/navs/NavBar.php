@@ -96,8 +96,8 @@ class NavBar extends \yii\bootstrap4\NavBar
                         ...Yii::$app->getRequest()->getQueryParams(),
                         ...$this->languageRoute,
                         'language' => $language,
-                    ])
-                    : Url::current(['language' => $language]),
+                    ], true)
+                    : Url::current(['language' => $language], true),
                 'encode' => false,
             ];
         }
