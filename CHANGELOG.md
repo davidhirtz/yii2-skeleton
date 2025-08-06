@@ -1,4 +1,4 @@
-## 2.5.7 (in development)
+## 2.5.7 (Aug 6, 2025)
 
 - Enhanced `TrailModelCollection` display of deleted active records
 - Fixed `UrlManager::$i18nSubdomain` for default subdomain
