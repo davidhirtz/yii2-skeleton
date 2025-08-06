@@ -244,7 +244,7 @@ class UrlManager extends \yii\web\UrlManager
             if (in_array($subdomain, $this->languages)) {
                 $replace = $this->languages[$this->defaultLanguage] ?? '';
                 $this->setHostInfo(str_replace("//$subdomain", "//$replace", $this->getHostInfo()));
-                Yii::$app->language = $subdomain;
+                Yii::$app->language = array_search($subdomain, $this->languages);
                 return;
             }
         }

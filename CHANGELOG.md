@@ -1,6 +1,7 @@
 ## 2.5.7 (in development)
 
 - Enhanced `TrailModelCollection` display of deleted active records
+- Fixed `UrlManager::$i18nSubdomain` for default subdomain
 - Fixed admin language URls for `UrlManager::$i18nSubdomain`
 
 ## 2.5.6 (Jul 15, 2025)
