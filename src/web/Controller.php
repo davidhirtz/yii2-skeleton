@@ -44,7 +44,7 @@ class Controller extends \yii\web\Controller
 
     protected function stripWhitespaceFromHtml(string $html): string
     {
-        return trim((string) preg_replace('/>\s+</', '><', $html));
+        return trim((string)preg_replace('/>\s+</', '><', $html));
     }
 
     public function error(Model|array|string $value): bool
@@ -75,8 +75,12 @@ class Controller extends \yii\web\Controller
         return false;
     }
 
-    public function errorOrSuccess(Model $model, ?string $message = null): void
+    public function errorOrSuccess(Model|array|string $value, string $message): void
     {
-        $model->hasErrors() ? $this->error($model) : $this->success($message);
+        if ($value instanceof Model ? $value->hasErrors() : !empty($value)) {
+            $this->error($value);
+        } else {
+            $this->success($message);
+        }
     }
 }

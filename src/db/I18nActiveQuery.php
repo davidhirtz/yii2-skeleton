@@ -7,8 +7,8 @@ namespace davidhirtz\yii2\skeleton\db;
 use Yii;
 
 /**
- * @template TActiveRecord
- * @template-extends ActiveQuery<TActiveRecord>
+ * @template T of ActiveRecord
+ * @template-extends ActiveQuery<T>
  */
 class I18nActiveQuery extends ActiveQuery
 {

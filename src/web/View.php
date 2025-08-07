@@ -39,7 +39,7 @@ class View extends \yii\web\View
         return $html;
     }
 
-    protected function renderJsModules(): string
+    public function renderJsModules(): string
     {
         $scripts = implode('', $this->js[self::POS_IMPORT] ?? []);
         $scripts .= implode('', $this->js[self::POS_MODULE] ?? []);

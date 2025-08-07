@@ -188,8 +188,9 @@ class AccountController extends Controller
             $user = $form->getUser();
 
             if (!$user->isDisabled()) {
-                $user->loginType = UserLogin::TYPE_CONFIRM_EMAIL;
-                Yii::$app->getUser()->login($user);
+                $webuser = Yii::$app->getUser();
+                $webuser->loginType = UserLogin::TYPE_CONFIRM_EMAIL;
+                $webuser->login($user);
             }
         }
 

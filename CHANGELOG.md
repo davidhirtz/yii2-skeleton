@@ -9,6 +9,35 @@
 - Removed `Html::buttonList()`, use `Html::buttons()` instead
 - Removed `GridView::renderSelectionForm()`
 
+## 2.5.7 (Aug 6, 2025)
+
+- Enhanced `TrailModelCollection` display of deleted active records
+- Fixed `UrlManager::$i18nSubdomain` for default subdomain
+- Fixed admin language URls for `UrlManager::$i18nSubdomain`
+
+## 2.5.6 (Jul 15, 2025)
+
+- Added `position` array key to `UrlManager` rules definition to allow for custom position of rules
+- Enhanced `Controller::errorOrSuccess()` to also accept arrays and strings
+- Fixed error for array values in `TrailGridView::renderUpdatedAttributeValues()`
+
+## 2.5.5 (Jul 1, 2025)
+
+- Fixed `ActiveRecordErrorLogger` default message with composite primary keys
+
+## 2.5.4 (Jun 27, 2025)
+
+- Annotation changes for static analysis (Yii 2.0.53)
+
+## 2.5.3 (Jun 24, 2025)
+
+- Updated country names for all supported languages
+
+## 2.5.2 (Jun 12, 2025)
+
+- Fixed `AjaxRouteTrait`
+-
+
 ## 2.5.1 (Jun 5, 2025)
 
 - Enhanced `StreamUploadedFile` to also set file name from URL on error

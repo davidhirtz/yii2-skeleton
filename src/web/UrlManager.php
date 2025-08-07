@@ -247,7 +247,7 @@ class UrlManager extends \yii\web\UrlManager
             if (in_array($subdomain, $this->languages)) {
                 $replace = $this->languages[$this->defaultLanguage] ?? '';
                 $this->setHostInfo(str_replace("//$subdomain", "//$replace", $this->getHostInfo()));
-                Yii::$app->language = $subdomain;
+                Yii::$app->language = array_search($subdomain, $this->languages);
                 return;
             }
         }
@@ -278,6 +278,24 @@ class UrlManager extends \yii\web\UrlManager
         $this->trigger(static::EVENT_AFTER_CREATE, $event);
 
         return $event;
+    }
+
+    protected function buildRules($ruleDeclarations): array
+    {
+        $orderedRuleDeclarations = [];
+        $i = 1;
+
+        foreach ($ruleDeclarations as $key => &$rule) {
+            $orderedRuleDeclarations[$key] = ArrayHelper::remove($rule, 'position', $i++);
+        }
+
+        asort($orderedRuleDeclarations, SORT_NUMERIC);
+
+        foreach ($orderedRuleDeclarations as $key => &$value) {
+            $value = $ruleDeclarations[$key];
+        }
+
+        return parent::buildRules($orderedRuleDeclarations);
     }
 
     /**

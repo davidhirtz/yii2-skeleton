@@ -39,31 +39,23 @@ trait AjaxRouteTrait
         $this->registerAjaxRouteDocumentTitle();
 
         $html = '';
-        $modules = [];
         $js = [];
 
         foreach ($view->jsFiles as $jsFiles) {
             $html .= implode('', $jsFiles);
         }
 
-        foreach ($view->js as $position => $scripts) {
+        $html .= $view->renderJsModules();
+        unset($view->js[View::POS_IMPORT], $view->js[View::POS_MODULE]);
+
+        foreach ($view->js as $scripts) {
             foreach ($scripts as $script) {
                 $script = rtrim((string)$script, ';');
-
-                if ($position == View::POS_MODULE) {
-                    $modules[] = $script;
-                } else {
-                    $js[] = $script;
-                }
+                $js[] = $script;
             }
         }
 
-        $modules = implode(';', $modules);
         $js = implode(';', $js);
-
-        if ($modules) {
-            $html .= "<script type='module'>$modules</script>";
-        }
 
         if ($js) {
             $html .= "<script>$js</script>";
