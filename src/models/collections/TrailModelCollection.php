@@ -41,18 +41,9 @@ class TrailModelCollection
             try {
                 $instance = Yii::createObject($modelName[0]);
 
-                if ($instance instanceof ActiveRecord && $modelId) {
-                    $primaryKey = $instance::primaryKey();
-                    $values = is_string($modelId) ? explode('-', $modelId) : $modelId;
-                    $keys = count($primaryKey) > 1 && count($primaryKey) === count($values)
-                        ? array_combine($primaryKey, $values)
-                        : array_combine($primaryKey, [$modelId]);
-
-                    self::$models[$instance::tableName()][$modelId] ??= $instance::findOne($keys) ?? $instance;
-                    return self::$models[$instance::tableName()][$modelId];
-                }
-
-                return $instance;
+                return $instance instanceof ActiveRecord && $modelId
+                    ? self::getOrFindActiveRecord($instance, $modelId)
+                    : $instance;
             } catch (Throwable) {
                 return null;
             }
@@ -94,7 +85,24 @@ class TrailModelCollection
 
         return is_array($value) ? print_r($value, true) : (string)$value;
     }
-    
+
+    private static function getOrFindActiveRecord(ActiveRecord $instance, int|string $id): ActiveRecord
+    {
+        $tableName = $instance::tableName();
+
+        if (!isset(self::$models[$tableName][$id])) {
+            $primaryKey = $instance::primaryKey();
+            $values = is_string($id) ? explode('-', $id) : $id;
+            $keys = count($primaryKey) > 1 && count($primaryKey) === count($values)
+                ? array_combine($primaryKey, $values)
+                : array_combine($primaryKey, [$id]);
+
+            self::$models[$tableName][$id] = $instance::findOne($keys) ?? new $instance($keys);
+        }
+
+        return self::$models[$tableName][$id] ?? $instance;
+    }
+
     /**
      * Cycles through the owner model validators to detect default display values for attribute names.
      */

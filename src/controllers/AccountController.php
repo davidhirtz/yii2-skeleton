@@ -18,6 +18,7 @@ use davidhirtz\yii2\skeleton\models\forms\PasswordResetForm;
 use davidhirtz\yii2\skeleton\models\forms\SignupForm;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\skeleton\web\Controller;
+use Override;
 use Yii;
 use yii\authclient\AuthAction;
 use yii\base\InvalidCallException;
@@ -33,7 +34,7 @@ class AccountController extends Controller
 {
     public $defaultAction = 'update';
 
-    #[\Override]
+    #[Override]
     public function behaviors(): array
     {
         return [
@@ -83,7 +84,7 @@ class AccountController extends Controller
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function actions(): array
     {
         return [
