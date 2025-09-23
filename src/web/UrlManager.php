@@ -133,7 +133,7 @@ class UrlManager extends \yii\web\UrlManager
         return $this->createAbsoluteUrl($params);
     }
 
-    private function replaceSubdomain(string $replacement, string $url): string
+    protected function replaceSubdomain(string $replacement, string $url): string
     {
         return preg_replace('#^((https?://)(www.)?)#', "$2$replacement.", $url);
     }

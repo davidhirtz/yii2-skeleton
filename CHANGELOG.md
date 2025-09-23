@@ -1,3 +1,7 @@
+## 2.5.8 (Sep 23, 2025)
+
+- Changed visibility of `UrlManager::replaceSubdomain()` to protected
+
 ## 2.5.7 (Aug 6, 2025)
 
 - Enhanced `TrailModelCollection` display of deleted active records
