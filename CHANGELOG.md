@@ -1,6 +1,7 @@
 ## 2.5.8 (Sep 23, 2025)
 
 - Changed visibility of `UrlManager::replaceSubdomain()` to protected
+- Fixed `Url::draft()` helper method to correctly handle strings
 
 ## 2.5.7 (Aug 6, 2025)
 
