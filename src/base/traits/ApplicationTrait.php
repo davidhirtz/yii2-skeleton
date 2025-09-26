@@ -31,12 +31,14 @@ use yii\web\JqueryAsset;
 
 /**
  * @property DbManager $authManager
+ * @property Connection $db
  * @property I18N $i18n
  * @property Sitemap $sitemap
  * @property UrlManager $urlManager
  * @property View $view
  *
  * @method DbManager getAuthManager()
+ * @method Connection getDb()
  * @method I18N getI18n()
  * @method Mailer getMailer()
  * @method UrlManager getUrlManager()

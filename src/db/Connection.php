@@ -7,22 +7,62 @@ namespace davidhirtz\yii2\skeleton\db;
 use DateTime;
 use davidhirtz\yii2\skeleton\db\mysql\Schema;
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
+use davidhirtz\yii2\skeleton\models\Session;
+use mikehaertl\shellcommand\Command;
 use Yii;
 
 class Connection extends \yii\db\Connection
 {
     public string $backupPath = '@runtime/backups';
+    public ?array $ignoredBackupTables;
+    public int|false $maxBackups = 10;
     private Schema $schema;
+
+    public function init(): void
+    {
+        $this->ignoredBackupTables ??= [
+            Session::tableName(),
+        ];
+
+        parent::init();
+    }
 
     public function backup(): string
     {
         $file = $this->getBackupFilePath();
+
         $this->backupTo($file);
+        $this->removeOutdatedBackups();
+
         return $file;
     }
 
-    public function backupTo(string $filePath): void
+    public function backupTo(string $filePath): bool
     {
+        $command = $this->getSchema()->getBackupCommand();
+        $command = $this->parseCommandTokens($command, $filePath);
+
+        return $this->createShellCommand($command)->execute();
+    }
+
+    public function removeOutdatedBackups(): void
+    {
+        if ($this->maxBackups) {
+            $backupPath = Yii::getAlias($this->backupPath);
+            $files = glob($backupPath . DIRECTORY_SEPARATOR . "*.sql");
+
+            usort($files, static function ($a, $b) {
+                return filemtime($b) <=> filemtime($a);
+            });
+
+            if (count($files) >= $this->maxBackups) {
+                $backupsToDelete = array_slice($files, $this->maxBackups);
+
+                foreach ($backupsToDelete as $backupToDelete) {
+                    FileHelper::unlink($backupToDelete);
+                }
+            }
+        }
     }
 
     public function getBackupFilePath(): string
@@ -30,7 +70,7 @@ class Connection extends \yii\db\Connection
         FileHelper::createDirectory($this->backupPath);
 
         $dsn = Dsn::fromString($this->dsn);
-        $date = (new DateTime())->format('Y-m-d-His');
+        $date = (new DateTime())->format('Y-m-d');
         $backupPath = Yii::getAlias($this->backupPath) . DIRECTORY_SEPARATOR;
         $filename = "$dsn->database-$date";
         $extension = '.sql';
@@ -60,6 +100,18 @@ class Connection extends \yii\db\Connection
         ];
 
         return str_replace(array_keys($tokens), $tokens, $command);
+    }
+
+    private function createShellCommand(string $command): Command
+    {
+        $shellCommand = new Command();
+        $shellCommand->setCommand($command);
+
+        if (!function_exists('proc_open') && function_exists('exec')) {
+            $shellCommand->useExec = true;
+        }
+
+        return $shellCommand;
     }
 
     public function getSchema(): Schema

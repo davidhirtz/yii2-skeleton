@@ -5,32 +5,29 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\tests\unit\db;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\db\Connection;
-use davidhirtz\yii2\skeleton\helpers\FileHelper;
+use Yii;
 
 class ConnectionTest extends Unit
 {
-    public function testGetBackupFilePath(): void
+    public function testBackup(): void
     {
-        $connection = new Connection([
-            'dsn' => 'mysql:host=127.0.0.1;dbname=yii2_skeleton_test',
-            'backupPath' => '@runtime/backups',
-        ]);
+        $db = Yii::$app->getDb();
+        $db->maxBackups = 1;
 
-        $filePath = $connection->getBackupFilePath();
+        $filePath = $db->backup();
 
+        self::assertFileExists($filePath);
         self::assertStringContainsString('runtime/backups/yii2_skeleton_test', $filePath);
         self::assertStringEndsWith('.sql', $filePath);
 
-        FileHelper::createDirectory($connection->backupPath);
-        file_put_contents($filePath, 'test');
+        $newFilePath = $db->backup();
 
-        $filePath2 = $connection->getBackupFilePath();
-        self::assertNotSame($filePath, $filePath2);
+        self::assertNotSame($filePath, $newFilePath);
+        self::assertFileExists($newFilePath);
+        self::assertStringEndsWith('-1.sql', $newFilePath);
 
-        self::assertStringContainsString('runtime/backups/yii2_skeleton_test', $filePath2);
-        self::assertStringEndsWith('-1.sql', $filePath2);
+        self::assertFileNotExists($filePath);
 
-        FileHelper::removeDirectory($connection->backupPath);
+        unlink($newFilePath);
     }
 }
