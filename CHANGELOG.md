@@ -1,3 +1,7 @@
+## 2.6.0 (in development)
+
+- Added `Dsn` helper class to parse DSN strings
+
 ## 2.5.8 (Sep 23, 2025)
 
 - Changed visibility of `UrlManager::replaceSubdomain()` to protected
