@@ -5,12 +5,25 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\db;
 
 use DateTime;
+use davidhirtz\yii2\skeleton\db\mysql\Schema;
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use Yii;
 
 class Connection extends \yii\db\Connection
 {
     public string $backupPath = '@runtime/backups';
+    private Schema $schema;
+
+    public function backup(): string
+    {
+        $file = $this->getBackupFilePath();
+        $this->backupTo($file);
+        return $file;
+    }
+
+    public function backupTo(string $filePath): void
+    {
+    }
 
     public function getBackupFilePath(): string
     {
@@ -47,5 +60,15 @@ class Connection extends \yii\db\Connection
         ];
 
         return str_replace(array_keys($tokens), $tokens, $command);
+    }
+
+    public function getSchema(): Schema
+    {
+        $this->schema ??= Yii::createObject([
+            'class' => Schema::class,
+            'db' => $this,
+        ]);
+
+        return $this->schema;
     }
 }
