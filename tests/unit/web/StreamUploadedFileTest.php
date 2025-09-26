@@ -11,7 +11,7 @@ use Yii;
 
 class StreamUploadedFileTest extends Unit
 {
-    protected const VALID_URL = 'https://raw.githubusercontent.com/davidhirtz/yii2-skeleton/master/README.md';
+    protected const string VALID_URL = 'https://raw.githubusercontent.com/davidhirtz/yii2-skeleton/master/README.md';
 
     public function _after(): void
     {
