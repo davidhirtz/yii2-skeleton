@@ -15,7 +15,7 @@ class Connection extends \yii\db\Connection
 {
     public bool $backupOnMigration = true;
     public string $backupPath = '@runtime/backups';
-    public ?array $ignoredBackupTables;
+    public ?array $ignoredBackupTables = null;
     public int|false $maxBackups = 10;
     private Schema $schema;
 
@@ -71,6 +71,9 @@ class Connection extends \yii\db\Connection
         }
     }
 
+    /**
+     * @return string[]
+     */
     public function getBackups(): array
     {
         $backupPath = Yii::getAlias($this->backupPath);

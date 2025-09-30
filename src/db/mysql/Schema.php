@@ -75,7 +75,7 @@ class Schema extends \yii\db\mysql\Schema
             $contents = [
                 '[client]',
                 "user={$this->db->username}",
-                'password="' . addslashes($this->db->password) . '"',
+                'password="' . addslashes((string)$this->db->password) . '"',
             ];
 
             $dsn = Dsn::fromString($this->db->dsn);

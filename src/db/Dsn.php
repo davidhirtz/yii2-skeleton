@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\db;
 
+use Stringable;
 use yii\base\InvalidArgumentException;
 
-readonly class Dsn
+readonly class Dsn implements Stringable
 {
     public function __construct(
         public string $driver,
@@ -44,7 +45,7 @@ readonly class Dsn
 
         foreach (explode(';', $dsn) as $part) {
             [$key, $value] = array_pad(explode('=', $part), 2, '');
-            $parts[trim($key)] = trim($value);
+            $parts[trim((string) $key)] = trim((string) $value);
         }
 
         if (empty($parts['host'])) {

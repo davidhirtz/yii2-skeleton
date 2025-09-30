@@ -73,7 +73,7 @@ class MigrateControllerTest extends Unit
         $controller->runAction('restore');
         $stdout = $controller->flushStdOutBuffer();
 
-        self::assertStringContainsString(basename($filename), $stdout);
+        self::assertStringContainsString(basename((string) $filename), $stdout);
         self::assertStringContainsString('Restoring database from backup ... done', $stdout);
 
         unlink($filename);
