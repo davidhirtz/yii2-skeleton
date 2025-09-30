@@ -8,6 +8,7 @@ use davidhirtz\yii2\skeleton\db\Connection;
 use davidhirtz\yii2\skeleton\db\Dsn;
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use mikehaertl\shellcommand\Command;
+use Yii;
 
 /**
  * @property Connection $db
@@ -17,7 +18,7 @@ class Schema extends \yii\db\mysql\Schema
     public function getBackupCommand(): string
     {
         $baseCommand = (new Command('mysqldump'))
-            ->addArg('--defaults-file=', $this->createDumpConfigFile())
+            ->addArg('--defaults-file=', $this->getTempConfigFile())
             ->addArg('--add-drop-table')
             ->addArg('--comments')
             ->addArg('--create-options')
@@ -52,7 +53,12 @@ class Schema extends \yii\db\mysql\Schema
         );
     }
 
-    protected function createDumpConfigFile(): string
+    public function getBackupFileExtension(): string
+    {
+        return 'sql';
+    }
+
+    private function getTempConfigFile(): string
     {
         $contents = [
             '[client]',
@@ -67,8 +73,10 @@ class Schema extends \yii\db\mysql\Schema
             $contents[] = "port=$dsn->port";
         }
 
-        $path = FileHelper::normalizePath(sys_get_temp_dir()) . DIRECTORY_SEPARATOR . uniqid() . '.cnf';
+        $path = Yii::getAlias('@runtime/' . uniqid() . '.cnf');
         file_put_contents($path, implode(PHP_EOL, $contents) . PHP_EOL);
+
+        $this->db->on(Connection::EVENT_AFTER_BACKUP, fn () => FileHelper::unlink($path));
 
         return $path;
     }

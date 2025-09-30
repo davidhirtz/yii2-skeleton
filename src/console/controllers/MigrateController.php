@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\console\controllers;
 
+use davidhirtz\yii2\skeleton\console\controllers\traits\BackupTrait;
 use davidhirtz\yii2\skeleton\console\controllers\traits\ConfigTrait;
 use davidhirtz\yii2\skeleton\models\User;
 use Seld\CliPrompt\CliPrompt;
@@ -16,6 +17,7 @@ use yii\helpers\Console;
  */
 class MigrateController extends \yii\console\controllers\MigrateController
 {
+    use BackupTrait;
     use ConfigTrait;
 
     public $migrationPath = null;
@@ -29,6 +31,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
     public $templateFile = '@skeleton/views/migration.php';
 
     private ?array $_dbConfig = null;
+    private bool $backupCompleted = false;
 
     public function beforeAction($action): bool
     {
@@ -49,7 +52,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
         $result = parent::actionUp($limit);
 
         if (
-            $result == ExitCode::OK
+            $result === ExitCode::OK
             && $this->interactive
             && !User::find()->exists()
             && $this->confirm('Create owner user account?', true)
@@ -58,6 +61,16 @@ class MigrateController extends \yii\console\controllers\MigrateController
         }
 
         return $result;
+    }
+
+    protected function migrateUp($class): bool
+    {
+        if (!$this->backupCompleted) {
+            $this->actionBackup();
+            $this->backupCompleted = true;
+        }
+
+        return parent::migrateUp($class);
     }
 
     /**
@@ -105,7 +118,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
         return CliPrompt::hiddenPrompt();
     }
 
-    public function getDbConfig(): array
+    protected function getDbConfig(): array
     {
         $this->_dbConfig ??= $this->getConfig($this->dbFile);
         return $this->_dbConfig;

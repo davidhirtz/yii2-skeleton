@@ -13,6 +13,8 @@ use Yii;
 
 class Connection extends \yii\db\Connection
 {
+    public const string EVENT_AFTER_BACKUP = 'afterBackup';
+
     public string $backupPath = '@runtime/backups';
     public ?array $ignoredBackupTables;
     public int|false $maxBackups = 10;
@@ -27,14 +29,16 @@ class Connection extends \yii\db\Connection
         parent::init();
     }
 
-    public function backup(): string
+    public function backup(): string|false
     {
         $file = $this->getBackupFilePath();
 
-        $this->backupTo($file);
-        $this->removeOutdatedBackups();
+        if ($this->backupTo($file)) {
+            $this->removeOutdatedBackups();
+            return $file;
+        }
 
-        return $file;
+        return false;
     }
 
     public function backupTo(string $filePath): bool
@@ -42,18 +46,13 @@ class Connection extends \yii\db\Connection
         $command = $this->getSchema()->getBackupCommand();
         $command = $this->parseCommandTokens($command, $filePath);
 
-        return $this->createShellCommand($command)->execute();
+        return $this->executeShellCommand($command);
     }
 
     public function removeOutdatedBackups(): void
     {
         if ($this->maxBackups) {
-            $backupPath = Yii::getAlias($this->backupPath);
-            $files = glob($backupPath . DIRECTORY_SEPARATOR . "*.sql");
-
-            usort($files, static function ($a, $b) {
-                return filemtime($b) <=> filemtime($a);
-            });
+            $files = $this->getBackups();
 
             if (count($files) >= $this->maxBackups) {
                 $backupsToDelete = array_slice($files, $this->maxBackups);
@@ -65,6 +64,17 @@ class Connection extends \yii\db\Connection
         }
     }
 
+    public function getBackups(): array
+    {
+        $backupPath = Yii::getAlias($this->backupPath);
+        $extension = '*.' . $this->getSchema()->getBackupFileExtension();
+        $files = glob($backupPath . DIRECTORY_SEPARATOR . $extension) ?: [];
+
+        usort($files, fn ($a, $b) => filemtime($b) <=> filemtime($a));
+
+        return $files;
+    }
+
     public function getBackupFilePath(): string
     {
         FileHelper::createDirectory($this->backupPath);
@@ -73,7 +83,7 @@ class Connection extends \yii\db\Connection
         $date = (new DateTime())->format('Y-m-d');
         $backupPath = Yii::getAlias($this->backupPath) . DIRECTORY_SEPARATOR;
         $filename = "$dsn->database-$date";
-        $extension = '.sql';
+        $extension = '.' . $this->getSchema()->getBackupFileExtension();
         $path = $backupPath . $filename . $extension;
         $i = 0;
 
@@ -102,16 +112,19 @@ class Connection extends \yii\db\Connection
         return str_replace(array_keys($tokens), $tokens, $command);
     }
 
-    private function createShellCommand(string $command): Command
+    private function executeShellCommand(string $command): bool
     {
-        $shellCommand = new Command();
-        $shellCommand->setCommand($command);
+        $cmd = new Command();
+        $cmd->setCommand($command);
 
         if (!function_exists('proc_open') && function_exists('exec')) {
-            $shellCommand->useExec = true;
+            $cmd->useExec = true;
         }
 
-        return $shellCommand;
+        $success = $cmd->execute();
+        $this->trigger(self::EVENT_AFTER_BACKUP);
+
+        return $success;
     }
 
     public function getSchema(): Schema
