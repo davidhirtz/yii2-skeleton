@@ -65,7 +65,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
 
     protected function migrateUp($class): bool
     {
-        if (!$this->backupCompleted) {
+        if (!$this->backupCompleted && Yii::$app->getDb()->backupOnMigration) {
             $this->actionBackup();
             $this->backupCompleted = true;
         }

@@ -31,7 +31,7 @@ class AssetController extends \yii\console\controllers\AssetController
         if (!$total) {
             $this->stdout('All assets are already cleared' . PHP_EOL, Console::FG_GREEN);
         } else {
-            $this->interactiveStartStdout('Removing ' . ($total == 1 ? 'one asset bundle' : "$total asset bundles") . '... ');
+            $this->interactiveStartStdout('Removing ' . ($total == 1 ? 'one asset bundle' : "$total asset bundles") . ' ... ');
 
             foreach ($assets as $asset) {
                 FileHelper::removeDirectory($asset);

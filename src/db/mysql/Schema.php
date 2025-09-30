@@ -15,6 +15,8 @@ use Yii;
  */
 class Schema extends \yii\db\mysql\Schema
 {
+    private ?string $tempConfigFile = null;
+
     public function getBackupCommand(): string
     {
         $baseCommand = (new Command('mysqldump'))
@@ -53,31 +55,48 @@ class Schema extends \yii\db\mysql\Schema
         );
     }
 
+    public function getRestoreCommand(): string
+    {
+        $command = (new Command('mysql'))
+            ->addArg('--defaults-file=', $this->getTempConfigFile())
+            ->addArg('{database}');
+
+        return $command->getExecCommand() . ' < "{file}"';
+    }
+
     public function getBackupFileExtension(): string
     {
         return 'sql';
     }
 
-    private function getTempConfigFile(): string
+    protected function getTempConfigFile(): string
     {
-        $contents = [
-            '[client]',
-            "user={$this->db->username}",
-            'password="' . addslashes($this->db->password) . '"',
-        ];
+        if ($this->tempConfigFile === null) {
+            $contents = [
+                '[client]',
+                "user={$this->db->username}",
+                'password="' . addslashes($this->db->password) . '"',
+            ];
 
-        $dsn = Dsn::fromString($this->db->dsn);
-        $contents[] = "host=$dsn->host";
+            $dsn = Dsn::fromString($this->db->dsn);
+            $contents[] = "host=$dsn->host";
 
-        if ($dsn->port) {
-            $contents[] = "port=$dsn->port";
+            if ($dsn->port) {
+                $contents[] = "port=$dsn->port";
+            }
+
+            $this->tempConfigFile = Yii::getAlias('@runtime/' . uniqid() . '.cnf');
+            file_put_contents($this->tempConfigFile, implode(PHP_EOL, $contents) . PHP_EOL);
         }
 
-        $path = Yii::getAlias('@runtime/' . uniqid() . '.cnf');
-        file_put_contents($path, implode(PHP_EOL, $contents) . PHP_EOL);
+        return $this->tempConfigFile;
+    }
 
-        $this->db->on(Connection::EVENT_AFTER_BACKUP, fn () => FileHelper::unlink($path));
-
-        return $path;
+    public function __destruct()
+    {
+        if ($this->tempConfigFile) {
+            FileHelper::unlink($this->tempConfigFile);
+            $this->tempConfigFile = null;
+        }
     }
 }

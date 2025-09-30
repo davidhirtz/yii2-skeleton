@@ -1,5 +1,7 @@
 ## 2.6.0 (in development)
 
+- Added backup and restore methods to `Connection` (Issue #46)
+- Added `Connection::$backupOnMigration` option, defaults to `true`
 - Added `Dsn` helper class to parse DSN strings
 - Locked database schema to MySql
 

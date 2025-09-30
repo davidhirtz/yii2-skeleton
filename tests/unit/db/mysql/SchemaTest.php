@@ -33,7 +33,5 @@ class SchemaTest extends Unit
         $this->assertStringContainsString('password="pass"', $contents);
         $this->assertStringContainsString('host=localhost', $contents);
         $this->assertStringNotContainsString('port=', $contents);
-
-        unlink($file);
     }
 }

@@ -13,7 +13,7 @@ trait BackupTrait
 
     public function actionBackup(): void
     {
-        $this->interactiveStartStdout('Backing up database...');
+        $this->interactiveStartStdout('Backing up database ...');
         $this->interactiveDoneStdout(Yii::$app->getDb()->backup() !== false);
     }
 
@@ -26,13 +26,13 @@ trait BackupTrait
             return;
         }
 
-        $this->stdout('Available backups:' . PHP_EOL, Console::FG_YELLOW);
+        $this->stdout('Available backups:' . PHP_EOL);
 
         foreach ($backups as $i => $file) {
-            $this->stdout(sprintf(' [%d] %s', $i + 1, basename($file)) . PHP_EOL, Console::FG_YELLOW);
+            $this->stdout(sprintf(' [%d] %s', $i + 1, basename($file)) . PHP_EOL);
         }
 
-        $index = $this->prompt('Select backup to restore (number): ', [
+        $index = $this->prompt('Select backup to restore (number):', [
             'required' => true,
             'pattern' => '/^[1-9][0-9]*$/',
             'error' => 'Please enter a valid number.',
@@ -46,5 +46,8 @@ trait BackupTrait
         }
 
         $filename = $backups[$index];
+
+        $this->interactiveStartStdout('Restoring database from backup ...');
+        $this->interactiveDoneStdout(Yii::$app->getDb()->restore($filename) !== false);
     }
 }

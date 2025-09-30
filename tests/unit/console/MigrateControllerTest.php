@@ -11,7 +11,7 @@ use davidhirtz\yii2\skeleton\console\controllers\MigrateController;
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use Yii;
 
-class MigrationControllerTest extends Unit
+class MigrateControllerTest extends Unit
 {
     use ConsoleApplicationTrait;
 
@@ -54,6 +54,31 @@ class MigrationControllerTest extends Unit
         self::assertEquals('Database connection not configured.' . PHP_EOL, $controller->flushStdOutBuffer());
     }
 
+    public function testActionBackupAndRestore(): void
+    {
+        $controller = $this->createMigrationController();
+
+        /**  @covers MigrateController::actionBackup() */
+        $controller->runAction('backup');
+
+        $stdout = $controller->flushStdOutBuffer();
+        self::assertStringContainsString('Backing up database ... done', $stdout);
+
+        $backups = Yii::$app->getDb()->getBackups();
+        self::assertNotEmpty($backups);
+
+        $filename = $backups[0];
+
+        /**  @covers MigrateController::actionRestore() */
+        $controller->runAction('restore');
+        $stdout = $controller->flushStdOutBuffer();
+
+        self::assertStringContainsString(basename($filename), $stdout);
+        self::assertStringContainsString('Restoring database from backup ... done', $stdout);
+
+        unlink($filename);
+    }
+
     public function testActionConfig(): void
     {
         $controller = $this->createMigrationController();
@@ -84,13 +109,13 @@ class MigrationControllerTest extends Unit
         self::assertFileExists(Yii::getAlias($controller->dbFile));
     }
 
-    protected function createMigrationController(): MigrationControllerMock
+    protected function createMigrationController(): MigrateControllerMock
     {
-        return new MigrationControllerMock('migration', Yii::$app);
+        return new MigrateControllerMock('migration', Yii::$app);
     }
 }
 
-class MigrationControllerMock extends MigrateController
+class MigrateControllerMock extends MigrateController
 {
     use StdOutBufferControllerTrait;
 
@@ -141,6 +166,7 @@ class MigrationControllerMock extends MigrateController
             'Enter port or leave empty:' => $this->dbPort,
             'Enter database name:' => $this->dbName,
             'Enter username:' => $this->dbUsername,
+            'Select backup to restore (number):' => '1',
             default => parent::prompt($text, $options),
         };
     }

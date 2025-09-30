@@ -13,8 +13,7 @@ use Yii;
 
 class Connection extends \yii\db\Connection
 {
-    public const string EVENT_AFTER_BACKUP = 'afterBackup';
-
+    public bool $backupOnMigration = true;
     public string $backupPath = '@runtime/backups';
     public ?array $ignoredBackupTables;
     public int|false $maxBackups = 10;
@@ -44,12 +43,20 @@ class Connection extends \yii\db\Connection
     public function backupTo(string $filePath): bool
     {
         $command = $this->getSchema()->getBackupCommand();
-        $command = $this->parseCommandTokens($command, $filePath);
+        $command = $this->parseShellCommandTokens($command, $filePath);
 
         return $this->executeShellCommand($command);
     }
 
-    public function removeOutdatedBackups(): void
+    public function restore(string $filename): bool
+    {
+        $command = $this->getSchema()->getRestoreCommand();
+        $command = $this->parseShellCommandTokens($command, $filename);
+
+        return $this->executeShellCommand($command);
+    }
+
+    protected function removeOutdatedBackups(): void
     {
         if ($this->maxBackups) {
             $files = $this->getBackups();
@@ -75,26 +82,26 @@ class Connection extends \yii\db\Connection
         return $files;
     }
 
-    public function getBackupFilePath(): string
+    protected function getBackupFilePath(): string
     {
         FileHelper::createDirectory($this->backupPath);
 
         $dsn = Dsn::fromString($this->dsn);
         $date = (new DateTime())->format('Y-m-d');
-        $backupPath = Yii::getAlias($this->backupPath) . DIRECTORY_SEPARATOR;
+        $directory = Yii::getAlias($this->backupPath) . DIRECTORY_SEPARATOR;
         $filename = "$dsn->database-$date";
         $extension = '.' . $this->getSchema()->getBackupFileExtension();
-        $path = $backupPath . $filename . $extension;
+        $path = $directory . $filename . $extension;
         $i = 0;
 
         while (file_exists($path)) {
-            $path = $backupPath . $filename . '-' . ++$i . $extension;
+            $path = $directory . $filename . '-' . ++$i . $extension;
         }
 
         return $path;
     }
 
-    protected function parseCommandTokens(string $command, string $file): string
+    protected function parseShellCommandTokens(string $command, string $file): string
     {
         // h/t https://stackoverflow.com/a/1250279/1688568
         $password = str_replace("'", "'\"'\"'", $this->password);
@@ -121,10 +128,7 @@ class Connection extends \yii\db\Connection
             $cmd->useExec = true;
         }
 
-        $success = $cmd->execute();
-        $this->trigger(self::EVENT_AFTER_BACKUP);
-
-        return $success;
+        return $cmd->execute();
     }
 
     public function getSchema(): Schema
