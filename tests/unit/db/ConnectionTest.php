@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\tests\unit\db;
 
 use Codeception\Test\Unit;
+use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use Yii;
 
 class ConnectionTest extends Unit
@@ -28,6 +29,6 @@ class ConnectionTest extends Unit
 
         self::assertFileNotExists($filePath);
 
-        unlink($newFilePath);
+        FileHelper::removeDirectory($db->backupPath);
     }
 }
