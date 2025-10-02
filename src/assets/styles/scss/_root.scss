@@ -4,7 +4,7 @@
   --color-red-50: oklch(97.1% 0.013 17.38);
   --color-red-100: oklch(93.6% 0.032 17.717);
   --color-red-200: oklch(88.5% 0.062 18.334);
-  --color-red-300: oklch(80.8% 0.114 19.571);
+  --color-red-300: oklch(0.769 0.137 20.73);
   --color-red-400: oklch(70.4% 0.191 22.216);
   --color-red-500: oklch(63.7% 0.237 25.331);
   --color-red-600: oklch(57.7% 0.245 27.325);
@@ -138,7 +138,7 @@
 
   --alert-info-bg: var(--color-blue-50);
   --alert-info-border-color: var(--alert-info-bg);
-  --alert-info-color: var(--color-blue-900);
+  --alert-info-color: inherit;
   --alert-info-link-color: var(--color-blue-500);
   --alert-info-link-hover-color: var(--color-blue-600);
 
@@ -202,7 +202,7 @@
   --card-color: var(--color-black);
   --card-header-bg: var(--color-slate-400);
   --card-header-color: var(--color-white);
-  --card-danger-bg: var(--color-red-400);
+  --card-danger-bg: var(--color-red-300);
   --card-danger-color: var(--color-white);
   --card-list-group-action-bg: var(--color-gray-100);
   --card-list-group-action-hover-bg: var(--color-gray-200);

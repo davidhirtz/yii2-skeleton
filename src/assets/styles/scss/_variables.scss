@@ -164,7 +164,7 @@ $header-line-height: 1.4 !default;
 
 $submenu-border-bottom-width: 2px !default;
 $submenu-link-margin: 0 0.125rem $spacer-x !default;
-$submenu-margin: 0 0 $margin-y !default;
+$submenu-margin: 0 !default;
 $submenu-justify-content: center !default;
 
 // Alert
@@ -326,7 +326,7 @@ $list-group-action-padding-y: $spacer-y !default;
 // Tables
 $table-border-width: $border-width !default;
 $table-striped-order: odd !default;
-$table-cell-padding-y: 0.75rem !default;
+$table-cell-padding-y: 1rem !default;
 $table-cell-padding-x: 1rem !default;
 $table-cell-vertical-align: top !default;
 $table-th-font-weight: null !default;
