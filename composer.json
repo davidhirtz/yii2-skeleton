@@ -22,6 +22,7 @@
         "guzzlehttp/guzzle": "^7.9",
         "guzzlehttp/oauth-subscriber": "^0.8.1",
         "jfcherng/php-diff": "^6.9",
+        "mikehaertl/php-shellcommand": "^1.7",
         "npm-asset/blueimp-file-upload": "^10.32",
         "npm-asset/bootbox": "^5",
         "robthree/twofactorauth": "^1.8",
