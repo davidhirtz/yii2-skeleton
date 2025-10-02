@@ -13,10 +13,11 @@ class FileHelperTest extends Unit
     public function testConfigFile(): void
     {
         $folder = Yii::getAlias('@runtime/file-helper');
+        $length = 20;
+        $filename = FileHelper::generateRandomFilename($folder, 'php', $length);
 
-        $filename = FileHelper::generateRandomFilename('php', 20);
         self::assertStringEndsWith('.php', $filename);
-        self::assertEquals(20 + 4, strlen($filename));
+        self::assertEquals($length + 4, strlen(basename($filename)));
 
         $config = [
             'string' => 'this is a string',

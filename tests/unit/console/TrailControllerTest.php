@@ -81,7 +81,7 @@ class TrailControllerTest extends Unit
         $controller = $this->createTrailController();
         $controller->actionOptimize();
 
-        self::assertStringStartsWith('Optimizing trail table...  done', $controller->flushStdOutBuffer());
+        self::assertStringStartsWith('Optimizing trail table ...  done', $controller->flushStdOutBuffer());
     }
 
     protected function createTrailController(): TrailControllerMock

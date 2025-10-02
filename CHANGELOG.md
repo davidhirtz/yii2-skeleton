@@ -9,6 +9,20 @@
 - Removed `Html::buttonList()`, use `Html::buttons()` instead
 - Removed `GridView::renderSelectionForm()`
 
+## 2.6.0 (Oct 2, 2025)
+
+- Added backup and restore methods to `Connection` (Issue #46)
+- Added `Connection::$backupOnMigration` option, defaults to `true`
+- Added `Dsn` helper class to parse DSN strings
+- Changed `FileHelper::generateRandomFilename()` signature
+- Locked database schema to MySql
+
+## 2.5.8 (Sep 23, 2025)
+
+- Changed visibility of `UrlManager::replaceSubdomain()` to protected
+- Enhanced `SitemapController` to redirect draft domains to production domains (#47)
+- Fixed `Url::draft()` helper method to correctly handle strings
+
 ## 2.5.7 (Aug 6, 2025)
 
 - Enhanced `TrailModelCollection` display of deleted active records

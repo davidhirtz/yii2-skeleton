@@ -119,7 +119,7 @@ class TrailController extends Controller
      */
     public function actionOptimize(): void
     {
-        $this->interactiveStartStdout('Optimizing trail table... ');
+        $this->interactiveStartStdout('Optimizing trail table ... ');
         $success = false;
 
         try {

@@ -54,6 +54,16 @@ class SitemapController extends Controller
         return $behaviors;
     }
 
+    public function beforeAction($action): bool
+    {
+        if ($this->request->isDraftRequest()) {
+            $this->redirect(Yii::$app->getUrlManager()->getHostInfo() . $this->request->getUrl())->send();
+            return false;
+        }
+
+        return parent::beforeAction($action);
+    }
+
     public function actionIndex(?string $key = null, int $offset = 0): string|bool
     {
         $sitemap = Yii::$app->sitemap;

@@ -9,6 +9,7 @@ use davidhirtz\yii2\skeleton\assets\EmptyAssetBundle;
 use davidhirtz\yii2\skeleton\auth\clients\Facebook;
 use davidhirtz\yii2\skeleton\controllers\HealthController;
 use davidhirtz\yii2\skeleton\controllers\SitemapController;
+use davidhirtz\yii2\skeleton\db\Connection;
 use davidhirtz\yii2\skeleton\i18n\I18N;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\rbac\DbManager;
@@ -24,7 +25,6 @@ use yii\bootstrap5\BootstrapAsset;
 use yii\bootstrap5\BootstrapPluginAsset;
 use yii\caching\FileCache;
 use yii\console\controllers\MigrateController;
-use yii\db\Connection;
 use yii\grid\GridViewAsset;
 use yii\helpers\ArrayHelper;
 use yii\i18n\PhpMessageSource;
@@ -34,12 +34,14 @@ use yii\web\JqueryAsset;
 
 /**
  * @property DbManager $authManager
+ * @property Connection $db
  * @property I18N $i18n
  * @property Sitemap $sitemap
  * @property UrlManager $urlManager
  * @property View $view
  *
  * @method DbManager getAuthManager()
+ * @method Connection getDb()
  * @method I18N getI18n()
  * @method Mailer getMailer()
  * @method UrlManager getUrlManager()
