@@ -1,4 +1,4 @@
-## 2.6.0 (in development)
+## 2.6.0 (Oct 2, 2025)
 
 - Added backup and restore methods to `Connection` (Issue #46)
 - Added `Connection::$backupOnMigration` option, defaults to `true`
@@ -38,7 +38,6 @@
 ## 2.5.2 (Jun 12, 2025)
 
 - Fixed `AjaxRouteTrait`
--
 
 ## 2.5.1 (Jun 5, 2025)
 
