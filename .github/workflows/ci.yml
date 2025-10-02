@@ -52,7 +52,7 @@ jobs:
         run: composer install --no-progress --prefer-dist --optimize-autoloader
 
       - name: Prepare the application
-        run: php tests/yii migrate --interactive=0
+        run: php tests/yii migrate --interactive=0 --skip-backup
         env:
           MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.mysql.ports['3306'] }};dbname=yii2_skeleton_test
 

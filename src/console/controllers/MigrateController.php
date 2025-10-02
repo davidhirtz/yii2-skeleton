@@ -31,7 +31,28 @@ class MigrateController extends \yii\console\controllers\MigrateController
     public $templateFile = '@skeleton/views/migration.php';
 
     private ?array $_dbConfig = null;
-    private bool $backupCompleted = false;
+
+    /**
+     * @var bool whether to skip database backup before applying or reverting migrations.
+     */
+    public bool $skipBackup = false;
+
+    public function init(): void
+    {
+        if (!$this->skipBackup) {
+            $this->skipBackup = !Yii::$app->getDb()->backupOnMigration;
+        }
+
+        parent::init();
+    }
+
+    public function options($actionID): array
+    {
+        $options = parent::options($actionID);
+        $options[] = 'skipBackup';
+
+        return $options;
+    }
 
     public function beforeAction($action): bool
     {
@@ -65,12 +86,22 @@ class MigrateController extends \yii\console\controllers\MigrateController
 
     protected function migrateUp($class): bool
     {
-        if (!$this->backupCompleted && Yii::$app->getDb()->backupOnMigration) {
+        if (!$this->skipBackup) {
             $this->actionBackup();
-            $this->backupCompleted = true;
+            $this->skipBackup = true;
         }
 
         return parent::migrateUp($class);
+    }
+
+    protected function migrateDown($class): bool
+    {
+        if (!$this->skipBackup) {
+            $this->actionBackup();
+            $this->skipBackup = true;
+        }
+
+        return parent::migrateDown($class);
     }
 
     /**
