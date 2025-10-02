@@ -74,17 +74,10 @@ class UserPictureForm extends Model
 
         if (!$extension) {
             $extensions = array_intersect($this->uploadExtensions, FileHelper::getExtensionsByMimeType($this->file->type ?? false));
-            $extension = $extensions ? current($extensions) : null;
+            $extension = $extensions ? current($extensions) : 'jpg';
         }
 
-        $this->filename = FileHelper::generateRandomFilename($extension, 12);
-        $this->generatePictureFilenameInternal();
-    }
-
-    private function generatePictureFilenameInternal(): void
-    {
-        if (is_file($this->user->getUploadPath() . $this->filename)) {
-            $this->generatePictureFilename();
-        }
+        $path = FileHelper::generateRandomFilename($this->user->getUploadPath(), $extension, 12);
+        $this->filename = basename($path);
     }
 }

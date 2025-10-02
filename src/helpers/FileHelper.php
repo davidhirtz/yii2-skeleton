@@ -109,20 +109,27 @@ EOL
         );
     }
 
-    public static function generateRandomFilename(?string $extension = null, int $length = 8): string
+    public static function generateRandomFilename(string $path, string $extension, int $length = 8): string
     {
-        $filename = Yii::$app->security->generateRandomString($length);
+        $basename = $path . DIRECTORY_SEPARATOR . Yii::$app->getSecurity()->generateRandomString($length);
+        return static::generateUniqueFilename($basename, $extension);
+    }
 
-        if ($extension) {
-            $filename .= '.' . (str_contains($extension, '.') ? strtolower(pathinfo($extension, PATHINFO_EXTENSION)) : $extension);
+    public static function generateUniqueFilename(string $basename, string $extension): string
+    {
+        $path = "$basename.$extension";
+        $i = 0;
+
+        while (file_exists($path)) {
+            $path = $basename . '-' . ++$i . ".$extension";
         }
 
-        return $filename;
+        return $path;
     }
 
     public static function getExtensionFromUrl(string $url): string
     {
-        return strtolower(pathinfo((string) parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
+        return strtolower(pathinfo((string)parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
     }
 
     public static function encodeUrl(string $url): string

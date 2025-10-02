@@ -9,6 +9,7 @@ use davidhirtz\yii2\skeleton\db\mysql\Schema;
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use davidhirtz\yii2\skeleton\models\Session;
 use mikehaertl\shellcommand\Command;
+use RuntimeException;
 use Yii;
 
 class Connection extends \yii\db\Connection
@@ -87,21 +88,18 @@ class Connection extends \yii\db\Connection
 
     protected function getBackupFilePath(): string
     {
-        FileHelper::createDirectory($this->backupPath);
+        $path = Yii::getAlias($this->backupPath);
+
+        if (!FileHelper::createDirectory($path)) {
+            throw new RuntimeException("Could not create backup directory: $path");
+        }
 
         $dsn = Dsn::fromString($this->dsn);
         $date = (new DateTime())->format('Y-m-d');
-        $directory = Yii::getAlias($this->backupPath) . DIRECTORY_SEPARATOR;
-        $filename = "$dsn->database-$date";
-        $extension = '.' . $this->getSchema()->getBackupFileExtension();
-        $path = $directory . $filename . $extension;
-        $i = 0;
+        $basename = $path . DIRECTORY_SEPARATOR . "$dsn->database-$date";
+        $extension = $this->getSchema()->getBackupFileExtension();
 
-        while (file_exists($path)) {
-            $path = $directory . $filename . '-' . ++$i . $extension;
-        }
-
-        return $path;
+        return FileHelper::generateUniqueFilename($basename, $extension);
     }
 
     protected function parseShellCommandTokens(string $command, string $file): string
