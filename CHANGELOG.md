@@ -1,3 +1,7 @@
+## 2.6.1 (Oct 20, 2025)
+
+- Added Russian language support
+
 ## 2.6.0 (Oct 2, 2025)
 
 - Added backup and restore methods to `Connection` (Issue #46)
