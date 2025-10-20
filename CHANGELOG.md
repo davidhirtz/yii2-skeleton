@@ -1,3 +1,7 @@
+## 2.6.2 (Oct 20, 2025)
+
+- Fixed Russian flag
+
 ## 2.6.1 (Oct 20, 2025)
 
 - Added Russian language support
