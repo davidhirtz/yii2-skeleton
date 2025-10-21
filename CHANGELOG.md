@@ -1,3 +1,7 @@
+## 2.6.3 (in development)
+
+- Removed unused DatePicker language JavaScript include
+
 ## 2.6.2 (Oct 20, 2025)
 
 - Fixed Russian flag
