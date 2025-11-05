@@ -66,10 +66,10 @@ jobs:
       - name: Run static code analysis
         run: composer phpstan
 
-      - name: Save logs on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: logs-php-${{ matrix.php-versions }}
-          path: ./runtime/logs
-          if-no-files-found: ignore
+      #- name: Save logs on failure
+      #  if: failure()
+      #  uses: actions/upload-artifact@v4
+      #  with:
+      #    name: logs-php-${{ matrix.php-versions }}
+      #    path: ./runtime/logs
+      #    if-no-files-found: ignore
