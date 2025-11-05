@@ -304,3 +304,48 @@ var Skeleton = {
         $('#progress').toggle(progress < 100).find('.bar').css('width', progress + '%');
     }
 };
+
+function normalizeHex(input, required) {
+    if (input) {
+        var val = String(input).trim();
+
+        if (val[0] !== '#') {
+            val = '#' + val;
+        }
+
+        val = val.toLowerCase();
+
+        if (/^#[0-9a-f]{3}$/.test(val)) {
+            return '#' + val[1] + val[1] + val[2] + val[2] + val[3] + val[3];
+        }
+
+        if (/^#[0-9a-f]{6}$/.test(val)) {
+            return val;
+        }
+    }
+
+    return required ? '#000000' : '';
+}
+
+document.querySelectorAll('[data-color]').forEach(function ($wrap) {
+    var $inputs = $wrap.querySelectorAll('input');
+    var changing = false;
+
+    $inputs.forEach(function ($input) {
+        $input.addEventListener('change', function () {
+            if (changing) {
+                return;
+            }
+
+            changing = true;
+
+            $inputs.forEach(function ($otherInput) {
+                $otherInput.value = normalizeHex($input.value, $input.required);
+            });
+
+            setTimeout(function () {
+                changing = false
+            }, 100);
+        });
+    });
+});

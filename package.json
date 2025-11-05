@@ -6,7 +6,7 @@
 	],
 	"scripts": {
 		"build": "node esbuild.js",
-		"watch": "node esbuild.js --watch"
+		"dev": "node esbuild.js --watch"
 	},
 	"devDependencies": {
 		"autoprefixer": "^10.4.20",

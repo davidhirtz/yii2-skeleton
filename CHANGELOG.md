@@ -1,5 +1,6 @@
-## 2.6.3 (in development)
+## 2.6.3 (Nov 5, 2025)
 
+- Added `HexColorInputWidget` and enhanced display for optional color fields
 - Removed unused DatePicker language JavaScript include
 
 ## 2.6.2 (Oct 20, 2025)
