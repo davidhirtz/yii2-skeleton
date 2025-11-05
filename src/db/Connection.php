@@ -129,7 +129,12 @@ class Connection extends \yii\db\Connection
             $cmd->useExec = true;
         }
 
-        return $cmd->execute();
+        if (!$cmd->execute()) {
+            Yii::error($cmd->getStdErr(), __METHOD__);
+            return false;
+        }
+
+        return true;
     }
 
     public function getSchema(): Schema
