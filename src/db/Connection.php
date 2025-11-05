@@ -130,7 +130,7 @@ class Connection extends \yii\db\Connection
         }
 
         if (!$cmd->execute()) {
-            Yii::error($cmd->getStdErr(), __METHOD__);
+            Yii::error($cmd->getError(), __METHOD__);
             return false;
         }
 

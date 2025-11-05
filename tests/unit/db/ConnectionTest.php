@@ -12,6 +12,8 @@ class ConnectionTest extends Unit
 {
     public function testBackup(): void
     {
+        Yii::error('Test log to ensure logging is working.');
+
         $db = Yii::$app->getDb();
         $db->maxBackups = 1;
 
