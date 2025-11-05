@@ -64,6 +64,9 @@ class MigrateControllerTest extends Unit
         $stdout = $controller->flushStdOutBuffer();
         self::assertStringContainsString('Backing up database ... done', $stdout);
 
+        Yii::$app->getDb()->close();
+        Yii::$app->getDb()->open();
+
         $backups = Yii::$app->getDb()->getBackups();
         self::assertNotEmpty($backups);
 
