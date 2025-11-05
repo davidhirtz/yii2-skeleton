@@ -37,7 +37,7 @@ class ActiveFieldTest extends Unit
 
         self::assertStringContainsString($expected, $field->hexColor()->render());
 
-        $expected = '<input type="color" id="test-color-color" class="form-control" name="Test[color]" value="#000" required>';
+        $expected = '<input type="color" id="test-color-color" class="form-control" name="Test[color]" value="#000000" required>';
 
         self::assertStringContainsString($expected, $field->hexColor(['value' => '#000'])->render());
     }
