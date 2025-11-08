@@ -20,18 +20,18 @@ class Schema extends \yii\db\mysql\Schema
     public function getBackupCommand(): string
     {
         $baseCommand = (new Command('mysqldump'))
+            ->addArg('--defaults-file=', $this->getTempConfigFile())
             ->addArg('--add-drop-table')
             ->addArg('--comments')
             ->addArg('--create-options')
-            ->addArg('--default-character-set=', $this->db->charset)
-            ->addArg('--defaults-file=', $this->getTempConfigFile())
             ->addArg('--dump-date')
             ->addArg('--no-autocommit')
-            ->addArg('--no-tablespaces')
             ->addArg('--routines')
+            ->addArg('--default-character-set=', $this->db->charset)
             ->addArg('--set-charset')
-            ->addArg('--single-transaction')
-            ->addArg('--triggers');
+            ->addArg('--triggers')
+            ->addArg('--no-tablespaces')
+            ->addArg('--set-gtid-purged=OFF');
 
         $schemaDump = (clone $baseCommand)
             ->addArg('--no-data')
