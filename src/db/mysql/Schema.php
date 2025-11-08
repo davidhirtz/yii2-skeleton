@@ -30,8 +30,11 @@ class Schema extends \yii\db\mysql\Schema
             ->addArg('--default-character-set=', $this->db->charset)
             ->addArg('--set-charset')
             ->addArg('--triggers')
-            ->addArg('--no-tablespaces')
-            ->addArg('--set-gtid-purged=OFF');
+            ->addArg('--no-tablespaces');
+
+        if ($this->supportsSetGtidPurgedArgument()) {
+            $baseCommand->addArg('--set-gtid-purged=OFF');
+        }
 
         $schemaDump = (clone $baseCommand)
             ->addArg('--no-data')
@@ -99,5 +102,11 @@ class Schema extends \yii\db\mysql\Schema
             FileHelper::unlink($this->tempConfigFile);
             $this->tempConfigFile = null;
         }
+    }
+
+    private function supportsSetGtidPurgedArgument(): bool
+    {
+        $command = (new Command())->setCommand('mysqldump --help | grep "--set-gtid-purged"');
+        return $command->execute() && $command->getOutput();
     }
 }

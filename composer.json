@@ -83,6 +83,6 @@
     "fix-cs": "ecs check --ansi --fix",
     "phpstan": "phpstan --memory-limit=1G",
     "rector": "rector",
-    "test": "codecept run --debug"
+    "test": "codecept run"
   }
 }
