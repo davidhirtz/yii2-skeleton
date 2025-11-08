@@ -130,9 +130,10 @@
   }
 
   &[type=color] {
-    height: 1em;
+    height: 20px;
+    width: auto;
+    aspect-ratio: 1;
     padding: 0;
-    width: 1em;
 
     &::-webkit-color-swatch-wrapper {
       padding: 0;
