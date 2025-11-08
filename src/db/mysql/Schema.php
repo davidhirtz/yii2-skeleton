@@ -106,7 +106,7 @@ class Schema extends \yii\db\mysql\Schema
 
     private function supportsSetGtidPurgedArgument(): bool
     {
-        $command = (new Command())->setCommand('mysqldump --help | grep "--set-gtid-purged"');
+        $command = (new Command())->setCommand('mysqldump --help | grep "set-gtid-purged"');
         return $command->execute() && $command->getOutput();
     }
 }
