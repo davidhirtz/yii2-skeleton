@@ -10,6 +10,7 @@ use davidhirtz\yii2\skeleton\html\traits\TagInputTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagLinkTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagModalTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagTooltipAttributeTrait;
+use Override;
 
 class Button extends Tag
 {
@@ -49,7 +50,7 @@ class Button extends Tag
         return static::make()->class('btn btn-link')->text($text);
     }
 
-    #[\Override]
+    #[Override]
     protected function getName(): string
     {
         return isset($this->attributes['href']) ? 'a' : 'button';

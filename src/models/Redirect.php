@@ -16,6 +16,7 @@ use davidhirtz\yii2\skeleton\models\traits\TrailModelTrait;
 use davidhirtz\yii2\skeleton\models\traits\TypeAttributeTrait;
 use davidhirtz\yii2\skeleton\models\traits\UpdatedByUserTrait;
 use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
+use Override;
 use Yii;
 
 /**
@@ -35,11 +36,11 @@ class Redirect extends ActiveRecord implements TypeAttributeInterface, TrailMode
 
     final public const string AUTH_REDIRECT_CREATE = 'redirectCreate';
 
-    final public const TYPE_DEFAULT = self::TYPE_MOVED_PERMANENTLY;
+    final public const int TYPE_DEFAULT = self::TYPE_MOVED_PERMANENTLY;
     final public const int TYPE_MOVED_PERMANENTLY = 301;
     final public const int TYPE_FOUND = 302;
 
-    #[\Override]
+    #[Override]
     public function behaviors(): array
     {
         return [
@@ -49,7 +50,7 @@ class Redirect extends ActiveRecord implements TypeAttributeInterface, TrailMode
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function rules(): array
     {
         return array_merge(parent::rules(), [
@@ -79,7 +80,7 @@ class Redirect extends ActiveRecord implements TypeAttributeInterface, TrailMode
         ]);
     }
 
-    #[\Override]
+    #[Override]
     public function beforeValidate(): bool
     {
         $this->type ??= static::TYPE_DEFAULT;
@@ -90,7 +91,7 @@ class Redirect extends ActiveRecord implements TypeAttributeInterface, TrailMode
         return parent::beforeValidate();
     }
 
-    #[\Override]
+    #[Override]
     public function beforeSave($insert): bool
     {
         $this->attachBehaviors([
@@ -145,7 +146,7 @@ class Redirect extends ActiveRecord implements TypeAttributeInterface, TrailMode
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function attributeLabels(): array
     {
         return [
@@ -155,13 +156,13 @@ class Redirect extends ActiveRecord implements TypeAttributeInterface, TrailMode
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function formName(): string
     {
         return 'Redirect';
     }
 
-    #[\Override]
+    #[Override]
     public static function tableName(): string
     {
         return '{{%redirect}}';

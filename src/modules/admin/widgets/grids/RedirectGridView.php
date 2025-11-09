@@ -13,7 +13,6 @@ use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\ButtonsColumn;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\TypeGridViewTrait;
 use davidhirtz\yii2\skeleton\widgets\buttons\DeleteButton;
-use davidhirtz\yii2\skeleton\widgets\buttons\ViewButton;
 use davidhirtz\yii2\timeago\TimeagoColumn;
 use Override;
 use Stringable;
@@ -171,7 +170,11 @@ class RedirectGridView extends GridView
     protected function getRowButtons(Redirect $redirect): array|string
     {
         return [
-            ViewButton::widget(['model' => $redirect]),
+            Button::primary()
+                ->icon('wrench')
+                ->href(['update', 'id' => $redirect->id])
+                ->addClass('d-none d-md-block')
+                ->render(),
             DeleteButton::widget([
                 'model' => $redirect,
                 'url' => [

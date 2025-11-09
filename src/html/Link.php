@@ -9,6 +9,7 @@ use davidhirtz\yii2\skeleton\html\traits\TagIconTextTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagLinkTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagModalTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagTooltipAttributeTrait;
+use Override;
 
 class Link extends Tag
 {
@@ -18,7 +19,7 @@ class Link extends Tag
     use TagModalTrait;
     use TagTooltipAttributeTrait;
 
-    #[\Override]
+    #[Override]
     protected function getName(): string
     {
         return 'a';
