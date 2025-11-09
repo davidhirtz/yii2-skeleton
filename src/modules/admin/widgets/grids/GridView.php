@@ -11,9 +11,9 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Dropdown;
 use davidhirtz\yii2\skeleton\html\Icon;
-use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\CheckboxColumn;
 use davidhirtz\yii2\skeleton\widgets\pagers\LinkPager;
+use Override;
 use Stringable;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -74,7 +74,7 @@ class GridView extends \yii\grid\GridView
     private ?ActiveRecord $_model = null;
     private ?string $_formName = null;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         if ($this->showSelection) {
@@ -93,7 +93,7 @@ class GridView extends \yii\grid\GridView
         parent::init();
     }
 
-    #[\Override]
+    #[Override]
     public function run(): string
     {
         $content = ($this->showOnEmpty || $this->dataProvider->getCount() > 0)
@@ -111,7 +111,7 @@ class GridView extends \yii\grid\GridView
         }, $this->layout);
     }
 
-    #[\Override]
+    #[Override]
     protected function initColumns(): void
     {
         foreach ($this->columns as &$column) {
@@ -129,7 +129,7 @@ class GridView extends \yii\grid\GridView
         parent::initColumns();
     }
 
-    #[\Override]
+    #[Override]
     public function renderItems(): string
     {
         if ($this->dataProvider->getCount() || $this->emptyText) {
@@ -139,7 +139,7 @@ class GridView extends \yii\grid\GridView
         return '';
     }
 
-    #[\Override]
+    #[Override]
     public function renderTableBody(): string
     {
         $tableBody = parent::renderTableBody();
@@ -157,7 +157,7 @@ class GridView extends \yii\grid\GridView
         return $tableBody;
     }
 
-    #[\Override]
+    #[Override]
     public function renderSummary(): string
     {
         $summary = new GridSummary(
@@ -239,7 +239,7 @@ class GridView extends \yii\grid\GridView
         return implode('', $result);
     }
 
-    #[\Override]
+    #[Override]
     public function renderSection($name): string|false
     {
         return match ($name) {
@@ -317,53 +317,9 @@ class GridView extends \yii\grid\GridView
     /**
      * @param T $model
      */
-    protected function getUpdateButton(ActiveRecordInterface $model, array $options = []): string
-    {
-        $icon = ArrayHelper::remove($options, 'icon', 'wrench');
-
-        return Button::primary()
-            ->icon($icon)
-            ->href($this->getRoute($model))
-            ->addClass('d-none d-md-inline-block')
-            ->addAttributes($options)
-            ->render();
-    }
-
-    /**
-     * @param T $model
-     */
-    protected function getDeleteButton(ActiveRecordInterface $model, array $options = []): string
-    {
-        $icon = ArrayHelper::remove($options, 'icon', 'trash');
-        $message = ArrayHelper::remove($options, 'message', Yii::t('yii', 'Are you sure you want to delete this item?'));
-
-        $modal = Modal::make()
-            ->title($message)
-            ->footer(Button::danger()
-                ->text(Yii::t('yii', 'Delete'))
-                ->delete($this->getDeleteRoute($model), '#' . $this->getRowId($model)));
-
-        return Button::danger()
-            ->icon($icon)
-            ->modal($modal)
-            ->addAttributes($options)
-            ->render();
-    }
-
-    /**
-     * @param T $model
-     */
     protected function getRoute(ActiveRecordInterface $model, array $params = []): array|false
     {
         return ['update', 'id' => $model->getPrimaryKey(), ...$params];
-    }
-
-    /**
-     * @param T $model
-     */
-    protected function getDeleteRoute(ActiveRecordInterface $model, array $params = []): array
-    {
-        return ['delete', 'id' => $model->getPrimaryKey(), ...$params];
     }
 
     /**

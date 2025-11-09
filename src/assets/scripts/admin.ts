@@ -1,10 +1,9 @@
-import collapse from "./components/collapse";
-import color from "./components/color";
-import dropdown from "./components/dropdown";
-import filter from "./components/filter";
-import modal from "./components/modals";
-import tooltip from "./components/tooltips";
-import {toggleTargetsOnChange, updateTargetsOnChange} from "./components/forms";
+import collapse from "./includes/collapse";
+import dropdown from "./includes/dropdown";
+import filter from "./includes/filter";
+import modal from "./includes/modals";
+import tooltip from "./includes/tooltips";
+import {toggleTargetsOnChange, updateTargetsOnChange} from "./includes/forms";
 
 import "htmx.org";
 
@@ -21,7 +20,6 @@ doc.body.addEventListener('htmx:configRequest', (event: CustomEvent) => {
 
 doc.body.addEventListener('htmx:load', () => {
     queryAll('[data-collapse]', collapse);
-    queryAll('[data-color]', color);
     queryAll('[data-dropdown]', dropdown);
     queryAll('[data-filter]', filter);
     queryAll('[data-form-target]', updateTargetsOnChange);

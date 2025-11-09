@@ -27,7 +27,7 @@ const watchPlugin = (type) => {
 };
 
 const scripts = await esbuild.context({
-    entryPoints: ['src/assets/scripts/*'],
+    entryPoints: ['src/assets/scripts/*', 'src/assets/scripts/components/*'],
     bundle: true,
     format: 'esm',
     minify: true,

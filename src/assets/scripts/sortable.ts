@@ -3,6 +3,7 @@ import {SortableEvent, SortableOptions} from "sortablejs";
 
 Sortable.mount(new AutoScroll());
 
+// noinspection JSUnusedGlobalSymbols
 export default (selector: string) => {
     const $el = document.querySelector(selector) as HTMLTableElement;
 

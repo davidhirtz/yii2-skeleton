@@ -16,10 +16,10 @@ trait TagLinkTrait
         ]);
     }
 
-    public function href(string|array|null $route): static
+    public function href(string|array|null $url): static
     {
         return $this->addAttributes([
-            'href' => $route !== null ? Url::to($route) : null,
+            'href' => $url !== null ? Url::to($url) : null,
             'type' => null,
         ]);
     }

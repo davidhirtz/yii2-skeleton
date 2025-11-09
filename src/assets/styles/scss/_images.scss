@@ -8,10 +8,9 @@
 }
 
 .img-thumbnail {
-  display: block;
   aspect-ratio: 5 / 4;
-  background: no-repeat left;
-  background-size: contain;
+  object-fit: contain;
+  object-position: top left;
 }
 
 .img-transparent {

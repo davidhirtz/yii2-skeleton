@@ -12,11 +12,12 @@ use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
 use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\ButtonsColumn;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\TypeGridViewTrait;
+use davidhirtz\yii2\skeleton\widgets\buttons\DeleteButton;
+use davidhirtz\yii2\skeleton\widgets\buttons\ViewButton;
 use davidhirtz\yii2\timeago\TimeagoColumn;
 use Override;
 use Stringable;
 use Yii;
-use yii\db\ActiveRecordInterface;
 
 /**
  * @extends GridView<Redirect>
@@ -33,7 +34,7 @@ class RedirectGridView extends GridView
      */
     public ?Redirect $redirect = null;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         $this->setId($this->getId(false) ?? 'redirects');
@@ -163,15 +164,6 @@ class RedirectGridView extends GridView
             ->modal($modal);
     }
 
-    #[\Override]
-    protected function getDeleteRoute(ActiveRecordInterface $model, array $params = []): array
-    {
-        return parent::getDeleteRoute($model, [
-            ...$params,
-            'previous' => $this->redirect->id ?? null,
-        ]);
-    }
-
     /**
      * @see RedirectController::actionUpdate()
      * @see RedirectController::actionDelete()
@@ -179,12 +171,19 @@ class RedirectGridView extends GridView
     protected function getRowButtons(Redirect $redirect): array|string
     {
         return [
-            $this->getUpdateButton($redirect),
-            $this->getDeleteButton($redirect),
+            ViewButton::widget(['model' => $redirect]),
+            DeleteButton::widget([
+                'model' => $redirect,
+                'url' => [
+                    'delete',
+                    'id' => $redirect->id,
+                    'previous' => $this->redirect->id ?? null,
+                ],
+            ]),
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function getModel(): Redirect
     {
         return Redirect::instance();

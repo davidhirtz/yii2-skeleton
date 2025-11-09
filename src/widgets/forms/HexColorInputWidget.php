@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
+use davidhirtz\yii2\skeleton\assets\HexColorInputAssetBundle;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use yii\widgets\InputWidget;
 
 class HexColorInputWidget extends InputWidget
 {
-    public string $template = '<div data-color class="input-group"><div class="input-group-prepend input-group-text">{color}</div>{input}</div>';
+    public string $template = '<color-picker class="input-group"><div class="input-group-prepend input-group-text">{color}</div>{input}</div>';
 
     public function init(): void
     {
@@ -22,6 +23,8 @@ class HexColorInputWidget extends InputWidget
         if ($this->options['value'] && !str_starts_with((string)$this->options['value'], '#')) {
             $this->options['value'] = "#{$this->options['value']}";
         }
+
+        $this->registerSignupClientScript();
 
         parent::init();
     }
@@ -47,5 +50,10 @@ class HexColorInputWidget extends InputWidget
             '{color}' => $colorInput,
             '{input}' => $this->renderInputHtml('text'),
         ]);
+    }
+
+    protected function registerSignupClientScript(): void
+    {
+        $this->getView()->registerAssetBundle(HexColorInputAssetBundle::class);
     }
 }

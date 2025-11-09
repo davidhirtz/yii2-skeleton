@@ -1,4 +1,4 @@
-const normalizeHex = (input: string, required: boolean) => {
+const normalizeHexValue = (input: string, required: boolean) => {
     if (input) {
         let val = String(input).trim();
 
@@ -43,20 +43,23 @@ const normalizeHex = (input: string, required: boolean) => {
     return required ? '#000000' : '';
 }
 
-export default ($wrap: HTMLElement) => {
-    const $inputs = $wrap.querySelectorAll('input');
-    let changing = false;
+window.customElements.get('color-picker') || window.customElements.define('color-picker', class extends HTMLElement {
+    // noinspection JSUnusedGlobalSymbols
+    connectedCallback() {
+        const $inputs = this.querySelectorAll('input');
+        let changing = false;
 
-    $inputs.forEach(($input) => {
-        $input.addEventListener('change', function () {
-            if (changing) {
-                return;
-            }
+        $inputs.forEach(($input) => {
+            $input.addEventListener('change', function () {
+                if (changing) {
+                    return;
+                }
 
-            changing = true;
+                changing = true;
 
-            $inputs.forEach(($other) => $other.value = normalizeHex($input.value, $input.required));
-            setTimeout(() => changing = false, 100);
+                $inputs.forEach(($other) => $other.value = normalizeHexValue($input.value, $input.required));
+                setTimeout(() => changing = false, 100);
+            });
         });
-    });
-}
+    }
+});
