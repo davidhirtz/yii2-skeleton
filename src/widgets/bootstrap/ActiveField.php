@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\widgets\forms\HexColorInputWidget;
 use Yii;
 use yii\validators\NumberValidator;
 use yii\validators\StringValidator;
@@ -114,14 +115,7 @@ class ActiveField extends \davidhirtz\yii2\skeleton\widgets\forms\ActiveField
 
     public function hexColor(array $options = []): static
     {
-        $value = $options['value'] ?? $this->model->{
-        $this->attribute};
-
-        if ($value && !str_starts_with((string)$value, '#')) {
-            $options['value'] ??= "#$value";
-        }
-
-        return $this->input('color', $options);
+        return $this->widget(HexColorInputWidget::class, $options);
     }
 
     public function slug(array $options = []): static

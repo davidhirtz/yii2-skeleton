@@ -9,6 +9,19 @@
 - Removed `Html::buttonList()`, use `Html::buttons()` instead
 - Removed `GridView::renderSelectionForm()`
 
+## 2.6.3 (Nov 5, 2025)
+
+- Added `HexColorInputWidget` and enhanced display for optional color fields
+- Removed unused DatePicker language JavaScript include
+
+## 2.6.2 (Oct 20, 2025)
+
+- Fixed Russian flag
+
+## 2.6.1 (Oct 20, 2025)
+
+- Added Russian language support
+
 ## 2.6.0 (Oct 2, 2025)
 
 - Added backup and restore methods to `Connection` (Issue #46)

@@ -28,16 +28,16 @@ class ActiveFieldTest extends Unit
             'attribute' => 'color',
         ]);
 
-        $expected = '<input type="color" id="test-color" class="form-control" name="Test[color]">';
+        $expected = '<input type="color" id="test-color-color" class="form-control" name="Test[color]" value="#000000" required>';
 
         self::assertStringContainsString($expected, $field->hexColor()->render());
 
-        $model->color = 'ccc';
-        $expected = '<input type="color" id="test-color" class="form-control" name="Test[color]" value="#ccc">';
+        $model->color = 'cccccc';
+        $expected = '<input type="color" id="test-color-color" class="form-control" name="Test[color]" value="#cccccc" required>';
 
         self::assertStringContainsString($expected, $field->hexColor()->render());
 
-        $expected = '<input type="color" id="test-color" class="form-control" name="Test[color]" value="#000">';
+        $expected = '<input type="color" id="test-color-color" class="form-control" name="Test[color]" value="#000000" required>';
 
         self::assertStringContainsString($expected, $field->hexColor(['value' => '#000'])->render());
     }

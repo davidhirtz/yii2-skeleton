@@ -29,7 +29,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Docs: https://github.com/shivammathur/setup-php
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -48,21 +47,29 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
-      - name: Install Composer dependencies
+      - name: Install composer dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader
 
       - name: Prepare the application
-        run: php tests/yii migrate --interactive=0
+        run: php tests/yii migrate --interactive=0 --skip-backup
         env:
           MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.mysql.ports['3306'] }};dbname=yii2_skeleton_test
 
-      - name: Run Tests
+      - name: Run tests
         run: composer test
         env:
           MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.mysql.ports['3306'] }};dbname=yii2_skeleton_test
 
-      - name: Coding Standards
+      - name: Check coding standards
         run: composer check-cs
 
-      - name: Run Static Code Analysis
+      - name: Run static code analysis
         run: composer phpstan
+
+      - name: Save logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-php-${{ matrix.php-versions }}
+          path: ./runtime/logs
+          if-no-files-found: ignore

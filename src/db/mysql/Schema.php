@@ -32,6 +32,10 @@ class Schema extends \yii\db\mysql\Schema
             ->addArg('--triggers')
             ->addArg('--no-tablespaces');
 
+        if ($this->supportsSetGtidPurgedArgument()) {
+            $baseCommand->addArg('--set-gtid-purged=OFF');
+        }
+
         $schemaDump = (clone $baseCommand)
             ->addArg('--no-data')
             ->addArg('--skip-triggers')
@@ -98,5 +102,11 @@ class Schema extends \yii\db\mysql\Schema
             FileHelper::unlink($this->tempConfigFile);
             $this->tempConfigFile = null;
         }
+    }
+
+    private function supportsSetGtidPurgedArgument(): bool
+    {
+        $command = (new Command())->setCommand('mysqldump --help | grep "set-gtid-purged"');
+        return $command->execute() && $command->getOutput();
     }
 }
