@@ -9,7 +9,7 @@ use yii\widgets\InputWidget;
 
 class HexColorInputWidget extends InputWidget
 {
-    public string $template = '<div data-color class="input-group"><div class="input-group-prepend"><div class="input-group-text">{color}</div></div>{input}</div>';
+    public string $template = '<div data-color class="input-group"><div class="input-group-prepend input-group-text">{color}</div>{input}</div>';
 
     public function init(): void
     {

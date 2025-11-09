@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
+use Override;
+
 class ActiveField extends \yii\bootstrap5\ActiveField
 {
-    #[\Override]
+    #[Override]
     protected function addAriaAttributes(&$options): void
     {
         parent::addAriaAttributes($options);

@@ -8,6 +8,7 @@ use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\ModelTimestampTrait;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\TypeFieldTrait;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
+use Override;
 
 /**
  * @property Redirect $model
@@ -22,7 +23,7 @@ class RedirectActiveForm extends ActiveForm
     /**
      * @uses static::typeField()
      */
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         $this->fields ??= [
