@@ -47,7 +47,9 @@ class Modal extends Tag
             $header = [];
 
             if ($this->title) {
-                $header[] = $this->title;
+                $header[] = Div::make()
+                    ->addClass('modal-title')
+                    ->text($this->title);
             }
 
             if ($this->dismiss !== false) {

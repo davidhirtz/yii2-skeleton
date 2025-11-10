@@ -14,6 +14,10 @@
   justify-content: center;
 }
 
+.empty-hidden:empty {
+  display: none;
+}
+
 // Currently needed for yii2-datetime extension
 .col-6 {
   width: 50%;

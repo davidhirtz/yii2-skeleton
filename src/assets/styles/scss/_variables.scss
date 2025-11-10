@@ -104,7 +104,7 @@ $body-font-weight: $font-weight-normal !default;
 $body-text-align: null !default;
 $main-padding-x: 0 !default;
 $main-padding-y: 1rem !default;
-$main-gap-y: $spacer !default;
+$main-gap-y: $spacer * 2 !default;
 
 // Alert
 $alert-padding-y: $spacer !default;
@@ -158,7 +158,7 @@ $breadcrumb-padding-x: 0 !default;
 $breadcrumb-padding-y: 0 !default;
 
 // Header
-$header-margin: $margin-y 0 $margin-y * 2 !default;
+$header-margin: 0 0 $margin-y * 2 !default;
 $header-text-align: center !default;
 $header-line-height: 1.4 !default;
 
@@ -390,7 +390,7 @@ $modal-header-border-width: 0 !default;
 $modal-header-padding-x: $spacer !default;
 $modal-header-padding-y: $spacer !default;
 
-$modal-title-font-weight: $font-weight-medium !default;
+$modal-title-font-weight: $font-weight-bold !default;
 $modal-title-line-height: $line-height-base !default;
 
 $modal-content-border-radius: $border-radius !default;

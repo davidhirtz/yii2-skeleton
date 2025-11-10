@@ -22,10 +22,6 @@ class Flashes extends Widget
 
     public function render(): string
     {
-        if (!$this->alerts) {
-            return '';
-        }
-
         $content = '';
 
         foreach ($this->alerts as $status => $alerts) {
@@ -34,6 +30,7 @@ class Flashes extends Widget
 
         return Container::make()
             ->attribute('id', 'flashes')
+            ->addClass('empty-hidden')
             ->html($content)
             ->render();
     }
@@ -41,7 +38,7 @@ class Flashes extends Widget
     protected function renderAlerts(string $status, array|string $messages): string
     {
         return is_array($messages)
-            ? array_reduce($messages, fn ($carry, $item) => $carry . $this->renderAlert($status, $item), '')
+            ? array_reduce($messages, fn ($carry, $item) => $carry . $this->renderAlerts($status, $item), '')
             : $this->renderAlert($status, $messages);
     }
 

@@ -18,10 +18,10 @@ class ButtonsColumn extends Column
     protected function renderDataCellContent($model, $key, $index): string
     {
         if ($this->content !== null) {
-            $buttons = call_user_func($this->content, $model, $key, $index, $this);
+            $html = call_user_func($this->content, $model, $key, $index, $this);
 
             return ButtonToolbar::make()
-                ->buttons(...$buttons)
+                ->addHtml(...(array)$html)
                 ->render();
         }
 

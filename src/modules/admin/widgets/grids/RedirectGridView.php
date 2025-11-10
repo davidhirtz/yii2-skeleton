@@ -10,9 +10,10 @@ use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
 use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\buttons\DeleteButton;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\buttons\ViewButton;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\ButtonsColumn;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\TypeGridViewTrait;
-use davidhirtz\yii2\skeleton\widgets\buttons\DeleteButton;
 use davidhirtz\yii2\timeago\TimeagoColumn;
 use Override;
 use Stringable;
@@ -167,22 +168,11 @@ class RedirectGridView extends GridView
      * @see RedirectController::actionUpdate()
      * @see RedirectController::actionDelete()
      */
-    protected function getRowButtons(Redirect $redirect): array|string
+    protected function getRowButtons(Redirect $redirect): array
     {
         return [
-            Button::primary()
-                ->icon('wrench')
-                ->href(['update', 'id' => $redirect->id])
-                ->addClass('d-none d-md-block')
-                ->render(),
-            DeleteButton::widget([
-                'model' => $redirect,
-                'url' => [
-                    'delete',
-                    'id' => $redirect->id,
-                    'previous' => $this->redirect->id ?? null,
-                ],
-            ]),
+            new ViewButton($redirect),
+            new DeleteButton($redirect),
         ];
     }
 

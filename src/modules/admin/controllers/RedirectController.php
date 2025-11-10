@@ -8,6 +8,7 @@ use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
 use davidhirtz\yii2\skeleton\web\Controller;
+use Override;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\ForbiddenHttpException;
@@ -16,7 +17,7 @@ use yii\web\Response;
 
 class RedirectController extends Controller
 {
-    #[\Override]
+    #[Override]
     public function behaviors(): array
     {
         return [

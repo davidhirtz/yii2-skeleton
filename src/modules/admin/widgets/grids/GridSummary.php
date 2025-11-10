@@ -35,7 +35,7 @@ class GridSummary
         if ($this->search?->value) {
             $alert->button(Button::make()
                 ->class('btn-icon')
-                ->href($this->search->url)
+                ->get($this->search->url)
                 ->tooltip(Yii::t('skeleton', 'Clear Search'))
                 ->icon('xmark'));
         }
