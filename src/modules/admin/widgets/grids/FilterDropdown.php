@@ -26,7 +26,8 @@ class FilterDropdown implements Stringable
             'page' => null,
         ],
     ) {
-        $this->dropdown = Dropdown::make();
+        $this->dropdown = Dropdown::make()
+            ->addAttributes(['hx-boost' => 'true']);
     }
 
     public function render(): string
@@ -35,18 +36,22 @@ class FilterDropdown implements Stringable
             return '';
         }
 
-        $this->dropdown->label($this->label);
-
         $this->defaultItem ??= Yii::t('skeleton', 'Show All');
         $this->filterPlaceholder ??= Yii::t('skeleton', 'Filter ...');
         $this->value ??= Yii::$app->getRequest()->get($this->paramName);
+
+        $this->dropdown->label($this->items[$this->value] ?? $this->label);
 
         if ($this->filter) {
             $this->addFilterInput();
         }
 
-        if ($this->defaultItem && $this->hasActiveItem()) {
-            $this->addDefaultItem();
+        if ($this->hasActiveItem()) {
+            if ($this->defaultItem) {
+                $this->addDefaultItem();
+            }
+
+            $this->dropdown->addClass('active');
         }
 
         $this->addItems();
