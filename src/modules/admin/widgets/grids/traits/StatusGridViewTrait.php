@@ -29,15 +29,14 @@ trait StatusGridViewTrait
         ];
     }
 
-    public function statusDropdown(): string
+    public function statusDropdown(): FilterDropdown
     {
-        $dropdown = FilterDropdown::make();
-        $dropdown->label = Yii::t('skeleton', 'Status');
-        $dropdown->paramName = $this->statusParamName;
-        $dropdown->defaultItem = $this->statusDefaultItem;
-        $dropdown->items = $this->statusDropdownItems();
-
-        return $dropdown->render();
+        return new FilterDropdown(
+            $this->statusDropdownItems(),
+            Yii::t('skeleton', 'Status'),
+            $this->statusParamName,
+            $this->statusDefaultItem
+        );
     }
 
     protected function getStatusIcon(StatusAttributeInterface $model): string

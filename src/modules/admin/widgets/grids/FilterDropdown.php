@@ -7,28 +7,25 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 use davidhirtz\yii2\skeleton\html\Dropdown;
 use davidhirtz\yii2\skeleton\html\Input;
 use davidhirtz\yii2\skeleton\html\Link;
-use davidhirtz\yii2\skeleton\widgets\Widget;
+use Stringable;
 use Yii;
 
-class FilterDropdown extends Widget
+class FilterDropdown implements Stringable
 {
-    public string|false|null $defaultItem = null;
-    public bool $filter = false;
-    public ?string $filterPlaceholder = null;
-    public string $label;
-    public array $items = [];
-    public string $paramName;
+    private readonly Dropdown $dropdown;
 
-    public array $params = [
-        'page' => null,
-    ];
-
-    public int|string|null $value = null;
-
-    private Dropdown $dropdown;
-
-    public function init(): void
-    {
+    public function __construct(
+        public array $items,
+        public string $label,
+        public string $paramName,
+        public string|false|null $defaultItem = null,
+        public int|string|null $value = null,
+        public bool $filter = false,
+        public ?string $filterPlaceholder = null,
+        public array $params = [
+            'page' => null,
+        ],
+    ) {
         $this->dropdown = Dropdown::make();
     }
 
@@ -42,7 +39,7 @@ class FilterDropdown extends Widget
 
         $this->defaultItem ??= Yii::t('skeleton', 'Show All');
         $this->filterPlaceholder ??= Yii::t('skeleton', 'Filter ...');
-        $this->value ??= Yii::$app->request->get($this->paramName);
+        $this->value ??= Yii::$app->getRequest()->get($this->paramName);
 
         if ($this->filter) {
             $this->addFilterInput();
@@ -97,5 +94,10 @@ class FilterDropdown extends Widget
     protected function hasActiveItem(): bool
     {
         return array_key_exists($this->value, $this->items);
+    }
+
+    public function __toString(): string
+    {
+        return $this->render();
     }
 }
