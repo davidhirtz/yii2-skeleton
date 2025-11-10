@@ -13,11 +13,11 @@ const queryAll = (selector: string, method: Function) => {
     document.querySelectorAll(selector).forEach(($el: Element) => method($el));
 };
 
-document.body.addEventListener('htmx:configRequest', (event: Event) => {
+htmx.on('htmx:configRequest', (event: Event) => {
     (event as CustomEvent).detail.headers['X-CSRF-Token'] = csrfToken;
 });
 
-document.body.addEventListener('htmx:load', () => {
+htmx.on('htmx:load', () => {
     queryAll('[data-collapse]', collapse);
     queryAll('[data-dropdown]', dropdown);
     queryAll('[data-filter]', filter);
@@ -27,4 +27,11 @@ document.body.addEventListener('htmx:load', () => {
     queryAll('[data-tooltip]', tooltip);
 });
 
-console.log(htmx);
+
+htmx.on('htmx:responseError', (event: Event) => {
+    const detail = (event as CustomEvent).detail;
+
+    if (!detail.xhr.ok) {
+        alert(detail.xhr.statusText);
+    }
+});

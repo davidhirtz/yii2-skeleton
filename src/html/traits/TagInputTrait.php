@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\html\traits;
 
+use davidhirtz\yii2\skeleton\html\Form;
+use Stringable;
+
 trait TagInputTrait
 {
     public function disabled(bool $disabled = true): static
@@ -11,9 +14,9 @@ trait TagInputTrait
         return $this->attribute('disabled', $disabled);
     }
 
-    public function form(string $formId): static
+    public function form(Form|string|Stringable $form): static
     {
-        return $this->attribute('form', $formId);
+        return $this->attribute('form', $form instanceof Form ? $form->getId() : $form);
     }
 
     public function name(?string $name): static
