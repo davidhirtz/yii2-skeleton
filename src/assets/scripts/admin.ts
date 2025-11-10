@@ -17,7 +17,9 @@ htmx.on('htmx:configRequest', (event: Event) => {
     (event as CustomEvent).detail.headers['X-CSRF-Token'] = csrfToken;
 });
 
-htmx.on('htmx:load', () => {
+htmx.on('htmx:load', (event: Event) => {
+    console.log(event);
+
     queryAll('[data-collapse]', collapse);
     queryAll('[data-dropdown]', dropdown);
     queryAll('[data-filter]', filter);

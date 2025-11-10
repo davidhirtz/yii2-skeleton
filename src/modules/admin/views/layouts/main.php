@@ -25,10 +25,10 @@ AdminAsset::register($this);
     <title><?= Html::encode($this->getDocumentTitle()); ?></title>
     <?php $this->head() ?>
 </head>
-<body>
+<body hx-select="main" hx-swap="outerHTML" hx-target="main">
 <?php $this->beginBody() ?>
 <?= NavBar::widget(); ?>
-<main class="main" hx-select="main" hx-select-oob="#flashes" hx-swap="outerHTML" hx-target="this">
+<main class="main">
     <?= Breadcrumbs::widget(); ?>
     <?= Flashes::widget(); ?>
     <?= $content ?>

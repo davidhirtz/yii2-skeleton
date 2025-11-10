@@ -45,8 +45,6 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
 
             $btn.disabled = true;
 
-            let redirect: string | undefined;
-
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
                 const totalChunks = Math.ceil(file.size / chunkSize);
@@ -56,6 +54,8 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
                     const end = Math.min(start + chunkSize, file.size);
 
                     await upload(file, start, end).then(response => {
+                        // Todo check multiple files and only update once all are done
+                        // Add progress
                         if (response.status === 200) {
                             response.text().then(html => {
                                 htmx.swap($target, html, {
@@ -73,10 +73,6 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
                         }
                     });
                 }
-            }
-
-            if (redirect) {
-                window.location.href = redirect;
             }
 
             $btn.disabled = false;

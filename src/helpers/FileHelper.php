@@ -138,6 +138,12 @@ EOL
 
     public static function encodeUrl(string $url): string
     {
-        return str_replace(['%2F', '%3A'], ['/', ':'], rawurlencode(rawurldecode($url)));
+        return strtr(rawurlencode(rawurldecode($url)), [
+            '%2F' => '/',
+            '%3A' => ':',
+            '%3D' => '=',
+            '%26' => '&',
+            '%3F' => '?',
+        ]);
     }
 }

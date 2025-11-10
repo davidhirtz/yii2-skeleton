@@ -81,6 +81,7 @@ class GridView extends \yii\grid\GridView
 
         $this->options['hx-select'] ??= '#' . $this->getId();
         $this->options['hx-target'] ??= $this->options['hx-select'];
+        $this->options['hx-select-oob'] ??= '#flashes';
 
         if (!$this->rowOptions) {
             $this->rowOptions = fn ($record) => $record instanceof ActiveRecord ? ['id' => $this->getRowId($record)] : [];

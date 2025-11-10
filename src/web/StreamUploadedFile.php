@@ -29,6 +29,8 @@ class StreamUploadedFile extends UploadedFile
             $this->tempName = $this->getTemporaryUploadPath() . uniqid();
         }
 
+        Yii::debug("Tempname: $this->tempName", __METHOD__);
+
         $this->saveTemporaryFile();
 
         parent::init();
@@ -36,6 +38,8 @@ class StreamUploadedFile extends UploadedFile
 
     protected function saveTemporaryFile(): void
     {
+        Yii::debug("URL to download: $this->url", __METHOD__);
+
         if (!$this->url) {
             $this->error = UPLOAD_ERR_NO_FILE;
             return;
@@ -45,13 +49,19 @@ class StreamUploadedFile extends UploadedFile
             ? FileHelper::encodeUrl($this->url)
             : $this->url;
 
+        Yii::debug("URL after parse: $this->url", __METHOD__);
+
         $this->name = basename((string) parse_url($this->url, PHP_URL_PATH));
         $contents = @file_get_contents($this->url);
+
+        Yii::debug("Name $this->name", __METHOD__);
 
         if (!$contents) {
             $this->error = UPLOAD_ERR_NO_FILE;
             return;
         }
+
+        Yii::debug("Can write", __METHOD__);
 
         $this->size = @file_put_contents($this->tempName, $contents);
 
@@ -60,12 +70,16 @@ class StreamUploadedFile extends UploadedFile
             return;
         }
 
+        Yii::debug("Has size", __METHOD__);
+
         $this->type = FileHelper::getMimeType($this->tempName);
 
         if ($this->allowedExtensions && !in_array($this->getExtension(), $this->allowedExtensions, true)) {
             $this->error = UPLOAD_ERR_EXTENSION;
             @unlink($this->tempName);
         }
+
+        Yii::debug("Final error $this->error", __METHOD__);
     }
 
     #[Override]
