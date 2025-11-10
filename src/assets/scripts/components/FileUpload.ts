@@ -12,6 +12,7 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
         }
 
         const $target = (this.dataset.target ? document.querySelector(this.dataset.target) : null) || document.body;
+        const $btn = this.querySelector('button') as HTMLButtonElement;
         const chunkSize = this.dataset.chunkSize ? parseInt(this.dataset.chunkSize) : 1024 * 1024 * 2;
 
         const upload = (file: File, start: number, end: number): Promise<Response> => {
@@ -41,6 +42,8 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
             if (!files) {
                 return;
             }
+
+            $btn.disabled = true;
 
             let redirect: string | undefined;
 
@@ -75,6 +78,10 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
             if (redirect) {
                 window.location.href = redirect;
             }
+
+            $btn.disabled = false;
         });
+
+        $btn.onclick = () => $input.click();
     }
 });

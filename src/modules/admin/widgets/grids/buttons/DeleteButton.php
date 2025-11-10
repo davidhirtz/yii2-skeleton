@@ -22,7 +22,11 @@ class DeleteButton implements Stringable
         $this->message ??= Yii::t('yii', 'Are you sure you want to delete this item?');
 
         if ($this->model) {
-            $this->url ??= ['delete', 'id' => $this->model->getPrimaryKey()];
+            $this->url ??= [
+                'delete',
+                ...Yii::$app->getRequest()->getQueryParams(),
+                'id' => $this->model->getPrimaryKey(),
+            ];
         }
     }
 

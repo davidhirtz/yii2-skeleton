@@ -1,12 +1,14 @@
 ## 3.0.0 (in development)
 
 - Added `TrailModelInterface` and `TrailModelTrait` to better handle static analysis of trail models
-- Added `GridSearch` and moved properties `search`, `searchParamName`, `searchInputOptions` and `searchUrl` as well as
-- Added `GridSummary`
-  methods `getSearchInput`, and `getSearchKeywords` to the new `GridView::$search` property
+- Added `GridSearch` and moved properties `search`, `searchParamName`, `searchInputOptions` and `searchUrl`
+- Added `GridSummary` methods `getSearchInput`, and `getSearchKeywords` to the new `GridView::$search` property
 - Changed `GridView::isSortedByPosition()` to `GridView::isSortable()`
 - Refactored `TrailBehavior::formatTrailAttributeValue` to `TrailModelCollection::formatAttributeValue`
 - Removed `Html::buttonList()`, use `Html::buttons()` instead
+- Removed `GridView::getUpdateButton()`
+- Removed `GridView::getDeleteButton()`
+- Removed `GridView::getSortableButton()`
 - Removed `GridView::renderSelectionForm()`
 
 ## 2.6.3 (Nov 5, 2025)

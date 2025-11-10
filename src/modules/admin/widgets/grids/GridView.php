@@ -6,11 +6,9 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\assets\SortableAssetBundle;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Dropdown;
-use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\CheckboxColumn;
 use davidhirtz\yii2\skeleton\widgets\pagers\LinkPager;
 use Override;
@@ -302,19 +300,6 @@ class GridView extends \yii\grid\GridView
     public function getRowId(ActiveRecordInterface $model): string
     {
         return $this->getFormName() . '-' . implode('-', (array)$model->getPrimaryKey());
-    }
-
-    /**
-     * @noinspection PhpUnused
-     */
-    protected function getSortableButton(array $options = []): string
-    {
-        $icon = ArrayHelper::remove($options, 'icon', 'arrows-alt');
-
-        return Html::tag('span', (string)Icon::tag($icon), [
-            'class' => 'btn btn-secondary sortable-handle',
-            ...$options,
-        ]);
     }
 
     /**
