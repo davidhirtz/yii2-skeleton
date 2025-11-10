@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\assets;
 
+use Override;
 use Yii;
 
 class AdminAsset extends AbstractAssetBundle
@@ -20,7 +21,7 @@ class AdminAsset extends AbstractAssetBundle
         FontAwesomeAsset::class,
     ];
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         if ($this->faviconOptions['href'] ?? false) {

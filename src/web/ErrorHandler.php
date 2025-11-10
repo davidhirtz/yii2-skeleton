@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\models\Redirect;
+use Override;
 use Yii;
 use yii\web\HttpException;
 
@@ -17,7 +18,7 @@ class ErrorHandler extends \yii\web\ErrorHandler
      */
     public bool $enableRedirect = true;
 
-    #[\Override]
+    #[Override]
     protected function renderException($exception): void
     {
         if ($this->enableRedirect && $exception instanceof HttpException && $exception->statusCode == 404) {

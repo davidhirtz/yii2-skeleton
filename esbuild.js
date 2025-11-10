@@ -27,14 +27,18 @@ const watchPlugin = (type) => {
 };
 
 const scripts = await esbuild.context({
-    entryPoints: ['src/assets/scripts/*', 'src/assets/scripts/components/*'],
+    entryPoints: [
+        'src/assets/scripts/*',
+        'src/assets/scripts/components/*',
+    ],
     bundle: true,
     format: 'esm',
     minify: true,
     outdir: 'src/assets/dist/js',
     plugins: [watchPlugin('scripts')],
     sourcemap: true,
-    target: 'es6',
+    splitting: true,
+    target: 'esnext',
 })
 
 const styles = await esbuild.context({

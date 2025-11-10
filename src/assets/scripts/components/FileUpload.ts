@@ -1,3 +1,5 @@
+import htmx from "htmx.org"
+
 const csrfToken = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement).getAttribute('content') as string;
 
 window.customElements.get('file-upload') || window.customElements.define('file-upload', class extends HTMLElement {
@@ -9,9 +11,10 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
             return;
         }
 
+        const $target = (this.dataset.target ? document.querySelector(this.dataset.target) : null) || document.body;
         const chunkSize = this.dataset.chunkSize ? parseInt(this.dataset.chunkSize) : 1024 * 1024 * 2;
 
-        const upload = async (file: File, start: number, end: number) => {
+        const upload = (file: File, start: number, end: number): Promise<Response> => {
             const body = new FormData();
             const headers: HeadersInit = new Headers();
 
@@ -25,7 +28,7 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
                 body.append($input.name, file);
             }
 
-            await fetch(this.dataset.url as string, {
+            return fetch(this.dataset.url as string, {
                 body: body,
                 headers: headers,
                 method: 'POST',
@@ -39,7 +42,7 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
                 return;
             }
 
-            console.log('Starting upload of', files.length, 'file(s)');
+            let redirect: string | undefined;
 
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
@@ -49,15 +52,28 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
                     const start = chunkIndex * chunkSize;
                     const end = Math.min(start + chunkSize, file.size);
 
-                    await upload(file, start, end)
-                        .then(() => {
-                            console.log('Uploaded chunk', chunkIndex, 'of file', file.name);
-                        })
-                        .catch(error => {
-                            console.error('Upload failed for chunk', chunkIndex, 'of file', file.name, error);
-                            chunkIndex = totalChunks; // Exit the loop on error
-                        });
+                    await upload(file, start, end).then(response => {
+                        if (response.status === 200) {
+                            response.text().then(html => {
+                                htmx.swap($target, html, {
+                                    swapStyle: 'outerHTML',
+                                    swapDelay: 0,
+                                    settleDelay: 0,
+                                    show: 'top',
+                                }, {
+                                    select: this.dataset.target || undefined,
+                                });
+                            })
+                        } else if (!response.ok) {
+                            alert(response.statusText);
+                            chunkIndex = totalChunks;
+                        }
+                    });
                 }
+            }
+
+            if (redirect) {
+                window.location.href = redirect;
             }
         });
     }

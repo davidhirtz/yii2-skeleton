@@ -5,20 +5,19 @@ import modal from "./includes/modals";
 import tooltip from "./includes/tooltips";
 import {toggleTargetsOnChange, updateTargetsOnChange} from "./includes/forms";
 
-import "htmx.org";
+import htmx from "htmx.org"
 
-const doc = document;
-const csrfToken = doc.querySelector('meta[name="csrf-token"]').getAttribute('content');
+const csrfToken = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement).getAttribute('content') as string;
 
 const queryAll = (selector: string, method: Function) => {
-    doc.querySelectorAll(selector).forEach(($el: Element) => method($el));
+    document.querySelectorAll(selector).forEach(($el: Element) => method($el));
 };
 
-doc.body.addEventListener('htmx:configRequest', (event: CustomEvent) => {
-    event.detail.headers['X-CSRF-Token'] = csrfToken;
+document.body.addEventListener('htmx:configRequest', (event: Event) => {
+    (event as CustomEvent).detail.headers['X-CSRF-Token'] = csrfToken;
 });
 
-doc.body.addEventListener('htmx:load', () => {
+document.body.addEventListener('htmx:load', () => {
     queryAll('[data-collapse]', collapse);
     queryAll('[data-dropdown]', dropdown);
     queryAll('[data-filter]', filter);
@@ -27,3 +26,5 @@ doc.body.addEventListener('htmx:load', () => {
     queryAll('[data-modal]', modal);
     queryAll('[data-tooltip]', tooltip);
 });
+
+console.log(htmx);

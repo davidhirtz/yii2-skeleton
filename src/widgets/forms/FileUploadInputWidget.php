@@ -20,6 +20,7 @@ class FileUploadInputWidget extends InputWidget
 
     public ?int $maxChunkSize = null;
     public $attribute = 'upload';
+    public ?string $target = null;
 
     #[Override]
     public function init(): void
@@ -33,6 +34,7 @@ class FileUploadInputWidget extends InputWidget
         return Html::tag('file-upload', $this->renderInputHtml('file'), [
             'data-url' => Url::to($this->url),
             'data-chunk-size' => $this->maxChunkSize,
+            'data-target' => $this->target,
         ]);
     }
 

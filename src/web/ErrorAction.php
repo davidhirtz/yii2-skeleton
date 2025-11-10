@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\web;
 
+use Override;
 use Yii;
 
+/**
+ * @property Controller $controller
+ */
 class ErrorAction extends \yii\web\ErrorAction
 {
     public ?string $email = null;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         $this->email ??= Yii::$app->params['email'];
@@ -19,29 +23,29 @@ class ErrorAction extends \yii\web\ErrorAction
         parent::init();
     }
 
-    #[\Override]
+    #[Override]
     public function run(): string
     {
         if ($this->layout !== null) {
             $this->controller->layout = $this->layout;
         }
 
-        Yii::$app->getResponse()->setStatusCodeByException($this->exception);
+        $this->controller->response->setStatusCodeByException($this->exception);
 
-        if (Yii::$app->getRequest()->getIsAjax() && !Yii::$app->getRequest()->getIsAjaxRoute()) {
+        if ($this->controller->request->getIsAjax() && !$this->controller->request->getIsAjaxRoute()) {
             return $this->renderAjaxResponse();
         }
 
         return $this->renderHtmlResponse();
     }
 
-    #[\Override]
+    #[Override]
     protected function renderAjaxResponse(): string
     {
         return $this->getExceptionMessage();
     }
 
-    #[\Override]
+    #[Override]
     protected function getExceptionName(): string
     {
         return match ($code = $this->getExceptionCode()) {
@@ -50,7 +54,7 @@ class ErrorAction extends \yii\web\ErrorAction
         };
     }
 
-    #[\Override]
+    #[Override]
     protected function getExceptionMessage(): string
     {
         return parent::getExceptionMessage() ?: match ($this->getExceptionCode()) {
@@ -60,7 +64,7 @@ class ErrorAction extends \yii\web\ErrorAction
         };
     }
 
-    #[\Override]
+    #[Override]
     protected function getViewRenderParams(): array
     {
         return [

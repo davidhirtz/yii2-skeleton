@@ -1,21 +1,23 @@
 {
-	"private": true,
-	"type": "module",
-	"browserslist": [
-		"defaults"
-	],
-	"scripts": {
-		"build": "node esbuild.js",
-		"dev": "node esbuild.js --watch"
-	},
-	"devDependencies": {
-		"@floating-ui/dom": "^1.6.12",
-		"@types/sortablejs": "^1.15.8",
-		"autoprefixer": "^10.4.20",
-		"esbuild": "^0.24.0",
-		"esbuild-sass-plugin": "^3.3.1",
-		"htmx.org": "^2.0.4",
-		"postcss": "^8.4.49",
-		"sortablejs": "^1.15.6"
-	}
+  "private": true,
+  "type": "module",
+  "browserslist": [
+    "defaults"
+  ],
+  "scripts": {
+    "build": "node esbuild.js",
+    "dev": "node esbuild.js --watch"
+  },
+  "dependencies": {
+    "htmx.org": "^2.0.4"
+  },
+  "devDependencies": {
+    "@floating-ui/dom": "^1.6.12",
+    "@types/sortablejs": "^1.15.8",
+    "autoprefixer": "^10.4.20",
+    "esbuild": "^0.24.0",
+    "esbuild-sass-plugin": "^3.3.1",
+    "postcss": "^8.4.49",
+    "sortablejs": "^1.15.6"
+  }
 }
