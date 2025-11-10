@@ -85,7 +85,7 @@ class FilterDropdown extends Widget
                 ->current([...$this->params, $this->paramName => $param])
                 ->text($text);
 
-            if ($param == $this->value) {
+            if ($param === $this->value) {
                 $this->dropdown->addClass('active')->label($text);
                 $link->addClass('active');
             }

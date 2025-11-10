@@ -148,36 +148,30 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         return TrailModelCollection::getModelByNameAndId($this->data['model'], $this->data['model_id'] ?? null);
     }
 
-
     public function isAuthPermissionType(): bool
     {
-        return in_array($this->type, [static::TYPE_ASSIGN, static::TYPE_REVOKE]);
+        return in_array($this->type, [static::TYPE_ASSIGN, static::TYPE_REVOKE], true);
     }
-
 
     public function isAuthPermissionAssignType(): bool
     {
-        return $this->type == static::TYPE_ASSIGN;
+        return $this->type === static::TYPE_ASSIGN;
     }
-
 
     public function isDeleteType(): bool
     {
-        return in_array($this->type, [static::TYPE_DELETE, static::TYPE_CHILD_DELETE]);
+        return in_array($this->type, [static::TYPE_DELETE, static::TYPE_CHILD_DELETE], true);
     }
-
 
     public function isCreateType(): bool
     {
-        return $this->type == static::TYPE_CREATE;
+        return $this->type === static::TYPE_CREATE;
     }
-
 
     public function isUpdateType(): bool
     {
-        return $this->type == static::TYPE_UPDATE;
+        return $this->type === static::TYPE_UPDATE;
     }
-
 
     public function hasAttributesEnabled(): bool
     {

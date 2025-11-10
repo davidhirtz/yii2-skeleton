@@ -64,7 +64,7 @@ class AuthItemQuery extends ActiveQuery
         $items[$parent]->children[$child] = $items[$child];
 
         foreach ($relations as $relation) {
-            if ($relation['parent'] == $child) {
+            if ($relation['parent'] === $child) {
                 $this->setAuthItemChild($items, $relations, $parent, $relation['child']);
             }
         }

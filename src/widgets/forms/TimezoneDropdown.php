@@ -37,7 +37,7 @@ class TimezoneDropdown extends InputWidget
             // Create a multidimensional array to sort by offset first and display name after.
             foreach (DateTimeZone::listAbbreviations() as $timezones) {
                 foreach ($timezones as $tz) {
-                    if (!empty($tz['timezone_id']) && in_array($tz['timezone_id'], $identifiers)) {
+                    if (!empty($tz['timezone_id']) && in_array($tz['timezone_id'], $identifiers, true)) {
                         $timezone = new DateTimeZone($tz['timezone_id']);
                         $list[$timezone->getOffset($now)][$tz['timezone_id']] = $this->formatTimezoneName($tz['timezone_id']);
                     }

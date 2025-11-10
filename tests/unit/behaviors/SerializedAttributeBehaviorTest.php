@@ -80,7 +80,6 @@ class SerializedAttributeBehaviorTest extends Unit
         self::assertEquals($data, $model->data);
     }
 
-
     public function testAfterFindEvent(): void
     {
         $model = new SerializedAttributesActiveRecord();

@@ -209,7 +209,7 @@ class AttributeTypecastBehavior extends Behavior
             $value = $value->__toString();
         }
 
-        if ($this->isEmpty($value) && in_array($attributeName, $this->getNullableAttributes())) {
+        if ($this->isEmpty($value) && in_array($attributeName, $this->getNullableAttributes(), true)) {
             return null;
         }
 

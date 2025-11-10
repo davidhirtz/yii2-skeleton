@@ -109,7 +109,7 @@ class SystemController extends Controller
 
     public function actionFlush(string $cache): Response|string
     {
-        if (!in_array($cache, array_keys($this->findCaches()))) {
+        if (!in_array($cache, array_keys($this->findCaches()), true)) {
             throw new NotFoundHttpException();
         }
 

@@ -66,7 +66,7 @@ class PasswordResetForm extends Model
      */
     public function validatePasswordResetCode(): bool
     {
-        if (!$this->hasErrors() && (!($user = $this->getUser()) || $user->password_reset_token != $this->code)) {
+        if (!$this->hasErrors() && (!($user = $this->getUser()) || $user->password_reset_token !== $this->code)) {
             $this->addError('id', Yii::t('skeleton', 'The password recovery url is invalid.'));
         }
 
@@ -100,7 +100,6 @@ class PasswordResetForm extends Model
 
         return false;
     }
-
 
     #[\Override]
     public function attributeLabels(): array

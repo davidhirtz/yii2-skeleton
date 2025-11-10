@@ -69,7 +69,7 @@ class Image extends BaseImage
 
         $image->resize(new Box($newWidth, $newHeight));
 
-        if ($newWidth != $width || $newHeight != $height) {
+        if ($newWidth !== $width || $newHeight !== $height) {
             $x = (int)ceil(($newWidth - $width) / 2);
             $y = (int)ceil(($newHeight - $height) / 2);
 
@@ -118,7 +118,7 @@ class Image extends BaseImage
             $extension = pathinfo($filename, PATHINFO_EXTENSION);
         }
 
-        return strtolower($extension) == 'svg' ? static::getSvgDimensions($filename) : @getimagesize($filename);
+        return strtolower($extension) === 'svg' ? static::getSvgDimensions($filename) : @getimagesize($filename);
     }
 
     /**

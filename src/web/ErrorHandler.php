@@ -21,7 +21,7 @@ class ErrorHandler extends \yii\web\ErrorHandler
     #[Override]
     protected function renderException($exception): void
     {
-        if ($this->enableRedirect && $exception instanceof HttpException && $exception->statusCode == 404) {
+        if ($this->enableRedirect && $exception instanceof HttpException && $exception->statusCode === 404) {
             $this->checkRedirectRequestUri();
         }
 

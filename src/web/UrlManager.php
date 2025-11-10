@@ -225,10 +225,10 @@ class UrlManager extends \yii\web\UrlManager
 
             if (preg_match('#^(' . implode('|', $this->languages) . ')\b(/?)#i', $pathInfo, $matches)) {
                 $request->setPathInfo(mb_substr($pathInfo, mb_strlen($matches[0], Yii::$app->charset), null, Yii::$app->charset));
-                $language = array_search($matches[1], $this->languages);
+                $language = array_search($matches[1], $this->languages, true);
 
                 if ($language) {
-                    if ($language == $this->defaultLanguage) {
+                    if ($language === $this->defaultLanguage) {
                         $url = preg_replace('#(/' . preg_quote($matches[1]) . ')(/|$)#', '$2', $request->getAbsoluteUrl());
                         throw new UrlNormalizerRedirectException($url, 301);
                     }
@@ -244,15 +244,15 @@ class UrlManager extends \yii\web\UrlManager
             $host = parse_url($this->getHostInfo(), PHP_URL_HOST);
             $subdomain = explode('.', (string)$host)[0];
 
-            if (in_array($subdomain, $this->languages)) {
+            if (in_array($subdomain, $this->languages, true)) {
                 $replace = $this->languages[$this->defaultLanguage] ?? '';
                 $this->setHostInfo(str_replace("//$subdomain", "//$replace", $this->getHostInfo()));
-                Yii::$app->language = array_search($subdomain, $this->languages);
+                Yii::$app->language = array_search($subdomain, $this->languages, true);
                 return;
             }
         }
 
-        if (in_array($request->getLanguage(), $this->languages)) {
+        if (in_array($request->getLanguage(), $this->languages, true)) {
             Yii::$app->language = $request->getLanguage();
             return;
         }

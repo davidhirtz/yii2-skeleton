@@ -106,7 +106,7 @@ class Sitemap extends Component
             return $urls;
         }
 
-        if ($key == 'urls') {
+        if ($key === 'urls') {
             return array_slice($this->getUrlsInternal(), $offset * $this->maxUrlCount, $this->maxUrlCount);
         }
 

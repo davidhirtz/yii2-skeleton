@@ -63,7 +63,7 @@ class SerializedAttributesBehavior extends Behavior
 
             if (is_scalar($this->owner->$attribute)) {
                 if ($this->encode) {
-                    $this->owner->$attribute = base64_decode($this->owner->$attribute);
+                    $this->owner->$attribute = base64_decode($this->owner->$attribute, true);
                 }
 
                 $value = @unserialize($this->owner->$attribute);

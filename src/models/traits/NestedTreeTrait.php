@@ -145,7 +145,7 @@ trait NestedTreeTrait
                 }
 
                 if (!$this->getIsNewRecord()) {
-                    if ($this->parent_id == $this->id || ($this->lft < $parent->lft && $this->rgt > $parent->rgt)) {
+                    if ($this->parent_id === $this->id || ($this->lft < $parent->lft && $this->rgt > $parent->rgt)) {
                         $this->addInvalidAttributeError('parent_id');
                         return;
                     }

@@ -54,7 +54,7 @@ class UserLanguageBehavior extends Behavior
         $identity = Yii::$app->getUser()->getIdentity();
         $request = Yii::$app->getRequest();
 
-        if ($identity && $identity->language != $language) {
+        if ($identity && $identity->language !== $language) {
             Yii::debug("Updating user language to '$language' ...");
 
             $identity->language = $language;
@@ -68,7 +68,7 @@ class UserLanguageBehavior extends Behavior
         $isNewCookieLanguage = !in_array($language, [
             $request->getLanguageFromCookie(),
             Yii::$app->sourceLanguage,
-        ]);
+        ], true);
 
         if ($isNewCookieLanguage) {
             Yii::debug("Language cookie set to '$language'");

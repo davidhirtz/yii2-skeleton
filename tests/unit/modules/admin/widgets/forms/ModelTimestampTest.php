@@ -47,7 +47,6 @@ class ModelTimestampTest extends Unit
         parent::_after();
     }
 
-
     public function testModelTimestampTrait(): void
     {
         $model = TestTimestampActiveRecord::create();

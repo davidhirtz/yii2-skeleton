@@ -88,7 +88,7 @@ class ErrorSummary extends Widget
 
     protected function renderErrors(): string
     {
-        return count($this->errors) == 1 ? Div::tag(reset($this->errors)) : Ul::tag($this->errors);
+        return count($this->errors) === 1 ? Div::tag(reset($this->errors)) : Ul::tag($this->errors);
     }
 
     protected function renderHeader(): string

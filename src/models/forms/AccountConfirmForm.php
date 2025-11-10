@@ -42,7 +42,7 @@ class AccountConfirmForm extends Model
         if (!$this->hasErrors()) {
             $user = $this->getUser();
 
-            if (!$user || $user->verification_token != $this->code) {
+            if (!$user || $user->verification_token !== $this->code) {
                 $this->addError('code', Yii::t('yii', '{attribute} is invalid.', [
                     'attribute' => $this->getAttributeLabel('code'),
                 ]));

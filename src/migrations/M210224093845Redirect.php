@@ -17,7 +17,6 @@ use yii\db\Migration;
 class M210224093845Redirect extends Migration
 {
     use MigrationTrait;
-
     
     public function safeUp(): void
     {
@@ -40,7 +39,6 @@ class M210224093845Redirect extends Migration
 
         $auth->addChild($admin, $redirectCreate);
     }
-
     
     public function safeDown(): void
     {

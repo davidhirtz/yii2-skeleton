@@ -100,7 +100,7 @@ class TrailModelCollection
             self::$models[$tableName][$id] = $instance::findOne($keys) ?? new $instance($keys);
         }
 
-        return self::$models[$tableName][$id] ?? $instance;
+        return self::$models[$tableName][$id];
     }
 
     /**
@@ -139,7 +139,7 @@ class TrailModelCollection
                 ];
 
                 foreach ($columns as $column) {
-                    if (in_array($column->dbType, $dateTypes)) {
+                    if (in_array($column->dbType, $dateTypes, true)) {
                         $attributes[$column->name] = self::VALUE_TYPE_DATETIME;
                     }
                 }

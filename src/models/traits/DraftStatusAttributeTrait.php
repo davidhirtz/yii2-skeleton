@@ -34,6 +34,6 @@ trait DraftStatusAttributeTrait
 
     public function isDraft(): bool
     {
-        return $this->status == static::STATUS_DRAFT;
+        return $this->status === static::STATUS_DRAFT;
     }
 }

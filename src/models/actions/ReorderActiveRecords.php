@@ -67,7 +67,7 @@ class ReorderActiveRecords
             $primaryKey = $model->getPrimaryKey(true);
             $position = $this->getNewPosition($primaryKey);
 
-            if ($position != $model->getAttribute($this->attribute)) {
+            if ($position !== $model->getAttribute($this->attribute)) {
                 $this->_totalRowsUpdated += $model::updateAll([$this->attribute => $position], $primaryKey);
             }
         }

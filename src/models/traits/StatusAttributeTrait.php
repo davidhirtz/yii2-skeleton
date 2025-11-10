@@ -42,6 +42,6 @@ trait StatusAttributeTrait
 
     public function isDisabled(): bool
     {
-        return $this->status == static::STATUS_DISABLED;
+        return $this->status === static::STATUS_DISABLED;
     }
 }

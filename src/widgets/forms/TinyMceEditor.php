@@ -180,7 +180,7 @@ class TinyMceEditor extends InputWidget
 
                 foreach ($classes as $class) {
                     foreach (explode(' ', $class) as $className) {
-                        if (!in_array($className, $allowedClasses[$tag])) {
+                        if (!in_array($className, $allowedClasses[$tag], true)) {
                             $allowedClasses[$tag][] = $className;
                         }
                     }
@@ -355,7 +355,7 @@ class TinyMceEditor extends InputWidget
         ];
 
         foreach ($toolbars as $toolbar => $plugin) {
-            if (in_array($toolbar, $this->toolbar)) {
+            if (in_array($toolbar, $this->toolbar, true)) {
                 $this->plugins[] = $plugin;
             }
         }
@@ -381,7 +381,7 @@ class TinyMceEditor extends InputWidget
 
     protected function isTagAllowed(string $tag): bool
     {
-        return !$this->validator || in_array($tag, $this->validator->allowedHtmlTags);
+        return !$this->validator || in_array($tag, $this->validator->allowedHtmlTags, true);
     }
 
     protected function registerClientScript(): void

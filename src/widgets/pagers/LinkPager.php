@@ -49,7 +49,7 @@ class LinkPager extends \yii\widgets\LinkPager
             }
 
             for ($i = $beginPage; $i <= $endPage; ++$i) {
-                $buttons[] = $this->renderPageButton((string)($i + 1), $i, '', false, $i == $currentPage);
+                $buttons[] = $this->renderPageButton((string)($i + 1), $i, '', false, $i === $currentPage);
             }
 
             if ($endPage < $lastPage) {

@@ -57,7 +57,7 @@ class UserQuery extends ActiveQuery
         if ($keywords = $this->splitSearchString($search)) {
             $tableName = User::tableName();
 
-            if (count($keywords) == 1) {
+            if (count($keywords) === 1) {
                 $keyword = array_pop($keywords);
 
                 if (is_numeric($keyword)) {

@@ -22,7 +22,6 @@ class M210831105800GoogleAuthenticator extends Migration
             ->null()
             ->after('password_reset_code'));
     }
-
     
     public function safeDown(): void
     {

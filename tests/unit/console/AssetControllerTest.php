@@ -16,6 +16,7 @@ class AssetControllerTest extends Unit
 {
     use AssetDirectoryTrait;
     use ConsoleApplicationTrait;
+
     protected function _before(): void
     {
         $this->createConsoleApplicationMock();

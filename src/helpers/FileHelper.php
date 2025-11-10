@@ -18,7 +18,7 @@ class FileHelper extends BaseFileHelper
         $source = Yii::getAlias($source);
         $dest = Yii::getAlias($dest);
 
-        if (stream_is_local($source) == stream_is_local($dest)) {
+        if (stream_is_local($source) === stream_is_local($dest)) {
             Yii::debug("Moving file \"$source\" to  \"$dest\"");
             return @rename($source, $dest);
         }

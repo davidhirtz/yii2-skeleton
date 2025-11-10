@@ -61,7 +61,6 @@ class PasswordRecoverForm extends Model
             ]));
         }
     }
-
     
     public function recover(): bool
     {
@@ -90,13 +89,11 @@ class PasswordRecoverForm extends Model
                 ->send();
         }
     }
-
     
     public function isAlreadySent(): bool
     {
         return ($user = $this->getUser()) && $user->password_reset_token && $user->updated_at->modify($this->timeoutSpamProtection) > new DateTime();
     }
-
     
     #[\Override]
     public function attributeLabels(): array

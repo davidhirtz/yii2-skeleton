@@ -57,7 +57,6 @@ class TrailGridView extends GridView
         parent::init();
     }
 
-
     public function modelColumn(): array
     {
         return [

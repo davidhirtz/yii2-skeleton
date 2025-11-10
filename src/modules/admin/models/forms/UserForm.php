@@ -168,7 +168,7 @@ class UserForm extends Model
 
     public function getIsNewRecord(): bool
     {
-        return $this->scenario == ActiveRecord::SCENARIO_INSERT;
+        return $this->scenario === ActiveRecord::SCENARIO_INSERT;
     }
 
     #[\Override]

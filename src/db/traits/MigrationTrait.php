@@ -20,8 +20,8 @@ trait MigrationTrait
     {
         $db = Yii::$app->getDb();
 
-        if ($db->getDriverName() == 'mysql') {
-            return $db->charset == 'utf8mb4'
+        if ($db->getDriverName() === 'mysql') {
+            return $db->charset === 'utf8mb4'
                 ? 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE InnoDB'
                 : 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE InnoDB';
         }
@@ -55,7 +55,7 @@ trait MigrationTrait
                     }
 
                     foreach ($languages as $language) {
-                        if (!in_array($language, $except)) {
+                        if (!in_array($language, $except, true)) {
                             $type->append("AFTER [[$prevAttribute]]");
                             $prevAttribute = $i18n->getAttributeName($attribute, $language);
 
@@ -87,7 +87,7 @@ trait MigrationTrait
                 foreach ($languages as $language) {
                     $column = $i18n->getAttributeName($attribute, $language);
 
-                    if (!in_array($language, $except) && $tableSchema->getColumn($column)) {
+                    if (!in_array($language, $except, true) && $tableSchema->getColumn($column)) {
                         $this->dropColumn($table, $column);
                     }
                 }

@@ -177,7 +177,7 @@ class Nav extends \yii\bootstrap5\Nav
                         $route = is_array($params) ? array_shift($params) : $params;
                     }
 
-                    $shouldSkip = ($route[0] == '!');
+                    $shouldSkip = ($route[0] === '!');
 
                     if ($shouldSkip) {
                         $route = substr((string)$route, 1);
@@ -186,8 +186,8 @@ class Nav extends \yii\bootstrap5\Nav
                     if (preg_match("~$route~", (string)Yii::$app->controller->route)) {
                         if (is_array($params)) {
                             foreach ($params as $key => $value) {
-                                if ((is_int($key) && !in_array($value, array_keys($request->get())))
-                                    || (is_string($key) && $request->get($key) != $value)) {
+                                if ((is_int($key) && !in_array($value, array_keys($request->get()), true))
+                                    || (is_string($key) && $request->get($key) !== $value)) {
                                     continue 2;
                                 }
                             }
@@ -232,7 +232,7 @@ class Nav extends \yii\bootstrap5\Nav
             unset($params[0]);
 
             foreach ($params as $name => $value) {
-                if ($value !== null && (!isset($this->params[$name]) || $this->params[$name] != $value)) {
+                if ($value !== null && (!isset($this->params[$name]) || $this->params[$name] !== $value)) {
                     return false;
                 }
             }

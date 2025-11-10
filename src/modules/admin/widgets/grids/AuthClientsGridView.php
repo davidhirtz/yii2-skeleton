@@ -37,7 +37,6 @@ class AuthClientsGridView extends GridView
         parent::init();
     }
 
-
     protected function initFooter(): void
     {
         $this->footer ??= [

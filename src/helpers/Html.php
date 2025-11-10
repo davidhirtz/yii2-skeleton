@@ -47,7 +47,6 @@ class Html extends BaseHtml
         return Html::tag('div', Icon::tag($icon, ['class' => 'fa-fw'])->render() . Html::tag('span', $content), $options);
     }
 
-
     public static function buttons(array|string $buttons, array $options = []): string
     {
         if (is_array($buttons)) {

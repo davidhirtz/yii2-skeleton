@@ -62,7 +62,7 @@ class StreamUploadedFile extends UploadedFile
 
         $this->type = FileHelper::getMimeType($this->tempName);
 
-        if ($this->allowedExtensions && !in_array($this->getExtension(), $this->allowedExtensions)) {
+        if ($this->allowedExtensions && !in_array($this->getExtension(), $this->allowedExtensions, true)) {
             $this->error = UPLOAD_ERR_EXTENSION;
             @unlink($this->tempName);
         }

@@ -83,7 +83,7 @@ class I18N extends \yii\i18n\I18N
             $language = Yii::$app->language;
         }
 
-        return rtrim($attribute . '_' . ($language != Yii::$app->sourceLanguage ? strtr(mb_strtolower((string)$language, Yii::$app->charset), '-', '_') : ''), '_');
+        return rtrim($attribute . '_' . ($language !== Yii::$app->sourceLanguage ? strtr(mb_strtolower((string)$language, Yii::$app->charset), '-', '_') : ''), '_');
     }
 
     /**

@@ -49,6 +49,7 @@ class UserFormTest extends Unit
 
         $this->tester->dontSeeEmailIsSent();
     }
+
     public function testCreateUserWithEmailConfirmation(): void
     {
         $form = UserForm::create();

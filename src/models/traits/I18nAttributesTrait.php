@@ -133,7 +133,7 @@ trait I18nAttributesTrait
                 foreach ($i18n->getLanguages() as $language) {
                     $label = parent::getAttributeLabel($attribute);
 
-                    if ($language != Yii::$app->language) {
+                    if ($language !== Yii::$app->language) {
                         $label = Yii::t('skeleton', '{label} ({language})', [
                             'label' => $label,
                             'language' => strtoupper((string)$language),
@@ -190,6 +190,6 @@ trait I18nAttributesTrait
 
     public function isI18nAttribute(string $attribute): bool
     {
-        return in_array($attribute, $this->i18nAttributes);
+        return in_array($attribute, $this->i18nAttributes, true);
     }
 }

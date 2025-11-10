@@ -34,6 +34,7 @@ class MainMenu extends Widget
             'hideOneItem' => $this->hideSingleItem,
         ]);
     }
+
     protected function getItems(): array
     {
         return [...$this->getHomeItems(), ...$this->getModuleItems()];

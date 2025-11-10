@@ -85,12 +85,12 @@ class ActiveRecord extends \yii\db\ActiveRecord
     {
         foreach ($attributes as $name => $value) {
             if (is_int($name)) {
-                if ($value == 'updated_by_user_id') {
+                if ($value === 'updated_by_user_id') {
                     $attributes[$value] = Yii::$app->has('user') ? Yii::$app->getUser()->getId() : null;
                     unset($name);
                 }
 
-                if ($value == 'updated_at') {
+                if ($value === 'updated_at') {
                     $attributes[$value] = new DateTime();
                     unset($name);
                 }
@@ -122,7 +122,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     {
         return array_filter(parent::getDirtyAttributes($names), function ($name): bool {
             $attribute = $this->getAttribute($name);
-            return !$attribute instanceof \DateTime || $this->getOldAttribute($name) != $attribute;
+            return !$attribute instanceof \DateTime || $this->getOldAttribute($name) !== $attribute;
         }, ARRAY_FILTER_USE_KEY);
     }
 

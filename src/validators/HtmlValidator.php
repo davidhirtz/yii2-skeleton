@@ -122,21 +122,21 @@ class HtmlValidator extends Validator
         }
 
         foreach ($defaultTags as $tag) {
-            if (!in_array($tag, $this->allowedHtmlTags) && !in_array($tag, $this->excludedHtmlTags)) {
+            if (!in_array($tag, $this->allowedHtmlTags, true) && !in_array($tag, $this->excludedHtmlTags, true)) {
                 $this->allowedHtmlTags[] = $tag;
             }
         }
 
-        if (!isset($this->allowedHtmlAttributes['a']) && in_array('a', $this->allowedHtmlTags)) {
+        if (!isset($this->allowedHtmlAttributes['a']) && in_array('a', $this->allowedHtmlTags, true)) {
             $this->allowedHtmlAttributes['a'] = ['href', 'rel', 'title', 'target'];
         }
 
-        if (in_array('img', $this->allowedHtmlTags)) {
+        if (in_array('img', $this->allowedHtmlTags, true)) {
             $this->allowedHtmlAttributes['img'] ??= ['alt', 'height', 'src', 'title', 'width'];
         }
 
         foreach ($this->allowedClasses as $tag => $classes) {
-            if (in_array($tag, $this->allowedHtmlTags)) {
+            if (in_array($tag, $this->allowedHtmlTags, true)) {
                 $this->allowedHtmlAttributes[$tag][] = 'class';
             }
         }

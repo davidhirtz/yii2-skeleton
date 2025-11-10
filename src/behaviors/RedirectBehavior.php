@@ -55,7 +55,7 @@ class RedirectBehavior extends Behavior
     {
         $url = Redirect::sanitizeUrl($this->owner->getUrl());
 
-        if ($url && $this->prevUrl && $this->prevUrl != $url) {
+        if ($url && $this->prevUrl && $this->prevUrl !== $url) {
             $this->updatePreviousRedirectUrls($url);
             $this->insertRedirect($url);
         }

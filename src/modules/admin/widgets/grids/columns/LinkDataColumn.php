@@ -25,7 +25,7 @@ class LinkDataColumn extends DataColumn
         $route = is_callable($this->route) ? call_user_func($this->route, $model) : $this->route;
         $content = parent::renderDataCellContent($model, $key, $index);
 
-        if (!$content || $content == $this->grid->emptyCell) {
+        if (!$content || $content === $this->grid->emptyCell) {
             return $content;
         }
 

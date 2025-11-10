@@ -14,7 +14,7 @@ class ArrayHelper extends BaseArrayHelper
      */
     public static function replaceValue(array &$array, string $value, mixed $replacement): void
     {
-        if (($key = array_search($value, $array)) !== false) {
+        if (($key = array_search($value, $array, true)) !== false) {
             $array[$key] = $replacement;
         }
     }

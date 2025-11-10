@@ -17,6 +17,6 @@ class OwnerRule extends Rule
 
         /** @var User|null $user */
         $user = $params['user'] ?? null;
-        return $user === null || !$user->isOwner() || $user->id == $userId;
+        return $user === null || !$user->isOwner() || $user->id === $userId;
     }
 }

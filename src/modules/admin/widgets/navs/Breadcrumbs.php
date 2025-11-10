@@ -58,7 +58,7 @@ class Breadcrumbs extends Widget
         /** @var Module $module */
         $module = Yii::$app->getModule('admin');
 
-        if (Yii::$app->controller->module instanceof Module || in_array(Yii::$app->controller->module, $module->getModules())) {
+        if (Yii::$app->controller->module instanceof Module || in_array(Yii::$app->controller->module, $module->getModules(), true)) {
             if ($module->showInBreadcrumbs) {
                 $this->links = [
                     [

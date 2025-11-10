@@ -157,7 +157,7 @@ class UserController extends Controller
             if ($form->delete()) {
                 $this->success(Yii::t('skeleton', 'The user was deleted.'));
 
-                if ($user->id == Yii::$app->getUser()->id) {
+                if ($user->id === Yii::$app->getUser()->id) {
                     Yii::$app->getUser()->logout(false);
                     return $this->goHome();
                 }

@@ -63,7 +63,6 @@ trait MaterializedTreeTrait
         return $this->parent_id ? current($this->ancestors) : null;
     }
 
-
     public function findAncestors(): ActiveQuery
     {
         return static::find()
@@ -96,7 +95,7 @@ trait MaterializedTreeTrait
         $this->_children = [];
 
         foreach ($children as $child) {
-            if ($child['parent_id'] == $this->id) {
+            if ($child['parent_id'] === $this->id) {
                 $this->_children[$child->id] = $child;
             }
         }

@@ -58,7 +58,7 @@ class Request extends \yii\web\Request
 
     public function getIsAjaxRoute(): bool
     {
-        return $this->getIsAjax() && ArrayHelper::getValue($_SERVER, 'HTTP_X_AJAX_REQUEST') == 'route';
+        return $this->getIsAjax() && ArrayHelper::getValue($_SERVER, 'HTTP_X_AJAX_REQUEST') === 'route';
     }
 
     public function isDraftRequest(): bool

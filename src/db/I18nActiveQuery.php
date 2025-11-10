@@ -25,7 +25,7 @@ class I18nActiveQuery extends ActiveQuery
 
     public function replaceI18nAttributes(): static
     {
-        if (Yii::$app->language != Yii::$app->sourceLanguage) {
+        if (Yii::$app->language !== Yii::$app->sourceLanguage) {
             if (is_array($this->select)) {
                 $instance = $this->getModelInstance();
                 $attributes = property_exists($instance, 'i18nAttributes')
@@ -38,7 +38,7 @@ class I18nActiveQuery extends ActiveQuery
                     $i18n = Yii::$app->getI18n();
 
                     foreach ($this->select as $key => $column) {
-                        $attribute = isset($attributes[$column]) ? $column : array_search($column, $attributes);
+                        $attribute = isset($attributes[$column]) ? $column : array_search($column, $attributes, true);
 
                         if ($attribute) {
                             $column = "$alias.[[" . $i18n->getAttributeName($attribute) . ']]';

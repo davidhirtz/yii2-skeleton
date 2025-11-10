@@ -65,7 +65,7 @@ class AuthClientSignupForm extends Model
 
         $this->sanitizeName();
 
-        if (!in_array($this->user->language, Yii::$app->getI18n()->languages)) {
+        if (!in_array($this->user->language, Yii::$app->getI18n()->languages, true)) {
             $this->user->language = Yii::$app->language;
         }
 

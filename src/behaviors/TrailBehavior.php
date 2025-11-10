@@ -75,7 +75,7 @@ class TrailBehavior extends Behavior
         foreach ($attributeNames as $attributeName) {
             if ($insert) {
                 $data[$attributeName] = $this->owner->{$attributeName};
-            } elseif ($changedAttributes[$attributeName] != $this->owner->{$attributeName}) {
+            } elseif ($changedAttributes[$attributeName] !== $this->owner->{$attributeName}) {
                 $data[$attributeName] = [$changedAttributes[$attributeName], $this->owner->{$attributeName}];
             }
         }
