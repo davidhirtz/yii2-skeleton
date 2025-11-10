@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
+use Override;
 use Yii;
 use yii\web\UploadedFile;
 
@@ -14,15 +15,11 @@ use yii\web\UploadedFile;
 class StreamUploadedFile extends UploadedFile
 {
     /**
-     * @var string|null the external url
-     */
-    public ?string $url = null;
-
-    /**
      * @var array|null containing a list of allowed extensions which will be filtered against the found mime-type only
-     * after the file was downloaded. This will also determine the file ending. Leave empty to use url ending.
+     * after the file was downloaded. This will also determine the file ending. Leave empty to use URL ending.
      */
     public ?array $allowedExtensions = null;
+    public ?string $url = null;
 
     private ?string $_temporaryUploadPath = null;
 
@@ -32,12 +29,12 @@ class StreamUploadedFile extends UploadedFile
             $this->tempName = $this->getTemporaryUploadPath() . uniqid();
         }
 
-        $this->loadTemporaryFile();
+        $this->saveTemporaryFile();
 
         parent::init();
     }
 
-    protected function loadTemporaryFile(): void
+    protected function saveTemporaryFile(): void
     {
         if (!$this->url) {
             $this->error = UPLOAD_ERR_NO_FILE;
@@ -49,7 +46,6 @@ class StreamUploadedFile extends UploadedFile
             : $this->url;
 
         $this->name = basename((string) parse_url($this->url, PHP_URL_PATH));
-
         $contents = @file_get_contents($this->url);
 
         if (!$contents) {
@@ -72,7 +68,7 @@ class StreamUploadedFile extends UploadedFile
         }
     }
 
-    #[\Override]
+    #[Override]
     public function saveAs($file, $deleteTempFile = true): bool
     {
         if (!$this->error) {
@@ -83,7 +79,7 @@ class StreamUploadedFile extends UploadedFile
         return false;
     }
 
-    #[\Override]
+    #[Override]
     public function getExtension(): string
     {
         $potentialExtensions = $this->type ? FileHelper::getExtensionsByMimeType($this->type) : [];
@@ -92,11 +88,7 @@ class StreamUploadedFile extends UploadedFile
             $potentialExtensions = array_intersect($this->allowedExtensions, $potentialExtensions);
         }
 
-        if ($potentialExtensions) {
-            return current($potentialExtensions);
-        }
-
-        return parent::getExtension();
+        return $potentialExtensions ? current($potentialExtensions) : parent::getExtension();
     }
 
     public function getTemporaryUploadPath(): ?string

@@ -10,10 +10,6 @@ use Yii;
 use yii\base\InvalidCallException;
 use yii\web\UploadedFile;
 
-/**
- * @property string $partialName
- * @method static ChunkedUploadedFile|null getInstance($model, $attribute)
- */
 class ChunkedUploadedFile extends UploadedFile
 {
     /**
@@ -27,7 +23,7 @@ class ChunkedUploadedFile extends UploadedFile
     public int $gcProbability = 1;
 
     /**
-     * @var int|null the maximum file size for chunked uploads. Can be set via container definitions config.
+     * @var int|null the maximum file size for chunked uploads.
      */
     public ?int $maxSize = null;
 
@@ -41,15 +37,9 @@ class ChunkedUploadedFile extends UploadedFile
 
     protected function saveTempFile(): void
     {
-        if (!$this->name || !$this->tempName || $this->error !== UPLOAD_ERR_OK) {
-            $this->error = UPLOAD_ERR_NO_FILE;
-            return;
-        }
-
         $range = (string)Yii::$app->getRequest()->getHeaders()->get('content-range');
 
         if (!preg_match('/^bytes (\d+)-(\d+)\/(\d+)$/', $range, $matches)) {
-            $this->error = UPLOAD_ERR_NO_FILE;
             return;
         }
 
@@ -142,18 +132,34 @@ class ChunkedUploadedFile extends UploadedFile
         return $this->error === UPLOAD_ERR_PARTIAL;
     }
 
+    public static function getInstance($model, $attribute): ?static
+    {
+        $file = $_FILES[$model->formName()] ?? null;
+
+        return $file
+            ? Yii::$container->get(static::class, config: [
+                'error' => $file['error'][$attribute],
+                'fullPath' => $file['full_path'][$attribute],
+                'name' => $file['name'][$attribute],
+                'size' => $file['size'][$attribute],
+                'tempName' => $file['tmp_name'][$attribute],
+                'type' => $file['type'][$attribute],
+            ])
+            : null;
+    }
+
     public static function getInstanceByName($name): ?static
     {
         $file = $_FILES[$name] ?? null;
 
         return $file
             ? Yii::$container->get(static::class, config: [
-                'name' => $file['name'] ?? null,
-                'fullPath' => $file['full_path'] ?? null,
-                'tempName' => $file['tmp_name'] ?? null,
-                'type' => $file['type'] ?? null,
-                'size' => $file['size'] ?? null,
-                'error' => $file['error'] ?? UPLOAD_ERR_NO_FILE,
+                'error' => $file['error'],
+                'fullPath' => $file['full_path'],
+                'name' => $file['name'],
+                'size' => $file['size'],
+                'tempName' => $file['tmp_name'],
+                'type' => $file['type'],
             ])
             : null;
     }

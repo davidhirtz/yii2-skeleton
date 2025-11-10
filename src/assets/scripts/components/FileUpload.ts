@@ -12,14 +12,18 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
         const chunkSize = this.dataset.chunkSize ? parseInt(this.dataset.chunkSize) : 1024 * 1024 * 2;
 
         const upload = async (file: File, start: number, end: number) => {
-            const blob = file.slice(start, end);
             const body = new FormData();
             const headers: HeadersInit = new Headers();
 
-            body.append('file', new File([blob], file.name, {type: file.type}));
-
             headers.set('X-CSRF-Token', csrfToken);
-            headers.set('Content-Range', `bytes ${start}-${end - 1}/${file.size}`);
+
+            if (start && end < file.size) {
+                const blob = file.slice(start, end);
+                body.append($input.name, new File([blob], file.name, {type: file.type}));
+                headers.set('Content-Range', `bytes ${start}-${end - 1}/${file.size}`);
+            } else {
+                body.append($input.name, file);
+            }
 
             await fetch(this.dataset.url as string, {
                 body: body,
