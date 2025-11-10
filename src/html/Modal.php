@@ -6,6 +6,8 @@ namespace davidhirtz\yii2\skeleton\html;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
+use Override;
+use Stringable;
 use Yii;
 
 class Modal extends Tag
@@ -26,9 +28,10 @@ class Modal extends Tag
         return $this;
     }
 
-    public function footer(Button|string $button): static
+    public function footer(Stringable|string $button): static
     {
-        $this->footer[] = $button instanceof Button ? $button->attribute('data-modal', '') : $button;
+        $this->footer[] = $button;
+
         return $this;
     }
 
@@ -38,7 +41,7 @@ class Modal extends Tag
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     protected function renderContent(): string
     {
         $content = [];
@@ -78,7 +81,7 @@ class Modal extends Tag
         return implode('', $content);
     }
 
-    #[\Override]
+    #[Override]
     protected function getName(): string
     {
         return 'dialog';

@@ -11,9 +11,19 @@ trait TagInputTrait
         return $this->attribute('disabled', $disabled);
     }
 
+    public function form(string $formId): static
+    {
+        return $this->attribute('form', $formId);
+    }
+
     public function name(?string $name): static
     {
         return $this->attribute('name', $name);
+    }
+
+    public function required(bool $required = true): static
+    {
+        return $this->attribute('required', $required ? '' : null);
     }
 
     public function type(?string $type): static

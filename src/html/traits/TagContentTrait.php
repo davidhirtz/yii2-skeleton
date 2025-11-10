@@ -31,7 +31,11 @@ trait TagContentTrait
 
     final public function addText(string|Stringable ...$content): static
     {
-        $this->content = [...$this->content, array_map(Html::encode(...), array_values($content))];
+        $this->content = [
+            ...$this->content,
+            array_map(Html::encode(...), array_values($content)),
+        ];
+
         return $this;
     }
 

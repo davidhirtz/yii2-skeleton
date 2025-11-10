@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\html;
 
 use davidhirtz\yii2\skeleton\html\traits\TagInputTrait;
+use Override;
 
 class Input extends Tag
 {
@@ -20,13 +21,13 @@ class Input extends Tag
         return $this->attribute('placeholder', $placeholder);
     }
 
-    #[\Override]
+    #[Override]
     protected function renderTag(): string
     {
         return '<' . $this->getName() . $this->renderAttributes() . '>';
     }
 
-    #[\Override]
+    #[Override]
     protected function getName(): string
     {
         return 'input';
