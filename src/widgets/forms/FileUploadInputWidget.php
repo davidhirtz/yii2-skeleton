@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
 use davidhirtz\yii2\skeleton\assets\FileUploadAssetBundle;
-use davidhirtz\yii2\skeleton\html\Button;
 use Override;
-use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -29,13 +27,7 @@ class FileUploadInputWidget extends InputWidget
     #[Override]
     public function init(): void
     {
-        $this->content ??= Button::primary()
-            ->text(Yii::t('media', 'Upload Files'))
-            ->icon('upload')
-            ->render();
-
         Html::addCssClass($this->options, 'd-none');
-
         $this->registerClientScript();
 
         parent::init();
