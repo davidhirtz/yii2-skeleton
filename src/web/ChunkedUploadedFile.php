@@ -43,14 +43,15 @@ class ChunkedUploadedFile extends UploadedFile
             return;
         }
 
-        [, $start, $end, $size] = array_map(intval(...), $matches);
+        [, $start, $end, $this->size] = array_map(intval(...), $matches);
 
-        if ($this->size !== $size || ($this->maxSize > 0 && $this->size > $this->maxSize)) {
+
+        if ($this->maxSize > 0 && $this->size > $this->maxSize) {
             $this->error = UPLOAD_ERR_FORM_SIZE;
             return;
         }
 
-        $tempName = $this->getPartialUploadPath() . Yii::$app->getSession()->getId() . '-' . $this->name . '.part';
+        $tempName = $this->getPartialUploadPath() . Yii::$app->getSession()->getId() . "-$this->name.tmp";
 
         if ($start === 0 && is_file($tempName)) {
             Yii::debug("Remove previously aborted upload '$tempName'");
@@ -64,7 +65,7 @@ class ChunkedUploadedFile extends UploadedFile
             return;
         }
 
-        $this->error = $end + 1 < $size ? UPLOAD_ERR_PARTIAL : UPLOAD_ERR_OK;
+        $this->error = $end + 1 < $this->size ? UPLOAD_ERR_PARTIAL : UPLOAD_ERR_OK;
         $this->tempName = $tempName;
     }
 

@@ -17,7 +17,7 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
 
             headers.set('X-CSRF-Token', csrfToken);
 
-            if (start && end < file.size) {
+            if (start > 0 || end < file.size) {
                 const blob = file.slice(start, end);
                 body.append($input.name, new File([blob], file.name, {type: file.type}));
                 headers.set('Content-Range', `bytes ${start}-${end - 1}/${file.size}`);
