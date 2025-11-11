@@ -139,7 +139,7 @@ class RedirectGridView extends GridView
     {
         return Button::primary(Yii::t('skeleton', 'New Redirect'))
             ->icon('plus')
-            ->get(['/admin/redirect/create'])
+            ->href(['/admin/redirect/create'])
             ->render();
     }
 

@@ -14,16 +14,11 @@ readonly class DraggableSortButton implements Stringable
     ) {
     }
 
-    public function render(): string
+    public function __toString(): string
     {
         return Button::secondary()
             ->icon($this->icon)
             ->addClass('sortable-handle')
             ->render();
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
     }
 }

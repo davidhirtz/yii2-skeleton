@@ -20,17 +20,12 @@ class ViewButton implements Stringable
         }
     }
 
-    public function render(): string
+    public function __toString(): string
     {
         return Button::primary()
             ->icon($this->icon)
             ->href($this->url)
             ->addClass('d-none d-md-block')
             ->render();
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
     }
 }

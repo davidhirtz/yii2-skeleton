@@ -50,6 +50,10 @@ class GridView extends \yii\grid\GridView
         'class' => LinkPager::class,
         'firstPageLabel' => true,
         'lastPageLabel' => true,
+        'options' => [
+            'class' => 'pagination',
+            'hx-boost' => 'true',
+        ],
     ];
 
     public GridSearch $search;
@@ -82,6 +86,8 @@ class GridView extends \yii\grid\GridView
         $this->options['hx-select'] ??= '#' . $this->getId();
         $this->options['hx-target'] ??= $this->options['hx-select'];
         $this->options['hx-select-oob'] ??= '#flashes';
+
+        $this->headerRowOptions['hx-boost'] ??= 'true';
 
         if (!$this->rowOptions) {
             $this->rowOptions = fn ($record) => $record instanceof ActiveRecord ? ['id' => $this->getRowId($record)] : [];
