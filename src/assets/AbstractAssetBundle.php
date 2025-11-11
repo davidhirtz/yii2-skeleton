@@ -15,7 +15,7 @@ abstract class AbstractAssetBundle extends AssetBundle
 
     public function getModuleUrl(): string
     {
-        return $this->baseUrl . '/js/' . $this->filename;
+        return "$this->baseUrl/js/$this->filename";
     }
 
     public static function registerModule(string|array|null $arguments = null): static

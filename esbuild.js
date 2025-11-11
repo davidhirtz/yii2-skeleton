@@ -3,24 +3,23 @@ import autoprefixer from "autoprefixer";
 import postcss from "postcss";
 import {sassPlugin} from 'esbuild-sass-plugin'
 
-// Use the "--watch" flag to watch for changes and rebuild automatically
 const isWatch = process.argv.slice(2).includes('--watch');
-let cssStartTime;
+let startTime;
 
 const watchPlugin = (type) => {
     return {
         name: 'watch-plugin',
         setup(build) {
             build.onStart(() => {
-                cssStartTime = Date.now();
+                startTime = Date.now();
             });
 
             build.onEnd((result) => {
                 if (result.errors.length) {
-                    console.log(result.errors);
+                    console.error(result.errors);
                 }
 
-                console.log(`Compiled ${type} with esbuild (${esbuild.version}) in ${Date.now() - cssStartTime}ms`);
+                console.log(`Compiled ${type} with esbuild (${esbuild.version}) in ${Date.now() - startTime}ms`);
             });
         },
     }

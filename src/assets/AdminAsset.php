@@ -9,22 +9,16 @@ use Yii;
 
 class AdminAsset extends AbstractAssetBundle
 {
-    /**
-     * @var array contains the options for the favicon link ta
-     */
     public array $faviconOptions = [];
 
     public $css = ['css/admin.css'];
+    public $depends = [FontAwesomeAsset::class];
     public $js = ['js/admin.js'];
-
-    public $depends = [
-        FontAwesomeAsset::class,
-    ];
 
     #[Override]
     public function init(): void
     {
-        if ($this->faviconOptions['href'] ?? false) {
+        if (array_key_exists('href', $this->faviconOptions)) {
             $this->faviconOptions['rel'] ??= 'shortcut icon';
             Yii::$app->getView()->registerLinkTag($this->faviconOptions, 'favicon');
         }

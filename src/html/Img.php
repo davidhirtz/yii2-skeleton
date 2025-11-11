@@ -1,0 +1,46 @@
+<?php
+
+declare(strict_types=1);
+
+namespace davidhirtz\yii2\skeleton\html;
+
+use davidhirtz\yii2\skeleton\helpers\Url;
+use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
+use Override;
+
+class Img extends Tag
+{
+    use TagContentTrait;
+
+    private ?string $src = null;
+
+    public function alt(string $alt): static
+    {
+        return $this->attribute('alt', $alt);
+    }
+
+    public function src(string|array|null $src): static
+    {
+        $this->src = $src !== null ? Url::to($src) : null;
+        return $this;
+    }
+
+    #[Override]
+    protected function prepareAttributes(): void
+    {
+        $this->attributes['alt'] ??= '';
+        $this->attributes['src'] ??= $this->src;
+    }
+
+    #[Override]
+    protected function renderTag(): string
+    {
+        return '<' . $this->getName() . $this->renderAttributes() . '>';
+    }
+
+    #[Override]
+    protected function getName(): string
+    {
+        return 'img';
+    }
+}

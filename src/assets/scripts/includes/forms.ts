@@ -1,35 +1,3 @@
-const toggleHr = (form: HTMLFormElement) => {
-    form.querySelectorAll('hr').forEach(($hr: HTMLElement) => {
-        let visible = false;
-        let $el = $hr.previousElementSibling;
-
-        while ($el && $el.tagName !== 'HR') {
-            if ($el.checkVisibility()) {
-                visible = true;
-                break;
-            }
-
-            $el = $el.previousElementSibling;
-        }
-
-        if (visible) {
-            $el = $hr.nextElementSibling;
-            visible = false;
-
-            while ($el && !$el.classList.contains('form-group-sticky')) {
-                if ($el.classList.contains('form-group') && $el.checkVisibility()) {
-                    visible = true;
-                    break;
-                }
-
-                $el = $el.nextElementSibling;
-            }
-        }
-
-        $hr.classList.toggle('d-none', !visible);
-    });
-}
-
 const getFieldSelectors = (selectors: string | string[]): Set<HTMLElement> => {
     const $elements = new Set<HTMLElement>();
 
@@ -38,7 +6,7 @@ const getFieldSelectors = (selectors: string | string[]): Set<HTMLElement> => {
     })
 
     selectors.forEach((selector: string) => {
-        document.querySelectorAll(selector).forEach(($el: HTMLElement) => $elements.add($el));
+        (document.querySelectorAll(selector) as NodeListOf<HTMLElement>).forEach(($el) => $elements.add($el));
     });
 
     return $elements;
@@ -49,7 +17,7 @@ export const toggleTargetsOnChange = ($input: HTMLSelectElement | HTMLInputEleme
     let allValues: string[][] = [];
     let $currentTargets: Set<HTMLElement>;
 
-    JSON.parse($input.dataset.formToggle).forEach((data: object) => {
+    JSON.parse($input.dataset.formToggle!).forEach((data: object) => {
         let [values, selectors] = Object.values(data);
         allValues.push(!Array.isArray(values) ? [String(values)] : values.map(String));
 
@@ -78,7 +46,8 @@ export const toggleTargetsOnChange = ($input: HTMLSelectElement | HTMLInputEleme
             });
         });
 
-        toggleHr($input.form);
+        const event = new Event('reflow');
+        $input.form!.dispatchEvent(event);
     }
 
     $input.addEventListener('change', onChange);
@@ -89,14 +58,18 @@ export const toggleTargetsOnChange = ($input: HTMLSelectElement | HTMLInputEleme
 };
 
 export const updateTargetsOnChange = ($select: HTMLSelectElement) => {
-    const $targets = getFieldSelectors(JSON.parse($select.dataset.formTarget));
+    const $targets = getFieldSelectors(JSON.parse($select.dataset.formTarget!));
 
     const onChange = () => {
-        const values = JSON.parse($select.selectedOptions[0].dataset.value);
+        const values = JSON.parse($select.selectedOptions[0].dataset.value!);
         let key = 0;
 
         $targets.forEach(($target) => {
-            $target[$target.tagName.toLowerCase() === 'input' ? "value" : "innerHTML"] = values[key++];
+            if($target.tagName.toLowerCase() === 'input') {
+                ($target as HTMLInputElement).value = values[key++]
+            } else {
+                $target.innerHTML = values[key++];
+            }
         });
     };
 

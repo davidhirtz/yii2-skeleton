@@ -85,7 +85,7 @@ trait ActiveFormTrait
             $this->renderFooter();
         }
 
-        return parent::run();
+        return Html::tag('active-form', parent::run());
     }
 
     public function renderFields(): void
@@ -332,7 +332,9 @@ trait ActiveFormTrait
         $tag = ArrayHelper::remove($options, 'tag', 'div');
         Html::addCssClass($options, $this->fieldConfig['horizontalCssClasses']['label']);
 
-        return Html::tag($tag, $content, $options);
+        return Html::tag('div', Html::tag($tag, $content, $options), [
+            'class' => 'col-form-label',
+        ]);
     }
 
     public function input(string $content, array $options = []): string
