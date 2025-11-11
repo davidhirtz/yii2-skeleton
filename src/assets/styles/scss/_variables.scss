@@ -157,6 +157,12 @@ $breadcrumb-margin: 0 !default;
 $breadcrumb-padding-x: 0 !default;
 $breadcrumb-padding-y: 0 !default;
 
+// Progress
+$progress-height: 0.5rem !default;
+$progress-top: 3rem !default;
+$progress-bg: var(--progress-bg) !default;
+$progress-bar-bg: var(--progress-bar-bg) !default;
+
 // Header
 $header-margin: 0 0 $margin-y * 2 !default;
 $header-text-align: center !default;
@@ -311,7 +317,6 @@ $checkbox-label-disabled-opacity: $checkbox-input-disabled-opacity !default;
 $checkbox-btn-check-disabled-opacity: .5 !default;
 
 $checkbox-inline-margin-end: 1rem !default;
-
 
 // List group
 $list-group-border-radius: $border-radius !default;

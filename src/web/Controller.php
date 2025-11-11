@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\web;
 
+use Override;
 use Yii;
 use yii\base\Model;
 
@@ -25,17 +26,17 @@ class Controller extends \yii\web\Controller
      */
     public string|false $contentSecurityPolicy = "frame-ancestors 'self'";
 
-    #[\Override]
+    #[Override]
     public function beforeAction($action): bool
     {
         if ($this->contentSecurityPolicy) {
-            Yii::$app->getResponse()->getHeaders()->set('Content-Security-Policy', $this->contentSecurityPolicy);
+            $this->response->getHeaders()->set('Content-Security-Policy', $this->contentSecurityPolicy);
         }
 
         return parent::beforeAction($action);
     }
 
-    #[\Override]
+    #[Override]
     public function render($view, $params = []): string
     {
         $content = parent::render($view, $params);

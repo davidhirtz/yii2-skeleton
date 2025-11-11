@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
+use Override;
 use Yii;
 
 /**
@@ -50,7 +51,7 @@ class Request extends \yii\web\Request
         return $this->getCookies()->getValue($this->languageParam);
     }
 
-    #[\Override]
+    #[Override]
     public function getRemoteIP(): ?string
     {
         return $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['HTTP_CLIENT_IP'] ?? parent::getRemoteIP();
@@ -75,5 +76,11 @@ class Request extends \yii\web\Request
     public function setIsDraft(bool $isDraft): void
     {
         $this->_isDraft = $isDraft;
+    }
+
+    public function preferNoContent(): bool
+    {
+        $prefer = (string)$this->getHeaders()->get('prefer');
+        return str_contains(strtolower($prefer), 'status=204');
     }
 }

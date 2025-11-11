@@ -1,0 +1,21 @@
+.progress {
+  position: fixed;
+  top: $progress-top;
+  left: 0;
+  height: $progress-height;
+  width: 100%;
+  background-color: var(--progress-bg);
+  appearance: none;
+}
+
+::-moz-progress-bar {
+  background-color: var(--progress-bar-bg);
+}
+
+::-webkit-progress-bar {
+  background-color: var(--progress-bg);
+}
+
+::-webkit-progress-value {
+  background-color: var(--progress-bar-bg);
+}
