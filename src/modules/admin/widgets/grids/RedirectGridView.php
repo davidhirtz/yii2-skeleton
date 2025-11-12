@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\html\Link;
 use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
@@ -13,6 +14,7 @@ use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\buttons\DeleteButton;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\buttons\ViewButton;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\ButtonsColumn;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\CheckboxColumn;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\TypeGridViewTrait;
 use davidhirtz\yii2\timeago\TimeagoColumn;
 use Override;
@@ -27,12 +29,8 @@ class RedirectGridView extends GridView
 {
     use TypeGridViewTrait;
 
-    public bool $showSelection = true;
-
-    /**
-     * @var Redirect|null the model used to display additional redirects
-     */
     public ?Redirect $redirect = null;
+    public bool $showSelection = true;
 
     #[Override]
     public function init(): void
@@ -42,17 +40,20 @@ class RedirectGridView extends GridView
         if ($this->redirect) {
             $this->setDataProviderFromRedirect();
             $this->setRedirectOptions();
-            $this->showOnEmpty = true;
         }
 
-        if (!$this->columns) {
-            $this->columns = [
-                $this->typeIconColumn(),
-                $this->requestUriColumn(),
-                $this->urlColumn(),
-                $this->updatedAtColumn(),
-                $this->buttonsColumn(),
-            ];
+        $this->columns ??= [
+            $this->typeIconColumn(),
+            $this->requestUriColumn(),
+            $this->urlColumn(),
+            $this->updatedAtColumn(),
+            $this->buttonsColumn(),
+        ];
+
+        if ($this->showSelection) {
+            array_unshift($this->columns, [
+                'class' => CheckboxColumn::class,
+            ]);
         }
 
         parent::init();
@@ -65,8 +66,6 @@ class RedirectGridView extends GridView
                 $this->search->getColumn(),
             ],
         ];
-
-        parent::initHeader();
     }
 
     protected function initFooter(): void
@@ -74,18 +73,17 @@ class RedirectGridView extends GridView
         $this->footer ??= [
             [
                 $this->getCreateButton(),
-                $this->showSelection ? $this->getSelectionButton() : '',
+                $this->showSelection ? $this->getSelectionButton() : null,
             ],
         ];
-
-        parent::initFooter();
     }
 
     protected function setDataProviderFromRedirect(): void
     {
         $this->dataProvider = Yii::createObject(RedirectActiveDataProvider::class);
 
-        $this->dataProvider->query->andWhere(['url' => $this->redirect->getOldAttribute('url')])
+        $this->dataProvider->query
+            ->andWhere(['url' => $this->redirect->getOldAttribute('url')])
             ->andWhere(['!=', 'id', $this->redirect->id]);
     }
 
@@ -99,7 +97,11 @@ class RedirectGridView extends GridView
     {
         return [
             'attribute' => 'request_uri',
-            'content' => fn (Redirect $redirect) => Html::a(Html::markKeywords($redirect->request_uri, $this->search->getKeywords()), $this->getRoute($redirect))
+            'content' => function (Redirect $redirect) {
+                return Link::make()
+                    ->html(Html::markKeywords($redirect->request_uri, $this->search->getKeywords()))
+                    ->href($this->getRoute($redirect));
+            }
         ];
     }
 
@@ -108,10 +110,11 @@ class RedirectGridView extends GridView
         return [
             'attribute' => 'url',
             'content' => function (Redirect $redirect) {
-                $text = Html::iconText('external-link-alt', Html::markKeywords($redirect->url ?: '/', $this->search->getKeywords()), ['class' => 'text-nowrap']);
-                return Html::a($text, $redirect->getBaseUrl() . $redirect->url, [
-                    'target' => '_blank',
-                ]);
+                return Link::make()
+                    ->icon('external-link-alt')
+                    ->html(Html::markKeywords($redirect->url ?: '/', $this->search->getKeywords()))
+                    ->href($redirect->url)
+                    ->target('_blank');
             }
         ];
     }
@@ -147,7 +150,6 @@ class RedirectGridView extends GridView
     /**
      * @see RedirectController::actionDeleteAll()
      */
-    #[Override]
     protected function getSelectionButton(): ?Stringable
     {
         $modal = Modal::make()

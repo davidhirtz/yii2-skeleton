@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\html;
 
+use davidhirtz\yii2\skeleton\html\base\VoidTag;
 use davidhirtz\yii2\skeleton\html\traits\TagInputTrait;
 use Override;
 
-class Input extends Tag
+class Input extends VoidTag
 {
     use TagInputTrait;
 
@@ -18,12 +19,6 @@ class Input extends Tag
         }
 
         parent::prepareAttributes();
-    }
-
-    #[Override]
-    protected function renderTag(): string
-    {
-        return '<' . $this->getTagName() . $this->renderAttributes() . '>';
     }
 
     #[Override]

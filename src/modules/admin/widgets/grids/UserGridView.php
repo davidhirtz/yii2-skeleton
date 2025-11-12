@@ -24,7 +24,7 @@ class UserGridView extends GridView
 {
     use StatusGridViewTrait;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         $this->setId($this->getId(false) ?? 'users');
@@ -177,7 +177,7 @@ class UserGridView extends GridView
             : false;
     }
 
-    #[\Override]
+    #[Override]
     public function getModel(): User
     {
         return User::instance();

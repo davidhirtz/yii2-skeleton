@@ -18,6 +18,11 @@ class LinkPager extends \yii\widgets\LinkPager
     public $firstPageLabel = true;
     public $lastPageLabel = true;
 
+    public $options = [
+        'class' => 'pagination',
+        'hx-boost' => 'true',
+    ];
+
     #[\Override]
     public function init(): void
     {

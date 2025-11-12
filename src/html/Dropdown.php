@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\html;
 
+use davidhirtz\yii2\skeleton\html\base\Tag;
 use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
 
 class Dropdown extends Tag
@@ -64,5 +65,10 @@ class Dropdown extends Tag
     {
         $content = implode('', $this->content) . '<ul>' . implode('', $this->items) . '</ul>';
         return $this->button->render() . '<dialog class="dropdown-menu">' . $content . '</dialog>';
+    }
+
+    protected function getTagName(): string
+    {
+        return 'div';
     }
 }

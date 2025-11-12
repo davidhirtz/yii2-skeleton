@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\html;
+namespace davidhirtz\yii2\skeleton\html\base;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use Stringable;
 
-class Tag implements Stringable
+abstract class Tag implements Stringable
 {
     protected array $attributes = [];
     private static int $counter = 0;
@@ -107,11 +107,6 @@ class Tag implements Stringable
         return '';
     }
 
-    protected function getTagName(): string
-    {
-        return 'div';
-    }
-
     final public static function make(): static
     {
         return new static();
@@ -121,4 +116,6 @@ class Tag implements Stringable
     {
         return $this->render();
     }
+
+    abstract protected function getTagName(): string;
 }

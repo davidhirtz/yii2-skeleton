@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\html;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\base\Tag;
 use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
 use Override;
 use Yii;
@@ -87,5 +88,10 @@ class Card extends Tag
             ->html(...$this->content);
 
         return implode('', $content);
+    }
+
+    protected function getTagName(): string
+    {
+        return 'div';
     }
 }

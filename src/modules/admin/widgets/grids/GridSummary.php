@@ -6,17 +6,18 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\html\Alert;
 use davidhirtz\yii2\skeleton\html\Button;
+use Stringable;
 use Yii;
 use yii\data\Pagination;
 
-class GridSummary
+class GridSummary implements Stringable
 {
     public function __construct(
-        protected ?string $message,
         protected int $count,
         protected int $totalCount,
         protected Pagination|false $pagination = false,
         protected ?GridSearch $search = null,
+        protected ?string $message = null,
         protected array $params = [],
     ) {
     }
@@ -80,5 +81,10 @@ class GridSummary
             $this->totalCount => Yii::t('skeleton', 'Displaying all {totalCount, number} records.', $params),
             default => Yii::t('skeleton', 'Displaying {begin, number}-{end, number} of {totalCount, number} records.', $params),
         };
+    }
+
+    public function __toString(): string
+    {
+        return $this->render();
     }
 }

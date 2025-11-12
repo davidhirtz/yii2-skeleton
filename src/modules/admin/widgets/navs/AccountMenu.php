@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 
+use davidhirtz\yii2\skeleton\html\base\Tag;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Dropdown;
 use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\html\Link;
 use davidhirtz\yii2\skeleton\html\Nav;
 use davidhirtz\yii2\skeleton\html\NavLink;
-use davidhirtz\yii2\skeleton\html\Tag;
 use davidhirtz\yii2\skeleton\web\User;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Yii;
