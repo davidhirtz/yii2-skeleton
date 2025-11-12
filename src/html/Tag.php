@@ -99,7 +99,7 @@ class Tag implements Stringable
 
     protected function renderTag(): string
     {
-        return '<' . $this->getName() . $this->renderAttributes() . '>' . $this->renderContent() . '</' . $this->getName() . '>';
+        return '<' . $this->getTagName() . $this->renderAttributes() . '>' . $this->renderContent() . '</' . $this->getTagName() . '>';
     }
 
     protected function renderContent(): string
@@ -107,7 +107,7 @@ class Tag implements Stringable
         return '';
     }
 
-    protected function getName(): string
+    protected function getTagName(): string
     {
         return 'div';
     }

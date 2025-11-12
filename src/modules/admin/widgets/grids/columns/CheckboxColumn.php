@@ -5,19 +5,25 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns;
 
 use davidhirtz\yii2\skeleton\assets\SelectableAssetBundle;
+use davidhirtz\yii2\skeleton\html\Checkbox;
 use Override;
-use yii\helpers\Html;
+use yii\grid\Column;
 
-class CheckboxColumn extends \yii\grid\CheckboxColumn
+class CheckboxColumn extends Column
 {
-    public $checkboxOptions = [
-        'class' => 'form-check-input',
-    ];
+    public array $checkboxAttributes = [];
+    public bool $multiple = true;
+    public string $name = 'selection';
 
     #[Override]
     public function init(): void
     {
-        $this->checkboxOptions['data-id'] = 'check';
+        if ($this->multiple && substr_compare($this->name, '[]', -2, 2)) {
+            $this->name .= '[]';
+        }
+
+        $this->registerClientScript();
+
         parent::init();
     }
 
@@ -28,23 +34,27 @@ class CheckboxColumn extends \yii\grid\CheckboxColumn
             return parent::renderHeaderCellContent();
         }
 
-        return Html::checkbox('', false, [
-            ...$this->checkboxOptions,
-            'data-id' => 'check-all',
-        ]);
+        return Checkbox::make()
+            ->attribute('data-check-all', "#{$this->grid->getId()}")
+            ->render();
     }
 
-    //    #[Override]
-    //    protected function renderDataCellContent($model, $key, $index): string
-    //    {
-    //        $checkbox = parent::renderDataCellContent($model, $key, $index);
-    //        return $this->multiple ? "<selectable-checkbox>$checkbox</selectable-checkbox>" : $checkbox;
-    //
-    //    }
-
     #[Override]
+    protected function renderDataCellContent($model, $key, $index): string
+    {
+        if ($this->content !== null) {
+            return parent::renderDataCellContent($model, $key, $index);
+        }
+
+        return Checkbox::make()
+            ->attribute('data-check', $this->multiple ? 'multiple' : 'single')
+            ->addAttributes($this->checkboxAttributes)
+            ->name($this->name)
+            ->render();
+    }
+
     public function registerClientScript(): void
     {
-        SelectableAssetBundle::registerModule('#' . $this->grid->getId());
+        $this->grid->getView()->registerAssetBundle(SelectableAssetBundle::class);
     }
 }

@@ -20,7 +20,7 @@ class Link extends Tag
     use TagTooltipAttributeTrait;
 
     #[Override]
-    protected function getName(): string
+    protected function getTagName(): string
     {
         return 'a';
     }

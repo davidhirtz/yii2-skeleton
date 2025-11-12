@@ -65,3 +65,11 @@
   color: var(--checkbox-label-color, inherit);
   cursor: $checkbox-label-cursor;
 }
+
+.d-block-checked {
+
+}
+
+:has(input[data-check]:checked) .d-block-checked {
+  display: block !important;
+}

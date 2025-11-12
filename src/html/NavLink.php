@@ -86,7 +86,7 @@ class NavLink extends Link
     }
 
     #[\Override]
-    protected function getName(): string
+    protected function getTagName(): string
     {
         return array_key_exists('href', $this->attributes) ? 'a' : 'button';
     }

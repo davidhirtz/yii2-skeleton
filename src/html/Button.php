@@ -52,7 +52,7 @@ class Button extends Tag
     }
 
     #[Override]
-    protected function getName(): string
+    protected function getTagName(): string
     {
         return isset($this->attributes['href']) ? 'a' : 'button';
     }

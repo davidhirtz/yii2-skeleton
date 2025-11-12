@@ -43,7 +43,7 @@ class Icon extends Tag
     }
 
     #[\Override]
-    protected function getName(): string
+    protected function getTagName(): string
     {
         return 'i';
     }

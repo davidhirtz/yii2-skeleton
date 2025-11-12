@@ -84,7 +84,7 @@ class Modal extends Tag
     }
 
     #[Override]
-    protected function getName(): string
+    protected function getTagName(): string
     {
         return 'dialog';
     }

@@ -49,7 +49,7 @@ class Nav extends Tag
     }
 
     #[\Override]
-    protected function getName(): string
+    protected function getTagName(): string
     {
         return 'ul';
     }

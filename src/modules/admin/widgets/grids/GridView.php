@@ -42,9 +42,6 @@ class GridView extends \yii\grid\GridView
 
     public $layout = '{header}{summary}{items}{pager}{footer}';
 
-    /**
-     * @var array|null the url route for sortable widget
-     */
     public ?array $orderRoute = ['order'];
 
     public $pager = [
@@ -66,7 +63,7 @@ class GridView extends \yii\grid\GridView
     public ?string $selectionButtonLabel = null;
     public array $selectionRoute = ['update-all'];
 
-    public array $selectionColumn = [
+    public array $selectionColumnOptions = [
         'class' => CheckboxColumn::class,
     ];
 
@@ -81,7 +78,7 @@ class GridView extends \yii\grid\GridView
     public function init(): void
     {
         if ($this->showSelection) {
-            array_unshift($this->columns, $this->selectionColumn);
+            array_unshift($this->columns, $this->selectionColumnOptions);
         }
 
         $this->options['hx-select'] ??= '#' . $this->getId();

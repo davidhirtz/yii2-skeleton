@@ -20,7 +20,7 @@ class Div extends Tag
     }
 
     #[Override]
-    protected function getName(): string
+    protected function getTagName(): string
     {
         return 'div';
     }

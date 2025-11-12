@@ -1,2 +1,0 @@
-import{a as s}from"./chunk-KKRCZ3SV.js";var f=d=>{s.onLoad(h=>{h.querySelectorAll(d).forEach(o=>{let t=o.querySelectorAll('[data-id="check"]'),c=o.querySelector('[data-id="check-all"]');c&&(c.onchange=()=>t.forEach(e=>e.checked=c.checked)),t.forEach(e=>e.onchange=()=>{if(!c)e.checked&&t.forEach(l=>l.checked=l===e);else{let l=o.querySelectorAll('[data-id="check-button"]'),n="none";t.forEach(a=>{a.checked&&(n="block")}),l.forEach(a=>a.style.display=n)}})})})};export{f as default};
-//# sourceMappingURL=selectable.js.map

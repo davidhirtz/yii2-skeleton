@@ -11,24 +11,23 @@ class Input extends Tag
 {
     use TagInputTrait;
 
-    protected array $attributes = [
-        'class' => 'form-control',
-        'type' => 'text',
-    ];
-
-    public function placeholder(?string $placeholder): static
+    protected function prepareAttributes(): void
     {
-        return $this->attribute('placeholder', $placeholder);
+        if (!array_key_exists('name', $this->attributes)) {
+            $this->getId();
+        }
+
+        parent::prepareAttributes();
     }
 
     #[Override]
     protected function renderTag(): string
     {
-        return '<' . $this->getName() . $this->renderAttributes() . '>';
+        return '<' . $this->getTagName() . $this->renderAttributes() . '>';
     }
 
     #[Override]
-    protected function getName(): string
+    protected function getTagName(): string
     {
         return 'input';
     }

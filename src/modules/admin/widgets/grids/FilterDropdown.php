@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\html\Dropdown;
-use davidhirtz\yii2\skeleton\html\Input;
 use davidhirtz\yii2\skeleton\html\Link;
+use davidhirtz\yii2\skeleton\html\TextInput;
 use Stringable;
 use Yii;
 
@@ -61,7 +61,7 @@ class FilterDropdown implements Stringable
 
     protected function addFilterInput(): void
     {
-        $input = Input::make()
+        $input = TextInput::make()
             ->attribute('data-filter', '#' . $this->dropdown->getId() . ' li')
             ->placeholder($this->filterPlaceholder)
             ->type('search')
