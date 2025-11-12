@@ -8,12 +8,10 @@ use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
+use Override;
 use Yii;
 use yii\db\ActiveRecord;
 
-/**
- * @property DeleteForm $form {@see static::setForm()}
- */
 class DeleteActiveForm extends ActiveForm
 {
     public string|false $attribute = false;
@@ -40,7 +38,7 @@ class DeleteActiveForm extends ActiveForm
      */
     public array $fieldOptions = [];
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         $this->form ??= Yii::$container->get(DeleteForm::class, [], [
@@ -64,12 +62,16 @@ class DeleteActiveForm extends ActiveForm
 
         $this->confirm ??= Yii::t('yii', 'Are you sure you want to delete this item?');
 
-        $btn = Button::danger($this->label);
+        $btn = Button::make()
+            ->danger()
+            ->text($this->label);
 
         if ($this->confirm) {
             $modal = Modal::make()
                 ->title($this->confirm)
-                ->footer(Button::danger($this->label)
+                ->footer(Button::make()
+                    ->danger()
+                    ->text($this->label)
                     ->type('submit')
                     ->attribute('form', $this->getId()));
 

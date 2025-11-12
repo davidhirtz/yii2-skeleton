@@ -23,31 +23,32 @@ class Button extends Tag
     
     protected array $attributes = [
         'type' => 'button',
+        'class' => 'btn',
     ];
 
-    public static function danger(string $text = ''): static
+    public function danger(): static
     {
-        return static::make()->class('btn btn-danger')->text($text);
+        return $this->addClass('btn-danger');
     }
 
-    public static function primary(string $text = ''): static
+    public function primary(): static
     {
-        return static::make()->class('btn btn-primary')->text($text);
+        return $this->addClass('btn-primary');
     }
 
-    public static function secondary(string $text = ''): static
+    public function success(): static
     {
-        return static::make()->class('btn btn-secondary')->text($text);
+        return $this->addClass('btn-success');
     }
 
-    public static function success(string $text = ''): static
+    public function secondary(): static
     {
-        return static::make()->class('btn btn-success')->text($text);
+        return $this->addClass('btn-secondary');
     }
 
-    public static function link(string $text = ''): static
+    public function link(): static
     {
-        return static::make()->class('btn btn-link')->text($text);
+        return $this->addClass('btn-link');
     }
 
     #[Override]

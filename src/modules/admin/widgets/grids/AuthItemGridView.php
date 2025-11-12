@@ -13,6 +13,7 @@ use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\ButtonsColumn;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\MessageSourceTrait;
+use Override;
 use Yii;
 use yii\grid\GridView;
 
@@ -35,7 +36,7 @@ class AuthItemGridView extends GridView
      */
     public static ?string $prevRuleName = null;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         if (!$this->rowOptions) {
@@ -166,14 +167,15 @@ class AuthItemGridView extends GridView
             ? Yii::t('skeleton', 'Revoke {auth}', ['auth' => $authItem->getTypeName()])
             : Yii::t('skeleton', 'Assign {auth}', ['auth' => $authItem->getTypeName()]);
 
-        return Button::primary()
+        return Button::make()
+            ->primary()
             ->icon($authItem->isAssigned ? 'ban' : 'star')
             ->tooltip($tooltip)
-            ->post($route, '#' . $this->getId())
+            ->replace($route, '#' . $this->getId())
             ->render();
     }
 
-    #[\Override]
+    #[Override]
     public function renderSummary(): string
     {
         $summary = new GridSummary(

@@ -67,7 +67,8 @@ class GridSearch
         $icon = ArrayHelper::remove($this->inputOptions, 'icon', 'search');
         $type = ArrayHelper::remove($this->inputOptions, 'type', 'search');
 
-        $btn = Button::link()
+        $btn = Button::make()
+            ->link()
             ->icon($icon)
             ->type('submit')
             ->render();

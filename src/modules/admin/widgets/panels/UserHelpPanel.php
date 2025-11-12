@@ -43,7 +43,9 @@ class UserHelpPanel extends HelpPanel
             return '';
         }
 
-        return Button::primary(Yii::t('skeleton', 'Delete picture'))
+        return Button::make()
+            ->primary()
+            ->text(Yii::t('skeleton', 'Delete picture'))
             ->icon('portrait')
             ->post(['delete-picture', 'id' => $this->user->id])
             ->render();
@@ -58,7 +60,9 @@ class UserHelpPanel extends HelpPanel
             return '';
         }
 
-        return Button::primary(Yii::t('skeleton', 'Disable 2FA'))
+        return Button::make()
+            ->primary()
+            ->text(Yii::t('skeleton', 'Disable 2FA'))
             ->icon('qrcode')
             ->post(['disable-google-authenticator', 'id' => $this->user->id])
             ->render();
@@ -72,11 +76,15 @@ class UserHelpPanel extends HelpPanel
         $modal = Modal::make()
             ->title(Yii::t('skeleton', 'Create password link'))
             ->text(Yii::t('skeleton', 'Are you sure you want to create a new password reset link? The current link will be invalidated.'))
-            ->footer(Button::primary(Yii::t('skeleton', 'Create password link'))
+            ->footer(Button::make()
+                ->primary()
+                ->text(Yii::t('skeleton', 'Create password link'))
                 ->icon('key')
                 ->post(['reset', 'id' => $this->user->id]));
 
-        return Button::primary(Yii::t('skeleton', 'Create password link'))
+        return Button::make()
+            ->primary()
+            ->text(Yii::t('skeleton', 'Create password link'))
             ->icon('key')
             ->modal($modal)
             ->render();
@@ -90,7 +98,9 @@ class UserHelpPanel extends HelpPanel
 
         $url = $this->user->getPasswordResetUrl();
 
-        $action = Button::primary(Yii::t('skeleton', 'Copy link'))
+        $action = Button::make()
+            ->primary()
+            ->text(Yii::t('skeleton', 'Copy link'))
             ->icon('clipboard')
             ->attribute('onclick', 'navigator.clipboard.writeText(' . Json::htmlEncode($url) . ')');
 
@@ -99,7 +109,9 @@ class UserHelpPanel extends HelpPanel
             ->html(Html::tag('div', $url, ['class' => 'text-break']))
             ->footer($action);
 
-        return Button::primary(Yii::t('skeleton', 'Show password link'))
+        return Button::make()
+            ->primary()
+            ->text(Yii::t('skeleton', 'Show password link'))
             ->icon('clipboard')
             ->modal($modal)
             ->render();

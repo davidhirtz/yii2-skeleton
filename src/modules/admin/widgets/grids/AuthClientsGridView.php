@@ -55,7 +55,9 @@ class AuthClientsGridView extends GridView
             ->title(Yii::t('skeleton', 'Clients'))
             ->html(AuthClientListGroup::make());
 
-        return Button::primary(Yii::t('skeleton', 'Add account'))
+        return Button::make()
+            ->primary()
+            ->text(Yii::t('skeleton', 'Add account'))
             ->icon('plus')
             ->modal($modal)
             ->render();
@@ -79,11 +81,14 @@ class AuthClientsGridView extends GridView
                 $modal = Modal::make()
                     ->title(Yii::t('skeleton', 'Remove {client}', ['client' => $title]))
                     ->text(Yii::t('skeleton', 'Are you sure your want to remove your {client} account?', ['client' => $title]))
-                    ->footer(Button::danger(Yii::t('skeleton', 'Remove'))
+                    ->footer(Button::make()
+                        ->danger()
+                        ->text(Yii::t('skeleton', 'Remove'))
                         ->icon('trash-alt')
                         ->post(['deauthorize', 'id' => $auth->id, 'name' => $auth->name]));
 
-                return Button::danger()
+                return Button::make()
+                    ->danger()
                     ->icon('trash-alt')
                     ->modal($modal)
                     ->tooltip(Yii::t('skeleton', 'Remove {client}', ['client' => $title]))

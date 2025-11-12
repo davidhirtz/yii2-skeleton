@@ -137,7 +137,9 @@ class RedirectGridView extends GridView
 
     protected function getCreateButton(): string
     {
-        return Button::primary(Yii::t('skeleton', 'New Redirect'))
+        return Button::make()
+        ->primary()
+        ->text(Yii::t('skeleton', 'New Redirect'))
             ->icon('plus')
             ->href(['/admin/redirect/create'])
             ->render();
@@ -152,12 +154,16 @@ class RedirectGridView extends GridView
         $modal = Modal::make()
             ->title(Yii::t('skeleton', 'Delete selected'))
             ->text(Yii::t('skeleton', 'Are you sure you want to delete all selected items?'))
-            ->footer(Button::danger(Yii::t('skeleton', 'Delete selected'))
+            ->footer(Button::make()
+        ->danger()
+        ->text(Yii::t('skeleton', 'Delete selected'))
                 ->icon('trash')
                 ->post(['/admin/redirect/delete-all'])
                 ->attribute('hx-include', '[data-id="check"]:checked'));
 
-        return Button::danger(Yii::t('skeleton', 'Delete selected'))
+        return Button::make()
+            ->danger()
+            ->text(Yii::t('skeleton', 'Delete selected'))
             ->icon('trash')
             ->attribute('data-id', 'check-button')
             ->attribute('style', 'display:none')

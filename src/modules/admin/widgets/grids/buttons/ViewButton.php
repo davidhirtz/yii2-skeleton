@@ -22,7 +22,8 @@ class ViewButton implements Stringable
 
     public function __toString(): string
     {
-        return Button::primary()
+        return Button::make()
+->primary()
             ->icon($this->icon)
             ->href($this->url)
             ->addClass('d-none d-md-block')

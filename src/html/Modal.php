@@ -62,7 +62,9 @@ class Modal extends Tag
                     ->class('btn-icon')
                     ->icon('xmark');
 
-                array_unshift($this->footer, Button::secondary(Yii::t('skeleton', 'Cancel'))
+                array_unshift($this->footer, Button::make()
+                    ->secondary()
+                    ->text(Yii::t('skeleton', 'Cancel'))
                     ->attribute('data-modal', '')
                     ->attribute('autofocus', true));
             }

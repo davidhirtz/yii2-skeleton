@@ -48,10 +48,12 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                     'contentOptions' => ['class' => 'text-end'],
                     'content' => fn ($modified, $name): string => ButtonToolbar::make()
                         ->addHtml(
-                            Button::primary()
+                            Button::make()
+->primary()
                                 ->href(['view', 'log' => $name, 'raw' => 1])
                                 ->icon('file'),
-                            Button::danger()
+                            Button::make()
+->danger()
                                 ->icon('trash')
                                 ->post(['delete', 'log' => $name])
                         )
@@ -96,7 +98,9 @@ $this->setTitle(Yii::t('skeleton', 'System'));
             [
                 [
                     /** @see SystemController::actionPublish() */
-                    'content' => Button::primary(Yii::t('skeleton', 'Refresh'))
+                    'content' => Button::make()
+                    ->primary()
+                    ->text(Yii::t('skeleton', 'Refresh'))
                         ->icon('sync-alt')
                         ->post(['publish']),
                     'options' => ['class' => 'ms-auto'],
@@ -123,7 +127,8 @@ $this->setTitle(Yii::t('skeleton', 'System'));
             [
                 'contentOptions' => ['class' => 'text-end'],
                 /** @see SystemController::actionFlush() */
-                'content' => fn (array $item): string => Button::primary()
+                'content' => fn (array $item): string => Button::make()
+->primary()
                     ->icon('sync-alt')
                     ->post(['flush', 'cache' => $item['name']])
                     ->render()
@@ -158,7 +163,8 @@ $this->setTitle(Yii::t('skeleton', 'System'));
             [
                 'contentOptions' => ['class' => 'text-end'],
                 /** @see SystemController::actionSessionGc() */
-                'content' => fn (array $item): string => Button::primary()
+                'content' => fn (array $item): string => Button::make()
+->primary()
                     ->icon('trash')
                     ->post(['/admin/system/session-gc'])
                     ->tooltip(Yii::t('skeleton', 'Delete expired sessions'))

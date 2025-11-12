@@ -17,6 +17,14 @@ trait TagAjaxAttributeTrait
         return $this->post($url);
     }
 
+    public function replace(string|array $url, string $target): static
+    {
+        $this->attributes['hx-select'] = $target;
+        $this->attributes['hx-target'] = $target;
+
+        return $this->post($url);
+    }
+
     public function get(string|array $url, bool $pushHistory = true): static
     {
         $this->attributes['hx-get'] = Url::to($url);

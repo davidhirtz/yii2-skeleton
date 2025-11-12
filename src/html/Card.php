@@ -61,8 +61,8 @@ class Card extends Tag
 
             if ($this->collapsed !== null) {
                 $header[] = Button::make()
+                    ->link()
                     ->attribute('data-collapse', '#' . $this->getId())
-                    ->class('btn btn-link')
                     ->html($this->title);
 
                 $header[] = Button::make()

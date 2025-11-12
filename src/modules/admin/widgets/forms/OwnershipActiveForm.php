@@ -7,6 +7,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\models\forms\OwnershipForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
+use Override;
 use Yii;
 
 /**
@@ -14,12 +15,14 @@ use Yii;
  */
 class OwnershipActiveForm extends ActiveForm
 {
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         $this->buttons ??= [
-            Button::danger(Yii::t('skeleton', 'Transfer'))
-            ->type('submit')
+            Button::make()
+                ->danger()
+                ->text(Yii::t('skeleton', 'Transfer'))
+                ->type('submit')
         ];
 
         parent::init();

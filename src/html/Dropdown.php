@@ -23,7 +23,9 @@ class Dropdown extends Tag
 
     public function label(string $text): static
     {
-        return $this->button(Button::make()->class('btn dropdown-toggle')->text($text));
+        return $this->button(Button::make()
+            ->class('btn dropdown-toggle')
+            ->text($text));
     }
 
     public function dropend(): static

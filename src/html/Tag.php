@@ -55,6 +55,21 @@ class Tag implements Stringable
         return $this;
     }
 
+    final public function addStyle(string|array|null ...$style): static
+    {
+        if ($style) {
+            Html::addCssStyle($this->attributes, $style);
+        }
+
+        return $this;
+    }
+
+    final public function style(string|array|null ...$style): static
+    {
+        $this->attributes['style'] = $style;
+        return $this;
+    }
+
     final public function getId(): string
     {
         return $this->attributes['id'] ??= 'i' . ++self::$counter;

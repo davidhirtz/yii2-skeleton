@@ -150,14 +150,16 @@ class UserGridView extends GridView
     protected function getRowButtons(User $user): array|string
     {
         if ($route = $this->getRoute($user)) {
-            return Button::primary()
+            return Button::make()
+->primary()
                 ->href($route)
                 ->icon('wrench')
                 ->render();
         }
 
         if (Yii::$app->getUser()->can(User::AUTH_USER_ASSIGN, ['user' => $user])) {
-            return Button::primary()
+            return Button::make()
+->primary()
                 ->href(['/admin/auth/assign', 'user' => $user->id])
                 ->icon('unlock-alt')
                 ->tooltip(Yii::t('skeleton', 'Permissions'))

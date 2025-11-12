@@ -34,11 +34,13 @@ class DeleteButton implements Stringable
     {
         $modal = Modal::make()
             ->title($this->message)
-            ->footer(Button::danger()
+            ->footer(Button::make()
+->danger()
                 ->post($this->url, $this->pushHistory)
                 ->text(Yii::t('yii', 'Delete')));
 
-        return Button::danger()
+        return Button::make()
+->danger()
             ->icon($this->icon)
             ->modal($modal)
             ->render();
