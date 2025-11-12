@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\html;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
+use Override;
 use Yii;
 
 class Card extends Tag
@@ -51,7 +52,7 @@ class Card extends Tag
         parent::prepareAttributes();
     }
 
-    #[\Override]
+    #[Override]
     protected function renderContent(): string
     {
         $content = [];

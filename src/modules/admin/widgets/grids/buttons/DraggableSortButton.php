@@ -17,7 +17,7 @@ readonly class DraggableSortButton implements Stringable
     public function __toString(): string
     {
         return Button::make()
-->secondary()
+            ->secondary()
             ->icon($this->icon)
             ->addClass('sortable-handle')
             ->render();

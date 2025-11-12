@@ -135,28 +135,27 @@ class RedirectGridView extends GridView
         ];
     }
 
-    protected function getCreateButton(): string
+    protected function getCreateButton(): ?Stringable
     {
         return Button::make()
-        ->primary()
-        ->text(Yii::t('skeleton', 'New Redirect'))
+            ->primary()
+            ->text(Yii::t('skeleton', 'New Redirect'))
             ->icon('plus')
-            ->href(['/admin/redirect/create'])
-            ->render();
+            ->get(['/admin/redirect/create']);
     }
 
     /**
      * @see RedirectController::actionDeleteAll()
      */
     #[Override]
-    protected function getSelectionButton(): Stringable|string
+    protected function getSelectionButton(): ?Stringable
     {
         $modal = Modal::make()
             ->title(Yii::t('skeleton', 'Delete selected'))
             ->text(Yii::t('skeleton', 'Are you sure you want to delete all selected items?'))
             ->footer(Button::make()
-        ->danger()
-        ->text(Yii::t('skeleton', 'Delete selected'))
+                ->danger()
+                ->text(Yii::t('skeleton', 'Delete selected'))
                 ->icon('trash')
                 ->post(['/admin/redirect/delete-all'])
                 ->attribute('hx-include', '[data-id="check"]:checked'));
@@ -166,19 +165,20 @@ class RedirectGridView extends GridView
             ->text(Yii::t('skeleton', 'Delete selected'))
             ->icon('trash')
             ->attribute('data-id', 'check-button')
-            ->attribute('style', 'display:none')
+            ->addStyle('display: none')
             ->modal($modal);
     }
 
     /**
-     * @see RedirectController::actionUpdate()
+     * @return array<Stringable>
      * @see RedirectController::actionDelete()
+     * @see RedirectController::actionUpdate()
      */
     protected function getRowButtons(Redirect $redirect): array
     {
         return [
-            new ViewButton($redirect),
-            new DeleteButton($redirect),
+            Yii::createObject(ViewButton::class, [$redirect]),
+            Yii::createObject(DeleteButton::class, [$redirect]),
         ];
     }
 

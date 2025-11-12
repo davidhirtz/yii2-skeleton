@@ -37,7 +37,7 @@ class RedirectController extends Controller
 
     public function actionIndex(?int $user = null, ?string $q = null): Response|string
     {
-        $provider = Yii::$container->get(RedirectActiveDataProvider::class, [], [
+        $provider = Yii::$container->get(RedirectActiveDataProvider::class, config: [
             'user' => User::findOne($user),
             'search' => $q,
         ]);
@@ -51,15 +51,14 @@ class RedirectController extends Controller
     {
         $redirect = Redirect::create();
         $redirect->type = $type;
-        $request = Yii::$app->getRequest();
 
         if (!Yii::$app->getUser()->can('redirectCreate', ['redirect' => $redirect])) {
             throw new ForbiddenHttpException();
         }
 
-        if ($redirect->load($request->post()) && $redirect->insert()) {
+        if ($redirect->load($this->request->post()) && $redirect->insert()) {
             $this->success(Yii::t('skeleton', 'The redirect rule was created.'));
-            return $this->redirect(array_merge($request->get(), ['index']));
+            return $this->redirect(array_merge($this->request->get(), ['index']));
         }
 
         return $this->render('create', [
@@ -70,15 +69,14 @@ class RedirectController extends Controller
     public function actionUpdate(int $id): Response|string
     {
         $redirect = $this->findRedirect($id);
-        $request = Yii::$app->getRequest();
 
-        if ($redirect->load($request->post())) {
+        if ($redirect->load($this->request->post())) {
             if ($redirect->update()) {
                 $this->success(Yii::t('skeleton', 'The redirect rule was updated.'));
             }
 
             if (!$redirect->hasErrors()) {
-                return $this->redirect(array_merge($request->get(), ['update', 'id' => $redirect->id]));
+                return $this->redirect(array_merge($this->request->get(), ['update', 'id' => $redirect->id]));
             }
         }
 
@@ -94,7 +92,11 @@ class RedirectController extends Controller
 
         $this->errorOrSuccess($redirect, Yii::t('skeleton', 'The redirect rule was deleted.'));
 
-        return $this->redirect($this->request->getReferrer() ?? ['index']);
+        return $this->redirect([
+            'index',
+            ...$this->request->getQueryParams(),
+            'id' => null,
+        ]);
     }
 
     public function actionDeleteAll(): Response|string

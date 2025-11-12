@@ -8,6 +8,7 @@ use davidhirtz\yii2\skeleton\assets\SortableAssetBundle;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Dropdown;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\CheckboxColumn;
 use davidhirtz\yii2\skeleton\widgets\pagers\LinkPager;
@@ -140,11 +141,12 @@ class GridView extends \yii\grid\GridView
     #[Override]
     public function renderItems(): string
     {
-        if ($this->dataProvider->getCount() || $this->emptyText) {
-            return Html::tag('div', parent::renderItems(), ['class' => 'table-responsive']);
-        }
-
-        return '';
+        return $this->dataProvider->getCount() || $this->emptyText ?
+            Div::make()
+                ->html(parent::renderItems())
+                ->class('table-responsive')
+                ->render()
+            : '';
     }
 
     #[Override]
@@ -257,12 +259,12 @@ class GridView extends \yii\grid\GridView
         };
     }
 
-    protected function getSelectionButton(): Stringable|string
+    protected function getSelectionButton(): ?Stringable
     {
         $items = $this->getSelectionButtonItems();
 
         if (!$items) {
-            return '';
+            return null;
         }
 
         return Dropdown::make()

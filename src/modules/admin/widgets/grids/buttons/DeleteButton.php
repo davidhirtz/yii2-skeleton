@@ -17,7 +17,6 @@ class DeleteButton implements Stringable
         private array|null|string $url = null,
         private ?string $message = null,
         private readonly ?string $icon = 'trash',
-        private readonly bool $pushHistory = false,
     ) {
         $this->message ??= Yii::t('yii', 'Are you sure you want to delete this item?');
 
@@ -35,12 +34,12 @@ class DeleteButton implements Stringable
         $modal = Modal::make()
             ->title($this->message)
             ->footer(Button::make()
-->danger()
-                ->post($this->url, $this->pushHistory)
+                ->danger()
+                ->post($this->url)
                 ->text(Yii::t('yii', 'Delete')));
 
         return Button::make()
-->danger()
+            ->danger()
             ->icon($this->icon)
             ->modal($modal)
             ->render();

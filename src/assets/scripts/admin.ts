@@ -11,16 +11,15 @@ import './components/ActiveForm';
 
 const csrfToken = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement).getAttribute('content') as string;
 
-const queryAll = (selector: string, method: Function) => {
-    document.querySelectorAll(selector).forEach(($el: Element) => method($el));
-};
 
 htmx.on('htmx:configRequest', (event: Event) => {
     (event as CustomEvent).detail.headers['X-CSRF-Token'] = csrfToken;
 });
 
-htmx.on('htmx:load', (event: Event) => {
-    console.log(event);
+htmx.onLoad(($container) => {
+    const queryAll = (selector: string, method: Function) => {
+        ($container as HTMLElement).querySelectorAll(selector).forEach(($el: Element) => method($el));
+    };
 
     queryAll('[data-collapse]', collapse);
     queryAll('[data-dropdown]', dropdown);

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\html;
 
+use Override;
+
 class Ul extends Tag
 {
     private array $items = [];
@@ -35,19 +37,19 @@ class Ul extends Tag
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     protected function renderContent(): string
     {
         return implode('', $this->items);
     }
 
-    #[\Override]
+    #[Override]
     protected function renderTag(): string
     {
         return $this->items ? parent::renderTag() : '';
     }
 
-    #[\Override]
+    #[Override]
     protected function getName(): string
     {
         return 'ul';

@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\data;
 
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\models\User;
+use Override;
 use yii\data\ActiveDataProvider;
 
 /**
@@ -16,11 +17,10 @@ class RedirectActiveDataProvider extends ActiveDataProvider
     public ?User $user = null;
     public ?string $search = null;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         $this->query = Redirect::find()
-            ->orderBy(['updated_at' => SORT_DESC])
             ->indexBy('id');
 
         if ($search = $this->query->sanitizeSearchString($this->search)) {
@@ -35,7 +35,8 @@ class RedirectActiveDataProvider extends ActiveDataProvider
 
         $this->getPagination()->defaultPageSize = 50;
         $this->getPagination()->pageSizeLimit = false;
-        $this->setSort(false);
+
+        $this->getSort()->defaultOrder = ['updated_at' => SORT_DESC];
 
         parent::init();
     }
@@ -43,7 +44,7 @@ class RedirectActiveDataProvider extends ActiveDataProvider
     /**
      * @return Redirect[]
      */
-    #[\Override]
+    #[Override]
     protected function prepareModels(): array
     {
         /** @var Redirect[] $models */

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\html;
 
 use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
+use Override;
 
 class Div extends Tag
 {
@@ -18,7 +19,7 @@ class Div extends Tag
             ->render();
     }
 
-    #[\Override]
+    #[Override]
     protected function getName(): string
     {
         return 'div';
