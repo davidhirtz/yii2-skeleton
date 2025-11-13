@@ -9,6 +9,7 @@ use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
+use davidhirtz\yii2\skeleton\widgets\panels\HelpPanel;
 use Yii;
 use yii\helpers\Json;
 

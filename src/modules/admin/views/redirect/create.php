@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\ErrorSummary;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\RedirectActiveForm;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
+use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Create New Redirect'));

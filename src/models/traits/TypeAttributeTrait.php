@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\models\traits;
 
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\TypeGridViewTrait;
+use davidhirtz\yii2\skeleton\widgets\grids\traits\TypeGridViewTrait;
 use Yii;
 use yii\helpers\Inflector;
 

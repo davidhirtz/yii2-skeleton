@@ -9,7 +9,7 @@ use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\ErrorSummary;
+use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 use Override;
 use Stringable;
 use Yii;

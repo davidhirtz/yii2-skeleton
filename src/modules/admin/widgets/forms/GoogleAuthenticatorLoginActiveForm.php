@@ -6,8 +6,8 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\SubmitButtonTrait;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
+use davidhirtz\yii2\skeleton\widgets\forms\traits\SubmitButtonTrait;
 use Yii;
 use yii\widgets\ActiveField;
 

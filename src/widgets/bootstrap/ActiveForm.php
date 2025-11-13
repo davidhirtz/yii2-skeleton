@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
-use davidhirtz\yii2\skeleton\widgets\forms\ActiveFormTrait;
+use davidhirtz\yii2\skeleton\widgets\forms\traits\ActiveFormTrait;
 
 class ActiveForm extends \yii\widgets\ActiveForm
 {

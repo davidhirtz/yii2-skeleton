@@ -16,13 +16,13 @@ use davidhirtz\yii2\skeleton\html\Alert;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\models\forms\AccountUpdateForm;
 use davidhirtz\yii2\skeleton\models\forms\GoogleAuthenticatorForm;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\ErrorSummary;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\AccountActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\AuthClientsGridView;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
+use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 
 $this->setTitle(Yii::t('skeleton', 'Account'));
 ?>

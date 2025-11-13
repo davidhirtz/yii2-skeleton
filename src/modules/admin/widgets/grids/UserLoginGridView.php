@@ -7,6 +7,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\models\UserLogin;
+use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use davidhirtz\yii2\timeago\Timeago;
 use Override;
 

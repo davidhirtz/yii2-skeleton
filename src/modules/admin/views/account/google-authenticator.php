@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 use davidhirtz\yii2\skeleton\html\Card;
 use davidhirtz\yii2\skeleton\html\Container;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\ErrorSummary;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorLoginActiveForm;
+use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 
 $this->setTitle(Yii::t('skeleton', 'Google Authenticator'));
 

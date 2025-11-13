@@ -10,8 +10,9 @@ use davidhirtz\yii2\skeleton\html\Ul;
 use davidhirtz\yii2\skeleton\models\AuthItem;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\ButtonsColumn;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\MessageSourceTrait;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonsColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\GridView;
+use davidhirtz\yii2\skeleton\widgets\grids\traits\MessageSourceTrait;
 use Override;
 use Yii;
 
