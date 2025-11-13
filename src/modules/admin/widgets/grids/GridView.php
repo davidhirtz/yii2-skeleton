@@ -139,25 +139,16 @@ class GridView extends Widget
             : '';
     }
 
+
     protected function renderSections(): string
     {
-        return preg_replace_callback(
-            '/{\\w+}/',
-            fn (array $matches) => $this->renderSection($matches[0]),
-            $this->layout
-        );
-    }
-
-    protected function renderSection(string $name): string|false
-    {
-        return match ($name) {
+        return strtr($this->layout, [
             '{header}' => $this->renderHeader(),
             '{footer}' => $this->renderFooter(),
             '{summary}' => $this->renderSummary(),
             '{items}' => $this->renderItems(),
             '{pager}' => $this->renderPager(),
-            default => $name,
-        };
+        ]);
     }
 
     protected function renderItems(): string
