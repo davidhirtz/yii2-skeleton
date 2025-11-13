@@ -47,10 +47,10 @@ class GridView extends Widget
     public array $attributes = ['class' => 'grid-view'];
     public array $headerAttributes = ['class' => 'grid-view-header'];
     public array $footerAttributes = ['class' => 'grid-view-footer'];
-    public array $headerRowAttributes = [];
+    public array $headerRowAttributes;
     public array $tableAttributes = ['class' => 'table table-striped table-hover'];
-    private array $tableBodyAttributes = [];
-    public array|Closure $rowAttributes = [];
+    private array $tableBodyAttributes;
+    public array|Closure $rowAttributes;
 
     public array $pagerOptions = [];
     public bool $showOnEmpty = true;
@@ -78,6 +78,8 @@ class GridView extends Widget
         $this->attributes['hx-select-oob'] ??= '#flashes';
 
         $this->headerRowAttributes['hx-boost'] ??= 'true';
+        $this->tableBodyAttributes ??= [];
+        $this->rowAttributes ??= [];
 
         $this->search ??= Yii::createObject(GridSearch::class, [$this]);
 
