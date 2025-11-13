@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 use davidhirtz\yii2\skeleton\controllers\AccountController;
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Alert;
+use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\models\forms\AccountUpdateForm;
 use davidhirtz\yii2\skeleton\models\forms\GoogleAuthenticatorForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\ErrorSummary;
@@ -79,6 +81,10 @@ if ($form->user->isDeletable()) {
         ])
     ]);
 } elseif ($form->user->isOwner()) {
-    echo Html::warning(Yii::t('skeleton', 'You cannot delete your account, because you are the owner of this website.'));
+    echo Container::make()
+        ->html(Alert::make()
+            ->text(Yii::t('skeleton', 'You cannot delete your account, because you are the owner of this website.'))
+            ->status('warning'))
+        ->render();
 }
 ?>

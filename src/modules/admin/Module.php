@@ -219,7 +219,12 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
                 'label' => Yii::t('skeleton', 'Users'),
                 'icon' => 'users',
                 'url' => ['/admin/user/index'],
-                'active' => ['admin/auth', 'admin/login', 'admin/user'],
+                'active' => [
+                    'admin/auth',
+                    'admin/login',
+                    'admin/user',
+                    'admin/trail/index' => ['user'],
+                ],
                 'roles' => [
                     User::AUTH_USER_ASSIGN,
                     User::AUTH_USER_UPDATE,
