@@ -44,7 +44,7 @@ trait TypeGridViewTrait
     {
         return $this->hasVisibleTypes()
             ? new FilterDropdown(
-                $this->typeDropdownItems(),
+                $this->getTypeDropdownItems(),
                 Yii::t('skeleton', 'Type'),
                 $this->typeParamName,
                 $this->typeDefaultItem,
@@ -52,7 +52,7 @@ trait TypeGridViewTrait
             : null;
     }
 
-    protected function typeDropdownItems(): array
+    protected function getTypeDropdownItems(): array
     {
         $model = $this->getModel();
 
