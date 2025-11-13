@@ -8,7 +8,6 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\interfaces\TypeAttributeInterface;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\FilterDropdown;
 use Yii;
-use yii\base\Model;
 
 trait TypeGridViewTrait
 {
@@ -41,7 +40,7 @@ trait TypeGridViewTrait
         ];
     }
 
-    public function typeDropdown(): ?FilterDropdown
+    public function getTypeDropdown(): ?FilterDropdown
     {
         return $this->hasVisibleTypes()
             ? new FilterDropdown(
@@ -55,10 +54,11 @@ trait TypeGridViewTrait
 
     protected function typeDropdownItems(): array
     {
-        /** @var Model&TypeAttributeInterface $model */
         $model = $this->getModel();
 
-        return array_map(fn ($model) => $model->getTypePlural(), $model::getTypeInstances());
+        return $model instanceof TypeAttributeInterface
+            ? array_map(fn ($model) => $model->getTypePlural(), $model::getTypeInstances())
+            : [];
     }
 
     protected function getTypeIcon(TypeAttributeInterface $model): string
@@ -70,8 +70,7 @@ trait TypeGridViewTrait
 
     protected function hasVisibleTypes(): bool
     {
-        /** @var Model&TypeAttributeInterface $model */
         $model = $this->getModel();
-        return !$this->type && count($model::getTypes()) > 1;
+        return $model instanceof TypeAttributeInterface && !$this->type && count($model::getTypes()) > 1;
     }
 }

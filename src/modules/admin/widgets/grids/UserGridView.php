@@ -13,6 +13,7 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\StatusGridViewTr
 use davidhirtz\yii2\timeago\Timeago;
 use davidhirtz\yii2\timeago\TimeagoColumn;
 use Override;
+use Stringable;
 use Yii;
 use yii\db\ActiveRecordInterface;
 
@@ -47,7 +48,7 @@ class UserGridView extends GridView
     {
         $this->header ??= [
             [
-                $this->statusDropdown(),
+                $this->getStatusDropdown(),
                 $this->search->getColumn(),
             ],
         ];
@@ -58,7 +59,7 @@ class UserGridView extends GridView
         $this->footer ??= [
             [
                 [
-                    'content' => $this->getCreateUserButton(),
+                    'content' => $this->getCreateButton(),
                     'visible' => Yii::$app->getUser()->can(User::AUTH_USER_CREATE),
                 ],
             ],
@@ -139,9 +140,9 @@ class UserGridView extends GridView
         ];
     }
 
-    protected function getCreateUserButton(): string
+    protected function getCreateButton(): Stringable
     {
-        return (string)new CreateButton(
+        return new CreateButton(
             Yii::t('skeleton', 'New User'),
             ['/admin/user/create'],
             'user-plus',

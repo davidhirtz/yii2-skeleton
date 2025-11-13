@@ -27,7 +27,7 @@ trait StatusGridViewTrait
         ];
     }
 
-    public function statusDropdown(): FilterDropdown
+    public function getStatusDropdown(): FilterDropdown
     {
         return new FilterDropdown(
             $this->statusDropdownItems(),
