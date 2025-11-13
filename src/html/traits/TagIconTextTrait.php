@@ -12,9 +12,9 @@ trait TagIconTextTrait
 
     private ?Icon $icon = null;
 
-    public function icon(?string $icon): static
+    public function icon(?string $icon, array $attributes = []): static
     {
-        $this->icon = $icon ? Icon::tag($icon) : null;
+        $this->icon = $icon ? Icon::make()->name($icon)->attributes($attributes) : null;
         return $this;
     }
 

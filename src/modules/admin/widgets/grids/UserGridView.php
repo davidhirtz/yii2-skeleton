@@ -47,6 +47,7 @@ class UserGridView extends GridView
     {
         $this->header ??= [
             [
+                $this->statusDropdown(),
                 $this->search->getColumn(),
             ],
         ];
@@ -140,7 +141,11 @@ class UserGridView extends GridView
 
     protected function getCreateUserButton(): string
     {
-        return Html::a(Html::iconText('user-plus', Yii::t('skeleton', 'New User')), ['/admin/user/create'], ['class' => 'btn btn-primary']);
+        return (string)new CreateButton(
+            Yii::t('skeleton', 'New User'),
+            ['/admin/user/create'],
+            'user-plus',
+        );
     }
 
     protected function getRowButtons(User $user): array|string

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
-use davidhirtz\yii2\skeleton\html\Icon;
+use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\forms\AccountUpdateForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\UserActiveFormTrait;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
@@ -72,7 +72,7 @@ class AccountActiveForm extends ActiveForm
 
     protected function getOldPasswordFieldIcon(array $options = []): string
     {
-        return Icon::tag('info-circle')
+        return Html::icon('info-circle')
             ->tooltip(Yii::t('skeleton', 'Only needed, if you want to change your password'))
             ->addAttributes($options)
             ->render();

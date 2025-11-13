@@ -7,14 +7,16 @@ namespace davidhirtz\yii2\skeleton\modules\admin\data;
 use davidhirtz\yii2\skeleton\data\ActiveDataProvider;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\models\User;
+use Override;
 
 /**
- * @property UserQuery|null $query
+ * @property UserQuery $query
  * @extends ActiveDataProvider<User>
  */
 class UserActiveDataProvider extends ActiveDataProvider
 {
     public ?string $searchString = null;
+    public ?int $status = null;
 
     public function __construct($config = [])
     {
@@ -22,7 +24,7 @@ class UserActiveDataProvider extends ActiveDataProvider
         parent::__construct($config);
     }
 
-    #[\Override]
+    #[Override]
     protected function prepareQuery(): void
     {
         $this->initQuery();
@@ -34,9 +36,13 @@ class UserActiveDataProvider extends ActiveDataProvider
         if ($this->searchString) {
             $this->query->matching($this->searchString);
         }
+
+        if ($this->status !== null) {
+            $this->query->andWhere(['status' => $this->status]);
+        }
     }
 
-    #[\Override]
+    #[Override]
     public function setSort($value): void
     {
         if (is_array($value)) {
@@ -46,7 +52,7 @@ class UserActiveDataProvider extends ActiveDataProvider
         parent::setSort($value);
     }
 
-    #[\Override]
+    #[Override]
     public function setPagination($value): void
     {
         if (is_array($value)) {

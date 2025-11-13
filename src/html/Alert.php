@@ -35,7 +35,7 @@ class Alert extends Tag
 
     public function icon(?string $icon): static
     {
-        $this->icon = $icon ? Icon::tag($icon) : null;
+        $this->icon = $icon ? Icon::make()->name($icon) : null;
         return $this;
     }
 

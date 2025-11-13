@@ -13,20 +13,22 @@ class Icon extends Tag
 {
     use TagTooltipAttributeTrait;
 
+    public const string ICON_COLLECTION_BRAND = 'brand';
+    public const string ICON_COLLECTION_FLAG = 'flag';
+
     private string $name;
     private ?string $collection = null;
 
-    public static function tag(string $name, array $attributes = []): static
+    public function name(string $name): static
     {
-        $instance = static::make();
-        $instance->attributes = $attributes;
-        $instance->name = $name;
+        $this->name = $name;
 
         if (str_contains($name, ':')) {
-            [$instance->collection, $instance->name] = explode(':', $name, 2);
+            [$this->collection, $this->name] = explode(':', $name, 2);
         }
 
-        return $instance;
+        $this->name = $name;
+        return $this;
     }
 
     public function collection(string $collection): static
@@ -38,8 +40,8 @@ class Icon extends Tag
     protected function prepareAttributes(): void
     {
         Html::addCssClass($this->attributes, match ($this->collection) {
-            'brand' => "fab fa-$this->name",
-            'flag' => "i18n-icon $this->name",
+            self::ICON_COLLECTION_BRAND => "fab fa-$this->name",
+            self::ICON_COLLECTION_FLAG => "i18n-icon $this->name",
             default => "fas fa-$this->name",
         });
     }

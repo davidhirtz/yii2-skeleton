@@ -6,7 +6,6 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
-use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\interfaces\StatusAttributeInterface;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\FilterDropdown;
 use Yii;
@@ -40,18 +39,20 @@ trait StatusGridViewTrait
 
     protected function getStatusIcon(StatusAttributeInterface $model): string
     {
-        return Icon::tag($model->getStatusIcon())
+        return Html::icon($model->getStatusIcon())
             ->tooltip($model->getStatusName())
             ->render();
     }
 
     protected function statusDropdownItems(): array
     {
-        $model = $this->getModel();
-        return array_map(fn ($options) => $options['plural'] ?? $options['name'], $model::getStatuses());
+        return array_map(fn ($options) => $options['plural'] ?? $options['name'], $this->getModel()::getStatuses());
     }
 
-    protected function statusSelectionButtonItems(?StatusAttributeInterface $model = null): array
+    /**
+     * @todo Extract this to class
+     */
+    protected function statusSelectionButtonItems(?StatusAttributeInterface $model = null, array|string|null $url = null): array
     {
         $model ??= $this->getModel();
         $paramName = $model instanceof Model ? Html::getInputName($model, 'status') : $this->statusParamName;
@@ -61,7 +62,7 @@ trait StatusGridViewTrait
             $items[] = Button::make()
                 ->attribute('hx-include', '[data-id="check"]:checked')
                 ->name($paramName)
-                ->post($this->selectionRoute)
+                ->post($url ?? ['update-all'])
                 ->text($statusOptions['name'])
                 ->value($status);
         }

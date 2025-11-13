@@ -6,7 +6,6 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
-use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\html\Ul;
 use davidhirtz\yii2\skeleton\models\AuthItem;
 use davidhirtz\yii2\skeleton\models\User;
@@ -51,7 +50,7 @@ class AuthItemGridView extends GridView
         return [
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
             'contentOptions' => ['class' => 'd-none d-md-table-cell text-center'],
-            'content' => fn (AuthItem $authItem) => Icon::tag($authItem->getTypeIcon())
+            'content' => fn (AuthItem $authItem) => Html::icon($authItem->getTypeIcon())
                 ->tooltip($authItem->getTypeName())
                 ->render(),
         ];

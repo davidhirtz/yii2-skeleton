@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets;
 
+use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Alert;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\html\Div;
@@ -88,7 +89,7 @@ class ErrorSummary extends Widget
 
     protected function renderErrors(): string
     {
-        return count($this->errors) === 1 ? Div::tag(reset($this->errors)) : Ul::tag($this->errors);
+        return count($this->errors) === 1 ? Html::tag(reset($this->errors)) : Ul::tag($this->errors);
     }
 
     protected function renderHeader(): string

@@ -84,7 +84,9 @@ class AccountMenu extends Widget
             ->dropend()
             ->button(Button::make()
                 ->class('nav-link')
-                ->html(Icon::tag(Yii::$app->language)->collection('flag')));
+                ->html(Icon::make()
+                    ->name(Yii::$app->language)
+                    ->collection(Icon::ICON_COLLECTION_FLAG)));
 
         foreach ($i18n->getLanguages() as $language) {
             $label = $i18n->getLabel($language);

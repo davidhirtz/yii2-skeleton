@@ -42,6 +42,11 @@ class Html extends BaseHtml
         return is_array($content) ? $tag->html(...$content) : $tag->html($content);
     }
 
+    public static function icon(string $name, array $attributes = []): Icon
+    {
+        return Icon::make()->name($name)->attributes($attributes);
+    }
+
     public static function formText(string $content, array $options = []): string
     {
         $tag = ArrayHelper::remove($options, 'tag', 'div');
@@ -50,10 +55,12 @@ class Html extends BaseHtml
         return Html::tag($tag, $content, $options);
     }
 
-    public static function iconText(string $icon, string $content, array $options = []): string
+    /**
+     * @deprecated
+     */
+    public static function iconText(string $icon, string $content, array $attributes = []): Div
     {
-        static::addCssClass($options, 'icon-text');
-        return Html::tag('div', Icon::tag($icon, ['class' => 'fa-fw'])->render() . Html::tag('span', $content), $options);
+        return static::div($content, $attributes)->icon($icon);
     }
 
     public static function buttons(array|string $buttons, array $options = []): string

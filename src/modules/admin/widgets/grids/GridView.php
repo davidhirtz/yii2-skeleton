@@ -59,14 +59,11 @@ class GridView extends Widget
     public string $layout = '{header}{summary}{items}{pager}{footer}';
     public ?array $orderRoute = ['order'];
 
-
     /**
      * @noinspection PhpUnused
      */
     public string $emptyCell = '&nbsp;';
     public Formatter $formatter;
-
-    private ?ActiveRecord $_model = null;
 
     #[Override]
     public function init(): void
@@ -162,8 +159,7 @@ class GridView extends Widget
     protected function renderItems(): string
     {
         return $this->dataProvider->getCount()
-            ? Div::make()
-                ->html($this->renderTable())
+            ? Html::div($this->renderTable())
                 ->class('table-responsive')
                 ->render()
             : '';
@@ -302,41 +298,25 @@ class GridView extends Widget
     }
 
     /**
+     * @return T|null
+     */
+    public function getModel(): ?ActiveRecord
+    {
+        if ($this->dataProvider instanceof ActiveDataProvider) {
+            /** @var class-string<ActiveRecord>|null $model */
+            $model = $this->dataProvider->query->modelClass ?? null;
+            return $model ? $model::instance() : null;
+        }
+
+        return null;
+    }
+
+    /**
      * @param T $model
      */
     protected function getRoute(ActiveRecordInterface $model, array $params = []): array|false
     {
         return ['update', 'id' => $model->getPrimaryKey(), ...$params];
-    }
-
-    /**
-     * @return T|null
-     */
-    protected function getModel(): ?ActiveRecord
-    {
-        if ($this->_model === null && $this->dataProvider instanceof ActiveDataProvider) {
-            $model = $this->dataProvider->query->modelClass ?? null;
-            $this->_model = $model ? Yii::createObject($model) : null;
-        }
-
-        return $this->_model;
-    }
-
-    /**
-     * @param T $model
-     * @noinspection PhpUnused
-     */
-    protected function setModel(ActiveRecord $model): void
-    {
-        $this->_model = $model;
-    }
-
-    /**
-     * @return T[]
-     */
-    protected function getModels(): array
-    {
-        return $this->dataProvider->getModels();
     }
 
     protected function isSortable(): bool
