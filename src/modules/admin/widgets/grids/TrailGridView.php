@@ -30,34 +30,31 @@ class TrailGridView extends GridView
     use MessageSourceTrait;
     use TypeGridViewTrait;
 
-    public $tableOptions = [
+    public array $tableOptions = [
         'class' => 'table table-striped trail',
     ];
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         $this->rowOptions = fn (Trail $trail) => [
-            'id' => 'trail-' . $trail->id,
             'class' => $trail->isDeleteType() ? 'bg-danger' : '',
         ];
 
-        if (!$this->columns) {
-            $this->columns = [
-                $this->typeIconColumn(),
-                $this->modelColumn(),
-                $this->dataColumn(),
-                $this->userColumn(),
-                $this->createdAtColumn(),
-            ];
-        }
+        $this->columns ??= [
+            $this->typeIconColumn(),
+            $this->modelColumn(),
+            $this->dataColumn(),
+            $this->userColumn(),
+            $this->createdAtColumn(),
+        ];
 
         $this->messageSourceAttribute = 'message';
 
         parent::init();
     }
 
-    public function modelColumn(): array
+    protected function modelColumn(): array
     {
         return [
             'attribute' => 'model',
@@ -79,7 +76,7 @@ class TrailGridView extends GridView
         ];
     }
 
-    public function dataColumn(): array
+    protected function dataColumn(): array
     {
         return [
             'attribute' => 'data',
@@ -87,7 +84,7 @@ class TrailGridView extends GridView
         ];
     }
 
-    public function dataColumnContent(Trail $trail): string
+    protected function dataColumnContent(Trail $trail): string
     {
         if ($trail->isAuthPermissionType()) {
             return $this->renderAuthPermissionContent($trail);
@@ -251,7 +248,7 @@ class TrailGridView extends GridView
         return trim($message . ' ' . $this->renderDataTrailLink($trail));
     }
 
-    public function userColumn(): array
+    protected function userColumn(): array
     {
         return [
             'attribute' => 'user_id',
@@ -277,7 +274,7 @@ class TrailGridView extends GridView
         ];
     }
 
-    public function createdAtColumn(): array
+    protected function createdAtColumn(): array
     {
         return [
             'class' => TimeagoColumn::class,

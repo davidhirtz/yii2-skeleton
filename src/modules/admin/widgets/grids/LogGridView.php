@@ -15,8 +15,8 @@ use Yii;
  */
 class LogGridView extends GridView
 {
-    public $layout = '{items}';
-    public $tableOptions = [
+    public string $layout = '{items}';
+    public array $tableOptions = [
         'class' => 'table table-striped',
         'style' => 'table-layout: fixed;',
     ];
@@ -24,20 +24,18 @@ class LogGridView extends GridView
     #[Override]
     public function init(): void
     {
-        if (!$this->columns) {
-            $this->columns = [
-                $this->dateColumn(),
-                $this->levelColumn(),
-                $this->messageColumn(),
-            ];
-        }
+        $this->columns ??= [
+            $this->dateColumn(),
+            $this->levelColumn(),
+            $this->messageColumn(),
+        ];
 
         $this->getView()->registerCss('pre{margin-top: 20px; max-height:200px;}');
 
         parent::init();
     }
 
-    public function dateColumn(): array
+    protected function dateColumn(): array
     {
         return [
             'label' => Yii::t('skeleton', 'Date'),
@@ -47,7 +45,7 @@ class LogGridView extends GridView
         ];
     }
 
-    public function levelColumn(): array
+    protected function levelColumn(): array
     {
         return [
             'label' => Yii::t('skeleton', 'Level'),
@@ -58,7 +56,7 @@ class LogGridView extends GridView
         ];
     }
 
-    public function messageColumn(): array
+    protected function messageColumn(): array
     {
         return [
             'label' => Yii::t('yii', 'Error'),

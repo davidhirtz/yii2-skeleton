@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 
 use davidhirtz\yii2\skeleton\html\Container;
+use Override;
 use yii\helpers\Html;
 
 class Submenu extends Nav
@@ -15,14 +16,14 @@ class Submenu extends Nav
     public array $cssClass = ['submenu', 'nav', 'nav-pills'];
     public array $labelOptions = ['class' => 'd-none d-md-inline'];
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         Html::addCssClass($this->options, $this->cssClass);
         parent::init();
     }
 
-    #[\Override]
+    #[Override]
     public function run(): string
     {
         $html = $this->renderTitle() . $this->renderItems();

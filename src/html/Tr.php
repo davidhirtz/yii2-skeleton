@@ -20,7 +20,10 @@ class Tr extends Tag
         return $this;
     }
 
-    public function addCells(TableCell ...$cells): self
+    /**
+     * This currently needs string support for simpler usage without creating TableCell instances for GridView rows.
+     */
+    public function addCells(TableCell|string ...$cells): self
     {
         $this->cells = array_merge($this->cells, $cells);
         return $this;

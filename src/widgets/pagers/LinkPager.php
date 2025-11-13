@@ -21,6 +21,7 @@ class LinkPager extends \yii\widgets\LinkPager
     public $options = [
         'class' => 'pagination',
         'hx-boost' => 'true',
+        'hx-swap' => 'scroll:top',
     ];
 
     #[\Override]

@@ -15,21 +15,12 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\ButtonsColumn;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\traits\MessageSourceTrait;
 use Override;
 use Yii;
-use yii\grid\GridView;
 
 class AuthItemGridView extends GridView
 {
     use MessageSourceTrait;
 
     public ?User $user = null;
-
-    public $summaryOptions = [
-        'class' => 'summary alert alert-info',
-    ];
-
-    public $tableOptions = [
-        'class' => 'table table-striped table-hover',
-    ];
 
     /**
      * @var string|null the previous rule name, needs to be `public` because it's called in content closure.
@@ -39,23 +30,18 @@ class AuthItemGridView extends GridView
     #[Override]
     public function init(): void
     {
-        if (!$this->rowOptions) {
-            if ($this->user) {
-                $this->rowOptions = fn (AuthItem $authItem) => ($authItem->isAssigned || $authItem->isInherited)
-                    ? ['class' => 'is-selected']
-                    : null;
-            }
+        if ($this->user) {
+            $this->rowOptions = fn (AuthItem $authItem) => ($authItem->isAssigned || $authItem->isInherited)
+                ? ['class' => 'is-selected']
+                : null;
         }
 
-        if (!$this->columns) {
-            $this->columns = [
-                $this->typeColumn(),
-                $this->nameColumn(),
-                $this->descriptionColumn(),
-            ];
-
-            $this->columns[] = $this->user ? $this->buttonsColumn() : $this->usersColumn();
-        }
+        $this->columns ??= [
+            $this->typeColumn(),
+            $this->nameColumn(),
+            $this->descriptionColumn(),
+            $this->user ? $this->buttonsColumn() : $this->usersColumn(),
+        ];
 
         parent::init();
     }
@@ -173,17 +159,5 @@ class AuthItemGridView extends GridView
             ->tooltip($tooltip)
             ->replace($route, '#' . $this->getId())
             ->render();
-    }
-
-    #[Override]
-    public function renderSummary(): string
-    {
-        $summary = new GridSummary(
-            $this->summary,
-            $this->dataProvider->getCount(),
-            $this->dataProvider->getTotalCount(),
-        );
-
-        return $summary->render();
     }
 }

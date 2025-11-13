@@ -7,6 +7,7 @@ namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\web\View;
+use Override;
 use Yii;
 use yii\helpers\Html;
 
@@ -51,7 +52,7 @@ class Nav extends \yii\bootstrap5\Nav
      * Overrides default implementation for `roles` option to validate user access. And allows for the option to hide
      * nav, if only a single item is set.
      */
-    #[\Override]
+    #[Override]
     public function renderItems(): string
     {
         $items = [];
@@ -108,7 +109,7 @@ class Nav extends \yii\bootstrap5\Nav
      *
      * @inheritdoc
      */
-    #[\Override]
+    #[Override]
     public function renderItem($item): string
     {
         if ($this->linkOptions) {
@@ -155,7 +156,7 @@ class Nav extends \yii\bootstrap5\Nav
      * value pairs that must match with the request. Routes can be reserved to prevent activating an item on a hit by
      * starting the route with "!".
      */
-    #[\Override]
+    #[Override]
     protected function isItemActive($item): bool
     {
         if (!$this->activateItems || $this->_hasActiveItem) {
@@ -186,8 +187,10 @@ class Nav extends \yii\bootstrap5\Nav
                     if (preg_match("~$route~", (string)Yii::$app->controller->route)) {
                         if (is_array($params)) {
                             foreach ($params as $key => $value) {
-                                if ((is_int($key) && !in_array($value, array_keys($request->get()), true))
-                                    || (is_string($key) && $request->get($key) !== $value)) {
+                                if (
+                                    (is_int($key) && !in_array($value, array_keys($request->get()), true))
+                                    || (is_string($key) && $request->get($key) !== $value)
+                                ) {
                                     continue 2;
                                 }
                             }
@@ -218,11 +221,11 @@ class Nav extends \yii\bootstrap5\Nav
     {
         $route = $params[0];
 
-        if (!str_starts_with((string) $route, '/')) {
+        if (!str_starts_with((string)$route, '/')) {
             $route = Yii::$app->controller->module->getUniqueId() . '/' . $route;
         }
 
-        if (ltrim((string) $route, '/') !== $this->route) {
+        if (ltrim((string)$route, '/') !== $this->route) {
             return false;
         }
 
@@ -232,7 +235,7 @@ class Nav extends \yii\bootstrap5\Nav
             unset($params[0]);
 
             foreach ($params as $name => $value) {
-                if ($value !== null && (!isset($this->params[$name]) || $this->params[$name] !== $value)) {
+                if ($value !== null && (!isset($this->params[$name]) || (string)$this->params[$name] !== (string)$value)) {
                     return false;
                 }
             }

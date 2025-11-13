@@ -9,6 +9,7 @@ use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\timeago\Timeago;
+use Override;
 
 /**
  * @extends GridView<UserLogin>
@@ -17,41 +18,39 @@ class UserLoginGridView extends GridView
 {
     public ?User $user = null;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
-        if (!$this->columns) {
-            $this->columns = [
-                [
-                    'contentOptions' => ['class' => 'text-center'],
-                    'content' => fn (UserLogin $login) => Icon::tag($login->getTypeIcon() ?? "brand:$login->type")
-                        ->tooltip($login->getTypeName())
-                        ->render(),
-                ],
-                [
-                    'attribute' => 'ip_address',
-                    'content' => function (UserLogin $login) {
-                        $ipAddress = $login->getDisplayIp();
-                        return $ipAddress ? Html::a($ipAddress, ['index', 'q' => $ipAddress]) : '';
-                    }
-                ],
-                [
-                    'attribute' => 'user',
-                    'visible' => !$this->user,
-                    'content' => fn (UserLogin $login) => Html::username($login->user, ['view', 'user' => $login->user_id])
-                ],
-                [
-                    'attribute' => 'browser',
-                    'headerOptions' => ['class' => 'd-none d-md-table-cell', 'style' => 'width:45%;'],
-                    'contentOptions' => ['class' => 'd-none d-md-table-cell'],
-                    'content' => fn (UserLogin $login) => $login->browser
-                ],
-                [
-                    'attribute' => 'created_at',
-                    'content' => fn (UserLogin $login): string => Timeago::tag($login->created_at)
-                ],
-            ];
-        }
+        $this->columns ??= [
+            [
+                'contentOptions' => ['class' => 'text-center'],
+                'content' => fn (UserLogin $login) => Icon::tag($login->getTypeIcon() ?? "brand:$login->type")
+                    ->tooltip($login->getTypeName())
+                    ->render(),
+            ],
+            [
+                'attribute' => 'ip_address',
+                'content' => function (UserLogin $login) {
+                    $ipAddress = $login->getDisplayIp();
+                    return $ipAddress ? Html::a($ipAddress, ['index', 'q' => $ipAddress]) : '';
+                }
+            ],
+            [
+                'attribute' => 'user',
+                'visible' => !$this->user,
+                'content' => fn (UserLogin $login) => Html::username($login->user, ['view', 'user' => $login->user_id])
+            ],
+            [
+                'attribute' => 'browser',
+                'headerOptions' => ['class' => 'd-none d-md-table-cell', 'style' => 'width:45%;'],
+                'contentOptions' => ['class' => 'd-none d-md-table-cell'],
+                'content' => fn (UserLogin $login) => $login->browser
+            ],
+            [
+                'attribute' => 'created_at',
+                'content' => fn (UserLogin $login): string => Timeago::tag($login->created_at)
+            ],
+        ];
 
         parent::init();
     }

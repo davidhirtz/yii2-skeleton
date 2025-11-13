@@ -12,6 +12,7 @@ use davidhirtz\yii2\skeleton\modules\admin\controllers\traits\UserTrait;
 use davidhirtz\yii2\skeleton\modules\admin\data\UserActiveDataProvider;
 use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\web\Controller;
+use Override;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -24,7 +25,7 @@ class UserController extends Controller
 {
     use UserTrait;
 
-    #[\Override]
+    #[Override]
     public function behaviors(): array
     {
         return [
@@ -44,7 +45,15 @@ class UserController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['deauthorize', 'delete-picture', 'disable-google-authenticator', 'index', 'ownership', 'reset', 'update'],
+                        'actions' => [
+                            'deauthorize',
+                            'delete-picture',
+                            'disable-google-authenticator',
+                            'index',
+                            'ownership',
+                            'reset',
+                            'update',
+                        ],
                         'roles' => [User::AUTH_USER_UPDATE],
                     ],
                     [
@@ -68,7 +77,7 @@ class UserController extends Controller
 
     public function actionIndex(string $q = null): Response|string
     {
-        $provider = Yii::$container->get(UserActiveDataProvider::class, [], [
+        $provider = Yii::$container->get(UserActiveDataProvider::class, config: [
             'searchString' => $q,
         ]);
 

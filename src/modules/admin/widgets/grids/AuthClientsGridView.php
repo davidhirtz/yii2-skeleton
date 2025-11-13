@@ -12,15 +12,16 @@ use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\columns\ButtonsColumn;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\panels\AuthClientListGroup;
 use davidhirtz\yii2\timeago\TimeagoColumn;
+use Override;
 use Yii;
 use yii\data\ArrayDataProvider;
 
 class AuthClientsGridView extends GridView
 {
-    public $layout = '{items}{footer}';
+    public string $layout = '{items}{footer}';
     public User $user;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         $this->dataProvider = new ArrayDataProvider([

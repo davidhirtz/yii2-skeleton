@@ -7,13 +7,14 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
+use Override;
 use Yii;
 
 class UserSubmenu extends Submenu
 {
     public ?User $user = null;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         if ($this->user && !$this->user->getIsNewRecord()) {

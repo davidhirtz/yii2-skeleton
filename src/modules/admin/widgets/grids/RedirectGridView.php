@@ -93,7 +93,7 @@ class RedirectGridView extends GridView
         $this->layout = '{items}';
     }
 
-    public function requestUriColumn(): array
+    protected function requestUriColumn(): array
     {
         return [
             'attribute' => 'request_uri',
@@ -105,7 +105,7 @@ class RedirectGridView extends GridView
         ];
     }
 
-    public function urlColumn(): array
+    protected function urlColumn(): array
     {
         return [
             'attribute' => 'url',
@@ -119,7 +119,7 @@ class RedirectGridView extends GridView
         ];
     }
 
-    public function updatedAtColumn(): array
+    protected function updatedAtColumn(): array
     {
         return [
             'class' => TimeagoColumn::class,
@@ -130,7 +130,7 @@ class RedirectGridView extends GridView
         ];
     }
 
-    public function buttonsColumn(): array
+    protected function buttonsColumn(): array
     {
         return [
             'class' => ButtonsColumn::class,
@@ -182,11 +182,5 @@ class RedirectGridView extends GridView
             Yii::createObject(ViewButton::class, [$redirect]),
             Yii::createObject(DeleteButton::class, [$redirect]),
         ];
-    }
-
-    #[Override]
-    public function getModel(): Redirect
-    {
-        return Redirect::instance();
     }
 }

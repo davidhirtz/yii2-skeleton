@@ -12,7 +12,6 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Table;
 use davidhirtz\yii2\skeleton\html\Tbody;
-use davidhirtz\yii2\skeleton\html\Td;
 use davidhirtz\yii2\skeleton\html\Thead;
 use davidhirtz\yii2\skeleton\html\Tr;
 use davidhirtz\yii2\skeleton\widgets\pagers\LinkPager;
@@ -26,7 +25,6 @@ use yii\db\ActiveRecordInterface;
 use yii\grid\Column;
 use yii\grid\DataColumn;
 use yii\helpers\Inflector;
-use yii\helpers\StringHelper;
 use yii\helpers\Url;
 use yii\i18n\Formatter;
 
@@ -45,7 +43,6 @@ class GridView extends Widget
     public ?array $footer = null;
     public ?array $header = null;
 
-
     public GridSearch $search;
 
     public array $tableOptions = [
@@ -56,20 +53,20 @@ class GridView extends Widget
     public array $headerRowOptions = [];
     public array|Closure $rowOptions = [];
     public array $pagerOptions = [];
-
-    public string|null|false $emptyText;
-    public array $emptyTextOptions = ['class' => 'empty'];
+    public bool $showOnEmpty = true;
 
     public string $layout = '{header}{summary}{items}{pager}{footer}';
     public ?array $orderRoute = ['order'];
 
-    public Formatter $formatter;
 
+    /**
+     * @noinspection PhpUnused
+     */
     public string $emptyCell = '&nbsp;';
     public null $filterModel = null;
+    public Formatter $formatter;
 
     private ?ActiveRecord $_model = null;
-    private ?string $_formName = null;
 
     #[Override]
     public function init(): void
@@ -80,12 +77,6 @@ class GridView extends Widget
         $this->options['hx-select-oob'] ??= '#flashes';
 
         $this->headerRowOptions['hx-boost'] ??= 'true';
-
-        if (!$this->rowOptions) {
-            $this->rowOptions = fn ($record) => $record instanceof ActiveRecord
-                ? ['id' => $this->getRowId($record)]
-                : [];
-        }
 
         $this->formatter ??= Yii::$app->getFormatter();
 
@@ -101,8 +92,7 @@ class GridView extends Widget
     {
         foreach ($this->columns as $i => $column) {
             if (is_string($column)) {
-                $method = lcfirst(Inflector::camelize($column)) . 'Column';
-                $column = method_exists($this, $method) ? call_user_func([$this, $method]) : ['attribute' => $column];
+                $column = ['attribute' => $column];
             }
 
             if (is_array($column)) {
@@ -141,32 +131,46 @@ class GridView extends Widget
     #[Override]
     public function run(): string
     {
-        $content = $this->dataProvider->getCount() > 0
-            ? $this->renderSections()
-            : $this->renderEmpty();
-
-        return $content ? Html::tag('div', $content, $this->options) : '';
+        return $this->dataProvider->getCount() || $this->showOnEmpty
+            ? Div::make()
+                ->html($this->renderSections())
+                ->attributes($this->options)
+                ->render()
+            : '';
     }
 
     protected function renderSections(): string
     {
-        return preg_replace_callback('/{\\w+}/', function ($matches) {
-            $content = $this->renderSection($matches[0]);
-            return $content === false ? $matches[0] : $content;
-        }, $this->layout);
+        return preg_replace_callback(
+            '/{\\w+}/',
+            fn (array $matches) => $this->renderSection($matches[0]),
+            $this->layout
+        );
+    }
+
+    protected function renderSection(string $name): string|false
+    {
+        return match ($name) {
+            '{header}' => $this->renderHeader(),
+            '{footer}' => $this->renderFooter(),
+            '{summary}' => $this->renderSummary(),
+            '{items}' => $this->renderItems(),
+            '{pager}' => $this->renderPager(),
+            default => $name,
+        };
     }
 
     protected function renderItems(): string
     {
-        return $this->dataProvider->getCount() || $this->emptyText ?
-            Div::make()
+        return $this->dataProvider->getCount()
+            ? Div::make()
                 ->html($this->renderTable())
                 ->class('table-responsive')
                 ->render()
             : '';
     }
 
-    protected function renderTable(): Stringable
+    protected function renderTable(): Table
     {
         return Table::make()
             ->attributes($this->tableOptions)
@@ -179,7 +183,7 @@ class GridView extends Widget
         $tr = Tr::make()->attributes($this->headerRowOptions);
 
         foreach ($this->columns as $column) {
-            $tr->addCells(Td::make()->html($column instanceof Column ? $column->renderHeaderCell() : ''));
+            $tr->addCells($column instanceof Column ? $column->renderHeaderCell() : '');
         }
 
         return Thead::make()->rows($tr);
@@ -206,24 +210,32 @@ class GridView extends Widget
         return $tbody;
     }
 
-    public function renderTableRow(mixed $model, int $key, int $index): Tr
+    protected function renderTableRow(mixed $model, int|string $key, int $index): Tr
     {
+        $attributes = $this->rowOptions instanceof Closure
+            ? call_user_func($this->rowOptions, $model, $key, $index, $this)
+            : $this->rowOptions;
+
+        if ($model instanceof ActiveRecord) {
+            $attributes['id'] ??= implode('-', [
+                Inflector::camel2id($model->formName()),
+                ...$model->getPrimaryKey(true),
+            ]);
+        }
+
         $tr = Tr::make()
-            ->attributes($this->rowOptions instanceof Closure
-                ? call_user_func($this->rowOptions, $model, $key, $index, $this)
-                : $this->rowOptions);
+            ->attributes($attributes);
 
         foreach ($this->columns as $column) {
-            $tr->addCells(Td::make()
-                ->html($column instanceof Column
-                    ? $column->renderDataCell($model, $key, $index)
-                    : ''));
+            $tr->addCells($column instanceof Column
+                ? $column->renderDataCell($model, $key, $index)
+                : '');
         }
 
         return $tr;
     }
 
-    public function renderSummary(): string
+    protected function renderSummary(): string
     {
         $summary = Yii::createObject(GridSummary::class, [
             $this->dataProvider->getCount(),
@@ -233,18 +245,6 @@ class GridView extends Widget
         ]);
 
         return $summary->render();
-    }
-
-    protected function renderEmpty(): string
-    {
-        if ($this->emptyText === false) {
-            return '';
-        }
-
-        return Div::make()
-            ->html($this->emptyText ?? Yii::t('yii', 'No results found.'))
-            ->attributes($this->emptyTextOptions)
-            ->render();
     }
 
     protected function initHeader(): void
@@ -331,42 +331,6 @@ class GridView extends Widget
         ]);
     }
 
-    protected function renderSection($name): string|false
-    {
-        return match ($name) {
-            '{header}' => $this->renderHeader(),
-            '{footer}' => $this->renderFooter(),
-            '{summary}' => $this->renderSummary(),
-            '{items}' => $this->renderItems(),
-            '{pager}' => $this->renderPager(),
-            default => $name,
-        };
-    }
-
-    public function getFormName(): ?string
-    {
-        if ($this->_formName === null) {
-            if ($model = $this->getModel()) {
-                $this->_formName = Inflector::camel2id(StringHelper::basename($model->formName()));
-            }
-        }
-
-        return $this->_formName;
-    }
-
-    /**
-     * @noinspection PhpUnused
-     */
-    public function setFormName(string $formName): void
-    {
-        $this->_formName = $formName;
-    }
-
-    public function getRowId(ActiveRecordInterface $model): string
-    {
-        return $this->getFormName() . '-' . implode('-', (array)$model->getPrimaryKey());
-    }
-
     /**
      * @param T $model
      */
@@ -378,13 +342,11 @@ class GridView extends Widget
     /**
      * @return T|null
      */
-    public function getModel(): ?ActiveRecord
+    protected function getModel(): ?ActiveRecord
     {
-        if ($this->_model === null) {
-            if ($this->dataProvider instanceof ActiveDataProvider) {
-                $models = $this->dataProvider->getModels();
-                $this->_model = reset($models);
-            }
+        if ($this->_model === null && $this->dataProvider instanceof ActiveDataProvider) {
+            $model = $this->dataProvider->query->modelClass ?? null;
+            $this->_model = $model ? Yii::createObject($model) : null;
         }
 
         return $this->_model;
@@ -394,7 +356,7 @@ class GridView extends Widget
      * @param T $model
      * @noinspection PhpUnused
      */
-    public function setModel(ActiveRecord $model): void
+    protected function setModel(ActiveRecord $model): void
     {
         $this->_model = $model;
     }
@@ -402,7 +364,7 @@ class GridView extends Widget
     /**
      * @return T[]
      */
-    public function getModels(): array
+    protected function getModels(): array
     {
         return $this->dataProvider->getModels();
     }

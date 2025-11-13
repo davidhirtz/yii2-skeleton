@@ -29,20 +29,16 @@ class UserGridView extends GridView
     {
         $this->setId($this->getId(false) ?? 'users');
 
-        if (!$this->columns) {
-            $this->columns = [
-                $this->statusColumn(),
-                $this->nameColumn(),
-                $this->emailColumn(),
-                $this->lastLoginColumn(),
-                $this->createdAtColumn(),
-                $this->buttonsColumn(),
-            ];
-        }
+        $this->columns ??= [
+            $this->statusColumn(),
+            $this->nameColumn(),
+            $this->emailColumn(),
+            $this->lastLoginColumn(),
+            $this->createdAtColumn(),
+            $this->buttonsColumn(),
+        ];
 
-        if (!$this->rowOptions) {
-            $this->rowOptions = fn (User $user) => ['class' => $user->isDisabled() ? 'disabled' : null];
-        }
+        $this->rowOptions = fn (User $user) => ['class' => $user->isDisabled() ? 'disabled' : null];
 
         parent::init();
     }
@@ -68,7 +64,7 @@ class UserGridView extends GridView
         ];
     }
 
-    public function nameColumn(): array
+    protected function nameColumn(): array
     {
         return [
             'attribute' => 'name',
@@ -82,7 +78,7 @@ class UserGridView extends GridView
         ];
     }
 
-    public function emailColumn(): array
+    protected function emailColumn(): array
     {
         return [
             'attribute' => 'email',
@@ -106,7 +102,7 @@ class UserGridView extends GridView
         ];
     }
 
-    public function lastLoginColumn(): array
+    protected function lastLoginColumn(): array
     {
         return [
             'attribute' => 'last_login',
@@ -122,7 +118,7 @@ class UserGridView extends GridView
         ];
     }
 
-    public function createdAtColumn(): array
+    protected function createdAtColumn(): array
     {
         return [
             'class' => TimeagoColumn::class,
@@ -134,7 +130,7 @@ class UserGridView extends GridView
         ];
     }
 
-    public function buttonsColumn(): array
+    protected function buttonsColumn(): array
     {
         return [
             'class' => ButtonsColumn::class,
@@ -151,7 +147,7 @@ class UserGridView extends GridView
     {
         if ($route = $this->getRoute($user)) {
             return Button::make()
-->primary()
+                ->primary()
                 ->href($route)
                 ->icon('wrench')
                 ->render();
@@ -159,7 +155,7 @@ class UserGridView extends GridView
 
         if (Yii::$app->getUser()->can(User::AUTH_USER_ASSIGN, ['user' => $user])) {
             return Button::make()
-->primary()
+                ->primary()
                 ->href(['/admin/auth/assign', 'user' => $user->id])
                 ->icon('unlock-alt')
                 ->tooltip(Yii::t('skeleton', 'Permissions'))
