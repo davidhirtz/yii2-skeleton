@@ -63,7 +63,12 @@ class GridView extends Widget
      * @noinspection PhpUnused
      */
     public string $emptyCell = '&nbsp;';
-    public Formatter $formatter;
+    public null $filterModel = null;
+
+    public function __construct(public Formatter $formatter, $config = [])
+    {
+        parent::__construct($config);
+    }
 
     #[Override]
     public function init(): void
@@ -74,8 +79,6 @@ class GridView extends Widget
         $this->attributes['hx-select-oob'] ??= '#flashes';
 
         $this->headerRowAttributes['hx-boost'] ??= 'true';
-
-        $this->formatter ??= Yii::$app->getFormatter();
 
         $this->search ??= Yii::createObject(GridSearch::class, [$this]);
 
