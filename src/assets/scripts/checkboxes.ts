@@ -1,11 +1,11 @@
 import htmx from "htmx.org";
 
-htmx.onLoad(($container: Node) => {
-    if (!($container instanceof HTMLElement)) {
+htmx.onLoad(($node) => {
+    if (!($node instanceof HTMLElement)) {
         return;
     }
 
-    ($container.querySelectorAll('[data-check-all]') as NodeListOf<HTMLInputElement>).forEach($checkbox => {
+    ($node.querySelectorAll('[data-check-all]') as NodeListOf<HTMLInputElement>).forEach($checkbox => {
         const $parent = ($checkbox.dataset.checkAll ? document.querySelector($checkbox.dataset.checkAll!) : null) as HTMLElement | null;
 
         $checkbox.onchange = () => {
@@ -15,7 +15,7 @@ htmx.onLoad(($container: Node) => {
         };
     });
 
-    ($container.querySelectorAll('[data-check="single"]') as NodeListOf<HTMLInputElement>).forEach(($checkbox) => {
+    ($node.querySelectorAll('[data-check="single"]') as NodeListOf<HTMLInputElement>).forEach(($checkbox) => {
         const $parent = $checkbox.closest('form') || document;
 
         $checkbox.onchange = () => {

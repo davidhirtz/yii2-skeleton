@@ -45,13 +45,12 @@ class GridView extends Widget
 
     public GridSearch $search;
 
-    public array $tableOptions = [
-        'class' => 'table table-striped table-hover',
-    ];
+    public array $attributes = ['class' => 'grid-view'];
+    public array $headerRowAttributes = [];
+    public array $tableAttributes = ['class' => 'table table-striped table-hover'];
+    private array $tableBodyAttributes = [];
+    public array|Closure $rowAttributes = [];
 
-    public array $options = ['class' => 'grid-view'];
-    public array $headerRowOptions = [];
-    public array|Closure $rowOptions = [];
     public array $pagerOptions = [];
     public bool $showOnEmpty = true;
 
@@ -63,7 +62,6 @@ class GridView extends Widget
      * @noinspection PhpUnused
      */
     public string $emptyCell = '&nbsp;';
-    public null $filterModel = null;
     public Formatter $formatter;
 
     private ?ActiveRecord $_model = null;
@@ -71,16 +69,21 @@ class GridView extends Widget
     #[Override]
     public function init(): void
     {
-        $this->options['id'] ??= $this->getId();
-        $this->options['hx-select'] ??= '#' . $this->getId();
-        $this->options['hx-target'] ??= $this->options['hx-select'];
-        $this->options['hx-select-oob'] ??= '#flashes';
+        $this->attributes['id'] ??= $this->getId();
+        $this->attributes['hx-select'] ??= '#' . $this->getId();
+        $this->attributes['hx-target'] ??= $this->attributes['hx-select'];
+        $this->attributes['hx-select-oob'] ??= '#flashes';
 
-        $this->headerRowOptions['hx-boost'] ??= 'true';
+        $this->headerRowAttributes['hx-boost'] ??= 'true';
 
         $this->formatter ??= Yii::$app->getFormatter();
 
         $this->search ??= Yii::createObject(GridSearch::class, [$this]);
+
+        if ($this->isSortable()) {
+            $this->tableAttributes['data-sort-url'] ??= Url::to($this->orderRoute);
+            $this->getView()->registerAssetBundle(SortableAssetBundle::class);
+        }
 
         $this->columns ??= $this->getDefaultColumns();
         $this->initColumns();
@@ -133,14 +136,14 @@ class GridView extends Widget
     {
         return $this->dataProvider->getCount() || $this->showOnEmpty
             ? Div::make()
-                ->html($this->renderSections())
-                ->attributes($this->options)
+                ->html($this->renderContent())
+                ->attributes($this->attributes)
                 ->render()
             : '';
     }
 
 
-    protected function renderSections(): string
+    protected function renderContent(): string
     {
         return strtr($this->layout, [
             '{header}' => $this->renderHeader(),
@@ -164,14 +167,14 @@ class GridView extends Widget
     protected function renderTable(): Table
     {
         return Table::make()
-            ->attributes($this->tableOptions)
+            ->attributes($this->tableAttributes)
             ->header($this->renderTableHeader())
             ->body($this->renderTableBody());
     }
 
     protected function renderTableHeader(): Thead
     {
-        $tr = Tr::make()->attributes($this->headerRowOptions);
+        $tr = Tr::make()->attributes($this->headerRowAttributes);
 
         foreach ($this->columns as $column) {
             $tr->addCells($column instanceof Column ? $column->renderHeaderCell() : '');
@@ -185,14 +188,8 @@ class GridView extends Widget
         $models = array_values($this->dataProvider->getModels());
         $keys = $this->dataProvider->getKeys();
 
-        $tbody = Tbody::make();
-
-        if ($this->isSortable()) {
-            $tbody->addClass('sortable')
-                ->attribute('data-sort-url', Url::to($this->orderRoute));
-
-            SortableAssetBundle::registerModule("#{$tbody->getId()}");
-        }
+        $tbody = Tbody::make()
+        ->attributes($this->tableBodyAttributes);
 
         foreach ($models as $index => $model) {
             $tbody->addRows($this->renderTableRow($model, $keys[$index], $index));
@@ -203,9 +200,9 @@ class GridView extends Widget
 
     protected function renderTableRow(mixed $model, int|string $key, int $index): Tr
     {
-        $attributes = $this->rowOptions instanceof Closure
-            ? call_user_func($this->rowOptions, $model, $key, $index, $this)
-            : $this->rowOptions;
+        $attributes = $this->rowAttributes instanceof Closure
+            ? call_user_func($this->rowAttributes, $model, $key, $index, $this)
+            : $this->rowAttributes;
 
         if ($model instanceof ActiveRecord) {
             $attributes['id'] ??= implode('-', [

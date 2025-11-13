@@ -38,7 +38,7 @@ class UserGridView extends GridView
             $this->buttonsColumn(),
         ];
 
-        $this->rowOptions = fn (User $user) => ['class' => $user->isDisabled() ? 'disabled' : null];
+        $this->rowAttributes = fn (User $user) => ['class' => $user->isDisabled() ? 'disabled' : null];
 
         parent::init();
     }

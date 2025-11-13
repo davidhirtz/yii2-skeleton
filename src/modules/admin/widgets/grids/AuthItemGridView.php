@@ -31,7 +31,7 @@ class AuthItemGridView extends GridView
     public function init(): void
     {
         if ($this->user) {
-            $this->rowOptions = fn (AuthItem $authItem) => ($authItem->isAssigned || $authItem->isInherited)
+            $this->rowAttributes = fn (AuthItem $authItem) => ($authItem->isAssigned || $authItem->isInherited)
                 ? ['class' => 'is-selected']
                 : null;
         }

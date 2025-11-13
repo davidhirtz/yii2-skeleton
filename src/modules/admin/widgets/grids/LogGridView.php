@@ -16,7 +16,7 @@ use Yii;
 class LogGridView extends GridView
 {
     public string $layout = '{items}';
-    public array $tableOptions = [
+    public array $tableAttributes = [
         'class' => 'table table-striped',
         'style' => 'table-layout: fixed;',
     ];

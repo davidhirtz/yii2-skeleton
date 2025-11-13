@@ -30,14 +30,14 @@ class TrailGridView extends GridView
     use MessageSourceTrait;
     use TypeGridViewTrait;
 
-    public array $tableOptions = [
+    public array $tableAttributes = [
         'class' => 'table table-striped trail',
     ];
 
     #[Override]
     public function init(): void
     {
-        $this->rowOptions = fn (Trail $trail) => [
+        $this->rowAttributes = fn (Trail $trail) => [
             'class' => $trail->isDeleteType() ? 'bg-danger' : '',
         ];
 

@@ -4,11 +4,14 @@ import {SortableEvent, SortableOptions} from "sortablejs";
 
 Sortable.mount(new AutoScroll());
 
-// noinspection JSUnusedGlobalSymbols
-export default (selector: string) => {
-    const $el = document.querySelector(selector) as HTMLTableElement;
+import htmx from "htmx.org";
 
-    if ($el) {
+htmx.onLoad(($node) => {
+    if (!($node instanceof HTMLElement)) {
+        return;
+    }
+
+    ($node.querySelectorAll('[data-sort-url]') as NodeListOf<HTMLTableElement>).forEach(($el) => {
         new Sortable($el, {
             handle: '.sortable-handle',
             direction: 'vertical',
@@ -31,5 +34,5 @@ export default (selector: string) => {
                 });
             },
         } as SortableOptions);
-    }
-}
+    });
+})

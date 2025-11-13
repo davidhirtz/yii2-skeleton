@@ -6,5 +6,5 @@ namespace davidhirtz\yii2\skeleton\assets;
 
 class SortableAssetBundle extends AbstractAssetBundle
 {
-    public string $filename = 'sortable.js';
+    public $js = ['js/sortable.js'];
 }
