@@ -10,7 +10,7 @@ use yii\widgets\InputWidget;
 
 class HexColorInputWidget extends InputWidget
 {
-    public string $template = '<color-picker class="input-group"><div class="input-group-prepend input-group-text">{color}</div>{input}</div>';
+    public string $template = '<color-picker class="input-group"><div class="input-group-prepend input-group-text">{color}</div>{input}</color-picker>';
 
     public function init(): void
     {
