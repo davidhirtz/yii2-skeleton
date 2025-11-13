@@ -14,15 +14,11 @@ use yii\helpers\Url;
 
 class GridSearch
 {
-    public array $columnOptions = [
-        'attributes' => [
-            'class' => 'ms-auto',
-        ],
-    ];
-
     public bool $enableAjax = true;
+
     public array $formAttributes = [];
     public array $inputAttributes = [];
+    public array $toolbarItemAttributes = ['class' => 'ms-auto'];
 
     public ?string $value = null;
     public string $paramName = 'q';
@@ -84,12 +80,9 @@ class GridSearch
         return Html::input($type, $this->paramName, $this->value, $options);
     }
 
-    public function getColumn(): array
+    public function getToolbarItem(): GridToolbarItem
     {
-        return [
-            ...$this->columnOptions,
-            'content' => $this->render(),
-        ];
+        return new GridToolbarItem($this->render(), $this->toolbarItemAttributes);
     }
 
     public function getKeywords(): array

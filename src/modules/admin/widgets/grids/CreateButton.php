@@ -12,7 +12,7 @@ class CreateButton implements Stringable
 {
     public function __construct(
         private ?string $label = null,
-        private array|null $url = ['create'],
+        private readonly array|null $url = ['create'],
         private readonly ?string $icon = 'plus',
     ) {
         $this->label ??= Yii::t('skeleton', 'Create');
@@ -22,6 +22,7 @@ class CreateButton implements Stringable
     {
         return Button::make()
             ->primary()
+            ->text($this->label)
             ->icon($this->icon)
             ->href($this->url)
             ->render();

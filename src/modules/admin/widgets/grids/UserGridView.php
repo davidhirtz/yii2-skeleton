@@ -48,8 +48,7 @@ class UserGridView extends GridView
     {
         $this->header ??= [
             [
-                $this->getStatusDropdown(),
-                $this->search->getColumn(),
+                $this->search->getToolbarItem(),
             ],
         ];
     }

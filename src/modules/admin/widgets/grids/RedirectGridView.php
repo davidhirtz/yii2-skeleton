@@ -63,7 +63,7 @@ class RedirectGridView extends GridView
     {
         $this->header ??= [
             [
-                $this->search->getColumn(),
+                $this->search->getToolbarItem(),
             ],
         ];
     }

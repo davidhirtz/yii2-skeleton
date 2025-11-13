@@ -265,7 +265,7 @@ class GridView extends Widget
         $items = [];
 
         foreach ($row as $item) {
-            if ($item instanceof Stringable) {
+            if ($item instanceof Stringable && !$item instanceof GridToolbarItem) {
                 $item = (string)$item;
             }
 
