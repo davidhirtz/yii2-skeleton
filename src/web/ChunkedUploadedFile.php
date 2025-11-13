@@ -65,8 +65,15 @@ class ChunkedUploadedFile extends UploadedFile
             return;
         }
 
-        $this->error = $end + 1 < $this->size ? UPLOAD_ERR_PARTIAL : UPLOAD_ERR_OK;
+        $isPartial = $end + 1 < $this->size;
+        $percentage = round((($start + $end) / $this->size) * 100);
+
+        $this->error = $isPartial ? UPLOAD_ERR_PARTIAL : UPLOAD_ERR_OK;
         $this->tempName = $tempName;
+
+        Yii::debug($isPartial
+            ? "Uploaded $percentage% of \"$this->name\"."
+            : "Upload of \"$this->name\" completed.");
     }
 
     #[Override]
