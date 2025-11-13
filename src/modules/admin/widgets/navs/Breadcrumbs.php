@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 
+use davidhirtz\yii2\skeleton\html\A;
 use davidhirtz\yii2\skeleton\html\Container;
-use davidhirtz\yii2\skeleton\html\Link;
 use davidhirtz\yii2\skeleton\html\Ul;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\widgets\Widget;
@@ -117,7 +117,7 @@ class Breadcrumbs extends Widget
             $content = Html::encode($content);
         }
 
-        return Link::make()
+        return A::make()
             ->addHtml($content)
             ->attributes($this->linkAttributes)
             ->href($url)

@@ -9,7 +9,7 @@ use davidhirtz\yii2\skeleton\html\traits\TagVisibilityTrait;
 use Yii;
 use yii\web\Controller;
 
-class NavLink extends Link
+class NavLink extends A
 {
     use TagVisibilityTrait;
 

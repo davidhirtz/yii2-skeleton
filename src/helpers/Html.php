@@ -6,9 +6,12 @@ namespace davidhirtz\yii2\skeleton\helpers;
 
 use davidhirtz\yii2\skeleton\html\Alert;
 use davidhirtz\yii2\skeleton\html\Container;
+use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\ErrorSummary;
+use Override;
+use Stringable;
 use Yii;
 use yii\helpers\BaseHtml;
 
@@ -31,6 +34,12 @@ class Html extends BaseHtml
     public static function danger(string $html): string
     {
         return static::alert($html, 'danger');
+    }
+
+    public static function div(array|string|Stringable $content = '', array $attributes = []): Div
+    {
+        $tag = Div::make()->attributes($attributes);
+        return is_array($content) ? $tag->html(...$content) : $tag->html($content);
     }
 
     public static function formText(string $content, array $options = []): string
@@ -61,7 +70,7 @@ class Html extends BaseHtml
         return '';
     }
 
-    #[\Override]
+    #[Override]
     public static function input($type, $name = null, $value = null, $options = []): string
     {
         if (isset($options['prepend']) || isset($options['append'])) {
@@ -111,7 +120,7 @@ class Html extends BaseHtml
     /**
      * @deprecated use {@link ErrorSummary} directly instead.
      */
-    #[\Override]
+    #[Override]
     public static function errorSummary($models, $options = []): string
     {
         $title = ArrayHelper::remove($options, 'header');

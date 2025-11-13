@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\A;
 use davidhirtz\yii2\skeleton\html\Button;
-use davidhirtz\yii2\skeleton\html\Link;
 use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
@@ -98,7 +98,7 @@ class RedirectGridView extends GridView
         return [
             'attribute' => 'request_uri',
             'content' => function (Redirect $redirect) {
-                return Link::make()
+                return A::make()
                     ->html(Html::markKeywords($redirect->request_uri, $this->search->getKeywords()))
                     ->href($this->getRoute($redirect));
             }
@@ -110,7 +110,7 @@ class RedirectGridView extends GridView
         return [
             'attribute' => 'url',
             'content' => function (Redirect $redirect) {
-                return Link::make()
+                return A::make()
                     ->icon('external-link-alt')
                     ->html(Html::markKeywords($redirect->url ?: '/', $this->search->getKeywords()))
                     ->href($redirect->url)

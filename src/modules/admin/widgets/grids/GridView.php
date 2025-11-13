@@ -46,6 +46,8 @@ class GridView extends Widget
     public GridSearch $search;
 
     public array $attributes = ['class' => 'grid-view'];
+    public array $headerAttributes = ['class' => 'grid-view-header'];
+    public array $footerAttributes = ['class' => 'grid-view-footer'];
     public array $headerRowAttributes = [];
     public array $tableAttributes = ['class' => 'table table-striped table-hover'];
     private array $tableBodyAttributes = [];
@@ -81,12 +83,16 @@ class GridView extends Widget
         $this->search ??= Yii::createObject(GridSearch::class, [$this]);
 
         if ($this->isSortable()) {
-            $this->tableAttributes['data-sort-url'] ??= Url::to($this->orderRoute);
+            $this->tableBodyAttributes['data-sort-url'] ??= Url::to($this->orderRoute);
             $this->getView()->registerAssetBundle(SortableAssetBundle::class);
         }
 
         $this->columns ??= $this->getDefaultColumns();
+
+        $this->initHeader();
         $this->initColumns();
+        $this->initFooter();
+
 
         parent::init();
     }
@@ -142,7 +148,6 @@ class GridView extends Widget
             : '';
     }
 
-
     protected function renderContent(): string
     {
         return strtr($this->layout, [
@@ -189,7 +194,7 @@ class GridView extends Widget
         $keys = $this->dataProvider->getKeys();
 
         $tbody = Tbody::make()
-        ->attributes($this->tableBodyAttributes);
+            ->attributes($this->tableBodyAttributes);
 
         foreach ($models as $index => $model) {
             $tbody->addRows($this->renderTableRow($model, $keys[$index], $index));
@@ -239,68 +244,45 @@ class GridView extends Widget
     {
     }
 
-    protected function renderHeader(): string
+    protected function renderHeader(): ?Stringable
     {
-        $this->initHeader();
-
-        $header = $this->header ? $this->renderRows($this->header) : '';
-
-        if ($header) {
-            $options = $this->header['options'] ?? [];
-            Html::addCssClass($options, 'grid-view-header');
-            $header = Html::tag('div', $header, $options);
-        }
-
-        return $header;
+        return $this->header ? $this->renderToolbars($this->header, $this->headerAttributes) : null;
     }
 
     protected function initFooter(): void
     {
     }
 
-    protected function renderFooter(): string
+    protected function renderFooter(): ?Stringable
     {
-        $this->initFooter();
-
-        $footer = $this->footer ? $this->renderRows($this->footer) : '';
-
-        if ($footer) {
-            $options = $this->footer['options'] ?? [];
-            Html::addCssClass($options, 'grid-view-footer');
-            $footer = Html::tag('div', $footer, $options);
-        }
-
-        return $footer;
+        return $this->footer ? $this->renderToolbars($this->footer, $this->footerAttributes) : null;
     }
 
-    protected function renderRows(array $rows): string
+    protected function renderToolbars(array $rows, array $attributes = []): ?Stringable
     {
-        $result = [];
+        $result = array_map(fn ($row) => $this->renderToolbar($row), $rows);
+        return $result ? Html::div($result, $attributes) : null;
+    }
 
-        foreach ($rows as $row) {
-            $items = [];
+    protected function renderToolbar(array $row): ?Stringable
+    {
+        $items = [];
 
-            foreach ($row as $item) {
-                if (is_string($item) || $item instanceof Stringable) {
-                    $content = (string)$item;
-
-                    if ($content) {
-                        $items[] = Html::tag('div', $content);
-                    }
-                } elseif (($item['visible'] ?? true) && ($item['content'] ?? null)) {
-                    $items[] = Html::tag($item['tag'] ?? 'div', $item['content'], $item['options'] ?? []);
-                }
+        foreach ($row as $item) {
+            if ($item instanceof Stringable) {
+                $item = (string)$item;
             }
 
-            if ($items) {
-                $options = $row['options'] ?? [];
-                Html::addCssClass($options, 'row');
+            if (is_string($item) || is_array($item)) {
+                $item = Yii::createObject(GridToolbarItem::class, (array)$item);
+            }
 
-                $result[] = Html::tag('div', implode('', $items), $options);
+            if ($item instanceof GridToolbarItem && $item->visible) {
+                $items[] = $item;
             }
         }
 
-        return implode('', $result);
+        return $items ? Html::div($items)->addClass('row') : null;
     }
 
     protected function renderPager(): string

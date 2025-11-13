@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
+use davidhirtz\yii2\skeleton\html\A;
 use davidhirtz\yii2\skeleton\html\Dropdown;
-use davidhirtz\yii2\skeleton\html\Link;
 use davidhirtz\yii2\skeleton\html\TextInput;
 use Stringable;
 use Yii;
@@ -72,7 +72,7 @@ class FilterDropdown implements Stringable
 
     protected function addDefaultItem(): void
     {
-        $this->dropdown->addItem(Link::make()
+        $this->dropdown->addItem(A::make()
             ->class('dropdown-default-item')
             ->current([...$this->params, $this->paramName => null])
             ->text($this->defaultItem));
@@ -83,7 +83,7 @@ class FilterDropdown implements Stringable
     protected function addItems(): void
     {
         foreach ($this->items as $param => $text) {
-            $link = Link::make()
+            $link = A::make()
                 ->current([...$this->params, $this->paramName => $param])
                 ->text($text);
 

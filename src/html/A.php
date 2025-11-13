@@ -12,7 +12,7 @@ use davidhirtz\yii2\skeleton\html\traits\TagModalTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagTooltipAttributeTrait;
 use Override;
 
-class Link extends Tag
+class A extends Tag
 {
     use TagAjaxAttributeTrait;
     use TagIconTextTrait;

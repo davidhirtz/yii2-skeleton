@@ -7,6 +7,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\web\Request;
 use Yii;
 use yii\base\Widget;
 use yii\helpers\Url;
@@ -14,23 +15,23 @@ use yii\helpers\Url;
 class GridSearch
 {
     public array $columnOptions = [
-        'options' => [
+        'attributes' => [
             'class' => 'ms-auto',
         ],
     ];
 
     public bool $enableAjax = true;
-    public array $formOptions = [];
-    public array $inputOptions = [];
+    public array $formAttributes = [];
+    public array $inputAttributes = [];
 
     public ?string $value = null;
     public string $paramName = 'q';
     public array|string|null $route = null;
     public readonly string $url;
 
-    public function __construct(protected Widget $grid)
+    public function __construct(protected Widget $grid, protected Request $request)
     {
-        $this->value ??= Yii::$app->getRequest()->get($this->paramName);
+        $this->value ??= $this->request->get($this->paramName);
         $this->value = $this->value ? trim((string)$this->value) : null;
 
         $this->url = $this->route ? Url::to($this->route) : Url::current([
@@ -39,8 +40,8 @@ class GridSearch
         ]);
 
         if ($this->value) {
-            $this->inputOptions['autofocus'] ??= true;
-            $this->inputOptions['onfocus'] ??= 'this.setSelectionRange(this.value.length,this.value.length);';
+            $this->inputAttributes['autofocus'] ??= true;
+            $this->inputAttributes['onfocus'] ??= 'this.setSelectionRange(this.value.length,this.value.length);';
         }
 
         if ($this->enableAjax) {
@@ -50,22 +51,22 @@ class GridSearch
 
     protected function setAjaxFormOptions(): void
     {
-        $this->formOptions = [
+        $this->formAttributes = [
             'hx-get' => $this->url,
             'hx-push-url' => 'true',
-            ...$this->formOptions,
+            ...$this->formAttributes,
         ];
     }
 
     public function render(): string
     {
-        return Html::beginForm($this->url, 'get', $this->formOptions) . $this->renderInput() . Html::endForm();
+        return Html::beginForm($this->url, 'get', $this->formAttributes) . $this->renderInput() . Html::endForm();
     }
 
     protected function renderInput(): string
     {
-        $icon = ArrayHelper::remove($this->inputOptions, 'icon', 'search');
-        $type = ArrayHelper::remove($this->inputOptions, 'type', 'search');
+        $icon = ArrayHelper::remove($this->inputAttributes, 'icon', 'search');
+        $type = ArrayHelper::remove($this->inputAttributes, 'type', 'search');
 
         $btn = Button::make()
             ->link()
@@ -77,7 +78,7 @@ class GridSearch
             'class' => 'form-control',
             'prepend' => $btn,
             'placeholder' => Yii::t('skeleton', 'Search ...'),
-            ...$this->inputOptions
+            ...$this->inputAttributes
         ];
 
         return Html::input($type, $this->paramName, $this->value, $options);
