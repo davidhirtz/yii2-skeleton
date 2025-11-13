@@ -9,7 +9,6 @@ use davidhirtz\yii2\skeleton\assets\SortableAssetBundle;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Table;
 use davidhirtz\yii2\skeleton\html\Tbody;
 use davidhirtz\yii2\skeleton\html\Thead;
@@ -141,10 +140,7 @@ class GridView extends Widget
     public function run(): string
     {
         return $this->dataProvider->getCount() || $this->showOnEmpty
-            ? Div::make()
-                ->html($this->renderContent())
-                ->attributes($this->attributes)
-                ->render()
+            ? Html::div($this->renderContent(), $this->attributes)->render()
             : '';
     }
 
@@ -159,13 +155,11 @@ class GridView extends Widget
         ]);
     }
 
-    protected function renderItems(): string
+    protected function renderItems(): ?Stringable
     {
         return $this->dataProvider->getCount()
-            ? Html::div($this->renderTable())
-                ->class('table-responsive')
-                ->render()
-            : '';
+            ? Html::div($this->renderTable())->class('table-responsive')
+            : null;
     }
 
     protected function renderTable(): Table
@@ -227,16 +221,14 @@ class GridView extends Widget
         return $tr;
     }
 
-    protected function renderSummary(): string
+    protected function renderSummary(): ?Stringable
     {
-        $summary = Yii::createObject(GridSummary::class, [
+        return Yii::createObject(GridSummary::class, [
             $this->dataProvider->getCount(),
             $this->dataProvider->getTotalCount(),
             $this->dataProvider->getPagination(),
             $this->search,
         ]);
-
-        return $summary->render();
     }
 
     protected function initHeader(): void
