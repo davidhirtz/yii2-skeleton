@@ -13,19 +13,20 @@ use davidhirtz\yii2\skeleton\html\Table;
 use davidhirtz\yii2\skeleton\html\Tbody;
 use davidhirtz\yii2\skeleton\html\Thead;
 use davidhirtz\yii2\skeleton\html\Tr;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\pagers\LinkPager;
 use Override;
 use Stringable;
 use Yii;
+use yii\base\Model;
 use yii\base\Widget;
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use yii\data\DataProviderInterface;
 use yii\db\ActiveRecordInterface;
 use yii\grid\Column;
-use yii\grid\DataColumn;
 use yii\helpers\Inflector;
 use yii\helpers\Url;
-use yii\i18n\Formatter;
 
 /**
  * @template T of ActiveRecord
@@ -58,20 +59,16 @@ class GridView extends Widget
     public string $layout = '{header}{summary}{items}{pager}{footer}';
     public ?array $orderRoute = ['order'];
 
-    /**
-     * @noinspection PhpUnused
-     */
-    public string $emptyCell = '&nbsp;';
-    public null $filterModel = null;
-
-    public function __construct(public Formatter $formatter, $config = [])
-    {
-        parent::__construct($config);
-    }
-
     #[Override]
     public function init(): void
     {
+        $this->search ??= Yii::createObject(GridSearch::class, [$this]);
+        $this->columns ??= $this->getDefaultColumns();
+
+        $this->initHeader();
+        $this->initColumns();
+        $this->initFooter();
+
         $this->attributes['id'] ??= $this->getId();
         $this->attributes['hx-select'] ??= '#' . $this->getId();
         $this->attributes['hx-target'] ??= $this->attributes['hx-select'];
@@ -81,21 +78,16 @@ class GridView extends Widget
         $this->tableBodyAttributes ??= [];
         $this->rowAttributes ??= [];
 
-        $this->search ??= Yii::createObject(GridSearch::class, [$this]);
-
         if ($this->isSortable()) {
             $this->tableBodyAttributes['data-sort-url'] ??= Url::to($this->orderRoute);
             $this->getView()->registerAssetBundle(SortableAssetBundle::class);
         }
 
-        $this->columns ??= $this->getDefaultColumns();
-
-        $this->initHeader();
-        $this->initColumns();
-        $this->initFooter();
-
-
         parent::init();
+    }
+
+    protected function initHeader(): void
+    {
     }
 
     protected function initColumns(): void
@@ -119,6 +111,10 @@ class GridView extends Widget
 
             $this->columns[$i] = $column;
         }
+    }
+
+    protected function initFooter(): void
+    {
     }
 
     protected function getDefaultColumns(): array
@@ -150,11 +146,43 @@ class GridView extends Widget
     {
         return strtr($this->layout, [
             '{header}' => $this->renderHeader(),
-            '{footer}' => $this->renderFooter(),
             '{summary}' => $this->renderSummary(),
             '{items}' => $this->renderItems(),
             '{pager}' => $this->renderPager(),
+            '{footer}' => $this->renderFooter(),
         ]);
+    }
+
+    protected function renderHeader(): ?Stringable
+    {
+        return $this->header ? $this->renderToolbars($this->header, $this->headerAttributes) : null;
+    }
+
+    protected function renderToolbars(array $rows, array $attributes = []): ?Stringable
+    {
+        $result = array_map($this->renderToolbar(...), $rows);
+        return $result ? Html::div($result, $attributes) : null;
+    }
+
+    protected function renderToolbar(array $row): ?Stringable
+    {
+        $items = [];
+
+        foreach ($row as $item) {
+            if ($item instanceof Stringable && !$item instanceof GridToolbarItem) {
+                $item = (string)$item;
+            }
+
+            if (is_string($item) || is_array($item)) {
+                $item = Yii::createObject(GridToolbarItem::class, (array)$item);
+            }
+
+            if ($item instanceof GridToolbarItem && $item->visible) {
+                $items[] = $item;
+            }
+        }
+
+        return $items ? Html::div($items)->addClass('row') : null;
     }
 
     protected function renderItems(): ?Stringable
@@ -233,51 +261,6 @@ class GridView extends Widget
         ]);
     }
 
-    protected function initHeader(): void
-    {
-    }
-
-    protected function renderHeader(): ?Stringable
-    {
-        return $this->header ? $this->renderToolbars($this->header, $this->headerAttributes) : null;
-    }
-
-    protected function initFooter(): void
-    {
-    }
-
-    protected function renderFooter(): ?Stringable
-    {
-        return $this->footer ? $this->renderToolbars($this->footer, $this->footerAttributes) : null;
-    }
-
-    protected function renderToolbars(array $rows, array $attributes = []): ?Stringable
-    {
-        $result = array_map($this->renderToolbar(...), $rows);
-        return $result ? Html::div($result, $attributes) : null;
-    }
-
-    protected function renderToolbar(array $row): ?Stringable
-    {
-        $items = [];
-
-        foreach ($row as $item) {
-            if ($item instanceof Stringable && !$item instanceof GridToolbarItem) {
-                $item = (string)$item;
-            }
-
-            if (is_string($item) || is_array($item)) {
-                $item = Yii::createObject(GridToolbarItem::class, (array)$item);
-            }
-
-            if ($item instanceof GridToolbarItem && $item->visible) {
-                $items[] = $item;
-            }
-        }
-
-        return $items ? Html::div($items)->addClass('row') : null;
-    }
-
     protected function renderPager(): string
     {
         $pagination = $this->dataProvider->getPagination();
@@ -294,15 +277,30 @@ class GridView extends Widget
         ]);
     }
 
-    public function getModel(): ?ActiveRecord
+    protected function renderFooter(): ?Stringable
+    {
+        return $this->footer ? $this->renderToolbars($this->footer, $this->footerAttributes) : null;
+    }
+
+    public function getModel(): ?Model
     {
         if ($this->dataProvider instanceof ActiveDataProvider) {
-            /** @var class-string<ActiveRecord>|null $model */
-            $model = $this->dataProvider->query->modelClass ?? null;
-            return $model ? $model::instance() : null;
+            /** @var class-string<ActiveRecord>|null $modelClass */
+            $modelClass = $this->dataProvider->query->modelClass ?? null;
         }
 
-        return null;
+        $modelClass ??= $this->dataProvider instanceof ArrayDataProvider
+            ? $this->dataProvider->modelClass
+            : null;
+
+        if ($modelClass) {
+            return $modelClass::instance();
+        }
+
+        $models = $this->dataProvider->getModels();
+        $model = reset($models);
+
+        return $model instanceof Model ? $model : null;
     }
 
     /**

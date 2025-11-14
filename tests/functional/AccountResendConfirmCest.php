@@ -15,6 +15,7 @@ use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\AccountResendConfirmActiveForm;
 use davidhirtz\yii2\skeleton\tests\support\FunctionalTester;
+use Override;
 use Yii;
 use yii\symfonymailer\Message;
 
@@ -24,7 +25,7 @@ class AccountResendConfirmCest extends BaseCest
 
     private ?Module $module = null;
 
-    #[\Override]
+    #[Override]
     public function _before(): void
     {
         /** @var Module $module */
