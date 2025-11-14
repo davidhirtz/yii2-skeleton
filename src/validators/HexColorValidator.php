@@ -11,6 +11,7 @@ class HexColorValidator extends StringValidator
 {
     public string $pattern = '/^#(?:[0-9a-fA-F]{3}){1,2}$/i';
 
+    #[\Override]
     public function init(): void
     {
         if ($this->message === null) {
@@ -37,6 +38,7 @@ class HexColorValidator extends StringValidator
         $model->$attribute = $value;
     }
 
+    #[\Override]
     protected function validateValue($value): ?array
     {
         $valid = !is_array($value) && preg_match($this->pattern, (string)$value);

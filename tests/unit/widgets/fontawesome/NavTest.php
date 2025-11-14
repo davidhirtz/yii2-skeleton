@@ -35,7 +35,7 @@ class NavTest extends Unit
         parent::_after();
     }
 
-    public function testHideOneItem()
+    public function testHideOneItem(): void
     {
         $content = Nav::widget([
             'items' => [
@@ -49,7 +49,7 @@ class NavTest extends Unit
         self::assertEmpty($content);
     }
 
-    public function testItemVisibility()
+    public function testItemVisibility(): void
     {
         $content = Nav::widget([
             'hideOneItem' => false,
@@ -65,7 +65,7 @@ class NavTest extends Unit
         self::assertEmpty($content);
     }
 
-    public function testItemRoles()
+    public function testItemRoles(): void
     {
         Yii::$app->getUser()->disableRbacForGuests = false;
 
@@ -88,7 +88,7 @@ class NavTest extends Unit
         self::assertStringContainsString('><a class="nav-link active" href="/site/index">Home</a></li>', $content);
     }
 
-    public function testLinkOptions()
+    public function testLinkOptions(): void
     {
         $content = Nav::widget([
             'hideOneItem' => false,
@@ -107,7 +107,7 @@ class NavTest extends Unit
         self::assertStringContainsString('<a class="nav-link active" href="/site/index" target="_blank">Home</a>', $content);
     }
 
-    public function testBadgeAndIconOptions()
+    public function testBadgeAndIconOptions(): void
     {
         $content = Nav::widget([
             'hideOneItem' => false,
@@ -127,7 +127,7 @@ class NavTest extends Unit
         self::assertStringContainsString('<a class="nav-link active" href="/site/index"><div class="icon-text"><i class="fa-fw fas fa-fas fa-home"></i><span>Home</span><span class="test">New</span></div></a>', $content);
     }
 
-    public function testDropdownItemsCallback()
+    public function testDropdownItemsCallback(): void
     {
         $content = Nav::widget([
             'hideOneItem' => false,
@@ -151,7 +151,7 @@ class NavTest extends Unit
         self::assertStringContainsString('<a class="dropdown-item" href="/site/test">Option 1</a>', $content);
     }
 
-    public function testActiveItemFromUrl()
+    public function testActiveItemFromUrl(): void
     {
         $content = Nav::widget([
             'items' => [
@@ -169,7 +169,7 @@ class NavTest extends Unit
         self::assertStringContainsString('<a class="nav-link active" href="/site/index">Home</a>', $content);
     }
 
-    public function testActiveItemWithRoutes()
+    public function testActiveItemWithRoutes(): void
     {
         $content = Nav::widget([
             'items' => [
@@ -190,7 +190,7 @@ class NavTest extends Unit
         self::assertStringContainsString('<a class="nav-link active" href="/site/test">Test</a>', $content);
     }
 
-    public function testActiveItemWithSkippedRoute()
+    public function testActiveItemWithSkippedRoute(): void
     {
         $content = Nav::widget([
             'items' => [
@@ -209,7 +209,7 @@ class NavTest extends Unit
         self::assertStringContainsString('<a class="nav-link active" href="/site/index">Test</a>', $content);
     }
 
-    public function testActiveItemWithActiveCallback()
+    public function testActiveItemWithActiveCallback(): void
     {
         $content = Nav::widget([
             'items' => [
@@ -228,7 +228,7 @@ class NavTest extends Unit
         self::assertStringContainsString('<a class="nav-link active" href="/site/index">Test</a>', $content);
     }
 
-    public function testActiveItemWithRequestQueryParameters()
+    public function testActiveItemWithRequestQueryParameters(): void
     {
         Yii::$app->getRequest()->setQueryParams(['id' => 1]);
 

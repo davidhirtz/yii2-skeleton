@@ -53,31 +53,28 @@ class Redirect extends ActiveRecord implements TypeAttributeInterface, TrailMode
     #[Override]
     public function rules(): array
     {
-        return array_merge(parent::rules(), [
+        return [
+            ...parent::rules(),
             [
                 ['type'],
                 DynamicRangeValidator::class,
                 'integerOnly' => false,
                 'skipOnEmpty' => false,
-            ],
-            [
+            ], [
                 ['request_uri'],
                 'required',
-            ],
-            [
+            ], [
                 ['request_uri', 'url'],
                 'string',
                 'max' => 250,
-            ],
-            [
+            ], [
                 ['request_uri'],
                 'unique',
-            ],
-            [
+            ], [
                 ['url'],
                 $this->validateUrl(...),
             ],
-        ]);
+        ];
     }
 
     #[Override]

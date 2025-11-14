@@ -140,6 +140,7 @@ class ChunkedUploadedFile extends UploadedFile
         return $this->error === UPLOAD_ERR_PARTIAL;
     }
 
+    #[\Override]
     public static function getInstance($model, $attribute): ?static
     {
         $file = $_FILES[$model->formName()] ?? null;
@@ -156,6 +157,7 @@ class ChunkedUploadedFile extends UploadedFile
             : null;
     }
 
+    #[\Override]
     public static function getInstanceByName($name): ?static
     {
         $file = $_FILES[$name] ?? null;

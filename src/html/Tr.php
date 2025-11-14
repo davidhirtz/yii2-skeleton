@@ -25,10 +25,11 @@ class Tr extends Tag
      */
     public function addCells(TableCell|string ...$cells): self
     {
-        $this->cells = array_merge($this->cells, $cells);
+        $this->cells = [...$this->cells, ...$cells];
         return $this;
     }
 
+    #[\Override]
     protected function renderContent(): string
     {
         return $this->cells ? implode('', $this->cells) : '';

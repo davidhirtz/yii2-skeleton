@@ -50,6 +50,6 @@ class ListGroup extends Widget
             $label = Html::iconText($item['icon'], $label);
         }
 
-        return Html::a($label, $item['url'] ?? '#', array_merge($this->linkOptions, $item['linkOptions'] ?? []));
+        return Html::a($label, $item['url'] ?? '#', [...$this->linkOptions, ...$item['linkOptions'] ?? []]);
     }
 }

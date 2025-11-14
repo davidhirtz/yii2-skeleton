@@ -68,7 +68,7 @@ class MaintenanceController extends Controller
         $options = parent::options($actionID);
 
         if ($actionID === 'enable') {
-            $options = array_merge($options, $this->configProperties);
+            $options = [...$options, ...$this->configProperties];
         }
 
         return $options;

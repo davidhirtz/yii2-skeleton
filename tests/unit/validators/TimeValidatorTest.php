@@ -10,7 +10,7 @@ use yii\base\Model;
 
 class TimeValidatorTest extends Unit
 {
-    public function testDefaultCurrencyAttribute()
+    public function testDefaultCurrencyAttribute(): void
     {
         $model = new class() extends Model {
             public ?string $time = null;

@@ -12,6 +12,7 @@ class HexColorInputWidget extends InputWidget
 {
     public string $template = '<color-picker class="input-group"><div class="input-group-prepend input-group-text">{color}</div>{input}</color-picker>';
 
+    #[\Override]
     public function init(): void
     {
         $this->options['value'] ??= $this->value ?: null;
@@ -36,7 +37,7 @@ class HexColorInputWidget extends InputWidget
 
         $value = $this->options['value'] ?: '#000000';
 
-        if (strlen($value) === 4) {
+        if (strlen((string) $value) === 4) {
             $value = '#' . $value[1] . $value[1] . $value[2] . $value[2] . $value[3] . $value[3];
         }
 

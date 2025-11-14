@@ -366,7 +366,7 @@ class AttributeTypecastBehaviorTest extends Unit
         self::assertEquals($expectedAttributeTypes, $behavior->attributeTypes);
     }
 
-    public function testAutoDetectAttributeTypesFromBehaviors()
+    public function testAutoDetectAttributeTypesFromBehaviors(): void
     {
         $model = new class() extends AttributeTypecastActiveRecord {
             use ModelTrait;

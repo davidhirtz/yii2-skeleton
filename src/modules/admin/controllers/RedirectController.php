@@ -58,7 +58,7 @@ class RedirectController extends Controller
 
         if ($redirect->load($this->request->post()) && $redirect->insert()) {
             $this->success(Yii::t('skeleton', 'The redirect rule was created.'));
-            return $this->redirect(array_merge($this->request->get(), ['index']));
+            return $this->redirect([...$this->request->get(), 'index']);
         }
 
         return $this->render('create', [
@@ -76,7 +76,7 @@ class RedirectController extends Controller
             }
 
             if (!$redirect->hasErrors()) {
-                return $this->redirect(array_merge($this->request->get(), ['update', 'id' => $redirect->id]));
+                return $this->redirect([...$this->request->get(), 'update', 'id' => $redirect->id]);
             }
         }
 
@@ -103,7 +103,7 @@ class RedirectController extends Controller
     {
         Yii::debug($this->request->post());
 
-        if ($redirectIds = array_map('intval', $this->request->post('selection', []))) {
+        if ($redirectIds = array_map(intval(...), $this->request->post('selection', []))) {
             $redirects = Redirect::findAll(['id' => $redirectIds]);
             $isDeleted = false;
 

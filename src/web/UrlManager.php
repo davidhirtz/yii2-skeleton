@@ -280,6 +280,7 @@ class UrlManager extends \yii\web\UrlManager
         return $event;
     }
 
+    #[\Override]
     protected function buildRules($ruleDeclarations): array
     {
         $orderedRuleDeclarations = [];

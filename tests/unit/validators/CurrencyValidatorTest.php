@@ -11,7 +11,7 @@ use yii\base\Model;
 
 class CurrencyValidatorTest extends Unit
 {
-    public function testDefaultCurrencyAttribute()
+    public function testDefaultCurrencyAttribute(): void
     {
         $model = new CurrencyValidatorTestModel();
 
@@ -28,7 +28,7 @@ class CurrencyValidatorTest extends Unit
         self::assertEquals('10.00', $model->currency);
     }
 
-    public function testLocalizedCurrencyAttribute()
+    public function testLocalizedCurrencyAttribute(): void
     {
         Yii::$app->language = 'de';
         $model = new CurrencyValidatorTestModel();

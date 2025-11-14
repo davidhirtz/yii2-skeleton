@@ -81,9 +81,9 @@ trait I18nAttributesTrait
         $names = [];
 
         foreach ((array)$attributes as $attribute) {
-            $names = array_merge($names, $this->isI18nAttribute($attribute)
+            $names = [...$names, ...$this->isI18nAttribute($attribute)
                 ? $i18n->getAttributeNames($attribute, $languages)
-                : [$attribute]);
+                : [$attribute]];
         }
 
         return $names;

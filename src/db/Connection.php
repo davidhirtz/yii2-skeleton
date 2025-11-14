@@ -137,6 +137,7 @@ class Connection extends \yii\db\Connection
         return true;
     }
 
+    #[\Override]
     public function getSchema(): Schema
     {
         $this->schema ??= Yii::createObject([

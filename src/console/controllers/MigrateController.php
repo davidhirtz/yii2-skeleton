@@ -37,6 +37,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
      */
     public bool $skipBackup = false;
 
+    #[\Override]
     public function init(): void
     {
         if (!$this->skipBackup) {
@@ -46,6 +47,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
         parent::init();
     }
 
+    #[\Override]
     public function options($actionID): array
     {
         $options = parent::options($actionID);
@@ -86,6 +88,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
         return $result;
     }
 
+    #[\Override]
     protected function migrateUp($class): bool
     {
         if (!$this->skipBackup) {
@@ -96,6 +99,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
         return parent::migrateUp($class);
     }
 
+    #[\Override]
     protected function migrateDown($class): bool
     {
         if (!$this->skipBackup) {
@@ -140,7 +144,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
                 $this->_dbConfig = $db;
 
                 Yii::$app->setComponents([
-                    'db' => array_merge(Yii::$app->getComponents()['db'], $db),
+                    'db' => [...Yii::$app->getComponents()['db'], ...$db],
                 ]);
             }
         }

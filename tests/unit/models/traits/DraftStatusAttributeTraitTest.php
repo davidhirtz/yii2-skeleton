@@ -12,7 +12,7 @@ use yii\base\Model;
 
 class DraftStatusAttributeTraitTest extends Unit
 {
-    public function testDraftStatus()
+    public function testDraftStatus(): void
     {
         $model = new class() extends Model implements DraftStatusAttributeInterface {
             use DraftStatusAttributeTrait;

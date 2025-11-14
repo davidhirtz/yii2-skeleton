@@ -48,7 +48,8 @@ class Application extends \yii\console\Application
     #[\Override]
     public function coreCommands(): array
     {
-        return array_merge(parent::coreCommands(), [
+        return [
+            ...parent::coreCommands(),
             'asset' => AssetController::class,
             'email' => EmailController::class,
             'maintenance' => MaintenanceController::class,
@@ -57,7 +58,7 @@ class Application extends \yii\console\Application
             'params' => ParamsController::class,
             'trail' => TrailController::class,
             'user' => UserController::class,
-        ]);
+        ];
     }
 
     protected function setWebrootAliases(): void

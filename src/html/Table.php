@@ -21,6 +21,7 @@ class Table extends base\Tag
         return $this;
     }
 
+    #[\Override]
     protected function renderContent(): string
     {
         return $this->header . $this->body;

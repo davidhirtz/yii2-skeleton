@@ -55,7 +55,7 @@ trait ApplicationTrait
             throw new InvalidConfigException(self::class . '::$basePath must be defined');
         }
 
-        Yii::$classMap = array_merge(Yii::$classMap, ArrayHelper::remove($config, 'classMap', []));
+        Yii::$classMap = [...Yii::$classMap, ...ArrayHelper::remove($config, 'classMap', [])];
 
         $core = [
             'id' => 'skeleton',
@@ -193,11 +193,11 @@ trait ApplicationTrait
         $config = ArrayHelper::merge($core, $config);
 
         if (is_file($params = $path . 'params.php')) {
-            $config['params'] = array_merge($config['params'] ?? [], require ($params));
+            $config['params'] = [...$config['params'] ?? [], ...require ($params)];
         }
 
         if (is_file($db = $path . 'db.php')) {
-            $config['components']['db'] = array_merge(require ($db), $config['components']['db']);
+            $config['components']['db'] = [...require ($db), ...$config['components']['db']];
         }
 
 

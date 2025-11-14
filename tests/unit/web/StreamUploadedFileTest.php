@@ -60,7 +60,7 @@ class StreamUploadedFileTest extends Unit
         self::assertEquals(UPLOAD_ERR_OK, $upload->error);
     }
 
-    public function testInvalidTempDirectory()
+    public function testInvalidTempDirectory(): void
     {
         $upload = $this->getStreamUploadedFile([
             'url' => static::VALID_URL,

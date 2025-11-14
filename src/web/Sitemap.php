@@ -100,7 +100,7 @@ class Sitemap extends Component
             $urls = $this->getUrlsInternal();
 
             foreach ($this->models as $key) {
-                $urls = array_merge($urls, $key->generateSitemapUrls());
+                $urls = [...$urls, ...$key->generateSitemapUrls()];
             }
 
             return $urls;
@@ -174,7 +174,7 @@ class Sitemap extends Component
 
                     foreach ($languages as $language) {
                         $urls[] = [
-                            'loc' => array_filter(array_merge([$view['route'], $paramName => $name !== $defaultView ? $name : null, 'language' => $language], $params)),
+                            'loc' => array_filter([$view['route'], $paramName => $name !== $defaultView ? $name : null, 'language' => $language, ...$params]),
                             'lastmod' => date(DATE_W3C, filectime($file)),
                         ];
                     }

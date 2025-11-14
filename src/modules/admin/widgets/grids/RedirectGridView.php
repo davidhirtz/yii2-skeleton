@@ -99,11 +99,9 @@ class RedirectGridView extends GridView
     {
         return [
             'attribute' => 'request_uri',
-            'content' => function (Redirect $redirect) {
-                return A::make()
-                    ->html(Html::markKeywords($redirect->request_uri, $this->search->getKeywords()))
-                    ->href($this->getRoute($redirect));
-            }
+            'content' => fn (Redirect $redirect) => A::make()
+                ->html(Html::markKeywords($redirect->request_uri, $this->search->getKeywords()))
+                ->href($this->getRoute($redirect))
         ];
     }
 
@@ -111,13 +109,11 @@ class RedirectGridView extends GridView
     {
         return [
             'attribute' => 'url',
-            'content' => function (Redirect $redirect) {
-                return A::make()
-                    ->icon('external-link-alt')
-                    ->html(Html::markKeywords($redirect->url ?: '/', $this->search->getKeywords()))
-                    ->href($redirect->url)
-                    ->target('_blank');
-            }
+            'content' => fn (Redirect $redirect) => A::make()
+                ->icon('external-link-alt')
+                ->html(Html::markKeywords($redirect->url ?: '/', $this->search->getKeywords()))
+                ->href($redirect->url)
+                ->target('_blank')
         ];
     }
 
@@ -136,7 +132,7 @@ class RedirectGridView extends GridView
     {
         return [
             'class' => ButtonsColumn::class,
-            'content' => fn (Redirect $redirect) => $this->getRowButtons($redirect),
+            'content' => $this->getRowButtons(...),
         ];
     }
 

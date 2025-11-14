@@ -236,7 +236,7 @@ class TinyMceEditor extends InputWidget
 
         if ($this->stylesFormats) {
             if ($headlineStyles) {
-                $this->stylesFormats = array_merge($headlineStyles, $this->stylesFormats);
+                $this->stylesFormats = [...$headlineStyles, ...$this->stylesFormats];
             }
 
             $this->clientOptions['style_formats'] ??= $this->stylesFormats;

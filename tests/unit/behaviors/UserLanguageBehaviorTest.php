@@ -24,7 +24,7 @@ class UserLanguageBehaviorTest extends Unit
         parent::_before();
     }
 
-    public function testSetIdentityLanguage()
+    public function testSetIdentityLanguage(): void
     {
         $this->tester->amLoggedInAs(1);
         Yii::$app->getRequest()->setQueryParams(['language' => 'de']);
@@ -38,7 +38,7 @@ class UserLanguageBehaviorTest extends Unit
         self::assertEmpty($this->getLanguageCookieValue());
     }
 
-    public function testGetIdentityLanguage()
+    public function testGetIdentityLanguage(): void
     {
         User::updateAll(['language' => 'de'], ['id' => 1]);
         $this->tester->amLoggedInAs(1);
@@ -50,7 +50,7 @@ class UserLanguageBehaviorTest extends Unit
         self::assertEquals('de', Yii::$app->language);
     }
 
-    public function testGetIdentityLanguageBeforeAction()
+    public function testGetIdentityLanguageBeforeAction(): void
     {
         User::updateAll(['language' => 'de'], ['id' => 1]);
         $this->tester->amLoggedInAs(1);
@@ -61,7 +61,7 @@ class UserLanguageBehaviorTest extends Unit
         self::assertEquals('de', Yii::$app->language);
     }
 
-    public function testSetCookieLanguage()
+    public function testSetCookieLanguage(): void
     {
         Yii::$app->getRequest()->setQueryParams(['language' => 'de']);
 

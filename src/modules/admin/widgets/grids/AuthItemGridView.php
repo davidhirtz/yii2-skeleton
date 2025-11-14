@@ -87,7 +87,7 @@ class AuthItemGridView extends GridView
             'label' => Yii::t('skeleton', 'Inherited Permissions'),
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
             'contentOptions' => ['class' => 'd-none d-md-table-cell'],
-            'content' => fn (AuthItem $authItem) => $this->getDescriptionFormItem($authItem),
+            'content' => $this->getDescriptionFormItem(...),
         ];
     }
 
@@ -112,7 +112,7 @@ class AuthItemGridView extends GridView
     {
         return [
             'label' => Yii::t('skeleton', 'Users'),
-            'content' => fn (AuthItem $authItem) => $this->getUsersForItem($authItem),
+            'content' => $this->getUsersForItem(...),
         ];
     }
 
@@ -132,7 +132,7 @@ class AuthItemGridView extends GridView
     {
         return [
             'class' => ButtonsColumn::class,
-            'content' => fn (AuthItem $authItem) => $this->getRowButtons($authItem),
+            'content' => $this->getRowButtons(...),
         ];
     }
 

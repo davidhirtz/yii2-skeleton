@@ -77,6 +77,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
      * Override Yii2's default implementation of adding the anti-pattern `$alias.*` on empty select. This causes
      * problems with `sql_mode=only_full_group_by`.
      */
+    #[\Override]
     public function prepare($builder): Query
     {
         if (empty($this->select)) {

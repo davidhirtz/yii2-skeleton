@@ -174,7 +174,7 @@ class MaterializedTreeTraitTest extends Unit
         self::assertEquals(2, $model->parent['id']);
     }
 
-    public function testSiblings()
+    public function testSiblings(): void
     {
         $model = TestMaterializedTreeActiveRecord::findOne(2);
         self::assertEquals(2, $model->findSiblings()->count());

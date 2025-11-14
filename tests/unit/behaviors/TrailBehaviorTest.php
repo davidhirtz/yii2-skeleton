@@ -16,6 +16,7 @@ use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\traits\TrailModelTrait;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\tests\support\UnitTester;
+use Override;
 use ReflectionClass;
 use Yii;
 use yii\base\Model;
@@ -114,7 +115,7 @@ class TrailBehaviorTest extends Unit
         self::assertEquals(Trail::TYPE_DELETE, $trail->type);
     }
 
-    public function testFailedInsertTrail()
+    public function testFailedInsertTrail(): void
     {
         $model = new class() extends TrailActiveRecord {
             public function behaviors(): array
@@ -223,7 +224,7 @@ class TrailBehaviorTest extends Unit
         return $model;
     }
 
-    private function findLatestTrailForActiveRecord(TrailActiveRecord $model)
+    private function findLatestTrailForActiveRecord(TrailActiveRecord $model): Trail
     {
         return Trail::find()
             ->where([
@@ -252,7 +253,7 @@ class TrailActiveRecord extends ActiveRecord implements TrailModelInterface
 {
     use TrailModelTrait;
 
-    #[\Override]
+    #[Override]
     public function behaviors(): array
     {
         return [
@@ -266,7 +267,7 @@ class TrailActiveRecord extends ActiveRecord implements TrailModelInterface
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function rules(): array
     {
         return [
@@ -309,7 +310,7 @@ class TrailActiveRecord extends ActiveRecord implements TrailModelInterface
         ];
     }
 
-    #[\Override]
+    #[Override]
     public static function tableName(): string
     {
         return 'trail_test';
@@ -318,11 +319,11 @@ class TrailActiveRecord extends ActiveRecord implements TrailModelInterface
 
 class TrailBehaviorMock extends TrailBehavior
 {
-    #[\Override]
+    #[Override]
     protected function insertTrail(Trail $trail): void
     {
         $trail = new class() extends Trail {
-            public function insert($runValidation = true, $attributes = null)
+            public function insert($runValidation = true, $attributes = null): bool
             {
                 throw new Exception("Mocked error message");
             }

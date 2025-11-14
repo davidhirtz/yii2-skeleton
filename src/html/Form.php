@@ -23,6 +23,7 @@ class Form extends Tag
         return $this->attribute('action', $action !== null ? Url::to($action) : null);
     }
 
+    #[\Override]
     protected function renderContent(): string
     {
         if ($this->attributes['method'] === 'post') {

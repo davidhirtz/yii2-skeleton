@@ -22,8 +22,6 @@ trait SessionTrait
         }
 
         /** @noinspection PhpMultipleClassDeclarationsInspection */
-        return array_merge(parent::getCookieParams(), [
-            'domain' => $this->cookieDomain,
-        ]);
+        return [...parent::getCookieParams(), 'domain' => $this->cookieDomain];
     }
 }

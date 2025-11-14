@@ -137,7 +137,7 @@ class UserGridView extends GridView
     {
         return [
             'class' => ButtonsColumn::class,
-            'content' => fn (User $user) => $this->getRowButtons($user),
+            'content' => $this->getRowButtons(...),
         ];
     }
 

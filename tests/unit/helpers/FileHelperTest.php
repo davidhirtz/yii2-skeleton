@@ -50,7 +50,7 @@ class FileHelperTest extends Unit
         self::assertFalse(FileHelper::unlink('@runtime/invalid-file'));
     }
 
-    public function testEncodeUrl()
+    public function testEncodeUrl(): void
     {
         $url = 'https://www.example.com/test file.txt';
         $encodedUrl = FileHelper::encodeUrl($url);

@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\base\traits\ApplicationTrait;
 use davidhirtz\yii2\skeleton\rbac\DbManager;
+use Override;
 use Yii;
 use yii\authclient\Collection;
 use yii\base\Event;
@@ -31,7 +32,7 @@ class Application extends \yii\web\Application
 {
     use ApplicationTrait;
 
-    #[\Override]
+    #[Override]
     public function preInit(&$config): void
     {
         $config['basePath'] ??= dirname((string)$_SERVER['SCRIPT_FILENAME'], 2);
@@ -42,7 +43,7 @@ class Application extends \yii\web\Application
         parent::preInit($config);
     }
 
-    #[\Override]
+    #[Override]
     protected function bootstrap(): void
     {
         $this->setDefaultCookieConfig();
@@ -53,17 +54,16 @@ class Application extends \yii\web\Application
         $this->setDefaultEmail();
     }
 
-    #[\Override]
+    #[Override]
     public function coreComponents(): array
     {
-        return array_merge(parent::coreComponents(), [
+        return [
+            ...parent::coreComponents(),
             'errorHandler' => [
                 'class' => ErrorHandler::class,
-            ],
-            'request' => [
+            ], 'request' => [
                 'class' => Request::class,
-            ],
-            'response' => [
+            ], 'response' => [
                 'class' => Response::class,
                 'on beforeSend' => function (Event $event): void {
                     if ($this->getRequest()->getIsDraft()) {
@@ -72,11 +72,10 @@ class Application extends \yii\web\Application
                         $response->getHeaders()->set('X-Robots-Tag', 'none');
                     }
                 }
-            ],
-            'user' => [
+            ], 'user' => [
                 'class' => User::class,
             ],
-        ]);
+        ];
     }
 
     public function getAuthClientCollection(): ?Collection

@@ -51,7 +51,7 @@ class LogGridView extends GridView
         return [
             'label' => Yii::t('skeleton', 'Level'),
             'headerOptions' => ['width' => '100'],
-            'content' => fn ($model) => Html::tag('div', ucfirst($model['level']), [
+            'content' => fn ($model) => Html::tag('div', ucfirst((string) $model['level']), [
                 'class' => $this->getLevelCssClass($model['level']),
             ])
         ];

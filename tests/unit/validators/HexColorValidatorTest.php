@@ -10,7 +10,7 @@ use yii\base\Model;
 
 class HexColorValidatorTest extends Unit
 {
-    public function testHexColorAttribute()
+    public function testHexColorAttribute(): void
     {
         $model = new class() extends Model {
             public ?string $color = null;

@@ -18,7 +18,7 @@ class SignupFormTest extends Unit
 {
     use UserFixtureTrait;
 
-    public function testSignupWithDisabledSignup()
+    public function testSignupWithDisabledSignup(): void
     {
         $form = SignupForm::create();
 

@@ -92,7 +92,7 @@ class HtmlValidator extends Validator
         }
 
         // Sanitize user input
-        $this->allowedHtmlTags = array_map('strtolower', array_filter($this->allowedHtmlTags));
+        $this->allowedHtmlTags = array_map(strtolower(...), array_filter($this->allowedHtmlTags));
 
         // Transform legacy allowedClasses to an array of allowed classes for the link tag.
         if (key($this->allowedClasses) === 0) {

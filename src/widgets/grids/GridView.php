@@ -253,7 +253,7 @@ class GridView extends Widget
 
     protected function renderToolbars(array $rows, array $attributes = []): ?Stringable
     {
-        $result = array_map(fn ($row) => $this->renderToolbar($row), $rows);
+        $result = array_map($this->renderToolbar(...), $rows);
         return $result ? Html::div($result, $attributes) : null;
     }
 

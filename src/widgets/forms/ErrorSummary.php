@@ -53,7 +53,7 @@ class ErrorSummary extends Widget
         $errors = [];
 
         foreach ($this->models as $model) {
-            $errors = array_unique(array_merge($errors, $model->getErrorSummary($this->showAllErrors)));
+            $errors = array_unique([...$errors, ...$model->getErrorSummary($this->showAllErrors)]);
         }
 
         return array_values($errors);

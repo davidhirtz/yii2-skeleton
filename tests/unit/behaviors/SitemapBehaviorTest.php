@@ -80,7 +80,7 @@ class SitemapBehaviorTest extends Unit
         self::assertEquals('https://www.test.com/one-month-ago', $urls[0]['loc']);
     }
 
-    public function testMissingCallback()
+    public function testMissingCallback(): void
     {
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('SitemapBehavior::$callback must be callable.');
@@ -96,7 +96,7 @@ class SitemapBehaviorTest extends Unit
         };
     }
 
-    public function testInvalidUrl()
+    public function testInvalidUrl(): void
     {
         $model = new class() extends SitemapActiveRecord {
             public function generateSitemapUrl(SitemapActiveRecord $model): array

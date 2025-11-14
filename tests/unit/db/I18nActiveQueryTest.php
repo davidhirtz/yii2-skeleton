@@ -49,7 +49,7 @@ class I18nActiveQueryTest extends Unit
         self::assertEquals("$tableName.[[content_de]]", $model::find()->getI18nAttributeName('content'));
     }
 
-    public function testReplaceI18nAttributes()
+    public function testReplaceI18nAttributes(): void
     {
         $model = new I18nActiveRecord();
 

@@ -54,8 +54,6 @@ class CurrencyValidator extends NumberValidator
     #[\Override]
     public function getClientOptions($model, $attribute): array
     {
-        return array_merge(parent::getClientOptions($model, $attribute), [
-            'pattern' => new JsExpression($this->currencyPattern),
-        ]);
+        return [...parent::getClientOptions($model, $attribute), 'pattern' => new JsExpression($this->currencyPattern)];
     }
 }

@@ -105,7 +105,7 @@ class I18nAttributesTraitTest extends Unit
         self::assertEquals(['slug_de', 'parent_slug_de'], $rules[3]['targetAttribute']);
     }
 
-    public function testI18nAttributeHints()
+    public function testI18nAttributeHints(): void
     {
         $model = new TestI18nActiveRecord();
 
@@ -113,7 +113,7 @@ class I18nAttributesTraitTest extends Unit
         self::assertEquals('Part of the URL', $model->getAttributeHint('slug_de'));
     }
 
-    public function testEmptyI18nAttributes()
+    public function testEmptyI18nAttributes(): void
     {
         $model = new class() extends ActiveRecord {
             use I18nAttributesTrait;

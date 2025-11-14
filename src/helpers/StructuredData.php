@@ -39,7 +39,7 @@ class StructuredData
             }
 
             $item['item'] = Url::to($item['item'], true);
-            $items[] = array_merge(['@type' => 'ListItem', 'position' => $pos++], $item);
+            $items[] = ['@type' => 'ListItem', 'position' => $pos++, ...$item];
         }
 
         return $items ? static::tag(['@type' => 'BreadcrumbList', 'itemListElement' => $items]) : '';

@@ -54,6 +54,7 @@ class SitemapController extends Controller
         return $behaviors;
     }
 
+    #[\Override]
     public function beforeAction($action): bool
     {
         if ($this->request->isDraftRequest()) {
