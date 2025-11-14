@@ -13,6 +13,7 @@ use davidhirtz\yii2\skeleton\html\Table;
 use davidhirtz\yii2\skeleton\html\Tbody;
 use davidhirtz\yii2\skeleton\html\Thead;
 use davidhirtz\yii2\skeleton\html\Tr;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\pagers\LinkPager;
 use Override;
@@ -24,7 +25,6 @@ use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\data\DataProviderInterface;
 use yii\db\ActiveRecordInterface;
-use yii\grid\Column;
 use yii\helpers\Inflector;
 use yii\helpers\Url;
 
@@ -98,10 +98,10 @@ class GridView extends Widget
             }
 
             if (is_array($column)) {
-                $column['class'] ??= DataColumn::class;
+                $className = ArrayHelper::remove($column, 'class', DataColumn::class);
                 $column['grid'] = $this;
 
-                $column = Yii::createObject($column);
+                $column = Yii::createObject($className, $column);
             }
 
             if (!$column->visible) {
@@ -205,7 +205,7 @@ class GridView extends Widget
         $tr = Tr::make()->attributes($this->headerRowAttributes);
 
         foreach ($this->columns as $column) {
-            $tr->addCells($column instanceof Column ? $column->renderHeaderCell() : '');
+            $tr->addCells($column instanceof Column ? $column->renderHeader() : '');
         }
 
         return Thead::make()->rows($tr);
@@ -243,9 +243,7 @@ class GridView extends Widget
             ->attributes($attributes);
 
         foreach ($this->columns as $column) {
-            $tr->addCells($column instanceof Column
-                ? $column->renderDataCell($model, $key, $index)
-                : '');
+            $tr->addCells($column instanceof Column ? $column->renderBody($model, $key, $index) : '');
         }
 
         return $tr;

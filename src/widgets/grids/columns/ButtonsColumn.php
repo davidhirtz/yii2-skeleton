@@ -4,20 +4,25 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\grids\columns;
 
+use Closure;
 use davidhirtz\yii2\skeleton\html\ButtonToolbar;
 use Override;
-use yii\grid\Column;
 
 class ButtonsColumn extends Column
 {
-    public $contentOptions = [
-        'class' => 'text-end text-nowrap',
-    ];
+    protected function init(): void
+    {
+        $this->contentAttributes ??= [
+            'class' => 'text-end text-nowrap',
+        ];
+
+        parent::init();
+    }
 
     #[Override]
     protected function renderDataCellContent($model, $key, $index): string
     {
-        if ($this->content !== null) {
+        if ($this->content instanceof Closure) {
             $html = call_user_func($this->content, $model, $key, $index, $this);
 
             return ButtonToolbar::make()
@@ -25,6 +30,6 @@ class ButtonsColumn extends Column
                 ->render();
         }
 
-        return $this->grid->emptyCell;
+        return parent::renderDataCellContent($model, $key, $index);
     }
 }

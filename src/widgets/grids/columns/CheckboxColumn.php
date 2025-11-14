@@ -4,43 +4,53 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\grids\columns;
 
+use Closure;
 use davidhirtz\yii2\skeleton\assets\SelectableAssetBundle;
 use davidhirtz\yii2\skeleton\html\Checkbox;
+use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use Override;
-use yii\grid\Column;
+use Stringable;
+use Yii;
+use yii\base\Model;
 
 class CheckboxColumn extends Column
 {
-    public array $checkboxAttributes = [];
-    public bool $multiple = true;
-    public string $name = 'selection';
+    public function __construct(
+        GridView $grid,
+        protected array $checkboxAttributes = [],
+        protected bool $multiple = true,
+        protected string $name = 'selection[]',
+        Closure|string|null $content = null,
+        array|Closure $contentAttributes = [],
+        ?string $header = null,
+        array $headerAttributes = [],
+        bool $visible = true,
+        string $emptyCell = '&nbsp;',
+    ) {
+        parent::__construct($grid, $content, $contentAttributes, $header, $headerAttributes, $visible, $emptyCell);
+    }
 
-    #[Override]
-    public function init(): void
+    protected function init(): void
     {
         if ($this->multiple && substr_compare($this->name, '[]', -2, 2)) {
             $this->name .= '[]';
         }
 
         $this->registerClientScript();
-
-        parent::init();
     }
 
     #[Override]
-    protected function renderHeaderCellContent(): string
+    protected function renderHeaderCellContent(): string|Stringable
     {
         if ($this->header !== null || !$this->multiple) {
             return parent::renderHeaderCellContent();
         }
 
-        return Checkbox::make()
-            ->attribute('data-check-all', "#{$this->grid->getId()}")
-            ->render();
+        return Checkbox::make()->attribute('data-check-all', "#{$this->grid->getId()}");
     }
 
     #[Override]
-    protected function renderDataCellContent($model, $key, $index): string
+    protected function renderDataCellContent(Model $model, string|int $key, int $index): string|Stringable
     {
         if ($this->content !== null) {
             return parent::renderDataCellContent($model, $key, $index);
@@ -49,12 +59,11 @@ class CheckboxColumn extends Column
         return Checkbox::make()
             ->attribute('data-check', $this->multiple ? 'multiple' : 'single')
             ->addAttributes($this->checkboxAttributes)
-            ->name($this->name)
-            ->render();
+            ->name($this->name);
     }
 
-    public function registerClientScript(): void
+    protected function registerClientScript(): void
     {
-        $this->grid->getView()->registerAssetBundle(SelectableAssetBundle::class);
+        Yii::$app->getView()->registerAssetBundle(SelectableAssetBundle::class);
     }
 }

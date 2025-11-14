@@ -15,19 +15,24 @@ class Column
     public function __construct(
         protected readonly GridView $grid,
         protected string|null|Closure $content = null,
-        protected array|Closure $contentAttributes = [],
+        protected array|null|Closure $contentAttributes = null,
         protected ?string $header = null,
-        protected array $headerAttributes = [],
-        protected bool $visible = true,
+        protected ?array $headerAttributes = null,
+        public bool $visible = true,
         protected string $emptyCell = '&nbsp;',
     ) {
+        $this->init();
     }
 
-    public function renderHeaderCell(): Td
+    protected function init(): void
+    {
+    }
+
+    public function renderHeader(): Td
     {
         return Td::make()
             ->html($this->renderHeaderCellContent())
-            ->attributes($this->headerAttributes);
+            ->attributes($this->headerAttributes ?? []);
     }
 
     protected function renderHeaderCellContent(): string|Stringable
@@ -35,7 +40,7 @@ class Column
         return $this->header ?? $this->emptyCell;
     }
 
-    public function renderDataCell(Model $model, string|int $key, int $index): Td
+    public function renderBody(Model $model, string|int $key, int $index): Td
     {
         $attributes = $this->contentAttributes instanceof Closure
             ? call_user_func($this->contentAttributes, $model, $key, $index, $this)
@@ -43,7 +48,7 @@ class Column
 
         return Td::make()
             ->html($this->renderDataCellContent($model, $key, $index))
-            ->attributes($attributes);
+            ->attributes($attributes ?? []);
     }
 
     protected function renderDataCellContent(Model $model, string|int $key, int $index): string|Stringable

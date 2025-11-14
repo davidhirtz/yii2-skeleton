@@ -30,7 +30,7 @@ class CounterColumn extends LinkDataColumn
     /**
      * @var array contains the HTML attributes for the link or wrapper
      */
-    public array $wrapperOptions = ['class' => 'badge'];
+    public array $wrapperAttributes = ['class' => 'badge'];
 
     /**
      * @var string the value to be displayed when the count is 0 or not set

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\web;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use Override;
 use Yii;
 use yii\helpers\Json;
 use yii\helpers\Url;
@@ -27,7 +28,7 @@ class View extends \yii\web\View
     private string|null $description = null;
     private string $jsImportName = 'a';
 
-    #[\Override]
+    #[Override]
     protected function renderBodyEndHtml($ajaxMode): string
     {
         // jQuery is no longer supported

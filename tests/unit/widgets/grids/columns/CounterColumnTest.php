@@ -22,17 +22,17 @@ class CounterColumnTest extends Unit
         };
 
         $expects = '<td class="d-none d-md-table-cell text-center"><div class="badge">100</div></td>';
-        self::assertEquals($expects, $column->renderDataCell($model, 0, 0));
+        self::assertEquals($expects, $column->renderBody($model, 0, 0));
 
         $model->count = 1000;
 
         $expects = '<td class="d-none d-md-table-cell text-center"><div class="badge">1,000</div></td>';
-        self::assertEquals($expects, $column->renderDataCell($model, 0, 0));
+        self::assertEquals($expects, $column->renderBody($model, 0, 0));
 
         $model->count = 0;
 
         $expects = '<td class="d-none d-md-table-cell text-center"></td>';
-        self::assertEquals($expects, $column->renderDataCell($model, 0, 0));
+        self::assertEquals($expects, $column->renderBody($model, 0, 0));
     }
 
     public function testRouteAttribute(): void
@@ -49,14 +49,14 @@ class CounterColumnTest extends Unit
         ]);
 
         $expects = '<td class="d-none d-md-table-cell text-center"><a class="badge" href="/view?id=1">10</a></td>';
-        self::assertEquals($expects, $column->renderDataCell($model, 0, 0));
+        self::assertEquals($expects, $column->renderBody($model, 0, 0));
 
         $column = $this->createCounterColumn([
             'route' => '/static',
         ]);
 
         $expects = '<td class="d-none d-md-table-cell text-center"><a class="badge" href="/static">10</a></td>';
-        self::assertEquals($expects, $column->renderDataCell($model, 0, 0));
+        self::assertEquals($expects, $column->renderBody($model, 0, 0));
     }
 
     protected function createCounterColumn(array $options = []): CounterColumn
