@@ -12,8 +12,8 @@ use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
 use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\DeleteButton;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\ViewButton;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\DeleteGridButton;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\ViewGridButton;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\CheckboxColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\TimeagoColumn;
@@ -57,12 +57,6 @@ class RedirectGridView extends GridView
             $this->getUpdatedAtColumn(),
             $this->getButtonColumn(),
         ];
-
-        if ($this->showSelection) {
-            array_unshift($this->columns, [
-                'class' => CheckboxColumn::class,
-            ]);
-        }
 
         $this->footer ??= [
             $this->getCreateButton(),
@@ -140,9 +134,9 @@ class RedirectGridView extends GridView
     protected function getButtonColumnContent(Redirect $redirect): array
     {
         return [
-            ViewButton::make()
+            ViewGridButton::make()
                 ->model($redirect),
-            DeleteButton::make()
+            DeleteGridButton::make()
                 ->model($redirect),
         ];
     }

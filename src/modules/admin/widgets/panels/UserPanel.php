@@ -7,22 +7,22 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\panels;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Modal;
-use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
-use davidhirtz\yii2\skeleton\widgets\panels\HelpPanel;
+use davidhirtz\yii2\skeleton\widgets\panels\Panel;
+use davidhirtz\yii2\skeleton\widgets\traits\UserWidgetTrait;
+use davidhirtz\yii2\skeleton\widgets\Widget;
+use Stringable;
 use Yii;
 use yii\helpers\Json;
 
-class UserHelpPanel extends HelpPanel
+class UserPanel extends Widget
 {
-    public ?User $user = null;
+    use UserWidgetTrait;
 
-    #[\Override]
-    public function init(): void
+    protected function renderContent(): string|Stringable
     {
-        $this->content ??= $this->renderButtonToolbar(array_filter($this->getButtons()));
-
-        parent::init();
+        return Panel::make()
+            ->buttons(...$this->getButtons());
     }
 
     protected function getButtons(): array
@@ -38,41 +38,35 @@ class UserHelpPanel extends HelpPanel
     /**
      * @see UserController::actionDeletePicture()
      */
-    protected function getDeletePictureButton(): string
+    protected function getDeletePictureButton(): ?Stringable
     {
-        if (!$this->user->picture) {
-            return '';
-        }
-
-        return Button::make()
-            ->primary()
-            ->text(Yii::t('skeleton', 'Delete picture'))
-            ->icon('portrait')
-            ->post(['delete-picture', 'id' => $this->user->id])
-            ->render();
+        return $this->user->picture
+            ? Button::make()
+                ->primary()
+                ->text(Yii::t('skeleton', 'Delete picture'))
+                ->icon('portrait')
+                ->post(['delete-picture', 'id' => $this->user->id])
+            : null;
     }
 
     /**
      * @see UserController::actionDisableGoogleAuthenticator()
      */
-    protected function getDisableGoogleAuthenticatorButton(): string
+    protected function getDisableGoogleAuthenticatorButton(): ?Stringable
     {
-        if (!$this->user->google_2fa_secret) {
-            return '';
-        }
-
-        return Button::make()
-            ->primary()
-            ->text(Yii::t('skeleton', 'Disable 2FA'))
-            ->icon('qrcode')
-            ->post(['disable-google-authenticator', 'id' => $this->user->id])
-            ->render();
+        return $this->user->google_2fa_secret
+            ? Button::make()
+                ->primary()
+                ->text(Yii::t('skeleton', 'Disable 2FA'))
+                ->icon('qrcode')
+                ->post(['disable-google-authenticator', 'id' => $this->user->id])
+            : null;
     }
 
     /**
      * @see UserController::actionReset()
      */
-    protected function getCreatePasswordResetLinkButton(): string
+    protected function getCreatePasswordResetLinkButton(): Stringable
     {
         $modal = Modal::make()
             ->title(Yii::t('skeleton', 'Create password link'))
@@ -87,14 +81,13 @@ class UserHelpPanel extends HelpPanel
             ->primary()
             ->text(Yii::t('skeleton', 'Create password link'))
             ->icon('key')
-            ->modal($modal)
-            ->render();
+            ->modal($modal);
     }
 
-    protected function getPasswordResetLinkButton(): string
+    protected function getPasswordResetLinkButton(): ?Stringable
     {
         if (!$this->user->password_reset_token) {
-            return '';
+            return null;
         }
 
         $url = $this->user->getPasswordResetUrl();
@@ -114,7 +107,6 @@ class UserHelpPanel extends HelpPanel
             ->primary()
             ->text(Yii::t('skeleton', 'Show password link'))
             ->icon('clipboard')
-            ->modal($modal)
-            ->render();
+            ->modal($modal);
     }
 }

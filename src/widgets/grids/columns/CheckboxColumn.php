@@ -13,14 +13,9 @@ use yii\base\Model;
 
 class CheckboxColumn extends Column
 {
-    public function __construct(
-        protected array $checkboxAttributes = [],
-        protected bool $multiple = true,
-        protected string $name = 'selection[]',
-        ...$args,
-    ) {
-        parent::__construct(...$args);
-    }
+    public array $checkboxAttributes = [];
+    protected bool $multiple = true;
+    protected string $name = 'selection[]';
 
     protected function init(): void
     {
@@ -29,6 +24,18 @@ class CheckboxColumn extends Column
         }
 
         $this->registerClientScript();
+    }
+
+    public function multiple(bool $multiple = true): static
+    {
+        $this->multiple = $multiple;
+        return $this;
+    }
+
+    public function name(string $name): static
+    {
+        $this->name = $name;
+        return $this;
     }
 
     #[Override]

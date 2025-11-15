@@ -4,77 +4,69 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\panels;
 
+use davidhirtz\yii2\skeleton\html\ButtonToolbar;
 use davidhirtz\yii2\skeleton\html\Card;
-use davidhirtz\yii2\skeleton\html\Container;
+use davidhirtz\yii2\skeleton\html\Div;
+use davidhirtz\yii2\skeleton\html\traits\TagCardTrait;
+use davidhirtz\yii2\skeleton\widgets\grids\traits\GridTrait;
+use davidhirtz\yii2\skeleton\widgets\traits\ContainerWidgetTrait;
+use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
+use Yii;
 
-class Panel implements Stringable
+class Panel extends Widget
 {
-    final public const string TYPE_DEFAULT = 'default';
-    final public const string TYPE_DANGER = 'danger';
+    use ContainerWidgetTrait;
+    use GridTrait;
+    use TagCardTrait;
 
-    public ?string $content = null;
-    public ?bool $collapsed = null;
-    public ?string $id = null;
-    public ?string $title = null;
-    public string $type = self::TYPE_DEFAULT;
+    public array $panelAttributes = ['class' => 'form-group form-group-horizontal'];
+    public array $contentOptions = ['class' => 'col-form-content'];
 
-    public function content(?string $content): static
+    protected array $buttons = [];
+
+    public function init(): void
     {
-        $this->content = $content;
+        $this->title ??= Yii::t('skeleton', 'Operations');
+        parent::init();
+    }
+
+    public function buttons(Stringable|string ...$buttons): static
+    {
+        $this->buttons = $buttons;
         return $this;
     }
 
-    public function collapsed(?bool $collapsed): static
+    public function addButton(Stringable|string $button): static
     {
-        $this->collapsed = $collapsed;
+        $this->buttons[] = $button;
         return $this;
     }
 
-    public function id(?string $id): static
+    protected function renderContent(): string|Stringable
     {
-        $this->id = $id;
-        return $this;
-    }
-
-    public function title(?string $title): static
-    {
-        $this->title = $title;
-        return $this;
-    }
-
-    public function type(string $type): static
-    {
-        $this->type = $type;
-        return $this;
-    }
-
-    public function render(): string
-    {
-        return $this->content
-            ? Container::make()
-                ->attribute('id', $this->id)
-                ->content($this->renderContent())
-                ->render()
+        return $this->content || $this->buttons
+            ? Card::make()
+                ->title($this->title)
+                ->collapsed($this->collapsed)
+                ->content($this->getPanel())
             : '';
     }
 
-    protected function renderContent(): string
+    protected function getPanel(): Stringable
     {
-        $card = Card::make()
-            ->title($this->title)
-            ->content($this->content)
-            ->collapsed($this->collapsed);
+        $content = Div::make()
+            ->attributes($this->contentOptions)
+            ->content(...$this->content);
 
-        if ($this->type === self::TYPE_DANGER) {
-            $card->danger();
+        if ($this->buttons) {
+            $content->addContent(
+                ButtonToolbar::make()
+                    ->content(...$this->buttons));
         }
 
-        return $card->render();
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
+        return Div::make()
+            ->attributes($this->panelAttributes)
+            ->content($content);
     }
 }

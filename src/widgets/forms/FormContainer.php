@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
 use davidhirtz\yii2\skeleton\html\Card;
-use davidhirtz\yii2\skeleton\html\traits\TagCollapsedTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagTitleTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagCardTrait;
 use davidhirtz\yii2\skeleton\widgets\traits\ContainerWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
@@ -14,8 +13,7 @@ use Stringable;
 class FormContainer extends Widget
 {
     use ContainerWidgetTrait;
-    use TagCollapsedTrait;
-    use TagTitleTrait;
+    use TagCardTrait;
 
     private string $form;
 
@@ -26,11 +24,6 @@ class FormContainer extends Widget
     {
         $this->form = $form;
         return $this;
-    }
-
-    public function danger(): static
-    {
-        return $this->addClass('card-danger');
     }
 
     protected function renderContent(): Stringable

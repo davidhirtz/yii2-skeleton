@@ -12,7 +12,7 @@ trait TagIconTextTrait
 {
     use TagContentTrait;
 
-    private ?Icon $icon = null;
+    protected ?Icon $icon = null;
 
     public function icon(string|Icon|null $icon, array $attributes = []): static
     {

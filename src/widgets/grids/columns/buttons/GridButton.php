@@ -5,23 +5,18 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\grids\columns\buttons;
 
 use davidhirtz\yii2\skeleton\base\traits\ContainerConfigurationTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagIconTextTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use yii\db\ActiveRecord;
 
 abstract class GridButton extends Widget
 {
     use ContainerConfigurationTrait;
+    use TagIconTextTrait;
 
-    protected ?string $icon = null;
     protected ?string $label = null;
     protected ?ActiveRecord $model = null;
-    protected array|null $url = null;
-
-    public function icon(string|null $icon): static
-    {
-        $this->icon = $icon;
-        return $this;
-    }
+    protected array|null $href = null;
 
     public function label(string $label): static
     {
@@ -35,9 +30,9 @@ abstract class GridButton extends Widget
         return $this;
     }
 
-    public function url(array|null $url): static
+    public function href(array|null $href): static
     {
-        $this->url = $url;
+        $this->href = $href;
         return $this;
     }
 }

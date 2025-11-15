@@ -5,26 +5,17 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\html;
 
 use davidhirtz\yii2\skeleton\html\base\Tag;
-use davidhirtz\yii2\skeleton\html\traits\TagCollapsedTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagTitleTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagCardTrait;
 use Override;
 use Yii;
 
 class Card extends Tag
 {
-    use TagCollapsedTrait;
-    use TagContentTrait;
-    use TagTitleTrait;
+    use TagCardTrait;
 
     public array $attributes = [
         'class' => 'card',
     ];
-
-    public function danger(): static
-    {
-        return $this->addClass('card-danger');
-    }
 
     protected function prepareAttributes(): void
     {

@@ -4,29 +4,41 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\panels;
 
-use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
-use davidhirtz\yii2\skeleton\widgets\panels\HelpPanel;
+use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\widgets\panels\Panel;
+use davidhirtz\yii2\skeleton\widgets\Widget;
+use Stringable;
 use Yii;
 
-class UserOwnerPanel extends HelpPanel
+class UserOwnerPanel extends Widget
 {
-    public string $type = self::TYPE_DANGER;
 
-    #[\Override]
-    public function init(): void
+    protected function renderContent(): string|Stringable
     {
-        $this->title ??= Yii::t('skeleton', 'Transfer Ownership');
+        return Panel::make()
+            ->danger()
+            ->title($this->getTitle())
+            ->content($this->getContent())
+            ->buttons(...$this->getButtons());
+    }
 
-        $content = Yii::t('skeleton', 'You are currently the owner of this website, do you want to transfer the website ownership?');
+    protected function getTitle(): string
+    {
+        return Yii::t('skeleton', 'Transfer Ownership');
+    }
 
-        /** @see UserController::actionOwnership() */
-        $button = Html::a(Yii::t('skeleton', 'Transfer Ownership'), ['ownership'], [
-            'class' => 'btn btn-danger',
-        ]);
+    protected function getContent(): string
+    {
+        return Yii::t('skeleton', 'You are currently the owner of this website, do you want to transfer the website ownership?');
+    }
 
-        $this->content ??= $this->renderHelpBlock($content) . $this->renderButtonToolbar($button);
-
-        parent::init();
+    protected function getButtons(): array
+    {
+        return [
+            Button::make()
+                ->danger()
+                ->text(Yii::t('skeleton', 'Transfer Ownership'))
+                ->href(['ownership'])
+        ];
     }
 }

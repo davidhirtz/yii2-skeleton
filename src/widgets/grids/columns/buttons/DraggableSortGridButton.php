@@ -6,7 +6,7 @@ namespace davidhirtz\yii2\skeleton\widgets\grids\columns\buttons;
 
 use davidhirtz\yii2\skeleton\html\Button;
 
-class DraggableSortButton extends GridButton
+class DraggableSortGridButton extends GridButton
 {
     public function renderContent(): string
     {

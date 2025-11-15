@@ -14,7 +14,7 @@ use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\panels\UserDeletePanel;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\panels\UserHelpPanel;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\panels\UserPanel;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 use davidhirtz\yii2\skeleton\widgets\forms\FormContainer;
@@ -36,9 +36,8 @@ echo FormContainer::make()
     ]));
 
 
-echo UserHelpPanel::widget([
-    'user' => $form->user,
-]);
+echo UserPanel::make()
+->user($form->user);
 
 if (Yii::$app->getUser()->can(User::AUTH_USER_DELETE, ['user' => $form->user])) {
     echo UserDeletePanel::widget([
