@@ -16,7 +16,7 @@ use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 
 $this->setTitle(Yii::t('skeleton', 'Google Authenticator'));
 
-echo ErrorSummary::forModel($form)
+echo ErrorSummary::make()->models($form)
     ->title(Yii::t('skeleton', 'Login unsuccessful'));
 
 echo Container::make()

@@ -25,7 +25,7 @@ use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 $this->setTitle(Yii::t('skeleton', 'Login'));
 ?>
 
-<?= ErrorSummary::forModel($form)
+<?= ErrorSummary::make()->models($form)
     ->title(Yii::t('skeleton', 'Login unsuccessful')); ?>
 
 <noscript>

@@ -20,7 +20,7 @@ use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 $this->setTitle(Yii::t('skeleton', 'Sign up'));
 ?>
 
-<?= ErrorSummary::forModel($form)
+<?= ErrorSummary::make()->models($form)
     ->title(Yii::t('skeleton', 'Your account could not be created')); ?>
 
     <noscript>

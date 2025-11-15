@@ -26,11 +26,6 @@ class ErrorSummary extends Widget
      */
     protected array $models = [];
 
-    public static function forModel(Model $model): static
-    {
-        return static::make()->models($model);
-    }
-
     public function icon(string|null $icon): static
     {
         $this->icon = $icon;

@@ -20,7 +20,7 @@ use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Recover Password'));
 
-echo ErrorSummary::forModel($form)
+echo ErrorSummary::make()->models($form)
     ->title(Yii::t('skeleton', 'Your password could not be reset'));
 
 echo Container::make()

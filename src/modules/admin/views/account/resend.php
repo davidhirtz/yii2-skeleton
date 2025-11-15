@@ -21,7 +21,7 @@ use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Resend Account Confirmation'));
 
-echo ErrorSummary::forModel($form)
+echo ErrorSummary::make()->models($form)
     ->title(Yii::t('skeleton', 'Your confirmation could not be resend'));
 
 echo Container::make()

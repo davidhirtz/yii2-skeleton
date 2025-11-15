@@ -26,7 +26,7 @@ echo UserSubmenu::widget([
     'user' => $form->user,
 ]);
 
-echo ErrorSummary::forModel($form)
+echo ErrorSummary::make()->models($form)
     ->title(Yii::t('skeleton', 'The user could not be updated'));
 
 echo Panel::widget([

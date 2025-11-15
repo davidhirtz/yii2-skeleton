@@ -20,7 +20,7 @@ $this->setTitle($form->user->password_hash
     ? Yii::t('skeleton', 'Set New Password')
     : Yii::t('skeleton', 'Create Password'));
 
-echo ErrorSummary::forModel($form)
+echo ErrorSummary::make()->models($form)
     ->title(Yii::t('skeleton', 'Your password could not be saved'));
 
 echo Container::make()
