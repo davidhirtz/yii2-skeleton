@@ -125,7 +125,9 @@ class SystemController extends Controller
 
     public function actionDelete(string $log): Response|string
     {
-        $provider = $this->getLogDataProvider($log);
+        $provider = Yii::$container->get(LogDataProvider::class, config: [
+            'file' => $log,
+        ]);
 
         if (!$provider->isFileValid()) {
             throw new NotFoundHttpException();
@@ -137,7 +139,7 @@ class SystemController extends Controller
 
     protected function getLogDataProvider(?string $file = null): LogDataProvider
     {
-        return Yii::$container->get(LogDataProvider::class, [], [
+        return Yii::$container->get(LogDataProvider::class, config: [
             'file' => $file,
         ]);
     }

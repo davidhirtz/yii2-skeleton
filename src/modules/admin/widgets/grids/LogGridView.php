@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Div;
+use davidhirtz\yii2\skeleton\html\Pre;
+use davidhirtz\yii2\skeleton\models\Log;
 use davidhirtz\yii2\skeleton\modules\admin\data\LogDataProvider;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
@@ -13,7 +16,7 @@ use Override;
 use Yii;
 
 /**
- * @property LogDataProvider|null $provider
+ * @property LogDataProvider $provider
  */
 class LogGridView extends GridView
 {
@@ -27,8 +30,6 @@ class LogGridView extends GridView
     #[Override]
     public function init(): void
     {
-        $this->provider ??= Yii::createObject(LogDataProvider::class);
-
         $this->columns ??= [
             $this->getDateColumn(),
             $this->getLevelColumn(),
@@ -64,18 +65,28 @@ class LogGridView extends GridView
     {
         return Column::make()
             ->header(Yii::t('skeleton', 'Error'))
-            ->content(function ($model) {
-                $html = Html::tag('div', Html::encode(trim((string)$model['message'])), ['class' => 'strong']);
+            ->content(function (Log $log): array {
 
-                if (isset($model['category'])) {
-                    $html .= Html::tag('div', Html::encode($model['category']), ['class' => 'small']);
+                $content = [
+                    Div::make()
+                        ->text($log->message)
+                        ->class('strong'),
+                ];
+
+                if ($log->category) {
+                    $content[] = Div::make()
+                        ->text($log->category)
+                        ->class('small');
                 }
 
-                if (isset($model['vars'])) {
-                    $html .= Html::tag('pre', Html::encode(rtrim((string)$model['vars'])), ['class' => 'small']);
+                if ($log->content) {
+                    $content[] = Div::make()
+                        ->content(Pre::make()
+                            ->text(rtrim($log->content))
+                            ->class('small'));
                 }
 
-                return $html;
+                return $content;
             });
     }
 

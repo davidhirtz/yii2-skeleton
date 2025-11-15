@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController;
 use davidhirtz\yii2\skeleton\modules\admin\data\LogFileArrayDataProvider;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
@@ -67,6 +68,10 @@ class LogFileGridView extends GridView
             ->header(Yii::t('skeleton', 'Last Update'));
     }
 
+    /**
+     * @see SystemController::actionView()
+     * @see SystemController::actionDelete()
+     */
     protected function getButtonColumn(): ButtonColumn
     {
         return ButtonColumn::make()
