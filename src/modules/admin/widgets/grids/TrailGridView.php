@@ -6,17 +6,22 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\A;
+use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\models\collections\TrailModelCollection;
 use davidhirtz\yii2\skeleton\models\interfaces\TrailModelInterface;
 use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\TrailActiveDataProvider;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\TimeagoColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\widgets\grids\traits\MessageSourceTrait;
 use davidhirtz\yii2\skeleton\widgets\grids\traits\TypeGridViewTrait;
-use davidhirtz\yii2\timeago\TimeagoColumn;
+use davidhirtz\yii2\skeleton\widgets\Username;
 use Jfcherng\Diff\DiffHelper;
 use Override;
+use Stringable;
 use Yii;
 use yii\base\Model;
 use yii\db\ActiveRecordInterface;
@@ -44,10 +49,10 @@ class TrailGridView extends GridView
 
         $this->columns ??= [
             $this->getTypeIconColumn(),
-            $this->modelColumn(),
-            $this->dataColumn(),
-            $this->userColumn(),
-            $this->createdAtColumn(),
+            $this->getModelColumn(),
+            $this->getDataColumn(),
+            $this->getUserColumn(),
+            $this->getCreatedAtColumn(),
         ];
 
         $this->messageSourceAttribute = 'message';
@@ -55,60 +60,73 @@ class TrailGridView extends GridView
         parent::init();
     }
 
-    protected function modelColumn(): array
+    protected function getModelColumn(): DataColumn
     {
-        return [
-            'attribute' => 'model',
-            'contentOptions' => ['style' => 'width:300px'],
-            'visible' => !$this->provider->model,
-            'content' => function (Trail $trail): string {
-                if ($trail->model) {
-                    $model = $trail->getModelClass();
-                    $isModel = $model instanceof ActiveRecord && !$model->getIsNewRecord();
-                    $tag = $isModel ? 'strong' : 'em';
-                    $type = $isModel ? $trail->getModelType() : false;
+        return DataColumn::make()
+            ->property('model')
+            ->content($this->getModelColumnContent(...))
+            ->contentAttributes(['style' => 'width:300px'])
+            ->visible(!$this->provider->model);
+    }
 
-                    return Html::a(Html::tag($tag, $trail->getModelName()), $this->getTrailModelRoute($trail)) .
-                        ($type ? Html::tag('div', $type, ['class' => 'small']) : '');
-                }
+    protected function getModelColumnContent(Trail $trail): array|string
+    {
+        if ($trail->model) {
+            $model = $trail->getModelClass();
+            $isModel = $model instanceof ActiveRecord && !$model->getIsNewRecord();
 
-                return '';
+            $content = [
+                A::make()
+                    ->content($trail->getModelName())
+                    ->href($this->getTrailModelRoute($trail))
+                    ->class($isModel ? 'strong' : 'italic'),
+            ];
+
+            $type = $isModel ? $trail->getModelType() : false;
+
+            if ($type) {
+                $content[] = Div::make()
+                    ->content($type)
+                    ->class('small');
             }
-        ];
+
+            return $content;
+        }
+
+        return '';
     }
 
-    protected function dataColumn(): array
+    protected function getDataColumn(): DataColumn
     {
-        return [
-            'attribute' => 'data',
-            'content' => $this->dataColumnContent(...),
-        ];
+        return DataColumn::make()
+            ->property('data')
+            ->content($this->getDataColumnContent(...));
     }
 
-    protected function dataColumnContent(Trail $trail): string
+    protected function getDataColumnContent(Trail $trail): string
     {
         if ($trail->isAuthPermissionType()) {
-            return $this->renderAuthPermissionContent($trail);
+            return $this->getAuthPermissionContent($trail);
         }
 
         if ($trail->hasAttributesEnabled()) {
             if ($trail->isCreateType()) {
-                return $this->renderCreateAttributesContent($trail);
+                return $this->getCreateAttributesContent($trail);
             }
 
             if ($trail->isUpdateType()) {
-                return $this->renderUpdateAttributesContent($trail);
+                return $this->getUpdateAttributesContent($trail);
             }
         }
 
         if ($trail->hasDataModelEnabled()) {
-            return $this->renderDataModelContent($trail);
+            return $this->getDataModelContent($trail);
         }
 
-        return $this->renderMessageContent($trail);
+        return $this->getMessageContent($trail);
     }
 
-    protected function renderAuthPermissionContent(Trail $trail): string
+    protected function getAuthPermissionContent(Trail $trail): string
     {
         $params = [
             'permission' => Html::tag($trail->isAuthPermissionAssignType() ? 'ins' : 'del', $this->getTranslations()[$trail->message] ?? $trail->message),
@@ -118,7 +136,7 @@ class TrailGridView extends GridView
             Yii::t('skeleton', 'Permission {permission} revoked', $params);
     }
 
-    protected function renderCreateAttributesContent(Trail $trail): string
+    protected function getCreateAttributesContent(Trail $trail): string
     {
         $model = $trail->getModelClass();
         $rows = [];
@@ -131,24 +149,24 @@ class TrailGridView extends GridView
                 }
 
                 if ($value) {
-                    $rows[] = [$attribute, $this->renderCreatedAttributeValue($value)];
+                    $rows[] = [$attribute, $this->getCreatedAttributeValue($value)];
                 }
             }
         }
 
-        return $this->renderTrailAttributes($rows, ['class' => 'trail-insert']);
+        return $this->getTrailAttributes($rows, ['class' => 'trail-insert']);
     }
 
-    protected function renderCreatedAttributeValue(mixed $value): string
+    protected function getCreatedAttributeValue(mixed $value): string
     {
         if ($value instanceof ActiveRecord) {
-            return $this->renderTrailActiveRecordAttribute($value);
+            return $this->getTrailActiveRecordAttribute($value);
         }
 
         return is_array($value) ? Html::ul($value, ['class' => 'list-unstyled']) : Html::encode($value);
     }
 
-    protected function renderUpdateAttributesContent(Trail $trail): string
+    protected function getUpdateAttributesContent(Trail $trail): string
     {
         $model = $trail->getModelClass();
         $rows = [];
@@ -161,20 +179,20 @@ class TrailGridView extends GridView
                 }
 
                 if ($values[0] !== $values[1]) {
-                    $rows[] = [$attribute, $this->renderUpdatedAttributeValues($values[0], $values[1])];
+                    $rows[] = [$attribute, $this->getUpdatedAttributeValues($values[0], $values[1])];
                 }
             }
         }
 
-        return $this->renderTrailAttributes($rows, ['class' => 'trail-update']);
+        return $this->getTrailAttributes($rows, ['class' => 'trail-update']);
     }
 
-    protected function renderUpdatedAttributeValues(mixed $oldValue, mixed $newValue): string
+    protected function getUpdatedAttributeValues(mixed $oldValue, mixed $newValue): string
     {
         if ($oldValue instanceof ActiveRecord || $newValue instanceof ActiveRecord) {
             $cells = [
-                Html::tag('td', $this->renderTrailActiveRecordAttribute($oldValue), ['class' => 'old']),
-                Html::tag('td', $this->renderTrailActiveRecordAttribute($newValue), ['class' => 'new']),
+                Html::tag('td', $this->getTrailActiveRecordAttribute($oldValue), ['class' => 'old']),
+                Html::tag('td', $this->getTrailActiveRecordAttribute($newValue), ['class' => 'new']),
             ];
 
             $content = Html::tag('tr', implode('', $cells));
@@ -197,7 +215,7 @@ class TrailGridView extends GridView
         ]);
     }
 
-    protected function renderTrailActiveRecordAttribute(?ActiveRecord $model): string
+    protected function getTrailActiveRecordAttribute(?ActiveRecord $model): string
     {
         if (!$model?->getPrimaryKey()) {
             return '';
@@ -208,18 +226,18 @@ class TrailGridView extends GridView
         return Html::a($name, Trail::getAdminRouteByModel($model), ['class' => 'strong']);
     }
 
-    protected function renderTrailAttributes(array $rows, array $options = []): string
+    protected function getTrailAttributes(array $rows, array $options = []): string
     {
         Html::addCssClass($options, 'trail-table');
         return $rows ? Html::tag('table', Html::tableBody($rows), $options) : '';
     }
 
-    protected function renderDataModelContent(Trail $trail): string
+    protected function getDataModelContent(Trail $trail): string
     {
         return $this->renderI18nTrailMessage($trail, $trail->getDataModelClass());
     }
 
-    protected function renderMessageContent(Trail $trail): string
+    protected function getMessageContent(Trail $trail): string
     {
         if ($trail->message) {
             return trim(($this->getTranslations()[$trail->message] ?? $trail->message) . ' ' . $this->renderDataTrailLink($trail));
@@ -249,40 +267,14 @@ class TrailGridView extends GridView
         return trim($message . ' ' . $this->renderDataTrailLink($trail));
     }
 
-    protected function userColumn(): array
+    protected function getUserColumn(): DataColumn
     {
-        return [
-            'attribute' => 'user_id',
-            'headerOptions' => ['class' => 'd-none d-md-table-cell'],
-            'contentOptions' => ['class' => 'd-none d-md-table-cell text-nowrap'],
-            'visible' => !$this->provider->user,
-            'content' => function (Trail $trail) {
-                if (!$trail->user_id) {
-                    return '';
-                }
-
-                if ($trail->user) {
-                    return Html::username($trail->user, ['index', 'user' => $trail->user_id]);
-                }
-
-                $name = Yii::t('skeleton', '{model} #{id}', [
-                    'model' => Yii::t('skeleton', 'User'),
-                    'id' => $trail->user_id,
-                ]);
-
-                return Html::a($name, ['index', 'model' => User::class . ':' . $trail->user_id]);
-            }
-        ];
-    }
-
-    protected function createdAtColumn(): array
-    {
-        return [
-            'class' => TimeagoColumn::class,
-            'attribute' => 'created_at',
-            'contentOptions' => ['class' => 'text-nowrap'],
-            'displayAtBreakpoint' => 'md',
-        ];
+        return DataColumn::make()
+            ->property('user_id')
+            ->content($this->getUserColumnContent(...))
+            ->visible(!$this->provider->user)
+            ->hiddenForSmallDevices()
+            ->nowrap();
     }
 
     protected function renderDataTrailLink(Trail $trail): string
@@ -306,6 +298,33 @@ class TrailGridView extends GridView
             : TrailModelCollection::formatAttributeValue($model, $attribute, $value);
     }
 
+    protected function getUserColumnContent(Trail $trail): string|Stringable
+    {
+        if (!$trail->user_id) {
+            return '';
+        }
+
+        if ($trail->user) {
+            return Username::make()
+                ->user($trail->user)
+                ->href(['index', 'user' => $trail->user_id]);
+        }
+
+        return A::make()
+            ->href(['index', 'model' => User::class . ":$trail->user_id"])
+            ->content(Yii::t('skeleton', '{model} #{id}', [
+                'model' => Yii::t('skeleton', 'User'),
+                'id' => $trail->user_id,
+            ]));
+    }
+
+    protected function getCreatedAtColumn(): TimeagoColumn
+    {
+        return TimeagoColumn::make()
+            ->property('created_at')
+            ->hiddenForSmallDevices();
+    }
+
     #[Override]
     protected function getRoute(ActiveRecordInterface $model, array $params = []): array|false
     {
@@ -315,5 +334,10 @@ class TrailGridView extends GridView
     protected function getTrailModelRoute(Trail $trail): ?array
     {
         return ['index', 'model' => implode('@', array_filter([$trail->model, (string)$trail->model_id]))];
+    }
+
+    public function getModel(): Trail
+    {
+        return Trail::instance();
     }
 }

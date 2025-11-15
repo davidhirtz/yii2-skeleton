@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\html\base;
 
+use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
 use Stringable;
 
 abstract class Tag implements Stringable
 {
+    use TagAttributesTrait;
     use TagIdTrait;
 
     final public function __construct()
@@ -35,7 +37,7 @@ abstract class Tag implements Stringable
         return '<' . $this->getTagName() . $this->renderAttributes() . '>' . $this->renderContent() . '</' . $this->getTagName() . '>';
     }
 
-    protected function renderContent(): string
+    protected function renderContent(): string|Stringable
     {
         return '';
     }

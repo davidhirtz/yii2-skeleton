@@ -44,7 +44,7 @@ trait TagContentTrait
         return [] !== array_filter($this->content);
     }
 
-    protected function renderContent(): string
+    protected function renderContent(): string|Stringable
     {
         return implode('', $this->content);
     }

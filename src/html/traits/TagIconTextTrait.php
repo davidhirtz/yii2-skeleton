@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\html\traits;
 
+use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Icon;
+use Stringable;
 
 trait TagIconTextTrait
 {
@@ -18,18 +20,21 @@ trait TagIconTextTrait
             ? ($icon instanceof Icon ? $icon : Icon::make()->name($icon))
                 ->addAttributes($attributes)
             : null;
-        
+
         return $this;
     }
 
-    protected function renderContent(): string
+    protected function renderContent(): string|Stringable
     {
-        $html = implode('', $this->content);
-
-        if ($this->icon && $html) {
-            return '<div class="icon-text">' . $this->icon->render() . "<div>$html</div></div>";
+        if ($this->icon && $this->content) {
+            return Div::make()
+                ->class('icon-text')
+                ->addContent($this->icon)
+                ->addContent(
+                    Div::make()
+                        ->content(...$this->content));
         }
 
-        return $this->icon?->render() ?? $html;
+        return $this->icon ?? implode('', $this->content);
     }
 }

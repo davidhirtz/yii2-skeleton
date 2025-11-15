@@ -9,13 +9,14 @@ use davidhirtz\yii2\skeleton\html\Card;
 use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
-use davidhirtz\yii2\skeleton\widgets\traits\ContainerTrait;
+use davidhirtz\yii2\skeleton\widgets\traits\ContainerWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 
 class Panel extends Widget
 {
     use ContainerConfigurationTrait;
-    use ContainerTrait;
+    use ContainerWidgetTrait;
+    use TagAttributesTrait;
     use TagContentTrait;
     use TagIdTrait;
 

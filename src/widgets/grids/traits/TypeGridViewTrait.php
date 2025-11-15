@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\grids\traits;
 
-use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\interfaces\TypeAttributeInterface;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\LinkColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\FilterDropdown;
+use Stringable;
 use Yii;
 use yii\db\ActiveRecordInterface;
 
@@ -22,7 +23,7 @@ trait TypeGridViewTrait
         return LinkColumn::make()
             ->property('typeName')
             ->visible($this->hasVisibleTypes())
-            ->href($this->getRoute(...))
+            ->href(fn (ActiveRecordInterface&TypeAttributeInterface $model) => $this->getRoute($model))
             ->nowrap();
     }
 
@@ -31,15 +32,22 @@ trait TypeGridViewTrait
         return LinkColumn::make()
             ->property('type')
             ->header(false)
-            ->href($this->getRoute(...))
-            ->content($this->getTypeColumnContent(...))
+            ->href(fn (ActiveRecordInterface&TypeAttributeInterface $model) => $this->getRoute($model))
+            ->content($this->getTypeIconColumnContent(...))
             ->visible($this->hasVisibleTypes())
             ->centered();
     }
 
-    protected function getTypeColumnContent(ActiveRecordInterface&TypeAttributeInterface $model): string
+    protected function getTypeIconColumnContent(TypeAttributeInterface $model): Stringable
     {
-        return $this->getTypeIcon($model);
+        return Icon::make()
+            ->name($this->getTypeIcon($model))
+            ->tooltip($model->getTypeName());
+    }
+
+    protected function getTypeIcon(TypeAttributeInterface $model): string
+    {
+        return $model->getTypeIcon();
     }
 
     protected function getTypeDropdown(): ?FilterDropdown
@@ -61,13 +69,6 @@ trait TypeGridViewTrait
         return $model instanceof TypeAttributeInterface
             ? array_map(fn ($model) => $model->getTypePlural(), $model::getTypeInstances())
             : [];
-    }
-
-    protected function getTypeIcon(TypeAttributeInterface $model): string
-    {
-        return Html::icon($model->getTypeIcon())
-            ->tooltip($model->getTypeName())
-            ->render();
     }
 
     protected function hasVisibleTypes(): bool

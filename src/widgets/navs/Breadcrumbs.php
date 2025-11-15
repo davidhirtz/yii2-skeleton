@@ -7,7 +7,7 @@ namespace davidhirtz\yii2\skeleton\widgets\navs;
 use davidhirtz\yii2\skeleton\html\A;
 use davidhirtz\yii2\skeleton\html\Ul;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
-use davidhirtz\yii2\skeleton\widgets\traits\ContainerTrait;
+use davidhirtz\yii2\skeleton\widgets\traits\ContainerWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
 use Yii;
@@ -17,7 +17,7 @@ use yii\helpers\Html;
 
 class Breadcrumbs extends Widget
 {
-    use ContainerTrait;
+    use ContainerWidgetTrait;
 
     public bool $alwaysShowHomeLink = false;
     public bool $encodeLabels = true;

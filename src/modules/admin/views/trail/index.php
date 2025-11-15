@@ -15,7 +15,7 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\TrailGridView;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\TrailSubmenu;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu;
 use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
+use davidhirtz\yii2\skeleton\widgets\grids\GridContainer;
 
 $this->setTitle(Yii::t('skeleton', 'History'));
 $this->setBreadcrumb(Yii::t('skeleton', 'History'), ['index']);
@@ -29,8 +29,7 @@ if ($provider->user) {
         'dataProvider' => $provider,
     ]);
 }
-echo Panel::widget([
-    'content' => TrailGridView::widget([
-        'dataProvider' => $provider,
-    ]),
-]);
+
+echo GridContainer::make()
+    ->grid(TrailGridView::make()
+        ->provider($provider));

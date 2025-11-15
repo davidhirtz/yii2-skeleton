@@ -15,6 +15,7 @@ use davidhirtz\yii2\skeleton\html\Table;
 use davidhirtz\yii2\skeleton\html\Tbody;
 use davidhirtz\yii2\skeleton\html\Thead;
 use davidhirtz\yii2\skeleton\html\Tr;
+use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
 use davidhirtz\yii2\skeleton\web\User;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
@@ -37,6 +38,7 @@ use yii\helpers\Url;
 class GridView extends Widget
 {
     use ContainerConfigurationTrait;
+    use TagAttributesTrait;
     use TagIdTrait;
 
     public DataProviderInterface $provider;

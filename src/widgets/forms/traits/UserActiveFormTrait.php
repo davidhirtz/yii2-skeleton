@@ -10,6 +10,7 @@ use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\widgets\forms\TimezoneDropdown;
+use davidhirtz\yii2\skeleton\widgets\Username;
 use davidhirtz\yii2\timeago\Timeago;
 use Yii;
 use yii\widgets\ActiveField;
@@ -104,13 +105,11 @@ trait UserActiveFormTrait
             }
 
             if ($user->created_by_user_id) {
-                $route = Yii::$app->getUser()->can(User::AUTH_USER_UPDATE, ['user' => $user->admin])
-                    ? ['/admin/user/update', 'id' => $user->id]
-                    : null;
-
                 $items[] = Yii::t('skeleton', 'Created by {user} {timestamp}', [
                     'timestamp' => Timeago::tag($user->created_at),
-                    'user' => Html::username($user->admin, $route),
+                    'user' => Username::make()
+                        ->user($user->admin)
+                        ->clickable(),
                 ]);
             } else {
                 $items[] = Yii::t('skeleton', 'Signed up {timestamp}', [

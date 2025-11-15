@@ -179,18 +179,6 @@ class Html extends BaseHtml
         return $text;
     }
 
-    public static function username(?User $user, array|string|null $route = null, array $options = []): string
-    {
-        if ($user && $route) {
-            return self::a($user->getUsername(), $route, $options);
-        }
-
-        if (!$user || $options) {
-            return self::tag($user ? 'span' : 'em', $user ? $user->getUsername() : Yii::t('skeleton', 'Deleted'), $options);
-        }
-
-        return $user->getUsername();
-    }
 
     public static function warning(string $html): string
     {

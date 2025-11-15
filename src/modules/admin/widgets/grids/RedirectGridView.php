@@ -143,15 +143,17 @@ class RedirectGridView extends GridView
         ];
     }
 
-    protected function getCreateButton(): ?Stringable
+    protected function getCreateButton(): Stringable
     {
-        return new CreateButton(Yii::t('skeleton', 'New Redirect'), ['/admin/redirect/create']);
+        return CreateButton::make()
+            ->text(Yii::t('skeleton', 'New Redirect'))
+            ->href(['/admin/redirect/create']);
     }
 
     /**
      * @see RedirectController::actionDeleteAll()
      */
-    protected function getSelectionButton(): ?Stringable
+    protected function getSelectionButton(): Stringable
     {
         $modal = Modal::make()
             ->title(Yii::t('skeleton', 'Delete selected'))

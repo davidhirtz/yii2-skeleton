@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\traits;
 
 use davidhirtz\yii2\skeleton\html\Container;
+use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
 use Stringable;
 
-trait ContainerTrait
+trait ContainerWidgetTrait
 {
+    use TagAttributesTrait;
     use TagIdTrait;
 
     public function render(): string|Stringable

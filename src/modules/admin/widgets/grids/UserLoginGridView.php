@@ -4,54 +4,55 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
-use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\models\User;
+use davidhirtz\yii2\skeleton\models\interfaces\TypeAttributeInterface;
 use davidhirtz\yii2\skeleton\models\UserLogin;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\LinkColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\TimeagoColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
-use davidhirtz\yii2\timeago\Timeago;
+use davidhirtz\yii2\skeleton\widgets\grids\traits\TypeGridViewTrait;
+use davidhirtz\yii2\skeleton\widgets\traits\UserWidgetTrait;
+use davidhirtz\yii2\skeleton\widgets\Username;
 use Override;
+use Stringable;
 
 /**
  * @extends GridView<UserLogin>
  */
 class UserLoginGridView extends GridView
 {
-    public ?User $user = null;
+    use UserWidgetTrait;
+    use TypeGridViewTrait;
 
     #[Override]
     public function init(): void
     {
         $this->columns ??= [
-            [
-                'contentOptions' => ['class' => 'text-center'],
-                'content' => fn (UserLogin $login) => Html::icon($login->getTypeIcon() ?? "brand:$login->type")
-                    ->tooltip($login->getTypeName())
-                    ->render(),
-            ],
-            [
-                'attribute' => 'ip_address',
-                'content' => function (UserLogin $login) {
-                    $ipAddress = $login->getDisplayIp();
-                    return $ipAddress ? Html::a($ipAddress, ['index', 'q' => $ipAddress]) : '';
-                }
-            ],
-            [
-                'attribute' => 'user',
-                'visible' => !$this->user,
-                'content' => fn (UserLogin $login) => Html::username($login->user, ['view', 'user' => $login->user_id])
-            ],
-            [
-                'attribute' => 'browser',
-                'headerOptions' => ['class' => 'd-none d-md-table-cell', 'style' => 'width:45%;'],
-                'contentOptions' => ['class' => 'd-none d-md-table-cell'],
-                'content' => fn (UserLogin $login) => $login->browser
-            ],
-            [
-                'attribute' => 'created_at',
-                'content' => fn (UserLogin $login): string => Timeago::tag($login->created_at)
-            ],
+            $this->getTypeIconColumn(),
+            LinkColumn::make()
+                ->property('ip_address')
+                ->href(fn (UserLogin $login) => ['view', 'id' => $login->id]),
+            LinkColumn::make()
+                ->property('user')
+                ->visible(!$this->user)
+                ->content(fn (UserLogin $login): Stringable => Username::make()
+                    ->user($login->user))
+                ->href(fn (UserLogin $login): array => ['view', 'user' => $login->user_id]),
+            DataColumn::make()
+                ->property('browser')
+                ->hiddenForSmallDevices(),
+            TimeagoColumn::make()
+                ->property('created_at'),
         ];
 
         parent::init();
+    }
+
+    /**
+     * @param UserLogin $model
+     */
+    protected function getTypeIcon(TypeAttributeInterface $model): string
+    {
+        return $model->getTypeIcon() ?: "brand:$model->type";
     }
 }

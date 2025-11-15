@@ -6,9 +6,13 @@ namespace davidhirtz\yii2\skeleton\html;
 
 use davidhirtz\yii2\skeleton\html\base\Tag;
 use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagIconTextTrait;
 
-class Div extends Tag
+class Span extends Tag
 {
-    use TagIconTextTrait;
+    use TagContentTrait;
+
+    protected function getTagName(): string
+    {
+        return 'span';
+    }
 }

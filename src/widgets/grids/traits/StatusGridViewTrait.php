@@ -6,9 +6,11 @@ namespace davidhirtz\yii2\skeleton\widgets\grids\traits;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\interfaces\StatusAttributeInterface;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\LinkColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\FilterDropdown;
+use Stringable;
 use Yii;
 use yii\base\Model;
 use yii\db\ActiveRecordInterface;
@@ -18,19 +20,21 @@ trait StatusGridViewTrait
     protected string|false|null $statusDefaultItem = null;
     protected string $statusParamName = 'status';
 
-    protected function getStatusColumn(): DataColumn
+    protected function getStatusColumn(): LinkColumn
     {
-        return DataColumn::make()
+        return LinkColumn::make()
             ->property('status')
             ->header(false)
-            ->content($this->getStatusColumnContent(...))
+            ->content($this->getStatusIcon(...))
+            ->href(fn (ActiveRecordInterface&StatusAttributeInterface $model) => $this->getRoute($model))
             ->centered();
     }
 
-    protected function getStatusColumnContent(ActiveRecordInterface&StatusAttributeInterface $model): string
+    protected function getStatusIcon(StatusAttributeInterface $model): Stringable
     {
-        $icon = $this->getStatusIcon($model);
-        return ($route = $this->getRoute($model)) ? Html::a($icon, $route) : $icon;
+        return Icon::make()
+            ->name($model->getStatusIcon())
+            ->tooltip($model->getStatusName());
     }
 
     public function getStatusDropdown(): FilterDropdown
@@ -41,13 +45,6 @@ trait StatusGridViewTrait
             $this->statusParamName,
             $this->statusDefaultItem
         );
-    }
-
-    protected function getStatusIcon(StatusAttributeInterface $model): string
-    {
-        return Html::icon($model->getStatusIcon())
-            ->tooltip($model->getStatusName())
-            ->render();
     }
 
     protected function getStatusDropdownItems(): array

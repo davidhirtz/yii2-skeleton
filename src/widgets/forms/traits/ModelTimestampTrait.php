@@ -7,6 +7,7 @@ namespace davidhirtz\yii2\skeleton\widgets\forms\traits;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\interfaces\TrailModelInterface;
 use davidhirtz\yii2\skeleton\models\Trail;
+use davidhirtz\yii2\skeleton\widgets\Username;
 use davidhirtz\yii2\timeago\Timeago;
 use Yii;
 
@@ -33,7 +34,8 @@ trait ModelTimestampTrait
         if ($this->model->updated ?? null) {
             $text = Yii::t('skeleton', 'Last updated by {user} {timestamp}', [
                 'timestamp' => Timeago::tag($this->model->updated_at),
-                'user' => Html::username($this->model->updated),
+                'user' => Username::make()
+                    ->user($this->model->updated),
             ]);
         } else {
             $text = Yii::t('skeleton', 'Last updated {timestamp}', [

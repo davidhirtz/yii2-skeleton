@@ -9,6 +9,7 @@ use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagIconTextTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagLinkTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
+use Stringable;
 use Yii;
 
 class CreateButton extends Widget
@@ -24,15 +25,15 @@ class CreateButton extends Widget
         }
 
         $this->attributes['href'] ??= ['create'];
+        $this->icon ??= 'plus';
     }
 
-    public function renderContent(): string
+    public function renderContent(): Stringable
     {
         return Button::make()
             ->addAttributes($this->attributes)
             ->primary()
             ->content(...$this->content)
-            ->icon($this->icon ?? 'plus')
-            ->render();
+            ->icon($this->icon);
     }
 }

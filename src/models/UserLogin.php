@@ -7,8 +7,11 @@ namespace davidhirtz\yii2\skeleton\models;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use davidhirtz\yii2\skeleton\models\interfaces\TypeAttributeInterface;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
+use davidhirtz\yii2\skeleton\models\traits\TypeAttributeTrait;
 use davidhirtz\yii2\skeleton\validators\RelationValidator;
+use Override;
 use Yii;
 
 /**
@@ -23,15 +26,17 @@ use Yii;
  * @property-read string $typeName
  * @property-read string $displayIp
  */
-class UserLogin extends ActiveRecord
+class UserLogin extends ActiveRecord implements TypeAttributeInterface
 {
-    public const TYPE_COOKIE = 'auto';
-    public const TYPE_LOGIN = 'login';
-    public const TYPE_SIGNUP = 'signup';
-    public const TYPE_CONFIRM_EMAIL = 'email';
-    public const TYPE_RESET_PASSWORD = 'password';
+    use TypeAttributeTrait;
 
-    #[\Override]
+    public const string TYPE_COOKIE = 'auto';
+    public const string TYPE_LOGIN = 'login';
+    public const string TYPE_SIGNUP = 'signup';
+    public const string TYPE_CONFIRM_EMAIL = 'email';
+    public const string TYPE_RESET_PASSWORD = 'password';
+
+    #[Override]
     public function rules(): array
     {
         return [
@@ -47,7 +52,7 @@ class UserLogin extends ActiveRecord
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function behaviors(): array
     {
         return [
@@ -68,26 +73,33 @@ class UserLogin extends ActiveRecord
 
     public function getTypeName(): string
     {
-        return match ($this->type) {
-            static::TYPE_LOGIN => Yii::t('skeleton', 'Login'),
-            static::TYPE_COOKIE => Yii::t('skeleton', 'Cookie'),
-            static::TYPE_SIGNUP => Yii::t('skeleton', 'Sign up'),
-            static::TYPE_CONFIRM_EMAIL => Yii::t('skeleton', 'Email confirmation'),
-            static::TYPE_RESET_PASSWORD => Yii::t('skeleton', 'Password reset'),
-            default => ucfirst($this->type),
-        };
+        return $this->getTypeOptions()['name'] ?? ucfirst($this->type);
     }
 
-    public function getTypeIcon(): ?string
+    public static function getTypes(): array
     {
-        return match ($this->type) {
-            static::TYPE_LOGIN => 'sign-in-alt',
-            static::TYPE_COOKIE => 'heart',
-            static::TYPE_SIGNUP => 'user-plus',
-            static::TYPE_CONFIRM_EMAIL => 'envelope',
-            static::TYPE_RESET_PASSWORD => 'unlock',
-            default => null,
-        };
+        return [
+            static::TYPE_LOGIN => [
+                'name' => Yii::t('skeleton', 'Login'),
+                'icon' => 'sign-in-alt',
+            ],
+            static::TYPE_COOKIE => [
+                'name' => Yii::t('skeleton', 'Cookie'),
+                'icon' => 'heart',
+            ],
+            static::TYPE_SIGNUP => [
+                'name' => Yii::t('skeleton', 'Sign up'),
+                'icon' => 'user-plus',
+            ],
+            static::TYPE_CONFIRM_EMAIL => [
+                'name' => Yii::t('skeleton', 'Email confirmation'),
+                'icon' => 'envelope',
+            ],
+            static::TYPE_RESET_PASSWORD => [
+                'name' => Yii::t('skeleton', 'Password reset'),
+                'icon' => 'unlock',
+            ],
+        ];
     }
 
     public function getDisplayIp(): string
@@ -95,7 +107,7 @@ class UserLogin extends ActiveRecord
         return $this->ip_address ? (inet_ntop($this->ip_address) ?: '-') : '';
     }
 
-    #[\Override]
+    #[Override]
     public function attributeLabels(): array
     {
         return [
@@ -107,7 +119,7 @@ class UserLogin extends ActiveRecord
         ];
     }
 
-    #[\Override]
+    #[Override]
     public static function tableName(): string
     {
         return '{{%user_login}}';
