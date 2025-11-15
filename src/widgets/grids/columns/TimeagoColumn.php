@@ -19,7 +19,7 @@ class TimeagoColumn extends LinkColumn
 
     protected function getValue(Model $model, int|string $key, int $index): ?string
     {
-        $timestamp = ArrayHelper::getValue($model, $this->attribute);
+        $timestamp = ArrayHelper::getValue($model, $this->property);
         return $timestamp ? Timeago::tag($timestamp) : null;
     }
 }

@@ -6,7 +6,7 @@ namespace davidhirtz\yii2\skeleton\widgets\grids;
 
 use Closure;
 use davidhirtz\yii2\skeleton\assets\SortableAssetBundle;
-use davidhirtz\yii2\skeleton\base\traits\ContainerTrait;
+use davidhirtz\yii2\skeleton\base\traits\ContainerConfigurationTrait;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
@@ -16,6 +16,7 @@ use davidhirtz\yii2\skeleton\html\Tbody;
 use davidhirtz\yii2\skeleton\html\Thead;
 use davidhirtz\yii2\skeleton\html\Tr;
 use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
+use davidhirtz\yii2\skeleton\web\User;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
 use davidhirtz\yii2\skeleton\widgets\grids\pagers\LinkPager;
 use davidhirtz\yii2\skeleton\widgets\grids\toolbars\GridToolbarItem;
@@ -35,7 +36,7 @@ use yii\helpers\Url;
  */
 class GridView extends Widget
 {
-    use ContainerTrait;
+    use ContainerConfigurationTrait;
     use TagIdTrait;
 
     public DataProviderInterface $provider;
@@ -48,14 +49,13 @@ class GridView extends Widget
     public ?array $footer = null;
     public ?array $header = null;
 
-    public GridSearch $search;
 
     public array $attributes = ['class' => 'grid-view'];
     public array $headerAttributes = ['class' => 'grid-view-header'];
     public array $footerAttributes = ['class' => 'grid-view-footer'];
     public array $headerRowAttributes;
     public array $tableAttributes = ['class' => 'table table-striped table-hover'];
-    private array $tableBodyAttributes;
+    public array $tableBodyAttributes;
     public array|Closure $rowAttributes;
 
     public array $pagerOptions = [];
@@ -64,34 +64,30 @@ class GridView extends Widget
     public string $layout = '{header}{summary}{items}{pager}{footer}';
     public ?array $orderRoute = ['order'];
 
+    protected GridSearch $search;
+    protected User $webuser;
+
     public function __construct()
     {
         $this->search ??= GridSearch::make()
             ->grid($this);
 
-        $this->initHeader();
-        $this->initColumns();
-        $this->initFooter();
+        $this->webuser ??= Yii::$app->getUser();
 
-        $this->attributes['hx-select'] ??= "#{$this->attributes['id']}";
+        parent::__construct();
+    }
+
+    public function init(): void
+    {
+        $this->initColumns();
+
+        $this->attributes['hx-select'] ??= "#{$this->getId()}";
         $this->attributes['hx-target'] ??= $this->attributes['hx-select'];
         $this->attributes['hx-select-oob'] ??= '#flashes';
 
         $this->headerRowAttributes['hx-boost'] ??= 'true';
         $this->tableBodyAttributes ??= [];
         $this->rowAttributes ??= [];
-
-        parent::__construct();
-    }
-
-    public function provider(DataProviderInterface $data): static
-    {
-        $this->provider = $data;
-        return $this;
-    }
-
-    protected function initHeader(): void
-    {
     }
 
     protected function initColumns(): void
@@ -107,57 +103,42 @@ class GridView extends Widget
         }
     }
 
-    protected function getDefaultColumns(): array
+    public function provider(DataProviderInterface $data): static
     {
-        $models = $this->provider->getModels();
-        $model = reset($models);
-        $columns = [];
-
-        if (is_array($model) || is_object($model)) {
-            foreach ($model as $name => $value) {
-                if ($value === null || is_scalar($value) || $value instanceof Stringable) {
-                    $columns[] = (string)$name;
-                }
-            }
-        }
-
-        return $columns;
+        $this->provider = $data;
+        return $this;
     }
 
-    protected function initFooter(): void
-    {
-    }
-
-    public function render(): string
+    protected function render(): string
     {
         return $this->provider->getCount() || $this->showOnEmpty
-            ? Html::div($this->renderContent(), $this->attributes)->render()
+            ? Html::div($this->getContent(), $this->attributes)->render()
             : '';
     }
 
-    protected function renderContent(): string
+    protected function getContent(): string
     {
         return strtr($this->layout, [
-            '{header}' => $this->renderHeader(),
-            '{summary}' => $this->renderSummary(),
-            '{items}' => $this->renderItems(),
-            '{pager}' => $this->renderPager(),
-            '{footer}' => $this->renderFooter(),
+            '{header}' => $this->getHeader(),
+            '{summary}' => $this->getSummary(),
+            '{items}' => $this->getItems(),
+            '{pager}' => $this->getPager(),
+            '{footer}' => $this->getFooter(),
         ]);
     }
 
-    protected function renderHeader(): ?Stringable
+    protected function getHeader(): ?Stringable
     {
-        return $this->header ? $this->renderToolbars($this->header, $this->headerAttributes) : null;
+        return $this->header ? $this->getToolbars($this->header, $this->headerAttributes) : null;
     }
 
-    protected function renderToolbars(array $rows, array $attributes = []): ?Stringable
+    protected function getToolbars(array $rows, array $attributes = []): ?Stringable
     {
-        $result = array_map($this->renderToolbar(...), $rows);
+        $result = is_array(current($rows)) ? array_map($this->getToolbar(...), $rows) : $this->getToolbar($rows);
         return $result ? Html::div($result, $attributes) : null;
     }
 
-    protected function renderToolbar(array $row): ?Stringable
+    protected function getToolbar(array $row): ?Stringable
     {
         $items = [];
 
@@ -178,7 +159,7 @@ class GridView extends Widget
         return $items ? Html::div($items)->addClass('row') : null;
     }
 
-    protected function renderSummary(): ?Stringable
+    protected function getSummary(): ?Stringable
     {
         return Yii::createObject(GridSummary::class, [
             $this->provider->getCount(),
@@ -188,7 +169,7 @@ class GridView extends Widget
         ]);
     }
 
-    protected function renderItems(): ?Stringable
+    protected function getItems(): ?Stringable
     {
         return $this->provider->getCount()
             ? Div::make()
@@ -203,6 +184,23 @@ class GridView extends Widget
             ->attributes($this->tableAttributes)
             ->header($this->getTableHeader())
             ->body($this->getTableBody());
+    }
+
+    protected function getDefaultColumns(): array
+    {
+        $models = $this->provider->getModels();
+        $model = reset($models);
+        $columns = [];
+
+        if (is_array($model) || is_object($model)) {
+            foreach ($model as $name => $value) {
+                if ($value === null || is_scalar($value) || $value instanceof Stringable) {
+                    $columns[] = (string)$name;
+                }
+            }
+        }
+
+        return $columns;
     }
 
     protected function getTableHeader(): Thead
@@ -259,7 +257,7 @@ class GridView extends Widget
         return $tr;
     }
 
-    protected function renderPager(): string
+    protected function getPager(): string
     {
         $pagination = $this->provider->getPagination();
 
@@ -275,9 +273,9 @@ class GridView extends Widget
         ]);
     }
 
-    protected function renderFooter(): ?Stringable
+    protected function getFooter(): ?Stringable
     {
-        return $this->footer ? $this->renderToolbars($this->footer, $this->footerAttributes) : null;
+        return $this->footer ? $this->getToolbars($this->footer, $this->footerAttributes) : null;
     }
 
     public function getModel(): ?Model
@@ -315,10 +313,5 @@ class GridView extends Widget
             && $this->provider->getPagination() === false
             && !$this->search->getValue()
             && $this->orderRoute !== null;
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
     }
 }

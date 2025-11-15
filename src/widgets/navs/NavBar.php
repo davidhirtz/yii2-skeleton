@@ -16,7 +16,7 @@ class NavBar extends Widget
      */
     public array $attributes = ['class' => 'navbar'];
 
-    public function render(): string
+    protected function render(): string
     {
         $container = Container::make()
             ->addClass('navbar-container');
@@ -38,9 +38,9 @@ class NavBar extends Widget
         return MainMenu::widget();
     }
 
-    protected function getAccountMenu(): string
+    protected function getAccountMenu(): AccountMenu
     {
-        return AccountMenu::widget();
+        return AccountMenu::make();
     }
 
     protected function getMobileToggle(): string

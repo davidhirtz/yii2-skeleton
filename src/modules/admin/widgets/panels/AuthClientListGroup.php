@@ -22,7 +22,7 @@ class AuthClientListGroup extends Widget
         parent::init();
     }
 
-    public function render(): string
+    protected function render(): string
     {
         return $this->list->render();
     }

@@ -8,7 +8,7 @@ use Closure;
 use davidhirtz\yii2\skeleton\html\ButtonToolbar;
 use Override;
 
-class ButtonsColumn extends Column
+class ButtonColumn extends Column
 {
     protected array|null|Closure $contentAttributes = [
         'class' => 'text-end text-nowrap',

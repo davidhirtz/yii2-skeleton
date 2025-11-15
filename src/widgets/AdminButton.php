@@ -33,7 +33,7 @@ class AdminButton extends Widget
         parent::init();
     }
 
-    public function render(): string
+    protected function render(): string
     {
         return Html::a($this->icon, '/admin', [
             'class' => 'admin-btn',

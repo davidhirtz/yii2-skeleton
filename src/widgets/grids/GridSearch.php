@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\grids;
 
-use davidhirtz\yii2\skeleton\base\traits\ContainerTrait;
+use davidhirtz\yii2\skeleton\base\traits\ContainerConfigurationTrait;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Form;
@@ -18,7 +18,7 @@ use yii\helpers\Url;
 
 class GridSearch
 {
-    use ContainerTrait;
+    use ContainerConfigurationTrait;
     use GridTrait;
 
     protected array $inputAttributes = [];

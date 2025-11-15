@@ -4,39 +4,35 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets;
 
-use davidhirtz\yii2\skeleton\base\traits\ContainerTrait;
+use davidhirtz\yii2\skeleton\base\traits\ContainerConfigurationTrait;
 use davidhirtz\yii2\skeleton\web\View;
 use Deprecated;
 use Stringable;
 use Yii;
-use yii\base\BaseObject;
 use yii\base\ViewContextInterface;
 
 /**
  * @property View $view
  */
-abstract class Widget extends BaseObject implements Stringable, ViewContextInterface
+abstract class Widget implements Stringable, ViewContextInterface
 {
-    use ContainerTrait;
+    use ContainerConfigurationTrait;
 
     protected View $view;
     protected ?string $viewPath = null;
 
-    public function __construct($config = [])
+    public function __construct()
     {
         $this->view = Yii::$app->getView();
-        parent::__construct($config);
     }
 
+    public function init(): void
+    {
+    }
 
     public function getViewPath(): ?string
     {
-        if ($this->viewPath === null) {
-            $controllerId = Yii::$app->controller->id;
-            $this->setViewPath("@views/$controllerId/");
-        }
-
-        return $this->viewPath;
+        return $this->viewPath ??= '"@views/' . Yii::$app->controller->id . '/';
     }
 
     #[Deprecated]
@@ -45,10 +41,16 @@ abstract class Widget extends BaseObject implements Stringable, ViewContextInter
         return Yii::$container->get(static::class, [], $config)->render();
     }
 
-    public function __toString(): string
+    public function run(): string
     {
+        $this->init();
         return $this->render();
     }
 
-    abstract public function render(): string;
+    public function __toString(): string
+    {
+        return $this->run();
+    }
+
+    abstract protected function render(): string;
 }

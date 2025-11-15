@@ -6,7 +6,6 @@ namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\web\View;
 use Override;
 use Yii;

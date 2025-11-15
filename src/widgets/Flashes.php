@@ -19,7 +19,7 @@ class Flashes extends Widget
         parent::init();
     }
 
-    public function render(): string
+    protected function render(): string
     {
         $content = '';
 

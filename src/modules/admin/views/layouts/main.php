@@ -30,8 +30,8 @@ AdminAsset::register($this);
 <?php $this->beginBody() ?>
 <?= NavBar::widget(); ?>
 <main class="main">
-    <?= Breadcrumbs::widget(); ?>
-    <?= Flashes::widget(); ?>
+    <?= Breadcrumbs::make(); ?>
+    <?= Flashes::make(); ?>
     <?= $content ?>
     <?php $this->endBody() ?>
 </main>

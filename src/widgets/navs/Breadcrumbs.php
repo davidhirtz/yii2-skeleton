@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\navs;
 
 use davidhirtz\yii2\skeleton\html\A;
-use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\html\Ul;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
+use davidhirtz\yii2\skeleton\widgets\traits\ContainerTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -16,22 +16,17 @@ use yii\helpers\Html;
 
 class Breadcrumbs extends Widget
 {
+    use ContainerTrait;
+
     public bool $alwaysShowHomeLink = false;
     public bool $encodeLabels = true;
     public array|null|false $homeLink = null;
-    public array $links;
 
-    public array $attributes = [
-        'class' => 'breadcrumb',
-    ];
+    public array $attributes = ['class' => 'breadcrumb'];
+    public array $itemAttributes = ['class' => 'breadcrumb-item'];
+    public array $linkAttributes = ['class' => 'breadcrumb-link'];
 
-    public array $itemAttributes = [
-        'class' => 'breadcrumb-item',
-    ];
-
-    public array $linkAttributes = [
-        'class' => 'breadcrumb-link',
-    ];
+    protected array $links;
 
     public function init(): void
     {
@@ -71,20 +66,7 @@ class Breadcrumbs extends Widget
         }
     }
 
-    public function render(): string
-    {
-        $items = $this->renderItems();
-
-        if (!$items) {
-            return '';
-        }
-
-        return Container::make()
-            ->addHtml($items)
-            ->render();
-    }
-
-    protected function renderItems(): string
+    protected function render(): string
     {
         if (!$this->links) {
             return '';

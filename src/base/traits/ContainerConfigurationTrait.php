@@ -6,7 +6,7 @@ namespace davidhirtz\yii2\skeleton\base\traits;
 
 use Yii;
 
-trait ContainerTrait
+trait ContainerConfigurationTrait
 {
     public static function make(...$args): static
     {

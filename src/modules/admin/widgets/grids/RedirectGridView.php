@@ -11,9 +11,9 @@ use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
 use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\DeleteButton;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\ViewButton;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonsColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\widgets\grids\toolbars\CreateButton;
@@ -145,7 +145,7 @@ class RedirectGridView extends GridView
     protected function buttonsColumn(): array
     {
         return [
-            'class' => ButtonsColumn::class,
+            'class' => ButtonColumn::class,
             'content' => $this->getRowButtons(...),
         ];
     }

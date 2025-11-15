@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -8,20 +9,19 @@ declare(strict_types=1);
  * @var ActiveDataProvider $provider
  */
 
+use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\AuthItemGridView;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu;
 use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
+use davidhirtz\yii2\skeleton\widgets\grids\GridContainer;
 use yii\data\ActiveDataProvider;
 
 $this->setTitle(Yii::t('skeleton', 'Permissions'));
 $this->setBreadcrumb(Yii::t('skeleton', 'Permissions'), ['index']);
-?>
 
-<?= UserSubmenu::widget(); ?>
+echo Container::make()
+    ->html(UserSubmenu::widget());
 
-<?= Panel::widget([
-    'content' => AuthItemGridView::widget([
-        'dataProvider' => $provider,
-    ]),
-]); ?>
+echo GridContainer::make()
+    ->grid(AuthItemGridView::make()
+        ->provider($provider));

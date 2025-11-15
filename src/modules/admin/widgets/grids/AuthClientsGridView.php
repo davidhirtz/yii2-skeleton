@@ -10,9 +10,10 @@ use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\panels\AuthClientListGroup;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonsColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\TimeagoColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
-use davidhirtz\yii2\timeago\TimeagoColumn;
 use Override;
 use Yii;
 use yii\data\ArrayDataProvider;
@@ -29,29 +30,21 @@ class AuthClientsGridView extends GridView
             'allModels' => $this->user->authClients,
         ]);
 
-        $this->columns = [
-            $this->accountColumn(),
-            $this->nameColumn(),
-            $this->updatedAtColumn(),
-            $this->buttonsColumn(),
+        $this->footer ??= [
+            $this->getCreateButton(),
+        ];
+
+        $this->columns ??= [
+            $this->getAccountColumn(),
+            $this->getNameColumn(),
+            $this->getUpdatedAtColumn(),
+            $this->getButtonColumn(),
         ];
 
         parent::init();
     }
 
-    protected function initFooter(): void
-    {
-        $this->footer ??= [
-            [
-                [
-                    'content' => $this->renderCreateButton(),
-                    'options' => ['class' => 'col'],
-                ]
-            ]
-        ];
-    }
-
-    protected function renderCreateButton(): string
+    protected function getCreateButton(): string
     {
         $modal = Modal::make()
             ->title(Yii::t('skeleton', 'Clients'))
@@ -65,56 +58,56 @@ class AuthClientsGridView extends GridView
             ->render();
     }
 
-    protected function accountColumn(): array
+    protected function getAccountColumn(): Column
     {
-        return [
-            'label' => Yii::t('skeleton', 'Account'),
-            'content' => fn (AuthClient $auth) => $auth->getClientClass()->getTitle(),
-        ];
+        return Column::make()
+            ->header(Yii::t('skeleton', 'Account'))
+            ->content(fn (AuthClient $auth) => $auth->getClientClass()->getTitle());
     }
 
-    protected function buttonsColumn(): array
+    protected function getButtonColumn(): ButtonColumn
     {
-        return [
-            'class' => ButtonsColumn::class,
-            'content' => function (AuthClient $auth) {
-                $title = $auth->getClientClass()->getTitle();
-
-                $modal = Modal::make()
-                    ->title(Yii::t('skeleton', 'Remove {client}', ['client' => $title]))
-                    ->text(Yii::t('skeleton', 'Are you sure your want to remove your {client} account?', ['client' => $title]))
-                    ->footer(Button::make()
-                        ->danger()
-                        ->text(Yii::t('skeleton', 'Remove'))
-                        ->icon('trash-alt')
-                        ->post(['deauthorize', 'id' => $auth->id, 'name' => $auth->name]));
-
-                return Button::make()
-                    ->danger()
-                    ->icon('trash-alt')
-                    ->modal($modal)
-                    ->tooltip(Yii::t('skeleton', 'Remove {client}', ['client' => $title]))
-                    ->render();
-            }
-        ];
+        return ButtonColumn::make()
+            ->content($this->getButtonColumnContent(...));
     }
 
-    protected function nameColumn(): array
+    protected function getButtonColumnContent(AuthClient $auth): string
     {
-        return [
-            'label' => Yii::t('skeleton', 'Name'),
-            'content' => function (AuthClient $auth) {
-                $url = $auth->getClientClass()::getExternalUrl($auth);
-                return $url ? Html::a($auth->getDisplayName(), $url, ['target' => '_blank']) : $auth->getDisplayName();
-            },
-        ];
+        $title = $auth->getClientClass()->getTitle();
+
+        $modal = Modal::make()
+            ->title(Yii::t('skeleton', 'Remove {client}', ['client' => $title]))
+            ->text(Yii::t('skeleton', 'Are you sure your want to remove your {client} account?', ['client' => $title]))
+            ->footer(Button::make()
+                ->danger()
+                ->text(Yii::t('skeleton', 'Remove'))
+                ->icon('trash-alt')
+                ->post(['deauthorize', 'id' => $auth->id, 'name' => $auth->name]));
+
+        return Button::make()
+            ->danger()
+            ->icon('trash-alt')
+            ->modal($modal)
+            ->tooltip(Yii::t('skeleton', 'Remove {client}', ['client' => $title]))
+            ->render();
     }
 
-    protected function updatedAtColumn(): array
+    protected function getNameColumn(): Column
     {
-        return [
-            'class' => TimeagoColumn::class,
-            'attribute' => 'updated_at',
-        ];
+        return Column::make()
+            ->header(Yii::t('skeleton', 'Name'))
+            ->content($this->getNameColumnContent(...));
+    }
+
+    protected function getNameColumnContent(AuthClient $auth): string
+    {
+        $url = $auth->getClientClass()::getExternalUrl($auth);
+        return $url ? Html::a($auth->getDisplayName(), $url, ['target' => '_blank']) : $auth->getDisplayName();
+    }
+
+    protected function getUpdatedAtColumn(): TimeagoColumn
+    {
+        return TimeagoColumn::make()
+            ->property('updated_at');
     }
 }

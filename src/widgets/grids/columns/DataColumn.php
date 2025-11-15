@@ -15,7 +15,7 @@ use yii\helpers\Inflector;
 
 class DataColumn extends Column
 {
-    protected ?string $attribute = null;
+    protected ?string $property = null;
     protected ?string $label = null;
     protected string|null|Closure $value = null;
     protected string $format = 'text';
@@ -23,9 +23,9 @@ class DataColumn extends Column
     protected bool $enableSorting = true;
     protected bool $encodeLabel = true;
 
-    public function attribute(?string $attribute): static
+    public function property(?string $property): static
     {
-        $this->attribute = $attribute;
+        $this->property = $property;
         return $this;
     }
 
@@ -62,24 +62,24 @@ class DataColumn extends Column
     #[Override]
     protected function getHeaderContent(): string|Stringable
     {
-        if ($this->header !== null || ($this->label === null && $this->attribute === null)) {
+        if ($this->header !== null || ($this->label === null && $this->property === null)) {
             return parent::getHeaderContent();
         }
 
         $label = $this->label
-            ?? $this->grid->getModel()?->getAttributeLabel($this->attribute)
-            ?? Inflector::camel2words($this->attribute);
+            ?? $this->grid->getModel()?->getAttributeLabel($this->property)
+            ?? Inflector::camel2words($this->property);
 
         if ($this->encodeLabel) {
             $label = Html::encode($label);
         }
 
         if (
-            $this->attribute !== null
+            $this->property !== null
             && $this->enableSorting
-            && ($sort = $this->grid->provider->getSort()) !== false && $sort->hasAttribute($this->attribute)
+            && ($sort = $this->grid->provider->getSort()) !== false && $sort->hasAttribute($this->property)
         ) {
-            return $sort->link($this->attribute, [
+            return $sort->link($this->property, [
                 ...$this->sortLinkAttributes,
                 'label' => $label,
             ]);
@@ -101,7 +101,7 @@ class DataColumn extends Column
             return call_user_func($this->value, $model, $key, $index, $this);
         }
 
-        $key = $this->value ?? $this->attribute ?? null;
-        return $key ? ArrayHelper::getValue($model, $this->value ?? $this->attribute) : null;
+        $key = $this->value ?? $this->property ?? null;
+        return $key ? ArrayHelper::getValue($model, $this->value ?? $this->property) : null;
     }
 }

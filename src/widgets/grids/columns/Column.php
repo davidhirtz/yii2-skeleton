@@ -63,10 +63,18 @@ class Column
         return $this;
     }
 
-    public function hiddenUntil(string $breakpoint): static
+    public function hiddenForSmallDevices(): static
     {
-        Html::addCssClass($this->headerAttributes, "d-none d-$breakpoint-table-cell");
-        Html::addCssClass($this->contentAttributes, "d-none d-$breakpoint-table-cell");
+        Html::addCssClass($this->headerAttributes, "d-none d-md-table-cell");
+        Html::addCssClass($this->contentAttributes, "d-none d-md-table-cell");
+
+        return $this;
+    }
+
+    public function hiddenForMediumDevices(): static
+    {
+        Html::addCssClass($this->headerAttributes, "d-none d-lg-table-cell");
+        Html::addCssClass($this->contentAttributes, "d-none d-lg-table-cell");
 
         return $this;
     }

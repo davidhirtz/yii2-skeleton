@@ -6,14 +6,18 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Ul;
 use davidhirtz\yii2\skeleton\models\AuthItem;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonsColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\widgets\grids\traits\MessageSourceTrait;
 use Override;
+use Stringable;
 use Yii;
 
 class AuthItemGridView extends GridView
@@ -37,61 +41,72 @@ class AuthItemGridView extends GridView
         }
 
         $this->columns ??= [
-            $this->typeColumn(),
-            $this->nameColumn(),
-            $this->descriptionColumn(),
-            $this->user ? $this->buttonsColumn() : $this->usersColumn(),
+            $this->getTypeColumn(),
+            $this->getNameColumn(),
+            $this->getDescriptionColumn(),
+            $this->user ? $this->getButtonColumn() : $this->getUsersColumn(),
         ];
 
         parent::init();
     }
 
-    protected function typeColumn(): array
+    public function user(?User $user): static
     {
-        return [
-            'headerOptions' => ['class' => 'd-none d-md-table-cell'],
-            'contentOptions' => ['class' => 'd-none d-md-table-cell text-center'],
-            'content' => fn (AuthItem $authItem) => Html::icon($authItem->getTypeIcon())
-                ->tooltip($authItem->getTypeName())
-                ->render(),
-        ];
+        $this->user = $user;
+        return $this;
     }
 
-    protected function nameColumn(): array
+    protected function getTypeColumn(): Column
     {
-        return [
-            'attribute' => 'name',
-            'content' => function (AuthItem $authItem) {
-                $cssClass = $authItem->isRole() ? 'strong' : null;
+        return Column::make()
+            ->content($this->getTypeColumnContent(...))
+            ->hiddenForSmallDevices()
+            ->centered();
+    }
 
-                if ($authItem->isPermission()) {
-                    preg_match('/[A-Z]/', $authItem->name, $matches, PREG_OFFSET_CAPTURE);
-                    $ruleName = substr($authItem->name, 0, $matches[0][1] ?? 0);
+    protected function getTypeColumnContent(AuthItem $authItem): Stringable
+    {
+        return Html::icon($authItem->getTypeIcon())
+            ->tooltip($authItem->getTypeName());
+    }
 
-                    if ($ruleName !== static::$prevRuleName) {
-                        static::$prevRuleName = $ruleName;
-                        $cssClass = 'strong';
-                    }
-                }
+    protected function getNameColumn(): DataColumn
+    {
+        return DataColumn::make()
+            ->property('name')
+            ->content($this->getNameColumnContent(...));
+    }
 
-                return Html::tag('span', $authItem->isRole() ? $authItem->getDisplayName() : ($this->getTranslations()[$authItem->description] ?? $authItem->description), [
-                    'class' => $cssClass,
-                ]);
+    protected function getNameColumnContent(AuthItem $authItem): Stringable
+    {
+        $cssClass = $authItem->isRole() ? 'strong' : null;
+
+        if ($authItem->isPermission()) {
+            preg_match('/[A-Z]/', $authItem->name, $matches, PREG_OFFSET_CAPTURE);
+            $ruleName = substr($authItem->name, 0, $matches[0][1] ?? 0);
+
+            if ($ruleName !== static::$prevRuleName) {
+                static::$prevRuleName = $ruleName;
+                $cssClass = 'strong';
             }
-        ];
+        }
+
+        return Div::make()
+            ->class($cssClass)
+            ->html($authItem->isRole()
+                ? $authItem->getDisplayName()
+                : ($this->getTranslations()[$authItem->description] ?? $authItem->description));
     }
 
-    protected function descriptionColumn(): array
+    protected function getDescriptionColumn(): Column
     {
-        return [
-            'label' => Yii::t('skeleton', 'Inherited Permissions'),
-            'headerOptions' => ['class' => 'd-none d-md-table-cell'],
-            'contentOptions' => ['class' => 'd-none d-md-table-cell'],
-            'content' => $this->getDescriptionFormItem(...),
-        ];
+        return Column::make()
+            ->header(Yii::t('skeleton', 'Inherited Permissions'))
+            ->content($this->getDescriptionColumnContent(...))
+            ->hiddenForSmallDevices();
     }
 
-    protected function getDescriptionFormItem(AuthItem $authItem): string
+    protected function getDescriptionColumnContent(AuthItem $authItem): Stringable
     {
         $items = [];
 
@@ -103,44 +118,41 @@ class AuthItemGridView extends GridView
         }
 
 
-        return (string)Ul::make()
+        return Ul::make()
             ->class('list-unstyled')
             ->items(array_filter($items));
     }
 
-    protected function usersColumn(): array
+    protected function getUsersColumn(): Column
     {
-        return [
-            'label' => Yii::t('skeleton', 'Users'),
-            'content' => $this->getUsersForItem(...),
-        ];
+        return Column::make()
+            ->header(Yii::t('skeleton', 'Users'))
+            ->content($this->getUsersColumnColumn(...));
     }
 
-    protected function getUsersForItem(AuthItem $authItem): string
+    protected function getUsersColumnColumn(AuthItem $authItem): Stringable
     {
         $items = array_map(
             fn (User $user) => Html::a($user->getUsername(), ['auth/view', 'user' => $user->id]),
             $authItem->users
         );
 
-        return (string)Ul::make()
+        return Ul::make()
             ->class('list-unstyled')
             ->items($items);
     }
 
-    protected function buttonsColumn(): array
+    protected function getButtonColumn(): ButtonColumn
     {
-        return [
-            'class' => ButtonsColumn::class,
-            'content' => $this->getRowButtons(...),
-        ];
+        return ButtonColumn::make()
+            ->content($this->getButtonColumnContent(...));
     }
 
     /**
      * @see AuthController::actionAssign()
      * @see AuthController::actionRevoke()
      */
-    protected function getRowButtons(AuthItem $authItem): string
+    protected function getButtonColumnContent(AuthItem $authItem): string
     {
         $route = [
             $authItem->isAssigned ? 'revoke' : 'assign',

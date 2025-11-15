@@ -38,7 +38,7 @@ class AccountMenu extends Widget
         parent::init();
     }
 
-    public function render(): string
+    protected function render(): string
     {
         return Nav::make()
             ->attributes($this->attributes)

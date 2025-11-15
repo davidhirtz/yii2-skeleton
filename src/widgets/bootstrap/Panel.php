@@ -19,7 +19,7 @@ class Panel extends Widget
     public ?bool $collapse = null;
     public string $type = self::TYPE_DEFAULT;
 
-    public function render(): string
+    protected function render(): string
     {
         if (!$this->content) {
             return '';

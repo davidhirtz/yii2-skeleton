@@ -62,7 +62,7 @@ class ErrorSummary extends Widget
         return $this;
     }
 
-    public function render(): string
+    protected function render(): string
     {
         $this->errors ??= $this->getModelErrors();
         return $this->errors ? Container::make()->html($this->renderAlert())->render() : '';

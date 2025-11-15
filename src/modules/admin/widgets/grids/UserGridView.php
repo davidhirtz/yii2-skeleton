@@ -9,7 +9,7 @@ use davidhirtz\yii2\skeleton\html\A;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\UserActiveDataProvider;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonsColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\TimeagoColumn;
@@ -29,9 +29,13 @@ class UserGridView extends GridView
 {
     use StatusGridViewTrait;
 
-    public function __construct()
+    public function init(): void
     {
         $this->attributes['id'] ??= 'user-grid';
+
+        $this->header ??= [
+            $this->search->getToolbarItem(),
+        ];
 
         $this->rowAttributes = fn (User $user) => $user->isDisabled() ? ['class' => 'disabled'] : [];
 
@@ -44,30 +48,16 @@ class UserGridView extends GridView
             $this->getButtonsColumn(),
         ];
 
-        parent::__construct();
-    }
-
-    protected function initHeader(): void
-    {
-        $this->header ??= [
-            [
-                $this->search->getToolbarItem(),
-            ],
-        ];
-    }
-
-    protected function initFooter(): void
-    {
         $this->footer ??= [
-            [
-                $this->getCreateButton(),
-            ],
+            $this->getCreateButton(),
         ];
+
+        parent::init();
     }
 
     protected function getCreateButton(): ?Stringable
     {
-        return Yii::$app->getUser()->can(User::AUTH_USER_CREATE)
+        return $this->webuser->can(User::AUTH_USER_CREATE)
             ? CreateButton::make()
                 ->label(Yii::t('skeleton', 'New User'))
                 ->href(['/admin/user/create'])
@@ -78,7 +68,7 @@ class UserGridView extends GridView
     protected function getNameColumn(): Column
     {
         return DataColumn::make()
-            ->attribute('name')
+            ->property('name')
             ->content($this->getNameColumnContent(...));
     }
 
@@ -96,9 +86,9 @@ class UserGridView extends GridView
     protected function getEmailColumn(): Column
     {
         return DataColumn::make()
-            ->attribute('email')
-            ->hiddenUntil('md')
-            ->content($this->getEmailColumnContent(...));
+            ->property('email')
+            ->content($this->getEmailColumnContent(...))
+            ->hiddenForSmallDevices();
     }
 
     protected function getEmailColumnContent(User $user): ?Stringable
@@ -118,20 +108,20 @@ class UserGridView extends GridView
     protected function getLastLoginColumn(): DataColumn
     {
         return TimeagoColumn::make()
-            ->attribute('last_login')
+            ->property('last_login')
             ->href(fn (User $user) => ['/admin/login/index', 'user' => $user->id]);
     }
 
     protected function getCreatedAtColumn(): DataColumn
     {
         return TimeagoColumn::make()
-            ->attribute('created_at')
-            ->hiddenUntil('lg');
+            ->property('created_at')
+            ->hiddenForMediumDevices();
     }
 
-    protected function getButtonsColumn(): ButtonsColumn
+    protected function getButtonsColumn(): ButtonColumn
     {
-        return ButtonsColumn::make()
+        return ButtonColumn::make()
             ->content($this->getButtonsColumnContent(...));
     }
 
@@ -145,7 +135,7 @@ class UserGridView extends GridView
                 ->render();
         }
 
-        if (Yii::$app->getUser()->can(User::AUTH_USER_ASSIGN, ['user' => $user])) {
+        if ($this->webuser->can(User::AUTH_USER_ASSIGN, ['user' => $user])) {
             return Button::make()
                 ->primary()
                 ->href(['/admin/auth/assign', 'user' => $user->id])
@@ -160,7 +150,7 @@ class UserGridView extends GridView
     #[Override]
     protected function getRoute(ActiveRecordInterface $model, array $params = []): array|false
     {
-        return Yii::$app->getUser()->can(User::AUTH_USER_UPDATE, ['user' => $model])
+        return $this->webuser->can(User::AUTH_USER_UPDATE, ['user' => $model])
             ? ['/admin/user/update', 'id' => $model->id, ...$params]
             : false;
     }

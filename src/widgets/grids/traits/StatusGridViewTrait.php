@@ -21,7 +21,7 @@ trait StatusGridViewTrait
     protected function getStatusColumn(): DataColumn
     {
         return DataColumn::make()
-            ->attribute('status')
+            ->property('status')
             ->header(false)
             ->content($this->getStatusColumnContent(...))
             ->centered();
@@ -36,7 +36,7 @@ trait StatusGridViewTrait
     public function getStatusDropdown(): FilterDropdown
     {
         return new FilterDropdown(
-            $this->statusDropdownItems(),
+            $this->getStatusDropdownItems(),
             Yii::t('skeleton', 'Status'),
             $this->statusParamName,
             $this->statusDefaultItem
@@ -50,7 +50,7 @@ trait StatusGridViewTrait
             ->render();
     }
 
-    protected function statusDropdownItems(): array
+    protected function getStatusDropdownItems(): array
     {
         return array_map(fn ($options) => $options['plural'] ?? $options['name'], $this->getModel()::getStatuses());
     }
@@ -58,7 +58,7 @@ trait StatusGridViewTrait
     /**
      * @todo Extract this to class
      */
-    protected function statusSelectionButtonItems(?StatusAttributeInterface $model = null, array|string|null $url = null): array
+    protected function getStatusSelectionButtonItems(?StatusAttributeInterface $model = null, array|string|null $url = null): array
     {
         $model ??= $this->getModel();
         $paramName = $model instanceof Model ? Html::getInputName($model, 'status') : $this->statusParamName;
