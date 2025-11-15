@@ -8,6 +8,7 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
+use Override;
 use Yii;
 
 /**
@@ -45,7 +46,7 @@ class UserDeletePanel extends Panel
         parent::init();
     }
 
-    #[\Override]
+    #[Override]
     public function renderContent(): string
     {
         return $this->user->isOwner() ? $this->renderOwnerWarning() : parent::renderContent();

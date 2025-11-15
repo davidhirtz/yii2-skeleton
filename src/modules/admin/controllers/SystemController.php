@@ -50,23 +50,7 @@ class SystemController extends Controller
 
     public function actionIndex(): Response|string
     {
-        $sessions = new ArrayDataProvider([
-            'allModels' => [
-                [
-                    'sessionCount' => Session::find()->count(),
-                    'expiredSessionCount' => Session::find()
-                        ->where(['<', 'expire', time()])
-                        ->count(),
-                ],
-            ],
-            'pagination' => false,
-            'sort' => false,
-        ]);
-
-        return $this->render('index', [
-            'logs' => $this->getLogDataProvider(),
-            'sessions' => $sessions,
-        ]);
+        return $this->render('index');
     }
 
     /**

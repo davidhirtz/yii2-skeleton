@@ -9,6 +9,7 @@ use davidhirtz\yii2\skeleton\html\Ul;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\widgets\traits\ContainerTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
+use Stringable;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
@@ -66,7 +67,7 @@ class Breadcrumbs extends Widget
         }
     }
 
-    protected function render(): string
+    protected function renderContent(): string|Stringable
     {
         if (!$this->links) {
             return '';
@@ -82,7 +83,7 @@ class Breadcrumbs extends Widget
             $list->addItem($this->renderItem($link), $this->itemAttributes);
         }
 
-        return $list->render();
+        return $list;
     }
 
     protected function renderItem(array $attributes): string

@@ -22,11 +22,11 @@ class GridContainer extends Widget
         return $this;
     }
 
-    protected function render(): string
+    protected function renderContent(): string
     {
         return Card::make()
             ->title($this->title)
-            ->html($this->grid->run())
+            ->html($this->grid->render())
             ->render();
     }
 }

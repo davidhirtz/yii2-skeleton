@@ -16,9 +16,10 @@ use yii\db\ActiveRecord;
 
 class ErrorSummary extends Widget
 {
-    protected ?string $icon = 'exclamation-triangle';
+    public ?string $icon = 'exclamation-triangle';
+    public bool $showAllErrors = true;
+
     protected array $errors = [];
-    protected bool $showAllErrors = true;
     protected string|false|null $title = null;
 
     /**
@@ -62,7 +63,7 @@ class ErrorSummary extends Widget
         return $this;
     }
 
-    protected function render(): string
+    protected function renderContent(): string
     {
         $this->errors ??= $this->getModelErrors();
         return $this->errors ? Container::make()->html($this->renderAlert())->render() : '';

@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\bootstrap;
 
 use davidhirtz\yii2\skeleton\html\Card;
-use davidhirtz\yii2\skeleton\html\Container;
+use davidhirtz\yii2\skeleton\widgets\traits\ContainerTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 
 class Panel extends Widget
 {
+    use ContainerTrait;
+
     final public const string TYPE_DEFAULT = 'default';
     final public const string TYPE_DANGER = 'danger';
 
@@ -18,17 +20,6 @@ class Panel extends Widget
     public ?string $content = null;
     public ?bool $collapse = null;
     public string $type = self::TYPE_DEFAULT;
-
-    protected function render(): string
-    {
-        if (!$this->content) {
-            return '';
-        }
-        return Container::make()
-            ->attribute('id', $this->id)
-            ->html($this->renderContent())
-            ->render();
-    }
 
     protected function renderContent(): string
     {

@@ -13,7 +13,7 @@ use Override;
 use Yii;
 
 /**
- * @property LogDataProvider $provider
+ * @property LogDataProvider|null $provider
  */
 class LogGridView extends GridView
 {
@@ -27,6 +27,8 @@ class LogGridView extends GridView
     #[Override]
     public function init(): void
     {
+        $this->provider ??= Yii::createObject(LogDataProvider::class);
+
         $this->columns ??= [
             $this->getDateColumn(),
             $this->getLevelColumn(),

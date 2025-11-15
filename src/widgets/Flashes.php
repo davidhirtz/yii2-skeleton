@@ -19,7 +19,7 @@ class Flashes extends Widget
         parent::init();
     }
 
-    protected function render(): string
+    protected function renderContent(): string
     {
         $content = '';
 
@@ -56,7 +56,7 @@ class Flashes extends Widget
             ->render();
     }
 
-    public function getStatusIcon(string $status): ?string
+    protected function getStatusIcon(string $status): ?string
     {
         return match ($status) {
             'success' => 'check-circle',

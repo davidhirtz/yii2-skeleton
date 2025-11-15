@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\grids\columns;
 
 use Closure;
+use davidhirtz\yii2\skeleton\base\traits\ContainerConfigurationTrait;
 use davidhirtz\yii2\skeleton\html\Td;
 use davidhirtz\yii2\skeleton\html\Th;
 use davidhirtz\yii2\skeleton\html\traits\TagVisibilityTrait;
@@ -16,6 +17,7 @@ use yii\helpers\Html;
 
 class Column
 {
+    use ContainerConfigurationTrait;
     use GridTrait;
     use TagVisibilityTrait;
 
@@ -109,10 +111,5 @@ class Column
         }
 
         return $this->content ?? $this->emptyCell;
-    }
-
-    public static function make(): static
-    {
-        return Yii::createObject(static::class);
     }
 }

@@ -26,7 +26,7 @@ class MainMenu extends Widget
         parent::init();
     }
 
-    protected function render(): string
+    protected function renderContent(): string
     {
         return Nav::widget([
             'items' => $this->getItems(),

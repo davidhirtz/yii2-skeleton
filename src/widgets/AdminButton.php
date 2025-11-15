@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets;
 
+use davidhirtz\yii2\skeleton\html\A;
+use Stringable;
 use Yii;
 use yii\helpers\Html;
 
@@ -33,13 +35,14 @@ class AdminButton extends Widget
         parent::init();
     }
 
-    protected function render(): string
+    protected function renderContent(): Stringable
     {
-        return Html::a($this->icon, '/admin', [
-            'class' => 'admin-btn',
-            'onclick' => 'document.documentElement.classList.toggle(\'is-admin\');return false',
-            'target' => '_blank',
-        ]);
+        return A::make()
+            ->html($this->icon)
+            ->href('/admin')
+            ->class('admin-btn')
+            ->attribute('onclick', 'document.documentElement.classList.toggle(\'is-admin\');return false')
+            ->target('_blank');
     }
 
     public function registerCss(): void

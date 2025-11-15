@@ -109,10 +109,12 @@ class GridView extends Widget
         return $this;
     }
 
-    protected function render(): string
+    protected function renderContent(): string|Stringable
     {
         return $this->provider->getCount() || $this->showOnEmpty
-            ? Html::div($this->getContent(), $this->attributes)->render()
+            ? Div::make()
+                ->attributes($this->attributes)
+                ->html($this->getContent())
             : '';
     }
 

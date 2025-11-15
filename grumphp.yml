@@ -1,6 +1,4 @@
 grumphp:
     fixer:
         fix_by_default: true
-    tasks:
-        ecs:
-            config: 'ecs.php'
+

@@ -13,6 +13,7 @@ use davidhirtz\yii2\skeleton\html\Nav;
 use davidhirtz\yii2\skeleton\html\NavLink;
 use davidhirtz\yii2\skeleton\web\User;
 use davidhirtz\yii2\skeleton\widgets\Widget;
+use Stringable;
 use Yii;
 use yii\helpers\Url;
 
@@ -38,13 +39,12 @@ class AccountMenu extends Widget
         parent::init();
     }
 
-    protected function render(): string
+    protected function renderContent(): Stringable
     {
         return Nav::make()
             ->attributes($this->attributes)
             ->addItems($this->getItems())
-            ->hideSingleItem($this->hideSingleItem)
-            ->render();
+            ->hideSingleItem($this->hideSingleItem);
     }
 
     protected function getItems(): array

@@ -16,7 +16,7 @@ class NavBar extends Widget
      */
     public array $attributes = ['class' => 'navbar'];
 
-    protected function render(): string
+    protected function renderContent(): string
     {
         $container = Container::make()
             ->addClass('navbar-container');
