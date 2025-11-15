@@ -12,7 +12,13 @@ class DeleteButton extends GridButton
 {
     protected ?string $message = null;
 
-    public function render(): string
+    public function message(string|null $message): static
+    {
+        $this->message = $message;
+        return $this;
+    }
+
+    public function renderContent(): string
     {
         $this->message ??= Yii::t('yii', 'Are you sure you want to delete this item?');
 

@@ -14,18 +14,20 @@ use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\DeleteButton;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\ViewButton;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\CheckboxColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\LinkColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\TimeagoColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\widgets\grids\toolbars\CreateButton;
 use davidhirtz\yii2\skeleton\widgets\grids\traits\TypeGridViewTrait;
-use davidhirtz\yii2\timeago\TimeagoColumn;
 use Override;
 use Stringable;
 use Yii;
 
 /**
  * @extends GridView<Redirect>
- * @property RedirectActiveDataProvider $provider
+ * @property RedirectActiveDataProvider|null $provider
  */
 class RedirectGridView extends GridView
 {
@@ -37,52 +39,44 @@ class RedirectGridView extends GridView
     #[Override]
     public function init(): void
     {
-        $this->setId($this->getId(false) ?? 'redirects');
+        $this->attributes['id'] ??= 'redirects';
 
         if ($this->redirect) {
             $this->setDataProviderFromRedirect();
             $this->setRedirectOptions();
         }
 
-        $this->columns ??= [
-//            $this->typeIconColumn(),
-            $this->requestUriColumn(),
-//            $this->urlColumn(),
-//            $this->updatedAtColumn(),
-//            $this->buttonsColumn(),
+        $this->header ??= [
+            $this->search->getToolbarItem(),
         ];
 
-        //        if ($this->showSelection) {
-        //            array_unshift($this->columns, [
-        //                'class' => CheckboxColumn::class,
-        //            ]);
-        //        }
+        $this->columns ??= [
+            $this->getCheckboxColumn(),
+            $this->getTypeIconColumn(),
+            $this->getRequestUriColumn(),
+            $this->getUrlColumn(),
+            $this->getUpdatedAtColumn(),
+            $this->getButtonColumn(),
+        ];
+
+        if ($this->showSelection) {
+            array_unshift($this->columns, [
+                'class' => CheckboxColumn::class,
+            ]);
+        }
+
+        $this->footer ??= [
+            $this->getCreateButton(),
+            $this->showSelection ? $this->getSelectionButton() : null,
+        ];
 
         parent::init();
     }
 
-    protected function initHeader(): void
-    {
-        $this->header ??= [
-            [
-                $this->search->getToolbarItem(),
-            ],
-        ];
-    }
-
-    protected function initFooter(): void
-    {
-        $this->footer ??= [
-            [
-                $this->getCreateButton(),
-                $this->showSelection ? $this->getSelectionButton() : null,
-            ],
-        ];
-    }
 
     protected function setDataProviderFromRedirect(): void
     {
-        $this->provider = Yii::createObject(RedirectActiveDataProvider::class);
+        $this->provider ??= Yii::createObject(RedirectActiveDataProvider::class);
 
         $this->provider->query
             ->andWhere(['url' => $this->redirect->getOldAttribute('url')])
@@ -95,58 +89,57 @@ class RedirectGridView extends GridView
         $this->layout = '{items}';
     }
 
-    protected function requestUriColumn()
+    protected function getCheckboxColumn(): ?CheckboxColumn
     {
-        //        return Yii::createObject(DataColumn::class, [
-        //            'attribute' => 'request_uri',
-        //            'grid' => $this,
-        //            'content' => fn (Redirect $redirect) => A::make()
-        //                ->html(Html::markKeywords($redirect->request_uri, $this->search->getKeywords()))
-        //                ->href($this->getRoute($redirect)),
-        //        ]);
-        return new DataColumn(
-            attribute: 'request_uri',
-            content: fn (Redirect $redirect) => A::make()
-                ->content(Html::markKeywords($redirect->request_uri, $this->search->getKeywords()))
-                ->href($this->getRoute($redirect)),
-            grid: $this,
-        );
-        return [
-            'attribute' => 'request_uri',
-            'content' => fn (Redirect $redirect) => A::make()
-                ->content(Html::markKeywords($redirect->request_uri, $this->search->getKeywords()))
-                ->href($this->getRoute($redirect))
-        ];
+        return $this->showSelection
+            ? CheckboxColumn::make()
+            : null;
     }
 
-    protected function urlColumn(): array
+    protected function getRequestUriColumn(): DataColumn
     {
-        return [
-            'attribute' => 'url',
-            'content' => fn (Redirect $redirect) => A::make()
+        return DataColumn::make()
+            ->property('request_uri')
+            ->content(fn (Redirect $redirect): Stringable => A::make()
+                ->content(Html::markKeywords($redirect->request_uri, $this->search->getKeywords()))
+                ->href($this->getRoute($redirect)));
+    }
+
+    protected function getUrlColumn(): DataColumn
+    {
+        return DataColumn::make()
+            ->property('url')
+            ->content(fn (Redirect $redirect): Stringable => A::make()
                 ->icon('external-link-alt')
                 ->content(Html::markKeywords($redirect->url ?: '/', $this->search->getKeywords()))
                 ->href($redirect->url)
-                ->target('_blank')
-        ];
+                ->target('_blank'));
     }
 
-    protected function updatedAtColumn(): array
+    protected function getUpdatedAtColumn(): TimeagoColumn
     {
-        return [
-            'class' => TimeagoColumn::class,
-            'attribute' => 'updated_at',
-            'contentAttributes' => ['class' => 'text-nowrap'],
-            'headerAttributes' => ['class' => 'text-nowrap'],
-            'displayAtBreakpoint' => 'md',
-        ];
+        return TimeagoColumn::make()
+            ->property('updated_at')
+            ->hiddenForSmallDevices();
     }
 
-    protected function buttonsColumn(): array
+    protected function getButtonColumn(): ButtonColumn
+    {
+        return ButtonColumn::make()
+            ->content($this->getButtonColumnContent(...));
+    }
+
+    /**
+     * @see RedirectController::actionDelete()
+     * @see RedirectController::actionUpdate()
+     */
+    protected function getButtonColumnContent(Redirect $redirect): array
     {
         return [
-            'class' => ButtonColumn::class,
-            'content' => $this->getRowButtons(...),
+            ViewButton::make()
+                ->model($redirect),
+            DeleteButton::make()
+                ->model($redirect),
         ];
     }
 
@@ -177,18 +170,5 @@ class RedirectGridView extends GridView
             ->attribute('data-id', 'check-button')
             ->addClass('d-none', 'd-block-checked')
             ->modal($modal);
-    }
-
-    /**
-     * @return array<Stringable>
-     * @see RedirectController::actionDelete()
-     * @see RedirectController::actionUpdate()
-     */
-    protected function getRowButtons(Redirect $redirect): array
-    {
-        return [
-            Yii::createObject(ViewButton::class, [$redirect]),
-            Yii::createObject(DeleteButton::class, [$redirect]),
-        ];
     }
 }

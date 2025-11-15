@@ -43,7 +43,7 @@ class TrailGridView extends GridView
         ];
 
         $this->columns ??= [
-            $this->typeIconColumn(),
+            $this->getTypeIconColumn(),
             $this->modelColumn(),
             $this->dataColumn(),
             $this->userColumn(),

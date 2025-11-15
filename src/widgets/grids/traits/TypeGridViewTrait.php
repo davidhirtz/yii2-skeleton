@@ -6,8 +6,10 @@ namespace davidhirtz\yii2\skeleton\widgets\grids\traits;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\interfaces\TypeAttributeInterface;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\LinkColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\FilterDropdown;
 use Yii;
+use yii\db\ActiveRecordInterface;
 
 trait TypeGridViewTrait
 {
@@ -15,32 +17,32 @@ trait TypeGridViewTrait
     protected string|false|null $typeDefaultItem = null;
     protected string $typeParamName = 'type';
 
-    public function typeColumn(): array
+    protected function getTypeColumn(): LinkColumn
     {
-        return [
-            'attribute' => 'type',
-            'visible' => $this->hasVisibleTypes(),
-            'contentAttributes' => ['class' => 'text-nowrap'],
-            'content' => function ($model) {
-                $route = $this->getRoute($model);
-                return $route ? Html::a($model->getTypeName(), $route) : $model->getTypeName();
-            },
-        ];
+        return LinkColumn::make()
+            ->property('typeName')
+            ->visible($this->hasVisibleTypes())
+            ->href($this->getRoute(...))
+            ->nowrap();
     }
 
-    public function typeIconColumn(): array
+    protected function getTypeIconColumn(): LinkColumn
     {
-        return [
-            'visible' => $this->hasVisibleTypes(),
-            'contentAttributes' => ['class' => 'text-center'],
-            'content' => function ($model) {
-                $icon = $this->getTypeIcon($model);
-                return ($route = $this->getRoute($model)) ? Html::a($icon, $route) : $icon;
-            }
-        ];
+        return LinkColumn::make()
+            ->property('type')
+            ->header(false)
+            ->href($this->getRoute(...))
+            ->content($this->getTypeColumnContent(...))
+            ->visible($this->hasVisibleTypes())
+            ->centered();
     }
 
-    public function getTypeDropdown(): ?FilterDropdown
+    protected function getTypeColumnContent(ActiveRecordInterface&TypeAttributeInterface $model): string
+    {
+        return $this->getTypeIcon($model);
+    }
+
+    protected function getTypeDropdown(): ?FilterDropdown
     {
         return $this->hasVisibleTypes()
             ? new FilterDropdown(

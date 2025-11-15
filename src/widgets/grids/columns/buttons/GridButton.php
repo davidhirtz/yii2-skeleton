@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\grids\columns\buttons;
 
-use Stringable;
-use Yii;
+use davidhirtz\yii2\skeleton\base\traits\ContainerConfigurationTrait;
+use davidhirtz\yii2\skeleton\widgets\Widget;
 use yii\db\ActiveRecord;
 
-abstract class GridButton implements Stringable
+abstract class GridButton extends Widget
 {
+    use ContainerConfigurationTrait;
+
     protected ?string $icon = null;
     protected ?string $label = null;
     protected ?ActiveRecord $model = null;
@@ -38,16 +40,4 @@ abstract class GridButton implements Stringable
         $this->url = $url;
         return $this;
     }
-
-    public function __toString(): string
-    {
-        return $this->render();
-    }
-
-    final public static function make(): static
-    {
-        return Yii::$container->get(static::class);
-    }
-
-    abstract public function render(): string;
 }

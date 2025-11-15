@@ -4,41 +4,35 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\grids\toolbars;
 
-use davidhirtz\yii2\skeleton\html\base\Tag;
 use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagIconTextTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagLinkTrait;
+use davidhirtz\yii2\skeleton\widgets\Widget;
 use Yii;
 
-class CreateButton extends Tag
+class CreateButton extends Widget
 {
-    protected array|null $href = null;
-    protected ?string $label = null;
-    protected ?string $icon = null;
+    use TagAttributesTrait;
+    use TagIconTextTrait;
+    use TagLinkTrait;
 
-    public function href(array|string|null $href): static
+    protected function prepareAttributes(): void
     {
-        $this->href = $href;
-        return $this;
-    }
+        if (!$this->content) {
+            $this->content = [Yii::t('skeleton', 'Create')];
+        }
 
-    public function label(string $label): static
-    {
-        $this->label = $label;
-        return $this;
-    }
-
-    public function icon(string|null $icon): static
-    {
-        $this->icon = $icon;
-        return $this;
+        $this->attributes['href'] ??= ['create'];
     }
 
     public function renderContent(): string
     {
         return Button::make()
+            ->addAttributes($this->attributes)
             ->primary()
-            ->text($this->label ?? Yii::t('skeleton', 'Create'))
+            ->content(...$this->content)
             ->icon($this->icon ?? 'plus')
-            ->href($this->href ?? ['create'])
             ->render();
     }
 }

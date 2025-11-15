@@ -8,7 +8,7 @@ use davidhirtz\yii2\skeleton\html\Button;
 
 class ViewButton extends GridButton
 {
-    public function render(): string
+    public function renderContent(): string
     {
         if ($this->model) {
             $this->url ??= ['update', 'id' => $this->model->getPrimaryKey()];

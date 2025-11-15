@@ -8,7 +8,7 @@ use davidhirtz\yii2\skeleton\html\Button;
 
 class DraggableSortButton extends GridButton
 {
-    public function render(): string
+    public function renderContent(): string
     {
         return Button::make()
             ->secondary()

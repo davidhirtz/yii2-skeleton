@@ -59,9 +59,9 @@ class UserGridView extends GridView
     {
         return $this->webuser->can(User::AUTH_USER_CREATE)
             ? CreateButton::make()
-                ->label(Yii::t('skeleton', 'New User'))
-                ->href(['/admin/user/create'])
                 ->icon('user-plus')
+                ->text(Yii::t('skeleton', 'New User'))
+                ->href(['/admin/user/create'])
             : null;
     }
 
