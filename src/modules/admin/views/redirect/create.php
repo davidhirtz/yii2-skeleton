@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -8,6 +9,7 @@ declare(strict_types=1);
  * @var Redirect $redirect
  */
 
+use davidhirtz\yii2\skeleton\html\A;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\RedirectActiveForm;
@@ -15,7 +17,6 @@ use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 use davidhirtz\yii2\skeleton\widgets\forms\FormContainer;
 use davidhirtz\yii2\skeleton\widgets\navs\Header;
-use \davidhirtz\yii2\skeleton\html\A;
 
 $this->setTitle(Yii::t('skeleton', 'Create New Redirect'));
 $this->setBreadcrumb(Yii::t('skeleton', 'Redirects'), ['index']);
@@ -32,4 +33,3 @@ echo FormContainer::make()
     ->form(RedirectActiveForm::widget([
         'model' => $redirect,
     ]));
-

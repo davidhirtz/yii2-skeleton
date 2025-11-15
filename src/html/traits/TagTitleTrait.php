@@ -16,5 +16,4 @@ trait TagTitleTrait
         $this->title = is_string($title) ? Html::encode($title) : null;
         return $this;
     }
-
 }
