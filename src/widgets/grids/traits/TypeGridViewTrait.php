@@ -20,7 +20,7 @@ trait TypeGridViewTrait
         return [
             'attribute' => 'type',
             'visible' => $this->hasVisibleTypes(),
-            'contentOptions' => ['class' => 'text-nowrap'],
+            'contentAttributes' => ['class' => 'text-nowrap'],
             'content' => function ($model) {
                 $route = $this->getRoute($model);
                 return $route ? Html::a($model->getTypeName(), $route) : $model->getTypeName();
@@ -32,7 +32,7 @@ trait TypeGridViewTrait
     {
         return [
             'visible' => $this->hasVisibleTypes(),
-            'contentOptions' => ['class' => 'text-center'],
+            'contentAttributes' => ['class' => 'text-center'],
             'content' => function ($model) {
                 $icon = $this->getTypeIcon($model);
                 return ($route = $this->getRoute($model)) ? Html::a($icon, $route) : $icon;

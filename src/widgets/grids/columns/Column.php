@@ -6,31 +6,54 @@ namespace davidhirtz\yii2\skeleton\widgets\grids\columns;
 
 use Closure;
 use davidhirtz\yii2\skeleton\html\Td;
+use davidhirtz\yii2\skeleton\html\Th;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\interfaces\ColumnInterface;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use Stringable;
 use yii\base\Model;
 
-class Column
+class Column implements ColumnInterface
 {
-    public function __construct(
-        protected readonly GridView $grid,
-        protected string|null|Closure $content = null,
-        protected array|null|Closure $contentAttributes = null,
-        protected ?string $header = null,
-        protected ?array $headerAttributes = null,
-        public bool $visible = true,
-        protected string $emptyCell = '&nbsp;',
-    ) {
-        $this->init();
+    protected GridView $grid;
+    protected string|null|Closure $content = null;
+    protected array|null|Closure $contentAttributes = null;
+    protected ?string $header = null;
+    protected ?array $headerAttributes = null;
+    protected string $emptyCell = '&nbsp;';
+
+    public function grid(GridView $grid): static
+    {
+        $this->grid = $grid;
+        return $this;
     }
 
-    protected function init(): void
+    public function content(string|Closure|null $content): static
     {
+        $this->content = $content;
+        return $this;
     }
 
-    public function renderHeader(): Td
+    public function contentAttributes(array|Closure|null $attributes): static
     {
-        return Td::make()
+        $this->contentAttributes = $attributes;
+        return $this;
+    }
+
+    public function header(string|null $header): static
+    {
+        $this->header = $header;
+        return $this;
+    }
+
+    public function headerAttributes(array|null $attributes): static
+    {
+        $this->headerAttributes = $attributes;
+        return $this;
+    }
+
+    public function renderHeader(): Th
+    {
+        return Th::make()
             ->html($this->renderHeaderCellContent())
             ->attributes($this->headerAttributes ?? []);
     }

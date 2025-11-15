@@ -2,22 +2,18 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\grids\buttons;
+namespace davidhirtz\yii2\skeleton\widgets\grids\columns\buttons;
 
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Modal;
-use Stringable;
 use Yii;
-use yii\db\ActiveRecord;
 
-class DeleteButton implements Stringable
+class DeleteButton extends GridButton
 {
-    public function __construct(
-        private readonly ?ActiveRecord $model = null,
-        private array|null|string $url = null,
-        private ?string $message = null,
-        private readonly ?string $icon = 'trash',
-    ) {
+    protected ?string $message = null;
+
+    public function render(): string
+    {
         $this->message ??= Yii::t('yii', 'Are you sure you want to delete this item?');
 
         if ($this->model) {
@@ -27,20 +23,17 @@ class DeleteButton implements Stringable
                 'id' => $this->model->getPrimaryKey(),
             ];
         }
-    }
 
-    public function __toString(): string
-    {
         $modal = Modal::make()
             ->title($this->message)
             ->footer(Button::make()
                 ->danger()
                 ->post($this->url)
-                ->text(Yii::t('yii', 'Delete')));
+                ->text($this->label ?? Yii::t('yii', 'Delete')));
 
         return Button::make()
             ->danger()
-            ->icon($this->icon)
+            ->icon($this->icon ?? 'trash')
             ->modal($modal)
             ->render();
     }

@@ -9,16 +9,16 @@ use davidhirtz\yii2\skeleton\html\Alert;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Ul;
-use davidhirtz\yii2\skeleton\widgets\Widget;
+use Stringable;
 use Yii;
 use yii\base\Model;
 use yii\db\ActiveRecord;
 
-class ErrorSummary extends Widget
+class ErrorSummary extends Stringable
 {
-    public ?string $icon = 'exclamation-triangle';
-    public array $errors = [];
-    public bool $showAllErrors = true;
+    protected ?string $icon = 'exclamation-triangle';
+    protected array $errors = [];
+    protected bool $showAllErrors = true;
     protected string|false|null $title = null;
 
     /**
@@ -28,35 +28,19 @@ class ErrorSummary extends Widget
 
     public static function forModel(Model $model): static
     {
-        return static::make()->models($model);
+        return (new self())->models($model);
     }
 
-    public function render(): string
+    public function icon(string|null $icon): static
     {
-        if ($this->models) {
-            $this->errors = $this->getModelErrors();
-        }
-
-        if (!$this->errors) {
-            return '';
-        }
-
-        $content = $this->renderAlert();
-
-        return Container::make()
-            ->html($content)
-            ->render();
+        $this->icon = $icon;
+        return $this;
     }
 
-    protected function getModelErrors(): array
+    public function errors(array $errors): static
     {
-        $errors = [];
-
-        foreach ($this->models as $model) {
-            $errors = array_unique([...$errors, ...$model->getErrorSummary($this->showAllErrors)]);
-        }
-
-        return array_values($errors);
+        $this->errors = $errors;
+        return $this;
     }
 
     public function models(array|Model $model): static
@@ -71,10 +55,33 @@ class ErrorSummary extends Widget
         return $this;
     }
 
+    public function showAllErrors(bool $showAllErrors): static
+    {
+        $this->showAllErrors = $showAllErrors;
+        return $this;
+    }
+
     public function title(string|false|null $title): static
     {
         $this->title = $title;
         return $this;
+    }
+
+    public function render(): string
+    {
+        $this->errors ??= $this->getModelErrors();
+        return $this->errors ? Container::make()->html($this->renderAlert())->render() : '';
+    }
+
+    protected function getModelErrors(): array
+    {
+        $errors = [];
+
+        foreach ($this->models as $model) {
+            $errors = array_unique([...$errors, ...$model->getErrorSummary($this->showAllErrors)]);
+        }
+
+        return array_values($errors);
     }
 
     protected function renderAlert(): string
@@ -102,5 +109,10 @@ class ErrorSummary extends Widget
             ->class('alert-heading')
             ->html($this->title)
             ->render();
+    }
+
+    public function __toString(): string
+    {
+        return $this->render();
     }
 }

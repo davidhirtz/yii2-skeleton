@@ -74,9 +74,4 @@ class Alert extends Tag
 
         return $content;
     }
-
-    protected function getTagName(): string
-    {
-        return 'div';
-    }
 }

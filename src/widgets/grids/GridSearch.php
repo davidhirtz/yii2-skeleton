@@ -8,6 +8,7 @@ use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\web\Request;
+use davidhirtz\yii2\skeleton\widgets\grids\toolbars\GridToolbarItem;
 use Yii;
 use yii\base\Widget;
 use yii\helpers\Url;

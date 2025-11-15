@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\grids\columns;
 
-use Closure;
 use davidhirtz\yii2\skeleton\assets\SelectableAssetBundle;
 use davidhirtz\yii2\skeleton\html\Checkbox;
-use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use Override;
 use Stringable;
 use Yii;
@@ -16,18 +14,12 @@ use yii\base\Model;
 class CheckboxColumn extends Column
 {
     public function __construct(
-        GridView $grid,
         protected array $checkboxAttributes = [],
         protected bool $multiple = true,
         protected string $name = 'selection[]',
-        Closure|string|null $content = null,
-        array|Closure $contentAttributes = [],
-        ?string $header = null,
-        array $headerAttributes = [],
-        bool $visible = true,
-        string $emptyCell = '&nbsp;',
+        ...$args,
     ) {
-        parent::__construct($grid, $content, $contentAttributes, $header, $headerAttributes, $visible, $emptyCell);
+        parent::__construct(...$args);
     }
 
     protected function init(): void

@@ -11,12 +11,12 @@ use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
 use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
-use davidhirtz\yii2\skeleton\widgets\grids\buttons\CreateButton;
-use davidhirtz\yii2\skeleton\widgets\grids\buttons\DeleteButton;
-use davidhirtz\yii2\skeleton\widgets\grids\buttons\ViewButton;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\DeleteButton;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\ViewButton;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonsColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\CheckboxColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
+use davidhirtz\yii2\skeleton\widgets\grids\toolbars\CreateButton;
 use davidhirtz\yii2\skeleton\widgets\grids\traits\TypeGridViewTrait;
 use davidhirtz\yii2\timeago\TimeagoColumn;
 use Override;
@@ -25,7 +25,7 @@ use Yii;
 
 /**
  * @extends GridView<Redirect>
- * @property RedirectActiveDataProvider $dataProvider
+ * @property RedirectActiveDataProvider $provider
  */
 class RedirectGridView extends GridView
 {
@@ -45,18 +45,18 @@ class RedirectGridView extends GridView
         }
 
         $this->columns ??= [
-            $this->typeIconColumn(),
+//            $this->typeIconColumn(),
             $this->requestUriColumn(),
-            $this->urlColumn(),
-            $this->updatedAtColumn(),
-            $this->buttonsColumn(),
+//            $this->urlColumn(),
+//            $this->updatedAtColumn(),
+//            $this->buttonsColumn(),
         ];
 
-        if ($this->showSelection) {
-            array_unshift($this->columns, [
-                'class' => CheckboxColumn::class,
-            ]);
-        }
+        //        if ($this->showSelection) {
+        //            array_unshift($this->columns, [
+        //                'class' => CheckboxColumn::class,
+        //            ]);
+        //        }
 
         parent::init();
     }
@@ -82,9 +82,9 @@ class RedirectGridView extends GridView
 
     protected function setDataProviderFromRedirect(): void
     {
-        $this->dataProvider = Yii::createObject(RedirectActiveDataProvider::class);
+        $this->provider = Yii::createObject(RedirectActiveDataProvider::class);
 
-        $this->dataProvider->query
+        $this->provider->query
             ->andWhere(['url' => $this->redirect->getOldAttribute('url')])
             ->andWhere(['!=', 'id', $this->redirect->id]);
     }
@@ -95,8 +95,22 @@ class RedirectGridView extends GridView
         $this->layout = '{items}';
     }
 
-    protected function requestUriColumn(): array
+    protected function requestUriColumn()
     {
+        //        return Yii::createObject(DataColumn::class, [
+        //            'attribute' => 'request_uri',
+        //            'grid' => $this,
+        //            'content' => fn (Redirect $redirect) => A::make()
+        //                ->html(Html::markKeywords($redirect->request_uri, $this->search->getKeywords()))
+        //                ->href($this->getRoute($redirect)),
+        //        ]);
+        return new DataColumn(
+            attribute: 'request_uri',
+            content: fn (Redirect $redirect) => A::make()
+                ->html(Html::markKeywords($redirect->request_uri, $this->search->getKeywords()))
+                ->href($this->getRoute($redirect)),
+            grid: $this,
+        );
         return [
             'attribute' => 'request_uri',
             'content' => fn (Redirect $redirect) => A::make()
@@ -122,8 +136,8 @@ class RedirectGridView extends GridView
         return [
             'class' => TimeagoColumn::class,
             'attribute' => 'updated_at',
-            'contentOptions' => ['class' => 'text-nowrap'],
-            'headerOptions' => ['class' => 'text-nowrap'],
+            'contentAttributes' => ['class' => 'text-nowrap'],
+            'headerAttributes' => ['class' => 'text-nowrap'],
             'displayAtBreakpoint' => 'md',
         ];
     }

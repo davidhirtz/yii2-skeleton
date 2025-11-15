@@ -25,7 +25,7 @@ class AuthClientsGridView extends GridView
     #[Override]
     public function init(): void
     {
-        $this->dataProvider = new ArrayDataProvider([
+        $this->provider = new ArrayDataProvider([
             'allModels' => $this->user->authClients,
         ]);
 

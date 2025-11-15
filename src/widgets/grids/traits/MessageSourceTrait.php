@@ -40,7 +40,7 @@ trait MessageSourceTrait
             }
 
             /** @var AuthItem $authItem */
-            foreach ($this->dataProvider->getModels() as $authItem) {
+            foreach ($this->provider->getModels() as $authItem) {
                 if ($message = $authItem->{$this->messageSourceAttribute}) {
                     foreach ($sources as $category => $source) {
                         if ($translation = $source->translate($category, $message, Yii::$app->language)) {

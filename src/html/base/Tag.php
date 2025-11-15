@@ -117,5 +117,8 @@ abstract class Tag implements Stringable
         return $this->render();
     }
 
-    abstract protected function getTagName(): string;
+    protected function getTagName(): string
+    {
+        return 'div';
+    }
 }

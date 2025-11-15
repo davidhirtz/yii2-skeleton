@@ -14,9 +14,4 @@ class ButtonToolbar extends Tag
     protected array $attributes = [
         'class' => 'btn-toolbar',
     ];
-
-    protected function getTagName(): string
-    {
-        return 'div';
-    }
 }

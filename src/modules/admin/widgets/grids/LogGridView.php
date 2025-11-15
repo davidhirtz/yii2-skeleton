@@ -12,7 +12,7 @@ use Override;
 use Yii;
 
 /**
- * @property LogDataProvider $dataProvider
+ * @property LogDataProvider $provider
  */
 class LogGridView extends GridView
 {

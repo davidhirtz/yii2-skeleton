@@ -19,9 +19,4 @@ class Container extends Tag
     {
         return $this->addClass('container-centered');
     }
-
-    protected function getTagName(): string
-    {
-        return 'div';
-    }
 }

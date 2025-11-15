@@ -8,9 +8,11 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\UserActiveDataProvider;
-use davidhirtz\yii2\skeleton\widgets\grids\buttons\CreateButton;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonsColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\interfaces\ColumnInterface;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
+use davidhirtz\yii2\skeleton\widgets\grids\toolbars\CreateButton;
 use davidhirtz\yii2\skeleton\widgets\grids\traits\StatusGridViewTrait;
 use davidhirtz\yii2\timeago\Timeago;
 use davidhirtz\yii2\timeago\TimeagoColumn;
@@ -21,29 +23,28 @@ use yii\db\ActiveRecordInterface;
 
 /**
  * @extends GridView<User>
- * @property UserActiveDataProvider $dataProvider
+ * @property UserActiveDataProvider $provider
  */
 class UserGridView extends GridView
 {
     use StatusGridViewTrait;
 
-    #[Override]
-    public function init(): void
+    public function __construct()
     {
-        $this->setId($this->getId(false) ?? 'users');
+        $this->attributes['id'] ??= 'user-grid';
+
+        $this->rowAttributes = fn (User $user) => ['class' => $user->isDisabled() ? 'disabled' : null];
 
         $this->columns ??= [
             $this->statusColumn(),
-            $this->nameColumn(),
+            $this->getNameColumn(),
             $this->emailColumn(),
             $this->lastLoginColumn(),
             $this->createdAtColumn(),
             $this->buttonsColumn(),
         ];
 
-        $this->rowAttributes = fn (User $user) => ['class' => $user->isDisabled() ? 'disabled' : null];
-
-        parent::init();
+        parent::__construct();
     }
 
     protected function initHeader(): void
@@ -59,26 +60,35 @@ class UserGridView extends GridView
     {
         $this->footer ??= [
             [
-                [
-                    'content' => $this->getCreateButton(),
-                    'visible' => Yii::$app->getUser()->can(User::AUTH_USER_CREATE),
-                ],
+                $this->getCreateButton(),
             ],
         ];
     }
 
-    protected function nameColumn(): array
+    protected function getCreateButton(): ?Stringable
     {
-        return [
-            'attribute' => 'name',
-            'content' => function (User $user) {
-                $name = ($name = $user->getUsername())
-                    ? Html::tag('strong', Html::markKeywords($name, $this->search->getKeywords()))
-                    : Html::tag('span', Yii::t('skeleton', 'User'), ['class' => 'text-muted']);
+        return Yii::$app->getUser()->can(User::AUTH_USER_CREATE)
+            ? CreateButton::make()
+                ->label(Yii::t('skeleton', 'New User'))
+                ->href(['/admin/user/create'])
+                ->icon('user-plus')
+            : null;
+    }
 
-                return ($route = $this->getRoute($user)) ? Html::a($name, $route) : $name;
-            }
-        ];
+    protected function getNameColumn(): ColumnInterface
+    {
+        return DataColumn::make()
+            ->attribute('name')
+            ->content($this->getNameColumnContent(...));
+    }
+
+    protected function getNameColumnContent(User $user): string|Stringable
+    {
+        $name = ($name = $user->getUsername())
+            ? Html::div(Html::markKeywords($name, $this->search->getKeywords()), ['class' => 'strong'])
+            : Html::div(Yii::t('skeleton', 'User'), ['class' => 'text-muted']);
+
+        return ($route = $this->getRoute($user)) ? Html::a($name, $route) : $name;
     }
 
     protected function emailColumn(): array
@@ -139,15 +149,6 @@ class UserGridView extends GridView
             'class' => ButtonsColumn::class,
             'content' => $this->getRowButtons(...),
         ];
-    }
-
-    protected function getCreateButton(): Stringable
-    {
-        return new CreateButton(
-            Yii::t('skeleton', 'New User'),
-            ['/admin/user/create'],
-            'user-plus',
-        );
     }
 
     protected function getRowButtons(User $user): array|string

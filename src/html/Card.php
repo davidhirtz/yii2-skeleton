@@ -89,9 +89,4 @@ class Card extends Tag
 
         return implode('', $content);
     }
-
-    protected function getTagName(): string
-    {
-        return 'div';
-    }
 }

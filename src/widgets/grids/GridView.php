@@ -15,12 +15,12 @@ use davidhirtz\yii2\skeleton\html\Thead;
 use davidhirtz\yii2\skeleton\html\Tr;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\interfaces\ColumnInterface;
 use davidhirtz\yii2\skeleton\widgets\grids\pagers\LinkPager;
-use Override;
+use davidhirtz\yii2\skeleton\widgets\grids\toolbars\GridToolbarItem;
 use Stringable;
 use Yii;
 use yii\base\Model;
-use yii\base\Widget;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\data\DataProviderInterface;
@@ -31,12 +31,12 @@ use yii\helpers\Url;
 /**
  * @template T of ActiveRecord
  */
-class GridView extends Widget
+class GridView implements Stringable
 {
-    public DataProviderInterface $dataProvider;
+    public DataProviderInterface $provider;
 
     /**
-     * @var array<int, string|Column|array>
+     * @var Column[]
      */
     public array $columns;
 
@@ -59,8 +59,9 @@ class GridView extends Widget
     public string $layout = '{header}{summary}{items}{pager}{footer}';
     public ?array $orderRoute = ['order'];
 
-    #[Override]
-    public function init(): void
+    private static int $counter = 0;
+
+    public function __construct()
     {
         $this->search ??= Yii::createObject(GridSearch::class, [$this]);
         $this->columns ??= $this->getDefaultColumns();
@@ -69,8 +70,8 @@ class GridView extends Widget
         $this->initColumns();
         $this->initFooter();
 
-        $this->attributes['id'] ??= $this->getId();
-        $this->attributes['hx-select'] ??= '#' . $this->getId();
+        $this->attributes['id'] ??= 'grid-' . ++self::$counter;
+        $this->attributes['hx-select'] ??= "#{$this->attributes['id']}";
         $this->attributes['hx-target'] ??= $this->attributes['hx-select'];
         $this->attributes['hx-select-oob'] ??= '#flashes';
 
@@ -80,10 +81,14 @@ class GridView extends Widget
 
         if ($this->isSortable()) {
             $this->tableBodyAttributes['data-sort-url'] ??= Url::to($this->orderRoute);
-            $this->getView()->registerAssetBundle(SortableAssetBundle::class);
+            Yii::$app->getView()->registerAssetBundle(SortableAssetBundle::class);
         }
+    }
 
-        parent::init();
+    public function provider(DataProviderInterface $data): static
+    {
+        $this->provider = $data;
+        return $this;
     }
 
     protected function initHeader(): void
@@ -92,25 +97,25 @@ class GridView extends Widget
 
     protected function initColumns(): void
     {
-        foreach ($this->columns as $i => $column) {
-            if (is_string($column)) {
-                $column = ['attribute' => $column];
-            }
-
-            if (is_array($column)) {
-                $className = ArrayHelper::remove($column, 'class', DataColumn::class);
-                $column['grid'] = $this;
-
-                $column = Yii::createObject($className, $column);
-            }
-
-            if (!$column->visible) {
-                unset($this->columns[$i]);
-                continue;
-            }
-
-            $this->columns[$i] = $column;
-        }
+        //        foreach ($this->columns as $i => $column) {
+        //            if (is_string($column)) {
+        //                $column = ['attribute' => $column];
+        //            }
+        //
+        //            if (is_array($column)) {
+        //                $className = ArrayHelper::remove($column, 'class', DataColumn::class);
+        //                $column['grid'] = $this;
+        //
+        //                dd($className, $column);
+        //            }
+        //
+        //            if (!$column->visible) {
+        //                unset($this->columns[$i]);
+        //                continue;
+        //            }
+        //
+        //            $this->columns[$i] = $column;
+        //        }
     }
 
     protected function initFooter(): void
@@ -119,7 +124,7 @@ class GridView extends Widget
 
     protected function getDefaultColumns(): array
     {
-        $models = $this->dataProvider->getModels();
+        $models = $this->provider->getModels();
         $model = reset($models);
         $columns = [];
 
@@ -134,10 +139,9 @@ class GridView extends Widget
         return $columns;
     }
 
-    #[Override]
-    public function run(): string
+    public function render(): string
     {
-        return $this->dataProvider->getCount() || $this->showOnEmpty
+        return $this->provider->getCount() || $this->showOnEmpty
             ? Html::div($this->renderContent(), $this->attributes)->render()
             : '';
     }
@@ -185,9 +189,19 @@ class GridView extends Widget
         return $items ? Html::div($items)->addClass('row') : null;
     }
 
+    protected function renderSummary(): ?Stringable
+    {
+        return Yii::createObject(GridSummary::class, [
+            $this->provider->getCount(),
+            $this->provider->getTotalCount(),
+            $this->provider->getPagination(),
+            $this->search,
+        ]);
+    }
+
     protected function renderItems(): ?Stringable
     {
-        return $this->dataProvider->getCount()
+        return $this->provider->getCount()
             ? Html::div($this->renderTable())->class('table-responsive')
             : null;
     }
@@ -205,7 +219,7 @@ class GridView extends Widget
         $tr = Tr::make()->attributes($this->headerRowAttributes);
 
         foreach ($this->columns as $column) {
-            $tr->addCells($column instanceof Column ? $column->renderHeader() : '');
+            $tr->addCells($column->renderHeader());
         }
 
         return Thead::make()->rows($tr);
@@ -213,8 +227,8 @@ class GridView extends Widget
 
     protected function renderTableBody(): Tbody
     {
-        $models = array_values($this->dataProvider->getModels());
-        $keys = $this->dataProvider->getKeys();
+        $models = array_values($this->provider->getModels());
+        $keys = $this->provider->getKeys();
 
         $tbody = Tbody::make()
             ->attributes($this->tableBodyAttributes);
@@ -243,27 +257,17 @@ class GridView extends Widget
             ->attributes($attributes);
 
         foreach ($this->columns as $column) {
-            $tr->addCells($column instanceof Column ? $column->renderBody($model, $key, $index) : '');
+            $tr->addCells($column->renderBody($model, $key, $index));
         }
 
         return $tr;
     }
 
-    protected function renderSummary(): ?Stringable
-    {
-        return Yii::createObject(GridSummary::class, [
-            $this->dataProvider->getCount(),
-            $this->dataProvider->getTotalCount(),
-            $this->dataProvider->getPagination(),
-            $this->search,
-        ]);
-    }
-
     protected function renderPager(): string
     {
-        $pagination = $this->dataProvider->getPagination();
+        $pagination = $this->provider->getPagination();
 
-        if ($pagination === false || $this->dataProvider->getCount() <= 0) {
+        if ($pagination === false || $this->provider->getCount() <= 0) {
             return '';
         }
 
@@ -271,7 +275,7 @@ class GridView extends Widget
 
         return $class::widget([
             'pagination' => $pagination,
-            'view' => $this->getView(),
+            'view' => Yii::$app->getView(),
         ]);
     }
 
@@ -280,22 +284,32 @@ class GridView extends Widget
         return $this->footer ? $this->renderToolbars($this->footer, $this->footerAttributes) : null;
     }
 
+    /**
+     * @template TCol of ColumnInterface
+     * @param class-string<TCol> $className
+     * @return TCol
+     */
+    protected function getColumn(string $className = DataColumn::class): ColumnInterface
+    {
+        return Yii::$container->get($className, [$this]);
+    }
+
     public function getModel(): ?Model
     {
-        if ($this->dataProvider instanceof ActiveDataProvider) {
+        if ($this->provider instanceof ActiveDataProvider) {
             /** @var class-string<ActiveRecord>|null $modelClass */
-            $modelClass = $this->dataProvider->query->modelClass ?? null;
+            $modelClass = $this->provider->query->modelClass ?? null;
         }
 
-        $modelClass ??= $this->dataProvider instanceof ArrayDataProvider
-            ? $this->dataProvider->modelClass
+        $modelClass ??= $this->provider instanceof ArrayDataProvider
+            ? $this->provider->modelClass
             : null;
 
         if ($modelClass) {
             return $modelClass::instance();
         }
 
-        $models = $this->dataProvider->getModels();
+        $models = $this->provider->getModels();
         $model = reset($models);
 
         return $model instanceof Model ? $model : null;
@@ -311,9 +325,19 @@ class GridView extends Widget
 
     protected function isSortable(): bool
     {
-        return $this->dataProvider->getSort() === false
-            && $this->dataProvider->getPagination() === false
+        return $this->provider->getSort() === false
+            && $this->provider->getPagination() === false
             && !$this->search->value
             && $this->orderRoute !== null;
+    }
+
+    public static function make(): static
+    {
+        return Yii::createObject(static::class);
+    }
+
+    public function __toString(): string
+    {
+        return $this->render();
     }
 }

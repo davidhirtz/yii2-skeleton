@@ -24,7 +24,7 @@ use yii\helpers\Url;
 
 /**
  * @extends GridView<Trail>
- * @property TrailActiveDataProvider $dataProvider
+ * @property TrailActiveDataProvider $provider
  */
 class TrailGridView extends GridView
 {
@@ -60,7 +60,7 @@ class TrailGridView extends GridView
         return [
             'attribute' => 'model',
             'contentOptions' => ['style' => 'width:300px'],
-            'visible' => !$this->dataProvider->model,
+            'visible' => !$this->provider->model,
             'content' => function (Trail $trail): string {
                 if ($trail->model) {
                     $model = $trail->getModelClass();
@@ -255,7 +255,7 @@ class TrailGridView extends GridView
             'attribute' => 'user_id',
             'headerOptions' => ['class' => 'd-none d-md-table-cell'],
             'contentOptions' => ['class' => 'd-none d-md-table-cell text-nowrap'],
-            'visible' => !$this->dataProvider->user,
+            'visible' => !$this->provider->user,
             'content' => function (Trail $trail) {
                 if (!$trail->user_id) {
                     return '';
@@ -288,7 +288,7 @@ class TrailGridView extends GridView
     protected function renderDataTrailLink(Trail $trail): string
     {
         if ($trailId = ($trail->data['trail_id'] ?? false)) {
-            $link = isset($this->dataProvider->getModels()[$trailId]) ? Url::current(['#' => 'trail-' . $trailId]) : ['index', 'id' => $trailId];
+            $link = isset($this->provider->getModels()[$trailId]) ? Url::current(['#' => 'trail-' . $trailId]) : ['index', 'id' => $trailId];
             return Html::a('(#' . $trailId . ')', $link);
         }
 

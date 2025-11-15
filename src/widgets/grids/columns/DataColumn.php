@@ -5,62 +5,81 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\grids\columns;
 
 use Closure;
-use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use Override;
 use Stringable;
+use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
-use yii\i18n\Formatter;
 
 class DataColumn extends Column
 {
-    public function __construct(
-        GridView $grid,
-        protected Formatter $formatter,
-        protected ?string $attribute = null,
-        protected ?string $label = null,
-        protected string|null|Closure $value = null,
-        protected string $format = 'text',
-        string|null|Closure $content = null,
-        array|Closure $contentAttributes = [],
-        ?string $header = null,
-        array $headerAttributes = [],
-        protected array $sortLinkAttributes = [],
-        bool $visible = true,
-        protected bool $enableSorting = true,
-        protected bool $encodeLabel = true,
-        string $emptyCell = '&nbsp;',
-    ) {
-        parent::__construct(
-            $grid,
-            $content,
-            $contentAttributes,
-            $header,
-            $headerAttributes,
-            $visible,
-            $emptyCell
-        );
+    protected ?string $attribute = null;
+    protected ?string $label = null;
+    protected string|null|Closure $value = null;
+    protected string $format = 'text';
+    protected array $sortLinkAttributes = [];
+    protected bool $enableSorting = true;
+    protected bool $encodeLabel = true;
+
+    public function attribute(?string $attribute): static
+    {
+        $this->attribute = $attribute;
+        $this->label ??= $this->grid->getModel()?->getAttributeLabel($this->attribute)
+            ?? Inflector::camel2words($this->attribute);
+
+        return $this;
+    }
+
+    public function label(?string $label): static
+    {
+        $this->label = $label;
+        return $this;
+    }
+
+    public function value(string|null|Closure $value): static
+    {
+        $this->value = $value;
+        return $this;
+    }
+
+    public function format(string $format): static
+    {
+        $this->format = $format;
+        return $this;
+    }
+
+    public function enableSorting(bool $enableSorting): static
+    {
+        $this->enableSorting = $enableSorting;
+        return $this;
+    }
+
+    public function sortLinkAttributes(array $attributes): static
+    {
+        $this->sortLinkAttributes = $attributes;
+        return $this;
     }
 
     #[Override]
     protected function renderHeaderCellContent(): string|Stringable
     {
-        if ($this->header !== null || $this->label === null && $this->attribute === null) {
+        if ($this->header !== null || $this->label === null) {
             return parent::renderHeaderCellContent();
         }
 
-        $label = $this->getHeaderCellLabel();
+        $label = $this->label;
 
         if ($this->encodeLabel) {
             $label = Html::encode($label);
         }
 
+
         if (
             $this->attribute !== null
             && $this->enableSorting
-            && ($sort = $this->grid->dataProvider->getSort()) !== false && $sort->hasAttribute($this->attribute)
+            && ($sort = $this->grid->provider->getSort()) !== false && $sort->hasAttribute($this->attribute)
         ) {
             return $sort->link($this->attribute, [
                 ...$this->sortLinkAttributes,
@@ -69,13 +88,6 @@ class DataColumn extends Column
         }
 
         return $label;
-    }
-
-    protected function getHeaderCellLabel(): ?string
-    {
-        return $this->attribute
-            ? $this->grid->getModel()?->getAttributeLabel($this->attribute) ?? Inflector::camel2words($this->attribute)
-            : null;
     }
 
     protected function getDataCellValue(Model $model, string|int $key, int $index): mixed
@@ -91,7 +103,7 @@ class DataColumn extends Column
     protected function renderDataCellContent(Model $model, string|int $key, int $index): string|Stringable
     {
         return $this->content === null
-            ? $this->formatter->format($this->getDataCellValue($model, $key, $index), $this->format)
+            ? Yii::$app->getFormatter()->format($this->getDataCellValue($model, $key, $index), $this->format)
             : parent::renderDataCellContent($model, $key, $index);
     }
 }

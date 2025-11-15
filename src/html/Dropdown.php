@@ -66,9 +66,4 @@ class Dropdown extends Tag
         $content = implode('', $this->content) . '<ul>' . implode('', $this->items) . '</ul>';
         return $this->button->render() . '<dialog class="dropdown-menu">' . $content . '</dialog>';
     }
-
-    protected function getTagName(): string
-    {
-        return 'div';
-    }
 }
