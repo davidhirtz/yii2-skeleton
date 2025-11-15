@@ -26,7 +26,7 @@ class GridContainer extends Widget
     {
         return Card::make()
             ->title($this->title)
-            ->html($this->grid->render())
+            ->content($this->grid->render())
             ->render();
     }
 }

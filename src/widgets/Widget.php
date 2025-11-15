@@ -32,7 +32,7 @@ abstract class Widget implements Stringable, ViewContextInterface
 
     public function getViewPath(): ?string
     {
-        return $this->viewPath ??= '"@views/' . Yii::$app->controller->id . '/';
+        return $this->viewPath ??= '@views/' . Yii::$app->controller->id . '/';
     }
 
     #[Deprecated]

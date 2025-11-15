@@ -27,9 +27,9 @@ echo ErrorSummary::make()->models($form)
 
 
 echo Container::make()
-    ->html(Card::make()
+    ->content(Card::make()
         ->danger()
         ->title($this->title)
-        ->html(OwnershipActiveForm::widget([
+        ->content(OwnershipActiveForm::widget([
             'model' => $form,
         ])));

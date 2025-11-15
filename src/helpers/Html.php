@@ -23,9 +23,9 @@ class Html extends BaseHtml
             return '';
         }
 
-        return (string)Container::make()->html(
+        return (string)Container::make()->content(
             Alert::make()
-                ->html($html)
+                ->content($html)
                 ->icon('check-circle')
                 ->status('danger')
         );
@@ -39,7 +39,7 @@ class Html extends BaseHtml
     public static function div(array|string|Stringable $content = '', array $attributes = []): Div
     {
         $tag = Div::make()->attributes($attributes);
-        return is_array($content) ? $tag->html(...$content) : $tag->html($content);
+        return is_array($content) ? $tag->content(...$content) : $tag->content($content);
     }
 
     public static function icon(string $name, array $attributes = []): Icon

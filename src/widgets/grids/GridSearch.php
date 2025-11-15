@@ -91,7 +91,7 @@ class GridSearch
         return Form::make()
             ->method('get')
             ->attributes($formAttributes)
-            ->html($this->getInput());
+            ->content($this->getInput());
     }
 
     protected function getInput(): Stringable
@@ -128,7 +128,7 @@ class GridSearch
     {
         return GridToolbarItem::make()
             ->attributes($this->toolbarItemAttributes)
-            ->html($this->render());
+            ->content($this->render());
     }
 
     public function getKeywords(): array

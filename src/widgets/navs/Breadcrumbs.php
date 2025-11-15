@@ -101,7 +101,7 @@ class Breadcrumbs extends Widget
         }
 
         return A::make()
-            ->addHtml($content)
+            ->addContent($content)
             ->attributes($this->linkAttributes)
             ->href($url)
             ->render();

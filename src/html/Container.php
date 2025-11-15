@@ -11,7 +11,7 @@ class Container extends Tag
 {
     use TagContentTrait;
 
-    protected array $attributes = [
+    public array $attributes = [
         'class' => 'container',
     ];
 

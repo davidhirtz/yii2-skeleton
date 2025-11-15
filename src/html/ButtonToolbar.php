@@ -11,7 +11,7 @@ class ButtonToolbar extends Tag
 {
     use TagContentTrait;
 
-    protected array $attributes = [
+    public array $attributes = [
         'class' => 'btn-toolbar',
     ];
 }

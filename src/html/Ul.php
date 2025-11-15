@@ -24,7 +24,7 @@ class Ul extends Tag
     {
         $this->items[] = Li::make()
             ->attributes($attributes)
-            ->html($html)
+            ->content($html)
             ->render();
 
         return $this;

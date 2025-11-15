@@ -10,7 +10,7 @@ class Checkbox extends Input
 {
     use TagInputTrait;
 
-    protected array $attributes = [
+    public array $attributes = [
         'class' => 'form-check-input',
         'type' => 'checkbox',
     ];

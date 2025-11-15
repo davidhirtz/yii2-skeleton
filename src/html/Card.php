@@ -14,7 +14,7 @@ class Card extends Tag
 {
     use TagContentTrait;
 
-    protected array $attributes = [
+    public array $attributes = [
         'class' => 'card',
     ];
 
@@ -65,7 +65,7 @@ class Card extends Tag
                 $header[] = Button::make()
                     ->link()
                     ->attribute('data-collapse', '#' . $this->getId())
-                    ->html($this->title);
+                    ->content($this->title);
 
                 $header[] = Button::make()
                     ->attribute('aria-label', Yii::t('skeleton', 'Toggle'))
@@ -78,14 +78,14 @@ class Card extends Tag
 
             $content[] = Div::make()
                 ->class('card-header')
-                ->html(Div::make()
+                ->content(Div::make()
                     ->class('card-title')
-                    ->html(...$header));
+                    ->content(...$header));
         }
 
         $content[] = Div::make()
             ->class('card-body')
-            ->html(...$this->content);
+            ->content(...$this->content);
 
         return implode('', $content);
     }

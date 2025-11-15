@@ -38,7 +38,7 @@ class AdminButton extends Widget
     protected function renderContent(): Stringable
     {
         return A::make()
-            ->html($this->icon)
+            ->content($this->icon)
             ->href('/admin')
             ->class('admin-btn')
             ->attribute('onclick', 'document.documentElement.classList.toggle(\'is-admin\');return false')

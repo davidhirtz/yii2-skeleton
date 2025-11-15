@@ -11,7 +11,7 @@ class Dropdown extends Tag
 {
     use TagContentTrait;
 
-    protected array $attributes = ['class' => 'dropdown'];
+    public array $attributes = ['class' => 'dropdown'];
 
     private Button $button;
     private array $items = [];

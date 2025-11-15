@@ -29,10 +29,10 @@ $this->setTitle(Yii::t('skeleton', 'Sign up'));
 
 <?= Container::make()
     ->centered()
-    ->html(
+    ->content(
         Card::make()
             ->title($this->title)
-            ->html(SignupActiveForm::widget([
+            ->content(SignupActiveForm::widget([
                 'model' => $form,
             ])),
         ListGroup::make()

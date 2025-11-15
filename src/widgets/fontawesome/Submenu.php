@@ -27,7 +27,7 @@ class Submenu extends Nav
     public function run(): string
     {
         $html = $this->renderTitle() . $this->renderItems();
-        return $html ? Container::make()->html($html)->render() : '';
+        return $html ? Container::make()->content($html)->render() : '';
     }
 
     protected function renderTitle(): string

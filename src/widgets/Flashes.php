@@ -30,7 +30,7 @@ class Flashes extends Widget
         return Container::make()
             ->attribute('id', 'flashes')
             ->addClass('empty-hidden')
-            ->html($content)
+            ->content($content)
             ->render();
     }
 
@@ -50,7 +50,7 @@ class Flashes extends Widget
         $icon = $this->showStatusIcon ? $this->getStatusIcon($status) : null;
 
         return Alert::make()
-            ->html($message)
+            ->content($message)
             ->icon($icon)
             ->status($status)
             ->render();

@@ -28,5 +28,5 @@ echo GridContainer::make()
 
 if (Yii::$app->getUser()->getIdentity()->isOwner()) {
     echo Container::make()
-        ->html(UserOwnerPanel::widget());
+        ->content(UserOwnerPanel::widget());
 }

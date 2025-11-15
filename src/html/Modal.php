@@ -15,7 +15,7 @@ class Modal extends Tag
 {
     use TagContentTrait;
 
-    protected array $attributes = [
+    public array $attributes = [
         'class' => 'modal',
     ];
 
@@ -72,19 +72,19 @@ class Modal extends Tag
 
             $content[] = Div::make()
                 ->class('modal-header')
-                ->html(...$header);
+                ->content(...$header);
         }
 
         if ($this->content) {
             $content[] = Div::make()
                 ->class('modal-body')
-                ->html(...$this->content);
+                ->content(...$this->content);
         }
 
         if ($this->footer) {
             $content[] = Div::make()
                 ->class('modal-footer')
-                ->html(...$this->footer);
+                ->content(...$this->footer);
         }
 
         return implode('', $content);

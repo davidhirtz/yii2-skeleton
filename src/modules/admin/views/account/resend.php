@@ -26,10 +26,10 @@ echo ErrorSummary::make()->models($form)
 
 echo Container::make()
     ->centered()
-    ->html(
+    ->content(
         Card::make()
             ->title($this->title)
-            ->html(AccountResendConfirmActiveForm::widget([
+            ->content(AccountResendConfirmActiveForm::widget([
                 'model' => $form,
             ])),
         ListGroup::make()

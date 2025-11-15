@@ -13,7 +13,7 @@ class NavLink extends A
 {
     use TagVisibilityTrait;
 
-    protected array $attributes = [
+    public array $attributes = [
         'class' => 'nav-link',
     ];
 
@@ -32,7 +32,7 @@ class NavLink extends A
 
     public function label(string $text): static
     {
-        $this->addHtml('<span class="d-none d-lg-block">' . Html::encode($text) . '</span>');
+        $this->addContent('<span class="d-none d-lg-block">' . Html::encode($text) . '</span>');
         return $this;
     }
 

@@ -37,14 +37,14 @@ class LinkColumn extends DataColumn
         if ($href) {
             return A::make()
                 ->attributes($this->linkAttributes)
-                ->html($content)
+                ->content($content)
                 ->href($href);
         }
 
         return $this->linkAttributes
             ? Div::make()
                 ->attributes($this->linkAttributes)
-                ->html($content)
+                ->content($content)
             : $content;
     }
 }

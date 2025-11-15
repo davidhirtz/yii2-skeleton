@@ -25,10 +25,10 @@ echo ErrorSummary::make()->models($form)
 
 echo Container::make()
     ->centered()
-    ->html(
+    ->content(
         Card::make()
             ->title($this->title)
-            ->html(PasswordRecoverActiveForm::widget([
+            ->content(PasswordRecoverActiveForm::widget([
                 'model' => $form,
             ])),
         ListGroup::make()

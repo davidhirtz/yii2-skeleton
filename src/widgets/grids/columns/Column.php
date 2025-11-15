@@ -85,7 +85,7 @@ class Column
     public function renderHeader(): Th
     {
         return Th::make()
-            ->html($this->getHeaderContent())
+            ->content($this->getHeaderContent())
             ->attributes($this->headerAttributes ?? []);
     }
 
@@ -101,7 +101,7 @@ class Column
             : $this->contentAttributes;
 
         return Td::make()
-            ->html($this->getBodyContent($model, $key, $index))
+            ->content($this->getBodyContent($model, $key, $index))
             ->attributes($attributes ?? []);
     }
 

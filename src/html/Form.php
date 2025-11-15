@@ -14,7 +14,7 @@ class Form extends Tag
 {
     use TagContentTrait;
 
-    protected array $attributes = [
+    public array $attributes = [
         'method' => 'post',
     ];
 

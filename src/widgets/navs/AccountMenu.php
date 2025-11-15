@@ -84,7 +84,7 @@ class AccountMenu extends Widget
             ->dropend()
             ->button(Button::make()
                 ->class('nav-link')
-                ->html(Icon::make()
+                ->content(Icon::make()
                     ->name(Yii::$app->language)
                     ->collection(Icon::ICON_COLLECTION_FLAG)));
 

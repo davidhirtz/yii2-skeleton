@@ -80,7 +80,7 @@ class UserGridView extends GridView
 
         $route = $this->getRoute($user);
 
-        return $route ? A::make()->html($name)->href($route) : $name;
+        return $route ? A::make()->content($name)->href($route) : $name;
     }
 
     protected function getEmailColumn(): Column
@@ -94,7 +94,7 @@ class UserGridView extends GridView
     protected function getEmailColumnContent(User $user): ?Stringable
     {
         $link = A::make()
-            ->html(Html::markKeywords(Html::encode($user->email), $this->search->getKeywords()))
+            ->content(Html::markKeywords(Html::encode($user->email), $this->search->getKeywords()))
             ->mailto($user->email);
 
         if ($user->isUnconfirmed()) {

@@ -13,7 +13,7 @@ class Alert extends Tag
 {
     use TagContentTrait;
 
-    protected array $attributes = [
+    public array $attributes = [
         'class' => 'alert',
     ];
 
@@ -59,16 +59,16 @@ class Alert extends Tag
     {
         $content = Div::make()
             ->class('grow')
-            ->html(...$this->content)
+            ->content(...$this->content)
             ->render();
 
         if ($this->icon) {
-            $content = Div::make()->class('icon')->html($this->icon) . $content;
+            $content = Div::make()->class('icon')->content($this->icon) . $content;
         }
 
         if ($this->buttons) {
             $content .= Div::make()
-                ->html(...$this->buttons)
+                ->content(...$this->buttons)
                 ->addClass('alert-buttons');
         }
 

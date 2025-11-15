@@ -49,8 +49,6 @@ class GridView extends Widget
     public ?array $footer = null;
     public ?array $header = null;
 
-
-    public array $attributes = ['class' => 'grid-view'];
     public array $headerAttributes = ['class' => 'grid-view-header'];
     public array $footerAttributes = ['class' => 'grid-view-footer'];
     public array $headerRowAttributes;
@@ -114,7 +112,8 @@ class GridView extends Widget
         return $this->provider->getCount() || $this->showOnEmpty
             ? Div::make()
                 ->attributes($this->attributes)
-                ->html($this->getContent())
+                ->addClass('grid-view')
+                ->content($this->getContent())
             : '';
     }
 
@@ -148,11 +147,11 @@ class GridView extends Widget
         foreach ($row as $item) {
             if (!$item instanceof GridToolbarItem) {
                 $item = GridToolbarItem::make()
-                    ->html($item);
+                    ->content($item);
             }
 
             if ($item->isVisible()) {
-                $tag->addHtml($item);
+                $tag->addContent($item);
             }
         }
 
@@ -173,7 +172,7 @@ class GridView extends Widget
     {
         return $this->provider->getCount()
             ? Div::make()
-                ->html($this->getTable())
+                ->content($this->getTable())
                 ->class('table-responsive')
             : null;
     }

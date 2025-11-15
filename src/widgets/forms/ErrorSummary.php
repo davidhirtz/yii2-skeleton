@@ -66,7 +66,7 @@ class ErrorSummary extends Widget
     protected function renderContent(): string
     {
         $this->errors ??= $this->getModelErrors();
-        return $this->errors ? Container::make()->html($this->renderAlert())->render() : '';
+        return $this->errors ? Container::make()->content($this->renderAlert())->render() : '';
     }
 
     protected function getModelErrors(): array
@@ -83,8 +83,8 @@ class ErrorSummary extends Widget
     protected function renderAlert(): string
     {
         return Alert::make()
-            ->html($this->renderHeader())
-            ->addHtml($this->renderErrors())
+            ->content($this->renderHeader())
+            ->addContent($this->renderErrors())
             ->icon($this->icon)
             ->status('danger')
             ->render();
@@ -103,7 +103,7 @@ class ErrorSummary extends Widget
 
         return Div::make()
             ->class('alert-heading')
-            ->html($this->title)
+            ->content($this->title)
             ->render();
     }
 }

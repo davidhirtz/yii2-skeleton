@@ -11,13 +11,13 @@ trait TagContentTrait
 {
     protected array $content = [];
 
-    final public function html(string|Stringable ...$content): static
+    final public function content(string|Stringable ...$content): static
     {
         $this->content = array_values($content);
         return $this;
     }
 
-    final public function addHtml(string|Stringable ...$content): static
+    final public function addContent(string|Stringable ...$content): static
     {
         $this->content = [...$this->content, ...array_values($content)];
         return $this;

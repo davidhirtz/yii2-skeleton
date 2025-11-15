@@ -54,7 +54,7 @@ class Panel implements Stringable
         return $this->content
             ? Container::make()
                 ->attribute('id', $this->id)
-                ->html($this->renderContent())
+                ->content($this->renderContent())
                 ->render()
             : '';
     }
@@ -63,7 +63,7 @@ class Panel implements Stringable
     {
         $card = Card::make()
             ->title($this->title)
-            ->html($this->content)
+            ->content($this->content)
             ->collapsed($this->collapsed);
 
         if ($this->type === self::TYPE_DANGER) {

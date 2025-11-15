@@ -8,7 +8,7 @@ use davidhirtz\yii2\skeleton\html\base\Tag;
 
 class Nav extends Tag
 {
-    protected array $attributes = [
+    public array $attributes = [
         'class' => 'nav',
     ];
 

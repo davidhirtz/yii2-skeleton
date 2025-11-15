@@ -26,7 +26,7 @@ class GridToolbarItem extends Widget
         return $this->content
             ? Div::make()
                 ->attributes($this->attributes)
-                ->html(...$this->content)
+                ->content(...$this->content)
             : '';
     }
 }

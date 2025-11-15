@@ -40,10 +40,10 @@ class CacheGridView extends GridView
                 ->header(Yii::t('skeleton', 'Name'))
                 ->content(fn (array $item): array => [
                     Div::make()
-                        ->html(ucwords((string)$item['name']))
+                        ->content(ucwords((string)$item['name']))
                         ->class('strong'),
                     Div::make()
-                        ->html($item['class'])
+                        ->content($item['class'])
                         ->class('small'),
                 ]),
             ButtonColumn::make()

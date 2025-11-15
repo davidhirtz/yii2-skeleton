@@ -22,11 +22,11 @@ class NavBar extends Widget
             ->addClass('navbar-container');
 
         if ($menu = $this->getMainMenu()) {
-            $container->addHtml($this->getMobileToggle());
-            $container->addHtml($menu);
+            $container->addContent($this->getMobileToggle());
+            $container->addContent($menu);
         }
 
-        $container->addHtml($this->getAccountMenu());
+        $container->addContent($this->getAccountMenu());
 
         $content = $container->render();
 

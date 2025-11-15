@@ -82,7 +82,7 @@ if ($form->user->isDeletable()) {
     ]);
 } elseif ($form->user->isOwner()) {
     echo Container::make()
-        ->html(Alert::make()
+        ->content(Alert::make()
             ->text(Yii::t('skeleton', 'You cannot delete your account, because you are the owner of this website.'))
             ->status('warning'))
         ->render();

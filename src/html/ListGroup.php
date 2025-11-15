@@ -6,7 +6,7 @@ namespace davidhirtz\yii2\skeleton\html;
 
 class ListGroup extends Ul
 {
-    protected array $attributes = [
+    public array $attributes = [
         'class' => 'list-group',
     ];
 

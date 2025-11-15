@@ -21,8 +21,8 @@ echo ErrorSummary::make()->models($form)
 
 echo Container::make()
     ->centered()
-    ->html(Card::make()
+    ->content(Card::make()
         ->title($this->title)
-        ->html(GoogleAuthenticatorLoginActiveForm::widget([
+        ->content(GoogleAuthenticatorLoginActiveForm::widget([
             'model' => $form,
         ])));

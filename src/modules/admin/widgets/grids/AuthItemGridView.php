@@ -93,7 +93,7 @@ class AuthItemGridView extends GridView
 
         return Div::make()
             ->class($cssClass)
-            ->html($authItem->isRole()
+            ->content($authItem->isRole()
                 ? $authItem->getDisplayName()
                 : ($this->getTranslations()[$authItem->description] ?? $authItem->description));
     }

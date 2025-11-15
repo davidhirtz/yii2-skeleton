@@ -12,7 +12,7 @@ class TextInput extends Input
     use TagInputTrait;
     use TagPlaceholderTrait;
 
-    protected array $attributes = [
+    public array $attributes = [
         'class' => 'form-control',
         'type' => 'text',
     ];

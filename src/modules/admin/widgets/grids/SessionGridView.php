@@ -40,12 +40,12 @@ class SessionGridView extends GridView
                 ->content(fn (array $item): array => [
                     Div::make()
                         ->class('strong')
-                        ->html(Yii::t('skeleton', 'Expired sessions: {count,number}', [
+                        ->content(Yii::t('skeleton', 'Expired sessions: {count,number}', [
                             'count' => $item['expiredSessionCount'],
                         ])),
                     Div::make()
                         ->class('small')
-                        ->html(Yii::t('app', 'Total sessions: {sessionCount,number} / Garbage collection probability: {probability}', [
+                        ->content(Yii::t('app', 'Total sessions: {sessionCount,number} / Garbage collection probability: {probability}', [
                             'sessionCount' => $item['sessionCount'],
                             'probability' => Yii::$app->getSession()->getGCProbability(),
                         ]))

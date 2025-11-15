@@ -30,7 +30,7 @@ class GridSummary implements Stringable
     protected function getAlert(): Alert
     {
         $alert = Alert::make()
-            ->html($this->getContent())
+            ->content($this->getContent())
             ->status($this->totalCount ? 'info' : 'warning');
 
         if ($this->search?->getValue()) {

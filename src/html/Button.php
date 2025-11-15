@@ -22,7 +22,7 @@ class Button extends Tag
     use TagModalTrait;
     use TagTooltipAttributeTrait;
     
-    protected array $attributes = [
+    public array $attributes = [
         'type' => 'button',
         'class' => 'btn',
     ];

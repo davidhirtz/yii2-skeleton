@@ -67,7 +67,7 @@ class FilterDropdown implements Stringable
             ->type('search')
             ->render();
 
-        $this->dropdown->html('<div class="dropdown-header">' . $input . '</div>');
+        $this->dropdown->content('<div class="dropdown-header">' . $input . '</div>');
     }
 
     protected function addDefaultItem(): void

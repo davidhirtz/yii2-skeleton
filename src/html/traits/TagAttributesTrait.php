@@ -8,7 +8,7 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 
 trait TagAttributesTrait
 {
-    protected array $attributes = [];
+    public array $attributes = [];
 
     final public function addAttributes(array $attributes): static
     {

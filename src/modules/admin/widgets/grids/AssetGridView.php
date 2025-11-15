@@ -44,10 +44,10 @@ class AssetGridView extends GridView
                     }
 
                     return Div::make()
-                        ->addHtml(Div::make()
+                        ->addContent(Div::make()
                             ->class('strong')
-                            ->html($item['name']))
-                        ->addHtml($ul);
+                            ->content($item['name']))
+                        ->addContent($ul);
                 }),
             TimeagoColumn::make()
                 ->property('modified')
@@ -58,7 +58,7 @@ class AssetGridView extends GridView
         $this->footer ??= [
             GridToolbarItem::make()
                 ->class('ms-auto')
-                ->html(Button::make()
+                ->content(Button::make()
                     ->primary()
                     ->text(Yii::t('skeleton', 'Refresh'))
                     ->icon('sync-alt')

@@ -10,7 +10,7 @@ class ListGroupItemLink extends A
 {
     use TagVisibilityTrait;
 
-    protected array $attributes = [
+    public array $attributes = [
         'class' => 'list-group-item-action',
     ];
 }

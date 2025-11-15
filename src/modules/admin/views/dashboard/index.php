@@ -34,7 +34,7 @@ $this->setTitle(Yii::t('skeleton', 'Admin'));
         echo Card::make()
             ->addClass('dashboard-card')
             ->title($panel['name'])
-            ->html($list)
+            ->content($list)
             ->render();
         ?>
         </div>

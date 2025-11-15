@@ -107,14 +107,14 @@ class RedirectGridView extends GridView
         return new DataColumn(
             attribute: 'request_uri',
             content: fn (Redirect $redirect) => A::make()
-                ->html(Html::markKeywords($redirect->request_uri, $this->search->getKeywords()))
+                ->content(Html::markKeywords($redirect->request_uri, $this->search->getKeywords()))
                 ->href($this->getRoute($redirect)),
             grid: $this,
         );
         return [
             'attribute' => 'request_uri',
             'content' => fn (Redirect $redirect) => A::make()
-                ->html(Html::markKeywords($redirect->request_uri, $this->search->getKeywords()))
+                ->content(Html::markKeywords($redirect->request_uri, $this->search->getKeywords()))
                 ->href($this->getRoute($redirect))
         ];
     }
@@ -125,7 +125,7 @@ class RedirectGridView extends GridView
             'attribute' => 'url',
             'content' => fn (Redirect $redirect) => A::make()
                 ->icon('external-link-alt')
-                ->html(Html::markKeywords($redirect->url ?: '/', $this->search->getKeywords()))
+                ->content(Html::markKeywords($redirect->url ?: '/', $this->search->getKeywords()))
                 ->href($redirect->url)
                 ->target('_blank')
         ];

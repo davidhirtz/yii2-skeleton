@@ -107,7 +107,7 @@ class UserHelpPanel extends HelpPanel
 
         $modal = Modal::make()
             ->title(Yii::t('skeleton', 'Password reset link'))
-            ->html(Html::tag('div', $url, ['class' => 'text-break']))
+            ->content(Html::tag('div', $url, ['class' => 'text-break']))
             ->footer($action);
 
         return Button::make()

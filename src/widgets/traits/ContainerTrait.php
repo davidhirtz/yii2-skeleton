@@ -12,8 +12,6 @@ trait ContainerTrait
 {
     use TagIdTrait;
 
-    protected array $attributes = [];
-
     public function render(): string|Stringable
     {
         $html = parent::render();
@@ -21,7 +19,7 @@ trait ContainerTrait
         return $html
             ? Container::make()
                 ->addAttributes($this->attributes)
-                ->html($html)
+                ->content($html)
             : '';
     }
 }

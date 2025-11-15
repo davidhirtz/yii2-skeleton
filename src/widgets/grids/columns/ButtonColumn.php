@@ -28,7 +28,7 @@ class ButtonColumn extends Column
 
             if (is_array($buttons)) {
                 return ButtonToolbar::make()
-                    ->addHtml(...$buttons);
+                    ->addContent(...$buttons);
             }
         }
 
