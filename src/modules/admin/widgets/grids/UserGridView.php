@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\A;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\UserActiveDataProvider;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonsColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\interfaces\ColumnInterface;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\TimeagoColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\widgets\grids\toolbars\CreateButton;
 use davidhirtz\yii2\skeleton\widgets\grids\traits\StatusGridViewTrait;
-use davidhirtz\yii2\timeago\Timeago;
-use davidhirtz\yii2\timeago\TimeagoColumn;
 use Override;
 use Stringable;
 use Yii;
@@ -33,15 +33,15 @@ class UserGridView extends GridView
     {
         $this->attributes['id'] ??= 'user-grid';
 
-        $this->rowAttributes = fn (User $user) => ['class' => $user->isDisabled() ? 'disabled' : null];
+        $this->rowAttributes = fn (User $user) => $user->isDisabled() ? ['class' => 'disabled'] : [];
 
         $this->columns ??= [
-            $this->statusColumn(),
+            $this->getStatusColumn(),
             $this->getNameColumn(),
-            $this->emailColumn(),
-            $this->lastLoginColumn(),
-            $this->createdAtColumn(),
-            $this->buttonsColumn(),
+            $this->getEmailColumn(),
+            $this->getLastLoginColumn(),
+            $this->getCreatedAtColumn(),
+            $this->getButtonsColumn(),
         ];
 
         parent::__construct();
@@ -75,83 +75,67 @@ class UserGridView extends GridView
             : null;
     }
 
-    protected function getNameColumn(): ColumnInterface
+    protected function getNameColumn(): Column
     {
         return DataColumn::make()
             ->attribute('name')
             ->content($this->getNameColumnContent(...));
     }
 
-    protected function getNameColumnContent(User $user): string|Stringable
+    protected function getNameColumnContent(User $user): Stringable
     {
         $name = ($name = $user->getUsername())
             ? Html::div(Html::markKeywords($name, $this->search->getKeywords()), ['class' => 'strong'])
             : Html::div(Yii::t('skeleton', 'User'), ['class' => 'text-muted']);
 
-        return ($route = $this->getRoute($user)) ? Html::a($name, $route) : $name;
+        $route = $this->getRoute($user);
+
+        return $route ? A::make()->html($name)->href($route) : $name;
     }
 
-    protected function emailColumn(): array
+    protected function getEmailColumn(): Column
     {
-        return [
-            'attribute' => 'email',
-            'headerOptions' => ['class' => 'd-none d-md-table-cell'],
-            'contentOptions' => ['class' => 'd-none d-md-table-cell'],
-            'content' => function (User $user) {
-                $email = $user->email
-                    ? Html::markKeywords(Html::encode($user->email), $this->search->getKeywords())
-                    : '';
-
-                if (!$user->isUnconfirmed()) {
-                    return $email;
-                }
-
-                return Html::tag('span', $email, [
-                    'class' => 'text-muted',
-                    'data-tooltip' => '',
-                    'title' => Yii::t('skeleton', 'Unconfirmed email'),
-                ]);
-            }
-        ];
+        return DataColumn::make()
+            ->attribute('email')
+            ->hiddenUntil('md')
+            ->content($this->getEmailColumnContent(...));
     }
 
-    protected function lastLoginColumn(): array
+    protected function getEmailColumnContent(User $user): ?Stringable
     {
-        return [
-            'attribute' => 'last_login',
-            'headerOptions' => ['class' => 'd-none d-md-table-cell'],
-            'contentOptions' => ['class' => 'd-none d-md-table-cell text-nowrap'],
-            'content' => function (User $user) {
-                $timeago = Timeago::tag($user->last_login);
+        $link = A::make()
+            ->html(Html::markKeywords(Html::encode($user->email), $this->search->getKeywords()))
+            ->mailto($user->email);
 
-                return Yii::$app->getUser()->can(User::AUTH_USER_UPDATE, ['user' => $user])
-                    ? Html::a($timeago, ['/admin/user-login/view', 'user' => $user->id])
-                    : $timeago;
-            }
-        ];
+        if ($user->isUnconfirmed()) {
+            $link->tooltip(Yii::t('skeleton', 'Unconfirmed email'))
+                ->addClass('text-muted');
+        }
+
+        return $link;
     }
 
-    protected function createdAtColumn(): array
+    protected function getLastLoginColumn(): DataColumn
     {
-        return [
-            'class' => TimeagoColumn::class,
-            'attribute' => 'created_at',
-            'displayAtBreakpoint' => 'lg',
-            'contentOptions' => [
-                'class' => 'text-nowrap',
-            ],
-        ];
+        return TimeagoColumn::make()
+            ->attribute('last_login')
+            ->href(fn (User $user) => ['/admin/login/index', 'user' => $user->id]);
     }
 
-    protected function buttonsColumn(): array
+    protected function getCreatedAtColumn(): DataColumn
     {
-        return [
-            'class' => ButtonsColumn::class,
-            'content' => $this->getRowButtons(...),
-        ];
+        return TimeagoColumn::make()
+            ->attribute('created_at')
+            ->hiddenUntil('lg');
     }
 
-    protected function getRowButtons(User $user): array|string
+    protected function getButtonsColumn(): ButtonsColumn
+    {
+        return ButtonsColumn::make()
+            ->content($this->getButtonsColumnContent(...));
+    }
+
+    protected function getButtonsColumnContent(User $user): array|string
     {
         if ($route = $this->getRoute($user)) {
             return Button::make()

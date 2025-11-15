@@ -33,7 +33,7 @@ class GridSummary implements Stringable
             ->html($this->getContent())
             ->status($this->totalCount ? 'info' : 'warning');
 
-        if ($this->search?->value) {
+        if ($this->search?->getValue()) {
             $alert->button(Button::make()
                 ->class('btn-icon')
                 ->get($this->search->url)
@@ -47,7 +47,7 @@ class GridSummary implements Stringable
     protected function getContent(): string
     {
         $params = [
-            'search' => $this->search?->value,
+            'search' => $this->search?->getValue(),
             'totalCount' => $this->totalCount,
         ];
 
@@ -66,7 +66,7 @@ class GridSummary implements Stringable
             return Yii::$app->getI18n()->format($this->message, $params, Yii::$app->language);
         }
 
-        if ($this->search?->value) {
+        if ($this->search?->getValue()) {
             return match ($this->count) {
                 1 => Yii::t('skeleton', 'Displaying the only result matching "{search}".', $params),
                 0 => Yii::t('skeleton', 'Sorry, no results found matching matching "{search}".', $params),

@@ -35,7 +35,7 @@ class Breadcrumbs extends Widget
 
     public function init(): void
     {
-        $this->links ??= $this->getView()->getBreadcrumbs();
+        $this->links ??= $this->view->getBreadcrumbs();
         $this->addLinksFromModules();
 
         if ($this->homeLink !== false && ($this->links || $this->alwaysShowHomeLink)) {

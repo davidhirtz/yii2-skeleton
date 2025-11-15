@@ -4,63 +4,97 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\grids;
 
+use davidhirtz\yii2\skeleton\base\traits\ContainerTrait;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
-use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\html\Form;
+use davidhirtz\yii2\skeleton\html\Input;
 use davidhirtz\yii2\skeleton\web\Request;
 use davidhirtz\yii2\skeleton\widgets\grids\toolbars\GridToolbarItem;
+use davidhirtz\yii2\skeleton\widgets\grids\traits\GridTrait;
+use Stringable;
 use Yii;
-use yii\base\Widget;
 use yii\helpers\Url;
 
 class GridSearch
 {
-    public bool $enableAjax = true;
+    use ContainerTrait;
+    use GridTrait;
 
-    public array $formAttributes = [];
-    public array $inputAttributes = [];
-    public array $toolbarItemAttributes = ['class' => 'ms-auto'];
+    protected array $inputAttributes = [];
+    protected array $formAttributes = [];
+    protected string $paramName = 'q';
+    protected array $toolbarItemAttributes = ['class' => 'ms-auto'];
+    protected array|string|null $url = null;
+    protected ?string $value = null;
 
-    public ?string $value = null;
-    public string $paramName = 'q';
-    public array|string|null $route = null;
-    public readonly string $url;
-
-    public function __construct(protected Widget $grid, protected Request $request)
+    public function __construct(protected Request $request)
     {
-        $this->value ??= $this->request->get($this->paramName);
-        $this->value = $this->value ? trim((string)$this->value) : null;
+    }
 
-        $this->url = $this->route ? Url::to($this->route) : Url::current([
+    public function inputAttributes(array $attributes): static
+    {
+        $this->inputAttributes = $attributes;
+        return $this;
+    }
+
+    public function formAttributes(array $attributes): static
+    {
+        $this->formAttributes = $attributes;
+        return $this;
+    }
+
+    public function paramName(string $paramName): static
+    {
+        $this->paramName = $paramName;
+        return $this;
+    }
+
+    public function toolbarItemAttributes(array $attributes): static
+    {
+        $this->toolbarItemAttributes = $attributes;
+        return $this;
+    }
+
+    public function url(array|string|null $url): static
+    {
+        $this->url = $url;
+        return $this;
+    }
+
+    public function value(?string $value): static
+    {
+        $this->value = $value;
+        return $this;
+    }
+
+    public function getValue(): ?string
+    {
+        if ($this->value === null) {
+            $this->value = $this->request->get($this->paramName);
+            $this->value = $this->value ? trim((string)$this->value) : null;
+        }
+
+        return $this->value;
+    }
+
+    public function render(): Stringable
+    {
+        $formAttributes = $this->formAttributes;
+        $formAttributes['hx-push-url'] ??= 'true';
+
+        $formAttributes['hx-get'] ??= $this->url ? Url::to($this->url) : Url::current([
             $this->paramName => null,
             'page' => null,
         ]);
 
-        if ($this->value) {
-            $this->inputAttributes['autofocus'] ??= true;
-            $this->inputAttributes['onfocus'] ??= 'this.setSelectionRange(this.value.length,this.value.length);';
-        }
-
-        if ($this->enableAjax) {
-            $this->setAjaxFormOptions();
-        }
+        return Form::make()
+            ->method('get')
+            ->attributes($formAttributes)
+            ->html($this->renderInput());
     }
 
-    protected function setAjaxFormOptions(): void
-    {
-        $this->formAttributes = [
-            'hx-get' => $this->url,
-            'hx-push-url' => 'true',
-            ...$this->formAttributes,
-        ];
-    }
-
-    public function render(): string
-    {
-        return Html::beginForm($this->url, 'get', $this->formAttributes) . $this->renderInput() . Html::endForm();
-    }
-
-    protected function renderInput(): string
+    protected function renderInput(): Stringable
     {
         $icon = ArrayHelper::remove($this->inputAttributes, 'icon', 'search');
         $type = ArrayHelper::remove($this->inputAttributes, 'type', 'search');
@@ -71,14 +105,23 @@ class GridSearch
             ->type('submit')
             ->render();
 
-        $options = [
+        $inputAttributes = [
             'class' => 'form-control',
             'prepend' => $btn,
             'placeholder' => Yii::t('skeleton', 'Search ...'),
             ...$this->inputAttributes
         ];
 
-        return Html::input($type, $this->paramName, $this->value, $options);
+        if ($this->getValue()) {
+            $inputAttributes['autofocus'] ??= true;
+            $inputAttributes['onfocus'] ??= 'this.setSelectionRange(this.value.length,this.value.length);';
+        }
+
+        return Input::make()
+            ->type($type)
+            ->name($this->paramName)
+            ->value($this->getValue())
+            ->attributes($inputAttributes);
     }
 
     public function getToolbarItem(): GridToolbarItem
@@ -88,6 +131,6 @@ class GridSearch
 
     public function getKeywords(): array
     {
-        return $this->value ? array_filter(explode(' ', $this->value)) : [];
+        return array_filter(explode(' ', $this->getValue() ?? ''));
     }
 }

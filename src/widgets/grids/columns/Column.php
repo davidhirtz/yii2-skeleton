@@ -7,25 +7,23 @@ namespace davidhirtz\yii2\skeleton\widgets\grids\columns;
 use Closure;
 use davidhirtz\yii2\skeleton\html\Td;
 use davidhirtz\yii2\skeleton\html\Th;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\interfaces\ColumnInterface;
-use davidhirtz\yii2\skeleton\widgets\grids\GridView;
+use davidhirtz\yii2\skeleton\html\traits\TagVisibilityTrait;
+use davidhirtz\yii2\skeleton\widgets\grids\traits\GridTrait;
 use Stringable;
+use Yii;
 use yii\base\Model;
+use yii\helpers\Html;
 
-class Column implements ColumnInterface
+class Column
 {
-    protected GridView $grid;
-    protected string|null|Closure $content = null;
+    use GridTrait;
+    use TagVisibilityTrait;
+
+    protected string|Stringable|Closure|null $content = null;
     protected array|null|Closure $contentAttributes = null;
-    protected ?string $header = null;
+    protected string|false|null $header = null;
     protected ?array $headerAttributes = null;
     protected string $emptyCell = '&nbsp;';
-
-    public function grid(GridView $grid): static
-    {
-        $this->grid = $grid;
-        return $this;
-    }
 
     public function content(string|Closure|null $content): static
     {
@@ -39,7 +37,7 @@ class Column implements ColumnInterface
         return $this;
     }
 
-    public function header(string|null $header): static
+    public function header(string|false|null $header): static
     {
         $this->header = $header;
         return $this;
@@ -51,16 +49,38 @@ class Column implements ColumnInterface
         return $this;
     }
 
+    public function centered(): static
+    {
+        Html::addCssClass($this->headerAttributes, 'text-center');
+        Html::addCssClass($this->contentAttributes, 'text-center');
+
+        return $this;
+    }
+
+    public function nowrap(): static
+    {
+        Html::addCssClass($this->contentAttributes, 'text-nowrap');
+        return $this;
+    }
+
+    public function hiddenUntil(string $breakpoint): static
+    {
+        Html::addCssClass($this->headerAttributes, "d-none d-$breakpoint-table-cell");
+        Html::addCssClass($this->contentAttributes, "d-none d-$breakpoint-table-cell");
+
+        return $this;
+    }
+
     public function renderHeader(): Th
     {
         return Th::make()
-            ->html($this->renderHeaderCellContent())
+            ->html($this->getHeaderContent())
             ->attributes($this->headerAttributes ?? []);
     }
 
-    protected function renderHeaderCellContent(): string|Stringable
+    protected function getHeaderContent(): string|Stringable
     {
-        return $this->header ?? $this->emptyCell;
+        return $this->header ?: $this->emptyCell;
     }
 
     public function renderBody(Model $model, string|int $key, int $index): Td
@@ -70,16 +90,21 @@ class Column implements ColumnInterface
             : $this->contentAttributes;
 
         return Td::make()
-            ->html($this->renderDataCellContent($model, $key, $index))
+            ->html($this->getBodyContent($model, $key, $index))
             ->attributes($attributes ?? []);
     }
 
-    protected function renderDataCellContent(Model $model, string|int $key, int $index): string|Stringable
+    protected function getBodyContent(Model $model, string|int $key, int $index): string|Stringable
     {
         if ($this->content instanceof Closure) {
             return call_user_func($this->content, $model, $key, $index, $this);
         }
 
         return $this->content ?? $this->emptyCell;
+    }
+
+    public static function make(): static
+    {
+        return Yii::createObject(static::class);
     }
 }

@@ -70,15 +70,21 @@ class Modal extends Tag
                     ->attribute('autofocus', true));
             }
 
-            $content[] = Div::make()->class('modal-header')->html(...$header);
+            $content[] = Div::make()
+                ->class('modal-header')
+                ->html(...$header);
         }
 
         if ($this->content) {
-            $content[] = Div::make()->class('modal-body')->html(...$this->content);
+            $content[] = Div::make()
+                ->class('modal-body')
+                ->html(...$this->content);
         }
 
         if ($this->footer) {
-            $content[] = Div::make()->class('modal-footer')->html(...$this->footer);
+            $content[] = Div::make()
+                ->class('modal-footer')
+                ->html(...$this->footer);
         }
 
         return implode('', $content);

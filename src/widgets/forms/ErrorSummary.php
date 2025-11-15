@@ -9,12 +9,12 @@ use davidhirtz\yii2\skeleton\html\Alert;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Ul;
-use Stringable;
+use davidhirtz\yii2\skeleton\widgets\Widget;
 use Yii;
 use yii\base\Model;
 use yii\db\ActiveRecord;
 
-class ErrorSummary extends Stringable
+class ErrorSummary extends Widget
 {
     protected ?string $icon = 'exclamation-triangle';
     protected array $errors = [];
@@ -28,7 +28,7 @@ class ErrorSummary extends Stringable
 
     public static function forModel(Model $model): static
     {
-        return (new self())->models($model);
+        return static::make()->models($model);
     }
 
     public function icon(string|null $icon): static
@@ -109,10 +109,5 @@ class ErrorSummary extends Stringable
             ->class('alert-heading')
             ->html($this->title)
             ->render();
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
     }
 }

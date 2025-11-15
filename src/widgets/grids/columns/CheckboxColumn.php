@@ -32,20 +32,20 @@ class CheckboxColumn extends Column
     }
 
     #[Override]
-    protected function renderHeaderCellContent(): string|Stringable
+    protected function getHeaderContent(): string|Stringable
     {
         if ($this->header !== null || !$this->multiple) {
-            return parent::renderHeaderCellContent();
+            return parent::getHeaderContent();
         }
 
         return Checkbox::make()->attribute('data-check-all', "#{$this->grid->getId()}");
     }
 
     #[Override]
-    protected function renderDataCellContent(Model $model, string|int $key, int $index): string|Stringable
+    protected function getBodyContent(Model $model, string|int $key, int $index): string|Stringable
     {
         if ($this->content !== null) {
-            return parent::renderDataCellContent($model, $key, $index);
+            return parent::getBodyContent($model, $key, $index);
         }
 
         return Checkbox::make()

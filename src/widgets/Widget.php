@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets;
 
+use davidhirtz\yii2\skeleton\base\traits\ContainerTrait;
 use davidhirtz\yii2\skeleton\web\View;
+use Deprecated;
 use Stringable;
 use Yii;
 use yii\base\BaseObject;
@@ -15,24 +17,17 @@ use yii\base\ViewContextInterface;
  */
 abstract class Widget extends BaseObject implements Stringable, ViewContextInterface
 {
-    private ?View $view = null;
-    private ?string $viewPath = null;
+    use ContainerTrait;
 
-    public function getView(): View
+    protected View $view;
+    protected ?string $viewPath = null;
+
+    public function __construct($config = [])
     {
-        if ($this->viewPath === null) {
-            /** @var View $view */
-            $view = Yii::$app->getView();
-            $this->setView($view);
-        }
-
-        return $this->view;
+        $this->view = Yii::$app->getView();
+        parent::__construct($config);
     }
 
-    public function setView(?View $view): void
-    {
-        $this->view = $view;
-    }
 
     public function getViewPath(): ?string
     {
@@ -44,21 +39,10 @@ abstract class Widget extends BaseObject implements Stringable, ViewContextInter
         return $this->viewPath;
     }
 
-    public function setViewPath(?string $viewPath): void
-    {
-        $this->viewPath = $viewPath;
-    }
-
+    #[Deprecated]
     public static function widget(array $config = []): string
     {
         return Yii::$container->get(static::class, [], $config)->render();
-    }
-
-    public static function make(): static
-    {
-        /** @var static $instance */
-        $instance = Yii::$container->get(static::class);
-        return $instance;
     }
 
     public function __toString(): string

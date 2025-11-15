@@ -10,17 +10,12 @@ use Override;
 
 class ButtonsColumn extends Column
 {
-    protected function init(): void
-    {
-        $this->contentAttributes ??= [
-            'class' => 'text-end text-nowrap',
-        ];
-
-        parent::init();
-    }
+    protected array|null|Closure $contentAttributes = [
+        'class' => 'text-end text-nowrap',
+    ];
 
     #[Override]
-    protected function renderDataCellContent($model, $key, $index): string
+    protected function getBodyContent($model, $key, $index): string
     {
         if ($this->content instanceof Closure) {
             $html = call_user_func($this->content, $model, $key, $index, $this);
@@ -30,6 +25,6 @@ class ButtonsColumn extends Column
                 ->render();
         }
 
-        return parent::renderDataCellContent($model, $key, $index);
+        return parent::getBodyContent($model, $key, $index);
     }
 }

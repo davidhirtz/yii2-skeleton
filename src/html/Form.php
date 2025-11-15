@@ -23,10 +23,15 @@ class Form extends Tag
         return $this->attribute('action', $action !== null ? Url::to($action) : null);
     }
 
-    #[\Override]
+    public function method(string $method): static
+    {
+        return $this->attribute('method', strtolower($method));
+    }
+
+    #[Override]
     protected function renderContent(): string
     {
-        if ($this->attributes['method'] === 'post') {
+        if ('post' === ($this->attributes['method'] ?? null)) {
             $this->content[] = TextInput::make()
                 ->type('hidden')
                 ->name(Yii::$app->request->csrfParam)

@@ -24,6 +24,14 @@ trait TagLinkTrait
         ]);
     }
 
+    public function mailto(string $email): static
+    {
+        return $this->addAttributes([
+            'href' => "mailto:$email",
+            'type' => null,
+        ]);
+    }
+
     public function target(string $target): static
     {
         return $this->attribute('target', $target);

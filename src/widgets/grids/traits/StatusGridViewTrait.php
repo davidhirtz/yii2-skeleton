@@ -7,24 +7,30 @@ namespace davidhirtz\yii2\skeleton\widgets\grids\traits;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\models\interfaces\StatusAttributeInterface;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\FilterDropdown;
 use Yii;
 use yii\base\Model;
+use yii\db\ActiveRecordInterface;
 
 trait StatusGridViewTrait
 {
     protected string|false|null $statusDefaultItem = null;
     protected string $statusParamName = 'status';
 
-    public function statusColumn(): array
+    protected function getStatusColumn(): DataColumn
     {
-        return [
-            'contentOptions' => ['class' => 'text-center'],
-            'content' => function ($model) {
-                $icon = $this->getStatusIcon($model);
-                return ($route = $this->getRoute($model)) ? Html::a($icon, $route) : $icon;
-            }
-        ];
+        return DataColumn::make()
+            ->attribute('status')
+            ->header(false)
+            ->content($this->getStatusColumnContent(...))
+            ->centered();
+    }
+
+    protected function getStatusColumnContent(ActiveRecordInterface&StatusAttributeInterface $model): string
+    {
+        $icon = $this->getStatusIcon($model);
+        return ($route = $this->getRoute($model)) ? Html::a($icon, $route) : $icon;
     }
 
     public function getStatusDropdown(): FilterDropdown

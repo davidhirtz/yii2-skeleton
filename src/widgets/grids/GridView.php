@@ -6,18 +6,20 @@ namespace davidhirtz\yii2\skeleton\widgets\grids;
 
 use Closure;
 use davidhirtz\yii2\skeleton\assets\SortableAssetBundle;
+use davidhirtz\yii2\skeleton\base\traits\ContainerTrait;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Table;
 use davidhirtz\yii2\skeleton\html\Tbody;
 use davidhirtz\yii2\skeleton\html\Thead;
 use davidhirtz\yii2\skeleton\html\Tr;
+use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\interfaces\ColumnInterface;
 use davidhirtz\yii2\skeleton\widgets\grids\pagers\LinkPager;
 use davidhirtz\yii2\skeleton\widgets\grids\toolbars\GridToolbarItem;
+use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
 use Yii;
 use yii\base\Model;
@@ -31,8 +33,11 @@ use yii\helpers\Url;
 /**
  * @template T of ActiveRecord
  */
-class GridView implements Stringable
+class GridView extends Widget
 {
+    use ContainerTrait;
+    use TagIdTrait;
+
     public DataProviderInterface $provider;
 
     /**
@@ -59,18 +64,15 @@ class GridView implements Stringable
     public string $layout = '{header}{summary}{items}{pager}{footer}';
     public ?array $orderRoute = ['order'];
 
-    private static int $counter = 0;
-
     public function __construct()
     {
-        $this->search ??= Yii::createObject(GridSearch::class, [$this]);
-        $this->columns ??= $this->getDefaultColumns();
+        $this->search ??= GridSearch::make()
+            ->grid($this);
 
         $this->initHeader();
         $this->initColumns();
         $this->initFooter();
 
-        $this->attributes['id'] ??= 'grid-' . ++self::$counter;
         $this->attributes['hx-select'] ??= "#{$this->attributes['id']}";
         $this->attributes['hx-target'] ??= $this->attributes['hx-select'];
         $this->attributes['hx-select-oob'] ??= '#flashes';
@@ -79,10 +81,7 @@ class GridView implements Stringable
         $this->tableBodyAttributes ??= [];
         $this->rowAttributes ??= [];
 
-        if ($this->isSortable()) {
-            $this->tableBodyAttributes['data-sort-url'] ??= Url::to($this->orderRoute);
-            Yii::$app->getView()->registerAssetBundle(SortableAssetBundle::class);
-        }
+        parent::__construct();
     }
 
     public function provider(DataProviderInterface $data): static
@@ -97,29 +96,15 @@ class GridView implements Stringable
 
     protected function initColumns(): void
     {
-        //        foreach ($this->columns as $i => $column) {
-        //            if (is_string($column)) {
-        //                $column = ['attribute' => $column];
-        //            }
-        //
-        //            if (is_array($column)) {
-        //                $className = ArrayHelper::remove($column, 'class', DataColumn::class);
-        //                $column['grid'] = $this;
-        //
-        //                dd($className, $column);
-        //            }
-        //
-        //            if (!$column->visible) {
-        //                unset($this->columns[$i]);
-        //                continue;
-        //            }
-        //
-        //            $this->columns[$i] = $column;
-        //        }
-    }
+        $this->columns ??= $this->getDefaultColumns();
 
-    protected function initFooter(): void
-    {
+        foreach ($this->columns as $i => $column) {
+            $column->grid($this);
+
+            if (!$column->isVisible()) {
+                unset($this->columns[$i]);
+            }
+        }
     }
 
     protected function getDefaultColumns(): array
@@ -137,6 +122,10 @@ class GridView implements Stringable
         }
 
         return $columns;
+    }
+
+    protected function initFooter(): void
+    {
     }
 
     public function render(): string
@@ -202,19 +191,21 @@ class GridView implements Stringable
     protected function renderItems(): ?Stringable
     {
         return $this->provider->getCount()
-            ? Html::div($this->renderTable())->class('table-responsive')
+            ? Div::make()
+                ->html($this->getTable())
+                ->class('table-responsive')
             : null;
     }
 
-    protected function renderTable(): Table
+    protected function getTable(): Table
     {
         return Table::make()
             ->attributes($this->tableAttributes)
-            ->header($this->renderTableHeader())
-            ->body($this->renderTableBody());
+            ->header($this->getTableHeader())
+            ->body($this->getTableBody());
     }
 
-    protected function renderTableHeader(): Thead
+    protected function getTableHeader(): Thead
     {
         $tr = Tr::make()->attributes($this->headerRowAttributes);
 
@@ -225,22 +216,27 @@ class GridView implements Stringable
         return Thead::make()->rows($tr);
     }
 
-    protected function renderTableBody(): Tbody
+    protected function getTableBody(): Tbody
     {
-        $models = array_values($this->provider->getModels());
-        $keys = $this->provider->getKeys();
+        if ($this->isSortable()) {
+            $this->tableBodyAttributes['data-sort-url'] ??= Url::to($this->orderRoute);
+            Yii::$app->getView()->registerAssetBundle(SortableAssetBundle::class);
+        }
 
         $tbody = Tbody::make()
             ->attributes($this->tableBodyAttributes);
 
+        $models = array_values($this->provider->getModels());
+        $keys = $this->provider->getKeys();
+
         foreach ($models as $index => $model) {
-            $tbody->addRows($this->renderTableRow($model, $keys[$index], $index));
+            $tbody->addRows($this->getTableRow($model, $keys[$index], $index));
         }
 
         return $tbody;
     }
 
-    protected function renderTableRow(mixed $model, int|string $key, int $index): Tr
+    protected function getTableRow(mixed $model, int|string $key, int $index): Tr
     {
         $attributes = $this->rowAttributes instanceof Closure
             ? call_user_func($this->rowAttributes, $model, $key, $index, $this)
@@ -284,16 +280,6 @@ class GridView implements Stringable
         return $this->footer ? $this->renderToolbars($this->footer, $this->footerAttributes) : null;
     }
 
-    /**
-     * @template TCol of ColumnInterface
-     * @param class-string<TCol> $className
-     * @return TCol
-     */
-    protected function getColumn(string $className = DataColumn::class): ColumnInterface
-    {
-        return Yii::$container->get($className, [$this]);
-    }
-
     public function getModel(): ?Model
     {
         if ($this->provider instanceof ActiveDataProvider) {
@@ -327,13 +313,8 @@ class GridView implements Stringable
     {
         return $this->provider->getSort() === false
             && $this->provider->getPagination() === false
-            && !$this->search->value
+            && !$this->search->getValue()
             && $this->orderRoute !== null;
-    }
-
-    public static function make(): static
-    {
-        return Yii::createObject(static::class);
     }
 
     public function __toString(): string

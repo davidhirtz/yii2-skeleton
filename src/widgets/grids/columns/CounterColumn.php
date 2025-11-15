@@ -7,7 +7,7 @@ namespace davidhirtz\yii2\skeleton\widgets\grids\columns;
 use Yii;
 use yii\base\Model;
 
-class CounterColumn extends LinkDataColumn
+class CounterColumn extends LinkColumn
 {
     public $headerOptions = [
         'class' => 'd-none d-md-table-cell text-center',
@@ -30,7 +30,7 @@ class CounterColumn extends LinkDataColumn
     /**
      * @var array contains the HTML attributes for the link or wrapper
      */
-    public array $wrapperAttributes = ['class' => 'badge'];
+    public array $linkAttributes = ['class' => 'badge'];
 
     /**
      * @var string the value to be displayed when the count is 0 or not set
@@ -42,7 +42,7 @@ class CounterColumn extends LinkDataColumn
     {
         if ($this->content === null) {
             $this->content = function (Model $model, mixed $key, int $index) {
-                $count = $this->getDataCellValue($model, $key, $index);
+                $count = $this->getValue($model, $key, $index);
 
                 if (!$count) {
                     return $this->emptyValue;

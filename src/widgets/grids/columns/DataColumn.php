@@ -26,9 +26,6 @@ class DataColumn extends Column
     public function attribute(?string $attribute): static
     {
         $this->attribute = $attribute;
-        $this->label ??= $this->grid->getModel()?->getAttributeLabel($this->attribute)
-            ?? Inflector::camel2words($this->attribute);
-
         return $this;
     }
 
@@ -63,18 +60,19 @@ class DataColumn extends Column
     }
 
     #[Override]
-    protected function renderHeaderCellContent(): string|Stringable
+    protected function getHeaderContent(): string|Stringable
     {
-        if ($this->header !== null || $this->label === null) {
-            return parent::renderHeaderCellContent();
+        if ($this->header !== null || ($this->label === null && $this->attribute === null)) {
+            return parent::getHeaderContent();
         }
 
-        $label = $this->label;
+        $label = $this->label
+            ?? $this->grid->getModel()?->getAttributeLabel($this->attribute)
+            ?? Inflector::camel2words($this->attribute);
 
         if ($this->encodeLabel) {
             $label = Html::encode($label);
         }
-
 
         if (
             $this->attribute !== null
@@ -90,7 +88,14 @@ class DataColumn extends Column
         return $label;
     }
 
-    protected function getDataCellValue(Model $model, string|int $key, int $index): mixed
+    protected function getBodyContent(Model $model, string|int $key, int $index): string|Stringable
+    {
+        return $this->content === null
+            ? Yii::$app->getFormatter()->format($this->getValue($model, $key, $index), $this->format)
+            : parent::getBodyContent($model, $key, $index);
+    }
+
+    protected function getValue(Model $model, string|int $key, int $index): mixed
     {
         if ($this->value instanceof Closure) {
             return call_user_func($this->value, $model, $key, $index, $this);
@@ -98,12 +103,5 @@ class DataColumn extends Column
 
         $key = $this->value ?? $this->attribute ?? null;
         return $key ? ArrayHelper::getValue($model, $this->value ?? $this->attribute) : null;
-    }
-
-    protected function renderDataCellContent(Model $model, string|int $key, int $index): string|Stringable
-    {
-        return $this->content === null
-            ? Yii::$app->getFormatter()->format($this->getDataCellValue($model, $key, $index), $this->format)
-            : parent::renderDataCellContent($model, $key, $index);
     }
 }

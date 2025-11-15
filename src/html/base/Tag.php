@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\html\base;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
 use Stringable;
 
 abstract class Tag implements Stringable
 {
+    use TagIdTrait;
+
     protected array $attributes = [];
-    private static int $counter = 0;
 
     final public function __construct()
     {
@@ -65,11 +67,6 @@ abstract class Tag implements Stringable
     {
         Html::removeCssStyle($this->attributes, $properties);
         return $this;
-    }
-
-    final public function getId(): string
-    {
-        return $this->attributes['id'] ??= 'i' . ++self::$counter;
     }
 
     final protected function renderAttributes(): string
