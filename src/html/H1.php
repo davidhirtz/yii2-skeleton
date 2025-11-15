@@ -10,5 +10,8 @@ class H1 extends base\Tag
 {
     use TagContentTrait;
 
-    protected string $tagName = 'h1';
+    protected function getTagName(): string
+    {
+        return 'h1';
+    }
 }

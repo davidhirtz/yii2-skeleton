@@ -90,6 +90,7 @@ class DeleteActiveForm extends ActiveForm
         }
 
         if ($this->attribute) {
+            $this->fieldOptions['inputOptions']['required'] ??= true;
             echo $this->field($this->form, 'value', $this->fieldOptions);
         }
     }

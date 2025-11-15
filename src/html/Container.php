@@ -11,9 +11,10 @@ class Container extends Tag
 {
     use TagContentTrait;
 
-    public array $attributes = [
-        'class' => 'container',
-    ];
+    protected function prepareAttributes(): void
+    {
+        $this->addClass('container');
+    }
 
     public function centered(): static
     {

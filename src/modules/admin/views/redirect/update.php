@@ -27,9 +27,8 @@ $this->setTitle(Yii::t('skeleton', 'Update Redirect'));
 $this->setBreadcrumb(Yii::t('skeleton', 'Redirects'), ['index']);
 
 echo Header::make()
-    ->title(A::make()
-        ->text(Yii::t('skeleton', 'Redirects'))
-        ->href(['index']));
+    ->title(Yii::t('skeleton', 'Redirects'))
+    ->url(['index']);
 
 echo ErrorSummary::make()
     ->models($redirect);

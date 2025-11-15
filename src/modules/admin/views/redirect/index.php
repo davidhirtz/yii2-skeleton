@@ -21,9 +21,8 @@ $this->setTitle(Yii::t('skeleton', 'Redirects'));
 $this->setBreadcrumb(Yii::t('skeleton', 'Redirects'), ['index']);
 
 echo Header::make()
-    ->title(A::make()
-        ->text(Yii::t('skeleton', 'Redirects'))
-        ->href(['index']));
+    ->title(Yii::t('skeleton', 'Redirects'))
+    ->url(['index']);
 
 echo GridContainer::make()
     ->grid(RedirectGridView::make()

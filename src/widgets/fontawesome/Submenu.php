@@ -13,6 +13,7 @@ use yii\helpers\Html;
 class Submenu extends Nav
 {
     public ?string $title = null;
+    public string|array|null $url = null;
 
     public array $badgeOptions = ['class' => 'badge d-none d-md-inline-block'];
     public array $cssClass = ['submenu', 'nav', 'nav-pills'];
@@ -35,6 +36,7 @@ class Submenu extends Nav
     protected function renderTitle(): Stringable
     {
         return Header::make()
-            ->title($this->title);
+            ->title($this->title)
+            ->url($this->url);
     }
 }

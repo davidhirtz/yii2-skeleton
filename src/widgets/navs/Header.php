@@ -22,12 +22,12 @@ class Header extends Widget
     {
         return $this->title
             ? H1::make()
+                ->attributes($this->attributes)
+                ->addClass('page-header')
                 ->content($this->url
                     ? A::make()->content($this->title)
                         ->href($this->url)
                     : $this->title)
-                ->attributes($this->attributes)
-                ->addClass('page-header')
             : '';
     }
 }
