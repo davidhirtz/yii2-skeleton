@@ -31,15 +31,15 @@ class Panel extends Widget
         parent::init();
     }
 
-    public function buttons(Stringable|string ...$buttons): static
+    public function buttons(string|Stringable|null ...$buttons): static
     {
-        $this->buttons = $buttons;
+        $this->buttons = array_values(array_filter($buttons));
         return $this;
     }
 
-    public function addButton(Stringable|string $button): static
+    public function addButtons(Stringable|string|null ...$buttons): static
     {
-        $this->buttons[] = $button;
+        $this->buttons[] = [...$this->buttons, ...array_values(array_filter($buttons))];
         return $this;
     }
 

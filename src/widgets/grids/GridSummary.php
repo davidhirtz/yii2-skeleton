@@ -19,7 +19,8 @@ class GridSummary implements Stringable
         protected ?GridSearch $search = null,
         protected ?string $message = null,
         protected array $params = [],
-    ) {
+    )
+    {
     }
 
     public function render(): string
@@ -30,13 +31,18 @@ class GridSummary implements Stringable
     protected function getAlert(): Alert
     {
         $alert = Alert::make()
-            ->content($this->getContent())
-            ->status($this->totalCount ? 'info' : 'warning');
+            ->content($this->getContent());
+
+        if ($this->totalCount) {
+            $alert->info();
+        } else {
+            $alert->warning();
+        }
 
         if ($this->search?->getValue()) {
             $alert->button(Button::make()
                 ->class('btn-icon')
-                ->get($this->search->url)
+                ->get($this->search->getUrl())
                 ->tooltip(Yii::t('skeleton', 'Clear Search'))
                 ->icon('xmark'));
         }

@@ -25,7 +25,7 @@ class Html extends BaseHtml
             Alert::make()
                 ->content($html)
                 ->icon('check-circle')
-                ->status('danger')
+                ->danger()
         );
     }
 

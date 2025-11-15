@@ -24,11 +24,13 @@ use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 use davidhirtz\yii2\skeleton\widgets\forms\FormContainer;
 use davidhirtz\yii2\skeleton\widgets\grids\GridContainer;
+use davidhirtz\yii2\skeleton\widgets\navs\Header;
 
 $this->setTitle(Yii::t('skeleton', 'Account'));
-?>
-<h1 class="page-header"><?= $form->user->getUsername(); ?></h1>
-<?php
+
+echo Header::make()
+    ->title($form->user->getUsername());
+
 if ($form->user->isUnconfirmed()) {
     echo Html::warning(Yii::t('skeleton', 'Your email address "{email}" was not yet confirmed. Please check your inbox or click {here} to request a new confirmation email.', [
         'email' => $form->email,
@@ -80,6 +82,6 @@ if ($form->user->isDeletable()) {
     echo Container::make()
         ->content(Alert::make()
             ->text(Yii::t('skeleton', 'You cannot delete your account, because you are the owner of this website.'))
-            ->status('warning'));
+            ->warning());
 }
-?>
+

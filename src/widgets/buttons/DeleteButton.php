@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\grids\columns\buttons;
+namespace davidhirtz\yii2\skeleton\widgets\buttons;
 
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Modal;
@@ -10,7 +10,7 @@ use davidhirtz\yii2\skeleton\widgets\buttons\traits\DeleteButtonTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
 
-class DeleteGridButton extends Widget
+class DeleteButton extends Widget
 {
     use DeleteButtonTrait;
 
@@ -27,12 +27,12 @@ class DeleteGridButton extends Widget
             ->content(...$this->content)
             ->footer(Button::make()
                 ->danger()
-                ->post($this->url)
+                ->post($this->url, true)
                 ->text($this->label));
 
         return Button::make()
             ->danger()
-            ->ariaLabel($this->label)
+            ->text($this->label)
             ->icon($this->icon)
             ->modal($modal);
     }

@@ -45,6 +45,26 @@ class Alert extends Tag
         return $this;
     }
 
+    public function success(): static
+    {
+        return $this->status('success');
+    }
+
+    public function info(): static
+    {
+        return $this->status('info');
+    }
+
+    public function warning(): static
+    {
+        return $this->status('warning');
+    }
+
+    public function danger(): static
+    {
+        return $this->status('danger');
+    }
+
     protected function prepareAttributes(): void
     {
         if ($this->status) {
@@ -57,21 +77,27 @@ class Alert extends Tag
     #[Override]
     protected function renderContent(): string
     {
-        $content = Div::make()
-            ->class('grow')
-            ->content(...$this->content)
-            ->render();
+        $content = [
+            Div::make()
+                ->class('grow')
+                ->content(...$this->content),
+        ];
 
         if ($this->icon) {
-            $content = Div::make()->class('icon')->content($this->icon) . $content;
+            $content = [
+                Div::make()
+                    ->class('icon')
+                    ->content($this->icon),
+                ...$content
+            ];
         }
 
         if ($this->buttons) {
-            $content .= Div::make()
+            $content[] = Div::make()
                 ->content(...$this->buttons)
                 ->addClass('alert-buttons');
         }
 
-        return $content;
+        return implode('', $content);
     }
 }

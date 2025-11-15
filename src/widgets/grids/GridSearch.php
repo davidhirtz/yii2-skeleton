@@ -9,6 +9,7 @@ use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Form;
 use davidhirtz\yii2\skeleton\html\Input;
+use davidhirtz\yii2\skeleton\html\traits\TagUrlTrait;
 use davidhirtz\yii2\skeleton\web\Request;
 use davidhirtz\yii2\skeleton\widgets\grids\toolbars\GridToolbarItem;
 use davidhirtz\yii2\skeleton\widgets\grids\traits\GridTrait;
@@ -20,12 +21,12 @@ class GridSearch
 {
     use ContainerConfigurationTrait;
     use GridTrait;
+    use TagUrlTrait;
 
     protected array $inputAttributes = [];
     protected array $formAttributes = [];
     protected string $paramName = 'q';
     protected array $toolbarItemAttributes = ['class' => 'ms-auto'];
-    protected array|string|null $url = null;
     protected ?string $value = null;
 
     public function __construct(protected Request $request)
@@ -56,10 +57,12 @@ class GridSearch
         return $this;
     }
 
-    public function url(array|string|null $url): static
+    public function getUrl(): ?string
     {
-        $this->url = $url;
-        return $this;
+        return $this->url ??= Url::current([
+            $this->paramName => null,
+            'page' => null,
+        ]);
     }
 
     public function value(?string $value): static
@@ -83,10 +86,7 @@ class GridSearch
         $formAttributes = $this->formAttributes;
         $formAttributes['hx-push-url'] ??= 'true';
 
-        $formAttributes['hx-get'] ??= $this->url ? Url::to($this->url) : Url::current([
-            $this->paramName => null,
-            'page' => null,
-        ]);
+        $formAttributes['hx-get'] ??= $this->getUrl();
 
         return Form::make()
             ->method('get')

@@ -10,15 +10,7 @@ use Stringable;
 
 class Ul extends Tag
 {
-    private array $items = [];
-
-    public static function tag(array $items, array $attributes = []): string
-    {
-        return static::make()
-            ->attributes($attributes)
-            ->items($items)
-            ->render();
-    }
+    protected array $items = [];
 
     public function addItem(string|Stringable $html, array $attributes = []): static
     {

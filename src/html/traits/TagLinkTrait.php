@@ -16,6 +16,11 @@ trait TagLinkTrait
         ]);
     }
 
+    public function ariaLabel(string $label): static
+    {
+        return $this->attribute('aria-label', $label);
+    }
+
     public function href(string|array|null $url): static
     {
         return $this->addAttributes([

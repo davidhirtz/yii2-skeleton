@@ -11,29 +11,29 @@ trait TagContentTrait
 {
     protected array $content = [];
 
-    final public function content(string|Stringable ...$content): static
+    final public function content(string|Stringable|null ...$content): static
     {
-        $this->content = array_values($content);
+        $this->content = array_values(array_filter($content));
         return $this;
     }
 
-    final public function addContent(string|Stringable ...$content): static
+    final public function addContent(string|Stringable|null ...$content): static
     {
-        $this->content = [...$this->content, ...array_values($content)];
+        $this->content = [...$this->content, ...array_values(array_filter($content))];
         return $this;
     }
 
-    final public function text(string|Stringable ...$content): static
+    final public function text(string|Stringable|null ...$content): static
     {
-        $this->content = array_values(array_map(Html::encode(...), $content));
+        $this->content = array_values(array_filter(array_map(Html::encode(...), $content)));
         return $this;
     }
 
-    final public function addText(string|Stringable ...$content): static
+    final public function addText(string|Stringable|null ...$content): static
     {
         $this->content = [
             ...$this->content,
-            array_map(Html::encode(...), array_values($content)),
+            array_map(Html::encode(...), array_values(array_filter($content))),
         ];
 
         return $this;

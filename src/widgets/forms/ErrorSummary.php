@@ -8,19 +8,22 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Alert;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\html\Div;
+use davidhirtz\yii2\skeleton\html\traits\TagTitleTrait;
 use davidhirtz\yii2\skeleton\html\Ul;
 use davidhirtz\yii2\skeleton\widgets\Widget;
+use Stringable;
 use Yii;
 use yii\base\Model;
 use yii\db\ActiveRecord;
 
 class ErrorSummary extends Widget
 {
+    use TagTitleTrait;
+
     public ?string $icon = 'exclamation-triangle';
     public bool $showAllErrors = true;
 
     protected array $errors = [];
-    protected string|false|null $title = null;
 
     /**
      * @var Model[]
@@ -57,16 +60,10 @@ class ErrorSummary extends Widget
         return $this;
     }
 
-    public function title(string|false|null $title): static
-    {
-        $this->title = $title;
-        return $this;
-    }
-
     protected function renderContent(): string
     {
         $this->errors ??= $this->getModelErrors();
-        return $this->errors ? Container::make()->content($this->renderAlert())->render() : '';
+        return $this->errors ? Container::make()->content($this->getAlert())->render() : '';
     }
 
     protected function getModelErrors(): array
@@ -80,30 +77,30 @@ class ErrorSummary extends Widget
         return array_values($errors);
     }
 
-    protected function renderAlert(): string
+    protected function getAlert(): Stringable
     {
         return Alert::make()
-            ->content($this->renderHeader())
-            ->addContent($this->renderErrors())
+            ->content($this->getHeader())
+            ->addContent($this->getErrors())
             ->icon($this->icon)
-            ->status('danger')
-            ->render();
+            ->danger();
     }
 
-    protected function renderErrors(): string
+    protected function getErrors(): Stringable
     {
-        return count($this->errors) === 1 ? Html::tag(reset($this->errors)) : Ul::tag($this->errors);
+        return count($this->errors) === 1
+            ? Div::make()
+                ->content(reset($this->errors))
+            : Ul::make()
+                ->items($this->errors);
     }
 
-    protected function renderHeader(): string
+    protected function getHeader(): ?Stringable
     {
-        if (!$this->title) {
-            return '';
-        }
-
-        return Div::make()
-            ->class('alert-heading')
-            ->content($this->title)
-            ->render();
+        return $this->title
+            ? Div::make()
+                ->class('alert-heading')
+                ->content($this->title)
+            : null;
     }
 }

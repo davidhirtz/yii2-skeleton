@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\panels;
 
-use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\models\User;
+use davidhirtz\yii2\skeleton\html\Alert;
+use davidhirtz\yii2\skeleton\html\traits\TagTitleTrait;
 use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\DeleteGridButton;
 use davidhirtz\yii2\skeleton\widgets\panels\Panel;
 use davidhirtz\yii2\skeleton\widgets\traits\UserWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
-use Override;
 use Stringable;
 use Yii;
 
@@ -20,7 +18,14 @@ use Yii;
  */
 class UserDeletePanel extends Widget
 {
+    use TagTitleTrait;
     use UserWidgetTrait;
+
+    public function init(): void
+    {
+        $this->title ??= Yii::t('skeleton', 'Delete User');
+        parent::init();
+    }
 
     public function renderContent(): string|Stringable
     {
@@ -33,14 +38,9 @@ class UserDeletePanel extends Widget
     {
         return Panel::make()
             ->danger()
-            ->title($this->getTitle())
+            ->title($this->title)
             ->content($this->getContent())
             ->buttons($this->getButton());
-    }
-
-    protected function getTitle(): string
-    {
-        return Yii::t('skeleton', 'Delete User');
     }
 
     protected function getContent(): string
@@ -48,25 +48,21 @@ class UserDeletePanel extends Widget
         return Yii::t('skeleton', 'Please type the user email in the text field below to delete this user. All related records and files will also be deleted. This cannot be undone, please be certain!');
     }
 
-    public function getButton(): Stringable
+    public function getButton(): string
     {
-        DeleteGridButton::
-        $this->confirm ??= Yii::t('skeleton', 'Are you sure you want to delete this user?');
-
-        $this->content ??= DeleteActiveForm::widget([
+        return DeleteActiveForm::widget([
             'model' => $this->user,
             'attribute' => 'email',
-            'message' => $this->message,
-            'confirm' => $this->confirm,
+            'message' => Yii::t('skeleton', 'Are you sure you want to delete this user?'),
+            'confirm' => $this->title,
         ]);
-
-        parent::init();
     }
 
-    protected function getOwnerWarning(): string
+    protected function getOwnerWarning(): Stringable
     {
-        return Html::tag('div', Yii::t('skeleton', 'You cannot delete this user, because it is the owner of this website.'), [
-            'class' => 'alert alert-warning',
-        ]);
+        return Alert::make()
+            ->content(Yii::t('skeleton', 'You cannot delete this user, because it is the owner of this website.'))
+            ->icon('warning-triangle')
+            ->warning();
     }
 }

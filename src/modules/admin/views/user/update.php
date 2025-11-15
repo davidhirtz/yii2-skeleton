@@ -37,10 +37,9 @@ echo FormContainer::make()
 
 
 echo UserPanel::make()
-->user($form->user);
+    ->user($form->user);
 
 if (Yii::$app->getUser()->can(User::AUTH_USER_DELETE, ['user' => $form->user])) {
-    echo UserDeletePanel::widget([
-        'user' => $form->user,
-    ]);
+    echo UserDeletePanel::make()
+        ->user($form->user);
 }

@@ -64,9 +64,8 @@
 
 .card-danger {
   --card-border-color: var(--card-danger-border-color, var(--card-border-color));
-  --card-bg: var(--card-danger-bg, transparent);
-  --card-color: var(--card-danger-color, inherit);
-  --card-title-color: var(--card-title-danger-color, inherit);
+  --card-header-bg: var(--card-danger-header-bg, transparent);
+  --card-header-color: var(--card-danger-header-color, inherit);
 }
 
 .card-title {
