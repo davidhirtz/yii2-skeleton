@@ -6,7 +6,6 @@ declare(strict_types=1);
  * @see SystemController::actionIndex()
  *
  * @var View $this
- * @var ArrayDataProvider $assets
  * @var ArrayDataProvider $caches
  * @var ArrayDataProvider $logs
  * @var ArrayDataProvider $sessions
@@ -16,9 +15,12 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\ButtonToolbar;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\AssetGridView;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\CacheGridView;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
+use davidhirtz\yii2\skeleton\widgets\grids\GridContainer;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use davidhirtz\yii2\timeago\Timeago;
 use yii\data\ArrayDataProvider;
@@ -29,6 +31,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
     echo Submenu::widget([
         'title' => Yii::t('skeleton', 'Logs'),
     ]);
+
 
     echo Panel::widget([
         'content' => GridView::widget([
@@ -49,11 +52,11 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                     'content' => fn ($modified, $name): string => ButtonToolbar::make()
                         ->addHtml(
                             Button::make()
-->primary()
+                                ->primary()
                                 ->href(['view', 'log' => $name, 'raw' => 1])
                                 ->icon('file'),
                             Button::make()
-->danger()
+                                ->danger()
                                 ->icon('trash')
                                 ->post(['delete', 'log' => $name])
                         )
@@ -63,81 +66,22 @@ $this->setTitle(Yii::t('skeleton', 'System'));
         ]),
     ]);
 }
-?>
 
-
-<?= Submenu::widget([
+echo Submenu::widget([
     'title' => Yii::t('skeleton', 'Assets'),
-]); ?>
+]);
 
-<?= Panel::widget([
-    'content' => GridView::widget([
-        'dataProvider' => $assets,
-        'layout' => '{items}{footer}',
-        'columns' => [
-            [
-                'label' => Yii::t('skeleton', 'Name'),
-                'content' => function ($item): string {
-                    $links = [];
+echo GridContainer::make()
+    ->grid(AssetGridView::make());
 
-                    foreach ($item['files'] as $file => $link) {
-                        $links[] = Html::a($file, $link . $file, ['target' => '_blank']);
-                    }
-
-                    return Html::tag('div', $item['name'], ['class' => 'strong']) .
-                        Html::ul($links, ['class' => 'small', 'encode' => false]);
-                }
-            ],
-            [
-                'label' => Yii::t('skeleton', 'Updated'),
-                'contentOptions' => ['style' => 'vertical-align:top'],
-                'content' => fn ($item): string => Timeago::tag($item['modified'])
-            ]
-        ],
-        'footer' => [
-            [
-                [
-                    /** @see SystemController::actionPublish() */
-                    'content' => Button::make()
-                    ->primary()
-                    ->text(Yii::t('skeleton', 'Refresh'))
-                        ->icon('sync-alt')
-                        ->post(['publish']),
-                    'options' => ['class' => 'ms-auto'],
-                ]
-            ],
-        ],
-    ]),
-]); ?>
-
-<?= Submenu::widget([
+echo Submenu::widget([
     'title' => Yii::t('skeleton', 'Cache'),
-]); ?>
+]);
 
-<?= Panel::widget([
-    'content' => GridView::widget([
-        'dataProvider' => $caches,
-        'layout' => '{items}{footer}',
-        'columns' => [
-            [
-                'label' => Yii::t('skeleton', 'Name'),
-                'content' => fn ($item): string => Html::tag('div', ucwords((string)$item['name']), ['class' => 'strong']) .
-                    Html::tag('div', $item['class'], ['class' => 'small'])
-            ],
-            [
-                'contentOptions' => ['class' => 'text-end'],
-                /** @see SystemController::actionFlush() */
-                'content' => fn (array $item): string => Button::make()
-->primary()
-                    ->icon('sync-alt')
-                    ->post(['flush', 'cache' => $item['name']])
-                    ->render()
-            ],
-        ],
-    ]),
-]); ?>
+echo GridContainer::make()
+    ->grid(CacheGridView::make());
 
-<?= Submenu::widget([
+echo Submenu::widget([
     'title' => Yii::t('skeleton', 'Sessions'),
 ]); ?>
 
@@ -164,7 +108,7 @@ $this->setTitle(Yii::t('skeleton', 'System'));
                 'contentOptions' => ['class' => 'text-end'],
                 /** @see SystemController::actionSessionGc() */
                 'content' => fn (array $item): string => Button::make()
-->primary()
+                    ->primary()
                     ->icon('trash')
                     ->post(['/admin/system/session-gc'])
                     ->tooltip(Yii::t('skeleton', 'Delete expired sessions'))

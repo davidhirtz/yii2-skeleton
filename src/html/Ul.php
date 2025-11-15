@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\html;
 
 use davidhirtz\yii2\skeleton\html\base\Tag;
 use Override;
+use Stringable;
 
 class Ul extends Tag
 {
@@ -19,7 +20,7 @@ class Ul extends Tag
             ->render();
     }
 
-    public function addItem(string $html, array $attributes = []): static
+    public function addItem(string|Stringable $html, array $attributes = []): static
     {
         $this->items[] = Li::make()
             ->attributes($attributes)

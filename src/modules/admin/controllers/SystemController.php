@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
+use davidhirtz\yii2\skeleton\caching\CacheComponents;
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use davidhirtz\yii2\skeleton\models\Session;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\LogDataProvider;
 use davidhirtz\yii2\skeleton\web\Controller;
+use Override;
 use Yii;
-use yii\caching\Cache;
 use yii\data\ArrayDataProvider;
 use yii\db\Connection;
 use yii\filters\AccessControl;
@@ -20,7 +21,7 @@ use yii\web\Response;
 
 class SystemController extends Controller
 {
-    #[\Override]
+    #[Override]
     public function behaviors(): array
     {
         return [
@@ -49,27 +50,6 @@ class SystemController extends Controller
 
     public function actionIndex(): Response|string
     {
-        $assets = new ArrayDataProvider([
-            'allModels' => $this->findAssets(),
-            'pagination' => false,
-            'sort' => false,
-        ]);
-
-        $caches = [];
-
-        foreach ($this->findCaches() as $name => $class) {
-            $caches[] = [
-                'name' => $name,
-                'class' => $class,
-            ];
-        }
-
-        $caches = new ArrayDataProvider([
-            'allModels' => $caches,
-            'pagination' => false,
-            'sort' => false,
-        ]);
-
         $sessions = new ArrayDataProvider([
             'allModels' => [
                 [
@@ -84,8 +64,6 @@ class SystemController extends Controller
         ]);
 
         return $this->render('index', [
-            'assets' => $assets,
-            'caches' => $caches,
             'logs' => $this->getLogDataProvider(),
             'sessions' => $sessions,
         ]);
@@ -109,7 +87,7 @@ class SystemController extends Controller
 
     public function actionFlush(string $cache): Response|string
     {
-        if (!in_array($cache, array_keys($this->findCaches()), true)) {
+        if (!in_array($cache, array_keys(CacheComponents::getAll()), true)) {
             throw new NotFoundHttpException();
         }
 
@@ -180,60 +158,5 @@ class SystemController extends Controller
         return Yii::$container->get(LogDataProvider::class, [], [
             'file' => $file,
         ]);
-    }
-
-    protected function findAssets(): array
-    {
-        $manager = Yii::$app->getAssetManager();
-        $basePath = $manager->basePath;
-        $baseUrl = $manager->baseUrl;
-
-        $directories = FileHelper::findDirectories($basePath, ['recursive' => false]);
-        $assets = [];
-
-        foreach ($directories as $directory) {
-            $handle = @opendir($directory);
-            $basename = pathinfo((string)$directory, PATHINFO_BASENAME);
-            $files = [];
-
-            while (($file = readdir($handle)) !== false) {
-                if ($file !== '.' && $file !== '..') {
-                    $files[$file] = $baseUrl . '/' . $basename . '/';
-                }
-            }
-
-            closedir($handle);
-
-            $assets[] = [
-                'name' => $basename,
-                'files' => $files,
-                'modified' => filemtime($directory),
-            ];
-        }
-
-        return $assets;
-    }
-
-    protected function findCaches(): array
-    {
-        $caches = [];
-
-        foreach (Yii::$app->getComponents() as $name => $component) {
-            if ($component instanceof Cache) {
-                $caches[$name] = $component::class;
-            } elseif (is_array($component) && isset($component['class']) && $this->isCacheClass($component['class'])) {
-                $caches[$name] = $component['class'];
-            } elseif (is_string($component) && $this->isCacheClass($component)) {
-                $caches[$name] = $component;
-            }
-        }
-
-        ksort($caches);
-        return $caches;
-    }
-
-    private function isCacheClass(string $className): bool
-    {
-        return is_subclass_of($className, Cache::class);
     }
 }
