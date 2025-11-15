@@ -62,8 +62,7 @@ class AssetGridView extends GridView
                     ->primary()
                     ->text(Yii::t('skeleton', 'Refresh'))
                     ->icon('sync-alt')
-                    ->post(['publish']))
-            ,
+                    ->post(['publish'])),
         ];
 
         parent::init();

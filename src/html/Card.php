@@ -4,38 +4,26 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\html;
 
-use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\base\Tag;
+use davidhirtz\yii2\skeleton\html\traits\TagCollapsedTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagTitleTrait;
 use Override;
 use Yii;
 
 class Card extends Tag
 {
+    use TagCollapsedTrait;
     use TagContentTrait;
+    use TagTitleTrait;
 
     public array $attributes = [
         'class' => 'card',
     ];
 
-    protected ?bool $collapsed = null;
-    protected ?string $title = null;
-
     public function danger(): static
     {
         return $this->addClass('card-danger');
-    }
-
-    public function title(string|null $title): static
-    {
-        $this->title = $title ? Html::encode($title) : null;
-        return $this;
-    }
-
-    public function collapsed(?bool $collapsed): static
-    {
-        $this->collapsed = $collapsed;
-        return $this;
     }
 
     protected function prepareAttributes(): void

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @see RedirectController::actionCreate()
  *
@@ -6,30 +8,28 @@
  * @var Redirect $redirect
  */
 
-declare(strict_types=1);
-
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\RedirectActiveForm;
 use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
-use yii\helpers\Url;
+use davidhirtz\yii2\skeleton\widgets\forms\FormContainer;
+use davidhirtz\yii2\skeleton\widgets\navs\Header;
+use \davidhirtz\yii2\skeleton\html\A;
 
 $this->setTitle(Yii::t('skeleton', 'Create New Redirect'));
 $this->setBreadcrumb(Yii::t('skeleton', 'Redirects'), ['index']);
-?>
-    <h1 class="page-header">
-        <a href="<?= Url::toRoute(['index']) ?>"><?= Yii::t('skeleton', 'Redirects'); ?></a>
-    </h1>
 
-<?php
+echo Header::make()
+    ->title(A::make()
+        ->text(Yii::t('skeleton', 'Redirects'))
+        ->href(['index']));
+
 echo ErrorSummary::make()->models($redirect);
 
-echo Panel::widget([
-    'title' => $this->title,
-    'content' => RedirectActiveForm::widget([
+echo FormContainer::make()
+    ->title($this->title)
+    ->form(RedirectActiveForm::widget([
         'model' => $redirect,
-    ]),
-]);
-?>
+    ]));
+

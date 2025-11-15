@@ -16,8 +16,8 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\panels\UserDeletePanel;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\panels\UserHelpPanel;
 use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
+use davidhirtz\yii2\skeleton\widgets\forms\FormContainer;
 
 $this->setTitle(Yii::t('skeleton', 'Edit User'));
 $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
@@ -29,12 +29,12 @@ echo UserSubmenu::widget([
 echo ErrorSummary::make()->models($form)
     ->title(Yii::t('skeleton', 'The user could not be updated'));
 
-echo Panel::widget([
-    'title' => $this->title,
-    'content' => UserActiveForm::widget([
+echo FormContainer::make()
+    ->title($this->title)
+    ->form(UserActiveForm::widget([
         'model' => $form,
-    ]),
-]);
+    ]));
+
 
 echo UserHelpPanel::widget([
     'user' => $form->user,

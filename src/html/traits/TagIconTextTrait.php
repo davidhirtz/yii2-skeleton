@@ -32,7 +32,8 @@ trait TagIconTextTrait
                 ->addContent($this->icon)
                 ->addContent(
                     Div::make()
-                        ->content(...$this->content));
+                        ->content(...$this->content)
+                );
         }
 
         return $this->icon ?? implode('', $this->content);

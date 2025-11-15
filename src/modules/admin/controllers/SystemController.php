@@ -6,13 +6,11 @@ namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
 use davidhirtz\yii2\skeleton\caching\CacheComponents;
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
-use davidhirtz\yii2\skeleton\models\Session;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\LogDataProvider;
 use davidhirtz\yii2\skeleton\web\Controller;
 use Override;
 use Yii;
-use yii\data\ArrayDataProvider;
 use yii\db\Connection;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;

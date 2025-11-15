@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
 
 use davidhirtz\yii2\skeleton\html\Container;
+use davidhirtz\yii2\skeleton\widgets\navs\Header;
 use Override;
+use Stringable;
 use yii\helpers\Html;
 
 class Submenu extends Nav
@@ -30,8 +32,9 @@ class Submenu extends Nav
         return $html ? Container::make()->content($html)->render() : '';
     }
 
-    protected function renderTitle(): string
+    protected function renderTitle(): Stringable
     {
-        return $this->title ? Html::tag('h1', $this->title, ['class' => 'page-header']) : '';
+        return Header::make()
+            ->title($this->title);
     }
 }

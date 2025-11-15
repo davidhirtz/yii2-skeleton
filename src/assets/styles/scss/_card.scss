@@ -63,16 +63,10 @@
 }
 
 .card-danger {
-  border-color: var(--card-danger-border-color, var(--card-border-color));
-
-  .card-header {
-    background: var(--card-danger-bg, transparent);
-    color: var(--card-danger-color, inherit);
-  }
-
-  .card-title {
-    color: var(--card-title-danger-color, inherit);
-  }
+  --card-border-color: var(--card-danger-border-color, var(--card-border-color));
+  --card-bg: var(--card-danger-bg, transparent);
+  --card-color: var(--card-danger-color, inherit);
+  --card-title-color: var(--card-title-danger-color, inherit);
 }
 
 .card-title {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets;
 
-
 use davidhirtz\yii2\skeleton\html\A;
 use davidhirtz\yii2\skeleton\html\Span;
 use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;

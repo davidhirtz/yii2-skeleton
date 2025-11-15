@@ -11,7 +11,6 @@ use davidhirtz\yii2\skeleton\html\Th;
 use davidhirtz\yii2\skeleton\html\traits\TagVisibilityTrait;
 use davidhirtz\yii2\skeleton\widgets\grids\traits\GridTrait;
 use Stringable;
-use Yii;
 use yii\base\Model;
 use yii\helpers\Html;
 

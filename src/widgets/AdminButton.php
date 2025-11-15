@@ -7,7 +7,6 @@ namespace davidhirtz\yii2\skeleton\widgets;
 use davidhirtz\yii2\skeleton\html\A;
 use Stringable;
 use Yii;
-use yii\helpers\Html;
 
 class AdminButton extends Widget
 {

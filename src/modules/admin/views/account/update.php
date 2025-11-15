@@ -20,9 +20,10 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\AccountActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\AuthClientsGridView;
 use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
+use davidhirtz\yii2\skeleton\widgets\forms\FormContainer;
+use davidhirtz\yii2\skeleton\widgets\grids\GridContainer;
 
 $this->setTitle(Yii::t('skeleton', 'Account'));
 ?>
@@ -38,37 +39,33 @@ if ($form->user->isUnconfirmed()) {
 echo ErrorSummary::make()->models($form)
     ->title(Yii::t('skeleton', 'Your account could not be updated'));
 
-echo Panel::widget([
-    'title' => $this->title,
-    'content' => AccountActiveForm::widget([
+echo FormContainer::make()
+    ->title($this->title)
+    ->form(AccountActiveForm::widget([
         'model' => $form,
-    ]),
-]);
+    ]));
 
 if (Yii::$app->getUser()->enableGoogleAuthenticator) {
-    echo Panel::widget([
-        'title' => Yii::t('skeleton', 'Google Authenticator'),
-        'content' => GoogleAuthenticatorActiveForm::widget([
+    echo FormContainer::make()
+        ->title(Yii::t('skeleton', 'Google Authenticator'))
+        ->form(GoogleAuthenticatorActiveForm::widget([
             'model' => GoogleAuthenticatorForm::create([
                 'user' => $form->user,
             ]),
-        ]),
-    ]);
+        ]));
 }
 
 if (Yii::$app->getAuthClientCollection()->clients) {
-    echo Panel::widget([
-        'title' => Yii::t('skeleton', 'Clients'),
-        'content' => AuthClientsGridView::widget([
-            'user' => $form->user,
-        ]),
-    ]);
+    echo GridContainer::make()
+        ->title(Yii::t('skeleton', 'Clients'))
+        ->grid(AuthClientsGridView::make()
+            ->user($form->user));
 }
 if ($form->user->isDeletable()) {
-    echo Panel::widget([
-        'type' => 'danger',
-        'title' => Yii::t('skeleton', 'Delete Account'),
-        'content' => DeleteActiveForm::widget([
+    echo FormContainer::make()
+        ->title(Yii::t('skeleton', 'Delete Account'))
+        ->danger()
+        ->form(DeleteActiveForm::widget([
             'model' => $form->user,
             'attribute' => 'password',
             'action' => ['delete'],
@@ -78,13 +75,11 @@ if ($form->user->isDeletable()) {
                     'type' => 'password',
                 ],
             ],
-        ])
-    ]);
+        ]));
 } elseif ($form->user->isOwner()) {
     echo Container::make()
         ->content(Alert::make()
             ->text(Yii::t('skeleton', 'You cannot delete your account, because you are the owner of this website.'))
-            ->status('warning'))
-        ->render();
+            ->status('warning'));
 }
 ?>

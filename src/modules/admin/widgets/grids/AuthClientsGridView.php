@@ -8,20 +8,21 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\models\AuthClient;
-use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\panels\AuthClientListGroup;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\TimeagoColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
+use davidhirtz\yii2\skeleton\widgets\traits\UserWidgetTrait;
 use Override;
 use Yii;
 use yii\data\ArrayDataProvider;
 
 class AuthClientsGridView extends GridView
 {
+    use UserWidgetTrait;
+
     public string $layout = '{items}{footer}';
-    public User $user;
 
     #[Override]
     public function init(): void

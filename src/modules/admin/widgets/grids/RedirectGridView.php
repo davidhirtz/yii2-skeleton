@@ -16,7 +16,6 @@ use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\DeleteButton;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\ViewButton;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\CheckboxColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\LinkColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\TimeagoColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\widgets\grids\toolbars\CreateButton;
@@ -33,7 +32,7 @@ class RedirectGridView extends GridView
 {
     use TypeGridViewTrait;
 
-    public ?Redirect $redirect = null;
+    protected ?Redirect $redirect = null;
     public bool $showSelection = true;
 
     #[Override]
@@ -73,6 +72,11 @@ class RedirectGridView extends GridView
         parent::init();
     }
 
+    public function redirect(Redirect $redirect): static
+    {
+        $this->redirect = $redirect;
+        return $this;
+    }
 
     protected function setDataProviderFromRedirect(): void
     {
