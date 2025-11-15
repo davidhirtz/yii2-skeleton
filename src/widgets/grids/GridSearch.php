@@ -91,10 +91,10 @@ class GridSearch
         return Form::make()
             ->method('get')
             ->attributes($formAttributes)
-            ->html($this->renderInput());
+            ->html($this->getInput());
     }
 
-    protected function renderInput(): Stringable
+    protected function getInput(): Stringable
     {
         $icon = ArrayHelper::remove($this->inputAttributes, 'icon', 'search');
         $type = ArrayHelper::remove($this->inputAttributes, 'type', 'search');
@@ -126,7 +126,9 @@ class GridSearch
 
     public function getToolbarItem(): GridToolbarItem
     {
-        return new GridToolbarItem($this->render(), $this->toolbarItemAttributes);
+        return GridToolbarItem::make()
+            ->attributes($this->toolbarItemAttributes)
+            ->html($this->render());
     }
 
     public function getKeywords(): array

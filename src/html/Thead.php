@@ -14,6 +14,6 @@ class Thead extends base\Tag
     #[Override]
     protected function getTagName(): string
     {
-        return 'tbody';
+        return 'thead';
     }
 }

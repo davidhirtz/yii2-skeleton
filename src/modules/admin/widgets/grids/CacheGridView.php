@@ -38,24 +38,20 @@ class CacheGridView extends GridView
         $this->columns ??= [
             Column::make()
                 ->header(Yii::t('skeleton', 'Name'))
-                ->content(function (array $item): string {
-                    return implode('', [
-                        Div::make()
-                            ->html(ucwords((string)$item['name']))
-                            ->class('strong'),
-                        Div::make()
-                            ->html($item['class'])
-                            ->class('small'),
-                    ]);
-                }),
+                ->content(fn (array $item): array => [
+                    Div::make()
+                        ->html(ucwords((string)$item['name']))
+                        ->class('strong'),
+                    Div::make()
+                        ->html($item['class'])
+                        ->class('small'),
+                ]),
             ButtonColumn::make()
-                ->content(function (array $item): Stringable {
-                    /** @see SystemController::actionFlush() */
-                    return Button::make()
-                        ->primary()
-                        ->icon('sync-alt')
-                        ->post(['flush', 'cache' => $item['name']]);
-                })
+                /** @see SystemController::actionFlush() */
+                ->content(fn (array $item): Stringable => Button::make()
+                    ->primary()
+                    ->icon('sync-alt')
+                    ->post(['flush', 'cache' => $item['name']]))
         ];
 
         parent::init();

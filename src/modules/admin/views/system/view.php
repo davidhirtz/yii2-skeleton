@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 
 use davidhirtz\yii2\skeleton\modules\admin\data\LogDataProvider;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\LogGridView;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\LogFileGridView;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\Panel;
 use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
@@ -22,7 +22,7 @@ echo Submenu::widget([
 ]);
 
 echo Panel::widget([
-    'content' => LogGridView::widget([
+    'content' => LogFileGridView::widget([
         'dataProvider' => $provider,
     ])
 ]);

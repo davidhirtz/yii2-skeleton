@@ -21,11 +21,12 @@ class Column
     use GridTrait;
     use TagVisibilityTrait;
 
-    protected string|Stringable|Closure|null $content = null;
-    protected array|null|Closure $contentAttributes = null;
     protected string|false|null $header = null;
-    protected ?array $headerAttributes = null;
-    protected string $emptyCell = '&nbsp;';
+
+    public string|Stringable|Closure|null $content = null;
+    public array|null|Closure $contentAttributes = null;
+    public ?array $headerAttributes = null;
+    public string $emptyCell = '&nbsp;';
 
     public function content(string|Closure|null $content): static
     {
@@ -93,7 +94,7 @@ class Column
         return $this->header ?: $this->emptyCell;
     }
 
-    public function renderBody(Model $model, string|int $key, int $index): Td
+    public function renderBody(array|Model $model, string|int $key, int $index): Td
     {
         $attributes = $this->contentAttributes instanceof Closure
             ? call_user_func($this->contentAttributes, $model, $key, $index, $this)
@@ -104,10 +105,11 @@ class Column
             ->attributes($attributes ?? []);
     }
 
-    protected function getBodyContent(Model $model, string|int $key, int $index): string|Stringable
+    protected function getBodyContent(array|Model $model, string|int $key, int $index): string|Stringable
     {
         if ($this->content instanceof Closure) {
-            return call_user_func($this->content, $model, $key, $index, $this);
+            $content = call_user_func($this->content, $model, $key, $index, $this);
+            return is_array($content) ? implode('', $content) : $content;
         }
 
         return $this->content ?? $this->emptyCell;

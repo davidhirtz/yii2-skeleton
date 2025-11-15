@@ -88,14 +88,14 @@ class DataColumn extends Column
         return $label;
     }
 
-    protected function getBodyContent(Model $model, string|int $key, int $index): string|Stringable
+    protected function getBodyContent(array|Model $model, string|int $key, int $index): string|Stringable
     {
         return $this->content === null
             ? Yii::$app->getFormatter()->format($this->getValue($model, $key, $index), $this->format)
             : parent::getBodyContent($model, $key, $index);
     }
 
-    protected function getValue(Model $model, string|int $key, int $index): mixed
+    protected function getValue(array|Model $model, string|int $key, int $index): mixed
     {
         if ($this->value instanceof Closure) {
             return call_user_func($this->value, $model, $key, $index, $this);

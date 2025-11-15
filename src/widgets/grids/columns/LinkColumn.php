@@ -23,7 +23,7 @@ class LinkColumn extends DataColumn
     }
 
     #[Override]
-    protected function getBodyContent(Model $model, string|int $key, int $index): string|Stringable
+    protected function getBodyContent(array|Model $model, string|int $key, int $index): string|Stringable
     {
         $content = parent::getBodyContent($model, $key, $index);
         $content = parent::getBodyContent($model, $key, $index);

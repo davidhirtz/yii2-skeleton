@@ -11,13 +11,13 @@ use yii\base\Model;
 
 class TimeagoColumn extends LinkColumn
 {
-    protected array|null|Closure $contentAttributes = [
+    public array|null|Closure $contentAttributes = [
         'class' => 'text-nowrap',
     ];
 
     protected string $format = 'raw';
 
-    protected function getValue(Model $model, int|string $key, int $index): ?string
+    protected function getValue(array|Model $model, string|int $key, int $index): ?string
     {
         $timestamp = ArrayHelper::getValue($model, $this->property);
         return $timestamp ? Timeago::tag($timestamp) : null;

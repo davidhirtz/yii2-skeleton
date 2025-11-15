@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\data;
 
+use Override;
 use Yii;
 use yii\data\ArrayDataProvider;
 
 class LogDataProvider extends ArrayDataProvider
 {
-    /**
-     * @var string|null the file path of the current error log
-     */
+    public string $basePath = '@runtime/logs/';
     public ?string $file = null;
 
     /**
@@ -19,12 +18,8 @@ class LogDataProvider extends ArrayDataProvider
      */
     public string $pattern = '/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) \[([^]]*)]\[([^]]*)]\[([^]]*)]\[([^]]*)]\[([^]]*)]/';
 
-    /**
-     * @var string the path used for parsing error files
-     */
-    public string $basePath = '@runtime/logs/';
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         if ($this->allModels === null) {
@@ -90,7 +85,10 @@ class LogDataProvider extends ArrayDataProvider
         $files = [];
 
         foreach (glob(Yii::getAlias($this->basePath . '*')) as $file) {
-            $files[pathinfo($file, PATHINFO_BASENAME)] = filemtime($file);
+            $files[] = [
+                'filename' => pathinfo($file, PATHINFO_BASENAME),
+                'updated_at' => filemtime($file),
+            ];
         }
 
         return $files;

@@ -37,21 +37,19 @@ class SessionGridView extends GridView
         $this->columns ??= [
             Column::make()
                 ->header(Yii::t('skeleton', 'Sessions'))
-                ->content(function (array $item): string {
-                    return implode('', [
-                        Div::make()
-                            ->class('strong')
-                            ->html(Yii::t('skeleton', 'Expired sessions: {count,number}', [
-                                'count' => $item['expiredSessionCount'],
-                            ])),
-                        Div::make()
-                            ->class('small')
-                            ->html(Yii::t('app', 'Total sessions: {sessionCount,number} / Garbage collection probability: {probability}', [
-                                'sessionCount' => $item['sessionCount'],
-                                'probability' => Yii::$app->getSession()->getGCProbability(),
-                            ]))
-                    ]);
-                }),
+                ->content(fn (array $item): array => [
+                    Div::make()
+                        ->class('strong')
+                        ->html(Yii::t('skeleton', 'Expired sessions: {count,number}', [
+                            'count' => $item['expiredSessionCount'],
+                        ])),
+                    Div::make()
+                        ->class('small')
+                        ->html(Yii::t('app', 'Total sessions: {sessionCount,number} / Garbage collection probability: {probability}', [
+                            'sessionCount' => $item['sessionCount'],
+                            'probability' => Yii::$app->getSession()->getGCProbability(),
+                        ]))
+                ]),
             ButtonColumn::make()
                 /** @see SystemController::actionSessionGc() */
                 ->content(fn (): Stringable => Button::make()

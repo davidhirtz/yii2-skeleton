@@ -7,6 +7,7 @@ namespace davidhirtz\yii2\skeleton\widgets\grids\columns;
 use Closure;
 use davidhirtz\yii2\skeleton\html\ButtonToolbar;
 use Override;
+use Stringable;
 use yii\base\Model;
 
 class ButtonColumn extends Column
@@ -19,11 +20,16 @@ class ButtonColumn extends Column
     protected function getBodyContent(array|Model $model, string|int $key, int $index): string|Stringable
     {
         if ($this->content instanceof Closure) {
-            $html = call_user_func($this->content, $model, $key, $index, $this);
+            $buttons = call_user_func($this->content, $model, $key, $index, $this);
 
-            return ButtonToolbar::make()
-                ->addHtml(...(array)$html)
-                ->render();
+            if (is_string($buttons)) {
+                $buttons = [$buttons];
+            }
+
+            if (is_array($buttons)) {
+                return ButtonToolbar::make()
+                    ->addHtml(...$buttons);
+            }
         }
 
         return parent::getBodyContent($model, $key, $index);

@@ -12,6 +12,7 @@ use davidhirtz\yii2\skeleton\html\Ul;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\TimeagoColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
+use davidhirtz\yii2\skeleton\widgets\grids\toolbars\GridToolbarItem;
 use Stringable;
 use Yii;
 use yii\data\ArrayDataProvider;
@@ -55,12 +56,14 @@ class AssetGridView extends GridView
 
         /** @see SystemController::actionPublish() */
         $this->footer ??= [
-            Button::make()
-                ->primary()
-                ->text(Yii::t('skeleton', 'Refresh'))
-                ->icon('sync-alt')
-                ->post(['publish'])
-                ->addClass('ms-auto'),
+            GridToolbarItem::make()
+                ->class('ms-auto')
+                ->html(Button::make()
+                    ->primary()
+                    ->text(Yii::t('skeleton', 'Refresh'))
+                    ->icon('sync-alt')
+                    ->post(['publish']))
+            ,
         ];
 
         parent::init();

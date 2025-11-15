@@ -23,7 +23,7 @@ class Breadcrumbs extends Widget
     public bool $encodeLabels = true;
     public array|null|false $homeLink = null;
 
-    public array $attributes = ['class' => 'breadcrumb'];
+    public array $listAttributes = ['class' => 'breadcrumb'];
     public array $itemAttributes = ['class' => 'breadcrumb-item'];
     public array $linkAttributes = ['class' => 'breadcrumb-link'];
 
@@ -73,7 +73,7 @@ class Breadcrumbs extends Widget
             return '';
         }
 
-        $list = Ul::make()->attributes($this->attributes);
+        $list = Ul::make()->attributes($this->listAttributes);
 
         foreach ($this->links as $link) {
             if (!is_array($link)) {

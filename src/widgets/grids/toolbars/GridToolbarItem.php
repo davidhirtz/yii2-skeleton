@@ -4,20 +4,29 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\grids\toolbars;
 
-use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\base\traits\ContainerConfigurationTrait;
+use davidhirtz\yii2\skeleton\html\Div;
+use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagVisibilityTrait;
+use davidhirtz\yii2\skeleton\widgets\grids\traits\GridTrait;
+use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
 
-readonly class GridToolbarItem implements Stringable
+class GridToolbarItem extends Widget
 {
-    public function __construct(
-        public string|Stringable $content,
-        public array $attributes = [],
-        public bool $visible = true,
-    ) {
-    }
+    use ContainerConfigurationTrait;
+    use GridTrait;
+    use TagAttributesTrait;
+    use TagContentTrait;
+    use TagVisibilityTrait;
 
-    public function __toString(): string
+    protected function renderContent(): string|Stringable
     {
-        return Html::div($this->content, $this->attributes)->render();
+        return $this->content
+            ? Div::make()
+                ->attributes($this->attributes)
+                ->html(...$this->content)
+            : '';
     }
 }

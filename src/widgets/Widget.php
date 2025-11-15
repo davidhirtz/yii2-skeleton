@@ -49,7 +49,7 @@ abstract class Widget implements Stringable, ViewContextInterface
 
     final public function __toString(): string
     {
-        return $this->render();
+        return (string)$this->render();
     }
 
     abstract protected function renderContent(): string|Stringable;

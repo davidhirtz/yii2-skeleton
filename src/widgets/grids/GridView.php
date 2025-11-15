@@ -142,23 +142,21 @@ class GridView extends Widget
 
     protected function getToolbar(array $row): ?Stringable
     {
-        $items = [];
+        $tag = Div::make()
+            ->class('row');
 
         foreach ($row as $item) {
-            if ($item instanceof Stringable && !$item instanceof GridToolbarItem) {
-                $item = (string)$item;
+            if (!$item instanceof GridToolbarItem) {
+                $item = GridToolbarItem::make()
+                    ->html($item);
             }
 
-            if (is_string($item) || is_array($item)) {
-                $item = Yii::createObject(GridToolbarItem::class, (array)$item);
-            }
-
-            if ($item instanceof GridToolbarItem && $item->visible) {
-                $items[] = $item;
+            if ($item->isVisible()) {
+                $tag->addHtml($item);
             }
         }
 
-        return $items ? Html::div($items)->addClass('row') : null;
+        return $tag->hasContent() ? $tag : null;
     }
 
     protected function getSummary(): ?Stringable

@@ -123,7 +123,7 @@ return [
     'Inherited Permissions' => 'Vererbte Benutzerrechte',
     'Keep me logged in' => 'Eingeloggt bleiben',
     'Language' => 'Sprache',
-    'Last Update' => 'Letztes Update',
+    'Last Update' => 'Letzte Änderung',
     'Last login' => 'Letzter Login',
     'Last name' => 'Nachname',
     'Last updated by {user} {timestamp}' => 'Letzte Aktualisierung von {user} {timestamp}',
