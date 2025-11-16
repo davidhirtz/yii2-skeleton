@@ -7,8 +7,8 @@ namespace davidhirtz\yii2\skeleton\widgets\panels;
 final class DashboardItem
 {
     public function __construct(
-        public string $label,
-        public array|string $url,
+        public ?string $label = null,
+        public array|string|null $url = null,
         public ?string $icon = null,
         public array $roles = [],
         public array $attributes = [],
@@ -18,6 +18,10 @@ final class DashboardItem
 
     public function merge(self $item): self
     {
+        if ($item->label) {
+            $this->label = $item->label;
+        }
+
         if ($item->url) {
             $this->url = $item->url;
         }

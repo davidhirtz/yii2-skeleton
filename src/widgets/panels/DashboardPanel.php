@@ -10,7 +10,7 @@ final class DashboardPanel
      * @param array<string, DashboardItem> $items
      */
     public function __construct(
-        public string $name,
+        public ?string $name = null,
         public array $items = [],
         public array $roles = [],
         public array $attributes = [],
@@ -20,6 +20,10 @@ final class DashboardPanel
 
     public function merge(self $panel): self
     {
+        if ($panel->name) {
+            $this->name = $panel->name;
+        }
+
         foreach ($panel->items as $key => $item) {
             $this->items[$key] = array_key_exists($key, $this->items)
                 ? $this->items[$key]->merge($item)

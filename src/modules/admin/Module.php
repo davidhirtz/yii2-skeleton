@@ -110,17 +110,14 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
         return array_map(fn ($class) => ['class' => $class], $classMap);
     }
 
-    /**
-     * @return DashboardPanel[]
-     */
     public function getDashboardPanels(): array
     {
         $panels = $this->getDefaultDashboardPanels();
 
         foreach ($this->getSubmodules() as $module) {
             foreach ($module->getDashboardPanels() as $key => $panel) {
+                // @phpstan-ignore-next-line todo remove once all modules have been updated
                 if (!$panel instanceof DashboardPanel) {
-                    // Todo remove once all modules have been updated
                     Yii::debug("Creating DashboardPanel '$key' from array configuration, please update modules config.");
                     continue;
                 }
