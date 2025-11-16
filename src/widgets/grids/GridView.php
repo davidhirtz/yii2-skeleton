@@ -20,6 +20,7 @@ use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
 use davidhirtz\yii2\skeleton\web\User;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
 use davidhirtz\yii2\skeleton\widgets\grids\pagers\LinkPager;
+use davidhirtz\yii2\skeleton\widgets\grids\toolbars\GridSearch;
 use davidhirtz\yii2\skeleton\widgets\grids\toolbars\GridToolbarItem;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;

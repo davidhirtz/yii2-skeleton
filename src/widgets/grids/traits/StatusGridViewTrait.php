@@ -9,7 +9,7 @@ use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\interfaces\StatusAttributeInterface;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\LinkColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\FilterDropdown;
+use davidhirtz\yii2\skeleton\widgets\grids\toolbars\FilterDropdown;
 use Stringable;
 use Yii;
 use yii\base\Model;

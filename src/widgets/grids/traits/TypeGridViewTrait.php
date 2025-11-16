@@ -7,7 +7,7 @@ namespace davidhirtz\yii2\skeleton\widgets\grids\traits;
 use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\interfaces\TypeAttributeInterface;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\LinkColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\FilterDropdown;
+use davidhirtz\yii2\skeleton\widgets\grids\toolbars\FilterDropdown;
 use Stringable;
 use Yii;
 use yii\db\ActiveRecordInterface;

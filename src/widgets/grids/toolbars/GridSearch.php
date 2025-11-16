@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\grids;
+namespace davidhirtz\yii2\skeleton\widgets\grids\toolbars;
 
 use davidhirtz\yii2\skeleton\base\traits\ContainerConfigurationTrait;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
@@ -11,7 +11,6 @@ use davidhirtz\yii2\skeleton\html\Form;
 use davidhirtz\yii2\skeleton\html\Input;
 use davidhirtz\yii2\skeleton\html\traits\TagUrlTrait;
 use davidhirtz\yii2\skeleton\web\Request;
-use davidhirtz\yii2\skeleton\widgets\grids\toolbars\GridToolbarItem;
 use davidhirtz\yii2\skeleton\widgets\grids\traits\GridTrait;
 use Stringable;
 use Yii;
