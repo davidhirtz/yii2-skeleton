@@ -44,7 +44,7 @@ class SessionGridView extends GridView
                         ])),
                     Div::make()
                         ->class('small')
-                        ->content(Yii::t('app', 'Total sessions: {sessionCount,number} / Garbage collection probability: {probability}', [
+                        ->content(Yii::t('skeleton', 'Total sessions: {sessionCount,number} / Garbage collection probability: {probability}', [
                             'sessionCount' => $item['sessionCount'],
                             'probability' => Yii::$app->getSession()->getGCProbability(),
                         ]))

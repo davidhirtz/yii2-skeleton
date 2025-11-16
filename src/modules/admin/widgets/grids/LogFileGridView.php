@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
-use davidhirtz\yii2\skeleton\html\Button;
-use davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController;
+use davidhirtz\yii2\skeleton\models\AuthItem;
+use davidhirtz\yii2\skeleton\models\LogFile;
 use davidhirtz\yii2\skeleton\modules\admin\data\LogFileArrayDataProvider;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\DeleteGridButton;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\ViewGridButton;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\LinkColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\TimeagoColumn;
@@ -27,9 +29,12 @@ class LogFileGridView extends GridView
         'style' => 'table-layout: fixed;',
     ];
 
+    public bool $showOnEmpty = false;
+
     #[Override]
     public function init(): void
     {
+        $this->attributes['id'] ??= 'logs';
         $this->provider ??= Yii::createObject(LogFileArrayDataProvider::class);
 
         $this->columns ??= [
@@ -49,7 +54,7 @@ class LogFileGridView extends GridView
         return LinkColumn::make()
             ->property('name')
             ->header(Yii::t('skeleton', 'Name'))
-            ->href(fn (array $model): array => ['view', 'log' => $model['name']])
+            ->href(fn (LogFile $file): array => $this->getLogFileUrl($file))
             ->contentAttributes(['class' => 'strong']);
     }
 
@@ -68,22 +73,29 @@ class LogFileGridView extends GridView
             ->header(Yii::t('skeleton', 'Last Update'));
     }
 
-    /**
-     * @see SystemController::actionView()
-     * @see SystemController::actionDelete()
-     */
     protected function getButtonColumn(): ButtonColumn
     {
         return ButtonColumn::make()
-            ->content(fn (array $model): array => [
-                Button::make()
-                    ->primary()
-                    ->href(['view', 'log' => $model['name'], 'raw' => 1])
-                    ->icon('file'),
-                Button::make()
-                    ->danger()
-                    ->icon('trash')
-                    ->post(['delete', 'log' => $model['name']])
-            ]);
+            ->content($this->getButtonColumnContent(...));
+    }
+
+    protected function getButtonColumnContent(LogFile $file): array
+    {
+        return [
+            ViewGridButton::make()
+                ->url($this->getLogFileUrl($file, raw: true))
+                ->icon('file'),
+            DeleteGridButton::make()
+                ->url($this->getLogFileUrl($file, 'delete'))
+        ];
+    }
+
+    /**
+     * @see LogController::actionView()
+     * @see LogController::actionDelete()
+     */
+    protected function getLogFileUrl(LogFile $file, string $action = 'view', ?bool $raw = null): array
+    {
+        return ["/admin/log/$action", 'log' => $file->name, 'raw' => $raw];
     }
 }

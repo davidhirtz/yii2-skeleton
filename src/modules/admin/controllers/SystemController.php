@@ -103,44 +103,4 @@ class SystemController extends Controller
         return $this->redirect(['index']);
     }
 
-    public function actionView(string $log, bool $raw = false): Response|string
-    {
-        $provider = $this->getLogDataProvider($log);
-
-        if (!$provider->isFileValid()) {
-            throw new NotFoundHttpException();
-        }
-
-        if ($raw) {
-            return Yii::$app->getResponse()->sendFile($provider->file, basename($log), [
-                'mimeType' => 'text/plain',
-                'inline' => true,
-            ]);
-        }
-
-        return $this->render('view', [
-            'provider' => $provider,
-        ]);
-    }
-
-    public function actionDelete(string $log): Response|string
-    {
-        $provider = Yii::$container->get(LogDataProvider::class, config: [
-            'file' => $log,
-        ]);
-
-        if (!$provider->isFileValid()) {
-            throw new NotFoundHttpException();
-        }
-
-        FileHelper::unlink($provider->file);
-        return $this->redirect(['index']);
-    }
-
-    protected function getLogDataProvider(?string $file = null): LogDataProvider
-    {
-        return Yii::$container->get(LogDataProvider::class, config: [
-            'file' => $file,
-        ]);
-    }
 }

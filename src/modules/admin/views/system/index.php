@@ -13,10 +13,13 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\CacheGridView;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\LogFileGridView;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\SessionGridView;
 use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
 use davidhirtz\yii2\skeleton\widgets\grids\GridContainer;
+use davidhirtz\yii2\skeleton\widgets\navs\Header;
 
 $this->setTitle(Yii::t('skeleton', 'System'));
+
+echo Header::make()
+    ->title(Yii::t('skeleton', 'System'));
 
 $blocks = [
     Yii::t('skeleton', 'Logs') => LogFileGridView::make(),
@@ -26,9 +29,7 @@ $blocks = [
 ];
 
 foreach ($blocks as $title => $grid) {
-    echo Submenu::widget([
-        'title' => $title,
-    ]);
     echo GridContainer::make()
+        ->title($title)
         ->grid($grid);
 }

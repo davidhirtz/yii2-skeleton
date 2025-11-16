@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\data;
 
+use davidhirtz\yii2\skeleton\models\LogFile;
 use Override;
 use Yii;
 use yii\data\ArrayDataProvider;
 
 /**
- * @property array{'name':string, 'size':int, 'updated_at':int}[] $allModels
+ * @property LogFile[] $allModels
  */
 class LogFileArrayDataProvider extends ArrayDataProvider
 {
@@ -26,16 +27,7 @@ class LogFileArrayDataProvider extends ArrayDataProvider
 
     protected function findFiles(): array
     {
-        $files = [];
-
-        foreach (glob(Yii::getAlias($this->basePath . '*')) as $file) {
-            $files[] = [
-                'name' => pathinfo($file, PATHINFO_BASENAME),
-                'size' => filesize($file),
-                'updated_at' => filemtime($file),
-            ];
-        }
-
-        return $files;
+        $files = glob(Yii::getAlias($this->basePath . '*'));
+        return array_map(fn ($file) => LogFile::createFromFilename($file), $files ?: []);
     }
 }

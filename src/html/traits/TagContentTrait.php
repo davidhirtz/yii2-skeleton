@@ -39,9 +39,9 @@ trait TagContentTrait
         return $this;
     }
 
-    final public function hasContent(): bool
+    public function hasContent(): bool
     {
-        return [] !== array_filter($this->content);
+        return !empty(implode('', $this->content));
     }
 
     protected function renderContent(): string|Stringable

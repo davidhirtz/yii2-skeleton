@@ -23,9 +23,9 @@ class GridSummary implements Stringable
     {
     }
 
-    public function render(): string
+    public function render(): Stringable
     {
-        return $this->getAlert()->render();
+        return $this->getAlert();
     }
 
     protected function getAlert(): Alert
@@ -91,6 +91,6 @@ class GridSummary implements Stringable
 
     public function __toString(): string
     {
-        return $this->render();
+        return (string)$this->render();
     }
 }

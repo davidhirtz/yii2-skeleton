@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController::actionView()
+ * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\LogController::actionView()
  *
  * @var View $this
  * @var LogDataProvider $provider

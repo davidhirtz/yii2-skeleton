@@ -12,6 +12,7 @@ use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\DashboardController;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\LogController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\TrailController;
@@ -102,6 +103,10 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
             'dashboard' => [
                 'class' => DashboardController::class,
                 'viewPath' => '@skeleton/modules/admin/views/dashboard',
+            ],
+            'log' => [
+                'class' => LogController::class,
+                'viewPath' => '@skeleton/modules/admin/views/log',
             ],
             'redirect' => [
                 'class' => RedirectController::class,

@@ -10,6 +10,6 @@ trait TagIdTrait
 
     final public function getId(): string
     {
-        return $this->attributes['id'] ??= 'i' . ++self::$counter;
+        return $this->attributes['id'] ??= 'i' . ++static::$counter;
     }
 }

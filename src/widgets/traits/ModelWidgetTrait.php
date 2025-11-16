@@ -15,5 +15,4 @@ trait ModelWidgetTrait
         $this->model = $model;
         return $this;
     }
-
 }
