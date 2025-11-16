@@ -73,20 +73,21 @@ class Breadcrumbs extends Widget
             return '';
         }
 
-        $list = Ul::make()->attributes($this->listAttributes);
+        $list = Ul::make()
+            ->attributes($this->listAttributes);
 
         foreach ($this->links as $link) {
             if (!is_array($link)) {
                 $link = ['label' => $link];
             }
 
-            $list->addItem($this->renderItem($link), $this->itemAttributes);
+            $list->addItem($this->getLink($link), $this->itemAttributes);
         }
 
         return $list;
     }
 
-    protected function renderItem(array $attributes): string
+    protected function getLink(array $attributes): Stringable
     {
         if (!array_key_exists('label', $attributes)) {
             throw new InvalidConfigException('The "label" element is required for each link.');
@@ -103,7 +104,6 @@ class Breadcrumbs extends Widget
         return A::make()
             ->addContent($content)
             ->attributes($this->linkAttributes)
-            ->href($url)
-            ->render();
+            ->href($url);
     }
 }

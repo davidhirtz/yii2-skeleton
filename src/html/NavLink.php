@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\html;
 
-use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\traits\TagVisibilityTrait;
+use Override;
 use Yii;
 use yii\web\Controller;
 
@@ -32,7 +32,10 @@ class NavLink extends A
 
     public function label(string $text): static
     {
-        $this->addContent('<span class="d-none d-lg-block">' . Html::encode($text) . '</span>');
+        $this->addContent(Span::make()
+            ->text($text)
+            ->class('d-none d-lg-block'));
+
         return $this;
     }
 
@@ -85,7 +88,7 @@ class NavLink extends A
         parent::prepareAttributes();
     }
 
-    #[\Override]
+    #[Override]
     protected function getTagName(): string
     {
         return array_key_exists('href', $this->attributes) ? 'a' : 'button';

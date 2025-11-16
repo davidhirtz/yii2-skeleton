@@ -14,16 +14,21 @@ class Ul extends Tag
 
     public function addItem(string|Stringable $html, array $attributes = []): static
     {
-        $this->items[] = Li::make()
-            ->attributes($attributes)
-            ->content($html)
-            ->render();
+        if (!$html instanceof Li) {
+            $html = Li::make()
+                ->attributes($attributes)
+                ->content($html);
+        }
+
+        $this->items[] = $html;
 
         return $this;
     }
 
     public function items(array $items, array $attributes = []): static
     {
+        $this->items = [];
+
         foreach ($items as $item) {
             $this->addItem($item, $attributes);
         }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\html\traits;
 
+use Closure;
 use Yii;
 
 trait TagVisibilityTrait
@@ -17,9 +18,9 @@ trait TagVisibilityTrait
         return $this;
     }
 
-    public function visible(callable|bool $visible): static
+    public function visible(bool|Closure $visible): static
     {
-        $this->visible = is_callable($visible) ? $visible() : $visible;
+        $this->visible = $visible instanceof Closure ? $visible() : $visible;
         return $this;
     }
 
@@ -30,7 +31,7 @@ trait TagVisibilityTrait
         }
 
         foreach ($this->roles as $role) {
-            if ($role === '*' || Yii::$app->getUser()->can($role)) {
+            if ('*' === $role || Yii::$app->getUser()->can($role)) {
                 return true;
             }
         }

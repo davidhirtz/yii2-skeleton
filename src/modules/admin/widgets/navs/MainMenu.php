@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\navs;
+namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\web\User;
+use davidhirtz\yii2\skeleton\widgets\navs\Nav;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Yii;
 
@@ -17,6 +18,7 @@ class MainMenu extends Widget
     ];
 
     public bool $hideSingleItem = true;
+
     protected User $user;
 
     public function init(): void

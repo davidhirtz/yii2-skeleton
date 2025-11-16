@@ -12,6 +12,7 @@ final class NavItem
         public ?string $label = null,
         public array|string|null $url = null,
         public array|string|Closure|null $active = null,
+        public bool|Closure|null $visible = null,
         public array $items = [],
         public array $roles = [],
         public string|int|null $badge = null,

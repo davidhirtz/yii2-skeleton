@@ -9,8 +9,8 @@ use davidhirtz\yii2\skeleton\html\base\Tag;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Dropdown;
 use davidhirtz\yii2\skeleton\html\Icon;
-use davidhirtz\yii2\skeleton\html\Nav;
 use davidhirtz\yii2\skeleton\html\NavLink;
+use davidhirtz\yii2\skeleton\html\Ul;
 use davidhirtz\yii2\skeleton\web\User;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
@@ -24,7 +24,7 @@ class AccountMenu extends Widget
         'class' => 'navbar-nav navbar-right nav',
     ];
 
-    public bool $hideSingleItem = false;
+    public array $itemAttributes = [];
 
     /**
      * @var array|null containing the route of the language dropdown. If not set, the current URL will be used.
@@ -39,12 +39,22 @@ class AccountMenu extends Widget
         parent::init();
     }
 
-    protected function renderContent(): Stringable
+    protected function renderContent(): string|Stringable
     {
-        return Nav::make()
-            ->attributes($this->attributes)
-            ->addItems($this->getItems())
-            ->hideSingleItem($this->hideSingleItem);
+        $items = array_filter($this->getItems());
+
+        if (!$items) {
+            return '';
+        }
+
+        $list = Ul::make()
+            ->attributes($this->attributes);
+
+        foreach ($items as $item) {
+            $list->addItem($item, $this->itemAttributes);
+        }
+
+        return $list;
     }
 
     protected function getItems(): array
@@ -60,19 +70,15 @@ class AccountMenu extends Widget
 
     protected function getAccountItem(): ?Tag
     {
-        $identity = $this->user->getIdentity();
-
-        if ($identity === null) {
-            return null;
-        }
-
-        return NavLink::make()
-            ->href(['/admin/account/update'])
-            ->icon('user')
-            ->label($identity->getUsername());
+        return !$this->user->getIsGuest()
+            ? NavLink::make()
+                ->href(['/admin/account/update'])
+                ->icon('user')
+                ->label($this->user->getIdentity()->getUsername())
+            : null;
     }
 
-    protected function getLanguageDropdownItem(): ?Tag
+    protected function getLanguageDropdownItem(): ?Dropdown
     {
         $i18n = Yii::$app->getI18n();
 
@@ -114,50 +120,44 @@ class AccountMenu extends Widget
     /**
      * @see AccountController::actionLogin()
      */
-    protected function getLoginItem(): ?Tag
+    protected function getLoginItem(): ?NavLink
     {
-        if (!$this->user->getIsGuest() || !$this->user->isLoginEnabled()) {
-            return null;
-        }
-
-        return NavLink::make()
-            ->href($this->user->loginUrl)
-            ->icon('sign-in-alt')
-            ->label(Yii::t('skeleton', 'Login'));
+        return $this->user->getIsGuest() && $this->user->isLoginEnabled()
+            ? NavLink::make()
+                ->href($this->user->loginUrl)
+                ->icon('sign-in-alt')
+                ->label(Yii::t('skeleton', 'Login'))
+            : null;
     }
 
     /**
      * @see AccountController::actionLogout()
      */
-    protected function getLogoutItem(): ?Tag
+    protected function getLogoutItem(): ?NavLink
     {
-        if ($this->user->getIsGuest()) {
-            return null;
-        }
-
-        return NavLink::make()
-            ->addAttributes([
-                'hx-post' => Url::toRoute(['/admin/account/logout']),
-                'hx-push-url' => 'true',
-                'hx-target' => 'body',
-            ])
-            ->addClass('navbar-logout')
-            ->icon('sign-out-alt')
-            ->label(Yii::t('skeleton', 'Logout'));
+        return !$this->user->getIsGuest()
+            ? NavLink::make()
+                ->addAttributes([
+                    'hx-post' => Url::toRoute(['/admin/account/logout']),
+                    'hx-push-url' => 'true',
+                    'hx-target' => 'body',
+                ])
+                ->addClass('navbar-logout')
+                ->icon('sign-out-alt')
+                ->label(Yii::t('skeleton', 'Logout'))
+            : null;
     }
 
     /**
      * @see AccountController::actionCreate()
      */
-    protected function getSignupItem(): ?Tag
+    protected function getSignupItem(): ?NavLink
     {
-        if (!$this->user->getIsGuest() || !$this->user->isSignupEnabled()) {
-            return null;
-        }
-
-        return NavLink::make()
-            ->href(['/admin/account/create'])
-            ->icon('plus-circle')
-            ->label(Yii::t('skeleton', 'Sign up'));
+        return $this->user->getIsGuest() && $this->user->isSignupEnabled()
+            ? NavLink::make()
+                ->href(['/admin/account/create'])
+                ->icon('plus-circle')
+                ->label(Yii::t('skeleton', 'Sign up'))
+            : null;
     }
 }

@@ -16,21 +16,12 @@ class Nav extends Tag
     private array $items = [];
     private bool $hideSingleItem = false;
 
-    public function addItem(Tag $tag): static
+    public function addItems(Tag ...$tags): static
     {
-        $this->items[] = Li::make()
-            ->class('nav-item')
-            ->content($tag);
-
-        return $this;
-    }
-
-    public function addItems(array $items): static
-    {
-        foreach ($items as $item) {
-            if ($item instanceof Tag) {
-                $this->addItem($item);
-            }
+        foreach ($tags as $tag) {
+            $this->items[] = Li::make()
+                ->class('nav-item')
+                ->content($tag);
         }
 
         return $this;
@@ -51,7 +42,9 @@ class Nav extends Tag
     #[Override]
     protected function renderTag(): string
     {
-        return $this->items && (!$this->hideSingleItem || count($this->items) > 1) ? parent::renderTag() : '';
+        return $this->items && (!$this->hideSingleItem || count($this->items) > 1)
+            ? parent::renderTag() :
+            '';
     }
 
     #[Override]

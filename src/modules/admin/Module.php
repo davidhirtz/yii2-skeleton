@@ -191,7 +191,7 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
         $this->dashboardPanels = $panels;
     }
 
-    protected function getName(): string
+    public function getName(): string
     {
         return Yii::t('skeleton', 'Admin');
     }
