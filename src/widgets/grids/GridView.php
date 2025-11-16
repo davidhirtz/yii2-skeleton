@@ -19,6 +19,7 @@ use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
 use davidhirtz\yii2\skeleton\web\User;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\pagers\LinkPager;
 use davidhirtz\yii2\skeleton\widgets\grids\toolbars\GridSearch;
 use davidhirtz\yii2\skeleton\widgets\grids\toolbars\GridToolbarItem;
@@ -45,7 +46,7 @@ class GridView extends Widget
     public DataProviderInterface $provider;
 
     /**
-     * @var Column[]
+     * @var array<Column|string>
      */
     public array $columns;
 
@@ -96,6 +97,11 @@ class GridView extends Widget
         $this->columns ??= $this->getDefaultColumns();
 
         foreach ($this->columns as $i => $column) {
+            if (is_string($column)) {
+                $column = DataColumn::make()
+                    ->property($column);
+            }
+
             $column->grid($this);
 
             if (!$column->isVisible()) {

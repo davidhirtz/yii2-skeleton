@@ -9,7 +9,7 @@ use davidhirtz\yii2\skeleton\codeception\traits\AssetDirectoryTrait;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\tests\support\UnitTester;
 use davidhirtz\yii2\skeleton\web\Controller;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Nav;
+use davidhirtz\yii2\skeleton\widgets\navs\Nav;
 use Yii;
 
 /**

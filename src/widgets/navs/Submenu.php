@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\fontawesome;
+namespace davidhirtz\yii2\skeleton\widgets\navs;
 
 use davidhirtz\yii2\skeleton\html\Container;
-use davidhirtz\yii2\skeleton\widgets\navs\Header;
 use Override;
 use Stringable;
 use yii\helpers\Html;

@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 
-use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
+use davidhirtz\yii2\skeleton\widgets\navs\Submenu;
 use Override;
 use Yii;
 

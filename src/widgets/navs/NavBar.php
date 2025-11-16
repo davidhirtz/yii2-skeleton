@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\widgets\navs;
 
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Container;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\AccountMenu;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Yii;
 
