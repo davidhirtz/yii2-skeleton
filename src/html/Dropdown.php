@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\html;
 
 use davidhirtz\yii2\skeleton\html\base\Tag;
 use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
+use Override;
 
 class Dropdown extends Tag
 {
@@ -42,7 +43,9 @@ class Dropdown extends Tag
     public function addItem(Tag ...$items): static
     {
         foreach ($items as $item) {
-            $this->items[] = '<li>' . $item->addClass('dropdown-item')->render() . '</li>';
+            $this->items[] = Li::make()
+                ->content($item
+                    ->class('dropdown-item'));
         }
 
         return $this;
@@ -56,14 +59,23 @@ class Dropdown extends Tag
 
     public function divider(): static
     {
-        $this->items[] = '<li><div class="dropdown-divider"></div></li>';
+        $this->items[] = Li::make()
+            ->content(Div::make()
+                ->class('dropdown-divider'));
+
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     protected function renderContent(): string
     {
-        $content = implode('', $this->content) . '<ul>' . implode('', $this->items) . '</ul>';
-        return $this->button->render() . '<dialog class="dropdown-menu">' . $content . '</dialog>';
+        return implode('', [
+            $this->button,
+            Dialog::make()
+                ->class('dropdown-menu')
+                ->content(...$this->content)
+                ->addContent(Ul::make()
+                    ->items($this->items))
+        ]);
     }
 }

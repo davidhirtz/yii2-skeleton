@@ -38,12 +38,12 @@ class Nav extends \yii\bootstrap5\Nav
     /**
      * @var array default badge HTML options, can be set individually by item option `badgeOptions`.
      */
-    public array $badgeOptions = ['class' => 'badge'];
+    public array $badgeAttributes = ['class' => 'badge'];
 
     /**
      * @var array default label HTML options can be set individually by item option `labelOptions`.
      */
-    public array $labelOptions = [];
+    public array $labelAttributes = [];
 
     private bool $_hasActiveItem = false;
 
@@ -122,7 +122,7 @@ class Nav extends \yii\bootstrap5\Nav
         if ($icon || $badge) {
             $label = $item['label'] ?? '';
             $iconOptions = $item['iconOptions'] ?? $this->iconOptions;
-            $badgeOptions = $item['badgeOptions'] ?? $this->badgeOptions;
+            $badgeOptions = $item['badgeOptions'] ?? $this->badgeAttributes;
             $template = $item['template'] ?? $this->itemTemplate;
 
             // Only encode label.
@@ -134,7 +134,7 @@ class Nav extends \yii\bootstrap5\Nav
             $item['label'] = strtr($template, [
                 '{icon}' => $icon ? Html::icon($icon, $iconOptions)->render() : '',
                 '{badge}' => $badge !== false ? Html::tag('span', $badge, $badgeOptions) : '',
-                '{label}' => $label ? Html::tag('span', $label, $item['labelOptions'] ?? $this->labelOptions) : '',
+                '{label}' => $label ? Html::tag('span', $label, $item['labelOptions'] ?? $this->labelAttributes) : '',
             ]);
         }
 

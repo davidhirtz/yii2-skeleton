@@ -5,37 +5,38 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\navs;
 
 use davidhirtz\yii2\skeleton\html\Container;
+use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagTitleTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagUrlTrait;
+use davidhirtz\yii2\skeleton\widgets\traits\ContainerWidgetTrait;
+use davidhirtz\yii2\skeleton\widgets\Widget;
 use Override;
 use Stringable;
 use yii\helpers\Html;
 
-class Submenu extends Nav
+class Submenu extends Widget
 {
-    public ?string $title = null;
-    public string|array|null $url = null;
+    use TagAttributesTrait;
+    use ContainerWidgetTrait;
+    use TagContentTrait;
+    use TagTitleTrait;
+    use TagUrlTrait;
 
-    public array $badgeOptions = ['class' => 'badge d-none d-md-inline-block'];
-    public array $cssClass = ['submenu', 'nav', 'nav-pills'];
-    public array $labelOptions = ['class' => 'd-none d-md-inline'];
+//    public array $attributes = ['class' => 'submenu nav nav-pills'];
+    public array $badgeAttributes = ['class' => 'badge d-none d-md-inline-block'];
+    public array $labelAttributes = ['class' => 'd-none d-md-inline'];
 
-    #[Override]
-    public function init(): void
-    {
-        Html::addCssClass($this->options, $this->cssClass);
-        parent::init();
-    }
 
-    #[Override]
-    public function run(): string
-    {
-        $html = $this->renderTitle() . $this->renderItems();
-        return $html ? Container::make()->content($html)->render() : '';
-    }
-
-    protected function renderTitle(): Stringable
+    protected function getTitle(): Stringable
     {
         return Header::make()
             ->title($this->title)
             ->url($this->url);
+    }
+
+    protected function renderContent(): string|Stringable
+    {
+        return $this->getTitle();
     }
 }
