@@ -7,7 +7,7 @@ namespace davidhirtz\yii2\skeleton\widgets\panels;
 final class DashboardPanel
 {
     /**
-     * @param array<string, DashboardItem> $items
+     * @param array<string, DashboardItem|null> $items
      */
     public function __construct(
         public ?string $name = null,
@@ -25,7 +25,7 @@ final class DashboardPanel
         }
 
         foreach ($panel->items as $key => $item) {
-            $this->items[$key] = array_key_exists($key, $this->items)
+            $this->items[$key] = null !== $item && !empty($this->items[$key])
                 ? $this->items[$key]->merge($item)
                 : $item;
         }

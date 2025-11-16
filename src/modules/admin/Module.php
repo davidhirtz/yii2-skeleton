@@ -130,9 +130,9 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
 
     private function mergePanel(array &$panels, string $key, DashboardPanel|null $panel): void
     {
-        $panels[$key] = $panel !== null
-            ? (!empty($panels[$key]) ? $panels[$key]->merge($panel) : $panel)
-            : null;
+        $panels[$key] = null !== $panel && !empty($panels[$key])
+            ? $panels[$key]->merge($panel)
+            : $panel;
     }
 
     /**
