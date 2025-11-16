@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\web\Controller;
+use davidhirtz\yii2\skeleton\widgets\panels\DashboardPanel;
 use Override;
 use yii\filters\AccessControl;
 use yii\web\Response;
@@ -25,14 +26,14 @@ class DashboardController extends Controller
             $this->roles = [];
 
             foreach ($this->getPanels() as $panel) {
-                foreach ($panel['items'] ?? [] as $item) {
-                    $roles = $item['roles'] ?? null;
-
-                    if ($roles) {
-                        $this->roles = [...$this->roles, ...$roles];
-                    }
+                foreach ($panel->items ?? [] as $item) {
+                    $this->roles = [...$this->roles, ...$item->roles];
                 }
+
+                $this->roles = [...$this->roles, ...$panel->roles];
             }
+
+            $this->roles = array_unique($this->roles);
 
             if (!$this->roles) {
                 $this->roles = ['@'];
@@ -67,9 +68,11 @@ class DashboardController extends Controller
         ]);
     }
 
+    /**
+     * @return DashboardPanel[
+     */
     protected function getPanels(): array
     {
-        $this->_panels ??= $this->module->getDashboardPanels();
-        return $this->_panels;
+        return $this->_panels ??= $this->module->getDashboardPanels();
     }
 }

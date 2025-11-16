@@ -45,7 +45,6 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
     public $controllerNamespace = 'app\modules\admin\controllers';
     public $layout = '@skeleton/modules/admin/views/layouts/main';
 
-    private ?array $_dashboardPanels = null;
     private ?array $_navBarItems = null;
 
     #[Override]
@@ -119,11 +118,17 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
         $panels = $this->getDefaultDashboardPanels();
 
         foreach ($this->getSubmodules() as $module) {
-            $panels = ArrayHelper::merge($panels, $module->getDashboardPanels());
-        }
+            foreach ($module->getDashboardPanels() as $key => $panel) {
+                if (!$panel instanceof DashboardPanel) {
+                    // Todo remove once all modules have been updated
+                    Yii::debug("Creating DashboardPanel '$key' from array configuration, please update modules config.");
+                    continue;
+                }
 
-        if ($this->_dashboardPanels) {
-            $panels = ArrayHelper::merge($panels, $this->_dashboardPanels);
+                $panels[$key] = array_key_exists($key, $panels)
+                    ? $panels[$key]->merge($panel)
+                    : $panel;
+            }
         }
 
         return $panels;
@@ -136,7 +141,7 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
     {
         return [
             'skeleton' => new DashboardPanel(
-                title: Yii::t('skeleton', 'Administration'),
+                name: Yii::t('skeleton', 'Administration'),
                 items: [
                     'user' => new DashboardItem(
                         label: Yii::t('skeleton', 'Create New User'),
@@ -175,11 +180,6 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
                     ),
                 ]),
         ];
-    }
-
-    public function setDashboardPanels(array $panels = []): void
-    {
-        $this->_dashboardPanels = $panels;
     }
 
     public function getName(): string

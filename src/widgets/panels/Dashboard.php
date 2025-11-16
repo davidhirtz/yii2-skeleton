@@ -15,7 +15,7 @@ class Dashboard extends Widget
     use ContainerWidgetTrait;
 
     /**
-     * @var array<string, DashboardPanel|array>
+     * @var array<string, DashboardPanel>
      */
     protected array $panels;
 
@@ -31,15 +31,11 @@ class Dashboard extends Widget
             ->class('row flex-wrap justify-center');
 
         foreach ($this->panels as $panel) {
-            if (!$panel instanceof DashboardPanel) {
-                $panel = new DashboardPanel(...$panel);
-            }
-
             $list = ListGroup::make();
 
             foreach ($panel->items as $item) {
                 $list->addLink(ListGroupItemLink::make()
-                    ->attributes($item->attributes)
+                    ->addAttributes($item->attributes)
                     ->text($item->label)
                     ->href($item->url)
                     ->roles($item->roles)
@@ -51,7 +47,7 @@ class Dashboard extends Widget
                 ->addClass('dashboard-item')
                 ->content(Card::make()
                     ->addClass('dashboard-card')
-                    ->title($panel->title)
+                    ->title($panel->name)
                     ->content($list)));
         }
 

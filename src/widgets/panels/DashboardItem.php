@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\panels;
 
-class DashboardItem
+final class DashboardItem
 {
     public function __construct(
         public string $label,
@@ -14,5 +14,21 @@ class DashboardItem
         public array $attributes = [],
     )
     {
+    }
+
+    public function merge(self $item): self
+    {
+        if ($item->url) {
+            $this->url = $item->url;
+        }
+
+        if ($item->icon) {
+            $this->icon = $item->icon;
+        }
+
+        $this->roles = array_unique([...$this->roles, ...$item->roles]);
+        $this->attributes = [...$this->attributes, ...$item->attributes];
+
+        return $this;
     }
 }
