@@ -45,6 +45,7 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
     public $controllerNamespace = 'app\modules\admin\controllers';
     public $layout = '@skeleton/modules/admin/views/layouts/main';
 
+    private array $dashboardPanels = [];
     private ?array $_navBarItems = null;
 
     #[Override]
@@ -116,19 +117,22 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
 
         foreach ($this->getSubmodules() as $module) {
             foreach ($module->getDashboardPanels() as $key => $panel) {
-                // @phpstan-ignore-next-line todo remove once all modules have been updated
-                if (!$panel instanceof DashboardPanel) {
-                    Yii::debug("Creating DashboardPanel '$key' from array configuration, please update modules config.");
-                    continue;
-                }
-
-                $panels[$key] = array_key_exists($key, $panels)
-                    ? $panels[$key]->merge($panel)
-                    : $panel;
+                $this->mergePanel($panels, $key, $panel);
             }
         }
 
-        return $panels;
+        foreach ($this->dashboardPanels as $key => $panel) {
+            $this->mergePanel($panels, $key, $panel);
+        }
+
+        return array_filter($panels);
+    }
+
+    private function mergePanel(array &$panels, string $key, DashboardPanel|null $panel): void
+    {
+        $panels[$key] = $panel !== null
+            ? (!empty($panels[$key]) ? $panels[$key]->merge($panel) : $panel)
+            : null;
     }
 
     /**
@@ -179,7 +183,15 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
         ];
     }
 
-    public function getName(): string
+    /**
+     * @param array<DashboardItem|null> $panels
+     */
+    public function setDashboardPanels(array $panels = []): void
+    {
+        $this->dashboardPanels = $panels;
+    }
+
+    protected function getName(): string
     {
         return Yii::t('skeleton', 'Admin');
     }

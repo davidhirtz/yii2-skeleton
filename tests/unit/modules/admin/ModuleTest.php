@@ -47,6 +47,12 @@ class ModuleTest extends Unit
         self::assertEquals(['/admin/account/test'], $panels['skeleton']->items['account']->url);
         self::assertContains('test', $panels['skeleton']->items['system']->roles);
         self::assertEquals('test-class', $panels['skeleton']->items['homepage']->attributes['class'] ?? '');
+
+        $module->setDashboardPanels([
+            'trail' => null,
+        ]);
+
+        self::assertArrayNotHasKey('trail', $panels);
     }
 
     private function getAdminModule(): Module

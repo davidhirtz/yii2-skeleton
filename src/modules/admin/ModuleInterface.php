@@ -13,7 +13,7 @@ interface ModuleInterface
 {
 
     /**
-     * @return DashboardPanel[]
+     * @return array<string, DashboardPanel>
      */
     public function getDashboardPanels(): array;
 
