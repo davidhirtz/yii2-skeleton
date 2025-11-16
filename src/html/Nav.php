@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\html;
 
 use davidhirtz\yii2\skeleton\html\base\Tag;
+use Override;
 
 class Nav extends Tag
 {
@@ -17,7 +18,10 @@ class Nav extends Tag
 
     public function addItem(Tag $tag): static
     {
-        $this->items[] = '<li class="nav-item">' . $tag->render() . '</li>';
+        $this->items[] = Li::make()
+            ->class('nav-item')
+            ->content($tag);
+
         return $this;
     }
 
@@ -38,19 +42,19 @@ class Nav extends Tag
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     protected function renderContent(): string
     {
         return implode('', $this->items);
     }
 
-    #[\Override]
+    #[Override]
     protected function renderTag(): string
     {
         return $this->items && (!$this->hideSingleItem || count($this->items) > 1) ? parent::renderTag() : '';
     }
 
-    #[\Override]
+    #[Override]
     protected function getTagName(): string
     {
         return 'ul';

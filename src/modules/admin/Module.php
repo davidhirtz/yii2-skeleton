@@ -18,6 +18,7 @@ use davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\TrailController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\UserLoginController;
+use Override;
 use Yii;
 
 class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInterface
@@ -45,7 +46,7 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
     private ?array $_dashboardPanels = null;
     private ?array $_navBarItems = null;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         $controllerMap = [];
@@ -60,7 +61,7 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
         parent::init();
     }
 
-    #[\Override]
+    #[Override]
     public function beforeAction($action): bool
     {
         $request = Yii::$app->getRequest();
@@ -91,44 +92,17 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
 
     protected function getCoreControllerMap(): array
     {
-        return [
-            'account' => [
-                'class' => AccountController::class,
-                'viewPath' => '@skeleton/modules/admin/views/account',
-            ],
-            'auth' => [
-                'class' => AuthController::class,
-                'viewPath' => '@skeleton/modules/admin/views/auth',
-            ],
-            'dashboard' => [
-                'class' => DashboardController::class,
-                'viewPath' => '@skeleton/modules/admin/views/dashboard',
-            ],
-            'log' => [
-                'class' => LogController::class,
-                'viewPath' => '@skeleton/modules/admin/views/log',
-            ],
-            'redirect' => [
-                'class' => RedirectController::class,
-                'viewPath' => '@skeleton/modules/admin/views/redirect',
-            ],
-            'system' => [
-                'class' => SystemController::class,
-                'viewPath' => '@skeleton/modules/admin/views/system',
-            ],
-            'trail' => [
-                'class' => TrailController::class,
-                'viewPath' => '@skeleton/modules/admin/views/trail',
-            ],
-            'user' => [
-                'class' => UserController::class,
-                'viewPath' => '@skeleton/modules/admin/views/user',
-            ],
-            'user-login' => [
-                'class' => UserLoginController::class,
-                'viewPath' => '@skeleton/modules/admin/views/user-login',
-            ],
-        ];
+        return $this->getFormattedControllerMap([
+            'account' => AccountController::class,
+            'auth' => AuthController::class,
+            'dashboard' => DashboardController::class,
+            'log' => LogController::class,
+            'redirect' => RedirectController::class,
+            'system' => SystemController::class,
+            'trail' => TrailController::class,
+            'user' => UserController::class,
+            'user-login' => UserLoginController::class,
+        ]);
     }
 
     public function getDashboardPanels(): array
