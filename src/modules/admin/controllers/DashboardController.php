@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\web\Controller;
+use Override;
 use yii\filters\AccessControl;
 use yii\web\Response;
 
@@ -17,7 +18,7 @@ class DashboardController extends Controller
     public ?array $_panels = null;
     public ?array $roles = null;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         if ($this->roles === null) {
@@ -41,7 +42,7 @@ class DashboardController extends Controller
         parent::init();
     }
 
-    #[\Override]
+    #[Override]
     public function behaviors(): array
     {
         return [
@@ -66,7 +67,7 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function getPanels(): array
+    protected function getPanels(): array
     {
         $this->_panels ??= $this->module->getDashboardPanels();
         return $this->_panels;

@@ -18,6 +18,8 @@ use davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\TrailController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\UserLoginController;
+use davidhirtz\yii2\skeleton\widgets\panels\DashboardPanel;
+use davidhirtz\yii2\skeleton\widgets\panels\DashboardItem;
 use Override;
 use Yii;
 
@@ -87,12 +89,14 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
             }
         }
 
+        $this->setViewPath('@skeleton/modules/admin/views');
+
         return parent::beforeAction($action);
     }
 
     protected function getCoreControllerMap(): array
     {
-        return $this->getFormattedControllerMap([
+        $classMap = [
             'account' => AccountController::class,
             'auth' => AuthController::class,
             'dashboard' => DashboardController::class,
@@ -102,9 +106,14 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
             'trail' => TrailController::class,
             'user' => UserController::class,
             'user-login' => UserLoginController::class,
-        ]);
+        ];
+
+        return array_map(fn ($class) => ['class' => $class], $classMap);
     }
 
+    /**
+     * @return DashboardPanel[]
+     */
     public function getDashboardPanels(): array
     {
         $panels = $this->getDefaultDashboardPanels();
@@ -120,49 +129,51 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
         return $panels;
     }
 
+    /**
+     * @return array<string, DashboardPanel>
+     */
     protected function getDefaultDashboardPanels(): array
     {
         return [
-            'skeleton' => [
-                'name' => Yii::t('skeleton', 'Administration'),
-                'items' => [
-                    'user' => [
-                        'label' => Yii::t('skeleton', 'Create New User'),
-                        'url' => ['/admin/user/create'],
-                        'icon' => 'user-plus',
-                        'roles' => [User::AUTH_USER_CREATE],
-                    ],
-                    'account' => [
-                        'label' => Yii::t('skeleton', 'Your Account'),
-                        'url' => ['/admin/account/update'],
-                        'icon' => 'user',
-                    ],
-                    'system' => [
-                        'label' => Yii::t('skeleton', 'System Settings'),
-                        'url' => ['/admin/system/index'],
-                        'icon' => 'cog',
-                        'roles' => [User::AUTH_ROLE_ADMIN],
-                    ],
-                    'trail' => [
-                        'label' => Yii::t('skeleton', 'History'),
-                        'url' => ['/admin/trail/index'],
-                        'icon' => 'history',
-                        'roles' => [Trail::AUTH_TRAIL_INDEX],
-                    ],
-                    'redirect' => [
-                        'label' => Yii::t('skeleton', 'Redirects'),
-                        'url' => ['/admin/redirect/index'],
-                        'icon' => 'forward',
-                        'roles' => [Redirect::AUTH_REDIRECT_CREATE],
-                    ],
-                    'homepage' => [
-                        'label' => Yii::t('skeleton', 'Homepage'),
-                        'url' => '/',
-                        'icon' => 'globe',
-                        'options' => ['target' => '_blank'],
-                    ],
-                ],
-            ],
+            'skeleton' => new DashboardPanel(
+                title: Yii::t('skeleton', 'Administration'),
+                items: [
+                    'user' => new DashboardItem(
+                        label: Yii::t('skeleton', 'Create New User'),
+                        url: ['/admin/user/create'],
+                        icon: 'user-plus',
+                        roles: [User::AUTH_USER_CREATE],
+                    ),
+                    'account' => new DashboardItem(
+                        label: Yii::t('skeleton', 'Your Account'),
+                        url: ['/admin/account/update'],
+                        icon: 'user',
+                    ),
+                    'system' => new DashboardItem(
+                        label: Yii::t('skeleton', 'System Settings'),
+                        url: ['/admin/system/index'],
+                        icon: 'cog',
+                        roles: [User::AUTH_ROLE_ADMIN],
+                    ),
+                    'trail' => new DashboardItem(
+                        label: Yii::t('skeleton', 'History'),
+                        url: ['/admin/trail/index'],
+                        icon: 'history',
+                        roles: [Trail::AUTH_TRAIL_INDEX],
+                    ),
+                    'redirect' => new DashboardItem(
+                        label: Yii::t('skeleton', 'Redirects'),
+                        url: ['/admin/redirect/index'],
+                        icon: 'forward',
+                        roles: [Redirect::AUTH_REDIRECT_CREATE],
+                    ),
+                    'homepage' => new DashboardItem(
+                        label: Yii::t('skeleton', 'Homepage'),
+                        url: '/',
+                        icon: 'globe',
+                        attributes: ['target' => '_blank'],
+                    ),
+                ]),
         ];
     }
 
