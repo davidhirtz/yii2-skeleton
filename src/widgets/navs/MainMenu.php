@@ -6,7 +6,6 @@ namespace davidhirtz\yii2\skeleton\widgets\navs;
 
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\web\User;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Nav;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Yii;
 

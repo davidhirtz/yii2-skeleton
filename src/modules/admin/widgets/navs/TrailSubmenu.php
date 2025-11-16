@@ -7,7 +7,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\interfaces\TrailModelInterface;
 use davidhirtz\yii2\skeleton\modules\admin\data\TrailActiveDataProvider;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\Submenu;
+use davidhirtz\yii2\skeleton\widgets\navs\Submenu;
 use Yii;
 use yii\base\Model;
 
