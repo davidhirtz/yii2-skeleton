@@ -6,8 +6,6 @@ namespace davidhirtz\yii2\skeleton\widgets\panels;
 
 use davidhirtz\yii2\skeleton\html\Card;
 use davidhirtz\yii2\skeleton\html\Div;
-use davidhirtz\yii2\skeleton\widgets\navs\ListGroup;
-use davidhirtz\yii2\skeleton\widgets\navs\ListGroupItem;
 use davidhirtz\yii2\skeleton\widgets\traits\ContainerWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;

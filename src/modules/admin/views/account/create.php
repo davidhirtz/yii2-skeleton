@@ -14,8 +14,8 @@ use davidhirtz\yii2\skeleton\html\Card;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\SignupActiveForm;
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
-use davidhirtz\yii2\skeleton\widgets\navs\ListGroup;
-use davidhirtz\yii2\skeleton\widgets\navs\ListGroupItem;
+use davidhirtz\yii2\skeleton\widgets\panels\ListGroup;
+use davidhirtz\yii2\skeleton\widgets\panels\ListGroupItem;
 
 $this->setTitle(Yii::t('skeleton', 'Sign up'));
 ?>
