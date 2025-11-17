@@ -7,6 +7,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 use davidhirtz\yii2\skeleton\html\A;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Dropdown;
+use davidhirtz\yii2\skeleton\html\DropdownLink;
 use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\web\User;
 use davidhirtz\yii2\skeleton\widgets\navs\Nav;
@@ -65,6 +66,7 @@ class AccountMenu extends Widget
         $dropdown = Dropdown::make()
             ->dropend()
             ->button(Button::make()
+                ->class('nav-link')
                 ->content(Icon::make()
                     ->name(Yii::$app->language)
                     ->collection(Icon::ICON_COLLECTION_FLAG)));
@@ -72,7 +74,7 @@ class AccountMenu extends Widget
         foreach ($i18n->getLanguages() as $language) {
             $label = $i18n->getLabel($language);
 
-            $link = A::make()
+            $link = DropdownLink::make()
                 ->text($label)
                 ->icon("flag:$language");
 

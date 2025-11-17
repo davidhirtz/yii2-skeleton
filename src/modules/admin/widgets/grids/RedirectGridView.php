@@ -46,6 +46,7 @@ class RedirectGridView extends GridView
         }
 
         $this->header ??= [
+            $this->getTypeDropdown(),
             $this->search->getToolbarItem(),
         ];
 

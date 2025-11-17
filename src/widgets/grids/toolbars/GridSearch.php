@@ -93,7 +93,7 @@ class GridSearch
             ->content($this->getInput());
     }
 
-    protected function getInput(): Stringable
+    public function getInput(): Stringable
     {
         $icon = ArrayHelper::remove($this->inputAttributes, 'icon', 'search');
         $type = ArrayHelper::remove($this->inputAttributes, 'type', 'search');

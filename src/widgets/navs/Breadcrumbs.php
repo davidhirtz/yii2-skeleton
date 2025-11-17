@@ -82,7 +82,7 @@ class Breadcrumbs extends Widget
                 $link = ['label' => $link];
             }
 
-            $list->addItem(Li::make()
+            $list->addContent(Li::make()
                 ->attributes($this->itemAttributes)
                 ->content($this->getLink($link)));
         }

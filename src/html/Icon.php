@@ -27,7 +27,6 @@ class Icon extends Tag
             [$this->collection, $this->name] = explode(':', $name, 2);
         }
 
-        $this->name = $name;
         return $this;
     }
 

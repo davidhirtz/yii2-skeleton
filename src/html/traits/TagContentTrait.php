@@ -39,11 +39,6 @@ trait TagContentTrait
         return $this;
     }
 
-    public function hasContent(): bool
-    {
-        return $this->renderContent() === '';
-    }
-
     protected function renderContent(): string|Stringable
     {
         return implode('', $this->content);

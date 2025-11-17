@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\panels;
 
 use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\html\P;
 use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagTitleTrait;
 use davidhirtz\yii2\skeleton\widgets\panels\Panel;
@@ -19,8 +20,9 @@ class UserOwnerPanel extends Widget
 
     public function init(): void
     {
-        if (!$this->hasContent()) {
-            $this->content(Yii::t('skeleton', 'Transfer ownership of this user to another administrator.'));
+        if (!$this->content) {
+            $this->content(P::make()
+                ->content(Yii::t('skeleton', 'Transfer ownership of this user to another administrator.')));
         }
 
         $this->title ??= Yii::t('skeleton', 'Transfer Ownership');

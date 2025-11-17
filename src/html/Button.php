@@ -24,32 +24,31 @@ class Button extends Tag
     
     public array $attributes = [
         'type' => 'button',
-        'class' => 'btn',
     ];
 
     public function danger(): static
     {
-        return $this->addClass('btn-danger');
+        return $this->addClass('btn btn-danger');
     }
 
     public function primary(): static
     {
-        return $this->addClass('btn-primary');
+        return $this->addClass('btn btn-primary');
     }
 
     public function success(): static
     {
-        return $this->addClass('btn-success');
+        return $this->addClass('btn btn-success');
     }
 
     public function secondary(): static
     {
-        return $this->addClass('btn-secondary');
+        return $this->addClass('btn btn-secondary');
     }
 
     public function link(): static
     {
-        return $this->addClass('btn-link');
+        return $this->addClass('btn btn-link');
     }
 
     #[Override]

@@ -7,6 +7,7 @@ namespace davidhirtz\yii2\skeleton\widgets\grids\toolbars;
 use davidhirtz\yii2\skeleton\html\A;
 use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Dropdown;
+use davidhirtz\yii2\skeleton\html\DropdownLink;
 use davidhirtz\yii2\skeleton\html\TextInput;
 use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
@@ -21,33 +22,23 @@ class FilterDropdown extends Widget
     use TagLabelTrait;
     use TagIdTrait;
 
+    public int $showFilterThreshold = 20;
+    public array $params = ['page' => null];
+
     protected string $param;
     protected string|false|null $default = null;
     protected int|string|null $value = null;
-    protected ?string $filter = null;
+    protected ?string $placeholder = null;
+    protected ?bool $filterable = null;
 
     /**
      * @param array<int|string, string> $items
      */
     protected array $items = [];
 
-    public array $params = ['page' => null];
-
     public function items(array $items): static
     {
         $this->items = $items;
-        return $this;
-    }
-
-    public function addItem(array $item): static
-    {
-        $this->items[] = $item;
-        return $this;
-    }
-
-    public function filter(string $filter): static
-    {
-        $this->filter = $filter;
         return $this;
     }
 
@@ -57,9 +48,21 @@ class FilterDropdown extends Widget
         return $this;
     }
 
+    public function filterable(?bool $filterable): static
+    {
+        $this->filterable = $filterable;
+        return $this;
+    }
+
     public function param(string $param): static
     {
         $this->param = $param;
+        return $this;
+    }
+
+    public function placeholder(string $placeholder): static
+    {
+        $this->placeholder = $placeholder;
         return $this;
     }
 
@@ -70,7 +73,8 @@ class FilterDropdown extends Widget
         }
 
         $this->default ??= Yii::t('skeleton', 'Show All');
-        $this->filter ??= Yii::t('skeleton', 'Filter ...');
+        $this->filterable ??= count($this->items) >= $this->showFilterThreshold;
+        $this->placeholder ??= Yii::t('skeleton', 'Filter ...');
         $this->value ??= Yii::$app->getRequest()->get($this->param);
 
         $this->attributes['hx-boost'] ??= 'true';
@@ -78,7 +82,7 @@ class FilterDropdown extends Widget
         $dropdown = Dropdown::make()
             ->label($this->items[$this->value] ?? $this->label);
 
-        if ($this->filter) {
+        if ($this->filterable) {
             $dropdown->content($this->getFilter());
         }
 
@@ -92,7 +96,7 @@ class FilterDropdown extends Widget
         }
 
         foreach ($this->items as $param => $text) {
-            $link = A::make()
+            $link = DropdownLink::make()
                 ->current([...$this->params, $this->param => $param])
                 ->text($text);
 
@@ -117,7 +121,7 @@ class FilterDropdown extends Widget
             ->class('dropdown-header')
             ->content(TextInput::make()
                 ->attribute('data-filter', '#' . $this->getId() . ' li')
-                ->placeholder($this->filter)
+                ->placeholder($this->placeholder)
                 ->type('search'));
     }
 

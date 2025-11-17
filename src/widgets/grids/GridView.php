@@ -148,7 +148,7 @@ class GridView extends Widget
         return $result ? Html::div($result, $attributes) : null;
     }
 
-    protected function getToolbar(array $row): ?Stringable
+    protected function getToolbar(array $row): Stringable
     {
         $tag = Div::make()
             ->class('row');
@@ -164,7 +164,7 @@ class GridView extends Widget
             }
         }
 
-        return $tag->hasContent() ? $tag : null;
+        return $tag;
     }
 
     protected function getSummary(): ?Stringable
