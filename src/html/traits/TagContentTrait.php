@@ -33,7 +33,7 @@ trait TagContentTrait
     {
         $this->content = [
             ...$this->content,
-            array_map(Html::encode(...), array_values(array_filter($content))),
+            ...array_map(Html::encode(...), array_values(array_filter($content))),
         ];
 
         return $this;

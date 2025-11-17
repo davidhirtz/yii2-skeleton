@@ -10,10 +10,10 @@ declare(strict_types=1);
  */
 
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\html\Card;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\SignupActiveForm;
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
+use davidhirtz\yii2\skeleton\widgets\panels\Card;
 use davidhirtz\yii2\skeleton\widgets\panels\ListGroup;
 use davidhirtz\yii2\skeleton\widgets\panels\ListGroupItem;
 

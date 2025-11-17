@@ -9,10 +9,10 @@ declare(strict_types=1);
  * @var davidhirtz\yii2\skeleton\models\forms\LoginForm $form
  */
 
-use davidhirtz\yii2\skeleton\html\Card;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorLoginActiveForm;
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
+use davidhirtz\yii2\skeleton\widgets\panels\Card;
 
 $this->setTitle(Yii::t('skeleton', 'Google Authenticator'));
 

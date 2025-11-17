@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
-use davidhirtz\yii2\skeleton\html\Card;
 use davidhirtz\yii2\skeleton\html\traits\TagCardTrait;
+use davidhirtz\yii2\skeleton\widgets\panels\Card;
 use davidhirtz\yii2\skeleton\widgets\traits\ContainerWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;

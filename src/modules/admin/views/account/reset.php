@@ -9,12 +9,12 @@ declare(strict_types=1);
  * @var PasswordResetForm $form
  */
 
-use davidhirtz\yii2\skeleton\html\Card;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\models\forms\PasswordResetForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\PasswordResetActiveForm;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
+use davidhirtz\yii2\skeleton\widgets\panels\Card;
 
 $this->setTitle($form->user->password_hash
     ? Yii::t('skeleton', 'Set New Password')

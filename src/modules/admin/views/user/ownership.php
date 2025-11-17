@@ -8,13 +8,13 @@ declare(strict_types=1);
  * @var OwnershipForm $form
  */
 
-use davidhirtz\yii2\skeleton\html\Card;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\models\forms\OwnershipForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\OwnershipActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
+use davidhirtz\yii2\skeleton\widgets\panels\Card;
 
 $this->setTitle(Yii::t('skeleton', 'Transfer Ownership'));
 $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);

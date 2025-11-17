@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\panels;
 
 use davidhirtz\yii2\skeleton\html\ButtonToolbar;
-use davidhirtz\yii2\skeleton\html\Card;
 use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\traits\TagCardTrait;
 use davidhirtz\yii2\skeleton\widgets\grids\traits\GridTrait;

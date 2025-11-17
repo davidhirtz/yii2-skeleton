@@ -11,7 +11,9 @@ class ButtonToolbar extends Tag
 {
     use TagContentTrait;
 
-    public array $attributes = [
-        'class' => 'btn-toolbar',
-    ];
+    protected function prepareAttributes(): void
+    {
+        $this->addClass('btn-toolbar');
+        parent::prepareAttributes();
+    }
 }
