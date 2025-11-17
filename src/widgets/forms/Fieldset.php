@@ -21,23 +21,31 @@ class Fieldset extends Widget
     /**
      * @var ActiveFieldNew[]|string[]
      */
-    protected ?array $fields;
+    protected array $fields = [];
+
+    public function items(ActiveFieldNew|string ...$fields): static
+    {
+        $this->fields = $fields;
+        return $this;
+    }
 
     protected function renderContent(): string|Stringable
     {
         foreach ($this->fields as $i => $field) {
             if (is_string($field)) {
                 $field = ActiveFieldNew::make()
+                    ->model($this->model)
                     ->property($field);
             }
 
-            $field->grid($this);
+
+            $field->form($this->form);
 
             if (!$field->isVisible()) {
                 unset($this->fields[$i]);
             }
         }
-        
-        // TODO: Implement renderContent() method.
+
+        return implode('', $this->fields);
     }
 }

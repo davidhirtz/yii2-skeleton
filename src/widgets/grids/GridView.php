@@ -96,6 +96,7 @@ class GridView extends Widget
         $this->rowAttributes ??= [];
 
         $this->columns ??= $this->getDefaultColumns();
+        $this->columns = array_values(array_filter($this->columns));
 
         foreach ($this->columns as $i => $column) {
             if (is_string($column)) {

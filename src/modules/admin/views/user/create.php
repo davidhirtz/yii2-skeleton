@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @var UserForm $form
  */
 
+use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
 use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
@@ -23,9 +24,10 @@ $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
 echo UserSubmenu::make()
     ->user($form->user);
 
-echo ErrorSummary::make()
+echo Container::make()
+    ->content(ErrorSummary::make()
     ->title(Yii::t('skeleton', 'The user could not be created'))
-    ->models($form);
+    ->models($form));
 
 echo FormContainer::make()
     ->title($this->title)

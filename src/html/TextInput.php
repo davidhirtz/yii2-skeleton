@@ -12,8 +12,11 @@ class TextInput extends Input
     use TagInputTrait;
     use TagPlaceholderTrait;
 
-    public array $attributes = [
-        'class' => 'form-control',
-        'type' => 'text',
-    ];
+    protected function before(): string
+    {
+        $this->addClass('form-control');
+        $this->attributes['type'] ??= 'text';
+
+        return parent::before();
+    }
 }

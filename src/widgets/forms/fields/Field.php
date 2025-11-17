@@ -2,14 +2,11 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\forms;
+namespace davidhirtz\yii2\skeleton\widgets\forms\fields;
 
 use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagLabelTrait;
-use davidhirtz\yii2\skeleton\widgets\forms\traits\FormTrait;
-use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
-use davidhirtz\yii2\skeleton\widgets\traits\PropertyWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
 
@@ -34,6 +31,25 @@ class Field extends Widget
 
     protected function renderContent(): string|Stringable
     {
-        return $this->model->getAttributeLabel($this->property);
+    }
+
+    public function getLabel(): string|Stringable
+    {
+        return '';
+    }
+
+    public function getContent(): string|Stringable
+    {
+        return '';
+    }
+
+    public function getHint(): string|Stringable
+    {
+        return '';
+    }
+
+    public function getError(): string|Stringable
+    {
+        return '';
     }
 }

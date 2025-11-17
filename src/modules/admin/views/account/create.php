@@ -20,13 +20,16 @@ use davidhirtz\yii2\skeleton\widgets\panels\ListGroupItem;
 
 $this->setTitle(Yii::t('skeleton', 'Sign up'));
 
-echo ErrorSummary::make()->models($form)
-    ->title(Yii::t('skeleton', 'Your account could not be created'));
+echo Container::make()
+    ->content(ErrorSummary::make()
+        ->models($form)
+        ->title(Yii::t('skeleton', 'Your account could not be created')));
 
 echo Noscript::make()
-    ->content(Alert::make()
-        ->danger()
-        ->content(Yii::t('skeleton', 'Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to sign up.')));
+    ->content(Container::make()
+        ->content(Alert::make()
+            ->danger()
+            ->content(Yii::t('skeleton', 'Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to sign up.'))));
 
 echo Container::make()
     ->centered()

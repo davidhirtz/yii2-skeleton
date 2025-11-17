@@ -85,6 +85,7 @@ class RedirectGridView extends GridView
     protected function setRedirectOptions(): void
     {
         $this->showSelection = false;
+        $this->showOnEmpty = false;
         $this->layout = '{items}';
     }
 

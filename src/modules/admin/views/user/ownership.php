@@ -22,8 +22,9 @@ $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
 
 echo UserSubmenu::make();
 
-echo ErrorSummary::make()->models($form)
-    ->title(Yii::t('skeleton', 'The site ownership could not be transferred'));
+echo Container::make()
+    ->content(ErrorSummary::make()->models($form)
+        ->title(Yii::t('skeleton', 'The site ownership could not be transferred')));
 
 
 echo Container::make()

@@ -16,8 +16,9 @@ use davidhirtz\yii2\skeleton\widgets\panels\Card;
 
 $this->setTitle(Yii::t('skeleton', 'Google Authenticator'));
 
-echo ErrorSummary::make()->models($form)
-    ->title(Yii::t('skeleton', 'Login unsuccessful'));
+echo Container::make()
+    ->content(ErrorSummary::make()->models($form)
+    ->title(Yii::t('skeleton', 'Login unsuccessful')));
 
 echo Container::make()
     ->centered()

@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @var Redirect $redirect
  */
 
+use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\RedirectActiveForm;
@@ -24,7 +25,9 @@ echo Header::make()
     ->title(Yii::t('skeleton', 'Redirects'))
     ->url(['index']);
 
-echo ErrorSummary::make()->models($redirect);
+echo Container::make()
+    ->content(ErrorSummary::make()
+        ->models($redirect));
 
 echo FormContainer::make()
     ->title($this->title)

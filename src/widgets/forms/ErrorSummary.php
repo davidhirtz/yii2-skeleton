@@ -59,10 +59,10 @@ class ErrorSummary extends Widget
         return $this;
     }
 
-    protected function renderContent(): string
+    protected function renderContent(): string|Stringable
     {
         $this->errors ??= $this->getModelErrors();
-        return $this->errors ? Container::make()->content($this->getAlert())->render() : '';
+        return $this->errors ? $this->getAlert() : '';
     }
 
     protected function getModelErrors(): array

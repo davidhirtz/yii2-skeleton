@@ -17,13 +17,15 @@ class GridContainer extends Widget
     use GridTrait;
     use TagCardTrait;
 
-    protected function renderContent(): Stringable
+    protected function renderContent(): string|Stringable
     {
-        $card = Card::make()
-            ->title($this->title)
-            ->collapsed($this->collapsed)
-            ->content($this->grid);
+        $content = $this->grid->render();
 
-        return $card;
+        return $content
+            ? Card::make()
+                ->title($this->title)
+                ->collapsed($this->collapsed)
+                ->content($this->grid)
+            : '';
     }
 }

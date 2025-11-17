@@ -38,8 +38,10 @@ if ($form->user->isUnconfirmed()) {
     ]));
 }
 
-echo ErrorSummary::make()->models($form)
-    ->title(Yii::t('skeleton', 'Your account could not be updated'));
+echo Container::make()
+    ->content(ErrorSummary::make()
+        ->models($form)
+        ->title(Yii::t('skeleton', 'Your account could not be updated')));
 
 echo FormContainer::make()
     ->title($this->title)
