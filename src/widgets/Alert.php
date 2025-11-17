@@ -2,23 +2,24 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\html;
+namespace davidhirtz\yii2\skeleton\widgets;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\html\base\Tag;
+use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\html\Div;
+use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagIconTrait;
 use Override;
+use Stringable;
 
-class Alert extends Tag
+class Alert extends Widget
 {
+    use TagAttributesTrait;
     use TagContentTrait;
+    use TagIconTrait;
 
-    public array $attributes = [
-        'class' => 'alert',
-    ];
-
-    private array $buttons = [];
-    private ?Icon $icon = null;
+    protected array $buttons = [];
     private ?string $status = null;
 
     public function button(Button $btn): static
@@ -33,14 +34,12 @@ class Alert extends Tag
         return $this;
     }
 
-    public function icon(?string $icon): static
-    {
-        $this->icon = $icon ? Icon::make()->name($icon) : null;
-        return $this;
-    }
-
     public function status(string $status): static
     {
+        if ($status === 'error') {
+            $status = 'danger';
+        }
+
         $this->status = $status;
         return $this;
     }
@@ -65,39 +64,37 @@ class Alert extends Tag
         return $this->status('danger');
     }
 
-    protected function prepareAttributes(): void
+    #[Override]
+    protected function renderContent(): string|Stringable
     {
         if ($this->status) {
             Html::addCssClass($this->attributes, "alert-$this->status");
         }
 
-        parent::prepareAttributes();
-    }
+        $alert = Div::make()
+            ->attributes($this->attributes)
+            ->addClass('alert');
 
-    #[Override]
-    protected function renderContent(): string
-    {
-        $content = [
+
+        if ($this->icon) {
+            $alert->addContent(Div::make()
+                ->class('icon')
+                ->content($this->icon),
+            );
+        }
+
+        $alert->addContent(
             Div::make()
                 ->class('grow')
                 ->content(...$this->content),
-        ];
-
-        if ($this->icon) {
-            $content = [
-                Div::make()
-                    ->class('icon')
-                    ->content($this->icon),
-                ...$content
-            ];
-        }
+        );
 
         if ($this->buttons) {
-            $content[] = Div::make()
+            $alert->addContent(Div::make()
                 ->content(...$this->buttons)
-                ->addClass('alert-buttons');
+                ->addClass('alert-buttons'));
         }
 
-        return implode('', $content);
+        return $alert;
     }
 }

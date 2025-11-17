@@ -4,13 +4,9 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
-use davidhirtz\yii2\skeleton\html\Alert;
 use davidhirtz\yii2\skeleton\html\traits\TagTitleTrait;
 use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
-use davidhirtz\yii2\skeleton\widgets\panels\Panel;
 use davidhirtz\yii2\skeleton\widgets\traits\UserWidgetTrait;
-use davidhirtz\yii2\skeleton\widgets\Widget;
-use Stringable;
 use Yii;
 
 /**

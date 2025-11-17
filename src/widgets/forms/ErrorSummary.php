@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
-use davidhirtz\yii2\skeleton\html\Alert;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\traits\TagTitleTrait;
 use davidhirtz\yii2\skeleton\html\Ul;
+use davidhirtz\yii2\skeleton\widgets\Alert;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
 use Yii;

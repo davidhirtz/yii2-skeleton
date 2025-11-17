@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets;
 
-use davidhirtz\yii2\skeleton\html\Alert;
 use davidhirtz\yii2\skeleton\html\Container;
+use Stringable;
 use Yii;
 
 class Flashes extends Widget
@@ -13,42 +13,36 @@ class Flashes extends Widget
     public array $alerts;
     public bool $showStatusIcon = true;
 
-    protected function renderContent(): string
+    protected function renderContent(): string|Stringable
     {
         $this->alerts ??= Yii::$app->getSession()->getAllFlashes();
-        $content = '';
+
+        $content = Container::make()
+            ->attribute('id', 'flashes')
+            ->addClass('empty-hidden');
 
         foreach ($this->alerts as $status => $alerts) {
-            $content .= $this->renderAlerts($status, $alerts);
+            $content->addContent($this->getAlerts($status, $alerts));
         }
 
-        return Container::make()
-            ->attribute('id', 'flashes')
-            ->addClass('empty-hidden')
-            ->content($content)
-            ->render();
+        return $content;
     }
 
-    protected function renderAlerts(string $status, array|string $messages): string
+    protected function getAlerts(string $status, array|string $messages): string|Stringable
     {
         return is_array($messages)
-            ? array_reduce($messages, fn ($carry, $item) => $carry . $this->renderAlerts($status, $item), '')
+            ? array_reduce($messages, fn ($carry, $item) => $carry . $this->getAlerts($status, $item), '')
             : $this->renderAlert($status, $messages);
     }
 
-    protected function renderAlert(string $status, string $message): string
+    protected function renderAlert(string $status, string $message): string|Stringable
     {
-        if ($status === 'error') {
-            $status = 'danger';
-        }
-
         $icon = $this->showStatusIcon ? $this->getStatusIcon($status) : null;
 
         return Alert::make()
             ->content($message)
             ->icon($icon)
-            ->status($status)
-            ->render();
+            ->status($status);
     }
 
     protected function getStatusIcon(string $status): ?string
@@ -58,6 +52,7 @@ class Flashes extends Widget
             'info' => 'info-circle',
             'warning' => 'exclamation-triangle',
             'danger' => 'exclamation-circle',
+            'error' => 'exclamation-circle',
             default => null,
         };
     }

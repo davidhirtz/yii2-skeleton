@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\grids;
 
-use davidhirtz\yii2\skeleton\html\Alert;
 use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\widgets\Alert;
 use davidhirtz\yii2\skeleton\widgets\grids\toolbars\GridSearch;
 use Stringable;
 use Yii;
