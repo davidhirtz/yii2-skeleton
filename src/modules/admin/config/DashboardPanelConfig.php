@@ -14,8 +14,7 @@ final class DashboardPanelConfig implements ConfigInterface
         public array $items = [],
         public array $roles = [],
         public array $attributes = [],
-    )
-    {
+    ) {
     }
 
     public function merge(ConfigInterface $config): self

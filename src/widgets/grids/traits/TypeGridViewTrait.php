@@ -10,7 +10,6 @@ use davidhirtz\yii2\skeleton\widgets\grids\columns\LinkColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\toolbars\FilterDropdown;
 use Stringable;
 use Yii;
-use yii\db\ActiveRecordInterface;
 
 trait TypeGridViewTrait
 {

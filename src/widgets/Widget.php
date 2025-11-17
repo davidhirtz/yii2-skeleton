@@ -6,7 +6,6 @@ namespace davidhirtz\yii2\skeleton\widgets;
 
 use davidhirtz\yii2\skeleton\base\traits\ContainerConfigurationTrait;
 use davidhirtz\yii2\skeleton\web\View;
-use Deprecated;
 use Stringable;
 use Yii;
 use yii\base\ViewContextInterface;

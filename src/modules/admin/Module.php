@@ -11,7 +11,6 @@ use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\config\Config;
-use davidhirtz\yii2\skeleton\modules\admin\config\ConfigInterface;
 use davidhirtz\yii2\skeleton\modules\admin\config\DashboardItemConfig;
 use davidhirtz\yii2\skeleton\modules\admin\config\DashboardPanelConfig;
 use davidhirtz\yii2\skeleton\modules\admin\config\MainMenuItemConfig;

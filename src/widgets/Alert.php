@@ -66,7 +66,8 @@ class Alert extends Widget
 
 
         if ($this->icon) {
-            $alert->addContent(Div::make()
+            $alert->addContent(
+                Div::make()
                 ->class('icon')
                 ->content($this->icon),
             );

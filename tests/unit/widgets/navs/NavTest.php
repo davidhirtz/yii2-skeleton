@@ -81,7 +81,8 @@ class NavTest extends Unit
                 NavItem::make()
                     ->label('Test')
                     ->url(['/admin/dashboard/index'])
-                    ->roles([User::AUTH_ROLE_ADMIN]))
+                    ->roles([User::AUTH_ROLE_ADMIN])
+            )
             ->showSingleItem()
             ->render();
 
@@ -114,7 +115,8 @@ class NavTest extends Unit
                     ->url(['site/index']),
                 NavItem::make()
                     ->label('Test')
-                    ->url(['site/test']))
+                    ->url(['site/test'])
+            )
             ->render();
 
         self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active" href="/site/index"><span>Home</span></a></li><li class="nav-item"><a class="nav-link" href="/site/test"><span>Test</span></a></li></ul>', $content);
@@ -130,7 +132,8 @@ class NavTest extends Unit
                 NavItem::make()
                     ->label('Test')
                     ->routes(['site/index'])
-                    ->url(['site/test']))
+                    ->url(['site/test'])
+            )
             ->render();
 
         self::assertStringContainsString('<ul class="nav"><li class="nav-item"><a class="nav-link" href="/site/test"><span>Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/site/test"><span>Test</span></a></li></ul>', $content);
@@ -146,7 +149,8 @@ class NavTest extends Unit
                     ->routes(['!site/index']),
                 NavItem::make()
                     ->label('Test')
-                    ->url(['site/index']))
+                    ->url(['site/index'])
+            )
             ->render();
 
         self::assertStringContainsString('<ul class="nav"><li class="nav-item"><a class="nav-link" href="/site/index"><span>Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/site/index"><span>Test</span></a></li></ul>', $content);
@@ -169,7 +173,8 @@ class NavTest extends Unit
                     ->url(['site/test'])
                     ->routes([
                         ['site/index', 'id' => 1],
-                    ]))
+                    ])
+            )
             ->render();
 
         self::assertStringContainsString('<ul class="nav"><li class="nav-item"><a class="nav-link" href="/site/test"><span>Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/site/test"><span>Test</span></a></li></ul>', $content);

@@ -18,8 +18,7 @@ final class MainMenuItemConfig implements ConfigInterface
         public array $items = [],
         public ?int $order = null,
         public array $attributes = [],
-    )
-    {
+    ) {
     }
 
     public function merge(ConfigInterface $config): self
