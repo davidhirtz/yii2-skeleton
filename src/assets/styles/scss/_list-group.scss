@@ -29,11 +29,11 @@
 
 .list-group-link {
   display: flex;
-  width: 100%;
+  align-items: center;
   padding: $list-group-action-padding-y $list-group-action-padding-x;
   background: var(--list-group-action-bg, inherit);
   color: var(--list-group-action-color, inherit);
-  gap: $icon-gap-x;
+  gap: $list-group-action-padding-x;
   text-align: inherit;
 
   &:hover,

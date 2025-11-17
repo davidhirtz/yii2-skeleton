@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\navs;
+namespace davidhirtz\yii2\skeleton\widgets\panels;
 
-use davidhirtz\yii2\skeleton\html\Li;
 use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\Ul;
 use davidhirtz\yii2\skeleton\widgets\Widget;
