@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\html;
 
+use Override;
+
 class Table extends base\Tag
 {
     private ?Tbody $body = null;
@@ -21,13 +23,13 @@ class Table extends base\Tag
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     protected function renderContent(): string
     {
         return $this->header . $this->body;
     }
 
-    #[\Override]
+    #[Override]
     protected function getTagName(): string
     {
         return 'table';

@@ -10,13 +10,16 @@ class Checkbox extends Input
 {
     use TagInputTrait;
 
-    public array $attributes = [
-        'class' => 'form-check-input',
-        'type' => 'checkbox',
-    ];
-
     public function checked(bool $checked = true): static
     {
         return $this->attribute('checked', $checked);
+    }
+
+    protected function prepareAttributes(): void
+    {
+        $this->addClass('form-check-input')
+            ->attributes['type'] ??= 'checkbox';
+
+        parent::prepareAttributes();
     }
 }
