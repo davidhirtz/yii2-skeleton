@@ -7,21 +7,23 @@ namespace davidhirtz\yii2\skeleton\widgets;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\base\Tag;
 use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\html\Dialog;
 use davidhirtz\yii2\skeleton\html\Div;
+use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagTitleTrait;
 use Override;
 use Stringable;
 use Yii;
 
-class Modal extends Tag
+class Modal extends Widget
 {
+    use TagAttributesTrait;
     use TagContentTrait;
+    use TagIdTrait;
+    use TagTitleTrait;
 
-    public array $attributes = [
-        'class' => 'modal',
-    ];
-
-    private ?string $title = null;
     private string|false|null $dismiss = null;
     private array $footer = [];
 
@@ -34,36 +36,32 @@ class Modal extends Tag
     public function footer(Stringable|string $button): static
     {
         $this->footer[] = $button;
-
-        return $this;
-    }
-
-    public function title(string $title): static
-    {
-        $this->title = Html::encode($title);
         return $this;
     }
 
     #[Override]
-    protected function renderContent(): string
+    protected function renderContent(): string|Stringable
     {
-        $content = [];
+        $dialog = Dialog::make()
+            ->attributes($this->attributes)
+            ->addClass('modal');
 
         if ($this->title || $this->dismiss !== false) {
-            $header = [];
+            $header = Div::make()
+                ->class('modal-header');
 
             if ($this->title) {
-                $header[] = Div::make()
+                $header->addContent(Div::make()
                     ->addClass('modal-title')
-                    ->text($this->title);
+                    ->text($this->title));
             }
 
             if ($this->dismiss !== false) {
-                $header[] = Button::make()
+                $header->addContent(Button::make()
                     ->attribute('aria-label', $this->dismiss ?? Yii::t('skeleton', 'Close'))
                     ->attribute('data-modal', '')
                     ->class('btn-icon')
-                    ->icon('xmark');
+                    ->icon('xmark'));
 
                 array_unshift($this->footer, Button::make()
                     ->secondary()
@@ -72,29 +70,21 @@ class Modal extends Tag
                     ->attribute('autofocus', true));
             }
 
-            $content[] = Div::make()
-                ->class('modal-header')
-                ->content(...$header);
+            $dialog->addContent($header);
         }
 
         if ($this->content) {
-            $content[] = Div::make()
+            $dialog->addContent(Div::make()
                 ->class('modal-body')
-                ->content(...$this->content);
+                ->content(...$this->content));
         }
 
         if ($this->footer) {
-            $content[] = Div::make()
+            $dialog->addContent(Div::make()
                 ->class('modal-footer')
-                ->content(...$this->footer);
+                ->content(...$this->footer));
         }
 
-        return implode('', $content);
-    }
-
-    #[Override]
-    protected function getTagName(): string
-    {
-        return 'dialog';
+        return $dialog;
     }
 }

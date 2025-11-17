@@ -17,7 +17,7 @@ use davidhirtz\yii2\skeleton\models\forms\AccountUpdateForm;
 use davidhirtz\yii2\skeleton\models\forms\GoogleAuthenticatorForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\AccountActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorActiveForm;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\AuthClientsGridView;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\AuthClientGridView;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\Alert;
 use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
@@ -60,7 +60,7 @@ if (Yii::$app->getUser()->enableGoogleAuthenticator) {
 if (Yii::$app->getAuthClientCollection()->clients) {
     echo GridContainer::make()
         ->title(Yii::t('skeleton', 'Clients'))
-        ->grid(AuthClientsGridView::make()
+        ->grid(AuthClientGridView::make()
             ->user($form->user));
 }
 if ($form->user->isDeletable()) {

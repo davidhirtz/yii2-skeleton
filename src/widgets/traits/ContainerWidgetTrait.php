@@ -7,14 +7,13 @@ namespace davidhirtz\yii2\skeleton\widgets\traits;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
-use Stringable;
 
 trait ContainerWidgetTrait
 {
     use TagAttributesTrait;
     use TagIdTrait;
 
-    public function render(): string|Stringable
+    public function render(): string
     {
         $html = parent::render();
 
@@ -22,6 +21,7 @@ trait ContainerWidgetTrait
             ? Container::make()
                 ->addAttributes($this->attributes)
                 ->content($html)
+                ->render()
             : '';
     }
 }

@@ -19,7 +19,7 @@ use Stringable;
 use Yii;
 use yii\data\ArrayDataProvider;
 
-class AuthClientsGridView extends GridView
+class AuthClientGridView extends GridView
 {
     use UserWidgetTrait;
 
@@ -78,11 +78,10 @@ class AuthClientsGridView extends GridView
         $title = $auth->getClientClass()->getTitle();
 
         $modal = Modal::make()
-            ->title(Yii::t('skeleton', 'Remove {client}', ['client' => $title]))
-            ->text(Yii::t('skeleton', 'Are you sure your want to remove your {client} account?', ['client' => $title]))
+            ->title(Yii::t('skeleton', 'Are you sure your want to remove your {client} account?', ['client' => $title]))
             ->footer(Button::make()
                 ->danger()
-                ->text(Yii::t('skeleton', 'Remove'))
+                ->text(Yii::t('skeleton', 'Remove {client}', ['client' => $title]))
                 ->icon('trash-alt')
                 ->post(['deauthorize', 'id' => $auth->id, 'name' => $auth->name]));
 

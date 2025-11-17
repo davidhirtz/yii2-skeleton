@@ -40,14 +40,14 @@ abstract class Widget implements Stringable, ViewContextInterface
         return Yii::$container->get(static::class, [], $config)->renderContent();
     }
 
-    public function render(): string|Stringable
+    public function render(): string
     {
-        return $this->renderContent();
+        return (string)$this->renderContent();
     }
 
     final public function __toString(): string
     {
-        return (string)$this->render();
+        return $this->render();
     }
 
     abstract protected function renderContent(): string|Stringable;
