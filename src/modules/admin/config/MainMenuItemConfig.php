@@ -16,6 +16,7 @@ final class MainMenuItemConfig implements ConfigInterface
         public array $roles = [],
         public array $routes = [],
         public array $items = [],
+        public ?int $order = null,
         public array $attributes = [],
     )
     {
@@ -33,6 +34,10 @@ final class MainMenuItemConfig implements ConfigInterface
 
         if ($config->icon) {
             $this->icon = $config->icon;
+        }
+
+        if ($config->order) {
+            $this->order = $config->order;
         }
 
         $this->roles = array_unique([...$this->roles, ...$config->roles]);

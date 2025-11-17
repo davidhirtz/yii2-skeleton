@@ -197,17 +197,17 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
     }
 
     /**
-     * @return array<string, ConfigInterface<MainMenuItemConfig>>
+     * @return array<string, MainMenuItemConfig>
      */
     public function getMainMenuItems(): array
     {
         $items = $this->getDefaultMainMenuItems();
 
-//        foreach ($this->getSubmodules() as $module) {
-//            foreach ($module->getMainMenuItems() as $key => $item) {
-//                $items = Config::merge($items, $key, $item);
-//            }
-//        }
+        foreach ($this->getSubmodules() as $module) {
+            foreach ($module->getMainMenuItems() as $key => $item) {
+                $items = Config::merge($items, $key, $item);
+            }
+        }
 
         foreach ($this->mainMenuItems as $key => $item) {
             $items = Config::merge($items, $key, $item);
@@ -236,6 +236,7 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
                     'admin/user',
                     'admin/trail/index' => ['user'],
                 ],
+                order: 100,
             ),
         ];
     }

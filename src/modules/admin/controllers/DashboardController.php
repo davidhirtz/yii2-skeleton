@@ -69,7 +69,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * @return DashboardPanelConfig[
+     * @return DashboardPanelConfig[]
      */
     protected function getPanels(): array
     {

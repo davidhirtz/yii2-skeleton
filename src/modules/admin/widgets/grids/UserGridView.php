@@ -29,7 +29,7 @@ class UserGridView extends GridView
 {
     use StatusGridViewTrait;
 
-    #[\Override]
+    #[Override]
     public function renderContent(): string|Stringable
     {
         $this->attributes['id'] ??= 'user-grid';

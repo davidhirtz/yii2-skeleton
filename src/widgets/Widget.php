@@ -31,15 +31,6 @@ abstract class Widget implements Stringable, ViewContextInterface
         return $this->viewPath ??= '@views/' . Yii::$app->controller->id . '/';
     }
 
-    /**
-     * @deprecated Use `::make()` instead.
-     */
-    #[Deprecated]
-    public static function widget(array $config = []): string
-    {
-        return Yii::$container->get(static::class, [], $config)->renderContent();
-    }
-
     public function render(): string
     {
         return (string)$this->renderContent();

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\tests\unit\modules\admin\widgets\grids\columns;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\CounterColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\BadgeColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use Yii;
 use yii\base\Model;
@@ -59,11 +59,11 @@ class CounterColumnTest extends Unit
         self::assertEquals($expects, $column->renderBody($model, 0, 0));
     }
 
-    protected function createCounterColumn(array $options = []): CounterColumn
+    protected function createCounterColumn(array $options = []): BadgeColumn
     {
-        /** @var CounterColumn $column */
+        /** @var BadgeColumn $column */
         $column = Yii::createObject([
-            'class' => CounterColumn::class,
+            'class' => BadgeColumn::class,
             'attribute' => 'count',
             'grid' => $this->createMock(GridView::class),
             ...$options

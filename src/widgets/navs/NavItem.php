@@ -29,7 +29,6 @@ class NavItem extends Widget
     use TagVisibilityTrait;
 
     public array $linkAttributes = [];
-    public array $iconAttributes = ['class' => 'fa-fw'];
     public array $labelAttributes = [];
     public array $badgeAttributes = ['class' => 'badge d-none d-lg-block'];
 
@@ -48,7 +47,13 @@ class NavItem extends Widget
         return $this;
     }
 
-    public function order(int $order): static
+    public function badgeAttributes(array $attributes): static
+    {
+        $this->badgeAttributes = $attributes;
+        return $this;
+    }
+
+    public function order(?int $order): static
     {
         $this->addStyle(['order' => $order]);
         return $this;
@@ -80,10 +85,7 @@ class NavItem extends Widget
                         }
                     }
 
-                    if (!$shouldSkip) {
-                        $this->active = true;
-                    }
-
+                    $this->active = !$shouldSkip;
                     break;
                 }
             }

@@ -38,7 +38,7 @@ class Icon extends Tag
 
     protected function prepareAttributes(): void
     {
-        Html::addCssClass($this->attributes, match ($this->collection) {
+        $this->addClass(match ($this->collection) {
             self::ICON_COLLECTION_BRAND => "fab fa-$this->name",
             self::ICON_COLLECTION_FLAG => "i18n-icon $this->name",
             default => "fas fa-$this->name",
