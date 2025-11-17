@@ -16,5 +16,5 @@ interface ModuleInterface
      */
     public function getDashboardPanels(): array;
 
-    public function getNavBarItems(): array;
+    public function getMainMenuItems(): array;
 }

@@ -17,19 +17,19 @@ class ModuleTest extends Unit
     {
         $module = $this->getAdminModule();
 
-        $module->setNavBarItems([
+        $module->setMainMenuItems([
             'test' => [
                 'name' => 'Test',
             ],
         ]);
 
-        self::assertEquals(['users', 'test'], array_keys($module->getNavBarItems()));
+        self::assertEquals(['users', 'test'], array_keys($module->getMainMenuItems()));
 
         $module->setModule('test', [
             'class' => TestModule::class,
         ]);
 
-        self::assertEquals(['users', 'module', 'test'], array_keys($module->getNavBarItems()));
+        self::assertEquals(['users', 'module', 'test'], array_keys($module->getMainMenuItems()));
     }
 
     public function testDashboardPanels(): void
@@ -80,7 +80,7 @@ class TestModule extends \davidhirtz\yii2\skeleton\base\Module implements Module
         ];
     }
 
-    public function getNavBarItems(): array
+    public function getMainMenuItems(): array
     {
         return [
             'module' => [

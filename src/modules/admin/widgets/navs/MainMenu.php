@@ -42,7 +42,7 @@ class MainMenu extends Widget
         $items = [];
 
         /** @var MainMenuItemConfig $item */
-        foreach($module->getNavBarItems() as $item) {
+        foreach($module->getMainMenuItems() as $item) {
             $items[] = NavItem::make()
                 ->label($item->label)
                 ->url($item->url)

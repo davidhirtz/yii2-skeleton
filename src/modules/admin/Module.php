@@ -49,7 +49,7 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
     public $layout = '@skeleton/modules/admin/views/layouts/main';
 
     private array $dashboardPanels = [];
-    private array $navBarItems = [];
+    private array $mainMenuItems = [];
 
     #[Override]
     public function init(): void
@@ -199,17 +199,17 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
     /**
      * @return array<string, ConfigInterface<MainMenuItemConfig>>
      */
-    public function getNavBarItems(): array
+    public function getMainMenuItems(): array
     {
-        $items = $this->getDefaultNavBarItems();
+        $items = $this->getDefaultMainMenuItems();
 
 //        foreach ($this->getSubmodules() as $module) {
-//            foreach ($module->getNavBarItems() as $key => $item) {
+//            foreach ($module->getMainMenuItems() as $key => $item) {
 //                $items = Config::merge($items, $key, $item);
 //            }
 //        }
 
-        foreach ($this->navBarItems as $key => $item) {
+        foreach ($this->mainMenuItems as $key => $item) {
             $items = Config::merge($items, $key, $item);
         }
 
@@ -219,7 +219,7 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
     /**
      * @return array<string, MainMenuItemConfig>
      */
-    protected function getDefaultNavBarItems(): array
+    protected function getDefaultMainMenuItems(): array
     {
         return [
             'users' => new MainMenuItemConfig(
@@ -240,9 +240,9 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
         ];
     }
 
-    public function setNavBarItems(array $items): void
+    public function setMainMenuItems(array $items): void
     {
-        $this->navBarItems = $items;
+        $this->mainMenuItems = $items;
     }
 
     /**
