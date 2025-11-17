@@ -61,6 +61,5 @@ class MainMenu extends Widget
      */
     protected function sortItemsByOrder(array &$items): void
     {
-
     }
 }

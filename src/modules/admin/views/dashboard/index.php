@@ -8,9 +8,6 @@ declare(strict_types=1);
  * @var array $panels
  */
 
-use davidhirtz\yii2\skeleton\html\Card;
-use davidhirtz\yii2\skeleton\html\ListGroup;
-use davidhirtz\yii2\skeleton\html\ListGroupItemLink;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\navs\Header;
 use davidhirtz\yii2\skeleton\widgets\panels\Dashboard;

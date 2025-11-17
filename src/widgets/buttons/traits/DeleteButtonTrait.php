@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\buttons\traits;
 
-use davidhirtz\yii2\skeleton\helpers\Url;
 use davidhirtz\yii2\skeleton\html\Icon;
-use davidhirtz\yii2\skeleton\html\traits\TagUrlTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagIconTextTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagLabelTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagTitleTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagUrlTrait;
 use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
 use Yii;
 

@@ -67,7 +67,6 @@ class LogGridView extends GridView
         return Column::make()
             ->header(Yii::t('skeleton', 'Error'))
             ->content(function (Log $log): array {
-
                 $content = [
                     Div::make()
                         ->text($log->message)

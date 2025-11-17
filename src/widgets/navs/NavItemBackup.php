@@ -22,8 +22,7 @@ final class NavItemBackup
         public array $linkAttributes = [],
         public array $badgeAttributes = [],
         public array $iconAttributes = [],
-    )
-    {
+    ) {
     }
 
     public function merge(self $item): self

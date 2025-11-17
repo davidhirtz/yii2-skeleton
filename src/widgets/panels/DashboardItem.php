@@ -12,8 +12,7 @@ final class DashboardItem
         public ?string $icon = null,
         public array $roles = [],
         public array $attributes = [],
-    )
-    {
+    ) {
     }
 
     public function merge(self $item): self

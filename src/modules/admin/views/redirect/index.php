@@ -10,7 +10,6 @@ declare(strict_types=1);
  */
 
 
-use davidhirtz\yii2\skeleton\html\A;
 use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\RedirectGridView;
 use davidhirtz\yii2\skeleton\web\View;

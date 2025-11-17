@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
-use davidhirtz\yii2\skeleton\models\AuthItem;
 use davidhirtz\yii2\skeleton\models\LogFile;
 use davidhirtz\yii2\skeleton\modules\admin\data\LogFileArrayDataProvider;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonColumn;

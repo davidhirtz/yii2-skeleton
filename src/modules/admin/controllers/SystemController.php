@@ -7,7 +7,6 @@ namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 use davidhirtz\yii2\skeleton\caching\CacheComponents;
 use davidhirtz\yii2\skeleton\helpers\FileHelper;
 use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\modules\admin\data\LogDataProvider;
 use davidhirtz\yii2\skeleton\web\Controller;
 use Override;
 use Yii;
@@ -102,5 +101,4 @@ class SystemController extends Controller
         $this->success(Yii::t('skeleton', 'Expired sessions were deleted.'));
         return $this->redirect(['index']);
     }
-
 }

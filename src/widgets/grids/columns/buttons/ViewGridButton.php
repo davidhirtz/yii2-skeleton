@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\grids\columns\buttons;
 
 use davidhirtz\yii2\skeleton\html\Button;
-use davidhirtz\yii2\skeleton\html\traits\TagUrlTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagIconTextTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagLabelTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagUrlTrait;
 use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;

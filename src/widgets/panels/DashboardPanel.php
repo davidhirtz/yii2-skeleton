@@ -14,8 +14,7 @@ final class DashboardPanel
         public array $items = [],
         public array $roles = [],
         public array $attributes = [],
-    )
-    {
+    ) {
     }
 
     public function merge(self $panel): self

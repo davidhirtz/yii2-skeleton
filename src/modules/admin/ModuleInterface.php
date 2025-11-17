@@ -11,7 +11,6 @@ use davidhirtz\yii2\skeleton\widgets\panels\DashboardPanel;
  */
 interface ModuleInterface
 {
-
     /**
      * @return array<string, DashboardPanel>
      */

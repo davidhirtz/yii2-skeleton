@@ -18,8 +18,8 @@ use davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\TrailController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\UserLoginController;
-use davidhirtz\yii2\skeleton\widgets\panels\DashboardPanel;
 use davidhirtz\yii2\skeleton\widgets\panels\DashboardItem;
+use davidhirtz\yii2\skeleton\widgets\panels\DashboardPanel;
 use Override;
 use Yii;
 
@@ -179,7 +179,8 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
                         icon: 'globe',
                         attributes: ['target' => '_blank'],
                     ),
-                ]),
+                ]
+            ),
         ];
     }
 

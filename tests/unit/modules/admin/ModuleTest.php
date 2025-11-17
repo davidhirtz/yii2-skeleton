@@ -75,7 +75,8 @@ class TestModule extends \davidhirtz\yii2\skeleton\base\Module implements Module
                     'account' => new DashboardItem(url: ['/admin/account/test']),
                     'system' => new DashboardItem(roles: ['test']),
                     'homepage' => new DashboardItem(attributes: ['class' => 'test-class']),
-                ]),
+                ]
+            ),
         ];
     }
 

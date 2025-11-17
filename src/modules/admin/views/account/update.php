@@ -84,4 +84,3 @@ if ($form->user->isDeletable()) {
             ->text(Yii::t('skeleton', 'You cannot delete your account, because you are the owner of this website.'))
             ->warning());
 }
-

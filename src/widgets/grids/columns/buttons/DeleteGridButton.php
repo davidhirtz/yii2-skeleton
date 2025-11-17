@@ -6,12 +6,9 @@ namespace davidhirtz\yii2\skeleton\widgets\grids\columns\buttons;
 
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Modal;
-use davidhirtz\yii2\skeleton\html\traits\TagUrlTrait;
 use davidhirtz\yii2\skeleton\widgets\buttons\traits\DeleteButtonTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
-use Yii;
-use yii\helpers\Url;
 
 class DeleteGridButton extends Widget
 {

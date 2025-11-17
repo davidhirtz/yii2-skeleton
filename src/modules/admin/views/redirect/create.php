@@ -9,7 +9,6 @@ declare(strict_types=1);
  * @var Redirect $redirect
  */
 
-use davidhirtz\yii2\skeleton\html\A;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\RedirectActiveForm;

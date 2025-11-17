@@ -20,8 +20,7 @@ class GridSummary implements Stringable
         protected ?GridSearch $search = null,
         protected ?string $message = null,
         protected array $params = [],
-    )
-    {
+    ) {
     }
 
     public function render(): Stringable

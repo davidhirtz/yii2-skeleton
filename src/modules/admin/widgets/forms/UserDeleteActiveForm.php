@@ -30,42 +30,42 @@ class UserDeleteActiveForm extends DeleteActiveForm
         parent::init();
     }
 
-//    public function renderContent(): string|Stringable
-//    {
-//        return $this->user->isOwner()
-//            ? $this->getOwnerWarning()
-//            : $this->getPanel();
-//    }
-//
-//    protected function getPanel(): Stringable
-//    {
-//        return Panel::make()
-//            ->danger()
-//            ->title($this->title)
-//            ->content($this->getContent())
-//            ->buttons($this->getButton());
-//    }
-//
-//    protected function getContent(): string
-//    {
-//        return ;
-//    }
-//
-//    public function getButton(): string
-//    {
-//        return DeleteActiveForm::widget([
-//            'model' => $this->user,
-//            'attribute' => 'email',
-//            'message' => Yii::t('skeleton', 'Are you sure you want to delete this user?'),
-//            'confirm' => $this->title,
-//        ]);
-//    }
-//
-//    protected function getOwnerWarning(): Stringable
-//    {
-//        return Alert::make()
-//            ->content(Yii::t('skeleton', 'You cannot delete this user, because it is the owner of this website.'))
-//            ->icon('warning-triangle')
-//            ->warning();
-//    }
+    //    public function renderContent(): string|Stringable
+    //    {
+    //        return $this->user->isOwner()
+    //            ? $this->getOwnerWarning()
+    //            : $this->getPanel();
+    //    }
+    //
+    //    protected function getPanel(): Stringable
+    //    {
+    //        return Panel::make()
+    //            ->danger()
+    //            ->title($this->title)
+    //            ->content($this->getContent())
+    //            ->buttons($this->getButton());
+    //    }
+    //
+    //    protected function getContent(): string
+    //    {
+    //        return ;
+    //    }
+    //
+    //    public function getButton(): string
+    //    {
+    //        return DeleteActiveForm::widget([
+    //            'model' => $this->user,
+    //            'attribute' => 'email',
+    //            'message' => Yii::t('skeleton', 'Are you sure you want to delete this user?'),
+    //            'confirm' => $this->title,
+    //        ]);
+    //    }
+    //
+    //    protected function getOwnerWarning(): Stringable
+    //    {
+    //        return Alert::make()
+    //            ->content(Yii::t('skeleton', 'You cannot delete this user, because it is the owner of this website.'))
+    //            ->icon('warning-triangle')
+    //            ->warning();
+    //    }
 }

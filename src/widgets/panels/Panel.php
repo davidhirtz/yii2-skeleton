@@ -58,7 +58,8 @@ class Panel extends Widget
         if ($this->buttons) {
             $content->addContent(
                 ButtonToolbar::make()
-                    ->content(...$this->buttons));
+                    ->content(...$this->buttons)
+            );
         }
 
         return Div::make()

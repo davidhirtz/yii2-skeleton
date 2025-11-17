@@ -10,7 +10,6 @@ declare(strict_types=1);
  * @var RedirectActiveDataProvider $provider
  */
 
-use davidhirtz\yii2\skeleton\html\A;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
 use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
