@@ -19,7 +19,8 @@ use yii\data\ActiveDataProvider;
 $this->setTitle(Yii::t('skeleton', 'Logins'));
 $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['/admin/user/index']);
 
-echo UserSubmenu::widget(['user' => $user]);
+echo UserSubmenu::make()
+    ->user($user);
 
 echo GridContainer::make()
     ->grid(UserLoginGridView::make()

@@ -21,9 +21,8 @@ $this->setTitle(Yii::t('skeleton', 'History'));
 $this->setBreadcrumb(Yii::t('skeleton', 'History'), ['index']);
 
 if ($provider->user) {
-    echo UserSubmenu::widget([
-        'user' => $provider->user,
-    ]);
+    echo UserSubmenu::make()
+        ->user($provider->user);
 } else {
     echo TrailSubmenu::widget([
         'dataProvider' => $provider,

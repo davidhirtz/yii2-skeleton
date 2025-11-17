@@ -23,23 +23,21 @@ class Header extends Widget
 
     protected function renderContent(): string
     {
-        return implode('', [
-            $this->getTitle(),
-            $this->getContent(),
-        ]);
+        return $this->getTitle() . $this->getContent();
     }
 
-    protected function getTitle(): ?Stringable
+    protected function getTitle(): Stringable
     {
-        return $this->title
-            ? H1::make()
-                ->attributes($this->attributes)
-                ->addClass('page-header')
-                ->content($this->url
-                    ? A::make()->content($this->title)
-                        ->href($this->url)
-                    : $this->title)
-            : null;
+        $content = $this->url
+            ? A::make()
+                ->text($this->title)
+                ->href($this->url)
+            : $this->title;
+
+        return H1::make()
+            ->attributes($this->attributes)
+            ->addClass('page-header')
+            ->content($content);
     }
 
     protected function getContent(): ?Stringable

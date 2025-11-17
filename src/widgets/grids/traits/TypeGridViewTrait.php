@@ -53,12 +53,11 @@ trait TypeGridViewTrait
     protected function getTypeDropdown(): ?FilterDropdown
     {
         return $this->hasVisibleTypes()
-            ? new FilterDropdown(
-                $this->getTypeDropdownItems(),
-                Yii::t('skeleton', 'Type'),
-                $this->typeParamName,
-                $this->typeDefaultItem,
-            )
+            ? FilterDropdown::make()
+                ->label(Yii::t('skeleton', 'Type'))
+                ->items($this->getTypeDropdownItems())
+                ->param($this->typeParamName)
+                ->default($this->typeDefaultItem)
             : null;
     }
 

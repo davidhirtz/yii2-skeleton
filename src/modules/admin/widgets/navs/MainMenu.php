@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 
 use davidhirtz\yii2\skeleton\modules\admin\Module;
-use davidhirtz\yii2\skeleton\web\User;
 use davidhirtz\yii2\skeleton\widgets\navs\Nav;
+use davidhirtz\yii2\skeleton\widgets\navs\NavItem;
 use davidhirtz\yii2\skeleton\widgets\Widget;
+use Stringable;
 use Yii;
 
 class MainMenu extends Widget
@@ -17,28 +18,20 @@ class MainMenu extends Widget
         'class' => 'navbar-nav navbar-left nav',
     ];
 
-    public bool $hideSingleItem = true;
-
-    protected User $user;
-
-    public function init(): void
+    protected function renderContent(): Stringable
     {
-        $this->user ??= Yii::$app->getUser();
-        parent::init();
-    }
-
-    protected function renderContent(): string
-    {
-        return Nav::widget([
-            'items' => $this->getItems(),
-            'options' => $this->attributes,
-            'hideOneItem' => $this->hideSingleItem,
-        ]);
+        return Nav::make()
+            ->attributes($this->attributes)
+            ->items(...$this->getItems())
+            ->showSingleItem();
     }
 
     protected function getItems(): array
     {
-        return [...$this->getHomeItems(), ...$this->getModuleItems()];
+        return [
+            $this->getHomeItem(),
+//            ...$this->getModuleItems(),
+        ];
     }
 
     protected function getModuleItems(): array
@@ -55,15 +48,12 @@ class MainMenu extends Widget
     /**
      * @see DashboardController::actionIndex()
      */
-    protected function getHomeItems(): array
+    protected function getHomeItem(): NavItem
     {
-        return [
-            [
-                'label' => Yii::t('skeleton', 'Home'),
-                'icon' => 'home',
-                'url' => ['/admin/dashboard/index'],
-            ],
-        ];
+        return NavItem::make()
+            ->label(Yii::t('skeleton', 'Home'))
+            ->url(['/admin/dashboard/index'])
+            ->icon('home');
     }
 
     /**
@@ -71,15 +61,6 @@ class MainMenu extends Widget
      */
     protected function sortItemsByOrder(array &$items): void
     {
-        $keys = array_keys($items);
-        sort($keys);
 
-        $orderByKeys = array_flip($keys);
-
-        uksort($items, static function ($a, $b) use ($items, $orderByKeys): int {
-            $a = $items[$a]['order'] ?? $orderByKeys[$a];
-            $b = $items[$b]['order'] ?? $orderByKeys[$b];
-            return $a <=> $b;
-        });
     }
 }

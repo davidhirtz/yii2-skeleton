@@ -39,12 +39,11 @@ trait StatusGridViewTrait
 
     public function getStatusDropdown(): FilterDropdown
     {
-        return new FilterDropdown(
-            $this->getStatusDropdownItems(),
-            Yii::t('skeleton', 'Status'),
-            $this->statusParamName,
-            $this->statusDefaultItem
-        );
+        return FilterDropdown::make()
+            ->label(Yii::t('skeleton', 'Status'))
+            ->items($this->getStatusDropdownItems())
+            ->param($this->statusParamName)
+            ->default($this->statusDefaultItem);
     }
 
     protected function getStatusDropdownItems(): array

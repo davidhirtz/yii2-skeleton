@@ -22,9 +22,8 @@ use davidhirtz\yii2\skeleton\widgets\forms\FormContainer;
 $this->setTitle(Yii::t('skeleton', 'Edit User'));
 $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
 
-echo UserSubmenu::widget([
-    'user' => $form->user,
-]);
+echo UserSubmenu::make()
+    ->user($form->user);
 
 echo ErrorSummary::make()->models($form)
     ->title(Yii::t('skeleton', 'The user could not be updated'));

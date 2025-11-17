@@ -20,6 +20,7 @@
   min-width: $nav-link-min-width;
   padding: $nav-link-padding;
   text-decoration: none;
+  gap: $icon-gap-x;
   @include transition($nav-link-transition);
 
   &:hover,

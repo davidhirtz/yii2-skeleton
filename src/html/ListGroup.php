@@ -17,7 +17,9 @@ class ListGroup extends Ul
     public function addLink(ListGroupItemLink $link): static
     {
         if ($link->isVisible()) {
-            $this->addItem($link, $this->itemAttributes);
+            $this->addContent(Li::make()
+                ->attributes($this->itemAttributes)
+                ->content($link));
         }
 
         return $this;

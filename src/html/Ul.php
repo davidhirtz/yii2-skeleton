@@ -12,27 +12,32 @@ class Ul extends Tag
 {
     protected array $items = [];
 
-    public function addItem(string|Stringable $html, array $attributes = []): static
+    final public function items(string|Stringable ...$items): static
     {
-        if (!$html instanceof Li) {
-            $html = Li::make()
-                ->attributes($attributes)
-                ->content($html);
+        $this->items = [];
+        return $this->addItem(...$items);
+    }
+
+    final public function addItem(string|Stringable ...$items): static
+    {
+        $items = array_values(array_filter($items));
+
+        foreach ($items as $item) {
+            $this->items[] = Li::make()->content($item);
         }
-
-        $this->items[] = $html;
-
+        
         return $this;
     }
 
-    public function items(array $items, array $attributes = []): static
+    final public function content(string|Stringable|null ...$content): static
     {
-        $this->items = [];
+        $this->items = array_values(array_filter($content));
+        return $this;
+    }
 
-        foreach ($items as $item) {
-            $this->addItem($item, $attributes);
-        }
-
+    final public function addContent(string|Stringable|null ...$content): static
+    {
+        $this->items = [...$this->items, ...array_values(array_filter($content))];
         return $this;
     }
 
@@ -43,9 +48,9 @@ class Ul extends Tag
     }
 
     #[Override]
-    protected function renderTag(): string
+    protected function getTag(): string
     {
-        return $this->items ? parent::renderTag() : '';
+        return $this->items ? parent::getTag() : '';
     }
 
     #[Override]

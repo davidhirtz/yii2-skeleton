@@ -120,7 +120,7 @@ class AuthItemGridView extends GridView
 
         return Ul::make()
             ->class('list-unstyled')
-            ->items(array_filter($items));
+            ->items(...array_filter($items));
     }
 
     protected function getUsersColumn(): Column
@@ -139,7 +139,7 @@ class AuthItemGridView extends GridView
 
         return Ul::make()
             ->class('list-unstyled')
-            ->items($items);
+            ->items(...$items);
     }
 
     protected function getButtonColumn(): ButtonColumn

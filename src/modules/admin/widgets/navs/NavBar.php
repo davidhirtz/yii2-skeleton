@@ -7,13 +7,11 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\widgets\Widget;
+use Stringable;
 use Yii;
 
 class NavBar extends Widget
 {
-    /**
-     * @var array the HTML attributes for the widget container tag.
-     */
     public array $attributes = ['class' => 'navbar'];
 
     protected function renderContent(): string
@@ -21,21 +19,22 @@ class NavBar extends Widget
         $container = Container::make()
             ->addClass('navbar-container');
 
-        if ($menu = $this->getMainMenu()) {
+        $menu = (string)$this->getMainMenu();
+
+        if ($menu) {
             $container->addContent($this->getMobileToggle());
             $container->addContent($menu);
         }
 
         $container->addContent($this->getAccountMenu());
-
         $content = $container->render();
 
         return $content ? "<header class=\"navbar\">$content</header>" : '';
     }
 
-    protected function getMainMenu(): string
+    protected function getMainMenu(): Stringable
     {
-        return MainMenu::widget();
+        return MainMenu::make();
     }
 
     protected function getAccountMenu(): AccountMenu

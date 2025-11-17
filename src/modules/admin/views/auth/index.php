@@ -20,7 +20,7 @@ $this->setTitle(Yii::t('skeleton', 'Permissions'));
 $this->setBreadcrumb(Yii::t('skeleton', 'Permissions'), ['index']);
 
 echo Container::make()
-    ->content(UserSubmenu::widget());
+    ->content(UserSubmenu::make());
 
 echo GridContainer::make()
     ->grid(AuthItemGridView::make()

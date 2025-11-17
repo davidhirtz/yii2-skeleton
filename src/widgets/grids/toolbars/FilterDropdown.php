@@ -5,104 +5,132 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\grids\toolbars;
 
 use davidhirtz\yii2\skeleton\html\A;
+use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Dropdown;
 use davidhirtz\yii2\skeleton\html\TextInput;
+use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagLabelTrait;
+use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
 use Yii;
 
-class FilterDropdown implements Stringable
+class FilterDropdown extends Widget
 {
-    private readonly Dropdown $dropdown;
+    use TagAttributesTrait;
+    use TagLabelTrait;
+    use TagIdTrait;
 
-    public function __construct(
-        public array $items,
-        public string $label,
-        public string $paramName,
-        public string|false|null $defaultItem = null,
-        public int|string|null $value = null,
-        public bool $filter = false,
-        public ?string $filterPlaceholder = null,
-        public array $params = [
-            'page' => null,
-        ],
-    ) {
-        $this->dropdown = Dropdown::make()
-            ->addAttributes(['hx-boost' => 'true']);
+    protected string $param;
+    protected string|false|null $default = null;
+    protected int|string|null $value = null;
+    protected ?string $filter = null;
+
+    /**
+     * @param array<int|string, string> $items
+     */
+    protected array $items = [];
+
+    public array $params = ['page' => null];
+
+    public function items(array $items): static
+    {
+        $this->items = $items;
+        return $this;
     }
 
-    public function render(): string
+    public function addItem(array $item): static
+    {
+        $this->items[] = $item;
+        return $this;
+    }
+
+    public function filter(string $filter): static
+    {
+        $this->filter = $filter;
+        return $this;
+    }
+
+    public function default(string|false|null $default): static
+    {
+        $this->default = $default;
+        return $this;
+    }
+
+    public function param(string $param): static
+    {
+        $this->param = $param;
+        return $this;
+    }
+
+    public function renderContent(): string|Stringable
     {
         if (!$this->items) {
             return '';
         }
 
-        $this->defaultItem ??= Yii::t('skeleton', 'Show All');
-        $this->filterPlaceholder ??= Yii::t('skeleton', 'Filter ...');
-        $this->value ??= Yii::$app->getRequest()->get($this->paramName);
+        $this->default ??= Yii::t('skeleton', 'Show All');
+        $this->filter ??= Yii::t('skeleton', 'Filter ...');
+        $this->value ??= Yii::$app->getRequest()->get($this->param);
 
-        $this->dropdown->label($this->items[$this->value] ?? $this->label);
+        $this->attributes['hx-boost'] ??= 'true';
+
+        $dropdown = Dropdown::make()
+            ->label($this->items[$this->value] ?? $this->label);
 
         if ($this->filter) {
-            $this->addFilterInput();
+            $dropdown->content($this->getFilter());
         }
 
         if ($this->hasActiveItem()) {
-            if ($this->defaultItem) {
-                $this->addDefaultItem();
+            if ($this->default) {
+                $dropdown->addItem($this->getDefault())
+                    ->divider();
             }
 
-            $this->dropdown->addClass('active');
+            $dropdown->addClass('active');
         }
 
-        $this->addItems();
-
-        return $this->dropdown->render();
-    }
-
-    protected function addFilterInput(): void
-    {
-        $input = TextInput::make()
-            ->attribute('data-filter', '#' . $this->dropdown->getId() . ' li')
-            ->placeholder($this->filterPlaceholder)
-            ->type('search')
-            ->render();
-
-        $this->dropdown->content('<div class="dropdown-header">' . $input . '</div>');
-    }
-
-    protected function addDefaultItem(): void
-    {
-        $this->dropdown->addItem(A::make()
-            ->class('dropdown-default-item')
-            ->current([...$this->params, $this->paramName => null])
-            ->text($this->defaultItem));
-
-        $this->dropdown->divider();
-    }
-
-    protected function addItems(): void
-    {
         foreach ($this->items as $param => $text) {
             $link = A::make()
-                ->current([...$this->params, $this->paramName => $param])
+                ->current([...$this->params, $this->param => $param])
                 ->text($text);
 
             if ($param === $this->value) {
-                $this->dropdown->addClass('active')->label($text);
                 $link->addClass('active');
+
+                $dropdown->addClass('active')
+                    ->label($text);
             }
 
-            $this->dropdown->addItem($link);
+            $dropdown->addItem($link);
         }
+
+        return GridToolbarItem::make()
+            ->attributes($this->attributes)
+            ->content($dropdown);
+    }
+
+    protected function getFilter(): Stringable
+    {
+        return Div::make()
+            ->class('dropdown-header')
+            ->content(TextInput::make()
+                ->attribute('data-filter', '#' . $this->getId() . ' li')
+                ->placeholder($this->filter)
+                ->type('search'));
+    }
+
+    protected function getDefault(): Stringable
+    {
+        return A::make()
+            ->class('dropdown-default-item')
+            ->current([...$this->params, $this->param => null])
+            ->text($this->default);
     }
 
     protected function hasActiveItem(): bool
     {
         return array_key_exists($this->value, $this->items);
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
     }
 }

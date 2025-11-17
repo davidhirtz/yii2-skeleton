@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\html\base;
 
+use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
 use Stringable;
@@ -19,12 +20,7 @@ abstract class Tag implements Stringable
 
     final public function render(): string
     {
-        return $this->before() . $this->renderTag() . $this->after();
-    }
-
-    protected function after(): string
-    {
-        return '';
+        return $this->before() . $this->getTag() . $this->after();
     }
 
     protected function before(): string
@@ -32,9 +28,24 @@ abstract class Tag implements Stringable
         return '';
     }
 
-    protected function renderTag(): string
+    protected function after(): string
     {
-        return '<' . $this->getTagName() . $this->renderAttributes() . '>' . $this->renderContent() . '</' . $this->getTagName() . '>';
+        return '';
+    }
+
+    protected function getTag(): string
+    {
+        return '<' . $this->getTagName() . $this->getAttributes() . '>' . $this->renderContent() . '</' . $this->getTagName() . '>';
+    }
+
+    final protected function getAttributes(): string
+    {
+        $this->prepareAttributes();
+        return Html::renderTagAttributes($this->attributes);
+    }
+
+    protected function prepareAttributes(): void
+    {
     }
 
     protected function renderContent(): string|Stringable

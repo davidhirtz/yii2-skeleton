@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
-use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Alert;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\html\Div;
@@ -92,7 +91,7 @@ class ErrorSummary extends Widget
             ? Div::make()
                 ->content(reset($this->errors))
             : Ul::make()
-                ->items($this->errors);
+                ->items(...$this->errors);
     }
 
     protected function getHeader(): ?Stringable

@@ -60,14 +60,4 @@ trait TagAttributesTrait
         Html::removeCssStyle($this->attributes, $properties);
         return $this;
     }
-
-    final protected function renderAttributes(): string
-    {
-        $this->prepareAttributes();
-        return Html::renderTagAttributes($this->attributes);
-    }
-
-    protected function prepareAttributes(): void
-    {
-    }
 }

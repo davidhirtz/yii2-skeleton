@@ -20,7 +20,7 @@ use yii\data\ActiveDataProvider;
 $this->setTitle(Yii::t('skeleton', 'Users'));
 $this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
 
-echo UserSubmenu::widget();
+echo UserSubmenu::make();
 
 echo GridContainer::make()
     ->grid(UserGridView::make()

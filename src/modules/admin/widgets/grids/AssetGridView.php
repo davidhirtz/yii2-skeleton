@@ -37,7 +37,7 @@ class AssetGridView extends GridView
                         ->class('small');
 
                     foreach ($item['files'] as $file => $link) {
-                        $ul->addItem(A::make()
+                        $ul->addContent(A::make()
                             ->href($link . $file)
                             ->text($file)
                             ->target('_blank'));

@@ -18,7 +18,7 @@ class CreateButton extends Widget
     use TagIconTextTrait;
     use TagLinkTrait;
 
-    protected function prepareAttributes(): void
+    public function init(): void
     {
         if (!$this->content) {
             $this->content = [Yii::t('skeleton', 'Create')];
@@ -26,6 +26,8 @@ class CreateButton extends Widget
 
         $this->attributes['href'] ??= ['create'];
         $this->icon ??= 'plus';
+
+        parent::init();
     }
 
     public function renderContent(): Stringable

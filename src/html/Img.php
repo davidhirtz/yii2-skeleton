@@ -34,9 +34,9 @@ class Img extends Tag
     }
 
     #[Override]
-    protected function renderTag(): string
+    protected function getTag(): string
     {
-        return '<' . $this->getTagName() . $this->renderAttributes() . '>';
+        return '<' . $this->getTagName() . $this->getAttributes() . '>';
     }
 
     #[Override]

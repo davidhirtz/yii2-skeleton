@@ -19,7 +19,7 @@ $this->setTitle(Yii::t('skeleton', 'Logins'));
 $this->setBreadcrumb(Yii::t('skeleton', 'Logins'), ['index']);
 
 
-echo UserSubmenu::widget();
+echo UserSubmenu::make();
 
 echo GridContainer::make()
     ->grid(UserLoginGridView::make()

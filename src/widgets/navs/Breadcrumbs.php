@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\navs;
 
 use davidhirtz\yii2\skeleton\html\A;
+use davidhirtz\yii2\skeleton\html\Li;
 use davidhirtz\yii2\skeleton\html\Ul;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\widgets\traits\ContainerWidgetTrait;
@@ -81,7 +82,9 @@ class Breadcrumbs extends Widget
                 $link = ['label' => $link];
             }
 
-            $list->addItem($this->getLink($link), $this->itemAttributes);
+            $list->addItem(Li::make()
+                ->attributes($this->itemAttributes)
+                ->content($this->getLink($link)));
         }
 
         return $list;

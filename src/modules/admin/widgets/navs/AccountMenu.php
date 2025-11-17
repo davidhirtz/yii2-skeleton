@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 
 use davidhirtz\yii2\skeleton\html\A;
-use davidhirtz\yii2\skeleton\html\base\Tag;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Dropdown;
 use davidhirtz\yii2\skeleton\html\Icon;
-use davidhirtz\yii2\skeleton\html\NavLink;
-use davidhirtz\yii2\skeleton\html\Ul;
 use davidhirtz\yii2\skeleton\web\User;
+use davidhirtz\yii2\skeleton\widgets\navs\Nav;
+use davidhirtz\yii2\skeleton\widgets\navs\NavItem;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
 use Yii;
@@ -23,8 +22,6 @@ class AccountMenu extends Widget
         'id' => 'account-menu',
         'class' => 'navbar-nav navbar-right nav',
     ];
-
-    public array $itemAttributes = [];
 
     /**
      * @var array|null containing the route of the language dropdown. If not set, the current URL will be used.
@@ -41,20 +38,9 @@ class AccountMenu extends Widget
 
     protected function renderContent(): string|Stringable
     {
-        $items = array_filter($this->getItems());
-
-        if (!$items) {
-            return '';
-        }
-
-        $list = Ul::make()
-            ->attributes($this->attributes);
-
-        foreach ($items as $item) {
-            $list->addItem($item, $this->itemAttributes);
-        }
-
-        return $list;
+        return Nav::make()
+            ->attributes($this->attributes)
+            ->items(...$this->getItems());
     }
 
     protected function getItems(): array
@@ -68,17 +54,7 @@ class AccountMenu extends Widget
         ];
     }
 
-    protected function getAccountItem(): ?Tag
-    {
-        return !$this->user->getIsGuest()
-            ? NavLink::make()
-                ->href(['/admin/account/update'])
-                ->icon('user')
-                ->label($this->user->getIdentity()->getUsername())
-            : null;
-    }
-
-    protected function getLanguageDropdownItem(): ?Dropdown
+    protected function getLanguageDropdownItem(): ?NavItem
     {
         $i18n = Yii::$app->getI18n();
 
@@ -89,7 +65,6 @@ class AccountMenu extends Widget
         $dropdown = Dropdown::make()
             ->dropend()
             ->button(Button::make()
-                ->class('nav-link')
                 ->content(Icon::make()
                     ->name(Yii::$app->language)
                     ->collection(Icon::ICON_COLLECTION_FLAG)));
@@ -114,50 +89,65 @@ class AccountMenu extends Widget
             $dropdown->addItem($link);
         }
 
-        return $dropdown;
+        return NavItem::make()
+            ->content($dropdown);
+    }
+
+    /**
+     * @see AccountController::actionUpdate()
+     */
+    protected function getAccountItem(): ?NavItem
+    {
+        return !$this->user->getIsGuest()
+            ? NavItem::make()
+                ->label($this->user->getIdentity()->getUsername())
+                ->url(['/admin/account/update'])
+                ->icon('user')
+            : null;
     }
 
     /**
      * @see AccountController::actionLogin()
      */
-    protected function getLoginItem(): ?NavLink
+    protected function getLoginItem(): ?NavItem
     {
         return $this->user->getIsGuest() && $this->user->isLoginEnabled()
-            ? NavLink::make()
-                ->href($this->user->loginUrl)
-                ->icon('sign-in-alt')
+            ? NavItem::make()
                 ->label(Yii::t('skeleton', 'Login'))
+                ->url($this->user->loginUrl)
+                ->icon('sign-in-alt')
             : null;
     }
 
     /**
      * @see AccountController::actionLogout()
      */
-    protected function getLogoutItem(): ?NavLink
+    protected function getLogoutItem(): ?NavItem
     {
         return !$this->user->getIsGuest()
-            ? NavLink::make()
-                ->addAttributes([
-                    'hx-post' => Url::toRoute(['/admin/account/logout']),
-                    'hx-push-url' => 'true',
-                    'hx-target' => 'body',
-                ])
-                ->addClass('navbar-logout')
-                ->icon('sign-out-alt')
-                ->label(Yii::t('skeleton', 'Logout'))
+            ? NavItem::make()
+                ->content(Button::make()
+                    ->text(Yii::t('skeleton', 'Logout'))
+                    ->addAttributes([
+                        'hx-post' => Url::toRoute(['/admin/account/logout']),
+                        'hx-push-url' => 'true',
+                        'hx-target' => 'body',
+                    ])
+                    ->icon('sign-out-alt')
+                    ->class('nav-link navbar-logout'))
             : null;
     }
 
     /**
      * @see AccountController::actionCreate()
      */
-    protected function getSignupItem(): ?NavLink
+    protected function getSignupItem(): ?NavItem
     {
         return $this->user->getIsGuest() && $this->user->isSignupEnabled()
-            ? NavLink::make()
-                ->href(['/admin/account/create'])
-                ->icon('plus-circle')
+            ? NavItem::make()
                 ->label(Yii::t('skeleton', 'Sign up'))
+                ->url(['/admin/account/create'])
+                ->icon('plus-circle')
             : null;
     }
 }

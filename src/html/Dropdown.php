@@ -7,6 +7,7 @@ namespace davidhirtz\yii2\skeleton\html;
 use davidhirtz\yii2\skeleton\html\base\Tag;
 use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
 use Override;
+use Stringable;
 
 class Dropdown extends Tag
 {
@@ -40,18 +41,18 @@ class Dropdown extends Tag
         return $this->addClass('dropup');
     }
 
-    public function addItem(Tag ...$items): static
+    public function addItem(string|Stringable ...$items): static
     {
-        foreach ($items as $item) {
+        foreach (array_filter($items) as $item) {
             $this->items[] = Li::make()
-                ->content($item
-                    ->class('dropdown-item'));
+                ->content($item)
+                ->class('dropdown-item');
         }
 
         return $this;
     }
 
-    public function items(Tag ...$items): static
+    public function items(string|Stringable ...$items): static
     {
         $this->items = [];
         return $this->addItem(...$items);
@@ -75,7 +76,7 @@ class Dropdown extends Tag
                 ->class('dropdown-menu')
                 ->content(...$this->content)
                 ->addContent(Ul::make()
-                    ->items($this->items))
+                    ->content(...$this->items))
         ]);
     }
 }

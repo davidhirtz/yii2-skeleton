@@ -6,12 +6,13 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\widgets\navs\Submenu;
+use davidhirtz\yii2\skeleton\widgets\traits\UserWidgetTrait;
 use Override;
 use Yii;
 
 class UserSubmenu extends Submenu
 {
-    public ?User $user = null;
+    use UserWidgetTrait;
 
     #[Override]
     public function init(): void
@@ -39,21 +40,21 @@ class UserSubmenu extends Submenu
 
     protected function getDefaultItems(): array
     {
-        return array_filter([
+        return [
             ...$this->getUserGridViewItems(),
             ...$this->getPermissionGridViewItems(),
             ...$this->getLoginGridViewItems(),
-        ]);
+        ];
     }
 
     protected function getUserItems(): array
     {
-        return array_filter([
+        return [
             ...$this->getUserFormItems(),
             ...$this->getUserPermissionGridViewItems(),
             ...$this->getUserLoginGridViewItems(),
             ...$this->getUserTrailGridViewItems(),
-        ]);
+        ];
     }
 
     protected function getUserGridViewItems(): array
