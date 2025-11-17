@@ -27,12 +27,13 @@
   }
 }
 
-.list-group-item-action {
-  display: block;
+.list-group-link {
+  display: flex;
   width: 100%;
   padding: $list-group-action-padding-y $list-group-action-padding-x;
   background: var(--list-group-action-bg, inherit);
   color: var(--list-group-action-color, inherit);
+  gap: $icon-gap-x;
   text-align: inherit;
 
   &:hover,

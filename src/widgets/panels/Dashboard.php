@@ -6,8 +6,8 @@ namespace davidhirtz\yii2\skeleton\widgets\panels;
 
 use davidhirtz\yii2\skeleton\html\Card;
 use davidhirtz\yii2\skeleton\html\Div;
-use davidhirtz\yii2\skeleton\html\ListGroup;
-use davidhirtz\yii2\skeleton\html\ListGroupItemLink;
+use davidhirtz\yii2\skeleton\widgets\navs\ListGroup;
+use davidhirtz\yii2\skeleton\widgets\navs\ListGroupItem;
 use davidhirtz\yii2\skeleton\widgets\traits\ContainerWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
@@ -36,10 +36,10 @@ class Dashboard extends Widget
             $list = ListGroup::make();
 
             foreach ($panel->items as $item) {
-                $list->addLink(ListGroupItemLink::make()
-                    ->addAttributes($item->attributes)
-                    ->text($item->label)
-                    ->href($item->url)
+                $list->addItem(ListGroupItem::make()
+                    ->attributes($item->attributes)
+                    ->label($item->label)
+                    ->url($item->url)
                     ->roles($item->roles)
                     ->icon($item->icon));
             }

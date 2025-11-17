@@ -11,11 +11,11 @@ declare(strict_types=1);
 
 use davidhirtz\yii2\skeleton\html\Card;
 use davidhirtz\yii2\skeleton\html\Container;
-use davidhirtz\yii2\skeleton\html\ListGroup;
-use davidhirtz\yii2\skeleton\html\ListGroupItemLink;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\PasswordRecoverActiveForm;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
+use davidhirtz\yii2\skeleton\widgets\navs\ListGroup;
+use davidhirtz\yii2\skeleton\widgets\navs\ListGroupItem;
 use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Recover Password'));
@@ -32,11 +32,11 @@ echo Container::make()
                 'model' => $form,
             ])),
         ListGroup::make()
-            ->addLink(
-                ListGroupItemLink::make()
+            ->addItem(
+                ListGroupItem::make()
+                    ->label(Yii::t('skeleton', 'Back to login'))
                     ->icon('sign-in-alt')
-                    ->href(Url::to(['login']))
-                    ->text(Yii::t('skeleton', 'Back to login'))
+                    ->url(Url::to(['login']))
                     ->visible(Yii::$app->getUser()->getIsGuest())
             )
     );

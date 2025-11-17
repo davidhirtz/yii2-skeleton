@@ -53,14 +53,6 @@ class Html extends BaseHtml
         return Html::tag($tag, $content, $options);
     }
 
-    /**
-     * @deprecated
-     */
-    public static function iconText(string $icon, string $content, array $attributes = []): Div
-    {
-        return static::div($content, $attributes)->icon($icon);
-    }
-
     public static function buttons(array|string $buttons, array $options = []): string
     {
         if (is_array($buttons)) {

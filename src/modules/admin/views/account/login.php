@@ -15,12 +15,12 @@ use davidhirtz\yii2\skeleton\controllers\AccountController;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Card;
 use davidhirtz\yii2\skeleton\html\Container;
-use davidhirtz\yii2\skeleton\html\ListGroup;
-use davidhirtz\yii2\skeleton\html\ListGroupItemLink;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\LoginActiveForm;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
+use davidhirtz\yii2\skeleton\widgets\navs\ListGroup;
+use davidhirtz\yii2\skeleton\widgets\navs\ListGroupItem;
 
 $this->setTitle(Yii::t('skeleton', 'Login'));
 ?>
@@ -41,24 +41,24 @@ $this->setTitle(Yii::t('skeleton', 'Login'));
                 'model' => $form,
             ])),
         ListGroup::make()
-            ->addLink(ListGroupItemLink::make()
-                ->text(Yii::t('skeleton', 'Login with Facebook'))
+            ->addItem(ListGroupItem::make()
+                ->label(Yii::t('skeleton', 'Login with Facebook'))
                 ->icon('brand:facebook')
-                ->href(['auth', 'authclient' => 'facebook'])
+                ->url(['auth', 'authclient' => 'facebook'])
                 ->visible($form->isFacebookLoginEnabled()))
-            ->addLink(ListGroupItemLink::make()
-                ->text(Yii::t('skeleton', 'Create new account'))
+            ->addItem(ListGroupItem::make()
+                ->label(Yii::t('skeleton', 'Create new account'))
                 ->icon('user')
-                ->href(['create'])
+                ->url(['create'])
                 ->visible(Yii::$app->getUser()->isSignupEnabled()))
-            ->addLink(ListGroupItemLink::make()
-                ->text(Yii::t('skeleton', 'Resend email confirmation'))
+            ->addItem(ListGroupItem::make()
+                ->label(Yii::t('skeleton', 'Resend email confirmation'))
                 ->icon('envelope')
-                ->href(['resend'])
+                ->url(['resend'])
                 ->visible(Yii::$app->getUser()->isPasswordResetEnabled() && !Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()))
-            ->addLink(ListGroupItemLink::make()
-                ->text(Yii::t('skeleton', 'I forgot my password'))
+            ->addItem(ListGroupItem::make()
+                ->label(Yii::t('skeleton', 'I forgot my password'))
                 ->icon('key')
-                ->href(['recover'])
+                ->url(['recover'])
                 ->visible(Yii::$app->getUser()->isPasswordResetEnabled()))
     ); ?>

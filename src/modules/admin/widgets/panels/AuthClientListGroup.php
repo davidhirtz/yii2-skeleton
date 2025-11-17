@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\panels;
 
 use davidhirtz\yii2\skeleton\helpers\Url;
-use davidhirtz\yii2\skeleton\html\ListGroup;
-use davidhirtz\yii2\skeleton\html\ListGroupItemLink;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
+use davidhirtz\yii2\skeleton\widgets\navs\ListGroup;
+use davidhirtz\yii2\skeleton\widgets\navs\ListGroupItem;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 
 /**
@@ -33,10 +33,10 @@ class AuthClientListGroup extends Widget
     protected function setFacebookLoginLink(): void
     {
         if ((new LoginForm())->isFacebookLoginEnabled()) {
-            $this->list->addLink(ListGroupItemLink::make()
-                ->text('Facebook')
+            $this->list->addItem(ListGroupItem::make()
+                ->label('Facebook')
                 ->icon('brand:facebook')
-                ->href(Url::toRoute(['/admin/user/auth', 'authclient' => 'facebook'])));
+                ->url(Url::toRoute(['/admin/user/auth', 'authclient' => 'facebook'])));
         }
     }
 }

@@ -6,12 +6,12 @@ namespace davidhirtz\yii2\skeleton\widgets\grids\toolbars;
 
 use davidhirtz\yii2\skeleton\html\A;
 use davidhirtz\yii2\skeleton\html\Div;
-use davidhirtz\yii2\skeleton\html\Dropdown;
-use davidhirtz\yii2\skeleton\html\DropdownLink;
 use davidhirtz\yii2\skeleton\html\TextInput;
 use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagLabelTrait;
+use davidhirtz\yii2\skeleton\widgets\navs\Dropdown;
+use davidhirtz\yii2\skeleton\widgets\navs\DropdownLink;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
 use Yii;

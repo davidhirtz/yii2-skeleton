@@ -6,10 +6,11 @@ namespace davidhirtz\yii2\skeleton\widgets\navs;
 
 use Closure;
 use davidhirtz\yii2\skeleton\html\A;
-use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\html\Li;
 use davidhirtz\yii2\skeleton\html\Span;
 use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagIconTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagLabelTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagUrlTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagVisibilityTrait;
@@ -21,6 +22,8 @@ use yii\web\Controller;
 class NavItem extends Widget
 {
     use TagAttributesTrait;
+    use TagContentTrait;
+    use TagIconTrait;
     use TagLabelTrait;
     use TagUrlTrait;
     use TagVisibilityTrait;
@@ -31,9 +34,7 @@ class NavItem extends Widget
     public array $badgeAttributes = ['class' => 'badge d-none d-lg-block'];
 
     protected bool|null $active = null;
-    protected array $content = [];
     protected int|string|null $badge = null;
-    protected string|null $icon = null;
 
     public function active(bool|callable $active): static
     {
@@ -41,21 +42,9 @@ class NavItem extends Widget
         return $this;
     }
 
-    public function content(string|Stringable|null ...$content): static
-    {
-        $this->content = array_values(array_filter($content));
-        return $this;
-    }
-
     public function badge(int|string|null $badge): static
     {
         $this->badge = $badge;
-        return $this;
-    }
-
-    public function icon(string|null $icon): static
-    {
-        $this->icon = $icon;
         return $this;
     }
 
@@ -75,7 +64,7 @@ class NavItem extends Widget
                     $route = is_array($params) ? array_shift($params) : $params;
                 }
 
-                $shouldSkip = ($route[0] === '!');
+                $shouldSkip = ('!' === $route[0]);
 
                 if ($shouldSkip) {
                     $route = substr((string)$route, 1);
@@ -123,8 +112,7 @@ class NavItem extends Widget
             ->href($this->url);
 
         if ($this->icon) {
-            $link->addContent(Icon::make()
-                ->name($this->icon)
+            $link->addContent($this->icon
                 ->attributes($this->iconAttributes));
         }
 
