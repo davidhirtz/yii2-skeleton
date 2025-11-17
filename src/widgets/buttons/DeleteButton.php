@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\buttons;
 
 use davidhirtz\yii2\skeleton\html\Button;
-use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\widgets\buttons\traits\DeleteButtonTrait;
+use davidhirtz\yii2\skeleton\widgets\Modal;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
 

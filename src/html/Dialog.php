@@ -6,12 +6,13 @@ namespace davidhirtz\yii2\skeleton\html;
 
 use davidhirtz\yii2\skeleton\html\base\Tag;
 use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
+use Override;
 
 class Dialog extends Tag
 {
     use TagContentTrait;
 
-    #[\Override]
+    #[Override]
     protected function getTagName(): string
     {
         return 'dialog';

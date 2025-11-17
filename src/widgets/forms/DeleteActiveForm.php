@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
 use davidhirtz\yii2\skeleton\html\Button;
-use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
+use davidhirtz\yii2\skeleton\widgets\Modal;
 use Override;
 use Yii;
 use yii\db\ActiveRecord;

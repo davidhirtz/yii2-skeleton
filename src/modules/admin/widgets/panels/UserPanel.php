@@ -6,8 +6,8 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\panels;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
-use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
+use davidhirtz\yii2\skeleton\widgets\Modal;
 use davidhirtz\yii2\skeleton\widgets\panels\Panel;
 use davidhirtz\yii2\skeleton\widgets\traits\UserWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;

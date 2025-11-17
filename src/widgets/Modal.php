@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\html;
+namespace davidhirtz\yii2\skeleton\widgets;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\base\Tag;
+use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
 use Override;
 use Stringable;

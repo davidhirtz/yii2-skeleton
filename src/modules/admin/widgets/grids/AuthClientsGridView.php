@@ -6,13 +6,13 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
-use davidhirtz\yii2\skeleton\html\Modal;
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\panels\AuthClientListGroup;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\TimeagoColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
+use davidhirtz\yii2\skeleton\widgets\Modal;
 use davidhirtz\yii2\skeleton\widgets\traits\UserWidgetTrait;
 use Override;
 use Stringable;
