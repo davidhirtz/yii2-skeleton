@@ -25,12 +25,6 @@ class Panel extends Widget
 
     protected array $buttons = [];
 
-    public function init(): void
-    {
-        $this->title ??= Yii::t('skeleton', 'Operations');
-        parent::init();
-    }
-
     public function buttons(string|Stringable|null ...$buttons): static
     {
         $this->buttons = array_values(array_filter($buttons));
@@ -45,6 +39,8 @@ class Panel extends Widget
 
     protected function renderContent(): string|Stringable
     {
+        $this->title ??= Yii::t('skeleton', 'Operations');
+
         return $this->content || $this->buttons
             ? Card::make()
                 ->title($this->title)

@@ -11,6 +11,7 @@ class P extends Tag
 {
     use TagContentTrait;
 
+    #[\Override]
     protected function getTagName(): string
     {
         return 'p';

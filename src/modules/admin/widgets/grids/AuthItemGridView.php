@@ -16,6 +16,7 @@ use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\widgets\grids\traits\MessageSourceTrait;
+use davidhirtz\yii2\skeleton\widgets\traits\UserWidgetTrait;
 use Override;
 use Stringable;
 use Yii;
@@ -23,8 +24,7 @@ use Yii;
 class AuthItemGridView extends GridView
 {
     use MessageSourceTrait;
-
-    public ?User $user = null;
+    use UserWidgetTrait;
 
     /**
      * @var string|null the previous rule name, needs to be `public` because it's called in content closure.
@@ -32,7 +32,7 @@ class AuthItemGridView extends GridView
     public static ?string $prevRuleName = null;
 
     #[Override]
-    public function init(): void
+    public function renderContent(): string|Stringable
     {
         if ($this->user) {
             $this->rowAttributes = fn (AuthItem $authItem) => ($authItem->isAssigned || $authItem->isInherited)
@@ -47,13 +47,7 @@ class AuthItemGridView extends GridView
             $this->user ? $this->getButtonColumn() : $this->getUsersColumn(),
         ];
 
-        parent::init();
-    }
-
-    public function user(?User $user): static
-    {
-        $this->user = $user;
-        return $this;
+        return parent::renderContent();
     }
 
     protected function getTypeColumn(): Column

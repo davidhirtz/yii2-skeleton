@@ -32,11 +32,17 @@ class RedirectGridView extends GridView
 {
     use TypeGridViewTrait;
 
-    protected ?Redirect $redirect = null;
     public bool $showSelection = true;
+    protected ?Redirect $redirect = null;
+
+    public function redirect(Redirect $redirect): static
+    {
+        $this->redirect = $redirect;
+        return $this;
+    }
 
     #[Override]
-    public function init(): void
+    public function renderContent(): string|Stringable
     {
         $this->attributes['id'] ??= 'redirects';
 
@@ -64,13 +70,7 @@ class RedirectGridView extends GridView
             $this->showSelection ? $this->getSelectionButton() : null,
         ];
 
-        parent::init();
-    }
-
-    public function redirect(Redirect $redirect): static
-    {
-        $this->redirect = $redirect;
-        return $this;
+        return parent::renderContent();
     }
 
     protected function setDataProviderFromRedirect(): void

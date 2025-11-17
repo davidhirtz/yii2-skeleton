@@ -10,20 +10,18 @@ use davidhirtz\yii2\skeleton\html\ListGroupItemLink;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 
+/**
+ * @todo
+ */
 class AuthClientListGroup extends Widget
 {
     protected ListGroup $list;
 
-    public function init(): void
+    protected function renderContent(): string
     {
         $this->list = ListGroup::make();
         $this->setItems();
 
-        parent::init();
-    }
-
-    protected function renderContent(): string
-    {
         return $this->list->render();
     }
 

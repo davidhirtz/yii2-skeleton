@@ -18,7 +18,7 @@ class UserOwnerPanel extends Widget
     use TagTitleTrait;
     use TagContentTrait;
 
-    public function init(): void
+    protected function renderContent(): string|Stringable
     {
         if (!$this->content) {
             $this->content(P::make()
@@ -27,11 +27,6 @@ class UserOwnerPanel extends Widget
 
         $this->title ??= Yii::t('skeleton', 'Transfer Ownership');
 
-        parent::init();
-    }
-
-    protected function renderContent(): string|Stringable
-    {
         return Panel::make()
             ->danger()
             ->title($this->title)

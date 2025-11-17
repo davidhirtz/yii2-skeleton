@@ -28,14 +28,10 @@ class AdminButton extends Widget
      */
     public bool $toggleButtonOpacity = true;
 
-    public function init(): void
+    protected function renderContent(): string|Stringable
     {
         $this->registerCss();
-        parent::init();
-    }
 
-    protected function renderContent(): Stringable
-    {
         return A::make()
             ->content($this->icon)
             ->href('/admin')
@@ -44,7 +40,7 @@ class AdminButton extends Widget
             ->target('_blank');
     }
 
-    public function registerCss(): void
+    protected function registerCss(): void
     {
         if (self::$is_Registered) {
             return;

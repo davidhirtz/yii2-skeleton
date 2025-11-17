@@ -18,7 +18,8 @@ class SessionGridView extends GridView
 {
     public string $layout = '{items}{footer}';
 
-    public function init(): void
+    #[\Override]
+    public function renderContent(): string|Stringable
     {
         $this->provider ??= new ArrayDataProvider([
             'allModels' => [
@@ -58,6 +59,6 @@ class SessionGridView extends GridView
                     ->tooltip(Yii::t('skeleton', 'Delete expired sessions')))
         ];
 
-        parent::init();
+        return parent::renderContent();
     }
 }

@@ -8,16 +8,24 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\interfaces\TrailModelInterface;
 use davidhirtz\yii2\skeleton\modules\admin\data\TrailActiveDataProvider;
 use davidhirtz\yii2\skeleton\widgets\navs\Submenu;
+use Override;
+use Stringable;
 use Yii;
 use yii\base\Model;
 
 class TrailSubmenu extends Submenu
 {
-    public ?TrailActiveDataProvider $dataProvider = null;
+    protected ?TrailActiveDataProvider $provider = null;
     private ?Model $_trailModel = null;
 
-    #[\Override]
-    public function init(): void
+    public function provider(TrailActiveDataProvider $provider): static
+    {
+        $this->provider = $provider;
+        return $this;
+    }
+
+    #[Override]
+    public function renderContent(): string|Stringable
     {
         if ($this->title === null) {
             $model = $this->getTrailModel();
@@ -31,46 +39,44 @@ class TrailSubmenu extends Submenu
         }
 
         $this->setBreadcrumbs();
-        parent::init();
+        return parent::renderContent();
     }
 
-    public function setBreadcrumbs(): void
+    protected function setBreadcrumbs(): void
     {
-        $view = $this->getView();
-
-        if ($this->dataProvider->trailId) {
-            $view->setBreadcrumb(Yii::t('skeleton', '{model} #{id}', [
+        if ($this->provider->trailId) {
+            $this->view->setBreadcrumb(Yii::t('skeleton', '{model} #{id}', [
                 'model' => Yii::t('skeleton', 'History'),
-                'id' => $this->dataProvider->trailId,
+                'id' => $this->provider->trailId,
             ]));
         }
 
         $model = $this->getTrailModel();
 
         if ($model) {
-            $view->setBreadcrumb($model->getTrailModelName());
+            $this->view->setBreadcrumb($model->getTrailModelName());
         }
     }
 
-    public function getTrailModelAdminRoute(): array|false
+    protected function getTrailModelAdminRoute(): array|false
     {
         $model = $this->getTrailModel();
 
         if ($model instanceof TrailModelInterface) {
             return [
                 ...$model->getTrailModelAdminRoute(),
-                'language' => explode('::', (string) $model->getTrailBehavior()->modelClass)[1] ?? null
+                'language' => explode('::', (string)$model->getTrailBehavior()->modelClass)[1] ?? null
             ];
         }
 
         return false;
     }
 
-    public function getTrailModel(): TrailModelInterface|Model|null
+    protected function getTrailModel(): TrailModelInterface|Model|null
     {
-        if ($this->dataProvider->model) {
-            $this->_trailModel ??= $this->dataProvider->getModels()
-                ? current($this->dataProvider->getModels())->getModelClass()
+        if ($this->provider->model) {
+            $this->_trailModel ??= $this->provider->getModels()
+                ? current($this->provider->getModels())->getModelClass()
                 : null;
         }
 

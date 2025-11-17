@@ -79,10 +79,14 @@ class GridView extends Widget
         parent::__construct();
     }
 
-    public function init(): void
+    public function provider(DataProviderInterface $data): static
     {
-        $this->initColumns();
+        $this->provider = $data;
+        return $this;
+    }
 
+    protected function renderContent(): string|Stringable
+    {
         $this->attributes['hx-select'] ??= "#{$this->getId()}";
         $this->attributes['hx-target'] ??= $this->attributes['hx-select'];
         $this->attributes['hx-select-oob'] ??= '#flashes';
@@ -90,10 +94,7 @@ class GridView extends Widget
         $this->headerRowAttributes['hx-boost'] ??= 'true';
         $this->tableBodyAttributes ??= [];
         $this->rowAttributes ??= [];
-    }
 
-    protected function initColumns(): void
-    {
         $this->columns ??= $this->getDefaultColumns();
 
         foreach ($this->columns as $i => $column) {
@@ -108,16 +109,7 @@ class GridView extends Widget
                 unset($this->columns[$i]);
             }
         }
-    }
 
-    public function provider(DataProviderInterface $data): static
-    {
-        $this->provider = $data;
-        return $this;
-    }
-
-    protected function renderContent(): string|Stringable
-    {
         return $this->provider->getCount() || $this->showOnEmpty
             ? Div::make()
                 ->attributes($this->attributes)

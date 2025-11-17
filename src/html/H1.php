@@ -10,6 +10,7 @@ class H1 extends base\Tag
 {
     use TagContentTrait;
 
+    #[\Override]
     protected function getTagName(): string
     {
         return 'h1';

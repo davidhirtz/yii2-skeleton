@@ -15,6 +15,7 @@ use davidhirtz\yii2\skeleton\widgets\grids\columns\TimeagoColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\widgets\traits\UserWidgetTrait;
 use Override;
+use Stringable;
 use Yii;
 use yii\data\ArrayDataProvider;
 
@@ -25,7 +26,7 @@ class AuthClientsGridView extends GridView
     public string $layout = '{items}{footer}';
 
     #[Override]
-    public function init(): void
+    public function renderContent(): string|Stringable
     {
         $this->provider = new ArrayDataProvider([
             'allModels' => $this->user->authClients,
@@ -42,7 +43,7 @@ class AuthClientsGridView extends GridView
             $this->getButtonColumn(),
         ];
 
-        parent::init();
+        return parent::renderContent();
     }
 
     protected function getCreateButton(): string

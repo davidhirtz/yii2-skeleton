@@ -10,6 +10,8 @@ use davidhirtz\yii2\skeleton\html\traits\TagUrlTrait;
 use davidhirtz\yii2\skeleton\widgets\navs\traits\NavItemTrait;
 use davidhirtz\yii2\skeleton\widgets\traits\ContainerWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
+use Override;
+use Stringable;
 
 class Submenu extends Widget
 {
@@ -22,7 +24,8 @@ class Submenu extends Widget
     public array $navAttributes = ['class' => 'submenu nav-pills'];
     public array $headerAttributes = [];
 
-    protected function renderContent(): string
+    #[Override]
+    protected function renderContent(): string|Stringable
     {
         return $this->getHeader() . $this->getNav();
     }

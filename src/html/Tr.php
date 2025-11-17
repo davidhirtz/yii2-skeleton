@@ -35,6 +35,7 @@ class Tr extends Tag
         return $this->cells ? implode('', $this->cells) : '';
     }
 
+    #[\Override]
     protected function getTagName(): string
     {
         return 'tr';

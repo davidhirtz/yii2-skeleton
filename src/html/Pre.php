@@ -10,6 +10,7 @@ class Pre extends base\Tag
 {
     use TagContentTrait;
 
+    #[\Override]
     protected function getTagName(): string
     {
         return 'pre';

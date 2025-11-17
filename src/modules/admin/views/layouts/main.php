@@ -28,7 +28,7 @@ AdminAsset::register($this);
 </head>
 <body hx-select="main" hx-swap="outerHTML" hx-target="main">
 <?php $this->beginBody() ?>
-<?= NavBar::widget(); ?>
+<?= NavBar::make(); ?>
 <main class="main">
     <?= Breadcrumbs::make(); ?>
     <?= Flashes::make(); ?>

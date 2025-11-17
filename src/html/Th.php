@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\html;
 
 class Th extends base\TableCell
 {
+    #[\Override]
     protected function getTagName(): string
     {
         return 'th';

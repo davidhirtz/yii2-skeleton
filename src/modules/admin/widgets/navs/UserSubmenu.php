@@ -15,6 +15,7 @@ class UserSubmenu extends Submenu
 {
     use UserWidgetTrait;
 
+    #[\Override]
     protected function renderContent(): string
     {
         if ($this->user && !$this->user->getIsNewRecord()) {

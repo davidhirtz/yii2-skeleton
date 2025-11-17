@@ -30,7 +30,7 @@ class Breadcrumbs extends Widget
 
     protected array $links;
 
-    public function init(): void
+    protected function renderContent(): string|Stringable
     {
         $this->links ??= $this->view->getBreadcrumbs();
         $this->addLinksFromModules();
@@ -39,7 +39,24 @@ class Breadcrumbs extends Widget
             $this->setDefaultHomeLink();
         }
 
-        parent::init();
+        if (!$this->links) {
+            return '';
+        }
+
+        $list = Ul::make()
+            ->attributes($this->listAttributes);
+
+        foreach ($this->links as $link) {
+            if (!is_array($link)) {
+                $link = ['label' => $link];
+            }
+
+            $list->addContent(Li::make()
+                ->attributes($this->itemAttributes)
+                ->content($this->getLink($link)));
+        }
+
+        return $list;
     }
 
     protected function setDefaultHomeLink(): void
@@ -66,28 +83,6 @@ class Breadcrumbs extends Widget
                 ];
             }
         }
-    }
-
-    protected function renderContent(): string|Stringable
-    {
-        if (!$this->links) {
-            return '';
-        }
-
-        $list = Ul::make()
-            ->attributes($this->listAttributes);
-
-        foreach ($this->links as $link) {
-            if (!is_array($link)) {
-                $link = ['label' => $link];
-            }
-
-            $list->addContent(Li::make()
-                ->attributes($this->itemAttributes)
-                ->content($this->getLink($link)));
-        }
-
-        return $list;
     }
 
     protected function getLink(array $attributes): Stringable

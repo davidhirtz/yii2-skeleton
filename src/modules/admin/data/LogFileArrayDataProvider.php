@@ -28,6 +28,6 @@ class LogFileArrayDataProvider extends ArrayDataProvider
     protected function findFiles(): array
     {
         $files = glob(Yii::getAlias($this->basePath . '*'));
-        return array_map(fn ($file) => LogFile::createFromFilename($file), $files ?: []);
+        return array_map(LogFile::createFromFilename(...), $files ?: []);
     }
 }

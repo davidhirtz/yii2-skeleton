@@ -15,6 +15,7 @@ use davidhirtz\yii2\skeleton\widgets\grids\columns\LinkColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\TimeagoColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use Override;
+use Stringable;
 use Yii;
 
 /**
@@ -23,16 +24,15 @@ use Yii;
 class LogFileGridView extends GridView
 {
     public string $layout = '{items}';
+    public bool $showOnEmpty = false;
 
     public array $tableAttributes = [
         'class' => 'table table-striped',
         'style' => 'table-layout: fixed;',
     ];
 
-    public bool $showOnEmpty = false;
-
     #[Override]
-    public function init(): void
+    public function renderContent(): string|Stringable
     {
         $this->attributes['id'] ??= 'logs';
         $this->provider ??= Yii::createObject(LogFileArrayDataProvider::class);
@@ -46,7 +46,7 @@ class LogFileGridView extends GridView
 
         $this->view->registerCss('pre{margin-top: 20px; max-height:200px;}');
 
-        parent::init();
+        return parent::renderContent();
     }
 
     protected function getNameColumn(): LinkColumn

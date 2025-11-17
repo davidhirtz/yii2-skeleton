@@ -18,7 +18,8 @@ class CacheGridView extends GridView
 {
     public string $layout = '{items}{footer}';
 
-    public function init(): void
+    #[\Override]
+    public function renderContent(): string|Stringable
     {
         $caches = [];
 
@@ -54,6 +55,6 @@ class CacheGridView extends GridView
                     ->post(['flush', 'cache' => $item['name']]))
         ];
 
-        parent::init();
+        return parent::renderContent();
     }
 }

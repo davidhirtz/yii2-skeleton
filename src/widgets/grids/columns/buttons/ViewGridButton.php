@@ -20,7 +20,7 @@ class ViewGridButton extends Widget
     use TagIconTextTrait;
     use TagLabelTrait;
 
-    public function init(): void
+    public function renderContent(): Stringable
     {
         if ($this->model) {
             $this->url ??= ['update', 'id' => $this->model->getPrimaryKey()];
@@ -28,11 +28,6 @@ class ViewGridButton extends Widget
 
         $this->label ??= Yii::t('yii', 'View');
 
-        parent::init();
-    }
-
-    public function renderContent(): Stringable
-    {
         return Button::make()
             ->primary()
             ->ariaLabel($this->label)

@@ -21,6 +21,7 @@ class UserDeleteActiveForm extends DeleteActiveForm
     use TagTitleTrait;
     use UserWidgetTrait;
 
+    #[\Override]
     public function init(): void
     {
         $this->message ??= Yii::t('skeleton', 'Please type the user email in the text field below to delete this user. All related records and files will also be deleted. This cannot be undone, please be certain!');

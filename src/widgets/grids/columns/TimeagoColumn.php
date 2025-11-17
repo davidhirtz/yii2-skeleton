@@ -17,6 +17,7 @@ class TimeagoColumn extends LinkColumn
 
     protected string $format = 'raw';
 
+    #[\Override]
     protected function getValue(array|Model $model, string|int $key, int $index): ?string
     {
         $timestamp = ArrayHelper::getValue($model, $this->property);

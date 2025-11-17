@@ -17,14 +17,10 @@ class DeleteGridButton extends Widget
 {
     use DeleteButtonTrait;
 
-    public function init(): void
-    {
-        $this->setButtonDefault();
-        parent::init();
-    }
-
     public function renderContent(): Stringable
     {
+        $this->setButtonDefault();
+
         $modal = Modal::make()
             ->title($this->title)
             ->content(...$this->content)

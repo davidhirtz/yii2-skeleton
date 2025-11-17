@@ -41,7 +41,7 @@ class TrailGridView extends GridView
     ];
 
     #[Override]
-    public function init(): void
+    public function renderContent(): string|Stringable
     {
         $this->rowAttributes = fn (Trail $trail) => [
             'class' => $trail->isDeleteType() ? 'bg-danger' : '',
@@ -57,7 +57,7 @@ class TrailGridView extends GridView
 
         $this->messageSourceAttribute = 'message';
 
-        parent::init();
+        return parent::renderContent();
     }
 
     protected function getModelColumn(): DataColumn
@@ -336,6 +336,7 @@ class TrailGridView extends GridView
         return ['index', 'model' => implode('@', array_filter([$trail->model, (string)$trail->model_id]))];
     }
 
+    #[Override]
     public function getModel(): Trail
     {
         return Trail::instance();

@@ -12,7 +12,9 @@ use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\web\User;
 use davidhirtz\yii2\skeleton\widgets\navs\Nav;
 use davidhirtz\yii2\skeleton\widgets\navs\NavItem;
+use davidhirtz\yii2\skeleton\widgets\traits\UserWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
+use Override;
 use Stringable;
 use Yii;
 use yii\helpers\Url;
@@ -29,14 +31,15 @@ class AccountMenu extends Widget
      */
     public ?array $languageRoute = null;
 
-    protected User $user;
+    protected User $webuser;
 
-    public function init(): void
+    public function __construct()
     {
-        $this->user ??= Yii::$app->getUser();
-        parent::init();
+        $this->webuser = Yii::$app->getUser();
+        parent::__construct();
     }
 
+    #[Override]
     protected function renderContent(): string|Stringable
     {
         return Nav::make()
@@ -100,9 +103,9 @@ class AccountMenu extends Widget
      */
     protected function getAccountItem(): ?NavItem
     {
-        return !$this->user->getIsGuest()
+        return !$this->webuser->getIsGuest()
             ? NavItem::make()
-                ->label($this->user->getIdentity()->getUsername())
+                ->label($this->webuser->getIdentity()->getUsername())
                 ->url(['/admin/account/update'])
                 ->icon('user')
             : null;
@@ -113,10 +116,10 @@ class AccountMenu extends Widget
      */
     protected function getLoginItem(): ?NavItem
     {
-        return $this->user->getIsGuest() && $this->user->isLoginEnabled()
+        return $this->webuser->getIsGuest() && $this->webuser->isLoginEnabled()
             ? NavItem::make()
                 ->label(Yii::t('skeleton', 'Login'))
-                ->url($this->user->loginUrl)
+                ->url($this->webuser->loginUrl)
                 ->icon('sign-in-alt')
             : null;
     }
@@ -126,7 +129,7 @@ class AccountMenu extends Widget
      */
     protected function getLogoutItem(): ?NavItem
     {
-        return !$this->user->getIsGuest()
+        return !$this->webuser->getIsGuest()
             ? NavItem::make()
                 ->content(Button::make()
                     ->text(Yii::t('skeleton', 'Logout'))
@@ -145,7 +148,7 @@ class AccountMenu extends Widget
      */
     protected function getSignupItem(): ?NavItem
     {
-        return $this->user->getIsGuest() && $this->user->isSignupEnabled()
+        return $this->webuser->getIsGuest() && $this->webuser->isSignupEnabled()
             ? NavItem::make()
                 ->label(Yii::t('skeleton', 'Sign up'))
                 ->url(['/admin/account/create'])

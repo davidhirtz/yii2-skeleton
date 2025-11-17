@@ -26,10 +26,6 @@ abstract class Widget implements Stringable, ViewContextInterface
         $this->view = Yii::$app->getView();
     }
 
-    public function init(): void
-    {
-    }
-
     public function getViewPath(): ?string
     {
         return $this->viewPath ??= '@views/' . Yii::$app->controller->id . '/';
@@ -46,7 +42,6 @@ abstract class Widget implements Stringable, ViewContextInterface
 
     public function render(): string|Stringable
     {
-        $this->init();
         return $this->renderContent();
     }
 

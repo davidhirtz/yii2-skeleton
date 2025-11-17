@@ -27,6 +27,7 @@ class Table extends base\Tag
         return $this->header . $this->body;
     }
 
+    #[\Override]
     protected function getTagName(): string
     {
         return 'table';

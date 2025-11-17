@@ -88,6 +88,7 @@ class DataColumn extends Column
         return $label;
     }
 
+    #[\Override]
     protected function getBodyContent(array|Model $model, string|int $key, int $index): string|Stringable
     {
         return $this->content === null

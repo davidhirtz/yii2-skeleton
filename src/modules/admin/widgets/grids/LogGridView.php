@@ -13,6 +13,7 @@ use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use Override;
+use Stringable;
 use Yii;
 
 /**
@@ -28,7 +29,7 @@ class LogGridView extends GridView
     ];
 
     #[Override]
-    public function init(): void
+    public function renderContent(): string|Stringable
     {
         $this->columns ??= [
             $this->getDateColumn(),
@@ -38,7 +39,7 @@ class LogGridView extends GridView
 
         $this->view->registerCss('pre{margin-top: 20px; max-height:200px;}');
 
-        parent::init();
+        return parent::renderContent();
     }
 
     protected function getDateColumn(): DataColumn

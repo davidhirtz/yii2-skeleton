@@ -25,7 +25,7 @@ class UserLoginGridView extends GridView
     use TypeGridViewTrait;
 
     #[Override]
-    public function init(): void
+    public function renderContent(): string|Stringable
     {
         $this->columns ??= [
             $this->getTypeIconColumn(),
@@ -45,7 +45,7 @@ class UserLoginGridView extends GridView
                 ->property('created_at'),
         ];
 
-        parent::init();
+        return parent::renderContent();
     }
 
     /**

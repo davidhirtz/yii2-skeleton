@@ -51,7 +51,5 @@ class CounterColumn extends LinkColumn
                 return Yii::$app->getFormatter()->asInteger($count, $this->numberFormatterOptions, $this->numberFormatterTextOptions);
             };
         }
-
-        parent::init();
     }
 }

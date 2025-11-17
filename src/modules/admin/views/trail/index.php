@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 /**
- * Trail list
  * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\TrailController::actionIndex()
  *
  * @var View $this
@@ -20,14 +19,11 @@ use davidhirtz\yii2\skeleton\widgets\grids\GridContainer;
 $this->setTitle(Yii::t('skeleton', 'History'));
 $this->setBreadcrumb(Yii::t('skeleton', 'History'), ['index']);
 
-if ($provider->user) {
-    echo UserSubmenu::make()
-        ->user($provider->user);
-} else {
-    echo TrailSubmenu::widget([
-        'dataProvider' => $provider,
-    ]);
-}
+echo $provider->user
+    ? UserSubmenu::make()
+        ->user($provider->user)
+    : TrailSubmenu::make()
+        ->provider($provider);
 
 echo GridContainer::make()
     ->grid(TrailGridView::make()

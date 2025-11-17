@@ -13,14 +13,9 @@ class Flashes extends Widget
     public array $alerts;
     public bool $showStatusIcon = true;
 
-    public function init(): void
-    {
-        $this->alerts ??= Yii::$app->getSession()->getAllFlashes();
-        parent::init();
-    }
-
     protected function renderContent(): string
     {
+        $this->alerts ??= Yii::$app->getSession()->getAllFlashes();
         $content = '';
 
         foreach ($this->alerts as $status => $alerts) {
