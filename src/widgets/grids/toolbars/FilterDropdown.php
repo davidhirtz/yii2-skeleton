@@ -88,7 +88,10 @@ class FilterDropdown extends Widget
 
         if ($this->hasActiveItem()) {
             if ($this->default) {
-                $dropdown->addItem($this->getDefault())
+                $dropdown->addItem(DropdownLink::make()
+                    ->class('dropdown-default-item')
+                    ->current([...$this->params, $this->param => null])
+                    ->text($this->default))
                     ->divider();
             }
 
@@ -123,14 +126,6 @@ class FilterDropdown extends Widget
                 ->attribute('data-filter', '#' . $this->getId() . ' li')
                 ->placeholder($this->placeholder)
                 ->type('search'));
-    }
-
-    protected function getDefault(): Stringable
-    {
-        return A::make()
-            ->class('dropdown-default-item')
-            ->current([...$this->params, $this->param => null])
-            ->text($this->default);
     }
 
     protected function hasActiveItem(): bool

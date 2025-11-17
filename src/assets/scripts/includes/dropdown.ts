@@ -1,10 +1,14 @@
-import {computePosition, autoUpdate, flip, offset, shift} from '@floating-ui/dom';
+import {computePosition, autoUpdate, flip, offset} from '@floating-ui/dom';
 
 export default ($btn: HTMLElement) => {
     const selector = $btn.dataset.dropdown;
     const $dialog: HTMLDialogElement | null = selector
         ? document.querySelector(selector)
-        : $btn.parentElement.querySelector('dialog');
+        : $btn.parentElement!.querySelector('dialog');
+
+    if (!$dialog) {
+        return;
+    }
 
     const keydownEvent = (event: KeyboardEvent) => {
         if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
@@ -14,7 +18,7 @@ export default ($btn: HTMLElement) => {
     }
 
     const clickOutsideEvent = (event: MouseEvent) => {
-        if (!$dialog.firstElementChild.contains(event.target as HTMLElement)) {
+        if (!$dialog.firstElementChild!.contains(event.target as HTMLElement)) {
             $dialog.close();
         }
     }

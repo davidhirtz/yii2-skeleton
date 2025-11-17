@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets;
 
-use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
@@ -20,7 +19,6 @@ class Alert extends Widget
     use TagIconTrait;
 
     protected array $buttons = [];
-    private ?string $status = null;
 
     public function button(Button $btn): static
     {
@@ -36,12 +34,7 @@ class Alert extends Widget
 
     public function status(string $status): static
     {
-        if ($status === 'error') {
-            $status = 'danger';
-        }
-
-        $this->status = $status;
-        return $this;
+        return $this->attribute('data-alert', $status);
     }
 
     public function success(): static
@@ -67,10 +60,6 @@ class Alert extends Widget
     #[Override]
     protected function renderContent(): string|Stringable
     {
-        if ($this->status) {
-            Html::addCssClass($this->attributes, "alert-$this->status");
-        }
-
         $alert = Div::make()
             ->attributes($this->attributes)
             ->addClass('alert');

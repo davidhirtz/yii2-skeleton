@@ -59,7 +59,10 @@ class View extends \yii\web\View
             return $this->title ?: Yii::$app->name;
         }
 
-        return strtr($this->titleTemplate, ['{title}' => $this->title, '{app}' => Yii::$app->name]);
+        return strtr($this->titleTemplate, [
+            '{title}' => $this->title,
+            '{app}' => Yii::$app->name,
+        ]);
     }
 
     public function setMetaDescription(string $description, bool $replace = true): void

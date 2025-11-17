@@ -9,25 +9,26 @@ declare(strict_types=1);
  * @var davidhirtz\yii2\skeleton\models\forms\SignupForm $form
  */
 
-use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Container;
+use davidhirtz\yii2\skeleton\html\Noscript;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\SignupActiveForm;
+use davidhirtz\yii2\skeleton\widgets\Alert;
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 use davidhirtz\yii2\skeleton\widgets\panels\Card;
 use davidhirtz\yii2\skeleton\widgets\panels\ListGroup;
 use davidhirtz\yii2\skeleton\widgets\panels\ListGroupItem;
 
 $this->setTitle(Yii::t('skeleton', 'Sign up'));
-?>
 
-<?= ErrorSummary::make()->models($form)
-    ->title(Yii::t('skeleton', 'Your account could not be created')); ?>
+echo ErrorSummary::make()->models($form)
+    ->title(Yii::t('skeleton', 'Your account could not be created'));
 
-    <noscript>
-        <?= Html::danger(Yii::t('skeleton', 'Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to sign up.')); ?>
-    </noscript>
+echo Noscript::make()
+    ->content(Alert::make()
+        ->danger()
+        ->content(Yii::t('skeleton', 'Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to sign up.')));
 
-<?= Container::make()
+echo Container::make()
     ->centered()
     ->content(
         Card::make()
@@ -45,4 +46,4 @@ $this->setTitle(Yii::t('skeleton', 'Sign up'));
                 ->label(Yii::t('skeleton', 'Back to login'))
                 ->url(['login'])
                 ->icon('sign-in-alt'))
-    ); ?>
+    );

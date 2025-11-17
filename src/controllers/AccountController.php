@@ -287,11 +287,11 @@ class AccountController extends Controller
             }
 
             if (!$form->hasErrors()) {
-                $form->newPassword = null;
-                $form->oldPassword = null;
-
                 return $this->refresh();
             }
+
+            $form->newPassword = null;
+            $form->oldPassword = null;
         }
 
         return $this->render('update', [

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\html\traits;
 
+use davidhirtz\yii2\skeleton\helpers\Html;
+
 trait TagIdTrait
 {
-    private static int $counter = 0;
-
     final public function getId(): string
     {
-        return $this->attributes['id'] ??= 'i' . ++static::$counter;
+        return $this->attributes['id'] ??= Html::getId();
     }
 }

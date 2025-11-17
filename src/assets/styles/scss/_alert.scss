@@ -1,3 +1,32 @@
+.flashes {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  top: 4rem;
+  right: 0;
+  width: min(32rem, 100%);
+  gap: .5rem;
+  pointer-events: none;
+  z-index: 1000;
+
+  .alert {
+    transition: opacity .3s ease, translate .3s ease;
+    transition-behavior: allow-discrete;
+    pointer-events: all;
+
+    @starting-style {
+      opacity: 0;
+      translate: 1rem;
+    }
+
+    &.dismissed {
+      opacity: 0;
+      translate: 100%;
+    }
+  }
+}
+
 .alert {
   --link-color: var(--alert-link-color);
   --link-hover-color: var(--alert-link-hover-color);
@@ -40,7 +69,7 @@
   font-weight: $alert-heading-font-weight;
 }
 
-.alert-success {
+[data-alert="success"] {
   --alert-bg: var(--alert-success-bg);
   --alert-border-color: var(--alert-success-border-color);
   --alert-color: var(--alert-success-color);
@@ -48,7 +77,7 @@
   --alert-link-hover-color: var(--alert-success-link-hover-color);
 }
 
-.alert-info {
+[data-alert="info"] {
   --alert-bg: var(--alert-info-bg);
   --alert-border-color: var(--alert-info-border-color);
   --alert-color: var(--alert-info-color);
@@ -56,7 +85,7 @@
   --alert-link-hover-color: var(--alert-info-link-hover-color);
 }
 
-.alert-warning {
+[data-alert="warning"] {
   --alert-bg: var(--alert-warning-bg);
   --alert-border-color: var(--alert-warning-border-color);
   --alert-color: var(--alert-warning-color);
@@ -64,7 +93,8 @@
   --alert-link-hover-color: var(--alert-warning-link-hover-color);
 }
 
-.alert-danger {
+[data-alert="danger"],
+[data-alert="error"] {
   --alert-bg: var(--alert-danger-bg);
   --alert-border-color: var(--alert-danger-border-color);
   --alert-color: var(--alert-danger-color);

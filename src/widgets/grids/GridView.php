@@ -89,7 +89,7 @@ class GridView extends Widget
     {
         $this->attributes['hx-select'] ??= "#{$this->getId()}";
         $this->attributes['hx-target'] ??= $this->attributes['hx-select'];
-        $this->attributes['hx-select-oob'] ??= '#flashes';
+        $this->attributes['hx-select-oob'] ??= '#flashes:beforeend';
 
         $this->headerRowAttributes['hx-boost'] ??= 'true';
         $this->tableBodyAttributes ??= [];

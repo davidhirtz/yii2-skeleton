@@ -15,6 +15,8 @@ use yii\helpers\BaseHtml;
 
 class Html extends BaseHtml
 {
+    private static int $counter = 0;
+
     public static function alert(string $html, string $status): string
     {
         if (!$html) {
@@ -43,6 +45,11 @@ class Html extends BaseHtml
     public static function icon(string $name, array $attributes = []): Icon
     {
         return Icon::make()->name($name)->attributes($attributes);
+    }
+
+    public static function getId(): string
+    {
+        return 'i' . ++self::$counter;
     }
 
     public static function formText(string $content, array $options = []): string

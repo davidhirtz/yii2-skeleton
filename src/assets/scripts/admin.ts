@@ -8,6 +8,7 @@ import tooltip from "./includes/tooltips";
 import {toggleTargetsOnChange, updateTargetsOnChange} from "./includes/forms";
 
 import './components/ActiveForm';
+import './components/FlashAlert';
 
 const csrfToken = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement).getAttribute('content') as string;
 

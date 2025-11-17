@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets;
 
+use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Container;
 use Stringable;
 use Yii;
 
 class Flashes extends Widget
 {
-    public array $alerts;
-    public bool $showStatusIcon = true;
+    protected array $alerts;
 
     protected function renderContent(): string|Stringable
     {
@@ -19,7 +20,8 @@ class Flashes extends Widget
 
         $content = Container::make()
             ->attribute('id', 'flashes')
-            ->addClass('empty-hidden');
+            ->attribute('hx-swap-oob', 'beforeend:#flashes')
+            ->class('flashes empty-hidden');
 
         foreach ($this->alerts as $status => $alerts) {
             $content->addContent($this->getAlerts($status, $alerts));
@@ -32,17 +34,19 @@ class Flashes extends Widget
     {
         return is_array($messages)
             ? array_reduce($messages, fn ($carry, $item) => $carry . $this->getAlerts($status, $item), '')
-            : $this->renderAlert($status, $messages);
+            : Html::tag('flash-alert', $this->renderAlert($status, $messages));
     }
 
     protected function renderAlert(string $status, string $message): string|Stringable
     {
-        $icon = $this->showStatusIcon ? $this->getStatusIcon($status) : null;
-
         return Alert::make()
             ->content($message)
-            ->icon($icon)
-            ->status($status);
+            ->icon($this->getStatusIcon($status))
+            ->status($status)
+            ->button(Button::make()
+                ->class('btn-icon')
+                ->attribute('data-close', '')
+                ->icon('xmark'));
     }
 
     protected function getStatusIcon(string $status): ?string
@@ -51,8 +55,7 @@ class Flashes extends Widget
             'success' => 'check-circle',
             'info' => 'info-circle',
             'warning' => 'exclamation-triangle',
-            'danger' => 'exclamation-circle',
-            'error' => 'exclamation-circle',
+            'danger', 'error' => 'exclamation-circle',
             default => null,
         };
     }
