@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 
+use davidhirtz\yii2\skeleton\modules\admin\config\MainMenuItemConfig;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\widgets\navs\Nav;
 use davidhirtz\yii2\skeleton\widgets\navs\NavItem;
@@ -30,7 +31,7 @@ class MainMenu extends Widget
     {
         return [
             $this->getHomeItem(),
-//            ...$this->getModuleItems(),
+            ...$this->getModuleItems(),
         ];
     }
 
@@ -38,7 +39,16 @@ class MainMenu extends Widget
     {
         /** @var Module $module */
         $module = Yii::$app->getModule('admin');
-        $items = $module->getNavBarItems();
+        $items = [];
+
+        /** @var MainMenuItemConfig $item */
+        foreach($module->getNavBarItems() as $item) {
+            $items[] = NavItem::make()
+                ->label($item->label)
+                ->url($item->url)
+                ->icon($item->icon)
+                ->routes($item->routes);
+        }
 
         return $items;
     }

@@ -115,7 +115,7 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
     }
 
     /**
-     * @return array<string, ConfigInterface<DashboardPanelConfig>>
+     * @return array<string, DashboardPanelConfig>
      */
     public function getDashboardPanels(): array
     {
@@ -123,12 +123,12 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
 
         foreach ($this->getSubmodules() as $module) {
             foreach ($module->getDashboardPanels() as $key => $panel) {
-                Config::merge($panels, $key, $panel);
+                $panels = Config::merge($panels, $key, $panel);
             }
         }
 
         foreach ($this->dashboardPanels as $key => $panel) {
-            Config::merge($panels, $key, $panel);
+            $panels = Config::merge($panels, $key, $panel);
         }
 
         return array_filter($panels);
@@ -203,14 +203,14 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
     {
         $items = $this->getDefaultNavBarItems();
 
-        foreach ($this->getSubmodules() as $module) {
-            foreach ($module->getNavBarItems() as $key => $item) {
-                Config::merge($items, $key, $item);
-            }
-        }
+//        foreach ($this->getSubmodules() as $module) {
+//            foreach ($module->getNavBarItems() as $key => $item) {
+//                $items = Config::merge($items, $key, $item);
+//            }
+//        }
 
         foreach ($this->navBarItems as $key => $item) {
-            Config::merge($items, $key, $item);
+            $items = Config::merge($items, $key, $item);
         }
 
         return array_filter($items);

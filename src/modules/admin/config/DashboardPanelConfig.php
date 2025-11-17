@@ -14,7 +14,8 @@ final class DashboardPanelConfig implements ConfigInterface
         public array $items = [],
         public array $roles = [],
         public array $attributes = [],
-    ) {
+    )
+    {
     }
 
     public function merge(ConfigInterface $config): self
@@ -23,9 +24,13 @@ final class DashboardPanelConfig implements ConfigInterface
             $this->name = $config->name;
         }
 
+        $items = [];
+
         foreach ($config->items as $key => $item) {
-            Config::merge($config->items, $key, $item);
+            $items = Config::merge($config->items, $key, $item);
         }
+
+        $this->items = $items;
 
         $this->roles = array_unique([...$this->roles, ...$config->roles]);
         $this->attributes = [...$this->attributes, ...$config->attributes];

@@ -23,10 +23,6 @@ final class MainMenuItemConfig implements ConfigInterface
 
     public function merge(ConfigInterface $config): self
     {
-        foreach ($config->items as $key => $item) {
-            Config::merge($config->items, $key, $item);
-        }
-
         if ($config->label) {
             $this->label = $config->label;
         }
@@ -42,6 +38,14 @@ final class MainMenuItemConfig implements ConfigInterface
         $this->roles = array_unique([...$this->roles, ...$config->roles]);
         $this->routes = array_unique([...$this->routes, ...$config->routes]);
         $this->attributes = [...$this->attributes, ...$config->attributes];
+
+        $items = [];
+
+        foreach ($config->items as $key => $item) {
+            $items = Config::merge($config->items, $key, $item);
+        }
+
+        $this->items = $items;
 
         return $this;
     }
