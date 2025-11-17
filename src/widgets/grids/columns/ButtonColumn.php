@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\grids\columns;
 
 use Closure;
-use davidhirtz\yii2\skeleton\html\ButtonToolbar;
+use davidhirtz\yii2\skeleton\html\Div;
 use Override;
 use Stringable;
 use yii\base\Model;
@@ -27,7 +27,8 @@ class ButtonColumn extends Column
             }
 
             if (is_array($buttons)) {
-                return ButtonToolbar::make()
+                return Div::make()
+                    ->class('btn-toolbar')
                     ->addContent(...$buttons);
             }
         }
