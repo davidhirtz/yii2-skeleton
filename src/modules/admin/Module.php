@@ -10,6 +10,11 @@ use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
+use davidhirtz\yii2\skeleton\modules\admin\config\Config;
+use davidhirtz\yii2\skeleton\modules\admin\config\ConfigInterface;
+use davidhirtz\yii2\skeleton\modules\admin\config\DashboardItemConfig;
+use davidhirtz\yii2\skeleton\modules\admin\config\DashboardPanelConfig;
+use davidhirtz\yii2\skeleton\modules\admin\config\MainMenuItemConfig;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\DashboardController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\LogController;
@@ -18,8 +23,6 @@ use davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\TrailController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\UserLoginController;
-use davidhirtz\yii2\skeleton\widgets\panels\DashboardItem;
-use davidhirtz\yii2\skeleton\widgets\panels\DashboardPanel;
 use Override;
 use Yii;
 
@@ -46,7 +49,7 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
     public $layout = '@skeleton/modules/admin/views/layouts/main';
 
     private array $dashboardPanels = [];
-    private ?array $_navBarItems = null;
+    private array $navBarItems = [];
 
     #[Override]
     public function init(): void
@@ -111,69 +114,65 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
         return array_map(fn ($class) => ['class' => $class], $classMap);
     }
 
+    /**
+     * @return array<string, ConfigInterface<DashboardPanelConfig>>
+     */
     public function getDashboardPanels(): array
     {
         $panels = $this->getDefaultDashboardPanels();
 
         foreach ($this->getSubmodules() as $module) {
             foreach ($module->getDashboardPanels() as $key => $panel) {
-                $this->mergePanel($panels, $key, $panel);
+                Config::merge($panels, $key, $panel);
             }
         }
 
         foreach ($this->dashboardPanels as $key => $panel) {
-            $this->mergePanel($panels, $key, $panel);
+            Config::merge($panels, $key, $panel);
         }
 
         return array_filter($panels);
     }
 
-    private function mergePanel(array &$panels, string $key, DashboardPanel|null $panel): void
-    {
-        $panels[$key] = null !== $panel && !empty($panels[$key])
-            ? $panels[$key]->merge($panel)
-            : $panel;
-    }
-
     /**
-     * @return array<string, DashboardPanel>
+     * @return array<string, DashboardPanelConfig>
      */
     protected function getDefaultDashboardPanels(): array
     {
         return [
-            'skeleton' => new DashboardPanel(
+            'skeleton' => new DashboardPanelConfig(
                 name: Yii::t('skeleton', 'Administration'),
                 items: [
-                    'user' => new DashboardItem(
+                    'user' => new DashboardItemConfig(
                         label: Yii::t('skeleton', 'Create New User'),
                         url: ['/admin/user/create'],
                         icon: 'user-plus',
                         roles: [User::AUTH_USER_CREATE],
                     ),
-                    'account' => new DashboardItem(
+                    'account' => new DashboardItemConfig(
                         label: Yii::t('skeleton', 'Your Account'),
                         url: ['/admin/account/update'],
                         icon: 'user',
                     ),
-                    'system' => new DashboardItem(
+                    'system' => new DashboardItemConfig(
                         label: Yii::t('skeleton', 'System Settings'),
                         url: ['/admin/system/index'],
                         icon: 'cog',
                         roles: [User::AUTH_ROLE_ADMIN],
                     ),
-                    'trail' => new DashboardItem(
+                    'trail' => new DashboardItemConfig(
                         label: Yii::t('skeleton', 'History'),
                         url: ['/admin/trail/index'],
                         icon: 'history',
                         roles: [Trail::AUTH_TRAIL_INDEX],
                     ),
-                    'redirect' => new DashboardItem(
+                    'redirect' => new DashboardItemConfig(
                         label: Yii::t('skeleton', 'Redirects'),
                         url: ['/admin/redirect/index'],
                         icon: 'forward',
                         roles: [Redirect::AUTH_REDIRECT_CREATE],
                     ),
-                    'homepage' => new DashboardItem(
+                    'homepage' => new DashboardItemConfig(
                         label: Yii::t('skeleton', 'Homepage'),
                         url: '/',
                         icon: 'globe',
@@ -185,7 +184,7 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
     }
 
     /**
-     * @param array<DashboardItem|null> $panels
+     * @param array<DashboardItemConfig|null> $panels
      */
     public function setDashboardPanels(array $panels = []): void
     {
@@ -197,45 +196,53 @@ class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInte
         return Yii::t('skeleton', 'Admin');
     }
 
+    /**
+     * @return array<string, ConfigInterface<MainMenuItemConfig>>
+     */
     public function getNavBarItems(): array
     {
         $items = $this->getDefaultNavBarItems();
 
         foreach ($this->getSubmodules() as $module) {
-            $items = ArrayHelper::merge($items, $module->getNavBarItems());
+            foreach ($module->getNavBarItems() as $key => $item) {
+                Config::merge($items, $key, $item);
+            }
         }
 
-        if ($this->_navBarItems) {
-            $items = ArrayHelper::merge($items, $this->_navBarItems);
+        foreach ($this->navBarItems as $key => $item) {
+            Config::merge($items, $key, $item);
         }
 
-        return $items;
+        return array_filter($items);
     }
 
+    /**
+     * @return array<string, MainMenuItemConfig>
+     */
     protected function getDefaultNavBarItems(): array
     {
         return [
-            'users' => [
-                'label' => Yii::t('skeleton', 'Users'),
-                'icon' => 'users',
-                'url' => ['/admin/user/index'],
-                'active' => [
+            'users' => new MainMenuItemConfig(
+                label: Yii::t('skeleton', 'Users'),
+                url: ['/admin/user/index'],
+                icon: 'users',
+                roles: [
+                    User::AUTH_USER_ASSIGN,
+                    User::AUTH_USER_UPDATE,
+                ],
+                routes: [
                     'admin/auth',
                     'admin/login',
                     'admin/user',
                     'admin/trail/index' => ['user'],
                 ],
-                'roles' => [
-                    User::AUTH_USER_ASSIGN,
-                    User::AUTH_USER_UPDATE,
-                ],
-            ],
+            ),
         ];
     }
 
-    public function setNavBarItems(array $items = []): void
+    public function setNavBarItems(array $items): void
     {
-        $this->_navBarItems = $items;
+        $this->navBarItems = $items;
     }
 
     /**

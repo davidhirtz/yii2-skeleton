@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
+use davidhirtz\yii2\skeleton\modules\admin\config\DashboardPanelConfig;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\web\Controller;
-use davidhirtz\yii2\skeleton\widgets\panels\DashboardPanel;
 use Override;
 use yii\filters\AccessControl;
 use yii\web\Response;
@@ -69,7 +69,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * @return DashboardPanel[
+     * @return DashboardPanelConfig[
      */
     protected function getPanels(): array
     {

@@ -9,13 +9,14 @@ use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\widgets\navs\NavItem;
 use davidhirtz\yii2\skeleton\widgets\navs\Submenu;
 use davidhirtz\yii2\skeleton\widgets\traits\UserWidgetTrait;
+use Override;
 use Yii;
 
 class UserSubmenu extends Submenu
 {
     use UserWidgetTrait;
 
-    #[\Override]
+    #[Override]
     protected function renderContent(): string
     {
         if ($this->user && !$this->user->getIsNewRecord()) {

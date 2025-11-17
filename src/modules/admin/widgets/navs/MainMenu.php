@@ -40,8 +40,6 @@ class MainMenu extends Widget
         $module = Yii::$app->getModule('admin');
         $items = $module->getNavBarItems();
 
-        $this->sortItemsByOrder($items);
-
         return $items;
     }
 
@@ -54,12 +52,5 @@ class MainMenu extends Widget
             ->label(Yii::t('skeleton', 'Home'))
             ->url(['/admin/dashboard/index'])
             ->icon('home');
-    }
-
-    /**
-     * Sorts items by array key `order` and if not set by array key.
-     */
-    protected function sortItemsByOrder(array &$items): void
-    {
     }
 }

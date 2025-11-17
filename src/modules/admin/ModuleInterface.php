@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin;
 
-use davidhirtz\yii2\skeleton\widgets\panels\DashboardPanel;
+use davidhirtz\yii2\skeleton\modules\admin\config\DashboardPanelConfig;
 
 /**
  * @mixin \davidhirtz\yii2\skeleton\base\Module
@@ -12,7 +12,7 @@ use davidhirtz\yii2\skeleton\widgets\panels\DashboardPanel;
 interface ModuleInterface
 {
     /**
-     * @return array<string, DashboardPanel>
+     * @return array<string, DashboardPanelConfig>
      */
     public function getDashboardPanels(): array;
 

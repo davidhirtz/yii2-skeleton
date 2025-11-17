@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\panels;
 
 use davidhirtz\yii2\skeleton\html\Div;
+use davidhirtz\yii2\skeleton\modules\admin\config\DashboardPanelConfig;
 use davidhirtz\yii2\skeleton\widgets\traits\ContainerWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
@@ -14,7 +15,7 @@ class Dashboard extends Widget
     use ContainerWidgetTrait;
 
     /**
-     * @var array<string, DashboardPanel>
+     * @var array<string, DashboardPanelConfig>
      */
     protected array $panels;
 
