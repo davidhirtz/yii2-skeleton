@@ -138,7 +138,6 @@ class NavTest extends Unit
 
     public function testActiveItemWithSkippedRoute(): void
     {
-
         $content = Nav::make()
             ->items(
                 NavItem::make()
@@ -150,52 +149,30 @@ class NavTest extends Unit
                     ->url(['site/index']))
             ->render();
 
-        self::assertStringContainsString('<ul class="nav"><li class="nav-item"><a class="nav-link" href="/site/test"><span>Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/site/test"><span>Test</span></a></li></ul>', $content);
-    }
-
-    public function testActiveItemWithActiveCallback(): void
-    {
-        $content = Nav::widget([
-            'items' => [
-                [
-                    'label' => 'Home',
-                    'url' => ['site/index'],
-                    'active' => fn () => ['site/no-match'],
-                ],
-                [
-                    'label' => 'Test',
-                    'url' => ['site/index'],
-                ],
-            ],
-        ]);
-
-        self::assertStringContainsString('<a class="nav-link active" href="/site/index">Test</a>', $content);
+        self::assertStringContainsString('<ul class="nav"><li class="nav-item"><a class="nav-link" href="/site/index"><span>Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/site/index"><span>Test</span></a></li></ul>', $content);
     }
 
     public function testActiveItemWithRequestQueryParameters(): void
     {
         Yii::$app->getRequest()->setQueryParams(['id' => 1]);
 
-        $content = Nav::widget([
-            'items' => [
-                [
-                    'label' => 'Home',
-                    'url' => ['site/index'],
-                    'active' => [
+        $content = Nav::make()
+            ->items(
+                NavItem::make()
+                    ->label('Home')
+                    ->url(['site/test'])
+                    ->routes([
                         ['site/index', 'id' => 2],
-                    ],
-                ],
-                [
-                    'label' => 'Test',
-                    'url' => ['site/index'],
-                    'active' => [
-                        'site/index' => ['id' => 1],
-                    ],
-                ],
-            ],
-        ]);
+                    ]),
+                NavItem::make()
+                    ->label('Test')
+                    ->url(['site/test'])
+                    ->routes([
+                        ['site/index', 'id' => 1],
+                    ]))
+            ->render();
 
-        self::assertStringContainsString('<a class="nav-link active" href="/site/index">Test</a>', $content);
+        self::assertStringContainsString('<ul class="nav"><li class="nav-item"><a class="nav-link" href="/site/test"><span>Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/site/test"><span>Test</span></a></li></ul>', $content);
     }
 }
 

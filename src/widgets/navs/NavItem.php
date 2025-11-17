@@ -78,11 +78,18 @@ class NavItem extends Widget
                 if (preg_match("~$route~", Yii::$app->controller->route)) {
                     if (is_array($params)) {
                         foreach ($params as $key => $value) {
-                            if ((is_int($key) && !in_array($value, array_keys($request->get()), true))
-                                || (is_string($key) && $request->get($key) !== $value)) {
-                                continue 2;
+                            $isMatching = is_int($key)
+                                ? in_array($value, array_keys($request->get()), true)
+                                : $request->get($key) === $value;
+
+                            if ($isMatching) {
+                                $this->active = true;
+                                break 2;
                             }
                         }
+
+                        $this->active = false;
+                        break;
                     }
 
                     $this->active = !$shouldSkip;

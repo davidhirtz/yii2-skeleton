@@ -48,11 +48,9 @@ class UserLoginGridView extends GridView
         return parent::renderContent();
     }
 
-    /**
-     * @param UserLogin $model
-     */
     protected function getTypeIcon(TypeAttributeInterface $model): string
     {
+        /** @var UserLogin $model */
         return $model->getTypeIcon() ?: "brand:$model->type";
     }
 }

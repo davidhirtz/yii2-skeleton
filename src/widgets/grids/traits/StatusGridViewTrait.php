@@ -26,7 +26,7 @@ trait StatusGridViewTrait
             ->property('status')
             ->header(false)
             ->content($this->getStatusIcon(...))
-            ->href(fn (ActiveRecordInterface $model) => $this->getRoute($model))
+            ->href(fn ($model) => $this->getRoute($model))
             ->centered();
     }
 
