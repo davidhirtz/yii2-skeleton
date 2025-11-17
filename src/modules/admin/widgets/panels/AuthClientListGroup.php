@@ -9,34 +9,30 @@ use davidhirtz\yii2\skeleton\models\forms\LoginForm;
 use davidhirtz\yii2\skeleton\widgets\panels\ListGroup;
 use davidhirtz\yii2\skeleton\widgets\panels\ListGroupItem;
 use davidhirtz\yii2\skeleton\widgets\Widget;
+use Stringable;
 
-/**
- * @todo
- */
 class AuthClientListGroup extends Widget
 {
-    protected ListGroup $list;
-
-    protected function renderContent(): string
+    protected function renderContent(): string|Stringable
     {
-        $this->list = ListGroup::make();
-        $this->setItems();
-
-        return $this->list->render();
+        return ListGroup::make()
+            ->items(...$this->getItems());
     }
 
-    protected function setItems(): void
+    protected function getItems(): array
     {
-        $this->setFacebookLoginLink();
+        return [
+            $this->getFacebookLogin(),
+        ];
     }
 
-    protected function setFacebookLoginLink(): void
+    protected function getFacebookLogin(): ?ListGroupItem
     {
-        if ((new LoginForm())->isFacebookLoginEnabled()) {
-            $this->list->addItem(ListGroupItem::make()
+        return (new LoginForm())->isFacebookLoginEnabled()
+            ? ListGroupItem::make()
                 ->label('Facebook')
                 ->icon('brand:facebook')
-                ->url(Url::toRoute(['/admin/user/auth', 'authclient' => 'facebook'])));
-        }
+                ->url(Url::toRoute(['/admin/user/auth', 'authclient' => 'facebook']))
+            : null;
     }
 }
