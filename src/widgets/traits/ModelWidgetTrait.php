@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\traits;
 
-use yii\db\ActiveRecord;
+use yii\base\Model;
 
 trait ModelWidgetTrait
 {
-    protected ?ActiveRecord $model = null;
+    protected ?Model $model = null;
 
-    public function model(?ActiveRecord $model): static
+    public function model(?Model $model): static
     {
         $this->model = $model;
         return $this;

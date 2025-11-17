@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\navs;
 
-use davidhirtz\yii2\skeleton\html\base\Tag;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Dialog;
 use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Li;
+use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
 use davidhirtz\yii2\skeleton\html\Ul;
+use davidhirtz\yii2\skeleton\widgets\Widget;
 use Override;
 use Stringable;
 
-class Dropdown extends Tag
+class Dropdown extends Widget
 {
+    use TagAttributesTrait;
     use TagContentTrait;
-
-    public array $attributes = ['class' => 'dropdown'];
 
     private Button $button;
     private array $items = [];
@@ -73,15 +73,17 @@ class Dropdown extends Tag
     }
 
     #[Override]
-    protected function renderContent(): string
+    protected function renderContent(): Stringable
     {
-        return implode('', [
-            $this->button,
-            Dialog::make()
-                ->class('dropdown-menu')
-                ->content(...$this->content)
-                ->addContent(Ul::make()
-                    ->content(...$this->items))
-        ]);
+        $dialog = Dialog::make()
+            ->class('dropdown-menu')
+            ->content(...$this->content)
+            ->addContent(Ul::make()
+                ->content(...$this->items));
+
+        return Div::make()
+            ->attributes($this->attributes)
+            ->addClass('dropdown')
+            ->content($this->button, $dialog);
     }
 }

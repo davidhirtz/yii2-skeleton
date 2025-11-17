@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\html;
 
 use davidhirtz\yii2\skeleton\html\traits\TagInputTrait;
+use Override;
 
 class Checkbox extends Input
 {
@@ -15,11 +16,12 @@ class Checkbox extends Input
         return $this->attribute('checked', $checked);
     }
 
-    protected function prepareAttributes(): void
+    #[Override]
+    protected function before(): string
     {
         $this->addClass('form-check-input')
             ->attributes['type'] ??= 'checkbox';
 
-        parent::prepareAttributes();
+        return parent::before();
     }
 }

@@ -12,6 +12,7 @@ use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
 use Yii;
+use yii\db\ActiveRecordInterface;
 
 class ViewGridButton extends Widget
 {
@@ -22,7 +23,7 @@ class ViewGridButton extends Widget
 
     public function renderContent(): Stringable
     {
-        if ($this->model) {
+        if ($this->model instanceof ActiveRecordInterface) {
             $this->url ??= ['update', 'id' => $this->model->getPrimaryKey()];
         }
 

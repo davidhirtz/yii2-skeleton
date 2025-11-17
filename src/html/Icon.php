@@ -35,13 +35,15 @@ class Icon extends Tag
         return $this;
     }
 
-    protected function prepareAttributes(): void
+    protected function before(): string
     {
         $this->addClass(match ($this->collection) {
             self::ICON_COLLECTION_BRAND => "fab fa-$this->name",
             self::ICON_COLLECTION_FLAG => "i18n-icon $this->name",
             default => "fas fa-$this->name",
         });
+
+        return parent::before();
     }
 
     #[Override]

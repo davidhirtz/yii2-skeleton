@@ -8,9 +8,9 @@ use davidhirtz\yii2\skeleton\html\A;
 
 class DropdownLink extends A
 {
-    protected function prepareAttributes(): void
+    protected function before(): string
     {
         $this->addClass('dropdown-link');
-        parent::prepareAttributes();
+        return parent::before();
     }
 }

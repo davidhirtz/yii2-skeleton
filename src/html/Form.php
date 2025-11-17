@@ -14,10 +14,6 @@ class Form extends Tag
 {
     use TagContentTrait;
 
-    public array $attributes = [
-        'method' => 'post',
-    ];
-
     public function action(array|string|null $action): static
     {
         return $this->attribute('action', $action !== null ? Url::to($action) : null);
@@ -28,10 +24,16 @@ class Form extends Tag
         return $this->attribute('method', strtolower($method));
     }
 
+    protected function before(): string
+    {
+        $this->attributes['method'] ??= 'post';
+        return parent::before();
+    }
+
     #[Override]
     protected function renderContent(): string
     {
-        if ('post' === ($this->attributes['method'] ?? null)) {
+        if ('post' === $this->attributes['method']) {
             $this->content[] = TextInput::make()
                 ->type('hidden')
                 ->name(Yii::$app->request->csrfParam)

@@ -27,10 +27,12 @@ class Img extends Tag
     }
 
     #[Override]
-    protected function prepareAttributes(): void
+    protected function before(): string
     {
         $this->attributes['alt'] ??= '';
         $this->attributes['src'] ??= $this->src;
+
+        return parent::before();
     }
 
     #[Override]

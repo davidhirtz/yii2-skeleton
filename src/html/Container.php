@@ -11,13 +11,19 @@ class Container extends Tag
 {
     use TagContentTrait;
 
-    protected function prepareAttributes(): void
-    {
-        $this->addClass('container');
-    }
-
     public function centered(): static
     {
         return $this->addClass('container-centered');
+    }
+
+    protected function before(): string
+    {
+        $this->addClass('container');
+        return parent::before();
+    }
+
+    protected function getTagName(): string
+    {
+        return 'div';
     }
 }

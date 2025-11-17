@@ -6,7 +6,7 @@ namespace davidhirtz\yii2\skeleton\html\base;
 
 use Override;
 
-abstract class VoidTag extends Tag
+abstract class VoidTag extends AbstractTag
 {
     #[Override]
     protected function getTag(): string

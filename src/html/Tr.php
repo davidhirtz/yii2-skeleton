@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\html;
 
 use davidhirtz\yii2\skeleton\html\base\TableCell;
 use davidhirtz\yii2\skeleton\html\base\Tag;
+use Override;
 
 class Tr extends Tag
 {
@@ -29,13 +30,13 @@ class Tr extends Tag
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     protected function renderContent(): string
     {
         return $this->cells ? implode('', $this->cells) : '';
     }
 
-    #[\Override]
+    #[Override]
     protected function getTagName(): string
     {
         return 'tr';

@@ -12,13 +12,14 @@ class Input extends VoidTag
 {
     use TagInputTrait;
 
-    protected function prepareAttributes(): void
+    #[Override]
+    protected function before(): string
     {
         if (!array_key_exists('name', $this->attributes)) {
             $this->getId();
         }
 
-        parent::prepareAttributes();
+        return parent::before();
     }
 
     #[Override]

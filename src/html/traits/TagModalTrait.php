@@ -23,6 +23,6 @@ trait TagModalTrait
             return $this->modal->render();
         }
 
-        return '';
+        return parent::before();
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\grids\columns;
 
 use Closure;
+use davidhirtz\yii2\skeleton\widgets\traits\PropertyWidgetTrait;
 use Override;
 use Stringable;
 use Yii;
@@ -15,19 +16,14 @@ use yii\helpers\Inflector;
 
 class DataColumn extends Column
 {
-    protected ?string $property = null;
+    use PropertyWidgetTrait;
+
     protected ?string $label = null;
     protected string|null|Closure $value = null;
     protected string $format = 'text';
     protected array $sortLinkAttributes = [];
     protected bool $enableSorting = true;
     protected bool $encodeLabel = true;
-
-    public function property(?string $property): static
-    {
-        $this->property = $property;
-        return $this;
-    }
 
     public function label(?string $label): static
     {

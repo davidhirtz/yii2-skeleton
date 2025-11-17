@@ -10,4 +10,9 @@ use davidhirtz\yii2\skeleton\html\traits\TagIconTextTrait;
 class Div extends Tag
 {
     use TagIconTextTrait;
+
+    protected function getTagName(): string
+    {
+        return 'div';
+    }
 }

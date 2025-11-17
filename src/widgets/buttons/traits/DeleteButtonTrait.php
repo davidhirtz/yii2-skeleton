@@ -11,6 +11,7 @@ use davidhirtz\yii2\skeleton\html\traits\TagTitleTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagUrlTrait;
 use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
 use Yii;
+use yii\db\ActiveRecordInterface;
 
 trait DeleteButtonTrait
 {
@@ -22,7 +23,7 @@ trait DeleteButtonTrait
 
     public function setButtonDefault(): void
     {
-        if ($this->model) {
+        if ($this->model instanceof ActiveRecordInterface) {
             $this->url ??= [
                 'delete',
                 ...Yii::$app->getRequest()->getQueryParams(),
