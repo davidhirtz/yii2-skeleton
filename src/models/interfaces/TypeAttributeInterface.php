@@ -6,7 +6,7 @@ namespace davidhirtz\yii2\skeleton\models\interfaces;
 
 interface TypeAttributeInterface
 {
-    public const TYPE_DEFAULT = 1;
+    public const int TYPE_DEFAULT = 1;
 
     public static function getTypes(): array;
 

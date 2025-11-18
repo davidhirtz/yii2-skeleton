@@ -5,18 +5,29 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
 use davidhirtz\yii2\skeleton\helpers\Url;
+use davidhirtz\yii2\skeleton\html\A;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Form;
+use davidhirtz\yii2\skeleton\html\Li;
 use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
 use davidhirtz\yii2\skeleton\html\Ul;
+use davidhirtz\yii2\skeleton\models\interfaces\TrailModelInterface;
+use davidhirtz\yii2\skeleton\models\queries\UserQuery;
+use davidhirtz\yii2\skeleton\models\Trail;
+use davidhirtz\yii2\skeleton\models\User;
+use davidhirtz\yii2\skeleton\widgets\forms\footers\CreatedAtFooterItem;
+use davidhirtz\yii2\skeleton\widgets\forms\footers\FormFooter;
+use davidhirtz\yii2\skeleton\widgets\forms\footers\UpdatedAtFooterItem;
 use davidhirtz\yii2\skeleton\widgets\forms\rows\FormRow;
 use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
+use davidhirtz\yii2\skeleton\widgets\Username;
 use davidhirtz\yii2\skeleton\widgets\Widget;
+use davidhirtz\yii2\timeago\Timeago;
 use Stringable;
 use Yii;
-use yii\base\Model;
+use yii\db\ActiveRecord;
 use yii\db\ActiveRecordInterface;
 
 class ActiveForm extends Widget
@@ -115,12 +126,8 @@ class ActiveForm extends Widget
             return null;
         }
 
-        // todo Defaults...
-        $this->footer ??= [];
-
-        return FormRow::make()
-            ->content(Ul::make()
-                ->class('form-footer')
-                ->content(...$this->footer));
+        return FormFooter::make()
+            ->model($this->model)
+            ->items($this->footer);
     }
 }

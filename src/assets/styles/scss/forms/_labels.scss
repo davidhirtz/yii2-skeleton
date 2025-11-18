@@ -29,6 +29,17 @@
   z-index: 2;
 }
 
+.form-footer {
+  @include list-unstyled();
+  @include font-size($font-size-xs);
+  line-height: $line-height-xs;
+  color: var(--muted-color);
+
+  a:not(:hover) {
+    color: currentColor;
+  }
+}
+
 .form-label {
   @include font-size($form-label-font-size);
   font-style: $form-label-font-style;

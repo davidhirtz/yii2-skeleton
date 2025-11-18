@@ -43,7 +43,6 @@ trait ModelTimestampTrait
             ]);
         }
 
-        // @phpstan-ignore-next-line
         $hasTrailBehavior = $this->model instanceof TrailModelInterface
             && Yii::$app->getUser()->can('trailIndex');
 
