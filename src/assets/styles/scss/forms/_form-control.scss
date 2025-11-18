@@ -18,7 +18,7 @@
   outline: 0;
 
   // Note: This has no effect on <select>s in some browsers, due to the limited stylability of `<select>`s in CSS.
-  border-radius: $input-border-radius, 0;
+  border-radius: $input-border-radius;
   transition: $input-transition;
 
   &[type="color"] {

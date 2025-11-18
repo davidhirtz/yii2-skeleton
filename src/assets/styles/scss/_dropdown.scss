@@ -7,9 +7,19 @@
 }
 
 .dropdown-toggle {
+  background-image: var(--caret-down);
+  background-repeat: no-repeat;
+  background-position: right $btn-padding-x center;
+  background-size: 12px;
+  text-align: left;
+  padding-right: 2rem;
   white-space: nowrap;
-  @include caret();
+
+  .dropup {
+    // todo
+  }
 }
+
 
 .dropdown-menu {
   background-color: var(--dropdown-bg);
@@ -49,12 +59,6 @@
   > li:last-child .dropdown-item {
     border-bottom-right-radius: $dropdown-inner-border-radius;
     border-bottom-left-radius: $dropdown-inner-border-radius;
-  }
-}
-
-.dropup {
-  .dropdown-toggle {
-    @include caret(up);
   }
 }
 

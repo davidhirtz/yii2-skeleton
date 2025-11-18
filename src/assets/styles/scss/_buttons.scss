@@ -32,7 +32,7 @@
   }
 
   &.active, .active > & {
-    background: var(--btn-active-bg, transparent);
+    background-color: var(--btn-active-bg, transparent);
     border-color: var(--btn-active-border-color, transparent);
     color: var(--btn-active-color, inherit);
   }

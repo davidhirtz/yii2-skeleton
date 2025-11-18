@@ -9,12 +9,12 @@
   color: var(--input-color);
   appearance: none;
   background-color: var(--input-bg-color);
-  background-image: var(--select-bg);
+  background-image: var(--input-caret);
   background-repeat: no-repeat;
   background-position: $select-bg-position;
-  background-size: $select-bg-size;
+  background-size: 12px;
   border: $select-border-width solid var(--input-border-color);
-  border-radius: $select-border-radius, 0;
+  border-radius: $select-border-radius;
   transition: $select-transition;
 
   &:not(.is-invalid,:user-invalid,:disabled):hover,
@@ -22,7 +22,7 @@
     --input-bg-color: var(--input-focus-bg-color);
     --input-border-color: var(--input-focus-border-color);
     --input-color: var(--input-focus-color);
-    --select-bg: var(--select-hover-bg);
+    --input-caret: var(--caret-down);
     outline: 0;
   }
 
