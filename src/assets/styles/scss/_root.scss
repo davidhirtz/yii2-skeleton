@@ -231,10 +231,9 @@
   --dropdown-link-hover-color: inherit;
 
   // Form
-  --form-padding-x: #{$form-padding-x};
-  --form-padding-y: #{$form-padding-y};
-  --form-font-size: #{$form-font-size};
-  --form-line-height: #{$form-line-height};
+  --form-padding-x: 1rem;
+  --form-padding-y: 0.5625rem;
+  --form-font-size: .875rem;
   --form-sticky-border-color: var(--color-gray-700);
 
   --form-invalid-bg: var(--color-white);
@@ -334,7 +333,7 @@
   --tooltip-color: var(--color-white);
 
   @include media-breakpoint-down(md) {
-    --form-padding-y: 0.4375rem;
+    --form-padding-y: .4375rem;
     --form-font-size: #{1rem};
     --form-line-height: #{1.4};
   }

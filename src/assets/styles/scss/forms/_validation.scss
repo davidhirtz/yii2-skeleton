@@ -2,12 +2,12 @@
 
 .is-invalid,
 .form-group:has(.is-invalid,:user-invalid), {
-  --input-bg-color: #{$form-invalid-bg};
-  --input-border-color: #{$form-invalid-border-color};
-  --input-color: #{$form-invalid-color};
+  --input-bg-color: var(--form-invalid-bg);
+  --input-border-color: var(--form-invalid-border);
+  --input-color: var(--form-invalid-color);
 }
 
 .invalid-feedback {
   font-size: .875rem;
-  color: $form-invalid-color;
+  color: var(--form-invalid-color);
 }

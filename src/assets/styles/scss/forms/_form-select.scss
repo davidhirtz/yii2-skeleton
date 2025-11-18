@@ -1,21 +1,17 @@
 .form-select {
   display: block;
   width: 100%;
-  padding: $select-padding-y $select-indicator-padding $select-padding-y $select-padding-x;
-  font-family: $select-font-family;
-  font-size: $select-font-size;
-  font-weight: $select-font-weight;
-  line-height: $select-line-height;
+  padding: 0.5625rem 2.5rem 0.5625rem 1rem;
   color: var(--input-color);
   appearance: none;
   background-color: var(--input-bg-color);
   background-image: var(--input-caret);
   background-repeat: no-repeat;
-  background-position: $select-bg-position;
+  background-position: right;
   background-size: 12px;
-  border: $select-border-width solid var(--input-border-color);
-  border-radius: $select-border-radius;
-  transition: $select-transition;
+  border: 1px solid var(--input-border-color);
+  border-radius: .25rem;
+  transition: border-color .15s ease-in-out, color .15s ease-in-out;
 
   &:not(.is-invalid,:user-invalid,:disabled):hover,
   &:not(.is-invalid,:user-invalid):focus {

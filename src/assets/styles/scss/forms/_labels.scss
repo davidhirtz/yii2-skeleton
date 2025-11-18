@@ -2,29 +2,29 @@
 
 .form-group {
   display: grid;
-  gap: $form-group-gap;
+  gap: .5rem;
 
   &:not(:last-child) {
-    margin-bottom: $form-group-spacer;
+    margin-bottom: 1rem;
   }
 }
 
 .form-group-horizontal {
   @include media-breakpoint-up(md) {
-    gap: $form-group-horizontal-gap;
-    grid-template-columns: $form-group-horizontal-template-columns;
+    gap: 1rem;
+    grid-template-columns: 1fr 3fr;
     margin: 0 auto;
-    max-width: $form-group-horizontal-max-width;
+    max-width: 76rem;
     width: 100%;
   }
 }
 
 .form-group-sticky {
-  position: $form-sticky-position;
-  margin-top: $form-group-spacer;
-  padding: $form-group-spacer 0;
+  position: sticky;
+  margin-top: 1rem;
+  padding-inline: 1rem;
   bottom: 0;
-  border-top: $form-sticky-border-width solid var(--form-sticky-border-color);
+  border-top: 1px solid var(--form-sticky-border-color);
   background: var(--card-bg);
   z-index: 2;
 }
@@ -40,11 +40,8 @@
 }
 
 .form-label {
-  font-size: $form-label-font-size;
-  font-style: $form-label-font-style;
-  line-height: $form-label-line-height;
-  font-weight: $form-label-font-weight;
-  color: $form-label-color;
+  font-weight: 500;
+  color: var(--color-black);
 
   .required &:after {
     content: " *";
@@ -58,7 +55,7 @@
     text-align: right;
 
     .form-label {
-      padding: $form-label-padding-y $form-label-padding-x;
+      padding: 0.5625rem 1px;
     }
   }
 }

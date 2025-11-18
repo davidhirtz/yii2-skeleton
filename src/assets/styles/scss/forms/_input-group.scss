@@ -44,18 +44,15 @@
 .input-group-text {
   display: flex;
   align-items: center;
-  padding: $input-group-addon-padding-y $input-group-addon-padding-x;
-  font-size:$input-font-size;
-  font-weight: $input-group-addon-font-weight;
-  line-height: $input-line-height;
+  padding: 0.5625rem 1rem;
+  font-size: .875rem;
   color: var(--input-color);
   text-align: center;
   white-space: nowrap;
   background: var(--input-group-bg);
-  border: $input-border-width solid var(--input-border-color);
-  border-radius: $input-border-radius;
-
-  transition: $input-transition;
+  border: 1px solid var(--input-border-color);
+  border-radius: .25rem;
+  transition: border-color .15s ease-in-out, color .15s ease-in-out;
 }
 
 .input-group-prepend {
@@ -80,7 +77,7 @@
   }
 
   > :not(:first-child):not(.dropdown-menu) {
-    margin-left: calc(#{$input-border-width} * -1); // stylelint-disable-line function-disallowed-list
+    margin-left: -1px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   }

@@ -3,23 +3,18 @@
 .form-control {
   display: block;
   width: 100%;
-  padding: $input-padding-y $input-padding-x;
-  font-family: $input-font-family;
-  font-size: $input-font-size;
-  font-weight: $input-font-weight;
-  line-height: $input-line-height;
+  padding: .5625rem 1rem;
+  font-size: .875rem;
   appearance: none; // Fix appearance for date inputs in Safari
   background-color: var(--input-bg-color);
-  color: $input-color;
+  color: var(--input-color);
   background-clip: padding-box;
-  border: $input-border-width solid $input-border-color;
-  //noinspection CssUnknownProperty
-  //field-sizing: content;
+  border: 1px solid var(--input-border-color);
   outline: 0;
 
-  // Note: This has no effect on <select>s in some browsers, due to the limited stylability of `<select>`s in CSS.
-  border-radius: $input-border-radius;
-  transition: $input-transition;
+  // Note: This has no effect on <select>s in some browsers, due to the limited stability of `<select>`s in CSS.
+  border-radius: .25rem;
+  transition: border-color .15s ease-in-out, color .15s ease-in-out;
 
   &[type="color"] {
     height: 20px;
@@ -80,12 +75,6 @@
     padding: 0;
   }
 
-  // Placeholder
-  &::placeholder {
-    color: $input-placeholder-color;
-    opacity: $input-placeholder-opacity;
-  }
-
   &:disabled {
     color: var(--input-disabled-color);
     background-color: var(--input-disabled-bg-color);
@@ -94,35 +83,25 @@
     opacity: 1;
   }
 
-  &::file-selector-button {
-    padding: $input-padding-y $input-padding-x;
-    //margin: (-$input-padding-y) (-$input-padding-x); // todo
-    margin-inline-end: $input-padding-x;
-    color: var(--input-color);
-    pointer-events: none;
-    border-color: inherit;
-    border-style: solid;
-    border-width: 0;
-    border-inline-end-width: $input-border-width;
-    border-radius: 0; // stylelint-disable-line property-disallowed-list
-    transition: $btn-transition;
-  }
-
   &:hover:not(:disabled):not([readonly])::file-selector-button {
     background-color: var(--input-bg-color);
+  }
+
+  @include media-breakpoint-up(md) {
+      padding-block: .4375rem;
+      font-size: 1rem;
+      line-height: 1.4;
   }
 }
 
 .form-control-plaintext {
   display: block;
   width: 100%;
-  padding: $input-padding-y 0;
+  padding: .5625rem 0;
   margin-bottom: 0; // match inputs if this class comes on inputs with default margins
-  line-height: $input-line-height;
-  color: $input-plaintext-color;
   background-color: transparent;
   border: solid transparent;
-  border-width: $input-border-width 0;
+  border-width: 1px 0;
 
   &:focus {
     outline: 0;

@@ -2,34 +2,32 @@
 
 .form-check {
   display: inline-flex;
-  margin-right: $checkbox-inline-margin-end;
-  gap: $checkbox-gap;
+  margin-right:  1rem;
+  gap: .75rem;
 }
 
 .form-check-input {
   flex-shrink: 0;
-  width: $checkbox-input-width;
+  width: 1.25rem;
   aspect-ratio: 1;
   appearance: none;
   background-size: contain;
-  border: $checkbox-border-width solid var(--input-border-color);
+  border: 1px solid var(--input-border-color);
   print-color-adjust: exact; // Keep themed appearance for print
-  transition: $checkbox-transition;
 
   &[type="checkbox"] {
     background: var(--checkbox-bg);
-    border-radius: $checkbox-input-border-radius;
+    border-radius: .25rem;
   }
 
   &[type="radio"] {
     background: var(--radio-bg);
-    border-radius: $checkbox-radio-border-radius;
+    border-radius: 50%;
   }
 
   &:not(.is-invalid,:user-invalid,:disabled):hover,
   &:not(.is-invalid,:user-invalid):focus {
     border-color: var(--checkbox-input-focus-border, var(--input-focus-border));
-    outline: $checkbox-input-focus-outline;
   }
 
   &:checked {
@@ -47,22 +45,19 @@
   &:disabled {
     pointer-events: none;
     filter: none;
-    opacity: $checkbox-input-disabled-opacity;
+    opacity: .5;
   }
 
   &[disabled],
   &:disabled {
     ~ .form-check-label {
-      opacity: $checkbox-label-disabled-opacity;
+      opacity: .5;
     }
   }
 }
 
 .form-check-label {
-  font-size: $checkbox-label-font-size;
-  line-height: $checkbox-label-line-height;
   color: var(--checkbox-label-color, inherit);
-  cursor: $checkbox-label-cursor;
 }
 
 .d-block-checked {
