@@ -12,15 +12,15 @@ html,
 :host {
   -webkit-tap-highlight-color: transparent;
   -webkit-text-size-adjust: 100%;
-  font-family: $html-font-family;
+  font-family: "Open Sans", sans-serif;
   font-feature-settings: normal;
   font-variation-settings: normal;
-  line-height: $html-line-height;
+  line-height: 1.4;
   tab-size: 4;
 }
 
 html:has(.navbar) {
-  scroll-padding-top: $html-scroll-padding;
+  scroll-padding-top: var(--scroll-padding);
 }
 
 body {
@@ -29,8 +29,8 @@ body {
   min-height: 100svh;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  font-size: $body-font-size;
-  font-weight: $body-font-weight;
+  font-size: .875rem;
+  font-weight: 400;
   color: var(--body-color);
   background: var(--body-bg);
 
@@ -45,9 +45,9 @@ dialog {
 }
 
 hr {
-  margin: $hr-margin-y 0;
-  border-top: $hr-border-width solid var(--border-color);
-  opacity: $hr-opacity;
+  margin-block: 1rem;
+  border-top: 1px solid var(--border-color);
+  opacity: 1;
 }
 
 ol,
@@ -57,7 +57,7 @@ menu {
 }
 
 dt {
-  font-weight: $dt-font-weight;
+  font-weight: 500;
 }
 
 dd {
@@ -67,7 +67,7 @@ dd {
 b,
 strong,
 .strong {
-  font-weight: $font-weight-bold;
+  font-weight: 500;
 }
 
 mark, .mark {
@@ -78,7 +78,7 @@ mark, .mark {
 sub,
 sup {
   position: relative;
-  font-size: $sub-sup-font-size;
+  font-size: .75rem;
   line-height: 0;
   vertical-align: baseline;
 }
@@ -104,7 +104,7 @@ a {
 pre,
 code {
   display: block;
-  font-family: $font-family-code;
+  font-family: "Courier New", monospace;
   font-size: $code-font-size;
   overflow: auto;
 

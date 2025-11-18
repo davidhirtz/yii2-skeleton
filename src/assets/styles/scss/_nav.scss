@@ -13,10 +13,7 @@
   border: 0;
   color: var(--nav-link-color);
   display: flex;
-  font-size: $nav-link-font-size;
-  font-weight: $nav-link-font-weight;
-  height: $nav-link-height;
-  line-height: $nav-link-line-height;
+  height: 3rem;
   min-width: $nav-link-min-width;
   padding: $nav-link-padding;
   text-decoration: none;
@@ -43,7 +40,7 @@
   // Disabled state lightens text
   &.disabled,
   &:disabled {
-    opacity: $nav-link-disabled-opacity;
+    opacity: .5;
     pointer-events: none;
     cursor: default;
   }

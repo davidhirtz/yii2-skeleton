@@ -6,11 +6,11 @@ h3, .h3,
 h4, .h4,
 h5,
 h6 {
-  margin-bottom: $headings-margin-bottom;
+  margin-bottom: .5em;
   font-family: $headings-font-family;
   font-style: $headings-font-style;
-  font-weight: $headings-font-weight;
-  line-height: $headings-line-height;
+  font-weight: 400;
+  line-height: 1.2;
   color: var(--heading-color, inherit);
 }
 
@@ -31,7 +31,7 @@ h4, h5, h6 {
 }
 
 p:not(:last-child) {
-    margin-bottom: $paragraph-margin-bottom;
+    margin-bottom: 1rem;
 }
 
 abbr[title] {
@@ -41,13 +41,13 @@ abbr[title] {
 }
 
 .lead {
-  font-size: $lead-font-size;
-  font-weight: $lead-font-weight;
+  font-size: 1.25rem;
+  font-weight: 300;
 }
 
 .small, .text-xs {
-  font-size: $font-size-xs;
-  line-height: $line-height-xs;
+  font-size: .75rem;
+  line-height: 1.125rem;
 }
 
 

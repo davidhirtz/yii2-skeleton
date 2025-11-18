@@ -114,6 +114,8 @@
 
   --body-bg: var(--color-gray-50);
   --body-color: var(--color-black);
+  --scroll-padding: 4rem;
+
   --border-color: var(--color-gray-200);
 
   --link-color: var(--color-gray-900);
@@ -333,8 +335,8 @@
 
   @include media-breakpoint-down(md) {
     --form-padding-y: #{$form-padding-y-sm};
-    --form-font-size: #{$font-size-base};
-    --form-line-height: #{$line-height-base};
+    --form-font-size: #{1rem};
+    --form-line-height: #{1.4};
   }
 
   @include media-breakpoint-up(lg) {

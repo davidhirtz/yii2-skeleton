@@ -18,7 +18,7 @@
   line-height: $grid-view-line-height;
 
   .alert:not(:last-child) {
-    margin-bottom: $spacer-y;
+    margin-bottom: $spacer;
   }
 }
 
@@ -55,7 +55,7 @@
   position: sticky;
   bottom: 0;
   background: var(--card-bg);
-  padding-bottom: $spacer-y;
+  padding-bottom: $spacer;
   z-index: 100;
 
   &:not(:first-child) {

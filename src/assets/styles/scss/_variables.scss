@@ -1,4 +1,4 @@
-// Setup
+
 $grid-breakpoints: (
         xs: 0,
         sm: 36rem,
@@ -9,85 +9,10 @@ $grid-breakpoints: (
 
 $enable-important-utilities: true !default;
 
-// Typography
-$font-family-sans-serif: "Open Sans", sans-serif !default;
-$font-family-monospace: "Courier New", monospace !default;
-$font-family-base: $font-family-sans-serif !default;
-$font-family-code: $font-family-monospace !default;
-
-$font-size-xs: 0.75rem !default;
-$font-size-sm: .875rem !default;
-$font-size-base: 1rem !default;
-$font-size-lg: 1.125rem !default;
-
-$font-weight-normal: 400 !default;
-$font-weight-medium: 500 !default;
-$font-weight-bold: 700 !default;
-
-$font-weight-base: $font-weight-normal !default;
-
-$line-height-base: 1.5 !default;
-$line-height-xs: 1.125rem !default;
-$line-height-sm: calc(1.25 / .875) !default;
-
-$headings-margin-bottom: .5rem !default;
-$headings-font-family: null !default;
-$headings-font-style: null !default;
-$headings-font-weight: $font-weight-base !default;
-$headings-line-height: 1.2 !default;
-
-$paragraph-margin-bottom: 1rem !default;
-$dt-font-weight: $font-weight-bold !default;
-$lead-font-size: $font-size-base * 1.25 !default;
-$lead-font-weight: 300 !default;
-$sub-sup-font-size: .75em !default;
 
 $spacer: 1rem !default;
 $grid-spacer: .5rem !default;
 
-$container-max-widths: (
-        xl: 100rem
-) !default;
-
-$margin-y: $spacer !default;
-$spacer-y: $spacer !default;
-$spacer-x: $spacer !default;
-
-$border-width: 1px !default;
-$border-radius: 0.25rem !default;
-
-$hr-margin-y: $spacer !default;
-$hr-border-width: $border-width;
-$hr-opacity: 1;
-
-$legend-margin-bottom: .5rem !default;
-$legend-font-size: 1.5rem !default;
-$legend-font-weight: null !default;
-
-// HTML
-$html-font-family: $font-family-sans-serif !default;
-$html-line-height: $line-height-sm !default;
-$html-scroll-padding: 4rem !default;
-
-$body-font-size: $font-size-sm !default;
-$body-font-weight: $font-weight-normal !default;
-
-$main-padding-x: 0 !default;
-$main-padding-y: 1rem !default;
-$main-gap-y: $spacer * 2 !default;
-
-// Alert
-$alert-padding-y: $spacer !default;
-$alert-padding-x: $spacer !default;
-$alert-border-radius: $border-radius !default;
-$alert-link-font-weight: normal !default;
-$alert-link-text-decoration: null !default;
-$alert-border-width: $border-width !default;
-$alert-ul-padding-left: 1rem !default;
-$alert-ul-list-style-type: square !default;
-
-// Nav
-$nav-link-disabled-opacity: .5 !default;
 $nav-link-font-size: null !default;
 $nav-link-font-weight: null !default;
 $nav-link-height: 3rem !default;
@@ -97,7 +22,7 @@ $nav-link-padding: 0 1rem !default;
 $nav-link-transition: color .15s, background-color .15s, border-color .15s !default;
 
 $nav-pills-gap: .5rem !default;
-$nav-pills-border-radius: $border-radius $border-radius 0 0 !default;
+$nav-pills-border-radius: .25rem .25rem 0 0 !default;
 
 // Navbar
 $navbar-expand-breakpoint: md !default;
@@ -113,7 +38,7 @@ $navbar-icon-hex-color: #fff !default;
 $navbar-toggler-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24px' height='24px' viewBox='0 0 30 30'><path stroke='#{$navbar-icon-hex-color}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>") !default;
 
 // Breadcrumbs
-$breadcrumb-border-radius: $border-radius !default;
+$breadcrumb-border-radius: .25rem !default;
 $breadcrumb-divider-color: var(--breadcrumb-divider-color) !default;
 $breadcrumb-divider: quote("/") !default;
 $breadcrumb-font-size: null !default;
@@ -133,30 +58,30 @@ $progress-bg: var(--progress-bg) !default;
 $progress-bar-bg: var(--progress-bar-bg) !default;
 
 // Header
-$header-margin: 0 0 $margin-y * 2 !default;
+$header-margin: 0 0 $spacer * 2 !default;
 $header-text-align: center !default;
 $header-line-height: 1.4 !default;
 
 $submenu-border-bottom-width: 2px !default;
-$submenu-link-margin: 0 0.125rem $spacer-x !default;
+$submenu-link-margin: 0 0.125rem $spacer !default;
 $submenu-margin: 0 !default;
 $submenu-justify-content: center !default;
 
 // Alert
 $alert-heading-font-weight: bold !default;
 $alert-heading-margin-bottom: .5rem !default;
-$alert-gap: $spacer-x !default;
+$alert-gap: $spacer !default;
 $alert-buttons-gap: .5rem !default;
 
 // Card
-$card-border-radius: $border-radius !default;
+$card-border-radius: .25rem !default;
 $card-border-width: 0 !default;
 $card-header-border-bottom-width: 0 !default;
-$card-header-padding-x: $spacer-x !default;
+$card-header-padding-x: $spacer !default;
 $card-header-padding-y: .75rem !default;
-$card-inner-border-radius: $border-radius !default;
-$card-spacer-x: $spacer-x !default;
-$card-spacer-y: $spacer-y !default;
+$card-inner-border-radius: .25rem !default;
+$card-spacer-x: $spacer !default;
+$card-spacer-y: $spacer !default;
 $card-title-font-weight: 500 !default;
 
 // Grid
@@ -165,18 +90,18 @@ $grid-view-line-height: null !default;
 $grid-view-header-border: none !default;
 $grid-view-spacer: $grid-spacer !default;
 $grid-view-footer-margin-top: -1px !default;
-$grid-view-footer-border-width: $border-width !default;
+$grid-view-footer-border-width: 1px !default;
 
 // Forms
 //$form-padding-x: 0.75rem !default;
 $form-padding-x: 1rem !default;
 $form-padding-y: 0.5625rem !default;
 $form-padding-y-sm: 0.4375rem !default;
-$form-font-size: $font-size-sm !default;
-$form-line-height: $line-height-sm !default;
+$form-font-size: .875rem !default;
+$form-line-height: 1.4 !default;
 
 $form-sticky-position: sticky !default;
-$form-sticky-border-width: $border-width !default;
+$form-sticky-border-width: 1px !default;
 
 $form-group-gap: .5rem !default;
 $form-group-spacer: $spacer !default;
@@ -194,21 +119,21 @@ $btn-color: var(--color-black) !default;
 $btn-padding-x: $form-padding-x !default;
 $btn-padding-y: $form-padding-y !default;
 $btn-font-family: null !default;
-$btn-font-size: $font-size-sm !default;
+$btn-font-size: .875rem !default;
 $btn-line-height: null !default;
-$btn-font-weight: $font-weight-medium !default;
+$btn-font-weight: 500 !default;
 $btn-white-space: null !default;
 
 $btn-padding-y-sm: 0.25rem !default;
 $btn-padding-x-sm: 0.375rem !default;
-$btn-font-size-sm: $font-size-xs !default;
-$btn-font-weight-sm: $font-weight-medium !default;
-$btn-line-height-sm: $line-height-xs !default;
+$btn-font-size-sm: .75rem !default;
+$btn-font-weight-sm: 500 !default;
+$btn-line-height-sm: 1.125rem !default;
 
-$btn-border-radius: $border-radius !default;
-$btn-border-radius-sm: $border-radius !default;
+$btn-border-radius: .25rem !default;
+$btn-border-radius-sm: .25rem !default;
 $btn-white-space: nowrap !default;
-$btn-border-width: $border-width !default;
+$btn-border-width: 1px !default;
 $btn-min-width: 2.625rem !default;
 $btn-transition: color .15s, background-color .15s, border-color .15s;
 $btn-disabled-opacity: .5 !default;
@@ -217,12 +142,12 @@ $btn-toolbar-gap: .5rem !default;
 
 // Inputs
 $input-border-color: var(--input-border-color) !default;
-$input-border-radius: $border-radius !default;
-$input-border-width: $border-width !default;
+$input-border-radius: .25rem !default;
+$input-border-width: 1px !default;
 $input-color: var(--input-color) !default;
 $input-font-family: null !default;
 $input-font-size: var(--form-font-size) !default;
-$input-font-weight: $font-weight-base !default;
+$input-font-weight: 400 !default;
 $input-height-inner-half: calc(1.5 / #{$input-font-size}) !default; // todo
 $input-line-height: var(--form-line-height) !default;
 $input-padding-x: var(--form-padding-x) !default;
@@ -255,19 +180,19 @@ $form-label-font-size: null !default;
 $form-label-line-height: null !default;
 $form-label-font-style: null !default;
 $form-label-color: var(--color-black) !default;
-$form-label-font-weight: $font-weight-medium !default;
+$form-label-font-weight: 500 !default;
 $form-label-padding-y: $btn-padding-y !default;
 $form-label-padding-x: 0 !default;
 
 // Checkbox
 $checkbox-label-cursor: null !default;
 $checkbox-label-font-size: null !default;
-$checkbox-label-line-height: $line-height-sm !default;
+$checkbox-label-line-height: 1.4 !default;
 $checkbox-transition: null !default;
 
-$checkbox-input-border-radius: $border-radius !default;
+$checkbox-input-border-radius: .25rem !default;
 $checkbox-input-width: 1.25rem !default;
-$checkbox-border-width: $border-width !default;
+$checkbox-border-width: 1px !default;
 $checkbox-input-height: $checkbox-input-width !default;
 $checkbox-gap: 0.75rem !default;
 
@@ -282,17 +207,17 @@ $checkbox-btn-check-disabled-opacity: .5 !default;
 $checkbox-inline-margin-end: 1rem !default;
 
 // List group
-$list-group-border-radius: $border-radius !default;
-$list-group-border-width: $border-width !default;
+$list-group-border-radius: .25rem !default;
+$list-group-border-width: 1px !default;
 $list-group-font-size: null !default;
-$list-group-font-weight: $font-weight-medium !default;
-$list-group-line-height: $line-height-sm !default;
+$list-group-font-weight: 500 !default;
+$list-group-line-height: 1.4 !default;
 
-$list-group-action-padding-x: $spacer-x !default;
-$list-group-action-padding-y: $spacer-y !default;
+$list-group-action-padding-x: $spacer !default;
+$list-group-action-padding-y: $spacer !default;
 
 // Tables
-$table-border-width: $border-width !default;
+$table-border-width: 1px !default;
 $table-striped-order: odd !default;
 $table-cell-padding-y: 1rem !default;
 $table-cell-padding-x: 1rem !default;
@@ -303,7 +228,7 @@ $table-margin-bottom: 0 !default;
 $table-th-active-font-style: normal !default;
 $table-th-active-text-decoration: underline !default;
 
-$table-border-radius: $border-radius !default;
+$table-border-radius: .25rem !default;
 
 // Pagination
 $pagination-gap: 0.5rem !default;
@@ -311,41 +236,41 @@ $pagination-justify-content: center !default;
 $pagination-margin: $spacer 0 !default;
 $pagination-padding: 0 !default;
 
-$page-link-border-radius: $border-radius !default;
+$page-link-border-radius: .25rem !default;
 $page-link-border-width: 0 !default;
 $page-link-disabled-opacity: .5 !default;
-$page-link-font-size: $font-size-sm !default;
+$page-link-font-size: .875rem !default;
 $page-link-padding-x: 1rem !default;
-$page-link-line-height: $line-height-sm !default;
+$page-link-line-height: 1.4 !default;
 $page-link-padding-y: $btn-padding-y !default;
 $page-link-transition: color .15s, background-color .15s, border-color .15s !default;
 
 // Dropdown
-$dropdown-border-radius: $border-radius !default;
+$dropdown-border-radius: .25rem !default;
 $dropdown-border-width: 0 !default;
 $dropdown-button-active-font-weight: 500 !default;
-$dropdown-divider-border-width: $border-width !default;
+$dropdown-divider-border-width: 1px !default;
 $dropdown-divider-margin-y: 0 !default;
 $dropdown-font-size: null !default;
-$dropdown-inner-border-radius: $border-radius !default;
+$dropdown-inner-border-radius: .25rem !default;
 $dropdown-line-height: null !default;
 $dropdown-max-height: 50vh !default;
 $dropdown-min-width: 12rem !default;
 $dropdown-padding-x: 0 !default;
 $dropdown-padding-y: 0 !default;
 
-$dropdown-header-border-width: $border-width !default;
+$dropdown-header-border-width: 1px !default;
 $dropdown-header-padding-x: 0.75rem !default;
 $dropdown-header-padding-y: 0.625rem !default;
 
-$dropdown-item-default-font-weight: $font-weight-medium !default;
+$dropdown-item-default-font-weight: 500 !default;
 $dropdown-item-padding-x: $dropdown-header-padding-x !default;
 $dropdown-item-padding-y: $dropdown-header-padding-y !default;
 
 // Badge
-$badge-font-size: $font-size-xs !default;
-$bade-line-height: $line-height-xs !default;
-$badge-font-weight: $font-weight-medium !default;
+$badge-font-size: .75rem !default;
+$bade-line-height: 1.125rem !default;
+$badge-font-weight: 500 !default;
 $badge-padding-y: 0.25rem !default;
 $badge-padding-x: 0.5rem !default;
 $badge-border-radius: 0.25rem !default;
@@ -358,10 +283,10 @@ $modal-header-border-width: 0 !default;
 $modal-header-padding-x: $spacer !default;
 $modal-header-padding-y: $spacer !default;
 
-$modal-title-font-weight: $font-weight-bold !default;
-$modal-title-line-height: $line-height-base !default;
+$modal-title-font-weight: 500 !default;
+$modal-title-line-height: 1.4 !default;
 
-$modal-content-border-radius: $border-radius !default;
+$modal-content-border-radius: .25rem !default;
 $modal-content-border-width: 0 !default;
 $modal-content-inner-border-radius: subtract($modal-content-border-radius, $modal-content-border-width) !default;
 
@@ -371,9 +296,9 @@ $modal-footer-gap: .5rem !default;
 // Tooltip
 $tooltip-arrow-height: 0.5rem !default;
 $tooltip-arrow-width: 0.5rem !default;
-$tooltip-border-radius: $border-radius !default;
-$tooltip-font-size: $font-size-xs !default;
-$tooltip-line-height: $line-height-xs !default;
+$tooltip-border-radius: .25rem !default;
+$tooltip-font-size: .75rem !default;
+$tooltip-line-height: 1.125rem !default;
 $tooltip-max-width: 12rem !default;
 $tooltip-padding-x: $spacer * .5 !default;
 $tooltip-padding-y: $spacer * .25 !default;
@@ -398,7 +323,7 @@ $trail-del-bg: #e43c3c !default;
 $trail-ins-bg: #a3cba3 !default;
 $trail-cell-padding: 0.5rem !default;
 
-$code-font-size: $font-size-xs !default;
+$code-font-size: .75rem !default;
 $code-color: var(--color-black) !default;
 
 

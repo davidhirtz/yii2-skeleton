@@ -1,19 +1,19 @@
 .flashes {
-  position: fixed;
+  align-items: flex-end;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  top: 4rem;
-  right: 0;
-  width: min(32rem, 100%);
   gap: .5rem;
   pointer-events: none;
+  position: fixed;
+  right: 0;
+  top: 4rem;
+  width: min(32rem, 100%);
   z-index: 1000;
 
   .alert {
-    transition: opacity .3s ease, translate .3s ease;
-    transition-behavior: allow-discrete;
     pointer-events: all;
+    transition-behavior: allow-discrete;
+    transition: opacity .3s ease, translate .3s ease;
 
     @starting-style {
       opacity: 0;
@@ -32,23 +32,22 @@
   --link-hover-color: var(--alert-link-hover-color);
 
   align-items: flex-start;
-  border-radius: $alert-border-radius;
+  border-radius: .25rem;
   background: var(--alert-bg);
-  border: $alert-border-width solid var(--alert-border-color);
+  border: 1px solid var(--alert-border-color);
   color: var(--alert-color);
   display: flex;
-  gap: $alert-gap;
-  padding: $alert-padding-x $alert-padding-y;
+  gap: 1rem;
+  padding: 1rem 1rem;
   position: relative;
 
   a {
-    font-weight: $alert-link-font-weight;
-    text-decoration: $alert-link-text-decoration;
+    text-decoration: underline
   }
 
   ul {
-    padding-left: $alert-ul-padding-left;
-    list-style-type: $alert-ul-list-style-type;
+    padding-left: 1rem;
+    list-style-type: square;
   }
 
   li {
@@ -60,13 +59,13 @@
 .alert-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: $alert-buttons-gap;
+  gap: .5rem;
   justify-content: flex-end;
 }
 
 .alert-heading {
-  margin-bottom: $alert-heading-margin-bottom;
-  font-weight: $alert-heading-font-weight;
+  margin-bottom: .5rem;
+  font-weight: 700;
 }
 
 [data-alert="success"] {
