@@ -113,7 +113,6 @@ class AuthItemGridView extends GridView
 
 
         return Ul::make()
-            ->class('list-unstyled')
             ->items(...array_filter($items));
     }
 

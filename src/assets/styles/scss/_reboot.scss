@@ -57,15 +57,15 @@ dt {
 
 dd {
   margin-bottom: .5rem;
-  margin-left: 0; // Undo browser default
 }
 
 b,
-strong {
+strong,
+.strong {
   font-weight: $font-weight-bolder;
 }
 
-mark {
+mark, .mark {
   padding: $mark-padding;
   color: var(--highlight-color);
   background-color: var(--highlight-bg);
@@ -169,8 +169,7 @@ address,
 button,
 input,
 select,
-textarea
-{
+textarea {
   font: inherit;
   font-feature-settings: inherit;
   font-variation-settings: inherit;

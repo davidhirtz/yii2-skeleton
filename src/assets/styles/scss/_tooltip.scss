@@ -24,7 +24,7 @@
 }
 
 .tooltip-inner {
-  @include border-radius($tooltip-border-radius);
+  border-radius: $tooltip-border-radius;
   background-color: var(--tooltip-bg);
   color: var(--tooltip-color);
   font-size: $tooltip-font-size;

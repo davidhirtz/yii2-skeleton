@@ -21,7 +21,7 @@
   padding: $nav-link-padding;
   text-decoration: none;
   gap: $icon-gap-x;
-  @include transition($nav-link-transition);
+  transition: $nav-link-transition;
 
   &:hover,
   &:focus {
@@ -38,7 +38,6 @@
 
   &:focus-visible {
     outline: 0;
-    box-shadow: $nav-link-focus-box-shadow;
   }
 
   // Disabled state lightens text
@@ -60,7 +59,7 @@
   gap: $nav-pills-gap;
 
   .nav-link {
-    @include border-radius($nav-pills-border-radius);
+    border-radius: $nav-pills-border-radius;
   }
 }
 

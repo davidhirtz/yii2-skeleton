@@ -3,7 +3,7 @@
   display: inline-flex;
   vertical-align: middle;
 
-  @include border-radius($btn-border-radius);
+  border-radius: $btn-border-radius;
 
   > .btn {
     position: relative;
@@ -26,13 +26,15 @@
   > .btn:not(:last-child):not(.dropdown-toggle),
   > .btn.dropdown-toggle-split:first-child,
   > .btn-group:not(:last-child) > .btn {
-    @include border-end-radius(0);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
   }
 
   > .btn:nth-child(n + 3),
   > :not(.btn-check) + .btn,
   > .btn-group:not(:first-child) > .btn {
-    @include border-start-radius(0);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
 }
 

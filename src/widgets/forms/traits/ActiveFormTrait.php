@@ -390,7 +390,7 @@ trait ActiveFormTrait
     {
         if (!$options) {
             $options = [
-                'class' => 'list-unstyled small text-muted',
+                'class' => 'small text-muted',
                 'encode' => false,
             ];
         }

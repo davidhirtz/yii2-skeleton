@@ -59,7 +59,7 @@
   background: #{escape-svg($navbar-toggler-bg)} no-repeat center;
   border: 0;
   grid-area: toggler;
-  @include border-radius($navbar-toggler-border-radius);
+  border-radius: $navbar-toggler-border-radius;
 
   @include media-breakpoint-up($navbar-expand-breakpoint) {
     display: none;

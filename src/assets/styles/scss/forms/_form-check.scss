@@ -14,23 +14,22 @@
   background-size: contain;
   border: $checkbox-border-width solid var(--input-border-color);
   print-color-adjust: exact; // Keep themed appearance for print
-  @include transition($checkbox-transition);
+  transition: $checkbox-transition;
 
   &[type="checkbox"] {
     background: var(--checkbox-bg);
-    @include border-radius($checkbox-input-border-radius);
+    border-radius: $checkbox-input-border-radius;
   }
 
   &[type="radio"] {
     background: var(--radio-bg);
-    @include border-radius($checkbox-radio-border-radius);
+    border-radius: $checkbox-radio-border-radius;
   }
 
   &:not(.is-invalid,:user-invalid,:disabled):hover,
   &:not(.is-invalid,:user-invalid):focus {
     border-color: var(--checkbox-input-focus-border, var(--input-focus-border));
     outline: $checkbox-input-focus-outline;
-    box-shadow: $checkbox-input-focus-box-shadow;
   }
 
   &:checked {

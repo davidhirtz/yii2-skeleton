@@ -8,7 +8,7 @@
   margin: $breadcrumb-margin;
   overflow-x: auto;
   padding: $breadcrumb-padding-y $breadcrumb-padding-x;
-  @include border-radius($breadcrumb-border-radius);
+  border-radius: $breadcrumb-border-radius;
 }
 
 .breadcrumb-item {

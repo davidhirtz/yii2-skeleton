@@ -6,8 +6,6 @@
   padding: $pagination-padding;
   justify-content: $pagination-justify-content;
   gap: $pagination-gap;
-
-  @include list-unstyled();
 }
 
 .page-link {
@@ -19,7 +17,7 @@
   border: $page-link-border-width solid var(--page-link-border-color);
   border-radius: $page-link-border-radius;
   line-height: $page-link-line-height;
-  @include transition($page-link-transition);
+  transition: $page-link-transition;
 
   &:hover,
   &:focus {

@@ -8,7 +8,7 @@
   outline: 0;
   text-align: left;
   white-space: normal; // Reset the white-space: nowrap; from parent element
-  @include border-radius($modal-content-border-radius);
+  border-radius: $modal-content-border-radius;
 
   &[open] {
     display: flex;
@@ -35,7 +35,8 @@
   gap: $modal-header-padding-x;
   border-bottom: $modal-header-border-width solid var(--modal-header-border-color, var(--modal-border-color));
   background-color: var(--modal-header-bg);
-  @include border-top-radius($modal-content-inner-border-radius);
+  border-top-left-radius: $modal-content-border-radius;
+  border-top-right-radius: $modal-content-border-radius;
 }
 
 .modal-title {
@@ -60,5 +61,6 @@
   background-color: var(--modal-footer-bg, transparent);
   border-top: $modal-footer-border-width solid var(--modal-footer-border-color, var(--modal-border-color));
   gap: $modal-footer-gap;
-  @include border-bottom-radius($modal-content-inner-border-radius);
+  border-bottom-left-radius: $modal-content-border-radius;
+  border-bottom-right-radius: $modal-content-border-radius;
 }

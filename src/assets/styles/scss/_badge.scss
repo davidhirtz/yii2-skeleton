@@ -9,7 +9,7 @@
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-  @include border-radius($badge-border-radius);
+  border-radius: $badge-border-radius;
   background: var(--badge-bg);
   color: var(--badge-color);
   text-decoration: none !important;

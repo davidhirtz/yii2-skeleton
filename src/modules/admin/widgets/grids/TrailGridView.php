@@ -163,7 +163,7 @@ class TrailGridView extends GridView
             return $this->getTrailActiveRecordAttribute($value);
         }
 
-        return is_array($value) ? Html::ul($value, ['class' => 'list-unstyled']) : Html::encode($value);
+        return is_array($value) ? Html::ul($value) : Html::encode($value);
     }
 
     protected function getUpdateAttributesContent(Trail $trail): string

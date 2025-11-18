@@ -7,13 +7,8 @@ $grid-breakpoints: (
         xl: 80rem
 ) !default;
 
-
 $enable-caret: true !default;
 $enable-important-utilities: true !default;
-$enable-reduced-motion: true !default;
-$enable-rounded: true !default;
-$enable-shadows: false !default;
-$enable-transitions: true !default;
 
 // Typography
 $font-family-sans-serif: "Open Sans", sans-serif !default;
@@ -48,7 +43,6 @@ $headings-line-height: 1.2 !default;
 
 $paragraph-margin-bottom: 1rem !default;
 $dt-font-weight: $font-weight-bold !default;
-$list-inline-padding: .5rem !default;
 $lead-font-size: $font-size-base * 1.25 !default;
 $lead-font-weight: 300 !default;
 $sub-sup-font-size: .75em !default;
@@ -119,7 +113,6 @@ $alert-ul-list-style-type: square !default;
 
 // Nav
 $nav-link-disabled-opacity: .5 !default;
-$nav-link-focus-box-shadow: none !default;
 $nav-link-font-size: null !default;
 $nav-link-font-weight: null !default;
 $nav-link-height: 3rem !default;
@@ -250,7 +243,6 @@ $btn-toolbar-gap: .5rem !default;
 $input-border-color: var(--input-border-color) !default;
 $input-border-radius: $border-radius !default;
 $input-border-width: $border-width !default;
-$input-box-shadow: none !default;
 $input-color: var(--input-color) !default;
 $input-font-family: null !default;
 $input-font-size: var(--form-font-size) !default;
@@ -261,7 +253,6 @@ $input-padding-x: var(--form-padding-x) !default;
 $input-padding-y: var(--form-padding-y) !default;
 $input-transition: border-color .15s ease-in-out, color .15s ease-in-out !default;
 
-$input-focus-box-shadow: none !default;
 $input-focus-width: .25rem !default;
 
 $input-placeholder-color: var(--color-black) !default;
@@ -276,7 +267,6 @@ $select-bg-position: right $input-padding-x center !default;
 $select-bg-size: 16px 12px !default;
 $select-border-radius: $input-border-radius !default;
 $select-border-width: $input-border-width !default;
-$select-box-shadow: null !default;
 $select-font-family: $input-font-family !default;
 $select-font-size: $input-font-size !default;
 $select-font-weight: $input-font-weight !default;
@@ -285,8 +275,6 @@ $select-line-height: $input-line-height !default;
 $select-padding-x: $input-padding-x !default;
 $select-padding-y: $input-padding-y !default;
 $select-transition: $input-transition !default;
-
-$select-focus-box-shadow: none !default;
 
 $form-label-font-size: null !default;
 $form-label-line-height: null !default;
@@ -310,7 +298,6 @@ $checkbox-gap: 0.75rem !default;
 
 $checkbox-radio-border-radius: 50% !default;
 
-$checkbox-input-focus-box-shadow: none !default;
 $checkbox-input-focus-outline: 0 !default;
 
 $checkbox-input-disabled-opacity: .5 !default;

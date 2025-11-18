@@ -16,8 +16,8 @@
   border: $btn-border-width solid var(--btn-border, transparent);
   min-width: $btn-min-width;
 
-  @include border-radius($btn-border-radius);
-  @include transition($btn-transition);
+  border-radius: $btn-border-radius;
+  transition: $btn-transition;
 
   &:hover {
     color: var(--btn-hover-color, inherit);
@@ -111,8 +111,8 @@
   background: var(--btn-icon-bg, transparent);
   border: 0;
   color: inherit;
-  @include border-radius($btn-border-radius);
-  @include transition($btn-transition);
+  border-radius: $btn-border-radius;
+  transition: $btn-transition;
   @extend .icon;
 
   &:hover {

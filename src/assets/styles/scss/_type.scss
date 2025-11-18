@@ -50,33 +50,6 @@ abbr[title] {
   line-height: $line-height-xs;
 }
 
-.strong {
-  @extend strong;
-}
-
-.mark {
-  @extend mark;
-}
-
-.list-unstyled {
-  @include list-unstyled();
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-
-.list-inline {
-  @include list-unstyled();
-}
-
-.list-inline-item {
-  display: inline-block;
-
-  &:not(:last-child) {
-    margin-right: $list-inline-padding;
-  }
-}
 
 .icon-text {
   display: inline-flex;

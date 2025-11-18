@@ -3,7 +3,7 @@
   width: 100%;
   padding: $select-padding-y $select-indicator-padding $select-padding-y $select-padding-x;
   font-family: $select-font-family;
-  font-size:$select-font-size;
+  font-size: $select-font-size;
   font-weight: $select-font-weight;
   line-height: $select-line-height;
   color: var(--input-color);
@@ -14,9 +14,8 @@
   background-position: $select-bg-position;
   background-size: $select-bg-size;
   border: $select-border-width solid var(--input-border-color);
-  @include border-radius($select-border-radius, 0);
-  @include box-shadow($select-box-shadow);
-  @include transition($select-transition);
+  border-radius: $select-border-radius, 0;
+  transition: $select-transition;
 
   &:not(.is-invalid,:user-invalid,:disabled):hover,
   &:not(.is-invalid,:user-invalid):focus {
@@ -25,13 +24,6 @@
     --input-color: var(--input-focus-color);
     --select-bg: var(--select-hover-bg);
     outline: 0;
-
-    @if $enable-shadows {
-      @include box-shadow($select-box-shadow, $select-focus-box-shadow);
-    } @else {
-      // Avoid using mixin so we can pass custom focus shadow properly
-      box-shadow: $select-focus-box-shadow;
-    }
   }
 
   &[multiple],

@@ -53,9 +53,9 @@
   white-space: nowrap;
   background: var(--input-group-bg);
   border: $input-border-width solid var(--input-border-color);
-  @include border-radius($input-border-radius);
+  border-radius: $input-border-radius;
 
-  @include transition($input-transition);
+  transition: $input-transition;
 }
 
 .input-group-prepend {
@@ -66,19 +66,22 @@
   &:not(.has-validation) {
     > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu),
     > .dropdown-toggle:nth-last-child(n + 3) {
-      @include border-end-radius(0);
+      border-bottom-right-radius: 0;
+      border-top-right-radius: 0;
     }
   }
 
   &.has-validation {
     > :nth-last-child(n + 3):not(.dropdown-toggle):not(.dropdown-menu),
     > .dropdown-toggle:nth-last-child(n + 4) {
-      @include border-end-radius(0);
+      border-bottom-right-radius: 0;
+      border-top-right-radius: 0;
     }
   }
 
   > :not(:first-child):not(.dropdown-menu) {
     margin-left: calc(#{$input-border-width} * -1); // stylelint-disable-line function-disallowed-list
-    @include border-start-radius(0);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
 }

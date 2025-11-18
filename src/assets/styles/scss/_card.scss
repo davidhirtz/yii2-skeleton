@@ -45,19 +45,19 @@
 @if ($card-inner-border-radius) {
   .card-header, .card-body {
     &:first-child {
-      @include border-radius($card-inner-border-radius $card-inner-border-radius 0 0);
+      border-radius: $card-inner-border-radius $card-inner-border-radius 0 0;
     }
   }
 
   .card-body {
     &:last-child {
-      @include border-radius(0 0 $card-inner-border-radius $card-inner-border-radius);
+      border-radius: 0 0 $card-inner-border-radius $card-inner-border-radius;
     }
   }
 
   .card.collapsed {
     .card-header {
-      @include border-radius($card-inner-border-radius);
+      border-radius: $card-inner-border-radius;
     }
   }
 }

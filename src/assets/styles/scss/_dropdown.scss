@@ -39,18 +39,16 @@
     }
   }
 
-  & > ul {
-    @extend .list-unstyled;
-  }
-
   > .dropdown-item:first-child,
   > li:first-child .dropdown-item {
-    @include border-top-radius($dropdown-inner-border-radius);
+    border-top-left-radius: $dropdown-inner-border-radius;
+    border-top-right-radius: $dropdown-inner-border-radius;
   }
 
   > .dropdown-item:last-child,
   > li:last-child .dropdown-item {
-    @include border-bottom-radius($dropdown-inner-border-radius);
+    border-bottom-right-radius: $dropdown-inner-border-radius;
+    border-bottom-left-radius: $dropdown-inner-border-radius;
   }
 }
 

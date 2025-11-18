@@ -18,10 +18,8 @@
   outline: 0;
 
   // Note: This has no effect on <select>s in some browsers, due to the limited stylability of `<select>`s in CSS.
-  @include border-radius($input-border-radius, 0);
-
-  @include box-shadow($input-box-shadow);
-  @include transition($input-transition);
+  border-radius: $input-border-radius, 0;
+  transition: $input-transition;
 
   &[type="color"] {
     height: 20px;
@@ -52,13 +50,6 @@
     --input-bg-color: var(--input-focus-bg-color);
     --input-border-color: var(--input-focus-border-color);
     --input-color: var(--input-focus-color);
-
-    @if $enable-shadows {
-      @include box-shadow($input-box-shadow, $input-focus-box-shadow);
-    } @else {
-      // Avoid using mixin so we can pass custom focus shadow properly
-      box-shadow: $input-focus-box-shadow;
-    }
   }
 
   &::-webkit-date-and-time-value {
@@ -114,7 +105,7 @@
     border-width: 0;
     border-inline-end-width: $input-border-width;
     border-radius: 0; // stylelint-disable-line property-disallowed-list
-    @include transition($btn-transition);
+    transition: $btn-transition;
   }
 
   &:hover:not(:disabled):not([readonly])::file-selector-button {
