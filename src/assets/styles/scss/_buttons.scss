@@ -1,27 +1,23 @@
 .btn {
-  display: inline-block;
-  padding: $btn-padding-y $btn-padding-x;
-  font-family: $btn-font-family;
-  font-size: $btn-font-size;
-  font-weight: $btn-font-weight;
-  line-height: $btn-line-height;
-  color: var(--btn-color, var(--color-black));
   background: var(--btn-bg, transparent);
-  text-align: center;
-  white-space: $btn-white-space;
-  vertical-align: middle;
+  border-radius: .25rem;
+  border: 1px solid var(--btn-border, transparent);
+  color: var(--btn-color, var(--color-black));
   cursor: pointer;
-  user-select: none;
-  border: $btn-border-width solid var(--btn-border, transparent);
+  display: inline-block;
+  font-size: .875rem;
+  font-weight: 500;
   min-width: 2.5rem;
-
-  border-radius: $btn-border-radius;
-  transition: $btn-transition;
+  padding: 0.5625rem 1rem;
+  text-align: center;
+  transition: color .15s, background-color .15s, border-color .15s;;
+  user-select: none;
+  vertical-align: middle;
 
   &:hover {
-    color: var(--btn-hover-color, inherit);
     background-color: var(--btn-hover-bg);
     border-color: var(--btn-hover-border-color, inherit);
+    color: var(--btn-hover-color, inherit);
   }
 
   .btn-check:focus-visible + & {
@@ -44,7 +40,7 @@
   &.disabled,
   fieldset:disabled & {
     pointer-events: none;
-    opacity: $btn-disabled-opacity;
+    opacity: .5;
   }
 
   &:has(i:only-child) {
@@ -79,6 +75,7 @@
   --btn-hover-color: var(--btn-danger-hover-color);
 }
 
+// Todo
 .btn-link {
   background: transparent !important;
   margin: 0;
@@ -103,12 +100,13 @@
   width: 100%;
 }
 
+// todo
 .btn-icon {
   background: var(--btn-icon-bg, transparent);
   border: 0;
   color: inherit;
-  border-radius: $btn-border-radius;
-  transition: $btn-transition;
+  border-radius: .25rem;
+  transition: color .15s, background-color .15s, border-color .15s;
   @extend .icon;
 
   &:hover {
@@ -130,9 +128,9 @@
 }
 
 .btn-sm {
-  border-radius: $btn-border-radius-sm;
-  font-size: $btn-font-size-sm;
-  font-weight: $btn-font-weight-sm;
-  line-height: $btn-line-height-sm;
-  padding: $btn-padding-y-sm $btn-padding-x-sm;
+  border-radius: .25rem;
+  font-size: .75rem;
+  font-weight: 500;
+  line-height: 1.125rem;
+  padding: 0.25rem 375rem;
 }
