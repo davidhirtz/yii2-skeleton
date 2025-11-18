@@ -13,9 +13,9 @@ trait ContainerWidgetTrait
     use TagAttributesTrait;
     use TagIdTrait;
 
-    public function render(): string
+    public function render(bool $refresh = false): string
     {
-        $html = parent::render();
+        $html = parent::render($refresh);
 
         return $html
             ? Container::make()

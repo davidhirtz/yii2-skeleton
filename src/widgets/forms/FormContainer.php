@@ -28,13 +28,13 @@ class FormContainer extends Widget
 
     protected function renderContent(): string|Stringable
     {
-        $form = (string)$this->form;
+        $content = (string)$this->form;
 
-        return $form
+        return $content
             ? Card::make()
                 ->title($this->title)
                 ->collapsed($this->collapsed)
-                ->content($this->form)
+                ->content($content)
             : '';
     }
 }

@@ -16,6 +16,7 @@ use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
 use Yii;
+use yii\base\Model;
 use yii\db\ActiveRecordInterface;
 
 class ActiveForm extends Widget
@@ -73,12 +74,12 @@ class ActiveForm extends Widget
         return Fieldset::make()
             ->form($this)
             ->model($this->model)
-            ->items(...$this->fields);
+            ->fields(...$this->fields);
     }
 
     protected function getButtons(): ?Stringable
     {
-        if ($this->buttons === false) {
+        if (false === $this->buttons) {
             return null;
         }
 
@@ -110,7 +111,7 @@ class ActiveForm extends Widget
 
     protected function getFooter(): ?Stringable
     {
-        if ($this->footer === false) {
+        if (false === $this->footer) {
             return null;
         }
 

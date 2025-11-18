@@ -15,4 +15,9 @@ trait ModelWidgetTrait
         $this->model = $model;
         return $this;
     }
+
+    public function getModel(): ?Model
+    {
+        return $this->model;
+    }
 }

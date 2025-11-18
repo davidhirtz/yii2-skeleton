@@ -25,7 +25,7 @@ class GridContainer extends Widget
             ? Card::make()
                 ->title($this->title)
                 ->collapsed($this->collapsed)
-                ->content($this->grid)
+                ->content($content)
             : '';
     }
 }

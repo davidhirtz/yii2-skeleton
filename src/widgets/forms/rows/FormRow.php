@@ -20,6 +20,12 @@ class FormRow extends Widget
 
     protected string|Stringable|null $header = null;
 
+    public function header(string|Stringable|null $header): static
+    {
+        $this->header = $header;
+        return $this;
+    }
+
     protected function renderContent(): string|Stringable
     {
         $row = Div::make()

@@ -11,6 +11,7 @@ use davidhirtz\yii2\skeleton\widgets\Alert;
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 use Override;
 use Stringable;
+use Yii;
 use yii\helpers\BaseHtml;
 
 class Html extends BaseHtml
@@ -36,10 +37,21 @@ class Html extends BaseHtml
         return static::alert($html, 'danger');
     }
 
-    public static function div(array|string|Stringable $content = '', array $attributes = []): Div
+    public static function getInputIdByName($name): string
     {
-        $tag = Div::make()->attributes($attributes);
-        return is_array($content) ? $tag->content(...$content) : $tag->content($content);
+        return strtr(
+            mb_strtolower($name, Yii::$app?->charset ?? 'UTF-8'),
+            [
+                '[]' => '',
+                '][' => '-',
+                '[' => '-',
+                ']' => '',
+                ' ' => '-',
+                '.' => '-',
+                '--' => '-',
+                '_' => '-',
+            ]
+        );
     }
 
     public static function icon(string $name, array $attributes = []): Icon

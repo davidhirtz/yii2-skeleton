@@ -98,7 +98,7 @@ class GridView extends Widget
         $this->columns ??= $this->getDefaultColumns();
         $this->columns = array_values(array_filter($this->columns));
 
-        foreach ($this->columns as $i => $column) {
+        foreach ($this->columns as $i => &$column) {
             if (is_string($column)) {
                 $column = DataColumn::make()
                     ->property($column);
@@ -137,8 +137,13 @@ class GridView extends Widget
 
     protected function getToolbars(array $rows, array $attributes = []): ?Stringable
     {
-        $result = is_array(current($rows)) ? array_map($this->getToolbar(...), $rows) : $this->getToolbar($rows);
-        return $result ? Html::div($result, $attributes) : null;
+        $content = is_array(current($rows)) ? array_map($this->getToolbar(...), $rows) : $this->getToolbar($rows);
+
+        return $content
+            ? Div::make()
+                ->attributes($attributes)
+                ->content($content)
+            : null;
     }
 
     protected function getToolbar(array $row): Stringable

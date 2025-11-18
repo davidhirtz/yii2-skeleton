@@ -19,6 +19,8 @@ class Input extends VoidTag
             $this->getId();
         }
 
+        $this->attributes['type'] ??= 'text';
+
         return parent::before();
     }
 

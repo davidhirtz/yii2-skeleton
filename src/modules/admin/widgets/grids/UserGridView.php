@@ -7,6 +7,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\A;
 use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\UserActiveDataProvider;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonColumn;
@@ -76,8 +77,12 @@ class UserGridView extends GridView
     protected function getNameColumnContent(User $user): Stringable
     {
         $name = ($name = $user->getUsername())
-            ? Html::div(Html::markKeywords($name, $this->search->getKeywords()), ['class' => 'strong'])
-            : Html::div(Yii::t('skeleton', 'User'), ['class' => 'text-muted']);
+            ? Div::make()
+                ->content(Html::markKeywords($name, $this->search->getKeywords()))
+                ->class('strong')
+            : Div::make()
+                ->content(Yii::t('skeleton', 'User'))
+                ->class('text-muted');
 
         $route = $this->getRoute($user);
 
