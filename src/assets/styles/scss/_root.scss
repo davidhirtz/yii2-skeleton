@@ -334,7 +334,7 @@
   --tooltip-color: var(--color-white);
 
   @include media-breakpoint-down(md) {
-    --form-padding-y: #{$form-padding-y-sm};
+    --form-padding-y: 0.4375rem;
     --form-font-size: #{1rem};
     --form-line-height: #{1.4};
   }

@@ -1,6 +1,6 @@
 .table {
   width: 100%;
-  vertical-align: $table-cell-vertical-align;
+  vertical-align: top;
   border-color: var(--table-border-color, transparent);
 
   > tbody {
@@ -12,19 +12,18 @@
   }
 
   th, td {
-    padding: $table-cell-padding-y $table-cell-padding-x;
-    // Following the precept of cascades: https://codepen.io/miriamsuzanne/full/vYNgodb
+    padding: 1rem;
     background: var(--table-bg);
-    border-bottom: $table-border-width solid var(--table-td-border-color);
+    border-bottom: 1px solid var(--table-td-border-color);
   }
 
-  th, tr:last-child td{
+  th, tr:last-child td {
     border-bottom-color: var(--table-th-border-color);
   }
 }
 
 .table-striped {
-  > tbody > tr:nth-of-type(#{$table-striped-order}) > * {
+  > tbody > tr:nth-of-type(odd) > * {
     --table-bg: var(--table-striped-bg);
   }
 }
@@ -65,8 +64,7 @@ th > a, th > a:hover {
 
 th > a.asc, th > a.desc {
   position: relative;
-  font-style: $table-th-active-font-style;
-  text-decoration: $table-th-active-text-decoration;
+  text-decoration: underline;
 }
 
 .is-selected .is-selected-hidden, tr:not(.is-selected) .is-selected-block {
@@ -81,25 +79,23 @@ tr.invalid {
   text-decoration: line-through;
 }
 
-@if $table-border-radius {
-  tr:first-child {
-    td:first-child {
-      border-top-left-radius: $table-border-radius;
-    }
-
-    td:last-child {
-      border-top-right-radius: $table-border-radius;
-    }
+tr:first-child {
+  td:first-child {
+    border-top-left-radius: .25rem;
   }
 
-  tr:last-child {
-    td:first-child {
-      border-bottom-left-radius: $table-border-radius;
-    }
+  td:last-child {
+    border-top-right-radius: .25rem;
+  }
+}
 
-    td:last-child {
-      border-bottom-right-radius: $table-border-radius;
-    }
+tr:last-child {
+  td:first-child {
+    border-bottom-left-radius: .25rem-radius;
+  }
+
+  td:last-child {
+    border-bottom-right-radius: .25rem;
   }
 }
 

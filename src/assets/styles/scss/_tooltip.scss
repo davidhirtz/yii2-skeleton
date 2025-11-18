@@ -5,13 +5,13 @@
   position: absolute;
   width: max-content;
   word-wrap: break-word;
-  z-index: $tooltip-z-index;
+  z-index: 1080;
 }
 
 .tooltip-arrow {
   position: absolute;
-  width: $tooltip-arrow-width;
-  height: $tooltip-arrow-height;
+  width: 0.5rem;
+  aspect-ratio: 1 / 1;
   background-color: var(--tooltip-bg);
   transform: rotate(45deg);
 
@@ -24,14 +24,14 @@
 }
 
 .tooltip-inner {
-  border-radius: $tooltip-border-radius;
+  border-radius: .25rem;
   background-color: var(--tooltip-bg);
   color: var(--tooltip-color);
-  font-size: $tooltip-font-size;
+  font-size: 75rem;
   font-weight: normal;
-  line-height: $tooltip-line-height;
-  max-width: $tooltip-max-width;
-  padding: $tooltip-padding-y $tooltip-padding-x;
+  line-height: 1.125rem;
+  max-width: 12rem;
+  padding: .25rem .5rem;
   position: relative;
   text-align: center;
 }
