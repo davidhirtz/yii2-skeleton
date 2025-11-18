@@ -67,11 +67,10 @@ dd {
 b,
 strong,
 .strong {
-  font-weight: $font-weight-bolder;
+  font-weight: $font-weight-bold;
 }
 
 mark, .mark {
-  padding: $mark-padding;
   color: var(--highlight-color);
   background-color: var(--highlight-bg);
 }
@@ -94,11 +93,10 @@ sup {
 
 a {
   color: var(--link-color);
-  text-decoration: $link-decoration;
+  text-decoration: none;
 
   &:hover {
     color: var(--link-hover-color);
-    text-decoration: $link-hover-decoration;
   }
 }
 

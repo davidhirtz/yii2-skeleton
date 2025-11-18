@@ -7,7 +7,6 @@ $grid-breakpoints: (
         xl: 80rem
 ) !default;
 
-$enable-caret: true !default;
 $enable-important-utilities: true !default;
 
 // Typography
@@ -21,13 +20,9 @@ $font-size-sm: .875rem !default;
 $font-size-base: 1rem !default;
 $font-size-lg: 1.125rem !default;
 
-$font-weight-lighter: lighter !default;
-$font-weight-light: 300 !default;
 $font-weight-normal: 400 !default;
 $font-weight-medium: 500 !default;
-$font-weight-semibold: 600 !default;
 $font-weight-bold: 700 !default;
-$font-weight-bolder: bolder !default;
 
 $font-weight-base: $font-weight-normal !default;
 
@@ -47,14 +42,6 @@ $lead-font-size: $font-size-base * 1.25 !default;
 $lead-font-weight: 300 !default;
 $sub-sup-font-size: .75em !default;
 
-// Links
-$link-decoration: none !default;
-$link-hover-decoration: null !default;
-$stretched-link-pseudo-element: after !default;
-$stretched-link-z-index: 1 !default;
-
-$mark-padding: 0 !default;
-
 $spacer: 1rem !default;
 $grid-spacer: .5rem !default;
 
@@ -65,14 +52,6 @@ $container-max-widths: (
 $margin-y: $spacer !default;
 $spacer-y: $spacer !default;
 $spacer-x: $spacer !default;
-
-$container-padding-x: $spacer !default;
-$container-padding-y: 0 !default;
-
-$container-centered-max-width: 28rem !default;
-$container-centered-padding-x: $container-padding-x;
-$container-centered-padding-y: 0 !default;
-$container-centered-gap: $spacer !default;
 
 $border-width: 1px !default;
 $border-radius: 0.25rem !default;

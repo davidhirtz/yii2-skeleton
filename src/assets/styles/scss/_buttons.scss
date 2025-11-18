@@ -8,7 +8,6 @@
   color: var(--btn-color, var(--color-black));
   background: var(--btn-bg, transparent);
   text-align: center;
-  text-decoration: if($link-decoration == none, null, none);
   white-space: $btn-white-space;
   vertical-align: middle;
   cursor: pointer;
@@ -21,7 +20,6 @@
 
   &:hover {
     color: var(--btn-hover-color, inherit);
-    text-decoration: if($link-hover-decoration == underline, none, null);
     background-color: var(--btn-hover-bg);
     border-color: var(--btn-hover-border-color, inherit);
   }
@@ -87,15 +85,9 @@
   padding: 0;
   border: 0 !important;
   min-width: auto;
-  text-decoration: $link-decoration;
   line-height: inherit;
   font-weight: inherit;
   vertical-align: inherit;
-
-  &:hover,
-  &:focus-visible {
-    text-decoration: $link-hover-decoration;
-  }
 
   &:focus-visible {
     color: var(--btn-color);

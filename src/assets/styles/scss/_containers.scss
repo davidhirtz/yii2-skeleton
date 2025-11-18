@@ -1,24 +1,14 @@
-//@import "../../../../node_modules/bootstrap/scss/containers";
-
 .container {
-  margin: 0 auto;
-  padding: $container-padding-y $container-padding-x;
-  width: 100%;
-
-  @each $breakpoint, $container-max-width in $container-max-widths {
-    @include media-breakpoint-up($breakpoint, $grid-breakpoints) {
-      max-width: $container-max-width;
-    }
-  }
-
+  margin-inline: auto;
+  padding-inline: 1rem;
+  width: min(100%, 100rem);
 }
 
 .container-centered {
-  flex-direction: column;
-  justify-content: center;
   display: flex;
+  flex-direction: column;
   flex-grow: 1;
-  gap: $container-centered-gap;
-  max-width: $container-centered-max-width;
-  padding: $container-centered-padding-y $container-centered-padding-x;
+  gap: 1rem;
+  justify-content: center;
+  max-width: 28rem;
 }
