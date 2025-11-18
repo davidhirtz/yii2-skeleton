@@ -1,28 +1,23 @@
 .breadcrumb {
   background-color: var(--breadcrumb-bg);
   display: flex;
-  font-size: $breadcrumb-font-size;
-  gap: $breadcrumb-gap-x;
-  line-height: $breadcrumb-line-height;
+  gap: .5rem;
   list-style: none;
-  margin: $breadcrumb-margin;
   overflow-x: auto;
-  padding: $breadcrumb-padding-y $breadcrumb-padding-x;
-  border-radius: $breadcrumb-border-radius;
 }
 
 .breadcrumb-item {
   display: flex;
-  gap: $breadcrumb-gap-x;
-  max-width: $breadcrumb-item-min-width;
+  gap: .5rem;
+  max-width: 10em;
 
   &:last-child {
-    max-width: $breadcrumb-item-max-width;
+    max-width: 30em;
   }
 
   &:not(:first-child)::before {
-    color: $breadcrumb-divider-color;
-    content: escape-svg($breadcrumb-divider);
+    color: var(--breadcrumb-divider-color);
+    content: "/"
   }
 }
 
