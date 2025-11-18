@@ -39,6 +39,11 @@ body {
   }
 }
 
+dialog {
+  margin: auto;
+  outline: none;
+}
+
 hr {
   margin: $hr-margin-y 0;
   border-top: $hr-border-width solid var(--border-color);

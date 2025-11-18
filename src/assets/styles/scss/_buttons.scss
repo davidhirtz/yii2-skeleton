@@ -14,7 +14,7 @@
   cursor: pointer;
   user-select: none;
   border: $btn-border-width solid var(--btn-border, transparent);
-  min-width: $btn-min-width;
+  min-width: 2.5rem;
 
   border-radius: $btn-border-radius;
   transition: $btn-transition;
@@ -47,6 +47,10 @@
   fieldset:disabled & {
     pointer-events: none;
     opacity: $btn-disabled-opacity;
+  }
+
+  &:has(i:only-child) {
+    padding-inline: 0;
   }
 }
 
