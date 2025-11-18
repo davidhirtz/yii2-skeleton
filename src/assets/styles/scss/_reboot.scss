@@ -105,7 +105,7 @@ pre,
 code {
   display: block;
   font-family: "Courier New", monospace;
-  font-size: $code-font-size;
+  font-size: .75rem;
   overflow: auto;
 
   code {
@@ -115,25 +115,12 @@ code {
 }
 
 code {
-  font-size: $code-font-size;
   color: var(--code-color);
   word-wrap: break-word;
 
-  // Streamline the style when inside anchors to avoid broken underline and more
   a > & {
     color: inherit;
   }
-}
-
-kbd {
-  padding: $kbd-padding-y $kbd-padding-x;
-  font-size: $kbd-font-size;
-  color: $kbd-color;
-  background-color: $kbd-bg;
-}
-
-figure {
-  margin: 0 0 1rem;
 }
 
 img,
@@ -157,14 +144,12 @@ table {
 }
 
 caption {
-  padding-top: $table-cell-padding-y;
-  padding-bottom: $table-cell-padding-y;
+  padding-block: 1rem;
   color: var(--table-caption-color, inherit);
   text-align: left;
 }
 
 th {
-  font-weight: $table-th-font-weight;
   text-align: inherit;
 }
 

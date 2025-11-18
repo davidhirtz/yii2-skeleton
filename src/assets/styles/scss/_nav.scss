@@ -14,11 +14,11 @@
   color: var(--nav-link-color);
   display: flex;
   height: 3rem;
-  min-width: $nav-link-min-width;
-  padding: $nav-link-padding;
+  min-width: 3rem;
+  padding-inline: 1rem;
   text-decoration: none;
-  gap: $icon-gap-x;
-  transition: $nav-link-transition;
+  gap: .5rem;
+  transition: color .15s, background-color .15s, border-color .15s;
 
   &:hover,
   &:focus {
@@ -53,10 +53,10 @@
   --nav-link-hover-bg: var(--nav-pills-link-hover-bg);
   --nav-link-hover-color: var(--nav-pills-link-hover-color);
 
-  gap: $nav-pills-gap;
+  gap: .5rem;
 
   .nav-link {
-    border-radius: $nav-pills-border-radius;
+    border-radius: 25rem .25rem 0 0;
   }
 }
 

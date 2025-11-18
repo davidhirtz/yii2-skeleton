@@ -11,10 +11,9 @@
 
 .navbar-container {
   display: grid;
-  padding: $navbar-padding-y $navbar-padding-x;
   grid-template-areas: "toggler right" "left left";
 
-  @include media-breakpoint-up($navbar-expand-breakpoint) {
+  @include media-breakpoint-up(md) {
     display: flex;
   }
 }
@@ -38,7 +37,7 @@
     display: block;
   }
 
-  @include media-breakpoint-up($navbar-expand-breakpoint) {
+  @include media-breakpoint-up(md) {
     display: flex;
     flex-wrap: nowrap;
     overflow: auto;
@@ -54,14 +53,13 @@
 
 .navbar-toggler {
   align-self: center;
-  width: $navbar-toggler-width;
-  height: $navbar-toggler-height;
+  width: 3rem;
+  aspect-ratio: 1 / 1;
   background: #{escape-svg($navbar-toggler-bg)} no-repeat center;
   border: 0;
   grid-area: toggler;
-  border-radius: $navbar-toggler-border-radius;
 
-  @include media-breakpoint-up($navbar-expand-breakpoint) {
+  @include media-breakpoint-up(md) {
     display: none;
   }
 }
@@ -69,7 +67,7 @@
 .navbar-i18n-dropdown {
   display: none;
 
-  @include media-breakpoint-up($navbar-expand-breakpoint) {
+  @include media-breakpoint-up(md) {
     display: block;
   }
 }

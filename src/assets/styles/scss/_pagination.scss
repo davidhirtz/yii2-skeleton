@@ -2,22 +2,19 @@
 
 .pagination {
   display: flex;
-  margin: $pagination-margin;
-  padding: $pagination-padding;
-  justify-content: $pagination-justify-content;
-  gap: $pagination-gap;
+  margin-block: 1rem;
+  justify-content: center;
+  gap: .5rem;
 }
 
 .page-link {
   display: block;
-  padding: $page-link-padding-y $page-link-padding-x;
+  padding: 0.5625rem 1rem;
   font-size: $page-link-font-size;
   color: var(--page-link-color);
   background: var(--page-link-bg);
-  border: $page-link-border-width solid var(--page-link-border-color);
-  border-radius: $page-link-border-radius;
-  line-height: $page-link-line-height;
-  transition: $page-link-transition;
+  border-radius: .25rem;
+  transition: color .15s, background-color .15s, border-color .15s;
 
   &:hover,
   &:focus {
@@ -36,7 +33,7 @@
 
   &.disabled,
   .disabled > & {
-    opacity: $page-link-disabled-opacity;
+    opacity: .5;
     pointer-events: none;
   }
 }
