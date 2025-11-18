@@ -23,17 +23,13 @@
 
 .dropdown-menu {
   background-color: var(--dropdown-bg);
-  border-radius: $dropdown-border-radius;
-  border: $dropdown-border-width solid var(--dropdown-border-color);
+  border-radius: .25rem;
   color: var(--dropdown-color);
   display: none;
-  font-size: $dropdown-font-size;
-  line-height: $dropdown-line-height;
   margin: 0;
-  max-height: $dropdown-max-height;
-  min-width: $dropdown-min-width;
+  max-height: 50vh;
+  min-width: 12rem;
   overflow-y: auto;
-  padding: $dropdown-padding-y $dropdown-padding-x;
   position: absolute;
   text-align: left; // Ensures proper alignment if parent has it changed (e.g., modal footer)
   z-index: 1000;
@@ -51,39 +47,39 @@
 
   > .dropdown-item:first-child,
   > li:first-child .dropdown-item {
-    border-top-left-radius: $dropdown-inner-border-radius;
-    border-top-right-radius: $dropdown-inner-border-radius;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
   }
 
   > .dropdown-item:last-child,
   > li:last-child .dropdown-item {
-    border-bottom-right-radius: $dropdown-inner-border-radius;
-    border-bottom-left-radius: $dropdown-inner-border-radius;
+    border-bottom-right-radius: .25rem;
+    border-bottom-left-radius: .25rem;
   }
 }
 
 .dropdown-header {
-  padding: $dropdown-header-padding-y $dropdown-header-padding-x;
-  border-bottom: $dropdown-header-border-width solid var(--dropdown-divider-color);
+  padding: .625rem .75rem;
+  border-bottom: 1px solid var(--dropdown-divider-color);
 }
 
 .dropdown-divider {
   height: 0;
-  margin: $dropdown-divider-margin-y 0;
   overflow: hidden;
-  border-top: $dropdown-divider-border-width solid var(--dropdown-divider-color);
+  border-top: 1px solid var(--dropdown-divider-color);
   opacity: 1;
 }
 
 .dropdown-link {
-  display: block;
-  width: 100%; // Buttons...
-  padding: $dropdown-item-padding-y $dropdown-item-padding-x;
-  font-weight: 400;
-  color: var(--dropdown-link-color);
-  text-align: inherit;
   background-color: transparent;
   border: 0;
+  color: var(--dropdown-link-color);
+  display: block;
+  font-weight: 400;
+  padding: .625rem .75rem;
+  text-align: inherit;
+  width: 100%; // Buttons...
+
   @extend .text-truncate;
 
   &:hover,
@@ -96,7 +92,7 @@
   &.active {
     color: var(--dropdown-link-active-color);
     background-color: var(--dropdown-link-active-bg);
-    font-weight: $dropdown-button-active-font-weight;
+    font-weight: 500;
   }
 
   &.disabled,
@@ -108,7 +104,7 @@
 }
 
 .dropdown-default-item {
-  font-weight: $dropdown-item-default-font-weight;
+  font-weight: 500;
 }
 
 .dropdown-toggle {
@@ -125,6 +121,6 @@
   @extend .text-truncate;
 
   .active > & {
-    font-weight: $dropdown-button-active-font-weight;
+    font-weight: 500;
   }
 }
