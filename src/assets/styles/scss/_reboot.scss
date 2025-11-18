@@ -1,13 +1,22 @@
 *,
-*::before,
-*::after {
+::after,
+::before,
+::backdrop {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0 solid;
 }
 
-:root {
-  @media (prefers-reduced-motion: no-preference) {
-    scroll-behavior: smooth;
-  }
+html,
+:host {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  font-family: $html-font-family;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  line-height: $html-line-height;
+  tab-size: 4;
 }
 
 html:has(.navbar) {
@@ -15,20 +24,15 @@ html:has(.navbar) {
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: $body-font-family;
-  font-size:$body-font-size;
-  font-weight: $body-font-weight;
-  line-height: $body-line-height;
-  color: var(--body-color);
-  text-align: $body-text-align;
-  background: var(--body-bg);
-  overflow-y: scroll;
-  -webkit-text-size-adjust: 100%;
-  -webkit-tap-highlight-color: rgba(#000, 0);
-  text-rendering: optimizeLegibility;
+  line-height: inherit;
+  min-width: 20rem;
+  min-height: 100svh;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-size: $body-font-size;
+  font-weight: $body-font-weight;
+  color: var(--body-color);
+  background: var(--body-bg);
 
   &:has(dialog[open]) {
     overflow: hidden;
@@ -37,28 +41,14 @@ body {
 
 hr {
   margin: $hr-margin-y 0;
-  border: 0;
   border-top: $hr-border-width solid var(--border-color);
   opacity: $hr-opacity;
 }
 
 ol,
-ul {
-  padding-left: 2rem;
-}
-
-ol,
 ul,
-dl {
-  margin-top: 0;
-  margin-bottom: 1rem;
-}
-
-ol ol,
-ul ul,
-ol ul,
-ul ol {
-  margin-bottom: 0;
+menu {
+  list-style: none;
 }
 
 dt {
@@ -68,12 +58,6 @@ dt {
 dd {
   margin-bottom: .5rem;
   margin-left: 0; // Undo browser default
-}
-
-
-// Blockquote
-blockquote {
-  margin: 0 0 1rem;
 }
 
 b,
@@ -86,7 +70,6 @@ mark {
   color: var(--highlight-color);
   background-color: var(--highlight-bg);
 }
-
 
 sub,
 sup {
@@ -104,9 +87,6 @@ sup {
   top: -.5em;
 }
 
-
-// Links
-
 a {
   color: var(--link-color);
   text-decoration: $link-decoration;
@@ -117,40 +97,22 @@ a {
   }
 }
 
-a:not([href]):not([class]) {
-  &,
-  &:hover {
-    color: inherit;
-    text-decoration: none;
-  }
-}
-
 
 pre,
-code,
-kbd,
-samp {
-  font-family: $font-family-code;
-  @include font-size(1em);
-}
-
-pre {
+code {
   display: block;
-  margin-top: 0; // 1
-  margin-bottom: 1rem; // 2
-  overflow: auto; // 3
-  @include font-size($code-font-size);
-  color: $pre-color;
+  font-family: $font-family-code;
+  font-size: $code-font-size;
+  overflow: auto;
 
   code {
-    @include font-size(inherit);
     color: inherit;
     word-break: normal;
   }
 }
 
 code {
-  @include font-size($code-font-size);
+  font-size: $code-font-size;
   color: var(--code-color);
   word-wrap: break-word;
 
@@ -165,13 +127,6 @@ kbd {
   @include font-size($kbd-font-size);
   color: $kbd-color;
   background-color: $kbd-bg;
-  @include border-radius($border-radius);
-
-  kbd {
-    padding: 0;
-    @include font-size(1em);
-    font-weight: $nested-kbd-font-weight;
-  }
 }
 
 figure {
@@ -179,9 +134,18 @@ figure {
 }
 
 img,
-svg {
-  max-width: 100%;
+svg,
+video,
+audio,
+iframe {
+  display: block;
   vertical-align: middle;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
 }
 
 table {
@@ -199,41 +163,22 @@ caption {
 th {
   font-weight: $table-th-font-weight;
   text-align: inherit;
-  text-align: -webkit-match-parent;
 }
 
-thead,
-tbody,
-tfoot,
-tr,
-td,
-th {
-  border-color: inherit;
-  border-style: solid;
-  border-width: 0;
-}
-
-label {
-  display: inline-block;
-}
-
-button {
-  border-radius: 0;
-
-  &:focus:not(:focus-visible) {
-    outline: 0;
-  }
-}
-
-input,
+address,
 button,
+input,
 select,
-optgroup,
-textarea {
-  margin: 0;
-  font-family: inherit;
-  @include font-size(inherit);
-  line-height: inherit;
+textarea
+{
+  font: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  border-radius: 0;
+  background-color: transparent;
+  opacity: 1;
 }
 
 button,
@@ -241,18 +186,11 @@ select {
   text-transform: none;
 }
 
-[role="button"] {
-  cursor: pointer;
+::placeholder {
+  opacity: 1;
+  color: color-mix(in oklab, currentColor 50%, transparent);
 }
 
-select {
-  // See https://github.com/twbs/bootstrap/issues/24990
-  word-wrap: normal;
-
-  &:disabled {
-    opacity: 1;
-  }
-}
 
 // See https://stackoverflow.com/a/54997118
 [list]:not([type="date"]):not([type="datetime-local"]):not([type="month"]):not([type="week"]):not([type="time"])::-webkit-calendar-picker-indicator {
@@ -266,52 +204,26 @@ button,
   -webkit-appearance: button;
 }
 
+[role="button"],
 button:not(:disabled) {
   cursor: pointer;
-}
-
-::-moz-focus-inner {
-  padding: 0;
-  border-style: none;
 }
 
 textarea {
   resize: vertical;
 }
 
-fieldset {
-  min-width: 0;
-  padding: 0;
-  margin: 0;
-  border: 0;
-}
-
-legend {
-  float: left;
-  width: 100%;
-  padding: 0;
-  margin-bottom: $legend-margin-bottom;
-  font-weight: $legend-font-weight;
-  line-height: inherit;
-
-  @include font-size($legend-font-size);
-
-  + * {
-    clear: left;
-  }
-}
-
 // See https://github.com/twbs/bootstrap/issues/18842
-::-webkit-datetime-edit-fields-wrapper,
-::-webkit-datetime-edit-text,
-::-webkit-datetime-edit-minute,
-::-webkit-datetime-edit-hour-field,
-::-webkit-datetime-edit-day-field,
-::-webkit-datetime-edit-month-field,
-::-webkit-datetime-edit-year-field,
-::-webkit-color-swatch-wrapper {
-  padding: 0;
-}
+//::-webkit-datetime-edit-fields-wrapper,
+//::-webkit-datetime-edit-text,
+//::-webkit-datetime-edit-minute,
+//::-webkit-datetime-edit-hour-field,
+//::-webkit-datetime-edit-day-field,
+//::-webkit-datetime-edit-month-field,
+//::-webkit-datetime-edit-year-field,
+//::-webkit-color-swatch-wrapper {
+//  padding: 0;
+//}
 
 ::-webkit-inner-spin-button {
   height: auto;
@@ -324,23 +236,6 @@ legend {
 ::file-selector-button {
   font: inherit;
   -webkit-appearance: button;
-}
-
-output {
-  display: inline-block;
-}
-
-iframe {
-  border: 0;
-}
-
-summary {
-  display: list-item;
-  cursor: pointer;
-}
-
-progress {
-  vertical-align: baseline;
 }
 
 [hidden] {

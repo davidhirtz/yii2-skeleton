@@ -95,13 +95,14 @@ $legend-margin-bottom: .5rem !default;
 $legend-font-size: 1.5rem !default;
 $legend-font-weight: null !default;
 
-// Layout
+// HTML
+$html-font-family: $font-family-sans-serif !default;
+$html-line-height: $line-height-sm !default;
 $html-scroll-padding: 4rem !default;
-$body-font-family: $font-family-sans-serif !default;
+
 $body-font-size: $font-size-sm !default;
-$body-line-height: $line-height-sm !default;
 $body-font-weight: $font-weight-normal !default;
-$body-text-align: null !default;
+
 $main-padding-x: 0 !default;
 $main-padding-y: 1rem !default;
 $main-gap-y: $spacer * 2 !default;
@@ -438,6 +439,8 @@ $trail-cell-padding: 0.5rem !default;
 $code-font-size: $font-size-xs !default;
 $code-color: var(--color-black) !default;
 
+
+// Keyboard
 $kbd-padding-y: .1875rem !default;
 $kbd-padding-x: .375rem !default;
 $kbd-font-size: $code-font-size !default;
