@@ -135,10 +135,12 @@ class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttribut
         return [
             static::TYPE_MOVED_PERMANENTLY => [
                 'name' => Yii::t('skeleton', '301 - Moved permanently'),
+                'plural' => Yii::t('skeleton', '301 – Permanent'),
                 'icon' => 'forward',
             ],
             static::TYPE_FOUND => [
                 'name' => Yii::t('skeleton', '302 - Temporary redirect'),
+                'plural' => Yii::t('skeleton', '302 – Temporary'),
                 'icon' => 'clock',
             ],
         ];

@@ -14,6 +14,7 @@ use yii\data\ActiveDataProvider;
  */
 class RedirectActiveDataProvider extends ActiveDataProvider
 {
+    public ?int $type = null;
     public ?User $user = null;
     public ?string $search = null;
 
@@ -22,6 +23,10 @@ class RedirectActiveDataProvider extends ActiveDataProvider
     {
         $this->query = Redirect::find()
             ->indexBy('id');
+
+        if (null !== $this->type) {
+            $this->query->andWhere(['type' => $this->type]);
+        }
 
         if ($search = $this->query->sanitizeSearchString($this->search)) {
             $this->query->andWhere('[[request_uri]] LIKE :search OR [[url]] LIKE :search', [
