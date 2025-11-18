@@ -53,7 +53,7 @@ abbr[title] {
   display: inline-flex;
   align-items: center;
   vertical-align: top; // Fixes 0.5px margin issue in links
-  gap: $icon-gap-x;
+  gap: .5rem;
 }
 
 .text-muted {
@@ -68,10 +68,6 @@ abbr[title] {
   text-decoration: line-through;
 }
 
-// Deprecated, use .text-end instead
-.text-right {
-  text-align: right;
-}
 
 .text-truncate {
   overflow: hidden;
