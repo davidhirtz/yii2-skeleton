@@ -1,56 +1,7 @@
-.btn-group {
-  position: relative;
-  display: inline-flex;
-  vertical-align: middle;
-
-  border-radius: $btn-border-radius;
-
-  > .btn {
-    position: relative;
-    flex: 1 1 auto;
-  }
-
-  > .btn-check:checked + .btn,
-  > .btn-check:focus + .btn,
-  > .btn:hover,
-  > .btn:focus,
-  > .btn:active, {
-    z-index: 1;
-  }
-
-  > :not(.btn-check:first-child) + .btn,
-  > .btn-group:not(:first-child) {
-    margin-left: calc(#{$btn-border-width} * -1); // stylelint-disable-line function-disallowed-list
-  }
-
-  > .btn:not(:last-child):not(.dropdown-toggle),
-  > .btn.dropdown-toggle-split:first-child,
-  > .btn-group:not(:last-child) > .btn {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-
-  > .btn:nth-child(n + 3),
-  > :not(.btn-check) + .btn,
-  > .btn-group:not(:first-child) > .btn {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-}
-
 .btn-toolbar {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
-  gap: $btn-toolbar-gap;
-
-  &:not(:first-child) {
-    margin-top: $btn-toolbar-gap;
-  }
-
-  .input-group {
-    width: auto;
-  }
+  gap: .5rem;
 
   .text-end & {
     justify-content: flex-end;
