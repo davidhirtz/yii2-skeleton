@@ -6,7 +6,6 @@ h3, .h3,
 h4, .h4,
 h5,
 h6 {
-  margin-top: 0;
   margin-bottom: $headings-margin-bottom;
   font-family: $headings-font-family;
   font-style: $headings-font-style;
@@ -31,12 +30,8 @@ h4, h5, h6 {
   font-size: var(--text-h4);
 }
 
-p {
-  margin: 0;
-
-  &:not(:last-child) {
+p:not(:last-child) {
     margin-bottom: $paragraph-margin-bottom;
-  }
 }
 
 abbr[title] {
@@ -46,12 +41,12 @@ abbr[title] {
 }
 
 .lead {
-  @include font-size($lead-font-size);
+  font-size: $lead-font-size;
   font-weight: $lead-font-weight;
 }
 
 .small, .text-xs {
-  @include font-size($font-size-xs);
+  font-size: $font-size-xs;
   line-height: $line-height-xs;
 }
 

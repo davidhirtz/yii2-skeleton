@@ -74,7 +74,7 @@ mark {
 sub,
 sup {
   position: relative;
-  @include font-size($sub-sup-font-size);
+  font-size: $sub-sup-font-size;
   line-height: 0;
   vertical-align: baseline;
 }
@@ -124,7 +124,7 @@ code {
 
 kbd {
   padding: $kbd-padding-y $kbd-padding-x;
-  @include font-size($kbd-font-size);
+  font-size: $kbd-font-size;
   color: $kbd-color;
   background-color: $kbd-bg;
 }
