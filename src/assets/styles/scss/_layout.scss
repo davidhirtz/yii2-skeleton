@@ -10,13 +10,11 @@
 }
 
 .page-header {
-  margin: $header-margin;
-  text-align: $header-text-align;
-  line-height: $header-line-height;
+  margin: 0 0 2rem;
+  text-align: center;
 }
 
 .submenu {
-  border-bottom: $submenu-border-bottom-width solid var(--submenu-border-color);
-  margin: $submenu-margin;
-  justify-content: $submenu-justify-content;
+  border-bottom: 2px solid var(--submenu-border-color);
+  justify-content: center;
 }

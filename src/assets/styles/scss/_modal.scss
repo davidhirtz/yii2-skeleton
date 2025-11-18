@@ -4,11 +4,10 @@
   border: 0;
   color: var(--modal-color, inherit);
   background-color: var(--modal-bg);
-  border: $modal-content-border-width solid var(--modal-border-color);
   outline: 0;
   text-align: left;
   white-space: normal; // Reset the white-space: nowrap; from parent element
-  border-radius: $modal-content-border-radius;
+  border-radius: .25rem;
 
   &[open] {
     display: flex;
@@ -31,24 +30,22 @@
   display: flex;
   flex-shrink: 0;
   justify-content: space-between;
-  padding: $modal-header-padding-y $modal-header-padding-x;
-  gap: $modal-header-padding-x;
-  border-bottom: $modal-header-border-width solid var(--modal-header-border-color, var(--modal-border-color));
+  padding: 1rem;
+  gap: 1rem;
   background-color: var(--modal-header-bg);
-  border-top-left-radius: $modal-content-border-radius;
-  border-top-right-radius: $modal-content-border-radius;
+  border-top-left-radius: .25rem;
+  border-top-right-radius: .25rem;
 }
 
 .modal-title {
   margin-bottom: 0;
-  line-height: $modal-title-line-height;
-  font-weight: $modal-title-font-weight;
+  font-weight: 500;
 }
 
 .modal-body {
   position: relative;
   flex: 1 1 auto;
-  padding: $modal-header-padding-y $modal-header-padding-x;
+  padding: 1rem;
   overflow-y: auto;
 }
 
@@ -57,10 +54,9 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: flex-end;
-  padding: $modal-header-padding-y $modal-header-padding-x;
+  padding: 1rem;
   background-color: var(--modal-footer-bg, transparent);
-  border-top: $modal-footer-border-width solid var(--modal-footer-border-color, var(--modal-border-color));
-  gap: $modal-footer-gap;
-  border-bottom-left-radius: $modal-content-border-radius;
-  border-bottom-right-radius: $modal-content-border-radius;
+  gap: .5rem;
+  border-bottom-left-radius: .25rem;
+  border-bottom-right-radius: .25rem;
 }
