@@ -295,7 +295,7 @@ trait ActiveFormTrait
             $buttonRow = $this->buttonRow($buttons);
 
             echo $this->hasStickyButtons
-                ? Html::tag('div', $buttonRow, ['class' => 'form-group-sticky'])
+                ? Html::tag('div', $buttonRow, ['class' => 'form-buttons'])
                 : $buttonRow;
         }
     }
@@ -333,7 +333,7 @@ trait ActiveFormTrait
         Html::addCssClass($options, $this->fieldConfig['horizontalCssClasses']['label']);
 
         return Html::tag('div', Html::tag($tag, $content, $options), [
-            'class' => 'col-form-label',
+            'class' => 'form-label',
         ]);
     }
 

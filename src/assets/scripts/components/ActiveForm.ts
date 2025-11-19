@@ -22,8 +22,8 @@ window.customElements.get('active-form') || window.customElements.define('active
                         $el = $hr.nextElementSibling;
                         visible = false;
 
-                        while ($el && !$el.classList.contains('form-group-sticky')) {
-                            if ($el.classList.contains('form-group') && $el.checkVisibility()) {
+                        while ($el && !$el.classList.contains('form-buttons')) {
+                            if ($el.classList.contains('form-row') && $el.checkVisibility()) {
                                 visible = true;
                                 break;
                             }

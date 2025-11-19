@@ -16,7 +16,7 @@ trait ContentFieldTrait
             $isHtml = $this->model->contentType === 'html';
 
             if ($isHtml) {
-                $options['labelOptions']['class'] ??= 'col-form-label col-form-content-label';
+                $options['labelOptions']['class'] ??= 'form-label form-content-label';
             }
 
             $field = $this->field($this->model, 'content', $options);

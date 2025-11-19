@@ -60,6 +60,7 @@ class ActiveForm extends Widget
 
         return Form::make()
             ->attributes($this->attributes)
+            ->addClass('form')
             ->action($this->action)
             ->content($this->getContent());
     }
@@ -105,7 +106,7 @@ class ActiveForm extends Widget
 
         return $this->hasStickyButtons
             ? Div::make()
-                ->class('form-group-sticky')
+                ->class('form-buttons')
                 ->content($row)
             : $row;
     }

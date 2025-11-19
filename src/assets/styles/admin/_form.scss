@@ -1,5 +1,73 @@
+.form,
+.fieldset{
+  display: grid;
+  gap: 1rem;
+}
+
+.form-row {
+  display: grid;
+  gap: .5rem;
+
+  @include media-breakpoint-up(sm) {
+    gap: 1rem;
+    grid-template-columns: 1fr 3fr;
+    margin: 0 auto;
+    max-width: 76rem;
+    width: 100%;
+  }
+}
+
+.form-label {
+  @include media-breakpoint-up(md) {
+    padding: 1px 0;
+    align-self: flex-start;
+    text-align: right;
+  }
+}
+
+.form-content {
+  @include media-breakpoint-up(md) {
+    grid-column-start: 2;
+  }
+}
+
+.form-buttons {
+  position: sticky;
+  padding: 1rem 1em 0;
+  bottom: 0;
+  border-top: 1px solid var(--form-footer-border-color);
+  background: var(--card-bg);
+  z-index: 2;
+}
+
+.form-footer {
+  font-size: .75rem;
+  line-height: 1.125rem;
+  color: var(--muted-color);
+
+  a:not(:hover) {
+    color: currentColor;
+  }
+}
+
+.label {
+  color: var(--color-label);
+  display: inline-block;
+  font-weight: 700;
+
+  .form-label & {
+    border: 1px transparent;
+    padding: 0.5rem 0;
+  }
+
+  .required &:after {
+    content: " *";
+  }
+}
+
 .is-invalid,
 .form-group:has(.is-invalid,:user-invalid), {
+  --color-label: var(--form-invalid-color);
   --input-bg-color: var(--form-invalid-bg);
   --input-border-color: var(--form-invalid-border);
   --input-color: var(--form-invalid-color);

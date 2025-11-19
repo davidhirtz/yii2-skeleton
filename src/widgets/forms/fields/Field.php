@@ -42,7 +42,7 @@ class Field extends Widget
         return $this->label
             ? Label::make()
                 ->attributes($this->labelAttributes)
-                ->addClass('form-label')
+                ->addClass('label')
                 ->for($this->getId())
                 ->text($this->label)
             : null;

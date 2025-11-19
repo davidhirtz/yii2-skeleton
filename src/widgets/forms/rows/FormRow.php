@@ -15,8 +15,8 @@ class FormRow extends Widget
     use TagAttributesTrait;
     use TagContentTrait;
 
-    public array $headerAttributes = ['class' => 'col-form-label'];
-    public array $contentAttributes = ['class' => 'col-form-content'];
+    public array $headerAttributes = ['class' => 'form-label'];
+    public array $contentAttributes = ['class' => 'form-content'];
 
     protected string|Stringable|null $header = null;
 
@@ -30,7 +30,7 @@ class FormRow extends Widget
     {
         $row = Div::make()
             ->attributes($this->attributes)
-            ->addClass('form-group form-group-horizontal');
+            ->addClass('form-group form-row');
 
         if ($this->header) {
             $row->content(Div::make()

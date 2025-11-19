@@ -46,6 +46,7 @@ class Fieldset extends Widget
 
         return \davidhirtz\yii2\skeleton\html\Fieldset::make()
             ->attributes($this->attributes)
+            ->addClass('fieldset')
             ->content(...$this->fields);
     }
 }

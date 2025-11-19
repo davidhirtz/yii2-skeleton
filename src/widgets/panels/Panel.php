@@ -18,8 +18,8 @@ class Panel extends Widget
     use GridTrait;
     use TagCardTrait;
 
-    public array $panelAttributes = ['class' => 'form-group form-group-horizontal'];
-    public array $contentOptions = ['class' => 'col-form-content'];
+    public array $panelAttributes = ['class' => 'form-group form-row'];
+    public array $contentOptions = ['class' => 'form-content'];
 
     protected array $buttons = [];
 

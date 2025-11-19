@@ -48,7 +48,7 @@ class ActiveField extends \davidhirtz\yii2\skeleton\widgets\forms\ActiveField
             }
         }
 
-        $this->template = '<div class="col-form-label">{label}</div>{beginWrapper}{input}{error}{hint}{endWrapper}';
+        $this->template = '<div class="form-label">{label}</div>{beginWrapper}{input}{error}{hint}{endWrapper}';
         $this->checkHorizontalTemplate = $this->checkTemplate;
 
         parent::init();

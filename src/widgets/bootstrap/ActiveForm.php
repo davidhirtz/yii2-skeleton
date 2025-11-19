@@ -14,10 +14,10 @@ class ActiveForm extends \yii\widgets\ActiveForm
     public $fieldClass = ActiveField::class;
     public $fieldConfig = [
         'horizontalCssClasses' => [
-            'wrapper' => 'col-form-content',
-            'field' => 'form-group form-group-horizontal',
-            'label' => 'form-label',
-            'offset' => 'col-form-content',
+            'wrapper' => 'form-content',
+            'field' => 'form-row',
+            'label' => 'label',
+            'offset' => 'form-content',
         ],
     ];
     public string $layout = 'horizontal';
