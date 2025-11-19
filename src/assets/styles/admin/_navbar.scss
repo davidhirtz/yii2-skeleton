@@ -78,9 +78,8 @@
 
 //noinspection ALL
 .i18n-icon {
-  display: inline-block;
-  width: 18px;
-  height: 18px;
+  width: 1lh;
+  aspect-ratio: 1;
   background: no-repeat;
   background-size: contain;
   vertical-align: middle;
@@ -110,6 +109,9 @@
   }
 }
 
-.i18n-label {
-  margin-left: .5em;
+.i18n-dropdown-link {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  padding: 0.8125rem 1rem;
 }

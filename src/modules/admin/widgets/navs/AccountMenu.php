@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 
 use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\web\User;
 use davidhirtz\yii2\skeleton\widgets\navs\Dropdown;
@@ -76,8 +77,13 @@ class AccountMenu extends Widget
             $label = $i18n->getLabel($language);
 
             $link = DropdownLink::make()
-                ->text($label)
-                ->icon("flag:$language");
+                ->addClass('i18n-dropdown-link')
+                ->content(
+                    Icon::make()
+                        ->collection(Icon::ICON_COLLECTION_FLAG)
+                        ->name($language),
+                    Div::make()
+                        ->addText($label));
 
             if ($this->languageRoute) {
                 $link->href([
