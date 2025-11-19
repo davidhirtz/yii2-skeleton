@@ -30,7 +30,7 @@ export const toggleTargetsOnChange = ($input: HTMLSelectElement | HTMLInputEleme
             : '0';
 
         if ($currentTargets) {
-            $currentTargets.forEach(($el: HTMLElement) => $el.classList.remove('d-none'));
+            $currentTargets.forEach(($el: HTMLElement) => $el.classList.remove('hidden'));
         }
 
         $currentTargets = new Set();
@@ -40,7 +40,7 @@ export const toggleTargetsOnChange = ($input: HTMLSelectElement | HTMLInputEleme
                 if (String(value) === selected) {
                     $allTargets[key].forEach($target => {
                         $currentTargets.add($target);
-                        $target.classList.add('d-none');
+                        $target.classList.add('hidden');
                     });
                 }
             });

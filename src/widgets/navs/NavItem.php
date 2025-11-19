@@ -30,7 +30,7 @@ class NavItem extends Widget
 
     public array $linkAttributes = [];
     public array $labelAttributes = [];
-    public array $badgeAttributes = ['class' => 'badge d-none d-lg-block'];
+    public array $badgeAttributes = ['class' => 'badge hidden d-lg-block'];
 
     protected bool|null $active = null;
     protected int|string|null $badge = null;

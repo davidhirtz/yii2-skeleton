@@ -9,33 +9,36 @@
 @import "admin/transition";
 
 @import "admin/type";
-
 @import "admin/image";
-@import "admin/container";
-@import "admin/grid";
 
-@import "admin/card";
-@import "admin/tables";
-@import "admin/labels";
-@import "admin/input";
-@import "admin/select";
-@import "admin/validation";
-@import "admin/buttons";
-@import "admin/dropdown";
 @import "admin/nav";
 @import "admin/navbar";
 
-@import "admin/breadcrumb";
-@import "admin/pagination";
-@import "admin/progress";
-@import "admin/badge";
-@import "admin/alert";
-@import "admin/stack";
-@import "admin/modal";
-@import "admin/sortable";
-@import "admin/tooltip";
+@import "admin/container";
 
 @import "admin/layout";
+@import "admin/breadcrumb";
+
+@import "admin/card";
+
+@import "admin/grid";
+@import "admin/tables";
+
+@import "admin/form";
+@import "admin/label";
+@import "admin/input";
+@import "admin/buttons";
+@import "admin/dropdown";
+
+@import "admin/alert";
+@import "admin/badge";
+@import "admin/modal";
+@import "admin/pagination";
+@import "admin/progress";
+@import "admin/sortable";
+@import "admin/stack";
+@import "admin/tooltip";
+
 @import "admin/dashboard";
 @import "admin/trail";
 

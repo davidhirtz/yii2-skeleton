@@ -170,7 +170,7 @@ class RedirectGridView extends GridView
             ->text(Yii::t('skeleton', 'Delete selected'))
             ->icon('trash')
             ->attribute('data-id', 'check-button')
-            ->addClass('d-none d-block-checked')
+            ->addClass('hidden d-block-checked')
             ->modal($modal);
     }
 }

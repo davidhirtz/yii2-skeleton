@@ -27,7 +27,7 @@ class FileUploadInputWidget extends InputWidget
     #[Override]
     public function init(): void
     {
-        Html::addCssClass($this->options, 'd-none');
+        Html::addCssClass($this->options, 'hidden');
         $this->registerClientScript();
 
         parent::init();
