@@ -6,7 +6,7 @@ namespace davidhirtz\yii2\skeleton\widgets\traits;
 
 trait PropertyWidgetTrait
 {
-    protected ?string $property = null;
+    public ?string $property = null;
 
     public function property(?string $property): static
     {

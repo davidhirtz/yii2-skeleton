@@ -8,16 +8,11 @@ use yii\base\Model;
 
 trait ModelWidgetTrait
 {
-    protected ?Model $model = null;
+    public ?Model $model = null;
 
     public function model(?Model $model): static
     {
         $this->model = $model;
         return $this;
-    }
-
-    public function getModel(): ?Model
-    {
-        return $this->model;
     }
 }

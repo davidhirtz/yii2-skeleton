@@ -9,9 +9,14 @@ use Stringable;
 
 trait TagInputTrait
 {
+    public function autocomplete(?string $autocomplete): static
+    {
+        return $this->attribute('autocomplete', $autocomplete);
+    }
+
     public function disabled(bool $disabled = true): static
     {
-        return $this->attribute('disabled', $disabled);
+        return $this->attribute('disabled', $disabled ? '' : null);
     }
 
     public function form(Form|string|Stringable $form): static

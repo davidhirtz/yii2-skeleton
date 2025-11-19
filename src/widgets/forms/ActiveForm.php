@@ -95,7 +95,8 @@ class ActiveForm extends Widget
             ? Div::make()
                 ->class('btn-group')
                 ->content(...$this->buttons)
-            : $this->getSubmitButton();
+            : Div::make()
+                ->content($this->getSubmitButton());
 
         $row = FormRow::make()
             ->content($content);

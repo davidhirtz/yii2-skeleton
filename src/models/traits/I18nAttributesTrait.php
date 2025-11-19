@@ -36,10 +36,6 @@ trait I18nAttributesTrait
         return $this->$attribute;
     }
 
-    /**
-     * Returns the translated attribute name for given language. If language is omitted, the current application
-     * language is used.
-     */
     public function getI18nAttributeName(string $attribute, ?string $language = null): string
     {
         return $this->isI18nAttribute($attribute)
@@ -47,10 +43,6 @@ trait I18nAttributesTrait
             : $attribute;
     }
 
-    /**
-     * Returns an array with all attribute variations indexed by language. If the attribute is not translated, this
-     * method returns the attribute indexed by the current application language.
-     */
     public function getI18nAttributeNames(string $attribute, ?string $languages = null): array
     {
         if (!$this->isI18nAttribute($attribute)) {
@@ -71,10 +63,6 @@ trait I18nAttributesTrait
         return $names;
     }
 
-    /**
-     * Returns a flat array with all translated attribute names for given languages. If the languages are omitted, all
-     * available languages are used.
-     */
     public function getI18nAttributesNames(array|string $attributes, ?array $languages = null): array
     {
         $i18n = Yii::$app->getI18n();
@@ -123,7 +111,7 @@ trait I18nAttributesTrait
         return $this->_i18nHints;
     }
 
-    public function getI18nLabels(): array
+    protected function getI18nLabels(): array
     {
         if ($this->_i18nLabels === null) {
             $i18n = Yii::$app->getI18n();

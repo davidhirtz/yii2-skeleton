@@ -35,10 +35,27 @@
 }
 
 .form-content {
+  display: grid;
+  gap: .5rem;
+
   @include media-breakpoint-up(md) {
     grid-column-start: 2;
   }
 }
+
+.form-error {
+  display: none;
+
+  :has([aria-invalid]) > & {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--form-invalid-color);
+  }
+}
+
+.form-hint {
+  font-size: 0.875rem;
+  color: var(--muted-color);
 
 .form-buttons {
   position: sticky;
