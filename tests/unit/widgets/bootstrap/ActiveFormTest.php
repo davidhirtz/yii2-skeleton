@@ -19,7 +19,7 @@ class ActiveFormTest extends Unit
             'fields' => ['custom'],
         ]);
 
-        $needle = '<input type="text" id="testmodel-custom" class="form-control" name="TestModel[custom]">';
+        $needle = '<input type="text" id="testmodel-custom" class="input" name="TestModel[custom]">';
         self::assertStringContainsString($needle, $content);
 
         $content = TestActiveForm::widget([
@@ -28,7 +28,7 @@ class ActiveFormTest extends Unit
             ],
         ]);
 
-        $needle = '<input type="text" id="custom-id" class="form-control" name="TestModel[custom]">';
+        $needle = '<input type="text" id="custom-id" class="input" name="TestModel[custom]">';
         self::assertStringContainsString($needle, $content);
     }
 
@@ -40,7 +40,7 @@ class ActiveFormTest extends Unit
             ],
         ]);
 
-        $needle = '<input type="text" id="testmodel-value" class="form-control" name="TestModel[value]">';
+        $needle = '<input type="text" id="testmodel-value" class="input" name="TestModel[value]">';
         self::assertStringContainsString($needle, $content);
 
         $content = TestActiveForm::widget([
@@ -49,7 +49,7 @@ class ActiveFormTest extends Unit
             ],
         ]);
 
-        $needle = '<input type="hidden" id="testmodel-value" class="form-control" name="TestModel[value]">';
+        $needle = '<input type="hidden" id="testmodel-value" class="input" name="TestModel[value]">';
         self::assertStringContainsString($needle, $content);
 
         $content = TestActiveForm::widget([
@@ -60,7 +60,7 @@ class ActiveFormTest extends Unit
             ],
         ]);
 
-        $needle = '<textarea id="testmodel-value" class="form-control" name="TestModel[value]" rows="5"></textarea>';
+        $needle = '<textarea id="testmodel-value" class="input" name="TestModel[value]" rows="5"></textarea>';
         self::assertStringContainsString($needle, $content);
 
         $content = TestActiveForm::widget([
@@ -81,7 +81,7 @@ class ActiveFormTest extends Unit
             ],
         ]);
 
-        $needle = "<select id=\"testmodel-value\" class=\"form-select\" name=\"TestModel[value]\">\n<option value=\"value1\">Value 1</option>";
+        $needle = "<select id=\"testmodel-value\" class=\"select\" name=\"TestModel[value]\">\n<option value=\"value1\">Value 1</option>";
         self::assertStringContainsString($needle, $content);
 
 

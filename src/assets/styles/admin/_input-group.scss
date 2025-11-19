@@ -7,7 +7,7 @@
   width: 100%;
 
   > .input,
-  > .form-select {
+  > .select {
     position: relative; // For focus state's z-index
     flex: 1 1 auto;
     width: 1%;
@@ -16,7 +16,7 @@
 
   // Bring the "active" form control to the top of surrounding elements
   > .input:focus,
-  > .form-select:focus {
+  > .select:focus {
     z-index: 5;
   }
 

@@ -30,7 +30,7 @@ class DynamicRangeDropdown extends InputWidget
         }
 
         if (($this->options['class'] ?? null) === 'input') {
-            $this->options['class'] = 'form-select';
+            $this->options['class'] = 'select';
         }
 
         parent::init();
