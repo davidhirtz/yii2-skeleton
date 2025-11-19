@@ -6,14 +6,16 @@ namespace davidhirtz\yii2\skeleton\widgets\forms\fields;
 
 use davidhirtz\yii2\skeleton\html\Option;
 use davidhirtz\yii2\skeleton\html\Select;
+use davidhirtz\yii2\skeleton\html\traits\TagInputTrait;
 use Override;
 use Stringable;
 use Yii;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 
 class SelectField extends Field
 {
+    use TagInputTrait;
+
     /**
      * @var array<string|int, string|int|array{label: string, attributes?: array<string|int>}>
      */

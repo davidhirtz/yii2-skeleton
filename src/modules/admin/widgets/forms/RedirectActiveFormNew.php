@@ -19,19 +19,9 @@ class RedirectActiveFormNew extends ActiveForm
     protected function renderContent(): string|Stringable
     {
         $this->rows ??= [
-            [
-                'type',
-            ],
-            [
-                FormRow::make()
-                    ->content(
-                        Div::make()
-                            ->class('input strong')
-                            ->text('This is a random text')
-                    ),
-                'request_uri',
-                'url',
-            ],
+            'type',
+            'request_uri',
+            'url',
         ];
 
         return parent::renderContent();

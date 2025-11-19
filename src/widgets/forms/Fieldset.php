@@ -12,6 +12,7 @@ use davidhirtz\yii2\skeleton\validators\HexColorValidator;
 use davidhirtz\yii2\skeleton\validators\SensitiveAttributeValidator;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\Field;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\HexColorField;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\SelectField;
 use davidhirtz\yii2\skeleton\widgets\forms\traits\FormTrait;
 use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
@@ -20,7 +21,6 @@ use Stringable;
 use Yii;
 use yii\validators\BooleanValidator;
 use yii\validators\EmailValidator;
-use yii\validators\RangeValidator;
 
 class Fieldset extends Widget
 {
@@ -86,7 +86,7 @@ class Fieldset extends Widget
     protected function getFieldForProperty(string $property): Field
     {
         $validators = $this->model->getActiveValidators($property);
-        $className = Field::class;
+        $className = InputField::class;
         $type = null;
 
         foreach ($validators as $validator) {
