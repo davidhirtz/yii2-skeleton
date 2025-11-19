@@ -7,11 +7,20 @@ namespace davidhirtz\yii2\skeleton\widgets\forms;
 use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
 use davidhirtz\yii2\skeleton\models\interfaces\I18nAttributeInterface;
+use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
+use davidhirtz\yii2\skeleton\validators\HexColorValidator;
+use davidhirtz\yii2\skeleton\validators\SensitiveAttributeValidator;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\Field;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\HexColorField;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\SelectField;
 use davidhirtz\yii2\skeleton\widgets\forms\traits\FormTrait;
 use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
+use Yii;
+use yii\validators\BooleanValidator;
+use yii\validators\EmailValidator;
+use yii\validators\RangeValidator;
 
 class Fieldset extends Widget
 {
@@ -33,6 +42,7 @@ class Fieldset extends Widget
 
     protected function renderContent(): string|Stringable
     {
+
         $rows = [];
 
         foreach ($this->rows as $field) {
@@ -46,17 +56,24 @@ class Fieldset extends Widget
             }
 
             if (!$field->isVisible()) {
+                Yii::debug("Skipping invisible attribute '$field->property'");
                 continue;
             }
 
-            if ($this->model instanceof I18nAttributeInterface) {
-                foreach ($this->model->getI18nAttributeNames($field->property) as $property) {
-                    $rows[] = (clone $field)
-                        ->property($property)
-                        ->form($this->form);
-                }
-            } else {
+            if (!$field->isSafe()) {
+                Yii::debug("Skipping unsafe attribute '$field->property'");
+                continue;
+            }
+
+            if (!$this->model instanceof I18nAttributeInterface) {
                 $rows[] = $field->form($this->form);
+                continue;
+            }
+
+            foreach ($this->model->getI18nAttributeNames($field->property) as $property) {
+                $rows[] = (clone $field)
+                    ->property($property)
+                    ->form($this->form);
             }
         }
 
@@ -68,7 +85,41 @@ class Fieldset extends Widget
 
     protected function getFieldForProperty(string $property): Field
     {
-        return Field::make()
+        $validators = $this->model->getActiveValidators($property);
+        $className = Field::class;
+        $type = null;
+
+        foreach ($validators as $validator) {
+            if ($validator instanceof SensitiveAttributeValidator) {
+                $type = 'password';
+                break;
+            }
+
+            if ($validator instanceof DynamicRangeValidator) {
+                return SelectField::make()
+                    ->property($property);
+                break;
+            }
+
+            if($validator instanceof BooleanValidator) {
+                // Todo true and false values
+                $type = 'checkbox';
+                break;
+            }
+
+            if ($validator instanceof EmailValidator) {
+                $type = 'email';
+                break;
+            }
+
+            if ($validator instanceof HexColorValidator) {
+                $className = HexColorField::class;
+                break;
+            }
+        }
+
+        return $className::make()
+            ->type($type)
             ->property($property);
     }
 }

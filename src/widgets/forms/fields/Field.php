@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\forms\fields;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\html\base\Tag;
-use davidhirtz\yii2\skeleton\html\base\VoidTag;
 use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Input;
 use davidhirtz\yii2\skeleton\html\Label;
@@ -16,7 +14,7 @@ use davidhirtz\yii2\skeleton\html\traits\TagInputTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagLabelTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagVisibilityTrait;
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
-use davidhirtz\yii2\skeleton\widgets\forms\rows\FormRow;
+use davidhirtz\yii2\skeleton\widgets\forms\FormRow;
 use davidhirtz\yii2\skeleton\widgets\forms\traits\FormTrait;
 use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\traits\PropertyWidgetTrait;
@@ -80,6 +78,12 @@ class Field extends Widget
 
     protected function renderContent(): string|Stringable
     {
+        $this->attributes['type'] ??= 'text';
+
+        if ('hidden' === $this->attributes['type']) {
+            return $this->getInput();
+        }
+
         return FormRow::make()
             ->attributes($this->rowAttributes)
             ->addClass(($this->attributes['required'] ?? false) ? 'required' : null)
@@ -102,7 +106,7 @@ class Field extends Widget
             : null;
     }
 
-    public function getInput(): Tag|VoidTag
+    public function getInput(): string|Stringable
     {
         $this->attributes['id'] ??= $this->getId();
 
@@ -129,8 +133,13 @@ class Field extends Widget
             : '';
     }
 
-    protected function isRequired(): bool
+    public function isSafe(): bool
     {
-        return ($this->attributes['required'] ?? false) !== null;
+        return $this->model?->isAttributeSafe($this->property) ?? true;
+    }
+
+    public function isRequired(): bool
+    {
+        return ($this->attributes['required'] ?? null) !== null;
     }
 }

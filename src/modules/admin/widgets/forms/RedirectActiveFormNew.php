@@ -8,7 +8,7 @@ use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\SelectField;
-use davidhirtz\yii2\skeleton\widgets\forms\rows\FormRow;
+use davidhirtz\yii2\skeleton\widgets\forms\FormRow;
 use Stringable;
 
 /**

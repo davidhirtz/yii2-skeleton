@@ -9,6 +9,7 @@ use davidhirtz\yii2\skeleton\html\base\VoidTag;
 use davidhirtz\yii2\skeleton\html\Option;
 use davidhirtz\yii2\skeleton\html\Select;
 use Override;
+use Stringable;
 
 class SelectField extends Field
 {
@@ -38,7 +39,7 @@ class SelectField extends Field
     }
 
     #[Override]
-    public function getInput(): Tag|VoidTag
+    public function getInput(): string|Stringable
     {
         $this->attributes['id'] ??= $this->getId();
 
