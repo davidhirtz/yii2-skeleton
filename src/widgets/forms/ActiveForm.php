@@ -5,30 +5,18 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
 use davidhirtz\yii2\skeleton\helpers\Url;
-use davidhirtz\yii2\skeleton\html\A;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Form;
-use davidhirtz\yii2\skeleton\html\Li;
 use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
-use davidhirtz\yii2\skeleton\html\Ul;
-use davidhirtz\yii2\skeleton\models\interfaces\TrailModelInterface;
-use davidhirtz\yii2\skeleton\models\queries\UserQuery;
-use davidhirtz\yii2\skeleton\models\Trail;
-use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\Field;
-use davidhirtz\yii2\skeleton\widgets\forms\footers\CreatedAtFooterItem;
 use davidhirtz\yii2\skeleton\widgets\forms\footers\FormFooter;
-use davidhirtz\yii2\skeleton\widgets\forms\footers\UpdatedAtFooterItem;
 use davidhirtz\yii2\skeleton\widgets\forms\rows\FormRow;
 use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
-use davidhirtz\yii2\skeleton\widgets\Username;
 use davidhirtz\yii2\skeleton\widgets\Widget;
-use davidhirtz\yii2\timeago\Timeago;
 use Stringable;
 use Yii;
-use yii\db\ActiveRecord;
 use yii\db\ActiveRecordInterface;
 
 class ActiveForm extends Widget
@@ -40,15 +28,15 @@ class ActiveForm extends Widget
     public array|string|false|null $action = null;
 
     public bool $hasStickyButtons = true;
-    public string $layout = "{fields}{buttons}{footer}";
+    public string $layout = "{errors}{rows}{buttons}{footer}";
 
     protected array|false|null $buttons = null;
     protected array|false|null $footer = null;
 
     /**
-     * @var Field[]|string[]|null
+     * @var Stringable[]|Field[][]|string[][]|string[]|null
      */
-    protected ?array $fields = null;
+    protected ?array $rows = null;
 
     protected function renderContent(): string|Stringable
     {
@@ -70,7 +58,7 @@ class ActiveForm extends Widget
     {
         return strtr($this->layout, [
             '{errors}' => $this->getErrors(),
-            '{fields}' => $this->getFields(),
+            '{rows}' => $this->getRows(),
             '{buttons}' => $this->getButtons(),
             '{footer}' => $this->getFooter(),
         ]);
@@ -82,12 +70,19 @@ class ActiveForm extends Widget
             ->models($this->model);
     }
 
-    protected function getFields(): string|Stringable
+    protected function getRows(): string|Stringable
+    {
+        return is_array(current($this->rows))
+            ? implode('', array_map($this->getFieldset(...), $this->rows))
+            : $this->getFieldset($this->rows);
+    }
+
+    protected function getFieldset(array $fields): Stringable
     {
         return Fieldset::make()
             ->form($this)
             ->model($this->model)
-            ->fields(...$this->fields);
+            ->fields(...$fields);
     }
 
     protected function getButtons(): ?Stringable

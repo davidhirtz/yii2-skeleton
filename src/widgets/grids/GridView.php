@@ -17,6 +17,7 @@ use davidhirtz\yii2\skeleton\html\Tr;
 use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
 use davidhirtz\yii2\skeleton\web\User;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\Field;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\pagers\LinkPager;
@@ -49,7 +50,14 @@ class GridView extends Widget
      */
     public array $columns;
 
+    /**
+     * @var Stringable[]|Field[][]|string[][]|string[]|null
+     */
     public ?array $footer = null;
+
+    /**
+     * @var Stringable[]|Field[][]|string[][]|string[]|null
+     */
     public ?array $header = null;
 
     public array $headerAttributes = ['class' => 'grid-header'];

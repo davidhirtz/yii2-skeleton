@@ -20,34 +20,36 @@ class Fieldset extends Widget
     use ModelWidgetTrait;
 
     /**
-     * @var Field[]|string[]
+     * @var Stringable[]|string[]
      */
-    protected array $fields = [];
+    protected array $rows = [];
 
-    public function fields(Field|string ...$fields): static
+    public function fields(Stringable|string ...$fields): static
     {
-        $this->fields = $fields;
+        $this->rows = $fields;
         return $this;
     }
 
     protected function renderContent(): string|Stringable
     {
-        foreach ($this->fields as $i => &$field) {
+        foreach ($this->rows as $i => &$field) {
             if (is_string($field)) {
                 $field = Field::make()
                     ->property($field);
             }
 
-            $field->form($this->form);
+            if ($field instanceof Field) {
+                $field->form($this->form);
 
-            if (!$field->isVisible()) {
-                unset($this->fields[$i]);
+                if (!$field->isVisible()) {
+                    unset($this->rows[$i]);
+                }
             }
         }
 
         return \davidhirtz\yii2\skeleton\html\Fieldset::make()
             ->attributes($this->attributes)
             ->addClass('fieldset')
-            ->content(...$this->fields);
+            ->content(...$this->rows);
     }
 }
