@@ -48,7 +48,7 @@ class InputGroup extends Widget
         $div->addContent(...$this->content);
 
         if (null !== $this->append) {
-            $div->content(
+            $div->addContent(
                 Div::make()
                     ->addClass('input-group-append')
                     ->addContent(...$this->append)

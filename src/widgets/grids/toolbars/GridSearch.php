@@ -86,12 +86,12 @@ class GridSearch
     {
         $formAttributes = $this->formAttributes;
         $formAttributes['hx-push-url'] ??= 'true';
-
-        $formAttributes['hx-get'] ??= $this->getUrl();
+        $formAttributes['hx-boost'] ??= 'true';
 
         return Form::make()
-            ->method('get')
             ->attributes($formAttributes)
+            ->action($this->getUrl())
+            ->method('get')
             ->content($this->getInput());
     }
 
@@ -101,7 +101,7 @@ class GridSearch
         $type = ArrayHelper::remove($this->inputAttributes, 'type', 'search');
 
         $btn = Button::make()
-            ->link()
+            ->addClass('btn')
             ->icon($icon)
             ->type('submit')
             ->render();
@@ -120,10 +120,10 @@ class GridSearch
         return InputGroup::make()
             ->prepend($btn)
             ->content(Input::make()
+                ->attributes($inputAttributes)
                 ->type($type)
                 ->name($this->paramName)
-                ->value($this->getValue())
-                ->attributes($inputAttributes));
+                ->value($this->getValue()));
     }
 
     public function getToolbarItem(): GridToolbarItem

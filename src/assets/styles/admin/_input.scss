@@ -1,7 +1,6 @@
 .input {
   appearance: none;
   background-clip: padding-box;
-  background-color: var(--input-bg-color);
   border-radius: .25rem;
   border: 1px solid var(--input-border-color);
   color: var(--input-color);
@@ -17,11 +16,15 @@
     opacity: 1;
   }
 
-  &:not(.is-invalid, :user-invalid, :disabled):hover,
-  &:not(.is-invalid, :user-invalid):focus {
-    --input-bg-color: var(--input-focus-bg-color);
-    --input-border-color: var(--input-focus-border-color);
-    --input-color: var(--input-focus-color);
+  &:is(input,textarea) {
+    background-color: var(--input-bg-color);
+
+    &:not(.is-invalid, :user-invalid, :disabled):hover,
+    &:not(.is-invalid, :user-invalid):focus {
+      --input-bg-color: var(--input-focus-bg-color);
+      --input-border-color: var(--input-focus-border-color);
+      --input-color: var(--input-focus-color);
+    }
   }
 
   &[type="checkbox"],
@@ -48,7 +51,7 @@
     background: var(--checkbox-bg);
 
     &:checked {
-      background: var(--checkbox-checked-bg);
+      --checkbox-bg: var(--checkbox-checked-bg);
     }
   }
 
@@ -57,7 +60,7 @@
     border-radius: 50%;
 
     &:checked {
-      background: var(--radio-checked-bg);
+      --radio-bg: var(--radio-checked-bg);
     }
   }
 
@@ -85,35 +88,27 @@
   //}
 }
 
-//.input-plaintext {
-//  display: block;
-//  width: 100%;
-//  padding: 0.5625rem 0;
-//  margin-bottom: 0; // match inputs if this class comes on inputs with default margins
-//  background-color: transparent;
-//  border: solid transparent;
-//  border-width: 1px 0;
-//
-//  &:focus {
-//    outline: 0;
-//  }
-//}
-
-
 .input-group {
-  display: flex;
-  color: var(--input-color);
-  white-space: nowrap;
-  background: var(--input-group-bg);
-  border: 1px solid var(--input-border-color);
-  border-radius: .25rem;
   align-items: stretch;
+  background: var(--input-group-bg);
+  border-radius: .25rem;
+  border: 1px solid var(--input-border-color);
+  color: var(--input-color);
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
   width: 100%;
+
+  .btn,
+  .input,
+  .select {
+    border: 0;
+    border-radius: 0;
+  }
 
   > .input,
   > .select {
     flex: 1 1 auto;
-    border: 0;
     min-width: 0; // https://stackoverflow.com/questions/36247140/why-dont-flex-items-shrink-past-content-size
     position: relative; // For focus state's z-index
     width: 1%;

@@ -6,11 +6,12 @@
 // Layout & components
 @import "admin/theme";
 @import "admin/reboot";
+@import "admin/transition";
 
 @import "admin/type";
 
-@import "admin/images";
-@import "admin/containers";
+@import "admin/image";
+@import "admin/container";
 @import "admin/grid";
 
 @import "admin/card";
