@@ -25,7 +25,7 @@ class GridSearch
     protected array $inputAttributes = [];
     protected array $formAttributes = [];
     protected string $paramName = 'q';
-    protected array $toolbarItemAttributes = ['class' => 'ms-auto'];
+    protected array $toolbarItemAttributes = ['class' => 'grid-search'];
     protected ?string $value = null;
 
     public function __construct(protected Request $request)

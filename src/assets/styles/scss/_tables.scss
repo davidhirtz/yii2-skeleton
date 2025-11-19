@@ -1,7 +1,6 @@
 .table {
   width: 100%;
   vertical-align: top;
-  border-color: var(--table-border-color, transparent);
 
   > tbody {
     vertical-align: inherit;
@@ -17,9 +16,10 @@
     border-bottom: 1px solid var(--table-td-border-color);
   }
 
-  th, tr:last-child td {
+  th {
     border-bottom-color: var(--table-th-border-color);
   }
+
 }
 
 .table-striped {
@@ -35,68 +35,38 @@
   }
 }
 
-.table-responsive {
+.table-wrap {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-tr.is-selected {
-  --table-color: var(--table-selected-color);
-  --table-bg: var(--table-selected-bg);
-  --table-hover-color: var(--table-selected-hover-color);
-  --table-hover-bg: var(--table-selected-hover-bg);
-  --table-striped-bg: var(--table-selected-bg);
+.table {
+  tr.is-selected {
+    --table-bg: var(--table-selected-bg);
+    --table-hover-color: var(--table-selected-hover-color);
+    --table-hover-bg: var(--table-selected-hover-bg);
+    --table-striped-bg: var(--table-selected-bg);
 
-  .badge {
-    --badge-bg: var(--badge-active-bg);
-    --badge-color: var(--badge-active-color);
+    .badge {
+      --badge-bg: var(--badge-active-bg);
+      --badge-color: var(--badge-active-color);
+    }
+  }
+
+
+  th > a, th > a:hover {
+    display: block;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+
+  tr.disabled {
+    opacity: .3;
   }
 }
 
-
-th > a, th > a:hover {
-  display: block;
-  color: inherit;
-  text-decoration: none;
-  font-weight: bold;
-  white-space: nowrap;
-}
-
-th > a.asc, th > a.desc {
-  position: relative;
+a.asc, a.desc {
   text-decoration: underline;
-}
-
-.is-selected .is-selected-hidden, tr:not(.is-selected) .is-selected-block {
-  display: none;
-}
-
-tr.disabled {
-  opacity: .3;
-}
-
-tr.invalid {
-  text-decoration: line-through;
-}
-
-tr:first-child {
-  td:first-child {
-    border-top-left-radius: .25rem;
-  }
-
-  td:last-child {
-    border-top-right-radius: .25rem;
-  }
-}
-
-tr:last-child {
-  td:first-child {
-    border-bottom-left-radius: .25rem-radius;
-  }
-
-  td:last-child {
-    border-bottom-right-radius: .25rem;
-  }
 }
 
 a.asc:after, a.desc:after {

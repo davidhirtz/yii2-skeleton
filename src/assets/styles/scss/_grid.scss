@@ -1,54 +1,47 @@
+.grid {
+  display: grid;
+  gap: 1rem;
+}
 
+.grid-header {
+  --cols: 1;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  gap: 1rem;
 
-.grid-view {
+  @include media-breakpoint-up(sm) {
+    --cols: 2;
+  }
 
-  .alert:not(:last-child) {
-    margin-bottom: .5rem;
+  @include media-breakpoint-up(md) {
+    --cols: 3;
+  }
+
+  @include media-breakpoint-up(lg) {
+    --cols: 4;
+  }
+
+  @include media-breakpoint-up(xl) {
+    --cols: 5;
   }
 }
 
-.grid-view-header {
-  margin-bottom: .5rem;
-
-  .row {
-    padding-bottom: .5rem;
-
-    @include media-breakpoint-down(lg) {
-      flex-wrap: wrap;
-    }
-
-    & > * {
-      width: 100%;
-
-      @include media-breakpoint-up(sm) {
-        width: 50%;
-      }
-
-      @include media-breakpoint-up(lg) {
-        max-width: 25%;
-      }
-    }
-  }
-
-  &:empty {
-    display: none;
-  }
+.grid-search {
+  grid-column-start: var(--cols);
 }
 
-.grid-view-footer {
+.grid-footer {
   position: sticky;
+  display: flex;
+  gap: .5rem;
   bottom: 0;
+  margin-top: calc(-1rem - 1px);
   background: var(--card-bg);
-  padding-bottom: .5rem;
+  border-top: 1px solid var(--table-th-border-color);
+  padding-block: 1rem;
   z-index: 100;
 
-  &:not(:first-child) {
-    margin-top: -1px;
-    padding-top: .5rem;
-    border-top: 1px solid var(--table-th-border-color);
-  }
-
-  .row {
-    padding-top: .5em;
+  .card-body:has(&) {
+    padding-bottom: 0;
   }
 }

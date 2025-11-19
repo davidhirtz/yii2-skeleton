@@ -9,7 +9,6 @@ use davidhirtz\yii2\skeleton\assets\SortableAssetBundle;
 use davidhirtz\yii2\skeleton\base\traits\ContainerConfigurationTrait;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
-use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Table;
 use davidhirtz\yii2\skeleton\html\Tbody;
@@ -53,8 +52,8 @@ class GridView extends Widget
     public ?array $footer = null;
     public ?array $header = null;
 
-    public array $headerAttributes = ['class' => 'grid-view-header'];
-    public array $footerAttributes = ['class' => 'grid-view-footer'];
+    public array $headerAttributes = ['class' => 'grid-header'];
+    public array $footerAttributes = ['class' => 'grid-footer'];
     public array $headerRowAttributes;
     public array $tableAttributes = ['class' => 'table table-striped table-hover'];
     public array $tableBodyAttributes;
@@ -114,7 +113,7 @@ class GridView extends Widget
         return $this->provider->getCount() || $this->showOnEmpty
             ? Div::make()
                 ->attributes($this->attributes)
-                ->addClass('grid-view')
+                ->addClass('grid')
                 ->content($this->getContent())
             : '';
     }
@@ -137,19 +136,18 @@ class GridView extends Widget
 
     protected function getToolbars(array $rows, array $attributes = []): ?Stringable
     {
-        $content = is_array(current($rows)) ? array_map($this->getToolbar(...), $rows) : $this->getToolbar($rows);
+        $items = is_array(current($rows)) ? array_map($this->getToolbarItems(...), $rows) : $this->getToolbarItems($rows);
 
-        return $content
+        return $items
             ? Div::make()
                 ->attributes($attributes)
-                ->content($content)
+                ->content(...$items)
             : null;
     }
 
-    protected function getToolbar(array $row): Stringable
+    protected function getToolbarItems(array $row): array
     {
-        $tag = Div::make()
-            ->class('row');
+        $items = [];
 
         foreach ($row as $item) {
             if (!$item instanceof GridToolbarItem) {
@@ -158,11 +156,11 @@ class GridView extends Widget
             }
 
             if ($item->isVisible()) {
-                $tag->addContent($item);
+                $items[] = $item;
             }
         }
 
-        return $tag;
+        return $items;
     }
 
     protected function getSummary(): ?Stringable
@@ -180,7 +178,7 @@ class GridView extends Widget
         return $this->provider->getCount()
             ? Div::make()
                 ->content($this->getTable())
-                ->class('table-responsive')
+                ->class('table-wrap')
             : null;
     }
 

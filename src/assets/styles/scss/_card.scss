@@ -38,10 +38,6 @@
   .collapsed > & {
     display: none;
   }
-
-  &:has(.sticky:last-child) {
-    padding-bottom: 0;
-  }
 }
 
 .card-header, .card-body {
