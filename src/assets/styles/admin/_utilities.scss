@@ -1,15 +1,24 @@
-.hidden {
+.hidden,
+.hidden-empty:empty {
   display: none;
 }
 
-.ms-auto {
-  margin-left: auto;
+:has(:checked) .block-has-checked {
+  display: block;
 }
 
-.grow {
-  flex-grow: 1;
+@include media-breakpoint-up(md) {
+  .md\:block {
+    display: block;
+  }
+
+  .md\:table-cell {
+    display: table-cell;
+  }
 }
 
-.empty-hidden:empty {
-  display: none;
+@include media-breakpoint-up(lg) {
+  .lg\:table-cell {
+    display: table-cell;
+  }
 }

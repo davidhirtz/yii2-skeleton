@@ -34,6 +34,6 @@ class ViewGridButton extends Widget
             ->ariaLabel($this->label)
             ->icon($this->icon ?? 'wrench')
             ->href($this->url)
-            ->addClass('hidden d-md-block');
+            ->addClass('hidden md:block');
     }
 }

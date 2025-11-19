@@ -1,9 +1,12 @@
 .breadcrumb {
+  display: none;
   background-color: var(--breadcrumb-bg);
-  display: flex;
   gap: .5rem;
-  list-style: none;
   overflow-x: auto;
+
+  @include media-breakpoint-up(sm) {
+    display: flex;
+  }
 }
 
 .breadcrumb-item {

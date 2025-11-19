@@ -21,7 +21,7 @@ class Flashes extends Widget
         $content = Container::make()
             ->attribute('id', 'flashes')
             ->attribute('hx-swap-oob', 'beforeend:#flashes')
-            ->class('flashes empty-hidden');
+            ->class('flashes hidden-empty');
 
         foreach ($this->alerts as $status => $alerts) {
             $content->addContent($this->getAlerts($status, $alerts));

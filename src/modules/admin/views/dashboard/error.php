@@ -43,7 +43,7 @@ AdminAsset::register($this);
     <div class="wrap">
         <main>
             <div class="container">
-                <ul class="breadcrumb hidden d-md-flex">
+                <ul class="breadcrumb hidden">
                     <li class="breadcrumb-item"><a href="/"><?= Yii::$app->name; ?></a></li>
                 </ul>
                 <h1><?= $handler->htmlEncode($message); ?></h1>

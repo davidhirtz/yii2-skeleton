@@ -75,7 +75,7 @@ class Alert extends Widget
 
         $alert->addContent(
             Div::make()
-                ->class('grow')
+                ->class('alert-content')
                 ->content(...$this->content),
         );
 

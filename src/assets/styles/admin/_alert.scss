@@ -68,6 +68,10 @@
   font-weight: 700;
 }
 
+.alert-content {
+  flex-grow: 1;
+}
+
 [data-alert="success"] {
   --alert-bg: var(--alert-success-bg);
   --alert-border-color: var(--alert-success-border-color);

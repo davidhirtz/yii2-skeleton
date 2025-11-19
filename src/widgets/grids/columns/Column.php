@@ -67,16 +67,16 @@ class Column
 
     public function hiddenForSmallDevices(): static
     {
-        Html::addCssClass($this->headerAttributes, "hidden d-md-table-cell");
-        Html::addCssClass($this->contentAttributes, "hidden d-md-table-cell");
+        Html::addCssClass($this->headerAttributes, "hidden md:table-cell");
+        Html::addCssClass($this->contentAttributes, "hidden md:table-cell");
 
         return $this;
     }
 
     public function hiddenForMediumDevices(): static
     {
-        Html::addCssClass($this->headerAttributes, "hidden d-lg-table-cell");
-        Html::addCssClass($this->contentAttributes, "hidden d-lg-table-cell");
+        Html::addCssClass($this->headerAttributes, "hidden lg:table-cell");
+        Html::addCssClass($this->contentAttributes, "hidden lg:table-cell");
 
         return $this;
     }
