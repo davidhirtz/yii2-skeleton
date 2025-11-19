@@ -5,33 +5,22 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
 use davidhirtz\yii2\skeleton\models\Redirect;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
-use davidhirtz\yii2\skeleton\widgets\forms\traits\ModelTimestampTrait;
-use davidhirtz\yii2\skeleton\widgets\forms\traits\TypeFieldTrait;
-use Override;
+use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
+use Stringable;
 
 /**
  * @property Redirect $model
  */
 class RedirectActiveForm extends ActiveForm
 {
-    use ModelTimestampTrait;
-    use TypeFieldTrait;
-
-    public bool $hasStickyButtons = true;
-
-    /**
-     * @uses static::typeField()
-     */
-    #[Override]
-    public function init(): void
+    protected function renderContent(): string|Stringable
     {
-        $this->fields ??= [
+        $this->rows ??= [
             'type',
             'request_uri',
             'url',
         ];
 
-        parent::init();
+        return parent::renderContent();
     }
 }

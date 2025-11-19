@@ -49,7 +49,6 @@ class SelectField extends Field
         if (!$this->items && $this->model) {
             $method = 'get' . Inflector::camelize(Inflector::pluralize($this->property));
 
-
             /** @var array<int|string, string|array> $items */
             $items = $this->model->hasMethod($method)
                 ? call_user_func([$this->model, $method])
@@ -80,6 +79,8 @@ class SelectField extends Field
                 ->label($item['label'] ?? $item)
                 ->value($value));
         }
+
+        dd($select);
 
         return $select;
     }

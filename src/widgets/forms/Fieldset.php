@@ -42,7 +42,6 @@ class Fieldset extends Widget
 
     protected function renderContent(): string|Stringable
     {
-
         $rows = [];
 
         foreach ($this->rows as $field) {

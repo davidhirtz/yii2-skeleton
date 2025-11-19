@@ -15,7 +15,6 @@ use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
 use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\RedirectActiveForm;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\RedirectActiveFormNew;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\RedirectGridView;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
@@ -37,14 +36,8 @@ echo Container::make()
 
 echo FormContainer::make()
     ->title($this->title)
-    ->form(RedirectActiveFormNew::make()
+    ->form(RedirectActiveForm::make()
         ->model($redirect));
-
-echo FormContainer::make()
-    ->title($this->title)
-    ->form(RedirectActiveForm::widget([
-        'model' => $redirect,
-    ]));
 
 echo GridContainer::make()
     ->title(Yii::t('skeleton', 'Additional Redirects'))

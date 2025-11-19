@@ -15,12 +15,10 @@ class InputField extends Field
 
     public function form(ActiveForm $form): static
     {
-        parent::form($form);
-
         $this->attributes['type'] ??= 'text';
-        $this->attributes['value'] ??= $this->model->{$this->property};
+        $this->attributes['value'] ??= $form->model?->{$this->property};
 
-        return $this;
+        return parent::form($form);
     }
 
     protected function renderContent(): string|Stringable
