@@ -39,7 +39,7 @@
     display: none;
   }
 
-  &:has(.grid-view-footer:last-child) {
+  &:has(.sticky:last-child) {
     padding-bottom: 0;
   }
 }

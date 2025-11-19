@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\widgets\navs;
 
 use davidhirtz\yii2\skeleton\html\A;
 use davidhirtz\yii2\skeleton\html\Li;
+use davidhirtz\yii2\skeleton\html\Ol;
 use davidhirtz\yii2\skeleton\html\Ul;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\widgets\traits\ContainerWidgetTrait;
@@ -16,7 +17,7 @@ use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
-class Breadcrumbs extends Widget
+class Breadcrumb extends Widget
 {
     use ContainerWidgetTrait;
 
@@ -43,7 +44,7 @@ class Breadcrumbs extends Widget
             return '';
         }
 
-        $list = Ul::make()
+        $list = Ol::make()
             ->attributes($this->listAttributes);
 
         foreach ($this->links as $link) {

@@ -11,7 +11,7 @@ use davidhirtz\yii2\skeleton\assets\AdminAsset;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\NavBar;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\Flashes;
-use davidhirtz\yii2\skeleton\widgets\navs\Breadcrumbs;
+use davidhirtz\yii2\skeleton\widgets\navs\Breadcrumb;
 use yii\helpers\Html;
 
 AdminAsset::register($this);
@@ -32,7 +32,7 @@ AdminAsset::register($this);
 <div id="wrap">
     <?= NavBar::make(); ?>
     <main class="main">
-        <?= Breadcrumbs::make(); ?>
+        <?= Breadcrumb::make(); ?>
         <?= $content ?>
         <?php $this->endBody() ?>
     </main>
