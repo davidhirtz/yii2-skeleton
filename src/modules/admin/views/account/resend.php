@@ -19,7 +19,7 @@ use davidhirtz\yii2\skeleton\widgets\panels\Stack;
 use davidhirtz\yii2\skeleton\widgets\panels\StackItem;
 use yii\helpers\Url;
 
-$this->setTitle(Yii::t('skeleton', 'Resend Account Confirmation'));
+$this->title(Yii::t('skeleton', 'Resend Account Confirmation'));
 
 echo Container::make()
     ->content(ErrorSummary::make()->models($form)

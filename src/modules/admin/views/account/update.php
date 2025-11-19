@@ -26,7 +26,7 @@ use davidhirtz\yii2\skeleton\widgets\forms\FormContainer;
 use davidhirtz\yii2\skeleton\widgets\grids\GridContainer;
 use davidhirtz\yii2\skeleton\widgets\navs\Header;
 
-$this->setTitle(Yii::t('skeleton', 'Account'));
+$this->title(Yii::t('skeleton', 'Account'));
 
 echo Header::make()
     ->title($form->user->getUsername());

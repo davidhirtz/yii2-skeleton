@@ -8,6 +8,7 @@ use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\models\forms\traits\UserFormTrait;
 use davidhirtz\yii2\skeleton\models\User;
+use Override;
 use Yii;
 use yii\base\Model;
 
@@ -40,7 +41,7 @@ class UserForm extends Model
         parent::__construct($config);
     }
 
-    #[\Override]
+    #[Override]
     public function rules(): array
     {
         return [
@@ -81,7 +82,7 @@ class UserForm extends Model
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function scenarios(): array
     {
         $attributes = [
@@ -171,7 +172,7 @@ class UserForm extends Model
         return $this->scenario === ActiveRecord::SCENARIO_INSERT;
     }
 
-    #[\Override]
+    #[Override]
     public function attributeLabels(): array
     {
         return [

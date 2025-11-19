@@ -19,14 +19,14 @@ class View extends \yii\web\View
     final public const int POS_MODULE = 6;
     final public const int POS_IMPORT = 7;
 
-    /**
-     * @var string|null the title template that will be used to generate the page title.
-     */
     public ?string $titleTemplate = null;
 
-    private array $breadcrumbs = [];
-    private string|null $description = null;
-    private string $jsImportName = 'a';
+    /**
+     * @var array<int, array{label: string, url: array|string|null}>
+     */
+    protected array $breadcrumbs = [];
+    protected string|null $description = null;
+    protected string $jsImportName = 'a';
 
     #[Override]
     protected function renderBodyEndHtml($ajaxMode): string
@@ -48,9 +48,10 @@ class View extends \yii\web\View
         return $scripts ? Html::script($scripts, ['type' => 'module']) : '';
     }
 
-    public function setTitle(string $title): void
+    public function title(string $title): static
     {
         $this->title = $title;
+        return $this;
     }
 
     public function getDocumentTitle(): string
@@ -65,12 +66,14 @@ class View extends \yii\web\View
         ]);
     }
 
-    public function setMetaDescription(string $description, bool $replace = true): void
+    public function description(string $description, bool $replace = true): static
     {
         if (empty($this->metaTags[static::DESCRIPTION_KEY]) || $replace) {
             $this->description = preg_replace("/\n+/", ' ', Html::encode($description));
             $this->registerMetaTag(['name' => 'description', 'content' => $this->description], static::DESCRIPTION_KEY);
         }
+
+        return $this;
     }
 
     public function getMetaDescription(): ?string
@@ -78,18 +81,16 @@ class View extends \yii\web\View
         return $this->description;
     }
 
-    public function setBreadcrumbs(array $breadcrumbs): void
+    public function breadcrumbs(array $breadcrumbs): void
     {
+        $this->breadcrumbs = [];
+
         foreach ($breadcrumbs as $key => $value) {
-            if (!is_numeric($key)) {
-                $this->setBreadcrumb($key, $value);
-            } else {
-                $this->setBreadcrumb($value);
-            }
+            $this->addBreadcrumb(is_int($key) ? $value : $key, is_string($key) ? $value : null);
         }
     }
 
-    public function setBreadcrumb(?string $label, array|string $url = null): void
+    public function addBreadcrumb(?string $label, array|string $url = null): void
     {
         if ($label) {
             $this->breadcrumbs[] = ['label' => $label, 'url' => $url];

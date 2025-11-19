@@ -16,7 +16,6 @@ use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
 use Yii;
-use yii\base\Model;
 use yii\db\ActiveRecordInterface;
 use yii\helpers\Inflector;
 

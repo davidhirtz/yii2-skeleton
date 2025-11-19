@@ -16,7 +16,7 @@ use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 use davidhirtz\yii2\skeleton\widgets\panels\Card;
 
-$this->setTitle($form->user->password_hash
+$this->title($form->user->password_hash
     ? Yii::t('skeleton', 'Set New Password')
     : Yii::t('skeleton', 'Create Password'));
 

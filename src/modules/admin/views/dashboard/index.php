@@ -12,7 +12,7 @@ use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\navs\Header;
 use davidhirtz\yii2\skeleton\widgets\panels\Dashboard;
 
-$this->setTitle(Yii::t('skeleton', 'Admin'));
+$this->title(Yii::t('skeleton', 'Admin'));
 
 echo Header::make()
     ->title(Yii::$app->name);

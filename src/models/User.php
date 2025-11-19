@@ -122,7 +122,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
                 'trim',
             ],
             [
-                ['email'],
+                ['status', 'email'],
                 'required',
             ],
             [

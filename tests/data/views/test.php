@@ -8,6 +8,6 @@ declare(strict_types=1);
 
 use davidhirtz\yii2\skeleton\web\View;
 
-$this->setTitle('Test title');
+$this->title('Test title');
 ?>
 <div class="container"><?= $content ?></div>

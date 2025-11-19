@@ -16,8 +16,8 @@ use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 use davidhirtz\yii2\skeleton\widgets\panels\Card;
 
-$this->setTitle(Yii::t('skeleton', 'Transfer Ownership'));
-$this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
+$this->title(Yii::t('skeleton', 'Transfer Ownership'));
+$this->addBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
 
 
 echo UserSubmenu::make();

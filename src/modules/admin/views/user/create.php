@@ -18,8 +18,8 @@ use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 use davidhirtz\yii2\skeleton\widgets\forms\FormContainer;
 
-$this->setTitle(Yii::t('skeleton', 'Create New User'));
-$this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
+$this->title(Yii::t('skeleton', 'Create New User'));
+$this->addBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
 
 echo UserSubmenu::make()
     ->user($form->user);

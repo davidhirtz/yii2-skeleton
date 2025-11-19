@@ -22,7 +22,7 @@ use davidhirtz\yii2\skeleton\widgets\panels\Card;
 use davidhirtz\yii2\skeleton\widgets\panels\Stack;
 use davidhirtz\yii2\skeleton\widgets\panels\StackItem;
 
-$this->setTitle(Yii::t('skeleton', 'Login'));
+$this->title(Yii::t('skeleton', 'Login'));
 ?>
 
 <?= ErrorSummary::make()->models($form)

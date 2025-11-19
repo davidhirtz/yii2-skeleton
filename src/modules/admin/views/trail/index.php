@@ -16,8 +16,8 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\grids\GridContainer;
 
-$this->setTitle(Yii::t('skeleton', 'History'));
-$this->setBreadcrumb(Yii::t('skeleton', 'History'), ['index']);
+$this->title(Yii::t('skeleton', 'History'));
+$this->addBreadcrumb(Yii::t('skeleton', 'History'), ['index']);
 
 echo $provider->user
     ? UserSubmenu::make()

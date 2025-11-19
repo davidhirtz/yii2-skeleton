@@ -16,7 +16,7 @@ use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\grids\GridContainer;
 use davidhirtz\yii2\skeleton\widgets\navs\Header;
 
-$this->setTitle(Yii::t('skeleton', 'System'));
+$this->title(Yii::t('skeleton', 'System'));
 
 echo Header::make()
     ->title(Yii::t('skeleton', 'System'));

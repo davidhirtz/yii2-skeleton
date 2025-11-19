@@ -14,7 +14,7 @@ declare(strict_types=1);
 use davidhirtz\yii2\skeleton\web\ErrorAction;
 use davidhirtz\yii2\skeleton\web\View;
 
-$this->setTitle($name);
+$this->title($name);
 ?>
     <h1><?= $message ?: $name; ?></h1>
 <?php if (Yii::$app->getResponse()->getIsServerError()) {

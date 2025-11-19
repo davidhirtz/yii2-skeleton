@@ -20,21 +20,13 @@ use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 use davidhirtz\yii2\skeleton\widgets\forms\FormContainer;
 
-$this->setTitle(Yii::t('skeleton', 'Edit User'));
-$this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
-
 echo UserSubmenu::make()
     ->user($form->user);
 
-echo Container::make()
-    ->content(ErrorSummary::make()->models($form)
-        ->title(Yii::t('skeleton', 'The user could not be updated')));
-
 echo FormContainer::make()
     ->title($this->title)
-    ->form(UserActiveForm::widget([
-        'model' => $form,
-    ]));
+    ->form(UserActiveForm::make()
+        ->model($form));
 
 echo UserPanel::make()
     ->user($form->user);
@@ -43,7 +35,6 @@ if (Yii::$app->getUser()->can(User::AUTH_USER_DELETE, ['user' => $form->user])) 
     echo FormContainer::make()
         ->danger()
         ->title(Yii::t('skeleton', 'Delete User'))
-        ->form(UserDeleteActiveForm::widget([
-            'model' => $form->user,
-        ]));
+        ->form(UserDeleteActiveForm::make()
+            ->model($form->user));
 }

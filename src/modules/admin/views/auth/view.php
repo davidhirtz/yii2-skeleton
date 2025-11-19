@@ -17,8 +17,8 @@ use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\grids\GridContainer;
 use yii\data\ActiveDataProvider;
 
-$this->setTitle(Yii::t('skeleton', 'Edit Permissions'));
-$this->setBreadcrumb(Yii::t('skeleton', 'Users'), ['/admin/user/index']);
+$this->title(Yii::t('skeleton', 'Edit Permissions'));
+$this->addBreadcrumb(Yii::t('skeleton', 'Users'), ['/admin/user/index']);
 
 echo UserSubmenu::make()
     ->user($user);

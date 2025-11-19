@@ -18,7 +18,7 @@ use davidhirtz\yii2\skeleton\widgets\panels\Stack;
 use davidhirtz\yii2\skeleton\widgets\panels\StackItem;
 use yii\helpers\Url;
 
-$this->setTitle(Yii::t('skeleton', 'Recover Password'));
+$this->title(Yii::t('skeleton', 'Recover Password'));
 
 echo Container::make()
     ->content(ErrorSummary::make()->models($form)

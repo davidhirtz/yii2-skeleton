@@ -18,7 +18,7 @@ use davidhirtz\yii2\skeleton\widgets\panels\Card;
 use davidhirtz\yii2\skeleton\widgets\panels\Stack;
 use davidhirtz\yii2\skeleton\widgets\panels\StackItem;
 
-$this->setTitle(Yii::t('skeleton', 'Sign up'));
+$this->title(Yii::t('skeleton', 'Sign up'));
 
 echo Container::make()
     ->content(ErrorSummary::make()

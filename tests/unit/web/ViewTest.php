@@ -16,7 +16,7 @@ class ViewTest extends Unit
     {
         $view = new View();
 
-        $view->setBreadcrumbs([
+        $view->breadcrumbs([
             'Home' => '/',
             'No link',
         ]);
@@ -60,8 +60,8 @@ class ViewTest extends Unit
 
         $view = new View();
 
-        $view->setTitle($title);
-        $view->setMetaDescription($description);
+        $view->title($title);
+        $view->description($description);
 
         $view->registerOpenGraphMetaTags();
 

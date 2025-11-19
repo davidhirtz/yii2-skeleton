@@ -15,8 +15,8 @@ use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\grids\GridContainer;
 use yii\data\ActiveDataProvider;
 
-$this->setTitle(Yii::t('skeleton', 'Logins'));
-$this->setBreadcrumb(Yii::t('skeleton', 'Logins'), ['index']);
+$this->title(Yii::t('skeleton', 'Logins'));
+$this->addBreadcrumb(Yii::t('skeleton', 'Logins'), ['index']);
 
 
 echo UserSubmenu::make();

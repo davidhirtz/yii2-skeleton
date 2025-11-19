@@ -25,7 +25,13 @@ class UserSubmenu extends Submenu
             $this->items = $this->getUserItems();
         } else {
             $this->title ??= Yii::t('skeleton', 'Users');
+
+            $this->view->title($this->title)
+                ->addBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
+
+            $this->title = Yii::t('skeleton', 'Users');
             $this->url ??= ['/admin/user/index'];
+
             $this->items = $this->getDefaultItems();
         }
 

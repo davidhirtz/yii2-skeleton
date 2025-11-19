@@ -45,7 +45,7 @@ class TrailSubmenu extends Submenu
     protected function setBreadcrumbs(): void
     {
         if ($this->provider->trailId) {
-            $this->view->setBreadcrumb(Yii::t('skeleton', '{model} #{id}', [
+            $this->view->addBreadcrumb(Yii::t('skeleton', '{model} #{id}', [
                 'model' => Yii::t('skeleton', 'History'),
                 'id' => $this->provider->trailId,
             ]));
@@ -54,7 +54,7 @@ class TrailSubmenu extends Submenu
         $model = $this->getTrailModel();
 
         if ($model) {
-            $this->view->setBreadcrumb($model->getTrailModelName());
+            $this->view->addBreadcrumb($model->getTrailModelName());
         }
     }
 
