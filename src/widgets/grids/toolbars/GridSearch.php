@@ -7,10 +7,12 @@ namespace davidhirtz\yii2\skeleton\widgets\grids\toolbars;
 use davidhirtz\yii2\skeleton\base\traits\ContainerConfigurationTrait;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\html\Button;
+use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Form;
 use davidhirtz\yii2\skeleton\html\Input;
 use davidhirtz\yii2\skeleton\html\traits\TagUrlTrait;
 use davidhirtz\yii2\skeleton\web\Request;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\InputGroup;
 use davidhirtz\yii2\skeleton\widgets\grids\traits\GridTrait;
 use Stringable;
 use Yii;
@@ -106,7 +108,6 @@ class GridSearch
 
         $inputAttributes = [
             'class' => 'input',
-            'prepend' => $btn,
             'placeholder' => Yii::t('skeleton', 'Search ...'),
             ...$this->inputAttributes
         ];
@@ -116,11 +117,13 @@ class GridSearch
             $inputAttributes['onfocus'] ??= 'this.setSelectionRange(this.value.length,this.value.length);';
         }
 
-        return Input::make()
-            ->type($type)
-            ->name($this->paramName)
-            ->value($this->getValue())
-            ->attributes($inputAttributes);
+        return InputGroup::make()
+            ->prepend($btn)
+            ->content(Input::make()
+                ->type($type)
+                ->name($this->paramName)
+                ->value($this->getValue())
+                ->attributes($inputAttributes));
     }
 
     public function getToolbarItem(): GridToolbarItem
