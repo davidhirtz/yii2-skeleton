@@ -20,11 +20,7 @@ class RedirectActiveFormNew extends ActiveForm
     {
         $this->rows ??= [
             [
-                SelectField::make()
-                    ->property('type')
-                    ->items(array_column($this->model::getTypes(), 'name'))
-                    ->required()
-                    ->empty(),
+                'type',
             ],
             [
                 FormRow::make()

@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\forms\fields;
 
-use davidhirtz\yii2\skeleton\html\base\Tag;
-use davidhirtz\yii2\skeleton\html\base\VoidTag;
 use davidhirtz\yii2\skeleton\html\Option;
 use davidhirtz\yii2\skeleton\html\Select;
 use Override;
 use Stringable;
+use Yii;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Inflector;
 
 class SelectField extends Field
 {
@@ -18,11 +19,11 @@ class SelectField extends Field
      */
     public array $items = [];
 
-    protected string|false $empty = false;
+    protected string|false $prompt = false;
 
-    public function empty(string|false $empty = ''): static
+    public function prompt(string|false $prompt = ''): static
     {
-        $this->empty = $empty;
+        $this->prompt = $prompt;
         return $this;
     }
 
@@ -43,14 +44,32 @@ class SelectField extends Field
     {
         $this->attributes['id'] ??= $this->getId();
 
+        if (!$this->items && $this->model) {
+            $method = 'get' . Inflector::camelize(Inflector::pluralize($this->property));
+
+
+            /** @var array<int|string, string|array> $items */
+            $items = $this->model->hasMethod($method)
+                ? call_user_func([$this->model, $method])
+                : [];
+
+            if (!$items) {
+                Yii::debug('No items returned from ' . $this->model::class . '::' . $method . '()');
+            }
+
+            $this->items = is_array(current($items))
+                ? array_map(fn($item) => $item['name'] ?? current($item), $items)
+                : $items;
+        }
+
         $select = Select::make()
             ->attributes($this->attributes)
             ->addClass('input');
 
-        if (false !== $this->empty && (!$this->isRequired() || empty($this->attributes['value']))) {
+        if (false !== $this->prompt && (!$this->isRequired() || empty($this->attributes['value']))) {
             $select->addOption(Option::make()
                 ->disabled($this->isRequired())
-                ->label($this->empty));
+                ->label($this->prompt));
         }
 
         foreach ($this->items as $value => $item) {
@@ -61,5 +80,10 @@ class SelectField extends Field
         }
 
         return $select;
+    }
+
+    public function isVisible(): bool
+    {
+        return parent::isVisible() && [] === $this->items;
     }
 }

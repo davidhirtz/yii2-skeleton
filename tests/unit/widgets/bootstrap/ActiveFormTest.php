@@ -8,7 +8,7 @@ use Codeception\Test\Unit;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveField;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
-use davidhirtz\yii2\skeleton\widgets\forms\DynamicRangeDropdown;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\DynamicSelectField;
 use yii\base\Model;
 
 class ActiveFormTest extends Unit
@@ -87,7 +87,7 @@ class ActiveFormTest extends Unit
 
         $content = TestActiveForm::widget([
             'fields' => [
-                ['value', DynamicRangeDropdown::class],
+                ['value', DynamicSelectField::class],
             ],
         ]);
 

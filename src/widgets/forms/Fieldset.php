@@ -96,8 +96,7 @@ class Fieldset extends Widget
             }
 
             if ($validator instanceof DynamicRangeValidator) {
-                return SelectField::make()
-                    ->property($property);
+                $className = SelectField::make();
                 break;
             }
 
