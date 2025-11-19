@@ -14,7 +14,7 @@ class TextInput extends Input
 
     protected function before(): string
     {
-        $this->addClass('form-control');
+        $this->addClass('input');
         $this->attributes['type'] ??= 'text';
 
         return parent::before();

@@ -380,7 +380,7 @@ trait ActiveFormTrait
 
         $wrapperOptions = ArrayHelper::remove($options, 'wrapperOptions', []);
 
-        $content = Html::tag('div', $content, ['class' => 'form-control-plaintext']);
+        $content = Html::tag('div', $content, ['class' => 'input-plaintext']);
         $wrapper = $this->wrapper($content, $wrapperOptions);
 
         return $this->row($label . $wrapper, $options);

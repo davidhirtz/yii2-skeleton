@@ -15,7 +15,7 @@ use yii\widgets\InputWidget;
  */
 class TimezoneDropdown extends InputWidget
 {
-    public $options = ['class' => 'form-control'];
+    public $options = ['class' => 'input'];
 
     private ?array $_timezones = null;
 

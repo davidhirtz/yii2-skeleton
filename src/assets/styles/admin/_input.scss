@@ -1,6 +1,4 @@
-//@import "../../../../../../../node_modules/bootstrap/scss/forms/labels";
-
-.form-control {
+.input {
   display: block;
   width: 100%;
   padding: 0.5rem 1rem;
@@ -46,10 +44,10 @@
   }
 
   &::-webkit-date-and-time-value {
-    // On Android Chrome, form-control's "width: 100%" makes the input width too small
+    // On Android Chrome, input's "width: 100%" makes the input width too small
     // Tested under Android 11 / Chrome 89, Android 12 / Chrome 100, Android 13 / Chrome 109
     //
-    // On iOS Safari, form-control's "appearance: none" + "width: 100%" makes the input width too small
+    // On iOS Safari, input's "appearance: none" + "width: 100%" makes the input width too small
     // Tested under iOS 16.2 / Safari 16.2
     min-width: 85px; // Seems to be a good minimum safe width
 
@@ -86,7 +84,7 @@
   }
 }
 
-.form-control-plaintext {
+.input-plaintext {
   display: block;
   width: 100%;
   padding: 0.5625rem 0;

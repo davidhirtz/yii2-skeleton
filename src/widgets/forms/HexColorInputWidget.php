@@ -43,7 +43,7 @@ class HexColorInputWidget extends InputWidget
 
         $colorInput = Html::input('color', $name, $value, [
             'id' => "$id-color",
-            'class' => 'form-control',
+            'class' => 'input',
             'required' => true,
         ]);
 

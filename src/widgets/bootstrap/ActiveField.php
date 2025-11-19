@@ -76,7 +76,7 @@ class ActiveField extends \davidhirtz\yii2\skeleton\widgets\forms\ActiveField
     #[\Override]
     public function fileInput($options = []): static
     {
-        $options['class'] ??= 'form-control-file';
+        $options['class'] ??= 'input-file';
         return parent::fileInput($options);
     }
 

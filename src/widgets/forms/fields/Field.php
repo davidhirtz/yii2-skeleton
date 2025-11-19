@@ -54,7 +54,7 @@ class Field extends Widget
 
         return Input::make()
             ->attributes($this->attributes)
-            ->addClass('form-control');
+            ->addClass('input');
     }
 
     public function getHint(): string|Stringable

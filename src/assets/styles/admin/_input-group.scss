@@ -6,7 +6,7 @@
   align-items: stretch;
   width: 100%;
 
-  > .form-control,
+  > .input,
   > .form-select {
     position: relative; // For focus state's z-index
     flex: 1 1 auto;
@@ -15,7 +15,7 @@
   }
 
   // Bring the "active" form control to the top of surrounding elements
-  > .form-control:focus,
+  > .input:focus,
   > .form-select:focus {
     z-index: 5;
   }

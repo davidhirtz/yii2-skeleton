@@ -105,7 +105,7 @@ class GridSearch
             ->render();
 
         $inputAttributes = [
-            'class' => 'form-control',
+            'class' => 'input',
             'prepend' => $btn,
             'placeholder' => Yii::t('skeleton', 'Search ...'),
             ...$this->inputAttributes
