@@ -52,7 +52,6 @@
   background: var(--input-group-bg);
   border: 1px solid var(--input-border-color);
   border-radius: .25rem;
-  transition: border-color .15s ease-in-out, color .15s ease-in-out;
 }
 
 .input-group-prepend {
@@ -61,16 +60,16 @@
 
 .input-group {
   &:not(.has-validation) {
-    > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu),
-    > .dropdown-toggle:nth-last-child(n + 3) {
+    > :not(:last-child):not(.dropdown-btn):not(.dropdown-menu),
+    > .dropdown-btn:nth-last-child(n + 3) {
       border-bottom-right-radius: 0;
       border-top-right-radius: 0;
     }
   }
 
   &.has-validation {
-    > :nth-last-child(n + 3):not(.dropdown-toggle):not(.dropdown-menu),
-    > .dropdown-toggle:nth-last-child(n + 4) {
+    > :nth-last-child(n + 3):not(.dropdown-btn):not(.dropdown-menu),
+    > .dropdown-btn:nth-last-child(n + 4) {
       border-bottom-right-radius: 0;
       border-top-right-radius: 0;
     }

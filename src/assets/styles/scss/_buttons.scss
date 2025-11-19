@@ -10,7 +10,6 @@
   min-width: 2.5rem;
   padding: 0.5625rem 1rem;
   text-align: center;
-  transition: color .15s, background-color .15s, border-color .15s;;
   user-select: none;
   vertical-align: middle;
 
@@ -106,7 +105,6 @@
   border: 0;
   color: inherit;
   border-radius: .25rem;
-  transition: color .15s, background-color .15s, border-color .15s;
   @extend .icon;
 
   &:hover {

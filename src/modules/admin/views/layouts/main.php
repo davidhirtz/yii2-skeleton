@@ -26,15 +26,17 @@ AdminAsset::register($this);
     <?= Html::csrfMetaTags() ?>
     <?php $this->head() ?>
 </head>
-<body hx-select="main" hx-swap="outerHTML" hx-target="main">
+<body hx-select="#wrap" hx-swap="innerHTML" hx-target="#wrap">
 <?php $this->beginBody() ?>
-<?= NavBar::make(); ?>
 <?= Flashes::make(); ?>
-<main class="main">
-    <?= Breadcrumbs::make(); ?>
-    <?= $content ?>
-    <?php $this->endBody() ?>
-</main>
+<div id="wrap">
+    <?= NavBar::make(); ?>
+    <main class="main">
+        <?= Breadcrumbs::make(); ?>
+        <?= $content ?>
+        <?php $this->endBody() ?>
+    </main>
+</div>
 </body>
 </html>
 <?php $this->endPage() ?>

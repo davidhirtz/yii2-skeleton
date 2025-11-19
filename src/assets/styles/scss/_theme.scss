@@ -216,13 +216,13 @@
   --dropdown-color: var(--color-black);
   --dropdown-divider-color: var(--border-color);
 
-  --dropdown-btn-active-bg: var(--color-gray-300);
-  --dropdown-btn-active-border-color: var(--color-gray-300);
-  --dropdown-btn-bg: var(--color-gray-100);
-  --dropdown-btn-border-color: var(--border-color);
+  --dropdown-btn-active-bg: var(--color-gray-200);
+  --dropdown-btn-active-border-color: var(--color-gray-200);
+  --dropdown-btn-bg-color: var(--color-gray-100);
+  --dropdown-btn-border-color: var(--color-gray-100);
   --dropdown-btn-color: var(--color-black);
   --dropdown-btn-hover-bg: var(--color-gray-200);
-  --dropdown-btn-hover-border-color: var(--color-gray-200);
+  --dropdown-btn-hover-border-color: var(--color-gray-300);
 
   --dropdown-link-active-bg: var(--color-gray-100);
   --dropdown-link-active-color: inherit;
@@ -251,15 +251,15 @@
 
   --input-group-bg: var(--input-bg-color);
 
-  --caret-down: #{svg-url("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>")};
-  --caret-up: #{svg-url("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 11 6-6 6 6'/></svg>")};
-  --input-caret: #{svg-url("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#ddd' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>")};
+  --caret-down: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m2 5 6 6 6-6"/></svg>')};
+  --caret-up: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m2 11 6-6 6 6"/></svg>')};
+  --input-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke="#ddd" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m2 5 6 6 6-6"/></svg>')};
 
   --checkbox-bg: var(--color-white);
-  --checkbox-checked-bg: var(--color-white) #{svg-url("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#000' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/></svg>")} no-repeat center;
+  --checkbox-checked-bg: var(--color-white) #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="m6 10 3 3 6-6"/></svg>')} no-repeat center;
 
   --radio-bg: var(--color-white);
-  --radio-checked-bg: var(--color-white) #{svg-url("<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='2' fill='#000'/></svg>")} no-repeat center;
+  --radio-checked-bg: var(--color-white) #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 8 8"><circle r="2" fill="#000"/></svg>')} no-repeat center;
 
   // List
   --list-group-action-bg: var(--color-white);

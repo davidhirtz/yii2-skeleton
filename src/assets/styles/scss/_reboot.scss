@@ -15,7 +15,7 @@ html,
   font-family: "Open Sans", sans-serif;
   font-feature-settings: normal;
   font-variation-settings: normal;
-  line-height: 1.4;
+  line-height: 1.57142857;
   tab-size: 4;
 }
 
@@ -144,11 +144,18 @@ select {
   text-transform: none;
 }
 
+a,
+button,
+select,
+input,
+textarea {
+  transition: color .2s, background-color .2s, border-color .2s;
+}
+
 ::placeholder {
   opacity: 1;
   color: color-mix(in oklab, currentColor 50%, transparent);
 }
-
 
 // See https://stackoverflow.com/a/54997118
 [list]:not([type="date"]):not([type="datetime-local"]):not([type="month"]):not([type="week"]):not([type="time"])::-webkit-calendar-picker-indicator {

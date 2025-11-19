@@ -1,25 +1,38 @@
 .dropdown {
   position: relative;
-
-  .grid-view-header & {
-    width: 100%;
-  }
 }
 
-.dropdown-toggle {
-  background-image: var(--caret-down);
-  background-repeat: no-repeat;
-  background-position: right 2.5rem center;
-  background-size: 12px;
-  text-align: left;
-  padding-right: 2rem;
+.dropdown-btn {
+  background: var(--dropdown-btn-bg-color) var(--caret-down) no-repeat right 1rem center;
+  background-size: 0.875rem;
+  border-radius: .25rem;
+  border: 1px solid var(--dropdown-btn-border-color);
+  color: var(--dropdown-btn-color);
+  font-weight: 500;
+  min-width: 2.5rem;
+  overflow: hidden;
+  padding: 0.5625rem 2rem 0.5625rem 1rem;
+  text-align: center;
+  text-overflow: ellipsis;
   white-space: nowrap;
+  width: 100%;
 
-  .dropup {
-    // todo
+  .active & {
+    background-color: var(--dropdown-btn-active-bg);
+    border-color: var(--dropdown-btn-active-border-color);
+    font-weight: 700;
+  }
+
+  &:hover {
+    background-color: var(--dropdown-btn-hover-bg);
+    border-color: var(--dropdown-btn-hover-border-color);
+    color: var(--dropdown-btn-hover-color);
+  }
+
+  .dropup & {
+    background-image: var(--caret-up);
   }
 }
-
 
 .dropdown-menu {
   background-color: var(--dropdown-bg);
@@ -104,23 +117,5 @@
 }
 
 .dropdown-default-item {
-  font-weight: 700;
-}
-
-.dropdown-toggle {
-  --btn-bg: var(--dropdown-btn-bg);
-  --btn-color: var(--dropdown-btn-color);
-  --btn-border-color: var(--dropdown-btn-border-color);
-  --btn-active-bg: var(--dropdown-btn-active-bg);
-  --btn-active-border-color: var(--dropdown-btn-active-border-color);
-  --btn-active-color: var(--dropdown-btn-active-color, inherit);
-  --btn-hover-bg: var(--dropdown-btn-hover-bg);
-  --btn-hover-border-color: var(--dropdown-btn-hover-border-color);
-
-  width: 100%;
-  @extend .text-truncate;
-
-  .active > & {
-    font-weight: 700;
-  }
+  font-weight: 500;
 }

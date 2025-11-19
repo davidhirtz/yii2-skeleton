@@ -11,7 +11,6 @@
   background-size: 12px;
   border: 1px solid var(--input-border-color);
   border-radius: .25rem;
-  transition: border-color .15s ease-in-out, color .15s ease-in-out;
 
   &:not(.is-invalid,:user-invalid,:disabled):hover,
   &:not(.is-invalid,:user-invalid):focus {

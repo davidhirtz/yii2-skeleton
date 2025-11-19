@@ -32,7 +32,7 @@ class Dropdown extends Widget
     public function label(string $text): static
     {
         return $this->button(Button::make()
-            ->class('btn dropdown-toggle')
+            ->class('dropdown-btn')
             ->text($text));
     }
 

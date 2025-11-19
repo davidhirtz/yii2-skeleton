@@ -9,25 +9,25 @@
 }
 
 .tooltip-arrow {
-  position: absolute;
-  width: 0.5rem;
   aspect-ratio: 1 / 1;
   background-color: var(--tooltip-bg);
+  position: absolute;
   transform: rotate(45deg);
+  width: 0.5rem;
 
   &::before {
-    position: absolute;
-    content: "";
     border-color: transparent;
     border-style: solid;
+    content: "";
+    position: absolute;
   }
 }
 
 .tooltip-inner {
-  border-radius: .25rem;
   background-color: var(--tooltip-bg);
+  border-radius: .25rem;
   color: var(--tooltip-color);
-  font-size: 75rem;
+  font-size: .75rem;
   font-weight: normal;
   line-height: 1.125rem;
   max-width: 12rem;
