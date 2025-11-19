@@ -41,7 +41,7 @@
 }
 
 tr.is-selected {
-  --table-color: var(--table-selected-color, inherit);
+  --table-color: var(--table-selected-color);
   --table-bg: var(--table-selected-bg);
   --table-hover-color: var(--table-selected-hover-color);
   --table-hover-bg: var(--table-selected-hover-bg);

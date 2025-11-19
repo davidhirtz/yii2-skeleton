@@ -9,19 +9,19 @@ use davidhirtz\yii2\skeleton\html\Ul;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
 
-class ListGroup extends Widget
+class Stack extends Widget
 {
     use TagAttributesTrait;
 
     protected array $items = [];
 
-    public function items(ListGroupItem|null ...$items): static
+    public function items(StackItem|null ...$items): static
     {
         $this->items = array_values(array_filter($items));
         return $this;
     }
 
-    public function addItem(ListGroupItem $item): static
+    public function addItem(StackItem $item): static
     {
         $this->items[] = $item;
         return $this;
@@ -29,7 +29,7 @@ class ListGroup extends Widget
 
     protected function renderContent(): string|Stringable
     {
-        $items = array_filter($this->items, fn (ListGroupItem $item) => $item->isVisible());
+        $items = array_filter($this->items, fn (StackItem $item) => $item->isVisible());
 
         if (!$items) {
             return '';
@@ -37,7 +37,7 @@ class ListGroup extends Widget
 
         return Ul::make()
             ->attributes($this->attributes)
-            ->addClass('list-group')
+            ->addClass('stack')
             ->content(...$this->items);
     }
 }

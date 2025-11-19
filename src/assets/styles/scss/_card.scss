@@ -1,7 +1,7 @@
 
 .card {
-  --list-group-action-bg: var(--card-list-group-action-bg);
-  --list-group-action-hover-bg: var(--card-list-group-action-hover-bg);
+  --stack-link-bg: var(--card-stack-link-bg);
+  --stack-link-hover-bg: var(--card-stack-link-hover-bg);
 
   background: var(--card-bg);
   border-radius: .25rem;
@@ -14,7 +14,7 @@
 //.card-danger {
 //  --card-border-color: var(--card-danger-border-color, var(--card-border-color));
 //  --card-header-bg: var(--card-danger-header-bg, transparent);
-//  --card-header-color: var(--card-danger-header-color, inherit);
+//  --card-header-color: var(--card-danger-header-color);
 //}
 
 .card-header {

@@ -6,8 +6,8 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\panels;
 
 use davidhirtz\yii2\skeleton\helpers\Url;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
-use davidhirtz\yii2\skeleton\widgets\panels\ListGroup;
-use davidhirtz\yii2\skeleton\widgets\panels\ListGroupItem;
+use davidhirtz\yii2\skeleton\widgets\panels\Stack;
+use davidhirtz\yii2\skeleton\widgets\panels\StackItem;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
 
@@ -15,7 +15,7 @@ class AuthClientListGroup extends Widget
 {
     protected function renderContent(): string|Stringable
     {
-        return ListGroup::make()
+        return Stack::make()
             ->items(...$this->getItems());
     }
 
@@ -26,10 +26,10 @@ class AuthClientListGroup extends Widget
         ];
     }
 
-    protected function getFacebookLogin(): ?ListGroupItem
+    protected function getFacebookLogin(): ?StackItem
     {
         return (new LoginForm())->isFacebookLoginEnabled()
-            ? ListGroupItem::make()
+            ? StackItem::make()
                 ->label('Facebook')
                 ->icon('brand:facebook')
                 ->url(Url::toRoute(['/admin/user/auth', 'authclient' => 'facebook']))

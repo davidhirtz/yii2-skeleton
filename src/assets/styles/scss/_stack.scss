@@ -1,0 +1,32 @@
+.stack {
+  display: grid;
+  gap: 2px;
+}
+
+.stack-item {
+  overflow: hidden;
+
+  &:first-child {
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+  }
+
+  &:last-child {
+    border-bottom-right-radius: .25rem;
+    border-bottom-left-radius: .25rem;
+  }
+}
+
+.stack-link {
+  display: flex;
+  align-items: center;
+  background: var(--stack-link-bg);
+  font-weight: 500;
+  padding: 1rem;
+  gap: 1rem;
+
+  &:hover,
+  &:focus {
+    background: var(--stack-link-hover-bg);
+  }
+}

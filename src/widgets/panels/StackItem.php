@@ -17,7 +17,7 @@ use davidhirtz\yii2\skeleton\widgets\Widget;
 use Override;
 use Stringable;
 
-class ListGroupItem extends Widget
+class StackItem extends Widget
 {
     use TagAttributesTrait;
     use TagContentTrait;
@@ -26,14 +26,14 @@ class ListGroupItem extends Widget
     use TagUrlTrait;
     use TagVisibilityTrait;
 
-    public array $linkAttributes = ['class' => 'list-group-link'];
+    public array $linkAttributes = ['class' => 'stack-link'];
 
     #[Override]
     protected function renderContent(): Stringable
     {
         return Li::make()
             ->attributes($this->attributes)
-            ->addClass('list-group-item')
+            ->addClass('stack-item')
             ->content($this->getContent());
     }
 
@@ -45,7 +45,7 @@ class ListGroupItem extends Widget
 
         $link = A::make()
             ->attributes($this->linkAttributes)
-            ->addClass('list-group-item-link')
+            ->addClass('stack-item-link')
             ->href($this->url);
 
         if ($this->icon) {

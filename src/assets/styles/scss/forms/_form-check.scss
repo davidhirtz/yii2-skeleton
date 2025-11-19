@@ -32,12 +32,12 @@
 
   &:checked {
     &[type="checkbox"] {
-      --input-border-color: var(--checkbox-checked-border, inherit);
+      --input-border-color: var(--checkbox-checked-border);
       --checkbox-bg: var(--checkbox-checked-bg);
     }
 
     &[type="radio"] {
-      --input-border-color: var(--radio-checked-border, inherit);
+      --input-border-color: var(--radio-checked-border);
       --radio-bg: var(--radio-checked-bg);
     }
   }
@@ -57,7 +57,7 @@
 }
 
 .form-check-label {
-  color: var(--checkbox-label-color, inherit);
+  color: var(--checkbox-label-color);
 }
 
 .d-block-checked {

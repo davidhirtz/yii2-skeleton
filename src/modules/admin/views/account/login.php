@@ -19,8 +19,8 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\LoginActiveForm;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 use davidhirtz\yii2\skeleton\widgets\panels\Card;
-use davidhirtz\yii2\skeleton\widgets\panels\ListGroup;
-use davidhirtz\yii2\skeleton\widgets\panels\ListGroupItem;
+use davidhirtz\yii2\skeleton\widgets\panels\Stack;
+use davidhirtz\yii2\skeleton\widgets\panels\StackItem;
 
 $this->setTitle(Yii::t('skeleton', 'Login'));
 ?>
@@ -40,23 +40,23 @@ $this->setTitle(Yii::t('skeleton', 'Login'));
             ->content(LoginActiveForm::widget([
                 'model' => $form,
             ])),
-        ListGroup::make()
-            ->addItem(ListGroupItem::make()
+        Stack::make()
+            ->addItem(StackItem::make()
                 ->label(Yii::t('skeleton', 'Login with Facebook'))
                 ->icon('brand:facebook')
                 ->url(['auth', 'authclient' => 'facebook'])
                 ->visible($form->isFacebookLoginEnabled()))
-            ->addItem(ListGroupItem::make()
+            ->addItem(StackItem::make()
                 ->label(Yii::t('skeleton', 'Create new account'))
                 ->icon('user')
                 ->url(['create'])
                 ->visible(Yii::$app->getUser()->isSignupEnabled()))
-            ->addItem(ListGroupItem::make()
+            ->addItem(StackItem::make()
                 ->label(Yii::t('skeleton', 'Resend email confirmation'))
                 ->icon('envelope')
                 ->url(['resend'])
                 ->visible(Yii::$app->getUser()->isPasswordResetEnabled() && !Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()))
-            ->addItem(ListGroupItem::make()
+            ->addItem(StackItem::make()
                 ->label(Yii::t('skeleton', 'I forgot my password'))
                 ->icon('key')
                 ->url(['recover'])

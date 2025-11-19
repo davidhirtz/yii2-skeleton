@@ -31,10 +31,10 @@ class Dashboard extends Widget
             ->class('dashboard');
 
         foreach ($this->panels as $panel) {
-            $list = ListGroup::make();
+            $list = Stack::make();
 
             foreach ($panel->items as $item) {
-                $list->addItem(ListGroupItem::make()
+                $list->addItem(StackItem::make()
                     ->attributes($item->attributes)
                     ->label($item->label)
                     ->url($item->url)

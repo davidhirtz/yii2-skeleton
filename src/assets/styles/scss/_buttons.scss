@@ -15,23 +15,23 @@
 
   &:hover {
     background-color: var(--btn-hover-bg);
-    border-color: var(--btn-hover-border-color, inherit);
-    color: var(--btn-hover-color, inherit);
+    border-color: var(--btn-hover-border-color);
+    color: var(--btn-hover-color);
   }
 
   .btn-check:focus-visible + & {
-    border-color: var(--btn-hover-border-color, inherit);
+    border-color: var(--btn-hover-border-color);
     outline: 0;
   }
 
   &.active, .active > & {
     background-color: var(--btn-active-bg, transparent);
     border-color: var(--btn-active-border-color, transparent);
-    color: var(--btn-active-color, inherit);
+    color: var(--btn-active-color);
   }
 
   &:focus-visible {
-    border-color: var(--btn-focus-border-color, inherit);
+    border-color: var(--btn-focus-border-color);
     outline: 0;
   }
 
@@ -108,11 +108,11 @@
   @extend .icon;
 
   &:hover {
-    background: var(--btn-icon-hover-bg, inherit);
+    background: var(--btn-icon-hover-bg);
   }
 
   &:focus-visible {
-    background: var(--btn-icon-focus-bg, inherit);
+    background: var(--btn-icon-focus-bg);
     outline: 0;
   }
 }

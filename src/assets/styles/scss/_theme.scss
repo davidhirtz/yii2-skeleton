@@ -207,8 +207,8 @@
   --card-header-color: var(--color-white);
   --card-danger-header-bg: var(--color-red-300);
   --card-danger-header-color: var(--color-white);
-  --card-list-group-action-bg: var(--color-gray-100);
-  --card-list-group-action-hover-bg: var(--color-gray-200);
+  --card-stack-link-bg: var(--color-gray-100);
+  --card-stack-link-hover-bg: var(--color-gray-200);
 
   // Dropdown
   --dropdown-bg: var(--color-white);
@@ -261,9 +261,6 @@
   --radio-bg: var(--color-white);
   --radio-checked-bg: var(--color-white) #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 8 8"><circle r="2" fill="#000"/></svg>')} no-repeat center;
 
-  // List
-  --list-group-action-bg: var(--color-white);
-  --list-group-action-hover-bg: var(--color-gray-300);
 
   // Modal
   --modal-backdrop-bg: rgba(0, 0, 0, .4);
@@ -309,6 +306,10 @@
   // Progress
   --progress-bg: var(--color-blue-50);
   --progress-bar-bg: var(--color-black);
+
+  // Stack
+  --stack-link-bg: var(--color-white);
+  --stack-link-hover-bg: var(--color-gray-100);
 
   // Submenu
   --submenu-border-color: var(--color-gray-700);

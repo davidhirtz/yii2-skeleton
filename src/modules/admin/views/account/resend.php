@@ -15,8 +15,8 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\AccountResendConfirmAct
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 use davidhirtz\yii2\skeleton\widgets\panels\Card;
-use davidhirtz\yii2\skeleton\widgets\panels\ListGroup;
-use davidhirtz\yii2\skeleton\widgets\panels\ListGroupItem;
+use davidhirtz\yii2\skeleton\widgets\panels\Stack;
+use davidhirtz\yii2\skeleton\widgets\panels\StackItem;
 use yii\helpers\Url;
 
 $this->setTitle(Yii::t('skeleton', 'Resend Account Confirmation'));
@@ -33,9 +33,9 @@ echo Container::make()
             ->content(AccountResendConfirmActiveForm::widget([
                 'model' => $form,
             ])),
-        ListGroup::make()
+        Stack::make()
             ->addItem(
-                ListGroupItem::make()
+                StackItem::make()
                     ->label(Yii::t('skeleton', 'Back to login'))
                     ->icon('sign-in-alt')
                     ->url(Url::to(['login']))

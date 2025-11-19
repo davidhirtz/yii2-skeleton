@@ -15,8 +15,8 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\SignupActiveForm;
 use davidhirtz\yii2\skeleton\widgets\Alert;
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 use davidhirtz\yii2\skeleton\widgets\panels\Card;
-use davidhirtz\yii2\skeleton\widgets\panels\ListGroup;
-use davidhirtz\yii2\skeleton\widgets\panels\ListGroupItem;
+use davidhirtz\yii2\skeleton\widgets\panels\Stack;
+use davidhirtz\yii2\skeleton\widgets\panels\StackItem;
 
 $this->setTitle(Yii::t('skeleton', 'Sign up'));
 
@@ -39,13 +39,13 @@ echo Container::make()
             ->content(SignupActiveForm::widget([
                 'model' => $form,
             ])),
-        ListGroup::make()
-            ->addItem(ListGroupItem::make()
+        Stack::make()
+            ->addItem(StackItem::make()
                 ->label(Yii::t('skeleton', 'Sign up with Facebook'))
                 ->url(['auth', 'authclient' => 'facebook'])
                 ->icon('brand:facebook')
                 ->visible($form->isFacebookSignupEnabled()))
-            ->addItem(ListGroupItem::make()
+            ->addItem(StackItem::make()
                 ->label(Yii::t('skeleton', 'Back to login'))
                 ->url(['login'])
                 ->icon('sign-in-alt'))
