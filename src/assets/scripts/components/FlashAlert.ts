@@ -7,7 +7,7 @@ window.customElements.get('flash-alert') || window.customElements.define('flash-
 
         const close = () => {
             $alert.classList.add('dismissed');
-            $alert.ontransitionend = () => $alert.remove();
+            $alert.ontransitionend = () => this.remove();
         }
 
         if ($close) {

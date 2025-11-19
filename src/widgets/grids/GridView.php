@@ -62,9 +62,9 @@ class GridView extends Widget
 
     public array $headerAttributes = ['class' => 'grid-header'];
     public array $footerAttributes = ['class' => 'grid-footer'];
-    public array $headerRowAttributes;
+    public array $headerRowAttributes = [];
     public array $tableAttributes = ['class' => 'table table-striped table-hover'];
-    public array $tableBodyAttributes;
+    public array $tableBodyAttributes = [];
     public array|Closure $rowAttributes;
 
     public array $pagerOptions = [];
@@ -94,12 +94,14 @@ class GridView extends Widget
 
     protected function renderContent(): string|Stringable
     {
-        $this->attributes['hx-select'] ??= "#{$this->getId()}";
-        $this->attributes['hx-target'] ??= $this->attributes['hx-select'];
-        $this->attributes['hx-select-oob'] ??= '#flashes:beforeend';
+        $this->headerAttributes['hx-select'] ??= "#{$this->getId()}";
+        $this->headerAttributes['hx-target'] ??= $this->headerAttributes['hx-select'];
+        $this->headerAttributes['hx-boost'] ??= 'true';
 
+        $this->headerRowAttributes['hx-select'] ??= "#{$this->getId()} table";
+        $this->headerRowAttributes['hx-target'] ??= $this->headerRowAttributes['hx-select'];
         $this->headerRowAttributes['hx-boost'] ??= 'true';
-        $this->tableBodyAttributes ??= [];
+
         $this->rowAttributes ??= [];
 
         $this->columns ??= $this->getDefaultColumns();

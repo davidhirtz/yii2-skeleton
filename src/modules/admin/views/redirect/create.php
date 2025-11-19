@@ -31,6 +31,5 @@ echo Container::make()
 
 echo FormContainer::make()
     ->title($this->title)
-    ->form(RedirectActiveForm::widget([
-        'model' => $redirect,
-    ]));
+    ->form(RedirectActiveForm::make()
+        ->model($redirect));

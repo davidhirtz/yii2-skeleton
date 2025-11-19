@@ -10,7 +10,6 @@ use davidhirtz\yii2\skeleton\behaviors\BlameableBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TimestampBehavior;
 use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\models\interfaces\BlameableUserInterface;
 use davidhirtz\yii2\skeleton\models\interfaces\TrailModelInterface;
 use davidhirtz\yii2\skeleton\models\interfaces\TypeAttributeInterface;
 use davidhirtz\yii2\skeleton\models\traits\TrailModelTrait;

@@ -26,7 +26,7 @@ AdminAsset::register($this);
     <?= Html::csrfMetaTags() ?>
     <?php $this->head() ?>
 </head>
-<body hx-select="#wrap" hx-swap="outerHTML" hx-target="#wrap">
+<body hx-select="#wrap" hx-select-oob="#flashes:beforeend" hx-swap="outerHTML" hx-target="#wrap" hx-boost="true">
 <?php $this->beginBody() ?>
 <?= Flashes::make(); ?>
 <div id="wrap">

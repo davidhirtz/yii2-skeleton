@@ -40,6 +40,5 @@ echo GridContainer::make()
 echo FormContainer::make()
     ->danger()
     ->title(Yii::t('skeleton', 'Delete Redirect'))
-    ->form(DeleteActiveForm::widget([
-        'model' => $redirect,
-    ]));
+    ->form(DeleteActiveForm::make()
+        ->model($redirect));

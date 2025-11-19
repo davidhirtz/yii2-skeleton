@@ -7,13 +7,14 @@
   position: fixed;
   right: 0;
   top: 4rem;
-  width: min(32rem, 100%);
   z-index: 1000;
 
   .alert {
+    justify-self: end;
     pointer-events: all;
     transition-behavior: allow-discrete;
     transition: opacity .3s ease, translate .3s ease;
+    width: min(32rem, 100%);
 
     @starting-style {
       opacity: 0;

@@ -5,62 +5,51 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\forms;
 
 use davidhirtz\yii2\skeleton\html\Button;
-use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
+use davidhirtz\yii2\skeleton\html\traits\TagLabelTrait;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
 use davidhirtz\yii2\skeleton\widgets\Modal;
-use Override;
+use davidhirtz\yii2\skeleton\widgets\traits\PropertyWidgetTrait;
+use Stringable;
 use Yii;
 use yii\db\ActiveRecord;
 
 class DeleteActiveForm extends ActiveForm
 {
-    public string|false $attribute = false;
-    public DeleteForm $form;
+    use PropertyWidgetTrait;
+    use TagLabelTrait;
 
-    /**
-     * @var string|null the message to display above the "delete" button, defaults to a generic warning message
-     */
-    public ?string $message = null;
+    public bool $hasStickyButtons = false;
 
-    /**
-     * @var string|null the label of the "delete" button, defaults to "Delete"
-     */
-    public ?string $label = null;
+    protected ?string $message = null;
+    protected string|false|null $confirm = null;
 
-    /**
-     * @var string|false|null the confirmation message to display when the "delete" button is clicked, defaults to a
-     * generic confirmation message, set to `false` to disable confirmation
-     */
-    public string|false|null $confirm = null;
-
-    /**
-     * @var array the options for the "delete" text field
-     */
-    public array $fieldOptions = [];
-
-    #[Override]
-    public function init(): void
+    public function message(string|null $message): static
     {
-        $this->form ??= Yii::$container->get(DeleteForm::class, [], [
-            'model' => $this->model,
-            'attribute' => $this->attribute,
-        ]);
+        $this->message = $message;
+        return $this;
+    }
 
-        if ($this->action === '' && $this->model instanceof ActiveRecord) {
-            $this->action = ['delete', 'id' => $this->model->getPrimaryKey()];
-        }
 
-        $this->label ??= Yii::t('skeleton', 'Delete');
+    public function confirm(string|false|null $confirm): static
+    {
+        $this->confirm = $confirm;
+        return $this;
+    }
 
-        if ($this->attribute) {
-            $this->message ??= Yii::t('skeleton', 'Please type the exact {attribute} in the text field below to delete this record. All related files will also be unrecoverably deleted. This cannot be undone, please be certain!', [
-                'attribute' => $this->model->getAttributeLabel($this->attribute),
-            ]);
-        } else {
-            $this->message ??= Yii::t('skeleton', 'Warning: Deleting this record cannot be undone. All related files will also be unrecoverably deleted. Please be certain!');
+    protected function renderContent(): string|Stringable
+    {
+        $this->message ??= $this->property
+            ? Yii::t('skeleton', 'Please type the exact {attribute} in the text field below to delete this record. All related files will also be unrecoverably deleted. This cannot be undone, please be certain!', [
+                'attribute' => $this->model->getAttributeLabel($this->property),
+            ])
+            : Yii::t('skeleton', 'Warning: Deleting this record cannot be undone. All related files will also be unrecoverably deleted. Please be certain!');
+
+        if ($this->model instanceof ActiveRecord) {
+            $this->action ??= ['delete', 'id' => $this->model->getPrimaryKey()];
         }
 
         $this->confirm ??= Yii::t('yii', 'Are you sure you want to delete this item?');
+        $this->label ??= Yii::t('skeleton', 'Delete');
 
         $btn = Button::make()
             ->danger()
@@ -78,20 +67,18 @@ class DeleteActiveForm extends ActiveForm
             $btn->modal($modal);
         }
 
-        $this->buttons ??= $btn->render();
+        $this->buttons ??= [$btn];
+        $this->footer ??= false;
 
-        parent::init();
-    }
+        $this->rows ??= [
+            FormRow::make()
+                ->content($this->message),
+            InputField::make()
+                ->property($this->property)
+                ->visible($this->property !== null)
+                ->required(),
+        ];
 
-    public function renderFields(): void
-    {
-        if ($this->message) {
-            echo $this->textRow($this->message);
-        }
-
-        if ($this->attribute) {
-            $this->fieldOptions['inputOptions']['required'] ??= true;
-            echo $this->field($this->form, 'value', $this->fieldOptions);
-        }
+        return parent::renderContent();
     }
 }
