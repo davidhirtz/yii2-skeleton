@@ -1,38 +1,43 @@
-@import "scss/fonts";
+@import "shared/fonts";
 
 // Configuration
-@import "scss/mixins/breakpoints";
+@import "shared/breakpoints";
 
 // Layout & components
-@import "scss/theme";
-@import "scss/reboot";
+@import "admin/theme";
+@import "admin/reboot";
 
-@import "scss/type";
+@import "admin/type";
 
-@import "scss/images";
-@import "scss/containers";
-@import "scss/grid";
+@import "admin/images";
+@import "admin/containers";
+@import "admin/grid";
 
-@import "scss/card";
-@import "scss/tables";
-@import "scss/forms";
-@import "scss/buttons";
-@import "scss/dropdown";
-@import "scss/nav";
-@import "scss/navbar";
+@import "admin/card";
+@import "admin/tables";
+@import "admin/labels";
+@import "admin/form-control";
+@import "admin/form-select";
+@import "admin/form-check";
+@import "admin/input-group";
+@import "admin/validation";
+@import "admin/buttons";
+@import "admin/dropdown";
+@import "admin/nav";
+@import "admin/navbar";
 
-@import "scss/breadcrumb";
-@import "scss/pagination";
-@import "scss/progress";
-@import "scss/badge";
-@import "scss/alert";
-@import "scss/stack";
-@import "scss/modal";
-@import "scss/sortable";
-@import "scss/tooltip";
+@import "admin/breadcrumb";
+@import "admin/pagination";
+@import "admin/progress";
+@import "admin/badge";
+@import "admin/alert";
+@import "admin/stack";
+@import "admin/modal";
+@import "admin/sortable";
+@import "admin/tooltip";
 
-@import "scss/layout";
-@import "scss/dashboard";
-@import "scss/trail";
+@import "admin/layout";
+@import "admin/dashboard";
+@import "admin/trail";
 
-@import "scss/utilities";
+@import "admin/utilities";

@@ -26,19 +26,12 @@
     border-radius: 50%;
   }
 
-  &:not(.is-invalid,:user-invalid,:disabled):hover,
-  &:not(.is-invalid,:user-invalid):focus {
-    border-color: var(--checkbox-input-focus-border, var(--input-focus-border));
-  }
-
   &:checked {
     &[type="checkbox"] {
-      --input-border-color: var(--checkbox-checked-border);
       --checkbox-bg: var(--checkbox-checked-bg);
     }
 
     &[type="radio"] {
-      --input-border-color: var(--radio-checked-border);
       --radio-bg: var(--radio-checked-bg);
     }
   }
@@ -59,10 +52,6 @@
 
 .form-check-label {
   color: var(--checkbox-label-color);
-}
-
-.d-block-checked {
-
 }
 
 :has(input[data-check]:checked) .d-block-checked {
