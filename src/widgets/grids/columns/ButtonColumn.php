@@ -12,7 +12,7 @@ use yii\base\Model;
 
 class ButtonColumn extends Column
 {
-    public array|null|Closure $contentAttributes = ['class' => 'text-end text-nowrap'];
+    public array|null|Closure $contentAttributes = [];
 
     #[Override]
     protected function getBodyContent(array|Model $model, string|int $key, int $index): string|Stringable
@@ -26,7 +26,7 @@ class ButtonColumn extends Column
 
             if (is_array($buttons)) {
                 return Div::make()
-                    ->class('btn-toolbar')
+                    ->class('btn-group')
                     ->addContent(...$buttons);
             }
         }

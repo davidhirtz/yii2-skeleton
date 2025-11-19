@@ -79,7 +79,7 @@ class Html extends BaseHtml
         }
 
         if ($buttons) {
-            static::addCssClass($options, 'btn-toolbar');
+            static::addCssClass($options, 'btn-group');
             return static::tag('div', $buttons, $options);
         }
 

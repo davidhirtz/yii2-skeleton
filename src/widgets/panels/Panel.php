@@ -56,7 +56,7 @@ class Panel extends Widget
         if ($this->buttons) {
             $content->addContent(
                 Div::make()
-                    ->class('btn-toolbar')
+                    ->class('btn-group')
                     ->content(...$this->buttons)
             );
         }

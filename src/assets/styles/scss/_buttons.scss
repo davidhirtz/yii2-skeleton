@@ -132,3 +132,14 @@
   line-height: 1.125rem;
   padding: 0.25rem 375rem;
 }
+
+.btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+
+  td > & {
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+  }
+}

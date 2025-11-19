@@ -96,7 +96,7 @@ class ActiveForm extends Widget
 
         $content = $this->buttons
             ? Div::make()
-                ->class('btn-toolbar')
+                ->class('btn-group')
                 ->content(...$this->buttons)
             : $this->getSubmitButton();
 

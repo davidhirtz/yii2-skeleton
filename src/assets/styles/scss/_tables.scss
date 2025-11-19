@@ -2,12 +2,8 @@
   width: 100%;
   vertical-align: top;
 
-  > tbody {
+  tbody {
     vertical-align: inherit;
-  }
-
-  > thead {
-    vertical-align: bottom;
   }
 
   th, td {
@@ -16,10 +12,9 @@
     border-bottom: 1px solid var(--table-td-border-color);
   }
 
-  th {
+  th, tr:last-child td {
     border-bottom-color: var(--table-th-border-color);
   }
-
 }
 
 .table-striped {

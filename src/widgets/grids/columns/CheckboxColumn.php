@@ -17,15 +17,6 @@ class CheckboxColumn extends Column
     protected bool $multiple = true;
     protected string $name = 'selection[]';
 
-    protected function init(): void
-    {
-        if ($this->multiple && substr_compare($this->name, '[]', -2, 2)) {
-            $this->name .= '[]';
-        }
-
-        $this->registerClientScript();
-    }
-
     public function multiple(bool $multiple = true): static
     {
         $this->multiple = $multiple;
@@ -35,12 +26,19 @@ class CheckboxColumn extends Column
     public function name(string $name): static
     {
         $this->name = $name;
+
+        if (substr_compare($this->name, '[]', -2, 2)) {
+            $this->name .= '[]';
+        }
+
         return $this;
     }
 
     #[Override]
     protected function getHeaderContent(): string|Stringable
     {
+        $this->registerClientScript();
+
         if ($this->header !== null || !$this->multiple) {
             return parent::getHeaderContent();
         }
