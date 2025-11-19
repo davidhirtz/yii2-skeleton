@@ -1,3 +1,9 @@
+.dashboard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
 
 .dashboard-item {
   width: 100%;

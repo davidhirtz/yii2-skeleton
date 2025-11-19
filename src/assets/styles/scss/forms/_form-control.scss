@@ -3,7 +3,7 @@
 .form-control {
   display: block;
   width: 100%;
-  padding: .5625rem 1rem;
+  padding: 0.5625rem 1rem;
   font-size: .875rem;
   appearance: none; // Fix appearance for date inputs in Safari
   background-color: var(--input-bg-color);
@@ -88,7 +88,7 @@
   }
 
   @include media-breakpoint-up(md) {
-      padding-block: .4375rem;
+      padding-block: 0.5625rem;
       font-size: 1rem;
       line-height: 1.4;
   }
@@ -97,7 +97,7 @@
 .form-control-plaintext {
   display: block;
   width: 100%;
-  padding: .5625rem 0;
+  padding: 0.5625rem 0;
   margin-bottom: 0; // match inputs if this class comes on inputs with default margins
   background-color: transparent;
   border: solid transparent;

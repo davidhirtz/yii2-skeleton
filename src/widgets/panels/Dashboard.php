@@ -28,7 +28,7 @@ class Dashboard extends Widget
     protected function renderContent(): Stringable
     {
         $wrap = Div::make()
-            ->class('row flex-wrap justify-center');
+            ->class('dashboard');
 
         foreach ($this->panels as $panel) {
             $list = ListGroup::make();

@@ -1,13 +1,7 @@
 @import "scss/fonts";
 
 // Configuration
-@import "scss/variables";
-
 @import "scss/mixins/breakpoints";
-@import "scss/mixins/text-truncate";
-@import "scss/mixins/utilities";
-
-@import "scss/utilities";
 
 // Layout & components
 @import "scss/root";
@@ -42,8 +36,4 @@
 @import "scss/dashboard";
 @import "scss/trail";
 
-// Helpers
-@import "scss/helpers";
-
-// Utilities
-@import "scss/utilities/api";
+@import "scss/utilities";

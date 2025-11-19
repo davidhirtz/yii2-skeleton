@@ -45,7 +45,6 @@ dialog {
 }
 
 hr {
-  margin-block: 1rem;
   border-top: 1px solid var(--border-color);
   opacity: 1;
 }
@@ -54,14 +53,6 @@ ol,
 ul,
 menu {
   list-style: none;
-}
-
-dt {
-  font-weight: 500;
-}
-
-dd {
-  margin-bottom: .5rem;
 }
 
 b,
@@ -75,21 +66,6 @@ mark, .mark {
   background-color: var(--highlight-bg);
 }
 
-sub,
-sup {
-  position: relative;
-  font-size: .75rem;
-  line-height: 0;
-  vertical-align: baseline;
-}
-
-sub {
-  bottom: -.25em;
-}
-
-sup {
-  top: -.5em;
-}
 
 a {
   color: var(--link-color);
@@ -107,11 +83,6 @@ code {
   font-family: "Courier New", monospace;
   font-size: .75rem;
   overflow: auto;
-
-  code {
-    color: inherit;
-    word-break: normal;
-  }
 }
 
 code {

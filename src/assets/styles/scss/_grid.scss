@@ -1,9 +1,9 @@
 .row {
   display: flex;
-  margin: calc(-.5 * $grid-spacer);
+  margin: -.5rem;
 
   > * {
-    padding: calc(.5 * $grid-spacer);
+    padding: 1rem;
   }
 }
 
