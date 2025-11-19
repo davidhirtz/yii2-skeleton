@@ -14,7 +14,7 @@ use davidhirtz\yii2\skeleton\widgets\forms\fields\Field;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\HexColorField;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\SelectField;
-use davidhirtz\yii2\skeleton\widgets\forms\traits\FormTrait;
+use davidhirtz\yii2\skeleton\widgets\forms\traits\FormWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
@@ -24,7 +24,7 @@ use yii\validators\EmailValidator;
 
 class Fieldset extends Widget
 {
-    use FormTrait;
+    use FormWidgetTrait;
     use TagAttributesTrait;
     use TagIdTrait;
     use ModelWidgetTrait;

@@ -6,7 +6,7 @@ namespace davidhirtz\yii2\skeleton\widgets\forms\traits;
 
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
 
-trait FormTrait
+trait FormWidgetTrait
 {
     protected ActiveForm $form;
 

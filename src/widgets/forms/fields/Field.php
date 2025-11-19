@@ -13,7 +13,7 @@ use davidhirtz\yii2\skeleton\html\traits\TagLabelTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagVisibilityTrait;
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\forms\FormRow;
-use davidhirtz\yii2\skeleton\widgets\forms\traits\FormTrait;
+use davidhirtz\yii2\skeleton\widgets\forms\traits\FormWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\traits\PropertyWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
@@ -21,7 +21,7 @@ use Stringable;
 
 abstract class Field extends Widget
 {
-    use FormTrait;
+    use FormWidgetTrait;
     use ModelWidgetTrait;
     use PropertyWidgetTrait;
     use TagAttributesTrait;

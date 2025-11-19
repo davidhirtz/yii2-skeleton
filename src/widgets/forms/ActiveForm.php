@@ -17,6 +17,7 @@ use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
 use Yii;
 use yii\db\ActiveRecordInterface;
+use yii\helpers\Inflector;
 
 class ActiveForm extends Widget
 {
@@ -41,10 +42,11 @@ class ActiveForm extends Widget
     {
         $this->action ??= Url::current();
 
+        $this->attributes['id'] ??= $this->model ? Inflector::camel2id($this->model->formName()) : $this->getId();
         $this->attributes['hx-select'] ??= "#{$this->getId()}";
         $this->attributes['hx-target'] ??= $this->attributes['hx-select'];
         $this->attributes['hx-select-oob'] ??= '#flashes:beforeend';
-        $this->attributes['hx-boost'] ??= true;
+        $this->attributes['hx-boost'] ??= "true";
 
         return Form::make()
             ->attributes($this->attributes)
@@ -66,6 +68,7 @@ class ActiveForm extends Widget
     protected function getErrors(): string|Stringable
     {
         return ErrorSummary::make()
+            ->title(false)
             ->models($this->model);
     }
 

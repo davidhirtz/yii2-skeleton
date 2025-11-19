@@ -22,7 +22,7 @@ class ErrorSummary extends Widget
     public ?string $icon = 'exclamation-triangle';
     public bool $showAllErrors = true;
 
-    protected array $errors = [];
+    protected ?array $errors = null;
 
     /**
      * @var Model[]
@@ -35,7 +35,7 @@ class ErrorSummary extends Widget
         return $this;
     }
 
-    public function errors(array $errors): static
+    public function errors(?array $errors): static
     {
         $this->errors = $errors;
         return $this;

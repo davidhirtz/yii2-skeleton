@@ -68,6 +68,11 @@ class Request extends \yii\web\Request
         return $subdomain && str_contains((string)$this->getHostInfo(), "//$subdomain.");
     }
 
+    public function isHtmxRequest(): bool
+    {
+        return $this->getHeaders()->has('HX-Request');
+    }
+
     public function getIsDraft(): bool
     {
         return $this->_isDraft;

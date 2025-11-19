@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
+use davidhirtz\yii2\skeleton\controllers\traits\HtmxControllerTrait;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
@@ -17,6 +18,8 @@ use yii\web\Response;
 
 class RedirectController extends Controller
 {
+    use HtmxControllerTrait;
+
     #[Override]
     public function behaviors(): array
     {
@@ -36,8 +39,8 @@ class RedirectController extends Controller
     }
 
     public function actionIndex(
-        ?int $type = null,
-        ?int $user = null,
+        ?int    $type = null,
+        ?int    $user = null,
         ?string $q = null,
     ): Response|string
     {
@@ -81,7 +84,7 @@ class RedirectController extends Controller
             }
 
             if (!$redirect->hasErrors()) {
-                return $this->redirect([...$this->request->get(), 'update', 'id' => $redirect->id]);
+                return $this->redirectToIndex();
             }
         }
 
@@ -96,12 +99,7 @@ class RedirectController extends Controller
         $redirect->delete();
 
         $this->errorOrSuccess($redirect, Yii::t('skeleton', 'The redirect rule was deleted.'));
-
-        return $this->redirect([
-            'index',
-            ...$this->request->getQueryParams(),
-            'id' => null,
-        ]);
+        return $this->redirectToIndex();
     }
 
     public function actionDeleteAll(): Response|string
@@ -128,6 +126,15 @@ class RedirectController extends Controller
         }
 
         return $this->redirect($this->request->getReferrer() ?? ['index']);
+    }
+
+    protected function redirectToIndex(): Response
+    {
+        return $this->redirect([
+            'index',
+            ...$this->request->getQueryParams(),
+            'id' => null,
+        ]);
     }
 
     protected function findRedirect(int $id): Redirect

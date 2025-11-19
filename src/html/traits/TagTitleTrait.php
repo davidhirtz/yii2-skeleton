@@ -9,11 +9,11 @@ use Stringable;
 
 trait TagTitleTrait
 {
-    protected ?string $title = null;
+    protected string|Stringable|false|null $title = null;
 
-    public function title(string|Stringable|null $title): static
+    public function title(string|Stringable|false|null $title): static
     {
-        $this->title = is_string($title) ? Html::encode($title) : null;
+        $this->title = is_string($title) ? Html::encode($title) : $title;
         return $this;
     }
 }

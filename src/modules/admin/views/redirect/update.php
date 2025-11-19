@@ -10,7 +10,6 @@ declare(strict_types=1);
  * @var RedirectActiveDataProvider $provider
  */
 
-use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
 use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
@@ -18,7 +17,6 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\RedirectActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\RedirectGridView;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
-use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 use davidhirtz\yii2\skeleton\widgets\forms\FormContainer;
 use davidhirtz\yii2\skeleton\widgets\grids\GridContainer;
 use davidhirtz\yii2\skeleton\widgets\navs\Header;
@@ -30,12 +28,7 @@ echo Header::make()
     ->title(Yii::t('skeleton', 'Redirects'))
     ->url(['index']);
 
-echo Container::make()
-    ->content(ErrorSummary::make()
-        ->models($redirect));
-
 echo FormContainer::make()
-    ->title($this->title)
     ->form(RedirectActiveForm::make()
         ->model($redirect));
 
