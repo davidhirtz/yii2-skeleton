@@ -19,11 +19,6 @@ trait TagInputTrait
         return $this->attribute('disabled', $disabled ? '' : null);
     }
 
-    public function form(Form|string|Stringable $form): static
-    {
-        return $this->attribute('form', $form instanceof Form ? $form->getId() : $form);
-    }
-
     public function name(?string $name): static
     {
         return $this->attribute('name', $name);

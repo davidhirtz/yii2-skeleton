@@ -80,8 +80,6 @@ class SelectField extends Field
                 ->value($value));
         }
 
-        dd($select);
-
         return $select;
     }
 
