@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\widgets\forms;
 
 use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\Field;
 use davidhirtz\yii2\skeleton\widgets\forms\traits\FormTrait;
 use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
@@ -19,11 +20,11 @@ class Fieldset extends Widget
     use ModelWidgetTrait;
 
     /**
-     * @var ActiveFieldNew[]|string[]
+     * @var Field[]|string[]
      */
     protected array $fields = [];
 
-    public function fields(ActiveFieldNew|string ...$fields): static
+    public function fields(Field|string ...$fields): static
     {
         $this->fields = $fields;
         return $this;
@@ -33,7 +34,7 @@ class Fieldset extends Widget
     {
         foreach ($this->fields as $i => &$field) {
             if (is_string($field)) {
-                $field = ActiveFieldNew::make()
+                $field = Field::make()
                     ->property($field);
             }
 

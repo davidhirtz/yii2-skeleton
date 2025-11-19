@@ -17,6 +17,7 @@ use davidhirtz\yii2\skeleton\models\interfaces\TrailModelInterface;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
 use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\Field;
 use davidhirtz\yii2\skeleton\widgets\forms\footers\CreatedAtFooterItem;
 use davidhirtz\yii2\skeleton\widgets\forms\footers\FormFooter;
 use davidhirtz\yii2\skeleton\widgets\forms\footers\UpdatedAtFooterItem;
@@ -45,7 +46,7 @@ class ActiveForm extends Widget
     protected array|false|null $footer = null;
 
     /**
-     * @var ActiveFieldNew[]|string[]|null
+     * @var Field[]|string[]|null
      */
     protected ?array $fields = null;
 

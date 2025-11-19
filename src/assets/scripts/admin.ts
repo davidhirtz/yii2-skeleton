@@ -29,6 +29,10 @@ htmx.onLoad(($container) => {
     queryAll('[data-form-toggle]', toggleTargetsOnChange);
     queryAll('[data-modal]', modal);
     queryAll('[data-tooltip]', tooltip);
+
+    queryAll('[aria-invalid]', ($input: HTMLElement) => {
+        $input.addEventListener('input', () => $input.removeAttribute('aria-invalid'));
+    })
 });
 
 

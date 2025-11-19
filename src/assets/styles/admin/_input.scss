@@ -11,8 +11,8 @@
   &:is(input,select,textarea) {
     background-color: var(--input-bg-color);
 
-    &:not(.is-invalid, :user-invalid, :disabled):hover,
-    &:not(.is-invalid, :user-invalid):focus {
+    &:not([aria-invalid], :user-invalid, :disabled):hover,
+    &:not([aria-invalid], :user-invalid):focus {
       --input-bg-color: var(--input-focus-bg-color);
       --input-border-color: var(--input-focus-border-color);
       --input-caret: var(--caret-down);
@@ -128,8 +128,8 @@
   }
 
 
-  &:not(:has(.is-invalid,:user-invalid)):focus-within,
-  &:not(:has(.is-invalid,:user-invalid)):hover {
+  &:not(:has([aria-invalid],:user-invalid)):focus-within,
+  &:not(:has([aria-invalid],:user-invalid)):hover {
     --input-bg-color: var(--input-focus-bg-color);
     --input-border-color: var(--input-focus-border-color);
     --input-color: var(--input-focus-color);

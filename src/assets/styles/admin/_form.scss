@@ -1,7 +1,15 @@
 .form,
-.fieldset{
+.fieldset:has(>:not([hidden])) {
   display: grid;
   gap: 1rem;
+}
+
+.fieldset {
+  display: none;
+
+  &:not(:first-child) {
+    border-top: 1px solid var(--border-color);
+  }
 }
 
 .form-row {
@@ -65,8 +73,8 @@
   }
 }
 
-.is-invalid,
-.form-group:has(.is-invalid,:user-invalid), {
+[aria-invalid],
+.form-group:has([aria-invalid],:user-invalid), {
   --color-label: var(--form-invalid-color);
   --input-bg-color: var(--form-invalid-bg);
   --input-border-color: var(--form-invalid-border);
