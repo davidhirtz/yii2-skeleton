@@ -26,14 +26,15 @@ class UserSubmenu extends Submenu
         } else {
             $this->title ??= Yii::t('skeleton', 'Users');
 
-            $this->view->title($this->title)
-                ->addBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
+            $this->view->title($this->title);
 
             $this->title = Yii::t('skeleton', 'Users');
             $this->url ??= ['/admin/user/index'];
 
             $this->items = $this->getDefaultItems();
         }
+
+        $this->view->addBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
 
         return parent::renderContent();
     }

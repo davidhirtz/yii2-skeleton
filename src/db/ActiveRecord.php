@@ -8,6 +8,7 @@ use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
 use davidhirtz\yii2\skeleton\behaviors\AttributeTypecastBehavior;
 use davidhirtz\yii2\skeleton\db\commands\BatchInsertQueryBuild;
+use Override;
 use Yii;
 use yii\helpers\Inflector;
 
@@ -20,13 +21,13 @@ class ActiveRecord extends \yii\db\ActiveRecord
 {
     use ModelTrait;
 
-    public const SCENARIO_INSERT = 'insert';
-    public const SCENARIO_UPDATE = 'update';
+    public const string SCENARIO_INSERT = 'insert';
+    public const string SCENARIO_UPDATE = 'update';
 
     private bool $_isBatch = false;
     private bool $_isDeleted = false;
 
-    #[\Override]
+    #[Override]
     public function behaviors(): array
     {
         return [
@@ -35,7 +36,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function beforeDelete(): bool
     {
         $this->_isDeleted = true;
@@ -45,13 +46,13 @@ class ActiveRecord extends \yii\db\ActiveRecord
     /**
      * @return ActiveQuery<static>
      */
-    #[\Override]
+    #[Override]
     public static function find(): ActiveQuery
     {
         return Yii::createObject(ActiveQuery::class, [static::class]);
     }
 
-    #[\Override]
+    #[Override]
     public static function findOne($condition): ?static
     {
         return $condition === null ? null : parent::findOne($condition);
@@ -117,7 +118,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
      * Extends the default functionality by checking for DateTime objects, which unfortunately cannot be compared by
      * checking identical values using `===` as it always returns `true` even if the date was not changed.
      */
-    #[\Override]
+    #[Override]
     public function getDirtyAttributes($names = null): array
     {
         return array_filter(parent::getDirtyAttributes($names), function ($name): bool {
@@ -131,7 +132,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
      * cannot be compared by checking identical values using `===` as it always returns `true` even if the date was not
      * changed.
      */
-    #[\Override]
+    #[Override]
     public function isAttributeChanged($name, $identical = true): bool
     {
         if ($this->getAttribute($name) instanceof \DateTime) {
@@ -167,7 +168,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return $this->_isDeleted;
     }
 
-    #[\Override]
+    #[Override]
     public function attributeLabels(): array
     {
         return [

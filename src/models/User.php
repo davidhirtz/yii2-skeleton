@@ -20,6 +20,7 @@ use davidhirtz\yii2\skeleton\models\traits\StatusAttributeTrait;
 use davidhirtz\yii2\skeleton\models\traits\TrailModelTrait;
 use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
 use davidhirtz\yii2\skeleton\validators\UniqueValidator;
+use Override;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\db\ActiveQuery;
@@ -53,7 +54,7 @@ use yii\web\IdentityInterface;
  *
  * @property string $uploadPath {@see static::getUploadPath()}
  *
- * @property-read User $admin {@see static::getAdmin()}
+ * @property-read User|null $created {@see static::getCreated()}
  * @property-read AuthClient[] $authClients {@see static::getAuthClients()}
  *
  * @mixin TrailBehavior
@@ -99,7 +100,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
      */
     private string|false $_uploadPath = 'uploads/users/';
 
-    #[\Override]
+    #[Override]
     public function behaviors(): array
     {
         return [
@@ -113,7 +114,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function rules(): array
     {
         return [
@@ -151,7 +152,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
                 'pattern' => $this->namePattern,
                 'message' => Yii::t('skeleton', 'Username must only contain alphanumeric characters.'),
                 'skipOnError' => true,
-                'when' => fn () => $this->namePattern !== false,
+                'when' => fn() => $this->namePattern !== false,
             ],
             [
                 ['name'],
@@ -173,7 +174,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
                 'unique',
                 'message' => Yii::t('skeleton', 'This email address is already used by another user.'),
                 'skipOnError' => true,
-                'when' => fn () => $this->isAttributeChanged('email')
+                'when' => fn() => $this->isAttributeChanged('email')
             ],
             [
                 ['city', 'first_name', 'last_name'],
@@ -193,7 +194,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
         return $this->password_hash && Yii::$app->getSecurity()->validatePassword($password . $this->password_salt, $this->password_hash);
     }
 
-    #[\Override]
+    #[Override]
     public function beforeSave($insert): bool
     {
         if ($insert) {
@@ -203,7 +204,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
         return parent::beforeSave($insert);
     }
 
-    #[\Override]
+    #[Override]
     public function afterSave($insert, $changedAttributes): void
     {
         if (!$insert && !empty($changedAttributes['picture'])) {
@@ -213,7 +214,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
         parent::afterSave($insert, $changedAttributes);
     }
 
-    #[\Override]
+    #[Override]
     public function delete(): false|int
     {
         if (!$this->isDeletable()) {
@@ -227,7 +228,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
         return parent::delete();
     }
 
-    #[\Override]
+    #[Override]
     public function afterDelete(): void
     {
         if ($this->picture) {
@@ -240,7 +241,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
     /**
      * @return UserQuery<static>
      */
-    public function getAdmin(): UserQuery
+    public function getCreated(): UserQuery
     {
         /** @var UserQuery $query */
         $query = $this->hasOne(static::class, ['id' => 'created_by_user_id']);
@@ -255,7 +256,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
     /**
      * @return UserQuery<static>
      */
-    #[\Override]
+    #[Override]
     public static function find(): UserQuery
     {
         return Yii::createObject(UserQuery::class, [static::class]);
@@ -263,6 +264,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
 
     public static function findIdentity($id): ?static
     {
+        /** @var static|null $identity */
         $identity = static::find()
             ->where(['id' => $id])
             ->enabled()
@@ -337,7 +339,9 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
 
     public function getInitials(): string
     {
-        return $this->first_name && $this->last_name ? ($this->first_name[0] . $this->last_name[0]) : substr((string)$this->name, 0, 2);
+        return $this->first_name && $this->last_name
+            ? ($this->first_name[0] . $this->last_name[0])
+            : substr((string)$this->name, 0, 2);
     }
 
     public function getEmailConfirmationUrl(): ?string
@@ -468,11 +472,17 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
         return !$this->isOwner() && !empty($this->verification_token);
     }
 
+    /**
+     * @noinspection PhpUnused
+     */
     public static function getCountries(): array
     {
         return require(Yii::getAlias('@skeleton/messages/') . Yii::$app->language . '/countries.php');
     }
 
+    /**
+     * @noinspection PhpUnused
+     */
     public static function getLanguages(): array
     {
         $i18n = Yii::$app->getI18n();
@@ -485,12 +495,15 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
         return $languages;
     }
 
+    /**
+     * @noinspection PhpUnused
+     */
     public static function getTimezones(): array
     {
         return array_combine(DateTimeZone::listIdentifiers(), DateTimeZone::listIdentifiers());
     }
 
-    #[\Override]
+    #[Override]
     public function attributeLabels(): array
     {
         return [
@@ -517,13 +530,13 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function formName(): string
     {
         return 'User';
     }
 
-    #[\Override]
+    #[Override]
     public static function tableName(): string
     {
         return '{{%user}}';

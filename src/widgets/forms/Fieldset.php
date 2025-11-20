@@ -10,6 +10,7 @@ use davidhirtz\yii2\skeleton\models\interfaces\I18nAttributeInterface;
 use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
 use davidhirtz\yii2\skeleton\validators\HexColorValidator;
 use davidhirtz\yii2\skeleton\validators\SensitiveAttributeValidator;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\CheckboxField;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\Field;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\HexColorField;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
@@ -107,9 +108,9 @@ class Fieldset extends Widget
             }
 
             if ($validator instanceof BooleanValidator) {
-                // Todo true and false values
-                $type = 'checkbox';
-                break;
+                return CheckboxField::make()
+                    ->unchecked('0' !== $validator->falseValue ? $validator->falseValue : null)
+                    ->property($property);
             }
 
             if ($validator instanceof EmailValidator) {

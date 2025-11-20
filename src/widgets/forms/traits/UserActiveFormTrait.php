@@ -4,120 +4,88 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\forms\traits;
 
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
-use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\models\Trail;
-use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\SelectField;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\TimezoneSelectField;
-use davidhirtz\yii2\skeleton\widgets\Username;
-use davidhirtz\yii2\timeago\Timeago;
-use Yii;
-use yii\widgets\ActiveField;
+use Stringable;
 
 trait UserActiveFormTrait
 {
-    public function countryField(array $options = []): ActiveField|string
+    protected function getStatusField(): string|Stringable
     {
-        if (!$this->model->isAttributeRequired('country')) {
-            $options['inputOptions']['prompt'] ??= '';
-        }
-
-        $items = $this->model->user::getCountries();
-
-        return $this->field($this->model, 'country', $options)->dropDownList($items);
+        return SelectField::make()
+            ->model($this->model->user)
+            ->property('status');
     }
 
-    public function emailField(array $options = []): ActiveField|string
+    protected function getNameField(): string|Stringable
     {
-        return $this->field($this->model, 'email', $options)->input('email');
+        return InputField::make()
+            ->model($this->model->user)
+            ->property('name');
     }
 
-    public function languageField(array $options = []): ActiveField|string
+    protected function getEmailField(): string|Stringable
     {
-        $items = ArrayHelper::getColumn($this->model->user::getLanguages(), 'name');
-        return $this->field($this->model, 'language', $options)->dropDownList($items);
+        return InputField::make()
+            ->model($this->model)
+            ->property('email')
+            ->type('email');
     }
 
-    public function newPasswordField(array $options = []): ActiveField|string
+    protected function getNewPasswordField(): string|Stringable
     {
-        return $this->field($this->model, 'newPassword', $options)->passwordInput();
+        return InputField::make()
+            ->property('newPassword')
+            ->type('password');
     }
 
-    /**
-     * @uses UserForm::$repeatPassword
-     */
-    public function repeatPasswordField(array $options = []): ActiveField|string
+    protected function getRepeatPasswordField(): string|Stringable
     {
-        $options['enableClientValidation'] ??= false;
-        return $this->field($this->model, 'repeatPassword', $options)
-            ->passwordInput();
+        return InputField::make()
+            ->property('repeatPassword')
+            ->type('password');
     }
 
-    /**
-     * @uses User::getTimezones()
-     */
-    public function timezoneField(array $options = []): ActiveField|string
+    protected function getLanguageField(): string|Stringable
     {
-        return $this->field($this->model, 'timezone', $options)->widget(TimezoneSelectField::class);
+        return SelectField::make()
+            ->model($this->model->user)
+            ->property('language');
     }
 
-    public function uploadField(array $options = []): ActiveField|string
+    protected function getTimezoneField(): string|Stringable
     {
-        return $this->getPicturePreview()
-            . $this->field($this->model, 'upload')->fileInput($options);
+        return TimezoneSelectField::make()
+            ->model($this->model->user)
+            ->property('timezone');
     }
 
-    protected function getPicturePreview(): string
+    protected function getFirstNameField(): string|Stringable
     {
-        if (!$this->model->user->picture) {
-            return '';
-        }
-
-        return $this->row($this->offset(Html::img($this->model->user->getPictureUrl(), [
-            'style' => 'max-width:150px',
-        ])));
+        return InputField::make()
+            ->model($this->model->user)
+            ->property('first_name');
     }
 
-    public function renderFooter(): void
+    protected function getLastNameField(): string|Stringable
     {
-        if ($items = array_filter($this->getFooterItems())) {
-            echo $this->listRow($items);
-        }
+        return InputField::make()
+            ->model($this->model->user)
+            ->property('last_name');
     }
 
-    protected function getFooterItems(): array
+    protected function getCityField(): string|Stringable
     {
-        $user = $this->model->user;
-        $items = [];
+        return InputField::make()
+            ->model($this->model->user)
+            ->property('city');
+    }
 
-        if (!$user->getIsNewRecord()) {
-            if ($user->updated_at) {
-                $hasTrailAuth = Yii::$app->getUser()->can('trailIndex');
-
-                $text = Yii::t('skeleton', 'Last updated {timestamp}', [
-                    'timestamp' => Timeago::tag($user->updated_at),
-                ]);
-
-                $items[] = $hasTrailAuth
-                    ? Html::a($text, Trail::getAdminRouteByModel(User::instance(), $user->id))
-                    : $text;
-            }
-
-            if ($user->created_by_user_id) {
-                $items[] = Yii::t('skeleton', 'Created by {user} {timestamp}', [
-                    'timestamp' => Timeago::tag($user->created_at),
-                    'user' => Username::make()
-                        ->user($user->admin)
-                        ->clickable(),
-                ]);
-            } else {
-                $items[] = Yii::t('skeleton', 'Signed up {timestamp}', [
-                    'timestamp' => Timeago::tag($user->created_at),
-                ]);
-            }
-        }
-
-        return $items;
+    protected function getCountryField(): string|Stringable
+    {
+        return SelectField::make()
+            ->model($this->model->user)
+            ->property('country');
     }
 }

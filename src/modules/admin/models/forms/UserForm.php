@@ -19,10 +19,6 @@ class UserForm extends Model
 
     public string|int|null $status = null;
     public ?string $newPassword = null;
-
-    /**
-     * @var bool whether the credentials should be sent to the user's email address
-     */
     public bool $sendEmail = false;
 
     public function __construct(public User $user, array $config = [])
@@ -82,6 +78,7 @@ class UserForm extends Model
         ];
     }
 
+
     #[Override]
     public function scenarios(): array
     {
@@ -110,6 +107,12 @@ class UserForm extends Model
             ],
             ActiveRecord::SCENARIO_UPDATE => $attributes,
         ];
+    }
+
+    public function load($data, $formName = null): bool
+    {
+        $this->user->load($data, $formName);
+        return parent::load($data, $formName);
     }
 
     public function save(): bool

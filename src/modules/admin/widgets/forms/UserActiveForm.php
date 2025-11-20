@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
+use davidhirtz\yii2\skeleton\html\Li;
 use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
-use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
-use davidhirtz\yii2\skeleton\widgets\forms\fields\SelectField;
-use davidhirtz\yii2\skeleton\widgets\forms\fields\TimezoneSelectField;
+use davidhirtz\yii2\skeleton\widgets\forms\footers\UpdatedAtFooterItem;
 use davidhirtz\yii2\skeleton\widgets\forms\traits\UserActiveFormTrait;
+use davidhirtz\yii2\skeleton\widgets\Username;
+use davidhirtz\yii2\timeago\Timeago;
 use Stringable;
-use yii\widgets\ActiveField;
+use Yii;
 
 /**
  * @property UserForm $model
@@ -46,95 +46,41 @@ class UserActiveForm extends ActiveForm
             ],
         ];
 
+        $this->footer ??= [
+            $this->getUpdatedAtFooterItem(),
+            $this->getCreatedAtFooterItem(),
+        ];
+
         return parent::renderContent();
     }
 
-    protected function getStatusField(): string|Stringable
+    protected function getUpdatedAtFooterItem(): Stringable
     {
-        return SelectField::make()
-            ->model($this->model->user)
-            ->property('status');
+        return UpdatedAtFooterItem::make()
+            ->model($this->model->user);
     }
 
-    protected function getNameField(): string|Stringable
+    protected function getCreatedAtFooterItem(): ?Stringable
     {
-        return InputField::make()
-            ->model($this->model->user)
-            ->property('name');
-    }
+        if ($this->model->user->getIsNewRecord()) {
+            return null;
+        }
 
-    protected function getEmailField(): string|Stringable
-    {
-        return InputField::make()
-            ->model($this->model)
-            ->property('email')
-            ->type('email');
-    }
+        $created = $this->model->user->created;
 
-    protected function getNewPasswordField(): string|Stringable
-    {
-        return InputField::make()
-            ->property('newPassword')
-            ->type('password');
-    }
+        $content = $created
+            ? Yii::t('skeleton', 'Created by {user} {timestamp}', [
+                'timestamp' => Timeago::tag($this->model->user->created_at),
+                'user' => Username::make()
+                    ->user($created)
+                    ->clickable(),
+            ])
+            : Yii::t('skeleton', 'Signed up {timestamp}', [
+                'timestamp' => Timeago::tag($this->model->user->created_at),
+            ]);
 
-    protected function getRepeatPasswordField(): string|Stringable
-    {
-        return InputField::make()
-            ->property('newPassword')
-            ->type('password');
-    }
-
-    protected function getLanguageField(): string|Stringable
-    {
-        return SelectField::make()
-            ->model($this->model->user)
-            ->property('language');
-    }
-
-    protected function getTimezoneField(): string|Stringable
-    {
-        return TimezoneSelectField::make()
-            ->model($this->model->user)
-            ->property('timezone');
-    }
-
-    protected function getFirstNameField(): string|Stringable
-    {
-        return InputField::make()
-            ->model($this->model->user)
-            ->property('first_name');
-    }
-
-    protected function getLastNameField(): string|Stringable
-    {
-        return InputField::make()
-            ->model($this->model->user)
-            ->property('last_name');
-    }
-
-    protected function getCityField(): string|Stringable
-    {
-        return InputField::make()
-            ->model($this->model->user)
-            ->property('city');
-    }
-
-    protected function getCountryField(): string|Stringable
-    {
-        return SelectField::make()
-            ->model($this->model->user)
-            ->property('country');
-    }
-
-
-    public function sendEmailField(array $options = []): ActiveField|string
-    {
-        return $this->field($this->model, 'sendEmail')->checkbox($options);
-    }
-
-    protected function isNewRecord(): bool
-    {
-        return $this->model->user->getIsNewRecord();
+        return Li::make()
+            ->class('form-footer-item')
+            ->content($content);
     }
 }

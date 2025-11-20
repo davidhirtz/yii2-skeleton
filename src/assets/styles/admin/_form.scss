@@ -40,21 +40,33 @@
 
   @include media-breakpoint-up(md) {
     grid-column-start: 2;
+
+    .input[type="checkbox"],
+    .input[type="radio"] {
+      align-self: center;
+    }
+
+    .form-checkbox-row & {
+      display: flex;
+      gap: 1rem;
+      padding: .5rem 0;
+    }
   }
 }
+
 
 .form-error {
   display: none;
 
-  :has([aria-invalid]) > & {
+  .form-group:has([aria-invalid],:user-invalid) & {
     display: block;
-    font-size: 0.75rem;
+    font-size: .75rem;
     color: var(--form-invalid-color);
   }
 }
 
 .form-hint {
-  font-size: 0.875rem;
+  font-size: .75rem;
   color: var(--muted-color);
 }
 
@@ -80,11 +92,11 @@
 .label {
   color: var(--color-label);
   display: inline-block;
-  font-weight: 700;
 
   .form-label & {
     border: 1px transparent;
     padding: 0.5rem 0;
+    font-weight: 700;
   }
 
   .form-row:has(:required) &:after {

@@ -47,13 +47,8 @@
   }
 
   ul {
-    padding-left: 1rem;
-    list-style-type: square;
-  }
-
-  li {
-    padding-top: .25rem;
-    font-weight: normal;
+    display: grid;
+    gap: .25rem;
   }
 }
 
