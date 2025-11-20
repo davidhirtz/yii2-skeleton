@@ -18,17 +18,23 @@ class DeleteActiveForm extends ActiveForm
     use PropertyWidgetTrait;
     use TagLabelTrait;
 
+    public array $inputAttributes = ['autocomplete' => 'off'];
     public bool $hasStickyButtons = false;
 
     protected ?string $message = null;
     protected string|false|null $confirm = null;
+
+    public function inputAttributes(array $attributes): static
+    {
+        $this->inputAttributes = $attributes;
+        return $this;
+    }
 
     public function message(string|null $message): static
     {
         $this->message = $message;
         return $this;
     }
-
 
     public function confirm(string|false|null $confirm): static
     {
@@ -74,6 +80,7 @@ class DeleteActiveForm extends ActiveForm
             FormRow::make()
                 ->content($this->message),
             InputField::make()
+                ->attributes($this->inputAttributes)
                 ->property($this->property)
                 ->value('')
                 ->required()

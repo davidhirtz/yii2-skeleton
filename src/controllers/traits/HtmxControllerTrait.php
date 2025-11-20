@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\controllers\traits;
 
+use Override;
 use yii\helpers\Json;
 use yii\web\Response;
 
 trait HtmxControllerTrait
 {
+    #[Override]
     public function redirect($url, $statusCode = 302): Response
     {
         $response = parent::redirect($url, $statusCode);
@@ -33,6 +35,19 @@ trait HtmxControllerTrait
         }
 
         return $response;
+    }
+
+    #[Override]
+    public function refresh($anchor = ''): Response
+    {
+        return $this->redirect($this->request->getUrl() . $anchor);
+    }
+
+    protected function requestHtmxRefresh(): void
+    {
+        if ($this->isHtmxRequest()) {
+            $this->response->getHeaders()->set('HX-Refresh', 'true');
+        }
     }
 
     protected function getHtmxRedirectTarget(): string|false

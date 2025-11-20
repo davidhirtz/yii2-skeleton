@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\controllers;
 
 use davidhirtz\yii2\skeleton\auth\clients\ClientInterface;
+use davidhirtz\yii2\skeleton\controllers\traits\HtmxControllerTrait;
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\forms\AccountConfirmForm;
 use davidhirtz\yii2\skeleton\models\forms\AccountResendConfirmForm;
@@ -32,6 +33,8 @@ use yii\web\ServerErrorHttpException;
 
 class AccountController extends Controller
 {
+    use HtmxControllerTrait;
+
     public $defaultAction = 'update';
 
     #[Override]
@@ -281,8 +284,10 @@ class AccountController extends Controller
             'user' => Yii::$app->getUser()->getIdentity(),
         ]);
 
+        $language = $form->user->language;
+
         if ($form->load(Yii::$app->getRequest()->post())) {
-            if ($form->update()) {
+            if ($form->save()) {
                 $this->success(Yii::t('skeleton', 'Your account was updated.'));
             }
 
@@ -290,7 +295,6 @@ class AccountController extends Controller
                 return $this->refresh();
             }
 
-            $form->newPassword = null;
             $form->oldPassword = null;
         }
 

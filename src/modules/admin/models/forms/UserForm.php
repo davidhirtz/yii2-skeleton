@@ -79,38 +79,7 @@ class UserForm extends Model
         return $this->user->getIsNewRecord() ? self::SCENARIO_INSERT : Model::SCENARIO_DEFAULT;
     }
 
-    public function load($data, $formName = null): bool
-    {
-        $this->user->load($data, $formName);
-        return parent::load($data, $formName);
-    }
-
-    public function validate($attributeNames = null, $clearErrors = true): bool
-    {
-        $this->clearErrors();
-
-        if (!$this->user->validate($attributeNames, $clearErrors)) {
-            $this->addErrors($this->user->getErrors());
-        }
-
-        return parent::validate($attributeNames, false);
-    }
-
-    public function save(): bool
-    {
-        if (!$this->validate() || !$this->beforeSave()) {
-            return false;
-        }
-
-        if ($this->user->upsert(false)) {
-            $this->afterSave();
-            return true;
-        }
-
-        return false;
-    }
-
-    public function beforeSave(): bool
+    protected function beforeSave(): bool
     {
         if (!$this->user->isOwner()) {
             $this->user->status = $this->status;
@@ -126,7 +95,7 @@ class UserForm extends Model
         return true;
     }
 
-    public function afterSave(): void
+    protected function afterSave(): void
     {
         if ($this->newPassword) {
             $this->user->afterPasswordChange();
@@ -157,7 +126,6 @@ class UserForm extends Model
     public function attributeLabels(): array
     {
         return [
-            ...$this->user->attributeLabels(),
             'newPassword' => $this->user->getIsNewRecord()
                 ? Yii::t('skeleton', 'Password')
                 : Yii::t('skeleton', 'New password'),

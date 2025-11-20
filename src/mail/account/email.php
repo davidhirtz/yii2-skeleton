@@ -18,7 +18,7 @@ $this->title = Yii::t('skeleton', 'Email confirmation');
 <p><?= Yii::t('skeleton', 'Hi {name}, ', ['name' => $form->user->getUsername()]); ?></p>
 <p>
     <?= Yii::t('skeleton', 'You have recently changed your registered email from {old} to {new}.', [
-        'old' => $form->oldEmail,
+        'old' => $form->email,
         'new' => $form->user->email
     ]); ?>
     <?= Yii::t('skeleton', 'Please click the link below to verify your new email address.'); ?></p>
