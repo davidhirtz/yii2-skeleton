@@ -18,7 +18,7 @@ class TimezoneSelectField extends SelectField
         return parent::renderContent();
     }
 
-    public function getTimezones(): array
+    protected function getTimezones(): array
     {
         if ($this->_timezones === null) {
             $identifiers = DateTimeZone::listIdentifiers();
@@ -74,7 +74,10 @@ class TimezoneSelectField extends SelectField
             'America/Chicago' => 'Central Time (CST)',
             'America/New_York' => 'Eastern Time (EST)',
             'America/Campo_Grande' => 'Brazil',
-            default => strtr(preg_replace('#^(America|Arctic|Asia|Atlantic|Australia|Europe|Indian)/#', '', $name), ['_' => ' ', '/' => ' | ']),
+            default => strtr(preg_replace('#^(America|Arctic|Asia|Atlantic|Australia|Europe|Indian)/#', '', $name), [
+                '_' => ' ',
+                '/' => ' | ',
+            ]),
         };
     }
 }
