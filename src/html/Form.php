@@ -34,10 +34,13 @@ class Form extends Tag
     protected function renderContent(): string
     {
         if ('post' === $this->attributes['method']) {
-            $this->content[] = TextInput::make()
-                ->type('hidden')
-                ->name(Yii::$app->request->csrfParam)
-                ->value(Yii::$app->request->getCsrfToken());
+            $this->content = [
+                TextInput::make()
+                    ->type('hidden')
+                    ->name(Yii::$app->request->csrfParam)
+                    ->value(Yii::$app->request->getCsrfToken()),
+                ...$this->content
+            ];
         }
 
         return implode('', $this->content);

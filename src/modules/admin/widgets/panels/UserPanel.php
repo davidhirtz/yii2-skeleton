@@ -59,7 +59,7 @@ class UserPanel extends Widget
                 ->primary()
                 ->text(Yii::t('skeleton', 'Disable 2FA'))
                 ->icon('qrcode')
-                ->post(['disable-google-authenticator', 'id' => $this->user->id])
+                ->post(['disable-authenticator', 'id' => $this->user->id])
             : null;
     }
 

@@ -64,7 +64,7 @@ class LoginForm extends Model
     }
 
     /**
-     * Validates user credentials and status and Google authenticator code if set.
+     * Validates user credentials and status and Authenticator code if set.
      */
     #[\Override]
     public function afterValidate(): void
@@ -98,7 +98,7 @@ class LoginForm extends Model
     }
 
     /**
-     * Validates the Google authenticator code if needed.
+     * Validates the Authenticator code if needed.
      */
     public function validateGoogleAuthenticatorCode(): void
     {

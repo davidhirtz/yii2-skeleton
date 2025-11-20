@@ -31,6 +31,7 @@ class ActiveForm extends Widget
     public string $layout = "{errors}{rows}{buttons}{footer}";
 
     protected array|false|null $buttons = null;
+    protected ?string $submitButtonText = null;
     protected array|false|null $footer = null;
 
     /**
@@ -110,19 +111,21 @@ class ActiveForm extends Widget
 
         return $this->hasStickyButtons
             ? Div::make()
-                ->class('form-buttons')
+                ->class('form-buttons sticky')
                 ->content($row)
             : $row;
     }
 
     protected function getSubmitButton(): Stringable
     {
+        $this->submitButtonText ??= $this->model instanceof ActiveRecordInterface && $this->model->getIsNewRecord()
+            ? Yii::t('skeleton', 'Create')
+            : Yii::t('skeleton', 'Update');
+
         return Button::make()
             ->primary()
-            ->type('submit')
-            ->text($this->model instanceof ActiveRecordInterface && $this->model->getIsNewRecord()
-                ? Yii::t('skeleton', 'Create')
-                : Yii::t('skeleton', 'Update'));
+            ->text($this->submitButtonText)
+            ->type('submit');
     }
 
     protected function getFooter(): ?Stringable

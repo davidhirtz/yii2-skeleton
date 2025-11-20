@@ -52,7 +52,7 @@ class User extends \yii\web\User
     public bool $enableSignup = false;
 
     /**
-     * @var bool whether 2FA via Google authenticator should be available.
+     * @var bool whether 2FA via Authenticator should be available.
      */
     public bool $enableGoogleAuthenticator = true;
 

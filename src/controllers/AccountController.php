@@ -12,7 +12,7 @@ use davidhirtz\yii2\skeleton\models\forms\AccountResendConfirmForm;
 use davidhirtz\yii2\skeleton\models\forms\AccountUpdateForm;
 use davidhirtz\yii2\skeleton\models\forms\AuthClientSignupForm;
 use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
-use davidhirtz\yii2\skeleton\models\forms\GoogleAuthenticatorForm;
+use davidhirtz\yii2\skeleton\models\forms\TwoFactorAuthenticatorForm;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
 use davidhirtz\yii2\skeleton\models\forms\PasswordRecoverForm;
 use davidhirtz\yii2\skeleton\models\forms\PasswordResetForm;
@@ -50,8 +50,8 @@ class AccountController extends Controller
                         'actions' => [
                             'deauthorize',
                             'delete',
-                            'disable-google-authenticator',
-                            'enable-google-authenticator',
+                            'disable-authenticator',
+                            'enable-authenticator',
                             'logout',
                             'picture',
                             'update',
@@ -78,8 +78,8 @@ class AccountController extends Controller
                 'actions' => [
                     'deauthorize' => ['post'],
                     'delete' => ['post'],
-                    'disable-google-authenticator' => ['post'],
-                    'enable-google-authenticator' => ['post'],
+                    'disable-authenticator' => ['post'],
+                    'enable-authenticator' => ['post'],
                     'logout' => ['post'],
                     'picture' => ['post'],
                 ],
@@ -334,9 +334,9 @@ class AccountController extends Controller
         return $this->redirect(['update']);
     }
 
-    public function actionEnableGoogleAuthenticator(): Response|string
+    public function actionEnableAuthenticator(): Response|string
     {
-        $form = GoogleAuthenticatorForm::create([
+        $form = TwoFactorAuthenticatorForm::create([
             'user' => Yii::$app->getUser()->getIdentity(),
         ]);
 
@@ -348,9 +348,9 @@ class AccountController extends Controller
         return $this->redirect(['update']);
     }
 
-    public function actionDisableGoogleAuthenticator(): Response|string
+    public function actionDisableAuthenticator(): Response|string
     {
-        $form = GoogleAuthenticatorForm::create([
+        $form = TwoFactorAuthenticatorForm::create([
             'user' => Yii::$app->getUser()->getIdentity(),
         ]);
 

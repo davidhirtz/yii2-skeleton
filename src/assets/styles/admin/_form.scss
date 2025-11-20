@@ -27,7 +27,7 @@
 }
 
 .form-label {
-  @include media-breakpoint-up(md) {
+  @include media-breakpoint-up(sm) {
     padding: 1px 0;
     align-self: flex-start;
     text-align: right;
@@ -38,7 +38,7 @@
   display: grid;
   gap: .5rem;
 
-  @include media-breakpoint-up(md) {
+  @include media-breakpoint-up(sm) {
     grid-column-start: 2;
 
     .input[type="checkbox"],
@@ -72,7 +72,7 @@
 
 .form-buttons {
   position: sticky;
-  padding: 1rem 1em 0;
+  padding: 1rem;
   bottom: 0;
   border-top: 1px solid var(--form-footer-border-color);
   background: var(--card-bg);
@@ -84,6 +84,10 @@
   line-height: 1.125rem;
   color: var(--muted-color);
 
+  .form-buttons + & {
+    margin-top: -1rem;
+  }
+
   a:not(:hover) {
     color: currentColor;
   }
@@ -94,9 +98,12 @@
   display: inline-block;
 
   .form-label & {
-    border: 1px transparent;
-    padding: 0.5rem 0;
     font-weight: 700;
+
+    @include media-breakpoint-up(sm) {
+      border: 1px transparent;
+      padding: 0.5rem 0;
+    }
   }
 
   .form-row:has(:required) &:after {

@@ -40,8 +40,4 @@
   border-top: 1px solid var(--table-th-border-color);
   padding-block: 1rem;
   z-index: 100;
-
-  .card-body:has(&) {
-    padding-bottom: 0;
-  }
 }

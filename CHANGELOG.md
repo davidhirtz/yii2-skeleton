@@ -10,6 +10,7 @@
 - Removed `GridView::getDeleteButton()`
 - Removed `GridView::getSortableButton()`
 - Removed `GridView::renderSelectionForm()`
+- Renamed `GoogleAuthenticator` classes to `TwoFactorAuthenticator` classes
 
 ## 2.6.3 (Nov 5, 2025)
 

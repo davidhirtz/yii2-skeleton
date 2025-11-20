@@ -29,8 +29,8 @@ class InputField extends Field
 
         foreach ($this->model?->getActiveValidators($this->property) ?? [] as $validator) {
             if ($validator instanceof StringValidator) {
-                $this->attributes['maxlength'] ??= $validator->max;
-                $this->attributes['minlength'] ??= $validator->min;
+                $this->attributes['maxlength'] ??= $validator->max ?? $validator->length;
+                $this->attributes['minlength'] ??= $validator->min?? $validator->length;
             }
         }
 

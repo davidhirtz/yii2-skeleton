@@ -7,12 +7,13 @@ namespace davidhirtz\yii2\skeleton\models\forms;
 use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\validators\GoogleAuthenticatorValidator;
+use Override;
 use RobThree\Auth\Providers\Qr\QRServerProvider;
 use RobThree\Auth\TwoFactorAuth;
 use Yii;
 use yii\base\Model;
 
-class GoogleAuthenticatorForm extends Model
+class TwoFactorAuthenticatorForm extends Model
 {
     use ModelTrait;
 
@@ -24,7 +25,7 @@ class GoogleAuthenticatorForm extends Model
         parent::__construct($config);
     }
 
-    #[\Override]
+    #[Override]
     public function rules(): array
     {
         return [
@@ -90,7 +91,7 @@ class GoogleAuthenticatorForm extends Model
     protected function generateSecret(): void
     {
         Yii::$app->getSession()->set('google_2fa_secret', $this->_secret = (new TwoFactorAuth())->createSecret());
-        Yii::debug('New Google Authenticator secret generated');
+        Yii::debug('New Authenticator secret generated');
     }
 
     protected function getGoogleAuthenticatorIssuer(): string
@@ -98,13 +99,13 @@ class GoogleAuthenticatorForm extends Model
         return Yii::$app->params['googleAuthenticatorIssuer'] ?? Yii::$app->name;
     }
 
-    #[\Override]
+    #[Override]
     public function formName(): string
     {
         return 'GoogleAuthenticator';
     }
 
-    #[\Override]
+    #[Override]
     public function attributeLabels(): array
     {
         return [

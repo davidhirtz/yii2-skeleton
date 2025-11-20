@@ -33,8 +33,8 @@ class FormFooter extends Widget
 
         return $this->items
             ? FormRow::make()
+                ->addClass('form-footer')
                 ->content(Ul::make()
-                    ->class('form-footer')
                     ->content(...$this->items))
             : '';
     }

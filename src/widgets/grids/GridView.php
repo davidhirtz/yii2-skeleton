@@ -61,7 +61,7 @@ class GridView extends Widget
     public ?array $header = null;
 
     public array $headerAttributes = ['class' => 'grid-header'];
-    public array $footerAttributes = ['class' => 'grid-footer'];
+    public array $footerAttributes = ['class' => 'grid-footer sticky'];
     public array $headerRowAttributes = [];
     public array $tableAttributes = ['class' => 'table table-striped table-hover'];
     public array $tableBodyAttributes = [];

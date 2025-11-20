@@ -13,7 +13,7 @@ use yii\validators\StringValidator;
 class GoogleAuthenticatorValidator extends StringValidator
 {
     /**
-     * @var string|null the Google authenticator secret key.
+     * @var string|null the Authenticator secret key.
      */
     public ?string $secret = null;
 

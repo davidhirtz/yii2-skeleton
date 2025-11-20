@@ -14,9 +14,9 @@ use davidhirtz\yii2\skeleton\controllers\AccountController;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\models\forms\AccountUpdateForm;
-use davidhirtz\yii2\skeleton\models\forms\GoogleAuthenticatorForm;
+use davidhirtz\yii2\skeleton\models\forms\TwoFactorAuthenticatorForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\AccountActiveForm;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorActiveForm;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\TwoFactorAuthenticatorActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\AuthClientGridView;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\Alert;
@@ -47,12 +47,9 @@ echo FormContainer::make()
 
 if (Yii::$app->getUser()->enableGoogleAuthenticator) {
     echo FormContainer::make()
-        ->title(Yii::t('skeleton', 'Google Authenticator'))
-        ->form(GoogleAuthenticatorActiveForm::widget([
-            'model' => GoogleAuthenticatorForm::create([
-                'user' => $form->user,
-            ]),
-        ]));
+        ->title(Yii::t('skeleton', 'Two-Factor Authentication'))
+        ->form(TwoFactorAuthenticatorActiveForm::make()
+            ->model($form->user));
 }
 
 if (Yii::$app->getAuthClientCollection()->clients) {

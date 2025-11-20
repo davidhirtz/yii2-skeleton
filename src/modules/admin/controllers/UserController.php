@@ -50,7 +50,7 @@ class UserController extends Controller
                         'actions' => [
                             'deauthorize',
                             'delete-picture',
-                            'disable-google-authenticator',
+                            'disable-authenticator',
                             'index',
                             'ownership',
                             'reset',

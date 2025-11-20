@@ -14,7 +14,7 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorLogi
 use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 use davidhirtz\yii2\skeleton\widgets\panels\Card;
 
-$this->title(Yii::t('skeleton', 'Google Authenticator'));
+$this->title(Yii::t('skeleton', 'Two-Factor Authentication'));
 
 echo Container::make()
     ->content(ErrorSummary::make()->models($form)

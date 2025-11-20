@@ -1,13 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 /**
- * New email mail.
- *
  * @var yii\web\View $this
  * @var MessageInterface $message
  * @var AccountUpdateForm $form
- * @var string $oldEmail
  */
 
 use davidhirtz\yii2\skeleton\models\forms\AccountUpdateForm;
@@ -18,8 +16,8 @@ $this->title = Yii::t('skeleton', 'Email confirmation');
 <p><?= Yii::t('skeleton', 'Hi {name}, ', ['name' => $form->user->getUsername()]); ?></p>
 <p>
     <?= Yii::t('skeleton', 'You have recently changed your registered email from {old} to {new}.', [
-        'old' => $form->email,
-        'new' => $form->user->email
+            'old' => $form->email,
+            'new' => $form->user->email
     ]); ?>
     <?= Yii::t('skeleton', 'Please click the link below to verify your new email address.'); ?></p>
 <p><?php echo Yii::t('skeleton', 'Thank you!'); ?></p>
