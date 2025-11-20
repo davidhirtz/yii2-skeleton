@@ -46,7 +46,7 @@ class SelectField extends Field
     {
         $this->attributes['id'] ??= $this->getId();
 
-        $selected = $this->attributes['value'] ?? $this->model?->{$this->property} ?? null;
+        $selected = $this->attributes['value'] ?? $this->model->{$this->property} ?? null;
         unset($this->attributes['value']);
 
         if (!$this->items && $this->model) {
@@ -70,7 +70,7 @@ class SelectField extends Field
             ->attributes($this->attributes)
             ->addClass('input');
 
-        if (false !== $this->prompt && (!$this->isRequired() || empty($this->attributes['value']))) {
+        if (false !== $this->prompt && (!$this->isRequired() || $selected)) {
             $select->addOption(Option::make()
                 ->disabled($this->isRequired())
                 ->label($this->prompt));
@@ -87,10 +87,5 @@ class SelectField extends Field
         }
 
         return $select;
-    }
-
-    public function isVisible(): bool
-    {
-        return parent::isVisible() && [] === $this->items;
     }
 }

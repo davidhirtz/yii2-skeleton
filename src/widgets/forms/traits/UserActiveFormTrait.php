@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\forms\traits;
 
+use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\SelectField;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\TimezoneSelectField;
@@ -14,8 +15,10 @@ trait UserActiveFormTrait
     protected function getStatusField(): string|Stringable
     {
         return SelectField::make()
-            ->model($this->model->user)
-            ->property('status');
+            ->model($this->model)
+            ->property('status')
+            ->items(ArrayHelper::getColumn($this->model->user::getStatuses(), 'name'))
+            ->visible(!$this->model->user->isOwner());
     }
 
     protected function getNameField(): string|Stringable
@@ -28,7 +31,7 @@ trait UserActiveFormTrait
     protected function getEmailField(): string|Stringable
     {
         return InputField::make()
-            ->model($this->model)
+            ->model($this->model->user)
             ->property('email')
             ->type('email');
     }

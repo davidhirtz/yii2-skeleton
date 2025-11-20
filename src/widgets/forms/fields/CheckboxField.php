@@ -14,9 +14,17 @@ class CheckboxField extends Field
 {
     use TagInputTrait;
 
+    protected string|int $checkedValue = '1';
     protected string|int|null $uncheckedValue = null;
 
-    public function unchecked(string|int|null $uncheckedValue): static
+    public function checkedValue(string|int $checkedValue): static
+    {
+        $this->checkedValue = $checkedValue;
+        $this->attributes['value'] = $checkedValue;
+        return $this;
+    }
+
+    public function uncheckedValue(string|int|null $uncheckedValue): static
     {
         $this->uncheckedValue = $uncheckedValue;
         return $this;
@@ -40,7 +48,9 @@ class CheckboxField extends Field
     public function getInput(): string|Stringable
     {
         $this->attributes['type'] ??= 'checkbox';
-        $this->attributes['value'] ??= $this->model?->{$this->property};
+        $value = $this->attributes['value'] ?? $this->model?->{$this->property} ?? '';
+        $this->attributes['value'] = $this->checkedValue;
+        $this->attributes['checked'] = ((string)$value == (string)$this->checkedValue);
 
         $input = Input::make()
             ->attributes($this->attributes)

@@ -11,9 +11,7 @@ use Yii;
 
 trait ModelTrait
 {
-    private ?array $_activeAttributes = null;
-    private ?array $_safeAttributes = null;
-    private ?array $_scenarios = null;
+    private ?array $scenarios = null;
 
     public function addInvalidAttributeError(string $attribute): bool
     {
@@ -24,42 +22,14 @@ trait ModelTrait
         return false;
     }
 
-    /**
-     * This method is in place to avoid endless calls to {@see \yii\db\ActiveRecord::activeAttributes()}.
-     * If this method's results are cached in a future Yii2 version, this can be removed.
-     */
-    public function activeAttributes(): array
-    {
-        $this->_activeAttributes ??= parent::activeAttributes();
-        return $this->_activeAttributes;
-    }
-
-    /**
-     * This method is in place to avoid excessive calls to {@see \yii\db\ActiveRecord::safeAttributes()}.
-     * If this method's results are cached in a future Yii2 version, this can be removed.
-     */
-    public function safeAttributes(): array
-    {
-        $this->_safeAttributes ??= parent::safeAttributes();
-        return $this->_safeAttributes;
-    }
-
-    /**
-     * This method is in place to avoid endless calls to {@see \yii\db\ActiveRecord::scenarios()}.
-     * If this method's results are cached in a future Yii2 version, this can be removed.
-     */
     public function scenarios(): array
     {
-        $this->_scenarios ??= parent::scenarios();
-        return $this->_scenarios;
+        return $this->scenarios ??= parent::scenarios();
     }
 
     public function setScenario($value): void
     {
-        $this->_activeAttributes = null;
-        $this->_safeAttributes = null;
-        $this->_scenarios = null;
-
+        $this->scenarios = null;
         parent::setScenario($value);
     }
 

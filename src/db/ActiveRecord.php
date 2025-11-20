@@ -21,9 +21,6 @@ class ActiveRecord extends \yii\db\ActiveRecord
 {
     use ModelTrait;
 
-    public const string SCENARIO_INSERT = 'insert';
-    public const string SCENARIO_UPDATE = 'update';
-
     private bool $_isBatch = false;
     private bool $_isDeleted = false;
 

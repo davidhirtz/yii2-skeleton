@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
+use davidhirtz\yii2\skeleton\controllers\traits\HtmxControllerTrait;
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
 use davidhirtz\yii2\skeleton\models\forms\OwnershipForm;
@@ -23,6 +24,7 @@ use yii\web\ServerErrorHttpException;
 
 class UserController extends Controller
 {
+    use HtmxControllerTrait;
     use UserTrait;
 
     #[Override]
@@ -89,21 +91,20 @@ class UserController extends Controller
 
     public function actionCreate(): Response|string
     {
-        $form = UserForm::create();
-
-        if (!Yii::$app->getUser()->can(User::AUTH_USER_CREATE, ['user' => $form->user])) {
+        if (!Yii::$app->getUser()->can(User::AUTH_USER_CREATE)) {
             throw new ForbiddenHttpException();
         }
 
-        if ($form->load(Yii::$app->getRequest()->post())) {
-            if ($form->save()) {
-                $this->success(Yii::t('skeleton', 'The user was created.'));
-                return $this->redirect(['update', 'id' => $form->user->id]);
-            }
-        } else {
-            $identity = Yii::$app->getUser()->getIdentity();
-            $form->language = $identity->language;
-            $form->timezone = $identity->timezone;
+        $identity = Yii::$app->getUser()->getIdentity();
+        $form = UserForm::create();
+
+        $form->user->language = $identity->language;
+        $form->user->timezone = $identity->timezone;
+        $form->user->country = $identity->country;
+
+        if ($form->load(Yii::$app->getRequest()->post()) && $form->save()) {
+            $this->success(Yii::t('skeleton', 'The user was created.'));
+            return $this->redirect(['update', 'id' => $form->user->id]);
         }
 
         return $this->render('create', [

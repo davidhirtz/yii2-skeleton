@@ -123,12 +123,8 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
                 'trim',
             ],
             [
-                ['status', 'email'],
+                ['email'],
                 'required',
-            ],
-            [
-                ['status'],
-                DynamicRangeValidator::class,
             ],
             [
                 ['country', 'language', 'timezone'],

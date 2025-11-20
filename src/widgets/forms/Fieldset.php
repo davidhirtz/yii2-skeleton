@@ -109,7 +109,7 @@ class Fieldset extends Widget
 
             if ($validator instanceof BooleanValidator) {
                 return CheckboxField::make()
-                    ->unchecked('0' !== $validator->falseValue ? $validator->falseValue : null)
+                    ->uncheckedValue('0' !== $validator->falseValue ? $validator->falseValue : null)
                     ->property($property);
             }
 

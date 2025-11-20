@@ -1,16 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 /**
- * User sign up mail.
- *
  * @var yii\web\View $this
  * @var MessageInterface $message
  * @var UserForm $form
  */
 
 use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
-use yii\helpers\Url;
 use yii\mail\MessageInterface;
 
 $this->title = Yii::t('skeleton', 'Your Account');
@@ -21,7 +19,7 @@ $this->title = Yii::t('skeleton', 'Your Account');
     <tbody>
     <tr>
         <td><?= Yii::t('skeleton', 'Email'); ?></td>
-        <td><?= $form->email; ?></td>
+        <td><?= $form->user->email; ?></td>
     </tr>
     <?php if ($form->newPassword) { ?>
         <tr>
@@ -32,5 +30,5 @@ $this->title = Yii::t('skeleton', 'Your Account');
     </tbody>
 </table>
 <p><?= Yii::t('skeleton', 'Please click the link below to login and consider changing your password immediately.'); ?></p>
-<p><a href="<?= $url = Url::to(Yii::$app->getUser()->loginUrl, true); ?>"><?= $url; ?></a></p>
+<p><a href="<?= $form->getLoginUrl(); ?>"><?= $form->getLoginUrl(); ?></a></p>
 <p><?php echo Yii::t('skeleton', 'Thank you!'); ?></p>
