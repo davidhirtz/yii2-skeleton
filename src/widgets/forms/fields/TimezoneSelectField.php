@@ -2,29 +2,20 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\forms;
+namespace davidhirtz\yii2\skeleton\widgets\forms\fields;
 
 use DateTime;
 use DateTimeZone;
-use yii\helpers\Html;
-use yii\widgets\InputWidget;
+use Stringable;
 
-/**
- * @property array $timezones
- * @see TimezoneDropdown::getTimezones()
- */
-class TimezoneDropdown extends InputWidget
+class TimezoneSelectField extends SelectField
 {
-    public $options = ['class' => 'input'];
-
     private ?array $_timezones = null;
 
-    public function run(): string
+    protected function renderContent(): string|Stringable
     {
-        $timezones = $this->getTimezones();
-        return $this->hasModel()
-            ? Html::activeDropDownList($this->model, $this->attribute, $timezones, $this->options)
-            : Html::dropDownList($this->name, $this->value, $timezones, $this->options);
+        $this->items = $this->getTimezones();
+        return parent::renderContent();
     }
 
     public function getTimezones(): array
@@ -58,14 +49,6 @@ class TimezoneDropdown extends InputWidget
         }
 
         return $this->_timezones;
-    }
-
-    /**
-     * @noinspection PhpUnused
-     */
-    public function setTimezones(array $timezones): void
-    {
-        $this->_timezones = $timezones;
     }
 
     private function formatTimezoneOffset(int $offset): string

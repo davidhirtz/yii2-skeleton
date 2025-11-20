@@ -46,6 +46,9 @@ class SelectField extends Field
     {
         $this->attributes['id'] ??= $this->getId();
 
+        $selected = $this->attributes['value'] ?? $this->model?->{$this->property} ?? null;
+        unset($this->attributes['value']);
+
         if (!$this->items && $this->model) {
             $method = 'get' . Inflector::camelize(Inflector::pluralize($this->property));
 
@@ -74,8 +77,11 @@ class SelectField extends Field
         }
 
         foreach ($this->items as $value => $item) {
+            $attributes = $item['attributes'] ?? [];
+            $attributes['selected'] = ((string)$value === (string)$selected);
+
             $select->addOption(Option::make()
-                ->attributes($item['attributes'] ?? [])
+                ->attributes($attributes)
                 ->label($item['label'] ?? $item)
                 ->value($value));
         }

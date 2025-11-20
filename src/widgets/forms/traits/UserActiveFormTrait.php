@@ -9,7 +9,7 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
-use davidhirtz\yii2\skeleton\widgets\forms\TimezoneDropdown;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\TimezoneSelectField;
 use davidhirtz\yii2\skeleton\widgets\Username;
 use davidhirtz\yii2\timeago\Timeago;
 use Yii;
@@ -59,7 +59,7 @@ trait UserActiveFormTrait
      */
     public function timezoneField(array $options = []): ActiveField|string
     {
-        return $this->field($this->model, 'timezone', $options)->widget(TimezoneDropdown::class);
+        return $this->field($this->model, 'timezone', $options)->widget(TimezoneSelectField::class);
     }
 
     public function uploadField(array $options = []): ActiveField|string

@@ -6,7 +6,6 @@ namespace davidhirtz\yii2\skeleton\widgets\forms\fields;
 
 use davidhirtz\yii2\skeleton\html\Input;
 use davidhirtz\yii2\skeleton\html\traits\TagInputTrait;
-use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
 use Stringable;
 use yii\validators\StringValidator;
 
@@ -14,22 +13,19 @@ class InputField extends Field
 {
     use TagInputTrait;
 
-    public function form(ActiveForm $form): static
+    protected function renderContent(): string|Stringable
     {
-        parent::form($form);
+        if ('hidden' === ($this->attributes['type'] ?? null)) {
+            return $this->getInput();
+        }
 
-
-        return $this;
+        return parent::renderContent();
     }
 
-    protected function renderContent(): string|Stringable
+    public function getInput(): string|Stringable
     {
         $this->attributes['type'] ??= 'text';
         $this->attributes['value'] ??= $this->model?->{$this->property};
-
-        if ('hidden' === $this->attributes['type']) {
-            return $this->getInput();
-        }
 
         foreach ($this->model?->getActiveValidators($this->property) ?? [] as $validator) {
             if ($validator instanceof StringValidator) {
@@ -38,11 +34,6 @@ class InputField extends Field
             }
         }
 
-        return parent::renderContent();
-    }
-
-    public function getInput(): string|Stringable
-    {
         return Input::make()
             ->attributes($this->attributes)
             ->addClass('input');

@@ -9,6 +9,7 @@ use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\SelectField;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\TimezoneSelectField;
 use davidhirtz\yii2\skeleton\widgets\forms\traits\UserActiveFormTrait;
 use Stringable;
 use yii\widgets\ActiveField;
@@ -41,8 +42,7 @@ class UserActiveForm extends ActiveForm
                 SelectField::make()
                     ->model($this->model->user)
                     ->property('language'),
-                // Todo Timezone widget
-                SelectField::make()
+                TimezoneSelectField::make()
                     ->model($this->model->user)
                     ->property('timezone'),
             ],
