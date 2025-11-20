@@ -53,18 +53,20 @@ abstract class Field extends Widget
         $this->label ??= $this->model->getAttributeLabel($this->property);
         $this->form = $form;
 
-        $this->error ??= $this->model->getFirstError($this->property);
-        $this->hint ??= $this->model->getAttributeHint($this->property);
+        if ($this->model) {
+            $this->error ??= $this->model->getFirstError($this->property);
+            $this->hint ??= $this->model->getAttributeHint($this->property);
 
-        $this->attributes['name'] ??= Html::getInputName($this->model, $this->property);
-        $this->attributes['id'] ??= Html::getInputIdByName($this->attributes['name']);
+            $this->attributes['name'] ??= Html::getInputName($this->model, $this->property);
+            $this->attributes['id'] ??= Html::getInputIdByName($this->attributes['name']);
 
-        if ($this->model->isAttributeRequired($this->property)) {
-            $this->attributes['required'] ??= true;
-        }
+            if ($this->model->isAttributeRequired($this->property)) {
+                $this->attributes['required'] ??= true;
+            }
 
-        if ($this->model->hasErrors($this->property)) {
-            $this->attributes['aria-invalid'] = true;
+            if ($this->model->hasErrors($this->property)) {
+                $this->attributes['aria-invalid'] = true;
+            }
         }
 
         $this->rowAttributes['id'] ??= "{$this->getId()}-field";
@@ -76,7 +78,6 @@ abstract class Field extends Widget
     {
         return FormRow::make()
             ->attributes($this->rowAttributes)
-            ->addClass(($this->attributes['required'] ?? false) ? 'required' : null)
             ->header($this->getLabel())
             ->content(
                 $this->getInput(),
@@ -118,7 +119,7 @@ abstract class Field extends Widget
 
     public function isSafe(): bool
     {
-        return $this->model?->isAttributeSafe($this->property) ?? true;
+        return $this->model?->isAttributeSafe($this->property) ?? false;
     }
 
     public function isRequired(): bool

@@ -87,7 +87,7 @@
     padding: 0.5rem 0;
   }
 
-  .required &:after {
+  .form-row:has(:required) &:after {
     content: " *";
   }
 }

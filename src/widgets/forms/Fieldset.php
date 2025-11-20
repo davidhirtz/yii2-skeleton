@@ -54,16 +54,6 @@ class Fieldset extends Widget
                 continue;
             }
 
-            if (!$field->isVisible()) {
-                Yii::debug("Skipping invisible attribute '$field->property'");
-                continue;
-            }
-
-            if (!$field->isSafe()) {
-                Yii::debug("Skipping unsafe attribute '$field->property'");
-                continue;
-            }
-
             if (!$this->model instanceof I18nAttributeInterface) {
                 $rows[] = $field->form($this->form);
                 continue;
@@ -73,6 +63,23 @@ class Fieldset extends Widget
                 $rows[] = (clone $field)
                     ->property($property)
                     ->form($this->form);
+            }
+        }
+
+        foreach ($rows as $key => $field) {
+            if (!$field instanceof Field) {
+                continue;
+            }
+
+            if (!$field->isVisible()) {
+                Yii::debug("Skipping field for invisible attribute '$field->property'");
+                unset($rows[$key]);
+                continue;
+            }
+
+            if (!$field->isSafe()) {
+                Yii::debug("Skipping field for unsafe attribute '$field->property'");
+                unset($rows[$key]);
             }
         }
 
@@ -99,7 +106,7 @@ class Fieldset extends Widget
                 break;
             }
 
-            if($validator instanceof BooleanValidator) {
+            if ($validator instanceof BooleanValidator) {
                 // Todo true and false values
                 $type = 'checkbox';
                 break;

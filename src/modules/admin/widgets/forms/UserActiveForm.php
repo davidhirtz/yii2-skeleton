@@ -26,31 +26,20 @@ class UserActiveForm extends ActiveForm
         $this->rows ??= [
             [
                 $this->getStatusField(),
-                $this->nameField(),
-                InputField::make()
-                    ->model($this->model)
-                    ->property('email')
-                    ->type('email'),
-                InputField::make()
-                    ->property('newPassword')
-                    ->type('password'),
-                InputField::make()
-                    ->property('repeatPassword')
-                    ->type('password'),
+                $this->getNameField(),
+                $this->getEmailField(),
+                $this->getNewPasswordField(),
+                $this->getRepeatPasswordField(),
             ],
             [
-                SelectField::make()
-                    ->model($this->model->user)
-                    ->property('language'),
-                TimezoneSelectField::make()
-                    ->model($this->model->user)
-                    ->property('timezone'),
+                $this->getLanguageField(),
+                $this->getTimezoneField(),
             ],
             [
-                'first_name',
-                'last_name',
-                'city',
-                'country',
+                $this->getFirstNameField(),
+                $this->getLastNameField(),
+                $this->getCityField(),
+                $this->getCountryField(),
             ],
             [
                 'sendEmail',
@@ -60,19 +49,84 @@ class UserActiveForm extends ActiveForm
         return parent::renderContent();
     }
 
-    public function getStatusField(): string|Stringable
+    protected function getStatusField(): string|Stringable
     {
         return SelectField::make()
             ->model($this->model->user)
             ->property('status');
     }
 
-    public function nameField(): string|Stringable
+    protected function getNameField(): string|Stringable
     {
         return InputField::make()
             ->model($this->model->user)
             ->property('name');
     }
+
+    protected function getEmailField(): string|Stringable
+    {
+        return InputField::make()
+            ->model($this->model)
+            ->property('email')
+            ->type('email');
+    }
+
+    protected function getNewPasswordField(): string|Stringable
+    {
+        return InputField::make()
+            ->property('newPassword')
+            ->type('password');
+    }
+
+    protected function getRepeatPasswordField(): string|Stringable
+    {
+        return InputField::make()
+            ->property('newPassword')
+            ->type('password');
+    }
+
+    protected function getLanguageField(): string|Stringable
+    {
+        return SelectField::make()
+            ->model($this->model->user)
+            ->property('language');
+    }
+
+    protected function getTimezoneField(): string|Stringable
+    {
+        return TimezoneSelectField::make()
+            ->model($this->model->user)
+            ->property('timezone');
+    }
+
+    protected function getFirstNameField(): string|Stringable
+    {
+        return InputField::make()
+            ->model($this->model->user)
+            ->property('first_name');
+    }
+
+    protected function getLastNameField(): string|Stringable
+    {
+        return InputField::make()
+            ->model($this->model->user)
+            ->property('last_name');
+    }
+
+    protected function getCityField(): string|Stringable
+    {
+        return InputField::make()
+            ->model($this->model->user)
+            ->property('city');
+    }
+
+    protected function getCountryField(): string|Stringable
+    {
+        return SelectField::make()
+            ->model($this->model->user)
+            ->property('country');
+    }
+
 
     public function sendEmailField(array $options = []): ActiveField|string
     {

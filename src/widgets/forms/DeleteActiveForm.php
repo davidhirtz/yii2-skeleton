@@ -75,6 +75,8 @@ class DeleteActiveForm extends ActiveForm
                 ->content($this->message),
             InputField::make()
                 ->property($this->property)
+                ->value('')
+                ->required()
                 ->visible($this->property !== null)
                 ->required(),
         ];
