@@ -12,7 +12,7 @@ trait IdentityTrait
     public ?string $email = null;
     public ?User $user = null;
 
-    protected function validateEmail(): void
+    public function validateEmail(): void
     {
         $this->user ??= User::find()
             ->andWhereEmail($this->email)

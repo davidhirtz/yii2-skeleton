@@ -41,6 +41,10 @@
     opacity: 1;
   }
 
+  &:disabled {
+    cursor: default;
+  }
+
   &[type="checkbox"],
   &[type="color"],
   &[type="radio"] {
@@ -128,7 +132,7 @@
   }
 
   &:not(:has([aria-invalid],:user-invalid)):focus-within,
-  &:not(:has([aria-invalid],:user-invalid)):hover {
+  &:not(:has([aria-invalid],:user-invalid,:disabled,:read-only)):hover {
     --input-bg-color: var(--input-focus-bg-color);
     --input-border-color: var(--input-focus-border-color);
     --input-color: var(--input-focus-color);

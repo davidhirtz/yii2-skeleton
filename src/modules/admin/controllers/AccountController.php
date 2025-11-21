@@ -221,17 +221,19 @@ class AccountController extends Controller
             throw new ForbiddenHttpException();
         }
 
-        $form = Yii::createObject(PasswordRecoverForm::class);
+        $form = PasswordRecoverForm::create();
+        $form->email = Yii::$app->getRequest()->get('email', Yii::$app->getSession()->get('email'));
 
         if ($form->load(Yii::$app->getRequest()->post())) {
             if ($form->recover()) {
-                $this->success(Yii::t('skeleton', 'We have sent an email with instructions to reset your password to {email}.', ['email' => $form->user->email]));
+                $this->success(Yii::t('skeleton', 'We have sent an email with instructions to reset your password to {email}.', [
+                    'email' => $form->user->email,
+                ]));
+
                 return $this->goHome();
             }
 
             Yii::$app->getSession()->set('email', $form->email);
-        } else {
-            $form->email = Yii::$app->getRequest()->get('email', Yii::$app->getSession()->get('email'));
         }
 
         return $this->render('recover', [
@@ -245,17 +247,16 @@ class AccountController extends Controller
             throw new ForbiddenHttpException();
         }
 
-        $form = Yii::$container->get(PasswordResetForm::class, [], [
-            'email' => $email,
-            'code' => $code,
-        ]);
+        $form = PasswordResetForm::create();
+        $form->email = $email;
+        $form->code = $code;
 
         if ($form->load(Yii::$app->getRequest()->post())) {
             if ($form->reset()) {
                 $this->success(Yii::t('skeleton', 'Your password was updated.'));
                 return $this->goHome();
             }
-        } elseif (!$form->validatePasswordResetCode()) {
+        } elseif ($form->validateEmail() && !$form->validatePasswordResetCode()) {
             $this->error($form);
             return $this->goHome();
         }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\models\forms;
 
+use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
 use davidhirtz\yii2\skeleton\models\traits\IdentityTrait;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\models\UserLogin;
@@ -13,10 +14,12 @@ use yii\base\Model;
 
 class PasswordResetForm extends Model
 {
+    use ModelTrait;
     use IdentityTrait;
 
     public ?string $code = null;
     public ?string $newPassword = null;
+    public ?string $repeatPassword = null;
 
     #[Override]
     public function rules(): array
@@ -46,9 +49,7 @@ class PasswordResetForm extends Model
             ],
             [
                 ['repeatPassword'],
-                'compare',
-                'compareAttribute' => 'newPassword',
-                'message' => Yii::t('skeleton', 'The password must match the new password.'),
+                $this->validateRepeatPassword(...),
             ],
         ];
     }
@@ -62,6 +63,13 @@ class PasswordResetForm extends Model
         }
 
         parent::afterValidate();
+    }
+
+    protected function validateRepeatPassword(): void
+    {
+        if ($this->repeatPassword !== $this->newPassword) {
+            $this->addError('repeatPassword', Yii::t('skeleton', 'The password must match the new password.'));
+        }
     }
 
     public function validatePasswordResetCode(): bool

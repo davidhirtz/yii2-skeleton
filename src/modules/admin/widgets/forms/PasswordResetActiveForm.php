@@ -53,7 +53,7 @@ class PasswordResetActiveForm extends ActiveForm
         return InputField::make()
             ->model($this->model)
             ->property('email')
-            ->readonly()
+            ->disabled()
             ->prepend(Icon::make()
                 ->name('envelope'))
             ->placeholder()
