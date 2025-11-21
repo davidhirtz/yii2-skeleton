@@ -31,6 +31,5 @@ echo Container::make()
     ->content(Card::make()
         ->danger()
         ->title($this->title)
-        ->content(OwnershipActiveForm::widget([
-            'model' => $form,
-        ])));
+        ->content(OwnershipActiveForm::make()
+            ->model($form)));

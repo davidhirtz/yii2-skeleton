@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\models\forms;
 
 use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
 use davidhirtz\yii2\skeleton\models\User;
+use Override;
 use Yii;
 use yii\base\Model;
 
@@ -16,7 +17,7 @@ class OwnershipForm extends Model
     public ?string $name = null;
     private ?User $user = null;
 
-    #[\Override]
+    #[Override]
     public function rules(): array
     {
         return [
@@ -78,7 +79,7 @@ class OwnershipForm extends Model
         return false;
     }
 
-    #[\Override]
+    #[Override]
     public function attributeLabels(): array
     {
         return [

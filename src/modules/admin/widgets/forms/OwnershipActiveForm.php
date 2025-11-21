@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
-use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\models\forms\OwnershipForm;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
+use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
+use davidhirtz\yii2\skeleton\widgets\forms\FormRow;
 use Override;
+use Stringable;
 use Yii;
 
 /**
@@ -16,26 +18,30 @@ use Yii;
 class OwnershipActiveForm extends ActiveForm
 {
     #[Override]
-    public function init(): void
+    protected function renderContent(): string|Stringable
     {
-        $this->buttons ??= [
-            Button::make()
-                ->danger()
-                ->text(Yii::t('skeleton', 'Transfer'))
-                ->type('submit')
+        $this->hasStickyButtons = false;
+
+        $this->rows ??= [
+            $this->getHelpText(),
+            $this->getUsernameField(),
         ];
 
-        parent::init();
+        $this->submitButtonText ??= Yii::t('skeleton', 'Transfer');
+
+        return parent::renderContent();
     }
 
-    public function renderFields(): void
+    protected function getUsernameField(): ?Stringable
     {
-        echo $this->getHelpText();
-        echo $this->field($this->model, 'name');
+        return InputField::make()
+            ->model($this->model)
+            ->property('name');
     }
 
-    protected function getHelpText(): string
+    protected function getHelpText(): ?Stringable
     {
-        return $this->textRow(Yii::t('skeleton', 'Enter the username of the user you want to make owner of this site. This will remove all your admin privileges and there is no going back. Please be certain!'));
+        return FormRow::make()
+            ->content(Yii::t('skeleton', 'Enter the username of the user you want to make owner of this site. This will remove all your admin privileges and there is no going back. Please be certain!'));
     }
 }

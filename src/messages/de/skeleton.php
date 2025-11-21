@@ -248,7 +248,7 @@ return [
     'Toggle navigation' => 'Navigation umschalten',
     'Transfer' => 'Übertragen',
     'Transfer Ownership' => 'Webseitenbesitzer ändern',
-    'Two-factor authentication is enabled. Please enter the 6-digit code provided by your Authenticator app below to disable it.' => 'Zwei-Faktor-Authentifikation ist aktiv. Schreiben Sie den 6-stelligen Code aus Ihrer Authenticator App in das Textfeld unten um sie zu deaktivieren.',
+    'Two-factor authentication is enabled. Please enter the 6-digit code provided by your Authenticator app below to disable it.' => 'Zwei-Faktor-Authentifikation ist aktiv. Schreiben Sie den 6-stelligen Code aus Ihrer Authenticator App in das Textfeld unten, um sie zu deaktivieren.',
     'Two-factor authentication is now disabled on your account.' => 'Zwei-Faktor-Authentifikation ist nun deaktiviert.',
     'Two-factor authentication is now enabled on your account.' => 'Zwei-Faktor-Authentifikation ist nun aktiv.',
     'Type' => 'Typ',
