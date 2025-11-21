@@ -23,9 +23,13 @@ class SignupActiveForm extends ActiveForm
 {
     use LoginActiveFormTrait;
 
+    public array $attributes = ['class' => 'form-plain'];
+    public bool $hasStickyButtons = false;
+    public string $layout = "{errors}{rows}{buttons}";
+    public array $excludedErrorProperties = ['name', 'email', 'password'];
+
     protected function renderContent(): string|Stringable
     {
-        $this->configureForm();
         $this->registerSignupClientScript();
 
         $this->attributes['id'] ??= 'signup-form';

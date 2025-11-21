@@ -18,10 +18,13 @@ class LoginActiveForm extends ActiveForm
 {
     use LoginActiveFormTrait;
 
+    public array $attributes = ['class' => 'form-plain'];
+    public array $excludedErrorProperties = ['email', 'password'];
+    public bool $hasStickyButtons = false;
+    public string $layout = "{errors}{rows}{buttons}";
+
     protected function renderContent(): string|Stringable
     {
-        $this->configureForm();
-
         // Ensure the two-factor authentication form is displayed correctly
         $this->attributes['hx-select'] ??= '#wrap';
 

@@ -57,7 +57,7 @@ class SignupForm extends AbstractSignupForm
     {
         return [
             [
-                ['email', 'name'],
+                ['email', 'name', 'token'],
                 'trim',
             ],
             [
@@ -109,9 +109,6 @@ class SignupForm extends AbstractSignupForm
             return false;
         }
 
-        // There were some cases in which the value set by the ajax call contained a leading space...
-        $this->token = $this->token ? trim($this->token) : null;
-
         return parent::beforeValidate();
     }
 
@@ -131,7 +128,7 @@ class SignupForm extends AbstractSignupForm
         parent::afterValidate();
     }
 
-    public function validateIp(): void
+    protected function validateIp(): void
     {
         if (!Yii::$app->has('user') || !$this->spamProtectionInSeconds) {
             return;
@@ -149,7 +146,7 @@ class SignupForm extends AbstractSignupForm
             $duration = time() - $this->spamProtectionInSeconds;
 
             if ($signup?->created_at->getTimestamp() > $duration) {
-                $this->addError('id', Yii::t('skeleton', 'You have just created a new user account. Please wait a few minutes!'));
+                $this->addError('name', Yii::t('skeleton', 'You have just created a new user account. Please wait a few minutes!'));
             }
         }
     }
@@ -158,7 +155,7 @@ class SignupForm extends AbstractSignupForm
      * Validates the token against the session token and the time the token was set. If the token was generated less
      * than 2 seconds ago or more than 30 minutes ago, the token is considered invalid.
      */
-    public function validateToken(): void
+    protected function validateToken(): void
     {
         $token = $this->getSessionToken();
 
@@ -201,7 +198,6 @@ class SignupForm extends AbstractSignupForm
 
     /**
      * Generates a random token saved in the user session. If the token is not set or expired, a new token is generated.
-     *
      * Override this method to return null to disabled token check.
      */
     public function getSessionToken(): ?string

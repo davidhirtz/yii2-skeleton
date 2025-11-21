@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\models\forms;
 
 use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
 use davidhirtz\yii2\skeleton\models\User;
+use Override;
 use Yii;
 use yii\base\Model;
 
@@ -34,7 +35,7 @@ abstract class AbstractSignupForm extends Model
         $this->user->language = Yii::$app->language;
     }
 
-    #[\Override]
+    #[Override]
     public function afterValidate(): void
     {
         if (!$this->hasErrors()) {
@@ -74,7 +75,7 @@ abstract class AbstractSignupForm extends Model
     {
     }
 
-    #[\Override]
+    #[Override]
     public function attributeLabels(): array
     {
         return [

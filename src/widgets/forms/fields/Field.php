@@ -32,7 +32,7 @@ abstract class Field extends Widget
     public array $rowAttributes = [];
     public array $labelAttributes = [];
 
-    public string $template = '{input}{error}{hint}';
+    public string $layout = '{input}{error}{hint}';
 
     protected ?string $error = null;
     protected ?string $hint = null;
@@ -78,7 +78,7 @@ abstract class Field extends Widget
 
     protected function renderContent(): string|Stringable
     {
-        $content = strtr($this->template, [
+        $content = strtr($this->layout, [
             '{input}' => $this->getInput(),
             '{hint}' => $this->getHint(),
             '{error}' => $this->getError(),

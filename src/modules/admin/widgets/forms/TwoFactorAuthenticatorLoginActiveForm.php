@@ -18,10 +18,13 @@ class TwoFactorAuthenticatorLoginActiveForm extends ActiveForm
 {
     use LoginActiveFormTrait;
 
+    public array $attributes = ['class' => 'form-plain'];
+    public array $excludedErrorProperties = ['code'];
+    public bool $hasStickyButtons = false;
+    public string $layout = "{errors}{rows}{buttons}";
+
     protected function renderContent(): string|Stringable
     {
-        $this->configureForm();
-
         $this->rows ??= [
             $this->getCodeField(),
             $this->getEmailField(),

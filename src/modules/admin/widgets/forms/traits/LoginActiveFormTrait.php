@@ -10,14 +10,6 @@ use Stringable;
 
 trait LoginActiveFormTrait
 {
-    protected function configureForm(): void
-    {
-        $this->hasStickyButtons = false;
-        $this->layout = "{rows}{buttons}";
-
-        $this->addClass('form-plain');
-    }
-
     protected function getEmailField(): ?Stringable
     {
         return InputField::make()

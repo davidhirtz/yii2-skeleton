@@ -108,11 +108,7 @@ class AccountController extends Controller
 
         if ($form->load($this->request->post()) && $form->insert()) {
             $this->success(Yii::t('skeleton', 'Sign up completed. Please check your inbox to confirm your email address.'));
-            return $this->goBack('/admin');
-        }
-
-        if ($form->hasErrors()) {
-            $form->user->password_hash = null;
+            return $this->goHome();
         }
 
         return $this->render('create', [
@@ -152,11 +148,7 @@ class AccountController extends Controller
                         'name' => $form->user->getUsername(),
                     ]));
 
-                return $this->goBack('/admin');
-            }
-
-            if ($form->hasErrors()) {
-                $this->error($form);
+                return $this->goBack(['admin/dashboard/index']);
             }
 
             if ($form->isTwoFactorAuthenticationCodeRequired()) {
@@ -189,17 +181,13 @@ class AccountController extends Controller
             'code' => $code,
         ]);
 
-        if (!$form->confirm()) {
-            throw new BadRequestHttpException($form->getFirstError('code'));
-        }
-
-        if (Yii::$app->getUser()->getIsGuest() && !$form->user->isDisabled()) {
+        if ($form->confirm() && Yii::$app->getUser()->getIsGuest() && !$form->user->isDisabled()) {
             $webuser = Yii::$app->getUser();
             $webuser->loginType = UserLogin::TYPE_CONFIRM_EMAIL;
             $webuser->login($form->user);
         }
 
-        $this->success(Yii::t('skeleton', 'Your email address was successfully confirmed!'));
+        $this->errorOrSuccess($form, Yii::t('skeleton', 'Your email address was successfully confirmed!'));
         return $this->goHome();
     }
 

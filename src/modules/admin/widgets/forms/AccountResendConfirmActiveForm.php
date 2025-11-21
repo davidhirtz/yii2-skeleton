@@ -18,10 +18,13 @@ class AccountResendConfirmActiveForm extends ActiveForm
 {
     use LoginActiveFormTrait;
 
+    public array $attributes = ['class' => 'form-plain'];
+    public array $excludedErrorProperties = ['email'];
+    public bool $hasStickyButtons = false;
+    public string $layout = "{errors}{rows}{buttons}";
+
     protected function renderContent(): string|Stringable
     {
-        $this->configureForm();
-
         $this->attributes['id'] ??= 'resend-form';
 
         $this->rows ??= [

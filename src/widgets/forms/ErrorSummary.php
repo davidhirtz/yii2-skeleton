@@ -23,6 +23,7 @@ class ErrorSummary extends Widget
     public bool $showAllErrors = true;
 
     protected ?array $errors = null;
+    protected array $excluded = [];
 
     /**
      * @var Model[]
@@ -38,6 +39,12 @@ class ErrorSummary extends Widget
     public function errors(?array $errors): static
     {
         $this->errors = $errors;
+        return $this;
+    }
+
+    public function excluding(array $excluded): static
+    {
+        $this->excluded = $excluded;
         return $this;
     }
 
@@ -67,13 +74,19 @@ class ErrorSummary extends Widget
 
     protected function getModelErrors(): array
     {
-        $errors = [];
+        $lines = [];
 
         foreach ($this->models as $model) {
-            $errors = array_unique([...$errors, ...$model->getErrorSummary($this->showAllErrors)]);
+            $errors = $this->showAllErrors ? $model->getErrors() : $model->getFirstErrors();
+
+            foreach ($errors as $attribute => $error) {
+                if (!in_array($attribute, $this->excluded, true)) {
+                    $lines = [...$lines, ...(array)$error];
+                }
+            }
         }
 
-        return array_values($errors);
+        return array_values(array_unique($lines));
     }
 
     protected function getAlert(): Stringable

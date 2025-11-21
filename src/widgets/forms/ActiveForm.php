@@ -34,6 +34,7 @@ class ActiveForm extends Widget
     protected array|false|null $buttons = null;
     protected ?string $submitButtonText = null;
     protected array|false|null $footer = null;
+    protected array $excludedErrorProperties = [];
 
     /**
      * @var Stringable[]|Field[][]|string[][]|string[]|null
@@ -76,7 +77,8 @@ class ActiveForm extends Widget
     {
         return ErrorSummary::make()
             ->title(false)
-            ->models($this->model);
+            ->models($this->model)
+            ->excluding($this->excludedErrorProperties);
     }
 
     protected function getRows(): string|Stringable

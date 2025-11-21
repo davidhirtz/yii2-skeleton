@@ -20,7 +20,7 @@ class TwoFactorAuthenticatorForm extends Model
     public ?string $code = null;
     private ?string $_secret = null;
 
-    public function __construct(public User $user, array $config = [])
+    public function __construct(public readonly User $user, array $config = [])
     {
         parent::__construct($config);
     }
@@ -75,7 +75,7 @@ class TwoFactorAuthenticatorForm extends Model
 
     public function getQrImageUrl(int|string $size): string
     {
-        $issuer = str_replace(':', '-', $this->getGoogleAuthenticatorIssuer());
+        $issuer = str_replace(':', '-', $this->getTwoFactorAuthenticationIssuer());
         $label = "$issuer:{$this->user->email}";
         $auth = new TwoFactorAuth($issuer);
 
@@ -91,12 +91,12 @@ class TwoFactorAuthenticatorForm extends Model
     protected function generateSecret(): void
     {
         Yii::$app->getSession()->set('google_2fa_secret', $this->_secret = (new TwoFactorAuth())->createSecret());
-        Yii::debug('New Authenticator secret generated');
+        Yii::debug('New authenticator secret generated');
     }
 
-    protected function getGoogleAuthenticatorIssuer(): string
+    protected function getTwoFactorAuthenticationIssuer(): string
     {
-        return Yii::$app->params['googleAuthenticatorIssuer'] ?? Yii::$app->name;
+        return Yii::$app->params['twoFactorAuthenticationIssuer'] ?? Yii::$app->name;
     }
 
     #[Override]
