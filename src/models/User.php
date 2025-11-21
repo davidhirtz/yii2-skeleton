@@ -465,7 +465,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
 
     public function isUnconfirmed(): bool
     {
-        return !$this->isOwner() && !empty($this->verification_token);
+        return !empty($this->verification_token);
     }
 
     /**

@@ -3,14 +3,14 @@
 declare(strict_types=1);
 
 /**
- * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController::actionUpdate()
- * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController::actionDeauthorize()
+ * @see AccountController::actionUpdate()
+ * @see AccountController::actionDeauthorize()
  *
  * @var View $this
  * @var AccountUpdateForm $form
  */
 
-use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\A;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\models\forms\AccountUpdateForm;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController;
@@ -35,7 +35,9 @@ if ($form->user->isUnconfirmed()) {
             ->warning()
             ->content(Yii::t('skeleton', 'Your email address "{email}" was not yet confirmed. Please check your inbox or click {here} to request a new confirmation email.', [
                 'email' => $form->user->email,
-                'here' => Html::a(Yii::t('skeleton', 'here'), ['resend']),
+                'here' => A::make()
+                    ->text(Yii::t('skeleton', 'here'))
+                    ->href(['resend']),
             ])));
 }
 

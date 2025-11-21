@@ -210,6 +210,7 @@ class AccountController extends Controller
     public function actionResend(): Response|string
     {
         $form = AccountResendConfirmForm::create();
+
         $form->user(Yii::$app->getUser()->getIdentity());
         $form->email ??= $this->request->get('email', Yii::$app->getSession()->get('email'));
 
@@ -219,7 +220,7 @@ class AccountController extends Controller
                     'email' => $form->getUser()->email,
                 ]));
 
-                return $this->goHome();
+                return $this->goBack();
             }
 
             $this->error($form);
