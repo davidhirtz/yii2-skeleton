@@ -6,7 +6,7 @@ namespace davidhirtz\yii2\skeleton\html\traits;
 
 trait TagPlaceholderTrait
 {
-    public function placeholder(?string $placeholder): static
+    public function placeholder(?string $placeholder = null): static
     {
         return $this->attribute('placeholder', $placeholder);
     }

@@ -174,6 +174,8 @@ class AccountController extends Controller
             $this->success(Yii::t('skeleton', 'You are now logged out! See you soon!'));
         }
 
+        $this->requestHtmxRefresh();;
+
         return $this->goHome();
     }
 

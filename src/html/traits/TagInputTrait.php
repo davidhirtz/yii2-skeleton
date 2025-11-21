@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\html\traits;
 
-use davidhirtz\yii2\skeleton\html\Form;
-use Stringable;
-
 trait TagInputTrait
 {
+    public function autofocus(bool $autofocus = true): static
+    {
+        return $this->attribute('autofocus', $autofocus ? '' : null);
+    }
+
     public function autocomplete(?string $autocomplete): static
     {
         return $this->attribute('autocomplete', $autocomplete);

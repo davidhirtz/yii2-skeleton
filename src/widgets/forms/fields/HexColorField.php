@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\widgets\forms\fields;
 
 use davidhirtz\yii2\skeleton\assets\HexColorInputAssetBundle;
 use davidhirtz\yii2\skeleton\html\Input;
+use davidhirtz\yii2\skeleton\widgets\forms\InputGroup;
 use Stringable;
 
 class HexColorField extends Field

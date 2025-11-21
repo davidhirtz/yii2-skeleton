@@ -124,10 +124,8 @@
   > .select {
     flex: 1 1 auto;
     min-width: 0; // https://stackoverflow.com/questions/36247140/why-dont-flex-items-shrink-past-content-size
-    position: relative; // For focus state's z-index
     width: 1%;
   }
-
 
   &:not(:has([aria-invalid],:user-invalid)):focus-within,
   &:not(:has([aria-invalid],:user-invalid)):hover {
@@ -135,26 +133,17 @@
     --input-border-color: var(--input-focus-border-color);
     --input-color: var(--input-focus-color);
   }
-
-  //&:not(.has-validation) {
-  //  > :not(:last-child):not(.dropdown-btn):not(.dropdown-menu),
-  //  > .dropdown-btn:nth-last-child(n + 3) {
-  //    border-bottom-right-radius: 0;
-  //    border-top-right-radius: 0;
-  //  }
-  //}
-  //
-  //&.has-validation {
-  //  > :nth-last-child(n + 3):not(.dropdown-btn):not(.dropdown-menu),
-  //  > .dropdown-btn:nth-last-child(n + 4) {
-  //    border-bottom-right-radius: 0;
-  //    border-top-right-radius: 0;
-  //  }
-  //}
-
-  > :not(:first-child):not(.dropdown-menu) {
-    margin-left: -1px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
 }
+
+.input-group-append {
+  border-left: 1px solid var(--input-border-color);
+}
+
+.input-group-prepend {
+  border-right: 1px solid var(--input-border-color);
+}
+
+.input-group-append:not(:has(.btn)), .input-group-prepend:not(:has(.btn)) {
+  padding: 0.5rem 1rem;
+}
+

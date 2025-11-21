@@ -4,73 +4,66 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
+use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
-use davidhirtz\yii2\skeleton\widgets\forms\traits\SubmitButtonTrait;
+use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\CheckboxField;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
+use Stringable;
 use Yii;
-use yii\widgets\ActiveField;
 
+/**
+ * @property LoginForm $model
+ */
 class LoginActiveForm extends ActiveForm
 {
-    use SubmitButtonTrait;
+    public string $layout = "{rows}{buttons}";
 
-    public LoginForm $model;
-    public $enableClientValidation = false;
-
-    #[\Override]
-    public function init(): void
+    protected function renderContent(): string|Stringable
     {
-        $this->id = $this->getId(false) ?? 'login-form';
-        $this->model ??= Yii::createObject(LoginForm::class);
+        $this->attributes['id'] ??= 'login-form';
+        $this->attributes['hx-select'] ??= "main";
 
-        parent::init();
+        $this->rows ??= [
+            $this->getEmailField(),
+            $this->getPasswordField(),
+            $this->getRememberMeField(),
+        ];
+
+        return parent::renderContent();
     }
 
-    #[\Override]
-    public function run(): string
+    protected function getEmailField(): ?Stringable
     {
-        $this->renderFields();
-        return parent::run();
+        return InputField::make()
+            ->model($this->model)
+            ->property('email')
+            ->autocomplete('username')
+            ->autofocus(!$this->model->hasErrors())
+            ->prepend(Icon::make()
+                ->name('envelope'))
+            ->placeholder()
+            ->type('email');
     }
 
-    public function renderFields(): void
+    protected function getPasswordField(): ?Stringable
     {
-        echo $this->emailField();
-        echo $this->passwordField();
-        echo $this->rememberMeField();
-        echo $this->loginButton();
+        return InputField::make()
+            ->model($this->model)
+            ->property('password')
+            ->prepend(Icon::make()
+                ->name('key'))
+            ->autocomplete('current-password')
+            ->placeholder()
+            ->type('password');
     }
 
-    public function emailField(): ActiveField|string
-    {
-        $field = $this->field($this->model, 'email', [
-            'icon' => 'envelope',
-            'enableError' => false,
-        ]);
-
-        return $field->textInput([
-            'autocomplete' => 'username',
-            'autofocus' => !$this->model->hasErrors(),
-            'type' => 'email',
-        ]);
-    }
-
-    public function passwordField(): ActiveField|string
-    {
-        $field = $this->field($this->model, 'password', [
-            'icon' => 'key',
-            'enableError' => false,
-        ]);
-
-        return $field->passwordInput([
-            'autocomplete' => 'current-password',
-        ]);
-    }
-
-    public function rememberMeField(): ActiveField|string
+    protected function getRememberMeField(): ?Stringable
     {
         return Yii::$app->getUser()->enableAutoLogin
-            ? $this->field($this->model, 'rememberMe')->checkbox()
-            : '';
+            ? CheckboxField::make()
+                ->model($this->model)
+                ->property('rememberMe')
+            : null;
     }
 }

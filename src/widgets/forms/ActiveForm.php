@@ -80,9 +80,15 @@ class ActiveForm extends Widget
 
     protected function getRows(): string|Stringable
     {
-        return is_array(current($this->rows))
+        $content = is_array(current($this->rows))
             ? implode('', array_map($this->getFieldset(...), $this->rows))
             : $this->getFieldset($this->rows);
+
+        return $content
+            ? Div::make()
+                ->class('form-rows')
+                ->content($content)
+            : '';
     }
 
     protected function getFieldset(array $fields): Stringable
