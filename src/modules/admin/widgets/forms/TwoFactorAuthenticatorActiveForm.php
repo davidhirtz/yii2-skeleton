@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
-use davidhirtz\yii2\skeleton\controllers\AccountController;
 use davidhirtz\yii2\skeleton\html\Img;
 use davidhirtz\yii2\skeleton\models\forms\TwoFactorAuthenticatorForm;
 use davidhirtz\yii2\skeleton\models\User;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController;
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
 use davidhirtz\yii2\skeleton\widgets\forms\FormRow;

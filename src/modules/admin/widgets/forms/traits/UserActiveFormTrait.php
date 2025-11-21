@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\forms\traits;
+namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;

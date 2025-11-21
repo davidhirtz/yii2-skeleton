@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\controllers\traits;
 
 use Override;
+use Yii;
 use yii\helpers\Json;
 use yii\web\Response;
 
@@ -41,6 +42,11 @@ trait HtmxControllerTrait
     public function refresh($anchor = ''): Response
     {
         return $this->redirect($this->request->getUrl() . $anchor);
+    }
+
+    public function goBack($defaultUrl = null): Response
+    {
+        return $this->response->redirect(Yii::$app->getUser()->getReturnUrl($defaultUrl));
     }
 
     protected function requestHtmxRefresh(): static

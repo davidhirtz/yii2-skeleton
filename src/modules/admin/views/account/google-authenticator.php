@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @see davidhirtz\yii2\skeleton\controllers\AccountController::actionLogin()
+ * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController::actionLogin()
  *
  * @var davidhirtz\yii2\skeleton\web\View $this
  * @var davidhirtz\yii2\skeleton\models\forms\LoginForm $form

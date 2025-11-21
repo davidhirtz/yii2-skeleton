@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @see \davidhirtz\yii2\skeleton\controllers\AccountController::actionResend()
+ * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController::actionResend()
  *
  * @var View $this
  * @var AccountResendConfirmForm $form

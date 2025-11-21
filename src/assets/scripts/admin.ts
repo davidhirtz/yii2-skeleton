@@ -12,7 +12,6 @@ import './components/FlashAlert';
 
 const csrfToken = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement).getAttribute('content') as string;
 
-
 htmx.on('htmx:configRequest', (event: Event) => {
     (event as CustomEvent).detail.headers['X-CSRF-Token'] = csrfToken;
 });

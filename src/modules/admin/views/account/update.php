@@ -3,18 +3,17 @@
 declare(strict_types=1);
 
 /**
- * @see AccountController::actionUpdate()
- * @see AccountController::actionDeauthorize()
+ * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController::actionUpdate()
+ * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController::actionDeauthorize()
  *
  * @var View $this
  * @var AccountUpdateForm $form
  */
 
-use davidhirtz\yii2\skeleton\controllers\AccountController;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\models\forms\AccountUpdateForm;
-use davidhirtz\yii2\skeleton\models\forms\TwoFactorAuthenticatorForm;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\AccountActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\TwoFactorAuthenticatorActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\AuthClientGridView;

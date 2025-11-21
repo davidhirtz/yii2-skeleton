@@ -5,102 +5,99 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
 use davidhirtz\yii2\skeleton\assets\SignupAssetBundle;
-use davidhirtz\yii2\skeleton\controllers\AccountController;
-use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\forms\SignupForm;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\LoginActiveFormTrait;
+use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\CheckboxField;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
+use Stringable;
 use Yii;
-use yii\bootstrap5\ActiveField;
 use yii\helpers\Url;
 
+/**
+ * @property SignupForm $model
+ */
 class SignupActiveForm extends ActiveForm
 {
-    public SignupForm $model;
+    use LoginActiveFormTrait;
 
-    #[\Override]
-    public function init(): void
+    protected function renderContent(): string|Stringable
     {
+        $this->configureForm();
         $this->registerSignupClientScript();
-        parent::init();
+
+        $this->attributes['id'] ??= 'signup-form';
+        $this->attributes['data-id'] = 'signup';
+
+        $this->rows ??= [
+            $this->getUsernameField(),
+            $this->getEmailField(),
+            $this->getPasswordField('new-password'),
+            $this->getTermsField(),
+            $this->getHoneypotField(),
+            $this->getTokenField(),
+            $this->getTimezoneField(),
+        ];
+
+        $this->submitButtonText ??= Yii::t('skeleton', 'Create Account');
+
+        return parent::renderContent();
     }
 
-    #[\Override]
-    public function run(): string
+    protected function getUsernameField(): ?Stringable
     {
-        echo $this->usernameField();
-        echo $this->emailField();
-        echo $this->passwordField();
-        echo $this->termsField();
-
-        echo $this->honeypotField();
-        echo $this->tokenField();
-        echo $this->timeZoneField();
-
-        echo $this->submitButton();
-
-        return parent::run();
+        return InputField::make()
+            ->model($this->model)
+            ->property('name')
+            ->autocomplete('username')
+            ->autofocus(!$this->model->hasErrors())
+            ->placeholder()
+            ->prepend(Icon::make()
+                ->name('user-circle'));
     }
 
-    public function usernameField(): ActiveField|string
+    protected function getTermsField(): ?Stringable
     {
-        return $this->field($this->model, 'name', ['icon' => 'user'])->textInput([
-            'autofocus' => !$this->model->hasErrors()
-        ]);
+        return CheckboxField::make()
+            ->model($this->model)
+            ->property('terms');
     }
 
-    public function emailField(): ActiveField|string
+    protected function getHoneypotField(): ?Stringable
     {
-        return $this->field($this->model, 'email', ['icon' => 'envelope'])->textInput([
-            'autocomplete' => 'username',
-            'type' => 'email',
-        ]);
-    }
-
-    public function passwordField(): ActiveField|string
-    {
-        return $this->field($this->model, 'password', ['icon' => 'key'])->passwordInput([
-            'autocomplete' => 'new-password',
-            'minlength' => $this->model->user->passwordMinLength,
-        ]);
-    }
-
-    public function termsField(): ActiveField|string
-    {
-        return $this->field($this->model, 'terms')->checkbox();
-    }
-
-    public function honeypotField(): string
-    {
-        return Html::activeHiddenInput($this->model, 'honeypot', ['id' => 'honeypot']);
+        return InputField::make()
+            ->model($this->model)
+            ->property('honeypot')
+            ->attribute('data-id', 'honeypot')
+            ->type('hidden');
     }
 
     /**
      * @see AccountController::actionToken()
      */
-    public function tokenField(): string
+    protected function getTokenField(): ?Stringable
     {
-        return Html::activeHiddenInput($this->model, 'token', [
-            'id' => 'token',
-            'data-url' => Url::toRoute(['account/token']),
-        ]);
+        return InputField::make()
+            ->model($this->model)
+            ->property('token')
+            ->attribute('data-id', 'token')
+            ->attribute('data-url', Url::toRoute(['account/token']))
+            ->type('hidden');
     }
 
-    public function timeZoneField(): string
+    protected function getTimezoneField(): ?Stringable
     {
-        return Html::activeHiddenInput($this->model, 'timezone', ['id' => 'tz']);
+        return InputField::make()
+            ->model($this->model)
+            ->property('timezone')
+            ->attribute('data-id', 'tz')
+            ->type('hidden');
     }
 
-    public function submitButton(): string
+    protected function registerSignupClientScript(): void
     {
-        $button = Html::submitButton(Yii::t('skeleton', 'Create Account'), [
-            'class' => 'btn btn-primary btn-block',
-        ]);
-
-        return Html::tag('div', $button, ['class' => 'form-group-buttons form-group']);
-    }
-
-    public function registerSignupClientScript(): void
-    {
-        SignupAssetBundle::registerModule("#$this->id");
+        $this->view->registerAssetBundle(SignupAssetBundle::class);
     }
 }

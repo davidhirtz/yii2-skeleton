@@ -6,9 +6,9 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
 use davidhirtz\yii2\skeleton\html\Li;
 use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\UserActiveFormTrait;
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\forms\footers\UpdatedAtFooterItem;
-use davidhirtz\yii2\skeleton\widgets\forms\traits\UserActiveFormTrait;
 use davidhirtz\yii2\skeleton\widgets\Username;
 use davidhirtz\yii2\timeago\Timeago;
 use Stringable;

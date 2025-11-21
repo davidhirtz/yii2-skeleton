@@ -122,7 +122,7 @@
     }
   }
 
-  .form-row:has(:required) &:after {
+  .form-row:has(:required) .form-label &:after {
     content: " *";
   }
 }

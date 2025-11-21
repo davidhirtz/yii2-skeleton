@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin;
 
 use davidhirtz\yii2\skeleton\behaviors\UserLanguageBehavior;
-use davidhirtz\yii2\skeleton\controllers\AccountController;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\models\Trail;
@@ -14,6 +13,7 @@ use davidhirtz\yii2\skeleton\modules\admin\config\Config;
 use davidhirtz\yii2\skeleton\modules\admin\config\DashboardItemConfig;
 use davidhirtz\yii2\skeleton\modules\admin\config\DashboardPanelConfig;
 use davidhirtz\yii2\skeleton\modules\admin\config\MainMenuItemConfig;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\DashboardController;
 use davidhirtz\yii2\skeleton\modules\admin\controllers\LogController;

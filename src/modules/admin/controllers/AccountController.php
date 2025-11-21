@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\controllers;
+namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
 use davidhirtz\yii2\skeleton\auth\clients\ClientInterface;
 use davidhirtz\yii2\skeleton\controllers\traits\HtmxControllerTrait;
@@ -12,11 +12,11 @@ use davidhirtz\yii2\skeleton\models\forms\AccountResendConfirmForm;
 use davidhirtz\yii2\skeleton\models\forms\AccountUpdateForm;
 use davidhirtz\yii2\skeleton\models\forms\AuthClientSignupForm;
 use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
-use davidhirtz\yii2\skeleton\models\forms\TwoFactorAuthenticatorForm;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
 use davidhirtz\yii2\skeleton\models\forms\PasswordRecoverForm;
 use davidhirtz\yii2\skeleton\models\forms\PasswordResetForm;
 use davidhirtz\yii2\skeleton\models\forms\SignupForm;
+use davidhirtz\yii2\skeleton\models\forms\TwoFactorAuthenticatorForm;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\skeleton\web\Controller;
 use Override;
@@ -110,7 +110,7 @@ class AccountController extends Controller
 
         if ($form->load($this->request->post()) && $form->insert()) {
             $this->success(Yii::t('skeleton', 'Sign up completed. Please check your inbox to confirm your email address.'));
-            return $this->goBack();
+            return $this->goBack('/admin');
         }
 
         if ($form->hasErrors()) {
@@ -149,8 +149,7 @@ class AccountController extends Controller
                         'name' => $form->getUser()->getUsername(),
                     ]));
 
-                return $this->requestHtmxRefresh()
-                    ->goBack();
+                return $this->goBack('/admin');
             }
 
             if ($form->isGoogleAuthenticatorCodeRequired()) {

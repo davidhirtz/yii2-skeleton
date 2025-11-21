@@ -1,22 +1,27 @@
-export default (selector: string) => {
-    const $form = document.querySelector(selector) as HTMLFormElement;
-    const $token = $form.querySelector('#token') as HTMLInputElement;
-    const $honeypot = $form.querySelector('#honeypot') as HTMLInputElement;
-    const $timeZone = $form.querySelector('#tz') as HTMLInputElement;
+import htmx from "htmx.org";
+
+htmx.onLoad(($container) => {
+    const $form = ($container as HTMLElement).querySelector('[data-id="signup"]') as HTMLFormElement;
+
+    const getField = (id: string): HTMLInputElement => {
+        return $form.querySelector(`[data-id="${id}"]`) as HTMLInputElement;
+    }
+
+    const $token = getField('token');
+    const $honeypot = getField('honeypot');
+    const $timeZone = getField('tz');
 
     $timeZone.value = new Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 
-    $form.onsubmit = (e: SubmitEvent) => {
-        if (!$token.value) {
-            fetch($token.dataset.url)
+    if (!$token.value) {
+        const url = $token.dataset.url!;
+        $token.removeAttribute('data-url');
+
+        setTimeout(() => {
+            fetch(url)
                 .then(response => response.text())
                 .then(data => $token.value = data)
-                .then(() => {
-                    $honeypot.value = '';
-                    ($form).submit()
-                });
-
-            e.preventDefault();
-        }
-    };
-}
+                .then(() => $honeypot.value = '');
+        }, 1000);
+    }
+});

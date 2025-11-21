@@ -6,5 +6,5 @@ namespace davidhirtz\yii2\skeleton\assets;
 
 class SignupAssetBundle extends AbstractAssetBundle
 {
-    public string $filename = 'signup.js';
+    public $js = ['js/signup.js'];
 }

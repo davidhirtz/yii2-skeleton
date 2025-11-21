@@ -7,6 +7,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Icon;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController;
 use davidhirtz\yii2\skeleton\web\User;
 use davidhirtz\yii2\skeleton\widgets\navs\Dropdown;
 use davidhirtz\yii2\skeleton\widgets\navs\DropdownLink;

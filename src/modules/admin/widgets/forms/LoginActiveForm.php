@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
 use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\LoginActiveFormTrait;
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\CheckboxField;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
@@ -17,50 +18,23 @@ use Yii;
  */
 class LoginActiveForm extends ActiveForm
 {
-    public bool $hasStickyButtons = false;
-    public string $layout = "{rows}{buttons}";
+    use LoginActiveFormTrait;
 
     protected function renderContent(): string|Stringable
     {
-        $this->attributes['id'] ??= 'login-form';
-        $this->attributes['hx-select'] ??= "main";
+        $this->configureForm();
 
-        $this->addClass('form-plain');
+        $this->attributes['id'] ??= 'login-form';
 
         $this->rows ??= [
             $this->getEmailField(),
-            $this->getPasswordField(),
+            $this->getPasswordField('current-password'),
             $this->getRememberMeField(),
         ];
 
         $this->submitButtonText ??= Yii::t('skeleton', 'Login');
 
         return parent::renderContent();
-    }
-
-    protected function getEmailField(): ?Stringable
-    {
-        return InputField::make()
-            ->model($this->model)
-            ->property('email')
-            ->autocomplete('username')
-            ->autofocus(!$this->model->hasErrors())
-            ->prepend(Icon::make()
-                ->name('envelope'))
-            ->placeholder()
-            ->type('email');
-    }
-
-    protected function getPasswordField(): ?Stringable
-    {
-        return InputField::make()
-            ->model($this->model)
-            ->property('password')
-            ->prepend(Icon::make()
-                ->name('key'))
-            ->autocomplete('current-password')
-            ->placeholder()
-            ->type('password');
     }
 
     protected function getRememberMeField(): ?Stringable

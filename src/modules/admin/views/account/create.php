@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @see davidhirtz\yii2\skeleton\controllers\AccountController::actionCreate()
+ * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController::actionCreate()
  *
  * @var davidhirtz\yii2\skeleton\web\View $this
  * @var davidhirtz\yii2\skeleton\models\forms\SignupForm $form
@@ -36,9 +36,8 @@ echo Container::make()
     ->content(
         Card::make()
             ->title($this->title)
-            ->content(SignupActiveForm::widget([
-                'model' => $form,
-            ])),
+            ->content(SignupActiveForm::make()
+                ->model($form)),
         Stack::make()
             ->addItem(StackItem::make()
                 ->label(Yii::t('skeleton', 'Sign up with Facebook'))

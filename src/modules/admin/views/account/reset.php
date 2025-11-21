@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @see \davidhirtz\yii2\skeleton\controllers\AccountController::actionReset()
+ * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController::actionReset()
  *
  * @var View $this
  * @var PasswordResetForm $form
