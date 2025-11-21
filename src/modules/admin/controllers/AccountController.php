@@ -146,23 +146,23 @@ class AccountController extends Controller
 
         if ($form->load($this->request->post())) {
             if ($form->login()) {
-                $this->success($form->getUser()->login_count === 1
+                $this->success($form->user->login_count === 1
                     ? Yii::t('skeleton', 'Login successful!')
                     : Yii::t('skeleton', 'Welcome back, {name}!', [
-                        'name' => $form->getUser()->getUsername(),
+                        'name' => $form->user->getUsername(),
                     ]));
 
                 return $this->goBack('/admin');
             }
 
-            if ($form->isGoogleAuthenticatorCodeRequired()) {
-                return $this->render('google-authenticator', [
-                    'form' => $form,
-                ]);
-            }
-
             if ($form->hasErrors()) {
                 $this->error($form);
+            }
+
+            if ($form->isTwoFactorAuthenticationCodeRequired()) {
+                return $this->render('authentication', [
+                    'form' => $form,
+                ]);
             }
 
             Yii::$app->getSession()->set('email', $form->email);
@@ -193,14 +193,10 @@ class AccountController extends Controller
             throw new BadRequestHttpException($form->getFirstError('code'));
         }
 
-        if (Yii::$app->getUser()->getIsGuest()) {
-            $user = $form->getUser();
-
-            if (!$user->isDisabled()) {
-                $webuser = Yii::$app->getUser();
-                $webuser->loginType = UserLogin::TYPE_CONFIRM_EMAIL;
-                $webuser->login($user);
-            }
+        if (Yii::$app->getUser()->getIsGuest() && !$form->user->isDisabled()) {
+            $webuser = Yii::$app->getUser();
+            $webuser->loginType = UserLogin::TYPE_CONFIRM_EMAIL;
+            $webuser->login($form->user);
         }
 
         $this->success(Yii::t('skeleton', 'Your email address was successfully confirmed!'));
@@ -211,13 +207,13 @@ class AccountController extends Controller
     {
         $form = AccountResendConfirmForm::create();
 
-        $form->user(Yii::$app->getUser()->getIdentity());
+        $form->user = Yii::$app->getUser()->getIdentity();
         $form->email ??= $this->request->get('email', Yii::$app->getSession()->get('email'));
 
         if ($form->load($this->request->post())) {
             if ($form->resend()) {
                 $this->success(Yii::t('skeleton', 'We have sent another email to confirm your account to {email}.', [
-                    'email' => $form->getUser()->email,
+                    'email' => $form->user->email,
                 ]));
 
                 return $this->goBack();

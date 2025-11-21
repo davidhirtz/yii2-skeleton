@@ -54,7 +54,7 @@ class User extends \yii\web\User
     /**
      * @var bool whether 2FA via Authenticator should be available.
      */
-    public bool $enableGoogleAuthenticator = true;
+    public bool $enableTwoFactorAuthentication = true;
 
     /**
      * @var string|null the IP address of the user

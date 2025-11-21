@@ -7,7 +7,7 @@ namespace davidhirtz\yii2\skeleton\tests\unit\models\forms;
 use Codeception\Test\Unit;
 use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
-use davidhirtz\yii2\skeleton\validators\GoogleAuthenticatorValidator;
+use davidhirtz\yii2\skeleton\validators\TwoFactorAuthenticationValidator;
 use Yii;
 
 class LoginFormTest extends Unit
@@ -71,7 +71,7 @@ class LoginFormTest extends Unit
 
     public function testLoginWithGoogleAuthenticatorCorrect(): void
     {
-        Yii::$container->set(GoogleAuthenticatorValidator::class, [
+        Yii::$container->set(TwoFactorAuthenticationValidator::class, [
             'currentTime' => 1_609_455_600,
         ]);
 

@@ -46,7 +46,7 @@ echo FormContainer::make()
     ->form(AccountActiveForm::make()
         ->model($form));
 
-if (Yii::$app->getUser()->enableGoogleAuthenticator) {
+if (Yii::$app->getUser()->enableTwoFactorAuthentication) {
     echo FormContainer::make()
         ->title(Yii::t('skeleton', 'Two-Factor Authentication'))
         ->form(TwoFactorAuthenticatorActiveForm::make()

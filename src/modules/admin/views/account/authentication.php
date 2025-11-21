@@ -10,20 +10,14 @@ declare(strict_types=1);
  */
 
 use davidhirtz\yii2\skeleton\html\Container;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorLoginActiveForm;
-use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\TwoFactorAuthenticatorLoginActiveForm;
 use davidhirtz\yii2\skeleton\widgets\panels\Card;
 
 $this->title(Yii::t('skeleton', 'Two-Factor Authentication'));
 
 echo Container::make()
-    ->content(ErrorSummary::make()->models($form)
-    ->title(Yii::t('skeleton', 'Login unsuccessful')));
-
-echo Container::make()
     ->centered()
     ->content(Card::make()
         ->title($this->title)
-        ->content(GoogleAuthenticatorLoginActiveForm::widget([
-            'model' => $form,
-        ])));
+        ->content(TwoFactorAuthenticatorLoginActiveForm::make()
+            ->model($form)));

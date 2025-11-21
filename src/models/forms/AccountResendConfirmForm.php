@@ -39,7 +39,7 @@ class AccountResendConfirmForm extends Model
             ],
             [
                 ['email'],
-                $this->validateUserEmail(...),
+                $this->validateEmail(...),
             ],
         ];
     }
@@ -47,25 +47,27 @@ class AccountResendConfirmForm extends Model
     #[Override]
     public function afterValidate(): void
     {
-        $this->validateUserStatus();
-        $this->validateUserConfirmationCode();
-        $this->validateSpamProtection();
+        if (!$this->hasErrors()) {
+            $this->validateUserStatus();
+            $this->validateUserConfirmationCode();
+            $this->validateSpamProtection();
+        }
 
         parent::afterValidate();
     }
 
     protected function validateUserConfirmationCode(): void
     {
-        if (!$this->hasErrors() && ($user = $this->getUser()) && !$user->verification_token) {
+        if (!$this->user->verification_token) {
             $this->addError('email', Yii::t('skeleton', 'Your account was already confirmed!'));
         }
     }
 
     protected function validateSpamProtection(): void
     {
-        if (!$this->hasErrors() && $this->isAlreadySent()) {
+        if ($this->isAlreadySent()) {
             $this->addError('email', Yii::t('skeleton', 'We have just sent a link to confirm your account to {email}. Please check your inbox!', [
-                'email' => $this->getUser()->email,
+                'email' => $this->user->email,
             ]));
         }
     }
@@ -75,7 +77,7 @@ class AccountResendConfirmForm extends Model
         if ($this->validate()) {
             $this->sendConfirmEmail();
 
-            $this->getUser()->updateAttributes([
+            $this->user->updateAttributes([
                 'updated_at' => new DateTime(),
             ]);
 
@@ -87,20 +89,17 @@ class AccountResendConfirmForm extends Model
 
     protected function sendConfirmEmail(): void
     {
-        if ($user = $this->getUser()) {
-            Yii::$app->getMailer()->compose('@skeleton/mail/account/confirm', ['user' => $user])
-                ->setSubject(Yii::t('skeleton', 'Confirm your account'))
-                ->setFrom(Yii::$app->params['email'])
-                ->setTo($user->email)
-                ->send();
-        }
+        Yii::$app->getMailer()->compose('@skeleton/mail/account/confirm', ['user' => $this->user])
+            ->setSubject(Yii::t('skeleton', 'Confirm your account'))
+            ->setFrom(Yii::$app->params['email'])
+            ->setTo($this->user->email)
+            ->send();
     }
 
     protected function isAlreadySent(): bool
     {
-        return ($user = $this->getUser())
-            && $user->verification_token
-            && $user->updated_at?->modify($this->timeoutSpamProtection) > new DateTime();
+        return $this->user->verification_token
+            && $this->user->updated_at?->modify($this->timeoutSpamProtection) > new DateTime();
     }
 
     #[Override]

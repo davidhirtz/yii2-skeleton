@@ -6,7 +6,7 @@ namespace davidhirtz\yii2\skeleton\models\forms;
 
 use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
 use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\validators\GoogleAuthenticatorValidator;
+use davidhirtz\yii2\skeleton\validators\TwoFactorAuthenticationValidator;
 use Override;
 use RobThree\Auth\Providers\Qr\QRServerProvider;
 use RobThree\Auth\TwoFactorAuth;
@@ -35,7 +35,7 @@ class TwoFactorAuthenticatorForm extends Model
             ],
             [
                 ['code'],
-                GoogleAuthenticatorValidator::class,
+                TwoFactorAuthenticationValidator::class,
                 'secret' => $this->getSecret(),
             ],
         ];

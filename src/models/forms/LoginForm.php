@@ -8,7 +8,8 @@ use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
 use davidhirtz\yii2\skeleton\models\traits\IdentityTrait;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\models\UserLogin;
-use davidhirtz\yii2\skeleton\validators\GoogleAuthenticatorValidator;
+use davidhirtz\yii2\skeleton\validators\TwoFactorAuthenticationValidator;
+use Override;
 use Yii;
 use yii\base\Model;
 
@@ -25,9 +26,9 @@ class LoginForm extends Model
     public ?string $code = null;
     public bool|string $rememberMe = true;
 
-    private bool $_isGoogleAuthenticatorCodeRequired = false;
+    private bool $is2FaRequired = false;
 
-    #[\Override]
+    #[Override]
     public function rules(): array
     {
         return [
@@ -44,8 +45,19 @@ class LoginForm extends Model
                 'email',
             ],
             [
+                ['email'],
+                $this->validateEmail(...),
+                'when' => fn() => !$this->hasErrors(),
+            ],
+            [
+                ['password'],
+                $this->validatePassword(...),
+                'when' => fn() => !$this->hasErrors(),
+            ],
+            [
                 ['code'],
                 'string',
+                'length' => 6,
             ],
             [
                 ['rememberMe'],
@@ -54,7 +66,7 @@ class LoginForm extends Model
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function beforeValidate(): bool
     {
         if (!Yii::$app->getUser()->isLoginEnabled()) {
@@ -65,82 +77,66 @@ class LoginForm extends Model
         return parent::beforeValidate();
     }
 
-    /**
-     * Validates user credentials and status and Authenticator code if set.
-     */
-    #[\Override]
+    #[Override]
     public function afterValidate(): void
     {
-        $this->validateUserPassword();
-        $this->validateUserStatus();
-        $this->validateLoginStatus();
-        $this->validateGoogleAuthenticatorCode();
+        if (!$this->hasErrors()) {
+            $this->validateUserStatus();
+            $this->validateLoginStatus();
+            $this->validateTwoFactorAuthenticatorCode();
+        }
 
         parent::afterValidate();
     }
 
-    /**
-     * Validates password if email found user. If any other error occurred during validation, don't even bother.
-     */
-    public function validateUserPassword(): void
+    protected function validatePassword(): void
     {
-        if (!$this->hasErrors() && !(($user = $this->getUser()) && $user->validatePassword($this->password))) {
+        if (!$this->user->validatePassword($this->password)) {
             $this->addError('email', Yii::t('skeleton', 'Your email or password are incorrect.'));
         }
     }
 
-    /**
-     * Validates the user status if unconfirmed users are not allowed to log in via email.
-     */
-    public function validateLoginStatus(): void
+    protected function validateLoginStatus(): void
     {
-        if (($user = $this->getUser()) && $user->isUnconfirmed() && !Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
+        if ($this->user->isUnconfirmed() && !Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
             $this->addError('status', Yii::t('skeleton', 'Your email address is not confirmed yet. You should find a confirmation email in your inbox.'));
         }
     }
 
-    /**
-     * Validates the Authenticator code if needed.
-     */
-    public function validateGoogleAuthenticatorCode(): void
+    protected function validateTwoFactorAuthenticatorCode(): void
     {
-        if (Yii::$app->getUser()->enableGoogleAuthenticator && !$this->hasErrors() && ($user = $this->getUser()) && $user->google_2fa_secret) {
-            $validator = Yii::$container->get(GoogleAuthenticatorValidator::class, [], [
-                'secret' => $user->google_2fa_secret,
-                'datetime' => $user->last_login,
+        if (Yii::$app->getUser()->enableTwoFactorAuthentication && $this->user->google_2fa_secret) {
+            $validator = Yii::$container->get(TwoFactorAuthenticationValidator::class, [], [
+                'secret' => $this->user->google_2fa_secret,
+                'datetime' => $this->user->last_login,
             ]);
 
             $validator->validateAttribute($this, 'code');
-            $this->_isGoogleAuthenticatorCodeRequired = true;
+            $this->is2FaRequired = true;
         }
     }
 
-    /**
-     * Logs in a user using the provided email and password.
-     */
     public function login(): bool
     {
         if ($this->validate()) {
             $webuser = Yii::$app->getUser();
             $webuser->loginType = UserLogin::TYPE_LOGIN;
 
-            $user = $this->getUser();
-            $user->generatePasswordHash($this->password);
+            $this->user->generatePasswordHash($this->password);
 
-            return Yii::$app->getUser()->login($user, $this->rememberMe ? $webuser->cookieLifetime : 0);
+            return Yii::$app->getUser()->login($this->user, $this->rememberMe ? $webuser->cookieLifetime : 0);
         }
 
-        // Don't show empty error if the user has not been able to enter it...
-        if ($this->hasErrors('code') && $this->code === null) {
+        if (null === $this->code) {
             $this->clearErrors('code');
         }
 
         return false;
     }
 
-    public function isGoogleAuthenticatorCodeRequired(): bool
+    public function isTwoFactorAuthenticationCodeRequired(): bool
     {
-        return $this->_isGoogleAuthenticatorCodeRequired;
+        return $this->is2FaRequired;
     }
 
     public function isFacebookLoginEnabled(): bool
@@ -148,13 +144,13 @@ class LoginForm extends Model
         return $this->enableFacebookLogin && Yii::$app->getAuthClientCollection()->hasClient('facebook');
     }
 
-    #[\Override]
+    #[Override]
     public function formName(): string
     {
         return 'Login';
     }
 
-    #[\Override]
+    #[Override]
     public function attributeLabels(): array
     {
         return [

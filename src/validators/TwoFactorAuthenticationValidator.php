@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\validators;
 
 use davidhirtz\yii2\datetime\DateTime;
+use Override;
 use RobThree\Auth\TwoFactorAuth;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\validators\StringValidator;
 
-class GoogleAuthenticatorValidator extends StringValidator
+class TwoFactorAuthenticationValidator extends StringValidator
 {
     /**
-     * @var string|null the Authenticator secret key.
+     * @var string|null the authenticator secret key.
      */
     public ?string $secret = null;
 
@@ -47,7 +48,7 @@ class GoogleAuthenticatorValidator extends StringValidator
      */
     public ?int $currentTime = null;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         if (!$this->message) {
@@ -57,7 +58,7 @@ class GoogleAuthenticatorValidator extends StringValidator
         parent::init();
     }
 
-    #[\Override]
+    #[Override]
     public function validateAttribute($model, $attribute): void
     {
         parent::validateAttribute($model, $attribute);
@@ -76,7 +77,7 @@ class GoogleAuthenticatorValidator extends StringValidator
      * @param mixed $value
      * @return array|bool|void
      */
-    #[\Override]
+    #[Override]
     protected function validateValue($value)
     {
         throw new NotSupportedException(self::class . ' does not support validateValue().');

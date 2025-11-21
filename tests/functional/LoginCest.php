@@ -12,10 +12,10 @@ use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
 use davidhirtz\yii2\skeleton\codeception\functional\BaseCest;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorLoginActiveForm;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\TwoFactorAuthenticatorLoginActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\LoginActiveForm;
 use davidhirtz\yii2\skeleton\tests\support\FunctionalTester;
-use davidhirtz\yii2\skeleton\validators\GoogleAuthenticatorValidator;
+use davidhirtz\yii2\skeleton\validators\TwoFactorAuthenticationValidator;
 use RobThree\Auth\TwoFactorAuth;
 use Yii;
 
@@ -27,7 +27,7 @@ class LoginCest extends BaseCest
     public function _before(): void
     {
         Yii::$app->getUser()->enableLogin = true;
-        Yii::$app->getUser()->enableGoogleAuthenticator = true;
+        Yii::$app->getUser()->enableTwoFactorAuthentication = true;
 
         parent::_before();
     }
@@ -103,7 +103,7 @@ class LoginCest extends BaseCest
         $user = $I->grabUserFixture('admin');
         $this->assignAdminRole($user['id']);
 
-        $validator = Yii::createObject(GoogleAuthenticatorValidator::class);
+        $validator = Yii::createObject(TwoFactorAuthenticationValidator::class);
         $auth = new TwoFactorAuth(null, $validator->length, $validator->period);
 
         $this->submitGoogleAuthenticatorForm($I, $auth->getCode($user['google_2fa_secret']));
@@ -134,7 +134,7 @@ class LoginCest extends BaseCest
 
     protected function submitGoogleAuthenticatorForm(FunctionalTester $I, string $code): void
     {
-        $widget = Yii::createObject(GoogleAuthenticatorLoginActiveForm::class);
+        $widget = Yii::createObject(TwoFactorAuthenticatorLoginActiveForm::class);
 
         $I->submitForm("#$widget->id", [
             Html::getInputName($widget->model, 'code') => $code,

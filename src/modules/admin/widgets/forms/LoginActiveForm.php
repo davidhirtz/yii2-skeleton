@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
-use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\LoginActiveFormTrait;
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\CheckboxField;
-use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
 use Stringable;
 use Yii;
 
@@ -24,7 +22,8 @@ class LoginActiveForm extends ActiveForm
     {
         $this->configureForm();
 
-        $this->attributes['id'] ??= 'login-form';
+        // Ensure the two-factor authentication form is displayed correctly
+        $this->attributes['hx-select'] ??= '#wrap';
 
         $this->rows ??= [
             $this->getEmailField(),
