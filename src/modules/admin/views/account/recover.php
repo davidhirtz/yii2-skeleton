@@ -21,17 +21,12 @@ use yii\helpers\Url;
 $this->title(Yii::t('skeleton', 'Recover Password'));
 
 echo Container::make()
-    ->content(ErrorSummary::make()->models($form)
-    ->title(Yii::t('skeleton', 'Your password could not be reset')));
-
-echo Container::make()
     ->centered()
     ->content(
         Card::make()
             ->title($this->title)
-            ->content(PasswordRecoverActiveForm::widget([
-                'model' => $form,
-            ])),
+            ->content(PasswordRecoverActiveForm::make()
+                ->model($form)),
         Stack::make()
             ->addItem(
                 StackItem::make()

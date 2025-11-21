@@ -4,47 +4,54 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
-use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Div;
+use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\forms\PasswordRecoverForm;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
-use davidhirtz\yii2\skeleton\widgets\forms\traits\EmailFieldTrait;
+use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
+use Stringable;
 use Yii;
 
+/**
+ * @property PasswordRecoverForm $model
+ */
 class PasswordRecoverActiveForm extends ActiveForm
 {
-    use EmailFieldTrait;
+    public array $attributes = ['class' => 'form-plain'];
+    public array $excludedErrorProperties = ['email'];
+    public bool $hasStickyButtons = false;
+    public string $layout = "{errors}{rows}{buttons}";
 
-    public $enableClientValidation = false;
-
-    public function __construct(public PasswordRecoverForm $model, $config = [])
+    protected function renderContent(): string|Stringable
     {
-        parent::__construct($config);
+        $this->attributes['id'] ??= 'password-recover-form';
+
+        $this->rows ??= [
+            $this->getHelpText(),
+            $this->getEmailField(),
+        ];
+
+        $this->submitButtonText = Yii::t('skeleton', 'Send Email');
+
+        return parent::renderContent();
     }
 
-    #[\Override]
-    public function init(): void
+    protected function getHelpText(): ?Stringable
     {
-        $this->id = $this->getId(false) ?? 'password-recover-form';
-        parent::init();
+        return Div::make()
+            ->content(Yii::t('skeleton', 'Enter your email address and we will send you instructions how to reset your password.'));
     }
 
-    #[\Override]
-    public function run(): string
+    protected function getEmailField(): ?Stringable
     {
-        $this->renderFields();
-        return parent::run();
-    }
-
-    public function renderFields(): void
-    {
-        echo $this->helpBlock();
-        echo $this->emailField();
-        echo $this->sendEmailButton();
-    }
-
-    public function helpBlock(): string
-    {
-        $content = Yii::t('skeleton', 'Enter your email address and we will send you instructions how to reset your password.');
-        return Html::tag('p', $content);
+        return InputField::make()
+            ->model($this->model)
+            ->property('email')
+            ->autocomplete('email')
+            ->autofocus(!$this->model->hasErrors())
+            ->prepend(Icon::make()
+                ->name('envelope'))
+            ->placeholder()
+            ->type('email');
     }
 }
