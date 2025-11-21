@@ -26,6 +26,11 @@ trait TagInputTrait
         return $this->attribute('name', $name);
     }
 
+    public function readonly(bool $readonly = true): static
+    {
+        return $this->attribute('readonly', $readonly ? '' : null);
+    }
+
     public function required(bool $required = true): static
     {
         return $this->attribute('required', $required ? '' : null);

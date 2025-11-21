@@ -4,72 +4,86 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
-use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Div;
+use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\forms\PasswordResetForm;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
-use davidhirtz\yii2\skeleton\widgets\forms\traits\EmailFieldTrait;
+use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
+use Override;
+use Stringable;
 use Yii;
-use yii\widgets\ActiveField;
 
+/**
+ * @property PasswordResetForm $model
+ */
 class PasswordResetActiveForm extends ActiveForm
 {
-    use EmailFieldTrait;
+    public array $attributes = ['class' => 'form-plain'];
+    public array $excludedErrorProperties = ['newPassword', 'repeatPassword'];
+    public bool $hasStickyButtons = false;
+    public string $layout = "{errors}{rows}{buttons}";
 
-    public $enableClientValidation = false;
-
-    public function __construct(public PasswordResetForm $model, $config = [])
+    #[Override]
+    protected function renderContent(): string|Stringable
     {
-        parent::__construct($config);
+        $this->attributes['id'] ??= $this->getId();
+
+        $this->rows ??= [
+            $this->getHelpText(),
+            $this->getEmailField(),
+            $this->getNewPasswordField(),
+            $this->getRepeatPasswordField(),
+        ];
+
+        $this->submitButtonText = Yii::t('skeleton', 'Save New Password');
+
+        return parent::renderContent();
     }
 
-    #[\Override]
-    public function init(): void
+    protected function getHelpText(): ?Stringable
     {
-        $this->id = $this->getId(false) ?? 'password-reset-form';
-        parent::init();
+        return Div::make()
+            ->content($this->model->user->password_hash
+                ? Yii::t('skeleton', 'Please enter a new password below to update your account.')
+                : Yii::t('skeleton', 'Please enter a password below to complete your account.'));
     }
 
-    #[\Override]
-    public function run(): string
+    protected function getEmailField(): ?Stringable
     {
-        $this->renderFields();
-        return parent::run();
+        return InputField::make()
+            ->model($this->model)
+            ->property('email')
+            ->readonly()
+            ->prepend(Icon::make()
+                ->name('envelope'))
+            ->placeholder()
+            ->type('email');
     }
 
-    public function renderFields(): void
+    protected function getNewPasswordField(): ?Stringable
     {
-        echo $this->helpBlock();
 
-        echo $this->emailField(['readonly' => true]);
-        echo $this->newPasswordField();
-        echo $this->repeatPasswordField();
-
-        echo $this->resetPasswordButton();
+        return InputField::make()
+            ->model($this->model)
+            ->property('newPassword')
+            ->prepend(Icon::make()
+                ->name('key'))
+            ->autofocus()
+            ->autocomplete('new-password')
+            ->placeholder()
+            ->type('password');
     }
 
-    public function newPasswordField(): ActiveField|string
+    protected function getRepeatPasswordField(): ?Stringable
     {
-        return $this->field($this->model, 'newPassword', ['icon' => 'key'])->passwordInput([
-            'autofocus' => !$this->model->hasErrors(),
-        ]);
-    }
 
-    public function repeatPasswordField(): ActiveField|string
-    {
-        return $this->field($this->model, 'repeatPassword', ['icon' => 'key'])->passwordInput();
-    }
-
-    public function helpBlock(): string
-    {
-        $content = $this->model->user->password_hash
-            ? Yii::t('skeleton', 'Please enter a new password below to update your account.')
-            : Yii::t('skeleton', 'Please enter a password below to complete your account.');
-
-        return Html::tag('p', $content);
-    }
-
-    public function resetPasswordButton(): string
-    {
-        return $this->submitButton(Yii::t('skeleton', 'Save New Password'));
+        return InputField::make()
+            ->model($this->model)
+            ->property('repeatPassword')
+            ->prepend(Icon::make()
+                ->name('key'))
+            ->autocomplete('repeat-password')
+            ->placeholder()
+            ->type('password');
     }
 }

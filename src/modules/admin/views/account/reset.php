@@ -21,13 +21,8 @@ $this->title($form->user->password_hash
     : Yii::t('skeleton', 'Create Password'));
 
 echo Container::make()
-    ->content(ErrorSummary::make()->models($form)
-        ->title(Yii::t('skeleton', 'Your password could not be saved')));
-
-echo Container::make()
     ->centered()
     ->content(Card::make()
         ->title($this->title)
-        ->content(PasswordResetActiveForm::widget([
-            'model' => $form,
-        ])));
+        ->content(PasswordResetActiveForm::make()
+        ->model($form)));
