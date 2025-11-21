@@ -149,7 +149,8 @@ class AccountController extends Controller
                         'name' => $form->getUser()->getUsername(),
                     ]));
 
-                return $this->goBack();
+                return $this->requestHtmxRefresh()
+                    ->goBack();
             }
 
             if ($form->isGoogleAuthenticatorCodeRequired()) {
@@ -176,9 +177,7 @@ class AccountController extends Controller
             $this->success(Yii::t('skeleton', 'You are now logged out! See you soon!'));
         }
 
-        $this->requestHtmxRefresh();
-
-        return $this->goHome();
+        return $this->redirect(['login']);
     }
 
     public function actionConfirm(string $email, string $code): Response|string

@@ -43,7 +43,7 @@ trait HtmxControllerTrait
         return $this->redirect($this->request->getUrl() . $anchor);
     }
 
-    protected function requestHtmxRefresh(): void
+    protected function requestHtmxRefresh(): static
     {
         if ($this->isHtmxRequest()) {
             $this->response->getHeaders()->set('HX-Refresh', 'true');

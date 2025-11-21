@@ -48,7 +48,7 @@ class Controller extends \yii\web\Controller
         return trim((string)preg_replace('/>\s+</', '><', $html));
     }
 
-    public function error(Model|array|string $value): bool
+    public function error(Model|array|string $value): static
     {
         if ($value instanceof Model) {
             $value = $value->getFirstErrors();
@@ -56,13 +56,12 @@ class Controller extends \yii\web\Controller
 
         if ($value) {
             Yii::$app->getSession()->addFlash('danger', $value);
-            return true;
         }
 
-        return false;
+        return $this;
     }
 
-    public function success(Model|array|string|null $value, ?string $message = null): bool
+    public function success(Model|array|string|null $value, ?string $message = null): static
     {
         if ($value instanceof Model && !$value->hasErrors()) {
             $value = $message;
@@ -70,18 +69,19 @@ class Controller extends \yii\web\Controller
 
         if ($value) {
             Yii::$app->getSession()->addFlash('success', $value);
-            return true;
         }
 
-        return false;
+        return $this;
     }
 
-    public function errorOrSuccess(Model|array|string $value, string $message): void
+    public function errorOrSuccess(Model|array|string $value, string $message): static
     {
         if ($value instanceof Model ? $value->hasErrors() : !empty($value)) {
             $this->error($value);
         } else {
             $this->success($message);
         }
+
+        return $this;
     }
 }
