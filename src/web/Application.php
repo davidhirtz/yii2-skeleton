@@ -9,22 +9,22 @@ use davidhirtz\yii2\skeleton\rbac\DbManager;
 use Override;
 use Yii;
 use yii\authclient\Collection;
-use yii\base\Event;
 use yii\debug\Module;
 use yii\symfonymailer\Mailer;
 use yii\web\Cookie;
-use yii\web\Response;
 
 /**
  * @property Collection $authClientCollection
  * @property DbManager $authManager
  * @property Request $request
+ * @property Response $response
  * @property DbSession $session
  * @property User $user
  *
  * @method DbManager getAuthManager()
  * @method Mailer getMailer()
  * @method Request getRequest()
+ * @method Response getResponse()
  * @method CacheSession|DbSession getSession()
  * @method User getUser()
  */
@@ -61,18 +61,14 @@ class Application extends \yii\web\Application
             ...parent::coreComponents(),
             'errorHandler' => [
                 'class' => ErrorHandler::class,
-            ], 'request' => [
+            ],
+            'request' => [
                 'class' => Request::class,
-            ], 'response' => [
+            ],
+            'response' => [
                 'class' => Response::class,
-                'on beforeSend' => function (Event $event): void {
-                    if ($this->getRequest()->getIsDraft()) {
-                        /** @var Response $response */
-                        $response = $event->sender;
-                        $response->getHeaders()->set('X-Robots-Tag', 'none');
-                    }
-                }
-            ], 'user' => [
+            ],
+            'user' => [
                 'class' => User::class,
             ],
         ];

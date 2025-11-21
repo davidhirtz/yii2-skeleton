@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
 use davidhirtz\yii2\skeleton\auth\clients\ClientInterface;
-use davidhirtz\yii2\skeleton\controllers\traits\HtmxControllerTrait;
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\forms\AccountConfirmForm;
 use davidhirtz\yii2\skeleton\models\forms\AccountResendConfirmForm;
@@ -33,8 +32,6 @@ use yii\web\ServerErrorHttpException;
 
 class AccountController extends Controller
 {
-    use HtmxControllerTrait;
-
     public $defaultAction = 'update';
 
     #[Override]
@@ -81,6 +78,7 @@ class AccountController extends Controller
                     'disable-authenticator' => ['post'],
                     'enable-authenticator' => ['post'],
                     'logout' => ['post'],
+                    'token' => ['post'],
                     'picture' => ['post'],
                 ],
             ],
@@ -126,9 +124,14 @@ class AccountController extends Controller
      * Returns JSON encoded string containing a signup token.
      * The token will only be every five minutes, to prevent multiple signups within one session.
      */
-    public function actionToken(): string
+    public function actionToken(): array
     {
-        return SignupForm::create()->getSessionToken();
+        $this->response->format = Response::FORMAT_JSON;
+
+        return [
+            'csrf' => $this->request->getCsrfToken(),
+            'token' => SignupForm::create()->getSessionToken(),
+        ];
     }
 
     public function actionLogin(): Response|string

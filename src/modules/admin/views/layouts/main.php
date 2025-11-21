@@ -23,13 +23,12 @@ AdminAsset::register($this);
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1">
     <title><?= Html::encode($this->getDocumentTitle()); ?></title>
-    <?= Html::csrfMetaTags() ?>
     <?php $this->head() ?>
 </head>
 <body hx-select="#wrap" hx-select-oob="#flashes:beforeend" hx-swap="outerHTML show:top" hx-target="#wrap" hx-boost="true">
 <?php $this->beginBody() ?>
 <?= Flashes::make(); ?>
-<div id="wrap">
+<div id="wrap" hx-headers='{"X-CSRF-TOKEN":"<?= Yii::$app->getRequest()->getCsrfToken(); ?>"}'>
     <?= NavBar::make(); ?>
     <main class="main">
         <?= Breadcrumb::make(); ?>

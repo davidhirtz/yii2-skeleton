@@ -7,6 +7,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\models\AuthClient;
+use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\panels\AuthClientListGroup;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
@@ -73,6 +74,9 @@ class AuthClientGridView extends GridView
             ->content($this->getButtonColumnContent(...));
     }
 
+    /**
+     * @see UserController::actionDeauthorize()
+     */
     protected function getButtonColumnContent(AuthClient $auth): string
     {
         $title = $auth->getClientClass()->getTitle();

@@ -21,7 +21,10 @@ trait SessionTrait
             $this->cookieDomain = $cookie->domain;
         }
 
-        /** @noinspection PhpMultipleClassDeclarationsInspection */
-        return [...parent::getCookieParams(), 'domain' => $this->cookieDomain];
+        return [
+            ...parent::getCookieParams(),
+            'sameSite' => 'Lax',
+            'domain' => $this->cookieDomain,
+        ];
     }
 }

@@ -1,7 +1,5 @@
 import htmx from "htmx.org"
 
-const csrfToken = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement).getAttribute('content') as string;
-
 window.customElements.get('file-upload') || window.customElements.define('file-upload', class extends HTMLElement {
     // noinspection JSUnusedGlobalSymbols
     connectedCallback() {
@@ -62,7 +60,7 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
                         headers.set('Prefer', 'status=204');
                     }
 
-                    headers.set('X-CSRF-Token', csrfToken);
+                    headers.set('X-CSRF-Token', Object.values(JSON.parse(document.querySelector('#wrap')!.getAttribute('hx-headers') as string) as Object).pop());
 
                     await fetch(this.dataset.url as string, {
                         body: body,

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
-use davidhirtz\yii2\skeleton\controllers\traits\HtmxControllerTrait;
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
@@ -18,8 +17,6 @@ use yii\web\Response;
 
 class RedirectController extends Controller
 {
-    use HtmxControllerTrait;
-
     #[Override]
     public function behaviors(): array
     {

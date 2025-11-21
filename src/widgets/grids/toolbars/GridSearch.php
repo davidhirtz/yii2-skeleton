@@ -111,8 +111,9 @@ class GridSearch
             ...$this->inputAttributes
         ];
 
+        $inputAttributes['autofocus'] = true;
+
         if ($this->getValue()) {
-            $inputAttributes['autofocus'] ??= true;
             $inputAttributes['onfocus'] ??= 'this.setSelectionRange(this.value.length,this.value.length);';
         }
 

@@ -11,6 +11,8 @@ htmx.onLoad(($node) => {
         return;
     }
 
+    const csrfToken = Object.values(JSON.parse(document.querySelector('#wrap')!.getAttribute('hx-headers') as string) as Object).pop();
+
     ($node.querySelectorAll('[data-sort-url]') as NodeListOf<HTMLTableElement>).forEach(($el) => {
         new Sortable($el, {
             handle: '.sortable-handle',
@@ -28,7 +30,7 @@ htmx.onLoad(($node) => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
-                        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')!.getAttribute('content'),
+                        'X-CSRF-Token': csrfToken,
                     } as HeadersInit,
                     body: data,
                 });

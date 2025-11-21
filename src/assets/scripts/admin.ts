@@ -10,12 +10,6 @@ import {toggleTargetsOnChange, updateTargetsOnChange} from "./includes/forms";
 import './components/ActiveForm';
 import './components/FlashAlert';
 
-const csrfToken = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement).getAttribute('content') as string;
-
-htmx.on('htmx:configRequest', (event: Event) => {
-    (event as CustomEvent).detail.headers['X-CSRF-Token'] = csrfToken;
-});
-
 htmx.onLoad(($container) => {
     const queryAll = (selector: string, method: Function) => {
         ($container as HTMLElement).querySelectorAll(selector).forEach(($el: Element) => method($el));

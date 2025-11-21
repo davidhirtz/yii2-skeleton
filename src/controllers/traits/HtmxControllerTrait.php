@@ -48,21 +48,4 @@ trait HtmxControllerTrait
     {
         return $this->response->redirect(Yii::$app->getUser()->getReturnUrl($defaultUrl));
     }
-
-    protected function requestHtmxRefresh(): static
-    {
-        if ($this->isHtmxRequest()) {
-            $this->response->getHeaders()->set('HX-Refresh', 'true');
-        }
-    }
-
-    protected function getHtmxRedirectTarget(): string|false
-    {
-        return '#wrap';
-    }
-
-    protected function isHtmxRequest(): bool
-    {
-        return $this->request->isHtmxRequest();
-    }
 }

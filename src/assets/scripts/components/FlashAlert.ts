@@ -9,7 +9,6 @@ window.customElements.get('flash-alert') || window.customElements.define('flash-
         const max = window.innerWidth < 767 ? 3 : 5;
 
         const close = ($target: HTMLElement) => {
-            console.log('close', $target);
             $target.classList.add('dismissed');
             $target.ontransitionend = () => $target.remove();
         }

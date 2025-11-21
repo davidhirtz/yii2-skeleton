@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
 
-use davidhirtz\yii2\skeleton\controllers\traits\HtmxControllerTrait;
 use davidhirtz\yii2\skeleton\models\AuthClient;
 use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
 use davidhirtz\yii2\skeleton\models\forms\OwnershipForm;
@@ -24,7 +23,6 @@ use yii\web\ServerErrorHttpException;
 
 class UserController extends Controller
 {
-    use HtmxControllerTrait;
     use UserTrait;
 
     #[Override]

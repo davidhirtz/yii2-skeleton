@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\models;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use Override;
 
 /**
  * @property string $id
@@ -15,7 +16,7 @@ use davidhirtz\yii2\skeleton\db\ActiveRecord;
  */
 class Session extends ActiveRecord
 {
-    #[\Override]
+    #[Override]
     public static function tableName(): string
     {
         return '{{%session}}';
