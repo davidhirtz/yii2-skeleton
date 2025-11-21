@@ -5,20 +5,23 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\models\forms;
 
 use davidhirtz\yii2\datetime\DateTime;
+use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
 use davidhirtz\yii2\skeleton\models\traits\IdentityTrait;
+use Override;
 use Yii;
 use yii\base\Model;
 
 class AccountResendConfirmForm extends Model
 {
     use IdentityTrait;
+    use ModelTrait;
 
     /**
      * @var string the interval in which no new email will be sent as date time string.
      */
     public string $timeoutSpamProtection = '1 min';
 
-    #[\Override]
+    #[Override]
     public function rules(): array
     {
         return [
@@ -41,7 +44,7 @@ class AccountResendConfirmForm extends Model
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function afterValidate(): void
     {
         $this->validateUserStatus();
@@ -51,14 +54,14 @@ class AccountResendConfirmForm extends Model
         parent::afterValidate();
     }
 
-    public function validateUserConfirmationCode(): void
+    protected function validateUserConfirmationCode(): void
     {
         if (!$this->hasErrors() && ($user = $this->getUser()) && !$user->verification_token) {
             $this->addError('email', Yii::t('skeleton', 'Your account was already confirmed!'));
         }
     }
 
-    public function validateSpamProtection(): void
+    protected function validateSpamProtection(): void
     {
         if (!$this->hasErrors() && $this->isAlreadySent()) {
             $this->addError('email', Yii::t('skeleton', 'We have just sent a link to confirm your account to {email}. Please check your inbox!', [
@@ -82,7 +85,7 @@ class AccountResendConfirmForm extends Model
         return false;
     }
 
-    public function sendConfirmEmail(): void
+    protected function sendConfirmEmail(): void
     {
         if ($user = $this->getUser()) {
             Yii::$app->getMailer()->compose('@skeleton/mail/account/confirm', ['user' => $user])
@@ -93,14 +96,14 @@ class AccountResendConfirmForm extends Model
         }
     }
 
-    public function isAlreadySent(): bool
+    protected function isAlreadySent(): bool
     {
         return ($user = $this->getUser())
             && $user->verification_token
             && $user->updated_at?->modify($this->timeoutSpamProtection) > new DateTime();
     }
 
-    #[\Override]
+    #[Override]
     public function attributeLabels(): array
     {
         return [

@@ -4,47 +4,39 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
-use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\models\forms\AccountResendConfirmForm;
-use davidhirtz\yii2\skeleton\widgets\fontawesome\ActiveForm;
-use davidhirtz\yii2\skeleton\widgets\forms\traits\EmailFieldTrait;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\LoginActiveFormTrait;
+use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
+use Stringable;
 use Yii;
 
+/**
+ * @property AccountResendConfirmForm $model
+ */
 class AccountResendConfirmActiveForm extends ActiveForm
 {
-    use EmailFieldTrait;
+    use LoginActiveFormTrait;
 
-    public $enableClientValidation = false;
-
-    public function __construct(public AccountResendConfirmForm $model, $config = [])
+    protected function renderContent(): string|Stringable
     {
-        parent::__construct($config);
+        $this->configureForm();
+
+        $this->attributes['id'] ??= 'resend-form';
+
+        $this->rows ??= [
+            $this->getHelpText(),
+            $this->getEmailField(),
+        ];
+
+        $this->submitButtonText ??= Yii::t('skeleton', 'Send Email');
+
+        return parent::renderContent();
     }
 
-    #[\Override]
-    public function init(): void
+    protected function getHelpText(): ?Stringable
     {
-        $this->id = $this->getId(false) ?? 'account-resend-confirm-form';
-        parent::init();
-    }
-
-    #[\Override]
-    public function run(): string
-    {
-        $this->renderFields();
-        return parent::run();
-    }
-
-    public function renderFields(): void
-    {
-        echo $this->helpBlock();
-        echo $this->emailField();
-        echo $this->sendEmailButton();
-    }
-
-    public function helpBlock(): string
-    {
-        $content = Yii::t('skeleton', 'Enter your email address and we will send you another email to confirm your account.');
-        return Html::tag('p', $content);
+        return Div::make()
+            ->text(Yii::t('skeleton', 'Enter your email address and we will send you another email to confirm your account.'));
     }
 }

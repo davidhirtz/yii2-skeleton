@@ -209,13 +209,11 @@ class AccountController extends Controller
 
     public function actionResend(): Response|string
     {
-        $form = Yii::createObject(AccountResendConfirmForm::class);
+        $form = AccountResendConfirmForm::create();
+        $form->user(Yii::$app->getUser()->getIdentity());
+        $form->email ??= $this->request->get('email', Yii::$app->getSession()->get('email'));
 
-        if (!Yii::$app->getUser()->getIsGuest() || $form->load($this->request->post())) {
-            if (!Yii::$app->getUser()->getIsGuest()) {
-                $form->setUser(Yii::$app->getUser()->getIdentity());
-            }
-
+        if ($form->load($this->request->post())) {
             if ($form->resend()) {
                 $this->success(Yii::t('skeleton', 'We have sent another email to confirm your account to {email}.', [
                     'email' => $form->getUser()->email,
@@ -223,8 +221,8 @@ class AccountController extends Controller
 
                 return $this->goHome();
             }
-        } else {
-            $form->email = $this->request->get('email', Yii::$app->getSession()->get('email'));
+
+            $this->error($form);
         }
 
         return $this->render('resend', [

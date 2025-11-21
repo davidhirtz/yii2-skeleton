@@ -13,30 +13,32 @@ use Yii;
 trait IdentityTrait
 {
     public ?string $email = null;
-    private ?User $_user = null;
+    private ?User $user = null;
 
     public function getUser(): ?User
     {
-        if ($this->email) {
-            $this->_user ??= User::find()
+        if (null !== $this->email) {
+            $this->user ??= User::find()
                 ->andWhereEmail($this->email)
                 ->limit(1)
                 ->one();
         }
 
-        return $this->_user;
+        return $this->user;
     }
 
-    public function setUser(User $user): void
+    public function user(?User $user): static
     {
-        $this->_user = $user;
-        $this->email = $user->email;
+        $this->user = $user;
+        $this->email = $user?->email;
+
+        return $this;
     }
 
     public function validateUserEmail(): void
     {
         if (!$this->hasErrors() && !$this->getUser()) {
-            $this->addError('id', Yii::t('skeleton', 'Your email was not found.'));
+            $this->addError('email', Yii::t('skeleton', 'Your email was not found.'));
         }
     }
 
