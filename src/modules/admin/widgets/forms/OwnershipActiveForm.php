@@ -17,11 +17,12 @@ use Yii;
  */
 class OwnershipActiveForm extends ActiveForm
 {
+    public bool $hasStickyButtons = false;
+    public string $layout = "{rows}{buttons}";
+
     #[Override]
     protected function renderContent(): string|Stringable
     {
-        $this->hasStickyButtons = false;
-
         $this->rows ??= [
             $this->getHelpText(),
             $this->getUsernameField(),

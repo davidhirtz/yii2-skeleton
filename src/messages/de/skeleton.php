@@ -231,7 +231,7 @@ return [
     'The user was created.' => 'Der neue Benutzer wurde erstellt.',
     'The user was deleted.' => 'Der Benutzer wurde gelöscht.',
     'The user was updated.' => 'Der Benutzer wurde erfolgreich aktualisiert.',
-    'The user {name} was not found.' => 'Der Benutzer {user} wurde nicht gefunden.',
+    'The user {user} was not found.' => 'Der Benutzer {user} wurde nicht gefunden.',
     'The website ownership was successful transferred!' => 'Der Besitzer der Webseite wurde erfolgreich geändert!',
     'This email address is already used by another user.' => 'Diese E-Mail-Adresse wird bereits von einem anderen Benutzer verwendet.',
     'This permission was already assigned to user {name}.' => 'Diese Rechte wurden bereits {name} erteilt.',

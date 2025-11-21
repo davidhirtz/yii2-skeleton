@@ -221,11 +221,9 @@ class UserController extends Controller
 
         $form = OwnershipForm::create();
 
-        if ($form->load(Yii::$app->request->post())) {
-            if ($form->update()) {
-                $this->success(Yii::t('skeleton', 'The website ownership was successful transferred!'));
-                return $this->goHome();
-            }
+        if ($form->load(Yii::$app->request->post()) && $form->update()) {
+            $this->success(Yii::t('skeleton', 'The website ownership was successful transferred!'));
+            return $this->goHome();
         }
 
         return $this->render('ownership', [

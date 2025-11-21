@@ -44,8 +44,8 @@ class OwnershipForm extends Model
             ->one();
 
         if (!$this->user) {
-            $this->addError('name', Yii::t('skeleton', 'The user {name} was not found.', [
-                'name' => $this->name,
+            $this->addError('name', Yii::t('skeleton', 'The user {user} was not found.', [
+                'user' => $this->name,
             ]));
         }
 

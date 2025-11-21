@@ -223,7 +223,7 @@ return [
     'The user was created.' => '',
     'The user was deleted.' => '',
     'The user was updated.' => '',
-    'The user {name} was not found.' => '',
+    'The user {user} was not found.' => '',
     'The website ownership was successful transferred!' => '',
     'This email address is already used by another user.' => '',
     'This permission was already assigned to user {name}.' => '',
