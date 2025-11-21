@@ -32,6 +32,8 @@ abstract class Field extends Widget
     public array $rowAttributes = [];
     public array $labelAttributes = [];
 
+    public string $template = '{input}{error}{hint}';
+
     protected ?string $error = null;
     protected ?string $hint = null;
 
@@ -76,17 +78,19 @@ abstract class Field extends Widget
 
     protected function renderContent(): string|Stringable
     {
+        $content = strtr($this->template, [
+            '{input}' => $this->getInput(),
+            '{hint}' => $this->getHint(),
+            '{error}' => $this->getError(),
+        ]);
+
         return FormRow::make()
             ->attributes($this->rowAttributes)
             ->header($this->getLabel())
-            ->content(
-                $this->getInput(),
-                $this->getError(),
-                $this->getHint(),
-            );
+            ->content($content);
     }
 
-    public function getLabel(): ?Label
+    protected function getLabel(): ?Label
     {
         return $this->label
             ? Label::make()
@@ -97,9 +101,9 @@ abstract class Field extends Widget
             : null;
     }
 
-    abstract public function getInput(): string|Stringable;
+    abstract protected function getInput(): string|Stringable;
 
-    public function getHint(): string|Stringable
+    protected function getHint(): string|Stringable
     {
         return $this->hint
             ? Div::make()
@@ -108,7 +112,7 @@ abstract class Field extends Widget
             : '';
     }
 
-    public function getError(): string|Stringable
+    protected function getError(): string|Stringable
     {
         return $this->error
             ? Div::make()

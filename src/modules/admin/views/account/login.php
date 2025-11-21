@@ -12,23 +12,17 @@ declare(strict_types=1);
  */
 
 use davidhirtz\yii2\skeleton\controllers\AccountController;
-use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Container;
 use davidhirtz\yii2\skeleton\html\Noscript;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\LoginActiveForm;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\Alert;
-use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 use davidhirtz\yii2\skeleton\widgets\panels\Card;
 use davidhirtz\yii2\skeleton\widgets\panels\Stack;
 use davidhirtz\yii2\skeleton\widgets\panels\StackItem;
 
 $this->title(Yii::t('skeleton', 'Login'));
-
-echo Container::make()
-    ->content(ErrorSummary::make()->models($form)
-        ->title(Yii::t('skeleton', 'Login unsuccessful')));
 
 echo Noscript::make()
     ->content(Container::make()

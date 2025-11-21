@@ -30,7 +30,7 @@
   grid-column-start: var(--cols);
 }
 
-.grid-footer {
+.grid-footer.sticky {
   position: sticky;
   display: flex;
   gap: .5rem;

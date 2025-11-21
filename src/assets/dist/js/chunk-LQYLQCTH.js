@@ -1,2 +1,0 @@
-window.customElements.get("flash-alert")||window.customElements.define("flash-alert",class extends HTMLElement{connectedCallback(){let e=this.querySelector(".alert"),t=e.querySelector("[data-close]"),l=e.dataset.alert,s=()=>{e.classList.add("dismissed"),e.ontransitionend=()=>this.remove()};if(t&&(t.onclick=()=>s()),l==="success"){let n=setTimeout(s,5e3);e.onmouseenter=()=>clearTimeout(n)}}});
-//# sourceMappingURL=chunk-LQYLQCTH.js.map

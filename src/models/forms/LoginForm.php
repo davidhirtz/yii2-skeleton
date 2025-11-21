@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\models\forms;
 
+use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
 use davidhirtz\yii2\skeleton\models\traits\IdentityTrait;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\models\UserLogin;
@@ -17,6 +18,7 @@ use yii\base\Model;
 class LoginForm extends Model
 {
     use IdentityTrait;
+    use ModelTrait;
 
     public bool $enableFacebookLogin = true;
     public ?string $password = null;

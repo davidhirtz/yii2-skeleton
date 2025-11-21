@@ -5,17 +5,25 @@ window.customElements.get('flash-alert') || window.customElements.define('flash-
         const $close = $alert.querySelector('[data-close]') as HTMLElement;
         const type = $alert.dataset.alert!;
 
-        const close = () => {
-            $alert.classList.add('dismissed');
-            $alert.ontransitionend = () => this.remove();
+        const $siblings = this.parentElement!.children as HTMLCollectionOf<HTMLElement>;
+        const max = window.innerWidth < 767 ? 3 : 5;
+
+        const close = ($target: HTMLElement) => {
+            console.log('close', $target);
+            $target.classList.add('dismissed');
+            $target.ontransitionend = () => $target.remove();
+        }
+
+        if ($siblings.length >= max) {
+            close($siblings[0]);
         }
 
         if ($close) {
-            $close.onclick = () => close();
+            $close.onclick = () => close(this);
         }
 
         if (type === 'success') {
-            const timer = setTimeout(close, 5000);
+            const timer = setTimeout(() => close(this), 5000);
             $alert.onmouseenter = () => clearTimeout(timer);
         }
     }

@@ -106,16 +106,11 @@ class AccountController extends Controller
         }
 
         $form = SignupForm::create();
-        $request = Yii::$app->getRequest();
+        $form->email = $this->request->get('email', Yii::$app->getSession()->get('email'));
 
-        if ($form->load($request->post())) {
-            if ($form->insert()) {
-                $this->success(Yii::t('skeleton', 'Sign up completed. Please check your inbox to confirm your email address.'));
-                return $this->goBack();
-            }
-        } else {
-            $form->email = $request->get('email', Yii::$app->getSession()->get('email'));
-            $form->honeypot = Yii::$app->getSecurity()->generateRandomString(10);
+        if ($form->load($this->request->post()) && $form->insert()) {
+            $this->success(Yii::t('skeleton', 'Sign up completed. Please check your inbox to confirm your email address.'));
+            return $this->goBack();
         }
 
         if ($form->hasErrors()) {
@@ -143,12 +138,17 @@ class AccountController extends Controller
             return $this->goHome();
         }
 
-        $form = Yii::createObject(LoginForm::class);
-        $request = Yii::$app->getRequest();
+        $form = LoginForm::create();
+        $form->email = $this->request->get('email', Yii::$app->getSession()->get('email'));
 
-        if ($form->load($request->post())) {
+        if ($form->load($this->request->post())) {
             if ($form->login()) {
-                $this->success($form->getUser()->login_count > 1 ? Yii::t('skeleton', 'Welcome back, {name}!', ['name' => $form->getUser()->getUsername()]) : Yii::t('skeleton', 'Login successful!'));
+                $this->success($form->getUser()->login_count === 1
+                    ? Yii::t('skeleton', 'Login successful!')
+                    : Yii::t('skeleton', 'Welcome back, {name}!', [
+                        'name' => $form->getUser()->getUsername(),
+                    ]));
+
                 return $this->goBack();
             }
 
@@ -158,9 +158,11 @@ class AccountController extends Controller
                 ]);
             }
 
+            if ($form->hasErrors()) {
+                $this->error($form);
+            }
+
             Yii::$app->getSession()->set('email', $form->email);
-        } else {
-            $form->email = $request->get('email', Yii::$app->getSession()->get('email'));
         }
 
         return $this->render('login', [
@@ -174,7 +176,7 @@ class AccountController extends Controller
             $this->success(Yii::t('skeleton', 'You are now logged out! See you soon!'));
         }
 
-        $this->requestHtmxRefresh();;
+        $this->requestHtmxRefresh();
 
         return $this->goHome();
     }
@@ -207,9 +209,8 @@ class AccountController extends Controller
     public function actionResend(): Response|string
     {
         $form = Yii::createObject(AccountResendConfirmForm::class);
-        $request = Yii::$app->getRequest();
 
-        if (!Yii::$app->getUser()->getIsGuest() || $form->load($request->post())) {
+        if (!Yii::$app->getUser()->getIsGuest() || $form->load($this->request->post())) {
             if (!Yii::$app->getUser()->getIsGuest()) {
                 $form->setUser(Yii::$app->getUser()->getIdentity());
             }
@@ -222,7 +223,7 @@ class AccountController extends Controller
                 return $this->goHome();
             }
         } else {
-            $form->email = $request->get('email', Yii::$app->getSession()->get('email'));
+            $form->email = $this->request->get('email', Yii::$app->getSession()->get('email'));
         }
 
         return $this->render('resend', [
@@ -285,8 +286,6 @@ class AccountController extends Controller
         $form = AccountUpdateForm::create([
             'user' => Yii::$app->getUser()->getIdentity(),
         ]);
-
-        $language = $form->user->language;
 
         if ($form->load(Yii::$app->getRequest()->post())) {
             if ($form->save()) {

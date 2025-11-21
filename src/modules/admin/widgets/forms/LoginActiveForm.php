@@ -17,6 +17,7 @@ use Yii;
  */
 class LoginActiveForm extends ActiveForm
 {
+    public bool $hasStickyButtons = false;
     public string $layout = "{rows}{buttons}";
 
     protected function renderContent(): string|Stringable
@@ -24,11 +25,15 @@ class LoginActiveForm extends ActiveForm
         $this->attributes['id'] ??= 'login-form';
         $this->attributes['hx-select'] ??= "main";
 
+        $this->addClass('form-plain');
+
         $this->rows ??= [
             $this->getEmailField(),
             $this->getPasswordField(),
             $this->getRememberMeField(),
         ];
+
+        $this->submitButtonText ??= Yii::t('skeleton', 'Login');
 
         return parent::renderContent();
     }

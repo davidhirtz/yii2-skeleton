@@ -11,7 +11,7 @@ use Stringable;
 
 class HexColorField extends Field
 {
-    public function getInput(): string|Stringable
+    protected function getInput(): string|Stringable
     {
         $this->registerClientScript();
         return $this->getInputGroup();

@@ -45,7 +45,7 @@ class CheckboxField extends Field
                         $this->getHint()));
     }
 
-    public function getInput(): string|Stringable
+    protected function getInput(): string|Stringable
     {
         $this->attributes['type'] ??= 'checkbox';
         $value = $this->attributes['value'] ?? $this->model?->{$this->property} ?? '';

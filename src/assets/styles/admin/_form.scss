@@ -24,6 +24,10 @@
     max-width: 76rem;
     width: 100%;
   }
+
+  .form-plain & {
+    display: block;
+  }
 }
 
 .form-label {
@@ -31,6 +35,10 @@
     padding: 1px 0;
     align-self: flex-start;
     text-align: right;
+  }
+
+  .form-plain & {
+    display: none;
   }
 }
 
@@ -71,12 +79,20 @@
 }
 
 .form-buttons {
-  position: sticky;
-  padding: 1rem;
-  bottom: 0;
-  border-top: 1px solid var(--form-footer-border-color);
-  background: var(--card-bg);
-  z-index: 2;
+  &.sticky {
+    position: sticky;
+    padding: 1rem;
+    bottom: 0;
+    border-top: 1px solid var(--form-footer-border-color);
+    background: var(--card-bg);
+    z-index: 2;
+  }
+
+  .form-plain & {
+    .btn {
+      width: 100%;
+    }
+  }
 }
 
 .form-footer {
@@ -84,7 +100,7 @@
   line-height: 1.125rem;
   color: var(--muted-color);
 
-  .form-buttons + & {
+  .form-buttons.sticky + & {
     margin-top: -1rem;
   }
 
@@ -117,9 +133,4 @@
   --input-bg-color: var(--form-invalid-bg);
   --input-border-color: var(--form-invalid-border);
   --input-color: var(--form-invalid-color);
-}
-
-.invalid-feedback {
-  font-size: .875rem;
-  color: var(--form-invalid-color);
 }

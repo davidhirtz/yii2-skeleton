@@ -42,7 +42,7 @@ class SelectField extends Field
     }
 
     #[Override]
-    public function getInput(): string|Stringable
+    protected function getInput(): string|Stringable
     {
         $this->attributes['id'] ??= $this->getId();
 

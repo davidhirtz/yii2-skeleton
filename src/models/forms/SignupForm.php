@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\models\forms;
 
 use davidhirtz\yii2\skeleton\models\traits\SignupEmailTrait;
 use davidhirtz\yii2\skeleton\models\UserLogin;
+use Override;
 use Yii;
 
 class SignupForm extends AbstractSignupForm
@@ -45,7 +46,13 @@ class SignupForm extends AbstractSignupForm
      */
     public ?string $token = null;
 
-    #[\Override]
+    public function __construct($config = [])
+    {
+        $this->honeypot = Yii::$app->getSecurity()->generateRandomString(10);
+        parent::__construct($config);
+    }
+
+    #[Override]
     public function rules(): array
     {
         return [
@@ -87,14 +94,14 @@ class SignupForm extends AbstractSignupForm
         ];
     }
 
-    #[\Override]
+    #[Override]
     protected function setUserAttributes(): void
     {
         parent::setUserAttributes();
         $this->user->timezone = $this->timezone;
     }
 
-    #[\Override]
+    #[Override]
     public function beforeValidate(): bool
     {
         if (!Yii::$app->getUser()->isSignupEnabled()) {
@@ -108,7 +115,7 @@ class SignupForm extends AbstractSignupForm
         return parent::beforeValidate();
     }
 
-    #[\Override]
+    #[Override]
     public function afterValidate(): void
     {
         if (!$this->hasErrors()) {
@@ -217,7 +224,7 @@ class SignupForm extends AbstractSignupForm
         return $this->enableFacebookSignup && Yii::$app->getAuthClientCollection()->hasClient('facebook');
     }
 
-    #[\Override]
+    #[Override]
     public function attributeLabels(): array
     {
         return [

@@ -9,6 +9,7 @@ use davidhirtz\yii2\skeleton\assets\SortableAssetBundle;
 use davidhirtz\yii2\skeleton\base\traits\ContainerConfigurationTrait;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
+use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Table;
 use davidhirtz\yii2\skeleton\html\Tbody;
@@ -61,12 +62,13 @@ class GridView extends Widget
     public ?array $header = null;
 
     public array $headerAttributes = ['class' => 'grid-header'];
-    public array $footerAttributes = ['class' => 'grid-footer sticky'];
+    public array $footerAttributes = ['class' => 'grid-footer'];
     public array $headerRowAttributes = [];
     public array $tableAttributes = ['class' => 'table table-striped table-hover'];
     public array $tableBodyAttributes = [];
     public array|Closure $rowAttributes;
 
+    public bool $hasStickyFooter = true;
     public array $pagerOptions = [];
     public bool $showOnEmpty = true;
 
@@ -144,7 +146,7 @@ class GridView extends Widget
         return $this->header ? $this->getToolbars($this->header, $this->headerAttributes) : null;
     }
 
-    protected function getToolbars(array $rows, array $attributes = []): ?Stringable
+    protected function getToolbars(array $rows, array $attributes = []): ?Div
     {
         $items = is_array(current($rows)) ? array_map($this->getToolbarItems(...), $rows) : $this->getToolbarItems($rows);
 
@@ -289,7 +291,11 @@ class GridView extends Widget
 
     protected function getFooter(): ?Stringable
     {
-        return $this->footer ? $this->getToolbars($this->footer, $this->footerAttributes) : null;
+        $footer = $this->footer
+            ? $this->getToolbars($this->footer, $this->footerAttributes)
+            : null;
+
+        return $footer?->addClass($this->hasStickyFooter ? 'sticky' : null);
     }
 
     public function getModel(): ?Model

@@ -29,7 +29,7 @@ class InputField extends Field
         return parent::renderContent();
     }
 
-    public function getInput(): string|Stringable
+    protected function getInput(): string|Stringable
     {
         $this->attributes['type'] ??= 'text';
         $this->attributes['value'] ??= $this->model?->{$this->property};

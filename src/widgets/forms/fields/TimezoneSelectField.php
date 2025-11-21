@@ -25,7 +25,6 @@ class TimezoneSelectField extends SelectField
             $now = new DateTime('now', new DateTimeZone('GMT'));
             $list = [];
 
-            // Create a multidimensional array to sort by offset first and display name after.
             foreach (DateTimeZone::listAbbreviations() as $timezones) {
                 foreach ($timezones as $tz) {
                     if (!empty($tz['timezone_id']) && in_array($tz['timezone_id'], $identifiers, true)) {
