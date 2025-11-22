@@ -24,7 +24,6 @@ use yii\authclient\AuthAction;
 use yii\base\InvalidCallException;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -303,7 +302,7 @@ class AccountController extends Controller
 
     public function actionDelete(): Response|string
     {
-        $form = Yii::$container->get(DeleteForm::class, [], [
+        $form = DeleteForm::create([
             'model' => Yii::$app->getUser()->getIdentity(),
             'attribute' => 'password',
         ]);

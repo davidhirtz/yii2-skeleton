@@ -6,18 +6,16 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
 use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\forms\LoginForm;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\LoginActiveFormTrait;
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
 use Stringable;
+use Yii;
 
 /**
  * @property LoginForm $model
  */
 class TwoFactorAuthenticatorLoginActiveForm extends ActiveForm
 {
-    use LoginActiveFormTrait;
-
     public array $attributes = ['class' => 'form-plain'];
     public array $excludedErrorProperties = ['code'];
     public bool $hasStickyButtons = false;
@@ -31,6 +29,8 @@ class TwoFactorAuthenticatorLoginActiveForm extends ActiveForm
             $this->getPasswordField(),
             $this->getRememberMeField(),
         ];
+
+        $this->submitButtonText ??= Yii::t('skeleton', 'Login');
 
         return parent::renderContent();
     }

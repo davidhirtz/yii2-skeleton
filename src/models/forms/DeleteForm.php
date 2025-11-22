@@ -5,60 +5,50 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\models\forms;
 
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use Override;
 use Yii;
-use yii\base\InvalidConfigException;
 use yii\base\Model;
-use yii\helpers\Inflector;
-use yii\web\NotFoundHttpException;
 
 class DeleteForm extends Model
 {
-    public ?string $value = null;
-    public string $attribute = 'name';
+    public function __construct(
+        public readonly ActiveRecord $model,
+        public readonly ?string $attribute = null,
+        public ?string $value = null,
+    )
+    {
+        parent::__construct();
+    }
 
-    private ?ActiveRecord $_model = null;
-
-    #[\Override]
+    #[Override]
     public function rules(): array
     {
         return [
             [
                 ['value'],
                 'required',
-                'when' => fn () => $this->attribute
+                'when' => fn() => $this->attribute
             ],
             [
                 ['value'],
-                $this->validateName(...),
+                $this->validateValue(...),
             ],
         ];
     }
 
-    /**
-     * Checks for a validation method on the parent model or compares the given value with the model attribute.
-     */
-    public function validateName(): void
+    public function validateValue(): void
     {
-        $methodName = 'validate' . Inflector::camelize($this->attribute);
-        $model = $this->getModel();
-
-        $isValid = method_exists($model, $methodName)
-            ? !call_user_func([$model, $methodName], $this->value)
-            : $this->value !== $model->getAttribute($this->attribute);
-
-        if ($isValid) {
-            $this->addError('name', Yii::t('yii', '{attribute} is invalid.', [
-                'attribute' => $this->getModel()->getAttributeLabel($this->attribute),
+        if ($this->value !== $this->model->{$this->attribute}) {
+            $this->addError('value', Yii::t('yii', '{attribute} is invalid.', [
+                'attribute' => $this->model->getAttributeLabel($this->attribute),
             ]));
         }
     }
 
     public function delete(): bool
     {
-        if ($this->validate()) {
-            if (!$this->getModel()->delete()) {
-                $this->addErrors($this->getModel()->getErrors());
-            }
+        if (!$this->validate() || !$this->model->delete()) {
+            $this->addErrors($this->model->getErrors());
         }
 
         return !$this->hasErrors();
@@ -66,32 +56,24 @@ class DeleteForm extends Model
 
     public function getId(): array|int|string
     {
-        return $this->getModel()->getPrimaryKey();
+        return $this->model->getPrimaryKey();
     }
 
-    public function getModel(): ?ActiveRecord
+    public function formName(): string
     {
-        if (!$this->_model) {
-            throw new InvalidConfigException();
-        }
-
-        return $this->_model;
+        return 'DeleteForm';
     }
 
-    public function setModel(?ActiveRecord $model): void
-    {
-        if (!$model) {
-            throw new NotFoundHttpException();
-        }
-
-        $this->_model = $model;
-    }
-
-    #[\Override]
+    #[Override]
     public function attributeLabels(): array
     {
         return [
-            'value' => $this->getModel()->getAttributeLabel($this->attribute),
+            'value' => $this->model->getAttributeLabel($this->attribute),
         ];
+    }
+
+    public static function create(array $config): static
+    {
+        return Yii::$container->get(static::class, $config);
     }
 }

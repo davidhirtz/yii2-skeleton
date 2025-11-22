@@ -34,5 +34,6 @@ if (Yii::$app->getUser()->can(User::AUTH_USER_DELETE, ['user' => $form->user])) 
         ->danger()
         ->title(Yii::t('skeleton', 'Delete User'))
         ->form(UserDeleteActiveForm::make()
-            ->model($form->user));
+            ->model($form->user)
+            ->property('email'));
 }

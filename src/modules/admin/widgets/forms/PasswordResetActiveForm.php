@@ -68,7 +68,7 @@ class PasswordResetActiveForm extends ActiveForm
             ->property('newPassword')
             ->prepend(Icon::make()
                 ->name('key'))
-            ->autofocus()
+            ->autofocus(!$this->model->hasErrors())
             ->autocomplete('new-password')
             ->placeholder()
             ->type('password');

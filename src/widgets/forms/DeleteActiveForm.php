@@ -6,12 +6,12 @@ namespace davidhirtz\yii2\skeleton\widgets\forms;
 
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\traits\TagLabelTrait;
+use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
 use davidhirtz\yii2\skeleton\widgets\Modal;
 use davidhirtz\yii2\skeleton\widgets\traits\PropertyWidgetTrait;
 use Stringable;
 use Yii;
-use yii\db\ActiveRecord;
 
 class DeleteActiveForm extends ActiveForm
 {
@@ -44,21 +44,25 @@ class DeleteActiveForm extends ActiveForm
 
     protected function renderContent(): string|Stringable
     {
+        $this->model = DeleteForm::create([
+            'model' => $this->model,
+            'attribute' => $this->property,
+        ]);
+
         $this->message ??= $this->property
             ? Yii::t('skeleton', 'Please type the exact {attribute} in the text field below to delete this record. All related files will also be unrecoverably deleted. This cannot be undone, please be certain!', [
-                'attribute' => $this->model->getAttributeLabel($this->property),
+                'attribute' => $this->model->getAttributeLabel('value'),
             ])
             : Yii::t('skeleton', 'Warning: Deleting this record cannot be undone. All related files will also be unrecoverably deleted. Please be certain!');
 
-        if ($this->model instanceof ActiveRecord) {
-            $this->action ??= ['delete', 'id' => $this->model->getPrimaryKey()];
-        }
+        $this->action ??= ['delete', 'id' => $this->model->getId()];
 
         $this->confirm ??= Yii::t('yii', 'Are you sure you want to delete this item?');
         $this->label ??= Yii::t('skeleton', 'Delete');
 
         $btn = Button::make()
             ->danger()
+            ->attribute('form', $this->getId())
             ->text($this->label);
 
         if ($this->confirm) {
@@ -79,13 +83,12 @@ class DeleteActiveForm extends ActiveForm
         $this->rows ??= [
             FormRow::make()
                 ->content($this->message),
-            InputField::make()
+            $this->model->attribute
+                ? InputField::make()
                 ->attributes($this->inputAttributes)
-                ->property($this->property)
-                ->value('')
+                ->property('value')
                 ->required()
-                ->visible($this->property !== null)
-                ->required(),
+                : null,
         ];
 
         return parent::renderContent();

@@ -157,22 +157,20 @@ class UserController extends Controller
             throw new ForbiddenHttpException();
         }
 
-        $form = Yii::$container->get(DeleteForm::class, [], [
+        $form = DeleteForm::create([
             'model' => $user,
             'attribute' => 'email',
         ]);
 
-        if ($form->load(Yii::$app->getRequest()->post())) {
-            if ($form->delete()) {
-                $this->success(Yii::t('skeleton', 'The user was deleted.'));
+        if ($form->load(Yii::$app->getRequest()->post()) && $form->delete()) {
+            $this->success(Yii::t('skeleton', 'The user was deleted.'));
 
-                if ($user->id === Yii::$app->getUser()->id) {
-                    Yii::$app->getUser()->logout(false);
-                    return $this->goHome();
-                }
-
-                return $this->redirect(['index']);
+            if ($user->id === Yii::$app->getUser()->id) {
+                Yii::$app->getUser()->logout(false);
+                return $this->goHome();
             }
+
+            return $this->redirect(['index']);
         }
 
         $this->error($form);

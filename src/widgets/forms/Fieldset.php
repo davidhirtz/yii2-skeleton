@@ -35,9 +35,9 @@ class Fieldset extends Widget
      */
     protected array $rows = [];
 
-    public function fields(Stringable|string ...$fields): static
+    public function fields(Stringable|string|null ...$fields): static
     {
-        $this->rows = $fields;
+        $this->rows = array_filter($fields);
         return $this;
     }
 
