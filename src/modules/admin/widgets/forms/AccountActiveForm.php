@@ -17,6 +17,7 @@ class AccountActiveForm extends ActiveForm
 {
     use UserActiveFormTrait;
 
+    #[\Override]
     protected function renderContent(): string|Stringable
     {
         $this->rows ??= [

@@ -37,6 +37,7 @@ class Html extends BaseHtml
         return static::alert($html, 'danger');
     }
 
+    #[\Override]
     public static function getInputIdByName($name): string
     {
         return strtr(

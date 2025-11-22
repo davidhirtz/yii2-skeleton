@@ -12,6 +12,7 @@ class TimezoneSelectField extends SelectField
 {
     private ?array $_timezones = null;
 
+    #[\Override]
     protected function renderContent(): string|Stringable
     {
         $this->items = $this->getTimezones();

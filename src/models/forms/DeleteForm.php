@@ -59,6 +59,7 @@ class DeleteForm extends Model
         return $this->model->getPrimaryKey();
     }
 
+    #[\Override]
     public function formName(): string
     {
         return 'DeleteForm';

@@ -20,6 +20,7 @@ class InputField extends Field
     use TagInputTrait;
     use TagPlaceholderTrait;
 
+    #[\Override]
     protected function renderContent(): string|Stringable
     {
         if ('hidden' === ($this->attributes['type'] ?? null)) {

@@ -35,6 +35,7 @@ class Icon extends Tag
         return $this;
     }
 
+    #[\Override]
     protected function before(): string
     {
         $this->addClass(match ($this->collection) {

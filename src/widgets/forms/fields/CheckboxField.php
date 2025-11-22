@@ -30,6 +30,7 @@ class CheckboxField extends Field
         return $this;
     }
 
+    #[\Override]
     protected function renderContent(): string|Stringable
     {
         return FormRow::make()

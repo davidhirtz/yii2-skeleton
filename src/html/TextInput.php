@@ -12,6 +12,7 @@ class TextInput extends Input
     use TagInputTrait;
     use TagPlaceholderTrait;
 
+    #[\Override]
     protected function before(): string
     {
         $this->addClass('input');

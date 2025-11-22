@@ -24,6 +24,7 @@ class Label extends Tag
         return $this;
     }
 
+    #[\Override]
     protected function renderContent(): string|Stringable
     {
         return $this->text;

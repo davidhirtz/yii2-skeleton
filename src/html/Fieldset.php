@@ -19,6 +19,7 @@ class Fieldset extends Tag
         return $this;
     }
 
+    #[\Override]
     protected function before(): string
     {
         if ($this->legend !== null) {

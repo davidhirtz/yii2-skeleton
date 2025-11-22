@@ -42,6 +42,7 @@ class DeleteActiveForm extends ActiveForm
         return $this;
     }
 
+    #[\Override]
     protected function renderContent(): string|Stringable
     {
         $this->model = DeleteForm::create([

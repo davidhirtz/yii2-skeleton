@@ -11,6 +11,7 @@ use Yii;
 
 class RedirectSubmenu extends Submenu
 {
+    #[\Override]
     protected function renderContent(): string|Stringable
     {
         $this->view->title($this->title)

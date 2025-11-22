@@ -24,6 +24,7 @@ class Form extends Tag
         return $this->attribute('method', strtolower($method));
     }
 
+    #[\Override]
     protected function before(): string
     {
         $this->attributes['method'] ??= 'post';

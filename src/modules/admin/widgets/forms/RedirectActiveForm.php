@@ -13,6 +13,7 @@ use Stringable;
  */
 class RedirectActiveForm extends ActiveForm
 {
+    #[\Override]
     protected function renderContent(): string|Stringable
     {
         $this->rows ??= [

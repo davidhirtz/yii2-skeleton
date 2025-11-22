@@ -13,6 +13,7 @@ class Response extends \yii\web\Response
 {
     protected string $htmxRedirectTarget = '#wrap';
 
+    #[\Override]
     protected function prepare(): void
     {
         if (Yii::$app->getRequest()->getIsDraft()) {
@@ -22,10 +23,11 @@ class Response extends \yii\web\Response
         parent::prepare();
     }
 
+    #[\Override]
     public function redirect($url, $statusCode = 302, $checkAjax = true): static
     {
         if (is_array($url) && isset($url[0])) {
-            $url[0] = '/' . ltrim($url[0], '/');
+            $url[0] = '/' . ltrim((string) $url[0], '/');
         }
 
         $request = Yii::$app->getRequest();
@@ -36,8 +38,8 @@ class Response extends \yii\web\Response
         }
 
         if (
-            strncmp($url, '/', 1) === 0
-            && strncmp($url, '//', 2) !== 0
+            str_starts_with($url, '/')
+            && !str_starts_with($url, '//')
         ) {
             $url = $request->getHostInfo() . $url;
         }

@@ -16,6 +16,7 @@ class Container extends Tag
         return $this->addClass('container-centered');
     }
 
+    #[\Override]
     protected function before(): string
     {
         $this->addClass('container');

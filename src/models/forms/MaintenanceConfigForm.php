@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\models\forms;
 
 use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
+use Override;
 use Yii;
 use yii\base\Model;
 
@@ -12,7 +13,7 @@ class MaintenanceConfigForm extends Model
 {
     use ModelTrait;
 
-    public const MAINTENANCE_CONFIG = '@runtime/maintenance.json';
+    public const string MAINTENANCE_CONFIG = '@runtime/maintenance.json';
 
     /**
      * @var string|null optional redirect URL
@@ -39,7 +40,7 @@ class MaintenanceConfigForm extends Model
      */
     public string $viewFile = '@skeleton/views/maintenance.php';
     
-    #[\Override]
+    #[Override]
     public function rules(): array
     {
         return [

@@ -23,6 +23,7 @@ class LoginActiveForm extends ActiveForm
     public bool $hasStickyButtons = false;
     public string $layout = "{errors}{rows}{buttons}";
 
+    #[\Override]
     protected function renderContent(): string|Stringable
     {
         // Ensure the two-factor authentication form is displayed correctly

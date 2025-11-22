@@ -74,6 +74,7 @@ class UserForm extends Model
         ];
     }
 
+    #[\Override]
     public function getScenario(): string
     {
         return $this->user->getIsNewRecord() ? self::SCENARIO_INSERT : Model::SCENARIO_DEFAULT;

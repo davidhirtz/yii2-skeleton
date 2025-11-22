@@ -26,6 +26,7 @@ class Optgroup extends ListTag
         return $this;
     }
 
+    #[\Override]
     protected function renderContent(): string
     {
         return implode('', $this->options);

@@ -24,6 +24,7 @@ class Option extends Tag
         return $this;
     }
 
+    #[\Override]
     protected function renderContent(): string|Stringable
     {
         return (string)$this->label;
