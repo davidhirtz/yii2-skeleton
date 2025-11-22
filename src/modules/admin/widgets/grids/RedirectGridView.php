@@ -42,7 +42,7 @@ class RedirectGridView extends GridView
     }
 
     #[Override]
-    public function renderContent(): string|Stringable
+    public function configure(): void
     {
         $this->attributes['id'] ??= 'redirects';
 
@@ -70,7 +70,7 @@ class RedirectGridView extends GridView
             $this->showSelection ? $this->getSelectionButton() : null,
         ];
 
-        return parent::renderContent();
+        parent::configure();
     }
 
     protected function setDataProviderFromRedirect(): void

@@ -27,7 +27,7 @@ class AuthClientGridView extends GridView
     public string $layout = '{items}{footer}';
 
     #[Override]
-    public function renderContent(): string|Stringable
+    public function configure(): void
     {
         $this->provider = new ArrayDataProvider([
             'allModels' => $this->user->authClients,
@@ -44,7 +44,7 @@ class AuthClientGridView extends GridView
             $this->getButtonColumn(),
         ];
 
-        return parent::renderContent();
+        parent::configure();
     }
 
     protected function getCreateButton(): string

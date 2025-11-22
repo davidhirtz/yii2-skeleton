@@ -24,7 +24,7 @@ class AccountResendConfirmActiveForm extends ActiveForm
     public string $layout = "{errors}{rows}{buttons}";
 
     #[\Override]
-    protected function renderContent(): string|Stringable
+    protected function configure(): void
     {
         $this->attributes['id'] ??= 'resend-form';
 
@@ -35,7 +35,7 @@ class AccountResendConfirmActiveForm extends ActiveForm
 
         $this->submitButtonText ??= Yii::t('skeleton', 'Send Email');
 
-        return parent::renderContent();
+        parent::configure();
     }
 
     protected function getHelpText(): ?Stringable

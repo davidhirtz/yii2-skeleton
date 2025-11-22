@@ -25,19 +25,19 @@ class UserLoginGridView extends GridView
     use TypeGridViewTrait;
 
     #[Override]
-    public function renderContent(): string|Stringable
+    public function configure(): void
     {
         $this->columns ??= [
             $this->getTypeIconColumn(),
             LinkColumn::make()
                 ->property('ip_address')
-                ->href(fn (UserLogin $login) => ['view', 'id' => $login->id]),
+                ->href(fn(UserLogin $login) => ['view', 'id' => $login->id]),
             LinkColumn::make()
                 ->property('user')
                 ->visible(!$this->user)
-                ->content(fn (UserLogin $login): Stringable => Username::make()
+                ->content(fn(UserLogin $login): Stringable => Username::make()
                     ->user($login->user))
-                ->href(fn (UserLogin $login): array => ['view', 'user' => $login->user_id]),
+                ->href(fn(UserLogin $login): array => ['view', 'user' => $login->user_id]),
             DataColumn::make()
                 ->property('browser')
                 ->hiddenForSmallDevices(),
@@ -45,7 +45,7 @@ class UserLoginGridView extends GridView
                 ->property('created_at'),
         ];
 
-        return parent::renderContent();
+        parent::configure();
     }
 
     protected function getTypeIcon(TypeAttributeInterface $model): string

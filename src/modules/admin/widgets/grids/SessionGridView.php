@@ -10,6 +10,7 @@ use davidhirtz\yii2\skeleton\models\Session;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
+use Override;
 use Stringable;
 use Yii;
 use yii\data\ArrayDataProvider;
@@ -18,8 +19,8 @@ class SessionGridView extends GridView
 {
     public string $layout = '{items}{footer}';
 
-    #[\Override]
-    public function renderContent(): string|Stringable
+    #[Override]
+    public function configure(): void
     {
         $this->provider ??= new ArrayDataProvider([
             'allModels' => [
@@ -37,7 +38,7 @@ class SessionGridView extends GridView
         $this->columns ??= [
             Column::make()
                 ->header(Yii::t('skeleton', 'Sessions'))
-                ->content(fn (array $item): array => [
+                ->content(fn(array $item): array => [
                     Div::make()
                         ->class('strong')
                         ->content(Yii::t('skeleton', 'Expired sessions: {count,number}', [
@@ -52,13 +53,13 @@ class SessionGridView extends GridView
                 ]),
             ButtonColumn::make()
                 /** @see SystemController::actionSessionGc() */
-                ->content(fn (): Stringable => Button::make()
+                ->content(fn(): Stringable => Button::make()
                     ->primary()
                     ->icon('trash')
                     ->post(['/admin/system/session-gc'])
                     ->tooltip(Yii::t('skeleton', 'Delete expired sessions')))
         ];
 
-        return parent::renderContent();
+        parent::configure();
     }
 }

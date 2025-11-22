@@ -18,7 +18,7 @@ class AccountActiveForm extends ActiveForm
     use UserActiveFormTrait;
 
     #[\Override]
-    protected function renderContent(): string|Stringable
+    protected function configure(): void
     {
         $this->rows ??= [
             [
@@ -42,7 +42,7 @@ class AccountActiveForm extends ActiveForm
             ],
         ];
 
-        return parent::renderContent();
+        parent::configure();
     }
 
     protected function getOldPasswordField(): string|Stringable

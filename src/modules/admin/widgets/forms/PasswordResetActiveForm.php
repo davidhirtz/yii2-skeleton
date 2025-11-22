@@ -24,7 +24,7 @@ class PasswordResetActiveForm extends ActiveForm
     public string $layout = "{errors}{rows}{buttons}";
 
     #[Override]
-    protected function renderContent(): string|Stringable
+    protected function configure(): void
     {
         $this->attributes['id'] ??= $this->getId();
 
@@ -37,7 +37,7 @@ class PasswordResetActiveForm extends ActiveForm
 
         $this->submitButtonText = Yii::t('skeleton', 'Save New Password');
 
-        return parent::renderContent();
+        parent::configure();
     }
 
     protected function getHelpText(): ?Stringable

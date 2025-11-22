@@ -21,7 +21,7 @@ class OwnershipActiveForm extends ActiveForm
     public string $layout = "{rows}{buttons}";
 
     #[Override]
-    protected function renderContent(): string|Stringable
+    protected function configure(): void
     {
         $this->rows ??= [
             $this->getHelpText(),
@@ -30,7 +30,7 @@ class OwnershipActiveForm extends ActiveForm
 
         $this->submitButtonText ??= Yii::t('skeleton', 'Transfer');
 
-        return parent::renderContent();
+        parent::configure();
     }
 
     protected function getUsernameField(): ?Stringable

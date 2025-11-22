@@ -12,7 +12,7 @@ trait IdentityTrait
     public ?string $email = null;
     public ?User $user = null;
 
-    public function validateEmail(): void
+    public function validateEmail(): bool
     {
         $this->user ??= User::find()
             ->andWhereEmail($this->email)
@@ -22,6 +22,8 @@ trait IdentityTrait
         if (null === $this->user) {
             $this->addError('email', Yii::t('skeleton', 'Your email was not found.'));
         }
+
+        return !$this->hasErrors('email');
     }
 
     protected function validateUserStatus(): void

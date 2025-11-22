@@ -31,7 +31,7 @@ class LogFileGridView extends GridView
     ];
 
     #[Override]
-    public function renderContent(): string|Stringable
+    public function configure(): void
     {
         $this->attributes['id'] ??= 'logs';
         $this->provider ??= Yii::createObject(LogFileArrayDataProvider::class);
@@ -45,7 +45,7 @@ class LogFileGridView extends GridView
 
         $this->view->registerCss('pre{margin-top: 20px; max-height:200px;}');
 
-        return parent::renderContent();
+        parent::configure();
     }
 
     protected function getNameColumn(): LinkColumn

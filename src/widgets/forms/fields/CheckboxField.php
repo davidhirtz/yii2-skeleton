@@ -49,7 +49,7 @@ class CheckboxField extends Field
     protected function getInput(): string|Stringable
     {
         $this->attributes['type'] ??= 'checkbox';
-        $value = $this->attributes['value'] ?? $this->model?->{$this->property} ?? '';
+        $value = $this->attributes['value'] ?? $this->model->{$this->property} ?? '';
         $this->attributes['value'] = $this->checkedValue;
         $this->attributes['checked'] = ((string)$value == (string)$this->checkedValue);
 

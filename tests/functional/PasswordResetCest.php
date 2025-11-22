@@ -77,7 +77,7 @@ class PasswordResetCest extends BaseCest
     {
         $widget = Yii::createObject(PasswordResetActiveForm::class);
 
-        $I->submitForm("#$widget->id", [
+        $I->submitForm("#{$widget->getId()}", [
             Html::getInputName($widget->model, 'newPassword') => $newPassword,
             Html::getInputName($widget->model, 'repeatPassword') => $repeatPassword,
         ]);

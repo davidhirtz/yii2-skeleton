@@ -88,7 +88,7 @@ class AccountResendConfirmCest extends BaseCest
     {
         $widget = Yii::createObject(AccountResendConfirmActiveForm::class);
 
-        $I->submitForm("#$widget->id", [
+        $I->submitForm("#{$widget->getId()}", [
             Html::getInputName($widget->model, 'email') => $email,
         ]);
     }

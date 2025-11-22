@@ -11,6 +11,7 @@ use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Form;
 use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
+use yii\web\Controller;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\Field;
 use davidhirtz\yii2\skeleton\widgets\forms\footers\FormFooter;
 use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
@@ -47,15 +48,26 @@ class ActiveForm extends Widget
         return $this;
     }
 
-    protected function renderContent(): string|Stringable
+    public function rows(array|false|null $rows): static
     {
-        $this->action ??= Url::current();
+        $this->rows = $rows;
+        return $this;
+    }
+
+    protected function configure(): void
+    {
+        $this->action ??= Yii::$app->controller instanceof Controller ? Url::current() : '';
 
         $this->attributes['id'] ??= $this->model ? Inflector::camel2id($this->model->formName()) : $this->getId();
         $this->attributes['hx-select'] ??= "#{$this->getId()}";
         $this->attributes['hx-target'] ??= $this->attributes['hx-select'];
         $this->attributes['hx-boost'] ??= "true";
 
+        $this->rows ??= $this->model?->safeAttributes();
+    }
+
+    protected function renderContent(): string|Stringable
+    {
         return Form::make()
             ->attributes($this->attributes)
             ->addClass('form')

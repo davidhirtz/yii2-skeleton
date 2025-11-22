@@ -83,7 +83,7 @@ class RecoverPasswordCest extends BaseCest
     {
         $widget = Yii::createObject(PasswordRecoverActiveForm::class);
 
-        $I->submitForm("#$widget->id", [
+        $I->submitForm("#{$widget->getId()}", [
             Html::getInputName($widget->model, 'email') => $email,
         ]);
     }

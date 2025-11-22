@@ -9,7 +9,6 @@ use davidhirtz\yii2\skeleton\assets\SortableAssetBundle;
 use davidhirtz\yii2\skeleton\base\traits\ContainerConfigurationTrait;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
-use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Table;
 use davidhirtz\yii2\skeleton\html\Tbody;
@@ -94,7 +93,7 @@ class GridView extends Widget
         return $this;
     }
 
-    protected function renderContent(): string|Stringable
+    protected function configure(): void
     {
         $this->headerAttributes['hx-select'] ??= "#{$this->getId()}";
         $this->headerAttributes['hx-target'] ??= $this->headerAttributes['hx-select'];
@@ -122,6 +121,11 @@ class GridView extends Widget
             }
         }
 
+        parent::configure();
+    }
+
+    protected function renderContent(): string|Stringable
+    {
         return $this->provider->getCount() || $this->showOnEmpty
             ? Div::make()
                 ->attributes($this->attributes)

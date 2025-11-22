@@ -11,6 +11,7 @@ use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\forms\footers\UpdatedAtFooterItem;
 use davidhirtz\yii2\skeleton\widgets\Username;
 use davidhirtz\yii2\timeago\Timeago;
+use Override;
 use Stringable;
 use Yii;
 
@@ -21,8 +22,8 @@ class UserActiveForm extends ActiveForm
 {
     use UserActiveFormTrait;
 
-    #[\Override]
-    protected function renderContent(): string|Stringable
+    #[Override]
+    protected function configure(): void
     {
         $this->rows ??= [
             [
@@ -52,7 +53,7 @@ class UserActiveForm extends ActiveForm
             $this->getCreatedAtFooterItem(),
         ];
 
-        return parent::renderContent();
+        parent::configure();
     }
 
     protected function getUpdatedAtFooterItem(): Stringable

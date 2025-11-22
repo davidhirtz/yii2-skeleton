@@ -9,6 +9,7 @@ use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\models\forms\PasswordRecoverForm;
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
+use Override;
 use Stringable;
 use Yii;
 
@@ -22,8 +23,8 @@ class PasswordRecoverActiveForm extends ActiveForm
     public bool $hasStickyButtons = false;
     public string $layout = "{errors}{rows}{buttons}";
 
-    #[\Override]
-    protected function renderContent(): string|Stringable
+    #[Override]
+    protected function configure(): void
     {
         $this->attributes['id'] ??= 'password-recover-form';
 
@@ -34,7 +35,7 @@ class PasswordRecoverActiveForm extends ActiveForm
 
         $this->submitButtonText = Yii::t('skeleton', 'Send Email');
 
-        return parent::renderContent();
+        parent::configure();
     }
 
     protected function getHelpText(): ?Stringable

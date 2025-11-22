@@ -13,9 +13,6 @@ use Override;
 use Yii;
 use yii\base\Model;
 
-/**
- * @property User $user
- */
 class LoginForm extends Model
 {
     use IdentityTrait;

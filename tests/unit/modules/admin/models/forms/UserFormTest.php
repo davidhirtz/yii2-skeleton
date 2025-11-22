@@ -23,10 +23,10 @@ class UserFormTest extends Unit
         $form = UserForm::create();
         self::assertFalse($form->save());
 
-        $form->name = 'test-user';
+        $form->user->name = 'test-user';
         $form->newPassword = 'password';
         $form->repeatPassword = 'password';
-        $form->email = 'invalid_email';
+        $form->user->email = 'invalid_email';
 
         self::assertFalse($form->save());
 
@@ -37,14 +37,14 @@ class UserFormTest extends Unit
         self::assertEquals($expected, $form->getFirstError('email'));
 
         $admin = $this->tester->grabUserFixture('admin');
-        $form->email = $admin->email;
+        $form->user->email = $admin->email;
 
         self::assertFalse($form->save());
 
         $expected = 'This email address is already used by another user.';
         self::assertEquals($expected, $form->getFirstError('email'));
 
-        $form->email = 'test-user@test.com';
+        $form->user->email = 'test-user@test.com';
         self::assertTrue($form->save());
 
         $this->tester->dontSeeEmailIsSent();
@@ -55,10 +55,10 @@ class UserFormTest extends Unit
         $form = UserForm::create();
         self::assertFalse($form->save());
 
-        $form->name = 'test-user';
+        $form->user->name = 'test-user';
         $form->newPassword = 'password';
         $form->repeatPassword = 'password';
-        $form->email = 'test-user@test.com';
+        $form->user->email = 'test-user@test.com';
         $form->sendEmail = true;
 
         self::assertTrue($form->save());

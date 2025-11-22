@@ -8,6 +8,7 @@ use davidhirtz\yii2\skeleton\models\forms\LoginForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\LoginActiveFormTrait;
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\CheckboxField;
+use Override;
 use Stringable;
 use Yii;
 
@@ -23,8 +24,8 @@ class LoginActiveForm extends ActiveForm
     public bool $hasStickyButtons = false;
     public string $layout = "{errors}{rows}{buttons}";
 
-    #[\Override]
-    protected function renderContent(): string|Stringable
+    #[Override]
+    protected function configure(): void
     {
         // Ensure the two-factor authentication form is displayed correctly
         $this->attributes['hx-select'] ??= '#wrap';
@@ -37,7 +38,7 @@ class LoginActiveForm extends ActiveForm
 
         $this->submitButtonText ??= Yii::t('skeleton', 'Login');
 
-        return parent::renderContent();
+        parent::configure();
     }
 
     protected function getRememberMeField(): ?Stringable

@@ -31,7 +31,7 @@ class UserGridView extends GridView
     use StatusGridViewTrait;
 
     #[Override]
-    public function renderContent(): string|Stringable
+    public function configure(): void
     {
         $this->attributes['id'] ??= 'user-grid';
 
@@ -54,7 +54,7 @@ class UserGridView extends GridView
             $this->getCreateButton(),
         ];
 
-        return parent::renderContent();
+        parent::configure();
     }
 
     protected function getCreateButton(): ?Stringable

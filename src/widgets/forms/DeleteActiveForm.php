@@ -10,7 +10,7 @@ use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
 use davidhirtz\yii2\skeleton\widgets\Modal;
 use davidhirtz\yii2\skeleton\widgets\traits\PropertyWidgetTrait;
-use Stringable;
+use Override;
 use Yii;
 
 class DeleteActiveForm extends ActiveForm
@@ -42,8 +42,8 @@ class DeleteActiveForm extends ActiveForm
         return $this;
     }
 
-    #[\Override]
-    protected function renderContent(): string|Stringable
+    #[Override]
+    protected function configure(): void
     {
         $this->model = DeleteForm::create([
             'model' => $this->model,
@@ -92,6 +92,6 @@ class DeleteActiveForm extends ActiveForm
                 : null,
         ];
 
-        return parent::renderContent();
+        parent::configure();
     }
 }

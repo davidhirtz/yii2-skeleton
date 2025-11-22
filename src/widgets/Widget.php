@@ -36,16 +36,21 @@ abstract class Widget implements Stringable, ViewContextInterface
     public function render(bool $refresh = false): string
     {
         if ($this->content === null || $refresh) {
+            $this->configure();
             $this->content = (string)$this->renderContent();
         }
 
         return $this->content;
     }
 
+    protected function configure(): void
+    {
+    }
+
+    abstract protected function renderContent(): string|Stringable;
+
     final public function __toString(): string
     {
         return $this->render();
     }
-
-    abstract protected function renderContent(): string|Stringable;
 }

@@ -29,7 +29,7 @@ class LogGridView extends GridView
     ];
 
     #[Override]
-    public function renderContent(): string|Stringable
+    public function configure(): void
     {
         $this->columns ??= [
             $this->getDateColumn(),
@@ -39,7 +39,7 @@ class LogGridView extends GridView
 
         $this->view->registerCss('pre{margin-top: 20px; max-height:200px;}');
 
-        return parent::renderContent();
+        parent::configure();
     }
 
     protected function getDateColumn(): DataColumn

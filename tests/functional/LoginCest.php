@@ -126,7 +126,7 @@ class LoginCest extends BaseCest
 
         $widget = Yii::createObject(LoginActiveForm::class);
 
-        $I->submitForm("#$widget->id", [
+        $I->submitForm("#{$widget->getId()}", [
             Html::getInputName($widget->model, 'email') => $email,
             Html::getInputName($widget->model, 'password') => $password,
         ]);
@@ -136,7 +136,7 @@ class LoginCest extends BaseCest
     {
         $widget = Yii::createObject(TwoFactorAuthenticatorLoginActiveForm::class);
 
-        $I->submitForm("#$widget->id", [
+        $I->submitForm("#{$widget->getId()}", [
             Html::getInputName($widget->model, 'code') => $code,
         ]);
     }

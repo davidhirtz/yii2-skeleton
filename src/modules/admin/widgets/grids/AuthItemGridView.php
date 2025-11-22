@@ -32,7 +32,7 @@ class AuthItemGridView extends GridView
     public static ?string $prevRuleName = null;
 
     #[Override]
-    public function renderContent(): string|Stringable
+    public function configure(): void
     {
         if ($this->user) {
             $this->rowAttributes = fn (AuthItem $authItem) => ($authItem->isAssigned || $authItem->isInherited)
@@ -47,7 +47,7 @@ class AuthItemGridView extends GridView
             $this->user ? $this->getButtonColumn() : $this->getUsersColumn(),
         ];
 
-        return parent::renderContent();
+        parent::configure();
     }
 
     protected function getTypeColumn(): Column

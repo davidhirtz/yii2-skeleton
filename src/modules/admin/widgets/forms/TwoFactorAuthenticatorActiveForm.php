@@ -29,7 +29,7 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
     protected TwoFactorAuthenticatorForm $authenticator;
 
     #[Override]
-    protected function renderContent(): string|Stringable
+    protected function configure(): void
     {
         $this->authenticator = TwoFactorAuthenticatorForm::create([
             'user' => $this->model,
@@ -42,7 +42,7 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
         $this->submitButtonText ??= $enabled ? Yii::t('skeleton', 'Disable') : Yii::t('skeleton', 'Enable');
         $this->footer ??= false;
 
-        return parent::renderContent();
+        parent::configure();
     }
 
     protected function getDisableAuthenticatorRows(): array

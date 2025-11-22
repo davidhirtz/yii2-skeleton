@@ -120,26 +120,26 @@ class AccountUpdateFormTest extends Unit
             'user' => User::findOne(3),
         ]);
 
-        $form->name = '';
+        $form->user->name = '';
         self::assertFalse($form->save());
 
-        $form->name = '\\!//';
+        $form->user->name = '\\!//';
         self::assertFalse($form->save());
         $expects = Yii::t('skeleton', 'Username must only contain alphanumeric characters.');
         self::assertEquals($expects, $form->getFirstError('name'));
 
-        $form->name = 'disabled';
+        $form->user->name = 'disabled';
         self::assertFalse($form->save());
 
         $expects = Yii::t('skeleton', 'This username is already used by another user.');
         self::assertEquals($expects, $form->getFirstError('name'));
 
-        $form->name = 'admin';
-        $form->first_name = ' Test ';
-        $form->last_name = 'User';
+        $form->user->name = 'admin';
+        $form->user->first_name = ' Test ';
+        $form->user->last_name = 'User';
 
         self::assertTrue($form->save());
-        self::assertEquals('Test', $form->first_name);
+        self::assertEquals('Test', $form->user->first_name);
         self::assertEquals('Test User', $form->user->getFullName());
         self::assertEquals('TU', $form->user->getInitials());
 
@@ -163,13 +163,13 @@ class AccountUpdateFormTest extends Unit
             'user' => User::findOne(3),
         ]);
 
-        $form->timezone = 'invalid_timezone';
+        $form->user->timezone = 'invalid_timezone';
         self::assertFalse($form->save());
 
-        $form->timezone = 'America/New_York';
+        $form->user->timezone = 'America/New_York';
         self::assertTrue($form->save());
 
-        $dateTime = new DateTime('now', new DateTimeZone($form->timezone));
+        $dateTime = new DateTime('now', new DateTimeZone($form->user->timezone));
         self::assertEquals('GMT ' . $dateTime->format('P'), $form->user->getTimezoneOffset());
 
         $trail = $this->getLastTrailRecord();

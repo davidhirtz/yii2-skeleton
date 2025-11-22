@@ -6,15 +6,15 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
 use davidhirtz\yii2\skeleton\models\Redirect;
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
-use Stringable;
+use Override;
 
 /**
  * @property Redirect $model
  */
 class RedirectActiveForm extends ActiveForm
 {
-    #[\Override]
-    protected function renderContent(): string|Stringable
+    #[Override]
+    protected function configure(): void
     {
         $this->rows ??= [
             'type',
@@ -22,6 +22,6 @@ class RedirectActiveForm extends ActiveForm
             'url',
         ];
 
-        return parent::renderContent();
+        parent::configure();
     }
 }

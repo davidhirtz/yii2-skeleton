@@ -41,7 +41,7 @@ class Html extends BaseHtml
     public static function getInputIdByName($name): string
     {
         return strtr(
-            mb_strtolower($name, Yii::$app?->charset ?? 'UTF-8'),
+            mb_strtolower($name, 'UTF-8'),
             [
                 '[]' => '',
                 '][' => '-',

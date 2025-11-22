@@ -22,7 +22,7 @@ class AssetGridView extends GridView
     public string $layout = '{items}{footer}';
 
     #[\Override]
-    public function renderContent(): string|Stringable
+    public function configure(): void
     {
         $this->provider ??= new ArrayDataProvider([
             'allModels' => $this->findAssets(),
@@ -66,7 +66,7 @@ class AssetGridView extends GridView
                     ->post(['publish'])),
         ];
 
-        return parent::renderContent();
+        parent::configure();
     }
 
     protected function findAssets(): array
