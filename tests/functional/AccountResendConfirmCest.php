@@ -11,9 +11,9 @@ namespace davidhirtz\yii2\skeleton\tests\functional;
 use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
 use davidhirtz\yii2\skeleton\codeception\functional\BaseCest;
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\models\forms\AccountResendConfirmForm;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\AccountResendConfirmActiveForm;
 use davidhirtz\yii2\skeleton\tests\support\FunctionalTester;
 use Override;
 use Yii;
@@ -86,10 +86,10 @@ class AccountResendConfirmCest extends BaseCest
 
     protected function submitAccountResendConfirmForm(FunctionalTester $I, string $email): void
     {
-        $widget = Yii::createObject(AccountResendConfirmActiveForm::class);
+        $model = AccountResendConfirmForm::create();
 
-        $I->submitForm("#{$widget->getId()}", [
-            Html::getInputName($widget->model, 'email') => $email,
+        $I->submitForm("#resend-form", [
+            Html::getInputName($model, 'email') => $email,
         ]);
     }
 }

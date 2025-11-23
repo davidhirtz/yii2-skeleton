@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @noinspection PhpUnused
- */
-
 declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\tests\functional;
@@ -13,6 +9,10 @@ use davidhirtz\yii2\skeleton\codeception\functional\BaseCest;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\tests\support\FunctionalTester;
 use Yii;
+
+/**
+ * @noinspection PhpUnused
+ */
 
 class LogoutCest extends BaseCest
 {

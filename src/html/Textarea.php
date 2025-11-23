@@ -4,29 +4,28 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\html;
 
+use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\traits\TagInputTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagTextareaTrait;
+use Stringable;
 
 class Textarea extends base\Tag
 {
     use TagInputTrait;
+    use TagTextareaTrait;
 
-    protected ?string $value = null;
+    protected string $content = '';
 
-    public function rows(int $rows): static
+    protected function before(): string
     {
-        return $this->attribute('rows', $rows);
+        $this->content = Html::encode(ArrayHelper::remove($this->attributes, 'value', ''));
+        return parent::before();
     }
 
-    public function cols(int $cols): static
+    protected function renderContent(): string|Stringable
     {
-        return $this->attribute('cols', $cols);
-    }
-
-    public function value(?string $value): static
-    {
-        $this->value = Html::encode($value);
-        return $this;
+        return $this->content;
     }
 
     protected function getTagName(): string

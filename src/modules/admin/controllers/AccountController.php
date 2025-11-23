@@ -255,7 +255,7 @@ class AccountController extends Controller
                 $this->success(Yii::t('skeleton', 'Your password was updated.'));
                 return $this->goHome();
             }
-        } elseif ($form->validateEmail() && !$form->validatePasswordResetCode()) {
+        } elseif (!$form->validateEmail() || !$form->validatePasswordResetCode()) {
             $this->error($form);
             return $this->goHome();
         }

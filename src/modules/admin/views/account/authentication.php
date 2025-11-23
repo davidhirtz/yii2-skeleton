@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 
 use davidhirtz\yii2\skeleton\html\Container;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\TwoFactorAuthenticatorLoginActiveForm;
+use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\TwoFactorAuthenticationLoginActiveForm;
 use davidhirtz\yii2\skeleton\widgets\panels\Card;
 
 $this->title(Yii::t('skeleton', 'Two-Factor Authentication'));
@@ -19,5 +19,5 @@ echo Container::make()
     ->centered()
     ->content(Card::make()
         ->title($this->title)
-        ->content(TwoFactorAuthenticatorLoginActiveForm::make()
+        ->content(TwoFactorAuthenticationLoginActiveForm::make()
             ->model($form)));

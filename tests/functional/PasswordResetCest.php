@@ -1,20 +1,22 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * @noinspection PhpUnused
  */
+
+declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\tests\functional;
 
 use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
 use davidhirtz\yii2\skeleton\codeception\functional\BaseCest;
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\models\forms\PasswordResetForm;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\PasswordResetActiveForm;
 use davidhirtz\yii2\skeleton\tests\support\FunctionalTester;
+use Override;
 use Yii;
 
 class PasswordResetCest extends BaseCest
@@ -23,7 +25,7 @@ class PasswordResetCest extends BaseCest
 
     private ?Module $module = null;
 
-    #[\Override]
+    #[Override]
     public function _before(): void
     {
         /** @var Module $module */
@@ -51,7 +53,7 @@ class PasswordResetCest extends BaseCest
         $I->amOnPage($user->getPasswordResetUrl());
 
         $this->submitPasswordResetForm($I, 'new-password', 'wrong-repeat-password');
-        $I->seeValidationError(Yii::t('skeleton', 'Your password could not be saved'));
+        $I->seeValidationError(Yii::t('skeleton', 'The password must match the new password.'));
     }
 
     public function checkPasswordResetWithCorrectInputs(FunctionalTester $I): void
@@ -75,11 +77,11 @@ class PasswordResetCest extends BaseCest
 
     private function submitPasswordResetForm(FunctionalTester $I, string $newPassword, string $repeatPassword): void
     {
-        $widget = Yii::createObject(PasswordResetActiveForm::class);
+        $form = PasswordResetForm::create();
 
-        $I->submitForm("#{$widget->getId()}", [
-            Html::getInputName($widget->model, 'newPassword') => $newPassword,
-            Html::getInputName($widget->model, 'repeatPassword') => $repeatPassword,
+        $I->submitForm('#password-reset-form', [
+            Html::getInputName($form, 'newPassword') => $newPassword,
+            Html::getInputName($form, 'repeatPassword') => $repeatPassword,
         ]);
     }
 }

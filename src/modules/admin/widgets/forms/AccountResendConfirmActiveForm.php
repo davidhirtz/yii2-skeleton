@@ -8,6 +8,7 @@ use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\models\forms\AccountResendConfirmForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\LoginActiveFormTrait;
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
+use Override;
 use Stringable;
 use Yii;
 
@@ -23,7 +24,7 @@ class AccountResendConfirmActiveForm extends ActiveForm
     public bool $hasStickyButtons = false;
     public string $layout = "{errors}{rows}{buttons}";
 
-    #[\Override]
+    #[Override]
     protected function configure(): void
     {
         $this->attributes['id'] ??= 'resend-form';

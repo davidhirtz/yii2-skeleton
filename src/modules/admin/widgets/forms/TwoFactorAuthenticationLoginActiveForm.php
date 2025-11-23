@@ -15,7 +15,7 @@ use Yii;
 /**
  * @property LoginForm $model
  */
-class TwoFactorAuthenticatorLoginActiveForm extends ActiveForm
+class TwoFactorAuthenticationLoginActiveForm extends ActiveForm
 {
     public array $attributes = ['class' => 'form-plain'];
     public array $excludedErrorProperties = ['code'];
@@ -25,6 +25,8 @@ class TwoFactorAuthenticatorLoginActiveForm extends ActiveForm
     #[Override]
     protected function configure(): void
     {
+        $this->attributes['id'] ??= 'authentication-form';
+
         $this->rows ??= [
             $this->getCodeField(),
             $this->getEmailField(),

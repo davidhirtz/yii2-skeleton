@@ -11,11 +11,12 @@ namespace davidhirtz\yii2\skeleton\tests\functional;
 use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
 use davidhirtz\yii2\skeleton\codeception\functional\BaseCest;
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\models\forms\LoginForm;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\TwoFactorAuthenticatorLoginActiveForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\LoginActiveForm;
 use davidhirtz\yii2\skeleton\tests\support\FunctionalTester;
 use davidhirtz\yii2\skeleton\validators\TwoFactorAuthenticationValidator;
+use Override;
 use RobThree\Auth\TwoFactorAuth;
 use Yii;
 
@@ -23,7 +24,7 @@ class LoginCest extends BaseCest
 {
     use UserFixtureTrait;
 
-    #[\Override]
+    #[Override]
     public function _before(): void
     {
         Yii::$app->getUser()->enableLogin = true;
@@ -124,20 +125,20 @@ class LoginCest extends BaseCest
         $module = Yii::$app->getModule('admin');
         $I->amOnPage("/$module->alias");
 
-        $widget = Yii::createObject(LoginActiveForm::class);
+        $form = LoginForm::create();
 
-        $I->submitForm("#{$widget->getId()}", [
-            Html::getInputName($widget->model, 'email') => $email,
-            Html::getInputName($widget->model, 'password') => $password,
+        $I->submitForm('#login-form', [
+            Html::getInputName($form, 'email') => $email,
+            Html::getInputName($form, 'password') => $password,
         ]);
     }
 
     protected function submitGoogleAuthenticatorForm(FunctionalTester $I, string $code): void
     {
-        $widget = Yii::createObject(TwoFactorAuthenticatorLoginActiveForm::class);
+        $form = LoginForm::create();
 
-        $I->submitForm("#{$widget->getId()}", [
-            Html::getInputName($widget->model, 'code') => $code,
+        $I->submitForm('#authentication-form', [
+            Html::getInputName($form, 'code') => $code,
         ]);
     }
 }

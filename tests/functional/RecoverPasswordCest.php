@@ -11,10 +11,11 @@ namespace davidhirtz\yii2\skeleton\tests\functional;
 use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
 use davidhirtz\yii2\skeleton\codeception\functional\BaseCest;
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\models\forms\PasswordRecoverForm;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\PasswordRecoverActiveForm;
 use davidhirtz\yii2\skeleton\tests\support\FunctionalTester;
+use Override;
 use Yii;
 use yii\symfonymailer\Message;
 
@@ -24,7 +25,7 @@ class RecoverPasswordCest extends BaseCest
 
     private ?Module $module = null;
 
-    #[\Override]
+    #[Override]
     public function _before(): void
     {
         /** @var Module $module */
@@ -57,7 +58,6 @@ class RecoverPasswordCest extends BaseCest
 
     public function checkPasswordRecoverWithValidEmail(FunctionalTester $I): void
     {
-        /** @var User $user */
         $user = $I->grabUserFixture('admin');
 
         $I->amOnPage("/{$this->module->alias}/account/recover");
@@ -81,10 +81,10 @@ class RecoverPasswordCest extends BaseCest
 
     protected function submitPasswordRecoverForm(FunctionalTester $I, string $email): void
     {
-        $widget = Yii::createObject(PasswordRecoverActiveForm::class);
+        $form = PasswordRecoverForm::create();
 
-        $I->submitForm("#{$widget->getId()}", [
-            Html::getInputName($widget->model, 'email') => $email,
+        $I->submitForm('#password-recover-form', [
+            Html::getInputName($form, 'email') => $email,
         ]);
     }
 }

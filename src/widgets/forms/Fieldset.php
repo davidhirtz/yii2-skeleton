@@ -9,12 +9,14 @@ use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
 use davidhirtz\yii2\skeleton\models\interfaces\I18nAttributeInterface;
 use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
 use davidhirtz\yii2\skeleton\validators\HexColorValidator;
+use davidhirtz\yii2\skeleton\validators\HtmlValidator;
 use davidhirtz\yii2\skeleton\validators\SensitiveAttributeValidator;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\CheckboxField;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\Field;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\HexColorField;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\SelectField;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\TinyMceField;
 use davidhirtz\yii2\skeleton\widgets\forms\traits\FormWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
@@ -122,6 +124,12 @@ class Fieldset extends Widget
             if ($validator instanceof EmailValidator) {
                 $type = 'email';
                 break;
+            }
+
+            if ($validator instanceof HtmlValidator) {
+                return TinyMceField::make()
+                    ->property($property)
+                    ->validator($validator);
             }
 
             if ($validator instanceof HexColorValidator) {

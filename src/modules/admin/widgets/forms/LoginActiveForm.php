@@ -29,6 +29,7 @@ class LoginActiveForm extends ActiveForm
     {
         // Ensure the two-factor authentication form is displayed correctly
         $this->attributes['hx-select'] ??= '#wrap';
+        $this->attributes['id'] ??= 'login-form';
 
         $this->rows ??= [
             $this->getEmailField(),

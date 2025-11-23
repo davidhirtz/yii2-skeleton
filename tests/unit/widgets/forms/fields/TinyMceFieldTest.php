@@ -2,18 +2,19 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\modules\admin\widgets\forms;
+namespace davidhirtz\yii2\skeleton\tests\unit\widgets\forms\fields;
 
 use Codeception\Test\Unit;
 use davidhirtz\yii2\skeleton\assets\TinyMceAssetBundle;
 use davidhirtz\yii2\skeleton\codeception\traits\AssetDirectoryTrait;
 use davidhirtz\yii2\skeleton\validators\HtmlValidator;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
+use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\forms\traits\ContentFieldTrait;
+use Override;
 use Yii;
 use yii\base\Model;
 
-class ContentFieldTest extends Unit
+class TinyMceFieldTest extends Unit
 {
     use AssetDirectoryTrait;
 
@@ -31,7 +32,8 @@ class ContentFieldTest extends Unit
 
     public function testContentField(): void
     {
-        $form = TestContentFieldActiveForm::widget();
+        $form = TestContentFieldActiveForm::make()->render();
+
         self::assertStringContainsString('textarea', $form);
         self::assertArrayHasKey(TinyMceAssetBundle::class, Yii::$app->getAssetManager()->bundles);
     }
@@ -42,7 +44,7 @@ class TestContentFieldModel extends Model
     public string $contentType = 'html';
     public ?string $content = null;
 
-    #[\Override]
+    #[Override]
     public function rules(): array
     {
         return [
@@ -54,23 +56,15 @@ class TestContentFieldModel extends Model
     }
 }
 
-/**
- * @property TestContentFieldModel $model
- */
 class TestContentFieldActiveForm extends ActiveForm
 {
-    use ContentFieldTrait;
-
-    #[\Override]
-    public function init(): void
+    #[Override]
+    public function configure(): void
     {
         $this->action = '/';
         $this->model = new TestContentFieldModel();
-        parent::init();
-    }
+        $this->rows = ['content'];
 
-    public function renderFields(): void
-    {
-        echo $this->contentField();
+        parent::configure();
     }
 }

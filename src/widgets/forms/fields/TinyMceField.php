@@ -90,6 +90,12 @@ class TinyMceField extends Field
 
     protected ?string $value = null;
 
+    public function validator(array|HtmlValidator|string|null $validator): static
+    {
+        $this->validator = $validator;
+        return $this;
+    }
+
     public function value(?string $value): static
     {
         $this->value = $value;

@@ -180,13 +180,13 @@ class AccountUpdateFormTest extends Unit
     public function testUpdateUnsafeAttributes(): void
     {
         $form = AccountUpdateForm::create([
-            'user' => User::findOne(2),
+            'user' => $this->tester->grabUserFixture('disabled'),
         ]);
 
         Yii::$app->getI18n()->setLanguages(['de', 'en-US']);
 
         $form->load([
-            $form->formName() => [
+            $form->user->formName() => [
                 'status' => User::STATUS_ENABLED,
                 'country' => 'DE',
                 'language' => 'de',

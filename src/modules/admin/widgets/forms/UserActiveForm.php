@@ -49,6 +49,10 @@ class UserActiveForm extends ActiveForm
             ],
         ];
 
+        $this->submitButtonText ??= $this->model->user->getIsNewRecord()
+            ? Yii::t('skeleton', 'Create')
+            : Yii::t('skeleton', 'Update');
+
         $this->footer ??= [
             $this->getUpdatedAtFooterItem(),
             $this->getCreatedAtFooterItem(),

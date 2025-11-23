@@ -29,11 +29,11 @@ class FunctionalTester extends Actor
 
     public function seeValidationError(string $message): void
     {
-        $this->see($message, '.alert-danger');
+        $this->see($message, '.form-error,[data-alert="danger"]');
     }
 
     public function dontSeeValidationError(string $message): void
     {
-        $this->dontSee($message, '.alert-danger');
+        $this->dontSee($message, '.form-error,[data-alert="danger"]');
     }
 }

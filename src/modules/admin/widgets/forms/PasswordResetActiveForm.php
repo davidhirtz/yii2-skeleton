@@ -26,7 +26,7 @@ class PasswordResetActiveForm extends ActiveForm
     #[Override]
     protected function configure(): void
     {
-        $this->attributes['id'] ??= $this->getId();
+        $this->attributes['id'] ??= 'password-reset-form';
 
         $this->rows ??= [
             $this->getHelpText(),
