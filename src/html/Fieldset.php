@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\html;
 
 use davidhirtz\yii2\skeleton\html\base\Tag;
 use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
+use Override;
 
 class Fieldset extends Tag
 {
@@ -19,7 +20,7 @@ class Fieldset extends Tag
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     protected function before(): string
     {
         if ($this->legend !== null) {

@@ -8,6 +8,7 @@ use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Input;
 use davidhirtz\yii2\skeleton\html\traits\TagInputTrait;
 use davidhirtz\yii2\skeleton\widgets\forms\FormRow;
+use Override;
 use Stringable;
 
 class CheckboxField extends Field
@@ -30,7 +31,7 @@ class CheckboxField extends Field
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     protected function renderContent(): string|Stringable
     {
         return FormRow::make()

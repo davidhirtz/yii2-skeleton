@@ -22,6 +22,7 @@ use Stringable;
 use Yii;
 use yii\validators\BooleanValidator;
 use yii\validators\EmailValidator;
+use yii\validators\NumberValidator;
 
 class Fieldset extends Widget
 {
@@ -35,9 +36,9 @@ class Fieldset extends Widget
      */
     protected array $rows = [];
 
-    public function fields(Stringable|string|null ...$fields): static
+    public function rows(Stringable|string|null ...$rows): static
     {
-        $this->rows = array_filter($fields);
+        $this->rows = array_filter($rows);
         return $this;
     }
 
@@ -99,6 +100,11 @@ class Fieldset extends Widget
         foreach ($validators as $validator) {
             if ($validator instanceof SensitiveAttributeValidator) {
                 $type = 'password';
+                break;
+            }
+
+            if ($validator instanceof NumberValidator) {
+                $type = 'number';
                 break;
             }
 

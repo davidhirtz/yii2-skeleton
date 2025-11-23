@@ -56,7 +56,7 @@ class ActiveForm extends Widget
 
     protected function configure(): void
     {
-        $this->action ??= Yii::$app->controller instanceof Controller ? Url::current() : '';
+        $this->action ??= Yii::$app->controller instanceof Controller ? Url::current() : null;
 
         $this->attributes['id'] ??= $this->model ? Inflector::camel2id($this->model->formName()) : $this->getId();
         $this->attributes['hx-select'] ??= "#{$this->getId()}";
@@ -111,7 +111,7 @@ class ActiveForm extends Widget
         return Fieldset::make()
             ->form($this)
             ->model($this->model)
-            ->fields(...$fields);
+            ->rows(...$fields);
     }
 
     protected function getButtons(): ?Stringable

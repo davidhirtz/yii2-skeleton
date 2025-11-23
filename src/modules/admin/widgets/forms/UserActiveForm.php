@@ -8,6 +8,7 @@ use davidhirtz\yii2\skeleton\html\Li;
 use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\UserActiveFormTrait;
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\CheckboxField;
 use davidhirtz\yii2\skeleton\widgets\forms\footers\UpdatedAtFooterItem;
 use davidhirtz\yii2\skeleton\widgets\Username;
 use davidhirtz\yii2\timeago\Timeago;
@@ -44,7 +45,7 @@ class UserActiveForm extends ActiveForm
                 $this->getCountryField(),
             ],
             [
-                'sendEmail',
+                $this->sendEmailField(),
             ],
         ];
 
@@ -84,5 +85,11 @@ class UserActiveForm extends ActiveForm
         return Li::make()
             ->class('form-footer-item')
             ->content($content);
+    }
+
+    protected function sendEmailField(): ?Stringable
+    {
+        return CheckboxField::make()
+            ->property('sendEmail');
     }
 }

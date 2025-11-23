@@ -11,13 +11,9 @@ use Stringable;
 
 class HexColorField extends Field
 {
-    protected function getInput(): string|Stringable
-    {
-        $this->registerClientScript();
-        return $this->getInputGroup();
-    }
+    public string $defaultColor = '#000000';
 
-    protected function getInputGroup(): string|Stringable
+    protected function configure(): void
     {
         $this->attributes['id'] ??= $this->getId();
 
@@ -25,7 +21,14 @@ class HexColorField extends Field
             $this->attributes['value'] = "#{$this->attributes['value']}";
         }
 
-        $hexValue = $this->attributes['value'] ?: '#000000';
+        $this->registerClientScript();
+
+        parent::configure();
+    }
+
+    protected function getInput(): string|Stringable
+    {
+        $hexValue = $this->attributes['value'] ?: $this->defaultColor;
 
         if (strlen((string)$hexValue) === 4) {
             $hexValue = '#' . $hexValue[1] . $hexValue[1] . $hexValue[2] . $hexValue[2] . $hexValue[3] . $hexValue[3];

@@ -87,6 +87,7 @@ class DeleteActiveForm extends ActiveForm
             $this->model->attribute
                 ? InputField::make()
                 ->attributes($this->inputAttributes)
+                ->pattern('^' . preg_quote((string)$this->model->model->{$this->model->attribute}, '/') . '$')
                 ->property('value')
                 ->required()
                 : null,
