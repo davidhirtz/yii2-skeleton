@@ -6,7 +6,6 @@ namespace davidhirtz\yii2\skeleton\models\forms;
 
 use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
 use davidhirtz\yii2\skeleton\models\traits\IdentityTrait;
-use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\skeleton\validators\TwoFactorAuthenticationValidator;
 use Override;
@@ -44,12 +43,12 @@ class LoginForm extends Model
             [
                 ['email'],
                 $this->validateEmail(...),
-                'when' => fn() => !$this->hasErrors(),
+                'when' => fn () => !$this->hasErrors(),
             ],
             [
                 ['password'],
                 $this->validatePassword(...),
-                'when' => fn() => !$this->hasErrors(),
+                'when' => fn () => !$this->hasErrors(),
             ],
             [
                 ['code'],

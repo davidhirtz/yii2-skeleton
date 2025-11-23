@@ -13,7 +13,6 @@ use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use Override;
-use Stringable;
 use Yii;
 
 /**

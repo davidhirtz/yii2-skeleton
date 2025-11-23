@@ -16,7 +16,6 @@ use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\widgets\Modal;
 use davidhirtz\yii2\skeleton\widgets\traits\UserWidgetTrait;
 use Override;
-use Stringable;
 use Yii;
 use yii\data\ArrayDataProvider;
 

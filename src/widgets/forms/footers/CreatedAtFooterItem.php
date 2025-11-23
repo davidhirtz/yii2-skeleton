@@ -20,7 +20,7 @@ class CreatedAtFooterItem implements Stringable
 
     protected function getItem(): ?Li
     {
-        $createdAt = in_array($this->attributeName, $this->model->attributes())
+        $createdAt = in_array($this->attributeName, $this->model->attributes(), true)
             ? $this->model->{$this->attributeName}
             : null;
 

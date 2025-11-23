@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\html\custom;
 
 use davidhirtz\yii2\skeleton\helpers\Url;
-use davidhirtz\yii2\skeleton\html\Input;
-use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
+use davidhirtz\yii2\skeleton\html\base\Tag;
 use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
 use Override;
 
-class FileUpload extends Input
+class FileUpload extends Tag
 {
-    use TagAttributesTrait;
     use TagContentTrait;
 
     public function url(string|array|null $url): static

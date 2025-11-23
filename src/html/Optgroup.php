@@ -10,7 +10,7 @@ use Override;
 class Optgroup extends ListTag
 {
     /**
-     * @var Option[] $options
+     * @var Option[]
      */
     protected array $options = [];
 

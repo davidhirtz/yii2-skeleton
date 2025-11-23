@@ -14,7 +14,6 @@ use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\models\forms\PasswordResetForm;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\PasswordResetActiveForm;
 use davidhirtz\yii2\skeleton\tests\support\FunctionalTester;
 use Override;
 use Yii;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
 
-use davidhirtz\yii2\skeleton\widgets\navs\Header;
 use davidhirtz\yii2\skeleton\widgets\navs\Submenu;
 use Stringable;
 use Yii;

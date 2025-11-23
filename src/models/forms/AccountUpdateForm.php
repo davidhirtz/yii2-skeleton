@@ -42,7 +42,7 @@ class AccountUpdateForm extends Model
             [
                 ['repeatPassword'],
                 'required',
-                'when' => fn(self $model): bool => (bool)$model->newPassword,
+                'when' => fn (self $model): bool => (bool)$model->newPassword,
             ],
             [
                 ['repeatPassword'],
@@ -55,7 +55,7 @@ class AccountUpdateForm extends Model
                 $this->validateOldPassword(...),
                 'message' => Yii::t('skeleton', 'Your current password is required to change your email or password.'),
                 'skipOnEmpty' => false,
-                'when' => fn(self $model): bool => $model->newPassword || $model->email !== $model->user->email,
+                'when' => fn (self $model): bool => $model->newPassword || $model->email !== $model->user->email,
             ]
         ];
     }

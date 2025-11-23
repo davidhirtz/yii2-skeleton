@@ -31,13 +31,13 @@ class UserLoginGridView extends GridView
             $this->getTypeIconColumn(),
             LinkColumn::make()
                 ->property('ip_address')
-                ->url(fn(UserLogin $login) => ['view', 'id' => $login->id]),
+                ->url(fn (UserLogin $login) => ['view', 'id' => $login->id]),
             LinkColumn::make()
                 ->property('user')
                 ->visible(!$this->user)
-                ->content(fn(UserLogin $login): Stringable => Username::make()
+                ->content(fn (UserLogin $login): Stringable => Username::make()
                     ->user($login->user))
-                ->url(fn(UserLogin $login): array => ['view', 'user' => $login->user_id]),
+                ->url(fn (UserLogin $login): array => ['view', 'user' => $login->user_id]),
             DataColumn::make()
                 ->property('browser')
                 ->hiddenForSmallDevices(),

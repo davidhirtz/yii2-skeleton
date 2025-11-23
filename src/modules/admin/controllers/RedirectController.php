@@ -39,8 +39,7 @@ class RedirectController extends Controller
         ?int    $type = null,
         ?int    $user = null,
         ?string $q = null,
-    ): Response|string
-    {
+    ): Response|string {
         $provider = Yii::$container->get(RedirectActiveDataProvider::class, config: [
             'type' => $type,
             'user' => User::findOne($user),

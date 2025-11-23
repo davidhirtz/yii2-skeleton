@@ -27,7 +27,7 @@ class UpdatedAtFooterItem implements Stringable
 
     protected function getItem(): ?Li
     {
-        $updatedAt = in_array($this->attributeName, $this->model->attributes())
+        $updatedAt = in_array($this->attributeName, $this->model->attributes(), true)
             ? $this->model->{$this->attributeName}
             : null;
 

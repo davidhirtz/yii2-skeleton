@@ -62,7 +62,6 @@ class PasswordResetActiveForm extends ActiveForm
 
     protected function getNewPasswordField(): ?Stringable
     {
-
         return InputField::make()
             ->model($this->model)
             ->property('newPassword')
@@ -76,7 +75,6 @@ class PasswordResetActiveForm extends ActiveForm
 
     protected function getRepeatPasswordField(): ?Stringable
     {
-
         return InputField::make()
             ->model($this->model)
             ->property('repeatPassword')

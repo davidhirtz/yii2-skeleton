@@ -62,7 +62,8 @@ class FileUploadButton extends Widget
                 Input::make()
                     ->attribute('hidden', true)
                     ->name($this->name)
-                    ->type('file'));
+                    ->type('file')
+            );
     }
 
     protected function registerClientScript(): void

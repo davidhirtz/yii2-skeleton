@@ -62,7 +62,7 @@ class SelectField extends Field
             }
 
             $this->items = is_array(current($items))
-                ? array_map(fn($item) => $item['name'] ?? current($item), $items)
+                ? array_map(fn ($item) => $item['name'] ?? current($item), $items)
                 : $items;
         }
 

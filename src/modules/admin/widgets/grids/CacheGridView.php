@@ -40,7 +40,7 @@ class CacheGridView extends GridView
         $this->columns ??= [
             Column::make()
                 ->header(Yii::t('skeleton', 'Name'))
-                ->content(fn(array $item): array => [
+                ->content(fn (array $item): array => [
                     Div::make()
                         ->content(ucwords((string)$item['name']))
                         ->class('strong'),
@@ -50,7 +50,7 @@ class CacheGridView extends GridView
                 ]),
             ButtonColumn::make()
                 /** @see SystemController::actionFlush() */
-                ->content(fn(array $item): Stringable => Button::make()
+                ->content(fn (array $item): Stringable => Button::make()
                     ->primary()
                     ->icon('sync-alt')
                     ->post(['flush', 'cache' => $item['name']]))

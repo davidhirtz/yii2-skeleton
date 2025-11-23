@@ -148,7 +148,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
                 'pattern' => $this->namePattern,
                 'message' => Yii::t('skeleton', 'Username must only contain alphanumeric characters.'),
                 'skipOnError' => true,
-                'when' => fn() => $this->namePattern !== false,
+                'when' => fn () => $this->namePattern !== false,
             ],
             [
                 ['name'],
@@ -170,7 +170,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
                 'unique',
                 'message' => Yii::t('skeleton', 'This email address is already used by another user.'),
                 'skipOnError' => true,
-                'when' => fn() => $this->isAttributeChanged('email')
+                'when' => fn () => $this->isAttributeChanged('email')
             ],
             [
                 ['city', 'first_name', 'last_name'],

@@ -84,7 +84,8 @@ class AccountMenu extends Widget
                         ->collection(Icon::ICON_COLLECTION_FLAG)
                         ->name($language),
                     Div::make()
-                        ->addText($label));
+                        ->addText($label)
+                );
 
             if ($this->languageRoute) {
                 $link->href([

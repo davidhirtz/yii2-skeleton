@@ -59,7 +59,8 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
         return [
             FormRow::make()
                 ->content(
-                    Yii::t('skeleton', 'To activate two-factor authentication please scan the QR code below with your Authenticator app and enter the 6-digit code. After completing this setup you will need to use the Authenticator for every login for extra security.')),
+                    Yii::t('skeleton', 'To activate two-factor authentication please scan the QR code below with your Authenticator app and enter the 6-digit code. After completing this setup you will need to use the Authenticator for every login for extra security.')
+                ),
             FormRow::make()
                 ->content($this->getQrCodeImage()),
             $this->getInputField(),

@@ -13,7 +13,7 @@ class Select extends Tag
     use TagInputTrait;
 
     /**
-     * @var Option[]|Optgroup[] $options
+     * @var Option[]|Optgroup[]
      */
     protected array $options = [];
 

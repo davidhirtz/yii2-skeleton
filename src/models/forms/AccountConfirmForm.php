@@ -41,7 +41,7 @@ class AccountConfirmForm extends Model
             [
                 ['code'],
                 $this->validateCode(...),
-                'when' => fn() => !$this->hasErrors(),
+                'when' => fn () => !$this->hasErrors(),
             ]
         ];
     }

@@ -15,8 +15,7 @@ class DeleteForm extends Model
         public readonly ActiveRecord $model,
         public readonly ?string $attribute = null,
         public ?string $value = null,
-    )
-    {
+    ) {
         parent::__construct();
     }
 
@@ -27,7 +26,7 @@ class DeleteForm extends Model
             [
                 ['value'],
                 'required',
-                'when' => fn() => $this->attribute
+                'when' => fn () => $this->attribute
             ],
             [
                 ['value'],

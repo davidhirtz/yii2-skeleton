@@ -44,7 +44,9 @@ class CheckboxField extends Field
                     ->content(
                         $this->getLabel(),
                         $this->getError(),
-                        $this->getHint()));
+                        $this->getHint()
+                    )
+            );
     }
 
     protected function getInput(): string|Stringable
@@ -52,7 +54,7 @@ class CheckboxField extends Field
         $this->attributes['type'] ??= 'checkbox';
         $value = $this->attributes['value'] ?? $this->model->{$this->property} ?? '';
         $this->attributes['value'] = $this->checkedValue;
-        $this->attributes['checked'] = ((string)$value == (string)$this->checkedValue);
+        $this->attributes['checked'] = ((string)$value === (string)$this->checkedValue);
 
         $input = Input::make()
             ->attributes($this->attributes)

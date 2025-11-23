@@ -15,7 +15,7 @@ class BadgeColumnTest extends Unit
 {
     public function testDefaultOptions(): void
     {
-        $model = new class extends Model {
+        $model = new class() extends Model {
             public ?int $count = 100;
         };
 
@@ -45,13 +45,13 @@ class BadgeColumnTest extends Unit
     {
         Yii::$app->controller = $this->createMock(Controller::class);
 
-        $model = new class extends Model {
+        $model = new class() extends Model {
             public int $id = 1;
             public int $count = 10;
         };
 
         $column = $this->createCounterColumn()
-            ->url(fn($model) => ['view', 'id' => $model->id]);
+            ->url(fn ($model) => ['view', 'id' => $model->id]);
 
         $expects = '<td class="text-center"><a class="badge" href="/view?id=1">10</a></td>';
         self::assertEquals($expects, (string)$column->renderBody($model, 0, 0));
