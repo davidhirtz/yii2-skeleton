@@ -36,7 +36,8 @@ use yii\helpers\Inflector;
 use yii\helpers\Url;
 
 /**
- * @template T of ActiveRecord
+ * @template T of Model
+ * @property T|null $model
  */
 class GridView extends Widget
 {
@@ -311,6 +312,9 @@ class GridView extends Widget
         return $footer?->addClass($this->hasStickyFooter ? 'sticky' : null);
     }
 
+    /**
+     * @return T|null
+     */
     protected function getModelFromProvider(): ?Model
     {
         if ($this->provider instanceof ActiveDataProvider) {
@@ -331,9 +335,7 @@ class GridView extends Widget
 
         return $model instanceof Model ? $model : null;
     }
-    /**
-     * @param T $model
-     */
+
     protected function getRoute(ActiveRecordInterface $model, array $params = []): array|false
     {
         return ['update', 'id' => $model->getPrimaryKey(), ...$params];

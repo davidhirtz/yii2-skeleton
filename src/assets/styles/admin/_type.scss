@@ -29,7 +29,7 @@ h4, h5, h6 {
 }
 
 p:not(:last-child) {
-    margin-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
 abbr[title] {
@@ -48,7 +48,6 @@ abbr[title] {
   line-height: 1.125rem;
 }
 
-
 .icon-text {
   display: inline-flex;
   align-items: center;
@@ -56,8 +55,12 @@ abbr[title] {
   gap: .5rem;
 }
 
+.text-center {
+  text-align: center;
+}
+
 .text-muted {
-  color: var(--muted-color) !important;
+  color: var(--muted-color);
 
   a:not(:hover) {
     color: inherit;
@@ -67,7 +70,6 @@ abbr[title] {
 .text-invalid {
   text-decoration: line-through;
 }
-
 
 .text-truncate {
   overflow: hidden;

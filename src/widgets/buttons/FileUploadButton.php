@@ -27,12 +27,25 @@ class FileUploadButton extends Widget
     use TagUrlTrait;
 
     public ?int $maxChunkSize = null;
+    public array $inputAttributes = [];
+
     protected ?string $target = null;
-    protected string $name = 'upload';
+
+    public function accept(?string $accept): static
+    {
+        $this->inputAttributes['accept'] = $accept;
+        return $this;
+    }
+
+    public function multiple(bool $multiple = true): static
+    {
+        $this->inputAttributes['multiple'] = $multiple;
+        return $this;
+    }
 
     public function name(string $name): static
     {
-        $this->name = $name;
+        $this->inputAttributes['name'] = $name;
         return $this;
     }
 
@@ -44,6 +57,8 @@ class FileUploadButton extends Widget
 
     protected function configure(): void
     {
+        $this->inputAttributes['name'] ??= 'upload';
+
         $this->registerClientScript();
         parent::configure();
     }
@@ -57,11 +72,12 @@ class FileUploadButton extends Widget
             ->content(
                 Button::make()
                     ->attributes($this->attributes)
+                    ->primary()
                     ->text($this->label)
                     ->icon($this->icon),
                 Input::make()
+                    ->attributes($this->inputAttributes)
                     ->attribute('hidden', true)
-                    ->name($this->name)
                     ->type('file')
             );
     }
