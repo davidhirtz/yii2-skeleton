@@ -6,7 +6,7 @@ namespace davidhirtz\yii2\skeleton\widgets\forms\traits;
 
 use davidhirtz\yii2\skeleton\validators\HtmlValidator;
 use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveField;
-use davidhirtz\yii2\skeleton\widgets\forms\TinyMceEditor;
+use davidhirtz\yii2\skeleton\widgets\forms\fields\TinyMceField;
 
 trait ContentFieldTrait
 {
@@ -22,7 +22,7 @@ trait ContentFieldTrait
             $field = $this->field($this->model, 'content', $options);
 
             return $isHtml
-                ? $field->widget(TinyMceEditor::class, $this->getContentConfig())
+                ? $field->widget(TinyMceField::class, $this->getContentConfig())
                 : $field->textarea();
         }
 

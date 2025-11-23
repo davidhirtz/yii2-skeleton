@@ -2,22 +2,27 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\forms;
+namespace davidhirtz\yii2\skeleton\widgets\forms\fields;
 
 use davidhirtz\yii2\skeleton\assets\AdminAsset;
 use davidhirtz\yii2\skeleton\assets\TinyMceAssetBundle;
 use davidhirtz\yii2\skeleton\assets\TinyMceLanguageAssetBundle;
 use davidhirtz\yii2\skeleton\assets\TinyMceSkinAssetBundle;
+use davidhirtz\yii2\skeleton\html\Textarea;
+use davidhirtz\yii2\skeleton\html\traits\TagInputTrait;
+use davidhirtz\yii2\skeleton\html\traits\TagPlaceholderTrait;
 use davidhirtz\yii2\skeleton\validators\HtmlValidator;
 use Override;
+use Stringable;
 use Yii;
-use yii\helpers\Html;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
-use yii\widgets\InputWidget;
 
-class TinyMceEditor extends InputWidget
+class TinyMceField extends Field
 {
+    use TagInputTrait;
+    use TagPlaceholderTrait;
+
     /**
      * @var array containing all TinyMCE options, only set directly to override default behavior.
      */
@@ -83,16 +88,22 @@ class TinyMceEditor extends InputWidget
      */
     public array|HtmlValidator|string|null $validator = HtmlValidator::class;
 
+    protected ?string $value = null;
+
+    public function value(?string $value): static
+    {
+        $this->value = $value;
+        return $this;
+    }
+
     #[Override]
-    public function init(): void
+    protected function configure(): void
     {
         if (!$this->validator instanceof HtmlValidator) {
             $this->validator = $this->validator ? Yii::createObject($this->validator) : null;
         }
 
-        if (!$this->language) {
-            $this->language = Yii::$app->language;
-        }
+        $this->language ??= Yii::$app->language;
 
         $bundle = Yii::$app->getAssetManager()->getBundle(TinyMceSkinAssetBundle::class);
         $this->skin ??= "$bundle->baseUrl/ui/default";
@@ -107,31 +118,27 @@ class TinyMceEditor extends InputWidget
             $this->contentCss = "$bundle->baseUrl/css/tinymce.min.css";
         }
 
-        parent::init();
-    }
+        $this->value ??= $this->model->{$this->property} ?? '';
 
-    public function run(): void
-    {
-        if ($this->hasModel()) {
-            echo Html::activeTextarea($this->model, $this->attribute, $this->options);
-        } else {
-            echo Html::textarea($this->name, $this->value, $this->options);
-        }
-
-        $this->configureEditor();
-        $this->registerClientScript();
-    }
-
-    protected function configureEditor(): void
-    {
         $this->setDefaultOptions();
         $this->configureToolbar();
         $this->configurePlugins();
+
+        $this->registerClientScript();
+
+        parent::configure();
+    }
+
+    protected function getInput(): string|Stringable
+    {
+        return Textarea::make()
+            ->attributes($this->attributes)
+            ->value($this->value);
     }
 
     protected function setDefaultOptions(): void
     {
-        $this->clientOptions['selector'] ??= '#' . $this->options['id'];
+        $this->clientOptions['selector'] ??= '#' . $this->getId();
         $this->clientOptions['promotion'] ??= false;
         $this->clientOptions['statusbar'] ??= false;
         $this->clientOptions['menubar'] ??= false;
@@ -386,9 +393,7 @@ class TinyMceEditor extends InputWidget
 
     protected function registerClientScript(): void
     {
-        $view = $this->getView();
-        TinyMceAssetBundle::register($view);
-
-        $view->registerJs('tinymce.init(' . Json::encode($this->clientOptions) . ');', $view::POS_END);
+        $this->view->registerAssetBundle(TinyMceAssetBundle::class);
+        $this->view->registerJs('tinymce.init(' . Json::encode($this->clientOptions) . ');', $this->view::POS_END);
     }
 }
