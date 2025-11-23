@@ -345,6 +345,7 @@ class GridView extends Widget
     {
         return $this->provider->getSort() === false
             && $this->provider->getPagination() === false
+            && $this->provider->getCount() > 1
             && !$this->search->getValue()
             && $this->orderRoute !== null;
     }
