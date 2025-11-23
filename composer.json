@@ -23,16 +23,13 @@
         "guzzlehttp/oauth-subscriber": "^0.8.1",
         "jfcherng/php-diff": "^6.9",
         "mikehaertl/php-shellcommand": "^1.7",
-        "npm-asset/blueimp-file-upload": "^10.32",
-        "npm-asset/bootbox": "^5",
         "robthree/twofactorauth": "^1.8",
         "seld/cli-prompt": "^1.0",
-        "tinymce/tinymce": "^7.0",
+        "tinymce/tinymce": "^8.2",
         "yiisoft/yii2": "^2.0",
         "yiisoft/yii2-authclient": "^2.2",
-        "yiisoft/yii2-imagine": "^2.1",
-        "yiisoft/yii2-symfonymailer": "^4.0",
-        "yiisoft/yii2-bootstrap5": "^2.0"
+        "yiisoft/yii2-imagine": "^2.3",
+        "yiisoft/yii2-symfonymailer": "^4.0"
     },
     "require-dev": {
         "codeception/codeception": "^5.0",
