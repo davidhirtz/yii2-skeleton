@@ -42,8 +42,10 @@ class ControllerTest extends Unit
         $controller->errorOrSuccess(['error'], 'Success message');
         $flashes = Yii::$app->getSession()->getAllFlashes();
 
-        self::assertArrayHasKey('error', $flashes);
-        self::assertEquals(['error'], $flashes['error'][0]);
+        codecept_debug($flashes);
+
+        self::assertArrayHasKey('danger', $flashes);
+        self::assertEquals(['error'], $flashes['danger'][0]);
         self::assertArrayNotHasKey('success', $flashes);
     }
 

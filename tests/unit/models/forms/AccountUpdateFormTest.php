@@ -27,7 +27,7 @@ class AccountUpdateFormTest extends Unit
             'user' => User::findOne(3),
         ]);
 
-        $form->email = 'invalid_email';
+        $form->user->email = 'invalid_email';
         self::assertFalse($form->save());
 
         $expected = Yii::t('yii', '{attribute} is not a valid email address.', [
@@ -36,7 +36,7 @@ class AccountUpdateFormTest extends Unit
 
         self::assertEquals($expected, $form->getFirstError('email'));
 
-        $form->email = 'owner@domain.com';
+        $form->user->email = 'owner@domain.com';
         self::assertFalse($form->save());
 
         $expected = Yii::t('yii', '{attribute} is invalid.', [
@@ -52,7 +52,7 @@ class AccountUpdateFormTest extends Unit
         $expected = Yii::t('skeleton', 'This email address is already used by another user.');
         self::assertEquals($expected, $form->getFirstError('email'));
 
-        $form->email = 'valid@domain.com';
+        $form->user->email = 'valid@domain.com';
 
         self::assertTrue($form->save());
         self::assertNotEmpty($form->user->verification_token);

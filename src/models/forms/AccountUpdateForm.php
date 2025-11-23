@@ -18,7 +18,7 @@ class AccountUpdateForm extends Model
 
     public ?string $newPassword = null;
     public ?string $oldPassword = null;
-    public ?string $email = null;
+    public readonly ?string $email;
 
     public function __construct(public User $user, array $config = [])
     {

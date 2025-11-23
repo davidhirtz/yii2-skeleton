@@ -23,7 +23,7 @@ class OwnershipFormTest extends Unit
         $form->name = 'wrong_username';
 
         $expected = Yii::t('skeleton', 'The user {user} was not found.', [
-            'name' => $form->name,
+            'user' => $form->name,
         ]);
 
         self::assertFalse($form->update());

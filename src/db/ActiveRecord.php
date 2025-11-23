@@ -119,8 +119,12 @@ class ActiveRecord extends \yii\db\ActiveRecord
     public function getDirtyAttributes($names = null): array
     {
         return array_filter(parent::getDirtyAttributes($names), function ($name): bool {
-            $attribute = $this->getAttribute($name);
-            return !$attribute instanceof \DateTime || $this->getOldAttribute($name) !== $attribute;
+            $new = $this->getAttribute($name);
+            $old = $this->getOldAttribute($name);
+
+            return !$new instanceof \DateTime
+                || !$old instanceof \DateTime
+                || $new->getTimestamp() !== $old->getTimestamp();
         }, ARRAY_FILTER_USE_KEY);
     }
 
