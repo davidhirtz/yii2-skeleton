@@ -115,7 +115,7 @@ class UserGridView extends GridView
     {
         return TimeagoColumn::make()
             ->property('last_login')
-            ->href(fn (User $user) => ['/admin/login/index', 'user' => $user->id]);
+            ->url(fn (User $user) => ['/admin/login/index', 'user' => $user->id]);
     }
 
     protected function getCreatedAtColumn(): DataColumn

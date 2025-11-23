@@ -12,5 +12,5 @@ class BadgeColumn extends LinkColumn
     public array|null|Closure $contentAttributes = ['class' => 'text-center'];
     public array $linkAttributes = ['class' => 'badge'];
 
-    public string $format = 'number';
+    public string $format = 'integer';
 }

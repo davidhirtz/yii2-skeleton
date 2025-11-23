@@ -31,7 +31,7 @@ class DataColumn extends Column
         return $this;
     }
 
-    public function value(string|null|Closure $value): static
+    public function value(string|int|null|Closure $value): static
     {
         $this->value = $value;
         return $this;

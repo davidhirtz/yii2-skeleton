@@ -174,7 +174,7 @@ class AccountUpdateFormTest extends Unit
 
         $trail = $this->getLastTrailRecord();
 
-        self::assertEquals(['timezone' => ['Europe/Berlin', $form->timezone]], $trail->data);
+        self::assertEquals(['timezone' => ['Europe/Berlin', $form->user->timezone]], $trail->data);
     }
 
     public function testUpdateUnsafeAttributes(): void

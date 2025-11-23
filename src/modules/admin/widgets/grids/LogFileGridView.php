@@ -53,7 +53,7 @@ class LogFileGridView extends GridView
         return LinkColumn::make()
             ->property('name')
             ->header(Yii::t('skeleton', 'Name'))
-            ->href(fn (LogFile $file): array => $this->getLogFileUrl($file))
+            ->url(fn (LogFile $file): array => $this->getLogFileUrl($file))
             ->contentAttributes(['class' => 'strong']);
     }
 

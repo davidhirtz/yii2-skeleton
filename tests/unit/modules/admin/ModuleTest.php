@@ -7,6 +7,7 @@ namespace davidhirtz\yii2\skeleton\tests\unit\modules\admin;
 use Codeception\Test\Unit;
 use davidhirtz\yii2\skeleton\modules\admin\config\DashboardItemConfig;
 use davidhirtz\yii2\skeleton\modules\admin\config\DashboardPanelConfig;
+use davidhirtz\yii2\skeleton\modules\admin\config\MainMenuItemConfig;
 use davidhirtz\yii2\skeleton\modules\admin\Module;
 use davidhirtz\yii2\skeleton\modules\admin\ModuleInterface;
 use Yii;
@@ -18,9 +19,9 @@ class ModuleTest extends Unit
         $module = $this->getAdminModule();
 
         $module->setMainMenuItems([
-            'test' => [
-                'name' => 'Test',
-            ],
+            'test' => new MainMenuItemConfig(
+                label: 'Test',
+            ),
         ]);
 
         self::assertEquals(['users', 'test'], array_keys($module->getMainMenuItems()));
@@ -83,9 +84,9 @@ class TestModule extends \davidhirtz\yii2\skeleton\base\Module implements Module
     public function getMainMenuItems(): array
     {
         return [
-            'module' => [
-                'name' => 'Test Module',
-            ],
+            'module' => new MainMenuItemConfig(
+                label: 'Test Module',
+            ),
         ];
     }
 }

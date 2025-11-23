@@ -22,7 +22,7 @@ trait TypeGridViewTrait
         return LinkColumn::make()
             ->property('typeName')
             ->visible($this->hasVisibleTypes())
-            ->href(fn ($model) => $this->getRoute($model))
+            ->url(fn ($model) => $this->getRoute($model))
             ->nowrap();
     }
 
@@ -31,7 +31,7 @@ trait TypeGridViewTrait
         return LinkColumn::make()
             ->property('type')
             ->header(false)
-            ->href(fn ($model) => $this->getRoute($model))
+            ->url(fn ($model) => $this->getRoute($model))
             ->content($this->getTypeIconColumnContent(...))
             ->visible($this->hasVisibleTypes())
             ->centered();

@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets;
+namespace davidhirtz\yii2\skeleton\widgets\buttons;
 
 use davidhirtz\yii2\skeleton\html\A;
+use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
 use Yii;
 
