@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\grids\traits;
 
-use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\models\AuthItem;
 use Yii;
 use yii\i18n\PhpMessageSource;
 
-/**
- * @method ActiveRecord getModel()
- */
 trait MessageSourceTrait
 {
     public string $messageSourceAttribute = 'description';

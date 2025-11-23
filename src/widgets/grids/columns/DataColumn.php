@@ -63,7 +63,7 @@ class DataColumn extends Column
         }
 
         $label = $this->label
-            ?? $this->grid->getModel()?->getAttributeLabel($this->property)
+            ?? $this->grid->model->getAttributeLabel($this->property)
             ?? Inflector::camel2words($this->property);
 
         if ($this->encodeLabel) {

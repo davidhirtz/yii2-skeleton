@@ -23,6 +23,7 @@ use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\pagers\LinkPager;
 use davidhirtz\yii2\skeleton\widgets\grids\toolbars\GridSearch;
 use davidhirtz\yii2\skeleton\widgets\grids\toolbars\GridToolbarItem;
+use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
 use Yii;
@@ -40,6 +41,7 @@ use yii\helpers\Url;
 class GridView extends Widget
 {
     use ContainerConfigurationTrait;
+    use ModelWidgetTrait;
     use TagAttributesTrait;
     use TagIdTrait;
 
@@ -105,7 +107,16 @@ class GridView extends Widget
 
         $this->rowAttributes ??= [];
 
+        $this->model ??= $this->getModelFromProvider();
         $this->columns ??= $this->getDefaultColumns();
+
+        $this->ensureColumns();
+
+        parent::configure();
+    }
+
+    protected function ensureColumns(): void
+    {
         $this->columns = array_values(array_filter($this->columns));
 
         foreach ($this->columns as $i => &$column) {
@@ -120,8 +131,6 @@ class GridView extends Widget
                 unset($this->columns[$i]);
             }
         }
-
-        parent::configure();
     }
 
     protected function renderContent(): string|Stringable
@@ -302,7 +311,7 @@ class GridView extends Widget
         return $footer?->addClass($this->hasStickyFooter ? 'sticky' : null);
     }
 
-    public function getModel(): ?Model
+    protected function getModelFromProvider(): ?Model
     {
         if ($this->provider instanceof ActiveDataProvider) {
             /** @var class-string<ActiveRecord>|null $modelClass */
@@ -322,7 +331,6 @@ class GridView extends Widget
 
         return $model instanceof Model ? $model : null;
     }
-
     /**
      * @param T $model
      */

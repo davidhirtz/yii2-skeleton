@@ -43,6 +43,8 @@ class TrailGridView extends GridView
     #[Override]
     public function configure(): void
     {
+        $this->model ??= Trail::instance();
+
         $this->rowAttributes = fn (Trail $trail) => [
             'class' => $trail->isDeleteType() ? 'bg-danger' : '',
         ];
@@ -334,11 +336,5 @@ class TrailGridView extends GridView
     protected function getTrailModelRoute(Trail $trail): ?array
     {
         return ['index', 'model' => implode('@', array_filter([$trail->model, (string)$trail->model_id]))];
-    }
-
-    #[Override]
-    public function getModel(): Trail
-    {
-        return Trail::instance();
     }
 }

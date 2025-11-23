@@ -20,6 +20,11 @@ class Img extends Tag
         return $this->attribute('alt', $alt);
     }
 
+    public function loading(string $loading): static
+    {
+        return $this->attribute('loading', $loading);
+    }
+
     public function src(string|array|null $src): static
     {
         $this->src = $src !== null ? Url::to($src) : null;

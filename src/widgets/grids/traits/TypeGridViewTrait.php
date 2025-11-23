@@ -62,16 +62,13 @@ trait TypeGridViewTrait
 
     protected function getTypeDropdownItems(): array
     {
-        $model = $this->getModel();
-
-        return $model instanceof TypeAttributeInterface
-            ? array_map(fn ($model) => $model->getTypePlural(), $model::getTypeInstances())
+        return $this->model instanceof TypeAttributeInterface
+            ? array_map(fn ($model) => $model->getTypePlural(), $this->model::getTypeInstances())
             : [];
     }
 
     protected function hasVisibleTypes(): bool
     {
-        $model = $this->getModel();
-        return $model instanceof TypeAttributeInterface && !$this->type && count($model::getTypes()) > 1;
+        return $this->model instanceof TypeAttributeInterface && !$this->type && count($this->model::getTypes()) > 1;
     }
 }

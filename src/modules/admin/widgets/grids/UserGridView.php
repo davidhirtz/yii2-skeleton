@@ -33,6 +33,8 @@ class UserGridView extends GridView
     #[Override]
     public function configure(): void
     {
+        $this->model ??= User::instance();
+
         $this->attributes['id'] ??= 'user-grid';
 
         $this->header ??= [
@@ -159,11 +161,5 @@ class UserGridView extends GridView
         return $this->webuser->can(User::AUTH_USER_UPDATE, ['user' => $model])
             ? ['/admin/user/update', 'id' => $model->id, ...$params]
             : false;
-    }
-
-    #[Override]
-    public function getModel(): User
-    {
-        return User::instance();
     }
 }
