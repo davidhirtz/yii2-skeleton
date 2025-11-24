@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\forms\footers;
 
+use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\Ul;
 use davidhirtz\yii2\skeleton\widgets\forms\FormRow;
 use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
@@ -12,6 +13,7 @@ use Stringable;
 
 class FormFooter extends Widget
 {
+    use TagAttributesTrait;
     use ModelWidgetTrait;
 
     protected array|null $items = null;
@@ -20,6 +22,14 @@ class FormFooter extends Widget
     {
         $this->items = $items;
         return $this;
+    }
+
+    protected function configure(): void
+    {
+        $this->attributes['hx-select'] ??= "#wrap";
+        $this->attributes['hx-target'] ??= $this->attributes['hx-select'];
+
+        parent::configure();
     }
 
     protected function renderContent(): string|Stringable
@@ -33,6 +43,7 @@ class FormFooter extends Widget
 
         return $this->items
             ? FormRow::make()
+                ->attributes($this->attributes)
                 ->addClass('form-footer')
                 ->content(Ul::make()
                     ->content(...$this->items))

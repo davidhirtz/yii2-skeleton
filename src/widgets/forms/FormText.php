@@ -10,6 +10,7 @@ use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagLabelTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagVisibilityTrait;
+use davidhirtz\yii2\skeleton\widgets\forms\traits\RowAttributesTrait;
 use davidhirtz\yii2\skeleton\widgets\traits\FormatTrait;
 use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\traits\PropertyWidgetTrait;
@@ -21,13 +22,13 @@ class FormText extends Widget
     use FormatTrait;
     use ModelWidgetTrait;
     use PropertyWidgetTrait;
+    use RowAttributesTrait;
     use TagAttributesTrait;
     use TagVisibilityTrait;
     use TagIdTrait;
     use TagLabelTrait;
 
     public array $contentAttributes = [];
-    public array $rowAttributes = [];
     public array $labelAttributes = [];
 
     protected string|int|float|bool|Stringable|null $content = null;

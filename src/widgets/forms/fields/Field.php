@@ -14,6 +14,7 @@ use davidhirtz\yii2\skeleton\html\traits\TagVisibilityTrait;
 use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\forms\FormRow;
 use davidhirtz\yii2\skeleton\widgets\forms\traits\FormWidgetTrait;
+use davidhirtz\yii2\skeleton\widgets\forms\traits\RowAttributesTrait;
 use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\traits\PropertyWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
@@ -24,12 +25,12 @@ abstract class Field extends Widget
     use FormWidgetTrait;
     use ModelWidgetTrait;
     use PropertyWidgetTrait;
+    use RowAttributesTrait;
     use TagAttributesTrait;
     use TagVisibilityTrait;
     use TagIdTrait;
     use TagLabelTrait;
 
-    public array $rowAttributes = [];
     public array $labelAttributes = [];
 
     public string $layout = '{input}{error}{hint}';

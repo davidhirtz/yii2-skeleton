@@ -105,12 +105,16 @@ class ActiveForm extends Widget
             : '';
     }
 
-    protected function getFieldset(array $fields): Stringable
+    protected function getFieldset(array|Fieldset $rows): ?Stringable
     {
-        return Fieldset::make()
+        if (!$rows instanceof Fieldset) {
+            $rows = Fieldset::make()
+                ->rows(...$rows);
+        }
+
+        return $rows
             ->form($this)
-            ->model($this->model)
-            ->rows(...$fields);
+            ->model($this->model);
     }
 
     protected function getButtons(): ?Stringable

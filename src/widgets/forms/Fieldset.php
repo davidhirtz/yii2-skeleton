@@ -87,10 +87,12 @@ class Fieldset extends Widget
             }
         }
 
-        return \davidhirtz\yii2\skeleton\html\Fieldset::make()
-            ->attributes($this->attributes)
-            ->addClass('fieldset')
-            ->content(...$rows);
+        return $rows
+            ? \davidhirtz\yii2\skeleton\html\Fieldset::make()
+                ->attributes($this->attributes)
+                ->addClass('fieldset')
+                ->content(...$rows)
+            : '';
     }
 
     protected function getFieldForProperty(string $property): Field

@@ -48,7 +48,7 @@ class UpdatedAtFooterItem implements Stringable
             ]);
 
         $url = $this->model instanceof TrailModelInterface && Yii::$app->getUser()->can(Trail::AUTH_TRAIL_INDEX)
-            ? $this->model->getTrailModelAdminRoute()
+            ? Trail::getAdminRouteByModel($this->model)
             : null;
 
         if ($url) {
