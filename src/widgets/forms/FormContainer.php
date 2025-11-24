@@ -16,10 +16,7 @@ class FormContainer extends Widget
     use ContainerWidgetTrait;
     use TagCardTrait;
 
-    /**
-     * @todo use FormWidgetTrait once form-related methods are added
-     */
-    private string|ActiveForm $form;
+    private ActiveForm $form;
 
     public function form(ActiveForm|string $form): static
     {
@@ -27,9 +24,14 @@ class FormContainer extends Widget
         return $this;
     }
 
-    protected function renderContent(): string|Stringable
+    protected function configure(): void
     {
         $this->title ??= $this->view->title;
+        parent::configure();
+    }
+
+    protected function renderContent(): string|Stringable
+    {
         $content = (string)$this->form;
 
         return $content

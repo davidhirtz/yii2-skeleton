@@ -41,7 +41,7 @@ class Select extends Tag
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     protected function renderContent(): string
     {
         return implode('', $this->options);

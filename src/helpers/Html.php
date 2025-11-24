@@ -62,46 +62,6 @@ class Html extends BaseHtml
         return 'i' . ++self::$counter;
     }
 
-    public static function formText(string $content, array $options = []): string
-    {
-        $tag = ArrayHelper::remove($options, 'tag', 'div');
-        Html::addCssClass($options, 'form-text');
-
-        return Html::tag($tag, $content, $options);
-    }
-
-    public static function buttons(array|string $buttons, array $options = []): string
-    {
-        if (is_array($buttons)) {
-            $buttons = implode('', $buttons);
-        }
-
-        if ($buttons) {
-            static::addCssClass($options, 'btn-group');
-            return static::tag('div', $buttons, $options);
-        }
-
-        return '';
-    }
-
-    #[Override]
-    public static function input($type, $name = null, $value = null, $options = []): string
-    {
-        if (isset($options['prepend']) || isset($options['append'])) {
-            if ($prepend = ArrayHelper::remove($options, 'prepend', '')) {
-                $prepend = "<div class=\"input-group-prepend input-group-text\">$prepend</div>";
-            }
-
-            if ($append = ArrayHelper::remove($options, 'append', '')) {
-                $append = "<div class=\"input-group-append input-group-text\">$append</div>";
-            }
-
-            $input = parent::input($type, $name, $value, $options);
-            return "<div class=\"input-group\">$prepend$input$append</div>";
-        }
-
-        return parent::input($type, $name, $value, $options);
-    }
 
     public static function tableBody(array $items, array $rowOptions = [], array $cellOptions = []): string
     {

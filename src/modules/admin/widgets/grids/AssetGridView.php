@@ -13,6 +13,7 @@ use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\TimeagoColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\widgets\grids\toolbars\GridToolbarItem;
+use Override;
 use Stringable;
 use Yii;
 use yii\data\ArrayDataProvider;
@@ -21,7 +22,7 @@ class AssetGridView extends GridView
 {
     public string $layout = '{items}{footer}';
 
-    #[\Override]
+    #[Override]
     public function configure(): void
     {
         $this->provider ??= new ArrayDataProvider([

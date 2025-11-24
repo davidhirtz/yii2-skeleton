@@ -16,6 +16,12 @@ class LinkColumn extends DataColumn
     protected array $linkAttributes = [];
     protected ?Closure $url = null;
 
+    public function linkAttributes(array $attributes): static
+    {
+        $this->linkAttributes = $attributes;
+        return $this;
+    }
+
     public function url(Closure $url): static
     {
         $this->url = $url;

@@ -330,7 +330,7 @@ class TrailGridView extends GridView
     #[Override]
     protected function getRoute(ActiveRecordInterface $model, array $params = []): array|false
     {
-        return ['index', 'id' => $model->id];
+        return ['index', 'id' => $model->getPrimaryKey()];
     }
 
     protected function getTrailModelRoute(Trail $trail): ?array

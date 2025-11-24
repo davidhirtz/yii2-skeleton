@@ -15,7 +15,7 @@
     &:not([aria-invalid], :user-invalid):focus {
       --input-bg-color: var(--input-focus-bg-color);
       --input-border-color: var(--input-focus-border-color);
-      --input-caret: var(--caret-down);
+      --input-caret: var(--input-caret-hover);
       --input-color: var(--input-focus-color);
     }
   }
@@ -23,7 +23,7 @@
   &:is(select) {
     background-image: var(--input-caret);
     background-repeat: no-repeat;
-    background-position: right;
+    background-position: right 1rem center;
     background-size: 0.875rem;
   }
 

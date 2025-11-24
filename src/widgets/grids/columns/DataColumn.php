@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\grids\columns;
 
 use Closure;
+use davidhirtz\yii2\skeleton\widgets\traits\FormatTrait;
 use davidhirtz\yii2\skeleton\widgets\traits\PropertyWidgetTrait;
 use Override;
 use Stringable;
-use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -16,11 +16,11 @@ use yii\helpers\Inflector;
 
 class DataColumn extends Column
 {
+    use FormatTrait;
     use PropertyWidgetTrait;
 
     protected ?string $label = null;
     protected string|null|Closure $value = null;
-    protected string $format = 'text';
     protected array $sortLinkAttributes = [];
     protected bool $enableSorting = true;
     protected bool $encodeLabel = true;
@@ -34,12 +34,6 @@ class DataColumn extends Column
     public function value(string|int|null|Closure $value): static
     {
         $this->value = $value;
-        return $this;
-    }
-
-    public function format(string $format): static
-    {
-        $this->format = $format;
         return $this;
     }
 
@@ -84,11 +78,11 @@ class DataColumn extends Column
         return $label;
     }
 
-    #[\Override]
+    #[Override]
     protected function getBodyContent(array|Model $model, string|int $key, int $index): string|Stringable
     {
         return $this->content === null
-            ? Yii::$app->getFormatter()->format($this->getValue($model, $key, $index), $this->format)
+            ? $this->formatValue($this->getValue($model, $key, $index))
             : parent::getBodyContent($model, $key, $index);
     }
 

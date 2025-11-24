@@ -55,7 +55,7 @@ abstract class Field extends Widget
         $this->label ??= $this->model->getAttributeLabel($this->property);
         $this->form = $form;
 
-        if ($this->model) {
+        if ($this->model && $this->property) {
             $this->error ??= $this->model->getFirstError($this->property);
             $this->hint ??= $this->model->getAttributeHint($this->property);
 
@@ -71,7 +71,7 @@ abstract class Field extends Widget
             }
         }
 
-        $this->rowAttributes['id'] ??= "{$this->getId()}-field";
+        $this->rowAttributes['id'] ??= "{$this->getId()}-row";
 
         return $this;
     }
@@ -123,7 +123,7 @@ abstract class Field extends Widget
 
     public function isSafe(): bool
     {
-        return $this->model?->isAttributeSafe($this->property) ?? false;
+        return !$this->property || ($this->model?->isAttributeSafe($this->property) ?? false);
     }
 
     public function isRequired(): bool
