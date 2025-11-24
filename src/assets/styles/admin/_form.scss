@@ -33,9 +33,11 @@
 
 .form-label {
   @include media-breakpoint-up(sm) {
-    padding: 1px 0;
-    align-self: flex-start;
     text-align: right;
+
+    .form-group:has(.input) & {
+      padding: 1px 0;
+    }
   }
 
   .form-plain & {
@@ -64,7 +66,9 @@
 }
 
 .form-text {
-  padding: 0.5rem 1rem;
+  @include media-breakpoint-up(sm) {
+    padding-inline: 1rem;
+  }
 }
 
 .form-error {
@@ -119,9 +123,10 @@
 
   .form-label & {
     font-weight: 700;
+  }
 
-    @include media-breakpoint-up(sm) {
-      border: 1px transparent;
+  @include media-breakpoint-up(sm) {
+    .form-group:has(.input) & {
       padding: 0.5rem 0;
     }
   }
