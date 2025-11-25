@@ -62,6 +62,7 @@ class ActiveForm extends Widget
         $this->attributes['hx-target'] ??= $this->attributes['hx-select'];
         $this->attributes['hx-boost'] ??= "true";
 
+        // @todo change this to exclude I18N attributes
         $this->rows ??= $this->model?->safeAttributes();
     }
 
@@ -105,16 +106,15 @@ class ActiveForm extends Widget
             : '';
     }
 
-    protected function getFieldset(array|Fieldset $rows): ?Stringable
+    protected function getFieldset(array|Fieldset $fieldsetOrRows): ?Stringable
     {
-        if (!$rows instanceof Fieldset) {
-            $rows = Fieldset::make()
-                ->rows(...$rows);
+        if (!$fieldsetOrRows instanceof Fieldset) {
+            $fieldsetOrRows = Fieldset::make()
+                ->rows($fieldsetOrRows);
         }
 
-        return $rows
-            ->form($this)
-            ->model($this->model);
+        return $fieldsetOrRows
+            ->form($this);
     }
 
     protected function getButtons(): ?Stringable

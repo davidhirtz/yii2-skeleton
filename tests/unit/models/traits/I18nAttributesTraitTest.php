@@ -6,7 +6,9 @@ namespace davidhirtz\yii2\skeleton\tests\unit\models\traits;
 
 use Codeception\Test\Unit;
 use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use davidhirtz\yii2\skeleton\models\interfaces\I18nAttributeInterface;
 use davidhirtz\yii2\skeleton\models\traits\I18nAttributesTrait;
+use Override;
 use Yii;
 
 class I18nAttributesTraitTest extends Unit
@@ -133,20 +135,20 @@ class I18nAttributesTraitTest extends Unit
  * @property string $slug_de
  * @property string $untranslated
  */
-class TestI18nActiveRecord extends ActiveRecord
+class TestI18nActiveRecord extends ActiveRecord implements I18nAttributeInterface
 {
     use I18nAttributesTrait;
 
     public array|string|null $slugTargetAttribute = null;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         $this->i18nAttributes = ['name', 'slug', 'parent_slug'];
         parent::init();
     }
 
-    #[\Override]
+    #[Override]
     public function rules(): array
     {
         return $this->getI18nRules([
@@ -166,7 +168,7 @@ class TestI18nActiveRecord extends ActiveRecord
         ]);
     }
 
-    #[\Override]
+    #[Override]
     public function attributeHints(): array
     {
         return [
@@ -174,7 +176,7 @@ class TestI18nActiveRecord extends ActiveRecord
         ];
     }
 
-    #[\Override]
+    #[Override]
     public static function tableName(): string
     {
         return 'i18n_test';
@@ -187,7 +189,7 @@ class TestI18nActiveRecord extends ActiveRecord
  */
 class TestI18nParentSlugActiveRecord extends TestI18nActiveRecord
 {
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         $this->slugTargetAttribute = ['slug', 'parent_slug'];

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets;
 
+use Closure;
 use davidhirtz\yii2\skeleton\base\traits\ContainerConfigurationTrait;
 use davidhirtz\yii2\skeleton\web\View;
 use Stringable;
@@ -21,6 +22,7 @@ abstract class Widget implements Stringable, ViewContextInterface
     protected ?string $viewPath = null;
 
     private ?string $content = null;
+    protected ?Closure $config = null;
 
     public function __construct()
     {
@@ -30,6 +32,12 @@ abstract class Widget implements Stringable, ViewContextInterface
     public function getViewPath(): ?string
     {
         return $this->viewPath ??= '@views/' . Yii::$app->controller->id . '/';
+    }
+
+    public function prepare(Closure $config): static
+    {
+        $this->config = $config;
+        return $this;
     }
 
     public function render(bool $refresh = false): string
@@ -44,6 +52,9 @@ abstract class Widget implements Stringable, ViewContextInterface
 
     protected function configure(): void
     {
+        if ($this->config instanceof Closure) {
+            call_user_func($this->config, $this);
+        }
     }
 
     abstract protected function renderContent(): string|Stringable;

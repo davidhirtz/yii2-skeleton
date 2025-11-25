@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\tests\unit\i18n;
 
 use Codeception\Test\Unit;
 use davidhirtz\yii2\skeleton\modules\ModuleTrait;
+use Override;
 use Yii;
 use yii\base\Module;
 
@@ -44,7 +45,7 @@ class TestModule extends Module
 {
     use ModuleTrait;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         $this->enableI18nTables = true;

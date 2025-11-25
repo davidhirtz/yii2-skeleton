@@ -11,7 +11,6 @@ use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagLabelTrait;
 use davidhirtz\yii2\skeleton\html\traits\TagVisibilityTrait;
-use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\forms\FormRow;
 use davidhirtz\yii2\skeleton\widgets\forms\traits\FormWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\forms\traits\RowAttributesTrait;
@@ -19,6 +18,7 @@ use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\traits\PropertyWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Widget;
 use Stringable;
+use Yii;
 
 abstract class Field extends Widget
 {
@@ -34,9 +34,16 @@ abstract class Field extends Widget
     public array $labelAttributes = [];
 
     public string $layout = '{input}{error}{hint}';
+    public string $language;
 
     protected ?string $error = null;
     protected ?string $hint = null;
+
+    public function __construct()
+    {
+        $this->language = Yii::$app->language;
+        parent::__construct();
+    }
 
     public function error(?string $error): static
     {
@@ -50,13 +57,16 @@ abstract class Field extends Widget
         return $this;
     }
 
-    public function form(ActiveForm $form): static
+    public function language(string $language): static
     {
-        $this->model ??= $form->model;
-        $this->label ??= $this->model->getAttributeLabel($this->property);
-        $this->form = $form;
+        $this->language = $language;
+        return $this;
+    }
 
+    protected function configure(): void
+    {
         if ($this->model && $this->property) {
+            $this->label ??= $this->model->getAttributeLabel($this->property);
             $this->error ??= $this->model->getFirstError($this->property);
             $this->hint ??= $this->model->getAttributeHint($this->property);
 
@@ -74,7 +84,11 @@ abstract class Field extends Widget
 
         $this->rowAttributes['id'] ??= "{$this->getId()}-row";
 
-        return $this;
+        if ($this->config) {
+            call_user_func($this->config, $this);
+        }
+
+        parent::configure();
     }
 
     protected function renderContent(): string|Stringable

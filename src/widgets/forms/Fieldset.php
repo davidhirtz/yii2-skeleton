@@ -38,13 +38,13 @@ class Fieldset extends Widget
      */
     protected array $rows = [];
 
-    public function rows(Stringable|string|null ...$rows): static
+    public function rows(array $rows): static
     {
         $this->rows = array_filter($rows);
         return $this;
     }
 
-    protected function renderContent(): string|Stringable
+    protected function configure(): void
     {
         $rows = [];
 
@@ -58,15 +58,17 @@ class Fieldset extends Widget
                 continue;
             }
 
+            $field->form($this->form);
+
             if (!$this->model instanceof I18nAttributeInterface) {
-                $rows[] = $field->form($this->form);
+                $rows[] = $field;
                 continue;
             }
 
-            foreach ($this->model->getI18nAttributeNames($field->property) as $property) {
+            foreach ($this->model->getI18nAttributeNames($field->property) as $language => $property) {
                 $rows[] = (clone $field)
-                    ->property($property)
-                    ->form($this->form);
+                    ->language($language)
+                    ->property($property);
             }
         }
 
@@ -87,12 +89,9 @@ class Fieldset extends Widget
             }
         }
 
-        return $rows
-            ? \davidhirtz\yii2\skeleton\html\Fieldset::make()
-                ->attributes($this->attributes)
-                ->addClass('fieldset')
-                ->content(...$rows)
-            : '';
+        $this->rows = array_values($rows);
+
+        parent::configure();
     }
 
     protected function getFieldForProperty(string $property): Field
@@ -120,7 +119,8 @@ class Fieldset extends Widget
             if ($validator instanceof BooleanValidator) {
                 return CheckboxField::make()
                     ->uncheckedValue('0' !== $validator->falseValue ? $validator->falseValue : null)
-                    ->property($property);
+                    ->property($property)
+                    ->model($this->model);
             }
 
             if ($validator instanceof EmailValidator) {
@@ -131,6 +131,7 @@ class Fieldset extends Widget
             if ($validator instanceof HtmlValidator) {
                 return TinyMceField::make()
                     ->property($property)
+                    ->model($this->model)
                     ->validator($validator);
             }
 
@@ -142,6 +143,17 @@ class Fieldset extends Widget
 
         return $className::make()
             ->type($type)
-            ->property($property);
+            ->property($property)
+            ->model($this->model);
+    }
+
+    protected function renderContent(): string|Stringable
+    {
+        return $this->rows
+            ? \davidhirtz\yii2\skeleton\html\Fieldset::make()
+                ->attributes($this->attributes)
+                ->addClass('fieldset')
+                ->content(...$this->rows)
+            : '';
     }
 }

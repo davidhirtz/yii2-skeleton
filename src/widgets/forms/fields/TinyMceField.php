@@ -51,11 +51,6 @@ class TinyMceField extends Field
     public int $height = 400;
 
     /**
-     * @var string|null the language to use, if null, the application's language will be used.
-     */
-    public ?string $language = null;
-
-    /**
      * @var string|null the language URL to use, if null, the skin asset URL will be used.
      */
     public ?string $languageUrl = null;
@@ -108,8 +103,6 @@ class TinyMceField extends Field
         if (!$this->validator instanceof HtmlValidator) {
             $this->validator = $this->validator ? Yii::createObject($this->validator) : null;
         }
-
-        $this->language ??= Yii::$app->language;
 
         $bundle = Yii::$app->getAssetManager()->getBundle(TinyMceSkinAssetBundle::class);
         $this->skin ??= "$bundle->baseUrl/ui/default";
