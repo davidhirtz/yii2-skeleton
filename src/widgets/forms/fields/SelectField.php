@@ -22,10 +22,17 @@ class SelectField extends Field
     public array $items = [];
 
     protected string|false $prompt = false;
+    protected array $promptAttributes = [];
 
     public function prompt(string|false $prompt = ''): static
     {
         $this->prompt = $prompt;
+        return $this;
+    }
+
+    public function promptAttributes(array $options): static
+    {
+        $this->promptAttributes = $options;
         return $this;
     }
 
@@ -71,8 +78,10 @@ class SelectField extends Field
             ->addClass('input');
 
         if (false !== $this->prompt && (!$this->isRequired() || $selected)) {
+            $this->promptAttributes['disabled'] ??= $this->isRequired();
+
             $select->addOption(Option::make()
-                ->disabled($this->isRequired())
+                ->attributes($this->promptAttributes)
                 ->label($this->prompt));
         }
 
