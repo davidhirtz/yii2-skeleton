@@ -43,7 +43,7 @@ class NavItem extends Widget
 
     public function badge(int|string|null $badge): static
     {
-        $this->badge = $badge;
+        $this->badge = $badge ? (string)$badge : null;
         return $this;
     }
 
