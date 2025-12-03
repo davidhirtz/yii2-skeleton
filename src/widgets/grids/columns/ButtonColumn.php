@@ -12,7 +12,9 @@ use yii\base\Model;
 
 class ButtonColumn extends Column
 {
-    public array|null|Closure $contentAttributes = [];
+    public array|null|Closure $contentAttributes = [
+        'class' => 'text-end',
+    ];
 
     #[Override]
     protected function getBodyContent(array|Model $model, string|int $key, int $index): string|Stringable

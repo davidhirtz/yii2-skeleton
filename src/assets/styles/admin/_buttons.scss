@@ -128,16 +128,19 @@
 .btn-sm {
   border-radius: .25rem;
   font-size: .75rem;
-  font-weight: 700;
   line-height: 1.125rem;
-  padding: 0.25rem 375rem;
+  padding: 0.25rem .375rem;
 }
 
 .btn-group {
   display: flex;
   gap: .5rem;
 
-  td > & {
+  &:not(:first-child) {
+    margin-top: .5rem;
+  }
+
+  .text-end > & {
     justify-content: flex-end;
     flex-wrap: nowrap;
   }
