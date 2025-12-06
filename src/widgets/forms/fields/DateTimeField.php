@@ -56,11 +56,10 @@ class DateTimeField extends Field
     protected function getTimeZone(): ?string
     {
         $offset = $this->timeZone->getOffset(new DateTime());
-        $sign = $offset >= 0 ? '+' : '-';
         $abs = abs($offset);
         $hours = intdiv($abs, 3600);
         $minutes = intdiv($abs % 3600, 60);
 
-        return "GMT$sign" . sprintf('%02d:%02d', $hours, $minutes);
+        return 'GMT' . ($offset >= 0 ? '+' : '-') . sprintf('%02d:%02d', $hours, $minutes);
     }
 }

@@ -6,7 +6,6 @@ namespace davidhirtz\yii2\skeleton\tests\unit\widgets\forms\fields;
 use Codeception\Test\Unit;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\DateTimeField;
-use Yii;
 
 class DateTimeFieldTest extends Unit
 {

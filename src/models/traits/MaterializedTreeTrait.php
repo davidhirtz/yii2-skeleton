@@ -170,12 +170,8 @@ trait MaterializedTreeTrait
     public function findSiblings(): ActiveQuery
     {
         return static::find()
-            ->where([
-                'parent_id' => $this->parent_id,
-            ])
-            ->orderBy([
-                'position' => SORT_ASC,
-            ]);
+            ->where(['parent_id' => $this->parent_id,])
+            ->orderBy(['position' => SORT_ASC]);
     }
 
     public function getAncestorIds(): array
@@ -185,11 +181,11 @@ trait MaterializedTreeTrait
 
     public function getIdsFromPath(?string $path): array
     {
-        return ArrayHelper::cacheStringToArray($path);
+        return $path ? array_map(intval(...), explode(',', $path)) : [];
     }
 
     public function getPathFromIds(array $ids = []): string
     {
-        return ArrayHelper::createCacheString($ids);
+        return implode(',', $ids);
     }
 }

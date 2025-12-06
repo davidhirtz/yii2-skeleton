@@ -9,7 +9,6 @@ use davidhirtz\yii2\skeleton\html\Select;
 use davidhirtz\yii2\skeleton\html\traits\TagInputTrait;
 use Override;
 use Stringable;
-use Yii;
 use yii\helpers\Inflector;
 
 class SelectField extends Field
@@ -17,22 +16,17 @@ class SelectField extends Field
     use TagInputTrait;
 
     /**
-     * @var array<string|int, string|int|array{label: string, attributes?: array<string|int>}>
+     * @var array<string|int, string|int|array>
      */
     public array $items = [];
 
     protected string|false $prompt = false;
     protected array $promptAttributes = [];
 
-    public function prompt(string|false $prompt = ''): static
+    public function prompt(string|false $prompt = '', array $attributes = []): static
     {
         $this->prompt = $prompt;
-        return $this;
-    }
-
-    public function promptAttributes(array $options): static
-    {
-        $this->promptAttributes = $options;
+        $this->promptAttributes = $attributes;
         return $this;
     }
 
@@ -42,19 +36,15 @@ class SelectField extends Field
         return $this;
     }
 
-    public function addItem(string|int $value, string|int|array $label): static
+    public function addItem(string|int $value, string|int|array $item): static
     {
-        $this->items[$value] = $label;
+        $this->items[$value] = $item;
         return $this;
     }
 
-    #[Override]
-    protected function getInput(): string|Stringable
+    protected function configure(): void
     {
         $this->attributes['id'] ??= $this->getId();
-
-        $selected = $this->attributes['value'] ?? $this->model->{$this->property} ?? null;
-        unset($this->attributes['value']);
 
         if (!$this->items && $this->model) {
             $method = 'get' . Inflector::camelize(Inflector::pluralize($this->property));
@@ -64,20 +54,27 @@ class SelectField extends Field
                 ? call_user_func([$this->model, $method])
                 : [];
 
-            if (!$items) {
-                Yii::debug('No items returned from ' . $this->model::class . '::' . $method . '()');
+            foreach ($items as $key => $item) {
+                $this->items[$key] = is_array($item)
+                    ? ['label' => $item['name'], ...$item['attributes'] ?? []]
+                    : $item;
             }
-
-            $this->items = is_array(current($items))
-                ? array_map(fn ($item) => $item['name'] ?? current($item), $items)
-                : $items;
         }
+
+        parent::configure();
+    }
+
+    #[Override]
+    protected function getInput(): string|Stringable
+    {
+        $selected = (string)($this->attributes['value'] ?? $this->model->{$this->property} ?? '');
+        unset($this->attributes['value']);
 
         $select = Select::make()
             ->attributes($this->attributes)
             ->addClass('input');
 
-        if (false !== $this->prompt && (!$this->isRequired() || $selected)) {
+        if (false !== $this->prompt && (!$this->isRequired() || '' !== $selected)) {
             $this->promptAttributes['disabled'] ??= $this->isRequired();
 
             $select->addOption(Option::make()
@@ -85,13 +82,21 @@ class SelectField extends Field
                 ->label($this->prompt));
         }
 
-        foreach ($this->items as $value => $item) {
-            $attributes = $item['attributes'] ?? [];
-            $attributes['selected'] = ((string)$value === (string)$selected);
+        foreach ($this->items as $value => $attributes) {
+            $value = (string)$value;
+
+            if (is_array($attributes)) {
+                $label = $attributes['label'] ?? $value;
+                unset($attributes['label']);
+            } else {
+                $label = (string)$attributes;
+                $attributes = [];
+            }
 
             $select->addOption(Option::make()
                 ->attributes($attributes)
-                ->label($item['label'] ?? $item)
+                ->label($label)
+                ->selected($value === $selected)
                 ->value($value));
         }
 

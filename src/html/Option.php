@@ -18,6 +18,11 @@ class Option extends Tag
         return $this->attribute('disabled', $disabled ? true : null);
     }
 
+    public function selected(bool $selected = true): static
+    {
+        return $this->attribute('selected', $selected ? true : null);
+    }
+
     public function value(string|int|float|null $value): static
     {
         $this->attributes['value'] = $value;
