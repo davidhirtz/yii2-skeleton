@@ -60,7 +60,7 @@ class Fieldset extends Widget
 
             $field->form($this->form);
 
-            if (!$this->model instanceof I18nAttributeInterface) {
+            if (!$this->model instanceof I18nAttributeInterface || !$field->property) {
                 $rows[] = $field;
                 continue;
             }
