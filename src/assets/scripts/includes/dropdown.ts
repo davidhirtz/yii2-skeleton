@@ -12,8 +12,10 @@ export default ($btn: HTMLElement) => {
 
     const keydownEvent = (event: KeyboardEvent) => {
         if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-            selected = (selected + (event.key === 'ArrowDown' ? 1 : -1) + $items.length) % $items.length;
-            $items[selected].focus();
+            const $visibleItems = [...$items].filter($item => $item.checkVisibility());
+
+            selected = (selected + (event.key === 'ArrowDown' ? 1 : -1) + $visibleItems.length) % $visibleItems.length;
+            $visibleItems[selected].focus();
         }
     }
 
