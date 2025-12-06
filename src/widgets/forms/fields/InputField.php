@@ -63,7 +63,9 @@ class InputField extends Field
         return $this->append || $this->prepend
             ? InputGroup::make()
                 ->append(...$this->append)
+                ->appendAttributes($this->appendAttributes)
                 ->prepend(...$this->prepend)
+                ->prependAttributes($this->prependAttributes)
                 ->content($input)
             : $input;
     }

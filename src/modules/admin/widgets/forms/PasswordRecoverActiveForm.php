@@ -51,8 +51,7 @@ class PasswordRecoverActiveForm extends ActiveForm
             ->property('email')
             ->autocomplete('email')
             ->autofocus(!$this->model->hasErrors())
-            ->prepend(Icon::make()
-                ->name('envelope'))
+            ->prepend(Icon::make()->name('envelope'))
             ->placeholder()
             ->type('email');
     }

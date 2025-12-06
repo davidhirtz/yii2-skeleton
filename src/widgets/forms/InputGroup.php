@@ -24,22 +24,16 @@ class InputGroup extends Widget
         $div = Div::make()
             ->addClass('input-group');
 
-        if ([] !== $this->prepend) {
-            $div->content(
-                Div::make()
-                    ->addClass('input-group-prepend')
-                    ->addContent(...$this->prepend)
-            );
+        if (null !== $this->prepend) {
+            $div->content(($this->prepend instanceof Div ? $this->prepend : (Div::make()->content($this->prepend)))
+                ->addClass('input-group-prepend'));
         }
 
         $div->addContent(...$this->content);
 
-        if ([] !== $this->append) {
-            $div->addContent(
-                Div::make()
-                    ->addClass('input-group-append')
-                    ->addContent(...$this->append)
-            );
+        if (null !== $this->append) {
+            $div->addContent(($this->append instanceof Div ? $this->append : (Div::make()->content($this->append)))
+                ->addClass('input-group-append'));
         }
 
         return $div;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\grids\toolbars;
 
+use davidhirtz\yii2\skeleton\helpers\Url;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
@@ -19,15 +20,17 @@ class CreateButton extends Widget
     use TagIconTextTrait;
     use TagLinkTrait;
 
+    protected function configure(): void
+    {
+        $this->content = $this->content ?: [Yii::t('skeleton', 'Create')];
+        $this->icon ??= Icon::make()->name('plus');
+        $this->attributes['href'] ??= Url::toRoute(['create']);
+
+        parent::configure();
+    }
+
     public function renderContent(): Stringable
     {
-        if (!$this->content) {
-            $this->content = [Yii::t('skeleton', 'Create')];
-        }
-
-        $this->attributes['href'] ??= ['create'];
-        $this->icon ??= Icon::make()->name('plus');
-
         return Button::make()
             ->addAttributes($this->attributes)
             ->primary()
