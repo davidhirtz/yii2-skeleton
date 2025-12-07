@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\tests\unit\console;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\assets\AdminAsset;
+use davidhirtz\yii2\skeleton\assets\AdminAssetBundle;
 use davidhirtz\yii2\skeleton\codeception\traits\AssetDirectoryTrait;
 use davidhirtz\yii2\skeleton\codeception\traits\ConsoleApplicationTrait;
 use davidhirtz\yii2\skeleton\codeception\traits\StdOutBufferControllerTrait;
@@ -21,7 +21,7 @@ class AssetControllerTest extends Unit
     {
         $this->createConsoleApplicationMock();
         $this->createAssetDirectory();
-        AdminAsset::register(Yii::$app->getView());
+        AdminAssetBundle::register(Yii::$app->getView());
 
         parent::_before();
     }

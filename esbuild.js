@@ -27,13 +27,13 @@ const watchPlugin = (type) => {
 
 const scripts = await esbuild.context({
     entryPoints: [
-        'src/assets/scripts/*',
-        'src/assets/scripts/components/*',
+        'assets/src/js/*',
+        'assets/src/js/components/*',
     ],
     bundle: true,
     format: 'esm',
     minify: true,
-    outdir: 'src/assets/dist/js',
+    outdir: 'assets/dist/js',
     plugins: [watchPlugin('scripts')],
     sourcemap: true,
     splitting: true,
@@ -41,9 +41,9 @@ const scripts = await esbuild.context({
 })
 
 const styles = await esbuild.context({
-    entryPoints: ['src/assets/styles/*'],
+    entryPoints: ['assets/src/css/*'],
     minify: true,
-    outdir: 'src/assets/dist/css',
+    outdir: 'assets/dist/css',
     plugins: [
         watchPlugin('styles'),
         sassPlugin({

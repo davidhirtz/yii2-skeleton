@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\forms\fields;
 
-use davidhirtz\yii2\skeleton\assets\AdminAsset;
+use davidhirtz\yii2\skeleton\assets\AdminAssetBundle;
 use davidhirtz\yii2\skeleton\assets\TinyMceAssetBundle;
 use davidhirtz\yii2\skeleton\assets\TinyMceLanguageAssetBundle;
 use davidhirtz\yii2\skeleton\assets\TinyMceSkinAssetBundle;
@@ -113,7 +113,7 @@ class TinyMceField extends Field
         }
 
         if (!$this->contentCss) {
-            $bundle = Yii::$app->getAssetManager()->getBundle(AdminAsset::class);
+            $bundle = Yii::$app->getAssetManager()->getBundle(AdminAssetBundle::class);
             $this->contentCss = "$bundle->baseUrl/css/tinymce.min.css";
         }
 

@@ -7,7 +7,7 @@ declare(strict_types=1);
  * @var ErrorHandler $handler
  */
 
-use davidhirtz\yii2\skeleton\assets\AdminAsset;
+use davidhirtz\yii2\skeleton\assets\AdminAssetBundle;
 use davidhirtz\yii2\skeleton\web\View;
 use yii\base\UserException;
 use yii\helpers\Html;
@@ -25,7 +25,7 @@ $message = $exception instanceof UserException
     : Yii::t('yii', 'An internal server error occurred.');
 
 
-AdminAsset::register($this);
+AdminAssetBundle::register($this);
 
 ?>
 <?php $this->beginPage() ?>

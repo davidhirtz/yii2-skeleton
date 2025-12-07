@@ -7,14 +7,14 @@ declare(strict_types=1);
  * @var string $content
  */
 
-use davidhirtz\yii2\skeleton\assets\AdminAsset;
+use davidhirtz\yii2\skeleton\assets\AdminAssetBundle;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\NavBar;
 use davidhirtz\yii2\skeleton\web\View;
 use davidhirtz\yii2\skeleton\widgets\Flashes;
 use davidhirtz\yii2\skeleton\widgets\navs\Breadcrumb;
 use yii\helpers\Html;
 
-AdminAsset::register($this);
+AdminAssetBundle::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

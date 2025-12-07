@@ -10,5 +10,5 @@ abstract class AbstractAssetBundle extends AssetBundle
 {
     public string $filename;
     public $jsOptions = ['type' => 'module'];
-    public $sourcePath = '@skeleton/assets/dist';
+    public $sourcePath = '@skeleton/../assets/dist';
 }
