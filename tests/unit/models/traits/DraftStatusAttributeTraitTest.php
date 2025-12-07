@@ -14,7 +14,7 @@ class DraftStatusAttributeTraitTest extends Unit
 {
     public function testDraftStatus(): void
     {
-        $model = new class() extends Model implements DraftStatusAttributeInterface {
+        $model = new class () extends Model implements DraftStatusAttributeInterface {
             use DraftStatusAttributeTrait;
 
             public ?int $status = self::STATUS_DEFAULT;

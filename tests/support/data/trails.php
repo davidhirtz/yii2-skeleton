@@ -52,6 +52,6 @@ return [
         "user_id" => 1,
         "message" => null,
         "data" => null,
-        "created_at" => gmdate("Y-m-d H:i:s" , strtotime("-1 minute")),
+        "created_at" => gmdate("Y-m-d H:i:s", strtotime("-1 minute")),
     ],
 ];

@@ -15,7 +15,7 @@ class BadgeColumnTest extends Unit
 {
     public function testDefaultOptions(): void
     {
-        $model = new class() extends Model {
+        $model = new class () extends Model {
             public ?int $count = 100;
         };
 
@@ -45,7 +45,7 @@ class BadgeColumnTest extends Unit
     {
         Yii::$app->controller = $this->createMock(Controller::class);
 
-        $model = new class() extends Model {
+        $model = new class () extends Model {
             public int $id = 1;
             public int $count = 10;
         };

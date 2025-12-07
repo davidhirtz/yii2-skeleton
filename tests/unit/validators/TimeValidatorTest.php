@@ -12,7 +12,7 @@ class TimeValidatorTest extends Unit
 {
     public function testDefaultCurrencyAttribute(): void
     {
-        $model = new class() extends Model {
+        $model = new class () extends Model {
             public ?string $time = null;
 
             public function rules(): array

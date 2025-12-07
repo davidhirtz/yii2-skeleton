@@ -66,7 +66,7 @@ class AttributeTypecastBehaviorTest extends Unit
 
     public function testTypecastModelProperties(): void
     {
-        $model = new class() extends Model {
+        $model = new class () extends Model {
             public int|string|null $int = null;
             public float|null $float = null;
             public bool|null $bool = null;
@@ -172,7 +172,7 @@ class AttributeTypecastBehaviorTest extends Unit
 
     public function testBeforeValidateEvent(): void
     {
-        $model = new class() extends AttributeTypecastActiveRecord {
+        $model = new class () extends AttributeTypecastActiveRecord {
             public bool $typecastBeforeValidate = true;
 
             public function rules(): array
@@ -368,7 +368,7 @@ class AttributeTypecastBehaviorTest extends Unit
 
     public function testAutoDetectAttributeTypesFromBehaviors(): void
     {
-        $model = new class() extends AttributeTypecastActiveRecord {
+        $model = new class () extends AttributeTypecastActiveRecord {
             use ModelTrait;
 
             public function behaviors(): array
@@ -385,7 +385,7 @@ class AttributeTypecastBehaviorTest extends Unit
             }
         };
 
-        $behavior = new class() extends Behavior {
+        $behavior = new class () extends Behavior {
             public function events(): array
             {
                 return [

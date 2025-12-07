@@ -12,7 +12,7 @@ class HexColorValidatorTest extends Unit
 {
     public function testHexColorAttribute(): void
     {
-        $model = new class() extends Model {
+        $model = new class () extends Model {
             public ?string $color = null;
 
             public function rules(): array

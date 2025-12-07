@@ -16,7 +16,7 @@ class IconFilenameAttributeTraitTest extends Unit
 {
     public function testTraitAttributeLabels(): void
     {
-        $model = new class() extends Model {
+        $model = new class () extends Model {
             use IconFilenameAttributeTrait;
             use ModelTrait;
 
@@ -35,7 +35,7 @@ class IconFilenameAttributeTraitTest extends Unit
 
     public function testTraitRules(): void
     {
-        $model = new class() extends Model {
+        $model = new class () extends Model {
             use IconFilenameAttributeTrait;
             use ModelTrait;
 
@@ -67,7 +67,7 @@ class IconFilenameAttributeTraitTest extends Unit
         file_put_contents("$alias/test-image.svg", '');
         file_put_contents("$alias/not-an-image.txt", '');
 
-        $model = new class() extends Model {
+        $model = new class () extends Model {
             use IconFilenameAttributeTrait;
 
             public ?string $icon_filename = null;

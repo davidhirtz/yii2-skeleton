@@ -57,7 +57,7 @@ class RedirectBehaviorTest extends Unit
 
     public function testAfterSaveEventWithCustomUrl(): void
     {
-        $model = new class() extends RedirectActiveRecord {
+        $model = new class () extends RedirectActiveRecord {
             public function getUrl(): string
             {
                 return "/custom/$this->query";

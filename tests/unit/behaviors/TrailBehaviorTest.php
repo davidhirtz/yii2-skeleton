@@ -24,9 +24,8 @@ use yii\db\Exception;
 
 class TrailBehaviorTest extends Unit
 {
-    protected UnitTester $tester;
-
     use UserFixtureTrait;
+    protected UnitTester $tester;
 
     protected function _before(): void
     {
@@ -71,7 +70,7 @@ class TrailBehaviorTest extends Unit
 
     public function testAfterInsertEventWithoutTrailAttributes(): void
     {
-        $model = new class() extends TrailActiveRecord {
+        $model = new class () extends TrailActiveRecord {
             public function getTrailAttributes(): array
             {
                 return [];
@@ -117,7 +116,7 @@ class TrailBehaviorTest extends Unit
 
     public function testFailedInsertTrail(): void
     {
-        $model = new class() extends TrailActiveRecord {
+        $model = new class () extends TrailActiveRecord {
             public function behaviors(): array
             {
                 return [
@@ -146,7 +145,7 @@ class TrailBehaviorTest extends Unit
         $model = TrailActiveRecord::create();
         self::assertFalse($model->getTrailModelAdminRoute());
 
-        $model = new class() extends TrailActiveRecord {
+        $model = new class () extends TrailActiveRecord {
             public function getAdminRoute(): array
             {
                 return ['/admin/test'];
@@ -185,7 +184,7 @@ class TrailBehaviorTest extends Unit
 
     public function testFormatTrailAttributeValueWithoutRange(): void
     {
-        $model = new class() extends Model implements TrailModelInterface {
+        $model = new class () extends Model implements TrailModelInterface {
             use TrailModelTrait;
 
             public ?int $value = null;
@@ -322,7 +321,7 @@ class TrailBehaviorMock extends TrailBehavior
     #[Override]
     protected function insertTrail(Trail $trail): void
     {
-        $trail = new class() extends Trail {
+        $trail = new class () extends Trail {
             public function insert($runValidation = true, $attributes = null): bool
             {
                 throw new Exception("Mocked error message");

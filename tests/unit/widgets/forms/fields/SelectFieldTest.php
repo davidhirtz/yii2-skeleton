@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\tests\unit\widgets\forms\fields;
@@ -11,7 +12,7 @@ class SelectFieldTest extends Unit
 {
     public function testDefaultItemsFromModel(): void
     {
-        $model = new class extends Model {
+        $model = new class () extends Model {
             public int $status = 1;
 
             /** @noinspection PhpUnused */

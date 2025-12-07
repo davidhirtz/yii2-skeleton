@@ -117,7 +117,7 @@ class I18nAttributesTraitTest extends Unit
 
     public function testEmptyI18nAttributes(): void
     {
-        $model = new class() extends ActiveRecord {
+        $model = new class () extends ActiveRecord {
             use I18nAttributesTrait;
 
             public string $name = '';

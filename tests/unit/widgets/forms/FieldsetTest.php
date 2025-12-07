@@ -100,7 +100,7 @@ class FieldsetTest extends Unit
             '<div id="testactiverecord-name-de-row" class="form-group form-row"><div class="form-label"><label class="label" for="testactiverecord-name-de">Name (DE)</label></div><div class="form-content"><input type="text" id="testactiverecord-name-de" class="input" name="TestActiveRecord[name_de]" value="de" maxlength="255" required></div></div>',
         ];
 
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             self::assertStringContainsString($row, $content);
         }
     }
