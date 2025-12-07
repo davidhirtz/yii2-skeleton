@@ -1,4 +1,5 @@
 import htmx from "htmx.org"
+import "x-timeago";
 
 import collapse from "./includes/collapse";
 import dropdown from "./includes/dropdown";

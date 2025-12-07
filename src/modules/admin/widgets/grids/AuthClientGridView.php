@@ -11,7 +11,7 @@ use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\panels\AuthClientListGroup;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\TimeagoColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\RelativeTimeColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\widgets\Modal;
 use davidhirtz\yii2\skeleton\widgets\traits\UserWidgetTrait;
@@ -109,9 +109,9 @@ class AuthClientGridView extends GridView
         return $url ? Html::a($auth->getDisplayName(), $url, ['target' => '_blank']) : $auth->getDisplayName();
     }
 
-    protected function getUpdatedAtColumn(): TimeagoColumn
+    protected function getUpdatedAtColumn(): RelativeTimeColumn
     {
-        return TimeagoColumn::make()
+        return RelativeTimeColumn::make()
             ->property('updated_at');
     }
 }

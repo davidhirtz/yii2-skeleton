@@ -11,7 +11,7 @@ use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\DeleteGridButton;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\ViewGridButton;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\LinkColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\TimeagoColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\RelativeTimeColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use Override;
 use Yii;
@@ -64,9 +64,9 @@ class LogFileGridView extends GridView
             ->format('shortSize');
     }
 
-    protected function getUpdatedAtColumn(): TimeagoColumn
+    protected function getUpdatedAtColumn(): RelativeTimeColumn
     {
-        return TimeagoColumn::make()
+        return RelativeTimeColumn::make()
             ->property('updated_at')
             ->header(Yii::t('skeleton', 'Last Update'));
     }

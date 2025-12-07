@@ -10,7 +10,7 @@ use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Div;
 use davidhirtz\yii2\skeleton\html\Ul;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\TimeagoColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\RelativeTimeColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\widgets\grids\toolbars\GridToolbarItem;
 use Override;
@@ -51,7 +51,7 @@ class AssetGridView extends GridView
                             ->content($item['name']))
                         ->addContent($ul);
                 }),
-            TimeagoColumn::make()
+            RelativeTimeColumn::make()
                 ->property('modified')
                 ->header(Yii::t('skeleton', 'Updated')),
         ];

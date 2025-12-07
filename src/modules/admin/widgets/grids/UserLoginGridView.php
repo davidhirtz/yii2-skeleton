@@ -8,7 +8,7 @@ use davidhirtz\yii2\skeleton\models\interfaces\TypeAttributeInterface;
 use davidhirtz\yii2\skeleton\models\UserLogin;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\LinkColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\TimeagoColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\RelativeTimeColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\widgets\grids\traits\TypeGridViewTrait;
 use davidhirtz\yii2\skeleton\widgets\traits\UserWidgetTrait;
@@ -41,7 +41,7 @@ class UserLoginGridView extends GridView
             DataColumn::make()
                 ->property('browser')
                 ->hiddenForSmallDevices(),
-            TimeagoColumn::make()
+            RelativeTimeColumn::make()
                 ->property('created_at'),
         ];
 

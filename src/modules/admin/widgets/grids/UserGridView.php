@@ -13,7 +13,7 @@ use davidhirtz\yii2\skeleton\modules\admin\data\UserActiveDataProvider;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\TimeagoColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\RelativeTimeColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\widgets\grids\toolbars\CreateButton;
 use davidhirtz\yii2\skeleton\widgets\grids\traits\StatusGridViewTrait;
@@ -115,14 +115,14 @@ class UserGridView extends GridView
 
     protected function getLastLoginColumn(): DataColumn
     {
-        return TimeagoColumn::make()
+        return RelativeTimeColumn::make()
             ->property('last_login')
             ->url(fn (User $user) => ['/admin/login/index', 'user' => $user->id]);
     }
 
     protected function getCreatedAtColumn(): DataColumn
     {
-        return TimeagoColumn::make()
+        return RelativeTimeColumn::make()
             ->property('created_at')
             ->hiddenForMediumDevices();
     }

@@ -16,7 +16,7 @@ use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\modules\admin\data\TrailActiveDataProvider;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\TimeagoColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\RelativeTimeColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\widgets\grids\traits\MessageSourceTrait;
 use davidhirtz\yii2\skeleton\widgets\grids\traits\TypeGridViewTrait;
@@ -331,9 +331,9 @@ class TrailGridView extends GridView
             ]));
     }
 
-    protected function getCreatedAtColumn(): TimeagoColumn
+    protected function getCreatedAtColumn(): RelativeTimeColumn
     {
-        return TimeagoColumn::make()
+        return RelativeTimeColumn::make()
             ->property('created_at')
             ->hiddenForSmallDevices();
     }

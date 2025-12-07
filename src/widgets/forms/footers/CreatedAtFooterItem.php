@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\forms\footers;
 
 use davidhirtz\yii2\skeleton\base\traits\ContainerConfigurationTrait;
+use davidhirtz\yii2\skeleton\html\custom\RelativeTime;
 use davidhirtz\yii2\skeleton\html\Li;
 use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
-use davidhirtz\yii2\timeago\Timeago;
 use Stringable;
 use Yii;
 
@@ -28,7 +28,7 @@ class CreatedAtFooterItem implements Stringable
             ? Li::make()
                 ->class('form-footer-item')
                 ->content(Yii::t('skeleton', 'Created {timestamp}', [
-                    'timestamp' => Timeago::tag($createdAt),
+                    'timestamp' => RelativeTime::make()->value($createdAt),
                 ]))
             : null;
     }

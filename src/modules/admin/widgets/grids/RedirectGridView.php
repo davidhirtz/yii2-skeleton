@@ -15,7 +15,7 @@ use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\DeleteGridButton;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\ViewGridButton;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\CheckboxColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\TimeagoColumn;
+use davidhirtz\yii2\skeleton\widgets\grids\columns\RelativeTimeColumn;
 use davidhirtz\yii2\skeleton\widgets\grids\GridView;
 use davidhirtz\yii2\skeleton\widgets\grids\toolbars\CreateButton;
 use davidhirtz\yii2\skeleton\widgets\grids\traits\TypeGridViewTrait;
@@ -116,9 +116,9 @@ class RedirectGridView extends GridView
                 ->target('_blank'));
     }
 
-    protected function getUpdatedAtColumn(): TimeagoColumn
+    protected function getUpdatedAtColumn(): RelativeTimeColumn
     {
-        return TimeagoColumn::make()
+        return RelativeTimeColumn::make()
             ->property('updated_at')
             ->hiddenForSmallDevices();
     }

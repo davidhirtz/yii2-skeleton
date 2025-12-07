@@ -6,6 +6,7 @@ namespace davidhirtz\yii2\skeleton\widgets\forms\footers;
 
 use davidhirtz\yii2\skeleton\base\traits\ContainerConfigurationTrait;
 use davidhirtz\yii2\skeleton\html\A;
+use davidhirtz\yii2\skeleton\html\custom\RelativeTime;
 use davidhirtz\yii2\skeleton\html\Li;
 use davidhirtz\yii2\skeleton\models\interfaces\TrailModelInterface;
 use davidhirtz\yii2\skeleton\models\queries\UserQuery;
@@ -13,7 +14,6 @@ use davidhirtz\yii2\skeleton\models\Trail;
 use davidhirtz\yii2\skeleton\models\User;
 use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
 use davidhirtz\yii2\skeleton\widgets\Username;
-use davidhirtz\yii2\timeago\Timeago;
 use Stringable;
 use Yii;
 use yii\db\ActiveRecord;
@@ -36,7 +36,7 @@ class UpdatedAtFooterItem implements Stringable
         }
 
         $updated = $this->getUpdated();
-        $timestamp = Timeago::tag($this->model->{$this->attributeName});
+        $timestamp = RelativeTime::make()->value($this->model->{$this->attributeName});
 
         $content = $updated
             ? Yii::t('skeleton', 'Last updated by {user} {timestamp}', [

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
 
+use davidhirtz\yii2\skeleton\html\custom\RelativeTime;
 use davidhirtz\yii2\skeleton\html\Li;
 use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\UserActiveFormTrait;
@@ -11,7 +12,6 @@ use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
 use davidhirtz\yii2\skeleton\widgets\forms\fields\CheckboxField;
 use davidhirtz\yii2\skeleton\widgets\forms\footers\UpdatedAtFooterItem;
 use davidhirtz\yii2\skeleton\widgets\Username;
-use davidhirtz\yii2\timeago\Timeago;
 use Override;
 use Stringable;
 use Yii;
@@ -77,13 +77,13 @@ class UserActiveForm extends ActiveForm
 
         $content = $created
             ? Yii::t('skeleton', 'Created by {user} {timestamp}', [
-                'timestamp' => Timeago::tag($this->model->user->created_at),
+                'timestamp' => RelativeTime::make()->value($this->model->user->created_at),
                 'user' => Username::make()
                     ->user($created)
                     ->clickable(),
             ])
             : Yii::t('skeleton', 'Signed up {timestamp}', [
-                'timestamp' => Timeago::tag($this->model->user->created_at),
+                'timestamp' => RelativeTime::make()->value($this->model->user->created_at),
             ]);
 
         return Li::make()

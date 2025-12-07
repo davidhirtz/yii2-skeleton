@@ -11,6 +11,7 @@
 - Removed `GridView::getSortableButton()`
 - Removed `GridView::renderSelectionForm()`
 - Renamed `GoogleAuthenticator` classes to `TwoFactorAuthenticator` classes
+- Removed `yii2-timeago`, use `RelativeTime` tag instead
 
 ## 2.6.3 (Nov 5, 2025)
 
