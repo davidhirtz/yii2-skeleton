@@ -6,28 +6,29 @@ namespace davidhirtz\yii2\skeleton\test;
 
 use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\web\Application;
+use Override;
 use Yii;
-
 use yii\db\Transaction;
-
-
 use yii\test\FixtureTrait;
 
 class TestCase extends \PHPUnit\Framework\TestCase
 {
     use FixtureTrait;
 
-    protected bool $isTransactional = true;
     private Transaction $transaction;
+    protected bool $isTransactional = true;
 
     protected bool $cleanup = true;
 
     protected array $config = [];
 
+    #[Override]
     protected function setUp(): void
     {
         $this->createApplication();
         $this->loadFixtures();
+
+        $this->transaction = Yii::$app->getDb()->beginTransaction();
 
         parent::setUp();
     }
@@ -52,9 +53,14 @@ class TestCase extends \PHPUnit\Framework\TestCase
         Yii::createObject(ArrayHelper::merge($config, $this->config));
     }
 
+    #[Override]
     protected function tearDown(): void
     {
         Yii::$app->getErrorHandler()->unregister();
+
+        $this->transaction->rollBack();
+        $this->unloadFixtures();
+
         parent::tearDown();
     }
 }
