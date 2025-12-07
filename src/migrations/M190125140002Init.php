@@ -142,11 +142,11 @@ class M190125140002Init extends Migration
 
         $this->createIndex('status', User::tableName(), 'status');
         $this->createIndex('email', User::tableName(), 'email', true);
-        
+
         if ($isNameRequired) {
             $this->createIndex('name', User::tableName(), 'name', true);
         }
-        
+
         /**
          * Auth.
          */

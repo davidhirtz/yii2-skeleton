@@ -57,12 +57,12 @@ class AuthItem extends ActiveRecord implements TypeAttributeInterface
     {
         return Yii::createObject(AuthItemQuery::class, [static::class]);
     }
-    
+
     public function getDisplayName(): string
     {
         return str_replace(' ', ' / ', $this->generateAttributeLabel($this->name));
     }
-    
+
     public function getTypeIcon(): string
     {
         return $this->getTypeOptions()['icon'] ?? '';
@@ -81,17 +81,17 @@ class AuthItem extends ActiveRecord implements TypeAttributeInterface
 
         return $this->isAssigned;
     }
-    
+
     public function isRole(): bool
     {
         return $this->type === Item::TYPE_ROLE;
     }
-    
+
     public function isPermission(): bool
     {
         return $this->type === Item::TYPE_PERMISSION;
     }
-    
+
     public static function getTypes(): array
     {
         return [
@@ -105,7 +105,7 @@ class AuthItem extends ActiveRecord implements TypeAttributeInterface
             ],
         ];
     }
-    
+
     #[\Override]
     public function attributeLabels(): array
     {
@@ -115,7 +115,7 @@ class AuthItem extends ActiveRecord implements TypeAttributeInterface
             'description' => Yii::t('skeleton', 'Description'),
         ];
     }
-    
+
     #[\Override]
     public static function tableName(): string
     {

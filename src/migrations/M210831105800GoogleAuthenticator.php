@@ -22,7 +22,7 @@ class M210831105800GoogleAuthenticator extends Migration
             ->null()
             ->after('password_reset_code'));
     }
-    
+
     public function safeDown(): void
     {
         $this->dropColumn(User::tableName(), 'google_2fa_secret');

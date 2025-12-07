@@ -17,7 +17,7 @@ use yii\db\Migration;
 class M201205112000Trail extends Migration
 {
     use MigrationTrait;
-    
+
     public function safeUp(): void
     {
         $this->createTable(Trail::tableName(), [
@@ -44,7 +44,7 @@ class M201205112000Trail extends Migration
 
         $auth->addChild($admin, $trailIndex);
     }
-    
+
     public function safeDown(): void
     {
         $this->dropTable(Trail::tableName());

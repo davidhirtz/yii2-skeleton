@@ -25,7 +25,7 @@ abstract class ListTag extends Tag
         foreach ($items as $item) {
             $this->items[] = Li::make()->content($item);
         }
-        
+
         return $this;
     }
 

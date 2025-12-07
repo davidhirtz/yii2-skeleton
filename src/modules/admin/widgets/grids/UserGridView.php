@@ -42,7 +42,7 @@ class UserGridView extends GridView
             $this->search->getToolbarItem(),
         ];
 
-        $this->rowAttributes = fn(User $user) => $user->isDisabled() ? ['class' => 'disabled'] : [];
+        $this->rowAttributes = fn (User $user) => $user->isDisabled() ? ['class' => 'disabled'] : [];
 
         $this->columns ??= [
             $this->getStatusColumn(),
@@ -118,7 +118,7 @@ class UserGridView extends GridView
     {
         return RelativeTimeColumn::make()
             ->property('last_login')
-            ->url(fn(User $user) => ['/admin/login/index', 'user' => $user->id]);
+            ->url(fn (User $user) => ['/admin/login/index', 'user' => $user->id]);
     }
 
     protected function getCreatedAtColumn(): DataColumn

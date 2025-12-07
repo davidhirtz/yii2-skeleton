@@ -39,7 +39,7 @@ class MaintenanceConfigForm extends Model
      * @var string path to the maintenance mode template, set empty string to render nothing
      */
     public string $viewFile = '@skeleton/views/maintenance.php';
-    
+
     #[Override]
     public function rules(): array
     {
@@ -67,7 +67,7 @@ class MaintenanceConfigForm extends Model
             ],
         ];
     }
-    
+
     public function save(): false|int
     {
         if ($this->validate()) {
@@ -88,7 +88,7 @@ class MaintenanceConfigForm extends Model
 
         return false;
     }
-    
+
     public function isConfigured(): bool
     {
         return file_exists(Yii::getAlias(static::MAINTENANCE_CONFIG));

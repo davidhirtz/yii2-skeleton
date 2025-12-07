@@ -39,7 +39,7 @@ class M220513072052User extends Migration
             $this->dropTable('{{%session_auth_key}}');
         }
     }
-    
+
     public function safeDown(): void
     {
         $this->renameColumn(User::tableName(), 'password_hash', 'password');

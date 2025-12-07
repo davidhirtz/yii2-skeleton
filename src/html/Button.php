@@ -21,7 +21,7 @@ class Button extends Tag
     use TagLinkTrait;
     use TagModalTrait;
     use TagTooltipAttributeTrait;
-    
+
     public array $attributes = ['type' => 'button'];
 
     public function danger(): static
