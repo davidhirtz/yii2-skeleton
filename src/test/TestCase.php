@@ -26,7 +26,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected function setUp(): void
     {
         $this->createApplication();
-        $this->loadFixtures();
+        $this->initFixtures();
 
         $this->transaction = Yii::$app->getDb()->beginTransaction();
 
@@ -56,10 +56,10 @@ class TestCase extends \PHPUnit\Framework\TestCase
     #[Override]
     protected function tearDown(): void
     {
-        Yii::$app->getErrorHandler()->unregister();
-
         $this->transaction->rollBack();
         $this->unloadFixtures();
+
+        Yii::$app->getErrorHandler()->unregister();
 
         parent::tearDown();
     }
