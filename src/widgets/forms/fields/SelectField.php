@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\widgets\forms\fields;
 
 use davidhirtz\yii2\skeleton\helpers\Html;
+use davidhirtz\yii2\skeleton\html\Input;
 use davidhirtz\yii2\skeleton\html\Option;
 use davidhirtz\yii2\skeleton\html\Select;
 use davidhirtz\yii2\skeleton\html\traits\TagInputTrait;
@@ -17,13 +18,21 @@ class SelectField extends Field
 {
     use TagInputTrait;
 
+    public bool $showSingleOption = false;
+
     /**
      * @var array<string|int, string|int|array>
      */
-    public array $items = [];
+    protected array $items = [];
 
     protected string|false $prompt = false;
     protected array $promptAttributes = [];
+
+    public function showSingleOption(bool $showSingleOption = true): static
+    {
+        $this->showSingleOption = $showSingleOption;
+        return $this;
+    }
 
     public function prompt(string|false $prompt = '', array $attributes = []): static
     {
@@ -46,48 +55,64 @@ class SelectField extends Field
 
     protected function configure(): void
     {
-        if (!$this->items && $this->model) {
-            $method = 'get' . Inflector::camelize(Inflector::pluralize($this->property));
+        if ($this->model) {
+            if (!$this->items) {
+                $method = 'get' . Inflector::camelize(Inflector::pluralize($this->property));
 
-            /** @var array<int|string, string|array> $items */
-            $items = $this->model->hasMethod($method)
-                ? call_user_func([$this->model, $method])
-                : [];
+                /** @var array<int|string, string|array> $items */
+                $items = $this->model->hasMethod($method)
+                    ? call_user_func([$this->model, $method])
+                    : [];
 
-            foreach ($items as $key => $item) {
-                $this->items[$key] = is_array($item)
-                    ? ['label' => $item['name'], ...$item['attributes'] ?? []]
-                    : $item;
-            }
-
-            $attributes = array_filter(array_map(
-                function (array $options) {
-                    $attributes = $options['hiddenFields'] ?? [];
-
-                    return $this->model instanceof I18nAttributeInterface
-                        ? $this->model->getI18nAttributesNames($attributes)
-                        : $attributes;
-                },
-                $items
-            ));
-
-            if ($attributes) {
-                $selectors = [];
-
-                foreach ($attributes as $value => $names) {
-                    $selectors["$value"] = array_map(
-                        fn (string $name) => $this->model->hasProperty($name)
-                            ? Html::getInputId($this->model, $name)
-                            : $name,
-                        $names
-                    );
+                foreach ($items as $key => $item) {
+                    $this->items[$key] = is_array($item)
+                        ? ['label' => $item['name'], ...$item['attributes'] ?? []]
+                        : $item;
                 }
 
-                $this->attributes['data-toggle'] ??= $selectors;
+                $attributes = array_filter(array_map(
+                    function (array $options) {
+                        $attributes = $options['hiddenFields'] ?? [];
+
+                        return $this->model instanceof I18nAttributeInterface
+                            ? $this->model->getI18nAttributesNames($attributes)
+                            : $attributes;
+                    },
+                    $items
+                ));
+
+                if ($attributes) {
+                    $selectors = [];
+
+                    foreach ($attributes as $value => $names) {
+                        $selectors["$value"] = array_map(
+                            fn (string $name) => $this->model->hasProperty($name)
+                                ? Html::getInputId($this->model, $name)
+                                : $name,
+                            $names
+                        );
+                    }
+
+                    $this->attributes['data-toggle'] ??= $selectors;
+                }
+            }
+
+            if ($this->property) {
+                $this->attributes['value'] ??= $this->model->{$this->property};
             }
         }
 
         parent::configure();
+    }
+
+    #[Override]
+    protected function renderContent(): string|Stringable
+    {
+        return count($this->items) === 1 && false === $this->showSingleOption
+            ? Input::make()
+                ->attributes($this->attributes)
+                ->type('hidden')
+            : parent::renderContent();
     }
 
     #[Override]

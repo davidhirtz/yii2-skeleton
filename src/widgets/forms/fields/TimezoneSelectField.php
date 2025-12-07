@@ -6,22 +6,22 @@ namespace davidhirtz\yii2\skeleton\widgets\forms\fields;
 
 use DateTime;
 use DateTimeZone;
-use Stringable;
+use Override;
 
 class TimezoneSelectField extends SelectField
 {
     private ?array $_timezones = null;
 
-    #[\Override]
-    protected function renderContent(): string|Stringable
+    #[Override]
+    protected function configure(): void
     {
         $this->items = $this->getTimezones();
-        return parent::renderContent();
+        parent::configure();
     }
 
     protected function getTimezones(): array
     {
-        if ($this->_timezones === null) {
+        if (null === $this->_timezones) {
             $identifiers = DateTimeZone::listIdentifiers();
             $now = new DateTime('now', new DateTimeZone('GMT'));
             $list = [];
