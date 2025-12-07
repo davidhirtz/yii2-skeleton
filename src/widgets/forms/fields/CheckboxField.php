@@ -39,6 +39,7 @@ class CheckboxField extends Field
             ->addClass('form-checkbox-row')
             ->content(
                 Div::make()
+                    ->addClass('checkbox')
                     ->content($this->getInput()),
                 Div::make()
                     ->content(

@@ -35,7 +35,7 @@
   @include media-breakpoint-up(sm) {
     text-align: right;
 
-    .form-group:has(.input) & {
+    .form-row:not(.form-checkbox-row):has(.input) & {
       padding: 1px 0;
     }
   }
@@ -60,7 +60,6 @@
     .form-checkbox-row & {
       display: flex;
       gap: 1rem;
-      padding: .5rem 0;
     }
   }
 }
@@ -126,7 +125,7 @@
   }
 
   @include media-breakpoint-up(sm) {
-    .form-group:has(.input) & {
+    .form-row:not(.form-checkbox-row):has(.input) & {
       padding: 0.5rem 0;
     }
   }
