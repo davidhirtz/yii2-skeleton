@@ -15,7 +15,7 @@ class DateTimeFieldTest extends Unit
             ->value('2024-06-15 14:30:20')
             ->render();
 
-        $html = '<div id="i1-row" class="form-group form-row"><div class="form-content"><div class="input-group"><input type="datetime-local" id="i1" class="input" value="2024-06-15 14:30:20"><div class="input-group-append">GMT+00:00</div></div></div></div>';
+        $html = '<div class="form-group form-row" data-id="i1"><div class="form-content"><div class="input-group"><input type="datetime-local" id="i1" class="input" value="2024-06-15 14:30:20"><div class="input-group-append">GMT+00:00</div></div></div></div>';
         self::assertEquals($html, $content);
 
         $content = DateTimeField::make()
@@ -23,7 +23,7 @@ class DateTimeFieldTest extends Unit
             ->value(new DateTime('2024-06-15T14:30:00+01:00'))
             ->render();
 
-        $html = '<div id="i2-row" class="form-group form-row"><div class="form-content"><div class="input-group"><input type="datetime-local" id="i2" class="input" value="2024-06-15T15:30"><div class="input-group-append">GMT+01:00</div></div></div></div>';
+        $html = '<div class="form-group form-row" data-id="i2"><div class="form-content"><div class="input-group"><input type="datetime-local" id="i2" class="input" value="2024-06-15T15:30"><div class="input-group-append">GMT+01:00</div></div></div></div>';
         self::assertEquals($html, $content);
     }
 }
