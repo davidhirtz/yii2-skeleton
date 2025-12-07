@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\assets;
 
-use Yii;
 use yii\web\AssetBundle;
 
 abstract class AbstractAssetBundle extends AssetBundle
@@ -12,18 +11,4 @@ abstract class AbstractAssetBundle extends AssetBundle
     public string $filename;
     public $jsOptions = ['type' => 'module'];
     public $sourcePath = '@skeleton/assets/dist';
-
-    public function getModuleUrl(): string
-    {
-        return "$this->baseUrl/js/$this->filename";
-    }
-
-    public static function registerModule(string|array|null $arguments = null): static
-    {
-        $view = Yii::$app->getView();
-        $asset = static::register($view);
-        $view->registerJsModule($asset->getModuleUrl(), $arguments);
-
-        return $asset;
-    }
 }

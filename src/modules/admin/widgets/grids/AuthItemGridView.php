@@ -7,6 +7,7 @@ namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Button;
 use davidhirtz\yii2\skeleton\html\Div;
+use davidhirtz\yii2\skeleton\html\Icon;
 use davidhirtz\yii2\skeleton\html\Ul;
 use davidhirtz\yii2\skeleton\models\AuthItem;
 use davidhirtz\yii2\skeleton\models\User;
@@ -60,7 +61,7 @@ class AuthItemGridView extends GridView
 
     protected function getTypeColumnContent(AuthItem $authItem): Stringable
     {
-        return Html::icon($authItem->getTypeIcon())
+        return Icon::make()->name($authItem->getTypeIcon())
             ->tooltip($authItem->getTypeName());
     }
 

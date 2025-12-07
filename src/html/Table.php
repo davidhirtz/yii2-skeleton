@@ -23,6 +23,18 @@ class Table extends base\Tag
         return $this;
     }
 
+    public function rows(array $rows): self
+    {
+        $this->body ??= Tbody::make();
+
+        foreach ($rows as $row) {
+            $this->body->addRows(Tr::make()
+                ->cells(...array_map(fn (mixed $cell) => Td::make()->content((string)$cell), $row)));
+        }
+
+        return $this;
+    }
+
     #[Override]
     protected function renderContent(): string
     {

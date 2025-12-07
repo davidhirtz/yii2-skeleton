@@ -4,37 +4,20 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\helpers;
 
-use davidhirtz\yii2\skeleton\html\Container;
-use davidhirtz\yii2\skeleton\html\Icon;
-use davidhirtz\yii2\skeleton\widgets\Alert;
-use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
 use Override;
+use yii\base\Model;
 use yii\helpers\BaseHtml;
 
 class Html extends BaseHtml
 {
     private static int $counter = 0;
 
-    public static function alert(string $html, string $status): string
+    public static function getId(): string
     {
-        if (!$html) {
-            return '';
-        }
-
-        return (string)Container::make()->content(
-            Alert::make()
-                ->content($html)
-                ->icon('check-circle')
-                ->danger()
-        );
+        return 'i' . ++self::$counter;
     }
 
-    public static function danger(string $html): string
-    {
-        return static::alert($html, 'danger');
-    }
-
-    #[\Override]
+    #[Override]
     public static function getInputIdByName($name): string
     {
         return strtr(
@@ -52,83 +35,6 @@ class Html extends BaseHtml
         );
     }
 
-    public static function icon(string $name, array $attributes = []): Icon
-    {
-        return Icon::make()->name($name)->attributes($attributes);
-    }
-
-    public static function getId(): string
-    {
-        return 'i' . ++self::$counter;
-    }
-
-
-    public static function tableBody(array $items, array $rowOptions = [], array $cellOptions = []): string
-    {
-        $rows = [];
-
-        foreach ($items as $row) {
-            $cells = [];
-
-            foreach ($row as $cell) {
-                $cells[] = static::tag('td', $cell, $cellOptions);
-            }
-
-            $rows[] = static::tag('tr', implode('', $cells), $rowOptions);
-        }
-
-        return $rows ? Html::tag('tbody', implode('', $rows)) : '';
-    }
-
-    public static function truncateText(string $text, int|false $maxLength, string $ellipsis = '…'): string
-    {
-        if ($maxLength !== false && mb_strlen($text) > $maxLength) {
-            return Html::tag('span', mb_substr($text, 0, $maxLength - 3) . $ellipsis, [
-                'title' => $text,
-            ]);
-        }
-
-        return $text;
-    }
-
-    /**
-     * @deprecated use {@link ErrorSummary} directly instead.
-     */
-    #[Override]
-    public static function errorSummary($models, $options = []): string
-    {
-        $title = ArrayHelper::remove($options, 'header');
-
-        return (string)ErrorSummary::make()
-            ->models($models)
-            ->title($title);
-    }
-
-    /**
-     * @noinspection PhpUnused
-     */
-    public static function formatInlineJs(string $js, array $params = []): string
-    {
-        $js = str_replace(["\r", "\n", "\t"], '', $js);
-        return $params ? strtr($js, $params) : $js;
-    }
-
-    /**
-     * @noinspection PhpUnused
-     */
-    public static function nl2br(string $text): string
-    {
-        return nl2br($text, false);
-    }
-
-    /**
-     * @noinspection PhpUnused
-     */
-    public static function minify(string $html): string
-    {
-        return trim((string)preg_replace('/>\s+</', '><', $html));
-    }
-
     public static function markKeywords(string $text, array|string|null $keywords, bool $wordBoundary = false): string
     {
         if ($keywords) {
@@ -144,11 +50,5 @@ class Html extends BaseHtml
         }
 
         return $text;
-    }
-
-
-    public static function warning(string $html): string
-    {
-        return static::alert($html, 'warning');
     }
 }

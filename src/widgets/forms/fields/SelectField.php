@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace davidhirtz\yii2\skeleton\widgets\forms\fields;
 
+use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\Option;
 use davidhirtz\yii2\skeleton\html\Select;
 use davidhirtz\yii2\skeleton\html\traits\TagInputTrait;
+use davidhirtz\yii2\skeleton\models\interfaces\I18nAttributeInterface;
 use Override;
 use Stringable;
 use yii\helpers\Inflector;
@@ -44,8 +46,6 @@ class SelectField extends Field
 
     protected function configure(): void
     {
-        $this->attributes['id'] ??= $this->getId();
-
         if (!$this->items && $this->model) {
             $method = 'get' . Inflector::camelize(Inflector::pluralize($this->property));
 
@@ -58,6 +58,32 @@ class SelectField extends Field
                 $this->items[$key] = is_array($item)
                     ? ['label' => $item['name'], ...$item['attributes'] ?? []]
                     : $item;
+            }
+
+            $attributes = array_filter(array_map(
+                function (array $options) {
+                    $attributes = $options['hiddenFields'] ?? [];
+
+                    return $this->model instanceof I18nAttributeInterface
+                        ? $this->model->getI18nAttributesNames($attributes)
+                        : $attributes;
+                },
+                $items
+            ));
+
+            if ($attributes) {
+                $selectors = [];
+
+                foreach ($attributes as $value => $names) {
+                    $selectors["$value"] = array_map(
+                        fn (string $name) => $this->model->hasProperty($name)
+                            ? Html::getInputId($this->model, $name)
+                            : $name,
+                        $names
+                    );
+                }
+
+                $this->attributes['data-toggle'] ??= $selectors;
             }
         }
 

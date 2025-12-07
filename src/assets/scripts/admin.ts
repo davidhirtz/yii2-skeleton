@@ -5,9 +5,8 @@ import dropdown from "./includes/dropdown";
 import filter from "./includes/filter";
 import modal from "./includes/modals";
 import tooltip from "./includes/tooltips";
-import {toggleTargetsOnChange, updateTargetsOnChange} from "./includes/forms";
+import {toggle, updateTargetsOnChange} from "./includes/forms";
 
-import './components/ActiveForm';
 import './components/FlashAlert';
 
 htmx.onLoad(($container) => {
@@ -19,7 +18,7 @@ htmx.onLoad(($container) => {
     queryAll('[data-dropdown]', dropdown);
     queryAll('[data-filter]', filter);
     queryAll('[data-form-target]', updateTargetsOnChange);
-    queryAll('[data-form-toggle]', toggleTargetsOnChange);
+    queryAll('[data-toggle]', toggle);
     queryAll('[data-modal]', modal);
     queryAll('[data-tooltip]', tooltip);
 

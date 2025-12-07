@@ -82,7 +82,7 @@ abstract class Field extends Widget
             }
         }
 
-        $this->rowAttributes['id'] ??= "{$this->getId()}-row";
+        $this->rowAttributes['data-id'] ??= $this->getId();
 
         if ($this->config) {
             call_user_func($this->config, $this);

@@ -8,6 +8,8 @@ use davidhirtz\yii2\skeleton\db\ActiveRecord;
 use davidhirtz\yii2\skeleton\helpers\Html;
 use davidhirtz\yii2\skeleton\html\A;
 use davidhirtz\yii2\skeleton\html\Div;
+use davidhirtz\yii2\skeleton\html\Table;
+use davidhirtz\yii2\skeleton\html\Ul;
 use davidhirtz\yii2\skeleton\models\collections\TrailModelCollection;
 use davidhirtz\yii2\skeleton\models\interfaces\TrailModelInterface;
 use davidhirtz\yii2\skeleton\models\Trail;
@@ -105,7 +107,7 @@ class TrailGridView extends GridView
             ->content($this->getDataColumnContent(...));
     }
 
-    protected function getDataColumnContent(Trail $trail): string
+    protected function getDataColumnContent(Trail $trail): string|Stringable
     {
         if ($trail->isAuthPermissionType()) {
             return $this->getAuthPermissionContent($trail);
@@ -138,7 +140,7 @@ class TrailGridView extends GridView
             Yii::t('skeleton', 'Permission {permission} revoked', $params);
     }
 
-    protected function getCreateAttributesContent(Trail $trail): string
+    protected function getCreateAttributesContent(Trail $trail): ?Stringable
     {
         $model = $trail->getModelClass();
         $rows = [];
@@ -156,19 +158,24 @@ class TrailGridView extends GridView
             }
         }
 
-        return $this->getTrailAttributes($rows, ['class' => 'trail-insert']);
+        return $rows
+            ? $this->getTrailAttributesTable($rows)
+                ->addClass('trail-insert')
+            : null;
     }
 
-    protected function getCreatedAttributeValue(mixed $value): string
+    protected function getCreatedAttributeValue(mixed $value): string|Stringable
     {
         if ($value instanceof ActiveRecord) {
             return $this->getTrailActiveRecordAttribute($value);
         }
 
-        return is_array($value) ? Html::ul($value) : Html::encode($value);
+        return is_array($value)
+            ? Ul::make()->items(...array_map(strval(...), $value))
+            : Html::encode($value);
     }
 
-    protected function getUpdateAttributesContent(Trail $trail): string
+    protected function getUpdateAttributesContent(Trail $trail): ?Stringable
     {
         $model = $trail->getModelClass();
         $rows = [];
@@ -186,7 +193,10 @@ class TrailGridView extends GridView
             }
         }
 
-        return $this->getTrailAttributes($rows, ['class' => 'trail-update']);
+        return $rows
+            ? $this->getTrailAttributesTable($rows)
+                ->addClass('trail-update')
+            : null;
     }
 
     protected function getUpdatedAttributeValues(mixed $oldValue, mixed $newValue): string
@@ -228,10 +238,11 @@ class TrailGridView extends GridView
         return Html::a($name, Trail::getAdminRouteByModel($model), ['class' => 'strong']);
     }
 
-    protected function getTrailAttributes(array $rows, array $options = []): string
+    protected function getTrailAttributesTable(array $rows): Table
     {
-        Html::addCssClass($options, 'trail-table');
-        return $rows ? Html::tag('table', Html::tableBody($rows), $options) : '';
+        return Table::make()
+            ->class('trail-table')
+            ->rows($rows);
     }
 
     protected function getDataModelContent(Trail $trail): string
