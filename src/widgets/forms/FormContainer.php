@@ -24,6 +24,7 @@ class FormContainer extends Widget
         return $this;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->title ??= $this->view->title;

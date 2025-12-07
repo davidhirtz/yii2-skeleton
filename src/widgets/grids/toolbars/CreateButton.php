@@ -20,6 +20,7 @@ class CreateButton extends Widget
     use TagIconTextTrait;
     use TagLinkTrait;
 
+    #[\Override]
     protected function configure(): void
     {
         $this->content = $this->content ?: [Yii::t('skeleton', 'Create')];

@@ -96,6 +96,7 @@ class GridView extends Widget
         return $this;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->headerAttributes['hx-select'] ??= "#{$this->getId()}";

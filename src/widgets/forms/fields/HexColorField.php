@@ -13,6 +13,7 @@ class HexColorField extends Field
 {
     public string $defaultColor = '#000000';
 
+    #[\Override]
     protected function configure(): void
     {
         $this->attributes['id'] ??= $this->getId();

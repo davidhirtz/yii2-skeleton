@@ -53,6 +53,7 @@ class ActiveForm extends Widget
         return $this;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->action ??= Yii::$app->controller instanceof Controller ? Url::current() : null;

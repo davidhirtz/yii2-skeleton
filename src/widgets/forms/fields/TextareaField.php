@@ -15,6 +15,7 @@ class TextareaField extends Field
     use TagInputTrait;
     use TagPlaceholderTrait;
 
+    #[\Override]
     protected function configure(): void
     {
         $this->attributes['value'] ??= $this->model?->{$this->property};

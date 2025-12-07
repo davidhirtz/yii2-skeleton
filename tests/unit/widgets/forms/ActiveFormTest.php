@@ -65,6 +65,7 @@ class TestModel extends Model
     public ?string $invalid = null;
     public ?string $value = null;
 
+    #[\Override]
     public function rules(): array
     {
         return [

@@ -44,6 +44,7 @@ class Fieldset extends Widget
         return $this;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $rows = [];

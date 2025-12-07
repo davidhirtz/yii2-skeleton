@@ -39,6 +39,7 @@ class FormText extends Widget
         return $this;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->label ??= $this->model->getAttributeLabel($this->property);

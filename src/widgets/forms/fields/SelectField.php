@@ -53,6 +53,7 @@ class SelectField extends Field
         return $this;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         if ($this->model) {

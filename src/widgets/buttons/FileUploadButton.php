@@ -55,6 +55,7 @@ class FileUploadButton extends Widget
         return $this;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->inputAttributes['name'] ??= 'upload';

@@ -23,6 +23,7 @@ class DateTimeField extends Field
         return $this;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->timeZone ??= Yii::$app->getTimeZone() ?: 'UTC';

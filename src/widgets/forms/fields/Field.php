@@ -63,6 +63,7 @@ abstract class Field extends Widget
         return $this;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         if ($this->model && $this->property) {

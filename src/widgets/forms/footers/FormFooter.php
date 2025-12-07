@@ -24,6 +24,7 @@ class FormFooter extends Widget
         return $this;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->attributes['hx-select'] ??= "#wrap";

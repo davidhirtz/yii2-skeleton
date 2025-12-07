@@ -17,12 +17,14 @@ class Textarea extends base\Tag
 
     protected string $content = '';
 
+    #[\Override]
     protected function before(): string
     {
         $this->content = Html::encode(ArrayHelper::remove($this->attributes, 'value', ''));
         return parent::before();
     }
 
+    #[\Override]
     protected function renderContent(): string|Stringable
     {
         return $this->content;
