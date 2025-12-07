@@ -21,13 +21,6 @@ class RelativeTime extends Tag
     }
 
     #[Override]
-    protected function before(): string
-    {
-        $this->attributes['data-date'] ??= Yii::$app->getFormatter()->asDatetime($this->value, "php:c");
-        return parent::before();
-    }
-
-    #[Override]
     protected function getTag(): string
     {
         return null !== $this->value ? parent::getTag() : '';
