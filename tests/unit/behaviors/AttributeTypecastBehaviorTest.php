@@ -462,7 +462,7 @@ class AttributeTypecastActiveRecord extends ActiveRecord
                     'amount' => AttributeTypecastBehavior::TYPE_INTEGER,
                     'price' => AttributeTypecastBehavior::TYPE_FLOAT,
                     'is_active' => AttributeTypecastBehavior::TYPE_BOOLEAN,
-                    'callback' => fn ($value) => "callback: $value",
+                    'callback' => fn($value) => "callback: $value",
                     'nullable' => AttributeTypecastBehavior::TYPE_STRING,
                 ],
                 'typecastBeforeValidate' => $this->typecastBeforeValidate,
