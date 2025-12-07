@@ -13,7 +13,7 @@ use yii\db\Transaction;
 
 use yii\test\FixtureTrait;
 
-abstract class TestCase extends \PHPUnit\Framework\TestCase
+class TestCase extends \PHPUnit\Framework\TestCase
 {
     use FixtureTrait;
 
