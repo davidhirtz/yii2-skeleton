@@ -8,19 +8,20 @@ use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use davidhirtz\yii2\skeleton\web\Application;
 use Override;
 use Yii;
+use yii\base\Event;
 use yii\db\Transaction;
+use yii\log\Logger;
 use yii\test\FixtureTrait;
+use yii\web\UploadedFile;
 
 class TestCase extends \PHPUnit\Framework\TestCase
 {
     use FixtureTrait;
 
-    private Transaction $transaction;
-    protected bool $isTransactional = true;
-
-    protected bool $cleanup = true;
-
     protected array $config = [];
+    protected TestMailer $mailer;
+
+    private Transaction $transaction;
 
     #[Override]
     protected function setUp(): void
@@ -30,7 +31,23 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
         $this->transaction = Yii::$app->getDb()->beginTransaction();
 
+
         parent::setUp();
+    }
+
+    #[Override]
+    protected function tearDown(): void
+    {
+        $this->transaction->rollBack();
+        $this->unloadFixtures();
+
+        Yii::$app->getErrorHandler()->unregister();
+        $this->mailer->reset();
+
+        UploadedFile::reset();
+        Event::offAll();
+
+        parent::tearDown();
     }
 
     protected function createApplication(): void
@@ -51,16 +68,20 @@ class TestCase extends \PHPUnit\Framework\TestCase
         ];
 
         Yii::createObject(ArrayHelper::merge($config, $this->config));
+
+        $this->mailer = Yii::createObject(TestMailer::class);
+        Yii::$app->set('mailer', $this->mailer);
+
+        Yii::setLogger($this->getLogger());
     }
 
-    #[Override]
-    protected function tearDown(): void
+    private function getLogger(): TestLogger
     {
-        $this->transaction->rollBack();
-        $this->unloadFixtures();
+        if (Yii::$container->hasSingleton(Logger::class)) {
+            return Yii::$container->get(TestLogger::class);
+        }
 
-        Yii::$app->getErrorHandler()->unregister();
-
-        parent::tearDown();
+        Yii::$container->setSingleton(Logger::class, TestLogger::class);
+        return $this->getLogger();
     }
 }
