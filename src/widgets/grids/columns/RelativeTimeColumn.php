@@ -17,9 +17,9 @@ class RelativeTimeColumn extends LinkColumn
     protected string $format = 'raw';
 
     #[Override]
-    protected function getValue(array|Model $model, string|int $key, int $index): Stringable
+    protected function getValue(array|Model $model, string|int $key, int $index): string
     {
         $timestamp = ArrayHelper::getValue($model, $this->property);
-        return RelativeTime::make()->value($timestamp);
+        return RelativeTime::make()->value($timestamp)->render();
     }
 }

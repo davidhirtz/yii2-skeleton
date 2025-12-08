@@ -2,14 +2,10 @@
 .github/ export-ignore
 .gitignore export-ignore
 README.md export-ignore
-codeception.yml export-ignore
 composer.lock export-ignore
-ecs.php export-ignore
 esbuild.js export-ignore
 package.json export-ignore
 package-lock.json export-ignore
 phpstan.neon export-ignore
 rector.php export-ignore
-src/assets/scripts/ export-ignore
-src/assets/styles/ export-ignore
 tests/ export-ignore

@@ -45,7 +45,6 @@
   "provide": {
     "bower-asset/bootstrap": "*",
     "bower-asset/inputmask": "*",
-    "bower-asset/jquery": "*",
     "bower-asset/punycode": "*",
     "bower-asset/yii2-pjax": "*"
   },

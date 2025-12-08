@@ -1,14 +1,6 @@
-# Development
-.idea
-node_modules
-src/assets/dist/**/*.map
-tests/_output/coverage.xml
-tests/_output/coverage.serialized
-vendor
-
-# Yii
-runtime
-
-# OS cache files
 .DS_Store
+.idea
+/node_modules
+/runtime
+/vendor
 Thumbs.db
