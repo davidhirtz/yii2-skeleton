@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\assets;
+namespace Hirtz\Skeleton\Assets;
 
 use Override;
 use Yii;

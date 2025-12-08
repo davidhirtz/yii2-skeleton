@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\panels;
+namespace Hirtz\Skeleton\Widgets\Panels;
 
-use Hirtz\Skeleton\html\A;
-use Hirtz\Skeleton\html\Li;
-use Hirtz\Skeleton\html\Span;
-use Hirtz\Skeleton\html\traits\TagAttributesTrait;
-use Hirtz\Skeleton\html\traits\TagContentTrait;
-use Hirtz\Skeleton\html\traits\TagIconTrait;
-use Hirtz\Skeleton\html\traits\TagLabelTrait;
-use Hirtz\Skeleton\html\traits\TagUrlTrait;
-use Hirtz\Skeleton\html\traits\TagVisibilityTrait;
-use Hirtz\Skeleton\widgets\Widget;
+use Hirtz\Skeleton\Html\A;
+use Hirtz\Skeleton\Html\Li;
+use Hirtz\Skeleton\Html\Span;
+use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
+use Hirtz\Skeleton\Html\Traits\TagContentTrait;
+use Hirtz\Skeleton\Html\Traits\TagIconTrait;
+use Hirtz\Skeleton\Html\Traits\TagLabelTrait;
+use Hirtz\Skeleton\Html\Traits\TagUrlTrait;
+use Hirtz\Skeleton\Html\Traits\TagVisibilityTrait;
+use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
 

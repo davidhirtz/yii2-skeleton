@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\behaviors;
+namespace Hirtz\Skeleton\Tests\unit\behaviors;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\base\traits\ModelTrait;
-use Hirtz\Skeleton\behaviors\AttributeTypecastBehavior;
-use Hirtz\Skeleton\db\ActiveRecord;
-use Hirtz\Skeleton\models\events\CreateValidatorsEvent;
+use Hirtz\Skeleton\Base\Traits\ModelTrait;
+use Hirtz\Skeleton\Behaviors\AttributeTypecastBehavior;
+use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Models\Events\CreateValidatorsEvent;
 use Yii;
 use yii\base\Behavior;
 use yii\base\DynamicModel;

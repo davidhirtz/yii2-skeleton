@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\widgets\forms\fields;
+namespace Hirtz\Skeleton\Tests\unit\widgets\forms\fields;
 
 use Codeception\Test\Unit;
 use davidhirtz\yii2\datetime\DateTime;
-use Hirtz\Skeleton\widgets\forms\fields\DateTimeField;
+use Hirtz\Skeleton\Widgets\Forms\Fields\DateTimeField;
 
 class DateTimeFieldTest extends Unit
 {

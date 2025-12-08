@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\widgets\navs;
+namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
-use Hirtz\Skeleton\html\Button;
-use Hirtz\Skeleton\html\Div;
-use Hirtz\Skeleton\html\Icon;
-use Hirtz\Skeleton\modules\admin\controllers\AccountController;
-use Hirtz\Skeleton\web\User;
-use Hirtz\Skeleton\widgets\navs\Dropdown;
-use Hirtz\Skeleton\widgets\navs\DropdownLink;
-use Hirtz\Skeleton\widgets\navs\Nav;
-use Hirtz\Skeleton\widgets\navs\NavItem;
-use Hirtz\Skeleton\widgets\Widget;
+use Hirtz\Skeleton\Html\Button;
+use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Html\Icon;
+use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
+use Hirtz\Skeleton\Web\User;
+use Hirtz\Skeleton\Widgets\Navs\Dropdown;
+use Hirtz\Skeleton\Widgets\Navs\DropdownLink;
+use Hirtz\Skeleton\Widgets\Navs\Nav;
+use Hirtz\Skeleton\Widgets\Navs\NavItem;
+use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
 use Yii;

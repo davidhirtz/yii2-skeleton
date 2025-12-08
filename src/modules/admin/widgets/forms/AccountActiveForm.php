@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\widgets\forms;
+namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms;
 
-use Hirtz\Skeleton\models\forms\AccountUpdateForm;
-use Hirtz\Skeleton\modules\admin\widgets\forms\traits\UserActiveFormTrait;
-use Hirtz\Skeleton\widgets\forms\ActiveForm;
-use Hirtz\Skeleton\widgets\forms\fields\InputField;
+use Hirtz\Skeleton\Models\Forms\AccountUpdateForm;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\Traits\UserActiveFormTrait;
+use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
+use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
 use Stringable;
 
 /**

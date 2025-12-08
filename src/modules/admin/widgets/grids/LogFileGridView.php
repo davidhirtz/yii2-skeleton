@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\widgets\grids;
+namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
-use Hirtz\Skeleton\models\LogFile;
-use Hirtz\Skeleton\modules\admin\data\LogFileArrayDataProvider;
-use Hirtz\Skeleton\widgets\grids\columns\ButtonColumn;
-use Hirtz\Skeleton\widgets\grids\columns\buttons\DeleteGridButton;
-use Hirtz\Skeleton\widgets\grids\columns\buttons\ViewGridButton;
-use Hirtz\Skeleton\widgets\grids\columns\DataColumn;
-use Hirtz\Skeleton\widgets\grids\columns\LinkColumn;
-use Hirtz\Skeleton\widgets\grids\columns\RelativeTimeColumn;
-use Hirtz\Skeleton\widgets\grids\GridView;
+use Hirtz\Skeleton\Models\LogFile;
+use Hirtz\Skeleton\Modules\Admin\Data\LogFileArrayDataProvider;
+use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\DeleteGridButton;
+use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\ViewGridButton;
+use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\LinkColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
+use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Override;
 use Yii;
 

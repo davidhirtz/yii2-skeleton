@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\helpers;
+namespace Hirtz\Skeleton\Helpers;
 
 use SimpleXMLElement;
 use yii\helpers\BaseArrayHelper;

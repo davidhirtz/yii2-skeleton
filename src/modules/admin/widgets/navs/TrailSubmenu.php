@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\widgets\navs;
+namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
-use Hirtz\Skeleton\helpers\Html;
-use Hirtz\Skeleton\models\interfaces\TrailModelInterface;
-use Hirtz\Skeleton\modules\admin\data\TrailActiveDataProvider;
-use Hirtz\Skeleton\widgets\navs\Submenu;
+use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
+use Hirtz\Skeleton\Modules\Admin\Data\TrailActiveDataProvider;
+use Hirtz\Skeleton\Widgets\Navs\Submenu;
 use Override;
 use Stringable;
 use Yii;

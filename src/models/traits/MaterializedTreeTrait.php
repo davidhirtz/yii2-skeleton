@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models\traits;
+namespace Hirtz\Skeleton\Models\Traits;
 
-use Hirtz\Skeleton\db\ActiveQuery;
-use Hirtz\Skeleton\helpers\ArrayHelper;
+use Hirtz\Skeleton\Db\ActiveQuery;
+use Hirtz\Skeleton\Helpers\ArrayHelper;
 
 /**
  * @property int $id

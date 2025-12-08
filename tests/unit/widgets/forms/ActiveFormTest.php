@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\widgets\forms;
+namespace Hirtz\Skeleton\Tests\unit\widgets\forms;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\html\Div;
-use Hirtz\Skeleton\validators\DynamicRangeValidator;
-use Hirtz\Skeleton\widgets\forms\ActiveForm;
+use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Validators\DynamicRangeValidator;
+use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
 use yii\base\Model;
 
 class ActiveFormTest extends Unit

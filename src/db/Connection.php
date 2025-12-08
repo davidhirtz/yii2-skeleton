@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\db;
+namespace Hirtz\Skeleton\Db;
 
 use DateTime;
-use Hirtz\Skeleton\db\mysql\Schema;
-use Hirtz\Skeleton\helpers\FileHelper;
-use Hirtz\Skeleton\models\Session;
+use Hirtz\Skeleton\Db\Mysql\Schema;
+use Hirtz\Skeleton\Helpers\FileHelper;
+use Hirtz\Skeleton\Models\Session;
 use mikehaertl\shellcommand\Command;
 use RuntimeException;
 use Yii;

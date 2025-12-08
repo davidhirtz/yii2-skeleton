@@ -6,10 +6,10 @@ declare(strict_types=1);
  * @noinspection PhpUnused
  */
 
-namespace Hirtz\Skeleton\console\controllers;
+namespace Hirtz\Skeleton\Console\Controllers;
 
-use Hirtz\Skeleton\console\controllers\traits\ControllerTrait;
-use Hirtz\Skeleton\helpers\FileHelper;
+use Hirtz\Skeleton\Console\Controllers\traits\ControllerTrait;
+use Hirtz\Skeleton\Helpers\FileHelper;
 use Yii;
 use yii\helpers\Console;
 

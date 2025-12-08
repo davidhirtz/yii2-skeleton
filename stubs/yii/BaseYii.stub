@@ -5,7 +5,7 @@ namespace yii;
 class BaseYii
 {
     /**
-     * @var \Hirtz\Skeleton\web\Application|\Hirtz\Skeleton\console\Application|null
+     * @var \Hirtz\Skeleton\Web\Application|\Hirtz\Skeleton\Console\Application|null
      */
     public static $app;
 
@@ -18,10 +18,10 @@ class BaseYii
     public static function createObject($type, array $params = []);
 }
 
-namespace Hirtz\Skeleton\console;
+namespace Hirtz\Skeleton\Console;
 
 class Application {}
 
-namespace Hirtz\Skeleton\web;
+namespace Hirtz\Skeleton\Web;
 
 class Application {}

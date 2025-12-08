@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\console;
+namespace Hirtz\Skeleton\Tests\unit\console;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\codeception\traits\StdOutBufferControllerTrait;
-use Hirtz\Skeleton\console\controllers\EmailController;
-use Hirtz\Skeleton\tests\support\UnitTester;
+use Hirtz\Skeleton\Codeception\traits\StdOutBufferControllerTrait;
+use Hirtz\Skeleton\Console\Controllers\EmailController;
+use Hirtz\Skeleton\Tests\support\UnitTester;
 use Yii;
 use yii\symfonymailer\Message;
 

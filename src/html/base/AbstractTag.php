@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\html\base;
+namespace Hirtz\Skeleton\Html\Base;
 
-use Hirtz\Skeleton\helpers\Html;
-use Hirtz\Skeleton\html\traits\TagAttributesTrait;
-use Hirtz\Skeleton\html\traits\TagIdTrait;
+use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
+use Hirtz\Skeleton\Html\Traits\TagIdTrait;
 use Stringable;
 
 abstract class AbstractTag implements Stringable

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\grids\columns\buttons;
+namespace Hirtz\Skeleton\Widgets\Grids\Columns\Buttons;
 
-use Hirtz\Skeleton\html\Button;
-use Hirtz\Skeleton\widgets\buttons\traits\DeleteButtonTrait;
-use Hirtz\Skeleton\widgets\Modal;
-use Hirtz\Skeleton\widgets\Widget;
+use Hirtz\Skeleton\Html\Button;
+use Hirtz\Skeleton\Widgets\Buttons\Traits\DeleteButtonTrait;
+use Hirtz\Skeleton\Widgets\Modal;
+use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 
 class DeleteGridButton extends Widget

@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\navs;
+namespace Hirtz\Skeleton\Widgets\Navs;
 
-use Hirtz\Skeleton\html\Button;
-use Hirtz\Skeleton\html\Dialog;
-use Hirtz\Skeleton\html\Div;
-use Hirtz\Skeleton\html\Li;
-use Hirtz\Skeleton\html\traits\TagAttributesTrait;
-use Hirtz\Skeleton\html\traits\TagContentTrait;
-use Hirtz\Skeleton\html\Ul;
-use Hirtz\Skeleton\widgets\Widget;
+use Hirtz\Skeleton\Html\Button;
+use Hirtz\Skeleton\Html\Dialog;
+use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Html\Li;
+use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
+use Hirtz\Skeleton\Html\Traits\TagContentTrait;
+use Hirtz\Skeleton\Html\Ul;
+use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
 

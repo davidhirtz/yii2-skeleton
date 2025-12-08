@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models;
+namespace Hirtz\Skeleton\Models;
 
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
-use Hirtz\Skeleton\db\ActiveRecord;
-use Hirtz\Skeleton\models\interfaces\TypeAttributeInterface;
-use Hirtz\Skeleton\models\queries\UserQuery;
-use Hirtz\Skeleton\models\traits\TypeAttributeTrait;
-use Hirtz\Skeleton\validators\RelationValidator;
+use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
+use Hirtz\Skeleton\Models\Queries\UserQuery;
+use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
+use Hirtz\Skeleton\Validators\RelationValidator;
 use Override;
 use Yii;
 

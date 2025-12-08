@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\widgets\navs;
+namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
-use Hirtz\Skeleton\widgets\navs\Submenu;
+use Hirtz\Skeleton\Widgets\Navs\Submenu;
 use Stringable;
 use Yii;
 

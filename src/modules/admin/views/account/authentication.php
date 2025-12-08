@@ -3,15 +3,15 @@
 declare(strict_types=1);
 
 /**
- * @see \Hirtz\Skeleton\modules\admin\controllers\AccountController::actionLogin()
+ * @see \Hirtz\Skeleton\Modules\Admin\Controllers\AccountController::actionLogin()
  *
- * @var Hirtz\Skeleton\web\View $this
- * @var Hirtz\Skeleton\models\forms\LoginForm $form
+ * @var Hirtz\Skeleton\Web\View $this
+ * @var Hirtz\Skeleton\Models\Forms\LoginForm $form
  */
 
-use Hirtz\Skeleton\html\Container;
-use Hirtz\Skeleton\modules\admin\widgets\forms\TwoFactorAuthenticationLoginActiveForm;
-use Hirtz\Skeleton\widgets\panels\Card;
+use Hirtz\Skeleton\Html\Container;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\TwoFactorAuthenticationLoginActiveForm;
+use Hirtz\Skeleton\Widgets\Panels\Card;
 
 $this->title(Yii::t('skeleton', 'Two-Factor Authentication'));
 

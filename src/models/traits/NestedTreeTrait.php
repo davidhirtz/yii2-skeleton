@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models\traits;
+namespace Hirtz\Skeleton\Models\Traits;
 
-use Hirtz\Skeleton\db\ActiveQuery;
-use Hirtz\Skeleton\db\ActiveRecord;
+use Hirtz\Skeleton\Db\ActiveQuery;
+use Hirtz\Skeleton\Db\ActiveRecord;
 use yii\db\Expression;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\buttons;
+namespace Hirtz\Skeleton\Widgets\Buttons;
 
-use Hirtz\Skeleton\html\A;
-use Hirtz\Skeleton\widgets\Widget;
+use Hirtz\Skeleton\Html\A;
+use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use Yii;
 

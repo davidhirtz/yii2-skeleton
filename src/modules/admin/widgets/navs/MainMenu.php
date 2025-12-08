@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\widgets\navs;
+namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
-use Hirtz\Skeleton\modules\admin\Module;
-use Hirtz\Skeleton\widgets\navs\Nav;
-use Hirtz\Skeleton\widgets\navs\NavItem;
-use Hirtz\Skeleton\widgets\Widget;
+use Hirtz\Skeleton\Modules\Admin\Module;
+use Hirtz\Skeleton\Widgets\Navs\Nav;
+use Hirtz\Skeleton\Widgets\Navs\NavItem;
+use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use Yii;
 

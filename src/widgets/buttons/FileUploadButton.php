@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\buttons;
+namespace Hirtz\Skeleton\Widgets\Buttons;
 
-use Hirtz\Skeleton\assets\FileUploadAssetBundle;
-use Hirtz\Skeleton\html\Button;
-use Hirtz\Skeleton\html\custom\FileUpload;
-use Hirtz\Skeleton\html\Input;
-use Hirtz\Skeleton\html\traits\TagAttributesTrait;
-use Hirtz\Skeleton\html\traits\TagIconTrait;
-use Hirtz\Skeleton\html\traits\TagLabelTrait;
-use Hirtz\Skeleton\html\traits\TagUrlTrait;
-use Hirtz\Skeleton\widgets\Widget;
+use Hirtz\Skeleton\Assets\FileUploadAssetBundle;
+use Hirtz\Skeleton\Html\Button;
+use Hirtz\Skeleton\Html\Custom\FileUpload;
+use Hirtz\Skeleton\Html\Input;
+use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
+use Hirtz\Skeleton\Html\Traits\TagIconTrait;
+use Hirtz\Skeleton\Html\Traits\TagLabelTrait;
+use Hirtz\Skeleton\Html\Traits\TagUrlTrait;
+use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use yii\db\ActiveRecord;
 

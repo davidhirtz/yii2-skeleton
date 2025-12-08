@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\models\forms;
+namespace Hirtz\Skeleton\Tests\unit\models\forms;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\codeception\fixtures\UserFixtureTrait;
-use Hirtz\Skeleton\models\forms\LoginForm;
-use Hirtz\Skeleton\validators\TwoFactorAuthenticationValidator;
+use Hirtz\Skeleton\Codeception\fixtures\UserFixtureTrait;
+use Hirtz\Skeleton\Models\Forms\LoginForm;
+use Hirtz\Skeleton\Validators\TwoFactorAuthenticationValidator;
 use Yii;
 
 class LoginFormTest extends Unit

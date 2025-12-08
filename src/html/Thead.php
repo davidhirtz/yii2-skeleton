@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\html;
+namespace Hirtz\Skeleton\Html;
 
-use Hirtz\Skeleton\html\traits\TagTableRowsTrait;
+use Hirtz\Skeleton\Html\Traits\TagTableRowsTrait;
 use Override;
 
 class Thead extends base\Tag

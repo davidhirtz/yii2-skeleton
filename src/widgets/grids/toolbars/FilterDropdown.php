@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\grids\toolbars;
+namespace Hirtz\Skeleton\Widgets\Grids\Toolbars;
 
-use Hirtz\Skeleton\html\Div;
-use Hirtz\Skeleton\html\TextInput;
-use Hirtz\Skeleton\html\traits\TagAttributesTrait;
-use Hirtz\Skeleton\html\traits\TagIdTrait;
-use Hirtz\Skeleton\html\traits\TagLabelTrait;
-use Hirtz\Skeleton\widgets\navs\Dropdown;
-use Hirtz\Skeleton\widgets\navs\DropdownLink;
-use Hirtz\Skeleton\widgets\Widget;
+use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Html\TextInput;
+use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
+use Hirtz\Skeleton\Html\Traits\TagIdTrait;
+use Hirtz\Skeleton\Html\Traits\TagLabelTrait;
+use Hirtz\Skeleton\Widgets\Navs\Dropdown;
+use Hirtz\Skeleton\Widgets\Navs\DropdownLink;
+use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use Yii;
 

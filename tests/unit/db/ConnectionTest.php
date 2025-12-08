@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\db;
+namespace Hirtz\Skeleton\Tests\unit\db;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\helpers\FileHelper;
+use Hirtz\Skeleton\Helpers\FileHelper;
 use Yii;
 
 class ConnectionTest extends Unit

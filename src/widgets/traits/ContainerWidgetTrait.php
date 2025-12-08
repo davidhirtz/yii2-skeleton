@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\traits;
+namespace Hirtz\Skeleton\Widgets\Traits;
 
-use Hirtz\Skeleton\html\Container;
-use Hirtz\Skeleton\html\traits\TagAttributesTrait;
-use Hirtz\Skeleton\html\traits\TagIdTrait;
+use Hirtz\Skeleton\Html\Container;
+use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
+use Hirtz\Skeleton\Html\Traits\TagIdTrait;
 
 trait ContainerWidgetTrait
 {

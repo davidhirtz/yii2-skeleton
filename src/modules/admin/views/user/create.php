@@ -9,12 +9,12 @@ declare(strict_types=1);
  * @var UserForm $form
  */
 
-use Hirtz\Skeleton\modules\admin\controllers\UserController;
-use Hirtz\Skeleton\modules\admin\models\forms\UserForm;
-use Hirtz\Skeleton\modules\admin\widgets\forms\UserActiveForm;
-use Hirtz\Skeleton\modules\admin\widgets\navs\UserSubmenu;
-use Hirtz\Skeleton\web\View;
-use Hirtz\Skeleton\widgets\forms\FormContainer;
+use Hirtz\Skeleton\Modules\Admin\Controllers\UserController;
+use Hirtz\Skeleton\Modules\Admin\Models\forms\UserForm;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\UserActiveForm;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserSubmenu;
+use Hirtz\Skeleton\Web\View;
+use Hirtz\Skeleton\Widgets\Forms\FormContainer;
 
 $this->title(Yii::t('skeleton', 'Create New User'))
     ->addBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);

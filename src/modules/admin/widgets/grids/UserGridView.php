@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\widgets\grids;
+namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
-use Hirtz\Skeleton\helpers\Html;
-use Hirtz\Skeleton\html\A;
-use Hirtz\Skeleton\html\Button;
-use Hirtz\Skeleton\html\Div;
-use Hirtz\Skeleton\models\User;
-use Hirtz\Skeleton\modules\admin\data\UserActiveDataProvider;
-use Hirtz\Skeleton\widgets\grids\columns\ButtonColumn;
-use Hirtz\Skeleton\widgets\grids\columns\Column;
-use Hirtz\Skeleton\widgets\grids\columns\DataColumn;
-use Hirtz\Skeleton\widgets\grids\columns\RelativeTimeColumn;
-use Hirtz\Skeleton\widgets\grids\GridView;
-use Hirtz\Skeleton\widgets\grids\toolbars\CreateButton;
-use Hirtz\Skeleton\widgets\grids\traits\StatusGridViewTrait;
+use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Html\A;
+use Hirtz\Skeleton\Html\Button;
+use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Data\UserActiveDataProvider;
+use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
+use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
+use Hirtz\Skeleton\Widgets\Grids\GridView;
+use Hirtz\Skeleton\Widgets\Grids\Toolbars\CreateButton;
+use Hirtz\Skeleton\Widgets\Grids\Traits\StatusGridViewTrait;
 use Override;
 use Stringable;
 use Yii;

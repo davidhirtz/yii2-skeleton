@@ -7,14 +7,14 @@ declare(strict_types=1);
  * @var View $this
  */
 
-use Hirtz\Skeleton\modules\admin\controllers\SystemController;
-use Hirtz\Skeleton\modules\admin\widgets\grids\AssetGridView;
-use Hirtz\Skeleton\modules\admin\widgets\grids\CacheGridView;
-use Hirtz\Skeleton\modules\admin\widgets\grids\LogFileGridView;
-use Hirtz\Skeleton\modules\admin\widgets\grids\SessionGridView;
-use Hirtz\Skeleton\web\View;
-use Hirtz\Skeleton\widgets\grids\GridContainer;
-use Hirtz\Skeleton\widgets\navs\Header;
+use Hirtz\Skeleton\Modules\Admin\Controllers\SystemController;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\AssetGridView;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\CacheGridView;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\LogFileGridView;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\SessionGridView;
+use Hirtz\Skeleton\Web\View;
+use Hirtz\Skeleton\Widgets\Grids\GridContainer;
+use Hirtz\Skeleton\Widgets\Navs\Header;
 
 $this->title(Yii::t('skeleton', 'System'));
 

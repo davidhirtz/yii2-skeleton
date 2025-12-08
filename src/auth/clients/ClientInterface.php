@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\auth\clients;
+namespace Hirtz\Skeleton\Auth\Clients;
 
-use Hirtz\Skeleton\models\AuthClient;
+use Hirtz\Skeleton\Models\AuthClient;
 
 /**
  * @property-read array $safeUserAttributes {@see ClientInterface::getSafeUserAttributes()}

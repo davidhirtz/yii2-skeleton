@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models\forms;
+namespace Hirtz\Skeleton\Models\Forms;
 
-use Hirtz\Skeleton\base\traits\ModelTrait;
-use Hirtz\Skeleton\models\traits\IdentityTrait;
-use Hirtz\Skeleton\models\User;
-use Hirtz\Skeleton\models\UserLogin;
+use Hirtz\Skeleton\Base\Traits\ModelTrait;
+use Hirtz\Skeleton\Models\Traits\IdentityTrait;
+use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Models\UserLogin;
 use Override;
 use Yii;
 use yii\base\Model;

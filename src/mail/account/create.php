@@ -7,7 +7,7 @@ declare(strict_types=1);
  * @var User $user
  */
 
-use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\Models\User;
 use yii\mail\MessageInterface;
 use yii\web\View;
 

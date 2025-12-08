@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\html;
+namespace Hirtz\Skeleton\Html;
 
-use Hirtz\Skeleton\html\traits\TagContentTrait;
+use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Override;
 
 class H1 extends base\Tag

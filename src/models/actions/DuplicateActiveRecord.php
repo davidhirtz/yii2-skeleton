@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models\actions;
+namespace Hirtz\Skeleton\Models\Actions;
 
-use Hirtz\Skeleton\db\ActiveRecord;
-use Hirtz\Skeleton\models\events\DuplicateActiveRecordEvent;
+use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Models\Events\DuplicateActiveRecordEvent;
 use Exception;
 use Yii;
 

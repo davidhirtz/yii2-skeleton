@@ -11,8 +11,8 @@ declare(strict_types=1);
  * @var string $name
  */
 
-use Hirtz\Skeleton\web\ErrorAction;
-use Hirtz\Skeleton\web\View;
+use Hirtz\Skeleton\Web\ErrorAction;
+use Hirtz\Skeleton\Web\View;
 
 $this->title($name);
 ?>

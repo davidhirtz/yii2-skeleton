@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\console\controllers;
+namespace Hirtz\Skeleton\Console\Controllers;
 
-use Hirtz\Skeleton\console\controllers\traits\ConfigTrait;
+use Hirtz\Skeleton\Console\Controllers\traits\ConfigTrait;
 use Yii;
 use yii\console\Controller;
 

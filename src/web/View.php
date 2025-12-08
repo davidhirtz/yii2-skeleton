@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\web;
+namespace Hirtz\Skeleton\Web;
 
-use Hirtz\Skeleton\helpers\Html;
+use Hirtz\Skeleton\Helpers\Html;
 use Override;
 use Yii;
 use yii\helpers\Json;

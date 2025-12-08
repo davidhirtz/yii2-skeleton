@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models\actions;
+namespace Hirtz\Skeleton\Models\Actions;
 
-use Hirtz\Skeleton\helpers\ArrayHelper;
+use Hirtz\Skeleton\Helpers\ArrayHelper;
 use Exception;
 use Yii;
 use yii\db\ActiveRecordInterface;

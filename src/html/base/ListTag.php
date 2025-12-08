@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\html\base;
+namespace Hirtz\Skeleton\Html\Base;
 
-use Hirtz\Skeleton\html\Li;
+use Hirtz\Skeleton\Html\Li;
 use Override;
 use Stringable;
 

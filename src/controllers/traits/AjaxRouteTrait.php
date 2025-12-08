@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\controllers\traits;
+namespace Hirtz\Skeleton\Controllers\Traits;
 
-use Hirtz\Skeleton\web\View;
+use Hirtz\Skeleton\Web\View;
 use Yii;
 
 trait AjaxRouteTrait

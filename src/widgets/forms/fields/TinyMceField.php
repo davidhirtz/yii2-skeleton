@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\forms\fields;
+namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 
-use Hirtz\Skeleton\assets\AdminAssetBundle;
-use Hirtz\Skeleton\assets\TinyMceAssetBundle;
-use Hirtz\Skeleton\assets\TinyMceLanguageAssetBundle;
-use Hirtz\Skeleton\assets\TinyMceSkinAssetBundle;
-use Hirtz\Skeleton\html\Textarea;
-use Hirtz\Skeleton\html\traits\TagInputTrait;
-use Hirtz\Skeleton\html\traits\TagPlaceholderTrait;
-use Hirtz\Skeleton\validators\HtmlValidator;
+use Hirtz\Skeleton\Assets\AdminAssetBundle;
+use Hirtz\Skeleton\Assets\TinyMceAssetBundle;
+use Hirtz\Skeleton\Assets\TinyMceLanguageAssetBundle;
+use Hirtz\Skeleton\Assets\TinyMceSkinAssetBundle;
+use Hirtz\Skeleton\Html\Textarea;
+use Hirtz\Skeleton\Html\Traits\TagInputTrait;
+use Hirtz\Skeleton\Html\Traits\TagPlaceholderTrait;
+use Hirtz\Skeleton\Validators\HtmlValidator;
 use Override;
 use Stringable;
 use Yii;

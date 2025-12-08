@@ -10,19 +10,19 @@ declare(strict_types=1);
  * @var AccountUpdateForm $form
  */
 
-use Hirtz\Skeleton\html\A;
-use Hirtz\Skeleton\html\Container;
-use Hirtz\Skeleton\models\forms\AccountUpdateForm;
-use Hirtz\Skeleton\modules\admin\controllers\AccountController;
-use Hirtz\Skeleton\modules\admin\widgets\forms\AccountActiveForm;
-use Hirtz\Skeleton\modules\admin\widgets\forms\TwoFactorAuthenticatorActiveForm;
-use Hirtz\Skeleton\modules\admin\widgets\grids\AuthClientGridView;
-use Hirtz\Skeleton\web\View;
-use Hirtz\Skeleton\widgets\Alert;
-use Hirtz\Skeleton\widgets\forms\DeleteActiveForm;
-use Hirtz\Skeleton\widgets\forms\FormContainer;
-use Hirtz\Skeleton\widgets\grids\GridContainer;
-use Hirtz\Skeleton\widgets\navs\Header;
+use Hirtz\Skeleton\Html\A;
+use Hirtz\Skeleton\Html\Container;
+use Hirtz\Skeleton\Models\Forms\AccountUpdateForm;
+use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\AccountActiveForm;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\TwoFactorAuthenticatorActiveForm;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\AuthClientGridView;
+use Hirtz\Skeleton\Web\View;
+use Hirtz\Skeleton\Widgets\Alert;
+use Hirtz\Skeleton\Widgets\Forms\DeleteActiveForm;
+use Hirtz\Skeleton\Widgets\Forms\FormContainer;
+use Hirtz\Skeleton\Widgets\Grids\GridContainer;
+use Hirtz\Skeleton\Widgets\Navs\Header;
 
 $this->title(Yii::t('skeleton', 'Account'));
 

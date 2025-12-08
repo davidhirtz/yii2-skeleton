@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\behaviors;
+namespace Hirtz\Skeleton\Tests\unit\behaviors;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\behaviors\BlameableBehavior;
+use Hirtz\Skeleton\Behaviors\BlameableBehavior;
 use Yii;
 use yii\base\BaseObject;
 use yii\db\ActiveRecord;

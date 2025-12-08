@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\grids\columns;
+namespace Hirtz\Skeleton\Widgets\Grids\Columns;
 
 use Closure;
-use Hirtz\Skeleton\helpers\ArrayHelper;
-use Hirtz\Skeleton\html\custom\RelativeTime;
+use Hirtz\Skeleton\Helpers\ArrayHelper;
+use Hirtz\Skeleton\Html\Custom\RelativeTime;
 use Override;
 use Stringable;
 use yii\base\Model;

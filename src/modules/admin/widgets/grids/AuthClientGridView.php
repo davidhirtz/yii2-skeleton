@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\widgets\grids;
+namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
-use Hirtz\Skeleton\helpers\Html;
-use Hirtz\Skeleton\html\Button;
-use Hirtz\Skeleton\models\AuthClient;
-use Hirtz\Skeleton\modules\admin\controllers\UserController;
-use Hirtz\Skeleton\modules\admin\widgets\panels\AuthClientListGroup;
-use Hirtz\Skeleton\widgets\grids\columns\ButtonColumn;
-use Hirtz\Skeleton\widgets\grids\columns\Column;
-use Hirtz\Skeleton\widgets\grids\columns\RelativeTimeColumn;
-use Hirtz\Skeleton\widgets\grids\GridView;
-use Hirtz\Skeleton\widgets\Modal;
-use Hirtz\Skeleton\widgets\traits\UserWidgetTrait;
+use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Html\Button;
+use Hirtz\Skeleton\Models\AuthClient;
+use Hirtz\Skeleton\Modules\Admin\Controllers\UserController;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\AuthClientListGroup;
+use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
+use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
+use Hirtz\Skeleton\Widgets\Grids\GridView;
+use Hirtz\Skeleton\Widgets\Modal;
+use Hirtz\Skeleton\Widgets\Traits\UserWidgetTrait;
 use Override;
 use Yii;
 use yii\data\ArrayDataProvider;

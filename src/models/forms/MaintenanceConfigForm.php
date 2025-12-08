@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models\forms;
+namespace Hirtz\Skeleton\Models\Forms;
 
-use Hirtz\Skeleton\base\traits\ModelTrait;
+use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Override;
 use Yii;
 use yii\base\Model;

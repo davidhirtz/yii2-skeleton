@@ -3,19 +3,19 @@
 declare(strict_types=1);
 
 /**
- * @see \Hirtz\Skeleton\modules\admin\controllers\AccountController::actionResend()
+ * @see \Hirtz\Skeleton\Modules\Admin\Controllers\AccountController::actionResend()
  *
  * @var View $this
  * @var AccountResendConfirmForm $form
  */
 
-use Hirtz\Skeleton\html\Container;
-use Hirtz\Skeleton\models\forms\AccountResendConfirmForm;
-use Hirtz\Skeleton\modules\admin\widgets\forms\AccountResendConfirmActiveForm;
-use Hirtz\Skeleton\web\View;
-use Hirtz\Skeleton\widgets\panels\Card;
-use Hirtz\Skeleton\widgets\panels\Stack;
-use Hirtz\Skeleton\widgets\panels\StackItem;
+use Hirtz\Skeleton\Html\Container;
+use Hirtz\Skeleton\Models\Forms\AccountResendConfirmForm;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\AccountResendConfirmActiveForm;
+use Hirtz\Skeleton\Web\View;
+use Hirtz\Skeleton\Widgets\Panels\Card;
+use Hirtz\Skeleton\Widgets\Panels\Stack;
+use Hirtz\Skeleton\Widgets\Panels\StackItem;
 use yii\helpers\Url;
 
 $this->title(Yii::t('skeleton', 'Resend Account Confirmation'));

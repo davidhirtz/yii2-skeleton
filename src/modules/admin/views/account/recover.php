@@ -3,18 +3,18 @@
 declare(strict_types=1);
 
 /**
- * @see \Hirtz\Skeleton\modules\admin\controllers\AccountController::actionRecover()
+ * @see \Hirtz\Skeleton\Modules\Admin\Controllers\AccountController::actionRecover()
  *
  * @var View $this
- * @var Hirtz\Skeleton\models\forms\PasswordRecoverForm $form
+ * @var Hirtz\Skeleton\Models\Forms\PasswordRecoverForm $form
  */
 
-use Hirtz\Skeleton\html\Container;
-use Hirtz\Skeleton\modules\admin\widgets\forms\PasswordRecoverActiveForm;
-use Hirtz\Skeleton\web\View;
-use Hirtz\Skeleton\widgets\panels\Card;
-use Hirtz\Skeleton\widgets\panels\Stack;
-use Hirtz\Skeleton\widgets\panels\StackItem;
+use Hirtz\Skeleton\Html\Container;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\PasswordRecoverActiveForm;
+use Hirtz\Skeleton\Web\View;
+use Hirtz\Skeleton\Widgets\Panels\Card;
+use Hirtz\Skeleton\Widgets\Panels\Stack;
+use Hirtz\Skeleton\Widgets\Panels\StackItem;
 use yii\helpers\Url;
 
 $this->title(Yii::t('skeleton', 'Recover Password'));

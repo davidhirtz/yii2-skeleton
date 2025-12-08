@@ -1,6 +1,6 @@
 <?php
 
-namespace Hirtz\Skeleton\test;
+namespace Hirtz\Skeleton\Test;
 
 use yii\mail\BaseMailer;
 use yii\mail\MessageInterface;

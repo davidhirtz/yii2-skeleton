@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\forms\footers;
+namespace Hirtz\Skeleton\Widgets\Forms\Footers;
 
-use Hirtz\Skeleton\html\traits\TagAttributesTrait;
-use Hirtz\Skeleton\html\Ul;
-use Hirtz\Skeleton\widgets\forms\FormRow;
-use Hirtz\Skeleton\widgets\traits\ModelWidgetTrait;
-use Hirtz\Skeleton\widgets\Widget;
+use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
+use Hirtz\Skeleton\Html\Ul;
+use Hirtz\Skeleton\Widgets\Forms\FormRow;
+use Hirtz\Skeleton\Widgets\Traits\ModelWidgetTrait;
+use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 
 class FormFooter extends Widget

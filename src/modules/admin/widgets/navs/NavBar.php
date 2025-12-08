@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\widgets\navs;
+namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
-use Hirtz\Skeleton\html\Button;
-use Hirtz\Skeleton\html\Container;
-use Hirtz\Skeleton\widgets\Widget;
+use Hirtz\Skeleton\Html\Button;
+use Hirtz\Skeleton\Html\Container;
+use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use Yii;
 

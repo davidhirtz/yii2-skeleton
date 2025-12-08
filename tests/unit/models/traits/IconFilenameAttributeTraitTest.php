@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\models\traits;
+namespace Hirtz\Skeleton\Tests\unit\models\traits;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\base\traits\ModelTrait;
-use Hirtz\Skeleton\helpers\FileHelper;
-use Hirtz\Skeleton\models\traits\IconFilenameAttributeTrait;
-use Hirtz\Skeleton\validators\DynamicRangeValidator;
+use Hirtz\Skeleton\Base\Traits\ModelTrait;
+use Hirtz\Skeleton\Helpers\FileHelper;
+use Hirtz\Skeleton\Models\Traits\IconFilenameAttributeTrait;
+use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Yii;
 use yii\base\Model;
 

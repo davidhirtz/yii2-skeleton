@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\navs;
+namespace Hirtz\Skeleton\Widgets\Navs;
 
-use Hirtz\Skeleton\html\traits\TagAttributesTrait;
-use Hirtz\Skeleton\html\Ul;
-use Hirtz\Skeleton\widgets\navs\traits\NavItemTrait;
-use Hirtz\Skeleton\widgets\Widget;
+use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
+use Hirtz\Skeleton\Html\Ul;
+use Hirtz\Skeleton\Widgets\Navs\Traits\NavItemTrait;
+use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 
 class Nav extends Widget

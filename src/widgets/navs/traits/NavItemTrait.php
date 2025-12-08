@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\navs\traits;
+namespace Hirtz\Skeleton\Widgets\Navs\Traits;
 
-use Hirtz\Skeleton\widgets\navs\NavItem;
+use Hirtz\Skeleton\Widgets\Navs\NavItem;
 
 trait NavItemTrait
 {

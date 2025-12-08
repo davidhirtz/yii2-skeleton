@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 /** @noinspection PhpUnused */
 
-namespace Hirtz\Skeleton\migrations;
+namespace Hirtz\Skeleton\Migrations;
 
-use Hirtz\Skeleton\db\traits\MigrationTrait;
-use Hirtz\Skeleton\models\AuthClient;
-use Hirtz\Skeleton\models\Session;
-use Hirtz\Skeleton\models\User;
-use Hirtz\Skeleton\models\UserLogin;
-use Hirtz\Skeleton\rbac\rules\OwnerRule;
+use Hirtz\Skeleton\Db\Traits\MigrationTrait;
+use Hirtz\Skeleton\Models\AuthClient;
+use Hirtz\Skeleton\Models\Session;
+use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Models\UserLogin;
+use Hirtz\Skeleton\Rbac\Rules\OwnerRule;
 use Yii;
 use yii\db\Migration;
 use yii\db\Query;
@@ -299,7 +299,7 @@ class M190125140002Init extends Migration
     protected function isMigrationApplied(): bool
     {
         return (new Query())->from('{{%migration}}')
-            ->where(['version' => 'Hirtz\Skeleton\migrations\m151125_140002_init'])
+            ->where(['version' => 'Hirtz\Skeleton\Migrations\M151125_140002_init'])
             ->exists();
     }
 }

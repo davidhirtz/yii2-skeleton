@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets;
+namespace Hirtz\Skeleton\Widgets;
 
-use Hirtz\Skeleton\html\Button;
-use Hirtz\Skeleton\html\Div;
-use Hirtz\Skeleton\html\traits\TagAttributesTrait;
-use Hirtz\Skeleton\html\traits\TagContentTrait;
-use Hirtz\Skeleton\html\traits\TagIconTrait;
+use Hirtz\Skeleton\Html\Button;
+use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
+use Hirtz\Skeleton\Html\Traits\TagContentTrait;
+use Hirtz\Skeleton\Html\Traits\TagIconTrait;
 use Override;
 use Stringable;
 

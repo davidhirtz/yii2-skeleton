@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\helpers;
+namespace Hirtz\Skeleton\Helpers;
 
 use Yii;
 use yii\helpers\BaseFileHelper;

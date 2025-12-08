@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\widgets\forms\traits;
+namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms\Traits;
 
-use Hirtz\Skeleton\html\Icon;
-use Hirtz\Skeleton\widgets\forms\fields\InputField;
+use Hirtz\Skeleton\Html\Icon;
+use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
 use Stringable;
 
 trait LoginActiveFormTrait

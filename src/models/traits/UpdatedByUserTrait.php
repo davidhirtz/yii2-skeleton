@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models\traits;
+namespace Hirtz\Skeleton\Models\Traits;
 
-use Hirtz\Skeleton\models\queries\UserQuery;
-use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\Models\Queries\UserQuery;
+use Hirtz\Skeleton\Models\User;
 
 /**
  * @property int|null $updated_by_user_id

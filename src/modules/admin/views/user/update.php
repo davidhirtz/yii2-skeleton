@@ -3,20 +3,20 @@
 declare(strict_types=1);
 
 /**
- * @see Hirtz\Skeleton\modules\admin\controllers\UserController::actionUpdate()
+ * @see Hirtz\Skeleton\Modules\Admin\Controllers\UserController::actionUpdate()
  *
  * @var View $this
  * @var UserForm $form
  */
 
-use Hirtz\Skeleton\models\User;
-use Hirtz\Skeleton\modules\admin\models\forms\UserForm;
-use Hirtz\Skeleton\modules\admin\widgets\forms\UserActiveForm;
-use Hirtz\Skeleton\modules\admin\widgets\forms\UserDeleteActiveForm;
-use Hirtz\Skeleton\modules\admin\widgets\navs\UserSubmenu;
-use Hirtz\Skeleton\modules\admin\widgets\panels\UserPanel;
-use Hirtz\Skeleton\web\View;
-use Hirtz\Skeleton\widgets\forms\FormContainer;
+use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Models\forms\UserForm;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\UserActiveForm;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\UserDeleteActiveForm;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserSubmenu;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\UserPanel;
+use Hirtz\Skeleton\Web\View;
+use Hirtz\Skeleton\Widgets\Forms\FormContainer;
 
 echo UserSubmenu::make()
     ->user($form->user);

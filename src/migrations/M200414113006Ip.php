@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\migrations;
+namespace Hirtz\Skeleton\Migrations;
 
-use Hirtz\Skeleton\models\Session;
-use Hirtz\Skeleton\models\UserLogin;
+use Hirtz\Skeleton\Models\Session;
+use Hirtz\Skeleton\Models\UserLogin;
 use yii\db\Expression;
 use yii\db\Migration;
 

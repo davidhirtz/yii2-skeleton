@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models\forms;
+namespace Hirtz\Skeleton\Models\Forms;
 
-use Hirtz\Skeleton\auth\clients\ClientInterface;
-use Hirtz\Skeleton\base\traits\ModelTrait;
-use Hirtz\Skeleton\models\traits\SignupEmailTrait;
-use Hirtz\Skeleton\models\User;
-use Hirtz\Skeleton\web\StreamUploadedFile;
+use Hirtz\Skeleton\Auth\Clients\ClientInterface;
+use Hirtz\Skeleton\Base\Traits\ModelTrait;
+use Hirtz\Skeleton\Models\Traits\SignupEmailTrait;
+use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Web\StreamUploadedFile;
 use Yii;
 use yii\base\Model;
 

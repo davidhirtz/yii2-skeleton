@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\behaviors;
+namespace Hirtz\Skeleton\Tests\unit\behaviors;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\behaviors\SitemapBehavior;
-use Hirtz\Skeleton\db\ActiveRecord;
+use Hirtz\Skeleton\Behaviors\SitemapBehavior;
+use Hirtz\Skeleton\Db\ActiveRecord;
 use Yii;
 use yii\base\InvalidConfigException;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models\interfaces;
+namespace Hirtz\Skeleton\Models\Interfaces;
 
 interface SitemapInterface
 {

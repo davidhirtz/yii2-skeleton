@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\models\forms;
+namespace Hirtz\Skeleton\Tests\unit\models\forms;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\codeception\fixtures\UserFixtureTrait;
-use Hirtz\Skeleton\models\forms\SignupForm;
-use Hirtz\Skeleton\tests\support\UnitTester;
+use Hirtz\Skeleton\Codeception\fixtures\UserFixtureTrait;
+use Hirtz\Skeleton\Models\Forms\SignupForm;
+use Hirtz\Skeleton\Tests\support\UnitTester;
 use Yii;
 use yii\symfonymailer\Message;
 

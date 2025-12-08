@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\models\traits;
+namespace Hirtz\Skeleton\Tests\unit\models\traits;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\models\interfaces\DraftStatusAttributeInterface;
-use Hirtz\Skeleton\models\traits\DraftStatusAttributeTrait;
+use Hirtz\Skeleton\Models\Interfaces\DraftStatusAttributeInterface;
+use Hirtz\Skeleton\Models\Traits\DraftStatusAttributeTrait;
 use Yii;
 use yii\base\Model;
 

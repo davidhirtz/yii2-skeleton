@@ -1,6 +1,6 @@
 <?php
 
-use Hirtz\Skeleton\web\Application;
+use Hirtz\Skeleton\Web\Application;
 use yii\BaseYii;
 
 /**
@@ -10,7 +10,7 @@ use yii\BaseYii;
 class Yii extends BaseYii
 {
     /**
-     * @var Application|\Hirtz\Skeleton\console\Application
+     * @var Application|\Hirtz\Skeleton\Console\Application
      */
     public static $app;
 }

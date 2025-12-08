@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models\forms;
+namespace Hirtz\Skeleton\Models\Forms;
 
-use Hirtz\Skeleton\base\traits\ModelTrait;
-use Hirtz\Skeleton\models\forms\traits\UserFormTrait;
-use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\Base\Traits\ModelTrait;
+use Hirtz\Skeleton\Models\Forms\Traits\UserFormTrait;
+use Hirtz\Skeleton\Models\User;
 use Override;
 use Yii;
 use yii\base\Model;

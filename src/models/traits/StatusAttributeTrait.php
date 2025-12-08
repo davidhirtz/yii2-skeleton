@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models\traits;
+namespace Hirtz\Skeleton\Models\Traits;
 
 use Yii;
 

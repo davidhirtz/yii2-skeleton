@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models\traits;
+namespace Hirtz\Skeleton\Models\Traits;
 
-use Hirtz\Skeleton\behaviors\TrailBehavior;
-use Hirtz\Skeleton\models\collections\TrailModelCollection;
+use Hirtz\Skeleton\Behaviors\TrailBehavior;
+use Hirtz\Skeleton\Models\Collections\TrailModelCollection;
 use ReflectionClass;
 
 trait TrailModelTrait

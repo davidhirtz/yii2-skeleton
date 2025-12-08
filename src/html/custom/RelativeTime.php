@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\html\custom;
+namespace Hirtz\Skeleton\Html\Custom;
 
 use DateTimeInterface;
-use Hirtz\Skeleton\html\base\Tag;
+use Hirtz\Skeleton\Html\Base\Tag;
 use Override;
 use Stringable;
 use Yii;

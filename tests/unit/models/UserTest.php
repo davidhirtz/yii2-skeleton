@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\models;
+namespace Hirtz\Skeleton\Tests\unit\models;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\Models\User;
 
 class UserTest extends Unit
 {

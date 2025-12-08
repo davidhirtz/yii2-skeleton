@@ -2,21 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\base\traits;
+namespace Hirtz\Skeleton\Base\Traits;
 
-use Composer\InstalledVersions;
-use Hirtz\Skeleton\assets\EmptyAssetBundle;
-use Hirtz\Skeleton\auth\clients\Facebook;
-use Hirtz\Skeleton\controllers\HealthController;
-use Hirtz\Skeleton\controllers\SitemapController;
-use Hirtz\Skeleton\db\Connection;
-use Hirtz\Skeleton\i18n\I18N;
-use Hirtz\Skeleton\modules\admin\Module;
-use Hirtz\Skeleton\rbac\DbManager;
-use Hirtz\Skeleton\web\DbSession;
-use Hirtz\Skeleton\web\Sitemap;
-use Hirtz\Skeleton\web\UrlManager;
-use Hirtz\Skeleton\web\View;
+use Hirtz\Skeleton\Assets\EmptyAssetBundle;
+use Hirtz\Skeleton\Auth\Clients\Facebook;
+use Hirtz\Skeleton\Controllers\HealthController;
+use Hirtz\Skeleton\Controllers\SitemapController;
+use Hirtz\Skeleton\Db\Connection;
+use Hirtz\Skeleton\I18n\I18N;
+use Hirtz\Skeleton\Modules\Admin\Module;
+use Hirtz\Skeleton\Rbac\DbManager;
+use Hirtz\Skeleton\Web\DbSession;
+use Hirtz\Skeleton\Web\Sitemap;
+use Hirtz\Skeleton\Web\UrlManager;
+use Hirtz\Skeleton\Web\View;
 use Yii;
 use yii\authclient\Collection;
 use yii\base\ActionEvent;
@@ -158,24 +157,6 @@ trait ApplicationTrait
             ],
             'viewPath' => '@views',
         ];
-
-        if (!YII_ENV_PROD && InstalledVersions::isInstalled('yiisoft/yii2-gii')) {
-            $core['bootstrap'][] = 'gii';
-            $core['modules']['gii'] = [
-                'class' => 'yii\gii\Module',
-                'generators' => [
-                    'model' => [
-                        'class' => 'yii\gii\generators\model\Generator',
-                        'baseClass' => 'Hirtz\Skeleton\db\ActiveRecord',
-                        'queryBaseClass' => 'Hirtz\Skeleton\db\ActiveQuery',
-                        'queryNs' => 'app\models\queries',
-                        'templates' => [
-                            'skeleton' => '@skeleton/gii/generators/model/default',
-                        ],
-                    ],
-                ],
-            ];
-        }
 
         $path = "{$config['basePath']}/config/";
         $config = ArrayHelper::merge($core, $config);

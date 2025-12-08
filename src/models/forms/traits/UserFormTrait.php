@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models\forms\traits;
+namespace Hirtz\Skeleton\Models\Forms\Traits;
 
-use Hirtz\Skeleton\models\forms\UserPictureForm;
-use Hirtz\Skeleton\web\StreamUploadedFile;
+use Hirtz\Skeleton\Models\Forms\UserPictureForm;
+use Hirtz\Skeleton\Web\StreamUploadedFile;
 use Override;
 use yii\web\UploadedFile;
 

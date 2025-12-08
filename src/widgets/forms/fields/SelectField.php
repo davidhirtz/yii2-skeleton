@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\forms\fields;
+namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 
-use Hirtz\Skeleton\helpers\Html;
-use Hirtz\Skeleton\html\Input;
-use Hirtz\Skeleton\html\Option;
-use Hirtz\Skeleton\html\Select;
-use Hirtz\Skeleton\html\traits\TagInputTrait;
-use Hirtz\Skeleton\models\interfaces\I18nAttributeInterface;
+use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Html\Input;
+use Hirtz\Skeleton\Html\Option;
+use Hirtz\Skeleton\Html\Select;
+use Hirtz\Skeleton\Html\Traits\TagInputTrait;
+use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
 use Override;
 use Stringable;
 use yii\helpers\Inflector;

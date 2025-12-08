@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\filters;
+namespace Hirtz\Skeleton\Filters;
 
 use Yii;
 use yii\base\InvalidConfigException;

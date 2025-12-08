@@ -3,20 +3,20 @@
 declare(strict_types=1);
 
 /**
- * @see \Hirtz\Skeleton\modules\admin\controllers\AccountController::actionCreate()
+ * @see \Hirtz\Skeleton\Modules\Admin\Controllers\AccountController::actionCreate()
  *
- * @var Hirtz\Skeleton\web\View $this
- * @var Hirtz\Skeleton\models\forms\SignupForm $form
+ * @var Hirtz\Skeleton\Web\View $this
+ * @var Hirtz\Skeleton\Models\Forms\SignupForm $form
  */
 
-use Hirtz\Skeleton\html\Container;
-use Hirtz\Skeleton\html\Noscript;
-use Hirtz\Skeleton\modules\admin\widgets\forms\SignupActiveForm;
-use Hirtz\Skeleton\widgets\Alert;
-use Hirtz\Skeleton\widgets\forms\ErrorSummary;
-use Hirtz\Skeleton\widgets\panels\Card;
-use Hirtz\Skeleton\widgets\panels\Stack;
-use Hirtz\Skeleton\widgets\panels\StackItem;
+use Hirtz\Skeleton\Html\Container;
+use Hirtz\Skeleton\Html\Noscript;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\SignupActiveForm;
+use Hirtz\Skeleton\Widgets\Alert;
+use Hirtz\Skeleton\Widgets\Forms\ErrorSummary;
+use Hirtz\Skeleton\Widgets\Panels\Card;
+use Hirtz\Skeleton\Widgets\Panels\Stack;
+use Hirtz\Skeleton\Widgets\Panels\StackItem;
 
 $this->title(Yii::t('skeleton', 'Sign up'));
 

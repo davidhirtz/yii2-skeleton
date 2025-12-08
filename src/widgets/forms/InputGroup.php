@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\forms;
+namespace Hirtz\Skeleton\Widgets\Forms;
 
-use Hirtz\Skeleton\html\Div;
-use Hirtz\Skeleton\html\traits\TagAttributesTrait;
-use Hirtz\Skeleton\html\traits\TagContentTrait;
-use Hirtz\Skeleton\widgets\forms\traits\InputGroupTrait;
-use Hirtz\Skeleton\widgets\Widget;
+use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
+use Hirtz\Skeleton\Html\Traits\TagContentTrait;
+use Hirtz\Skeleton\Widgets\Forms\Traits\InputGroupTrait;
+use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
 

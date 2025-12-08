@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\behaviors;
+namespace Hirtz\Skeleton\Behaviors;
 
 use Yii;
 use yii\base\Behavior;

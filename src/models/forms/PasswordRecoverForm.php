@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models\forms;
+namespace Hirtz\Skeleton\Models\Forms;
 
 use davidhirtz\yii2\datetime\DateTime;
-use Hirtz\Skeleton\base\traits\ModelTrait;
-use Hirtz\Skeleton\models\traits\IdentityTrait;
+use Hirtz\Skeleton\Base\Traits\ModelTrait;
+use Hirtz\Skeleton\Models\Traits\IdentityTrait;
 use Override;
 use Yii;
 use yii\base\Model;

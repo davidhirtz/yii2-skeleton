@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\html\traits;
+namespace Hirtz\Skeleton\Html\Traits;
 
-use Hirtz\Skeleton\widgets\Modal;
+use Hirtz\Skeleton\Widgets\Modal;
 
 trait TagModalTrait
 {

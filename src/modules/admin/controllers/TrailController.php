@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\controllers;
+namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
-use Hirtz\Skeleton\models\User;
-use Hirtz\Skeleton\modules\admin\data\TrailActiveDataProvider;
-use Hirtz\Skeleton\web\Controller;
+use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Data\TrailActiveDataProvider;
+use Hirtz\Skeleton\Web\Controller;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Response;

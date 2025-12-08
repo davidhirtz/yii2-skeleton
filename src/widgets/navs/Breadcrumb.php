@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\navs;
+namespace Hirtz\Skeleton\Widgets\Navs;
 
-use Hirtz\Skeleton\html\A;
-use Hirtz\Skeleton\html\Li;
-use Hirtz\Skeleton\html\Ol;
-use Hirtz\Skeleton\modules\admin\Module;
-use Hirtz\Skeleton\widgets\traits\ContainerWidgetTrait;
-use Hirtz\Skeleton\widgets\Widget;
+use Hirtz\Skeleton\Html\A;
+use Hirtz\Skeleton\Html\Li;
+use Hirtz\Skeleton\Html\Ol;
+use Hirtz\Skeleton\Modules\Admin\Module;
+use Hirtz\Skeleton\Widgets\Traits\ContainerWidgetTrait;
+use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use Yii;
 use yii\base\InvalidConfigException;

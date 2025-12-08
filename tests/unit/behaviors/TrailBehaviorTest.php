@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\behaviors;
+namespace Hirtz\Skeleton\Tests\unit\behaviors;
 
 use Codeception\Test\Unit;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeValidator;
-use Hirtz\Skeleton\behaviors\TrailBehavior;
-use Hirtz\Skeleton\codeception\fixtures\UserFixtureTrait;
-use Hirtz\Skeleton\db\ActiveRecord;
-use Hirtz\Skeleton\models\interfaces\TrailModelInterface;
-use Hirtz\Skeleton\models\queries\UserQuery;
-use Hirtz\Skeleton\models\Trail;
-use Hirtz\Skeleton\models\traits\TrailModelTrait;
-use Hirtz\Skeleton\models\User;
-use Hirtz\Skeleton\tests\support\UnitTester;
+use Hirtz\Skeleton\Behaviors\TrailBehavior;
+use Hirtz\Skeleton\Codeception\fixtures\UserFixtureTrait;
+use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
+use Hirtz\Skeleton\Models\Queries\UserQuery;
+use Hirtz\Skeleton\Models\Trail;
+use Hirtz\Skeleton\Models\Traits\TrailModelTrait;
+use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Tests\support\UnitTester;
 use Override;
 use ReflectionClass;
 use Yii;

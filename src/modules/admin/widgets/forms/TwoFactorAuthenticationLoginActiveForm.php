@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\widgets\forms;
+namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms;
 
-use Hirtz\Skeleton\html\Icon;
-use Hirtz\Skeleton\models\forms\LoginForm;
-use Hirtz\Skeleton\widgets\forms\ActiveForm;
-use Hirtz\Skeleton\widgets\forms\fields\InputField;
+use Hirtz\Skeleton\Html\Icon;
+use Hirtz\Skeleton\Models\Forms\LoginForm;
+use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
+use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
 use Override;
 use Stringable;
 use Yii;

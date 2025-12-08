@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\widgets\grids;
+namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
-use Hirtz\Skeleton\helpers\Html;
-use Hirtz\Skeleton\html\Button;
-use Hirtz\Skeleton\html\Div;
-use Hirtz\Skeleton\html\Icon;
-use Hirtz\Skeleton\html\Ul;
-use Hirtz\Skeleton\models\AuthItem;
-use Hirtz\Skeleton\models\User;
-use Hirtz\Skeleton\modules\admin\controllers\AuthController;
-use Hirtz\Skeleton\widgets\grids\columns\ButtonColumn;
-use Hirtz\Skeleton\widgets\grids\columns\Column;
-use Hirtz\Skeleton\widgets\grids\columns\DataColumn;
-use Hirtz\Skeleton\widgets\grids\GridView;
-use Hirtz\Skeleton\widgets\grids\traits\MessageSourceTrait;
-use Hirtz\Skeleton\widgets\traits\UserWidgetTrait;
+use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Html\Button;
+use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Html\Icon;
+use Hirtz\Skeleton\Html\Ul;
+use Hirtz\Skeleton\Models\AuthItem;
+use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Controllers\AuthController;
+use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
+use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
+use Hirtz\Skeleton\Widgets\Grids\GridView;
+use Hirtz\Skeleton\Widgets\Grids\Traits\MessageSourceTrait;
+use Hirtz\Skeleton\Widgets\Traits\UserWidgetTrait;
 use Override;
 use Stringable;
 use Yii;

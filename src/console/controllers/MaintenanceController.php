@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\console\controllers;
+namespace Hirtz\Skeleton\Console\Controllers;
 
-use Hirtz\Skeleton\helpers\FileHelper;
-use Hirtz\Skeleton\models\forms\MaintenanceConfigForm;
+use Hirtz\Skeleton\Helpers\FileHelper;
+use Hirtz\Skeleton\Models\Forms\MaintenanceConfigForm;
 use Yii;
 use yii\console\Controller;
 use yii\helpers\Console;

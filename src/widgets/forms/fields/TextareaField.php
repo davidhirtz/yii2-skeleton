@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\forms\fields;
+namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 
-use Hirtz\Skeleton\html\Textarea;
-use Hirtz\Skeleton\html\traits\TagInputTrait;
-use Hirtz\Skeleton\html\traits\TagPlaceholderTrait;
+use Hirtz\Skeleton\Html\Textarea;
+use Hirtz\Skeleton\Html\Traits\TagInputTrait;
+use Hirtz\Skeleton\Html\Traits\TagPlaceholderTrait;
 use Stringable;
 use yii\validators\StringValidator;
 

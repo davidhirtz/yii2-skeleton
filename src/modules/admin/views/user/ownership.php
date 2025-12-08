@@ -8,13 +8,13 @@ declare(strict_types=1);
  * @var OwnershipForm $form
  */
 
-use Hirtz\Skeleton\html\Container;
-use Hirtz\Skeleton\models\forms\OwnershipForm;
-use Hirtz\Skeleton\modules\admin\widgets\forms\OwnershipActiveForm;
-use Hirtz\Skeleton\modules\admin\widgets\navs\UserSubmenu;
-use Hirtz\Skeleton\web\View;
-use Hirtz\Skeleton\widgets\forms\ErrorSummary;
-use Hirtz\Skeleton\widgets\panels\Card;
+use Hirtz\Skeleton\Html\Container;
+use Hirtz\Skeleton\Models\Forms\OwnershipForm;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\OwnershipActiveForm;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserSubmenu;
+use Hirtz\Skeleton\Web\View;
+use Hirtz\Skeleton\Widgets\Forms\ErrorSummary;
+use Hirtz\Skeleton\Widgets\Panels\Card;
 
 $this->title(Yii::t('skeleton', 'Transfer Ownership'))
     ->addBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);

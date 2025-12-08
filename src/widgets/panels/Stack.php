@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\panels;
+namespace Hirtz\Skeleton\Widgets\Panels;
 
-use Hirtz\Skeleton\html\traits\TagAttributesTrait;
-use Hirtz\Skeleton\html\Ul;
-use Hirtz\Skeleton\widgets\Widget;
+use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
+use Hirtz\Skeleton\Html\Ul;
+use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 
 class Stack extends Widget

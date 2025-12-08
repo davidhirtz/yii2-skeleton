@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\widgets\panels;
+namespace Hirtz\Skeleton\Modules\Admin\Widgets\Panels;
 
-use Hirtz\Skeleton\helpers\Html;
-use Hirtz\Skeleton\html\Button;
-use Hirtz\Skeleton\modules\admin\controllers\UserController;
-use Hirtz\Skeleton\widgets\Modal;
-use Hirtz\Skeleton\widgets\panels\Panel;
-use Hirtz\Skeleton\widgets\traits\UserWidgetTrait;
-use Hirtz\Skeleton\widgets\Widget;
+use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Html\Button;
+use Hirtz\Skeleton\Modules\Admin\Controllers\UserController;
+use Hirtz\Skeleton\Widgets\Modal;
+use Hirtz\Skeleton\Widgets\Panels\Panel;
+use Hirtz\Skeleton\Widgets\Traits\UserWidgetTrait;
+use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use Yii;
 use yii\helpers\Json;

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\data\controllers;
+namespace Hirtz\Skeleton\Tests\data\controllers;
 
-use Hirtz\Skeleton\web\Controller;
-use Hirtz\Skeleton\web\ErrorAction;
+use Hirtz\Skeleton\Web\Controller;
+use Hirtz\Skeleton\Web\ErrorAction;
 
 class TestController extends Controller
 {

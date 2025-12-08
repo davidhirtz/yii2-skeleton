@@ -7,11 +7,11 @@ declare(strict_types=1);
  * @var string $content
  */
 
-use Hirtz\Skeleton\assets\AdminAssetBundle;
-use Hirtz\Skeleton\modules\admin\widgets\navs\NavBar;
-use Hirtz\Skeleton\web\View;
-use Hirtz\Skeleton\widgets\Flashes;
-use Hirtz\Skeleton\widgets\navs\Breadcrumb;
+use Hirtz\Skeleton\Assets\AdminAssetBundle;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\NavBar;
+use Hirtz\Skeleton\Web\View;
+use Hirtz\Skeleton\Widgets\Flashes;
+use Hirtz\Skeleton\Widgets\Navs\Breadcrumb;
 use yii\helpers\Html;
 
 AdminAssetBundle::register($this);

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\functional;
+namespace Hirtz\Skeleton\Tests\functional;
 
-use Hirtz\Skeleton\codeception\fixtures\UserFixtureTrait;
-use Hirtz\Skeleton\codeception\functional\BaseCest;
-use Hirtz\Skeleton\modules\admin\Module;
-use Hirtz\Skeleton\tests\support\FunctionalTester;
+use Hirtz\Skeleton\Codeception\fixtures\UserFixtureTrait;
+use Hirtz\Skeleton\Codeception\functional\BaseCest;
+use Hirtz\Skeleton\Modules\Admin\Module;
+use Hirtz\Skeleton\Tests\support\FunctionalTester;
 use Yii;
 
 /**

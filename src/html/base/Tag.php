@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\html\base;
+namespace Hirtz\Skeleton\Html\Base;
 
 use Override;
 use Stringable;

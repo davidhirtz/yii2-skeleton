@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\forms\traits;
+namespace Hirtz\Skeleton\Widgets\Forms\Traits;
 
 trait RowAttributesTrait
 {

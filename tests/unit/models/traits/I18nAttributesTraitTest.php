@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\models\traits;
+namespace Hirtz\Skeleton\Tests\unit\models\traits;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\db\ActiveRecord;
-use Hirtz\Skeleton\models\interfaces\I18nAttributeInterface;
-use Hirtz\Skeleton\models\traits\I18nAttributesTrait;
+use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
+use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
 use Override;
 use Yii;
 

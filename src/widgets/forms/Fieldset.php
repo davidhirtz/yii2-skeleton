@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\forms;
+namespace Hirtz\Skeleton\Widgets\Forms;
 
-use Hirtz\Skeleton\html\traits\TagAttributesTrait;
-use Hirtz\Skeleton\html\traits\TagIdTrait;
-use Hirtz\Skeleton\models\interfaces\I18nAttributeInterface;
-use Hirtz\Skeleton\validators\DynamicRangeValidator;
-use Hirtz\Skeleton\validators\HexColorValidator;
-use Hirtz\Skeleton\validators\HtmlValidator;
-use Hirtz\Skeleton\validators\SensitiveAttributeValidator;
-use Hirtz\Skeleton\widgets\forms\fields\CheckboxField;
-use Hirtz\Skeleton\widgets\forms\fields\Field;
-use Hirtz\Skeleton\widgets\forms\fields\HexColorField;
-use Hirtz\Skeleton\widgets\forms\fields\InputField;
-use Hirtz\Skeleton\widgets\forms\fields\SelectField;
-use Hirtz\Skeleton\widgets\forms\fields\TinyMceField;
-use Hirtz\Skeleton\widgets\forms\traits\FormWidgetTrait;
-use Hirtz\Skeleton\widgets\traits\ModelWidgetTrait;
-use Hirtz\Skeleton\widgets\Widget;
+use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
+use Hirtz\Skeleton\Html\Traits\TagIdTrait;
+use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
+use Hirtz\Skeleton\Validators\DynamicRangeValidator;
+use Hirtz\Skeleton\Validators\HexColorValidator;
+use Hirtz\Skeleton\Validators\HtmlValidator;
+use Hirtz\Skeleton\Validators\SensitiveAttributeValidator;
+use Hirtz\Skeleton\Widgets\Forms\Fields\CheckboxField;
+use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
+use Hirtz\Skeleton\Widgets\Forms\Fields\HexColorField;
+use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
+use Hirtz\Skeleton\Widgets\Forms\Fields\SelectField;
+use Hirtz\Skeleton\Widgets\Forms\Fields\TinyMceField;
+use Hirtz\Skeleton\Widgets\Forms\Traits\FormWidgetTrait;
+use Hirtz\Skeleton\Widgets\Traits\ModelWidgetTrait;
+use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use Yii;
 use yii\validators\BooleanValidator;
@@ -151,7 +151,7 @@ class Fieldset extends Widget
     protected function renderContent(): string|Stringable
     {
         return $this->rows
-            ? \Hirtz\Skeleton\html\Fieldset::make()
+            ? \Hirtz\Skeleton\Html\Fieldset::make()
                 ->attributes($this->attributes)
                 ->addClass('fieldset')
                 ->content(...$this->rows)

@@ -8,7 +8,7 @@ declare(strict_types=1);
  * @var AccountUpdateForm $form
  */
 
-use Hirtz\Skeleton\models\forms\AccountUpdateForm;
+use Hirtz\Skeleton\Models\Forms\AccountUpdateForm;
 use yii\mail\MessageInterface;
 
 $this->title = Yii::t('skeleton', 'Email confirmation');

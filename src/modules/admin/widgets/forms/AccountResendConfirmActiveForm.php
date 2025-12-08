@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\widgets\forms;
+namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms;
 
-use Hirtz\Skeleton\html\Div;
-use Hirtz\Skeleton\models\forms\AccountResendConfirmForm;
-use Hirtz\Skeleton\modules\admin\widgets\forms\traits\LoginActiveFormTrait;
-use Hirtz\Skeleton\widgets\forms\ActiveForm;
+use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Models\Forms\AccountResendConfirmForm;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\Traits\LoginActiveFormTrait;
+use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
 use Override;
 use Stringable;
 use Yii;

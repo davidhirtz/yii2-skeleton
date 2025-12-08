@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\widgets\forms\traits;
+namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms\Traits;
 
-use Hirtz\Skeleton\helpers\ArrayHelper;
-use Hirtz\Skeleton\widgets\forms\fields\InputField;
-use Hirtz\Skeleton\widgets\forms\fields\SelectField;
-use Hirtz\Skeleton\widgets\forms\fields\TimezoneSelectField;
+use Hirtz\Skeleton\Helpers\ArrayHelper;
+use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
+use Hirtz\Skeleton\Widgets\Forms\Fields\SelectField;
+use Hirtz\Skeleton\Widgets\Forms\Fields\TimezoneSelectField;
 use Stringable;
 
 trait UserActiveFormTrait

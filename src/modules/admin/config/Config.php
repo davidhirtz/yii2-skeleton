@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\config;
+namespace Hirtz\Skeleton\Modules\Admin\Config;
 
 final readonly class Config
 {

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\behaviors;
+namespace Hirtz\Skeleton\Tests\unit\behaviors;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\behaviors\UserLanguageBehavior;
-use Hirtz\Skeleton\codeception\fixtures\UserFixtureTrait;
-use Hirtz\Skeleton\models\User;
-use Hirtz\Skeleton\tests\support\UnitTester;
-use Hirtz\Skeleton\web\Controller;
+use Hirtz\Skeleton\Behaviors\UserLanguageBehavior;
+use Hirtz\Skeleton\Codeception\fixtures\UserFixtureTrait;
+use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Tests\support\UnitTester;
+use Hirtz\Skeleton\Web\Controller;
 use Yii;
 
 class UserLanguageBehaviorTest extends Unit

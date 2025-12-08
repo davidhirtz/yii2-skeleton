@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\console\controllers;
+namespace Hirtz\Skeleton\Console\Controllers;
 
 use Yii;
 

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\controllers;
+namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
-use Hirtz\Skeleton\helpers\FileHelper;
-use Hirtz\Skeleton\models\User;
-use Hirtz\Skeleton\modules\admin\data\LogDataProvider;
-use Hirtz\Skeleton\web\Controller;
+use Hirtz\Skeleton\Helpers\FileHelper;
+use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Data\LogDataProvider;
+use Hirtz\Skeleton\Web\Controller;
 use Override;
 use Yii;
 use yii\filters\AccessControl;

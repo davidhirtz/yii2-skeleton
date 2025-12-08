@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\grids\columns;
+namespace Hirtz\Skeleton\Widgets\Grids\Columns;
 
 use Closure;
-use Hirtz\Skeleton\widgets\traits\FormatTrait;
-use Hirtz\Skeleton\widgets\traits\PropertyWidgetTrait;
+use Hirtz\Skeleton\Widgets\Traits\FormatTrait;
+use Hirtz\Skeleton\Widgets\Traits\PropertyWidgetTrait;
 use Override;
 use Stringable;
 use yii\base\Model;

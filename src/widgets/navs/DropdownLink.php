@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\navs;
+namespace Hirtz\Skeleton\Widgets\Navs;
 
-use Hirtz\Skeleton\html\A;
+use Hirtz\Skeleton\Html\A;
 
 class DropdownLink extends A
 {

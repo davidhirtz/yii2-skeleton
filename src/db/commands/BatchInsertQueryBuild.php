@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\db\commands;
+namespace Hirtz\Skeleton\Db\Commands;
 
-use Hirtz\Skeleton\db\ActiveRecord;
+use Hirtz\Skeleton\Db\ActiveRecord;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\db\Command;

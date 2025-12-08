@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\grids\columns;
+namespace Hirtz\Skeleton\Widgets\Grids\Columns;
 
-use Hirtz\Skeleton\assets\SelectableAssetBundle;
-use Hirtz\Skeleton\html\Checkbox;
+use Hirtz\Skeleton\Assets\SelectableAssetBundle;
+use Hirtz\Skeleton\Html\Checkbox;
 use Override;
 use Stringable;
 use Yii;

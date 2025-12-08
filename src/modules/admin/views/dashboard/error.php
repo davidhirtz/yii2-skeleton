@@ -7,8 +7,8 @@ declare(strict_types=1);
  * @var ErrorHandler $handler
  */
 
-use Hirtz\Skeleton\assets\AdminAssetBundle;
-use Hirtz\Skeleton\web\View;
+use Hirtz\Skeleton\Assets\AdminAssetBundle;
+use Hirtz\Skeleton\Web\View;
 use yii\base\UserException;
 use yii\helpers\Html;
 use yii\web\ErrorHandler;

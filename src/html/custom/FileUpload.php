@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\html\custom;
+namespace Hirtz\Skeleton\Html\Custom;
 
-use Hirtz\Skeleton\helpers\Url;
-use Hirtz\Skeleton\html\base\Tag;
-use Hirtz\Skeleton\html\traits\TagContentTrait;
+use Hirtz\Skeleton\Helpers\Url;
+use Hirtz\Skeleton\Html\Base\Tag;
+use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Override;
 
 class FileUpload extends Tag

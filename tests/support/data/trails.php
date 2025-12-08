@@ -6,7 +6,7 @@ return [
     [
         'id' => 1,
         'type' => 1,
-        'model' => 'Hirtz\Skeleton\models\User',
+        'model' => 'Hirtz\Skeleton\Models\User',
         'model_id' => '1',
         'user_id' => 1,
         'message' => null,
@@ -16,7 +16,7 @@ return [
     [
         'id' => 2,
         'type' => 2,
-        'model' => 'Hirtz\Skeleton\models\User',
+        'model' => 'Hirtz\Skeleton\Models\User',
         'model_id' => '1',
         'user_id' => 1,
         'message' => null,
@@ -27,7 +27,7 @@ return [
     [
         'id' => 3,
         'type' => 1,
-        'model' => 'Hirtz\Skeleton\models\Redirect',
+        'model' => 'Hirtz\Skeleton\Models\Redirect',
         'model_id' => '1',
         'user_id' => 1,
         'message' => null,
@@ -37,7 +37,7 @@ return [
     [
         'id' => 4,
         'type' => 2,
-        'model' => 'Hirtz\Skeleton\models\Redirect',
+        'model' => 'Hirtz\Skeleton\Models\Redirect',
         'model_id' => '1',
         'user_id' => 1,
         'message' => null,

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\behaviors;
+namespace Hirtz\Skeleton\Behaviors;
 
-use Hirtz\Skeleton\validators\DynamicRangeValidator;
+use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use yii\base\Behavior;
 use yii\base\Event;
 use yii\base\InvalidArgumentException;

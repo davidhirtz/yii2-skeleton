@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\behaviors;
+namespace Hirtz\Skeleton\Tests\unit\behaviors;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\behaviors\SerializedAttributesBehavior;
-use Hirtz\Skeleton\db\ActiveRecord;
+use Hirtz\Skeleton\Behaviors\SerializedAttributesBehavior;
+use Hirtz\Skeleton\Db\ActiveRecord;
 use Yii;
 
 class SerializedAttributeBehaviorTest extends Unit

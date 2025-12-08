@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\controllers;
+namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
-use Hirtz\Skeleton\modules\admin\config\DashboardPanelConfig;
-use Hirtz\Skeleton\modules\admin\Module;
-use Hirtz\Skeleton\web\Controller;
+use Hirtz\Skeleton\Modules\Admin\Config\DashboardPanelConfig;
+use Hirtz\Skeleton\Modules\Admin\Module;
+use Hirtz\Skeleton\Web\Controller;
 use Override;
 use yii\filters\AccessControl;
 use yii\web\Response;

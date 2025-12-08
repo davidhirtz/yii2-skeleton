@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\support\fixtures;
+namespace Hirtz\Skeleton\Tests\support\fixtures;
 
-use Hirtz\Skeleton\models\Trail;
+use Hirtz\Skeleton\Models\Trail;
 use yii\test\ActiveFixture;
 
 class TrailFixture extends ActiveFixture

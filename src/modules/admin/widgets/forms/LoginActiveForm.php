@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\widgets\forms;
+namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms;
 
-use Hirtz\Skeleton\models\forms\LoginForm;
-use Hirtz\Skeleton\modules\admin\widgets\forms\traits\LoginActiveFormTrait;
-use Hirtz\Skeleton\widgets\forms\ActiveForm;
-use Hirtz\Skeleton\widgets\forms\fields\CheckboxField;
+use Hirtz\Skeleton\Models\Forms\LoginForm;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\Traits\LoginActiveFormTrait;
+use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
+use Hirtz\Skeleton\Widgets\Forms\Fields\CheckboxField;
 use Override;
 use Stringable;
 use Yii;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules;
+namespace Hirtz\Skeleton\Modules;
 
 use Yii;
 

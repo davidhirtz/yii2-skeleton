@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\html;
+namespace Hirtz\Skeleton\Html;
 
-use Hirtz\Skeleton\html\base\ListTag;
+use Hirtz\Skeleton\Html\Base\ListTag;
 use Override;
 
 class Optgroup extends ListTag

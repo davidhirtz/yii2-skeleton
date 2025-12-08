@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\rbac\rules;
+namespace Hirtz\Skeleton\Rbac\Rules;
 
-use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\Models\User;
 use yii\rbac\Rule;
 
 class OwnerRule extends Rule

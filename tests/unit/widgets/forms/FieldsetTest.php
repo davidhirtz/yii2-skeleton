@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\widgets\forms;
+namespace Hirtz\Skeleton\Tests\unit\widgets\forms;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\db\ActiveRecord;
-use Hirtz\Skeleton\models\interfaces\I18nAttributeInterface;
-use Hirtz\Skeleton\models\traits\I18nAttributesTrait;
-use Hirtz\Skeleton\validators\SensitiveAttributeValidator;
-use Hirtz\Skeleton\widgets\forms\fields\InputField;
-use Hirtz\Skeleton\widgets\forms\Fieldset;
+use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
+use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
+use Hirtz\Skeleton\Validators\SensitiveAttributeValidator;
+use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
+use Hirtz\Skeleton\Widgets\Forms\Fieldset;
 use Override;
 use Yii;
 

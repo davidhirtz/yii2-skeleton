@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models\traits;
+namespace Hirtz\Skeleton\Models\Traits;
 
-use Hirtz\Skeleton\db\I18nActiveQuery;
+use Hirtz\Skeleton\Db\I18nActiveQuery;
 use Yii;
 use yii\db\ActiveRecord;
 

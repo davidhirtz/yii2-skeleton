@@ -2,30 +2,30 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin;
+namespace Hirtz\Skeleton\Modules\Admin;
 
-use Hirtz\Skeleton\behaviors\UserLanguageBehavior;
-use Hirtz\Skeleton\helpers\ArrayHelper;
-use Hirtz\Skeleton\models\Redirect;
-use Hirtz\Skeleton\models\Trail;
-use Hirtz\Skeleton\models\User;
-use Hirtz\Skeleton\modules\admin\config\Config;
-use Hirtz\Skeleton\modules\admin\config\DashboardItemConfig;
-use Hirtz\Skeleton\modules\admin\config\DashboardPanelConfig;
-use Hirtz\Skeleton\modules\admin\config\MainMenuItemConfig;
-use Hirtz\Skeleton\modules\admin\controllers\AccountController;
-use Hirtz\Skeleton\modules\admin\controllers\AuthController;
-use Hirtz\Skeleton\modules\admin\controllers\DashboardController;
-use Hirtz\Skeleton\modules\admin\controllers\LogController;
-use Hirtz\Skeleton\modules\admin\controllers\RedirectController;
-use Hirtz\Skeleton\modules\admin\controllers\SystemController;
-use Hirtz\Skeleton\modules\admin\controllers\TrailController;
-use Hirtz\Skeleton\modules\admin\controllers\UserController;
-use Hirtz\Skeleton\modules\admin\controllers\UserLoginController;
+use Hirtz\Skeleton\Behaviors\UserLanguageBehavior;
+use Hirtz\Skeleton\Helpers\ArrayHelper;
+use Hirtz\Skeleton\Models\Redirect;
+use Hirtz\Skeleton\Models\Trail;
+use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Config\Config;
+use Hirtz\Skeleton\Modules\Admin\Config\DashboardItemConfig;
+use Hirtz\Skeleton\Modules\Admin\Config\DashboardPanelConfig;
+use Hirtz\Skeleton\Modules\Admin\Config\MainMenuItemConfig;
+use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
+use Hirtz\Skeleton\Modules\Admin\Controllers\AuthController;
+use Hirtz\Skeleton\Modules\Admin\Controllers\DashboardController;
+use Hirtz\Skeleton\Modules\Admin\Controllers\LogController;
+use Hirtz\Skeleton\Modules\Admin\Controllers\RedirectController;
+use Hirtz\Skeleton\Modules\Admin\Controllers\SystemController;
+use Hirtz\Skeleton\Modules\Admin\Controllers\TrailController;
+use Hirtz\Skeleton\Modules\Admin\Controllers\UserController;
+use Hirtz\Skeleton\Modules\Admin\Controllers\UserLoginController;
 use Override;
 use Yii;
 
-class Module extends \Hirtz\Skeleton\base\Module implements ModuleInterface
+class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
 {
     /**
      * @var string the module base route
@@ -44,7 +44,7 @@ class Module extends \Hirtz\Skeleton\base\Module implements ModuleInterface
     public bool $showInBreadcrumbs = true;
 
     public $defaultRoute = 'dashboard/index';
-    public $controllerNamespace = 'app\modules\admin\controllers';
+    public $controllerNamespace = 'app\Modules\Admin\Controllers';
     public $layout = '@skeleton/modules/admin/views/layouts/main';
 
     private array $dashboardPanels = [];

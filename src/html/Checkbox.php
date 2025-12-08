@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\html;
+namespace Hirtz\Skeleton\Html;
 
-use Hirtz\Skeleton\html\traits\TagInputTrait;
+use Hirtz\Skeleton\Html\Traits\TagInputTrait;
 use Override;
 
 class Checkbox extends Input

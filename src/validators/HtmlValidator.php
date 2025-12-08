@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\validators;
+namespace Hirtz\Skeleton\Validators;
 
 use yii\db\ActiveRecord;
 use yii\helpers\HtmlPurifier;

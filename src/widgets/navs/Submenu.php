@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\navs;
+namespace Hirtz\Skeleton\Widgets\Navs;
 
-use Hirtz\Skeleton\html\traits\TagContentTrait;
-use Hirtz\Skeleton\html\traits\TagTitleTrait;
-use Hirtz\Skeleton\html\traits\TagUrlTrait;
-use Hirtz\Skeleton\widgets\navs\traits\NavItemTrait;
-use Hirtz\Skeleton\widgets\traits\ContainerWidgetTrait;
-use Hirtz\Skeleton\widgets\Widget;
+use Hirtz\Skeleton\Html\Traits\TagContentTrait;
+use Hirtz\Skeleton\Html\Traits\TagTitleTrait;
+use Hirtz\Skeleton\Html\Traits\TagUrlTrait;
+use Hirtz\Skeleton\Widgets\Navs\Traits\NavItemTrait;
+use Hirtz\Skeleton\Widgets\Traits\ContainerWidgetTrait;
+use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models;
+namespace Hirtz\Skeleton\Models;
 
-use Hirtz\Skeleton\base\traits\ModelTrait;
+use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use yii\base\Model;
 
 class LogFile extends Model

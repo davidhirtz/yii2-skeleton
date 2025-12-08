@@ -6,15 +6,15 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\functional;
+namespace Hirtz\Skeleton\Tests\functional;
 
-use Hirtz\Skeleton\codeception\fixtures\UserFixtureTrait;
-use Hirtz\Skeleton\codeception\functional\BaseCest;
-use Hirtz\Skeleton\helpers\Html;
-use Hirtz\Skeleton\models\forms\AccountResendConfirmForm;
-use Hirtz\Skeleton\models\User;
-use Hirtz\Skeleton\modules\admin\Module;
-use Hirtz\Skeleton\tests\support\FunctionalTester;
+use Hirtz\Skeleton\Codeception\fixtures\UserFixtureTrait;
+use Hirtz\Skeleton\Codeception\functional\BaseCest;
+use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Models\Forms\AccountResendConfirmForm;
+use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Module;
+use Hirtz\Skeleton\Tests\support\FunctionalTester;
 use Override;
 use Yii;
 use yii\symfonymailer\Message;

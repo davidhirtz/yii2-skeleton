@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models;
+namespace Hirtz\Skeleton\Models;
 
 use davidhirtz\yii2\datetime\DateTime;
-use Hirtz\Skeleton\db\ActiveRecord;
-use Hirtz\Skeleton\models\collections\TrailModelCollection;
-use Hirtz\Skeleton\models\interfaces\TrailModelInterface;
-use Hirtz\Skeleton\models\interfaces\TypeAttributeInterface;
-use Hirtz\Skeleton\models\queries\UserQuery;
-use Hirtz\Skeleton\models\traits\TypeAttributeTrait;
-use Hirtz\Skeleton\modules\admin\widgets\grids\TrailGridView;
-use Hirtz\Skeleton\validators\DynamicRangeValidator;
+use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Models\Collections\TrailModelCollection;
+use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
+use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
+use Hirtz\Skeleton\Models\Queries\UserQuery;
+use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\TrailGridView;
+use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use ReflectionClass;
 use Yii;
 use yii\base\Model;

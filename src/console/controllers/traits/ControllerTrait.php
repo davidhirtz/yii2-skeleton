@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\console\controllers\traits;
+namespace Hirtz\Skeleton\Console\Controllers\traits;
 
 trait ControllerTrait
 {

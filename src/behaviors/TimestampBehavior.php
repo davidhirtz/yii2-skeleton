@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\behaviors;
+namespace Hirtz\Skeleton\Behaviors;
 
 use davidhirtz\yii2\datetime\DateTime;
 

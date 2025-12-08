@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\validators;
+namespace Hirtz\Skeleton\Tests\unit\validators;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\validators\HtmlValidator;
+use Hirtz\Skeleton\Validators\HtmlValidator;
 
 class HtmlValidatorTest extends Unit
 {

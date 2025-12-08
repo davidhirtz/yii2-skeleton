@@ -3,16 +3,16 @@
 declare(strict_types=1);
 
 /**
- * @see \Hirtz\Skeleton\modules\admin\controllers\UserLoginController::actionIndex()
+ * @see \Hirtz\Skeleton\Modules\Admin\Controllers\UserLoginController::actionIndex()
  *
  * @var View $this
  * @var ActiveDataProvider $provider
  */
 
-use Hirtz\Skeleton\modules\admin\widgets\grids\UserLoginGridView;
-use Hirtz\Skeleton\modules\admin\widgets\navs\UserSubmenu;
-use Hirtz\Skeleton\web\View;
-use Hirtz\Skeleton\widgets\grids\GridContainer;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\UserLoginGridView;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserSubmenu;
+use Hirtz\Skeleton\Web\View;
+use Hirtz\Skeleton\Widgets\Grids\GridContainer;
 use yii\data\ActiveDataProvider;
 
 $this->title(Yii::t('skeleton', 'Logins'))

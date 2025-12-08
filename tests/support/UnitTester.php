@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\support;
+namespace Hirtz\Skeleton\Tests\support;
 
 use Codeception\Actor;
 

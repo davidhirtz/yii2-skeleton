@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\data;
+namespace Hirtz\Skeleton\Modules\Admin\Data;
 
-use Hirtz\Skeleton\models\queries\UserQuery;
-use Hirtz\Skeleton\models\Trail;
-use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\Models\Queries\UserQuery;
+use Hirtz\Skeleton\Models\Trail;
+use Hirtz\Skeleton\Models\User;
 use yii\data\ActiveDataProvider;
 
 /**

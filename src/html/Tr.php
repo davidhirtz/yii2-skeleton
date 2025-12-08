@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\html;
+namespace Hirtz\Skeleton\Html;
 
-use Hirtz\Skeleton\html\base\TableCell;
-use Hirtz\Skeleton\html\base\Tag;
+use Hirtz\Skeleton\Html\Base\TableCell;
+use Hirtz\Skeleton\Html\Base\Tag;
 use Override;
 
 class Tr extends Tag

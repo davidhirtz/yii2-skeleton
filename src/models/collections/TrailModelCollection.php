@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models\collections;
+namespace Hirtz\Skeleton\Models\Collections;
 
 use DateTime;
 use DateTimeZone;
-use Hirtz\Skeleton\db\ActiveRecord;
+use Hirtz\Skeleton\Db\ActiveRecord;
 use Throwable;
 use Yii;
 use yii\base\Model;
@@ -28,7 +28,7 @@ class TrailModelCollection
 
     /**
      * Finds the model based on the given model string. If a model supports `i18n` tables, the corresponding language
-     * will be added to the model, separated by "::" like `\Hirtz\Cms\models\Entry::en_US`.
+     * will be added to the model, separated by "::" like `\Hirtz\Cms\Models\Entry::en_US`.
      *
      * For this reason, the cache key is the table name, rather than the model class name.
      */

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\db;
+namespace Hirtz\Skeleton\Tests\unit\db;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\db\Dsn;
+use Hirtz\Skeleton\Db\Dsn;
 use yii\base\InvalidArgumentException;
 
 class DsnTest extends Unit

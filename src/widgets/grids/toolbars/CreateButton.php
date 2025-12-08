@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\grids\toolbars;
+namespace Hirtz\Skeleton\Widgets\Grids\Toolbars;
 
-use Hirtz\Skeleton\helpers\Url;
-use Hirtz\Skeleton\html\Button;
-use Hirtz\Skeleton\html\Icon;
-use Hirtz\Skeleton\html\traits\TagAttributesTrait;
-use Hirtz\Skeleton\html\traits\TagIconTextTrait;
-use Hirtz\Skeleton\html\traits\TagLinkTrait;
-use Hirtz\Skeleton\widgets\Widget;
+use Hirtz\Skeleton\Helpers\Url;
+use Hirtz\Skeleton\Html\Button;
+use Hirtz\Skeleton\Html\Icon;
+use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
+use Hirtz\Skeleton\Html\Traits\TagIconTextTrait;
+use Hirtz\Skeleton\Html\Traits\TagLinkTrait;
+use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use Yii;
 

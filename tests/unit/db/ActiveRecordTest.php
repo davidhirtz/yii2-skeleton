@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\db;
+namespace Hirtz\Skeleton\Tests\unit\db;
 
 use Codeception\Test\Unit;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
-use Hirtz\Skeleton\codeception\fixtures\UserFixtureTrait;
-use Hirtz\Skeleton\db\ActiveQuery;
-use Hirtz\Skeleton\db\ActiveRecord;
-use Hirtz\Skeleton\models\queries\UserQuery;
-use Hirtz\Skeleton\models\traits\UpdatedByUserTrait;
-use Hirtz\Skeleton\models\User;
-use Hirtz\Skeleton\tests\support\UnitTester;
+use Hirtz\Skeleton\Codeception\fixtures\UserFixtureTrait;
+use Hirtz\Skeleton\Db\ActiveQuery;
+use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Models\Queries\UserQuery;
+use Hirtz\Skeleton\Models\Traits\UpdatedByUserTrait;
+use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Tests\support\UnitTester;
 use Yii;
 
 class ActiveRecordTest extends Unit

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\helpers;
+namespace Hirtz\Skeleton\Helpers;
 
-use Hirtz\Skeleton\web\View;
+use Hirtz\Skeleton\Web\View;
 use yii\helpers\Json;
 use yii\helpers\Url;
 

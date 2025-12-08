@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models;
+namespace Hirtz\Skeleton\Models;
 
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
-use Hirtz\Skeleton\behaviors\BlameableBehavior;
-use Hirtz\Skeleton\behaviors\TimestampBehavior;
-use Hirtz\Skeleton\behaviors\TrailBehavior;
-use Hirtz\Skeleton\db\ActiveRecord;
-use Hirtz\Skeleton\models\interfaces\TrailModelInterface;
-use Hirtz\Skeleton\models\interfaces\TypeAttributeInterface;
-use Hirtz\Skeleton\models\traits\TrailModelTrait;
-use Hirtz\Skeleton\models\traits\TypeAttributeTrait;
-use Hirtz\Skeleton\models\traits\UpdatedByUserTrait;
-use Hirtz\Skeleton\validators\DynamicRangeValidator;
+use Hirtz\Skeleton\Behaviors\BlameableBehavior;
+use Hirtz\Skeleton\Behaviors\TimestampBehavior;
+use Hirtz\Skeleton\Behaviors\TrailBehavior;
+use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
+use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
+use Hirtz\Skeleton\Models\Traits\TrailModelTrait;
+use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
+use Hirtz\Skeleton\Models\Traits\UpdatedByUserTrait;
+use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Override;
 use Yii;
 

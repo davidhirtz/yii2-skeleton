@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\db;
+namespace Hirtz\Skeleton\Db;
 
 use davidhirtz\yii2\datetime\DateTime;
-use Hirtz\Skeleton\base\traits\ModelTrait;
-use Hirtz\Skeleton\behaviors\AttributeTypecastBehavior;
-use Hirtz\Skeleton\db\commands\BatchInsertQueryBuild;
+use Hirtz\Skeleton\Base\Traits\ModelTrait;
+use Hirtz\Skeleton\Behaviors\AttributeTypecastBehavior;
+use Hirtz\Skeleton\Db\Commands\BatchInsertQueryBuild;
 use Override;
 use Yii;
 use yii\helpers\Inflector;

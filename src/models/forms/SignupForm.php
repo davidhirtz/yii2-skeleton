@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models\forms;
+namespace Hirtz\Skeleton\Models\Forms;
 
-use Hirtz\Skeleton\models\traits\SignupEmailTrait;
-use Hirtz\Skeleton\models\UserLogin;
+use Hirtz\Skeleton\Models\Traits\SignupEmailTrait;
+use Hirtz\Skeleton\Models\UserLogin;
 use Override;
 use Yii;
 

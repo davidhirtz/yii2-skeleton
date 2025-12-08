@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\base;
+namespace Hirtz\Skeleton\Base;
 
 use Override;
 

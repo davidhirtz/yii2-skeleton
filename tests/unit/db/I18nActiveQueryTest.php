@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\db;
+namespace Hirtz\Skeleton\Tests\unit\db;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\db\ActiveRecord;
-use Hirtz\Skeleton\models\traits\I18nAttributesTrait;
+use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
 use Yii;
 
 class I18nActiveQueryTest extends Unit

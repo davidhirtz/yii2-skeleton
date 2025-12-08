@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\modules\admin\models\forms;
+namespace Hirtz\Skeleton\Tests\unit\Modules\Admin\Models\forms;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\codeception\fixtures\UserFixtureTrait;
-use Hirtz\Skeleton\models\Trail;
-use Hirtz\Skeleton\modules\admin\models\forms\UserForm;
-use Hirtz\Skeleton\tests\support\UnitTester;
+use Hirtz\Skeleton\Codeception\fixtures\UserFixtureTrait;
+use Hirtz\Skeleton\Models\Trail;
+use Hirtz\Skeleton\Modules\Admin\Models\forms\UserForm;
+use Hirtz\Skeleton\Tests\support\UnitTester;
 use Yii;
 use yii\symfonymailer\Message;
 

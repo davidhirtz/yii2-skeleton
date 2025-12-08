@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\db\mysql;
+namespace Hirtz\Skeleton\Db\Mysql;
 
-use Hirtz\Skeleton\db\Connection;
-use Hirtz\Skeleton\db\Dsn;
-use Hirtz\Skeleton\helpers\FileHelper;
+use Hirtz\Skeleton\Db\Connection;
+use Hirtz\Skeleton\Db\Dsn;
+use Hirtz\Skeleton\Helpers\FileHelper;
 use mikehaertl\shellcommand\Command;
 use Yii;
 

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\forms\fields;
+namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 
-use Hirtz\Skeleton\html\Input;
-use Hirtz\Skeleton\html\traits\TagInputTrait;
-use Hirtz\Skeleton\html\traits\TagPlaceholderTrait;
-use Hirtz\Skeleton\widgets\forms\InputGroup;
-use Hirtz\Skeleton\widgets\forms\traits\InputGroupTrait;
+use Hirtz\Skeleton\Html\Input;
+use Hirtz\Skeleton\Html\Traits\TagInputTrait;
+use Hirtz\Skeleton\Html\Traits\TagPlaceholderTrait;
+use Hirtz\Skeleton\Widgets\Forms\InputGroup;
+use Hirtz\Skeleton\Widgets\Forms\Traits\InputGroupTrait;
 use Override;
 use Stringable;
 use yii\validators\NumberValidator;

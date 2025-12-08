@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\controllers;
+namespace Hirtz\Skeleton\Controllers;
 
 use DateTime;
-use Hirtz\Skeleton\web\Controller;
+use Hirtz\Skeleton\Web\Controller;
 use XMLWriter;
 use Yii;
 use yii\filters\PageCache;

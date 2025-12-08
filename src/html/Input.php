@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\html;
+namespace Hirtz\Skeleton\Html;
 
-use Hirtz\Skeleton\html\base\VoidTag;
-use Hirtz\Skeleton\html\traits\TagInputTrait;
+use Hirtz\Skeleton\Html\Base\VoidTag;
+use Hirtz\Skeleton\Html\Traits\TagInputTrait;
 use Override;
 
 class Input extends VoidTag

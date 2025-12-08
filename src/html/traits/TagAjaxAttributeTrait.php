@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\html\traits;
+namespace Hirtz\Skeleton\Html\Traits;
 
-use Hirtz\Skeleton\helpers\Url;
+use Hirtz\Skeleton\Helpers\Url;
 
 trait TagAjaxAttributeTrait
 {

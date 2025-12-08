@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\widgets\grids;
+namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
-use Hirtz\Skeleton\helpers\Html;
-use Hirtz\Skeleton\html\Div;
-use Hirtz\Skeleton\html\Pre;
-use Hirtz\Skeleton\models\Log;
-use Hirtz\Skeleton\modules\admin\data\LogDataProvider;
-use Hirtz\Skeleton\widgets\grids\columns\Column;
-use Hirtz\Skeleton\widgets\grids\columns\DataColumn;
-use Hirtz\Skeleton\widgets\grids\GridView;
+use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Html\Pre;
+use Hirtz\Skeleton\Models\Log;
+use Hirtz\Skeleton\Modules\Admin\Data\LogDataProvider;
+use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
+use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
+use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Override;
 use Yii;
 

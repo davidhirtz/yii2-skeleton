@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\widgets\forms;
+namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms;
 
-use Hirtz\Skeleton\assets\SignupAssetBundle;
-use Hirtz\Skeleton\html\Icon;
-use Hirtz\Skeleton\models\forms\SignupForm;
-use Hirtz\Skeleton\modules\admin\controllers\AccountController;
-use Hirtz\Skeleton\modules\admin\widgets\forms\traits\LoginActiveFormTrait;
-use Hirtz\Skeleton\widgets\forms\ActiveForm;
-use Hirtz\Skeleton\widgets\forms\fields\CheckboxField;
-use Hirtz\Skeleton\widgets\forms\fields\InputField;
+use Hirtz\Skeleton\Assets\SignupAssetBundle;
+use Hirtz\Skeleton\Html\Icon;
+use Hirtz\Skeleton\Models\Forms\SignupForm;
+use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\Traits\LoginActiveFormTrait;
+use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
+use Hirtz\Skeleton\Widgets\Forms\Fields\CheckboxField;
+use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
 use Stringable;
 use Yii;
 use yii\helpers\Url;

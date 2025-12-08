@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\web;
+namespace Hirtz\Skeleton\Web;
 
-use Hirtz\Skeleton\helpers\ArrayHelper;
+use Hirtz\Skeleton\Helpers\ArrayHelper;
 use Override;
 use Yii;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\validators;
+namespace Hirtz\Skeleton\Validators;
 
 use davidhirtz\yii2\datetime\DateTime;
 use Override;

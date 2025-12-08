@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\html;
+namespace Hirtz\Skeleton\Html;
 
-use Hirtz\Skeleton\helpers\Html;
-use Hirtz\Skeleton\html\base\Tag;
+use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Html\Base\Tag;
 use Stringable;
 
 class Label extends Tag

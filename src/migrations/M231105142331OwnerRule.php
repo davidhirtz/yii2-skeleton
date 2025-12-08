@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\migrations;
+namespace Hirtz\Skeleton\Migrations;
 
-use Hirtz\Skeleton\db\traits\MigrationTrait;
-use Hirtz\Skeleton\rbac\rules\OwnerRule;
+use Hirtz\Skeleton\Db\Traits\MigrationTrait;
+use Hirtz\Skeleton\Rbac\Rules\OwnerRule;
 use Yii;
 use yii\db\Migration;
 

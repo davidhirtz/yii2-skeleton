@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\models\events;
+namespace Hirtz\Skeleton\Tests\unit\models\events;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\base\traits\ModelTrait;
-use Hirtz\Skeleton\models\events\CreateValidatorsEvent;
+use Hirtz\Skeleton\Base\Traits\ModelTrait;
+use Hirtz\Skeleton\Models\Events\CreateValidatorsEvent;
 use yii\base\Behavior;
 use yii\base\Model;
 use yii\validators\RequiredValidator;

@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models;
+namespace Hirtz\Skeleton\Models;
 
 use DateTimeZone;
 use davidhirtz\yii2\datetime\Date;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
-use Hirtz\Skeleton\behaviors\TimestampBehavior;
-use Hirtz\Skeleton\behaviors\TrailBehavior;
-use Hirtz\Skeleton\db\ActiveRecord;
-use Hirtz\Skeleton\helpers\FileHelper;
-use Hirtz\Skeleton\models\interfaces\StatusAttributeInterface;
-use Hirtz\Skeleton\models\interfaces\TrailModelInterface;
-use Hirtz\Skeleton\models\queries\UserQuery;
-use Hirtz\Skeleton\models\traits\StatusAttributeTrait;
-use Hirtz\Skeleton\models\traits\TrailModelTrait;
-use Hirtz\Skeleton\modules\admin\controllers\AccountController;
-use Hirtz\Skeleton\validators\DynamicRangeValidator;
-use Hirtz\Skeleton\validators\UniqueValidator;
+use Hirtz\Skeleton\Behaviors\TimestampBehavior;
+use Hirtz\Skeleton\Behaviors\TrailBehavior;
+use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Helpers\FileHelper;
+use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
+use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
+use Hirtz\Skeleton\Models\Queries\UserQuery;
+use Hirtz\Skeleton\Models\Traits\StatusAttributeTrait;
+use Hirtz\Skeleton\Models\Traits\TrailModelTrait;
+use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
+use Hirtz\Skeleton\Validators\DynamicRangeValidator;
+use Hirtz\Skeleton\Validators\UniqueValidator;
 use Override;
 use Yii;
 use yii\base\NotSupportedException;

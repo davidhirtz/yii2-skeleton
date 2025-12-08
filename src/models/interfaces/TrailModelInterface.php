@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models\interfaces;
+namespace Hirtz\Skeleton\Models\Interfaces;
 
-use Hirtz\Skeleton\behaviors\TrailBehavior;
+use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use yii\base\Model;
 
 /**

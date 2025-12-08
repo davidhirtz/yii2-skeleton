@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\grids\traits;
+namespace Hirtz\Skeleton\Widgets\Grids\Traits;
 
-use Hirtz\Skeleton\widgets\grids\GridView;
+use Hirtz\Skeleton\Widgets\Grids\GridView;
 
 trait GridTrait
 {

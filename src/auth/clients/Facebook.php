@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\auth\clients;
+namespace Hirtz\Skeleton\Auth\Clients;
 
 use davidhirtz\yii2\datetime\Date;
-use Hirtz\Skeleton\models\AuthClient;
+use Hirtz\Skeleton\Models\AuthClient;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;

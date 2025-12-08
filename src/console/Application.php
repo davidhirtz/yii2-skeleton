@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\console;
+namespace Hirtz\Skeleton\Console;
 
-use Hirtz\Skeleton\base\traits\ApplicationTrait;
-use Hirtz\Skeleton\console\controllers\AssetController;
-use Hirtz\Skeleton\console\controllers\EmailController;
-use Hirtz\Skeleton\console\controllers\MaintenanceController;
-use Hirtz\Skeleton\console\controllers\MessageController;
-use Hirtz\Skeleton\console\controllers\MigrateController;
-use Hirtz\Skeleton\console\controllers\ParamsController;
-use Hirtz\Skeleton\console\controllers\TrailController;
-use Hirtz\Skeleton\console\controllers\UserController;
+use Hirtz\Skeleton\Base\Traits\ApplicationTrait;
+use Hirtz\Skeleton\Console\Controllers\AssetController;
+use Hirtz\Skeleton\Console\Controllers\EmailController;
+use Hirtz\Skeleton\Console\Controllers\MaintenanceController;
+use Hirtz\Skeleton\Console\Controllers\MessageController;
+use Hirtz\Skeleton\Console\Controllers\MigrateController;
+use Hirtz\Skeleton\Console\Controllers\ParamsController;
+use Hirtz\Skeleton\Console\Controllers\TrailController;
+use Hirtz\Skeleton\Console\Controllers\UserController;
 use Yii;
 
 class Application extends \yii\console\Application

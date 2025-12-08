@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\modules\admin;
+namespace Hirtz\Skeleton\Tests\unit\modules\admin;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\modules\admin\config\DashboardItemConfig;
-use Hirtz\Skeleton\modules\admin\config\DashboardPanelConfig;
-use Hirtz\Skeleton\modules\admin\config\MainMenuItemConfig;
-use Hirtz\Skeleton\modules\admin\Module;
-use Hirtz\Skeleton\modules\admin\ModuleInterface;
+use Hirtz\Skeleton\Modules\Admin\Config\DashboardItemConfig;
+use Hirtz\Skeleton\Modules\Admin\Config\DashboardPanelConfig;
+use Hirtz\Skeleton\Modules\Admin\Config\MainMenuItemConfig;
+use Hirtz\Skeleton\Modules\Admin\Module;
+use Hirtz\Skeleton\Modules\Admin\ModuleInterface;
 use Yii;
 
 class ModuleTest extends Unit
@@ -64,7 +64,7 @@ class ModuleTest extends Unit
     }
 }
 
-class TestModule extends \Hirtz\Skeleton\base\Module implements ModuleInterface
+class TestModule extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
 {
     public function getDashboardPanels(): array
     {

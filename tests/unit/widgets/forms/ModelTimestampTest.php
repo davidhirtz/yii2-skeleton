@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\tests\unit\modules\admin\widgets\forms;
+namespace Hirtz\Skeleton\Tests\unit\Modules\Admin\Widgets\Forms;
 
 use Codeception\Test\Unit;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
-use Hirtz\Skeleton\behaviors\TimestampBehavior;
-use Hirtz\Skeleton\codeception\traits\AssetDirectoryTrait;
-use Hirtz\Skeleton\db\ActiveRecord;
-use Hirtz\Skeleton\widgets\bootstrap\ActiveForm;
-use Hirtz\Skeleton\widgets\forms\traits\ModelTimestampTrait;
+use Hirtz\Skeleton\Behaviors\TimestampBehavior;
+use Hirtz\Skeleton\Codeception\traits\AssetDirectoryTrait;
+use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Widgets\Bootstrap\ActiveForm;
+use Hirtz\Skeleton\Widgets\Forms\Traits\ModelTimestampTrait;
 use Hirtz\Timeago\Timeago;
 use Yii;
 

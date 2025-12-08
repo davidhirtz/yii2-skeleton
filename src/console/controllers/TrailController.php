@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\console\controllers;
+namespace Hirtz\Skeleton\Console\Controllers;
 
-use Hirtz\Skeleton\console\controllers\traits\ControllerTrait;
-use Hirtz\Skeleton\models\Trail;
-use Hirtz\Skeleton\modules\admin\Module;
+use Hirtz\Skeleton\Console\Controllers\traits\ControllerTrait;
+use Hirtz\Skeleton\Models\Trail;
+use Hirtz\Skeleton\Modules\Admin\Module;
 use Exception;
 use Yii;
 use yii\base\InvalidConfigException;

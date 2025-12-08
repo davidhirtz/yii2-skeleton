@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models\events;
+namespace Hirtz\Skeleton\Models\Events;
 
-use Hirtz\Skeleton\db\ActiveRecord;
+use Hirtz\Skeleton\Db\ActiveRecord;
 use yii\base\ModelEvent;
 
 class DuplicateActiveRecordEvent extends ModelEvent

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models\traits;
+namespace Hirtz\Skeleton\Models\Traits;
 
-use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\Models\User;
 use Yii;
 
 trait IdentityTrait

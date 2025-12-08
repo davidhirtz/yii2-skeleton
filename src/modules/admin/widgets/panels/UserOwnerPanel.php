@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\modules\admin\widgets\panels;
+namespace Hirtz\Skeleton\Modules\Admin\Widgets\Panels;
 
-use Hirtz\Skeleton\html\Button;
-use Hirtz\Skeleton\html\P;
-use Hirtz\Skeleton\html\traits\TagContentTrait;
-use Hirtz\Skeleton\html\traits\TagTitleTrait;
-use Hirtz\Skeleton\widgets\panels\Panel;
-use Hirtz\Skeleton\widgets\Widget;
+use Hirtz\Skeleton\Html\Button;
+use Hirtz\Skeleton\Html\P;
+use Hirtz\Skeleton\Html\Traits\TagContentTrait;
+use Hirtz\Skeleton\Html\Traits\TagTitleTrait;
+use Hirtz\Skeleton\Widgets\Panels\Panel;
+use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use Yii;
 

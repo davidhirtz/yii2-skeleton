@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\migrations;
+namespace Hirtz\Skeleton\Migrations;
 
-use Hirtz\Skeleton\db\traits\MigrationTrait;
-use Hirtz\Skeleton\models\Redirect;
-use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\Db\Traits\MigrationTrait;
+use Hirtz\Skeleton\Models\Redirect;
+use Hirtz\Skeleton\Models\User;
 use Yii;
 use yii\db\Migration;
 
 /**
- * @package Hirtz\Skeleton\migrations
+ * @package Hirtz\Skeleton\Migrations
  * @noinspection PhpUnused
  */
 class M210224093845Redirect extends Migration

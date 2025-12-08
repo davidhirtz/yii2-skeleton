@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\behaviors;
+namespace Hirtz\Skeleton\Behaviors;
 
-use Hirtz\Skeleton\db\ActiveQuery;
-use Hirtz\Skeleton\db\ActiveRecord;
-use Hirtz\Skeleton\web\Sitemap;
+use Hirtz\Skeleton\Db\ActiveQuery;
+use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Web\Sitemap;
 use Yii;
 use yii\base\Behavior;
 use yii\base\InvalidConfigException;

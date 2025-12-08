@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\models\forms;
+namespace Hirtz\Skeleton\Models\Forms;
 
-use Hirtz\Skeleton\base\traits\ModelTrait;
-use Hirtz\Skeleton\models\User;
-use Hirtz\Skeleton\validators\TwoFactorAuthenticationValidator;
+use Hirtz\Skeleton\Base\Traits\ModelTrait;
+use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Validators\TwoFactorAuthenticationValidator;
 use Override;
 use RobThree\Auth\Providers\Qr\QRServerProvider;
 use RobThree\Auth\TwoFactorAuth;

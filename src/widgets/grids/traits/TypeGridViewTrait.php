@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\widgets\grids\traits;
+namespace Hirtz\Skeleton\Widgets\Grids\Traits;
 
-use Hirtz\Skeleton\html\Icon;
-use Hirtz\Skeleton\models\interfaces\TypeAttributeInterface;
-use Hirtz\Skeleton\widgets\grids\columns\LinkColumn;
-use Hirtz\Skeleton\widgets\grids\toolbars\FilterDropdown;
+use Hirtz\Skeleton\Html\Icon;
+use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
+use Hirtz\Skeleton\Widgets\Grids\Columns\LinkColumn;
+use Hirtz\Skeleton\Widgets\Grids\Toolbars\FilterDropdown;
 use Stringable;
 use Yii;
 
