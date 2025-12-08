@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\grids\toolbars;
+namespace Hirtz\Skeleton\widgets\grids\toolbars;
 
-use davidhirtz\yii2\skeleton\base\traits\ContainerConfigurationTrait;
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
-use davidhirtz\yii2\skeleton\html\Button;
-use davidhirtz\yii2\skeleton\html\Form;
-use davidhirtz\yii2\skeleton\html\Input;
-use davidhirtz\yii2\skeleton\html\traits\TagUrlTrait;
-use davidhirtz\yii2\skeleton\web\Request;
-use davidhirtz\yii2\skeleton\widgets\forms\InputGroup;
-use davidhirtz\yii2\skeleton\widgets\grids\traits\GridTrait;
+use Hirtz\Skeleton\base\traits\ContainerConfigurationTrait;
+use Hirtz\Skeleton\helpers\ArrayHelper;
+use Hirtz\Skeleton\html\Button;
+use Hirtz\Skeleton\html\Form;
+use Hirtz\Skeleton\html\Input;
+use Hirtz\Skeleton\html\traits\TagUrlTrait;
+use Hirtz\Skeleton\web\Request;
+use Hirtz\Skeleton\widgets\forms\InputGroup;
+use Hirtz\Skeleton\widgets\grids\traits\GridTrait;
 use Stringable;
 use Yii;
 use yii\helpers\Url;

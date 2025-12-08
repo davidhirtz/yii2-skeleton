@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\navs;
+namespace Hirtz\Skeleton\widgets\navs;
 
-use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagTitleTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagUrlTrait;
-use davidhirtz\yii2\skeleton\widgets\navs\traits\NavItemTrait;
-use davidhirtz\yii2\skeleton\widgets\traits\ContainerWidgetTrait;
-use davidhirtz\yii2\skeleton\widgets\Widget;
+use Hirtz\Skeleton\html\traits\TagContentTrait;
+use Hirtz\Skeleton\html\traits\TagTitleTrait;
+use Hirtz\Skeleton\html\traits\TagUrlTrait;
+use Hirtz\Skeleton\widgets\navs\traits\NavItemTrait;
+use Hirtz\Skeleton\widgets\traits\ContainerWidgetTrait;
+use Hirtz\Skeleton\widgets\Widget;
 use Override;
 use Stringable;
 

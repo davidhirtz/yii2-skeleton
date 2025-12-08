@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\validators;
+namespace Hirtz\Skeleton\tests\unit\validators;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\validators\TimeValidator;
+use Hirtz\Skeleton\validators\TimeValidator;
 use yii\base\Model;
 
 class TimeValidatorTest extends Unit

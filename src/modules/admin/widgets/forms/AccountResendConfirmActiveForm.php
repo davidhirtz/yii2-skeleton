@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
+namespace Hirtz\Skeleton\modules\admin\widgets\forms;
 
-use davidhirtz\yii2\skeleton\html\Div;
-use davidhirtz\yii2\skeleton\models\forms\AccountResendConfirmForm;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\LoginActiveFormTrait;
-use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
+use Hirtz\Skeleton\html\Div;
+use Hirtz\Skeleton\models\forms\AccountResendConfirmForm;
+use Hirtz\Skeleton\modules\admin\widgets\forms\traits\LoginActiveFormTrait;
+use Hirtz\Skeleton\widgets\forms\ActiveForm;
 use Override;
 use Stringable;
 use Yii;

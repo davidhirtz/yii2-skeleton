@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\grids\columns;
+namespace Hirtz\Skeleton\widgets\grids\columns;
 
 use Closure;
-use davidhirtz\yii2\skeleton\html\Div;
+use Hirtz\Skeleton\html\Div;
 use Override;
 use Stringable;
 use yii\base\Model;

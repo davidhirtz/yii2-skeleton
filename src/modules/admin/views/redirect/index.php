@@ -3,18 +3,18 @@
 declare(strict_types=1);
 
 /**
- * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController::actionIndex()
+ * @see \Hirtz\Skeleton\modules\admin\controllers\RedirectController::actionIndex()
  *
  * @var View $this
  * @var RedirectActiveDataProvider $provider
  */
 
 
-use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\RedirectGridView;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\RedirectSubmenu;
-use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\grids\GridContainer;
+use Hirtz\Skeleton\modules\admin\data\RedirectActiveDataProvider;
+use Hirtz\Skeleton\modules\admin\widgets\grids\RedirectGridView;
+use Hirtz\Skeleton\modules\admin\widgets\navs\RedirectSubmenu;
+use Hirtz\Skeleton\web\View;
+use Hirtz\Skeleton\widgets\grids\GridContainer;
 
 echo RedirectSubmenu::make()
     ->title(Yii::t('skeleton', 'Redirects'));

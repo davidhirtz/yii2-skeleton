@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\codeception\traits;
+namespace Hirtz\Skeleton\codeception\traits;
 
 trait StdOutBufferControllerTrait
 {

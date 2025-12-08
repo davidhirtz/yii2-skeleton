@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
+namespace Hirtz\Skeleton\modules\admin\widgets\grids;
 
-use davidhirtz\yii2\skeleton\models\interfaces\TypeAttributeInterface;
-use davidhirtz\yii2\skeleton\models\UserLogin;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\LinkColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\RelativeTimeColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\GridView;
-use davidhirtz\yii2\skeleton\widgets\grids\traits\TypeGridViewTrait;
-use davidhirtz\yii2\skeleton\widgets\traits\UserWidgetTrait;
-use davidhirtz\yii2\skeleton\widgets\Username;
+use Hirtz\Skeleton\models\interfaces\TypeAttributeInterface;
+use Hirtz\Skeleton\models\UserLogin;
+use Hirtz\Skeleton\widgets\grids\columns\DataColumn;
+use Hirtz\Skeleton\widgets\grids\columns\LinkColumn;
+use Hirtz\Skeleton\widgets\grids\columns\RelativeTimeColumn;
+use Hirtz\Skeleton\widgets\grids\GridView;
+use Hirtz\Skeleton\widgets\grids\traits\TypeGridViewTrait;
+use Hirtz\Skeleton\widgets\traits\UserWidgetTrait;
+use Hirtz\Skeleton\widgets\Username;
 use Override;
 use Stringable;
 

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\test;
+namespace Hirtz\Skeleton\test;
 
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
-use davidhirtz\yii2\skeleton\web\Application;
+use Hirtz\Skeleton\helpers\ArrayHelper;
+use Hirtz\Skeleton\web\Application;
 use Override;
 use Yii;
 use yii\base\Event;

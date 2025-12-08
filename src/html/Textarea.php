@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\html;
+namespace Hirtz\Skeleton\html;
 
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
-use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\html\traits\TagInputTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagTextareaTrait;
+use Hirtz\Skeleton\helpers\ArrayHelper;
+use Hirtz\Skeleton\helpers\Html;
+use Hirtz\Skeleton\html\traits\TagInputTrait;
+use Hirtz\Skeleton\html\traits\TagTextareaTrait;
 use Stringable;
 
 class Textarea extends base\Tag

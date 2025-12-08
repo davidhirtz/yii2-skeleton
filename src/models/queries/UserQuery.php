@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\models\queries;
+namespace Hirtz\Skeleton\models\queries;
 
-use davidhirtz\yii2\skeleton\db\ActiveQuery;
-use davidhirtz\yii2\skeleton\models\User;
+use Hirtz\Skeleton\db\ActiveQuery;
+use Hirtz\Skeleton\models\User;
 
 /**
  * @template T of User

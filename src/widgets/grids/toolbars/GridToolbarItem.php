@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\grids\toolbars;
+namespace Hirtz\Skeleton\widgets\grids\toolbars;
 
-use davidhirtz\yii2\skeleton\base\traits\ContainerConfigurationTrait;
-use davidhirtz\yii2\skeleton\html\Div;
-use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagVisibilityTrait;
-use davidhirtz\yii2\skeleton\widgets\grids\traits\GridTrait;
-use davidhirtz\yii2\skeleton\widgets\Widget;
+use Hirtz\Skeleton\base\traits\ContainerConfigurationTrait;
+use Hirtz\Skeleton\html\Div;
+use Hirtz\Skeleton\html\traits\TagAttributesTrait;
+use Hirtz\Skeleton\html\traits\TagContentTrait;
+use Hirtz\Skeleton\html\traits\TagVisibilityTrait;
+use Hirtz\Skeleton\widgets\grids\traits\GridTrait;
+use Hirtz\Skeleton\widgets\Widget;
 use Stringable;
 
 class GridToolbarItem extends Widget

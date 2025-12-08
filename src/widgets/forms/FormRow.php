@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\forms;
+namespace Hirtz\Skeleton\widgets\forms;
 
-use davidhirtz\yii2\skeleton\html\Div;
-use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
-use davidhirtz\yii2\skeleton\widgets\Widget;
+use Hirtz\Skeleton\html\Div;
+use Hirtz\Skeleton\html\traits\TagAttributesTrait;
+use Hirtz\Skeleton\html\traits\TagContentTrait;
+use Hirtz\Skeleton\widgets\Widget;
 use Stringable;
 
 class FormRow extends Widget

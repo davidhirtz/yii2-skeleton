@@ -9,14 +9,14 @@ declare(strict_types=1);
  * @var Redirect $redirect
  */
 
-use davidhirtz\yii2\skeleton\html\Container;
-use davidhirtz\yii2\skeleton\models\Redirect;
-use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\RedirectActiveForm;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\RedirectSubmenu;
-use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
-use davidhirtz\yii2\skeleton\widgets\forms\FormContainer;
+use Hirtz\Skeleton\html\Container;
+use Hirtz\Skeleton\models\Redirect;
+use Hirtz\Skeleton\modules\admin\controllers\RedirectController;
+use Hirtz\Skeleton\modules\admin\widgets\forms\RedirectActiveForm;
+use Hirtz\Skeleton\modules\admin\widgets\navs\RedirectSubmenu;
+use Hirtz\Skeleton\web\View;
+use Hirtz\Skeleton\widgets\forms\ErrorSummary;
+use Hirtz\Skeleton\widgets\forms\FormContainer;
 
 echo RedirectSubmenu::make()
     ->title(Yii::t('skeleton', 'Create New Redirect'));

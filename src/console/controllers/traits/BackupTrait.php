@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\console\controllers\traits;
+namespace Hirtz\Skeleton\console\controllers\traits;
 
 use Yii;
 use yii\helpers\Console;

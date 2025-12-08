@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\behaviors;
+namespace Hirtz\Skeleton\tests\unit\behaviors;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\behaviors\RedirectBehavior;
-use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\models\Redirect;
+use Hirtz\Skeleton\behaviors\RedirectBehavior;
+use Hirtz\Skeleton\db\ActiveRecord;
+use Hirtz\Skeleton\models\Redirect;
 use Yii;
 use yii\base\InvalidConfigException;
 

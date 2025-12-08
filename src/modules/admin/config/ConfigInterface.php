@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin\config;
+namespace Hirtz\Skeleton\modules\admin\config;
 
 /**
  * @template T of ConfigInterface

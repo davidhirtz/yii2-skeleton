@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\db;
+namespace Hirtz\Skeleton\db;
 
-use davidhirtz\yii2\skeleton\models\interfaces\StatusAttributeInterface;
+use Hirtz\Skeleton\models\interfaces\StatusAttributeInterface;
 use Yii;
 use yii\db\Query;
 

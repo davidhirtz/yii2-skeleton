@@ -6,7 +6,7 @@ declare(strict_types=1);
  * @var string $content
  */
 
-use davidhirtz\yii2\skeleton\web\View;
+use Hirtz\Skeleton\web\View;
 
 $this->title('Test title');
 ?>

@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\models\forms;
+namespace Hirtz\Skeleton\tests\unit\models\forms;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\auth\clients\ClientInterface;
-use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
-use davidhirtz\yii2\skeleton\helpers\FileHelper;
-use davidhirtz\yii2\skeleton\models\AuthClient;
-use davidhirtz\yii2\skeleton\models\forms\AuthClientSignupForm;
-use davidhirtz\yii2\skeleton\tests\support\UnitTester;
+use Hirtz\Skeleton\auth\clients\ClientInterface;
+use Hirtz\Skeleton\codeception\fixtures\UserFixtureTrait;
+use Hirtz\Skeleton\helpers\FileHelper;
+use Hirtz\Skeleton\models\AuthClient;
+use Hirtz\Skeleton\models\forms\AuthClientSignupForm;
+use Hirtz\Skeleton\tests\support\UnitTester;
 use Yii;
 use yii\authclient\BaseClient;
 use yii\symfonymailer\Message;

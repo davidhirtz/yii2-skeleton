@@ -3,18 +3,18 @@
 declare(strict_types=1);
 
 /**
- * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\UserController::actionIndex()
+ * @see \Hirtz\Skeleton\modules\admin\controllers\UserController::actionIndex()
  *
  * @var View $this
  * @var ActiveDataProvider $provider
  */
 
-use davidhirtz\yii2\skeleton\html\Container;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\UserGridView;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\panels\UserOwnerPanel;
-use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\grids\GridContainer;
+use Hirtz\Skeleton\html\Container;
+use Hirtz\Skeleton\modules\admin\widgets\grids\UserGridView;
+use Hirtz\Skeleton\modules\admin\widgets\navs\UserSubmenu;
+use Hirtz\Skeleton\modules\admin\widgets\panels\UserOwnerPanel;
+use Hirtz\Skeleton\web\View;
+use Hirtz\Skeleton\widgets\grids\GridContainer;
 use yii\data\ActiveDataProvider;
 
 $this->title(Yii::t('skeleton', 'Users'))

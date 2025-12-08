@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\forms;
+namespace Hirtz\Skeleton\widgets\forms;
 
-use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\html\Div;
-use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagLabelTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagVisibilityTrait;
-use davidhirtz\yii2\skeleton\widgets\forms\traits\RowAttributesTrait;
-use davidhirtz\yii2\skeleton\widgets\traits\FormatTrait;
-use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
-use davidhirtz\yii2\skeleton\widgets\traits\PropertyWidgetTrait;
-use davidhirtz\yii2\skeleton\widgets\Widget;
+use Hirtz\Skeleton\helpers\Html;
+use Hirtz\Skeleton\html\Div;
+use Hirtz\Skeleton\html\traits\TagAttributesTrait;
+use Hirtz\Skeleton\html\traits\TagIdTrait;
+use Hirtz\Skeleton\html\traits\TagLabelTrait;
+use Hirtz\Skeleton\html\traits\TagVisibilityTrait;
+use Hirtz\Skeleton\widgets\forms\traits\RowAttributesTrait;
+use Hirtz\Skeleton\widgets\traits\FormatTrait;
+use Hirtz\Skeleton\widgets\traits\ModelWidgetTrait;
+use Hirtz\Skeleton\widgets\traits\PropertyWidgetTrait;
+use Hirtz\Skeleton\widgets\Widget;
 use Stringable;
 
 class FormText extends Widget

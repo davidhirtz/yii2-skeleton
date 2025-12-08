@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\models\forms;
+namespace Hirtz\Skeleton\tests\unit\models\forms;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
-use davidhirtz\yii2\skeleton\models\forms\OwnershipForm;
-use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\tests\support\UnitTester;
+use Hirtz\Skeleton\codeception\fixtures\UserFixtureTrait;
+use Hirtz\Skeleton\models\forms\OwnershipForm;
+use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\tests\support\UnitTester;
 use Yii;
 
 class OwnershipFormTest extends Unit

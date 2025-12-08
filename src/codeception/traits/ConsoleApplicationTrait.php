@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\codeception\traits;
+namespace Hirtz\Skeleton\codeception\traits;
 
-use davidhirtz\yii2\skeleton\console\Application;
+use Hirtz\Skeleton\console\Application;
 
 trait ConsoleApplicationTrait
 {

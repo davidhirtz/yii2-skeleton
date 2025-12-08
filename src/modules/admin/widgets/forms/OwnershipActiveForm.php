@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
+namespace Hirtz\Skeleton\modules\admin\widgets\forms;
 
-use davidhirtz\yii2\skeleton\models\forms\OwnershipForm;
-use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
-use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
-use davidhirtz\yii2\skeleton\widgets\forms\FormRow;
+use Hirtz\Skeleton\models\forms\OwnershipForm;
+use Hirtz\Skeleton\widgets\forms\ActiveForm;
+use Hirtz\Skeleton\widgets\forms\fields\InputField;
+use Hirtz\Skeleton\widgets\forms\FormRow;
 use Override;
 use Stringable;
 use Yii;

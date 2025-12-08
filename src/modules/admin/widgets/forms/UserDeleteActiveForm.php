@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
+namespace Hirtz\Skeleton\modules\admin\widgets\forms;
 
-use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
+use Hirtz\Skeleton\widgets\forms\DeleteActiveForm;
 use Override;
 use Yii;
 

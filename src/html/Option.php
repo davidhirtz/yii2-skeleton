@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\html;
+namespace Hirtz\Skeleton\html;
 
-use davidhirtz\yii2\skeleton\html\base\Tag;
-use davidhirtz\yii2\skeleton\html\traits\TagLabelTrait;
+use Hirtz\Skeleton\html\base\Tag;
+use Hirtz\Skeleton\html\traits\TagLabelTrait;
 use Override;
 use Stringable;
 

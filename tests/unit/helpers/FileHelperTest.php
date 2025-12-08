@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\helpers;
+namespace Hirtz\Skeleton\tests\unit\helpers;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\helpers\FileHelper;
+use Hirtz\Skeleton\helpers\FileHelper;
 use Yii;
 
 class FileHelperTest extends Unit

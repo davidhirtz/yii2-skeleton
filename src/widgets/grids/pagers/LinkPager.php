@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\grids\pagers;
+namespace Hirtz\Skeleton\widgets\grids\pagers;
 
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
-use davidhirtz\yii2\skeleton\helpers\Html;
+use Hirtz\Skeleton\helpers\ArrayHelper;
+use Hirtz\Skeleton\helpers\Html;
 
 class LinkPager extends \yii\widgets\LinkPager
 {

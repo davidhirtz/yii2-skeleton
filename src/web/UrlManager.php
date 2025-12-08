@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\web;
+namespace Hirtz\Skeleton\web;
 
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
+use Hirtz\Skeleton\helpers\ArrayHelper;
 use InvalidArgumentException;
 use Yii;
 use yii\web\UrlNormalizerRedirectException;
@@ -49,7 +49,7 @@ class UrlManager extends \yii\web\UrlManager
      * or as arrays containing the request URIs as an array in array key `request`, the target URL as the key `url`
      * and optional the redirect code (defaults to 301) as `status`.
      *
-     * If dynamic redirects are necessary, please take a look at {@see \davidhirtz\yii2\skeleton\models\Redirect}.
+     * If dynamic redirects are necessary, please take a look at {@see \Hirtz\Skeleton\models\Redirect}.
      */
     public array $redirectMap = [];
 

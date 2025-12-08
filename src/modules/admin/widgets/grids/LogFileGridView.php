@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
+namespace Hirtz\Skeleton\modules\admin\widgets\grids;
 
-use davidhirtz\yii2\skeleton\models\LogFile;
-use davidhirtz\yii2\skeleton\modules\admin\data\LogFileArrayDataProvider;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\DeleteGridButton;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\ViewGridButton;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\LinkColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\RelativeTimeColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\GridView;
+use Hirtz\Skeleton\models\LogFile;
+use Hirtz\Skeleton\modules\admin\data\LogFileArrayDataProvider;
+use Hirtz\Skeleton\widgets\grids\columns\ButtonColumn;
+use Hirtz\Skeleton\widgets\grids\columns\buttons\DeleteGridButton;
+use Hirtz\Skeleton\widgets\grids\columns\buttons\ViewGridButton;
+use Hirtz\Skeleton\widgets\grids\columns\DataColumn;
+use Hirtz\Skeleton\widgets\grids\columns\LinkColumn;
+use Hirtz\Skeleton\widgets\grids\columns\RelativeTimeColumn;
+use Hirtz\Skeleton\widgets\grids\GridView;
 use Override;
 use Yii;
 

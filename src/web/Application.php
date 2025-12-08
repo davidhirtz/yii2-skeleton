@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\web;
+namespace Hirtz\Skeleton\web;
 
-use davidhirtz\yii2\skeleton\base\traits\ApplicationTrait;
-use davidhirtz\yii2\skeleton\rbac\DbManager;
+use Hirtz\Skeleton\base\traits\ApplicationTrait;
+use Hirtz\Skeleton\rbac\DbManager;
 use Override;
 use Yii;
 use yii\authclient\Collection;

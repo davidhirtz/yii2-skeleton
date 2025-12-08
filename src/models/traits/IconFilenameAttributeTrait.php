@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\models\traits;
+namespace Hirtz\Skeleton\models\traits;
 
-use davidhirtz\yii2\skeleton\helpers\FileHelper;
-use davidhirtz\yii2\skeleton\helpers\StringHelper;
-use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
+use Hirtz\Skeleton\helpers\FileHelper;
+use Hirtz\Skeleton\helpers\StringHelper;
+use Hirtz\Skeleton\validators\DynamicRangeValidator;
 use Yii;
 
 trait IconFilenameAttributeTrait

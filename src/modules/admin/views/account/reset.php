@@ -3,17 +3,17 @@
 declare(strict_types=1);
 
 /**
- * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController::actionReset()
+ * @see \Hirtz\Skeleton\modules\admin\controllers\AccountController::actionReset()
  *
  * @var View $this
  * @var PasswordResetForm $form
  */
 
-use davidhirtz\yii2\skeleton\html\Container;
-use davidhirtz\yii2\skeleton\models\forms\PasswordResetForm;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\PasswordResetActiveForm;
-use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\panels\Card;
+use Hirtz\Skeleton\html\Container;
+use Hirtz\Skeleton\models\forms\PasswordResetForm;
+use Hirtz\Skeleton\modules\admin\widgets\forms\PasswordResetActiveForm;
+use Hirtz\Skeleton\web\View;
+use Hirtz\Skeleton\widgets\panels\Card;
 
 $this->title($form->user->password_hash
     ? Yii::t('skeleton', 'Set New Password')

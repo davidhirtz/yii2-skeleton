@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
+namespace Hirtz\Skeleton\modules\admin\widgets\forms;
 
-use davidhirtz\yii2\skeleton\html\custom\RelativeTime;
-use davidhirtz\yii2\skeleton\html\Li;
-use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\UserActiveFormTrait;
-use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
-use davidhirtz\yii2\skeleton\widgets\forms\fields\CheckboxField;
-use davidhirtz\yii2\skeleton\widgets\forms\footers\UpdatedAtFooterItem;
-use davidhirtz\yii2\skeleton\widgets\Username;
+use Hirtz\Skeleton\html\custom\RelativeTime;
+use Hirtz\Skeleton\html\Li;
+use Hirtz\Skeleton\modules\admin\models\forms\UserForm;
+use Hirtz\Skeleton\modules\admin\widgets\forms\traits\UserActiveFormTrait;
+use Hirtz\Skeleton\widgets\forms\ActiveForm;
+use Hirtz\Skeleton\widgets\forms\fields\CheckboxField;
+use Hirtz\Skeleton\widgets\forms\footers\UpdatedAtFooterItem;
+use Hirtz\Skeleton\widgets\Username;
 use Override;
 use Stringable;
 use Yii;

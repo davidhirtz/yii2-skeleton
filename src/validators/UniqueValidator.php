@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\validators;
+namespace Hirtz\Skeleton\validators;
 
-use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use Hirtz\Skeleton\db\ActiveRecord;
 use Yii;
 
 class UniqueValidator extends \yii\validators\UniqueValidator

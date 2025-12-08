@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
+namespace Hirtz\Skeleton\modules\admin\controllers;
 
-use davidhirtz\yii2\skeleton\auth\clients\ClientInterface;
-use davidhirtz\yii2\skeleton\models\AuthClient;
-use davidhirtz\yii2\skeleton\models\forms\AccountConfirmForm;
-use davidhirtz\yii2\skeleton\models\forms\AccountResendConfirmForm;
-use davidhirtz\yii2\skeleton\models\forms\AccountUpdateForm;
-use davidhirtz\yii2\skeleton\models\forms\AuthClientSignupForm;
-use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
-use davidhirtz\yii2\skeleton\models\forms\LoginForm;
-use davidhirtz\yii2\skeleton\models\forms\PasswordRecoverForm;
-use davidhirtz\yii2\skeleton\models\forms\PasswordResetForm;
-use davidhirtz\yii2\skeleton\models\forms\SignupForm;
-use davidhirtz\yii2\skeleton\models\forms\TwoFactorAuthenticatorForm;
-use davidhirtz\yii2\skeleton\models\UserLogin;
-use davidhirtz\yii2\skeleton\web\Controller;
+use Hirtz\Skeleton\auth\clients\ClientInterface;
+use Hirtz\Skeleton\models\AuthClient;
+use Hirtz\Skeleton\models\forms\AccountConfirmForm;
+use Hirtz\Skeleton\models\forms\AccountResendConfirmForm;
+use Hirtz\Skeleton\models\forms\AccountUpdateForm;
+use Hirtz\Skeleton\models\forms\AuthClientSignupForm;
+use Hirtz\Skeleton\models\forms\DeleteForm;
+use Hirtz\Skeleton\models\forms\LoginForm;
+use Hirtz\Skeleton\models\forms\PasswordRecoverForm;
+use Hirtz\Skeleton\models\forms\PasswordResetForm;
+use Hirtz\Skeleton\models\forms\SignupForm;
+use Hirtz\Skeleton\models\forms\TwoFactorAuthenticatorForm;
+use Hirtz\Skeleton\models\UserLogin;
+use Hirtz\Skeleton\web\Controller;
 use Override;
 use Yii;
 use yii\authclient\AuthAction;

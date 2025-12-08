@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\db\traits;
+namespace Hirtz\Skeleton\db\traits;
 
 use Exception;
 use Yii;

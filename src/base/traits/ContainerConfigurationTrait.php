@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\base\traits;
+namespace Hirtz\Skeleton\base\traits;
 
 use Yii;
 

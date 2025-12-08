@@ -13,7 +13,7 @@ if (!empty($namespace)) {
 }
 ?>
 
-use davidhirtz\yii2\skeleton\db\traits\MigrationTrait;
+use Hirtz\Skeleton\db\traits\MigrationTrait;
 use yii\db\Migration;
 
 /**

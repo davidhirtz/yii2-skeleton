@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\models\forms;
+namespace Hirtz\Skeleton\models\forms;
 
-use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
-use davidhirtz\yii2\skeleton\models\traits\IdentityTrait;
-use davidhirtz\yii2\skeleton\models\UserLogin;
-use davidhirtz\yii2\skeleton\validators\TwoFactorAuthenticationValidator;
+use Hirtz\Skeleton\base\traits\ModelTrait;
+use Hirtz\Skeleton\models\traits\IdentityTrait;
+use Hirtz\Skeleton\models\UserLogin;
+use Hirtz\Skeleton\validators\TwoFactorAuthenticationValidator;
 use Override;
 use Yii;
 use yii\base\Model;

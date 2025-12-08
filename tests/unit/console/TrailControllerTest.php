@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\console;
+namespace Hirtz\Skeleton\tests\unit\console;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\codeception\traits\StdOutBufferControllerTrait;
-use davidhirtz\yii2\skeleton\console\controllers\TrailController;
-use davidhirtz\yii2\skeleton\models\Trail;
-use davidhirtz\yii2\skeleton\tests\support\fixtures\TrailFixture;
+use Hirtz\Skeleton\codeception\traits\StdOutBufferControllerTrait;
+use Hirtz\Skeleton\console\controllers\TrailController;
+use Hirtz\Skeleton\models\Trail;
+use Hirtz\Skeleton\tests\support\fixtures\TrailFixture;
 use Yii;
 use yii\base\InvalidConfigException;
 
@@ -30,7 +30,7 @@ class TrailControllerTest extends Unit
         $controller = $this->createTrailController();
         $controller->actionUpdateModels();
 
-        self::assertEquals('Updated 1 davidhirtz\yii2\skeleton\models\Trail trail records' . PHP_EOL, $controller->flushStdOutBuffer());
+        self::assertEquals('Updated 1 Hirtz\Skeleton\models\Trail trail records' . PHP_EOL, $controller->flushStdOutBuffer());
     }
 
     public function testActionClearWithoutOffset(): void

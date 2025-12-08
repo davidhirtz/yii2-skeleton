@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\grids\columns;
+namespace Hirtz\Skeleton\widgets\grids\columns;
 
 use Closure;
 use Yii;

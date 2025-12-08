@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\html;
+namespace Hirtz\Skeleton\html;
 
-use davidhirtz\yii2\skeleton\helpers\Url;
-use davidhirtz\yii2\skeleton\html\base\Tag;
-use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
+use Hirtz\Skeleton\helpers\Url;
+use Hirtz\Skeleton\html\base\Tag;
+use Hirtz\Skeleton\html\traits\TagContentTrait;
 use Override;
 use Yii;
 

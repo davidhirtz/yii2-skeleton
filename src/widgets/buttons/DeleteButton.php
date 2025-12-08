@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\buttons;
+namespace Hirtz\Skeleton\widgets\buttons;
 
-use davidhirtz\yii2\skeleton\html\Button;
-use davidhirtz\yii2\skeleton\widgets\buttons\traits\DeleteButtonTrait;
-use davidhirtz\yii2\skeleton\widgets\Modal;
-use davidhirtz\yii2\skeleton\widgets\Widget;
+use Hirtz\Skeleton\html\Button;
+use Hirtz\Skeleton\widgets\buttons\traits\DeleteButtonTrait;
+use Hirtz\Skeleton\widgets\Modal;
+use Hirtz\Skeleton\widgets\Widget;
 use Stringable;
 
 class DeleteButton extends Widget

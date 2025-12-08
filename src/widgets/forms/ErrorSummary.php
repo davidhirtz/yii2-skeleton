@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\forms;
+namespace Hirtz\Skeleton\widgets\forms;
 
-use davidhirtz\yii2\skeleton\html\Div;
-use davidhirtz\yii2\skeleton\html\traits\TagTitleTrait;
-use davidhirtz\yii2\skeleton\html\Ul;
-use davidhirtz\yii2\skeleton\widgets\Alert;
-use davidhirtz\yii2\skeleton\widgets\Widget;
+use Hirtz\Skeleton\html\Div;
+use Hirtz\Skeleton\html\traits\TagTitleTrait;
+use Hirtz\Skeleton\html\Ul;
+use Hirtz\Skeleton\widgets\Alert;
+use Hirtz\Skeleton\widgets\Widget;
 use Stringable;
 use Yii;
 use yii\base\Model;

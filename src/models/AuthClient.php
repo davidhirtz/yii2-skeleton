@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\models;
+namespace Hirtz\Skeleton\models;
 
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
-use davidhirtz\yii2\skeleton\auth\clients\ClientInterface;
-use davidhirtz\yii2\skeleton\behaviors\SerializedAttributesBehavior;
-use davidhirtz\yii2\skeleton\behaviors\TimestampBehavior;
-use davidhirtz\yii2\skeleton\behaviors\TrailBehavior;
-use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\models\interfaces\TrailModelInterface;
-use davidhirtz\yii2\skeleton\models\queries\UserQuery;
-use davidhirtz\yii2\skeleton\models\traits\TrailModelTrait;
+use Hirtz\Skeleton\auth\clients\ClientInterface;
+use Hirtz\Skeleton\behaviors\SerializedAttributesBehavior;
+use Hirtz\Skeleton\behaviors\TimestampBehavior;
+use Hirtz\Skeleton\behaviors\TrailBehavior;
+use Hirtz\Skeleton\db\ActiveRecord;
+use Hirtz\Skeleton\models\interfaces\TrailModelInterface;
+use Hirtz\Skeleton\models\queries\UserQuery;
+use Hirtz\Skeleton\models\traits\TrailModelTrait;
 use Yii;
 
 /**

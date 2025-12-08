@@ -2,30 +2,30 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin;
+namespace Hirtz\Skeleton\modules\admin;
 
-use davidhirtz\yii2\skeleton\behaviors\UserLanguageBehavior;
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
-use davidhirtz\yii2\skeleton\models\Redirect;
-use davidhirtz\yii2\skeleton\models\Trail;
-use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\modules\admin\config\Config;
-use davidhirtz\yii2\skeleton\modules\admin\config\DashboardItemConfig;
-use davidhirtz\yii2\skeleton\modules\admin\config\DashboardPanelConfig;
-use davidhirtz\yii2\skeleton\modules\admin\config\MainMenuItemConfig;
-use davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController;
-use davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController;
-use davidhirtz\yii2\skeleton\modules\admin\controllers\DashboardController;
-use davidhirtz\yii2\skeleton\modules\admin\controllers\LogController;
-use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
-use davidhirtz\yii2\skeleton\modules\admin\controllers\SystemController;
-use davidhirtz\yii2\skeleton\modules\admin\controllers\TrailController;
-use davidhirtz\yii2\skeleton\modules\admin\controllers\UserController;
-use davidhirtz\yii2\skeleton\modules\admin\controllers\UserLoginController;
+use Hirtz\Skeleton\behaviors\UserLanguageBehavior;
+use Hirtz\Skeleton\helpers\ArrayHelper;
+use Hirtz\Skeleton\models\Redirect;
+use Hirtz\Skeleton\models\Trail;
+use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\modules\admin\config\Config;
+use Hirtz\Skeleton\modules\admin\config\DashboardItemConfig;
+use Hirtz\Skeleton\modules\admin\config\DashboardPanelConfig;
+use Hirtz\Skeleton\modules\admin\config\MainMenuItemConfig;
+use Hirtz\Skeleton\modules\admin\controllers\AccountController;
+use Hirtz\Skeleton\modules\admin\controllers\AuthController;
+use Hirtz\Skeleton\modules\admin\controllers\DashboardController;
+use Hirtz\Skeleton\modules\admin\controllers\LogController;
+use Hirtz\Skeleton\modules\admin\controllers\RedirectController;
+use Hirtz\Skeleton\modules\admin\controllers\SystemController;
+use Hirtz\Skeleton\modules\admin\controllers\TrailController;
+use Hirtz\Skeleton\modules\admin\controllers\UserController;
+use Hirtz\Skeleton\modules\admin\controllers\UserLoginController;
 use Override;
 use Yii;
 
-class Module extends \davidhirtz\yii2\skeleton\base\Module implements ModuleInterface
+class Module extends \Hirtz\Skeleton\base\Module implements ModuleInterface
 {
     /**
      * @var string the module base route

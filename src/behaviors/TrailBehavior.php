@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\behaviors;
+namespace Hirtz\Skeleton\behaviors;
 
-use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\models\interfaces\TrailModelInterface;
-use davidhirtz\yii2\skeleton\models\Trail;
+use Hirtz\Skeleton\db\ActiveRecord;
+use Hirtz\Skeleton\models\interfaces\TrailModelInterface;
+use Hirtz\Skeleton\models\Trail;
 use Exception;
 use Yii;
 use yii\base\Behavior;

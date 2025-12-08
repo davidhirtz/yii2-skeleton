@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\models\forms;
+namespace Hirtz\Skeleton\tests\unit\models\forms;
 
 use Codeception\Test\Unit;
 use DateTime;
 use DateTimeZone;
-use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
-use davidhirtz\yii2\skeleton\models\forms\AccountUpdateForm;
-use davidhirtz\yii2\skeleton\models\Trail;
-use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\tests\support\UnitTester;
+use Hirtz\Skeleton\codeception\fixtures\UserFixtureTrait;
+use Hirtz\Skeleton\models\forms\AccountUpdateForm;
+use Hirtz\Skeleton\models\Trail;
+use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\tests\support\UnitTester;
 use Yii;
 use yii\symfonymailer\Message;
 

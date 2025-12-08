@@ -3,17 +3,17 @@
 declare(strict_types=1);
 
 /**
- * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AuthController::actionIndex()
+ * @see \Hirtz\Skeleton\modules\admin\controllers\AuthController::actionIndex()
  *
  * @var View $this
  * @var ActiveDataProvider $provider
  */
 
-use davidhirtz\yii2\skeleton\html\Container;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\AuthItemGridView;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu;
-use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\grids\GridContainer;
+use Hirtz\Skeleton\html\Container;
+use Hirtz\Skeleton\modules\admin\widgets\grids\AuthItemGridView;
+use Hirtz\Skeleton\modules\admin\widgets\navs\UserSubmenu;
+use Hirtz\Skeleton\web\View;
+use Hirtz\Skeleton\widgets\grids\GridContainer;
 use yii\data\ActiveDataProvider;
 
 $this->title(Yii::t('skeleton', 'Permissions'))

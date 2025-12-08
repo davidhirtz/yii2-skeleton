@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\log;
+namespace Hirtz\Skeleton\log;
 
 use Yii;
 use yii\base\BaseObject;

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
+namespace Hirtz\Skeleton\modules\admin\controllers;
 
-use davidhirtz\yii2\skeleton\models\Redirect;
-use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
-use davidhirtz\yii2\skeleton\web\Controller;
+use Hirtz\Skeleton\models\Redirect;
+use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\modules\admin\data\RedirectActiveDataProvider;
+use Hirtz\Skeleton\web\Controller;
 use Override;
 use Yii;
 use yii\filters\AccessControl;

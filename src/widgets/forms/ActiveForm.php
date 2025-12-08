@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\forms;
+namespace Hirtz\Skeleton\widgets\forms;
 
-use davidhirtz\yii2\skeleton\helpers\Url;
-use davidhirtz\yii2\skeleton\html\Button;
-use davidhirtz\yii2\skeleton\html\Div;
-use davidhirtz\yii2\skeleton\html\Form;
-use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
-use davidhirtz\yii2\skeleton\widgets\forms\fields\Field;
-use davidhirtz\yii2\skeleton\widgets\forms\footers\FormFooter;
-use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
-use davidhirtz\yii2\skeleton\widgets\Widget;
+use Hirtz\Skeleton\helpers\Url;
+use Hirtz\Skeleton\html\Button;
+use Hirtz\Skeleton\html\Div;
+use Hirtz\Skeleton\html\Form;
+use Hirtz\Skeleton\html\traits\TagAttributesTrait;
+use Hirtz\Skeleton\html\traits\TagIdTrait;
+use Hirtz\Skeleton\widgets\forms\fields\Field;
+use Hirtz\Skeleton\widgets\forms\footers\FormFooter;
+use Hirtz\Skeleton\widgets\traits\ModelWidgetTrait;
+use Hirtz\Skeleton\widgets\Widget;
 use Stringable;
 use Yii;
 use yii\db\ActiveRecordInterface;

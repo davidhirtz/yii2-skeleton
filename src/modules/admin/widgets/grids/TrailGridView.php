@@ -2,25 +2,25 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
+namespace Hirtz\Skeleton\modules\admin\widgets\grids;
 
-use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\html\A;
-use davidhirtz\yii2\skeleton\html\Div;
-use davidhirtz\yii2\skeleton\html\Table;
-use davidhirtz\yii2\skeleton\html\Ul;
-use davidhirtz\yii2\skeleton\models\collections\TrailModelCollection;
-use davidhirtz\yii2\skeleton\models\interfaces\TrailModelInterface;
-use davidhirtz\yii2\skeleton\models\Trail;
-use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\modules\admin\data\TrailActiveDataProvider;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\RelativeTimeColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\GridView;
-use davidhirtz\yii2\skeleton\widgets\grids\traits\MessageSourceTrait;
-use davidhirtz\yii2\skeleton\widgets\grids\traits\TypeGridViewTrait;
-use davidhirtz\yii2\skeleton\widgets\Username;
+use Hirtz\Skeleton\db\ActiveRecord;
+use Hirtz\Skeleton\helpers\Html;
+use Hirtz\Skeleton\html\A;
+use Hirtz\Skeleton\html\Div;
+use Hirtz\Skeleton\html\Table;
+use Hirtz\Skeleton\html\Ul;
+use Hirtz\Skeleton\models\collections\TrailModelCollection;
+use Hirtz\Skeleton\models\interfaces\TrailModelInterface;
+use Hirtz\Skeleton\models\Trail;
+use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\modules\admin\data\TrailActiveDataProvider;
+use Hirtz\Skeleton\widgets\grids\columns\DataColumn;
+use Hirtz\Skeleton\widgets\grids\columns\RelativeTimeColumn;
+use Hirtz\Skeleton\widgets\grids\GridView;
+use Hirtz\Skeleton\widgets\grids\traits\MessageSourceTrait;
+use Hirtz\Skeleton\widgets\grids\traits\TypeGridViewTrait;
+use Hirtz\Skeleton\widgets\Username;
 use Jfcherng\Diff\DiffHelper;
 use Override;
 use Stringable;

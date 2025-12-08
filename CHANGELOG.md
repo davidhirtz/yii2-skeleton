@@ -194,7 +194,7 @@
 - Added `_POST.SignupForm.password` to `Log::$maskVars`
 - Enhanced `SessionTrait::$cookieDomain` to use the default cookie domain from the container definition rater than from
   the application parameters
-- Removed the user count check from `davidhirtz\yii2\skeleton\web::isSignupEnabled()`
+- Removed the user count check from `Hirtz\Skeleton\web::isSignupEnabled()`
 
 ## 2.3.12 (Aug 23, 2024)
 
@@ -210,7 +210,7 @@
 ## 2.3.10 (Aug 19, 2024)
 
 - Added `AdminButton::$adminLinkZIndex` (still defaults to '3')
-- Added `davidhirtz\yii2\skeleton\models\interfaces\SitemapInterface` (Issue #30)
+- Added `Hirtz\Skeleton\models\interfaces\SitemapInterface` (Issue #30)
 - Changed `ActiveDataProvider::prepareQuery()` visibility to `protected`
 - Fixed `GridView::$searchUrl` to reset current page on default
 
@@ -224,13 +224,13 @@
 
 ## 2.3.7 (Jul 16, 2024)
 
-- Fixed `davidhirtz\yii2\skeleton\widgets\AdminButton` CSS width and height attributes
+- Fixed `Hirtz\Skeleton\widgets\AdminButton` CSS width and height attributes
 
 ## 2.3.6 (Jul 8, 2024)
 
 - Added `View::POS_MODULE` constant to handle module scripts and JavaScript files
 - Added support for JS and CSS files in `AjaxRouteTrait`
-- Changed `davidhirtz\yii2\skeleton\modules\admin\Module::$name` to `Module::getName()` to prevent translation issues
+- Changed `Hirtz\Skeleton\modules\admin\Module::$name` to `Module::getName()` to prevent translation issues
   (Issue #28)
 
 ## 2.3.5 (Jun 28, 2024)
@@ -260,14 +260,14 @@
 ## 2.3.1 (Apr 15, 2024)
 
 - Extracted draft domain creating from `Request` to `Url::draft()`
-- Moved host info configuration to `davidhirtz\yii2\skeleton\codeception\Yii2` for testing
+- Moved host info configuration to `Hirtz\Skeleton\codeception\Yii2` for testing
 
 ## 2.3.0 (Apr 5, 2024)
 
 - Added `DashboardController::$roles` to allow adjusting the admin dashboard roles, defaults to the roles used in the
   dashboard panels
 - Fixed `UrlMananger::$languages` to accept `false` to disable the application language being set via URLs
-- Removed public properties `$roles`, `$navbarItems` and `$panels` from `davidhirtz\yii2\skeleton\modules\admin\Module`
+- Removed public properties `$roles`, `$navbarItems` and `$panels` from `Hirtz\Skeleton\modules\admin\Module`
   in favor of the new methods to add navbar items and dashboard panels as described in new `ModuleInterface`.
 
 ## 2.2.7 (Apr 3, 2024)
@@ -319,7 +319,7 @@
 
 ## 2.2.0 (Feb 29, 2024)
 
-- Changed `AuthClientSignupForm` and `davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm` to extend
+- Changed `AuthClientSignupForm` and `Hirtz\Skeleton\modules\admin\models\forms\UserForm` to extend
   from `Model` instead of `User` (Issue #21)
 - Extracted user picture upload methods and options to `UserPictureForm`
 - Removed `Identity` class and replaced it with `User` class (Issue #20)
@@ -379,7 +379,7 @@
 
 - Removed `View::registerTwitterCardMetaTags()`
 - Removed `View::registerStructuredDataBreadcrumbs()` and `View::registerStructuredData()` in favor
-  of `davidhirtz\yii2\skeleton\helpers\StructuredData`
+  of `Hirtz\Skeleton\helpers\StructuredData`
 
 ## 2.1.14 (Jan 12, 2024)
 
@@ -390,12 +390,12 @@
 
 - Added `UserLanguageBehavior` to better control when the user language should be set and updated
 - Removed `ActiveRecord::typecastAttributes()` in favor
-  of `davidhirtz\yii2\skeleton\behaviors\AttributeTypecastBehavior`
+  of `Hirtz\Skeleton\behaviors\AttributeTypecastBehavior`
 - Removed `UserQuery::selectIdentityAttribute`
 
 ## 2.1.12 (Jan 9, 2024)
 
-- Removed `ErrorController` introduced in 2.1.11 in favor of `davidhirtz\yii2\skeleton\web\ErrorAction`
+- Removed `ErrorController` introduced in 2.1.11 in favor of `Hirtz\Skeleton\web\ErrorAction`
 
 ## 2.1.11 (Jan 9, 2024)
 
@@ -455,7 +455,7 @@
 ## 2.0.14 (Dec 8, 2023)
 
 - Extracted shared model methods from `ActiveRecord` to `ModelTrait`
-- Removed `ActiveRecord::logErrors` and replaced it with `\davidhirtz\yii2\skeleton\log\ActiveRecordErrorLogger::log()`
+- Removed `ActiveRecord::logErrors` and replaced it with `\Hirtz\Skeleton\log\ActiveRecordErrorLogger::log()`
 - Reverted `ActiveRecord::isAttributeChanged()` to also accept arrays of attributes,
   added `ActiveRecord::hasChangedAttributes()` instead
 
@@ -479,10 +479,10 @@
 ## 2.0.9 (Nov 9, 2023)
 
 - Added `ActiveRecord::getTraitRules()` and `ActiveRecord::getTraitAttributeLabels()`
-- Added `davidhirtz\yii2\skeleton\models\traits\IconFilenameAttributeTrait`
+- Added `Hirtz\Skeleton\models\traits\IconFilenameAttributeTrait`
 - Added `StringHelper::humanizeFilename()`
 - Added `Html::truncateText()`
-- Enhanced `davidhirtz\yii2\skeleton\widgets\forms\ActiveFormTrait`
+- Enhanced `Hirtz\Skeleton\widgets\forms\ActiveFormTrait`
 - Improved `AccountActiveForm::oldPasswordField()`
 - Removed `@config` alias as it is interfering with `yii2-config` module
 
@@ -493,7 +493,7 @@
 ## 2.0.7 (Nov 7, 2023)
 
 - Changed the default view path to `@views` alias
-- Fixed bug in `davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\UserFormTrait`
+- Fixed bug in `Hirtz\Skeleton\modules\admin\widgets\forms\traits\UserFormTrait`
 
 ## 2.0.6 (Nov 7, 2023)
 
@@ -501,15 +501,15 @@
 
 ## 2.0.5 (Nov 7, 2023)
 
-- Improved `\davidhirtz\yii2\skeleton\modules\admin\widgets\forms\traits\TypeFieldTrait`
+- Improved `\Hirtz\Skeleton\modules\admin\widgets\forms\traits\TypeFieldTrait`
 - Removed unbound version constraints in third-party composer packages
 - Removed unnecessary composer requirements from Yii2 via "provide"
 
 ## 2.0.4 (Nov 7, 2023)
 
-- Added `davidhirtz\yii2\skeleton\widgets\AdminButton`
+- Added `Hirtz\Skeleton\widgets\AdminButton`
 - Added default aliases for `@app`, `@config`, `@messages`, `@resources`, `@root` and `@views`
-- Moved `\davidhirtz\yii2\skeleton\core\ApplicationTrait` to `davidhirtz\yii2\skeleton\base\traits\ApplicationTrait`
+- Moved `\Hirtz\Skeleton\core\ApplicationTrait` to `Hirtz\Skeleton\base\traits\ApplicationTrait`
 - Improved error view
 - Removed unused `BootstrapPluginAsset`
 - Removed unused `CountryDropdown` and `LanguageDropdown` widgets
@@ -523,16 +523,16 @@
 - Added action `DuplicateActiveRecord` and a related `DuplicateActiveRecordEvent` event
 - Change `m151125_140002_init` migration name to be consistent with all other migrations (non-breaking change)
 - Moved `I18nAttributesTrait`, `MaterializedTreeTrait`, `NestedTreeTrait`, `StatusAttributeTrait`
-  and `TypeAttributeTrait` to namespace `davidhirtz\yii2\skeleton\models\traits`
-- Moved `MigrationTrait` to namespace `davidhirtz\yii2\skeleton\db\traits`
-- Moved `OwnerRule` to namespace `davidhirtz\yii2\skeleton\rbac\rules`, migration `M231105142331OwnerRule` changes the
+  and `TypeAttributeTrait` to namespace `Hirtz\Skeleton\models\traits`
+- Moved `MigrationTrait` to namespace `Hirtz\Skeleton\db\traits`
+- Moved `OwnerRule` to namespace `Hirtz\Skeleton\rbac\rules`, migration `M231105142331OwnerRule` changes the
   namespace of the rule in the database
-- Removed `ActiveRecord::updatePosition()`, use `\davidhirtz\yii2\skeleton\db\actions\ReorderActiveRecords`
+- Removed `ActiveRecord::updatePosition()`, use `\Hirtz\Skeleton\db\actions\ReorderActiveRecords`
   instead
 
 ## 2.0.1 (Nov 4, 2023)
 
-- Extracted AJAX Route functionality from controller to `davidhirtz\yii2\skeleton\controllers\traits\AjaxRouteTrait`
+- Extracted AJAX Route functionality from controller to `Hirtz\Skeleton\controllers\traits\AjaxRouteTrait`
 - Removed default route from application and restored default value of `UrlManager::$enableStrictParsing`
 - Renamed `View::getDescription()` to `View::getMetaDescription()`
 - Renamed `View::getTitle()` to `View::getDocumentTitle()`
@@ -540,12 +540,12 @@
 ## 2.0.0 (Nov 3, 2023)
 
 - Added `IdentityActiveForm` for a better separation of admin and user forms
-- Changed namespaces from `davidhirtz\yii2\skeleton\admin\widgets\grid`
-  to `davidhirtz\yii2\skeleton\admin\widgets\grids` and `davidhirtz\yii2\skeleton\admin\widgets\nav`
-  to `davidhirtz\yii2\skeleton\admin\widgets\navs`
-- Changed namespaces for `CounterColumn` to `davidhirtz\yii2\skeleton\admin\widgets\grids\columns`
+- Changed namespaces from `Hirtz\Skeleton\admin\widgets\grid`
+  to `Hirtz\Skeleton\admin\widgets\grids` and `Hirtz\Skeleton\admin\widgets\nav`
+  to `Hirtz\Skeleton\admin\widgets\navs`
+- Changed namespaces for `CounterColumn` to `Hirtz\Skeleton\admin\widgets\grids\columns`
 - Changed namespaces for `MessageSourceTrait`, `StatusGridViewTrait` and `TypeGridViewTrait`
-  to `davidhirtz\yii2\skeleton\admin\widgets\grids\traits`
+  to `Hirtz\Skeleton\admin\widgets\grids\traits`
 - Enhanced `TrailGridView` now tries to automatically load related models
 - Moved source code to `src` folder
 - Moved all models, data providers and widgets out of `base` folder, to override them use Yii's dependency injection

@@ -8,7 +8,7 @@ declare(strict_types=1);
  * @var UserForm $form
  */
 
-use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
+use Hirtz\Skeleton\modules\admin\models\forms\UserForm;
 use yii\mail\MessageInterface;
 
 $this->title = Yii::t('skeleton', 'Your Account');

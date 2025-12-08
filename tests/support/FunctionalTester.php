@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\support;
+namespace Hirtz\Skeleton\tests\support;
 
 use Codeception\Actor;
-use davidhirtz\yii2\skeleton\models\User;
+use Hirtz\Skeleton\models\User;
 
 /**
  * Inherited Methods

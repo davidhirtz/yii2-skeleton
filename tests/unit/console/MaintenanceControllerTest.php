@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\console;
+namespace Hirtz\Skeleton\tests\unit\console;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\codeception\traits\ConsoleApplicationTrait;
-use davidhirtz\yii2\skeleton\codeception\traits\StdOutBufferControllerTrait;
-use davidhirtz\yii2\skeleton\console\controllers\MaintenanceController;
-use davidhirtz\yii2\skeleton\models\forms\MaintenanceConfigForm;
+use Hirtz\Skeleton\codeception\traits\ConsoleApplicationTrait;
+use Hirtz\Skeleton\codeception\traits\StdOutBufferControllerTrait;
+use Hirtz\Skeleton\console\controllers\MaintenanceController;
+use Hirtz\Skeleton\models\forms\MaintenanceConfigForm;
 use Yii;
 
 class MaintenanceControllerTest extends Unit

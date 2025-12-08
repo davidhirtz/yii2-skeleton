@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\base\traits;
+namespace Hirtz\Skeleton\base\traits;
 
 use Composer\InstalledVersions;
-use davidhirtz\yii2\skeleton\assets\EmptyAssetBundle;
-use davidhirtz\yii2\skeleton\auth\clients\Facebook;
-use davidhirtz\yii2\skeleton\controllers\HealthController;
-use davidhirtz\yii2\skeleton\controllers\SitemapController;
-use davidhirtz\yii2\skeleton\db\Connection;
-use davidhirtz\yii2\skeleton\i18n\I18N;
-use davidhirtz\yii2\skeleton\modules\admin\Module;
-use davidhirtz\yii2\skeleton\rbac\DbManager;
-use davidhirtz\yii2\skeleton\web\DbSession;
-use davidhirtz\yii2\skeleton\web\Sitemap;
-use davidhirtz\yii2\skeleton\web\UrlManager;
-use davidhirtz\yii2\skeleton\web\View;
+use Hirtz\Skeleton\assets\EmptyAssetBundle;
+use Hirtz\Skeleton\auth\clients\Facebook;
+use Hirtz\Skeleton\controllers\HealthController;
+use Hirtz\Skeleton\controllers\SitemapController;
+use Hirtz\Skeleton\db\Connection;
+use Hirtz\Skeleton\i18n\I18N;
+use Hirtz\Skeleton\modules\admin\Module;
+use Hirtz\Skeleton\rbac\DbManager;
+use Hirtz\Skeleton\web\DbSession;
+use Hirtz\Skeleton\web\Sitemap;
+use Hirtz\Skeleton\web\UrlManager;
+use Hirtz\Skeleton\web\View;
 use Yii;
 use yii\authclient\Collection;
 use yii\base\ActionEvent;
@@ -166,8 +166,8 @@ trait ApplicationTrait
                 'generators' => [
                     'model' => [
                         'class' => 'yii\gii\generators\model\Generator',
-                        'baseClass' => 'davidhirtz\yii2\skeleton\db\ActiveRecord',
-                        'queryBaseClass' => 'davidhirtz\yii2\skeleton\db\ActiveQuery',
+                        'baseClass' => 'Hirtz\Skeleton\db\ActiveRecord',
+                        'queryBaseClass' => 'Hirtz\Skeleton\db\ActiveQuery',
                         'queryNs' => 'app\models\queries',
                         'templates' => [
                             'skeleton' => '@skeleton/gii/generators/model/default',

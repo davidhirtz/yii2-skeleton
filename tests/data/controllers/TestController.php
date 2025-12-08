@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\data\controllers;
+namespace Hirtz\Skeleton\tests\data\controllers;
 
-use davidhirtz\yii2\skeleton\web\Controller;
-use davidhirtz\yii2\skeleton\web\ErrorAction;
+use Hirtz\Skeleton\web\Controller;
+use Hirtz\Skeleton\web\ErrorAction;
 
 class TestController extends Controller
 {

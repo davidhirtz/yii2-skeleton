@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\widgets\navs;
+namespace Hirtz\Skeleton\tests\unit\widgets\navs;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\codeception\traits\AssetDirectoryTrait;
-use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\tests\support\UnitTester;
-use davidhirtz\yii2\skeleton\web\Controller;
-use davidhirtz\yii2\skeleton\widgets\navs\Nav;
-use davidhirtz\yii2\skeleton\widgets\navs\NavItem;
+use Hirtz\Skeleton\codeception\traits\AssetDirectoryTrait;
+use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\tests\support\UnitTester;
+use Hirtz\Skeleton\web\Controller;
+use Hirtz\Skeleton\widgets\navs\Nav;
+use Hirtz\Skeleton\widgets\navs\NavItem;
 use Yii;
 
 /**

@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\panels;
+namespace Hirtz\Skeleton\widgets\panels;
 
-use davidhirtz\yii2\skeleton\html\A;
-use davidhirtz\yii2\skeleton\html\Li;
-use davidhirtz\yii2\skeleton\html\Span;
-use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagIconTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagLabelTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagUrlTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagVisibilityTrait;
-use davidhirtz\yii2\skeleton\widgets\Widget;
+use Hirtz\Skeleton\html\A;
+use Hirtz\Skeleton\html\Li;
+use Hirtz\Skeleton\html\Span;
+use Hirtz\Skeleton\html\traits\TagAttributesTrait;
+use Hirtz\Skeleton\html\traits\TagContentTrait;
+use Hirtz\Skeleton\html\traits\TagIconTrait;
+use Hirtz\Skeleton\html\traits\TagLabelTrait;
+use Hirtz\Skeleton\html\traits\TagUrlTrait;
+use Hirtz\Skeleton\html\traits\TagVisibilityTrait;
+use Hirtz\Skeleton\widgets\Widget;
 use Override;
 use Stringable;
 

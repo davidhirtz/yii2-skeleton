@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\web;
+namespace Hirtz\Skeleton\tests\unit\web;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\helpers\StructuredData;
-use davidhirtz\yii2\skeleton\web\Controller;
-use davidhirtz\yii2\skeleton\web\View;
+use Hirtz\Skeleton\helpers\StructuredData;
+use Hirtz\Skeleton\web\Controller;
+use Hirtz\Skeleton\web\View;
 use Yii;
 
 class ViewTest extends Unit

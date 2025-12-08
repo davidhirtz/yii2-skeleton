@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
+namespace Hirtz\Skeleton\modules\admin\widgets\grids;
 
-use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\html\A;
-use davidhirtz\yii2\skeleton\html\Button;
-use davidhirtz\yii2\skeleton\models\Redirect;
-use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
-use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\DeleteGridButton;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\buttons\ViewGridButton;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\CheckboxColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\DataColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\RelativeTimeColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\GridView;
-use davidhirtz\yii2\skeleton\widgets\grids\toolbars\CreateButton;
-use davidhirtz\yii2\skeleton\widgets\grids\traits\TypeGridViewTrait;
-use davidhirtz\yii2\skeleton\widgets\Modal;
+use Hirtz\Skeleton\helpers\Html;
+use Hirtz\Skeleton\html\A;
+use Hirtz\Skeleton\html\Button;
+use Hirtz\Skeleton\models\Redirect;
+use Hirtz\Skeleton\modules\admin\controllers\RedirectController;
+use Hirtz\Skeleton\modules\admin\data\RedirectActiveDataProvider;
+use Hirtz\Skeleton\widgets\grids\columns\ButtonColumn;
+use Hirtz\Skeleton\widgets\grids\columns\buttons\DeleteGridButton;
+use Hirtz\Skeleton\widgets\grids\columns\buttons\ViewGridButton;
+use Hirtz\Skeleton\widgets\grids\columns\CheckboxColumn;
+use Hirtz\Skeleton\widgets\grids\columns\DataColumn;
+use Hirtz\Skeleton\widgets\grids\columns\RelativeTimeColumn;
+use Hirtz\Skeleton\widgets\grids\GridView;
+use Hirtz\Skeleton\widgets\grids\toolbars\CreateButton;
+use Hirtz\Skeleton\widgets\grids\traits\TypeGridViewTrait;
+use Hirtz\Skeleton\widgets\Modal;
 use Override;
 use Stringable;
 use Yii;

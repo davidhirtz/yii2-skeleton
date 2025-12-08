@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\i18n;
+namespace Hirtz\Skeleton\tests\unit\i18n;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\modules\ModuleTrait;
+use Hirtz\Skeleton\modules\ModuleTrait;
 use Override;
 use Yii;
 use yii\base\Module;

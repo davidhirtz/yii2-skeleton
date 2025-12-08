@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\models\forms;
+namespace Hirtz\Skeleton\models\forms;
 
-use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
-use davidhirtz\yii2\skeleton\helpers\FileHelper;
-use davidhirtz\yii2\skeleton\helpers\Image;
-use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\web\StreamUploadedFile;
+use Hirtz\Skeleton\base\traits\ModelTrait;
+use Hirtz\Skeleton\helpers\FileHelper;
+use Hirtz\Skeleton\helpers\Image;
+use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\web\StreamUploadedFile;
 use yii\base\Model;
 use yii\web\UploadedFile;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\models\events;
+namespace Hirtz\Skeleton\models\events;
 
 use ArrayObject;
 use yii\base\Event;

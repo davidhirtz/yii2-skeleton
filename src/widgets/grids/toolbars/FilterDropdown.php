@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\grids\toolbars;
+namespace Hirtz\Skeleton\widgets\grids\toolbars;
 
-use davidhirtz\yii2\skeleton\html\Div;
-use davidhirtz\yii2\skeleton\html\TextInput;
-use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagLabelTrait;
-use davidhirtz\yii2\skeleton\widgets\navs\Dropdown;
-use davidhirtz\yii2\skeleton\widgets\navs\DropdownLink;
-use davidhirtz\yii2\skeleton\widgets\Widget;
+use Hirtz\Skeleton\html\Div;
+use Hirtz\Skeleton\html\TextInput;
+use Hirtz\Skeleton\html\traits\TagAttributesTrait;
+use Hirtz\Skeleton\html\traits\TagIdTrait;
+use Hirtz\Skeleton\html\traits\TagLabelTrait;
+use Hirtz\Skeleton\widgets\navs\Dropdown;
+use Hirtz\Skeleton\widgets\navs\DropdownLink;
+use Hirtz\Skeleton\widgets\Widget;
 use Stringable;
 use Yii;
 

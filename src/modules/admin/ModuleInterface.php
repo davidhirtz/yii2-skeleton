@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin;
+namespace Hirtz\Skeleton\modules\admin;
 
-use davidhirtz\yii2\skeleton\modules\admin\config\DashboardPanelConfig;
+use Hirtz\Skeleton\modules\admin\config\DashboardPanelConfig;
 
 /**
- * @mixin \davidhirtz\yii2\skeleton\base\Module
+ * @mixin \Hirtz\Skeleton\base\Module
  */
 interface ModuleInterface
 {

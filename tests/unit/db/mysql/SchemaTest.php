@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\db\mysql;
+namespace Hirtz\Skeleton\tests\unit\db\mysql;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\db\Connection;
-use davidhirtz\yii2\skeleton\db\mysql\Schema;
+use Hirtz\Skeleton\db\Connection;
+use Hirtz\Skeleton\db\mysql\Schema;
 
 class SchemaTest extends Unit
 {

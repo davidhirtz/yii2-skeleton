@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\forms\footers;
+namespace Hirtz\Skeleton\widgets\forms\footers;
 
-use davidhirtz\yii2\skeleton\base\traits\ContainerConfigurationTrait;
-use davidhirtz\yii2\skeleton\html\custom\RelativeTime;
-use davidhirtz\yii2\skeleton\html\Li;
-use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
+use Hirtz\Skeleton\base\traits\ContainerConfigurationTrait;
+use Hirtz\Skeleton\html\custom\RelativeTime;
+use Hirtz\Skeleton\html\Li;
+use Hirtz\Skeleton\widgets\traits\ModelWidgetTrait;
 use Stringable;
 use Yii;
 

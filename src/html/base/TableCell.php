@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\html\base;
+namespace Hirtz\Skeleton\html\base;
 
-use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
+use Hirtz\Skeleton\html\traits\TagContentTrait;
 
 abstract class TableCell extends Tag
 {

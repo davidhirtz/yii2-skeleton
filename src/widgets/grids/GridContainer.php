@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\grids;
+namespace Hirtz\Skeleton\widgets\grids;
 
-use davidhirtz\yii2\skeleton\html\traits\TagCardTrait;
-use davidhirtz\yii2\skeleton\widgets\grids\traits\GridTrait;
-use davidhirtz\yii2\skeleton\widgets\panels\Card;
-use davidhirtz\yii2\skeleton\widgets\traits\ContainerWidgetTrait;
-use davidhirtz\yii2\skeleton\widgets\Widget;
+use Hirtz\Skeleton\html\traits\TagCardTrait;
+use Hirtz\Skeleton\widgets\grids\traits\GridTrait;
+use Hirtz\Skeleton\widgets\panels\Card;
+use Hirtz\Skeleton\widgets\traits\ContainerWidgetTrait;
+use Hirtz\Skeleton\widgets\Widget;
 use Stringable;
 
 class GridContainer extends Widget

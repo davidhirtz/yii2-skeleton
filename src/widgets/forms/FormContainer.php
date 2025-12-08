@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\forms;
+namespace Hirtz\Skeleton\widgets\forms;
 
-use davidhirtz\yii2\skeleton\html\traits\TagCardTrait;
-use davidhirtz\yii2\skeleton\widgets\forms\traits\FormWidgetTrait;
-use davidhirtz\yii2\skeleton\widgets\panels\Card;
-use davidhirtz\yii2\skeleton\widgets\traits\ContainerWidgetTrait;
-use davidhirtz\yii2\skeleton\widgets\Widget;
+use Hirtz\Skeleton\html\traits\TagCardTrait;
+use Hirtz\Skeleton\widgets\forms\traits\FormWidgetTrait;
+use Hirtz\Skeleton\widgets\panels\Card;
+use Hirtz\Skeleton\widgets\traits\ContainerWidgetTrait;
+use Hirtz\Skeleton\widgets\Widget;
 use Stringable;
 
 class FormContainer extends Widget

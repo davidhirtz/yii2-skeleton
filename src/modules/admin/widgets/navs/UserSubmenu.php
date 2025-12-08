@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\navs;
+namespace Hirtz\Skeleton\modules\admin\widgets\navs;
 
-use davidhirtz\yii2\skeleton\models\Trail;
-use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\widgets\navs\NavItem;
-use davidhirtz\yii2\skeleton\widgets\navs\Submenu;
-use davidhirtz\yii2\skeleton\widgets\traits\UserWidgetTrait;
+use Hirtz\Skeleton\models\Trail;
+use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\widgets\navs\NavItem;
+use Hirtz\Skeleton\widgets\navs\Submenu;
+use Hirtz\Skeleton\widgets\traits\UserWidgetTrait;
 use Override;
 use Yii;
 

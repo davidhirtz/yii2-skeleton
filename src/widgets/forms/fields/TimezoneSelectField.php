@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\forms\fields;
+namespace Hirtz\Skeleton\widgets\forms\fields;
 
 use DateTime;
 use DateTimeZone;

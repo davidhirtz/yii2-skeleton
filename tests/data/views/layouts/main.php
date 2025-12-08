@@ -6,7 +6,7 @@ declare(strict_types=1);
  * @var View $this
  */
 
-use davidhirtz\yii2\skeleton\web\View;
+use Hirtz\Skeleton\web\View;
 use yii\helpers\Html;
 
 ?>

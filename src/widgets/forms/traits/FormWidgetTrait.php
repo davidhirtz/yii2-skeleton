@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\forms\traits;
+namespace Hirtz\Skeleton\widgets\forms\traits;
 
-use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
+use Hirtz\Skeleton\widgets\forms\ActiveForm;
 
 trait FormWidgetTrait
 {

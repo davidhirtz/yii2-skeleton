@@ -6,15 +6,15 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\functional;
+namespace Hirtz\Skeleton\tests\functional;
 
-use davidhirtz\yii2\skeleton\codeception\fixtures\UserFixtureTrait;
-use davidhirtz\yii2\skeleton\codeception\functional\BaseCest;
-use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\models\forms\PasswordRecoverForm;
-use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\modules\admin\Module;
-use davidhirtz\yii2\skeleton\tests\support\FunctionalTester;
+use Hirtz\Skeleton\codeception\fixtures\UserFixtureTrait;
+use Hirtz\Skeleton\codeception\functional\BaseCest;
+use Hirtz\Skeleton\helpers\Html;
+use Hirtz\Skeleton\models\forms\PasswordRecoverForm;
+use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\modules\admin\Module;
+use Hirtz\Skeleton\tests\support\FunctionalTester;
 use Override;
 use Yii;
 use yii\symfonymailer\Message;

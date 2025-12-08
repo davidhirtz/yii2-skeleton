@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\caching;
+namespace Hirtz\Skeleton\caching;
 
 use Yii;
 use yii\caching\Cache;

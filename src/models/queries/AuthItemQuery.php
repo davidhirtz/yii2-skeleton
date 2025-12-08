@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\models\queries;
+namespace Hirtz\Skeleton\models\queries;
 
-use davidhirtz\yii2\skeleton\db\ActiveQuery;
-use davidhirtz\yii2\skeleton\models\AuthItem;
+use Hirtz\Skeleton\db\ActiveQuery;
+use Hirtz\Skeleton\models\AuthItem;
 use Yii;
 use yii\db\Connection;
 use yii\db\Query;

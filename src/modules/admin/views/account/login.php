@@ -3,23 +3,23 @@
 declare(strict_types=1);
 
 /**
- * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController::actionLogin()
- * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController::actionResend()
- * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController::actionRecover()
+ * @see \Hirtz\Skeleton\modules\admin\controllers\AccountController::actionLogin()
+ * @see \Hirtz\Skeleton\modules\admin\controllers\AccountController::actionResend()
+ * @see \Hirtz\Skeleton\modules\admin\controllers\AccountController::actionRecover()
  *
  * @var View $this
  * @var LoginForm $form
  */
 
-use davidhirtz\yii2\skeleton\html\Container;
-use davidhirtz\yii2\skeleton\html\Noscript;
-use davidhirtz\yii2\skeleton\models\forms\LoginForm;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\LoginActiveForm;
-use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\Alert;
-use davidhirtz\yii2\skeleton\widgets\panels\Card;
-use davidhirtz\yii2\skeleton\widgets\panels\Stack;
-use davidhirtz\yii2\skeleton\widgets\panels\StackItem;
+use Hirtz\Skeleton\html\Container;
+use Hirtz\Skeleton\html\Noscript;
+use Hirtz\Skeleton\models\forms\LoginForm;
+use Hirtz\Skeleton\modules\admin\widgets\forms\LoginActiveForm;
+use Hirtz\Skeleton\web\View;
+use Hirtz\Skeleton\widgets\Alert;
+use Hirtz\Skeleton\widgets\panels\Card;
+use Hirtz\Skeleton\widgets\panels\Stack;
+use Hirtz\Skeleton\widgets\panels\StackItem;
 
 $this->title(Yii::t('skeleton', 'Login'));
 

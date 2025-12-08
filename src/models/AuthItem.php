@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\models;
+namespace Hirtz\Skeleton\models;
 
-use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\models\interfaces\TypeAttributeInterface;
-use davidhirtz\yii2\skeleton\models\queries\AuthItemQuery;
-use davidhirtz\yii2\skeleton\models\queries\UserQuery;
-use davidhirtz\yii2\skeleton\models\traits\TypeAttributeTrait;
+use Hirtz\Skeleton\db\ActiveRecord;
+use Hirtz\Skeleton\models\interfaces\TypeAttributeInterface;
+use Hirtz\Skeleton\models\queries\AuthItemQuery;
+use Hirtz\Skeleton\models\queries\UserQuery;
+use Hirtz\Skeleton\models\traits\TypeAttributeTrait;
 use Yii;
 use yii\rbac\Item;
 

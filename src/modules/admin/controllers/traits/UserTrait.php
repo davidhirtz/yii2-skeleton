@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin\controllers\traits;
+namespace Hirtz\Skeleton\modules\admin\controllers\traits;
 
-use davidhirtz\yii2\skeleton\models\User;
+use Hirtz\Skeleton\models\User;
 use Yii;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;

@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\web;
+namespace Hirtz\Skeleton\web;
 
 use davidhirtz\yii2\datetime\DateTime;
-use davidhirtz\yii2\skeleton\models\UserLogin;
+use Hirtz\Skeleton\models\UserLogin;
 use Yii;
 use yii\web\MultiFieldSession;
 use yii\web\Response;
 
 /**
- * @property-read \davidhirtz\yii2\skeleton\models\User|null $identity {@see static::getIdentity()}
- * @method \davidhirtz\yii2\skeleton\models\User|null getIdentity($autoRenew = true)
+ * @property-read \Hirtz\Skeleton\models\User|null $identity {@see static::getIdentity()}
+ * @method \Hirtz\Skeleton\models\User|null getIdentity($autoRenew = true)
  */
 class User extends \yii\web\User
 {
@@ -67,7 +67,7 @@ class User extends \yii\web\User
     public string $loginType = 'unknown';
 
     public $enableAutoLogin = true;
-    public $identityClass = \davidhirtz\yii2\skeleton\models\User::class;
+    public $identityClass = \Hirtz\Skeleton\models\User::class;
     public $loginUrl = null;
 
     #[\Override]
@@ -95,7 +95,7 @@ class User extends \yii\web\User
     }
 
     /**
-     * @param \davidhirtz\yii2\skeleton\models\User $identity
+     * @param \Hirtz\Skeleton\models\User $identity
      */
     #[\Override]
     protected function afterLogin($identity, $cookieBased, $duration): void
@@ -128,7 +128,7 @@ class User extends \yii\web\User
 
     /**
      * Removes user id from session.
-     * @param \davidhirtz\yii2\skeleton\models\User $identity
+     * @param \Hirtz\Skeleton\models\User $identity
      */
     #[\Override]
     protected function afterLogout($identity): void
@@ -144,7 +144,7 @@ class User extends \yii\web\User
         parent::afterLogout($identity);
     }
 
-    private function insertLogin(\davidhirtz\yii2\skeleton\models\User $user): void
+    private function insertLogin(\Hirtz\Skeleton\models\User $user): void
     {
         if ($browser = Yii::$app->getRequest()->getUserAgent()) {
             $browser = mb_substr((string) $browser, 0, 255, Yii::$app->charset);

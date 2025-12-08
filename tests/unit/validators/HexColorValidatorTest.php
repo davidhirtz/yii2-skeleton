@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\validators;
+namespace Hirtz\Skeleton\tests\unit\validators;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\validators\HexColorValidator;
+use Hirtz\Skeleton\validators\HexColorValidator;
 use yii\base\Model;
 
 class HexColorValidatorTest extends Unit

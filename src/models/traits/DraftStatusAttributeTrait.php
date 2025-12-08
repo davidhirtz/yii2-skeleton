@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\models\traits;
+namespace Hirtz\Skeleton\models\traits;
 
-use davidhirtz\yii2\skeleton\models\interfaces\DraftStatusAttributeInterface;
+use Hirtz\Skeleton\models\interfaces\DraftStatusAttributeInterface;
 use Yii;
 
 /**

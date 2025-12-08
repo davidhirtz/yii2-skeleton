@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\html;
+namespace Hirtz\Skeleton\html;
 
-use davidhirtz\yii2\skeleton\html\traits\TagInputTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagPlaceholderTrait;
+use Hirtz\Skeleton\html\traits\TagInputTrait;
+use Hirtz\Skeleton\html\traits\TagPlaceholderTrait;
 
 class TextInput extends Input
 {

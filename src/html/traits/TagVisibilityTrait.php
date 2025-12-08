@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\html\traits;
+namespace Hirtz\Skeleton\html\traits;
 
 use Closure;
 use Yii;

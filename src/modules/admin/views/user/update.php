@@ -3,20 +3,20 @@
 declare(strict_types=1);
 
 /**
- * @see davidhirtz\yii2\skeleton\modules\admin\controllers\UserController::actionUpdate()
+ * @see Hirtz\Skeleton\modules\admin\controllers\UserController::actionUpdate()
  *
  * @var View $this
  * @var UserForm $form
  */
 
-use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserActiveForm;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\UserDeleteActiveForm;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\UserSubmenu;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\panels\UserPanel;
-use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\forms\FormContainer;
+use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\modules\admin\models\forms\UserForm;
+use Hirtz\Skeleton\modules\admin\widgets\forms\UserActiveForm;
+use Hirtz\Skeleton\modules\admin\widgets\forms\UserDeleteActiveForm;
+use Hirtz\Skeleton\modules\admin\widgets\navs\UserSubmenu;
+use Hirtz\Skeleton\modules\admin\widgets\panels\UserPanel;
+use Hirtz\Skeleton\web\View;
+use Hirtz\Skeleton\widgets\forms\FormContainer;
 
 echo UserSubmenu::make()
     ->user($form->user);

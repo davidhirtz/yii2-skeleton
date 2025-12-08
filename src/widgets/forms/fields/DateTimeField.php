@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\forms\fields;
+namespace Hirtz\Skeleton\widgets\forms\fields;
 
 use DateTime;
 use DateTimeZone;
-use davidhirtz\yii2\skeleton\html\Input;
-use davidhirtz\yii2\skeleton\html\traits\TagInputTrait;
-use davidhirtz\yii2\skeleton\widgets\forms\InputGroup;
+use Hirtz\Skeleton\html\Input;
+use Hirtz\Skeleton\html\traits\TagInputTrait;
+use Hirtz\Skeleton\widgets\forms\InputGroup;
 use Stringable;
 use Yii;
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin\data;
+namespace Hirtz\Skeleton\modules\admin\data;
 
-use davidhirtz\yii2\skeleton\models\Log;
+use Hirtz\Skeleton\models\Log;
 use Override;
 use Yii;
 use yii\data\ArrayDataProvider;

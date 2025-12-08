@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\web;
+namespace Hirtz\Skeleton\tests\unit\web;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\tests\data\controllers\TestController;
+use Hirtz\Skeleton\tests\data\controllers\TestController;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\UserException;

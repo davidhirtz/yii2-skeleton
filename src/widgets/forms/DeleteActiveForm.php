@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\forms;
+namespace Hirtz\Skeleton\widgets\forms;
 
-use davidhirtz\yii2\skeleton\html\Button;
-use davidhirtz\yii2\skeleton\html\traits\TagLabelTrait;
-use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
-use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
-use davidhirtz\yii2\skeleton\widgets\Modal;
-use davidhirtz\yii2\skeleton\widgets\traits\PropertyWidgetTrait;
+use Hirtz\Skeleton\html\Button;
+use Hirtz\Skeleton\html\traits\TagLabelTrait;
+use Hirtz\Skeleton\models\forms\DeleteForm;
+use Hirtz\Skeleton\widgets\forms\fields\InputField;
+use Hirtz\Skeleton\widgets\Modal;
+use Hirtz\Skeleton\widgets\traits\PropertyWidgetTrait;
 use Override;
 use Yii;
 

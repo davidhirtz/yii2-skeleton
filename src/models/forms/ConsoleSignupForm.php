@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\models\forms;
+namespace Hirtz\Skeleton\models\forms;
 
 class ConsoleSignupForm extends AbstractSignupForm
 {

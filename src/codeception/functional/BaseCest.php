@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\codeception\functional;
+namespace Hirtz\Skeleton\codeception\functional;
 
-use davidhirtz\yii2\skeleton\codeception\traits\AssetDirectoryTrait;
+use Hirtz\Skeleton\codeception\traits\AssetDirectoryTrait;
 
 abstract class BaseCest
 {

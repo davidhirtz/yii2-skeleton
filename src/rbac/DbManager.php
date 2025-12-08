@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\rbac;
+namespace Hirtz\Skeleton\rbac;
 
-use davidhirtz\yii2\skeleton\models\Trail;
-use davidhirtz\yii2\skeleton\models\User;
+use Hirtz\Skeleton\models\Trail;
+use Hirtz\Skeleton\models\User;
 use yii\rbac\Assignment;
 
 class DbManager extends \yii\rbac\DbManager

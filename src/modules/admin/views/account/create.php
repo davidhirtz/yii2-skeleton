@@ -3,20 +3,20 @@
 declare(strict_types=1);
 
 /**
- * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\AccountController::actionCreate()
+ * @see \Hirtz\Skeleton\modules\admin\controllers\AccountController::actionCreate()
  *
- * @var davidhirtz\yii2\skeleton\web\View $this
- * @var davidhirtz\yii2\skeleton\models\forms\SignupForm $form
+ * @var Hirtz\Skeleton\web\View $this
+ * @var Hirtz\Skeleton\models\forms\SignupForm $form
  */
 
-use davidhirtz\yii2\skeleton\html\Container;
-use davidhirtz\yii2\skeleton\html\Noscript;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\SignupActiveForm;
-use davidhirtz\yii2\skeleton\widgets\Alert;
-use davidhirtz\yii2\skeleton\widgets\forms\ErrorSummary;
-use davidhirtz\yii2\skeleton\widgets\panels\Card;
-use davidhirtz\yii2\skeleton\widgets\panels\Stack;
-use davidhirtz\yii2\skeleton\widgets\panels\StackItem;
+use Hirtz\Skeleton\html\Container;
+use Hirtz\Skeleton\html\Noscript;
+use Hirtz\Skeleton\modules\admin\widgets\forms\SignupActiveForm;
+use Hirtz\Skeleton\widgets\Alert;
+use Hirtz\Skeleton\widgets\forms\ErrorSummary;
+use Hirtz\Skeleton\widgets\panels\Card;
+use Hirtz\Skeleton\widgets\panels\Stack;
+use Hirtz\Skeleton\widgets\panels\StackItem;
 
 $this->title(Yii::t('skeleton', 'Sign up'));
 

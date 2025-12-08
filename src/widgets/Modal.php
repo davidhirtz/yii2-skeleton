@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets;
+namespace Hirtz\Skeleton\widgets;
 
-use davidhirtz\yii2\skeleton\html\Button;
-use davidhirtz\yii2\skeleton\html\Dialog;
-use davidhirtz\yii2\skeleton\html\Div;
-use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagContentTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagTitleTrait;
+use Hirtz\Skeleton\html\Button;
+use Hirtz\Skeleton\html\Dialog;
+use Hirtz\Skeleton\html\Div;
+use Hirtz\Skeleton\html\traits\TagAttributesTrait;
+use Hirtz\Skeleton\html\traits\TagContentTrait;
+use Hirtz\Skeleton\html\traits\TagIdTrait;
+use Hirtz\Skeleton\html\traits\TagTitleTrait;
 use Override;
 use Stringable;
 use Yii;

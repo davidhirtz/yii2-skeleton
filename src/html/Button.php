@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\html;
+namespace Hirtz\Skeleton\html;
 
-use davidhirtz\yii2\skeleton\html\base\Tag;
-use davidhirtz\yii2\skeleton\html\traits\TagAjaxAttributeTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagIconTextTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagInputTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagLinkTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagModalTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagTooltipAttributeTrait;
+use Hirtz\Skeleton\html\base\Tag;
+use Hirtz\Skeleton\html\traits\TagAjaxAttributeTrait;
+use Hirtz\Skeleton\html\traits\TagIconTextTrait;
+use Hirtz\Skeleton\html\traits\TagInputTrait;
+use Hirtz\Skeleton\html\traits\TagLinkTrait;
+use Hirtz\Skeleton\html\traits\TagModalTrait;
+use Hirtz\Skeleton\html\traits\TagTooltipAttributeTrait;
 use Override;
 
 class Button extends Tag

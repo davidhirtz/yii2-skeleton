@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\modules\admin\widgets\grids\columns;
+namespace Hirtz\Skeleton\tests\unit\modules\admin\widgets\grids\columns;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\BadgeColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\GridView;
+use Hirtz\Skeleton\widgets\grids\columns\BadgeColumn;
+use Hirtz\Skeleton\widgets\grids\GridView;
 use Yii;
 use yii\base\Model;
 use yii\web\Controller;

@@ -6,7 +6,7 @@ declare(strict_types=1);
  *
  * @var yii\web\View $this
  * @var MessageInterface $message
- * @var \davidhirtz\yii2\skeleton\models\User $user
+ * @var \Hirtz\Skeleton\models\User $user
  */
 
 use yii\mail\MessageInterface;

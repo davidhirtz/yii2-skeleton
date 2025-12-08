@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets;
+namespace Hirtz\Skeleton\widgets;
 
-use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\html\Button;
-use davidhirtz\yii2\skeleton\html\Container;
+use Hirtz\Skeleton\helpers\Html;
+use Hirtz\Skeleton\html\Button;
+use Hirtz\Skeleton\html\Container;
 use Stringable;
 use Yii;
 

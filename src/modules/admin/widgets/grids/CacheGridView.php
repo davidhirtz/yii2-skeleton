@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\grids;
+namespace Hirtz\Skeleton\modules\admin\widgets\grids;
 
-use davidhirtz\yii2\skeleton\caching\CacheComponents;
-use davidhirtz\yii2\skeleton\html\Button;
-use davidhirtz\yii2\skeleton\html\Div;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\ButtonColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\Column;
-use davidhirtz\yii2\skeleton\widgets\grids\GridView;
+use Hirtz\Skeleton\caching\CacheComponents;
+use Hirtz\Skeleton\html\Button;
+use Hirtz\Skeleton\html\Div;
+use Hirtz\Skeleton\widgets\grids\columns\ButtonColumn;
+use Hirtz\Skeleton\widgets\grids\columns\Column;
+use Hirtz\Skeleton\widgets\grids\GridView;
 use Override;
 use Stringable;
 use Yii;

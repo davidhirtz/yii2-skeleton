@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
+namespace Hirtz\Skeleton\modules\admin\controllers;
 
-use davidhirtz\yii2\skeleton\models\AuthClient;
-use davidhirtz\yii2\skeleton\models\forms\DeleteForm;
-use davidhirtz\yii2\skeleton\models\forms\OwnershipForm;
-use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\modules\admin\controllers\traits\UserTrait;
-use davidhirtz\yii2\skeleton\modules\admin\data\UserActiveDataProvider;
-use davidhirtz\yii2\skeleton\modules\admin\models\forms\UserForm;
-use davidhirtz\yii2\skeleton\web\Controller;
+use Hirtz\Skeleton\models\AuthClient;
+use Hirtz\Skeleton\models\forms\DeleteForm;
+use Hirtz\Skeleton\models\forms\OwnershipForm;
+use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\modules\admin\controllers\traits\UserTrait;
+use Hirtz\Skeleton\modules\admin\data\UserActiveDataProvider;
+use Hirtz\Skeleton\modules\admin\models\forms\UserForm;
+use Hirtz\Skeleton\web\Controller;
 use Override;
 use Yii;
 use yii\filters\AccessControl;

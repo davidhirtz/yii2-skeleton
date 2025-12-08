@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\forms\fields;
+namespace Hirtz\Skeleton\widgets\forms\fields;
 
-use davidhirtz\yii2\skeleton\html\Div;
-use davidhirtz\yii2\skeleton\html\Input;
-use davidhirtz\yii2\skeleton\html\traits\TagInputTrait;
-use davidhirtz\yii2\skeleton\widgets\forms\FormRow;
+use Hirtz\Skeleton\html\Div;
+use Hirtz\Skeleton\html\Input;
+use Hirtz\Skeleton\html\traits\TagInputTrait;
+use Hirtz\Skeleton\widgets\forms\FormRow;
 use Override;
 use Stringable;
 

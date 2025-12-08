@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\forms\footers;
+namespace Hirtz\Skeleton\widgets\forms\footers;
 
-use davidhirtz\yii2\skeleton\base\traits\ContainerConfigurationTrait;
-use davidhirtz\yii2\skeleton\html\A;
-use davidhirtz\yii2\skeleton\html\custom\RelativeTime;
-use davidhirtz\yii2\skeleton\html\Li;
-use davidhirtz\yii2\skeleton\models\interfaces\TrailModelInterface;
-use davidhirtz\yii2\skeleton\models\queries\UserQuery;
-use davidhirtz\yii2\skeleton\models\Trail;
-use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
-use davidhirtz\yii2\skeleton\widgets\Username;
+use Hirtz\Skeleton\base\traits\ContainerConfigurationTrait;
+use Hirtz\Skeleton\html\A;
+use Hirtz\Skeleton\html\custom\RelativeTime;
+use Hirtz\Skeleton\html\Li;
+use Hirtz\Skeleton\models\interfaces\TrailModelInterface;
+use Hirtz\Skeleton\models\queries\UserQuery;
+use Hirtz\Skeleton\models\Trail;
+use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\widgets\traits\ModelWidgetTrait;
+use Hirtz\Skeleton\widgets\Username;
 use Stringable;
 use Yii;
 use yii\db\ActiveRecord;

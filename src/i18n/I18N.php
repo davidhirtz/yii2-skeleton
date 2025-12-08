@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\i18n;
+namespace Hirtz\Skeleton\i18n;
 
 use Yii;
 use yii\helpers\ArrayHelper;

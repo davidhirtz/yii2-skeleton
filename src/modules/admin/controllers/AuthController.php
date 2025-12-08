@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
+namespace Hirtz\Skeleton\modules\admin\controllers;
 
-use davidhirtz\yii2\skeleton\models\AuthItem;
-use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\modules\admin\controllers\traits\UserTrait;
-use davidhirtz\yii2\skeleton\web\Controller;
+use Hirtz\Skeleton\models\AuthItem;
+use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\modules\admin\controllers\traits\UserTrait;
+use Hirtz\Skeleton\web\Controller;
 use Yii;
 use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;

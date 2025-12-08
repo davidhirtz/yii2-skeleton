@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin\controllers;
+namespace Hirtz\Skeleton\modules\admin\controllers;
 
-use davidhirtz\yii2\skeleton\models\queries\UserQuery;
-use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\models\UserLogin;
-use davidhirtz\yii2\skeleton\modules\admin\controllers\traits\UserTrait;
+use Hirtz\Skeleton\models\queries\UserQuery;
+use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\models\UserLogin;
+use Hirtz\Skeleton\modules\admin\controllers\traits\UserTrait;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\panels;
+namespace Hirtz\Skeleton\widgets\panels;
 
-use davidhirtz\yii2\skeleton\html\Button;
-use davidhirtz\yii2\skeleton\html\Div;
-use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagCardTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
-use davidhirtz\yii2\skeleton\widgets\Widget;
+use Hirtz\Skeleton\html\Button;
+use Hirtz\Skeleton\html\Div;
+use Hirtz\Skeleton\html\traits\TagAttributesTrait;
+use Hirtz\Skeleton\html\traits\TagCardTrait;
+use Hirtz\Skeleton\html\traits\TagIdTrait;
+use Hirtz\Skeleton\widgets\Widget;
 use Override;
 use Stringable;
 use Yii;

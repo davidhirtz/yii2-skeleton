@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\test;
+namespace Hirtz\Skeleton\test;
 
 use Override;
 use yii\base\Exception;

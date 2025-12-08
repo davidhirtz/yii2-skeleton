@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\web;
+namespace Hirtz\Skeleton\tests\unit\web;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\helpers\FileHelper;
-use davidhirtz\yii2\skeleton\web\StreamUploadedFile;
+use Hirtz\Skeleton\helpers\FileHelper;
+use Hirtz\Skeleton\web\StreamUploadedFile;
 use Yii;
 
 class StreamUploadedFileTest extends Unit

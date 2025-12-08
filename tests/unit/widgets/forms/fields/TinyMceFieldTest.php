@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\widgets\forms\fields;
+namespace Hirtz\Skeleton\tests\unit\widgets\forms\fields;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\assets\TinyMceAssetBundle;
-use davidhirtz\yii2\skeleton\codeception\traits\AssetDirectoryTrait;
-use davidhirtz\yii2\skeleton\validators\HtmlValidator;
-use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
+use Hirtz\Skeleton\assets\TinyMceAssetBundle;
+use Hirtz\Skeleton\codeception\traits\AssetDirectoryTrait;
+use Hirtz\Skeleton\validators\HtmlValidator;
+use Hirtz\Skeleton\widgets\forms\ActiveForm;
 use Override;
 use Yii;
 use yii\base\Model;

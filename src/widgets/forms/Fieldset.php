@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\forms;
+namespace Hirtz\Skeleton\widgets\forms;
 
-use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagIdTrait;
-use davidhirtz\yii2\skeleton\models\interfaces\I18nAttributeInterface;
-use davidhirtz\yii2\skeleton\validators\DynamicRangeValidator;
-use davidhirtz\yii2\skeleton\validators\HexColorValidator;
-use davidhirtz\yii2\skeleton\validators\HtmlValidator;
-use davidhirtz\yii2\skeleton\validators\SensitiveAttributeValidator;
-use davidhirtz\yii2\skeleton\widgets\forms\fields\CheckboxField;
-use davidhirtz\yii2\skeleton\widgets\forms\fields\Field;
-use davidhirtz\yii2\skeleton\widgets\forms\fields\HexColorField;
-use davidhirtz\yii2\skeleton\widgets\forms\fields\InputField;
-use davidhirtz\yii2\skeleton\widgets\forms\fields\SelectField;
-use davidhirtz\yii2\skeleton\widgets\forms\fields\TinyMceField;
-use davidhirtz\yii2\skeleton\widgets\forms\traits\FormWidgetTrait;
-use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
-use davidhirtz\yii2\skeleton\widgets\Widget;
+use Hirtz\Skeleton\html\traits\TagAttributesTrait;
+use Hirtz\Skeleton\html\traits\TagIdTrait;
+use Hirtz\Skeleton\models\interfaces\I18nAttributeInterface;
+use Hirtz\Skeleton\validators\DynamicRangeValidator;
+use Hirtz\Skeleton\validators\HexColorValidator;
+use Hirtz\Skeleton\validators\HtmlValidator;
+use Hirtz\Skeleton\validators\SensitiveAttributeValidator;
+use Hirtz\Skeleton\widgets\forms\fields\CheckboxField;
+use Hirtz\Skeleton\widgets\forms\fields\Field;
+use Hirtz\Skeleton\widgets\forms\fields\HexColorField;
+use Hirtz\Skeleton\widgets\forms\fields\InputField;
+use Hirtz\Skeleton\widgets\forms\fields\SelectField;
+use Hirtz\Skeleton\widgets\forms\fields\TinyMceField;
+use Hirtz\Skeleton\widgets\forms\traits\FormWidgetTrait;
+use Hirtz\Skeleton\widgets\traits\ModelWidgetTrait;
+use Hirtz\Skeleton\widgets\Widget;
 use Stringable;
 use Yii;
 use yii\validators\BooleanValidator;
@@ -151,7 +151,7 @@ class Fieldset extends Widget
     protected function renderContent(): string|Stringable
     {
         return $this->rows
-            ? \davidhirtz\yii2\skeleton\html\Fieldset::make()
+            ? \Hirtz\Skeleton\html\Fieldset::make()
                 ->attributes($this->attributes)
                 ->addClass('fieldset')
                 ->content(...$this->rows)

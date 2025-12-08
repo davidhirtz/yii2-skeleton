@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\grids\traits;
+namespace Hirtz\Skeleton\widgets\grids\traits;
 
-use davidhirtz\yii2\skeleton\helpers\Html;
-use davidhirtz\yii2\skeleton\html\Button;
-use davidhirtz\yii2\skeleton\html\Icon;
-use davidhirtz\yii2\skeleton\models\interfaces\StatusAttributeInterface;
-use davidhirtz\yii2\skeleton\widgets\grids\columns\LinkColumn;
-use davidhirtz\yii2\skeleton\widgets\grids\toolbars\FilterDropdown;
+use Hirtz\Skeleton\helpers\Html;
+use Hirtz\Skeleton\html\Button;
+use Hirtz\Skeleton\html\Icon;
+use Hirtz\Skeleton\models\interfaces\StatusAttributeInterface;
+use Hirtz\Skeleton\widgets\grids\columns\LinkColumn;
+use Hirtz\Skeleton\widgets\grids\toolbars\FilterDropdown;
 use Stringable;
 use Yii;
 use yii\base\Model;

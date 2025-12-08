@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\migrations;
+namespace Hirtz\Skeleton\migrations;
 
-use davidhirtz\yii2\skeleton\db\traits\MigrationTrait;
-use davidhirtz\yii2\skeleton\models\User;
+use Hirtz\Skeleton\db\traits\MigrationTrait;
+use Hirtz\Skeleton\models\User;
 use yii\db\Migration;
 
 /**

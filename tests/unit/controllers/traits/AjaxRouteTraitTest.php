@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\controllers\traits;
+namespace Hirtz\Skeleton\tests\unit\controllers\traits;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\controllers\traits\AjaxRouteTrait;
-use davidhirtz\yii2\skeleton\web\Controller;
+use Hirtz\Skeleton\controllers\traits\AjaxRouteTrait;
+use Hirtz\Skeleton\web\Controller;
 use Yii;
 use yii\web\View;
 

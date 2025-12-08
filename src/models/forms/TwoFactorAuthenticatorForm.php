@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\models\forms;
+namespace Hirtz\Skeleton\models\forms;
 
-use davidhirtz\yii2\skeleton\base\traits\ModelTrait;
-use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\validators\TwoFactorAuthenticationValidator;
+use Hirtz\Skeleton\base\traits\ModelTrait;
+use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\validators\TwoFactorAuthenticationValidator;
 use Override;
 use RobThree\Auth\Providers\Qr\QRServerProvider;
 use RobThree\Auth\TwoFactorAuth;

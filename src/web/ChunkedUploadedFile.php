@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\web;
+namespace Hirtz\Skeleton\web;
 
-use davidhirtz\yii2\skeleton\helpers\FileHelper;
+use Hirtz\Skeleton\helpers\FileHelper;
 use Override;
 use Yii;
 use yii\base\InvalidCallException;

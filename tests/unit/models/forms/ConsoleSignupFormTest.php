@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\models\forms;
+namespace Hirtz\Skeleton\tests\unit\models\forms;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\models\forms\ConsoleSignupForm;
-use davidhirtz\yii2\skeleton\tests\support\UnitTester;
+use Hirtz\Skeleton\models\forms\ConsoleSignupForm;
+use Hirtz\Skeleton\tests\support\UnitTester;
 use Yii;
 
 /**

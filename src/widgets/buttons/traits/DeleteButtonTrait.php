@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\buttons\traits;
+namespace Hirtz\Skeleton\widgets\buttons\traits;
 
-use davidhirtz\yii2\skeleton\html\Icon;
-use davidhirtz\yii2\skeleton\html\traits\TagIconTextTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagLabelTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagTitleTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagUrlTrait;
-use davidhirtz\yii2\skeleton\widgets\traits\ModelWidgetTrait;
+use Hirtz\Skeleton\html\Icon;
+use Hirtz\Skeleton\html\traits\TagIconTextTrait;
+use Hirtz\Skeleton\html\traits\TagLabelTrait;
+use Hirtz\Skeleton\html\traits\TagTitleTrait;
+use Hirtz\Skeleton\html\traits\TagUrlTrait;
+use Hirtz\Skeleton\widgets\traits\ModelWidgetTrait;
 use Yii;
 use yii\db\ActiveRecordInterface;
 

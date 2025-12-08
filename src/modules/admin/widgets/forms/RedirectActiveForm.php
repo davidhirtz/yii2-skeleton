@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\forms;
+namespace Hirtz\Skeleton\modules\admin\widgets\forms;
 
-use davidhirtz\yii2\skeleton\models\Redirect;
-use davidhirtz\yii2\skeleton\widgets\forms\ActiveForm;
+use Hirtz\Skeleton\models\Redirect;
+use Hirtz\Skeleton\widgets\forms\ActiveForm;
 use Override;
 
 /**

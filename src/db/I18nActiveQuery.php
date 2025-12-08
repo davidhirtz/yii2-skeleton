@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\db;
+namespace Hirtz\Skeleton\db;
 
 use Yii;
 

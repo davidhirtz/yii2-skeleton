@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\grids\columns\buttons;
+namespace Hirtz\Skeleton\widgets\grids\columns\buttons;
 
-use davidhirtz\yii2\skeleton\html\Button;
-use davidhirtz\yii2\skeleton\html\traits\TagIconTextTrait;
-use davidhirtz\yii2\skeleton\widgets\Widget;
+use Hirtz\Skeleton\html\Button;
+use Hirtz\Skeleton\html\traits\TagIconTextTrait;
+use Hirtz\Skeleton\widgets\Widget;
 
 class DraggableSortGridButton extends Widget
 {

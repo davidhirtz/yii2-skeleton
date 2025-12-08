@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\models\traits;
+namespace Hirtz\Skeleton\models\traits;
 
-use davidhirtz\yii2\skeleton\db\ActiveQuery;
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
+use Hirtz\Skeleton\db\ActiveQuery;
+use Hirtz\Skeleton\helpers\ArrayHelper;
 
 /**
  * @property int $id

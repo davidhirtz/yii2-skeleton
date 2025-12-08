@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\web;
+namespace Hirtz\Skeleton\web;
 
-use davidhirtz\yii2\skeleton\models\Redirect;
+use Hirtz\Skeleton\models\Redirect;
 use Override;
 use Yii;
 use yii\web\HttpException;

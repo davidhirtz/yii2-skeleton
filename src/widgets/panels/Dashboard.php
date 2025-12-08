@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\panels;
+namespace Hirtz\Skeleton\widgets\panels;
 
-use davidhirtz\yii2\skeleton\html\Div;
-use davidhirtz\yii2\skeleton\modules\admin\config\DashboardPanelConfig;
-use davidhirtz\yii2\skeleton\widgets\traits\ContainerWidgetTrait;
-use davidhirtz\yii2\skeleton\widgets\Widget;
+use Hirtz\Skeleton\html\Div;
+use Hirtz\Skeleton\modules\admin\config\DashboardPanelConfig;
+use Hirtz\Skeleton\widgets\traits\ContainerWidgetTrait;
+use Hirtz\Skeleton\widgets\Widget;
 use Stringable;
 
 class Dashboard extends Widget

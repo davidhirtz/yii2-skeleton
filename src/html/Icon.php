@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\html;
+namespace Hirtz\Skeleton\html;
 
-use davidhirtz\yii2\skeleton\html\base\Tag;
-use davidhirtz\yii2\skeleton\html\traits\TagTooltipAttributeTrait;
+use Hirtz\Skeleton\html\base\Tag;
+use Hirtz\Skeleton\html\traits\TagTooltipAttributeTrait;
 use Override;
 
 class Icon extends Tag

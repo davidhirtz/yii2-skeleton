@@ -10,16 +10,16 @@ declare(strict_types=1);
  * @var RedirectActiveDataProvider $provider
  */
 
-use davidhirtz\yii2\skeleton\models\Redirect;
-use davidhirtz\yii2\skeleton\modules\admin\controllers\RedirectController;
-use davidhirtz\yii2\skeleton\modules\admin\data\RedirectActiveDataProvider;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\RedirectActiveForm;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\RedirectGridView;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\navs\RedirectSubmenu;
-use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\forms\DeleteActiveForm;
-use davidhirtz\yii2\skeleton\widgets\forms\FormContainer;
-use davidhirtz\yii2\skeleton\widgets\grids\GridContainer;
+use Hirtz\Skeleton\models\Redirect;
+use Hirtz\Skeleton\modules\admin\controllers\RedirectController;
+use Hirtz\Skeleton\modules\admin\data\RedirectActiveDataProvider;
+use Hirtz\Skeleton\modules\admin\widgets\forms\RedirectActiveForm;
+use Hirtz\Skeleton\modules\admin\widgets\grids\RedirectGridView;
+use Hirtz\Skeleton\modules\admin\widgets\navs\RedirectSubmenu;
+use Hirtz\Skeleton\web\View;
+use Hirtz\Skeleton\widgets\forms\DeleteActiveForm;
+use Hirtz\Skeleton\widgets\forms\FormContainer;
+use Hirtz\Skeleton\widgets\grids\GridContainer;
 
 echo RedirectSubmenu::make()
     ->title(Yii::t('skeleton', 'Update Redirect'));

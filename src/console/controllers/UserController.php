@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\console\controllers;
+namespace Hirtz\Skeleton\console\controllers;
 
-use davidhirtz\yii2\skeleton\models\forms\ConsoleSignupForm;
+use Hirtz\Skeleton\models\forms\ConsoleSignupForm;
 use Seld\CliPrompt\CliPrompt;
 use yii\console\Controller;
 use yii\helpers\Console;

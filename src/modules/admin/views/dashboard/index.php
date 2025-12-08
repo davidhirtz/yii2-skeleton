@@ -3,14 +3,14 @@
 declare(strict_types=1);
 
 /**
- * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\DashboardController::actionIndex()
+ * @see \Hirtz\Skeleton\modules\admin\controllers\DashboardController::actionIndex()
  * @var View $this
  * @var array $panels
  */
 
-use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\navs\Header;
-use davidhirtz\yii2\skeleton\widgets\panels\Dashboard;
+use Hirtz\Skeleton\web\View;
+use Hirtz\Skeleton\widgets\navs\Header;
+use Hirtz\Skeleton\widgets\panels\Dashboard;
 
 $this->title(Yii::t('skeleton', 'Admin'));
 

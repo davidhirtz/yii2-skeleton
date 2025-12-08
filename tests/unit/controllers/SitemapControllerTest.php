@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\controllers;
+namespace Hirtz\Skeleton\tests\unit\controllers;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\controllers\SitemapController;
+use Hirtz\Skeleton\controllers\SitemapController;
 use SimpleXMLElement;
 use Yii;
 

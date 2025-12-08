@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\forms\fields;
+namespace Hirtz\Skeleton\widgets\forms\fields;
 
-use davidhirtz\yii2\skeleton\assets\AdminAssetBundle;
-use davidhirtz\yii2\skeleton\assets\TinyMceAssetBundle;
-use davidhirtz\yii2\skeleton\assets\TinyMceLanguageAssetBundle;
-use davidhirtz\yii2\skeleton\assets\TinyMceSkinAssetBundle;
-use davidhirtz\yii2\skeleton\html\Textarea;
-use davidhirtz\yii2\skeleton\html\traits\TagInputTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagPlaceholderTrait;
-use davidhirtz\yii2\skeleton\validators\HtmlValidator;
+use Hirtz\Skeleton\assets\AdminAssetBundle;
+use Hirtz\Skeleton\assets\TinyMceAssetBundle;
+use Hirtz\Skeleton\assets\TinyMceLanguageAssetBundle;
+use Hirtz\Skeleton\assets\TinyMceSkinAssetBundle;
+use Hirtz\Skeleton\html\Textarea;
+use Hirtz\Skeleton\html\traits\TagInputTrait;
+use Hirtz\Skeleton\html\traits\TagPlaceholderTrait;
+use Hirtz\Skeleton\validators\HtmlValidator;
 use Override;
 use Stringable;
 use Yii;

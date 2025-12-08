@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\console\controllers;
+namespace Hirtz\Skeleton\console\controllers;
 
-use davidhirtz\yii2\skeleton\console\controllers\traits\BackupTrait;
-use davidhirtz\yii2\skeleton\console\controllers\traits\ConfigTrait;
-use davidhirtz\yii2\skeleton\models\User;
+use Hirtz\Skeleton\console\controllers\traits\BackupTrait;
+use Hirtz\Skeleton\console\controllers\traits\ConfigTrait;
+use Hirtz\Skeleton\models\User;
 use Seld\CliPrompt\CliPrompt;
 use Yii;
 use yii\console\ExitCode;
@@ -24,7 +24,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
 
     public $migrationNamespaces = [
         'app\migrations',
-        'davidhirtz\yii2\skeleton\migrations',
+        'Hirtz\Skeleton\migrations',
     ];
 
     public string $dbFile = '@root/config/db.php';

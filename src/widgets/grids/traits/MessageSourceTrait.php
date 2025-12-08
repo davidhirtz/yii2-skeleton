@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\grids\traits;
+namespace Hirtz\Skeleton\widgets\grids\traits;
 
-use davidhirtz\yii2\skeleton\models\AuthItem;
+use Hirtz\Skeleton\models\AuthItem;
 use Yii;
 use yii\i18n\PhpMessageSource;
 

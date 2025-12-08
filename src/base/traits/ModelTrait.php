@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\base\traits;
+namespace Hirtz\Skeleton\base\traits;
 
 use ArrayObject;
-use davidhirtz\yii2\skeleton\models\events\CreateValidatorsEvent;
+use Hirtz\Skeleton\models\events\CreateValidatorsEvent;
 use ReflectionClass;
 use Yii;
 

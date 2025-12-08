@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin\data;
+namespace Hirtz\Skeleton\modules\admin\data;
 
-use davidhirtz\yii2\skeleton\models\Redirect;
-use davidhirtz\yii2\skeleton\models\User;
+use Hirtz\Skeleton\models\Redirect;
+use Hirtz\Skeleton\models\User;
 use Override;
 use yii\data\ActiveDataProvider;
 

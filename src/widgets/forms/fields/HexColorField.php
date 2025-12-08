@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\forms\fields;
+namespace Hirtz\Skeleton\widgets\forms\fields;
 
-use davidhirtz\yii2\skeleton\assets\HexColorInputAssetBundle;
-use davidhirtz\yii2\skeleton\html\Input;
-use davidhirtz\yii2\skeleton\widgets\forms\InputGroup;
+use Hirtz\Skeleton\assets\HexColorInputAssetBundle;
+use Hirtz\Skeleton\html\Input;
+use Hirtz\Skeleton\widgets\forms\InputGroup;
 use Stringable;
 
 class HexColorField extends Field

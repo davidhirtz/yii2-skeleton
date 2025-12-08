@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\web;
+namespace Hirtz\Skeleton\web;
 
-use davidhirtz\yii2\skeleton\behaviors\SitemapBehavior;
-use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
-use davidhirtz\yii2\skeleton\helpers\FileHelper;
-use davidhirtz\yii2\skeleton\models\interfaces\SitemapInterface;
+use Hirtz\Skeleton\behaviors\SitemapBehavior;
+use Hirtz\Skeleton\db\ActiveRecord;
+use Hirtz\Skeleton\helpers\ArrayHelper;
+use Hirtz\Skeleton\helpers\FileHelper;
+use Hirtz\Skeleton\models\interfaces\SitemapInterface;
 use Yii;
 use yii\base\Component;
 use yii\caching\Cache;

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\web;
+namespace Hirtz\Skeleton\tests\unit\web;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\tests\support\UnitTester;
-use davidhirtz\yii2\skeleton\web\Request;
-use davidhirtz\yii2\skeleton\web\UrlManager;
+use Hirtz\Skeleton\tests\support\UnitTester;
+use Hirtz\Skeleton\web\Request;
+use Hirtz\Skeleton\web\UrlManager;
 use Yii;
 use yii\web\UrlNormalizerRedirectException;
 use yii\web\UrlRule;

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\models\traits;
+namespace Hirtz\Skeleton\tests\unit\models\traits;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\models\traits\NestedTreeTrait;
+use Hirtz\Skeleton\db\ActiveRecord;
+use Hirtz\Skeleton\models\traits\NestedTreeTrait;
 use Yii;
 
 class NestedTreeTraitTest extends Unit

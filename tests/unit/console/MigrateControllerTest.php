@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\console;
+namespace Hirtz\Skeleton\tests\unit\console;
 
 use Codeception\Test\Unit;
-use davidhirtz\yii2\skeleton\codeception\traits\ConsoleApplicationTrait;
-use davidhirtz\yii2\skeleton\codeception\traits\StdOutBufferControllerTrait;
-use davidhirtz\yii2\skeleton\console\controllers\MigrateController;
-use davidhirtz\yii2\skeleton\helpers\FileHelper;
+use Hirtz\Skeleton\codeception\traits\ConsoleApplicationTrait;
+use Hirtz\Skeleton\codeception\traits\StdOutBufferControllerTrait;
+use Hirtz\Skeleton\console\controllers\MigrateController;
+use Hirtz\Skeleton\helpers\FileHelper;
 use Yii;
 
 class MigrateControllerTest extends Unit

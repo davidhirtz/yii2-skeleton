@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\behaviors;
+namespace Hirtz\Skeleton\behaviors;
 
-use davidhirtz\yii2\skeleton\db\ActiveRecord;
+use Hirtz\Skeleton\db\ActiveRecord;
 use yii\base\Behavior;
 
 /**

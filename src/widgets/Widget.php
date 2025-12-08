@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets;
+namespace Hirtz\Skeleton\widgets;
 
 use Closure;
-use davidhirtz\yii2\skeleton\base\traits\ContainerConfigurationTrait;
-use davidhirtz\yii2\skeleton\web\View;
+use Hirtz\Skeleton\base\traits\ContainerConfigurationTrait;
+use Hirtz\Skeleton\web\View;
 use Stringable;
 use Yii;
 use yii\base\ViewContextInterface;

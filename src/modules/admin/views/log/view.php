@@ -3,17 +3,17 @@
 declare(strict_types=1);
 
 /**
- * @see \davidhirtz\yii2\skeleton\modules\admin\controllers\LogController::actionView()
+ * @see \Hirtz\Skeleton\modules\admin\controllers\LogController::actionView()
  *
  * @var View $this
  * @var LogDataProvider $provider
  */
 
-use davidhirtz\yii2\skeleton\modules\admin\data\LogDataProvider;
-use davidhirtz\yii2\skeleton\modules\admin\widgets\grids\LogGridView;
-use davidhirtz\yii2\skeleton\web\View;
-use davidhirtz\yii2\skeleton\widgets\grids\GridContainer;
-use davidhirtz\yii2\skeleton\widgets\navs\Header;
+use Hirtz\Skeleton\modules\admin\data\LogDataProvider;
+use Hirtz\Skeleton\modules\admin\widgets\grids\LogGridView;
+use Hirtz\Skeleton\web\View;
+use Hirtz\Skeleton\widgets\grids\GridContainer;
+use Hirtz\Skeleton\widgets\navs\Header;
 
 $this->title(Yii::t('skeleton', 'System'));
 

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\grids\columns;
+namespace Hirtz\Skeleton\widgets\grids\columns;
 
 use Closure;
-use davidhirtz\yii2\skeleton\base\traits\ContainerConfigurationTrait;
-use davidhirtz\yii2\skeleton\html\Td;
-use davidhirtz\yii2\skeleton\html\Th;
-use davidhirtz\yii2\skeleton\html\traits\TagVisibilityTrait;
-use davidhirtz\yii2\skeleton\widgets\grids\traits\GridTrait;
+use Hirtz\Skeleton\base\traits\ContainerConfigurationTrait;
+use Hirtz\Skeleton\html\Td;
+use Hirtz\Skeleton\html\Th;
+use Hirtz\Skeleton\html\traits\TagVisibilityTrait;
+use Hirtz\Skeleton\widgets\grids\traits\GridTrait;
 use Stringable;
 use yii\base\Model;
 use yii\helpers\Html;

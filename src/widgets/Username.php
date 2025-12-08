@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets;
+namespace Hirtz\Skeleton\widgets;
 
-use davidhirtz\yii2\skeleton\html\A;
-use davidhirtz\yii2\skeleton\html\Span;
-use davidhirtz\yii2\skeleton\html\traits\TagAttributesTrait;
-use davidhirtz\yii2\skeleton\html\traits\TagLinkTrait;
-use davidhirtz\yii2\skeleton\models\User;
-use davidhirtz\yii2\skeleton\widgets\traits\UserWidgetTrait;
+use Hirtz\Skeleton\html\A;
+use Hirtz\Skeleton\html\Span;
+use Hirtz\Skeleton\html\traits\TagAttributesTrait;
+use Hirtz\Skeleton\html\traits\TagLinkTrait;
+use Hirtz\Skeleton\models\User;
+use Hirtz\Skeleton\widgets\traits\UserWidgetTrait;
 use Stringable;
 use Yii;
 

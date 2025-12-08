@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\grids;
+namespace Hirtz\Skeleton\widgets\grids;
 
-use davidhirtz\yii2\skeleton\html\Button;
-use davidhirtz\yii2\skeleton\widgets\Alert;
-use davidhirtz\yii2\skeleton\widgets\grids\toolbars\GridSearch;
+use Hirtz\Skeleton\html\Button;
+use Hirtz\Skeleton\widgets\Alert;
+use Hirtz\Skeleton\widgets\grids\toolbars\GridSearch;
 use Stringable;
 use Yii;
 use yii\data\Pagination;

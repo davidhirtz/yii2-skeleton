@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\tests\unit\modules\admin\widgets\forms;
+namespace Hirtz\Skeleton\tests\unit\modules\admin\widgets\forms;
 
 use Codeception\Test\Unit;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
-use davidhirtz\yii2\skeleton\behaviors\TimestampBehavior;
-use davidhirtz\yii2\skeleton\codeception\traits\AssetDirectoryTrait;
-use davidhirtz\yii2\skeleton\db\ActiveRecord;
-use davidhirtz\yii2\skeleton\widgets\bootstrap\ActiveForm;
-use davidhirtz\yii2\skeleton\widgets\forms\traits\ModelTimestampTrait;
-use davidhirtz\yii2\timeago\Timeago;
+use Hirtz\Skeleton\behaviors\TimestampBehavior;
+use Hirtz\Skeleton\codeception\traits\AssetDirectoryTrait;
+use Hirtz\Skeleton\db\ActiveRecord;
+use Hirtz\Skeleton\widgets\bootstrap\ActiveForm;
+use Hirtz\Skeleton\widgets\forms\traits\ModelTimestampTrait;
+use Hirtz\Timeago\Timeago;
 use Yii;
 
 //class ModelTimestampTest extends Unit

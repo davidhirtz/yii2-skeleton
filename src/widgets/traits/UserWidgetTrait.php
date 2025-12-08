@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\widgets\traits;
+namespace Hirtz\Skeleton\widgets\traits;
 
-use davidhirtz\yii2\skeleton\models\User;
+use Hirtz\Skeleton\models\User;
 
 trait UserWidgetTrait
 {

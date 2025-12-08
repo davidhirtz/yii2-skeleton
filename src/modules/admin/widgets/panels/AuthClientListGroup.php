@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\modules\admin\widgets\panels;
+namespace Hirtz\Skeleton\modules\admin\widgets\panels;
 
-use davidhirtz\yii2\skeleton\helpers\Url;
-use davidhirtz\yii2\skeleton\models\forms\LoginForm;
-use davidhirtz\yii2\skeleton\widgets\panels\Stack;
-use davidhirtz\yii2\skeleton\widgets\panels\StackItem;
-use davidhirtz\yii2\skeleton\widgets\Widget;
+use Hirtz\Skeleton\helpers\Url;
+use Hirtz\Skeleton\models\forms\LoginForm;
+use Hirtz\Skeleton\widgets\panels\Stack;
+use Hirtz\Skeleton\widgets\panels\StackItem;
+use Hirtz\Skeleton\widgets\Widget;
 use Stringable;
 
 class AuthClientListGroup extends Widget

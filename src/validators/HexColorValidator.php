@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace davidhirtz\yii2\skeleton\validators;
+namespace Hirtz\Skeleton\validators;
 
 use Yii;
 use yii\validators\StringValidator;
