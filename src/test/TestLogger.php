@@ -21,6 +21,7 @@ class TestLogger extends Logger
     {
     }
 
+    #[\Override]
     public function log($message, $level, $category = 'application'): void
     {
         if (

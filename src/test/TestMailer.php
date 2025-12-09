@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hirtz\Skeleton\Test;
 
 use yii\mail\BaseMailer;
@@ -18,6 +20,7 @@ class TestMailer extends BaseMailer
         return true;
     }
 
+    #[\Override]
     protected function saveMessage($message): bool
     {
         return $this->sendMessage($message);
