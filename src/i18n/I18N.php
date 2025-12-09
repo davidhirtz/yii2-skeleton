@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\I18n;
 
+use Override;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\i18n\PhpMessageSource;
@@ -25,13 +26,20 @@ class I18N extends \yii\i18n\I18N
 
     private array $_languages;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         $this->translations['skeleton'] ??= [
             'class' => PhpMessageSource::class,
+            'basePath' => '@skeleton/../messages',
             'sourceLanguage' => Yii::$app->sourceLanguage,
-            'basePath' => '@skeleton/messages',
+        ];
+
+        $this->translations['country'] ??= [
+            'class' => PhpMessageSource::class,
+            'basePath' => '@skeleton/../messages',
+            'forceTranslation' => true,
+            'sourceLanguage' => Yii::$app->sourceLanguage,
         ];
 
         $this->_languages ??= [Yii::$app->language];

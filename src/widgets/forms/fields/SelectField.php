@@ -72,7 +72,11 @@ class SelectField extends Field
                 }
 
                 $attributes = array_filter(array_map(
-                    function (array $options) {
+                    function (array|string $options) {
+                        if (is_string($options)) {
+                            return [];
+                        }
+
                         $attributes = $options['hiddenFields'] ?? [];
 
                         return $this->model instanceof I18nAttributeInterface

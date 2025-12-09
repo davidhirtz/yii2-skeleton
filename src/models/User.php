@@ -11,6 +11,7 @@ use davidhirtz\yii2\datetime\DateTimeBehavior;
 use Hirtz\Skeleton\Behaviors\TimestampBehavior;
 use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Helpers\CountryList;
 use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
@@ -473,7 +474,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
      */
     public static function getCountries(): array
     {
-        return require(Yii::getAlias('@skeleton/messages/') . Yii::$app->language . '/countries.php');
+        return CountryList::getNames();
     }
 
     /**
