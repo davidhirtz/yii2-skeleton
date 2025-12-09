@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Console\Controllers;
 
+use Override;
 use Yii;
 
 class MessageController extends \yii\console\controllers\MessageController
 {
-    #[\Override]
+    #[Override]
     public function actionExtract($configFile = null): void
     {
         $configFile ??= $this->getDefaultConfigPath();
