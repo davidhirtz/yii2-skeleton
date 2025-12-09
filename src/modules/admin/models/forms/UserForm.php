@@ -109,7 +109,7 @@ class UserForm extends Model
 
     protected function sendCredentialsEmail(): void
     {
-        Yii::$app->getI18n()->callback($this->user->language, function () {
+        Yii::$app->getI18n()->callback($this->user->language, function (): void {
             Yii::$app->getMailer()->compose('@skeleton/mail/account/credentials', ['form' => $this])
                 ->setSubject(Yii::t('skeleton', 'Your {name} Account', ['name' => Yii::$app->name]))
                 ->setFrom(Yii::$app->params['email'])

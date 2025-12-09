@@ -389,7 +389,7 @@ class AttributeTypecastBehaviorTest extends Unit
             public function events(): array
             {
                 return [
-                    CreateValidatorsEvent::EVENT_CREATE_VALIDATORS => function (CreateValidatorsEvent $event) {
+                    CreateValidatorsEvent::EVENT_CREATE_VALIDATORS => function (CreateValidatorsEvent $event): void {
                         $event->validators->append(new NumberValidator([
                             'attributes' => ['name'],
                             'integerOnly' => true,

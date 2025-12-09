@@ -17,7 +17,7 @@ class TestLogger extends Logger
      * Overridden to prevent register_shutdown_function call.
      */
     #[Override]
-    public function init()
+    public function init(): void
     {
     }
 
