@@ -109,4 +109,9 @@ trait MigrationTrait
         $tableName = $this->getDb()->getSchema()->getRawTableName($tableName);
         return $tableName . '_' . $column;
     }
+
+    protected function hasColumn(string $table, string $column): bool
+    {
+        return Yii::$app->getDb()->getSchema()->getTableSchema($table, true)->getColumn($column) !== null;
+    }
 }

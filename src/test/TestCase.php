@@ -18,7 +18,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
 {
     use FixtureTrait;
 
-    protected array $config = [];
+    protected array $config;
     protected TestMailer $mailer;
 
     private Transaction $transaction;
@@ -26,11 +26,12 @@ class TestCase extends \PHPUnit\Framework\TestCase
     #[Override]
     protected function setUp(): void
     {
+        $this->config ??= require(__DIR__ . '/../../tests/config.php');
+
         $this->createApplication();
         $this->initFixtures();
 
         $this->transaction = Yii::$app->getDb()->beginTransaction();
-
 
         parent::setUp();
     }

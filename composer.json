@@ -47,7 +47,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Hirtz\\Skeleton\\tests\\": "tests"
+      "Hirtz\\Skeleton\\Tests\\": "tests"
     }
   },
   "config": {

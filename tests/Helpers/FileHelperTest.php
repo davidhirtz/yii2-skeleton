@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\helpers;
+namespace Hirtz\Skeleton\Tests\Helpers;
 
-use Codeception\Test\Unit;
 use Hirtz\Skeleton\Helpers\FileHelper;
+use Hirtz\Skeleton\Test\TestCase;
 use Yii;
 
-class FileHelperTest extends Unit
+class FileHelperTest extends TestCase
 {
     public function testConfigFile(): void
     {
-        $folder = Yii::getAlias('@runtime/file-helper');
+        $folder = Yii::getAlias('@runtime/files');
         $length = 20;
         $filename = FileHelper::generateRandomFilename($folder, 'php', $length);
 

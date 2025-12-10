@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
+use Hirtz\Skeleton\Models\Redirect;
+use Hirtz\Skeleton\Models\User;
+
 return [
     [
         'id' => 1,
         'type' => 1,
-        'model' => \Hirtz\Skeleton\Models\User::class,
+        'model' => User::class,
         'model_id' => '1',
         'user_id' => 1,
         'message' => null,
@@ -16,7 +19,7 @@ return [
     [
         'id' => 2,
         'type' => 2,
-        'model' => \Hirtz\Skeleton\Models\User::class,
+        'model' => User::class,
         'model_id' => '1',
         'user_id' => 1,
         'message' => null,
@@ -27,7 +30,7 @@ return [
     [
         'id' => 3,
         'type' => 1,
-        'model' => \Hirtz\Skeleton\Models\Redirect::class,
+        'model' => Redirect::class,
         'model_id' => '1',
         'user_id' => 1,
         'message' => null,
@@ -37,7 +40,7 @@ return [
     [
         'id' => 4,
         'type' => 2,
-        'model' => \Hirtz\Skeleton\Models\Redirect::class,
+        'model' => Redirect::class,
         'model_id' => '1',
         'user_id' => 1,
         'message' => null,
