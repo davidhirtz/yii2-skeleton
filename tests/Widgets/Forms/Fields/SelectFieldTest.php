@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\widgets\forms\fields;
+namespace Hirtz\Skeleton\Tests\Widgets\Forms\Fields;
 
-use Codeception\Test\Unit;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Widgets\Forms\Fields\SelectField;
 use yii\base\Model;
 
-class SelectFieldTest extends Unit
+class SelectFieldTest extends TestCase
 {
     public function testDefaultItemsFromModel(): void
     {

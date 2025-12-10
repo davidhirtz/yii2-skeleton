@@ -13,6 +13,8 @@ use Hirtz\Skeleton\Console\Controllers\MigrateController;
 use Hirtz\Skeleton\Console\Controllers\ParamsController;
 use Hirtz\Skeleton\Console\Controllers\TrailController;
 use Hirtz\Skeleton\Console\Controllers\UserController;
+use Hirtz\Tenant\Models\Collections\TenantCollection;
+use Override;
 use Yii;
 
 class Application extends \yii\console\Application
@@ -21,7 +23,7 @@ class Application extends \yii\console\Application
 
     public $controllerNamespace = 'app\\commands';
 
-    #[\Override]
+    #[Override]
     public function preInit(&$config): void
     {
         $config['basePath'] ??= getcwd();
@@ -36,7 +38,7 @@ class Application extends \yii\console\Application
         parent::preInit($config);
     }
 
-    #[\Override]
+    #[Override]
     protected function bootstrap(): void
     {
         $this->setWebrootAliases();
@@ -45,7 +47,7 @@ class Application extends \yii\console\Application
         parent::bootstrap();
     }
 
-    #[\Override]
+    #[Override]
     public function coreCommands(): array
     {
         return [

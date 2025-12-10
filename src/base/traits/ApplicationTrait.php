@@ -169,7 +169,6 @@ trait ApplicationTrait
             $config['components']['db'] = [...require ($db), ...$config['components']['db']];
         }
 
-
         // Make sure the cache prefix via params is applied before application bootstrap, as a DB session might get
         // started which could trigger the database schema cache.
         if ($cacheKeyPrefix = ($config['params']['cacheKeyPrefix'] ?? false)) {

@@ -2,16 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\Modules\Admin\Widgets\Grids\Columns;
-
-use Codeception\Test\Unit;
+namespace Hirtz\Skeleton\Tests\Widgets\Grids\Columns;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Widgets\Grids\Columns\BadgeColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Yii;
 use yii\base\Model;
 use yii\web\Controller;
 
-class BadgeColumnTest extends Unit
+class BadgeColumnTest extends TestCase
 {
     public function testDefaultOptions(): void
     {

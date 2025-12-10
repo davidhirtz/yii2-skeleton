@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Web;
 
 use Hirtz\Skeleton\Helpers\ArrayHelper;
 use InvalidArgumentException;
+use Override;
 use Yii;
 use yii\web\UrlNormalizerRedirectException;
 use yii\web\UrlRule;
@@ -56,7 +57,7 @@ class UrlManager extends \yii\web\UrlManager
     public $enablePrettyUrl = true;
     public $showScriptName = false;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         if (!$this->enablePrettyUrl) {
@@ -85,7 +86,7 @@ class UrlManager extends \yii\web\UrlManager
         parent::init();
     }
 
-    #[\Override]
+    #[Override]
     public function createUrl($params): string
     {
         $request = Yii::$app->getRequest();
@@ -143,7 +144,7 @@ class UrlManager extends \yii\web\UrlManager
     /**
      * @param Request $request
      */
-    #[\Override]
+    #[Override]
     public function parseRequest($request): bool|array
     {
         $this->parseRedirectMap($request, $this->redirectMap);
@@ -280,7 +281,7 @@ class UrlManager extends \yii\web\UrlManager
         return $event;
     }
 
-    #[\Override]
+    #[Override]
     protected function buildRules($ruleDeclarations): array
     {
         $orderedRuleDeclarations = [];

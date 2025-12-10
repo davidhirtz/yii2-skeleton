@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Test;
 
 use Hirtz\Skeleton\Helpers\ArrayHelper;
+use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Web\Application;
 use Override;
 use Yii;
@@ -22,6 +23,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected TestMailer $mailer;
 
     private Transaction $transaction;
+    private string $webroot = '@runtime/web';
 
     #[Override]
     protected function setUp(): void
@@ -45,6 +47,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
         Yii::$app->getErrorHandler()->unregister();
         $this->mailer->reset();
 
+        FileHelper::removeDirectory($this->webroot);
         UploadedFile::reset();
         Event::offAll();
 
@@ -54,6 +57,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected function createApplication(): void
     {
         $config = [
+            'basePath' => getcwd(),
             'class' => Application::class,
             'components' => [
                 'db' => [
@@ -62,6 +66,10 @@ class TestCase extends \PHPUnit\Framework\TestCase
                     'password' => getenv('MYSQL_PASSWORD') ?: '',
                     'charset' => 'utf8',
                 ],
+                'request' => [
+                    'hostInfo' => 'https://www.example.com',
+                    'scriptUrl' => 'index.php',
+                ],
             ],
             'params' => [
                 'cookieValidationKey' => 'test',
@@ -69,6 +77,9 @@ class TestCase extends \PHPUnit\Framework\TestCase
         ];
 
         Yii::createObject(ArrayHelper::merge($config, $this->config));
+        Yii::setAlias('@webroot', $this->webroot);
+
+        FileHelper::createDirectory("$this->webroot/assets");
 
         $this->mailer = Yii::createObject(TestMailer::class);
         Yii::$app->set('mailer', $this->mailer);

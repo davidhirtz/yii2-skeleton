@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\widgets\forms\fields;
+namespace Hirtz\Skeleton\Tests\Widgets\Forms\Fields;
 
-use Codeception\Test\Unit;
 use davidhirtz\yii2\datetime\DateTime;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Widgets\Forms\Fields\DateTimeField;
 
-class DateTimeFieldTest extends Unit
+class DateTimeFieldTest extends TestCase
 {
     public function testDateTimeLocalField(): void
     {

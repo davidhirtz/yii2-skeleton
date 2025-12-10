@@ -2,33 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\widgets\forms\fields;
+namespace Hirtz\Skeleton\Tests\Widgets\Forms\Fields;
 
-use Codeception\Test\Unit;
 use Hirtz\Skeleton\Assets\TinyMceAssetBundle;
-use Hirtz\Skeleton\Codeception\Traits\AssetDirectoryTrait;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Validators\HtmlValidator;
 use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
 use Override;
 use Yii;
 use yii\base\Model;
 
-class TinyMceFieldTest extends Unit
+class TinyMceFieldTest extends TestCase
 {
-    use AssetDirectoryTrait;
-
-    public function _before(): void
-    {
-        $this->createAssetDirectory();
-        parent::_before();
-    }
-
-    public function _after(): void
-    {
-        $this->removeAssetDirectory();
-        parent::_after();
-    }
-
     public function testContentField(): void
     {
         $form = TestContentFieldActiveForm::make()->render();

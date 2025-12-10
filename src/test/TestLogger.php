@@ -21,11 +21,12 @@ class TestLogger extends Logger
     {
     }
 
-    #[\Override]
+    #[Override]
     public function log($message, $level, $category = 'application'): void
     {
         if (
-            !in_array($level, [Logger::LEVEL_WARNING, Logger::LEVEL_ERROR])
+            !in_array('--debug', $_SERVER['argv'], true)
+            || !in_array($level, [Logger::LEVEL_WARNING, Logger::LEVEL_ERROR])
             || str_starts_with($category, Command::class)) {
             return;
         }
