@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\models;
+namespace Hirtz\Skeleton\Tests\unit\Models;
 
 use Codeception\Test\Unit;
 use Hirtz\Skeleton\Models\User;

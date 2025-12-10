@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Console\Controllers;
 
-use Hirtz\Skeleton\Console\Controllers\traits\ControllerTrait;
+use Hirtz\Skeleton\Console\Controllers\Traits\ControllerTrait;
 use Hirtz\Skeleton\Helpers\FileHelper;
 use Yii;
 use yii\helpers\Console;

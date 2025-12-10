@@ -50,7 +50,7 @@ return [
     [
         "id" => 5,
         "type" => 4,
-        "model" => 'invalid\namespace\models\Model',
+        "model" => 'invalid\namespace\Models\Model',
         "model_id" => "1",
         "user_id" => 1,
         "message" => null,

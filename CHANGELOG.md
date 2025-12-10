@@ -545,7 +545,7 @@
   to `Hirtz\Skeleton\Admin\widgets\navs`
 - Changed namespaces for `CounterColumn` to `Hirtz\Skeleton\Admin\widgets\grids\columns`
 - Changed namespaces for `MessageSourceTrait`, `StatusGridViewTrait` and `TypeGridViewTrait`
-  to `Hirtz\Skeleton\Admin\widgets\grids\traits`
+  to `Hirtz\Skeleton\Admin\widgets\grids\Traits`
 - Enhanced `TrailGridView` now tries to automatically load related models
 - Moved source code to `src` folder
 - Moved all models, data providers and widgets out of `base` folder, to override them use Yii's dependency injection

@@ -6,7 +6,7 @@ namespace Hirtz\Skeleton\Tests\unit\widgets\forms\fields;
 
 use Codeception\Test\Unit;
 use Hirtz\Skeleton\Assets\TinyMceAssetBundle;
-use Hirtz\Skeleton\Codeception\traits\AssetDirectoryTrait;
+use Hirtz\Skeleton\Codeception\Traits\AssetDirectoryTrait;
 use Hirtz\Skeleton\Validators\HtmlValidator;
 use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
 use Override;

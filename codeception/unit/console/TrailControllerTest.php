@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\unit\console;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\Codeception\traits\StdOutBufferControllerTrait;
+use Hirtz\Skeleton\Codeception\Traits\StdOutBufferControllerTrait;
 use Hirtz\Skeleton\Console\Controllers\TrailController;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Tests\support\fixtures\TrailFixture;
@@ -26,7 +26,7 @@ class TrailControllerTest extends Unit
 
     public function testActionUpdateModels(): void
     {
-        Yii::$container->set('invalid\namespace\models\Model', Trail::class);
+        Yii::$container->set('invalid\namespace\Models\Model', Trail::class);
         $controller = $this->createTrailController();
         $controller->actionUpdateModels();
 

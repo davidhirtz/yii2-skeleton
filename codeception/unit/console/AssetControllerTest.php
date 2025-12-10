@@ -6,9 +6,9 @@ namespace Hirtz\Skeleton\Tests\unit\console;
 
 use Codeception\Test\Unit;
 use Hirtz\Skeleton\Assets\AdminAssetBundle;
-use Hirtz\Skeleton\Codeception\traits\AssetDirectoryTrait;
-use Hirtz\Skeleton\Codeception\traits\ConsoleApplicationTrait;
-use Hirtz\Skeleton\Codeception\traits\StdOutBufferControllerTrait;
+use Hirtz\Skeleton\Codeception\Traits\AssetDirectoryTrait;
+use Hirtz\Skeleton\Codeception\Traits\ConsoleApplicationTrait;
+use Hirtz\Skeleton\Codeception\Traits\StdOutBufferControllerTrait;
 use Hirtz\Skeleton\Console\Controllers\AssetController;
 use Yii;
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\unit\widgets\navs;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\Codeception\traits\AssetDirectoryTrait;
+use Hirtz\Skeleton\Codeception\Traits\AssetDirectoryTrait;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Tests\support\UnitTester;
 use Hirtz\Skeleton\Web\Controller;

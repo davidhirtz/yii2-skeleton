@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Console\Controllers;
 
-use Hirtz\Skeleton\Console\Controllers\traits\ControllerTrait;
+use Hirtz\Skeleton\Console\Controllers\Traits\ControllerTrait;
 use Yii;
 use yii\console\Controller;
 use yii\helpers\Console;

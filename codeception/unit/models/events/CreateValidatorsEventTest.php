@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\models\events;
+namespace Hirtz\Skeleton\Tests\unit\Models\events;
 
 use Codeception\Test\Unit;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\models\forms;
+namespace Hirtz\Skeleton\Tests\unit\Models\forms;
 
 use Codeception\Test\Unit;
 use DateTime;

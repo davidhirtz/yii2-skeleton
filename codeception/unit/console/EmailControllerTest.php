@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\unit\console;
 
 use Codeception\Test\Unit;
-use Hirtz\Skeleton\Codeception\traits\StdOutBufferControllerTrait;
+use Hirtz\Skeleton\Codeception\Traits\StdOutBufferControllerTrait;
 use Hirtz\Skeleton\Console\Controllers\EmailController;
 use Hirtz\Skeleton\Tests\support\UnitTester;
 use Yii;

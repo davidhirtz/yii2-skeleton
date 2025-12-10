@@ -37,7 +37,7 @@ class I18nTest extends Unit
         Yii::$app->language = 'de';
 
         self::assertEquals('{{%prefix_test_de}}', $module->getTableName('test'));
-        self::assertEquals('app\\models\\Test::de', $module->getI18nClassName('app\\models\\Test'));
+        self::assertEquals('app\\Models\\Test::de', $module->getI18nClassName('app\\Models\\Test'));
     }
 }
 

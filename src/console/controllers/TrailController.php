@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Console\Controllers;
 
-use Hirtz\Skeleton\Console\Controllers\traits\ControllerTrait;
+use Hirtz\Skeleton\Console\Controllers\Traits\ControllerTrait;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Exception;
@@ -29,7 +29,7 @@ class TrailController extends Controller
     /**
      * Updates the model classes in the trail table to the current class names based on the container definitions.
      */
-    public function actionUpdateModels(?string $filter = '\\models\\'): void
+    public function actionUpdateModels(?string $filter = '\\Models\\'): void
     {
         $classNames = [];
 
