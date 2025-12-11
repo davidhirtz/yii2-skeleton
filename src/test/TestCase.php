@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Test;
 
 use Hirtz\Skeleton\Helpers\ArrayHelper;
 use Hirtz\Skeleton\Helpers\FileHelper;
+use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Web\Application;
 use Override;
 use Yii;
@@ -48,6 +49,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $this->mailer->reset();
 
         FileHelper::removeDirectory($this->webroot);
+        Html::reset();
         UploadedFile::reset();
         Event::offAll();
 

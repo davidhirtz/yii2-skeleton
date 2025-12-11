@@ -42,7 +42,7 @@ class BadgeColumnTest extends TestCase
 
     public function testRouteAttribute(): void
     {
-        Yii::$app->controller = $this->createMock(Controller::class);
+        Yii::$app->controller = new Controller('test', Yii::$app);
 
         $model = new class () extends Model {
             public int $id = 1;
@@ -52,7 +52,7 @@ class BadgeColumnTest extends TestCase
         $column = $this->createCounterColumn()
             ->url(fn ($model) => ['view', 'id' => $model->id]);
 
-        $expects = '<td class="text-center"><a class="badge" href="/view?id=1">10</a></td>';
+        $expects = '<td class="text-center"><a class="badge" href="/test/view?id=1">10</a></td>';
         self::assertEquals($expects, (string)$column->renderBody($model, 0, 0));
     }
 
@@ -60,6 +60,6 @@ class BadgeColumnTest extends TestCase
     {
         return BadgeColumn::make()
             ->property('count')
-            ->grid($this->createMock(GridView::class));
+            ->grid(GridView::make());
     }
 }

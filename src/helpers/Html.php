@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Helpers;
 
 use Override;
-use yii\base\Model;
 use yii\helpers\BaseHtml;
 
 class Html extends BaseHtml
@@ -15,6 +14,11 @@ class Html extends BaseHtml
     public static function getId(): string
     {
         return 'i' . ++self::$counter;
+    }
+
+    public static function reset(): void
+    {
+        self::$counter = 0;
     }
 
     #[Override]

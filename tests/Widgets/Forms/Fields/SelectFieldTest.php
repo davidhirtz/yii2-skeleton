@@ -34,7 +34,7 @@ class SelectFieldTest extends TestCase
             ->model($model)
             ->property('status');
 
-        $html = '<div id="i1-row" class="form-group form-row"><div class="form-label"><label class="label" for="i1">Status</label></div><div class="form-content"><select id="i1" class="input" name="F[status]"><option value="0">Inactive</option><option value="1" selected>Active</option></select></div></div>';
+        $html = '<div class="form-group form-row" data-id="f-status"><div class="form-label"><label class="label" for="f-status">Status</label></div><div class="form-content"><select id="f-status" class="input" name="F[status]"><option value="0">Inactive</option><option value="1" selected>Active</option></select></div></div>';
         self::assertEquals($html, $select->render());
     }
 
@@ -47,7 +47,7 @@ class SelectFieldTest extends TestCase
                 2 => 'Option 2',
             ]);
 
-        $html = '<div id="i1-row" class="form-group form-row"><div class="form-content"><select id="i1" class="input"><option value="default"></option><option value="1">Option 1</option><option value="2">Option 2</option></select></div></div>';
+        $html = '<div class="form-group form-row" data-id="i1"><div class="form-content"><select id="i1" class="input"><option value="default"></option><option value="1">Option 1</option><option value="2">Option 2</option></select></div></div>';
         self::assertEquals($html, $select->render());
     }
 
