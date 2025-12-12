@@ -2,25 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\console;
-
-use Codeception\Test\Unit;
-use Hirtz\Skeleton\Codeception\Traits\ConsoleApplicationTrait;
-use Hirtz\Skeleton\Codeception\Traits\StdOutBufferControllerTrait;
+namespace Hirtz\Skeleton\Tests\Console;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Console\Controllers\MaintenanceController;
 use Hirtz\Skeleton\Models\Forms\MaintenanceConfigForm;
+use Hirtz\Skeleton\Test\Traits\StdOutBufferControllerTrait;
 use Yii;
 
-class MaintenanceControllerTest extends Unit
+class MaintenanceControllerTest extends TestCase
 {
-    use ConsoleApplicationTrait;
-
-    protected function _after(): void
+    protected function tearDown(): void
     {
         @unlink(Yii::getAlias(MaintenanceController::MAINTENANCE_FILE));
         @unlink(Yii::getAlias(MaintenanceConfigForm::MAINTENANCE_CONFIG));
 
-        parent::_after();
+        parent::tearDown();
     }
 
     public function testActionIndex(): void
@@ -42,7 +38,7 @@ class MaintenanceControllerTest extends Unit
         $controller->retry = 1;
         $controller->refresh = 2;
         $controller->statusCode = 500;
-        $controller->viewFile = '@tests/data/views/maintenance.html';
+        $controller->viewFile = '@skeleton/../resources/tests/views/maintenance.html';
 
         $controller->actionEnable();
         self::assertMaintenanceModeEnabled($controller);
@@ -74,7 +70,7 @@ class MaintenanceControllerTest extends Unit
     protected function assertMaintenanceModeDisabled(MaintenanceControllerMock $controller): void
     {
         self::assertEquals('Maintenance mode disabled.' . PHP_EOL, $controller->flushStdOutBuffer());
-        self::assertFileNotExists(Yii::getAlias(MaintenanceController::MAINTENANCE_FILE));
+        self::assertFileDoesNotExist(Yii::getAlias(MaintenanceController::MAINTENANCE_FILE));
     }
 
     protected function createMaintenanceController(): MaintenanceControllerMock

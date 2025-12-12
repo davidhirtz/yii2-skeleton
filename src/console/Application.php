@@ -13,7 +13,6 @@ use Hirtz\Skeleton\Console\Controllers\MigrateController;
 use Hirtz\Skeleton\Console\Controllers\ParamsController;
 use Hirtz\Skeleton\Console\Controllers\TrailController;
 use Hirtz\Skeleton\Console\Controllers\UserController;
-use Hirtz\Tenant\Models\Collections\TenantCollection;
 use Override;
 use Yii;
 

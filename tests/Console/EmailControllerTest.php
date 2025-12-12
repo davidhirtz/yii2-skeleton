@@ -2,19 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\console;
+namespace Hirtz\Skeleton\Tests\Console;
 
-use Codeception\Test\Unit;
-use Hirtz\Skeleton\Codeception\Traits\StdOutBufferControllerTrait;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Console\Controllers\EmailController;
-use Hirtz\Skeleton\Tests\support\UnitTester;
+use Hirtz\Skeleton\Test\Traits\StdOutBufferControllerTrait;
 use Yii;
-use yii\symfonymailer\Message;
 
-/**
- * @property UnitTester $tester
- */
-class EmailControllerTest extends Unit
+class EmailControllerTest extends TestCase
 {
     public function testActionTest(): void
     {
@@ -25,8 +20,7 @@ class EmailControllerTest extends Unit
 
         self::assertStringStartsWith('Testing email functionality ... done', $controller->flushStdOutBuffer());
 
-        /** @var Message $message */
-        $message = $this->tester->grabLastSentEmail();
+        $message = $this->mailer->getLastMessage();
 
         self::assertEquals($email, key($message->getTo()));
         self::assertEquals(Yii::$app->params['email'], key($message->getFrom()));

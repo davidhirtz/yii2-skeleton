@@ -12,27 +12,29 @@ use Override;
 use Yii;
 use yii\base\Event;
 use yii\db\Transaction;
-use yii\di\Container;
 use yii\log\Logger;
 use yii\test\FixtureTrait;
 use yii\web\UploadedFile;
 
-class TestCase extends \PHPUnit\Framework\TestCase
+abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
     use FixtureTrait;
 
+    protected string $applicationClass = Application::class;
     protected array $config;
     protected TestMailer $mailer;
 
     private Transaction $transaction;
     private string $webroot = '@runtime/web';
 
+    private array $serverParams;
+
     #[Override]
     protected function setUp(): void
     {
         $this->config ??= require(__DIR__ . '/../../tests/config.php');
 
-        $_SERVER = [
+        $this->serverParams = $_SERVER = [
             ...$_SERVER,
             ...$this->getServerParams(),
         ];
@@ -48,12 +50,16 @@ class TestCase extends \PHPUnit\Framework\TestCase
     #[Override]
     protected function tearDown(): void
     {
-        Yii::$app->getSession()->close();
+        if (Yii::$app->get('session', false)) {
+            Yii::$app->getSession()->close();
+        }
 
         $this->transaction->rollBack();
         $this->unloadFixtures();
 
         $this->tearDownApplication();
+
+        $_SERVER = $this->serverParams;
 
         parent::tearDown();
     }
@@ -73,25 +79,20 @@ class TestCase extends \PHPUnit\Framework\TestCase
     {
         $config = [
             'basePath' => getcwd(),
-            'class' => Application::class,
+            'class' => $this->applicationClass,
             'components' => [
-                'db' => [
-                    'dsn' => getenv('MYSQL_DSN'),
-                    'username' => getenv('MYSQL_USER') ?: 'root',
-                    'password' => getenv('MYSQL_PASSWORD') ?: '',
-                    'charset' => 'utf8',
-                ],
                 'mailer' => [
                     'class' => TestMailer::class,
                 ],
-            ],
-            'params' => [
-                'cookieValidationKey' => 'test',
             ],
         ];
 
         Yii::createObject(ArrayHelper::merge($config, $this->config));
         Yii::setAlias('@webroot', $this->webroot);
+
+        Yii::$app->params = [
+            'cookieValidationKey' => 'test',
+        ];
 
         FileHelper::createDirectory("$this->webroot/assets");
 
@@ -109,12 +110,10 @@ class TestCase extends \PHPUnit\Framework\TestCase
         Yii::$app->getDb()->close();
 
         FileHelper::removeDirectory($this->webroot);
+
         Html::reset();
         UploadedFile::reset();
         Event::offAll();
-
-        Yii::$app = null;
-        Yii::$container = new Container();
     }
 
     private function getLogger(): TestLogger

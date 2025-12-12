@@ -2,33 +2,29 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\console;
+namespace Hirtz\Skeleton\Tests\Console;
 
-use Codeception\Test\Unit;
-use Hirtz\Skeleton\Codeception\Traits\ConsoleApplicationTrait;
-use Hirtz\Skeleton\Codeception\Traits\StdOutBufferControllerTrait;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Console\Controllers\MigrateController;
 use Hirtz\Skeleton\Helpers\FileHelper;
+use Hirtz\Skeleton\Test\Traits\StdOutBufferControllerTrait;
+use Override;
 use Yii;
 
-class MigrateControllerTest extends Unit
+class MigrateControllerTest extends TestCase
 {
-    use ConsoleApplicationTrait;
+    private string $configPath = '@runtime/config';
 
-    protected string $configPath = '@runtime/config';
-
-    protected function _before(): void
+    protected function setUp(): void
     {
-        $this->createConsoleApplicationMock();
+        parent::setUp();
         FileHelper::createDirectory($this->configPath);
-
-        parent::_before();
     }
 
-    protected function _after(): void
+    protected function tearDown(): void
     {
         FileHelper::removeDirectory($this->configPath);
-        parent::_after();
+        parent::tearDown();
     }
 
     public function testActionUp(): void
@@ -141,7 +137,7 @@ class MigrateControllerMock extends MigrateController
         Yii::$app->getDb()->dsn = '';
     }
 
-    #[\Override]
+    #[Override]
     public function confirm($message, $default = false): bool
     {
         switch ($message) {
@@ -160,7 +156,7 @@ class MigrateControllerMock extends MigrateController
         return false;
     }
 
-    #[\Override]
+    #[Override]
     public function prompt($text, $options = []): string
     {
         return match ($text) {
@@ -173,7 +169,7 @@ class MigrateControllerMock extends MigrateController
         };
     }
 
-    #[\Override]
+    #[Override]
     public function hiddenPasswordPrompt(): string
     {
         return $this->dbPassword;

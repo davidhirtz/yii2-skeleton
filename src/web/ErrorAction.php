@@ -12,7 +12,7 @@ use Yii;
  */
 class ErrorAction extends \yii\web\ErrorAction
 {
-    public ?string $email = null;
+    public string $email;
 
     #[Override]
     public function init(): void
@@ -26,7 +26,7 @@ class ErrorAction extends \yii\web\ErrorAction
     #[Override]
     public function run(): string
     {
-        if ($this->layout !== null) {
+        if (null !== $this->layout) {
             $this->controller->layout = $this->layout;
         }
 

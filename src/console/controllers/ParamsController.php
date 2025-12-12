@@ -30,7 +30,7 @@ class ParamsController extends Controller
         $params = Yii::$app->params;
         $maxLength = 0;
 
-        ksort($params);
+        ksort($config);
 
         foreach (Yii::$app->params as $name => $value) {
             if (!array_key_exists($name, $config)) {

@@ -2,33 +2,28 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\console;
+namespace Hirtz\Skeleton\Tests\Console;
 
-use Codeception\Test\Unit;
-use Hirtz\Skeleton\Codeception\Traits\ConsoleApplicationTrait;
-use Hirtz\Skeleton\Codeception\Traits\StdOutBufferControllerTrait;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Console\Controllers\ParamsController;
 use Hirtz\Skeleton\Helpers\FileHelper;
+use Hirtz\Skeleton\Test\Traits\StdOutBufferControllerTrait;
 use Yii;
 
-class ParamsControllerTest extends Unit
+class ParamsControllerTest extends TestCase
 {
-    use ConsoleApplicationTrait;
+    private string $configPath = '@runtime/config';
 
-    protected string $configPath = '@runtime/config';
-
-    protected function _before(): void
+    protected function setUp(): void
     {
-        $this->createConsoleApplicationMock();
+        parent::setUp();
         FileHelper::createDirectory($this->configPath);
-
-        parent::_before();
     }
 
-    protected function _after(): void
+    protected function tearDown(): void
     {
         FileHelper::removeDirectory($this->configPath);
-        parent::_after();
+        parent::tearDown();
     }
 
     public function testActionIndex(): void
@@ -122,16 +117,15 @@ class ParamsControllerTest extends Unit
         self::assertArrayNotHasKey('test', Yii::$app->params);
     }
 
-    protected function createParamsController(): ParamsControllerMock
+    protected function createParamsController(): TestParamsController
     {
-        $controller = new ParamsControllerMock('params', Yii::$app);
-        $controller->config = "$this->configPath/params.php";
-
-        return $controller;
+        return new TestParamsController('params', Yii::$app, [
+            'config' => "$this->configPath/params.php",
+        ]);
     }
 }
 
-class ParamsControllerMock extends ParamsController
+class TestParamsController extends ParamsController
 {
     use StdOutBufferControllerTrait;
 }

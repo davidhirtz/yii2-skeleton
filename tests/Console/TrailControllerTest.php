@@ -2,24 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\console;
+namespace Hirtz\Skeleton\Tests\Console;
 
-use Codeception\Test\Unit;
-use Hirtz\Skeleton\Codeception\Traits\StdOutBufferControllerTrait;
+use Hirtz\Skeleton\Test\Fixtures\TrailFixture;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Console\Controllers\TrailController;
 use Hirtz\Skeleton\Models\Trail;
-use Hirtz\Skeleton\Tests\support\fixtures\TrailFixture;
+use Hirtz\Skeleton\Test\Traits\StdOutBufferControllerTrait;
 use Yii;
 use yii\base\InvalidConfigException;
 
-class TrailControllerTest extends Unit
+class TrailControllerTest extends TestCase
 {
-    public function _fixtures(): array
+    public function fixtures(): array
     {
         return [
             'trail' => [
                 'class' => TrailFixture::class,
-                'dataFile' => codecept_data_dir() . 'trails.php',
             ],
         ];
     }
