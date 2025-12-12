@@ -2,17 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\Models\Traits;
-
-use Codeception\Test\Unit;
+namespace Hirtz\Skeleton\Tests\Models\Traits;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Traits\NestedTreeTrait;
+use Override;
 use Yii;
 
-class NestedTreeTraitTest extends Unit
+class NestedTreeTraitTest extends TestCase
 {
-    protected function _before(): void
+    protected function setUp(): void
     {
+        parent::setUp();
+
         $columns = [
             'id' => 'pk',
             'name' => 'string NOT NULL',
@@ -25,18 +27,16 @@ class NestedTreeTraitTest extends Unit
             ->createCommand()
             ->createTable(TestNestedTreeActiveRecord::tableName(), $columns)
             ->execute();
-
-        parent::_before();
     }
 
-    protected function _after(): void
+    protected function tearDown(): void
     {
         Yii::$app->getDb()
             ->createCommand()
             ->dropTable(TestNestedTreeActiveRecord::tableName())
             ->execute();
 
-        parent::_after();
+        parent::tearDown();
     }
 
     public function testNestedTree(): void
@@ -83,7 +83,7 @@ class TestNestedTreeActiveRecord extends ActiveRecord
 {
     use NestedTreeTrait;
 
-    #[\Override]
+    #[Override]
     public function rules(): array
     {
         return [
@@ -98,21 +98,21 @@ class TestNestedTreeActiveRecord extends ActiveRecord
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function beforeSave($insert): bool
     {
         $this->updateTreeBeforeSave();
         return parent::beforeSave($insert);
     }
 
-    #[\Override]
+    #[Override]
     public function afterDelete(): void
     {
         $this->updateNestedTreeAfterDelete();
         parent::afterDelete();
     }
 
-    #[\Override]
+    #[Override]
     public static function tableName(): string
     {
         return 'test_nested_tree';

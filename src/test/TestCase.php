@@ -48,6 +48,8 @@ class TestCase extends \PHPUnit\Framework\TestCase
     #[Override]
     protected function tearDown(): void
     {
+        Yii::$app->getSession()->close();
+
         $this->transaction->rollBack();
         $this->unloadFixtures();
 
@@ -104,7 +106,6 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
         Yii::$app->getErrorHandler()->unregister();
         Yii::$app->getCache()->flush();
-        Yii::$app->getSession()->close();
         Yii::$app->getDb()->close();
 
         FileHelper::removeDirectory($this->webroot);

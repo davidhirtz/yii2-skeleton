@@ -2,24 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\Models\forms;
-
-use Codeception\Test\Unit;
+namespace Hirtz\Skeleton\Tests\Models\Forms;
+use Hirtz\Skeleton\Test\TestCase;
 use DateTime;
 use DateTimeZone;
-use Hirtz\Skeleton\Codeception\fixtures\UserFixtureTrait;
 use Hirtz\Skeleton\Models\Forms\AccountUpdateForm;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
-use Hirtz\Skeleton\Tests\support\UnitTester;
+use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Yii;
-use yii\symfonymailer\Message;
 
-class AccountUpdateFormTest extends Unit
+class AccountUpdateFormTest extends TestCase
 {
     use UserFixtureTrait;
-
-    public UnitTester $tester;
 
     public function testUpdateEmailAddress(): void
     {
@@ -57,8 +52,7 @@ class AccountUpdateFormTest extends Unit
         self::assertTrue($form->save());
         self::assertNotEmpty($form->user->verification_token);
 
-        /** @var Message $message */
-        $message = $this->tester->grabLastSentEmail();
+        $message = $this->mailer->getLastMessage();
         self::assertStringContainsString($form->user->getEmailConfirmationUrl(), $message->getSymfonyEmail()->getHtmlBody());
     }
 
@@ -180,7 +174,7 @@ class AccountUpdateFormTest extends Unit
     public function testUpdateUnsafeAttributes(): void
     {
         $form = AccountUpdateForm::create([
-            'user' => $this->tester->grabUserFixture('disabled'),
+            'user' => $this->getUserFromFixture('disabled'),
         ]);
 
         Yii::$app->getI18n()->setLanguages(['de', 'en-US']);

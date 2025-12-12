@@ -2,20 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\Models\forms;
-
-use Codeception\Test\Unit;
-use Hirtz\Skeleton\Codeception\fixtures\UserFixtureTrait;
+namespace Hirtz\Skeleton\Tests\Models\Forms;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Models\Forms\OwnershipForm;
 use Hirtz\Skeleton\Models\User;
-use Hirtz\Skeleton\Tests\support\UnitTester;
+use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Yii;
 
-class OwnershipFormTest extends Unit
+class OwnershipFormTest extends TestCase
 {
     use UserFixtureTrait;
-
-    public UnitTester $tester;
 
     public function testWithInvalidName(): void
     {
@@ -33,7 +29,7 @@ class OwnershipFormTest extends Unit
     public function testWithDisabledUser(): void
     {
         $form = OwnershipForm::create();
-        $form->name = $this->tester->grabUserFixture('disabled')->name;
+        $form->name = $this->getUserFromFixture('disabled')->name;
 
         $expected = Yii::t('skeleton', 'This user is currently disabled and thus can not be made website owner!');
 
@@ -44,7 +40,7 @@ class OwnershipFormTest extends Unit
     public function testWithOwner(): void
     {
         $form = OwnershipForm::create();
-        $form->name = $this->tester->grabUserFixture()->name;
+        $form->name = $this->getUserFromFixture('owner')->name;
 
         $expected = Yii::t('skeleton', 'This user is already the owner of the website!');
 
@@ -55,7 +51,7 @@ class OwnershipFormTest extends Unit
     public function testWithValidUser(): void
     {
         $form = OwnershipForm::create();
-        $form->name = $this->tester->grabUserFixture('admin')->name;
+        $form->name = $this->getUserFromFixture('admin')->name;
 
         self::assertTrue($form->update());
 

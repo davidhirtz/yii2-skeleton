@@ -2,18 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\Models\Traits;
-
-use Codeception\Test\Unit;
+namespace Hirtz\Skeleton\Tests\Models\Traits;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Traits\MaterializedTreeTrait;
+use Override;
 use Yii;
 use yii\db\Expression;
 
-class MaterializedTreeTraitTest extends Unit
+class MaterializedTreeTraitTest extends TestCase
 {
-    protected function _before(): void
+    #[Override]
+    protected function setUp(): void
     {
+        parent::setUp();
+
         Yii::$app->getI18n()->setLanguages(['en-US', 'de']);
 
         $columns = [
@@ -84,17 +87,15 @@ class MaterializedTreeTraitTest extends Unit
         Yii::$app->getDb()->createCommand()
             ->batchInsert(TestMaterializedTreeActiveRecord::tableName(), array_keys($rows[0]), $rows)
             ->execute();
-
-        parent::_before();
     }
 
-    protected function _after(): void
+    protected function tearDown(): void
     {
         Yii::$app->getDb()->createCommand()
             ->dropTable(TestMaterializedTreeActiveRecord::tableName())
             ->execute();
 
-        parent::_after();
+        parent::tearDown();
     }
 
     public function testAncestors(): void
@@ -199,7 +200,7 @@ class TestMaterializedTreeActiveRecord extends ActiveRecord
 {
     use MaterializedTreeTrait;
 
-    #[\Override]
+    #[Override]
     public static function tableName(): string
     {
         return '{{%test_materialized_tree}}';

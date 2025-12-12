@@ -52,7 +52,7 @@ class StreamUploadedFileTest extends TestCase
     public function testUploadFromUnencodedUrl(): void
     {
         $upload = $this->getStreamUploadedFile([
-            'url' => 'https://raw.githubusercontent.com/davidhirtz/yii2-skeleton/master/tests/support/files/Ümlauts & Spaces.md',
+            'url' => 'https://raw.githubusercontent.com/davidhirtz/yii2-skeleton/v3/resources/tests/data/Ümlauts & Spaces.md',
             'allowedExtensions' => ['md', 'txt'],
         ]);
 

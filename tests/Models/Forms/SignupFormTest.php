@@ -2,19 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\Models\forms;
-
-use Codeception\Test\Unit;
-use Hirtz\Skeleton\Codeception\fixtures\UserFixtureTrait;
+namespace Hirtz\Skeleton\Tests\Models\Forms;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Models\Forms\SignupForm;
-use Hirtz\Skeleton\Tests\support\UnitTester;
+use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Yii;
-use yii\symfonymailer\Message;
 
-/**
- * @property UnitTester $tester
- */
-class SignupFormTest extends Unit
+class SignupFormTest extends TestCase
 {
     use UserFixtureTrait;
 
@@ -41,7 +35,7 @@ class SignupFormTest extends Unit
         self::assertTrue($form->hasErrors('token'));
         self::assertTrue($form->hasErrors('honeypot'));
 
-        $user = $this->tester->grabUserFixture('admin');
+        $user = $this->getUserFromFixture('admin');
 
         $form->name = 'Testname';
         $form->email = $user->email;
@@ -78,8 +72,7 @@ class SignupFormTest extends Unit
         self::assertFalse($form->user->getIsNewRecord());
         self::assertFalse(Yii::$app->getUser()->getIsGuest());
 
-        /** @var Message $message */
-        $message = $this->tester->grabLastSentEmail();
+        $message = $this->mailer->getLastMessage();
         self::assertStringContainsString($form->user->getEmailConfirmationUrl(), $message->getSymfonyEmail()->getHtmlBody());
     }
 

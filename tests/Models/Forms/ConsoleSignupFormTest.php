@@ -2,17 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\Models\forms;
-
-use Codeception\Test\Unit;
+namespace Hirtz\Skeleton\Tests\Models\Forms;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Models\Forms\ConsoleSignupForm;
-use Hirtz\Skeleton\Tests\support\UnitTester;
 use Yii;
 
-/**
- * @property UnitTester $tester
- */
-class ConsoleSignupFormTest extends Unit
+class ConsoleSignupFormTest extends TestCase
 {
     public function testSignup(): void
     {

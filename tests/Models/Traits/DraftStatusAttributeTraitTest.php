@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\Models\Traits;
+namespace Hirtz\Skeleton\Tests\Models\Traits;
 
-use Codeception\Test\Unit;
 use Hirtz\Skeleton\Models\Interfaces\DraftStatusAttributeInterface;
 use Hirtz\Skeleton\Models\Traits\DraftStatusAttributeTrait;
+use Hirtz\Skeleton\Test\TestCase;
 use Yii;
 use yii\base\Model;
 
-class DraftStatusAttributeTraitTest extends Unit
+class DraftStatusAttributeTraitTest extends TestCase
 {
     public function testDraftStatus(): void
     {

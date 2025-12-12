@@ -2,24 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\Models\forms;
-
-use Codeception\Test\Unit;
+namespace Hirtz\Skeleton\Tests\Models\Forms;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Auth\Clients\ClientInterface;
-use Hirtz\Skeleton\Codeception\fixtures\UserFixtureTrait;
 use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Models\AuthClient;
 use Hirtz\Skeleton\Models\Forms\AuthClientSignupForm;
-use Hirtz\Skeleton\Tests\support\UnitTester;
+use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
+use Override;
 use Yii;
 use yii\authclient\BaseClient;
-use yii\symfonymailer\Message;
 
-class AuthClientSignupFormTest extends Unit
+class AuthClientSignupFormTest extends TestCase
 {
     use UserFixtureTrait;
-
-    public UnitTester $tester;
 
     public function testAuthClientWithDisabledLogin(): void
     {
@@ -54,8 +50,7 @@ class AuthClientSignupFormTest extends Unit
         self::assertTrue($form->insert());
         self::assertEquals('test-client', $form->user->name);
 
-        /** @var Message $message */
-        $message = $this->tester->grabLastSentEmail();
+        $message = $this->mailer->getLastMessage();
         self::assertStringContainsString($form->user->getEmailConfirmationUrl(), $message->getSymfonyEmail()->getHtmlBody());
     }
 
@@ -68,7 +63,7 @@ class AuthClientSignupFormTest extends Unit
             'email' => 'auth-test-client@test.com',
         ]);
 
-        $form->externalPictureUrl = Yii::getAlias('@tests/support/files/test.png');
+        $form->externalPictureUrl = Yii::getAlias('@skeleton/../resources/tests/data/test.png');
 
         self::assertTrue($form->insert());
         self::assertNotNull($form->user->picture);
@@ -79,7 +74,7 @@ class AuthClientSignupFormTest extends Unit
 
     public function testAuthClientWithExistingUsername(): void
     {
-        $user = $this->tester->grabUserFixture('admin');
+        $user = $this->getUserFromFixture('admin');
         Yii::$app->getUser()->enableSignup = true;
 
         $form = $this->createAuthClientSignupForm([
@@ -125,7 +120,7 @@ class TestAuthClient extends BaseClient implements ClientInterface
         return $this->getUserAttributes();
     }
 
-    #[\Override]
+    #[Override]
     public function getViewOptions(): array
     {
         return [];

@@ -2,19 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\Models\Traits;
+namespace Hirtz\Skeleton\Tests\Models\Traits;
 
-use Codeception\Test\Unit;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
 use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
 use Override;
 use Yii;
 
-class I18nAttributesTraitTest extends Unit
+class I18nAttributesTraitTest extends TestCase
 {
-    protected function _before(): void
+    #[Override]
+    protected function setUp(): void
     {
+        parent::setUp();
+
         Yii::$app->getI18n()->setLanguages(['en-US', 'de']);
 
         $columns = [
@@ -39,17 +42,16 @@ class I18nAttributesTraitTest extends Unit
         Yii::$app->getDb()->createCommand()
             ->createIndex('slug_de', TestI18nActiveRecord::tableName(), ['slug_de', 'parent_slug_de'], true)
             ->execute();
-
-        parent::_before();
     }
 
-    protected function _after(): void
+    #[Override]
+    protected function tearDown(): void
     {
         Yii::$app->getDb()->createCommand()
             ->dropTable(TestI18nActiveRecord::tableName())
             ->execute();
 
-        parent::_after();
+        parent::tearDown();
     }
 
     public function testI18nAttributes(): void

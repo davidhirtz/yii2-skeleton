@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\Models\Traits;
-
-use Codeception\Test\Unit;
+namespace Hirtz\Skeleton\Tests\Models\Traits;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Models\Traits\IconFilenameAttributeTrait;
@@ -12,7 +11,7 @@ use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Yii;
 use yii\base\Model;
 
-class IconFilenameAttributeTraitTest extends Unit
+class IconFilenameAttributeTraitTest extends TestCase
 {
     public function testTraitAttributeLabels(): void
     {
@@ -53,7 +52,7 @@ class IconFilenameAttributeTraitTest extends Unit
             }
         };
 
-        static::assertEquals(2, count($model->getActiveValidators()));
+        static::assertCount(2, $model->getActiveValidators());
         static::assertEquals(DynamicRangeValidator::class, $model->getActiveValidators($model->iconFilenameAttribute)[0]::class);
     }
 
