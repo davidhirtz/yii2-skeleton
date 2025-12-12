@@ -2,19 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\behaviors;
+namespace Hirtz\Skeleton\Tests\Behaviors;
 
-use Codeception\Test\Unit;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Behaviors\BlameableBehavior;
 use Yii;
 use yii\base\BaseObject;
 use yii\db\ActiveRecord;
 use yii\db\BaseActiveRecord;
 
-class BlameableBehaviorTest extends Unit
+class BlameableBehaviorTest extends TestCase
 {
-    public function _before(): void
+    public function setUp(): void
     {
+        parent::setUp();
+
         Yii::$app->set('user', UserMock::class);
         $this->getUser()->login(10);
 
@@ -24,15 +26,15 @@ class BlameableBehaviorTest extends Unit
             'created_by_user_id' => 'integer null',
         ];
 
-        Yii::$app->getDb()->createCommand()->createTable('test_blame', $columns)->execute();
-
-        parent::_before();
+        Yii::$app->getDb()->createCommand()
+            ->createTable('test_blame', $columns)
+            ->execute();
     }
 
-    protected function _after(): void
+    protected function tearDown(): void
     {
         Yii::$app->getDb()->createCommand()->dropTable('test_blame')->execute();
-        parent::_after();
+        parent::tearDown();
     }
 
     public function testInsertUserIsGuest(): void

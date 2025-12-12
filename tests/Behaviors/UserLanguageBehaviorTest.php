@@ -2,31 +2,29 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\behaviors;
+namespace Hirtz\Skeleton\Tests\Behaviors;
 
-use Codeception\Test\Unit;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Behaviors\UserLanguageBehavior;
-use Hirtz\Skeleton\Codeception\fixtures\UserFixtureTrait;
 use Hirtz\Skeleton\Models\User;
-use Hirtz\Skeleton\Tests\support\UnitTester;
+use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Hirtz\Skeleton\Web\Controller;
+use Override;
 use Yii;
 
-class UserLanguageBehaviorTest extends Unit
+class UserLanguageBehaviorTest extends TestCase
 {
     use UserFixtureTrait;
 
-    protected UnitTester $tester;
-
-    protected function _before(): void
+    protected function setUp(): void
     {
+        parent::setUp();
         Yii::$app->getI18n()->setLanguages(['en-US', 'de']);
-        parent::_before();
     }
 
     public function testSetIdentityLanguage(): void
     {
-        $this->tester->amLoggedInAs(1);
+        Yii::$app->getUser()->login(User::findOne(1));
         Yii::$app->getRequest()->setQueryParams(['language' => 'de']);
 
         $behavior = new UserLanguageBehavior();
@@ -41,7 +39,7 @@ class UserLanguageBehaviorTest extends Unit
     public function testGetIdentityLanguage(): void
     {
         User::updateAll(['language' => 'de'], ['id' => 1]);
-        $this->tester->amLoggedInAs(1);
+        Yii::$app->getUser()->login(User::findOne(1));
 
         $behavior = new UserLanguageBehavior();
         $behavior->setApplicationLanguage = true;
@@ -53,7 +51,7 @@ class UserLanguageBehaviorTest extends Unit
     public function testGetIdentityLanguageBeforeAction(): void
     {
         User::updateAll(['language' => 'de'], ['id' => 1]);
-        $this->tester->amLoggedInAs(1);
+        Yii::$app->getUser()->login(User::findOne(1));
 
         $controller = new UserLanguageController('user-language', Yii::$app);
         $controller->runAction('index');
@@ -79,7 +77,7 @@ class UserLanguageBehaviorTest extends Unit
 
 class UserLanguageController extends Controller
 {
-    #[\Override]
+    #[Override]
     public function behaviors(): array
     {
         return [

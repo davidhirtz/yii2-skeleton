@@ -31,7 +31,7 @@ class ParamsControllerTest extends TestCase
         $controller = $this->createParamsController();
         $controller->actionIndex();
 
-        self::assertEquals("- *cookieValidationKey*  'test'" . PHP_EOL, $controller->flushStdOutBuffer());
+        self::assertStringContainsString("- *cookieValidationKey*  'test'" . PHP_EOL, $controller->flushStdOutBuffer());
     }
 
     public function testActionIndexWithoutCookieValidationKey(): void

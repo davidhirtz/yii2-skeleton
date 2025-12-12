@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Console\Controllers;
 use Hirtz\Skeleton\Console\Controllers\Traits\BackupTrait;
 use Hirtz\Skeleton\Console\Controllers\Traits\ConfigTrait;
 use Hirtz\Skeleton\Models\User;
+use Override;
 use Seld\CliPrompt\CliPrompt;
 use Yii;
 use yii\console\ExitCode;
@@ -37,7 +38,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
      */
     public bool $skipBackup = false;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         if (!$this->skipBackup) {
@@ -47,7 +48,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
         parent::init();
     }
 
-    #[\Override]
+    #[Override]
     public function options($actionID): array
     {
         $options = parent::options($actionID);
@@ -56,7 +57,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
         return $options;
     }
 
-    #[\Override]
+    #[Override]
     public function beforeAction($action): bool
     {
         if (!Yii::$app->getDb()->dsn) {
@@ -71,7 +72,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
         return Yii::$app->getDb()->dsn && parent::beforeAction($action);
     }
 
-    #[\Override]
+    #[Override]
     public function actionUp($limit = 0): int
     {
         $result = parent::actionUp($limit);
@@ -88,7 +89,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
         return $result;
     }
 
-    #[\Override]
+    #[Override]
     protected function migrateUp($class): bool
     {
         if (!$this->skipBackup) {
@@ -99,7 +100,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
         return parent::migrateUp($class);
     }
 
-    #[\Override]
+    #[Override]
     protected function migrateDown($class): bool
     {
         if (!$this->skipBackup) {

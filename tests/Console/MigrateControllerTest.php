@@ -30,8 +30,6 @@ class MigrateControllerTest extends TestCase
     public function testActionUp(): void
     {
         $controller = $this->createMigrationController();
-
-        /**  @covers MigrateController::actionUp() */
         $controller->runAction('up');
 
         self::assertStringContainsString('No new migrations found. Your system is up-to-date.', $controller->flushStdOutBuffer());
@@ -43,8 +41,6 @@ class MigrateControllerTest extends TestCase
         $controller->resetDbCredentials();
 
         $controller->interactive = false;
-
-        /**  @covers MigrateController::actionConfig() */
         $controller->runAction('up');
 
         self::assertEquals('Database connection not configured.' . PHP_EOL, $controller->flushStdOutBuffer());
@@ -53,8 +49,6 @@ class MigrateControllerTest extends TestCase
     public function testActionBackupAndRestore(): void
     {
         $controller = $this->createMigrationController();
-
-        /**  @covers MigrateController::actionBackup() */
         $controller->runAction('backup');
 
         $stdout = $controller->flushStdOutBuffer();
@@ -65,7 +59,6 @@ class MigrateControllerTest extends TestCase
 
         $filename = $backups[0];
 
-        /**  @covers MigrateController::actionRestore() */
         $controller->runAction('restore');
         $stdout = $controller->flushStdOutBuffer();
 
@@ -79,8 +72,6 @@ class MigrateControllerTest extends TestCase
     {
         $controller = $this->createMigrationController();
         $controller->dbFile = "$this->configPath/db.php";
-
-        /**  @covers MigrateController::actionConfig() */
         $controller->runAction('config');
 
         self::assertStringContainsString('Generate database connection credentials?', $controller->flushStdOutBuffer());
@@ -93,8 +84,6 @@ class MigrateControllerTest extends TestCase
 
         $controller->dbFile = "$this->configPath/db.php";
         $controller->confirmCreateDbCredentialsPrompt = true;
-
-        /**  @covers MigrateController::actionUp() */
         $controller->runAction('up');
 
         $stdout = $controller->flushStdOutBuffer();

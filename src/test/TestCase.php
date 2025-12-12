@@ -92,6 +92,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
         Yii::$app->params = [
             'cookieValidationKey' => 'test',
+            'email' => 'test@example.com',
         ];
 
         FileHelper::createDirectory("$this->webroot/assets");

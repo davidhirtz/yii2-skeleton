@@ -2,39 +2,44 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\behaviors;
+namespace Hirtz\Skeleton\Tests\Behaviors;
 
-use Codeception\Test\Unit;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Behaviors\RedirectBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Redirect;
 use Yii;
 use yii\base\InvalidConfigException;
 
-class RedirectBehaviorTest extends Unit
+class RedirectBehaviorTest extends TestCase
 {
-    protected function _before(): void
+    protected function setUp(): void
     {
+        parent::setUp();
+
         $columns = [
             'id' => 'pk',
             'query' => 'string not null',
         ];
 
-        Yii::$app->getDb()->createCommand()->createTable(RedirectActiveRecord::tableName(), $columns)->execute();
+        Yii::$app->getDb()->createCommand()
+            ->createTable(RedirectActiveRecord::tableName(), $columns)
+            ->execute();
 
         Yii::$app->getUrlManager()->addRules([
             'test/<query>' => 'site/index',
         ]);
-
-        parent::_before();
     }
 
-    protected function _after(): void
+    protected function tearDown(): void
     {
-        Yii::$app->getDb()->createCommand()->dropTable(RedirectActiveRecord::tableName())->execute();
+        Yii::$app->getDb()->createCommand()
+            ->dropTable(RedirectActiveRecord::tableName())
+            ->execute();
+
         Redirect::deleteAll();
 
-        parent::_after();
+        parent::tearDown();
     }
 
     public function testCreateUrl(): void

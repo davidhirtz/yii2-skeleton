@@ -13,6 +13,7 @@ use Hirtz\Skeleton\Models\Traits\UpdatedByUserTrait;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
+use Override;
 use Yii;
 
 class ActiveRecordTest extends TestCase
@@ -144,7 +145,7 @@ class ActiveRecordTest extends TestCase
         $model = TestActiveRecord::find()->one();
         $model->updated_at = (new DateTime())->setTimestamp($model->updated_at->getTimestamp());
 
-        self::assertEquals(0, count($model->getDirtyAttributes()));
+        self::assertCount(0, $model->getDirtyAttributes());
         self::assertFalse($model->isAttributeChanged('updated_at'));
         self::assertFalse($model->hasChangedAttributes(['name', 'updated_at']));
 
@@ -197,7 +198,7 @@ class TestActiveRecord extends ActiveRecord
 {
     use UpdatedByUserTrait;
 
-    #[\Override]
+    #[Override]
     public function behaviors(): array
     {
         return [
@@ -206,7 +207,7 @@ class TestActiveRecord extends ActiveRecord
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function rules(): array
     {
         return [
@@ -230,7 +231,7 @@ class TestActiveRecord extends ActiveRecord
         return $query;
     }
 
-    #[\Override]
+    #[Override]
     public static function tableName(): string
     {
         return 'test_active_record';

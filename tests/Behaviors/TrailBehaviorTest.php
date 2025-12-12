@@ -2,33 +2,33 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\behaviors;
+namespace Hirtz\Skeleton\Tests\Behaviors;
 
-use Codeception\Test\Unit;
+use Hirtz\Skeleton\Test\TestCase;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeValidator;
 use Hirtz\Skeleton\Behaviors\TrailBehavior;
-use Hirtz\Skeleton\Codeception\fixtures\UserFixtureTrait;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\Traits\TrailModelTrait;
 use Hirtz\Skeleton\Models\User;
-use Hirtz\Skeleton\Tests\support\UnitTester;
+use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Override;
 use ReflectionClass;
 use Yii;
 use yii\base\Model;
 use yii\db\Exception;
 
-class TrailBehaviorTest extends Unit
+class TrailBehaviorTest extends TestCase
 {
     use UserFixtureTrait;
-    protected UnitTester $tester;
 
-    protected function _before(): void
+    protected function setUp(): void
     {
+        parent::setUp();
+
         $columns = [
             'id' => 'pk',
             'name' => 'string null',
@@ -42,17 +42,15 @@ class TrailBehaviorTest extends Unit
         Yii::$app->getDb()->createCommand()
             ->createTable(TrailActiveRecord::tableName(), $columns)
             ->execute();
-
-        parent::_before();
     }
 
-    protected function _after(): void
+    protected function tearDown(): void
     {
         Yii::$app->getDb()->createCommand()
             ->dropTable(TrailActiveRecord::tableName())
             ->execute();
 
-        parent::_after();
+        parent::tearDown();
     }
 
     public function testAfterInsertEvent(): void

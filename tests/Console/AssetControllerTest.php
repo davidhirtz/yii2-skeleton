@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Console;
 
 use Hirtz\Skeleton\Assets\AdminAssetBundle;
-use Hirtz\Skeleton\Console\Application;
 use Hirtz\Skeleton\Console\Controllers\AssetController;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\StdOutBufferControllerTrait;

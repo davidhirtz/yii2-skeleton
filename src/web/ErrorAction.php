@@ -12,7 +12,7 @@ use Yii;
  */
 class ErrorAction extends \yii\web\ErrorAction
 {
-    public string $email;
+    public ?string $email;
 
     #[Override]
     public function init(): void

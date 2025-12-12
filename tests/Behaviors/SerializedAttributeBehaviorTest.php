@@ -2,17 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\behaviors;
+namespace Hirtz\Skeleton\Tests\Behaviors;
 
-use Codeception\Test\Unit;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Behaviors\SerializedAttributesBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Yii;
 
-class SerializedAttributeBehaviorTest extends Unit
+class SerializedAttributeBehaviorTest extends TestCase
 {
-    protected function _before(): void
+    protected function setUp(): void
     {
+        parent::setUp();
+
         $columns = [
             'id' => 'pk',
             'data' => 'blob null',
@@ -21,17 +23,15 @@ class SerializedAttributeBehaviorTest extends Unit
         Yii::$app->getDb()->createCommand()
             ->createTable(SerializedAttributesActiveRecord::tableName(), $columns)
             ->execute();
-
-        parent::_before();
     }
 
-    protected function _after(): void
+    protected function tearDown(): void
     {
         Yii::$app->getDb()->createCommand()
             ->dropTable(SerializedAttributesActiveRecord::tableName())
             ->execute();
 
-        parent::_after();
+        parent::tearDown();
     }
 
     public function testBeforeSaveEvent(): void

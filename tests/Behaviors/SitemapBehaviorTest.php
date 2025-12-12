@@ -2,20 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\behaviors;
+namespace Hirtz\Skeleton\Tests\Behaviors;
 
-use Codeception\Test\Unit;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Behaviors\SitemapBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Yii;
 use yii\base\InvalidConfigException;
 
-class SitemapBehaviorTest extends Unit
+class SitemapBehaviorTest extends TestCase
 {
     private ?int $now = null;
 
-    protected function _before(): void
+    protected function setUp(): void
     {
+        parent::setUp();
+
         $columns = [
             'id' => 'pk',
             'url' => 'string not null',
@@ -36,17 +38,15 @@ class SitemapBehaviorTest extends Unit
             ['https://www.test.com/one-day-ago', $this->now - 86400],
             ['https://www.test.com/one-hour-ago', $this->now - 3600],
         ])->execute();
-
-        parent::_before();
     }
 
-    protected function _after(): void
+    protected function tearDown(): void
     {
+        parent::tearDown();
+
         Yii::$app->getDb()->createCommand()
             ->dropTable(SitemapActiveRecord::tableName())
             ->execute();
-
-        parent::_after();
     }
 
     public function testSitemapUrlCount(): void

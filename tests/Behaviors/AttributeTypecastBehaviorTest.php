@@ -2,23 +2,26 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\behaviors;
+namespace Hirtz\Skeleton\Tests\Behaviors;
 
-use Codeception\Test\Unit;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Behaviors\AttributeTypecastBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Events\CreateValidatorsEvent;
+use Override;
 use Yii;
 use yii\base\Behavior;
 use yii\base\DynamicModel;
 use yii\base\Model;
 use yii\validators\NumberValidator;
 
-class AttributeTypecastBehaviorTest extends Unit
+class AttributeTypecastBehaviorTest extends TestCase
 {
-    protected function _before(): void
+    protected function setUp(): void
     {
+        parent::setUp();
+
         $columns = [
             'id' => 'pk',
             'name' => 'string not null',
@@ -29,17 +32,17 @@ class AttributeTypecastBehaviorTest extends Unit
             'nullable' => 'string null default null',
         ];
 
-        Yii::$app->getDb()->createCommand()->createTable(AttributeTypecastActiveRecord::tableName(), $columns)->execute();
-
-        parent::_before();
+        Yii::$app->getDb()->createCommand()
+            ->createTable(AttributeTypecastActiveRecord::tableName(), $columns)
+            ->execute();
     }
 
-    protected function _after(): void
+    protected function tearDown(): void
     {
         Yii::$app->getDb()->createCommand()->dropTable(AttributeTypecastActiveRecord::tableName())->execute();
         AttributeTypecastBehavior::clearAutoDetectedAttributeTypes();
 
-        parent::_after();
+        parent::tearDown();
     }
 
     public function testTypecast(): void
@@ -450,7 +453,7 @@ class AttributeTypecastActiveRecord extends ActiveRecord
     public bool $typecastBeforeValidate = false;
     public bool $typecastAfterSave = false;
 
-    #[\Override]
+    #[Override]
     public function behaviors(): array
     {
         return [
@@ -474,13 +477,13 @@ class AttributeTypecastActiveRecord extends ActiveRecord
         ];
     }
 
-    #[\Override]
+    #[Override]
     public static function tableName(): string
     {
         return 'test_attribute_typecast';
     }
 
-    #[\Override]
+    #[Override]
     public function rules(): array
     {
         return [
