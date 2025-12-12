@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\db;
+namespace Hirtz\Skeleton\Tests\Db;
 
-use Codeception\Test\Unit;
 use Hirtz\Skeleton\Db\Dsn;
+use Hirtz\Skeleton\Test\TestCase;
 use yii\base\InvalidArgumentException;
 
-class DsnTest extends Unit
+class DsnTest extends TestCase
 {
     public function testToString(): void
     {

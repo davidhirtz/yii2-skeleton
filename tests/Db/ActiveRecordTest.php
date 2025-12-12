@@ -2,28 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\db;
+namespace Hirtz\Skeleton\Tests\Db;
 
-use Codeception\Test\Unit;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
-use Hirtz\Skeleton\Codeception\fixtures\UserFixtureTrait;
 use Hirtz\Skeleton\Db\ActiveQuery;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
 use Hirtz\Skeleton\Models\Traits\UpdatedByUserTrait;
 use Hirtz\Skeleton\Models\User;
-use Hirtz\Skeleton\Tests\support\UnitTester;
+use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Yii;
 
-class ActiveRecordTest extends Unit
+class ActiveRecordTest extends TestCase
 {
     use UserFixtureTrait;
 
-    protected UnitTester $tester;
-
-    protected function _before(): void
+    protected function setUp(): void
     {
+        parent::setUp();
+
         $columns = [
             'id' => 'pk',
             'name' => 'string not null',
@@ -36,17 +35,15 @@ class ActiveRecordTest extends Unit
         Yii::$app->getDb()->createCommand()
             ->createTable(TestActiveRecord::tableName(), $columns)
             ->execute();
-
-        parent::_before();
     }
 
-    protected function _after(): void
+    protected function tearDown(): void
     {
         Yii::$app->getDb()->createCommand()
             ->dropTable(TestActiveRecord::tableName())
             ->execute();
 
-        parent::_after();
+        parent::tearDown();
     }
 
     public function testFind(): void
@@ -91,7 +88,7 @@ class ActiveRecordTest extends Unit
 
     public function testUpdateAttributesBlameable(): void
     {
-        $this->tester->amLoggedInAs(1);
+        Yii::$app->getUser()->login(User::findOne(1));
 
         $model = new TestActiveRecord();
         $model->name = 'Test';

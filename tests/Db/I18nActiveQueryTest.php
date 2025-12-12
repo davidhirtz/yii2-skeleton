@@ -2,17 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\db;
+namespace Hirtz\Skeleton\Tests\Db;
 
-use Codeception\Test\Unit;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
+use Hirtz\Skeleton\Test\TestCase;
+use Override;
 use Yii;
 
-class I18nActiveQueryTest extends Unit
+class I18nActiveQueryTest extends TestCase
 {
-    protected function _before(): void
+    protected function setUp(): void
     {
+        parent::setUp();
+
         Yii::$app->getI18n()->setLanguages(['en-US', 'de']);
 
         $columns = [
@@ -24,17 +27,15 @@ class I18nActiveQueryTest extends Unit
         Yii::$app->getDb()->createCommand()
             ->createTable(I18nActiveRecord::tableName(), $columns)
             ->execute();
-
-        parent::_before();
     }
 
-    protected function _after(): void
+    protected function tearDown(): void
     {
         Yii::$app->getDb()->createCommand()
             ->dropTable(I18nActiveRecord::tableName())
             ->execute();
 
-        parent::_after();
+        parent::tearDown();
     }
 
     public function testI18nAttributeName(): void
@@ -90,14 +91,14 @@ class I18nActiveRecord extends ActiveRecord
 {
     use I18nAttributesTrait;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         $this->i18nAttributes = ['content'];
         parent::init();
     }
 
-    #[\Override]
+    #[Override]
     public static function tableName(): string
     {
         return '{{%i18n_test}}';

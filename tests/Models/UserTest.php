@@ -2,17 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\Models;
+namespace Hirtz\Skeleton\Tests\Models;
 
-use Codeception\Test\Unit;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Test\TestCase;
+use Yii;
 
-class UserTest extends Unit
+class UserTest extends TestCase
 {
     public function testSetUploadPath(): void
     {
         $model = User::create();
         $model->setUploadPath('/test');
-        self::assertEquals('./test/', $model->uploadPath);
+        $expected = Yii::getAlias('@webroot/test/');
+
+        self::assertEquals($expected, $model->uploadPath);
     }
 }

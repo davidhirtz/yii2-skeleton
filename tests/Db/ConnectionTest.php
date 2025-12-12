@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\db;
+namespace Hirtz\Skeleton\Tests\Db;
 
-use Codeception\Test\Unit;
 use Hirtz\Skeleton\Helpers\FileHelper;
+use Hirtz\Skeleton\Test\TestCase;
 use Yii;
 
-class ConnectionTest extends Unit
+class ConnectionTest extends TestCase
 {
     public function testBackup(): void
     {
@@ -16,9 +16,10 @@ class ConnectionTest extends Unit
         $db->maxBackups = 1;
 
         $filePath = $db->backup();
+        $expected = Yii::getAlias('@runtime/backups/') . 'yii2_test-' . date('Y-m-d') . '.sql';
 
         self::assertFileExists($filePath);
-        self::assertStringContainsString('runtime/backups/yii2_skeleton_test', $filePath);
+        self::assertEquals($expected, $filePath);
         self::assertStringEndsWith('.sql', $filePath);
 
         $newFilePath = $db->backup();
@@ -27,7 +28,7 @@ class ConnectionTest extends Unit
         self::assertFileExists($newFilePath);
         self::assertStringEndsWith('-1.sql', $newFilePath);
 
-        self::assertFileNotExists($filePath);
+        self::assertFileDoesNotExist($filePath);
 
         FileHelper::removeDirectory($db->backupPath);
     }

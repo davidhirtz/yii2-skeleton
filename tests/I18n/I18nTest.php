@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\i18n;
+namespace Hirtz\Skeleton\Tests\I18n;
 
-use Codeception\Test\Unit;
 use Hirtz\Skeleton\Modules\ModuleTrait;
+use Hirtz\Skeleton\Test\TestCase;
 use Override;
 use Yii;
 use yii\base\Module;
 
-class I18nTest extends Unit
+class I18nTest extends TestCase
 {
-    protected function _before(): void
+    protected function setUp(): void
     {
+        parent::setUp();
+
         Yii::$app->getI18n()->setLanguages(['en-US', 'de']);
         Yii::$app->language = 'en-US';
-
-        parent::_before();
     }
 
     public function testTranslatedTableNames(): void
