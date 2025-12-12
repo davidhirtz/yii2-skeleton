@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\controllers;
+namespace Hirtz\Skeleton\Tests\Controllers;
 
-use Codeception\Test\Unit;
 use Hirtz\Skeleton\Controllers\SitemapController;
+use Hirtz\Skeleton\Test\TestCase;
 use SimpleXMLElement;
 use Yii;
 
-class SitemapControllerTest extends Unit
+class SitemapControllerTest extends TestCase
 {
     public function testIndexWithNoUrls(): void
     {
         $result = $this->runIndexAction();
 
-        self::assertStringContainsString('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"/>', $result);
+        self::assertStringContainsString('<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9/"/>', $result);
 
         $xml = new SimpleXMLElement($result);
 
@@ -45,7 +45,7 @@ class SitemapControllerTest extends Unit
         $xml = new SimpleXMLElement($result);
 
         self::assertEquals('sitemapindex', $xml->getName());
-        self::assertEquals('http://www.sitemaps.org/schemas/sitemap/0.9', $xml->getNamespaces()['']);
+        self::assertEquals('https://www.sitemaps.org/schemas/sitemap/0.9/', $xml->getNamespaces()['']);
         self::assertCount(2, $xml->children());
 
         $child = $xml->children()->children();
@@ -124,7 +124,7 @@ class SitemapControllerTest extends Unit
     {
         self::assertEquals('urlset', $xml->getName());
 
-        self::assertEquals('http://www.sitemaps.org/schemas/sitemap/0.9', $xml->getDocNamespaces()['']);
+        self::assertEquals('https://www.sitemaps.org/schemas/sitemap/0.9/', $xml->getDocNamespaces()['']);
         self::assertEquals('http://www.google.com/schemas/sitemap-image/1.1', $xml->getDocNamespaces()['image']);
 
         $child = $xml->children()->children();

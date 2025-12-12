@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\controllers\Traits;
+namespace Hirtz\Skeleton\Tests\Controllers\Traits;
 
-use Codeception\Test\Unit;
 use Hirtz\Skeleton\Controllers\Traits\AjaxRouteTrait;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Web\Controller;
 use Yii;
 use yii\web\View;
 
-class AjaxRouteTraitTest extends Unit
+class AjaxRouteTraitTest extends TestCase
 {
     public function testRegularRequest(): void
     {
@@ -61,12 +61,12 @@ class AjaxRouteControllerMock extends Controller
 {
     use AjaxRouteTrait;
 
-    public $layout = '@tests/data/views/layouts/main';
+    public $layout = '@skeleton/../resources/tests/views/layouts/main';
     public bool $spacelessOutput = true;
 
     public function actionIndex(): string
     {
-        return $this->render('@tests/data/views/test', [
+        return $this->render('@skeleton/../resources/tests/views/test', [
             'content' => 'Test content'
         ]);
     }

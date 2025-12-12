@@ -47,7 +47,7 @@ class ErrorActionTest extends TestCase
         $error = Yii::t('yii', 'Error') . ' 404';
 
         $result = $this->runErrorAction([
-            'layout' => '@skeleton/Test/Views/layouts/main',
+            'layout' => '@skeleton/../resources/tests/views/layouts/main',
         ]);
 
         self::assertStringContainsString(Yii::t('yii', 'Page not found.'), $result);
@@ -111,8 +111,6 @@ class ErrorActionTest extends TestCase
 
 class TestController extends Controller
 {
-    public $layout = '@skeleton/Test/Views/layout.php';
-
     public array $config = [];
 
     #[Override]

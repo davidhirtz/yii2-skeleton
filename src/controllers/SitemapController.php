@@ -96,7 +96,7 @@ class SitemapController extends Controller
     private function writeUrlset(array $urls, bool $isIndex = false): void
     {
         $this->writer->startElement($isIndex ? 'sitemapindex' : 'urlset');
-        $this->writer->writeAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
+        $this->writer->writeAttribute('xmlns', 'https://www.sitemaps.org/schemas/sitemap/0.9/');
 
         foreach ($urls as $url) {
             if (isset($url['images'])) {
