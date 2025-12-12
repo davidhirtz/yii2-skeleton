@@ -12,6 +12,7 @@ use Override;
 use Yii;
 use yii\base\Event;
 use yii\db\Transaction;
+use yii\di\Container;
 use yii\log\Logger;
 use yii\test\FixtureTrait;
 use yii\web\UploadedFile;
@@ -31,7 +32,12 @@ class TestCase extends \PHPUnit\Framework\TestCase
     {
         $this->config ??= require(__DIR__ . '/../../tests/config.php');
 
-        $this->createApplication();
+        $_SERVER = [
+            ...$_SERVER,
+            ...$this->getServerParams(),
+        ];
+
+        $this->setUpApplication();
         $this->initFixtures();
 
         $this->transaction = Yii::$app->getDb()->beginTransaction();
@@ -45,18 +51,23 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $this->transaction->rollBack();
         $this->unloadFixtures();
 
-        Yii::$app->getErrorHandler()->unregister();
-        $this->mailer->reset();
-
-        FileHelper::removeDirectory($this->webroot);
-        Html::reset();
-        UploadedFile::reset();
-        Event::offAll();
+        $this->tearDownApplication();
 
         parent::tearDown();
     }
 
-    protected function createApplication(): void
+    protected function getServerParams(): array
+    {
+        return [
+            'REQUEST_URI' => '/',
+            'SCRIPT_FILENAME' => __DIR__ . '/../../runtime/web/index.php',
+            'SCRIPT_NAME' => '/index.php',
+            'SERVER_NAME' => 'www.example.com',
+            'SERVER_PORT' => '443',
+         ];
+    }
+
+    protected function setUpApplication(): void
     {
         $config = [
             'basePath' => getcwd(),
@@ -67,10 +78,6 @@ class TestCase extends \PHPUnit\Framework\TestCase
                     'username' => getenv('MYSQL_USER') ?: 'root',
                     'password' => getenv('MYSQL_PASSWORD') ?: '',
                     'charset' => 'utf8',
-                ],
-                'request' => [
-                    'hostInfo' => 'https://www.example.com',
-                    'scriptUrl' => 'index.php',
                 ],
             ],
             'params' => [
@@ -87,6 +94,28 @@ class TestCase extends \PHPUnit\Framework\TestCase
         Yii::$app->set('mailer', $this->mailer);
 
         Yii::setLogger($this->getLogger());
+    }
+
+    protected function tearDownApplication(): void
+    {
+        $this->mailer->reset();
+        Yii::$app->getErrorHandler()->unregister();
+
+        if (Yii::$app->has('session', true)) {
+            Yii::$app->getSession()->close();
+        }
+
+        if (Yii::$app->has('db', true)) {
+            Yii::$app->getDb()->close();
+        }
+
+        FileHelper::removeDirectory($this->webroot);
+        Html::reset();
+        UploadedFile::reset();
+        Event::offAll();
+
+        Yii::$app = null;
+        Yii::$container = new Container();
     }
 
     private function getLogger(): TestLogger

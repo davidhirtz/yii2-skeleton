@@ -2,38 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\widgets\navs;
+namespace Hirtz\Skeleton\Tests\Widgets\Navs;
 
-use Codeception\Test\Unit;
-use Hirtz\Skeleton\Codeception\Traits\AssetDirectoryTrait;
 use Hirtz\Skeleton\Models\User;
-use Hirtz\Skeleton\Tests\support\UnitTester;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Web\Controller;
 use Hirtz\Skeleton\Widgets\Navs\Nav;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Yii;
 
-/**
- * @property UnitTester $tester
- */
-class NavTest extends Unit
+class NavTest extends TestCase
 {
-    use AssetDirectoryTrait;
-
-    protected function _before(): void
+    protected function setUp(): void
     {
-        $this->createAssetDirectory();
-
-        Yii::$app->controllerMap['site'] = TestSiteController::class;
-        $this->tester->amOnRoute('site/index');
-
-        parent::_before();
-    }
-
-    protected function _after(): void
-    {
-        $this->removeAssetDirectory();
-        parent::_after();
+        parent::setUp();
+        Yii::$app->controller = new Controller('site/index', Yii::$app);
     }
 
     public function testHideSingleItem(): void
@@ -41,7 +24,7 @@ class NavTest extends Unit
         $content = Nav::make()
             ->items(NavItem::make()
                 ->label('Home')
-                ->url(['site/index']))
+                ->url('/'))
             ->render();
 
         self::assertEmpty($content);
@@ -49,11 +32,11 @@ class NavTest extends Unit
         $content = Nav::make()
             ->items(NavItem::make()
                 ->label('Home')
-                ->url(['site/index']))
+                ->url('/'))
             ->showSingleItem()
             ->render();
 
-        self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active" href="/site/index"><span>Home</span></a></li></ul>', $content);
+        self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active" href="/"><span>Home</span></a></li></ul>', $content);
     }
 
     public function testItemVisibility(): void
@@ -61,7 +44,7 @@ class NavTest extends Unit
         $content = Nav::make()
             ->items(NavItem::make()
                 ->label('Home')
-                ->url(['site/index'])
+                ->url('/')
                 ->visible(false))
             ->render();
 
@@ -76,7 +59,7 @@ class NavTest extends Unit
             ->items(
                 NavItem::make()
                     ->label('Home')
-                    ->url(['site/index'])
+                    ->url('/')
                     ->roles(['*']),
                 NavItem::make()
                     ->label('Test')
@@ -86,7 +69,7 @@ class NavTest extends Unit
             ->showSingleItem()
             ->render();
 
-        self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active" href="/site/index"><span>Home</span></a></li></ul>', $content);
+        self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active" href="/"><span>Home</span></a></li></ul>', $content);
     }
 
     public function testItemBadgeAndIcon(): void
@@ -94,7 +77,7 @@ class NavTest extends Unit
         $content = Nav::make()
             ->items(NavItem::make()
                 ->label('Home')
-                ->url(['site/index'])
+                ->url('/')
                 ->badge('New')
                 ->badgeAttributes(['class' => 'badge'])
                 ->icon('home')
@@ -103,7 +86,7 @@ class NavTest extends Unit
             ->render();
 
 
-        self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active" href="/site/index"><i class="hidden fas fa-home"></i><span>Home</span><span class="badge">New</span></a></li></ul>', $content);
+        self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active" href="/"><i class="hidden fas fa-home"></i><span>Home</span><span class="badge">New</span></a></li></ul>', $content);
     }
 
     public function testActiveItemFromUrl(): void
@@ -112,14 +95,14 @@ class NavTest extends Unit
             ->items(
                 NavItem::make()
                     ->label('Home')
-                    ->url(['site/index']),
+                    ->url('/'),
                 NavItem::make()
                     ->label('Test')
                     ->url(['site/test'])
             )
             ->render();
 
-        self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active" href="/site/index"><span>Home</span></a></li><li class="nav-item"><a class="nav-link" href="/site/test"><span>Test</span></a></li></ul>', $content);
+        self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active" href="/"><span>Home</span></a></li><li class="nav-item"><a class="nav-link" href="/site/test"><span>Test</span></a></li></ul>', $content);
     }
 
     public function testActiveItemWithRoutes(): void
@@ -131,12 +114,13 @@ class NavTest extends Unit
                     ->url(['site/test']),
                 NavItem::make()
                     ->label('Test')
-                    ->routes(['site/index'])
+                    ->routes(['/'])
                     ->url(['site/test'])
             )
             ->render();
 
-        self::assertStringContainsString('<ul class="nav"><li class="nav-item"><a class="nav-link" href="/site/test"><span>Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/site/test"><span>Test</span></a></li></ul>', $content);
+        $expected = '<ul class="nav"><li class="nav-item"><a class="nav-link" href="/site/test"><span>Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/site/test"><span>Test</span></a></li></ul>';
+        self::assertStringContainsString($expected, $content);
     }
 
     public function testActiveItemWithSkippedRoute(): void
@@ -145,15 +129,15 @@ class NavTest extends Unit
             ->items(
                 NavItem::make()
                     ->label('Home')
-                    ->url(['site/index'])
-                    ->routes(['!site/index']),
+                    ->url('/')
+                    ->routes(['!']),
                 NavItem::make()
                     ->label('Test')
-                    ->url(['site/index'])
+                    ->url('/')
             )
             ->render();
 
-        self::assertStringContainsString('<ul class="nav"><li class="nav-item"><a class="nav-link" href="/site/index"><span>Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/site/index"><span>Test</span></a></li></ul>', $content);
+        self::assertStringContainsString('<ul class="nav"><li class="nav-item"><a class="nav-link" href="/"><span>Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/"><span>Test</span></a></li></ul>', $content);
     }
 
     public function testActiveItemWithRequestQueryParameters(): void
@@ -178,13 +162,5 @@ class NavTest extends Unit
             ->render();
 
         self::assertStringContainsString('<ul class="nav"><li class="nav-item"><a class="nav-link" href="/site/test"><span>Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/site/test"><span>Test</span></a></li></ul>', $content);
-    }
-}
-
-class TestSiteController extends Controller
-{
-    public function actionIndex(): string
-    {
-        return '';
     }
 }

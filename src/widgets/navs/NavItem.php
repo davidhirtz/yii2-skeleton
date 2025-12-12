@@ -137,7 +137,7 @@ class NavItem extends Widget
                 ->attributes($this->badgeAttributes));
         }
 
-        $this->active ??= Yii::$app->getRequest()->url === ($link->attributes['href'] ?? null);
+        $this->active ??= Yii::$app->getRequest()->getUrl() === ($link->attributes['href'] ?? null);
 
         if ($this->active) {
             $link->addClass('active');
