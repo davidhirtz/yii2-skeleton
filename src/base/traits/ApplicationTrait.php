@@ -128,7 +128,7 @@ trait ApplicationTrait
                 ],
                 'mailer' => [
                     'class' => Mailer::class,
-                    'htmlLayout' => '@skeleton/mail/layouts/html',
+                    'htmlLayout' => '@skeleton/Mail/layouts/html',
                     'useFileTransport' => YII_DEBUG,
                 ],
                 'session' => [

@@ -79,6 +79,9 @@ class TestCase extends \PHPUnit\Framework\TestCase
                     'password' => getenv('MYSQL_PASSWORD') ?: '',
                     'charset' => 'utf8',
                 ],
+                'mailer' => [
+                    'class' => TestMailer::class,
+                ],
             ],
             'params' => [
                 'cookieValidationKey' => 'test',
@@ -90,8 +93,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
         FileHelper::createDirectory("$this->webroot/assets");
 
-        $this->mailer = Yii::createObject(TestMailer::class);
-        Yii::$app->set('mailer', $this->mailer);
+        $this->mailer = Yii::$app->get('mailer');
 
         Yii::setLogger($this->getLogger());
     }

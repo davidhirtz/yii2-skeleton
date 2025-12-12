@@ -2,21 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\Modules\Admin\Models\forms;
+namespace Hirtz\Skeleton\Tests\Modules\Admin\Models\Forms;
 
-use Codeception\Test\Unit;
-use Hirtz\Skeleton\Codeception\fixtures\UserFixtureTrait;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Modules\Admin\Models\forms\UserForm;
-use Hirtz\Skeleton\Tests\support\UnitTester;
+use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Yii;
-use yii\symfonymailer\Message;
 
-class UserFormTest extends Unit
+class UserFormTest extends TestCase
 {
     use UserFixtureTrait;
-
-    public UnitTester $tester;
 
     public function testCreateUser(): void
     {
@@ -36,7 +32,7 @@ class UserFormTest extends Unit
 
         self::assertEquals($expected, $form->getFirstError('email'));
 
-        $admin = $this->tester->grabUserFixture('admin');
+        $admin = $this->getUserFromFixture('admin');
         $form->user->email = $admin->email;
 
         self::assertFalse($form->save());
@@ -47,7 +43,7 @@ class UserFormTest extends Unit
         $form->user->email = 'test-user@test.com';
         self::assertTrue($form->save());
 
-        $this->tester->dontSeeEmailIsSent();
+        self::assertFalse($this->mailer->hasMessages());
     }
 
     public function testCreateUserWithEmailConfirmation(): void
@@ -66,8 +62,7 @@ class UserFormTest extends Unit
 
         $subject = Yii::t('skeleton', 'Your {name} Account', ['name' => Yii::$app->name]);
 
-        /** @var Message $message */
-        $message = $this->tester->grabLastSentEmail();
+        $message = $this->mailer->getLastMessage();
 
         self::assertStringContainsString($subject, $message->getSubject());
         self::assertStringContainsString($form->newPassword, $message->getSymfonyEmail()->getHtmlBody());
@@ -76,7 +71,7 @@ class UserFormTest extends Unit
     public function testUpdatePassword(): void
     {
         $form = UserForm::create([
-            'user' => $this->tester->grabUserFixture('admin'),
+            'user' => $this->getUserFromFixture('admin'),
         ]);
 
         $form->newPassword = 'new_password';

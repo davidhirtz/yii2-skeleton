@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Test;
 
-use yii\mail\BaseMailer;
+use Override;
 use yii\mail\MessageInterface;
+use yii\symfonymailer\Mailer;
 
-class TestMailer extends BaseMailer
+class TestMailer extends Mailer
 {
     /**
      * @var MessageInterface[]
@@ -20,15 +21,15 @@ class TestMailer extends BaseMailer
         return true;
     }
 
-    #[\Override]
+    #[Override]
     protected function saveMessage($message): bool
     {
         return $this->sendMessage($message);
     }
 
-    public function getMessages(): array
+    public function hasMessages(): bool
     {
-        return $this->messages;
+        return !empty($this->messages);
     }
 
     public function getLastMessage(): ?MessageInterface

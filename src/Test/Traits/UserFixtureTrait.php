@@ -6,22 +6,32 @@ namespace Hirtz\Skeleton\Test\Traits;
 
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\Fixtures\UserFixture;
+use Override;
 use Yii;
 
 trait UserFixtureTrait
 {
-    public function _fixtures(): array
-    {
-        return $this->getUserFixture();
-    }
-
-    protected function getUserFixture(): array
+    #[Override]
+    public function fixtures(): array
     {
         return [
             'user' => [
                 'class' => UserFixture::class,
             ],
         ];
+    }
+
+    protected function getUserFixture(): UserFixture
+    {
+        /** @var UserFixture $fixture */
+        $fixture = $this->getFixture('user');
+        return $fixture;
+    }
+
+    protected function getUserFromFixture(string $key): User
+    {
+        $fixture = $this->getUserFixture();
+        return User::findOne($fixture->data[$key]['id']);
     }
 
     protected function assignAdminRole(int $userId): void

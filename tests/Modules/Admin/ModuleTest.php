@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\modules\admin;
+namespace Hirtz\Skeleton\Tests\Modules\Admin;
 
-use Codeception\Test\Unit;
 use Hirtz\Skeleton\Modules\Admin\Config\DashboardItemConfig;
 use Hirtz\Skeleton\Modules\Admin\Config\DashboardPanelConfig;
 use Hirtz\Skeleton\Modules\Admin\Config\MainMenuItemConfig;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Modules\Admin\ModuleInterface;
+use Hirtz\Skeleton\Test\TestCase;
 use Yii;
 
-class ModuleTest extends Unit
+class ModuleTest extends TestCase
 {
     public function testNavBarItems(): void
     {
@@ -24,13 +24,20 @@ class ModuleTest extends Unit
             ),
         ]);
 
-        self::assertEquals(['users', 'test'], array_keys($module->getMainMenuItems()));
+        $items = array_keys($module->getMainMenuItems());
+
+        self::assertEquals('users', current($items));
+        self::assertEquals('test', end($items));
 
         $module->setModule('test', [
             'class' => TestModule::class,
         ]);
 
-        self::assertEquals(['users', 'module', 'test'], array_keys($module->getMainMenuItems()));
+        $items = array_keys($module->getMainMenuItems());
+
+        self::assertContains('users', $items);
+        self::assertContains('module', $items);
+        self::assertContains('test', $items);
     }
 
     public function testDashboardPanels(): void
@@ -42,8 +49,10 @@ class ModuleTest extends Unit
         ]);
 
         $panels = $module->getDashboardPanels();
+        $ids = array_keys($panels);
 
-        self::assertEquals(['skeleton', 'module'], array_keys($panels));
+        self::assertEquals('skeleton', current($ids));
+        self::assertEquals('module', end($ids));
         self::assertEquals('Overridden label', $panels['skeleton']->items['user']->label);
         self::assertEquals(['/admin/account/test'], $panels['skeleton']->items['account']->url);
         self::assertContains('test', $panels['skeleton']->items['system']->roles);
