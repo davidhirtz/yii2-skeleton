@@ -2,20 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\web;
+namespace Hirtz\Skeleton\Tests\Web;
 
-use Codeception\Test\Unit;
-use Hirtz\Skeleton\Tests\support\UnitTester;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Web\Request;
 use Hirtz\Skeleton\Web\UrlManager;
+use Hirtz\Tenant\Models\Collections\TenantCollection;
 use Yii;
 use yii\web\UrlNormalizerRedirectException;
 use yii\web\UrlRule;
 
-class UrlManagerTest extends Unit
+class UrlManagerTest extends TestCase
 {
-    protected UnitTester $tester;
-
     public function testCreateUrl(): void
     {
         $manager = $this->getUrlManager();

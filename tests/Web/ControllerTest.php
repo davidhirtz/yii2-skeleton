@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\web;
+namespace Hirtz\Skeleton\Tests\Web;
 
-use Codeception\Test\Unit;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Web\Controller;
 use Yii;
 use yii\base\Model;
 
-class ControllerTest extends Unit
+class ControllerTest extends TestCase
 {
     public function testErrorOrSuccessWithModelHavingErrors(): void
     {
@@ -41,8 +41,6 @@ class ControllerTest extends Unit
         $controller = new Controller('test', Yii::$app);
         $controller->errorOrSuccess(['error'], 'Success message');
         $flashes = Yii::$app->getSession()->getAllFlashes();
-
-        codecept_debug($flashes);
 
         self::assertArrayHasKey('danger', $flashes);
         self::assertEquals(['error'], $flashes['danger'][0]);

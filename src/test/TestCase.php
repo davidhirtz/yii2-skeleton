@@ -63,7 +63,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
             'SCRIPT_FILENAME' => __DIR__ . '/../../runtime/web/index.php',
             'SCRIPT_NAME' => '/index.php',
             'SERVER_NAME' => 'www.example.com',
-            'SERVER_PORT' => '443',
+            'HTTPS' => 'on',
          ];
     }
 
@@ -100,14 +100,9 @@ class TestCase extends \PHPUnit\Framework\TestCase
     {
         $this->mailer->reset();
         Yii::$app->getErrorHandler()->unregister();
-
-        if (Yii::$app->has('session', true)) {
-            Yii::$app->getSession()->close();
-        }
-
-        if (Yii::$app->has('db', true)) {
-            Yii::$app->getDb()->close();
-        }
+        Yii::$app->getCache()->flush();
+        Yii::$app->getSession()->close();
+        Yii::$app->getDb()->close();
 
         FileHelper::removeDirectory($this->webroot);
         Html::reset();

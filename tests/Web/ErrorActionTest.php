@@ -2,16 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\web;
+namespace Hirtz\Skeleton\Tests\Web;
 
-use Codeception\Test\Unit;
-use Hirtz\Skeleton\Tests\data\controllers\TestController;
+use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Web\Controller;
+use Hirtz\Skeleton\Web\ErrorAction;
+use Override;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\UserException;
+use yii\base\ViewNotFoundException;
 use yii\web\ForbiddenHttpException;
 
-class ErrorActionTest extends Unit
+class ErrorActionTest extends TestCase
 {
     public function testYiiException(): void
     {
@@ -44,7 +47,7 @@ class ErrorActionTest extends Unit
         $error = Yii::t('yii', 'Error') . ' 404';
 
         $result = $this->runErrorAction([
-            'layout' => '@tests/data/views/layouts/main',
+            'layout' => '@skeleton/Test/Views/layouts/main',
         ]);
 
         self::assertStringContainsString(Yii::t('yii', 'Page not found.'), $result);
@@ -66,8 +69,10 @@ class ErrorActionTest extends Unit
 
     public function testInvalidView(): void
     {
-        $this->expectException('yii\base\ViewNotFoundException');
-        $this->expectExceptionMessage('The view file does not exist: ./resources/views/test/invalid.php');
+        $path = Yii::getAlias('@views/test/invalid.php');
+
+        $this->expectException(ViewNotFoundException::class);
+        $this->expectExceptionMessage("The view file does not exist: $path");
 
         $controller = $this->getController([
             'view' => 'invalid',
@@ -78,8 +83,10 @@ class ErrorActionTest extends Unit
 
     public function testLayout(): void
     {
-        $this->expectException('yii\base\ViewNotFoundException');
-        $this->expectExceptionMessage('The view file does not exist: ./resources/views/layouts/non-existing.php');
+        $path = Yii::getAlias('@views/layouts/non-existing.php');
+
+        $this->expectException(ViewNotFoundException::class);
+        $this->expectExceptionMessage("The view file does not exist: $path");
 
         $controller = $this->getController([
             'layout' => 'non-existing',
@@ -88,7 +95,7 @@ class ErrorActionTest extends Unit
         $controller->runAction('error');
     }
 
-    protected function getController(array $config = []): TestController
+    private function getController(array $config = []): TestController
     {
         return new TestController('test', Yii::$app, [
             'layout' => false,
@@ -96,8 +103,26 @@ class ErrorActionTest extends Unit
         ]);
     }
 
-    protected function runErrorAction(array $config = []): string
+    private function runErrorAction(array $config = []): string
     {
         return $this->getController($config)->runAction('error');
+    }
+}
+
+class TestController extends Controller
+{
+    public $layout = '@skeleton/Test/Views/layout.php';
+
+    public array $config = [];
+
+    #[Override]
+    public function actions(): array
+    {
+        return [
+            'error' => [
+                'class' => ErrorAction::class,
+                ...$this->config,
+            ],
+        ];
     }
 }

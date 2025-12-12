@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\web;
-
-use Codeception\Test\Unit;
+namespace Hirtz\Skeleton\Tests\Web;
 use Hirtz\Skeleton\Helpers\StructuredData;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Web\Controller;
 use Hirtz\Skeleton\Web\View;
 use Yii;
 
-class ViewTest extends Unit
+class ViewTest extends TestCase
 {
     public function testBreadcrumbs(): void
     {
