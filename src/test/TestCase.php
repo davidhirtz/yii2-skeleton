@@ -99,6 +99,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected function tearDownApplication(): void
     {
         $this->mailer->reset();
+
         Yii::$app->getErrorHandler()->unregister();
         Yii::$app->getCache()->flush();
         Yii::$app->getSession()->close();

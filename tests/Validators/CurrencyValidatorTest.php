@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\validators;
-
-use Codeception\Test\Unit;
+namespace Hirtz\Skeleton\Tests\Validators;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Validators\CurrencyValidator;
 use Yii;
 use yii\base\Model;
 
-class CurrencyValidatorTest extends Unit
+class CurrencyValidatorTest extends TestCase
 {
     public function testDefaultCurrencyAttribute(): void
     {
@@ -31,7 +30,7 @@ class CurrencyValidatorTest extends Unit
     public function testLocalizedCurrencyAttribute(): void
     {
         Yii::$app->language = 'de';
-        $model = new CurrencyValidatorTestModel();
+        $model = new \CurrencyValidatorTestModel();
 
         $model->currency = '10,00';
         self::assertTrue($model->validate());

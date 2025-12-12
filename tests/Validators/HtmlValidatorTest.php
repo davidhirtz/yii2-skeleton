@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\validators;
 
-use Codeception\Test\Unit;
+namespace Hirtz\Skeleton\Tests\Validators;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Validators\HtmlValidator;
 
-class HtmlValidatorTest extends Unit
+class HtmlValidatorTest extends TestCase
 {
     protected array $defaultAllowedHtmlTags = ['a', 'br', 'li', 'ol', 'p', 'span', 'strong', 'ul'];
     protected array $defaultAllowedHtmlAttributes = [

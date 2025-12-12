@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\unit\validators;
+namespace Hirtz\Skeleton\Tests\Validators;
 
-use Codeception\Test\Unit;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Validators\TimeValidator;
 use yii\base\Model;
 
-class TimeValidatorTest extends Unit
+class TimeValidatorTest extends TestCase
 {
     public function testDefaultCurrencyAttribute(): void
     {
