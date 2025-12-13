@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\Modules\Admin;
+namespace Hirtz\Skeleton\Tests\Functional;
 
 use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Models\Forms\LoginForm;
@@ -13,7 +13,7 @@ use Hirtz\Tenant\Test\TestCase;
 use RobThree\Auth\TwoFactorAuth;
 use Yii;
 
-class AdminLoginFunctionalTest extends TestCase
+class LoginTest extends TestCase
 {
     use FunctionalTestTrait;
     use UserFixtureTrait;
@@ -25,12 +25,6 @@ class AdminLoginFunctionalTest extends TestCase
         self::openUri('admin');
         self::assertUrlPathEquals('admin/account/login');
         self::assertAnyAlertErrorSame('You must login to view this page!');
-    }
-
-    protected function tearDown(): void
-    {
-        Yii::$app->getUser()->logout();
-        parent::tearDown();
     }
 
     public function testLoginWithInvalidCredentials(): void
@@ -106,13 +100,11 @@ class AdminLoginFunctionalTest extends TestCase
 
     public static function submitLoginForm(?string $email = null, ?string $password = null, ?string $code = null): void
     {
-        $form = self::$crawler->selectButton('Login')
-            ->form()
-            ->setValues(array_filter([
-                Html::getInputName(LoginForm::instance(), 'email') => $email,
-                Html::getInputName(LoginForm::instance(), 'password') => $password,
-                Html::getInputName(LoginForm::instance(), 'code') => $code,
-            ]));
+        $form = self::$crawler->filter('form')->form(array_filter([
+            Html::getInputName(LoginForm::instance(), 'email') => $email,
+            Html::getInputName(LoginForm::instance(), 'password') => $password,
+            Html::getInputName(LoginForm::instance(), 'code') => $code,
+        ]));
 
         self::$crawler = self::$browser->submit($form);
     }

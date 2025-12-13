@@ -102,6 +102,11 @@ class AccountResendConfirmForm extends Model
             && $this->user->updated_at?->modify($this->timeoutSpamProtection) > new DateTime();
     }
 
+    public function formName(): string
+    {
+        return 'Account';
+    }
+
     #[Override]
     public function attributeLabels(): array
     {

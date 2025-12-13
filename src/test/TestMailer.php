@@ -5,26 +5,30 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Test;
 
 use Override;
-use yii\mail\MessageInterface;
 use yii\symfonymailer\Mailer;
+use yii\symfonymailer\Message;
 
 class TestMailer extends Mailer
 {
     /**
-     * @var MessageInterface[]
+     * @var Message[]
      */
     private array $messages = [];
 
+    public function init(): void
+    {
+        $this->useFileTransport = false;
+        parent::init();
+    }
+
+    /**
+     * @param Message $message
+     */
+    #[Override]
     protected function sendMessage($message): true
     {
         $this->messages[$this->generateMessageFileName()] = $message;
         return true;
-    }
-
-    #[Override]
-    protected function saveMessage($message): bool
-    {
-        return $this->sendMessage($message);
     }
 
     public function hasMessages(): bool
@@ -32,7 +36,7 @@ class TestMailer extends Mailer
         return !empty($this->messages);
     }
 
-    public function getLastMessage(): ?MessageInterface
+    public function getLastMessage(): ?Message
     {
         return end($this->messages) ?: null;
     }
