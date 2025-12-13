@@ -45,8 +45,8 @@ class ViewTest extends TestCase
         $view->registerHrefLangLinkTags(['en', 'de'], false);
 
         $expected = [
-            'hreflang_en' => '<link href="https://www.example.com/test?language=en" rel="alternate" hreflang="en">',
-            'hreflang_de' => '<link href="https://www.example.com/test?language=de" rel="alternate" hreflang="de">',
+            'hreflang_en' => '<link href="https://www.test.localhost/test?language=en" rel="alternate" hreflang="en">',
+            'hreflang_de' => '<link href="https://www.test.localhost/test?language=de" rel="alternate" hreflang="de">',
         ];
 
         static::assertEquals($expected, $view->linkTags);
@@ -74,10 +74,10 @@ class ViewTest extends TestCase
         $view->registerImageMetaTags('/images/test.jpg', 300, 200);
         $view->registerImageMetaTags('/images/test-2.jpg');
 
-        static::assertEquals("<meta property=\"og:image\" content=\"https://www.example.com/images/test.jpg\">", $view->metaTags[0]);
+        static::assertEquals("<meta property=\"og:image\" content=\"https://www.test.localhost/images/test.jpg\">", $view->metaTags[0]);
         static::assertEquals("<meta property=\"og:image:width\" content=\"300\">", $view->metaTags[1]);
         static::assertEquals("<meta property=\"og:image:height\" content=\"200\">", $view->metaTags[2]);
-        static::assertContains('<link href="https://www.example.com/images/test-2.jpg" rel="image_src">', $view->linkTags);
+        static::assertContains('<link href="https://www.test.localhost/images/test-2.jpg" rel="image_src">', $view->linkTags);
     }
 
     public function testCanonicalTag(): void
@@ -85,7 +85,7 @@ class ViewTest extends TestCase
         $view = new View();
         $view->registerCanonicalTag('/test');
 
-        static::assertContains('<link href="https://www.example.com/test" rel="canonical">', $view->linkTags);
+        static::assertContains('<link href="https://www.test.localhost/test" rel="canonical">', $view->linkTags);
     }
 
     public function testFilenameWithVersion(): void

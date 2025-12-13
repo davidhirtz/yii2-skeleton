@@ -52,9 +52,9 @@ class FileHelperTest extends TestCase
 
     public function testEncodeUrl(): void
     {
-        $url = 'https://www.example.com/test file.txt';
+        $url = 'https://www.test.localhost/test file.txt';
         $encodedUrl = FileHelper::encodeUrl($url);
-        self::assertEquals('https://www.example.com/test%20file.txt', $encodedUrl);
+        self::assertEquals('https://www.test.localhost/test%20file.txt', $encodedUrl);
 
         $url = '/üöä';
         $encodedUrl = FileHelper::encodeUrl($url);

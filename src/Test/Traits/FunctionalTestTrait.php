@@ -26,7 +26,7 @@ trait FunctionalTestTrait
     protected function open(string $uri, array $parameters = []): void
     {
         self::$client = new Browser([
-            'HTTP_HOST' => 'www.example.com',
+            'HTTP_HOST' => 'www.test.localhost',
             'HTTPS' => 'on',
         ]);
 

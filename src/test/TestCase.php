@@ -72,7 +72,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             'REQUEST_URI' => '/',
             'SCRIPT_FILENAME' => __DIR__ . '/../../runtime/web/index.php',
             'SCRIPT_NAME' => '/index.php',
-            'HTTP_HOST' => 'www.example.com',
+            'HTTP_HOST' => 'www.test.localhost',
             'HTTPS' => 'on',
          ];
     }
@@ -94,7 +94,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
         Yii::$app->params = [
             'cookieValidationKey' => 'test',
-            'email' => 'test@example.com',
+            'email' => 'test@test.localhost',
         ];
 
         FileHelper::createDirectory("$this->webroot/assets");

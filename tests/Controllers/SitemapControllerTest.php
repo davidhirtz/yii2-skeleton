@@ -50,7 +50,7 @@ class SitemapControllerTest extends TestCase
 
         $child = $xml->children()->children();
 
-        self::assertEquals('https://www.example.com/sitemap.xml?key=urls&offset=0', $child->loc[0]);
+        self::assertEquals('https://www.test.localhost/sitemap.xml?key=urls&offset=0', $child->loc[0]);
         self::assertEquals('2024-01-01 10:00:00', $child->lastmod[0]);
     }
 
@@ -85,25 +85,25 @@ class SitemapControllerTest extends TestCase
     {
         Yii::$app->sitemap->urls = [
             [
-                'loc' => 'https://example.com/page-1',
+                'loc' => 'https://test.localhost/page-1',
                 'lastmod' => '2024-01-01 10:00:00',
                 'changefreq' => 'daily',
                 'priority' => '1.0',
                 'images' => [
                     [
-                        'loc' => 'https://example.com/test-1.jpg',
+                        'loc' => 'https://test.localhost/test-1.jpg',
                         'caption' => 'Test',
                     ],
                     [
-                        'loc' => 'https://example.com/test-2.jpg',
+                        'loc' => 'https://test.localhost/test-2.jpg',
                     ],
                 ]
             ],
             [
-                'loc' => 'https://example.com/page-2',
+                'loc' => 'https://test.localhost/page-2',
             ],
             [
-                'loc' => 'https://example.com/page-3',
+                'loc' => 'https://test.localhost/page-3',
             ],
         ];
     }
@@ -128,10 +128,10 @@ class SitemapControllerTest extends TestCase
         self::assertEquals('http://www.google.com/schemas/sitemap-image/1.1', $xml->getDocNamespaces()['image']);
 
         $child = $xml->children()->children();
-        self::assertEquals('https://example.com/page-1', $child->loc[0]);
+        self::assertEquals('https://test.localhost/page-1', $child->loc[0]);
 
         $image = $xml->url[0]->children('http://www.google.com/schemas/sitemap-image/1.1')->image;
-        self::assertEquals('https://example.com/test-1.jpg', $image->loc[0]);
+        self::assertEquals('https://test.localhost/test-1.jpg', $image->loc[0]);
         self::assertEquals('Test', $image->caption[0]);
     }
 }

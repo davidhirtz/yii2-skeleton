@@ -58,10 +58,10 @@ class UrlManagerTest extends TestCase
         $manager = $this->getUrlManager();
 
         $url = $manager->createAbsoluteUrl('post/view');
-        self::assertEquals('https://www.example.com/post/view', $url);
+        self::assertEquals('https://www.test.localhost/post/view', $url);
 
         $url = $manager->createAbsoluteUrl(['post/view'], '');
-        self::assertEquals('//www.example.com/post/view', $url);
+        self::assertEquals('//www.test.localhost/post/view', $url);
     }
 
     public function testCreateDraftUrl(): void
@@ -69,18 +69,18 @@ class UrlManagerTest extends TestCase
         $manager = $this->getUrlManager();
 
         $url = $manager->createDraftUrl('post/view');
-        self::assertEquals('https://draft.example.com/post/view', $url);
+        self::assertEquals('https://draft.test.localhost/post/view', $url);
 
         $manager->draftSubdomain = 'preview';
 
         $url = $manager->createDraftUrl('post/view');
-        self::assertEquals('https://preview.example.com/post/view', $url);
+        self::assertEquals('https://preview.test.localhost/post/view', $url);
 
         Yii::$app->getRequest()->setIsDraft(true);
         $manager->draftSubdomain = false;
 
         $url = $manager->createDraftUrl('post/view');
-        self::assertEquals('https://www.example.com/post/view', $url);
+        self::assertEquals('https://www.test.localhost/post/view', $url);
     }
 
     public function testI18nUrl(): void
@@ -93,32 +93,32 @@ class UrlManagerTest extends TestCase
             ],
         ]);
 
-        self::assertEquals('https://www.example.com', $manager->getHostInfo());
+        self::assertEquals('https://www.test.localhost', $manager->getHostInfo());
 
         $request = $this->getRequest([
-            'hostInfo' => 'https://www.example.com',
+            'hostInfo' => 'https://www.test.localhost',
             'url' => '/de',
         ]);
 
         $manager->parseRequest($request);
 
-        self::assertEquals('https://www.example.com', $manager->getHostInfo());
+        self::assertEquals('https://www.test.localhost', $manager->getHostInfo());
         self::assertEquals('de', Yii::$app->language);
 
         $url = $manager->createAbsoluteUrl(['test']);
-        self::assertEquals('https://www.example.com/de/test', $url);
+        self::assertEquals('https://www.test.localhost/de/test', $url);
 
         $url = $manager->createDraftUrl(['test']);
-        self::assertEquals('https://draft.example.com/de/test', $url);
+        self::assertEquals('https://draft.test.localhost/de/test', $url);
 
         $url = $manager->createAbsoluteUrl(['test', 'language' => 'en-US']);
-        self::assertEquals('https://www.example.com/test', $url);
+        self::assertEquals('https://www.test.localhost/test', $url);
 
         $url = $manager->createDraftUrl(['test', 'language' => 'en-US']);
-        self::assertEquals('https://draft.example.com/test', $url);
+        self::assertEquals('https://draft.test.localhost/test', $url);
 
         $request = $this->getRequest([
-            'hostInfo' => 'https://www.example.com',
+            'hostInfo' => 'https://www.test.localhost',
             'url' => '/en/test',
         ]);
 
@@ -126,20 +126,20 @@ class UrlManagerTest extends TestCase
             $manager->parseRequest($request);
             self::fail('UrlNormalizerRedirectException not thrown');
         } catch (UrlNormalizerRedirectException $e) {
-            self::assertEquals('https://www.example.com/test', $e->url);
+            self::assertEquals('https://www.test.localhost/test', $e->url);
         }
 
         $url = $manager->createAbsoluteUrl(['test', 'language' => 'de']);
-        self::assertEquals('https://www.example.com/de/test', $url);
+        self::assertEquals('https://www.test.localhost/de/test', $url);
 
         $request = $this->getRequest([
-            'hostInfo' => 'https://draft.example.com',
+            'hostInfo' => 'https://draft.test.localhost',
             'url' => '/de',
         ]);
 
         $manager->parseRequest($request);
 
-        self::assertEquals('https://example.com', $manager->getHostInfo());
+        self::assertEquals('https://test.localhost', $manager->getHostInfo());
         self::assertEquals('de', Yii::$app->language);
         self::assertTrue($request->getIsDraft());
     }
@@ -154,48 +154,48 @@ class UrlManagerTest extends TestCase
             ],
         ]);
 
-        self::assertEquals('https://www.example.com', $manager->getHostInfo());
+        self::assertEquals('https://www.test.localhost', $manager->getHostInfo());
 
         $request = $this->getRequest([
-            'hostInfo' => 'https://de.example.com',
+            'hostInfo' => 'https://de.test.localhost',
             'url' => '/',
         ]);
 
         $manager->parseRequest($request);
 
-        self::assertEquals('https://www.example.com', $manager->getHostInfo());
+        self::assertEquals('https://www.test.localhost', $manager->getHostInfo());
         self::assertEquals('de', Yii::$app->language);
 
         $url = $manager->createAbsoluteUrl(['test']);
-        self::assertEquals('https://de.example.com/test', $url);
+        self::assertEquals('https://de.test.localhost/test', $url);
 
         $url = $manager->createDraftUrl(['test']);
-        self::assertEquals('https://draft.de.example.com/test', $url);
+        self::assertEquals('https://draft.de.test.localhost/test', $url);
 
         $url = $manager->createAbsoluteUrl(['test', 'language' => 'en-US']);
-        self::assertEquals('https://www.example.com/test', $url);
+        self::assertEquals('https://www.test.localhost/test', $url);
 
         $url = $manager->createDraftUrl(['test', 'language' => 'en-US']);
-        self::assertEquals('https://draft.example.com/test', $url);
+        self::assertEquals('https://draft.test.localhost/test', $url);
 
         $request = $this->getRequest([
-            'hostInfo' => 'https://www.example.com',
+            'hostInfo' => 'https://www.test.localhost',
             'url' => '/',
         ]);
 
         $manager->parseRequest($request);
 
         $url = $manager->createAbsoluteUrl(['test', 'language' => 'de']);
-        self::assertEquals('https://de.example.com/test', $url);
+        self::assertEquals('https://de.test.localhost/test', $url);
 
         $request = $this->getRequest([
-            'hostInfo' => 'https://draft.de.example.com',
+            'hostInfo' => 'https://draft.de.test.localhost',
             'url' => '/',
         ]);
 
         $manager->parseRequest($request);
 
-        self::assertEquals('https://www.example.com', $manager->getHostInfo());
+        self::assertEquals('https://www.test.localhost', $manager->getHostInfo());
         self::assertEquals('de', Yii::$app->language);
         self::assertTrue($request->getIsDraft());
     }
@@ -214,15 +214,15 @@ class UrlManagerTest extends TestCase
         ]);
 
         $request = $this->getRequest([
-            'hostInfo' => 'https://www.example.com',
+            'hostInfo' => 'https://www.test.localhost',
             'url' => '/',
         ]);
 
         $manager->parseRequest($request);
-        self::assertEquals('https://www.example.com', $manager->getHostInfo());
+        self::assertEquals('https://www.test.localhost', $manager->getHostInfo());
 
         $request = $this->getRequest([
-            'hostInfo' => 'https://www.example.com',
+            'hostInfo' => 'https://www.test.localhost',
             'url' => '/old-url',
         ]);
 
@@ -234,7 +234,7 @@ class UrlManagerTest extends TestCase
         }
 
         $request = $this->getRequest([
-            'hostInfo' => 'https://www.example.com',
+            'hostInfo' => 'https://www.test.localhost',
             'url' => '/old/test',
         ]);
 
@@ -257,7 +257,7 @@ class UrlManagerTest extends TestCase
         ]);
 
         $request = $this->getRequest([
-            'hostInfo' => 'https://www.example.com',
+            'hostInfo' => 'https://www.test.localhost',
             'url' => '/',
             'bodyParams' => [
                 'language' => 'de',

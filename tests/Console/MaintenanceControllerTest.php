@@ -34,7 +34,7 @@ class MaintenanceControllerTest extends TestCase
     {
         $controller = $this->createMaintenanceController();
 
-        $controller->redirect = 'https://example.com';
+        $controller->redirect = 'https://test.localhost';
         $controller->retry = 1;
         $controller->refresh = 2;
         $controller->statusCode = 500;
@@ -48,7 +48,7 @@ class MaintenanceControllerTest extends TestCase
 
         $config = json_decode(file_get_contents($config), true);
 
-        self::assertEquals('https://example.com', $config['redirect']);
+        self::assertEquals('https://test.localhost', $config['redirect']);
         self::assertEquals(1, $config['retry']);
         self::assertEquals(2, $config['refresh']);
         self::assertEquals(500, $config['status']);
