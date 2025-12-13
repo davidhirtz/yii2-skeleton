@@ -1,7 +1,4 @@
 parameters:
-    bootstrapFiles:
-        - tests/bootstrap.php
-
     dynamicConstantNames:
         - YII_DEBUG
         - YII_ENV
@@ -14,20 +11,3 @@ parameters:
     paths:
         - src
         - tests
-
-    excludePaths:
-        - src/gii/*
-        - tests/_output/*
-        - tests/support/*
-
-    scanFiles:
-        - Yii.php
-
-    stubFiles:
-        - stubs/yii/BaseYii.stub
-
-    earlyTerminatingMethodCalls:
-        yii\base\Application:
-            - end
-        yii\base\ErrorHandler:
-            - convertExceptionToError

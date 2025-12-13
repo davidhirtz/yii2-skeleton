@@ -7,7 +7,7 @@ namespace Hirtz\Skeleton\Html;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Override;
 
-class H1 extends base\Tag
+class H1 extends Base\Tag
 {
     use TagContentTrait;
 

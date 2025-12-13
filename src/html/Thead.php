@@ -7,7 +7,7 @@ namespace Hirtz\Skeleton\Html;
 use Hirtz\Skeleton\Html\Traits\TagTableRowsTrait;
 use Override;
 
-class Thead extends base\Tag
+class Thead extends Base\Tag
 {
     use TagTableRowsTrait;
 

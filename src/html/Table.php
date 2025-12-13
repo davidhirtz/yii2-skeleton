@@ -6,7 +6,7 @@ namespace Hirtz\Skeleton\Html;
 
 use Override;
 
-class Table extends base\Tag
+class Table extends Base\Tag
 {
     private ?Tbody $body = null;
     private ?Thead $header = null;

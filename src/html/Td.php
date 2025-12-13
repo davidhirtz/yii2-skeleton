@@ -6,7 +6,7 @@ namespace Hirtz\Skeleton\Html;
 
 use Override;
 
-class Td extends base\TableCell
+class Td extends Base\TableCell
 {
     #[Override]
     protected function getTagName(): string

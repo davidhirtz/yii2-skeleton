@@ -10,7 +10,7 @@ use Hirtz\Skeleton\Html\Traits\TagInputTrait;
 use Hirtz\Skeleton\Html\Traits\TagTextareaTrait;
 use Stringable;
 
-class Textarea extends base\Tag
+class Textarea extends Base\Tag
 {
     use TagInputTrait;
     use TagTextareaTrait;
