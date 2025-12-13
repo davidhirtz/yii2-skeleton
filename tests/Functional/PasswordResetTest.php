@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Functional;
+
 use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Models\Forms\PasswordResetForm;
 use Hirtz\Skeleton\Models\User;

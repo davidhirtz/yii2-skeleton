@@ -12,5 +12,5 @@ use yii\web\AssetBundle;
 class FontAwesomeAssetBundle extends AssetBundle
 {
     public $css = ['css/all.css'];
-    public $sourcePath = '@skeleton/../assets/vendor/fontawesome';
+    public $sourcePath = '@skeleton/../resources/assets/vendor/fontawesome';
 }

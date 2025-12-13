@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Console;
+
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Console\Controllers\MaintenanceController;
 use Hirtz\Skeleton\Models\Forms\MaintenanceConfigForm;

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Widgets\Grids\Columns;
+
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Widgets\Grids\Columns\BadgeColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;

@@ -18,7 +18,7 @@ class ErrorAction extends \yii\web\ErrorAction
     public function init(): void
     {
         $this->email ??= Yii::$app->params['email'];
-        $this->view ??= '@skeleton/views/error';
+        $this->view ??= '@skeleton/../resources/views/error';
 
         parent::init();
     }

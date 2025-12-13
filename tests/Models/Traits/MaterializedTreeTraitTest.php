@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Models\Traits;
+
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Traits\MaterializedTreeTrait;

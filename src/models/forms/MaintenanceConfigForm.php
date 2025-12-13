@@ -38,7 +38,7 @@ class MaintenanceConfigForm extends Model
     /**
      * @var string path to the maintenance mode template, set empty string to render nothing
      */
-    public string $viewFile = '@skeleton/views/maintenance.php';
+    public string $viewFile = '@skeleton/../resources/views/maintenance.php';
 
     #[Override]
     public function rules(): array

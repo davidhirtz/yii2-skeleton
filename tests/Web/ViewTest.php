@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Web;
+
 use Hirtz\Skeleton\Helpers\StructuredData;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Web\Controller;

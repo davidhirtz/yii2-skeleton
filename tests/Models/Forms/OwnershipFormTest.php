@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Models\Forms;
+
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Models\Forms\OwnershipForm;
 use Hirtz\Skeleton\Models\User;

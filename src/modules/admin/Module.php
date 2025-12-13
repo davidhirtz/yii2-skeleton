@@ -45,7 +45,7 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
 
     public $defaultRoute = 'dashboard/index';
     public $controllerNamespace = 'app\Modules\Admin\Controllers';
-    public $layout = '@skeleton/modules/admin/views/layouts/main';
+    public $layout = 'main';
 
     private array $dashboardPanels = [];
     private array $mainMenuItems = [];
@@ -74,7 +74,7 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
             Yii::$app->getUser()->loginUrl ??= ['/admin/account/login'];
 
             if (!YII_DEBUG) {
-                Yii::$app->getErrorHandler()->errorView = '@skeleton/modules/admin/views/dashboard/error.php';
+                Yii::$app->getErrorHandler()->errorView = '@skeleton/../resources/views/admin/views/dashboard/error.php';
             }
         }
 
@@ -91,7 +91,7 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
             }
         }
 
-        $this->setViewPath('@skeleton/modules/admin/views');
+        $this->setViewPath('@skeleton/../resources/views/admin');
 
         return parent::beforeAction($action);
     }

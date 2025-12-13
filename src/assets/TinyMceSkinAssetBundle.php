@@ -9,5 +9,5 @@ use yii\web\AssetBundle;
 class TinyMceSkinAssetBundle extends AssetBundle
 {
     public $depends = [TinyMceAssetBundle::class];
-    public $sourcePath = '@skeleton/../assets/vendor/tinymce/skins';
+    public $sourcePath = '@skeleton/../resources/assets/vendor/tinymce/skins';
 }

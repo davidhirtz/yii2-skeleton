@@ -49,7 +49,7 @@ class MaintenanceController extends Controller
     /**
      * @var string path to the maintenance mode template, set empty string to render nothing
      */
-    public string $viewFile = '@skeleton/views/maintenance.php';
+    public string $viewFile = '@skeleton/../resources/views/maintenance.php';
 
     /**
      * @var string[] list of properties that can be configured

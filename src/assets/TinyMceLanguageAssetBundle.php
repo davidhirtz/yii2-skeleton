@@ -9,5 +9,5 @@ use yii\web\AssetBundle;
 class TinyMceLanguageAssetBundle extends AssetBundle
 {
     public $depends = [TinyMceAssetBundle::class];
-    public $sourcePath = '@skeleton/../assets/vendor/tinymce/langs';
+    public $sourcePath = '@skeleton/../resources/assets/vendor/tinymce/langs';
 }
