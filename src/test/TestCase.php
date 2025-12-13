@@ -27,16 +27,18 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     private Transaction $transaction;
     private string $webroot = '@runtime/web';
 
-    private array $serverParams;
+    private array $originalServerParams;
 
     #[Override]
     protected function setUp(): void
     {
         $this->config ??= require(__DIR__ . '/../../tests/config.php');
 
-        $this->serverParams = $_SERVER = [
+        $this->originalServerParams = $_SERVER;
+
+        $_SERVER = [
             ...$_SERVER,
-            ...$this->getServerParams(),
+            ...$this->getServerParams()
         ];
 
         $this->setUpApplication();
@@ -59,7 +61,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
         $this->tearDownApplication();
 
-        $_SERVER = $this->serverParams;
+        $_SERVER = $this->originalServerParams;
 
         parent::tearDown();
     }
@@ -70,7 +72,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             'REQUEST_URI' => '/',
             'SCRIPT_FILENAME' => __DIR__ . '/../../runtime/web/index.php',
             'SCRIPT_NAME' => '/index.php',
-            'SERVER_NAME' => 'www.example.com',
+            'HTTP_HOST' => 'www.example.com',
             'HTTPS' => 'on',
          ];
     }

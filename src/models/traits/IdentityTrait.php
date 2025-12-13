@@ -29,7 +29,7 @@ trait IdentityTrait
     protected function validateUserStatus(): void
     {
         if ($this->user->isDisabled() && !$this->user->isOwner()) {
-            $this->addError('status', Yii::t('skeleton', 'Your account is currently disabled. Please contact an administrator!'));
+            $this->addError('email', Yii::t('skeleton', 'Your account is currently disabled. Please contact an administrator!'));
         }
     }
 }

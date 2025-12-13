@@ -28,10 +28,14 @@ trait UserFixtureTrait
         return $fixture;
     }
 
+    protected function getUserFixtureData(string $key): array
+    {
+        return $this->getUserFixture()->data[$key];
+    }
+
     protected function getUserFromFixture(string $key): User
     {
-        $fixture = $this->getUserFixture();
-        return User::findOne($fixture->data[$key]['id']);
+        return User::findOne($this->getUserFixtureData($key)['id']);
     }
 
     protected function assignAdminRole(int $userId): void

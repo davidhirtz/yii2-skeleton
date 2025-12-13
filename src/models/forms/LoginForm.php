@@ -66,7 +66,7 @@ class LoginForm extends Model
     public function beforeValidate(): bool
     {
         if (!Yii::$app->getUser()->isLoginEnabled()) {
-            $this->addError('id', Yii::t('skeleton', 'Sorry, logging in is currently disabled!'));
+            $this->addError('email', Yii::t('skeleton', 'Sorry, logging in is currently disabled!'));
             return false;
         }
 

@@ -26,11 +26,11 @@ class TestLogger extends Logger
     {
         if (
             !in_array('--debug', $_SERVER['argv'], true)
-            || !in_array($level, [Logger::LEVEL_WARNING, Logger::LEVEL_ERROR])
             || str_starts_with($category, Command::class)) {
             return;
         }
 
+        /** @phpstan-ignore-next-line  */
         if ($message instanceof Exception) {
             $message = $message->__toString();
         }
@@ -38,6 +38,7 @@ class TestLogger extends Logger
         $color = match ($level) {
             Logger::LEVEL_ERROR => Console::FG_RED,
             Logger::LEVEL_WARNING => Console::FG_YELLOW,
+            default => Console::FG_GREEN,
         };
 
         $text = Console::ansiFormat("[$category] " . VarDumper::export($message), [$color]);
