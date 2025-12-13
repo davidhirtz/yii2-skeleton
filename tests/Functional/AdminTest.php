@@ -13,9 +13,9 @@ class AdminTest extends TestCase
 
     public function testLoginRedirect(): void
     {
-        $this->open('admin');
+        $this->open('https://draft.example.com/admin');
 
-        self::assertCurrentUrlEquals('admin/account/login');
+        self::assertCurrentUrlEquals('https://www.example.com/admin/account/login');
         self::assertAnyAlertErrorSame('You must login to view this page!');
     }
 }

@@ -25,7 +25,11 @@ trait FunctionalTestTrait
 
     protected function open(string $uri, array $parameters = []): void
     {
-        self::$client = new Browser();
+        self::$client = new Browser([
+            'HTTP_HOST' => 'www.example.com',
+            'HTTPS' => 'on',
+        ]);
+
         self::$crawler = self::$client->request('GET', $uri, $parameters);
     }
 
@@ -64,6 +68,12 @@ trait FunctionalTestTrait
 
     public static function assertCurrentUrlEquals(string $expected): void
     {
+        if (preg_match('~^https?://~', $expected)) {
+            $url = self::$crawler->getUri();
+            self::assertEquals($expected, $url, "Expected current URL '$expected', got '$url'.");
+            return;
+        }
+
         $path = parse_url(self::$crawler->getUri(), PHP_URL_PATH);
         $expected = '/' . ltrim($expected, '/');
 
