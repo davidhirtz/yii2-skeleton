@@ -14,18 +14,41 @@ use Symfony\Component\DomCrawler\Test\Constraint\CrawlerSelectorAttributeValueSa
 use Symfony\Component\DomCrawler\Test\Constraint\CrawlerSelectorExists;
 use Symfony\Component\DomCrawler\Test\Constraint\CrawlerSelectorTextContains;
 use Symfony\Component\DomCrawler\Test\Constraint\CrawlerSelectorTextSame;
+use yii\base\Model;
 
 use function sprintf;
 
 trait FunctionalTestTrait
 {
-    protected static Browser $browser;
+    protected static Browser $client;
     protected static Crawler $crawler;
 
-    protected static function openUri(string $uri, array $parameters = []): void
+    protected function open(string $uri, array $parameters = []): void
     {
-        self::$browser = new Browser();
-        self::$crawler = self::$browser->request('GET', $uri, $parameters);
+        self::$client = new Browser();
+        self::$crawler = self::$client->request('GET', $uri, $parameters);
+    }
+
+    protected function click(string $selector): void
+    {
+        self::assertSelectorExists($selector);
+
+        $link = self::$crawler->filter($selector)->link();
+        self::$crawler = self::$client->click($link);
+    }
+
+    protected function submit(string $selector = 'form', array $values = []): void
+    {
+        self::assertSelectorExists($selector);
+
+        $form = self::$crawler->filter($selector)->form($values);
+        self::$crawler = self::$client->submit($form);
+    }
+
+    protected function prefixFormValues(string|Model $prefix, array $values): array
+    {
+        $keys = array_map(fn ($key) => sprintf('%s[%s]', is_string($prefix) ? $prefix : $prefix->formName(), $key), array_keys($values));
+        return array_combine($keys, array_values($values));
     }
 
     public static function assertResponseIsSuccessful(): void
@@ -35,16 +58,32 @@ trait FunctionalTestTrait
 
     public static function assertResponseStatusCodeSame(int $expected): void
     {
-        $code = self::$browser->getResponse()->getStatusCode();
+        $code = self::$client->getResponse()->getStatusCode();
         self::assertEquals($expected, $code, "Expected response code $expected, got $code.");
     }
 
-    public static function assertUrlPathEquals(string $expected): void
+    public static function assertCurrentUrlEquals(string $expected): void
     {
         $path = parse_url(self::$crawler->getUri(), PHP_URL_PATH);
         $expected = '/' . ltrim($expected, '/');
 
         self::assertEquals($expected, $path, "Expected query path '$expected', got '$path'.");
+    }
+
+    public static function assertResponseHasHeader(string $headerName, string $message = ''): void
+    {
+        self::assertContains($headerName, array_keys(self::$client->getResponse()->getHeaders()), $message);
+    }
+
+    public static function assertResponseNotHasHeader(string $headerName, string $message = ''): void
+    {
+        self::assertNotContains($headerName, array_keys(self::$client->getResponse()->getHeaders()), $message);
+    }
+
+    public static function assertResponseHeaderSame(string $headerName, string $expectedValue, string $message = ''): void
+    {
+        self::assertResponseHasHeader($headerName, $message);
+        self::assertEquals($expectedValue, self::$client->getResponse()->getHeaders()[$headerName][0], $message);
     }
 
     public static function assertAnyAlertErrorSame(string $text): void

@@ -25,7 +25,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     protected TestMailer $mailer;
 
     private Transaction $transaction;
-    private string $webroot = '@runtime/web';
+    protected string $webroot = '@runtime/web';
 
     private array $originalServerParams;
 

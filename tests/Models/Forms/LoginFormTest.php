@@ -45,7 +45,7 @@ class LoginFormTest extends TestCase
         static::assertEmpty($form->getErrors(), 'Error messages should not be set');
     }
 
-    public function testLoginWithGoogleAuthenticatorEmptyCode(): void
+    public function testLoginWithTwoFactorAuthenticatorEmptyCode(): void
     {
         $form = Yii::$container->get(LoginForm::class, [], [
             'email' => 'f2a@domain.com',
@@ -56,7 +56,7 @@ class LoginFormTest extends TestCase
         static::assertArrayHasKey('code', $form->getErrors(), 'Error message should be set');
     }
 
-    public function testLoginWithGoogleAuthenticatorInvalidCode(): void
+    public function testLoginWithTwoFactorAuthenticatorInvalidCode(): void
     {
         $form = Yii::$container->get(LoginForm::class, [], [
             'email' => 'f2a@domain.com',
@@ -68,7 +68,7 @@ class LoginFormTest extends TestCase
         static::assertArrayHasKey('code', $form->getErrors(), 'Error message should be set');
     }
 
-    public function testLoginWithGoogleAuthenticatorCorrect(): void
+    public function testLoginWithTwoFactorAuthenticatorCorrect(): void
     {
         Yii::$container->set(TwoFactorAuthenticationValidator::class, [
             'currentTime' => 1_609_455_600,

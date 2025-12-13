@@ -13,10 +13,14 @@ class ConnectionTest extends TestCase
     public function testBackup(): void
     {
         $db = Yii::$app->getDb();
+
+        $db->backupPath = Yii::getAlias("$this->webroot/backups");
         $db->maxBackups = 1;
 
         $filePath = $db->backup();
-        $expected = Yii::getAlias('@runtime/backups/') . 'yii2_test-' . date('Y-m-d') . '.sql';
+
+        $date = date('Y-m-d');
+        $expected = "$db->backupPath/yii2_test-$date.sql";
 
         self::assertFileExists($filePath);
         self::assertEquals($expected, $filePath);

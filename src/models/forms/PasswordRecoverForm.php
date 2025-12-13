@@ -77,9 +77,6 @@ class PasswordRecoverForm extends Model
         return false;
     }
 
-    /**
-     * Sends password reset code email.
-     */
     public function sendPasswordResetEmail(): void
     {
         Yii::$app->getMailer()->compose('@skeleton/mail/account/recover', ['user' => $this->user])
@@ -93,6 +90,11 @@ class PasswordRecoverForm extends Model
     {
         return $this->user->password_reset_token
             && $this->user->updated_at->modify($this->timeoutSpamProtection) > new DateTime();
+    }
+
+    public function formName(): string
+    {
+        return 'PasswordRecover';
     }
 
     #[Override]
