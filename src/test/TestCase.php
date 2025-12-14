@@ -87,15 +87,14 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
                     'class' => TestMailer::class,
                 ],
             ],
+            'params' => [
+                'cookieValidationKey' => 'test',
+                'email' => 'test@test.localhost',
+            ],
         ];
 
         Yii::createObject(ArrayHelper::merge($config, $this->config));
         Yii::setAlias('@webroot', $this->webroot);
-
-        Yii::$app->params = [
-            'cookieValidationKey' => 'test',
-            'email' => 'test@test.localhost',
-        ];
 
         FileHelper::createDirectory("$this->webroot/assets");
 

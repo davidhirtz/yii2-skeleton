@@ -158,15 +158,21 @@ trait ApplicationTrait
             'viewPath' => '@views',
         ];
 
-        $path = "{$config['basePath']}/config/";
         $config = ArrayHelper::merge($core, $config);
 
-        if (is_file($params = $path . 'params.php')) {
-            $config['params'] = [...$config['params'] ?? [], ...require($params)];
-        }
+        if (!YII_ENV_TEST) {
+            $path = "{$config['basePath']}/config/";
+            $file = "{$path}params.php";
 
-        if (is_file($db = $path . 'db.php')) {
-            $config['components']['db'] = [...require($db), ...$config['components']['db']];
+            if (is_file($file)) {
+                $config['params'] = [...$config['params'] ?? [], ...require($file)];
+            }
+
+            $file = "{$path}db.php";
+
+            if (is_file($file)) {
+                $config['components']['db'] = [...$config['components']['db'], ...require($file)];
+            }
         }
 
         // Make sure the cache prefix via params is applied before application bootstrap, as a DB session might get
