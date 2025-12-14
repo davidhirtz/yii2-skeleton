@@ -20,7 +20,7 @@ class Application extends \yii\console\Application
 {
     use ApplicationTrait;
 
-    public $controllerNamespace = 'app\\commands';
+    public $controllerNamespace = 'App\\Commands';
 
     #[Override]
     public function preInit(&$config): void
