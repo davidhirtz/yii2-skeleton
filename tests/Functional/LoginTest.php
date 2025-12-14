@@ -8,7 +8,7 @@ use Hirtz\Skeleton\Models\Forms\LoginForm;
 use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Hirtz\Skeleton\Validators\TwoFactorAuthenticationValidator;
-use Hirtz\Tenant\Test\TestCase;
+use Hirtz\Skeleton\Test\TestCase;
 use RobThree\Auth\TwoFactorAuth;
 use Yii;
 
