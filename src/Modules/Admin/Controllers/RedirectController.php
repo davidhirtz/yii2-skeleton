@@ -1,0 +1,148 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Hirtz\Skeleton\Modules\Admin\Controllers;
+
+use Hirtz\Skeleton\Models\Redirect;
+use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Data\RedirectActiveDataProvider;
+use Hirtz\Skeleton\Web\Controller;
+use Override;
+use Yii;
+use yii\filters\AccessControl;
+use yii\web\ForbiddenHttpException;
+use yii\web\NotFoundHttpException;
+use yii\web\Response;
+
+class RedirectController extends Controller
+{
+    #[Override]
+    public function behaviors(): array
+    {
+        return [
+            ...parent::behaviors(),
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['create', 'delete', 'delete-all', 'index', 'update'],
+                        'roles' => [Redirect::AUTH_REDIRECT_CREATE],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    public function actionIndex(
+        ?int    $type = null,
+        ?int    $user = null,
+        ?string $q = null,
+    ): Response|string {
+        $provider = Yii::$container->get(RedirectActiveDataProvider::class, config: [
+            'type' => $type,
+            'user' => User::findOne($user),
+            'search' => $q,
+        ]);
+
+        return $this->render('index', [
+            'provider' => $provider,
+        ]);
+    }
+
+    public function actionCreate(?int $type = null): Response|string
+    {
+        $redirect = Redirect::create();
+        $redirect->type = $type;
+
+        if (!Yii::$app->getUser()->can('redirectCreate', ['redirect' => $redirect])) {
+            throw new ForbiddenHttpException();
+        }
+
+        if ($redirect->load($this->request->post()) && $redirect->insert()) {
+            $this->success(Yii::t('skeleton', 'The redirect rule was created.'));
+            return $this->redirect([...$this->request->get(), 'index']);
+        }
+
+        return $this->render('create', [
+            'redirect' => $redirect,
+        ]);
+    }
+
+    public function actionUpdate(int $id): Response|string
+    {
+        $redirect = $this->findRedirect($id);
+
+        if ($redirect->load($this->request->post())) {
+            if ($redirect->update()) {
+                $this->success(Yii::t('skeleton', 'The redirect rule was updated.'));
+            }
+
+            if (!$redirect->hasErrors()) {
+                return $this->redirectToIndex();
+            }
+        }
+
+        return $this->render('update', [
+            'redirect' => $redirect,
+        ]);
+    }
+
+    public function actionDelete(int $id): Response|string
+    {
+        $redirect = $this->findRedirect($id);
+        $redirect->delete();
+
+        $this->errorOrSuccess($redirect, Yii::t('skeleton', 'The redirect rule was deleted.'));
+        return $this->redirectToIndex();
+    }
+
+    public function actionDeleteAll(): Response|string
+    {
+        Yii::debug($this->request->post());
+
+        if ($redirectIds = array_map(intval(...), $this->request->post('selection', []))) {
+            $redirects = Redirect::findAll(['id' => $redirectIds]);
+            $isDeleted = false;
+
+            foreach ($redirects as $redirect) {
+                if (Yii::$app->getUser()->can(Redirect::AUTH_REDIRECT_CREATE, ['redirect' => $redirect])) {
+                    if ($redirect->delete()) {
+                        $isDeleted = true;
+                    }
+
+                    $this->error($redirect);
+                }
+            }
+
+            if ($isDeleted) {
+                $this->success(Yii::t('skeleton', 'The selected redirect rules were deleted.'));
+            }
+        }
+
+        return $this->redirect($this->request->getReferrer() ?? ['index']);
+    }
+
+    protected function redirectToIndex(): Response
+    {
+        return $this->redirect([
+            'index',
+            ...$this->request->getQueryParams(),
+            'id' => null,
+        ]);
+    }
+
+    protected function findRedirect(int $id): Redirect
+    {
+        if (!$redirect = Redirect::findOne($id)) {
+            throw new NotFoundHttpException();
+        }
+
+        if (!Yii::$app->getUser()->can(Redirect::AUTH_REDIRECT_CREATE, ['redirect' => $redirect])) {
+            throw new ForbiddenHttpException();
+        }
+
+        return $redirect;
+    }
+}

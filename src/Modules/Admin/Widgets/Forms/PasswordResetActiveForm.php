@@ -1,0 +1,87 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms;
+
+use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Html\Icon;
+use Hirtz\Skeleton\Models\Forms\PasswordResetForm;
+use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
+use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
+use Override;
+use Stringable;
+use Yii;
+
+/**
+ * @property PasswordResetForm $model
+ */
+class PasswordResetActiveForm extends ActiveForm
+{
+    public array $attributes = ['class' => 'form-plain'];
+    public array $excludedErrorProperties = ['newPassword', 'repeatPassword'];
+    public bool $hasStickyButtons = false;
+    public string $layout = "{errors}{rows}{buttons}";
+
+    #[Override]
+    protected function configure(): void
+    {
+        $this->attributes['id'] ??= 'password-reset-form';
+
+        $this->rows ??= [
+            $this->getHelpText(),
+            $this->getEmailField(),
+            $this->getNewPasswordField(),
+            $this->getRepeatPasswordField(),
+        ];
+
+        $this->submitButtonText = Yii::t('skeleton', 'Save New Password');
+
+        parent::configure();
+    }
+
+    protected function getHelpText(): ?Stringable
+    {
+        return Div::make()
+            ->content($this->model->user->password_hash
+                ? Yii::t('skeleton', 'Please enter a new password below to update your account.')
+                : Yii::t('skeleton', 'Please enter a password below to complete your account.'));
+    }
+
+    protected function getEmailField(): ?Stringable
+    {
+        return InputField::make()
+            ->model($this->model)
+            ->property('email')
+            ->disabled()
+            ->prepend(Icon::make()
+                ->name('envelope'))
+            ->placeholder()
+            ->type('email');
+    }
+
+    protected function getNewPasswordField(): ?Stringable
+    {
+        return InputField::make()
+            ->model($this->model)
+            ->property('newPassword')
+            ->prepend(Icon::make()
+                ->name('key'))
+            ->autofocus(!$this->model->hasErrors())
+            ->autocomplete('new-password')
+            ->placeholder()
+            ->type('password');
+    }
+
+    protected function getRepeatPasswordField(): ?Stringable
+    {
+        return InputField::make()
+            ->model($this->model)
+            ->property('repeatPassword')
+            ->prepend(Icon::make()
+                ->name('key'))
+            ->autocomplete('repeat-password')
+            ->placeholder()
+            ->type('password');
+    }
+}
