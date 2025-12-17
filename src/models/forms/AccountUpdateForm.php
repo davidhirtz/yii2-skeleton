@@ -103,7 +103,7 @@ class AccountUpdateForm extends Model
 
     protected function sendEmailConfirmationEmail(): void
     {
-        Yii::$app->getMailer()->compose('@skeleton/mail/account/email', ['form' => $this])
+        Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/email', ['form' => $this])
             ->setSubject(Yii::t('skeleton', 'Please confirm your new email address'))
             ->setFrom(Yii::$app->params['email'])
             ->setTo($this->email)

@@ -79,7 +79,7 @@ class PasswordRecoverForm extends Model
 
     public function sendPasswordResetEmail(): void
     {
-        Yii::$app->getMailer()->compose('@skeleton/mail/account/recover', ['user' => $this->user])
+        Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/recover', ['user' => $this->user])
             ->setSubject(Yii::t('skeleton', 'Reset your password'))
             ->setFrom(Yii::$app->params['email'])
             ->setTo($this->user->email)

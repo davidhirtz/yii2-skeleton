@@ -10,7 +10,7 @@ trait SignupEmailTrait
 {
     public function sendSignupEmail(): void
     {
-        $mail = Yii::$app->getMailer()->compose('@skeleton/mail/account/create', [
+        $mail = Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/create', [
             'user' => $this->user,
         ]);
 

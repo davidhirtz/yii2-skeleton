@@ -89,7 +89,7 @@ class AccountResendConfirmForm extends Model
 
     protected function sendConfirmEmail(): void
     {
-        Yii::$app->getMailer()->compose('@skeleton/mail/account/confirm', ['user' => $this->user])
+        Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/confirm', ['user' => $this->user])
             ->setSubject(Yii::t('skeleton', 'Confirm your account'))
             ->setFrom(Yii::$app->params['email'])
             ->setTo($this->user->email)
