@@ -19,6 +19,7 @@
     "esbuild-sass-plugin": "^3.3.1",
     "postcss": "^8.4.49",
     "sortablejs": "^1.15.6",
+    "tinymce": "^8.3.1",
     "x-timeago": "^1.2.0"
   }
 }

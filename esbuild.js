@@ -1,7 +1,6 @@
 import * as esbuild from 'esbuild'
 import autoprefixer from 'autoprefixer';
 import postcss from 'postcss';
-import fs from 'fs';
 import {sassPlugin} from 'esbuild-sass-plugin'
 
 const isWatch = process.argv.slice(2).includes('--watch');
@@ -49,7 +48,10 @@ const contexts = [
         target: 'esnext',
     }),
     await esbuild.context({
-        entryPoints: ['resources/assets/src/css/*'],
+        entryPoints: [
+            'resources/assets/src/css/tinymce/*',
+            'resources/assets/src/css/*',
+        ],
         minify: true,
         outdir: 'resources/assets/dist/css',
         plugins: [

@@ -111,7 +111,9 @@ class TinyMceField extends Field
         }
 
         $bundle = Yii::$app->getAssetManager()->getBundle(AdminAssetBundle::class);
-        $this->contentCss ??= "$bundle->baseUrl/css/wysiwyg.css";
+
+        $this->skin ??= "$bundle->baseUrl/css/tinymce";
+        $this->contentCss ??= "$bundle->baseUrl/css/tinymce/content.css";
 
         $this->value ??= $this->model->{$this->property} ?? '';
 
@@ -128,7 +130,7 @@ class TinyMceField extends Field
     {
         $content = Textarea::make()
             ->attributes($this->attributes)
-            ->attribute('hidden', true)
+            ->addStyle(['height' => "{$this->height}px"])
             ->value($this->value);
 
         return Html::tag('tinymce-editor', $content, [
@@ -138,7 +140,6 @@ class TinyMceField extends Field
 
     protected function setDefaultOptions(): void
     {
-        //        $this->clientOptions['selector'] ??= '#' . $this->getId();
         $this->clientOptions['promotion'] ??= false;
         $this->clientOptions['statusbar'] ??= false;
         $this->clientOptions['menubar'] ??= false;
