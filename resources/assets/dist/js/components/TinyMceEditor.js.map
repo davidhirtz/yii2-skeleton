@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/js/components/TinyMceEditor.ts"],
+  "sourcesContent": ["\n\nwindow.customElements.get('tinymce-editor') || window.customElements.define('tinymce-editor', class extends HTMLElement {\n    #id: string | undefined;\n\n    // noinspection JSUnusedGlobalSymbols\n    connectedCallback() {\n        const textarea = this.querySelector('textarea');\n        const config = JSON.parse(this.dataset.config!);\n\n        config.selector = this.#id = `#${textarea!.id}`;\n        setTimeout(() => tinymce.init(config), 100);\n        this.style.height = `${config.height!}px`;\n    }\n\n    // noinspection JSUnusedGlobalSymbols\n    disconnectedCallback() {\n        tinymce.remove(this.#id);\n    }\n});"],
+  "mappings": "AAEA,OAAO,eAAe,IAAI,gBAAgB,GAAK,OAAO,eAAe,OAAO,iBAAkB,cAAc,WAAY,CACpHA,GAGA,mBAAoB,CAChB,IAAMC,EAAW,KAAK,cAAc,UAAU,EACxCC,EAAS,KAAK,MAAM,KAAK,QAAQ,MAAO,EAE9CA,EAAO,SAAW,KAAKF,GAAM,IAAIC,EAAU,EAAE,GAC7C,WAAW,IAAM,QAAQ,KAAKC,CAAM,EAAG,GAAG,EAC1C,KAAK,MAAM,OAAS,GAAGA,EAAO,MAAO,IACzC,CAGA,sBAAuB,CACnB,QAAQ,OAAO,KAAKF,EAAG,CAC3B,CACJ,CAAC",
+  "names": ["#id", "textarea", "config"]
+}

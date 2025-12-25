@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 use Hirtz\Skeleton\Assets\AdminAssetBundle;
 use Hirtz\Skeleton\Assets\TinyMceAssetBundle;
 use Hirtz\Skeleton\Assets\TinyMceLanguageAssetBundle;
+use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\Textarea;
 use Hirtz\Skeleton\Html\Traits\TagInputTrait;
 use Hirtz\Skeleton\Html\Traits\TagPlaceholderTrait;
@@ -15,7 +16,6 @@ use Override;
 use Stringable;
 use Yii;
 use yii\helpers\Inflector;
-use yii\helpers\Json;
 
 class TinyMceField extends Field
 {
@@ -99,6 +99,8 @@ class TinyMceField extends Field
     #[Override]
     protected function configure(): void
     {
+        $this->attributes['id'] ??= 'a-' . uniqid();
+
         if (!$this->validator instanceof HtmlValidator) {
             $this->validator = $this->validator ? Yii::createObject($this->validator) : null;
         }
@@ -124,14 +126,19 @@ class TinyMceField extends Field
 
     protected function getInput(): string|Stringable
     {
-        return Textarea::make()
+        $content = Textarea::make()
             ->attributes($this->attributes)
+            ->attribute('hidden', true)
             ->value($this->value);
+
+        return Html::tag('tinymce-editor', $content, [
+            'data-config' => $this->clientOptions,
+        ]);
     }
 
     protected function setDefaultOptions(): void
     {
-        $this->clientOptions['selector'] ??= '#' . $this->getId();
+        //        $this->clientOptions['selector'] ??= '#' . $this->getId();
         $this->clientOptions['promotion'] ??= false;
         $this->clientOptions['statusbar'] ??= false;
         $this->clientOptions['menubar'] ??= false;
@@ -387,7 +394,5 @@ class TinyMceField extends Field
     protected function registerClientScript(): void
     {
         $this->view->registerAssetBundle(TinyMceAssetBundle::class);
-        $this->view->registerJs('tinymce.init(' . Json::encode($this->clientOptions) . ');', $this->view::POS_END);
-        $this->view->registerCss(Yii::$app->getAssetManager()->getBundle(AdminAssetBundle::class)->baseUrl . '/css/tinymce.css');
     }
 }

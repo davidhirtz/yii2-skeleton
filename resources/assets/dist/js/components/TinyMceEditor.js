@@ -1,0 +1,2 @@
+window.customElements.get("tinymce-editor")||window.customElements.define("tinymce-editor",class extends HTMLElement{#e;connectedCallback(){let t=this.querySelector("textarea"),e=JSON.parse(this.dataset.config);e.selector=this.#e=`#${t.id}`,setTimeout(()=>tinymce.init(e),100),this.style.height=`${e.height}px`}disconnectedCallback(){tinymce.remove(this.#e)}});
+//# sourceMappingURL=TinyMceEditor.js.map
