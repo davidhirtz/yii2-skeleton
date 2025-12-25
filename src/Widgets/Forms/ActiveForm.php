@@ -96,7 +96,7 @@ class ActiveForm extends Widget
 
     protected function getRows(): string|Stringable
     {
-        $content = is_array(current($this->rows))
+        $content = is_array(current($this->rows)) || current($this->rows) instanceof Fieldset
             ? implode('', array_map($this->getFieldset(...), $this->rows))
             : $this->getFieldset($this->rows);
 

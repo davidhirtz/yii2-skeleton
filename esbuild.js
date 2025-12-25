@@ -1,9 +1,11 @@
 import * as esbuild from 'esbuild'
-import autoprefixer from "autoprefixer";
-import postcss from "postcss";
+import autoprefixer from 'autoprefixer';
+import postcss from 'postcss';
+import fs from 'fs';
 import {sassPlugin} from 'esbuild-sass-plugin'
 
 const isWatch = process.argv.slice(2).includes('--watch');
+const jsDir = 'resources/assets/dist/js/';
 let startTime;
 
 const watchPlugin = (type) => {
@@ -12,6 +14,12 @@ const watchPlugin = (type) => {
         setup(build) {
             build.onStart(() => {
                 startTime = Date.now();
+
+                // if ('scripts' === type) {
+                //     fs.readdirSync(jsDir, {withFileTypes: true})
+                //         .filter(file => file.isFile())
+                //         .map((file) => fs.unlinkSync(jsDir + file.name))
+                // }
             });
 
             build.onEnd((result) => {
@@ -19,7 +27,7 @@ const watchPlugin = (type) => {
                     console.error(result.errors);
                 }
 
-                console.log(`Compiled ${type} with esbuild (${esbuild.version}) in ${Date.now() - startTime}ms`);
+                console.info(`Compiled ${type} with esbuild (${esbuild.version}) in ${Date.now() - startTime}ms`);
             });
         },
     }
@@ -27,13 +35,13 @@ const watchPlugin = (type) => {
 
 const scripts = await esbuild.context({
     entryPoints: [
-        'assets/src/js/*',
-        'assets/src/js/components/*',
+        'resources/assets/src/js/components/*.ts',
+        'resources/assets/src/js/*.ts',
     ],
     bundle: true,
     format: 'esm',
     minify: true,
-    outdir: 'assets/dist/js',
+    outdir: jsDir,
     plugins: [watchPlugin('scripts')],
     sourcemap: true,
     splitting: true,
@@ -41,9 +49,9 @@ const scripts = await esbuild.context({
 })
 
 const styles = await esbuild.context({
-    entryPoints: ['assets/src/css/*'],
+    entryPoints: ['resources/assets/src/css/*'],
     minify: true,
-    outdir: 'assets/dist/css',
+    outdir: 'resources/assets/dist/css',
     plugins: [
         watchPlugin('styles'),
         sassPlugin({

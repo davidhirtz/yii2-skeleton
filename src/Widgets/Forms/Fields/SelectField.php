@@ -103,7 +103,7 @@ class SelectField extends Field
             }
 
             if ($this->property) {
-                $this->attributes['value'] ??= $this->model->{$this->property};
+                $this->attributes['value'] ??= $this->model->{$this->property} ?? key($this->items);
             }
         }
 
@@ -113,11 +113,13 @@ class SelectField extends Field
     #[Override]
     protected function renderContent(): string|Stringable
     {
-        return count($this->items) === 1 && false === $this->showSingleOption
-            ? Input::make()
+        if(count($this->items) > 1 || false !== $this->showSingleOption) {
+            return parent::renderContent();
+        }
+
+        return Input::make()
                 ->attributes($this->attributes)
-                ->type('hidden')
-            : parent::renderContent();
+                ->type('hidden');
     }
 
     #[Override]

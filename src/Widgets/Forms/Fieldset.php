@@ -20,6 +20,7 @@ use Hirtz\Skeleton\Widgets\Forms\Fields\TinyMceField;
 use Hirtz\Skeleton\Widgets\Forms\Traits\FormWidgetTrait;
 use Hirtz\Skeleton\Widgets\Traits\ModelWidgetTrait;
 use Hirtz\Skeleton\Widgets\Widget;
+use Override;
 use Stringable;
 use Yii;
 use yii\validators\BooleanValidator;
@@ -44,7 +45,7 @@ class Fieldset extends Widget
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     protected function configure(): void
     {
         $rows = [];

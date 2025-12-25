@@ -21,7 +21,7 @@ window.customElements.get('flash-alert') || window.customElements.define('flash-
             $close.onclick = () => close(this);
         }
 
-        if (type === 'success') {
+        if ('success' === type) {
             const timer = setTimeout(() => close(this), 5000);
             $alert.onmouseenter = () => clearTimeout(timer);
         }

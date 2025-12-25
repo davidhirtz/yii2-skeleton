@@ -1,6 +1,6 @@
 .form,
 .form-rows,
-.fieldset:has(>:not([hidden])) {
+.fieldset:has(>:not([hidden],[type="hidden"])) {
   display: grid;
   gap: 1rem;
 }
