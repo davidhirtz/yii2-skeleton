@@ -7,7 +7,6 @@ namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 use Hirtz\Skeleton\Assets\AdminAssetBundle;
 use Hirtz\Skeleton\Assets\TinyMceAssetBundle;
 use Hirtz\Skeleton\Assets\TinyMceLanguageAssetBundle;
-use Hirtz\Skeleton\Assets\TinyMceSkinAssetBundle;
 use Hirtz\Skeleton\Html\Textarea;
 use Hirtz\Skeleton\Html\Traits\TagInputTrait;
 use Hirtz\Skeleton\Html\Traits\TagPlaceholderTrait;
@@ -29,10 +28,10 @@ class TinyMceField extends Field
     public array $clientOptions = [];
 
     /**
-     * @var array|string containing TinyMCE content CSS files, if empty, the skin's content CSS file will be used.
+     * @var array|string|null containing TinyMCE content CSS files, if empty, the skin's content CSS file will be used.
      * @link https://www.tiny.cloud/docs/tinymce/6/add-css-options/#content_css
      */
-    public array|string $contentCss = [];
+    public array|string|null $contentCss = null;
 
     /**
      * @var string|null containing additional content CSS styles.
@@ -104,18 +103,13 @@ class TinyMceField extends Field
             $this->validator = $this->validator ? Yii::createObject($this->validator) : null;
         }
 
-        $bundle = Yii::$app->getAssetManager()->getBundle(TinyMceSkinAssetBundle::class);
-        $this->skin ??= "$bundle->baseUrl/ui/default";
-
-        if ($this->languageUrl === null) {
+        if (null === $this->languageUrl) {
             $bundle = Yii::$app->getAssetManager()->getBundle(TinyMceLanguageAssetBundle::class);
             $this->languageUrl = $bundle->baseUrl;
         }
 
-        if (!$this->contentCss) {
-            $bundle = Yii::$app->getAssetManager()->getBundle(AdminAssetBundle::class);
-            $this->contentCss = "$bundle->baseUrl/css/tinymce.min.css";
-        }
+        $bundle = Yii::$app->getAssetManager()->getBundle(AdminAssetBundle::class);
+        $this->contentCss ??= "$bundle->baseUrl/css/wysiwyg.css";
 
         $this->value ??= $this->model->{$this->property} ?? '';
 
@@ -394,5 +388,6 @@ class TinyMceField extends Field
     {
         $this->view->registerAssetBundle(TinyMceAssetBundle::class);
         $this->view->registerJs('tinymce.init(' . Json::encode($this->clientOptions) . ');', $this->view::POS_END);
+        $this->view->registerCss(Yii::$app->getAssetManager()->getBundle(AdminAssetBundle::class)->baseUrl . '/css/tinymce.css');
     }
 }
