@@ -33,43 +33,43 @@ const watchPlugin = (type) => {
     }
 };
 
-const scripts = await esbuild.context({
-    entryPoints: [
-        'resources/assets/src/js/components/*.ts',
-        'resources/assets/src/js/*.ts',
-    ],
-    bundle: true,
-    format: 'esm',
-    minify: true,
-    outdir: jsDir,
-    plugins: [watchPlugin('scripts')],
-    sourcemap: true,
-    splitting: true,
-    target: 'esnext',
-})
+const contexts = [
+    await esbuild.context({
+        entryPoints: [
+            'resources/assets/src/js/components/*.ts',
+            'resources/assets/src/js/*.ts',
+        ],
+        bundle: true,
+        format: 'esm',
+        minify: true,
+        outdir: jsDir,
+        plugins: [watchPlugin('scripts')],
+        sourcemap: true,
+        splitting: true,
+        target: 'esnext',
+    }),
+    await esbuild.context({
+        entryPoints: ['resources/assets/src/css/*'],
+        minify: true,
+        outdir: 'resources/assets/dist/css',
+        plugins: [
+            watchPlugin('styles'),
+            sassPlugin({
+                async transform(source) {
+                    const {css} = await postcss([autoprefixer]).process(source, {from: undefined});
+                    return css;
+                }
+            })
+        ],
+        sourcemap: true,
+    }),
+]
 
-const styles = await esbuild.context({
-    entryPoints: ['resources/assets/src/css/*'],
-    minify: true,
-    outdir: 'resources/assets/dist/css',
-    plugins: [
-        watchPlugin('styles'),
-        sassPlugin({
-            async transform(source) {
-                const {css} = await postcss([autoprefixer]).process(source, {from: undefined});
-                return css;
-            }
-        })
-    ],
-    sourcemap: true,
-})
-
-if (isWatch) {
-    await scripts.watch();
-    await styles.watch();
-} else {
-    await scripts.rebuild();
-    await scripts.dispose();
-    await styles.rebuild();
-    await styles.dispose();
-}
+contexts.forEach(async (context) => {
+    if (isWatch) {
+        await context.watch();
+    } else {
+        await context.rebuild();
+        await context.dispose();
+    }
+});

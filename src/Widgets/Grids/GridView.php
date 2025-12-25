@@ -25,6 +25,7 @@ use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridSearch;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridToolbarItem;
 use Hirtz\Skeleton\Widgets\Traits\ModelWidgetTrait;
 use Hirtz\Skeleton\Widgets\Widget;
+use Override;
 use Stringable;
 use Yii;
 use yii\base\Model;
@@ -82,9 +83,7 @@ class GridView extends Widget
 
     public function __construct()
     {
-        $this->search ??= GridSearch::make()
-            ->grid($this);
-
+        $this->search ??= GridSearch::make()->grid($this);
         $this->webuser ??= Yii::$app->getUser();
 
         parent::__construct();
@@ -96,7 +95,7 @@ class GridView extends Widget
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     protected function configure(): void
     {
         $this->headerAttributes['hx-select'] ??= "#{$this->getId()}";
