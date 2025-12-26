@@ -1,4 +1,4 @@
-import tinymce from 'tinymce';
+import tinymce, {Editor} from 'tinymce';
 
 import 'tinymce/icons/default/icons.min.js';
 
@@ -12,21 +12,23 @@ import 'tinymce/plugins/lists';
 import 'tinymce/plugins/table';
 
 window.customElements.get('tinymce-editor') || window.customElements.define('tinymce-editor', class extends HTMLElement {
-    #id: string | undefined;
+    #editor: Editor[] = [];
 
     // noinspection JSUnusedGlobalSymbols
     connectedCallback() {
-        const textarea = this.querySelector('textarea');
+        const $textarea = this.querySelector('textarea')!;
         const config = JSON.parse(this.dataset.config!);
 
-        console.log('TinyMceEditor connectedCallback', config);
+        // TinyMCE requires a unique ID for each editor instance (issues with HTMX swaps)
+        $textarea.id = `tinymce-${Math.random().toString(36).substring(2, 15)}`;
 
-        this.#id = `#${textarea!.id}`;
-        void tinymce.init({...config, selector: this.#id});
+        setTimeout(async () => this.#editor = await tinymce.init({...config, selector: `#${$textarea!.id}`}), 1);
     }
 
     // noinspection JSUnusedGlobalSymbols
     disconnectedCallback() {
-        tinymce.remove(this.#id!);
+        this.#editor.forEach(editor => {
+            editor.remove();
+        });
     }
 });

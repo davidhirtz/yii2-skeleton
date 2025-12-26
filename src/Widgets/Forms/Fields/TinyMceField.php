@@ -99,8 +99,6 @@ class TinyMceField extends Field
     #[Override]
     protected function configure(): void
     {
-        $this->attributes['id'] ??= 'a-' . uniqid();
-
         if (!$this->validator instanceof HtmlValidator) {
             $this->validator = $this->validator ? Yii::createObject($this->validator) : null;
         }
