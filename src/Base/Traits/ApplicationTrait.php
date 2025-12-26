@@ -159,20 +159,20 @@ trait ApplicationTrait
         ];
 
         $config = ArrayHelper::merge($core, $config);
+        $path = "{$config['basePath']}/config/";
 
         if (!YII_ENV_TEST) {
-            $path = "{$config['basePath']}/config/";
             $file = "{$path}params.php";
 
             if (is_file($file)) {
                 $config['params'] = [...$config['params'] ?? [], ...require($file)];
             }
+        }
 
-            $file = "{$path}db.php";
+        $file = "{$path}db.php";
 
-            if (is_file($file)) {
-                $config['components']['db'] = [...$config['components']['db'], ...require($file)];
-            }
+        if (is_file($file)) {
+            $config['components']['db'] = [...require($file), ...$config['components']['db']];
         }
 
         // Make sure the cache prefix via params is applied before application bootstrap, as a DB session might get

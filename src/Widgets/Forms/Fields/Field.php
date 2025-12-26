@@ -17,6 +17,7 @@ use Hirtz\Skeleton\Widgets\Forms\Traits\RowAttributesTrait;
 use Hirtz\Skeleton\Widgets\Traits\ModelWidgetTrait;
 use Hirtz\Skeleton\Widgets\Traits\PropertyWidgetTrait;
 use Hirtz\Skeleton\Widgets\Widget;
+use Override;
 use Stringable;
 use Yii;
 
@@ -63,7 +64,7 @@ abstract class Field extends Widget
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     protected function configure(): void
     {
         if ($this->model && $this->property) {
@@ -144,6 +145,6 @@ abstract class Field extends Widget
 
     public function isRequired(): bool
     {
-        return ($this->attributes['required'] ?? null) !== null;
+        return (bool)($this->attributes['required'] ?? false);
     }
 }

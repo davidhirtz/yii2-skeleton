@@ -18,8 +18,6 @@ class SelectField extends Field
 {
     use TagInputTrait;
 
-    public bool $showSingleOption = false;
-
     /**
      * @var array<string|int, string|int|array>
      */
@@ -27,12 +25,6 @@ class SelectField extends Field
 
     protected string|false $prompt = false;
     protected array $promptAttributes = [];
-
-    public function showSingleOption(bool $showSingleOption = true): static
-    {
-        $this->showSingleOption = $showSingleOption;
-        return $this;
-    }
 
     public function prompt(string|false $prompt = '', array $attributes = []): static
     {
@@ -53,7 +45,7 @@ class SelectField extends Field
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     protected function configure(): void
     {
         if ($this->model) {
@@ -103,7 +95,7 @@ class SelectField extends Field
             }
 
             if ($this->property) {
-                $this->attributes['value'] ??= $this->model->{$this->property} ?? key($this->items);
+                $this->attributes['value'] ??= $this->model->{$this->property};
             }
         }
 
@@ -113,13 +105,13 @@ class SelectField extends Field
     #[Override]
     protected function renderContent(): string|Stringable
     {
-        if(count($this->items) > 1 || false !== $this->showSingleOption) {
+        if (count($this->items) > 1 || !$this->isRequired()) {
             return parent::renderContent();
         }
 
         return Input::make()
-                ->attributes($this->attributes)
-                ->type('hidden');
+            ->attributes($this->attributes)
+            ->type('hidden');
     }
 
     #[Override]

@@ -54,13 +54,14 @@ class SelectFieldTest extends TestCase
     public function testSingleOption(): void
     {
         $select = SelectField::make()
+            ->attribute('required', true)
             ->items([1 => 'Option 1'])
             ->value('1');
 
-        $html = '<input type="hidden" id="i1" value="1">';
+        $html = '<input type="hidden" id="i1" value="1" required>';
         self::assertEquals($html, $select->render());
 
-        $select->showSingleOption();
+        $select->attribute('required', false);
 
         $html = '<div class="form-group form-row" data-id="i1"><div class="form-content"><select id="i1" class="input"><option value="1" selected>Option 1</option></select></div></div>';
         self::assertEquals($html, $select->render(true));
