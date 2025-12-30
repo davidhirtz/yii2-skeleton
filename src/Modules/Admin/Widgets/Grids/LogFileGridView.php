@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Modules\Admin\Data\LogFileArrayDataProvider;
 use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\DeleteGridButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\ViewGridButton;
+use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\LinkColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
@@ -71,7 +72,7 @@ class LogFileGridView extends GridView
             ->header(Yii::t('skeleton', 'Last Update'));
     }
 
-    protected function getButtonColumn(): ButtonColumn
+    protected function getButtonColumn(): ?Column
     {
         return ButtonColumn::make()
             ->content($this->getButtonColumnContent(...));

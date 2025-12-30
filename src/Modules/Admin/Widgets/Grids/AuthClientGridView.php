@@ -60,14 +60,14 @@ class AuthClientGridView extends GridView
             ->render();
     }
 
-    protected function getAccountColumn(): Column
+    protected function getAccountColumn(): ?Column
     {
         return Column::make()
             ->header(Yii::t('skeleton', 'Account'))
             ->content(fn (AuthClient $auth) => $auth->getClientClass()->getTitle());
     }
 
-    protected function getButtonColumn(): ButtonColumn
+    protected function getButtonColumn(): ?Column
     {
         return ButtonColumn::make()
             ->content($this->getButtonColumnContent(...));

@@ -136,7 +136,7 @@ class AuthItemGridView extends GridView
             ->items(...$items);
     }
 
-    protected function getButtonColumn(): ButtonColumn
+    protected function getButtonColumn(): ?Column
     {
         return ButtonColumn::make()
             ->content($this->getButtonColumnContent(...));

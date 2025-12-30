@@ -14,6 +14,7 @@ use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\DeleteGridButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\ViewGridButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\CheckboxColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
@@ -96,7 +97,7 @@ class RedirectGridView extends GridView
             : null;
     }
 
-    protected function getRequestUriColumn(): DataColumn
+    protected function getRequestUriColumn(): ?Column
     {
         return DataColumn::make()
             ->property('request_uri')
@@ -105,7 +106,7 @@ class RedirectGridView extends GridView
                 ->href($this->getRoute($redirect)));
     }
 
-    protected function getUrlColumn(): DataColumn
+    protected function getUrlColumn(): ?Column
     {
         return DataColumn::make()
             ->property('url')
@@ -116,14 +117,14 @@ class RedirectGridView extends GridView
                 ->target('_blank'));
     }
 
-    protected function getUpdatedAtColumn(): RelativeTimeColumn
+    protected function getUpdatedAtColumn(): ?Column
     {
         return RelativeTimeColumn::make()
             ->property('updated_at')
             ->hiddenForSmallDevices();
     }
 
-    protected function getButtonColumn(): ButtonColumn
+    protected function getButtonColumn(): ?Column
     {
         return ButtonColumn::make()
             ->content($this->getButtonColumnContent(...));
