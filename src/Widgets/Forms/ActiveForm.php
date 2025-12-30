@@ -41,9 +41,9 @@ class ActiveForm extends Widget
      */
     protected ?array $rows = null;
 
-    public function action(string|false|null $action): static
+    public function action(array|string|false|null $action): static
     {
-        $this->action = $action;
+        $this->action = $action ? Url::to($action) : $action;
         return $this;
     }
 
