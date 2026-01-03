@@ -54,7 +54,7 @@ class Modal extends Widget
                     ->text($this->title));
             }
 
-            if ($this->dismiss !== false) {
+            if (false !== $this->dismiss) {
                 $header->addContent(Button::make()
                     ->attribute('aria-label', $this->dismiss ?? Yii::t('skeleton', 'Close'))
                     ->attribute('data-modal', '')
