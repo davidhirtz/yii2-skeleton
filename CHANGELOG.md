@@ -1,3 +1,7 @@
+## 2.6.4 (Dec 5, 2026)
+
+- Disabled `PageCache` for draft requests
+
 ## 2.6.3 (Nov 5, 2025)
 
 - Added `HexColorInputWidget` and enhanced display for optional color fields
