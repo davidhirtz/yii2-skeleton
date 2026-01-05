@@ -81,12 +81,12 @@ class GridView extends Widget
     protected GridSearch $search;
     protected User $webuser;
 
-    public function __construct()
+    public function __construct($config = [])
     {
-        $this->search ??= GridSearch::make()->grid($this);
-        $this->webuser ??= Yii::$app->getUser();
+        $this->search = GridSearch::make()->grid($this);
+        $this->webuser = Yii::$app->getUser();
 
-        parent::__construct();
+        parent::__construct($config);
     }
 
     public function provider(DataProviderInterface $data): static

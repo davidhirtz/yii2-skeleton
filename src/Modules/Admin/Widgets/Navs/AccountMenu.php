@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 use Hirtz\Skeleton\Html\Button;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Icon;
+use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Web\User;
 use Hirtz\Skeleton\Widgets\Navs\Dropdown;
@@ -21,22 +22,19 @@ use yii\helpers\Url;
 
 class AccountMenu extends Widget
 {
-    public array $attributes = [
-        'id' => 'account-menu',
-        'class' => 'navbar-nav navbar-right nav',
-    ];
+    use TagAttributesTrait;
 
-    /**
-     * @var array|null containing the route of the language dropdown. If not set, the current URL will be used.
-     */
-    public ?array $languageRoute = null;
-
+    protected ?array $languageRoute = null;
     protected User $webuser;
 
-    public function __construct()
+    protected function configure(): void
     {
+        $this->attributes['id'] ??= 'account-menu';
+        $this->attributes['class'] ??= 'navbar-nav navbar-right nav';
+
         $this->webuser = Yii::$app->getUser();
-        parent::__construct();
+
+        parent::configure();
     }
 
     #[Override]

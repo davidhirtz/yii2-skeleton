@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Input;
 use Hirtz\Skeleton\Html\Traits\TagInputTrait;
+use Hirtz\Skeleton\Html\Traits\TagTooltipAttributeTrait;
 use Hirtz\Skeleton\Widgets\Forms\FormRow;
 use Override;
 use Stringable;
@@ -14,6 +15,7 @@ use Stringable;
 class CheckboxField extends Field
 {
     use TagInputTrait;
+    use TagTooltipAttributeTrait;
 
     protected string|int $checkedValue = '1';
     protected string|int|null $uncheckedValue = null;

@@ -10,7 +10,7 @@ use yii\db\Query;
 
 /**
  * @template T of ActiveRecord
- * @template-extends  \yii\db\ActiveQuery<T>
+ * @extends \yii\db\ActiveQuery<T>
  *
  * @property class-string<T> $modelClass
  */

@@ -8,7 +8,7 @@ use Yii;
 
 /**
  * @template T of ActiveRecord
- * @template-extends ActiveQuery<T>
+ * @extends ActiveQuery<T>
  */
 class I18nActiveQuery extends ActiveQuery
 {

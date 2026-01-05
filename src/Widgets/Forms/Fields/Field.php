@@ -32,18 +32,19 @@ abstract class Field extends Widget
     use TagIdTrait;
     use TagLabelTrait;
 
-    public array $labelAttributes = [];
+    protected array $labelAttributes = [];
 
-    public string $layout = '{input}{error}{hint}';
+    protected string $layout = '{input}{error}{hint}';
     public string $language;
 
     protected ?string $error = null;
     protected ?string $hint = null;
 
-    public function __construct()
+    public function __construct($config = [])
     {
+        // Make protected
         $this->language = Yii::$app->language;
-        parent::__construct();
+        parent::__construct($config);
     }
 
     public function error(?string $error): static

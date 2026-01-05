@@ -24,8 +24,9 @@ abstract class Widget implements Stringable, ViewContextInterface
     private ?string $content = null;
     protected ?Closure $config = null;
 
-    public function __construct()
+    public function __construct($config = [])
     {
+        Yii::configure($this, $config);
         $this->view = Yii::$app->getView();
     }
 
@@ -42,7 +43,7 @@ abstract class Widget implements Stringable, ViewContextInterface
 
     public function render(bool $refresh = false): string
     {
-        if ($this->content === null || $refresh) {
+        if (null === $this->content || $refresh) {
             $this->configure();
             $this->content = (string)$this->renderContent();
         }

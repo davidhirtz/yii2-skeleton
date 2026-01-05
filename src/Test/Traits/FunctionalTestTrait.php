@@ -25,8 +25,10 @@ trait FunctionalTestTrait
 
     protected function open(string $uri, array $parameters = []): void
     {
+        $host = parse_url($uri, PHP_URL_HOST) ?: 'www.test.localhost';
+
         self::$client = new Browser([
-            'HTTP_HOST' => 'www.test.localhost',
+            'HTTP_HOST' => $host,
             'HTTPS' => 'on',
         ]);
 

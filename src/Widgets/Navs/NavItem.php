@@ -15,6 +15,7 @@ use Hirtz\Skeleton\Html\Traits\TagLabelTrait;
 use Hirtz\Skeleton\Html\Traits\TagUrlTrait;
 use Hirtz\Skeleton\Html\Traits\TagVisibilityTrait;
 use Hirtz\Skeleton\Widgets\Widget;
+use Override;
 use Stringable;
 use Yii;
 use yii\web\Controller;
@@ -101,6 +102,7 @@ class NavItem extends Widget
         return $this;
     }
 
+    #[Override]
     protected function renderContent(): Stringable
     {
         return Li::make()
@@ -109,7 +111,7 @@ class NavItem extends Widget
             ->content($this->getContent());
     }
 
-    public function getContent(): string|Stringable
+    protected function getContent(): string|Stringable
     {
         if ($this->content) {
             return implode('', $this->content);

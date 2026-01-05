@@ -49,7 +49,7 @@ class CheckboxColumn extends Column
     #[Override]
     protected function getBodyContent(array|Model $model, string|int $key, int $index): string|Stringable
     {
-        if ($this->content !== null) {
+        if (null !== $this->content) {
             return parent::getBodyContent($model, $key, $index);
         }
 
