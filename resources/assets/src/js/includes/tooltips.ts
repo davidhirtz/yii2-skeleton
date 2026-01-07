@@ -1,22 +1,34 @@
 import {arrow, computePosition, flip, offset, shift} from "@floating-ui/dom";
 
-export default ($owner: HTMLElement) => {
-    const $tooltip = document.createElement('div');
+interface HotspotEvent extends CustomEvent {
+    detail: {
+        hotspots: HTMLElement[];
+    }
+}
+
+document.addEventListener('tooltip:init', (event) => {
+    (event as HotspotEvent).detail.hotspots.forEach($hotspot => {
+        initHotspot($hotspot);
+    });
+});
+
+const initHotspot = ($hotspot: HTMLElement) => {
     const $arrow = document.createElement('div');
+    const $tooltip = document.createElement('div');
 
     $tooltip.classList.add('tooltip');
     $tooltip.setAttribute('role', 'tooltip');
-    $tooltip.innerHTML = `<div class="tooltip-inner">${$owner.title}</div>`;
+    $tooltip.innerHTML = `<div class="tooltip-inner">${$hotspot.title}</div>`;
 
     $arrow.classList.add('tooltip-arrow');
     $tooltip.prepend($arrow);
 
-    $owner.removeAttribute('title');
+    $hotspot.removeAttribute('title');
 
-    $owner.addEventListener('mouseenter', () => {
-        $owner.after($tooltip);
+    $hotspot.addEventListener('mouseenter', () => {
+        $hotspot.after($tooltip);
 
-        computePosition($owner, $tooltip, {
+        computePosition($hotspot, $tooltip, {
             placement: 'top',
             middleware: [
                 offset(8),
@@ -30,18 +42,18 @@ export default ($owner: HTMLElement) => {
                 top: `${y}px`,
             });
 
-            const {x: arrowX, y: arrowY} = middlewareData.arrow;
+            const arrow = middlewareData.arrow!;
 
             const staticSide = {
                 top: 'bottom',
                 right: 'left',
                 bottom: 'top',
                 left: 'right',
-            }[placement.split('-')[0]];
+            }[placement.split('-')[0]] as string;
 
             Object.assign($arrow.style, {
-                left: arrowX != null ? `${arrowX}px` : '',
-                top: arrowY != null ? `${arrowY}px` : '',
+                left: arrow.x !== null ? `${arrow.x}px` : '',
+                top: arrow.y !== null ? `${arrow.y}px` : '',
                 right: '',
                 bottom: '',
                 [staticSide]: '-4px',
@@ -49,5 +61,7 @@ export default ($owner: HTMLElement) => {
         });
     });
 
-    $owner.addEventListener('mouseleave', () => $tooltip.remove());
+    $hotspot.addEventListener('mouseleave', () => $tooltip.remove());
 }
+
+export default initHotspot;

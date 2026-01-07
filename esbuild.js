@@ -4,7 +4,6 @@ import postcss from 'postcss';
 import {sassPlugin} from 'esbuild-sass-plugin'
 
 const isWatch = process.argv.slice(2).includes('--watch');
-const jsDir = 'resources/assets/dist/js/';
 let startTime;
 
 const watchPlugin = (type) => {
@@ -13,12 +12,6 @@ const watchPlugin = (type) => {
         setup(build) {
             build.onStart(() => {
                 startTime = Date.now();
-
-                // if ('scripts' === type) {
-                //     fs.readdirSync(jsDir, {withFileTypes: true})
-                //         .filter(file => file.isFile())
-                //         .map((file) => fs.unlinkSync(jsDir + file.name))
-                // }
             });
 
             build.onEnd((result) => {
@@ -41,7 +34,7 @@ const contexts = [
         bundle: true,
         format: 'esm',
         minify: true,
-        outdir: jsDir,
+        outdir: 'resources/assets/dist/js/',
         plugins: [watchPlugin('scripts')],
         sourcemap: true,
         splitting: true,

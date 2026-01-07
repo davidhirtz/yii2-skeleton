@@ -20,7 +20,7 @@ class InputField extends Field
     use TagInputTrait;
     use TagPlaceholderTrait;
 
-    #[\Override]
+    #[Override]
     protected function configure(): void
     {
         $this->attributes['type'] ??= 'text';

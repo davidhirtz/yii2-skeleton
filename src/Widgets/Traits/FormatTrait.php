@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Traits;
 
+use Stringable;
 use Yii;
 
 trait FormatTrait
@@ -16,7 +17,7 @@ trait FormatTrait
         return $this;
     }
 
-    protected function formatValue(mixed $value): string
+    protected function formatValue(mixed $value): string|Stringable
     {
         return Yii::$app->getFormatter()->format($value, $this->format);
     }

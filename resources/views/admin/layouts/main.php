@@ -25,7 +25,7 @@ AdminAssetBundle::register($this);
     <title><?= Html::encode($this->getDocumentTitle()); ?></title>
     <?php $this->head() ?>
 </head>
-<body hx-select="#wrap" hx-select-oob="#flashes:beforeend" hx-swap="outerHTML show:top" hx-target="#wrap" hx-boost="true">
+<body hx-ext="head-support" hx-select="#wrap" hx-select-oob="#flashes:beforeend" hx-swap="outerHTML show:top" hx-target="#wrap" hx-boost="true" >
 <?php $this->beginBody() ?>
 <?= Flashes::make(); ?>
 <div id="wrap" hx-headers='{"X-CSRF-TOKEN":"<?= Yii::$app->getRequest()->getCsrfToken(); ?>"}'>

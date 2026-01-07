@@ -24,11 +24,11 @@
     outline: 0;
   }
 
-  &.active, .active > & {
-    background-color: var(--btn-active-bg, transparent);
-    border-color: var(--btn-active-border-color, transparent);
-    color: var(--btn-active-color);
-  }
+  //&.active, .active > & {
+  //  background-color: var(--btn-active-bg, transparent);
+  //  border-color: var(--btn-active-border-color, transparent);
+  //  color: var(--btn-active-color);
+  //}
 
   &:focus-visible {
     border-color: var(--btn-focus-border-color);

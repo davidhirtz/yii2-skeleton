@@ -50,7 +50,7 @@ class UserGridView extends GridView
             $this->getEmailColumn(),
             $this->getLastLoginColumn(),
             $this->getCreatedAtColumn(),
-            $this->getButtonsColumn(),
+            $this->getButtonColumn(),
         ];
 
         $this->footer ??= [
@@ -128,13 +128,13 @@ class UserGridView extends GridView
             ->hiddenForMediumDevices();
     }
 
-    protected function getButtonsColumn(): ButtonColumn
+    protected function getButtonColumn(): ButtonColumn
     {
         return ButtonColumn::make()
-            ->content($this->getButtonsColumnContent(...));
+            ->content($this->getButtonColumnContent(...));
     }
 
-    protected function getButtonsColumnContent(User $user): array|string
+    protected function getButtonColumnContent(User $user): array|string
     {
         if ($route = $this->getRoute($user)) {
             return Button::make()
