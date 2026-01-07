@@ -92,6 +92,7 @@ class PasswordRecoverForm extends Model
             && $this->user->updated_at->modify($this->timeoutSpamProtection) > new DateTime();
     }
 
+    #[\Override]
     public function formName(): string
     {
         return 'PasswordRecover';

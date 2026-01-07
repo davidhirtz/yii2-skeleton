@@ -13,6 +13,7 @@ use yii\db\BaseActiveRecord;
 
 class BlameableBehaviorTest extends TestCase
 {
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();
@@ -31,6 +32,7 @@ class BlameableBehaviorTest extends TestCase
             ->execute();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         Yii::$app->getDb()->createCommand()->dropTable('test_blame')->execute();

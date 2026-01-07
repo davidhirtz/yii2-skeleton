@@ -13,6 +13,7 @@ use yii\base\InvalidConfigException;
 
 class RedirectBehaviorTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -31,6 +32,7 @@ class RedirectBehaviorTest extends TestCase
         ]);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         Yii::$app->getDb()->createCommand()

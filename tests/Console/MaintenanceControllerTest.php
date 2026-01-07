@@ -12,6 +12,7 @@ use Yii;
 
 class MaintenanceControllerTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         @unlink(Yii::getAlias(MaintenanceController::MAINTENANCE_FILE));

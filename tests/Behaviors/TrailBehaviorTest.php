@@ -25,6 +25,7 @@ class TrailBehaviorTest extends TestCase
 {
     use UserFixtureTrait;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -44,6 +45,7 @@ class TrailBehaviorTest extends TestCase
             ->execute();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         Yii::$app->getDb()->createCommand()

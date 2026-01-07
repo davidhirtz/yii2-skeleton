@@ -76,7 +76,7 @@ trait FunctionalTestTrait
             return;
         }
 
-        $path = parse_url(self::$crawler->getUri(), PHP_URL_PATH);
+        $path = parse_url((string) self::$crawler->getUri(), PHP_URL_PATH);
         $expected = '/' . ltrim($expected, '/');
 
         self::assertEquals($expected, $path, "Expected query path '$expected', got '$path'.");

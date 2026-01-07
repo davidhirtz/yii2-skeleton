@@ -29,7 +29,7 @@ class ButtonColumn extends Column
             if (is_array($buttons)) {
                 return Div::make()
                     ->class('btn-group')
-                    ->addContent(...$buttons);
+                    ->content(...$buttons);
             }
         }
 

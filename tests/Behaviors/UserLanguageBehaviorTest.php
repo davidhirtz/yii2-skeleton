@@ -16,6 +16,7 @@ class UserLanguageBehaviorTest extends TestCase
 {
     use UserFixtureTrait;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -27,6 +27,7 @@ class AccountMenu extends Widget
     protected ?array $languageRoute = null;
     protected User $webuser;
 
+    #[\Override]
     protected function configure(): void
     {
         $this->attributes['id'] ??= 'account-menu';

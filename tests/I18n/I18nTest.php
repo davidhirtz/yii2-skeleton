@@ -12,6 +12,7 @@ use yii\base\Module;
 
 class I18nTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

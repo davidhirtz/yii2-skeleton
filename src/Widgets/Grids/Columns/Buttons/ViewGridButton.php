@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Widgets\Grids\Columns\Buttons;
 use Hirtz\Skeleton\Html\Button;
 use Hirtz\Skeleton\Html\Traits\TagIconTextTrait;
 use Hirtz\Skeleton\Html\Traits\TagLabelTrait;
+use Hirtz\Skeleton\Html\Traits\TagTooltipAttributeTrait;
 use Hirtz\Skeleton\Html\Traits\TagUrlTrait;
 use Hirtz\Skeleton\Widgets\Traits\ModelWidgetTrait;
 use Hirtz\Skeleton\Widgets\Widget;

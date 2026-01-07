@@ -12,6 +12,7 @@ use Yii;
 
 class I18nActiveQueryTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -29,6 +30,7 @@ class I18nActiveQueryTest extends TestCase
             ->execute();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         Yii::$app->getDb()->createCommand()

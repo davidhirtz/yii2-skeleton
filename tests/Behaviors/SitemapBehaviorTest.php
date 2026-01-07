@@ -14,6 +14,7 @@ class SitemapBehaviorTest extends TestCase
 {
     private ?int $now = null;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -40,6 +41,7 @@ class SitemapBehaviorTest extends TestCase
         ])->execute();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();

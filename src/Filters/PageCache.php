@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Filters;
 
+use Override;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\caching\TagDependency;
 
 class PageCache extends \yii\filters\PageCache
 {
-    public const TAG_DEPENDENCY_KEY = 'page-cache';
+    public const string TAG_DEPENDENCY_KEY = 'page-cache';
 
     /**
      * @var bool whether to cache the response for logged-in users
@@ -39,14 +40,14 @@ class PageCache extends \yii\filters\PageCache
      */
     public bool $useTagDependency = true;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         $request = Yii::$app->getRequest();
 
-
         if ($this->enabled) {
             $this->enabled = (!$this->disableForPostRequests || Yii::$app->getRequest()->getIsGet())
+                && !$request->getIsDraft()
                 && (!$this->disableForUsers || Yii::$app->getUser()->getIsGuest())
                 && (!$this->noCacheParam || !$request->get($this->noCacheParam));
         }

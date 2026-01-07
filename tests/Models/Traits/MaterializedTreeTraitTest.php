@@ -90,6 +90,7 @@ class MaterializedTreeTraitTest extends TestCase
             ->execute();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         Yii::$app->getDb()->createCommand()

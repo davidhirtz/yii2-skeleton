@@ -13,6 +13,7 @@ use Yii;
 
 class NavTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

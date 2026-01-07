@@ -11,6 +11,7 @@ use Yii;
 
 class SerializedAttributeBehaviorTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -25,6 +26,7 @@ class SerializedAttributeBehaviorTest extends TestCase
             ->execute();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         Yii::$app->getDb()->createCommand()

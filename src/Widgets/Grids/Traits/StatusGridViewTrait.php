@@ -4,22 +4,20 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Grids\Traits;
 
-use Hirtz\Skeleton\Helpers\Html;
-use Hirtz\Skeleton\Html\Button;
 use Hirtz\Skeleton\Html\Icon;
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
+use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\LinkColumn;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\FilterDropdown;
 use Stringable;
 use Yii;
-use yii\base\Model;
 
 trait StatusGridViewTrait
 {
     protected string|false|null $statusDefaultItem = null;
     protected string $statusParamName = 'status';
 
-    protected function getStatusColumn(): LinkColumn
+    protected function getStatusColumn(): Column
     {
         return LinkColumn::make()
             ->property('status')

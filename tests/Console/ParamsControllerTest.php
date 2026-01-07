@@ -14,12 +14,14 @@ class ParamsControllerTest extends TestCase
 {
     private string $configPath = '@runtime/config';
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
         FileHelper::createDirectory($this->configPath);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         FileHelper::removeDirectory($this->configPath);

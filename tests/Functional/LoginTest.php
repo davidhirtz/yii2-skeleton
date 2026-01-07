@@ -17,6 +17,7 @@ class LoginTest extends TestCase
     use FunctionalTestTrait;
     use UserFixtureTrait;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

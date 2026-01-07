@@ -20,6 +20,7 @@ class ActiveRecordTest extends TestCase
 {
     use UserFixtureTrait;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -38,6 +39,7 @@ class ActiveRecordTest extends TestCase
             ->execute();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         Yii::$app->getDb()->createCommand()
