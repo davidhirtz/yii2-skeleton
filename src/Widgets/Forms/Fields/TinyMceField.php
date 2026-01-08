@@ -129,7 +129,8 @@ class TinyMceField extends Field
         $content = Textarea::make()
             ->attributes($this->attributes)
             ->addStyle(['height' => "{$this->height}px"])
-            ->value($this->value);
+            ->value($this->value)
+            ->render();
 
         return Html::tag('tinymce-editor', $content, [
             'data-config' => $this->clientOptions,

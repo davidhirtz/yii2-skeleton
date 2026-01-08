@@ -22,25 +22,14 @@ use Hirtz\Skeleton\Modules\Admin\Controllers\SystemController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\TrailController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\UserController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\UserLoginController;
+use Hirtz\Skeleton\Web\Request;
 use Override;
 use Yii;
 
 class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
 {
-    /**
-     * @var string the module base route
-     */
     public string $alias = 'admin';
-
-    /**
-     * @var int|null the time in seconds after which trail records should be deleted.
-     * Leave empty to never delete trail records.
-     */
     public ?int $trailLifetime = null;
-
-    /**
-     * @var bool whether to show the admin module in the breadcrumbs
-     */
     public bool $showInBreadcrumbs = true;
 
     public $defaultRoute = 'dashboard/index';
@@ -78,7 +67,7 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
             }
         }
 
-        if (!$request->getIsConsoleRequest()) {
+        if ($request instanceof Request) {
             //  Redirects draft URLs for the backend, but only if it's not an AJAX to prevent breaking frontend
             // implementations or REST APIs that use admin endpoints.
             if ($request->isDraftRequest() && !$request->getIsAjax()) {

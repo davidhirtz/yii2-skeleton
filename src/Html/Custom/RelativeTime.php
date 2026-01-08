@@ -7,7 +7,6 @@ namespace Hirtz\Skeleton\Html\Custom;
 use DateTimeInterface;
 use Hirtz\Skeleton\Html\Base\Tag;
 use Override;
-use Stringable;
 use Yii;
 
 class RelativeTime extends Tag

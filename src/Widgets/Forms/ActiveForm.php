@@ -14,6 +14,7 @@ use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
 use Hirtz\Skeleton\Widgets\Forms\Footers\FormFooter;
 use Hirtz\Skeleton\Widgets\Traits\ModelWidgetTrait;
 use Hirtz\Skeleton\Widgets\Widget;
+use Override;
 use Stringable;
 use Yii;
 use yii\db\ActiveRecordInterface;
@@ -53,7 +54,7 @@ class ActiveForm extends Widget
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     protected function configure(): void
     {
         $this->action ??= Yii::$app->controller instanceof Controller ? Url::current() : null;

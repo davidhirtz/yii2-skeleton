@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Db;
 
 use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Db\I18nActiveQuery;
 use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
 use Hirtz\Skeleton\Test\TestCase;
 use Override;
@@ -12,7 +13,7 @@ use Yii;
 
 class I18nActiveQueryTest extends TestCase
 {
-    #[\Override]
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -30,7 +31,7 @@ class I18nActiveQueryTest extends TestCase
             ->execute();
     }
 
-    #[\Override]
+    #[Override]
     protected function tearDown(): void
     {
         Yii::$app->getDb()->createCommand()
@@ -98,6 +99,15 @@ class I18nActiveRecord extends ActiveRecord
     {
         $this->i18nAttributes = ['content'];
         parent::init();
+    }
+
+    /**
+     * @return I18nActiveQuery<static>
+     */
+    #[Override]
+    public static function find(): I18nActiveQuery
+    {
+        return Yii::createObject(I18nActiveQuery::class, [static::class]);
     }
 
     #[Override]

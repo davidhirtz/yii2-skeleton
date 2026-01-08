@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
-use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Modules\Admin\Data\TrailActiveDataProvider;
 use Hirtz\Skeleton\Widgets\Navs\Submenu;
@@ -27,16 +26,8 @@ class TrailSubmenu extends Submenu
     #[Override]
     public function renderContent(): string|Stringable
     {
-        if ($this->title === null) {
-            $model = $this->getTrailModel();
-
-            if ($model) {
-                $name = $model->getTrailModelName();
-                $this->title = ($route = $this->getTrailModelAdminRoute()) ? Html::a($name, $route) : $name;
-            } else {
-                $this->title = Html::a(Yii::t('skeleton', 'History'), ['index']);
-            }
-        }
+        $this->title ??= $this->getTrailModel()?->getTrailModelName() ?? Yii::t('skeleton', 'History');
+        $this->url ??= $this->getTrailModelAdminRoute() ?? ['index'];
 
         $this->setBreadcrumbs();
         return parent::renderContent();
@@ -58,7 +49,7 @@ class TrailSubmenu extends Submenu
         }
     }
 
-    protected function getTrailModelAdminRoute(): array|false
+    protected function getTrailModelAdminRoute(): ?array
     {
         $model = $this->getTrailModel();
 
@@ -69,7 +60,7 @@ class TrailSubmenu extends Submenu
             ];
         }
 
-        return false;
+        return null;
     }
 
     protected function getTrailModel(): TrailModelInterface|Model|null

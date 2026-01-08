@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Forms\Footers;
 
+use DateTimeInterface;
 use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Custom\RelativeTime;
@@ -23,20 +24,27 @@ class UpdatedAtFooterItem implements Stringable
     use ContainerConfigurationTrait;
     use ModelWidgetTrait;
 
-    public string $attributeName = 'updated_at';
+    protected string $attributeName = 'updated_at';
+    protected DateTimeInterface|int|string|null $value = null;
+
+    public function value(DateTimeInterface|int|string|null $value): static
+    {
+        $this->value = $value;
+        return $this;
+    }
 
     protected function getItem(): ?Li
     {
-        $updatedAt = in_array($this->attributeName, $this->model->attributes(), true)
+        $this->value ??= in_array($this->attributeName, $this->model->attributes(), true)
             ? $this->model->{$this->attributeName}
             : null;
 
-        if (!$updatedAt) {
+        if (!$this->value) {
             return null;
         }
 
         $updated = $this->getUpdated();
-        $timestamp = RelativeTime::make()->value($this->model->{$this->attributeName});
+        $timestamp = RelativeTime::make()->value($this->value);
 
         $content = $updated
             ? Yii::t('skeleton', 'Last updated by {user} {timestamp}', [

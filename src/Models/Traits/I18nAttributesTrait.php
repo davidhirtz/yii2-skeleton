@@ -22,14 +22,6 @@ trait I18nAttributesTrait
     private ?array $_i18nHints = null;
     private ?array $_i18nLabels = null;
 
-    /**
-     * @return I18nActiveQuery<static>
-     */
-    public static function find(): I18nActiveQuery
-    {
-        return Yii::createObject(I18nActiveQuery::class, [static::class]);
-    }
-
     public function getI18nAttribute(string $attribute, ?string $language = null): mixed
     {
         $attribute = $this->getI18nAttributeName($attribute, $language);

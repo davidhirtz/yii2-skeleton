@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Html\Ul;
 use Hirtz\Skeleton\Widgets\Forms\FormRow;
 use Hirtz\Skeleton\Widgets\Traits\ModelWidgetTrait;
 use Hirtz\Skeleton\Widgets\Widget;
+use Override;
 use Stringable;
 
 class FormFooter extends Widget
@@ -24,7 +25,7 @@ class FormFooter extends Widget
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     protected function configure(): void
     {
         $this->attributes['hx-select'] ??= "#wrap";
