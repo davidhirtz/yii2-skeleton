@@ -30,7 +30,6 @@ class TestLogger extends Logger
             return;
         }
 
-        /** @phpstan-ignore-next-line  */
         if ($message instanceof Exception) {
             $message = $message->__toString();
         }

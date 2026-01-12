@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Db\Mysql\Schema;
 use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Models\Session;
 use mikehaertl\shellcommand\Command;
+use Override;
 use RuntimeException;
 use Yii;
 
@@ -137,7 +138,10 @@ class Connection extends \yii\db\Connection
         return true;
     }
 
-    #[\Override]
+    /**
+     * @phpstan-ignore method.childReturnType
+     */
+    #[Override]
     public function getSchema(): Schema
     {
         $this->schema ??= Yii::createObject([

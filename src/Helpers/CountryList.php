@@ -214,4 +214,10 @@ class CountryList
 
         return self::$country;
     }
+
+    public static function getName(string $code): ?string
+    {
+        $names = self::getNames();
+        return $names[$code] ?? null;
+    }
 }

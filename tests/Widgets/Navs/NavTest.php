@@ -9,17 +9,11 @@ use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Web\Controller;
 use Hirtz\Skeleton\Widgets\Navs\Nav;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
+use Override;
 use Yii;
 
 class NavTest extends TestCase
 {
-    #[\Override]
-    protected function setUp(): void
-    {
-        parent::setUp();
-        Yii::$app->controller = new Controller('site/index', Yii::$app);
-    }
-
     public function testHideSingleItem(): void
     {
         $content = Nav::make()

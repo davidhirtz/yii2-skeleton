@@ -33,7 +33,7 @@
     background-image: none;
   }
 
-  &:is(div),
+  &:is(div:not(.ts-wrapper)),
   &:disabled {
     color: var(--input-disabled-color);
     background-color: var(--input-disabled-bg-color);

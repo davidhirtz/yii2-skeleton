@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Grids\Columns;
 
 use Closure;
-use Hirtz\Skeleton\Helpers\ArrayHelper;
 use Hirtz\Skeleton\Html\Custom\RelativeTime;
 use Override;
-use Stringable;
 use yii\base\Model;
 
 class RelativeTimeColumn extends LinkColumn
@@ -19,7 +17,7 @@ class RelativeTimeColumn extends LinkColumn
     #[Override]
     protected function getValue(array|Model $model, string|int $key, int $index): string
     {
-        $timestamp = ArrayHelper::getValue($model, $this->property);
+        $timestamp = parent::getValue($model, $key, $index);
         return RelativeTime::make()->value($timestamp)->render();
     }
 }

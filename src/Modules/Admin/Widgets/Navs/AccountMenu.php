@@ -11,7 +11,7 @@ use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Web\User;
 use Hirtz\Skeleton\Widgets\Navs\Dropdown;
-use Hirtz\Skeleton\Widgets\Navs\DropdownLink;
+use Hirtz\Skeleton\Widgets\Navs\DropdownOption;
 use Hirtz\Skeleton\Widgets\Navs\Nav;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Hirtz\Skeleton\Widgets\Widget;
@@ -76,8 +76,8 @@ class AccountMenu extends Widget
         foreach ($i18n->getLanguages() as $language) {
             $label = $i18n->getLabel($language);
 
-            $link = DropdownLink::make()
-                ->addClass('i18n-dropdown-link')
+            $link = DropdownOption::make()
+                ->addClass('i18n-dropdown-option')
                 ->content(
                     Icon::make()
                         ->collection(Icon::ICON_COLLECTION_FLAG)

@@ -10,7 +10,7 @@ use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
 use Hirtz\Skeleton\Html\Traits\TagLabelTrait;
 use Hirtz\Skeleton\Widgets\Navs\Dropdown;
-use Hirtz\Skeleton\Widgets\Navs\DropdownLink;
+use Hirtz\Skeleton\Widgets\Navs\DropdownOption;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use Yii;
@@ -87,7 +87,7 @@ class FilterDropdown extends Widget
 
         if ($this->hasActiveItem()) {
             if ($this->default) {
-                $dropdown->addItem(DropdownLink::make()
+                $dropdown->addItem(DropdownOption::make()
                     ->class('dropdown-default-item')
                     ->current([...$this->params, $this->param => null])
                     ->text($this->default))
@@ -98,12 +98,12 @@ class FilterDropdown extends Widget
         }
 
         foreach ($this->items as $param => $text) {
-            $link = DropdownLink::make()
+            $link = DropdownOption::make()
                 ->current([...$this->params, $this->param => $param])
                 ->text($text);
 
-            if ($param === $this->value) {
-                $link->addClass('active');
+            if ((string)$param === (string)$this->value) {
+                $link->addClass('selected');
 
                 $dropdown->addClass('active')
                     ->label($text);

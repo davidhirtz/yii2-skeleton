@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Widgets\Grids\Columns;
 
 use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Web\Controller;
 use Hirtz\Skeleton\Widgets\Grids\Columns\BadgeColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Yii;
 use yii\base\Model;
-use yii\web\Controller;
+use yii\base\Module;
 
 class BadgeColumnTest extends TestCase
 {
@@ -43,7 +44,9 @@ class BadgeColumnTest extends TestCase
 
     public function testRouteAttribute(): void
     {
-        Yii::$app->controller = new Controller('test', Yii::$app);
+        /** @var Controller<Module> $controller */
+        $controller = new Controller('test', Yii::$app);
+        Yii::$app->controller = $controller;
 
         $model = new class () extends Model {
             public int $id = 1;

@@ -224,12 +224,12 @@
   --dropdown-btn-hover-bg: var(--color-gray-200);
   --dropdown-btn-hover-border-color: var(--color-gray-300);
 
-  --dropdown-link-active-bg: var(--color-gray-100);
-  --dropdown-link-active-color: inherit;
-  --dropdown-link-color: var(--color-black);
-  --dropdown-link-disabled-color: var(--color-gray-300);
-  --dropdown-link-hover-bg: var(--color-gray-50);
-  --dropdown-link-hover-color: inherit;
+  --dropdown-option-selected-bg: var(--color-gray-100);
+  --dropdown-option-selected-color: inherit;
+  --dropdown-option-color: var(--color-black);
+  --dropdown-option-disabled-color: var(--color-gray-300);
+  --dropdown-option-hover-bg: var(--color-gray-50);
+  --dropdown-option-hover-color: inherit;
 
   // Form
   --form-footer-border-color: var(--color-gray-700);

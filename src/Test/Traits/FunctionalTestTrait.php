@@ -35,6 +35,12 @@ trait FunctionalTestTrait
         self::$crawler = self::$client->request('GET', $uri, $parameters);
     }
 
+    protected function getJsonResponseData(): array
+    {
+        self::assertResponseIsJson();
+        return json_decode(self::$client->getResponse()->getContent(), true, flags: JSON_THROW_ON_ERROR);
+    }
+
     protected function click(string $selector): void
     {
         self::assertSelectorExists($selector);
@@ -62,6 +68,15 @@ trait FunctionalTestTrait
         self::assertResponseStatusCodeSame(200);
     }
 
+
+    public static function assertResponseIsJson(): void
+    {
+        $headerName = 'content-type';
+
+        self::assertResponseHasHeader($headerName);
+        self::assertStringContainsString('application/json', self::$client->getResponse()->getHeaders()[$headerName][0]);
+    }
+
     public static function assertResponseStatusCodeSame(int $expected): void
     {
         $code = self::$client->getResponse()->getStatusCode();
@@ -76,7 +91,7 @@ trait FunctionalTestTrait
             return;
         }
 
-        $path = parse_url((string) self::$crawler->getUri(), PHP_URL_PATH);
+        $path = parse_url((string)self::$crawler->getUri(), PHP_URL_PATH);
         $expected = '/' . ltrim($expected, '/');
 
         self::assertEquals($expected, $path, "Expected query path '$expected', got '$path'.");

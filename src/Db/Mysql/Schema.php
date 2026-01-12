@@ -9,8 +9,12 @@ use Hirtz\Skeleton\Db\Dsn;
 use Hirtz\Skeleton\Helpers\FileHelper;
 use mikehaertl\shellcommand\Command;
 use Yii;
+use yii\db\mysql\ColumnSchema;
 
 /**
+ * @template T of ColumnSchema
+ * @extends \yii\db\mysql\Schema<T>
+ *
  * @property Connection $db
  */
 class Schema extends \yii\db\mysql\Schema

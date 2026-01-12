@@ -7,8 +7,12 @@ namespace Hirtz\Skeleton\Web;
 use Override;
 use Yii;
 use yii\base\Model;
+use yii\base\Module;
 
 /**
+ * @template T of Module
+ * @extends  \yii\web\Controller<T>
+ *
  * @property Request $request
  * @method View getView()
  */

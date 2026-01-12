@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Navs;
 
 use Hirtz\Skeleton\Html\A;
+use Override;
 
-class DropdownLink extends A
+class DropdownOption extends A
 {
-    #[\Override]
+    #[Override]
     protected function before(): string
     {
-        $this->addClass('dropdown-link');
+        $this->addClass('dropdown-option');
         return parent::before();
     }
 }

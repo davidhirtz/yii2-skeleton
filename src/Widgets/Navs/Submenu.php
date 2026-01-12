@@ -7,11 +7,13 @@ namespace Hirtz\Skeleton\Widgets\Navs;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Hirtz\Skeleton\Html\Traits\TagTitleTrait;
 use Hirtz\Skeleton\Html\Traits\TagUrlTrait;
+use Hirtz\Skeleton\Web\User;
 use Hirtz\Skeleton\Widgets\Navs\Traits\NavItemTrait;
 use Hirtz\Skeleton\Widgets\Traits\ContainerWidgetTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
+use Yii;
 
 class Submenu extends Widget
 {
@@ -21,8 +23,15 @@ class Submenu extends Widget
     use TagUrlTrait;
     use NavItemTrait;
 
-    public array $navAttributes = ['class' => 'submenu nav-pills'];
-    public array $headerAttributes = [];
+    protected array $navAttributes = ['class' => 'submenu nav-pills'];
+    protected array $headerAttributes = [];
+    protected User $webuser;
+
+    public function __construct($config = [])
+    {
+        $this->webuser = Yii::$app->getUser();
+        parent::__construct($config);
+    }
 
     #[Override]
     protected function renderContent(): string|Stringable
@@ -43,7 +52,7 @@ class Submenu extends Widget
     protected function getNav(): Nav
     {
         return Nav::make()
-                ->attributes($this->navAttributes)
-                ->items(...$this->items);
+            ->attributes($this->navAttributes)
+            ->items(...$this->items);
     }
 }
