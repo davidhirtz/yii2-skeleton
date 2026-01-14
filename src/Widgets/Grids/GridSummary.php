@@ -41,7 +41,7 @@ class GridSummary implements Stringable
 
         if ($this->search?->getValue()) {
             $alert->button(Button::make()
-                ->class('btn-icon')
+                ->class('btn-icon icon')
                 ->get($this->search->getUrl())
                 ->tooltip(Yii::t('skeleton', 'Clear Search'))
                 ->icon('xmark'));

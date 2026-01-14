@@ -1,44 +1,40 @@
-@import "shared/fonts";
+@use "shared/fonts";
 
-// Configuration
-@import "shared/breakpoints";
+@use "admin/theme";
+@use "admin/reboot";
+@use "admin/transition";
 
-// Layout & components
-@import "admin/theme";
-@import "admin/reboot";
-@import "admin/transition";
+@use "admin/type";
+@use "admin/image";
 
-@import "admin/type";
-@import "admin/image";
+@use "admin/nav";
+@use "admin/navbar";
 
-@import "admin/nav";
-@import "admin/navbar";
+@use "admin/container";
 
-@import "admin/container";
+@use "admin/layout";
+@use "admin/breadcrumb";
 
-@import "admin/layout";
-@import "admin/breadcrumb";
+@use "admin/card";
 
-@import "admin/card";
+@use "admin/grid";
+@use "admin/tables";
 
-@import "admin/grid";
-@import "admin/tables";
+@use "admin/form";
+@use "admin/input";
+@use "admin/buttons";
+@use "admin/dropdown";
 
-@import "admin/form";
-@import "admin/input";
-@import "admin/buttons";
-@import "admin/dropdown";
+@use "admin/alert";
+@use "admin/badge";
+@use "admin/modal";
+@use "admin/pagination";
+@use "admin/progress";
+@use "admin/sortable";
+@use "admin/stack";
+@use "admin/tooltip";
 
-@import "admin/alert";
-@import "admin/badge";
-@import "admin/modal";
-@import "admin/pagination";
-@import "admin/progress";
-@import "admin/sortable";
-@import "admin/stack";
-@import "admin/tooltip";
+@use "admin/dashboard";
+@use "admin/trail";
 
-@import "admin/dashboard";
-@import "admin/trail";
-
-@import "admin/utilities";
+@use "admin/utilities";

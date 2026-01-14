@@ -1,4 +1,4 @@
-//@import "../../../../node_modules/bootstrap/scss/pagination";
+@use "../shared/breakpoints" as *;
 
 .pagination {
   display: flex;

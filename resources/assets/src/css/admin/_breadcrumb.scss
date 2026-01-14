@@ -1,3 +1,5 @@
+@use "../shared/breakpoints" as *;
+
 .breadcrumb {
   display: none;
   background-color: var(--breadcrumb-bg);
@@ -25,8 +27,10 @@
 }
 
 .breadcrumb-link {
-  @extend .text-truncate;
   --link-color: var(--breadcrumb-link-color);
   --link-hover-color: var(--breadcrumb-link-hover-color);
   display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

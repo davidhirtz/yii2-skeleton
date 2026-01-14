@@ -44,7 +44,7 @@ class Flashes extends Widget
             ->icon($this->getStatusIcon($status))
             ->status($status)
             ->button(Button::make()
-                ->class('btn-icon')
+                ->class('btn-icon icon')
                 ->attribute('data-close', '')
                 ->icon('xmark'));
     }

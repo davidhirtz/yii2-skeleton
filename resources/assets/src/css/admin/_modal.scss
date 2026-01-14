@@ -1,7 +1,7 @@
+@use "../shared/breakpoints" as *;
+
 .modal {
   flex-direction: column;
-  padding: 0;
-  border: 0;
   color: var(--modal-color);
   background-color: var(--modal-bg);
   outline: 0;

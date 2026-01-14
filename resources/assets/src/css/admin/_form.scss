@@ -1,3 +1,5 @@
+@use "../shared/breakpoints" as *;
+
 .form,
 .form-rows,
 .fieldset:has(>:not([hidden],[type="hidden"])) {

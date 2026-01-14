@@ -63,9 +63,6 @@ class ActiveForm extends Widget
         $this->attributes['hx-select'] ??= "#{$this->getId()}";
         $this->attributes['hx-target'] ??= $this->attributes['hx-select'];
         $this->attributes['hx-boost'] ??= "true";
-
-        // @todo change this to exclude I18N attributes
-        $this->rows ??= $this->model?->safeAttributes();
     }
 
     protected function renderContent(): string|Stringable

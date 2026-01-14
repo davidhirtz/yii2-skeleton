@@ -58,7 +58,7 @@ class Modal extends Widget
                 $header->addContent(Button::make()
                     ->attribute('aria-label', $this->dismiss ?? Yii::t('skeleton', 'Close'))
                     ->attribute('data-modal', '')
-                    ->class('btn-icon')
+                    ->class('btn-icon icon')
                     ->icon('xmark'));
 
                 array_unshift($this->footer, Button::make()

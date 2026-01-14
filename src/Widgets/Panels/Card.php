@@ -50,7 +50,7 @@ class Card extends Widget
                 $title->addContent(Button::make()
                     ->attribute('aria-label', Yii::t('skeleton', 'Toggle'))
                     ->attribute('data-collapse', '#' . $this->getId())
-                    ->class('btn-collapse', 'btn-icon')
+                    ->class('btn-collapse btn-icon icon')
                     ->icon('chevron-down'));
             } else {
                 $title->text($this->title);

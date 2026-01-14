@@ -99,13 +99,9 @@
   width: 100%;
 }
 
-// todo
 .btn-icon {
   background: var(--btn-icon-bg, transparent);
-  border: 0;
-  color: inherit;
   border-radius: .25rem;
-  @extend .icon;
 
   &:hover {
     background: var(--btn-icon-hover-bg);

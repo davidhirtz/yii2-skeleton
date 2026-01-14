@@ -85,15 +85,15 @@
 
 .dropdown-option {
   background-color: transparent;
-  border: 0;
   color: var(--dropdown-option-color);
   display: block;
   font-weight: 400;
+  overflow: hidden;
   padding: .625rem .75rem;
   text-align: inherit;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   width: 100%; // Buttons...
-
-  @extend .text-truncate;
 
   &:hover,
   &:focus,

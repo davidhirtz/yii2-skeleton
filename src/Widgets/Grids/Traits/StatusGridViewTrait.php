@@ -47,25 +47,4 @@ trait StatusGridViewTrait
     {
         return array_map(fn ($options) => $options['plural'] ?? $options['name'], $this->model::getStatuses());
     }
-
-    /**
-     * @todo Extract this to class
-     */
-    //    protected function getStatusSelectionButtonItems(?StatusAttributeInterface $model = null, array|string|null $url = null): array
-    //    {
-    //        $model ??= $this->getModel();
-    //        $paramName = $model instanceof Model ? Html::getInputName($model, 'status') : $this->statusParamName;
-    //        $items = [];
-    //
-    //        foreach ($model::getStatuses() as $status => $statusOptions) {
-    //            $items[] = Button::make()
-    //                ->attribute('hx-include', '[data-id="check"]:checked')
-    //                ->name($paramName)
-    //                ->post($url ?? ['update-all'])
-    //                ->text($statusOptions['name'])
-    //                ->value($status);
-    //        }
-    //
-    //        return $items;
-    //    }
 }
