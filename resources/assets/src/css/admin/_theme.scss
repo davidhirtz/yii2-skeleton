@@ -319,6 +319,7 @@
 
   // Table
   --table-bg: var(--color-white);
+  --table-color: var(--color-black);
   --table-striped-bg: var(--color-gray-50);
   --table-hover-bg: var(--color-gray-100);
   --table-striped-color: var(--color-black);
@@ -329,6 +330,13 @@
 
   --table-td-border-color: var(--border-color);
   --table-th-border-color: var(--color-gray-700);
+
+  // Trail
+  --trail-table-bg: transparent;
+  --trail-delete-bg: #ffedee;
+  --trail-delete-color: #ffbec2;
+  --trail-insert-bg: #edf6ee;
+  --trail-insert-color: #bedec2;
 
   // Tooltip
   --tooltip-bg: var(--color-gray-700);

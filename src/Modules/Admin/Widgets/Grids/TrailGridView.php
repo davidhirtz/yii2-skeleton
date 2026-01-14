@@ -6,9 +6,11 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Table;
+use Hirtz\Skeleton\Html\Td;
 use Hirtz\Skeleton\Html\Ul;
 use Hirtz\Skeleton\Models\Collections\TrailModelCollection;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
@@ -27,7 +29,6 @@ use Stringable;
 use Yii;
 use yii\base\Model;
 use yii\db\ActiveRecordInterface;
-use Hirtz\Skeleton\Helpers\Url;;
 
 /**
  * @extends GridView<Trail>
@@ -39,7 +40,7 @@ class TrailGridView extends GridView
     use TypeGridViewTrait;
 
     public array $tableAttributes = [
-        'class' => 'table table-striped trail',
+        'class' => 'trail-table table table-striped',
     ];
 
     #[Override]
@@ -48,7 +49,7 @@ class TrailGridView extends GridView
         $this->model ??= Trail::instance();
 
         $this->rowAttributes = fn (Trail $trail) => [
-            'class' => $trail->isDeleteType() ? 'bg-danger' : '',
+            'class' => $trail->isDeleteType() ? 'trail-delete' : '',
         ];
 
         $this->columns ??= [
@@ -68,8 +69,8 @@ class TrailGridView extends GridView
     {
         return DataColumn::make()
             ->property('model')
+            ->headerAttributes(['class' => 'trail-model-col'])
             ->content($this->getModelColumnContent(...))
-            ->contentAttributes(['style' => 'width:300px'])
             ->visible(!$this->provider->model);
     }
 
@@ -153,7 +154,14 @@ class TrailGridView extends GridView
                 }
 
                 if ($value) {
-                    $rows[] = [$attribute, $this->getCreatedAttributeValue($value)];
+                    $rows[] = [
+                        Td::make()
+                            ->class('trail-property-col')
+                            ->text($attribute),
+                        Td::make()
+                            ->class('trail-value-col')
+                            ->content($this->getCreatedAttributeContent($value)),
+                    ];
                 }
             }
         }
@@ -164,7 +172,7 @@ class TrailGridView extends GridView
             : null;
     }
 
-    protected function getCreatedAttributeValue(mixed $value): string|Stringable
+    protected function getCreatedAttributeContent(mixed $value): string|Stringable
     {
         if ($value instanceof ActiveRecord) {
             return $this->getTrailActiveRecordAttribute($value);
@@ -175,7 +183,7 @@ class TrailGridView extends GridView
             : Html::encode($value);
     }
 
-    protected function getUpdateAttributesContent(Trail $trail): ?Stringable
+    protected function getUpdateAttributesContent(Trail $trail): string|Stringable
     {
         $model = $trail->getModelClass();
         $rows = [];
@@ -188,29 +196,38 @@ class TrailGridView extends GridView
                 }
 
                 if ($values[0] !== $values[1]) {
-                    $rows[] = [$attribute, $this->getUpdatedAttributeValues($values[0], $values[1])];
+                    $rows[] = [
+                        Td::make()
+                            ->class('trail-property-col')
+                            ->text($attribute),
+                        Td::make()
+                            ->class('trail-value-col')
+                            ->content($this->getUpdatedAttributeContent($values[0], $values[1])),
+                    ];
                 }
             }
         }
 
         return $rows
-            ? $this->getTrailAttributesTable($rows)
-                ->addClass('trail-update')
-            : null;
+            ? $this->getTrailAttributesTable($rows)->addClass('trail-update')
+            : '';
     }
 
-    protected function getUpdatedAttributeValues(mixed $oldValue, mixed $newValue): string
+    protected function getUpdatedAttributeContent(mixed $oldValue, mixed $newValue): string|Stringable
     {
         if ($oldValue instanceof ActiveRecord || $newValue instanceof ActiveRecord) {
-            $cells = [
-                Html::tag('td', $this->getTrailActiveRecordAttribute($oldValue), ['class' => 'old']),
-                Html::tag('td', $this->getTrailActiveRecordAttribute($newValue), ['class' => 'new']),
-            ];
-
-            $content = Html::tag('tr', implode('', $cells));
-            $content = Html::tag('tbody', $content, ['class' => 'change change-rep']);
-
-            return Html::tag('table', $content, ['class' => 'diff-wrapper diff diff-html diff-side-by-side']);
+            return Table::make()
+                ->class('trail-diff-table table')
+                ->rows([
+                    [
+                        Td::make()
+                            ->class('old')
+                            ->content($this->getTrailActiveRecordAttribute($oldValue)),
+                        Td::make()
+                            ->class('new')
+                            ->content($this->getTrailActiveRecordAttribute($newValue)),
+                    ],
+                ]);
         }
 
         if (is_array($oldValue)) {
@@ -222,26 +239,30 @@ class TrailGridView extends GridView
         }
 
         return DiffHelper::calculate((string)$oldValue, (string)$newValue, 'SideBySide', [], [
+            'wrapperClasses' => ['trail-diff-table table'],
             'showHeader' => false,
             'lineNumbers' => false,
         ]);
     }
 
-    protected function getTrailActiveRecordAttribute(?ActiveRecord $model): string
+    protected function getTrailActiveRecordAttribute(?ActiveRecord $model): ?Stringable
     {
         if (!$model?->getPrimaryKey()) {
-            return '';
+            return null;
         }
 
         $name = $model instanceof TrailModelInterface ? $model->getTrailModelName() : $model->getPrimaryKey();
 
-        return Html::a($name, Trail::getAdminRouteByModel($model), ['class' => 'strong']);
+        return A::make()
+            ->text($name)
+            ->href(Trail::getAdminRouteByModel($model))
+            ->class('strong');
     }
 
     protected function getTrailAttributesTable(array $rows): Table
     {
         return Table::make()
-            ->class('trail-table')
+            ->class('table')
             ->rows($rows);
     }
 
@@ -263,17 +284,26 @@ class TrailGridView extends GridView
     {
         if ($model instanceof TrailModelInterface) {
             $name = $model->getTrailModelName();
-            $model = ($route = $model->getTrailModelAdminRoute()) ? Html::a($name, $route) : $name;
-        } else {
-            $model = Html::tag('em', Yii::t('skeleton', 'Deleted'));
+            $route = $model->getTrailModelAdminRoute();
+
+            if ($route) {
+                $name = A::make()
+                    ->text($name)
+                    ->href($route)
+                    ->render();
+            }
         }
+
+        $name ??= Div::make()
+            ->text(Yii::t('skeleton', 'Deleted'))
+            ->class('text-invalid');
 
         $options = $trail->getTypeOptions();
         $message = '';
 
-        if (isset($options['message'])) {
+        if ($options['message'] ?? false) {
             $message .= Yii::t($options['messageCategory'] ?? 'skeleton', $options['message'], [
-                'model' => $model,
+                'model' => $name,
             ]);
         }
 

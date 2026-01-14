@@ -28,8 +28,15 @@ class Table extends Base\Tag
         $this->body ??= Tbody::make();
 
         foreach ($rows as $row) {
+            $cells = array_map(
+                fn (mixed $cell) => !$cell instanceof Td
+                ? Td::make()->content((string)$cell)
+                : $cell,
+                $row
+            );
+
             $this->body->addRows(Tr::make()
-                ->cells(...array_map(fn (mixed $cell) => Td::make()->content((string)$cell), $row)));
+                ->cells(...$cells));
         }
 
         return $this;

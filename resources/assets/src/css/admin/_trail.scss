@@ -34,120 +34,78 @@ $diff-border-color: $diff-text-color !default;
 $diff-bg-color-none-block: mix($diff-bg-color, $diff-table-sidebar-color, 80%) !default;
 $diff-bg-color-none-block-alternative: mix($diff-bg-color, $diff-table-sidebar-color, 55%) !default;
 
-
 .trail-table {
-  width: 100%;
-
-  tr {
-    background: transparent !important; // Replaces .table-stripes
-  }
-
-  td {
-    border: 0 !important;
-  }
-
-  & > tbody > tr > td:first-child {
-    width: 140px;
-    text-align: right;
-    //background-color: $gray-300;
-  }
+  --table-td-border-color: var(--card-bg);
+  --table-th-border-color: transparent;
 }
 
-.trail-insert {
-  & > tbody > tr > td:last-child {
-    background: $diff-bg-color-ins;
-  }
+.trail-delete {
+  --table-bg: var(--trail-delete-bg) !important;
 }
 
 .trail-update {
+  --table-td-border-color: var(--table-bg);
+
   & > tbody > tr > td:last-child {
     padding: 0;
   }
 }
 
-.diff-wrapper {
-  background: repeating-linear-gradient(-45deg, $diff-bg-color-none-block, $diff-bg-color-none-block 0.5em, $diff-bg-color-none-block-alternative 0.5em, $diff-bg-color-none-block-alternative 1em);
-  border-collapse: collapse;
-  border-spacing: 0;
+.trail-diff-table {
+  --table-bg: var(--trail-table-bg);
+
   empty-cells: show;
-  width: 100%;
   word-break: break-all;
   white-space: pre-wrap;
 
   td {
-    vertical-align: baseline;
-  }
-
-  td {
-    border-collapse: separate;
     width: 50%;
 
-    // make empty cell has height
     &:empty:after {
       content: " ";
       visibility: hidden;
     }
   }
 
-  tbody {
-    border: 0 !important; // Override tbody + tbody
-
-    //&.skipped {
-    //  border-top: 1px solid $diff-border-color;
-    //
-    //  td,
-    //  th {
-    //    display: none;
-    //  }
-    //}
-  }
-
-  &.diff-combined {
-    .change.change-rep {
-      .rep {
-        // fixes https://github.com/jfcherng/php-diff/issues/34#issuecomment-671404456
-        white-space: normal;
-      }
-    }
-  }
-}
-
-.trail {
   del {
-    background-color: $diff-bg-color-del-highlight;
+    background-color: var(--trail-delete-color);
     text-decoration: none;
   }
 
   ins {
-    background-color: $diff-bg-color-ins-highlight;
+    background-color: var(--trail-insert-color);
     text-decoration: none;
   }
 
-  .change-eq {
-    .old,
-    .new {
-      //background: $gray-300;
-    }
-  }
-
   .old {
-    background: $diff-bg-color-del;
+    --table-bg: var(--trail-delete-bg);
   }
 
   .new {
-    background: $diff-bg-color-ins;
-  }
-
-  .rep {
-    background: $diff-bg-color-rep;
+    --table-bg: var(--trail-insert-bg);
   }
 
   .old,
-  .new,
-  .rep {
+  .new {
     &.none {
       background: transparent;
       cursor: not-allowed;
     }
+  }
+}
+
+.trail-model-col {
+  min-width: 12rem;
+}
+
+.trail-property-col {
+  width: 10rem;
+  text-align: right;
+  hyphens: auto;
+}
+
+.trail-value-col {
+  .trail-insert & {
+    --table-bg: var(--trail-insert-bg);
   }
 }

@@ -18,14 +18,14 @@
 }
 
 .table-striped {
-  > tbody > tr:nth-of-type(odd) > * {
+  > tbody > tr:nth-of-type(odd) {
     --table-bg: var(--table-striped-bg);
   }
 }
 
 .table-hover {
-  > tbody > tr:hover > * {
-    color: var(--table-hover-color);
+  > tbody > tr:hover {
+    --table-color: var(--table-hover-color);
     --table-bg: var(--table-hover-bg);
   }
 }
@@ -56,6 +56,10 @@
 
   tr.disabled {
     opacity: .3;
+  }
+
+  td, td a:not(.btn) {
+    color: var(--table-color);
   }
 }
 
