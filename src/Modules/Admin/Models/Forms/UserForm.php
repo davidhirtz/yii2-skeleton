@@ -10,7 +10,7 @@ use Hirtz\Skeleton\Models\User;
 use Override;
 use Yii;
 use yii\base\Model;
-use yii\helpers\Url;
+use Hirtz\Skeleton\Helpers\Url;;
 
 class UserForm extends Model
 {

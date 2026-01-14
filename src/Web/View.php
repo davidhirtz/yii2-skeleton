@@ -8,7 +8,7 @@ use Hirtz\Skeleton\Helpers\Html;
 use Override;
 use Yii;
 use yii\helpers\Json;
-use yii\helpers\Url;
+use Hirtz\Skeleton\Helpers\Url;;
 
 class View extends \yii\web\View
 {

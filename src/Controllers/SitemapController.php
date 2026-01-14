@@ -9,7 +9,7 @@ use Hirtz\Skeleton\Web\Controller;
 use XMLWriter;
 use Yii;
 use yii\filters\PageCache;
-use yii\helpers\Url;
+use Hirtz\Skeleton\Helpers\Url;;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 

@@ -14,6 +14,19 @@ use Yii;
 
 class NavTest extends TestCase
 {
+    #[Override]
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Yii::$app->controller = new class ('test', Yii::$app) extends Controller {
+            public function getRoute()
+            {
+                return 'site/index';
+            }
+        };
+    }
+
     public function testHideSingleItem(): void
     {
         $content = Nav::make()
@@ -114,8 +127,8 @@ class NavTest extends TestCase
             )
             ->render();
 
-        $expected = '<ul class="nav"><li class="nav-item"><a class="nav-link" href="/site/test"><span>Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/site/test"><span>Test</span></a></li></ul>';
-        self::assertStringContainsString($expected, $content);
+        $needle = '<ul class="nav"><li class="nav-item"><a class="nav-link" href="/site/test"><span>Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/site/test"><span>Test</span></a></li></ul>';
+        self::assertStringContainsString($needle, $content);
     }
 
     public function testActiveItemWithSkippedRoute(): void

@@ -34,7 +34,7 @@ use yii\data\ArrayDataProvider;
 use yii\data\DataProviderInterface;
 use yii\db\ActiveRecordInterface;
 use yii\helpers\Inflector;
-use yii\helpers\Url;
+use Hirtz\Skeleton\Helpers\Url;;
 
 /**
  * @template T of Model

@@ -6,7 +6,7 @@ namespace Hirtz\Skeleton\Helpers;
 
 use Hirtz\Skeleton\Web\View;
 use yii\helpers\Json;
-use yii\helpers\Url;
+use Hirtz\Skeleton\Helpers\Url;;
 
 class StructuredData
 {

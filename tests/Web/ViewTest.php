@@ -40,6 +40,8 @@ class ViewTest extends TestCase
 
     public function testHrefLangLinkTags(): void
     {
+        Yii::$app->controller = new Controller('test', Yii::$app);
+
         $view = new View();
         $view->registerHrefLangLinkTags(['en', 'de'], false);
 

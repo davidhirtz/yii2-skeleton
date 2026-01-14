@@ -18,7 +18,7 @@ use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
 use Yii;
-use yii\helpers\Url;
+use Hirtz\Skeleton\Helpers\Url;;
 
 class AccountMenu extends Widget
 {

@@ -15,7 +15,7 @@ use Hirtz\Skeleton\Widgets\Forms\InputGroup;
 use Hirtz\Skeleton\Widgets\Grids\Traits\GridTrait;
 use Stringable;
 use Yii;
-use yii\helpers\Url;
+use Hirtz\Skeleton\Helpers\Url;;
 
 class GridSearch
 {

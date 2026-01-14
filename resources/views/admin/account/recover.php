@@ -15,7 +15,7 @@ use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Panels\Card;
 use Hirtz\Skeleton\Widgets\Panels\Stack;
 use Hirtz\Skeleton\Widgets\Panels\StackItem;
-use yii\helpers\Url;
+use Hirtz\Skeleton\Helpers\Url;;
 
 $this->title(Yii::t('skeleton', 'Recover Password'));
 

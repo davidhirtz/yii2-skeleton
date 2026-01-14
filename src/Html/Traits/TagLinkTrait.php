@@ -5,16 +5,13 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Html\Traits;
 
 use Hirtz\Skeleton\Helpers\Url;
-use Yii;
 
 trait TagLinkTrait
 {
     public function current(array $params = [], bool $scheme = false): static
     {
         return $this->addAttributes([
-            'href' => null === Yii::$app->controller
-                ? Url::toRoute([Yii::$app->defaultRoute, ...$params], $scheme)
-                : Url::current($params, $scheme),
+            'href' => Url::current($params, $scheme),
             'type' => null,
         ]);
     }

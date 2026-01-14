@@ -14,7 +14,7 @@ use Hirtz\Skeleton\Widgets\Forms\Fields\CheckboxField;
 use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
 use Stringable;
 use Yii;
-use yii\helpers\Url;
+use Hirtz\Skeleton\Helpers\Url;;
 
 /**
  * @property SignupForm $model

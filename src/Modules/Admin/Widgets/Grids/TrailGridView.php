@@ -27,7 +27,7 @@ use Stringable;
 use Yii;
 use yii\base\Model;
 use yii\db\ActiveRecordInterface;
-use yii\helpers\Url;
+use Hirtz\Skeleton\Helpers\Url;;
 
 /**
  * @extends GridView<Trail>

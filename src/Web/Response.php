@@ -7,7 +7,7 @@ namespace Hirtz\Skeleton\Web;
 use Yii;
 use yii\base\InvalidRouteException;
 use yii\helpers\Json;
-use yii\helpers\Url;
+use Hirtz\Skeleton\Helpers\Url;;
 
 class Response extends \yii\web\Response
 {
