@@ -126,6 +126,8 @@ class GridView extends Widget
                     ->property($column);
             }
 
+
+
             $column->grid($this);
 
             if (!$column->isVisible()) {

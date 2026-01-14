@@ -99,18 +99,30 @@ class Column
             ? call_user_func($this->contentAttributes, $model, $key, $index, $this)
             : $this->contentAttributes;
 
+        $attributes ??= [];
+        $content = $this->getBodyContent($model, $key, $index);
+
+        if ($content instanceof Td) {
+            return $content->addAttributes($attributes);
+        }
+
         return Td::make()
-            ->content($this->getBodyContent($model, $key, $index))
-            ->attributes($attributes ?? []);
+            ->attributes($attributes)
+            ->content($content);
     }
 
     protected function getBodyContent(array|Model $model, string|int $key, int $index): string|Stringable
     {
-        if ($this->content instanceof Closure) {
+        $content = $this->content;
+
+        if ($content instanceof Closure) {
             $content = call_user_func($this->content, $model, $key, $index, $this);
-            return is_array($content) ? implode('', $content) : $content;
+
+            if (is_array($content)) {
+                $content = implode('', $content);
+            }
         }
 
-        return $this->content ?? $this->emptyCell;
+        return $content ?? $this->emptyCell;
     }
 }

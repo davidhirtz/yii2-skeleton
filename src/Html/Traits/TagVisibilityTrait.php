@@ -9,8 +9,8 @@ use Yii;
 
 trait TagVisibilityTrait
 {
-    private array $roles = [];
-    private bool $visible = true;
+    protected array $roles = [];
+    protected bool $visible = true;
 
     public function roles(array $roles): static
     {

@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Widgets\Grids\Columns;
 
 use Closure;
 use Hirtz\Skeleton\Html\Div;
+use Iterator;
 use Override;
 use Stringable;
 use yii\base\Model;
@@ -24,6 +25,10 @@ class ButtonColumn extends Column
 
             if (is_string($buttons)) {
                 $buttons = [$buttons];
+            }
+
+            if ($buttons instanceof Iterator) {
+                $buttons = iterator_to_array($buttons);
             }
 
             if (is_array($buttons)) {
