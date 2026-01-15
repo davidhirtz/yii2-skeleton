@@ -7,7 +7,6 @@ namespace Hirtz\Skeleton\Models\Collections;
 use DateTime;
 use DateTimeZone;
 use Hirtz\Skeleton\Db\ActiveRecord;
-use Throwable;
 use Yii;
 use yii\base\Model;
 use yii\helpers\Inflector;
@@ -38,15 +37,11 @@ class TrailModelCollection
         $language = $modelName[1] ?? Yii::$app->language;
 
         return Yii::$app->getI18n()->callback($language, function () use ($modelName, $modelId) {
-            try {
-                $instance = Yii::createObject($modelName[0]);
+            $instance = Yii::createObject($modelName[0]);
 
-                return $instance instanceof ActiveRecord && $modelId
-                    ? self::getOrFindActiveRecord($instance, $modelId)
-                    : $instance;
-            } catch (Throwable) {
-                return null;
-            }
+            return $instance instanceof ActiveRecord && $modelId
+                ? self::getOrFindActiveRecord($instance, $modelId)
+                : $instance;
         });
     }
 
@@ -91,11 +86,12 @@ class TrailModelCollection
         $tableName = $instance::tableName();
 
         if (!isset(self::$models[$tableName][$id])) {
-            $primaryKey = $instance::primaryKey();
             $values = is_string($id) ? explode('-', $id) : $id;
-            $keys = count($primaryKey) > 1 && count($primaryKey) === count($values)
-                ? array_combine($primaryKey, $values)
-                : array_combine($primaryKey, [$id]);
+            $keys = [];
+
+            foreach ($instance::primaryKey() as $index => $key) {
+                $keys[$key] = $values[$index] ?? null;
+            }
 
             self::$models[$tableName][$id] = $instance::findOne($keys) ?? new $instance($keys);
         }

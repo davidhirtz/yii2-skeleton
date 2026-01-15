@@ -172,7 +172,7 @@ class TrailGridView extends GridView
             : null;
     }
 
-    protected function getCreatedAttributeContent(mixed $value): string|Stringable
+    protected function getCreatedAttributeContent(mixed $value): string|Stringable|null
     {
         if ($value instanceof ActiveRecord) {
             return $this->getTrailActiveRecordAttribute($value);

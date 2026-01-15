@@ -1,13 +1,17 @@
 .card {
   --stack-link-bg: var(--card-stack-link-bg);
   --stack-link-hover-bg: var(--card-stack-link-hover-bg);
-
   background: var(--card-bg);
   border-radius: .25rem;
   border: 1px solid var(--card-border-color);
   color: var(--card-color);
   position: relative;
   word-wrap: break-word;
+}
+
+[data-card="danger"] {
+  --card-header-bg: var(--card-danger-header-bg);
+  --card-header-color: var(--card-danger-header-color);
 }
 
 .card-header {

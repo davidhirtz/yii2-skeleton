@@ -12,6 +12,6 @@ trait TagCardTrait
 
     public function danger(): static
     {
-        return $this->addClass('card-danger');
+        return $this->attribute('data-card', 'danger');
     }
 }

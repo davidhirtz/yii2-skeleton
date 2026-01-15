@@ -43,6 +43,8 @@ class Application extends \yii\console\Application
         $this->setWebrootAliases();
         $this->setDefaultUrlManagerRules();
 
+        $this->setControllerPath(Yii::getAlias('@app/commands'));
+
         parent::bootstrap();
     }
 

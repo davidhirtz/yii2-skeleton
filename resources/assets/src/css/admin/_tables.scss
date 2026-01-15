@@ -58,7 +58,7 @@
     opacity: .3;
   }
 
-  td, td a:not(.btn) {
+  td, td a:not(.btn,.badge) {
     color: var(--table-color);
   }
 }
