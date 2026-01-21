@@ -99,7 +99,10 @@ class AuthItemGridView extends GridView
                 $items = [];
 
                 foreach ($authItem->children as $child) {
-                    $description = $this->getTranslations()[$child->description] ?? $child->description;
+                    $description = $child->description
+                        ? ($this->getTranslations()[$child->description] ?? $child->description)
+                        : '';
+
                     $isActive = $this->user && !$authItem->isAssigned && ($child->isAssigned || $child->isInherited);
                     $items[] = $isActive ? Html::tag('span', $description, ['class' => 'bg-success']) : $description;
                 }

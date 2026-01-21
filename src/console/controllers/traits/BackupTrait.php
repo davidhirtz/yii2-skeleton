@@ -29,7 +29,7 @@ trait BackupTrait
         $this->stdout('Available backups:' . PHP_EOL);
 
         foreach ($backups as $i => $file) {
-            $this->stdout(sprintf(' [%d] %s', $i + 1, basename($file)) . PHP_EOL);
+            $this->stdout(sprintf(' [%d] %s', $i + 1, basename((string) $file)) . PHP_EOL);
         }
 
         $index = $this->prompt('Select backup to restore (number):', [

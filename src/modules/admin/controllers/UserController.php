@@ -65,7 +65,7 @@ class UserController extends Controller
         ];
     }
 
-    public function actionIndex(string $q = null): Response|string
+    public function actionIndex(?string $q = null): Response|string
     {
         $provider = Yii::$container->get(UserActiveDataProvider::class, [], [
             'searchString' => $q,

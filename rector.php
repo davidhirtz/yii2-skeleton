@@ -14,7 +14,7 @@ use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromAssignsRector;
 use Rector\TypeDeclaration\Rector\StmtsAwareInterface\DeclareStrictTypesRector;
 
 return RectorConfig::configure()
-    ->withPhpSets(php83: true)
+    ->withPhpSets(php85: true)
     ->withRules([
         AddPropertyTypeDeclarationRector::class,
         AddReturnTypeDeclarationBasedOnParentClassMethodRector::class,

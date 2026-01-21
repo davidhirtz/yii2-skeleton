@@ -95,7 +95,7 @@ class ReorderActiveRecords
 
     public static function runWithBodyParam(string $paramName, array $config = []): int|false
     {
-        $order = array_map('intval', array_filter(Yii::$app->getRequest()->getBodyParam($paramName, [])));
+        $order = array_map(intval(...), array_filter(Yii::$app->getRequest()->getBodyParam($paramName, [])));
 
         if ($order) {
             $action = Yii::createObject(static::class, [...array_values($config), $order]);

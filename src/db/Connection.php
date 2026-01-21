@@ -137,6 +137,9 @@ class Connection extends \yii\db\Connection
         return true;
     }
 
+    /**
+     * @phpstan-ignore-next-line
+     */
     public function getSchema(): Schema
     {
         $this->schema ??= Yii::createObject([

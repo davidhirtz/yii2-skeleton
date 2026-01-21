@@ -51,7 +51,7 @@ class TimeValidator extends Validator
         // Adds seconds for MySQL conform data format
         $model->$attribute = implode(':', [
             str_pad((string) $hours, 2, '0', STR_PAD_LEFT),
-            str_pad($minutes, 2, '0', STR_PAD_LEFT),
+            str_pad((string) $minutes, 2, '0', STR_PAD_LEFT),
             '00',
         ]);
     }

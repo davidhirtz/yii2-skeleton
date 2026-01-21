@@ -26,7 +26,7 @@
     "npm-asset/blueimp-file-upload": "^10.32",
     "npm-asset/bootbox": "^5",
     "npm-asset/jstimezonedetect": "^1.0",
-    "robthree/twofactorauth": "^1.8",
+    "robthree/twofactorauth": "^3.0",
     "seld/cli-prompt": "^1.0",
     "tinymce/tinymce": "^7.0",
     "yiisoft/yii2": "^2.0",

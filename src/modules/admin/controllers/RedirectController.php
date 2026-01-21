@@ -101,7 +101,7 @@ class RedirectController extends Controller
     {
         $request = Yii::$app->getRequest();
 
-        if ($redirectIds = array_map('intval', $request->post('selection', []))) {
+        if ($redirectIds = array_map(intval(...), $request->post('selection', []))) {
             $redirects = Redirect::findAll(['id' => $redirectIds]);
             $isDeleted = false;
 

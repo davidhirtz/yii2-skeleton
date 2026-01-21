@@ -40,7 +40,7 @@ class ParamsController extends Controller
                 $params[$name] = $value;
             }
 
-            $maxLength = max($maxLength, strlen($name));
+            $maxLength = max($maxLength, strlen((string) $name));
         }
 
         foreach ($params as $name => $value) {

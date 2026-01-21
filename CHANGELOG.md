@@ -1,3 +1,7 @@
+## 2.6.5 (in development)
+
+- PHP 8.5 compatibility fixes
+
 ## 2.6.4 (Dec 5, 2026)
 
 - Disabled `PageCache` for draft requests

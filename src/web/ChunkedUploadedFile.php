@@ -62,7 +62,7 @@ class ChunkedUploadedFile extends UploadedFile
 
         if ($range) {
             $range = preg_split('/[^0-9]+/', (string)$range);
-            $range = array_map('intval', $range);
+            $range = array_map(intval(...), $range);
 
             $this->chunkOffset = $range[1] ?? null;
             $this->chunkSize = $range[2] ?? null;
