@@ -58,7 +58,7 @@ trait TypeGridViewTrait
         /** @var TypeAttributeInterface $model */
         // @phpstan-ignore varTag.nativeType
         $model = $this->getModel();
-        $typeOptions = $model::getTypes()[$this->type] ?? false;
+        $typeOptions = $model::getTypes()[$this->type ?? ''] ?? null;
 
         if ($typeOptions) {
             $name = isset($typeOptions['class'])

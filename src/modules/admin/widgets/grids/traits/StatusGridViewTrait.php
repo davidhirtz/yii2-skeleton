@@ -48,7 +48,7 @@ trait StatusGridViewTrait
     public function statusDropdown(): string
     {
         $items = $this->statusDropdownItems();
-        $label = $items[$this->status]['label'] ?? false;
+        $label = $items[$this->status ?? '']['label'] ?? null;
 
         return ButtonDropdown::widget([
             'label' => $label ? Html::tag('strong', $label) : Yii::t('skeleton', 'Status'),
