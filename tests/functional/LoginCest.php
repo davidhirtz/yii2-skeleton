@@ -16,6 +16,7 @@ use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\GoogleAuthenticatorLogi
 use davidhirtz\yii2\skeleton\modules\admin\widgets\forms\LoginActiveForm;
 use davidhirtz\yii2\skeleton\tests\support\FunctionalTester;
 use davidhirtz\yii2\skeleton\validators\GoogleAuthenticatorValidator;
+use RobThree\Auth\Providers\Qr\QRServerProvider;
 use RobThree\Auth\TwoFactorAuth;
 use Yii;
 
@@ -105,7 +106,7 @@ class LoginCest extends BaseCest
         $this->assignAdminRole($user['id']);
 
         $validator = Yii::createObject(GoogleAuthenticatorValidator::class);
-        $auth = new TwoFactorAuth(null, $validator->length, $validator->period);
+        $auth = new TwoFactorAuth(new QRServerProvider(), null, $validator->length, $validator->period);
 
         $this->submitGoogleAuthenticatorForm($I, $auth->getCode($user['google_2fa_secret']));
         $I->seeLink(Yii::t('skeleton', 'Logout'));
