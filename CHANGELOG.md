@@ -1,6 +1,7 @@
-## 2.6.5 (in development)
+## 2.6.5 (Jan 26, 2026)
 
 - PHP 8.5 compatibility fixes
+- Upgraded 2FA library to version 3
 
 ## 2.6.4 (Dec 5, 2026)
 
