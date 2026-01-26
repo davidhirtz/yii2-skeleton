@@ -96,8 +96,8 @@ class View extends \yii\web\View
     public function registerJsModule(string $filename, array|string|null $arguments = null, string|null|false $importName = null, ?string $key = null): void
     {
         if ($importName === null) {
-            $this->jsImportName = str_increment($this->jsImportName);
             $importName = $this->jsImportName;
+            $this->jsImportName = str_increment($this->jsImportName);
         }
 
         $js = $importName ? "import $importName from '$filename';" : "import '$filename';";
