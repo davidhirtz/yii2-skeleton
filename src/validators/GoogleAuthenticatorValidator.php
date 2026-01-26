@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace davidhirtz\yii2\skeleton\validators;
 
 use davidhirtz\yii2\datetime\DateTime;
+use RobThree\Auth\Providers\Qr\QRServerProvider;
 use RobThree\Auth\TwoFactorAuth;
 use Yii;
 use yii\base\NotSupportedException;
@@ -61,7 +62,7 @@ class GoogleAuthenticatorValidator extends StringValidator
         parent::validateAttribute($model, $attribute);
 
         if (!$model->hasErrors($attribute)) {
-            $auth = new TwoFactorAuth(null, $this->length, $this->period);
+            $auth = new TwoFactorAuth(new QRServerProvider(), null, $this->length, $this->period);
             $timestamp = $this->datetime ? (int)floor($this->datetime->getTimestamp() / $this->period) : 0;
 
             if (!$auth->verifyCode($this->secret, $model->$attribute, $this->discrepancy, $this->currentTime, $timeslice) || ($timeslice <= $timestamp)) {
