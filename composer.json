@@ -40,12 +40,12 @@
     "codeception/module-asserts": "^3.2",
     "codeception/module-filesystem": "^3.0",
     "codeception/module-phpbrowser": "^3.0",
-    "codeception/module-yii2": "^v2.0",
+    "codeception/module-yii2": "^2.0",
     "codeception/specify": "^2.0",
     "codeception/verify": "^3.0",
     "phpro/grumphp-shim": "^2.4",
-    "rector/rector": "^2.0",
-    "symplify/easy-coding-standard": "^12.5",
+    "rector/rector": "^2.3",
+    "symplify/easy-coding-standard": "^13.0",
     "yiisoft/yii2-debug": "^2.1"
   },
   "provide": {
