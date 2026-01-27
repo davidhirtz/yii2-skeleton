@@ -113,7 +113,7 @@ class UrlManager extends \yii\web\UrlManager
         }
 
         if ($this->i18nSubdomain && $language !== $this->defaultLanguage) {
-            $subdomain = $this->languages[$language] ?? '';
+            $subdomain = $language ? $this->languages[$language] ?? '' : '';
             return $this->replaceSubdomain($subdomain, $this->getHostInfo()) . $url;
         }
 
