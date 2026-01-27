@@ -35,7 +35,7 @@ class UserLoginController extends Controller
         ];
     }
 
-    public function actionIndex(string $q = null): Response|string
+    public function actionIndex(?string $q = null): Response|string
     {
         $provider = new ActiveDataProvider([
             'sort' => false,

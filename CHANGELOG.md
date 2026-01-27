@@ -13,6 +13,15 @@
 - Renamed `GoogleAuthenticator` classes to `TwoFactorAuthenticator` classes
 - Removed `yii2-timeago`, use `RelativeTime` tag instead
 
+## 2.6.5 (Jan 26, 2026)
+
+- PHP 8.5 compatibility fixes
+- Upgraded 2FA library to version 3
+
+## 2.6.4 (Dec 5, 2026)
+
+- Disabled `PageCache` for draft requests
+
 ## 2.6.3 (Nov 5, 2025)
 
 - Added `HexColorInputWidget` and enhanced display for optional color fields

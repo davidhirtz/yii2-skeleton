@@ -46,7 +46,7 @@ class PageCache extends \yii\filters\PageCache
         $request = Yii::$app->getRequest();
 
         if ($this->enabled) {
-            $this->enabled = (!$this->disableForPostRequests || Yii::$app->getRequest()->getIsGet())
+            $this->enabled = (!$this->disableForPostRequests || $request->getIsGet())
                 && !$request->getIsDraft()
                 && (!$this->disableForUsers || Yii::$app->getUser()->getIsGuest())
                 && (!$this->noCacheParam || !$request->get($this->noCacheParam));

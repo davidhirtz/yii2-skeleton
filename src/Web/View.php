@@ -90,7 +90,7 @@ class View extends \yii\web\View
         }
     }
 
-    public function addBreadcrumb(?string $label, array|string $url = null): void
+    public function addBreadcrumb(?string $label, array|string|null $url = null): void
     {
         if ($label) {
             $this->breadcrumbs[] = ['label' => $label, 'url' => $url];
@@ -104,7 +104,11 @@ class View extends \yii\web\View
 
     public function registerJsModule(string $filename, array|string|null $arguments = null, string|null|false $importName = null, ?string $key = null): void
     {
-        $importName ??= $this->jsImportName++;
+        if ($importName === null) {
+            $importName = $this->jsImportName;
+            $this->jsImportName = str_increment($this->jsImportName);
+        }
+
         $js = $importName ? "import $importName from '$filename';" : "import '$filename';";
 
         $this->registerJs($js, self::POS_IMPORT, $key);

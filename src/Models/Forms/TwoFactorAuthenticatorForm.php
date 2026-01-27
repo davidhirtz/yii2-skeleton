@@ -18,7 +18,7 @@ class TwoFactorAuthenticatorForm extends Model
     use ModelTrait;
 
     public ?string $code = null;
-    private ?string $_secret = null;
+    private ?string $secret = null;
 
     public function __construct(public readonly User $user, array $config = [])
     {
@@ -64,25 +64,24 @@ class TwoFactorAuthenticatorForm extends Model
 
     public function getSecret(): string
     {
-        $this->_secret ??= $this->user->google_2fa_secret ?: Yii::$app->getSession()->get('google_2fa_secret');
+        $this->secret ??= $this->user->google_2fa_secret ?: Yii::$app->getSession()->get('google_2fa_secret');
 
-        if (!$this->_secret) {
+        if (!$this->secret) {
             $this->generateSecret();
         }
 
-        return $this->_secret;
+        return $this->secret;
     }
 
     public function getQrImageUrl(int|string $size): string
     {
         $issuer = str_replace(':', '-', $this->getTwoFactorAuthenticationIssuer());
         $label = "$issuer:{$this->user->email}";
-        $auth = new TwoFactorAuth($issuer);
 
-        /** @var QRServerProvider $qrProvider */
-        $qrProvider = $auth->getQrCodeProvider();
+        $provider = new QRServerProvider();
+        $auth = new TwoFactorAuth($provider, $issuer);
 
-        return $qrProvider->getUrl($auth->getQRText($label, $this->getSecret()), $size);
+        return $provider->getUrl($auth->getQRText($label, $this->getSecret()), $size);
     }
 
     /**
@@ -90,7 +89,9 @@ class TwoFactorAuthenticatorForm extends Model
      */
     protected function generateSecret(): void
     {
-        Yii::$app->getSession()->set('google_2fa_secret', $this->_secret = (new TwoFactorAuth())->createSecret());
+        $this->secret = (new TwoFactorAuth(new QRServerProvider()))->createSecret();
+
+        Yii::$app->getSession()->set('google_2fa_secret', $this->secret);
         Yii::debug('New authenticator secret generated');
     }
 

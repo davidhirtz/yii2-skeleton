@@ -27,7 +27,7 @@ trait TypeAttributeTrait
      */
     public static function instantiate($row): static
     {
-        $className = static::getTypes()[$row['type'] ?? null]['class'] ?? static::class;
+        $className = static::getTypes()[$row['type'] ?? '']['class'] ?? static::class;
 
         $model = $className::create();
         $model->setAttributes($row, false);
