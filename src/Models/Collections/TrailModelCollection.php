@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Models\Collections;
 use DateTime;
 use DateTimeZone;
 use Hirtz\Skeleton\Db\ActiveRecord;
+use Throwable;
 use Yii;
 use yii\base\Model;
 use yii\helpers\Inflector;
@@ -37,7 +38,12 @@ class TrailModelCollection
         $language = $modelName[1] ?? Yii::$app->language;
 
         return Yii::$app->getI18n()->callback($language, function () use ($modelName, $modelId) {
-            $instance = Yii::createObject($modelName[0]);
+            try {
+                $instance = Yii::createObject($modelName[0]);
+            } catch (Throwable $e) {
+                Yii::error($e->getMessage(), __METHOD__);
+                $instance = null;
+            }
 
             return $instance instanceof ActiveRecord && $modelId
                 ? self::getOrFindActiveRecord($instance, $modelId)
@@ -51,7 +57,9 @@ class TrailModelCollection
     public static function formatAttributeValue(Model $model, string $attribute, mixed $value): mixed
     {
         if ($model instanceof ActiveRecord) {
-            if ($relation = $model->getRelationFromForeignKey($attribute)) {
+            $relation = $model->getRelationFromForeignKey($attribute);
+
+            if ($relation) {
                 return self::getModelByNameAndId($relation->modelClass, $value);
             }
         }
@@ -90,7 +98,7 @@ class TrailModelCollection
             $keys = [];
 
             foreach ($instance::primaryKey() as $index => $key) {
-                $keys[$key] = $values[$index] ?? null;
+                $keys[$key] = $values[$index] ?? $values;
             }
 
             self::$models[$tableName][$id] = $instance::findOne($keys) ?? new $instance($keys);

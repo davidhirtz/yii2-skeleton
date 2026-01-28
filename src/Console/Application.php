@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Console\Controllers\MessageController;
 use Hirtz\Skeleton\Console\Controllers\MigrateController;
 use Hirtz\Skeleton\Console\Controllers\ParamsController;
 use Hirtz\Skeleton\Console\Controllers\TrailController;
+use Hirtz\Skeleton\Console\Controllers\UpgradeController;
 use Hirtz\Skeleton\Console\Controllers\UserController;
 use Override;
 use Yii;
@@ -61,6 +62,7 @@ class Application extends \yii\console\Application
             'params' => ParamsController::class,
             'trail' => TrailController::class,
             'user' => UserController::class,
+            'upgrade' => UpgradeController::class,
         ];
     }
 

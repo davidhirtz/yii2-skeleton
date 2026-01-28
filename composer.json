@@ -22,7 +22,7 @@
     "guzzlehttp/oauth-subscriber": "^0.8.1",
     "jfcherng/php-diff": "^6.9",
     "mikehaertl/php-shellcommand": "^1.7",
-    "robthree/twofactorauth": "^1.8",
+    "robthree/twofactorauth": "^3.0",
     "seld/cli-prompt": "^1.0",
     "tinymce/tinymce": "^8.2",
     "yiisoft/yii2": "^2.0",

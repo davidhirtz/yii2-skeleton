@@ -79,7 +79,7 @@ class FilterDropdown extends Widget
         $this->attributes['hx-boost'] ??= 'true';
 
         $dropdown = Dropdown::make()
-            ->label($this->items[$this->value] ?? $this->label);
+            ->label($this->value ? $this->items[$this->value] ?? $this->label : $this->label);
 
         if ($this->filterable) {
             $dropdown->content($this->getFilter());
@@ -129,6 +129,6 @@ class FilterDropdown extends Widget
 
     protected function hasActiveItem(): bool
     {
-        return array_key_exists($this->value, $this->items);
+        return $this->value !== null && array_key_exists($this->value, $this->items);
     }
 }

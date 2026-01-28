@@ -141,7 +141,7 @@ class TrailGridView extends GridView
             Yii::t('skeleton', 'Permission {permission} revoked', $params);
     }
 
-    protected function getCreateAttributesContent(Trail $trail): ?Stringable
+    protected function getCreateAttributesContent(Trail $trail): string|Stringable
     {
         $model = $trail->getModelClass();
         $rows = [];
@@ -169,7 +169,7 @@ class TrailGridView extends GridView
         return $rows
             ? $this->getTrailAttributesTable($rows)
                 ->addClass('trail-insert')
-            : null;
+            : '';
     }
 
     protected function getCreatedAttributeContent(mixed $value): string|Stringable|null

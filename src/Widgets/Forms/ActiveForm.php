@@ -63,6 +63,8 @@ class ActiveForm extends Widget
         $this->attributes['hx-select'] ??= "#{$this->getId()}";
         $this->attributes['hx-target'] ??= $this->attributes['hx-select'];
         $this->attributes['hx-boost'] ??= "true";
+
+        $this->rows ??= $this->model?->safeAttributes() ?: [];
     }
 
     protected function renderContent(): string|Stringable
@@ -94,6 +96,10 @@ class ActiveForm extends Widget
 
     protected function getRows(): string|Stringable
     {
+        if (!$this->rows) {
+            return '';
+        }
+
         $content = is_array(current($this->rows)) || current($this->rows) instanceof Fieldset
             ? implode('', array_map($this->getFieldset(...), $this->rows))
             : $this->getFieldset($this->rows);

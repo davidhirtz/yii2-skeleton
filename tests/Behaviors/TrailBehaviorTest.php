@@ -15,6 +15,7 @@ use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\Traits\TrailModelTrait;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
+use Hirtz\Skeleton\Validators\RelationValidator;
 use Override;
 use ReflectionClass;
 use Yii;
@@ -164,6 +165,7 @@ class TrailBehaviorTest extends TestCase
     {
         $model = $this->createTrailActiveRecord();
         $model->user_id = 1;
+
         $model->insert();
 
         $trail = $this->findLatestTrailForActiveRecord($model);
@@ -286,6 +288,10 @@ class TrailActiveRecord extends ActiveRecord implements TrailModelInterface
             [
                 ['datetime'],
                 DateTimeValidator::class,
+            ],
+            [
+                ['user_id'],
+                RelationValidator::class,
             ],
         ];
     }
