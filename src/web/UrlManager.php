@@ -105,6 +105,10 @@ class UrlManager extends \yii\web\UrlManager
             $url = $event->url;
         }
 
+        if (!$language) {
+            return $url;
+        }
+
         if ($this->i18nUrl) {
             if (isset($this->languages[$language]) && $language !== $defaultLanguage) {
                 $position = strlen($this->showScriptName ? $this->getScriptUrl() : $this->getBaseUrl());
@@ -113,7 +117,7 @@ class UrlManager extends \yii\web\UrlManager
         }
 
         if ($this->i18nSubdomain && $language !== $this->defaultLanguage) {
-            $subdomain = $language ? $this->languages[$language] ?? '' : '';
+            $subdomain = $this->languages[$language] ?? '';
             return $this->replaceSubdomain($subdomain, $this->getHostInfo()) . $url;
         }
 
