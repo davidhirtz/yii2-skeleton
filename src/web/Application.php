@@ -33,6 +33,8 @@ class Application extends \yii\web\Application
 
     public function preInit(&$config): void
     {
+        $config['basePath'] ??= realpath(dirname((string)$_SERVER['SCRIPT_FILENAME'], 2));
+
         $this->preInitInternal($config);
         $this->setDebugModuleConfig($config);
 

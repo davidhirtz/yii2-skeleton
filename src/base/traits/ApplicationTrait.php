@@ -48,7 +48,6 @@ trait ApplicationTrait
     protected function preInitInternal(&$config): void
     {
         Yii::$classMap = array_merge(Yii::$classMap, ArrayHelper::remove($config, 'classMap', []));
-        $config['basePath'] ??= dirname(__FILE__, 7);
 
         $core = [
             'id' => 'skeleton',
