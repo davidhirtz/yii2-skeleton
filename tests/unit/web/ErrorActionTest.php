@@ -9,6 +9,7 @@ use davidhirtz\yii2\skeleton\tests\data\controllers\TestController;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\UserException;
+use yii\base\ViewNotFoundException;
 use yii\web\ForbiddenHttpException;
 
 class ErrorActionTest extends Unit
@@ -66,8 +67,10 @@ class ErrorActionTest extends Unit
 
     public function testInvalidView(): void
     {
-        $this->expectException('yii\base\ViewNotFoundException');
-        $this->expectExceptionMessage('The view file does not exist: ./resources/views/test/invalid.php');
+        $path = Yii::getAlias('@views/test/invalid.php');
+
+        $this->expectException(ViewNotFoundException::class);
+        $this->expectExceptionMessage("The view file does not exist: $path");
 
         $controller = $this->getController([
             'view' => 'invalid',
@@ -78,8 +81,10 @@ class ErrorActionTest extends Unit
 
     public function testLayout(): void
     {
-        $this->expectException('yii\base\ViewNotFoundException');
-        $this->expectExceptionMessage('The view file does not exist: ./resources/views/layouts/non-existing.php');
+        $path = Yii::getAlias('@views/layouts/non-existing.php');
+
+        $this->expectException(ViewNotFoundException::class);
+        $this->expectExceptionMessage("The view file does not exist: $path");
 
         $controller = $this->getController([
             'layout' => 'non-existing',
