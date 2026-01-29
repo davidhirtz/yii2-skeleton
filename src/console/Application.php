@@ -23,7 +23,6 @@ class Application extends \yii\console\Application
 
     public function preInit(&$config): void
     {
-        $config['basePath'] ??= getcwd();
         $this->preInitInternal($config);
 
         unset(

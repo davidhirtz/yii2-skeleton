@@ -1,3 +1,7 @@
+## 2.6.6 (Jan 29, 2026)
+
+- Fixed `Application::$basePath` for symlinked applications
+
 ## 2.6.5 (Jan 26, 2026)
 
 - PHP 8.5 compatibility fixes

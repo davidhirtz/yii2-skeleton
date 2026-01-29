@@ -19,7 +19,6 @@ use davidhirtz\yii2\skeleton\web\View;
 use Yii;
 use yii\authclient\Collection;
 use yii\base\ActionEvent;
-use yii\base\InvalidConfigException;
 use yii\bootstrap4\BootstrapAsset;
 use yii\caching\FileCache;
 use yii\console\controllers\MigrateController;
@@ -48,11 +47,8 @@ trait ApplicationTrait
 {
     protected function preInitInternal(&$config): void
     {
-        if (!isset($config['basePath'])) {
-            throw new InvalidConfigException(self::class . '::$basePath must be defined');
-        }
-
         Yii::$classMap = array_merge(Yii::$classMap, ArrayHelper::remove($config, 'classMap', []));
+        $config['basePath'] ??= dirname(__FILE__, 7);
 
         $core = [
             'id' => 'skeleton',
