@@ -26,7 +26,6 @@ class Application extends \yii\console\Application
     #[Override]
     public function preInit(&$config): void
     {
-        $config['basePath'] ??= getcwd();
         $this->preInitInternal($config);
 
         unset(

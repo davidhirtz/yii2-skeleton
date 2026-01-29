@@ -47,11 +47,8 @@ trait ApplicationTrait
 {
     protected function preInitInternal(&$config): void
     {
-        if (!isset($config['basePath'])) {
-            throw new InvalidConfigException(self::class . '::$basePath must be defined');
-        }
-
         Yii::$classMap = [...Yii::$classMap, ...ArrayHelper::remove($config, 'classMap', [])];
+        $config['basePath'] ??= dirname(__FILE__, 7);
 
         $core = [
             'id' => 'skeleton',

@@ -79,11 +79,11 @@ trait TypeAttributeTrait
 
     public function getTypeIcon(): string
     {
-        return static::getTypes()[$this->type]['icon'] ?? '';
+        return $this->type ? static::getTypes()[$this->type]['icon'] ?? '' : '';
     }
 
     public function getTypeOptions(): array
     {
-        return static::getTypes()[$this->type] ?? [];
+        return $this->type ? static::getTypes()[$this->type] ?? [] : [];
     }
 }
