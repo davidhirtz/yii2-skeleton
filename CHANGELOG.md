@@ -1,3 +1,7 @@
+## 2.6.7 (Feb 10, 2026)
+
+- Fixed admin redirects to the correct domain when using i18N paths
+
 ## 2.6.6 (Jan 29, 2026)
 
 - Fixed `Application::$basePath` for symlinked applications

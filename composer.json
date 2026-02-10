@@ -64,12 +64,12 @@
     }
   },
   "config": {
-    "platform": {
-      "php": "8.3"
-    },
     "allow-plugins": {
       "yiisoft/yii2-composer": true,
       "phpro/grumphp-shim": true
+    },
+    "platform": {
+      "php": "8.3"
     }
   },
   "repositories": [
