@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Config;
 
 /**
- * @implements ConfigInterface<DashboardItemConfig>
+ * @implements ConfigInterface<DashboardItem>
  */
-final class DashboardItemConfig implements ConfigInterface
+final class DashboardItem implements ConfigInterface
 {
     public function __construct(
         public ?string $label = null,

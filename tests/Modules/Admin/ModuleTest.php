@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Modules\Admin;
 
-use Hirtz\Skeleton\Modules\Admin\Config\DashboardItemConfig;
-use Hirtz\Skeleton\Modules\Admin\Config\DashboardPanelConfig;
+use Hirtz\Skeleton\Modules\Admin\Config\DashboardItem;
 use Hirtz\Skeleton\Modules\Admin\Config\MainMenuItemConfig;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Modules\Admin\ModuleInterface;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\DashboardPanel;
 use Hirtz\Skeleton\Test\TestCase;
 use Yii;
 
@@ -78,13 +78,13 @@ class TestModule extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
     public function getDashboardPanels(): array
     {
         return [
-            'module' => new DashboardPanelConfig('Test Module'),
-            'skeleton' => new DashboardPanelConfig(
+            'module' => new DashboardPanel('Test Module'),
+            'skeleton' => new DashboardPanel(
                 items: [
-                    'user' => new DashboardItemConfig('Overridden label'),
-                    'account' => new DashboardItemConfig(url: ['/admin/account/test']),
-                    'system' => new DashboardItemConfig(roles: ['test']),
-                    'homepage' => new DashboardItemConfig(attributes: ['class' => 'test-class']),
+                    'user' => new DashboardItem('Overridden label'),
+                    'account' => new DashboardItem(url: ['/admin/account/test']),
+                    'system' => new DashboardItem(roles: ['test']),
+                    'homepage' => new DashboardItem(attributes: ['class' => 'test-class']),
                 ]
             ),
         ];
