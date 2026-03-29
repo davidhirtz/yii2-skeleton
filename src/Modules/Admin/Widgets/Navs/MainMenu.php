@@ -14,8 +14,7 @@ use Yii;
 class MainMenu extends Widget
 {
     public array $attributes = [
-        'id' => 'menu',
-        'class' => 'navbar-nav navbar-left nav',
+        'class' => 'aside-nav nav',
     ];
 
     protected function renderContent(): Stringable

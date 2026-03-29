@@ -6,35 +6,24 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
 use Hirtz\Skeleton\Html\Button;
 use Hirtz\Skeleton\Html\Container;
+use Hirtz\Skeleton\Html\Header;
 use Hirtz\Skeleton\Widgets\Widget;
-use Stringable;
 use Yii;
 
 class NavBar extends Widget
 {
     public array $attributes = ['class' => 'navbar'];
 
-    protected function renderContent(): string
+    protected function renderContent(): Header
     {
         $container = Container::make()
-            ->addClass('navbar-container');
+            ->addClass('navbar-container')
+            ->addContent($this->getMobileToggle())
+            ->addContent($this->getAccountMenu());
 
-        $menu = (string)$this->getMainMenu();
-
-        if ($menu) {
-            $container->addContent($this->getMobileToggle());
-            $container->addContent($menu);
-        }
-
-        $container->addContent($this->getAccountMenu());
-        $content = $container->render();
-
-        return $content ? "<header class=\"navbar\">$content</header>" : '';
-    }
-
-    protected function getMainMenu(): Stringable
-    {
-        return MainMenu::make();
+        return Header::make()
+            ->attributes($this->attributes)
+            ->content($container);
     }
 
     protected function getAccountMenu(): AccountMenu
@@ -45,8 +34,8 @@ class NavBar extends Widget
     protected function getMobileToggle(): string
     {
         return Button::make()
-            ->class('navbar-toggler')
-            ->attribute('data-collapse', "#menu")
+            ->class('aside-toggler')
+            ->attribute('onclick', "body.classList.toggle('has-aside')")
             ->attribute('aria-label', Yii::t('skeleton', 'Toggle navigation'))
             ->render();
     }

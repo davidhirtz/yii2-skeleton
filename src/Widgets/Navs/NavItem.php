@@ -11,7 +11,6 @@ use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Hirtz\Skeleton\Html\Traits\TagIconTrait;
-use Hirtz\Skeleton\Html\Traits\TagLabelTrait;
 use Hirtz\Skeleton\Html\Traits\TagUrlTrait;
 use Hirtz\Skeleton\Html\Traits\TagVisibilityTrait;
 use Hirtz\Skeleton\Widgets\Widget;
@@ -25,81 +24,120 @@ class NavItem extends Widget
     use TagAttributesTrait;
     use TagContentTrait;
     use TagIconTrait;
-    use TagLabelTrait;
     use TagUrlTrait;
     use TagVisibilityTrait;
 
-    public array $linkAttributes = [];
-    public array $labelAttributes = [];
-    public array $badgeAttributes = ['class' => 'badge hidden md:block'];
+    protected ?bool $active = null;
+    protected ?Span $badge = null;
+    protected ?Span $label = null;
+    protected ?Closure $link = null;
+    protected array $routes = [];
 
-    protected bool|null $active = null;
-    protected int|string|null $badge = null;
-
-    public function active(bool|callable $active): static
+    public function active(bool|callable|null $active): static
     {
         $this->active = $active instanceof Closure ? $active() : $active;
         return $this;
     }
 
-    public function badge(int|string|null $badge): static
+    /**
+     * @param Closure(Span):(int|string|null)|int|string|null $badge
+     * @return $this
+     */
+    public function badge(Closure|int|string|null $badge): static
     {
-        $this->badge = $badge ? (string)$badge : null;
+        $this->badge ??= $badge ? Span::make()->class('badge hidden md:block') : null;
+
+        if ($this->badge) {
+            $this->badge = is_callable($badge)
+                ? $badge($this->badge)
+                : $this->badge->text(is_int($badge) ? Yii::$app->getFormatter()->asInteger($badge) : $badge);
+        }
+
         return $this;
     }
 
-    public function badgeAttributes(array $attributes): static
+    /**
+     * @param Closure(Span):(int|string|null)|string|null $label
+     * @return $this
+     */
+    public function label(Closure|string|null $label): static
     {
-        $this->badgeAttributes = $attributes;
+        $this->label ??= $label ? Span::make() : null;
+
+        if ($this->label) {
+            $this->label = is_callable($label) ? $label($this->label) : $this->label->text($label);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Closure(A):(string|Stringable)|null $link
+     * @return $this
+     */
+    public function link(?Closure $link): static
+    {
+        $this->link = $link;
         return $this;
     }
 
     public function order(?int $order): static
     {
-        $this->addStyle(['order' => $order]);
-        return $this;
+        return $order !== null ? $this->addStyle(['order' => $order]) : $this->removeStyle(['order']);
     }
 
     public function routes(array $routes): static
     {
-        $request = Yii::$app->getRequest();
+        $this->routes = [...$this->routes, ...$routes];
+        return $this;
+    }
 
-        if (Yii::$app->controller instanceof Controller) {
-            foreach ($routes as $route => $params) {
-                if (is_int($route)) {
-                    $route = is_array($params) ? array_shift($params) : $params;
-                }
+    protected function configure(): void
+    {
+        $this->parseRoutes();
+        parent::configure();
+    }
 
-                $shouldSkip = ('!' === $route[0]);
-
-                if ($shouldSkip) {
-                    $route = substr((string)$route, 1);
-                }
-
-                if (preg_match("~$route~", Yii::$app->controller->route)) {
-                    if (is_array($params)) {
-                        foreach ($params as $key => $value) {
-                            $isMatching = is_int($key)
-                                ? in_array($value, array_keys($request->get()), true)
-                                : $request->get($key) === $value;
-
-                            if ($isMatching) {
-                                $this->active = true;
-                                break 2;
-                            }
-                        }
-
-                        $this->active = false;
-                        break;
-                    }
-
-                    $this->active = !$shouldSkip;
-                    break;
-                }
-            }
+    protected function parseRoutes(): void
+    {
+        if (!(Yii::$app->controller instanceof Controller) || $this->active) {
+            return;
         }
 
-        return $this;
+        $request = Yii::$app->getRequest();
+
+        foreach ($this->routes as $route => $params) {
+            if (is_int($route)) {
+                $route = is_array($params) ? array_shift($params) : $params;
+            }
+
+            $shouldSkip = ('!' === $route[0]);
+
+            if ($shouldSkip) {
+                $route = substr((string)$route, 1);
+            }
+
+            if (preg_match("~$route~", Yii::$app->controller->route)) {
+                if (is_array($params)) {
+                    foreach ($params as $key => $value) {
+                        $isMatching = is_int($key)
+                            ? in_array($value, array_keys($request->get()), true)
+                            : $request->get($key) === $value;
+
+                        if ($isMatching) {
+                            $this->active = true;
+                            break 2;
+                        }
+                    }
+
+                    $this->active = false;
+                    break;
+                }
+
+                $this->active = !$shouldSkip;
+                break;
+            }
+        }
     }
 
     #[Override]
@@ -108,36 +146,19 @@ class NavItem extends Widget
         return Li::make()
             ->attributes($this->attributes)
             ->addClass('nav-item')
-            ->content($this->getContent());
+            ->content($this->renderLink());
     }
 
-    protected function getContent(): string|Stringable
+    protected function renderLink(): string|Stringable
     {
         if ($this->content) {
             return implode('', $this->content);
         }
 
         $link = A::make()
-            ->attributes($this->linkAttributes)
-            ->addClass('nav-link')
+            ->class('nav-link')
+            ->content($this->icon, $this->label, $this->badge)
             ->href($this->url);
-
-        if ($this->icon) {
-            $link->addContent($this->icon
-                ->attributes($this->iconAttributes));
-        }
-
-        if ($this->label) {
-            $link->addContent(Span::make()
-                ->text($this->label)
-                ->attributes($this->labelAttributes));
-        }
-
-        if (null !== $this->badge) {
-            $link->addContent(Span::make()
-                ->text($this->badge)
-                ->attributes($this->badgeAttributes));
-        }
 
         $this->active ??= Yii::$app->getRequest()->getUrl() === ($link->attributes['href'] ?? null);
 
@@ -145,6 +166,6 @@ class NavItem extends Widget
             $link->addClass('active');
         }
 
-        return $link;
+        return $this->link ? ($this->link)($link) : $link;
     }
 }

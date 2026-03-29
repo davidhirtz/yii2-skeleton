@@ -1,12 +1,12 @@
 .nav {
   display: flex;
-  flex-wrap: wrap;
-  padding: 0;
+  gap: 0.125rem;
 }
 
 .nav-link {
   align-items: center;
   background: var(--nav-link-bg, transparent);
+  border-radius: .25rem;
   color: var(--nav-link-color);
   display: flex;
   min-width: 3rem;

@@ -12,6 +12,12 @@ trait TagVisibilityTrait
     protected array $roles = [];
     protected bool $visible = true;
 
+    public function addRoles(array $roles): static
+    {
+        $this->roles = array_merge($this->roles, $roles);
+        return $this;
+    }
+
     public function roles(array $roles): static
     {
         $this->roles = $roles;

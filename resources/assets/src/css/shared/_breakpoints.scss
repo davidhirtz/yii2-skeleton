@@ -32,7 +32,7 @@ $breakpoints: (
 }
 
 @mixin media-breakpoint-down($name) {
-  $next: breakpoint-next($name);
+  $next: map.get($breakpoints, breakpoint-next($name));
   @if $next {
     @media (width < $next) {
       @content;

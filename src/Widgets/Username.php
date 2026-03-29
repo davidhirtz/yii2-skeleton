@@ -28,16 +28,13 @@ class Username extends Widget
         return $this;
     }
 
-    protected function prepareAttributes(): void
-    {
-        if (!$this->user) {
-            $this->addClass('text-invalid');
-        }
-    }
-
     protected function renderContent(): string|Stringable
     {
         $text = $this->user?->getUsername() ?? Yii::t('skeleton', 'Deleted');
+
+        if (!$this->user) {
+            $this->addClass('text-invalid');
+        }
 
         return array_key_exists('href', $this->attributes)
             ? A::make()

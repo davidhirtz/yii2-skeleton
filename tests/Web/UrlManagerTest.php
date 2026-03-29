@@ -7,7 +7,6 @@ namespace Hirtz\Skeleton\Tests\Web;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Web\Request;
 use Hirtz\Skeleton\Web\UrlManager;
-use Hirtz\Tenant\Models\Collections\TenantCollection;
 use Yii;
 use yii\web\UrlNormalizerRedirectException;
 use yii\web\UrlRule;

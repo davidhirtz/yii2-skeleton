@@ -6,7 +6,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1100;
+  z-index: 100;
   background: var(--navbar-bg);
 }
 
@@ -19,7 +19,7 @@
   }
 }
 
-.navbar-nav {
+.aside-nav {
   --nav-link-color: var(--navbar-link-color);
   --nav-link-hover-bg: var(--navbar-link-hover-bg);
   --nav-link-hover-color: var(--navbar-link-hover-color);
@@ -49,7 +49,7 @@
   flex-grow: 1;
 }
 
-.navbar-toggler {
+.aside-toggler {
   align-self: center;
   width: 3rem;
   aspect-ratio: 1 / 1;

@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Assets\SortableAssetBundle;
 use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Helpers\ArrayHelper;
+use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Table;
 use Hirtz\Skeleton\Html\Tbody;
@@ -34,7 +35,6 @@ use yii\data\ArrayDataProvider;
 use yii\data\DataProviderInterface;
 use yii\db\ActiveRecordInterface;
 use yii\helpers\Inflector;
-use Hirtz\Skeleton\Helpers\Url;;
 
 /**
  * @template T of Model
@@ -125,8 +125,6 @@ class GridView extends Widget
                 $column = DataColumn::make()
                     ->property($column);
             }
-
-
 
             $column->grid($this);
 

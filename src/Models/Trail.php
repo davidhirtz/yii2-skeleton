@@ -13,6 +13,7 @@ use Hirtz\Skeleton\Models\Queries\UserQuery;
 use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\TrailGridView;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
+use Override;
 use ReflectionClass;
 use Yii;
 use yii\base\Model;
@@ -49,7 +50,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
 
     public ActiveRecordInterface|array|null $parents = null;
 
-    #[\Override]
+    #[Override]
     public function rules(): array
     {
         return [
@@ -60,7 +61,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function beforeSave($insert): bool
     {
         if (Yii::$app->has('user')) {
@@ -76,7 +77,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         return parent::beforeSave($insert);
     }
 
-    #[\Override]
+    #[Override]
     public function afterSave($insert, $changedAttributes): void
     {
         if ($this->parents) {
@@ -276,7 +277,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function attributeLabels(): array
     {
         return [
@@ -288,13 +289,13 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function formName(): string
     {
         return 'Trail';
     }
 
-    #[\Override]
+    #[Override]
     public static function tableName(): string
     {
         return '{{%trail}}';

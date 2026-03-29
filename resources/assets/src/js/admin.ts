@@ -27,6 +27,8 @@ htmx.onLoad(($container) => {
     queryAll('[aria-invalid]', ($input: HTMLElement) => {
         $input.addEventListener('input', () => $input.removeAttribute('aria-invalid'));
     })
+
+    document.body.classList.remove('has-aside');
 });
 
 

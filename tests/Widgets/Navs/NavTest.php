@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Widgets\Navs;
 
+use Hirtz\Skeleton\Html\A;
+use Hirtz\Skeleton\Html\Icon;
+use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Web\Controller;
@@ -20,7 +23,7 @@ class NavTest extends TestCase
         parent::setUp();
 
         Yii::$app->controller = new class ('test', Yii::$app) extends Controller {
-            public function getRoute()
+            public function getRoute(): string
             {
                 return 'site/index';
             }
@@ -86,15 +89,13 @@ class NavTest extends TestCase
             ->items(NavItem::make()
                 ->label('Home')
                 ->url('/')
-                ->badge('New')
-                ->badgeAttributes(['class' => 'badge'])
-                ->icon('home')
-                ->iconAttributes(['class' => 'hidden']))
+                ->badge(fn (Span $badge) => $badge->text('New')->class('badge'))
+                ->icon(fn (Icon $icon) => $icon->name('home')->addClass('hidden'))
+                ->link(fn (A $link) => $link->addClass('home')))
             ->showSingleItem()
             ->render();
 
-
-        self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active" href="/"><i class="hidden fas fa-home"></i><span>Home</span><span class="badge">New</span></a></li></ul>', $content);
+        self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active home" href="/"><i class="hidden fas fa-home"></i><span>Home</span><span class="badge">New</span></a></li></ul>', $content);
     }
 
     public function testActiveItemFromUrl(): void

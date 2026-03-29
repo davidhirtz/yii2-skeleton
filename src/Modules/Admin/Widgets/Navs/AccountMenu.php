@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
+use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Button;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Icon;
@@ -18,7 +19,6 @@ use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
 use Yii;
-use Hirtz\Skeleton\Helpers\Url;;
 
 class AccountMenu extends Widget
 {
@@ -27,7 +27,7 @@ class AccountMenu extends Widget
     protected ?array $languageRoute = null;
     protected User $webuser;
 
-    #[\Override]
+    #[Override]
     protected function configure(): void
     {
         $this->attributes['id'] ??= 'account-menu';

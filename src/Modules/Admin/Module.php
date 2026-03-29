@@ -38,6 +38,7 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
 
     private array $dashboardPanels = [];
     private array $mainMenuItems = [];
+    private ?array $submodules = null;
 
     #[Override]
     public function init(): void
@@ -239,16 +240,18 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
      */
     public function getSubmodules(): array
     {
-        $modules = [];
+        if ($this->submodules === null) {
+            $this->submodules = [];
 
-        foreach (array_keys($this->getModules()) as $moduleName) {
-            $module = $this->getModule($moduleName);
+            foreach (array_keys($this->getModules()) as $moduleName) {
+                $module = $this->getModule($moduleName);
 
-            if ($module instanceof ModuleInterface) {
-                $modules[] = $module;
+                if ($module instanceof ModuleInterface) {
+                    $this->submodules[] = $module;
+                }
             }
         }
 
-        return $modules;
+        return $this->submodules;
     }
 }

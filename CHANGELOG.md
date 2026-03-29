@@ -12,6 +12,7 @@
 - Removed `GridView::renderSelectionForm()`
 - Renamed `GoogleAuthenticator` classes to `TwoFactorAuthenticator` classes
 - Removed `yii2-timeago`, use `RelativeTime` tag instead
+- Replaced `Picture` with `Media`
 
 ## 2.6.6 (Jan 29, 2026)
 

@@ -9,7 +9,7 @@
   position: fixed;
   right: 0;
   bottom: 1rem;
-  z-index: 1000;
+  z-index: 50;
 
   @include media-breakpoint-up(sm) {
     bottom: auto;

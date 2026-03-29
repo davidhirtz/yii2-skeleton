@@ -1,7 +1,15 @@
+.layout {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  overflow-x: clip;
+}
+
 .main {
   display: flex;
+  flex: 1;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100dvh;
   gap: 2rem;
 
   .navbar ~ & {

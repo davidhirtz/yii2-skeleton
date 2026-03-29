@@ -8,27 +8,23 @@ use Hirtz\Skeleton\Html\Base\VoidTag;
 use Hirtz\Skeleton\Html\Traits\TagImageAttributesTrait;
 use Override;
 
-class Img extends VoidTag
+class Source extends VoidTag
 {
     use TagImageAttributesTrait;
 
-    public array $attributes = [
-        'alt' => '',
-    ];
-
-    public function alt(string $alt): static
+    public function media(?string $media): static
     {
-        return $this->attribute('alt', $alt);
+        return $this->attribute('media', $media);
     }
 
-    public function loading(?string $loading): static
+    public function type(?string $type): self
     {
-        return $this->attribute('loading', $loading);
+        return $this->attribute('type', $type);
     }
 
     #[Override]
     protected function getTagName(): string
     {
-        return 'img';
+        return 'source';
     }
 }

@@ -4,22 +4,23 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Html\Traits;
 
+use Closure;
 use Hirtz\Skeleton\Html\Icon;
 
 trait TagIconTrait
 {
-    public array $iconAttributes = [];
     protected ?Icon $icon = null;
 
-    public function icon(string|Icon|null $icon): static
+    /**
+     * @param Icon|Closure(Icon): (Icon|null)|string|null $icon
+     * @return $this
+     */
+    public function icon(Icon|Closure|string|null $icon): static
     {
-        $this->icon = is_string($icon) ? Icon::make()->name($icon) : $icon;
-        return $this;
-    }
+        $this->icon = is_string($icon)
+            ? Icon::make()->name($icon)
+            : (is_callable($icon) ? ($icon)($this->icon ?? Icon::make()) : $icon);
 
-    public function iconAttributes(array $attributes): static
-    {
-        $this->iconAttributes = $attributes;
         return $this;
     }
 }
