@@ -16,7 +16,7 @@ class AuthClientListGroup extends Widget
     protected function renderContent(): string|Stringable
     {
         return Stack::make()
-            ->items(...$this->getItems());
+            ->items($this->getItems());
     }
 
     protected function getItems(): array

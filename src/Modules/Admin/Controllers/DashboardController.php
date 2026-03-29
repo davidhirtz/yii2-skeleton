@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
-use Hirtz\Skeleton\Modules\Admin\Config\DashboardPanelConfig;
 use Hirtz\Skeleton\Modules\Admin\Module;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\DashboardPanel;
 use Hirtz\Skeleton\Web\Controller;
 use Override;
 use yii\filters\AccessControl;
@@ -16,28 +16,30 @@ use yii\web\Response;
  */
 class DashboardController extends Controller
 {
-    public ?array $_panels = null;
-    public ?array $roles = null;
+    /**
+     * @var DashboardPanel[]
+     */
+    private array $panels;
+    private array $roles;
 
     #[Override]
     public function init(): void
     {
-        if ($this->roles === null) {
-            $this->roles = [];
+        $this->panels = $this->module->getDashboardPanels();
+        $this->roles = [];
 
-            foreach ($this->getPanels() as $panel) {
-                foreach ($panel->items ?? [] as $item) {
-                    $this->roles = [...$this->roles, ...$item->roles];
-                }
-
-                $this->roles = [...$this->roles, ...$panel->roles];
+        foreach ($this->panels as $panel) {
+            foreach ($panel->items ?? [] as $item) {
+                $this->roles = [...$this->roles, ...$item->roles];
             }
 
-            $this->roles = array_unique($this->roles);
+            $this->roles = [...$this->roles, ...$panel->roles];
+        }
 
-            if (!$this->roles) {
-                $this->roles = ['@'];
-            }
+        $this->roles = array_unique($this->roles);
+
+        if (!$this->roles) {
+            $this->roles = ['@'];
         }
 
         parent::init();
@@ -64,15 +66,7 @@ class DashboardController extends Controller
     public function actionIndex(): Response|string
     {
         return $this->render('index', [
-            'panels' => $this->getPanels(),
+            'panels' => $this->panels,
         ]);
-    }
-
-    /**
-     * @return DashboardPanelConfig[]
-     */
-    protected function getPanels(): array
-    {
-        return $this->_panels ??= $this->module->getDashboardPanels();
     }
 }

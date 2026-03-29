@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin;
 
-use Hirtz\Skeleton\Modules\Admin\Config\DashboardPanelConfig;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\DashboardPanel;
 
 /**
  * @mixin \Hirtz\Skeleton\Base\Module
@@ -12,7 +12,7 @@ use Hirtz\Skeleton\Modules\Admin\Config\DashboardPanelConfig;
 interface ModuleInterface
 {
     /**
-     * @return array<string, DashboardPanelConfig>
+     * @return array<string, DashboardPanel>
      */
     public function getDashboardPanels(): array;
 

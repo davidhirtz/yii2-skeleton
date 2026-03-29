@@ -10,8 +10,7 @@ use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Config\Config;
-use Hirtz\Skeleton\Modules\Admin\Config\DashboardItemConfig;
-use Hirtz\Skeleton\Modules\Admin\Config\DashboardPanelConfig;
+use Hirtz\Skeleton\Modules\Admin\Config\DashboardItem;
 use Hirtz\Skeleton\Modules\Admin\Config\MainMenuItemConfig;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AuthController;
@@ -22,6 +21,7 @@ use Hirtz\Skeleton\Modules\Admin\Controllers\SystemController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\TrailController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\UserController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\UserLoginController;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\DashboardPanel;
 use Hirtz\Skeleton\Web\Request;
 use Override;
 use Yii;
@@ -104,7 +104,7 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
     }
 
     /**
-     * @return array<string, DashboardPanelConfig>
+     * @return array<string, DashboardPanel>
      */
     public function getDashboardPanels(): array
     {
@@ -124,44 +124,44 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
     }
 
     /**
-     * @return array<string, DashboardPanelConfig>
+     * @return array<string, DashboardPanel>
      */
     protected function getDefaultDashboardPanels(): array
     {
         return [
-            'skeleton' => new DashboardPanelConfig(
+            'skeleton' => new DashboardPanel(
                 name: Yii::t('skeleton', 'Administration'),
                 items: [
-                    'user' => new DashboardItemConfig(
+                    'user' => new DashboardItem(
                         label: Yii::t('skeleton', 'Create New User'),
                         url: ['/admin/user/create'],
                         icon: 'user-plus',
                         roles: [User::AUTH_USER_CREATE],
                     ),
-                    'account' => new DashboardItemConfig(
+                    'account' => new DashboardItem(
                         label: Yii::t('skeleton', 'Your Account'),
                         url: ['/admin/account/update'],
                         icon: 'user',
                     ),
-                    'system' => new DashboardItemConfig(
+                    'system' => new DashboardItem(
                         label: Yii::t('skeleton', 'System Settings'),
                         url: ['/admin/system/index'],
                         icon: 'cog',
                         roles: [User::AUTH_ROLE_ADMIN],
                     ),
-                    'trail' => new DashboardItemConfig(
+                    'trail' => new DashboardItem(
                         label: Yii::t('skeleton', 'History'),
                         url: ['/admin/trail/index'],
                         icon: 'history',
                         roles: [Trail::AUTH_TRAIL_INDEX],
                     ),
-                    'redirect' => new DashboardItemConfig(
+                    'redirect' => new DashboardItem(
                         label: Yii::t('skeleton', 'Redirects'),
                         url: ['/admin/redirect/index'],
                         icon: 'forward',
                         roles: [Redirect::AUTH_REDIRECT_CREATE],
                     ),
-                    'homepage' => new DashboardItemConfig(
+                    'homepage' => new DashboardItem(
                         label: Yii::t('skeleton', 'Homepage'),
                         url: '/',
                         icon: 'globe',
@@ -173,7 +173,7 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
     }
 
     /**
-     * @param array<DashboardItemConfig|null> $panels
+     * @param array<DashboardItem|null> $panels
      */
     public function setDashboardPanels(array $panels = []): void
     {
