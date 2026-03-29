@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Grids;
 
-use Hirtz\Skeleton\Html\Button;
 use Hirtz\Skeleton\Widgets\Alert;
+use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridSearch;
 use Stringable;
 use Yii;

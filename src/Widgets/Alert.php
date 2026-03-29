@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets;
 
-use Hirtz\Skeleton\Html\Button;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Hirtz\Skeleton\Html\Traits\TagIconTrait;
+use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Override;
 use Stringable;
 

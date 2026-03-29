@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Forms;
 
-use Hirtz\Skeleton\Html\Button;
 use Hirtz\Skeleton\Html\Traits\TagLabelTrait;
 use Hirtz\Skeleton\Models\Forms\DeleteForm;
+use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
 use Hirtz\Skeleton\Widgets\Modal;
 use Hirtz\Skeleton\Widgets\Traits\PropertyWidgetTrait;

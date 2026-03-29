@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Buttons;
 
 use Hirtz\Skeleton\Assets\FileUploadAssetBundle;
-use Hirtz\Skeleton\Html\Button;
 use Hirtz\Skeleton\Html\Custom\FileUpload;
 use Hirtz\Skeleton\Html\Input;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Panels;
 
 use Hirtz\Skeleton\Helpers\Html;
-use Hirtz\Skeleton\Html\Button;
 use Hirtz\Skeleton\Modules\Admin\Controllers\UserController;
+use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Modal;
 use Hirtz\Skeleton\Widgets\Panels\Panel;
 use Hirtz\Skeleton\Widgets\Traits\UserWidgetTrait;

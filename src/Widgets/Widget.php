@@ -43,7 +43,7 @@ abstract class Widget implements Stringable, ViewContextInterface
 
     public function render(bool $refresh = false): string
     {
-        if (null === $this->content || $refresh) {
+        if ($this->content === null || $refresh) {
             $this->configure();
             $this->content = (string)$this->renderContent();
         }

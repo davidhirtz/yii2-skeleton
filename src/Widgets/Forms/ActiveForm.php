@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Forms;
 
 use Hirtz\Skeleton\Helpers\Url;
-use Hirtz\Skeleton\Html\Button;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Form;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
+use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
 use Hirtz\Skeleton\Widgets\Forms\Footers\FormFooter;
 use Hirtz\Skeleton\Widgets\Traits\ModelWidgetTrait;

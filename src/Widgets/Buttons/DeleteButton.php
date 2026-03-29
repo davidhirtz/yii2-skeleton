@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Buttons;
 
-use Hirtz\Skeleton\Html\Button;
 use Hirtz\Skeleton\Widgets\Buttons\Traits\DeleteButtonTrait;
 use Hirtz\Skeleton\Widgets\Modal;
 use Hirtz\Skeleton\Widgets\Widget;

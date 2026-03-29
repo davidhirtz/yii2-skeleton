@@ -37,7 +37,7 @@ class StackItem extends Widget
             ->content($this->getContent());
     }
 
-    public function getContent(): string|Stringable
+    protected function getContent(): string|Stringable
     {
         if ($this->content) {
             return implode('', $this->content);

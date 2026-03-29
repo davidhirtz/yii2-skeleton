@@ -79,7 +79,7 @@ class TwoFactorAuthenticatorForm extends Model
         $label = "$issuer:{$this->user->email}";
 
         $provider = new QRServerProvider();
-        $auth = new TwoFactorAuth($provider, $issuer);
+        $auth = new TwoFactorAuth($issuer, qrcodeprovider: $provider);
 
         return $provider->getUrl($auth->getQRText($label, $this->getSecret()), $size);
     }

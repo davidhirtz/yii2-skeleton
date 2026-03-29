@@ -96,7 +96,7 @@ class Column
     public function renderBody(array|Model $model, string|int $key, int $index): Td
     {
         $attributes = $this->contentAttributes instanceof Closure
-            ? call_user_func($this->contentAttributes, $model, $key, $index, $this)
+            ? ($this->contentAttributes)($model, $key, $index, $this)
             : $this->contentAttributes;
 
         $attributes ??= [];
@@ -116,7 +116,7 @@ class Column
         $content = $this->content;
 
         if ($content instanceof Closure) {
-            $content = call_user_func($this->content, $model, $key, $index, $this);
+            $content = ($this->content)($model, $key, $index, $this);
 
             if (is_array($content)) {
                 $content = implode('', $content);

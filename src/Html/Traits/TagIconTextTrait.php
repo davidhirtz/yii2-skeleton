@@ -14,14 +14,15 @@ trait TagIconTextTrait
 
     protected function renderContent(): string|Stringable
     {
+        return $this->renderIconText();
+    }
+
+    protected function renderIconText(): string|Stringable
+    {
         if ($this->icon && $this->content) {
             return Div::make()
                 ->class('icon-text')
-                ->addContent($this->icon)
-                ->addContent(
-                    Div::make()
-                        ->content(...$this->content)
-                );
+                ->content($this->icon, Div::make()->content(...$this->content));
         }
 
         return $this->icon ?? implode('', $this->content);
