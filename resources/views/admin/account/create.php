@@ -9,10 +9,10 @@ declare(strict_types=1);
  * @var Hirtz\Skeleton\Models\Forms\SignupForm $form
  */
 
-use Hirtz\Skeleton\Html\Container;
 use Hirtz\Skeleton\Html\Noscript;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\SignupActiveForm;
 use Hirtz\Skeleton\Widgets\Alert;
+use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Forms\ErrorSummary;
 use Hirtz\Skeleton\Widgets\Panels\Card;
 use Hirtz\Skeleton\Widgets\Panels\Stack;

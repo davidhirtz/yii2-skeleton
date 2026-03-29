@@ -54,7 +54,7 @@ abstract class Widget implements Stringable, ViewContextInterface
     protected function configure(): void
     {
         if ($this->config instanceof Closure) {
-            call_user_func($this->config, $this);
+            ($this->config)($this);
         }
     }
 

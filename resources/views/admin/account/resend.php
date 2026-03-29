@@ -9,14 +9,16 @@ declare(strict_types=1);
  * @var AccountResendConfirmForm $form
  */
 
-use Hirtz\Skeleton\Html\Container;
+use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Models\Forms\AccountResendConfirmForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\AccountResendConfirmActiveForm;
 use Hirtz\Skeleton\Web\View;
+use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Panels\Card;
 use Hirtz\Skeleton\Widgets\Panels\Stack;
 use Hirtz\Skeleton\Widgets\Panels\StackItem;
-use Hirtz\Skeleton\Helpers\Url;;
+
+;
 
 $this->title(Yii::t('skeleton', 'Resend Account Confirmation'));
 

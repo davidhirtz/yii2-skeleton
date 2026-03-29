@@ -8,11 +8,11 @@ declare(strict_types=1);
  * @var OwnershipForm $form
  */
 
-use Hirtz\Skeleton\Html\Container;
 use Hirtz\Skeleton\Models\Forms\OwnershipForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\OwnershipActiveForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserSubmenu;
 use Hirtz\Skeleton\Web\View;
+use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Forms\ErrorSummary;
 use Hirtz\Skeleton\Widgets\Panels\Card;
 

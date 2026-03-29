@@ -9,13 +9,15 @@ declare(strict_types=1);
  * @var Hirtz\Skeleton\Models\Forms\PasswordRecoverForm $form
  */
 
-use Hirtz\Skeleton\Html\Container;
+use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\PasswordRecoverActiveForm;
 use Hirtz\Skeleton\Web\View;
+use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Panels\Card;
 use Hirtz\Skeleton\Widgets\Panels\Stack;
 use Hirtz\Skeleton\Widgets\Panels\StackItem;
-use Hirtz\Skeleton\Helpers\Url;;
+
+;
 
 $this->title(Yii::t('skeleton', 'Recover Password'));
 

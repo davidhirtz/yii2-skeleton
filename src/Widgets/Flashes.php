@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets;
 
 use Hirtz\Skeleton\Helpers\Html;
-use Hirtz\Skeleton\Html\Container;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Stringable;
 use Yii;

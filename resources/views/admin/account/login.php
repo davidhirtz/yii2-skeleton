@@ -11,12 +11,12 @@ declare(strict_types=1);
  * @var LoginForm $form
  */
 
-use Hirtz\Skeleton\Html\Container;
 use Hirtz\Skeleton\Html\Noscript;
 use Hirtz\Skeleton\Models\Forms\LoginForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\LoginActiveForm;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Alert;
+use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Panels\Card;
 use Hirtz\Skeleton\Widgets\Panels\Stack;
 use Hirtz\Skeleton\Widgets\Panels\StackItem;

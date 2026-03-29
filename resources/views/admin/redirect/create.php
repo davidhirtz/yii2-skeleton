@@ -9,12 +9,12 @@ declare(strict_types=1);
  * @var Redirect $redirect
  */
 
-use Hirtz\Skeleton\Html\Container;
 use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Modules\Admin\Controllers\RedirectController;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\RedirectActiveForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\RedirectSubmenu;
 use Hirtz\Skeleton\Web\View;
+use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Forms\ErrorSummary;
 use Hirtz\Skeleton\Widgets\Forms\FormContainer;
 

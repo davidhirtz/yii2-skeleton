@@ -9,8 +9,8 @@ declare(strict_types=1);
  * @var Hirtz\Skeleton\Models\Forms\LoginForm $form
  */
 
-use Hirtz\Skeleton\Html\Container;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\TwoFactorAuthenticationLoginActiveForm;
+use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Panels\Card;
 
 $this->title(Yii::t('skeleton', 'Two-Factor Authentication'));

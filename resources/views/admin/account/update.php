@@ -11,7 +11,6 @@ declare(strict_types=1);
  */
 
 use Hirtz\Skeleton\Html\A;
-use Hirtz\Skeleton\Html\Container;
 use Hirtz\Skeleton\Models\Forms\AccountUpdateForm;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\AccountActiveForm;
@@ -19,6 +18,7 @@ use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\TwoFactorAuthenticatorActiveForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\AuthClientGridView;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Alert;
+use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Forms\DeleteActiveForm;
 use Hirtz\Skeleton\Widgets\Forms\FormContainer;
 use Hirtz\Skeleton\Widgets\Grids\GridContainer;

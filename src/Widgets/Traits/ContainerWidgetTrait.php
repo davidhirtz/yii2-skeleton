@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Traits;
 
-use Hirtz\Skeleton\Html\Container;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
+use Hirtz\Skeleton\Widgets\Container;
 
 trait ContainerWidgetTrait
 {

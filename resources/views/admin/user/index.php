@@ -9,11 +9,11 @@ declare(strict_types=1);
  * @var ActiveDataProvider $provider
  */
 
-use Hirtz\Skeleton\Html\Container;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\UserGridView;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserSubmenu;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\UserOwnerPanel;
 use Hirtz\Skeleton\Web\View;
+use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Grids\GridContainer;
 use yii\data\ActiveDataProvider;
 
