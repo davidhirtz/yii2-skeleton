@@ -2,14 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Html;
+namespace Hirtz\Skeleton\Widgets;
 
-use Hirtz\Skeleton\Html\Base\Tag;
+use Hirtz\Skeleton\Html\Span;
+use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagTooltipAttributeTrait;
 use Override;
+use Stringable;
 
-class Icon extends Tag
+class Icon extends Widget
 {
+    use TagAttributesTrait;
     use TagTooltipAttributeTrait;
 
     public const string ICON_COLLECTION_BRAND = 'brand';
@@ -35,8 +38,7 @@ class Icon extends Tag
         return $this;
     }
 
-    #[\Override]
-    protected function before(): string
+    protected function configure(): void
     {
         $this->addClass(match ($this->collection) {
             self::ICON_COLLECTION_BRAND => "fab fa-$this->name",
@@ -44,12 +46,12 @@ class Icon extends Tag
             default => "fas fa-$this->name",
         });
 
-        return parent::before();
+        parent::configure();
     }
 
     #[Override]
-    protected function getTagName(): string
+    protected function renderContent(): string|Stringable
     {
-        return 'i';
+        return Span::make()->attributes($this->attributes);
     }
 }

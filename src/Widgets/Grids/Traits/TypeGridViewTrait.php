@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Grids\Traits;
 
-use Hirtz\Skeleton\Html\Icon;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Widgets\Grids\Columns\LinkColumn;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\FilterDropdown;
+use Hirtz\Skeleton\Widgets\Icon;
 use Stringable;
 use Yii;
 

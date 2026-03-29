@@ -5,16 +5,18 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms;
 
 use Hirtz\Skeleton\Assets\SignupAssetBundle;
-use Hirtz\Skeleton\Html\Icon;
+use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Models\Forms\SignupForm;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\Traits\LoginActiveFormTrait;
 use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
 use Hirtz\Skeleton\Widgets\Forms\Fields\CheckboxField;
 use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
+use Hirtz\Skeleton\Widgets\Icon;
 use Stringable;
 use Yii;
-use Hirtz\Skeleton\Helpers\Url;;
+
+;
 
 /**
  * @property SignupForm $model

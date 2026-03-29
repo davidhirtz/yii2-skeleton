@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms;
 
 use Hirtz\Skeleton\Html\Div;
-use Hirtz\Skeleton\Html\Icon;
 use Hirtz\Skeleton\Models\Forms\PasswordRecoverForm;
 use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
 use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
+use Hirtz\Skeleton\Widgets\Icon;
 use Override;
 use Stringable;
 use Yii;

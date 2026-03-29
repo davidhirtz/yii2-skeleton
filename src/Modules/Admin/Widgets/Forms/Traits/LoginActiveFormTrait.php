@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms\Traits;
 
-use Hirtz\Skeleton\Html\Icon;
 use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
+use Hirtz\Skeleton\Widgets\Icon;
 use Stringable;
 
 trait LoginActiveFormTrait

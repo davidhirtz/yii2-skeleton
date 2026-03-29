@@ -6,7 +6,6 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
 use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\Div;
-use Hirtz\Skeleton\Html\Icon;
 use Hirtz\Skeleton\Html\Ul;
 use Hirtz\Skeleton\Models\AuthItem;
 use Hirtz\Skeleton\Models\User;
@@ -17,6 +16,7 @@ use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Hirtz\Skeleton\Widgets\Grids\Traits\MessageSourceTrait;
+use Hirtz\Skeleton\Widgets\Icon;
 use Hirtz\Skeleton\Widgets\Traits\UserWidgetTrait;
 use Override;
 use Stringable;

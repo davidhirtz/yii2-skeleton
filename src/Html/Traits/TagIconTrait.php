@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Html\Traits;
 
 use Closure;
-use Hirtz\Skeleton\Html\Icon;
+use Hirtz\Skeleton\Widgets\Icon;
 
 trait TagIconTrait
 {

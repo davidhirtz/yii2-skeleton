@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Widgets\Navs;
 
 use Hirtz\Skeleton\Html\A;
-use Hirtz\Skeleton\Html\Icon;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Web\Controller;
+use Hirtz\Skeleton\Widgets\Icon;
 use Hirtz\Skeleton\Widgets\Navs\Nav;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Override;
