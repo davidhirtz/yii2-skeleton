@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Html\Traits;
+namespace Hirtz\Skeleton\Widgets\Traits;
 
 use Closure;
 use Hirtz\Skeleton\Widgets\Icon;
 
-trait TagIconTrait
+trait IconTrait
 {
     protected ?Icon $icon = null;
 

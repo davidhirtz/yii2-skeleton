@@ -20,6 +20,7 @@ use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\CreateButton;
 use Hirtz\Skeleton\Widgets\Grids\Traits\TypeGridViewTrait;
+use Hirtz\Skeleton\Widgets\Link;
 use Hirtz\Skeleton\Widgets\Modal;
 use Override;
 use Stringable;
@@ -110,7 +111,7 @@ class RedirectGridView extends GridView
     {
         return DataColumn::make()
             ->property('url')
-            ->content(fn (Redirect $redirect): Stringable => A::make()
+            ->content(fn (Redirect $redirect) => Link::make()
                 ->icon('external-link-alt')
                 ->content(Html::markKeywords($redirect->url ?: '/', $this->search->getKeywords()))
                 ->href($redirect->url)

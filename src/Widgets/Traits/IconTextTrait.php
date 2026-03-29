@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Html\Traits;
+namespace Hirtz\Skeleton\Widgets\Traits;
 
 use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Stringable;
 
-trait TagIconTextTrait
+trait IconTextTrait
 {
     use TagContentTrait;
-    use TagIconTrait;
+    use IconTrait;
 
     protected function renderContent(): string|Stringable
     {

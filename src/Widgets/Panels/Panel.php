@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Panels;
 
 use Hirtz\Skeleton\Html\Div;
-use Hirtz\Skeleton\Html\Traits\TagCardTrait;
 use Hirtz\Skeleton\Widgets\Grids\Traits\GridTrait;
-use Hirtz\Skeleton\Widgets\Traits\ContainerWidgetTrait;
+use Hirtz\Skeleton\Widgets\Traits\ContainerTrait;
+use Hirtz\Skeleton\Widgets\Traits\CardTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use Yii;
 
 class Panel extends Widget
 {
-    use ContainerWidgetTrait;
+    use ContainerTrait;
     use GridTrait;
-    use TagCardTrait;
+    use CardTrait;
 
     public array $panelAttributes = ['class' => 'form-group form-row'];
     public array $contentOptions = ['class' => 'form-content'];

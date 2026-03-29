@@ -6,13 +6,13 @@ namespace Hirtz\Skeleton\Widgets\Panels;
 
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\DashboardPanel;
-use Hirtz\Skeleton\Widgets\Traits\ContainerWidgetTrait;
+use Hirtz\Skeleton\Widgets\Traits\ContainerTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 
 class Dashboard extends Widget
 {
-    use ContainerWidgetTrait;
+    use ContainerTrait;
 
     /**
      * @var array<string, DashboardPanel>

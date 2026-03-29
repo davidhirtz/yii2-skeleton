@@ -9,13 +9,13 @@ use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Label;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
-use Hirtz\Skeleton\Html\Traits\TagLabelTrait;
-use Hirtz\Skeleton\Html\Traits\TagVisibilityTrait;
 use Hirtz\Skeleton\Widgets\Forms\FormRow;
 use Hirtz\Skeleton\Widgets\Forms\Traits\FormWidgetTrait;
 use Hirtz\Skeleton\Widgets\Forms\Traits\RowAttributesTrait;
 use Hirtz\Skeleton\Widgets\Traits\ModelWidgetTrait;
 use Hirtz\Skeleton\Widgets\Traits\PropertyWidgetTrait;
+use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
+use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
@@ -28,9 +28,9 @@ abstract class Field extends Widget
     use PropertyWidgetTrait;
     use RowAttributesTrait;
     use TagAttributesTrait;
-    use TagVisibilityTrait;
+    use VisibilityTrait;
     use TagIdTrait;
-    use TagLabelTrait;
+    use LabelTrait;
 
     protected array $labelAttributes = [];
 

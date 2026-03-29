@@ -2,13 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Html\Traits;
+namespace Hirtz\Skeleton\Widgets\Traits;
 
-trait TagCardTrait
+use Hirtz\Skeleton\Html\Traits\TagContentTrait;
+
+trait CardTrait
 {
-    use TagCollapsedTrait;
+    use CollapsedTrait;
     use TagContentTrait;
-    use TagTitleTrait;
+    use TitleTrait;
 
     public function danger(): static
     {

@@ -8,9 +8,9 @@ use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\TextInput;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
-use Hirtz\Skeleton\Html\Traits\TagLabelTrait;
 use Hirtz\Skeleton\Widgets\Navs\Dropdown;
 use Hirtz\Skeleton\Widgets\Navs\DropdownOption;
+use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use Yii;
@@ -18,7 +18,7 @@ use Yii;
 class FilterDropdown extends Widget
 {
     use TagAttributesTrait;
-    use TagLabelTrait;
+    use LabelTrait;
     use TagIdTrait;
 
     public int $showFilterThreshold = 20;

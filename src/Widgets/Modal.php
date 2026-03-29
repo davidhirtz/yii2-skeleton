@@ -9,8 +9,8 @@ use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
-use Hirtz\Skeleton\Html\Traits\TagTitleTrait;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
+use Hirtz\Skeleton\Widgets\Traits\TitleTrait;
 use Override;
 use Stringable;
 use Yii;
@@ -20,7 +20,7 @@ class Modal extends Widget
     use TagAttributesTrait;
     use TagContentTrait;
     use TagIdTrait;
-    use TagTitleTrait;
+    use TitleTrait;
 
     private string|false|null $dismiss = null;
     private array $footer = [];

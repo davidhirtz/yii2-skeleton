@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Forms;
 
 use Hirtz\Skeleton\Html\Div;
-use Hirtz\Skeleton\Html\Traits\TagTitleTrait;
 use Hirtz\Skeleton\Html\Ul;
 use Hirtz\Skeleton\Widgets\Alert;
+use Hirtz\Skeleton\Widgets\Traits\TitleTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use Yii;
@@ -16,7 +16,7 @@ use yii\db\ActiveRecord;
 
 class ErrorSummary extends Widget
 {
-    use TagTitleTrait;
+    use TitleTrait;
 
     public ?string $icon = 'exclamation-triangle';
     public bool $showAllErrors = true;

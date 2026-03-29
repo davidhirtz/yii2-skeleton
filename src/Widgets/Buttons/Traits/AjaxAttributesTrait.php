@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Html\Traits;
+namespace Hirtz\Skeleton\Widgets\Buttons\Traits;
 
 use Hirtz\Skeleton\Helpers\Url;
 
-trait TagAjaxAttributeTrait
+trait AjaxAttributesTrait
 {
     public function delete(string|array $url, string $target): static
     {

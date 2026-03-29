@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Buttons;
 
 use Hirtz\Skeleton\Html\A;
-use Hirtz\Skeleton\Html\Traits\TagAjaxAttributeTrait;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
-use Hirtz\Skeleton\Html\Traits\TagIconTextTrait;
 use Hirtz\Skeleton\Html\Traits\TagInputTrait;
 use Hirtz\Skeleton\Html\Traits\TagLinkTrait;
-use Hirtz\Skeleton\Html\Traits\TagTooltipAttributeTrait;
+use Hirtz\Skeleton\Widgets\Buttons\Traits\AjaxAttributesTrait;
 use Hirtz\Skeleton\Widgets\Modal;
+use Hirtz\Skeleton\Widgets\Traits\IconTextTrait;
+use Hirtz\Skeleton\Widgets\Traits\TooltipAttributeTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
@@ -19,11 +19,11 @@ use Stringable;
 class Button extends Widget
 {
     use TagAttributesTrait;
-    use TagAjaxAttributeTrait;
-    use TagIconTextTrait;
+    use AjaxAttributesTrait;
+    use IconTextTrait;
     use TagInputTrait;
     use TagLinkTrait;
-    use TagTooltipAttributeTrait;
+    use TooltipAttributeTrait;
 
     protected ?Modal $modal = null;
 

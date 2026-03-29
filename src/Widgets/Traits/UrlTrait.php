@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Html\Traits;
+namespace Hirtz\Skeleton\Widgets\Traits;
 
-trait TagUrlTrait
+trait UrlTrait
 {
     protected array|string|null $url = null;
 

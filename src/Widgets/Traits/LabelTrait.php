@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Html\Traits;
+namespace Hirtz\Skeleton\Widgets\Traits;
 
 use Hirtz\Skeleton\Helpers\Html;
 use Stringable;
 
-trait TagLabelTrait
+trait LabelTrait
 {
     protected ?string $label = null;
 

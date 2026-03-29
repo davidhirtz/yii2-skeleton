@@ -7,8 +7,8 @@ namespace Hirtz\Skeleton\Widgets;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
-use Hirtz\Skeleton\Html\Traits\TagIconTrait;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
+use Hirtz\Skeleton\Widgets\Traits\IconTrait;
 use Override;
 use Stringable;
 
@@ -16,7 +16,7 @@ class Alert extends Widget
 {
     use TagAttributesTrait;
     use TagContentTrait;
-    use TagIconTrait;
+    use IconTrait;
 
     protected array $buttons = [];
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Html\Traits;
+namespace Hirtz\Skeleton\Widgets\Traits;
 
-trait TagTooltipAttributeTrait
+trait TooltipAttributeTrait
 {
     public function tooltip(string $tooltip): static
     {

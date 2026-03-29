@@ -8,7 +8,7 @@ use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
 use Hirtz\Skeleton\Widgets\Container;
 
-trait ContainerWidgetTrait
+trait ContainerTrait
 {
     use TagAttributesTrait;
     use TagIdTrait;

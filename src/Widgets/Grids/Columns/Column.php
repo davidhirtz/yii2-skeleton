@@ -8,8 +8,8 @@ use Closure;
 use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
 use Hirtz\Skeleton\Html\Td;
 use Hirtz\Skeleton\Html\Th;
-use Hirtz\Skeleton\Html\Traits\TagVisibilityTrait;
 use Hirtz\Skeleton\Widgets\Grids\Traits\GridTrait;
+use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Stringable;
 use yii\base\Model;
 use yii\helpers\Html;
@@ -18,7 +18,7 @@ class Column
 {
     use ContainerConfigurationTrait;
     use GridTrait;
-    use TagVisibilityTrait;
+    use VisibilityTrait;
 
     protected string|false|null $header = null;
 

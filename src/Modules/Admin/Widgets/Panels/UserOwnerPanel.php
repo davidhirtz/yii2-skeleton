@@ -6,16 +6,16 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Panels;
 
 use Hirtz\Skeleton\Html\P;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
-use Hirtz\Skeleton\Html\Traits\TagTitleTrait;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Panels\Panel;
+use Hirtz\Skeleton\Widgets\Traits\TitleTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use Yii;
 
 class UserOwnerPanel extends Widget
 {
-    use TagTitleTrait;
+    use TitleTrait;
     use TagContentTrait;
 
     protected function renderContent(): string|Stringable

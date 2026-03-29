@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Grids\Columns\Buttons;
 
-use Hirtz\Skeleton\Html\Traits\TagIconTextTrait;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
+use Hirtz\Skeleton\Widgets\Traits\IconTextTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 
 class DraggableSortGridButton extends Widget
 {
-    use TagIconTextTrait;
+    use IconTextTrait;
 
     public function renderContent(): string
     {

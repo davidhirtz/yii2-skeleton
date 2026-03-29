@@ -2,25 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Html\Traits;
+namespace Hirtz\Skeleton\Widgets\Traits;
 
 use Closure;
 use Yii;
 
-trait TagVisibilityTrait
+trait VisibilityTrait
 {
     protected array $roles = [];
     protected bool $visible = true;
 
-    public function addRoles(array $roles): static
-    {
-        $this->roles = array_merge($this->roles, $roles);
-        return $this;
-    }
-
     public function roles(array $roles): static
     {
-        $this->roles = $roles;
+        $this->roles = [...$this->roles, ...$roles];
         return $this;
     }
 
@@ -37,7 +31,7 @@ trait TagVisibilityTrait
         }
 
         foreach ($this->roles as $role) {
-            if ('*' === $role || Yii::$app->getUser()->can($role)) {
+            if ($role === '*' || Yii::$app->getUser()->can($role)) {
                 return true;
             }
         }

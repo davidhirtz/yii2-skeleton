@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Forms;
 
-use Hirtz\Skeleton\Html\Traits\TagCardTrait;
-use Hirtz\Skeleton\Widgets\Forms\Traits\FormWidgetTrait;
 use Hirtz\Skeleton\Widgets\Panels\Card;
-use Hirtz\Skeleton\Widgets\Traits\ContainerWidgetTrait;
+use Hirtz\Skeleton\Widgets\Traits\ContainerTrait;
+use Hirtz\Skeleton\Widgets\Traits\CardTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 
 class FormContainer extends Widget
 {
-    use ContainerWidgetTrait;
-    use TagCardTrait;
+    use ContainerTrait;
+    use CardTrait;
 
     private ActiveForm $form;
 

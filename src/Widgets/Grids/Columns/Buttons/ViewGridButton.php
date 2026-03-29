@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Grids\Columns\Buttons;
 
-use Hirtz\Skeleton\Html\Traits\TagIconTextTrait;
-use Hirtz\Skeleton\Html\Traits\TagLabelTrait;
-use Hirtz\Skeleton\Html\Traits\TagUrlTrait;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
+use Hirtz\Skeleton\Widgets\Traits\IconTextTrait;
+use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
 use Hirtz\Skeleton\Widgets\Traits\ModelWidgetTrait;
+use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use Yii;
@@ -17,9 +17,9 @@ use yii\db\ActiveRecordInterface;
 class ViewGridButton extends Widget
 {
     use ModelWidgetTrait;
-    use TagUrlTrait;
-    use TagIconTextTrait;
-    use TagLabelTrait;
+    use UrlTrait;
+    use IconTextTrait;
+    use LabelTrait;
 
     public function renderContent(): Stringable
     {

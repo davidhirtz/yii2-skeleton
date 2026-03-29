@@ -4,14 +4,20 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Html;
 
+use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\Base\Tag;
-use Hirtz\Skeleton\Html\Traits\TagLabelTrait;
 use Override;
 use Stringable;
 
 class Option extends Tag
 {
-    use TagLabelTrait;
+    private string $label = '';
+
+    public function label(string $label): static
+    {
+        $this->label = Html::encode($label);
+        return $this;
+    }
 
     public function disabled(bool $disabled = true): static
     {
@@ -29,10 +35,10 @@ class Option extends Tag
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     protected function renderContent(): string|Stringable
     {
-        return (string)$this->label;
+        return $this->label;
     }
 
     #[Override]

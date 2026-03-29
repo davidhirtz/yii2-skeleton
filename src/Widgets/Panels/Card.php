@@ -6,9 +6,9 @@ namespace Hirtz\Skeleton\Widgets\Panels;
 
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
-use Hirtz\Skeleton\Html\Traits\TagCardTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
+use Hirtz\Skeleton\Widgets\Traits\CardTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
@@ -18,7 +18,7 @@ class Card extends Widget
 {
     use TagAttributesTrait;
     use TagIdTrait;
-    use TagCardTrait;
+    use CardTrait;
 
     #[Override]
     protected function renderContent(): string|Stringable

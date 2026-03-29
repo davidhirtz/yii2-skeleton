@@ -17,6 +17,7 @@ use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\CreateButton;
 use Hirtz\Skeleton\Widgets\Grids\Traits\StatusGridViewTrait;
+use Hirtz\Skeleton\Widgets\Link;
 use Override;
 use Stringable;
 use Yii;
@@ -102,7 +103,7 @@ class UserGridView extends GridView
 
     protected function getEmailColumnContent(User $user): ?Stringable
     {
-        $link = A::make()
+        $link = Link::make()
             ->content(Html::markKeywords(Html::encode($user->email), $this->search->getKeywords()))
             ->mailto($user->email);
 

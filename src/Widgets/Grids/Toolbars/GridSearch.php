@@ -9,11 +9,11 @@ use Hirtz\Skeleton\Helpers\ArrayHelper;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Form;
 use Hirtz\Skeleton\Html\Input;
-use Hirtz\Skeleton\Html\Traits\TagUrlTrait;
 use Hirtz\Skeleton\Web\Request;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Forms\InputGroup;
 use Hirtz\Skeleton\Widgets\Grids\Traits\GridTrait;
+use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Stringable;
 use Yii;
 
@@ -23,7 +23,7 @@ class GridSearch
 {
     use ContainerConfigurationTrait;
     use GridTrait;
-    use TagUrlTrait;
+    use UrlTrait;
 
     protected array $inputAttributes = [];
     protected array $formAttributes = [];

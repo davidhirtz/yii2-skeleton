@@ -8,9 +8,9 @@ use Hirtz\Skeleton\Assets\FileUploadAssetBundle;
 use Hirtz\Skeleton\Html\Custom\FileUpload;
 use Hirtz\Skeleton\Html\Input;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
-use Hirtz\Skeleton\Html\Traits\TagIconTrait;
-use Hirtz\Skeleton\Html\Traits\TagLabelTrait;
-use Hirtz\Skeleton\Html\Traits\TagUrlTrait;
+use Hirtz\Skeleton\Widgets\Traits\IconTrait;
+use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
+use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use yii\db\ActiveRecord;
@@ -21,9 +21,9 @@ use yii\db\ActiveRecord;
 class FileUploadButton extends Widget
 {
     use TagAttributesTrait;
-    use TagLabelTrait;
-    use TagIconTrait;
-    use TagUrlTrait;
+    use LabelTrait;
+    use IconTrait;
+    use UrlTrait;
 
     public ?int $maxChunkSize = null;
     public array $inputAttributes = [];

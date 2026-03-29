@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Buttons\Traits;
 
-use Hirtz\Skeleton\Html\Traits\TagIconTextTrait;
-use Hirtz\Skeleton\Html\Traits\TagLabelTrait;
-use Hirtz\Skeleton\Html\Traits\TagTitleTrait;
-use Hirtz\Skeleton\Html\Traits\TagUrlTrait;
 use Hirtz\Skeleton\Widgets\Icon;
+use Hirtz\Skeleton\Widgets\Traits\IconTextTrait;
+use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
 use Hirtz\Skeleton\Widgets\Traits\ModelWidgetTrait;
+use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
+use Hirtz\Skeleton\Widgets\Traits\TitleTrait;
 use Yii;
 use yii\db\ActiveRecordInterface;
 
 trait DeleteButtonTrait
 {
     use ModelWidgetTrait;
-    use TagUrlTrait;
-    use TagIconTextTrait;
-    use TagLabelTrait;
-    use TagTitleTrait;
+    use UrlTrait;
+    use IconTextTrait;
+    use LabelTrait;
+    use TitleTrait;
 
     public function setButtonDefault(): void
     {

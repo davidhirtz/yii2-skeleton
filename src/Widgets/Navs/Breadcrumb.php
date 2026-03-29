@@ -8,7 +8,7 @@ use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Li;
 use Hirtz\Skeleton\Html\Ol;
 use Hirtz\Skeleton\Modules\Admin\Module;
-use Hirtz\Skeleton\Widgets\Traits\ContainerWidgetTrait;
+use Hirtz\Skeleton\Widgets\Traits\ContainerTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use Yii;
@@ -18,7 +18,7 @@ use yii\helpers\Html;
 
 class Breadcrumb extends Widget
 {
-    use ContainerWidgetTrait;
+    use ContainerTrait;
 
     public bool $alwaysShowHomeLink = false;
     public bool $encodeLabels = true;

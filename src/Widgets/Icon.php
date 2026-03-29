@@ -6,14 +6,14 @@ namespace Hirtz\Skeleton\Widgets;
 
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
-use Hirtz\Skeleton\Html\Traits\TagTooltipAttributeTrait;
+use Hirtz\Skeleton\Widgets\Traits\TooltipAttributeTrait;
 use Override;
 use Stringable;
 
 class Icon extends Widget
 {
     use TagAttributesTrait;
-    use TagTooltipAttributeTrait;
+    use TooltipAttributeTrait;
 
     public const string ICON_COLLECTION_BRAND = 'brand';
     public const string ICON_COLLECTION_FLAG = 'flag';
