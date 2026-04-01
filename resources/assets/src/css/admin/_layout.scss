@@ -1,3 +1,5 @@
+@use "../shared/breakpoints" as *;
+
 .layout {
   width: 100%;
   height: 100%;
@@ -6,23 +8,28 @@
 }
 
 .main {
-  display: flex;
   flex: 1;
-  flex-direction: column;
   min-height: 100dvh;
-  gap: 2rem;
+}
 
-  .navbar ~ & {
-    padding-top: var(--scroll-padding);
+.container {
+  margin-inline: auto;
+  width: min(100%, 100rem);
+
+  @include media-breakpoint-up(md) {
+    padding: 1rem;
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--border-color);
   }
 }
 
-.page-header {
-  margin: 0 0 2rem;
-  text-align: center;
-}
-
-.submenu {
-  border-bottom: 2px solid var(--submenu-border-color);
+.container-centered {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 1rem;
   justify-content: center;
+  max-width: 28rem;
 }

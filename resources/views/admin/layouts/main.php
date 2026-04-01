@@ -9,10 +9,9 @@ declare(strict_types=1);
 
 use Hirtz\Skeleton\Assets\AdminAssetBundle;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\Aside;
-use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\NavBar;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Flashes;
-use Hirtz\Skeleton\Widgets\Navs\Breadcrumb;
+use Hirtz\Skeleton\Widgets\Navs\Breadcrumbs;
 use yii\helpers\Html;
 
 AdminAssetBundle::register($this);
@@ -29,17 +28,14 @@ AdminAssetBundle::register($this);
     <body hx-ext="head-support" hx-select="#wrap" hx-select-oob="#flashes:beforeend" hx-swap="outerHTML show:top" hx-target="#wrap" hx-boost="true">
     <?php $this->beginBody() ?>
     <?= Flashes::make(); ?>
-    <div id="wrap" hx-headers='{"X-CSRF-TOKEN":"<?= Yii::$app->getRequest()->getCsrfToken(); ?>"}'>
+    <div class="layout" id="wrap" hx-headers='{"X-CSRF-TOKEN":"<?= Yii::$app->getRequest()->getCsrfToken(); ?>"}'>
         <button class="aside-close" onclick="body.classList.toggle('has-aside')"></button>
-        <?= NavBar::make(); ?>
-        <div class="layout">
-            <?= Aside::make(); ?>
-            <main class="main">
-                <?= Breadcrumb::make(); ?>
-                <?= $content ?>
-                <?php $this->endBody() ?>
-            </main>
-        </div>
+        <?= Aside::make(); ?>
+        <main class="main">
+            <?= Breadcrumbs::make(); ?>
+            <?= $content ?>
+            <?php $this->endBody() ?>
+        </main>
     </div>
     </body>
     </html>

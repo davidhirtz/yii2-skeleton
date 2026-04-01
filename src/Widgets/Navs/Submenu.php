@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Navs;
 
+use Closure;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Hirtz\Skeleton\Web\User;
+use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Navs\Traits\NavItemTrait;
-use Hirtz\Skeleton\Widgets\Traits\ContainerTrait;
-use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Traits\TitleTrait;
+use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
@@ -17,15 +18,15 @@ use Yii;
 
 class Submenu extends Widget
 {
-    use ContainerTrait;
     use TagContentTrait;
     use TitleTrait;
     use UrlTrait;
     use NavItemTrait;
 
     protected array $navAttributes = ['class' => 'submenu nav-pills'];
-    protected array $headerAttributes = [];
     protected User $webuser;
+
+    protected Closure|Header|null $header = null;
 
     public function __construct($config = [])
     {
@@ -33,26 +34,37 @@ class Submenu extends Widget
         parent::__construct($config);
     }
 
+    /**
+     * @param Closure(Header):Header|Header|null $header
+     */
+    public function header(Closure|Header|null $header): static
+    {
+        $this->header = $header;
+        return $this;
+    }
+
     #[Override]
     protected function renderContent(): string|Stringable
     {
-        return $this->getHeader() . $this->getNav();
+        return $this->renderHeader() . $this->renderNav();
     }
 
-    protected function getHeader(): ?Header
+    protected function renderHeader(): ?Header
     {
-        return $this->title
-            ? Header::make()
-                ->attributes($this->headerAttributes)
+        $header = $this->header instanceof Header
+            ? $this->header
+            : Header::make()
                 ->title($this->title)
-                ->url($this->url)
-            : null;
+                ->url($this->url);
+
+        return is_callable($this->header) ? ($this->header)($header) : $header;
     }
 
-    protected function getNav(): Nav
+    protected function renderNav(): Container
     {
-        return Nav::make()
-            ->attributes($this->navAttributes)
-            ->items(...$this->items);
+        return Container::make()
+            ->content(Nav::make()
+                ->attributes($this->navAttributes)
+                ->items(...$this->items));
     }
 }

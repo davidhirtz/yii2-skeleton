@@ -1,17 +1,22 @@
 @use "../shared/breakpoints" as *;
 
-.breadcrumb {
-  display: none;
+//.breadcrumbs {
+//  display: none;
+//
+//  @include media-breakpoint-up(sm) {
+//    display: block;
+//  }
+//}
+
+.breadcrumbs-list {
+  display: flex;
   background-color: var(--breadcrumb-bg);
   gap: .5rem;
   overflow-x: auto;
-
-  @include media-breakpoint-up(sm) {
-    display: flex;
-  }
+  padding: 0.5rem 1rem;
 }
 
-.breadcrumb-item {
+.breadcrumbs-item {
   display: flex;
   gap: .5rem;
   max-width: 10em;
@@ -26,11 +31,12 @@
   }
 }
 
-.breadcrumb-link {
+.breadcrumbs-link {
   --link-color: var(--breadcrumb-link-color);
   --link-hover-color: var(--breadcrumb-link-hover-color);
   display: block;
   overflow: hidden;
+  padding: 0.0625rem 0;
   text-overflow: ellipsis;
   white-space: nowrap;
 }

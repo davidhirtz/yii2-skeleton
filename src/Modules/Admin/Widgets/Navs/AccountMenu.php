@@ -31,7 +31,7 @@ class AccountMenu extends Widget
     protected function configure(): void
     {
         $this->attributes['id'] ??= 'account-menu';
-        $this->attributes['class'] ??= 'navbar-nav navbar-right nav';
+        $this->attributes['class'] ??= 'aside-nav nav';
 
         $this->webuser = Yii::$app->getUser();
 

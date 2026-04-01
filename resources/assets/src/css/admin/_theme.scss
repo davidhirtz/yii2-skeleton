@@ -121,17 +121,11 @@
   --border-color: var(--color-gray-200);
 
   --link-color: var(--color-gray-900);
-  --link-hover-color: var(--color-black);
+  --link-hover-color: var(--color-blue-600);
 
   --highlight-bg: var(--color-blue-200);
   --highlight-color: var(--color-black);
   --muted-color: var(--color-gray-500);
-
-  // Text
-  --text-h1: 1.5rem;
-  --text-h2: 1.125rem;
-  --text-h3: 1rem;
-  --text-h4: .875rem;
 
   // Alert
   --alert-success-bg: var(--color-green-50);
@@ -273,26 +267,28 @@
   --modal-header-bg: var(--color-white);
 
   // Nav
-  --nav-link-active-badge-bg: var(--color-white);
-  --nav-link-active-badge-color: var(--color-black);
-  --nav-link-active-bg: var(--color-white);
-  --nav-link-active-color: var(--color-white);
-  --nav-link-color: var(--link-color);
-  --nav-link-disabled-color: var(--color-gray-300);
-  --nav-link-hover-color: var(--link-hover-color);
-
+  --nav-pills-link-bg: transparent;
+  --nav-pills-link-border-color: var(--color-gray-700);
+  --nav-pills-link-color: var(--color-black);
   --nav-pills-link-active-bg: var(--color-gray-700);
+  --nav-pills-link-active-border-color: var(--nav-pills-link-active-bg);
   --nav-pills-link-active-color: var(--color-white);
   --nav-pills-link-hover-bg: var(--color-gray-200);
+  --nav-pills-link-hover-border-color: var(--color-black);
   --nav-pills-link-hover-color: var(--color-black);
 
-  // Navbar
-  --navbar-bg: var(--color-gray-700);
-  --navbar-link-active-bg: var(--color-blue-500);
-  --navbar-link-active-color: var(--color-white);
-  --navbar-link-color: var(--color-black);
-  --navbar-link-hover-bg: var(--color-blue-200);
-  --navbar-link-hover-color: var(--color-black);
+  // Aside
+  --aside-bg: var(--color-gray-700);
+
+  --aside-link-active-bg: var(--color-blue-500);
+  --aside-link-active-border-color: var(--aside-link-active-bg);
+  --aside-link-active-color: var(--color-white);
+  --aside-link-bg: transparent;
+  --aside-link-border-color: var(--aside-link-bg);
+  --aside-link-color: var(--color-black);
+  --aside-link-hover-bg: var(--color-blue-200);
+  --aside-link-hover-border-color: var(--aside-link-hover-bg);
+  --aside-link-hover-color: var(--color-black);
 
   // Pagination
   --page-link-bg: var(--color-gray-100);
@@ -344,9 +340,5 @@
   @include media-breakpoint-down(md) {
     --form-padding-y: .4375rem;
     --form-font-size: #{1rem};
-  }
-
-  @include media-breakpoint-up(lg) {
-    --text-h1: 2rem;
   }
 }

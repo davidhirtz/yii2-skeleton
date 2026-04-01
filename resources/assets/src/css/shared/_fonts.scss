@@ -36,11 +36,26 @@ $path: '..' !default;
   src: url('#{$path}/fonts/open-sans-v40-latin-700.woff2') format('woff2');
 }
 
-/* open-sans-700italic - latin */
 //@font-face {
 //  font-display: swap;
-//  font-family: 'Open Sans';
-//  font-style: italic;
-//  font-weight: 700;
-//  src: url('#{$path}/fonts/open-sans-v40-latin-700italic.woff2') format('woff2');
+//  font-family: 'ATC Overlook';
+//  font-style: normal;
+//  font-weight: 400;
+//  src: url('#{$path}/fonts/atcoverlook-regular-webfont.woff2') format('woff2');
 //}
+
+//@font-face {
+//  font-display: swap;
+//  font-family: 'ATC Overlook';
+//  font-style: normal;
+//  font-weight: 700;
+//  src: url('#{$path}/fonts/atcoverlook-heavy-webfont.woff2') format('woff2');
+//}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Bebas Neue';
+  font-style: normal;
+  font-weight: normal;
+  src: url('#{$path}/fonts/bebasneue_bold-webfont.woff2') format('woff2');
+}

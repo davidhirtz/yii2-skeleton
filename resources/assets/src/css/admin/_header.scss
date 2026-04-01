@@ -1,0 +1,13 @@
+.header {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem;
+}
+
+.header-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 2.5rem;
+  place-content: center;
+  gap: .25rem;
+}

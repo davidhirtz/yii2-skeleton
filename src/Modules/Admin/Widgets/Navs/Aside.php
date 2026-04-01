@@ -18,11 +18,16 @@ class Aside extends Widget
     {
         return \Hirtz\Skeleton\Html\Aside::make()
             ->attributes($this->attributes)
-            ->content($this->getMainMenu());
+            ->content($this->renderMainMenu(), $this->renderAccountMenu());
     }
 
-    protected function getMainMenu(): Stringable
+    protected function renderMainMenu(): Stringable
     {
         return MainMenu::make();
+    }
+
+    protected function renderAccountMenu(): AccountMenu
+    {
+        return AccountMenu::make();
     }
 }

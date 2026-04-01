@@ -10,6 +10,7 @@
 
 html,
 :host {
+  -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   -webkit-text-size-adjust: 100%;
   font-family: "Open Sans", sans-serif;
@@ -17,6 +18,8 @@ html,
   font-variation-settings: normal;
   line-height: 1.57142857;
   tab-size: 4;
+  text-rendering: optimizeLegibility;
+
 }
 
 html:has(.navbar) {
@@ -27,8 +30,6 @@ body {
   line-height: inherit;
   min-width: 20rem;
   min-height: 100svh;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
   font-size: .875rem;
   font-weight: 400;
   color: var(--body-color);
@@ -72,7 +73,7 @@ a {
   text-decoration: none;
 
   &:hover {
-    color: var(--link-hover-color);
+    --link-color: var(--link-hover-color);
   }
 }
 
