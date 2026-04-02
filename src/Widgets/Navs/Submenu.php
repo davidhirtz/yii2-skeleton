@@ -23,7 +23,7 @@ class Submenu extends Widget
     use UrlTrait;
     use NavItemTrait;
 
-    protected array $navAttributes = ['class' => 'submenu nav-pills'];
+    protected array $navAttributes = ['class' => 'tabs'];
     protected User $webuser;
 
     protected Closure|Header|null $header = null;
@@ -49,7 +49,7 @@ class Submenu extends Widget
         return $this->renderHeader() . $this->renderNav();
     }
 
-    protected function renderHeader(): ?Header
+    protected function renderHeader(): ?Stringable
     {
         $header = $this->header instanceof Header
             ? $this->header
@@ -60,11 +60,13 @@ class Submenu extends Widget
         return is_callable($this->header) ? ($this->header)($header) : $header;
     }
 
-    protected function renderNav(): Container
+    protected function renderNav(): ?Stringable
     {
-        return Container::make()
-            ->content(Nav::make()
-                ->attributes($this->navAttributes)
-                ->items(...$this->items));
+        return $this->items
+            ? Container::make()
+                ->content(Nav::make()
+                    ->attributes($this->navAttributes)
+                    ->items(...$this->items))
+            : null;
     }
 }

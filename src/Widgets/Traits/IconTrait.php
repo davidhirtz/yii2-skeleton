@@ -12,14 +12,14 @@ trait IconTrait
     protected ?Icon $icon = null;
 
     /**
-     * @param Icon|Closure(Icon): (Icon|null)|string|null $icon
+     * @param Icon|Closure(?Icon):(Icon|null)|string|null $icon
      * @return $this
      */
     public function icon(Icon|Closure|string|null $icon): static
     {
         $this->icon = is_string($icon)
             ? Icon::make()->name($icon)
-            : (is_callable($icon) ? ($icon)($this->icon ?? Icon::make()) : $icon);
+            : (is_callable($icon) ? ($icon)($this->icon) : $icon);
 
         return $this;
     }

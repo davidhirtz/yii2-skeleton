@@ -194,12 +194,12 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
 
         foreach ($this->getSubmodules() as $module) {
             foreach ($module->getMainMenuItems() as $key => $item) {
-                $items = Config::merge($items, $key, $item);
+                $items[] = $item;
             }
         }
 
         foreach ($this->mainMenuItems as $key => $item) {
-            $items = Config::merge($items, $key, $item);
+            $items[] = $item;
         }
 
         return array_filter($items);

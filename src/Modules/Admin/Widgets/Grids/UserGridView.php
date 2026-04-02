@@ -10,12 +10,12 @@ use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Data\UserActiveDataProvider;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
+use Hirtz\Skeleton\Widgets\Buttons\CreateButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
-use Hirtz\Skeleton\Widgets\Grids\Toolbars\CreateButton;
 use Hirtz\Skeleton\Widgets\Grids\Traits\StatusGridViewTrait;
 use Hirtz\Skeleton\Widgets\Link;
 use Override;
@@ -61,14 +61,13 @@ class UserGridView extends GridView
         parent::configure();
     }
 
-    protected function getCreateButton(): ?Stringable
+    protected function getCreateButton(): string|Stringable
     {
-        return $this->webuser->can(User::AUTH_USER_CREATE)
-            ? CreateButton::make()
-                ->icon('user-plus')
-                ->text(Yii::t('skeleton', 'New User'))
-                ->href(['/admin/user/create'])
-            : null;
+        return CreateButton::make()
+            ->href(['/admin/user/create'])
+            ->icon('user-plus')
+            ->roles([User::AUTH_USER_CREATE])
+            ->text(Yii::t('skeleton', 'New User'));
     }
 
     protected function getNameColumn(): Column

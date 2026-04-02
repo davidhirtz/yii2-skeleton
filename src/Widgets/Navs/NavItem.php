@@ -10,6 +10,8 @@ use Hirtz\Skeleton\Html\Li;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
+use Hirtz\Skeleton\Widgets\Icon;
+use Hirtz\Skeleton\Widgets\Navs\Traits\NavItemTrait;
 use Hirtz\Skeleton\Widgets\Traits\IconTrait;
 use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
@@ -24,6 +26,7 @@ class NavItem extends Widget
     use TagAttributesTrait;
     use TagContentTrait;
     use IconTrait;
+    use NavItemTrait;
     use UrlTrait;
     use VisibilityTrait;
 
@@ -33,10 +36,19 @@ class NavItem extends Widget
     protected ?Closure $link = null;
     protected array $routes = [];
 
-    public function active(bool|callable|null $active): static
+    /**
+     * @param bool|Closure():(bool|null)|null $active
+     * @return $this
+     */
+    public function active(bool|Closure|null $active): static
     {
         $this->active = $active instanceof Closure ? $active() : $active;
         return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active === true;
     }
 
     /**
@@ -92,16 +104,69 @@ class NavItem extends Widget
         return $this;
     }
 
-    protected function configure(): void
+    #[Override]
+    protected function renderContent(): string|Stringable
     {
-        $this->parseRoutes();
-        parent::configure();
+        if (!$this->isVisible()) {
+            return '';
+        }
+
+        $items = $this->renderItems();
+
+        return Li::make()
+            ->attributes($this->attributes)
+            ->addClass('nav-item')
+            ->content($this->renderLink(), $items);
     }
 
-    protected function parseRoutes(): void
+    protected function renderLink(): string|Stringable
     {
-        if (!(Yii::$app->controller instanceof Controller) || $this->active) {
-            return;
+        if ($this->content) {
+            return implode('', $this->content);
+        }
+
+        $this->icon(fn (?Icon $icon) => $icon?->addClass('nav-link-icon'));
+
+        $link = A::make()
+            ->class('nav-link')
+            ->content($this->icon, $this->label, $this->badge)
+            ->href($this->url);
+
+        $this->active ??= $this->hasActiveSubnavItem() ?: $this->hasActiveRoute();
+        $this->active ??= Yii::$app->getRequest()->getUrl() === ($link->attributes['href'] ?? null);
+
+        if ($this->active) {
+            $link->addClass('active');
+        }
+
+        return $this->link ? ($this->link)($link) : $link;
+    }
+
+    protected function renderItems(): ?string
+    {
+        return $this->items
+            ? Nav::make()
+                ->class('subnav')
+                ->items(...$this->items)
+                ->render()
+            : null;
+    }
+
+    protected function hasActiveSubnavItem(): bool
+    {
+        foreach ($this->items as $item) {
+            if ($item->isActive()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected function hasActiveRoute(): ?bool
+    {
+        if (!(Yii::$app->controller instanceof Controller)) {
+            return null;
         }
 
         $request = Yii::$app->getRequest();
@@ -125,47 +190,17 @@ class NavItem extends Widget
                             : $request->get($key) === $value;
 
                         if ($isMatching) {
-                            $this->active = true;
-                            break 2;
+                            return true;
                         }
                     }
 
-                    $this->active = false;
-                    break;
+                    return false;
                 }
 
-                $this->active = !$shouldSkip;
-                break;
+                return !$shouldSkip;
             }
         }
-    }
 
-    #[Override]
-    protected function renderContent(): Stringable
-    {
-        return Li::make()
-            ->attributes($this->attributes)
-            ->addClass('nav-item')
-            ->content($this->renderLink());
-    }
-
-    protected function renderLink(): string|Stringable
-    {
-        if ($this->content) {
-            return implode('', $this->content);
-        }
-
-        $link = A::make()
-            ->class('nav-link')
-            ->content($this->icon, $this->label, $this->badge)
-            ->href($this->url);
-
-        $this->active ??= Yii::$app->getRequest()->getUrl() === ($link->attributes['href'] ?? null);
-
-        if ($this->active) {
-            $link->addClass('active');
-        }
-
-        return $this->link ? ($this->link)($link) : $link;
+        return false;
     }
 }

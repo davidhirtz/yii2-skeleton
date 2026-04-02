@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Widgets\Grids\Toolbars;
+namespace Hirtz\Skeleton\Widgets\Buttons;
 
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagLinkTrait;
-use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Icon;
 use Hirtz\Skeleton\Widgets\Traits\IconTextTrait;
+use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Hirtz\Skeleton\Widgets\Widget;
+use Override;
 use Stringable;
 use Yii;
 
@@ -19,8 +20,9 @@ class CreateButton extends Widget
     use TagAttributesTrait;
     use IconTextTrait;
     use TagLinkTrait;
+    use VisibilityTrait;
 
-    #[\Override]
+    #[Override]
     protected function configure(): void
     {
         $this->content = $this->content ?: [Yii::t('skeleton', 'Create')];
@@ -30,12 +32,14 @@ class CreateButton extends Widget
         parent::configure();
     }
 
-    public function renderContent(): Stringable
+    public function renderContent(): string|Stringable
     {
-        return Button::make()
-            ->addAttributes($this->attributes)
-            ->primary()
-            ->content(...$this->content)
-            ->icon($this->icon);
+        return $this->isVisible()
+            ? Button::make()
+                ->addAttributes($this->attributes)
+                ->primary()
+                ->content(...$this->content)
+                ->icon($this->icon)
+            : '';
     }
 }

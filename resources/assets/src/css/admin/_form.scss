@@ -34,6 +34,9 @@
 }
 
 .form-label {
+  font-family: "Bebas Neue", sans-serif;
+  letter-spacing: .0625em;
+
   @include media-breakpoint-up(sm) {
     text-align: right;
 

@@ -13,7 +13,7 @@ trait NavItemTrait
      */
     protected array $items = [];
 
-    public function items(NavItem|null ...$items): static
+    public function items(?NavItem ...$items): static
     {
         $this->items = array_filter($items);
         return $this;

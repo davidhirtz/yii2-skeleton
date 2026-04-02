@@ -25,15 +25,13 @@ class Nav extends Widget
 
     protected function renderContent(): string|Stringable
     {
-        $items = array_filter($this->items, fn (NavItem $item) => $item->isVisible());
-
-        if (!$items || (1 === count($items) && $this->hideSingleItem)) {
+        if (!$this->items || (1 === count($this->items) && $this->hideSingleItem)) {
             return '';
         }
 
         return Ul::make()
             ->attributes($this->attributes)
             ->addClass('nav')
-            ->content(...$items);
+            ->content(...$this->items);
     }
 }

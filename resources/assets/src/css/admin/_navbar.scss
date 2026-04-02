@@ -1,24 +1,6 @@
 @use "../shared/breakpoints" as *;
 @use "../shared/svg" as *;
 
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 100;
-  background: var(--aside-bg);
-}
-
-.navbar-container {
-  display: grid;
-  grid-template-areas: "toggler right" "left left";
-
-  @include media-breakpoint-up(md) {
-    display: flex;
-  }
-}
-
 .navbar-i18n-dropdown {
   display: none;
 

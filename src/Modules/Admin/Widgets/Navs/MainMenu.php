@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
+use Hirtz\Skeleton\Modules\Admin\Config\ConfigInterface;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Widgets\Navs\Nav;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
@@ -40,12 +41,14 @@ class MainMenu extends Widget
         $items = [];
 
         foreach ($module->getMainMenuItems() as $item) {
-            $items[] = NavItem::make()
-                ->label($item->label)
-                ->url($item->url)
-                ->icon($item->icon)
-                ->routes($item->routes)
-                ->order($item->order);
+            $items[] = $item instanceof ConfigInterface
+                ? NavItem::make()
+                    ->label($item->label)
+                    ->url($item->url)
+                    ->icon($item->icon)
+                    ->routes($item->routes)
+                    ->order($item->order)
+                : $item;
         }
 
         return $items;

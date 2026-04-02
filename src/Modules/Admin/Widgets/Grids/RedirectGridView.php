@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Modules\Admin\Controllers\RedirectController;
 use Hirtz\Skeleton\Modules\Admin\Data\RedirectActiveDataProvider;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
+use Hirtz\Skeleton\Widgets\Buttons\CreateButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\DeleteGridButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\ViewGridButton;
@@ -18,7 +19,6 @@ use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
-use Hirtz\Skeleton\Widgets\Grids\Toolbars\CreateButton;
 use Hirtz\Skeleton\Widgets\Grids\Traits\TypeGridViewTrait;
 use Hirtz\Skeleton\Widgets\Link;
 use Hirtz\Skeleton\Widgets\Modal;
@@ -145,7 +145,7 @@ class RedirectGridView extends GridView
         ];
     }
 
-    protected function getCreateButton(): Stringable
+    protected function getCreateButton(): string|Stringable
     {
         return CreateButton::make()
             ->text(Yii::t('skeleton', 'New Redirect'))

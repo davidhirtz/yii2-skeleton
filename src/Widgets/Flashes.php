@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets;
 
 use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Stringable;
 use Yii;
@@ -17,7 +18,7 @@ class Flashes extends Widget
     {
         $this->alerts ??= Yii::$app->getSession()->getAllFlashes();
 
-        $content = Container::make()
+        $content = Div::make()
             ->attribute('id', 'flashes')
             ->attribute('hx-swap-oob', 'beforeend:#flashes')
             ->class('flashes hidden-empty');
