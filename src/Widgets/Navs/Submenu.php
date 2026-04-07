@@ -66,7 +66,7 @@ class Submenu extends Widget
             ? Container::make()
                 ->content(Nav::make()
                     ->attributes($this->navAttributes)
-                    ->items(...$this->items))
+                    ->items($this->items))
             : null;
     }
 }

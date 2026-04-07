@@ -65,7 +65,7 @@ class TwoFactorAuthenticationValidator extends StringValidator
         parent::validateAttribute($model, $attribute);
 
         if (!$model->hasErrors($attribute)) {
-            $auth = new TwoFactorAuth(new QRServerProvider(), null, $this->length, $this->period);
+            $auth = new TwoFactorAuth(null, $this->length, $this->period);
             $timestamp = $this->datetime ? (int)floor($this->datetime->getTimestamp() / $this->period) : 0;
 
             if (!$auth->verifyCode($this->secret, $model->$attribute, $this->discrepancy, $this->currentTime, $timeslice) || ($timeslice <= $timestamp)) {

@@ -147,7 +147,7 @@ class NavItem extends Widget
         return $this->items
             ? Nav::make()
                 ->class('subnav')
-                ->items(...$this->items)
+                ->items($this->items)
                 ->render()
             : null;
     }

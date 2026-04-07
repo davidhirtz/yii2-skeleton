@@ -20,10 +20,13 @@ class MainMenu extends Widget
 
     protected function renderContent(): Stringable
     {
-        return Nav::make()
+        /** @var Module $module */
+        $module = Yii::$app->getModule('admin');
+
+        return $module->aside(Nav::make()
             ->attributes($this->attributes)
-            ->items(...$this->getItems())
-            ->showSingleItem();
+            ->items($this->getItems())
+            ->showSingleItem());
     }
 
     protected function getItems(): array

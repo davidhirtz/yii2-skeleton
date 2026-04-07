@@ -21,8 +21,10 @@ use Hirtz\Skeleton\Modules\Admin\Controllers\SystemController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\TrailController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\UserController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\UserLoginController;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\MainMenu;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\DashboardPanel;
 use Hirtz\Skeleton\Web\Request;
+use Hirtz\Skeleton\Widgets\Navs\Nav;
 use Override;
 use Yii;
 
@@ -183,6 +185,17 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
     public function getName(): string
     {
         return Yii::t('skeleton', 'Admin');
+    }
+
+    public function aside(Nav $nav): Nav
+    {
+        foreach ($this->getSubmodules() as $module) {
+            if (method_exists($module, 'aside')) {
+                $nav = $module->aside($nav);
+            }
+        }
+
+        return $nav;
     }
 
     /**

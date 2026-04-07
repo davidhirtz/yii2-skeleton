@@ -19,7 +19,7 @@ trait IconTrait
     {
         $this->icon = is_string($icon)
             ? Icon::make()->name($icon)
-            : (is_callable($icon) ? ($icon)($this->icon) : $icon);
+            : (is_callable($icon) ? $icon($this->icon) : $icon);
 
         return $this;
     }

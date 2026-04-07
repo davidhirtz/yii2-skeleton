@@ -33,7 +33,7 @@ class NavTest extends TestCase
     public function testHideSingleItem(): void
     {
         $content = Nav::make()
-            ->items(NavItem::make()
+            ->addItem(NavItem::make()
                 ->label('Home')
                 ->url('/'))
             ->render();
@@ -41,7 +41,7 @@ class NavTest extends TestCase
         self::assertEmpty($content);
 
         $content = Nav::make()
-            ->items(NavItem::make()
+            ->addItem(NavItem::make()
                 ->label('Home')
                 ->url('/'))
             ->showSingleItem()
@@ -53,7 +53,7 @@ class NavTest extends TestCase
     public function testItemVisibility(): void
     {
         $content = Nav::make()
-            ->items(NavItem::make()
+            ->addItem(NavItem::make()
                 ->label('Home')
                 ->url('/')
                 ->visible(false))
@@ -67,7 +67,7 @@ class NavTest extends TestCase
         Yii::$app->getUser()->disableRbacForGuests = false;
 
         $content = Nav::make()
-            ->items(
+            ->items([
                 NavItem::make()
                     ->label('Home')
                     ->url('/')
@@ -76,7 +76,7 @@ class NavTest extends TestCase
                     ->label('Test')
                     ->url(['/admin/dashboard/index'])
                     ->roles([User::AUTH_ROLE_ADMIN])
-            )
+            ])
             ->showSingleItem()
             ->render();
 
@@ -86,7 +86,7 @@ class NavTest extends TestCase
     public function testItemBadgeAndIcon(): void
     {
         $content = Nav::make()
-            ->items(NavItem::make()
+            ->addItem(NavItem::make()
                 ->label('Home')
                 ->url('/')
                 ->badge(fn (Span $badge) => $badge->text('New')->class('badge'))
@@ -101,14 +101,10 @@ class NavTest extends TestCase
     public function testActiveItemFromUrl(): void
     {
         $content = Nav::make()
-            ->items(
-                NavItem::make()
-                    ->label('Home')
-                    ->url('/'),
-                NavItem::make()
-                    ->label('Test')
-                    ->url(['site/test'])
-            )
+            ->items([
+                NavItem::make()->label('Home')->url('/'),
+                NavItem::make()->label('Test')->url(['site/test']),
+            ])
             ->render();
 
         self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active" href="/"><span>Home</span></a></li><li class="nav-item"><a class="nav-link" href="/site/test"><span>Test</span></a></li></ul>', $content);
@@ -117,7 +113,7 @@ class NavTest extends TestCase
     public function testActiveItemWithRoutes(): void
     {
         $content = Nav::make()
-            ->items(
+            ->items([
                 NavItem::make()
                     ->label('Home')
                     ->url(['site/test']),
@@ -125,7 +121,7 @@ class NavTest extends TestCase
                     ->label('Test')
                     ->routes(['/'])
                     ->url(['site/test'])
-            )
+            ])
             ->render();
 
         $needle = '<ul class="nav"><li class="nav-item"><a class="nav-link" href="/site/test"><span>Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/site/test"><span>Test</span></a></li></ul>';
@@ -135,7 +131,7 @@ class NavTest extends TestCase
     public function testActiveItemWithSkippedRoute(): void
     {
         $content = Nav::make()
-            ->items(
+            ->items([
                 NavItem::make()
                     ->label('Home')
                     ->url('/')
@@ -143,7 +139,7 @@ class NavTest extends TestCase
                 NavItem::make()
                     ->label('Test')
                     ->url('/')
-            )
+            ])
             ->render();
 
         self::assertStringContainsString('<ul class="nav"><li class="nav-item"><a class="nav-link" href="/"><span>Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/"><span>Test</span></a></li></ul>', $content);
@@ -154,7 +150,7 @@ class NavTest extends TestCase
         Yii::$app->getRequest()->setQueryParams(['id' => 1]);
 
         $content = Nav::make()
-            ->items(
+            ->items([
                 NavItem::make()
                     ->label('Home')
                     ->url(['site/test'])
@@ -166,8 +162,8 @@ class NavTest extends TestCase
                     ->url(['site/test'])
                     ->routes([
                         ['site/index', 'id' => 1],
-                    ])
-            )
+                    ]),
+            ])
             ->render();
 
         self::assertStringContainsString('<ul class="nav"><li class="nav-item"><a class="nav-link" href="/site/test"><span>Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/site/test"><span>Test</span></a></li></ul>', $content);

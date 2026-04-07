@@ -43,7 +43,7 @@ class AccountMenu extends Widget
     {
         return Nav::make()
             ->attributes($this->attributes)
-            ->items(...$this->getItems());
+            ->items($this->getItems());
     }
 
     protected function getItems(): array
