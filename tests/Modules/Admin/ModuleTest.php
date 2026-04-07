@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Modules\Admin;
 
 use Hirtz\Skeleton\Modules\Admin\Config\DashboardItem;
-use Hirtz\Skeleton\Modules\Admin\Config\MainMenuItemConfig;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Modules\Admin\ModuleInterface;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\DashboardPanel;
 use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Widgets\Navs\Nav;
+use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Yii;
 
 class ModuleTest extends TestCase
@@ -18,26 +19,13 @@ class ModuleTest extends TestCase
     {
         $module = $this->getAdminModule();
 
-        $module->setMainMenuItems([
-            'test' => new MainMenuItemConfig(
-                label: 'Test',
-            ),
-        ]);
-
-        $items = array_keys($module->getMainMenuItems());
-
-        self::assertEquals('users', current($items));
-        self::assertEquals('test', end($items));
-
         $module->setModule('test', [
             'class' => TestModule::class,
         ]);
 
-        $items = array_keys($module->getMainMenuItems());
+        $nav = $module->aside(Nav::make());
 
-        self::assertContains('users', $items);
-        self::assertContains('module', $items);
-        self::assertContains('test', $items);
+        self::assertStringContainsString('Test Module', (string) $nav);
     }
 
     public function testDashboardPanels(): void
@@ -90,12 +78,8 @@ class TestModule extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
         ];
     }
 
-    public function getMainMenuItems(): array
+    public function aside(Nav $nav): Nav
     {
-        return [
-            'module' => new MainMenuItemConfig(
-                label: 'Test Module',
-            ),
-        ];
+        return $nav->addItem(NavItem::make()->label('Test Module'));
     }
 }

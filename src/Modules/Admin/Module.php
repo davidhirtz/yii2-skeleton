@@ -11,7 +11,6 @@ use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Config\Config;
 use Hirtz\Skeleton\Modules\Admin\Config\DashboardItem;
-use Hirtz\Skeleton\Modules\Admin\Config\MainMenuItemConfig;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AuthController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\DashboardController;
@@ -21,10 +20,10 @@ use Hirtz\Skeleton\Modules\Admin\Controllers\SystemController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\TrailController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\UserController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\UserLoginController;
-use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\MainMenu;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\DashboardPanel;
 use Hirtz\Skeleton\Web\Request;
 use Hirtz\Skeleton\Widgets\Navs\Nav;
+use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Override;
 use Yii;
 
@@ -39,8 +38,6 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
     public $layout = 'main';
 
     private array $dashboardPanels = [];
-    private array $mainMenuItems = [];
-    private ?array $submodules = null;
 
     #[Override]
     public function init(): void
@@ -189,63 +186,28 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
 
     public function aside(Nav $nav): Nav
     {
-        foreach ($this->getSubmodules() as $module) {
-            if (method_exists($module, 'aside')) {
-                $nav = $module->aside($nav);
-            }
-        }
-
-        return $nav;
-    }
-
-    /**
-     * @return array<string, MainMenuItemConfig>
-     */
-    public function getMainMenuItems(): array
-    {
-        $items = $this->getDefaultMainMenuItems();
-
-        foreach ($this->getSubmodules() as $module) {
-            foreach ($module->getMainMenuItems() as $key => $item) {
-                $items[] = $item;
-            }
-        }
-
-        foreach ($this->mainMenuItems as $key => $item) {
-            $items[] = $item;
-        }
-
-        return array_filter($items);
-    }
-
-    /**
-     * @return array<string, MainMenuItemConfig>
-     */
-    protected function getDefaultMainMenuItems(): array
-    {
-        return [
-            'users' => new MainMenuItemConfig(
-                label: Yii::t('skeleton', 'Users'),
-                url: ['/admin/user/index'],
-                icon: 'users',
-                roles: [
-                    User::AUTH_USER_ASSIGN,
-                    User::AUTH_USER_UPDATE,
-                ],
-                routes: [
+        $nav->addItem(NavItem::make()
+            ->label(Yii::t('skeleton', 'Dashboard'))
+            ->url(['/admin/dashboard/index'])
+            ->icon('home'))
+            ->addItem(NavItem::make()
+                ->label(Yii::t('skeleton', 'Users'))
+                ->url(['/admin/user/index'])
+                ->icon('users')
+                ->roles([User::AUTH_USER_ASSIGN, User::AUTH_USER_UPDATE])
+                ->routes([
                     'admin/auth',
                     'admin/login',
                     'admin/user',
                     'admin/trail/index' => ['user'],
-                ],
-                order: 100,
-            ),
-        ];
-    }
+                ])
+                ->order(100));
 
-    public function setMainMenuItems(array $items): void
-    {
-        $this->mainMenuItems = $items;
+        foreach ($this->getSubmodules() as $module) {
+            $nav = $module->aside($nav);
+        }
+
+        return $nav;
     }
 
     /**
@@ -253,18 +215,16 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
      */
     public function getSubmodules(): array
     {
-        if ($this->submodules === null) {
-            $this->submodules = [];
+        $submodules = [];
 
-            foreach (array_keys($this->getModules()) as $moduleName) {
-                $module = $this->getModule($moduleName);
+        foreach (array_keys($this->getModules()) as $moduleName) {
+            $module = $this->getModule($moduleName);
 
-                if ($module instanceof ModuleInterface) {
-                    $this->submodules[] = $module;
-                }
+            if ($module instanceof ModuleInterface) {
+                $submodules[] = $module;
             }
         }
 
-        return $this->submodules;
+        return $submodules;
     }
 }

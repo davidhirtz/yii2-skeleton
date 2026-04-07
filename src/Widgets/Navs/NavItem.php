@@ -132,6 +132,7 @@ class NavItem extends Widget
             ->content($this->icon, $this->label, $this->badge)
             ->href($this->url);
 
+
         $this->active ??= $this->hasActiveSubnavItem() ?: $this->hasActiveRoute();
         $this->active ??= Yii::$app->getRequest()->getUrl() === ($link->attributes['href'] ?? null);
 
@@ -201,6 +202,6 @@ class NavItem extends Widget
             }
         }
 
-        return false;
+        return null;
     }
 }

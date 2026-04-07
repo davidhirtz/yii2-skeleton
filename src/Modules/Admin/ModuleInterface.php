@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin;
 
-use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\MainMenu;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\DashboardPanel;
 use Hirtz\Skeleton\Widgets\Navs\Nav;
 
@@ -19,6 +18,4 @@ interface ModuleInterface
     public function getDashboardPanels(): array;
 
     public function aside(Nav $nav): Nav;
-
-    public function getMainMenuItems(): array;
 }
