@@ -15,6 +15,7 @@ class DeleteButton extends Widget
 
     public function renderContent(): Stringable
     {
+        // todo change this to constructor
         $this->setButtonDefault();
 
         $modal = Modal::make()

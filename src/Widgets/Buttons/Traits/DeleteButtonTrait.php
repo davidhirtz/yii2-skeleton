@@ -31,8 +31,7 @@ trait DeleteButtonTrait
             ];
         }
 
-        $this->icon ??= Icon::make()
-            ->name('trash');
+        $this->icon ??= 'trash';
 
         $this->label ??= Yii::t('yii', 'Delete');
         $this->title ??= Yii::t('yii', 'Are you sure you want to delete this item?');

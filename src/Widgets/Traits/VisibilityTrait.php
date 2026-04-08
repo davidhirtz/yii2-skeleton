@@ -9,25 +9,35 @@ use Yii;
 
 trait VisibilityTrait
 {
-    protected array $roles = [];
-    protected bool $visible = true;
+    protected ?array $roles = null;
+    protected Closure|bool $visible = true;
 
     public function roles(array $roles): static
     {
-        $this->roles = [...$this->roles, ...$roles];
+        $this->roles = $this->roles ? [...$this->roles, ...$roles] : $roles;
         return $this;
     }
 
-    public function visible(bool|Closure $visible): static
+    /**
+     * @param Closure(self):(bool)|bool $visible
+     * @return $this
+     */
+    public function visible(Closure|bool $visible): static
     {
-        $this->visible = $visible instanceof Closure ? $visible() : $visible;
+        $this->visible = $visible;
         return $this;
     }
 
     public function isVisible(): bool
     {
-        if (!$this->visible) {
+        $visible = $this->visible instanceof Closure ? ($this->visible)($this) : $this->visible;
+
+        if (!$visible) {
             return false;
+        }
+
+        if ($this->roles === null) {
+            return true;
         }
 
         foreach ($this->roles as $role) {
@@ -36,6 +46,6 @@ trait VisibilityTrait
             }
         }
 
-        return !$this->roles;
+        return false;
     }
 }

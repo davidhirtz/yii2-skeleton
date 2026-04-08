@@ -20,6 +20,9 @@ use Hirtz\Skeleton\Modules\Admin\Controllers\SystemController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\TrailController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\UserController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\UserLoginController;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\DashboardNavItem;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\SystemNavItem;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserNavItem;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\DashboardPanel;
 use Hirtz\Skeleton\Web\Request;
 use Hirtz\Skeleton\Widgets\Navs\Nav;
@@ -186,22 +189,7 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
 
     public function aside(Nav $nav): Nav
     {
-        $nav->addItem(NavItem::make()
-            ->label(Yii::t('skeleton', 'Dashboard'))
-            ->url(['/admin/dashboard/index'])
-            ->icon('home'))
-            ->addItem(NavItem::make()
-                ->label(Yii::t('skeleton', 'Users'))
-                ->url(['/admin/user/index'])
-                ->icon('users')
-                ->roles([User::AUTH_USER_ASSIGN, User::AUTH_USER_UPDATE])
-                ->routes([
-                    'admin/auth',
-                    'admin/login',
-                    'admin/user',
-                    'admin/trail/index' => ['user'],
-                ])
-                ->order(100));
+        $nav->addItems(DashboardNavItem::make(), UserNavItem::make(), SystemNavItem::make());
 
         foreach ($this->getSubmodules() as $module) {
             $nav = $module->aside($nav);

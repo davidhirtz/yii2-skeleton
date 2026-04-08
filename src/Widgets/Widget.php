@@ -24,10 +24,19 @@ abstract class Widget implements Stringable, ViewContextInterface
     private ?string $content = null;
     protected ?Closure $config = null;
 
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
-        Yii::configure($this, $config);
-        $this->view = Yii::$app->getView();
+        if ($config) {
+            Yii::configure($this, $config);
+        }
+
+        $this->view ??= Yii::$app->getView();
+
+        $this->init();
+    }
+
+    protected function init(): void
+    {
     }
 
     public function getViewPath(): ?string

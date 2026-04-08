@@ -10,9 +10,10 @@ use Hirtz\Skeleton\Html\Li;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
-use Hirtz\Skeleton\Widgets\Icon;
+use Hirtz\Skeleton\Widgets\Buttons\Badge;
 use Hirtz\Skeleton\Widgets\Navs\Traits\NavItemTrait;
 use Hirtz\Skeleton\Widgets\Traits\IconTrait;
+use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
 use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Hirtz\Skeleton\Widgets\Widget;
@@ -26,15 +27,16 @@ class NavItem extends Widget
     use TagAttributesTrait;
     use TagContentTrait;
     use IconTrait;
+    use LabelTrait;
     use NavItemTrait;
     use UrlTrait;
     use VisibilityTrait;
 
     protected ?bool $active = null;
-    protected ?Span $badge = null;
-    protected ?Span $label = null;
+    protected Closure|string|int|null $badge = null;
     protected ?Closure $link = null;
     protected array $routes = [];
+    protected ?int $order = null;
 
     /**
      * @param bool|Closure():(bool|null)|null $active
@@ -52,34 +54,12 @@ class NavItem extends Widget
     }
 
     /**
-     * @param Closure(Span):(int|string|null)|int|string|null $badge
+     * @param Closure(Badge):(?Badge)|int|string|null $badge
      * @return $this
      */
     public function badge(Closure|int|string|null $badge): static
     {
-        $this->badge ??= $badge ? Span::make()->class('badge hidden md:block') : null;
-
-        if ($this->badge) {
-            $this->badge = is_callable($badge)
-                ? $badge($this->badge)
-                : $this->badge->text(is_int($badge) ? Yii::$app->getFormatter()->asInteger($badge) : $badge);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param Closure(Span):(int|string|null)|string|null $label
-     * @return $this
-     */
-    public function label(Closure|string|null $label): static
-    {
-        $this->label ??= $label ? Span::make() : null;
-
-        if ($this->label) {
-            $this->label = is_callable($label) ? $label($this->label) : $this->label->text($label);
-        }
-
+        $this->badge = $badge;
         return $this;
     }
 
@@ -95,7 +75,8 @@ class NavItem extends Widget
 
     public function order(?int $order): static
     {
-        return $order !== null ? $this->addStyle(['order' => $order]) : $this->removeStyle(['order']);
+        $this->order = $order;
+        return $this;
     }
 
     public function routes(array $routes): static
@@ -103,6 +84,7 @@ class NavItem extends Widget
         $this->routes = [...$this->routes, ...$routes];
         return $this;
     }
+
 
     #[Override]
     protected function renderContent(): string|Stringable
@@ -113,25 +95,38 @@ class NavItem extends Widget
 
         $items = $this->renderItems();
 
+        if ($this->order !== null) {
+            $this->addStyle(['order' => $this->order]);
+        }
+
         return Li::make()
             ->attributes($this->attributes)
             ->addClass('nav-item')
-            ->content($this->renderLink(), $items);
+            ->content($this->getContent(), $items);
     }
 
-    protected function renderLink(): string|Stringable
+    protected function getContent(): string|Stringable
     {
         if ($this->content) {
             return implode('', $this->content);
         }
 
-        $this->icon(fn (?Icon $icon) => $icon?->addClass('nav-link-icon'));
-
         $link = A::make()
             ->class('nav-link')
-            ->content($this->icon, $this->label, $this->badge)
             ->href($this->url);
 
+        $link->addContent($this->getIcon()?->addClass('nav-link-icon'));
+
+        if ($this->label) {
+            $link->addContent(Span::make()->text($this->label));
+        }
+
+        if ($this->badge) {
+            $badge = Badge::make()->addClass('aside-badge');
+            $badge = $this->badge instanceof Closure ? ($this->badge)($badge) : $badge->value($this->badge);
+
+            $link->addContent($badge);
+        }
 
         $this->active ??= $this->hasActiveSubnavItem() ?: $this->hasActiveRoute();
         $this->active ??= Yii::$app->getRequest()->getUrl() === ($link->attributes['href'] ?? null);

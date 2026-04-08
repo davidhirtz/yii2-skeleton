@@ -16,6 +16,7 @@ use Hirtz\Skeleton\Widgets\Widget;
  */
 final class DashboardPanel extends Widget implements ConfigInterface
 {
+    // todo replace this with new panel
     public function __construct(
         public ?string $name = null,
         /** @var DashboardItem[] */

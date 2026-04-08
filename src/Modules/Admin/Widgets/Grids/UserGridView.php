@@ -64,10 +64,10 @@ class UserGridView extends GridView
     protected function getCreateButton(): string|Stringable
     {
         return CreateButton::make()
-            ->href(['/admin/user/create'])
+            ->label(Yii::t('skeleton', 'New User'))
             ->icon('user-plus')
             ->roles([User::AUTH_USER_CREATE])
-            ->text(Yii::t('skeleton', 'New User'));
+            ->url(['/admin/user/create']);
     }
 
     protected function getNameColumn(): Column

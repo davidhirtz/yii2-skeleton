@@ -6,9 +6,9 @@ namespace Hirtz\Skeleton\Widgets\Buttons;
 
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
-use Hirtz\Skeleton\Html\Traits\TagLinkTrait;
-use Hirtz\Skeleton\Widgets\Icon;
-use Hirtz\Skeleton\Widgets\Traits\IconTextTrait;
+use Hirtz\Skeleton\Widgets\Traits\IconTrait;
+use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
+use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
@@ -18,27 +18,29 @@ use Yii;
 class CreateButton extends Widget
 {
     use TagAttributesTrait;
-    use IconTextTrait;
-    use TagLinkTrait;
+    use IconTrait;
+    use LabelTrait;
     use VisibilityTrait;
+    use UrlTrait;
 
-    #[Override]
-    protected function configure(): void
+    public function __construct(array $config = [])
     {
-        $this->content = $this->content ?: [Yii::t('skeleton', 'Create')];
-        $this->icon ??= Icon::make()->name('plus');
-        $this->attributes['href'] ??= Url::toRoute(['create']);
+        $this->icon ??= 'plus';
+        $this->label ??= Yii::t('skeleton', 'Create');
+        $this->url ??= Url::toRoute(['create']);
 
-        parent::configure();
+        parent::__construct($config);
     }
 
+    #[Override]
     public function renderContent(): string|Stringable
     {
         return $this->isVisible()
             ? Button::make()
-                ->addAttributes($this->attributes)
+                ->attributes($this->attributes)
                 ->primary()
-                ->content(...$this->content)
+                ->href($this->url)
+                ->text($this->label)
                 ->icon($this->icon)
             : '';
     }

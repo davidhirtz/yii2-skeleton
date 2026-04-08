@@ -31,6 +31,6 @@ class Link extends Widget
     {
         return A::make()
             ->attributes($this->attributes)
-            ->content($this->renderIconText());
+            ->content($this->getIconText());
     }
 }

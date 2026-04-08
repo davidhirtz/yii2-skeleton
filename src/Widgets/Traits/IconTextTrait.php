@@ -15,17 +15,17 @@ trait IconTextTrait
 
     protected function renderContent(): string|Stringable
     {
-        return $this->renderIconText();
+        return $this->getIconText();
     }
 
-    protected function renderIconText(): string|Stringable
+    protected function getIconText(): string|Stringable
     {
         if ($this->icon && $this->content) {
             return Div::make()
                 ->class('icon-text')
-                ->content($this->icon, Div::make()->content(...$this->content));
+                ->content($this->getIcon(), Div::make()->content(...$this->content));
         }
 
-        return $this->icon ?? implode('', $this->content);
+        return $this->getIcon() ?? implode('', $this->content);
     }
 }

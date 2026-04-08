@@ -78,6 +78,6 @@ class Button extends Widget
     {
         return (($this->attributes['href'] ?? null) ? A::make() : \Hirtz\Skeleton\Html\Button::make())
             ->attributes($this->attributes)
-            ->content($this->renderIconText());
+            ->content($this->getIconText());
     }
 }

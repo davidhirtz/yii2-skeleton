@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Widgets\Forms\Fields;
 
-use DateTimeZone;
 use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Widgets\Forms\Fields\DateTimeField;
@@ -25,7 +24,7 @@ class DateTimeFieldTest extends TestCase
             ->value(new DateTime('2024-06-15T14:30:00+01:00'))
             ->render();
 
-        $html = '<div class="form-group form-row" data-id="i2"><div class="form-content"><div class="input-group"><input type="datetime-local" id="i2" class="input" value="2024-06-15T15:30"><div class="input-group-append">GMT+00:00</div></div></div></div>';
+        $html = '<div class="form-group form-row" data-id="i2"><div class="form-content"><div class="input-group"><input type="datetime-local" id="i2" class="input" value="2024-06-15T13:30"><div class="input-group-append">GMT+00:00</div></div></div></div>';
         self::assertEquals($html, $content);
     }
 }

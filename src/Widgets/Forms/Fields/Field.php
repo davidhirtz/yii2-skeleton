@@ -40,7 +40,7 @@ abstract class Field extends Widget
     protected ?string $error = null;
     protected ?string $hint = null;
 
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
         // Make protected
         $this->language = Yii::$app->language;

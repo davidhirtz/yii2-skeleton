@@ -61,7 +61,7 @@ class FormText extends Widget
             ->header(Div::make()
                 ->attributes($this->labelAttributes)
                 ->addClass('label')
-                ->content($this->label))
+                ->text($this->label))
             ->content(Div::make()
                 ->attributes($this->contentAttributes)
                 ->addClass('form-text')

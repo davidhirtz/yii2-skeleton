@@ -148,8 +148,8 @@ class RedirectGridView extends GridView
     protected function getCreateButton(): string|Stringable
     {
         return CreateButton::make()
-            ->text(Yii::t('skeleton', 'New Redirect'))
-            ->href(['/admin/redirect/create']);
+            ->label(Yii::t('skeleton', 'New Redirect'))
+            ->url(['/admin/redirect/create']);
     }
 
     /**

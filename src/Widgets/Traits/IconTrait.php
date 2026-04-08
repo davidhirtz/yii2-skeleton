@@ -9,18 +9,26 @@ use Hirtz\Skeleton\Widgets\Icon;
 
 trait IconTrait
 {
-    protected ?Icon $icon = null;
+    protected Closure|string|null $icon = null;
 
     /**
-     * @param Icon|Closure(?Icon):(Icon|null)|string|null $icon
+     * @param Closure(Icon):(Icon|null)|string|null $icon
      * @return $this
      */
-    public function icon(Icon|Closure|string|null $icon): static
+    public function icon(Closure|string|null $icon): static
     {
-        $this->icon = is_string($icon)
-            ? Icon::make()->name($icon)
-            : (is_callable($icon) ? $icon($this->icon) : $icon);
-
+        $this->icon = $icon;
         return $this;
+    }
+
+    protected function getIcon(): ?Icon
+    {
+        $icon = Icon::make();
+
+        if ($this->icon instanceof Closure) {
+            return ($this->icon)($icon);
+        }
+
+        return $this->icon ? $icon->name($this->icon) : null;
     }
 }

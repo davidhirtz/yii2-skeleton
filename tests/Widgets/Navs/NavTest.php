@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Web\Controller;
+use Hirtz\Skeleton\Widgets\Buttons\Badge;
 use Hirtz\Skeleton\Widgets\Icon;
 use Hirtz\Skeleton\Widgets\Navs\Nav;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
@@ -89,8 +90,8 @@ class NavTest extends TestCase
             ->addItem(NavItem::make()
                 ->label('Home')
                 ->url('/')
-                ->badge(fn (Span $badge) => $badge->text('New')->class('badge'))
-                ->icon(fn (?Icon $icon) => Icon::make()->name('home')->addClass('hidden'))
+                ->badge(fn (Badge $badge) => $badge->value('New')->class('badge'))
+                ->icon(fn (Icon $icon) => $icon->name('home')->addClass('hidden'))
                 ->link(fn (A $link) => $link->addClass('home')))
             ->showSingleItem()
             ->render();

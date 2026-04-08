@@ -41,11 +41,7 @@ class UserSubmenu extends Submenu
 
     protected function getDefaultItems(): array
     {
-        return [
-            $this->getUserIndex(),
-            $this->getPermissionIndex(),
-            $this->getLoginIndex(),
-        ];
+        return [];
     }
 
     protected function getUserItems(): array
@@ -56,37 +52,6 @@ class UserSubmenu extends Submenu
             $this->getUserLoginIndex(),
             $this->getUserTrailIndex(),
         ];
-    }
-
-    protected function getUserIndex(): ?NavItem
-    {
-        return NavItem::make()
-            ->label(Yii::t('skeleton', 'Users'))
-            ->url(['/admin/user/index'])
-            ->icon('users')
-            ->routes(['user/(index|owner|create)']);
-    }
-
-    protected function getPermissionIndex(): ?NavItem
-    {
-        return Yii::$app->getUser()->can(User::AUTH_USER_ASSIGN)
-            ? NavItem::make()
-                ->label(Yii::t('skeleton', 'Permissions'))
-                ->url(['/admin/auth/index'])
-                ->icon('unlock-alt')
-                ->routes(['auth/(index|view)'])
-            : null;
-    }
-
-    protected function getLoginIndex(): ?NavItem
-    {
-        return Yii::$app->getUser()->can(User::AUTH_USER_UPDATE)
-            ? NavItem::make()
-                ->label(Yii::t('skeleton', 'Logins'))
-                ->url(['/admin/user-login/index'])
-                ->icon('bars')
-                ->routes(['user-login/(index|view)'])
-            : null;
     }
 
     protected function getUserForm(): ?NavItem

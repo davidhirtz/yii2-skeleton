@@ -49,12 +49,11 @@ class StackItem extends Widget
             ->href($this->url);
 
         if ($this->icon) {
-            $link->addContent($this->icon);
+            $link->addContent($this->getIcon());
         }
 
         if ($this->label) {
-            $link->addContent(Span::make()
-                ->text($this->label));
+            $link->addContent(Span::make()->text($this->label));
         }
 
         return $link;

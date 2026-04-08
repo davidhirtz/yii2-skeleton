@@ -28,7 +28,7 @@ class Submenu extends Widget
 
     protected Closure|Header|null $header = null;
 
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
         $this->webuser = Yii::$app->getUser();
         parent::__construct($config);
@@ -57,7 +57,7 @@ class Submenu extends Widget
                 ->title($this->title)
                 ->url($this->url);
 
-        return is_callable($this->header) ? ($this->header)($header) : $header;
+        return $this->header instanceof Closure ? ($this->header)($header) : $header;
     }
 
     protected function renderNav(): ?Stringable

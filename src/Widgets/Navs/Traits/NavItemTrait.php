@@ -20,13 +20,19 @@ trait NavItemTrait
      */
     public function items(array|Closure $items): static
     {
-        $this->items = is_callable($items) ? $items($this->items) : array_filter($items);
+        $this->items = $items instanceof Closure ? $items($this->items) : array_filter($items);
         return $this;
     }
 
     public function addItem(NavItem $item): static
     {
         $this->items[] = $item;
+        return $this;
+    }
+
+    public function addItems(NavItem ...$items): static
+    {
+        $this->items = [...$this->items, ...$items];
         return $this;
     }
 }

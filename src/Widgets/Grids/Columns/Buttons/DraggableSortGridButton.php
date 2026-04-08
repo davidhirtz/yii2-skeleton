@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Grids\Columns\Buttons;
 
 use Hirtz\Skeleton\Widgets\Buttons\Button;
-use Hirtz\Skeleton\Widgets\Traits\IconTextTrait;
+use Hirtz\Skeleton\Widgets\Traits\IconTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 
 class DraggableSortGridButton extends Widget
 {
-    use IconTextTrait;
+    use IconTrait;
 
     public function renderContent(): string
     {

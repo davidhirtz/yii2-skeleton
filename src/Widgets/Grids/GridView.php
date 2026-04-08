@@ -81,7 +81,7 @@ class GridView extends Widget
     protected GridSearch $search;
     protected User $webuser;
 
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
         $this->search = GridSearch::make()->grid($this);
         $this->webuser = Yii::$app->getUser();
