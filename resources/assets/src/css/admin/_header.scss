@@ -12,3 +12,20 @@
   place-content: center;
   gap: .25rem;
 }
+
+.header-title,
+.header-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-subtitle {
+  &:before {
+    content: "";
+    width: 1.25rem;
+    height: 0.25rem;
+    border-radius: 0.25rem;
+    background-color: var(--link-hover-color);
+  }
+}

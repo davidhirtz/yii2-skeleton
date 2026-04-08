@@ -34,12 +34,12 @@ class TrailHeader extends Header
     public function configure(): void
     {
         $this->title ??= $this->getTrailModelTitle();
-        $this->url ??= $this->getTrailModelAdminRoute();
+        $this->url ??= $this->getTrailModelAdminRoute() ?? ['/admin/trail/index'];
 
         $page = $this->provider->getPagination()->getPage() + 1;
 
         if ($page > 1) {
-            $this->title .= ' - ' . Yii::t('skeleton', 'Page {page}', ['page' => $page]);
+            $this->subtitle ??= Yii::t('skeleton', 'Page {page}', ['page' => $page]);
         }
 
         $this->setBreadcrumbs();
