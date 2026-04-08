@@ -50,14 +50,14 @@ class Header extends Widget
 
         $wrapper->content(Div::make()
             ->class('header-content')
-            ->content($this->renderHeadline(), $this->renderSubheading()));
+            ->content($this->getTitle(), $this->getSubheading()));
 
         $wrapper->addContent(...$this->content);
 
         return $wrapper;
     }
 
-    protected function renderHeadline(): ?Stringable
+    protected function getTitle(): ?Stringable
     {
         if (!$this->title) {
             return null;
@@ -74,7 +74,7 @@ class Header extends Widget
             ->content($content);
     }
 
-    protected function renderSubheading(): ?Stringable
+    protected function getSubheading(): ?Stringable
     {
         return $this->subheading
             ? Div::make()

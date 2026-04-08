@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Modules\Admin\Data;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
+use Override;
 use yii\data\ActiveDataProvider;
 
 /**
@@ -19,7 +20,7 @@ class TrailActiveDataProvider extends ActiveDataProvider
     public ?string $modelId = null;
     public ?int $trailId = null;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         $this->query = Trail::find()
@@ -54,7 +55,7 @@ class TrailActiveDataProvider extends ActiveDataProvider
         parent::init();
     }
 
-    #[\Override]
+    #[Override]
     protected function prepareModels(): array
     {
         /** @var Trail[] $models */

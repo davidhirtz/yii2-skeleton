@@ -35,7 +35,7 @@ class TrailController extends Controller
     {
         $model = $model ? explode('@', $model) : null;
 
-        $provider = Yii::$container->get(TrailActiveDataProvider::class, [], [
+        $provider = Yii::$container->get(TrailActiveDataProvider::class, config: [
             'user' => $user ? User::findOne($user) : null,
             'model' => $model[0] ?? null,
             'modelId' => $model[1] ?? null,
