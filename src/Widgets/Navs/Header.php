@@ -28,7 +28,7 @@ class Header extends Widget
     protected ?string $subtitle = null;
     protected ?string $title = null;
 
-    public function page(ActiveDataProvider|int $page): static
+    public function pagination(ActiveDataProvider|int $page): static
     {
         if ($page instanceof ActiveDataProvider) {
             $page->prepare();
@@ -56,7 +56,7 @@ class Header extends Widget
             ->class('header-content')
             ->content($this->getHeaderContent(), $this->getSubheading()));
 
-        $wrapper->addContent(...$this->content);
+        $wrapper->addContent(Div::make()->content(...$this->content));
 
         return $wrapper;
     }

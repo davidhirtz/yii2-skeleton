@@ -6,11 +6,15 @@
 
 @use "admin/type";
 @use "admin/image";
+@use "admin/form";
+@use "admin/input";
+@use "admin/buttons";
+@use "admin/dropdown";
 
 @use "admin/layout";
-@use "admin/aside";
 @use "admin/nav";
 @use "admin/navbar";
+@use "admin/aside";
 
 @use "admin/breadcrumb";
 @use "admin/header";
@@ -20,10 +24,6 @@
 @use "admin/grid";
 @use "admin/tables";
 
-@use "admin/form";
-@use "admin/input";
-@use "admin/buttons";
-@use "admin/dropdown";
 
 @use "admin/alert";
 @use "admin/badge";

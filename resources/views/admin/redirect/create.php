@@ -12,20 +12,16 @@ declare(strict_types=1);
 use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Modules\Admin\Controllers\RedirectController;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\RedirectActiveForm;
-use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\RedirectHeader;
 use Hirtz\Skeleton\Web\View;
-use Hirtz\Skeleton\Widgets\Container;
-use Hirtz\Skeleton\Widgets\Forms\ErrorSummary;
 use Hirtz\Skeleton\Widgets\Forms\FormContainer;
+use Hirtz\Skeleton\Widgets\Navs\Header;
 
-echo RedirectHeader::make()
+$this->addBreadcrumb(Yii::t('skeleton', 'Redirects'), ['/admin/redirect/index']);
+
+echo Header::make()
     ->title(Yii::t('skeleton', 'Create New Redirect'));
 
-echo Container::make()
-    ->content(ErrorSummary::make()
-        ->models($redirect));
-
 echo FormContainer::make()
-    ->title($this->title)
+    ->title(Yii::t('skeleton', 'New Redirect'))
     ->form(RedirectActiveForm::make()
         ->model($redirect));

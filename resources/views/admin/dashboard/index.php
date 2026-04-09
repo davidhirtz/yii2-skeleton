@@ -8,14 +8,13 @@ declare(strict_types=1);
  * @var array $panels
  */
 
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\DashboardHeader;
 use Hirtz\Skeleton\Web\View;
-use Hirtz\Skeleton\Widgets\Navs\Header;
 use Hirtz\Skeleton\Widgets\Panels\Dashboard;
 
-$this->title(Yii::t('skeleton', 'Admin'));
+$this->title(Yii::t('skeleton', 'Dashboard'));
 
-echo Header::make()
-    ->title(Yii::$app->name);
+echo DashboardHeader::make();
 
 echo Dashboard::make()
     ->panels($panels);

@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 use Hirtz\Skeleton\Assets\AdminAssetBundle;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\AsideMenu;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\NavBar;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Flashes;
 use Hirtz\Skeleton\Widgets\Navs\Breadcrumbs;
@@ -27,9 +28,9 @@ AdminAssetBundle::register($this);
     </head>
     <body hx-ext="head-support" hx-select="#wrap" hx-select-oob="#flashes:beforeend" hx-swap="outerHTML show:top" hx-target="#wrap" hx-boost="true">
     <?php $this->beginBody() ?>
+    <?= NavBar::make(); ?>
     <?= Flashes::make(); ?>
     <div class="layout" id="wrap" hx-headers='{"X-CSRF-TOKEN":"<?= Yii::$app->getRequest()->getCsrfToken(); ?>"}'>
-        <button class="aside-close" onclick="body.classList.toggle('has-aside')"></button>
         <?= AsideMenu::make(); ?>
         <main class="main">
             <?= Breadcrumbs::make(); ?>

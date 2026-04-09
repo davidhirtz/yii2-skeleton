@@ -26,7 +26,7 @@ class TrailHeader extends Header
                 : null;
         }
 
-        return $this->page($provider);
+        return $this->pagination($provider);
     }
 
     #[Override]

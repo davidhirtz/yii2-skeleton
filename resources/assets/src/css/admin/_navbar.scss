@@ -1,47 +1,58 @@
 @use "../shared/breakpoints" as *;
 @use "../shared/svg" as *;
 
-.navbar-i18n-dropdown {
-  display: none;
-
-  @include media-breakpoint-up(md) {
-    display: block;
-  }
+.navbar {
+  display: flex;
+  gap: .5rem;
+  background: var(--body-bg);
+  border-bottom: 1px solid var(--border-color);
+  border-left: 1px solid var(--border-color);
+  padding: 1rem;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 50;
 }
 
-.navbar-logout {
-  --nav-link-hover-bg: var(--btn-danger-bg);
-}
-
-//noinspection ALL
 .i18n-icon {
-  width: 1lh;
   aspect-ratio: 1;
-  background: no-repeat;
+  background-repeat: no-repeat;
   background-size: contain;
-  vertical-align: middle;
+  display: block;
+  height: 1lh;
+
+  .btn:has(&) {
+    background: transparent;
+    padding-inline: 0.75rem;
+  }
 
   &.de {
+    //noinspection CssUnknownTarget
     background-image: url(../images/flags/de.png);
   }
 
   &.en-US {
+    //noinspection CssUnknownTarget
     background-image: url(../images/flags/en-US.png);
   }
 
   &.fr {
+    //noinspection CssUnknownTarget
     background-image: url(../images/flags/fr.png);
   }
 
   &.pt {
+    //noinspection CssUnknownTarget
     background-image: url(../images/flags/pt.png);
   }
 
   &.zh-CN {
+    //noinspection CssUnknownTarget
     background-image: url(../images/flags/zh-CN.png);
   }
 
   &.zh-TW {
+    //noinspection CssUnknownTarget
     background-image: url(../images/flags/zh-TW.png);
   }
 }

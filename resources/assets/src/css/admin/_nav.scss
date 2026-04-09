@@ -46,6 +46,10 @@
   }
 }
 
+.nav-logout-link {
+  --nav-link-hover-bg: var(--btn-danger-bg);
+}
+
 .subnav {
   display: none;
 

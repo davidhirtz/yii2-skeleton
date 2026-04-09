@@ -1,24 +1,27 @@
 import htmx from "htmx.org";
 
-htmx.onLoad(($container) => {
-    (($container as HTMLElement).querySelectorAll('[data-check-all]') as NodeListOf<HTMLInputElement>)
+htmx.onLoad((elt) => {
+    const $container = elt as HTMLElement;
+
+    $container.querySelectorAll<HTMLInputElement>('[data-check-all]')
         .forEach($checkbox => {
-            const $parent = ($checkbox.dataset.checkAll ? document.querySelector($checkbox.dataset.checkAll!) : null) as HTMLElement | null;
+            const $parent: HTMLElement | null = $checkbox.dataset.checkAll
+                ? document.querySelector($checkbox.dataset.checkAll!)
+                : null;
 
             $checkbox.onchange = () => {
-                (($parent || document).querySelectorAll('[data-check="multiple"]') as NodeListOf<HTMLInputElement>).forEach(($el) => {
-                    $el.checked = $checkbox.checked;
-                });
+                ($parent || document).querySelectorAll<HTMLInputElement>('[data-check="multiple"]')
+                    .forEach(($el) => $el.checked = $checkbox.checked);
             };
         });
 
-    (($container as HTMLElement).querySelectorAll('[data-check="single"]') as NodeListOf<HTMLInputElement>)
+    $container.querySelectorAll<HTMLInputElement>('[data-check="single"]')
         .forEach(($checkbox) => {
             const $parent = $checkbox.closest('form') || document;
 
             $checkbox.onchange = () => {
                 if ($checkbox.checked) {
-                    ($parent.querySelectorAll(`[data-check="single"][name="${$checkbox.name}"]:checked`) as NodeListOf<HTMLInputElement>)
+                    ($parent.querySelectorAll<HTMLInputElement>(`[data-check="single"][name="${$checkbox.name}"]:checked`))
                         .forEach($el => {
                             if ($el !== $checkbox) {
                                 $el.checked = false;

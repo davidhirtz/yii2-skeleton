@@ -17,7 +17,7 @@ class UserHeader extends Header
     public function provider(UserActiveDataProvider $provider): static
     {
         $this->provider = $provider;
-        return $this->page($provider);
+        return $this->pagination($provider);
     }
 
     #[Override]

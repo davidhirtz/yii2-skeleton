@@ -3,12 +3,15 @@
 
 .aside {
   background-color: var(--aside-bg);
+  border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   gap: 1rem;
   height: 100dvh;
   justify-content: space-between;
+  overflow-y: auto;
   position: sticky;
+  scrollbar-width: none;
   top: 0;
   width: 18rem;
 
@@ -23,10 +26,6 @@
     .has-aside & {
       translate: 0;
     }
-  }
-
-  @include media-breakpoint-up(sm) {
-    border-right: 1px solid var(--border-color);
   }
 
   .nav-link-icon {
@@ -73,13 +72,7 @@
   }
 }
 
-.aside-toggler {
-  align-self: center;
-  width: 3rem;
-  aspect-ratio: 1 / 1;
-  background: #{svg-url("<svg xmlns='http://www.w3.org/2000/svg' width='24px' height='24px' viewBox='0 0 30 30'><path stroke='#fff' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>")} no-repeat center;
-  grid-area: toggler;
-
+.aside-toggle {
   @include media-breakpoint-up(md) {
     display: none;
   }

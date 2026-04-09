@@ -18,7 +18,8 @@ use Hirtz\Skeleton\Widgets\Navs\Header;
 
 echo Header::make()
     ->title(Yii::t('skeleton', 'Redirects'))
-    ->page($provider);
+    ->url(['/admin/redirect/index'])
+    ->pagination($provider);
 
 echo GridContainer::make()
     ->grid(RedirectGridView::make()

@@ -5,14 +5,10 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
 use Hirtz\Skeleton\Helpers\Url;
-use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Web\User;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
-use Hirtz\Skeleton\Widgets\Icon;
-use Hirtz\Skeleton\Widgets\Navs\Dropdown;
-use Hirtz\Skeleton\Widgets\Navs\DropdownOption;
 use Hirtz\Skeleton\Widgets\Navs\Nav;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Hirtz\Skeleton\Widgets\Widget;
@@ -24,7 +20,6 @@ class AccountMenu extends Widget
 {
     use TagAttributesTrait;
 
-    protected ?array $languageRoute = null;
     protected User $webuser;
 
     #[Override]
@@ -49,58 +44,11 @@ class AccountMenu extends Widget
     protected function getItems(): array
     {
         return [
-            $this->getLanguageDropdownItem(),
             $this->getAccountItem(),
             $this->getLoginItem(),
             $this->getLogoutItem(),
             $this->getSignupItem(),
         ];
-    }
-
-    protected function getLanguageDropdownItem(): ?NavItem
-    {
-        $i18n = Yii::$app->getI18n();
-
-        if (count($i18n->getLanguages()) < 2) {
-            return null;
-        }
-
-        $dropdown = Dropdown::make()
-            ->dropend()
-            ->button(Button::make()
-                ->class('nav-link')
-                ->content(Icon::make()
-                    ->name(Yii::$app->language)
-                    ->collection(Icon::ICON_COLLECTION_FLAG)));
-
-        foreach ($i18n->getLanguages() as $language) {
-            $label = $i18n->getLabel($language);
-
-            $link = DropdownOption::make()
-                ->addClass('i18n-dropdown-option')
-                ->content(
-                    Icon::make()
-                        ->collection(Icon::ICON_COLLECTION_FLAG)
-                        ->name($language),
-                    Div::make()
-                        ->addText($label)
-                );
-
-            if ($this->languageRoute) {
-                $link->href([
-                    ...Yii::$app->getRequest()->getQueryParams(),
-                    ...$this->languageRoute,
-                    'language' => $language,
-                ]);
-            } else {
-                $link->current(['language' => $language]);
-            }
-
-            $dropdown->addItem($link);
-        }
-
-        return NavItem::make()
-            ->content($dropdown);
     }
 
     /**
@@ -144,7 +92,7 @@ class AccountMenu extends Widget
                         'hx-target' => 'body',
                     ])
                     ->icon('sign-out-alt')
-                    ->class('nav-link navbar-logout'))
+                    ->class('nav-link nav-logout-link'))
             : null;
     }
 

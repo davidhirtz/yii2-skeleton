@@ -18,16 +18,11 @@ class Module extends \yii\base\Module
         $parts = explode('/', $path);
         $name = strtolower(array_pop($parts));
 
-        if ($name === 'src') {
-            $this->setViewPath("$path/../resources/views/");
-        } else {
-            while ($parts && array_pop($parts) !== 'src') {
-                $path .= '/..';
-            }
-
-            $this->setViewPath("$path/../../resources/views/$name");
+        while ($parts && array_pop($parts) !== 'src') {
+            $path .= '/..';
         }
 
+        $this->setViewPath("$path/../../resources/views/$name");
 
         $this->setViewPath($this->getBasePath() . '/../../../resources/views/admin/');
         $this->trigger(self::EVENT_INIT);

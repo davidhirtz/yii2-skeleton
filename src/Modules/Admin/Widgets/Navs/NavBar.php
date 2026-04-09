@@ -4,39 +4,85 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
-use Hirtz\Skeleton\Html\Header;
+use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
-use Hirtz\Skeleton\Widgets\Container;
+use Hirtz\Skeleton\Widgets\Icon;
+use Hirtz\Skeleton\Widgets\Navs\Dropdown;
+use Hirtz\Skeleton\Widgets\Navs\DropdownOption;
+use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Hirtz\Skeleton\Widgets\Widget;
+use Override;
+use Stringable;
 use Yii;
 
 class NavBar extends Widget
 {
-    public array $attributes = ['class' => 'navbar'];
+    use TagAttributesTrait;
 
-    protected function renderContent(): Header
+    protected ?array $languageRoute = null;
+
+    #[Override]
+    protected function renderContent(): Stringable|string
     {
-        $container = Container::make()
-            ->addClass('navbar-container')
-            ->addContent($this->getMobileToggle())
-            ->addContent($this->getAccountMenu());
-
-        return Header::make()
+        return Div::make()
             ->attributes($this->attributes)
-            ->content($container);
+            ->addClass('navbar')
+            ->content($this->getLanguageDropdownItem(), $this->getMobileToggle());
     }
 
-    protected function getAccountMenu(): AccountMenu
+    protected function getLanguageDropdownItem(): ?Stringable
     {
-        return AccountMenu::make();
+        $i18n = Yii::$app->getI18n();
+
+        if (count($i18n->getLanguages()) < 2) {
+            return null;
+        }
+
+        $dropdown = Dropdown::make()
+            ->dropend()
+            ->button(Button::make()
+                ->primary()
+                ->content(Icon::make()
+                    ->name(Yii::$app->language)
+                    ->collection(Icon::ICON_COLLECTION_FLAG)));
+
+        foreach ($i18n->getLanguages() as $language) {
+            $label = $i18n->getLabel($language);
+
+            $link = DropdownOption::make()
+                ->addClass('i18n-dropdown-option')
+                ->content(
+                    Icon::make()
+                        ->collection(Icon::ICON_COLLECTION_FLAG)
+                        ->name($language),
+                    Div::make()
+                        ->addText($label)
+                );
+
+            if ($this->languageRoute) {
+                $link->href([
+                    ...Yii::$app->getRequest()->getQueryParams(),
+                    ...$this->languageRoute,
+                    'language' => $language,
+                ]);
+            } else {
+                $link->current(['language' => $language]);
+            }
+
+            $dropdown->addItem($link);
+        }
+
+        return $dropdown;
     }
 
-    protected function getMobileToggle(): string
+    protected function getMobileToggle(): ?Stringable
     {
         return Button::make()
-            ->class('aside-toggler')
+            ->secondary()
+            ->addClass('aside-toggle')
+            ->icon('bars')
             ->attribute('onclick', "body.classList.toggle('has-aside')")
-            ->attribute('aria-label', Yii::t('skeleton', 'Toggle navigation'))
-            ->render();
+            ->attribute('aria-label', Yii::t('skeleton', 'Toggle menu'));
     }
 }
