@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Widgets\Navs;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Ul;
 use Hirtz\Skeleton\Widgets\Navs\Traits\NavItemTrait;
+use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 
@@ -14,6 +15,7 @@ class Nav extends Widget
 {
     use NavItemTrait;
     use TagAttributesTrait;
+    use VisibilityTrait;
 
     protected bool $hideSingleItem = true;
 
@@ -25,7 +27,7 @@ class Nav extends Widget
 
     protected function renderContent(): string|Stringable
     {
-        if (!$this->items || (1 === count($this->items) && $this->hideSingleItem)) {
+        if (!$this->isVisible() || !$this->items || (count($this->items) === 1 && $this->hideSingleItem)) {
             return '';
         }
 

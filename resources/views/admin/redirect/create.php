@@ -12,13 +12,13 @@ declare(strict_types=1);
 use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Modules\Admin\Controllers\RedirectController;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\RedirectActiveForm;
-use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\RedirectSubmenu;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\RedirectHeader;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Forms\ErrorSummary;
 use Hirtz\Skeleton\Widgets\Forms\FormContainer;
 
-echo RedirectSubmenu::make()
+echo RedirectHeader::make()
     ->title(Yii::t('skeleton', 'Create New Redirect'));
 
 echo Container::make()

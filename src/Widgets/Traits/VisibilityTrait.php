@@ -12,10 +12,18 @@ trait VisibilityTrait
     protected ?array $roles = null;
     protected Closure|bool $visible = true;
 
-    public function roles(array $roles): static
+    public function roles(?array $roles): static
     {
-        $this->roles = $this->roles ? [...$this->roles, ...$roles] : $roles;
+        $this->roles = $roles
+            ? array_unique(array_filter($this->roles ? [...$this->roles, ...$roles] : $roles))
+            : null;
+
         return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return $this->roles ?? [];
     }
 
     /**

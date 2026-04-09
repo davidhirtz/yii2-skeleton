@@ -18,15 +18,16 @@ use Hirtz\Skeleton\Modules\Admin\Controllers\LogController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\RedirectController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\SystemController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\TrailController;
+use Hirtz\Skeleton\Modules\Admin\Controllers\UserAuthController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\UserController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\UserLoginController;
+use Hirtz\Skeleton\Modules\Admin\Controllers\UserTrailController;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\DashboardNavItem;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\SystemNavItem;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserNavItem;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\DashboardPanel;
 use Hirtz\Skeleton\Web\Request;
 use Hirtz\Skeleton\Widgets\Navs\Nav;
-use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Override;
 use Yii;
 
@@ -48,7 +49,11 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
         $controllerMap = [];
 
         foreach ($this->getSubmodules() as $submodule) {
-            $controllerMap = ArrayHelper::merge($controllerMap, $submodule->controllerMap);
+            foreach ($submodule->controllerMap as $key => $controller) {
+                $controllerMap[$key] = is_string($controller)
+                    ? ['class' => $controller, 'module' => $submodule]
+                    : $controller;
+            }
         }
 
         $controllerMap = ArrayHelper::merge($this->getCoreControllerMap(), $controllerMap);
@@ -99,7 +104,9 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
             'system' => SystemController::class,
             'trail' => TrailController::class,
             'user' => UserController::class,
+            'user-auth' => UserAuthController::class,
             'user-login' => UserLoginController::class,
+            'user-trail' => UserTrailController::class,
         ];
 
         return array_map(fn ($class) => ['class' => $class], $classMap);

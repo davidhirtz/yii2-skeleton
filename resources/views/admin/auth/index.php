@@ -10,17 +10,13 @@ declare(strict_types=1);
  */
 
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\AuthItemGridView;
-use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserSubmenu;
 use Hirtz\Skeleton\Web\View;
-use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Grids\GridContainer;
+use Hirtz\Skeleton\Widgets\Navs\Header;
 use yii\data\ActiveDataProvider;
 
-$this->title(Yii::t('skeleton', 'Permissions'))
-    ->addBreadcrumb(Yii::t('skeleton', 'Permissions'), ['index']);
-
-echo Container::make()
-    ->content(UserSubmenu::make());
+echo Header::make()
+    ->title(Yii::t('skeleton', 'Permissions'));
 
 echo GridContainer::make()
     ->grid(AuthItemGridView::make()

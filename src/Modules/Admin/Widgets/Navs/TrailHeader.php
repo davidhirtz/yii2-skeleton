@@ -19,7 +19,6 @@ class TrailHeader extends Header
     public function provider(TrailActiveDataProvider $provider): static
     {
         $this->provider = $provider;
-        $provider->prepare();
 
         if ($provider->model) {
             $this->model = $provider->getModels()
@@ -27,7 +26,7 @@ class TrailHeader extends Header
                 : null;
         }
 
-        return $this;
+        return $this->page($provider);
     }
 
     #[Override]
@@ -35,12 +34,6 @@ class TrailHeader extends Header
     {
         $this->title ??= $this->getTrailModelTitle();
         $this->url ??= $this->getTrailModelAdminRoute() ?? ['/admin/trail/index'];
-
-        $page = $this->provider->getPagination()->getPage() + 1;
-
-        if ($page > 1) {
-            $this->subtitle ??= Yii::t('skeleton', 'Page {page}', ['page' => $page]);
-        }
 
         $this->setBreadcrumbs();
         parent::configure();

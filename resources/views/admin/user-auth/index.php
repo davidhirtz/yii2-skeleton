@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @see \Hirtz\Skeleton\Modules\Admin\Controllers\AuthController::actionView()
+ * @see \Hirtz\Skeleton\Modules\Admin\Controllers\UserAuthController::actionIndex()
  *
  * @var View $this
  * @var ActiveDataProvider $provider
@@ -16,9 +16,6 @@ use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserSubmenu;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Grids\GridContainer;
 use yii\data\ActiveDataProvider;
-
-$this->title(Yii::t('skeleton', 'Edit Permissions'))
-    ->addBreadcrumb(Yii::t('skeleton', 'Users'), ['/admin/user/index']);
 
 echo UserSubmenu::make()
     ->user($user);

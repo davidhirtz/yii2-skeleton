@@ -17,6 +17,7 @@
   padding: 0.5rem 1rem;
   text-decoration: none;
   gap: .5rem;
+  width: 100%;
 
   &:hover,
   &:focus {
@@ -62,4 +63,6 @@
 .tabs {
   padding: 1rem;
   gap: .5rem;
+  overflow-y: auto;
+  scrollbar-width: none;
 }

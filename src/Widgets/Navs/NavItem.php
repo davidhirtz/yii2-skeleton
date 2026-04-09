@@ -50,119 +50,12 @@ class NavItem extends Widget
 
     public function isActive(): bool
     {
-        return $this->active === true;
-    }
-
-    /**
-     * @param Closure(Badge):(?Badge)|int|string|null $badge
-     * @return $this
-     */
-    public function badge(Closure|int|string|null $badge): static
-    {
-        $this->badge = $badge;
-        return $this;
-    }
-
-    /**
-     * @param Closure(A):(string|Stringable)|null $link
-     * @return $this
-     */
-    public function link(?Closure $link): static
-    {
-        $this->link = $link;
-        return $this;
-    }
-
-    public function order(?int $order): static
-    {
-        $this->order = $order;
-        return $this;
-    }
-
-    public function routes(array $routes): static
-    {
-        $this->routes = [...$this->routes, ...$routes];
-        return $this;
-    }
-
-
-    #[Override]
-    protected function renderContent(): string|Stringable
-    {
-        if (!$this->isVisible()) {
-            return '';
+        if ($this->active !== null) {
+            return $this->active;
         }
 
-        $items = $this->renderItems();
-
-        if ($this->order !== null) {
-            $this->addStyle(['order' => $this->order]);
-        }
-
-        return Li::make()
-            ->attributes($this->attributes)
-            ->addClass('nav-item')
-            ->content($this->getContent(), $items);
-    }
-
-    protected function getContent(): string|Stringable
-    {
-        if ($this->content) {
-            return implode('', $this->content);
-        }
-
-        $link = A::make()
-            ->class('nav-link')
-            ->href($this->url);
-
-        $link->addContent($this->getIcon()?->addClass('nav-link-icon'));
-
-        if ($this->label) {
-            $link->addContent(Span::make()->text($this->label));
-        }
-
-        if ($this->badge) {
-            $badge = Badge::make()->addClass('aside-badge');
-            $badge = $this->badge instanceof Closure ? ($this->badge)($badge) : $badge->value($this->badge);
-
-            $link->addContent($badge);
-        }
-
-        $this->active ??= $this->hasActiveSubnavItem() ?: $this->hasActiveRoute();
-        $this->active ??= Yii::$app->getRequest()->getUrl() === ($link->attributes['href'] ?? null);
-
-        if ($this->active) {
-            $link->addClass('active');
-        }
-
-        return $this->link ? ($this->link)($link) : $link;
-    }
-
-    protected function renderItems(): ?string
-    {
-        return $this->items
-            ? Nav::make()
-                ->class('subnav')
-                ->items($this->items)
-                ->render()
-            : null;
-    }
-
-    protected function hasActiveSubnavItem(): bool
-    {
-        foreach ($this->items as $item) {
-            if ($item->isActive()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    protected function hasActiveRoute(): ?bool
-    {
         if (!(Yii::$app->controller instanceof Controller)) {
-            return null;
+            return false;
         }
 
         $request = Yii::$app->getRequest();
@@ -197,6 +90,112 @@ class NavItem extends Widget
             }
         }
 
-        return null;
+        return $request->getUrl() === ($link->attributes['href'] ?? null);
+    }
+
+    /**
+     * @param Closure(Badge):(?Badge)|int|string|null $badge
+     * @return $this
+     */
+    public function badge(Closure|int|string|null $badge): static
+    {
+        $this->badge = $badge;
+        return $this;
+    }
+
+    /**
+     * @param Closure(A):(string|Stringable)|null $link
+     * @return $this
+     */
+    public function link(?Closure $link): static
+    {
+        $this->link = $link;
+        return $this;
+    }
+
+    public function order(?int $order): static
+    {
+        $this->order = $order;
+        return $this;
+    }
+
+    public function routes(array $routes): static
+    {
+        $this->routes = [...$this->routes, ...$routes];
+        return $this;
+    }
+
+    #[Override]
+    protected function renderContent(): string|Stringable
+    {
+        $items = $this->getItems();
+
+        if (!$this->isVisible()) {
+            return '';
+        }
+
+        if ($this->order !== null) {
+            $this->addStyle(['order' => $this->order]);
+        }
+
+        return Li::make()
+            ->attributes($this->attributes)
+            ->addClass('nav-item')
+            ->content($this->getContent(), $items);
+    }
+
+    protected function getContent(): string|Stringable
+    {
+        if ($this->content) {
+            return implode('', $this->content);
+        }
+
+        $link = A::make()
+            ->class('nav-link')
+            ->href($this->url);
+
+        $link->addContent($this->getIcon()?->addClass('nav-link-icon'));
+
+        if ($this->label) {
+            $link->addContent(Span::make()->text($this->label));
+        }
+
+        if ($this->badge) {
+            $badge = Badge::make()->addClass('aside-badge');
+            $badge = $this->badge instanceof Closure ? ($this->badge)($badge) : $badge->value($this->badge);
+
+            $link->addContent($badge);
+        }
+
+        $this->active ??= $this->isActive();
+
+        if ($this->active) {
+            $link->addClass('active');
+        }
+
+        return $this->link ? ($this->link)($link) : $link;
+    }
+
+    protected function getItems(): ?string
+    {
+        if (!$this->items) {
+            return null;
+        }
+
+        foreach ($this->items as $item) {
+            $isActive = $item->isActive();
+            $item->active($isActive);
+
+            if ($isActive) {
+                $this->active = true;
+            }
+
+            $this->roles($item->getRoles());
+        }
+
+        return Nav::make()
+            ->class('subnav')
+            ->items($this->items)
+            ->render();
     }
 }

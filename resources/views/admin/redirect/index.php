@@ -12,12 +12,13 @@ declare(strict_types=1);
 
 use Hirtz\Skeleton\Modules\Admin\Data\RedirectActiveDataProvider;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\RedirectGridView;
-use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\RedirectSubmenu;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Grids\GridContainer;
+use Hirtz\Skeleton\Widgets\Navs\Header;
 
-echo RedirectSubmenu::make()
-    ->title(Yii::t('skeleton', 'Redirects'));
+echo Header::make()
+    ->title(Yii::t('skeleton', 'Redirects'))
+    ->page($provider);
 
 echo GridContainer::make()
     ->grid(RedirectGridView::make()

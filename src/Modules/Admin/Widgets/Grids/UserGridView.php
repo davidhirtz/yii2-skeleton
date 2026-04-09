@@ -9,8 +9,8 @@ use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Data\UserActiveDataProvider;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\UserCreateButton;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
-use Hirtz\Skeleton\Widgets\Buttons\CreateButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
@@ -63,11 +63,7 @@ class UserGridView extends GridView
 
     protected function getCreateButton(): string|Stringable
     {
-        return CreateButton::make()
-            ->label(Yii::t('skeleton', 'New User'))
-            ->icon('user-plus')
-            ->roles([User::AUTH_USER_CREATE])
-            ->url(['/admin/user/create']);
+        return UserCreateButton::make();
     }
 
     protected function getNameColumn(): Column

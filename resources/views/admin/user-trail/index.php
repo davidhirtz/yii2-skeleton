@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @see \Hirtz\Skeleton\Modules\Admin\Controllers\TrailController::actionIndex()
+ * @see \Hirtz\Skeleton\Modules\Admin\Controllers\UserTrailController::actionIndex()
  *
  * @var View $this
  * @var TrailActiveDataProvider $provider
@@ -11,12 +11,12 @@ declare(strict_types=1);
 
 use Hirtz\Skeleton\Modules\Admin\Data\TrailActiveDataProvider;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\TrailGridView;
-use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\TrailHeader;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserSubmenu;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Grids\GridContainer;
 
-echo TrailHeader::make()
-    ->provider($provider);
+echo UserSubmenu::make()
+    ->user($provider->user);
 
 echo GridContainer::make()
     ->grid(TrailGridView::make()

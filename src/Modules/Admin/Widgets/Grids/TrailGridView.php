@@ -350,7 +350,7 @@ class TrailGridView extends GridView
         if ($trail->user) {
             return Username::make()
                 ->user($trail->user)
-                ->href(['index', 'user' => $trail->user_id]);
+                ->href(['/admin/user-trail/index', 'id' => $trail->user_id]);
         }
 
         return A::make()

@@ -31,7 +31,7 @@ class SystemNavItem extends NavItem
 
     protected function addDefaultItems(): static
     {
-        return $this->addItem($this->getTrailItem(), $this->getRedirectsItem());
+        return $this->addItems($this->getTrailItem(), $this->getRedirectsItem());
     }
 
     protected function getRedirectsItem(): NavItem

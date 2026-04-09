@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Navs;
 
+use yii\data\ActiveDataProvider;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\H1;
@@ -14,6 +15,7 @@ use Hirtz\Skeleton\Widgets\Traits\ContainerTrait;
 use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
+use Yii;
 
 class Header extends Widget
 {
@@ -22,24 +24,20 @@ class Header extends Widget
     use TagContentTrait;
     use UrlTrait;
 
-    protected ?string $title = null;
-    protected ?string $subtitle = null;
     protected string|Stringable|null $subheading = null;
+    protected ?string $subtitle = null;
+    protected ?string $title = null;
 
-    public function title(?string $title): static
+    public function page(ActiveDataProvider|int $page): static
     {
-        if ($title) {
-            $this->view->title($title);
+        if ($page instanceof ActiveDataProvider) {
+            $page->prepare();
+            $page = $page->getPagination()->getPage() + 1;
         }
 
-        $this->title = $title;
-        return $this;
-    }
-
-    public function subtitle(?string $subtitle): static
-    {
-        $this->subtitle = $subtitle;
-        return $this;
+        return $page > 1
+            ? $this->subtitle(Yii::t('skeleton', 'Page {page}', ['page' => $page]))
+            : $this;
     }
 
     public function subheading(string|Stringable|null $subheading): static
@@ -63,12 +61,30 @@ class Header extends Widget
         return $wrapper;
     }
 
+    public function subtitle(?string $subtitle): static
+    {
+        $this->subtitle = $subtitle;
+        return $this;
+    }
+
+    public function title(?string $title): static
+    {
+        if ($title) {
+            $this->view->title($title);
+        }
+
+        $this->title = $title;
+        return $this;
+    }
+
     protected function getHeaderContent(): string|Stringable|null
     {
-        return $this->subtitle
+        $subtitle = $this->getSubtitle();
+
+        return $subtitle
             ? Div::make()
                 ->class('header-title')
-                ->content($this->getTitle(), $this->getSubtitle())
+                ->content($this->getTitle(), $subtitle)
             : $this->getTitle();
     }
 

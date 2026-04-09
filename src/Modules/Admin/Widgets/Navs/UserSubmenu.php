@@ -58,7 +58,7 @@ class UserSubmenu extends Submenu
     {
         return Yii::$app->getUser()->can(User::AUTH_USER_UPDATE, ['user' => $this->user])
             ? NavItem::make()
-                ->label(Yii::t('skeleton', 'User'))
+                ->label(Yii::t('skeleton', 'Account'))
                 ->url(['/admin/user/update', 'id' => $this->user->id])
                 ->icon('user')
             : null;
@@ -69,7 +69,7 @@ class UserSubmenu extends Submenu
         return Yii::$app->getUser()->can(User::AUTH_USER_ASSIGN, ['user' => $this->user])
             ? NavItem::make()
                 ->label(Yii::t('skeleton', 'Permissions'))
-                ->url(['/admin/auth/view', 'user' => $this->user->id])
+                ->url(['/admin/user-auth/index', 'id' => $this->user->id])
                 ->icon('unlock-alt')
             : null;
     }
@@ -79,8 +79,9 @@ class UserSubmenu extends Submenu
         return Yii::$app->getUser()->can(User::AUTH_USER_UPDATE, ['user' => $this->user])
             ? NavItem::make()
                 ->label(Yii::t('skeleton', 'Logins'))
-                ->url(['/admin/user-login/view', 'user' => $this->user->id])
                 ->icon('bars')
+                ->url(['/admin/user-login/view', 'user' => $this->user->id])
+                ->routes(['admin/user-login/view'])
             : null;
     }
 
@@ -89,8 +90,9 @@ class UserSubmenu extends Submenu
         return Yii::$app->getUser()->can(Trail::AUTH_TRAIL_INDEX)
             ? NavItem::make()
                 ->label(Yii::t('skeleton', 'History'))
-                ->url(['/admin/trail/index', 'user' => $this->user->id])
                 ->icon('history')
+                ->url(['/admin/user-trail/index', 'id' => $this->user->id])
+                ->routes(['admin/user-trail/index'])
             : null;
     }
 }

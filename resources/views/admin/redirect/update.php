@@ -15,13 +15,13 @@ use Hirtz\Skeleton\Modules\Admin\Controllers\RedirectController;
 use Hirtz\Skeleton\Modules\Admin\Data\RedirectActiveDataProvider;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\RedirectActiveForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\RedirectGridView;
-use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\RedirectSubmenu;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\RedirectHeader;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Forms\DeleteActiveForm;
 use Hirtz\Skeleton\Widgets\Forms\FormContainer;
 use Hirtz\Skeleton\Widgets\Grids\GridContainer;
 
-echo RedirectSubmenu::make()
+echo RedirectHeader::make()
     ->title(Yii::t('skeleton', 'Update Redirect'));
 
 echo FormContainer::make()

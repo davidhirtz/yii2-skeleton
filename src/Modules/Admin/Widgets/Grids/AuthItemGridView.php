@@ -9,7 +9,7 @@ use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Ul;
 use Hirtz\Skeleton\Models\AuthItem;
 use Hirtz\Skeleton\Models\User;
-use Hirtz\Skeleton\Modules\Admin\Controllers\AuthController;
+use Hirtz\Skeleton\Modules\Admin\Controllers\UserAuthController;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
@@ -143,13 +143,13 @@ class AuthItemGridView extends GridView
     }
 
     /**
-     * @see AuthController::actionAssign()
-     * @see AuthController::actionRevoke()
+     * @see UserAuthController::actionCreate()
+     * @see UserAuthController::actionDelete()
      */
     protected function getButtonColumnContent(AuthItem $authItem): string
     {
         $route = [
-            $authItem->isAssigned ? 'revoke' : 'assign',
+            $authItem->isAssigned ? '/admiin/user-auth/delete' : '/admiin/user-auth/create',
             'id' => $this->user->id,
             'name' => $authItem->name,
             'type' => $authItem->type,

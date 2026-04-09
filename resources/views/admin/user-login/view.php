@@ -16,9 +16,6 @@ use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Grids\GridContainer;
 use yii\data\ActiveDataProvider;
 
-$this->title(Yii::t('skeleton', 'Logins'))
-    ->addBreadcrumb(Yii::t('skeleton', 'Users'), ['/admin/user/index']);
-
 echo UserSubmenu::make()
     ->user($user);
 

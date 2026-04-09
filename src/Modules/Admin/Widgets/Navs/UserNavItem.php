@@ -18,14 +18,6 @@ class UserNavItem extends NavItem
         $this->order ??= 100;
         $this->url ??= ['/admin/user/index'];
 
-        // Todo this should not override
-        $this->routes = [
-            'admin/auth',
-            'admin/login',
-            'admin/user',
-            'admin/trail/index' => ['user'],
-        ];
-
         parent::__construct($config);
     }
 
@@ -46,9 +38,8 @@ class UserNavItem extends NavItem
         return NavItem::make()
             ->label(Yii::t('skeleton', 'Users'))
             ->url(['/admin/user/index'])
-            ->icon('users')
             ->roles([User::AUTH_USER_CREATE, User::AUTH_USER_UPDATE])
-            ->routes(['user/(index|owner|create)']);
+            ->routes(['admin/user/', 'admin/user-auth/', 'admin/user-trail/', 'admin/user-login/view']);
     }
 
     protected function getPermissionItem(): NavItem
@@ -56,9 +47,8 @@ class UserNavItem extends NavItem
         return NavItem::make()
             ->label(Yii::t('skeleton', 'Permissions'))
             ->url(['/admin/auth/index'])
-            ->icon('unlock-alt')
             ->roles([User::AUTH_USER_ASSIGN])
-            ->routes(['auth/(index|view)']);
+            ->routes(['admin/auth']);
     }
 
     protected function getLoginItem(): NavItem
@@ -66,8 +56,7 @@ class UserNavItem extends NavItem
         return NavItem::make()
             ->label(Yii::t('skeleton', 'Logins'))
             ->url(['/admin/user-login/index'])
-            ->icon('bars')
             ->roles([User::AUTH_USER_UPDATE])
-            ->routes(['user-login/(index|view)']);
+            ->routes(['admin/user-login/index']);
     }
 }

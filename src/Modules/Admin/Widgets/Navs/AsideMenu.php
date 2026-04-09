@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
 use Hirtz\Skeleton\Widgets\Widget;
+use Hirtz\Skeleton\Html\Aside;
 use Stringable;
 
-class Aside extends Widget
+class AsideMenu extends Widget
 {
     public array $attributes = [
         'class' => 'aside',
@@ -16,17 +17,17 @@ class Aside extends Widget
 
     protected function renderContent(): string|Stringable
     {
-        return \Hirtz\Skeleton\Html\Aside::make()
+        return Aside::make()
             ->attributes($this->attributes)
-            ->content($this->renderMainMenu(), $this->renderAccountMenu());
+            ->content($this->getMainMenu(), $this->getAccountMenu());
     }
 
-    protected function renderMainMenu(): Stringable
+    protected function getMainMenu(): Stringable
     {
         return MainMenu::make();
     }
 
-    protected function renderAccountMenu(): AccountMenu
+    protected function getAccountMenu(): AccountMenu
     {
         return AccountMenu::make();
     }
