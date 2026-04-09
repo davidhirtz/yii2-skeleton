@@ -10,6 +10,13 @@ class Button extends Base\Tag
 {
     use TagContentTrait;
 
+    protected function getAttributes(): string
+    {
+        $this->attributes['type'] ??= 'button';
+
+        return parent::getAttributes();
+    }
+
     protected function getTagName(): string
     {
         return 'button';

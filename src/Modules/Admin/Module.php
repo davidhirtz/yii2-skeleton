@@ -5,23 +5,11 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin;
 
 use Hirtz\Skeleton\Behaviors\UserLanguageBehavior;
-use Hirtz\Skeleton\Helpers\ArrayHelper;
 use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Config\Config;
 use Hirtz\Skeleton\Modules\Admin\Config\DashboardItem;
-use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
-use Hirtz\Skeleton\Modules\Admin\Controllers\AuthController;
-use Hirtz\Skeleton\Modules\Admin\Controllers\DashboardController;
-use Hirtz\Skeleton\Modules\Admin\Controllers\LogController;
-use Hirtz\Skeleton\Modules\Admin\Controllers\RedirectController;
-use Hirtz\Skeleton\Modules\Admin\Controllers\SystemController;
-use Hirtz\Skeleton\Modules\Admin\Controllers\TrailController;
-use Hirtz\Skeleton\Modules\Admin\Controllers\UserAuthController;
-use Hirtz\Skeleton\Modules\Admin\Controllers\UserController;
-use Hirtz\Skeleton\Modules\Admin\Controllers\UserLoginController;
-use Hirtz\Skeleton\Modules\Admin\Controllers\UserTrailController;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\DashboardNavItem;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\SystemNavItem;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserNavItem;
@@ -37,35 +25,15 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
     public ?int $trailLifetime = null;
     public bool $showInBreadcrumbs = true;
 
-    public $defaultRoute = 'dashboard/index';
-    public $controllerNamespace = 'app\Modules\Admin\Controllers';
+    public $defaultRoute = 'dashboard';
     public $layout = 'main';
 
     private array $dashboardPanels = [];
 
     #[Override]
-    public function init(): void
-    {
-        $controllerMap = [];
-
-        foreach ($this->getSubmodules() as $submodule) {
-            foreach ($submodule->controllerMap as $key => $controller) {
-                $controllerMap[$key] = is_string($controller)
-                    ? ['class' => $controller, 'module' => $submodule]
-                    : $controller;
-            }
-        }
-
-        $controllerMap = ArrayHelper::merge($this->getCoreControllerMap(), $controllerMap);
-        $this->controllerMap = ArrayHelper::merge($controllerMap, $this->controllerMap);
-
-        parent::init();
-    }
-
-    #[Override]
     public function beforeAction($action): bool
     {
-        $request = Yii::$app->getRequest();
+        $request = $action->controller->request;
 
         if (Yii::$app->has('user')) {
             Yii::$app->getUser()->loginUrl ??= ['/admin/account/login'];
@@ -80,7 +48,7 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
             // implementations or REST APIs that use admin endpoints.
             if ($request->isDraftRequest() && !$request->getIsAjax()) {
                 $url = Yii::$app->getUrlManager()->createAbsoluteUrl($request->getUrl());
-                Yii::$app->getResponse()->redirect($url)->send();
+                $action->controller->response->redirect($url)->send();
             }
 
             if (count(Yii::$app->getI18n()->getLanguages()) > 1) {
@@ -88,28 +56,7 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
             }
         }
 
-        $this->setViewPath('@skeleton/../resources/views/admin');
-
         return parent::beforeAction($action);
-    }
-
-    protected function getCoreControllerMap(): array
-    {
-        $classMap = [
-            'account' => AccountController::class,
-            'auth' => AuthController::class,
-            'dashboard' => DashboardController::class,
-            'log' => LogController::class,
-            'redirect' => RedirectController::class,
-            'system' => SystemController::class,
-            'trail' => TrailController::class,
-            'user' => UserController::class,
-            'user-auth' => UserAuthController::class,
-            'user-login' => UserLoginController::class,
-            'user-trail' => UserTrailController::class,
-        ];
-
-        return array_map(fn ($class) => ['class' => $class], $classMap);
     }
 
     /**
@@ -120,8 +67,10 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
         $panels = $this->getDefaultDashboardPanels();
 
         foreach ($this->getSubmodules() as $module) {
-            foreach ($module->getDashboardPanels() as $key => $panel) {
-                $panels = Config::merge($panels, $key, $panel);
+            if ($module instanceof ModuleInterface) {
+                foreach ($module->getDashboardPanels() as $key => $panel) {
+                    $panels = Config::merge($panels, $key, $panel);
+                }
             }
         }
 
@@ -194,30 +143,29 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
         return Yii::t('skeleton', 'Admin');
     }
 
+    #[Override]
     public function aside(Nav $nav): Nav
     {
         $nav->addItems(DashboardNavItem::make(), UserNavItem::make(), SystemNavItem::make());
 
         foreach ($this->getSubmodules() as $module) {
-            $nav = $module->aside($nav);
+            if ($module instanceof ModuleInterface) {
+                $nav = $module->aside($nav);
+            }
         }
 
         return $nav;
     }
 
     /**
-     * @return (\yii\base\Module&ModuleInterface)[]
+     * @return \yii\base\Module[]
      */
     public function getSubmodules(): array
     {
         $submodules = [];
 
         foreach (array_keys($this->getModules()) as $moduleName) {
-            $module = $this->getModule($moduleName);
-
-            if ($module instanceof ModuleInterface) {
-                $submodules[] = $module;
-            }
+            $submodules[] = $this->getModule($moduleName);
         }
 
         return $submodules;

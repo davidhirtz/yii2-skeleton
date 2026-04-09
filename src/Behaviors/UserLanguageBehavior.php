@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Behaviors;
 
+use Override;
 use Yii;
 use yii\base\Behavior;
 use yii\base\Controller;
@@ -27,7 +28,7 @@ class UserLanguageBehavior extends Behavior
         parent::init();
     }
 
-    #[\Override]
+    #[Override]
     public function events(): array
     {
         return [

@@ -33,7 +33,7 @@ abstract class AbstractTag implements Stringable
         return '';
     }
 
-    final protected function getAttributes(): string
+    protected function getAttributes(): string
     {
         return Html::renderTagAttributes($this->attributes);
     }

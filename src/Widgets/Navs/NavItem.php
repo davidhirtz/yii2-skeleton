@@ -50,47 +50,7 @@ class NavItem extends Widget
 
     public function isActive(): bool
     {
-        if ($this->active !== null) {
-            return $this->active;
-        }
-
-        if (!(Yii::$app->controller instanceof Controller)) {
-            return false;
-        }
-
-        $request = Yii::$app->getRequest();
-
-        foreach ($this->routes as $route => $params) {
-            if (is_int($route)) {
-                $route = is_array($params) ? array_shift($params) : $params;
-            }
-
-            $shouldSkip = ('!' === $route[0]);
-
-            if ($shouldSkip) {
-                $route = substr((string)$route, 1);
-            }
-
-            if (preg_match("~$route~", Yii::$app->controller->route)) {
-                if (is_array($params)) {
-                    foreach ($params as $key => $value) {
-                        $isMatching = is_int($key)
-                            ? in_array($value, array_keys($request->get()), true)
-                            : $request->get($key) === $value;
-
-                        if ($isMatching) {
-                            return true;
-                        }
-                    }
-
-                    return false;
-                }
-
-                return !$shouldSkip;
-            }
-        }
-
-        return $request->getUrl() === ($link->attributes['href'] ?? null);
+        return $this->active === true;
     }
 
     /**
@@ -167,7 +127,7 @@ class NavItem extends Widget
             $link->addContent($badge);
         }
 
-        $this->active ??= $this->isActive();
+        $this->active ??= $this->hasActiveRoute() ?? Yii::$app->getRequest()->getUrl() === $link->attributes['href'];
 
         if ($this->active) {
             $link->addClass('active');
@@ -176,26 +136,66 @@ class NavItem extends Widget
         return $this->link ? ($this->link)($link) : $link;
     }
 
+    protected function hasActiveRoute(): ?bool
+    {
+        if (!(Yii::$app->controller instanceof Controller)) {
+            return false;
+        }
+
+        $request = Yii::$app->getRequest();
+
+        foreach ($this->routes as $route => $params) {
+            if (is_int($route)) {
+                $route = is_array($params) ? array_shift($params) : $params;
+            }
+
+            $shouldSkip = ('!' === $route[0]);
+
+            if ($shouldSkip) {
+                $route = substr((string)$route, 1);
+            }
+
+            if (preg_match("~$route~", Yii::$app->controller->route)) {
+                if (is_array($params)) {
+                    foreach ($params as $key => $value) {
+                        $isMatching = is_int($key)
+                            ? in_array($value, array_keys($request->get()), true)
+                            : $request->get($key) === $value;
+
+                        if ($isMatching) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
+
+                return !$shouldSkip;
+            }
+        }
+
+        return null;
+    }
+
     protected function getItems(): ?string
     {
         if (!$this->items) {
             return null;
         }
 
-        foreach ($this->items as $item) {
-            $isActive = $item->isActive();
-            $item->active($isActive);
+        $items = Nav::make()
+            ->class('subnav')
+            ->items($this->items)
+            ->render();
 
-            if ($isActive) {
+        foreach ($this->items as $item) {
+            if ($item->isActive()) {
                 $this->active = true;
             }
 
             $this->roles($item->getRoles());
         }
 
-        return Nav::make()
-            ->class('subnav')
-            ->items($this->items)
-            ->render();
+        return $items;
     }
 }
