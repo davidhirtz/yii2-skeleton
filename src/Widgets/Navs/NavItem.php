@@ -14,6 +14,8 @@ use Hirtz\Skeleton\Widgets\Buttons\Badge;
 use Hirtz\Skeleton\Widgets\Navs\Traits\NavItemTrait;
 use Hirtz\Skeleton\Widgets\Traits\IconTrait;
 use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
+use Hirtz\Skeleton\Widgets\Traits\LinkTrait;
+use Hirtz\Skeleton\Widgets\Traits\OrderTrait;
 use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Hirtz\Skeleton\Widgets\Widget;
@@ -28,15 +30,15 @@ class NavItem extends Widget
     use TagContentTrait;
     use IconTrait;
     use LabelTrait;
+    use LinkTrait;
     use NavItemTrait;
+    use OrderTrait;
     use UrlTrait;
     use VisibilityTrait;
 
     protected ?bool $active = null;
     protected Closure|string|int|null $badge = null;
-    protected ?Closure $link = null;
     protected array $routes = [];
-    protected ?int $order = null;
 
     /**
      * @param bool|Closure():(bool|null)|null $active
@@ -63,22 +65,6 @@ class NavItem extends Widget
         return $this;
     }
 
-    /**
-     * @param Closure(A):(string|Stringable)|null $link
-     * @return $this
-     */
-    public function link(?Closure $link): static
-    {
-        $this->link = $link;
-        return $this;
-    }
-
-    public function order(?int $order): static
-    {
-        $this->order = $order;
-        return $this;
-    }
-
     public function routes(array $routes): static
     {
         $this->routes = [...$this->routes, ...$routes];
@@ -94,9 +80,7 @@ class NavItem extends Widget
             return '';
         }
 
-        if ($this->order !== null) {
-            $this->addStyle(['order' => $this->order]);
-        }
+        $this->addOrderStyle();
 
         return Li::make()
             ->attributes($this->attributes)
@@ -133,7 +117,7 @@ class NavItem extends Widget
             $link->addClass('active');
         }
 
-        return $this->link ? ($this->link)($link) : $link;
+        return $this->getLink($link);
     }
 
     protected function hasActiveRoute(): ?bool

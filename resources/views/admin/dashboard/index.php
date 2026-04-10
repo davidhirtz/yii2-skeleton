@@ -5,7 +5,6 @@ declare(strict_types=1);
 /**
  * @see \Hirtz\Skeleton\Modules\Admin\Controllers\DashboardController::actionIndex()
  * @var View $this
- * @var array $panels
  */
 
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\DashboardHeader;
@@ -15,6 +14,4 @@ use Hirtz\Skeleton\Widgets\Panels\Dashboard;
 $this->title(Yii::t('skeleton', 'Dashboard'));
 
 echo DashboardHeader::make();
-
-echo Dashboard::make()
-    ->panels($panels);
+echo Dashboard::make();

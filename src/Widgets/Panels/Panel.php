@@ -6,8 +6,8 @@ namespace Hirtz\Skeleton\Widgets\Panels;
 
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Widgets\Grids\Traits\GridTrait;
-use Hirtz\Skeleton\Widgets\Traits\ContainerTrait;
 use Hirtz\Skeleton\Widgets\Traits\CardTrait;
+use Hirtz\Skeleton\Widgets\Traits\ContainerTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use Yii;
@@ -23,22 +23,20 @@ class Panel extends Widget
 
     protected array $buttons = [];
 
+    public function __construct(array $config = [])
+    {
+        $this->title ??= Yii::t('skeleton', 'Operations');
+        parent::__construct($config);
+    }
+
     public function buttons(string|Stringable|null ...$buttons): static
     {
         $this->buttons = array_values(array_filter($buttons));
         return $this;
     }
 
-    public function addButtons(Stringable|string|null ...$buttons): static
-    {
-        $this->buttons[] = [...$this->buttons, ...array_values(array_filter($buttons))];
-        return $this;
-    }
-
     protected function renderContent(): string|Stringable
     {
-        $this->title ??= Yii::t('skeleton', 'Operations');
-
         return $this->content || $this->buttons
             ? Card::make()
                 ->title($this->title)

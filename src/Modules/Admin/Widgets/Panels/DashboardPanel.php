@@ -4,27 +4,46 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Panels;
 
-use Hirtz\Skeleton\Modules\Admin\Config\Config;
-use Hirtz\Skeleton\Modules\Admin\Config\ConfigInterface;
-use Hirtz\Skeleton\Modules\Admin\Config\DashboardItem;
+use Closure;
+use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
+use Hirtz\Skeleton\Widgets\Panels\Panel;
 use Hirtz\Skeleton\Widgets\Panels\Stack;
 use Hirtz\Skeleton\Widgets\Panels\StackItem;
+use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
+use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
+use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 
-/**
- * @implements ConfigInterface<DashboardPanel>
- */
-final class DashboardPanel extends Widget implements ConfigInterface
+class DashboardPanel extends Panel
 {
-    // todo replace this with new panel
-    public function __construct(
-        public ?string $name = null,
-        /** @var DashboardItem[] */
-        public array $items = [],
-        public array $roles = [],
-        public array $attributes = [],
-    ) {
-        parent::__construct();
+    use LabelTrait;
+    use TagAttributesTrait;
+
+    /**
+     * @var StackItem[]
+     */
+    protected array $items = [];
+
+    /**
+     * @param StackItem[]|Closure(StackItem[]):StackItem[] $items
+     * @return $this
+     */
+    public function items(array|Closure $items): static
+    {
+        $this->items = $items instanceof Closure ? $items($this->items) : array_filter($items);
+        return $this;
+    }
+
+    public function addItem(StackItem $item): static
+    {
+        $this->items[] = $item;
+        return $this;
+    }
+
+    public function addItems(StackItem ...$items): static
+    {
+        $this->items = [...$this->items, ...$items];
+        return $this;
     }
 
     protected function renderContent(): Stack
@@ -41,25 +60,5 @@ final class DashboardPanel extends Widget implements ConfigInterface
         }
 
         return $list;
-    }
-
-    public function merge(ConfigInterface $config): self
-    {
-        if ($config->name) {
-            $this->name = $config->name;
-        }
-
-        $items = [];
-
-        foreach ($config->items as $key => $item) {
-            $items = Config::merge($config->items, $key, $item);
-        }
-
-        $this->items = $items;
-
-        $this->roles = array_unique([...$this->roles, ...$config->roles]);
-        $this->attributes = [...$this->attributes, ...$config->attributes];
-
-        return $this;
     }
 }

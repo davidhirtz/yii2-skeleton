@@ -5,17 +5,15 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin;
 
 use Hirtz\Skeleton\Behaviors\UserLanguageBehavior;
-use Hirtz\Skeleton\Models\Redirect;
-use Hirtz\Skeleton\Models\Trail;
+use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Models\User;
-use Hirtz\Skeleton\Modules\Admin\Config\Config;
-use Hirtz\Skeleton\Modules\Admin\Config\DashboardItem;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\DashboardNavItem;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\SystemNavItem;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserNavItem;
-use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\DashboardPanel;
 use Hirtz\Skeleton\Web\Request;
 use Hirtz\Skeleton\Widgets\Navs\Nav;
+use Hirtz\Skeleton\Widgets\Panels\Dashboard;
+use Hirtz\Skeleton\Widgets\Panels\DashboardItem;
 use Override;
 use Yii;
 
@@ -27,8 +25,6 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
 
     public $defaultRoute = 'dashboard';
     public $layout = 'main';
-
-    private array $dashboardPanels = [];
 
     #[Override]
     public function beforeAction($action): bool
@@ -59,90 +55,6 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
         return parent::beforeAction($action);
     }
 
-    /**
-     * @return array<string, DashboardPanel>
-     */
-    public function getDashboardPanels(): array
-    {
-        $panels = $this->getDefaultDashboardPanels();
-
-        foreach ($this->getSubmodules() as $module) {
-            if ($module instanceof ModuleInterface) {
-                foreach ($module->getDashboardPanels() as $key => $panel) {
-                    $panels = Config::merge($panels, $key, $panel);
-                }
-            }
-        }
-
-        foreach ($this->dashboardPanels as $key => $panel) {
-            $panels = Config::merge($panels, $key, $panel);
-        }
-
-        return array_filter($panels);
-    }
-
-    /**
-     * @return array<string, DashboardPanel>
-     */
-    protected function getDefaultDashboardPanels(): array
-    {
-        return [
-            'skeleton' => new DashboardPanel(
-                name: Yii::t('skeleton', 'Administration'),
-                items: [
-                    'user' => new DashboardItem(
-                        label: Yii::t('skeleton', 'Create New User'),
-                        url: ['/admin/user/create'],
-                        icon: 'user-plus',
-                        roles: [User::AUTH_USER_CREATE],
-                    ),
-                    'account' => new DashboardItem(
-                        label: Yii::t('skeleton', 'Your Account'),
-                        url: ['/admin/account/update'],
-                        icon: 'user',
-                    ),
-                    'system' => new DashboardItem(
-                        label: Yii::t('skeleton', 'System Settings'),
-                        url: ['/admin/system/index'],
-                        icon: 'cog',
-                        roles: [User::AUTH_ROLE_ADMIN],
-                    ),
-                    'trail' => new DashboardItem(
-                        label: Yii::t('skeleton', 'History'),
-                        url: ['/admin/trail/index'],
-                        icon: 'history',
-                        roles: [Trail::AUTH_TRAIL_INDEX],
-                    ),
-                    'redirect' => new DashboardItem(
-                        label: Yii::t('skeleton', 'Redirects'),
-                        url: ['/admin/redirect/index'],
-                        icon: 'forward',
-                        roles: [Redirect::AUTH_REDIRECT_CREATE],
-                    ),
-                    'homepage' => new DashboardItem(
-                        label: Yii::t('skeleton', 'Homepage'),
-                        url: '/',
-                        icon: 'globe',
-                        attributes: ['target' => '_blank'],
-                    ),
-                ]
-            ),
-        ];
-    }
-
-    /**
-     * @param array<DashboardItem|null> $panels
-     */
-    public function setDashboardPanels(array $panels = []): void
-    {
-        $this->dashboardPanels = $panels;
-    }
-
-    public function getName(): string
-    {
-        return Yii::t('skeleton', 'Admin');
-    }
-
     #[Override]
     public function aside(Nav $nav): Nav
     {
@@ -155,6 +67,32 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
         }
 
         return $nav;
+    }
+
+    #[Override]
+    public function dashboard(Dashboard $dashboard): Dashboard
+    {
+        $dashboard->addItems(
+            DashboardItem::make()
+                ->icon('user-plus')
+                ->label(Yii::t('skeleton', 'Create New User'))
+                ->url(['/admin/user/create'])
+                ->roles([User::AUTH_USER_CREATE]),
+            DashboardItem::make()
+                ->icon('globe')
+                ->label(Yii::t('skeleton', 'Open Homepage'))
+                ->link(fn (A $link) => $link->target('_blank'))
+                ->order(100)
+                ->url('/'),
+        );
+
+        foreach ($this->getSubmodules() as $module) {
+            if ($module instanceof ModuleInterface) {
+                $dashboard = $module->dashboard($dashboard);
+            }
+        }
+
+        return $dashboard;
     }
 
     /**

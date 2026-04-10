@@ -30,9 +30,9 @@ trait NavItemTrait
         return $this;
     }
 
-    public function addItems(NavItem ...$items): static
+    public function addItems(?NavItem ...$items): static
     {
-        $this->items = [...$this->items, ...$items];
+        $this->items = array_filter([...$this->items, ...$items]);
         return $this;
     }
 }

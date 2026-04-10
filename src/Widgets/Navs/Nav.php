@@ -17,17 +17,17 @@ class Nav extends Widget
     use TagAttributesTrait;
     use VisibilityTrait;
 
-    protected bool $hideSingleItem = true;
+    protected bool $showSingleItem = false;
 
-    public function showSingleItem(): static
+    public function showSingleItem(bool $show = true): static
     {
-        $this->hideSingleItem = false;
+        $this->showSingleItem = $show;
         return $this;
     }
 
     protected function renderContent(): string|Stringable
     {
-        if (!$this->isVisible() || !$this->items || (count($this->items) === 1 && $this->hideSingleItem)) {
+        if (!$this->isVisible() || !$this->items || (count($this->items) === 1 && !$this->showSingleItem)) {
             return '';
         }
 

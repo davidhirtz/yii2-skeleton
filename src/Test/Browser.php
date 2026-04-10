@@ -30,7 +30,7 @@ class Browser extends AbstractBrowser
             : $path;
 
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
-        $_SERVER['QUERY_STRING'] = (string) $query;
+        $_SERVER['QUERY_STRING'] = (string)$query;
 
         $_COOKIE = $request->getCookies();
         $_REQUEST = $this->normalizeQueryParameters($request->getParameters());
@@ -87,7 +87,7 @@ class Browser extends AbstractBrowser
                 $value = Yii::$app->getSecurity()->hashData(serialize($data), $validationKey);
             }
 
-            $expires = is_int($cookie->expire) ? (string) $cookie->expire : null;
+            $expires = is_int($cookie->expire) ? (string)$cookie->expire : null;
 
             $this->getCookieJar()->set(new Cookie(
                 $cookie->name,
@@ -106,6 +106,8 @@ class Browser extends AbstractBrowser
         $headers = $response->getHeaders()->toArray();
 
         $response->clear();
+
+        Yii::$app->set('view', Yii::$app->getComponents()['view']);
 
         return new Response($content, $status, $headers);
     }

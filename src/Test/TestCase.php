@@ -15,6 +15,7 @@ use yii\db\Transaction;
 use yii\log\Logger;
 use yii\test\FixtureTrait;
 use yii\web\UploadedFile;
+use yii\web\View;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
@@ -74,7 +75,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             'SCRIPT_NAME' => '/index.php',
             'HTTP_HOST' => 'www.test.localhost',
             'HTTPS' => 'on',
-         ];
+        ];
     }
 
     protected function setUpApplication(): void

@@ -14,21 +14,32 @@ class Module extends \yii\base\Module
     #[Override]
     public function init(): void
     {
-        $path = $this->getBasePath();
-        $parts = explode('/', $path);
-        $name = strtolower(array_pop($parts));
-
-        while ($parts && array_pop($parts) !== 'src') {
-            $path .= '/..';
-        }
-
-        $this->setViewPath("$path/../../resources/views/$name");
-
-        $this->setViewPath($this->getBasePath() . '/../../../resources/views/admin/');
+        $this->setViewPath($this->getViewPathFromBasePath());
         $this->trigger(self::EVENT_INIT);
 
         $this->controllerNamespace ??= (new ReflectionClass(static::class))->getNamespaceName() . '\\Controllers';
 
         parent::init();
+    }
+
+    protected function getViewPathFromBasePath(): string
+    {
+        $path = $this->getBasePath();
+        $parts = explode('/', $path);
+        $name = strtolower(array_pop($parts));
+
+        if ($name === 'src') {
+            return "$path/../resources/views/";
+        }
+
+        while ($parts) {
+            $path .= '/..';
+
+            if (array_pop($parts) === 'src') {
+                break;
+            }
+        }
+
+        return "$path/../resources/views/$name/";
     }
 }

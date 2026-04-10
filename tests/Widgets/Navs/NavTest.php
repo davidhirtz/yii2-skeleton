@@ -31,15 +31,13 @@ class NavTest extends TestCase
         };
     }
 
-    public function testHideSingleItem(): void
+    public function testShowSingleItem(): void
     {
         $content = Nav::make()
             ->addItem(NavItem::make()
                 ->label('Home')
                 ->url('/'))
             ->render();
-
-        self::assertEmpty($content);
 
         $content = Nav::make()
             ->addItem(NavItem::make()

@@ -4,18 +4,12 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin;
 
-use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\DashboardPanel;
 use Hirtz\Skeleton\Widgets\Navs\Nav;
+use Hirtz\Skeleton\Widgets\Panels\Dashboard;
 
-/**
- * @mixin \Hirtz\Skeleton\Base\Module
- */
 interface ModuleInterface
 {
-    /**
-     * @return array<string, DashboardPanel>
-     */
-    public function getDashboardPanels(): array;
-
     public function aside(Nav $nav): Nav;
+
+    public function dashboard(Dashboard $dashboard): Dashboard;
 }

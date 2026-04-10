@@ -1,20 +1,26 @@
 @use "../shared/breakpoints" as *;
 
 .dashboard {
-  display: flex;
-  flex-wrap: wrap;
+  --cols: 1;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  padding: 1rem;
   gap: 1rem;
-  justify-content: center;
-}
-
-.dashboard-item {
-  width: 100%;
 
   @include media-breakpoint-up(sm) {
-    max-width: min(24rem, 100%);
+    --cols: 2;
   }
 
-  .card {
-    height: 100%;
+  @include media-breakpoint-up(md) {
+    --cols: 3;
   }
+}
+
+.dashboard-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid var(--border-color);
+  padding: 1rem;
+  border-radius: 0.25rem;
 }
