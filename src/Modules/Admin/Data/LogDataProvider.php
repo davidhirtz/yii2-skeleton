@@ -27,8 +27,11 @@ class LogDataProvider extends ArrayDataProvider
     public function init(): void
     {
         $this->basePath = Yii::getAlias($this->basePath);
-        $this->allModels ??= $this->parseFile();
 
+        $this->file = basename($this->file);
+        $this->file = preg_replace('/[^a-zA-Z0-9._-]/', '', $this->file);
+
+        $this->allModels ??= $this->parseFile();
         $this->setPagination(false);
 
         parent::init();

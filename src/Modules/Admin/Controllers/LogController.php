@@ -85,7 +85,7 @@ class LogController extends Controller
             throw new NotFoundHttpException();
         }
 
-        FileHelper::unlink($provider->file);
+        FileHelper::unlink($provider->basePath . $provider->file);
 
         return $this->redirect(['/admin/log/index']);
     }
