@@ -20,9 +20,9 @@ abstract class Widget implements Stringable, ViewContextInterface
 
     protected View $view;
     protected ?string $viewPath = null;
-
-    private ?string $content = null;
     protected ?Closure $config = null;
+
+    private ?string $html = null;
 
     public function __construct(array $config = [])
     {
@@ -52,12 +52,12 @@ abstract class Widget implements Stringable, ViewContextInterface
 
     public function render(bool $refresh = false): string
     {
-        if ($this->content === null || $refresh) {
+        if ($this->html === null || $refresh) {
             $this->configure();
-            $this->content = (string)$this->renderContent();
+            $this->html = (string)$this->renderContent();
         }
 
-        return $this->content;
+        return $this->html;
     }
 
     protected function configure(): void

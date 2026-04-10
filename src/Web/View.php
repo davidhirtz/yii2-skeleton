@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Web;
 
 use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Widgets\Traits\BreadcrumbTrait;
 use Override;
 use Yii;
 use yii\helpers\Json;
@@ -12,6 +13,8 @@ use Hirtz\Skeleton\Helpers\Url;
 
 class View extends \yii\web\View
 {
+    use BreadcrumbTrait;
+
     final public const string HREF_LANG_KEY = 'hreflang_';
     final public const string CANONICAL_KEY = 'canonical';
     final public const string DESCRIPTION_KEY = 'description';
@@ -21,10 +24,6 @@ class View extends \yii\web\View
 
     public ?string $titleTemplate = null;
 
-    /**
-     * @var array<int, array{label: string, url: array|string|null}>
-     */
-    protected array $breadcrumbs = [];
     protected string|null $description = null;
     protected string $jsImportName = 'a';
 
@@ -79,27 +78,6 @@ class View extends \yii\web\View
     public function getMetaDescription(): ?string
     {
         return $this->description;
-    }
-
-    public function breadcrumbs(array $breadcrumbs): void
-    {
-        $this->breadcrumbs = [];
-
-        foreach ($breadcrumbs as $key => $value) {
-            $this->addBreadcrumb(is_int($key) ? $value : $key, is_string($key) ? $value : null);
-        }
-    }
-
-    public function addBreadcrumb(?string $label, array|string|null $url = null): void
-    {
-        if ($label) {
-            $this->breadcrumbs[] = ['label' => $label, 'url' => $url];
-        }
-    }
-
-    public function getBreadcrumbs(): array
-    {
-        return $this->breadcrumbs;
     }
 
     public function registerJsModule(string $filename, array|string|null $arguments = null, string|null|false $importName = null, ?string $key = null): void

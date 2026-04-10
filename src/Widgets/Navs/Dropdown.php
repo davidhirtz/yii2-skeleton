@@ -20,12 +20,23 @@ class Dropdown extends Widget
     use TagAttributesTrait;
     use TagContentTrait;
 
-    private Button $button;
-    private array $items = [];
+    protected bool $autofocus = false;
+    protected Button $button;
+
+    /**
+     * @var Li[]
+     */
+    protected array $items = [];
+
+    public function autofocus(bool $autofocus = true): static
+    {
+        $this->autofocus = $autofocus;
+        return $this;
+    }
 
     public function button(Button $button): static
     {
-        $this->button = $button->attribute('data-dropdown', '');
+        $this->button = $button;
         return $this;
     }
 
@@ -49,9 +60,13 @@ class Dropdown extends Widget
     public function addItem(string|Stringable ...$items): static
     {
         foreach (array_filter($items) as $item) {
-            $this->items[] = Li::make()
-                ->content($item)
-                ->class('dropdown-item');
+            $content = (string)$item;
+
+            if ($content) {
+                $this->items[] = Li::make()
+                    ->content($content)
+                    ->class('dropdown-item');
+            }
         }
 
         return $this;
@@ -66,19 +81,27 @@ class Dropdown extends Widget
     public function divider(): static
     {
         $this->items[] = Li::make()
-            ->content(Div::make()
-                ->class('dropdown-divider'));
+            ->content(Div::make()->class('dropdown-divider'));
 
         return $this;
     }
 
+    protected function configure(): void
+    {
+        $this->button->attributes['data-autofocus'] ??= $this->autofocus;
+        $this->button->attributes['data-dropdown'] ??= '';
+
+        parent::configure();
+    }
+
     #[Override]
-    protected function renderContent(): Stringable
+    protected function renderContent(): string|Stringable
     {
         $dialog = Dialog::make()
             ->class('dropdown-menu')
             ->content(...$this->content)
             ->addContent(Ul::make()
+                ->class('dropdown-list')
                 ->content(...$this->items));
 
         return Div::make()

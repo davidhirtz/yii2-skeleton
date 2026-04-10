@@ -9,7 +9,7 @@ use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Icon;
 use Hirtz\Skeleton\Widgets\Navs\Dropdown;
-use Hirtz\Skeleton\Widgets\Navs\DropdownOption;
+use Hirtz\Skeleton\Widgets\Navs\DropdownOptionLink;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
@@ -50,7 +50,7 @@ class NavBar extends Widget
         foreach ($i18n->getLanguages() as $language) {
             $label = $i18n->getLabel($language);
 
-            $link = DropdownOption::make()
+            $link = DropdownOptionLink::make()
                 ->addClass('i18n-dropdown-option')
                 ->content(
                     Icon::make()

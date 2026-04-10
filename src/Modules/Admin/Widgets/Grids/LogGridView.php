@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
-use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Pre;
 use Hirtz\Skeleton\Models\Log;
@@ -23,8 +22,7 @@ class LogGridView extends GridView
     public string $layout = '{items}';
 
     public array $tableAttributes = [
-        'class' => 'table table-striped',
-        'style' => 'table-layout: fixed;',
+        'class' => 'log-table table table-striped',
     ];
 
     #[Override]
@@ -35,8 +33,6 @@ class LogGridView extends GridView
             $this->getLevelColumn(),
             $this->getMessageColumn(),
         ];
-
-        $this->view->registerCss('pre{margin-top: 20px; max-height:200px;}');
 
         parent::configure();
     }
@@ -56,9 +52,9 @@ class LogGridView extends GridView
         return Column::make()
             ->header(Yii::t('skeleton', 'Level'))
             ->headerAttributes(['width' => '100'])
-            ->content(fn ($model) => Html::tag('div', ucfirst((string)$model['level']), [
-                'class' => $this->getLevelCssClass($model['level']),
-            ]));
+            ->content(fn ($model) => Div::make()
+                ->class($this->getLevelCssClass($model['level']))
+                ->content(ucfirst((string)$model['level'])));
     }
 
     protected function getMessageColumn(): Column
@@ -75,14 +71,14 @@ class LogGridView extends GridView
                 if ($log->category) {
                     $content[] = Div::make()
                         ->text($log->category)
-                        ->class('small');
+                        ->class('log-category small');
                 }
 
                 if ($log->content) {
                     $content[] = Div::make()
                         ->content(Pre::make()
-                            ->text(rtrim($log->content))
-                            ->class('small'));
+                            ->class('log-content small')
+                            ->text(rtrim($log->content)));
                 }
 
                 return $content;

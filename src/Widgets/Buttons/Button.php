@@ -58,6 +58,11 @@ class Button extends Widget
         return $this->addClass('btn btn-link');
     }
 
+    public function url(string|array|null $url): static
+    {
+        return $this->href($url);
+    }
+
     #[Override]
     protected function configure(): void
     {

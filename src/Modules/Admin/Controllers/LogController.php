@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Data\LogDataProvider;
+use Hirtz\Skeleton\Modules\Admin\Data\LogFileArrayDataProvider;
 use Hirtz\Skeleton\Web\Controller;
 use Override;
 use Yii;
@@ -27,7 +28,7 @@ class LogController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['delete', 'view'],
+                        'actions' => ['index', 'delete', 'view'],
                         'roles' => [User::AUTH_ROLE_ADMIN],
                     ],
                 ],
@@ -41,6 +42,19 @@ class LogController extends Controller
         ];
     }
 
+    public function actionIndex(): Response|string
+    {
+        $provider = Yii::createObject(LogFileArrayDataProvider::class);
+
+        if (count($provider->allModels) === 1) {
+            return $this->redirect(['/admin/log/view/', 'log' => current($provider->allModels)->name]);
+        }
+
+        return $this->render('index', [
+            'provider' => $provider,
+        ]);
+    }
+
     public function actionView(string $log, bool $raw = false): Response|string
     {
         $provider = $this->getLogDataProvider($log);
@@ -50,7 +64,7 @@ class LogController extends Controller
         }
 
         if ($raw) {
-            return Yii::$app->getResponse()->sendFile($provider->file, basename($log), [
+            return Yii::$app->getResponse()->sendFile($provider->basePath . $provider->file, basename($log), [
                 'mimeType' => 'text/plain',
                 'inline' => true,
             ]);
@@ -73,7 +87,7 @@ class LogController extends Controller
 
         FileHelper::unlink($provider->file);
 
-        return $this->redirect(['/admin/system/index']);
+        return $this->redirect(['/admin/log/index']);
     }
 
     protected function getLogDataProvider(?string $file = null): LogDataProvider

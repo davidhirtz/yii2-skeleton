@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Buttons;
 
-use Hirtz\Cms\Models\Entry;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Widgets\Buttons\CreateButton;
 use Yii;

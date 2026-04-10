@@ -9,7 +9,7 @@ use Hirtz\Skeleton\Html\TextInput;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
 use Hirtz\Skeleton\Widgets\Navs\Dropdown;
-use Hirtz\Skeleton\Widgets\Navs\DropdownOption;
+use Hirtz\Skeleton\Widgets\Navs\DropdownOptionLink;
 use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
@@ -79,6 +79,7 @@ class FilterDropdown extends Widget
         $this->attributes['hx-boost'] ??= 'true';
 
         $dropdown = Dropdown::make()
+            ->autofocus()
             ->label($this->value ? $this->items[$this->value] ?? $this->label : $this->label);
 
         if ($this->filterable) {
@@ -87,7 +88,7 @@ class FilterDropdown extends Widget
 
         if ($this->hasActiveItem()) {
             if ($this->default) {
-                $dropdown->addItem(DropdownOption::make()
+                $dropdown->addItem(DropdownOptionLink::make()
                     ->class('dropdown-default-item')
                     ->current([...$this->params, $this->param => null])
                     ->text($this->default))
@@ -98,7 +99,7 @@ class FilterDropdown extends Widget
         }
 
         foreach ($this->items as $param => $text) {
-            $link = DropdownOption::make()
+            $link = DropdownOptionLink::make()
                 ->current([...$this->params, $this->param => $param])
                 ->text($text);
 

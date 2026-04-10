@@ -7,12 +7,14 @@ namespace Hirtz\Skeleton\Widgets\Buttons;
 use Hirtz\Skeleton\Widgets\Buttons\Traits\DeleteButtonTrait;
 use Hirtz\Skeleton\Widgets\Modal;
 use Hirtz\Skeleton\Widgets\Widget;
+use Override;
 use Stringable;
 
 class DeleteButton extends Widget
 {
     use DeleteButtonTrait;
 
+    #[Override]
     public function renderContent(): Stringable
     {
         // todo change this to constructor

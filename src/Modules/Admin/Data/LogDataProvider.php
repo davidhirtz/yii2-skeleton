@@ -26,7 +26,7 @@ class LogDataProvider extends ArrayDataProvider
     #[Override]
     public function init(): void
     {
-        $this->file = Yii::getAlias($this->basePath . $this->file);
+        $this->basePath = Yii::getAlias($this->basePath);
         $this->allModels ??= $this->parseFile();
 
         $this->setPagination(false);
@@ -39,7 +39,7 @@ class LogDataProvider extends ArrayDataProvider
         $models = [];
         $current = null;
 
-        if ($file = @fopen($this->file, 'r')) {
+        if ($file = @fopen($this->basePath . $this->file, 'r')) {
             while (!feof($file)) {
                 $line = fgets($file);
 
@@ -98,6 +98,6 @@ class LogDataProvider extends ArrayDataProvider
 
     public function isFileValid(): bool
     {
-        return is_file($this->file);
+        return is_file($this->basePath . $this->file);
     }
 }

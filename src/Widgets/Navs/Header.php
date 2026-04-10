@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Navs;
 
+use Hirtz\Skeleton\Widgets\Traits\BreadcrumbTrait;
+use Override;
 use yii\data\ActiveDataProvider;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
@@ -19,6 +21,7 @@ use Yii;
 
 class Header extends Widget
 {
+    use BreadcrumbTrait;
     use ContainerTrait;
     use TagAttributesTrait;
     use TagContentTrait;
@@ -46,6 +49,17 @@ class Header extends Widget
         return $this;
     }
 
+    #[Override]
+    protected function configure(): void
+    {
+        if ($this->breadcrumbs) {
+            $this->view->addBreadcrumbs($this->breadcrumbs);
+        }
+
+        parent::configure();
+    }
+
+    #[Override]
     protected function renderContent(): string|Stringable
     {
         $wrapper = Div::make()
@@ -56,7 +70,9 @@ class Header extends Widget
             ->class('header-content')
             ->content($this->getHeaderContent(), $this->getSubheading()));
 
-        $wrapper->addContent(Div::make()->content(...$this->content));
+        if ($this->content) {
+            $wrapper->addContent(Div::make()->content(...$this->content));
+        }
 
         return $wrapper;
     }

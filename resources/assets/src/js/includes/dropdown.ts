@@ -34,9 +34,12 @@ export default ($btn: HTMLElement) => {
         $dialog.showModal();
         $dialog.addEventListener('click', clickOutsideEvent);
 
-        if ($items) {
-            $dialog.addEventListener('keydown', keydownEvent);
-            $items[selected].focus();
+        $dialog.addEventListener('keydown', keydownEvent);
+        $items[selected].focus();
+
+        // Browsers automatically focus the first element in a dialog regardless of the focus call above, ...
+        if (!$btn.dataset.autofocus) {
+            (document.activeElement as HTMLElement).blur();
         }
 
         cleanup = autoUpdate($btn, $dialog, () => {
