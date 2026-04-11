@@ -8,7 +8,6 @@ use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Widgets\Buttons\CreateButton;
 use Hirtz\Skeleton\Widgets\Buttons\DeleteButton;
 use Hirtz\Skeleton\Widgets\Navs\ActionDropdown;
-use Override;
 use Stringable;
 use Yii;
 
@@ -19,14 +18,7 @@ class RedirectActionDropdown extends ActionDropdown
     public function model(Redirect $model): static
     {
         $this->model = $model;
-        return $this;
-    }
-
-    #[Override]
-    protected function configure(): void
-    {
-        $this->addItem($this->getCreateButton(), $this->getDeleteButton());
-        parent::configure();
+        return $this->addItem($this->getCreateButton(), $this->getDeleteButton());
     }
 
     protected function getCreateButton(): ?Stringable

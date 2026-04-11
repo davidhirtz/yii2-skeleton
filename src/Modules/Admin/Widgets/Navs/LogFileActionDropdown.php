@@ -7,7 +7,6 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Buttons\DeleteButton;
 use Hirtz\Skeleton\Widgets\Navs\ActionDropdown;
-use Override;
 use Stringable;
 use Yii;
 
@@ -18,19 +17,7 @@ class LogFileActionDropdown extends ActionDropdown
     public function file(string $file): self
     {
         $this->file = $file;
-        return $this;
-    }
-
-    #[Override]
-    protected function configure(): void
-    {
-        $this->addItem($this->getOpenRawFileButton());
-
-        $this->addItem(DeleteButton::make()
-            ->label(Yii::t('skeleton', 'Delete file'))
-            ->url(["/admin/log/delete", 'log' => $this->file]));
-
-        parent::configure();
+        return $this->addItem($this->getOpenRawFileButton(), $this->getDeleteFileButton());
     }
 
     protected function getOpenRawFileButton(): ?Stringable
@@ -41,5 +28,12 @@ class LogFileActionDropdown extends ActionDropdown
             ->text(Yii::t('skeleton', 'Open file'))
             ->url(["/admin/log/view", 'log' => $this->file, 'raw' => 1])
             ->target('_blank');
+    }
+
+    protected function getDeleteFileButton(): ?Stringable
+    {
+        return DeleteButton::make()
+            ->label(Yii::t('skeleton', 'Delete file'))
+            ->url(["/admin/log/delete", 'log' => $this->file]);
     }
 }

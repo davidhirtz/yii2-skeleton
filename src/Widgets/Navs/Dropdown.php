@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Html\Li;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Hirtz\Skeleton\Html\Ul;
+use Hirtz\Skeleton\Widgets\Attributes\Configure;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
@@ -71,11 +72,10 @@ class Dropdown extends Widget
             ->content(Div::make()->class('dropdown-divider')));
     }
 
+    #[Configure]
     protected function configure(): void
     {
         $this->button->attributes['data-autofocus'] ??= $this->autofocus;
-
-        parent::configure();
     }
 
     #[Override]

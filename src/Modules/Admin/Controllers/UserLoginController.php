@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Models\Queries\UserQuery;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Models\UserLogin;
 use Hirtz\Skeleton\Modules\Admin\Controllers\Traits\UserTrait;
+use Override;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -17,7 +18,7 @@ class UserLoginController extends Controller
 {
     use UserTrait;
 
-    #[\Override]
+    #[Override]
     public function behaviors(): array
     {
         return [

@@ -8,7 +8,6 @@ use Hirtz\Skeleton\Widgets\Attributes\Configure;
 
 trait OrderTrait
 {
-    #[Configure('addOrderStyle')]
     protected ?int $order = null;
 
     public function order(?int $order): static
@@ -17,6 +16,7 @@ trait OrderTrait
         return $this;
     }
 
+    #[Configure]
     protected function addOrderStyle(): static
     {
         return $this->order !== null

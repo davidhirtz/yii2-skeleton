@@ -7,8 +7,7 @@ namespace Hirtz\Skeleton\Widgets;
 use Closure;
 use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
 use Hirtz\Skeleton\Web\View;
-use Hirtz\Skeleton\Widgets\Attributes\Configure;
-use ReflectionClass;
+use Hirtz\Skeleton\Widgets\Traits\ConfigureAttributesTrait;
 use Stringable;
 use Yii;
 use yii\base\ViewContextInterface;
@@ -19,6 +18,7 @@ use yii\base\ViewContextInterface;
 abstract class Widget implements Stringable, ViewContextInterface
 {
     use ContainerConfigurationTrait;
+    use ConfigureAttributesTrait;
 
     protected View $view;
     protected ?string $viewPath = null;
@@ -29,19 +29,18 @@ abstract class Widget implements Stringable, ViewContextInterface
     private array $callbacks = [];
     private ?string $html = null;
 
+    /**
+     * @var array<class-string, list<string>>
+     */
+    private static array $configureAttributes = [];
+
     public function __construct(array $config = [])
     {
+        $this->view ??= Yii::$app->getView();
+
         if ($config) {
             Yii::configure($this, $config);
         }
-
-        $this->view ??= Yii::$app->getView();
-
-        $this->init();
-    }
-
-    protected function init(): void
-    {
     }
 
     public function getViewPath(): ?string
@@ -71,21 +70,17 @@ abstract class Widget implements Stringable, ViewContextInterface
 
     protected function configure(): void
     {
+        $this->configureAttributes();
+
         foreach ($this->callbacks as $callback) {
             ($callback)($this);
         }
-
-        foreach ((new ReflectionClass($this))->getProperties() as $property) {
-            foreach ($property->getAttributes(Configure::class) as $attribute) {
-                $this->{$attribute->newInstance()->method}();
-            }
-        }
     }
-
-    abstract protected function renderContent(): string|Stringable;
 
     final public function __toString(): string
     {
         return $this->render();
     }
+
+    abstract protected function renderContent(): string|Stringable;
 }

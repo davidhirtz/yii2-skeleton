@@ -12,9 +12,9 @@ use Hirtz\Skeleton\Html\Traits\TagIdTrait;
 use Hirtz\Skeleton\Widgets\Forms\FormRow;
 use Hirtz\Skeleton\Widgets\Forms\Traits\FormWidgetTrait;
 use Hirtz\Skeleton\Widgets\Forms\Traits\RowAttributesTrait;
+use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
 use Hirtz\Skeleton\Widgets\Traits\ModelWidgetTrait;
 use Hirtz\Skeleton\Widgets\Traits\PropertyWidgetTrait;
-use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
 use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
@@ -86,10 +86,6 @@ abstract class Field extends Widget
         }
 
         $this->rowAttributes['data-id'] ??= $this->getId();
-
-        if ($this->config) {
-            call_user_func($this->config, $this);
-        }
 
         parent::configure();
     }

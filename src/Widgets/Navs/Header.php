@@ -49,7 +49,6 @@ class Header extends Widget
         return $this;
     }
 
-    #[Override]
     protected function configure(): void
     {
         if ($this->breadcrumbs) {

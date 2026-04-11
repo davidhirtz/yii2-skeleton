@@ -35,15 +35,11 @@ class TrailHeader extends Header
         $this->title ??= $this->getTrailModelTitle();
         $this->url ??= $this->getTrailModelAdminRoute() ?? ['/admin/trail/index'];
 
-        $this->setBreadcrumbs();
-        parent::configure();
-    }
-
-    protected function setBreadcrumbs(): void
-    {
         if ($this->provider->trailId || $this->model) {
-            $this->view->addBreadcrumb(Yii::t('skeleton', 'History'), ['/admin/trail/index']);
+            $this->breadcrumbs ??= [Yii::t('skeleton', 'History') => ['/admin/trail/index']];
         }
+
+        parent::configure();
     }
 
     protected function getTrailModelTitle(): string

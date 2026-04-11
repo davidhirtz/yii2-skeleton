@@ -6,11 +6,8 @@ namespace Hirtz\Skeleton\Widgets\Attributes;
 
 use Attribute;
 
-#[Attribute(Attribute::TARGET_PROPERTY)]
+#[Attribute(Attribute::TARGET_METHOD)]
 class Configure
 {
-    public function __construct(public string $method)
-    {
-    }
 }
 

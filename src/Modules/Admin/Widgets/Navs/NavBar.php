@@ -10,7 +10,6 @@ use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Icon;
 use Hirtz\Skeleton\Widgets\Navs\Dropdown;
 use Hirtz\Skeleton\Widgets\Navs\DropdownOptionLink;
-use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
