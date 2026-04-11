@@ -37,7 +37,6 @@ class DashboardItem extends Widget
             return '';
         }
 
-        $this->addOrderStyle();
 
         return Li::make()
             ->attributes($this->attributes)

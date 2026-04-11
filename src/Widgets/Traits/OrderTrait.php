@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Traits;
 
+use Hirtz\Skeleton\Widgets\Attributes\Configure;
+
 trait OrderTrait
 {
+    #[Configure('addOrderStyle')]
     protected ?int $order = null;
 
     public function order(?int $order): static
