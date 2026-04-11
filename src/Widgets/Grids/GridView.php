@@ -22,7 +22,7 @@ use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Pagers\LinkPager;
-use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridSearch;
+use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridFooter;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridToolbarItem;
 use Hirtz\Skeleton\Widgets\Traits\ModelWidgetTrait;
 use Hirtz\Skeleton\Widgets\Widget;
@@ -55,9 +55,9 @@ class GridView extends Widget
     public array $columns;
 
     /**
-     * @var Stringable[]|Field[][]|string[][]|string[]|null
+     * @var Stringable[]|GridFooter|null
      */
-    public ?array $footer = null;
+    public array|GridFooter|null $footer = null;
 
     /**
      * @var Stringable[]|Field[][]|string[][]|string[]|null
@@ -65,7 +65,6 @@ class GridView extends Widget
     public ?array $header = null;
 
     public array $headerAttributes = ['class' => 'grid-header'];
-    public array $footerAttributes = ['class' => 'grid-footer'];
     public array $headerRowAttributes = [];
     public array $tableAttributes = ['class' => 'table table-striped table-hover'];
     public array $tableBodyAttributes = [];
@@ -78,12 +77,12 @@ class GridView extends Widget
     public string $layout = '{header}{summary}{items}{pager}{footer}';
     public ?array $orderRoute = ['order'];
 
-    protected GridSearch $search;
+    public GridSearch $search;
     protected User $webuser;
 
     public function __construct(array $config = [])
     {
-        $this->search = GridSearch::make()->grid($this);
+        $this->search ??= GridSearch::make();
         $this->webuser = Yii::$app->getUser();
 
         parent::__construct($config);
@@ -303,13 +302,14 @@ class GridView extends Widget
         ]);
     }
 
-    protected function getFooter(): ?Stringable
+    protected function getFooter(): ?GridFooter
     {
-        $footer = $this->footer
-            ? $this->getToolbars($this->footer, $this->footerAttributes)
-            : null;
+        $footer = is_array($this->footer)
+            ? GridFooter::make()
+                ->items($this->footer)
+            : $this->footer;
 
-        return $footer?->addClass($this->hasStickyFooter ? 'sticky' : null);
+        return $footer?->sticky($this->hasStickyFooter);
     }
 
     /**

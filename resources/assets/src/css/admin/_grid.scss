@@ -33,17 +33,17 @@
 }
 
 .grid-footer {
+  display: flex;
+  gap: .5rem;
+  bottom: 0;
+  margin-top: calc(-1rem - 1px);
+  background: var(--card-bg);
+  border-top: 1px solid var(--table-th-border-color);
+  padding-block: 1rem;
+  z-index: 20;
 
   &.sticky {
     position: sticky;
-    display: flex;
-    gap: .5rem;
-    bottom: 0;
-    margin-top: calc(-1rem - 1px);
-    background: var(--card-bg);
-    border-top: 1px solid var(--table-th-border-color);
-    padding-block: 1rem;
-    z-index: 20;
   }
 }
 

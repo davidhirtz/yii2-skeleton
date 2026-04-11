@@ -6,13 +6,14 @@ namespace Hirtz\Skeleton\Html;
 
 use Hirtz\Skeleton\Html\Traits\TagInputTrait;
 use Hirtz\Skeleton\Html\Traits\TagPlaceholderTrait;
+use Override;
 
 class TextInput extends Input
 {
     use TagInputTrait;
     use TagPlaceholderTrait;
 
-    #[\Override]
+    #[Override]
     protected function before(): string
     {
         $this->addClass('input');

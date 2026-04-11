@@ -6,7 +6,6 @@ namespace Hirtz\Skeleton\Widgets\Grids;
 
 use Hirtz\Skeleton\Widgets\Alert;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
-use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridSearch;
 use Stringable;
 use Yii;
 use yii\data\Pagination;

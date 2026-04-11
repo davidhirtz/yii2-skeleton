@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
-use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Models\User;
@@ -77,7 +76,7 @@ class UserGridView extends GridView
     {
         $name = ($name = $user->getUsername())
             ? Div::make()
-                ->content(Html::markKeywords($name, $this->search->getKeywords()))
+                ->content($this->search->markKeywords($name))
                 ->class('strong')
             : Div::make()
                 ->content(Yii::t('skeleton', 'User'))
@@ -99,7 +98,7 @@ class UserGridView extends GridView
     protected function getEmailColumnContent(User $user): ?Stringable
     {
         $link = Link::make()
-            ->content(Html::markKeywords(Html::encode($user->email), $this->search->getKeywords()))
+            ->content($this->search->markKeywords($user->email))
             ->mailto($user->email);
 
         if ($user->isUnconfirmed()) {

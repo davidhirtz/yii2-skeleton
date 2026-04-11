@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
-use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Modules\Admin\Controllers\RedirectController;
@@ -18,6 +17,7 @@ use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
+use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridFooter;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridToolbarItem;
 use Hirtz\Skeleton\Widgets\Grids\Traits\TypeGridViewTrait;
 use Hirtz\Skeleton\Widgets\Link;
@@ -67,10 +67,11 @@ class RedirectGridView extends GridView
             $this->getButtonColumn(),
         ];
 
-        $this->footer ??= [
-//            $this->getCreateButton(),
-            $this->showSelection ? $this->getSelectionButton() : null,
-        ];
+        if ($this->showSelection) {
+            $this->footer ??= GridFooter::make()
+                ->addClass('hidden block-has-checked')
+                ->items([$this->getSelectionButton()]);
+        }
 
         parent::configure();
     }
@@ -103,7 +104,7 @@ class RedirectGridView extends GridView
         return DataColumn::make()
             ->property('request_uri')
             ->content(fn (Redirect $redirect): Stringable => A::make()
-                ->content(Html::markKeywords($redirect->request_uri, $this->search->getKeywords()))
+                ->content($this->search->markKeywords($redirect->request_uri))
                 ->href($this->getRoute($redirect)));
     }
 
@@ -113,7 +114,7 @@ class RedirectGridView extends GridView
             ->property('url')
             ->content(fn (Redirect $redirect) => Link::make()
                 ->icon('external-link-alt')
-                ->content(Html::markKeywords($redirect->url ?: '/', $this->search->getKeywords()))
+                ->content($this->search->markKeywords($redirect->url ?: '/'))
                 ->href($redirect->url)
                 ->target('_blank'));
     }
@@ -168,7 +169,6 @@ class RedirectGridView extends GridView
             ->modal($modal);
 
         return GridToolbarItem::make()
-            ->addClass('hidden block-has-checked')
             ->content($button);
     }
 }
