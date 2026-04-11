@@ -7,7 +7,6 @@ namespace Hirtz\Skeleton\Widgets\Navs;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Traits\IconTrait;
 use Override;
-use Stringable;
 
 class ActionDropdown extends Dropdown
 {
@@ -16,7 +15,6 @@ class ActionDropdown extends Dropdown
     public function __construct(array $config = [])
     {
         $this->attributes['class'] ??= 'dropdown-actions';
-
         parent::__construct($config);
     }
 
@@ -30,11 +28,5 @@ class ActionDropdown extends Dropdown
             ->icon($this->icon);
 
         parent::configure();
-    }
-
-    #[Override]
-    protected function renderContent(): string|Stringable
-    {
-        return $this->items ? parent::renderContent() : '';
     }
 }

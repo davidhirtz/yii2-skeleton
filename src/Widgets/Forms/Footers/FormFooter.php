@@ -47,8 +47,7 @@ class FormFooter extends Widget
             ? FormRow::make()
                 ->attributes($this->attributes)
                 ->addClass('form-footer')
-                ->content(Ul::make()
-                    ->content(...$this->items))
+                ->content(Ul::make()->items(...$this->items))
             : '';
     }
 }

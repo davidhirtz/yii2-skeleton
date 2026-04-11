@@ -16,7 +16,7 @@ use Yii;
 
 class FieldsetTest extends TestCase
 {
-    #[\Override]
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -45,7 +45,7 @@ class FieldsetTest extends TestCase
             ])->execute();
     }
 
-    #[\Override]
+    #[Override]
     protected function tearDown(): void
     {
         Yii::$app->getDb()->createCommand()

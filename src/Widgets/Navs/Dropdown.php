@@ -22,9 +22,6 @@ class Dropdown extends Widget
     protected bool $autofocus = false;
     protected Button $button;
 
-    /**
-     * @var Li[]
-     */
     protected array $items = [];
 
     public function autofocus(bool $autofocus = true): static
@@ -56,33 +53,22 @@ class Dropdown extends Widget
         return $this->addClass('dropup');
     }
 
-    public function addItem(string|Stringable ...$items): static
+    public function items(array $items): static
     {
-        foreach (array_filter($items) as $item) {
-            $content = (string)$item;
-
-            if ($content) {
-                $this->items[] = Li::make()
-                    ->content($content)
-                    ->class('dropdown-item');
-            }
-        }
-
+        $this->items = array_values(array_filter($items));
         return $this;
     }
 
-    public function items(string|Stringable ...$items): static
+    public function addItem(string|Stringable ...$items): static
     {
-        $this->items = [];
-        return $this->addItem(...$items);
+        $this->items = [...$this->items, ...array_filter($items)];
+        return $this;
     }
 
     public function divider(): static
     {
-        $this->items[] = Li::make()
-            ->content(Div::make()->class('dropdown-divider'));
-
-        return $this;
+        return $this->addItem(Li::make()
+            ->content(Div::make()->class('dropdown-divider')));
     }
 
     protected function configure(): void
@@ -95,13 +81,19 @@ class Dropdown extends Widget
     #[Override]
     protected function renderContent(): string|Stringable
     {
+        $content = $this->getListContent();
+
+        if (!$content) {
+            return '';
+        }
+
         $popover = Div::make()
             ->attribute('popover', 'auto')
             ->class('dropdown-menu')
             ->content(...$this->content)
             ->addContent(Ul::make()
                 ->class('dropdown-list')
-                ->content(...$this->items));
+                ->content(...$content));
 
         $this->button->attributes['popovertarget'] = $popover->getId();
 
@@ -109,5 +101,18 @@ class Dropdown extends Widget
             ->attributes($this->attributes)
             ->addClass('dropdown')
             ->content($this->button, $popover);
+    }
+
+    protected function getListContent(): array
+    {
+        $items = [];
+
+        foreach ($this->items as $item) {
+            $items[] = $item instanceof Li
+                ? $item->render()
+                : Li::make()->class('dropdown-item')->content($item)->render();
+        }
+
+        return array_filter($items);
     }
 }

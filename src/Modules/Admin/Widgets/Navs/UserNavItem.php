@@ -30,7 +30,7 @@ class UserNavItem extends NavItem
 
     protected function addDefaultItems(): static
     {
-        return $this->addItems($this->getUserItem(), $this->getPermissionItem(), $this->getLoginItem());
+        return $this->addItem($this->getUserItem(), $this->getPermissionItem(), $this->getLoginItem());
     }
 
     protected function getUserItem(): ?NavItem

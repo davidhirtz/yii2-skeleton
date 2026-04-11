@@ -50,7 +50,7 @@ class TestModule extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
 
     public function dashboard(Dashboard $dashboard): Dashboard
     {
-        return $dashboard->addItems(DashboardItem::make()
+        return $dashboard->addItem(DashboardItem::make()
             ->label('Test Module')
             ->url(['/admin/system/test']));
     }

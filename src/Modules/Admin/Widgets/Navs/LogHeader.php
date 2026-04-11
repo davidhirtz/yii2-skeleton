@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
 use Hirtz\Skeleton\Modules\Admin\Data\LogDataProvider;
-use Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\LogFileActionDropdown;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\LogFileActionDropdown;
 use Hirtz\Skeleton\Widgets\Navs\Header;
 use Yii;
 

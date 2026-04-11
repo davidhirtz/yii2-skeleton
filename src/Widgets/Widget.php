@@ -7,6 +7,8 @@ namespace Hirtz\Skeleton\Widgets;
 use Closure;
 use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
 use Hirtz\Skeleton\Web\View;
+use Hirtz\Skeleton\Widgets\Attributes\Configure;
+use ReflectionClass;
 use Stringable;
 use Yii;
 use yii\base\ViewContextInterface;
@@ -20,8 +22,11 @@ abstract class Widget implements Stringable, ViewContextInterface
 
     protected View $view;
     protected ?string $viewPath = null;
-    protected ?Closure $config = null;
 
+    /**
+     * @var Closure[]
+     */
+    private array $callbacks = [];
     private ?string $html = null;
 
     public function __construct(array $config = [])
@@ -44,9 +49,13 @@ abstract class Widget implements Stringable, ViewContextInterface
         return $this->viewPath ??= '@views/' . Yii::$app->controller->id . '/';
     }
 
-    public function prepare(Closure $config): static
+    /**
+     * @param Closure(static):void $callback
+     * @return $this
+     */
+    public function prepare(Closure $callback): static
     {
-        $this->config = $config;
+        $this->callbacks[] = $callback;
         return $this;
     }
 
@@ -62,8 +71,14 @@ abstract class Widget implements Stringable, ViewContextInterface
 
     protected function configure(): void
     {
-        if ($this->config instanceof Closure) {
-            ($this->config)($this);
+        foreach ($this->callbacks as $callback) {
+            ($callback)($this);
+        }
+
+        foreach ((new ReflectionClass($this))->getProperties() as $property) {
+            foreach ($property->getAttributes(Configure::class) as $attribute) {
+                $this->{$attribute->newInstance()->method}();
+            }
         }
     }
 

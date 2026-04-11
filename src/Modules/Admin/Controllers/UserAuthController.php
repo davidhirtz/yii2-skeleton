@@ -81,7 +81,7 @@ class UserAuthController extends Controller
             ]));
         }
 
-        return $this->redirect(['index', 'user' => $user->id]);
+        return $this->redirect(['/admin/user-auth/index', 'id' => $user->id]);
     }
 
     public function actionDelete(int $id, string $name, int $type): Response|string
@@ -97,7 +97,7 @@ class UserAuthController extends Controller
             ]));
         }
 
-        return $this->redirect(['index', 'user' => $user->id]);
+        return $this->redirect(['/admin/user-auth/index', 'id' => $user->id]);
     }
 
     protected function getAuthItem(string $name, int $type): Permission|Role

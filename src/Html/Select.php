@@ -6,28 +6,13 @@ namespace Hirtz\Skeleton\Html;
 
 use Hirtz\Skeleton\Html\Base\Tag;
 use Hirtz\Skeleton\Html\Traits\TagInputTrait;
+use Hirtz\Skeleton\Html\Traits\TagSelectTrait;
 use Override;
 
 class Select extends Tag
 {
     use TagInputTrait;
-
-    /**
-     * @var Option[]|Optgroup[]
-     */
-    protected array $options = [];
-
-    public function options(Option|Optgroup ...$option): static
-    {
-        $this->options = $option;
-        return $this;
-    }
-
-    public function addOption(Option|Optgroup ...$option): static
-    {
-        $this->options = [...$this->options, ...$option];
-        return $this;
-    }
+    use TagSelectTrait;
 
     public function size(int $size): static
     {
@@ -39,12 +24,6 @@ class Select extends Tag
     {
         $this->attributes['multiple'] = true;
         return $this;
-    }
-
-    #[Override]
-    protected function renderContent(): string
-    {
-        return implode('', $this->options);
     }
 
     #[Override]

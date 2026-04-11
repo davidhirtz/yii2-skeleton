@@ -8,7 +8,7 @@ use Closure;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Hirtz\Skeleton\Web\User;
 use Hirtz\Skeleton\Widgets\Container;
-use Hirtz\Skeleton\Widgets\Navs\Traits\NavItemTrait;
+use Hirtz\Skeleton\Widgets\Navs\Traits\ItemTrait;
 use Hirtz\Skeleton\Widgets\Traits\TitleTrait;
 use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Widget;
@@ -18,10 +18,12 @@ use Yii;
 
 class Submenu extends Widget
 {
+    /** @use ItemTrait<NavItem> */
+    use ItemTrait;
+
     use TagContentTrait;
     use TitleTrait;
     use UrlTrait;
-    use NavItemTrait;
 
     protected array $navAttributes = ['class' => 'tabs'];
     protected User $webuser;

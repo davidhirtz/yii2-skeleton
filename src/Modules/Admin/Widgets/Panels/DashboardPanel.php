@@ -10,9 +10,6 @@ use Hirtz\Skeleton\Widgets\Panels\Panel;
 use Hirtz\Skeleton\Widgets\Panels\Stack;
 use Hirtz\Skeleton\Widgets\Panels\StackItem;
 use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
-use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
-use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
-use Hirtz\Skeleton\Widgets\Widget;
 
 class DashboardPanel extends Panel
 {
@@ -30,19 +27,13 @@ class DashboardPanel extends Panel
      */
     public function items(array|Closure $items): static
     {
-        $this->items = $items instanceof Closure ? $items($this->items) : array_filter($items);
+        $this->items = $items instanceof Closure ? $items($this->items) : array_values(array_filter($items));
         return $this;
     }
 
-    public function addItem(StackItem $item): static
+    public function addItem(StackItem ...$items): static
     {
-        $this->items[] = $item;
-        return $this;
-    }
-
-    public function addItems(StackItem ...$items): static
-    {
-        $this->items = [...$this->items, ...$items];
+        $this->items = [...$this->items, ...array_filter($items)];
         return $this;
     }
 

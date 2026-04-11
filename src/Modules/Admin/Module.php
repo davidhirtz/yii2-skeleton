@@ -58,7 +58,7 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
     #[Override]
     public function aside(Nav $nav): Nav
     {
-        $nav->addItems(DashboardNavItem::make(), UserNavItem::make(), SystemNavItem::make());
+        $nav->addItem(DashboardNavItem::make(), UserNavItem::make(), SystemNavItem::make());
 
         foreach ($this->getSubmodules() as $module) {
             if ($module instanceof ModuleInterface) {
@@ -72,7 +72,7 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
     #[Override]
     public function dashboard(Dashboard $dashboard): Dashboard
     {
-        $dashboard->addItems(
+        $dashboard->addItem(
             DashboardItem::make()
                 ->icon('user-plus')
                 ->label(Yii::t('skeleton', 'Create New User'))

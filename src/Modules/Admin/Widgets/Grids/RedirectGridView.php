@@ -10,7 +10,6 @@ use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Modules\Admin\Controllers\RedirectController;
 use Hirtz\Skeleton\Modules\Admin\Data\RedirectActiveDataProvider;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
-use Hirtz\Skeleton\Widgets\Buttons\CreateButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\DeleteGridButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\ViewGridButton;
@@ -19,6 +18,7 @@ use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
+use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridToolbarItem;
 use Hirtz\Skeleton\Widgets\Grids\Traits\TypeGridViewTrait;
 use Hirtz\Skeleton\Widgets\Link;
 use Hirtz\Skeleton\Widgets\Modal;
@@ -68,7 +68,7 @@ class RedirectGridView extends GridView
         ];
 
         $this->footer ??= [
-            $this->getCreateButton(),
+//            $this->getCreateButton(),
             $this->showSelection ? $this->getSelectionButton() : null,
         ];
 
@@ -145,13 +145,6 @@ class RedirectGridView extends GridView
         ];
     }
 
-    protected function getCreateButton(): string|Stringable
-    {
-        return CreateButton::make()
-            ->label(Yii::t('skeleton', 'New Redirect'))
-            ->url(['/admin/redirect/create']);
-    }
-
     /**
      * @see RedirectController::actionDeleteAll()
      */
@@ -167,12 +160,15 @@ class RedirectGridView extends GridView
                 ->post(['/admin/redirect/delete-all'])
                 ->attribute('hx-include', '[data-check]:checked'));
 
-        return Button::make()
+        $button = Button::make()
             ->danger()
             ->text(Yii::t('skeleton', 'Delete selected'))
             ->icon('trash')
             ->attribute('data-id', 'check-button')
-            ->addClass('hidden block-has-checked')
             ->modal($modal);
+
+        return GridToolbarItem::make()
+            ->addClass('hidden block-has-checked')
+            ->content($button);
     }
 }

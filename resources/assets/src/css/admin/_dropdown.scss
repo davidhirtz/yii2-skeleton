@@ -3,7 +3,8 @@
 }
 
 .dropdown-btn {
-  background: var(--dropdown-btn-bg-color) var(--caret-down) no-repeat right 1rem center;
+  --dropdown-btn-bg-img: var(--caret-down);
+  background: var(--dropdown-btn-bg-color) var(--dropdown-btn-bg-img) no-repeat right 1rem center;
   background-size: 0.875rem;
   border-radius: .25rem;
   border: 1px solid var(--dropdown-btn-border-color);
@@ -18,26 +19,27 @@
   width: 100%;
 
   .active & {
-    background-color: var(--dropdown-btn-active-bg);
-    border-color: var(--dropdown-btn-active-border-color);
+    --dropdown-btn-bg-color: var(--dropdown-btn-active-bg);
+    --dropdown-btn-border-color: var(--dropdown-btn-active-border-color);
     font-weight: 700;
   }
 
-  &:hover {
-    background-color: var(--dropdown-btn-hover-bg);
-    border-color: var(--dropdown-btn-hover-border-color);
-    color: var(--dropdown-btn-hover-color);
+  &:focus, &:hover, .dropdown:has(:popover-open) & {
+    --dropdown-btn-bg-color: var(--dropdown-btn-hover-bg);
+    --dropdown-btn-border-color: var(--dropdown-btn-hover-border-color);
+    --dropdown-btn-color: var(--dropdown-btn-hover-color);
+    outline: none;
   }
 
   .dropup & {
-    background-image: var(--caret-up);
+    --dropdown-btn-bg-img: var(--caret-up);
   }
 }
 
 .dropdown-menu {
   background-color: var(--dropdown-bg);
   border-radius: .25rem;
-  border: 0;
+  border: 1px solid var(--dropdown-border-color);
   color: var(--dropdown-color);
   inset: unset;
   margin: 0;
@@ -52,7 +54,6 @@
     display: block;
   }
 
-
   > .dropdown-item:first-child,
   > li:first-child .dropdown-item {
     border-top-left-radius: .25rem;
@@ -64,11 +65,18 @@
     border-bottom-right-radius: .25rem;
     border-bottom-left-radius: .25rem;
   }
+
+  .dropdown-actions & {
+    border: 0;
+  }
 }
 
 .dropdown-list {
   display: grid;
-  gap: 1px;
+
+  .dropdown-actions & {
+    gap: 1px;
+  }
 }
 
 .dropdown-header {

@@ -11,7 +11,7 @@ use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Hirtz\Skeleton\Widgets\Buttons\Badge;
-use Hirtz\Skeleton\Widgets\Navs\Traits\NavItemTrait;
+use Hirtz\Skeleton\Widgets\Navs\Traits\ItemTrait;
 use Hirtz\Skeleton\Widgets\Traits\IconTrait;
 use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
 use Hirtz\Skeleton\Widgets\Traits\LinkTrait;
@@ -28,10 +28,13 @@ class NavItem extends Widget
 {
     use TagAttributesTrait;
     use TagContentTrait;
+
+    /** @use ItemTrait<NavItem> */
+    use ItemTrait;
+
     use IconTrait;
     use LabelTrait;
     use LinkTrait;
-    use NavItemTrait;
     use OrderTrait;
     use UrlTrait;
     use VisibilityTrait;

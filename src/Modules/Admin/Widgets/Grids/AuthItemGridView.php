@@ -113,8 +113,7 @@ class AuthItemGridView extends GridView
         }
 
 
-        return Ul::make()
-            ->items(...array_filter($items));
+        return Ul::make()->items(...array_filter($items));
     }
 
     protected function getUsersColumn(): Column
@@ -149,7 +148,7 @@ class AuthItemGridView extends GridView
     protected function getButtonColumnContent(AuthItem $authItem): string
     {
         $route = [
-            $authItem->isAssigned ? '/admiin/user-auth/delete' : '/admiin/user-auth/create',
+            $authItem->isAssigned ? '/admin/user-auth/delete' : '/admin/user-auth/create',
             'id' => $this->user->id,
             'name' => $authItem->name,
             'type' => $authItem->type,

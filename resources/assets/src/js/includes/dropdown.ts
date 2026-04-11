@@ -23,15 +23,19 @@ export default ($btn: HTMLElement) => {
 
             const rect = $btn.getBoundingClientRect();
             const fitsBelow = rect.bottom + 4 + $popover.offsetHeight <= window.innerHeight;
-            const left = Math.max(0, Math.min(rect.left, window.innerWidth - $popover.offsetWidth));
+            let left = rect.left;
+
+            if (left + $popover.offsetWidth > window.innerWidth) {
+                left = rect.right - $popover.offsetWidth;
+            }
 
             Object.assign($popover.style, {
-                left: `${left}px`,
+                left: `${Math.max(0, left)}px`,
                 top: fitsBelow ? `${rect.bottom + 4}px` : `${rect.top - 4 - $popover.offsetHeight}px`,
                 width: `${rect.width}px`,
             });
 
-            if ($btn.dataset.autofocus) {
+            if ($btn.hasAttribute('data-autofocus')) {
                 requestAnimationFrame(() => $items[selected].focus());
             }
         } else {

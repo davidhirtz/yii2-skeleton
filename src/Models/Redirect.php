@@ -132,6 +132,20 @@ class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttribut
         return !parse_url($this->url, PHP_URL_HOST) ? '/' : '';
     }
 
+    public function getDisplayName(): string
+    {
+        return Yii::t('skeleton', '{model} #{id}', [
+            'model' => Yii::t('skeleton', 'Redirect'),
+            'id' => $this->id,
+        ]);
+    }
+
+    #[Override]
+    public function getTrailModelName(): string
+    {
+        return $this->id ? $this->getDisplayName() : Yii::t('skeleton', 'Redirect');
+    }
+
     public static function getTypes(): array
     {
         return [

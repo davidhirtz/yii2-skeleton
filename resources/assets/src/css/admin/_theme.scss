@@ -210,12 +210,12 @@
   --dropdown-divider-color: var(--border-color);
 
   --dropdown-btn-active-bg: var(--color-gray-200);
-  --dropdown-btn-active-border-color: var(--color-gray-200);
+  --dropdown-btn-active-border-color: var(--border-color);
   --dropdown-btn-bg-color: var(--color-gray-100);
-  --dropdown-btn-border-color: var(--color-gray-100);
+  --dropdown-btn-border-color: var(--border-color);
   --dropdown-btn-color: var(--color-black);
   --dropdown-btn-hover-bg: var(--color-gray-200);
-  --dropdown-btn-hover-border-color: var(--color-gray-300);
+  --dropdown-btn-hover-border-color: var(--btn-primary-bg);
 
   --dropdown-option-selected-bg: var(--color-gray-100);
   --dropdown-option-selected-color: inherit;
@@ -235,7 +235,7 @@
   --input-border-color: var(--border-color);
   --input-color: var(--color-black);
   --input-focus-bg-color: var(--color-gray-50);
-  --input-focus-border-color: var(--color-black);
+  --input-focus-border-color: var(--btn-primary-bg);
   --input-focus-color: var(--color-black);
 
   --input-disabled-bg-color: var(--color-gray-100);

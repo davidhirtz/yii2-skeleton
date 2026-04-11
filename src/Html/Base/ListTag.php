@@ -12,13 +12,13 @@ abstract class ListTag extends Tag
 {
     protected array $items = [];
 
-    final public function items(string|Stringable ...$items): static
+    final public function items(string|Stringable|null ...$items): static
     {
         $this->items = [];
         return $this->addItem(...$items);
     }
 
-    final public function addItem(string|Stringable ...$items): static
+    final public function addItem(string|Stringable|null ...$items): static
     {
         $items = array_values(array_filter($items));
 

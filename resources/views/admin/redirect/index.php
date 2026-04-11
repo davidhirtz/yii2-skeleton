@@ -9,16 +9,13 @@ declare(strict_types=1);
  * @var RedirectActiveDataProvider $provider
  */
 
-
 use Hirtz\Skeleton\Modules\Admin\Data\RedirectActiveDataProvider;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\RedirectGridView;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\RedirectIndexHeader;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Grids\GridContainer;
-use Hirtz\Skeleton\Widgets\Navs\Header;
 
-echo Header::make()
-    ->title(Yii::t('skeleton', 'Redirects'))
-    ->url(['/admin/redirect/index'])
+echo RedirectIndexHeader::make()
     ->pagination($provider);
 
 echo GridContainer::make()
