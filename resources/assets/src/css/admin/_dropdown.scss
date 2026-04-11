@@ -37,26 +37,21 @@
 .dropdown-menu {
   background-color: var(--dropdown-bg);
   border-radius: .25rem;
+  border: 0;
   color: var(--dropdown-color);
-  display: none;
+  inset: unset;
   margin: 0;
   max-height: 50vh;
   min-width: 12rem;
   overflow-y: auto;
-  position: absolute;
+  padding: 0;
+  position: fixed;
   text-align: left; // Ensures proper alignment if parent has it changed (e.g., modal footer)
-  z-index: 10;
 
-  &[open] {
+  &:popover-open {
     display: block;
   }
 
-  .dropdown-menu-end {
-    & {
-      left: auto;
-      right: 0;
-    }
-  }
 
   > .dropdown-item:first-child,
   > li:first-child .dropdown-item {

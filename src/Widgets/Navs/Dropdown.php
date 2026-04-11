@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Navs;
 
-use Hirtz\Skeleton\Html\Dialog;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Li;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
@@ -89,7 +88,6 @@ class Dropdown extends Widget
     protected function configure(): void
     {
         $this->button->attributes['data-autofocus'] ??= $this->autofocus;
-        $this->button->attributes['data-dropdown'] ??= '';
 
         parent::configure();
     }
@@ -97,16 +95,19 @@ class Dropdown extends Widget
     #[Override]
     protected function renderContent(): string|Stringable
     {
-        $dialog = Dialog::make()
+        $popover = Div::make()
+            ->attribute('popover', 'auto')
             ->class('dropdown-menu')
             ->content(...$this->content)
             ->addContent(Ul::make()
                 ->class('dropdown-list')
                 ->content(...$this->items));
 
+        $this->button->attributes['popovertarget'] = $popover->getId();
+
         return Div::make()
             ->attributes($this->attributes)
             ->addClass('dropdown')
-            ->content($this->button, $dialog);
+            ->content($this->button, $popover);
     }
 }

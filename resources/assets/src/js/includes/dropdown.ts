@@ -1,14 +1,12 @@
-import {computePosition, autoUpdate, flip, offset} from '@floating-ui/dom';
-
 export default ($btn: HTMLElement) => {
-    const selector = $btn.dataset.dropdown;
-    const $dialog: HTMLDialogElement | null = selector
-        ? document.querySelector(selector)
-        : $btn.parentElement!.querySelector('dialog');
+    const $popover = document.getElementById($btn.getAttribute('popovertarget')!) as HTMLElement | null;
 
-    if (!$dialog) {
+    if (!$popover) {
         return;
     }
+
+    const $items = $popover.querySelectorAll('a:not([inert],.disabled),button:not([inert],:disabled,.disabled),input:not([inert],:disabled,.disabled)') as NodeListOf<HTMLElement>;
+    let selected = 0;
 
     const keydownEvent = (event: KeyboardEvent) => {
         if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
@@ -19,57 +17,24 @@ export default ($btn: HTMLElement) => {
         }
     }
 
-    const clickOutsideEvent = (event: MouseEvent) => {
-        if (!$dialog.firstElementChild!.contains(event.target as HTMLElement)) {
-            $dialog.close();
-        }
-    }
+    $popover.addEventListener('toggle', (event) => {
+        if ((event as ToggleEvent).newState === 'open') {
+            $popover.addEventListener('keydown', keydownEvent);
 
-    const $items = $dialog.querySelectorAll('a:not([inert],.disabled),button:not([inert],:disabled,.disabled),input:not([inert],:disabled,.disabled)') as NodeListOf<HTMLElement>;
+            if ($btn.dataset.autofocus) {
+                $items[selected].focus();
+            }
 
-    let cleanup: () => void;
-    let selected = 0;
+            const rect = $btn.getBoundingClientRect();
+            const fitsBelow = rect.bottom + 4 + $popover.offsetHeight <= window.innerHeight;
 
-    $btn.addEventListener('click', () => {
-        $dialog.showModal();
-        $dialog.addEventListener('click', clickOutsideEvent);
-
-        $dialog.addEventListener('keydown', keydownEvent);
-        $items[selected].focus();
-
-        // Browsers automatically focus the first element in a dialog regardless of the focus call above, ...
-        if (!$btn.dataset.autofocus) {
-            (document.activeElement as HTMLElement).blur();
-        }
-
-        cleanup = autoUpdate($btn, $dialog, () => {
-            computePosition($btn, $dialog, {
-                placement: 'bottom-start',
-                middleware: [
-                    offset(4),
-                    flip({
-                        fallbackPlacements: [
-                            'bottom-start',
-                            'bottom-end',
-                            'top-start',
-                            'top-end',
-                        ],
-                        padding: 80,
-                    }),
-                ],
-            }).then(({x, y}) => {
-                Object.assign($dialog.style, {
-                    left: `${x}px`,
-                    top: `${y}px`,
-                    width: $btn.offsetWidth + 'px',
-                });
+            Object.assign($popover.style, {
+                left: `${rect.left}px`,
+                top: fitsBelow ? `${rect.bottom + 4}px` : `${rect.top - 4 - $popover.offsetHeight}px`,
+                width: `${rect.width}px`,
             });
-        });
+        } else {
+            $popover.removeEventListener('keydown', keydownEvent);
+        }
     });
-
-    $dialog.addEventListener('close', () => {
-        $dialog.removeEventListener('keydown', keydownEvent);
-        $dialog.removeEventListener('click', clickOutsideEvent);
-        cleanup();
-    })
 }

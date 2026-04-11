@@ -17,7 +17,7 @@ htmx.onLoad(($container) => {
     };
 
     queryAll('[data-collapse]', collapse);
-    queryAll('[data-dropdown]', dropdown);
+    queryAll('[popovertarget]', dropdown);
     queryAll('[data-filter]', filter);
     queryAll('[data-form-target]', updateTargetsOnChange);
     queryAll('[data-toggle]', toggle);
