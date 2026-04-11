@@ -15,12 +15,10 @@ class RedirectHeader extends Header
     protected ?Redirect $model = null;
     protected ?RedirectActiveDataProvider $provider = null;
 
-    public function __construct(array $config = [])
+    public function model(Redirect $model): static
     {
-        $this->title ??= Yii::t('skeleton', 'Redirects');
-        $this->url ??= ['/admin/redirect/index'];
-
-        parent::__construct($config);
+        $this->model = $model;
+        return $this;
     }
 
     public function provider(RedirectActiveDataProvider $provider): static
@@ -29,23 +27,18 @@ class RedirectHeader extends Header
         return $this;
     }
 
-    public function model(Redirect $model): static
-    {
-        $this->model = $model;
-        return $this;
-    }
-
     #[Override]
     protected function configure(): void
     {
-        $this->addBreadcrumbs();
-        parent::configure();
-    }
-
-    protected function addBreadcrumbs(): void
-    {
-        if (!$this->provider) {
-            $this->view->addBreadcrumb(Yii::t('skeleton', 'Redirects'), $this->url);
+        if ($this->model) {
+            $this->breadcrumbs ??= [Yii::t('skeleton', 'Redirects') => ['/admin/redirect/index']];
         }
+
+        if ($this->provider) {
+            $this->title ??= Yii::t('skeleton', 'Redirects');
+            $this->url ??= ['/admin/redirect/index'];
+        }
+
+        parent::configure();
     }
 }
