@@ -21,18 +21,19 @@ export default ($btn: HTMLElement) => {
         if ((event as ToggleEvent).newState === 'open') {
             $popover.addEventListener('keydown', keydownEvent);
 
-            if ($btn.dataset.autofocus) {
-                $items[selected].focus();
-            }
-
             const rect = $btn.getBoundingClientRect();
             const fitsBelow = rect.bottom + 4 + $popover.offsetHeight <= window.innerHeight;
+            const left = Math.max(0, Math.min(rect.left, window.innerWidth - $popover.offsetWidth));
 
             Object.assign($popover.style, {
-                left: `${rect.left}px`,
+                left: `${left}px`,
                 top: fitsBelow ? `${rect.bottom + 4}px` : `${rect.top - 4 - $popover.offsetHeight}px`,
                 width: `${rect.width}px`,
             });
+
+            if ($btn.dataset.autofocus) {
+                requestAnimationFrame(() => $items[selected].focus());
+            }
         } else {
             $popover.removeEventListener('keydown', keydownEvent);
         }

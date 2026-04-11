@@ -45,7 +45,7 @@
   min-width: 12rem;
   overflow-y: auto;
   padding: 0;
-  position: fixed;
+  position: absolute;
   text-align: left; // Ensures proper alignment if parent has it changed (e.g., modal footer)
 
   &:popover-open {
