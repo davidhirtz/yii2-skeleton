@@ -17,7 +17,7 @@ use yii\data\ArrayDataProvider;
 
 class SessionGridView extends GridView
 {
-    public string $layout = '{items}{footer}';
+    protected string $layout = '{items}{footer}';
 
     #[Override]
     public function configure(): void

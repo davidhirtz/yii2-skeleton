@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Grids\Toolbars;
 
-class GridFooter extends GridToolbar
+class GridHeader extends GridToolbar
 {
 }

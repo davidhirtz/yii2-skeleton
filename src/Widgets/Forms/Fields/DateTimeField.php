@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 use DateTime;
 use DateTimeZone;
 use Hirtz\Skeleton\Html\Input;
+use Hirtz\Skeleton\Html\TextInput;
 use Hirtz\Skeleton\Html\Traits\TagInputTrait;
 use Hirtz\Skeleton\Widgets\Forms\InputGroup;
 use Stringable;
@@ -46,7 +47,7 @@ class DateTimeField extends Field
 
     protected function getInput(): string|Stringable
     {
-        $input = Input::make()
+        $input = TextInput::make()
             ->attributes($this->attributes)
             ->addClass('input');
 

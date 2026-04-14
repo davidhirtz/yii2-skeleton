@@ -51,6 +51,7 @@ class AccountController extends Controller
                             'logout',
                             'picture',
                             'update',
+                            'timezone',
                         ],
                         'roles' => ['@'],
                     ],
@@ -79,6 +80,7 @@ class AccountController extends Controller
                     'logout' => ['post'],
                     'token' => ['post'],
                     'picture' => ['post'],
+                    'timezone' => ['post'],
                 ],
             ],
         ];
@@ -371,6 +373,16 @@ class AccountController extends Controller
         }
 
         throw new ServerErrorHttpException();
+    }
+
+    public function actionTimezone(?string $redirect = null): Response|string
+    {
+        $user = Yii::$app->getUser()->getIdentity();
+        $user->timezone = $this->request->post('timezone');
+        $user->update();
+
+        $this->errorOrSuccess($user, Yii::t('skeleton', 'Your timezone was updated.'));
+        return $this->redirect($redirect ?? ['/admin/dashboard/index']);
     }
 
     /**

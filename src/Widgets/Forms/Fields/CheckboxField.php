@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 
+use Hirtz\Skeleton\Html\Checkbox;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Input;
 use Hirtz\Skeleton\Html\Traits\TagInputTrait;
@@ -57,11 +58,11 @@ class CheckboxField extends Field
         $this->attributes['type'] ??= 'checkbox';
         $value = $this->attributes['value'] ?? $this->model->{$this->property} ?? '';
         $this->attributes['value'] = $this->checkedValue;
-        $this->attributes['checked'] = ((string)$value === (string)$this->checkedValue);
 
-        $input = Input::make()
+        $input = Checkbox::make()
             ->attributes($this->attributes)
-            ->addClass('input');
+            ->addClass('input')
+            ->checked((string)$value === (string)$this->checkedValue);
 
         if (null !== $this->uncheckedValue) {
             $uncheckedInput = Input::make()

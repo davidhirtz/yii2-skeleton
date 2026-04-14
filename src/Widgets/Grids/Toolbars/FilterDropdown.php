@@ -124,6 +124,7 @@ class FilterDropdown extends Widget
             ->class('dropdown-header')
             ->content(TextInput::make()
                 ->attribute('data-filter', '#' . $this->getId() . ' li')
+                ->class('input')
                 ->placeholder($this->placeholder)
                 ->type('search'));
     }

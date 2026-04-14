@@ -21,8 +21,8 @@
     padding: 1rem;
   }
 
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--border-color);
+  &:not(:first-child) {
+    border-top: 1px solid var(--border-color);
   }
 }
 

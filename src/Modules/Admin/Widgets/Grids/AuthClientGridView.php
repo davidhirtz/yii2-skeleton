@@ -23,7 +23,7 @@ class AuthClientGridView extends GridView
 {
     use UserWidgetTrait;
 
-    public string $layout = '{items}{footer}';
+    protected string $layout = '{items}{footer}';
 
     #[Override]
     public function configure(): void

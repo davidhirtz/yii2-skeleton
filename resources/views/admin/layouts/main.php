@@ -8,6 +8,7 @@ declare(strict_types=1);
  */
 
 use Hirtz\Skeleton\Assets\AdminAssetBundle;
+use Hirtz\Skeleton\Modules\Admin\TimezoneModal;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\AsideMenu;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\NavBar;
 use Hirtz\Skeleton\Web\View;
@@ -32,6 +33,7 @@ AdminAssetBundle::register($this);
     <?= Flashes::make(); ?>
     <div class="layout" id="wrap" hx-headers='{"X-CSRF-TOKEN":"<?= Yii::$app->getRequest()->getCsrfToken(); ?>"}'>
         <?= AsideMenu::make(); ?>
+        <?= TimezoneModal::make(); ?>
         <main class="main">
             <?= Breadcrumbs::make(); ?>
             <?= $content ?>

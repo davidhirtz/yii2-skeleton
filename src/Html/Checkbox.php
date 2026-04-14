@@ -19,9 +19,7 @@ class Checkbox extends Input
     #[Override]
     protected function before(): string
     {
-        $this->addClass('input')
-            ->attributes['type'] ??= 'checkbox';
-
+        $this->attributes['type'] ??= 'checkbox';
         return parent::before();
     }
 }

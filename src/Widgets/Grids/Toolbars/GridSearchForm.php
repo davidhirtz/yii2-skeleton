@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Widgets\Grids\Toolbars;
 use Closure;
 use Hirtz\Skeleton\Html\Form;
 use Hirtz\Skeleton\Html\Input;
+use Hirtz\Skeleton\Html\TextInput;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Forms\InputGroup;
@@ -26,9 +27,9 @@ class GridSearchForm extends Widget
     protected string $value;
     protected string $paramName;
 
-    protected ?Closure $button;
-    protected ?Closure $input;
-    protected ?Closure $form;
+    protected ?Closure $button = null;
+    protected ?Closure $input = null;
+    protected ?Closure $form = null;
 
     public function __construct(array $config = [])
     {
@@ -101,7 +102,7 @@ class GridSearchForm extends Widget
 
     protected function getInput(): ?Stringable
     {
-        $input = Input::make()
+        $input = TextInput::make()
             ->class('input')
             ->type('search')
             ->placeholder(Yii::t('skeleton', 'Search ...'))

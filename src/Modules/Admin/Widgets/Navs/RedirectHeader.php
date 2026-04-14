@@ -24,7 +24,7 @@ class RedirectHeader extends Header
     protected function init(): void
     {
         $this->breadcrumbs ??= [Yii::t('skeleton', 'Redirects') => ['/admin/redirect/index']];
-        $this->title ??= $this->model?->getDisplayName() ?? Yii::t('skeleton', 'Update Redirect');
+        $this->title ??= $this->model?->getDisplayName() ?? Yii::t('skeleton', 'Create New Redirect');
 
         if ($this->model) {
             $this->addContent($this->getActionDropdown());

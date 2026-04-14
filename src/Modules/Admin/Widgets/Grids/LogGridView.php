@@ -19,14 +19,14 @@ use Yii;
  */
 class LogGridView extends GridView
 {
-    public string $layout = '{items}';
+    protected string $layout = '{items}';
 
-    public array $tableAttributes = [
+    protected array $tableAttributes = [
         'class' => 'log-table table table-striped',
     ];
 
     #[Override]
-    public function configure(): void
+    protected function configure(): void
     {
         $this->columns ??= [
             $this->getDateColumn(),

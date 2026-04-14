@@ -23,10 +23,10 @@ use Yii;
 class LogFileGridView extends GridView
 {
     // todo add nice message if no log was found
-    public string $layout = '{items}';
-    public bool $showOnEmpty = false;
+    protected string $layout = '{items}';
+    protected bool $showOnEmpty = false;
 
-    public array $tableAttributes = [
+    protected array $tableAttributes = [
         'class' => 'table table-striped',
         'style' => 'table-layout: fixed;',
     ];

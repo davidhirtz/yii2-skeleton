@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
+use Hirtz\Skeleton\Html\Custom\RelativeTime;
 use Hirtz\Skeleton\Web\User;
+use Hirtz\Skeleton\Widgets\Attributes\Configure;
 use Hirtz\Skeleton\Widgets\Navs\Header;
 use Yii;
 
@@ -15,6 +17,12 @@ class DashboardHeader extends Header
     public function __construct(array $config = [])
     {
         $this->webuser = Yii::$app->getUser();
+        parent::__construct($config);
+    }
+
+    #[Configure]
+    protected function setDefaults(): void
+    {
         $identity = $this->webuser->getIdentity();
         $params = ['user' => $identity->getUsername()];
 
@@ -22,6 +30,12 @@ class DashboardHeader extends Header
             ? Yii::t('skeleton', 'Hello {user}, good to have you back!', $params)
             : Yii::t('skeleton', 'Welcome {user}, nice to meet you!', $params);
 
-        parent::__construct($config);
+        $lastLogin = Yii::$app->getSession()->get('last_login_timestamp');
+
+        if ($lastLogin) {
+            $this->subheading ??= Yii::t('skeleton', 'Last login {timestamp}', [
+                'timestamp' => RelativeTime::make()->value($lastLogin),
+            ]);
+        }
     }
 }

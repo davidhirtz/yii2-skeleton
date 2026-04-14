@@ -18,6 +18,7 @@ use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridFooter;
+use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridSearchForm;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridToolbarItem;
 use Hirtz\Skeleton\Widgets\Grids\Traits\TypeGridViewTrait;
 use Hirtz\Skeleton\Widgets\Link;
@@ -55,7 +56,7 @@ class RedirectGridView extends GridView
 
         $this->header ??= [
             $this->getTypeDropdown(),
-            $this->search->getToolbarItem(),
+            GridSearchForm::make()->grid($this),
         ];
 
         $this->columns ??= [
@@ -70,7 +71,7 @@ class RedirectGridView extends GridView
         if ($this->showSelection) {
             $this->footer ??= GridFooter::make()
                 ->addClass('hidden block-has-checked')
-                ->items([$this->getSelectionButton()]);
+                ->content($this->getSelectionButton());
         }
 
         parent::configure();

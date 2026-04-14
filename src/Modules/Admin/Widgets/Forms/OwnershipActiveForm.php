@@ -18,7 +18,7 @@ use Yii;
 class OwnershipActiveForm extends ActiveForm
 {
     public bool $hasStickyButtons = false;
-    public string $layout = "{rows}{buttons}";
+    protected string $layout = "{rows}{buttons}";
 
     #[Override]
     protected function configure(): void

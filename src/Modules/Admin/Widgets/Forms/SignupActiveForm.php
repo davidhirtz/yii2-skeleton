@@ -27,7 +27,7 @@ class SignupActiveForm extends ActiveForm
 
     public array $attributes = ['class' => 'form-plain'];
     public bool $hasStickyButtons = false;
-    public string $layout = "{errors}{rows}{buttons}";
+    protected string $layout = "{errors}{rows}{buttons}";
     public array $excludedErrorProperties = ['name', 'email', 'password'];
 
     #[\Override]

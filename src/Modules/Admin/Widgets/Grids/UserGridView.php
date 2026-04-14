@@ -15,6 +15,7 @@ use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
+use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridSearchForm;
 use Hirtz\Skeleton\Widgets\Grids\Traits\StatusGridViewTrait;
 use Hirtz\Skeleton\Widgets\Link;
 use Override;
@@ -39,7 +40,7 @@ class UserGridView extends GridView
         $this->attributes['id'] ??= 'user-grid';
 
         $this->header ??= [
-            $this->search->getToolbarItem(),
+            GridSearchForm::make()->grid($this),
         ];
 
         $this->rowAttributes = fn (User $user) => $user->isDisabled() ? ['class' => 'disabled'] : [];

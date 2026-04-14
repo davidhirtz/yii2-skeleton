@@ -43,7 +43,9 @@ class CheckboxColumn extends Column
             return parent::getHeaderContent();
         }
 
-        return Checkbox::make()->attribute('data-check-all', "#{$this->grid->getId()}");
+        return Checkbox::make()
+            ->attribute('data-check-all', "#{$this->grid->getId()}")
+            ->class('checkbox');
     }
 
     #[Override]
@@ -56,6 +58,7 @@ class CheckboxColumn extends Column
         return Checkbox::make()
             ->attribute('data-check', $this->multiple ? 'multiple' : 'single')
             ->addAttributes($this->checkboxAttributes)
+            ->addClass('checkbox')
             ->name($this->name);
     }
 

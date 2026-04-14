@@ -30,7 +30,7 @@ class ActiveForm extends Widget
     public array|string|false|null $action = null;
 
     public bool $hasStickyButtons = true;
-    public string $layout = "{errors}{rows}{buttons}{footer}";
+    protected string $layout = "{errors}{rows}{buttons}{footer}";
 
     protected array|false|null $buttons = null;
     protected ?string $submitButtonText = null;

@@ -6,6 +6,7 @@ import collapse from './includes/collapse';
 import dropdown from './includes/dropdown';
 import filter from './includes/filter';
 import {closeModal, createModal} from './includes/modals';
+import timezone from "./includes/timezone.ts";
 import tooltip from './includes/tooltips';
 import {toggle, updateTargetsOnChange} from './includes/forms';
 
@@ -23,6 +24,7 @@ htmx.onLoad(($container) => {
     queryAll('[data-toggle]', toggle);
     queryAll('[data-modal]', closeModal);
     queryAll('[data-tooltip]', tooltip);
+    queryAll('[data-timezone-offset', timezone)
 
     queryAll('[aria-invalid]', ($input: HTMLElement) => {
         $input.addEventListener('input', () => $input.removeAttribute('aria-invalid'));

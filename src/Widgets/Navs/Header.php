@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Navs;
 
+use Hirtz\Skeleton\Widgets\Attributes\Configure;
 use Hirtz\Skeleton\Widgets\Traits\BreadcrumbTrait;
 use Override;
 use yii\data\ActiveDataProvider;
@@ -49,13 +50,12 @@ class Header extends Widget
         return $this;
     }
 
-    protected function configure(): void
+    #[Configure]
+    protected function setBreadcrumbs(): void
     {
         if ($this->breadcrumbs) {
             $this->view->addBreadcrumbs($this->breadcrumbs);
         }
-
-        parent::configure();
     }
 
     #[Override]

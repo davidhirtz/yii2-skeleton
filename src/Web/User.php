@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Web;
 
 use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Models\UserLogin;
+use Override;
 use Yii;
 use yii\web\MultiFieldSession;
 use yii\web\Response;
@@ -70,7 +71,7 @@ class User extends \yii\web\User
     public $identityClass = \Hirtz\Skeleton\Models\User::class;
     public $loginUrl = null;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         if (!$this->enableLogin) {
@@ -83,7 +84,7 @@ class User extends \yii\web\User
         parent::init();
     }
 
-    #[\Override]
+    #[Override]
     public function loginRequired($checkAjax = true, $checkAcceptHeader = true): ?Response
     {
         // Set flash message for required logins.
@@ -97,14 +98,12 @@ class User extends \yii\web\User
     /**
      * @param \Hirtz\Skeleton\Models\User $identity
      */
-    #[\Override]
+    #[Override]
     protected function afterLogin($identity, $cookieBased, $duration): void
     {
-        // Update login count, cache previous login date in session and insert new record to logins log.
         $session = Yii::$app->getSession();
         $session->set('last_login_timestamp', $identity->last_login?->getTimestamp());
 
-        // Updates session's user id.
         if ($session instanceof MultiFieldSession) {
             $session->writeCallback = fn () => [
                 'ip_address' => ($ipAddress = Yii::$app->getRequest()->getUserIP()) ? inet_pton($ipAddress) : null,
@@ -112,7 +111,6 @@ class User extends \yii\web\User
             ];
         }
 
-        // Update user record and insert login log.
         $identity->login_count++;
         $identity->last_login = new DateTime();
 
@@ -127,10 +125,9 @@ class User extends \yii\web\User
     }
 
     /**
-     * Removes user id from session.
      * @param \Hirtz\Skeleton\Models\User $identity
      */
-    #[\Override]
+    #[Override]
     protected function afterLogout($identity): void
     {
         $session = Yii::$app->getSession();
@@ -146,8 +143,10 @@ class User extends \yii\web\User
 
     private function insertLogin(\Hirtz\Skeleton\Models\User $user): void
     {
-        if ($browser = Yii::$app->getRequest()->getUserAgent()) {
-            $browser = mb_substr((string) $browser, 0, 255, Yii::$app->charset);
+        $browser = Yii::$app->getRequest()->getUserAgent();
+
+        if (is_string($browser)) {
+            $browser = mb_substr($browser, 0, 255, Yii::$app->charset);
         }
 
         $ipAddress = $this->ipAddress ?: Yii::$app->getRequest()->getUserIP();
@@ -166,7 +165,7 @@ class User extends \yii\web\User
         Yii::$app->getDb()->createCommand()->insert(UserLogin::tableName(), $columns)->execute();
     }
 
-    #[\Override]
+    #[Override]
     public function can($permissionName, $params = [], $allowCaching = true): bool
     {
         if ($this->disableRbacForGuests && $this->getIsGuest()) {

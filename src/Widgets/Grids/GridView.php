@@ -18,13 +18,13 @@ use Hirtz\Skeleton\Html\Tr;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
 use Hirtz\Skeleton\Web\User;
-use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Pagers\LinkPager;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridFooter;
-use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridToolbarItem;
+use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridHeader;
 use Hirtz\Skeleton\Widgets\Traits\ModelWidgetTrait;
+use Hirtz\Skeleton\Widgets\Traits\ProviderTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
@@ -32,7 +32,6 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
-use yii\data\DataProviderInterface;
 use yii\db\ActiveRecordInterface;
 use yii\helpers\Inflector;
 
@@ -44,38 +43,37 @@ class GridView extends Widget
 {
     use ContainerConfigurationTrait;
     use ModelWidgetTrait;
+    use ProviderTrait;
     use TagAttributesTrait;
     use TagIdTrait;
-
-    public DataProviderInterface $provider;
 
     /**
      * @var array<Column|string>
      */
-    public array $columns;
+    protected array $columns;
 
     /**
-     * @var Stringable[]|GridFooter|null
+     * @var list<string|Stringable>|GridFooter|null
      */
-    public array|GridFooter|null $footer = null;
+    protected array|GridFooter|null $footer = null;
+    protected array $footerAttributes = ['class' => 'grid-footer sticky'];
 
     /**
-     * @var Stringable[]|Field[][]|string[][]|string[]|null
+     * @var list<string|Stringable>|GridHeader|null
      */
-    public ?array $header = null;
+    protected ?array $header = null;
+    protected array $headerAttributes = ['class' => 'grid-header'];
 
-    public array $headerAttributes = ['class' => 'grid-header'];
     public array $headerRowAttributes = [];
-    public array $tableAttributes = ['class' => 'table table-striped table-hover'];
-    public array $tableBodyAttributes = [];
-    public array|Closure $rowAttributes;
+    protected array $tableAttributes = ['class' => 'table table-striped table-hover'];
+    protected array $tableBodyAttributes = [];
+    protected array|Closure $rowAttributes;
 
-    public bool $hasStickyFooter = true;
-    public array $pagerOptions = [];
-    public bool $showOnEmpty = true;
+    protected array $pagerOptions = [];
+    protected bool $showOnEmpty = true;
 
-    public string $layout = '{header}{summary}{items}{pager}{footer}';
-    public ?array $orderRoute = ['order'];
+    protected string $layout = '{header}{summary}{items}{pager}{footer}';
+    protected ?array $orderRoute = ['order'];
 
     public GridSearch $search;
     protected User $webuser;
@@ -86,12 +84,6 @@ class GridView extends Widget
         $this->webuser = Yii::$app->getUser();
 
         parent::__construct($config);
-    }
-
-    public function provider(DataProviderInterface $data): static
-    {
-        $this->provider = $data;
-        return $this;
     }
 
     #[Override]
@@ -154,48 +146,15 @@ class GridView extends Widget
         ]);
     }
 
-    protected function getHeader(): ?Stringable
+    protected function getHeader(): ?GridHeader
     {
-        return $this->header ? $this->getToolbars($this->header, $this->headerAttributes) : null;
+        $header = is_array($this->header) ? GridHeader::make()->content(...$this->header) : $this->header;
+        return $header?->attributes($this->headerAttributes);
     }
 
-    protected function getToolbars(array $rows, array $attributes = []): ?Div
+    protected function getSummary(): ?GridSummary
     {
-        $items = is_array(current($rows)) ? array_map($this->getToolbarItems(...), $rows) : $this->getToolbarItems($rows);
-
-        return $items
-            ? Div::make()
-                ->attributes($attributes)
-                ->content(...$items)
-            : null;
-    }
-
-    protected function getToolbarItems(array $row): array
-    {
-        $items = [];
-
-        foreach ($row as $item) {
-            if (!$item instanceof GridToolbarItem) {
-                $item = GridToolbarItem::make()
-                    ->content($item);
-            }
-
-            if ($item->isVisible()) {
-                $items[] = $item;
-            }
-        }
-
-        return $items;
-    }
-
-    protected function getSummary(): ?Stringable
-    {
-        return Yii::createObject(GridSummary::class, [
-            $this->provider->getCount(),
-            $this->provider->getTotalCount(),
-            $this->provider->getPagination(),
-            $this->search,
-        ]);
+        return GridSummary::make()->grid($this);
     }
 
     protected function getItems(): ?Stringable
@@ -304,12 +263,8 @@ class GridView extends Widget
 
     protected function getFooter(): ?GridFooter
     {
-        $footer = is_array($this->footer)
-            ? GridFooter::make()
-                ->items($this->footer)
-            : $this->footer;
-
-        return $footer?->sticky($this->hasStickyFooter);
+        $footer = is_array($this->footer) ? GridFooter::make()->content(...$this->footer) : $this->footer;
+        return $footer?->attributes($this->footerAttributes);
     }
 
     /**

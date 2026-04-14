@@ -6,23 +6,21 @@ namespace Hirtz\Skeleton\Widgets\Grids;
 
 use Hirtz\Skeleton\Widgets\Alert;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
+use Hirtz\Skeleton\Widgets\Grids\Traits\GridTrait;
+use Hirtz\Skeleton\Widgets\Widget;
+use Override;
 use Stringable;
 use Yii;
-use yii\data\Pagination;
 
-class GridSummary implements Stringable
+class GridSummary extends Widget
 {
-    public function __construct(
-        protected int $count,
-        protected int $totalCount,
-        protected Pagination|false $pagination = false,
-        protected ?GridSearch $search = null,
-        protected ?string $message = null,
-        protected array $params = [],
-    ) {
-    }
+    use GridTrait;
 
-    public function render(): Stringable
+    protected ?string $message = null;
+    protected array $params = [];
+
+    #[Override]
+    public function renderContent(): string|Stringable
     {
         return $this->getAlert();
     }
@@ -30,18 +28,18 @@ class GridSummary implements Stringable
     protected function getAlert(): Alert
     {
         $alert = Alert::make()
-            ->content($this->getContent());
+            ->content($this->getAlertContent());
 
-        if ($this->totalCount) {
+        if ($this->grid->provider->getTotalCount()) {
             $alert->info();
         } else {
             $alert->warning();
         }
 
-        if ($this->search?->getValue()) {
+        if ($this->grid->search?->getValue()) {
             $alert->button(Button::make()
                 ->class('btn-icon icon')
-                ->get($this->search->getUrl())
+                ->get($this->grid->search->getUrl())
                 ->tooltip(Yii::t('skeleton', 'Clear Search'))
                 ->icon('xmark'));
         }
@@ -49,19 +47,23 @@ class GridSummary implements Stringable
         return $alert;
     }
 
-    protected function getContent(): string
+    protected function getAlertContent(): string
     {
+        $pagination = $this->grid->provider->getPagination();
+        $count = $this->grid->provider->getCount();
+        $totalCount = $this->grid->provider->getTotalCount();
+
         $params = [
-            'search' => $this->search?->getValue(),
-            'totalCount' => $this->totalCount,
+            'search' => $this->grid->search?->getValue(),
+            'totalCount' => $this->grid->provider->getTotalCount(),
         ];
 
-        if ($this->pagination !== false) {
-            $begin = $this->pagination->getPage() * $this->pagination->getPageSize() + 1;
+        if ($pagination !== false) {
+            $begin = $pagination->getPage() * $pagination->getPageSize() + 1;
 
-            $params['page'] = $this->pagination->getPage() + 1;
-            $params['pageCount'] = $this->pagination->getPageCount();
-            $params['end'] = $begin + $this->count - 1;
+            $params['page'] = $pagination->getPage() + 1;
+            $params['pageCount'] = $pagination->getPageCount();
+            $params['end'] = $begin + $count - 1;
             $params['begin'] = min($begin, $params['end']);
         }
 
@@ -71,25 +73,20 @@ class GridSummary implements Stringable
             return Yii::$app->getI18n()->format($this->message, $params, Yii::$app->language);
         }
 
-        if ($this->search?->getValue()) {
-            return match ($this->count) {
+        if ($this->grid->search?->getValue()) {
+            return match ($count) {
                 1 => Yii::t('skeleton', 'Displaying the only result matching "{search}".', $params),
                 0 => Yii::t('skeleton', 'Sorry, no results found matching matching "{search}".', $params),
-                $this->totalCount => Yii::t('skeleton', 'Displaying all {totalCount, number} results matching "{search}".', $params),
+                $totalCount => Yii::t('skeleton', 'Displaying all {totalCount, number} results matching "{search}".', $params),
                 default => Yii::t('skeleton', 'Displaying {begin, number}-{end, number} of {totalCount, number} results matching "{search}".', $params),
             };
         }
 
-        return match ($this->count) {
+        return match ($count) {
             1 => Yii::t('skeleton', 'Displaying the only record.', $params),
             0 => Yii::t('skeleton', 'Sorry, no records found.', $params),
-            $this->totalCount => Yii::t('skeleton', 'Displaying all {totalCount, number} records.', $params),
+            $totalCount => Yii::t('skeleton', 'Displaying all {totalCount, number} records.', $params),
             default => Yii::t('skeleton', 'Displaying {begin, number}-{end, number} of {totalCount, number} records.', $params),
         };
-    }
-
-    public function __toString(): string
-    {
-        return (string)$this->render();
     }
 }

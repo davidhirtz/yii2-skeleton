@@ -39,12 +39,12 @@ class TrailGridView extends GridView
     use MessageSourceTrait;
     use TypeGridViewTrait;
 
-    public array $tableAttributes = [
+    protected array $tableAttributes = [
         'class' => 'trail-table table table-striped',
     ];
 
     #[Override]
-    public function configure(): void
+    protected function configure(): void
     {
         $this->model ??= Trail::instance();
 

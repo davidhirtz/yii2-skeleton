@@ -22,7 +22,7 @@ class AccountResendConfirmActiveForm extends ActiveForm
     public array $attributes = ['class' => 'form-plain'];
     public array $excludedErrorProperties = ['email'];
     public bool $hasStickyButtons = false;
-    public string $layout = "{errors}{rows}{buttons}";
+    protected string $layout = "{errors}{rows}{buttons}";
 
     #[Override]
     protected function configure(): void
