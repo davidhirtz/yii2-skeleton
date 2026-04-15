@@ -20,7 +20,7 @@ class DataColumn extends Column
     use PropertyTrait;
 
     protected ?string $label = null;
-    protected string|null|Closure $value = null;
+    protected ?Closure $value = null;
     protected array $sortLinkAttributes = [];
     protected bool $enableSorting = true;
     protected bool $encodeLabel = true;
@@ -31,7 +31,7 @@ class DataColumn extends Column
         return $this;
     }
 
-    public function value(string|int|null|Closure $value): static
+    public function value(?Closure $value): static
     {
         $this->value = $value;
         return $this;
@@ -57,7 +57,7 @@ class DataColumn extends Column
         }
 
         $label = $this->label
-            ?? $this->grid->model->getAttributeLabel($this->property)
+            ?? current($this->grid->provider->getModels())?->getAttributeLabel($this->property)
             ?: Inflector::camel2words($this->property);
 
         if ($this->encodeLabel) {
@@ -88,11 +88,8 @@ class DataColumn extends Column
 
     protected function getValue(array|Model $model, string|int $key, int $index): mixed
     {
-        if ($this->value instanceof Closure) {
-            return call_user_func($this->value, $model, $key, $index, $this);
-        }
-
-        $key = $this->value ?? $this->property ?? null;
-        return $key ? ArrayHelper::getValue($model, $this->value ?? $this->property) : null;
+        return $this->value instanceof Closure
+            ? ($this->value)($model, $key, $index, $this)
+            : ArrayHelper::getValue($model, $this->property);
     }
 }

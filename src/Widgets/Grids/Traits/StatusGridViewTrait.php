@@ -46,6 +46,8 @@ trait StatusGridViewTrait
 
     protected function getStatusDropdownItems(): array
     {
-        return array_map(fn ($options) => $options['plural'] ?? $options['name'], $this->model::getStatuses());
+        // todo
+        return [];
+//        return array_map(fn ($options) => $options['plural'] ?? $options['name'], $this->model::getStatuses());
     }
 }

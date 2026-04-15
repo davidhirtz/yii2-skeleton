@@ -21,10 +21,10 @@ class Column
     use VisibilityTrait;
 
     protected string|false|null $header = null;
+    protected ?array $headerAttributes = null;
 
     public string|Stringable|Closure|null $content = null;
     public array|null|Closure $contentAttributes = null;
-    public ?array $headerAttributes = null;
     public string $emptyCell = '&nbsp;';
 
     public function content(string|Closure|null $content): static
@@ -84,8 +84,8 @@ class Column
     public function renderHeader(): Th
     {
         return Th::make()
-            ->content($this->getHeaderContent())
-            ->attributes($this->headerAttributes ?? []);
+            ->attributes($this->headerAttributes ?? [])
+            ->content($this->getHeaderContent());
     }
 
     protected function getHeaderContent(): string|Stringable

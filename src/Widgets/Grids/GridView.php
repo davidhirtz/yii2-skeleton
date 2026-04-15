@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Widgets\Grids;
 use Closure;
 use Hirtz\Skeleton\Assets\SortableAssetBundle;
 use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
+use Hirtz\Skeleton\Data\ActiveDataProvider;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Helpers\ArrayHelper;
 use Hirtz\Skeleton\Helpers\Url;
@@ -30,23 +31,26 @@ use Override;
 use Stringable;
 use Yii;
 use yii\base\Model;
-use yii\data\ActiveDataProvider;
-use yii\data\ArrayDataProvider;
 use yii\helpers\Inflector;
 
 /**
- * @template T of Model
- * @property T|null $model
+ * @template TModel of Model|null
+ * @template TProvider of ActiveDataProvider
  */
 class GridView extends Widget
 {
     use ContainerConfigurationTrait;
 
     /**
-     * @use ModelTrait<T|null>
+     * @use ModelTrait<TModel>
      */
     use ModelTrait;
+
+    /**
+     * @use ProviderTrait<TProvider>
+     */
     use ProviderTrait;
+
     use TagAttributesTrait;
     use TagIdTrait;
 
@@ -67,10 +71,11 @@ class GridView extends Widget
     protected ?array $header = null;
     protected array $headerAttributes = ['class' => 'grid-header'];
 
-    public array $headerRowAttributes = [];
     protected array $tableAttributes = ['class' => 'table table-striped table-hover'];
+    protected array $tableHeaderAttributes = [];
     protected array $tableBodyAttributes = [];
-    protected array|Closure $rowAttributes;
+
+    protected array|Closure|null $rowAttributes = null;
 
     protected array $pagerOptions = [];
     protected bool $showOnEmpty = true;
@@ -96,13 +101,10 @@ class GridView extends Widget
         $this->headerAttributes['hx-target'] ??= $this->headerAttributes['hx-select'];
         $this->headerAttributes['hx-boost'] ??= 'true';
 
-        $this->headerRowAttributes['hx-select'] ??= "#{$this->getId()} table";
-        $this->headerRowAttributes['hx-target'] ??= $this->headerRowAttributes['hx-select'];
-        $this->headerRowAttributes['hx-boost'] ??= 'true';
+        $this->tableHeaderAttributes['hx-select'] ??= "#{$this->getId()} table";
+        $this->tableHeaderAttributes['hx-target'] ??= $this->tableHeaderAttributes['hx-select'];
+        $this->tableHeaderAttributes['hx-boost'] ??= 'true';
 
-        $this->rowAttributes ??= [];
-
-        $this->model ??= $this->getModelFromProvider();
         $this->columns ??= $this->getDefaultColumns();
 
         $this->ensureColumns();
@@ -197,7 +199,7 @@ class GridView extends Widget
 
     protected function getTableHeader(): Thead
     {
-        $tr = Tr::make()->attributes($this->headerRowAttributes);
+        $tr = Tr::make()->attributes($this->tableHeaderAttributes);
 
         foreach ($this->columns as $column) {
             $tr->addCells($column->renderHeader());
@@ -229,8 +231,8 @@ class GridView extends Widget
     protected function getTableRow(mixed $model, int|string $key, int $index): Tr
     {
         $attributes = $this->rowAttributes instanceof Closure
-            ? call_user_func($this->rowAttributes, $model, $key, $index, $this)
-            : $this->rowAttributes;
+            ? ($this->rowAttributes)($model, $key, $index, $this)
+            : $this->rowAttributes ?? [];
 
         if ($model instanceof ActiveRecord) {
             $attributes['id'] ??= implode('-', [
@@ -239,8 +241,7 @@ class GridView extends Widget
             ]);
         }
 
-        $tr = Tr::make()
-            ->attributes($attributes);
+        $tr = Tr::make()->attributes($attributes);
 
         foreach ($this->columns as $column) {
             $tr->addCells($column->renderBody($model, $key, $index));
@@ -272,29 +273,29 @@ class GridView extends Widget
             : $this->footer;
     }
 
-    /**
-     * @return T|null
-     */
-    protected function getModelFromProvider(): ?Model
-    {
-        if ($this->provider instanceof ActiveDataProvider) {
-            /** @var class-string<ActiveRecord>|null $modelClass */
-            $modelClass = $this->provider->query->modelClass ?? null;
-        }
-
-        $modelClass ??= $this->provider instanceof ArrayDataProvider
-            ? $this->provider->modelClass
-            : null;
-
-        if ($modelClass) {
-            return $modelClass::instance();
-        }
-
-        $models = $this->provider->getModels();
-        $model = reset($models);
-
-        return $model instanceof Model ? $model : null;
-    }
+    //    /**
+    //     * @return T|null
+    //     */
+    //    protected function getModelFromProvider(): ?Model
+    //    {
+    //        if ($this->provider instanceof ActiveDataProvider) {
+    //            /** @var class-string<ActiveRecord>|null $modelClass */
+    //            $modelClass = $this->provider->query->modelClass ?? null;
+    //        }
+    //
+    //        $modelClass ??= $this->provider instanceof ArrayDataProvider
+    //            ? $this->provider->modelClass
+    //            : null;
+    //
+    //        if ($modelClass) {
+    //            return $modelClass::instance();
+    //        }
+    //
+    //        $models = $this->provider->getModels();
+    //        $model = reset($models);
+    //
+    //        return $model instanceof Model ? $model : null;
+    //    }
 
     protected function isSortable(): bool
     {

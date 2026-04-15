@@ -34,8 +34,6 @@ class UserGridView extends GridView
     #[Override]
     public function configure(): void
     {
-        $this->model ??= User::instance();
-
         $this->attributes['id'] ??= 'user-grid';
 
         $this->header ??= [
