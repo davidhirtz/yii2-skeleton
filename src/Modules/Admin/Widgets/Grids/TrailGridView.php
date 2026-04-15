@@ -17,7 +17,7 @@ use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Data\TrailActiveDataProvider;
-use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\PropertyColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Hirtz\Skeleton\Widgets\Grids\Traits\MessageSourceTrait;
@@ -64,9 +64,9 @@ class TrailGridView extends GridView
         parent::configure();
     }
 
-    protected function getModelColumn(): DataColumn
+    protected function getModelColumn(): PropertyColumn
     {
-        return DataColumn::make()
+        return PropertyColumn::make()
             ->property('model')
             ->headerAttributes(['class' => 'trail-model-col'])
             ->content($this->getModelColumnContent(...))
@@ -100,9 +100,9 @@ class TrailGridView extends GridView
         return '';
     }
 
-    protected function getDataColumn(): DataColumn
+    protected function getDataColumn(): PropertyColumn
     {
-        return DataColumn::make()
+        return PropertyColumn::make()
             ->property('data')
             ->content($this->getDataColumnContent(...));
     }
@@ -309,9 +309,9 @@ class TrailGridView extends GridView
         return trim($message . ' ' . $this->renderDataTrailLink($trail));
     }
 
-    protected function getUserColumn(): DataColumn
+    protected function getUserColumn(): PropertyColumn
     {
-        return DataColumn::make()
+        return PropertyColumn::make()
             ->property('user_id')
             ->content($this->getUserColumnContent(...))
             ->visible(!$this->provider->user)

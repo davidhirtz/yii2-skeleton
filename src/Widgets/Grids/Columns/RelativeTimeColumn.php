@@ -11,8 +11,13 @@ use yii\base\Model;
 
 class RelativeTimeColumn extends LinkColumn
 {
-    public array|null|Closure $contentAttributes = ['class' => 'text-nowrap'];
-    protected string $format = 'raw';
+    protected array|null|Closure $contentAttributes = ['class' => 'text-nowrap'];
+
+    public function __construct(array $config = [])
+    {
+        $this->format ??= 'raw';
+        parent::__construct($config);
+    }
 
     #[Override]
     protected function getValue(array|Model $model, string|int $key, int $index): string

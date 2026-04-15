@@ -10,7 +10,7 @@ use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\DeleteGridButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\ViewGridButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
-use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\PropertyColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\LinkColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
@@ -55,9 +55,9 @@ class LogFileGridView extends GridView
             ->contentAttributes(['class' => 'strong']);
     }
 
-    protected function getSizeColumn(): DataColumn
+    protected function getSizeColumn(): PropertyColumn
     {
-        return DataColumn::make()
+        return PropertyColumn::make()
             ->property('size')
             ->header(Yii::t('skeleton', 'File Size'))
             ->format('shortSize');

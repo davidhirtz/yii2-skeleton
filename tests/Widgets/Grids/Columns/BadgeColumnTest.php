@@ -16,9 +16,7 @@ class BadgeColumnTest extends TestCase
 {
     public function testDefaultOptions(): void
     {
-        $model = new class () extends Model {
-            public ?int $count = 100;
-        };
+        $model = new TestModel(count: 100);
 
         $column = $this->createCounterColumn();
 
@@ -48,13 +46,10 @@ class BadgeColumnTest extends TestCase
         $controller = new Controller('test', Yii::$app);
         Yii::$app->controller = $controller;
 
-        $model = new class () extends Model {
-            public int $id = 1;
-            public int $count = 10;
-        };
+        $model = new TestModel(count: 10);
 
         $column = $this->createCounterColumn()
-            ->url(fn ($model) => ['view', 'id' => $model->id]);
+            ->url(fn (TestModel $model) => ['view', 'id' => $model->id]);
 
         $expects = '<td class="text-center"><a class="badge" href="/test/view?id=1">10</a></td>';
         self::assertEquals($expects, (string)$column->renderBody($model, 0, 0));
@@ -65,5 +60,15 @@ class BadgeColumnTest extends TestCase
         return BadgeColumn::make()
             ->property('count')
             ->grid(GridView::make());
+    }
+}
+
+class TestModel extends Model
+{
+    public function __construct(
+        public int $id = 1,
+        public ?int $count = null,
+    ) {
+        parent::__construct();
     }
 }

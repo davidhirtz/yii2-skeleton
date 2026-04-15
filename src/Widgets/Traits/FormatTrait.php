@@ -9,9 +9,9 @@ use Yii;
 
 trait FormatTrait
 {
-    protected string $format = 'text';
+    protected ?string $format = null;
 
-    public function format(string $format): static
+    public function format(?string $format): static
     {
         $this->format = $format;
         return $this;
@@ -19,6 +19,6 @@ trait FormatTrait
 
     protected function formatValue(mixed $value): string|Stringable
     {
-        return Yii::$app->getFormatter()->format($value, $this->format);
+        return Yii::$app->getFormatter()->format($value, $this->format ?? 'text');
     }
 }

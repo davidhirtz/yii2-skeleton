@@ -37,7 +37,7 @@ trait TagLinkTrait
         ]);
     }
 
-    public function target(string $target): static
+    public function target(?string $target): static
     {
         return $this->attribute('target', $target);
     }

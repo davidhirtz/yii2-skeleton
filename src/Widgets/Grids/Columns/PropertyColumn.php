@@ -14,7 +14,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
 
-class DataColumn extends Column
+class PropertyColumn extends Column
 {
     use FormatTrait;
     use PropertyTrait;
@@ -40,12 +40,6 @@ class DataColumn extends Column
     public function enableSorting(bool $enableSorting): static
     {
         $this->enableSorting = $enableSorting;
-        return $this;
-    }
-
-    public function sortLinkAttributes(array $attributes): static
-    {
-        $this->sortLinkAttributes = $attributes;
         return $this;
     }
 
@@ -88,8 +82,10 @@ class DataColumn extends Column
 
     protected function getValue(array|Model $model, string|int $key, int $index): mixed
     {
-        return $this->value instanceof Closure
-            ? ($this->value)($model, $key, $index, $this)
-            : ArrayHelper::getValue($model, $this->property);
+        if ($this->value instanceof Closure) {
+            return ($this->value)($model, $key, $index, $this);
+        }
+
+        return $this->property ? ArrayHelper::getValue($model, $this->property) : null;
     }
 }

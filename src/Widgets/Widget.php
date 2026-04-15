@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Widgets;
 
 use Closure;
 use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
+use Hirtz\Skeleton\Base\Traits\EvaluateClosureTrait;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Traits\ConfigureAttributesTrait;
 use Stringable;
@@ -19,6 +20,7 @@ abstract class Widget implements Stringable, ViewContextInterface
 {
     use ContainerConfigurationTrait;
     use ConfigureAttributesTrait;
+    use EvaluateClosureTrait;
 
     protected View $view;
     protected ?string $viewPath = null;
@@ -26,7 +28,7 @@ abstract class Widget implements Stringable, ViewContextInterface
     /**
      * @var Closure[]
      */
-    private array $callbacks = [];
+    private array $configureClosures = [];
     private ?string $html = null;
 
     /**
@@ -49,12 +51,12 @@ abstract class Widget implements Stringable, ViewContextInterface
     }
 
     /**
-     * @param Closure(static):void $callback
+     * @param Closure(static): (void|static) $callback
      * @return $this
      */
     public function prepare(Closure $callback): static
     {
-        $this->callbacks[] = $callback;
+        $this->configureClosures[] = $callback;
         return $this;
     }
 
@@ -71,10 +73,7 @@ abstract class Widget implements Stringable, ViewContextInterface
     protected function configure(): void
     {
         $this->configureAttributes();
-
-        foreach ($this->callbacks as $callback) {
-            ($callback)($this);
-        }
+        $this->evaluate($this->configureClosures, $this);
     }
 
     final public function __toString(): string

@@ -7,17 +7,17 @@ namespace Hirtz\Skeleton\Widgets\Traits;
 use yii\data\DataProviderInterface;
 
 /**
- * @template T of DataProviderInterface|null
+ * @template TProvider of DataProviderInterface|null
  */
 trait ProviderTrait
 {
     /**
-     * @var T
+     * @var TProvider
      */
     public ?DataProviderInterface $provider = null;
 
     /**
-     * @param T $provider
+     * @param TProvider $provider
      */
     public function provider(?DataProviderInterface $provider): static
     {

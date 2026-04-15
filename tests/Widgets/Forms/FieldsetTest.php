@@ -90,21 +90,20 @@ class FieldsetTest extends TestCase
     {
         $model = TestActiveRecord::findOne(1);
 
-        $content = Fieldset::make()
+        $fieldset = Fieldset::make()
             ->model($model)
             ->rows([
                 InputField::make()
                     ->property('name')
                     ->model($model)
                     ->prepare(fn (InputField $field) => $field->value($field->language)),
-            ])
-            ->render();
+            ]);
 
         $expected = '<div class="form-group form-row" data-id="testactiverecord-name"><div class="form-label"><label class="label" for="testactiverecord-name">Name</label></div><div class="form-content"><input type="text" id="testactiverecord-name" class="input" name="TestActiveRecord[name]" value="en-US" maxlength="255" required></div></div>';
-        self::assertStringContainsString($expected, $content);
+        self::assertStringContainsString($expected, $fieldset->render());
 
         $expected = '<div class="form-group form-row" data-id="testactiverecord-name-de"><div class="form-label"><label class="label" for="testactiverecord-name-de">Name (DE)</label></div><div class="form-content"><input type="text" id="testactiverecord-name-de" class="input" name="TestActiveRecord[name_de]" value="de" maxlength="255" required></div></div>';
-        self::assertStringContainsString($expected, $content);
+        self::assertStringContainsString($expected, $fieldset->render());
     }
 }
 

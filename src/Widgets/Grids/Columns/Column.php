@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Html\Th;
 use Hirtz\Skeleton\Widgets\Grids\Traits\GridTrait;
 use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Stringable;
+use Yii;
 use yii\base\Model;
 use yii\helpers\Html;
 
@@ -23,11 +24,18 @@ class Column
     protected string|false|null $header = null;
     protected ?array $headerAttributes = null;
 
-    public string|Stringable|Closure|null $content = null;
-    public array|null|Closure $contentAttributes = null;
-    public string $emptyCell = '&nbsp;';
+    protected ?Closure $content = null;
+    protected array|null|Closure $contentAttributes = null;
+    protected string $emptyCell = '&nbsp;';
 
-    public function content(string|Closure|null $content): static
+    public function __construct(array $config = [])
+    {
+        if ($config) {
+            Yii::configure($this, $config);
+        }
+    }
+
+    public function content(Closure|null $content): static
     {
         $this->content = $content;
         return $this;

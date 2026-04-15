@@ -12,7 +12,7 @@ use Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\UserCreateButton;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
-use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\PropertyColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridSearchForm;
@@ -65,7 +65,7 @@ class UserGridView extends GridView
 
     protected function getNameColumn(): Column
     {
-        return DataColumn::make()
+        return PropertyColumn::make()
             ->property('name')
             ->content($this->getNameColumnContent(...));
     }
@@ -80,12 +80,12 @@ class UserGridView extends GridView
                 ->content(Yii::t('skeleton', 'User'))
                 ->class('text-muted');
 
-        return $this->$this->canUpdateUser($user) ? A::make()->content($name)->href($user->getAdminRoute()) : $name;
+        return $this->canUpdateUser($user) ? A::make()->content($name)->href($user->getAdminRoute()) : $name;
     }
 
     protected function getEmailColumn(): Column
     {
-        return DataColumn::make()
+        return PropertyColumn::make()
             ->property('email')
             ->content($this->getEmailColumnContent(...))
             ->hiddenForSmallDevices();
@@ -105,14 +105,14 @@ class UserGridView extends GridView
         return $link;
     }
 
-    protected function getLastLoginColumn(): DataColumn
+    protected function getLastLoginColumn(): PropertyColumn
     {
         return RelativeTimeColumn::make()
             ->property('last_login')
             ->url(fn (User $user) => ['/admin/login/index', 'user' => $user->id]);
     }
 
-    protected function getCreatedAtColumn(): DataColumn
+    protected function getCreatedAtColumn(): PropertyColumn
     {
         return RelativeTimeColumn::make()
             ->property('created_at')
@@ -147,7 +147,7 @@ class UserGridView extends GridView
         return [];
     }
 
-    protected function canUpdateUser(User $user): array|false
+    protected function canUpdateUser(User $user): bool
     {
         return $this->webuser->can(User::AUTH_USER_UPDATE, ['user' => $user]);
     }

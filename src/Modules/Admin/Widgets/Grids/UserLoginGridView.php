@@ -6,7 +6,7 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Models\UserLogin;
-use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\PropertyColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\LinkColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
@@ -38,7 +38,7 @@ class UserLoginGridView extends GridView
                 ->content(fn (UserLogin $login): Stringable => Username::make()
                     ->user($login->user))
                 ->url(fn (UserLogin $login): array => ['view', 'user' => $login->user_id]),
-            DataColumn::make()
+            PropertyColumn::make()
                 ->property('browser')
                 ->hiddenForSmallDevices(),
             RelativeTimeColumn::make()

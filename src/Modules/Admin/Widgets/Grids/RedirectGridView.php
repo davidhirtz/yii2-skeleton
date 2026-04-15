@@ -14,7 +14,7 @@ use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\DeleteGridButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\ViewGridButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\CheckboxColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
-use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\PropertyColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridFooter;
@@ -103,7 +103,7 @@ class RedirectGridView extends GridView
 
     protected function getRequestUriColumn(): ?Column
     {
-        return DataColumn::make()
+        return PropertyColumn::make()
             ->property('request_uri')
             ->content(fn (Redirect $redirect): Stringable => A::make()
                 ->content($this->search->markKeywords($redirect->request_uri))
@@ -112,7 +112,7 @@ class RedirectGridView extends GridView
 
     protected function getUrlColumn(): ?Column
     {
-        return DataColumn::make()
+        return PropertyColumn::make()
             ->property('url')
             ->content(fn (Redirect $redirect) => Link::make()
                 ->icon('external-link-alt')

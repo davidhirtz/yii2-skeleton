@@ -13,7 +13,7 @@ use yii\base\Model;
 
 class ButtonColumn extends Column
 {
-    public array|null|Closure $contentAttributes = [
+    protected array|null|Closure $contentAttributes = [
         'class' => 'text-end',
     ];
 

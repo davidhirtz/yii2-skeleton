@@ -48,7 +48,7 @@ class InputField extends Field
     #[Override]
     protected function renderContent(): string|Stringable
     {
-        if ('hidden' === ($this->attributes['type'] ?? null)) {
+        if (($this->attributes['type'] ?? null) === 'hidden') {
             return $this->getInput();
         }
 

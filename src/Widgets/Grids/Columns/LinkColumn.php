@@ -5,26 +5,47 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Grids\Columns;
 
 use Closure;
+use Hirtz\Skeleton\Base\Traits\EvaluateClosureTrait;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
 use Override;
 use Stringable;
 use yii\base\Model;
 
-class LinkColumn extends DataColumn
+class LinkColumn extends PropertyColumn
 {
-    protected array $linkAttributes = [];
+    use EvaluateClosureTrait;
+
     protected ?Closure $url = null;
 
-    public function linkAttributes(array $attributes): static
+    protected ?string $target = null;
+
+    /**
+     * @var Closure(A|Div):(string|Stringable)[]|null
+     */
+    private ?array $linkClosures = null;
+
+    public function blank(): static
     {
-        $this->linkAttributes = $attributes;
+        $this->target('_blank');
         return $this;
     }
 
     /**
-     * @param Closure(Model, int, int, self):(array|null|string|false) $url
+     * @param Closure(A|Div):(string|Stringable) $closure
      */
+    public function link(Closure $closure): static
+    {
+        $this->linkClosures[] = $closure;
+        return $this;
+    }
+
+    public function target(?string $target): static
+    {
+        $this->target = $target;
+        return $this;
+    }
+
     public function url(Closure $url): static
     {
         $this->url = $url;
@@ -43,16 +64,14 @@ class LinkColumn extends DataColumn
         $href = $this->url ? ($this->url)($model, $key, $index, $this) : null;
 
         if ($href) {
-            return A::make()
-                ->attributes($this->linkAttributes)
+            return $this->evaluate($this->linkClosures, A::make()
                 ->content($content)
-                ->href($href);
+                ->href($href)
+                ->target($this->target));
         }
 
-        return $this->linkAttributes
-            ? Div::make()
-                ->attributes($this->linkAttributes)
-                ->content($content)
+        return $this->linkClosures
+            ? $this->evaluate($this->linkClosures, Div::make()->content($content))
             : $content;
     }
 }

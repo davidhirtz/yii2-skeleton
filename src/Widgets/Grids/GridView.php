@@ -7,7 +7,6 @@ namespace Hirtz\Skeleton\Widgets\Grids;
 use Closure;
 use Hirtz\Skeleton\Assets\SortableAssetBundle;
 use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
-use Hirtz\Skeleton\Data\ActiveDataProvider;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Helpers\ArrayHelper;
 use Hirtz\Skeleton\Helpers\Url;
@@ -20,7 +19,7 @@ use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
 use Hirtz\Skeleton\Web\User;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
-use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\PropertyColumn;
 use Hirtz\Skeleton\Widgets\Grids\Pagers\LinkPager;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridFooter;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridHeader;
@@ -30,25 +29,13 @@ use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
 use Yii;
-use yii\base\Model;
 use yii\helpers\Inflector;
 
-/**
- * @template TModel of Model|null
- * @template TProvider of ActiveDataProvider
- */
 class GridView extends Widget
 {
     use ContainerConfigurationTrait;
 
-    /**
-     * @use ModelTrait<TModel>
-     */
     use ModelTrait;
-
-    /**
-     * @use ProviderTrait<TProvider>
-     */
     use ProviderTrait;
 
     use TagAttributesTrait;
@@ -118,7 +105,7 @@ class GridView extends Widget
 
         foreach ($this->columns as $i => &$column) {
             if (is_string($column)) {
-                $column = DataColumn::make()
+                $column = PropertyColumn::make()
                     ->property($column);
             }
 
