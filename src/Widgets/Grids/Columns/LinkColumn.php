@@ -22,6 +22,9 @@ class LinkColumn extends DataColumn
         return $this;
     }
 
+    /**
+     * @param Closure(Model, int, int, self):(array|null|string|false) $url
+     */
     public function url(Closure $url): static
     {
         $this->url = $url;
@@ -37,7 +40,7 @@ class LinkColumn extends DataColumn
             return $content;
         }
 
-        $href = $this->url ? call_user_func($this->url, $model, $key, $index, $this) : null;
+        $href = $this->url ? ($this->url)($model, $key, $index, $this) : null;
 
         if ($href) {
             return A::make()

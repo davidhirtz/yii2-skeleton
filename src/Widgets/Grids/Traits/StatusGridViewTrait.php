@@ -23,7 +23,8 @@ trait StatusGridViewTrait
             ->property('status')
             ->header(false)
             ->content($this->getStatusIcon(...))
-            ->url(fn ($model) => $this->getRoute($model))
+            // todo
+//            ->url(fn ($model) => $model)
             ->centered();
     }
 

@@ -28,7 +28,6 @@ use Override;
 use Stringable;
 use Yii;
 use yii\base\Model;
-use yii\db\ActiveRecordInterface;
 
 /**
  * @extends GridView<Trail>
@@ -366,12 +365,6 @@ class TrailGridView extends GridView
         return RelativeTimeColumn::make()
             ->property('created_at')
             ->hiddenForSmallDevices();
-    }
-
-    #[Override]
-    protected function getRoute(ActiveRecordInterface $model, array $params = []): array|false
-    {
-        return ['index', 'id' => $model->getPrimaryKey()];
     }
 
     protected function getTrailModelRoute(Trail $trail): ?array

@@ -32,7 +32,6 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
-use yii\db\ActiveRecordInterface;
 use yii\helpers\Inflector;
 
 /**
@@ -42,6 +41,10 @@ use yii\helpers\Inflector;
 class GridView extends Widget
 {
     use ContainerConfigurationTrait;
+
+    /**
+     * @use ModelTrait<T|null>
+     */
     use ModelTrait;
     use ProviderTrait;
     use TagAttributesTrait;
@@ -291,11 +294,6 @@ class GridView extends Widget
         $model = reset($models);
 
         return $model instanceof Model ? $model : null;
-    }
-
-    protected function getRoute(ActiveRecordInterface $model, array $params = []): array|false
-    {
-        return ['update', 'id' => $model->getPrimaryKey(), ...$params];
     }
 
     protected function isSortable(): bool

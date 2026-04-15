@@ -314,9 +314,9 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
         $this->password_reset_token = Yii::$app->getSecurity()->generateRandomString();
     }
 
-    public function getAdminRoute(): array|false
+    public function getAdminRoute(): array
     {
-        return $this->id ? ['/admin/user/update', 'id' => $this->id] : false;
+        return $this->id ? ['/admin/user/update', 'id' => $this->id] : ['/admin/user/index'];
     }
 
     public function getAuthKey(): ?string

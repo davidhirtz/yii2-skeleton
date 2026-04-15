@@ -21,7 +21,6 @@ use Hirtz\Skeleton\Widgets\Link;
 use Override;
 use Stringable;
 use Yii;
-use yii\db\ActiveRecordInterface;
 
 /**
  * @template T of User
@@ -83,9 +82,7 @@ class UserGridView extends GridView
                 ->content(Yii::t('skeleton', 'User'))
                 ->class('text-muted');
 
-        $route = $this->getRoute($user);
-
-        return $route ? A::make()->content($name)->href($route) : $name;
+        return $this->$this->canUpdateUser($user) ? A::make()->content($name)->href($user->getAdminRoute()) : $name;
     }
 
     protected function getEmailColumn(): Column
@@ -132,10 +129,10 @@ class UserGridView extends GridView
 
     protected function getButtonColumnContent(User $user): array|string
     {
-        if ($route = $this->getRoute($user)) {
+        if ($this->canUpdateUser($user)) {
             return Button::make()
                 ->primary()
-                ->href($route)
+                ->href($user->getAdminRoute())
                 ->icon('wrench')
                 ->render();
         }
@@ -152,14 +149,8 @@ class UserGridView extends GridView
         return [];
     }
 
-    /**
-     * @param T $model
-     */
-    #[Override]
-    protected function getRoute(ActiveRecordInterface $model, array $params = []): array|false
+    protected function canUpdateUser(User $user): array|false
     {
-        return $this->webuser->can(User::AUTH_USER_UPDATE, ['user' => $model])
-            ? ['/admin/user/update', 'id' => $model->id, ...$params]
-            : false;
+        return $this->webuser->can(User::AUTH_USER_UPDATE, ['user' => $user]);
     }
 }
