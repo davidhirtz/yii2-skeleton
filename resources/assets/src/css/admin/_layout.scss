@@ -14,8 +14,8 @@
 }
 
 .container {
-  margin-inline: auto;
-  width: min(100%, 100rem);
+  //margin-inline: auto;
+  //width: min(100%, 100rem);
 
   @include media-breakpoint-up(md) {
     padding: 1rem;

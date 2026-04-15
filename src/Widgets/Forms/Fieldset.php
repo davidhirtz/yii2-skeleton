@@ -18,7 +18,7 @@ use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
 use Hirtz\Skeleton\Widgets\Forms\Fields\SelectField;
 use Hirtz\Skeleton\Widgets\Forms\Fields\TinyMceField;
 use Hirtz\Skeleton\Widgets\Forms\Traits\FormWidgetTrait;
-use Hirtz\Skeleton\Widgets\Traits\ModelWidgetTrait;
+use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
@@ -32,7 +32,7 @@ class Fieldset extends Widget
     use FormWidgetTrait;
     use TagAttributesTrait;
     use TagIdTrait;
-    use ModelWidgetTrait;
+    use ModelTrait;
 
     /**
      * @var Stringable[]|string[]

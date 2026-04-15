@@ -6,7 +6,7 @@ namespace Hirtz\Skeleton\Widgets\Grids\Columns;
 
 use Closure;
 use Hirtz\Skeleton\Widgets\Traits\FormatTrait;
-use Hirtz\Skeleton\Widgets\Traits\PropertyWidgetTrait;
+use Hirtz\Skeleton\Widgets\Traits\PropertyTrait;
 use Override;
 use Stringable;
 use yii\base\Model;
@@ -17,7 +17,7 @@ use yii\helpers\Inflector;
 class DataColumn extends Column
 {
     use FormatTrait;
-    use PropertyWidgetTrait;
+    use PropertyTrait;
 
     protected ?string $label = null;
     protected string|null|Closure $value = null;

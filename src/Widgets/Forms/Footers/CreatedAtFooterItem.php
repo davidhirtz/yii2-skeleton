@@ -8,14 +8,14 @@ use DateTimeInterface;
 use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
 use Hirtz\Skeleton\Html\Custom\RelativeTime;
 use Hirtz\Skeleton\Html\Li;
-use Hirtz\Skeleton\Widgets\Traits\ModelWidgetTrait;
+use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Stringable;
 use Yii;
 
 class CreatedAtFooterItem implements Stringable
 {
     use ContainerConfigurationTrait;
-    use ModelWidgetTrait;
+    use ModelTrait;
 
     protected string $attributeName = 'created_at';
     protected DateTimeInterface|int|string|null $value = null;

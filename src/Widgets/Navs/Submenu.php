@@ -48,10 +48,10 @@ class Submenu extends Widget
     #[Override]
     protected function renderContent(): string|Stringable
     {
-        return $this->renderHeader() . $this->renderNav();
+        return $this->getHeader() . $this->getNav();
     }
 
-    protected function renderHeader(): ?Stringable
+    protected function getHeader(): ?Stringable
     {
         $header = $this->header instanceof Header
             ? $this->header
@@ -62,7 +62,7 @@ class Submenu extends Widget
         return $this->header instanceof Closure ? ($this->header)($header) : $header;
     }
 
-    protected function renderNav(): ?Stringable
+    protected function getNav(): ?Stringable
     {
         return $this->items
             ? Container::make()

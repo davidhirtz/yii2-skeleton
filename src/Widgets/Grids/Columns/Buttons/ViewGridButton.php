@@ -7,7 +7,7 @@ namespace Hirtz\Skeleton\Widgets\Grids\Columns\Buttons;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Traits\IconTextTrait;
 use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
-use Hirtz\Skeleton\Widgets\Traits\ModelWidgetTrait;
+use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
@@ -16,7 +16,7 @@ use yii\db\ActiveRecordInterface;
 
 class ViewGridButton extends Widget
 {
-    use ModelWidgetTrait;
+    use ModelTrait;
     use UrlTrait;
     use IconTextTrait;
     use LabelTrait;

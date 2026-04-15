@@ -12,7 +12,7 @@ use Hirtz\Skeleton\Html\Traits\TagIdTrait;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
 use Hirtz\Skeleton\Widgets\Forms\Footers\FormFooter;
-use Hirtz\Skeleton\Widgets\Traits\ModelWidgetTrait;
+use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
@@ -25,7 +25,7 @@ class ActiveForm extends Widget
 {
     use TagAttributesTrait;
     use TagIdTrait;
-    use ModelWidgetTrait;
+    use ModelTrait;
 
     public array|string|false|null $action = null;
 

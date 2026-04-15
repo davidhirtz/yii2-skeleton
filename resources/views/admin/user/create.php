@@ -16,10 +16,8 @@ use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserSubmenu;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Forms\FormContainer;
 
-$this->title(Yii::t('skeleton', 'Create New User'))
-    ->addBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
-
-echo UserSubmenu::make();
+echo UserSubmenu::make()
+    ->title(Yii::t('skeleton', 'Create New User'));
 
 echo FormContainer::make()
     ->title($this->title)

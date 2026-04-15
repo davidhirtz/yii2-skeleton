@@ -23,7 +23,7 @@ use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Pagers\LinkPager;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridFooter;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridHeader;
-use Hirtz\Skeleton\Widgets\Traits\ModelWidgetTrait;
+use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Hirtz\Skeleton\Widgets\Traits\ProviderTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
@@ -42,7 +42,7 @@ use yii\helpers\Inflector;
 class GridView extends Widget
 {
     use ContainerConfigurationTrait;
-    use ModelWidgetTrait;
+    use ModelTrait;
     use ProviderTrait;
     use TagAttributesTrait;
     use TagIdTrait;
@@ -148,8 +148,9 @@ class GridView extends Widget
 
     protected function getHeader(): ?GridHeader
     {
-        $header = is_array($this->header) ? GridHeader::make()->content(...$this->header) : $this->header;
-        return $header?->attributes($this->headerAttributes);
+        return is_array($this->header)
+            ? GridHeader::make()->attributes($this->headerAttributes)->content(...$this->header)
+            : $this->header;
     }
 
     protected function getSummary(): ?GridSummary
@@ -263,8 +264,9 @@ class GridView extends Widget
 
     protected function getFooter(): ?GridFooter
     {
-        $footer = is_array($this->footer) ? GridFooter::make()->content(...$this->footer) : $this->footer;
-        return $footer?->attributes($this->footerAttributes);
+        return is_array($this->footer)
+            ? GridFooter::make()->attributes($this->footerAttributes)->content(...$this->footer)
+            : $this->footer;
     }
 
     /**

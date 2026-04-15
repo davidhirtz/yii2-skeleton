@@ -14,7 +14,7 @@ trait ProviderTrait
     /**
      * @var T
      */
-    public ?DataProviderInterface $provider;
+    public ?DataProviderInterface $provider = null;
 
     /**
      * @param T $provider

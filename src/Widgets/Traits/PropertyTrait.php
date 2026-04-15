@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Traits;
 
-trait PropertyWidgetTrait
+trait PropertyTrait
 {
     public ?string $property = null;
 

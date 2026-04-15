@@ -8,14 +8,14 @@ use Hirtz\Skeleton\Models\Forms\DeleteForm;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
 use Hirtz\Skeleton\Widgets\Modal;
-use Hirtz\Skeleton\Widgets\Traits\PropertyWidgetTrait;
+use Hirtz\Skeleton\Widgets\Traits\PropertyTrait;
 use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
 use Override;
 use Yii;
 
 class DeleteActiveForm extends ActiveForm
 {
-    use PropertyWidgetTrait;
+    use PropertyTrait;
     use LabelTrait;
 
     public array $inputAttributes = ['autocomplete' => 'off'];

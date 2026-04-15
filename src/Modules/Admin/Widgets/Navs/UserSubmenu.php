@@ -6,15 +6,32 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Data\UserActiveDataProvider;
+use Hirtz\Skeleton\Widgets\Attributes\Configure;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Hirtz\Skeleton\Widgets\Navs\Submenu;
-use Hirtz\Skeleton\Widgets\Traits\UserWidgetTrait;
+use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
+use Hirtz\Skeleton\Widgets\Traits\ProviderTrait;
 use Override;
 use Yii;
 
 class UserSubmenu extends Submenu
 {
-    use UserWidgetTrait;
+    /**
+     * @use ModelTrait<User|null>
+     */
+    use ModelTrait;
+
+    /**
+     * @use ProviderTrait<UserActiveDataProvider|null>
+     */
+    use ProviderTrait;
+
+    #[Configure]
+    protected function setDefaults(): void
+    {
+
+    }
 
     #[Override]
     protected function renderContent(): string

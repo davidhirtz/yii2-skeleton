@@ -22,12 +22,9 @@ echo UserSubmenu::make()
     ->user($form->user);
 
 echo FormContainer::make()
-    ->title($this->title)
+    ->title(Yii::t('skeleton', 'Account'))
     ->form(UserActiveForm::make()
         ->model($form));
-
-echo UserPanel::make()
-    ->user($form->user);
 
 if (Yii::$app->getUser()->can(User::AUTH_USER_DELETE, ['user' => $form->user])) {
     echo FormContainer::make()

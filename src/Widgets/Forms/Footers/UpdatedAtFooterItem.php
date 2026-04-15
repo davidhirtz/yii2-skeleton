@@ -13,7 +13,7 @@ use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
-use Hirtz\Skeleton\Widgets\Traits\ModelWidgetTrait;
+use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Hirtz\Skeleton\Widgets\Username;
 use Stringable;
 use Yii;
@@ -22,7 +22,7 @@ use yii\db\ActiveRecord;
 class UpdatedAtFooterItem implements Stringable
 {
     use ContainerConfigurationTrait;
-    use ModelWidgetTrait;
+    use ModelTrait;
 
     protected string $attributeName = 'updated_at';
     protected DateTimeInterface|int|string|null $value = null;

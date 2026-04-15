@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Navs;
 
-use Hirtz\Skeleton\Widgets\Attributes\Configure;
-use Hirtz\Skeleton\Widgets\Traits\BreadcrumbTrait;
-use Override;
-use yii\data\ActiveDataProvider;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\H1;
 use Hirtz\Skeleton\Html\H2;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
+use Hirtz\Skeleton\Widgets\Attributes\Configure;
+use Hirtz\Skeleton\Widgets\Traits\BreadcrumbTrait;
 use Hirtz\Skeleton\Widgets\Traits\ContainerTrait;
 use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Widget;
+use Override;
 use Stringable;
 use Yii;
+use yii\data\ActiveDataProvider;
 
 class Header extends Widget
 {
@@ -32,16 +32,9 @@ class Header extends Widget
     protected ?string $subtitle = null;
     protected ?string $title = null;
 
-    public function pagination(ActiveDataProvider|int $page): static
+    public function pagination(ActiveDataProvider|int|null $page): static
     {
-        if ($page instanceof ActiveDataProvider) {
-            $page->prepare();
-            $page = $page->getPagination()->getPage() + 1;
-        }
-
-        return $page > 1
-            ? $this->subtitle(Yii::t('skeleton', 'Page {page}', ['page' => $page]))
-            : $this;
+        return $this->subtitle($this->getPaginationSubtitle($page));
     }
 
     public function subheading(string|Stringable|null $subheading): static
@@ -50,8 +43,20 @@ class Header extends Widget
         return $this;
     }
 
+    protected function getPaginationSubtitle(ActiveDataProvider|int|null $page): ?string
+    {
+        if ($page instanceof ActiveDataProvider) {
+            $page->prepare();
+            $page = $page->getPagination()->getPage() + 1;
+        }
+
+        return $page > 1
+            ? Yii::t('skeleton', 'Page {page}', ['page' => $page])
+            : null;
+    }
+
     #[Configure]
-    protected function setBreadcrumbs(): void
+    protected function configureBreadcrumbs(): void
     {
         if ($this->breadcrumbs) {
             $this->view->addBreadcrumbs($this->breadcrumbs);

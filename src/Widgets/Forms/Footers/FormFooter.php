@@ -7,7 +7,7 @@ namespace Hirtz\Skeleton\Widgets\Forms\Footers;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Ul;
 use Hirtz\Skeleton\Widgets\Forms\FormRow;
-use Hirtz\Skeleton\Widgets\Traits\ModelWidgetTrait;
+use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
@@ -15,7 +15,7 @@ use Stringable;
 class FormFooter extends Widget
 {
     use TagAttributesTrait;
-    use ModelWidgetTrait;
+    use ModelTrait;
 
     protected array|null $items = null;
 

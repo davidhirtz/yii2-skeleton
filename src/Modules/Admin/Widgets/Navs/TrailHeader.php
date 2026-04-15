@@ -6,32 +6,30 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Modules\Admin\Data\TrailActiveDataProvider;
+use Hirtz\Skeleton\Widgets\Attributes\Configure;
 use Hirtz\Skeleton\Widgets\Navs\Header;
-use Override;
+use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
+use Hirtz\Skeleton\Widgets\Traits\ProviderTrait;
 use Yii;
-use yii\base\Model;
 
 class TrailHeader extends Header
 {
-    protected ?TrailActiveDataProvider $provider = null;
-    protected ?Model $model = null;
+    use ModelTrait;
 
-    public function provider(TrailActiveDataProvider $provider): static
+    /**
+     * @use ProviderTrait<TrailActiveDataProvider|null>
+     */
+    use ProviderTrait;
+
+    #[Configure]
+    public function configureDefaults(): void
     {
-        $this->provider = $provider;
-
-        if ($provider->model) {
-            $this->model = $provider->getModels()
-                ? current($provider->getModels())->getModelClass()
+        if ($this->provider->model) {
+            $this->model = $this->provider->getModels()
+                ? current($this->provider->getModels())->getModelClass()
                 : null;
         }
 
-        return $this->pagination($provider);
-    }
-
-    #[Override]
-    public function configure(): void
-    {
         $this->title ??= $this->getTrailModelTitle();
         $this->url ??= $this->getTrailModelAdminRoute() ?? ['/admin/trail/index'];
 
@@ -39,7 +37,9 @@ class TrailHeader extends Header
             $this->breadcrumbs ??= [Yii::t('skeleton', 'History') => ['/admin/trail/index']];
         }
 
-        parent::configure();
+        if ($this->provider) {
+            $this->subtitle ??= $this->getPaginationSubtitle($this->provider);
+        }
     }
 
     protected function getTrailModelTitle(): string
