@@ -63,7 +63,7 @@ class AuthClientGridView extends GridView
     protected function getAccountColumn(): ?Column
     {
         return Column::make()
-            ->header(Yii::t('skeleton', 'Account'))
+            ->title(Yii::t('skeleton', 'Account'))
             ->content(fn (AuthClient $auth) => $auth->getClientClass()->getTitle());
     }
 
@@ -99,7 +99,7 @@ class AuthClientGridView extends GridView
     protected function getNameColumn(): Column
     {
         return Column::make()
-            ->header(Yii::t('skeleton', 'Name'))
+            ->title(Yii::t('skeleton', 'Name'))
             ->content($this->getNameColumnContent(...));
     }
 

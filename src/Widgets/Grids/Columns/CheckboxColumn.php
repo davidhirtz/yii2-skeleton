@@ -15,7 +15,7 @@ class CheckboxColumn extends Column
 {
     public array $checkboxAttributes = [];
     protected bool $multiple = true;
-    protected string $name = 'selection[]';
+    protected string $param = 'selection[]';
 
     public function multiple(bool $multiple = true): static
     {
@@ -23,12 +23,12 @@ class CheckboxColumn extends Column
         return $this;
     }
 
-    public function name(string $name): static
+    public function param(string $param): static
     {
-        $this->name = $name;
+        $this->param = $param;
 
-        if (substr_compare($this->name, '[]', -2, 2)) {
-            $this->name .= '[]';
+        if (substr_compare($this->param, '[]', -2, 2)) {
+            $this->param .= '[]';
         }
 
         return $this;
@@ -39,7 +39,7 @@ class CheckboxColumn extends Column
     {
         $this->registerClientScript();
 
-        if ($this->header !== null || !$this->multiple) {
+        if ($this->title !== null || !$this->multiple) {
             return parent::getHeaderContent();
         }
 
@@ -59,7 +59,7 @@ class CheckboxColumn extends Column
             ->attribute('data-check', $this->multiple ? 'multiple' : 'single')
             ->addAttributes($this->checkboxAttributes)
             ->addClass('checkbox')
-            ->name($this->name);
+            ->name($this->title);
     }
 
     protected function registerClientScript(): void

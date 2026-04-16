@@ -19,17 +19,10 @@ class PropertyColumn extends Column
     use FormatTrait;
     use PropertyTrait;
 
-    protected ?string $label = null;
     protected ?Closure $value = null;
     protected array $sortLinkAttributes = [];
     protected bool $enableSorting = true;
     protected bool $encodeLabel = true;
-
-    public function label(?string $label): static
-    {
-        $this->label = $label;
-        return $this;
-    }
 
     public function value(?Closure $value): static
     {
@@ -46,11 +39,11 @@ class PropertyColumn extends Column
     #[Override]
     protected function getHeaderContent(): string|Stringable
     {
-        if ($this->header !== null || ($this->label === null && $this->property === null)) {
+        if ($this->property === null) {
             return parent::getHeaderContent();
         }
 
-        $label = $this->label
+        $label = $this->title
             ?? current($this->grid->provider->getModels())?->getAttributeLabel($this->property)
             ?: Inflector::camel2words($this->property);
 
@@ -58,11 +51,9 @@ class PropertyColumn extends Column
             $label = Html::encode($label);
         }
 
-        if (
-            $this->property !== null
-            && $this->enableSorting
-            && ($sort = $this->grid->provider->getSort()) !== false && $sort->hasAttribute($this->property)
-        ) {
+        $sort = $this->enableSorting ? $this->grid->provider->getSort() : false;
+
+        if ($sort && $sort->hasAttribute($this->property)) {
             return $sort->link($this->property, [
                 ...$this->sortLinkAttributes,
                 'label' => $label,

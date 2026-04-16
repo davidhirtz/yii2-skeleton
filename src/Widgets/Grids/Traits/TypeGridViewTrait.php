@@ -31,7 +31,7 @@ trait TypeGridViewTrait
     {
         return LinkColumn::make()
             ->property('type')
-            ->header(false)
+            ->title(false)
         // todo
 //            ->url(fn ($model) => $this->getRoute($model))
             ->content($this->getTypeIconColumnContent(...))

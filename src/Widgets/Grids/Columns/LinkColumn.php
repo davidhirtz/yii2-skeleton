@@ -18,8 +18,6 @@ class LinkColumn extends PropertyColumn
 
     protected ?Closure $url = null;
 
-    protected ?string $target = null;
-
     /**
      * @var Closure(A|Div):(string|Stringable)[]|null
      */
@@ -42,8 +40,7 @@ class LinkColumn extends PropertyColumn
 
     public function target(?string $target): static
     {
-        $this->target = $target;
-        return $this;
+        return $this->link(fn (A|Div $tag) => $tag instanceof A ? $tag->target($target) : $tag);
     }
 
     public function url(Closure $url): static
@@ -66,8 +63,7 @@ class LinkColumn extends PropertyColumn
         if ($href) {
             return $this->evaluate($this->linkClosures, A::make()
                 ->content($content)
-                ->href($href)
-                ->target($this->target));
+                ->href($href));
         }
 
         return $this->linkClosures

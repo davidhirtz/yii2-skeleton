@@ -96,7 +96,7 @@ class AuthItemGridView extends GridView
     protected function getDescriptionColumn(): Column
     {
         return Column::make()
-            ->header(Yii::t('skeleton', 'Inherited Permissions'))
+            ->title(Yii::t('skeleton', 'Inherited Permissions'))
             ->content($this->getDescriptionColumnContent(...))
             ->hiddenForSmallDevices();
     }
@@ -119,7 +119,7 @@ class AuthItemGridView extends GridView
     protected function getUsersColumn(): Column
     {
         return Column::make()
-            ->header(Yii::t('skeleton', 'Users'))
+            ->title(Yii::t('skeleton', 'Users'))
             ->content($this->getUsersColumnColumn(...));
     }
 

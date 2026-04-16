@@ -50,7 +50,7 @@ class LogFileGridView extends GridView
     {
         return LinkColumn::make()
             ->property('name')
-            ->header(Yii::t('skeleton', 'Name'))
+            ->title(Yii::t('skeleton', 'Name'))
             ->url(fn (LogFile $file): array => $this->getLogFileUrl($file))
             ->contentAttributes(['class' => 'strong']);
     }
@@ -59,7 +59,7 @@ class LogFileGridView extends GridView
     {
         return PropertyColumn::make()
             ->property('size')
-            ->header(Yii::t('skeleton', 'File Size'))
+            ->title(Yii::t('skeleton', 'File Size'))
             ->format('shortSize');
     }
 
@@ -67,7 +67,7 @@ class LogFileGridView extends GridView
     {
         return RelativeTimeColumn::make()
             ->property('updated_at')
-            ->header(Yii::t('skeleton', 'Last Update'));
+            ->title(Yii::t('skeleton', 'Last Update'));
     }
 
     protected function getButtonColumn(): ?Column

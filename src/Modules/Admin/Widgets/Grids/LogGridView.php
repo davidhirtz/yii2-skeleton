@@ -41,7 +41,7 @@ class LogGridView extends GridView
     {
         return PropertyColumn::make()
             ->property('date')
-            ->header(Yii::t('skeleton', 'Date'))
+            ->title(Yii::t('skeleton', 'Date'))
             ->headerAttributes(['width' => '150'])
             ->format('date')
             ->nowrap();
@@ -50,7 +50,7 @@ class LogGridView extends GridView
     protected function getLevelColumn(): Column
     {
         return Column::make()
-            ->header(Yii::t('skeleton', 'Level'))
+            ->title(Yii::t('skeleton', 'Level'))
             ->headerAttributes(['width' => '100'])
             ->content(fn ($model) => Div::make()
                 ->class($this->getLevelCssClass($model['level']))
@@ -60,7 +60,7 @@ class LogGridView extends GridView
     protected function getMessageColumn(): Column
     {
         return Column::make()
-            ->header(Yii::t('skeleton', 'Error'))
+            ->title(Yii::t('skeleton', 'Error'))
             ->content(function (Log $log): array {
                 $content = [
                     Div::make()

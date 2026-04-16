@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
 use Hirtz\Skeleton\Html\Td;
 use Hirtz\Skeleton\Html\Th;
 use Hirtz\Skeleton\Widgets\Grids\Traits\GridTrait;
+use Hirtz\Skeleton\Widgets\Traits\TitleTrait;
 use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Stringable;
 use Yii;
@@ -20,8 +21,8 @@ class Column
     use ContainerConfigurationTrait;
     use GridTrait;
     use VisibilityTrait;
+    use TitleTrait;
 
-    protected string|false|null $header = null;
     protected ?array $headerAttributes = null;
 
     protected ?Closure $content = null;
@@ -44,12 +45,6 @@ class Column
     public function contentAttributes(array|Closure|null $attributes): static
     {
         $this->contentAttributes = $attributes;
-        return $this;
-    }
-
-    public function header(string|false|null $header): static
-    {
-        $this->header = $header;
         return $this;
     }
 
@@ -98,7 +93,7 @@ class Column
 
     protected function getHeaderContent(): string|Stringable
     {
-        return $this->header ?: $this->emptyCell;
+        return $this->title ?: $this->emptyCell;
     }
 
     public function renderBody(array|Model $model, string|int $key, int $index): Td

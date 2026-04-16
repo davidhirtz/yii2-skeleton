@@ -21,7 +21,7 @@ trait StatusGridViewTrait
     {
         return LinkColumn::make()
             ->property('status')
-            ->header(false)
+            ->title(false)
             ->content($this->getStatusIcon(...))
             // todo
 //            ->url(fn ($model) => $model)

@@ -39,7 +39,7 @@ class CacheGridView extends GridView
 
         $this->columns ??= [
             Column::make()
-                ->header(Yii::t('skeleton', 'Name'))
+                ->title(Yii::t('skeleton', 'Name'))
                 ->content(fn (array $item): array => [
                     Div::make()
                         ->content(ucwords((string)$item['name']))

@@ -37,7 +37,7 @@ class SessionGridView extends GridView
 
         $this->columns ??= [
             Column::make()
-                ->header(Yii::t('skeleton', 'Sessions'))
+                ->title(Yii::t('skeleton', 'Sessions'))
                 ->content(fn (array $item): array => [
                     Div::make()
                         ->class('strong')

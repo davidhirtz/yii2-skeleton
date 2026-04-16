@@ -33,7 +33,7 @@ class AssetGridView extends GridView
 
         $this->columns ??= [
             Column::make()
-                ->header(Yii::t('skeleton', 'Name'))
+                ->title(Yii::t('skeleton', 'Name'))
                 ->content(function ($item): Stringable {
                     $ul = Ul::make()
                         ->class('small');
@@ -53,7 +53,7 @@ class AssetGridView extends GridView
                 }),
             RelativeTimeColumn::make()
                 ->property('modified')
-                ->header(Yii::t('skeleton', 'Updated')),
+                ->title(Yii::t('skeleton', 'Updated')),
         ];
 
         /** @see SystemController::actionPublish() */
