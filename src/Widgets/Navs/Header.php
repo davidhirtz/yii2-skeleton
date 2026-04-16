@@ -47,7 +47,8 @@ class Header extends Widget
     {
         if ($page instanceof ActiveDataProvider) {
             $page->prepare();
-            $page = $page->getPagination()->getPage() + 1;
+            $pagination = $page->getPagination();
+            $page = $pagination ? ($pagination->getPage() + 1) : 0;
         }
 
         return $page > 1

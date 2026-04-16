@@ -15,10 +15,11 @@ class DeleteButton extends Widget
     use DeleteButtonTrait;
 
     #[Override]
-    public function renderContent(): Stringable
+    public function renderContent(): string|Stringable
     {
-        // todo change this to constructor
-        $this->setButtonDefault();
+        if (!$this->isVisible()) {
+            return '';
+        }
 
         $modal = Modal::make()
             ->title($this->title)

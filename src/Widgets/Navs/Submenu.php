@@ -50,6 +50,6 @@ class Submenu extends Widget
     {
         return Nav::make()
             ->attributes($this->navAttributes)
-            ->items(...$this->items);
+            ->items($this->items);
     }
 }
