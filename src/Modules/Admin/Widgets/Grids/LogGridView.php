@@ -6,12 +6,14 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Pre;
+use Hirtz\Skeleton\Html\Th;
 use Hirtz\Skeleton\Models\Log;
 use Hirtz\Skeleton\Modules\Admin\Data\LogDataProvider;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\PropertyColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Override;
+use Stringable;
 use Yii;
 
 /**
@@ -41,48 +43,56 @@ class LogGridView extends GridView
     {
         return PropertyColumn::make()
             ->property('date')
-            ->title(Yii::t('skeleton', 'Date'))
-            ->headerAttributes(['width' => '150'])
             ->format('date')
-            ->nowrap();
+            ->title(Yii::t('skeleton', 'Date'))
+            ->nowrap()
+            ->width(150);
     }
 
     protected function getLevelColumn(): Column
     {
         return Column::make()
             ->title(Yii::t('skeleton', 'Level'))
-            ->headerAttributes(['width' => '100'])
-            ->content(fn ($model) => Div::make()
-                ->class($this->getLevelCssClass($model['level']))
-                ->content(ucfirst((string)$model['level'])));
+            ->content($this->getLevelColumnContent(...))
+            ->width(100);
+    }
+
+    protected function getLevelColumnContent(Log $model): string|Stringable
+    {
+        return Div::make()
+            ->class($this->getLevelCssClass($model->level))
+            ->content(ucfirst($model->level));
     }
 
     protected function getMessageColumn(): Column
     {
         return Column::make()
             ->title(Yii::t('skeleton', 'Error'))
-            ->content(function (Log $log): array {
-                $content = [
-                    Div::make()
-                        ->text($log->message)
-                        ->class('strong'),
-                ];
+            ->content($this->getMessageColumnContent(...));
+    }
 
-                if ($log->category) {
-                    $content[] = Div::make()
-                        ->text($log->category)
-                        ->class('log-category small');
-                }
+    protected function getMessageColumnContent(Log $log): array
+    {
+        $content = [
+            Div::make()
+                ->text($log->message)
+                ->class('strong'),
+        ];
 
-                if ($log->content) {
-                    $content[] = Div::make()
-                        ->content(Pre::make()
-                            ->class('log-content small')
-                            ->text(rtrim($log->content)));
-                }
+        if ($log->category) {
+            $content[] = Div::make()
+                ->text($log->category)
+                ->class('log-category small');
+        }
 
-                return $content;
-            });
+        if ($log->content) {
+            $content[] = Div::make()
+                ->content(Pre::make()
+                    ->class('log-content small')
+                    ->text(rtrim($log->content)));
+        }
+
+        return $content;
     }
 
     protected function getLevelCssClass(string $level): string

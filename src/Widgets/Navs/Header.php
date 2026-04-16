@@ -10,9 +10,9 @@ use Hirtz\Skeleton\Html\H1;
 use Hirtz\Skeleton\Html\H2;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
-use Hirtz\Skeleton\Widgets\Attributes\Configure;
 use Hirtz\Skeleton\Widgets\Traits\BreadcrumbTrait;
 use Hirtz\Skeleton\Widgets\Traits\ContainerTrait;
+use Hirtz\Skeleton\Widgets\Traits\TitleTrait;
 use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
@@ -26,11 +26,11 @@ class Header extends Widget
     use ContainerTrait;
     use TagAttributesTrait;
     use TagContentTrait;
+    use TitleTrait;
     use UrlTrait;
 
     protected string|Stringable|null $subheading = null;
     protected ?string $subtitle = null;
-    protected ?string $title = null;
 
     public function pagination(ActiveDataProvider|int|null $page): static
     {
@@ -53,14 +53,6 @@ class Header extends Widget
         return $page > 1
             ? Yii::t('skeleton', 'Page {page}', ['page' => $page])
             : null;
-    }
-
-    #[Configure]
-    protected function configureBreadcrumbs(): void
-    {
-        if ($this->breadcrumbs) {
-            $this->view->addBreadcrumbs($this->breadcrumbs);
-        }
     }
 
     #[Override]
@@ -87,14 +79,17 @@ class Header extends Widget
         return $this;
     }
 
-    public function title(?string $title): static
+    protected function configure(): void
     {
-        if ($title) {
-            $this->view->title($title);
+        if (is_string($this->title)) {
+            $this->view->title ??= $this->title;
         }
 
-        $this->title = $title;
-        return $this;
+        if ($this->breadcrumbs) {
+            $this->view->addBreadcrumbs($this->breadcrumbs);
+        }
+
+        parent::configure();
     }
 
     protected function getHeaderContent(): string|Stringable|null

@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Table;
 use Hirtz\Skeleton\Html\Td;
+use Hirtz\Skeleton\Html\Th;
 use Hirtz\Skeleton\Html\Ul;
 use Hirtz\Skeleton\Models\Collections\TrailModelCollection;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
@@ -68,7 +69,7 @@ class TrailGridView extends GridView
     {
         return PropertyColumn::make()
             ->property('model')
-            ->headerAttributes(['class' => 'trail-model-col'])
+            ->header(fn (Th $th) => $th->addClass('trail-model-col'))
             ->content($this->getModelColumnContent(...))
             ->visible(!$this->provider->model);
     }

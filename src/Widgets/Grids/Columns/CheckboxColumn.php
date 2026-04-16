@@ -13,7 +13,7 @@ use yii\base\Model;
 
 class CheckboxColumn extends Column
 {
-    public array $checkboxAttributes = [];
+    public array $checkboxAttributes = ['class' => 'input checkbox'];
     protected bool $multiple = true;
     protected string $param = 'selection[]';
 
@@ -35,30 +35,25 @@ class CheckboxColumn extends Column
     }
 
     #[Override]
-    protected function getHeaderContent(): string|Stringable
+    protected function getHeader(): string|Stringable
     {
         $this->registerClientScript();
 
         if ($this->title !== null || !$this->multiple) {
-            return parent::getHeaderContent();
+            return parent::getHeader();
         }
 
         return Checkbox::make()
-            ->attribute('data-check-all', "#{$this->grid->getId()}")
-            ->class('checkbox');
+            ->attributes($this->checkboxAttributes)
+            ->attribute('data-check-all', "#{$this->grid->getId()}");
     }
 
     #[Override]
-    protected function getBodyContent(array|Model $model, string|int $key, int $index): string|Stringable
+    protected function getBody(array|Model $model, string|int $key, int $index): string|Stringable
     {
-        if (null !== $this->content) {
-            return parent::getBodyContent($model, $key, $index);
-        }
-
         return Checkbox::make()
+            ->attributes($this->checkboxAttributes)
             ->attribute('data-check', $this->multiple ? 'multiple' : 'single')
-            ->addAttributes($this->checkboxAttributes)
-            ->addClass('checkbox')
             ->name($this->title);
     }
 

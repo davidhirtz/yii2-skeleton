@@ -6,7 +6,6 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
 use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Modules\Admin\Data\RedirectActiveDataProvider;
-use Hirtz\Skeleton\Widgets\Attributes\Configure;
 use Hirtz\Skeleton\Widgets\Buttons\CreateButton;
 use Hirtz\Skeleton\Widgets\Navs\Header;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
@@ -26,8 +25,7 @@ class RedirectHeader extends Header
      */
     use ProviderTrait;
 
-    #[Configure]
-    protected function configureDefaults(): void
+    protected function configure(): void
     {
         $this->title ??= $this->provider
             ? Yii::t('skeleton', 'Redirects')
@@ -46,6 +44,8 @@ class RedirectHeader extends Header
             $this->subtitle ??= $this->getPaginationSubtitle($this->provider);
             $this->url ??= ['/admin/redirect/index'];
         }
+
+        parent::configure();
     }
 
     protected function getActionDropdown(): ?Stringable

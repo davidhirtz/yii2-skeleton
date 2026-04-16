@@ -105,8 +105,7 @@ class GridView extends Widget
 
         foreach ($this->columns as $i => &$column) {
             if (is_string($column)) {
-                $column = PropertyColumn::make()
-                    ->property($column);
+                $column = PropertyColumn::make()->property($column);
             }
 
             $column->grid($this);

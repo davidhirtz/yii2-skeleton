@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Grids\Columns;
 
 use Closure;
+use Hirtz\Skeleton\Html\A;
+use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Widgets\Traits\FormatTrait;
 use Hirtz\Skeleton\Widgets\Traits\PropertyTrait;
 use Override;
 use Stringable;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Html;
 use yii\helpers\Inflector;
 
 class PropertyColumn extends Column
@@ -20,13 +21,22 @@ class PropertyColumn extends Column
     use PropertyTrait;
 
     protected ?Closure $value = null;
-    protected array $sortLinkAttributes = [];
     protected bool $enableSorting = true;
-    protected bool $encodeLabel = true;
 
-    public function value(?Closure $value): static
+    private ?array $sortCallbacks = null;
+
+    public function __construct(array $config = [])
     {
-        $this->value = $value;
+        $this->content ??= $this->getValue(...);
+        parent::__construct($config);
+    }
+
+    /**
+     * @param Closure(A|Div):(string|Stringable) $closure
+     */
+    public function sort(Closure $closure): static
+    {
+        $this->sortCallbacks[] = $closure;
         return $this;
     }
 
@@ -36,47 +46,53 @@ class PropertyColumn extends Column
         return $this;
     }
 
-    #[Override]
-    protected function getHeaderContent(): string|Stringable
+    public function value(?Closure $value): static
     {
-        if ($this->property === null) {
-            return parent::getHeaderContent();
-        }
+        $this->value = $value;
+        return $this;
+    }
 
-        $label = $this->title
+    #[Override]
+    protected function getHeader(): string|Stringable
+    {
+        return $this->property === null
+            ? parent::getHeader()
+            : $this->evaluate($this->sortCallbacks, $this->getSortTag());
+    }
+
+    protected function getSortTag(): A|Div
+    {
+        $title = $this->title
             ?? current($this->grid->provider->getModels())?->getAttributeLabel($this->property)
             ?: Inflector::camel2words($this->property);
 
-        if ($this->encodeLabel) {
-            $label = Html::encode($label);
+
+        $sort = $this->enableSorting ? $this->grid->provider->getSort() ?: null : null;
+
+        if (!$sort?->hasAttribute($this->property)) {
+            return Div::make()->text($title);
         }
 
-        $sort = $this->enableSorting ? $this->grid->provider->getSort() : false;
+        $direction = $sort->getAttributeOrder($this->property);
 
-        if ($sort && $sort->hasAttribute($this->property)) {
-            return $sort->link($this->property, [
-                ...$this->sortLinkAttributes,
-                'label' => $label,
-            ]);
-        }
+        $link = A::make()
+            ->href($sort->createUrl($this->property))
+            ->text($title);
 
-        return $label;
+        return $direction !== null ? $link->class($direction === SORT_ASC ? 'asc' : 'desc') : $link;
     }
 
-    #[Override]
-    protected function getBodyContent(array|Model $model, string|int $key, int $index): string|Stringable
+    protected function getValue(array|Model $model, string|int $key, int $index): string|Stringable
     {
-        return $this->content === null
-            ? $this->formatValue($this->getValue($model, $key, $index))
-            : parent::getBodyContent($model, $key, $index);
+        $value = $this->value instanceof Closure
+            ? ($this->value)($model, $key, $index, $this)
+            : $this->getPropertyValue($model);
+
+        return $this->formatValue($value);
     }
 
-    protected function getValue(array|Model $model, string|int $key, int $index): mixed
+    protected function getPropertyValue(array|Model $model): mixed
     {
-        if ($this->value instanceof Closure) {
-            return ($this->value)($model, $key, $index, $this);
-        }
-
         return $this->property ? ArrayHelper::getValue($model, $this->property) : null;
     }
 }

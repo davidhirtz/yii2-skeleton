@@ -13,31 +13,31 @@ use yii\base\Model;
 
 class ButtonColumn extends Column
 {
-    protected array|null|Closure $contentAttributes = [
-        'class' => 'text-end',
-    ];
+    public function __construct(array $config = [])
+    {
+        $this->bodyAttributes = ['class' => 'text-end'];
+        parent::__construct($config);
+    }
 
     #[Override]
-    protected function getBodyContent(array|Model $model, string|int $key, int $index): string|Stringable
+    protected function getBody(array|Model $model, string|int $key, int $index): string|Stringable
     {
-        if ($this->content instanceof Closure) {
-            $buttons = call_user_func($this->content, $model, $key, $index, $this);
+        $buttons = ($this->content)($model, $key, $index, $this);
 
-            if (is_string($buttons)) {
-                $buttons = [$buttons];
-            }
-
-            if ($buttons instanceof Iterator) {
-                $buttons = iterator_to_array($buttons);
-            }
-
-            if (is_array($buttons)) {
-                return Div::make()
-                    ->class('btn-group')
-                    ->content(...$buttons);
-            }
+        if (is_string($buttons)) {
+            $buttons = [$buttons];
         }
 
-        return parent::getBodyContent($model, $key, $index);
+        if ($buttons instanceof Iterator) {
+            $buttons = iterator_to_array($buttons);
+        }
+
+        if (is_array($buttons)) {
+            return Div::make()
+                ->class('btn-group')
+                ->content(...$buttons);
+        }
+
+        return parent::getBody($model, $key, $index);
     }
 }

@@ -5,23 +5,23 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Grids\Columns;
 
 use Closure;
-use Hirtz\Skeleton\Base\Traits\EvaluateClosureTrait;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
-use Override;
 use Stringable;
 use yii\base\Model;
 
 class LinkColumn extends PropertyColumn
 {
-    use EvaluateClosureTrait;
-
+    protected array $linkAttributes = [];
     protected ?Closure $url = null;
 
-    /**
-     * @var Closure(A|Div):(string|Stringable)[]|null
-     */
-    private ?array $linkClosures = null;
+    private ?array $linkCallbacks = null;
+
+    public function __construct(array $config = [])
+    {
+        $this->content ??= $this->getLink(...);
+        parent::__construct($config);
+    }
 
     public function blank(): static
     {
@@ -34,7 +34,7 @@ class LinkColumn extends PropertyColumn
      */
     public function link(Closure $closure): static
     {
-        $this->linkClosures[] = $closure;
+        $this->linkCallbacks[] = $closure;
         return $this;
     }
 
@@ -49,25 +49,27 @@ class LinkColumn extends PropertyColumn
         return $this;
     }
 
-    #[Override]
-    protected function getBodyContent(array|Model $model, string|int $key, int $index): string|Stringable
+    protected function getLink(array|Model $model, string|int $key, int $index): string|Stringable
     {
-        $content = parent::getBodyContent($model, $key, $index);
+        $content = $this->getValue($model, $key, $index);
 
-        if (!$content) {
+        if ($content === '') {
             return $content;
         }
 
         $href = $this->url ? ($this->url)($model, $key, $index, $this) : null;
 
         if ($href) {
-            return $this->evaluate($this->linkClosures, A::make()
-                ->content($content)
+            return $this->evaluate($this->linkCallbacks, A::make()
+                ->attributes($this->linkAttributes)
+                ->text($content)
                 ->href($href));
         }
 
-        return $this->linkClosures
-            ? $this->evaluate($this->linkClosures, Div::make()->content($content))
+        return $this->linkCallbacks
+            ? $this->evaluate($this->linkCallbacks, Div::make()
+                ->attributes($this->linkAttributes)
+                ->text($content))
             : $content;
     }
 }

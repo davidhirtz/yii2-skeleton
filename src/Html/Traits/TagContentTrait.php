@@ -25,13 +25,16 @@ trait TagContentTrait
 
     final public function text(string|Stringable|null ...$content): static
     {
-        $this->content = array_values(array_filter(array_map(Html::encode(...), $content)));
-        return $this;
+        $this->content = [];
+        return $this->addText(...$content);
     }
 
     final public function addText(string|Stringable|null ...$content): static
     {
-        $this->content = [...$this->content, ...array_map(Html::encode(...), array_values(array_filter($content)))];
+        foreach ($content as $text) {
+            $this->content[] = $text instanceof Stringable ? $text : Html::encode($text);
+        }
+
         return $this;
     }
 

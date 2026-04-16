@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
+use Hirtz\Skeleton\Html\Td;
 use Hirtz\Skeleton\Models\LogFile;
 use Hirtz\Skeleton\Modules\Admin\Data\LogFileArrayDataProvider;
 use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\DeleteGridButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\ViewGridButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
-use Hirtz\Skeleton\Widgets\Grids\Columns\PropertyColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\LinkColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\PropertyColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Override;
@@ -52,7 +53,7 @@ class LogFileGridView extends GridView
             ->property('name')
             ->title(Yii::t('skeleton', 'Name'))
             ->url(fn (LogFile $file): array => $this->getLogFileUrl($file))
-            ->contentAttributes(['class' => 'strong']);
+            ->body(fn (Td $td) => $td->addClass('strong'));
     }
 
     protected function getSizeColumn(): PropertyColumn
