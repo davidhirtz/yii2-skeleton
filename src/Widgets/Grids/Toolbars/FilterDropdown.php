@@ -21,10 +21,10 @@ class FilterDropdown extends Widget
     use LabelTrait;
     use TagIdTrait;
 
-    public int $showFilterThreshold = 20;
-    public array $params = ['page' => null];
+    protected int $showFilterThreshold = 20;
+    protected array $params = ['page' => null];
 
-    protected string $param;
+    protected string $paramName;
     protected string|false|null $default = null;
     protected int|string|null $value = null;
     protected ?string $placeholder = null;
@@ -53,9 +53,9 @@ class FilterDropdown extends Widget
         return $this;
     }
 
-    public function param(string $param): static
+    public function paramName(string $param): static
     {
-        $this->param = $param;
+        $this->paramName = $param;
         return $this;
     }
 
@@ -72,11 +72,9 @@ class FilterDropdown extends Widget
         }
 
         $this->default ??= Yii::t('skeleton', 'Show All');
-        $this->filterable ??= count($this->items) >= $this->showFilterThreshold;
         $this->placeholder ??= Yii::t('skeleton', 'Filter ...');
-        $this->value ??= Yii::$app->getRequest()->get($this->param);
-
-        $this->attributes['hx-boost'] ??= 'true';
+        $this->filterable ??= count($this->items) >= $this->showFilterThreshold;
+        $this->value ??= Yii::$app->getRequest()->get($this->paramName);
 
         $dropdown = Dropdown::make()
             ->autofocus()
@@ -90,7 +88,7 @@ class FilterDropdown extends Widget
             if ($this->default) {
                 $dropdown->addItem(DropdownOptionLink::make()
                     ->class('dropdown-default-item')
-                    ->current([...$this->params, $this->param => null])
+                    ->current([...$this->params, $this->paramName => null])
                     ->text($this->default))
                     ->divider();
             }
@@ -100,7 +98,7 @@ class FilterDropdown extends Widget
 
         foreach ($this->items as $param => $text) {
             $link = DropdownOptionLink::make()
-                ->current([...$this->params, $this->param => $param])
+                ->current([...$this->params, $this->paramName => $param])
                 ->text($text);
 
             if ((string)$param === (string)$this->value) {

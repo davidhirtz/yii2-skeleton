@@ -18,7 +18,7 @@ class Html extends BaseHtml
 
     public static function reset(): void
     {
-        self::$counter = 0;
+        static::$counter = 0;
     }
 
     #[Override]

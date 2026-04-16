@@ -13,7 +13,7 @@ use Hirtz\Skeleton\Modules\Admin\Controllers\UserAuthController;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
-use Hirtz\Skeleton\Widgets\Grids\Columns\PropertyColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Hirtz\Skeleton\Widgets\Grids\Traits\MessageSourceTrait;
 use Hirtz\Skeleton\Widgets\Icon;
@@ -65,9 +65,9 @@ class AuthItemGridView extends GridView
             ->tooltip($authItem->getTypeName());
     }
 
-    protected function getNameColumn(): PropertyColumn
+    protected function getNameColumn(): DataColumn
     {
-        return PropertyColumn::make()
+        return DataColumn::make()
             ->property('name')
             ->content($this->getNameColumnContent(...));
     }

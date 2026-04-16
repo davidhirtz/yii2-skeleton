@@ -13,16 +13,19 @@ use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Models\forms\UserForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\UserActiveForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\UserDeleteActiveForm;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserHeader;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserSubmenu;
-use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\UserPanel;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Forms\FormContainer;
 
+echo UserHeader::make()
+    ->model($form->user);
+
 echo UserSubmenu::make()
-    ->user($form->user);
+    ->model($form->user);
 
 echo FormContainer::make()
-    ->title(Yii::t('skeleton', 'Account'))
+    ->title(Yii::t('skeleton', 'Update User'))
     ->form(UserActiveForm::make()
         ->model($form));
 

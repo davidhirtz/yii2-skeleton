@@ -387,7 +387,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
 
     public function getUsername(): ?string
     {
-        return $this->name;
+        return $this->getOldAttributes()['name'] ?? $this->name;
     }
 
     public function getPictureUrl(): string|false

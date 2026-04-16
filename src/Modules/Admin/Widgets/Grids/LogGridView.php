@@ -10,7 +10,7 @@ use Hirtz\Skeleton\Html\Th;
 use Hirtz\Skeleton\Models\Log;
 use Hirtz\Skeleton\Modules\Admin\Data\LogDataProvider;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
-use Hirtz\Skeleton\Widgets\Grids\Columns\PropertyColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Override;
 use Stringable;
@@ -39,9 +39,9 @@ class LogGridView extends GridView
         parent::configure();
     }
 
-    protected function getDateColumn(): PropertyColumn
+    protected function getDateColumn(): DataColumn
     {
-        return PropertyColumn::make()
+        return DataColumn::make()
             ->property('date')
             ->format('date')
             ->title(Yii::t('skeleton', 'Date'))

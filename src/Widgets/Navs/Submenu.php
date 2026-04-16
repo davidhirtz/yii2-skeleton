@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Navs;
 
-use Closure;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Hirtz\Skeleton\Web\User;
 use Hirtz\Skeleton\Widgets\Container;
@@ -28,47 +27,29 @@ class Submenu extends Widget
     protected array $navAttributes = ['class' => 'tabs'];
     protected User $webuser;
 
-    protected Closure|Header|null $header = null;
-
     public function __construct(array $config = [])
     {
         $this->webuser = Yii::$app->getUser();
         parent::__construct($config);
     }
 
-    /**
-     * @param Closure(Header):Header|Header|null $header
-     */
-    public function header(Closure|Header|null $header): static
-    {
-        $this->header = $header;
-        return $this;
-    }
-
     #[Override]
     protected function renderContent(): string|Stringable
     {
-        return $this->getHeader() . $this->getNav();
+        return $this->getContent();
     }
 
-    protected function getHeader(): ?Stringable
-    {
-        $header = $this->header instanceof Header
-            ? $this->header
-            : Header::make()
-                ->title($this->title)
-                ->url($this->url);
-
-        return $this->header instanceof Closure ? ($this->header)($header) : $header;
-    }
-
-    protected function getNav(): ?Stringable
+    protected function getContent(): string|Stringable
     {
         return $this->items
-            ? Container::make()
-                ->content(Nav::make()
-                    ->attributes($this->navAttributes)
-                    ->items($this->items))
-            : null;
+            ? Container::make()->content($this->getNav())
+            : '';
+    }
+
+    protected function getNav(): Stringable
+    {
+        return Nav::make()
+            ->attributes($this->navAttributes)
+            ->items(...$this->items);
     }
 }

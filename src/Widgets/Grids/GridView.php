@@ -19,7 +19,7 @@ use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
 use Hirtz\Skeleton\Web\User;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
-use Hirtz\Skeleton\Widgets\Grids\Columns\PropertyColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Pagers\LinkPager;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridFooter;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridHeader;
@@ -105,7 +105,7 @@ class GridView extends Widget
 
         foreach ($this->columns as $i => &$column) {
             if (is_string($column)) {
-                $column = PropertyColumn::make()->property($column);
+                $column = DataColumn::make()->property($column);
             }
 
             $column->grid($this);
@@ -144,7 +144,7 @@ class GridView extends Widget
             : $this->header;
     }
 
-    protected function getSummary(): ?GridSummary
+    protected function getSummary(): ?Stringable
     {
         return GridSummary::make()->grid($this);
     }

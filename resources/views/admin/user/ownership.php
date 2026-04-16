@@ -20,7 +20,8 @@ $this->title(Yii::t('skeleton', 'Transfer Ownership'))
     ->addBreadcrumb(Yii::t('skeleton', 'Users'), ['index']);
 
 
-echo UserSubmenu::make();
+// Todo
+//echo UserSubmenu::make();
 
 echo Container::make()
     ->content(ErrorSummary::make()->models($form)

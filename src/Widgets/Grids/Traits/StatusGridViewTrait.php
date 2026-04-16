@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Grids\Traits;
 
-use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
-use Hirtz\Skeleton\Widgets\Grids\Columns\LinkColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\StatusIconColumn;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\FilterDropdown;
-use Hirtz\Skeleton\Widgets\Icon;
-use Stringable;
 use Yii;
 
 trait StatusGridViewTrait
@@ -19,35 +16,17 @@ trait StatusGridViewTrait
 
     protected function getStatusColumn(): Column
     {
-        return LinkColumn::make()
-            ->property('status')
-            ->title(false)
-            ->content($this->getStatusIcon(...))
-            // todo
-//            ->url(fn ($model) => $model)
-            ->centered();
+        return StatusIconColumn::make();
     }
 
-    protected function getStatusIcon(StatusAttributeInterface $model): Stringable
-    {
-        return Icon::make()
-            ->name($model->getStatusIcon())
-            ->tooltip($model->getStatusName());
-    }
-
-    public function getStatusDropdown(): FilterDropdown
+    protected function getStatusDropdown(): FilterDropdown
     {
         return FilterDropdown::make()
             ->label(Yii::t('skeleton', 'Status'))
             ->items($this->getStatusDropdownItems())
-            ->param($this->statusParamName)
+            ->paramName($this->statusParamName)
             ->default($this->statusDefaultItem);
     }
 
-    protected function getStatusDropdownItems(): array
-    {
-        // todo
-        return [];
-//        return array_map(fn ($options) => $options['plural'] ?? $options['name'], $this->model::getStatuses());
-    }
+    abstract protected function getStatusDropdownItems(): array;
 }

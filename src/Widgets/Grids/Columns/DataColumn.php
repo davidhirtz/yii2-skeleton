@@ -15,7 +15,7 @@ use yii\base\Model;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 
-class PropertyColumn extends Column
+class DataColumn extends Column
 {
     use FormatTrait;
     use PropertyTrait;
@@ -55,12 +55,12 @@ class PropertyColumn extends Column
     #[Override]
     protected function getHeader(): string|Stringable
     {
-        return $this->property === null
-            ? parent::getHeader()
-            : $this->evaluate($this->sortCallbacks, $this->getSortTag());
+        return $this->property !== null && $this->title !== false
+            ? $this->evaluate($this->sortCallbacks, $this->getSort())
+            : parent::getHeader();
     }
 
-    protected function getSortTag(): A|Div
+    protected function getSort(): A|Div|null
     {
         $title = $this->title
             ?? current($this->grid->provider->getModels())?->getAttributeLabel($this->property)

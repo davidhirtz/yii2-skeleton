@@ -10,7 +10,7 @@ use Hirtz\Skeleton\Html\Div;
 use Stringable;
 use yii\base\Model;
 
-class LinkColumn extends PropertyColumn
+class LinkColumn extends DataColumn
 {
     protected array $linkAttributes = [];
     protected ?Closure $url = null;

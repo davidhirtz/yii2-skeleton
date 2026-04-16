@@ -12,13 +12,17 @@ declare(strict_types=1);
 
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\AuthItemGridView;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserHeader;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserSubmenu;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Grids\GridContainer;
 use yii\data\ActiveDataProvider;
 
+echo UserHeader::make()
+    ->model($user);
+
 echo UserSubmenu::make()
-    ->user($user);
+    ->model($user);
 
 echo GridContainer::make()
     ->grid(AuthItemGridView::make()

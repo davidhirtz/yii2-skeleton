@@ -12,7 +12,7 @@ use Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\UserCreateButton;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
-use Hirtz\Skeleton\Widgets\Grids\Columns\PropertyColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridSearchForm;
@@ -51,21 +51,18 @@ class UserGridView extends GridView
             $this->getButtonColumn(),
         ];
 
-        $this->footer ??= [
-            $this->getCreateButton(),
-        ];
-
         parent::configure();
     }
 
-    protected function getCreateButton(): string|Stringable
+    #[Override]
+    protected function getStatusDropdownItems(): array
     {
-        return UserCreateButton::make();
+        return User::instance()::getStatuses();
     }
 
     protected function getNameColumn(): Column
     {
-        return PropertyColumn::make()
+        return DataColumn::make()
             ->property('name')
             ->content($this->getNameColumnContent(...));
     }
@@ -85,7 +82,7 @@ class UserGridView extends GridView
 
     protected function getEmailColumn(): Column
     {
-        return PropertyColumn::make()
+        return DataColumn::make()
             ->property('email')
             ->content($this->getEmailColumnContent(...))
             ->hiddenForSmallDevices();
@@ -105,14 +102,14 @@ class UserGridView extends GridView
         return $link;
     }
 
-    protected function getLastLoginColumn(): PropertyColumn
+    protected function getLastLoginColumn(): DataColumn
     {
         return RelativeTimeColumn::make()
             ->property('last_login')
             ->url(fn (User $user) => ['/admin/login/index', 'user' => $user->id]);
     }
 
-    protected function getCreatedAtColumn(): PropertyColumn
+    protected function getCreatedAtColumn(): DataColumn
     {
         return RelativeTimeColumn::make()
             ->property('created_at')

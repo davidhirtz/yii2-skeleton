@@ -7,15 +7,17 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 use Hirtz\Skeleton\Html\Td;
 use Hirtz\Skeleton\Models\LogFile;
 use Hirtz\Skeleton\Modules\Admin\Data\LogFileArrayDataProvider;
+use Hirtz\Skeleton\Widgets\Alert;
 use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\DeleteGridButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\ViewGridButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\LinkColumn;
-use Hirtz\Skeleton\Widgets\Grids\Columns\PropertyColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Override;
+use Stringable;
 use Yii;
 
 /**
@@ -23,10 +25,6 @@ use Yii;
  */
 class LogFileGridView extends GridView
 {
-    // todo add nice message if no log was found
-    protected string $layout = '{items}';
-    protected bool $showOnEmpty = false;
-
     protected array $tableAttributes = [
         'class' => 'table table-striped',
         'style' => 'table-layout: fixed;',
@@ -47,6 +45,14 @@ class LogFileGridView extends GridView
         parent::configure();
     }
 
+    #[Override]
+    protected function renderContent(): string|Stringable
+    {
+        return $this->getItems() ?? Alert::make()
+            ->success()
+            ->text(Yii::t('app', 'All good! The error logs are empty.'));
+    }
+
     protected function getNameColumn(): LinkColumn
     {
         return LinkColumn::make()
@@ -56,9 +62,9 @@ class LogFileGridView extends GridView
             ->body(fn (Td $td) => $td->addClass('strong'));
     }
 
-    protected function getSizeColumn(): PropertyColumn
+    protected function getSizeColumn(): DataColumn
     {
-        return PropertyColumn::make()
+        return DataColumn::make()
             ->property('size')
             ->title(Yii::t('skeleton', 'File Size'))
             ->format('shortSize');

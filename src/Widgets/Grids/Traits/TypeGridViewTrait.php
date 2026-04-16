@@ -57,7 +57,7 @@ trait TypeGridViewTrait
             ? FilterDropdown::make()
                 ->label(Yii::t('skeleton', 'Type'))
                 ->items($this->getTypeDropdownItems())
-                ->param($this->typeParamName)
+                ->paramName($this->typeParamName)
                 ->default($this->typeDefaultItem)
             : null;
     }

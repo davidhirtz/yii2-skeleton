@@ -19,6 +19,12 @@ class GridSummary extends Widget
     protected ?string $message = null;
     protected array $params = [];
 
+    public function message(string $message): static
+    {
+        $this->message = $message;
+        return $this;
+    }
+
     #[Override]
     public function renderContent(): string|Stringable
     {

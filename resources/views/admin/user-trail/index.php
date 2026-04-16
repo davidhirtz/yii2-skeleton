@@ -11,12 +11,17 @@ declare(strict_types=1);
 
 use Hirtz\Skeleton\Modules\Admin\Data\TrailActiveDataProvider;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\TrailGridView;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserHeader;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserSubmenu;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Grids\GridContainer;
 
+echo UserHeader::make()
+    ->model($provider->user)
+    ->provider($provider);
+
 echo UserSubmenu::make()
-    ->user($provider->user);
+    ->model($provider->user);
 
 echo GridContainer::make()
     ->grid(TrailGridView::make()
