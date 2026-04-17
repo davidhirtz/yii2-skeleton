@@ -13,7 +13,7 @@ class DashboardNavItem extends NavItem
     {
         $this->label ??= Yii::t('skeleton', 'Dashboard');
         $this->icon ??= 'home';
-        $this->url ??= ['/admin/'];
+        $this->url ??= ['/admin'];
         $this->order ??= 0;
         $this->visible = !Yii::$app->getUser()->getIsGuest();
 

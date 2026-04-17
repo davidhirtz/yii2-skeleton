@@ -19,23 +19,19 @@ class Nav extends Widget
     use TagAttributesTrait;
     use VisibilityTrait;
 
-    protected bool $showSingleItem = false;
-
-    public function showSingleItem(bool $show = true): static
-    {
-        $this->showSingleItem = $show;
-        return $this;
-    }
-
     protected function renderContent(): string|Stringable
     {
-        if (!$this->isVisible() || !$this->items || (count($this->items) === 1 && !$this->showSingleItem)) {
+        if (!$this->isVisible()) {
             return '';
         }
 
-        return Ul::make()
-            ->attributes($this->attributes)
-            ->addClass('nav')
-            ->content(...$this->items);
+        $content = implode('', array_map(strval(...), $this->items));
+
+        return $content
+            ? Ul::make()
+                ->attributes($this->attributes)
+                ->addClass('nav')
+                ->content($content)
+            : '';
     }
 }

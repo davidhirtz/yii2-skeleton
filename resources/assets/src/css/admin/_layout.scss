@@ -14,19 +14,18 @@
 }
 
 .container {
-  //margin-inline: auto;
-  //width: min(100%, 100rem);
 
   @include media-breakpoint-up(md) {
     padding: 1rem;
   }
 
-  &:not(:first-child) {
-    border-top: 1px solid var(--border-color);
+  &:not(:last-child,.container-centered) {
+    border-bottom: 1px solid var(--border-color);
   }
 }
 
 .container-centered {
+  margin-inline: auto;
   display: flex;
   flex-direction: column;
   flex-grow: 1;

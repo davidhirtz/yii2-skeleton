@@ -45,9 +45,7 @@ class AccountMenu extends Widget
     {
         return [
             $this->getAccountItem(),
-            $this->getLoginItem(),
             $this->getLogoutItem(),
-            $this->getSignupItem(),
         ];
     }
 
@@ -61,19 +59,6 @@ class AccountMenu extends Widget
                 ->label($this->webuser->getIdentity()->getUsername())
                 ->url(['/admin/account/update'])
                 ->icon('user')
-            : null;
-    }
-
-    /**
-     * @see AccountController::actionLogin()
-     */
-    protected function getLoginItem(): ?NavItem
-    {
-        return $this->webuser->getIsGuest() && $this->webuser->isLoginEnabled()
-            ? NavItem::make()
-                ->label(Yii::t('skeleton', 'Login'))
-                ->url($this->webuser->loginUrl)
-                ->icon('sign-in-alt')
             : null;
     }
 
@@ -93,19 +78,6 @@ class AccountMenu extends Widget
                     ])
                     ->icon('sign-out-alt')
                     ->class('nav-link nav-logout-link'))
-            : null;
-    }
-
-    /**
-     * @see AccountController::actionCreate()
-     */
-    protected function getSignupItem(): ?NavItem
-    {
-        return $this->webuser->getIsGuest() && $this->webuser->isSignupEnabled()
-            ? NavItem::make()
-                ->label(Yii::t('skeleton', 'Sign up'))
-                ->url(['/admin/account/create'])
-                ->icon('plus-circle')
             : null;
     }
 }

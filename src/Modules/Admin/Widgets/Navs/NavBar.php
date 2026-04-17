@@ -38,13 +38,18 @@ class NavBar extends Widget
             return null;
         }
 
+        $icon = Icon::make()
+            ->collection(Icon::ICON_COLLECTION_FLAG)
+            ->name(Yii::$app->language);
+
+        $button = Button::make()
+            ->primary()
+            ->content($icon);
+
         $dropdown = Dropdown::make()
+            ->button($button)
             ->dropend()
-            ->button(Button::make()
-                ->primary()
-                ->content(Icon::make()
-                    ->name(Yii::$app->language)
-                    ->collection(Icon::ICON_COLLECTION_FLAG)));
+            ->popover(fn (Div $tag) => $tag->attribute('id', 'i18n'));
 
         foreach ($i18n->getLanguages() as $language) {
             $label = $i18n->getLabel($language);
@@ -55,8 +60,7 @@ class NavBar extends Widget
                     Icon::make()
                         ->collection(Icon::ICON_COLLECTION_FLAG)
                         ->name($language),
-                    Div::make()
-                        ->addText($label)
+                    Div::make()->addText($label)
                 );
 
             if ($this->languageRoute) {

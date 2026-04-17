@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Navs;
 
+use Closure;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Li;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
@@ -24,6 +25,8 @@ class Dropdown extends Widget
     protected Button $button;
 
     protected array $items = [];
+
+    private ?array $popoverCallbacks = null;
 
     public function autofocus(bool $autofocus = true): static
     {
@@ -47,6 +50,15 @@ class Dropdown extends Widget
     public function dropend(): static
     {
         return $this->addClass('dropdown-menu-end');
+    }
+
+    /**
+     * @param Closure(Div):Div $callback
+     */
+    public function popover(Closure $callback): static
+    {
+        $this->popoverCallbacks[] = $callback;
+        return $this;
     }
 
     public function dropup(): static
@@ -87,13 +99,13 @@ class Dropdown extends Widget
             return '';
         }
 
-        $popover = Div::make()
+        $popover = $this->evaluate($this->popoverCallbacks, Div::make()
             ->attribute('popover', 'auto')
             ->class('dropdown-menu')
             ->content(...$this->content)
             ->addContent(Ul::make()
                 ->class('dropdown-list')
-                ->content(...$content));
+                ->content(...$content)));
 
         $this->button->attributes['popovertarget'] = $popover->getId();
 

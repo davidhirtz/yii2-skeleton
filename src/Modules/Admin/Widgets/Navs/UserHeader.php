@@ -35,13 +35,12 @@ class UserHeader extends Header
             $this->subtitle ??= $this->getPaginationSubtitle($this->provider);
         }
 
-        if (!$this->provider instanceof UserActiveDataProvider) {
+        if ($this->provider instanceof UserActiveDataProvider) {
+            $this->addCreateUserButton();
+        } else {
             $this->breadcrumbs ??= [Yii::t('app', 'Users') => ['/admin/user/index']];
         }
 
-        if (!$this->model) {
-            $this->addCreateUserButton();
-        }
 
         parent::configure();
     }

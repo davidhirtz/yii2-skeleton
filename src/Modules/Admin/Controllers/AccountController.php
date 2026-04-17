@@ -149,7 +149,7 @@ class AccountController extends Controller
                         'name' => $form->user->getUsername(),
                     ]));
 
-                return $this->goBack(['admin/dashboard/index']);
+                return $this->goBack(['/admin/dashboard/index']);
             }
 
             if ($form->isTwoFactorAuthenticationCodeRequired()) {

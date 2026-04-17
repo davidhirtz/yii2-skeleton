@@ -11,7 +11,7 @@ use Stringable;
 class AsideMenu extends Widget
 {
     public array $attributes = [
-        'class' => 'aside',
+        'class' => 'aside hidden-empty',
         'id' => 'aside',
     ];
 

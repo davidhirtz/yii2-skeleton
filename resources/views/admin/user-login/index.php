@@ -10,16 +10,14 @@ declare(strict_types=1);
  */
 
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\UserLoginGridView;
-use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserSubmenu;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Grids\GridContainer;
+use Hirtz\Skeleton\Widgets\Navs\Header;
 use yii\data\ActiveDataProvider;
 
-$this->title(Yii::t('skeleton', 'Logins'))
-    ->addBreadcrumb(Yii::t('skeleton', 'Logins'), ['index']);
-
-
-echo UserSubmenu::make();
+echo Header::make()
+    ->pagination($provider)
+    ->title(Yii::t('skeleton', 'Logins'));
 
 echo GridContainer::make()
     ->grid(UserLoginGridView::make()

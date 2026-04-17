@@ -33,7 +33,6 @@ class MainMenu extends Widget
     protected function getNav(): Nav
     {
         return Nav::make()
-            ->class('aside-nav nav')
-            ->showSingleItem();
+            ->class('aside-nav');
     }
 }

@@ -35,7 +35,7 @@ class AdminButton extends Widget
 
         return A::make()
             ->content($this->icon)
-            ->href(['admin/dashboard/index'])
+            ->href(['/admin/dashboard/index'])
             ->class('admin-btn')
             ->attribute('onclick', 'document.documentElement.classList.toggle(\'is-admin\');return false')
             ->target('_blank');

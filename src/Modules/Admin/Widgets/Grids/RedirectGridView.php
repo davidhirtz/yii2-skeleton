@@ -56,7 +56,7 @@ class RedirectGridView extends GridView
 
         $this->header ??= [
             $this->getTypeDropdown(),
-            GridSearchForm::make()->grid($this),
+            $this->getSearchInput(),
         ];
 
         $this->columns ??= [

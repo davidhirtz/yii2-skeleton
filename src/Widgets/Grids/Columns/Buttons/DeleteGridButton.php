@@ -16,8 +16,6 @@ class DeleteGridButton extends Widget
 
     public function renderContent(): Stringable
     {
-        $this->setButtonDefault();
-
         $modal = Modal::make()
             ->title($this->title)
             ->content(...$this->content)

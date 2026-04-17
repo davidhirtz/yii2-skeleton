@@ -23,6 +23,7 @@ use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Pagers\LinkPager;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridFooter;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridHeader;
+use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridSearchForm;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Hirtz\Skeleton\Widgets\Traits\ProviderTrait;
 use Hirtz\Skeleton\Widgets\Widget;
@@ -144,6 +145,11 @@ class GridView extends Widget
             : $this->header;
     }
 
+    protected function getSearchInput(): ?Stringable
+    {
+        return GridSearchForm::make()->grid($this);
+    }
+
     protected function getSummary(): ?Stringable
     {
         return GridSummary::make()->grid($this);
@@ -258,30 +264,6 @@ class GridView extends Widget
             ? GridFooter::make()->attributes($this->footerAttributes)->content(...$this->footer)
             : $this->footer;
     }
-
-    //    /**
-    //     * @return T|null
-    //     */
-    //    protected function getModelFromProvider(): ?Model
-    //    {
-    //        if ($this->provider instanceof ActiveDataProvider) {
-    //            /** @var class-string<ActiveRecord>|null $modelClass */
-    //            $modelClass = $this->provider->query->modelClass ?? null;
-    //        }
-    //
-    //        $modelClass ??= $this->provider instanceof ArrayDataProvider
-    //            ? $this->provider->modelClass
-    //            : null;
-    //
-    //        if ($modelClass) {
-    //            return $modelClass::instance();
-    //        }
-    //
-    //        $models = $this->provider->getModels();
-    //        $model = reset($models);
-    //
-    //        return $model instanceof Model ? $model : null;
-    //    }
 
     protected function isSortable(): bool
     {

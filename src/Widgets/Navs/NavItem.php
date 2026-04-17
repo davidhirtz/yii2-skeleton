@@ -83,7 +83,6 @@ class NavItem extends Widget
             return '';
         }
 
-
         return Li::make()
             ->attributes($this->attributes)
             ->addClass('nav-item')
@@ -169,7 +168,7 @@ class NavItem extends Widget
             return null;
         }
 
-        $items = Nav::make()
+        $subnav = Nav::make()
             ->class('subnav')
             ->items($this->items)
             ->render();
@@ -182,6 +181,6 @@ class NavItem extends Widget
             $this->roles($item->getRoles());
         }
 
-        return $items;
+        return $subnav;
     }
 }

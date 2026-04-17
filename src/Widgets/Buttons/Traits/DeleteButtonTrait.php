@@ -16,6 +16,9 @@ use yii\db\ActiveRecordInterface;
 
 trait DeleteButtonTrait
 {
+    /**
+     * @use ModelTrait<ActiveRecordInterface>
+     */
     use ModelTrait;
     use UrlTrait;
     use IconTextTrait;

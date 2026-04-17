@@ -162,7 +162,7 @@ class UserController extends Controller
             'attribute' => 'email',
         ]);
 
-        if ($form->load(Yii::$app->getRequest()->post()) && $form->delete()) {
+        if ($form->load($this->request->post()) && $form->delete()) {
             $this->success(Yii::t('skeleton', 'The user was deleted.'));
 
             if ($user->id === Yii::$app->getUser()->id) {

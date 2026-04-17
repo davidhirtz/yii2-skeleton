@@ -99,7 +99,7 @@ class Breadcrumbs extends Widget
             $this->links = [
                 [
                     'label' => Yii::t('skeleton', 'Admin'),
-                    'url' => [$module->defaultRoute],
+                    'url' => ['/admin'],
                 ],
                 ...$this->links
             ];

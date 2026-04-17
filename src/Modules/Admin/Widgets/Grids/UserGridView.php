@@ -37,7 +37,7 @@ class UserGridView extends GridView
         $this->attributes['id'] ??= 'user-grid';
 
         $this->header ??= [
-            GridSearchForm::make()->grid($this),
+            $this->getSearchInput(),
         ];
 
         $this->rowAttributes = fn (User $user) => $user->isDisabled() ? ['class' => 'disabled'] : [];

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Widgets\Navs;
 
 use Hirtz\Skeleton\Html\A;
-use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Web\Controller;
@@ -39,13 +38,6 @@ class NavTest extends TestCase
                 ->url('/'))
             ->render();
 
-        $content = Nav::make()
-            ->addItem(NavItem::make()
-                ->label('Home')
-                ->url('/'))
-            ->showSingleItem()
-            ->render();
-
         self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active" href="/"><span>Home</span></a></li></ul>', $content);
     }
 
@@ -76,7 +68,6 @@ class NavTest extends TestCase
                     ->url(['/admin/dashboard/index'])
                     ->roles([User::AUTH_ROLE_ADMIN])
             ])
-            ->showSingleItem()
             ->render();
 
         self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active" href="/"><span>Home</span></a></li></ul>', $content);
@@ -91,7 +82,6 @@ class NavTest extends TestCase
                 ->badge(fn (Badge $badge) => $badge->value('New')->class('badge'))
                 ->icon(fn (Icon $icon) => $icon->name('home')->addClass('hidden'))
                 ->link(fn (A $link) => $link->addClass('home')))
-            ->showSingleItem()
             ->render();
 
         self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active home" href="/"><span class="hidden nav-link-icon fas fa-home"></span><span>Home</span><span class="badge">New</span></a></li></ul>', $content);

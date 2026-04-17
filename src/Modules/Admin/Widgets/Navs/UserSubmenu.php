@@ -22,18 +22,14 @@ class UserSubmenu extends Submenu
     #[Override]
     protected function configure(): void
     {
-        $this->items = [...$this->items, $this->getDefaultItems()];
-        parent::configure();
-    }
-
-    protected function getDefaultItems(): array
-    {
-        return [
+        $this->addItem(
             $this->getUserUpdateItem(),
             $this->getUserPermissionItem(),
             $this->getUserLoginItem(),
             $this->getUserTrailItem(),
-        ];
+        );
+
+        parent::configure();
     }
 
     protected function getUserUpdateItem(): ?NavItem
