@@ -18,11 +18,12 @@ use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Data\TrailActiveDataProvider;
+use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\TypeIconColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Hirtz\Skeleton\Widgets\Grids\Traits\MessageSourceTrait;
-use Hirtz\Skeleton\Widgets\Grids\Traits\TypeGridViewTrait;
 use Hirtz\Skeleton\Widgets\Username;
 use Jfcherng\Diff\DiffHelper;
 use Override;
@@ -37,7 +38,6 @@ use yii\base\Model;
 class TrailGridView extends GridView
 {
     use MessageSourceTrait;
-    use TypeGridViewTrait;
 
     protected array $tableAttributes = [
         'class' => 'trail-table table table-striped',
@@ -53,7 +53,7 @@ class TrailGridView extends GridView
         ];
 
         $this->columns ??= [
-            $this->getTypeIconColumn(),
+            $this->getTypeColumn(),
             $this->getModelColumn(),
             $this->getDataColumn(),
             $this->getUserColumn(),
@@ -63,6 +63,11 @@ class TrailGridView extends GridView
         $this->messageSourceAttribute = 'message';
 
         parent::configure();
+    }
+
+    protected function getTypeColumn(): ?Column
+    {
+        return TypeIconColumn::make();
     }
 
     protected function getModelColumn(): DataColumn

@@ -12,15 +12,15 @@ trait MessageSourceTrait
 {
     public string $messageSourceAttribute = 'description';
 
-    private ?array $_translations = null;
+    private ?array $translations = null;
 
     /**
      * Finds the correct translation source for the authItem description.
      */
     public function getTranslations(): array
     {
-        if ($this->_translations === null) {
-            $this->_translations = [];
+        if ($this->translations === null) {
+            $this->translations = [];
 
             $i18n = Yii::$app->getI18n();
             $sources = [];
@@ -40,7 +40,7 @@ trait MessageSourceTrait
                 if ($message = $authItem->{$this->messageSourceAttribute}) {
                     foreach ($sources as $category => $source) {
                         if ($translation = $source->translate($category, $message, Yii::$app->language)) {
-                            $this->_translations[$message] = $translation;
+                            $this->translations[$message] = $translation;
                             break;
                         }
                     }
@@ -48,11 +48,11 @@ trait MessageSourceTrait
             }
         }
 
-        return $this->_translations;
+        return $this->translations;
     }
 
     public function setTranslations(array $translations): void
     {
-        $this->_translations = $translations;
+        $this->translations = $translations;
     }
 }

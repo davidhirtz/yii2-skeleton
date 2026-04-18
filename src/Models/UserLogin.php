@@ -76,6 +76,11 @@ class UserLogin extends ActiveRecord implements TypeAttributeInterface
         return $this->getTypeOptions()['name'] ?? ucfirst($this->type);
     }
 
+    public function getTypeIcon(): string
+    {
+        return $this->getTypeOptions()['icon'] ?: "brand:$this->type";
+    }
+
     public static function getTypes(): array
     {
         return [

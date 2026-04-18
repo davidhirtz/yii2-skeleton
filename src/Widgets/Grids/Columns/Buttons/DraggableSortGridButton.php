@@ -12,7 +12,7 @@ class DraggableSortGridButton extends Widget
 {
     use IconTrait;
 
-    public function renderContent(): string
+    protected function renderContent(): string
     {
         return Button::make()
             ->secondary()

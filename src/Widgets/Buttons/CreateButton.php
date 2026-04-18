@@ -33,7 +33,7 @@ class CreateButton extends Widget
     }
 
     #[Override]
-    public function renderContent(): string|Stringable
+    protected function renderContent(): string|Stringable
     {
         return $this->isVisible()
             ? Button::make()

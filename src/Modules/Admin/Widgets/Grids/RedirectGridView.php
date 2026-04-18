@@ -16,11 +16,11 @@ use Hirtz\Skeleton\Widgets\Grids\Columns\CheckboxColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\TypeIconColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridFooter;
-use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridSearchForm;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridToolbarItem;
-use Hirtz\Skeleton\Widgets\Grids\Traits\TypeGridViewTrait;
+use Hirtz\Skeleton\Widgets\Grids\Toolbars\TypeFilterDropdown;
 use Hirtz\Skeleton\Widgets\Link;
 use Hirtz\Skeleton\Widgets\Modal;
 use Override;
@@ -33,8 +33,6 @@ use Yii;
  */
 class RedirectGridView extends GridView
 {
-    use TypeGridViewTrait;
-
     public bool $showSelection = true;
     protected ?Redirect $redirect = null;
 
@@ -45,7 +43,7 @@ class RedirectGridView extends GridView
     }
 
     #[Override]
-    public function configure(): void
+    protected function configure(): void
     {
         $this->attributes['id'] ??= 'redirects';
 
@@ -61,7 +59,7 @@ class RedirectGridView extends GridView
 
         $this->columns ??= [
             $this->getCheckboxColumn(),
-            $this->getTypeIconColumn(),
+            $this->getTypeColumn(),
             $this->getRequestUriColumn(),
             $this->getUrlColumn(),
             $this->getUpdatedAtColumn(),
@@ -94,11 +92,22 @@ class RedirectGridView extends GridView
         $this->layout = '{items}';
     }
 
+    protected function getTypeDropdown(): ?Stringable
+    {
+        return TypeFilterDropdown::make()
+            ->model(Redirect::instance());
+    }
+
     protected function getCheckboxColumn(): ?CheckboxColumn
     {
         return $this->showSelection
             ? CheckboxColumn::make()
             : null;
+    }
+
+    protected function getTypeColumn(): ?Column
+    {
+        return TypeIconColumn::make();
     }
 
     protected function getRequestUriColumn(): ?Column

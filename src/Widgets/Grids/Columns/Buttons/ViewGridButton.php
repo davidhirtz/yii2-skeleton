@@ -21,7 +21,7 @@ class ViewGridButton extends Widget
     use IconTextTrait;
     use LabelTrait;
 
-    public function renderContent(): Stringable
+    protected function renderContent(): Stringable
     {
         if ($this->model instanceof ActiveRecordInterface) {
             $this->url ??= ['update', 'id' => $this->model->getPrimaryKey()];

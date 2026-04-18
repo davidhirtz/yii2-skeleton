@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Html\Traits\TagIdTrait;
 use Hirtz\Skeleton\Widgets\Navs\Dropdown;
 use Hirtz\Skeleton\Widgets\Navs\DropdownOptionLink;
 use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
+use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
@@ -21,8 +22,9 @@ class FilterDropdown extends Widget
     use TagAttributesTrait;
     use LabelTrait;
     use TagIdTrait;
+    use VisibilityTrait;
 
-    protected int $showFilterThreshold = 20;
+    protected int|false $showFilterThreshold = 20;
     protected array $params = ['page' => null];
 
     protected string $paramName;
@@ -69,14 +71,17 @@ class FilterDropdown extends Widget
     #[Override]
     protected function renderContent(): string|Stringable
     {
-        if (!$this->items) {
+        if (!$this->items || !$this->isVisible()) {
             return '';
         }
 
         $this->default ??= Yii::t('skeleton', 'Show All');
         $this->placeholder ??= Yii::t('skeleton', 'Filter ...');
-        $this->filterable ??= count($this->items) >= $this->showFilterThreshold;
         $this->value ??= Yii::$app->getRequest()->get($this->paramName);
+
+        if ($this->showFilterThreshold !== false) {
+            $this->filterable ??= count($this->items) >= $this->showFilterThreshold;
+        }
 
         $dropdown = Dropdown::make()
             ->autofocus()
