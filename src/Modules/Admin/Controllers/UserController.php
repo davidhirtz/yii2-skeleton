@@ -69,6 +69,7 @@ class UserController extends Controller
                     'deauthorize' => ['post'],
                     'delete-picture' => ['post'],
                     'delete' => ['post'],
+                    'ownership' => ['post'],
                     'reset' => ['post'],
                 ],
             ],
@@ -211,15 +212,19 @@ class UserController extends Controller
         throw new ServerErrorHttpException();
     }
 
-    public function actionOwnership(): Response|string
+    public function actionOwnership(int $id): Response|string
     {
         if (!Yii::$app->getUser()->getIdentity()->isOwner()) {
             throw new ForbiddenHttpException();
         }
 
-        $form = OwnershipForm::create();
+        $user = $this->findUser($id, User::AUTH_USER_UPDATE);
 
-        if ($form->load(Yii::$app->request->post()) && $form->update()) {
+        $form = OwnershipForm::create([
+            'user' => $user,
+        ]);
+
+        if ($form->update()) {
             $this->success(Yii::t('skeleton', 'The website ownership was successful transferred!'));
             return $this->goHome();
         }

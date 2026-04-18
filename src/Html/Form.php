@@ -34,13 +34,13 @@ class Form extends Tag
     #[Override]
     protected function renderContent(): string
     {
-        if ('post' === $this->attributes['method']) {
+        if (strtolower($this->attributes['method']) === 'post') {
             $this->content = [
                 TextInput::make()
                     ->type('hidden')
                     ->name(Yii::$app->request->csrfParam)
                     ->value(Yii::$app->request->getCsrfToken()),
-                ...$this->content
+                ...$this->content,
             ];
         }
 

@@ -5,23 +5,14 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
 use Hirtz\Skeleton\Html\Custom\RelativeTime;
-use Hirtz\Skeleton\Web\User;
-use Hirtz\Skeleton\Widgets\Attributes\Configure;
 use Hirtz\Skeleton\Widgets\Navs\Header;
+use Override;
 use Yii;
 
 class DashboardHeader extends Header
 {
-    protected User $webuser;
-
-    public function __construct(array $config = [])
-    {
-        $this->webuser = Yii::$app->getUser();
-        parent::__construct($config);
-    }
-
-    #[Configure]
-    protected function setDefaults(): void
+    #[Override]
+    protected function configure(): void
     {
         $identity = $this->webuser->getIdentity();
         $params = ['user' => $identity->getUsername()];
@@ -37,5 +28,7 @@ class DashboardHeader extends Header
                 'timestamp' => RelativeTime::make()->value($lastLogin),
             ]);
         }
+
+        parent::configure();
     }
 }

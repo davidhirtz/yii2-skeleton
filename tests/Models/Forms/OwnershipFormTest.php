@@ -14,23 +14,12 @@ class OwnershipFormTest extends TestCase
 {
     use UserFixtureTrait;
 
-    public function testWithInvalidName(): void
-    {
-        $form = OwnershipForm::create();
-        $form->name = 'wrong_username';
-
-        $expected = Yii::t('skeleton', 'The user {user} was not found.', [
-            'user' => $form->name,
-        ]);
-
-        self::assertFalse($form->update());
-        self::assertEquals($expected, $form->getFirstError('name'));
-    }
 
     public function testWithDisabledUser(): void
     {
-        $form = OwnershipForm::create();
-        $form->name = $this->getUserFromFixture('disabled')->name;
+        $form = OwnershipForm::create([
+            'user' => $this->getUserFromFixture('disabled')
+        ]);
 
         $expected = Yii::t('skeleton', 'This user is currently disabled and thus can not be made website owner!');
 
@@ -40,8 +29,9 @@ class OwnershipFormTest extends TestCase
 
     public function testWithOwner(): void
     {
-        $form = OwnershipForm::create();
-        $form->name = $this->getUserFromFixture('owner')->name;
+        $form = OwnershipForm::create([
+            'user' => $this->getUserFromFixture('owner')
+        ]);
 
         $expected = Yii::t('skeleton', 'This user is already the owner of the website!');
 
@@ -51,14 +41,15 @@ class OwnershipFormTest extends TestCase
 
     public function testWithValidUser(): void
     {
-        $form = OwnershipForm::create();
-        $form->name = $this->getUserFromFixture('admin')->name;
+        $form = OwnershipForm::create([
+            'user' => $this->getUserFromFixture('admin')
+        ]);
 
         self::assertTrue($form->update());
 
         $user = User::find()->where(['is_owner' => 1])->one();
 
         self::assertTrue($user->isOwner());
-        self::assertEquals($form->name, $user->name);
+        self::assertEquals($form->user->name, $user->name);
     }
 }

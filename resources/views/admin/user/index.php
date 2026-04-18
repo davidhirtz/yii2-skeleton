@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\UserGridView;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserHeader;
-use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\UserOwnerPanel;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Grids\GridContainer;
@@ -23,8 +22,3 @@ echo UserHeader::make()
 echo GridContainer::make()
     ->grid(UserGridView::make()
         ->provider($provider));
-
-if (Yii::$app->getUser()->getIdentity()->isOwner()) {
-    echo Container::make()
-        ->content(UserOwnerPanel::make());
-}

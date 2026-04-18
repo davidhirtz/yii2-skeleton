@@ -14,48 +14,23 @@ class OwnershipForm extends Model
 {
     use ModelTrait;
 
-    public ?string $name = null;
-    private ?User $user = null;
-
-    #[Override]
-    public function rules(): array
+    public function __construct(public readonly User $user)
     {
-        return [
-            [
-                ['name'],
-                'trim',
-            ],
-            [
-                ['name'],
-                'required',
-            ],
-            [
-                ['name'],
-                $this->validateUser(...),
-            ],
-        ];
+        parent::__construct();
     }
 
-    protected function validateUser(): void
+    #[Override]
+    public function beforeValidate(): bool
     {
-        $this->user ??= User::find()
-            ->andWhereName($this->name)
-            ->limit(1)
-            ->one();
-
-        if (!$this->user) {
-            $this->addError('name', Yii::t('skeleton', 'The user {user} was not found.', [
-                'user' => $this->name,
-            ]));
-        }
-
-        if ($this->user?->isDisabled()) {
+        if ($this->user->isDisabled()) {
             $this->addError('name', Yii::t('skeleton', 'This user is currently disabled and thus can not be made website owner!'));
         }
 
-        if ($this->user?->isOwner()) {
+        if ($this->user->isOwner()) {
             $this->addError('name', Yii::t('skeleton', 'This user is already the owner of the website!'));
         }
+
+        return parent::beforeValidate();
     }
 
     public function update(): bool
@@ -70,20 +45,10 @@ class OwnershipForm extends Model
                 $owner->update();
             }
 
-            if ($this->user) {
-                $this->user->is_owner = true;
-                return (bool)$this->user->update(false);
-            }
+            $this->user->is_owner = true;
+            return (bool)$this->user->update(false);
         }
 
         return false;
-    }
-
-    #[Override]
-    public function attributeLabels(): array
-    {
-        return [
-            'name' => Yii::t('skeleton', 'Username'),
-        ];
     }
 }

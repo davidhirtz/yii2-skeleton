@@ -37,9 +37,9 @@ AdminAssetBundle::register($this);
         <main class="main">
             <?= Breadcrumbs::make(); ?>
             <?= $content ?>
-            <?php $this->endBody() ?>
         </main>
     </div>
+    <?php $this->endBody() ?>
     </body>
     </html>
 <?php $this->endPage() ?>

@@ -20,7 +20,7 @@ class StatusFilterDropdown extends FilterDropdown
         $this->paramName ??= 'status';
 
         if ($this->model instanceof StatusAttributeInterface) {
-            $this->items = $this->model::getStatuses();
+            $this->items = array_map(fn ($item) => $item['name'], ($this->model::getStatuses()));
         }
 
         parent::configure();

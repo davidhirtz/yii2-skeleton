@@ -6,7 +6,6 @@ namespace Hirtz\Skeleton\Widgets\Buttons;
 
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Form;
-use Hirtz\Skeleton\Html\Input;
 use Hirtz\Skeleton\Html\TextInput;
 use Hirtz\Skeleton\Widgets\Buttons\Traits\DeleteButtonTrait;
 use Hirtz\Skeleton\Widgets\Modal;
@@ -21,7 +20,7 @@ class DeleteButton extends Widget
     use PropertyTrait;
 
     #[Override]
-    public function renderContent(): string|Stringable
+    protected function renderContent(): string|Stringable
     {
         return $this->isVisible() ? $this->getButton() : '';
     }
@@ -66,7 +65,7 @@ class DeleteButton extends Widget
             ->content($this->getInput());
     }
 
-    protected function getInput(): Input
+    protected function getInput(): TextInput
     {
         return TextInput::make()
             ->autofocus()

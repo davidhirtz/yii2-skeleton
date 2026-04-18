@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Widgets\Navs\Dropdown;
 use Hirtz\Skeleton\Widgets\Navs\DropdownOptionLink;
 use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
 use Hirtz\Skeleton\Widgets\Widget;
+use Override;
 use Stringable;
 use Yii;
 
@@ -65,7 +66,8 @@ class FilterDropdown extends Widget
         return $this;
     }
 
-    public function renderContent(): string|Stringable
+    #[Override]
+    protected function renderContent(): string|Stringable
     {
         if (!$this->items) {
             return '';

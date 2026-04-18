@@ -8,15 +8,14 @@ use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Data\UserActiveDataProvider;
-use Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\UserCreateButton;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\StatusIconColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
-use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridSearchForm;
-use Hirtz\Skeleton\Widgets\Grids\Traits\StatusGridViewTrait;
+use Hirtz\Skeleton\Widgets\Grids\Toolbars\StatusFilterDropdown;
 use Hirtz\Skeleton\Widgets\Link;
 use Override;
 use Stringable;
@@ -29,14 +28,13 @@ use Yii;
  */
 class UserGridView extends GridView
 {
-    use StatusGridViewTrait;
-
     #[Override]
-    public function configure(): void
+    protected function configure(): void
     {
         $this->attributes['id'] ??= 'user-grid';
 
         $this->header ??= [
+            $this->getStatusDropdown(),
             $this->getSearchInput(),
         ];
 
@@ -54,10 +52,15 @@ class UserGridView extends GridView
         parent::configure();
     }
 
-    #[Override]
-    protected function getStatusDropdownItems(): array
+    protected function getStatusDropdown(): ?Stringable
     {
-        return User::instance()::getStatuses();
+        return StatusFilterDropdown::make()
+            ->model(User::instance());
+    }
+
+    protected function getStatusColumn(): ?Column
+    {
+        return StatusIconColumn::make();
     }
 
     protected function getNameColumn(): Column

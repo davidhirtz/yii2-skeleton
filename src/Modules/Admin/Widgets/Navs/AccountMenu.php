@@ -7,7 +7,6 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
-use Hirtz\Skeleton\Web\User;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Navs\Nav;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
@@ -20,15 +19,11 @@ class AccountMenu extends Widget
 {
     use TagAttributesTrait;
 
-    protected User $webuser;
-
     #[Override]
     protected function configure(): void
     {
         $this->attributes['id'] ??= 'account-menu';
         $this->attributes['class'] ??= 'aside-nav nav';
-
-        $this->webuser = Yii::$app->getUser();
 
         parent::configure();
     }

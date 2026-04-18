@@ -120,9 +120,9 @@ class Dropdown extends Widget
         $items = [];
 
         foreach ($this->items as $item) {
-            $items[] = $item instanceof Li
-                ? $item->render()
-                : Li::make()->class('dropdown-item')->content($item)->render();
+                $items[] = $item instanceof Li
+                    ? $item->render()
+                    : Li::make()->class('dropdown-item')->content($item)->render();
         }
 
         return array_filter($items);

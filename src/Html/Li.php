@@ -12,6 +12,8 @@ class Li extends Tag
 {
     use TagContentTrait;
 
+    protected bool $showEmpty = false;
+
     #[Override]
     protected function getTagName(): string
     {

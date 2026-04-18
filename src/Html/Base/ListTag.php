@@ -10,6 +10,7 @@ use Stringable;
 
 abstract class ListTag extends Tag
 {
+    protected bool $showEmpty = false;
     protected array $items = [];
 
     final public function items(string|Stringable|null ...$items): static
@@ -45,11 +46,5 @@ abstract class ListTag extends Tag
     protected function renderContent(): string
     {
         return implode('', $this->items);
-    }
-
-    #[Override]
-    protected function getTag(): string
-    {
-        return $this->items ? parent::getTag() : '';
     }
 }

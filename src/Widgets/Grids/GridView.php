@@ -17,7 +17,6 @@ use Hirtz\Skeleton\Html\Thead;
 use Hirtz\Skeleton\Html\Tr;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
-use Hirtz\Skeleton\Web\User;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Pagers\LinkPager;
@@ -72,13 +71,10 @@ class GridView extends Widget
     protected ?array $orderRoute = ['order'];
 
     public GridSearch $search;
-    protected User $webuser;
 
     public function __construct(array $config = [])
     {
         $this->search ??= GridSearch::make();
-        $this->webuser = Yii::$app->getUser();
-
         parent::__construct($config);
     }
 

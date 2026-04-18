@@ -9,7 +9,6 @@ use DateTimeZone;
 use Hirtz\Skeleton\Html\P;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
-use Hirtz\Skeleton\Web\User;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Modal;
 use Hirtz\Skeleton\Widgets\Widget;
@@ -20,15 +19,12 @@ use yii\web\Session;
 class TimezoneModal extends Widget
 {
     protected Session $session;
-    protected User $webuser;
 
     final protected const string SESSION_KEY = 'timezone_validated';
 
     public function __construct(array $config = [])
     {
         $this->session = Yii::$app->getSession();
-        $this->webuser = Yii::$app->getUser();
-
         parent::__construct($config);
     }
 
