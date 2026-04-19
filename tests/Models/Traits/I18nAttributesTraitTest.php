@@ -72,6 +72,8 @@ class I18nAttributesTraitTest extends TestCase
         self::assertEquals(['en-US' => 'untranslated'], $model->getI18nAttributeNames('untranslated'));
 
         Yii::$app->getI18n()->callback('de', fn () => self::assertEquals('name_de', $model->getI18nAttributeName('name')));
+
+        self::assertEquals('en-US', Yii::$app->language);
     }
 
     public function testI18nRules(): void

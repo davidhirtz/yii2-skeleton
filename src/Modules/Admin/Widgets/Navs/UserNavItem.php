@@ -13,7 +13,7 @@ class UserNavItem extends NavItem
 {
     public function __construct(array $config = [])
     {
-        $this->label ??= Yii::t('skeleton', 'Users');
+        $this->label ??= Yii::t('skeleton', 'User Management');
         $this->icon ??= 'users';
         $this->order ??= 100;
         $this->url ??= ['/admin/user/index'];
@@ -36,6 +36,7 @@ class UserNavItem extends NavItem
     protected function getUserItem(): ?NavItem
     {
         return NavItem::make()
+            ->icon('user-friends')
             ->label(Yii::t('skeleton', 'Users'))
             ->url(['/admin/user/index'])
             ->roles([User::AUTH_USER_CREATE, User::AUTH_USER_UPDATE])
@@ -45,6 +46,7 @@ class UserNavItem extends NavItem
     protected function getPermissionItem(): NavItem
     {
         return NavItem::make()
+            ->icon('balance-scale-right')
             ->label(Yii::t('skeleton', 'Permissions'))
             ->url(['/admin/auth/index'])
             ->roles([User::AUTH_USER_ASSIGN])
@@ -54,6 +56,7 @@ class UserNavItem extends NavItem
     protected function getLoginItem(): NavItem
     {
         return NavItem::make()
+            ->icon('sign-in-alt')
             ->label(Yii::t('skeleton', 'Logins'))
             ->url(['/admin/user-login/index'])
             ->roles([User::AUTH_USER_UPDATE])

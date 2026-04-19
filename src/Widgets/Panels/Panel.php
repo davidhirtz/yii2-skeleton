@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Panels;
 
 use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Widgets\Buttons\ButtonGroup;
 use Hirtz\Skeleton\Widgets\Grids\Traits\GridTrait;
 use Hirtz\Skeleton\Widgets\Traits\CardTrait;
 use Hirtz\Skeleton\Widgets\Traits\ContainerTrait;
@@ -52,11 +53,7 @@ class Panel extends Widget
             ->content(...$this->content);
 
         if ($this->buttons) {
-            $content->addContent(
-                Div::make()
-                    ->class('btn-group')
-                    ->content(...$this->buttons)
-            );
+            $content->addContent(ButtonGroup::make()->content(...$this->buttons));
         }
 
         return Div::make()

@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Widgets\Grids\Columns;
 
 use Closure;
 use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Widgets\Buttons\ButtonGroup;
 use Iterator;
 use Override;
 use Stringable;
@@ -33,9 +34,7 @@ class ButtonColumn extends Column
         }
 
         if (is_array($buttons)) {
-            return Div::make()
-                ->class('btn-group')
-                ->content(...$buttons);
+            return ButtonGroup::make()->content(...$buttons);
         }
 
         return parent::getBody($model, $key, $index);

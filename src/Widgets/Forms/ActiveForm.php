@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Html\Form;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
+use Hirtz\Skeleton\Widgets\Buttons\ButtonGroup;
 use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
 use Hirtz\Skeleton\Widgets\Forms\Footers\FormFooter;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
@@ -129,11 +130,8 @@ class ActiveForm extends Widget
         }
 
         $content = $this->buttons
-            ? Div::make()
-                ->class('btn-group')
-                ->content(...$this->buttons)
-            : Div::make()
-                ->content($this->getSubmitButton());
+            ? ButtonGroup::make()->content(...$this->buttons)
+            : Div::make()->content($this->getSubmitButton());
 
         $row = FormRow::make()
             ->content($content);

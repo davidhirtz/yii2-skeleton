@@ -73,7 +73,7 @@
 }
 
 .aside-toggle {
-  @include media-breakpoint-up(md) {
+  @include media-breakpoint-up(lg) {
     display: none;
   }
 }

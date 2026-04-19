@@ -52,13 +52,14 @@ class I18N extends \yii\i18n\I18N
      */
     public function callback(string $language, callable $callback): mixed
     {
-        $prevLanguage = Yii::$app->language;
+        $original = Yii::$app->language;
         Yii::$app->language = $language;
 
-        $result = call_user_func($callback);
-
-        Yii::$app->language = $prevLanguage;
-        return $result;
+        try {
+            return $callback($language);
+        } finally {
+            Yii::$app->language = $original;
+        }
     }
 
     public function getLanguages(): array

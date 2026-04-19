@@ -35,7 +35,6 @@ trait BreadcrumbTrait
     public function addBreadcrumb(?string $label, array|string|null $url = null): static
     {
         if ($label) {
-            $this->breadcrumbs ??= [];
             $this->breadcrumbs[] = ['label' => $label, 'url' => $url];
         }
 

@@ -20,7 +20,10 @@ class TypeFilterDropdown extends FilterDropdown
         $this->paramName ??= 'type';
 
         if ($this->model instanceof TypeAttributeInterface) {
-            $this->items = array_map(fn ($item) => $item['plural'] ?? $item['name'], ($this->model::getTypes()));
+            $this->items = array_map(
+                fn ($item) => $item['plural'] ?? $item['name'],
+                $this->items ?: $this->model::getTypes(),
+            );
         }
 
         parent::configure();
