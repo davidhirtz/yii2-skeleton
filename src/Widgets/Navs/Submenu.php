@@ -7,7 +7,6 @@ namespace Hirtz\Skeleton\Widgets\Navs;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Navs\Traits\ItemTrait;
-use Hirtz\Skeleton\Widgets\Traits\TitleTrait;
 use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
@@ -19,10 +18,13 @@ class Submenu extends Widget
     use ItemTrait;
 
     use TagContentTrait;
-    use TitleTrait;
-    use UrlTrait;
 
     protected array $navAttributes = ['class' => 'tabs'];
+
+    public function title()
+    {
+
+    }
 
     #[Override]
     protected function renderContent(): string|Stringable

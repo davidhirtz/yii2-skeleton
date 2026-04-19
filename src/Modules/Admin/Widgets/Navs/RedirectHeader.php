@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
+use Hirtz\Skeleton\Models\Breadcrumb;
 use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Modules\Admin\Data\RedirectActiveDataProvider;
 use Hirtz\Skeleton\Widgets\Buttons\CreateButton;
@@ -32,7 +33,9 @@ class RedirectHeader extends Header
             : $this->model?->getDisplayName() ?? Yii::t('skeleton', 'Create New Redirect');
 
         if (!$this->provider) {
-            $this->breadcrumbs ??= [Yii::t('skeleton', 'Redirects') => ['/admin/redirect/index']];
+            $this->breadcrumbs ??= [
+                new Breadcrumb(Yii::t('skeleton', 'Redirects'), ['/admin/redirect/index']),
+            ];
         }
 
         if ($this->model) {

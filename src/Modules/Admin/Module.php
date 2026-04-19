@@ -21,7 +21,6 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
 {
     public string $alias = 'admin';
     public ?int $trailLifetime = null;
-    public bool $showInBreadcrumbs = true;
 
     public $defaultRoute = 'dashboard';
     public $layout = 'main';

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Grids\Columns;
 
 use Closure;
+use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
 use Stringable;
@@ -13,9 +14,12 @@ use yii\base\Model;
 class LinkColumn extends DataColumn
 {
     protected array $linkAttributes = [];
-    protected ?Closure $url = null;
-
     private ?array $linkCallbacks = null;
+
+    /**
+     * @var Closure(array|Model, string|int, int):(array|string|null|false)|null
+     */
+    protected ?Closure $url = null;
 
     public function __construct(array $config = [])
     {
@@ -43,7 +47,10 @@ class LinkColumn extends DataColumn
         return $this->link(fn (A|Div $tag) => $tag instanceof A ? $tag->target($target) : $tag);
     }
 
-    public function url(Closure $url): static
+    /**
+     * @param Closure(array|Model, string|int, int):(array|string|null|false)|null $url
+     */
+    public function url(?Closure $url): static
     {
         $this->url = $url;
         return $this;
@@ -62,14 +69,14 @@ class LinkColumn extends DataColumn
         if ($href) {
             return $this->evaluate($this->linkCallbacks, A::make()
                 ->attributes($this->linkAttributes)
-                ->text($content)
+                ->content($content)
                 ->href($href));
         }
 
-        return $this->linkCallbacks
+        return $this->linkCallbacks || $this->linkAttributes
             ? $this->evaluate($this->linkCallbacks, Div::make()
                 ->attributes($this->linkAttributes)
-                ->text($content))
+                ->content($content))
             : $content;
     }
 }

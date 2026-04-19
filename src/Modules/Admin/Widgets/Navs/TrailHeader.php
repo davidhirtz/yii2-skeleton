@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
+use Hirtz\Skeleton\Models\Breadcrumb;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Modules\Admin\Data\TrailActiveDataProvider;
-use Hirtz\Skeleton\Widgets\Attributes\Configure;
 use Hirtz\Skeleton\Widgets\Navs\Header;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Hirtz\Skeleton\Widgets\Traits\ProviderTrait;
+use Override;
 use Yii;
 
 class TrailHeader extends Header
@@ -21,8 +22,8 @@ class TrailHeader extends Header
      */
     use ProviderTrait;
 
-    #[Configure]
-    public function configureDefaults(): void
+    #[Override]
+    protected function configure(): void
     {
         if ($this->provider->model) {
             $this->model = $this->provider->getModels()
@@ -34,12 +35,16 @@ class TrailHeader extends Header
         $this->url ??= $this->getTrailModelAdminRoute() ?? ['/admin/trail/index'];
 
         if ($this->provider->trailId || $this->model) {
-            $this->breadcrumbs ??= [Yii::t('skeleton', 'History') => ['/admin/trail/index']];
+            $this->breadcrumbs ??= [
+                new Breadcrumb(Yii::t('skeleton', 'History'), ['/admin/trail/index']),
+            ];
         }
 
         if ($this->provider) {
             $this->subtitle ??= $this->getPaginationSubtitle($this->provider);
         }
+
+        parent::configure();
     }
 
     protected function getTrailModelTitle(): string

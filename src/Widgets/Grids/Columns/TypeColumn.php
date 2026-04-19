@@ -10,8 +10,8 @@ class TypeColumn extends LinkColumn
 {
     public function __construct(array $config = [])
     {
-        $this->content ??= fn (TypeAttributeInterface $model): string => $model->getTypeName();
         $this->property ??= 'type';
+        $this->value ??= fn (TypeAttributeInterface $model): string => $model->getTypeName();
 
         $this->nowrap();
 

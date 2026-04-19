@@ -13,9 +13,10 @@ class StatusIconColumn extends LinkColumn
     public function __construct(array $config = [])
     {
         $this->bodyAttributes = ['class' => 'text-center'];
-        $this->content ??= $this->getStatusIcon(...);
+        $this->format ??= 'raw';
         $this->property ??= 'status';
         $this->title ??= false;
+        $this->value ??= $this->getStatusIcon(...);
 
         parent::__construct($config);
     }

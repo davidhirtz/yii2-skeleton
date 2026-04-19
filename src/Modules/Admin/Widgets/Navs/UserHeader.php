@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
+use Hirtz\Skeleton\Models\Breadcrumb;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Data\UserActiveDataProvider;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\UserCreateButton;
@@ -40,7 +41,9 @@ class UserHeader extends Header
         if ($this->provider instanceof UserActiveDataProvider) {
             $this->addCreateUserButton();
         } else {
-            $this->breadcrumbs ??= [Yii::t('app', 'Users') => ['/admin/user/index']];
+            $this->breadcrumbs ??= [
+                new Breadcrumb(Yii::t('app', 'Users'), ['/admin/user/index']),
+            ];
         }
 
         parent::configure();
