@@ -10,7 +10,6 @@ use Hirtz\Skeleton\Widgets\Traits\IconTrait;
 use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
-use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
@@ -29,7 +28,6 @@ class DuplicateButton extends Widget
 
     use TagAttributesTrait;
     use UrlTrait;
-    use VisibilityTrait;
 
 
     #[Override]
@@ -45,13 +43,11 @@ class DuplicateButton extends Widget
     #[Override]
     protected function renderContent(): string|Stringable
     {
-        return $this->isVisible()
-            ? Button::make()
+        return Button::make()
                 ->attributes($this->attributes)
                 ->primary()
                 ->post($this->url, true)
                 ->text($this->label)
-                ->icon($this->icon)
-            : '';
+                ->icon($this->icon);
     }
 }

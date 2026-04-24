@@ -12,7 +12,6 @@ use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Hirtz\Skeleton\Widgets\Traits\IconTrait;
 use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
 use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
-use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
@@ -24,7 +23,6 @@ class StackItem extends Widget
     use IconTrait;
     use LabelTrait;
     use UrlTrait;
-    use VisibilityTrait;
 
     public array $linkAttributes = ['class' => 'stack-link'];
 

@@ -17,7 +17,6 @@ use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
 use Hirtz\Skeleton\Widgets\Traits\LinkTrait;
 use Hirtz\Skeleton\Widgets\Traits\OrderTrait;
 use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
-use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
@@ -37,7 +36,6 @@ class NavItem extends Widget
     use LinkTrait;
     use OrderTrait;
     use UrlTrait;
-    use VisibilityTrait;
 
     protected ?bool $active = null;
     protected Closure|string|int|null $badge = null;
@@ -77,11 +75,8 @@ class NavItem extends Widget
     #[Override]
     protected function renderContent(): string|Stringable
     {
+        // Items need to be rendered before getContent is getting called
         $items = $this->getItems();
-
-        if (!$this->isVisible()) {
-            return '';
-        }
 
         return Li::make()
             ->attributes($this->attributes)

@@ -72,7 +72,7 @@ class Dropdown extends Widget
         return $this;
     }
 
-    public function addItem(string|Stringable ...$items): static
+    public function addItem(string|Stringable|null ...$items): static
     {
         $this->items = [...$this->items, ...array_filter($items)];
         return $this;

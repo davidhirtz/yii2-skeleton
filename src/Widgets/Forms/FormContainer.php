@@ -25,13 +25,6 @@ class FormContainer extends Widget
     }
 
     #[Override]
-    protected function configure(): void
-    {
-        $this->title ??= $this->view->title;
-        parent::configure();
-    }
-
-    #[Override]
     protected function renderContent(): string|Stringable
     {
         $content = (string)$this->form;

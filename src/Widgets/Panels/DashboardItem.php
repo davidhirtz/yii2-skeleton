@@ -14,7 +14,6 @@ use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
 use Hirtz\Skeleton\Widgets\Traits\LinkTrait;
 use Hirtz\Skeleton\Widgets\Traits\OrderTrait;
 use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
-use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
@@ -28,15 +27,10 @@ class DashboardItem extends Widget
     use LinkTrait;
     use OrderTrait;
     use UrlTrait;
-    use VisibilityTrait;
 
     #[Override]
     protected function renderContent(): string|Stringable
     {
-        if (!$this->isVisible()) {
-            return '';
-        }
-
         return Li::make()
             ->attributes($this->attributes)
             ->addClass('dashboard-item')

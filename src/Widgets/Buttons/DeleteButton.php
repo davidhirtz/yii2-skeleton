@@ -15,7 +15,6 @@ use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Hirtz\Skeleton\Widgets\Traits\PropertyTrait;
 use Hirtz\Skeleton\Widgets\Traits\TitleTrait;
 use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
-use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
@@ -34,7 +33,6 @@ class DeleteButton extends Widget
     use PropertyTrait;
     use TitleTrait;
     use UrlTrait;
-    use VisibilityTrait;
 
     protected string|null|false $message = null;
 

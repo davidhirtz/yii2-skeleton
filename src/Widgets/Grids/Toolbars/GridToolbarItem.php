@@ -9,7 +9,6 @@ use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Hirtz\Skeleton\Widgets\Grids\Traits\GridTrait;
-use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 
@@ -19,7 +18,6 @@ class GridToolbarItem extends Widget
     use GridTrait;
     use TagAttributesTrait;
     use TagContentTrait;
-    use VisibilityTrait;
 
     protected function renderContent(): string|Stringable
     {

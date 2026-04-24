@@ -130,7 +130,7 @@ class UserGridView extends GridView
         if ($this->canUpdateUser($user)) {
             return Button::make()
                 ->primary()
-                ->href($user->getAdminRoute())
+                ->url($user->getAdminRoute())
                 ->icon('wrench')
                 ->render();
         }
@@ -138,7 +138,7 @@ class UserGridView extends GridView
         if ($this->webuser->can(User::AUTH_USER_ASSIGN, ['user' => $user])) {
             return Button::make()
                 ->primary()
-                ->href(['/admin/auth/assign', 'user' => $user->id])
+                ->url(['/admin/auth/assign', 'user' => $user->id])
                 ->icon('unlock-alt')
                 ->tooltip(Yii::t('skeleton', 'Permissions'))
                 ->render();

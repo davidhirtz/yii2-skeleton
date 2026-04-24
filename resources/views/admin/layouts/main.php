@@ -38,8 +38,8 @@ AdminAssetBundle::register($this);
             <?= Breadcrumbs::make(); ?>
             <?= $content ?>
         </main>
+        <?php $this->endBody() ?>
     </div>
-    <?php $this->endBody() ?>
     </body>
     </html>
 <?php $this->endPage() ?>

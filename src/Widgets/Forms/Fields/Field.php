@@ -15,7 +15,6 @@ use Hirtz\Skeleton\Widgets\Forms\Traits\RowAttributesTrait;
 use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Hirtz\Skeleton\Widgets\Traits\PropertyTrait;
-use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
@@ -24,13 +23,12 @@ use Yii;
 abstract class Field extends Widget
 {
     use FormWidgetTrait;
+    use LabelTrait;
     use ModelTrait;
     use PropertyTrait;
     use RowAttributesTrait;
     use TagAttributesTrait;
-    use VisibilityTrait;
     use TagIdTrait;
-    use LabelTrait;
 
     protected array $labelAttributes = [];
 

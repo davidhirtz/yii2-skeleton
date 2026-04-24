@@ -13,8 +13,8 @@ use Hirtz\Skeleton\Widgets\Traits\FormatTrait;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Hirtz\Skeleton\Widgets\Traits\PropertyTrait;
 use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
-use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Hirtz\Skeleton\Widgets\Widget;
+use Override;
 use Stringable;
 
 class FormText extends Widget
@@ -24,7 +24,6 @@ class FormText extends Widget
     use PropertyTrait;
     use RowAttributesTrait;
     use TagAttributesTrait;
-    use VisibilityTrait;
     use TagIdTrait;
     use LabelTrait;
 
@@ -39,7 +38,7 @@ class FormText extends Widget
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     protected function configure(): void
     {
         $this->label ??= $this->model->getAttributeLabel($this->property);

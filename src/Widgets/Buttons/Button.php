@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Buttons;
 
+use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagInputTrait;
@@ -11,19 +12,22 @@ use Hirtz\Skeleton\Html\Traits\TagLinkTrait;
 use Hirtz\Skeleton\Widgets\Buttons\Traits\AjaxAttributesTrait;
 use Hirtz\Skeleton\Widgets\Modal;
 use Hirtz\Skeleton\Widgets\Traits\IconTextTrait;
+use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
 use Hirtz\Skeleton\Widgets\Traits\TooltipAttributeTrait;
+use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
 
 class Button extends Widget
 {
-    use TagAttributesTrait;
     use AjaxAttributesTrait;
     use IconTextTrait;
+    use TagAttributesTrait;
     use TagInputTrait;
     use TagLinkTrait;
     use TooltipAttributeTrait;
+    use UrlTrait;
 
     protected ?Modal $modal = null;
 
@@ -58,11 +62,6 @@ class Button extends Widget
         return $this->addClass('btn btn-link');
     }
 
-    public function url(string|array|null $url): static
-    {
-        return $this->href($url);
-    }
-
     #[Override]
     protected function configure(): void
     {
@@ -81,6 +80,9 @@ class Button extends Widget
 
     protected function renderTag(): string|Stringable
     {
+        $url = is_array($this->url) ? Url::toRoute($this->url) : $this->url;
+        $this->attributes['href'] ??= $url;
+
         return (($this->attributes['href'] ?? null) ? A::make() : \Hirtz\Skeleton\Html\Button::make())
             ->attributes($this->attributes)
             ->content($this->getIconText());

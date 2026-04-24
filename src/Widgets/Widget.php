@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Base\Traits\EvaluateClosureTrait;
 use Hirtz\Skeleton\Web\User;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Traits\ConfigureAttributesTrait;
+use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Stringable;
 use Yii;
 use yii\base\ViewContextInterface;
@@ -22,6 +23,7 @@ abstract class Widget implements Stringable, ViewContextInterface
     use ContainerConfigurationTrait;
     use ConfigureAttributesTrait;
     use EvaluateClosureTrait;
+    use VisibilityTrait;
 
     protected View $view;
     protected User $webuser;
@@ -67,7 +69,7 @@ abstract class Widget implements Stringable, ViewContextInterface
     {
         if ($this->html === null || $refresh) {
             $this->configure();
-            $this->html = (string)$this->renderContent();
+            $this->html = $this->isVisible() ? (string)$this->renderContent() : '';
         }
 
         return $this->html;

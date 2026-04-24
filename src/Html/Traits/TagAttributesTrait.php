@@ -22,12 +22,6 @@ trait TagAttributesTrait
         return $this;
     }
 
-    final public function unionAttributes(array $attributes): static
-    {
-        $this->attributes += $attributes;
-        return $this;
-    }
-
     final public function attributes(array $attributes): static
     {
         $this->attributes = $attributes;
