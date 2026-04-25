@@ -6,12 +6,13 @@ namespace Hirtz\Skeleton\Html;
 
 use Hirtz\Skeleton\Html\Base\Tag;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
+use Override;
 
 class P extends Tag
 {
     use TagContentTrait;
 
-    #[\Override]
+    #[Override]
     protected function getTagName(): string
     {
         return 'p';

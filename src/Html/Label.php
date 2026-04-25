@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Html;
 
 use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\Base\Tag;
+use Override;
 use Stringable;
 
 class Label extends Tag
@@ -24,7 +25,7 @@ class Label extends Tag
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     protected function renderContent(): string|Stringable
     {
         return $this->text;

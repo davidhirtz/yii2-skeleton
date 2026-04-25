@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Web;
 
-use Hirtz\Skeleton\Helpers\StructuredData;
+use Hirtz\Skeleton\Models\Breadcrumb;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Web\Controller;
 use Hirtz\Skeleton\Web\View;
+use Hirtz\Skeleton\Widgets\StructuredData\BreadcrumbList;
 use Yii;
 
 class ViewTest extends TestCase
@@ -17,25 +18,15 @@ class ViewTest extends TestCase
         $view = new View();
 
         $view->breadcrumbs([
-            'Home' => '/',
-            'No link',
+            new Breadcrumb('Home', '/'),
+            new Breadcrumb('No link'),
         ]);
 
-        $expected = [
-            [
-                'label' => 'Home',
-                'url' => '/',
-            ],
-            [
-                'label' => 'No link',
-                'url' => null
-            ],
-        ];
+        $html = BreadcrumbList::make()
+            ->breadcrumbs($view->getBreadcrumbs())
+            ->render();
 
-        static::assertEquals($expected, $view->getBreadcrumbs());
-
-        $html = StructuredData::breadcrumbList($view->getBreadcrumbs());
-        static::assertStringContainsString('<script type="application/ld+json">', $html);
+        static::assertEquals('<script type="application/ld+json">{"@context":"https:\/\/schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\/\/www.test.localhost\/"}]}</script>', $html);
     }
 
     public function testHrefLangLinkTags(): void
