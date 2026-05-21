@@ -26,6 +26,7 @@ use yii\helpers\ArrayHelper;
 use yii\i18n\PhpMessageSource;
 use yii\log\FileTarget;
 use yii\symfonymailer\Mailer;
+use yii\validators\TrimValidator;
 use yii\web\JqueryAsset;
 
 /**
@@ -142,6 +143,11 @@ trait ApplicationTrait
                 ],
                 'view' => [
                     'class' => View::class,
+                ],
+            ],
+            'container' => [
+                'definitions' => [
+                    TrimValidator::class => \davidhirtz\yii2\skeleton\validators\TrimValidator::class,
                 ],
             ],
             'controllerMap' => [

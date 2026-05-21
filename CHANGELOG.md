@@ -1,3 +1,7 @@
+## 2.6.8 (May 21, 2026)
+
+- Replaced `TrimValidator` with UTF-8 compatible validator using `mb_trim` (available through Symfony polyfill)
+
 ## 2.6.7 (Feb 10, 2026)
 
 - Fixed admin redirects to the correct domain when using i18N paths
