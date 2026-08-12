@@ -1,3 +1,7 @@
+## 2.6.9 (in development)
+
+- PHP 8.5 compatibility fixes
+
 ## 2.6.8 (May 21, 2026)
 
 - Replaced `TrimValidator` with UTF-8 compatible validator using `mb_trim` (available through Symfony polyfill)

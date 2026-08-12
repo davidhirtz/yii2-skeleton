@@ -66,7 +66,7 @@ class ArrayHelper extends BaseArrayHelper
     public static function simpleXmlToArray(?SimpleXMLElement $xml): array
     {
         $namespace = $xml?->getDocNamespaces(true);
-        $namespace[null] = null;
+        $namespace[''] = null;
 
         $children = [];
         $attributes = [];
@@ -81,7 +81,6 @@ class ArrayHelper extends BaseArrayHelper
         /** @noinspection PhpConditionAlreadyCheckedInspection */
         if (is_object($xml)) {
             foreach ($namespace as $ns => $nsUrl) {
-                // Attributes.
                 $_attributes = $xml->attributes($ns, true);
 
                 foreach ($_attributes as $attribute => $value) {
@@ -95,7 +94,6 @@ class ArrayHelper extends BaseArrayHelper
                     $attributes[$attribute] = $value;
                 }
 
-                // Children.
                 $_children = $xml->children($ns, true);
 
                 foreach ($_children as $child => $value) {

@@ -41,7 +41,7 @@ trait ConfigTrait
     protected function setConfig(string $file, array $config, ?string $message = null): void
     {
         if (!FileHelper::createConfigFile($file, $config)) {
-            $this->stderr("Unable to create config file." . PHP_EOL, Console::FG_RED);
+            $this->stderr('Unable to create config file.' . PHP_EOL, Console::FG_RED);
             return;
         }
 
