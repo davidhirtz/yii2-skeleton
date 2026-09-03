@@ -53,7 +53,7 @@ class HtmlValidatorTest extends TestCase
     public function testConfigWithExcludedHtmlTags(): void
     {
         $excludedHtmlTags = ['a', 'strong'];
-        $allowedHtmlTags = array_diff($this->defaultAllowedHtmlTags, $excludedHtmlTags);
+        $allowedHtmlTags = array_values(array_diff($this->defaultAllowedHtmlTags, $excludedHtmlTags));
 
         $validator = new HtmlValidator([
             'excludedHtmlTags' => $excludedHtmlTags,
@@ -77,7 +77,7 @@ class HtmlValidatorTest extends TestCase
             'allowedClasses' => $allowedClasses,
         ]);
 
-        static::assertEqualsCanonicalizing(['marked', 'highlight'], $validator->allowedClasses['span'] ?? []);
+        static::assertEqualsCanonicalizing(['Named 1' => 'marked', 'Named 2' => 'highlight'], $validator->allowedClasses['span'] ?? []);
         static::assertEqualsCanonicalizing(['btn', 'cta', 'marked', 'highlight'], $validator->purifierOptions['Attr.AllowedClasses']);
         static::assertStringContainsString('a[class|href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']);
         static::assertStringContainsString('span[class]', $validator->purifierOptions['HTML.Allowed']);
