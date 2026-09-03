@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Web;
 
 use Hirtz\Skeleton\Helpers\ArrayHelper;
+use Hirtz\Skeleton\Routing\UrlGeneratorInterface;
 use InvalidArgumentException;
 use Override;
 use Yii;
 use yii\web\UrlNormalizerRedirectException;
 use yii\web\UrlRule;
 
-class UrlManager extends \yii\web\UrlManager
+class UrlManager extends \yii\web\UrlManager implements UrlGeneratorInterface
 {
     public const string EVENT_AFTER_CREATE = 'afterCreate';
     public const string EVENT_BEFORE_PARSE = 'beforeParse';
@@ -138,6 +139,72 @@ class UrlManager extends \yii\web\UrlManager
         }
 
         return $this->createAbsoluteUrl($params);
+    }
+
+    /**
+     * @param array<string, mixed> $params
+     */
+    #[Override]
+    public function generate(string $name, array $params = []): string
+    {
+        return $this->createUrl($this->createRouteParams($name, $params));
+    }
+
+    /**
+     * @param array<string, mixed> $params
+     */
+    #[Override]
+    public function generateAbsolute(string $name, array $params = [], ?string $scheme = null): string
+    {
+        return $this->createAbsoluteUrl($this->createRouteParams($name, $params), $scheme);
+    }
+
+    /**
+     * @param array<string, mixed> $params
+     */
+    #[Override]
+    public function generateDraft(string $name, array $params = []): string
+    {
+        return $this->createDraftUrl($this->createRouteParams($name, $params));
+    }
+
+    #[Override]
+    public function hasRoute(string $name): bool
+    {
+        return Yii::$app->getRoutes()->hasName($name);
+    }
+
+    /**
+     * @param array<string, mixed> $params
+     * @return array<array-key, mixed>
+     */
+    protected function createRouteParams(string $name, array $params): array
+    {
+        $route = Yii::$app->getRoutes()->getByName($name)
+            ?? throw new InvalidArgumentException(sprintf('Unknown route name "%s".', $name));
+
+        $params = [...$route->defaults, ...$params];
+        $action = $route->action;
+
+        if (str_contains($action, '{')) {
+            $action = (string)preg_replace_callback(
+                '/\{(\w+)}/',
+                function (array $matches) use (&$params, $name): string {
+                    $value = ArrayHelper::remove($params, $matches[1]);
+
+                    if ($value === null) {
+                        throw new InvalidArgumentException(
+                            sprintf('Route "%s" is missing a value for placeholder "%s".', $name, $matches[1])
+                        );
+                    }
+
+                    return (string)$value;
+                },
+                $action
+            );
+        }
+
+        return [$action, ...$params];
     }
 
     protected function replaceSubdomain(string $replacement, string $url): string

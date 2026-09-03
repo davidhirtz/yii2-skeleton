@@ -47,6 +47,8 @@ class Application extends \yii\console\Application
         $this->setControllerPath(Yii::getAlias('@app/commands'));
 
         parent::bootstrap();
+
+        $this->addConfiguredRoutes();
     }
 
     #[Override]

@@ -1,5 +1,15 @@
 ## 3.0.0 (in development)
 
+- Added `Routing\Route`, `RouteCollection` and `RouteCompilerInterface` for framework-agnostic route definitions
+- Added `Routing\Compilers\YiiRouteCompiler` translating routes into `UrlManager` rule declarations
+- Added `Routing\UrlGeneratorInterface`, implemented by `Web\UrlManager`, to create URLs from route names
+- Added `ApplicationTrait::getUrlGenerator()`, returning the `urlManager` component
+- Added `Url::route()` and `Url::draftRoute()` as named-route counterparts to `Url::to()` and
+  `Url::draft()`, both unchanged
+- Added `ApplicationTrait::addRoutes()`, `getRoutes()` and `getRouteCompiler()`
+- Added the application `routes` config key for registering `Route` objects from `config/*.php`
+- Removed `ApplicationTrait::addUrlManagerRules()`; register routes with `addRoutes()` or the
+  `routes` config key, or declare array URL rules via the `urlManager` component's `rules` option
 - Added `TrailModelInterface` and `TrailModelTrait` to better handle static analysis of trail models
 - Added `GridSearch` and moved properties `search`, `searchParamName`, `searchInputOptions` and `searchUrl`
 - Added `GridSummary` methods `getSearchInput`, and `getSearchKeywords` to the new `GridView::$search` property
