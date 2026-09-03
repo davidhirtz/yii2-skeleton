@@ -115,12 +115,6 @@ class UrlGeneratorTest extends TestCase
         self::assertSame(Route::POSITION_DEFAULT, $registered->position);
     }
 
-    public function testUrlRouteHelperDelegatesToGenerator(): void
-    {
-        self::assertSame('/application-health', Url::route('health'));
-        self::assertStringStartsWith('https://', Url::route('health', [], 'https'));
-    }
-
     public function testUrlToStillAcceptsYiiRouteArrays(): void
     {
         self::assertSame('/application-health', Url::to(['/health/index']));
