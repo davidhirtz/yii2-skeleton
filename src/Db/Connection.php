@@ -115,7 +115,7 @@ class Connection extends \yii\db\Connection
             '{server}' => $dsn->host,
             '{user}' => $this->username,
             '{password}' => $password,
-            '{database}' => $dsn->database
+            '{database}' => $dsn->database,
         ];
 
         return str_replace(array_keys($tokens), $tokens, $command);
