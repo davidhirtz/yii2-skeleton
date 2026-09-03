@@ -276,7 +276,7 @@ class AccountController extends Controller
 
         if ($form->load(Yii::$app->getRequest()->post())) {
             if ($form->save()) {
-                $this->success(Lang::t('skeleton', 'ACCOUNT_FLASH_YOUR_ACCOUNT_WAS_UPDATED'));
+                $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_PROFILE_UPDATED'));
             }
 
             if (!$form->hasErrors()) {
@@ -297,7 +297,7 @@ class AccountController extends Controller
         $user->picture = null;
 
         if ($user->update()) {
-            $this->success(Lang::t('skeleton', 'ACCOUNT_FLASH_YOUR_ACCOUNT_WAS_UPDATED'));
+            $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_PROFILE_UPDATED'));
         }
 
         return $this->redirect(['update']);

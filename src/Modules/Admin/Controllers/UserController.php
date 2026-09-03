@@ -118,7 +118,7 @@ class UserController extends Controller
         $form = UserForm::create(['user' => $user]);
 
         if ($form->load(Yii::$app->getRequest()->post()) && $form->save()) {
-            $this->success(Lang::t('skeleton', 'USER_FLASH_THE_USER_WAS_UPDATED'));
+            $this->success(Lang::t('skeleton', 'USER_SUCCESS_UPDATED'));
             return $this->refresh();
         }
 
@@ -241,7 +241,7 @@ class UserController extends Controller
         $user->setAttributes($attributes, false);
 
         if ($user->save()) {
-            $this->success(Lang::t('skeleton', 'USER_FLASH_THE_USER_WAS_UPDATED'));
+            $this->success(Lang::t('skeleton', 'USER_SUCCESS_UPDATED'));
         }
 
         return $this->redirect(['update', 'id' => $user->id]);
