@@ -67,7 +67,7 @@ class UserForm extends Model
                 ['repeatPassword'],
                 'compare',
                 'compareAttribute' => 'newPassword',
-                'message' => Lang::t('skeleton', 'COMMON_THE_PASSWORD_MUST_MATCH_THE_NEW'),
+                'message' => Lang::t('skeleton', 'COMMON_PASSWORD_MUST_MATCH'),
             ],
             [
                 ['sendEmail'],

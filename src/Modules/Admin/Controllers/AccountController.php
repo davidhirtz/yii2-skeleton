@@ -101,7 +101,7 @@ class AccountController extends Controller
     public function actionCreate(): Response|string
     {
         if (!Yii::$app->getUser()->getIsGuest()) {
-            $this->error(Lang::t('skeleton', 'ACCOUNT_PLEASE_LOGOUT_BEFORE_CREATING_ANOTHER_ACCOUNT'));
+            $this->error(Lang::t('skeleton', 'ACCOUNT_LOGOUT_BEFORE_CREATING'));
             return $this->goHome();
         }
 
@@ -109,7 +109,7 @@ class AccountController extends Controller
         $form->email = $this->request->get('email', Yii::$app->getSession()->get('email'));
 
         if ($form->load($this->request->post()) && $form->insert()) {
-            $this->success(Lang::t('skeleton', 'ACCOUNT_FLASH_SIGN_UP_COMPLETED_PLEASE_CHECK_YOUR'));
+            $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_SIGN_UP_COMPLETED_PLEASE'));
             return $this->goHome();
         }
 
@@ -135,7 +135,7 @@ class AccountController extends Controller
     public function actionLogin(): Response|string
     {
         if (!Yii::$app->getUser()->getIsGuest()) {
-            $this->error(Lang::t('skeleton', 'ACCOUNT_PLEASE_LOGOUT_BEFORE_LOGGING_IN_WITH'));
+            $this->error(Lang::t('skeleton', 'ACCOUNT_LOGOUT_BEFORE_LOGGING'));
             return $this->goHome();
         }
 
@@ -145,7 +145,7 @@ class AccountController extends Controller
         if ($form->load($this->request->post())) {
             if ($form->login()) {
                 $this->success($form->user->login_count === 1
-                    ? Lang::t('skeleton', 'ACCOUNT_FLASH_LOGIN_SUCCESSFUL')
+                    ? Lang::t('skeleton', 'ACCOUNT_SUCCESS_LOGIN_SUCCESSFUL')
                     : Lang::t('skeleton', 'ACCOUNT_WELCOME_BACK', [
                         'name' => $form->user->getUsername(),
                     ]));
@@ -170,7 +170,7 @@ class AccountController extends Controller
     public function actionLogout(): Response|string
     {
         if (Yii::$app->getUser()->logout()) {
-            $this->success(Lang::t('skeleton', 'ACCOUNT_FLASH_YOU_ARE_NOW_LOGGED_OUT_SEE'));
+            $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_NOW_LOGGED_OUT'));
         }
 
         return $this->redirect(['login']);
@@ -189,7 +189,7 @@ class AccountController extends Controller
             $webuser->login($form->user);
         }
 
-        $this->errorOrSuccess($form, Lang::t('skeleton', 'ACCOUNT_FLASH_YOUR_EMAIL_ADDRESS_WAS_SUCCESSFULLY_CONFIRMED'));
+        $this->errorOrSuccess($form, Lang::t('skeleton', 'ACCOUNT_SUCCESS_EMAIL_ADDRESS_SUCCESSFULLY'));
         return $this->goHome();
     }
 
@@ -202,7 +202,7 @@ class AccountController extends Controller
 
         if ($form->load($this->request->post())) {
             if ($form->resend()) {
-                $this->success(Lang::t('skeleton', 'ACCOUNT_FLASH_WE_HAVE_SENT_ANOTHER_EMAIL_TO', [
+                $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_SENT_ANOTHER', [
                     'email' => $form->user->email,
                 ]));
 
@@ -228,7 +228,7 @@ class AccountController extends Controller
 
         if ($form->load(Yii::$app->getRequest()->post())) {
             if ($form->recover()) {
-                $this->success(Lang::t('skeleton', 'ACCOUNT_FLASH_WE_HAVE_SENT_AN_EMAIL_WITH', [
+                $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_SENT_EMAIL', [
                     'email' => $form->user->email,
                 ]));
 
@@ -255,7 +255,7 @@ class AccountController extends Controller
 
         if ($form->load(Yii::$app->getRequest()->post())) {
             if ($form->reset()) {
-                $this->success(Lang::t('skeleton', 'ACCOUNT_FLASH_YOUR_PASSWORD_WAS_UPDATED'));
+                $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_UPDATED_PASSWORD'));
                 return $this->goHome();
             }
         } elseif (!$form->validateEmail() || !$form->validatePasswordResetCode()) {
@@ -311,7 +311,7 @@ class AccountController extends Controller
         ]);
 
         if ($form->load(Yii::$app->getRequest()->post()) && $form->delete()) {
-            $this->success(Lang::t('skeleton', 'ACCOUNT_FLASH_YOUR_ACCOUNT_WAS_SUCCESSFULLY_DELETED_AND'));
+            $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_DELETED'));
 
             Yii::$app->getUser()->logout();
             return $this->goHome();
@@ -330,7 +330,7 @@ class AccountController extends Controller
 
         if ($form->load(Yii::$app->getRequest()->post())) {
             $form->save();
-            $this->errorOrSuccess($form, Lang::t('skeleton', 'ACCOUNT_FLASH_TWO_FACTOR_AUTHENTICATION_IS_NOW_ENABLED'));
+            $this->errorOrSuccess($form, Lang::t('skeleton', 'ACCOUNT_SUCCESS_TWO_FACTOR_AUTHENTICATION_ENABLED'));
         }
 
         return $this->redirect(['update']);
@@ -344,7 +344,7 @@ class AccountController extends Controller
 
         if ($form->load(Yii::$app->getRequest()->post())) {
             $form->delete();
-            $this->errorOrSuccess($form, Lang::t('skeleton', 'ACCOUNT_FLASH_TWO_FACTOR_AUTHENTICATION_IS_NOW_DISABLED'));
+            $this->errorOrSuccess($form, Lang::t('skeleton', 'ACCOUNT_SUCCESS_TWO_FACTOR_AUTHENTICATION_DISABLED'));
         }
 
         return $this->redirect(['update']);
@@ -364,7 +364,7 @@ class AccountController extends Controller
         if ($auth->delete()) {
             $client = $auth->getClientClass();
 
-            $this->success(Lang::t('skeleton', 'ACCOUNT_FLASH_ACCOUNT_WAS_REMOVED_FROM_YOUR_PROFILE', [
+            $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_REMOVED', [
                 'client' => $client->getTitle(),
                 'name' => $client::getDisplayName($auth),
                 'isOwner' => 1,
@@ -382,7 +382,7 @@ class AccountController extends Controller
         $user->timezone = $this->request->post('timezone');
         $user->update();
 
-        $this->errorOrSuccess($user, Lang::t('skeleton', 'ACCOUNT_FLASH_YOUR_TIMEZONE_WAS_UPDATED'));
+        $this->errorOrSuccess($user, Lang::t('skeleton', 'ACCOUNT_SUCCESS_UPDATED_TIMEZONE'));
         return $this->redirect($redirect ?? ['/admin/dashboard/index']);
     }
 
@@ -408,7 +408,7 @@ class AccountController extends Controller
         $auth->user_id = Yii::$app->getUser()->getId();
 
         if ($auth->save()) {
-            $this->success(Lang::t('skeleton', 'ACCOUNT_FLASH_YOUR_ACCOUNT_IS_NOW_CONNECTED_WITH', [
+            $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_ACCOUNT_NOW_CONNECTED', [
                 'client' => $client->getTitle(),
             ]));
         }
@@ -427,11 +427,11 @@ class AccountController extends Controller
         $user = $auth->identity;
 
         if (!$user?->isEnabled()) {
-            $this->error(Lang::t('skeleton', 'COMMON_YOUR_ACCOUNT_IS_CURRENTLY_DISABLED_PLEASE'));
+            $this->error(Lang::t('skeleton', 'COMMON_ACCOUNT_CURRENTLY_DISABLED'));
             return false;
         }
 
-        $this->success(Lang::t('skeleton', 'ACCOUNT_FLASH_WELCOME_BACK', [
+        $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_WELCOME_BACK', [
             'name' => $user->getUsername(),
         ]));
 
@@ -455,7 +455,7 @@ class AccountController extends Controller
             return false;
         }
 
-        $this->success(Lang::t('skeleton', 'ACCOUNT_FLASH_SIGN_UP_WITH_COMPLETED', [
+        $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_SIGN_UP_COMPLETED_CLIENT', [
             'client' => $form->client->getTitle(),
         ]));
 

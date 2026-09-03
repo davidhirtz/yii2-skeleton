@@ -42,7 +42,7 @@ class PasswordRecoverActiveForm extends ActiveForm
     protected function getHelpText(): ?Stringable
     {
         return Div::make()
-            ->content(Lang::t('skeleton', 'PASSWORD_RECOVER_ACTIVE_ENTER_YOUR_EMAIL_ADDRESS_AND_WE'));
+            ->content(Lang::t('skeleton', 'PASSWORD_RECOVER_ACTIVE_ENTER'));
     }
 
     protected function getEmailField(): ?Stringable

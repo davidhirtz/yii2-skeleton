@@ -48,7 +48,7 @@ class UpdatedAtFooterItem implements Stringable
         $timestamp = RelativeTime::make()->value($this->value);
 
         $content = $updated
-            ? Lang::t('skeleton', 'UPDATED_AT_FOOTER_ITEM_LAST_UPDATED_BY', [
+            ? Lang::t('skeleton', 'UPDATED_AT_FOOTER_ITEM', [
                 'user' => Username::make()->user($updated),
                 'timestamp' => $timestamp,
             ])

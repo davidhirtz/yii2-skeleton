@@ -91,7 +91,7 @@ class User extends \yii\web\User
     {
         // Set flash message for required logins.
         if (!$checkAjax || !Yii::$app->getRequest()->getIsAjax()) {
-            Yii::$app->getSession()->addFlash('error', Lang::t('skeleton', 'USER_FLASH_YOU_MUST_LOGIN_TO_VIEW_THIS'));
+            Yii::$app->getSession()->addFlash('error', Lang::t('skeleton', 'USER_ERROR_MUST_LOGIN_VIEW'));
         }
 
         return parent::loginRequired($checkAjax, $checkAcceptHeader);

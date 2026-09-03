@@ -64,7 +64,7 @@ class TimezoneModal extends Widget
     protected function getModalContent(): string|Stringable
     {
         return P::make()
-            ->content(Lang::t('skeleton', 'TIMEZONE_MODAL_WE_HAVE_DETECTED_A_CHANGE_IN', [
+            ->content(Lang::t('skeleton', 'TIMEZONE_MODAL_WE_DETECTED', [
                 'timezone' => Span::make()
                     ->text(Yii::$app->getTimeZone())
                     ->class('strong'),

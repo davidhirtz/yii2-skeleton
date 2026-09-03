@@ -148,14 +148,14 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
                 ['name'],
                 'match',
                 'pattern' => $this->namePattern,
-                'message' => Lang::t('skeleton', 'USER_USERNAME_MUST_ONLY_CONTAIN_ALPHANUMERIC_CHARACTERS'),
+                'message' => Lang::t('skeleton', 'USER_USERNAME_MUST_ONLY'),
                 'skipOnError' => true,
                 'when' => fn () => $this->namePattern !== false,
             ],
             [
                 ['name'],
                 UniqueValidator::class,
-                'message' => Lang::t('skeleton', 'USER_THIS_USERNAME_IS_ALREADY_USED_BY'),
+                'message' => Lang::t('skeleton', 'USER_USERNAME_ALREADY_USED'),
             ],
             [
                 ['email'],
@@ -170,7 +170,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
             [
                 ['email'],
                 'unique',
-                'message' => Lang::t('skeleton', 'USER_THIS_EMAIL_ADDRESS_IS_ALREADY_USED'),
+                'message' => Lang::t('skeleton', 'USER_EMAIL_ADDRESS_ALREADY'),
                 'skipOnError' => true,
                 'when' => fn () => $this->isAttributeChanged('email')
             ],
@@ -217,7 +217,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
     {
         if (!$this->isDeletable()) {
             $this->addError('id', $this->isOwner()
-                ? Lang::t('skeleton', 'USER_THIS_USER_IS_THE_WEBSITE_OWNER')
+                ? Lang::t('skeleton', 'USER_USER_WEBSITE_OWNER')
                 : Lang::t('skeleton', 'USER_THE_USER_CANNOT_BE_DELETED'));
 
             return false;

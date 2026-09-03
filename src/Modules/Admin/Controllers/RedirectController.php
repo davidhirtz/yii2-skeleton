@@ -62,7 +62,7 @@ class RedirectController extends Controller
         }
 
         if ($redirect->load($this->request->post()) && $redirect->insert()) {
-            $this->success(Lang::t('skeleton', 'REDIRECT_FLASH_THE_REDIRECT_RULE_WAS_CREATED'));
+            $this->success(Lang::t('skeleton', 'REDIRECT_SUCCESS_CREATED'));
             return $this->redirect([...$this->request->get(), 'index']);
         }
 
@@ -77,7 +77,7 @@ class RedirectController extends Controller
 
         if ($redirect->load($this->request->post())) {
             if ($redirect->update()) {
-                $this->success(Lang::t('skeleton', 'REDIRECT_FLASH_THE_REDIRECT_RULE_WAS_UPDATED'));
+                $this->success(Lang::t('skeleton', 'REDIRECT_SUCCESS_UPDATED'));
             }
 
             if (!$redirect->hasErrors()) {
@@ -95,7 +95,7 @@ class RedirectController extends Controller
         $redirect = $this->findRedirect($id);
         $redirect->delete();
 
-        $this->errorOrSuccess($redirect, Lang::t('skeleton', 'REDIRECT_FLASH_THE_REDIRECT_RULE_WAS_DELETED'));
+        $this->errorOrSuccess($redirect, Lang::t('skeleton', 'REDIRECT_SUCCESS_DELETED'));
         return $this->redirectToIndex();
     }
 
@@ -118,7 +118,7 @@ class RedirectController extends Controller
             }
 
             if ($isDeleted) {
-                $this->success(Lang::t('skeleton', 'REDIRECT_FLASH_THE_SELECTED_REDIRECT_RULES_WERE_DELETED'));
+                $this->success(Lang::t('skeleton', 'REDIRECT_SUCCESS_SELECTED_DELETED'));
             }
         }
 

@@ -52,10 +52,10 @@ class DeleteActiveForm extends ActiveForm
         ]);
 
         $this->message ??= $this->property
-            ? Lang::t('skeleton', 'COMMON_PLEASE_TYPE_THE_EXACT_IN_THE', [
+            ? Lang::t('skeleton', 'COMMON_TYPE_EXACT', [
                 'attribute' => $this->model->getAttributeLabel('value'),
             ])
-            : Lang::t('skeleton', 'DELETE_ACTIVE_FLASH_WARNING_DELETING_THIS_RECORD_CANNOT_BE');
+            : Lang::t('skeleton', 'DELETE_ACTIVE_WARNING_DELETED');
 
         $this->action ??= ['delete', 'id' => $this->model->getId()];
 

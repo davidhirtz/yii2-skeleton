@@ -74,7 +74,7 @@ class SignupForm extends AbstractSignupForm
                 ['terms'],
                 'compare',
                 'compareValue' => 1,
-                'message' => Lang::t('skeleton', 'SIGNUP_PLEASE_ACCEPT_THE_TERMS_OF_SERVICE'),
+                'message' => Lang::t('skeleton', 'SIGNUP_ACCEPT_TERMS_SERVICE'),
                 'skipOnEmpty' => false,
             ],
             [
@@ -86,7 +86,7 @@ class SignupForm extends AbstractSignupForm
                 ['honeypot'],
                 'compare',
                 'compareValue' => '',
-                'message' => Lang::t('skeleton', 'SIGNUP_SIGN_UP_COULD_NOT_BE_COMPLETED'),
+                'message' => Lang::t('skeleton', 'SIGNUP_SIGN_UP_COULD'),
             ],
             [
                 ['timezone'],
@@ -106,7 +106,7 @@ class SignupForm extends AbstractSignupForm
     public function beforeValidate(): bool
     {
         if (!Yii::$app->getUser()->isSignupEnabled()) {
-            $this->addError('id', Lang::t('skeleton', 'COMMON_SORRY_SIGNING_UP_IS_CURRENTLY_DISABLED'));
+            $this->addError('id', Lang::t('skeleton', 'COMMON_SORRY_SIGNING_UP'));
             return false;
         }
 
@@ -147,7 +147,7 @@ class SignupForm extends AbstractSignupForm
             $duration = time() - $this->spamProtectionInSeconds;
 
             if ($signup?->created_at->getTimestamp() > $duration) {
-                $this->addError('name', Lang::t('skeleton', 'SIGNUP_YOU_HAVE_JUST_CREATED_A_NEW'));
+                $this->addError('name', Lang::t('skeleton', 'SIGNUP_JUST_CREATED'));
             }
         }
     }
@@ -164,14 +164,14 @@ class SignupForm extends AbstractSignupForm
             $tokenCreatedAt = Yii::$app->getSession()->get(self::SESSION_TIMESTAMP_NAME);
 
             if ($this->token !== $token || $tokenCreatedAt === null) {
-                $this->addError('token', Lang::t('skeleton', 'SIGNUP_SIGN_UP_COULD_NOT_BE_COMPLETED'));
+                $this->addError('token', Lang::t('skeleton', 'SIGNUP_SIGN_UP_COULD'));
             }
 
             if (!$this->hasErrors('token')) {
                 $timestamp = time() - $tokenCreatedAt;
 
                 if ($timestamp < static::SESSION_TOKEN_MIN_TIME || $timestamp > static::SESSION_TOKEN_MAX_TIME) {
-                    $this->addError('token', Lang::t('skeleton', 'SIGNUP_SIGN_UP_COULD_NOT_BE_COMPLETED'));
+                    $this->addError('token', Lang::t('skeleton', 'SIGNUP_SIGN_UP_COULD'));
                 }
             }
         }

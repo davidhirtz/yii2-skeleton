@@ -49,12 +49,12 @@ class AccountUpdateForm extends Model
                 ['repeatPassword'],
                 'compare',
                 'compareAttribute' => 'newPassword',
-                'message' => Lang::t('skeleton', 'COMMON_THE_PASSWORD_MUST_MATCH_THE_NEW'),
+                'message' => Lang::t('skeleton', 'COMMON_PASSWORD_MUST_MATCH'),
             ],
             [
                 ['oldPassword'],
                 $this->validateOldPassword(...),
-                'message' => Lang::t('skeleton', 'ACCOUNT_UPDATE_YOUR_CURRENT_PASSWORD_IS_REQUIRED_TO'),
+                'message' => Lang::t('skeleton', 'ACCOUNT_UPDATE_CURRENT_PASSWORD'),
                 'skipOnEmpty' => false,
                 'when' => fn (self $model): bool => $model->newPassword || $model->email !== $model->user->email,
             ]
@@ -91,7 +91,7 @@ class AccountUpdateForm extends Model
             if (!$webuser->isUnconfirmedEmailLoginEnabled()) {
                 $webuser->logout(false);
 
-                $session->addFlash('success', Lang::t('skeleton', 'ACCOUNT_UPDATE_FLASH_PLEASE_CHECK_YOUR_EMAILS_TO_CONFIRM'));
+                $session->addFlash('success', Lang::t('skeleton', 'ACCOUNT_UPDATE_SUCCESS_CHECK_EMAILS_CONFIRM'));
             }
 
             $this->sendEmailConfirmationEmail();
@@ -105,7 +105,7 @@ class AccountUpdateForm extends Model
     protected function sendEmailConfirmationEmail(): void
     {
         Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/email', ['form' => $this])
-            ->setSubject(Lang::t('skeleton', 'ACCOUNT_UPDATE_PLEASE_CONFIRM_YOUR_NEW_EMAIL_ADDRESS'))
+            ->setSubject(Lang::t('skeleton', 'ACCOUNT_UPDATE_PLEASE_CONFIRM_YOUR_NEW_EMAIL_ADDRESS_CONFIRM_TITLE'))
             ->setFrom(Yii::$app->params['email'])
             ->setTo($this->email)
             ->send();

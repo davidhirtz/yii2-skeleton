@@ -82,8 +82,8 @@ class GridSummary extends Widget
 
         if ($this->grid->search?->getValue()) {
             return match ($count) {
-                1 => Lang::t('skeleton', 'GRID_SUMMARY_DISPLAYING_THE_ONLY_RESULT_MATCHING', $params),
-                0 => Lang::t('skeleton', 'GRID_SUMMARY_SORRY_NO_RESULTS_FOUND_MATCHING_MATCHING', $params),
+                1 => Lang::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ONLY', $params),
+                0 => Lang::t('skeleton', 'GRID_SUMMARY_SORRY_NO', $params),
                 $totalCount => Lang::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ALL_RESULTS_MATCHING', $params),
                 default => Lang::t('skeleton', 'GRID_SUMMARY_DISPLAYING_OF_RESULTS_MATCHING', $params),
             };

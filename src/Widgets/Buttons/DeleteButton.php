@@ -60,7 +60,7 @@ class DeleteButton extends Widget
         $this->title ??= Yii::t('yii', 'Are you sure you want to delete this item?');
 
         if ($this->property) {
-            $this->message ??= Lang::t('skeleton', 'COMMON_PLEASE_TYPE_THE_EXACT_IN_THE', [
+            $this->message ??= Lang::t('skeleton', 'COMMON_TYPE_EXACT', [
                 'attribute' => $this->model->getAttributeLabel($this->property),
             ]);
         }

@@ -43,6 +43,6 @@ class AccountResendConfirmActiveForm extends ActiveForm
     protected function getHelpText(): ?Stringable
     {
         return Div::make()
-            ->text(Lang::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_ACTIVE_ENTER_YOUR_EMAIL_ADDRESS_AND_WE'));
+            ->text(Lang::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_ACTIVE'));
     }
 }

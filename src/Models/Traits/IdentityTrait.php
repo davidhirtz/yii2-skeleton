@@ -30,7 +30,7 @@ trait IdentityTrait
     protected function validateUserStatus(): void
     {
         if ($this->user->isDisabled() && !$this->user->isOwner()) {
-            $this->addError('email', Lang::t('skeleton', 'COMMON_YOUR_ACCOUNT_IS_CURRENTLY_DISABLED_PLEASE'));
+            $this->addError('email', Lang::t('skeleton', 'COMMON_ACCOUNT_CURRENTLY_DISABLED'));
         }
     }
 }

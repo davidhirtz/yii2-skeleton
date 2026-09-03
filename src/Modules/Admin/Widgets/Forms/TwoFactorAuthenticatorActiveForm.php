@@ -50,7 +50,7 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
     {
         return [
             FormRow::make()
-                ->content(Lang::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_TWO_FACTOR_AUTHENTICATION_IS_ENABLED_PLEASE')),
+                ->content(Lang::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_AUTHENTICATION')),
             $this->getInputField(),
         ];
     }
@@ -60,7 +60,7 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
         return [
             FormRow::make()
                 ->content(
-                    Lang::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_TO_ACTIVATE_TWO_FACTOR_AUTHENTICATION_PLEASE')
+                    Lang::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_ACTIVATE')
                 ),
             FormRow::make()
                 ->content($this->getQrCodeImage()),
@@ -79,7 +79,7 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
     {
         return Img::make()
             ->src($this->authenticator->getQrImageUrl($this->qrCodeSize))
-            ->alt(Lang::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_AUTHENTICATOR_QR_CODE'))
+            ->alt(Lang::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_CODE'))
             ->addStyle([
                 'width' => "{$this->qrCodeSize}px",
                 'height' => "{$this->qrCodeSize}px",

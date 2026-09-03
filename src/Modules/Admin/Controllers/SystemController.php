@@ -75,7 +75,7 @@ class SystemController extends Controller
             FileHelper::removeDirectory($asset);
         }
 
-        $this->success(Lang::t('skeleton', 'SYSTEM_FLASH_ALL_ASSETS_REFRESHED'));
+        $this->success(Lang::t('skeleton', 'SYSTEM_SUCCESS_REFRESHED'));
         return $this->redirect(['index']);
     }
 
@@ -87,7 +87,7 @@ class SystemController extends Controller
 
         Yii::$app->get($cache)->flush();
 
-        $this->success(Lang::t('skeleton', 'SYSTEM_FLASH_CACHE_WAS_FLUSHED'));
+        $this->success(Lang::t('skeleton', 'SYSTEM_SUCCESS_FLUSHED'));
         return $this->redirect(['index']);
     }
 
@@ -111,7 +111,7 @@ class SystemController extends Controller
     public function actionSessionGc(): Response|string
     {
         Yii::$app->getSession()->gcSession(0);
-        $this->success(Lang::t('skeleton', 'SYSTEM_FLASH_EXPIRED_SESSIONS_WERE_DELETED'));
+        $this->success(Lang::t('skeleton', 'SYSTEM_SUCCESS_DELETED'));
         return $this->redirect(['index']);
     }
 }

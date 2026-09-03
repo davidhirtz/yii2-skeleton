@@ -69,14 +69,14 @@ class PasswordResetForm extends Model
     protected function validateRepeatPassword(): void
     {
         if ($this->repeatPassword !== $this->newPassword) {
-            $this->addError('repeatPassword', Lang::t('skeleton', 'COMMON_THE_PASSWORD_MUST_MATCH_THE_NEW'));
+            $this->addError('repeatPassword', Lang::t('skeleton', 'COMMON_PASSWORD_MUST_MATCH'));
         }
     }
 
     public function validatePasswordResetCode(): bool
     {
         if ($this->user->password_reset_token !== $this->code) {
-            $this->addError('id', Lang::t('skeleton', 'PASSWORD_RESET_THE_PASSWORD_RECOVERY_URL_IS_INVALID'));
+            $this->addError('id', Lang::t('skeleton', 'PASSWORD_RESET_PASSWORD_RECOVERY'));
         }
 
         return !$this->hasErrors();

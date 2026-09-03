@@ -75,9 +75,9 @@ class UserAuthController extends Controller
         $role = $this->getAuthItem($name, $type);
 
         if (Yii::$app->getAuthManager()->assign($role, $user->id)) {
-            $this->success(Lang::t('skeleton', 'USER_AUTH_FLASH_THE_PERMISSION_WAS_ASSIGNED'));
+            $this->success(Lang::t('skeleton', 'USER_AUTH_SUCCESS_ASSIGNED'));
         } else {
-            $this->error(Lang::t('skeleton', 'USER_AUTH_THIS_PERMISSION_WAS_ALREADY_ASSIGNED_TO', [
+            $this->error(Lang::t('skeleton', 'USER_AUTH_PERMISSION_ALREADY', [
                 'name' => $user->getUsername(),
             ]));
         }
@@ -91,9 +91,9 @@ class UserAuthController extends Controller
         $role = $this->getAuthItem($name, $type);
 
         if (Yii::$app->getAuthManager()->revoke($role, $user->id)) {
-            $this->success(Lang::t('skeleton', 'USER_AUTH_FLASH_THE_PERMISSION_WAS_REMOVED'));
+            $this->success(Lang::t('skeleton', 'USER_AUTH_SUCCESS_REMOVED'));
         } else {
-            $this->error(Lang::t('skeleton', 'USER_AUTH_THIS_PERMISSION_WAS_NOT_ASSIGNED_TO', [
+            $this->error(Lang::t('skeleton', 'USER_AUTH_PERMISSION_NOT', [
                 'name' => $user->getUsername(),
             ]));
         }

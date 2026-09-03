@@ -67,7 +67,7 @@ class LoginForm extends Model
     public function beforeValidate(): bool
     {
         if (!Yii::$app->getUser()->isLoginEnabled()) {
-            $this->addError('email', Lang::t('skeleton', 'USER_SORRY_LOGGING_IN_IS_CURRENTLY_DISABLED'));
+            $this->addError('email', Lang::t('skeleton', 'USER_SORRY_LOGGING_CURRENTLY'));
             return false;
         }
 
@@ -89,14 +89,14 @@ class LoginForm extends Model
     protected function validatePassword(): void
     {
         if (!$this->user->validatePassword($this->password)) {
-            $this->addError('email', Lang::t('skeleton', 'USER_YOUR_EMAIL_OR_PASSWORD_ARE_INCORRECT'));
+            $this->addError('email', Lang::t('skeleton', 'USER_EMAIL_PASSWORD_INCORRECT'));
         }
     }
 
     protected function validateLoginStatus(): void
     {
         if ($this->user->isUnconfirmed() && !Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
-            $this->addError('status', Lang::t('skeleton', 'USER_YOUR_EMAIL_ADDRESS_IS_NOT_CONFIRMED'));
+            $this->addError('status', Lang::t('skeleton', 'USER_EMAIL_ADDRESS_NOT'));
         }
     }
 

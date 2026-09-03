@@ -45,8 +45,8 @@ class PasswordResetActiveForm extends ActiveForm
     {
         return Div::make()
             ->content($this->model->user->password_hash
-                ? Lang::t('skeleton', 'PASSWORD_RESET_ACTIVE_PLEASE_ENTER_A_NEW_PASSWORD_BELOW')
-                : Lang::t('skeleton', 'PASSWORD_RESET_ACTIVE_PLEASE_ENTER_A_PASSWORD_BELOW_TO'));
+                ? Lang::t('skeleton', 'PASSWORD_RESET_ACTIVE_ENTER_PLEASE')
+                : Lang::t('skeleton', 'PASSWORD_RESET_ACTIVE_ENTER_BELOW'));
     }
 
     protected function getEmailField(): ?Stringable

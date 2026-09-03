@@ -24,7 +24,7 @@ class UserDeleteButton extends DeleteButton
     #[Override]
     protected function configure(): void
     {
-        $this->message ??= Lang::t('skeleton', 'USER_DELETE_PLEASE_TYPE_THE_USER_EMAIL_IN');
+        $this->message ??= Lang::t('skeleton', 'USER_DELETE_TYPE_USER');
         $this->property ??= 'email';
         $this->title ??= Lang::t('skeleton', 'USER_CONFIRM_DELETE');
 

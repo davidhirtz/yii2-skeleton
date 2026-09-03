@@ -60,7 +60,7 @@ class AuthClientSignupForm extends Model
     public function beforeValidate(): bool
     {
         if (!Yii::$app->getUser()->isSignupEnabled()) {
-            $this->addError('id', Lang::t('skeleton', 'COMMON_SORRY_SIGNING_UP_IS_CURRENTLY_DISABLED'));
+            $this->addError('id', Lang::t('skeleton', 'COMMON_SORRY_SIGNING_UP'));
             return false;
         }
 
@@ -108,7 +108,7 @@ class AuthClientSignupForm extends Model
 
     protected function addContextToEmailError(): void
     {
-        $this->addError('email', Lang::t('skeleton', 'AUTH_CLIENT_SIGNUP_A_USER_WITH_EMAIL_ALREADY_EXISTS', [
+        $this->addError('email', Lang::t('skeleton', 'AUTH_CLIENT_SIGNUP_USER', [
             'client' => $this->client->getTitle(),
             'email' => $this->user->email,
         ]));

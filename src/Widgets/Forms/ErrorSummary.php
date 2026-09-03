@@ -52,8 +52,8 @@ class ErrorSummary extends Widget
     {
         if ($model instanceof ActiveRecord) {
             $this->title ??= $model->getIsNewRecord()
-                ? Lang::t('skeleton', 'ERROR_SUMMARY_THE_RECORD_COULD_NOT_BE_CREATED')
-                : Lang::t('skeleton', 'ERROR_SUMMARY_THE_RECORD_COULD_NOT_BE_UPDATED');
+                ? Lang::t('skeleton', 'ERROR_SUMMARY_RECORD_COULD_NOT')
+                : Lang::t('skeleton', 'ERROR_SUMMARY_RECORD_COULD_UPDATED');
         }
 
         $this->models = is_array($model) ? $model : [$model];

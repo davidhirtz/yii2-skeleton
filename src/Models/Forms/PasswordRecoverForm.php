@@ -59,7 +59,7 @@ class PasswordRecoverForm extends Model
     public function validateSpamProtection(): void
     {
         if ($this->isAlreadySent()) {
-            $this->addError('email', Lang::t('skeleton', 'PASSWORD_RECOVER_WE_HAVE_JUST_SENT_A_LINK', [
+            $this->addError('email', Lang::t('skeleton', 'PASSWORD_RECOVER_WE_JUST', [
                 'email' => $this->user->email,
             ]));
         }

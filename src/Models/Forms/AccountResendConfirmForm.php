@@ -60,14 +60,14 @@ class AccountResendConfirmForm extends Model
     protected function validateUserConfirmationCode(): void
     {
         if (!$this->user->verification_token) {
-            $this->addError('email', Lang::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_YOUR_ACCOUNT_WAS_ALREADY_CONFIRMED'));
+            $this->addError('email', Lang::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_ACCOUNT'));
         }
     }
 
     protected function validateSpamProtection(): void
     {
         if ($this->isAlreadySent()) {
-            $this->addError('email', Lang::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_WE_HAVE_JUST_SENT_A_LINK', [
+            $this->addError('email', Lang::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_WE', [
                 'email' => $this->user->email,
             ]));
         }

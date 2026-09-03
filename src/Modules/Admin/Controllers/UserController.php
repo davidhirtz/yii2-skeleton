@@ -103,7 +103,7 @@ class UserController extends Controller
         $form->user->country = $identity->country;
 
         if ($form->load(Yii::$app->getRequest()->post()) && $form->save()) {
-            $this->success(Lang::t('skeleton', 'USER_FLASH_THE_USER_WAS_CREATED'));
+            $this->success(Lang::t('skeleton', 'USER_SUCCESS_CREATED'));
             return $this->redirect(['update', 'id' => $form->user->id]);
         }
 
@@ -143,7 +143,7 @@ class UserController extends Controller
         $user->generatePasswordResetToken();
 
         if ($user->save()) {
-            $this->success(Lang::t('skeleton', 'USER_FLASH_THE_PASSWORD_RESET_LINK_WAS_UPDATED'));
+            $this->success(Lang::t('skeleton', 'USER_SUCCESS_UPDATED_PASSWORD'));
         }
 
         return $this->redirect(['update', 'id' => $user->id]);
@@ -165,7 +165,7 @@ class UserController extends Controller
         ]);
 
         if ($form->load($this->request->post()) && $form->delete()) {
-            $this->success(Lang::t('skeleton', 'USER_FLASH_THE_USER_WAS_DELETED'));
+            $this->success(Lang::t('skeleton', 'USER_SUCCESS_DELETED'));
 
             if ($user->id === Yii::$app->getUser()->id) {
                 Yii::$app->getUser()->logout(false);
@@ -202,7 +202,7 @@ class UserController extends Controller
         if ($auth->delete()) {
             $client = $auth->getClientClass();
 
-            $this->success(Lang::t('skeleton', 'USER_FLASH_ACCOUNT_WAS_REMOVED_FROM_USER_ACCOUNT', [
+            $this->success(Lang::t('skeleton', 'USER_SUCCESS_REMOVED', [
                 'client' => $client->getTitle(),
                 'name' => $client::getDisplayName($auth),
             ]));
@@ -226,7 +226,7 @@ class UserController extends Controller
         ]);
 
         if ($form->update()) {
-            $this->success(Lang::t('skeleton', 'USER_FLASH_THE_WEBSITE_OWNERSHIP_WAS_SUCCESSFUL_TRANSFERRED'));
+            $this->success(Lang::t('skeleton', 'USER_SUCCESS_WEBSITE_OWNERSHIP_SUCCESSFUL'));
             return $this->goHome();
         }
 

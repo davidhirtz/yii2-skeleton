@@ -19,8 +19,8 @@ class DashboardHeader extends Header
         $params = ['user' => $identity->getUsername()];
 
         $this->title ??= $identity->login_count > 1
-            ? Lang::t('skeleton', 'DASHBOARD_HEADER_HELLO_GOOD_TO_HAVE_YOU_BACK', $params)
-            : Lang::t('skeleton', 'DASHBOARD_HEADER_WELCOME_NICE_TO_MEET_YOU', $params);
+            ? Lang::t('skeleton', 'DASHBOARD_HEADER_HELLO_GOOD', $params)
+            : Lang::t('skeleton', 'DASHBOARD_HEADER_WELCOME_NICE', $params);
 
         $lastLogin = Yii::$app->getSession()->get('last_login_timestamp');
 
