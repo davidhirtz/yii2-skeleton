@@ -46,15 +46,18 @@ class BadgeColumnTest extends TestCase
         $controller = new Controller('test', Yii::$app);
         Yii::$app->controller = $controller;
 
-        $model = new TestModel(count: 10);
-
         $column = $this->createCounterColumn()
             ->url(fn (TestModel $model) => ['view', 'id' => $model->id]);
 
+        $model = new TestModel(count: 10);
         $expects = '<td class="text-center"><a class="badge" href="/test/view?id=1">10</a></td>';
+
         self::assertEquals($expects, (string)$column->renderBody($model, 0, 0));
     }
 
+    /**
+     * @return BadgeColumn<TestModel>
+     */
     protected function createCounterColumn(): BadgeColumn
     {
         return BadgeColumn::make()

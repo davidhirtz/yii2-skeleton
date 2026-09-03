@@ -5,19 +5,22 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Grids\Columns;
 
 use Closure;
-use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
 use Stringable;
 use yii\base\Model;
 
+/**
+ * @template TModel of array|Model
+ * @extends DataColumn<TModel>
+ */
 class LinkColumn extends DataColumn
 {
     protected array $linkAttributes = [];
     private ?array $linkCallbacks = null;
 
     /**
-     * @var Closure(array|Model, string|int, int):(array|string|null|false)|null
+     * @var Closure(TModel, string|int=, int=):(array|string|null|false)|null
      */
     protected ?Closure $url = null;
 
@@ -48,7 +51,7 @@ class LinkColumn extends DataColumn
     }
 
     /**
-     * @param Closure(array|Model, string|int, int):(array|string|null|false)|null $url
+     * @param Closure(TModel, string|int=, int=):(array|string|null|false)|null $url
      */
     public function url(?Closure $url): static
     {
@@ -56,6 +59,9 @@ class LinkColumn extends DataColumn
         return $this;
     }
 
+    /**
+     * @param TModel $model
+     */
     protected function getLink(array|Model $model, string|int $key, int $index): string|Stringable
     {
         $content = $this->getValue($model, $key, $index);
@@ -64,7 +70,7 @@ class LinkColumn extends DataColumn
             return $content;
         }
 
-        $href = $this->url ? ($this->url)($model, $key, $index, $this) : null;
+        $href = $this->url ? ($this->url)($model, $key, $index) : null;
 
         if ($href) {
             return $this->evaluate($this->linkCallbacks, A::make()

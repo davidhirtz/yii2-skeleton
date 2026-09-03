@@ -9,10 +9,10 @@ use Closure;
 trait EvaluateClosureTrait
 {
     /**
-     * @template T
-     * @param array<Closure(T): T>|Closure(T): T|null $closure
-     * @param T $value
-     * @return T
+     * @template TValue
+     * @param array<Closure(TValue): TValue>|Closure(TValue): TValue|null $closure
+     * @param TValue $value
+     * @return TValue
      */
     protected function evaluate(array|Closure|null $closure, mixed $value = null): mixed
     {

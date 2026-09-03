@@ -14,6 +14,9 @@ use yii\symfonymailer\Mailer;
 use yii\web\Cookie;
 
 /**
+ * @template TUserIdentity of \Hirtz\Skeleton\Models\User
+ * @extends \yii\web\Application<TUserIdentity>
+ *
  * @property Collection $authClientCollection
  * @property DbManager $authManager
  * @property Request $request

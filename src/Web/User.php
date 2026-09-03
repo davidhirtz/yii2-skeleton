@@ -8,12 +8,13 @@ use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Models\UserLogin;
 use Override;
 use Yii;
+use yii\web\IdentityInterface;
 use yii\web\MultiFieldSession;
 use yii\web\Response;
 
 /**
- * @property-read \Hirtz\Skeleton\Models\User|null $identity {@see static::getIdentity()}
- * @method \Hirtz\Skeleton\Models\User|null getIdentity($autoRenew = true)
+ * @template T of IdentityInterface
+ * @extends \yii\web\User<T>
  */
 class User extends \yii\web\User
 {

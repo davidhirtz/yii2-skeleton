@@ -6,7 +6,12 @@ namespace Hirtz\Skeleton\Widgets\Grids\Columns;
 
 use Override;
 use Yii;
+use yii\base\Model;
 
+/**
+ * @template TModel of array|Model
+ * @extends LinkColumn<TModel>
+ */
 class BadgeColumn extends LinkColumn
 {
     protected bool $showEmpty = false;

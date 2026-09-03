@@ -15,11 +15,18 @@ use yii\base\Model;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 
+/**
+ * @template TModel of array|Model
+ * @extends Column<TModel>
+ */
 class DataColumn extends Column
 {
     use FormatTrait;
     use PropertyTrait;
 
+    /**
+     * @var Closure(TModel, string|int=, int=):mixed|null
+     */
     protected ?Closure $value = null;
     protected bool $enableSorting = true;
 
@@ -46,6 +53,9 @@ class DataColumn extends Column
         return $this;
     }
 
+    /**
+     * @param Closure(TModel, string|int=, int=):mixed|null $value
+     */
     public function value(?Closure $value): static
     {
         $this->value = $value;
@@ -82,15 +92,21 @@ class DataColumn extends Column
         return $direction !== null ? $link->class($direction === SORT_ASC ? 'asc' : 'desc') : $link;
     }
 
+    /**
+     * @param TModel $model
+     */
     protected function getValue(array|Model $model, string|int $key, int $index): string|Stringable
     {
         $value = $this->value instanceof Closure
-            ? ($this->value)($model, $key, $index, $this)
+            ? ($this->value)($model, $key, $index)
             : $this->getPropertyValue($model);
 
         return $this->formatValue($value);
     }
 
+    /**
+     * @param TModel $model
+     */
     protected function getPropertyValue(array|Model $model): mixed
     {
         return $this->property ? ArrayHelper::getValue($model, $this->property) : null;

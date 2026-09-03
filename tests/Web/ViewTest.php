@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Web\Controller;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\StructuredData\BreadcrumbList;
 use Yii;
+use yii\base\Module;
 
 class ViewTest extends TestCase
 {
@@ -31,7 +32,9 @@ class ViewTest extends TestCase
 
     public function testHrefLangLinkTags(): void
     {
-        Yii::$app->controller = new Controller('test', Yii::$app);
+        /** @var Controller<Module> $controller */
+        $controller = new Controller('test', Yii::$app);
+        Yii::$app->controller = $controller;
 
         $view = new View();
         $view->registerHrefLangLinkTags(['en', 'de'], false);

@@ -17,6 +17,9 @@ use Stringable;
 use Yii;
 use yii\base\Model;
 
+/**
+ * @template TModel of array|Model
+ */
 class Column
 {
     use ContainerConfigurationTrait;
@@ -95,6 +98,9 @@ class Column
         return $this->header(fn (Th $tag) => $tag->attribute('width', $width));
     }
 
+    /**
+     * @param TModel $model
+     */
     public function renderBody(array|Model $model, string|int $key, int $index): Td
     {
         $body = $this->getBody($model, $key, $index);
@@ -108,6 +114,9 @@ class Column
         return $this->evaluate($this->bodyCallbacks, $body);
     }
 
+    /**
+     * @param TModel $model
+     */
     protected function getBody(array|Model $model, string|int $key, int $index): string|Stringable
     {
         $content = ($this->content)($model, $key, $index, $this);
