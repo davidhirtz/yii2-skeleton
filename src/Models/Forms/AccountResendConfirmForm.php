@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Forms;
 
+use Hirtz\Skeleton\I18n\Lang;
 use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\Traits\IdentityTrait;
@@ -59,14 +60,14 @@ class AccountResendConfirmForm extends Model
     protected function validateUserConfirmationCode(): void
     {
         if (!$this->user->verification_token) {
-            $this->addError('email', Yii::t('skeleton', 'Your account was already confirmed!'));
+            $this->addError('email', Lang::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_YOUR_ACCOUNT_WAS_ALREADY_CONFIRMED'));
         }
     }
 
     protected function validateSpamProtection(): void
     {
         if ($this->isAlreadySent()) {
-            $this->addError('email', Yii::t('skeleton', 'We have just sent a link to confirm your account to {email}. Please check your inbox!', [
+            $this->addError('email', Lang::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_WE_HAVE_JUST_SENT_A_LINK', [
                 'email' => $this->user->email,
             ]));
         }
@@ -90,7 +91,7 @@ class AccountResendConfirmForm extends Model
     protected function sendConfirmEmail(): void
     {
         Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/confirm', ['user' => $this->user])
-            ->setSubject(Yii::t('skeleton', 'Confirm your account'))
+            ->setSubject(Lang::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_CONFIRM_YOUR_ACCOUNT'))
             ->setFrom(Yii::$app->params['email'])
             ->setTo($this->user->email)
             ->send();
@@ -112,7 +113,7 @@ class AccountResendConfirmForm extends Model
     public function attributeLabels(): array
     {
         return [
-            'email' => Yii::t('skeleton', 'Email'),
+            'email' => Lang::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_EMAIL_LABEL'),
         ];
     }
 }

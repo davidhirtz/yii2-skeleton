@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Migrations;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Db\Traits\MigrationTrait;
 use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Models\User;
@@ -34,7 +35,7 @@ class M210224093845Redirect extends Migration
         $admin = $auth->getRole(User::AUTH_ROLE_ADMIN);
 
         $redirectCreate = $auth->createPermission(Redirect::AUTH_REDIRECT_CREATE);
-        $redirectCreate->description = Yii::t('skeleton', 'Create and update redirect rules', [], Yii::$app->sourceLanguage);
+        $redirectCreate->description = Lang::t('skeleton', 'AUTH_REDIRECT_CREATE_DESCRIPTION', [], Yii::$app->sourceLanguage);
         $auth->add($redirectCreate);
 
         $auth->addChild($admin, $redirectCreate);

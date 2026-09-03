@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Models\Forms\PasswordResetForm;
 use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
@@ -35,7 +36,7 @@ class PasswordResetActiveForm extends ActiveForm
             $this->getRepeatPasswordField(),
         ];
 
-        $this->submitButtonText = Yii::t('skeleton', 'Save New Password');
+        $this->submitButtonText = Lang::t('skeleton', 'PASSWORD_RESET_ACTIVE_SAVE_NEW_PASSWORD');
 
         parent::configure();
     }
@@ -44,8 +45,8 @@ class PasswordResetActiveForm extends ActiveForm
     {
         return Div::make()
             ->content($this->model->user->password_hash
-                ? Yii::t('skeleton', 'Please enter a new password below to update your account.')
-                : Yii::t('skeleton', 'Please enter a password below to complete your account.'));
+                ? Lang::t('skeleton', 'PASSWORD_RESET_ACTIVE_PLEASE_ENTER_A_NEW_PASSWORD_BELOW')
+                : Lang::t('skeleton', 'PASSWORD_RESET_ACTIVE_PLEASE_ENTER_A_PASSWORD_BELOW_TO'));
     }
 
     protected function getEmailField(): ?Stringable

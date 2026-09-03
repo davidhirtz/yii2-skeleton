@@ -32,6 +32,7 @@ class I18N extends \yii\i18n\I18N
         $this->translations['skeleton'] ??= [
             'class' => PhpMessageSource::class,
             'basePath' => '@skeleton/../messages',
+            'forceTranslation' => true,
             'sourceLanguage' => Yii::$app->sourceLanguage,
         ];
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Navs;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\H1;
@@ -52,7 +53,7 @@ class Header extends Widget
         }
 
         return $page > 1
-            ? Yii::t('skeleton', 'Page {page}', ['page' => $page])
+            ? Lang::t('skeleton', 'HEADER_PAGE', ['page' => $page])
             : null;
     }
 

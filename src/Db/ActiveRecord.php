@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Db;
 
+use Hirtz\Skeleton\I18n\Lang;
 use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Behaviors\AttributeTypecastBehavior;
@@ -173,12 +174,12 @@ class ActiveRecord extends \yii\db\ActiveRecord
     public function attributeLabels(): array
     {
         return [
-            'id' => Yii::t('skeleton', 'ID'),
-            'status' => Yii::t('skeleton', 'Status'),
-            'type' => Yii::t('skeleton', 'Type'),
-            'updated_by_user_id' => Yii::t('skeleton', 'User'),
-            'updated_at' => Yii::t('skeleton', 'Last Update'),
-            'created_at' => Yii::t('skeleton', 'Created'),
+            'id' => Lang::t('skeleton', 'COMMON_ID_LABEL'),
+            'status' => Lang::t('skeleton', 'COMMON_STATUS_LABEL'),
+            'type' => Lang::t('skeleton', 'COMMON_TYPE_LABEL'),
+            'updated_by_user_id' => Lang::t('skeleton', 'COMMON_UPDATED_BY_USER_ID_LABEL'),
+            'updated_at' => Lang::t('skeleton', 'COMMON_UPDATED_AT_LABEL'),
+            'created_at' => Lang::t('skeleton', 'COMMON_CREATED_AT_LABEL'),
         ];
     }
 }

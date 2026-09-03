@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Models\Forms\PasswordRecoverForm;
 use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
@@ -33,7 +34,7 @@ class PasswordRecoverActiveForm extends ActiveForm
             $this->getEmailField(),
         ];
 
-        $this->submitButtonText = Yii::t('skeleton', 'Send Email');
+        $this->submitButtonText = Lang::t('skeleton', 'COMMON_SEND_EMAIL');
 
         parent::configure();
     }
@@ -41,7 +42,7 @@ class PasswordRecoverActiveForm extends ActiveForm
     protected function getHelpText(): ?Stringable
     {
         return Div::make()
-            ->content(Yii::t('skeleton', 'Enter your email address and we will send you instructions how to reset your password.'));
+            ->content(Lang::t('skeleton', 'PASSWORD_RECOVER_ACTIVE_ENTER_YOUR_EMAIL_ADDRESS_AND_WE'));
     }
 
     protected function getEmailField(): ?Stringable

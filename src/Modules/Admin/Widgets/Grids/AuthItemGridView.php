@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Ul;
@@ -96,7 +97,7 @@ class AuthItemGridView extends GridView
     protected function getDescriptionColumn(): Column
     {
         return Column::make()
-            ->title(Yii::t('skeleton', 'Inherited Permissions'))
+            ->title(Lang::t('skeleton', 'AUTH_ITEM_INHERITED_PERMISSIONS'))
             ->content($this->getDescriptionColumnContent(...))
             ->hiddenForSmallDevices();
     }
@@ -106,7 +107,7 @@ class AuthItemGridView extends GridView
         $items = [];
 
         foreach ($authItem->children as $child) {
-            $description = $this->getTranslations()[$child->description] ?? $child->description;
+            $description = $this->getTranslations()[$child->description ?? ''] ?? $child->description;
             $isActive = $this->user && !$authItem->isAssigned && ($child->isAssigned || $child->isInherited);
 
             $items[] = $isActive ? Html::tag('mark', $description) : $description;
@@ -119,7 +120,7 @@ class AuthItemGridView extends GridView
     protected function getUsersColumn(): Column
     {
         return Column::make()
-            ->title(Yii::t('skeleton', 'Users'))
+            ->title(Lang::t('skeleton', 'COMMON_USERS'))
             ->content($this->getUsersColumnColumn(...));
     }
 
@@ -155,8 +156,8 @@ class AuthItemGridView extends GridView
         ];
 
         $tooltip = $authItem->isAssigned
-            ? Yii::t('skeleton', 'Revoke {auth}', ['auth' => $authItem->getTypeName()])
-            : Yii::t('skeleton', 'Assign {auth}', ['auth' => $authItem->getTypeName()]);
+            ? Lang::t('skeleton', 'AUTH_ITEM_REVOKE', ['auth' => $authItem->getTypeName()])
+            : Lang::t('skeleton', 'AUTH_ITEM_ASSIGN', ['auth' => $authItem->getTypeName()]);
 
         return Button::make()
             ->primary()

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Migrations;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Db\Traits\MigrationTrait;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
@@ -39,7 +40,7 @@ class M201205112000Trail extends Migration
         $admin = $auth->getRole(User::AUTH_ROLE_ADMIN);
 
         $trailIndex = $auth->createPermission(Trail::AUTH_TRAIL_INDEX);
-        $trailIndex->description = Yii::t('skeleton', 'View history', [], $sourceLanguage);
+        $trailIndex->description = Lang::t('skeleton', 'AUTH_TRAIL_INDEX_DESCRIPTION', [], $sourceLanguage);
         $auth->add($trailIndex);
 
         $auth->addChild($admin, $trailIndex);

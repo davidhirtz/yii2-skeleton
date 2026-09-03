@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
@@ -30,7 +31,7 @@ class Username extends Widget
 
     protected function renderContent(): string|Stringable
     {
-        $text = $this->user?->getUsername() ?? Yii::t('skeleton', 'Deleted');
+        $text = $this->user?->getUsername() ?? Lang::t('skeleton', 'COMMON_DELETED');
 
         if (!$this->user) {
             $this->addClass('text-invalid');

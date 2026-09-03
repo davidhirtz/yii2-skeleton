@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Forms;
 
+use Hirtz\Skeleton\I18n\Lang;
 use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\Traits\IdentityTrait;
@@ -58,7 +59,7 @@ class PasswordRecoverForm extends Model
     public function validateSpamProtection(): void
     {
         if ($this->isAlreadySent()) {
-            $this->addError('email', Yii::t('skeleton', 'We have just sent a link to reset your password to {email}. Please check your inbox!', [
+            $this->addError('email', Lang::t('skeleton', 'PASSWORD_RECOVER_WE_HAVE_JUST_SENT_A_LINK', [
                 'email' => $this->user->email,
             ]));
         }
@@ -80,7 +81,7 @@ class PasswordRecoverForm extends Model
     public function sendPasswordResetEmail(): void
     {
         Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/recover', ['user' => $this->user])
-            ->setSubject(Yii::t('skeleton', 'Reset your password'))
+            ->setSubject(Lang::t('skeleton', 'PASSWORD_RECOVER_RESET_YOUR_PASSWORD'))
             ->setFrom(Yii::$app->params['email'])
             ->setTo($this->user->email)
             ->send();
@@ -102,7 +103,7 @@ class PasswordRecoverForm extends Model
     public function attributeLabels(): array
     {
         return [
-            'email' => Yii::t('skeleton', 'Email'),
+            'email' => Lang::t('skeleton', 'PASSWORD_RECOVER_EMAIL_LABEL'),
         ];
     }
 }

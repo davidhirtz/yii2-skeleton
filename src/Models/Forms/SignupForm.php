@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Forms;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Traits\SignupEmailTrait;
 use Hirtz\Skeleton\Models\UserLogin;
 use Override;
@@ -73,7 +74,7 @@ class SignupForm extends AbstractSignupForm
                 ['terms'],
                 'compare',
                 'compareValue' => 1,
-                'message' => Yii::t('skeleton', 'Please accept the terms of service and privacy policy.'),
+                'message' => Lang::t('skeleton', 'SIGNUP_PLEASE_ACCEPT_THE_TERMS_OF_SERVICE'),
                 'skipOnEmpty' => false,
             ],
             [
@@ -85,7 +86,7 @@ class SignupForm extends AbstractSignupForm
                 ['honeypot'],
                 'compare',
                 'compareValue' => '',
-                'message' => Yii::t('skeleton', 'Sign up could not be completed, please try again.'),
+                'message' => Lang::t('skeleton', 'SIGNUP_SIGN_UP_COULD_NOT_BE_COMPLETED'),
             ],
             [
                 ['timezone'],
@@ -105,7 +106,7 @@ class SignupForm extends AbstractSignupForm
     public function beforeValidate(): bool
     {
         if (!Yii::$app->getUser()->isSignupEnabled()) {
-            $this->addError('id', Yii::t('skeleton', 'Sorry, signing up is currently disabled!'));
+            $this->addError('id', Lang::t('skeleton', 'COMMON_SORRY_SIGNING_UP_IS_CURRENTLY_DISABLED'));
             return false;
         }
 
@@ -146,7 +147,7 @@ class SignupForm extends AbstractSignupForm
             $duration = time() - $this->spamProtectionInSeconds;
 
             if ($signup?->created_at->getTimestamp() > $duration) {
-                $this->addError('name', Yii::t('skeleton', 'You have just created a new user account. Please wait a few minutes!'));
+                $this->addError('name', Lang::t('skeleton', 'SIGNUP_YOU_HAVE_JUST_CREATED_A_NEW'));
             }
         }
     }
@@ -163,14 +164,14 @@ class SignupForm extends AbstractSignupForm
             $tokenCreatedAt = Yii::$app->getSession()->get(self::SESSION_TIMESTAMP_NAME);
 
             if ($this->token !== $token || $tokenCreatedAt === null) {
-                $this->addError('token', Yii::t('skeleton', 'Sign up could not be completed, please try again.'));
+                $this->addError('token', Lang::t('skeleton', 'SIGNUP_SIGN_UP_COULD_NOT_BE_COMPLETED'));
             }
 
             if (!$this->hasErrors('token')) {
                 $timestamp = time() - $tokenCreatedAt;
 
                 if ($timestamp < static::SESSION_TOKEN_MIN_TIME || $timestamp > static::SESSION_TOKEN_MAX_TIME) {
-                    $this->addError('token', Yii::t('skeleton', 'Sign up could not be completed, please try again.'));
+                    $this->addError('token', Lang::t('skeleton', 'SIGNUP_SIGN_UP_COULD_NOT_BE_COMPLETED'));
                 }
             }
         }
@@ -225,7 +226,7 @@ class SignupForm extends AbstractSignupForm
     {
         return [
             ...parent::attributeLabels(),
-            'terms' => Yii::t('skeleton', 'I accept the terms of service and privacy policy'),
+            'terms' => Lang::t('skeleton', 'SIGNUP_TERMS_LABEL'),
         ];
     }
 }

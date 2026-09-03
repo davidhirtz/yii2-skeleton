@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models;
 
+use Hirtz\Skeleton\I18n\Lang;
 use DateTimeZone;
 use davidhirtz\yii2\datetime\Date;
 use davidhirtz\yii2\datetime\DateTime;
@@ -147,14 +148,14 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
                 ['name'],
                 'match',
                 'pattern' => $this->namePattern,
-                'message' => Yii::t('skeleton', 'Username must only contain alphanumeric characters.'),
+                'message' => Lang::t('skeleton', 'USER_USERNAME_MUST_ONLY_CONTAIN_ALPHANUMERIC_CHARACTERS'),
                 'skipOnError' => true,
                 'when' => fn () => $this->namePattern !== false,
             ],
             [
                 ['name'],
                 UniqueValidator::class,
-                'message' => Yii::t('skeleton', 'This username is already used by another user.'),
+                'message' => Lang::t('skeleton', 'USER_THIS_USERNAME_IS_ALREADY_USED_BY'),
             ],
             [
                 ['email'],
@@ -169,7 +170,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
             [
                 ['email'],
                 'unique',
-                'message' => Yii::t('skeleton', 'This email address is already used by another user.'),
+                'message' => Lang::t('skeleton', 'USER_THIS_EMAIL_ADDRESS_IS_ALREADY_USED'),
                 'skipOnError' => true,
                 'when' => fn () => $this->isAttributeChanged('email')
             ],
@@ -216,8 +217,8 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
     {
         if (!$this->isDeletable()) {
             $this->addError('id', $this->isOwner()
-                ? Yii::t('skeleton', 'This user is the website owner. Please transfer ownership to another user before deleting this user.')
-                : Yii::t('skeleton', 'The user cannot be deleted.'));
+                ? Lang::t('skeleton', 'USER_THIS_USER_IS_THE_WEBSITE_OWNER')
+                : Lang::t('skeleton', 'USER_THE_USER_CANNOT_BE_DELETED'));
 
             return false;
         }
@@ -403,11 +404,11 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
     {
         return [
             static::STATUS_DISABLED => [
-                'name' => Yii::t('skeleton', 'Disabled'),
+                'name' => Lang::t('skeleton', 'COMMON_DISABLED'),
                 'icon' => 'exclamation-triangle',
             ],
             static::STATUS_ENABLED => [
-                'name' => Yii::t('skeleton', 'Enabled'),
+                'name' => Lang::t('skeleton', 'COMMON_ENABLED'),
                 'icon' => 'user',
             ],
         ];
@@ -416,7 +417,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
     public function getStatusName(): string
     {
         if ($this->isOwner()) {
-            return Yii::t('skeleton', 'Site Owner');
+            return Lang::t('skeleton', 'USER_SITE_OWNER');
         }
 
         return static::getStatuses()[$this->status]['name'] ?? '';
@@ -451,7 +452,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
 
     public function getTrailModelType(): string
     {
-        return Yii::t('skeleton', 'User');
+        return Lang::t('skeleton', 'COMMON_USER');
     }
 
     public function isDeletable(): bool
@@ -505,25 +506,25 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
     {
         return [
             ...parent::attributeLabels(),
-            'id' => Yii::t('skeleton', 'ID'),
-            'name' => Yii::t('skeleton', 'Username'),
-            'email' => Yii::t('skeleton', 'Email'),
-            'password' => Yii::t('skeleton', 'Password'),
-            'first_name' => Yii::t('skeleton', 'First name'),
-            'last_name' => Yii::t('skeleton', 'Last name'),
-            'birthdate' => Yii::t('skeleton', 'Birthdate'),
-            'city' => Yii::t('skeleton', 'City'),
-            'country' => Yii::t('skeleton', 'Country'),
-            'picture' => Yii::t('skeleton', 'Picture'),
-            'language' => Yii::t('skeleton', 'Language'),
-            'timezone' => Yii::t('skeleton', 'Timezone'),
-            'verification_token' => Yii::t('skeleton', 'Email verification code'),
-            'login_count' => Yii::t('skeleton', 'Login count'),
-            'last_login' => Yii::t('skeleton', 'Last login'),
-            'is_owner' => Yii::t('skeleton', 'Website owner'),
-            'updated_at' => Yii::t('skeleton', 'Updated'),
-            'created_at' => Yii::t('skeleton', 'Created'),
-            'upload' => Yii::t('skeleton', 'Picture'),
+            'id' => Lang::t('skeleton', 'USER_ID_LABEL'),
+            'name' => Lang::t('skeleton', 'USER_NAME_LABEL'),
+            'email' => Lang::t('skeleton', 'USER_EMAIL_LABEL'),
+            'password' => Lang::t('skeleton', 'USER_PASSWORD_LABEL'),
+            'first_name' => Lang::t('skeleton', 'USER_FIRST_NAME_LABEL'),
+            'last_name' => Lang::t('skeleton', 'USER_LAST_NAME_LABEL'),
+            'birthdate' => Lang::t('skeleton', 'USER_BIRTHDATE_LABEL'),
+            'city' => Lang::t('skeleton', 'USER_CITY_LABEL'),
+            'country' => Lang::t('skeleton', 'USER_COUNTRY_LABEL'),
+            'picture' => Lang::t('skeleton', 'USER_PICTURE_LABEL'),
+            'language' => Lang::t('skeleton', 'USER_LANGUAGE_LABEL'),
+            'timezone' => Lang::t('skeleton', 'USER_TIMEZONE_LABEL'),
+            'verification_token' => Lang::t('skeleton', 'USER_VERIFICATION_TOKEN_LABEL'),
+            'login_count' => Lang::t('skeleton', 'USER_LOGIN_COUNT_LABEL'),
+            'last_login' => Lang::t('skeleton', 'USER_LAST_LOGIN_LABEL'),
+            'is_owner' => Lang::t('skeleton', 'USER_IS_OWNER_LABEL'),
+            'updated_at' => Lang::t('skeleton', 'USER_UPDATED_AT_LABEL'),
+            'created_at' => Lang::t('skeleton', 'USER_CREATED_AT_LABEL'),
+            'upload' => Lang::t('skeleton', 'USER_UPLOAD_LABEL'),
         ];
     }
 

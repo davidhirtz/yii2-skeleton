@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Traits;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Db\I18nActiveQuery;
 use Yii;
 use yii\db\ActiveRecord;
@@ -114,7 +115,7 @@ trait I18nAttributesTrait
                     $label = parent::getAttributeLabel($attribute);
 
                     if ($language !== Yii::$app->language) {
-                        $label = Yii::t('skeleton', '{label} ({language})', [
+                        $label = Lang::t('skeleton', 'I18N_ATTRIBUTES_LABEL_LANGUAGE', [
                             'label' => $label,
                             'language' => strtoupper((string)$language),
                         ]);

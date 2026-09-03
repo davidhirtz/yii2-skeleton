@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Grids;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Widgets\Alert;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Grids\Traits\GridTrait;
@@ -46,7 +47,7 @@ class GridSummary extends Widget
             $alert->button(Button::make()
                 ->class('btn-icon icon')
                 ->get($this->grid->search->getUrl())
-                ->tooltip(Yii::t('skeleton', 'Clear Search'))
+                ->tooltip(Lang::t('skeleton', 'GRID_SUMMARY_CLEAR_SEARCH'))
                 ->icon('xmark'));
         }
 
@@ -81,18 +82,18 @@ class GridSummary extends Widget
 
         if ($this->grid->search?->getValue()) {
             return match ($count) {
-                1 => Yii::t('skeleton', 'Displaying the only result matching "{search}".', $params),
-                0 => Yii::t('skeleton', 'Sorry, no results found matching matching "{search}".', $params),
-                $totalCount => Yii::t('skeleton', 'Displaying all {totalCount, number} results matching "{search}".', $params),
-                default => Yii::t('skeleton', 'Displaying {begin, number}-{end, number} of {totalCount, number} results matching "{search}".', $params),
+                1 => Lang::t('skeleton', 'GRID_SUMMARY_DISPLAYING_THE_ONLY_RESULT_MATCHING', $params),
+                0 => Lang::t('skeleton', 'GRID_SUMMARY_SORRY_NO_RESULTS_FOUND_MATCHING_MATCHING', $params),
+                $totalCount => Lang::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ALL_RESULTS_MATCHING', $params),
+                default => Lang::t('skeleton', 'GRID_SUMMARY_DISPLAYING_OF_RESULTS_MATCHING', $params),
             };
         }
 
         return match ($count) {
-            1 => Yii::t('skeleton', 'Displaying the only record.', $params),
-            0 => Yii::t('skeleton', 'Sorry, no records found.', $params),
-            $totalCount => Yii::t('skeleton', 'Displaying all {totalCount, number} records.', $params),
-            default => Yii::t('skeleton', 'Displaying {begin, number}-{end, number} of {totalCount, number} records.', $params),
+            1 => Lang::t('skeleton', 'GRID_SUMMARY_DISPLAYING_THE_ONLY_RECORD', $params),
+            0 => Lang::t('skeleton', 'GRID_SUMMARY_SORRY_NO_RECORDS_FOUND', $params),
+            $totalCount => Lang::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ALL_RECORDS', $params),
+            default => Lang::t('skeleton', 'GRID_SUMMARY_DISPLAYING_OF_RECORDS', $params),
         };
     }
 }

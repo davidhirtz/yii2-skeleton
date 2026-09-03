@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Forms;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\Traits\IdentityTrait;
 use Hirtz\Skeleton\Models\UserLogin;
@@ -66,7 +67,7 @@ class LoginForm extends Model
     public function beforeValidate(): bool
     {
         if (!Yii::$app->getUser()->isLoginEnabled()) {
-            $this->addError('email', Yii::t('skeleton', 'Sorry, logging in is currently disabled!'));
+            $this->addError('email', Lang::t('skeleton', 'USER_SORRY_LOGGING_IN_IS_CURRENTLY_DISABLED'));
             return false;
         }
 
@@ -88,14 +89,14 @@ class LoginForm extends Model
     protected function validatePassword(): void
     {
         if (!$this->user->validatePassword($this->password)) {
-            $this->addError('email', Yii::t('skeleton', 'Your email or password are incorrect.'));
+            $this->addError('email', Lang::t('skeleton', 'USER_YOUR_EMAIL_OR_PASSWORD_ARE_INCORRECT'));
         }
     }
 
     protected function validateLoginStatus(): void
     {
         if ($this->user->isUnconfirmed() && !Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
-            $this->addError('status', Yii::t('skeleton', 'Your email address is not confirmed yet. You should find a confirmation email in your inbox.'));
+            $this->addError('status', Lang::t('skeleton', 'USER_YOUR_EMAIL_ADDRESS_IS_NOT_CONFIRMED'));
         }
     }
 
@@ -150,10 +151,10 @@ class LoginForm extends Model
     public function attributeLabels(): array
     {
         return [
-            'email' => Yii::t('skeleton', 'Email'),
-            'password' => Yii::t('skeleton', 'Password'),
-            'code' => Yii::t('skeleton', 'Code'),
-            'rememberMe' => Yii::t('skeleton', 'Keep me logged in'),
+            'email' => Lang::t('skeleton', 'USER_EMAIL_LABEL'),
+            'password' => Lang::t('skeleton', 'USER_PASSWORD_LABEL'),
+            'code' => Lang::t('skeleton', 'USER_CODE_LABEL'),
+            'rememberMe' => Lang::t('skeleton', 'USER_REMEMBERME_LABEL'),
         ];
     }
 }

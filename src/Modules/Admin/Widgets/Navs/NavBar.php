@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
@@ -86,6 +87,6 @@ class NavBar extends Widget
             ->addClass('aside-toggle')
             ->icon('bars')
             ->attribute('onclick', "body.classList.toggle('has-aside')")
-            ->attribute('aria-label', Yii::t('skeleton', 'Toggle menu'));
+            ->attribute('aria-label', Lang::t('skeleton', 'NAV_BAR_TOGGLE_MENU'));
     }
 }

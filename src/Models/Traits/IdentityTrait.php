@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Traits;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\User;
 use Yii;
 
@@ -20,7 +21,7 @@ trait IdentityTrait
             ->one();
 
         if (null === $this->user) {
-            $this->addError('email', Yii::t('skeleton', 'Your email was not found.'));
+            $this->addError('email', Lang::t('skeleton', 'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND'));
         }
 
         return !$this->hasErrors('email');
@@ -29,7 +30,7 @@ trait IdentityTrait
     protected function validateUserStatus(): void
     {
         if ($this->user->isDisabled() && !$this->user->isOwner()) {
-            $this->addError('email', Yii::t('skeleton', 'Your account is currently disabled. Please contact an administrator!'));
+            $this->addError('email', Lang::t('skeleton', 'COMMON_YOUR_ACCOUNT_IS_CURRENTLY_DISABLED_PLEASE'));
         }
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\AuthClient;
 use Hirtz\Skeleton\Models\Forms\DeleteForm;
 use Hirtz\Skeleton\Models\Forms\OwnershipForm;
@@ -102,7 +103,7 @@ class UserController extends Controller
         $form->user->country = $identity->country;
 
         if ($form->load(Yii::$app->getRequest()->post()) && $form->save()) {
-            $this->success(Yii::t('skeleton', 'The user was created.'));
+            $this->success(Lang::t('skeleton', 'USER_FLASH_THE_USER_WAS_CREATED'));
             return $this->redirect(['update', 'id' => $form->user->id]);
         }
 
@@ -117,7 +118,7 @@ class UserController extends Controller
         $form = UserForm::create(['user' => $user]);
 
         if ($form->load(Yii::$app->getRequest()->post()) && $form->save()) {
-            $this->success(Yii::t('skeleton', 'The user was updated.'));
+            $this->success(Lang::t('skeleton', 'USER_FLASH_THE_USER_WAS_UPDATED'));
             return $this->refresh();
         }
 
@@ -142,7 +143,7 @@ class UserController extends Controller
         $user->generatePasswordResetToken();
 
         if ($user->save()) {
-            $this->success(Yii::t('skeleton', 'The password reset link was updated.'));
+            $this->success(Lang::t('skeleton', 'USER_FLASH_THE_PASSWORD_RESET_LINK_WAS_UPDATED'));
         }
 
         return $this->redirect(['update', 'id' => $user->id]);
@@ -164,7 +165,7 @@ class UserController extends Controller
         ]);
 
         if ($form->load($this->request->post()) && $form->delete()) {
-            $this->success(Yii::t('skeleton', 'The user was deleted.'));
+            $this->success(Lang::t('skeleton', 'USER_FLASH_THE_USER_WAS_DELETED'));
 
             if ($user->id === Yii::$app->getUser()->id) {
                 Yii::$app->getUser()->logout(false);
@@ -201,7 +202,7 @@ class UserController extends Controller
         if ($auth->delete()) {
             $client = $auth->getClientClass();
 
-            $this->success(Yii::t('skeleton', '{client} account "{name}" was removed from user account.', [
+            $this->success(Lang::t('skeleton', 'USER_FLASH_ACCOUNT_WAS_REMOVED_FROM_USER_ACCOUNT', [
                 'client' => $client->getTitle(),
                 'name' => $client::getDisplayName($auth),
             ]));
@@ -225,7 +226,7 @@ class UserController extends Controller
         ]);
 
         if ($form->update()) {
-            $this->success(Yii::t('skeleton', 'The website ownership was successful transferred!'));
+            $this->success(Lang::t('skeleton', 'USER_FLASH_THE_WEBSITE_OWNERSHIP_WAS_SUCCESSFUL_TRANSFERRED'));
             return $this->goHome();
         }
 
@@ -240,7 +241,7 @@ class UserController extends Controller
         $user->setAttributes($attributes, false);
 
         if ($user->save()) {
-            $this->success(Yii::t('skeleton', 'The user was updated.'));
+            $this->success(Lang::t('skeleton', 'USER_FLASH_THE_USER_WAS_UPDATED'));
         }
 
         return $this->redirect(['update', 'id' => $user->id]);

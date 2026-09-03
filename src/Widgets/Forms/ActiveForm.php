@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Forms;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Form;
@@ -145,8 +146,8 @@ class ActiveForm extends Widget
     protected function getSubmitButton(): Stringable
     {
         $this->submitButtonText ??= $this->model instanceof ActiveRecordInterface && $this->model->getIsNewRecord()
-            ? Yii::t('skeleton', 'Create')
-            : Yii::t('skeleton', 'Update');
+            ? Lang::t('skeleton', 'COMMON_CREATE')
+            : Lang::t('skeleton', 'COMMON_UPDATE');
 
         return Button::make()
             ->primary()

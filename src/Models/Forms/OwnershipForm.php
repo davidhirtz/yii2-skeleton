@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Forms;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\User;
 use Override;
@@ -23,11 +24,11 @@ class OwnershipForm extends Model
     public function beforeValidate(): bool
     {
         if ($this->user->isDisabled()) {
-            $this->addError('name', Yii::t('skeleton', 'This user is currently disabled and thus can not be made website owner!'));
+            $this->addError('name', Lang::t('skeleton', 'OWNERSHIP_THIS_USER_IS_CURRENTLY_DISABLED_AND'));
         }
 
         if ($this->user->isOwner()) {
-            $this->addError('name', Yii::t('skeleton', 'This user is already the owner of the website!'));
+            $this->addError('name', Lang::t('skeleton', 'OWNERSHIP_THIS_USER_IS_ALREADY_THE_OWNER'));
         }
 
         return parent::beforeValidate();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Panels;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Widgets\Buttons\ButtonGroup;
 use Hirtz\Skeleton\Widgets\Grids\Traits\GridTrait;
@@ -26,7 +27,7 @@ class Panel extends Widget
 
     public function __construct(array $config = [])
     {
-        $this->title ??= Yii::t('skeleton', 'Operations');
+        $this->title ??= Lang::t('skeleton', 'PANEL_OPERATIONS');
         parent::__construct($config);
     }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models;
 
+use Hirtz\Skeleton\I18n\Lang;
 use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Collections\TrailModelCollection;
@@ -224,54 +225,54 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
 
         return [
             static::TYPE_CREATE => [
-                'name' => Yii::t('skeleton', 'Created'),
+                'name' => Lang::t('skeleton', 'COMMON_CREATED'),
                 'parentType' => static::TYPE_CHILD_CREATE,
                 'icon' => 'plus',
             ],
             static::TYPE_UPDATE => [
-                'name' => Yii::t('skeleton', 'Updated'),
+                'name' => Lang::t('skeleton', 'COMMON_UPDATED'),
                 'parentType' => static::TYPE_CHILD_UPDATE,
                 'icon' => 'pencil-alt',
             ],
             static::TYPE_DELETE => [
-                'name' => Yii::t('skeleton', 'Deleted'),
-                'message' => Yii::t('skeleton', '{model} was deleted', [], $language),
+                'name' => Lang::t('skeleton', 'COMMON_DELETED'),
+                'message' => Lang::t('skeleton', 'TRAIL_WAS_DELETED', [], $language),
                 'parentType' => static::TYPE_CHILD_DELETE,
                 'icon' => 'trash-alt',
             ],
             static::TYPE_ASSIGN => [
-                'name' => Yii::t('skeleton', 'Permission assigned'),
+                'name' => Lang::t('skeleton', 'TRAIL_PERMISSION_ASSIGNED'),
                 'icon' => 'user-plus',
             ],
             static::TYPE_REVOKE => [
-                'name' => Yii::t('skeleton', 'Permission revoked'),
+                'name' => Lang::t('skeleton', 'TRAIL_PERMISSION_REVOKED'),
                 'icon' => 'user-minus',
             ],
             static::TYPE_CHILD_CREATE => [
-                'name' => Yii::t('skeleton', 'Created'),
-                'message' => Yii::t('skeleton', '{model} created', [], $language),
+                'name' => Lang::t('skeleton', 'COMMON_CREATED'),
+                'message' => Lang::t('skeleton', 'TRAIL_CREATED', [], $language),
                 'hasDataModel' => true,
                 'icon' => 'plus',
             ],
             static::TYPE_CHILD_UPDATE => [
-                'name' => Yii::t('skeleton', 'Updated'),
-                'message' => Yii::t('skeleton', '{model} updated', [], $language),
+                'name' => Lang::t('skeleton', 'COMMON_UPDATED'),
+                'message' => Lang::t('skeleton', 'TRAIL_UPDATED', [], $language),
                 'hasDataModel' => true,
                 'icon' => 'pencil-alt',
             ],
             static::TYPE_CHILD_DELETE => [
-                'name' => Yii::t('skeleton', 'Deleted'),
-                'message' => Yii::t('skeleton', '{model} deleted', [], $language),
+                'name' => Lang::t('skeleton', 'COMMON_DELETED'),
+                'message' => Lang::t('skeleton', 'TRAIL_DELETED', [], $language),
                 'hasDataModel' => true,
                 'icon' => 'trash-alt',
             ],
             static::TYPE_ORDER => [
-                'name' => Yii::t('skeleton', 'Ordered'),
+                'name' => Lang::t('skeleton', 'TRAIL_ORDERED'),
                 'icon' => 'sort-amount-down',
             ],
             static::TYPE_PASSWORD => [
-                'name' => Yii::t('skeleton', 'Password changed'),
-                'message' => Yii::t('skeleton', 'The password was changed'),
+                'name' => Lang::t('skeleton', 'TRAIL_PASSWORD_CHANGED'),
+                'message' => Lang::t('skeleton', 'TRAIL_THE_PASSWORD_WAS_CHANGED'),
                 'icon' => 'key',
             ],
         ];
@@ -282,10 +283,10 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
     {
         return [
             ...parent::attributeLabels(),
-            'model' => Yii::t('skeleton', 'Record'),
-            'user_id' => Yii::t('skeleton', 'User'),
-            'data' => Yii::t('skeleton', 'Updates'),
-            'created_at' => Yii::t('skeleton', 'Time'),
+            'model' => Lang::t('skeleton', 'TRAIL_MODEL_LABEL'),
+            'user_id' => Lang::t('skeleton', 'TRAIL_USER_ID_LABEL'),
+            'data' => Lang::t('skeleton', 'TRAIL_DATA_LABEL'),
+            'created_at' => Lang::t('skeleton', 'TRAIL_CREATED_AT_LABEL'),
         ];
     }
 

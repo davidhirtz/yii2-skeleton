@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Models\forms;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\Forms\Traits\UserFormTrait;
 use Hirtz\Skeleton\Models\User;
 use Override;
 use Yii;
 use yii\base\Model;
-use Hirtz\Skeleton\Helpers\Url;;
+use Hirtz\Skeleton\Helpers\Url;
+
+;
 
 class UserForm extends Model
 {
@@ -64,7 +67,7 @@ class UserForm extends Model
                 ['repeatPassword'],
                 'compare',
                 'compareAttribute' => 'newPassword',
-                'message' => Yii::t('skeleton', 'The password must match the new password.'),
+                'message' => Lang::t('skeleton', 'COMMON_THE_PASSWORD_MUST_MATCH_THE_NEW'),
             ],
             [
                 ['sendEmail'],
@@ -111,7 +114,7 @@ class UserForm extends Model
     {
         Yii::$app->getI18n()->callback($this->user->language, function (): void {
             Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/credentials', ['form' => $this])
-                ->setSubject(Yii::t('skeleton', 'Your {name} Account', ['name' => Yii::$app->name]))
+                ->setSubject(Lang::t('skeleton', 'USER_YOUR_ACCOUNT', ['name' => Yii::$app->name]))
                 ->setFrom(Yii::$app->params['email'])
                 ->setTo($this->user->email)
                 ->send();
@@ -128,10 +131,10 @@ class UserForm extends Model
     {
         return [
             'newPassword' => $this->user->getIsNewRecord()
-                ? Yii::t('skeleton', 'Password')
-                : Yii::t('skeleton', 'New password'),
-            'repeatPassword' => Yii::t('skeleton', 'Repeat password'),
-            'sendEmail' => Yii::t('skeleton', 'Send user account details via email'),
+                ? Lang::t('skeleton', 'COMMON_PASSWORD')
+                : Lang::t('skeleton', 'COMMON_NEW_PASSWORD'),
+            'repeatPassword' => Lang::t('skeleton', 'USER_REPEATPASSWORD_LABEL'),
+            'sendEmail' => Lang::t('skeleton', 'USER_SENDEMAIL_LABEL'),
         ];
     }
 }

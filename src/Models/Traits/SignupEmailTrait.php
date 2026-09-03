@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Traits;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Yii;
 
 trait SignupEmailTrait
@@ -14,7 +15,7 @@ trait SignupEmailTrait
             'user' => $this->user,
         ]);
 
-        $mail->setSubject(Yii::t('skeleton', 'Sign up confirmation'))
+        $mail->setSubject(Lang::t('skeleton', 'SIGNUP_EMAIL_SIGN_UP_CONFIRMATION'))
             ->setFrom(Yii::$app->params['email'])
             ->setTo($this->user->email)
             ->send();

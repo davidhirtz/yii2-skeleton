@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Behaviors\UserLanguageBehavior;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Models\User;
@@ -74,12 +75,12 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
         $dashboard->addItem(
             DashboardItem::make()
                 ->icon('user-plus')
-                ->label(Yii::t('skeleton', 'Create New User'))
+                ->label(Lang::t('skeleton', 'MODULE_CREATE_NEW_USER'))
                 ->url(['/admin/user/create'])
                 ->roles([User::AUTH_USER_CREATE]),
             DashboardItem::make()
                 ->icon('globe')
-                ->label(Yii::t('skeleton', 'Open Homepage'))
+                ->label(Lang::t('skeleton', 'MODULE_OPEN_HOMEPAGE'))
                 ->link(fn (A $link) => $link->target('_blank'))
                 ->order(100)
                 ->url('/'),

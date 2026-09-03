@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Override;
@@ -13,7 +14,7 @@ class UserNavItem extends NavItem
 {
     public function __construct(array $config = [])
     {
-        $this->label ??= Yii::t('skeleton', 'User Management');
+        $this->label ??= Lang::t('skeleton', 'USER_NAV_ITEM_USER_MANAGEMENT');
         $this->icon ??= 'users';
         $this->order ??= 100;
         $this->url ??= ['/admin/user/index'];
@@ -37,7 +38,7 @@ class UserNavItem extends NavItem
     {
         return NavItem::make()
             ->icon('user-friends')
-            ->label(Yii::t('skeleton', 'Users'))
+            ->label(Lang::t('skeleton', 'COMMON_USERS'))
             ->url(['/admin/user/index'])
             ->roles([User::AUTH_USER_CREATE, User::AUTH_USER_UPDATE])
             ->routes(['admin/user/', 'admin/user-auth/', 'admin/user-trail/', 'admin/user-login/view']);
@@ -47,7 +48,7 @@ class UserNavItem extends NavItem
     {
         return NavItem::make()
             ->icon('balance-scale-right')
-            ->label(Yii::t('skeleton', 'Permissions'))
+            ->label(Lang::t('skeleton', 'COMMON_PERMISSIONS'))
             ->url(['/admin/auth/index'])
             ->roles([User::AUTH_USER_ASSIGN])
             ->routes(['admin/auth']);
@@ -57,7 +58,7 @@ class UserNavItem extends NavItem
     {
         return NavItem::make()
             ->icon('sign-in-alt')
-            ->label(Yii::t('skeleton', 'Logins'))
+            ->label(Lang::t('skeleton', 'COMMON_LOGINS'))
             ->url(['/admin/user-login/index'])
             ->roles([User::AUTH_USER_UPDATE])
             ->routes(['admin/user-login/index']);

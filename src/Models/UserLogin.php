@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models;
 
+use Hirtz\Skeleton\I18n\Lang;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
@@ -85,23 +86,23 @@ class UserLogin extends ActiveRecord implements TypeAttributeInterface
     {
         return [
             static::TYPE_LOGIN => [
-                'name' => Yii::t('skeleton', 'Login'),
+                'name' => Lang::t('skeleton', 'COMMON_LOGIN'),
                 'icon' => 'sign-in-alt',
             ],
             static::TYPE_COOKIE => [
-                'name' => Yii::t('skeleton', 'Cookie'),
+                'name' => Lang::t('skeleton', 'USER_LOGIN_COOKIE'),
                 'icon' => 'heart',
             ],
             static::TYPE_SIGNUP => [
-                'name' => Yii::t('skeleton', 'Sign up'),
+                'name' => Lang::t('skeleton', 'USER_LOGIN_SIGN_UP'),
                 'icon' => 'user-plus',
             ],
             static::TYPE_CONFIRM_EMAIL => [
-                'name' => Yii::t('skeleton', 'Email confirmation'),
+                'name' => Lang::t('skeleton', 'USER_LOGIN_EMAIL_CONFIRMATION'),
                 'icon' => 'envelope',
             ],
             static::TYPE_RESET_PASSWORD => [
-                'name' => Yii::t('skeleton', 'Password reset'),
+                'name' => Lang::t('skeleton', 'USER_LOGIN_PASSWORD_RESET'),
                 'icon' => 'unlock',
             ],
         ];
@@ -116,11 +117,11 @@ class UserLogin extends ActiveRecord implements TypeAttributeInterface
     public function attributeLabels(): array
     {
         return [
-            'typeName' => Yii::t('skeleton', 'Login'),
-            'browser' => Yii::t('skeleton', 'Browser'),
-            'ip_address' => Yii::t('skeleton', 'IP'),
-            'user' => Yii::t('skeleton', 'User'),
-            'created_at' => Yii::t('skeleton', 'Login'),
+            'typeName' => Lang::t('skeleton', 'USER_LOGIN_TYPENAME_LABEL'),
+            'browser' => Lang::t('skeleton', 'USER_LOGIN_BROWSER_LABEL'),
+            'ip_address' => Lang::t('skeleton', 'USER_LOGIN_IP_ADDRESS_LABEL'),
+            'user' => Lang::t('skeleton', 'USER_LOGIN_USER_LABEL'),
+            'created_at' => Lang::t('skeleton', 'USER_LOGIN_CREATED_AT_LABEL'),
         ];
     }
 

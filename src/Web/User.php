@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Web;
 
+use Hirtz\Skeleton\I18n\Lang;
 use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Models\UserLogin;
 use Override;
@@ -90,7 +91,7 @@ class User extends \yii\web\User
     {
         // Set flash message for required logins.
         if (!$checkAjax || !Yii::$app->getRequest()->getIsAjax()) {
-            Yii::$app->getSession()->addFlash('error', Yii::t('skeleton', 'You must login to view this page!'));
+            Yii::$app->getSession()->addFlash('error', Lang::t('skeleton', 'USER_FLASH_YOU_MUST_LOGIN_TO_VIEW_THIS'));
         }
 
         return parent::loginRequired($checkAjax, $checkAcceptHeader);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Forms;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Validators\TwoFactorAuthenticationValidator;
@@ -110,7 +111,7 @@ class TwoFactorAuthenticatorForm extends Model
     public function attributeLabels(): array
     {
         return [
-            'code' => Yii::t('skeleton', 'Code'),
+            'code' => Lang::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_CODE_LABEL'),
         ];
     }
 }

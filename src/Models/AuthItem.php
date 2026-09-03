@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Models\Queries\AuthItemQuery;
@@ -110,9 +111,9 @@ class AuthItem extends ActiveRecord implements TypeAttributeInterface
     public function attributeLabels(): array
     {
         return [
-            'name' => Yii::t('skeleton', 'Permission'),
-            'type' => Yii::t('skeleton', 'Type'),
-            'description' => Yii::t('skeleton', 'Description'),
+            'name' => Lang::t('skeleton', 'AUTH_ITEM_NAME_LABEL'),
+            'type' => Lang::t('skeleton', 'AUTH_ITEM_TYPE_LABEL'),
+            'description' => Lang::t('skeleton', 'AUTH_ITEM_DESCRIPTION_LABEL'),
         ];
     }
 

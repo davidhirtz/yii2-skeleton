@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models;
 
+use Hirtz\Skeleton\I18n\Lang;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
 use Hirtz\Skeleton\Auth\Clients\ClientInterface;
@@ -69,7 +70,7 @@ class AuthClient extends ActiveRecord implements TrailModelInterface
     public function validateUserId(): void
     {
         if (!$this->getIsNewRecord() && $this->isAttributeChanged('user_id')) {
-            $this->addError('user_id', Yii::t('skeleton', 'A different user is already linked with this {client} account.', [
+            $this->addError('user_id', Lang::t('skeleton', 'AUTH_CLIENT_A_DIFFERENT_USER_IS_ALREADY_LINKED', [
                 'client' => $this->getClientClass()->getTitle(),
             ]));
         }
@@ -84,7 +85,7 @@ class AuthClient extends ActiveRecord implements TrailModelInterface
                 ->exists();
 
             if ($emailIsAlreadyRegistered) {
-                $this->addError('data', Yii::t('skeleton', 'A different user with this email already exists.', [
+                $this->addError('data', Lang::t('skeleton', 'AUTH_CLIENT_A_DIFFERENT_USER_WITH_THIS_EMAIL', [
                     'email' => $this->data['email'],
                 ]));
             }
@@ -145,7 +146,7 @@ class AuthClient extends ActiveRecord implements TrailModelInterface
 
     public function getTrailModelType(): string
     {
-        return Yii::t('skeleton', 'Client');
+        return Lang::t('skeleton', 'AUTH_CLIENT_CLIENT');
     }
 
     public function getDisplayName(): string

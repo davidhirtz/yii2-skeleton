@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Forms;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Auth\Clients\ClientInterface;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\Traits\SignupEmailTrait;
@@ -59,7 +60,7 @@ class AuthClientSignupForm extends Model
     public function beforeValidate(): bool
     {
         if (!Yii::$app->getUser()->isSignupEnabled()) {
-            $this->addError('id', Yii::t('skeleton', 'Sorry, signing up is currently disabled!'));
+            $this->addError('id', Lang::t('skeleton', 'COMMON_SORRY_SIGNING_UP_IS_CURRENTLY_DISABLED'));
             return false;
         }
 
@@ -107,7 +108,7 @@ class AuthClientSignupForm extends Model
 
     protected function addContextToEmailError(): void
     {
-        $this->addError('email', Yii::t('skeleton', 'A user with email {email} already exists but is not linked to this {client} account. Login using email first to link it.', [
+        $this->addError('email', Lang::t('skeleton', 'AUTH_CLIENT_SIGNUP_A_USER_WITH_EMAIL_ALREADY_EXISTS', [
             'client' => $this->client->getTitle(),
             'email' => $this->user->email,
         ]));

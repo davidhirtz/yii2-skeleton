@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Data\RedirectActiveDataProvider;
@@ -61,7 +62,7 @@ class RedirectController extends Controller
         }
 
         if ($redirect->load($this->request->post()) && $redirect->insert()) {
-            $this->success(Yii::t('skeleton', 'The redirect rule was created.'));
+            $this->success(Lang::t('skeleton', 'REDIRECT_FLASH_THE_REDIRECT_RULE_WAS_CREATED'));
             return $this->redirect([...$this->request->get(), 'index']);
         }
 
@@ -76,7 +77,7 @@ class RedirectController extends Controller
 
         if ($redirect->load($this->request->post())) {
             if ($redirect->update()) {
-                $this->success(Yii::t('skeleton', 'The redirect rule was updated.'));
+                $this->success(Lang::t('skeleton', 'REDIRECT_FLASH_THE_REDIRECT_RULE_WAS_UPDATED'));
             }
 
             if (!$redirect->hasErrors()) {
@@ -94,7 +95,7 @@ class RedirectController extends Controller
         $redirect = $this->findRedirect($id);
         $redirect->delete();
 
-        $this->errorOrSuccess($redirect, Yii::t('skeleton', 'The redirect rule was deleted.'));
+        $this->errorOrSuccess($redirect, Lang::t('skeleton', 'REDIRECT_FLASH_THE_REDIRECT_RULE_WAS_DELETED'));
         return $this->redirectToIndex();
     }
 
@@ -117,7 +118,7 @@ class RedirectController extends Controller
             }
 
             if ($isDeleted) {
-                $this->success(Yii::t('skeleton', 'The selected redirect rules were deleted.'));
+                $this->success(Lang::t('skeleton', 'REDIRECT_FLASH_THE_SELECTED_REDIRECT_RULES_WERE_DELETED'));
             }
         }
 

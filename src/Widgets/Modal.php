@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\Dialog;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
@@ -56,14 +57,14 @@ class Modal extends Widget
 
             if (false !== $this->dismiss) {
                 $header->addContent(Button::make()
-                    ->attribute('aria-label', $this->dismiss ?? Yii::t('skeleton', 'Close'))
+                    ->attribute('aria-label', $this->dismiss ?? Lang::t('skeleton', 'MODAL_CLOSE'))
                     ->attribute('data-modal', '')
                     ->class('btn-icon icon')
                     ->icon('xmark'));
 
                 array_unshift($this->footer, Button::make()
                     ->secondary()
-                    ->text(Yii::t('skeleton', 'Cancel'))
+                    ->text(Lang::t('skeleton', 'MODAL_CANCEL'))
                     ->attribute('data-modal', '')
                     ->attribute('autofocus', true));
             }

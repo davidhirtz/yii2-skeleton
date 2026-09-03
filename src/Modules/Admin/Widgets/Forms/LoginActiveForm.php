@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Forms\LoginForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\Traits\LoginActiveFormTrait;
 use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
@@ -37,7 +38,7 @@ class LoginActiveForm extends ActiveForm
             $this->getRememberMeField(),
         ];
 
-        $this->submitButtonText ??= Yii::t('skeleton', 'Login');
+        $this->submitButtonText ??= Lang::t('skeleton', 'COMMON_LOGIN');
 
         parent::configure();
     }

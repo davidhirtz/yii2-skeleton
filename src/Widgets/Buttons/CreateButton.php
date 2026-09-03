@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Buttons;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Widgets\Traits\IconTrait;
 use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
@@ -23,7 +24,7 @@ class CreateButton extends Widget
     public function __construct(array $config = [])
     {
         $this->icon ??= 'plus';
-        $this->label ??= Yii::t('skeleton', 'Create');
+        $this->label ??= Lang::t('skeleton', 'COMMON_CREATE');
         $this->url ??= ['create'];
 
         parent::__construct($config);

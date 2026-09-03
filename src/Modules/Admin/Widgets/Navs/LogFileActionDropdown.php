@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Buttons\DeleteButton;
 use Hirtz\Skeleton\Widgets\Navs\ActionDropdown;
@@ -25,7 +26,7 @@ class LogFileActionDropdown extends ActionDropdown
         return Button::make()
             ->primary()
             ->icon('file-alt')
-            ->text(Yii::t('skeleton', 'Open file'))
+            ->text(Lang::t('skeleton', 'LOG_FILE_ACTION_DROPDOWN_OPEN_FILE'))
             ->url(["/admin/log/view", 'log' => $this->file, 'raw' => 1])
             ->target('_blank');
     }
@@ -33,7 +34,7 @@ class LogFileActionDropdown extends ActionDropdown
     protected function getDeleteFileButton(): ?Stringable
     {
         return DeleteButton::make()
-            ->label(Yii::t('skeleton', 'Delete file'))
+            ->label(Lang::t('skeleton', 'LOG_FILE_ACTION_DROPDOWN_DELETE_FILE'))
             ->url(["/admin/log/delete", 'log' => $this->file]);
     }
 }

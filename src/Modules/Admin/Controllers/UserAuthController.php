@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\AuthItem;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Controllers\Traits\UserTrait;
@@ -74,9 +75,9 @@ class UserAuthController extends Controller
         $role = $this->getAuthItem($name, $type);
 
         if (Yii::$app->getAuthManager()->assign($role, $user->id)) {
-            $this->success(Yii::t('skeleton', 'The permission was assigned.'));
+            $this->success(Lang::t('skeleton', 'USER_AUTH_FLASH_THE_PERMISSION_WAS_ASSIGNED'));
         } else {
-            $this->error(Yii::t('skeleton', 'This permission was already assigned to user {name}.', [
+            $this->error(Lang::t('skeleton', 'USER_AUTH_THIS_PERMISSION_WAS_ALREADY_ASSIGNED_TO', [
                 'name' => $user->getUsername(),
             ]));
         }
@@ -90,9 +91,9 @@ class UserAuthController extends Controller
         $role = $this->getAuthItem($name, $type);
 
         if (Yii::$app->getAuthManager()->revoke($role, $user->id)) {
-            $this->success(Yii::t('skeleton', 'The permission was removed.'));
+            $this->success(Lang::t('skeleton', 'USER_AUTH_FLASH_THE_PERMISSION_WAS_REMOVED'));
         } else {
-            $this->error(Yii::t('skeleton', 'This permission was not assigned to user {name}.', [
+            $this->error(Lang::t('skeleton', 'USER_AUTH_THIS_PERMISSION_WAS_NOT_ASSIGNED_TO', [
                 'name' => $user->getUsername(),
             ]));
         }

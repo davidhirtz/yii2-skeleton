@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Forms;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Ul;
 use Hirtz\Skeleton\Widgets\Alert;
@@ -51,8 +52,8 @@ class ErrorSummary extends Widget
     {
         if ($model instanceof ActiveRecord) {
             $this->title ??= $model->getIsNewRecord()
-                ? Yii::t('skeleton', 'The record could not be created:')
-                : Yii::t('skeleton', 'The record could not be updated:');
+                ? Lang::t('skeleton', 'ERROR_SUMMARY_THE_RECORD_COULD_NOT_BE_CREATED')
+                : Lang::t('skeleton', 'ERROR_SUMMARY_THE_RECORD_COULD_NOT_BE_UPDATED');
         }
 
         $this->models = is_array($model) ? $model : [$model];

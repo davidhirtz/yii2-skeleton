@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\Img;
 use Hirtz\Skeleton\Models\Forms\TwoFactorAuthenticatorForm;
 use Hirtz\Skeleton\Models\User;
@@ -39,7 +40,7 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
 
         $this->action ??= $enabled ? ['account/disable-authenticator'] : ['account/enable-authenticator'];
         $this->rows ??= $enabled ? $this->getDisableAuthenticatorRows() : $this->getEnableAuthenticatorRows();
-        $this->submitButtonText ??= $enabled ? Yii::t('skeleton', 'Disable') : Yii::t('skeleton', 'Enable');
+        $this->submitButtonText ??= $enabled ? Lang::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_DISABLE') : Lang::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_ENABLE');
         $this->footer ??= false;
 
         parent::configure();
@@ -49,7 +50,7 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
     {
         return [
             FormRow::make()
-                ->content(Yii::t('skeleton', 'Two-factor authentication is enabled. Please enter the 6-digit code provided by your Authenticator app below to disable it.')),
+                ->content(Lang::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_TWO_FACTOR_AUTHENTICATION_IS_ENABLED_PLEASE')),
             $this->getInputField(),
         ];
     }
@@ -59,7 +60,7 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
         return [
             FormRow::make()
                 ->content(
-                    Yii::t('skeleton', 'To activate two-factor authentication please scan the QR code below with your Authenticator app and enter the 6-digit code. After completing this setup you will need to use the Authenticator for every login for extra security.')
+                    Lang::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_TO_ACTIVATE_TWO_FACTOR_AUTHENTICATION_PLEASE')
                 ),
             FormRow::make()
                 ->content($this->getQrCodeImage()),
@@ -78,7 +79,7 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
     {
         return Img::make()
             ->src($this->authenticator->getQrImageUrl($this->qrCodeSize))
-            ->alt(Yii::t('skeleton', 'Authenticator QR Code'))
+            ->alt(Lang::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_AUTHENTICATOR_QR_CODE'))
             ->addStyle([
                 'width' => "{$this->qrCodeSize}px",
                 'height' => "{$this->qrCodeSize}px",

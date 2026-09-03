@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Models\User;
@@ -77,7 +78,7 @@ class UserGridView extends GridView
                 ->content($this->search->markKeywords($name))
                 ->class('strong')
             : Div::make()
-                ->content(Yii::t('skeleton', 'User'))
+                ->content(Lang::t('skeleton', 'COMMON_USER'))
                 ->class('text-muted');
 
         return $this->canUpdateUser($user) ? A::make()->content($name)->href($user->getAdminRoute()) : $name;
@@ -98,7 +99,7 @@ class UserGridView extends GridView
             ->mailto($user->email);
 
         if ($user->isUnconfirmed()) {
-            $link->tooltip(Yii::t('skeleton', 'Unconfirmed email'))
+            $link->tooltip(Lang::t('skeleton', 'USER_UNCONFIRMED_EMAIL'))
                 ->addClass('text-muted');
         }
 
@@ -140,7 +141,7 @@ class UserGridView extends GridView
                 ->primary()
                 ->url(['/admin/auth/assign', 'user' => $user->id])
                 ->icon('unlock-alt')
-                ->tooltip(Yii::t('skeleton', 'Permissions'))
+                ->tooltip(Lang::t('skeleton', 'COMMON_PERMISSIONS'))
                 ->render();
         }
 

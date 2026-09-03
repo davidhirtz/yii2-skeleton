@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Forms;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Forms\DeleteForm;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
@@ -51,15 +52,15 @@ class DeleteActiveForm extends ActiveForm
         ]);
 
         $this->message ??= $this->property
-            ? Yii::t('skeleton', 'Please type the exact {attribute} in the text field below to delete this record. All related files will also be unrecoverably deleted. This cannot be undone, please be certain!', [
+            ? Lang::t('skeleton', 'COMMON_PLEASE_TYPE_THE_EXACT_IN_THE', [
                 'attribute' => $this->model->getAttributeLabel('value'),
             ])
-            : Yii::t('skeleton', 'Warning: Deleting this record cannot be undone. All related files will also be unrecoverably deleted. Please be certain!');
+            : Lang::t('skeleton', 'DELETE_ACTIVE_FLASH_WARNING_DELETING_THIS_RECORD_CANNOT_BE');
 
         $this->action ??= ['delete', 'id' => $this->model->getId()];
 
         $this->confirm ??= Yii::t('yii', 'Are you sure you want to delete this item?');
-        $this->label ??= Yii::t('skeleton', 'Delete');
+        $this->label ??= Lang::t('skeleton', 'DELETE_ACTIVE_DELETE');
 
         $btn = Button::make()
             ->danger()

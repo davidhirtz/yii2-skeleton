@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Navs;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Li;
 use Hirtz\Skeleton\Html\Ol;
@@ -90,7 +91,7 @@ class Breadcrumbs extends Widget
     protected function addAdminBreadcrumb(): void
     {
         $this->breadcrumbs = [
-            new Breadcrumb(Yii::t('skeleton', 'Admin'), ['/admin']),
+            new Breadcrumb(Lang::t('skeleton', 'BREADCRUMBS_ADMIN'), ['/admin']),
             ...$this->breadcrumbs,
         ];
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Panels;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Modules\Admin\Controllers\UserController;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
@@ -43,7 +44,7 @@ class UserPanel extends Widget
         return $this->user->picture
             ? Button::make()
                 ->primary()
-                ->text(Yii::t('skeleton', 'Delete picture'))
+                ->text(Lang::t('skeleton', 'USER_DELETE_PICTURE'))
                 ->icon('portrait')
                 ->post(['delete-picture', 'id' => $this->user->id])
             : null;
@@ -57,7 +58,7 @@ class UserPanel extends Widget
         return $this->user->google_2fa_secret
             ? Button::make()
                 ->primary()
-                ->text(Yii::t('skeleton', 'Disable 2FA'))
+                ->text(Lang::t('skeleton', 'USER_DISABLE_2FA'))
                 ->icon('qrcode')
                 ->post(['disable-authenticator', 'id' => $this->user->id])
             : null;
@@ -69,17 +70,17 @@ class UserPanel extends Widget
     protected function getCreatePasswordResetLinkButton(): Stringable
     {
         $modal = Modal::make()
-            ->title(Yii::t('skeleton', 'Create password link'))
-            ->text(Yii::t('skeleton', 'Are you sure you want to create a new password reset link? The current link will be invalidated.'))
+            ->title(Lang::t('skeleton', 'USER_CREATE_PASSWORD_LINK'))
+            ->text(Lang::t('skeleton', 'USER_CONFIRM_CREATE_PASSWORD_LINK'))
             ->footer(Button::make()
                 ->primary()
-                ->text(Yii::t('skeleton', 'Create password link'))
+                ->text(Lang::t('skeleton', 'USER_CREATE_PASSWORD_LINK'))
                 ->icon('key')
                 ->post(['reset', 'id' => $this->user->id]));
 
         return Button::make()
             ->primary()
-            ->text(Yii::t('skeleton', 'Create password link'))
+            ->text(Lang::t('skeleton', 'USER_CREATE_PASSWORD_LINK'))
             ->icon('key')
             ->modal($modal);
     }
@@ -94,18 +95,18 @@ class UserPanel extends Widget
 
         $action = Button::make()
             ->primary()
-            ->text(Yii::t('skeleton', 'Copy link'))
+            ->text(Lang::t('skeleton', 'USER_COPY_LINK'))
             ->icon('clipboard')
             ->attribute('onclick', 'navigator.clipboard.writeText(' . Json::htmlEncode($url) . ')');
 
         $modal = Modal::make()
-            ->title(Yii::t('skeleton', 'Password reset link'))
+            ->title(Lang::t('skeleton', 'USER_PASSWORD_RESET_LINK'))
             ->content(Html::tag('div', $url, ['class' => 'text-break']))
             ->footer($action);
 
         return Button::make()
             ->primary()
-            ->text(Yii::t('skeleton', 'Show password link'))
+            ->text(Lang::t('skeleton', 'USER_SHOW_PASSWORD_LINK'))
             ->icon('clipboard')
             ->modal($modal);
     }

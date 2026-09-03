@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Grids\Toolbars;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Closure;
 use Hirtz\Skeleton\Html\Form;
 use Hirtz\Skeleton\Html\Input;
@@ -105,7 +106,7 @@ class GridSearchForm extends Widget
         $input = TextInput::make()
             ->class('input')
             ->type('search')
-            ->placeholder(Yii::t('skeleton', 'Search ...'))
+            ->placeholder(Lang::t('skeleton', 'GRID_SEARCH_SEARCH'))
             ->name($this->grid->search->paramName)
             ->value($this->grid->search->getValue());
 

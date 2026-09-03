@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
@@ -65,7 +66,7 @@ class AccountMenu extends Widget
         return !$this->webuser->getIsGuest()
             ? NavItem::make()
                 ->content(Button::make()
-                    ->text(Yii::t('skeleton', 'Logout'))
+                    ->text(Lang::t('skeleton', 'ACCOUNT_MENU_LOGOUT'))
                     ->addAttributes([
                         'hx-post' => Url::toRoute(['/admin/account/logout']),
                         'hx-push-url' => 'true',

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Web;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Override;
 use Yii;
 
@@ -58,7 +59,7 @@ class ErrorAction extends \yii\web\ErrorAction
     protected function getExceptionMessage(): string
     {
         return parent::getExceptionMessage() ?: match ($this->getExceptionCode()) {
-            403 => Yii::t('skeleton', 'Permission denied.'),
+            403 => Lang::t('skeleton', 'ERROR_PERMISSION_DENIED'),
             404 => Yii::t('yii', 'Page not found.'),
             default => Yii::t('yii', 'Error'),
         };

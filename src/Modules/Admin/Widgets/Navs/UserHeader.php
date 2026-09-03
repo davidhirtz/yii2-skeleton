@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Breadcrumb;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Data\UserActiveDataProvider;
@@ -33,7 +34,7 @@ class UserHeader extends Header
         }
 
         if ($this->provider) {
-            $this->title ??= Yii::t('skeleton', 'Users');
+            $this->title ??= Lang::t('skeleton', 'COMMON_USERS');
             $this->url ??= ['/admin/user/index'];
             $this->subtitle ??= $this->getPaginationSubtitle($this->provider);
         }

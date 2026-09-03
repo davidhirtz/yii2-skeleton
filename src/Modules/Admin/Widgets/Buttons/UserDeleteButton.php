@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Buttons;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Widgets\Buttons\DeleteButton;
 use Override;
@@ -23,9 +24,9 @@ class UserDeleteButton extends DeleteButton
     #[Override]
     protected function configure(): void
     {
-        $this->message ??= Yii::t('skeleton', 'Please type the user email in the text field below to delete this user. All related records and files will also be deleted. This cannot be undone, please be certain!');
+        $this->message ??= Lang::t('skeleton', 'USER_DELETE_PLEASE_TYPE_THE_USER_EMAIL_IN');
         $this->property ??= 'email';
-        $this->title ??= Yii::t('skeleton', 'Are you sure you want to delete this user?');
+        $this->title ??= Lang::t('skeleton', 'USER_CONFIRM_DELETE');
 
         parent::configure();
     }

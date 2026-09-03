@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Assets\AdminAssetBundle;
 use Hirtz\Skeleton\Assets\TinyMceAssetBundle;
 use Hirtz\Skeleton\Assets\TinyMceLanguageAssetBundle;
@@ -232,7 +233,7 @@ class TinyMceField extends Field
             if ($this->isTagAllowed($tag)) {
                 if ($this->stylesFormats) {
                     $headlineStyles[] = [
-                        'title' => Yii::t('skeleton', 'Heading {n}', ['n' => $i + 1]),
+                        'title' => Lang::t('skeleton', 'TINY_MCE_HEADING', ['n' => $i + 1]),
                         'format' => $tag,
                     ];
                 } else {
@@ -309,8 +310,8 @@ class TinyMceField extends Field
             foreach ($this->validator?->allowedClasses['a'] ?? [] as $name => $cssClass) {
                 if (is_int($name)) {
                     $name = match ($cssClass) {
-                        'btn' => Yii::t('skeleton', 'Button'),
-                        'cta' => Yii::t('skeleton', 'Call to action'),
+                        'btn' => Lang::t('skeleton', 'TINY_MCE_BUTTON'),
+                        'cta' => Lang::t('skeleton', 'TINY_MCE_CALL_TO_ACTION'),
                         default => Inflector::humanize($cssClass),
                     };
                 }
@@ -323,7 +324,7 @@ class TinyMceField extends Field
 
             if ($linkClassList) {
                 array_unshift($linkClassList, [
-                    'title' => Yii::t('skeleton', 'None'),
+                    'title' => Lang::t('skeleton', 'TINY_MCE_NONE'),
                     'value' => '',
                 ]);
 

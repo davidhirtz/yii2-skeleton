@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Migrations;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Db\Traits\MigrationTrait;
 use Hirtz\Skeleton\Models\AuthClient;
 use Hirtz\Skeleton\Models\Session;
@@ -247,22 +248,22 @@ class M190125140002Init extends Migration
         $authManager->add($ownerRule);
 
         $authUpdate = $authManager->createPermission(User::AUTH_USER_ASSIGN);
-        $authUpdate->description = Yii::t('skeleton', 'Assign and revoke user permissions', [], $sourceLanguage);
+        $authUpdate->description = Lang::t('skeleton', 'AUTH_AUTH_UPDATE_DESCRIPTION', [], $sourceLanguage);
         $authUpdate->ruleName = $ownerRule->name;
         $authManager->add($authUpdate);
 
         $userUpdate = $authManager->createPermission(User::AUTH_USER_UPDATE);
-        $userUpdate->description = Yii::t('skeleton', 'Update users', [], $sourceLanguage);
+        $userUpdate->description = Lang::t('skeleton', 'AUTH_USER_UPDATE_DESCRIPTION', [], $sourceLanguage);
         $userUpdate->ruleName = $ownerRule->name;
         $authManager->add($userUpdate);
 
         $userCreate = $authManager->createPermission(User::AUTH_USER_CREATE);
-        $userCreate->description = Yii::t('skeleton', 'Create new users', [], $sourceLanguage);
+        $userCreate->description = Lang::t('skeleton', 'AUTH_USER_CREATE_DESCRIPTION', [], $sourceLanguage);
         $authManager->add($userCreate);
         $authManager->addChild($userCreate, $userUpdate);
 
         $userDelete = $authManager->createPermission(User::AUTH_USER_DELETE);
-        $userDelete->description = Yii::t('skeleton', 'Delete users', [], $sourceLanguage);
+        $userDelete->description = Lang::t('skeleton', 'AUTH_USER_DELETE_DESCRIPTION', [], $sourceLanguage);
         $authManager->add($userDelete);
         $authManager->addChild($userDelete, $userUpdate);
 

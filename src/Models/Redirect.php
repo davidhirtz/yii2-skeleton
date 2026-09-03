@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models;
 
+use Hirtz\Skeleton\I18n\Lang;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
 use Hirtz\Skeleton\Behaviors\BlameableBehavior;
@@ -134,8 +135,8 @@ class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttribut
 
     public function getDisplayName(): string
     {
-        return Yii::t('skeleton', '{model} #{id}', [
-            'model' => Yii::t('skeleton', 'Redirect'),
+        return Lang::t('skeleton', 'COMMON_MODEL_ID', [
+            'model' => Lang::t('skeleton', 'REDIRECT_REDIRECT'),
             'id' => $this->id,
         ]);
     }
@@ -143,20 +144,20 @@ class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttribut
     #[Override]
     public function getTrailModelName(): string
     {
-        return $this->id ? $this->getDisplayName() : Yii::t('skeleton', 'Redirect');
+        return $this->id ? $this->getDisplayName() : Lang::t('skeleton', 'REDIRECT_REDIRECT');
     }
 
     public static function getTypes(): array
     {
         return [
             static::TYPE_MOVED_PERMANENTLY => [
-                'name' => Yii::t('skeleton', '301 - Moved permanently'),
-                'plural' => Yii::t('skeleton', '301 – Permanent'),
+                'name' => Lang::t('skeleton', 'REDIRECT_301_MOVED_PERMANENTLY'),
+                'plural' => Lang::t('skeleton', 'REDIRECT_301_PERMANENT'),
                 'icon' => 'forward',
             ],
             static::TYPE_FOUND => [
-                'name' => Yii::t('skeleton', '302 - Temporary redirect'),
-                'plural' => Yii::t('skeleton', '302 – Temporary'),
+                'name' => Lang::t('skeleton', 'REDIRECT_302_TEMPORARY_REDIRECT'),
+                'plural' => Lang::t('skeleton', 'REDIRECT_302_TEMPORARY'),
                 'icon' => 'clock',
             ],
         ];
@@ -167,8 +168,8 @@ class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttribut
     {
         return [
             ...parent::attributeLabels(),
-            'request_uri' => Yii::t('skeleton', 'Request'),
-            'url' => Yii::t('skeleton', 'Target URL'),
+            'request_uri' => Lang::t('skeleton', 'REDIRECT_REQUEST_URI_LABEL'),
+            'url' => Lang::t('skeleton', 'REDIRECT_URL_LABEL'),
         ];
     }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Models\AuthClient;
 use Hirtz\Skeleton\Modules\Admin\Controllers\UserController;
@@ -49,12 +50,12 @@ class AuthClientGridView extends GridView
     protected function getCreateButton(): string
     {
         $modal = Modal::make()
-            ->title(Yii::t('skeleton', 'Clients'))
+            ->title(Lang::t('skeleton', 'AUTH_CLIENT_CLIENTS'))
             ->content(AuthClientListGroup::make());
 
         return Button::make()
             ->primary()
-            ->text(Yii::t('skeleton', 'Add account'))
+            ->text(Lang::t('skeleton', 'AUTH_CLIENT_ADD_ACCOUNT'))
             ->icon('plus')
             ->modal($modal)
             ->render();
@@ -63,7 +64,7 @@ class AuthClientGridView extends GridView
     protected function getAccountColumn(): ?Column
     {
         return Column::make()
-            ->title(Yii::t('skeleton', 'Account'))
+            ->title(Lang::t('skeleton', 'COMMON_ACCOUNT'))
             ->content(fn (AuthClient $auth) => $auth->getClientClass()->getTitle());
     }
 
@@ -81,10 +82,10 @@ class AuthClientGridView extends GridView
         $title = $auth->getClientClass()->getTitle();
 
         $modal = Modal::make()
-            ->title(Yii::t('skeleton', 'Are you sure your want to remove your {client} account?', ['client' => $title]))
+            ->title(Lang::t('skeleton', 'ACCOUNT_CONFIRM_REMOVE', ['client' => $title]))
             ->footer(Button::make()
                 ->danger()
-                ->text(Yii::t('skeleton', 'Remove {client}', ['client' => $title]))
+                ->text(Lang::t('skeleton', 'AUTH_CLIENT_REMOVE', ['client' => $title]))
                 ->icon('trash-alt')
                 ->post(['deauthorize', 'id' => $auth->id, 'name' => $auth->name]));
 
@@ -92,14 +93,14 @@ class AuthClientGridView extends GridView
             ->danger()
             ->icon('trash-alt')
             ->modal($modal)
-            ->tooltip(Yii::t('skeleton', 'Remove {client}', ['client' => $title]))
+            ->tooltip(Lang::t('skeleton', 'AUTH_CLIENT_REMOVE', ['client' => $title]))
             ->render();
     }
 
     protected function getNameColumn(): Column
     {
         return Column::make()
-            ->title(Yii::t('skeleton', 'Name'))
+            ->title(Lang::t('skeleton', 'COMMON_NAME'))
             ->content($this->getNameColumnContent(...));
     }
 

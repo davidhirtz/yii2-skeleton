@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\Custom\RelativeTime;
 use Hirtz\Skeleton\Html\Li;
 use Hirtz\Skeleton\Modules\Admin\Models\forms\UserForm;
@@ -50,8 +51,8 @@ class UserActiveForm extends ActiveForm
         ];
 
         $this->submitButtonText ??= $this->model->user->getIsNewRecord()
-            ? Yii::t('skeleton', 'Create')
-            : Yii::t('skeleton', 'Update');
+            ? Lang::t('skeleton', 'COMMON_CREATE')
+            : Lang::t('skeleton', 'COMMON_UPDATE');
 
         $this->footer ??= [
             $this->getUpdatedAtFooterItem(),
@@ -76,13 +77,13 @@ class UserActiveForm extends ActiveForm
         $created = $this->model->user->created;
 
         $content = $created
-            ? Yii::t('skeleton', 'Created by {user} {timestamp}', [
+            ? Lang::t('skeleton', 'USER_ACTIVE_CREATED_BY', [
                 'timestamp' => RelativeTime::make()->value($this->model->user->created_at),
                 'user' => Username::make()
                     ->user($created)
                     ->clickable(),
             ])
-            : Yii::t('skeleton', 'Signed up {timestamp}', [
+            : Lang::t('skeleton', 'USER_ACTIVE_SIGNED_UP', [
                 'timestamp' => RelativeTime::make()->value($this->model->user->created_at),
             ]);
 

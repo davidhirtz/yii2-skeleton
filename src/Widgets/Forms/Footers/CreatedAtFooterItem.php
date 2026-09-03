@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Forms\Footers;
 
+use Hirtz\Skeleton\I18n\Lang;
 use DateTimeInterface;
 use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
 use Hirtz\Skeleton\Html\Custom\RelativeTime;
@@ -35,7 +36,7 @@ class CreatedAtFooterItem implements Stringable
         return $this->value
             ? Li::make()
                 ->class('form-footer-item')
-                ->content(Yii::t('skeleton', 'Created {timestamp}', [
+                ->content(Lang::t('skeleton', 'CREATED_AT_FOOTER_ITEM_CREATED', [
                     'timestamp' => RelativeTime::make()->value($this->value),
                 ]))
             : null;

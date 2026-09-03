@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Helpers\Url;
@@ -142,8 +143,8 @@ class TrailGridView extends GridView
             'permission' => Html::tag($trail->isAuthPermissionAssignType() ? 'ins' : 'del', $this->getTranslations()[$trail->message] ?? $trail->message),
         ];
 
-        return $trail->isAuthPermissionAssignType() ? Yii::t('skeleton', 'Permission {permission} assigned', $params) :
-            Yii::t('skeleton', 'Permission {permission} revoked', $params);
+        return $trail->isAuthPermissionAssignType() ? Lang::t('skeleton', 'TRAIL_PERMISSION_NAMED_ASSIGNED', $params) :
+            Lang::t('skeleton', 'TRAIL_PERMISSION_NAMED_REVOKED', $params);
     }
 
     protected function getCreateAttributesContent(Trail $trail): string|Stringable
@@ -300,7 +301,7 @@ class TrailGridView extends GridView
         }
 
         $name ??= Div::make()
-            ->text(Yii::t('skeleton', 'Deleted'))
+            ->text(Lang::t('skeleton', 'COMMON_DELETED'))
             ->class('text-invalid');
 
         $options = $trail->getTypeOptions();
@@ -360,8 +361,8 @@ class TrailGridView extends GridView
 
         return A::make()
             ->href(['index', 'model' => User::class . ":$trail->user_id"])
-            ->content(Yii::t('skeleton', '{model} #{id}', [
-                'model' => Yii::t('skeleton', 'User'),
+            ->content(Lang::t('skeleton', 'COMMON_MODEL_ID', [
+                'model' => Lang::t('skeleton', 'COMMON_USER'),
                 'id' => $trail->user_id,
             ]));
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Traits;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Helpers\StringHelper;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
@@ -31,7 +32,7 @@ trait IconFilenameAttributeTrait
     public function getIconFilenameAttributeTraitAttributeLabels(): array
     {
         return [
-            $this->iconFilenameAttribute => Yii::t('skeleton', 'Icon'),
+            $this->iconFilenameAttribute => Lang::t('skeleton', 'ICON_FILENAME_ATTRIBUTE_ICON'),
         ];
     }
 

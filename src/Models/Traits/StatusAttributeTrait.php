@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Traits;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Yii;
 
 /**
@@ -15,11 +16,11 @@ trait StatusAttributeTrait
     {
         return [
             static::STATUS_ENABLED => [
-                'name' => Yii::t('skeleton', 'Enabled'),
+                'name' => Lang::t('skeleton', 'COMMON_ENABLED'),
                 'icon' => 'globe',
             ],
             static::STATUS_DISABLED => [
-                'name' => Yii::t('skeleton', 'Disabled'),
+                'name' => Lang::t('skeleton', 'COMMON_DISABLED'),
                 'icon' => 'exclamation-triangle',
             ],
         ];

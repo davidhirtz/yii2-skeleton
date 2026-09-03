@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Breadcrumb;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Modules\Admin\Data\TrailActiveDataProvider;
@@ -36,7 +37,7 @@ class TrailHeader extends Header
 
         if ($this->provider->trailId || $this->model) {
             $this->breadcrumbs ??= [
-                new Breadcrumb(Yii::t('skeleton', 'History'), ['/admin/trail/index']),
+                new Breadcrumb(Lang::t('skeleton', 'COMMON_HISTORY'), ['/admin/trail/index']),
             ];
         }
 
@@ -54,13 +55,13 @@ class TrailHeader extends Header
         }
 
         if ($this->provider->trailId) {
-            return Yii::t('skeleton', '{model} #{id}', [
-                'model' => Yii::t('skeleton', 'History'),
+            return Lang::t('skeleton', 'COMMON_MODEL_ID', [
+                'model' => Lang::t('skeleton', 'COMMON_HISTORY'),
                 'id' => $this->provider->trailId,
             ]);
         }
 
-        return Yii::t('skeleton', 'History');
+        return Lang::t('skeleton', 'COMMON_HISTORY');
     }
 
     protected function getTrailModelAdminRoute(): ?array
