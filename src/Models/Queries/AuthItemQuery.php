@@ -21,7 +21,7 @@ class AuthItemQuery extends ActiveQuery
     public function withAssignment(int $userId): static
     {
         $this->addSelect(['isAssigned' => '([[item_name]]=[[name]])']);
-        $this->join('LEFT JOIN', Yii::$app->authManager->assignmentTable, '[[item_name]]=[[name]] AND [[user_id]]=:userId', ['userId' => $userId]);
+        $this->join('LEFT JOIN', Yii::$app->getAuthManager()->assignmentTable, '[[item_name]]=[[name]] AND [[user_id]]=:userId', ['userId' => $userId]);
 
         return $this;
     }
