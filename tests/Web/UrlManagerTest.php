@@ -143,62 +143,6 @@ class UrlManagerTest extends TestCase
         self::assertTrue($request->getIsDraft());
     }
 
-    public function testI18nSubdomain(): void
-    {
-        $manager = $this->getUrlManager([
-            'i18nSubdomain' => true,
-            'languages' => [
-                'en-US' => 'www',
-                'de' => 'de',
-            ],
-        ]);
-
-        self::assertEquals('https://www.test.localhost', $manager->getHostInfo());
-
-        $request = $this->getRequest([
-            'hostInfo' => 'https://de.test.localhost',
-            'url' => '/',
-        ]);
-
-        $manager->parseRequest($request);
-
-        self::assertEquals('https://www.test.localhost', $manager->getHostInfo());
-        self::assertEquals('de', Yii::$app->language);
-
-        $url = $manager->createAbsoluteUrl(['test']);
-        self::assertEquals('https://de.test.localhost/test', $url);
-
-        $url = $manager->createDraftUrl(['test']);
-        self::assertEquals('https://draft.de.test.localhost/test', $url);
-
-        $url = $manager->createAbsoluteUrl(['test', 'language' => 'en-US']);
-        self::assertEquals('https://www.test.localhost/test', $url);
-
-        $url = $manager->createDraftUrl(['test', 'language' => 'en-US']);
-        self::assertEquals('https://draft.test.localhost/test', $url);
-
-        $request = $this->getRequest([
-            'hostInfo' => 'https://www.test.localhost',
-            'url' => '/',
-        ]);
-
-        $manager->parseRequest($request);
-
-        $url = $manager->createAbsoluteUrl(['test', 'language' => 'de']);
-        self::assertEquals('https://de.test.localhost/test', $url);
-
-        $request = $this->getRequest([
-            'hostInfo' => 'https://draft.de.test.localhost',
-            'url' => '/',
-        ]);
-
-        $manager->parseRequest($request);
-
-        self::assertEquals('https://www.test.localhost', $manager->getHostInfo());
-        self::assertEquals('de', Yii::$app->language);
-        self::assertTrue($request->getIsDraft());
-    }
-
     public function testRedirectMap(): void
     {
         $manager = $this->getUrlManager([

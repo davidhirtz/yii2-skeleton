@@ -1,5 +1,8 @@
 ## 3.0.0 (in development)
 
+- Removed `UrlManager::$i18nSubdomain` and `UrlManager::hasI18nUrls()`; use `UrlManager::$i18nUrl`
+- Removed `Behaviors\UserLanguageBehavior`; the admin `Module` now applies the logged-in user's language
+  and persists a requested `?language=` param (to the user record, or a cookie for guests) itself
 - Added `Routing\Route`, `RouteCollection` and `RouteCompilerInterface` for framework-agnostic route definitions
 - Added `Routing\Compilers\YiiRouteCompiler` translating routes into `UrlManager` rule declarations
 - Added `Routing\UrlGeneratorInterface`, implemented by `Web\UrlManager`, to create URLs from route names
