@@ -144,7 +144,7 @@ trait ApplicationTrait
             ],
             'container' => [
                 'definitions' => [
-                    TrimValidator::class => \davidhirtz\yii2\skeleton\validators\TrimValidator::class,
+                    TrimValidator::class => \Hirtz\Skeleton\Validators\TrimValidator::class,
                 ],
             ],
             'controllerMap' => [

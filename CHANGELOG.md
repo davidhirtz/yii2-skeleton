@@ -24,7 +24,7 @@
 - Renamed `GoogleAuthenticator` classes to `TwoFactorAuthenticator` classes
 - Removed `yii2-timeago`, use `RelativeTime` tag instead
 - Replaced `Picture` with `Media`
-- 
+
 ## 2.6.8 (May 21, 2026)
 
 - Replaced `TrimValidator` with UTF-8 compatible validator using `mb_trim` (available through Symfony polyfill)
