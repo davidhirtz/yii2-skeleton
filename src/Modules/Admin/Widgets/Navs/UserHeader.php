@@ -16,12 +16,16 @@ use Override;
 use Stringable;
 use Yii;
 
-/**
- * @property User|null $model
- */
 class UserHeader extends Header
 {
+    /**
+     * @use ModelTrait<User|null>
+     */
     use ModelTrait;
+
+    /**
+     * @use ProviderTrait<UserActiveDataProvider|null>
+     */
     use ProviderTrait;
 
     #[Override]
