@@ -246,6 +246,9 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
         return $query;
     }
 
+    /**
+     * @return ActiveQuery<AuthClient>
+     */
     public function getAuthClients(): ActiveQuery
     {
         return $this->hasMany(AuthClient::class, ['user_id' => 'id']);

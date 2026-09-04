@@ -14,8 +14,8 @@ use Yii;
 use yii\helpers\Inflector;
 
 /**
- * @method ActiveQuery hasMany($class, array $link)
- * @method ActiveQuery hasOne($class, array $link)
+ * @method ActiveQuery<T> hasMany<T of ActiveRecord>(class-string<T> $class, array $link)
+ * @method ActiveQuery<T> hasOne<T of ActiveRecord>(class-string<T> $class, array $link)
  * @method static static[] findAll($condition)
  */
 class ActiveRecord extends \yii\db\ActiveRecord

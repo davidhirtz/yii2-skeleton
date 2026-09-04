@@ -162,6 +162,9 @@ trait MaterializedTreeTrait
             ]);
     }
 
+    /**
+     * @return ActiveQuery<static>
+     */
     public function getParent(): ActiveQuery
     {
         return $this->hasOne(static::class, ['id' => 'parent_id']);

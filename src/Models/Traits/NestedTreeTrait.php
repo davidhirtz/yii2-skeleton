@@ -26,6 +26,9 @@ trait NestedTreeTrait
     private ?array $_ancestors = null;
     private ?array $_descendants = null;
 
+    /**
+     * @return ActiveQuery<static>
+     */
     public function getParent(): ActiveQuery
     {
         return $this->hasOne(static::class, ['id' => 'parent_id']);

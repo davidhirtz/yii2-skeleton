@@ -97,8 +97,11 @@ class AuthClient extends ActiveRecord implements TrailModelInterface
      */
     public function getIdentity(): UserQuery
     {
+        /** @var class-string<User> $identityClass */
+        $identityClass = Yii::$app->getUser()->identityClass;
+
         /** @var UserQuery $query */
-        $query = $this->hasOne(Yii::$app->getUser()->identityClass, ['id' => 'user_id']);
+        $query = $this->hasOne($identityClass, ['id' => 'user_id']);
         return $query;
     }
 
