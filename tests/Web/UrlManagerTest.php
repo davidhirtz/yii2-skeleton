@@ -86,6 +86,7 @@ class UrlManagerTest extends TestCase
     {
         $manager = $this->getUrlManager([
             'i18nUrl' => true,
+            'defaultLanguage' => 'en-US',
             'languages' => [
                 'en-US' => 'en',
                 'de' => 'de',
@@ -188,6 +189,31 @@ class UrlManagerTest extends TestCase
             self::assertEquals('/temp/test', $e->url);
             self::assertEquals(302, $e->statusCode);
         }
+    }
+
+    public function testI18nUrlWithoutDefaultLanguage(): void
+    {
+        $manager = $this->getUrlManager([
+            'i18nUrl' => true,
+            'languages' => [
+                'en-US' => 'en',
+                'de' => 'de',
+            ],
+        ]);
+
+        self::assertNull($manager->defaultLanguage);
+
+        // Without a default language every language keeps its prefix, so no redirect is triggered.
+        $request = $this->getRequest([
+            'hostInfo' => 'https://www.test.localhost',
+            'url' => '/en/test',
+        ]);
+
+        $manager->parseRequest($request);
+        self::assertEquals('en-US', Yii::$app->language);
+
+        $url = $manager->createAbsoluteUrl(['test', 'language' => 'en-US']);
+        self::assertEquals('https://www.test.localhost/en/test', $url);
     }
 
     public function testLanguageFromBrowser(): void

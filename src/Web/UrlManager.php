@@ -35,10 +35,11 @@ class UrlManager extends \yii\web\UrlManager implements UrlGeneratorInterface
     public array|false|null $languages = null;
 
     /**
-     * @var string|false the default language for which no language identifier should be added to the path or subdomain.
-     * Set to `false` to use the first matching language for the initial request.
+     * @var string|null the language to fall back to when `i18nUrl` is disabled or no language prefix is present.
+     * With `i18nUrl` it is also the language for which no prefix is added to the path. When `null` (the default), the
+     * language is detected from the browser via `Request::getPreferredLanguage()`.
      */
-    public string|false|null $defaultLanguage = null;
+    public ?string $defaultLanguage = null;
 
     /**
      * @var array containing hard redirects, either as request URI ⇒ URL pairs, which generate regular 301 redirects
@@ -69,10 +70,6 @@ class UrlManager extends \yii\web\UrlManager implements UrlGeneratorInterface
 
         if (count($this->languages) < 2) {
             $this->i18nUrl = false;
-        }
-
-        if ($this->i18nUrl) {
-            $this->defaultLanguage ??= Yii::$app->sourceLanguage;
         }
 
         parent::init();

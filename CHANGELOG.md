@@ -3,8 +3,10 @@
 - Removed `UrlManager::$i18nSubdomain` and `UrlManager::hasI18nUrls()`; use `UrlManager::$i18nUrl`
 - Renamed `UrlManager::setApplicationLanguage()` to `UrlManager::setLanguage()`, the single point where the
   application language is resolved on every request — override it to customize language detection
-- Changed `UrlManager` to only default `$defaultLanguage` to `sourceLanguage` when `$i18nUrl` is enabled, so
-  without `$i18nUrl` and without an explicit `$defaultLanguage` the language falls back to the browser
+- Changed `UrlManager::$defaultLanguage` to `?string` (dropped the `false` type) and to no longer default to
+  `sourceLanguage`; when `null` (the default) the language is detected from the browser via
+  `Request::getPreferredLanguage()`. Set it explicitly to force a language or, with `$i18nUrl`, to define the
+  prefix-less default (otherwise every language gets a path prefix)
 - Removed `Behaviors\UserLanguageBehavior`, `Request::getLanguage()` and `Request::getLanguageFromCookie()`
   along with the `?language=` param, the language cookie and the admin user-language override; `UrlManager`
   now resolves the language from `$i18nUrl`, `$defaultLanguage`, or the browser's `Accept-Language` header
