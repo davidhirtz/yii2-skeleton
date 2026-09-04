@@ -14,8 +14,7 @@ use yii\web\MultiFieldSession;
 use yii\web\Response;
 
 /**
- * @template T of IdentityInterface
- * @extends \yii\web\User<T>
+ * @extends \yii\web\User<\Hirtz\Skeleton\Models\User>
  */
 class User extends \yii\web\User
 {
