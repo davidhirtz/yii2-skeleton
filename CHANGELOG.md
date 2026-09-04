@@ -1,8 +1,14 @@
 ## 3.0.0 (in development)
 
 - Removed `UrlManager::$i18nSubdomain` and `UrlManager::hasI18nUrls()`; use `UrlManager::$i18nUrl`
-- Removed `Behaviors\UserLanguageBehavior`; the admin `Module` now applies the logged-in user's language
-  and persists a requested `?language=` param (to the user record, or a cookie for guests) itself
+- Renamed `UrlManager::setApplicationLanguage()` to `UrlManager::setLanguage()`, the single point where the
+  application language is resolved on every request — override it to customize language detection
+- Changed `UrlManager` to only default `$defaultLanguage` to `sourceLanguage` when `$i18nUrl` is enabled, so
+  without `$i18nUrl` and without an explicit `$defaultLanguage` the language falls back to the browser
+- Removed `Behaviors\UserLanguageBehavior`, `Request::getLanguage()` and `Request::getLanguageFromCookie()`
+  along with the `?language=` param, the language cookie and the admin user-language override; `UrlManager`
+  now resolves the language from `$i18nUrl`, `$defaultLanguage`, or the browser's `Accept-Language` header
+  (`Request::getPreferredLanguage()`)
 - Added `Routing\Route`, `RouteCollection` and `RouteCompilerInterface` for framework-agnostic route definitions
 - Added `Routing\Compilers\YiiRouteCompiler` translating routes into `UrlManager` rule declarations
 - Added `Routing\UrlGeneratorInterface`, implemented by `Web\UrlManager`, to create URLs from route names
@@ -15,10 +21,6 @@
 - Added `GridSearch` and moved properties `search`, `searchParamName`, `searchInputOptions` and `searchUrl`
 - Added `GridSummary` methods `getSearchInput`, and `getSearchKeywords` to the new `GridView::$search` property
 - Changed `GridView::isSortedByPosition()` to `GridView::isSortable()`
-- Made `GridView` generic (`@template T of ActiveRecord`), so subclasses declaring `@extends GridView<Model>`
-  get typed models; fixed `GridView::$header`'s native type to allow `GridHeader` (matching `$footer`)
-- Typed behavior owners through Yii 2.0.53+ generics (`@extends Behavior<T>`) instead of `@property … $owner`
-  overrides in `TrailBehavior`, `SerializedAttributesBehavior`, `BlameableBehavior` and `AttributeTypecastBehavior`
 - Refactored `TrailBehavior::formatTrailAttributeValue` to `TrailModelCollection::formatAttributeValue`
 - Removed `Html::buttonList()`, use `Html::buttons()` instead
 - Removed `GridView::getUpdateButton()`

@@ -10,17 +10,16 @@ use Yii;
 
 /**
  * The web Request class extends the default Yii class by a draft mode and the option to set the host info via
- * application params and the application language based on the user's preferences.
+ * application params.
  */
 class Request extends \yii\web\Request
 {
     /**
-     * @var string the name of the GET parameter that specifies the language.
+     * @var string the parameter name used to add the language to a URL via `UrlManager::$i18nUrl`.
      */
     public string $languageParam = 'language';
 
     private bool $_isDraft = false;
-    private ?string $_language = null;
 
     /**
      * Sets the host info via params after draft mode is checked. Setting the host info manually can be useful if
@@ -35,20 +34,6 @@ class Request extends \yii\web\Request
         }
 
         parent::init();
-    }
-
-    public function getLanguage(): ?string
-    {
-        $this->_language ??= $this->post($this->languageParam);
-        $this->_language ??= $this->get($this->languageParam);
-        $this->_language ??= $this->getLanguageFromCookie();
-
-        return $this->_language;
-    }
-
-    public function getLanguageFromCookie(): ?string
-    {
-        return $this->getCookies()->getValue($this->languageParam);
     }
 
     #[Override]

@@ -16,7 +16,6 @@ use Hirtz\Skeleton\Widgets\Panels\Dashboard;
 use Hirtz\Skeleton\Widgets\Panels\DashboardItem;
 use Override;
 use Yii;
-use yii\web\Cookie;
 
 class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
 {
@@ -46,64 +45,9 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
                 $url = Yii::$app->getUrlManager()->createAbsoluteUrl($request->getUrl());
                 $action->controller->response->redirect($url)->send();
             }
-
-            if (count(Yii::$app->getI18n()->getLanguages()) > 1) {
-                $this->setLanguage($request);
-            }
         }
 
         return parent::beforeAction($action);
-    }
-
-    /**
-     * Sets the application language from the logged-in user's setting and persists an explicitly requested language,
-     * either on the user record or, for guests on public pages (login, lost password), via a cookie.
-     */
-    protected function setLanguage(Request $request): void
-    {
-        $language = $request->getLanguage();
-
-        if ($language) {
-            $this->saveLanguage($request, $language);
-        }
-
-        $identity = Yii::$app->getUser()->getIdentity();
-
-        if ($identity && !Yii::$app->getUrlManager()->i18nUrl) {
-            Yii::$app->language = $identity->language;
-        }
-    }
-
-    protected function saveLanguage(Request $request, string $language): void
-    {
-        $identity = Yii::$app->getUser()->getIdentity();
-
-        if ($identity && $identity->language !== $language) {
-            Yii::debug("Updating user language to '$language' ...", __METHOD__);
-
-            $identity->language = $language;
-            $identity->update();
-
-            Yii::$app->getResponse()->getCookies()->remove($request->languageParam);
-
-            return;
-        }
-
-        $isNewCookieLanguage = !in_array($language, [
-            $request->getLanguageFromCookie(),
-            Yii::$app->sourceLanguage,
-        ], true);
-
-        if ($isNewCookieLanguage) {
-            Yii::debug("Language cookie set to '$language'", __METHOD__);
-
-            $cookie = Yii::$container->get(Cookie::class, [], [
-                'name' => $request->languageParam,
-                'value' => $language,
-            ]);
-
-            Yii::$app->getResponse()->getCookies()->add($cookie);
-        }
     }
 
     #[Override]

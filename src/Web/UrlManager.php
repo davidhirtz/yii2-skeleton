@@ -59,8 +59,6 @@ class UrlManager extends \yii\web\UrlManager implements UrlGeneratorInterface
             $this->i18nUrl = false;
         }
 
-        $this->defaultLanguage ??= Yii::$app->sourceLanguage;
-
         if ($this->languages === null) {
             $this->languages = [];
 
@@ -71,6 +69,10 @@ class UrlManager extends \yii\web\UrlManager implements UrlGeneratorInterface
 
         if (count($this->languages) < 2) {
             $this->i18nUrl = false;
+        }
+
+        if ($this->i18nUrl) {
+            $this->defaultLanguage ??= Yii::$app->sourceLanguage;
         }
 
         parent::init();
@@ -208,7 +210,7 @@ class UrlManager extends \yii\web\UrlManager implements UrlGeneratorInterface
         }
 
         if (count($this->languages) > 1) {
-            $this->setApplicationLanguage($request);
+            $this->setLanguage($request);
         }
 
         $event = $this->getBeforeParseEvent($request);
@@ -272,7 +274,7 @@ class UrlManager extends \yii\web\UrlManager implements UrlGeneratorInterface
         }
     }
 
-    protected function setApplicationLanguage(Request $request): void
+    protected function setLanguage(Request $request): void
     {
         if ($this->i18nUrl) {
             $pathInfo = trim($request->getPathInfo(), '/');
@@ -292,11 +294,6 @@ class UrlManager extends \yii\web\UrlManager implements UrlGeneratorInterface
 
                 return;
             }
-        }
-
-        if (in_array($request->getLanguage(), $this->languages, true)) {
-            Yii::$app->language = $request->getLanguage();
-            return;
         }
 
         Yii::$app->language = $this->defaultLanguage ?: $request->getPreferredLanguage(array_keys($this->languages));

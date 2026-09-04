@@ -190,7 +190,7 @@ class UrlManagerTest extends TestCase
         }
     }
 
-    public function testLanguageUrl(): void
+    public function testLanguageFromBrowser(): void
     {
         $manager = $this->getUrlManager([
             'languages' => [
@@ -202,10 +202,9 @@ class UrlManagerTest extends TestCase
         $request = $this->getRequest([
             'hostInfo' => 'https://www.test.localhost',
             'url' => '/',
-            'bodyParams' => [
-                'language' => 'de',
-            ],
         ]);
+
+        $request->setAcceptableLanguages(['de', 'en-US']);
 
         $manager->parseRequest($request);
         self::assertEquals('de', Yii::$app->language);
