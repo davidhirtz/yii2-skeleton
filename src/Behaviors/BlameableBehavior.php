@@ -8,7 +8,7 @@ use Hirtz\Skeleton\Db\ActiveRecord;
 use Override;
 
 /**
- * @property ActiveRecord $owner
+ * @extends \yii\behaviors\BlameableBehavior<ActiveRecord>
  */
 class BlameableBehavior extends \yii\behaviors\BlameableBehavior
 {

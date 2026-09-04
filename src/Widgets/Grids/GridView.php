@@ -31,10 +31,16 @@ use Stringable;
 use Yii;
 use yii\helpers\Inflector;
 
+/**
+ * @template T of ActiveRecord
+ */
 class GridView extends Widget
 {
     use ContainerConfigurationTrait;
 
+    /**
+     * @use ModelTrait<T>
+     */
     use ModelTrait;
     use ProviderTrait;
 
@@ -55,7 +61,7 @@ class GridView extends Widget
     /**
      * @var list<string|Stringable>|GridHeader|null
      */
-    protected ?array $header = null;
+    protected array|GridHeader|null $header = null;
     protected array $headerAttributes = ['class' => 'grid-header'];
 
     protected array $tableAttributes = ['class' => 'table table-striped table-hover'];

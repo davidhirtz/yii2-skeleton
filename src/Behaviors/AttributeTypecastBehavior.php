@@ -35,7 +35,7 @@ use yii\validators\StringValidator;
  * @property array $attributeTypes {@see static::setAttributeTypes()}
  * @property array $nullableAttributes {@see static::setNullableAttributes()}
  *
- * @property ActiveRecord|Model $owner
+ * @extends Behavior<ActiveRecord|Model>
  */
 class AttributeTypecastBehavior extends Behavior
 {

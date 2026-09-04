@@ -8,7 +8,7 @@ use Hirtz\Skeleton\Db\ActiveRecord;
 use yii\base\Behavior;
 
 /**
- * @property ActiveRecord $owner
+ * @extends Behavior<ActiveRecord>
  */
 class SerializedAttributesBehavior extends Behavior
 {

@@ -15,6 +15,10 @@
 - Added `GridSearch` and moved properties `search`, `searchParamName`, `searchInputOptions` and `searchUrl`
 - Added `GridSummary` methods `getSearchInput`, and `getSearchKeywords` to the new `GridView::$search` property
 - Changed `GridView::isSortedByPosition()` to `GridView::isSortable()`
+- Made `GridView` generic (`@template T of ActiveRecord`), so subclasses declaring `@extends GridView<Model>`
+  get typed models; fixed `GridView::$header`'s native type to allow `GridHeader` (matching `$footer`)
+- Typed behavior owners through Yii 2.0.53+ generics (`@extends Behavior<T>`) instead of `@property … $owner`
+  overrides in `TrailBehavior`, `SerializedAttributesBehavior`, `BlameableBehavior` and `AttributeTypecastBehavior`
 - Refactored `TrailBehavior::formatTrailAttributeValue` to `TrailModelCollection::formatAttributeValue`
 - Removed `Html::buttonList()`, use `Html::buttons()` instead
 - Removed `GridView::getUpdateButton()`

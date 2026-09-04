@@ -14,8 +14,9 @@ use yii\db\AfterSaveEvent;
 
 /**
  * @property string $trailModelName
- * @property TrailModelInterface $owner
  * @mixin ActiveRecord
+ *
+ * @extends Behavior<ActiveRecord&TrailModelInterface>
  */
 class TrailBehavior extends Behavior
 {
