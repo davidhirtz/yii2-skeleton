@@ -14,6 +14,7 @@ if (!empty($namespace)) {
 ?>
 
 use Hirtz\Skeleton\Db\Traits\MigrationTrait;
+use Override;
 use yii\db\Migration;
 
 /**
@@ -23,10 +24,12 @@ final class <?= $className ?> extends Migration
 {
     use MigrationTrait;
 
+    #[Override]
     public function safeUp(): void
     {
     }
 
+    #[Override]
     public function safeDown(): void
     {
     }

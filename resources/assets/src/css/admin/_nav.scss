@@ -1,3 +1,5 @@
+@use "../shared/svg" as *;
+
 .nav {
   display: flex;
   gap: 0.125rem;
@@ -15,6 +17,7 @@
   letter-spacing: .0625em;
   min-width: 3rem;
   padding: 0.5rem 1rem;
+  position: relative;
   text-decoration: none;
   gap: .5rem;
   width: 100%;
@@ -50,19 +53,7 @@
   --nav-link-hover-bg: var(--btn-danger-bg);
 }
 
-.subnav {
-  display: none;
 
-  &.active, .nav-item:has(.active) > & {
-    display: flex;
-    flex-flow: column;
-    padding: 0.125rem 0 .5rem 2rem;
-  }
-
-  .nav-link {
-    padding: .25rem .5rem;
-  }
-}
 
 .tabs {
   padding: 1rem;

@@ -279,14 +279,11 @@
 
   // Aside
   --aside-bg: var(--body-bg);
-  --aside-link-active-bg: var(--color-gray-700);
-  --aside-link-active-border-color: var(--aside-link-active-bg);
-  --aside-link-active-color: var(--color-white);
+  --aside-link-active-bg: var(--color-gray-200);
+  --aside-link-active-color: var(--color-black);
   --aside-link-bg: transparent;
-  --aside-link-border-color: var(--aside-link-bg);
   --aside-link-color: var(--color-black);
-  --aside-link-hover-bg: var(--color-gray-200);
-  --aside-link-hover-border-color: var(--aside-link-hover-bg);
+  --aside-link-hover-bg: var(--color-gray-100);
   --aside-link-hover-color: var(--color-black);
 
   // Pagination

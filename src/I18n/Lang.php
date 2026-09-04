@@ -20,6 +20,6 @@ final class Lang
      */
     public static function t(string $category, string $key, array $params = [], ?string $language = null): string
     {
-        return (string)Yii::t($category, $key, $params, $language);
+        return Yii::t($category, $key, $params, $language);
     }
 }

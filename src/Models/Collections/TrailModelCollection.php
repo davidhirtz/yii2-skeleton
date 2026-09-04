@@ -76,8 +76,10 @@ class TrailModelCollection
             case self::VALUE_TYPE_RANGE:
                 $method = 'get' . Inflector::camelize(Inflector::pluralize($attribute));
 
-                if ($model->hasMethod($method)) {
-                    if ($value = ($model->{$method}()[$value] ?? false)) {
+                if ($model->hasMethod($method) && $value) {
+                    $value = $model->{$method}()[$value] ?? false;
+
+                    if ($value) {
                         // Return string value or "name" key, as a fallback print out the array content
                         return is_string($value) ? $value : ($value['name'] ?? print_r($value, true));
                     }

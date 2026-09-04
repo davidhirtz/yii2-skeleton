@@ -18,6 +18,7 @@ class Nav extends Widget
 
     protected function renderContent(): string|Stringable
     {
+        usort($this->items, fn (NavItem $a, NavItem $b) => $a->order <=> $b->order);
         $content = implode('', array_map(strval(...), $this->items));
 
         return $content

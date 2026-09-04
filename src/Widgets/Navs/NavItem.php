@@ -163,16 +163,14 @@ class NavItem extends Widget
             return null;
         }
 
+        usort($this->items, fn (self $a, self $b) => $a->order <=> $b->order);
+
         $subnav = Nav::make()
             ->class('subnav')
             ->items($this->items)
             ->render();
 
         foreach ($this->items as $item) {
-            if ($item->isActive()) {
-                $this->active = true;
-            }
-
             $this->roles($item->getRoles());
         }
 

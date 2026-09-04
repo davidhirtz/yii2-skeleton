@@ -10,7 +10,6 @@ use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Override;
-use Yii;
 
 class SystemNavItem extends NavItem
 {
@@ -39,9 +38,10 @@ class SystemNavItem extends NavItem
     protected function getLogIndexItem(): NavItem
     {
         return NavItem::make()
-            ->icon('server')
+            //->icon('server')
             ->label(Lang::t('skeleton', 'COMMON_ERROR_LOGS'))
             ->url(['/admin/log/index'])
+            ->order(20)
             ->roles([User::AUTH_ROLE_ADMIN])
             ->routes(['admin/log']);
     }
@@ -49,9 +49,10 @@ class SystemNavItem extends NavItem
     protected function getRedirectIndexItem(): NavItem
     {
         return NavItem::make()
-            ->icon('forward')
+            //->icon('forward')
             ->label(Lang::t('skeleton', 'COMMON_REDIRECTS'))
             ->url(['/admin/redirect/index'])
+            ->order(40)
             ->roles([Redirect::AUTH_REDIRECT_CREATE])
             ->routes(['admin/redirect']);
     }
@@ -59,9 +60,10 @@ class SystemNavItem extends NavItem
     protected function getTrailIndexItem(): NavItem
     {
         return NavItem::make()
-            ->icon('history')
+            //->icon('history')
             ->label(Lang::t('skeleton', 'COMMON_HISTORY'))
             ->url(['/admin/trail/index'])
+            ->order(60)
             ->roles([Trail::AUTH_TRAIL_INDEX])
             ->routes(['admin/trail']);
     }
