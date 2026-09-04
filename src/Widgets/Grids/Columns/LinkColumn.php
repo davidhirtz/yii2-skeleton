@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Widgets\Grids\Columns;
 use Closure;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
+use Override;
 use Stringable;
 use yii\base\Model;
 
@@ -51,11 +52,28 @@ class LinkColumn extends DataColumn
     }
 
     /**
-     * @param Closure(TModel, string|int=, int=):(array|string|null|false)|null $url
+     * @template TUrlModel of array|Model
+     * @param Closure(TUrlModel, string|int=, int=):(array|string|null|false)|null $url
+     * @return self<TUrlModel>
      */
-    public function url(?Closure $url): static
+    public function url(?Closure $url): self
     {
         $this->url = $url;
+        return $this;
+    }
+
+    /**
+     * Keeps the {@see LinkColumn} type (and its {@see self::url()} method) when the model type is
+     * re-bound through {@see DataColumn::value()}.
+     *
+     * @template TValueModel of array|Model
+     * @param Closure(TValueModel, string|int=, int=):mixed|null $value
+     * @return self<TValueModel>
+     */
+    #[Override]
+    public function value(?Closure $value): self
+    {
+        $this->value = $value;
         return $this;
     }
 

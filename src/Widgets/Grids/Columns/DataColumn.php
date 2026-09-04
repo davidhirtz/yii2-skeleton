@@ -54,9 +54,11 @@ class DataColumn extends Column
     }
 
     /**
-     * @param Closure(TModel, string|int=, int=):mixed|null $value
+     * @template TValueModel of array|Model
+     * @param Closure(TValueModel, string|int=, int=):mixed|null $value
+     * @return self<TValueModel>
      */
-    public function value(?Closure $value): static
+    public function value(?Closure $value): self
     {
         $this->value = $value;
         return $this;
