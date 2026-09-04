@@ -13,7 +13,7 @@ use yii\filters\AccessControl;
 use yii\web\Response;
 
 /**
- * @property Module $module
+ * @extends Controller<Module>
  */
 class DashboardController extends Controller
 {
