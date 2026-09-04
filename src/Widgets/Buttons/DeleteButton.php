@@ -20,15 +20,19 @@ use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
 use Yii;
+use yii\base\Model;
 use yii\db\ActiveRecordInterface;
 
+/**
+ * @template TModel of Model
+ */
 class DeleteButton extends Widget
 {
     use IconTextTrait;
     use LabelTrait;
 
     /**
-     * @use ModelTrait<ActiveRecordInterface>
+     * @use ModelTrait<TModel>
      */
     use ModelTrait;
     use PropertyTrait;

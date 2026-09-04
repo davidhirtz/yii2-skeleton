@@ -11,7 +11,7 @@ use Override;
 use Yii;
 
 /**
- * @property User $model
+ * @extends DeleteButton<User>
  */
 class UserDeleteButton extends DeleteButton
 {
