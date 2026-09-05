@@ -18,7 +18,7 @@ trait ItemTrait
     protected array $items = [];
 
     /**
-     * @param T[]|Closure(T[]):T[] $items
+     * @param array<T|null>|Closure(T[]):T[] $items
      * @return $this
      */
     public function items(array|Closure $items): static

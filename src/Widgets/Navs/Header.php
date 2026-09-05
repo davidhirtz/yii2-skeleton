@@ -84,7 +84,7 @@ class Header extends Widget
     protected function configure(): void
     {
         if (is_string($this->title)) {
-            $this->view->title ??= $this->title;
+            $this->view->title = $this->view->title ?: $this->title;
         }
 
         if ($this->breadcrumbs) {
