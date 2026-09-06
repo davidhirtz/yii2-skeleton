@@ -1,7 +1,8 @@
 @use "../shared/breakpoints" as *;
 
 .hidden,
-.hidden-empty:empty {
+.hidden-empty:empty,
+.sticky .hidden-sticky {
   display: none;
 }
 
@@ -29,4 +30,8 @@
   .lg\:table-cell {
     display: table-cell;
   }
+}
+
+.sticky {
+  position: sticky;
 }

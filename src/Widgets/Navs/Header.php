@@ -57,20 +57,20 @@ class Header extends Widget
     #[Override]
     protected function renderContent(): string|Stringable
     {
-        $inner = Div::make()
-            ->class('header-inner')
-            ->content(Div::make()
-                ->class('header-content')
-                ->content($this->getHeaderContent(), $this->getSubheading()));
+        $wrapper = Div::make()
+            ->attributes($this->attributes)
+            ->addAttributes(['data-sticky' => 'top'])
+            ->addClass('header');
+
+        $wrapper->content(Div::make()
+            ->class('header-content')
+            ->content($this->getHeaderContent(), $this->getSubheading()));
 
         if ($this->content) {
-            $inner->addContent(Div::make()->content(...$this->content));
+            $wrapper->addContent(Div::make()->content(...$this->content));
         }
 
-        return Div::make()
-            ->attributes($this->attributes)
-            ->addClass('header')
-            ->content($inner);
+        return $wrapper;
     }
 
     public function subtitle(?string $subtitle): static

@@ -48,10 +48,16 @@
     }
   }
 
-  th > a, th > a:hover {
-    display: block;
-    font-weight: bold;
-    white-space: nowrap;
+  th {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: .0625em;
+
+    & > a,
+    & > a:hover {
+      display: block;
+      font-weight: bold;
+      white-space: nowrap;
+    }
   }
 
   tr.disabled {

@@ -1,27 +1,16 @@
 .header {
   background: var(--body-bg);
   border-bottom: 1px solid var(--border-color);
-  container-type: scroll-state;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-.header-inner {
   display: flex;
   gap: 2rem;
   justify-content: space-between;
   padding: 1rem;
+  top: 0;
   transition: padding .2s;
-}
+  z-index: 1;
 
-@container scroll-state(stuck: top) {
-  .header-inner {
+  &.sticky {
     padding-block: .5rem;
-  }
-
-  .hidden-sticky {
-    display: none;
   }
 }
 

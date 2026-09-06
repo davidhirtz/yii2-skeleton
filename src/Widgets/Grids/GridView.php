@@ -56,7 +56,11 @@ class GridView extends Widget
      * @var list<string|Stringable>|GridFooter|null
      */
     protected array|GridFooter|null $footer = null;
-    protected array $footerAttributes = ['class' => 'grid-footer sticky'];
+    
+    protected array $footerAttributes = [
+        'class' => 'grid-footer',
+        'data-sticky' => 'bottom',
+    ];
 
     /**
      * @var list<string|Stringable>|GridHeader|null
