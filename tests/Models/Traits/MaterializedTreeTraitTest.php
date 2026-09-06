@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Models\Traits\MaterializedTreeTrait;
 use Override;
 use Yii;
 use yii\db\Expression;
+use yii\db\JsonExpression;
 
 class MaterializedTreeTraitTest extends TestCase
 {
@@ -23,7 +24,7 @@ class MaterializedTreeTraitTest extends TestCase
         $columns = [
             'id' => 'pk',
             'parent_id' => 'integer null',
-            'path' => 'string null',
+            'path' => 'json null',
             'name' => 'string null',
             'position' => 'integer',
         ];
@@ -43,28 +44,28 @@ class MaterializedTreeTraitTest extends TestCase
             [
                 'id' => 2,
                 'parent_id' => 1,
-                'path' => '1',
+                'path' => new JsonExpression([1]),
                 'name' => 'Child of 1 – 1',
                 'position' => 1,
             ],
             [
                 'id' => 3,
                 'parent_id' => 1,
-                'path' => '1',
+                'path' => new JsonExpression([1]),
                 'name' => 'Child of 1 – 2',
                 'position' => 2,
             ],
             [
                 'id' => 4,
                 'parent_id' => 2,
-                'path' => '1,2',
+                'path' => new JsonExpression([1, 2]),
                 'name' => 'Child of 2 – 1',
                 'position' => 1,
             ],
             [
                 'id' => 5,
                 'parent_id' => 2,
-                'path' => '1,2',
+                'path' => new JsonExpression([1, 2]),
                 'name' => 'Child of 2 – 2',
                 'position' => 2,
             ],
@@ -194,7 +195,7 @@ class MaterializedTreeTraitTest extends TestCase
 /**
  * @property int $id
  * @property int $parent_id
- * @property string $path
+ * @property array|null $path
  * @property string|null $name
  * @property int $position
  */

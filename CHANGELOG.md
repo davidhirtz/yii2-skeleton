@@ -32,6 +32,11 @@
 - Renamed `GoogleAuthenticator` classes to `TwoFactorAuthenticator` classes
 - Removed `yii2-timeago`, use `RelativeTime` tag instead
 - Replaced `Picture` with `Media`
+- Changed materialized tree `path` to a JSON `array` column; `MaterializedTreeTrait::$path` and
+  `getAncestorIds()` now work with `int[]` arrays and `findDescendants()` matches via `JSON_CONTAINS`
+- Removed `MaterializedTreeTrait::getIdsFromPath()` and `getPathFromIds()` (the comma-string helpers)
+- Removed `ArrayHelper::cacheStringToArray()` and `ArrayHelper::createCacheString()`; use native JSON
+  `array` columns instead
 
 ## 2.6.8 (May 21, 2026)
 

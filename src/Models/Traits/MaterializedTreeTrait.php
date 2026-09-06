@@ -10,7 +10,7 @@ use Hirtz\Skeleton\Helpers\ArrayHelper;
 /**
  * @property int $id
  * @property int|null $parent_id
- * @property string|null $path
+ * @property array|null $path
  * @property int $position
  *
  * @property-read static[] $ancestors {@see static::getAncestors()}
@@ -130,13 +130,12 @@ trait MaterializedTreeTrait
 
     public function setDescendants(array $descendants): void
     {
-        $length = $this->path ? strlen($this->path) : 0;
+        $path = $this->path ?? [];
+        $length = count($path);
         $this->_descendants = [];
 
         foreach ($descendants as $descendant) {
-            $path = $descendant->path ? substr((string)$descendant->path, 0, $length) : null;
-
-            if ($path === $this->path) {
+            if (array_slice($descendant->path ?? [], 0, $length) === $path) {
                 $this->_descendants[$descendant->id] = $descendant;
             }
         }
@@ -144,17 +143,11 @@ trait MaterializedTreeTrait
 
     public function findDescendants(): ActiveQuery
     {
-        $path = $this->getPathFromIds([
-            ...$this->getAncestorIds(),
-            $this->id,
-        ]);
-
         $fieldName = static::tableName() . '.[[path]]';
 
         return static::find()
-            ->where("$fieldName = :path OR $fieldName LIKE :partialPath", [
-                'path' => $path,
-                'partialPath' => "$path,%",
+            ->where("JSON_CONTAINS($fieldName, :id)", [
+                'id' => (string)$this->id,
             ])
             ->orderBy([
                 'path' => SORT_ASC,
@@ -179,16 +172,6 @@ trait MaterializedTreeTrait
 
     public function getAncestorIds(): array
     {
-        return $this->getIdsFromPath($this->path);
-    }
-
-    public function getIdsFromPath(?string $path): array
-    {
-        return $path ? array_map(intval(...), explode(',', $path)) : [];
-    }
-
-    public function getPathFromIds(array $ids = []): string
-    {
-        return implode(',', $ids);
+        return array_map(intval(...), $this->path ?? []);
     }
 }

@@ -36,30 +36,6 @@ class ArrayHelper extends BaseArrayHelper
         }
     }
 
-    public static function cacheStringToArray(
-        array|string|null $string,
-        array|int|string $values = [],
-        string $separator = ','
-    ): array {
-        if (!is_array($string)) {
-            $string = $string ? explode($separator, $string) : [];
-        }
-
-        if (!is_array($values)) {
-            $values = [$values];
-        }
-
-        return array_unique(array_filter([...$string, ...$values]));
-    }
-
-    public static function createCacheString(
-        array $array,
-        string $separator = ',',
-        ?string $default = null
-    ): ?string {
-        return $array ? implode($separator, $array) : $default;
-    }
-
     /**
      * @noinspection PhpUnused
      */
