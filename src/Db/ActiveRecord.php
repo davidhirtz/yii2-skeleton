@@ -13,9 +13,6 @@ use Override;
 use Yii;
 use yii\helpers\Inflector;
 
-/**
- * @method static static[] findAll($condition)
- */
 class ActiveRecord extends \yii\db\ActiveRecord
 {
     use ModelTrait;

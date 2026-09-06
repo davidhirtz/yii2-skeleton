@@ -15,6 +15,7 @@ use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
 use Hirtz\Skeleton\Models\Traits\TrailModelTrait;
+use Override;
 use Yii;
 
 /**
@@ -33,7 +34,7 @@ class AuthClient extends ActiveRecord implements TrailModelInterface
 {
     use TrailModelTrait;
 
-    #[\Override]
+    #[Override]
     public function behaviors(): array
     {
         return [
@@ -48,7 +49,7 @@ class AuthClient extends ActiveRecord implements TrailModelInterface
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function rules(): array
     {
         return [
@@ -172,7 +173,7 @@ class AuthClient extends ActiveRecord implements TrailModelInterface
         return $client;
     }
 
-    #[\Override]
+    #[Override]
     public static function tableName(): string
     {
         return '{{%auth_client}}';
