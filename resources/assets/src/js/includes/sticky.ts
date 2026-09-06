@@ -3,17 +3,15 @@ let bound = false;
 
 const update = (): void => {
     items.forEach(($el) => {
-        const $parent = $el.parentElement;
-
-        if (!$parent) {
+        if (!$el.isConnected) {
             items.delete($el);
             return;
         }
 
-        const rect = $parent.getBoundingClientRect();
+        const rect = $el.getBoundingClientRect();
         const stuck = $el.dataset.sticky === 'bottom'
-            ? rect.bottom > window.innerHeight
-            : rect.top < 0;
+            ? rect.bottom >= window.innerHeight
+            : rect.top <= 0;
 
         $el.classList.toggle('sticky', stuck);
     });

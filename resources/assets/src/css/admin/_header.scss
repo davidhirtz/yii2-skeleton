@@ -9,14 +9,18 @@
   padding: 1rem;
   top: 0;
   transition: padding .2s;
-  z-index: 1;
+  z-index: 10;
 
   &.sticky {
     padding-block: .5rem;
+
+    h1, h2 {
+      font-size: 1rem;
+    }
   }
 
   @include media-breakpoint-up(md) {
-      padding: 2rem;
+    padding: 2rem;
   }
 }
 

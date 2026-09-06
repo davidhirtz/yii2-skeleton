@@ -15,27 +15,6 @@
   th, tr:last-child td {
     border-bottom-color: var(--table-th-border-color);
   }
-}
-
-.table-striped {
-  > tbody > tr:nth-of-type(odd) {
-    --table-bg: var(--table-striped-bg);
-  }
-}
-
-.table-hover {
-  > tbody > tr:hover {
-    --table-color: var(--table-hover-color);
-    --table-bg: var(--table-hover-bg);
-  }
-}
-
-.table-wrap {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.table {
   tr.is-selected {
     --table-bg: var(--table-selected-bg);
     --table-hover-color: var(--table-selected-hover-color);
@@ -51,6 +30,7 @@
   th {
     font-family: 'Bebas Neue', sans-serif;
     letter-spacing: .0625em;
+    padding-bottom: .5rem;
 
     & > a,
     & > a:hover {
@@ -64,7 +44,8 @@
     opacity: .3;
   }
 
-  td, td a:not(.btn,.badge) {
+  td,
+  td a:not(.btn,.badge) {
     color: var(--table-color);
   }
 
@@ -87,4 +68,22 @@
     border-top: 0.4em solid #000;
     border-bottom: 0;
   }
+}
+
+.table-striped {
+  > tbody > tr:nth-of-type(odd) {
+    --table-bg: var(--table-striped-bg);
+  }
+}
+
+.table-hover {
+  > tbody > tr:hover {
+    --table-color: var(--table-hover-color);
+    --table-bg: var(--table-hover-bg);
+  }
+}
+
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
