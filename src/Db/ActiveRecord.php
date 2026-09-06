@@ -45,41 +45,6 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return Yii::createObject(ActiveQuery::class, [static::class]);
     }
 
-    /**
-     * Yii types the relation as its own {@see \yii\db\ActiveQuery}, but the related model's
-     * {@see self::find()} returns this {@see ActiveQuery}, so narrow the element and query type.
-     *
-     * @template TClass of ActiveRecord
-     * @param class-string<TClass> $class
-     * @param array<string, string> $link
-     * @return ActiveQuery<TClass>
-     *
-     * @phpstan-ignore method.childReturnType
-     */
-    #[Override]
-    public function hasMany($class, $link): ActiveQuery
-    {
-        /** @var ActiveQuery<TClass> $query */
-        $query = parent::hasMany($class, $link);
-        return $query;
-    }
-
-    /**
-     * @template TClass of ActiveRecord
-     * @param class-string<TClass> $class
-     * @param array<string, string> $link
-     * @return ActiveQuery<TClass>
-     *
-     * @phpstan-ignore method.childReturnType
-     */
-    #[Override]
-    public function hasOne($class, $link): ActiveQuery
-    {
-        /** @var ActiveQuery<TClass> $query */
-        $query = parent::hasOne($class, $link);
-        return $query;
-    }
-
     #[Override]
     public static function findOne($condition): ?static
     {
