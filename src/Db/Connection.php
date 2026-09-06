@@ -138,9 +138,6 @@ class Connection extends \yii\db\Connection
         return true;
     }
 
-    /**
-     * @phpstan-ignore method.childReturnType
-     */
     #[Override]
     public function getSchema(): Schema
     {
