@@ -1,8 +1,28 @@
 .header {
+  background: var(--body-bg);
+  border-bottom: 1px solid var(--border-color);
+  container-type: scroll-state;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.header-inner {
   display: flex;
-  justify-content: space-between;
   gap: 2rem;
+  justify-content: space-between;
   padding: 1rem;
+  transition: padding .2s;
+}
+
+@container scroll-state(stuck: top) {
+  .header-inner {
+    padding-block: .5rem;
+  }
+
+  .hidden-sticky {
+    display: none;
+  }
 }
 
 .header-content {
@@ -12,6 +32,7 @@
   place-content: center;
   gap: .25rem;
 }
+
 
 .header-title,
 .header-subtitle {

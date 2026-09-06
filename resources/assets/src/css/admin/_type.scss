@@ -15,17 +15,17 @@ h1 {
   font-size: 1.375rem;
   font-weight: 500;
 
-  @include media-breakpoint-up(md) {
-    font-size: 1.875rem;
-  }
+  //@include media-breakpoint-up(md) {
+  //  font-size: 1.875rem;
+  //}
 }
 
 h2 {
   font-size: 1.125rem;
 
-  @include media-breakpoint-up(md) {
-    font-size: 1.25rem;
-  }
+  //@include media-breakpoint-up(md) {
+  //  font-size: 1.25rem;
+  //}
 }
 
 h3 {

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models;
 
-use Hirtz\Skeleton\I18n\Lang;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
 use Hirtz\Skeleton\Behaviors\BlameableBehavior;
 use Hirtz\Skeleton\Behaviors\TimestampBehavior;
 use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Models\Traits\TrailModelTrait;
@@ -18,7 +18,6 @@ use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
 use Hirtz\Skeleton\Models\Traits\UpdatedByUserTrait;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Override;
-use Yii;
 
 /**
  * @property int $id
@@ -108,6 +107,11 @@ class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttribut
      */
     public function validateUrl(): void
     {
+        if ($this->url === $this->request_uri) {
+            $this->addInvalidAttributeError('url');
+            return;
+        }
+
         $redirect = static::find()
             ->where(['request_uri' => $this->url])
             ->limit(1)

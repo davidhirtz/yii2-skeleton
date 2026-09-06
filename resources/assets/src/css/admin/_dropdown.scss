@@ -69,6 +69,10 @@
   .dropdown-actions & {
     border: 0;
   }
+
+  .dropdown-item > .btn-danger{
+    --btn-danger-bg: var(--btn-primary-bg);
+  }
 }
 
 .dropdown-list {

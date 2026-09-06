@@ -4,27 +4,24 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Navs;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\H1;
 use Hirtz\Skeleton\Html\H2;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Widgets\Traits\BreadcrumbTrait;
-use Hirtz\Skeleton\Widgets\Traits\ContainerTrait;
 use Hirtz\Skeleton\Widgets\Traits\TitleTrait;
 use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
-use Yii;
 use yii\data\ActiveDataProvider;
 
 class Header extends Widget
 {
     use BreadcrumbTrait;
-    use ContainerTrait;
     use TagAttributesTrait;
     use TagContentTrait;
     use TitleTrait;
@@ -60,19 +57,20 @@ class Header extends Widget
     #[Override]
     protected function renderContent(): string|Stringable
     {
-        $wrapper = Div::make()
-            ->attributes($this->attributes)
-            ->addClass('header');
-
-        $wrapper->content(Div::make()
-            ->class('header-content')
-            ->content($this->getHeaderContent(), $this->getSubheading()));
+        $inner = Div::make()
+            ->class('header-inner')
+            ->content(Div::make()
+                ->class('header-content')
+                ->content($this->getHeaderContent(), $this->getSubheading()));
 
         if ($this->content) {
-            $wrapper->addContent(Div::make()->content(...$this->content));
+            $inner->addContent(Div::make()->content(...$this->content));
         }
 
-        return $wrapper;
+        return Div::make()
+            ->attributes($this->attributes)
+            ->addClass('header')
+            ->content($inner);
     }
 
     public function subtitle(?string $subtitle): static

@@ -2,6 +2,7 @@ import htmx from 'htmx.org'
 import 'htmx-ext-head-support';
 import 'x-timeago';
 
+import aside from './includes/aside';
 import collapse from './includes/collapse';
 import dropdown from './includes/dropdown';
 import filter from './includes/filter';
@@ -17,6 +18,7 @@ htmx.onLoad(($container) => {
         ($container as HTMLElement).querySelectorAll(selector).forEach(($el: Element) => method($el));
     };
 
+    queryAll('[data-aside]', aside);
     queryAll('[data-collapse]', collapse);
     queryAll('[popovertarget]', dropdown);
     queryAll('[data-filter]', filter);
@@ -28,7 +30,7 @@ htmx.onLoad(($container) => {
 
     queryAll('[aria-invalid]', ($input: HTMLElement) => {
         $input.addEventListener('input', () => $input.removeAttribute('aria-invalid'));
-    })
+    });
 
     document.body.classList.remove('has-aside');
 });

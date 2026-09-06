@@ -1,12 +1,5 @@
 @use "../shared/breakpoints" as *;
 
-//.breadcrumbs {
-//  display: none;
-//
-//  @include media-breakpoint-up(sm) {
-//    display: block;
-//  }
-//}
 
 .breadcrumbs-list {
   display: flex;
@@ -14,6 +7,22 @@
   gap: .5rem;
   overflow-x: auto;
   padding: 0.5rem 1rem;
+
+  @include media-breakpoint-down(sm) {
+    margin-right: 5rem;
+    position: relative;
+
+    &::after {
+      background: linear-gradient(to right, transparent, var(--body-bg));
+      bottom: 0;
+      content: "";
+      pointer-events: none;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 1.5rem;
+    }
+  }
 }
 
 .breadcrumbs-item {

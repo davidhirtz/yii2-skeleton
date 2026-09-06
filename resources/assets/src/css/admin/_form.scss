@@ -93,7 +93,7 @@
 .form-buttons {
   &.sticky {
     position: sticky;
-    padding: 1rem;
+    padding-block: 1rem;
     bottom: 0;
     border-top: 1px solid var(--form-footer-border-color);
     background: var(--card-bg);

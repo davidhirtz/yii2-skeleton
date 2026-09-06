@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\AsideToggleButton;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Icon;
 use Hirtz\Skeleton\Widgets\Navs\Dropdown;
@@ -82,11 +82,6 @@ class NavBar extends Widget
 
     protected function getMobileToggle(): ?Stringable
     {
-        return Button::make()
-            ->secondary()
-            ->addClass('aside-toggle')
-            ->icon('bars')
-            ->attribute('onclick', "body.classList.toggle('has-aside')")
-            ->attribute('aria-label', Lang::t('skeleton', 'NAV_BAR_TOGGLE_MENU'));
+        return AsideToggleButton::make();
     }
 }

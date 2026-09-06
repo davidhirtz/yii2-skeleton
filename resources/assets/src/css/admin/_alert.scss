@@ -7,21 +7,17 @@
   gap: .5rem;
   pointer-events: none;
   position: fixed;
-  right: 0;
+  right: 1rem;
   bottom: 1rem;
   z-index: 60;
 
-  @include media-breakpoint-up(sm) {
-    bottom: auto;
-    top: 4rem;
-  }
 
   .alert {
     justify-self: end;
     pointer-events: all;
     transition-behavior: allow-discrete;
     transition: opacity .3s ease, translate .3s ease;
-    width: min(32rem, 100%);
+    width: min(32rem, calc(100vw - 2rem));
 
     @starting-style {
       opacity: 0;

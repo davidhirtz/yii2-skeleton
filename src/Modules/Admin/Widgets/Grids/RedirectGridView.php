@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\A;
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Modules\Admin\Controllers\RedirectController;
 use Hirtz\Skeleton\Modules\Admin\Data\RedirectActiveDataProvider;
@@ -127,7 +127,7 @@ class RedirectGridView extends GridView
             ->content(fn (Redirect $redirect) => Link::make()
                 ->icon('external-link-alt')
                 ->content($this->search->markKeywords($redirect->url ?: '/'))
-                ->href($redirect->url)
+                ->href($redirect->getBaseUrl() . $redirect->url)
                 ->target('_blank'));
     }
 

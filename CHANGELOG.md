@@ -1,5 +1,11 @@
 ## 3.0.0 (in development)
 
+- Changed the sticky admin header to a CSS-only `container-type: scroll-state` implementation: the `Header`
+  widget now wraps its content in a `.header-inner` element and no longer emits `data-sticky`; the removed
+  JavaScript that toggled a `.sticky` class is gone. `.header` is the `scroll-state` query container and
+  `@container scroll-state(stuck: top)` drives the collapsed padding and hides `.hidden-sticky`, avoiding the
+  layout-feedback flicker of toggling a class on the resizing element (the previously dead
+  `.sticky .hidden-sticky` utility rule was removed)
 - Removed `UrlManager::$i18nSubdomain` and `UrlManager::hasI18nUrls()`; use `UrlManager::$i18nUrl`
 - Renamed `UrlManager::setApplicationLanguage()` to `UrlManager::setLanguage()`, the single point where the
   application language is resolved on every request — override it to customize language detection

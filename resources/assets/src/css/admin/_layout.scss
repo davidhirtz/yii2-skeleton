@@ -1,10 +1,20 @@
 @use "../shared/breakpoints" as *;
 
+.wrap {
+  position: relative;
+  transition: translate .3s;
+
+  .has-aside & {
+    @include media-breakpoint-down(sm) {
+      translate: 14rem 0;
+    }
+  }
+}
+
 .layout {
   width: 100%;
   height: 100%;
   display: flex;
-  overflow-x: clip;
 }
 
 .main {
@@ -14,6 +24,7 @@
 }
 
 .container {
+  padding-block: 1rem;
 
   @include media-breakpoint-up(md) {
     padding: 1rem;
