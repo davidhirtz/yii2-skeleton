@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Traits;
 
-use Hirtz\Skeleton\Db\ActiveQuery;
+use yii\db\ActiveQuery;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use yii\db\Expression;
 use yii\db\Query;
