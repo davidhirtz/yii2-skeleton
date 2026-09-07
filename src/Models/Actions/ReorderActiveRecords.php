@@ -49,7 +49,7 @@ class ReorderActiveRecords
         $transaction = Yii::$app->getDb()->beginTransaction();
 
         try {
-            $this->reorderActiveRecordsInternal();
+            $this->_totalRowsUpdated = $this->reorderActiveRecordsInternal();
             $transaction->commit();
         } catch (Exception $exception) {
             $transaction->rollBack();
@@ -59,18 +59,20 @@ class ReorderActiveRecords
         return $this->_totalRowsUpdated;
     }
 
-    protected function reorderActiveRecordsInternal(): void
+    protected function reorderActiveRecordsInternal(): int
     {
-        $this->_totalRowsUpdated = 0;
+        $totalRowsUpdated = 0;
 
         foreach ($this->models as $model) {
             $primaryKey = $model->getPrimaryKey(true);
             $position = $this->getNewPosition($primaryKey);
 
             if ($position !== $model->getAttribute($this->attribute)) {
-                $this->_totalRowsUpdated += $model::updateAll([$this->attribute => $position], $primaryKey);
+                $totalRowsUpdated += $model::updateAll([$this->attribute => $position], $primaryKey);
             }
         }
+
+        return $totalRowsUpdated;
     }
 
     protected function beforeReorder(): bool

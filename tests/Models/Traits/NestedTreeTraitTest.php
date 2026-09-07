@@ -23,6 +23,7 @@ class NestedTreeTraitTest extends TestCase
             'parent_id' => 'integer unsigned NULL DEFAULT NULL',
             'lft' => 'integer unsigned NOT NULL',
             'rgt' => 'integer unsigned NOT NULL',
+            'position' => 'integer unsigned NOT NULL DEFAULT 0',
         ];
 
         Yii::$app->getDb()
@@ -79,6 +80,36 @@ class NestedTreeTraitTest extends TestCase
 
         self::assertEquals(1, $root->lft);
         self::assertEquals(2, $root->rgt);
+    }
+
+    public function testRebuildNestedTreeReturnsUpdatedRowCount(): void
+    {
+        $root = TestNestedTreeActiveRecord::create();
+        $root->name = 'Root';
+        $root->save();
+
+        $first = TestNestedTreeActiveRecord::create();
+        $first->name = 'First';
+        $first->populateParentRelation($root);
+        $first->save();
+
+        $second = TestNestedTreeActiveRecord::create();
+        $second->name = 'Second';
+        $second->populateParentRelation($root);
+        $second->save();
+
+        $root->refresh();
+
+        // Swapping the two children moves both of them.
+        $order = [$second->id => 0, $first->id => 1];
+        self::assertSame(2, TestNestedTreeActiveRecord::rebuildNestedTree($root, $order));
+
+        $first->refresh();
+        $second->refresh();
+        self::assertLessThan($first->lft, $second->lft);
+
+        // Re-applying the same order is a no-op and updates nothing.
+        self::assertSame(0, TestNestedTreeActiveRecord::rebuildNestedTree($root, $order));
     }
 }
 

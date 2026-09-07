@@ -1,5 +1,13 @@
 ## 3.0.0 (in development)
 
+- Sortable reordering now issues its request through `htmx.ajax` (was a raw `fetch`) so the admin
+  controllers' out-of-band flash messages are rendered after a drag; the reordered row's primary key is
+  now taken from the last id segment, fixing reordering of models whose name contains a dash (e.g.
+  `hotspot-asset`)
+- `NestedTreeTrait::rebuildNestedTree()` now returns the number of rows it changed (was `void`) and skips
+  rows whose `lft`/`rgt` are unchanged; `ReorderActiveRecords::reorderActiveRecordsInternal()` likewise
+  returns the updated-row count, so nested-tree reorders (e.g. categories) report whether anything
+  changed and run their `afterReorder()` trail
 - Removed `UrlManager::$i18nSubdomain` and `UrlManager::hasI18nUrls()`; use `UrlManager::$i18nUrl`
 - Renamed `UrlManager::setApplicationLanguage()` to `UrlManager::setLanguage()`, the single point where the
   application language is resolved on every request — override it to customize language detection

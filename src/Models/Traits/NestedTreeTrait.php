@@ -276,9 +276,9 @@ trait NestedTreeTrait
         }
     }
 
-    public static function rebuildNestedTree(?ActiveRecord $parent = null, array $order = []): void
+    public static function rebuildNestedTree(?ActiveRecord $parent = null, array $order = []): int
     {
-        $parentId = $parent?->getPrimaryKey();
+        $parentId = $parent?->getPrimaryKey() ?? '';
         $query = static::find();
 
         if ($parent) {
@@ -296,7 +296,7 @@ trait NestedTreeTrait
         $tree = [];
 
         foreach ($models as $model) {
-            $tree[$model->parent_id][] = $model->id;
+            $tree[$model->parent_id ?? ''][] = $model->id;
         }
 
         if ($order) {
@@ -307,12 +307,24 @@ trait NestedTreeTrait
         $lft = $parent ? $parent->getAttribute('lft') + 1 : 1;
         $tree = self::rebuildNestedTreeBranch($tree, $lft, $parentId);
 
+        $totalRowsUpdated = 0;
+
         foreach ($models as $model) {
-            $model->updateAttributes($tree[$model->id]);
+            $attributes = $tree[$model->id];
+
+            if (
+                (int) $model->getAttribute('lft') !== $attributes['lft']
+                || (int) $model->getAttribute('rgt') !== $attributes['rgt']
+            ) {
+                $model->updateAttributes($attributes);
+                ++$totalRowsUpdated;
+            }
         }
+
+        return $totalRowsUpdated;
     }
 
-    private static function rebuildNestedTreeBranch(array $branch, int &$lft, ?int $parentId): array
+    private static function rebuildNestedTreeBranch(array $branch, int &$lft, int|string $parentId): array
     {
         $tree = [];
 

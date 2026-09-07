@@ -11,28 +11,29 @@ htmx.onLoad(($node) => {
         return;
     }
 
-    const csrfToken = Object.values(JSON.parse(document.querySelector('#wrap')!.getAttribute('hx-headers') as string) as Object).pop();
-
     ($node.querySelectorAll('[data-sort-url]') as NodeListOf<HTMLTableElement>).forEach(($el) => {
         new Sortable($el, {
             handle: '.sortable-handle',
             direction: 'vertical',
             onEnd: (evt: SortableEvent) => {
-                // @ts-ignore
-                const data = [...(evt.to.children as HTMLCollection<HTMLElement>)]
-                    .map(($el) => {
-                        const values = $el.id.split('-');
-                        return `${values[0]}[]=${values[1]}`;
-                    })
-                    .join('&');
+                const values: Record<string, string[]> = {};
 
-                void fetch($el.dataset.sortUrl!, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'X-CSRF-Token': csrfToken,
-                    } as HeadersInit,
-                    body: data,
+                // @ts-ignore
+                [...(evt.to.children as HTMLCollection<HTMLElement>)].forEach(($row) => {
+                    // Row ids are `${camel2id(formName)}-${primaryKey}`, so the model name may itself
+                    // contain dashes (e.g. `hotspot-asset-5`); the primary key is the last segment.
+                    const parts = $row.id.split('-');
+                    const id = parts.pop()!;
+                    (values[`${parts.join('-')}[]`] ??= []).push(id);
+                });
+
+                // Let htmx issue the request so it inherits the CSRF header from #wrap
+                // and processes the out-of-band flash messages returned by the action.
+                void htmx.ajax('POST', $el.dataset.sortUrl!, {
+                    source: $el,
+                    target: $el,
+                    swap: 'none',
+                    values,
                 });
             },
         } as SortableOptions);
