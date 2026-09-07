@@ -20,10 +20,17 @@ class Submenu extends Widget
     use TagContentTrait;
 
     protected array $navAttributes = ['class' => 'tabs'];
+    protected bool $hideSingleItem = true;
 
-    public function title()
+    public function title(): void
     {
 
+    }
+
+    public function hideSingleItem(bool $hideSingleItem): static
+    {
+        $this->hideSingleItem = $hideSingleItem;
+        return $this;
     }
 
     #[Override]
@@ -34,9 +41,13 @@ class Submenu extends Widget
 
     protected function getContent(): string|Stringable
     {
-        return $this->items
-            ? Container::make()->content($this->getNav())
-            : '';
+        $visibleCount = count(array_filter($this->items, static fn (NavItem $item): bool => $item->isVisible()));
+
+        if (!$visibleCount || ($this->hideSingleItem && $visibleCount < 2)) {
+            return '';
+        }
+
+        return Container::make()->content($this->getNav());
     }
 
     protected function getNav(): Stringable

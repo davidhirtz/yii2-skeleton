@@ -1,5 +1,7 @@
 ## 3.0.0 (in development)
 
+- `Submenu` now hides itself when it has fewer than two visible items; toggle via the new
+  `hideSingleItem` option (defaults to `true`)
 - `NestedTreeTrait` now maintains a `depth` column (0 for roots, incremented per level), kept in sync on
   insert, on `parent_id` moves (the whole branch is shifted) and by `rebuildNestedTree()`. Models using the
   trait require the new `depth` column — see the per-package migration (e.g. yii2-cms `M260907100000Depth`)
