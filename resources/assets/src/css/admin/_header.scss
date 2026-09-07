@@ -24,6 +24,18 @@
   }
 }
 
+// A collapsing sticky header shortens the document; on a page only slightly taller than the
+// viewport that pulls the scroll back below the stick point and flickers. Reserve at least the
+// reclaimed height (larger on md+, where the header collapses more) while stuck, so the scroll
+// length can never drop below the threshold.
+body:has(.header.sticky) {
+  padding-bottom: 3rem;
+
+  @include media-breakpoint-up(md) {
+    padding-bottom: 5rem;
+  }
+}
+
 .header-content {
   display: flex;
   flex-direction: column;
