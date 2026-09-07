@@ -31,7 +31,7 @@
   --color-yellow-100: oklch(97.3% 0.071 103.193);
   //--color-yellow-200: oklch(94.5% 0.129 101.54);
   //--color-yellow-300: oklch(90.5% 0.182 98.111);
-  //--color-yellow-400: oklch(85.2% 0.199 91.936);
+  --color-yellow-400: #EDE36B; //oklch(85.2% 0.199 91.936);
   --color-yellow-500: oklch(79.5% 0.184 86.047);
   --color-yellow-600: oklch(68.1% 0.162 75.834);
   //--color-yellow-700: oklch(55.4% 0.135 66.442);
@@ -106,7 +106,7 @@
   //--color-gray-400: oklch(70.7% 0.022 261.325);
   --color-gray-500: oklch(55.1% 0.027 264.364);
   //--color-gray-600: oklch(44.6% 0.03 256.802);
-  --color-gray-700: #2A2A2A;//oklch(37.3% 0.034 259.733);
+  --color-gray-700: #2A2A2A; //oklch(37.3% 0.034 259.733);
   --color-gray-800: oklch(27.8% 0.033 256.848);
   --color-gray-900: oklch(21% 0.034 264.665);
   //--color-gray-950: oklch(13% 0.028 261.692);
@@ -179,6 +179,13 @@
   --btn-secondary-hover-border-color: var(--btn-secondary-hover-bg);
   --btn-secondary-hover-color: var(--color-white);
 
+  --btn-accent-bg: var(--color-yellow-400);
+  --btn-accent-border-color: var(--btn-accent-bg);
+  --btn-accent-color: var(--color-black);
+  --btn-accent-hover-bg: var(--btn-primary-hover-bg);
+  --btn-accent-hover-border-color: var(--btn-primary-hover-border-color);
+  --btn-accent-hover-color: var(--btn-primary-hover-color);
+
   --btn-danger-bg: var(--color-red-400);
   --btn-danger-border-color: var(--btn-danger-bg);
   --btn-danger-color: var(--color-white);
@@ -209,13 +216,15 @@
   --dropdown-color: var(--color-black);
   --dropdown-divider-color: var(--border-color);
 
-  --dropdown-btn-active-bg: var(--color-gray-200);
-  --dropdown-btn-active-border-color: var(--border-color);
-  --dropdown-btn-bg-color: var(--color-gray-100);
-  --dropdown-btn-border-color: var(--border-color);
-  --dropdown-btn-color: var(--color-black);
-  --dropdown-btn-hover-bg: var(--color-gray-200);
-  --dropdown-btn-hover-border-color: var(--btn-primary-bg);
+  --dropdown-btn-active-bg: var(--btn-primary-hover-bg);
+  --dropdown-btn-active-border-color: var(--btn-primary-hover-border-color);
+  --dropdown-btn-active-color: var(--btn-primary-hover-color);
+  --dropdown-btn-bg-color: var(--btn-secondary-bg);
+  --dropdown-btn-border-color: var(--btn-secondary-border-color);
+  --dropdown-btn-color: var(--btn-secondary-color);
+  --dropdown-btn-hover-bg: var(--dropdown-btn-active-bg);
+  --dropdown-btn-hover-border-color: var(--dropdown-btn-active-border-color);
+  --dropdown-btn-hover-color: var(--dropdown-btn-active-color);
 
   --dropdown-option-selected-bg: var(--color-gray-100);
   --dropdown-option-selected-color: inherit;
@@ -223,6 +232,10 @@
   --dropdown-option-disabled-color: var(--color-gray-300);
   --dropdown-option-hover-bg: var(--color-gray-50);
   --dropdown-option-hover-color: inherit;
+
+  --dropdown-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" d="m2 5 6 6 6-6"/></svg>')};
+  --dropup-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" d="m2 11 6-6 6 6"/></svg>')};
+
 
   // Form
   --form-footer-border-color: var(--color-gray-700);

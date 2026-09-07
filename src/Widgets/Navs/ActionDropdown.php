@@ -24,7 +24,7 @@ class ActionDropdown extends Dropdown
         $this->icon ??= 'ellipsis-h';
 
         $this->button ??= Button::make()
-            ->primary()
+            ->accent()
             ->icon($this->icon);
 
         parent::configure();

@@ -37,6 +37,11 @@ class Button extends Widget
         return $this->type('button');
     }
 
+    public function accent(): static
+    {
+        return $this->addClass('btn btn-accent');
+    }
+
     public function danger(): static
     {
         return $this->addClass('btn btn-danger');

@@ -35,7 +35,7 @@ class CreateButton extends Widget
     {
         return Button::make()
             ->attributes($this->attributes)
-            ->primary()
+            ->accent()
             ->url($this->url)
             ->text($this->label)
             ->icon($this->icon);

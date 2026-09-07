@@ -63,6 +63,15 @@
   --btn-hover-color: var(--btn-secondary-hover-color);
 }
 
+.btn-accent {
+  --btn-bg: var(--btn-accent-bg);
+  --btn-border-color: var(--btn-accent-border-color);
+  --btn-color: var(--btn-accent-color);
+  --btn-hover-bg: var(--btn-accent-hover-bg);
+  --btn-hover-border-color: var(--btn-accent-hover-border-color);
+  --btn-hover-color: var(--btn-accent-hover-color);
+}
+
 .btn-danger {
   --btn-bg: var(--btn-danger-bg);
   --btn-border-color: var(--btn-danger-border-color);
@@ -90,11 +99,6 @@
   &:hover {
     --btn-color: var(--btn-hover-color);
   }
-}
-
-.btn-block {
-  display: block;
-  width: 100%;
 }
 
 .btn-icon {
