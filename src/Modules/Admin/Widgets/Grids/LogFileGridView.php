@@ -75,7 +75,7 @@ class LogFileGridView extends GridView
     {
         return RelativeTimeColumn::make()
             ->property('updated_at')
-            ->title(Lang::t('skeleton', 'COMMON_LAST_UPDATE'));
+            ->title(Lang::t('skeleton', 'COMMON_UPDATED_AT_LABEL'));
     }
 
     protected function getButtonColumn(): ?Column

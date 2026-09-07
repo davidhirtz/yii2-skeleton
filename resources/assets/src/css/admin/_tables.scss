@@ -15,8 +15,10 @@
   th, tr:last-child td {
     border-bottom-color: var(--table-th-border-color);
   }
+
   tr.is-selected {
     --table-bg: var(--table-selected-bg);
+    --table-td-border-color: var(--table-selected-td-border-color);
     --table-hover-color: var(--table-selected-hover-color);
     --table-hover-bg: var(--table-selected-hover-bg);
     --table-striped-bg: var(--table-selected-bg);

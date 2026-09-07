@@ -76,7 +76,7 @@ return [
     'COMMON_GENERAL' => '',
     'COMMON_HISTORY' => 'Historie',
     'COMMON_ID_LABEL' => 'ID',
-    'COMMON_LAST_UPDATE' => 'Letzte Änderung',
+    'COMMON_UPDATED_AT_LABEL' => 'Letzte Änderung',
     'COMMON_LOGIN' => 'Login',
     'COMMON_LOGINS' => 'Logins',
     'COMMON_MODEL_ID' => '{model} #{id}',

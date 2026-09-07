@@ -316,11 +316,12 @@
   --table-striped-color: var(--color-black);
   --table-hover-color: var(--color-black);
 
-  --table-selected-bg: var(--color-blue-50);
-  --table-selected-hover-bg: var(--color-blue-200);
+  --table-selected-bg: var(--color-green-50);
+  --table-selected-hover-bg: var(--color-green-200);
+  --table-selected-td-border-color: var(--color-white);
 
-  --table-td-border-color: var(--border-color);
-  --table-th-border-color: var(--color-gray-700);
+  --table-td-border-color: transparent;
+  --table-th-border-color: transparent;
 
   // Trail
   --trail-table-bg: repeating-linear-gradient(-45deg, var(--table-hover-bg), var(--table-hover-bg) 0.5em, transparent 0.5em, transparent 1em);
