@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Traits;
 
-use yii\db\ActiveQuery;
 use Hirtz\Skeleton\Db\ActiveRecord;
+use yii\db\ActiveQuery;
 use yii\db\Expression;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
+ * @template TModel of ActiveRecord
+ *
  * @property int $id
  * @property int|null $parent_id
  * @property int $rgt
@@ -28,7 +30,7 @@ trait NestedTreeTrait
     private ?array $_descendants = null;
 
     /**
-     * @return ActiveQuery<static>
+     * @return ActiveQuery<TModel>
      */
     public function getParent(): ActiveQuery
     {
@@ -36,7 +38,7 @@ trait NestedTreeTrait
     }
 
     /**
-     * @return static[]
+     * @return TModel[]
      */
     public function getAncestors(bool $refresh = false): array
     {
@@ -75,6 +77,9 @@ trait NestedTreeTrait
         }
     }
 
+    /**
+     * @return TModel|null
+     */
     public function getFirstAncestor(): ?static
     {
         if ($this->parent_id) {
@@ -91,7 +96,7 @@ trait NestedTreeTrait
     }
 
     /**
-     * @return static[]
+     * @return TModel[]
      */
     public function getDescendants(bool $refresh = false): array
     {
@@ -138,6 +143,7 @@ trait NestedTreeTrait
     {
         if ($this->parent_id) {
             if ($this->isAttributeChanged('parent_id', false)) {
+                /** @var self|null $parent */
                 $parent = static::find()
                     ->where(['id' => $this->parent_id])
                     ->limit(1)
@@ -162,6 +168,9 @@ trait NestedTreeTrait
         }
     }
 
+    /**
+     * @param TModel|null $parent
+     */
     public function populateParentRelation(?ActiveRecord $parent): void
     {
         $this->populateRelation('parent', $parent);
@@ -222,7 +231,7 @@ trait NestedTreeTrait
                 $query = (new Query())->where([
                     'not in',
                     'id',
-                    $branchIds
+                    $branchIds,
                 ])->andWhere(new Expression(':rgt BETWEEN [[lft]] AND [[rgt]]', ['rgt' => $this->parent->getAttribute('rgt')]));
                 static::updateAllCounters(['rgt' => $diff], $query->where);
 
@@ -325,9 +334,9 @@ trait NestedTreeTrait
             $attributes = $tree[$model->id];
 
             if (
-                (int) $model->getAttribute('lft') !== $attributes['lft']
-                || (int) $model->getAttribute('rgt') !== $attributes['rgt']
-                || (int) $model->getAttribute('depth') !== $attributes['depth']
+                (int)$model->getAttribute('lft') !== $attributes['lft']
+                || (int)$model->getAttribute('rgt') !== $attributes['rgt']
+                || (int)$model->getAttribute('depth') !== $attributes['depth']
             ) {
                 $model->updateAttributes($attributes);
                 ++$totalRowsUpdated;

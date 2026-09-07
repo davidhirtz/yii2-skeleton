@@ -12,7 +12,7 @@ use Yii;
 
 class NestedTreeTraitTest extends TestCase
 {
-    #[\Override]
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -33,7 +33,7 @@ class NestedTreeTraitTest extends TestCase
             ->execute();
     }
 
-    #[\Override]
+    #[Override]
     protected function tearDown(): void
     {
         Yii::$app->getDb()

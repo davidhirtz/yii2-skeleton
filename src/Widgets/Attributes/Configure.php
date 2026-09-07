@@ -10,4 +10,3 @@ use Attribute;
 class Configure
 {
 }
-

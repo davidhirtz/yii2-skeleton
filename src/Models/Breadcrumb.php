@@ -9,7 +9,6 @@ final readonly class Breadcrumb
     public function __construct(
         public string $label,
         public array|string|null $url = null,
-    )
-    {
+    ) {
     }
 }

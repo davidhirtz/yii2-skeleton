@@ -82,7 +82,7 @@ class GridSearch
         return $text;
     }
 
-    public function getToolbarItem()
+    public function getToolbarItem(): void
     {
     }
 }
