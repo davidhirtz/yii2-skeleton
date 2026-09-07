@@ -23,6 +23,7 @@ class NestedTreeTraitTest extends TestCase
             'parent_id' => 'integer unsigned NULL DEFAULT NULL',
             'lft' => 'integer unsigned NOT NULL',
             'rgt' => 'integer unsigned NOT NULL',
+            'depth' => 'integer unsigned NOT NULL DEFAULT 0',
             'position' => 'integer unsigned NOT NULL DEFAULT 0',
         ];
 
@@ -51,6 +52,7 @@ class NestedTreeTraitTest extends TestCase
         self::assertTrue($root->save());
         self::assertEquals(1, $root->lft);
         self::assertEquals(2, $root->rgt);
+        self::assertEquals(0, $root->depth);
         self::assertNull($root->parent_id);
 
         $child = TestNestedTreeActiveRecord::create();
@@ -60,6 +62,7 @@ class NestedTreeTraitTest extends TestCase
         self::assertTrue($child->save());
         self::assertEquals(2, $child->lft);
         self::assertEquals(3, $child->rgt);
+        self::assertEquals(1, $child->depth);
         self::assertEquals(1, $child->parent_id);
 
         $root->refresh();
@@ -80,6 +83,35 @@ class NestedTreeTraitTest extends TestCase
 
         self::assertEquals(1, $root->lft);
         self::assertEquals(2, $root->rgt);
+    }
+
+    public function testDepthIsUpdatedWhenMovingBranch(): void
+    {
+        $root = TestNestedTreeActiveRecord::create();
+        $root->name = 'Root';
+        $root->save();
+
+        $branch = TestNestedTreeActiveRecord::create();
+        $branch->name = 'Branch';
+        $branch->populateParentRelation($root);
+        $branch->save();
+
+        $leaf = TestNestedTreeActiveRecord::create();
+        $leaf->name = 'Leaf';
+        $leaf->populateParentRelation($branch);
+        $leaf->save();
+
+        self::assertEquals(1, $branch->depth);
+        self::assertEquals(2, $leaf->depth);
+
+        // Move the whole branch to the root: its own depth and its descendant's depth drop by one.
+        $branch->populateParentRelation(null);
+        $branch->save();
+
+        self::assertEquals(0, $branch->depth);
+
+        $leaf->refresh();
+        self::assertEquals(1, $leaf->depth);
     }
 
     public function testRebuildNestedTreeReturnsUpdatedRowCount(): void

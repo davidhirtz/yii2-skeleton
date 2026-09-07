@@ -15,6 +15,7 @@ use yii\helpers\ArrayHelper;
  * @property int|null $parent_id
  * @property int $rgt
  * @property int $lft
+ * @property int $depth
  * @property string $name
  *
  * @property-read static|null $parent {@see static::getParent()}
@@ -186,11 +187,13 @@ trait NestedTreeTrait
 
                 $this->rgt = $this->parent->getAttribute('rgt') + 1;
                 $this->lft = $this->parent->getAttribute('rgt');
+                $this->depth = (int)$this->parent->getAttribute('depth') + 1;
             } else {
                 $rgt = static::find()->max('rgt');
 
                 $this->rgt = $rgt + 2;
                 $this->lft = $rgt + 1;
+                $this->depth = 0;
             }
         } elseif ($this->isAttributeChanged('parent_id', false)) {
             $query = static::find()->select(['id'])->where('[[lft]] BETWEEN :lft AND :rgt', [
@@ -238,11 +241,19 @@ trait NestedTreeTrait
                 $diff = $rgt - $this->lft + 1;
             }
 
+            $depthDiff = ($this->parent ? (int)$this->parent->getAttribute('depth') + 1 : 0) - $this->depth;
+            $counters = ['lft' => $diff, 'rgt' => $diff];
+
+            if ($depthDiff !== 0) {
+                $counters['depth'] = $depthDiff;
+            }
+
             // Update branch.
-            static::updateAllCounters(['lft' => $diff, 'rgt' => $diff], ['in', 'id', $branchIds]);
+            static::updateAllCounters($counters, ['in', 'id', $branchIds]);
 
             $this->rgt += $diff;
             $this->lft += $diff;
+            $this->depth += $depthDiff;
         }
     }
 
@@ -288,7 +299,7 @@ trait NestedTreeTrait
             ]);
         }
 
-        $models = $query->select(['id', 'parent_id', 'lft', 'rgt'])
+        $models = $query->select(['id', 'parent_id', 'lft', 'rgt', 'depth'])
             ->orderBy(['lft' => SORT_ASC, 'position' => SORT_ASC])
             ->indexBy('id')
             ->all();
@@ -305,7 +316,8 @@ trait NestedTreeTrait
         }
 
         $lft = $parent ? $parent->getAttribute('lft') + 1 : 1;
-        $tree = self::rebuildNestedTreeBranch($tree, $lft, $parentId);
+        $depth = $parent ? (int)$parent->getAttribute('depth') + 1 : 0;
+        $tree = self::rebuildNestedTreeBranch($tree, $lft, $parentId, $depth);
 
         $totalRowsUpdated = 0;
 
@@ -315,6 +327,7 @@ trait NestedTreeTrait
             if (
                 (int) $model->getAttribute('lft') !== $attributes['lft']
                 || (int) $model->getAttribute('rgt') !== $attributes['rgt']
+                || (int) $model->getAttribute('depth') !== $attributes['depth']
             ) {
                 $model->updateAttributes($attributes);
                 ++$totalRowsUpdated;
@@ -324,15 +337,16 @@ trait NestedTreeTrait
         return $totalRowsUpdated;
     }
 
-    private static function rebuildNestedTreeBranch(array $branch, int &$lft, int|string $parentId): array
+    private static function rebuildNestedTreeBranch(array $branch, int &$lft, int|string $parentId, int $depth): array
     {
         $tree = [];
 
         foreach ($branch[$parentId] as $id) {
             $tree[$id]['lft'] = $lft++;
+            $tree[$id]['depth'] = $depth;
 
             if (isset($branch[$id])) {
-                $tree += self::rebuildNestedTreeBranch($branch, $lft, $id);
+                $tree += self::rebuildNestedTreeBranch($branch, $lft, $id, $depth + 1);
             }
 
             $tree[$id]['rgt'] = $lft++;
