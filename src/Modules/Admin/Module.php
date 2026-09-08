@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\A;
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\DashboardNavItem;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\SystemNavItem;
@@ -43,7 +43,7 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
             // implementations or REST APIs that use admin endpoints.
             if ($request->isDraftRequest() && !$request->getIsAjax()) {
                 $url = Yii::$app->getUrlManager()->createAbsoluteUrl($request->getUrl());
-                $action->controller->response->redirect($url)->send();
+                Yii::$app->getResponse()->redirect($url)->send();
             }
         }
 

@@ -43,7 +43,7 @@ class GridSummary extends Widget
             $alert->warning();
         }
 
-        if ($this->grid->search?->getValue()) {
+        if ($this->grid->search->getValue()) {
             $alert->button(Button::make()
                 ->class('btn-icon icon')
                 ->get($this->grid->search->getUrl())
@@ -61,7 +61,7 @@ class GridSummary extends Widget
         $totalCount = $this->grid->provider->getTotalCount();
 
         $params = [
-            'search' => $this->grid->search?->getValue(),
+            'search' => $this->grid->search->getValue(),
             'totalCount' => $this->grid->provider->getTotalCount(),
         ];
 
@@ -80,7 +80,7 @@ class GridSummary extends Widget
             return Yii::$app->getI18n()->format($this->message, $params, Yii::$app->language);
         }
 
-        if ($this->grid->search?->getValue()) {
+        if ($this->grid->search->getValue()) {
             return match ($count) {
                 1 => Lang::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ONLY', $params),
                 0 => Lang::t('skeleton', 'GRID_SUMMARY_SORRY_NO', $params),

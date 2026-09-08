@@ -17,7 +17,7 @@ trait ConfigureAttributesTrait
 
     private function configureAttributes(): void
     {
-        foreach (static::getResolvedAttributes() as $method) {
+        foreach (self::getResolvedAttributes() as $method) {
             $this->$method();
         }
     }

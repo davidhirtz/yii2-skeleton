@@ -35,11 +35,6 @@ abstract class Widget implements Stringable, ViewContextInterface
     private array $configureClosures = [];
     private ?string $html = null;
 
-    /**
-     * @var array<class-string, list<string>>
-     */
-    private static array $configureAttributes = [];
-
     public function __construct(array $config = [])
     {
         $this->view ??= Yii::$app->getView();

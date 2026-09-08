@@ -7,7 +7,6 @@ namespace Hirtz\Skeleton\Widgets\Grids\Columns;
 use Closure;
 use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
 use Hirtz\Skeleton\Base\Traits\EvaluateClosureTrait;
-use Hirtz\Skeleton\Html\Base\Tag;
 use Hirtz\Skeleton\Html\Td;
 use Hirtz\Skeleton\Html\Th;
 use Hirtz\Skeleton\Widgets\Grids\Traits\GridTrait;
@@ -72,7 +71,7 @@ class Column
 
     public function centered(): static
     {
-        $callback = fn (Tag $tag) => $tag->addClass('text-center');
+        $callback = fn (Td|Th $tag) => $tag->addClass('text-center');
         return $this->body($callback)->header($callback);
     }
 
@@ -83,13 +82,13 @@ class Column
 
     public function hiddenForSmallDevices(): static
     {
-        $closure = fn (Tag $tag) => $tag->addClass('hidden md:table-cell');
+        $closure = fn (Td|Th $tag) => $tag->addClass('hidden md:table-cell');
         return $this->body($closure)->header($closure);
     }
 
     public function hiddenForMediumDevices(): static
     {
-        $closure = fn (Tag $tag) => $tag->addClass('hidden lg:table-cell');
+        $closure = fn (Td|Th $tag) => $tag->addClass('hidden lg:table-cell');
         return $this->body($closure)->header($closure);
     }
 

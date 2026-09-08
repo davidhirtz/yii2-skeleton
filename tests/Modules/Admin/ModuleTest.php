@@ -34,7 +34,7 @@ class ModuleTest extends TestCase
         self::assertStringContainsString('Test Module', (string)$nav);
     }
 
-    public function testDashboardPanels(): void
+    public function testDashboard(): void
     {
         $nav = $this->module->dashboard(Dashboard::make());
         self::assertStringContainsString('Test Module', (string)$nav);

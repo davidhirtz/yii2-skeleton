@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Buttons;
 
+use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
@@ -14,8 +15,6 @@ use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
-use Yii;
-use yii\db\ActiveRecordInterface;
 
 class DuplicateButton extends Widget
 {
@@ -23,7 +22,7 @@ class DuplicateButton extends Widget
     use LabelTrait;
 
     /**
-     * @use ModelTrait<ActiveRecordInterface>
+     * @use ModelTrait<ActiveRecord>
      */
     use ModelTrait;
 
