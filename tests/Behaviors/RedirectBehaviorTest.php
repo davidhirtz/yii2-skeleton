@@ -8,12 +8,13 @@ use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Behaviors\RedirectBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Redirect;
+use Override;
 use Yii;
 use yii\base\InvalidConfigException;
 
 class RedirectBehaviorTest extends TestCase
 {
-    #[\Override]
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -32,7 +33,7 @@ class RedirectBehaviorTest extends TestCase
         ]);
     }
 
-    #[\Override]
+    #[Override]
     protected function tearDown(): void
     {
         Yii::$app->getDb()->createCommand()
@@ -155,7 +156,7 @@ class RedirectBehaviorTest extends TestCase
  */
 class BaseRedirectActiveRecord extends ActiveRecord
 {
-    #[\Override]
+    #[Override]
     public function behaviors(): array
     {
         return [
@@ -164,7 +165,7 @@ class BaseRedirectActiveRecord extends ActiveRecord
         ];
     }
 
-    #[\Override]
+    #[Override]
     public static function tableName(): string
     {
         return 'test_redirect';

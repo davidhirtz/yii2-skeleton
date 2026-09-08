@@ -33,13 +33,10 @@ class RedirectHeader extends Header
             ? Lang::t('skeleton', 'COMMON_REDIRECTS')
             : $this->model?->getDisplayName() ?? Lang::t('skeleton', 'REDIRECT_HEADER_CREATE_NEW_REDIRECT');
 
-        if (!$this->provider) {
-            $this->breadcrumbs ??= [
-                new Breadcrumb(Lang::t('skeleton', 'COMMON_REDIRECTS'), ['/admin/redirect/index']),
-            ];
-        }
+        $this->addSystemBreadcrumb();
 
         if ($this->model) {
+            $this->addRedirectBreadcrumb();
             $this->addContent($this->getActionDropdown());
         }
 
@@ -63,5 +60,15 @@ class RedirectHeader extends Header
         return CreateButton::make()
             ->label(Lang::t('skeleton', 'COMMON_NEW_REDIRECT'))
             ->url(['/admin/redirect/create']);
+    }
+
+    protected function addSystemBreadcrumb(): void
+    {
+        $this->addBreadcrumb(Yii::t('skeleton', 'COMMON_SYSTEM'), ['/admin/system/index']);
+    }
+
+    protected function addRedirectBreadcrumb(): void
+    {
+        $this->addBreadcrumb(Lang::t('skeleton', 'COMMON_REDIRECTS'), ['/admin/redirect/index']);
     }
 }

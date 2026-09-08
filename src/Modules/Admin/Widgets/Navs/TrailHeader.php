@@ -35,10 +35,10 @@ class TrailHeader extends Header
         $this->title ??= $this->getTrailModelTitle();
         $this->url ??= $this->getTrailModelAdminRoute() ?? ['/admin/trail/index'];
 
+        $this->addSystemBreadcrumb();
+
         if ($this->provider->trailId || $this->model) {
-            $this->breadcrumbs ??= [
-                new Breadcrumb(Lang::t('skeleton', 'COMMON_HISTORY'), ['/admin/trail/index']),
-            ];
+            $this->addTrailBreadcrumb();
         }
 
         if ($this->provider) {
@@ -74,5 +74,15 @@ class TrailHeader extends Header
         $language = explode('::', (string)$this->model->getTrailBehavior()->modelClass)[1] ?? null;
 
         return $route ? [...$route, 'language' => $language] : null;
+    }
+
+    protected function addSystemBreadcrumb(): void
+    {
+        $this->addBreadcrumb(Yii::t('skeleton', 'COMMON_SYSTEM'), ['/admin/system/index']);
+    }
+
+    protected function addTrailBreadcrumb(): void
+    {
+        $this->addBreadcrumb(Lang::t('skeleton', 'COMMON_HISTORY'), ['/admin/trail/index']);
     }
 }

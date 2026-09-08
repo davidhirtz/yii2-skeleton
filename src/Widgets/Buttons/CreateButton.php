@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Buttons;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Widgets\Traits\IconTrait;
 use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
 use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
-use Yii;
 
 class CreateButton extends Widget
 {
