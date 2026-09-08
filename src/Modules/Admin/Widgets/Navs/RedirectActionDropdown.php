@@ -22,6 +22,7 @@ class RedirectActionDropdown extends ActionDropdown
     use ModelTrait;
 
     #[Configure]
+    #[\Override]
     protected function configure(): void
     {
         $this->addItem($this->getCreateButton(), $this->getDeleteButton());

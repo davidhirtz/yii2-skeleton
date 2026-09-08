@@ -27,6 +27,7 @@ class RedirectHeader extends Header
      */
     use ProviderTrait;
 
+    #[\Override]
     protected function configure(): void
     {
         $this->title ??= $this->provider

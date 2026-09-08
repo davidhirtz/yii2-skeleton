@@ -10,6 +10,7 @@ class Button extends Base\Tag
 {
     use TagContentTrait;
 
+    #[\Override]
     protected function getAttributes(): string
     {
         $this->attributes['type'] ??= 'button';

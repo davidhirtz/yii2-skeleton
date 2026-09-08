@@ -14,6 +14,7 @@ use yii\base\InvalidConfigException;
 
 class TrailControllerTest extends TestCase
 {
+    #[\Override]
     public function fixtures(): array
     {
         return [

@@ -39,6 +39,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
      *
      * @link https://forum.yiiframework.com/t/question-about-activequery-findfor/134188
      */
+    #[\Override]
     public function findFor($name, $model): array|ActiveRecord|null
     {
         foreach ($this->link as $attribute) {

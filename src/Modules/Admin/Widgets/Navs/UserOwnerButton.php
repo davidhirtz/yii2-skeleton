@@ -34,6 +34,7 @@ class UserOwnerButton extends Widget
     use TitleTrait;
     use UrlTrait;
 
+    #[\Override]
     public function isVisible(): bool
     {
         return $this->webuser->getIdentity()->isOwner() && !$this->model->isOwner();

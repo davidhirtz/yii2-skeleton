@@ -85,6 +85,7 @@ class Dropdown extends Widget
     }
 
     #[Configure]
+    #[\Override]
     protected function configure(): void
     {
         $this->button->attributes['data-autofocus'] ??= $this->autofocus;

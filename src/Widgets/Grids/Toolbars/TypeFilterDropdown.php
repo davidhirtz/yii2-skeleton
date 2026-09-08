@@ -30,6 +30,7 @@ class TypeFilterDropdown extends FilterDropdown
         parent::configure();
     }
 
+    #[\Override]
     public function isVisible(): bool
     {
         return parent::isVisible()

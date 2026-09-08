@@ -79,6 +79,7 @@ class Header extends Widget
         return $this;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         if (is_string($this->title)) {

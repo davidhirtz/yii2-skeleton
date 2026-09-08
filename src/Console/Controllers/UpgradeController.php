@@ -22,7 +22,7 @@ class UpgradeController extends Controller
     {
         $name = 'userUpdateRule';
         $old = 'davidhirtz\\yii2\\skeleton\\rbac\\rules\\OwnerRule';
-        $new = 'Hirtz\\Skeleton\\Rbac\\Rules\\OwnerRule';
+        $new = \Hirtz\Skeleton\Rbac\Rules\OwnerRule::class;
 
         $data = (new Query())
             ->select('data')

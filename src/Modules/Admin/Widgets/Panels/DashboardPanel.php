@@ -37,6 +37,7 @@ class DashboardPanel extends Panel
         return $this;
     }
 
+    #[\Override]
     protected function renderContent(): Stack
     {
         $list = Stack::make();

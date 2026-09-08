@@ -19,6 +19,7 @@ class LogHeader extends Header
      */
     use ProviderTrait;
 
+    #[\Override]
     protected function configure(): void
     {
         $this->title ??= Lang::t('skeleton', 'COMMON_ERROR_LOGS');
