@@ -5,14 +5,8 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Models\Traits;
 
 use Hirtz\Skeleton\I18n\Lang;
-use Hirtz\Skeleton\Db\I18nActiveQuery;
 use Yii;
-use yii\db\ActiveRecord;
 
-/**
- * @template T of ActiveRecord
- * @property class-string<T> $modelClass
- */
 trait I18nAttributesTrait
 {
     /**

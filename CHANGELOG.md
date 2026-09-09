@@ -1,5 +1,9 @@
 ## 3.0.0 (in development)
 
+- `NestedTreeTrait::getFirstAncestor()` now returns `null` (was `false`) when the record has no ancestor,
+  matching its `?static` return type
+- `I18nAttributesTrait` is no longer generic: the unused `@template T` / `@property class-string<T> $modelClass`
+  metadata was removed, so `use` sites no longer need an `@use I18nAttributesTrait<…>` binding
 - `Submenu` now hides itself when it has fewer than two visible items; toggle via the new
   `hideSingleItem` option (defaults to `true`)
 - `NestedTreeTrait` now maintains a `depth` column (0 for roots, incremented per level), kept in sync on

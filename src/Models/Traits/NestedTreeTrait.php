@@ -11,8 +11,6 @@ use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
- * @template TModel of ActiveRecord
- *
  * @property int $id
  * @property int|null $parent_id
  * @property int $rgt
@@ -30,7 +28,7 @@ trait NestedTreeTrait
     private ?array $_descendants = null;
 
     /**
-     * @return ActiveQuery<TModel>
+     * @return ActiveQuery<static>
      */
     public function getParent(): ActiveQuery
     {
@@ -38,7 +36,7 @@ trait NestedTreeTrait
     }
 
     /**
-     * @return TModel[]
+     * @return static[]
      */
     public function getAncestors(bool $refresh = false): array
     {
@@ -78,13 +76,13 @@ trait NestedTreeTrait
     }
 
     /**
-     * @return TModel|null
+     * @return static|null
      */
     public function getFirstAncestor(): ?static
     {
         if ($this->parent_id) {
             $ancestors = $this->getAncestors();
-            return current($ancestors);
+            return current($ancestors) ?: null;
         }
 
         return null;
@@ -96,7 +94,7 @@ trait NestedTreeTrait
     }
 
     /**
-     * @return TModel[]
+     * @return static[]
      */
     public function getDescendants(bool $refresh = false): array
     {
@@ -143,7 +141,7 @@ trait NestedTreeTrait
     {
         if ($this->parent_id) {
             if ($this->isAttributeChanged('parent_id', false)) {
-                /** @var self|null $parent */
+                /** @var static|null $parent */
                 $parent = static::find()
                     ->where(['id' => $this->parent_id])
                     ->limit(1)
@@ -169,7 +167,7 @@ trait NestedTreeTrait
     }
 
     /**
-     * @param TModel|null $parent
+     * @param static|null $parent
      */
     public function populateParentRelation(?ActiveRecord $parent): void
     {
