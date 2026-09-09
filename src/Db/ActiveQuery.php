@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Db;
 
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
+use Override;
 use Yii;
 use yii\db\Query;
 
@@ -28,8 +29,9 @@ class ActiveQuery extends \yii\db\ActiveQuery
      */
     public function __construct(string $modelClass, array $config = [])
     {
-        $modelClass = Yii::createObject($modelClass)::class;
-        parent::__construct($modelClass, $config);
+        /** @var T $model */
+        $model = Yii::createObject($modelClass);
+        parent::__construct($model::class, $config);
     }
 
     /**
@@ -39,7 +41,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
      *
      * @link https://forum.yiiframework.com/t/question-about-activequery-findfor/134188
      */
-    #[\Override]
+    #[Override]
     public function findFor($name, $model): array|ActiveRecord|null
     {
         foreach ($this->link as $attribute) {
@@ -78,7 +80,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
      * Override Yii2's default implementation of adding the anti-pattern `$alias.*` on empty select. This causes
      * problems with `sql_mode=only_full_group_by`.
      */
-    #[\Override]
+    #[Override]
     public function prepare($builder): Query
     {
         if (empty($this->select)) {

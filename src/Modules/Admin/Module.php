@@ -30,14 +30,6 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
     {
         $request = $action->controller->request;
 
-        if (Yii::$app->has('user')) {
-            Yii::$app->getUser()->loginUrl ??= ['/admin/account/login'];
-
-            if (!YII_DEBUG) {
-                Yii::$app->getErrorHandler()->errorView = '@skeleton/../resources/views/admin/views/dashboard/error.php';
-            }
-        }
-
         if ($request instanceof Request) {
             //  Redirects draft URLs for the backend, but only if it's not an AJAX to prevent breaking frontend
             // implementations or REST APIs that use admin endpoints.
@@ -46,6 +38,21 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
                 Yii::$app->getResponse()->redirect($url)->send();
             }
         }
+
+        if (Yii::$app->has('user')) {
+            Yii::$app->getUser()->loginUrl ??= ['/admin/account/login'];
+
+            if (!YII_DEBUG) {
+                Yii::$app->getErrorHandler()->errorView = '@skeleton/../resources/views/admin/views/dashboard/error.php';
+            }
+
+            $identity = Yii::$app->getUser()->getIdentity();
+
+            if ($identity) {
+                Yii::$app->language = $identity->language;
+            }
+        }
+
 
         return parent::beforeAction($action);
     }
