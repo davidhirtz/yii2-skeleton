@@ -351,7 +351,7 @@ class UrlManager extends \yii\web\UrlManager implements UrlGeneratorInterface
                 } elseif (preg_match('/^<\w+:\(?([\w_\-|]+)\)?>$/', $param, $matches)) {
                     $params = [
                         ...$params,
-                        ...explode('|', $matches[1])
+                        ...explode('|', $matches[1]),
                     ];
                 }
             }
@@ -360,8 +360,10 @@ class UrlManager extends \yii\web\UrlManager implements UrlGeneratorInterface
         return array_unique($params);
     }
 
-    public function getDraftHostInfo(): false|string
+    public function getDraftHostInfo(): string
     {
-        return $this->replaceSubdomain($this->draftSubdomain, $this->getHostInfo());
+        return $this->draftSubdomain
+            ? $this->replaceSubdomain($this->draftSubdomain, $this->getHostInfo())
+            : $this->getHostInfo();
     }
 }
