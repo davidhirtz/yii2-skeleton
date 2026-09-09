@@ -137,7 +137,10 @@ class ActiveQuery extends \yii\db\ActiveQuery
     }
 
     /**
-     * @return ActiveRecord<T>
+     * `ActiveRecord` is not generic, so `ActiveRecord<T>` resolved to `ActiveRecord&iterable<T>` and hid every
+     * method the concrete model adds.
+     *
+     * @return T
      */
     protected function getModelInstance(): ActiveRecord
     {

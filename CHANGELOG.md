@@ -1,5 +1,8 @@
 ## 3.0.0 (in development)
 
+- Fixed the `Db\ActiveQuery::getModelInstance()` annotation, which declared `@return ActiveRecord<T>`. `ActiveRecord`
+  is not generic, so PHPStan resolved that to `ActiveRecord&iterable<T>` and hid every method the concrete model
+  adds; it is `@return T` now
 - `NestedTreeTrait::getBranchCount()` no longer throws on a record that is not in the tree yet. It divided
   `rgt - lft - 1` by two, which returns a float for an unsaved record whose `lft` / `rgt` are still `null`,
   and that violated the declared `int` return type. It now returns `0` for those records
