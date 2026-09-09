@@ -1,5 +1,8 @@
 ## 3.0.0 (in development)
 
+- `NestedTreeTrait::getBranchCount()` no longer throws on a record that is not in the tree yet. It divided
+  `rgt - lft - 1` by two, which returns a float for an unsaved record whose `lft` / `rgt` are still `null`,
+  and that violated the declared `int` return type. It now returns `0` for those records
 - `NestedTreeTrait::getFirstAncestor()` now returns `null` (was `false`) when the record has no ancestor,
   matching its `?static` return type
 - `I18nAttributesTrait` is no longer generic: the unused `@template T` / `@property class-string<T> $modelClass`

@@ -132,9 +132,13 @@ trait NestedTreeTrait
         return static::find()->where('[[lft]]>:lft AND [[rgt]]<:rgt', ['lft' => $this->lft, 'rgt' => $this->rgt]);
     }
 
+    /**
+     * A record that is not in the tree yet has no `lft` / `rgt`, which made the division return a float and the
+     * declared `int` return type throw.
+     */
     public function getBranchCount(): int
     {
-        return ($this->rgt - $this->lft - 1) / 2;
+        return $this->lft && $this->rgt ? intdiv($this->rgt - $this->lft - 1, 2) : 0;
     }
 
     public function validateParentId(): void
