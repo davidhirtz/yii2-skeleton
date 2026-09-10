@@ -17,9 +17,9 @@ html,
   font-feature-settings: normal;
   font-variation-settings: normal;
   line-height: 1.57142857;
+  overscroll-behavior: none;
   tab-size: 4;
   text-rendering: optimizeLegibility;
-
 }
 
 html:has(.navbar) {

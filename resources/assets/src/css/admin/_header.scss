@@ -41,6 +41,14 @@
 }
 
 .header-subtitle {
+  display: none;
+
+  @include media-breakpoint-up(sm) {
+    display: flex;
+  }
+}
+
+.header-subtitle {
   &:before {
     content: "";
     width: 1.25rem;

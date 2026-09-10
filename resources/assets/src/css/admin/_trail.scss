@@ -99,9 +99,11 @@ $diff-bg-color-none-block-alternative: mix($diff-bg-color, $diff-table-sidebar-c
 }
 
 .trail-property-col {
-  width: 10rem;
-  text-align: right;
+  font-family: Bebas Neue, sans-serif;
   hyphens: auto;
+  letter-spacing: .0625em;
+  text-align: right;
+  width: 10rem;
 }
 
 .trail-value-col {

@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Widgets\Navs;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Navs\Traits\ItemTrait;
+use Hirtz\Skeleton\Widgets\Traits\ContainerTrait;
 use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
@@ -18,6 +19,7 @@ class Submenu extends Widget
     use ItemTrait;
 
     use TagContentTrait;
+    use ContainerTrait;
 
     protected array $navAttributes = ['class' => 'tabs'];
     protected bool $hideSingleItem = true;
@@ -47,11 +49,6 @@ class Submenu extends Widget
             return '';
         }
 
-        return Container::make()->content($this->getNav());
-    }
-
-    protected function getNav(): Stringable
-    {
         return Nav::make()
             ->attributes($this->navAttributes)
             ->items($this->items);

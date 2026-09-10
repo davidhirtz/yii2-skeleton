@@ -44,6 +44,16 @@
   }
 }
 
+.dropdown-actions {
+  &:has(:popover-open) {
+    .btn-accent {
+      --btn-bg: var(--btn-accent-hover-bg);
+      --btn-border-color: var(--btn-accent-hover-border-color);
+      --btn-color: var(--btn-accent-hover-color);
+    }
+  }
+}
+
 .dropdown-menu {
   background-color: var(--dropdown-bg);
   border-radius: .25rem;
