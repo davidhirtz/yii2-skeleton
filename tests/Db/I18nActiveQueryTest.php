@@ -123,6 +123,55 @@ class I18nActiveQueryTest extends TestCase
         self::assertSame(0, $queries, 'Reading an eager loaded translation queried the database.');
     }
 
+    public function testAllEagerLoadsEveryLanguageByDefault(): void
+    {
+        Yii::$app->getI18n()->setLanguages(['en-US', 'de', 'fr']);
+
+        foreach (['One', 'Two'] as $content) {
+            $record = new I18nActiveRecord();
+            $record->content = $content;
+            $record->content_de = "$content DE";
+            $record->content_fr = "$content FR";
+
+            self::assertTrue($record->save(), implode(' ', $record->getErrorSummary(true)));
+        }
+
+        $records = [];
+
+        $queries = $this->countQueries(function () use (&$records): void {
+            $records = I18nActiveRecord::find()->orderBy(['id' => SORT_ASC])->all();
+        });
+
+        self::assertSame(2, $queries, 'A list did not eager load its translations in one extra query.');
+
+        $queries = $this->countQueries(function () use ($records): void {
+            foreach ($records as $record) {
+                self::assertSame("$record->content DE", $record->content_de);
+                self::assertSame("$record->content FR", $record->content_fr);
+            }
+        });
+
+        self::assertSame(0, $queries, 'Reading a translation of a listed record queried the database.');
+    }
+
+    public function testWithoutTranslationsLoadsLazily(): void
+    {
+        $record = new I18nActiveRecord();
+        $record->content = 'One';
+        $record->content_de = 'Eins';
+
+        self::assertTrue($record->save(), implode(' ', $record->getErrorSummary(true)));
+
+        $records = [];
+
+        $queries = $this->countQueries(function () use (&$records): void {
+            $records = I18nActiveRecord::find()->withoutTranslations()->all();
+        });
+
+        self::assertSame(1, $queries);
+        self::assertSame(1, $this->countQueries(fn () => self::assertSame('Eins', $records[0]->content_de)));
+    }
+
     public function testTranslationIsLoadedLazilyPerRecord(): void
     {
         $record = new I18nActiveRecord();
@@ -147,6 +196,7 @@ class I18nActiveQueryTest extends TestCase
  * @property int $id
  * @property string|null $content
  * @property string|null $content_de
+ * @property string|null $content_fr
  */
 class I18nActiveRecord extends ActiveRecord implements TranslationInterface
 {

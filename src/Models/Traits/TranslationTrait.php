@@ -22,8 +22,9 @@ use Yii;
  * deletes the records.
  *
  * Translated attributes must be string-typed: {@see Translation::$value} is a text column, so a number would come
- * back as a string. {@see \Hirtz\Skeleton\Db\ActiveRecord::batchInsert()} bypasses ActiveRecord and therefore never
- * writes translations.
+ * back as a string. {@see \Hirtz\Skeleton\Db\ActiveRecord::batchInsert()} and
+ * {@see \yii\db\BaseActiveRecord::updateAttributes()} write the table directly, so the former never writes a
+ * translation and the latter fails on a translated name.
  *
  * @property-read Translation[] $translations {@see static::getTranslations()}
  *
@@ -60,6 +61,11 @@ trait TranslationTrait
     public function getTranslatedAttributeNames(): array
     {
         $attributes = $this->getTranslationAttributes();
+
+        if (!$attributes) {
+            return [];
+        }
+
         $languages = $this->getTranslationLanguages();
         $key = [...$attributes, ...$languages];
 

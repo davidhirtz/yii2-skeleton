@@ -122,7 +122,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * The number of database queries the given callback triggers.
+     * The number of SQL statements the given callback runs, reads and writes alike.
      */
     protected function countQueries(callable $callback): int
     {
@@ -138,7 +138,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $messages = array_filter(
             $this->logger->messages,
             fn (array $message): bool => $message[1] === Logger::LEVEL_PROFILE_BEGIN
-                && $message[2] === 'yii\db\Command::query'
+                && in_array($message[2], ['yii\db\Command::query', 'yii\db\Command::execute'], true)
         );
 
         $this->logger->messages = [];

@@ -146,7 +146,10 @@ trait I18nAttributesTrait
                         if ($attribute !== $i18nAttribute) {
                             $i18nRule = $rule;
                             $i18nRule[0] = $i18nAttribute;
-                            $i18nRule[1] = UniqueValidator::class;
+
+                            if (in_array($rule[1], ['unique', BaseUniqueValidator::class], true)) {
+                                $i18nRule[1] = UniqueValidator::class;
+                            }
 
                             $targetAttribute = (array)($i18nRule['targetAttribute'] ?? $attribute);
                             $i18nRule['targetAttribute'] = $this->getI18nAttributesNames($targetAttribute, [$language]);
@@ -169,7 +172,9 @@ trait I18nAttributesTrait
      * If an i18n attribute has a unique validator with a "targetAttribute", all related attributes need their own rule
      * translating the target attribute.
      *
-     * Override this method if a custom unique validator is used.
+     * Override this method if a custom unique validator is used. The framework validator is swapped for
+     * {@see UniqueValidator} on the per-language rules; a custom one is kept and has to handle a translated target
+     * attribute itself, e.g. by extending it.
      */
     protected function isUniqueRule(mixed $ruleName): bool
     {

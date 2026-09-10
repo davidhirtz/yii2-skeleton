@@ -8,8 +8,10 @@
   name (`name_de`) but is a virtual attribute now: it is reported by `attributes()`, kept out of the
   INSERT/UPDATE and read lazily on first access. See `UPGRADE.md`
 - Replaced `Db\I18nActiveQuery::replaceI18nAttributes()` with `withTranslations(array|string|null $languages = null)`,
-  which eager loads the translation records of the given languages (defaults to the application language).
-  `I18nActiveQuery` gained `joinTranslation()`, rewrites a translated attribute name in `orderBy()` to the
+  which eager loads the translation records of the given languages (every configured language by default).
+  A query that returns more than one row applies it on its own, so a list never queries once per record in a
+  language it is read in later; `withoutTranslations()` opts out and a single record stays lazy. `I18nActiveQuery` gained
+  `joinTranslation()`, rewrites a translated attribute name in `orderBy()` to the
   expression it is stored as, and selects `getColumnAttributes()` rather than `attributes()`. A model that
   stores translations must return an `I18nActiveQuery` from `find()`
 - `I18nAttributesTrait::getI18nAttributeName()` and `getI18nAttribute()` (and their `I18nActiveQuery`

@@ -82,7 +82,7 @@ translated column recreates it itself.
 
 `I18nActiveQuery::replaceI18nAttributes()` rewrote the SELECT to the current language's columns.
 There are no such columns anymore, so it is replaced by `withTranslations()`, which eager loads the
-translation records of the given languages (the application language by default):
+translation records of the given languages, every configured language by default:
 
 ```php
 // before
@@ -95,11 +95,14 @@ Entry::find()
     ->selectSiteAttributes()
     ->withTranslations();
 
-// for every configured language, e.g. when building a sitemap
-Category::find()->withTranslations(Yii::$app->getI18n()->getLanguages());
+// one language only, for a list that is read in that language and discarded
+Entry::find()->withTranslations('de');
 ```
 
-Without it, each row loads its translations on first access — one query per record.
+A query that returns more than one row calls `withTranslations()` on its own when nothing was decided,
+so a list — a grid, a cached collection, a sitemap — never queries once per record in a language it is
+read in later. `withoutTranslations()` opts out for a list whose translated attributes are not read; a
+single record stays lazy and loads every language on first access.
 
 ### What to keep in mind
 
@@ -114,7 +117,8 @@ Without it, each row loads its translations on first access — one query per re
 - **The migration only moves the languages the running application configures.** A `_xx` column of a
   language that was removed from `i18n.languages` earlier is left untouched, as is an attribute that
   was removed from `i18nAttributes`.
-- `ActiveRecord::batchInsert()` bypasses ActiveRecord and therefore never writes translations.
+- `ActiveRecord::batchInsert()` and `updateAttributes()` write the table directly: the former never
+  writes a translation, the latter fails on a translated name.
 - Reading a translation in one language loads every unloaded language of that record in one query.
 
 ### Language fallback

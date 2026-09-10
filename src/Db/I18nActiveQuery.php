@@ -24,7 +24,8 @@ class I18nActiveQuery extends ActiveQuery
     private array $_translationJoins = [];
 
     /**
-     * @var list<string>|null the languages {@see static::withTranslations()} eager loads
+     * @var list<string>|null the languages the translation records are eager loaded for; `null` until decided, which
+     * {@see static::populate()} resolves to every configured language for a list
      */
     private ?array $_translationLanguages = null;
 
@@ -99,24 +100,39 @@ class I18nActiveQuery extends ActiveQuery
     }
 
     /**
-     * Eager loads the {@see Translation} records of the given languages, so a listing reads every row's translated
-     * attributes without a query per row. The source language is not stored and is removed from the list.
+     * Eager loads the {@see Translation} records of the given languages — every configured language by default — so a
+     * listing reads every row's translated attributes without a query per row. A query that returns more than one row
+     * applies this on its own unless {@see static::withoutTranslations()} was called: a list that is read in another
+     * language later, such as a cached collection or a sitemap, would otherwise query once per record. A single
+     * record stays lazy. The source language is not stored and is removed from the list.
      *
-     * @param list<string>|string|null $languages defaults to the current application language
+     * @param list<string>|string|null $languages
      */
     public function withTranslations(array|string|null $languages = null): static
     {
-        $languages = array_values(array_diff((array)($languages ?? Yii::$app->language), [Yii::$app->sourceLanguage]));
+        $languages ??= Yii::$app->getI18n()->getLanguages();
+        $languages = array_values(array_diff((array)$languages, [Yii::$app->sourceLanguage]));
 
-        if (!$languages) {
+        $this->_translationLanguages = $this->getModelInstance() instanceof TranslationInterface ? $languages : [];
+
+        if (!$this->_translationLanguages) {
             return $this;
         }
-
-        $this->_translationLanguages = $languages;
 
         return $this->with([
             'translations' => fn (TranslationQuery $query) => $query->whereLanguage($languages),
         ]);
+    }
+
+    /**
+     * Leaves the translations to the lazy load on first access, for a list whose translated attributes are not read.
+     */
+    public function withoutTranslations(): static
+    {
+        $this->_translationLanguages = [];
+        unset($this->with['translations']);
+
+        return $this;
     }
 
     /**
@@ -160,12 +176,20 @@ class I18nActiveQuery extends ActiveQuery
         return isset($names[$name]) ? $name : null;
     }
 
+    /**
+     * The relations are resolved inside the parent call, so deciding on the eager load here covers `all()`, `each()`
+     * and `batch()` alike, while `one()` — a single row — is left to the lazy load.
+     */
     #[Override]
     public function populate($rows): array
     {
+        if ($this->_translationLanguages === null && count($rows) > 1) {
+            $this->withTranslations();
+        }
+
         $models = parent::populate($rows);
 
-        if ($this->_translationLanguages === null || $this->asArray) {
+        if (!$this->_translationLanguages || $this->asArray) {
             return $models;
         }
 

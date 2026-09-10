@@ -17,7 +17,7 @@ use Yii;
  *
  * @property int $id
  * @property string $model
- * @property int $model_id
+ * @property int|string $model_id a string once loaded, the column is an unsigned bigint
  * @property string $language
  * @property string $attribute
  * @property string|null $value
