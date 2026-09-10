@@ -45,6 +45,15 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return Yii::createObject(ActiveQuery::class, [static::class]);
     }
 
+    /**
+     * Through the container, so a definition such as `i18nAttributes` also applies to loaded records.
+     */
+    #[Override]
+    public static function instantiate($row): static
+    {
+        return static::create();
+    }
+
     #[Override]
     public static function findOne($condition): ?static
     {

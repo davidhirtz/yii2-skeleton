@@ -68,6 +68,21 @@ class ActiveRecordTest extends TestCase
         self::assertInstanceOf(TestActiveRecord::class, $model::findOne(1));
     }
 
+    public function testInstantiateUsesTheContainer(): void
+    {
+        $model = new TestActiveRecord();
+        $model->name = 'Test';
+        $model->insert();
+
+        Yii::$container->setDefinitions([TestActiveRecord::class => ['isConfigured' => true]]);
+
+        try {
+            self::assertTrue(TestActiveRecord::findOne($model->id)?->isConfigured);
+        } finally {
+            Yii::$container->clear(TestActiveRecord::class);
+        }
+    }
+
     public function testRelationFromForeignKey(): void
     {
         $model = new TestActiveRecord();
@@ -199,6 +214,8 @@ class ActiveRecordTest extends TestCase
 class TestActiveRecord extends ActiveRecord
 {
     use UpdatedByUserTrait;
+
+    public bool $isConfigured = false;
 
     #[Override]
     public function behaviors(): array

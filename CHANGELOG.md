@@ -1,5 +1,8 @@
 ## 3.0.0 (in development)
 
+- `Db\ActiveRecord::instantiate()` creates loaded records through the container, so a definition configured for
+  the model class — `i18nAttributes` in particular — applies to records from `find()` as well as to `create()`.
+  Before, only models using `TypeAttributeTrait` did this
 - Translated attributes are stored in the new `translation` table instead of one `_xx` column per language, so
   adding a language no longer needs a migration on every translated table. The source language stays in the
   model's own column. Added `Models\Translation`, `Models\Queries\TranslationQuery`,
