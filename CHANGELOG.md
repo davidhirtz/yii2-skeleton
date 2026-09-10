@@ -1,5 +1,10 @@
 ## 3.0.0 (in development)
 
+- Removed the `enableI18nTables` feature and the `Modules\ModuleTrait` that carried it (the
+  `$enableI18nTables` / `$tablePrefix` properties and the `getTableName()`, `getLanguages()` and
+  `getI18nClassName()` methods). Modules no longer switch to per-language database tables; models now
+  declare a plain `tableName()`. The per-column translation feature (`I18nAttributesTrait`,
+  `Db\I18nActiveQuery`, `I18n\I18N`) is unaffected
 - Fixed the `Db\ActiveQuery::getModelInstance()` annotation, which declared `@return ActiveRecord<T>`. `ActiveRecord`
   is not generic, so PHPStan resolved that to `ActiveRecord&iterable<T>` and hid every method the concrete model
   adds; it is `@return T` now
