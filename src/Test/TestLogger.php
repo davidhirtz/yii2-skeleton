@@ -14,6 +14,12 @@ use yii\log\Logger;
 class TestLogger extends Logger
 {
     /**
+     * @var bool whether messages are collected in {@see static::$messages}, which is what
+     * {@see TestCase::countQueries()} evaluates. Off by default, so a test that does not count keeps no messages.
+     */
+    public bool $isRecording = false;
+
+    /**
      * Overridden to prevent register_shutdown_function call.
      */
     #[Override]
@@ -24,6 +30,10 @@ class TestLogger extends Logger
     #[Override]
     public function log($message, $level, $category = 'application'): void
     {
+        if ($this->isRecording) {
+            $this->messages[] = [$message, $level, $category, microtime(true), []];
+        }
+
         if (
             !in_array('--debug', $_SERVER['argv'], true)
             || str_starts_with($category, Command::class)) {

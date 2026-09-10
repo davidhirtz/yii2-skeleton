@@ -24,6 +24,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     protected string $applicationClass = Application::class;
     protected array $config;
     protected TestMailer $mailer;
+    protected TestLogger $logger;
 
     private Transaction $transaction;
     protected string $webroot = '@runtime/web';
@@ -100,8 +101,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         FileHelper::createDirectory("$this->webroot/assets");
 
         $this->mailer = Yii::$app->get('mailer');
+        $this->logger = $this->getLogger();
 
-        Yii::setLogger($this->getLogger());
+        Yii::setLogger($this->logger);
     }
 
     protected function tearDownApplication(): void
@@ -117,6 +119,31 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         Html::reset();
         UploadedFile::reset();
         Event::offAll();
+    }
+
+    /**
+     * The number of database queries the given callback triggers.
+     */
+    protected function countQueries(callable $callback): int
+    {
+        $this->logger->messages = [];
+        $this->logger->isRecording = true;
+
+        try {
+            $callback();
+        } finally {
+            $this->logger->isRecording = false;
+        }
+
+        $messages = array_filter(
+            $this->logger->messages,
+            fn (array $message): bool => $message[1] === Logger::LEVEL_PROFILE_BEGIN
+                && $message[2] === 'yii\db\Command::query'
+        );
+
+        $this->logger->messages = [];
+
+        return count($messages);
     }
 
     private function getLogger(): TestLogger

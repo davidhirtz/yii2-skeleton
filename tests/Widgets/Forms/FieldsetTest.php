@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Widgets\Forms;
 
+use Hirtz\Skeleton\Behaviors\TranslationBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Db\I18nActiveQuery;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
+use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
 use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
+use Hirtz\Skeleton\Models\Traits\TranslationTrait;
+use Hirtz\Skeleton\Models\Translation;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Validators\SensitiveAttributeValidator;
 use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
@@ -26,7 +31,6 @@ class FieldsetTest extends TestCase
         $columns = [
             'id' => 'pk',
             'name' => 'string not null',
-            'name_de' => 'string not null',
             'email' => 'string null',
             'password' => 'string null',
             'terms' => 'boolean null',
@@ -40,14 +44,27 @@ class FieldsetTest extends TestCase
         Yii::$app->getDb()->createCommand()
             ->insert(TestActiveRecord::tableName(), [
                 'name' => 'Test Name',
-                'name_de' => 'Test Name DE',
                 'number' => 42,
+            ])->execute();
+
+        Yii::$app->getDb()->createCommand()
+            ->insert(Translation::tableName(), [
+                'model' => TestActiveRecord::class,
+                'model_id' => 1,
+                'language' => 'de',
+                'attribute' => 'name',
+                'value' => 'Test Name DE',
             ])->execute();
     }
 
+    /**
+     * Creating the table commits the test case transaction, so the translation has to be removed by hand.
+     */
     #[Override]
     protected function tearDown(): void
     {
+        Translation::deleteAll(['model' => TestActiveRecord::class]);
+
         Yii::$app->getDb()->createCommand()
             ->dropTable(TestActiveRecord::tableName())
             ->execute();
@@ -110,21 +127,45 @@ class FieldsetTest extends TestCase
 /**
  * @property int $id
  * @property string $name
- * @property string $name_de
+ * @property string|null $name_de
  * @property string $email
  * @property string $password
  * @property bool|null $terms
  * @property int|null $number
  */
-class TestActiveRecord extends ActiveRecord implements I18nAttributeInterface
+class TestActiveRecord extends ActiveRecord implements I18nAttributeInterface, TranslationInterface
 {
     use I18nAttributesTrait;
+    use TranslationTrait;
 
     #[Override]
     public function init(): void
     {
         $this->i18nAttributes = ['name'];
         parent::init();
+    }
+
+    #[Override]
+    public function behaviors(): array
+    {
+        return [
+            ...parent::behaviors(),
+            'TranslationBehavior' => TranslationBehavior::class,
+        ];
+    }
+
+    public function getTranslationModelClass(): string
+    {
+        return self::class;
+    }
+
+    /**
+     * @return I18nActiveQuery<static>
+     */
+    #[Override]
+    public static function find(): I18nActiveQuery
+    {
+        return Yii::createObject(I18nActiveQuery::class, [static::class]);
     }
 
     #[Override]

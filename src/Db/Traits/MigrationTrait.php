@@ -5,8 +5,13 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Db\Traits;
 
 use Exception;
+use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
+use Hirtz\Skeleton\Models\Translation;
 use Yii;
 use yii\base\InvalidConfigException;
+use yii\db\ConstraintFinderInterface;
+use yii\db\IndexConstraint;
 use yii\rbac\DbManager;
 
 trait MigrationTrait
@@ -108,6 +113,100 @@ trait MigrationTrait
     {
         $tableName = $this->getDb()->getSchema()->getRawTableName($tableName);
         return $tableName . '_' . $column;
+    }
+
+    /**
+     * Moves every translated attribute of the given model from its `_xx` column into a {@see Translation} record and
+     * drops the column. Columns of a language the application no longer configures are left alone, as is any
+     * attribute a project removed from `i18nAttributes`.
+     */
+    protected function moveI18nColumnsToTranslations(ActiveRecord&TranslationInterface $model): void
+    {
+        $db = $this->getDb();
+        $table = $model::tableName();
+
+        $owner = $this->getQuotedTableName($table);
+        $translations = $this->getQuotedTableName(Translation::tableName());
+        $class = $db->quoteValue($model->getTranslationModelClass());
+
+        foreach ($model->getTranslatedAttributeNames() as $column => [$attribute, $language]) {
+            if (!$this->hasColumn($table, $column)) {
+                continue;
+            }
+
+            $this->execute("
+                INSERT INTO $translations ([[model]], [[model_id]], [[language]], [[attribute]], [[value]])
+                SELECT $class, [[id]], {$db->quoteValue($language)}, {$db->quoteValue($attribute)}, [[$column]]
+                FROM $owner
+                WHERE [[$column]] IS NOT NULL AND [[$column]] != ''
+            ");
+
+            $this->dropIndexesContainingColumn($table, $column);
+            $this->dropColumn($table, $column);
+        }
+    }
+
+    /**
+     * MySQL and MariaDB silently remove a dropped column from a composite index rather than dropping the index, which
+     * turns a unique index on `(parent_id, slug_de)` into a unique index on `parent_id` alone. So the indexes have to
+     * go before the column does.
+     */
+    protected function dropIndexesContainingColumn(string $table, string $column): void
+    {
+        $schema = $this->getDb()->getSchema();
+
+        if (!$schema instanceof ConstraintFinderInterface) {
+            return;
+        }
+
+        /** @var IndexConstraint[] $indexes */
+        $indexes = $schema->getTableIndexes($table, true);
+
+        foreach ($indexes as $index) {
+            if (!$index->isPrimary && in_array($column, (array)$index->columnNames, true)) {
+                $this->dropIndex((string)$index->name, $table);
+            }
+        }
+    }
+
+    /**
+     * Recreates the `_xx` columns from their source column definition and fills them from the {@see Translation}
+     * records, which are then removed. Indexes are not restored: a migration that dropped one recreates it itself.
+     */
+    protected function restoreI18nColumnsFromTranslations(ActiveRecord&TranslationInterface $model): void
+    {
+        $db = $this->getDb();
+        $table = $model::tableName();
+
+        $this->addI18nColumns($table, $model->getTranslationAttributes());
+
+        $owner = $this->getQuotedTableName($table);
+        $translations = $this->getQuotedTableName(Translation::tableName());
+        $class = $db->quoteValue($model->getTranslationModelClass());
+
+        foreach ($model->getTranslatedAttributeNames() as $column => [$attribute, $language]) {
+            if (!$this->hasColumn($table, $column)) {
+                continue;
+            }
+
+            $this->execute("
+                UPDATE $owner AS [[owner]]
+                INNER JOIN $translations AS [[translation]]
+                    ON [[translation]].[[model]] = $class
+                    AND [[translation]].[[model_id]] = [[owner]].[[id]]
+                    AND [[translation]].[[language]] = {$db->quoteValue($language)}
+                    AND [[translation]].[[attribute]] = {$db->quoteValue($attribute)}
+                SET [[owner]].[[$column]] = [[translation]].[[value]]
+            ");
+        }
+
+        $this->execute("DELETE FROM $translations WHERE [[model]] = $class");
+    }
+
+    protected function getQuotedTableName(string $tableName): string
+    {
+        $db = $this->getDb();
+        return $db->quoteTableName($db->getSchema()->getRawTableName($tableName));
     }
 
     protected function hasColumn(string $table, string $column): bool

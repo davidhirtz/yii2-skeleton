@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Models\Traits;
 
-use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Behaviors\TranslationBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Db\I18nActiveQuery;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
+use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
 use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
+use Hirtz\Skeleton\Models\Traits\TranslationTrait;
+use Hirtz\Skeleton\Models\Translation;
+use Hirtz\Skeleton\Test\TestCase;
 use Override;
 use Yii;
 
@@ -23,11 +28,8 @@ class I18nAttributesTraitTest extends TestCase
         $columns = [
             'id' => 'pk',
             'name' => 'string not null',
-            'name_de' => 'string not null',
             'slug' => 'string not null',
-            'slug_de' => 'string not null',
             'parent_slug' => 'string null',
-            'parent_slug_de' => 'string null',
             'untranslated' => 'string null',
         ];
 
@@ -38,15 +40,16 @@ class I18nAttributesTraitTest extends TestCase
         Yii::$app->getDb()->createCommand()
             ->createIndex('slug', TestI18nActiveRecord::tableName(), ['slug', 'parent_slug'], true)
             ->execute();
-
-        Yii::$app->getDb()->createCommand()
-            ->createIndex('slug_de', TestI18nActiveRecord::tableName(), ['slug_de', 'parent_slug_de'], true)
-            ->execute();
     }
 
+    /**
+     * Creating the table commits the test case transaction, so the translations have to be removed by hand.
+     */
     #[Override]
     protected function tearDown(): void
     {
+        Translation::deleteAll(['model' => TestI18nActiveRecord::class]);
+
         Yii::$app->getDb()->createCommand()
             ->dropTable(TestI18nActiveRecord::tableName())
             ->execute();
@@ -76,6 +79,19 @@ class I18nAttributesTraitTest extends TestCase
         self::assertEquals('en-US', Yii::$app->language);
     }
 
+    public function testI18nAttributeFallsBackToSourceLanguage(): void
+    {
+        $model = new TestI18nActiveRecord();
+        $model->name = 'Test Name';
+
+        self::assertNull($model->getI18nAttribute('name', 'de'));
+        self::assertEquals('Test Name', $model->getI18nAttribute('name', 'de', fallback: true));
+
+        $model->name_de = 'Test Name DE';
+
+        self::assertEquals('Test Name DE', $model->getI18nAttribute('name', 'de', fallback: true));
+    }
+
     public function testI18nRules(): void
     {
         $model = new TestI18nActiveRecord();
@@ -96,7 +112,7 @@ class I18nAttributesTraitTest extends TestCase
 
         self::assertTrue($model->save());
 
-        $newModel = new TestI18nActiveRecord($model->getAttributes(except: ['id']));
+        $newModel = $this->createModel($model->getAttributes(except: ['id']));
 
         self::assertFalse($newModel->save());
         self::assertEquals(['slug', 'slug_de'], array_keys($newModel->getErrors()));
@@ -109,6 +125,79 @@ class I18nAttributesTraitTest extends TestCase
 
         self::assertEquals(['slug', 'parent_slug'], $rules[2]['targetAttribute']);
         self::assertEquals(['slug_de', 'parent_slug_de'], $rules[3]['targetAttribute']);
+    }
+
+    public function testTranslatedUniqueRuleCompetesWithinItsLanguage(): void
+    {
+        $model = $this->createRecord([
+            'name' => 'Test',
+            'name_de' => 'Test DE',
+            'slug' => 'test',
+            'slug_de' => 'test-de',
+        ]);
+
+        $duplicate = $this->createModel([
+            'name' => 'Other',
+            'name_de' => 'Other DE',
+            'slug' => 'other',
+            'slug_de' => 'test-de',
+        ]);
+
+        self::assertFalse($duplicate->validate());
+        self::assertArrayHasKey('slug_de', $duplicate->getErrors());
+
+        // The very same value in the source language is a different attribute and does not collide.
+        $sourceLanguage = $this->createModel([
+            'name' => 'Other',
+            'name_de' => 'Other DE',
+            'slug' => 'test-de',
+            'slug_de' => 'other-de',
+        ]);
+        self::assertTrue($sourceLanguage->validate(), implode(' ', $sourceLanguage->getErrorSummary(true)));
+
+        // The record itself is excluded.
+        $model->name = 'Test Renamed';
+        self::assertTrue($model->validate(), implode(' ', $model->getErrorSummary(true)));
+    }
+
+    public function testTranslatedUniqueRuleWithTargetAttribute(): void
+    {
+        $this->createRecord([
+            'name' => 'Test',
+            'name_de' => 'Test DE',
+            'slug' => 'test',
+            'slug_de' => 'test-de',
+            'parent_slug' => 'parent',
+            'parent_slug_de' => 'parent-de',
+        ], TestI18nParentSlugActiveRecord::class);
+
+        $duplicate = $this->createModel([
+            'name' => 'Other',
+            'name_de' => 'Other DE',
+            'slug' => 'other',
+            'slug_de' => 'test-de',
+            'parent_slug' => 'other',
+            'parent_slug_de' => 'parent-de',
+        ], TestI18nParentSlugActiveRecord::class);
+
+        self::assertFalse($duplicate->validate());
+        self::assertArrayHasKey('slug_de', $duplicate->getErrors());
+
+        $duplicate->parent_slug_de = 'other-de';
+        self::assertTrue($duplicate->validate(), implode(' ', $duplicate->getErrorSummary(true)));
+    }
+
+    public function testTranslationsArePersistedAndLoadedLazily(): void
+    {
+        $model = $this->createRecord(['name' => 'Test', 'slug' => 'test', 'name_de' => 'Test DE', 'slug_de' => 'test-de']);
+
+        self::assertEquals(['name' => 'Test DE', 'slug' => 'test-de'], $this->getTranslations($model->id));
+
+        $loaded = TestI18nActiveRecord::findOne($model->id);
+
+        self::assertEquals('Test DE', $loaded->name_de);
+        self::assertEquals('Test DE', $loaded->getOldAttribute('name_de'));
+        self::assertEquals('test-de', $loaded->slug_de);
     }
 
     public function testI18nAttributeHints(): void
@@ -129,19 +218,66 @@ class I18nAttributesTraitTest extends TestCase
 
         self::assertEquals('Name', $model->getAttributeLabel('name'));
     }
+
+    /**
+     * @param array<string, string> $attributes
+     * @param class-string<TestI18nActiveRecord> $class
+     */
+    protected function createRecord(array $attributes, string $class = TestI18nActiveRecord::class): TestI18nActiveRecord
+    {
+        $model = $this->createModel($attributes, $class);
+        self::assertTrue($model->save(), implode(' ', $model->getErrorSummary(true)));
+
+        return $model;
+    }
+
+    /**
+     * @param array<string, string> $attributes
+     * @param class-string<TestI18nActiveRecord> $class
+     */
+    protected function createModel(array $attributes, string $class = TestI18nActiveRecord::class): TestI18nActiveRecord
+    {
+        $model = new $class();
+        $model->setAttributes($attributes, false);
+
+        return $model;
+    }
+
+    /**
+     * @return array<string, string|null> the stored German value per attribute
+     */
+    protected function getTranslations(int $id): array
+    {
+        $translations = Translation::find()
+            ->whereModel(TestI18nActiveRecord::class, $id)
+            ->whereLanguage('de')
+            ->orderBy(['attribute' => SORT_ASC])
+            ->all();
+
+        $values = [];
+
+        foreach ($translations as $translation) {
+            $values[$translation->attribute] = $translation->value;
+        }
+
+        return $values;
+    }
 }
 
 /**
  * @property int $id
  * @property string $name
- * @property string $name_de
+ * @property string|null $name_de
  * @property string $slug
- * @property string $slug_de
- * @property string $untranslated
+ * @property string|null $slug_de
+ * @property string|null $parent_slug
+ * @property string|null $parent_slug_de
+ * @property string|null $untranslated
  */
-class TestI18nActiveRecord extends ActiveRecord implements I18nAttributeInterface
+class TestI18nActiveRecord extends ActiveRecord implements I18nAttributeInterface, TranslationInterface
 {
     use I18nAttributesTrait;
+    use TranslationTrait;
 
     public array|string|null $slugTargetAttribute = null;
 
@@ -150,6 +286,15 @@ class TestI18nActiveRecord extends ActiveRecord implements I18nAttributeInterfac
     {
         $this->i18nAttributes = ['name', 'slug', 'parent_slug'];
         parent::init();
+    }
+
+    #[Override]
+    public function behaviors(): array
+    {
+        return [
+            ...parent::behaviors(),
+            'TranslationBehavior' => TranslationBehavior::class,
+        ];
     }
 
     #[Override]
@@ -172,6 +317,20 @@ class TestI18nActiveRecord extends ActiveRecord implements I18nAttributeInterfac
         ]);
     }
 
+    public function getTranslationModelClass(): string
+    {
+        return self::class;
+    }
+
+    /**
+     * @return I18nActiveQuery<static>
+     */
+    #[Override]
+    public static function find(): I18nActiveQuery
+    {
+        return Yii::createObject(I18nActiveQuery::class, [static::class]);
+    }
+
     #[Override]
     public function attributeHints(): array
     {
@@ -187,10 +346,6 @@ class TestI18nActiveRecord extends ActiveRecord implements I18nAttributeInterfac
     }
 }
 
-/**
- * @property string|null $parent_slug
- * @property string|null $parent_slug_de
- */
 class TestI18nParentSlugActiveRecord extends TestI18nActiveRecord
 {
     #[Override]

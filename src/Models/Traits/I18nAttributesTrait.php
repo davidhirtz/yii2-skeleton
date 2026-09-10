@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Models\Traits;
 
 use Hirtz\Skeleton\I18n\Lang;
+use Hirtz\Skeleton\Validators\UniqueValidator;
 use Yii;
+use yii\validators\UniqueValidator as BaseUniqueValidator;
 
 trait I18nAttributesTrait
 {
@@ -17,20 +19,30 @@ trait I18nAttributesTrait
     private ?array $_i18nHints = null;
     private ?array $_i18nLabels = null;
 
-    public function getI18nAttribute(string $attribute, ?string $language = null): mixed
+    public function getI18nAttribute(string $attribute, ?string $language = null, bool $fallback = false): mixed
     {
-        $attribute = $this->getI18nAttributeName($attribute, $language);
+        $attribute = $this->getI18nAttributeName($attribute, $language, $fallback);
         return $this->$attribute;
     }
 
-    public function getI18nAttributeName(string $attribute, ?string $language = null): string
+    /**
+     * With `$fallback`, a translated attribute that holds no value resolves to the untranslated attribute instead, so
+     * a caller reading a translation always gets the source language rather than nothing.
+     */
+    public function getI18nAttributeName(string $attribute, ?string $language = null, bool $fallback = false): string
     {
-        return $this->isI18nAttribute($attribute)
-            ? Yii::$app->getI18n()->getAttributeName($attribute, $language)
-            : $attribute;
+        if (!$this->isI18nAttribute($attribute)) {
+            return $attribute;
+        }
+
+        $name = Yii::$app->getI18n()->getAttributeName($attribute, $language);
+
+        return $fallback && $name !== $attribute && ($this->$name === null || $this->$name === '')
+            ? $attribute
+            : $name;
     }
 
-    public function getI18nAttributeNames(string $attribute, ?string $languages = null): array
+    public function getI18nAttributeNames(string $attribute, ?array $languages = null): array
     {
         if (!$this->isI18nAttribute($attribute)) {
             return [Yii::$app->language => $attribute];
@@ -134,6 +146,7 @@ trait I18nAttributesTrait
                         if ($attribute !== $i18nAttribute) {
                             $i18nRule = $rule;
                             $i18nRule[0] = $i18nAttribute;
+                            $i18nRule[1] = UniqueValidator::class;
 
                             $targetAttribute = (array)($i18nRule['targetAttribute'] ?? $attribute);
                             $i18nRule['targetAttribute'] = $this->getI18nAttributesNames($targetAttribute, [$language]);
@@ -160,7 +173,7 @@ trait I18nAttributesTrait
      */
     protected function isUniqueRule(mixed $ruleName): bool
     {
-        return $ruleName === 'unique';
+        return in_array($ruleName, ['unique', BaseUniqueValidator::class, UniqueValidator::class], true);
     }
 
     public function isI18nAttribute(string $attribute): bool

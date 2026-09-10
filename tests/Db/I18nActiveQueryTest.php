@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Db;
 
+use Hirtz\Skeleton\Behaviors\TranslationBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Db\I18nActiveQuery;
+use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
 use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
+use Hirtz\Skeleton\Models\Traits\TranslationTrait;
+use Hirtz\Skeleton\Models\Translation;
 use Hirtz\Skeleton\Test\TestCase;
 use Override;
 use Yii;
@@ -20,20 +24,22 @@ class I18nActiveQueryTest extends TestCase
 
         Yii::$app->getI18n()->setLanguages(['en-US', 'de']);
 
-        $columns = [
-            'id' => 'pk',
-            'content' => 'string null',
-            'content_de' => 'string not null',
-        ];
-
         Yii::$app->getDb()->createCommand()
-            ->createTable(I18nActiveRecord::tableName(), $columns)
+            ->createTable(I18nActiveRecord::tableName(), [
+                'id' => 'pk',
+                'content' => 'string null',
+            ])
             ->execute();
     }
 
+    /**
+     * Creating the table commits the test case transaction, so the translations have to be removed by hand.
+     */
     #[Override]
     protected function tearDown(): void
     {
+        Translation::deleteAll(['model' => I18nActiveRecord::class]);
+
         Yii::$app->getDb()->createCommand()
             ->dropTable(I18nActiveRecord::tableName())
             ->execute();
@@ -43,62 +49,140 @@ class I18nActiveQueryTest extends TestCase
 
     public function testI18nAttributeName(): void
     {
-        $model = new I18nActiveRecord();
-        $tableName = $model::tableName();
+        $tableName = I18nActiveRecord::tableName();
 
-        self::assertEquals("$tableName.[[id]]", $model::find()->getI18nAttributeName('id'));
-        self::assertEquals("$tableName.[[content]]", $model::find()->getI18nAttributeName('content'));
+        self::assertEquals("$tableName.[[id]]", I18nActiveRecord::find()->getI18nAttributeName('id'));
+        self::assertEquals("$tableName.[[content]]", I18nActiveRecord::find()->getI18nAttributeName('content'));
 
-        Yii::$app->language = 'de';
-        self::assertEquals("$tableName.[[content_de]]", $model::find()->getI18nAttributeName('content'));
+        self::assertEquals(
+            '[[t_content_de]].[[value]]',
+            I18nActiveRecord::find()->getI18nAttributeName('content', 'de')
+        );
+
+        self::assertEquals(
+            "COALESCE(NULLIF([[t_content_de]].[[value]], ''), $tableName.[[content]])",
+            I18nActiveRecord::find()->getI18nAttributeName('content', 'de', fallback: true)
+        );
     }
 
-    public function testReplaceI18nAttributes(): void
+    public function testTranslationIsJoinedOnce(): void
     {
-        $model = new I18nActiveRecord();
+        $query = I18nActiveRecord::find();
 
-        $sql = $model::find()
-            ->select(['id'])
-            ->replaceI18nAttributes()
+        self::assertEquals('[[t_content_de]].[[value]]', $query->getI18nAttributeName('content', 'de'));
+        self::assertEquals('t_content_de', $query->joinTranslation('content', 'de'));
+
+        self::assertCount(1, $query->join);
+    }
+
+    public function testOrderByTranslatedAttributeFallsBackToSourceColumn(): void
+    {
+        $db = Yii::$app->getDb();
+        $tableName = $db->quoteTableName($db->getSchema()->getRawTableName(I18nActiveRecord::tableName()));
+
+        $sql = I18nActiveRecord::find()
+            ->orderBy(['content_de' => SORT_ASC])
             ->createCommand()
             ->sql;
 
-        self::assertEquals("SELECT `id` FROM `i18n_test`", $sql);
+        self::assertStringContainsString(
+            "ORDER BY COALESCE(NULLIF(`t_content_de`.`value`, ''), $tableName.`content`)",
+            $sql
+        );
+    }
 
-        $sql = $model::find()
-            ->select(['id', 'content'])
-            ->replaceI18nAttributes()
-            ->createCommand()
-            ->sql;
+    public function testWithTranslationsLoadsEveryRowWithOneQuery(): void
+    {
+        foreach (['One', 'Two', 'Three'] as $index => $content) {
+            $record = new I18nActiveRecord();
+            $record->content = $content;
+            $record->content_de = "$content DE";
 
-        self::assertEquals("SELECT `id`, `content` FROM `i18n_test`", $sql);
+            self::assertTrue($record->save(), implode(' ', $record->getErrorSummary(true)));
+            self::assertSame($index + 1, (int)$record->id);
+        }
 
-        Yii::$app->language = 'de';
+        $records = [];
 
-        $sql = $model::find()
-            ->selectAllColumns()
-            ->replaceI18nAttributes()
-            ->createCommand()
-            ->sql;
+        $queries = $this->countQueries(function () use (&$records): void {
+            $records = I18nActiveRecord::find()
+                ->withTranslations('de')
+                ->orderBy(['id' => SORT_ASC])
+                ->all();
+        });
 
-        self::assertEquals("SELECT `i18n_test`.`id`, `i18n_test`.`content_de` FROM `i18n_test`", $sql);
+        self::assertCount(3, $records);
+        self::assertSame(2, $queries, 'Eager loading the translations took more than one extra query.');
+
+        $queries = $this->countQueries(function () use ($records): void {
+            foreach ($records as $record) {
+                self::assertSame("$record->content DE", $record->content_de);
+            }
+        });
+
+        self::assertSame(0, $queries, 'Reading an eager loaded translation queried the database.');
+    }
+
+    public function testTranslationIsLoadedLazilyPerRecord(): void
+    {
+        $record = new I18nActiveRecord();
+        $record->content = 'One';
+        $record->content_de = 'Eins';
+
+        self::assertTrue($record->save(), implode(' ', $record->getErrorSummary(true)));
+
+        $loaded = I18nActiveRecord::findOne($record->id);
+
+        $queries = $this->countQueries(function () use ($loaded): void {
+            self::assertSame('Eins', $loaded->content_de);
+            self::assertSame('Eins', $loaded->content_de);
+        });
+
+        self::assertSame(1, $queries);
+        self::assertSame('Eins', $loaded->getOldAttribute('content_de'));
     }
 }
 
 /**
  * @property int $id
- * @property string $content
- * @property string $content_de
+ * @property string|null $content
+ * @property string|null $content_de
  */
-class I18nActiveRecord extends ActiveRecord
+class I18nActiveRecord extends ActiveRecord implements TranslationInterface
 {
     use I18nAttributesTrait;
+    use TranslationTrait;
 
     #[Override]
     public function init(): void
     {
         $this->i18nAttributes = ['content'];
         parent::init();
+    }
+
+    #[Override]
+    public function behaviors(): array
+    {
+        return [
+            ...parent::behaviors(),
+            'TranslationBehavior' => TranslationBehavior::class,
+        ];
+    }
+
+    #[Override]
+    public function rules(): array
+    {
+        return $this->getI18nRules([
+            [
+                ['content'],
+                'string',
+            ],
+        ]);
+    }
+
+    public function getTranslationModelClass(): string
+    {
+        return self::class;
     }
 
     /**

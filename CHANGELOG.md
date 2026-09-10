@@ -1,5 +1,27 @@
 ## 3.0.0 (in development)
 
+- Translated attributes are stored in the new `translation` table instead of one `_xx` column per language, so
+  adding a language no longer needs a migration on every translated table. The source language stays in the
+  model's own column. Added `Models\Translation`, `Models\Queries\TranslationQuery`,
+  `Models\Interfaces\TranslationInterface`, `Models\Traits\TranslationTrait`,
+  `Behaviors\TranslationBehavior` and `Models\Actions\SaveTranslations`. A translated attribute keeps its
+  name (`name_de`) but is a virtual attribute now: it is reported by `attributes()`, kept out of the
+  INSERT/UPDATE and read lazily on first access. See `UPGRADE.md`
+- Replaced `Db\I18nActiveQuery::replaceI18nAttributes()` with `withTranslations(array|string|null $languages = null)`,
+  which eager loads the translation records of the given languages (defaults to the application language).
+  `I18nActiveQuery` gained `joinTranslation()`, rewrites a translated attribute name in `orderBy()` to the
+  expression it is stored as, and selects `getColumnAttributes()` rather than `attributes()`. A model that
+  stores translations must return an `I18nActiveQuery` from `find()`
+- `I18nAttributesTrait::getI18nAttributeName()` and `getI18nAttribute()` (and their `I18nActiveQuery`
+  counterpart) gained a third `bool $fallback = false` parameter: with it, a translated attribute that holds
+  no value resolves to the untranslated attribute instead
+- `Validators\UniqueValidator` now validates a translated target attribute against the joined translation
+  value; per-language unique rules expanded by `getI18nRules()` use it instead of the framework validator,
+  and `isUniqueRule()` accepts `'unique'`, `yii\validators\UniqueValidator::class` and the skeleton class
+- `I18nAttributesTrait::getI18nAttributeNames()` and `Models\Interfaces\I18nAttributeInterface` take
+  `?array $languages` (was typed `?string` while being iterated as an array)
+- Added `Db\Traits\MigrationTrait::moveI18nColumnsToTranslations()`,
+  `restoreI18nColumnsFromTranslations()`, `dropIndexesContainingColumn()` and `getQuotedTableName()`
 - Removed the `enableI18nTables` feature and the `Modules\ModuleTrait` that carried it (the
   `$enableI18nTables` / `$tablePrefix` properties and the `getTableName()`, `getLanguages()` and
   `getI18nClassName()` methods). Modules no longer switch to per-language database tables; models now
