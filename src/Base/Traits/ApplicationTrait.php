@@ -12,11 +12,6 @@ use Hirtz\Skeleton\Db\Connection;
 use Hirtz\Skeleton\I18n\I18N;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Rbac\DbManager;
-use Hirtz\Skeleton\Routing\Compilers\YiiRouteCompiler;
-use Hirtz\Skeleton\Routing\Route;
-use Hirtz\Skeleton\Routing\RouteCollection;
-use Hirtz\Skeleton\Routing\RouteCompilerInterface;
-use Hirtz\Skeleton\Routing\UrlGeneratorInterface;
 use Hirtz\Skeleton\Web\DbSession;
 use Hirtz\Skeleton\Web\Sitemap;
 use Hirtz\Skeleton\Web\UrlManager;
@@ -49,7 +44,6 @@ trait ApplicationTrait
     protected function preInitInternal(&$config): void
     {
         Yii::$classMap = [...Yii::$classMap, ...ArrayHelper::remove($config, 'classMap', [])];
-        $this->configuredRoutes = ArrayHelper::remove($config, 'routes', []);
 
         $core = [
             'id' => 'skeleton',
@@ -205,70 +199,32 @@ trait ApplicationTrait
             ?? 'sendmail://default';
     }
 
-    private ?RouteCollection $routes = null;
-
-    private ?RouteCompilerInterface $routeCompiler = null;
-
-    /**
-     * @var list<Route>
-     */
-    private array $configuredRoutes = [];
-
     protected function setDefaultUrlManagerRules(): void
     {
         /** @see Module::$alias */
         $alias = rtrim((string)$this->getModules()['admin']['alias'], '/');
 
-        $this->addRoutes(
-            Route::to('application-health', 'health/index')->name('health'),
-            Route::to('sitemap.xml', 'sitemap/index')->name('sitemap'),
-            Route::to("$alias/{module}/{controller}/{view}", 'admin/{module}/{controller}/{view}'),
-            Route::to("$alias/{controller}/{view}", 'admin/{controller}/{view}'),
-            Route::to("$alias/{controller}", 'admin/{controller}'),
-            Route::raw("$alias/?", 'admin/'),
-        );
+        $this->addUrlManagerRules([
+            'application-health' => 'health/index',
+            'sitemap.xml' => 'sitemap/index',
+            "$alias/<module>/<controller>/<view>" => 'admin/<module>/<controller>/<view>',
+            "$alias/<controller>/<view>" => 'admin/<controller>/<view>',
+            "$alias/<controller>" => 'admin/<controller>',
+            "$alias/?" => 'admin/',
+        ]);
     }
 
     /**
-     * Registers routes declared under the application's `routes` config key, after all bundle
-     * bootstraps have run so a project's routes are registered last and sort against them by position.
+     * @param array<array-key, mixed> $rules
      */
-    protected function addConfiguredRoutes(): void
+    public function addUrlManagerRules(array $rules, bool $prepend = false): void
     {
-        $this->addRoutes(...$this->configuredRoutes);
-    }
-
-    /**
-     * The only way to register routes. Array URL rules stay supported through the `urlManager`
-     * component's own `rules` config option; both interleave by position in {@see UrlManager::buildRules()}.
-     */
-    public function addRoutes(Route ...$routes): void
-    {
-        $added = $this->getRoutes()->add(...$routes);
-
-        if ($added === []) {
-            return;
-        }
-
         $component = $this->getComponents()['urlManager'];
-        $component['rules'] = [...$component['rules'] ?? [], ...$this->getRouteCompiler()->compile(...$added)];
+
+        $component['rules'] ??= [];
+        $component['rules'] = $prepend ? [...$rules, ...$component['rules']] : [...$component['rules'], ...$rules];
 
         $this->set('urlManager', $component);
-    }
-
-    public function getRoutes(): RouteCollection
-    {
-        return $this->routes ??= Yii::createObject(RouteCollection::class);
-    }
-
-    public function getRouteCompiler(): RouteCompilerInterface
-    {
-        return $this->routeCompiler ??= Yii::createObject(YiiRouteCompiler::class);
-    }
-
-    public function getUrlGenerator(): UrlGeneratorInterface
-    {
-        return $this->getUrlManager();
     }
 
     /**

@@ -54,7 +54,6 @@ class Application extends \yii\web\Application
 
         parent::bootstrap();
 
-        $this->addConfiguredRoutes();
         $this->setDefaultEmail();
     }
 
