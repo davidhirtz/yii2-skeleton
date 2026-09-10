@@ -9,8 +9,7 @@ use Hirtz\Skeleton\Models\Translation;
 use yii\db\Migration;
 
 /**
- * Creates the {@see Translation} table. The bundle migrations that move the `_xx` columns into it run afterwards, so
- * this timestamp must stay below theirs — Yii sorts all migration namespaces together by timestamp.
+ * Must sort before the bundle migrations that fill the table; Yii orders every namespace together by timestamp.
  *
  * @noinspection PhpUnused
  */

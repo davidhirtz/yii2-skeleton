@@ -11,11 +11,7 @@ use yii\base\Behavior;
 use yii\db\AfterSaveEvent;
 
 /**
- * Persists and deletes the {@see Translation} records of a {@see TranslationInterface} model.
- *
- * This must be attached before {@see TrailBehavior}: it appends the translation changes to the event's changed
- * attributes and Yii calls the handlers in attach order, which is what makes the trail log `name_de` the way it
- * logged the column.
+ * Attach before {@see TrailBehavior}: the changes are appended to the event, and handlers run in attach order.
  *
  * @extends Behavior<ActiveRecord&TranslationInterface>
  */

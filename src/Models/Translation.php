@@ -10,10 +10,7 @@ use Override;
 use Yii;
 
 /**
- * The value of a translated attribute in a language other than {@see \yii\base\Application::$sourceLanguage}, one
- * record per model, language and attribute. The source language stays in the model's own column.
- *
- * A missing record, a `null` value and an empty string all mean "no translation".
+ * One record per model, language and attribute; the source language stays in the model's own column.
  *
  * @property int $id
  * @property string $model

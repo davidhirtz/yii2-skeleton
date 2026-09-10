@@ -19,21 +19,15 @@ use yii\base\InvalidCallException;
 class I18nActiveQuery extends ActiveQuery
 {
     /**
-     * @var array<string, string> the join alias per `"attribute/language"`
+     * @var array<string, string> alias per "attribute/language"
      */
     private array $_translationJoins = [];
 
     /**
-     * @var list<string>|null the languages the translation records are eager loaded for; `null` until decided, which
-     * {@see static::populate()} resolves to every configured language for a list
+     * @var list<string>|null `null` until decided
      */
     private ?array $_translationLanguages = null;
 
-    /**
-     * The column expression an attribute is read from in the given language. A translated attribute resolves to the
-     * joined {@see Translation} value, with `$fallback` wrapped in a `COALESCE` on the source column, so a row without
-     * a translation still sorts and matches by its source-language value.
-     */
     public function getI18nAttributeName(string $attribute, ?string $language = null, bool $fallback = false): string
     {
         $instance = $this->getModelInstance();
@@ -61,8 +55,6 @@ class I18nActiveQuery extends ActiveQuery
     }
 
     /**
-     * Joins the {@see Translation} record of one attribute and language, once per query.
-     *
      * @return string the join alias
      */
     public function joinTranslation(string $attribute, ?string $language = null): string
@@ -100,13 +92,10 @@ class I18nActiveQuery extends ActiveQuery
     }
 
     /**
-     * Eager loads the {@see Translation} records of the given languages — every configured language by default — so a
-     * listing reads every row's translated attributes without a query per row. A query that returns more than one row
-     * applies this on its own unless {@see static::withoutTranslations()} was called: a list that is read in another
-     * language later, such as a cached collection or a sitemap, would otherwise query once per record. A single
-     * record stays lazy. The source language is not stored and is removed from the list.
+     * Applied by {@see static::populate()} for every list unless {@see static::withoutTranslations()} was called, so
+     * a list read in another language later does not query per record. A single record stays lazy.
      *
-     * @param list<string>|string|null $languages
+     * @param list<string>|string|null $languages defaults to every configured language
      */
     public function withTranslations(array|string|null $languages = null): static
     {
@@ -124,9 +113,6 @@ class I18nActiveQuery extends ActiveQuery
         ]);
     }
 
-    /**
-     * Leaves the translations to the lazy load on first access, for a list whose translated attributes are not read.
-     */
     public function withoutTranslations(): static
     {
         $this->_translationLanguages = [];
@@ -136,9 +122,8 @@ class I18nActiveQuery extends ActiveQuery
     }
 
     /**
-     * Reorders the given columns, replacing a translated attribute name — bare or prefixed — with the expression it is
-     * stored as. This is what makes {@see \yii\data\Sort} and a plain `orderBy(['name_de' => SORT_ASC])` work without
-     * the caller knowing where the value lives.
+     * Rewrites a translated attribute name, bare or prefixed, to its stored expression, so `Sort` and `orderBy()` need
+     * no knowledge of it.
      */
     #[Override]
     protected function normalizeOrderBy($columns): array
@@ -177,8 +162,7 @@ class I18nActiveQuery extends ActiveQuery
     }
 
     /**
-     * The relations are resolved inside the parent call, so deciding on the eager load here covers `all()`, `each()`
-     * and `batch()` alike, while `one()` — a single row — is left to the lazy load.
+     * The parent resolves the relations, so deciding here covers `all()`, `each()` and `batch()` alike.
      */
     #[Override]
     public function populate($rows): array

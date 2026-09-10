@@ -12,19 +12,8 @@ use Override;
 use Yii;
 
 /**
- * Backs the translated attributes of a model with {@see Translation} records instead of one column per language. The
- * attribute names are unchanged — `name_de` is still what a form posts, a rule validates and the trail logs — but they
- * are reported by {@see static::attributes()} without existing as columns, kept out of the INSERT/UPDATE and read
- * lazily on first access, so a record that is never asked for a translation never queries the table.
- *
- * Always used together with {@see I18nAttributesTrait}, and with
- * {@see \Hirtz\Skeleton\Behaviors\TranslationBehavior} attached before `TrailBehavior`, which is what writes and
- * deletes the records.
- *
- * Translated attributes must be string-typed: {@see Translation::$value} is a text column, so a number would come
- * back as a string. {@see \Hirtz\Skeleton\Db\ActiveRecord::batchInsert()} and
- * {@see \yii\db\BaseActiveRecord::updateAttributes()} write the table directly, so the former never writes a
- * translation and the latter fails on a translated name.
+ * Stores the translated attributes (`name_de`) in {@see Translation} records: they stay attributes but have no column.
+ * Requires {@see I18nAttributesTrait} and {@see \Hirtz\Skeleton\Behaviors\TranslationBehavior} before `TrailBehavior`.
  *
  * @property-read Translation[] $translations {@see static::getTranslations()}
  *
@@ -38,7 +27,7 @@ trait TranslationTrait
     private ?array $_translatedAttributeNames = null;
 
     /**
-     * @var list<string> the attributes and languages {@see static::$_translatedAttributeNames} was built from
+     * @var list<string>
      */
     private array $_translatedAttributeNamesKey = [];
 
@@ -69,8 +58,7 @@ trait TranslationTrait
         $languages = $this->getTranslationLanguages();
         $key = [...$attributes, ...$languages];
 
-        // `i18nAttributes` is public and the configured languages are application state, so the cache is keyed on both
-        // rather than built once — a shared `instance()` outlives either of them.
+        // Keyed rather than built once: a shared instance() outlives both the attributes and the languages.
         if ($this->_translatedAttributeNames === null || $this->_translatedAttributeNamesKey !== $key) {
             $i18n = Yii::$app->getI18n();
             $this->_translatedAttributeNames = [];
@@ -122,8 +110,7 @@ trait TranslationTrait
     }
 
     /**
-     * Populating on write too: the admin update path calls {@see ActiveRecord::load()} before anything is read, and
-     * without the stored value the old attribute would be unknown, so the change would neither be detected nor logged.
+     * Populates before the first write, so the old value is known to dirty tracking and the trail.
      */
     #[Override]
     public function __set($name, $value): void
@@ -136,9 +123,7 @@ trait TranslationTrait
     }
 
     /**
-     * Resets the loaded languages, and with them the attributes {@see ActiveRecord::refreshInternal()} has just set to
-     * `null`. Their old values are set to `null` as well, so a refreshed record does not report a translation it never
-     * read as changed.
+     * A refresh sets every virtual attribute to `null`; the old values follow so none reads as changed.
      */
     #[Override]
     public function afterRefresh(): void
@@ -229,9 +214,6 @@ trait TranslationTrait
     }
 
     /**
-     * The languages a {@see Translation} record is written for: every configured language but the source language,
-     * which stays in the model's own columns.
-     *
      * @return list<string>
      */
     protected function getTranslationLanguages(): array
@@ -253,12 +235,6 @@ trait TranslationTrait
         return $language === null || in_array($language, $this->_loadedTranslationLanguages, true);
     }
 
-    /**
-     * Loads every language that was not loaded yet in one query, so reading a second translated attribute of the same
-     * record does not query again.
-     *
-     * @noinspection PhpUnusedParameterInspection
-     */
     protected function populateVirtualAttributes(string $name): void
     {
         $languages = array_values(array_diff($this->getTranslationLanguages(), $this->_loadedTranslationLanguages));

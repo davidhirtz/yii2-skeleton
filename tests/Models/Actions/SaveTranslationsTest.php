@@ -37,7 +37,7 @@ class SaveTranslationsTest extends TestCase
     }
 
     /**
-     * Creating the table commits the test case transaction, so the records have to be removed by hand.
+     * `CREATE TABLE` commits the test transaction, so the records are removed by hand.
      */
     #[Override]
     protected function tearDown(): void
@@ -89,9 +89,7 @@ class SaveTranslationsTest extends TestCase
     }
 
     /**
-     * The admin update path loads a record and writes to it before anything is read, so the write itself has to
-     * materialise the stored value — otherwise the old attribute is unknown and the change is neither detected nor
-     * logged, and a header titled from `getOldAttribute()` renders empty.
+     * The admin update path writes via `load()` before anything is read.
      */
     public function testWritingBeforeReadingKeepsTheOldValue(): void
     {

@@ -14,8 +14,7 @@ use yii\log\Logger;
 class TestLogger extends Logger
 {
     /**
-     * @var bool whether messages are collected in {@see static::$messages}, which is what
-     * {@see TestCase::countQueries()} evaluates. Off by default, so a test that does not count keeps no messages.
+     * @var bool whether messages are kept for {@see TestCase::countQueries()}
      */
     public bool $isRecording = false;
 

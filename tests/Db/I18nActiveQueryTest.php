@@ -33,7 +33,7 @@ class I18nActiveQueryTest extends TestCase
     }
 
     /**
-     * Creating the table commits the test case transaction, so the translations have to be removed by hand.
+     * `CREATE TABLE` commits the test transaction, so the translations are removed by hand.
      */
     #[Override]
     protected function tearDown(): void

@@ -122,7 +122,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * The number of SQL statements the given callback runs, reads and writes alike.
+     * Reads and writes alike.
      */
     protected function countQueries(callable $callback): int
     {

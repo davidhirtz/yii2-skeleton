@@ -25,10 +25,6 @@ trait I18nAttributesTrait
         return $this->$attribute;
     }
 
-    /**
-     * With `$fallback`, a translated attribute that holds no value resolves to the untranslated attribute instead, so
-     * a caller reading a translation always gets the source language rather than nothing.
-     */
     public function getI18nAttributeName(string $attribute, ?string $language = null, bool $fallback = false): string
     {
         if (!$this->isI18nAttribute($attribute)) {
@@ -172,9 +168,8 @@ trait I18nAttributesTrait
      * If an i18n attribute has a unique validator with a "targetAttribute", all related attributes need their own rule
      * translating the target attribute.
      *
-     * Override this method if a custom unique validator is used. The framework validator is swapped for
-     * {@see UniqueValidator} on the per-language rules; a custom one is kept and has to handle a translated target
-     * attribute itself, e.g. by extending it.
+     * Override this method if a custom unique validator is used. It is kept on the per-language rules and has to handle
+     * a translated target attribute itself.
      */
     protected function isUniqueRule(mixed $ruleName): bool
     {

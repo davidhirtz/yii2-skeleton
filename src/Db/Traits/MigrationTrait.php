@@ -116,9 +116,7 @@ trait MigrationTrait
     }
 
     /**
-     * Moves every translated attribute of the given model from its `_xx` column into a {@see Translation} record and
-     * drops the column. Columns of a language the application no longer configures are left alone, as is any
-     * attribute a project removed from `i18nAttributes`.
+     * Only the configured languages and attributes are moved; any other `_xx` column is left alone.
      */
     protected function moveI18nColumnsToTranslations(ActiveRecord&TranslationInterface $model): void
     {
@@ -147,9 +145,8 @@ trait MigrationTrait
     }
 
     /**
-     * MySQL and MariaDB silently remove a dropped column from a composite index rather than dropping the index, which
-     * turns a unique index on `(parent_id, slug_de)` into a unique index on `parent_id` alone. So the indexes have to
-     * go before the column does.
+     * MySQL silently removes a dropped column from a composite index, which would leave `(parent_id, slug_de)` as a
+     * unique index on `parent_id`.
      */
     protected function dropIndexesContainingColumn(string $table, string $column): void
     {
@@ -170,8 +167,7 @@ trait MigrationTrait
     }
 
     /**
-     * Recreates the `_xx` columns from their source column definition and fills them from the {@see Translation}
-     * records, which are then removed. Indexes are not restored: a migration that dropped one recreates it itself.
+     * Indexes are not restored; the migration that dropped one recreates it.
      */
     protected function restoreI18nColumnsFromTranslations(ActiveRecord&TranslationInterface $model): void
     {

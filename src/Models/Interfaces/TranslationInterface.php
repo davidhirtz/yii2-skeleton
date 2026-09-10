@@ -9,46 +9,34 @@ use Hirtz\Skeleton\Models\Translation;
 use Hirtz\Skeleton\Models\Traits\TranslationTrait;
 
 /**
- * A model whose translated attributes are stored in {@see Translation} records rather than one column per language.
  * Implemented via {@see TranslationTrait}.
  */
 interface TranslationInterface extends I18nAttributeInterface
 {
     /**
-     * The class stored in {@see Translation::$model}, and matched on when reading the records back.
-     *
-     * It must be the canonical base class, never `static::class`: the container resolves the model class to whatever
-     * an application configured, so the very same row belongs to a subclass when a test or a bundle extension builds
-     * it. Keying on the runtime class makes the record invisible from the other path.
+     * The canonical base class, never `static::class`: the container may resolve a subclass, and the record has to
+     * stay visible from both.
      *
      * @return class-string
      */
     public function getTranslationModelClass(): string;
 
     /**
-     * The i18n attributes stored in {@see Translation} records. Defaults to all of them; a model whose attribute is
-     * backed by another table (a permalink slug) removes it here.
-     *
-     * @return list<string>
+     * @return list<string> `i18nAttributes` minus those stored elsewhere, e.g. a permalink slug
      */
     public function getTranslationAttributes(): array;
 
     /**
-     * @return array<string, array{string, string}> the attribute and language per translated attribute name
+     * @return array<string, array{string, string}> attribute and language per translated attribute name
      */
     public function getTranslatedAttributeNames(): array;
 
     /**
-     * The attributes reported by {@see \yii\db\ActiveRecord::attributes()} that have no column.
-     *
-     * @return list<string>
+     * @return list<string> the attributes without a column
      */
     public function getVirtualAttributes(): array;
 
     /**
-     * The attributes that are actually columns. Queries select these rather than
-     * {@see \yii\db\ActiveRecord::attributes()}.
-     *
      * @return list<string>
      */
     public function getColumnAttributes(): array;
@@ -59,9 +47,6 @@ interface TranslationInterface extends I18nAttributeInterface
     public function getTranslations(): TranslationQuery;
 
     /**
-     * Sets every translated attribute of the given languages, and its old attribute, from the `translations`
-     * relation. Loads the relation if it is not populated yet.
-     *
      * @param list<string>|null $languages
      */
     public function populateTranslationAttributes(?array $languages = null): void;
@@ -74,7 +59,7 @@ interface TranslationInterface extends I18nAttributeInterface
     public function updateOldTranslationAttributes(): void;
 
     /**
-     * @return array<string, string|null> the previously stored value per changed translated attribute name
+     * @return array<string, string|null> the previous value per changed translated attribute name
      */
     public function saveTranslations(): array;
 

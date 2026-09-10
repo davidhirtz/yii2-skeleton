@@ -8,10 +8,6 @@ use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
 use Hirtz\Skeleton\Models\Translation;
 
-/**
- * Writes the changed translated attributes of a model to {@see Translation} records. An empty value is stored as no
- * record at all, which is the same thing as `null`.
- */
 class SaveTranslations
 {
     public function __construct(
@@ -20,10 +16,9 @@ class SaveTranslations
     }
 
     /**
-     * The change list is computed from the stored records rather than the model's old attributes, so it stays correct
-     * for a value written through {@see ActiveRecord::setAttribute()}, which bypasses the lazy load.
+     * Diffs against the stored records, so a value written via `setAttribute()` without a lazy load is still detected.
      *
-     * @return array<string, string|null> the previously stored value per changed translated attribute name
+     * @return array<string, string|null> the previous value per changed translated attribute name
      */
     public function save(): array
     {

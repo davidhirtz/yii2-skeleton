@@ -35,8 +35,7 @@ class UniqueValidator extends \yii\validators\UniqueValidator
     }
 
     /**
-     * A translated attribute has no column, so Yii's query builder — whose relevant methods are all private — cannot
-     * find it. The check is rebuilt here against the expression the value is actually stored as.
+     * Yii's query helpers are private, so the check for a translated target attribute is rebuilt here.
      */
     #[\Override]
     public function validateAttribute($model, $attribute): void
@@ -85,7 +84,7 @@ class UniqueValidator extends \yii\validators\UniqueValidator
         $alias = $query->getTableAlias();
 
         foreach ($targetAttributes as $modelAttribute => $targetAttribute) {
-            // A translated attribute competes with the same language only; keeping a URL unique is the permalink's job.
+            // Same language only, no fallback: URL uniqueness is the permalink's job.
             $column = isset($names[$targetAttribute])
                 ? $query->getI18nAttributeName(...$names[$targetAttribute])
                 : "$alias.[[$targetAttribute]]";
@@ -113,7 +112,7 @@ class UniqueValidator extends \yii\validators\UniqueValidator
     }
 
     /**
-     * @return array<string, string> the target attribute per model attribute, the way Yii reads `targetAttribute`
+     * @return array<string, string> target attribute per model attribute
      */
     protected function getNormalizedTargetAttributes(string $attribute): array
     {

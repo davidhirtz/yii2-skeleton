@@ -58,7 +58,7 @@ class FieldsetTest extends TestCase
     }
 
     /**
-     * Creating the table commits the test case transaction, so the translation has to be removed by hand.
+     * `CREATE TABLE` commits the test transaction, so the translation is removed by hand.
      */
     #[Override]
     protected function tearDown(): void
