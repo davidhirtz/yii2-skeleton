@@ -52,7 +52,7 @@
   //--color-green-950: oklch(26.6% 0.065 152.934);
 
   --color-blue-50: #f5f9ff; //oklch(97% 0.014 254.604);
-  //--color-blue-100: oklch(93.2% 0.032 255.585);
+  --color-blue-100: #E3F1F4; //oklch(93.2% 0.032 255.585);
   --color-blue-200: #D2E8EF; //#dbeafe; // oklch(88.2 % 0.059 254.128);
   //--color-blue-300: oklch(80.9% 0.105 251.813);
   //--color-blue-400: oklch(70.7% 0.165 254.624);
@@ -329,8 +329,8 @@
   --table-striped-color: var(--color-black);
   --table-hover-color: var(--color-black);
 
-  --table-selected-bg: var(--color-green-50);
-  --table-selected-hover-bg: var(--color-green-200);
+  --table-selected-bg: var(--color-blue-100);
+  --table-selected-hover-bg: var(--color-blue-200);
   --table-selected-td-border-color: var(--color-white);
 
   --table-td-border-color: transparent;
