@@ -58,7 +58,7 @@ class GridView extends Widget
     protected array|GridFooter|null $footer = null;
 
     protected array $footerAttributes = [
-        'class' => 'grid-footer',
+        'class' => 'grid-footer sticky',
         'data-sticky' => 'bottom',
     ];
 
@@ -151,12 +151,12 @@ class GridView extends Widget
             : $this->header;
     }
 
-    protected function getSearchInput(): ?Stringable
+    protected function getSearchInput(): ?GridSearchForm
     {
         return GridSearchForm::make()->grid($this);
     }
 
-    protected function getSummary(): ?Stringable
+    protected function getSummary(): ?GridSummary
     {
         return GridSummary::make()->grid($this);
     }

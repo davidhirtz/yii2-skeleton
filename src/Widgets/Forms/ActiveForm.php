@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Forms;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Form;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
+use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Buttons\ButtonGroup;
 use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
@@ -34,8 +34,15 @@ class ActiveForm extends Widget
     public bool $hasStickyButtons = true;
     protected string $layout = "{errors}{rows}{buttons}{footer}";
 
+    /**
+     * @var Stringable[]|string[]|false|null
+     */
     protected array|false|null $buttons = null;
     protected ?string $submitButtonText = null;
+
+    /**
+     * @var Stringable[]|string[]|false|null
+     */
     protected array|false|null $footer = null;
     protected array $excludedErrorProperties = [];
 
@@ -137,10 +144,16 @@ class ActiveForm extends Widget
         $row = FormRow::make()
             ->content($content);
 
-        return Div::make()
+        $content = Div::make()
             ->class('form-buttons')
-            ->addClass($this->hasStickyButtons ? 'sticky' : '')
             ->content($row);
+
+        if ($this->hasStickyButtons) {
+            $content->addAttributes(['data-sticky' => 'bottom'])
+                ->addClass('sticky');
+        }
+
+        return $content;
     }
 
     protected function getSubmitButton(): Stringable

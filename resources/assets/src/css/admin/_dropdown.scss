@@ -21,6 +21,7 @@
   width: 100%;
 
   .active & {
+    --dropdown-btn-bg-img: var(--dropdown-active-caret);
     --dropdown-btn-bg-color: var(--dropdown-btn-active-bg);
     --dropdown-btn-border-color: var(--dropdown-btn-active-border-color);
     --dropdown-btn-color: var(--dropdown-btn-active-color);
@@ -36,6 +37,10 @@
 
   .dropup & {
     --dropdown-btn-bg-img: var(--dropup-caret);
+  }
+
+  .active.dropup & {
+    --dropdown-btn-bg-img: var(--dropup--active-caret);
   }
 }
 
@@ -128,7 +133,6 @@
   &.selected {
     --dropdown-option-color: var(--dropdown-option-selected-color);
     --dropdown-option-bg: var(--dropdown-option-selected-bg);
-    font-weight: 700;
   }
 
   &.disabled,
@@ -137,9 +141,4 @@
     pointer-events: none;
     background-color: transparent;
   }
-}
-
-
-.dropdown-default-item {
-  font-weight: 500;
 }

@@ -36,7 +36,7 @@ class CreatedAtFooterItem implements Stringable
         return $this->value
             ? Li::make()
                 ->class('form-footer-item')
-                ->content(Lang::t('skeleton', 'CREATED_AT_FOOTER_ITEM_CREATED', [
+                ->content(Lang::t('skeleton', 'COMMON_CREATED_AT', [
                     'timestamp' => RelativeTime::make()->value($this->value),
                 ]))
             : null;

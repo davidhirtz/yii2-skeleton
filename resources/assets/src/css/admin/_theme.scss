@@ -55,8 +55,8 @@
   --color-blue-100: #E3F1F4; //oklch(93.2% 0.032 255.585);
   --color-blue-200: #D2E8EF; //#dbeafe; // oklch(88.2 % 0.059 254.128);
   //--color-blue-300: oklch(80.9% 0.105 251.813);
-  //--color-blue-400: oklch(70.7% 0.165 254.624);
-  --color-blue-500: #75BCD2; // oklch(62.3% 0.214 259.815);
+  --color-blue-400: #75BCD2; //oklch(70.7% 0.165 254.624);
+  //--color-blue-500: oklch(62.3% 0.214 259.815);
   --color-blue-600: #67a5b6; //oklch(54.6% 0.245 262.881);
   //--color-blue-700: oklch(48.8% 0.243 264.376);
   //--color-blue-800: oklch(42.4% 0.199 265.638);
@@ -137,7 +137,7 @@
   --alert-info-bg: var(--color-blue-50);
   --alert-info-border-color: var(--alert-info-bg);
   --alert-info-color: var(--color-black);
-  --alert-info-link-color: var(--color-blue-500);
+  --alert-info-link-color: var(--color-blue-400);
   --alert-info-link-hover-color: var(--color-blue-600);
 
   --alert-warning-bg: var(--color-yellow-50);
@@ -216,29 +216,32 @@
   --dropdown-color: var(--color-black);
   --dropdown-divider-color: var(--border-color);
 
-  --dropdown-btn-active-bg: var(--btn-primary-hover-bg);
-  --dropdown-btn-active-border-color: var(--btn-primary-hover-border-color);
-  --dropdown-btn-active-color: var(--btn-primary-hover-color);
-  --dropdown-btn-bg-color: var(--btn-secondary-bg);
-  --dropdown-btn-border-color: var(--btn-secondary-border-color);
-  --dropdown-btn-color: var(--btn-secondary-color);
-  --dropdown-btn-hover-bg: var(--dropdown-btn-active-bg);
-  --dropdown-btn-hover-border-color: var(--dropdown-btn-active-border-color);
-  --dropdown-btn-hover-color: var(--dropdown-btn-active-color);
+  --dropdown-btn-active-bg: var(--color-blue-400);
+  --dropdown-btn-active-border-color: transparent;
+  --dropdown-btn-active-color: var(--color-white);
+  --dropdown-btn-bg-color: var(--color-blue-100);
+  --dropdown-btn-border-color: transparent;
+  --dropdown-btn-color: var(--color-gray-900);
+  --dropdown-btn-hover-bg: var(--color-blue-200);
+  --dropdown-btn-hover-border-color: transparent;
+  --dropdown-btn-hover-color: var(--color-black);
 
-  --dropdown-option-selected-bg: var(--color-gray-100);
+  --dropdown-option-selected-bg: var(--color-blue-50);
   --dropdown-option-selected-color: inherit;
   --dropdown-option-color: var(--color-black);
   --dropdown-option-disabled-color: var(--color-gray-300);
   --dropdown-option-hover-bg: var(--color-gray-50);
   --dropdown-option-hover-color: inherit;
 
-  --dropdown-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" d="m2 5 6 6 6-6"/></svg>')};
-  --dropup-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" d="m2 11 6-6 6 6"/></svg>')};
+  --dropdown-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" d="m2 5 6 6 6-6"/></svg>')};
+  --dropdown-active-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" d="m2 5 6 6 6-6"/></svg>')};
+  --dropup-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" d="m2 11 6-6 6 6"/></svg>')};
+  --dropup--active-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" d="m2 11 6-6 6 6"/></svg>')};
 
 
   // Form
-  --form-footer-border-color: var(--color-gray-700);
+  --form-footer-border-color: transparent;
+  --form-footer-sticky-border-color: var(--border-color);
 
   --form-invalid-bg: var(--color-white);
   --form-invalid-border: var(--color-red-900);
@@ -279,20 +282,20 @@
 
   // Nav
   --nav-link-bg: transparent;
-  --nav-link-border-color: var(--color-gray-700);
+  --nav-link-border-color: transparent;
   --nav-link-color: var(--color-black);
   --nav-link-active-badge-bg: var(--nav-link-active-color);
   --nav-link-active-badge-color: var(--nav-link-active-bg);
-  --nav-link-active-bg: var(--color-gray-700);
+  --nav-link-active-bg: var(--color-blue-400);
   --nav-link-active-border-color: var(--nav-link-active-bg);
   --nav-link-active-color: var(--color-white);
-  --nav-link-hover-bg: var(--color-gray-200);
+  --nav-link-hover-bg: var(--color-blue-50);
   --nav-link-hover-border-color: var(--nav-link-hover-bg);
   --nav-link-hover-color: var(--color-black);
 
   // Aside
   --aside-bg: var(--body-bg);
-  --aside-link-active-bg: var(--color-blue-500);
+  --aside-link-active-bg: var(--color-blue-400);
   --aside-link-active-color: var(--color-white);
   --aside-link-bg: transparent;
   --aside-link-color: var(--color-black);
@@ -323,7 +326,7 @@
 
   // Table
   --table-bg: var(--color-white);
-  --table-color: var(--color-gray-700);
+  --table-color: var(--color-gray-900);
   --table-striped-bg: var(--color-gray-50);
   --table-hover-bg: var(--color-gray-100);
   --table-striped-color: var(--color-black);

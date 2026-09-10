@@ -1,18 +1,19 @@
 @use "../shared/breakpoints" as *;
 
+
+
 .form,
-.form-rows,
-.fieldset:has(>:not([hidden],[type="hidden"])) {
+.form-rows{
   display: grid;
-  gap: 1rem;
+  gap: 2rem;
 }
 
 .fieldset {
   display: none;
 
-  &:not(:first-child) {
-    border-top: 1px solid var(--border-color);
-    padding-top: 1rem;
+  &:has(>:not([hidden],[type="hidden"])) {
+    display: grid;
+    gap: 1rem;
   }
 }
 
@@ -22,8 +23,7 @@
 
   @include media-breakpoint-up(sm) {
     gap: 1rem;
-    grid-template-columns: 1fr 3fr;
-    margin: 0 auto;
+    grid-template-columns: 10rem auto;
     max-width: 76rem;
     width: 100%;
   }
@@ -38,8 +38,6 @@
   letter-spacing: .0625em;
 
   @include media-breakpoint-up(sm) {
-    text-align: right;
-
     .form-row:not(.form-checkbox-row):has(.input) & {
       padding: 1px 0;
     }
@@ -69,12 +67,6 @@
   }
 }
 
-.form-text {
-  @include media-breakpoint-up(sm) {
-    padding-inline: 1rem;
-  }
-}
-
 .form-error {
   display: none;
 
@@ -91,11 +83,14 @@
 }
 
 .form-buttons {
+  border-top: 1px solid var(--form-footer-border-color);
+
   &.sticky {
-    position: sticky;
-    padding-block: 1rem;
+    --form-footer-border-color: var(--form-footer-sticky-border-color);
+
+    padding: 1rem 2rem;
+    margin-inline: -2rem;
     bottom: 0;
-    border-top: 1px solid var(--form-footer-border-color);
     background: var(--card-bg);
     z-index: 20;
   }
