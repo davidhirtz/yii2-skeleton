@@ -7,8 +7,8 @@
   gap: .5rem;
   pointer-events: none;
   position: fixed;
-  right: 1rem;
-  bottom: 1rem;
+  right: 2rem;
+  top: .5rem;
   z-index: 60;
 
 
@@ -17,7 +17,7 @@
     pointer-events: all;
     transition-behavior: allow-discrete;
     transition: opacity .3s ease, translate .3s ease;
-    width: min(32rem, calc(100vw - 2rem));
+    max-width: min(32rem, calc(100vw - 2rem));
 
     @starting-style {
       opacity: 0;
