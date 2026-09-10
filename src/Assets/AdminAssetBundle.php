@@ -23,6 +23,10 @@ class AdminAssetBundle extends AbstractAssetBundle
             Yii::$app->getView()->registerLinkTag($this->faviconOptions, 'favicon');
         }
 
+        if (YII_DEBUG) {
+            Yii::$app->getView()->registerCss('body:has(#yii-debug-toolbar){padding-bottom:53px}');
+        }
+
         parent::init();
     }
 }
