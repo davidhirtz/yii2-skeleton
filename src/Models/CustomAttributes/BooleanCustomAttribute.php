@@ -26,7 +26,7 @@ class BooleanCustomAttribute extends CustomAttribute
     }
 
     #[Override]
-    public function formatValue(Model $owner, mixed $value): string|Stringable|null
+    public function formatValue(Model $owner, mixed $value): string|Stringable|array|null
     {
         return $value === null ? null : Yii::t('yii', $value ? 'Yes' : 'No');
     }

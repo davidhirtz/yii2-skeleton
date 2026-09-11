@@ -174,7 +174,11 @@ abstract class CustomAttribute
         return $value;
     }
 
-    public function formatValue(Model $owner, mixed $value): string|Stringable|null
+    /**
+     * @return string|Stringable|array<string, string|Stringable|null>|null an array is a label => value map the trail
+     * renders as its own rows
+     */
+    public function formatValue(Model $owner, mixed $value): string|Stringable|array|null
     {
         if ($value === null) {
             return null;

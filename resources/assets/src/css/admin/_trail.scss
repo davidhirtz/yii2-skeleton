@@ -94,11 +94,19 @@ $diff-bg-color-none-block-alternative: mix($diff-bg-color, $diff-table-sidebar-c
   }
 }
 
-// A custom attribute group formats itself into a table, which must not inherit the diff cell's text wrapping.
-.trail-value-col .table {
-  white-space: normal;
+// A structured value, e.g. a custom attribute group, renders its labels down the rows rather than across.
+.trail-values-table,
+.trail-diff-values {
   width: 100%;
   word-break: normal;
+
+  td {
+    width: auto;
+  }
+
+  .trail-property-col {
+    width: 10rem;
+  }
 }
 
 .trail-model-col {

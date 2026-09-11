@@ -75,7 +75,7 @@ class SelectCustomAttribute extends CustomAttribute
     }
 
     #[Override]
-    public function formatValue(Model $owner, mixed $value): string|Stringable|null
+    public function formatValue(Model $owner, mixed $value): string|Stringable|array|null
     {
         if ($value === null) {
             return null;

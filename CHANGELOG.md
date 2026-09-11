@@ -10,10 +10,11 @@
   inside the JSON, not in the `translation` table. See `UPGRADE.md`
 - `Db\ActiveRecord` gained `getCustomAttributesColumn()`, a `rules()` returning the custom rules, `attributeHints()`,
   and the `beforeValidate()` that applies the definition defaults to a new record
-- A `GroupCustomAttribute` formats its trail value as a table — a column per child any row fills, in definition order,
-  with a translated child getting its own and a nested group a nested table — instead of a JSON string.
-  `Modules\Admin\Widgets\Grids\TrailGridView` renders a `Stringable` value as markup rather than escaping it, and
-  shows an old/new pair for it rather than a text diff
+- A `GroupCustomAttribute` formats its trail value as a label => value map — one entry per child of every row, numbered
+  when the group is `multiple`, with a translated child getting its own and a nested group flattened into the same map
+  — instead of a JSON string. `CustomAttribute::formatValue()` may return such a map, which
+  `Modules\Admin\Widgets\Grids\TrailGridView` renders as its own rows: attribute and value on a create, attribute,
+  old and new on an update, so a group with many attributes reads down rather than across
 - A `GroupCustomAttribute` with a `minCount` renders that many rows up front, empty when there is nothing stored, and
   the remove button is hidden while the group is at its minimum. An empty row is still dropped on save, so the minimum
   is reported as a validation error rather than stored as an empty object

@@ -185,11 +185,34 @@ class TrailGridView extends GridView
         }
 
         if (is_array($value)) {
-            return Ul::make()->items(...array_map(strval(...), $value));
+            return array_is_list($value)
+                ? Ul::make()->items(...array_map(strval(...), $value))
+                : $this->getTrailValuesTable($value);
         }
 
-        // A value that formatted itself into markup, e.g. the table of a custom attribute group.
-        return $value instanceof Stringable ? $value : Html::encode($value);
+        return Html::encode($value);
+    }
+
+    /**
+     * @param array<string, string|Stringable|null> $values
+     */
+    protected function getTrailValuesTable(array $values): Table
+    {
+        $rows = [];
+
+        foreach ($values as $label => $value) {
+            $rows[] = [
+                Td::make()
+                    ->class('trail-property-col')
+                    ->text($label),
+                Td::make()
+                    ->text($value),
+            ];
+        }
+
+        return Table::make()
+            ->class('trail-values-table table')
+            ->rows($rows);
     }
 
     protected function getUpdateAttributesContent(Trail $trail): string|Stringable
@@ -231,8 +254,11 @@ class TrailGridView extends GridView
             );
         }
 
-        if ($oldValue instanceof Stringable || $newValue instanceof Stringable) {
-            return $this->getTrailDiffTable($oldValue, $newValue);
+        $oldValues = is_array($oldValue) && !array_is_list($oldValue) ? $oldValue : null;
+        $newValues = is_array($newValue) && !array_is_list($newValue) ? $newValue : null;
+
+        if ($oldValues !== null || $newValues !== null) {
+            return $this->getTrailValuesDiffTable($oldValues ?? [], $newValues ?? []);
         }
 
         if (is_array($oldValue)) {
@@ -248,6 +274,40 @@ class TrailGridView extends GridView
             'showHeader' => false,
             'lineNumbers' => false,
         ]);
+    }
+
+    /**
+     * One row per changed label, so a group with many attributes reads down rather than across.
+     *
+     * @param array<string, string|Stringable|null> $oldValues
+     * @param array<string, string|Stringable|null> $newValues
+     */
+    protected function getTrailValuesDiffTable(array $oldValues, array $newValues): Table
+    {
+        $rows = [];
+
+        foreach (array_keys($oldValues + $newValues) as $label) {
+            $oldValue = $oldValues[$label] ?? null;
+            $newValue = $newValues[$label] ?? null;
+
+            if ((string)$oldValue !== (string)$newValue) {
+                $rows[] = [
+                    Td::make()
+                        ->class('trail-property-col')
+                        ->text($label),
+                    Td::make()
+                        ->class('old')
+                        ->text($oldValue),
+                    Td::make()
+                        ->class('new')
+                        ->text($newValue),
+                ];
+            }
+        }
+
+        return Table::make()
+            ->class('trail-diff-table trail-diff-values table')
+            ->rows($rows);
     }
 
     protected function getTrailDiffTable(string|Stringable|null $oldValue, string|Stringable|null $newValue): Table

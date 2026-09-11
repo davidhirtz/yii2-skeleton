@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\CustomAttributes;
 
-use Hirtz\Skeleton\Html\Table;
-use Hirtz\Skeleton\Html\Td;
-use Hirtz\Skeleton\Html\Th;
-use Hirtz\Skeleton\Html\Thead;
-use Hirtz\Skeleton\Html\Tr;
 use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
@@ -210,40 +205,50 @@ class GroupCustomAttribute extends CustomAttribute
     }
 
     /**
-     * A column per child that any row fills, in definition order, so the trail shows the rows rather than the JSON.
+     * A label per child of every row, so the trail can pair the old and the new value of each one. A nested group is
+     * flattened into the same map rather than nested, so its children diff on their own too.
+     *
+     * @return array<string, string|Stringable|null>
      */
     #[Override]
-    public function formatValue(Model $owner, mixed $value): string|Stringable|null
+    public function formatValue(Model $owner, mixed $value): array
+    {
+        return $this->getFormattedValues($owner, $value, '');
+    }
+
+    /**
+     * @return array<string, string|Stringable|null>
+     */
+    private function getFormattedValues(Model $owner, mixed $value, string $prefix): array
     {
         $rows = $this->multiple ? $value : [$value];
 
-        if (!is_array($rows) || !$rows) {
-            return null;
+        if (!is_array($rows)) {
+            return [];
         }
 
-        $rows = array_values(array_filter($rows, is_array(...)));
         $item = $this->createItem($owner, '0');
-        $names = $this->getFormattedNames($item, $rows);
+        $values = [];
+        $index = 0;
 
-        if (!$names) {
-            return null;
+        foreach ($rows as $row) {
+            if (!is_array($row) || !$this->hasValues($row)) {
+                continue;
+            }
+
+            $rowPrefix = $this->multiple ? $prefix . ++$index . '. ' : $prefix;
+
+            foreach ($this->getFormattedNames($item, [$row]) as $name) {
+                $definition = $item->getCustomAttribute($name);
+                $label = $rowPrefix . $item->getAttributeLabel($name);
+
+                $values = $definition instanceof self
+                    ? [...$values, ...$definition->getFormattedValues($item, $row[$name] ?? null, "$label ")]
+                    : [...$values, $label => $definition?->formatValue($item, $row[$name] ?? null)];
+            }
         }
 
-        $header = array_map(
-            static fn (string $name): Th => Th::make()->text($item->getAttributeLabel($name)),
-            $names,
-        );
-
-        return Table::make()
-            ->addClass('table')
-            ->header(Thead::make()->rows(Tr::make()->cells(...$header)))
-            ->rows(array_map(
-                fn (array $row): array => array_map(
-                    fn (string $name): Td => Td::make()->text($this->formatItemValue($item, $name, $row[$name] ?? null)),
-                    $names,
-                ),
-                $rows,
-            ));
+        return $values;
     }
 
     #[Override]
@@ -293,17 +298,6 @@ class GroupCustomAttribute extends CustomAttribute
         }
 
         return $filled;
-    }
-
-    private function formatItemValue(CustomAttributeGroupItem $item, string $name, mixed $value): string|Stringable|null
-    {
-        $definition = $item->getCustomAttribute($name);
-
-        if ($definition) {
-            return $definition->formatValue($item, $value);
-        }
-
-        return is_scalar($value) ? (string)$value : null;
     }
 
     private function hasValues(mixed $row): bool

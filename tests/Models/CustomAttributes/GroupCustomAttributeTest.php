@@ -101,64 +101,63 @@ class GroupCustomAttributeTest extends TestCase
         self::assertArrayHasKey('links', $model->getErrors());
     }
 
-    public function testTheTrailValueIsRenderedAsATable(): void
+    public function testTheTrailValueIsALabelPerChildOfEveryRow(): void
     {
         $model = $this->createRecord();
-        $value = [
+
+        $values = $model->getCustomAttribute('links')->formatValue($model, [
             ['label' => 'One', 'label_de' => 'Eins', 'url' => 'https://one.example.com'],
             ['label' => 'Two', 'url' => 'https://two.example.com'],
-        ];
+        ]);
 
-        $content = (string)$model->getCustomAttribute('links')->formatValue($model, $value);
-
-        self::assertStringStartsWith('<table class="table">', $content);
-
-        // Columns follow the definition order, a translated child gets its own, and an unfilled one is left out.
-        self::assertStringContainsString(
-            '<thead><tr><th>Label</th><th>Label (DE)</th><th>Url</th></tr></thead>',
-            $content
-        );
-
-        self::assertStringContainsString(
-            '<tr><td>One</td><td>Eins</td><td>https://one.example.com</td></tr>',
-            $content
-        );
-
-        self::assertStringContainsString(
-            '<tr><td>Two</td><td></td><td>https://two.example.com</td></tr>',
-            $content
-        );
+        // Labels follow the definition order, a translated child gets its own and a row is numbered from one.
+        self::assertSame([
+            '1. Label' => 'One',
+            '1. Label (DE)' => 'Eins',
+            '1. Url' => 'https://one.example.com',
+            '2. Label' => 'Two',
+            '2. Url' => 'https://two.example.com',
+        ], $values);
     }
 
-    public function testTheTrailValueEscapesTheStoredContent(): void
+    public function testTheTrailValueOfASingleGroupIsNotNumbered(): void
     {
         $model = $this->createRecord();
-        $content = (string)$model->getCustomAttribute('links')->formatValue($model, [['label' => '<b>One</b>']]);
+        $model->type = GroupRecord::TYPE_SINGLE;
 
-        self::assertStringContainsString('<td>&lt;b&gt;One&lt;/b&gt;</td>', $content);
+        self::assertSame(
+            ['Title' => 'Title'],
+            $model->getCustomAttribute('meta')->formatValue($model, ['title' => 'Title'])
+        );
     }
 
-    public function testTheTrailValueOfAnEmptyGroupIsNull(): void
+    public function testTheTrailValueOfAnEmptyGroupIsEmpty(): void
     {
         $model = $this->createRecord();
+        $definition = $model->getCustomAttribute('links');
 
-        self::assertNull($model->getCustomAttribute('links')->formatValue($model, null));
-        self::assertNull($model->getCustomAttribute('links')->formatValue($model, []));
-        self::assertNull($model->getCustomAttribute('links')->formatValue($model, [['label' => '']]));
+        self::assertSame([], $definition->formatValue($model, null));
+        self::assertSame([], $definition->formatValue($model, []));
+        self::assertSame([], $definition->formatValue($model, [['label' => '']]));
     }
 
-    public function testTheTrailValueOfANestedGroupIsANestedTable(): void
+    /**
+     * Flattened rather than nested, so every child of a nested group diffs on its own.
+     */
+    public function testTheTrailValueOfANestedGroupIsFlattened(): void
     {
         $model = $this->createRecord();
         $model->type = GroupRecord::TYPE_NESTED;
 
-        $content = (string)$model->getCustomAttribute('rows')->formatValue($model, [
+        $values = $model->getCustomAttribute('rows')->formatValue($model, [
             ['name' => 'Row', 'cells' => [['text' => 'One'], ['text' => 'Two']]],
         ]);
 
-        self::assertStringContainsString('<th>Name</th><th>Cells</th>', $content);
-        self::assertStringContainsString('<td>Row</td><td><table class="table">', $content);
-        self::assertStringContainsString('<tr><td>One</td></tr><tr><td>Two</td></tr>', $content);
+        self::assertSame([
+            '1. Name' => 'Row',
+            '1. Cells 1. Text' => 'One',
+            '1. Cells 2. Text' => 'Two',
+        ], $values);
     }
 
     /**
