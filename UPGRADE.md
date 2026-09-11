@@ -97,7 +97,9 @@ owning model.
   relation query: it runs in `afterFind()` for every loaded record. Eager load the relation
   (`->with('file')`) or guard with `isRelationPopulated()`.
 - A definition name must match `^[a-z][a-z0-9_]*$`, be unique, and collide with neither a column nor
-  a translated attribute name. Anything else throws an `InvalidConfigException`.
+  a translated attribute name. A model that declares definitions but whose table lacks the
+  `custom_attributes` column is a configuration error as well. All of these throw an
+  `InvalidConfigException` when the definitions resolve.
 
 ### Translations
 

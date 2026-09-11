@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 use Hirtz\Skeleton\Assets\CustomAttributesAssetBundle;
 use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Html\Legend;
 use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\CustomAttributes\CustomAttributeGroupItem;
 use Hirtz\Skeleton\Models\CustomAttributes\GroupCustomAttribute;
@@ -37,10 +38,14 @@ class GroupField extends Field
     #[Override]
     protected function renderContent(): string|Stringable
     {
+        $legend = Legend::make()
+            ->addClass('form-label')
+            ->text($this->label);
+
         return \Hirtz\Skeleton\Html\Fieldset::make()
             ->attributes($this->rowAttributes)
             ->addClass('form-group custom-attribute-group')
-            ->legend($this->label)
+            ->legend($legend)
             ->content($this->getError(), $this->getHint(), $this->getInput());
     }
 

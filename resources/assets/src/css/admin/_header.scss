@@ -16,6 +16,9 @@
 
     h1, h2 {
       font-size: 1rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 
@@ -30,6 +33,10 @@
   min-height: 2.5rem;
   place-content: center;
   gap: .25rem;
+
+  .sticky & {
+    overflow: hidden;
+  }
 }
 
 

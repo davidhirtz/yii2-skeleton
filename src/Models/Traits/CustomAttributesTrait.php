@@ -296,13 +296,19 @@ trait CustomAttributesTrait
     {
         $columns = $this instanceof ActiveRecord ? array_keys(static::getTableSchema()->columns) : [];
         $definitions = [];
+        $customAttributes = $this->getCustomAttributes();
+
+        // Without the column, a loaded record would keep its values in memory only and drop them on save.
+        if ($customAttributes && $this instanceof ActiveRecord && !in_array($this->getCustomAttributesColumn(), $columns, true)) {
+            throw new InvalidConfigException(static::class . ' declares custom attributes but ' . static::tableName() . ' has no "' . $this->getCustomAttributesColumn() . '" column.');
+        }
 
         // The custom part of `getI18nAttributes()` is primed empty above, so this is the model's own list.
         $i18nAttributes = $this instanceof I18nAttributeInterface
             ? $this->getI18nAttributesNames($this->getI18nAttributes())
             : [];
 
-        foreach ($this->getCustomAttributes() as $definition) {
+        foreach ($customAttributes as $definition) {
             $name = $definition->name;
 
             if (!preg_match(self::CUSTOM_ATTRIBUTE_NAME_PATTERN, $name)) {

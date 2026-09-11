@@ -368,6 +368,17 @@ class CustomAttributesTraitTest extends TestCase
         self::assertArrayHasKey('configured', $model->getErrors());
     }
 
+    public function testDefinitionsWithoutTheColumnThrow(): void
+    {
+        $model = ColumnlessRecord::create();
+        $model->type = ColumnlessRecord::TYPE_DEFAULT;
+
+        $this->expectException(InvalidConfigException::class);
+        $this->expectExceptionMessage('has no "missing_column" column');
+
+        $model->save();
+    }
+
     public function testDefinitionCollidingWithAColumnThrows(): void
     {
         $model = CustomAttributeRecord::create();
@@ -588,5 +599,14 @@ class CustomAttributeRecord extends ActiveRecord implements
     public static function tableName(): string
     {
         return 'custom_attribute_test';
+    }
+}
+
+class ColumnlessRecord extends CustomAttributeRecord
+{
+    #[Override]
+    public function getCustomAttributesColumn(): string
+    {
+        return 'missing_column';
     }
 }

@@ -12,11 +12,11 @@ class Fieldset extends Tag
 {
     use TagContentTrait;
 
-    protected ?string $legend = null;
+    protected ?Legend $legend = null;
 
-    public function legend(string|null $legend): static
+    public function legend(string|Legend|null $legend): static
     {
-        $this->legend = $legend;
+        $this->legend = is_string($legend) ? Legend::make()->text($legend) : $legend;
         return $this;
     }
 
@@ -24,8 +24,7 @@ class Fieldset extends Tag
     protected function before(): string
     {
         if ($this->legend !== null) {
-            array_unshift($this->content, Legend::make()
-                ->text($this->legend));
+            array_unshift($this->content, $this->legend);
         }
 
         return parent::before();
