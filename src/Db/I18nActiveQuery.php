@@ -186,11 +186,4 @@ class I18nActiveQuery extends ActiveQuery
 
         return $models;
     }
-
-    #[Override]
-    public function selectAllColumns(): static
-    {
-        $this->select = $this->prefixColumns($this->getModelInstance()->getColumnAttributes());
-        return $this;
-    }
 }

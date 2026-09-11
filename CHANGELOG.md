@@ -1,5 +1,7 @@
 ## 3.0.0 (in development)
 
+- `Db\ActiveQuery::selectAllColumns()` selects the columns, not `attributes()`: a model with virtual attributes
+  would otherwise select a column that does not exist. `Db\I18nActiveQuery`'s override of it is gone
 - `Widgets\Grids\GridView` no longer uses `Widgets\Traits\ModelTrait`: nothing read its `$model` — a column takes
   its label from the first row of the provider — and the property stood in the way of a subclass naming its own.
   A grid that needs one uses the trait itself. Its template parameter now types `$rowAttributes`

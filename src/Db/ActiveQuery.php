@@ -54,11 +54,11 @@ class ActiveQuery extends \yii\db\ActiveQuery
     }
 
     /**
-     * Selects all columns defined in {@see ActiveRecord::attributes()}.
+     * The virtual attributes are left out: `attributes()` reports them, but they have no column to select.
      */
     public function selectAllColumns(): static
     {
-        $this->select = $this->prefixColumns($this->getModelInstance()->attributes());
+        $this->select = $this->prefixColumns($this->getModelInstance()->getColumnAttributes());
         return $this;
     }
 
