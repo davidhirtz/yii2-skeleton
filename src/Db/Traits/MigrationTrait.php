@@ -34,46 +34,6 @@ trait MigrationTrait
         throw new InvalidConfigException();
     }
 
-    protected function addI18nColumns(string $table, array $attributes, bool $allowNull = false, ?array $except = null): void
-    {
-        if ($attributes) {
-            $schema = Yii::$app->getDb()->getSchema();
-            $tableSchema = $schema->getTableSchema($table);
-            $i18n = Yii::$app->getI18n();
-            $languages = $i18n->getLanguages();
-
-            $except ??= [Yii::$app->sourceLanguage];
-
-            foreach ($attributes as $attribute) {
-                $column = $tableSchema->getColumn($attribute);
-
-                if ($column) {
-                    $prevAttribute = $attribute;
-                    $type = $schema->createColumnSchemaBuilder($column->type, $column->size)->defaultValue($column->defaultValue);
-
-                    if ($column->unsigned) {
-                        $type->unsigned();
-                    }
-
-                    if ($allowNull && !$column->allowNull) {
-                        $type->notNull();
-                    }
-
-                    foreach ($languages as $language) {
-                        if (!in_array($language, $except, true)) {
-                            $type->append("AFTER [[$prevAttribute]]");
-                            $prevAttribute = $i18n->getAttributeName($attribute, $language);
-
-                            if (!$tableSchema->getColumn($prevAttribute)) {
-                                $this->addColumn($table, $prevAttribute, (string)$type);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     protected function addCustomAttributesColumn(string $table, string $column = 'custom_attributes', ?string $after = null): void
     {
         $type = $this->json()->null();
@@ -94,25 +54,6 @@ trait MigrationTrait
     {
         if ($this->getDb()->getTableSchema($table)->getColumn($column)) {
             $this->dropColumn($table, $column);
-        }
-    }
-
-    protected function dropI18nColumns(string $table, array $attributes, ?array $except = []): void
-    {
-        if ($attributes) {
-            $i18n = Yii::$app->getI18n();
-            $languages = $i18n->getLanguages();
-            $tableSchema = Yii::$app->getDb()->getSchema()->getTableSchema($table);
-
-            foreach ($attributes as $attribute) {
-                foreach ($languages as $language) {
-                    $column = $i18n->getAttributeName($attribute, $language);
-
-                    if (!in_array($language, $except, true) && $tableSchema->getColumn($column)) {
-                        $this->dropColumn($table, $column);
-                    }
-                }
-            }
         }
     }
 
@@ -213,6 +154,41 @@ trait MigrationTrait
         }
 
         $this->execute("DELETE FROM $translations WHERE [[model]] = $class");
+    }
+
+    /**
+     * @param list<string> $attributes
+     */
+    private function addI18nColumns(string $table, array $attributes): void
+    {
+        $schema = Yii::$app->getDb()->getSchema();
+        $tableSchema = $schema->getTableSchema($table, true);
+        $i18n = Yii::$app->getI18n();
+
+        foreach ($attributes as $attribute) {
+            $column = $tableSchema->getColumn($attribute);
+
+            if (!$column) {
+                continue;
+            }
+
+            $previous = $attribute;
+            $type = $schema->createColumnSchemaBuilder($column->type, $column->size)
+                ->defaultValue($column->defaultValue);
+
+            foreach ($i18n->getLanguages() as $language) {
+                if ($language === Yii::$app->sourceLanguage) {
+                    continue;
+                }
+
+                $type->append("AFTER [[$previous]]");
+                $previous = $i18n->getAttributeName($attribute, $language);
+
+                if (!$tableSchema->getColumn($previous)) {
+                    $this->addColumn($table, $previous, (string)$type);
+                }
+            }
+        }
     }
 
     protected function getQuotedTableName(string $tableName): string

@@ -82,6 +82,13 @@
   `?array $languages` (was typed `?string` while being iterated as an array)
 - Added `Db\Traits\MigrationTrait::moveI18nColumnsToTranslations()`,
   `restoreI18nColumnsFromTranslations()`, `dropIndexesContainingColumn()` and `getQuotedTableName()`
+- Removed `Db\Traits\MigrationTrait::dropI18nColumns()` and made `addI18nColumns()` private. Translated attributes
+  have no column of their own anymore, so a migration never adds one; the helper only exists to rebuild the columns
+  in `restoreI18nColumnsFromTranslations()`. Its `$allowNull` and `$except` parameters are gone with it
+- The historical migrations no longer create, index or alter `_xx` columns, so a fresh install builds the
+  source-language schema directly instead of adding the per-language columns just to have the translation migrations
+  drop them again. This also unblocks a fresh install: `Media\Migrations\M200117122241File` resolved the current
+  model's I18N attributes, which since custom attributes throws while `file` has no `custom_attributes` column yet
 - Removed the `enableI18nTables` feature and the `Modules\ModuleTrait` that carried it (the
   `$enableI18nTables` / `$tablePrefix` properties and the `getTableName()`, `getLanguages()` and
   `getI18nClassName()` methods). Modules no longer switch to per-language database tables; models now
