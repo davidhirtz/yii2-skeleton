@@ -19,6 +19,6 @@ use Hirtz\Skeleton\Widgets\Forms\FormContainer;
 echo RedirectHeader::make();
 
 echo FormContainer::make()
-    ->title(Yii::t('skeleton', 'New Redirect'))
+    ->title(Yii::t('skeleton', 'REDIRECT_CREATE_TITLE'))
     ->form(RedirectActiveForm::make()
         ->model($redirect));

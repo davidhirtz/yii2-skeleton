@@ -24,7 +24,6 @@ echo RedirectHeader::make()
     ->model($redirect);
 
 echo FormContainer::make()
-    ->title(Yii::t('app', 'Update Redirect'))
     ->form(RedirectActiveForm::make()
         ->model($redirect));
 

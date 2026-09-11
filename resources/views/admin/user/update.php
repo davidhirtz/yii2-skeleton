@@ -23,6 +23,5 @@ echo UserSubmenu::make()
     ->model($form->user);
 
 echo FormContainer::make()
-    ->title(Yii::t('skeleton', 'Update User'))
     ->form(UserActiveForm::make()
         ->model($form));
