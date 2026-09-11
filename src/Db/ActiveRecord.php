@@ -9,6 +9,7 @@ use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Behaviors\AttributeTypecastBehavior;
 use Hirtz\Skeleton\Db\Commands\BatchInsertQueryBuild;
+use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
 use Override;
 use Yii;
 use yii\helpers\Inflector;
@@ -34,6 +35,31 @@ class ActiveRecord extends \yii\db\ActiveRecord
     {
         $this->_isDeleted = true;
         return parent::beforeDelete();
+    }
+
+    /**
+     * The virtual attributes are written here rather than from a behavior, so their changes reach the event the
+     * trail listens to without depending on the order two behaviors were attached in.
+     */
+    #[Override]
+    public function afterSave($insert, $changedAttributes): void
+    {
+        if ($this instanceof TranslationInterface) {
+            $changedAttributes = [...$changedAttributes, ...$this->saveVirtualAttributes()];
+            $this->updateOldVirtualAttributes();
+        }
+
+        parent::afterSave($insert, $changedAttributes);
+    }
+
+    #[Override]
+    public function afterDelete(): void
+    {
+        if ($this instanceof TranslationInterface) {
+            $this->deleteVirtualAttributes();
+        }
+
+        parent::afterDelete();
     }
 
     /**

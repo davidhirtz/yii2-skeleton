@@ -56,12 +56,14 @@ interface TranslationInterface extends I18nAttributeInterface
      */
     public function markTranslationsLoaded(array $languages): void;
 
-    public function updateOldTranslationAttributes(): void;
+    public function updateOldVirtualAttributes(): void;
 
     /**
-     * @return array<string, string|null> the previous value per changed translated attribute name
+     * Called by {@see \Hirtz\Skeleton\Db\ActiveRecord::afterSave()}, before the event the trail listens to.
+     *
+     * @return array<string, string|null> the previous value per changed virtual attribute name
      */
-    public function saveTranslations(): array;
+    public function saveVirtualAttributes(): array;
 
-    public function deleteTranslations(): void;
+    public function deleteVirtualAttributes(): void;
 }

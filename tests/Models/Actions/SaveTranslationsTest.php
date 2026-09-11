@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Models\Actions;
 
 use Hirtz\Skeleton\Behaviors\TrailBehavior;
-use Hirtz\Skeleton\Behaviors\TranslationBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Db\I18nActiveQuery;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
@@ -56,15 +55,13 @@ class SaveTranslationsTest extends TestCase
     {
         $model = new TranslatedActiveRecord();
         $model->name = 'Name';
-        $model->name_de = 'Name DE';
-
-        // Detached so the insert leaves the records to the explicit call below.
-        $model->detachBehavior('TranslationBehavior');
 
         self::assertTrue($model->insert());
         self::assertNull($this->findTranslation($model));
 
-        self::assertSame(['name_de' => null], $model->saveTranslations());
+        $model->name_de = 'Name DE';
+
+        self::assertSame(['name_de' => null], $model->saveVirtualAttributes());
         self::assertSame('Name DE', $this->findTranslation($model)?->value);
     }
 
@@ -84,7 +81,7 @@ class SaveTranslationsTest extends TestCase
         // `setAttribute()` bypasses the lazy load, so the old attribute is unknown and only the stored record knows.
         $loaded->setAttribute('name_de', 'Name DE Updated');
 
-        self::assertSame(['name_de' => 'Name DE'], $loaded->saveTranslations());
+        self::assertSame(['name_de' => 'Name DE'], $loaded->saveVirtualAttributes());
         self::assertSame('Name DE Updated', $this->findTranslation($model)?->value);
     }
 
@@ -111,7 +108,7 @@ class SaveTranslationsTest extends TestCase
 
         $queries = $this->countQueries(function () use ($model): void {
             $model->name_de = 'Name DE';
-            self::assertSame([], $model->saveTranslations());
+            self::assertSame([], $model->saveVirtualAttributes());
         });
 
         self::assertSame(0, $queries);
@@ -122,7 +119,7 @@ class SaveTranslationsTest extends TestCase
         $model = $this->createRecord();
         $model->name_de = '';
 
-        self::assertSame(['name_de' => 'Name DE'], $model->saveTranslations());
+        self::assertSame(['name_de' => 'Name DE'], $model->saveVirtualAttributes());
         self::assertNull($this->findTranslation($model));
     }
 
@@ -202,7 +199,6 @@ class TranslatedActiveRecord extends ActiveRecord implements TrailModelInterface
     {
         return [
             ...parent::behaviors(),
-            'TranslationBehavior' => TranslationBehavior::class,
             'TrailBehavior' => TrailBehavior::class,
         ];
     }

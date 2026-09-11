@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Db;
 
-use Hirtz\Skeleton\Behaviors\TranslationBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Db\I18nActiveQuery;
 use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
@@ -208,15 +207,6 @@ class I18nActiveRecord extends ActiveRecord implements TranslationInterface
     {
         $this->i18nAttributes = ['content'];
         parent::init();
-    }
-
-    #[Override]
-    public function behaviors(): array
-    {
-        return [
-            ...parent::behaviors(),
-            'TranslationBehavior' => TranslationBehavior::class,
-        ];
     }
 
     #[Override]

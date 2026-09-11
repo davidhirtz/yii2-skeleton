@@ -6,10 +6,18 @@
 - Translated attributes are stored in the new `translation` table instead of one `_xx` column per language, so
   adding a language no longer needs a migration on every translated table. The source language stays in the
   model's own column. Added `Models\Translation`, `Models\Queries\TranslationQuery`,
-  `Models\Interfaces\TranslationInterface`, `Models\Traits\TranslationTrait`,
-  `Behaviors\TranslationBehavior` and `Models\Actions\SaveTranslations`. A translated attribute keeps its
+  `Models\Interfaces\TranslationInterface`, `Models\Traits\TranslationTrait` and
+  `Models\Actions\SaveTranslations`. A translated attribute keeps its
   name (`name_de`) but is a virtual attribute now: it is reported by `attributes()`, kept out of the
   INSERT/UPDATE and read lazily on first access. See `UPGRADE.md`
+- `Db\ActiveRecord::afterSave()` and `afterDelete()` write and delete the virtual attributes of a
+  `TranslationInterface` model, merging their previous values into the changed attributes before the event
+  `Behaviors\TrailBehavior` listens to. This replaces `Behaviors\TranslationBehavior`, which had to be
+  attached before `TrailBehavior` or the trail silently lost the translated values. The model hooks are
+  `saveVirtualAttributes()`, `deleteVirtualAttributes()` and `updateOldVirtualAttributes()` on
+  `TranslationInterface` (was `saveTranslations()`, `deleteTranslations()` and
+  `updateOldTranslationAttributes()`); the last one resets every virtual attribute, not only the translated
+  ones
 - Replaced `Db\I18nActiveQuery::replaceI18nAttributes()` with `withTranslations(array|string|null $languages = null)`,
   which eager loads the translation records of the given languages (every configured language by default).
   A query that returns more than one row applies it on its own, so a list never queries once per record in a

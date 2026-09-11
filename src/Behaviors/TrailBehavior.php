@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Behaviors;
 
-use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Trail;
 use Exception;
+use Override;
 use Yii;
 use yii\base\Behavior;
+use yii\db\ActiveRecord;
 use yii\db\AfterSaveEvent;
 
 /**
@@ -26,8 +27,7 @@ class TrailBehavior extends Behavior
     public ?string $modelClass = null;
 
     /**
-     * @array containing the excluded default attributes if the owner class does not override
-     * {@see TrailBehavior::getTrailAttributes()}
+     * @var list<string> the attributes excluded from the default trail attributes
      */
     public array $exclude = [
         'id',
@@ -37,14 +37,14 @@ class TrailBehavior extends Behavior
         'created_at',
     ];
 
-    #[\Override]
+    #[Override]
     public function attach($owner): void
     {
         $this->modelClass ??= $owner::class;
         parent::attach($owner);
     }
 
-    #[\Override]
+    #[Override]
     public function events(): array
     {
         return [
@@ -64,7 +64,10 @@ class TrailBehavior extends Behavior
         $this->onAfterSave(false, $event->changedAttributes);
     }
 
-    protected function onAfterSave($insert, $changedAttributes): void
+    /**
+     * @param array<string, mixed> $changedAttributes
+     */
+    protected function onAfterSave(bool $insert, array $changedAttributes): void
     {
         $data = [];
 

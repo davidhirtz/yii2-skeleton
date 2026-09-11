@@ -13,7 +13,7 @@ use Yii;
 
 /**
  * Stores the translated attributes (`name_de`) in {@see Translation} records: they stay attributes but have no column.
- * Requires {@see I18nAttributesTrait} and {@see \Hirtz\Skeleton\Behaviors\TranslationBehavior} before `TrailBehavior`.
+ * Requires {@see I18nAttributesTrait}.
  *
  * @property-read Translation[] $translations {@see static::getTranslations()}
  *
@@ -188,9 +188,9 @@ trait TranslationTrait
         ]));
     }
 
-    public function updateOldTranslationAttributes(): void
+    public function updateOldVirtualAttributes(): void
     {
-        foreach (array_keys($this->getTranslatedAttributeNames()) as $name) {
+        foreach ($this->getVirtualAttributes() as $name) {
             $this->setOldAttribute($name, $this->getAttribute($name));
         }
 
@@ -200,12 +200,12 @@ trait TranslationTrait
     /**
      * @return array<string, string|null>
      */
-    public function saveTranslations(): array
+    public function saveVirtualAttributes(): array
     {
         return (new SaveTranslations($this))->save();
     }
 
-    public function deleteTranslations(): void
+    public function deleteVirtualAttributes(): void
     {
         Translation::deleteAll([
             'model' => $this->getTranslationModelClass(),

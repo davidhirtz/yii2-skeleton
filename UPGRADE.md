@@ -24,10 +24,11 @@ $entry->name_de;
 1. Run the migrations. Each bundle ships one that moves its own models' `_xx` columns into
    `translation` and drops them; the skeleton's `M260910100000Translation` creates the table and must
    run first.
-2. For every translated model the project owns, add the interface, the trait and the behavior:
+2. For every translated model the project owns, add the interface and the trait. No behavior is
+   involved: `Db\ActiveRecord` writes the virtual attributes itself, before the event `TrailBehavior`
+   listens to, so the trail sees the translated values whatever order the behaviors were attached in.
 
 ```php
-use Hirtz\Skeleton\Behaviors\TranslationBehavior;
 use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
 use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\TranslationTrait;
@@ -37,17 +38,6 @@ class Product extends ActiveRecord implements TranslationInterface
     use I18nAttributesTrait;
     use TranslationTrait;
 
-    public function behaviors(): array
-    {
-        return [
-            ...parent::behaviors(),
-            // Must come before TrailBehavior: it appends the translation changes to the event's
-            // changed attributes, and Yii calls the handlers in attach order.
-            'TranslationBehavior' => TranslationBehavior::class,
-            'TrailBehavior' => TrailBehavior::class,
-        ];
-    }
-
     public function getTranslationModelClass(): string
     {
         // Never `static::class` — the container resolves the model class to whatever the application
@@ -56,6 +46,9 @@ class Product extends ActiveRecord implements TranslationInterface
     }
 }
 ```
+
+A model that overrides `saveVirtualAttributes()` returns the previous value per changed virtual
+attribute name, merged into the changed attributes the trail records.
 
 3. Write a migration for the project's own models, using the helpers on
    `Hirtz\Skeleton\Db\Traits\MigrationTrait`:
