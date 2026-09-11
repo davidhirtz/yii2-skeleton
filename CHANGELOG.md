@@ -1,5 +1,7 @@
 ## 3.0.0 (in development)
 
+- Added `Models\Traits\VisibleAttributeTrait`, moved here from `Hirtz\Cms\Models\Traits`: `getVisibleAttribute()`
+  and `isAttributeVisible()` read the `hiddenFields` key of a model's type options
 - Fixed the trail link of a deleted user in `Modules\Admin\Widgets\Grids\TrailGridView`: it joined the class and
   the id with `:` while the trail index splits the parameter on `@`, so the link filtered nothing. Both routes are
   built by the new `getTrailIndexRoute()`, with `getUserTrailRoute()` next to `getTrailModelRoute()`
