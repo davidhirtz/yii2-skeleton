@@ -4,7 +4,9 @@
   the new `Test\Fixtures\ActiveFixture`, which never resets the auto-increment counter: a record a test creates has
   no predictable id. DDL a test needs goes into the new `setUpSchema()` / `tearDownSchema()` hooks, which run outside
   the transaction; a test that runs DDL mid-test gets its fixtures unloaded by `tearDown()` instead. The table schema
-  is cached across the tests of a process
+  is cached across the tests of a process. `config/test.php` and `Test\TestCase` honour paratest's `TEST_TOKEN`:
+  worker N uses the database `<dbname>_N` and the runtime directory `runtime/paratest/N`. `setUp()` also clears
+  `$_GET`, `$_POST`, `$_COOKIE`, `$_REQUEST` and `$_FILES`, which a functional test's request used to leave behind
 - Added `Models\Interfaces\AdminRouteInterface`, the contract behind `getAdminRoute()`. `Models\User` and
   `Models\Redirect` implement it, and `Models\Traits\TrailModelTrait::getTrailModelAdminRoute()` asks for the interface
   instead of sniffing the method with `method_exists()`, so a model that implements it no longer needs to bridge the

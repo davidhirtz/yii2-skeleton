@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Db;
 
+use Hirtz\Skeleton\Db\Dsn;
 use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Test\TestCase;
 use Yii;
@@ -19,8 +20,9 @@ class ConnectionTest extends TestCase
 
         $filePath = $db->backup();
 
+        $database = Dsn::fromString($db->dsn)->database;
         $date = date('Y-m-d');
-        $expected = "$db->backupPath/yii2_test-$date.sql";
+        $expected = "$db->backupPath/$database-$date.sql";
 
         self::assertFileExists($filePath);
         self::assertEquals($expected, $filePath);

@@ -31,6 +31,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     protected string $webroot = '@runtime/web';
 
     private array $originalServerParams;
+    private array $originalRequestParams;
 
     private static ?ArrayCache $schemaCache = null;
 
@@ -40,11 +41,15 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $this->config ??= require(__DIR__ . '/../../config/test.php');
 
         $this->originalServerParams = $_SERVER;
+        $this->originalRequestParams = [$_GET, $_POST, $_COOKIE, $_REQUEST, $_FILES];
 
         $_SERVER = [
             ...$_SERVER,
             ...$this->getServerParams()
         ];
+
+        // a functional test's request leaves them behind, and the next test's URLs would carry its query string
+        $_GET = $_POST = $_COOKIE = $_REQUEST = $_FILES = [];
 
         $this->setUpApplication();
         $this->setUpSchema();
@@ -73,6 +78,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $this->tearDownApplication();
 
         $_SERVER = $this->originalServerParams;
+        [$_GET, $_POST, $_COOKIE, $_REQUEST, $_FILES] = $this->originalRequestParams;
 
         parent::tearDown();
     }
@@ -117,6 +123,11 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
                 'email' => 'test@test.localhost',
             ],
         ];
+
+        // paratest numbers its workers; each one gets its own runtime directory next to its own database
+        if ($token = getenv('TEST_TOKEN')) {
+            $config['runtimePath'] = getcwd() . "/runtime/paratest/$token";
+        }
 
         Yii::createObject(ArrayHelper::merge($config, $this->config));
         Yii::setAlias('@webroot', $this->webroot);
