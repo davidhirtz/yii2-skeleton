@@ -189,6 +189,32 @@ class GroupCustomAttributeTest extends TestCase
         self::assertSame('GroupRecord[rows][0][cells][1]', $item->getCustomAttributeItems('cells')[1]->formName());
     }
 
+    /**
+     * The items are cached to keep the validated instances for the form; an assignment in between must rebuild them.
+     */
+    public function testReassigningTheGroupAfterValidationRebuildsTheItems(): void
+    {
+        $model = $this->createRecord();
+        $model->links = [['label' => 'A', 'url' => 'https://a.example.com']];
+
+        self::assertTrue($model->validate());
+        $items = $model->getCustomAttributeItems('links');
+
+        // Unchanged since validation, so the form gets the validated instances.
+        self::assertSame($items, $model->getCustomAttributeItems('links'));
+
+        $model->links = [['label' => 'B', 'url' => 'https://b.example.com']];
+
+        self::assertTrue($model->validate());
+        self::assertSame('B', $model->links[0]['label']);
+        self::assertNotSame($items, $model->getCustomAttributeItems('links'));
+
+        $model->links = [['label' => 'C', 'url' => 'not a url']];
+
+        self::assertFalse($model->validate());
+        self::assertTrue($model->getCustomAttributeItems('links')[0]->hasErrors('url'));
+    }
+
     public function testTranslatingAGroupThrows(): void
     {
         $this->expectException(InvalidConfigException::class);

@@ -58,6 +58,7 @@ class CustomAttributesTraitTest extends TestCase
     {
         Translation::deleteAll(['model' => CustomAttributeRecord::class]);
         Trail::deleteAll(['model' => CustomAttributeRecord::class]);
+        Yii::$container->clear(CustomAttributeRecord::class);
 
         Yii::$app->getDb()->createCommand()
             ->dropTable(CustomAttributeRecord::tableName())
@@ -329,6 +330,44 @@ class CustomAttributesTraitTest extends TestCase
         self::assertFalse($model->featured);
     }
 
+    public function testConfiguredDefinitionsReplaceThoseOfTheType(): void
+    {
+        Yii::$container->set(CustomAttributeRecord::class, [
+            'customAttributes' => [TextCustomAttribute::make('configured')],
+        ]);
+
+        $model = CustomAttributeRecord::create();
+        $model->type = CustomAttributeRecord::TYPE_LINKS;
+        $model->configured = 'Configured';
+
+        self::assertSame(['configured'], array_keys($model->getCustomAttributeDefinitions()));
+        self::assertFalse($model->hasAttribute('links'));
+        self::assertTrue($model->save(), implode(' ', $model->getErrorSummary(true)));
+
+        // Applies to loaded records, which are instantiated through the container as well.
+        self::assertSame('Configured', CustomAttributeRecord::findOne($model->id)->configured);
+    }
+
+    public function testSetCustomAttributesAcceptsAClosureAndResetsTheDefinitions(): void
+    {
+        $model = CustomAttributeRecord::create();
+        $model->type = CustomAttributeRecord::TYPE_DEFAULT;
+
+        self::assertFalse($model->hasAttribute('configured'));
+        self::assertFalse($model->isAttributeSafe('configured'));
+
+        $model->setCustomAttributes(static fn (CustomAttributeRecord $model): array => [
+            TextCustomAttribute::make('configured')->required(),
+        ]);
+
+        self::assertTrue($model->hasAttribute('configured'));
+        self::assertTrue($model->isAttributeSafe('configured'));
+        self::assertNotContains('subtitle', $model->attributes());
+
+        self::assertFalse($model->validate());
+        self::assertArrayHasKey('configured', $model->getErrors());
+    }
+
     public function testDefinitionCollidingWithAColumnThrows(): void
     {
         $model = CustomAttributeRecord::create();
@@ -416,6 +455,7 @@ class CustomAttributesTraitTest extends TestCase
  * @property string|null $locked
  * @property string|null $note
  * @property array|null $links
+ * @property string|null $configured
  */
 class CustomAttributeRecord extends ActiveRecord implements
     CustomAttributeInterface,

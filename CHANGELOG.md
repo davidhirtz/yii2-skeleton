@@ -16,7 +16,10 @@
   `Assets\CustomAttributesAssetBundle`
 - Added `Widgets\Forms\Fields\Field::reloadsForm()` and `Web\Request::isFormReload()`: a field the rendered form
   depends on posts the form to its own action on change and swaps it with the response, and the marker header keeps
-  the action from saving
+  the action from saving. `Widgets\Forms\Fields\TypeSelectField` applies it to a type select, but only when the
+  types render different custom attribute fields (per-type fingerprints on the options and a conditional trigger)
+- `CustomAttributeInterface::setCustomAttributes()` takes a list of definitions or a closure returning one, so they
+  can be configured through the container like `i18nAttributes`; a configured list replaces the type options
 - `Widgets\Forms\Fields\SelectField::multiple()` renders a multiple select: the name ends in `[]` and `selected`
   matches against an array. `itemAttributes()` adds attributes to an option however the item was built
 - Added `Db\Traits\MigrationTrait::addCustomAttributesColumn()` and `dropCustomAttributesColumn()`

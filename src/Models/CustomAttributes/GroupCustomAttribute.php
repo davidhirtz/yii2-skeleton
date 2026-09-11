@@ -119,11 +119,13 @@ class GroupCustomAttribute extends CustomAttribute
     /**
      * Drops rows whose every value is empty, reindexes the rest in request order and copies the item errors into the
      * owner as `links.0.url`, so the save is blocked and the form shows them next to their input.
+     *
+     * @return array<string, mixed>|list<array<string, mixed>>|null the normalized value the owner assigns
      */
-    public function validateGroup(Model $owner, string $attribute): void
+    public function validateGroup(Model $owner, string $attribute): mixed
     {
         if (!$owner instanceof CustomAttributeInterface) {
-            return;
+            return $owner->{$attribute};
         }
 
         $items = $owner->getCustomAttributeItems($attribute);
@@ -159,7 +161,7 @@ class GroupCustomAttribute extends CustomAttribute
             }
         }
 
-        $owner->{$attribute} = $this->multiple ? ($values ?: null) : (($values[0] ?? []) ?: null);
+        return $this->multiple ? ($values ?: null) : (($values[0] ?? []) ?: null);
     }
 
     /**

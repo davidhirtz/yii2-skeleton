@@ -22,6 +22,12 @@ interface CustomAttributeInterface
     public function getCustomAttributes(): array;
 
     /**
+     * @param list<CustomAttribute>|\Closure(static): list<CustomAttribute>|null $customAttributes replaces those of
+     * the type options; settable through the container like `i18nAttributes`
+     */
+    public function setCustomAttributes(array|\Closure|null $customAttributes): void;
+
+    /**
      * @return array<string, CustomAttribute>
      */
     public function getCustomAttributeDefinitions(): array;

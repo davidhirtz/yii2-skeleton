@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Models\Traits;
 use Closure;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\CustomAttributes\CustomAttribute;
+use Hirtz\Skeleton\Models\CustomAttributes\CustomAttributeGroupItem;
 use Hirtz\Skeleton\Models\CustomAttributes\GroupCustomAttribute;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
@@ -31,22 +32,41 @@ trait CustomAttributesTrait
     private ?string $_customAttributesKey = null;
 
     /**
-     * @var array<string, array<int|string, \Hirtz\Skeleton\Models\CustomAttributes\CustomAttributeGroupItem>>
+     * @var list<CustomAttribute>|Closure(static): list<CustomAttribute>|null
+     */
+    private array|Closure|null $_customAttributes = null;
+
+    /**
+     * @var array<string, array<int|string, CustomAttributeGroupItem>>
      */
     private array $_customAttributeItems = [];
 
     /**
-     * @return list<CustomAttribute>
+     * @var array<string, mixed> the value each item list was built from
+     */
+    private array $_customAttributeItemSources = [];
+
+    /**
+     * @return list<CustomAttribute> the configured definitions, or those of the type options when none were set
      */
     public function getCustomAttributes(): array
     {
-        if (!$this instanceof TypeAttributeInterface) {
-            return [];
+        $attributes = $this->_customAttributes;
+
+        if ($attributes === null && $this instanceof TypeAttributeInterface) {
+            $attributes = $this->getTypeOptions()['customAttributes'] ?? [];
         }
 
-        $attributes = $this->getTypeOptions()['customAttributes'] ?? [];
+        return $attributes instanceof Closure ? $attributes($this) : $attributes ?? [];
+    }
 
-        return $attributes instanceof Closure ? $attributes($this) : $attributes;
+    /**
+     * @param list<CustomAttribute>|Closure(static): list<CustomAttribute>|null $customAttributes
+     */
+    public function setCustomAttributes(array|Closure|null $customAttributes): void
+    {
+        $this->_customAttributes = $customAttributes;
+        $this->resetCustomAttributes();
     }
 
     /**
@@ -62,6 +82,7 @@ trait CustomAttributesTrait
             }
 
             $this->_customAttributeItems = [];
+            $this->_customAttributeItemSources = [];
             $this->resetValidators();
         }
 
@@ -164,16 +185,23 @@ trait CustomAttributesTrait
     }
 
     /**
-     * @return array<int|string, \Hirtz\Skeleton\Models\CustomAttributes\CustomAttributeGroupItem>
+     * Rebuilt when the attribute was assigned since, and kept otherwise, so the form renders the instances that carry
+     * the validation errors.
+     *
+     * @return array<int|string, CustomAttributeGroupItem>
      */
     public function getCustomAttributeItems(string $name): array
     {
-        if (!isset($this->_customAttributeItems[$name])) {
+        $value = $this->{$name};
+
+        if (!array_key_exists($name, $this->_customAttributeItems) || $this->_customAttributeItemSources[$name] !== $value) {
             $definition = $this->getCustomAttributeDefinitions()[$name] ?? null;
 
             $this->_customAttributeItems[$name] = $definition instanceof GroupCustomAttribute
-                ? $definition->createItems($this, $this->{$name})
+                ? $definition->createItems($this, $value)
                 : [];
+
+            $this->_customAttributeItemSources[$name] = $value;
         }
 
         return $this->_customAttributeItems[$name];
@@ -207,7 +235,11 @@ trait CustomAttributesTrait
         $definition = $this->getCustomAttribute($attribute);
 
         if ($definition instanceof GroupCustomAttribute) {
-            $definition->validateGroup($this, $attribute);
+            // The normalized value is recorded as the items' source, so the validated instances survive the write-back.
+            $value = $definition->validateGroup($this, $attribute);
+
+            $this->{$attribute} = $value;
+            $this->_customAttributeItemSources[$attribute] = $value;
         }
     }
 
@@ -231,6 +263,7 @@ trait CustomAttributesTrait
         $this->_customAttributeDefinitions = null;
         $this->_customAttributesKey = null;
         $this->_customAttributeItems = [];
+        $this->_customAttributeItemSources = [];
 
         $this->resetValidators();
     }

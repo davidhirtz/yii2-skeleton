@@ -64,6 +64,21 @@ public static function getTypes(): array
 }
 ```
 
+The definitions can also be configured through the container, like `i18nAttributes`; a configured
+list (or closure) replaces the type options entirely:
+
+```php
+'container' => [
+    'definitions' => [
+        Section::class => [
+            'customAttributes' => [
+                BooleanCustomAttribute::make('featured'),
+            ],
+        ],
+    ],
+],
+```
+
 A model whose definitions depend on something else overrides `getCustomAttributes()`, and
 `getCustomAttributesKey()` with whatever the definitions are derived from — the resolved definitions
 are cached until that key changes.
@@ -103,9 +118,10 @@ columns directly and therefore bypass the JSON.
 ### Forms
 
 `ActiveForm` subclasses append `...$this->getCustomAttributeFields()` (from
-`Widgets\Forms\Traits\CustomAttributeFieldsTrait`) to their fieldset. A type select whose types
-render different fields reloads the form through htmx before the fields can change; the action tells
-that request apart with `Request::isFormReload()` and skips the save:
+`Widgets\Forms\Traits\CustomAttributeFieldsTrait`) to their fieldset and render the type select
+with `Widgets\Forms\Fields\TypeSelectField`. When the types render different fields it reloads the
+form through htmx before the fields can change, and does nothing otherwise; the action tells that
+request apart with `Request::isFormReload()` and skips the save:
 
 ```php
 if ($section->load($post) && !$this->request->isFormReload()) {

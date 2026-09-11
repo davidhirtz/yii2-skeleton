@@ -21,7 +21,9 @@ use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
 use Hirtz\Skeleton\Models\Translation;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
+use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
 use Hirtz\Skeleton\Widgets\Forms\Fields\GroupField;
+use Hirtz\Skeleton\Widgets\Forms\Fields\TypeSelectField;
 use Hirtz\Skeleton\Widgets\Forms\Fieldset;
 use Override;
 use Yii;
@@ -172,6 +174,35 @@ class CustomAttributeFieldsTest extends TestCase
         self::assertStringNotContainsString('data-group-remove', $content);
     }
 
+    public function testTypeSelectReloadsOnlyWhenTheTypesRenderDifferentFields(): void
+    {
+        $content = ActiveForm::make()
+            ->model($this->createRecord())
+            ->rows([TypeSelectField::make()->property('type')])
+            ->render();
+
+        self::assertStringContainsString('name="FieldRecord[type]"', $content);
+        self::assertStringContainsString('hx-trigger="change[this.selectedOptions[0].dataset.fingerprint !== this.dataset.fingerprint]"', $content);
+        self::assertStringContainsString('hx-headers=\'{"X-Form-Reload":"1"}\'', $content);
+        self::assertMatchesRegularExpression('/<select[^>]* data-fingerprint="[0-9a-f]{32}"/', $content);
+        self::assertMatchesRegularExpression('/<option value="2" data-fingerprint="[0-9a-f]{32}">Links<\/option>/', $content);
+
+        $model = UniformTypeRecord::create();
+        $model->type = UniformTypeRecord::TYPE_DEFAULT;
+
+        $content = ActiveForm::make()
+            ->model($model)
+            ->rows([TypeSelectField::make()->property('type')])
+            ->render();
+
+        self::assertMatchesRegularExpression('/<select[^>]*>/', $content);
+        preg_match('/<select[^>]*>/', $content, $select);
+
+        self::assertStringContainsString('name="UniformTypeRecord[type]"', $select[0]);
+        self::assertStringNotContainsString('data-fingerprint', $content);
+        self::assertStringNotContainsString('hx-', $select[0]);
+    }
+
     protected function createRecord(): FieldRecord
     {
         $model = FieldRecord::create();
@@ -282,5 +313,28 @@ class FieldRecord extends ActiveRecord implements
     public static function tableName(): string
     {
         return 'field_test';
+    }
+}
+
+/**
+ * Two types sharing one definition list, so the type select has nothing to reload for.
+ */
+class UniformTypeRecord extends FieldRecord
+{
+    #[Override]
+    public static function getTypes(): array
+    {
+        $customAttributes = fn (): array => [TextCustomAttribute::make('subtitle')];
+
+        return [
+            self::TYPE_DEFAULT => [
+                'name' => 'Default',
+                'customAttributes' => $customAttributes,
+            ],
+            self::TYPE_LINKS => [
+                'name' => 'Other',
+                'customAttributes' => $customAttributes,
+            ],
+        ];
     }
 }
