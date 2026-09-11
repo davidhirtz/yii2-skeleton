@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Modules\Admin\Widgets\Grids;
 
+use Hirtz\Skeleton\Models\Trail;
+use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\TrailGridView;
 use Hirtz\Skeleton\Test\TestCase;
 use Stringable;
@@ -76,6 +78,16 @@ class TrailGridViewTest extends TestCase
         self::assertStringNotContainsString('trail-diff-values', $content);
     }
 
+    public function testTheDeletedUserLinkIsParsedByTheTrailIndex(): void
+    {
+        $trail = Trail::create();
+        $trail->user_id = 9;
+
+        $route = TestTrailGridView::make()->userTrailRoute($trail);
+
+        self::assertSame([User::class, '9'], explode('@', $route['model']));
+    }
+
     protected function getBody(string $content): string
     {
         return (string)preg_replace('/^.*<tbody>|<\/tbody>.*$/s', '', $content);
@@ -92,5 +104,10 @@ class TestTrailGridView extends TrailGridView
     public function updatedAttributeContent(mixed $oldValue, mixed $newValue): string|Stringable
     {
         return $this->getUpdatedAttributeContent($oldValue, $newValue);
+    }
+
+    public function userTrailRoute(Trail $trail): array
+    {
+        return $this->getUserTrailRoute($trail);
     }
 }

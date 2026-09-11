@@ -1,5 +1,8 @@
 ## 3.0.0 (in development)
 
+- Fixed the trail link of a deleted user in `Modules\Admin\Widgets\Grids\TrailGridView`: it joined the class and
+  the id with `:` while the trail index splits the parameter on `@`, so the link filtered nothing. Both routes are
+  built by the new `getTrailIndexRoute()`, with `getUserTrailRoute()` next to `getTrailModelRoute()`
 - The polymorphic `trail` and `translation` tables name their owner in `model_class` instead of `model`
   (`M260912090000ModelClass`), so a model can keep a relation named `model` for the record itself. The JSON key
   `trail.data.model` written by the `TYPE_CHILD_*` types was renamed with it. `Models\Trail::getModelClass()` and

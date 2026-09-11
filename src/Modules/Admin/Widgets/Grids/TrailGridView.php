@@ -435,7 +435,7 @@ class TrailGridView extends GridView
         }
 
         return A::make()
-            ->href(['index', 'model' => User::class . ":$trail->user_id"])
+            ->href($this->getUserTrailRoute($trail))
             ->content(Lang::t('skeleton', 'COMMON_MODEL_ID', [
                 'model' => Lang::t('skeleton', 'COMMON_USER'),
                 'id' => $trail->user_id,
@@ -451,6 +451,20 @@ class TrailGridView extends GridView
 
     protected function getTrailModelRoute(Trail $trail): ?array
     {
-        return ['index', 'model' => implode('@', array_filter([$trail->model_class, (string)$trail->model_id]))];
+        return $this->getTrailIndexRoute($trail->model_class, (string)$trail->model_id);
+    }
+
+    protected function getUserTrailRoute(Trail $trail): array
+    {
+        return $this->getTrailIndexRoute(User::class, (string)$trail->user_id);
+    }
+
+    /**
+     * {@see \Hirtz\Skeleton\Modules\Admin\Controllers\TrailController::actionIndex()} splits the parameter on
+     * `@`, so a route that joins on anything else filters nothing.
+     */
+    protected function getTrailIndexRoute(string $modelClass, string $modelId): array
+    {
+        return ['index', 'model' => implode('@', array_filter([$modelClass, $modelId]))];
     }
 }
