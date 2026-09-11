@@ -13,10 +13,8 @@ use Yii;
 class NestedTreeTraitTest extends TestCase
 {
     #[Override]
-    protected function setUp(): void
+    protected function setUpSchema(): void
     {
-        parent::setUp();
-
         $columns = [
             'id' => 'pk',
             'name' => 'string NOT NULL',
@@ -34,14 +32,12 @@ class NestedTreeTraitTest extends TestCase
     }
 
     #[Override]
-    protected function tearDown(): void
+    protected function tearDownSchema(): void
     {
         Yii::$app->getDb()
             ->createCommand()
             ->dropTable(TestNestedTreeActiveRecord::tableName())
             ->execute();
-
-        parent::tearDown();
     }
 
     public function testNestedTree(): void

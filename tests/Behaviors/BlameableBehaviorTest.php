@@ -20,7 +20,11 @@ class BlameableBehaviorTest extends TestCase
 
         Yii::$app->set('user', UserMock::class);
         $this->getUser()->login(10);
+    }
 
+    #[\Override]
+    protected function setUpSchema(): void
+    {
         $columns = [
             'name' => 'string',
             'updated_by_user_id' => 'integer null',
@@ -33,10 +37,9 @@ class BlameableBehaviorTest extends TestCase
     }
 
     #[\Override]
-    protected function tearDown(): void
+    protected function tearDownSchema(): void
     {
         Yii::$app->getDb()->createCommand()->dropTable('test_blame')->execute();
-        parent::tearDown();
     }
 
     public function testInsertUserIsGuest(): void

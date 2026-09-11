@@ -23,7 +23,11 @@ class I18nAttributesTraitTest extends TestCase
         parent::setUp();
 
         Yii::$app->getI18n()->setLanguages(['en-US', 'de']);
+    }
 
+    #[Override]
+    protected function setUpSchema(): void
+    {
         $columns = [
             'id' => 'pk',
             'name' => 'string not null',
@@ -41,19 +45,12 @@ class I18nAttributesTraitTest extends TestCase
             ->execute();
     }
 
-    /**
-     * `CREATE TABLE` commits the test transaction, so the translations are removed by hand.
-     */
     #[Override]
-    protected function tearDown(): void
+    protected function tearDownSchema(): void
     {
-        Translation::deleteAll(['model_class' => TestI18nActiveRecord::class]);
-
         Yii::$app->getDb()->createCommand()
             ->dropTable(TestI18nActiveRecord::tableName())
             ->execute();
-
-        parent::tearDown();
     }
 
     public function testI18nAttributes(): void

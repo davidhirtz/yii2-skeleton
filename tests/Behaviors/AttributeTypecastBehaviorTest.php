@@ -18,11 +18,17 @@ use yii\validators\NumberValidator;
 
 class AttributeTypecastBehaviorTest extends TestCase
 {
-    #[\Override]
-    protected function setUp(): void
+    #[Override]
+    protected function tearDown(): void
     {
-        parent::setUp();
+        AttributeTypecastBehavior::clearAutoDetectedAttributeTypes();
 
+        parent::tearDown();
+    }
+
+    #[Override]
+    protected function setUpSchema(): void
+    {
         $columns = [
             'id' => 'pk',
             'name' => 'string not null',
@@ -38,13 +44,10 @@ class AttributeTypecastBehaviorTest extends TestCase
             ->execute();
     }
 
-    #[\Override]
-    protected function tearDown(): void
+    #[Override]
+    protected function tearDownSchema(): void
     {
         Yii::$app->getDb()->createCommand()->dropTable(AttributeTypecastActiveRecord::tableName())->execute();
-        AttributeTypecastBehavior::clearAutoDetectedAttributeTypes();
-
-        parent::tearDown();
     }
 
     public function testTypecast(): void

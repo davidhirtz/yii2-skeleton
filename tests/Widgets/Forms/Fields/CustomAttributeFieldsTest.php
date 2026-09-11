@@ -18,7 +18,6 @@ use Hirtz\Skeleton\Models\Traits\CustomAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\TranslationTrait;
 use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
-use Hirtz\Skeleton\Models\Translation;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
@@ -36,7 +35,11 @@ class CustomAttributeFieldsTest extends TestCase
         parent::setUp();
 
         Yii::$app->getI18n()->setLanguages(['en-US', 'de']);
+    }
 
+    #[Override]
+    protected function setUpSchema(): void
+    {
         Yii::$app->getDb()->createCommand()
             ->createTable(FieldRecord::tableName(), [
                 'id' => 'pk',
@@ -46,19 +49,12 @@ class CustomAttributeFieldsTest extends TestCase
             ->execute();
     }
 
-    /**
-     * `CREATE TABLE` commits the test transaction, so the records are removed by hand.
-     */
     #[Override]
-    protected function tearDown(): void
+    protected function tearDownSchema(): void
     {
-        Translation::deleteAll(['model_class' => FieldRecord::class]);
-
         Yii::$app->getDb()->createCommand()
             ->dropTable(FieldRecord::tableName())
             ->execute();
-
-        parent::tearDown();
     }
 
     public function testScalarFieldsRenderPerLanguageAndByType(): void

@@ -12,10 +12,8 @@ use Yii;
 class SerializedAttributeBehaviorTest extends TestCase
 {
     #[\Override]
-    protected function setUp(): void
+    protected function setUpSchema(): void
     {
-        parent::setUp();
-
         $columns = [
             'id' => 'pk',
             'data' => 'blob null',
@@ -27,13 +25,11 @@ class SerializedAttributeBehaviorTest extends TestCase
     }
 
     #[\Override]
-    protected function tearDown(): void
+    protected function tearDownSchema(): void
     {
         Yii::$app->getDb()->createCommand()
             ->dropTable(SerializedAttributesActiveRecord::tableName())
             ->execute();
-
-        parent::tearDown();
     }
 
     public function testBeforeSaveEvent(): void

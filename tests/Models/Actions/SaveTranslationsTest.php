@@ -26,7 +26,11 @@ class SaveTranslationsTest extends TestCase
         parent::setUp();
 
         Yii::$app->getI18n()->setLanguages(['en-US', 'de']);
+    }
 
+    #[Override]
+    protected function setUpSchema(): void
+    {
         Yii::$app->getDb()->createCommand()
             ->createTable(TranslatedActiveRecord::tableName(), [
                 'id' => 'pk',
@@ -35,20 +39,12 @@ class SaveTranslationsTest extends TestCase
             ->execute();
     }
 
-    /**
-     * `CREATE TABLE` commits the test transaction, so the records are removed by hand.
-     */
     #[Override]
-    protected function tearDown(): void
+    protected function tearDownSchema(): void
     {
-        Translation::deleteAll(['model_class' => TranslatedActiveRecord::class]);
-        Trail::deleteAll(['model_class' => TranslatedActiveRecord::class]);
-
         Yii::$app->getDb()->createCommand()
             ->dropTable(TranslatedActiveRecord::tableName())
             ->execute();
-
-        parent::tearDown();
     }
 
     public function testInsertWritesTranslationsAndReturnsTheChanges(): void

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Test\Fixtures;
 
 use Hirtz\Skeleton\Models\User;
-use yii\test\ActiveFixture;
 
 class UserFixture extends ActiveFixture
 {

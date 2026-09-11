@@ -1,5 +1,10 @@
 ## 3.0.0 (in development)
 
+- `Test\TestCase` loads the fixtures inside the test transaction and no longer unloads them, and the fixtures extend
+  the new `Test\Fixtures\ActiveFixture`, which never resets the auto-increment counter: a record a test creates has
+  no predictable id. DDL a test needs goes into the new `setUpSchema()` / `tearDownSchema()` hooks, which run outside
+  the transaction; a test that runs DDL mid-test gets its fixtures unloaded by `tearDown()` instead. The table schema
+  is cached across the tests of a process
 - Added `Models\Interfaces\AdminRouteInterface`, the contract behind `getAdminRoute()`. `Models\User` and
   `Models\Redirect` implement it, and `Models\Traits\TrailModelTrait::getTrailModelAdminRoute()` asks for the interface
   instead of sniffing the method with `method_exists()`, so a model that implements it no longer needs to bridge the

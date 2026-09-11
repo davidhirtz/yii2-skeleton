@@ -20,11 +20,9 @@ class ActiveRecordTest extends TestCase
 {
     use UserFixtureTrait;
 
-    #[\Override]
-    protected function setUp(): void
+    #[Override]
+    protected function setUpSchema(): void
     {
-        parent::setUp();
-
         $columns = [
             'id' => 'pk',
             'name' => 'string not null',
@@ -39,14 +37,12 @@ class ActiveRecordTest extends TestCase
             ->execute();
     }
 
-    #[\Override]
-    protected function tearDown(): void
+    #[Override]
+    protected function tearDownSchema(): void
     {
         Yii::$app->getDb()->createCommand()
             ->dropTable(TestActiveRecord::tableName())
             ->execute();
-
-        parent::tearDown();
     }
 
     public function testFind(): void

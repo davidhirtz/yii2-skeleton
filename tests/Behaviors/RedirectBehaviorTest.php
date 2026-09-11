@@ -19,6 +19,14 @@ class RedirectBehaviorTest extends TestCase
     {
         parent::setUp();
 
+        Yii::$app->getUrlManager()->addRules([
+            'test/<query>' => 'site/index',
+        ]);
+    }
+
+    #[Override]
+    protected function setUpSchema(): void
+    {
         $columns = [
             'id' => 'pk',
             'query' => 'string not null',
@@ -27,22 +35,14 @@ class RedirectBehaviorTest extends TestCase
         Yii::$app->getDb()->createCommand()
             ->createTable(RedirectActiveRecord::tableName(), $columns)
             ->execute();
-
-        Yii::$app->getUrlManager()->addRules([
-            'test/<query>' => 'site/index',
-        ]);
     }
 
     #[Override]
-    protected function tearDown(): void
+    protected function tearDownSchema(): void
     {
         Yii::$app->getDb()->createCommand()
             ->dropTable(RedirectActiveRecord::tableName())
             ->execute();
-
-        Redirect::deleteAll();
-
-        parent::tearDown();
     }
 
     public function testCreateUrl(): void

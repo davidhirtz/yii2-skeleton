@@ -19,16 +19,6 @@ class SitemapBehaviorTest extends TestCase
     {
         parent::setUp();
 
-        $columns = [
-            'id' => 'pk',
-            'url' => 'string not null',
-            'updated' => 'int unsigned',
-        ];
-
-        Yii::$app->getDb()->createCommand()
-            ->createTable(SitemapActiveRecord::tableName(), $columns)
-            ->execute();
-
         $this->now = time();
 
         Yii::$app->getDb()->createCommand()->batchInsert(SitemapActiveRecord::tableName(), ['url', 'updated'], [
@@ -42,10 +32,22 @@ class SitemapBehaviorTest extends TestCase
     }
 
     #[\Override]
-    protected function tearDown(): void
+    protected function setUpSchema(): void
     {
-        parent::tearDown();
+        $columns = [
+            'id' => 'pk',
+            'url' => 'string not null',
+            'updated' => 'int unsigned',
+        ];
 
+        Yii::$app->getDb()->createCommand()
+            ->createTable(SitemapActiveRecord::tableName(), $columns)
+            ->execute();
+    }
+
+    #[\Override]
+    protected function tearDownSchema(): void
+    {
         Yii::$app->getDb()->createCommand()
             ->dropTable(SitemapActiveRecord::tableName())
             ->execute();

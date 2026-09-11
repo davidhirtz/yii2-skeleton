@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Web\Application;
 use Override;
 use Yii;
 use yii\base\Event;
+use yii\caching\ArrayCache;
 use yii\db\Transaction;
 use yii\log\Logger;
 use yii\test\FixtureTrait;
@@ -31,6 +32,8 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
     private array $originalServerParams;
 
+    private static ?ArrayCache $schemaCache = null;
+
     #[Override]
     protected function setUp(): void
     {
@@ -44,9 +47,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         ];
 
         $this->setUpApplication();
-        $this->initFixtures();
+        $this->setUpSchema();
 
         $this->transaction = Yii::$app->getDb()->beginTransaction();
+        $this->initFixtures();
 
         parent::setUp();
     }
@@ -58,14 +62,30 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             Yii::$app->getSession()->close();
         }
 
-        $this->transaction->rollBack();
-        $this->unloadFixtures();
+        if ($this->transaction->getIsActive() && $this->transaction->db->pdo?->inTransaction()) {
+            $this->transaction->rollBack();
+        } else {
+            // DDL run mid-test committed the transaction; `inTransaction()` reports the server's state, not PDO's
+            $this->unloadFixtures();
+        }
 
+        $this->tearDownSchema();
         $this->tearDownApplication();
 
         $_SERVER = $this->originalServerParams;
 
         parent::tearDown();
+    }
+
+    /**
+     * DDL belongs here, before the transaction: in `setUp()` it would commit the fixtures and the test's own rows.
+     */
+    protected function setUpSchema(): void
+    {
+    }
+
+    protected function tearDownSchema(): void
+    {
     }
 
     protected function getServerParams(): array
@@ -85,6 +105,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             'basePath' => getcwd(),
             'class' => $this->applicationClass,
             'components' => [
+                'db' => [
+                    'schemaCache' => self::$schemaCache ??= new ArrayCache(),
+                ],
                 'mailer' => [
                     'class' => TestMailer::class,
                 ],

@@ -9,7 +9,6 @@ use Hirtz\Skeleton\Db\I18nActiveQuery;
 use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
 use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\TranslationTrait;
-use Hirtz\Skeleton\Models\Translation;
 use Hirtz\Skeleton\Test\TestCase;
 use Override;
 use Yii;
@@ -22,7 +21,11 @@ class I18nActiveQueryTest extends TestCase
         parent::setUp();
 
         Yii::$app->getI18n()->setLanguages(['en-US', 'de']);
+    }
 
+    #[Override]
+    protected function setUpSchema(): void
+    {
         Yii::$app->getDb()->createCommand()
             ->createTable(I18nActiveRecord::tableName(), [
                 'id' => 'pk',
@@ -31,19 +34,12 @@ class I18nActiveQueryTest extends TestCase
             ->execute();
     }
 
-    /**
-     * `CREATE TABLE` commits the test transaction, so the translations are removed by hand.
-     */
     #[Override]
-    protected function tearDown(): void
+    protected function tearDownSchema(): void
     {
-        Translation::deleteAll(['model_class' => I18nActiveRecord::class]);
-
         Yii::$app->getDb()->createCommand()
             ->dropTable(I18nActiveRecord::tableName())
             ->execute();
-
-        parent::tearDown();
     }
 
     public function testI18nAttributeName(): void

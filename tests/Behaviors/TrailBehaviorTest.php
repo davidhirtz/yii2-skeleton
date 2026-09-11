@@ -35,7 +35,11 @@ class TrailBehaviorTest extends TestCase
         parent::setUp();
 
         $this->trailId = (int)Trail::find()->max('id');
+    }
 
+    #[Override]
+    protected function setUpSchema(): void
+    {
         $columns = [
             'id' => 'pk',
             'name' => 'string null',
@@ -51,19 +55,12 @@ class TrailBehaviorTest extends TestCase
             ->execute();
     }
 
-    /**
-     * `CREATE TABLE` commits the test transaction, so the trail records are removed by hand.
-     */
-    #[\Override]
-    protected function tearDown(): void
+    #[Override]
+    protected function tearDownSchema(): void
     {
-        Trail::deleteAll(['>', 'id', $this->trailId]);
-
         Yii::$app->getDb()->createCommand()
             ->dropTable(TrailActiveRecord::tableName())
             ->execute();
-
-        parent::tearDown();
     }
 
     public function testAfterInsertEvent(): void

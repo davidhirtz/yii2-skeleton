@@ -21,18 +21,6 @@ class MaterializedTreeTraitTest extends TestCase
 
         Yii::$app->getI18n()->setLanguages(['en-US', 'de']);
 
-        $columns = [
-            'id' => 'pk',
-            'parent_id' => 'integer null',
-            'path' => 'json null',
-            'name' => 'string null',
-            'position' => 'integer',
-        ];
-
-        Yii::$app->getDb()->createCommand()
-            ->createTable(TestMaterializedTreeActiveRecord::tableName(), $columns)
-            ->execute();
-
         $rows = [
             [
                 'id' => 1,
@@ -85,20 +73,33 @@ class MaterializedTreeTraitTest extends TestCase
             ],
         ];
 
-
         Yii::$app->getDb()->createCommand()
             ->batchInsert(TestMaterializedTreeActiveRecord::tableName(), array_keys($rows[0]), $rows)
             ->execute();
     }
 
-    #[\Override]
-    protected function tearDown(): void
+    #[Override]
+    protected function setUpSchema(): void
+    {
+        $columns = [
+            'id' => 'pk',
+            'parent_id' => 'integer null',
+            'path' => 'json null',
+            'name' => 'string null',
+            'position' => 'integer',
+        ];
+
+        Yii::$app->getDb()->createCommand()
+            ->createTable(TestMaterializedTreeActiveRecord::tableName(), $columns)
+            ->execute();
+    }
+
+    #[Override]
+    protected function tearDownSchema(): void
     {
         Yii::$app->getDb()->createCommand()
             ->dropTable(TestMaterializedTreeActiveRecord::tableName())
             ->execute();
-
-        parent::tearDown();
     }
 
     public function testAncestors(): void

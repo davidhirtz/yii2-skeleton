@@ -39,7 +39,19 @@ class CustomAttributesTraitTest extends TestCase
         parent::setUp();
 
         Yii::$app->getI18n()->setLanguages(['en-US', 'de']);
+    }
 
+    #[Override]
+    protected function tearDown(): void
+    {
+        Yii::$container->clear(CustomAttributeRecord::class);
+
+        parent::tearDown();
+    }
+
+    #[Override]
+    protected function setUpSchema(): void
+    {
         Yii::$app->getDb()->createCommand()
             ->createTable(CustomAttributeRecord::tableName(), [
                 'id' => 'pk',
@@ -50,21 +62,12 @@ class CustomAttributesTraitTest extends TestCase
             ->execute();
     }
 
-    /**
-     * `CREATE TABLE` commits the test transaction, so the records are removed by hand.
-     */
     #[Override]
-    protected function tearDown(): void
+    protected function tearDownSchema(): void
     {
-        Translation::deleteAll(['model_class' => CustomAttributeRecord::class]);
-        Trail::deleteAll(['model_class' => CustomAttributeRecord::class]);
-        Yii::$container->clear(CustomAttributeRecord::class);
-
         Yii::$app->getDb()->createCommand()
             ->dropTable(CustomAttributeRecord::tableName())
             ->execute();
-
-        parent::tearDown();
     }
 
     public function testValuesRoundTripThroughTheJsonColumn(): void
