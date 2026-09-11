@@ -1,5 +1,81 @@
 # Upgrade Guide
 
+## 3.0.0 — Tenants
+
+`yii2-cms` requires `yii2-tenant`. Every database has at least one tenant, every entry belongs to one,
+and `yii2-cms-tenant` is gone: its behaviour lives in `yii2-cms` and `yii2-tenant`, and its GitHub
+repository is archived.
+
+`permalink` became an entry-only table on the way, and category URLs were removed.
+
+### Everyone
+
+- **Category URLs are gone.** `Module::$enableCategoryUrls` and the `site/category` view no longer exist.
+  `Category::getRoute()` returns `['/cms/site/index', 'category' => <slug>]`, the filtered entry index,
+  which was already the shipped default. If you had the option on and those URLs were public, add
+  redirect rules for them before upgrading. The category `slug` column and its uniqueness rule stay.
+- **`permalink` is entry-only.** `model_class` / `model_id` are `entry_id`, with an `ON DELETE CASCADE`
+  foreign key, and the table carries the entry's `tenant_id`. The unique indexes are
+  `(tenant_id, language, uri)` and `(entry_id, language)`.
+- **`Models\Interfaces\PermalinkInterface` and `Models\Actions\DeletePermalinks` are gone**, and so is
+  `permalink/prune` — the cascade keeps the table consistent. `permalink/rebuild` stays.
+  `Models\Traits\PermalinkTrait` is typed against `Models\Entry`.
+- **`Models\Queries\PermalinkQuery::whereModel()` is gone.** Filter on `entry_id`, or read
+  `$entry->permalinks`. On `EntryQuery`, `whereSlug()` is `whereUri(string $uri, ?string $language = null)`
+  and `whereNotSlug()` is `whereNotUri()`; both join the permalink table and honour the
+  `Permalink::LANGUAGE_ALL` fallback, which the old slug subquery did not.
+- **`Controllers\SiteController`** lost `findPermalink()`, `renderPermalink()`, `renderCategory()`,
+  `findCategory()`, `validateCategoryResponse()` and `findCategoryEntries()`. `actionView()` resolves the
+  entry through `getQuery()->whereUri($slug)`; override `findEntry()` to change the lookup.
+
+### A project that had no tenant bundle
+
+The migration seeds exactly one tenant and gives every entry and permalink its id.
+
+1. **Before `./yii migrate`**, set the seed URL for *this environment* — `params['tenantUrl']`, or the
+   console `urlManager.hostInfo`. `Cms\Migrations\M260908100000Tenant` refuses to run without one and
+   never guesses. `params['tenantUrl']` is the documented source; the URL manager reads it back as
+   `hostInfo` on every request, so a staging copy of a production database needs its own value.
+2. After `./yii migrate`, assert: `tenant` has one enabled row, `entry.tenant_id` is NOT NULL, and no
+   entry and no permalink has a NULL `tenant_id`.
+3. Unless you want the tenant admin, add `'tenant' => ['enableAdminModule' => false]` under `modules`.
+   With it off the routes 404 rather than hiding a nav item over a live controller, and the tenant URL
+   can then only be changed through the console or SQL.
+4. `Tenant::AUTH_*` RBAC items are still created by the tenant bundle's `Roles` migration. They are
+   harmless and are not offered in the dashboard role editor while the admin module is off.
+
+### A project that had `yii2-cms-tenant`
+
+Remove `davidhirtz/yii2-cms-tenant` from `require`; `yii2-tenant` arrives with `yii2-cms`. A project
+`Entry` extends `Hirtz\Cms\Models\Entry` again. The class map:
+
+| v2 (`davidhirtz\yii2\cms\tenant\…`) | v3 |
+|---|---|
+| `models\Entry` | `Hirtz\Cms\Models\Entry` |
+| `models\Permalink`, `models\queries\PermalinkQuery` | removed — `Hirtz\Cms\Models\Permalink` carries `tenant_id` |
+| `models\queries\EntryQuery` | `Hirtz\Cms\Models\Queries\EntryQuery` |
+| `data\EntryActiveDataProvider` | `Hirtz\Cms\Modules\Admin\Data\EntryActiveDataProvider` |
+| `filters\PageCache` | `Hirtz\Tenant\Filters\PageCache` |
+| `modules\admin\widgets\forms\EntryActiveForm` | `Hirtz\Cms\Modules\Admin\Widgets\Forms\EntryActiveForm` |
+| `modules\admin\widgets\forms\fields\EntryParentIdSelectField` | `Hirtz\Cms\Modules\Admin\Widgets\Forms\Fields\EntryParentIdSelectField` |
+| `modules\admin\widgets\forms\fields\TenantIdField` | `Hirtz\Cms\Modules\Admin\Widgets\Forms\Fields\TenantIdField` |
+| `modules\admin\widgets\grids\EntryGridView` | `Hirtz\Cms\Modules\Admin\Widgets\Grids\EntryGridView` |
+| `modules\admin\widgets\grids\SectionParentEntryGridView` | `Hirtz\Cms\Modules\Admin\Widgets\Grids\SectionParentEntryGridView` |
+| `modules\admin\widgets\grids\TenantGridView` | `Hirtz\Cms\Modules\Admin\Widgets\Grids\TenantGridView` |
+| `validators\TenantIdValidator` | `Hirtz\Cms\Validators\TenantIdValidator` |
+| `behaviors\EntryTenantBehavior`, `behaviors\TenantEntryBehavior` | removed — the methods are on `Entry`, so `getEntryTenantBehavior()->getTenantRouteParams()` is `getTenantRouteParams()` |
+| the two admin traits, `TenantDropdownAssetBundle` | removed |
+
+Nothing is bound in the container any more except `Tenant\Modules\Admin\Widgets\Grids\TenantGridView`,
+which `Cms\Bootstrap` maps to the cms subclass that adds the entry-count column. Grep `config/` for
+`cms\tenant` afterwards: a DI definition that named the glue `Entry` as a *string* is invisible to Rector.
+
+After `./yii migrate`: no seed is inserted, `entry.tenant_id` only becomes NOT NULL, and `permalink` is
+built with each entry's tenant. If any entry has a NULL `tenant_id` and you have several tenants the
+migration aborts and names the count — assign them by hand first. Two behaviour notes: two tenants may
+now serve the same slug, which v2 silently lost to the first; and category URLs never worked on a
+tenanted site, because the lookup filtered on a tenant the category did not have.
+
 ## 3.0.0 — `model_class`
 
 Every polymorphic table names its owner in a `model_class` / `model_id` pair. `model` was the natural
@@ -8,8 +84,8 @@ gave it up.
 
 `M260912090000ModelClass` renames `trail.model` and `translation.model`, recreates their indexes
 under the new name, and rewrites the `model` key of `trail.data` that the `TYPE_CHILD_*` types write.
-It is idempotent, so a fresh install runs it as a no-op. The cms bundle renames `permalink.model` in
-`M260912091000PermalinkModelClass`.
+It is idempotent, so a fresh install runs it as a no-op. `permalink` has no class column of any name —
+see "3.0.0 — Tenants" below, which made it an entry-only table.
 
 Your own polymorphic tables are your own business — nothing here touches them.
 
@@ -22,12 +98,10 @@ Your own polymorphic tables are your own business — nothing here touches them.
 | `Models\Trail::getDataModelClass()` | `getDataModelRecord()` |
 | `Models\Collections\TrailModelCollection::getModelByNameAndId()` | `getModelByClassAndId()` |
 | `Models\Translation::$model` | `Models\Translation::$model_class` |
-| `Hirtz\Cms\Models\Permalink::$model` | `$model_class` |
 
 The two `getModel…Class()` methods returned the *record*, not a class — hence the new names.
-`TrailBehavior::$modelClass`, `TranslationInterface::getTranslationModelClass()` and
-`PermalinkInterface::getPermalinkModelClass()` already said class and are unchanged, as is
-`Permalink::isModel()`.
+`TrailBehavior::$modelClass` and `TranslationInterface::getTranslationModelClass()` already said
+class and are unchanged.
 
 The `/admin/trail/index?model=` query parameter is a URL, not storage, and keeps its name.
 

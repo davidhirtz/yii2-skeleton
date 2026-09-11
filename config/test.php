@@ -13,6 +13,10 @@ if ($token = getenv('TEST_TOKEN')) {
 }
 
 return [
+    'params' => [
+        // the tenant seed migration refuses to guess the canonical URL of an environment
+        'tenantUrl' => 'https://www.domain.localhost',
+    ],
     'components' => [
         'db' => [
             'dsn' => $dsn,

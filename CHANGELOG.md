@@ -1,5 +1,9 @@
 ## 3.0.0 (in development)
 
+- `Test\TestCase::tearDownApplication()` replaces `Yii::$container`: a request writes to it (the cookie domain,
+  for one) and the next test must not inherit that. `config/test.php` sets `params['tenantUrl']`, which the cms
+  tenant seed migration needs to migrate a test database
+
 - `Test\TestCase` loads the fixtures inside the test transaction and no longer unloads them, and the fixtures extend
   the new `Test\Fixtures\ActiveFixture`, which never resets the auto-increment counter: a record a test creates has
   no predictable id. DDL a test needs goes into the new `setUpSchema()` / `tearDownSchema()` hooks, which run outside

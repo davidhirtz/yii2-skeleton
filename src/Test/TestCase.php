@@ -13,6 +13,7 @@ use Yii;
 use yii\base\Event;
 use yii\caching\ArrayCache;
 use yii\db\Transaction;
+use yii\di\Container;
 use yii\log\Logger;
 use yii\test\FixtureTrait;
 use yii\web\UploadedFile;
@@ -153,6 +154,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         Html::reset();
         UploadedFile::reset();
         Event::offAll();
+
+        // A request writes to the container (the cookie domain, for one), and the next test must not inherit it.
+        Yii::$container = new Container();
     }
 
     /**
