@@ -94,6 +94,13 @@ $diff-bg-color-none-block-alternative: mix($diff-bg-color, $diff-table-sidebar-c
   }
 }
 
+// A custom attribute group formats itself into a table, which must not inherit the diff cell's text wrapping.
+.trail-value-col .table {
+  white-space: normal;
+  width: 100%;
+  word-break: normal;
+}
+
 .trail-model-col {
   min-width: 12rem;
 }

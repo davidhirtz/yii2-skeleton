@@ -184,9 +184,12 @@ class TrailGridView extends GridView
             return $this->getTrailActiveRecordAttribute($value);
         }
 
-        return is_array($value)
-            ? Ul::make()->items(...array_map(strval(...), $value))
-            : Html::encode($value);
+        if (is_array($value)) {
+            return Ul::make()->items(...array_map(strval(...), $value));
+        }
+
+        // A value that formatted itself into markup, e.g. the table of a custom attribute group.
+        return $value instanceof Stringable ? $value : Html::encode($value);
     }
 
     protected function getUpdateAttributesContent(Trail $trail): string|Stringable
@@ -222,18 +225,14 @@ class TrailGridView extends GridView
     protected function getUpdatedAttributeContent(mixed $oldValue, mixed $newValue): string|Stringable
     {
         if ($oldValue instanceof ActiveRecord || $newValue instanceof ActiveRecord) {
-            return Table::make()
-                ->class('trail-diff-table table')
-                ->rows([
-                    [
-                        Td::make()
-                            ->class('old')
-                            ->content($this->getTrailActiveRecordAttribute($oldValue)),
-                        Td::make()
-                            ->class('new')
-                            ->content($this->getTrailActiveRecordAttribute($newValue)),
-                    ],
-                ]);
+            return $this->getTrailDiffTable(
+                $this->getTrailActiveRecordAttribute($oldValue),
+                $this->getTrailActiveRecordAttribute($newValue),
+            );
+        }
+
+        if ($oldValue instanceof Stringable || $newValue instanceof Stringable) {
+            return $this->getTrailDiffTable($oldValue, $newValue);
         }
 
         if (is_array($oldValue)) {
@@ -249,6 +248,22 @@ class TrailGridView extends GridView
             'showHeader' => false,
             'lineNumbers' => false,
         ]);
+    }
+
+    protected function getTrailDiffTable(string|Stringable|null $oldValue, string|Stringable|null $newValue): Table
+    {
+        return Table::make()
+            ->class('trail-diff-table table')
+            ->rows([
+                [
+                    Td::make()
+                        ->class('old')
+                        ->text($oldValue),
+                    Td::make()
+                        ->class('new')
+                        ->text($newValue),
+                ],
+            ]);
     }
 
     protected function getTrailActiveRecordAttribute(?ActiveRecord $model): ?Stringable

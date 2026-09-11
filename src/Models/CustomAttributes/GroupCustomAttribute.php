@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\CustomAttributes;
 
+use Hirtz\Skeleton\Html\Table;
+use Hirtz\Skeleton\Html\Td;
+use Hirtz\Skeleton\Html\Th;
+use Hirtz\Skeleton\Html\Thead;
+use Hirtz\Skeleton\Html\Tr;
 use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
@@ -204,10 +209,41 @@ class GroupCustomAttribute extends CustomAttribute
         return $value;
     }
 
+    /**
+     * A column per child that any row fills, in definition order, so the trail shows the rows rather than the JSON.
+     */
     #[Override]
     public function formatValue(Model $owner, mixed $value): string|Stringable|null
     {
-        return $value === null ? null : parent::formatValue($owner, $value);
+        $rows = $this->multiple ? $value : [$value];
+
+        if (!is_array($rows) || !$rows) {
+            return null;
+        }
+
+        $rows = array_values(array_filter($rows, is_array(...)));
+        $item = $this->createItem($owner, '0');
+        $names = $this->getFormattedNames($item, $rows);
+
+        if (!$names) {
+            return null;
+        }
+
+        $header = array_map(
+            static fn (string $name): Th => Th::make()->text($item->getAttributeLabel($name)),
+            $names,
+        );
+
+        return Table::make()
+            ->addClass('table')
+            ->header(Thead::make()->rows(Tr::make()->cells(...$header)))
+            ->rows(array_map(
+                fn (array $row): array => array_map(
+                    fn (string $name): Td => Td::make()->text($this->formatItemValue($item, $name, $row[$name] ?? null)),
+                    $names,
+                ),
+                $rows,
+            ));
     }
 
     #[Override]
@@ -227,6 +263,47 @@ class GroupCustomAttribute extends CustomAttribute
             $this->sortable,
             $this->itemClass,
         ];
+    }
+
+    /**
+     * @param list<array<string, mixed>> $rows
+     * @return list<string>
+     */
+    private function getFormattedNames(CustomAttributeGroupItem $item, array $rows): array
+    {
+        $names = [];
+
+        foreach ($item->getCustomAttributeDefinitions() as $definition) {
+            $names = [...$names, ...$definition->getAttributeNames($item)];
+        }
+
+        foreach ($rows as $row) {
+            $names = [...$names, ...array_keys($row)];
+        }
+
+        $filled = [];
+
+        foreach (array_unique($names) as $name) {
+            foreach ($rows as $row) {
+                if ($this->hasValues($row[$name] ?? null)) {
+                    $filled[] = $name;
+                    break;
+                }
+            }
+        }
+
+        return $filled;
+    }
+
+    private function formatItemValue(CustomAttributeGroupItem $item, string $name, mixed $value): string|Stringable|null
+    {
+        $definition = $item->getCustomAttribute($name);
+
+        if ($definition) {
+            return $definition->formatValue($item, $value);
+        }
+
+        return is_scalar($value) ? (string)$value : null;
     }
 
     private function hasValues(mixed $row): bool

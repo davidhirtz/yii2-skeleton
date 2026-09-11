@@ -101,6 +101,66 @@ class GroupCustomAttributeTest extends TestCase
         self::assertArrayHasKey('links', $model->getErrors());
     }
 
+    public function testTheTrailValueIsRenderedAsATable(): void
+    {
+        $model = $this->createRecord();
+        $value = [
+            ['label' => 'One', 'label_de' => 'Eins', 'url' => 'https://one.example.com'],
+            ['label' => 'Two', 'url' => 'https://two.example.com'],
+        ];
+
+        $content = (string)$model->getCustomAttribute('links')->formatValue($model, $value);
+
+        self::assertStringStartsWith('<table class="table">', $content);
+
+        // Columns follow the definition order, a translated child gets its own, and an unfilled one is left out.
+        self::assertStringContainsString(
+            '<thead><tr><th>Label</th><th>Label (DE)</th><th>Url</th></tr></thead>',
+            $content
+        );
+
+        self::assertStringContainsString(
+            '<tr><td>One</td><td>Eins</td><td>https://one.example.com</td></tr>',
+            $content
+        );
+
+        self::assertStringContainsString(
+            '<tr><td>Two</td><td></td><td>https://two.example.com</td></tr>',
+            $content
+        );
+    }
+
+    public function testTheTrailValueEscapesTheStoredContent(): void
+    {
+        $model = $this->createRecord();
+        $content = (string)$model->getCustomAttribute('links')->formatValue($model, [['label' => '<b>One</b>']]);
+
+        self::assertStringContainsString('<td>&lt;b&gt;One&lt;/b&gt;</td>', $content);
+    }
+
+    public function testTheTrailValueOfAnEmptyGroupIsNull(): void
+    {
+        $model = $this->createRecord();
+
+        self::assertNull($model->getCustomAttribute('links')->formatValue($model, null));
+        self::assertNull($model->getCustomAttribute('links')->formatValue($model, []));
+        self::assertNull($model->getCustomAttribute('links')->formatValue($model, [['label' => '']]));
+    }
+
+    public function testTheTrailValueOfANestedGroupIsANestedTable(): void
+    {
+        $model = $this->createRecord();
+        $model->type = GroupRecord::TYPE_NESTED;
+
+        $content = (string)$model->getCustomAttribute('rows')->formatValue($model, [
+            ['name' => 'Row', 'cells' => [['text' => 'One'], ['text' => 'Two']]],
+        ]);
+
+        self::assertStringContainsString('<th>Name</th><th>Cells</th>', $content);
+        self::assertStringContainsString('<td>Row</td><td><table class="table">', $content);
+        self::assertStringContainsString('<tr><td>One</td></tr><tr><td>Two</td></tr>', $content);
+    }
+
     /**
      * The form renders the rows a minimum count demands, but an empty one is still dropped rather than stored.
      */
