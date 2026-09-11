@@ -10,14 +10,20 @@
   inside the JSON, not in the `translation` table. See `UPGRADE.md`
 - `Db\ActiveRecord` gained `getCustomAttributesColumn()`, a `rules()` returning the custom rules, `attributeHints()`,
   and the `beforeValidate()` that applies the definition defaults to a new record
+- `Widgets\Forms\Fieldset` asks a `CustomAttributeInterface` model for a definition before deriving a field from the
+  validators, and no longer drops a disabled field (`Widgets\Forms\Fields\Field::isDisabled()`). Added
+  `Widgets\Forms\Fields\GroupField`, `Widgets\Forms\Traits\CustomAttributeFieldsTrait` and
+  `Assets\CustomAttributesAssetBundle`
+- Added `Widgets\Forms\Fields\Field::reloadsForm()` and `Web\Request::isFormReload()`: a field the rendered form
+  depends on posts the form to its own action on change and swaps it with the response, and the marker header keeps
+  the action from saving
 - `Widgets\Forms\Fields\SelectField::multiple()` renders a multiple select: the name ends in `[]` and `selected`
-  matches against an array
+  matches against an array. `itemAttributes()` adds attributes to an option however the item was built
 - Added `Db\Traits\MigrationTrait::addCustomAttributesColumn()` and `dropCustomAttributesColumn()`
 - Added `Helpers\IconHelper::getIconFilenames()`, which `Models\Traits\IconFilenameAttributeTrait` now delegates to.
   Removed its `findIconFiles()` and `humanizeIconFilename()` methods
 - `Models\Traits\I18nAttributesTrait` gained `getI18nAttributes()`, which is `i18nAttributes` plus the translatable
   custom attributes of the model's current state, and is what `isI18nAttribute()`, the labels, hints and rules read
-
 - The virtual attribute plumbing moved from `Models\Traits\TranslationTrait` into `Db\ActiveRecord`, so a second
   feature can add attributes without a column of their own without colliding with translations: `attributes()`,
   `getVirtualAttributes()`, `getColumnAttributes()`, `insertInternal()`, `updateInternal()`, `afterRefresh()` and

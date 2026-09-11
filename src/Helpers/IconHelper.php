@@ -18,12 +18,19 @@ class IconHelper
      */
     public static function getIconFilenames(string $path, ?array $options = null): array
     {
-        $key = $path . serialize($options);
+        $dir = Yii::getAlias('@webroot') . $path;
+        $key = $dir . serialize($options);
+
+        // A project without an icon directory has no icons, rather than a failing lookup. The result is not cached,
+        // so a directory created later is still picked up.
+        if (!is_dir($dir)) {
+            return [];
+        }
 
         if (!isset(self::$filenames[$key])) {
             $filenames = [];
 
-            foreach (FileHelper::findFiles(Yii::getAlias('@webroot') . $path, $options ?? ['only' => ['*.svg']]) as $filename) {
+            foreach (FileHelper::findFiles($dir, $options ?? ['only' => ['*.svg']]) as $filename) {
                 $filenames[basename((string)$filename)] = StringHelper::humanizeFilename($filename);
             }
 

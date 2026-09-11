@@ -27,6 +27,20 @@ class SelectField extends Field
     protected array $promptAttributes = [];
     protected bool $multiple = false;
 
+    /**
+     * @var array<int|string, array> extra attributes per option value, also applied to an item built from the model
+     */
+    protected array $itemAttributes = [];
+
+    /**
+     * @param array<int|string, array> $itemAttributes
+     */
+    public function itemAttributes(array $itemAttributes): static
+    {
+        $this->itemAttributes = $itemAttributes;
+        return $this;
+    }
+
     public function multiple(bool $multiple = true): static
     {
         $this->multiple = $multiple;
@@ -157,7 +171,7 @@ class SelectField extends Field
             }
 
             $select->addOption(Option::make()
-                ->attributes($attributes)
+                ->attributes([...$attributes, ...$this->itemAttributes[$value] ?? []])
                 ->label($label)
                 ->selected(in_array($value, $selected, true))
                 ->value($value));

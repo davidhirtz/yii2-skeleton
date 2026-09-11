@@ -49,12 +49,12 @@ trait FunctionalTestTrait
         self::$crawler = self::$client->click($link);
     }
 
-    protected function submit(string $selector = 'form', array $values = []): void
+    protected function submit(string $selector = 'form', array $values = [], array $server = []): void
     {
         self::assertSelectorExists($selector);
 
         $form = self::$crawler->filter($selector)->form($values);
-        self::$crawler = self::$client->submit($form);
+        self::$crawler = self::$client->submit($form, [], $server);
     }
 
     protected function prefixFormValues(string|Model $prefix, array $values): array

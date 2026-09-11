@@ -17,6 +17,7 @@ class HexColorField extends Field
     protected function configure(): void
     {
         $this->attributes['id'] ??= $this->getId();
+        $this->attributes['value'] ??= $this->model?->{$this->property};
 
         if ($this->attributes['value'] && !str_starts_with((string)$this->attributes['value'], '#')) {
             $this->attributes['value'] = "#{$this->attributes['value']}";

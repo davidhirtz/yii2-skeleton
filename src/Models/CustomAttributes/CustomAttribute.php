@@ -208,12 +208,14 @@ abstract class CustomAttribute
         return [];
     }
 
+    /**
+     * Label and hint are left to the model: it reports them through `attributeLabels()` and `attributeHints()`, which
+     * is what gives the per-language clone of a translatable definition its own "(DE)" label.
+     */
     protected function configureField(Field $field, Model $owner): Field
     {
         $field->model($owner)
-            ->property($this->name)
-            ->label($this->getLabel())
-            ->hint($this->getHint());
+            ->property($this->name);
 
         if ($this->isRequired($owner)) {
             $field->attribute('required', true);

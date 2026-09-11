@@ -19,6 +19,11 @@ class Request extends \yii\web\Request
      */
     public string $languageParam = 'language';
 
+    /**
+     * @var string the header a form reload is marked with by {@see \Hirtz\Skeleton\Widgets\Forms\Fields\Field::reloadsForm()}.
+     */
+    public string $formReloadHeader = 'X-Form-Reload';
+
     private bool $_isDraft = false;
 
     /**
@@ -34,6 +39,14 @@ class Request extends \yii\web\Request
         }
 
         parent::init();
+    }
+
+    /**
+     * A form reload posts to the same action as the save, so an action that writes must skip the write for it.
+     */
+    public function isFormReload(): bool
+    {
+        return $this->getHeaders()->has($this->formReloadHeader);
     }
 
     #[Override]

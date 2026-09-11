@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Widgets\Forms;
 
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
+use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Hirtz\Skeleton\Validators\HexColorValidator;
@@ -85,7 +86,8 @@ class Fieldset extends Widget
                 continue;
             }
 
-            if (!$field->isSafe()) {
+            // A disabled field is unsafe by definition, but it still renders.
+            if (!$field->isSafe() && !$field->isDisabled()) {
                 Yii::debug("Skipping field for unsafe attribute '$field->property'");
                 unset($rows[$key]);
             }
@@ -98,6 +100,14 @@ class Fieldset extends Widget
 
     protected function getFieldForProperty(string $property): Field
     {
+        $definition = $this->model instanceof CustomAttributeInterface
+            ? $this->model->getCustomAttribute($property)
+            : null;
+
+        if ($definition) {
+            return $definition->createField($this->model);
+        }
+
         $validators = $this->model->getActiveValidators($property);
         $className = InputField::class;
         $type = null;

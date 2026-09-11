@@ -1,5 +1,6 @@
 import htmx from 'htmx.org'
 import 'htmx-ext-head-support';
+import type {TinyMCE} from 'tinymce';
 import 'x-timeago';
 
 import aside from './includes/aside';
@@ -13,6 +14,12 @@ import tooltip from './includes/tooltips';
 import {toggle, updateTargetsOnChange} from './includes/forms';
 
 import './includes/FlashAlert';
+
+declare global {
+    interface Window {
+        tinymce?: TinyMCE;
+    }
+}
 
 htmx.onLoad(($container) => {
     const queryAll = (selector: string, method: Function) => {
@@ -57,6 +64,11 @@ htmx.on('htmx:responseError', (event: Event) => {
 
     $dialog.style.width = 'min(90rem, 90vw)';
     $dialog.style.height = 'min(60rem, 90vh)';
+});
+
+// `hx-include` serializes the form without firing `submit`, which is when TinyMCE writes to its textarea.
+htmx.on('htmx:configRequest', () => {
+    window.tinymce?.triggerSave();
 });
 
 htmx.config.historyCacheSize = 0;

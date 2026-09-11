@@ -142,4 +142,32 @@ abstract class Field extends Widget
     {
         return (bool)($this->attributes['required'] ?? false);
     }
+
+    public function isDisabled(): bool
+    {
+        return (bool)($this->attributes['disabled'] ?? false);
+    }
+
+    /**
+     * Posts the form to its own action on change and swaps it with the response, so a field the rendered form depends
+     * on can take effect without saving. {@see \Hirtz\Skeleton\Web\Request::isFormReload()} tells the action apart.
+     */
+    public function reloadsForm(): static
+    {
+        return $this->prepare(function (self $field): void {
+            if (!$field->form) {
+                return;
+            }
+
+            $id = $field->form->getId();
+
+            $field->attributes['hx-post'] ??= $field->form->action ?: '';
+            $field->attributes['hx-trigger'] ??= 'change';
+            $field->attributes['hx-include'] ??= 'closest form';
+            $field->attributes['hx-select'] ??= "#$id";
+            $field->attributes['hx-target'] ??= "#$id";
+            $field->attributes['hx-swap'] ??= 'outerHTML';
+            $field->attributes['hx-headers'] ??= ['X-Form-Reload' => '1'];
+        });
+    }
 }

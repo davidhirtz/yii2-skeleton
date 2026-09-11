@@ -1,5 +1,120 @@
 # Upgrade Guide
 
+## 3.0.0 — Custom attributes
+
+A model can declare typed attributes that have no column of their own. Their values are ordinary
+attributes — `$section->subtitle`, `load()`, `validate()`, the trail, `getI18nAttribute()` — but they
+are stored together in one `custom_attributes` JSON column.
+
+### Opting a model in
+
+```php
+use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
+use Hirtz\Skeleton\Models\Traits\CustomAttributesTrait;
+
+class Section extends ActiveRecord implements CustomAttributeInterface
+{
+    use CustomAttributesTrait;
+}
+```
+
+Every platform model that ships with a `type` already carries the column and the trait. A model of
+your own needs the column (`MigrationTrait::addCustomAttributesColumn()`), and its `rules()`,
+`attributeLabels()` and `attributeHints()` must spread `parent::…` — that is where the definitions
+inject theirs.
+
+Add a `@property` docblock per definition so static analysis and the IDE know them:
+
+```php
+/**
+ * @property string|null $subtitle
+ * @property string|null $subtitle_de
+ */
+```
+
+### Declaring definitions
+
+The default `getCustomAttributes()` reads the `customAttributes` key of the model's type options.
+Prefer a closure: `getTypes()` is called often and building the objects for every type on each call
+is waste.
+
+```php
+public static function getTypes(): array
+{
+    return [
+        self::TYPE_HEADLINE => [
+            'name' => 'Headline',
+            'customAttributes' => fn (): array => [
+                TextCustomAttribute::make('subtitle')->translatable(),
+            ],
+        ],
+        self::TYPE_LINK_LIST => [
+            'name' => 'Link list',
+            'customAttributes' => fn (): array => [
+                GroupCustomAttribute::make('links')
+                    ->multiple()
+                    ->maxCount(5)
+                    ->attributes([
+                        TextCustomAttribute::make('label')->translatable(),
+                        UrlCustomAttribute::make('url')->required(),
+                    ]),
+            ],
+        ],
+    ];
+}
+```
+
+A model whose definitions depend on something else overrides `getCustomAttributes()`, and
+`getCustomAttributesKey()` with whatever the definitions are derived from — the resolved definitions
+are cached until that key changes.
+
+Shipped types: `Text`, `Html`, `Boolean`, `Number`, `Select`, `Icon`, `Url`, `Email`, `HexColor` and
+`Group`, all suffixed `CustomAttribute`. Each takes `label()`, `hint()`, `translatable()`,
+`required()`, `visible()`, `disabled()` and `default()`; the last four accept a closure taking the
+owning model.
+
+- `visible: false` — no rule at all: unsafe, unvalidated, not rendered. The stored value is kept.
+- `disabled: true` — unsafe and unvalidated, but still rendered as a disabled input.
+
+### Rules for the author
+
+- `getCustomAttributes()` must be cheap and free of side effects, and must not trigger a lazy
+  relation query: it runs in `afterFind()` for every loaded record. Eager load the relation
+  (`->with('file')`) or guard with `isRelationPopulated()`.
+- A definition name must match `^[a-z][a-z0-9_]*$`, be unique, and collide with neither a column nor
+  a translated attribute name. Anything else throws an `InvalidConfigException`.
+
+### Translations
+
+A translatable definition keeps the usual names — `subtitle` for the source language, `subtitle_de`
+for the rest — but both live inside the JSON, not in the `translation` table: a repeatable group item
+has no stable flat name to key a translation row by. Everything else is unchanged:
+`getI18nAttribute('subtitle', 'de', fallback: true)` works and the trail labels it "Subtitle (DE)".
+
+### Stored JSON
+
+The column holds an object keyed by attribute name. A key no current definition claims is kept, so
+switching a type back does not lose its values. A value that serializes to `null` has no key, and an
+empty object is stored as `null`.
+
+Two documented limits, the same as for translations: `updateAttributes()` and `batchInsert()` write
+columns directly and therefore bypass the JSON.
+
+### Forms
+
+`ActiveForm` subclasses append `...$this->getCustomAttributeFields()` (from
+`Widgets\Forms\Traits\CustomAttributeFieldsTrait`) to their fieldset. A type select whose types
+render different fields reloads the form through htmx before the fields can change; the action tells
+that request apart with `Request::isFormReload()` and skips the save:
+
+```php
+if ($section->load($post) && !$this->request->isFormReload()) {
+    // …
+}
+```
+
+An action of your own on an opted-in model needs that guard, or it saves on every type change.
+
 ## 3.0.0 — Translations move to the `translation` table
 
 A translated attribute used to be one real column per language: `name` for the source language,

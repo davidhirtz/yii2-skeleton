@@ -12,7 +12,7 @@ import 'tinymce/plugins/lists';
 import 'tinymce/plugins/table';
 
 window.customElements.get('tinymce-editor') || window.customElements.define('tinymce-editor', class extends HTMLElement {
-    #editor: Editor[] = [];
+    #editors: Promise<Editor[]> | null = null;
 
     // noinspection JSUnusedGlobalSymbols
     connectedCallback() {
@@ -22,12 +22,21 @@ window.customElements.get('tinymce-editor') || window.customElements.define('tin
         // TinyMCE requires a unique ID for each editor instance (issues with HTMX swaps)
         $textarea.id = `tinymce-${Math.random().toString(36).substring(2, 15)}`;
 
-        setTimeout(async () => this.#editor = await tinymce.init({...config, selector: `#${$textarea!.id}`}), 1);
+        // The promise is kept so a disconnect within the timeout window still awaits and removes the editor, which a
+        // drag between two positions does.
+        this.#editors = new Promise((resolve) => {
+            setTimeout(async () => resolve(await tinymce.init({...config, selector: `#${$textarea.id}`})), 1);
+        });
     }
 
     // noinspection JSUnusedGlobalSymbols
-    disconnectedCallback() {
-        this.#editor.forEach(editor => {
+    async disconnectedCallback() {
+        const editors = await this.#editors;
+        this.#editors = null;
+
+        editors?.forEach((editor) => {
+            // Writes the content back to the textarea, so a move keeps what was typed.
+            editor.save();
             editor.remove();
         });
     }

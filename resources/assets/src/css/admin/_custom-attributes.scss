@@ -1,0 +1,30 @@
+.custom-attribute-group {
+  display: grid;
+  gap: 1rem;
+}
+
+.custom-attribute-group-container {
+  display: grid;
+  gap: 1rem;
+  justify-items: start;
+}
+
+.custom-attribute-group-items {
+  display: grid;
+  gap: 1rem;
+  width: 100%;
+}
+
+.custom-attribute-group-item {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius, .25rem);
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.custom-attribute-group-item-header {
+  display: flex;
+  gap: .5rem;
+  justify-content: flex-end;
+}

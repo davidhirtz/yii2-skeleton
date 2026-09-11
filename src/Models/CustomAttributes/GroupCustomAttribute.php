@@ -7,12 +7,12 @@ namespace Hirtz\Skeleton\Models\CustomAttributes;
 use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
+use Hirtz\Skeleton\Widgets\Forms\Fields\GroupField;
 use Override;
 use Stringable;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
-use yii\base\NotSupportedException;
 
 class GroupCustomAttribute extends CustomAttribute
 {
@@ -211,7 +211,7 @@ class GroupCustomAttribute extends CustomAttribute
     #[Override]
     public function createField(Model $owner): Field
     {
-        throw new NotSupportedException('Group custom attributes cannot be rendered yet.');
+        return $this->configureField(GroupField::make()->group($this), $owner);
     }
 
     #[Override]
