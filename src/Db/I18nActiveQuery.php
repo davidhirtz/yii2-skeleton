@@ -74,12 +74,12 @@ class I18nActiveQuery extends ActiveQuery
 
             $this->leftJoin(
                 "$table $alias",
-                "[[$alias]].[[model]] = :{$alias}_model"
+                "[[$alias]].[[model_class]] = :{$alias}_model_class"
                 . " AND [[$alias]].[[model_id]] = {$this->getTableAlias()}.[[id]]"
                 . " AND [[$alias]].[[language]] = :{$alias}_language"
                 . " AND [[$alias]].[[attribute]] = :{$alias}_attribute",
                 [
-                    ":{$alias}_model" => $instance->getTranslationModelClass(),
+                    ":{$alias}_model_class" => $instance->getTranslationModelClass(),
                     ":{$alias}_language" => $language,
                     ":{$alias}_attribute" => $attribute,
                 ]

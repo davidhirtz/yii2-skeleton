@@ -76,24 +76,24 @@ class UpgradeController extends Controller
     private function updateTrailNamespaces(): void
     {
         $query = Trail::find()
-            ->select(['id', 'model', 'data'])
+            ->select(['id', 'model_class', 'data'])
             ->asArray();
 
         $count = 0;
 
         foreach ($query->each() as $row) {
-            $model = $this->getNewNamespace($row['model']);
+            $modelClass = $this->getNewNamespace($row['model_class']);
             $data = $row['data'] !== null ? json_decode($row['data'], true) : [];
 
-            if (array_key_exists('model', $data)) {
-                $data['model'] = $this->getNewNamespace($data['model']);
+            if (array_key_exists('model_class', $data)) {
+                $data['model_class'] = $this->getNewNamespace($data['model_class']);
             }
 
             $data = json_encode($data);
 
-            if ($model !== $row['model'] || $data !== $row['data']) {
+            if ($modelClass !== $row['model_class'] || $data !== $row['data']) {
                 $count += Yii::$app->getDb()->createCommand()
-                    ->update(Trail::tableName(), ['model' => $model, 'data' => $data], ['id' => $row['id']])
+                    ->update(Trail::tableName(), ['model_class' => $modelClass, 'data' => $data], ['id' => $row['id']])
                     ->execute();
             }
         }

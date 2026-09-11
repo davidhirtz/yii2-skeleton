@@ -106,7 +106,7 @@ class TrailBehavior extends Behavior
     protected function createTrail(): Trail
     {
         $trail = Trail::create();
-        $trail->model = $this->modelClass;
+        $trail->model_class = $this->modelClass;
 
         if ($this->owner instanceof ActiveRecord) {
             $trail->model_id = $this->owner->getPrimaryKey(true);

@@ -27,19 +27,19 @@ class TrailModelCollection
     private static array $_modelAttributes = [];
 
     /**
-     * Finds the model based on the given model string. If a model supports `i18n` tables, the corresponding language
+     * Finds the model based on the given class string. If a model supports `i18n` tables, the corresponding language
      * will be added to the model, separated by "::" like `\Hirtz\Cms\Models\Entry::en_US`.
      *
      * For this reason, the cache key is the table name, rather than the model class name.
      */
-    public static function getModelByNameAndId(string $modelName, int|string|null $modelId): ?Model
+    public static function getModelByClassAndId(string $modelClass, int|string|null $modelId): ?Model
     {
-        $modelName = explode('::', $modelName);
-        $language = $modelName[1] ?? Yii::$app->language;
+        $modelClass = explode('::', $modelClass);
+        $language = $modelClass[1] ?? Yii::$app->language;
 
-        return Yii::$app->getI18n()->callback($language, function () use ($modelName, $modelId) {
+        return Yii::$app->getI18n()->callback($language, function () use ($modelClass, $modelId) {
             try {
-                $instance = Yii::createObject($modelName[0]);
+                $instance = Yii::createObject($modelClass[0]);
             } catch (Throwable $e) {
                 Yii::error($e->getMessage(), __METHOD__);
                 $instance = null;
@@ -60,7 +60,7 @@ class TrailModelCollection
             $relation = $model->getRelationFromForeignKey($attribute);
 
             if ($relation) {
-                return self::getModelByNameAndId($relation->modelClass, $value);
+                return self::getModelByClassAndId($relation->modelClass, $value);
             }
         }
 

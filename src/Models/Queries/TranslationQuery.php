@@ -22,7 +22,7 @@ class TranslationQuery extends ActiveQuery
         $alias = $this->getTableAlias();
 
         return $this->andWhere([
-            "$alias.[[model]]" => $class,
+            "$alias.[[model_class]]" => $class,
             "$alias.[[model_id]]" => $ids,
         ]);
     }

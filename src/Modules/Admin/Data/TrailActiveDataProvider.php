@@ -43,7 +43,7 @@ class TrailActiveDataProvider extends ActiveDataProvider
 
         if ($this->model) {
             $this->query->andFilterWhere([
-                'model' => $this->model,
+                'model_class' => $this->model,
                 'model_id' => $this->modelId,
             ]);
         }

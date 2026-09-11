@@ -26,10 +26,14 @@ class TrailBehaviorTest extends TestCase
 {
     use UserFixtureTrait;
 
+    private int $trailId = 0;
+
     #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->trailId = (int)Trail::find()->max('id');
 
         $columns = [
             'id' => 'pk',
@@ -46,9 +50,14 @@ class TrailBehaviorTest extends TestCase
             ->execute();
     }
 
+    /**
+     * `CREATE TABLE` commits the test transaction, so the trail records are removed by hand.
+     */
     #[\Override]
     protected function tearDown(): void
     {
+        Trail::deleteAll(['>', 'id', $this->trailId]);
+
         Yii::$app->getDb()->createCommand()
             ->dropTable(TrailActiveRecord::tableName())
             ->execute();
@@ -62,7 +71,7 @@ class TrailBehaviorTest extends TestCase
         self::assertTrue($model->insert());
 
         $trail = Trail::findOne([
-            'model' => $model::class,
+            'model_class' => $model::class,
             'model_id' => $model->id,
         ]);
 
@@ -184,6 +193,36 @@ class TrailBehaviorTest extends TestCase
         self::assertEquals(print_r($data, true), $model->formatTrailAttributeValue('name', $data));
     }
 
+    public function testChildTrailResolvesDataModelRecord(): void
+    {
+        $model = $this->createTrailActiveRecord();
+        self::assertTrue($model->insert());
+
+        $parent = $this->createTrailActiveRecord();
+        self::assertTrue($parent->insert());
+
+        $trail = Trail::create();
+        $trail->type = Trail::TYPE_UPDATE;
+        $trail->model_class = $model::class;
+        $trail->model_id = (string)$model->id;
+        $trail->parents = $parent;
+
+        self::assertTrue($trail->insert());
+
+        $child = Trail::find()
+            ->where(['type' => Trail::TYPE_CHILD_UPDATE])
+            ->andWhere(['>', 'id', $this->trailId])
+            ->one();
+
+        self::assertSame($model::class, $child->data['model_class']);
+        self::assertSame((string)$model->id, $child->data['model_id']);
+
+        $record = $child->getDataModelRecord();
+
+        self::assertInstanceOf(TrailActiveRecord::class, $record);
+        self::assertEquals($model->id, $record->id);
+    }
+
     public function testFormatTrailAttributeValueWithoutRange(): void
     {
         $model = new class () extends Model implements TrailModelInterface {
@@ -229,7 +268,7 @@ class TrailBehaviorTest extends TestCase
     {
         return Trail::find()
             ->where([
-                'model' => $model::class,
+                'model_class' => $model::class,
                 'model_id' => $model->id,
             ])
             ->orderBy(['id' => SORT_DESC])

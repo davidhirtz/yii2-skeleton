@@ -40,7 +40,7 @@ class TrailController extends Controller
         }
 
         foreach ($classNames as $oldName => $newName) {
-            $updated = Trail::updateAll(['model' => $newName], ['model' => $oldName]);
+            $updated = Trail::updateAll(['model_class' => $newName], ['model_class' => $oldName]);
 
             if ($updated) {
                 $updated = Yii::$app->getFormatter()->asInteger($updated);

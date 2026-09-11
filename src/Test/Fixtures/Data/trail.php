@@ -9,7 +9,7 @@ return [
     [
         'id' => 1,
         'type' => 1,
-        'model' => User::class,
+        'model_class' => User::class,
         'model_id' => '1',
         'user_id' => 1,
         'message' => null,
@@ -19,7 +19,7 @@ return [
     [
         'id' => 2,
         'type' => 2,
-        'model' => User::class,
+        'model_class' => User::class,
         'model_id' => '1',
         'user_id' => 1,
         'message' => null,
@@ -30,7 +30,7 @@ return [
     [
         'id' => 3,
         'type' => 1,
-        'model' => Redirect::class,
+        'model_class' => Redirect::class,
         'model_id' => '1',
         'user_id' => 1,
         'message' => null,
@@ -40,7 +40,7 @@ return [
     [
         'id' => 4,
         'type' => 2,
-        'model' => Redirect::class,
+        'model_class' => Redirect::class,
         'model_id' => '1',
         'user_id' => 1,
         'message' => null,
@@ -50,7 +50,7 @@ return [
     [
         "id" => 5,
         "type" => 4,
-        "model" => 'invalid\namespace\Models\Model',
+        "model_class" => 'invalid\namespace\Models\Model',
         "model_id" => "1",
         "user_id" => 1,
         "message" => null,

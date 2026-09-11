@@ -74,7 +74,7 @@ class TrailGridView extends GridView
     protected function getModelColumn(): DataColumn
     {
         return DataColumn::make()
-            ->property('model')
+            ->property('model_class')
             ->header(fn (Th $th) => $th->addClass('trail-model-col'))
             ->content($this->getModelColumnContent(...))
             ->visible(!$this->provider->model);
@@ -82,8 +82,8 @@ class TrailGridView extends GridView
 
     protected function getModelColumnContent(Trail $trail): array|string
     {
-        if ($trail->model) {
-            $model = $trail->getModelClass();
+        if ($trail->model_class) {
+            $model = $trail->getModelRecord();
             $isModel = $model instanceof ActiveRecord && !$model->getIsNewRecord();
 
             $content = [
@@ -149,7 +149,7 @@ class TrailGridView extends GridView
 
     protected function getCreateAttributesContent(Trail $trail): string|Stringable
     {
-        $model = $trail->getModelClass();
+        $model = $trail->getModelRecord();
         $rows = [];
 
         if (is_array($trail->data)) {
@@ -217,7 +217,7 @@ class TrailGridView extends GridView
 
     protected function getUpdateAttributesContent(Trail $trail): string|Stringable
     {
-        $model = $trail->getModelClass();
+        $model = $trail->getModelRecord();
         $rows = [];
 
         if (is_array($trail->data)) {
@@ -349,7 +349,7 @@ class TrailGridView extends GridView
 
     protected function getDataModelContent(Trail $trail): string
     {
-        return $this->renderI18nTrailMessage($trail, $trail->getDataModelClass());
+        return $this->renderI18nTrailMessage($trail, $trail->getDataModelRecord());
     }
 
     protected function getMessageContent(Trail $trail): string
@@ -358,7 +358,7 @@ class TrailGridView extends GridView
             return trim(($this->getTranslations()[$trail->message] ?? $trail->message) . ' ' . $this->renderDataTrailLink($trail));
         }
 
-        return $this->renderI18nTrailMessage($trail, $trail->getModelClass());
+        return $this->renderI18nTrailMessage($trail, $trail->getModelRecord());
     }
 
     protected function renderI18nTrailMessage(Trail $trail, ?Model $model = null): string
@@ -451,6 +451,6 @@ class TrailGridView extends GridView
 
     protected function getTrailModelRoute(Trail $trail): ?array
     {
-        return ['index', 'model' => implode('@', array_filter([$trail->model, (string)$trail->model_id]))];
+        return ['index', 'model' => implode('@', array_filter([$trail->model_class, (string)$trail->model_id]))];
     }
 }

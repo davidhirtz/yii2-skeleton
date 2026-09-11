@@ -112,7 +112,7 @@ trait TranslationTrait
     {
         /** @var TranslationQuery<Translation> */
         return $this->hasMany(Translation::class, ['model_id' => 'id'])
-            ->andOnCondition([Translation::tableName() . '.[[model]]' => $this->getTranslationModelClass()]);
+            ->andOnCondition([Translation::tableName() . '.[[model_class]]' => $this->getTranslationModelClass()]);
     }
 
     /**
@@ -151,7 +151,7 @@ trait TranslationTrait
     public function deleteVirtualAttributes(): void
     {
         Translation::deleteAll([
-            'model' => $this->getTranslationModelClass(),
+            'model_class' => $this->getTranslationModelClass(),
             'model_id' => $this->getPrimaryKey(),
         ]);
     }

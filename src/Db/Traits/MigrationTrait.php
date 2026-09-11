@@ -90,7 +90,7 @@ trait MigrationTrait
             }
 
             $this->execute("
-                INSERT INTO $translations ([[model]], [[model_id]], [[language]], [[attribute]], [[value]])
+                INSERT INTO $translations ([[model_class]], [[model_id]], [[language]], [[attribute]], [[value]])
                 SELECT $class, [[id]], {$db->quoteValue($language)}, {$db->quoteValue($attribute)}, [[$column]]
                 FROM $owner
                 WHERE [[$column]] IS NOT NULL AND [[$column]] != ''
@@ -145,7 +145,7 @@ trait MigrationTrait
             $this->execute("
                 UPDATE $owner AS [[owner]]
                 INNER JOIN $translations AS [[translation]]
-                    ON [[translation]].[[model]] = $class
+                    ON [[translation]].[[model_class]] = $class
                     AND [[translation]].[[model_id]] = [[owner]].[[id]]
                     AND [[translation]].[[language]] = {$db->quoteValue($language)}
                     AND [[translation]].[[attribute]] = {$db->quoteValue($attribute)}
@@ -153,7 +153,7 @@ trait MigrationTrait
             ");
         }
 
-        $this->execute("DELETE FROM $translations WHERE [[model]] = $class");
+        $this->execute("DELETE FROM $translations WHERE [[model_class]] = $class");
     }
 
     /**

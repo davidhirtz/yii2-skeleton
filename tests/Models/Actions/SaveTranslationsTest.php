@@ -41,8 +41,8 @@ class SaveTranslationsTest extends TestCase
     #[Override]
     protected function tearDown(): void
     {
-        Translation::deleteAll(['model' => TranslatedActiveRecord::class]);
-        Trail::deleteAll(['model' => TranslatedActiveRecord::class]);
+        Translation::deleteAll(['model_class' => TranslatedActiveRecord::class]);
+        Trail::deleteAll(['model_class' => TranslatedActiveRecord::class]);
 
         Yii::$app->getDb()->createCommand()
             ->dropTable(TranslatedActiveRecord::tableName())
@@ -159,7 +159,7 @@ class SaveTranslationsTest extends TestCase
     {
         return Trail::find()
             ->where([
-                'model' => $model::class,
+                'model_class' => $model::class,
                 'model_id' => $model->id,
             ])
             ->orderBy(['id' => SORT_DESC])

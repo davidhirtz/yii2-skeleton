@@ -148,7 +148,7 @@ class AccountUpdateFormTest extends TestCase
         self::assertEquals($expects, $trail->data);
 
         /** @var User $user */
-        $user = $trail->getModelClass();
+        $user = $trail->getModelRecord();
         self::assertEquals($user->getTrailModelName(), $form->user->getTrailModelName());
     }
 

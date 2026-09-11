@@ -286,7 +286,7 @@ class User extends ActiveRecord implements IdentityInterface, StatusAttributeInt
     public function afterPasswordChange(): void
     {
         $trail = Trail::create();
-        $trail->model = User::class;
+        $trail->model_class = User::class;
         $trail->model_id = (string)$this->id;
         $trail->type = Trail::TYPE_PASSWORD;
         $trail->insert();

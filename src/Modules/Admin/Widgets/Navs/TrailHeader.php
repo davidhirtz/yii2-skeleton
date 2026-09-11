@@ -28,7 +28,7 @@ class TrailHeader extends Header
     {
         if ($this->provider->model) {
             $this->model = $this->provider->getModels()
-                ? current($this->provider->getModels())->getModelClass()
+                ? current($this->provider->getModels())->getModelRecord()
                 : null;
         }
 

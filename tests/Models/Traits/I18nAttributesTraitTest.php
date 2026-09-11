@@ -47,7 +47,7 @@ class I18nAttributesTraitTest extends TestCase
     #[Override]
     protected function tearDown(): void
     {
-        Translation::deleteAll(['model' => TestI18nActiveRecord::class]);
+        Translation::deleteAll(['model_class' => TestI18nActiveRecord::class]);
 
         Yii::$app->getDb()->createCommand()
             ->dropTable(TestI18nActiveRecord::tableName())

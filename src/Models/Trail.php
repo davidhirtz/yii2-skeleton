@@ -23,7 +23,7 @@ use yii\db\ActiveRecordInterface;
 /**
  * @property int $id
  * @property int $type
- * @property string $model
+ * @property string $model_class
  * @property array|string|null $model_id
  * @property int|null $user_id
  * @property string $message
@@ -89,12 +89,12 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
                     if (!$parent->isDeleted()) {
                         if ($parent instanceof TrailModelInterface) {
                             $trail = static::create();
-                            $trail->model = $parent->getTrailBehavior()->modelClass;
+                            $trail->model_class = $parent->getTrailBehavior()->modelClass;
                             $trail->model_id = $parent instanceof ActiveRecordInterface ? $parent->getPrimaryKey(true) : null;
                             $trail->type = $type;
 
                             $trail->data = [
-                                'model' => $this->model,
+                                'model_class' => $this->model_class,
                                 'model_id' => $this->model_id,
                                 'trail_id' => $this->id,
                             ];
@@ -121,33 +121,33 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
 
     public function getModelName(): string
     {
-        if ($model = $this->getModelClass()) {
+        if ($model = $this->getModelRecord()) {
             return $model instanceof TrailModelInterface
                 ? $model->getTrailModelName()
                 : (new ReflectionClass($model))->getShortName();
         }
 
-        return $this->model;
+        return $this->model_class;
     }
 
     public function getModelType(): ?string
     {
-        $model = $this->getModelClass();
+        $model = $this->getModelRecord();
         return $model instanceof TrailModelInterface ? $model->getTrailModelType() : null;
     }
 
-    public function getModelClass(): ?Model
+    public function getModelRecord(): ?Model
     {
-        return TrailModelCollection::getModelByNameAndId($this->model, $this->model_id);
+        return TrailModelCollection::getModelByClassAndId($this->model_class, $this->model_id);
     }
 
-    public function getDataModelClass(): ?Model
+    public function getDataModelRecord(): ?Model
     {
-        if (empty($this->data['model'])) {
+        if (empty($this->data['model_class'])) {
             return null;
         }
 
-        return TrailModelCollection::getModelByNameAndId($this->data['model'], $this->data['model_id'] ?? null);
+        return TrailModelCollection::getModelByClassAndId($this->data['model_class'], $this->data['model_id'] ?? null);
     }
 
     public function isAuthPermissionType(): bool
@@ -191,7 +191,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         $trail->type = static::TYPE_ORDER;
 
         if ($model) {
-            $trail->model = $model->getTrailBehavior()->modelClass;
+            $trail->model_class = $model->getTrailBehavior()->modelClass;
             $trail->model_id = $model instanceof ActiveRecordInterface ? $model->getPrimaryKey(true) : null;
         }
 
@@ -283,7 +283,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
     {
         return [
             ...parent::attributeLabels(),
-            'model' => Lang::t('skeleton', 'TRAIL_MODEL_LABEL'),
+            'model_class' => Lang::t('skeleton', 'TRAIL_MODEL_LABEL'),
             'user_id' => Lang::t('skeleton', 'TRAIL_USER_ID_LABEL'),
             'data' => Lang::t('skeleton', 'TRAIL_DATA_LABEL'),
             'created_at' => Lang::t('skeleton', 'TRAIL_CREATED_AT_LABEL'),

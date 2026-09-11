@@ -56,8 +56,8 @@ class CustomAttributesTraitTest extends TestCase
     #[Override]
     protected function tearDown(): void
     {
-        Translation::deleteAll(['model' => CustomAttributeRecord::class]);
-        Trail::deleteAll(['model' => CustomAttributeRecord::class]);
+        Translation::deleteAll(['model_class' => CustomAttributeRecord::class]);
+        Trail::deleteAll(['model_class' => CustomAttributeRecord::class]);
         Yii::$container->clear(CustomAttributeRecord::class);
 
         Yii::$app->getDb()->createCommand()
@@ -442,7 +442,7 @@ class CustomAttributesTraitTest extends TestCase
     {
         return Trail::find()
             ->where([
-                'model' => $model::class,
+                'model_class' => $model::class,
                 'model_id' => $model->id,
             ])
             ->orderBy(['id' => SORT_DESC])

@@ -52,7 +52,7 @@ class CustomAttributeFieldsTest extends TestCase
     #[Override]
     protected function tearDown(): void
     {
-        Translation::deleteAll(['model' => FieldRecord::class]);
+        Translation::deleteAll(['model_class' => FieldRecord::class]);
 
         Yii::$app->getDb()->createCommand()
             ->dropTable(FieldRecord::tableName())

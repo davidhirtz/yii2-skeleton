@@ -1,5 +1,42 @@
 # Upgrade Guide
 
+## 3.0.0 — `model_class`
+
+Every polymorphic table names its owner in a `model_class` / `model_id` pair. `model` was the natural
+name for a relation returning the owning record itself, so the column that holds the class string
+gave it up.
+
+`M260912090000ModelClass` renames `trail.model` and `translation.model`, recreates their indexes
+under the new name, and rewrites the `model` key of `trail.data` that the `TYPE_CHILD_*` types write.
+It is idempotent, so a fresh install runs it as a no-op. The cms bundle renames `permalink.model` in
+`M260912091000PermalinkModelClass`.
+
+Your own polymorphic tables are your own business — nothing here touches them.
+
+### Renames
+
+| Before | After |
+|---|---|
+| `Models\Trail::$model` | `Models\Trail::$model_class` |
+| `Models\Trail::getModelClass()` | `getModelRecord()` |
+| `Models\Trail::getDataModelClass()` | `getDataModelRecord()` |
+| `Models\Collections\TrailModelCollection::getModelByNameAndId()` | `getModelByClassAndId()` |
+| `Models\Translation::$model` | `Models\Translation::$model_class` |
+| `Hirtz\Cms\Models\Permalink::$model` | `$model_class` |
+
+The two `getModel…Class()` methods returned the *record*, not a class — hence the new names.
+`TrailBehavior::$modelClass`, `TranslationInterface::getTranslationModelClass()` and
+`PermalinkInterface::getPermalinkModelClass()` already said class and are unchanged, as is
+`Permalink::isModel()`.
+
+The `/admin/trail/index?model=` query parameter is a URL, not storage, and keeps its name.
+
+### What to check in your own code
+
+Anything that writes or filters those columns by hand: `Trail::updateAll()` / `deleteAll()`,
+`Translation::deleteAll()` in a test `tearDown()`, raw `[[model]]` SQL, fixture data files, and
+`andOnCondition()` on a relation to one of the three tables.
+
 ## 3.0.0 — Custom attributes
 
 A model can declare typed attributes that have no column of their own. Their values are ordinary

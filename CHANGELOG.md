@@ -1,5 +1,10 @@
 ## 3.0.0 (in development)
 
+- The polymorphic `trail` and `translation` tables name their owner in `model_class` instead of `model`
+  (`M260912090000ModelClass`), so a model can keep a relation named `model` for the record itself. The JSON key
+  `trail.data.model` written by the `TYPE_CHILD_*` types was renamed with it. `Models\Trail::getModelClass()` and
+  `getDataModelClass()` returned the record, not a class, and are now `getModelRecord()` and `getDataModelRecord()`;
+  `Models\Collections\TrailModelCollection::getModelByNameAndId()` is `getModelByClassAndId()`. See `UPGRADE.md`
 - Added custom attributes: a model implementing `Models\Interfaces\CustomAttributeInterface` and using
   `Models\Traits\CustomAttributesTrait` declares typed definitions (`Models\CustomAttributes\*`) whose values are
   ordinary attributes — `load()`, `validate()`, the trail and `getI18nAttribute()` all work — but are stored together

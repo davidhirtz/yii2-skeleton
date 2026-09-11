@@ -37,7 +37,7 @@ class I18nActiveQueryTest extends TestCase
     #[Override]
     protected function tearDown(): void
     {
-        Translation::deleteAll(['model' => I18nActiveRecord::class]);
+        Translation::deleteAll(['model_class' => I18nActiveRecord::class]);
 
         Yii::$app->getDb()->createCommand()
             ->dropTable(I18nActiveRecord::tableName())

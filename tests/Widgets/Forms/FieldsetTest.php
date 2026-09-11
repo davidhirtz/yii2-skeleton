@@ -48,7 +48,7 @@ class FieldsetTest extends TestCase
 
         Yii::$app->getDb()->createCommand()
             ->insert(Translation::tableName(), [
-                'model' => TestActiveRecord::class,
+                'model_class' => TestActiveRecord::class,
                 'model_id' => 1,
                 'language' => 'de',
                 'attribute' => 'name',
@@ -62,7 +62,7 @@ class FieldsetTest extends TestCase
     #[Override]
     protected function tearDown(): void
     {
-        Translation::deleteAll(['model' => TestActiveRecord::class]);
+        Translation::deleteAll(['model_class' => TestActiveRecord::class]);
 
         Yii::$app->getDb()->createCommand()
             ->dropTable(TestActiveRecord::tableName())

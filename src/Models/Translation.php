@@ -13,7 +13,7 @@ use Yii;
  * One record per model, language and attribute; the source language stays in the model's own column.
  *
  * @property int $id
- * @property string $model
+ * @property string $model_class
  * @property int|string $model_id a string once loaded, the column is an unsigned bigint
  * @property string $language
  * @property string $attribute
@@ -27,11 +27,11 @@ class Translation extends ActiveRecord
         return [
             ...parent::rules(),
             [
-                ['model', 'model_id', 'language', 'attribute'],
+                ['model_class', 'model_id', 'language', 'attribute'],
                 'required',
             ],
             [
-                ['model'],
+                ['model_class'],
                 'string',
                 'max' => 255,
             ],

@@ -63,7 +63,7 @@ class SaveTranslations
     {
         Translation::getDb()->createCommand()
             ->upsert(Translation::tableName(), [
-                'model' => $this->model->getTranslationModelClass(),
+                'model_class' => $this->model->getTranslationModelClass(),
                 'model_id' => $this->model->getPrimaryKey(),
                 'language' => $language,
                 'attribute' => $attribute,

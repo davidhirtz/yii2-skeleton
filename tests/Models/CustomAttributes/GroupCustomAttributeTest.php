@@ -48,7 +48,7 @@ class GroupCustomAttributeTest extends TestCase
     #[Override]
     protected function tearDown(): void
     {
-        Translation::deleteAll(['model' => GroupRecord::class]);
+        Translation::deleteAll(['model_class' => GroupRecord::class]);
 
         Yii::$app->getDb()->createCommand()
             ->dropTable(GroupRecord::tableName())
