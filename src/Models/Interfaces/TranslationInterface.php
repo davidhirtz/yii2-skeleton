@@ -32,14 +32,9 @@ interface TranslationInterface extends I18nAttributeInterface
     public function getTranslatedAttributeNames(): array;
 
     /**
-     * @return list<string> the attributes without a column
+     * @return list<string> every configured language but the source language
      */
-    public function getVirtualAttributes(): array;
-
-    /**
-     * @return list<string>
-     */
-    public function getColumnAttributes(): array;
+    public function getTranslationLanguages(): array;
 
     /**
      * @return TranslationQuery<Translation>
@@ -56,7 +51,7 @@ interface TranslationInterface extends I18nAttributeInterface
      */
     public function markTranslationsLoaded(array $languages): void;
 
-    public function updateOldVirtualAttributes(): void;
+    public function resetLoadedTranslations(): void;
 
     /**
      * Called by {@see \Hirtz\Skeleton\Db\ActiveRecord::afterSave()}, before the event the trail listens to.

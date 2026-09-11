@@ -77,28 +77,6 @@ trait TranslationTrait
         return $this->_translatedAttributeNames;
     }
 
-    /**
-     * @return list<string>
-     */
-    public function getVirtualAttributes(): array
-    {
-        return array_keys($this->getTranslatedAttributeNames());
-    }
-
-    /**
-     * @return list<string>
-     */
-    public function getColumnAttributes(): array
-    {
-        return array_values(array_diff($this->attributes(), $this->getVirtualAttributes()));
-    }
-
-    #[Override]
-    public function attributes(): array
-    {
-        return array_values(array_unique([...parent::attributes(), ...$this->getVirtualAttributes()]));
-    }
-
     #[Override]
     public function __get($name)
     {
@@ -122,35 +100,9 @@ trait TranslationTrait
         parent::__set($name, $value);
     }
 
-    /**
-     * A refresh sets every virtual attribute to `null`; the old values follow so none reads as changed.
-     */
-    #[Override]
-    public function afterRefresh(): void
+    public function resetLoadedTranslations(): void
     {
         $this->_loadedTranslationLanguages = [];
-
-        foreach ($this->getVirtualAttributes() as $name) {
-            $this->setOldAttribute($name, $this->getAttribute($name));
-        }
-
-        parent::afterRefresh();
-    }
-
-    #[Override]
-    protected function insertInternal($attributes = null): bool
-    {
-        return parent::insertInternal($this->filterColumnAttributes($attributes));
-    }
-
-    #[Override]
-    protected function updateInternal($attributes = null): false|int
-    {
-        // A translation-only change touches no column, so Yii reports 0 affected rows even though a record was written.
-        $virtual = $this->getDirtyAttributes($this->getVirtualAttributes());
-        $result = parent::updateInternal($this->filterColumnAttributes($attributes));
-
-        return $result === 0 && $virtual ? 1 : $result;
     }
 
     /**
@@ -188,15 +140,6 @@ trait TranslationTrait
         ]));
     }
 
-    public function updateOldVirtualAttributes(): void
-    {
-        foreach ($this->getVirtualAttributes() as $name) {
-            $this->setOldAttribute($name, $this->getAttribute($name));
-        }
-
-        $this->markTranslationsLoaded($this->getTranslationLanguages());
-    }
-
     /**
      * @return array<string, string|null>
      */
@@ -216,7 +159,7 @@ trait TranslationTrait
     /**
      * @return list<string>
      */
-    protected function getTranslationLanguages(): array
+    public function getTranslationLanguages(): array
     {
         $languages = Yii::$app->getI18n()->getLanguages();
         return array_values(array_diff($languages, [Yii::$app->sourceLanguage]));
@@ -267,16 +210,5 @@ trait TranslationTrait
                 $this->setOldAttribute($name, $value);
             }
         }
-    }
-
-    /**
-     * @param list<string>|null $attributes
-     * @return list<string>
-     */
-    private function filterColumnAttributes(?array $attributes): array
-    {
-        return $attributes === null
-            ? $this->getColumnAttributes()
-            : array_values(array_diff($attributes, $this->getVirtualAttributes()));
     }
 }

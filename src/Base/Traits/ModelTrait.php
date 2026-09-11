@@ -12,6 +12,7 @@ use Yii;
 trait ModelTrait
 {
     private ?array $scenarios = null;
+    private ?ArrayObject $validators = null;
 
     public function addInvalidAttributeError(string $attribute): bool
     {
@@ -31,6 +32,21 @@ trait ModelTrait
     {
         $this->scenarios = null;
         parent::setScenario($value);
+    }
+
+    public function getValidators(): ArrayObject
+    {
+        return $this->validators ??= $this->createValidators();
+    }
+
+    /**
+     * Must be called whenever the rules of a model change after its validators were first built, e.g. when an attribute
+     * the rules depend on was assigned.
+     */
+    public function resetValidators(): void
+    {
+        $this->validators = null;
+        $this->scenarios = null;
     }
 
     public function createValidators(): ArrayObject

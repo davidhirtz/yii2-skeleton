@@ -190,13 +190,7 @@ class I18nActiveQuery extends ActiveQuery
     #[Override]
     public function selectAllColumns(): static
     {
-        $instance = $this->getModelInstance();
-
-        if (!$instance instanceof TranslationInterface) {
-            return parent::selectAllColumns();
-        }
-
-        $this->select = $this->prefixColumns($instance->getColumnAttributes());
+        $this->select = $this->prefixColumns($this->getModelInstance()->getColumnAttributes());
         return $this;
     }
 }

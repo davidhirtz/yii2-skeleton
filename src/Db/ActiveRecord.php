@@ -38,6 +38,84 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
+     * @return list<string> the attributes without a column of their own
+     */
+    public function getVirtualAttributes(): array
+    {
+        return $this instanceof TranslationInterface ? array_keys($this->getTranslatedAttributeNames()) : [];
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getColumnAttributes(): array
+    {
+        return array_values(array_diff($this->attributes(), $this->getVirtualAttributes()));
+    }
+
+    #[Override]
+    public function attributes(): array
+    {
+        $virtual = $this->getVirtualAttributes();
+        return $virtual ? array_values(array_unique([...parent::attributes(), ...$virtual])) : parent::attributes();
+    }
+
+    #[Override]
+    protected function insertInternal($attributes = null): bool
+    {
+        return parent::insertInternal($this->filterColumnAttributes($attributes));
+    }
+
+    #[Override]
+    protected function updateInternal($attributes = null): false|int
+    {
+        // A virtual-only change touches no column, so Yii reports 0 affected rows even though a record was written.
+        $virtual = $this->getDirtyAttributes($this->getVirtualAttributes());
+        $result = parent::updateInternal($this->filterColumnAttributes($attributes));
+
+        return $result === 0 && $virtual ? 1 : $result;
+    }
+
+    /**
+     * A refresh sets every virtual attribute to `null`; the old values follow so none reads as changed.
+     */
+    #[Override]
+    public function afterRefresh(): void
+    {
+        if ($this instanceof TranslationInterface) {
+            $this->resetLoadedTranslations();
+        }
+
+        foreach ($this->getVirtualAttributes() as $name) {
+            $this->setOldAttribute($name, $this->getAttribute($name));
+        }
+
+        parent::afterRefresh();
+    }
+
+    public function updateOldVirtualAttributes(): void
+    {
+        foreach ($this->getVirtualAttributes() as $name) {
+            $this->setOldAttribute($name, $this->getAttribute($name));
+        }
+
+        if ($this instanceof TranslationInterface) {
+            $this->markTranslationsLoaded($this->getTranslationLanguages());
+        }
+    }
+
+    /**
+     * @param list<string>|null $attributes
+     * @return list<string>
+     */
+    private function filterColumnAttributes(?array $attributes): array
+    {
+        return $attributes === null
+            ? $this->getColumnAttributes()
+            : array_values(array_diff($attributes, $this->getVirtualAttributes()));
+    }
+
+    /**
      * The virtual attributes are written here rather than from a behavior, so their changes reach the event the
      * trail listens to without depending on the order two behaviors were attached in.
      */

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Behaviors;
 
+use Hirtz\Skeleton\Db\ActiveRecord as SkeletonActiveRecord;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use yii\base\Behavior;
 use yii\base\Event;
@@ -179,7 +180,9 @@ class AttributeTypecastBehavior extends Behavior
 
     public function typecastAttributes(?array $attributeNames = null): void
     {
-        $attributeNames ??= $this->owner->attributes();
+        $attributeNames ??= $this->owner instanceof SkeletonActiveRecord
+            ? $this->owner->getColumnAttributes()
+            : $this->owner->attributes();
 
         foreach ($attributeNames as $attribute) {
             $value = $this->owner->$attribute;

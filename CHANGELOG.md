@@ -1,5 +1,17 @@
 ## 3.0.0 (in development)
 
+- The virtual attribute plumbing moved from `Models\Traits\TranslationTrait` into `Db\ActiveRecord`, so a second
+  feature can add attributes without a column of their own without colliding with translations: `attributes()`,
+  `getVirtualAttributes()`, `getColumnAttributes()`, `insertInternal()`, `updateInternal()`, `afterRefresh()` and
+  `updateOldVirtualAttributes()` are base class methods now. `TranslationInterface` no longer declares
+  `getVirtualAttributes()`, `getColumnAttributes()` and `updateOldVirtualAttributes()`; it declares
+  `getTranslationLanguages()` and the new `resetLoadedTranslations()` instead
+- `Base\Traits\ModelTrait` caches the validators itself and adds `resetValidators()`, which drops that cache and the
+  cached scenarios. `yii\base\Model` keeps its validators in a private property that cannot be invalidated, which
+  breaks a model whose rules depend on an attribute assigned after the validators were first built
+- `Behaviors\AttributeTypecastBehavior::typecastAttributes()` defaults to the column attributes of a
+  `Db\ActiveRecord` owner instead of `attributes()`
+
 - `Db\ActiveRecord::instantiate()` creates loaded records through the container, so a definition configured for
   the model class — `i18nAttributes` in particular — applies to records from `find()` as well as to `create()`.
   Before, only models using `TypeAttributeTrait` did this
