@@ -23,7 +23,6 @@ use Hirtz\Skeleton\Widgets\Grids\Pagers\LinkPager;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridFooter;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridHeader;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridSearchForm;
-use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Hirtz\Skeleton\Widgets\Traits\ProviderTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
@@ -37,11 +36,6 @@ use yii\helpers\Inflector;
 class GridView extends Widget
 {
     use ContainerConfigurationTrait;
-
-    /**
-     * @use ModelTrait<T>
-     */
-    use ModelTrait;
     use ProviderTrait;
 
     use TagAttributesTrait;
@@ -72,6 +66,9 @@ class GridView extends Widget
     protected array $tableHeaderAttributes = [];
     protected array $tableBodyAttributes = [];
 
+    /**
+     * @var array<string, mixed>|Closure(T, int|string, int, static): array<string, mixed>|null
+     */
     protected array|Closure|null $rowAttributes = null;
 
     protected array $pagerOptions = [];

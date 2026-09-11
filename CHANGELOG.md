@@ -1,5 +1,8 @@
 ## 3.0.0 (in development)
 
+- `Widgets\Grids\GridView` no longer uses `Widgets\Traits\ModelTrait`: nothing read its `$model` — a column takes
+  its label from the first row of the provider — and the property stood in the way of a subclass naming its own.
+  A grid that needs one uses the trait itself. Its template parameter now types `$rowAttributes`
 - Added `Models\Traits\VisibleAttributeTrait`, moved here from `Hirtz\Cms\Models\Traits`: `getVisibleAttribute()`
   and `isAttributeVisible()` read the `hiddenFields` key of a model's type options
 - Fixed the trail link of a deleted user in `Modules\Admin\Widgets\Grids\TrailGridView`: it joined the class and

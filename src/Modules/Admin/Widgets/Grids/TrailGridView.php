@@ -47,8 +47,6 @@ class TrailGridView extends GridView
     #[Override]
     protected function configure(): void
     {
-        $this->model ??= Trail::instance();
-
         $this->rowAttributes = fn (Trail $trail) => [
             'class' => $trail->isDeleteType() ? 'trail-delete' : '',
         ];

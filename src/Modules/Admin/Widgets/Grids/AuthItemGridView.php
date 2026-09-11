@@ -23,6 +23,9 @@ use Override;
 use Stringable;
 use Yii;
 
+/**
+ * @extends GridView<AuthItem>
+ */
 class AuthItemGridView extends GridView
 {
     use MessageSourceTrait;
