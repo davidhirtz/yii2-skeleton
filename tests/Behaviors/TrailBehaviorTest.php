@@ -9,6 +9,7 @@ use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeValidator;
 use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Models\Interfaces\AdminRouteInterface;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
 use Hirtz\Skeleton\Models\Trail;
@@ -155,7 +156,7 @@ class TrailBehaviorTest extends TestCase
         $model = TrailActiveRecord::create();
         self::assertFalse($model->getTrailModelAdminRoute());
 
-        $model = new class () extends TrailActiveRecord {
+        $model = new class () extends TrailActiveRecord implements AdminRouteInterface {
             public function getAdminRoute(): array
             {
                 return ['/admin/test'];

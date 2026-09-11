@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Behaviors\TimestampBehavior;
 use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\I18n\Lang;
+use Hirtz\Skeleton\Models\Interfaces\AdminRouteInterface;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Models\Traits\TrailModelTrait;
@@ -28,7 +29,7 @@ use Override;
  * @property DateTime|null $updated_at
  * @property DateTime $created_at
  */
-class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttributeInterface
+class Redirect extends ActiveRecord implements AdminRouteInterface, TrailModelInterface, TypeAttributeInterface
 {
     use TypeAttributeTrait;
     use TrailModelTrait;

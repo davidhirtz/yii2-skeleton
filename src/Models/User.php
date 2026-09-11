@@ -14,6 +14,7 @@ use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Helpers\CountryList;
 use Hirtz\Skeleton\Helpers\FileHelper;
+use Hirtz\Skeleton\Models\Interfaces\AdminRouteInterface;
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
@@ -61,7 +62,7 @@ use yii\web\IdentityInterface;
  *
  * @mixin TrailBehavior
  */
-class User extends ActiveRecord implements IdentityInterface, StatusAttributeInterface, TrailModelInterface
+class User extends ActiveRecord implements AdminRouteInterface, IdentityInterface, StatusAttributeInterface, TrailModelInterface
 {
     use StatusAttributeTrait;
     use TrailModelTrait;

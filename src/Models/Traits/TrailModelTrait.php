@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Models\Traits;
 use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Collections\TrailModelCollection;
+use Hirtz\Skeleton\Models\Interfaces\AdminRouteInterface;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use ReflectionClass;
 
@@ -41,7 +42,7 @@ trait TrailModelTrait
 
     public function getTrailModelAdminRoute(): array|false
     {
-        return method_exists($this, 'getAdminRoute') ? $this->getAdminRoute() : false;
+        return $this instanceof AdminRouteInterface ? $this->getAdminRoute() : false;
     }
 
     public function getTrailModelName(): string

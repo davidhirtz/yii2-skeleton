@@ -1,5 +1,9 @@
 ## 3.0.0 (in development)
 
+- Added `Models\Interfaces\AdminRouteInterface`, the contract behind `getAdminRoute()`. `Models\User` and
+  `Models\Redirect` implement it, and `Models\Traits\TrailModelTrait::getTrailModelAdminRoute()` asks for the interface
+  instead of sniffing the method with `method_exists()`, so a model that implements it no longer needs to bridge the
+  two itself
 - `Db\ActiveQuery::selectAllColumns()` selects the columns, not `attributes()`: a model with virtual attributes
   would otherwise select a column that does not exist. `Db\I18nActiveQuery`'s override of it is gone
 - `Widgets\Grids\GridView` no longer uses `Widgets\Traits\ModelTrait`: nothing read its `$model` — a column takes
