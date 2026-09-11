@@ -101,7 +101,7 @@ $diff-bg-color-none-block-alternative: mix($diff-bg-color, $diff-table-sidebar-c
   word-break: normal;
 
   td {
-    width: auto;
+    width: calc(50% - 5rem);
   }
 
   .trail-property-col {
@@ -114,6 +114,7 @@ $diff-bg-color-none-block-alternative: mix($diff-bg-color, $diff-table-sidebar-c
 }
 
 .trail-property-col {
+  --table-bg: var(--trail-property-bg);
   font-family: Bebas Neue, sans-serif;
   hyphens: auto;
   letter-spacing: .0625em;
