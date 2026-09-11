@@ -101,6 +101,24 @@ class GroupCustomAttributeTest extends TestCase
         self::assertArrayHasKey('links', $model->getErrors());
     }
 
+    /**
+     * The form renders the rows a minimum count demands, but an empty one is still dropped rather than stored.
+     */
+    public function testMinCountIsReportedOnTheGroupAndStoresNoEmptyRow(): void
+    {
+        $model = $this->createRecord();
+        $model->type = GroupRecord::TYPE_REQUIRED;
+        $model->links = [['label' => 'One'], ['label' => '']];
+
+        self::assertFalse($model->validate());
+        self::assertArrayHasKey('links', $model->getErrors());
+        self::assertSame([['label' => 'One']], $model->links);
+
+        $model->links = [['label' => 'One'], ['label' => 'Two']];
+
+        self::assertTrue($model->validate(), implode(' ', $model->getErrorSummary(true)));
+    }
+
     public function testRequiredChildBlocksTheSave(): void
     {
         $model = $this->createRecord();
@@ -259,6 +277,7 @@ class GroupRecord extends ActiveRecord implements
 
     final public const int TYPE_SINGLE = 2;
     final public const int TYPE_NESTED = 3;
+    final public const int TYPE_REQUIRED = 4;
 
     #[Override]
     public static function getTypes(): array
@@ -281,6 +300,15 @@ class GroupRecord extends ActiveRecord implements
                 'customAttributes' => fn (): array => [
                     GroupCustomAttribute::make('meta')
                         ->attributes([TextCustomAttribute::make('title')]),
+                ],
+            ],
+            self::TYPE_REQUIRED => [
+                'name' => 'Required',
+                'customAttributes' => fn (): array => [
+                    GroupCustomAttribute::make('links')
+                        ->multiple()
+                        ->minCount(2)
+                        ->attributes([TextCustomAttribute::make('label')]),
                 ],
             ],
             self::TYPE_NESTED => [

@@ -157,6 +157,38 @@ class CustomAttributeFieldsTest extends TestCase
         self::assertStringContainsString('data-group-add hidden', $content);
     }
 
+    public function testMinCountRendersItsRowsUpFront(): void
+    {
+        $model = $this->createRecord();
+        $model->type = FieldRecord::TYPE_REQUIRED_LINKS;
+
+        $content = Fieldset::make()
+            ->model($model)
+            ->rows(['links'])
+            ->render();
+
+        self::assertStringContainsString('data-group-min="2"', $content);
+        self::assertStringContainsString('name="FieldRecord[links][0][label]"', $content);
+        self::assertStringContainsString('name="FieldRecord[links][1][label]"', $content);
+        self::assertStringNotContainsString('name="FieldRecord[links][2][label]"', $content);
+    }
+
+    public function testMinCountOnlyTopsUpTheStoredRows(): void
+    {
+        $model = $this->createRecord();
+        $model->type = FieldRecord::TYPE_REQUIRED_LINKS;
+        $model->links = [['label' => 'One']];
+
+        $content = Fieldset::make()
+            ->model($model)
+            ->rows(['links'])
+            ->render();
+
+        self::assertStringContainsString('name="FieldRecord[links][0][label]" value="One"', $content);
+        self::assertStringContainsString('name="FieldRecord[links][1][label]"', $content);
+        self::assertStringNotContainsString('name="FieldRecord[links][2][label]"', $content);
+    }
+
     public function testSingleGroupRendersOneItemWithoutButtons(): void
     {
         $model = $this->createRecord();
@@ -238,6 +270,7 @@ class FieldRecord extends ActiveRecord implements
 
     final public const int TYPE_LINKS = 2;
     final public const int TYPE_META = 3;
+    final public const int TYPE_REQUIRED_LINKS = 4;
 
     #[Override]
     public static function getTypes(): array
@@ -278,6 +311,15 @@ class FieldRecord extends ActiveRecord implements
                 'customAttributes' => fn (): array => [
                     GroupCustomAttribute::make('meta')
                         ->attributes([TextCustomAttribute::make('title')]),
+                ],
+            ],
+            self::TYPE_REQUIRED_LINKS => [
+                'name' => 'Required links',
+                'customAttributes' => fn (): array => [
+                    GroupCustomAttribute::make('links')
+                        ->multiple()
+                        ->minCount(2)
+                        ->attributes([TextCustomAttribute::make('label')]),
                 ],
             ],
         ];

@@ -19,11 +19,20 @@ htmx.onLoad(($node) => {
             return;
         }
 
+        const min = Number($group.dataset.groupMin || 0);
         const max = Number($group.dataset.groupMax || Infinity);
+
         const update = () => {
+            const count = $items.children.length;
+
             if ($add) {
-                $add.hidden = $items.children.length >= max;
+                $add.hidden = count >= max;
             }
+
+            // The server renders the rows a minimum count demands, so they cannot be removed either.
+            $items.querySelectorAll<HTMLElement>('[data-group-remove]').forEach(($remove) => {
+                $remove.hidden = count <= min;
+            });
         };
 
         $add?.addEventListener('click', () => {

@@ -10,6 +10,9 @@
   inside the JSON, not in the `translation` table. See `UPGRADE.md`
 - `Db\ActiveRecord` gained `getCustomAttributesColumn()`, a `rules()` returning the custom rules, `attributeHints()`,
   and the `beforeValidate()` that applies the definition defaults to a new record
+- A `GroupCustomAttribute` with a `minCount` renders that many rows up front, empty when there is nothing stored, and
+  the remove button is hidden while the group is at its minimum. An empty row is still dropped on save, so the minimum
+  is reported as a validation error rather than stored as an empty object
 - `Widgets\Forms\Fieldset` asks a `CustomAttributeInterface` model for a definition before deriving a field from the
   validators, and no longer drops a disabled field (`Widgets\Forms\Fields\Field::isDisabled()`). Added
   `Widgets\Forms\Fields\GroupField`, `Widgets\Forms\Traits\CustomAttributeFieldsTrait` and

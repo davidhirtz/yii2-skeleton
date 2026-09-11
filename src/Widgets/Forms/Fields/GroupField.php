@@ -58,7 +58,7 @@ class GroupField extends Field
             return '';
         }
 
-        $items = array_values($owner->getCustomAttributeItems((string)$this->property));
+        $items = $this->getItems($owner);
 
         $container = Div::make()
             ->addClass('custom-attribute-group-container')
@@ -84,6 +84,24 @@ class GroupField extends Field
         $this->view->registerAssetBundle(CustomAttributesAssetBundle::class);
 
         return $container->addContent($this->getTemplate($owner), $this->getAddButton(count($items)));
+    }
+
+    /**
+     * The rows a minimum count demands are rendered empty, rather than left to the add button.
+     *
+     * @return list<CustomAttributeGroupItem>
+     */
+    protected function getItems(Model&CustomAttributeInterface $owner): array
+    {
+        $items = array_values($owner->getCustomAttributeItems((string)$this->property));
+
+        if ($this->group->isMultiple()) {
+            for ($index = count($items); $index < $this->group->getMinCount(); $index++) {
+                $items[] = $this->group->createItem($owner, (string)$index);
+            }
+        }
+
+        return $items;
     }
 
     protected function getItem(CustomAttributeGroupItem $item): Stringable
