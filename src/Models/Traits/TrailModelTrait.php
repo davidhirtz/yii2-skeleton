@@ -5,19 +5,31 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Models\Traits;
 
 use Hirtz\Skeleton\Behaviors\TrailBehavior;
+use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Collections\TrailModelCollection;
+use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use ReflectionClass;
 
 trait TrailModelTrait
 {
     public function formatTrailAttributeValue(string $attribute, mixed $value): mixed
     {
-        return TrailModelCollection::formatAttributeValue($this, $attribute, $value);
+        $definition = $this instanceof CustomAttributeInterface ? $this->getCustomAttribute($attribute) : null;
+
+        return $definition
+            ? $definition->formatValue($this, $value)
+            : TrailModelCollection::formatAttributeValue($this, $attribute, $value);
     }
 
     public function getTrailAttributes(): array
     {
-        return array_diff($this->attributes(), $this->getTrailBehavior()->exclude);
+        $exclude = $this->getTrailBehavior()->exclude;
+
+        if ($this instanceof ActiveRecord && $this instanceof CustomAttributeInterface) {
+            $exclude[] = $this->getCustomAttributesColumn();
+        }
+
+        return array_diff($this->attributes(), $exclude);
     }
 
     public function getTrailBehavior(): TrailBehavior

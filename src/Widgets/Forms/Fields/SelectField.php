@@ -25,6 +25,13 @@ class SelectField extends Field
 
     protected string|false $prompt = false;
     protected array $promptAttributes = [];
+    protected bool $multiple = false;
+
+    public function multiple(bool $multiple = true): static
+    {
+        $this->multiple = $multiple;
+        return $this;
+    }
 
     public function prompt(string|false $prompt = '', array $attributes = []): static
     {
@@ -100,12 +107,17 @@ class SelectField extends Field
         }
 
         parent::configure();
+
+        if ($this->multiple) {
+            $this->attributes['multiple'] = true;
+            $this->attributes['name'] = "{$this->attributes['name']}[]";
+        }
     }
 
     #[Override]
     protected function renderContent(): string|Stringable
     {
-        if (count($this->items) > 1 || !$this->isRequired()) {
+        if ($this->multiple || count($this->items) > 1 || !$this->isRequired()) {
             return parent::renderContent();
         }
 
@@ -117,14 +129,15 @@ class SelectField extends Field
     #[Override]
     protected function getInput(): string|Stringable
     {
-        $selected = (string)($this->attributes['value'] ?? $this->model->{$this->property} ?? '');
+        $value = $this->attributes['value'] ?? $this->model->{$this->property} ?? '';
+        $selected = array_map(strval(...), is_array($value) ? $value : [$value]);
         unset($this->attributes['value']);
 
         $select = Select::make()
             ->attributes($this->attributes)
             ->addClass('input');
 
-        if (false !== $this->prompt && (!$this->isRequired() || '' !== $selected)) {
+        if (false !== $this->prompt && !$this->multiple && (!$this->isRequired() || [''] !== $selected)) {
             $this->promptAttributes['disabled'] ??= $this->isRequired();
 
             $select->addOption(Option::make()
@@ -146,7 +159,7 @@ class SelectField extends Field
             $select->addOption(Option::make()
                 ->attributes($attributes)
                 ->label($label)
-                ->selected($value === $selected)
+                ->selected(in_array($value, $selected, true))
                 ->value($value));
         }
 

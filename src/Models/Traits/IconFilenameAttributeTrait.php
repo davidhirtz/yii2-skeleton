@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Models\Traits;
 
 use Hirtz\Skeleton\I18n\Lang;
-use Hirtz\Skeleton\Helpers\FileHelper;
-use Hirtz\Skeleton\Helpers\StringHelper;
+use Hirtz\Skeleton\Helpers\IconHelper;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
-use Yii;
 
 trait IconFilenameAttributeTrait
 {
@@ -38,33 +36,7 @@ trait IconFilenameAttributeTrait
 
     public static function getIconFilenames(): array
     {
-        if (static::$_iconFilenames === null) {
-            static::$_iconFilenames = [];
-
-            foreach (static::findIconFiles() as $filename) {
-                static::$_iconFilenames[basename((string) $filename)] = static::humanizeIconFilename($filename);
-            }
-
-            natcasesort(static::$_iconFilenames);
-        }
-
-        return static::$_iconFilenames;
-    }
-
-    protected static function findIconFiles(?array $options = null): array
-    {
-        $options ??= [
-            'only' => ['*.svg']
-        ];
-
-        $dir = Yii::getAlias('@webroot') . static::getIconPath();
-
-        return FileHelper::findFiles($dir, $options);
-    }
-
-    protected static function humanizeIconFilename(string $filename): string
-    {
-        return StringHelper::humanizeFilename($filename);
+        return static::$_iconFilenames ??= IconHelper::getIconFilenames(static::getIconPath());
     }
 
     public function getIcon(): string

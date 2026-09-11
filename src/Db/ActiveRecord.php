@@ -9,6 +9,7 @@ use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Behaviors\AttributeTypecastBehavior;
 use Hirtz\Skeleton\Db\Commands\BatchInsertQueryBuild;
+use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
 use Override;
 use Yii;
@@ -20,6 +21,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
 
     private bool $_isBatch = false;
     private bool $_isDeleted = false;
+    private bool $_hasCustomAttributesColumn = true;
 
     #[Override]
     public function behaviors(): array
@@ -42,7 +44,99 @@ class ActiveRecord extends \yii\db\ActiveRecord
      */
     public function getVirtualAttributes(): array
     {
-        return $this instanceof TranslationInterface ? array_keys($this->getTranslatedAttributeNames()) : [];
+        return [
+            ...$this instanceof TranslationInterface ? array_keys($this->getTranslatedAttributeNames()) : [],
+            ...$this instanceof CustomAttributeInterface ? $this->getCustomAttributeNames() : [],
+        ];
+    }
+
+    public function getCustomAttributesColumn(): string
+    {
+        return 'custom_attributes';
+    }
+
+    /**
+     * A record loaded without the column keeps the stored JSON: it is neither populated nor written back.
+     */
+    protected function populateCustomAttributes(): void
+    {
+        if (!$this instanceof CustomAttributeInterface) {
+            return;
+        }
+
+        // `getAttributes()` reports every declared attribute; only the old attributes say what was actually selected.
+        $column = $this->getCustomAttributesColumn();
+        $this->_hasCustomAttributesColumn = array_key_exists($column, $this->getOldAttributes());
+
+        if (!$this->_hasCustomAttributesColumn) {
+            return;
+        }
+
+        $values = $this->getAttribute($column);
+        $values = is_array($values) ? $values : [];
+
+        foreach ($this->getCustomAttributeDefinitions() as $definition) {
+            foreach ($definition->getAttributeNames($this) as $name) {
+                $value = $definition->unserialize($values[$name] ?? null);
+
+                $this->setAttribute($name, $value);
+                $this->setOldAttribute($name, $value);
+            }
+        }
+    }
+
+    /**
+     * Keeps a key no current definition claims, so switching a type back does not lose its values, and overwrites in
+     * place because MySQL reorders the keys of a rebuilt object and every save would then read as changed.
+     */
+    protected function serializeCustomAttributes(): void
+    {
+        if (!$this instanceof CustomAttributeInterface || !$this->_hasCustomAttributesColumn) {
+            return;
+        }
+
+        $column = $this->getCustomAttributesColumn();
+        $values = $this->getAttribute($column);
+        $values = is_array($values) ? $values : [];
+
+        foreach ($this->getCustomAttributeDefinitions() as $definition) {
+            foreach ($definition->getAttributeNames($this) as $name) {
+                $value = $definition->serialize($this->getAttribute($name));
+
+                if ($value === null) {
+                    unset($values[$name]);
+                    continue;
+                }
+
+                $values[$name] = $value;
+            }
+        }
+
+        $this->setAttribute($column, $values ?: null);
+    }
+
+    /**
+     * @return array<string, mixed> the previous value per changed custom attribute, so the trail logs the attribute
+     * rather than the JSON column
+     */
+    protected function getChangedCustomAttributes(bool $insert): array
+    {
+        if (!$this instanceof CustomAttributeInterface) {
+            return [];
+        }
+
+        $changed = [];
+
+        foreach ($this->getCustomAttributeNames() as $name) {
+            $value = $this->getAttribute($name);
+            $old = $insert ? null : $this->getOldAttribute($name);
+
+            if ($value !== $old) {
+                $changed[$name] = $old;
+            }
+        }
+
+        return $changed;
     }
 
     /**
@@ -76,6 +170,13 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return $result === 0 && $virtual ? 1 : $result;
     }
 
+    #[Override]
+    public function afterFind(): void
+    {
+        $this->populateCustomAttributes();
+        parent::afterFind();
+    }
+
     /**
      * A refresh sets every virtual attribute to `null`; the old values follow so none reads as changed.
      */
@@ -85,6 +186,8 @@ class ActiveRecord extends \yii\db\ActiveRecord
         if ($this instanceof TranslationInterface) {
             $this->resetLoadedTranslations();
         }
+
+        $this->populateCustomAttributes();
 
         foreach ($this->getVirtualAttributes() as $name) {
             $this->setOldAttribute($name, $this->getAttribute($name));
@@ -115,6 +218,31 @@ class ActiveRecord extends \yii\db\ActiveRecord
             : array_values(array_diff($attributes, $this->getVirtualAttributes()));
     }
 
+    #[Override]
+    public function beforeValidate(): bool
+    {
+        if ($this instanceof CustomAttributeInterface && $this->getIsNewRecord()) {
+            $this->applyCustomAttributeDefaults();
+        }
+
+        return parent::beforeValidate();
+    }
+
+    /**
+     * Serializes after the event, so a behavior writing an attribute in `EVENT_BEFORE_*` is included.
+     */
+    #[Override]
+    public function beforeSave($insert): bool
+    {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+
+        $this->serializeCustomAttributes();
+
+        return true;
+    }
+
     /**
      * The virtual attributes are written here rather than from a behavior, so their changes reach the event the
      * trail listens to without depending on the order two behaviors were attached in.
@@ -124,8 +252,10 @@ class ActiveRecord extends \yii\db\ActiveRecord
     {
         if ($this instanceof TranslationInterface) {
             $changedAttributes = [...$changedAttributes, ...$this->saveVirtualAttributes()];
-            $this->updateOldVirtualAttributes();
         }
+
+        $changedAttributes = [...$changedAttributes, ...$this->getChangedCustomAttributes($insert)];
+        $this->updateOldVirtualAttributes();
 
         parent::afterSave($insert, $changedAttributes);
     }
@@ -279,9 +409,24 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     #[Override]
+    public function rules(): array
+    {
+        return $this instanceof CustomAttributeInterface ? $this->getCustomAttributeRules() : [];
+    }
+
+    #[Override]
+    public function attributeHints(): array
+    {
+        return $this instanceof CustomAttributeInterface
+            ? array_filter($this->getCustomAttributeHints(), static fn (?string $hint): bool => $hint !== null)
+            : [];
+    }
+
+    #[Override]
     public function attributeLabels(): array
     {
         return [
+            ...$this instanceof CustomAttributeInterface ? $this->getCustomAttributeLabels() : [],
             'id' => Lang::t('skeleton', 'COMMON_ID_LABEL'),
             'status' => Lang::t('skeleton', 'COMMON_STATUS_LABEL'),
             'type' => Lang::t('skeleton', 'COMMON_TYPE_LABEL'),

@@ -74,6 +74,22 @@ trait MigrationTrait
         }
     }
 
+    protected function addCustomAttributesColumn(string $table, string $column = 'custom_attributes', ?string $after = null): void
+    {
+        $type = $this->json()->null();
+
+        if ($after !== null) {
+            $type->after($after);
+        }
+
+        $this->addColumn($table, $column, (string)$type);
+    }
+
+    protected function dropCustomAttributesColumn(string $table, string $column = 'custom_attributes'): void
+    {
+        $this->dropColumnIfExists($table, $column);
+    }
+
     protected function dropColumnIfExists(string $table, string $column): void
     {
         if ($this->getDb()->getTableSchema($table)->getColumn($column)) {

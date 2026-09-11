@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Models\Traits;
 
 use Hirtz\Skeleton\I18n\Lang;
+use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Validators\UniqueValidator;
 use Yii;
 use yii\validators\UniqueValidator as BaseUniqueValidator;
@@ -18,6 +19,17 @@ trait I18nAttributesTrait
 
     private ?array $_i18nHints = null;
     private ?array $_i18nLabels = null;
+    private array $_i18nLabelsKey = [];
+
+    /**
+     * @return list<string> `i18nAttributes` plus the translatable custom attributes of the model's current state
+     */
+    public function getI18nAttributes(): array
+    {
+        return $this instanceof CustomAttributeInterface
+            ? [...array_values($this->i18nAttributes), ...$this->getTranslatableCustomAttributeNames()]
+            : array_values($this->i18nAttributes);
+    }
 
     public function getI18nAttribute(string $attribute, ?string $language = null, bool $fallback = false): mixed
     {
@@ -79,61 +91,61 @@ trait I18nAttributesTrait
 
     public function getAttributeLabel($attribute): string
     {
-        if ($this->i18nAttributes) {
-            $labels = $this->getI18nLabels();
+        $labels = $this->getI18nLabels();
 
-            if (isset($labels[$attribute])) {
-                return $labels[$attribute];
-            }
-        }
-
-        return parent::getAttributeLabel($attribute);
+        return $labels[$attribute] ?? parent::getAttributeLabel($attribute);
     }
 
     public function getI18nHints(): array
     {
-        if ($this->_i18nHints === null) {
-            $i18n = Yii::$app->getI18n();
-            $this->_i18nHints = $this->attributeHints();
-
-            foreach ($this->i18nAttributes as $attribute) {
-                foreach ($i18n->getLanguages() as $language) {
-                    $this->_i18nHints[$i18n->getAttributeName($attribute, $language)] ??= $this->_i18nHints[$attribute] ?? null;
-                }
-            }
-        }
-
+        $this->buildI18nLabelsAndHints();
         return $this->_i18nHints;
     }
 
     protected function getI18nLabels(): array
     {
-        if ($this->_i18nLabels === null) {
-            $i18n = Yii::$app->getI18n();
-            $this->_i18nLabels = [];
+        $this->buildI18nLabelsAndHints();
+        return $this->_i18nLabels;
+    }
 
-            foreach ($this->i18nAttributes as $attribute) {
-                foreach ($i18n->getLanguages() as $language) {
-                    $label = parent::getAttributeLabel($attribute);
+    /**
+     * Keyed rather than built once: the attributes of a model with custom attributes change with its state.
+     */
+    private function buildI18nLabelsAndHints(): void
+    {
+        $attributes = $this->getI18nAttributes();
 
-                    if ($language !== Yii::$app->language) {
-                        $label = Lang::t('skeleton', 'I18N_ATTRIBUTES_LABEL_LANGUAGE', [
-                            'label' => $label,
-                            'language' => strtoupper((string)$language),
-                        ]);
-                    }
-
-                    $this->_i18nLabels[$i18n->getAttributeName($attribute, $language)] = $label;
-                }
-            }
+        if ($this->_i18nLabels !== null && $this->_i18nLabelsKey === $attributes) {
+            return;
         }
 
-        return $this->_i18nLabels;
+        $i18n = Yii::$app->getI18n();
+
+        $this->_i18nLabelsKey = $attributes;
+        $this->_i18nLabels = [];
+        $this->_i18nHints = $this->attributeHints();
+
+        foreach ($attributes as $attribute) {
+            foreach ($i18n->getLanguages() as $language) {
+                $name = $i18n->getAttributeName($attribute, $language);
+                $label = parent::getAttributeLabel($attribute);
+
+                if ($language !== Yii::$app->language) {
+                    $label = Lang::t('skeleton', 'I18N_ATTRIBUTES_LABEL_LANGUAGE', [
+                        'label' => $label,
+                        'language' => strtoupper((string)$language),
+                    ]);
+                }
+
+                $this->_i18nLabels[$name] = $label;
+                $this->_i18nHints[$name] ??= $this->_i18nHints[$attribute] ?? null;
+            }
+        }
     }
 
     public function getI18nRules(array $rules): array
     {
-        if ($this->i18nAttributes) {
+        if ($this->getI18nAttributes()) {
             foreach ($rules as $key => $rule) {
                 if ($this->isUniqueRule($rule[1])) {
                     $attribute = is_array($rule[0]) ? array_pop($rule[0]) : $rule[0];
@@ -178,6 +190,6 @@ trait I18nAttributesTrait
 
     public function isI18nAttribute(string $attribute): bool
     {
-        return in_array($attribute, $this->i18nAttributes, true);
+        return in_array($attribute, $this->getI18nAttributes(), true);
     }
 }

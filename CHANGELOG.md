@@ -1,5 +1,23 @@
 ## 3.0.0 (in development)
 
+- Added custom attributes: a model implementing `Models\Interfaces\CustomAttributeInterface` and using
+  `Models\Traits\CustomAttributesTrait` declares typed definitions (`Models\CustomAttributes\*`) whose values are
+  ordinary attributes — `load()`, `validate()`, the trail and `getI18nAttribute()` all work — but are stored together
+  in one `custom_attributes` JSON column instead of a column each. The definitions are resolved from the model's
+  current state, by default from the `customAttributes` key of its type options. Shipped types: `Text`, `Html`,
+  `Boolean`, `Number`, `Select`, `Icon`, `Url`, `Email`, `HexColor` and `Group`, the last one bundling definitions
+  into a nested object or a repeatable list of them. A translatable definition keeps its `_xx` name but is stored
+  inside the JSON, not in the `translation` table. See `UPGRADE.md`
+- `Db\ActiveRecord` gained `getCustomAttributesColumn()`, a `rules()` returning the custom rules, `attributeHints()`,
+  and the `beforeValidate()` that applies the definition defaults to a new record
+- `Widgets\Forms\Fields\SelectField::multiple()` renders a multiple select: the name ends in `[]` and `selected`
+  matches against an array
+- Added `Db\Traits\MigrationTrait::addCustomAttributesColumn()` and `dropCustomAttributesColumn()`
+- Added `Helpers\IconHelper::getIconFilenames()`, which `Models\Traits\IconFilenameAttributeTrait` now delegates to.
+  Removed its `findIconFiles()` and `humanizeIconFilename()` methods
+- `Models\Traits\I18nAttributesTrait` gained `getI18nAttributes()`, which is `i18nAttributes` plus the translatable
+  custom attributes of the model's current state, and is what `isI18nAttribute()`, the labels, hints and rules read
+
 - The virtual attribute plumbing moved from `Models\Traits\TranslationTrait` into `Db\ActiveRecord`, so a second
   feature can add attributes without a column of their own without colliding with translations: `attributes()`,
   `getVirtualAttributes()`, `getColumnAttributes()`, `insertInternal()`, `updateInternal()`, `afterRefresh()` and
