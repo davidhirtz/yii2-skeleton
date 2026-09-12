@@ -1,5 +1,23 @@
 ## 3.0.0 (in development)
 
+- Removed `Models\User::$picture` and everything around it: `Models\Forms\UserPictureForm`,
+  `User::deletePicture()`, `getPictureUrl()`, `getUploadPath()` / `setUploadPath()`, the
+  `account/picture` and `user/delete-picture` actions and `Models\Forms\Traits\UserFormTrait::$upload` /
+  `uploadUserPicture()`. Profile pictures had no upload UI left in v3
+- Removed the `first_name`, `last_name`, `birthdate`, `city` and `country` columns from `user`, together with
+  `User::getFullName()`, `User::getCountries()` and the `getFirstNameField()`, `getLastNameField()`,
+  `getCityField()` and `getCountryField()` methods of `Modules\Admin\Widgets\Forms\Traits\UserActiveFormTrait`.
+  `User::getInitials()` falls back to the username. `M260913100000UserAttributes` copies the five columns into
+  `custom_attributes` before dropping them; a project that still needs them declares them as custom attributes.
+  See UPGRADE.md
+- `Models\User` is a `CustomAttributeInterface`, and `user` has a `custom_attributes` column. The account and user
+  forms render one field per declared definition
+- `Widgets\Forms\Traits\CustomAttributeFieldsTrait::getCustomAttributeFields()` takes an optional model, for a form
+  whose own model wraps the record — as `UserForm` and `AccountUpdateForm` wrap `User`
+- `Models\Queries\UserQuery::matching()` searches `name` and `email` only, and `nameAttributesOnly()` /
+  `selectListAttributes()` no longer select the dropped columns
+- The message keys `USER_FIRST_NAME_LABEL`, `USER_LAST_NAME_LABEL`, `USER_BIRTHDATE_LABEL`, `USER_CITY_LABEL`,
+  `USER_COUNTRY_LABEL`, `USER_PICTURE_LABEL` and `USER_UPLOAD_LABEL` were dropped from every language file
 - `esbuild.config.js` exports the shared `buildScripts()` / `buildStyles()` builders every bundle's `esbuild.js`
   now calls, so a bundle only declares its entry points. Their sass load paths include the skeleton's
   `resources/assets/src/css` and `node_modules`, which replaces the `../../../../../yii2-skeleton/…` import chains

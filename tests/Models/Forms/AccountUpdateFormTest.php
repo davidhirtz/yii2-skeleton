@@ -129,23 +129,15 @@ class AccountUpdateFormTest extends TestCase
         $expects = Yii::t('skeleton', 'This username is already used by another user.');
         self::assertEquals($expects, $form->getFirstError('name'));
 
-        $form->user->name = 'admin';
-        $form->user->first_name = ' Test ';
-        $form->user->last_name = 'User';
+        $form->user->name = ' administrator ';
 
         self::assertTrue($form->save());
-        self::assertEquals('Test', $form->user->first_name);
-        self::assertEquals('Test User', $form->user->getFullName());
-        self::assertEquals('TU', $form->user->getInitials());
+        self::assertEquals('administrator', $form->user->name);
+        self::assertEquals('ad', $form->user->getInitials());
 
         $trail = $this->getLastTrailRecord();
 
-        $expects = [
-            'first_name' => [null, 'Test'],
-            'last_name' => [null, 'User'],
-        ];
-
-        self::assertEquals($expects, $trail->data);
+        self::assertEquals(['name' => ['admin', 'administrator']], $trail->data);
 
         /** @var User $user */
         $user = $trail->getModelRecord();
@@ -183,7 +175,6 @@ class AccountUpdateFormTest extends TestCase
         $form->load([
             $form->user->formName() => [
                 'status' => User::STATUS_ENABLED,
-                'country' => 'DE',
                 'language' => 'de',
                 'is_owner' => true,
             ],

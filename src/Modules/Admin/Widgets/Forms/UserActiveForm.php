@@ -39,10 +39,7 @@ class UserActiveForm extends ActiveForm
                 $this->getTimezoneField(),
             ],
             [
-                $this->getFirstNameField(),
-                $this->getLastNameField(),
-                $this->getCityField(),
-                $this->getCountryField(),
+                ...$this->getUserCustomAttributeFields(),
             ],
             [
                 $this->sendEmailField(),

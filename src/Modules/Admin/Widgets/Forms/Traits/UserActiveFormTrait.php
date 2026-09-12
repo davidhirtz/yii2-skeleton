@@ -5,13 +5,25 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms\Traits;
 
 use Hirtz\Skeleton\Helpers\ArrayHelper;
+use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
 use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
 use Hirtz\Skeleton\Widgets\Forms\Fields\SelectField;
 use Hirtz\Skeleton\Widgets\Forms\Fields\TimezoneSelectField;
+use Hirtz\Skeleton\Widgets\Forms\Traits\CustomAttributeFieldsTrait;
 use Stringable;
 
 trait UserActiveFormTrait
 {
+    use CustomAttributeFieldsTrait;
+
+    /**
+     * @return list<Field>
+     */
+    protected function getUserCustomAttributeFields(): array
+    {
+        return $this->getCustomAttributeFields($this->model->user);
+    }
+
     protected function getStatusField(): string|Stringable
     {
         return SelectField::make()
@@ -62,33 +74,5 @@ trait UserActiveFormTrait
         return TimezoneSelectField::make()
             ->model($this->model->user)
             ->property('timezone');
-    }
-
-    protected function getFirstNameField(): string|Stringable
-    {
-        return InputField::make()
-            ->model($this->model->user)
-            ->property('first_name');
-    }
-
-    protected function getLastNameField(): string|Stringable
-    {
-        return InputField::make()
-            ->model($this->model->user)
-            ->property('last_name');
-    }
-
-    protected function getCityField(): string|Stringable
-    {
-        return InputField::make()
-            ->model($this->model->user)
-            ->property('city');
-    }
-
-    protected function getCountryField(): string|Stringable
-    {
-        return SelectField::make()
-            ->model($this->model->user)
-            ->property('country');
     }
 }

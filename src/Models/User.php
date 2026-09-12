@@ -5,18 +5,17 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Models;
 
 use DateTimeZone;
-use davidhirtz\yii2\datetime\Date;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
 use Hirtz\Skeleton\Behaviors\TimestampBehavior;
 use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
-use Hirtz\Skeleton\Helpers\CountryList;
-use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Models\Interfaces\AdminRouteInterface;
+use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
+use Hirtz\Skeleton\Models\Traits\CustomAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\StatusAttributeTrait;
 use Hirtz\Skeleton\Models\Traits\TrailModelTrait;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
@@ -34,12 +33,6 @@ use yii\web\IdentityInterface;
  * @property string $email
  * @property string|null $password_hash
  * @property string|null $password_salt
- * @property string|null $first_name
- * @property string|null $last_name
- * @property Date|null $birthdate
- * @property string|null $city
- * @property string|null $country
- * @property string|null $picture
  * @property string $language
  * @property string|null $timezone
  * @property string|null $auth_key
@@ -52,15 +45,15 @@ use yii\web\IdentityInterface;
  * @property DateTime|null $last_login
  * @property DateTime|null $updated_at
  * @property DateTime $created_at
- *
- * @property string $uploadPath {@see static::getUploadPath()}
+ * @property array|null $custom_attributes
  *
  * @property-read User|null $created {@see static::getCreated()}
  *
  * @mixin TrailBehavior
  */
-class User extends ActiveRecord implements AdminRouteInterface, IdentityInterface, StatusAttributeInterface, TrailModelInterface
+class User extends ActiveRecord implements AdminRouteInterface, CustomAttributeInterface, IdentityInterface, StatusAttributeInterface, TrailModelInterface
 {
+    use CustomAttributesTrait;
     use StatusAttributeTrait;
     use TrailModelTrait;
 
@@ -95,11 +88,6 @@ class User extends ActiveRecord implements AdminRouteInterface, IdentityInterfac
      */
     public bool $requireName = true;
 
-    /**
-     * @var string|false set false to disabled profile pictures
-     */
-    private string|false $_uploadPath = 'uploads/users/';
-
     #[Override]
     public function behaviors(): array
     {
@@ -118,8 +106,9 @@ class User extends ActiveRecord implements AdminRouteInterface, IdentityInterfac
     public function rules(): array
     {
         return [
+            ...parent::rules(),
             [
-                ['name', 'email', 'city', 'country', 'first_name', 'last_name'],
+                ['name', 'email'],
                 'trim',
             ],
             [
@@ -127,7 +116,7 @@ class User extends ActiveRecord implements AdminRouteInterface, IdentityInterfac
                 'required',
             ],
             [
-                ['country', 'language', 'timezone'],
+                ['language', 'timezone'],
                 DynamicRangeValidator::class,
                 'integerOnly' => false,
             ],
@@ -172,11 +161,6 @@ class User extends ActiveRecord implements AdminRouteInterface, IdentityInterfac
                 'skipOnError' => true,
                 'when' => fn () => $this->isAttributeChanged('email')
             ],
-            [
-                ['city', 'first_name', 'last_name'],
-                'string',
-                'max' => 50,
-            ],
         ];
     }
 
@@ -201,16 +185,6 @@ class User extends ActiveRecord implements AdminRouteInterface, IdentityInterfac
     }
 
     #[Override]
-    public function afterSave($insert, $changedAttributes): void
-    {
-        if (!$insert && !empty($changedAttributes['picture'])) {
-            $this->deletePicture($changedAttributes['picture']);
-        }
-
-        parent::afterSave($insert, $changedAttributes);
-    }
-
-    #[Override]
     public function delete(): false|int
     {
         if (!$this->isDeletable()) {
@@ -222,16 +196,6 @@ class User extends ActiveRecord implements AdminRouteInterface, IdentityInterfac
         }
 
         return parent::delete();
-    }
-
-    #[Override]
-    public function afterDelete(): void
-    {
-        if ($this->picture) {
-            $this->deletePicture($this->picture);
-        }
-
-        parent::afterDelete();
     }
 
     /**
@@ -282,11 +246,6 @@ class User extends ActiveRecord implements AdminRouteInterface, IdentityInterfac
         $trail->insert();
     }
 
-    public function deletePicture(?string $picture): bool
-    {
-        return $picture && FileHelper::unlink($this->getUploadPath() . $picture);
-    }
-
     public function generatePasswordHash(string $password): void
     {
         $this->password_salt = Yii::$app->getSecurity()->generateRandomString(10);
@@ -318,11 +277,6 @@ class User extends ActiveRecord implements AdminRouteInterface, IdentityInterfac
         return $this->auth_key;
     }
 
-    public function getFullName(): string
-    {
-        return trim($this->first_name . ' ' . $this->last_name);
-    }
-
     public function getId(): mixed
     {
         return $this->getPrimaryKey();
@@ -330,9 +284,7 @@ class User extends ActiveRecord implements AdminRouteInterface, IdentityInterfac
 
     public function getInitials(): string
     {
-        return $this->first_name && $this->last_name
-            ? ($this->first_name[0] . $this->last_name[0])
-            : substr((string)$this->name, 0, 2);
+        return substr((string)$this->name, 0, 2);
     }
 
     public function getEmailConfirmationUrl(): ?string
@@ -369,28 +321,9 @@ class User extends ActiveRecord implements AdminRouteInterface, IdentityInterfac
         return 'GMT ' . $date->format('P');
     }
 
-    public function getUploadPath(): string|false
-    {
-        return $this->_uploadPath ? Yii::getAlias("@webroot/$this->_uploadPath") : false;
-    }
-
-    public function setUploadPath(string|false $uploadPath): void
-    {
-        $this->_uploadPath = $uploadPath ? (trim($uploadPath, '/') . '/') : false;
-    }
-
     public function getUsername(): ?string
     {
         return $this->getOldAttributes()['name'] ?? $this->name;
-    }
-
-    public function getPictureUrl(): string|false
-    {
-        if (!$this->picture) {
-            return false;
-        }
-
-        return '/' . ltrim($this->_uploadPath, '/') . $this->picture;
     }
 
     public static function getStatuses(): array
@@ -424,6 +357,7 @@ class User extends ActiveRecord implements AdminRouteInterface, IdentityInterfac
     public function getTrailAttributes(): array
     {
         return array_diff($this->attributes(), [
+            $this->getCustomAttributesColumn(),
             'password_hash',
             'password_salt',
             'auth_key',
@@ -466,14 +400,6 @@ class User extends ActiveRecord implements AdminRouteInterface, IdentityInterfac
     /**
      * @noinspection PhpUnused
      */
-    public static function getCountries(): array
-    {
-        return CountryList::getNames();
-    }
-
-    /**
-     * @noinspection PhpUnused
-     */
     public static function getLanguages(): array
     {
         $i18n = Yii::$app->getI18n();
@@ -503,12 +429,6 @@ class User extends ActiveRecord implements AdminRouteInterface, IdentityInterfac
             'name' => Yii::t('skeleton', 'USER_NAME_LABEL'),
             'email' => Yii::t('skeleton', 'USER_EMAIL_LABEL'),
             'password' => Yii::t('skeleton', 'USER_PASSWORD_LABEL'),
-            'first_name' => Yii::t('skeleton', 'USER_FIRST_NAME_LABEL'),
-            'last_name' => Yii::t('skeleton', 'USER_LAST_NAME_LABEL'),
-            'birthdate' => Yii::t('skeleton', 'USER_BIRTHDATE_LABEL'),
-            'city' => Yii::t('skeleton', 'USER_CITY_LABEL'),
-            'country' => Yii::t('skeleton', 'USER_COUNTRY_LABEL'),
-            'picture' => Yii::t('skeleton', 'USER_PICTURE_LABEL'),
             'language' => Yii::t('skeleton', 'USER_LANGUAGE_LABEL'),
             'timezone' => Yii::t('skeleton', 'USER_TIMEZONE_LABEL'),
             'verification_token' => Yii::t('skeleton', 'USER_VERIFICATION_TOKEN_LABEL'),
@@ -517,7 +437,6 @@ class User extends ActiveRecord implements AdminRouteInterface, IdentityInterfac
             'is_owner' => Yii::t('skeleton', 'USER_IS_OWNER_LABEL'),
             'updated_at' => Yii::t('skeleton', 'USER_UPDATED_AT_LABEL'),
             'created_at' => Yii::t('skeleton', 'USER_CREATED_AT_LABEL'),
-            'upload' => Yii::t('skeleton', 'USER_UPLOAD_LABEL'),
         ];
     }
 

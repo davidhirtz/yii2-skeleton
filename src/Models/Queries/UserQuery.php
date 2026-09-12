@@ -29,8 +29,6 @@ class UserQuery extends ActiveQuery
             'id',
             'status',
             'name',
-            'first_name',
-            'last_name',
             'is_owner',
         ]));
     }
@@ -42,9 +40,6 @@ class UserQuery extends ActiveQuery
             'status',
             'name',
             'email',
-            'first_name',
-            'last_name',
-            'picture',
             'verification_token',
             'is_owner',
             'last_login',
@@ -58,7 +53,7 @@ class UserQuery extends ActiveQuery
             $tableName = User::tableName();
 
             if (count($keywords) === 1) {
-                $keyword = array_pop($keywords);
+                $keyword = reset($keywords);
 
                 if (is_numeric($keyword)) {
                     return $this->andWhere("$tableName.[[id]]=:id", ['id' => $keyword]);
@@ -69,16 +64,10 @@ class UserQuery extends ActiveQuery
                         'search' => "%$keyword%",
                     ]);
                 }
-
-                return $this->andWhere("$tableName.[[name]] LIKE :search OR $tableName.[[email]] LIKE :search OR $tableName.[[first_name]] LIKE :search OR $tableName.[[last_name]] LIKE :search", [
-                    'search' => "%$keyword%",
-                ]);
             }
 
-            $this->andWhere("$tableName.[[first_name]] LIKE :name OR $tableName.[[last_name]] LIKE :name OR ($tableName.[[first_name]] LIKE :firstname AND $tableName.[[last_name]] LIKE :lastname) OR ($tableName.[[first_name]] LIKE :lastname AND $tableName.[[last_name]] LIKE :firstname)", [
-                'name' => implode(' ', $keywords) . '%',
-                'firstname' => array_pop($keywords) . '%',
-                'lastname' => implode(' ', $keywords) . '%',
+            $this->andWhere("$tableName.[[name]] LIKE :search OR $tableName.[[email]] LIKE :search", [
+                'search' => '%' . implode(' ', $keywords) . '%',
             ]);
         }
 

@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Forms\Traits;
 
-use Hirtz\Skeleton\Models\Forms\UserPictureForm;
-use Hirtz\Skeleton\Web\StreamUploadedFile;
 use Override;
-use yii\web\UploadedFile;
 
 trait UserFormTrait
 {
     public ?string $repeatPassword = null;
-    public UploadedFile|StreamUploadedFile|string|null $upload = null;
 
     #[Override]
     public function load($data, $formName = null): bool
@@ -44,12 +40,5 @@ trait UserFormTrait
         }
 
         return false;
-    }
-
-    protected function uploadUserPicture(): void
-    {
-        $form = UserPictureForm::create(['user' => $this->user]);
-        $form->file = UploadedFile::getInstance($this, 'upload');
-        $form->upload();
     }
 }

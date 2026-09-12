@@ -41,7 +41,6 @@ class AccountController extends Controller
                             'disable-authenticator',
                             'enable-authenticator',
                             'logout',
-                            'picture',
                             'update',
                             'timezone',
                         ],
@@ -69,7 +68,6 @@ class AccountController extends Controller
                     'enable-authenticator' => ['post'],
                     'logout' => ['post'],
                     'token' => ['post'],
-                    'picture' => ['post'],
                     'timezone' => ['post'],
                 ],
             ],
@@ -266,18 +264,6 @@ class AccountController extends Controller
         return $this->render('update', [
             'form' => $form,
         ]);
-    }
-
-    public function actionPicture(): Response|string
-    {
-        $user = $this->webuser->getIdentity();
-        $user->picture = null;
-
-        if ($user->update()) {
-            $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_PROFILE_UPDATED'));
-        }
-
-        return $this->redirect(['update']);
     }
 
     public function actionDelete(): Response|string

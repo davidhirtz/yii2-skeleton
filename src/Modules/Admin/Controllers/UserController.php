@@ -44,7 +44,6 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'actions' => [
-                            'delete-picture',
                             'disable-authenticator',
                             'index',
                             'ownership',
@@ -63,7 +62,6 @@ class UserController extends Controller
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'delete-picture' => ['post'],
                     'delete' => ['post'],
                     'ownership' => ['post'],
                     'reset' => ['post'],
@@ -95,7 +93,6 @@ class UserController extends Controller
 
         $form->user->language = $identity->language;
         $form->user->timezone = $identity->timezone;
-        $form->user->country = $identity->country;
 
         if ($form->load($this->request->post()) && $form->save()) {
             $this->success(Yii::t('skeleton', 'USER_SUCCESS_CREATED'));
@@ -120,11 +117,6 @@ class UserController extends Controller
         return $this->render('update', [
             'form' => $form,
         ]);
-    }
-
-    public function actionDeletePicture(int $id): Response|string
-    {
-        return $this->updateUserAttributes($id, ['picture' => null]);
     }
 
     public function actionDisableGoogleAuthenticator(int $id): Response|string

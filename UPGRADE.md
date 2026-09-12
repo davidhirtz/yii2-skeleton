@@ -1,5 +1,113 @@
 # Upgrade Guide
 
+## 3.0.0 — `User` profile attributes removed
+
+Six columns are gone from `user`: `picture`, `first_name`, `last_name`, `birthdate`, `city` and `country`.
+`M260913100000UserAttributes` adds a `custom_attributes` column, copies the five non-picture columns into it
+and then drops all six.
+
+`Models\User` is a `CustomAttributeInterface` now, so a project that still needs any of those five declares it
+as a custom attribute and gets the value, the form field, the validation and the trail entry back under the
+same attribute name.
+
+### Profile pictures are gone for good
+
+There is no replacement. `User::$picture`, `Models\Forms\UserPictureForm`, `User::deletePicture()`,
+`getPictureUrl()`, `getUploadPath()` / `setUploadPath()`, `UserFormTrait::$upload` and
+`UserFormTrait::uploadUserPicture()` were removed, together with the `account/picture` and
+`user/delete-picture` actions. v3 had no upload UI left for them.
+
+The migration drops the column but touches nothing on disk — delete `web/uploads/users/` by hand once you
+have migrated. If you need avatars, `User::getInitials()` still returns the first two characters of the
+username.
+
+### What else is gone
+
+| Removed | Replacement |
+|---|---|
+| `User::getFullName()` | — (compose it from your own definitions) |
+| `User::getCountries()` | `Helpers\CountryList::getNames()` |
+| `UserActiveFormTrait::getFirstNameField()`, `getLastNameField()`, `getCityField()`, `getCountryField()` | `UserActiveFormTrait::getUserCustomAttributeFields()` |
+| The message keys `USER_FIRST_NAME_LABEL`, `USER_LAST_NAME_LABEL`, `USER_BIRTHDATE_LABEL`, `USER_CITY_LABEL`, `USER_COUNTRY_LABEL`, `USER_PICTURE_LABEL`, `USER_UPLOAD_LABEL` | your own `label()` on the definition |
+
+`User::getInitials()` no longer builds the initials from `first_name` / `last_name`; it returns the first two
+characters of the username. `UserQuery::matching()` searches `name` and `email` only, and
+`nameAttributesOnly()` / `selectListAttributes()` stopped selecting the dropped columns.
+
+### Data upgrade plan
+
+The migration never loses data — it copies every non-empty value of the five columns into `custom_attributes`
+keyed by the column name, and a key no definition claims stays in the JSON untouched across saves. But an
+undeclared key is invisible: it is not an attribute, not a form field, and not readable from the model. So
+**declare the definitions before you migrate**, and the values are there the moment the migration finishes.
+
+1. **Decide which of the five you still need.** For each one, add a definition to `User` through the
+   container, in `config/local.php` or wherever you configure it:
+
+   ```php
+   use Hirtz\Skeleton\Helpers\CountryList;
+   use Hirtz\Skeleton\Models\CustomAttributes\SelectCustomAttribute;
+   use Hirtz\Skeleton\Models\CustomAttributes\TextCustomAttribute;
+   use Hirtz\Skeleton\Models\User;
+
+   return [
+       'container' => [
+           'definitions' => [
+               User::class => [
+                   'customAttributes' => [
+                       TextCustomAttribute::make('first_name')
+                           ->label(Yii::t('app', 'First name'))
+                           ->max(50),
+                       TextCustomAttribute::make('last_name')
+                           ->label(Yii::t('app', 'Last name'))
+                           ->max(50),
+                       TextCustomAttribute::make('city')
+                           ->label(Yii::t('app', 'City'))
+                           ->max(50),
+                       SelectCustomAttribute::make('country')
+                           ->label(Yii::t('app', 'Country'))
+                           ->options(CountryList::getNames()),
+                   ],
+               ],
+           ],
+       ],
+   ];
+   ```
+
+   Keep the column name as the definition name — that is the key the migration writes. There is no date
+   definition, so `birthdate` becomes a `TextCustomAttribute`; its stored value is the `YYYY-MM-DD` string the
+   `DATE` column held.
+
+   The definitions only resolve once the columns are gone: a custom attribute whose name collides with a
+   column of the same name throws `InvalidConfigException`. That is expected — configure them, then migrate,
+   and do not load the admin in between.
+
+2. **Run the migration.**
+
+   ```bash
+   ./yii migrate
+   ```
+
+3. **Check a record.** `$user->first_name` reads through the JSON column again, the account and user forms
+   render one field per definition, and the trail logs the attribute rather than the JSON column.
+
+4. **Anything you did not declare** stays in `custom_attributes` as a plain key. Declare it later and it
+   reappears; drop the key with an `UPDATE … JSON_REMOVE(…)` if you are sure you do not want it.
+
+5. **Reverting** (`migrate/down 1`) recreates the five columns, copies the values back out of the JSON and
+   drops `custom_attributes` — including any other custom attribute you declared on `User`. `picture` comes
+   back as an empty column.
+
+### Your own code
+
+- A query that selected one of the dropped columns, or a `where` on `country` / `city`, has to be rewritten
+  against `custom_attributes` (`JSON_EXTRACT`) or dropped. The custom attributes are not indexable as columns.
+- `UserActiveForm` and `AccountActiveForm` render `...$this->getUserCustomAttributeFields()` where the four
+  fields used to be. A form of your own that called `getFirstNameField()` and friends switches to the same
+  method; it returns one field per visible definition, in definition order.
+- `Widgets\Forms\Traits\CustomAttributeFieldsTrait::getCustomAttributeFields()` gained an optional model
+  parameter for this — pass the record when the form's own model wraps it, as `UserForm` wraps `User`.
+
 ## 3.0.0 — `yiisoft/yii2-authclient` removed
 
 Social login is gone. `yiisoft/yii2-authclient` is no longer a dependency, and `M260912130000AuthClient`
