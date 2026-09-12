@@ -14,6 +14,7 @@ use Hirtz\Skeleton\Widgets\Traits\ProviderTrait;
 use Override;
 use Stringable;
 use Yii;
+use yii\data\ActiveDataProvider;
 
 class UserHeader extends Header
 {
@@ -23,7 +24,7 @@ class UserHeader extends Header
     use ModelTrait;
 
     /**
-     * @use ProviderTrait<UserActiveDataProvider|null>
+     * @use ProviderTrait<ActiveDataProvider|null>
      */
     use ProviderTrait;
 

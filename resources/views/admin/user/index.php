@@ -6,15 +6,15 @@ declare(strict_types=1);
  * @see \Hirtz\Skeleton\Modules\Admin\Controllers\UserController::actionIndex()
  *
  * @var View $this
- * @var ActiveDataProvider $provider
+ * @var UserActiveDataProvider $provider
  */
 
+use Hirtz\Skeleton\Modules\Admin\Data\UserActiveDataProvider;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\UserGridView;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserHeader;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Grids\GridContainer;
-use yii\data\ActiveDataProvider;
 
 echo UserHeader::make()
     ->provider($provider);
