@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Tests\Widgets\Navs;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Hirtz\Skeleton\Web\Controller;
 use Hirtz\Skeleton\Widgets\Buttons\Badge;
 use Hirtz\Skeleton\Widgets\Icon;
@@ -17,6 +18,8 @@ use Yii;
 
 class NavTest extends TestCase
 {
+    use UserFixtureTrait;
+
     #[Override]
     protected function setUp(): void
     {
@@ -71,6 +74,22 @@ class NavTest extends TestCase
             ->render();
 
         self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active" href="/"><span>Home</span></a></li></ul>', $content);
+    }
+
+    public function testAuthenticatedItemRole(): void
+    {
+        $nav = fn (): string => Nav::make()
+            ->addItem(NavItem::make()
+                ->label('Home')
+                ->url('/')
+                ->roles([NavItem::ROLE_AUTHENTICATED]))
+            ->render(true);
+
+        self::assertEmpty($nav());
+
+        Yii::$app->getUser()->login($this->getUserFromFixture('admin'));
+
+        self::assertStringContainsString('Home', $nav());
     }
 
     public function testItemBadgeAndIcon(): void

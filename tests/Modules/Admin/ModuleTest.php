@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Modules\Admin\ModuleInterface;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\MainMenu;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\SystemNavItem;
 use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Hirtz\Skeleton\Widgets\Navs\Nav;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Hirtz\Skeleton\Widgets\Panels\Dashboard;
@@ -19,11 +20,16 @@ use yii\base\Event;
 
 class ModuleTest extends TestCase
 {
+    use UserFixtureTrait;
+
     protected Module $module;
 
     protected function setUp(): void
     {
         parent::setUp();
+
+        // The admin menu is a logged-in surface: `DashboardNavItem` and `SystemNavItem` are guarded by `ROLE_AUTHENTICATED`.
+        Yii::$app->getUser()->login($this->getUserFromFixture('admin'));
 
         /** @var Module $module */
         $module = Yii::$app->getModule('admin');

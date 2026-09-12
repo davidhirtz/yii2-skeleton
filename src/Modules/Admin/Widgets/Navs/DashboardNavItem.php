@@ -15,7 +15,7 @@ class DashboardNavItem extends NavItem
         $this->icon ??= 'home';
         $this->url ??= ['/admin'];
         $this->order ??= 0;
-        $this->visible = !Yii::$app->getUser()->getIsGuest();
+        $this->roles ??= [self::ROLE_AUTHENTICATED];
 
         parent::__construct($config);
     }

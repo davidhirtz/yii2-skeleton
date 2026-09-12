@@ -8,6 +8,12 @@ use Closure;
 
 trait VisibilityTrait
 {
+    /**
+     * The role markers of {@see \yii\filters\AccessRule}, which a permission name can be mixed with.
+     */
+    final public const string ROLE_ANY = '*';
+    final public const string ROLE_AUTHENTICATED = '@';
+
     protected ?array $roles = null;
     protected Closure|bool $visible = true;
 
@@ -48,7 +54,13 @@ trait VisibilityTrait
         }
 
         foreach ($this->roles as $role) {
-            if ($role === '*' || $this->webuser->can($role)) {
+            $granted = match ($role) {
+                self::ROLE_ANY => true,
+                self::ROLE_AUTHENTICATED => !$this->webuser->getIsGuest(),
+                default => $this->webuser->can($role),
+            };
+
+            if ($granted) {
                 return true;
             }
         }

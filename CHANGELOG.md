@@ -1,5 +1,9 @@
 ## 3.0.0 (in development)
 
+- `Widgets\Traits\VisibilityTrait` understands the role markers of `yii\filters\AccessRule`: `ROLE_ANY` (`*`, which
+  it already had) and the new `ROLE_AUTHENTICATED` (`@`), matched before a permission lookup.
+  `Modules\Admin\Widgets\Navs\DashboardNavItem` and `SystemNavItem` declare `roles` instead of computing
+  `visible`, so a project can widen them the same way as every other nav item
 - `Widgets\Buttons\FileUploadButton::selectOob()` and `Html\Custom\FileUpload::selectOob()` pass an
   `hx-select-oob` list to the upload, which `components/FileUpload.ts` hands to `htmx.swap()`, so a counter that
   sits outside the swap target is refreshed along with it
