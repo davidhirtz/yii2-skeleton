@@ -1,5 +1,19 @@
 ## 3.0.0 (in development)
 
+- `Web\Controller::$webuser` is no longer a property assigned in the constructor — it is a read-only magic property
+  backed by the new `getWebuser()`, so `$this->webuser` keeps working. A web controller must not resolve a web-only
+  component while being constructed: Yii's `HelpController::getCommands()` builds every controller of every
+  registered module, and `Console\Application::preInit()` unsets the `user` component, so every unknown console
+  command died with `Calling unknown method: Console\Application::getUser()` on top of the real error. A subclass
+  that assigns `$this->webuser` has to stop; one that reads it is unaffected
+- `Models\Forms\DeleteForm::formName()` returns `''`, so `value` lives at the top level of the request and both
+  widgets that post it agree. `Widgets\Buttons\DeleteButton` names its confirmation input `value` while
+  `Widgets\Forms\DeleteActiveForm` named it `DeleteForm[value]`, so a `load($this->request->post())` behind a delete
+  button never loaded anything and the delete silently did nothing: `UserController::actionDelete()` and
+  `Tenant\Modules\Admin\Controllers\TenantController::actionDelete()` both returned 200 with the record still in
+  place. `AccountController::actionDelete()` and `Media\Modules\Admin\Controllers\FolderController::actionDelete()`
+  worked around it with `load($post, '')` and drop that argument again. A project that posts the prefixed name, or
+  reads the `deleteform-value` input id, has to use `value`
 - Account deletion moved into the new `Modules\Admin\Widgets\Navs\AccountActionDropdown`, which the new
   `Modules\Admin\Widgets\Navs\AccountHeader` carries on all three account pages, replacing the `Widgets\Navs\Header`
   they configured by hand. The delete form is gone from the settings page, and with it the alert that told the owner

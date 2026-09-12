@@ -72,10 +72,14 @@ class DeleteForm extends Model
         return $this->model->getPrimaryKey();
     }
 
+    /**
+     * The empty name puts `value` at the top level of the request, where both `Widgets\Buttons\DeleteButton` and
+     * `Widgets\Forms\DeleteActiveForm` post it, so a plain `load($post)` reaches it.
+     */
     #[Override]
     public function formName(): string
     {
-        return 'DeleteForm';
+        return '';
     }
 
     #[Override]

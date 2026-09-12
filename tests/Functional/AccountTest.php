@@ -103,6 +103,11 @@ class AccountTest extends TestCase
         $this->open('admin/account/update');
         $this->postDeleteForm('wrong');
 
+        // A form the action failed to load would redirect just the same, but without an error
+        self::assertAlertSame(Yii::t('yii', '{attribute} is invalid.', [
+            'attribute' => $this->getUserFromFixture('admin')->getAttributeLabel('password'),
+        ]), 'danger');
+
         self::assertNotNull(User::findOne($id));
     }
 

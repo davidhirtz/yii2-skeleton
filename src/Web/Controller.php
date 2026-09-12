@@ -14,6 +14,7 @@ use yii\base\Module;
  * @extends  \yii\web\Controller<T>
  *
  * @property Request $request
+ * @property-read User $webuser
  * @method View getView()
  */
 class Controller extends \yii\web\Controller
@@ -30,12 +31,13 @@ class Controller extends \yii\web\Controller
      */
     public string|false $contentSecurityPolicy = "frame-ancestors 'self'";
 
-    protected User $webuser;
-
-    public function __construct($id, $module, $config = [])
+    /**
+     * Not resolved in the constructor: the console's `help` instantiates every controller of every module, and the
+     * console application has no `user` component.
+     */
+    public function getWebuser(): User
     {
-        $this->webuser = Yii::$app->getUser();
-        parent::__construct($id, $module, $config);
+        return Yii::$app->getUser();
     }
 
     #[Override]
