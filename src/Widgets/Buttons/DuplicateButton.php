@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Buttons;
 
 use Hirtz\Skeleton\Db\ActiveRecord;
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Widgets\Traits\IconTrait;
@@ -15,6 +14,7 @@ use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
+use Yii;
 
 class DuplicateButton extends Widget
 {
@@ -34,7 +34,7 @@ class DuplicateButton extends Widget
     protected function configure(): void
     {
         $this->icon ??= 'copy';
-        $this->label ??= Lang::t('skeleton', 'DUPLICATE_DUPLICATE');
+        $this->label ??= Yii::t('skeleton', 'DUPLICATE_DUPLICATE');
         $this->url ??= Url::toRoute(['duplicate', 'id' => $this->model->getPrimaryKey()]);
 
         parent::configure();

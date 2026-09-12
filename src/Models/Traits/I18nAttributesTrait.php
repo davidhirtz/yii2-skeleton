@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Traits;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Validators\UniqueValidator;
 use Yii;
@@ -131,7 +130,7 @@ trait I18nAttributesTrait
                 $label = parent::getAttributeLabel($attribute);
 
                 if ($language !== Yii::$app->language) {
-                    $label = Lang::t('skeleton', 'I18N_ATTRIBUTES_LABEL_LANGUAGE', [
+                    $label = Yii::t('skeleton', 'I18N_ATTRIBUTES_LABEL_LANGUAGE', [
                         'label' => $label,
                         'language' => strtoupper((string)$language),
                     ]);

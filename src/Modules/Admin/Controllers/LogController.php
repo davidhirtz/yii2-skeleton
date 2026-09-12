@@ -64,7 +64,7 @@ class LogController extends Controller
         }
 
         if ($raw) {
-            return Yii::$app->getResponse()->sendFile($provider->basePath . $provider->file, basename($log), [
+            return $this->response->sendFile($provider->basePath . $provider->file, basename($log), [
                 'mimeType' => 'text/plain',
                 'inline' => true,
             ]);

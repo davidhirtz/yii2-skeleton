@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Forms;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Ul;
 use Hirtz\Skeleton\Widgets\Alert;
@@ -52,8 +51,8 @@ class ErrorSummary extends Widget
     {
         if ($model instanceof ActiveRecord) {
             $this->title ??= $model->getIsNewRecord()
-                ? Lang::t('skeleton', 'ERROR_SUMMARY_RECORD_COULD_NOT')
-                : Lang::t('skeleton', 'ERROR_SUMMARY_RECORD_COULD_UPDATED');
+                ? Yii::t('skeleton', 'ERROR_SUMMARY_RECORD_COULD_NOT')
+                : Yii::t('skeleton', 'ERROR_SUMMARY_RECORD_COULD_UPDATED');
         }
 
         $this->models = is_array($model) ? $model : [$model];

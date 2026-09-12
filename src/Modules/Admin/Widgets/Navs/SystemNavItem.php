@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Override;
+use Yii;
 
 class SystemNavItem extends NavItem
 {
     public function __construct(array $config = [])
     {
-        $this->label ??= Lang::t('skeleton', 'COMMON_SYSTEM');
+        $this->label ??= Yii::t('skeleton', 'COMMON_SYSTEM');
         $this->icon ??= 'cogs';
         $this->order ??= 999;
         $this->url ??= ['/admin/system/index'];
@@ -39,7 +39,7 @@ class SystemNavItem extends NavItem
     {
         return NavItem::make()
             //->icon('server')
-            ->label(Lang::t('skeleton', 'COMMON_ERROR_LOGS'))
+            ->label(Yii::t('skeleton', 'COMMON_ERROR_LOGS'))
             ->url(['/admin/log/index'])
             ->order(20)
             ->roles([User::AUTH_ROLE_ADMIN])
@@ -50,7 +50,7 @@ class SystemNavItem extends NavItem
     {
         return NavItem::make()
             //->icon('forward')
-            ->label(Lang::t('skeleton', 'COMMON_REDIRECTS'))
+            ->label(Yii::t('skeleton', 'COMMON_REDIRECTS'))
             ->url(['/admin/redirect/index'])
             ->order(40)
             ->roles([Redirect::AUTH_REDIRECT_CREATE])
@@ -61,7 +61,7 @@ class SystemNavItem extends NavItem
     {
         return NavItem::make()
             //->icon('history')
-            ->label(Lang::t('skeleton', 'COMMON_HISTORY'))
+            ->label(Yii::t('skeleton', 'COMMON_HISTORY'))
             ->url(['/admin/trail/index'])
             ->order(60)
             ->roles([Trail::AUTH_TRAIL_INDEX])

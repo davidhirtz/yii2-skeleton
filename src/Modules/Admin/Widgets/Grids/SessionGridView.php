@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Models\Session;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
@@ -38,16 +37,16 @@ class SessionGridView extends GridView
 
         $this->columns ??= [
             Column::make()
-                ->title(Lang::t('skeleton', 'SESSION_SESSIONS'))
+                ->title(Yii::t('skeleton', 'SESSION_SESSIONS'))
                 ->content(fn (array $item): array => [
                     Div::make()
                         ->class('strong')
-                        ->content(Lang::t('skeleton', 'SESSION_EXPIRED_SESSIONS', [
+                        ->content(Yii::t('skeleton', 'SESSION_EXPIRED_SESSIONS', [
                             'count' => $item['expiredSessionCount'],
                         ])),
                     Div::make()
                         ->class('small')
-                        ->content(Lang::t('skeleton', 'SESSION_TOTAL_SESSIONS_GARBAGE_COLLECTION_PROBABILITY', [
+                        ->content(Yii::t('skeleton', 'SESSION_TOTAL_SESSIONS_GARBAGE_COLLECTION_PROBABILITY', [
                             'sessionCount' => $item['sessionCount'],
                             'probability' => Yii::$app->getSession()->getGCProbability(),
                         ]))
@@ -58,7 +57,7 @@ class SessionGridView extends GridView
                     ->primary()
                     ->icon('trash')
                     ->post(['/admin/system/session-gc'])
-                    ->tooltip(Lang::t('skeleton', 'SESSION_DELETE_EXPIRED_SESSIONS')))
+                    ->tooltip(Yii::t('skeleton', 'SESSION_DELETE_EXPIRED_SESSIONS')))
         ];
 
         parent::configure();

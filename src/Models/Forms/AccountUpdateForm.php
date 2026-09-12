@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Forms;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\Forms\Traits\UserFormTrait;
 use Hirtz\Skeleton\Models\User;
@@ -49,12 +48,12 @@ class AccountUpdateForm extends Model
                 ['repeatPassword'],
                 'compare',
                 'compareAttribute' => 'newPassword',
-                'message' => Lang::t('skeleton', 'COMMON_PASSWORD_MUST_MATCH'),
+                'message' => Yii::t('skeleton', 'COMMON_PASSWORD_MUST_MATCH'),
             ],
             [
                 ['oldPassword'],
                 $this->validateOldPassword(...),
-                'message' => Lang::t('skeleton', 'ACCOUNT_UPDATE_CURRENT_PASSWORD'),
+                'message' => Yii::t('skeleton', 'ACCOUNT_UPDATE_CURRENT_PASSWORD'),
                 'skipOnEmpty' => false,
                 'when' => fn (self $model): bool => $model->newPassword || $model->email !== $model->user->email,
             ]
@@ -91,7 +90,7 @@ class AccountUpdateForm extends Model
             if (!$webuser->isUnconfirmedEmailLoginEnabled()) {
                 $webuser->logout(false);
 
-                $session->addFlash('success', Lang::t('skeleton', 'ACCOUNT_UPDATE_SUCCESS_CHECK_EMAILS_CONFIRM'));
+                $session->addFlash('success', Yii::t('skeleton', 'ACCOUNT_UPDATE_SUCCESS_CHECK_EMAILS_CONFIRM'));
             }
 
             $this->sendEmailConfirmationEmail();
@@ -105,7 +104,7 @@ class AccountUpdateForm extends Model
     protected function sendEmailConfirmationEmail(): void
     {
         Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/email', ['form' => $this])
-            ->setSubject(Lang::t('skeleton', 'ACCOUNT_UPDATE_PLEASE_CONFIRM_YOUR_NEW_EMAIL_ADDRESS_CONFIRM_TITLE'))
+            ->setSubject(Yii::t('skeleton', 'ACCOUNT_UPDATE_PLEASE_CONFIRM_YOUR_NEW_EMAIL_ADDRESS_CONFIRM_TITLE'))
             ->setFrom(Yii::$app->params['email'])
             ->setTo($this->email)
             ->send();
@@ -115,9 +114,9 @@ class AccountUpdateForm extends Model
     public function attributeLabels(): array
     {
         return [
-            'newPassword' => Lang::t('skeleton', 'ACCOUNT_UPDATE_NEWPASSWORD_LABEL'),
-            'repeatPassword' => Lang::t('skeleton', 'ACCOUNT_UPDATE_REPEATPASSWORD_LABEL'),
-            'oldPassword' => Lang::t('skeleton', 'ACCOUNT_UPDATE_OLDPASSWORD_LABEL'),
+            'newPassword' => Yii::t('skeleton', 'ACCOUNT_UPDATE_NEWPASSWORD_LABEL'),
+            'repeatPassword' => Yii::t('skeleton', 'ACCOUNT_UPDATE_REPEATPASSWORD_LABEL'),
+            'oldPassword' => Yii::t('skeleton', 'ACCOUNT_UPDATE_OLDPASSWORD_LABEL'),
         ];
     }
 }

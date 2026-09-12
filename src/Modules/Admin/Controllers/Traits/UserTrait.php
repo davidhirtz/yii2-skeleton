@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Controllers\Traits;
 
 use Hirtz\Skeleton\Models\User;
-use Yii;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 
@@ -17,7 +16,7 @@ trait UserTrait
             throw new NotFoundHttpException();
         }
 
-        if ($permissionName && !Yii::$app->getUser()->can($permissionName, ['user' => $user])) {
+        if ($permissionName && !$this->webuser->can($permissionName, ['user' => $user])) {
             throw new ForbiddenHttpException();
         }
 

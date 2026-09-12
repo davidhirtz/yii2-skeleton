@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Grids;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Widgets\Alert;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Grids\Traits\GridTrait;
@@ -47,7 +46,7 @@ class GridSummary extends Widget
             $alert->button(Button::make()
                 ->class('btn-icon icon')
                 ->get($this->grid->search->getUrl())
-                ->tooltip(Lang::t('skeleton', 'GRID_SUMMARY_CLEAR_SEARCH'))
+                ->tooltip(Yii::t('skeleton', 'GRID_SUMMARY_CLEAR_SEARCH'))
                 ->icon('xmark'));
         }
 
@@ -82,18 +81,18 @@ class GridSummary extends Widget
 
         if ($this->grid->search->getValue()) {
             return match ($count) {
-                1 => Lang::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ONLY', $params),
-                0 => Lang::t('skeleton', 'GRID_SUMMARY_SORRY_NO', $params),
-                $totalCount => Lang::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ALL_RESULTS_MATCHING', $params),
-                default => Lang::t('skeleton', 'GRID_SUMMARY_DISPLAYING_OF_RESULTS_MATCHING', $params),
+                1 => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ONLY', $params),
+                0 => Yii::t('skeleton', 'GRID_SUMMARY_SORRY_NO', $params),
+                $totalCount => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ALL_RESULTS_MATCHING', $params),
+                default => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_OF_RESULTS_MATCHING', $params),
             };
         }
 
         return match ($count) {
-            1 => Lang::t('skeleton', 'GRID_SUMMARY_DISPLAYING_THE_ONLY_RECORD', $params),
-            0 => Lang::t('skeleton', 'GRID_SUMMARY_SORRY_NO_RECORDS_FOUND', $params),
-            $totalCount => Lang::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ALL_RECORDS', $params),
-            default => Lang::t('skeleton', 'GRID_SUMMARY_DISPLAYING_OF_RECORDS', $params),
+            1 => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_THE_ONLY_RECORD', $params),
+            0 => Yii::t('skeleton', 'GRID_SUMMARY_SORRY_NO_RECORDS_FOUND', $params),
+            $totalCount => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ALL_RECORDS', $params),
+            default => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_OF_RECORDS', $params),
         };
     }
 }

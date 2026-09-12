@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Caching\CacheComponents;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
@@ -40,7 +39,7 @@ class CacheGridView extends GridView
 
         $this->columns ??= [
             Column::make()
-                ->title(Lang::t('skeleton', 'COMMON_NAME'))
+                ->title(Yii::t('skeleton', 'COMMON_NAME'))
                 ->content(fn (array $item): array => [
                     Div::make()
                         ->content(ucwords((string)$item['name']))

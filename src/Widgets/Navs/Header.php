@@ -10,13 +10,13 @@ use Hirtz\Skeleton\Html\H1;
 use Hirtz\Skeleton\Html\H2;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Widgets\Traits\BreadcrumbTrait;
 use Hirtz\Skeleton\Widgets\Traits\TitleTrait;
 use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
+use Yii;
 use yii\data\ActiveDataProvider;
 
 class Header extends Widget
@@ -50,7 +50,7 @@ class Header extends Widget
         }
 
         return $page > 1
-            ? Lang::t('skeleton', 'HEADER_PAGE', ['page' => $page])
+            ? Yii::t('skeleton', 'HEADER_PAGE', ['page' => $page])
             : null;
     }
 

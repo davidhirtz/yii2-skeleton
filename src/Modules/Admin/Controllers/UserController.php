@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\AuthClient;
 use Hirtz\Skeleton\Models\Forms\DeleteForm;
 use Hirtz\Skeleton\Models\Forms\OwnershipForm;
@@ -91,19 +90,19 @@ class UserController extends Controller
 
     public function actionCreate(): Response|string
     {
-        if (!Yii::$app->getUser()->can(User::AUTH_USER_CREATE)) {
+        if (!$this->webuser->can(User::AUTH_USER_CREATE)) {
             throw new ForbiddenHttpException();
         }
 
-        $identity = Yii::$app->getUser()->getIdentity();
+        $identity = $this->webuser->getIdentity();
         $form = UserForm::create();
 
         $form->user->language = $identity->language;
         $form->user->timezone = $identity->timezone;
         $form->user->country = $identity->country;
 
-        if ($form->load(Yii::$app->getRequest()->post()) && $form->save()) {
-            $this->success(Lang::t('skeleton', 'USER_SUCCESS_CREATED'));
+        if ($form->load($this->request->post()) && $form->save()) {
+            $this->success(Yii::t('skeleton', 'USER_SUCCESS_CREATED'));
             return $this->redirect(['update', 'id' => $form->user->id]);
         }
 
@@ -117,8 +116,8 @@ class UserController extends Controller
         $user = $this->findUser($id, User::AUTH_USER_UPDATE);
         $form = UserForm::create(['user' => $user]);
 
-        if ($form->load(Yii::$app->getRequest()->post()) && $form->save()) {
-            $this->success(Lang::t('skeleton', 'USER_SUCCESS_UPDATED'));
+        if ($form->load($this->request->post()) && $form->save()) {
+            $this->success(Yii::t('skeleton', 'USER_SUCCESS_UPDATED'));
             return $this->refresh();
         }
 
@@ -143,7 +142,7 @@ class UserController extends Controller
         $user->generatePasswordResetToken();
 
         if ($user->save()) {
-            $this->success(Lang::t('skeleton', 'USER_SUCCESS_UPDATED_PASSWORD'));
+            $this->success(Yii::t('skeleton', 'USER_SUCCESS_UPDATED_PASSWORD'));
         }
 
         return $this->redirect(['update', 'id' => $user->id]);
@@ -155,7 +154,7 @@ class UserController extends Controller
             throw new NotFoundHttpException();
         }
 
-        if (!Yii::$app->getUser()->can(User::AUTH_USER_DELETE, ['user' => $user])) {
+        if (!$this->webuser->can(User::AUTH_USER_DELETE, ['user' => $user])) {
             throw new ForbiddenHttpException();
         }
 
@@ -165,10 +164,10 @@ class UserController extends Controller
         ]);
 
         if ($form->load($this->request->post()) && $form->delete()) {
-            $this->success(Lang::t('skeleton', 'USER_SUCCESS_DELETED'));
+            $this->success(Yii::t('skeleton', 'USER_SUCCESS_DELETED'));
 
-            if ($user->id === Yii::$app->getUser()->id) {
-                Yii::$app->getUser()->logout(false);
+            if ($user->id === $this->webuser->id) {
+                $this->webuser->logout(false);
                 return $this->goHome();
             }
 
@@ -195,14 +194,14 @@ class UserController extends Controller
             throw new NotFoundHttpException();
         }
 
-        if (!Yii::$app->getUser()->can(User::AUTH_USER_UPDATE, ['user' => $auth->identity])) {
+        if (!$this->webuser->can(User::AUTH_USER_UPDATE, ['user' => $auth->identity])) {
             throw new ForbiddenHttpException();
         }
 
         if ($auth->delete()) {
             $client = $auth->getClientClass();
 
-            $this->success(Lang::t('skeleton', 'USER_SUCCESS_REMOVED', [
+            $this->success(Yii::t('skeleton', 'USER_SUCCESS_REMOVED', [
                 'client' => $client->getTitle(),
                 'name' => $client::getDisplayName($auth),
             ]));
@@ -215,7 +214,7 @@ class UserController extends Controller
 
     public function actionOwnership(int $id): Response|string
     {
-        if (!Yii::$app->getUser()->getIdentity()->isOwner()) {
+        if (!$this->webuser->getIdentity()->isOwner()) {
             throw new ForbiddenHttpException();
         }
 
@@ -226,7 +225,7 @@ class UserController extends Controller
         ]);
 
         if ($form->update()) {
-            $this->success(Lang::t('skeleton', 'USER_SUCCESS_WEBSITE_OWNERSHIP_SUCCESSFUL'));
+            $this->success(Yii::t('skeleton', 'USER_SUCCESS_WEBSITE_OWNERSHIP_SUCCESSFUL'));
             return $this->goHome();
         }
 
@@ -241,7 +240,7 @@ class UserController extends Controller
         $user->setAttributes($attributes, false);
 
         if ($user->save()) {
-            $this->success(Lang::t('skeleton', 'USER_SUCCESS_UPDATED'));
+            $this->success(Yii::t('skeleton', 'USER_SUCCESS_UPDATED'));
         }
 
         return $this->redirect(['update', 'id' => $user->id]);

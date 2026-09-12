@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Forms;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\Traits\IdentityTrait;
 use Hirtz\Skeleton\Models\UserLogin;
@@ -67,7 +66,7 @@ class LoginForm extends Model
     public function beforeValidate(): bool
     {
         if (!Yii::$app->getUser()->isLoginEnabled()) {
-            $this->addError('email', Lang::t('skeleton', 'USER_SORRY_LOGGING_CURRENTLY'));
+            $this->addError('email', Yii::t('skeleton', 'USER_SORRY_LOGGING_CURRENTLY'));
             return false;
         }
 
@@ -89,14 +88,14 @@ class LoginForm extends Model
     protected function validatePassword(): void
     {
         if (!$this->user->validatePassword($this->password)) {
-            $this->addError('email', Lang::t('skeleton', 'USER_EMAIL_PASSWORD_INCORRECT'));
+            $this->addError('email', Yii::t('skeleton', 'USER_EMAIL_PASSWORD_INCORRECT'));
         }
     }
 
     protected function validateLoginStatus(): void
     {
         if ($this->user->isUnconfirmed() && !Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
-            $this->addError('status', Lang::t('skeleton', 'USER_EMAIL_ADDRESS_NOT'));
+            $this->addError('status', Yii::t('skeleton', 'USER_EMAIL_ADDRESS_NOT'));
         }
     }
 
@@ -151,10 +150,10 @@ class LoginForm extends Model
     public function attributeLabels(): array
     {
         return [
-            'email' => Lang::t('skeleton', 'USER_EMAIL_LABEL'),
-            'password' => Lang::t('skeleton', 'USER_PASSWORD_LABEL'),
-            'code' => Lang::t('skeleton', 'USER_CODE_LABEL'),
-            'rememberMe' => Lang::t('skeleton', 'USER_REMEMBERME_LABEL'),
+            'email' => Yii::t('skeleton', 'USER_EMAIL_LABEL'),
+            'password' => Yii::t('skeleton', 'USER_PASSWORD_LABEL'),
+            'code' => Yii::t('skeleton', 'USER_CODE_LABEL'),
+            'rememberMe' => Yii::t('skeleton', 'USER_REMEMBERME_LABEL'),
         ];
     }
 }

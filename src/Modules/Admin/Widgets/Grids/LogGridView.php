@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Pre;
 use Hirtz\Skeleton\Html\Th;
@@ -45,7 +44,7 @@ class LogGridView extends GridView
         return DataColumn::make()
             ->property('date')
             ->format('date')
-            ->title(Lang::t('skeleton', 'LOG_DATE'))
+            ->title(Yii::t('skeleton', 'LOG_DATE'))
             ->nowrap()
             ->width(150);
     }
@@ -53,7 +52,7 @@ class LogGridView extends GridView
     protected function getLevelColumn(): Column
     {
         return Column::make()
-            ->title(Lang::t('skeleton', 'LOG_LEVEL'))
+            ->title(Yii::t('skeleton', 'LOG_LEVEL'))
             ->content($this->getLevelColumnContent(...))
             ->width(100);
     }
@@ -68,7 +67,7 @@ class LogGridView extends GridView
     protected function getMessageColumn(): Column
     {
         return Column::make()
-            ->title(Lang::t('skeleton', 'LOG_ERROR'))
+            ->title(Yii::t('skeleton', 'LOG_ERROR'))
             ->content($this->getMessageColumnContent(...));
     }
 

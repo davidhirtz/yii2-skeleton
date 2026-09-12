@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Caching\CacheComponents;
 use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Models\User;
@@ -75,7 +74,7 @@ class SystemController extends Controller
             FileHelper::removeDirectory($asset);
         }
 
-        $this->success(Lang::t('skeleton', 'SYSTEM_SUCCESS_REFRESHED'));
+        $this->success(Yii::t('skeleton', 'SYSTEM_SUCCESS_REFRESHED'));
         return $this->redirect(['index']);
     }
 
@@ -87,7 +86,7 @@ class SystemController extends Controller
 
         Yii::$app->get($cache)->flush();
 
-        $this->success(Lang::t('skeleton', 'SYSTEM_SUCCESS_FLUSHED'));
+        $this->success(Yii::t('skeleton', 'SYSTEM_SUCCESS_FLUSHED'));
         return $this->redirect(['index']);
     }
 
@@ -111,7 +110,7 @@ class SystemController extends Controller
     public function actionSessionGc(): Response|string
     {
         Yii::$app->getSession()->gcSession(0);
-        $this->success(Lang::t('skeleton', 'SYSTEM_SUCCESS_DELETED'));
+        $this->success(Yii::t('skeleton', 'SYSTEM_SUCCESS_DELETED'));
         return $this->redirect(['index']);
     }
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Grids\Toolbars;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\TextInput;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
@@ -74,8 +73,8 @@ class FilterDropdown extends Widget
             return '';
         }
 
-        $this->default ??= Lang::t('skeleton', 'FILTER_DROPDOWN_SHOW_ALL');
-        $this->placeholder ??= Lang::t('skeleton', 'FILTER_DROPDOWN_FILTER');
+        $this->default ??= Yii::t('skeleton', 'FILTER_DROPDOWN_SHOW_ALL');
+        $this->placeholder ??= Yii::t('skeleton', 'FILTER_DROPDOWN_FILTER');
         $this->value ??= Yii::$app->getRequest()->get($this->paramName);
 
         if ($this->showFilterThreshold !== false) {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models;
 
-use Hirtz\Skeleton\I18n\Lang;
 use DateTimeZone;
 use davidhirtz\yii2\datetime\Date;
 use davidhirtz\yii2\datetime\DateTime;
@@ -149,14 +148,14 @@ class User extends ActiveRecord implements AdminRouteInterface, IdentityInterfac
                 ['name'],
                 'match',
                 'pattern' => $this->namePattern,
-                'message' => Lang::t('skeleton', 'USER_USERNAME_MUST_ONLY'),
+                'message' => Yii::t('skeleton', 'USER_USERNAME_MUST_ONLY'),
                 'skipOnError' => true,
                 'when' => fn () => $this->namePattern !== false,
             ],
             [
                 ['name'],
                 UniqueValidator::class,
-                'message' => Lang::t('skeleton', 'USER_USERNAME_ALREADY_USED'),
+                'message' => Yii::t('skeleton', 'USER_USERNAME_ALREADY_USED'),
             ],
             [
                 ['email'],
@@ -171,7 +170,7 @@ class User extends ActiveRecord implements AdminRouteInterface, IdentityInterfac
             [
                 ['email'],
                 'unique',
-                'message' => Lang::t('skeleton', 'USER_EMAIL_ADDRESS_ALREADY'),
+                'message' => Yii::t('skeleton', 'USER_EMAIL_ADDRESS_ALREADY'),
                 'skipOnError' => true,
                 'when' => fn () => $this->isAttributeChanged('email')
             ],
@@ -218,8 +217,8 @@ class User extends ActiveRecord implements AdminRouteInterface, IdentityInterfac
     {
         if (!$this->isDeletable()) {
             $this->addError('id', $this->isOwner()
-                ? Lang::t('skeleton', 'USER_USER_WEBSITE_OWNER')
-                : Lang::t('skeleton', 'USER_THE_USER_CANNOT_BE_DELETED'));
+                ? Yii::t('skeleton', 'USER_USER_WEBSITE_OWNER')
+                : Yii::t('skeleton', 'USER_THE_USER_CANNOT_BE_DELETED'));
 
             return false;
         }
@@ -408,11 +407,11 @@ class User extends ActiveRecord implements AdminRouteInterface, IdentityInterfac
     {
         return [
             static::STATUS_DISABLED => [
-                'name' => Lang::t('skeleton', 'COMMON_DISABLED'),
+                'name' => Yii::t('skeleton', 'COMMON_DISABLED'),
                 'icon' => 'exclamation-triangle',
             ],
             static::STATUS_ENABLED => [
-                'name' => Lang::t('skeleton', 'COMMON_ENABLED'),
+                'name' => Yii::t('skeleton', 'COMMON_ENABLED'),
                 'icon' => 'user',
             ],
         ];
@@ -421,7 +420,7 @@ class User extends ActiveRecord implements AdminRouteInterface, IdentityInterfac
     public function getStatusName(): string
     {
         if ($this->isOwner()) {
-            return Lang::t('skeleton', 'USER_SITE_OWNER');
+            return Yii::t('skeleton', 'USER_SITE_OWNER');
         }
 
         return static::getStatuses()[$this->status]['name'] ?? '';
@@ -456,7 +455,7 @@ class User extends ActiveRecord implements AdminRouteInterface, IdentityInterfac
 
     public function getTrailModelType(): string
     {
-        return Lang::t('skeleton', 'COMMON_USER');
+        return Yii::t('skeleton', 'COMMON_USER');
     }
 
     public function isDeletable(): bool
@@ -510,25 +509,25 @@ class User extends ActiveRecord implements AdminRouteInterface, IdentityInterfac
     {
         return [
             ...parent::attributeLabels(),
-            'id' => Lang::t('skeleton', 'USER_ID_LABEL'),
-            'name' => Lang::t('skeleton', 'USER_NAME_LABEL'),
-            'email' => Lang::t('skeleton', 'USER_EMAIL_LABEL'),
-            'password' => Lang::t('skeleton', 'USER_PASSWORD_LABEL'),
-            'first_name' => Lang::t('skeleton', 'USER_FIRST_NAME_LABEL'),
-            'last_name' => Lang::t('skeleton', 'USER_LAST_NAME_LABEL'),
-            'birthdate' => Lang::t('skeleton', 'USER_BIRTHDATE_LABEL'),
-            'city' => Lang::t('skeleton', 'USER_CITY_LABEL'),
-            'country' => Lang::t('skeleton', 'USER_COUNTRY_LABEL'),
-            'picture' => Lang::t('skeleton', 'USER_PICTURE_LABEL'),
-            'language' => Lang::t('skeleton', 'USER_LANGUAGE_LABEL'),
-            'timezone' => Lang::t('skeleton', 'USER_TIMEZONE_LABEL'),
-            'verification_token' => Lang::t('skeleton', 'USER_VERIFICATION_TOKEN_LABEL'),
-            'login_count' => Lang::t('skeleton', 'USER_LOGIN_COUNT_LABEL'),
-            'last_login' => Lang::t('skeleton', 'USER_LAST_LOGIN_LABEL'),
-            'is_owner' => Lang::t('skeleton', 'USER_IS_OWNER_LABEL'),
-            'updated_at' => Lang::t('skeleton', 'USER_UPDATED_AT_LABEL'),
-            'created_at' => Lang::t('skeleton', 'USER_CREATED_AT_LABEL'),
-            'upload' => Lang::t('skeleton', 'USER_UPLOAD_LABEL'),
+            'id' => Yii::t('skeleton', 'USER_ID_LABEL'),
+            'name' => Yii::t('skeleton', 'USER_NAME_LABEL'),
+            'email' => Yii::t('skeleton', 'USER_EMAIL_LABEL'),
+            'password' => Yii::t('skeleton', 'USER_PASSWORD_LABEL'),
+            'first_name' => Yii::t('skeleton', 'USER_FIRST_NAME_LABEL'),
+            'last_name' => Yii::t('skeleton', 'USER_LAST_NAME_LABEL'),
+            'birthdate' => Yii::t('skeleton', 'USER_BIRTHDATE_LABEL'),
+            'city' => Yii::t('skeleton', 'USER_CITY_LABEL'),
+            'country' => Yii::t('skeleton', 'USER_COUNTRY_LABEL'),
+            'picture' => Yii::t('skeleton', 'USER_PICTURE_LABEL'),
+            'language' => Yii::t('skeleton', 'USER_LANGUAGE_LABEL'),
+            'timezone' => Yii::t('skeleton', 'USER_TIMEZONE_LABEL'),
+            'verification_token' => Yii::t('skeleton', 'USER_VERIFICATION_TOKEN_LABEL'),
+            'login_count' => Yii::t('skeleton', 'USER_LOGIN_COUNT_LABEL'),
+            'last_login' => Yii::t('skeleton', 'USER_LAST_LOGIN_LABEL'),
+            'is_owner' => Yii::t('skeleton', 'USER_IS_OWNER_LABEL'),
+            'updated_at' => Yii::t('skeleton', 'USER_UPDATED_AT_LABEL'),
+            'created_at' => Yii::t('skeleton', 'USER_CREATED_AT_LABEL'),
+            'upload' => Yii::t('skeleton', 'USER_UPLOAD_LABEL'),
         ];
     }
 

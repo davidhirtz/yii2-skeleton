@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Controllers;
 
 use DateTime;
+use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Web\Controller;
+use Override;
 use XMLWriter;
 use Yii;
 use yii\filters\PageCache;
-use Hirtz\Skeleton\Helpers\Url;
-
-;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -19,7 +18,7 @@ class SitemapController extends Controller
 {
     private ?XMLWriter $writer = null;
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         if (!Yii::$app->has('sitemap')) {
@@ -29,7 +28,7 @@ class SitemapController extends Controller
         parent::init();
     }
 
-    #[\Override]
+    #[Override]
     public function behaviors(): array
     {
         $behaviors = parent::behaviors();
@@ -39,8 +38,8 @@ class SitemapController extends Controller
             $variations = $sitemap->variations;
 
             if ($sitemap->useSitemapIndex) {
-                $variations[] = Yii::$app->getRequest()->get('key');
-                $variations[] = Yii::$app->getRequest()->get('offset');
+                $variations[] = $this->request->get('key');
+                $variations[] = $this->request->get('offset');
             }
 
             $behaviors[] = [
@@ -56,7 +55,7 @@ class SitemapController extends Controller
         return $behaviors;
     }
 
-    #[\Override]
+    #[Override]
     public function beforeAction($action): bool
     {
         if ($this->request->isDraftRequest()) {
@@ -70,13 +69,12 @@ class SitemapController extends Controller
     public function actionIndex(?string $key = null, int $offset = 0): string|bool
     {
         $sitemap = Yii::$app->sitemap;
-        $response = Yii::$app->getResponse();
-        $response->format = Response::FORMAT_RAW;
+        $this->response->format = Response::FORMAT_RAW;
 
         ob_start();
         ob_implicit_flush(false);
 
-        $headers = $response->getHeaders();
+        $headers = $this->response->getHeaders();
         $headers->add('Content-Type', 'application/xml');
 
         $this->writer = new XMLWriter();

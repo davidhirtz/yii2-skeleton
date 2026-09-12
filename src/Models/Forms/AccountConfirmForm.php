@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Forms;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Traits\IdentityTrait;
 use Override;
 use Yii;
@@ -65,8 +64,8 @@ class AccountConfirmForm extends Model
     public function attributeLabels(): array
     {
         return [
-            'name' => Lang::t('skeleton', 'ACCOUNT_CONFIRM_NAME_LABEL'),
-            'code' => Lang::t('skeleton', 'ACCOUNT_CONFIRM_CODE_LABEL'),
+            'name' => Yii::t('skeleton', 'ACCOUNT_CONFIRM_NAME_LABEL'),
+            'code' => Yii::t('skeleton', 'ACCOUNT_CONFIRM_CODE_LABEL'),
         ];
     }
 }

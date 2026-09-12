@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Grids\Toolbars;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Override;
@@ -17,7 +16,7 @@ class TypeFilterDropdown extends FilterDropdown
     #[Override]
     protected function configure(): void
     {
-        $this->label ??= Lang::t('skeleton', 'COMMON_TYPE');
+        $this->label ??= Yii::t('skeleton', 'COMMON_TYPE');
         $this->paramName ??= 'type';
 
         if ($this->model instanceof TypeAttributeInterface) {

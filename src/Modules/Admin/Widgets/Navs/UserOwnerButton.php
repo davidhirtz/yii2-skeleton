@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\P;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Hirtz\Skeleton\Models\User;
@@ -44,8 +43,8 @@ class UserOwnerButton extends Widget
     protected function configure(): void
     {
         $this->icon ??= 'star';
-        $this->label ??= Lang::t('skeleton', 'USER_OWNER_TRANSFER_OWNERSHIP');
-        $this->title ??= Lang::t('skeleton', 'USER_OWNER_TRANSFER_OWNERSHIP');
+        $this->label ??= Yii::t('skeleton', 'USER_OWNER_TRANSFER_OWNERSHIP');
+        $this->title ??= Yii::t('skeleton', 'USER_OWNER_TRANSFER_OWNERSHIP');
         $this->url ??= ['/admin/user/ownership', 'id' => $this->model->id];
 
         $this->addContent($this->getMessage());
@@ -61,7 +60,7 @@ class UserOwnerButton extends Widget
 
     protected function getMessage(): ?Stringable
     {
-        return P::make()->text(Lang::t('skeleton', 'USER_CONFIRM_TRANSFER_OWNERSHIP'));
+        return P::make()->text(Yii::t('skeleton', 'USER_CONFIRM_TRANSFER_OWNERSHIP'));
     }
 
     protected function getButton(): string|Stringable
@@ -70,7 +69,7 @@ class UserOwnerButton extends Widget
             ->danger()
             ->icon($this->icon)
             ->modal($this->getModal())
-            ->text(Lang::t('skeleton', 'USER_OWNER_MAKE_SITE_OWNER'));
+            ->text(Yii::t('skeleton', 'USER_OWNER_MAKE_SITE_OWNER'));
     }
 
     protected function getModal(): Modal

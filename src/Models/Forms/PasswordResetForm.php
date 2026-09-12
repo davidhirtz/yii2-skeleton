@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Forms;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\Traits\IdentityTrait;
 use Hirtz\Skeleton\Models\User;
@@ -69,14 +68,14 @@ class PasswordResetForm extends Model
     protected function validateRepeatPassword(): void
     {
         if ($this->repeatPassword !== $this->newPassword) {
-            $this->addError('repeatPassword', Lang::t('skeleton', 'COMMON_PASSWORD_MUST_MATCH'));
+            $this->addError('repeatPassword', Yii::t('skeleton', 'COMMON_PASSWORD_MUST_MATCH'));
         }
     }
 
     public function validatePasswordResetCode(): bool
     {
         if ($this->user->password_reset_token !== $this->code) {
-            $this->addError('id', Lang::t('skeleton', 'PASSWORD_RESET_PASSWORD_RECOVERY'));
+            $this->addError('id', Yii::t('skeleton', 'PASSWORD_RESET_PASSWORD_RECOVERY'));
         }
 
         return !$this->hasErrors();
@@ -112,9 +111,9 @@ class PasswordResetForm extends Model
     {
         return [
             'newPassword' => $this->user?->login_count
-                ? Lang::t('skeleton', 'COMMON_NEW_PASSWORD')
-                : Lang::t('skeleton', 'COMMON_PASSWORD'),
-            'repeatPassword' => Lang::t('skeleton', 'PASSWORD_RESET_REPEATPASSWORD_LABEL'),
+                ? Yii::t('skeleton', 'COMMON_NEW_PASSWORD')
+                : Yii::t('skeleton', 'COMMON_PASSWORD'),
+            'repeatPassword' => Yii::t('skeleton', 'PASSWORD_RESET_REPEATPASSWORD_LABEL'),
         ];
     }
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Models\forms;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\Forms\Traits\UserFormTrait;
 use Hirtz\Skeleton\Models\User;
@@ -67,7 +66,7 @@ class UserForm extends Model
                 ['repeatPassword'],
                 'compare',
                 'compareAttribute' => 'newPassword',
-                'message' => Lang::t('skeleton', 'COMMON_PASSWORD_MUST_MATCH'),
+                'message' => Yii::t('skeleton', 'COMMON_PASSWORD_MUST_MATCH'),
             ],
             [
                 ['sendEmail'],
@@ -114,7 +113,7 @@ class UserForm extends Model
     {
         Yii::$app->getI18n()->callback($this->user->language, function (): void {
             Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/credentials', ['form' => $this])
-                ->setSubject(Lang::t('skeleton', 'USER_YOUR_ACCOUNT', ['name' => Yii::$app->name]))
+                ->setSubject(Yii::t('skeleton', 'USER_YOUR_ACCOUNT', ['name' => Yii::$app->name]))
                 ->setFrom(Yii::$app->params['email'])
                 ->setTo($this->user->email)
                 ->send();
@@ -131,10 +130,10 @@ class UserForm extends Model
     {
         return [
             'newPassword' => $this->user->getIsNewRecord()
-                ? Lang::t('skeleton', 'COMMON_PASSWORD')
-                : Lang::t('skeleton', 'COMMON_NEW_PASSWORD'),
-            'repeatPassword' => Lang::t('skeleton', 'USER_REPEATPASSWORD_LABEL'),
-            'sendEmail' => Lang::t('skeleton', 'USER_SENDEMAIL_LABEL'),
+                ? Yii::t('skeleton', 'COMMON_PASSWORD')
+                : Yii::t('skeleton', 'COMMON_NEW_PASSWORD'),
+            'repeatPassword' => Yii::t('skeleton', 'USER_REPEATPASSWORD_LABEL'),
+            'sendEmail' => Yii::t('skeleton', 'USER_SENDEMAIL_LABEL'),
         ];
     }
 }

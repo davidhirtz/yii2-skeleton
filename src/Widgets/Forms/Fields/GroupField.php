@@ -8,7 +8,6 @@ use Hirtz\Skeleton\Assets\CustomAttributesAssetBundle;
 use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Legend;
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\CustomAttributes\CustomAttributeGroupItem;
 use Hirtz\Skeleton\Models\CustomAttributes\GroupCustomAttribute;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
@@ -17,6 +16,7 @@ use Hirtz\Skeleton\Widgets\Forms\Fieldset;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\DraggableSortGridButton;
 use Override;
 use Stringable;
+use Yii;
 use yii\base\Model;
 
 class GroupField extends Field
@@ -132,7 +132,7 @@ class GroupField extends Field
                     ->icon('trash')
                     ->type('button')
                     ->attribute('data-group-remove', true)
-                    ->attribute('aria-label', Lang::t('skeleton', 'CUSTOM_ATTRIBUTE_BUTTON_REMOVE')),
+                    ->attribute('aria-label', Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_BUTTON_REMOVE')),
             );
     }
 
@@ -149,7 +149,7 @@ class GroupField extends Field
 
         $button = Button::make()
             ->secondary()
-            ->text(Lang::t('skeleton', 'CUSTOM_ATTRIBUTE_BUTTON_ADD'))
+            ->text(Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_BUTTON_ADD'))
             ->type('button')
             ->attribute('data-group-add', true);
 

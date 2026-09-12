@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Panels;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
@@ -49,7 +48,7 @@ class Card extends Widget
                     ->content($this->title));
 
                 $title->addContent(Button::make()
-                    ->attribute('aria-label', Lang::t('skeleton', 'CARD_TOGGLE'))
+                    ->attribute('aria-label', Yii::t('skeleton', 'CARD_TOGGLE'))
                     ->attribute('data-collapse', '#' . $this->getId())
                     ->class('btn-collapse btn-icon icon')
                     ->icon('chevron-down'));

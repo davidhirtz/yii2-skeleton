@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Forms;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Traits\SignupEmailTrait;
 use Hirtz\Skeleton\Models\UserLogin;
 use Override;
@@ -74,7 +73,7 @@ class SignupForm extends AbstractSignupForm
                 ['terms'],
                 'compare',
                 'compareValue' => 1,
-                'message' => Lang::t('skeleton', 'SIGNUP_ACCEPT_TERMS_SERVICE'),
+                'message' => Yii::t('skeleton', 'SIGNUP_ACCEPT_TERMS_SERVICE'),
                 'skipOnEmpty' => false,
             ],
             [
@@ -86,7 +85,7 @@ class SignupForm extends AbstractSignupForm
                 ['honeypot'],
                 'compare',
                 'compareValue' => '',
-                'message' => Lang::t('skeleton', 'SIGNUP_SIGN_UP_COULD'),
+                'message' => Yii::t('skeleton', 'SIGNUP_SIGN_UP_COULD'),
             ],
             [
                 ['timezone'],
@@ -106,7 +105,7 @@ class SignupForm extends AbstractSignupForm
     public function beforeValidate(): bool
     {
         if (!Yii::$app->getUser()->isSignupEnabled()) {
-            $this->addError('id', Lang::t('skeleton', 'COMMON_SORRY_SIGNING_UP'));
+            $this->addError('id', Yii::t('skeleton', 'COMMON_SORRY_SIGNING_UP'));
             return false;
         }
 
@@ -147,7 +146,7 @@ class SignupForm extends AbstractSignupForm
             $duration = time() - $this->spamProtectionInSeconds;
 
             if ($signup?->created_at->getTimestamp() > $duration) {
-                $this->addError('name', Lang::t('skeleton', 'SIGNUP_JUST_CREATED'));
+                $this->addError('name', Yii::t('skeleton', 'SIGNUP_JUST_CREATED'));
             }
         }
     }
@@ -164,14 +163,14 @@ class SignupForm extends AbstractSignupForm
             $tokenCreatedAt = Yii::$app->getSession()->get(self::SESSION_TIMESTAMP_NAME);
 
             if ($this->token !== $token || $tokenCreatedAt === null) {
-                $this->addError('token', Lang::t('skeleton', 'SIGNUP_SIGN_UP_COULD'));
+                $this->addError('token', Yii::t('skeleton', 'SIGNUP_SIGN_UP_COULD'));
             }
 
             if (!$this->hasErrors('token')) {
                 $timestamp = time() - $tokenCreatedAt;
 
                 if ($timestamp < static::SESSION_TOKEN_MIN_TIME || $timestamp > static::SESSION_TOKEN_MAX_TIME) {
-                    $this->addError('token', Lang::t('skeleton', 'SIGNUP_SIGN_UP_COULD'));
+                    $this->addError('token', Yii::t('skeleton', 'SIGNUP_SIGN_UP_COULD'));
                 }
             }
         }
@@ -226,7 +225,7 @@ class SignupForm extends AbstractSignupForm
     {
         return [
             ...parent::attributeLabels(),
-            'terms' => Lang::t('skeleton', 'SIGNUP_TERMS_LABEL'),
+            'terms' => Yii::t('skeleton', 'SIGNUP_TERMS_LABEL'),
         ];
     }
 }

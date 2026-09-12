@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Breadcrumb;
 use Hirtz\Skeleton\Modules\Admin\Data\LogDataProvider;
 use Hirtz\Skeleton\Widgets\Navs\Header;
@@ -22,7 +21,7 @@ class LogHeader extends Header
     #[\Override]
     protected function configure(): void
     {
-        $this->title ??= Lang::t('skeleton', 'COMMON_ERROR_LOGS');
+        $this->title ??= Yii::t('skeleton', 'COMMON_ERROR_LOGS');
         $this->url ??= ['/admin/log/index'];
 
         if ($this->provider) {

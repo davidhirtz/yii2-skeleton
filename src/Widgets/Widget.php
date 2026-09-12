@@ -35,6 +35,10 @@ abstract class Widget implements Stringable, ViewContextInterface
     private array $configureClosures = [];
     private ?string $html = null;
 
+    /**
+     * A subclass constructor runs before this one, so it must not read `$view` or `$webuser` — it has to call the
+     * components itself.
+     */
     public function __construct(array $config = [])
     {
         $this->view ??= Yii::$app->getView();

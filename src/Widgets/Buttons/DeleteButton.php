@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Buttons;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Form;
 use Hirtz\Skeleton\Html\P;
@@ -64,7 +63,7 @@ class DeleteButton extends Widget
         $this->title ??= Yii::t('yii', 'Are you sure you want to delete this item?');
 
         if ($this->property) {
-            $this->message ??= Lang::t('skeleton', 'COMMON_TYPE_EXACT', [
+            $this->message ??= Yii::t('skeleton', 'COMMON_TYPE_EXACT', [
                 'attribute' => $this->model->getAttributeLabel($this->property),
             ]);
         }

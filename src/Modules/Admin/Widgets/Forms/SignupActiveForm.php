@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Assets\SignupAssetBundle;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Models\Forms\SignupForm;
@@ -49,7 +48,7 @@ class SignupActiveForm extends ActiveForm
             $this->getTimezoneField(),
         ];
 
-        $this->submitButtonText ??= Lang::t('skeleton', 'SIGNUP_ACTIVE_CREATE_ACCOUNT');
+        $this->submitButtonText ??= Yii::t('skeleton', 'SIGNUP_ACTIVE_CREATE_ACCOUNT');
 
         parent::configure();
     }

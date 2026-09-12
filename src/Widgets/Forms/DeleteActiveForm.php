@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Forms;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Forms\DeleteForm;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
@@ -52,15 +51,15 @@ class DeleteActiveForm extends ActiveForm
         ]);
 
         $this->message ??= $this->property
-            ? Lang::t('skeleton', 'COMMON_TYPE_EXACT', [
+            ? Yii::t('skeleton', 'COMMON_TYPE_EXACT', [
                 'attribute' => $this->model->getAttributeLabel('value'),
             ])
-            : Lang::t('skeleton', 'DELETE_ACTIVE_WARNING_DELETED');
+            : Yii::t('skeleton', 'DELETE_ACTIVE_WARNING_DELETED');
 
         $this->action ??= ['delete', 'id' => $this->model->getId()];
 
         $this->confirm ??= Yii::t('yii', 'Are you sure you want to delete this item?');
-        $this->label ??= Lang::t('skeleton', 'DELETE_ACTIVE_DELETE');
+        $this->label ??= Yii::t('skeleton', 'DELETE_ACTIVE_DELETE');
 
         $btn = Button::make()
             ->danger()

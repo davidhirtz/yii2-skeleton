@@ -11,14 +11,14 @@ trait AjaxRouteTrait
 {
     public function renderContent($content): string
     {
-        return Yii::$app->getRequest()->getIsAjaxRoute()
+        return $this->request->getIsAjaxRoute()
             ? $this->renderAjaxRouteContent($content)
             : parent::renderContent($content);
     }
 
     public function renderAjaxRouteContent(string $content): string
     {
-        Yii::$app->getResponse()->getHeaders()
+        $this->response->getHeaders()
             ->set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
             ->set('Pragma', 'no-cache');
 

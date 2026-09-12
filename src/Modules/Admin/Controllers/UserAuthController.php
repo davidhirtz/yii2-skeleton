@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\AuthItem;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Controllers\Traits\UserTrait;
@@ -75,9 +74,9 @@ class UserAuthController extends Controller
         $role = $this->getAuthItem($name, $type);
 
         if (Yii::$app->getAuthManager()->assign($role, $user->id)) {
-            $this->success(Lang::t('skeleton', 'USER_AUTH_SUCCESS_ASSIGNED'));
+            $this->success(Yii::t('skeleton', 'USER_AUTH_SUCCESS_ASSIGNED'));
         } else {
-            $this->error(Lang::t('skeleton', 'USER_AUTH_PERMISSION_ALREADY', [
+            $this->error(Yii::t('skeleton', 'USER_AUTH_PERMISSION_ALREADY', [
                 'name' => $user->getUsername(),
             ]));
         }
@@ -91,9 +90,9 @@ class UserAuthController extends Controller
         $role = $this->getAuthItem($name, $type);
 
         if (Yii::$app->getAuthManager()->revoke($role, $user->id)) {
-            $this->success(Lang::t('skeleton', 'USER_AUTH_SUCCESS_REMOVED'));
+            $this->success(Yii::t('skeleton', 'USER_AUTH_SUCCESS_REMOVED'));
         } else {
-            $this->error(Lang::t('skeleton', 'USER_AUTH_PERMISSION_NOT', [
+            $this->error(Yii::t('skeleton', 'USER_AUTH_PERMISSION_NOT', [
                 'name' => $user->getUsername(),
             ]));
         }

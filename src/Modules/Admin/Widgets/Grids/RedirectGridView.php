@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
 use Hirtz\Skeleton\Html\A;
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Modules\Admin\Controllers\RedirectController;
 use Hirtz\Skeleton\Modules\Admin\Data\RedirectActiveDataProvider;
@@ -164,18 +163,18 @@ class RedirectGridView extends GridView
     protected function getSelectionButton(): Stringable
     {
         $modal = Modal::make()
-            ->title(Lang::t('skeleton', 'REDIRECT_DELETE_SELECTED'))
-            ->text(Lang::t('skeleton', 'COMMON_CONFIRM_DELETE_SELECTED'))
+            ->title(Yii::t('skeleton', 'REDIRECT_DELETE_SELECTED'))
+            ->text(Yii::t('skeleton', 'COMMON_CONFIRM_DELETE_SELECTED'))
             ->footer(Button::make()
                 ->danger()
-                ->text(Lang::t('skeleton', 'REDIRECT_DELETE_SELECTED'))
+                ->text(Yii::t('skeleton', 'REDIRECT_DELETE_SELECTED'))
                 ->icon('trash')
                 ->post(['/admin/redirect/delete-all'])
                 ->attribute('hx-include', '[data-check]:checked'));
 
         $button = Button::make()
             ->danger()
-            ->text(Lang::t('skeleton', 'REDIRECT_DELETE_SELECTED'))
+            ->text(Yii::t('skeleton', 'REDIRECT_DELETE_SELECTED'))
             ->icon('trash')
             ->attribute('data-id', 'check-button')
             ->modal($modal);

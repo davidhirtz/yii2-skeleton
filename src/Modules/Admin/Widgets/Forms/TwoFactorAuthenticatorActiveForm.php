@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\Img;
 use Hirtz\Skeleton\Models\Forms\TwoFactorAuthenticatorForm;
 use Hirtz\Skeleton\Models\User;
@@ -40,7 +39,7 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
 
         $this->action ??= $enabled ? ['account/disable-authenticator'] : ['account/enable-authenticator'];
         $this->rows ??= $enabled ? $this->getDisableAuthenticatorRows() : $this->getEnableAuthenticatorRows();
-        $this->submitButtonText ??= $enabled ? Lang::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_DISABLE') : Lang::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_ENABLE');
+        $this->submitButtonText ??= $enabled ? Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_DISABLE') : Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_ENABLE');
         $this->footer ??= false;
 
         parent::configure();
@@ -50,7 +49,7 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
     {
         return [
             FormRow::make()
-                ->content(Lang::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_AUTHENTICATION')),
+                ->content(Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_AUTHENTICATION')),
             $this->getInputField(),
         ];
     }
@@ -60,7 +59,7 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
         return [
             FormRow::make()
                 ->content(
-                    Lang::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_ACTIVATE')
+                    Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_ACTIVATE')
                 ),
             FormRow::make()
                 ->content($this->getQrCodeImage()),
@@ -79,7 +78,7 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
     {
         return Img::make()
             ->src($this->authenticator->getQrImageUrl($this->qrCodeSize))
-            ->alt(Lang::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_CODE'))
+            ->alt(Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_CODE'))
             ->addStyle([
                 'width' => "{$this->qrCodeSize}px",
                 'height' => "{$this->qrCodeSize}px",

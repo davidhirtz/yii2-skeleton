@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Traits;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Widgets\Grids\Traits\TypeGridViewTrait;
 use Yii;
 use yii\helpers\Inflector;
@@ -45,7 +44,7 @@ trait TypeAttributeTrait
     {
         return [
             static::TYPE_DEFAULT => [
-                'name' => Lang::t('skeleton', 'BASED_DEFAULT'),
+                'name' => Yii::t('skeleton', 'BASED_DEFAULT'),
             ],
         ];
     }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Auth\Clients\ClientInterface;
 use Hirtz\Skeleton\Models\AuthClient;
 use Hirtz\Skeleton\Models\Forms\AccountConfirmForm;
@@ -100,8 +99,8 @@ class AccountController extends Controller
 
     public function actionCreate(): Response|string
     {
-        if (!Yii::$app->getUser()->getIsGuest()) {
-            $this->error(Lang::t('skeleton', 'ACCOUNT_LOGOUT_BEFORE_CREATING'));
+        if (!$this->webuser->getIsGuest()) {
+            $this->error(Yii::t('skeleton', 'ACCOUNT_LOGOUT_BEFORE_CREATING'));
             return $this->goHome();
         }
 
@@ -109,7 +108,7 @@ class AccountController extends Controller
         $form->email = $this->request->get('email', Yii::$app->getSession()->get('email'));
 
         if ($form->load($this->request->post()) && $form->insert()) {
-            $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_SIGN_UP_COMPLETED_PLEASE'));
+            $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_SIGN_UP_COMPLETED_PLEASE'));
             return $this->goHome();
         }
 
@@ -134,8 +133,8 @@ class AccountController extends Controller
 
     public function actionLogin(): Response|string
     {
-        if (!Yii::$app->getUser()->getIsGuest()) {
-            $this->error(Lang::t('skeleton', 'ACCOUNT_LOGOUT_BEFORE_LOGGING'));
+        if (!$this->webuser->getIsGuest()) {
+            $this->error(Yii::t('skeleton', 'ACCOUNT_LOGOUT_BEFORE_LOGGING'));
             return $this->goHome();
         }
 
@@ -145,8 +144,8 @@ class AccountController extends Controller
         if ($form->load($this->request->post())) {
             if ($form->login()) {
                 $this->success($form->user->login_count === 1
-                    ? Lang::t('skeleton', 'ACCOUNT_SUCCESS_LOGIN_SUCCESSFUL')
-                    : Lang::t('skeleton', 'ACCOUNT_WELCOME_BACK', [
+                    ? Yii::t('skeleton', 'ACCOUNT_SUCCESS_LOGIN_SUCCESSFUL')
+                    : Yii::t('skeleton', 'ACCOUNT_WELCOME_BACK', [
                         'name' => $form->user->getUsername(),
                     ]));
 
@@ -169,8 +168,8 @@ class AccountController extends Controller
 
     public function actionLogout(): Response|string
     {
-        if (Yii::$app->getUser()->logout()) {
-            $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_NOW_LOGGED_OUT'));
+        if ($this->webuser->logout()) {
+            $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_NOW_LOGGED_OUT'));
         }
 
         return $this->redirect(['login']);
@@ -183,13 +182,12 @@ class AccountController extends Controller
             'code' => $code,
         ]);
 
-        if ($form->confirm() && Yii::$app->getUser()->getIsGuest() && !$form->user->isDisabled()) {
-            $webuser = Yii::$app->getUser();
-            $webuser->loginType = UserLogin::TYPE_CONFIRM_EMAIL;
-            $webuser->login($form->user);
+        if ($form->confirm() && $this->webuser->getIsGuest() && !$form->user->isDisabled()) {
+            $this->webuser->loginType = UserLogin::TYPE_CONFIRM_EMAIL;
+            $this->webuser->login($form->user);
         }
 
-        $this->errorOrSuccess($form, Lang::t('skeleton', 'ACCOUNT_SUCCESS_EMAIL_ADDRESS_SUCCESSFULLY'));
+        $this->errorOrSuccess($form, Yii::t('skeleton', 'ACCOUNT_SUCCESS_EMAIL_ADDRESS_SUCCESSFULLY'));
         return $this->goHome();
     }
 
@@ -197,12 +195,12 @@ class AccountController extends Controller
     {
         $form = AccountResendConfirmForm::create();
 
-        $form->user = Yii::$app->getUser()->getIdentity();
+        $form->user = $this->webuser->getIdentity();
         $form->email ??= $this->request->get('email', Yii::$app->getSession()->get('email'));
 
         if ($form->load($this->request->post())) {
             if ($form->resend()) {
-                $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_SENT_ANOTHER', [
+                $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_SENT_ANOTHER', [
                     'email' => $form->user->email,
                 ]));
 
@@ -219,16 +217,16 @@ class AccountController extends Controller
 
     public function actionRecover(): Response|string
     {
-        if (!Yii::$app->getUser()->isPasswordResetEnabled()) {
+        if (!$this->webuser->isPasswordResetEnabled()) {
             throw new ForbiddenHttpException();
         }
 
         $form = PasswordRecoverForm::create();
-        $form->email = Yii::$app->getRequest()->get('email', Yii::$app->getSession()->get('email'));
+        $form->email = $this->request->get('email', Yii::$app->getSession()->get('email'));
 
-        if ($form->load(Yii::$app->getRequest()->post())) {
+        if ($form->load($this->request->post())) {
             if ($form->recover()) {
-                $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_SENT_EMAIL', [
+                $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_SENT_EMAIL', [
                     'email' => $form->user->email,
                 ]));
 
@@ -245,7 +243,7 @@ class AccountController extends Controller
 
     public function actionReset(string $email, string $code): Response|string
     {
-        if (!Yii::$app->getUser()->isPasswordResetEnabled()) {
+        if (!$this->webuser->isPasswordResetEnabled()) {
             throw new ForbiddenHttpException();
         }
 
@@ -253,9 +251,9 @@ class AccountController extends Controller
         $form->email = $email;
         $form->code = $code;
 
-        if ($form->load(Yii::$app->getRequest()->post())) {
+        if ($form->load($this->request->post())) {
             if ($form->reset()) {
-                $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_UPDATED_PASSWORD'));
+                $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_UPDATED_PASSWORD'));
                 return $this->goHome();
             }
         } elseif (!$form->validateEmail() || !$form->validatePasswordResetCode()) {
@@ -271,12 +269,12 @@ class AccountController extends Controller
     public function actionUpdate(): Response|string
     {
         $form = AccountUpdateForm::create([
-            'user' => Yii::$app->getUser()->getIdentity(),
+            'user' => $this->webuser->getIdentity(),
         ]);
 
-        if ($form->load(Yii::$app->getRequest()->post())) {
+        if ($form->load($this->request->post())) {
             if ($form->save()) {
-                $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_PROFILE_UPDATED'));
+                $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_PROFILE_UPDATED'));
             }
 
             if (!$form->hasErrors()) {
@@ -293,11 +291,11 @@ class AccountController extends Controller
 
     public function actionPicture(): Response|string
     {
-        $user = Yii::$app->getUser()->getIdentity();
+        $user = $this->webuser->getIdentity();
         $user->picture = null;
 
         if ($user->update()) {
-            $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_PROFILE_UPDATED'));
+            $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_PROFILE_UPDATED'));
         }
 
         return $this->redirect(['update']);
@@ -306,14 +304,14 @@ class AccountController extends Controller
     public function actionDelete(): Response|string
     {
         $form = DeleteForm::create([
-            'model' => Yii::$app->getUser()->getIdentity(),
+            'model' => $this->webuser->getIdentity(),
             'attribute' => 'password',
         ]);
 
-        if ($form->load(Yii::$app->getRequest()->post()) && $form->delete()) {
-            $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_DELETED'));
+        if ($form->load($this->request->post()) && $form->delete()) {
+            $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_DELETED'));
 
-            Yii::$app->getUser()->logout();
+            $this->webuser->logout();
             return $this->goHome();
         }
 
@@ -325,12 +323,12 @@ class AccountController extends Controller
     public function actionEnableAuthenticator(): Response|string
     {
         $form = TwoFactorAuthenticatorForm::create([
-            'user' => Yii::$app->getUser()->getIdentity(),
+            'user' => $this->webuser->getIdentity(),
         ]);
 
-        if ($form->load(Yii::$app->getRequest()->post())) {
+        if ($form->load($this->request->post())) {
             $form->save();
-            $this->errorOrSuccess($form, Lang::t('skeleton', 'ACCOUNT_SUCCESS_TWO_FACTOR_AUTHENTICATION_ENABLED'));
+            $this->errorOrSuccess($form, Yii::t('skeleton', 'ACCOUNT_SUCCESS_TWO_FACTOR_AUTHENTICATION_ENABLED'));
         }
 
         return $this->redirect(['update']);
@@ -339,12 +337,12 @@ class AccountController extends Controller
     public function actionDisableAuthenticator(): Response|string
     {
         $form = TwoFactorAuthenticatorForm::create([
-            'user' => Yii::$app->getUser()->getIdentity(),
+            'user' => $this->webuser->getIdentity(),
         ]);
 
-        if ($form->load(Yii::$app->getRequest()->post())) {
+        if ($form->load($this->request->post())) {
             $form->delete();
-            $this->errorOrSuccess($form, Lang::t('skeleton', 'ACCOUNT_SUCCESS_TWO_FACTOR_AUTHENTICATION_DISABLED'));
+            $this->errorOrSuccess($form, Yii::t('skeleton', 'ACCOUNT_SUCCESS_TWO_FACTOR_AUTHENTICATION_DISABLED'));
         }
 
         return $this->redirect(['update']);
@@ -353,7 +351,7 @@ class AccountController extends Controller
     public function actionDeauthorize(string $id, string $name): Response|string
     {
         $auth = AuthClient::find()
-            ->where(['id' => $id, 'name' => $name, 'user_id' => Yii::$app->getUser()->getId()])
+            ->where(['id' => $id, 'name' => $name, 'user_id' => $this->webuser->getId()])
             ->limit(1)
             ->one();
 
@@ -364,7 +362,7 @@ class AccountController extends Controller
         if ($auth->delete()) {
             $client = $auth->getClientClass();
 
-            $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_REMOVED', [
+            $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_REMOVED', [
                 'client' => $client->getTitle(),
                 'name' => $client::getDisplayName($auth),
                 'isOwner' => 1,
@@ -378,11 +376,11 @@ class AccountController extends Controller
 
     public function actionTimezone(?string $redirect = null): Response|string
     {
-        $user = Yii::$app->getUser()->getIdentity();
+        $user = $this->webuser->getIdentity();
         $user->timezone = $this->request->post('timezone');
         $user->update();
 
-        $this->errorOrSuccess($user, Lang::t('skeleton', 'ACCOUNT_SUCCESS_UPDATED_TIMEZONE'));
+        $this->errorOrSuccess($user, Yii::t('skeleton', 'ACCOUNT_SUCCESS_UPDATED_TIMEZONE'));
         return $this->redirect($redirect ?? ['/admin/dashboard/index']);
     }
 
@@ -393,7 +391,7 @@ class AccountController extends Controller
     {
         $auth = AuthClient::findOrCreateFromClient($client);
 
-        if (Yii::$app->getUser()->getIsGuest()) {
+        if ($this->webuser->getIsGuest()) {
             $success = $auth->getIsNewRecord()
                 ? $this->signupWithAuthClient($auth)
                 : $this->loginWithAuthClient($auth);
@@ -405,10 +403,10 @@ class AccountController extends Controller
             return $this->goBack();
         }
 
-        $auth->user_id = Yii::$app->getUser()->getId();
+        $auth->user_id = $this->webuser->getId();
 
         if ($auth->save()) {
-            $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_ACCOUNT_NOW_CONNECTED', [
+            $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_ACCOUNT_NOW_CONNECTED', [
                 'client' => $client->getTitle(),
             ]));
         }
@@ -427,17 +425,16 @@ class AccountController extends Controller
         $user = $auth->identity;
 
         if (!$user?->isEnabled()) {
-            $this->error(Lang::t('skeleton', 'COMMON_ACCOUNT_CURRENTLY_DISABLED'));
+            $this->error(Yii::t('skeleton', 'COMMON_ACCOUNT_CURRENTLY_DISABLED'));
             return false;
         }
 
-        $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_WELCOME_BACK', [
+        $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_WELCOME_BACK', [
             'name' => $user->getUsername(),
         ]));
 
-        $webuser = Yii::$app->getUser();
-        $webuser->loginType = $auth->getClientClass()->getName();
-        $webuser->login($user, $webuser->cookieLifetime);
+        $this->webuser->loginType = $auth->getClientClass()->getName();
+        $this->webuser->login($user, $this->webuser->cookieLifetime);
 
         return $auth->update() !== false;
     }
@@ -455,7 +452,7 @@ class AccountController extends Controller
             return false;
         }
 
-        $this->success(Lang::t('skeleton', 'ACCOUNT_SUCCESS_SIGN_UP_COMPLETED_CLIENT', [
+        $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_SIGN_UP_COMPLETED_CLIENT', [
             'client' => $form->client->getTitle(),
         ]));
 

@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Html\Th;
 use Hirtz\Skeleton\Widgets\Grids\Traits\GridTrait;
 use Hirtz\Skeleton\Widgets\Traits\TitleTrait;
 use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
+use Hirtz\Skeleton\Web\User;
 use Stringable;
 use Yii;
 use yii\base\Model;
@@ -29,6 +30,7 @@ class Column
 
     protected array $bodyAttributes = [];
     protected array $headerAttributes = [];
+    protected User $webuser;
 
     protected Closure $content;
     protected string $emptyCell = '';
@@ -38,6 +40,8 @@ class Column
 
     public function __construct(array $config = [])
     {
+        $this->webuser ??= Yii::$app->getUser();
+
         if ($config) {
             Yii::configure($this, $config);
         }

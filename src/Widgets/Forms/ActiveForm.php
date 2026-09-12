@@ -9,7 +9,6 @@ use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Form;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Buttons\ButtonGroup;
 use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
@@ -159,8 +158,8 @@ class ActiveForm extends Widget
     protected function getSubmitButton(): Stringable
     {
         $this->submitButtonText ??= $this->model instanceof ActiveRecordInterface && $this->model->getIsNewRecord()
-            ? Lang::t('skeleton', 'COMMON_CREATE')
-            : Lang::t('skeleton', 'COMMON_UPDATE');
+            ? Yii::t('skeleton', 'COMMON_CREATE')
+            : Yii::t('skeleton', 'COMMON_UPDATE');
 
         return Button::make()
             ->primary()

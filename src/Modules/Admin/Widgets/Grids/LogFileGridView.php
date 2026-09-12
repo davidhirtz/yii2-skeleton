@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\Td;
 use Hirtz\Skeleton\Models\LogFile;
 use Hirtz\Skeleton\Modules\Admin\Data\LogFileArrayDataProvider;
@@ -58,7 +57,7 @@ class LogFileGridView extends GridView
     {
         return LinkColumn::make()
             ->property('name')
-            ->title(Lang::t('skeleton', 'COMMON_NAME'))
+            ->title(Yii::t('skeleton', 'COMMON_NAME'))
             ->url(fn (LogFile $file): array => $this->getLogFileUrl($file))
             ->body(fn (Td $td) => $td->addClass('strong'));
     }
@@ -67,7 +66,7 @@ class LogFileGridView extends GridView
     {
         return DataColumn::make()
             ->property('size')
-            ->title(Lang::t('skeleton', 'LOG_FILE_FILE_SIZE'))
+            ->title(Yii::t('skeleton', 'LOG_FILE_FILE_SIZE'))
             ->format('shortSize');
     }
 
@@ -75,7 +74,7 @@ class LogFileGridView extends GridView
     {
         return RelativeTimeColumn::make()
             ->property('updated_at')
-            ->title(Lang::t('skeleton', 'COMMON_UPDATED_AT_LABEL'));
+            ->title(Yii::t('skeleton', 'COMMON_UPDATED_AT_LABEL'));
     }
 
     protected function getButtonColumn(): ?Column

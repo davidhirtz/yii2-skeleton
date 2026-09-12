@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Forms;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Auth\Clients\ClientInterface;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\Traits\SignupEmailTrait;
@@ -60,7 +59,7 @@ class AuthClientSignupForm extends Model
     public function beforeValidate(): bool
     {
         if (!Yii::$app->getUser()->isSignupEnabled()) {
-            $this->addError('id', Lang::t('skeleton', 'COMMON_SORRY_SIGNING_UP'));
+            $this->addError('id', Yii::t('skeleton', 'COMMON_SORRY_SIGNING_UP'));
             return false;
         }
 
@@ -108,7 +107,7 @@ class AuthClientSignupForm extends Model
 
     protected function addContextToEmailError(): void
     {
-        $this->addError('email', Lang::t('skeleton', 'AUTH_CLIENT_SIGNUP_USER', [
+        $this->addError('email', Yii::t('skeleton', 'AUTH_CLIENT_SIGNUP_USER', [
             'client' => $this->client->getTitle(),
             'email' => $this->user->email,
         ]));

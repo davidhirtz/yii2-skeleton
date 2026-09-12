@@ -18,7 +18,7 @@ class HealthController extends Controller
             Yii::$app->getDb()->open();
         } catch (Exception $exception) {
             Yii::error($exception->getMessage());
-            Yii::$app->getResponse()->setStatusCode(503);
+            $this->response->setStatusCode(503);
         }
     }
 }

@@ -380,20 +380,20 @@ Entry::find()->getI18nAttributeName('name', fallback: true);
 Uniqueness deliberately does **not** fall back: a translated value competes with the same language
 only.
 
-## 3.0.0 — Key-based translations via the `Lang` facade
+## 3.0.0 — Key-based translations
 
-v3 replaces direct `Yii::t()` calls with the `Hirtz\Skeleton\I18n\Lang` facade and switches every
-platform message source to **key-based translations** resolved with `forceTranslation => true`.
-Instead of the English sentence being both the lookup key and the fallback, each string now has a
-stable, uppercase, domain-first **key**, and the English text lives in the `en-US` message file like
-any other language.
+v3 switches every platform message source to **key-based translations** resolved with
+`forceTranslation => true`. Instead of the English sentence being both the lookup key and the
+fallback, each string now has a stable, uppercase, domain-first **key**, and the English text lives
+in the `en-US` message file like any other language. Call sites stay on `Yii::t()` — the `yii
+message` extractor only recognises that call.
 
 ```php
 // before
 Yii::t('cms', 'Create Entry');
 
 // after
-Lang::t('cms', 'ENTRY_CREATE_BUTTON');
+Yii::t('cms', 'ENTRY_CREATE_BUTTON');
 ```
 
 ```php
@@ -440,8 +440,8 @@ were left unchanged.
 ### Migrating a downstream project
 
 Downstream apps translate their own strings under the **`app`** category. There is no Rector rule:
-the mechanical `Yii::t` → `Lang::t` swap is trivial, but no tool can reliably invent semantic keys
-from arbitrary English, so the key assignment is manual (best done per model/feature).
+no tool can reliably invent semantic keys from arbitrary English, so the key assignment is manual
+(best done per model/feature).
 
 1. **Turn on `forceTranslation`** for the `app` message source in your application config:
 
@@ -461,9 +461,7 @@ from arbitrary English, so the key assignment is manual (best done per model/fea
 2. **Assign a key** to each string following the convention above and rewrite the call sites:
 
    ```php
-   use Hirtz\Skeleton\I18n\Lang;
-
-   Lang::t('app', 'PRODUCT_NAME_LABEL');
+   Yii::t('app', 'PRODUCT_NAME_LABEL');
    ```
 
 3. **Regenerate the message files.** Add an `en-US/app.php` mapping each key to its English source
@@ -480,6 +478,6 @@ from arbitrary English, so the key assignment is manual (best done per model/fea
 4. **Verify** every key used in code resolves in `en-US/app.php` before shipping — a missing key
    renders as the key string itself.
 
-`Yii::t()` still works (the facade delegates to it), so a partially migrated app runs correctly:
-un-migrated calls keep passing the English string, which `forceTranslation` returns unchanged when no
-key matches. Migrate incrementally, one category or feature at a time.
+A partially migrated app runs correctly: un-migrated calls keep passing the English string, which
+`forceTranslation` returns unchanged when no key matches. Migrate incrementally, one category or
+feature at a time.

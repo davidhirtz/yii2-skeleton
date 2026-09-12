@@ -1,5 +1,19 @@
 ## 3.0.0 (in development)
 
+- Removed `I18n\Lang`: `yii message` extracts `Yii::t()` call sites only, so with `removeUnused` every key reached
+  through the facade was dropped from the message files on the next regeneration. Key-based translation is unchanged,
+  the calls go back to `Yii::t()`
+- `Modules\Admin\Controllers\UserLoginController` extends `Web\Controller` instead of `yii\web\Controller`, so it
+  gets the CSP header, the flash helpers and `$webuser` like every other admin controller
+- Controllers and the admin controller traits read the web user from `Web\Controller::$webuser`, widgets from
+  `Widgets\Widget::$webuser`, instead of calling `Yii::$app->getUser()`. Both are assigned in the constructor, so a
+  *subclass* constructor still has to call the component itself — it runs first
+- `Widgets\Grids\Columns\Column` gained `$webuser`, so `Widgets\Traits\VisibilityTrait::isVisible()` reads the
+  property for both of its hosts
+- Controllers read `$this->request` / `$this->response` instead of `Yii::$app->getRequest()` / `getResponse()`; both
+  are resolved in `yii\base\Controller::init()`, so code running before `parent::init()` still needs the component
+- `Db\Traits\MigrationTrait` resolves the connection with the migration's own `$this->getDb()` instead of
+  `Yii::$app->getDb()`, so `migrate --db=` is honoured; `Web\User` writes the login row through `UserLogin::getDb()`
 - `Db\ActiveQuery::selectWith('user')` joins a hasOne relation and populates it from the same row, where Yii's
   `joinWith()` joins and then runs a second query for the eager load. The joined table keeps its table name as alias
   as with `joinWith()` (`alias()` it in the callback to join a table twice), the relation's own `where` moves into the

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
@@ -34,7 +33,7 @@ class AssetGridView extends GridView
 
         $this->columns ??= [
             Column::make()
-                ->title(Lang::t('skeleton', 'COMMON_NAME'))
+                ->title(Yii::t('skeleton', 'COMMON_NAME'))
                 ->content(function ($item): Stringable {
                     $ul = Ul::make()
                         ->class('small');
@@ -54,7 +53,7 @@ class AssetGridView extends GridView
                 }),
             RelativeTimeColumn::make()
                 ->property('modified')
-                ->title(Lang::t('skeleton', 'COMMON_UPDATED')),
+                ->title(Yii::t('skeleton', 'COMMON_UPDATED')),
         ];
 
         /** @see SystemController::actionPublish() */
@@ -63,7 +62,7 @@ class AssetGridView extends GridView
                 ->class('ms-auto')
                 ->content(Button::make()
                     ->primary()
-                    ->text(Lang::t('skeleton', 'ASSET_REFRESH'))
+                    ->text(Yii::t('skeleton', 'ASSET_REFRESH'))
                     ->icon('sync-alt')
                     ->post(['publish'])),
         ];

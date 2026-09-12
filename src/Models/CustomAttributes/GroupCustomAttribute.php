@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\CustomAttributes;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
 use Hirtz\Skeleton\Widgets\Forms\Fields\GroupField;
@@ -147,14 +146,14 @@ class GroupCustomAttribute extends CustomAttribute
             $count = count($values);
 
             if ($count < $this->minCount) {
-                $owner->addError($attribute, Lang::t('skeleton', 'CUSTOM_ATTRIBUTE_ERROR_MIN_COUNT', [
+                $owner->addError($attribute, Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_ERROR_MIN_COUNT', [
                     'attribute' => $owner->getAttributeLabel($attribute),
                     'min' => $this->minCount,
                 ]));
             }
 
             if ($this->maxCount !== null && $count > $this->maxCount) {
-                $owner->addError($attribute, Lang::t('skeleton', 'CUSTOM_ATTRIBUTE_ERROR_MAX_COUNT', [
+                $owner->addError($attribute, Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_ERROR_MAX_COUNT', [
                     'attribute' => $owner->getAttributeLabel($attribute),
                     'max' => $this->maxCount,
                 ]));

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Forms;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\User;
 use Override;
@@ -81,7 +80,7 @@ abstract class AbstractSignupForm extends Model
     {
         return [
             ...$this->user->attributeLabels(),
-            'password' => Lang::t('skeleton', 'ABSTRACT_SIGNUP_PASSWORD_LABEL'),
+            'password' => Yii::t('skeleton', 'ABSTRACT_SIGNUP_PASSWORD_LABEL'),
         ];
     }
 }

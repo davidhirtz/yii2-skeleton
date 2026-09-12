@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Breadcrumb;
 use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Modules\Admin\Data\RedirectActiveDataProvider;
@@ -31,8 +30,8 @@ class RedirectHeader extends Header
     protected function configure(): void
     {
         $this->title ??= $this->provider
-            ? Lang::t('skeleton', 'COMMON_REDIRECTS')
-            : $this->model?->getDisplayName() ?? Lang::t('skeleton', 'REDIRECT_HEADER_CREATE_NEW_REDIRECT');
+            ? Yii::t('skeleton', 'COMMON_REDIRECTS')
+            : $this->model?->getDisplayName() ?? Yii::t('skeleton', 'REDIRECT_HEADER_CREATE_NEW_REDIRECT');
 
         $this->addSystemBreadcrumb();
 
@@ -59,7 +58,7 @@ class RedirectHeader extends Header
     protected function getCreateButton(): ?Stringable
     {
         return CreateButton::make()
-            ->label(Lang::t('skeleton', 'COMMON_NEW_REDIRECT'))
+            ->label(Yii::t('skeleton', 'COMMON_NEW_REDIRECT'))
             ->url(['/admin/redirect/create']);
     }
 
@@ -70,6 +69,6 @@ class RedirectHeader extends Header
 
     protected function addRedirectBreadcrumb(): void
     {
-        $this->addBreadcrumb(Lang::t('skeleton', 'COMMON_REDIRECTS'), ['/admin/redirect/index']);
+        $this->addBreadcrumb(Yii::t('skeleton', 'COMMON_REDIRECTS'), ['/admin/redirect/index']);
     }
 }

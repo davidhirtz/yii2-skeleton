@@ -23,7 +23,7 @@ trait MigrationTrait
 
     protected function getTableOptions(): ?string
     {
-        $db = Yii::$app->getDb();
+        $db = $this->getDb();
 
         if ($db->getDriverName() === 'mysql') {
             return $db->charset === 'utf8mb4'
@@ -161,7 +161,7 @@ trait MigrationTrait
      */
     private function addI18nColumns(string $table, array $attributes): void
     {
-        $schema = Yii::$app->getDb()->getSchema();
+        $schema = $this->getDb()->getSchema();
         $tableSchema = $schema->getTableSchema($table, true);
         $i18n = Yii::$app->getI18n();
 
@@ -199,6 +199,6 @@ trait MigrationTrait
 
     protected function hasColumn(string $table, string $column): bool
     {
-        return Yii::$app->getDb()->getSchema()->getTableSchema($table, true)->getColumn($column) !== null;
+        return $this->getDb()->getSchema()->getTableSchema($table, true)->getColumn($column) !== null;
     }
 }

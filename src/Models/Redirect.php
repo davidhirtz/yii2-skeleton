@@ -10,7 +10,6 @@ use Hirtz\Skeleton\Behaviors\BlameableBehavior;
 use Hirtz\Skeleton\Behaviors\TimestampBehavior;
 use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Interfaces\AdminRouteInterface;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
@@ -19,6 +18,7 @@ use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
 use Hirtz\Skeleton\Models\Traits\UpdatedByUserTrait;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Override;
+use Yii;
 
 /**
  * @property int $id
@@ -140,8 +140,8 @@ class Redirect extends ActiveRecord implements AdminRouteInterface, TrailModelIn
 
     public function getDisplayName(): string
     {
-        return Lang::t('skeleton', 'COMMON_MODEL_ID', [
-            'model' => Lang::t('skeleton', 'REDIRECT_REDIRECT'),
+        return Yii::t('skeleton', 'COMMON_MODEL_ID', [
+            'model' => Yii::t('skeleton', 'REDIRECT_REDIRECT'),
             'id' => $this->id,
         ]);
     }
@@ -149,20 +149,20 @@ class Redirect extends ActiveRecord implements AdminRouteInterface, TrailModelIn
     #[Override]
     public function getTrailModelName(): string
     {
-        return $this->id ? $this->getDisplayName() : Lang::t('skeleton', 'REDIRECT_REDIRECT');
+        return $this->id ? $this->getDisplayName() : Yii::t('skeleton', 'REDIRECT_REDIRECT');
     }
 
     public static function getTypes(): array
     {
         return [
             static::TYPE_MOVED_PERMANENTLY => [
-                'name' => Lang::t('skeleton', 'REDIRECT_301_MOVED_PERMANENTLY'),
-                'plural' => Lang::t('skeleton', 'REDIRECT_301_PERMANENT'),
+                'name' => Yii::t('skeleton', 'REDIRECT_301_MOVED_PERMANENTLY'),
+                'plural' => Yii::t('skeleton', 'REDIRECT_301_PERMANENT'),
                 'icon' => 'forward',
             ],
             static::TYPE_FOUND => [
-                'name' => Lang::t('skeleton', 'REDIRECT_302_TEMPORARY_REDIRECT'),
-                'plural' => Lang::t('skeleton', 'REDIRECT_302_TEMPORARY'),
+                'name' => Yii::t('skeleton', 'REDIRECT_302_TEMPORARY_REDIRECT'),
+                'plural' => Yii::t('skeleton', 'REDIRECT_302_TEMPORARY'),
                 'icon' => 'clock',
             ],
         ];
@@ -173,8 +173,8 @@ class Redirect extends ActiveRecord implements AdminRouteInterface, TrailModelIn
     {
         return [
             ...parent::attributeLabels(),
-            'request_uri' => Lang::t('skeleton', 'REDIRECT_REQUEST_URI_LABEL'),
-            'url' => Lang::t('skeleton', 'REDIRECT_URL_LABEL'),
+            'request_uri' => Yii::t('skeleton', 'REDIRECT_REQUEST_URI_LABEL'),
+            'url' => Yii::t('skeleton', 'REDIRECT_URL_LABEL'),
         ];
     }
 

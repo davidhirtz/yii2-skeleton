@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Data\RedirectActiveDataProvider;
@@ -57,12 +56,12 @@ class RedirectController extends Controller
         $redirect = Redirect::create();
         $redirect->type = $type;
 
-        if (!Yii::$app->getUser()->can('redirectCreate', ['redirect' => $redirect])) {
+        if (!$this->webuser->can('redirectCreate', ['redirect' => $redirect])) {
             throw new ForbiddenHttpException();
         }
 
         if ($redirect->load($this->request->post()) && $redirect->insert()) {
-            $this->success(Lang::t('skeleton', 'REDIRECT_SUCCESS_CREATED'));
+            $this->success(Yii::t('skeleton', 'REDIRECT_SUCCESS_CREATED'));
             return $this->redirect([...$this->request->get(), 'index']);
         }
 
@@ -77,7 +76,7 @@ class RedirectController extends Controller
 
         if ($redirect->load($this->request->post())) {
             if ($redirect->update()) {
-                $this->success(Lang::t('skeleton', 'REDIRECT_SUCCESS_UPDATED'));
+                $this->success(Yii::t('skeleton', 'REDIRECT_SUCCESS_UPDATED'));
             }
 
             if (!$redirect->hasErrors()) {
@@ -95,7 +94,7 @@ class RedirectController extends Controller
         $redirect = $this->findRedirect($id);
         $redirect->delete();
 
-        $this->errorOrSuccess($redirect, Lang::t('skeleton', 'REDIRECT_SUCCESS_DELETED'));
+        $this->errorOrSuccess($redirect, Yii::t('skeleton', 'REDIRECT_SUCCESS_DELETED'));
         return $this->redirectToIndex();
     }
 
@@ -108,7 +107,7 @@ class RedirectController extends Controller
             $isDeleted = false;
 
             foreach ($redirects as $redirect) {
-                if (Yii::$app->getUser()->can(Redirect::AUTH_REDIRECT_CREATE, ['redirect' => $redirect])) {
+                if ($this->webuser->can(Redirect::AUTH_REDIRECT_CREATE, ['redirect' => $redirect])) {
                     if ($redirect->delete()) {
                         $isDeleted = true;
                     }
@@ -118,7 +117,7 @@ class RedirectController extends Controller
             }
 
             if ($isDeleted) {
-                $this->success(Lang::t('skeleton', 'REDIRECT_SUCCESS_SELECTED_DELETED'));
+                $this->success(Yii::t('skeleton', 'REDIRECT_SUCCESS_SELECTED_DELETED'));
             }
         }
 
@@ -140,7 +139,7 @@ class RedirectController extends Controller
             throw new NotFoundHttpException();
         }
 
-        if (!Yii::$app->getUser()->can(Redirect::AUTH_REDIRECT_CREATE, ['redirect' => $redirect])) {
+        if (!$this->webuser->can(Redirect::AUTH_REDIRECT_CREATE, ['redirect' => $redirect])) {
             throw new ForbiddenHttpException();
         }
 

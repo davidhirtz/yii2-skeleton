@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms;
 
-use Hirtz\Skeleton\I18n\Lang;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Models\Forms\AccountResendConfirmForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\Traits\LoginActiveFormTrait;
@@ -35,7 +34,7 @@ class AccountResendConfirmActiveForm extends ActiveForm
             $this->getEmailField(),
         ];
 
-        $this->submitButtonText ??= Lang::t('skeleton', 'COMMON_SEND_EMAIL');
+        $this->submitButtonText ??= Yii::t('skeleton', 'COMMON_SEND_EMAIL');
 
         parent::configure();
     }
@@ -43,6 +42,6 @@ class AccountResendConfirmActiveForm extends ActiveForm
     protected function getHelpText(): ?Stringable
     {
         return Div::make()
-            ->text(Lang::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_ACTIVE'));
+            ->text(Yii::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_ACTIVE'));
     }
 }

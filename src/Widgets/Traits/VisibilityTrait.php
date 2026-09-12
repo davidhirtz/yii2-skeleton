@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Traits;
 
 use Closure;
-use Yii;
 
 trait VisibilityTrait
 {
@@ -49,7 +48,7 @@ trait VisibilityTrait
         }
 
         foreach ($this->roles as $role) {
-            if ($role === '*' || Yii::$app->getUser()->can($role)) {
+            if ($role === '*' || $this->webuser->can($role)) {
                 return true;
             }
         }
