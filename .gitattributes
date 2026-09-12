@@ -3,6 +3,7 @@
 /.gitignore export-ignore
 /README.md export-ignore
 /composer.lock export-ignore
+/esbuild.config.js export-ignore
 /esbuild.js export-ignore
 /package-lock.json export-ignore
 /package.json export-ignore

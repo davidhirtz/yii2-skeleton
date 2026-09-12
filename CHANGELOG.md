@@ -1,5 +1,9 @@
 ## 3.0.0 (in development)
 
+- `esbuild.config.js` exports the shared `buildScripts()` / `buildStyles()` builders every bundle's `esbuild.js`
+  now calls, so a bundle only declares its entry points. Their sass load paths include the skeleton's
+  `resources/assets/src/css` and `node_modules`, which replaces the `../../../../../yii2-skeleton/…` import chains
+  with `@use "shared/breakpoints" as *` and removes the need for a bundle to install esbuild itself
 - A dropdown tears its open state down when the popover is removed from the DOM. A partial htmx swap over an open
   dropdown — every grid filter is one — hides the popover without firing `toggle`, so `<html>` stayed at
   `overflow: hidden` with the page unscrollable, and floating-ui's `autoUpdate` kept its window listeners and went
