@@ -1,4 +1,5 @@
 import {autoUpdate, computePosition, flip, offset, shift} from "@floating-ui/dom";
+import htmx from 'htmx.org';
 
 import {teardownOnDisconnect} from "./teardown";
 
@@ -84,7 +85,10 @@ export default ($container: HTMLElement) => {
             if ($focused instanceof HTMLAnchorElement && $results.contains($focused)) {
                 $focused.click();
             } else if ($input.value.trim()) {
-                window.location.assign(`${$container.dataset.search}?q=${encodeURIComponent($input.value.trim())}`);
+                // Target, select and swap come from the body like a boosted link's; the push URL from the container.
+                htmx.ajax('GET', `${$container.dataset.search}?q=${encodeURIComponent($input.value.trim())}`, {
+                    source: $container,
+                });
             }
 
             return;

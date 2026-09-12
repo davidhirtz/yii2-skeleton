@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Models\Traits;
 
 use davidhirtz\yii2\datetime\DateTime;
+use Hirtz\Skeleton\Db\ActiveQuery;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Interfaces\AdminRouteInterface;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
@@ -89,6 +90,11 @@ trait SearchableTrait
         return $documents;
     }
 
+    public static function findSearchable(): ActiveQuery
+    {
+        return static::find();
+    }
+
     public function getSearchResult(): ?SearchResult
     {
         return $this->isSearchResultVisible() ? $this->createSearchResult() : null;
@@ -107,13 +113,22 @@ trait SearchableTrait
         $updated = $this->getAttribute('updated_at') ?? $this->getAttribute('created_at');
 
         return new SearchResult(
-            title: $this->getSearchTitle(),
+            title: $this->getSearchResultTitle(),
             route: $this instanceof AdminRouteInterface ? $this->getAdminRoute() : false,
             description: $this->getSearchDescription(),
             icon: $this->getSearchIcon(),
             badge: $this->getSearchBadge(),
             updated: $updated instanceof DateTime ? $updated : null,
         );
+    }
+
+    /**
+     * What the hit shows, as opposed to what is indexed: a child record names its parent here without the parent's
+     * name outranking it in the index.
+     */
+    protected function getSearchResultTitle(): string
+    {
+        return $this->getSearchTitle();
     }
 
     /**

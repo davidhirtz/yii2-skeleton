@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Interfaces;
 
+use Hirtz\Skeleton\Db\ActiveQuery;
 use Hirtz\Skeleton\Models\Traits\SearchableTrait;
 use Hirtz\Skeleton\Search\SearchDocument;
 use Hirtz\Skeleton\Search\SearchResult;
@@ -38,4 +39,10 @@ interface SearchableInterface
      * @return list<SearchDocument> one document per configured language
      */
     public function getSearchDocuments(?string $modelClass = null): array;
+
+    /**
+     * The query the rebuild and the hit hydration load records with, so a model can eager load what its documents
+     * or its result need.
+     */
+    public static function findSearchable(): ActiveQuery;
 }

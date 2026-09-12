@@ -81,6 +81,8 @@ class NavBar extends Widget
         return Div::make()
             ->class('navbar-search')
             ->attribute('data-search', Url::toRoute(['/admin/search/index']))
+            // The Enter key issues a boosted-style request from this element, which pushes the URL as a link would.
+            ->attribute('hx-push-url', 'true')
             ->content($input, $button, $results);
     }
 

@@ -45,11 +45,11 @@ class SearchController extends Controller
 
             $count = 0;
 
-            foreach ($modelClass::find()->batch($this->batchSize) as $records) {
+            foreach ($modelClass::findSearchable()->batch($this->batchSize) as $records) {
                 $documents = [];
 
                 foreach ($records as $record) {
-                    if ($record->isSearchable()) {
+                    if ($record instanceof SearchableInterface && $record->isSearchable()) {
                         $documents = [...$documents, ...$record->getSearchDocuments($modelClass)];
                     }
                 }

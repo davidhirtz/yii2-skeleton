@@ -73,6 +73,14 @@ class SearchControllerTest extends TestCase
         self::assertStringNotContainsString('/admin/user/update?id=' . $owner->id, $html);
     }
 
+    public function testSuggestBelowTheMinimumLengthRendersNothing(): void
+    {
+        $user = $this->loginUser(User::AUTH_USER_UPDATE);
+        $this->index($user);
+
+        self::assertSame('', $this->createSearchController()->actionSuggest(mb_substr($user->name, 0, 1)));
+    }
+
     public function testSuggestWithoutAQueryRendersNothing(): void
     {
         $this->loginUser(User::AUTH_USER_UPDATE);

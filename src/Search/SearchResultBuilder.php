@@ -78,11 +78,14 @@ class SearchResultBuilder
         $records = [];
 
         foreach ($modelIds as $modelClass => $ids) {
-            if (!is_subclass_of($modelClass, ActiveRecord::class)) {
+            if (!is_subclass_of($modelClass, ActiveRecord::class) || !is_subclass_of($modelClass, SearchableInterface::class)) {
                 continue;
             }
 
-            foreach ($modelClass::findAll(['id' => array_unique($ids)]) as $record) {
+            $query = $modelClass::findSearchable();
+            $query->andWhere([$query->getTableAlias() . '.[[id]]' => array_unique($ids)]);
+
+            foreach ($query->all() as $record) {
                 if ($record instanceof SearchableInterface) {
                     $records["$modelClass#{$record->getPrimaryKey()}"] = $record;
                 }

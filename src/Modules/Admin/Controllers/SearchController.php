@@ -31,6 +31,11 @@ class SearchController extends Controller
     final public const string LIST_ID = 'search-results-list';
 
     public int $suggestLimit = 8;
+
+    /**
+     * @var int a shorter query would run the `title LIKE` fallback over the whole table on every keystroke
+     */
+    public int $suggestMinLength = 2;
     public int $pageSize = 20;
 
     #[Override]
@@ -65,7 +70,7 @@ class SearchController extends Controller
     {
         $q = trim((string)$q);
 
-        if ($q === '') {
+        if (mb_strlen($q) < $this->suggestMinLength) {
             return '';
         }
 
