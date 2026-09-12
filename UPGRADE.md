@@ -1,5 +1,57 @@
 # Upgrade Guide
 
+## 3.0.0 — `IconFilenameAttributeTrait` replaced by `IconCustomAttribute`
+
+`Models\Traits\IconFilenameAttributeTrait` is gone. `Models\CustomAttributes\IconCustomAttribute` does the same
+job without an `icon_filename` column, without rules and without a label of its own — it is a
+`SelectCustomAttribute` whose options default to `Helpers\IconHelper::getIconFilenames()` over its `path`:
+
+```php
+self::TYPE_LINK => [
+    'name' => 'Link',
+    'customAttributes' => fn (): array => [
+        IconCustomAttribute::make('icon'),
+    ],
+],
+```
+
+That is the `customAttributes` key of the type options, as `Cms\Test\Models\TestSection` declares it. A model
+without types overrides `CustomAttributesTrait::getCustomAttributes()` or is handed the list through
+`setCustomAttributes()`. The path is configurable where `getIconPath()` used to be overridden:
+
+```php
+IconCustomAttribute::make('icon')->path('/images/nav-icons/');
+```
+
+| removed                            | replacement                                                       |
+|------------------------------------|-------------------------------------------------------------------|
+| `$iconFilenameAttribute`           | the custom attribute's own name                                   |
+| `getIconFilenameAttributeTraitRules()` / `...AttributeLabels()` | nothing — the custom attribute validates and labels itself |
+| `static::getIconFilenames()`       | `IconHelper::getIconFilenames($path)`                             |
+| `static::getIconPath()`            | `IconCustomAttribute::path()`                                     |
+| `getIcon()`                        | none — concatenate the path and the attribute value               |
+| `ICON_FILENAME_ATTRIBUTE_ICON`     | the custom attribute's label, which a project names itself        |
+
+The value moves from its own column into the `custom_attributes` JSON column, so a project that used the trait
+needs a migration that copies `icon_filename` into it and drops the column.
+
+## 3.0.0 — Trait rules and attribute labels are wired up by hand
+
+`ModelTrait::getTraitNames()`, `getTraitRules()` and `getTraitAttributeLabels()` are gone. They scanned the
+class with reflection and called any method named `get<Trait>Rules()` or `get<Trait>AttributeLabels()` they
+found — discovery by naming convention, the same magic `Widgets\Attributes\Configure` was removed for. It also
+never worked through inheritance: `ReflectionClass::getTraitNames()` is not recursive, so a trait used by a base
+class contributed nothing and said nothing about it.
+
+A trait that contributes rules or labels is now called by the class that uses it, as
+`Widgets\Grids\Toolbars\GridToolbar` calls `Widgets\Traits\StickyTrait::addStickyClass()`. In this bundle only
+`IconFilenameAttributeTrait` used the mechanism and it is removed outright, see above; for `yii2-cms` see
+`bundles/yii2-cms/UPGRADE.md`.
+
+Forgetting the `rules()` spread leaves an attribute neither safe nor validated, and
+`Widgets\Forms\Fields\Field` renders nothing for an attribute that is not safe — the field disappears from the
+form without an error.
+
 ## 3.0.0 — `User` profile attributes removed
 
 Six columns are gone from `user`: `picture`, `first_name`, `last_name`, `birthdate`, `city` and `country`.

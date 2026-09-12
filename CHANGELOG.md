@@ -1,5 +1,12 @@
 ## 3.0.0 (in development)
 
+- `Base\Traits\ModelTrait::getTraitNames()`, `getTraitRules()` and `getTraitAttributeLabels()` are removed. They
+  discovered `get<Trait>Rules()` / `get<Trait>AttributeLabels()` methods by reflection and naming convention — the
+  same magic `Widgets\Attributes\Configure` was removed for. A class that uses such a trait now spreads its
+  methods in its own `rules()` and `attributeLabels()`
+- `Models\Traits\IconFilenameAttributeTrait` is removed, together with the `ICON_FILENAME_ATTRIBUTE_ICON`
+  message. `Models\CustomAttributes\IconCustomAttribute` replaces it and needs no column, no rules and no label
+  of its own; `Helpers\IconHelper::getIconFilenames()` stays and is what it reads. See `UPGRADE.md`
 - `Web\Controller` triggers the new `Controller::EVENT_CONFIGURE` from `init()`, so a bundle `Bootstrap` can
   configure any web controller from the outside — the counterpart to `Widgets\Widget::EVENT_CONFIGURE`. It cannot be
   an `EVENT_BEFORE_ACTION` handler: `Component::trigger()` attaches the behaviors before it calls a handler, and a

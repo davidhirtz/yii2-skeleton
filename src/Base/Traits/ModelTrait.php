@@ -6,7 +6,6 @@ namespace Hirtz\Skeleton\Base\Traits;
 
 use ArrayObject;
 use Hirtz\Skeleton\Models\Events\CreateValidatorsEvent;
-use ReflectionClass;
 use Yii;
 
 trait ModelTrait
@@ -57,45 +56,6 @@ trait ModelTrait
         $this->trigger($event::EVENT_CREATE_VALIDATORS, $event);
 
         return $event->validators;
-    }
-
-    public function getTraitAttributeLabels(): array
-    {
-        $attributeLabels = [];
-
-        foreach ($this->getTraitNames() as $traitName) {
-            $method = "get{$traitName}AttributeLabels";
-
-            if (method_exists($this, $method)) {
-                $attributeLabels = [...$attributeLabels, ...$this->{$method}()];
-            }
-        }
-
-        return $attributeLabels;
-    }
-
-    public function getTraitRules(): array
-    {
-        $rules = [];
-
-        foreach ($this->getTraitNames() as $traitName) {
-            $method = "get{$traitName}Rules";
-
-            if (method_exists($this, $method)) {
-                $rules = [
-                    ...$rules,
-                    ...$this->{$method}(),
-                ];
-            }
-        }
-
-        return $rules;
-    }
-
-    public function getTraitNames(): array
-    {
-        $traitNames = (new ReflectionClass($this))->getTraitNames();
-        return array_map(fn ($name) => substr($name, strrpos($name, '\\') + 1), $traitNames);
     }
 
     public static function create(array $params = []): static

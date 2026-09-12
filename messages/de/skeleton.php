@@ -125,7 +125,6 @@ return [
     'GRID_SUMMARY_SORRY_NO_RECORDS_FOUND' => 'Leider wurden keine Ergebnisse gefunden.',
     'HEADER_PAGE' => '',
     'I18N_ATTRIBUTES_LABEL_LANGUAGE' => '{label} ({language})',
-    'ICON_FILENAME_ATTRIBUTE_ICON' => 'Symbol',
     'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND' => 'Ihre E-Mail-Adresse wurde nicht gefunden.',
     'LOCATION_TAGS' => '',
     'LOG_DATE' => 'Datum',

@@ -124,7 +124,6 @@ return [
     'GRID_SUMMARY_SORRY_NO_RECORDS_FOUND' => 'Sorry, no records found.',
     'HEADER_PAGE' => 'Page {page}',
     'I18N_ATTRIBUTES_LABEL_LANGUAGE' => '{label} ({language})',
-    'ICON_FILENAME_ATTRIBUTE_ICON' => 'Icon',
     'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND' => 'Your email was not found.',
     'LOCATION_TAGS' => 'Tags',
     'LOG_DATE' => 'Date',
