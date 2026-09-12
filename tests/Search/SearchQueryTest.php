@@ -115,13 +115,15 @@ class SearchQueryTest extends TestCase
     }
 
     /**
-     * A stopword is an ordinary required term now that it is indexed, so it narrows like every other word
-     * rather than being quietly ignored.
+     * A stopword beside another token only ranks, so a record without it is still found; the other token
+     * still narrows.
      */
-    public function testAStopwordNarrowsLikeEveryOtherTerm(): void
+    public function testAStopwordIsOptionalBesideARequiredTerm(): void
     {
         self::assertSame([self::COMMERCE_ID], $this->search('com department'));
-        self::assertSame([], $this->search('com Datenschutz'));
+        self::assertSame([self::CONTENT_ID], $this->search('com Datenschutz'));
+        self::assertSame([self::ENTRY_ID], $this->search('the Bergfirma'));
+        self::assertSame([], $this->search('the'));
     }
 
     public function testTheFrontendPresetsFilterTenantAndStatus(): void

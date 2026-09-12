@@ -23,10 +23,11 @@ final class SearchText
     ];
 
     /**
-     * Prefixed to a token InnoDB would not index, so the index carries a form of it that InnoDB keeps. Three
-     * characters at worst, and no stopword starts with it. Changing it needs a `search/rebuild`.
+     * Prefixed to a token InnoDB would not index, so the index carries a form of it that InnoDB keeps: the
+     * underscore is a word character to its parser and counts towards the minimum length, so `__i` is indexed,
+     * and no word or query starts with two of them. Changing it needs a `search/rebuild`.
      */
-    public const string UNINDEXED_PREFIX = 'zz';
+    public const string UNINDEXED_PREFIX = '__';
 
     private const string BOOLEAN_OPERATORS = '+-<>()~*"@';
 
@@ -89,26 +90,38 @@ final class SearchText
 
     /**
      * A token InnoDB indexes is asked for as an ordinary prefix. One it does not is asked for as either its
-     * prefixed copy or the plain prefix, so `com` finds both `domain.com` and `commerce`.
+     * prefixed copy or the plain prefix, so `com` finds both `domain.com` and `commerce`. A stopword beside
+     * another token only ranks, so `the Bergfirma` finds the record without `the`; on its own it is required.
+     * The optional pair is flat: InnoDB ORs a parenthesised group without an operator with the whole query.
      *
      * @param list<string> $tokens
      */
     public static function toBooleanQuery(array $tokens): string
     {
-        $terms = array_map(
-            static fn (string $token): string => self::isIndexed($token)
-                ? "+$token*"
-                : '+(' . self::encode($token) . "* $token*)",
-            $tokens
-        );
+        $hasRequiredTerm = array_filter($tokens, static fn (string $token): bool => !self::isStopword($token)) !== [];
+        $terms = [];
+
+        foreach ($tokens as $token) {
+            $encoded = self::encode($token) . "* $token*";
+
+            $terms[] = match (true) {
+                $hasRequiredTerm && self::isStopword($token) => $encoded,
+                self::isIndexed($token) => "+$token*",
+                default => "+($encoded)",
+            };
+        }
 
         return implode(' ', $terms);
     }
 
     public static function isIndexed(string $token): bool
     {
-        return mb_strlen($token) >= self::MIN_TOKEN_LENGTH
-            && !in_array(mb_strtolower($token), self::STOPWORDS, true);
+        return mb_strlen($token) >= self::MIN_TOKEN_LENGTH && !self::isStopword($token);
+    }
+
+    public static function isStopword(string $token): bool
+    {
+        return in_array(mb_strtolower($token), self::STOPWORDS, true);
     }
 
     public static function encode(string $token): string

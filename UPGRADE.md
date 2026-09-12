@@ -87,15 +87,18 @@ actions (404), the behavior's writes and the console commands. A project that tu
 - **InnoDB indexes neither its built-in stopwords nor tokens shorter than `innodb_ft_min_token_size` (3)**, and
   its parser splits `f2a@domain.com` into `f2a`, `domain` and `com` — so `com`, `IT` and `.de` were never in the
   index, and no query could reach them. A query term is never the problem: a prefix term is always matched
-  literally, whatever its length. `Search\SearchText::getIndexTokens()` therefore appends a `zz`-prefixed copy
-  of every dropped token to the indexed content, and `toBooleanQuery()` asks for one as `+(zzcom* com*)`: the
-  copy finds `domain.com`, the plain prefix still finds `commerce`. Changing `SearchText::UNINDEXED_PREFIX` or
-  `STOPWORDS` needs a `search/rebuild`.
-- **A stopword narrows like any other word.** Now that it is indexed it is a required term, so `the Bergfirma`
-  finds nothing unless the record really carries `the`. A project whose editors type prose can drop the
-  unindexed tokens from `toBooleanQuery()` instead — or, if it controls the server, set
-  `innodb_ft_server_stopword_table` to an empty table and `innodb_ft_min_token_size` to 1, rebuild the index and
-  leave the prefixed copies unused.
+  literally, whatever its length. `Search\SearchText::getIndexTokens()` therefore appends a `__`-prefixed copy
+  of every dropped token to the indexed content, and `toBooleanQuery()` asks for one as `+(__com* com*)`: the
+  copy finds `domain.com`, the plain prefix still finds `commerce`. The underscore is a word character to
+  InnoDB's parser and counts towards the minimum length, so `__i` is indexed. Changing
+  `SearchText::UNINDEXED_PREFIX` or `STOPWORDS` needs a `search/rebuild`.
+- **A stopword is required on its own and optional beside another token.** `the` alone or `.com` alone has to
+  match, since nothing else narrows; in `the Bergfirma` or `firma.de` it only ranks, so a record without it is
+  still found. A short token that is not a stopword (`AG`, `VW`) is always required; `IT` is a stopword, `it`
+  is on InnoDB's list. The optional pair is emitted flat (`+firma* __de* de*`), because InnoDB ORs a
+  parenthesised group without an operator with the whole query. A project that controls
+  the server can instead set `innodb_ft_server_stopword_table` to an empty table and `innodb_ft_min_token_size`
+  to 1, rebuild the index and leave the prefixed copies unused.
 - **The admin search is never scoped to a tenant.** `tenant_id` and `status` are on the row for the frontend
   presets (`SearchQuery::tenant()`, `enabled()`), where a site must only ever surface its own tenant's records.
 

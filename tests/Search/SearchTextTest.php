@@ -40,9 +40,9 @@ class SearchTextTest extends TestCase
      */
     public function testGetIndexTokensCarriesWhatInnoDbWouldDrop(): void
     {
-        self::assertSame('zzcom', SearchText::getIndexTokens('hausmeister@domain.com'));
-        self::assertSame('zzit zzvw', SearchText::getIndexTokens('IT and VW'));
-        self::assertSame('Mueller zzund', SearchText::getIndexTokens('Müller und Sohn'));
+        self::assertSame('__com', SearchText::getIndexTokens('hausmeister@domain.com'));
+        self::assertSame('__it __vw', SearchText::getIndexTokens('IT and VW'));
+        self::assertSame('Mueller __und', SearchText::getIndexTokens('Müller und Sohn'));
         self::assertSame('', SearchText::getIndexTokens('Bergfirma Sohn'));
     }
 
@@ -53,8 +53,21 @@ class SearchTextTest extends TestCase
     public function testToBooleanQueryRequiresEveryTokenAsPrefix(): void
     {
         self::assertSame('+alte* +firma*', SearchText::toBooleanQuery(['alte', 'firma']));
-        self::assertSame('+domain* +(zzcom* com*)', SearchText::toBooleanQuery(['domain', 'com']));
-        self::assertSame('+(zzit* IT*)', SearchText::toBooleanQuery(['IT']));
+        self::assertSame('+(__it* IT*)', SearchText::toBooleanQuery(['IT']));
+        self::assertSame('+(__ag* AG*) +firma*', SearchText::toBooleanQuery(['AG', 'firma']));
+        self::assertSame('+(__com* com*)', SearchText::toBooleanQuery(['com']));
+    }
+
+    /**
+     * A stopword is only required when nothing else narrows the query; beside another token it ranks. The
+     * optional pair is never parenthesised, since InnoDB ORs an operator-less group with the whole query.
+     */
+    public function testToBooleanQueryMakesAStopwordOptionalBesideARequiredTerm(): void
+    {
+        self::assertSame('+domain* __com* com*', SearchText::toBooleanQuery(['domain', 'com']));
+        self::assertSame('__the* the* +Bergfirma*', SearchText::toBooleanQuery(['the', 'Bergfirma']));
+        self::assertSame('+(__ag* AG*) __the* the*', SearchText::toBooleanQuery(['AG', 'the']));
+        self::assertSame('+(__it* IT*) +(__the* the*)', SearchText::toBooleanQuery(['IT', 'the']));
     }
 
     public function testSnippetWindowsAroundTheFirstMatch(): void

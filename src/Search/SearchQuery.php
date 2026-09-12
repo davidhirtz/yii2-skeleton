@@ -30,8 +30,7 @@ class SearchQuery extends ActiveQuery
     private bool $isGroupedByModel = false;
 
     /**
-     * Falls back to a `title LIKE` when no token survives the sanitizer, which is the only path a two-character
-     * query has.
+     * Falls back to a `title LIKE` for a query without a single word character, such as `@` or `...`.
      */
     public function matching(?string $search): static
     {
