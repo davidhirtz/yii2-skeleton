@@ -45,7 +45,11 @@ class DeleteActiveForm extends ActiveForm
     #[Override]
     protected function configure(): void
     {
-        $form = $this->getDeleteForm();
+        $form = DeleteForm::create([
+            'model' => $this->model,
+            'attribute' => $this->property,
+        ]);
+
         $this->model = $form;
 
         $this->message ??= $this->property
@@ -94,13 +98,5 @@ class DeleteActiveForm extends ActiveForm
         ];
 
         parent::configure();
-    }
-
-    protected function getDeleteForm(): DeleteForm
-    {
-        return DeleteForm::create([
-            'model' => $this->model,
-            'attribute' => $this->property,
-        ]);
     }
 }

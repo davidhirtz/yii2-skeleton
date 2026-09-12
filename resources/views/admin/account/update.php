@@ -13,18 +13,17 @@ use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Models\Forms\AccountUpdateForm;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\AccountActiveForm;
-use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\AccountDeleteActiveForm;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\AccountHeader;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\AccountSubmenu;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Alert;
 use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Forms\FormContainer;
-use Hirtz\Skeleton\Widgets\Navs\Header;
 
 $this->title(Yii::t('skeleton', 'COMMON_SETTINGS'));
 
-echo Header::make()
-    ->title($form->user->getUsername());
+echo AccountHeader::make()
+    ->model($form->user);
 
 echo AccountSubmenu::make();
 
@@ -43,18 +42,3 @@ if ($form->user->isUnconfirmed()) {
 echo FormContainer::make()
     ->form(AccountActiveForm::make()
         ->model($form));
-
-if ($form->user->isDeletable()) {
-    echo FormContainer::make()
-        ->title(Yii::t('skeleton', 'Delete Account'))
-        ->danger()
-        ->form(AccountDeleteActiveForm::make()
-            ->model($form->user));
-}
-
-if ($form->user->isOwner()) {
-    echo Container::make()
-        ->content(Alert::make()
-            ->text(Yii::t('skeleton', 'You cannot delete your account, because you are the owner of this website.'))
-            ->warning());
-}

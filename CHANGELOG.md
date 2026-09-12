@@ -1,16 +1,23 @@
 ## 3.0.0 (in development)
 
+- Account deletion moved into the new `Modules\Admin\Widgets\Navs\AccountActionDropdown`, which the new
+  `Modules\Admin\Widgets\Navs\AccountHeader` carries on all three account pages, replacing the `Widgets\Navs\Header`
+  they configured by hand. The delete form is gone from the settings page, and with it the alert that told the owner
+  why they could not delete their account — `Modules\Admin\Widgets\Buttons\AccountDeleteButton` is simply not
+  rendered for them. `AccountController::actionDelete()` reads the unprefixed `value` the button posts
+  (`load($post, '')`), as `Media\Modules\Admin\Controllers\FolderController` does
 - Account deletion verifies the password through `User::validatePassword()`. `Models\Forms\DeleteForm` compares the
   typed value with the model attribute it names, and `User` has no `password` attribute, so confirming the deletion
   threw `UnknownPropertyException` — on rendering the form as well as on submitting it. The new
-  `Models\Forms\AccountDeleteForm` and `Modules\Admin\Widgets\Forms\AccountDeleteActiveForm` hold the password
-  path, and the account view uses the latter instead of configuring `Widgets\Forms\DeleteActiveForm` itself
+  `Models\Forms\AccountDeleteForm` and `Modules\Admin\Widgets\Buttons\AccountDeleteButton` hold the password path.
+  `Widgets\Buttons\DeleteButton` reads the same attribute to build its input's `pattern`, so the button overrides
+  `getInput()` for a password field without one
 - `Models\Forms\DeleteForm` gained `getExpectedValue()` and `isValidValue()`, which `validateValue()` now goes
   through. `getExpectedValue()` is what the form renders as the input's `pattern`, so a secret that is verified
   rather than compared returns `null` from it and overrides `isValidValue()` — a password must never reach the
-  markup. `Widgets\Forms\DeleteActiveForm` omits the `pattern` for a `null` expected value and gained the
-  `getDeleteForm()` hook a subclass overrides to build its own form
-- New message key `ACCOUNT_DELETE_TYPE_PASSWORD`, which replaces the delete message the account view passed inline
+  markup. `Widgets\Forms\DeleteActiveForm` omits the `pattern` for a `null` expected value
+- New message keys `ACCOUNT_CONFIRM_DELETE` and `ACCOUNT_DELETE_TYPE_PASSWORD`, which replace the confirmation and
+  the delete message the account view passed inline
 - The admin account page was split into three: `AccountController::actionUpdate()` keeps the username, language,
   timezone and custom attribute fields, the new `actionCredentials()` holds the email and password fields and the
   new `actionSecurity()` the two-factor authenticator form, which `actionEnableAuthenticator()` and

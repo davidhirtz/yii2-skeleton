@@ -307,7 +307,7 @@ class AccountController extends Controller
             'user' => $this->webuser->getIdentity(),
         ]);
 
-        if ($form->load($this->request->post()) && $form->delete()) {
+        if ($form->load($this->request->post(), '') && $form->delete()) {
             $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_DELETED'));
 
             $this->webuser->logout();

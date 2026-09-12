@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Functional;
 
-use Hirtz\Skeleton\Models\Forms\DeleteForm;
 use Hirtz\Skeleton\Models\Forms\LoginForm;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
@@ -16,6 +15,8 @@ class AccountTest extends TestCase
 {
     use FunctionalTestTrait;
     use UserFixtureTrait;
+
+    private const string DELETE_FORM_SELECTOR = 'form[hx-post="/admin/account/delete"]';
 
     public function testSettings(): void
     {
@@ -65,7 +66,16 @@ class AccountTest extends TestCase
         self::assertResponseStatusCodeSame(403);
     }
 
-    public function testDeleteFormOfDeletableUser(): void
+    public function testDeleteButtonIsHiddenFromTheOwner(): void
+    {
+        $this->login('owner');
+        $this->open('admin/account/update');
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorNotExists(self::DELETE_FORM_SELECTOR);
+    }
+
+    public function testDeleteButtonOfDeletableUser(): void
     {
         Yii::$app->getUser()->enableTwoFactorAuthentication = false;
 
@@ -73,10 +83,10 @@ class AccountTest extends TestCase
         $this->open('admin/account/update');
 
         self::assertResponseIsSuccessful();
-        self::assertSelectorExists('#deleteform-value[type="password"]');
+        self::assertSelectorExists(self::DELETE_FORM_SELECTOR . ' input[name="value"][type="password"]');
 
-        // The confirmation is verified, never compared, so the form must not carry the password as a `pattern`
-        self::assertSelectorNotExists('#deleteform-value[pattern]');
+        // The password is verified, never compared, so it must not reach the markup as the input's `pattern`
+        self::assertSelectorNotExists(self::DELETE_FORM_SELECTOR . ' input[pattern]');
     }
 
     /**
@@ -91,13 +101,22 @@ class AccountTest extends TestCase
         $id = $this->getUserFromFixture('admin')->id;
 
         $this->open('admin/account/update');
+        $this->postDeleteForm('wrong');
 
-        $this->submit('form[action^="/admin/account/delete"]', $this->prefixFormValues(DeleteForm::instance()->formName(), [
-            'value' => 'wrong',
-        ]));
-
-        self::assertResponseIsSuccessful();
         self::assertNotNull(User::findOne($id));
+    }
+
+    /**
+     * The delete button posts through htmx, so its form carries no `action` for the browser to follow.
+     */
+    protected function postDeleteForm(string $password): void
+    {
+        $request = Yii::$app->getRequest();
+
+        self::$crawler = self::$client->request('POST', 'https://www.test.localhost/admin/account/delete', [
+            'value' => $password,
+            $request->csrfParam => $request->getCsrfToken(),
+        ]);
     }
 
     protected function login(string $fixtureKey): void

@@ -7,6 +7,7 @@
 return [
     'ABSTRACT_SIGNUP_PASSWORD_LABEL' => 'Password',
     'ACCOUNT_CONFIRM_CODE_LABEL' => 'Email verification code',
+    'ACCOUNT_CONFIRM_DELETE' => 'Are you sure you want to delete your account?',
     'ACCOUNT_CONFIRM_NAME_LABEL' => 'Username',
     'ACCOUNT_DELETE_TYPE_PASSWORD' => 'Type your password in the text field below to delete your account, all related items and uploaded files. This cannot be undone, please be certain!',
     'ACCOUNT_LOGOUT_BEFORE_CREATING' => 'Please logout before creating another account',
