@@ -1,3 +1,5 @@
+const TIMEOUT = 5000;
+
 window.customElements.get('flash-alert') || window.customElements.define('flash-alert', class extends HTMLElement {
     // noinspection JSUnusedGlobalSymbols
     connectedCallback() {
@@ -22,8 +24,14 @@ window.customElements.get('flash-alert') || window.customElements.define('flash-
         }
 
         if ('success' === type) {
-            const timer = setTimeout(() => close(this), 5000);
+            let timer: number;
+
+            const start = () => timer = window.setTimeout(() => close(this), TIMEOUT);
+
             $alert.onmouseenter = () => clearTimeout(timer);
+            $alert.onmouseleave = start;
+
+            start();
         }
     }
 });

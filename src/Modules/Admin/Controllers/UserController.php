@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
-use Hirtz\Skeleton\Models\AuthClient;
 use Hirtz\Skeleton\Models\Forms\DeleteForm;
 use Hirtz\Skeleton\Models\Forms\OwnershipForm;
 use Hirtz\Skeleton\Models\User;
@@ -19,7 +18,6 @@ use yii\filters\VerbFilter;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
-use yii\web\ServerErrorHttpException;
 
 class UserController extends Controller
 {
@@ -46,7 +44,6 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'actions' => [
-                            'deauthorize',
                             'delete-picture',
                             'disable-authenticator',
                             'index',
@@ -66,7 +63,6 @@ class UserController extends Controller
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'deauthorize' => ['post'],
                     'delete-picture' => ['post'],
                     'delete' => ['post'],
                     'ownership' => ['post'],
@@ -177,39 +173,6 @@ class UserController extends Controller
         $this->error($form);
 
         return $this->redirect(['update', 'id' => $user->id]);
-    }
-
-    public function actionDeauthorize(string $id, string $name): Response|string
-    {
-        $auth = AuthClient::find()
-            ->where([
-                AuthClient::tableName() . '.[[id]]' => $id,
-                AuthClient::tableName() . '.[[name]]' => $name,
-            ])
-            ->selectWith('identity', 'INNER JOIN')
-            ->limit(1)
-            ->one();
-
-        if (!$auth) {
-            throw new NotFoundHttpException();
-        }
-
-        if (!$this->webuser->can(User::AUTH_USER_UPDATE, ['user' => $auth->identity])) {
-            throw new ForbiddenHttpException();
-        }
-
-        if ($auth->delete()) {
-            $client = $auth->getClientClass();
-
-            $this->success(Yii::t('skeleton', 'USER_SUCCESS_REMOVED', [
-                'client' => $client->getTitle(),
-                'name' => $client::getDisplayName($auth),
-            ]));
-
-            return $this->redirect(['update', 'id' => $auth->user_id]);
-        }
-
-        throw new ServerErrorHttpException();
     }
 
     public function actionOwnership(int $id): Response|string

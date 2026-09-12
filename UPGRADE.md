@@ -1,5 +1,48 @@
 # Upgrade Guide
 
+## 3.0.0 — `yiisoft/yii2-authclient` removed
+
+Social login is gone. `yiisoft/yii2-authclient` is no longer a dependency, and `M260912130000AuthClient`
+drops the `auth_client` table together with every trail that pointed at one of its records — a trail whose
+class cannot be resolved logs an error on every trail index, so it is deleted rather than orphaned. The
+migration is reversible: `safeDown()` recreates the empty table, its `user_id` index and its foreign key.
+
+Existing `user_login` rows of type `facebook` are kept and the login history renders them exactly as it did
+before — `facebook` was never one of `UserLogin::getTypes()`, so nothing about that row changes.
+
+### What is gone
+
+| Removed | Replacement |
+|---|---|
+| `Auth\Clients\ClientInterface`, `Auth\Clients\Facebook` | — |
+| `Models\AuthClient` | — |
+| `Models\Forms\AuthClientSignupForm` | `Models\Forms\SignupForm` |
+| `Modules\Admin\Widgets\Grids\AuthClientGridView` | — |
+| `Modules\Admin\Widgets\Panels\AuthClientListGroup` | — |
+| `Web\Application::getAuthClientCollection()`, the `authClientCollection` component | — |
+| `Base\Traits\ApplicationTrait::setFacebookClientComponent()` | — |
+| `Models\User::getAuthClients()` and the `authClients` relation | — |
+| `LoginForm::$enableFacebookLogin`, `LoginForm::isFacebookLoginEnabled()` | — |
+| `SignupForm::$enableFacebookSignup`, `SignupForm::isFacebookSignupEnabled()` | — |
+| The `account/auth` action (`yii\authclient\AuthAction`) and `AccountController::onAuthSuccess()` | — |
+| `AccountController::actionDeauthorize()`, `UserController::actionDeauthorize()` | — |
+
+The message keys `AUTH_CLIENT_*`, `ACCOUNT_CONFIRM_REMOVE`, `ACCOUNT_SUCCESS_ACCOUNT_NOW_CONNECTED`,
+`ACCOUNT_SUCCESS_REMOVED`, `ACCOUNT_SUCCESS_SIGN_UP_COMPLETED_CLIENT`, `ACCOUNT_SUCCESS_WELCOME_BACK` and
+`USER_SUCCESS_REMOVED` were dropped from every language file.
+
+### Migrating a downstream project
+
+1. **Before `./yii migrate`**, export `auth_client` if you want to keep the linked account ids — the
+   migration drops the table and there is nothing left to read afterwards.
+2. Remove `params['facebookClientId']` and `params['facebookClientSecret']` from `config/params.php`.
+   They no longer register anything; left in place they are dead configuration.
+3. Remove any `components.authClientCollection` entry from your config, and any client class of your own
+   that implemented `Auth\Clients\ClientInterface`.
+4. Drop `yiisoft/yii2-authclient` from your own `composer.json` if you required it directly.
+5. A user who only ever signed in through a client has no password. Point them at
+   `account/recover` to set one — the recovery mail works for any confirmed email address.
+
 ## 3.0.0 — Tenants
 
 `yii2-cms` requires `yii2-tenant`. Every database has at least one tenant, every entry belongs to one,

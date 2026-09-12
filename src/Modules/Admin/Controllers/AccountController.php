@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
-use Hirtz\Skeleton\Auth\Clients\ClientInterface;
-use Hirtz\Skeleton\Models\AuthClient;
 use Hirtz\Skeleton\Models\Forms\AccountConfirmForm;
 use Hirtz\Skeleton\Models\Forms\AccountResendConfirmForm;
 use Hirtz\Skeleton\Models\Forms\AccountUpdateForm;
-use Hirtz\Skeleton\Models\Forms\AuthClientSignupForm;
 use Hirtz\Skeleton\Models\Forms\DeleteForm;
 use Hirtz\Skeleton\Models\Forms\LoginForm;
 use Hirtz\Skeleton\Models\Forms\PasswordRecoverForm;
@@ -20,14 +17,10 @@ use Hirtz\Skeleton\Models\UserLogin;
 use Hirtz\Skeleton\Web\Controller;
 use Override;
 use Yii;
-use yii\authclient\AuthAction;
-use yii\base\InvalidCallException;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\ForbiddenHttpException;
-use yii\web\NotFoundHttpException;
 use yii\web\Response;
-use yii\web\ServerErrorHttpException;
 
 class AccountController extends Controller
 {
@@ -44,7 +37,6 @@ class AccountController extends Controller
                     [
                         'allow' => true,
                         'actions' => [
-                            'deauthorize',
                             'delete',
                             'disable-authenticator',
                             'enable-authenticator',
@@ -58,7 +50,6 @@ class AccountController extends Controller
                     [
                         'allow' => true,
                         'actions' => [
-                            'auth',
                             'confirm',
                             'create',
                             'login',
@@ -73,7 +64,6 @@ class AccountController extends Controller
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'deauthorize' => ['post'],
                     'delete' => ['post'],
                     'disable-authenticator' => ['post'],
                     'enable-authenticator' => ['post'],
@@ -82,17 +72,6 @@ class AccountController extends Controller
                     'picture' => ['post'],
                     'timezone' => ['post'],
                 ],
-            ],
-        ];
-    }
-
-    #[Override]
-    public function actions(): array
-    {
-        return [
-            'auth' => [
-                'class' => AuthAction::class,
-                'successCallback' => $this->onAuthSuccess(...),
             ],
         ];
     }
@@ -348,32 +327,6 @@ class AccountController extends Controller
         return $this->redirect(['update']);
     }
 
-    public function actionDeauthorize(string $id, string $name): Response|string
-    {
-        $auth = AuthClient::find()
-            ->where(['id' => $id, 'name' => $name, 'user_id' => $this->webuser->getId()])
-            ->limit(1)
-            ->one();
-
-        if (!$auth) {
-            throw new NotFoundHttpException();
-        }
-
-        if ($auth->delete()) {
-            $client = $auth->getClientClass();
-
-            $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_REMOVED', [
-                'client' => $client->getTitle(),
-                'name' => $client::getDisplayName($auth),
-                'isOwner' => 1,
-            ]));
-
-            return $this->redirect(['update']);
-        }
-
-        throw new ServerErrorHttpException();
-    }
-
     public function actionTimezone(?string $redirect = null): Response|string
     {
         $user = $this->webuser->getIdentity();
@@ -382,82 +335,5 @@ class AccountController extends Controller
 
         $this->errorOrSuccess($user, Yii::t('skeleton', 'ACCOUNT_SUCCESS_UPDATED_TIMEZONE'));
         return $this->redirect($redirect ?? ['/admin/dashboard/index']);
-    }
-
-    /**
-     * @see AuthAction::successCallback()
-     */
-    public function onAuthSuccess(ClientInterface $client): Response|string
-    {
-        $auth = AuthClient::findOrCreateFromClient($client);
-
-        if ($this->webuser->getIsGuest()) {
-            $success = $auth->getIsNewRecord()
-                ? $this->signupWithAuthClient($auth)
-                : $this->loginWithAuthClient($auth);
-
-            if (!$success) {
-                return $this->redirect(['login']);
-            }
-
-            return $this->goBack();
-        }
-
-        $auth->user_id = $this->webuser->getId();
-
-        if ($auth->save()) {
-            $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_ACCOUNT_NOW_CONNECTED', [
-                'client' => $client->getTitle(),
-            ]));
-        }
-
-        $this->error($auth);
-
-        return $this->redirect(['update']);
-    }
-
-    private function loginWithAuthClient(AuthClient $auth): bool
-    {
-        if ($auth->getIsNewRecord()) {
-            throw new InvalidCallException();
-        }
-
-        $user = $auth->identity;
-
-        if (!$user?->isEnabled()) {
-            $this->error(Yii::t('skeleton', 'COMMON_ACCOUNT_CURRENTLY_DISABLED'));
-            return false;
-        }
-
-        $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_WELCOME_BACK', [
-            'name' => $user->getUsername(),
-        ]));
-
-        $this->webuser->loginType = $auth->getClientClass()->getName();
-        $this->webuser->login($user, $this->webuser->cookieLifetime);
-
-        return $auth->update() !== false;
-    }
-
-    private function signupWithAuthClient(AuthClient $auth): bool
-    {
-        if (!$auth->getIsNewRecord()) {
-            throw new InvalidCallException();
-        }
-
-        $form = AuthClientSignupForm::create(['client' => $auth->getClientClass()]);
-
-        if (!$form->insert()) {
-            $this->error($form);
-            return false;
-        }
-
-        $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_SIGN_UP_COMPLETED_CLIENT', [
-            'client' => $form->client->getTitle(),
-        ]));
-
-        $auth->user_id = $form->user->id;
-
-        return $auth->insert();
     }
 }

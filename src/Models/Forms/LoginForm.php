@@ -17,7 +17,6 @@ class LoginForm extends Model
     use IdentityTrait;
     use ModelTrait;
 
-    public bool $enableFacebookLogin = true;
     public ?string $password = null;
     public ?string $code = null;
     public bool|string $rememberMe = true;
@@ -133,11 +132,6 @@ class LoginForm extends Model
     public function isTwoFactorAuthenticationCodeRequired(): bool
     {
         return $this->is2FaRequired;
-    }
-
-    public function isFacebookLoginEnabled(): bool
-    {
-        return $this->enableFacebookLogin && Yii::$app->getAuthClientCollection()->hasClient('facebook');
     }
 
     #[Override]

@@ -25,7 +25,6 @@ use Hirtz\Skeleton\Validators\UniqueValidator;
 use Override;
 use Yii;
 use yii\base\NotSupportedException;
-use yii\db\ActiveQuery;
 use yii\web\IdentityInterface;
 
 /**
@@ -57,7 +56,6 @@ use yii\web\IdentityInterface;
  * @property string $uploadPath {@see static::getUploadPath()}
  *
  * @property-read User|null $created {@see static::getCreated()}
- * @property-read AuthClient[] $authClients {@see static::getAuthClients()}
  *
  * @mixin TrailBehavior
  */
@@ -244,14 +242,6 @@ class User extends ActiveRecord implements AdminRouteInterface, IdentityInterfac
         /** @var UserQuery $query */
         $query = $this->hasOne(static::class, ['id' => 'created_by_user_id']);
         return $query;
-    }
-
-    /**
-     * @return ActiveQuery<AuthClient>
-     */
-    public function getAuthClients(): ActiveQuery
-    {
-        return $this->hasMany(AuthClient::class, ['user_id' => 'id']);
     }
 
     /**

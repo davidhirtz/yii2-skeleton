@@ -21,11 +21,6 @@ class SignupForm extends AbstractSignupForm
     public ?string $timezone = null;
 
     /**
-     * @var bool whether Facebook should be enabled
-     */
-    public bool $enableFacebookSignup = true;
-
-    /**
      * @var string|null honeypot text field to mess with bots, the text field will have a random value which will be
      * removed by JavaScript before the form is submitted.
      */
@@ -213,11 +208,6 @@ class SignupForm extends AbstractSignupForm
         }
 
         return $session->get(self::SESSION_TOKEN_NAME, false);
-    }
-
-    public function isFacebookSignupEnabled(): bool
-    {
-        return $this->enableFacebookSignup && Yii::$app->getAuthClientCollection()->hasClient('facebook');
     }
 
     #[Override]

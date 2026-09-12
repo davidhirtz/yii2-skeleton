@@ -1,5 +1,8 @@
 import {autoUpdate, computePosition, flip, offset, shift} from "@floating-ui/dom";
 
+import {lockScroll, unlockScroll} from "./scrollLock";
+import {teardownOnDisconnect} from "./teardown";
+
 export default ($btn: HTMLElement) => {
     const $popover = document.getElementById($btn.getAttribute('popovertarget')!) as HTMLElement | null;
 
@@ -11,7 +14,7 @@ export default ($btn: HTMLElement) => {
     const $dropdown = $btn.closest('.dropdown');
     const preferred = $dropdown?.classList.contains('dropup') ? 'top-start' : 'bottom-start';
     let selected = 0;
-    let cleanup: (() => void) | null = null;
+    let teardown: (() => void) | null = null;
 
     const keydownEvent = (event: KeyboardEvent) => {
         if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
@@ -38,12 +41,6 @@ export default ($btn: HTMLElement) => {
         });
     }
 
-    const lockScroll = (locked: boolean) => {
-        const $html = document.documentElement;
-        $html.style.paddingRight = locked ? `${window.innerWidth - $html.clientWidth}px` : '';
-        $html.style.overflow = locked ? 'hidden' : '';
-    }
-
     $popover.addEventListener('beforetoggle', (event) => {
         if ((event as ToggleEvent).newState === 'open') {
             $popover.style.visibility = 'hidden';
@@ -52,19 +49,24 @@ export default ($btn: HTMLElement) => {
 
     $popover.addEventListener('toggle', (event) => {
         if ((event as ToggleEvent).newState === 'open') {
+            const cleanup = autoUpdate($btn, $popover, updatePosition);
+
             $popover.addEventListener('keydown', keydownEvent);
-            cleanup = autoUpdate($btn, $popover, updatePosition);
-            lockScroll(true);
+            lockScroll($popover);
+
+            teardown = teardownOnDisconnect($popover, () => {
+                $popover.removeEventListener('keydown', keydownEvent);
+                unlockScroll($popover);
+                cleanup();
+            });
 
             if ($btn.hasAttribute('data-autofocus')) {
                 requestAnimationFrame(() => $items[selected].focus());
             }
         } else {
-            $popover.removeEventListener('keydown', keydownEvent);
             $popover.style.visibility = '';
-            cleanup?.();
-            cleanup = null;
-            lockScroll(false);
+            teardown?.();
+            teardown = null;
         }
     });
 }

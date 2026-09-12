@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Base\Traits;
 
 use Hirtz\Skeleton\Assets\EmptyAssetBundle;
-use Hirtz\Skeleton\Auth\Clients\Facebook;
 use Hirtz\Skeleton\Controllers\HealthController;
 use Hirtz\Skeleton\Controllers\SitemapController;
 use Hirtz\Skeleton\Db\Connection;
@@ -17,7 +16,6 @@ use Hirtz\Skeleton\Web\Sitemap;
 use Hirtz\Skeleton\Web\UrlManager;
 use Hirtz\Skeleton\Web\View;
 use Yii;
-use yii\authclient\Collection;
 use yii\base\ActionEvent;
 use yii\caching\FileCache;
 use yii\console\controllers\MigrateController;
@@ -67,9 +65,6 @@ trait ApplicationTrait
                             'class' => EmptyAssetBundle::class,
                         ],
                     ],
-                ],
-                'authClientCollection' => [
-                    'class' => Collection::class,
                 ],
                 'authManager' => [
                     'class' => DbManager::class,
@@ -181,7 +176,6 @@ trait ApplicationTrait
         }
 
         $this->setDefaultMailerDsn($config);
-        $this->setFacebookClientComponent($config);
     }
 
     protected function setDefaultMailerDsn(&$config): void
@@ -225,18 +219,6 @@ trait ApplicationTrait
         $component['rules'] = $prepend ? [...$rules, ...$component['rules']] : [...$component['rules'], ...$rules];
 
         $this->set('urlManager', $component);
-    }
-
-    /**
-     * Detects Facebook client via config.
-     */
-    protected function setFacebookClientComponent(array &$config): void
-    {
-        if (isset($config['params']['facebookClientId'], $config['params']['facebookClientSecret'])) {
-            $config['components']['authClientCollection']['clients']['facebook'] = [
-                'class' => Facebook::class,
-            ];
-        }
     }
 
     /**

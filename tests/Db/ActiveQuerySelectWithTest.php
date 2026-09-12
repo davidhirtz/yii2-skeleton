@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Db;
 
 use Hirtz\Skeleton\Db\ActiveQuery;
-use Hirtz\Skeleton\Models\AuthClient;
+use Hirtz\Skeleton\Models\AuthItem;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\Fixtures\TrailFixture;
@@ -133,35 +133,10 @@ class ActiveQuerySelectWithTest extends TestCase
         self::assertSame(1, (int)$row['user__id']);
     }
 
-    /**
-     * A composite primary key, and the relation the admin's deauthorize action reads.
-     */
-    public function testIdentityOfAnAuthClientIsReadOffTheJoin(): void
-    {
-        $client = AuthClient::create();
-        $client->id = '12345';
-        $client->name = 'test';
-        $client->user_id = 1;
-        $client->data = [];
-
-        self::assertTrue($client->insert(false));
-
-        $auth = AuthClient::find()
-            ->where([
-                AuthClient::tableName() . '.[[id]]' => '12345',
-                AuthClient::tableName() . '.[[name]]' => 'test',
-            ])
-            ->selectWith('identity', 'INNER JOIN')
-            ->one();
-
-        self::assertTrue($auth->isRelationPopulated('identity'));
-        self::assertSame(1, $auth->identity->id);
-    }
-
     public function testHasManyIsRefused(): void
     {
         $this->expectException(InvalidCallException::class);
-        User::find()->selectWith('authClients');
+        AuthItem::find()->selectWith('users');
     }
 
     protected function getTrailId(int $index): int

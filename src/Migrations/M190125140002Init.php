@@ -7,7 +7,6 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Migrations;
 
 use Hirtz\Skeleton\Db\Traits\MigrationTrait;
-use Hirtz\Skeleton\Models\AuthClient;
 use Hirtz\Skeleton\Models\Session;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Models\UserLogin;
@@ -23,6 +22,8 @@ use yii\db\Query;
 class M190125140002Init extends Migration
 {
     use MigrationTrait;
+
+    private const string LEGACY_AUTH_CLIENT_TABLE = '{{%auth_client}}';
 
     public function safeUp(): void
     {
@@ -150,7 +151,7 @@ class M190125140002Init extends Migration
         /**
          * Auth.
          */
-        $this->createTable(AuthClient::tableName(), [
+        $this->createTable(self::LEGACY_AUTH_CLIENT_TABLE, [
             'id' => $this->string(64)->notNull(),
             'user_id' => $this->integer()->unsigned()->notNull(),
             'name' => $this->string(10)->notNull(),
@@ -160,7 +161,7 @@ class M190125140002Init extends Migration
             'PRIMARY KEY ([[id]], [[name]])'
         ], $tableOptions);
 
-        $this->createIndex('user_id', AuthClient::tableName(), 'user_id');
+        $this->createIndex('user_id', self::LEGACY_AUTH_CLIENT_TABLE, 'user_id');
 
         /**
          * Login.
@@ -196,7 +197,7 @@ class M190125140002Init extends Migration
          */
         $this->addForeignKey(
             'auth_client_user_id_ibfk',
-            AuthClient::tableName(),
+            self::LEGACY_AUTH_CLIENT_TABLE,
             'user_id',
             User::tableName(),
             'id',
@@ -284,7 +285,7 @@ class M190125140002Init extends Migration
 
         $authManager = $this->getAuthManager();
 
-        $this->dropTable(AuthClient::tableName());
+        $this->dropTable(self::LEGACY_AUTH_CLIENT_TABLE);
         $this->dropTable(Session::tableName());
         $this->dropTable(UserLogin::tableName());
 

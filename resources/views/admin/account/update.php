@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 /**
  * @see AccountController::actionUpdate()
- * @see AccountController::actionDeauthorize()
  *
  * @var View $this
  * @var AccountUpdateForm $form
@@ -15,13 +14,11 @@ use Hirtz\Skeleton\Models\Forms\AccountUpdateForm;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\AccountActiveForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\TwoFactorAuthenticatorActiveForm;
-use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\AuthClientGridView;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Alert;
 use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Forms\DeleteActiveForm;
 use Hirtz\Skeleton\Widgets\Forms\FormContainer;
-use Hirtz\Skeleton\Widgets\Grids\GridContainer;
 use Hirtz\Skeleton\Widgets\Navs\Header;
 
 $this->title(Yii::t('skeleton', 'Account'));
@@ -51,13 +48,6 @@ if (Yii::$app->getUser()->enableTwoFactorAuthentication) {
         ->title(Yii::t('skeleton', 'Two-Factor Authentication'))
         ->form(TwoFactorAuthenticatorActiveForm::make()
             ->model($form->user));
-}
-
-if (Yii::$app->getAuthClientCollection()->clients) {
-    echo GridContainer::make()
-        ->title(Yii::t('skeleton', 'Clients'))
-        ->grid(AuthClientGridView::make()
-            ->user($form->user));
 }
 
 if ($form->user->isDeletable()) {

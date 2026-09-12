@@ -1,5 +1,22 @@
 ## 3.0.0 (in development)
 
+- A dropdown tears its open state down when the popover is removed from the DOM. A partial htmx swap over an open
+  dropdown — every grid filter is one — hides the popover without firing `toggle`, so `<html>` stayed at
+  `overflow: hidden` with the page unscrollable, and floating-ui's `autoUpdate` kept its window listeners and went
+  on repositioning a detached element. The new `includes/teardown.ts` runs the teardown on disconnect as well as on
+  close, and the scroll lock moved out of `includes/dropdown.ts` into `includes/scrollLock.ts`, where it counts its
+  owners instead of writing the `<html>` styles per dropdown
+- A success flash message restarts its five-second remove timer on mouse-out; hovering it cleared the timer for
+  good, so the message stayed until it was closed by hand
+- Removed `yiisoft/yii2-authclient` and everything built on it: `Auth\Clients\ClientInterface`,
+  `Auth\Clients\Facebook`, `Models\AuthClient`, `Models\Forms\AuthClientSignupForm`,
+  `Modules\Admin\Widgets\Grids\AuthClientGridView`, `Modules\Admin\Widgets\Panels\AuthClientListGroup`,
+  `Web\Application::getAuthClientCollection()`, the `authClientCollection` component,
+  `Base\Traits\ApplicationTrait::setFacebookClientComponent()`, `Models\User::getAuthClients()`,
+  `Models\Forms\LoginForm::$enableFacebookLogin` / `isFacebookLoginEnabled()`,
+  `Models\Forms\SignupForm::$enableFacebookSignup` / `isFacebookSignupEnabled()`, and the `account/auth`,
+  `account/deauthorize` and `user/deauthorize` actions. `M260912130000AuthClient` drops the `auth_client` table
+  and the trails pointing at it. See UPGRADE.md
 - Removed `I18n\Lang`: `yii message` extracts `Yii::t()` call sites only, so with `removeUnused` every key reached
   through the facade was dropped from the message files on the next regeneration. Key-based translation is unchanged,
   the calls go back to `Yii::t()`

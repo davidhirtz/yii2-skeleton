@@ -8,7 +8,6 @@ use Hirtz\Skeleton\Base\Traits\ApplicationTrait;
 use Hirtz\Skeleton\Rbac\DbManager;
 use Override;
 use Yii;
-use yii\authclient\Collection;
 use yii\debug\Module;
 use yii\symfonymailer\Mailer;
 use yii\web\Cookie;
@@ -17,7 +16,6 @@ use yii\web\Cookie;
  * @template TUserIdentity of \Hirtz\Skeleton\Models\User
  * @extends \yii\web\Application<TUserIdentity>
  *
- * @property Collection $authClientCollection
  * @property DbManager $authManager
  * @property Request $request
  * @property Response $response
@@ -75,11 +73,6 @@ class Application extends \yii\web\Application
                 'class' => User::class,
             ],
         ];
-    }
-
-    public function getAuthClientCollection(): ?Collection
-    {
-        return $this->get('authClientCollection', false);
     }
 
     /**
