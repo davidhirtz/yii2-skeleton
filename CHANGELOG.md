@@ -1,5 +1,6 @@
 ## 3.0.0 (in development)
 
+- Added `Html\Img::fetchPriority()`
 - Private properties dropped their `_` prefix, so a cache now carries the name of the magic property it backs.
   In a class that uses one of the affected traits this shadows the getter: `$this->ancestors`, `$this->children`
   and `$this->descendants` in a model using `Models\Traits\MaterializedTreeTrait` or `NestedTreeTrait`, and

@@ -21,6 +21,11 @@ class Img extends VoidTag
         return $this->attribute('alt', $alt);
     }
 
+    public function fetchPriority(?string $fetchPriority): static
+    {
+        return $this->attribute('fetchpriority', $fetchPriority);
+    }
+
     public function loading(?string $loading): static
     {
         return $this->attribute('loading', $loading);
