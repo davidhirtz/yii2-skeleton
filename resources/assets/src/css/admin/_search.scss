@@ -1,0 +1,107 @@
+.navbar-search {
+  align-items: center;
+  display: flex;
+  gap: .5rem;
+  position: relative;
+}
+
+.navbar-search-input {
+  background-color: var(--input-bg-color);
+  border: 1px solid var(--input-border-color);
+  border-radius: .25rem;
+  color: var(--input-color);
+  opacity: 0;
+  outline: 0;
+  padding: 0;
+  pointer-events: none;
+  transition: width .15s ease-in-out, opacity .15s ease-in-out;
+  width: 0;
+
+  &::-webkit-search-cancel-button {
+    display: none;
+  }
+
+  .expanded > & {
+    opacity: 1;
+    padding: .5rem .75rem;
+    pointer-events: auto;
+    width: min(18rem, 50vw);
+  }
+}
+
+.navbar-search-results {
+  background-color: var(--dropdown-bg);
+  border: 1px solid var(--dropdown-border-color);
+  border-radius: .25rem;
+  color: var(--dropdown-color);
+  inset: unset;
+  margin: 0;
+  max-height: min(26rem, 70vh);
+  max-width: min(28rem, 90vw);
+  overflow-y: auto;
+  padding: 0;
+  position: absolute;
+
+  &:popover-open {
+    display: block;
+  }
+}
+
+.search-results {
+  display: grid;
+}
+
+.search-result {
+  align-items: center;
+  background-color: var(--dropdown-option-bg, transparent);
+  color: var(--dropdown-option-color);
+  display: flex;
+  gap: .75rem;
+  overflow: hidden;
+  padding: .625rem .75rem;
+
+  &:hover,
+  &:focus {
+    --dropdown-option-bg: var(--dropdown-option-hover-bg);
+    --dropdown-option-color: var(--dropdown-option-hover-color);
+    outline: 0;
+  }
+}
+
+.search-result-icon {
+  color: var(--muted-color);
+  flex: none;
+  width: 1rem;
+}
+
+.search-result-text {
+  display: grid;
+  min-width: 0;
+}
+
+.search-result-title {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-result-description {
+  color: var(--muted-color);
+  font-size: .8125rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-result-badge {
+  color: var(--muted-color);
+  flex: none;
+  font-size: .75rem;
+  text-transform: uppercase;
+}
+
+.search-result-empty {
+  color: var(--muted-color);
+  padding: .625rem .75rem;
+}

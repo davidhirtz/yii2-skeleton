@@ -12,10 +12,12 @@ use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Interfaces\AdminRouteInterface;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
+use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
 use Hirtz\Skeleton\Models\Traits\CustomAttributesTrait;
+use Hirtz\Skeleton\Models\Traits\SearchableTrait;
 use Hirtz\Skeleton\Models\Traits\StatusAttributeTrait;
 use Hirtz\Skeleton\Models\Traits\TrailModelTrait;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
@@ -51,9 +53,10 @@ use yii\web\IdentityInterface;
  *
  * @mixin TrailBehavior
  */
-class User extends ActiveRecord implements AdminRouteInterface, CustomAttributeInterface, IdentityInterface, StatusAttributeInterface, TrailModelInterface
+class User extends ActiveRecord implements AdminRouteInterface, CustomAttributeInterface, IdentityInterface, SearchableInterface, StatusAttributeInterface, TrailModelInterface
 {
     use CustomAttributesTrait;
+    use SearchableTrait;
     use StatusAttributeTrait;
     use TrailModelTrait;
 
@@ -270,6 +273,21 @@ class User extends ActiveRecord implements AdminRouteInterface, CustomAttributeI
     public function getAdminRoute(): array
     {
         return $this->id ? ['/admin/user/update', 'id' => $this->id] : ['/admin/user/index'];
+    }
+
+    public function getSearchAttributes(): array
+    {
+        return ['name', 'email'];
+    }
+
+    public function getSearchWeight(): float
+    {
+        return 0.5;
+    }
+
+    protected function isSearchResultVisible(): bool
+    {
+        return Yii::$app->has('user') && Yii::$app->getUser()->can(static::AUTH_USER_UPDATE);
     }
 
     public function getAuthKey(): ?string

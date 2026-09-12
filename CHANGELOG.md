@@ -1,5 +1,26 @@
 ## 3.0.0 (in development)
 
+- Added a fulltext search. A model opts in with `Models\Interfaces\SearchableInterface` +
+  `Models\Traits\SearchableTrait` and a `getSearchAttributes()` of its own; `Db\ActiveRecord::behaviors()`
+  attaches `Behaviors\SearchBehavior` to every such model, which writes one `search` row per record and
+  configured language on insert, update and delete. The new `search` application component
+  (`Search\Search`) carries the registered classes — each bundle adds its own from its `Bootstrap` through
+  `extendComponent('search', ['models' => [...]])` — and the driver behind
+  `Search\SearchDriverInterface`, of which `Search\MysqlDriver` is the only implementation.
+  `Search\SearchQuery` builds the boolean-mode `MATCH … AGAINST` with a title boost and the per-model weight,
+  falling back to a `title LIKE` when no token survives the sanitizer (`Search\SearchText`), and collapses the
+  per-language rows of a record into one hit. `Console\Controllers\SearchController` adds `search/rebuild` and
+  `search/clear`. `M260913120000Search` creates the `search` table, utf8mb4 and with its two fulltext indexes.
+  `Models\User` and `Models\Redirect` are opted in. See UPGRADE.md
+- Added the admin search: `Modules\Admin\Controllers\SearchController` with `suggest` and `index`, the
+  `Widgets\Search\SearchResultList` both render, the `Search\SearchResult` DTO a model returns from
+  `getSearchResult()` — `null` hides the hit from the current user — and `Search\SearchResultBuilder`, which
+  loads the hits one query per class and over-fetches because that check drops them after the fact.
+  `Modules\Admin\Widgets\Navs\NavBar` renders a search button that morphs into the autocomplete input
+  (`includes/search.ts`). The admin search is never scoped to a tenant: `search.tenant_id` and `search.status`
+  exist for the frontend presets on `SearchQuery`
+- `Modules\Admin\Module::$enableSearch` turns the whole feature off in one place: the navbar button, both admin
+  actions (404), the behavior's writes and the console commands
 - `Widgets\Traits\VisibilityTrait` understands the role markers of `yii\filters\AccessRule`: `ROLE_ANY` (`*`, which
   it already had) and the new `ROLE_AUTHENTICATED` (`@`), matched before a permission lookup.
   `Modules\Admin\Widgets\Navs\DashboardNavItem` and `SystemNavItem` declare `roles` instead of computing

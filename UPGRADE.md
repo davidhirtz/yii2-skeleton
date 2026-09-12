@@ -1,5 +1,93 @@
 # Upgrade Guide
 
+## 3.0.0 — Fulltext search
+
+`M260913120000Search` creates a `search` table: one row per searchable record, id and language, with the model's
+display name in `title`, its searchable attributes in `content` and two fulltext indexes over them. The admin gets a
+search button in the navbar and a results page; the frontend gets the query and the DTO, the result page is the
+project's.
+
+### Opting a model in
+
+```php
+use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
+use Hirtz\Skeleton\Models\Traits\SearchableTrait;
+
+class Product extends ActiveRecord implements SearchableInterface
+{
+    use SearchableTrait;
+
+    public function getSearchAttributes(): array
+    {
+        return ['name', 'subtitle', 'description'];
+    }
+
+    public function getSearchWeight(): float
+    {
+        return 0.6;
+    }
+
+    protected function isSearchResultVisible(): bool
+    {
+        return Yii::$app->getUser()->can(static::AUTH_PRODUCT_UPDATE);
+    }
+}
+```
+
+That is the whole opt-in: `Db\ActiveRecord::behaviors()` attaches `Behaviors\SearchBehavior` to every
+`SearchableInterface`, and the trait implements the rest of the interface. The attributes are read through
+`getI18nAttribute($name, $language, fallback: true)`, so translated and custom attributes come for free. Register
+the class from the bundle's `Bootstrap`, the same way media registers its asset classes — nothing is discovered by
+scanning:
+
+```php
+$app->extendComponent('search', [
+    'models' => [
+        Product::class,
+    ],
+]);
+```
+
+`models` also takes a weight per class (`[Product::class => 0.9]`), which overrides `getSearchWeight()` for that
+project. The weight is stored in the row and multiplied into the score, so changing it needs a `search/rebuild`.
+
+The hooks the trait leaves to the model: `getSearchTitle()` (defaults to the `name` attribute, then
+`getTrailModelName()`), `getSearchWeight()` (`1.0`), `getSearchTenantId()` (the `tenant_id` column, else `null`),
+`getSearchStatus()` (the `status` column of a `StatusAttributeInterface`), `isSearchable()` (`true` — return
+`false` for a record that has no page) and `isSearchResultVisible()`. The last one is the permission check: the
+model knows its own `AUTH_*` constants, the search does not, and a `getSearchResult()` of `null` hides the hit
+from the current user.
+
+### Keeping the index
+
+`SearchBehavior` writes on insert, update and delete, and skips an update that changed none of the searchable
+attributes, `status`, `type` or `tenant_id`. Writes that bypass `save()` leave the index stale — `updateAll()`,
+`updateAttributes()`, `batchInsert()` and the `parent_status` propagation in cms — the same limitation the
+`translation` table already lives with. Reconcile with the console:
+
+```bash
+./yii search/rebuild
+./yii search/rebuild --models=Entry,Category
+./yii search/clear
+```
+
+### The feature flag
+
+`Modules\Admin\Module::$enableSearch` switches the whole feature off in one place: the navbar button, both admin
+actions (404), the behavior's writes and the console commands. A project that turns it off should run
+`search/clear` once.
+
+### Traps
+
+- **InnoDB fulltext does not see uncommitted rows.** A test that asserts on a `MATCH` has to commit its rows and
+  delete them by hand, as `Tests\Search\SearchQueryTest` does; one that reads the index row with an ordinary
+  `WHERE` stays inside the test transaction.
+- **Tokens shorter than `innodb_ft_min_token_size` (3) are not indexed**, and neither are InnoDB's English
+  stopwords. A query that loses every token that way falls back to `title LIKE`, which is the only path a
+  two-character query has.
+- **The admin search is never scoped to a tenant.** `tenant_id` and `status` are on the row for the frontend
+  presets (`SearchQuery::tenant()`, `enabled()`), where a site must only ever surface its own tenant's records.
+
 ## 3.0.0 — `Trail::TYPE_DEFAULT` is a plain message
 
 `Models\Trail` declares its own `TYPE_DEFAULT` (`13`) for a trail that carries nothing but a `message`, and

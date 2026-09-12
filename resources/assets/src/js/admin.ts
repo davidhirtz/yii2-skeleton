@@ -8,6 +8,7 @@ import collapse from './includes/collapse';
 import dropdown from './includes/dropdown';
 import filter from './includes/filter';
 import {closeModal, createModal} from './includes/modals';
+import search from './includes/search';
 import sticky from './includes/sticky';
 import timezone from "./includes/timezone.ts";
 import tooltip from './includes/tooltips';
@@ -33,6 +34,7 @@ htmx.onLoad(($container) => {
     queryAll('[data-form-target]', updateTargetsOnChange);
     queryAll('[data-toggle]', toggle);
     queryAll('[data-modal]', closeModal);
+    queryAll('[data-search]', search);
     queryAll('[data-sticky]', sticky);
     queryAll('[data-tooltip]', tooltip);
     queryAll('[data-timezone-offset', timezone)

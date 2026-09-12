@@ -15,6 +15,13 @@ use Yii;
 class Module extends \Hirtz\Skeleton\Base\Module
 {
     public string $alias = 'admin';
+
+    /**
+     * @var bool whether the fulltext search is available: the navbar button, both search actions, the index writes
+     * of {@see \Hirtz\Skeleton\Behaviors\SearchBehavior} and the `search` console commands.
+     */
+    public bool $enableSearch = true;
+
     public ?int $trailLifetime = null;
 
     public $defaultRoute = 'dashboard';

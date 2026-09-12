@@ -11,8 +11,10 @@ use Hirtz\Skeleton\Behaviors\TimestampBehavior;
 use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Interfaces\AdminRouteInterface;
+use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
+use Hirtz\Skeleton\Models\Traits\SearchableTrait;
 use Hirtz\Skeleton\Models\Traits\TrailModelTrait;
 use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
 use Hirtz\Skeleton\Models\Traits\UpdatedByUserTrait;
@@ -29,8 +31,9 @@ use Yii;
  * @property DateTime|null $updated_at
  * @property DateTime $created_at
  */
-class Redirect extends ActiveRecord implements AdminRouteInterface, TrailModelInterface, TypeAttributeInterface
+class Redirect extends ActiveRecord implements AdminRouteInterface, SearchableInterface, TrailModelInterface, TypeAttributeInterface
 {
+    use SearchableTrait;
     use TypeAttributeTrait;
     use TrailModelTrait;
     use UpdatedByUserTrait;
@@ -131,6 +134,26 @@ class Redirect extends ActiveRecord implements AdminRouteInterface, TrailModelIn
     public function getAdminRoute(): array|false
     {
         return $this->id ? ['/admin/redirect/update', 'id' => $this->id] : false;
+    }
+
+    public function getSearchAttributes(): array
+    {
+        return ['request_uri', 'url'];
+    }
+
+    public function getSearchTitle(?string $language = null): string
+    {
+        return $this->request_uri;
+    }
+
+    public function getSearchWeight(): float
+    {
+        return 0.2;
+    }
+
+    protected function isSearchResultVisible(): bool
+    {
+        return Yii::$app->has('user') && Yii::$app->getUser()->can(static::AUTH_REDIRECT_CREATE, ['redirect' => $this]);
     }
 
     public function getBaseUrl(): string

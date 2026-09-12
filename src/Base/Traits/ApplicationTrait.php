@@ -9,8 +9,11 @@ use Hirtz\Skeleton\Controllers\HealthController;
 use Hirtz\Skeleton\Controllers\SitemapController;
 use Hirtz\Skeleton\Db\Connection;
 use Hirtz\Skeleton\I18n\I18N;
+use Hirtz\Skeleton\Models\Redirect;
+use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Rbac\DbManager;
+use Hirtz\Skeleton\Search\Search;
 use Hirtz\Skeleton\Web\DbSession;
 use Hirtz\Skeleton\Web\Sitemap;
 use Hirtz\Skeleton\Web\UrlManager;
@@ -27,6 +30,7 @@ use yii\validators\TrimValidator;
 use yii\web\JqueryAsset;
 
 /**
+ * @property Search $search
  * @property Sitemap $sitemap
  * @property UrlManager $urlManager
  *
@@ -117,6 +121,13 @@ trait ApplicationTrait
                     'class' => Mailer::class,
                     'htmlLayout' => '@skeleton/../resources/mail/layouts/html',
                     'useFileTransport' => YII_DEBUG,
+                ],
+                'search' => [
+                    'class' => Search::class,
+                    'models' => [
+                        Redirect::class,
+                        User::class,
+                    ],
                 ],
                 'session' => [
                     'class' => DbSession::class,

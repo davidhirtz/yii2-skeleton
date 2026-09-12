@@ -7,8 +7,10 @@ namespace Hirtz\Skeleton\Db;
 use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Behaviors\AttributeTypecastBehavior;
+use Hirtz\Skeleton\Behaviors\SearchBehavior;
 use Hirtz\Skeleton\Db\Commands\BatchInsertQueryBuild;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
+use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
 use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
 use Override;
 use Yii;
@@ -28,6 +30,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return [
             ...parent::behaviors(),
             'AttributeTypecastBehavior' => AttributeTypecastBehavior::class,
+            ...$this instanceof SearchableInterface ? ['SearchBehavior' => SearchBehavior::class] : [],
         ];
     }
 
