@@ -27,7 +27,11 @@ class MainMenu extends Nav
     protected function configure(): void
     {
         $this->addClass('aside-nav');
-        $this->addItem(DashboardNavItem::make(), UserNavItem::make(), SystemNavItem::make());
+
+        $this->addItem(
+            dashboard: DashboardNavItem::make(),
+            user: UserNavItem::make(),
+            system: SystemNavItem::make());
 
         foreach ($this->module->getSubmodules() as $module) {
             if ($module instanceof ModuleInterface) {

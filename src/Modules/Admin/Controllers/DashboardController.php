@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Web\Controller;
 use Override;
+use Yii;
 use yii\base\Event;
 use yii\filters\AccessControl;
 use yii\web\Response;

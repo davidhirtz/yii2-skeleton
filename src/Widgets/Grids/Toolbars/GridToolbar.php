@@ -24,7 +24,6 @@ class GridToolbar extends Widget
     protected function configure(): void
     {
         $this->addStickyClass();
-
         parent::configure();
     }
 
