@@ -8,6 +8,7 @@ return [
     'ABSTRACT_SIGNUP_PASSWORD_LABEL' => 'Passwort',
     'ACCOUNT_CONFIRM_CODE_LABEL' => 'E-Mail-Bestätigungscode',
     'ACCOUNT_CONFIRM_NAME_LABEL' => 'Benutzername',
+    'ACCOUNT_DELETE_TYPE_PASSWORD' => 'Bitte geben Sie Ihr Passwort in das Feld unten ein, um Ihren Account, alle zugehörigen Einträge und hochgeladenen Dateien zu löschen. Das kann nicht rückgängig gemacht werden!',
     'ACCOUNT_LOGOUT_BEFORE_CREATING' => 'Bitte loggen Sie sich aus, bevor Sie einen neuen Account erstellen.',
     'ACCOUNT_LOGOUT_BEFORE_LOGGING' => 'Bitte loggen Sie sich aus, bevor Sie sich mit einem anderen Account einloggen',
     'ACCOUNT_MENU_LOGOUT' => 'Logout',

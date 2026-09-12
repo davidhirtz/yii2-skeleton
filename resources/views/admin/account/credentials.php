@@ -6,10 +6,10 @@ declare(strict_types=1);
  * @see AccountController::actionCredentials()
  *
  * @var View $this
- * @var AccountUpdateForm $form
+ * @var AccountCredentialsForm $form
  */
 
-use Hirtz\Skeleton\Models\Forms\AccountUpdateForm;
+use Hirtz\Skeleton\Models\Forms\AccountCredentialsForm;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\AccountCredentialsActiveForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\AccountSubmenu;

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Models\Forms;
 
-use Hirtz\Skeleton\Test\TestCase;
 use DateTime;
 use DateTimeZone;
 use Hirtz\Skeleton\Models\Forms\AccountUpdateForm;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
@@ -16,98 +16,6 @@ use Yii;
 class AccountUpdateFormTest extends TestCase
 {
     use UserFixtureTrait;
-
-    public function testUpdateEmailAddress(): void
-    {
-        $form = AccountUpdateForm::create([
-            'user' => User::findOne(3),
-        ]);
-
-        $form->user->email = 'invalid_email';
-        self::assertFalse($form->save());
-
-        $expected = Yii::t('yii', '{attribute} is not a valid email address.', [
-            'attribute' => $form->getAttributeLabel('email'),
-        ]);
-
-        self::assertEquals($expected, $form->getFirstError('email'));
-
-        $form->user->email = 'owner@domain.com';
-        self::assertFalse($form->save());
-
-        $expected = Yii::t('yii', '{attribute} is invalid.', [
-            'attribute' => $form->getAttributeLabel('oldPassword'),
-        ]);
-
-        self::assertEquals($expected, $form->getFirstError('oldPassword'));
-
-        $form->oldPassword = 'password';
-
-        self::assertFalse($form->save());
-
-        $expected = Yii::t('skeleton', 'This email address is already used by another user.');
-        self::assertEquals($expected, $form->getFirstError('email'));
-
-        $form->user->email = 'valid@domain.com';
-
-        self::assertTrue($form->save());
-        self::assertNotEmpty($form->user->verification_token);
-
-        $message = $this->mailer->getLastMessage();
-        self::assertStringContainsString($form->user->getEmailConfirmationUrl(), $message->getSymfonyEmail()->getHtmlBody());
-    }
-
-    public function testUpdatePassword(): void
-    {
-        $form = AccountUpdateForm::create([
-            'user' => User::findOne(3),
-        ]);
-
-        $form->user->passwordMinLength = strlen('new_password');
-
-        $form->newPassword = 'short';
-        self::assertFalse($form->save());
-
-        $expected = Yii::t('yii', '{attribute} should contain at least {min, number} {min, plural, one{character} other{characters}}.', [
-            'attribute' => $form->getAttributeLabel('newPassword'),
-            'min' => $form->user->passwordMinLength,
-        ]);
-
-        self::assertEquals($expected, $form->getFirstError('newPassword'));
-
-        $form->newPassword = 'new_password';
-        self::assertFalse($form->save());
-
-        $expected = Yii::t('yii', '{attribute} is invalid.', [
-            'attribute' => $form->getAttributeLabel('oldPassword'),
-        ]);
-
-        self::assertEquals($expected, $form->getFirstError('oldPassword'));
-
-        $form->oldPassword = 'password';
-        self::assertFalse($form->save());
-
-        $expected = Yii::t('yii', '{attribute} cannot be blank.', [
-            'attribute' => $form->getAttributeLabel('repeatPassword'),
-        ]);
-
-        self::assertEquals($expected, $form->getFirstError('repeatPassword'));
-
-        $form->repeatPassword = 'wrong_new_password';
-        $form->oldPassword = 'password';
-        self::assertFalse($form->save());
-
-        $expected = Yii::t('skeleton', 'The password must match the new password.');
-        self::assertEquals($expected, $form->getFirstError('repeatPassword'));
-
-        $form->repeatPassword = 'new_password';
-        self::assertTrue($form->save());
-
-        $trail = $this->getLastTrailRecord();
-
-        self::assertNull($trail->data);
-        self::assertEquals($trail::TYPE_PASSWORD, $trail->type);
-    }
 
     public function testUpdateNameAttributes(): void
     {
@@ -188,6 +96,25 @@ class AccountUpdateFormTest extends TestCase
 
         self::assertArrayNotHasKey('status', $trail->data);
         self::assertEquals([], array_diff(array_keys($trail->data), $form->user->getTrailAttributes()));
+    }
+
+    public function testLoadIgnoresAttributesOfOtherForms(): void
+    {
+        $form = AccountUpdateForm::create([
+            'user' => User::findOne(3),
+        ]);
+
+        $email = $form->user->email;
+
+        $form->load([
+            $form->user->formName() => [
+                'name' => 'renamed',
+                'email' => 'hijacked@domain.com',
+            ],
+        ]);
+
+        self::assertEquals('renamed', $form->user->name);
+        self::assertEquals($email, $form->user->email);
     }
 
     protected function getLastTrailRecord(): Trail

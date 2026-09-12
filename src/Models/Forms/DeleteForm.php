@@ -37,11 +37,25 @@ class DeleteForm extends Model
 
     public function validateValue(): void
     {
-        if ($this->value !== $this->model->{$this->attribute}) {
+        if (!$this->isValidValue()) {
             $this->addError('value', Yii::t('yii', '{attribute} is invalid.', [
                 'attribute' => $this->model->getAttributeLabel($this->attribute),
             ]));
         }
+    }
+
+    protected function isValidValue(): bool
+    {
+        return $this->value === $this->getExpectedValue();
+    }
+
+    /**
+     * The form renders this as the input's `pattern`, so a secret that is verified rather than compared must
+     * return `null` and override {@see static::isValidValue()}.
+     */
+    public function getExpectedValue(): ?string
+    {
+        return $this->attribute !== null ? (string)$this->model->{$this->attribute} : null;
     }
 
     public function delete(): bool

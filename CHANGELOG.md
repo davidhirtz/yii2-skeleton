@@ -1,12 +1,32 @@
 ## 3.0.0 (in development)
 
+- Account deletion verifies the password through `User::validatePassword()`. `Models\Forms\DeleteForm` compares the
+  typed value with the model attribute it names, and `User` has no `password` attribute, so confirming the deletion
+  threw `UnknownPropertyException` — on rendering the form as well as on submitting it. The new
+  `Models\Forms\AccountDeleteForm` and `Modules\Admin\Widgets\Forms\AccountDeleteActiveForm` hold the password
+  path, and the account view uses the latter instead of configuring `Widgets\Forms\DeleteActiveForm` itself
+- `Models\Forms\DeleteForm` gained `getExpectedValue()` and `isValidValue()`, which `validateValue()` now goes
+  through. `getExpectedValue()` is what the form renders as the input's `pattern`, so a secret that is verified
+  rather than compared returns `null` from it and overrides `isValidValue()` — a password must never reach the
+  markup. `Widgets\Forms\DeleteActiveForm` omits the `pattern` for a `null` expected value and gained the
+  `getDeleteForm()` hook a subclass overrides to build its own form
+- New message key `ACCOUNT_DELETE_TYPE_PASSWORD`, which replaces the delete message the account view passed inline
 - The admin account page was split into three: `AccountController::actionUpdate()` keeps the username, language,
   timezone and custom attribute fields, the new `actionCredentials()` holds the email and password fields and the
   new `actionSecurity()` the two-factor authenticator form, which `actionEnableAuthenticator()` and
   `actionDisableAuthenticator()` now redirect back to. The new
   `Modules\Admin\Widgets\Navs\AccountSubmenu` links the three, and
   `Modules\Admin\Widgets\Forms\AccountActiveForm` lost the email, password and current password fields to the new
-  `AccountCredentialsActiveForm`. All three share `Models\Forms\AccountUpdateForm`
+  `AccountCredentialsActiveForm`
+- `Models\Forms\AccountUpdateForm` carries the settings fields only; the email and password fields moved to the new
+  `Models\Forms\AccountCredentialsForm`, which requires `oldPassword` for every save as long as the user has a
+  password, instead of only when the email or the password changed. The blank field now reports
+  `ACCOUNT_UPDATE_CURRENT_PASSWORD` rather than "is invalid"
+- `Models\Forms\Traits\UserFormTrait` no longer declares `$repeatPassword` — a form that has the field declares it
+  itself — and gained `getUserAttributeNames()`, the allowlist of user attributes `load()` accepts. A form that
+  renders only some of the user's fields must return them, or the others can still be set through a crafted request:
+  without it the split account pages would have let `/admin/account/update` change the email with no password check.
+  `null`, the default, keeps loading every safe attribute
 - Removed `Models\User::$picture` and everything around it: `Models\Forms\UserPictureForm`,
   `User::deletePicture()`, `getPictureUrl()`, `getUploadPath()` / `setUploadPath()`, the
   `account/picture` and `user/delete-picture` actions and `Models\Forms\Traits\UserFormTrait::$upload` /

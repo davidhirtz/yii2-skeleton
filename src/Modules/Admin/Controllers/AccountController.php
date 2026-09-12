@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
 use Hirtz\Skeleton\Models\Forms\AccountConfirmForm;
+use Hirtz\Skeleton\Models\Forms\AccountCredentialsForm;
+use Hirtz\Skeleton\Models\Forms\AccountDeleteForm;
 use Hirtz\Skeleton\Models\Forms\AccountResendConfirmForm;
 use Hirtz\Skeleton\Models\Forms\AccountUpdateForm;
-use Hirtz\Skeleton\Models\Forms\DeleteForm;
 use Hirtz\Skeleton\Models\Forms\LoginForm;
 use Hirtz\Skeleton\Models\Forms\PasswordRecoverForm;
 use Hirtz\Skeleton\Models\Forms\PasswordResetForm;
@@ -268,7 +269,7 @@ class AccountController extends Controller
 
     public function actionCredentials(): Response|string
     {
-        $form = AccountUpdateForm::create([
+        $form = AccountCredentialsForm::create([
             'user' => $this->webuser->getIdentity(),
         ]);
 
@@ -302,9 +303,8 @@ class AccountController extends Controller
 
     public function actionDelete(): Response|string
     {
-        $form = DeleteForm::create([
-            'model' => $this->webuser->getIdentity(),
-            'attribute' => 'password',
+        $form = AccountDeleteForm::create([
+            'user' => $this->webuser->getIdentity(),
         ]);
 
         if ($form->load($this->request->post()) && $form->delete()) {

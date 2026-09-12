@@ -45,18 +45,16 @@ class DeleteActiveForm extends ActiveForm
     #[Override]
     protected function configure(): void
     {
-        $this->model = DeleteForm::create([
-            'model' => $this->model,
-            'attribute' => $this->property,
-        ]);
+        $form = $this->getDeleteForm();
+        $this->model = $form;
 
         $this->message ??= $this->property
             ? Yii::t('skeleton', 'COMMON_TYPE_EXACT', [
-                'attribute' => $this->model->getAttributeLabel('value'),
+                'attribute' => $form->getAttributeLabel('value'),
             ])
             : Yii::t('skeleton', 'DELETE_ACTIVE_WARNING_DELETED');
 
-        $this->action ??= ['delete', 'id' => $this->model->getId()];
+        $this->action ??= ['delete', 'id' => $form->getId()];
 
         $this->confirm ??= Yii::t('yii', 'Are you sure you want to delete this item?');
         $this->label ??= Yii::t('skeleton', 'DELETE_ACTIVE_DELETE');
@@ -81,18 +79,28 @@ class DeleteActiveForm extends ActiveForm
         $this->buttons ??= [$btn];
         $this->footer ??= false;
 
+        $expected = $form->getExpectedValue();
+
         $this->rows ??= [
             FormRow::make()
                 ->content($this->message),
-            $this->model->attribute
+            $form->attribute
                 ? InputField::make()
                 ->attributes($this->inputAttributes)
-                ->pattern('^' . preg_quote((string)$this->model->model->{$this->model->attribute}, '/') . '$')
+                ->pattern($expected !== null ? '^' . preg_quote($expected, '/') . '$' : null)
                 ->property('value')
                 ->required()
                 : null,
         ];
 
         parent::configure();
+    }
+
+    protected function getDeleteForm(): DeleteForm
+    {
+        return DeleteForm::create([
+            'model' => $this->model,
+            'attribute' => $this->property,
+        ]);
     }
 }

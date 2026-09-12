@@ -23,6 +23,7 @@ class UserForm extends Model
 
     public string|int|null $status = null;
     public ?string $newPassword = null;
+    public ?string $repeatPassword = null;
     public bool $sendEmail = false;
 
     public function __construct(public User $user, array $config = [])

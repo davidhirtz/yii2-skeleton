@@ -13,11 +13,11 @@ use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Models\Forms\AccountUpdateForm;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\AccountActiveForm;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\AccountDeleteActiveForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\AccountSubmenu;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Alert;
 use Hirtz\Skeleton\Widgets\Container;
-use Hirtz\Skeleton\Widgets\Forms\DeleteActiveForm;
 use Hirtz\Skeleton\Widgets\Forms\FormContainer;
 use Hirtz\Skeleton\Widgets\Navs\Header;
 
@@ -41,7 +41,6 @@ if ($form->user->isUnconfirmed()) {
 }
 
 echo FormContainer::make()
-    ->title($this->title)
     ->form(AccountActiveForm::make()
         ->model($form));
 
@@ -49,11 +48,8 @@ if ($form->user->isDeletable()) {
     echo FormContainer::make()
         ->title(Yii::t('skeleton', 'Delete Account'))
         ->danger()
-        ->form(DeleteActiveForm::make()
-            ->model($form->user)
-            ->property('password')
-            ->message(Yii::t('skeleton', 'Type your password in the text field below to delete your account, all related items and uploaded files. This cannot be undone, please be certain!'))
-            ->inputAttributes(['type' => 'password']));
+        ->form(AccountDeleteActiveForm::make()
+            ->model($form->user));
 }
 
 if ($form->user->isOwner()) {
