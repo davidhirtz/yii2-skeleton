@@ -15,7 +15,8 @@ use Hirtz\Skeleton\Search\SearchResult;
 interface SearchableInterface
 {
     /**
-     * @return list<string> the attribute names whose values are indexed, translated and custom attributes included
+     * @return list<string> the names whose values are indexed — any readable property, so translated and custom
+     * attributes and plain getters are all allowed
      */
     public function getSearchAttributes(): array;
 

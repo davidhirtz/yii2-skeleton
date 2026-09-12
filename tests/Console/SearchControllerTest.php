@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Console;
 
 use Hirtz\Skeleton\Console\Controllers\SearchController;
-use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Models\Search;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
@@ -21,44 +20,51 @@ class SearchControllerTest extends TestCase
 
     public function testActionRebuildIndexesEveryRegisteredClass(): void
     {
-        $redirect = $this->createRedirect();
-
         Search::deleteAll();
 
         $controller = $this->createSearchController();
         self::assertSame(ExitCode::OK, $controller->actionRebuild());
 
-        $output = $controller->flushStdOutBuffer();
+        self::assertStringContainsString('Indexing ' . User::class, $controller->flushStdOutBuffer());
 
-        self::assertStringContainsString('Indexing ' . Redirect::class, $output);
-        self::assertStringContainsString('Indexing ' . User::class, $output);
-
-        self::assertSame(1, (int)Search::find()->where(['model_class' => Redirect::class])->count());
         self::assertSame(
             (int)User::find()->count(),
             (int)Search::find()->where(['model_class' => User::class])->count()
         );
 
-        $document = Search::findOne(['model_class' => Redirect::class, 'model_id' => $redirect->id]);
-        self::assertSame('alte-firma', $document->title);
+        $user = $this->getUserFromFixture('admin');
+        $document = Search::findOne(['model_class' => User::class, 'model_id' => $user->id]);
+
+        self::assertSame($user->name, $document->title);
+        self::assertStringContainsString($user->email, (string)$document->content);
     }
 
     public function testActionRebuildFiltersByShortName(): void
     {
-        $this->createRedirect();
         Search::deleteAll();
 
         $controller = $this->createSearchController();
-        $controller->actionRebuild('Redirect');
+        $controller->actionRebuild('User');
 
-        self::assertStringNotContainsString('Indexing ' . User::class, $controller->flushStdOutBuffer());
-        self::assertEmpty(Search::find()->where(['model_class' => User::class])->all());
-        self::assertNotEmpty(Search::find()->where(['model_class' => Redirect::class])->all());
+        self::assertStringContainsString('Indexing ' . User::class, $controller->flushStdOutBuffer());
+        self::assertNotEmpty(Search::find()->where(['model_class' => User::class])->all());
+    }
+
+    public function testAnUnknownNameIndexesNothing(): void
+    {
+        Search::deleteAll();
+
+        $controller = $this->createSearchController();
+        $controller->actionRebuild('Nope');
+
+        self::assertSame('', $controller->flushStdOutBuffer());
+        self::assertEmpty(Search::find()->all());
     }
 
     public function testActionClearRemovesEverything(): void
     {
-        $this->createRedirect();
+        $this->createSearchController()->actionRebuild();
+        self::assertNotEmpty(Search::find()->all());
 
         $controller = $this->createSearchController();
         self::assertSame(ExitCode::OK, $controller->actionClear());
@@ -69,12 +75,13 @@ class SearchControllerTest extends TestCase
 
     public function testActionClearRemovesOneClass(): void
     {
-        $this->createRedirect();
+        $this->createSearchController()->actionRebuild();
+        self::assertNotEmpty(Search::find()->where(['model_class' => User::class])->all());
 
         $controller = $this->createSearchController();
-        $controller->actionClear(Redirect::class);
+        $controller->actionClear(User::class);
 
-        self::assertEmpty(Search::find()->where(['model_class' => Redirect::class])->all());
+        self::assertEmpty(Search::find()->where(['model_class' => User::class])->all());
     }
 
     public function testTheCommandsRefuseToRunWhileTheSearchIsDisabled(): void
@@ -89,17 +96,6 @@ class SearchControllerTest extends TestCase
         self::assertSame(ExitCode::CONFIG, $controller->actionClear());
 
         self::assertStringContainsString('The search index is disabled', $controller->flushStdOutBuffer());
-    }
-
-    private function createRedirect(): Redirect
-    {
-        $redirect = Redirect::create();
-        $redirect->request_uri = 'alte-firma';
-        $redirect->url = 'neue-firma';
-
-        self::assertTrue($redirect->insert());
-
-        return $redirect;
     }
 
     private function createSearchController(): SearchControllerMock

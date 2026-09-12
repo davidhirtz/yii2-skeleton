@@ -11,6 +11,17 @@ final class SearchText
      */
     public const int MIN_TOKEN_LENGTH = 3;
 
+    /**
+     * InnoDB's built-in stopword list, which it neither indexes nor matches — a required `+com*` therefore finds
+     * nothing at all, which is what made `f2a@domain.com` unsearchable. The tokens below `MIN_TOKEN_LENGTH` are
+     * kept for completeness. A project that sets `innodb_ft_server_stopword_table` replaces this list too.
+     */
+    public const array STOPWORDS = [
+        'a', 'about', 'an', 'are', 'as', 'at', 'be', 'by', 'com', 'de', 'en', 'for', 'from', 'how', 'i', 'in',
+        'is', 'it', 'la', 'of', 'on', 'or', 'that', 'the', 'this', 'to', 'und', 'was', 'what', 'when', 'where',
+        'who', 'will', 'with', 'www',
+    ];
+
     private const string BOOLEAN_OPERATORS = '+-<>()~*"@';
 
     /**
@@ -49,7 +60,8 @@ final class SearchText
     }
 
     /**
-     * @return list<string> the tokens InnoDB would index, with the boolean operators removed
+     * @return list<string> the tokens InnoDB would index, with the boolean operators, the short tokens and the
+     * stopwords removed
      */
     public static function tokenize(?string $search): array
     {
@@ -59,6 +71,7 @@ final class SearchText
         return array_values(array_filter(
             $tokens,
             static fn (string $token): bool => mb_strlen($token) >= self::MIN_TOKEN_LENGTH
+                && !in_array(mb_strtolower($token), self::STOPWORDS, true)
         ));
     }
 

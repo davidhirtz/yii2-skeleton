@@ -195,12 +195,15 @@ trait SearchableTrait
     }
 
     /**
-     * Reads translated and custom attributes alike: both are plain attributes.
+     * Read through the magic getter, so a searchable name is any readable property: a column, a translated or
+     * custom attribute, or a getter such as the media `File::getFilename()`.
      */
     protected function getSearchAttributeValue(string $attribute, ?string $language = null): mixed
     {
-        return $this instanceof I18nAttributeInterface
-            ? $this->getI18nAttribute($attribute, $language, fallback: true)
-            : $this->getAttribute($attribute);
+        $name = $this instanceof I18nAttributeInterface
+            ? $this->getI18nAttributeName($attribute, $language, fallback: true)
+            : $attribute;
+
+        return $this->$name;
     }
 }

@@ -33,6 +33,16 @@ class SearchTextTest extends TestCase
         self::assertSame([], SearchText::tokenize(null));
     }
 
+    /**
+     * InnoDB indexes none of them, so a required `+com*` would find nothing at all.
+     */
+    public function testTokenizeDropsStopwords(): void
+    {
+        self::assertSame(['hausmeister', 'domain'], SearchText::tokenize('hausmeister@domain.com'));
+        self::assertSame(['Bergfirma'], SearchText::tokenize('The Bergfirma'));
+        self::assertSame([], SearchText::tokenize('what about this'));
+    }
+
     public function testToBooleanQueryRequiresEveryTokenAsPrefix(): void
     {
         self::assertSame('+alte* +firma*', SearchText::toBooleanQuery(['alte', 'firma']));

@@ -9,7 +9,6 @@ use Hirtz\Skeleton\Controllers\HealthController;
 use Hirtz\Skeleton\Controllers\SitemapController;
 use Hirtz\Skeleton\Db\Connection;
 use Hirtz\Skeleton\I18n\I18N;
-use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Rbac\DbManager;
@@ -125,7 +124,6 @@ trait ApplicationTrait
                 'search' => [
                     'class' => Search::class,
                     'models' => [
-                        Redirect::class,
                         User::class,
                     ],
                 ],

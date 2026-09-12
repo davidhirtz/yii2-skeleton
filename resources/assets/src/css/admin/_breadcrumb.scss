@@ -13,17 +13,6 @@
   @include media-breakpoint-up(md) {
       margin-right: 10rem;
   }
-
-  &::after {
-    background: linear-gradient(to right, transparent, var(--body-bg));
-    bottom: 0;
-    content: "";
-    pointer-events: none;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 1.5rem;
-  }
 }
 
 .breadcrumbs-item {

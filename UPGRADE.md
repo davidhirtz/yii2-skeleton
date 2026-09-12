@@ -19,6 +19,7 @@ class Product extends ActiveRecord implements SearchableInterface
 
     public function getSearchAttributes(): array
     {
+        // Any readable property: a column, a translated or custom attribute, or a getter.
         return ['name', 'subtitle', 'description'];
     }
 
@@ -35,8 +36,9 @@ class Product extends ActiveRecord implements SearchableInterface
 ```
 
 That is the whole opt-in: `Db\ActiveRecord::behaviors()` attaches `Behaviors\SearchBehavior` to every
-`SearchableInterface`, and the trait implements the rest of the interface. The attributes are read through
-`getI18nAttribute($name, $language, fallback: true)`, so translated and custom attributes come for free. Register
+`SearchableInterface`, and the trait implements the rest of the interface. The values are read through the magic getter, so a name may be a
+column, a translated or custom attribute, or a plain getter — the media `File` indexes `filename`, which is
+`getFilename()`. Register
 the class from the bundle's `Bootstrap`, the same way media registers its asset classes — nothing is discovered by
 scanning:
 
@@ -82,9 +84,11 @@ actions (404), the behavior's writes and the console commands. A project that tu
 - **InnoDB fulltext does not see uncommitted rows.** A test that asserts on a `MATCH` has to commit its rows and
   delete them by hand, as `Tests\Search\SearchQueryTest` does; one that reads the index row with an ordinary
   `WHERE` stays inside the test transaction.
-- **Tokens shorter than `innodb_ft_min_token_size` (3) are not indexed**, and neither are InnoDB's English
-  stopwords. A query that loses every token that way falls back to `title LIKE`, which is the only path a
-  two-character query has.
+- **InnoDB indexes neither tokens shorter than `innodb_ft_min_token_size` (3) nor its built-in stopwords**, and a
+  required `+com*` therefore matches nothing at all — which is what made `f2a@domain.com` unsearchable, since the
+  parser splits an address into `f2a`, `domain` and `com`. `Search\SearchText::tokenize()` drops both kinds
+  (`SearchText::STOPWORDS` mirrors InnoDB's list), and a query that loses every token that way falls back to
+  `title LIKE`, which is also the only path a two-character query has.
 - **The admin search is never scoped to a tenant.** `tenant_id` and `status` are on the row for the frontend
   presets (`SearchQuery::tenant()`, `enabled()`), where a site must only ever surface its own tenant's records.
 

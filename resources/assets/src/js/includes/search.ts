@@ -70,10 +70,27 @@ export default ($container: HTMLElement) => {
         $container.classList.contains('expanded') ? collapse() : expand();
     });
 
-    $container.addEventListener('keydown', (event: KeyboardEvent) => {
-        if (event.key === 'Escape') {
+    // A manual popover gets neither light dismiss nor the Escape key, so both are handled on the document — and
+    // the keystroke has to be caught there anyway once focus has left the box.
+    document.addEventListener('keydown', (event: KeyboardEvent) => {
+        if (event.key === 'Escape' && $container.classList.contains('expanded')) {
             $input.value = '';
             collapse();
+        }
+    });
+
+    document.addEventListener('pointerdown', (event: Event) => {
+        if (!$container.contains(event.target as Node)) {
+            close();
+
+            if (!$input.value) {
+                collapse();
+            }
+        }
+    });
+
+    $container.addEventListener('keydown', (event: KeyboardEvent) => {
+        if (event.key === 'Escape') {
             return;
         }
 

@@ -14,17 +14,19 @@
   outline: 0;
   padding: 0;
   pointer-events: none;
-  transition: width .15s ease-in-out, opacity .15s ease-in-out;
   width: 0;
 
   &::-webkit-search-cancel-button {
     display: none;
   }
 
+  // A transition is taken from the after-change style, so declaring it only here plays it on the way out of the
+  // button and lets the box close at once.
   .expanded > & {
     opacity: 1;
     padding: .5rem .75rem;
     pointer-events: auto;
+    transition: width .15s ease-in-out, opacity .15s ease-in-out;
     width: min(18rem, 50vw);
   }
 }

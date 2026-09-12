@@ -1,5 +1,18 @@
 ## 3.0.0 (in development)
 
+- `Search\SearchText::tokenize()` drops InnoDB's built-in stopwords along with the too-short tokens, listed as
+  `SearchText::STOPWORDS`. InnoDB splits `f2a@domain.com` into `f2a`, `domain` and `com`, indexes none of the
+  stopwords, and a required `+com*` therefore matched nothing at all — searching for an email address, or for
+  anything else carrying one, returned no results
+- A searchable name is any readable property, read through the magic getter: a column, a translated or custom
+  attribute, or a plain getter. `Models\Traits\SearchableTrait::getSearchAttributeValue()` no longer goes
+  through `getAttribute()`, which returned `null` for everything else
+- `Models\Redirect` is no longer searchable: one row per redirect drowned the results without helping anyone.
+  A project that wants them back adds `Models\Interfaces\SearchableInterface` and the trait itself
+- The navbar search closes on Escape and on a click outside it, wherever the focus is — a `popover="manual"`
+  gets neither light dismiss nor the Escape key of its own — and it no longer animates on the way closed
+- The fade that hides the overflowing breadcrumbs moved from `.breadcrumbs-list::after` to `.navbar::before`, so
+  it follows the navbar instead of sitting at a fixed offset: the search input changes the navbar's width
 - Added a fulltext search. A model opts in with `Models\Interfaces\SearchableInterface` +
   `Models\Traits\SearchableTrait` and a `getSearchAttributes()` of its own; `Db\ActiveRecord::behaviors()`
   attaches `Behaviors\SearchBehavior` to every such model, which writes one `search` row per record and

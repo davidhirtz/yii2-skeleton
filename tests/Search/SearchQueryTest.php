@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Search;
 
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
-use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Models\Search;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Search\SearchDocument;
@@ -28,6 +27,7 @@ class SearchQueryTest extends TestCase
     private const int DISABLED_ID = 105;
     private const int LIGHT_ID = 106;
     private const int HEAVY_ID = 107;
+    private const int EMAIL_ID = 108;
 
     #[Override]
     protected function setUp(): void
@@ -89,8 +89,24 @@ class SearchQueryTest extends TestCase
 
     public function testModelsNarrowTheHits(): void
     {
-        self::assertSame([self::ENTRY_ID], $this->search('firma', models: [Redirect::class]));
-        self::assertSame([], $this->search('firma', models: [User::class]));
+        self::assertSame([self::ENTRY_ID], $this->search('firma', models: [User::class]));
+        self::assertSame([], $this->search('firma', models: [Search::class]));
+    }
+
+    /**
+     * `com` is an InnoDB stopword, so a required `+com*` would find nothing at all.
+     */
+    public function testAnEmailAddressIsFoundWholeAndInParts(): void
+    {
+        self::assertSame([self::EMAIL_ID], $this->search('hausmeister@domain.com'));
+        self::assertSame([self::EMAIL_ID], $this->search('hausmeister'));
+        self::assertSame([self::EMAIL_ID], $this->search('domain.com'));
+    }
+
+    public function testAQueryOfStopwordsFallsBackToTheTitle(): void
+    {
+        self::assertSame([], $this->search('the'));
+        self::assertSame([self::ENTRY_ID], $this->search('the Bergfirma'));
     }
 
     public function testTheFrontendPresetsFilterTenantAndStatus(): void
@@ -144,6 +160,7 @@ class SearchQueryTest extends TestCase
             $this->createDocument(self::DISABLED_ID, 'Entwurf', '', status: StatusAttributeInterface::STATUS_DISABLED),
             $this->createDocument(self::LIGHT_ID, 'Sonderangebot', '', weight: 0.5),
             $this->createDocument(self::HEAVY_ID, 'Sonderangebot', '', weight: 2.0),
+            $this->createDocument(self::EMAIL_ID, 'Hausmeister', 'hausmeister@domain.com'),
         ];
 
         Yii::$app->get('search')->getDriver()->index(...$documents);
@@ -160,7 +177,7 @@ class SearchQueryTest extends TestCase
         $content = trim("$title $content " . SearchText::transliterate("$title $content"));
 
         return new SearchDocument(
-            modelClass: Redirect::class,
+            modelClass: User::class,
             modelId: $modelId,
             language: $language,
             title: $title,

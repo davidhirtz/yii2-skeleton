@@ -14,6 +14,19 @@
     right: 1rem;
     top: 0;
     z-index: 50;
+
+    // The navbar floats over the breadcrumbs, so whatever they overflow has to fade out right before it. The
+    // search input changes the navbar's width, which is why the fade follows the navbar and not the breadcrumbs.
+    &::before {
+      background: linear-gradient(to right, transparent, var(--body-bg));
+      bottom: 0;
+      content: "";
+      pointer-events: none;
+      position: absolute;
+      right: 100%;
+      top: 0;
+      width: 1.5rem;
+    }
   }
 }
 
