@@ -157,4 +157,40 @@ class NavTest extends TestCase
 
         self::assertStringContainsString('<ul class="nav"><li class="nav-item"><a class="nav-link" href="/site/test"><span>Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/site/test"><span>Test</span></a></li></ul>', $content);
     }
+
+    public function testNamedItemIsReplacedAndRemoved(): void
+    {
+        $content = Nav::make()
+            ->addItem(
+                home: NavItem::make()
+                    ->label('Home')
+                    ->url('/'),
+                about: NavItem::make()
+                    ->label('About')
+                    ->url('/about'),
+            )
+            ->addItem(about: NavItem::make()
+                ->label('Contact')
+                ->url('/contact'))
+            ->render();
+
+        self::assertStringContainsString('<span>Home</span>', $content);
+        self::assertStringContainsString('<span>Contact</span>', $content);
+        self::assertStringNotContainsString('<span>About</span>', $content);
+
+        $content = Nav::make()
+            ->addItem(
+                home: NavItem::make()
+                    ->label('Home')
+                    ->url('/'),
+                about: NavItem::make()
+                    ->label('About')
+                    ->url('/about'),
+            )
+            ->removeItem('about')
+            ->render();
+
+        self::assertStringContainsString('<span>Home</span>', $content);
+        self::assertStringNotContainsString('<span>About</span>', $content);
+    }
 }

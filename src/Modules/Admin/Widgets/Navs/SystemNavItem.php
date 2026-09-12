@@ -32,7 +32,11 @@ class SystemNavItem extends NavItem
 
     protected function addDefaultItems(): static
     {
-        return $this->addItem($this->getLogIndexItem(), $this->getTrailIndexItem(), $this->getRedirectIndexItem());
+        return $this->addItem(
+            log: $this->getLogIndexItem(),
+            trail: $this->getTrailIndexItem(),
+            redirect: $this->getRedirectIndexItem(),
+        );
     }
 
     protected function getLogIndexItem(): NavItem

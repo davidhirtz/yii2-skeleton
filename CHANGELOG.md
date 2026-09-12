@@ -16,6 +16,9 @@
   `Modules\Admin\ModuleInterface`. `Modules\Admin\Module::aside()` is gone with it and the module no longer
   implements `ModuleInterface`; `ModuleInterface::aside()` stays for the submodules. A subclass overriding
   `renderContent()` or `getNav()` has nothing to override any more
+- `Widgets\Navs\Traits\ItemTrait` keeps the string keys named arguments give `addItem()`, and `items()` no longer
+  reindexes, so `addItem(trail: ...)` replaces a named item and the new `removeItem(string ...$names)` drops one.
+  `Modules\Admin\Widgets\Navs\SystemNavItem` names its three default items `log`, `trail` and `redirect`
 - `Widgets\Panels\Dashboard` adds the modules' items in `configure()` rather than in the constructor, so a
   configured `items` is no longer silently replaced by them
 - The new `Console\Controllers\HelpController` replaces `yii\console\controllers\HelpController` in
