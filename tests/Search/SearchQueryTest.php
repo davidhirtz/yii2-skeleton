@@ -28,6 +28,8 @@ class SearchQueryTest extends TestCase
     private const int LIGHT_ID = 106;
     private const int HEAVY_ID = 107;
     private const int EMAIL_ID = 108;
+    private const int SHORT_ID = 109;
+    private const int COMMERCE_ID = 110;
 
     #[Override]
     protected function setUp(): void
@@ -62,10 +64,29 @@ class SearchQueryTest extends TestCase
         self::assertSame([self::TITLE_ID, self::CONTENT_ID], $this->search('Impressum'));
     }
 
-    public function testShortQueryFallsBackToTheTitle(): void
+    public function testAShortQueryIsAPrefixSearch(): void
     {
-        self::assertSame([self::ENTRY_ID], $this->search('be'));
+        self::assertSame([self::SHORT_ID, self::ENTRY_ID], $this->search('be'));
         self::assertSame([], $this->search('xy'));
+    }
+
+    /**
+     * `GmbH` is two characters short of what InnoDB indexes and `com` is one of its stopwords, so only the
+     * prefixed copies the write puts in the index can find either.
+     */
+    public function testATokenInnoDbDropsIsStillFound(): void
+    {
+        self::assertSame([self::SHORT_ID], $this->search('AG'));
+        self::assertSame([self::EMAIL_ID], $this->search('hausmeister@domain.com'));
+        self::assertSame([self::EMAIL_ID], $this->search('domain.com'));
+    }
+
+    /**
+     * The plain half of the pair keeps an ordinary prefix search working, so `com` still reaches `Commerce`.
+     */
+    public function testAStopwordStillMatchesLongerWords(): void
+    {
+        self::assertSame([self::COMMERCE_ID, self::EMAIL_ID], $this->search('com'));
     }
 
     public function testEmptyQueryMatchesNothing(): void
@@ -94,19 +115,13 @@ class SearchQueryTest extends TestCase
     }
 
     /**
-     * `com` is an InnoDB stopword, so a required `+com*` would find nothing at all.
+     * A stopword is an ordinary required term now that it is indexed, so it narrows like every other word
+     * rather than being quietly ignored.
      */
-    public function testAnEmailAddressIsFoundWholeAndInParts(): void
+    public function testAStopwordNarrowsLikeEveryOtherTerm(): void
     {
-        self::assertSame([self::EMAIL_ID], $this->search('hausmeister@domain.com'));
-        self::assertSame([self::EMAIL_ID], $this->search('hausmeister'));
-        self::assertSame([self::EMAIL_ID], $this->search('domain.com'));
-    }
-
-    public function testAQueryOfStopwordsFallsBackToTheTitle(): void
-    {
-        self::assertSame([], $this->search('the'));
-        self::assertSame([self::ENTRY_ID], $this->search('the Bergfirma'));
+        self::assertSame([self::COMMERCE_ID], $this->search('com department'));
+        self::assertSame([], $this->search('com Datenschutz'));
     }
 
     public function testTheFrontendPresetsFilterTenantAndStatus(): void
@@ -161,6 +176,8 @@ class SearchQueryTest extends TestCase
             $this->createDocument(self::LIGHT_ID, 'Sonderangebot', '', weight: 0.5),
             $this->createDocument(self::HEAVY_ID, 'Sonderangebot', '', weight: 2.0),
             $this->createDocument(self::EMAIL_ID, 'Hausmeister', 'hausmeister@domain.com'),
+            $this->createDocument(self::SHORT_ID, 'Bergbahn AG', 'Die Bergbahn AG'),
+            $this->createDocument(self::COMMERCE_ID, 'Commerce', 'Commerce department'),
         ];
 
         Yii::$app->get('search')->getDriver()->index(...$documents);
@@ -174,7 +191,8 @@ class SearchQueryTest extends TestCase
         int $status = StatusAttributeInterface::STATUS_ENABLED,
         float $weight = 1.0,
     ): SearchDocument {
-        $content = trim("$title $content " . SearchText::transliterate("$title $content"));
+        // The same transform {@see \Hirtz\Skeleton\Models\Traits\SearchableTrait::getSearchIndexContent()} applies.
+        $content = trim("$title $content " . SearchText::getIndexTokens("$title $content"));
 
         return new SearchDocument(
             modelClass: User::class,

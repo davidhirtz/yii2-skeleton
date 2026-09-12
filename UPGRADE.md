@@ -84,11 +84,18 @@ actions (404), the behavior's writes and the console commands. A project that tu
 - **InnoDB fulltext does not see uncommitted rows.** A test that asserts on a `MATCH` has to commit its rows and
   delete them by hand, as `Tests\Search\SearchQueryTest` does; one that reads the index row with an ordinary
   `WHERE` stays inside the test transaction.
-- **InnoDB indexes neither tokens shorter than `innodb_ft_min_token_size` (3) nor its built-in stopwords**, and a
-  required `+com*` therefore matches nothing at all — which is what made `f2a@domain.com` unsearchable, since the
-  parser splits an address into `f2a`, `domain` and `com`. `Search\SearchText::tokenize()` drops both kinds
-  (`SearchText::STOPWORDS` mirrors InnoDB's list), and a query that loses every token that way falls back to
-  `title LIKE`, which is also the only path a two-character query has.
+- **InnoDB indexes neither its built-in stopwords nor tokens shorter than `innodb_ft_min_token_size` (3)**, and
+  its parser splits `f2a@domain.com` into `f2a`, `domain` and `com` — so `com`, `IT` and `.de` were never in the
+  index, and no query could reach them. A query term is never the problem: a prefix term is always matched
+  literally, whatever its length. `Search\SearchText::getIndexTokens()` therefore appends a `zz`-prefixed copy
+  of every dropped token to the indexed content, and `toBooleanQuery()` asks for one as `+(zzcom* com*)`: the
+  copy finds `domain.com`, the plain prefix still finds `commerce`. Changing `SearchText::UNINDEXED_PREFIX` or
+  `STOPWORDS` needs a `search/rebuild`.
+- **A stopword narrows like any other word.** Now that it is indexed it is a required term, so `the Bergfirma`
+  finds nothing unless the record really carries `the`. A project whose editors type prose can drop the
+  unindexed tokens from `toBooleanQuery()` instead — or, if it controls the server, set
+  `innodb_ft_server_stopword_table` to an empty table and `innodb_ft_min_token_size` to 1, rebuild the index and
+  leave the prefixed copies unused.
 - **The admin search is never scoped to a tenant.** `tenant_id` and `status` are on the row for the frontend
   presets (`SearchQuery::tenant()`, `enabled()`), where a site must only ever surface its own tenant's records.
 

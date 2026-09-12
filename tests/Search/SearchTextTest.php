@@ -20,32 +20,41 @@ class SearchTextTest extends TestCase
         self::assertSame('', SearchText::normalize(null));
     }
 
-    public function testTransliterateOnlyReturnsTheFoldedTokens(): void
-    {
-        self::assertSame('Mueller Strasse', SearchText::transliterate('Müller GmbH Straße'));
-        self::assertSame('', SearchText::transliterate('Miller Inc'));
-    }
-
-    public function testTokenizeDropsOperatorsAndShortTokens(): void
+    public function testTokenizeKeepsEveryWordAndDropsTheOperators(): void
     {
         self::assertSame(['alte', 'firma'], SearchText::tokenize('+/alte-firma*'));
-        self::assertSame([], SearchText::tokenize('IT VW'));
+        self::assertSame(['IT', 'VW'], SearchText::tokenize('IT VW'));
+        self::assertSame(['hausmeister', 'domain', 'com'], SearchText::tokenize('hausmeister@domain.com'));
         self::assertSame([], SearchText::tokenize(null));
     }
 
-    /**
-     * InnoDB indexes none of them, so a required `+com*` would find nothing at all.
-     */
-    public function testTokenizeDropsStopwords(): void
+    public function testIsIndexedFollowsInnoDb(): void
     {
-        self::assertSame(['hausmeister', 'domain'], SearchText::tokenize('hausmeister@domain.com'));
-        self::assertSame(['Bergfirma'], SearchText::tokenize('The Bergfirma'));
-        self::assertSame([], SearchText::tokenize('what about this'));
+        self::assertTrue(SearchText::isIndexed('firma'));
+        self::assertFalse(SearchText::isIndexed('com'), '`com` is one of InnoDB\'s stopwords.');
+        self::assertFalse(SearchText::isIndexed('IT'), 'Two characters are below the minimum token size.');
     }
 
+    /**
+     * The prefixed copies are the only way a stopword or a short token reaches the index at all.
+     */
+    public function testGetIndexTokensCarriesWhatInnoDbWouldDrop(): void
+    {
+        self::assertSame('zzcom', SearchText::getIndexTokens('hausmeister@domain.com'));
+        self::assertSame('zzit zzvw', SearchText::getIndexTokens('IT and VW'));
+        self::assertSame('Mueller zzund', SearchText::getIndexTokens('Müller und Sohn'));
+        self::assertSame('', SearchText::getIndexTokens('Bergfirma Sohn'));
+    }
+
+    /**
+     * A token InnoDB indexes is an ordinary prefix; one it does not is either its copy or the plain prefix, so
+     * `com` finds `domain.com` as well as `commerce`.
+     */
     public function testToBooleanQueryRequiresEveryTokenAsPrefix(): void
     {
         self::assertSame('+alte* +firma*', SearchText::toBooleanQuery(['alte', 'firma']));
+        self::assertSame('+domain* +(zzcom* com*)', SearchText::toBooleanQuery(['domain', 'com']));
+        self::assertSame('+(zzit* IT*)', SearchText::toBooleanQuery(['IT']));
     }
 
     public function testSnippetWindowsAroundTheFirstMatch(): void

@@ -1,9 +1,12 @@
 ## 3.0.0 (in development)
 
-- `Search\SearchText::tokenize()` drops InnoDB's built-in stopwords along with the too-short tokens, listed as
-  `SearchText::STOPWORDS`. InnoDB splits `f2a@domain.com` into `f2a`, `domain` and `com`, indexes none of the
-  stopwords, and a required `+com*` therefore matched nothing at all — searching for an email address, or for
-  anything else carrying one, returned no results
+- The index carries the tokens InnoDB throws away. Its parser splits `f2a@domain.com` into `f2a`, `domain` and
+  `com`, then indexes neither its stopwords nor anything shorter than `innodb_ft_min_token_size`, so `com`, `IT`
+  and `.de` were never in the index and nothing could ask for them. `Search\SearchText::getIndexTokens()` now
+  appends a `zz`-prefixed copy of every such token to the indexed content, and `toBooleanQuery()` asks for one
+  as `+(zzcom* com*)` — the copy finds `domain.com`, the plain prefix still finds `commerce`. Two-character
+  searches work for the first time, and a stopword is an ordinary required term rather than being ignored.
+  `tokenize()` no longer drops anything. **Run `search/rebuild`**: an index written before this finds none of it
 - A searchable name is any readable property, read through the magic getter: a column, a translated or custom
   attribute, or a plain getter. `Models\Traits\SearchableTrait::getSearchAttributeValue()` no longer goes
   through `getAttribute()`, which returned `null` for everything else

@@ -169,14 +169,16 @@ trait SearchableTrait
     }
 
     /**
-     * The transliteration is what makes `Mueller` find `Müller`; the collation only folds `Muller`.
+     * The readable content plus what InnoDB would otherwise not have: the transliteration that makes `Mueller`
+     * find `Müller`, and a prefixed copy of every stopword and short token, which is the only way `.com` or `IT`
+     * reach the index at all. The title is read for its tokens but not repeated, so it keeps its own weight.
      */
     protected function getSearchIndexContent(?string $language = null): string
     {
         $content = $this->getSearchContent($language);
-        $transliterated = SearchText::transliterate($content);
+        $tokens = SearchText::getIndexTokens($this->getSearchTitle($language) . "\n" . $content);
 
-        return $transliterated !== '' ? "$content $transliterated" : $content;
+        return $tokens !== '' ? "$content $tokens" : $content;
     }
 
     protected function getSearchContent(?string $language = null): string
