@@ -23,6 +23,11 @@ class FileUpload extends Tag
         return $this->attribute('data-target', $target);
     }
 
+    public function selectOob(?string $selectOob): static
+    {
+        return $this->attribute('data-select-oob', $selectOob);
+    }
+
     public function chunkSize(?int $size): static
     {
         return $this->attribute('data-chunk-size', $size);

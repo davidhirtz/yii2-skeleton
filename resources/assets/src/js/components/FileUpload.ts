@@ -21,6 +21,13 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
                 return;
             }
 
+            // The swap replaces the target, not the dropdown the button sits in, which would stay open behind it.
+            const $popover = this.closest('[popover]') as HTMLElement | null;
+
+            if ($popover?.matches(':popover-open')) {
+                $popover.hidePopover();
+            }
+
             let totalSize = 0;
 
             for (let fileIndex = 0; fileIndex < files.length; fileIndex++) {
@@ -77,6 +84,7 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
                                         show: 'top',
                                     }, {
                                         select: this.dataset.target || undefined,
+                                        selectOOB: this.dataset.selectOob || undefined,
                                     });
                                 })
                             } else if (!response.ok) {

@@ -1,5 +1,10 @@
 ## 3.0.0 (in development)
 
+- `Widgets\Buttons\FileUploadButton::selectOob()` and `Html\Custom\FileUpload::selectOob()` pass an
+  `hx-select-oob` list to the upload, which `components/FileUpload.ts` hands to `htmx.swap()`, so a counter that
+  sits outside the swap target is refreshed along with it
+- A file upload closes the dropdown it was started from: the swap replaces the target, not the popover the button
+  sits in, which stayed open behind it
 - An htmx request whose session is gone is answered with `HX-Refresh` instead of a fragment: `Web\User::afterLogout()`
   and `loginRequired()` mark the response through the new `Web\Response::setHtmxRefresh()`, which drops the
   `HX-Location` htmx would otherwise process first. The page that made the request still carries the identity and the

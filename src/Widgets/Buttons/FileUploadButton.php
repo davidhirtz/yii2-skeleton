@@ -31,6 +31,7 @@ class FileUploadButton extends Widget
     protected array $inputAttributes = [];
 
     protected ?string $target = null;
+    protected ?string $selectOob = null;
 
     private ?array $buttonCallbacks = null;
 
@@ -68,6 +69,16 @@ class FileUploadButton extends Widget
         return $this;
     }
 
+    /**
+     * @param string|null $selectOob the htmx `hx-select-oob` list of elements the response also refreshes, such as a
+     * counter outside the target
+     */
+    public function selectOob(?string $selectOob): static
+    {
+        $this->selectOob = $selectOob;
+        return $this;
+    }
+
     #[Override]
     protected function configure(): void
     {
@@ -84,6 +95,7 @@ class FileUploadButton extends Widget
             ->url($this->url)
             ->chunkSize($this->maxChunkSize)
             ->target($this->target)
+            ->selectOob($this->selectOob)
             ->content($this->getButton(), $this->getInput());
     }
 
