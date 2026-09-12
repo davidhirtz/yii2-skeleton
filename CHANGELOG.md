@@ -1,5 +1,23 @@
 ## 3.0.0 (in development)
 
+- `Widgets\Widget` triggers `Widget::EVENT_CONFIGURE` from `configure()`, between the widget's own defaults and its
+  `prepare()` closures, so `Event::on(SystemNavItem::class, Widget::EVENT_CONFIGURE, ...)` adds to any widget from
+  anywhere — a bundle `Bootstrap` needs no admin submodule for it. The trigger walks the class hierarchy, so a
+  listener on a parent widget class fires for every subclass. `Widgets\Forms\ActiveForm::configure()` and
+  `Widgets\Navs\Dropdown::configure()` call `parent::configure()`, which they skipped: `prepare()` closures never
+  ran on a form or a dropdown
+- `Widgets\Attributes\Configure` and `Widgets\Traits\ConfigureAttributesTrait` are removed. A class that used the
+  attribute to run a trait hook calls that method from its own `configure()`:
+  `Widgets\Grids\Toolbars\GridToolbar` calls `Widgets\Traits\StickyTrait::addStickyClass()`,
+  `Cms\Modules\Admin\Widgets\Grids\Buttons\FrontendLinkButton` and
+  `Cms\Modules\Admin\Widgets\Navs\FrontendLink` call `FrontendUrlTrait::configureDefaultUrl()`
+- `Modules\Admin\Widgets\Navs\MainMenu` extends `Widgets\Navs\Nav` instead of wrapping one, and adds its items
+  in `configure()`: the three skeleton items and then every admin submodule implementing
+  `Modules\Admin\ModuleInterface`. `Modules\Admin\Module::aside()` is gone with it and the module no longer
+  implements `ModuleInterface`; `ModuleInterface::aside()` stays for the submodules. A subclass overriding
+  `renderContent()` or `getNav()` has nothing to override any more
+- `Widgets\Panels\Dashboard` adds the modules' items in `configure()` rather than in the constructor, so a
+  configured `items` is no longer silently replaced by them
 - The new `Console\Controllers\HelpController` replaces `yii\console\controllers\HelpController` in
   `Console\Application::coreCommands()`. Yii reflects the controller classes it discovers by scanning the
   filesystem, but adds every `controllerMap` key unchecked and lets `getCommands()` instantiate it to find out what
