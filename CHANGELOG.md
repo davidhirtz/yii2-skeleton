@@ -1,5 +1,13 @@
 ## 3.0.0 (in development)
 
+- `Web\Controller` triggers the new `Controller::EVENT_CONFIGURE` from `init()`, so a bundle `Bootstrap` can
+  configure any web controller from the outside — the counterpart to `Widgets\Widget::EVENT_CONFIGURE`. It cannot be
+  an `EVENT_BEFORE_ACTION` handler: `Component::trigger()` attaches the behaviors before it calls a handler, and a
+  class-level handler runs after the instance-level ones an `ActionFilter` registers, so an `AccessControl` has both
+  been built and run by then. `Modules\Admin\Controllers\DashboardController::addRoles()` listened for
+  `EVENT_BEFORE_ACTION` and therefore never widened the dashboard's access rule — every role added by
+  `yii2-cms`, `yii2-cms-shopify`, `yii2-config`, `yii2-location`, `yii2-media` and `yii2-tenant` was ignored and
+  only a user with `userCreate` or `authUpdate` could open the dashboard
 - `Widgets\Widget` triggers `Widget::EVENT_CONFIGURE` from `configure()`, between the widget's own defaults and its
   `prepare()` closures, so `Event::on(SystemNavItem::class, Widget::EVENT_CONFIGURE, ...)` adds to any widget from
   anywhere — a bundle `Bootstrap` needs no admin submodule for it. The trigger walks the class hierarchy, so a

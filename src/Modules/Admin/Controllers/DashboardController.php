@@ -8,7 +8,6 @@ use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Web\Controller;
 use Override;
-use Yii;
 use yii\base\Event;
 use yii\filters\AccessControl;
 use yii\web\Response;
@@ -20,7 +19,7 @@ class DashboardController extends Controller
 {
     public array $roles = [
         User::AUTH_USER_CREATE,
-        user::AUTH_USER_ASSIGN,
+        User::AUTH_USER_ASSIGN,
     ];
 
     #[Override]
@@ -48,7 +47,7 @@ class DashboardController extends Controller
 
     public static function addRoles(array $roles): void
     {
-        Event::on(static::class, static::EVENT_BEFORE_ACTION, function (Event $event) use ($roles): void {
+        Event::on(static::class, self::EVENT_CONFIGURE, function (Event $event) use ($roles): void {
             /** @var static $controller */
             $controller = $event->sender;
             $controller->roles = [...$controller->roles, ...$roles];

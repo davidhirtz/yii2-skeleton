@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Web;
 
 use Override;
 use Yii;
+use yii\base\Event;
 use yii\base\Model;
 use yii\base\Module;
 
@@ -18,6 +19,8 @@ use yii\base\Module;
  */
 class Controller extends \yii\web\Controller
 {
+    final public const string EVENT_CONFIGURE = 'configure';
+
     /**
      * @var bool whether spaces between HTML tags should be removed from the output.
      */
@@ -36,6 +39,18 @@ class Controller extends \yii\web\Controller
     {
         $this->webuser = Yii::$app->getUser();
         parent::__construct($id, $module, $config);
+    }
+
+    /**
+     * Listeners must run before `behaviors()` is evaluated, so this cannot be an `EVENT_BEFORE_ACTION` handler:
+     * `Component::trigger()` attaches the behaviors before it calls any handler, and a class-level handler is called
+     * after the instance-level ones an `ActionFilter` registers.
+     */
+    #[Override]
+    public function init(): void
+    {
+        parent::init();
+        Event::trigger($this, self::EVENT_CONFIGURE);
     }
 
     #[Override]
