@@ -1,11 +1,14 @@
 ## 3.0.0 (in development)
 
-- `Web\Controller::$webuser` is no longer a property assigned in the constructor — it is a read-only magic property
-  backed by the new `getWebuser()`, so `$this->webuser` keeps working. A web controller must not resolve a web-only
-  component while being constructed: Yii's `HelpController::getCommands()` builds every controller of every
-  registered module, and `Console\Application::preInit()` unsets the `user` component, so every unknown console
-  command died with `Calling unknown method: Console\Application::getUser()` on top of the real error. A subclass
-  that assigns `$this->webuser` has to stop; one that reads it is unaffected
+- The new `Console\Controllers\HelpController` replaces `yii\console\controllers\HelpController` in
+  `Console\Application::coreCommands()`. Yii reflects the controller classes it discovers by scanning the
+  filesystem, but adds every `controllerMap` key unchecked and lets `getCommands()` instantiate it to find out what
+  it is — so a web controller mapped into a module (the host application maps `admin/dashboard` this way) was built
+  under the console application, which has no `user` component. Every unknown console command therefore reported
+  `Calling unknown method: Console\Application::getUser()` instead of the real error, and no command ever got a
+  "Did you mean one of these?" suggestion. The override runs `controllerMap` entries through
+  `validateControllerClass()` as well; a definition whose class cannot be determined without building it is left
+  alone. The listed commands are unchanged
 - `Models\Forms\DeleteForm::formName()` returns `''`, so `value` lives at the top level of the request and both
   widgets that post it agree. `Widgets\Buttons\DeleteButton` names its confirmation input `value` while
   `Widgets\Forms\DeleteActiveForm` named it `DeleteForm[value]`, so a `load($this->request->post())` behind a delete

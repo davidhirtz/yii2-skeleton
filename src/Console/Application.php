@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Console;
 use Hirtz\Skeleton\Base\Traits\ApplicationTrait;
 use Hirtz\Skeleton\Console\Controllers\AssetController;
 use Hirtz\Skeleton\Console\Controllers\EmailController;
+use Hirtz\Skeleton\Console\Controllers\HelpController;
 use Hirtz\Skeleton\Console\Controllers\MaintenanceController;
 use Hirtz\Skeleton\Console\Controllers\MessageController;
 use Hirtz\Skeleton\Console\Controllers\MigrateController;
@@ -56,6 +57,7 @@ class Application extends \yii\console\Application
             ...parent::coreCommands(),
             'asset' => AssetController::class,
             'email' => EmailController::class,
+            'help' => HelpController::class,
             'maintenance' => MaintenanceController::class,
             'message' => MessageController::class,
             'migrate' => MigrateController::class,
