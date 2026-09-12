@@ -24,6 +24,13 @@ repository is archived.
   `$entry->permalinks`. On `EntryQuery`, `whereSlug()` is `whereUri(string $uri, ?string $language = null)`
   and `whereNotSlug()` is `whereNotUri()`; both join the permalink table and honour the
   `Permalink::LANGUAGE_ALL` fallback, which the old slug subquery did not.
+- **Redirects are host-qualified.** A `Redirect` whose `request_uri` names a host (`www.example.com/old`) only
+  fires on that host, and the 404 handler prefers it over a bare-path record for the same path. Renaming an
+  entry records the host-qualified form with the entry's tenant host, so two tenants can rename the same slug
+  independently. Redirects you enter in the admin may use either form. The host compared is the tenant's
+  canonical one, which `Tenant\Web\UrlManager` now keeps as `hostInfo` on every request, including a draft
+  request and a request on a host that only fell back to the default tenant — absolute URLs there are now on
+  the tenant's host rather than the request's.
 - **`Controllers\SiteController`** lost `findPermalink()`, `renderPermalink()`, `renderCategory()`,
   `findCategory()`, `validateCategoryResponse()` and `findCategoryEntries()`. `actionView()` resolves the
   entry through `getQuery()->whereUri($slug)`; override `findEntry()` to change the lookup.

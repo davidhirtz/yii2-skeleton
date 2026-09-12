@@ -1,5 +1,10 @@
 ## 3.0.0 (in development)
 
+- A `Redirect` may name a host: `request_uri` is `www.example.com/old` or `old`, and `Web\ErrorHandler` matches a
+  404 against both forms with the host of the URL manager's `hostInfo`, the host-qualified record first. It sends
+  the redirect response itself instead of calling `Application::end()`, so it works in the functional test browser
+  too. `ErrorHandler::checkRedirectRequestUri()` is `redirectRequestUri(): bool` and
+  `findRedirectByRequestUri()` takes the list of candidates
 - `Test\TestCase::tearDownApplication()` replaces `Yii::$container`: a request writes to it (the cookie domain,
   for one) and the next test must not inherit that. `config/test.php` sets `params['tenantUrl']`, which the cms
   tenant seed migration needs to migrate a test database

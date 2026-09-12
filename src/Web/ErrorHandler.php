@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Web;
 use Hirtz\Skeleton\Models\Redirect;
 use Override;
 use Yii;
+use yii\db\Expression;
 use yii\web\HttpException;
 
 class ErrorHandler extends \yii\web\ErrorHandler
@@ -21,31 +22,53 @@ class ErrorHandler extends \yii\web\ErrorHandler
     #[Override]
     protected function renderException($exception): void
     {
-        if ($this->enableRedirect && $exception instanceof HttpException && $exception->statusCode === 404) {
-            $this->checkRedirectRequestUri();
+        if (
+            $this->enableRedirect
+            && $exception instanceof HttpException
+            && $exception->statusCode === 404
+            && $this->redirectRequestUri()
+        ) {
+            return;
         }
 
         parent::renderException($exception);
     }
 
     /**
-     * Exits application and redirects to target url if a matching {@see Redirect} record was found.
+     * A {@see Redirect} may name a host (`www.example.com/old`) or not (`old`); a host-qualified record wins. The
+     * host is the URL manager's, not the request's, so a canonical host set by a URL manager subclass matches too.
      */
-    protected function checkRedirectRequestUri(): void
+    protected function redirectRequestUri(): bool
     {
-        if ($url = trim((string) Yii::$app->getRequest()->getUrl(), '/')) {
-            if ($redirect = $this->findRedirectByRequestUri($url)) {
-                Yii::$app->getResponse()->redirect($redirect->getBaseUrl() . $redirect->url, $redirect->type);
-                Yii::$app->end();
-            }
+        $url = trim((string)Yii::$app->getRequest()->getUrl(), '/');
+
+        if (!$url) {
+            return false;
         }
+
+        $host = parse_url((string)Yii::$app->getUrlManager()->getHostInfo(), PHP_URL_HOST);
+        $redirect = $this->findRedirectByRequestUri($host ? ["$host/$url", $url] : [$url]);
+
+        if (!$redirect) {
+            return false;
+        }
+
+        $response = Yii::$app->getResponse();
+        $response->redirect($redirect->getBaseUrl() . $redirect->url, $redirect->type);
+        $response->send();
+
+        return true;
     }
 
-    protected function findRedirectByRequestUri(string $url): ?Redirect
+    /**
+     * @param list<string> $requestUris
+     */
+    protected function findRedirectByRequestUri(array $requestUris): ?Redirect
     {
         return Redirect::find()
             ->select(['type', 'url'])
-            ->where(['request_uri' => $url])
+            ->where(['request_uri' => $requestUris])
+            ->orderBy(new Expression('LENGTH([[request_uri]]) DESC'))
             ->limit(1)
             ->one();
     }
