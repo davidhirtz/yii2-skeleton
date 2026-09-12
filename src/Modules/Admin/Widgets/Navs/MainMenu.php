@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
 use Hirtz\Skeleton\Modules\Admin\Module;
+use Hirtz\Skeleton\Modules\Admin\ModuleInterface;
 use Hirtz\Skeleton\Widgets\Navs\Nav;
-use Hirtz\Skeleton\Widgets\Widget;
 use Override;
-use Stringable;
 use Yii;
 
-class MainMenu extends Widget
+class MainMenu extends Nav
 {
     protected Module $module;
 
@@ -25,14 +24,17 @@ class MainMenu extends Widget
     }
 
     #[Override]
-    protected function renderContent(): Stringable
+    protected function configure(): void
     {
-        return $this->module->aside($this->getNav());
-    }
+        $this->addClass('aside-nav');
+        $this->addItem(DashboardNavItem::make(), UserNavItem::make(), SystemNavItem::make());
 
-    protected function getNav(): Nav
-    {
-        return Nav::make()
-            ->class('aside-nav');
+        foreach ($this->module->getSubmodules() as $module) {
+            if ($module instanceof ModuleInterface) {
+                $module->aside($this);
+            }
+        }
+
+        parent::configure();
     }
 }

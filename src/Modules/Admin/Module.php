@@ -6,17 +6,13 @@ namespace Hirtz\Skeleton\Modules\Admin;
 
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Models\User;
-use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\DashboardNavItem;
-use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\SystemNavItem;
-use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserNavItem;
 use Hirtz\Skeleton\Web\Request;
-use Hirtz\Skeleton\Widgets\Navs\Nav;
 use Hirtz\Skeleton\Widgets\Panels\Dashboard;
 use Hirtz\Skeleton\Widgets\Panels\DashboardItem;
 use Override;
 use Yii;
 
-class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
+class Module extends \Hirtz\Skeleton\Base\Module
 {
     public string $alias = 'admin';
     public ?int $trailLifetime = null;
@@ -56,21 +52,6 @@ class Module extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
         return parent::beforeAction($action);
     }
 
-    #[Override]
-    public function aside(Nav $nav): Nav
-    {
-        $nav->addItem(DashboardNavItem::make(), UserNavItem::make(), SystemNavItem::make());
-
-        foreach ($this->getSubmodules() as $module) {
-            if ($module instanceof ModuleInterface) {
-                $nav = $module->aside($nav);
-            }
-        }
-
-        return $nav;
-    }
-
-    #[Override]
     public function dashboard(Dashboard $dashboard): Dashboard
     {
         $dashboard->addItem(

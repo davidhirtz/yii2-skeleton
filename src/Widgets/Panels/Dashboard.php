@@ -31,9 +31,15 @@ class Dashboard extends Widget
         $module = Yii::$app->getModule('admin');
         $this->module = $module;
 
+        parent::__construct($config);
+    }
+
+    #[Override]
+    protected function configure(): void
+    {
         $this->module->dashboard($this);
 
-        parent::__construct($config);
+        parent::configure();
     }
 
     #[Override]
