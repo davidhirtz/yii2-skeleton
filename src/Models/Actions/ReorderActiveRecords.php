@@ -15,10 +15,7 @@ use yii\db\ActiveRecordInterface;
  */
 class ReorderActiveRecords
 {
-    /**
-     * @see static::getTotalRowsUpdated()
-     */
-    private int $_totalRowsUpdated = 0;
+    private int $totalRowsUpdated = 0;
 
     /**
      * @param TActiveRecord[] $models
@@ -41,7 +38,7 @@ class ReorderActiveRecords
             $this->afterReorder();
         }
 
-        return $this->_totalRowsUpdated;
+        return $this->totalRowsUpdated;
     }
 
     protected function reorderActiveRecords(): int
@@ -49,14 +46,14 @@ class ReorderActiveRecords
         $transaction = Yii::$app->getDb()->beginTransaction();
 
         try {
-            $this->_totalRowsUpdated = $this->reorderActiveRecordsInternal();
+            $this->totalRowsUpdated = $this->reorderActiveRecordsInternal();
             $transaction->commit();
         } catch (Exception $exception) {
             $transaction->rollBack();
             throw $exception;
         }
 
-        return $this->_totalRowsUpdated;
+        return $this->totalRowsUpdated;
     }
 
     protected function reorderActiveRecordsInternal(): int
@@ -88,11 +85,6 @@ class ReorderActiveRecords
     {
         $index = $this->index ? $primaryKey[$this->index] : current($primaryKey);
         return ArrayHelper::getValue($this->order, $index, 0) + 1;
-    }
-
-    public function getTotalRowsUpdated(): int
-    {
-        return $this->_totalRowsUpdated;
     }
 
     public static function runWithBodyParam(string $paramName, array $config = []): int|false
