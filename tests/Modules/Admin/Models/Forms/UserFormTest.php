@@ -68,6 +68,47 @@ class UserFormTest extends TestCase
         self::assertStringContainsString($form->newPassword, $message->getSymfonyEmail()->getHtmlBody());
     }
 
+    public function testCreateUserWithoutPasswordSendsResetLink(): void
+    {
+        $form = UserForm::create();
+
+        $form->user->name = 'test-user';
+        $form->user->email = 'test-user@test.com';
+        $form->sendEmail = true;
+
+        self::assertTrue($form->save());
+
+        self::assertNull($form->user->password_hash);
+        self::assertNotNull($form->user->password_reset_token);
+        self::assertFalse($form->user->validatePassword(''));
+
+        $body = $this->mailer->getLastMessage()->getSymfonyEmail()->getHtmlBody();
+
+        self::assertStringContainsString($form->user->getPasswordResetUrl(), $body);
+        self::assertStringNotContainsString('consider changing your password immediately', $body);
+    }
+
+    public function testCreateUserWithPasswordKeepsTheLoginLink(): void
+    {
+        $form = UserForm::create();
+
+        $form->user->name = 'test-user';
+        $form->user->email = 'test-user@test.com';
+        $form->newPassword = 'password';
+        $form->repeatPassword = 'password';
+        $form->sendEmail = true;
+
+        self::assertTrue($form->save());
+
+        self::assertNull($form->user->password_reset_token);
+        self::assertNull($form->getPasswordResetUrl());
+
+        $body = $this->mailer->getLastMessage()->getSymfonyEmail()->getHtmlBody();
+
+        self::assertStringContainsString($form->newPassword, $body);
+        self::assertStringContainsString('consider changing your password immediately', $body);
+    }
+
     public function testUpdatePassword(): void
     {
         $form = UserForm::create([

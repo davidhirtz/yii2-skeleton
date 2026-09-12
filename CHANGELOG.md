@@ -1,5 +1,8 @@
 ## 3.0.0 (in development)
 
+- A user created in the admin no longer needs a password: `Modules\Admin\Models\forms\UserForm` dropped the
+  `required` rule of its insert scenario and generates a password reset token instead, which the credentials
+  email offers as a reset link in place of the password
 - `Models\Trail::TYPE_DEFAULT` is `13`, a type of its own for a plain message, and no longer the `TYPE_CREATE`
   the interface constant resolved to. `beforeValidate()` assigns it, and `M260913110000TrailType` moves the
   column default with it, so a trail that names no type is a message instead of a bogus create

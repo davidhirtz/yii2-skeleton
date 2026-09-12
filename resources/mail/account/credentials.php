@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Modules\Admin\Models\forms\UserForm;
 use yii\mail\MessageInterface;
 
 $this->title = Yii::t('skeleton', 'Your Account');
+$passwordResetUrl = $form->getPasswordResetUrl();
 ?>
 <p><?= Yii::t('skeleton', 'Hi {name}, ', ['name' => $form->user->getUsername()]); ?></p>
 <p><?= Yii::t('skeleton', 'Here is your login information for {name}.', ['name' => Yii::$app->name]); ?></p>
@@ -29,6 +30,11 @@ $this->title = Yii::t('skeleton', 'Your Account');
     <?php } ?>
     </tbody>
 </table>
-<p><?= Yii::t('skeleton', 'Please click the link below to login and consider changing your password immediately.'); ?></p>
-<p><a href="<?= $form->getLoginUrl(); ?>"><?= $form->getLoginUrl(); ?></a></p>
+<?php if ($passwordResetUrl) { ?>
+    <p><?= Yii::t('skeleton', 'Please click the link below to choose a new password.'); ?></p>
+    <p><a href="<?= $passwordResetUrl; ?>"><?= $passwordResetUrl; ?></a></p>
+<?php } else { ?>
+    <p><?= Yii::t('skeleton', 'Please click the link below to login and consider changing your password immediately.'); ?></p>
+    <p><a href="<?= $form->getLoginUrl(); ?>"><?= $form->getLoginUrl(); ?></a></p>
+<?php } ?>
 <p><?php echo Yii::t('skeleton', 'Thank you!'); ?></p>

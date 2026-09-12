@@ -49,11 +49,6 @@ class UserForm extends Model
             ],
             [
                 ['newPassword'],
-                'required',
-                'on' => self::SCENARIO_INSERT,
-            ],
-            [
-                ['newPassword'],
                 'string',
                 'min' => $this->user->passwordMinLength,
                 'skipOnEmpty' => true,
@@ -92,6 +87,9 @@ class UserForm extends Model
         if ($this->newPassword) {
             $this->user->generateAuthKey();
             $this->user->generatePasswordHash($this->newPassword);
+        } elseif ($this->user->getIsNewRecord()) {
+            // A user created without a password can only reach the account through the reset link the email carries.
+            $this->user->generatePasswordResetToken();
         }
 
         $this->user->created_by_user_id ??= Yii::$app->getUser()->getId();
@@ -124,6 +122,14 @@ class UserForm extends Model
     public function getLoginUrl(): string
     {
         return Url::to(Yii::$app->getUser()->loginUrl, true);
+    }
+
+    /**
+     * @return string|null the reset url of a user created without a password, which is where the email sends them
+     */
+    public function getPasswordResetUrl(): ?string
+    {
+        return $this->newPassword ? null : $this->user->getPasswordResetUrl();
     }
 
     #[Override]
