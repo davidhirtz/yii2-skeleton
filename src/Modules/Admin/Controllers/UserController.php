@@ -187,7 +187,7 @@ class UserController extends Controller
                 AuthClient::tableName() . '.[[id]]' => $id,
                 AuthClient::tableName() . '.[[name]]' => $name,
             ])
-            ->joinWith('user', true, 'JOIN')
+            ->selectWith('identity', 'INNER JOIN')
             ->limit(1)
             ->one();
 

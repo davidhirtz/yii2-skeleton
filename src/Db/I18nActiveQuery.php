@@ -21,12 +21,12 @@ class I18nActiveQuery extends ActiveQuery
     /**
      * @var array<string, string> alias per "attribute/language"
      */
-    private array $_translationJoins = [];
+    private array $translationJoins = [];
 
     /**
      * @var list<string>|null `null` until decided
      */
-    private ?array $_translationLanguages = null;
+    private ?array $translationLanguages = null;
 
     public function getI18nAttributeName(string $attribute, ?string $language = null, bool $fallback = false): string
     {
@@ -68,7 +68,7 @@ class I18nActiveQuery extends ActiveQuery
         $language ??= Yii::$app->language;
         $key = "$attribute/$language";
 
-        if (!isset($this->_translationJoins[$key])) {
+        if (!isset($this->translationJoins[$key])) {
             $alias = 't_' . $attribute . '_' . strtr(mb_strtolower($language, Yii::$app->charset), '-', '_');
             $table = Translation::tableName();
 
@@ -85,10 +85,10 @@ class I18nActiveQuery extends ActiveQuery
                 ]
             );
 
-            $this->_translationJoins[$key] = $alias;
+            $this->translationJoins[$key] = $alias;
         }
 
-        return $this->_translationJoins[$key];
+        return $this->translationJoins[$key];
     }
 
     /**
@@ -102,9 +102,9 @@ class I18nActiveQuery extends ActiveQuery
         $languages ??= Yii::$app->getI18n()->getLanguages();
         $languages = array_values(array_diff((array)$languages, [Yii::$app->sourceLanguage]));
 
-        $this->_translationLanguages = $this->getModelInstance() instanceof TranslationInterface ? $languages : [];
+        $this->translationLanguages = $this->getModelInstance() instanceof TranslationInterface ? $languages : [];
 
-        if (!$this->_translationLanguages) {
+        if (!$this->translationLanguages) {
             return $this;
         }
 
@@ -115,7 +115,7 @@ class I18nActiveQuery extends ActiveQuery
 
     public function withoutTranslations(): static
     {
-        $this->_translationLanguages = [];
+        $this->translationLanguages = [];
         unset($this->with['translations']);
 
         return $this;
@@ -167,20 +167,20 @@ class I18nActiveQuery extends ActiveQuery
     #[Override]
     public function populate($rows): array
     {
-        if ($this->_translationLanguages === null && count($rows) > 1) {
+        if ($this->translationLanguages === null && count($rows) > 1) {
             $this->withTranslations();
         }
 
         $models = parent::populate($rows);
 
-        if (!$this->_translationLanguages || $this->asArray) {
+        if (!$this->translationLanguages || $this->asArray) {
             return $models;
         }
 
         foreach ($models as $model) {
             if ($model instanceof TranslationInterface) {
-                $model->populateTranslationAttributes($this->_translationLanguages);
-                $model->markTranslationsLoaded($this->_translationLanguages);
+                $model->populateTranslationAttributes($this->translationLanguages);
+                $model->markTranslationsLoaded($this->translationLanguages);
             }
         }
 

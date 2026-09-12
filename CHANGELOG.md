@@ -1,12 +1,16 @@
 ## 3.0.0 (in development)
 
 - `Db\ActiveQuery::selectWith('user')` joins a hasOne relation and populates it from the same row, where Yii's
-  `joinWith()` joins and then runs a second query for the eager load. The joined table is aliased with the relation's
-  name, the relation's own `where` moves into the ON clause (qualify its columns), a LEFT JOIN without a match
-  populates `null`, and a hasMany or `via` relation is refused — a filtered or limited join would hand out a partial
-  set. The related records are populated by the relation's own query, so a nested `with()` and the translations of a
+  `joinWith()` joins and then runs a second query for the eager load. The joined table keeps its table name as alias
+  as with `joinWith()` (`alias()` it in the callback to join a table twice), the relation's own `where` moves into the
+  ON clause (qualify its columns), a LEFT JOIN without a match populates `null`, and a hasMany or `via` relation is
+  refused — a filtered or limited join would hand out a partial set. The related records are populated by the relation's own query, so a nested `with()` and the translations of a
   `TranslationInterface` model apply as they would after `with()`. `selectJoinedRecord()` is the protected building
   block for a join the query builds itself
+- `Modules\Admin\Controllers\UserController::actionDeauthorize()` reads the `identity` relation it uses; it joined a
+  `user` relation `AuthClient` does not have, so the action threw
+- Private and protected properties lose their `_` prefix (`ActiveQuery::$status`, the I18n query's translation
+  state, the permalink and tenant collection state); a subclass reading `self::$_status` reads `self::$status`
 - A `Redirect` may name a host: `request_uri` is `www.example.com/old` or `old`, and `Web\ErrorHandler` matches a
   404 against both forms with the host of the URL manager's `hostInfo`, the host-qualified record first. It sends
   the redirect response itself instead of calling `Application::end()`, so it works in the functional test browser

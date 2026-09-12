@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Db;
 
+use Hirtz\Skeleton\Db\ActiveQuery;
+use Hirtz\Skeleton\Models\AuthClient;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\Fixtures\TrailFixture;
@@ -11,7 +13,6 @@ use Hirtz\Skeleton\Test\Fixtures\UserFixture;
 use Hirtz\Skeleton\Test\TestCase;
 use Override;
 use yii\base\InvalidCallException;
-use yii\db\ActiveQuery;
 
 /**
  * `selectWith()` reads a hasOne record off the joined row, where `joinWith()` queries it again. Every trail of the
@@ -56,7 +57,7 @@ class ActiveQuerySelectWithTest extends TestCase
 
         $trails = Trail::find()
             ->selectWith('user', callback: fn (ActiveQuery $query) => $query->onCondition([
-                '{{user}}.[[status]]' => User::STATUS_ENABLED,
+                User::tableName() . '.[[status]]' => User::STATUS_ENABLED,
             ]))
             ->andWhere([Trail::tableName() . '.[[id]]' => [$enabled, $disabled]])
             ->indexBy('id')
@@ -130,6 +131,31 @@ class ActiveQuerySelectWithTest extends TestCase
             ->one();
 
         self::assertSame(1, (int)$row['user__id']);
+    }
+
+    /**
+     * A composite primary key, and the relation the admin's deauthorize action reads.
+     */
+    public function testIdentityOfAnAuthClientIsReadOffTheJoin(): void
+    {
+        $client = AuthClient::create();
+        $client->id = '12345';
+        $client->name = 'test';
+        $client->user_id = 1;
+        $client->data = [];
+
+        self::assertTrue($client->insert(false));
+
+        $auth = AuthClient::find()
+            ->where([
+                AuthClient::tableName() . '.[[id]]' => '12345',
+                AuthClient::tableName() . '.[[name]]' => 'test',
+            ])
+            ->selectWith('identity', 'INNER JOIN')
+            ->one();
+
+        self::assertTrue($auth->isRelationPopulated('identity'));
+        self::assertSame(1, $auth->identity->id);
     }
 
     public function testHasManyIsRefused(): void

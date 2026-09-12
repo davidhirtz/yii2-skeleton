@@ -22,12 +22,12 @@ class ActiveQuery extends \yii\db\ActiveQuery
     /**
      * @var int|null the global status to be used in WHERE clause with `whereStatus()`.
      */
-    protected static ?int $_status = null;
+    protected static ?int $status = null;
 
     /**
      * @var array<string, array{query: \yii\db\ActiveQuery<covariant \yii\db\ActiveRecord>, prefix: string, populate: Closure}>
      */
-    private array $_joinedRecords = [];
+    private array $joinedRecords = [];
 
     /**
      * Makes sure the container instantiates the model class before calling parent constructor.
@@ -62,26 +62,25 @@ class ActiveQuery extends \yii\db\ActiveQuery
 
     /**
      * Joins a `hasOne` relation and reads the related record off the same row, where `joinWith()` runs a second
-     * query for it. The joined table is aliased with the relation's name, and the relation's own `where` moves into
-     * the ON clause, so its columns have to be qualified.
+     * query for it. The joined table keeps its table name as alias, as with `joinWith()`; `alias()` it in the
+     * callback to join a table twice. The relation's own `where` moves into the ON clause, so its columns have to be
+     * qualified.
      *
-     * @param Closure(\yii\db\ActiveQuery<covariant \yii\db\ActiveRecord>): mixed|null $callback
+     * @param Closure(ActiveQuery<covariant ActiveRecord>): mixed|null $callback
      */
     public function selectWith(string $name, string $joinType = 'LEFT JOIN', ?Closure $callback = null): static
     {
         $relation = $this->getModelInstance()->getRelation($name);
 
-        if (!$relation instanceof \yii\db\ActiveQuery || $relation->multiple || $relation->via) {
+        if (!$relation instanceof self || $relation->multiple || $relation->via) {
             throw new InvalidCallException("selectWith() needs a hasOne relation without a junction table, '$name' is not one.");
         }
-
-        $relation->alias($name);
 
         if ($callback) {
             $callback($relation);
         }
 
-        [, $alias] = $relation->getTableNameAndAlias();
+        [$table, $alias] = $relation->getTableNameAndAlias();
         $parentAlias = $this->quoteTableAlias($this->getTableAlias());
         $childAlias = $this->quoteTableAlias($alias);
         $on = [];
@@ -98,7 +97,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
             }
         }
 
-        $this->join($joinType, $relation->from, $on, $relation->params);
+        $this->join($joinType, $relation->from ?: $table, $on, $relation->params);
         $inverse = $relation->inverseOf;
 
         return $this->selectJoinedRecord(
@@ -141,7 +140,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
         }
 
         $this->addSelect($columns);
-        $this->_joinedRecords[$name] = ['query' => $query, 'prefix' => $prefix, 'populate' => $populate];
+        $this->joinedRecords[$name] = ['query' => $query, 'prefix' => $prefix, 'populate' => $populate];
 
         return $this;
     }
@@ -151,10 +150,10 @@ class ActiveQuery extends \yii\db\ActiveQuery
     {
         $models = parent::populate($rows);
 
-        if ($this->_joinedRecords && $models && !$this->asArray) {
+        if ($this->joinedRecords && $models && !$this->asArray) {
             $pairs = $this->pairModelsWithRows($models, $rows);
 
-            foreach ($this->_joinedRecords as ['query' => $query, 'prefix' => $prefix, 'populate' => $populate]) {
+            foreach ($this->joinedRecords as ['query' => $query, 'prefix' => $prefix, 'populate' => $populate]) {
                 $this->populateJoinedRecords($pairs, $query, $prefix, $populate);
             }
         }
@@ -368,13 +367,13 @@ class ActiveQuery extends \yii\db\ActiveQuery
         static::setStatus($status);
 
         $model = $this->getModelInstance();
-        return $this->andFilterWhere(['>=', $model::tableName() . '.status', static::$_status]);
+        return $this->andFilterWhere(['>=', $model::tableName() . '.status', static::$status]);
     }
 
     public static function setStatus(?int $status): void
     {
         if ($status !== null) {
-            static::$_status = (int)$status;
+            static::$status = (int)$status;
         }
     }
 
