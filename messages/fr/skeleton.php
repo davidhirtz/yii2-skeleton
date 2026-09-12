@@ -188,6 +188,7 @@ return [
     'TRAIL_CREATED_AT_LABEL' => '',
     'TRAIL_DATA_LABEL' => '',
     'TRAIL_DELETED' => '',
+    'TRAIL_MESSAGE' => '',
     'TRAIL_MODEL_LABEL' => '',
     'TRAIL_ORDERED' => '',
     'TRAIL_PASSWORD_CHANGED' => '',

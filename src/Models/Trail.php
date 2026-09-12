@@ -37,6 +37,11 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
 
     final public const string AUTH_TRAIL_INDEX = 'trailIndex';
 
+    /**
+     * A plain message, and the type of a trail that names none.
+     */
+    final public const int TYPE_DEFAULT = 13;
+
     final public const int TYPE_CREATE = 1;
     final public const int TYPE_UPDATE = 2;
     final public const int TYPE_DELETE = 3;
@@ -59,6 +64,13 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
                 DynamicRangeValidator::class,
             ],
         ];
+    }
+
+    #[Override]
+    public function beforeValidate(): bool
+    {
+        $this->type ??= static::TYPE_DEFAULT;
+        return parent::beforeValidate();
     }
 
     #[Override]
@@ -223,6 +235,10 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         $language = Yii::$app->sourceLanguage;
 
         return [
+            static::TYPE_DEFAULT => [
+                'name' => Yii::t('skeleton', 'TRAIL_MESSAGE'),
+                'icon' => 'info-circle',
+            ],
             static::TYPE_CREATE => [
                 'name' => Yii::t('skeleton', 'COMMON_CREATED'),
                 'parentType' => static::TYPE_CHILD_CREATE,

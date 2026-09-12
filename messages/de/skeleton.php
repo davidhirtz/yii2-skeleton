@@ -188,6 +188,7 @@ return [
     'TRAIL_CREATED_AT_LABEL' => 'Zeitpunkt',
     'TRAIL_DATA_LABEL' => 'Änderungen',
     'TRAIL_DELETED' => '{model} gelöscht',
+    'TRAIL_MESSAGE' => 'Nachricht',
     'TRAIL_MODEL_LABEL' => 'Datensatz',
     'TRAIL_ORDERED' => 'Sortiert',
     'TRAIL_PASSWORD_CHANGED' => 'Passwort geändert',

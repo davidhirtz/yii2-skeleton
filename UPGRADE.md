@@ -1,5 +1,13 @@
 # Upgrade Guide
 
+## 3.0.0 — `Trail::TYPE_DEFAULT` is a plain message
+
+`Models\Trail` declares its own `TYPE_DEFAULT` (`13`) for a trail that carries nothing but a `message`, and
+assigns it in `beforeValidate()`. Before, `TYPE_DEFAULT` was the `1` of `Models\Interfaces\TypeAttributeInterface`
+— the same value as `TYPE_CREATE` — so a trail written without a type was filed as a create and rendered as one.
+`M260913110000TrailType` moves the `trail.type` column default along. Existing rows keep their type; a project
+that inserts trail rows through plain SQL and relied on the old column default has to name `TYPE_CREATE` itself.
+
 ## 3.0.0 — `IconFilenameAttributeTrait` replaced by `IconCustomAttribute`
 
 `Models\Traits\IconFilenameAttributeTrait` is gone. `Models\CustomAttributes\IconCustomAttribute` does the same

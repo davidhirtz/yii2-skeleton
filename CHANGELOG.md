@@ -1,5 +1,8 @@
 ## 3.0.0 (in development)
 
+- `Models\Trail::TYPE_DEFAULT` is `13`, a type of its own for a plain message, and no longer the `TYPE_CREATE`
+  the interface constant resolved to. `beforeValidate()` assigns it, and `M260913110000TrailType` moves the
+  column default with it, so a trail that names no type is a message instead of a bogus create
 - Added `Html\Img::fetchPriority()`
 - Private properties dropped their `_` prefix, so a cache now carries the name of the magic property it backs.
   In a class that uses one of the affected traits this shadows the getter: `$this->ancestors`, `$this->children`

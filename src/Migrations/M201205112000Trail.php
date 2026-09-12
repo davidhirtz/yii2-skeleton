@@ -18,11 +18,16 @@ class M201205112000Trail extends Migration
 {
     use MigrationTrait;
 
+    /**
+     * The default of the day, which was `TYPE_CREATE`; a later migration moves it to the plain message type.
+     */
+    private const int LEGACY_TYPE_DEFAULT = 1;
+
     public function safeUp(): void
     {
         $this->createTable(Trail::tableName(), [
             'id' => $this->primaryKey()->unsigned(),
-            'type' => $this->smallInteger()->unsigned()->notNull()->defaultValue(Trail::TYPE_DEFAULT),
+            'type' => $this->smallInteger()->unsigned()->notNull()->defaultValue(self::LEGACY_TYPE_DEFAULT),
             'model' => $this->string()->null(),
             'model_id' => $this->string(64)->null(),
             'user_id' => $this->integer()->unsigned()->null(),
