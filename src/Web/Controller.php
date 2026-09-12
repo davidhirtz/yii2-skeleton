@@ -30,6 +30,14 @@ class Controller extends \yii\web\Controller
      */
     public string|false $contentSecurityPolicy = "frame-ancestors 'self'";
 
+    protected User $webuser;
+
+    public function __construct($id, $module, $config = [])
+    {
+        $this->webuser = Yii::$app->getUser();
+        parent::__construct($id, $module, $config);
+    }
+
     #[Override]
     public function beforeAction($action): bool
     {
