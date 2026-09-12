@@ -87,9 +87,15 @@ class User extends \yii\web\User
     #[Override]
     public function loginRequired($checkAjax = true, $checkAcceptHeader = true): ?Response
     {
+        $request = Yii::$app->getRequest();
+
         // Set flash message for required logins.
-        if (!$checkAjax || !Yii::$app->getRequest()->getIsAjax()) {
+        if (!$checkAjax || !$request->getIsAjax()) {
             Yii::$app->getSession()->addFlash('error', Yii::t('skeleton', 'USER_ERROR_MUST_LOGIN_VIEW'));
+        }
+
+        if ($request->isHtmxRequest()) {
+            return Yii::$app->getResponse()->setHtmxRefresh();
         }
 
         return parent::loginRequired($checkAjax, $checkAcceptHeader);
@@ -136,6 +142,10 @@ class User extends \yii\web\User
             $session->writeCallback = fn () => [
                 'user_id' => null,
             ];
+        }
+
+        if (Yii::$app->getRequest()->isHtmxRequest()) {
+            Yii::$app->getResponse()->setHtmxRefresh();
         }
 
         parent::afterLogout($identity);

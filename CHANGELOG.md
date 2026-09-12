@@ -1,5 +1,9 @@
 ## 3.0.0 (in development)
 
+- An htmx request whose session is gone is answered with `HX-Refresh` instead of a fragment: `Web\User::afterLogout()`
+  and `loginRequired()` mark the response through the new `Web\Response::setHtmxRefresh()`, which drops the
+  `HX-Location` htmx would otherwise process first. The page that made the request still carries the identity and the
+  CSRF token it was rendered with, so it has to be loaded again rather than patched
 - A user created in the admin no longer needs a password: `Modules\Admin\Models\forms\UserForm` dropped the
   `required` rule of its insert scenario and generates a password reset token instead, which the credentials
   email offers as a reset link in place of the password

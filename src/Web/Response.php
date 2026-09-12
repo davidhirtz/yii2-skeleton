@@ -15,6 +15,8 @@ class Response extends \yii\web\Response
 {
     protected string $htmxRedirectTarget = '#wrap';
 
+    private bool $isHtmxRefresh = false;
+
     #[\Override]
     protected function prepare(): void
     {
@@ -22,7 +24,28 @@ class Response extends \yii\web\Response
             $this->getHeaders()->set('X-Robots-Tag', 'none');
         }
 
+        if ($this->isHtmxRefresh) {
+            $this->prepareHtmxRefresh();
+        }
+
         parent::prepare();
+    }
+
+    /**
+     * htmx reads `HX-Location` first and returns, so the redirect headers have to go for the refresh to happen.
+     */
+    protected function prepareHtmxRefresh(): void
+    {
+        $headers = $this->getHeaders();
+        $headers->remove('HX-Location');
+        $headers->remove('HX-Redirect');
+        $headers->set('HX-Refresh', 'true');
+
+        $this->format = self::FORMAT_HTML;
+        $this->data = null;
+        $this->content = '';
+
+        $this->setStatusCode(200);
     }
 
     #[\Override]
@@ -64,6 +87,16 @@ class Response extends \yii\web\Response
     public function setHtmxRedirectTarget(string $target): static
     {
         $this->htmxRedirectTarget = $target;
+        return $this;
+    }
+
+    /**
+     * Answers an htmx request by reloading the page instead of swapping into it. The page was rendered for a session
+     * that is gone, down to the CSRF token it carries, so nothing of it can be kept.
+     */
+    public function setHtmxRefresh(): static
+    {
+        $this->isHtmxRefresh = true;
         return $this;
     }
 }
