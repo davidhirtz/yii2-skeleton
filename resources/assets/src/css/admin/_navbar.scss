@@ -6,12 +6,15 @@
   gap: .5rem;
   background: var(--body-bg);
   border-bottom: 1px solid var(--border-color);
-  border-left: 1px solid var(--border-color);
+  justify-content: flex-end;
   padding: 1rem;
-  position: fixed;
-  right: 0;
-  top: 0;
-  z-index: 50;
+
+  @include media-breakpoint-up(md) {
+    position: absolute;
+    right: 1rem;
+    top: 0;
+    z-index: 50;
+  }
 }
 
 .i18n-icon {

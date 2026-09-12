@@ -2,26 +2,27 @@
 
 
 .breadcrumbs-list {
-  display: flex;
   background-color: var(--breadcrumb-bg);
+  display: flex;
   gap: .5rem;
+  margin-right: 5rem;
   overflow-x: auto;
   padding: 0.5rem 1rem;
+  position: relative;
 
-  @include media-breakpoint-down(sm) {
-    margin-right: 5rem;
-    position: relative;
+  @include media-breakpoint-up(md) {
+      margin-right: 10rem;
+  }
 
-    &::after {
-      background: linear-gradient(to right, transparent, var(--body-bg));
-      bottom: 0;
-      content: "";
-      pointer-events: none;
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: 1.5rem;
-    }
+  &::after {
+    background: linear-gradient(to right, transparent, var(--body-bg));
+    bottom: 0;
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 1.5rem;
   }
 }
 

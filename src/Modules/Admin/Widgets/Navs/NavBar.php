@@ -49,7 +49,6 @@ class NavBar extends Widget
 
         $dropdown = Dropdown::make()
             ->button($button)
-            ->dropend()
             ->popover(fn (Div $tag) => $tag->attribute('id', 'i18n'));
 
         foreach ($i18n->getLanguages() as $language) {

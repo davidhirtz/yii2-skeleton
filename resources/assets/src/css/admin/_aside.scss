@@ -139,9 +139,6 @@
 }
 
 .aside-toggle {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
 
   @include media-breakpoint-up(md) {
     display: none;

@@ -46,11 +46,6 @@ class Dropdown extends Widget
             ->text($text));
     }
 
-    public function dropend(): static
-    {
-        return $this->addClass('dropdown-menu-end');
-    }
-
     /**
      * @param Closure(Div):Div $callback
      */
