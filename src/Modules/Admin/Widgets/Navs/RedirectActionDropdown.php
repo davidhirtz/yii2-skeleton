@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
 use Hirtz\Skeleton\Models\Redirect;
-use Hirtz\Skeleton\Widgets\Attributes\Configure;
 use Hirtz\Skeleton\Widgets\Buttons\CreateButton;
 use Hirtz\Skeleton\Widgets\Buttons\DeleteButton;
 use Hirtz\Skeleton\Widgets\Navs\ActionDropdown;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
+use Override;
 use Stringable;
 use Yii;
 
@@ -20,8 +20,7 @@ class RedirectActionDropdown extends ActionDropdown
      */
     use ModelTrait;
 
-    #[Configure]
-    #[\Override]
+    #[Override]
     protected function configure(): void
     {
         $this->addItem($this->getCreateButton(), $this->getDeleteButton());

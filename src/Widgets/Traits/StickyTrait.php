@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Traits;
 
-use Hirtz\Skeleton\Widgets\Attributes\Configure;
-
 trait StickyTrait
 {
     protected bool $sticky = false;
@@ -16,7 +14,6 @@ trait StickyTrait
         return $this;
     }
 
-    #[Configure]
     protected function addStickyClass(): static
     {
         return $this->sticky ? $this->addClass('sticky') : $this;

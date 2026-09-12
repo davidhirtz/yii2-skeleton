@@ -9,10 +9,10 @@ use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
 use Hirtz\Skeleton\Base\Traits\EvaluateClosureTrait;
 use Hirtz\Skeleton\Web\User;
 use Hirtz\Skeleton\Web\View;
-use Hirtz\Skeleton\Widgets\Traits\ConfigureAttributesTrait;
 use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Stringable;
 use Yii;
+use yii\base\Event;
 use yii\base\ViewContextInterface;
 
 /**
@@ -21,9 +21,10 @@ use yii\base\ViewContextInterface;
 abstract class Widget implements Stringable, ViewContextInterface
 {
     use ContainerConfigurationTrait;
-    use ConfigureAttributesTrait;
     use EvaluateClosureTrait;
     use VisibilityTrait;
+
+    final public const string EVENT_CONFIGURE = 'configure';
 
     protected View $view;
     protected User $webuser;
@@ -76,7 +77,7 @@ abstract class Widget implements Stringable, ViewContextInterface
 
     protected function configure(): void
     {
-        $this->configureAttributes();
+        Event::trigger($this, self::EVENT_CONFIGURE);
         $this->evaluate($this->configureClosures, $this);
     }
 

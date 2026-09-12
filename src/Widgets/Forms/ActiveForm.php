@@ -73,6 +73,8 @@ class ActiveForm extends Widget
         $this->attributes['hx-boost'] ??= "true";
 
         $this->rows ??= $this->model?->safeAttributes() ?: [];
+
+        parent::configure();
     }
 
     protected function renderContent(): string|Stringable

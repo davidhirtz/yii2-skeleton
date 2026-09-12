@@ -21,6 +21,14 @@ class GridToolbar extends Widget
     use TagContentTrait;
 
     #[Override]
+    protected function configure(): void
+    {
+        $this->addStickyClass();
+
+        parent::configure();
+    }
+
+    #[Override]
     protected function renderContent(): string|Stringable
     {
         return $this->content
