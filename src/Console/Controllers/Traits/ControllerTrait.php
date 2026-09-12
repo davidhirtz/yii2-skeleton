@@ -6,11 +6,11 @@ namespace Hirtz\Skeleton\Console\Controllers\Traits;
 
 trait ControllerTrait
 {
-    private ?float $_microTime = null;
+    private ?float $microTime = null;
 
     protected function startDuration(): void
     {
-        $this->_microTime = microtime(true);
+        $this->microTime = microtime(true);
     }
 
     public function interactiveStdout(): int|bool
@@ -31,7 +31,7 @@ trait ControllerTrait
 
     protected function getDuration(?float $microTime = null): string
     {
-        $time = (microtime(true) - ($microTime ?: $this->_microTime));
+        $time = (microtime(true) - ($microTime ?: $this->microTime));
         return ' (time: ' . sprintf('%.2f', $time) . 's)';
     }
 }

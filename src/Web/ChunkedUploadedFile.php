@@ -27,7 +27,7 @@ class ChunkedUploadedFile extends UploadedFile
      */
     public ?int $maxSize = null;
 
-    private ?string $_partialUploadPath = null;
+    private ?string $partialUploadPath = null;
 
     public function init(): void
     {
@@ -113,17 +113,17 @@ class ChunkedUploadedFile extends UploadedFile
 
     public function getPartialUploadPath(): ?string
     {
-        if ($this->_partialUploadPath === null) {
+        if ($this->partialUploadPath === null) {
             $this->setPartialUploadPath('@runtime/uploads');
         }
 
-        return $this->_partialUploadPath;
+        return $this->partialUploadPath;
     }
 
     public function setPartialUploadPath(string $path): void
     {
-        $this->_partialUploadPath = rtrim((string)Yii::getAlias($path), '/') . '/';
-        FileHelper::createDirectory($this->_partialUploadPath);
+        $this->partialUploadPath = rtrim((string)Yii::getAlias($path), '/') . '/';
+        FileHelper::createDirectory($this->partialUploadPath);
     }
 
     public function isCompleted(): bool

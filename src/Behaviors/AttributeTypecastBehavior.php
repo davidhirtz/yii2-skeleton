@@ -86,16 +86,16 @@ class AttributeTypecastBehavior extends Behavior
      * @var array|null the list of nullable attributes to be typecast to `null` if empty. If `null`, nullable
      * attributes will be auto-detected from the table schema.
      */
-    private ?array $_attributeTypes = null;
+    private ?array $attributeTypes = null;
 
     /**
      * @var array|null the list of nullable attributes to be typecast to `null` if empty. If `null`, nullable
      * attributes will be auto-detected from the table schema.
      */
-    private ?array $_nullableAttributes = null;
+    private ?array $nullableAttributes = null;
 
-    private static array $_autoDetectedAttributeTypes = [];
-    private static array $_autoDetectedNullableAttributes = [];
+    private static array $autoDetectedAttributeTypes = [];
+    private static array $autoDetectedNullableAttributes = [];
 
     #[\Override]
     public function events(): array
@@ -232,17 +232,17 @@ class AttributeTypecastBehavior extends Behavior
 
     public function getAttributeTypes(): ?array
     {
-        if ($this->_attributeTypes === null) {
-            self::$_autoDetectedAttributeTypes[$this->owner::class] ??= $this->detectAttributeTypes();
-            $this->_attributeTypes = self::$_autoDetectedAttributeTypes[$this->owner::class];
+        if ($this->attributeTypes === null) {
+            self::$autoDetectedAttributeTypes[$this->owner::class] ??= $this->detectAttributeTypes();
+            $this->attributeTypes = self::$autoDetectedAttributeTypes[$this->owner::class];
         }
 
-        return $this->_attributeTypes;
+        return $this->attributeTypes;
     }
 
     public function setAttributeTypes(?array $attributeTypes): void
     {
-        $this->_attributeTypes = $attributeTypes;
+        $this->attributeTypes = $attributeTypes;
     }
 
     protected function detectAttributeTypes(): array
@@ -273,17 +273,17 @@ class AttributeTypecastBehavior extends Behavior
 
     public function getNullableAttributes(): ?array
     {
-        if ($this->_nullableAttributes === null) {
-            self::$_autoDetectedNullableAttributes[$this->owner::class] ??= $this->detectNullableAttributes();
-            $this->_nullableAttributes = self::$_autoDetectedNullableAttributes[$this->owner::class];
+        if ($this->nullableAttributes === null) {
+            self::$autoDetectedNullableAttributes[$this->owner::class] ??= $this->detectNullableAttributes();
+            $this->nullableAttributes = self::$autoDetectedNullableAttributes[$this->owner::class];
         }
 
-        return $this->_nullableAttributes;
+        return $this->nullableAttributes;
     }
 
     public function setNullableAttributes(?array $nullableAttributes): void
     {
-        $this->_nullableAttributes = $nullableAttributes;
+        $this->nullableAttributes = $nullableAttributes;
     }
 
     protected function detectNullableAttributes(): array
@@ -307,7 +307,7 @@ class AttributeTypecastBehavior extends Behavior
 
     public static function clearAutoDetectedAttributeTypes(): void
     {
-        self::$_autoDetectedAttributeTypes = [];
-        self::$_autoDetectedNullableAttributes = [];
+        self::$autoDetectedAttributeTypes = [];
+        self::$autoDetectedNullableAttributes = [];
     }
 }

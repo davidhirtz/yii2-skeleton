@@ -27,31 +27,31 @@ trait CustomAttributesTrait
     /**
      * @var array<string, CustomAttribute>|null
      */
-    private ?array $_customAttributeDefinitions = null;
+    private ?array $customAttributeDefinitions = null;
 
-    private ?string $_customAttributesKey = null;
+    private ?string $customAttributesKey = null;
 
     /**
      * @var list<CustomAttribute>|Closure(static): list<CustomAttribute>|null
      */
-    private array|Closure|null $_customAttributes = null;
+    private array|Closure|null $customAttributes = null;
 
     /**
      * @var array<string, array<int|string, CustomAttributeGroupItem>>
      */
-    private array $_customAttributeItems = [];
+    private array $customAttributeItems = [];
 
     /**
      * @var array<string, mixed> the value each item list was built from
      */
-    private array $_customAttributeItemSources = [];
+    private array $customAttributeItemSources = [];
 
     /**
      * @return list<CustomAttribute> the configured definitions, or those of the type options when none were set
      */
     public function getCustomAttributes(): array
     {
-        $attributes = $this->_customAttributes;
+        $attributes = $this->customAttributes;
 
         if ($attributes === null && $this instanceof TypeAttributeInterface) {
             $attributes = $this->getTypeOptions()['customAttributes'] ?? [];
@@ -65,7 +65,7 @@ trait CustomAttributesTrait
      */
     public function setCustomAttributes(array|Closure|null $customAttributes): void
     {
-        $this->_customAttributes = $customAttributes;
+        $this->customAttributes = $customAttributes;
         $this->resetCustomAttributes();
     }
 
@@ -76,23 +76,23 @@ trait CustomAttributesTrait
     {
         $key = json_encode($this->getCustomAttributesKey());
 
-        if ($this->_customAttributeDefinitions !== null) {
-            if ($this->_customAttributesKey === $key) {
-                return $this->_customAttributeDefinitions;
+        if ($this->customAttributeDefinitions !== null) {
+            if ($this->customAttributesKey === $key) {
+                return $this->customAttributeDefinitions;
             }
 
-            $this->_customAttributeItems = [];
-            $this->_customAttributeItemSources = [];
+            $this->customAttributeItems = [];
+            $this->customAttributeItemSources = [];
             $this->resetValidators();
         }
 
         // Primed before resolving: `getCustomAttributes()` reads an attribute whose getter can run through
         // `attributes()`, which asks for the definitions again.
-        $this->_customAttributesKey = $key;
-        $this->_customAttributeDefinitions = [];
-        $this->_customAttributeDefinitions = $this->createCustomAttributeDefinitions();
+        $this->customAttributesKey = $key;
+        $this->customAttributeDefinitions = [];
+        $this->customAttributeDefinitions = $this->createCustomAttributeDefinitions();
 
-        return $this->_customAttributeDefinitions;
+        return $this->customAttributeDefinitions;
     }
 
     public function getCustomAttribute(string $name): ?CustomAttribute
@@ -194,17 +194,17 @@ trait CustomAttributesTrait
     {
         $value = $this->{$name};
 
-        if (!array_key_exists($name, $this->_customAttributeItems) || $this->_customAttributeItemSources[$name] !== $value) {
+        if (!array_key_exists($name, $this->customAttributeItems) || $this->customAttributeItemSources[$name] !== $value) {
             $definition = $this->getCustomAttributeDefinitions()[$name] ?? null;
 
-            $this->_customAttributeItems[$name] = $definition instanceof GroupCustomAttribute
+            $this->customAttributeItems[$name] = $definition instanceof GroupCustomAttribute
                 ? $definition->createItems($this, $value)
                 : [];
 
-            $this->_customAttributeItemSources[$name] = $value;
+            $this->customAttributeItemSources[$name] = $value;
         }
 
-        return $this->_customAttributeItems[$name];
+        return $this->customAttributeItems[$name];
     }
 
     /**
@@ -239,7 +239,7 @@ trait CustomAttributesTrait
             $value = $definition->validateGroup($this, $attribute);
 
             $this->{$attribute} = $value;
-            $this->_customAttributeItemSources[$attribute] = $value;
+            $this->customAttributeItemSources[$attribute] = $value;
         }
     }
 
@@ -260,10 +260,10 @@ trait CustomAttributesTrait
 
     public function resetCustomAttributes(): void
     {
-        $this->_customAttributeDefinitions = null;
-        $this->_customAttributesKey = null;
-        $this->_customAttributeItems = [];
-        $this->_customAttributeItemSources = [];
+        $this->customAttributeDefinitions = null;
+        $this->customAttributesKey = null;
+        $this->customAttributeItems = [];
+        $this->customAttributeItemSources = [];
 
         $this->resetValidators();
     }

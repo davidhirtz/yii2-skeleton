@@ -24,7 +24,7 @@ class Request extends \yii\web\Request
      */
     public string $formReloadHeader = 'X-Form-Reload';
 
-    private bool $_isDraft = false;
+    private bool $isDraft = false;
 
     /**
      * Sets the host info via params after draft mode is checked. Setting the host info manually can be useful if
@@ -73,12 +73,12 @@ class Request extends \yii\web\Request
 
     public function getIsDraft(): bool
     {
-        return $this->_isDraft;
+        return $this->isDraft;
     }
 
     public function setIsDraft(bool $isDraft): void
     {
-        $this->_isDraft = $isDraft;
+        $this->isDraft = $isDraft;
     }
 
     public function preferNoContent(): bool

@@ -16,9 +16,9 @@ trait I18nAttributesTrait
      */
     public array $i18nAttributes = [];
 
-    private ?array $_i18nHints = null;
-    private ?array $_i18nLabels = null;
-    private array $_i18nLabelsKey = [];
+    private ?array $i18nHints = null;
+    private ?array $i18nLabels = null;
+    private array $i18nLabelsKey = [];
 
     /**
      * @return list<string> `i18nAttributes` plus the translatable custom attributes of the model's current state
@@ -98,13 +98,13 @@ trait I18nAttributesTrait
     public function getI18nHints(): array
     {
         $this->buildI18nLabelsAndHints();
-        return $this->_i18nHints;
+        return $this->i18nHints;
     }
 
     protected function getI18nLabels(): array
     {
         $this->buildI18nLabelsAndHints();
-        return $this->_i18nLabels;
+        return $this->i18nLabels;
     }
 
     /**
@@ -114,15 +114,15 @@ trait I18nAttributesTrait
     {
         $attributes = $this->getI18nAttributes();
 
-        if ($this->_i18nLabels !== null && $this->_i18nLabelsKey === $attributes) {
+        if ($this->i18nLabels !== null && $this->i18nLabelsKey === $attributes) {
             return;
         }
 
         $i18n = Yii::$app->getI18n();
 
-        $this->_i18nLabelsKey = $attributes;
-        $this->_i18nLabels = [];
-        $this->_i18nHints = $this->attributeHints();
+        $this->i18nLabelsKey = $attributes;
+        $this->i18nLabels = [];
+        $this->i18nHints = $this->attributeHints();
 
         foreach ($attributes as $attribute) {
             foreach ($i18n->getLanguages() as $language) {
@@ -136,8 +136,8 @@ trait I18nAttributesTrait
                     ]);
                 }
 
-                $this->_i18nLabels[$name] = $label;
-                $this->_i18nHints[$name] ??= $this->_i18nHints[$attribute] ?? null;
+                $this->i18nLabels[$name] = $label;
+                $this->i18nHints[$name] ??= $this->i18nHints[$attribute] ?? null;
             }
         }
     }

@@ -10,7 +10,7 @@ use Override;
 
 class TimezoneSelectField extends SelectField
 {
-    private ?array $_timezones = null;
+    private ?array $timezones = null;
 
     #[Override]
     protected function configure(): void
@@ -21,7 +21,7 @@ class TimezoneSelectField extends SelectField
 
     protected function getTimezones(): array
     {
-        if (null === $this->_timezones) {
+        if (null === $this->timezones) {
             $identifiers = DateTimeZone::listIdentifiers();
             $now = new DateTime('now', new DateTimeZone('GMT'));
             $list = [];
@@ -41,14 +41,14 @@ class TimezoneSelectField extends SelectField
                 asort($timezones);
 
                 foreach ($timezones as $name => $displayName) {
-                    $this->_timezones[$name] = $this->formatTimezoneOffset($offset) . ' | ' . $displayName;
+                    $this->timezones[$name] = $this->formatTimezoneOffset($offset) . ' | ' . $displayName;
                 }
             }
 
-            asort($this->_timezones);
+            asort($this->timezones);
         }
 
-        return $this->_timezones;
+        return $this->timezones;
     }
 
     private function formatTimezoneOffset(int $offset): string

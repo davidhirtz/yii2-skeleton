@@ -24,8 +24,8 @@ use yii\helpers\ArrayHelper;
  */
 trait NestedTreeTrait
 {
-    private ?array $_ancestors = null;
-    private ?array $_descendants = null;
+    private ?array $ancestors = null;
+    private ?array $descendants = null;
 
     /**
      * @return ActiveQuery<static>
@@ -40,17 +40,17 @@ trait NestedTreeTrait
      */
     public function getAncestors(bool $refresh = false): array
     {
-        if ($this->_ancestors === null || $refresh) {
-            $this->_ancestors = [];
+        if ($this->ancestors === null || $refresh) {
+            $this->ancestors = [];
 
             if ($this->parent_id) {
-                $this->_ancestors = $this->findAncestors()
+                $this->ancestors = $this->findAncestors()
                     ->indexBy('id')
                     ->all();
             }
         }
 
-        return $this->_ancestors;
+        return $this->ancestors;
     }
 
     /**
@@ -58,13 +58,13 @@ trait NestedTreeTrait
      */
     public function setAncestors(array $records): void
     {
-        $this->_ancestors = [];
+        $this->ancestors = [];
 
         if ($this->parent_id) {
             foreach ($records as $record) {
                 if ($record->lft < $this->rgt) {
                     if ($record->rgt > $this->rgt) {
-                        $this->_ancestors[$record->id] = $record;
+                        $this->ancestors[$record->id] = $record;
                     }
 
                     continue;
@@ -98,17 +98,17 @@ trait NestedTreeTrait
      */
     public function getDescendants(bool $refresh = false): array
     {
-        if ($this->_descendants === null || $refresh) {
-            $this->_descendants = [];
+        if ($this->descendants === null || $refresh) {
+            $this->descendants = [];
 
             if ($this->lft < $this->rgt + 1) {
-                $this->_descendants = $this->findDescendants()
+                $this->descendants = $this->findDescendants()
                     ->indexBy('id')
                     ->all();
             }
         }
 
-        return $this->_descendants;
+        return $this->descendants;
     }
 
     /**
@@ -116,12 +116,12 @@ trait NestedTreeTrait
      */
     public function setDescendants(array $records): void
     {
-        $this->_descendants = [];
+        $this->descendants = [];
 
         if ($this->lft < $this->rgt + 1) {
             foreach ($records as $record) {
                 if ($record->lft > $this->lft && $record->rgt < $this->rgt) {
-                    $this->_descendants[$record->id] = $record;
+                    $this->descendants[$record->id] = $record;
                 }
             }
         }

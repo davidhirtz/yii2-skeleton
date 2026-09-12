@@ -25,7 +25,7 @@ class CustomAttributeGroupItem extends Model implements CustomAttributeInterface
     /**
      * @var array<string, mixed>
      */
-    private array $_values = [];
+    private array $values = [];
 
     public function __construct(
         private readonly GroupCustomAttribute $group,
@@ -96,12 +96,12 @@ class CustomAttributeGroupItem extends Model implements CustomAttributeInterface
 
     public function getAttribute(string $name): mixed
     {
-        return $this->_values[$name] ?? null;
+        return $this->values[$name] ?? null;
     }
 
     public function setAttribute(string $name, mixed $value): void
     {
-        $this->_values[$name] = $value;
+        $this->values[$name] = $value;
     }
 
     #[Override]

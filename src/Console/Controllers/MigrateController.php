@@ -31,7 +31,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
     public string $dbFile = '@root/config/db.php';
     public $templateFile = '@skeleton/views/migration.php';
 
-    private ?array $_dbConfig = null;
+    private ?array $dbConfig = null;
 
     /**
      * @var bool whether to skip database backup before applying or reverting migrations.
@@ -142,7 +142,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
                 $db['password'] = $this->hiddenPasswordPrompt();
 
                 $this->setConfig($this->dbFile, $db, 'Database connection credentials saved.');
-                $this->_dbConfig = $db;
+                $this->dbConfig = $db;
 
                 Yii::$app->setComponents([
                     'db' => [...Yii::$app->getComponents()['db'], ...$db],
@@ -158,7 +158,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
 
     protected function getDbConfig(): array
     {
-        $this->_dbConfig ??= $this->getConfig($this->dbFile);
-        return $this->_dbConfig;
+        $this->dbConfig ??= $this->getConfig($this->dbFile);
+        return $this->dbConfig;
     }
 }

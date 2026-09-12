@@ -24,17 +24,17 @@ trait TranslationTrait
     /**
      * @var array<string, array{string, string}>|null
      */
-    private ?array $_translatedAttributeNames = null;
+    private ?array $translatedAttributeNames = null;
 
     /**
      * @var list<string>
      */
-    private array $_translatedAttributeNamesKey = [];
+    private array $translatedAttributeNamesKey = [];
 
     /**
      * @var list<string>
      */
-    private array $_loadedTranslationLanguages = [];
+    private array $loadedTranslationLanguages = [];
 
     /**
      * @return list<string>
@@ -59,14 +59,14 @@ trait TranslationTrait
         $key = [...$attributes, ...$languages];
 
         // Keyed rather than built once: a shared instance() outlives both the attributes and the languages.
-        if ($this->_translatedAttributeNames === null || $this->_translatedAttributeNamesKey !== $key) {
+        if ($this->translatedAttributeNames === null || $this->translatedAttributeNamesKey !== $key) {
             $i18n = Yii::$app->getI18n();
-            $this->_translatedAttributeNames = [];
-            $this->_translatedAttributeNamesKey = $key;
+            $this->translatedAttributeNames = [];
+            $this->translatedAttributeNamesKey = $key;
 
             foreach ($attributes as $attribute) {
                 foreach ($languages as $language) {
-                    $this->_translatedAttributeNames[$i18n->getAttributeName($attribute, $language)] = [
+                    $this->translatedAttributeNames[$i18n->getAttributeName($attribute, $language)] = [
                         $attribute,
                         $language,
                     ];
@@ -74,7 +74,7 @@ trait TranslationTrait
             }
         }
 
-        return $this->_translatedAttributeNames;
+        return $this->translatedAttributeNames;
     }
 
     #[Override]
@@ -102,7 +102,7 @@ trait TranslationTrait
 
     public function resetLoadedTranslations(): void
     {
-        $this->_loadedTranslationLanguages = [];
+        $this->loadedTranslationLanguages = [];
     }
 
     /**
@@ -134,8 +134,8 @@ trait TranslationTrait
      */
     public function markTranslationsLoaded(array $languages): void
     {
-        $this->_loadedTranslationLanguages = array_values(array_unique([
-            ...$this->_loadedTranslationLanguages,
+        $this->loadedTranslationLanguages = array_values(array_unique([
+            ...$this->loadedTranslationLanguages,
             ...$languages,
         ]));
     }
@@ -175,12 +175,12 @@ trait TranslationTrait
     protected function isVirtualAttributeLoaded(string $name): bool
     {
         $language = $this->getTranslatedAttributeNames()[$name][1] ?? null;
-        return $language === null || in_array($language, $this->_loadedTranslationLanguages, true);
+        return $language === null || in_array($language, $this->loadedTranslationLanguages, true);
     }
 
     protected function populateVirtualAttributes(string $name): void
     {
-        $languages = array_values(array_diff($this->getTranslationLanguages(), $this->_loadedTranslationLanguages));
+        $languages = array_values(array_diff($this->getTranslationLanguages(), $this->loadedTranslationLanguages));
 
         if (!$languages) {
             return;

@@ -21,7 +21,7 @@ class StreamUploadedFile extends UploadedFile
     public ?array $allowedExtensions = null;
     public ?string $url = null;
 
-    private ?string $_temporaryUploadPath = null;
+    private ?string $temporaryUploadPath = null;
 
     public function init(): void
     {
@@ -107,16 +107,16 @@ class StreamUploadedFile extends UploadedFile
 
     public function getTemporaryUploadPath(): ?string
     {
-        if ($this->_temporaryUploadPath === null) {
+        if ($this->temporaryUploadPath === null) {
             $this->setTemporaryUploadPath('@runtime/uploads');
         }
 
-        return $this->_temporaryUploadPath;
+        return $this->temporaryUploadPath;
     }
 
     public function setTemporaryUploadPath(string $path): void
     {
-        $this->_temporaryUploadPath = rtrim((string)Yii::getAlias($path), '/') . '/';
-        FileHelper::createDirectory($this->_temporaryUploadPath);
+        $this->temporaryUploadPath = rtrim((string)Yii::getAlias($path), '/') . '/';
+        FileHelper::createDirectory($this->temporaryUploadPath);
     }
 }

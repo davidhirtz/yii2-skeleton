@@ -16,12 +16,12 @@ class HtmlCustomAttribute extends CustomAttribute
     protected array|string|null $validator = HtmlValidator::class;
     protected ?int $max = 65535;
 
-    private ?HtmlValidator $_validator = null;
+    private ?HtmlValidator $htmlValidator = null;
 
     public function validator(array|string|null $validator): static
     {
         $this->validator = $validator;
-        $this->_validator = null;
+        $this->htmlValidator = null;
 
         return $this;
     }
@@ -39,7 +39,7 @@ class HtmlCustomAttribute extends CustomAttribute
         }
 
         /** @var HtmlValidator $validator */
-        $validator = $this->_validator ??= Yii::createObject($this->validator);
+        $validator = $this->htmlValidator ??= Yii::createObject($this->validator);
 
         return $validator;
     }

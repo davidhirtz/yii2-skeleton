@@ -19,7 +19,7 @@ trait TypeAttributeTrait
     /**
      * @var static[][]
      */
-    private static ?array $_instances = [];
+    private static ?array $instances = [];
 
     /**
      * Instantiates a class based on the given `type`. In contrast to the original implementation, this can be used for
@@ -55,16 +55,16 @@ trait TypeAttributeTrait
      */
     public static function getTypeInstances(): array
     {
-        if (!isset(self::$_instances[static::class])) {
-            self::$_instances[static::class] = [];
+        if (!isset(self::$instances[static::class])) {
+            self::$instances[static::class] = [];
 
             foreach (static::getTypes() as $type => $typeOptions) {
-                self::$_instances[static::class][$type] = static::instantiate(['type' => $type]);
-                self::$_instances[static::class][$type]->type = $type;
+                self::$instances[static::class][$type] = static::instantiate(['type' => $type]);
+                self::$instances[static::class][$type]->type = $type;
             }
         }
 
-        return self::$_instances[static::class];
+        return self::$instances[static::class];
     }
 
     public function getTypeName(): string

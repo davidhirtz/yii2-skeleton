@@ -18,9 +18,9 @@ class ActiveRecord extends \yii\db\ActiveRecord
 {
     use ModelTrait;
 
-    private bool $_isBatch = false;
-    private bool $_isDeleted = false;
-    private bool $_hasCustomAttributesColumn = true;
+    private bool $isBatch = false;
+    private bool $isDeleted = false;
+    private bool $hasCustomAttributesColumn = true;
 
     #[Override]
     public function behaviors(): array
@@ -34,7 +34,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     #[Override]
     public function beforeDelete(): bool
     {
-        $this->_isDeleted = true;
+        $this->isDeleted = true;
         return parent::beforeDelete();
     }
 
@@ -65,9 +65,9 @@ class ActiveRecord extends \yii\db\ActiveRecord
 
         // `getAttributes()` reports every declared attribute; only the old attributes say what was actually selected.
         $column = $this->getCustomAttributesColumn();
-        $this->_hasCustomAttributesColumn = array_key_exists($column, $this->getOldAttributes());
+        $this->hasCustomAttributesColumn = array_key_exists($column, $this->getOldAttributes());
 
-        if (!$this->_hasCustomAttributesColumn) {
+        if (!$this->hasCustomAttributesColumn) {
             return;
         }
 
@@ -90,7 +90,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
      */
     protected function serializeCustomAttributes(): void
     {
-        if (!$this instanceof CustomAttributeInterface || !$this->_hasCustomAttributesColumn) {
+        if (!$this instanceof CustomAttributeInterface || !$this->hasCustomAttributesColumn) {
             return;
         }
 
@@ -394,17 +394,17 @@ class ActiveRecord extends \yii\db\ActiveRecord
 
     public function setIsBatch(bool $isBatch): void
     {
-        $this->_isBatch = $isBatch;
+        $this->isBatch = $isBatch;
     }
 
     public function getIsBatch(): bool
     {
-        return $this->_isBatch;
+        return $this->isBatch;
     }
 
     public function isDeleted(): bool
     {
-        return $this->_isDeleted;
+        return $this->isDeleted;
     }
 
     #[Override]

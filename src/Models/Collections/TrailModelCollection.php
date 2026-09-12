@@ -24,7 +24,7 @@ class TrailModelCollection
      * @var ActiveRecord[][]
      */
     private static array $models = [];
-    private static array $_modelAttributes = [];
+    private static array $modelAttributes = [];
 
     /**
      * Finds the model based on the given class string. If a model supports `i18n` tables, the corresponding language
@@ -116,7 +116,7 @@ class TrailModelCollection
     {
         $className = $model::class;
 
-        if (!isset(self::$_modelAttributes[$className])) {
+        if (!isset(self::$modelAttributes[$className])) {
             $attributes = [];
 
             $types = [
@@ -151,9 +151,9 @@ class TrailModelCollection
                 }
             }
 
-            self::$_modelAttributes[$className] = $attributes;
+            self::$modelAttributes[$className] = $attributes;
         }
 
-        return self::$_modelAttributes[$className];
+        return self::$modelAttributes[$className];
     }
 }

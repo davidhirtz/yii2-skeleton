@@ -20,9 +20,9 @@ use Hirtz\Skeleton\Helpers\ArrayHelper;
  */
 trait MaterializedTreeTrait
 {
-    private ?array $_ancestors = null;
-    private ?array $_descendants = null;
-    private ?array $_children = null;
+    private ?array $ancestors = null;
+    private ?array $descendants = null;
+    private ?array $children = null;
 
     /**
      * @return static[]
@@ -30,21 +30,21 @@ trait MaterializedTreeTrait
     public function getAncestors(bool $refresh = false): array
     {
         if ($refresh) {
-            $this->_ancestors = null;
+            $this->ancestors = null;
         }
 
-        $this->_ancestors ??= $this->path
+        $this->ancestors ??= $this->path
             ? $this->findAncestors()
                 ->indexBy('id')
                 ->all()
             : [];
 
-        return $this->_ancestors;
+        return $this->ancestors;
     }
 
     public function setAncestors(array $ancestors): void
     {
-        $this->_ancestors = [];
+        $this->ancestors = [];
 
         if ($this->path) {
             $ancestors = ArrayHelper::index($ancestors, 'id');
@@ -52,7 +52,7 @@ trait MaterializedTreeTrait
 
             foreach ($ancestorIds as $ancestorId) {
                 if (isset($ancestors[$ancestorId])) {
-                    $this->_ancestors[$ancestorId] = $ancestors[$ancestorId];
+                    $this->ancestors[$ancestorId] = $ancestors[$ancestorId];
                 }
             }
         }
@@ -60,7 +60,12 @@ trait MaterializedTreeTrait
 
     public function getFirstAncestor(): ?static
     {
-        return $this->parent_id ? current($this->ancestors) : null;
+        if (!$this->parent_id) {
+            return null;
+        }
+
+        $ancestors = $this->getAncestors();
+        return current($ancestors) ?: null;
     }
 
     public function findAncestors(): ActiveQuery
@@ -80,23 +85,23 @@ trait MaterializedTreeTrait
     public function getChildren(bool $refresh = false): array
     {
         if ($refresh) {
-            $this->_children = null;
+            $this->children = null;
         }
 
-        $this->_children ??= $this->findChildren()
+        $this->children ??= $this->findChildren()
             ->indexBy('id')
             ->all();
 
-        return $this->_children;
+        return $this->children;
     }
 
     public function setChildren(array $children): void
     {
-        $this->_children = [];
+        $this->children = [];
 
         foreach ($children as $child) {
             if ($child['parent_id'] === $this->id) {
-                $this->_children[$child->id] = $child;
+                $this->children[$child->id] = $child;
             }
         }
     }
@@ -118,25 +123,25 @@ trait MaterializedTreeTrait
     public function getDescendants(bool $refresh = false): array
     {
         if ($refresh) {
-            $this->_descendants = null;
+            $this->descendants = null;
         }
 
-        $this->_descendants ??= $this->findDescendants()
+        $this->descendants ??= $this->findDescendants()
             ->indexBy('id')
             ->all();
 
-        return $this->_descendants;
+        return $this->descendants;
     }
 
     public function setDescendants(array $descendants): void
     {
         $path = $this->path ?? [];
         $length = count($path);
-        $this->_descendants = [];
+        $this->descendants = [];
 
         foreach ($descendants as $descendant) {
             if (array_slice($descendant->path ?? [], 0, $length) === $path) {
-                $this->_descendants[$descendant->id] = $descendant;
+                $this->descendants[$descendant->id] = $descendant;
             }
         }
     }

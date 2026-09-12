@@ -1,5 +1,11 @@
 ## 3.0.0 (in development)
 
+- Private properties dropped their `_` prefix, so a cache now carries the name of the magic property it backs.
+  In a class that uses one of the affected traits this shadows the getter: `$this->ancestors`, `$this->children`
+  and `$this->descendants` in a model using `Models\Traits\MaterializedTreeTrait` or `NestedTreeTrait`, and
+  `$this->customAttributes` in one using `Models\Traits\CustomAttributesTrait`, read the unpopulated cache
+  instead of calling `getAncestors()`, `getChildren()`, `getDescendants()` or `getCustomAttributes()`. Call the
+  getter. Access from outside the class is unchanged
 - `Base\Traits\ModelTrait::getTraitNames()`, `getTraitRules()` and `getTraitAttributeLabels()` are removed. They
   discovered `get<Trait>Rules()` / `get<Trait>AttributeLabels()` methods by reflection and naming convention — the
   same magic `Widgets\Attributes\Configure` was removed for. A class that uses such a trait now spreads its

@@ -24,7 +24,7 @@ class I18N extends \yii\i18n\I18N
         'zh-TW' => '繁體中文', // zh-HANT
     ];
 
-    private array $_languages;
+    private array $languages;
 
     #[Override]
     public function init(): void
@@ -43,7 +43,7 @@ class I18N extends \yii\i18n\I18N
             'sourceLanguage' => Yii::$app->sourceLanguage,
         ];
 
-        $this->_languages ??= [Yii::$app->language];
+        $this->languages ??= [Yii::$app->language];
 
         parent::init();
     }
@@ -65,12 +65,12 @@ class I18N extends \yii\i18n\I18N
 
     public function getLanguages(): array
     {
-        return $this->_languages;
+        return $this->languages;
     }
 
     public function setLanguages(array|string $languages): void
     {
-        $this->_languages = array_unique((array)$languages);
+        $this->languages = array_unique((array)$languages);
     }
 
     public function getLabel(string $language): mixed
