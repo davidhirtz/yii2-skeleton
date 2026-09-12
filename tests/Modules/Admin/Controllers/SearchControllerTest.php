@@ -60,6 +60,19 @@ class SearchControllerTest extends TestCase
         self::assertStringNotContainsString('/admin/user/update', $html);
     }
 
+    public function testSuggestHidesTheOwnerFromOtherUsers(): void
+    {
+        $this->loginUser(User::AUTH_USER_UPDATE);
+
+        $owner = $this->getUserFromFixture('owner');
+        $this->index($owner);
+
+        $html = $this->createSearchController()->actionSuggest($owner->name);
+
+        self::assertStringContainsString('search-result-empty', $html);
+        self::assertStringNotContainsString('/admin/user/update?id=' . $owner->id, $html);
+    }
+
     public function testSuggestWithoutAQueryRendersNothing(): void
     {
         $this->loginUser(User::AUTH_USER_UPDATE);

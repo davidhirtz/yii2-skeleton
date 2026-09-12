@@ -71,12 +71,22 @@ class Search extends Component
     }
 
     /**
+     * Records are instantiated through the container, so the class asking is usually a project subclass of the
+     * class a bundle registered; the lookup walks up to it.
+     *
      * @param class-string<SearchableInterface> $modelClass
      */
     public function getWeight(string $modelClass): ?float
     {
         $this->resolveModels();
-        return $this->weights[$modelClass] ?? null;
+
+        foreach ([$modelClass, ...class_parents($modelClass) ?: []] as $class) {
+            if (isset($this->weights[$class])) {
+                return $this->weights[$class];
+            }
+        }
+
+        return null;
     }
 
     public function index(SearchableInterface ...$models): void

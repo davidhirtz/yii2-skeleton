@@ -287,7 +287,7 @@ class User extends ActiveRecord implements AdminRouteInterface, CustomAttributeI
 
     protected function isSearchResultVisible(): bool
     {
-        return Yii::$app->has('user') && Yii::$app->getUser()->can(static::AUTH_USER_UPDATE);
+        return Yii::$app->has('user') && Yii::$app->getUser()->can(static::AUTH_USER_UPDATE, ['user' => $this]);
     }
 
     public function getAuthKey(): ?string
