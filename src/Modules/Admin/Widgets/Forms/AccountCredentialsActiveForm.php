@@ -8,14 +8,16 @@ use Hirtz\Skeleton\Models\Forms\AccountUpdateForm;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\Traits\UserActiveFormTrait;
 use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
+use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
 use Override;
+use Stringable;
 
 /**
- * @see AccountController::actionUpdate()
+ * @see AccountController::actionCredentials()
  *
  * @property AccountUpdateForm $model
  */
-class AccountActiveForm extends ActiveForm
+class AccountCredentialsActiveForm extends ActiveForm
 {
     use UserActiveFormTrait;
 
@@ -24,17 +26,28 @@ class AccountActiveForm extends ActiveForm
     {
         $this->rows ??= [
             [
-                $this->getNameField(),
+                $this->getEmailField(),
             ],
             [
-                $this->getLanguageField(),
-                $this->getTimezoneField(),
+                $this->getNewPasswordField(),
+                $this->getRepeatPasswordField(),
             ],
             [
-                ...$this->getUserCustomAttributeFields(),
+                $this->getOldPasswordField(),
             ],
         ];
 
         parent::configure();
+    }
+
+    protected function getOldPasswordField(): string|Stringable
+    {
+        if (!$this->model->user->password_hash) {
+            return '';
+        }
+
+        return InputField::make()
+            ->property('oldPassword')
+            ->type('password');
     }
 }

@@ -56,7 +56,7 @@ class UserSubmenu extends Submenu
     {
         return $this->webuser->can(User::AUTH_USER_UPDATE, ['user' => $this->model])
             ? NavItem::make()
-                ->label(Yii::t('skeleton', 'COMMON_LOGINS'))
+                ->label(Yii::t('skeleton', 'COMMON_CREDENTIALS'))
                 ->icon('bars')
                 ->url(['/admin/user-login/view', 'user' => $this->model->id])
                 ->routes(['admin/user-login/view'])

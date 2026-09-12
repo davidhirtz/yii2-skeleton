@@ -1,5 +1,12 @@
 ## 3.0.0 (in development)
 
+- The admin account page was split into three: `AccountController::actionUpdate()` keeps the username, language,
+  timezone and custom attribute fields, the new `actionCredentials()` holds the email and password fields and the
+  new `actionSecurity()` the two-factor authenticator form, which `actionEnableAuthenticator()` and
+  `actionDisableAuthenticator()` now redirect back to. The new
+  `Modules\Admin\Widgets\Navs\AccountSubmenu` links the three, and
+  `Modules\Admin\Widgets\Forms\AccountActiveForm` lost the email, password and current password fields to the new
+  `AccountCredentialsActiveForm`. All three share `Models\Forms\AccountUpdateForm`
 - Removed `Models\User::$picture` and everything around it: `Models\Forms\UserPictureForm`,
   `User::deletePicture()`, `getPictureUrl()`, `getUploadPath()` / `setUploadPath()`, the
   `account/picture` and `user/delete-picture` actions and `Models\Forms\Traits\UserFormTrait::$upload` /

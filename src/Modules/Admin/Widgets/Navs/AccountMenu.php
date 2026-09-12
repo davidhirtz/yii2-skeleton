@@ -53,6 +53,7 @@ class AccountMenu extends Widget
             ? NavItem::make()
                 ->label($this->webuser->getIdentity()->getUsername())
                 ->url(['/admin/account/update'])
+                ->routes(['admin/account/'])
                 ->icon('user')
             : null;
     }

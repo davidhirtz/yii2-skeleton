@@ -60,7 +60,7 @@ class UserNavItem extends NavItem
     {
         return NavItem::make()
             //->icon('sign-in-alt')
-            ->label(Yii::t('skeleton', 'COMMON_LOGINS'))
+            ->label(Yii::t('skeleton', 'COMMON_USER_LOGINS'))
             ->url(['/admin/user-login/index'])
             ->order(40)
             ->roles([User::AUTH_USER_UPDATE])

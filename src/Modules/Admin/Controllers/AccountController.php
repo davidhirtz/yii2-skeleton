@@ -37,10 +37,12 @@ class AccountController extends Controller
                     [
                         'allow' => true,
                         'actions' => [
+                            'credentials',
                             'delete',
                             'disable-authenticator',
                             'enable-authenticator',
                             'logout',
+                            'security',
                             'update',
                             'timezone',
                         ],
@@ -257,12 +259,44 @@ class AccountController extends Controller
             if (!$form->hasErrors()) {
                 return $this->refresh();
             }
-
-            $form->oldPassword = null;
         }
 
         return $this->render('update', [
             'form' => $form,
+        ]);
+    }
+
+    public function actionCredentials(): Response|string
+    {
+        $form = AccountUpdateForm::create([
+            'user' => $this->webuser->getIdentity(),
+        ]);
+
+        if ($form->load($this->request->post())) {
+            if ($form->save()) {
+                $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_PROFILE_UPDATED'));
+            }
+
+            if (!$form->hasErrors()) {
+                return $this->refresh();
+            }
+
+            $form->oldPassword = null;
+        }
+
+        return $this->render('credentials', [
+            'form' => $form,
+        ]);
+    }
+
+    public function actionSecurity(): Response|string
+    {
+        if (!$this->webuser->enableTwoFactorAuthentication) {
+            throw new ForbiddenHttpException();
+        }
+
+        return $this->render('security', [
+            'user' => $this->webuser->getIdentity(),
         ]);
     }
 
@@ -296,7 +330,7 @@ class AccountController extends Controller
             $this->errorOrSuccess($form, Yii::t('skeleton', 'ACCOUNT_SUCCESS_TWO_FACTOR_AUTHENTICATION_ENABLED'));
         }
 
-        return $this->redirect(['update']);
+        return $this->redirect(['security']);
     }
 
     public function actionDisableAuthenticator(): Response|string
@@ -310,7 +344,7 @@ class AccountController extends Controller
             $this->errorOrSuccess($form, Yii::t('skeleton', 'ACCOUNT_SUCCESS_TWO_FACTOR_AUTHENTICATION_DISABLED'));
         }
 
-        return $this->redirect(['update']);
+        return $this->redirect(['security']);
     }
 
     public function actionTimezone(?string $redirect = null): Response|string
