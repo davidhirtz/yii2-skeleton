@@ -129,6 +129,28 @@ class RedirectBehaviorTest extends TestCase
         self::assertEquals('test/test-query-3', $redirects[1]->url);
     }
 
+    /**
+     * Renaming a record back to a URL it already had must leave one redirect onto the current URL and nothing
+     * else: the redirect recorded for the first rename now points at where the record is again, so it is a
+     * no-op. Leaving it in place used to flatten the second redirect onto its own request URI.
+     */
+    public function testRenamingBackRemovesTheRedirectItPointsAtInsteadOfLooping(): void
+    {
+        $model = $this->createRedirectActiveRecord();
+
+        $model->query = 'test-query-2';
+        $model->save();
+
+        $model->query = 'test-query-1';
+        $model->save();
+
+        $redirects = Redirect::find()->all();
+
+        self::assertCount(1, $redirects);
+        self::assertEquals('test/test-query-2', $redirects[0]->request_uri);
+        self::assertEquals('test/test-query-1', $redirects[0]->url);
+    }
+
     public function testMissingRouteMethod(): void
     {
         $this->expectException(InvalidConfigException::class);

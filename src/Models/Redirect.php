@@ -105,22 +105,34 @@ class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttribut
     }
 
     /**
-     * Makes sure the url is not pointing to another redirect, to eliminate unneeded redirect loops.
+     * A redirect must not point at another redirect's request URI, so the chain is followed to its end and the
+     * resolved target is stored. **Trap:** the self-check has to run on the *resolved* target, not only on the
+     * one that was assigned — a record renamed back to a URL it already had resolves through the redirect it
+     * left behind and lands on its own request URI. This only catches a row whose two columns are in the same
+     * shape; a host-qualified `request_uri` never compares equal to its relative `url`, so the writer of such a
+     * row has to keep it out of a loop itself.
      */
     public function validateUrl(): void
     {
-        if ($this->url === $this->request_uri) {
-            $this->addInvalidAttributeError('url');
-            return;
+        $visited = [$this->request_uri => true];
+
+        while ($this->url !== '' && !isset($visited[$this->url])) {
+            $visited[$this->url] = true;
+
+            $redirect = static::find()
+                ->where(['request_uri' => $this->url])
+                ->limit(1)
+                ->one();
+
+            if (!$redirect) {
+                break;
+            }
+
+            $this->url = $redirect->url;
         }
 
-        $redirect = static::find()
-            ->where(['request_uri' => $this->url])
-            ->limit(1)
-            ->one();
-
-        if ($redirect) {
-            $this->url = $redirect->url;
+        if ($this->url === $this->request_uri) {
+            $this->addInvalidAttributeError('url');
         }
     }
 

@@ -1,5 +1,15 @@
 ## 3.0.0 (in development)
 
+- **A rename back to an earlier URL no longer builds a redirect loop.** `Models\Redirect::validateUrl()` ran its
+  self-check *before* it flattened a chain and never re-checked the target it had just copied in, so a record
+  renamed back to a URL it already had resolved through the redirect the first rename left behind and landed on
+  its own `request_uri` — a row that redirects a URL to itself, past the guard written to prevent exactly that.
+  It now follows the chain to its end (a cycle among existing rows terminates on a visited set) and checks the
+  resolved target. `Behaviors\RedirectBehavior::updatePreviousRedirectUrls()` deletes a redirect the owner has
+  just moved back onto instead of updating it into a no-op, and both it and `insertRedirect()` report a failed
+  save through `Yii::warning()` rather than dropping it. **The self-check only sees a row whose two columns are
+  in the same shape**, so a writer storing a host-qualified `request_uri` beside a relative `url` — the cms
+  entry redirects — has to keep its own rows out of a loop
 - **A grid's columns and a form's rows can be contributed from outside.** `Widgets\Grids\GridView::columns()` is
   new and `Widgets\Forms\ActiveForm::rows()` also takes the `Navs\Traits\ItemTrait` closure form, so a
   `Widget::EVENT_CONFIGURE` listener is handed the current collection and returns the one it wants — a bundle

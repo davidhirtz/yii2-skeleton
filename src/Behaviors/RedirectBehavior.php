@@ -75,6 +75,10 @@ class RedirectBehavior extends Behavior
 
     /**
      * Updates previous redirect URLs. This is not handled via `updateAll` to enable {@see Trail} records.
+     *
+     * A redirect the owner has just moved back onto is a no-op and is deleted rather than updated: the update
+     * would fail {@see Redirect::validateUrl()} and, unreported, leave the row pointing at a URL that no longer
+     * resolves — and the redirect recorded for this rename would then chain through it onto itself.
      */
     protected function updatePreviousRedirectUrls(string $url): void
     {
@@ -84,8 +88,16 @@ class RedirectBehavior extends Behavior
             ->all();
 
         foreach ($redirects as $redirect) {
+            if ($redirect->request_uri === $url) {
+                $redirect->delete();
+                continue;
+            }
+
             $redirect->url = $url;
-            $redirect->update();
+
+            if (!$redirect->update()) {
+                $this->warn("Redirect from $redirect->request_uri could not be updated", $redirect);
+            }
         }
     }
 
@@ -94,7 +106,15 @@ class RedirectBehavior extends Behavior
         $redirect = Redirect::create();
         $redirect->request_uri = $this->prevUrl;
         $redirect->url = $url;
-        $redirect->insert();
+
+        if (!$redirect->insert()) {
+            $this->warn("Redirect from $this->prevUrl could not be saved", $redirect);
+        }
+    }
+
+    protected function warn(string $message, Redirect $redirect): void
+    {
+        Yii::warning("$message: " . implode(' ', $redirect->getErrorSummary(true)), __METHOD__);
     }
 
     /**
