@@ -108,6 +108,40 @@ class ChunkedUploadedFileTest extends TestCase
         self::assertSame(UPLOAD_ERR_CANT_WRITE, $file->error);
     }
 
+    /**
+     * A browser that aborts mid-upload leaves PHP with `UPLOAD_ERR_PARTIAL` and an empty `tmp_name`, which every
+     * path that touches the file has to survive — `fopen('')` is a `ValueError`, not a `false`.
+     *
+     * @see https://github.com/davidhirtz/yii2-monorepo/issues/27
+     */
+    public function testAnAbortedUploadIsReportedRatherThanThrowing(): void
+    {
+        $file = $this->createUploadedFile('', range: 'bytes 0-2/9', config: [
+            'error' => UPLOAD_ERR_PARTIAL,
+            'size' => 0,
+        ]);
+
+        self::assertSame(UPLOAD_ERR_PARTIAL, $file->error);
+        self::assertFalse($file->isCompleted());
+        self::assertFalse($file->saveAs($this->path . 'target.txt', false));
+        self::assertCount(0, glob($this->path . '*.tmp'));
+
+        // the uploader must not be told to send the next chunk of an upload that broke
+        self::assertFalse($file->isPartial());
+    }
+
+    public function testAnUploadThatExceededTheServerLimitIsReported(): void
+    {
+        $file = $this->createUploadedFile('', config: [
+            'error' => UPLOAD_ERR_INI_SIZE,
+            'size' => 0,
+        ]);
+
+        self::assertSame(UPLOAD_ERR_INI_SIZE, $file->error);
+        self::assertFalse($file->isCompleted());
+        self::assertFalse($file->saveAs($this->path . 'target.txt', false));
+    }
+
     public function testSaveAsMovesACompletedUpload(): void
     {
         $file = $this->createUploadedFile($this->createSourceFile('abc'), range: 'bytes 0-2/3');

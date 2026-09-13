@@ -28,6 +28,7 @@ class ChunkedUploadedFile extends UploadedFile
     public ?int $maxSize = null;
 
     private ?string $partialUploadPath = null;
+    private bool $isChunked = false;
 
     public function init(): void
     {
@@ -37,6 +38,12 @@ class ChunkedUploadedFile extends UploadedFile
 
     protected function saveTempFile(): void
     {
+        // An upload PHP already rejected carries no temporary file: a browser that aborts mid-transfer reports
+        // `UPLOAD_ERR_PARTIAL` with an empty `tmp_name`, and `fopen('')` is a `ValueError`, not a `false`.
+        if ($this->error || !$this->tempName) {
+            return;
+        }
+
         $range = (string)Yii::$app->getRequest()->getHeaders()->get('content-range');
 
         if (!preg_match('/^bytes (\d+)-(\d+)\/(\d+)$/', $range, $matches)) {
@@ -70,6 +77,7 @@ class ChunkedUploadedFile extends UploadedFile
 
         $this->error = $isPartial ? UPLOAD_ERR_PARTIAL : UPLOAD_ERR_OK;
         $this->tempName = $tempName;
+        $this->isChunked = true;
 
         Yii::debug($isPartial
             ? "Uploaded $percentage% of \"$this->name\"."
@@ -128,16 +136,23 @@ class ChunkedUploadedFile extends UploadedFile
 
     public function isCompleted(): bool
     {
+        if (!$this->tempName) {
+            return false;
+        }
+
         clearstatcache(true, $this->tempName);
         return filesize($this->tempName) === $this->size;
     }
 
     /**
+     * Whether a chunk landed and the next one is expected. PHP reports an aborted transfer as `UPLOAD_ERR_PARTIAL`
+     * too, so the error code alone cannot tell the two apart — only a chunk this class wrote itself counts.
+     *
      * @noinspection PhpUnused
      */
     public function isPartial(): bool
     {
-        return $this->error === UPLOAD_ERR_PARTIAL;
+        return $this->isChunked && $this->error === UPLOAD_ERR_PARTIAL;
     }
 
     #[\Override]
