@@ -46,6 +46,20 @@ class UserTest extends TestCase
         self::assertArrayHasKey('first_name', $user->getErrors());
     }
 
+    /**
+     * `user.name` is nullable wherever {@see User::$requireName} is off.
+     */
+    public function testAdminNameFallsBackToTheModelIdWithoutName(): void
+    {
+        $user = User::create();
+        $user->id = 3;
+
+        self::assertSame(Yii::t('skeleton', 'COMMON_MODEL_ID', [
+            'model' => $user->getAdminType(),
+            'id' => 3,
+        ]), $user->getAdminName());
+    }
+
     public function testInitialsFallBackToTheUsername(): void
     {
         $user = User::create();

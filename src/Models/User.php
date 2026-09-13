@@ -611,9 +611,9 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         ]);
     }
 
-    public function getAdminName(): string
+    protected function getAdminNameAttributeValue(): string
     {
-        return $this->id ? $this->getUsername() : $this->getAdminType();
+        return trim((string)$this->getUsername());
     }
 
     public function getAdminType(): string
