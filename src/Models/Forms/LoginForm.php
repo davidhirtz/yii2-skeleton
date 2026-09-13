@@ -100,7 +100,7 @@ class LoginForm extends Model
 
     protected function validateTwoFactorAuthenticatorCode(): void
     {
-        if (Yii::$app->getUser()->enableTwoFactorAuthentication && $this->user->google_2fa_secret) {
+        if (Yii::$app->getUser()->isTwoFactorAuthenticationRequired($this->user)) {
             $validator = Yii::$container->get(TwoFactorAuthenticationValidator::class, [], [
                 'secret' => $this->user->google_2fa_secret,
                 'datetime' => $this->user->last_login,

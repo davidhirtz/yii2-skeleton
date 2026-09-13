@@ -189,6 +189,15 @@ class User extends \yii\web\User
             || parent::can($permissionName, $params, $allowCaching);
     }
 
+    /**
+     * A flow that logs a user in without asking for a password — a password reset, an email confirmation, a signup —
+     * must not skip the second factor. It has no code to check, so it has to refuse the login instead.
+     */
+    public function isTwoFactorAuthenticationRequired(\Hirtz\Skeleton\Models\User $user): bool
+    {
+        return $this->enableTwoFactorAuthentication && (bool)$user->google_2fa_secret;
+    }
+
     public function isLoginEnabled(): bool
     {
         return !!$this->enableLogin;

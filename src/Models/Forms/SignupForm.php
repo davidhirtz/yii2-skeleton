@@ -185,7 +185,7 @@ class SignupForm extends AbstractSignupForm
     {
         $webuser = Yii::$app->getUser();
 
-        if ($webuser->isUnconfirmedEmailLoginEnabled()) {
+        if ($webuser->isUnconfirmedEmailLoginEnabled() && !$webuser->isTwoFactorAuthenticationRequired($this->user)) {
             $webuser->loginType = UserLogin::TYPE_SIGNUP;
             $webuser->login($this->user);
         }

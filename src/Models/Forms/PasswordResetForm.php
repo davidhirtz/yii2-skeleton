@@ -82,8 +82,7 @@ class PasswordResetForm extends Model
     }
 
     /**
-     * Hashes new password and logs in user if possible.
-     * This method also deletes all cookie auth keys for this user, so auto login cookies are not working anymore.
+     * Rotating the auth key invalidates every auto login cookie of this user.
      */
     public function reset(): bool|int
     {
@@ -98,7 +97,11 @@ class PasswordResetForm extends Model
 
         $webuser = Yii::$app->getUser();
 
-        if ($webuser->getIsGuest() && (!$this->user->isUnconfirmed() || $webuser->isUnconfirmedEmailLoginEnabled())) {
+        $canLogin = $webuser->getIsGuest()
+            && !$webuser->isTwoFactorAuthenticationRequired($this->user)
+            && (!$this->user->isUnconfirmed() || $webuser->isUnconfirmedEmailLoginEnabled());
+
+        if ($canLogin) {
             $webuser->loginType = UserLogin::TYPE_RESET_PASSWORD;
             return $webuser->login($this->user);
         }

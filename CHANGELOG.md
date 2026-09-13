@@ -1,5 +1,10 @@
 ## 3.0.0 (in development)
 
+- A password reset, an email confirmation and a signup no longer log a user in when they owe a second factor.
+  Only `Models\Forms\LoginForm` ever checked the TOTP code, so anyone who reached the mailbox — or an admin who
+  generated a reset token — got a session on a 2FA account without one. `Web\User::isTwoFactorAuthenticationRequired()`
+  is the one place that answers it, and the three flows refuse the automatic login instead;
+  `Modules\Admin\Controllers\AccountController::actionReset()` sends a guest to the login form afterwards
 - `Modules\Admin\Controllers\UserController::actionDisableGoogleAuthenticator()` is
   `actionDisableAuthenticator()`. Its route was `disable-google-authenticator` while the access rule named
   `disable-authenticator`, so the deny-by-default filter answered 403 for every request to it. It is `POST`-only

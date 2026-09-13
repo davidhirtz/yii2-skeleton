@@ -162,9 +162,15 @@ class AccountController extends Controller
             'code' => $code,
         ]);
 
-        if ($form->confirm() && $this->webuser->getIsGuest() && !$form->user->isDisabled()) {
-            $this->webuser->loginType = UserLogin::TYPE_CONFIRM_EMAIL;
-            $this->webuser->login($form->user);
+        if ($form->confirm()) {
+            $canLogin = $this->webuser->getIsGuest()
+                && !$form->user->isDisabled()
+                && !$this->webuser->isTwoFactorAuthenticationRequired($form->user);
+
+            if ($canLogin) {
+                $this->webuser->loginType = UserLogin::TYPE_CONFIRM_EMAIL;
+                $this->webuser->login($form->user);
+            }
         }
 
         $this->errorOrSuccess($form, Yii::t('skeleton', 'ACCOUNT_SUCCESS_EMAIL_ADDRESS_SUCCESSFULLY'));
@@ -234,7 +240,12 @@ class AccountController extends Controller
         if ($form->load($this->request->post())) {
             if ($form->reset()) {
                 $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_UPDATED_PASSWORD'));
-                return $this->goHome();
+
+                // A user who owes a second factor is not logged in by the reset, so the login form is where the
+                // flow has to continue.
+                return $this->webuser->getIsGuest()
+                    ? $this->redirect(['login', 'email' => $form->email])
+                    : $this->goHome();
             }
         } elseif (!$form->validateEmail() || !$form->validatePasswordResetCode()) {
             $this->error($form);
