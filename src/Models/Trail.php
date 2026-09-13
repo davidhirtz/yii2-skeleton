@@ -23,7 +23,7 @@ use yii\db\ActiveRecordInterface;
 /**
  * @property int $id
  * @property int $type
- * @property string $model_class
+ * @property string|null $model_class
  * @property array|string|null $model_id
  * @property int|null $user_id
  * @property string|null $message
@@ -139,7 +139,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
                 : (new ReflectionClass($model))->getShortName();
         }
 
-        return $this->model_class;
+        return (string)$this->model_class;
     }
 
     public function getModelType(): ?string
@@ -150,6 +150,10 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
 
     public function getModelRecord(): ?Model
     {
+        if (empty($this->model_class)) {
+            return null;
+        }
+
         return TrailModelCollection::getModelByClassAndId($this->model_class, $this->model_id);
     }
 

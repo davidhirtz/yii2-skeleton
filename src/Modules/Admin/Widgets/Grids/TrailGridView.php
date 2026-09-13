@@ -210,7 +210,10 @@ class TrailGridView extends GridView
     }
 
     /**
-     * @param array<string, string|Stringable|null> $values
+     * A create trail carries the record's attributes as they are, so a value is anything JSON holds — an `int`
+     * column included, which `Td::text()` refuses.
+     *
+     * @param array<string, mixed> $values
      */
     protected function getTrailValuesTable(array $values): Table
     {
@@ -220,9 +223,9 @@ class TrailGridView extends GridView
             $rows[] = [
                 Td::make()
                     ->class('trail-property-col')
-                    ->text($label),
+                    ->text((string)$label),
                 Td::make()
-                    ->text($value),
+                    ->content($this->getCreatedAttributeContent($value)),
             ];
         }
 

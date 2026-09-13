@@ -35,6 +35,41 @@ class TrailGridViewTest extends TestCase
         self::assertStringContainsString('<ins>Benutzer verwalten</ins>', TestTrailGridView::make()->dataContent($trail));
     }
 
+    /**
+     * A create trail carries the record's attributes as they are, so a JSON column reaches the nested table with
+     * whatever it holds — an `int` included, which used to be a `TypeError` on the whole trail page.
+     */
+    public function testACreateTrailRendersANestedHashOfAnyScalar(): void
+    {
+        $trail = Trail::create();
+        $trail->type = Trail::TYPE_CREATE;
+        $trail->data = [
+            'custom_attributes' => [
+                'position' => 3,
+                'subtitle' => 'A subtitle',
+                'enabled' => true,
+            ],
+        ];
+
+        $html = TestTrailGridView::make()->dataContent($trail);
+
+        self::assertStringContainsString('trail-values-table', $html);
+        self::assertStringContainsString('>3<', $html);
+        self::assertStringContainsString('>A subtitle<', $html);
+    }
+
+    public function testACreateTrailRendersAListOfValues(): void
+    {
+        $trail = Trail::create();
+        $trail->type = Trail::TYPE_CREATE;
+        $trail->data = ['category_ids' => [1, 2, 3]];
+
+        $html = TestTrailGridView::make()->dataContent($trail);
+
+        self::assertStringContainsString('<li>1</li>', $html);
+        self::assertStringContainsString('<li>3</li>', $html);
+    }
+
     public function testARevokeTrailOfADeletedItemFallsBackToItsName(): void
     {
         $trail = Trail::create();
