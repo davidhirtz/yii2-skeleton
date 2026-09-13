@@ -97,11 +97,28 @@ trait ApplicationTrait
                             'class' => FileTarget::class,
                             'levels' => ['error', 'warning'],
                             'fileMode' => 0770, // Make sure both web and console user can write to file
+                            // The session id and the identity cookie are credentials, and a reset or
+                            // confirmation link carries its token in the query string.
+                            'logVars' => [
+                                '_GET',
+                                '_POST',
+                                '_FILES',
+                                '_SERVER',
+                            ],
                             'maskVars' => [
+                                '_GET.code',
                                 '_SERVER.HTTP_AUTHORIZATION',
+                                '_SERVER.HTTP_COOKIE',
                                 '_SERVER.PHP_AUTH_USER',
                                 '_SERVER.PHP_AUTH_PW',
+                                '_POST.value',
+                                '_POST.AccountCredentialsForm.newPassword',
+                                '_POST.AccountCredentialsForm.oldPassword',
+                                '_POST.AccountCredentialsForm.repeatPassword',
+                                '_POST.GoogleAuthenticator.code',
+                                '_POST.Login.code',
                                 '_POST.Login.password',
+                                '_POST.PasswordResetForm.code',
                                 '_POST.PasswordResetForm.newPassword',
                                 '_POST.PasswordResetForm.repeatPassword',
                                 '_POST.SignupForm.password',
@@ -109,6 +126,8 @@ trait ApplicationTrait
                                 '_POST.User.oldPassword',
                                 '_POST.User.password',
                                 '_POST.User.repeatPassword',
+                                '_POST.UserForm.newPassword',
+                                '_POST.UserForm.repeatPassword',
                             ],
                             'except' => [
                                 'yii\web\HttpException:*',

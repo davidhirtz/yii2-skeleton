@@ -1,5 +1,10 @@
 ## 3.0.0 (in development)
 
+- The error log no longer carries credentials. Its `maskVars` still named `User.newPassword` and friends after the
+  account forms were renamed, so `AccountCredentialsForm`, `UserForm`, the two `code` fields and the account
+  delete's top-level `value` — which is the password — went to disk in the clear. `logVars` dropped `_COOKIE` and
+  `_SESSION`, and `_SERVER.HTTP_COOKIE` and `_GET.code` are masked, so neither the session id nor a reset token
+  reaches the log
 - `Web\Request::getRemoteIP()` no longer reads `X-Forwarded-For` or `Client-IP`. The headers are set by the
   client, so every request could name its own IP — which fed the signup rate limit, the `user_login` and
   `session` audit columns and any `ips` rule of an access filter. Yii resolves them behind
