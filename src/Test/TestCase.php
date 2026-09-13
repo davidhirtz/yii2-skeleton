@@ -111,6 +111,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $config = [
             'basePath' => getcwd(),
             'class' => $this->applicationClass,
+            // Pinned: `date_default_timezone_set()` is process wide and outlives the application, and Yii only
+            // calls it when `date.timezone` is absent from the php.ini — so one test switching zones would
+            // silently move every timestamp of every test after it in the same worker.
+            'timeZone' => 'UTC',
             'components' => [
                 // a fresh one per test: a file cache would carry rate limit counters into the next test and run
                 'cache' => [
