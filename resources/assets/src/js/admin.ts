@@ -75,4 +75,10 @@ htmx.on('htmx:confirm', () => {
     window.tinymce?.triggerSave();
 });
 
+// A save lands back on the page it was made on, where an instant jump to the top reads as a glitch and a scroll
+// reads as the page answering. Navigation keeps the jump, so the new page does not scroll past its own header.
+htmx.on('htmx:beforeSwap', (event: Event) => {
+    htmx.config.scrollBehavior = (event as CustomEvent).detail.requestConfig?.verb === 'post' ? 'smooth' : 'instant';
+});
+
 htmx.config.historyCacheSize = 0;
