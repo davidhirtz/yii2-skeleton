@@ -1,5 +1,10 @@
 ## 3.0.0 (in development)
 
+- `user_login` has a retention. It keeps an IP address and a user agent for every login and nothing ever removed
+  one, so an installation held them forever. `Modules\Admin\Module::$userLoginLifetime` sets how long they are
+  kept and the new `user-login/clear` command (`Console\Controllers\UserLoginController`) deletes the rest,
+  matching `trailLifetime` and `trail/clear`. The batched delete both use moved into
+  `Console\Controllers\Traits\GarbageCollectionTrait`, which `TrailController` reads `$sleep` from now
 - `userUpdate` is no longer a takeover of every account it reaches. It can set a password, generate a reset token
   and clear a second factor, so its holder could log in as anyone who was not the owner — including a user holding
   `authUpdate` or `admin`. `Rbac\Rules\OwnerRule` now also refuses a target whose permissions the acting user

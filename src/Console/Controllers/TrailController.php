@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Console\Controllers;
 
 use Hirtz\Skeleton\Console\Controllers\Traits\ControllerTrait;
+use Hirtz\Skeleton\Console\Controllers\Traits\GarbageCollectionTrait;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Modules\Admin\Module;
-use Exception;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\console\Controller;
@@ -19,12 +19,7 @@ use yii\helpers\Console;
 class TrailController extends Controller
 {
     use ControllerTrait;
-
-    /**
-     * @var int The number of seconds to sleep between batches when deleting records to prevent a database shutdown
-     * while deleting huge amounts of trail records, defaults to 1 second.
-     */
-    public int $sleep = 1;
+    use GarbageCollectionTrait;
 
     /**
      * Updates the model classes in the trail table to the current class names based on the container definitions.
@@ -52,10 +47,6 @@ class TrailController extends Controller
     /**
      * Removes trail records older than the threshold defined in the module configuration. Alternatively, the lifetime
      * in seconds can be passed as an argument.
-     *
-     * This method orders the records by their primary key and deletes them in batches of 100 records. This is done to
-     * prevent locking the table for too long or applying an SQL query with a too large `WHERE` clause. This means that
-     * the ID must be an auto-incrementing integer, with the oldest records having the lowest IDs.
      */
     public function actionClear(?int $lifetime = null): void
     {
@@ -65,44 +56,7 @@ class TrailController extends Controller
             throw new InvalidConfigException('Application `trailLifetime` must be set');
         }
 
-        $threshold = gmdate('Y-m-d H:i:s', time() - $lifetime);
-        $totalCount = 0;
-        $limit = 100;
-
-        $query = Trail::find()
-            ->select(['id', 'created_at'])
-            ->orderBy(['id' => SORT_ASC])
-            ->limit($limit)
-            ->asArray();
-
-        while (true) {
-            $rows = $query->all();
-            $ids = [];
-
-            foreach ($rows as $row) {
-                if ($row['created_at'] < $threshold) {
-                    $ids[] = $row['id'];
-                }
-            }
-
-            if ($ids) {
-                $deletedCount = Trail::deleteAll(['id' => $ids]);
-                $totalCount += $deletedCount;
-
-                $count = Yii::$app->getFormatter()->asInteger($totalCount);
-                $this->stdout("Deleting records ... ($count)\n");
-
-                if ($deletedCount === count($rows)) {
-                    if ($this->sleep && count($rows) === $limit) {
-                        sleep($this->sleep);
-                    }
-
-                    continue;
-                }
-            }
-
-            break;
-        }
+        $totalCount = $this->deleteExpiredRecords(Trail::class, $lifetime);
 
         $formattedCount = Yii::$app->getFormatter()->asInteger($totalCount);
         $message = $totalCount ? "Deleted $formattedCount expired trail records" : 'No expired trail records found';
@@ -119,17 +73,7 @@ class TrailController extends Controller
      */
     public function actionOptimize(): void
     {
-        $this->interactiveStartStdout('Optimizing trail table ... ');
-        $success = false;
-
-        try {
-            Yii::$app->getDb()->createCommand('OPTIMIZE TABLE ' . Trail::tableName());
-            $success = true;
-        } catch (Exception $exception) {
-            Yii::error($exception->getMessage());
-        }
-
-        $this->interactiveDoneStdout($success);
+        $this->optimizeTable(Trail::tableName());
     }
 
     protected function getTrailLifeTime(): ?int

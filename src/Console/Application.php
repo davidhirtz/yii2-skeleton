@@ -16,6 +16,7 @@ use Hirtz\Skeleton\Console\Controllers\SearchController;
 use Hirtz\Skeleton\Console\Controllers\TrailController;
 use Hirtz\Skeleton\Console\Controllers\UpgradeController;
 use Hirtz\Skeleton\Console\Controllers\UserController;
+use Hirtz\Skeleton\Console\Controllers\UserLoginController;
 use Override;
 use Yii;
 
@@ -66,6 +67,7 @@ class Application extends \yii\console\Application
             'search' => SearchController::class,
             'trail' => TrailController::class,
             'user' => UserController::class,
+            'user-login' => UserLoginController::class,
             'upgrade' => UpgradeController::class,
         ];
     }

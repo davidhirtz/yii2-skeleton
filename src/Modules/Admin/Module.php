@@ -24,6 +24,13 @@ class Module extends \Hirtz\Skeleton\Base\Module
 
     public ?int $trailLifetime = null;
 
+    /**
+     * @var int|null how long a `user_login` record is kept, in seconds. The table holds an IP address and a user
+     * agent for every login, so it is personal data with no reason to be kept forever — set it and run
+     * `user-login/clear` from cron.
+     */
+    public ?int $userLoginLifetime = null;
+
     public $defaultRoute = 'dashboard';
     public $layout = 'main';
 
