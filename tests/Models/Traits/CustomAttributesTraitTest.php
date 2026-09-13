@@ -19,6 +19,7 @@ use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Models\Trail;
+use Hirtz\Skeleton\Models\Traits\AdminModelTrait;
 use Hirtz\Skeleton\Models\Traits\CustomAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\TrailModelTrait;
@@ -477,6 +478,7 @@ class CustomAttributeRecord extends ActiveRecord implements
     TranslationInterface,
     TypeAttributeInterface
 {
+    use AdminModelTrait;
     use CustomAttributesTrait;
     use I18nAttributesTrait;
     use TrailModelTrait;
@@ -488,6 +490,11 @@ class CustomAttributeRecord extends ActiveRecord implements
     final public const int TYPE_I18N_COLLISION = 4;
     final public const int TYPE_INVALID_NAME = 5;
     final public const int TYPE_DUPLICATE_NAME = 6;
+
+    public function getAdminRoute(): array|false
+    {
+        return false;
+    }
 
     #[Override]
     public function init(): void

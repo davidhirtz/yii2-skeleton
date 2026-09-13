@@ -31,7 +31,7 @@ class RedirectHeader extends Header
     {
         $this->title ??= $this->provider
             ? Yii::t('skeleton', 'COMMON_REDIRECTS')
-            : $this->model?->getDisplayName() ?? Yii::t('skeleton', 'REDIRECT_HEADER_CREATE_NEW_REDIRECT');
+            : $this->model?->getAdminName() ?? Yii::t('skeleton', 'REDIRECT_HEADER_CREATE_NEW_REDIRECT');
 
         $this->addSystemBreadcrumb();
 

@@ -134,7 +134,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
     {
         if ($model = $this->getModelRecord()) {
             return $model instanceof TrailModelInterface
-                ? $model->getTrailModelName()
+                ? $model->getAdminName()
                 : (new ReflectionClass($model))->getShortName();
         }
 
@@ -144,7 +144,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
     public function getModelType(): ?string
     {
         $model = $this->getModelRecord();
-        return $model instanceof TrailModelInterface ? $model->getTrailModelType() : null;
+        return $model instanceof TrailModelInterface ? $model->getAdminType() : null;
     }
 
     public function getModelRecord(): ?Model

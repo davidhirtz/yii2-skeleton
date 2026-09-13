@@ -329,7 +329,7 @@ class TrailGridView extends GridView
             return null;
         }
 
-        $name = $model instanceof TrailModelInterface ? $model->getTrailModelName() : $model->getPrimaryKey();
+        $name = $model instanceof TrailModelInterface ? $model->getAdminName() : $model->getPrimaryKey();
 
         return A::make()
             ->text($name)
@@ -361,8 +361,8 @@ class TrailGridView extends GridView
     protected function renderI18nTrailMessage(Trail $trail, ?Model $model = null): string
     {
         if ($model instanceof TrailModelInterface) {
-            $name = $model->getTrailModelName();
-            $route = $model->getTrailModelAdminRoute();
+            $name = $model->getAdminName();
+            $route = $model->getAdminRoute();
 
             if ($route) {
                 $name = A::make()

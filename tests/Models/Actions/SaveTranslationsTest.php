@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Db\I18nActiveQuery;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
 use Hirtz\Skeleton\Models\Trail;
+use Hirtz\Skeleton\Models\Traits\AdminModelTrait;
 use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\TrailModelTrait;
 use Hirtz\Skeleton\Models\Traits\TranslationTrait;
@@ -179,9 +180,15 @@ class SaveTranslationsTest extends TestCase
  */
 class TranslatedActiveRecord extends ActiveRecord implements TrailModelInterface, TranslationInterface
 {
+    use AdminModelTrait;
     use I18nAttributesTrait;
     use TrailModelTrait;
     use TranslationTrait;
+
+    public function getAdminRoute(): array|false
+    {
+        return false;
+    }
 
     #[Override]
     public function init(): void

@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Tests\Behaviors;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
 use Hirtz\Skeleton\Models\Search;
+use Hirtz\Skeleton\Models\Traits\AdminModelTrait;
 use Hirtz\Skeleton\Models\Traits\SearchableTrait;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Test\TestCase;
@@ -160,9 +161,15 @@ class SearchBehaviorTest extends TestCase
  */
 class SearchableActiveRecord extends ActiveRecord implements SearchableInterface
 {
+    use AdminModelTrait;
     use SearchableTrait;
 
     public bool $isSearchable = true;
+
+    public function getAdminRoute(): array|false
+    {
+        return false;
+    }
 
     public function getSearchAttributes(): array
     {

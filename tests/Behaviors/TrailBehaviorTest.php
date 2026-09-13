@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Behaviors;
 
+use Hirtz\Skeleton\Models\Traits\AdminModelTrait;
 use Hirtz\Skeleton\Test\TestCase;
 use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeValidator;
 use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
-use Hirtz\Skeleton\Models\Interfaces\AdminRouteInterface;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
 use Hirtz\Skeleton\Models\Trail;
@@ -137,30 +137,31 @@ class TrailBehaviorTest extends TestCase
         self::assertTrue($model->insert());
     }
 
-    public function testTrailModelName(): void
+    public function testAdminName(): void
     {
         $name = (new ReflectionClass(TrailActiveRecord::class))->getShortName();
-        self::assertEquals($name, TrailActiveRecord::instance()->getTrailModelName());
+        self::assertEquals($name, TrailActiveRecord::instance()->getAdminName());
     }
 
-    public function testTrailModelType(): void
+    public function testAdminType(): void
     {
-        self::assertNull(TrailActiveRecord::instance()->getTrailModelType());
+        $name = (new ReflectionClass(TrailActiveRecord::class))->getShortName();
+        self::assertEquals($name, TrailActiveRecord::instance()->getAdminType());
     }
 
-    public function testTrailModelAdminRoute(): void
+    public function testAdminRoute(): void
     {
         $model = TrailActiveRecord::create();
-        self::assertFalse($model->getTrailModelAdminRoute());
+        self::assertFalse($model->getAdminRoute());
 
-        $model = new class () extends TrailActiveRecord implements AdminRouteInterface {
+        $model = new class () extends TrailActiveRecord {
             public function getAdminRoute(): array
             {
                 return ['/admin/test'];
             }
         };
 
-        self::assertEquals($model->getAdminRoute(), $model->getTrailModelAdminRoute());
+        self::assertEquals(['/admin/test'], $model->getAdminRoute());
     }
 
     public function testTrailParents(): void
@@ -224,7 +225,13 @@ class TrailBehaviorTest extends TestCase
     public function testFormatTrailAttributeValueWithoutRange(): void
     {
         $model = new class () extends Model implements TrailModelInterface {
+            use AdminModelTrait;
             use TrailModelTrait;
+
+            public function getAdminRoute(): array|false
+            {
+                return false;
+            }
 
             public ?int $value = null;
 
@@ -289,7 +296,13 @@ class TrailBehaviorTest extends TestCase
  */
 class TrailActiveRecord extends ActiveRecord implements TrailModelInterface
 {
+    use AdminModelTrait;
     use TrailModelTrait;
+
+    public function getAdminRoute(): array|false
+    {
+        return false;
+    }
 
     #[Override]
     public function behaviors(): array

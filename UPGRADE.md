@@ -1,5 +1,66 @@
 # Upgrade Guide
 
+## 3.0.0 — Admin model interface
+
+`Models\Interfaces\AdminRouteInterface` is gone. `Models\Interfaces\AdminModelInterface` takes its place and adds
+the three things every admin surface asked a model for separately — the trail grid, the trail header, the search
+result, the asset grid, a page title:
+
+```php
+public function getAdminRoute(): array|false;
+public function getAdminName(): string;
+public function getAdminType(): string;
+public function getAdminIcon(): ?string;
+```
+
+`Models\Traits\AdminModelTrait` implements all but `getAdminRoute()`, which stays with the model — only it knows
+its controller, and a silent `false` would hide every link to it:
+
+```php
+class Product extends ActiveRecord implements AdminModelInterface
+{
+    use AdminModelTrait;
+
+    public function getAdminRoute(): array|false
+    {
+        return $this->id ? ['/admin/shop/product/update', 'id' => $this->id] : false;
+    }
+
+    public function getAdminType(): string
+    {
+        return Yii::t('shop', 'COMMON_PRODUCT');
+    }
+}
+```
+
+`getAdminName()` reads the model's `name` — through the magic getter, so a translated or custom attribute counts —
+and falls back to `COMMON_MODEL_ID` with the record's id, or to `getAdminType()` when there is no id.
+`getAdminType()` is the type name of a `TypeAttributeInterface` model and its short class name otherwise, so a model
+with a noun of its own overrides it. `getAdminIcon()` is the type icon, then the status icon, then `null`.
+
+### What to rename
+
+`TrailModelInterface` and `SearchableInterface` extend `AdminModelInterface`, so the trail methods are gone:
+
+| Removed                       | Replacement       |
+|-------------------------------|-------------------|
+| `getTrailModelAdminRoute()`   | `getAdminRoute()` |
+| `getTrailModelName()`         | `getAdminName()`  |
+| `getTrailModelType()`         | `getAdminType()`  |
+
+Every `TrailModelInterface` is therefore an `AdminModelInterface`: add `use AdminModelTrait;` beside
+`use TrailModelTrait;`, and declare `getAdminRoute()`. A relation record with no page of its own returns `false`,
+which is what the old `instanceof AdminRouteInterface` check produced for it.
+
+`getAdminType()` returns a non-empty `string` where `getTrailModelType()` returned `?string`, so a model that
+declares neither a type nor an override now shows its short class name where the trail used to show nothing. A model
+that has a `name` is now named by it: `Cms\Models\Section`, `Cms\Hotspot\Models\Hotspot` and
+`Media\Models\Asset` used to report `COMMON_MODEL_ID` even when they had one.
+
+`Models\Traits\SearchableTrait::getSearchIcon()` and `getSearchBadge()` are gone with them — a hit's icon and badge
+are `getAdminIcon()` and `getAdminType()`. `Media\Models\Asset::getModelName()` is gone too:
+`$asset->model->getAdminName()` is the name, since `AssetModelInterface` extends `AdminModelInterface`.
+
 ## 3.0.0 — Fulltext search
 
 `M260913120000Search` creates a `search` table: one row per searchable record, id and language, with the model's
@@ -11,11 +72,18 @@ project's.
 
 ```php
 use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
+use Hirtz\Skeleton\Models\Traits\AdminModelTrait;
 use Hirtz\Skeleton\Models\Traits\SearchableTrait;
 
 class Product extends ActiveRecord implements SearchableInterface
 {
+    use AdminModelTrait;
     use SearchableTrait;
+
+    public function getAdminRoute(): array|false
+    {
+        return $this->id ? ['/admin/shop/product/update', 'id' => $this->id] : false;
+    }
 
     public function getSearchAttributes(): array
     {
@@ -36,7 +104,8 @@ class Product extends ActiveRecord implements SearchableInterface
 ```
 
 That is the whole opt-in: `Db\ActiveRecord::behaviors()` attaches `Behaviors\SearchBehavior` to every
-`SearchableInterface`, and the trait implements the rest of the interface. The values are read through the magic getter, so a name may be a
+`SearchableInterface`, and the two traits implement the rest of the interface — `SearchableInterface` extends
+`Models\Interfaces\AdminModelInterface`, which is where the hit's route, title, badge and icon come from. The values are read through the magic getter, so a name may be a
 column, a translated or custom attribute, or a plain getter — the media `File` indexes `filename`, which is
 `getFilename()`. Register
 the class from the bundle's `Bootstrap`, the same way media registers its asset classes — nothing is discovered by

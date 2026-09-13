@@ -12,7 +12,7 @@ use Hirtz\Skeleton\Search\SearchResult;
 /**
  * Implemented via {@see SearchableTrait}, which leaves only {@see static::getSearchAttributes()} to the model.
  */
-interface SearchableInterface
+interface SearchableInterface extends AdminModelInterface
 {
     /**
      * @return list<string> the names whose values are indexed — any readable property, so translated and custom

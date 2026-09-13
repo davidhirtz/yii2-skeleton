@@ -1,5 +1,16 @@
 ## 3.0.0 (in development)
 
+- `Models\Interfaces\AdminModelInterface` replaces `AdminRouteInterface` and holds everything the admin needs to
+  present a model: `getAdminRoute()`, `getAdminName()`, `getAdminType()` and `getAdminIcon()`.
+  `Models\Traits\AdminModelTrait` implements all but the route, which stays with the model. `TrailModelInterface`
+  and `SearchableInterface` extend it, so `getTrailModelName()`, `getTrailModelType()` and
+  `getTrailModelAdminRoute()` are gone — every call site reads the admin methods instead, and the trail model that
+  has no page of its own declares `getAdminRoute(): false` rather than being recognised by `instanceof`.
+  `Models\Traits\SearchableTrait` lost `getSearchIcon()` and `getSearchBadge()` with them: the result's icon and
+  badge are the model's admin icon and type. Two behaviour changes fall out of it — a model with a `name` is named
+  by it in the trail, where several ignored theirs, and `getAdminType()` is a non-empty `string` where
+  `getTrailModelType()` was `?string`, so a model that declares none reports its short class name. See UPGRADE.md
+- `Models\Redirect::getDisplayName()` is `getAdminName()`, and `getAdminType()` is the new `REDIRECT_REDIRECT` noun
 - The index carries the tokens InnoDB throws away. Its parser splits `f2a@domain.com` into `f2a`, `domain` and
   `com`, then indexes neither its stopwords nor anything shorter than `innodb_ft_min_token_size`, so `com`, `IT`
   and `.de` were never in the index and nothing could ask for them. `Search\SearchText::getIndexTokens()` now

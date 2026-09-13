@@ -50,7 +50,7 @@ class TrailHeader extends Header
     protected function getTrailModelTitle(): string
     {
         if ($this->model instanceof TrailModelInterface) {
-            return $this->model->getTrailModelName();
+            return $this->model->getAdminName();
         }
 
         if ($this->provider->trailId) {
@@ -69,7 +69,7 @@ class TrailHeader extends Header
             return null;
         }
 
-        $route = $this->model->getTrailModelAdminRoute();
+        $route = $this->model->getAdminRoute();
         $language = explode('::', (string)$this->model->getTrailBehavior()->modelClass)[1] ?? null;
 
         return $route ? [...$route, 'language' => $language] : null;

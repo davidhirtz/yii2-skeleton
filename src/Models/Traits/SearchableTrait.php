@@ -7,11 +7,8 @@ namespace Hirtz\Skeleton\Models\Traits;
 use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Db\ActiveQuery;
 use Hirtz\Skeleton\Db\ActiveRecord;
-use Hirtz\Skeleton\Models\Interfaces\AdminRouteInterface;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
-use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
-use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Search\Search;
 use Hirtz\Skeleton\Search\SearchDocument;
 use Hirtz\Skeleton\Search\SearchResult;
@@ -29,11 +26,7 @@ trait SearchableTrait
             ? (string)$this->getSearchAttributeValue('name', $language)
             : '';
 
-        if ($title === '' && $this instanceof TrailModelInterface) {
-            $title = $this->getTrailModelName();
-        }
-
-        return mb_substr(SearchText::normalize($title), 0, 255);
+        return mb_substr(SearchText::normalize($title ?: $this->getAdminName()), 0, 255);
     }
 
     public function getSearchWeight(): float
@@ -114,10 +107,10 @@ trait SearchableTrait
 
         return new SearchResult(
             title: $this->getSearchResultTitle(),
-            route: $this instanceof AdminRouteInterface ? $this->getAdminRoute() : false,
+            route: $this->getAdminRoute(),
             description: $this->getSearchDescription(),
-            icon: $this->getSearchIcon(),
-            badge: $this->getSearchBadge(),
+            icon: $this->getAdminIcon(),
+            badge: $this->getAdminType(),
             updated: $updated instanceof DateTime ? $updated : null,
         );
     }
@@ -144,20 +137,6 @@ trait SearchableTrait
         }
 
         return $content ?: null;
-    }
-
-    protected function getSearchIcon(): ?string
-    {
-        if ($this instanceof TypeAttributeInterface && ($icon = $this->getTypeIcon())) {
-            return $icon;
-        }
-
-        return $this instanceof StatusAttributeInterface ? ($this->getStatusIcon() ?: null) : null;
-    }
-
-    protected function getSearchBadge(): ?string
-    {
-        return $this instanceof TrailModelInterface ? ($this->getTrailModelType() ?: null) : null;
     }
 
     /**

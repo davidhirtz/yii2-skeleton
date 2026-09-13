@@ -10,17 +10,11 @@ use yii\base\Model;
 /**
  * @mixin Model
  */
-interface TrailModelInterface
+interface TrailModelInterface extends AdminModelInterface
 {
     public function formatTrailAttributeValue(string $attribute, mixed $value): mixed;
 
     public function getTrailAttributes(): array;
-
-    public function getTrailModelAdminRoute(): array|false;
-
-    public function getTrailModelName(): string;
-
-    public function getTrailModelType(): ?string;
 
     public function getTrailBehavior(): TrailBehavior;
 

@@ -10,9 +10,9 @@ use Hirtz\Skeleton\Behaviors\BlameableBehavior;
 use Hirtz\Skeleton\Behaviors\TimestampBehavior;
 use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
-use Hirtz\Skeleton\Models\Interfaces\AdminRouteInterface;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
+use Hirtz\Skeleton\Models\Traits\AdminModelTrait;
 use Hirtz\Skeleton\Models\Traits\TrailModelTrait;
 use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
 use Hirtz\Skeleton\Models\Traits\UpdatedByUserTrait;
@@ -29,8 +29,9 @@ use Yii;
  * @property DateTime|null $updated_at
  * @property DateTime $created_at
  */
-class Redirect extends ActiveRecord implements AdminRouteInterface, TrailModelInterface, TypeAttributeInterface
+class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttributeInterface
 {
+    use AdminModelTrait;
     use TypeAttributeTrait;
     use TrailModelTrait;
     use UpdatedByUserTrait;
@@ -133,23 +134,14 @@ class Redirect extends ActiveRecord implements AdminRouteInterface, TrailModelIn
         return $this->id ? ['/admin/redirect/update', 'id' => $this->id] : false;
     }
 
+    public function getAdminType(): string
+    {
+        return Yii::t('skeleton', 'REDIRECT_REDIRECT');
+    }
+
     public function getBaseUrl(): string
     {
         return !parse_url($this->url, PHP_URL_HOST) ? '/' : '';
-    }
-
-    public function getDisplayName(): string
-    {
-        return Yii::t('skeleton', 'COMMON_MODEL_ID', [
-            'model' => Yii::t('skeleton', 'REDIRECT_REDIRECT'),
-            'id' => $this->id,
-        ]);
-    }
-
-    #[Override]
-    public function getTrailModelName(): string
-    {
-        return $this->id ? $this->getDisplayName() : Yii::t('skeleton', 'REDIRECT_REDIRECT');
     }
 
     public static function getTypes(): array

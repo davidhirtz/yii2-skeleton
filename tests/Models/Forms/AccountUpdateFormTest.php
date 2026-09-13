@@ -49,7 +49,7 @@ class AccountUpdateFormTest extends TestCase
 
         /** @var User $user */
         $user = $trail->getModelRecord();
-        self::assertEquals($user->getTrailModelName(), $form->user->getTrailModelName());
+        self::assertEquals($user->getAdminName(), $form->user->getAdminName());
     }
 
     public function testUpdateTimezoneAttribute(): void
