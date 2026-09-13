@@ -38,16 +38,23 @@ class UserLoginController extends Controller
 
     public function actionIndex(?string $q = null): Response|string
     {
+        $query = UserLogin::find()
+            ->orderBy(['created_at' => SORT_DESC])
+            ->with([
+                'user' => function (UserQuery $query): void {
+                    $query->nameAttributesOnly();
+                }
+            ]);
+
+        if ($q) {
+            // an address that does not parse matches nothing: comparing the varbinary column to `false` would
+            // cast both sides to a number and return every row
+            $query->andWhere(['ip_address' => inet_pton($q) ?: []]);
+        }
+
         $provider = new ActiveDataProvider([
             'sort' => false,
-            'query' => UserLogin::find()
-                ->orderBy(['created_at' => SORT_DESC])
-                ->filterWhere(['ip_address' => $q ? inet_pton($q) : null])
-                ->with([
-                    'user' => function (UserQuery $query): void {
-                        $query->nameAttributesOnly();
-                    }
-                ])
+            'query' => $query,
         ]);
 
         $provider->getPagination()->defaultPageSize = 50;

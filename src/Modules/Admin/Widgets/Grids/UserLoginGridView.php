@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
 use Hirtz\Skeleton\Models\UserLogin;
+use Hirtz\Skeleton\Modules\Admin\Controllers\UserLoginController;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\LinkColumn;
@@ -42,21 +43,31 @@ class UserLoginGridView extends GridView
         return TypeIconColumn::make();
     }
 
+    /**
+     * `LinkColumn` wraps the cell's *value*, so a `content()` of its own would replace the link instead of filling it.
+     * @see UserLoginController::actionIndex()
+     */
     protected function getIpAddressColumn(): ?Column
     {
         return LinkColumn::make()
             ->property('ip_address')
-            ->content(fn (UserLogin $login): string => $login->getDisplayIp())
-            ->url(fn (UserLogin $login) => ['view', 'id' => $login->id]);
+            ->value(fn (UserLogin $login): string => $login->getDisplayIp())
+            ->url(fn (UserLogin $login): array|false => $login->ip_address
+                ? ['index', 'q' => $login->getDisplayIp()]
+                : false);
     }
 
+    /**
+     * @see UserLoginController::actionView()
+     */
     protected function getUserColumn(): ?Column
     {
-        return LinkColumn::make()
+        return DataColumn::make()
             ->property('user')
             ->visible(!$this->user)
-            ->content(fn (UserLogin $login): Stringable => Username::make()->user($login->user))
-            ->url(fn (UserLogin $login): array => ['view', 'user' => $login->user_id]);
+            ->content(fn (UserLogin $login): Stringable => Username::make()
+                ->user($login->user)
+                ->href(['view', 'user' => $login->user_id]));
     }
 
     protected function getBrowserColumn(): ?Column
