@@ -370,11 +370,23 @@ class ActiveQuery extends \yii\db\ActiveQuery
         return $this->andFilterWhere(['>=', $model::tableName() . '.status', static::$status]);
     }
 
+    /**
+     * `null` means "no opinion", so it never clears a status an earlier query in the same request already set.
+     */
     public static function setStatus(?int $status): void
     {
         if ($status !== null) {
             static::$status = (int)$status;
         }
+    }
+
+    /**
+     * The status belongs to the request — a draft host sets it to `STATUS_DRAFT` — so `ApplicationTrait` clears it
+     * for the next one rather than letting a draft request widen what a later one may see.
+     */
+    public static function resetStatus(): void
+    {
+        static::$status = null;
     }
 
     public function enabled(): static
