@@ -28,7 +28,7 @@ class PasswordResetFormTest extends TestCase
     public function testResetDoesNotLogInUserWithTwoFactorAuthentication(): void
     {
         $user = $this->getUserFromFixture('admin');
-        self::assertNotEmpty($user->google_2fa_secret);
+        self::assertTrue($user->hasTwoFactorAuthentication());
 
         $form = $this->createForm($user);
 

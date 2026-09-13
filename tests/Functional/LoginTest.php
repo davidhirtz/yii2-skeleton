@@ -87,7 +87,7 @@ class LoginTest extends TestCase
         $validator = Yii::createObject(TwoFactorAuthenticationValidator::class);
         $auth = new TwoFactorAuth(new QRServerProvider(), digits: $validator->length, period: $validator->period);
 
-        $this->submitLoginForm(code: $auth->getCode($user->google_2fa_secret));
+        $this->submitLoginForm(code: $auth->getCode($user->getTwoFactorAuthenticationSecret()));
         self::assertResponseStatusCodeSame(200);
 
         self::assertCurrentUrlEquals('admin/dashboard/index');

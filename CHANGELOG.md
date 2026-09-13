@@ -1,5 +1,14 @@
 ## 3.0.0 (in development)
 
+- The second factor is encrypted and has a recovery path. `user.google_2fa_secret` held the secret in the clear
+  in a 16-character column and there were no backup codes, so a lost device meant an administrator.
+  `Migrations\M260913160000TwoFactorAuthentication` widens the column, encrypts what is in it and adds
+  `google_2fa_recovery_codes`. `Models\User` reaches the secret through `getTwoFactorAuthenticationSecret()` /
+  `setTwoFactorAuthenticationSecret()` and answers `hasTwoFactorAuthentication()`; enabling 2FA issues
+  `User::RECOVERY_CODE_COUNT` single-use codes, shown once on the security page and kept only as HMACs. A
+  recovery code stands in for a TOTP code at the login **and** on the form that turns 2FA off, so a user who
+  lost the device gets themselves out. The encryption key is the `secretKey` param, falling back to
+  `cookieValidationKey`
 - `user_login` has a retention. It keeps an IP address and a user agent for every login and nothing ever removed
   one, so an installation held them forever. `Modules\Admin\Module::$userLoginLifetime` sets how long they are
   kept and the new `user-login/clear` command (`Console\Controllers\UserLoginController`) deletes the rest,

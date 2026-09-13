@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Models\Forms;
 
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\Traits\IdentityTrait;
+use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Models\UserLogin;
 use Hirtz\Skeleton\Validators\TwoFactorAuthenticationValidator;
 use Override;
@@ -58,7 +59,8 @@ class LoginForm extends Model
             [
                 ['code'],
                 'string',
-                'length' => 6,
+                'min' => 6,
+                'max' => User::RECOVERY_CODE_LENGTH,
             ],
             [
                 ['rememberMe'],
@@ -120,15 +122,34 @@ class LoginForm extends Model
 
     protected function validateTwoFactorAuthenticatorCode(): void
     {
-        if (Yii::$app->getUser()->isTwoFactorAuthenticationRequired($this->user)) {
-            $validator = Yii::$container->get(TwoFactorAuthenticationValidator::class, [], [
-                'secret' => $this->user->google_2fa_secret,
-                'datetime' => $this->user->last_login,
-            ]);
-
-            $validator->validateAttribute($this, 'code');
-            $this->is2FaRequired = true;
+        if (!Yii::$app->getUser()->isTwoFactorAuthenticationRequired($this->user)) {
+            return;
         }
+
+        $this->is2FaRequired = true;
+
+        // A recovery code is longer than a TOTP one, which is how the two are told apart
+        if (strlen((string)$this->code) === User::RECOVERY_CODE_LENGTH) {
+            if (!$this->user->validateTwoFactorAuthenticationRecoveryCode($this->code)) {
+                $this->addInvalidCodeError();
+            }
+
+            return;
+        }
+
+        $validator = Yii::$container->get(TwoFactorAuthenticationValidator::class, [], [
+            'secret' => $this->user->getTwoFactorAuthenticationSecret(),
+            'datetime' => $this->user->last_login,
+        ]);
+
+        $validator->validateAttribute($this, 'code');
+    }
+
+    private function addInvalidCodeError(): void
+    {
+        $this->addError('code', Yii::t('yii', '{attribute} is invalid.', [
+            'attribute' => $this->getAttributeLabel('code'),
+        ]));
     }
 
     public function login(): bool

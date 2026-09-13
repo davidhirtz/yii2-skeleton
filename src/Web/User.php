@@ -300,7 +300,7 @@ class User extends \yii\web\User
      */
     public function isTwoFactorAuthenticationRequired(\Hirtz\Skeleton\Models\User $user): bool
     {
-        return $this->enableTwoFactorAuthentication && (bool)$user->google_2fa_secret;
+        return $this->enableTwoFactorAuthentication && $user->hasTwoFactorAuthentication();
     }
 
     public function isLoginEnabled(): bool

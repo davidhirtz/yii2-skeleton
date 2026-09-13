@@ -25,6 +25,8 @@ use yii\web\Response;
 
 class AccountController extends Controller
 {
+    final public const string RECOVERY_CODES_FLASH = 'twoFactorAuthenticationRecoveryCodes';
+
     public $defaultAction = 'update';
 
     #[Override]
@@ -322,6 +324,7 @@ class AccountController extends Controller
 
         return $this->render('security', [
             'user' => $this->webuser->getIdentity(),
+            'recoveryCodes' => Yii::$app->getSession()->getFlash(self::RECOVERY_CODES_FLASH) ?: [],
         ]);
     }
 
@@ -351,10 +354,21 @@ class AccountController extends Controller
 
         if ($form->load($this->request->post())) {
             $form->save();
+            $this->setRecoveryCodesFlash($form);
             $this->errorOrSuccess($form, Yii::t('skeleton', 'ACCOUNT_SUCCESS_TWO_FACTOR_AUTHENTICATION_ENABLED'));
         }
 
         return $this->redirect(['security']);
+    }
+
+    /**
+     * The codes are only readable once, so they travel to the page that renders them and nowhere else.
+     */
+    protected function setRecoveryCodesFlash(TwoFactorAuthenticatorForm $form): void
+    {
+        if ($form->recoveryCodes) {
+            Yii::$app->getSession()->setFlash(self::RECOVERY_CODES_FLASH, $form->recoveryCodes);
+        }
     }
 
     public function actionDisableAuthenticator(): Response|string

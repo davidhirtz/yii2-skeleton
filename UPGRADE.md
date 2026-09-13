@@ -1,5 +1,30 @@
 # Upgrade Guide
 
+## 3.0.0 — Two-factor authentication
+
+`user.google_2fa_secret` was a plaintext 16-character column, and there were no backup codes at all, so a lost
+authenticator could only be cleared by an administrator.
+
+`Migrations\M260913160000TwoFactorAuthentication` widens the column, encrypts every secret already in it, and
+adds `google_2fa_recovery_codes`. The encryption key is `Yii::$app->params['secretKey']`, falling back to
+`cookieValidationKey` — **keep whichever one applies**, because losing it makes every stored secret unreadable
+and every user has to set up 2FA again. Rows written before the migration (their secret is not marked `enc:`)
+are still read as-is, so nothing breaks if the migration has not run yet.
+
+**Read the secret through the model, never off the column:**
+
+| Before                        | After                                    |
+|-------------------------------|------------------------------------------|
+| `$user->google_2fa_secret`    | `$user->getTwoFactorAuthenticationSecret()` |
+| `if ($user->google_2fa_secret)` | `$user->hasTwoFactorAuthentication()`  |
+| `$user->google_2fa_secret = $s` | `$user->setTwoFactorAuthenticationSecret($s)` |
+
+Enabling 2FA now issues `Models\User::RECOVERY_CODE_COUNT` single-use recovery codes. Only their HMACs are
+stored, so `Models\Forms\TwoFactorAuthenticatorForm::$recoveryCodes` after a successful `save()` is the one
+chance to show them — the security view renders them from a flash. A recovery code is accepted wherever a TOTP
+code is: at the login, and on the form that disables the second factor. Setting a new secret clears the codes,
+so a project that enables 2FA from its own code should surface the ones `save()` returns.
+
 ## 3.0.0 — `userUpdate` and `userDelete` respect the permission hierarchy
 
 `Rbac\Rules\OwnerRule` guarded the site owner and nothing else, so anyone with `userUpdate` could set a

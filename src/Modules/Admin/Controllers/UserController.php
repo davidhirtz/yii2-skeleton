@@ -123,7 +123,7 @@ class UserController extends Controller
     public function actionDisableAuthenticator(int $id): Response|string
     {
         $user = $this->findUser($id, User::AUTH_USER_UPDATE);
-        $user->google_2fa_secret = null;
+        $user->setTwoFactorAuthenticationSecret(null);
 
         if ($user->update()) {
             // A session opened behind the second factor must not outlive it.

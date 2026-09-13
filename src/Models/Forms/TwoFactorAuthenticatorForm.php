@@ -18,6 +18,13 @@ class TwoFactorAuthenticatorForm extends Model
     use ModelTrait;
 
     public ?string $code = null;
+
+    /**
+     * @var list<string> the recovery codes in the clear, populated by a successful {@see static::save()} and the
+     * only chance anyone has to write them down.
+     */
+    public array $recoveryCodes = [];
+
     private ?string $secret = null;
 
     public function __construct(public readonly User $user, array $config = [])
@@ -43,28 +50,45 @@ class TwoFactorAuthenticatorForm extends Model
 
     public function save(): bool
     {
-        if ($this->validate()) {
-            $this->user->google_2fa_secret = $this->getSecret();
-            return $this->user->update() === 1;
+        if (!$this->validate()) {
+            return false;
         }
 
-        return false;
+        $this->user->setTwoFactorAuthenticationSecret($this->getSecret());
+        $this->recoveryCodes = $this->user->generateTwoFactorAuthenticationRecoveryCodes();
+
+        Yii::$app->getSession()->set('google_2fa_secret', null);
+
+        return $this->user->update() === 1;
     }
 
     public function delete(): false|int
     {
-        if ($this->validate()) {
-            Yii::$app->getSession()->set('google_2fa_secret', null);
-            $this->user->google_2fa_secret = null;
-            return $this->user->update();
+        if (!$this->validateDeleteCode()) {
+            return false;
         }
 
-        return false;
+        Yii::$app->getSession()->set('google_2fa_secret', null);
+        $this->user->setTwoFactorAuthenticationSecret(null);
+
+        return $this->user->update();
+    }
+
+    /**
+     * A recovery code turns the second factor off as well as a code from the authenticator does. Without that, a
+     * user who lost the device could log in with a recovery code and still not get out of it on their own.
+     */
+    private function validateDeleteCode(): bool
+    {
+        $isRecoveryCode = strlen((string)$this->code) === User::RECOVERY_CODE_LENGTH;
+
+        return ($isRecoveryCode && $this->user->validateTwoFactorAuthenticationRecoveryCode($this->code))
+            || $this->validate();
     }
 
     public function getSecret(): string
     {
-        $this->secret ??= $this->user->google_2fa_secret ?: Yii::$app->getSession()->get('google_2fa_secret');
+        $this->secret ??= $this->user->getTwoFactorAuthenticationSecret() ?: Yii::$app->getSession()->get('google_2fa_secret');
 
         if (!$this->secret) {
             $this->generateSecret();

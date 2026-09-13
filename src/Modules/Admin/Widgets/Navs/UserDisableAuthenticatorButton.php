@@ -40,7 +40,7 @@ class UserDisableAuthenticatorButton extends Widget
     #[Override]
     public function isVisible(): bool
     {
-        return (bool)$this->model->google_2fa_secret
+        return $this->model->hasTwoFactorAuthentication()
             && $this->webuser->enableTwoFactorAuthentication
             && $this->webuser->can(User::AUTH_USER_UPDATE, ['user' => $this->model]);
     }

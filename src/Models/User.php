@@ -25,6 +25,7 @@ use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Hirtz\Skeleton\Validators\UniqueValidator;
 use Override;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\base\NotSupportedException;
 use yii\web\IdentityInterface;
 
@@ -42,7 +43,9 @@ use yii\web\IdentityInterface;
  * @property DateTime|null $verification_token_created_at
  * @property string|null $password_reset_token
  * @property DateTime|null $password_reset_token_created_at
- * @property string|null $google_2fa_secret
+ * @property string|null $google_2fa_secret the encrypted secret, reached through
+ *     {@see static::getTwoFactorAuthenticationSecret()}
+ * @property array|null $google_2fa_recovery_codes the hashed single-use codes
  * @property bool|int $is_owner
  * @property int $created_by_user_id
  * @property int $login_count
@@ -68,6 +71,18 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     final public const string AUTH_USER_UPDATE = 'userUpdate';
     final public const string AUTH_USER_ASSIGN = 'authUpdate';
     final public const string AUTH_ROLE_ADMIN = 'admin';
+
+    /**
+     * Marks a secret written by {@see static::encryptTwoFactorAuthenticationSecret()}, so a row that predates the
+     * encryption is still readable.
+     */
+    private const string ENCRYPTED_PREFIX = 'enc:';
+
+    private const string RECOVERY_CODE_ALPHABET = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+
+    final public const int RECOVERY_CODE_LENGTH = 10;
+
+    final public const int RECOVERY_CODE_COUNT = 8;
 
     /**
      * @var int the minimum length for the username
@@ -349,6 +364,123 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         return Yii::$app->getSecurity()->compareString($expected, $token);
     }
 
+    public function hasTwoFactorAuthentication(): bool
+    {
+        return (bool)$this->google_2fa_secret;
+    }
+
+    public function getTwoFactorAuthenticationSecret(): ?string
+    {
+        return $this->google_2fa_secret === null
+            ? null
+            : static::decryptTwoFactorAuthenticationSecret($this->google_2fa_secret);
+    }
+
+    public function setTwoFactorAuthenticationSecret(?string $secret): void
+    {
+        $this->google_2fa_secret = $secret === null
+            ? null
+            : static::encryptTwoFactorAuthenticationSecret($secret);
+
+        $this->google_2fa_recovery_codes = null;
+    }
+
+    /**
+     * @return list<string> the codes in the clear, which is the only time they can be shown — only their hashes
+     *     are kept
+     */
+    public function generateTwoFactorAuthenticationRecoveryCodes(): array
+    {
+        $codes = [];
+        $hashes = [];
+
+        for ($i = 0; $i < static::RECOVERY_CODE_COUNT; $i++) {
+            $code = '';
+
+            for ($j = 0; $j < static::RECOVERY_CODE_LENGTH; $j++) {
+                $code .= static::RECOVERY_CODE_ALPHABET[random_int(0, strlen(static::RECOVERY_CODE_ALPHABET) - 1)];
+            }
+
+            $codes[] = $code;
+            $hashes[] = static::hashTwoFactorAuthenticationRecoveryCode($code);
+        }
+
+        $this->google_2fa_recovery_codes = $hashes;
+
+        return $codes;
+    }
+
+    /**
+     * Consumes the code it matches: a recovery code is good once, so this writes the shortened list before it
+     * returns.
+     */
+    public function validateTwoFactorAuthenticationRecoveryCode(string $code): bool
+    {
+        $hash = static::hashTwoFactorAuthenticationRecoveryCode($code);
+        $remaining = [];
+        $matched = false;
+
+        foreach ($this->google_2fa_recovery_codes ?? [] as $stored) {
+            if (!$matched && hash_equals((string)$stored, $hash)) {
+                $matched = true;
+                continue;
+            }
+
+            $remaining[] = $stored;
+        }
+
+        if ($matched) {
+            $this->google_2fa_recovery_codes = $remaining;
+            $this->updateAttributes(['google_2fa_recovery_codes' => $remaining]);
+        }
+
+        return $matched;
+    }
+
+    public function getTwoFactorAuthenticationRecoveryCodeCount(): int
+    {
+        return count($this->google_2fa_recovery_codes ?? []);
+    }
+
+    public static function encryptTwoFactorAuthenticationSecret(string $secret): string
+    {
+        $data = Yii::$app->getSecurity()->encryptByKey($secret, static::getTwoFactorAuthenticationKey());
+        return static::ENCRYPTED_PREFIX . base64_encode($data);
+    }
+
+    public static function decryptTwoFactorAuthenticationSecret(string $secret): ?string
+    {
+        if (!str_starts_with($secret, static::ENCRYPTED_PREFIX)) {
+            // Written before the column was encrypted, and still the secret itself
+            return $secret;
+        }
+
+        $data = base64_decode(substr($secret, strlen(static::ENCRYPTED_PREFIX)), true);
+        $secret = $data === false ? false : Yii::$app->getSecurity()->decryptByKey($data, static::getTwoFactorAuthenticationKey());
+
+        return $secret === false ? null : $secret;
+    }
+
+    private static function hashTwoFactorAuthenticationRecoveryCode(string $code): string
+    {
+        // A recovery code is 50 bits of entropy the user never chose, so it needs no key stretching
+        return hash_hmac('sha256', strtoupper(trim($code)), static::getTwoFactorAuthenticationKey());
+    }
+
+    /**
+     * @throws InvalidConfigException
+     */
+    private static function getTwoFactorAuthenticationKey(): string
+    {
+        $key = Yii::$app->params['secretKey'] ?? Yii::$app->params['cookieValidationKey'] ?? null;
+
+        if (!$key) {
+            throw new InvalidConfigException('Either `secretKey` or `cookieValidationKey` must be set in params.');
+        }
+
+        return $key;
+    }
+
     public function getAdminRoute(): array
     {
         return $this->id ? ['/admin/user/update', 'id' => $this->id] : ['/admin/user/index'];
@@ -463,6 +595,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
             'password_reset_token',
             'password_reset_token_created_at',
             'google_2fa_secret',
+            'google_2fa_recovery_codes',
             'login_count',
             'last_login',
             'created_by_user_id',

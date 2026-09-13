@@ -35,7 +35,7 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
             'user' => $this->model,
         ]);
 
-        $enabled = $this->model->google_2fa_secret;
+        $enabled = $this->model->hasTwoFactorAuthentication();
 
         $this->action ??= $enabled ? ['account/disable-authenticator'] : ['account/enable-authenticator'];
         $this->rows ??= $enabled ? $this->getDisableAuthenticatorRows() : $this->getEnableAuthenticatorRows();
@@ -50,6 +50,10 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
         return [
             FormRow::make()
                 ->content(Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_AUTHENTICATION')),
+            FormRow::make()
+                ->content(Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_RECOVERY_CODES', [
+                    'count' => $this->model->getTwoFactorAuthenticationRecoveryCodeCount(),
+                ])),
             $this->getInputField(),
         ];
     }
