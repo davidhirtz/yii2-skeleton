@@ -1,5 +1,9 @@
 ## 3.0.0 (in development)
 
+- `Modules\Admin\Controllers\UserController::actionReset()` emails the reset link it creates. It used to write
+  a token nobody could reach and flash that something had happened, and nothing linked to it either — the new
+  `Modules\Admin\Widgets\Navs\UserPasswordResetButton` puts it in the user action dropdown. It refuses the
+  request when `Web\User::$enablePasswordReset` is off, since the action the link lands on would refuse it too
 - Tokens live in a `user_token` table of their own and are stored as an HMAC, never in the clear. A read of the
   `user` table used to hand over a working password reset for every account that had one. `Models\UserToken`
   holds the verification tokens, the password reset tokens and the 2FA recovery codes, one row each, with a

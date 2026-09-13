@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
 use Hirtz\Skeleton\Models\Forms\DeleteForm;
 use Hirtz\Skeleton\Models\Forms\OwnershipForm;
+use Hirtz\Skeleton\Models\Forms\PasswordRecoverForm;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Controllers\Traits\UserTrait;
 use Hirtz\Skeleton\Modules\Admin\Data\UserActiveDataProvider;
@@ -136,10 +137,23 @@ class UserController extends Controller
 
     public function actionReset(int $id): Response|string
     {
-        $user = $this->findUser($id, User::AUTH_USER_UPDATE);
-        $user->createPasswordResetToken();
+        // The emailed link lands on an action that refuses the request when self-service reset is off, so there
+        // would be nothing to send.
+        if (!$this->webuser->isPasswordResetEnabled()) {
+            throw new ForbiddenHttpException();
+        }
 
-        $this->success(Yii::t('skeleton', 'USER_SUCCESS_UPDATED_PASSWORD'));
+        $user = $this->findUser($id, User::AUTH_USER_UPDATE);
+
+        $form = PasswordRecoverForm::create();
+        $form->user = $user;
+        $form->email = $user->email;
+
+        $form->sendPasswordResetEmail();
+
+        $this->success(Yii::t('skeleton', 'USER_SUCCESS_SENT_PASSWORD_RESET', [
+            'email' => $user->email,
+        ]));
 
         return $this->redirect(['update', 'id' => $user->id]);
     }

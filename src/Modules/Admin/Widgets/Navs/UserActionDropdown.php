@@ -22,11 +22,18 @@ class UserActionDropdown extends ActionDropdown
     protected function configure(): void
     {
         $this->addItem(
+            $this->getUserPasswordResetButton(),
             $this->getUserDisableAuthenticatorButton(),
             $this->getUserDeleteButton(),
             $this->getOwnerLinkButton(),
         );
         parent::configure();
+    }
+
+    protected function getUserPasswordResetButton(): ?Stringable
+    {
+        return UserPasswordResetButton::make()
+            ->model($this->model);
     }
 
     protected function getUserDisableAuthenticatorButton(): ?Stringable
