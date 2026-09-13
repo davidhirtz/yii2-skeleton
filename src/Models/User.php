@@ -87,7 +87,13 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     /**
      * @var int the minimum length for the password
      */
-    public int $passwordMinLength = 5;
+    public int $passwordMinLength = 8;
+
+    /**
+     * @var int the maximum length for the password. bcrypt silently truncates at 72 bytes, so anything past it is
+     * not part of the password and must not be accepted as if it were.
+     */
+    public int $passwordMaxLength = 72;
 
     /**
      * @var bool whether the name is required
@@ -183,7 +189,23 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
 
     public function validatePassword(string $password): bool
     {
-        return $this->password_hash && Yii::$app->getSecurity()->validatePassword($password . $this->password_salt, $this->password_hash);
+        return (bool)$this->password_hash
+            && Yii::$app->getSecurity()->validatePassword($this->getSeasonedPassword($password), $this->password_hash);
+    }
+
+    /**
+     * True while the stored hash was written with the legacy `password_salt` or below the security component's
+     * current cost, so a successful login can replace it.
+     */
+    public function isPasswordHashOutdated(): bool
+    {
+        if (!$this->password_hash) {
+            return false;
+        }
+
+        return (bool)$this->password_salt || password_needs_rehash($this->password_hash, PASSWORD_BCRYPT, [
+            'cost' => Yii::$app->getSecurity()->passwordHashCost,
+        ]);
     }
 
     #[Override]
@@ -260,8 +282,19 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
 
     public function generatePasswordHash(string $password): void
     {
-        $this->password_salt = Yii::$app->getSecurity()->generateRandomString(10);
-        $this->password_hash = Yii::$app->getSecurity()->generatePasswordHash($password . $this->password_salt);
+        // bcrypt carries a salt of its own, so the column adds nothing — it is only kept for the hashes that
+        // were written with it. Clearing it first is what makes the pepper apply below.
+        $this->password_salt = null;
+        $this->password_hash = Yii::$app->getSecurity()->generatePasswordHash($this->getSeasonedPassword($password));
+    }
+
+    /**
+     * The optional `passwordPepper` param is a secret the database does not hold, so a leaked hash cannot be
+     * attacked offline. A hash written before it keeps its own `password_salt` and is still checked with that.
+     */
+    private function getSeasonedPassword(string $password): string
+    {
+        return $password . ($this->password_salt ?? (Yii::$app->params['passwordPepper'] ?? ''));
     }
 
     public function generateAuthKey(): void

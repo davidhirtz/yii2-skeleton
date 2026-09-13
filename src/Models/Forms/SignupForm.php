@@ -63,6 +63,7 @@ class SignupForm extends AbstractSignupForm
                 ['password'],
                 'string',
                 'min' => $this->user->passwordMinLength,
+                'max' => $this->user->passwordMaxLength,
             ],
             [
                 ['terms'],

@@ -1,5 +1,12 @@
 ## 3.0.0 (in development)
 
+- Password policy and hashing. `Models\User::$passwordMinLength` is 8 rather than 5, the new
+  `$passwordMaxLength` caps a password at bcrypt's 72 bytes — past which it is silently truncated — and every
+  form that takes one enforces both. `generatePasswordHash()` no longer writes a `password_salt`: bcrypt carries
+  its own, and the optional `passwordPepper` param takes its place as a secret the database does not hold.
+  `Models\Forms\LoginForm` rehashed and re-salted on every single login and now calls the new
+  `isPasswordHashOutdated()` first, which migrates a legacy salted hash or one below the security component's
+  current cost exactly once. A hash written with a `password_salt` keeps validating against it
 - The login is rate limited. Nothing counted a failed attempt before, so a password or a six-digit TOTP code —
   of which three are valid in every period at the default discrepancy — could be guessed at request speed.
   `Web\User::$loginAttemptLimit` (10) and `$loginAttemptDuration` (900 seconds) drive a per-email **and**

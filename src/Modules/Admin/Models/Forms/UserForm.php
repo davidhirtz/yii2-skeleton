@@ -51,6 +51,7 @@ class UserForm extends Model
                 ['newPassword'],
                 'string',
                 'min' => $this->user->passwordMinLength,
+                'max' => $this->user->passwordMaxLength,
                 'skipOnEmpty' => true,
             ],
             [

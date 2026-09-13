@@ -126,7 +126,9 @@ class LoginForm extends Model
             $webuser->loginType = UserLogin::TYPE_LOGIN;
             $webuser->resetFailedLoginAttempts($this->email);
 
-            $this->user->generatePasswordHash($this->password);
+            if ($this->user->isPasswordHashOutdated()) {
+                $this->user->generatePasswordHash($this->password);
+            }
 
             return $webuser->login($this->user, $this->rememberMe ? $webuser->cookieLifetime : 0);
         }

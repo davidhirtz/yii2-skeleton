@@ -1,5 +1,30 @@
 # Upgrade Guide
 
+## 3.0.0 — Passwords
+
+The minimum length is 8 (`Models\User::$passwordMinLength`, was 5) and the new `$passwordMaxLength` caps one at
+bcrypt's 72 bytes. Existing passwords are unaffected — the rules only run when one is set — but a project that
+wants the old floor back configures the model through the container.
+
+`generatePasswordHash()` stops writing `password_salt`. bcrypt salts its own hashes, so the column bought
+nothing; it stays in the schema because the hashes written with it still validate against it, and
+`Models\Forms\LoginForm` migrates each one to the new form on that user's next successful login, through the
+new `isPasswordHashOutdated()`. The same check replaces the unconditional rehash the login did on every request,
+which was pure cost, and it also picks up a raised `Security::$passwordHashCost`.
+
+An **optional pepper** takes the salt's place: set `passwordPepper` in `config/params.php` and it is appended to
+every password before hashing, so a leaked `user` table cannot be attacked without a secret the database never
+held.
+
+```php
+// config/params.php
+'passwordPepper' => '…',
+```
+
+Set it once, keep it out of the database and out of version control, and **never change or remove it** — every
+hash written with it stops matching. Hashes written before it keep their `password_salt` and keep working;
+they migrate to the peppered form as their owners log in.
+
 ## 3.0.0 — Login rate limiting
 
 `Models\Forms\LoginForm` now refuses a login once an email address or an IP has accumulated

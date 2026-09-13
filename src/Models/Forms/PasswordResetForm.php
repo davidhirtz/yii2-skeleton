@@ -46,6 +46,7 @@ class PasswordResetForm extends Model
                 ['newPassword'],
                 'string',
                 'min' => User::instance()->passwordMinLength,
+                'max' => User::instance()->passwordMaxLength,
             ],
             [
                 ['repeatPassword'],

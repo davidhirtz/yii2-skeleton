@@ -39,6 +39,7 @@ class AccountCredentialsForm extends Model
                 ['newPassword', 'repeatPassword'],
                 'string',
                 'min' => $this->user->passwordMinLength,
+                'max' => $this->user->passwordMaxLength,
             ],
             [
                 ['repeatPassword'],
