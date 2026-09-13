@@ -94,6 +94,12 @@ class Schema extends \yii\db\mysql\Schema
             }
 
             $this->tempConfigFile = Yii::getAlias('@runtime/' . uniqid() . '.cnf');
+
+            // The file holds the database password, so it must not be readable by anyone else. `touch()` before
+            // `chmod()` keeps it from ever existing with the umask's permissions.
+            touch($this->tempConfigFile);
+            chmod($this->tempConfigFile, 0600);
+
             file_put_contents($this->tempConfigFile, implode(PHP_EOL, $contents) . PHP_EOL);
         }
 

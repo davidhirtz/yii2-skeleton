@@ -1,5 +1,7 @@
 ## 3.0.0 (in development)
 
+- The temporary `.cnf` `Db\Mysql\Schema` writes the database password to for `mysqldump` is created `0600`
+  instead of with the process umask
 - The error log no longer carries credentials. Its `maskVars` still named `User.newPassword` and friends after the
   account forms were renamed, so `AccountCredentialsForm`, `UserForm`, the two `code` fields and the account
   delete's top-level `value` — which is the password — went to disk in the clear. `logVars` dropped `_COOKIE` and
