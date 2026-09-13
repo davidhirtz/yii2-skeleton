@@ -24,6 +24,7 @@ trait SessionTrait
         return [
             ...parent::getCookieParams(),
             'sameSite' => 'Lax',
+            'secure' => Yii::$app->getRequest()->getIsSecureConnection(),
             'domain' => $this->cookieDomain,
         ];
     }

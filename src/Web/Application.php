@@ -106,7 +106,10 @@ class Application extends \yii\web\Application
     protected function setDefaultCookieConfig(): void
     {
         if (!Yii::$container->has(Cookie::class)) {
-            $config = ['sameSite' => Cookie::SAME_SITE_LAX];
+            $config = [
+                'sameSite' => Cookie::SAME_SITE_LAX,
+                'secure' => $this->getRequest()->getIsSecureConnection(),
+            ];
 
             if ($domain = $this->params['cookieDomain'] ?? false) {
                 $hostInfo = trim((string)$domain, '.');

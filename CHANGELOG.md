@@ -1,5 +1,10 @@
 ## 3.0.0 (in development)
 
+- Cookies carry the `secure` flag over a secure connection. `Web\SessionTrait::getCookieParams()` set only
+  `sameSite`, and neither the identity cookie nor the container's `Cookie` definition set it at all, so the session
+  id and the auto-login key were sent over plain HTTP whenever anything reached the site that way
+- `Web\Controller::$strictTransportSecurity` sends a `Strict-Transport-Security` header next to the CSP one,
+  defaulting to `max-age=31536000` and only over a secure connection. Set it to `false` to opt out
 - `user.login_count` is an unsigned `int`. It was a signed `SMALLINT` that every login — a cookie login
   included — increments, so an account that reached 32,767 could not log in again
   (`Migrations\M260913130000LoginCount`)

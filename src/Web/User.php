@@ -79,7 +79,10 @@ class User extends \yii\web\User
             $this->enableAutoLogin = false;
         }
 
-        $this->ipAddress ??= Yii::$app->getRequest()->getUserIP();
+        $request = Yii::$app->getRequest();
+
+        $this->ipAddress ??= $request->getUserIP();
+        $this->identityCookie['secure'] ??= $request->getIsSecureConnection();
 
         parent::init();
     }

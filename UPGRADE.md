@@ -1,5 +1,27 @@
 # Upgrade Guide
 
+## 3.0.0 — Secure cookies and HSTS
+
+Session, identity and application cookies now set `secure` when the request is a secure connection, and
+`Web\Controller` sends `Strict-Transport-Security: max-age=31536000` on such a request. Both read
+`Request::getIsSecureConnection()`, so **a deployment behind a proxy that terminates TLS has to set
+`Request::$trustedHosts`** (see the client IP section above) — without it the application sees a plain HTTP
+request, and neither the flag nor the header is applied.
+
+A year of HSTS is a commitment: once a browser has seen the header it refuses to reach the host over HTTP until
+it expires, subdomains included if `includeSubDomains` is added. Shorten or disable it per controller or
+application-wide:
+
+```php
+'as hsts' => [
+    'class' => \yii\base\Behavior::class, // or set the property on your own base controller
+],
+```
+
+```php
+public string|false $strictTransportSecurity = false;
+```
+
 ## 3.0.0 — Client IP behind a proxy
 
 `Web\Request::getRemoteIP()` returned `$_SERVER['HTTP_X_FORWARDED_FOR']` or `$_SERVER['HTTP_CLIENT_IP']` for

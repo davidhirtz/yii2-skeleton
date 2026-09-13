@@ -33,6 +33,12 @@ class Controller extends \yii\web\Controller
      */
     public string|false $contentSecurityPolicy = "frame-ancestors 'self'";
 
+    /**
+     * @var string|false the `Strict-Transport-Security` header, only ever sent over a secure connection — set on a
+     * plain HTTP response it would be ignored, and over a proxy that terminates TLS it needs `Request::$trustedHosts`.
+     */
+    public string|false $strictTransportSecurity = 'max-age=31536000';
+
     protected User $webuser;
 
     public function __construct($id, $module, $config = [])
@@ -58,6 +64,10 @@ class Controller extends \yii\web\Controller
     {
         if ($this->contentSecurityPolicy) {
             $this->response->getHeaders()->set('Content-Security-Policy', $this->contentSecurityPolicy);
+        }
+
+        if ($this->strictTransportSecurity && $this->request->getIsSecureConnection()) {
+            $this->response->getHeaders()->set('Strict-Transport-Security', $this->strictTransportSecurity);
         }
 
         return parent::beforeAction($action);
