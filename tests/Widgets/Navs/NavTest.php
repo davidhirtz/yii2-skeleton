@@ -82,7 +82,7 @@ class NavTest extends TestCase
             ->addItem(NavItem::make()
                 ->label('Home')
                 ->url('/')
-                ->roles([NavItem::ROLE_AUTHENTICATED]))
+                ->roles([User::ROLE_AUTHENTICATED]))
             ->render(true);
 
         self::assertEmpty($nav());

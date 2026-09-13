@@ -5,15 +5,10 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Traits;
 
 use Closure;
+use Hirtz\Skeleton\Models\User;
 
 trait VisibilityTrait
 {
-    /**
-     * The role markers of {@see \yii\filters\AccessRule}, which a permission name can be mixed with.
-     */
-    final public const string ROLE_ANY = '*';
-    final public const string ROLE_AUTHENTICATED = '@';
-
     protected ?array $roles = null;
     protected Closure|bool $visible = true;
 
@@ -55,8 +50,8 @@ trait VisibilityTrait
 
         foreach ($this->roles as $role) {
             $granted = match ($role) {
-                self::ROLE_ANY => true,
-                self::ROLE_AUTHENTICATED => !$this->webuser->getIsGuest(),
+                User::ROLE_ANY => true,
+                User::ROLE_AUTHENTICATED => !$this->webuser->getIsGuest(),
                 default => $this->webuser->can($role),
             };
 

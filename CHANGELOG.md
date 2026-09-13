@@ -1,5 +1,9 @@
 ## 3.0.0 (in development)
 
+- The role markers `ROLE_ANY` (`*`) and `ROLE_AUTHENTICATED` (`@`) moved from `Widgets\Traits\VisibilityTrait`
+  to `Models\User`, beside the `AUTH_*` permission names. A trait constant cannot be read through the trait, so
+  every call site had to reach them through an arbitrary using class — `Widget::ROLE_AUTHENTICATED` in a
+  controller declaring an `AccessControl` rule, which has nothing to do with widgets
 - The navbar's search results carry the literal id `Modules\Admin\Widgets\Navs\NavBar::SEARCH_RESULTS_ID`
   instead of a generated one. `Helpers\Html::getId()` restarts at `i1` on every request while the navbar
   survives every htmx swap, so its generated id was also the id of an element in a later `#wrap` — and both

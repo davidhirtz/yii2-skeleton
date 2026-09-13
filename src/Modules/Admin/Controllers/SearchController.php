@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
+use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Search\Search;
 use Hirtz\Skeleton\Search\SearchRequest;
 use Hirtz\Skeleton\Search\SearchResult;
 use Hirtz\Skeleton\Search\SearchResultBuilder;
 use Hirtz\Skeleton\Web\Controller;
 use Hirtz\Skeleton\Widgets\Search\SearchResultList;
-use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Yii;
 use yii\data\Pagination;
@@ -49,7 +49,7 @@ class SearchController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index', 'suggest'],
-                        'roles' => [Widget::ROLE_AUTHENTICATED],
+                        'roles' => [User::ROLE_AUTHENTICATED],
                     ],
                 ],
             ],

@@ -19,7 +19,7 @@ class SystemNavItem extends NavItem
         $this->icon ??= 'cogs';
         $this->order ??= 999;
         $this->url ??= ['/admin/system/index'];
-        $this->roles ??= [self::ROLE_AUTHENTICATED];
+        $this->roles ??= [User::ROLE_AUTHENTICATED];
 
         parent::__construct($config);
     }

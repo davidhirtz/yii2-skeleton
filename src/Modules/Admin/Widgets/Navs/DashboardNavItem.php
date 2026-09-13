@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
+use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Yii;
 
@@ -15,7 +16,7 @@ class DashboardNavItem extends NavItem
         $this->icon ??= 'home';
         $this->url ??= ['/admin'];
         $this->order ??= 0;
-        $this->roles ??= [self::ROLE_AUTHENTICATED];
+        $this->roles ??= [User::ROLE_AUTHENTICATED];
 
         parent::__construct($config);
     }

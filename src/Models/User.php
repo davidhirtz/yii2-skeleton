@@ -63,6 +63,13 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     use StatusAttributeTrait;
     use TrailModelTrait;
 
+    /**
+     * The role markers of {@see \yii\filters\AccessRule}, which a permission name can be mixed with wherever
+     * roles are declared — an `AccessRule` and {@see \Hirtz\Skeleton\Widgets\Traits\VisibilityTrait} alike.
+     */
+    final public const string ROLE_ANY = '*';
+    final public const string ROLE_AUTHENTICATED = '@';
+
     final public const string AUTH_USER_CREATE = 'userCreate';
     final public const string AUTH_USER_DELETE = 'userDelete';
     final public const string AUTH_USER_UPDATE = 'userUpdate';
