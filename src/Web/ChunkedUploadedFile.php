@@ -145,7 +145,7 @@ class ChunkedUploadedFile extends UploadedFile
     {
         $file = $_FILES[$model->formName()] ?? null;
 
-        return $file
+        return isset($file['tmp_name'][$attribute])
             ? Yii::$container->get(static::class, config: [
                 'error' => $file['error'][$attribute],
                 'fullPath' => $file['full_path'][$attribute],
@@ -162,7 +162,7 @@ class ChunkedUploadedFile extends UploadedFile
     {
         $file = $_FILES[$name] ?? null;
 
-        return $file
+        return isset($file['tmp_name'])
             ? Yii::$container->get(static::class, config: [
                 'error' => $file['error'],
                 'fullPath' => $file['full_path'],
