@@ -1,5 +1,28 @@
 # Upgrade Guide
 
+## 3.0.0 — Client IP behind a proxy
+
+`Web\Request::getRemoteIP()` returned `$_SERVER['HTTP_X_FORWARDED_FOR']` or `$_SERVER['HTTP_CLIENT_IP']` for
+every request, whether or not a proxy set them. Both are client-controlled, so any request could claim any IP.
+
+The override is gone. Yii's own proxy handling takes over, and it is off until the deployment says which proxies
+to trust — **an application behind a load balancer or a CDN must now configure it**, or every request reports the
+proxy's address:
+
+```php
+'components' => [
+    'request' => [
+        'trustedHosts' => [
+            '10.0.0.0/8',
+        ],
+    ],
+],
+```
+
+`Request::$ipHeaders` defaults to `[['X-Forwarded-For', ...]]`, so naming the trusted proxies is usually all it
+takes; a proxy that forwards under a different header adds it there. An application that is not behind a proxy
+needs no configuration and was reading a spoofable header until now.
+
 ## 3.0.0 — Admin model interface
 
 `Models\Interfaces\AdminRouteInterface` is gone. `Models\Interfaces\AdminModelInterface` takes its place and adds

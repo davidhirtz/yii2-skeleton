@@ -1,5 +1,9 @@
 ## 3.0.0 (in development)
 
+- `Web\Request::getRemoteIP()` no longer reads `X-Forwarded-For` or `Client-IP`. The headers are set by the
+  client, so every request could name its own IP — which fed the signup rate limit, the `user_login` and
+  `session` audit columns and any `ips` rule of an access filter. Yii resolves them behind
+  `Request::$trustedHosts`, which a deployment behind a proxy has to configure. See UPGRADE.md
 - `Models\Interfaces\AdminModelInterface` replaces `AdminRouteInterface` and holds everything the admin needs to
   present a model: `getAdminRoute()`, `getAdminName()`, `getAdminType()` and `getAdminIcon()`.
   `Models\Traits\AdminModelTrait` implements all but the route, which stays with the model. `TrailModelInterface`

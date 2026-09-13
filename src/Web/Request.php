@@ -32,6 +32,7 @@ class Request extends \yii\web\Request
      * prevent faked header attacks (see https://www.acunetix.com/vulnerabilities/web/host-header-attack). The original
      * value of `$hostInfo` is still available via `Request::getRequestHostInfo()`.
      */
+    #[Override]
     public function init(): void
     {
         if ($this->enableCookieValidation && !$this->cookieValidationKey) {
@@ -47,12 +48,6 @@ class Request extends \yii\web\Request
     public function isFormReload(): bool
     {
         return $this->getHeaders()->has($this->formReloadHeader);
-    }
-
-    #[Override]
-    public function getRemoteIP(): ?string
-    {
-        return $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['HTTP_CLIENT_IP'] ?? parent::getRemoteIP();
     }
 
     public function getIsAjaxRoute(): bool
