@@ -14,7 +14,7 @@ return [
         'timezone' => null,
         'password_hash' => '$2y$13$NSWIXMF8phJ5tvofcc/a0OC1Kx9Vgi35g/88VQ6gn8WvG6MR5bSte', // password
         'password_scheme' => null,
-        'google_2fa_secret' => null,
+        'two_factor_secret' => null,
         'auth_key' => 'h0rrnZTn0qKf2mWAxfzb6-cp0XuZRnUh',
         'email_confirmed_at' => new Expression('UTC_TIMESTAMP()'),
         'is_owner' => 1,
@@ -28,7 +28,7 @@ return [
         'timezone' => null,
         'password_hash' => '$2y$13$NSWIXMF8phJ5tvofcc/a0OC1Kx9Vgi35g/88VQ6gn8WvG6MR5bSte', // password
         'password_scheme' => null,
-        'google_2fa_secret' => null,
+        'two_factor_secret' => null,
         'auth_key' => 'h0rrnZTn0qKf2mWAxfzb6-cp0XuZRnUh',
         'email_confirmed_at' => new Expression('UTC_TIMESTAMP()'),
         'is_owner' => 0,
@@ -42,7 +42,7 @@ return [
         'timezone' => 'Europe/Berlin',
         'password_hash' => '$2y$13$NSWIXMF8phJ5tvofcc/a0OC1Kx9Vgi35g/88VQ6gn8WvG6MR5bSte', // password
         'password_scheme' => null,
-        'google_2fa_secret' => 'AX7CR435GC575V4C', // 123456
+        'two_factor_secret' => 'AX7CR435GC575V4C', // 123456
         'auth_key' => 'h0rrnZTn0qKf2mWAxfzb6-cp0XuZRnUh',
         'email_confirmed_at' => null,
         'is_owner' => 0,

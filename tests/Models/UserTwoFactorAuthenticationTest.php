@@ -24,7 +24,7 @@ class UserTwoFactorAuthenticationTest extends TestCase
 
         $user = User::findOne($user->id);
 
-        self::assertStringNotContainsString('AX7CR435GC575V4C', (string)$user->google_2fa_secret);
+        self::assertStringNotContainsString('AX7CR435GC575V4C', (string)$user->two_factor_secret);
         self::assertEquals('AX7CR435GC575V4C', $user->getTwoFactorAuthenticationSecret());
         self::assertTrue($user->hasTwoFactorAuthentication());
     }
@@ -34,7 +34,7 @@ class UserTwoFactorAuthenticationTest extends TestCase
         // Written before the column was encrypted, as the fixture still is
         $user = $this->getUserFromFixture('admin');
 
-        self::assertEquals('AX7CR435GC575V4C', $user->google_2fa_secret);
+        self::assertEquals('AX7CR435GC575V4C', $user->two_factor_secret);
         self::assertEquals('AX7CR435GC575V4C', $user->getTwoFactorAuthenticationSecret());
     }
 

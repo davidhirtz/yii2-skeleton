@@ -17,6 +17,8 @@ class TwoFactorAuthenticatorForm extends Model
 {
     use ModelTrait;
 
+    final public const string SESSION_SECRET_NAME = 'two_factor_secret';
+
     public ?string $code = null;
 
     /**
@@ -57,7 +59,7 @@ class TwoFactorAuthenticatorForm extends Model
         $this->user->setTwoFactorAuthenticationSecret($this->getSecret());
         $this->recoveryCodes = $this->user->generateTwoFactorAuthenticationRecoveryCodes();
 
-        Yii::$app->getSession()->set('google_2fa_secret', null);
+        Yii::$app->getSession()->set(static::SESSION_SECRET_NAME, null);
 
         return $this->user->update() === 1;
     }
@@ -68,7 +70,7 @@ class TwoFactorAuthenticatorForm extends Model
             return false;
         }
 
-        Yii::$app->getSession()->set('google_2fa_secret', null);
+        Yii::$app->getSession()->set(static::SESSION_SECRET_NAME, null);
         $this->user->setTwoFactorAuthenticationSecret(null);
 
         return $this->user->update();
@@ -88,7 +90,7 @@ class TwoFactorAuthenticatorForm extends Model
 
     public function getSecret(): string
     {
-        $this->secret ??= $this->user->getTwoFactorAuthenticationSecret() ?: Yii::$app->getSession()->get('google_2fa_secret');
+        $this->secret ??= $this->user->getTwoFactorAuthenticationSecret() ?: Yii::$app->getSession()->get(static::SESSION_SECRET_NAME);
 
         if (!$this->secret) {
             $this->generateSecret();
@@ -115,7 +117,7 @@ class TwoFactorAuthenticatorForm extends Model
     {
         $this->secret = (new TwoFactorAuth(new QRServerProvider()))->createSecret();
 
-        Yii::$app->getSession()->set('google_2fa_secret', $this->secret);
+        Yii::$app->getSession()->set(static::SESSION_SECRET_NAME, $this->secret);
         Yii::debug('New authenticator secret generated');
     }
 

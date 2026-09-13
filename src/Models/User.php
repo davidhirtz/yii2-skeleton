@@ -41,7 +41,7 @@ use yii\web\IdentityInterface;
  * @property string $language
  * @property string|null $timezone
  * @property string|null $auth_key
- * @property string|null $google_2fa_secret the encrypted secret, reached through
+ * @property string|null $two_factor_secret the encrypted secret, reached through
  *     {@see static::getTwoFactorAuthenticationSecret()}
  * @property bool|int $is_owner
  * @property int $created_by_user_id
@@ -400,19 +400,19 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
 
     public function hasTwoFactorAuthentication(): bool
     {
-        return (bool)$this->google_2fa_secret;
+        return (bool)$this->two_factor_secret;
     }
 
     public function getTwoFactorAuthenticationSecret(): ?string
     {
-        return $this->google_2fa_secret === null
+        return $this->two_factor_secret === null
             ? null
-            : static::decryptTwoFactorAuthenticationSecret($this->google_2fa_secret);
+            : static::decryptTwoFactorAuthenticationSecret($this->two_factor_secret);
     }
 
     public function setTwoFactorAuthenticationSecret(?string $secret): void
     {
-        $this->google_2fa_secret = $secret === null
+        $this->two_factor_secret = $secret === null
             ? null
             : static::encryptTwoFactorAuthenticationSecret($secret);
 
@@ -602,7 +602,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
             'password_scheme',
             'auth_key',
             'email_confirmed_at',
-            'google_2fa_secret',
+            'two_factor_secret',
             'login_count',
             'last_login',
             'created_by_user_id',

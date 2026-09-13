@@ -1,5 +1,9 @@
 ## 3.0.0 (in development)
 
+- `user.google_2fa_secret` is `two_factor_secret` (`Migrations\M260913190000TwoFactorSecret`). Every command,
+  form, validator and method around it already said `TwoFactor`, and the column was the last thing naming a
+  vendor that has nothing to do with TOTP. `Models\Forms\TwoFactorAuthenticatorForm::SESSION_SECRET_NAME`
+  replaces the `google_2fa_secret` session key it used while setting one up
 - **v2 passwords are not carried over.** `Migrations\M260913180000PasswordScheme` drops every hash that still
   carried a v2 per-user salt and rotates its auth key, so v2's five-character minimum cannot outlive the upgrade
   and every hash in a v3 database is peppered. Those accounts land where a user created without a password

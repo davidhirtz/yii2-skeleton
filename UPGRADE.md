@@ -134,7 +134,8 @@ these URLs by hand must drop it.
 authenticator could only be cleared by an administrator.
 
 `Migrations\M260913160000TwoFactorAuthentication` widens the column, encrypts every secret already in it, and
-adds `google_2fa_recovery_codes`. The encryption key is `Yii::$app->params['secretKey']`, falling back to
+adds `google_2fa_recovery_codes`; `Migrations\M260913190000TwoFactorSecret` then renames the column to
+`two_factor_secret`, since everything else around it says `TwoFactor` and nothing about TOTP is Google's. The encryption key is `Yii::$app->params['secretKey']`, falling back to
 `cookieValidationKey` — **keep whichever one applies**, because losing it makes every stored secret unreadable
 and every user has to set up 2FA again. Rows written before the migration (their secret is not marked `enc:`)
 are still read as-is, so nothing breaks if the migration has not run yet.
@@ -146,6 +147,9 @@ are still read as-is, so nothing breaks if the migration has not run yet.
 | `$user->google_2fa_secret`    | `$user->getTwoFactorAuthenticationSecret()` |
 | `if ($user->google_2fa_secret)` | `$user->hasTwoFactorAuthentication()`  |
 | `$user->google_2fa_secret = $s` | `$user->setTwoFactorAuthenticationSecret($s)` |
+
+The column behind them is `two_factor_secret`, so a query or fixture that named `google_2fa_secret` has to be
+renamed — but application code should be reaching for the three methods above rather than either column name.
 
 Enabling 2FA now issues `Models\User::RECOVERY_CODE_COUNT` single-use recovery codes. Only their HMACs are
 stored, so `Models\Forms\TwoFactorAuthenticatorForm::$recoveryCodes` after a successful `save()` is the one
