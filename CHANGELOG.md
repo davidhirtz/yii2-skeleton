@@ -1,5 +1,10 @@
 ## 3.0.0 (in development)
 
+- `Modules\Admin\Controllers\UserController::actionDisableGoogleAuthenticator()` is
+  `actionDisableAuthenticator()`. Its route was `disable-google-authenticator` while the access rule named
+  `disable-authenticator`, so the deny-by-default filter answered 403 for every request to it. It is `POST`-only
+  now and reachable from the new `Modules\Admin\Widgets\Navs\UserDisableAuthenticatorButton` in the user
+  action dropdown, which is shown only for a user who actually has a secret
 - Cookies carry the `secure` flag over a secure connection. `Web\SessionTrait::getCookieParams()` set only
   `sameSite`, and neither the identity cookie nor the container's `Cookie` definition set it at all, so the session
   id and the auto-login key were sent over plain HTTP whenever anything reached the site that way

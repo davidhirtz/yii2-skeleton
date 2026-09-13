@@ -21,8 +21,18 @@ class UserActionDropdown extends ActionDropdown
     #[Override]
     protected function configure(): void
     {
-        $this->addItem($this->getUserDeleteButton(), $this->getOwnerLinkButton());
+        $this->addItem(
+            $this->getUserDisableAuthenticatorButton(),
+            $this->getUserDeleteButton(),
+            $this->getOwnerLinkButton(),
+        );
         parent::configure();
+    }
+
+    protected function getUserDisableAuthenticatorButton(): ?Stringable
+    {
+        return UserDisableAuthenticatorButton::make()
+            ->model($this->model);
     }
 
     protected function getUserDeleteButton(): ?Stringable

@@ -63,6 +63,7 @@ class UserController extends Controller
                 'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['post'],
+                    'disable-authenticator' => ['post'],
                     'ownership' => ['post'],
                     'reset' => ['post'],
                 ],
@@ -119,7 +120,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function actionDisableGoogleAuthenticator(int $id): Response|string
+    public function actionDisableAuthenticator(int $id): Response|string
     {
         return $this->updateUserAttributes($id, ['google_2fa_secret' => null]);
     }
