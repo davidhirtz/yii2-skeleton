@@ -64,8 +64,15 @@ class LoginForm extends Model
     #[Override]
     public function beforeValidate(): bool
     {
-        if (!Yii::$app->getUser()->isLoginEnabled()) {
+        $webuser = Yii::$app->getUser();
+
+        if (!$webuser->isLoginEnabled()) {
             $this->addError('email', Yii::t('skeleton', 'USER_SORRY_LOGGING_CURRENTLY'));
+            return false;
+        }
+
+        if ($webuser->isLoginAttemptLimitReached($this->email)) {
+            $this->addError('email', Yii::t('skeleton', 'LOGIN_TOO_MANY_ATTEMPTS'));
             return false;
         }
 
@@ -113,13 +120,20 @@ class LoginForm extends Model
 
     public function login(): bool
     {
+        $webuser = Yii::$app->getUser();
+
         if ($this->validate()) {
-            $webuser = Yii::$app->getUser();
             $webuser->loginType = UserLogin::TYPE_LOGIN;
+            $webuser->resetFailedLoginAttempts($this->email);
 
             $this->user->generatePasswordHash($this->password);
 
-            return Yii::$app->getUser()->login($this->user, $this->rememberMe ? $webuser->cookieLifetime : 0);
+            return $webuser->login($this->user, $this->rememberMe ? $webuser->cookieLifetime : 0);
+        }
+
+        // A blank form is a mistake, not an attempt — only a submission that got as far as a credential counts.
+        if ($this->email && $this->password) {
+            $webuser->addFailedLoginAttempt($this->email);
         }
 
         if (null === $this->code) {

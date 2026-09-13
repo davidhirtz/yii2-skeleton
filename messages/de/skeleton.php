@@ -131,6 +131,7 @@ return [
     'I18N_ATTRIBUTES_LABEL_LANGUAGE' => '{label} ({language})',
     'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND' => 'Ihre E-Mail-Adresse wurde nicht gefunden.',
     'LOCATION_TAGS' => '',
+    'LOGIN_TOO_MANY_ATTEMPTS' => '',
     'LOG_DATE' => 'Datum',
     'LOG_ERROR' => '',
     'LOG_FILE_ACTION_DROPDOWN_DELETE_FILE' => '',

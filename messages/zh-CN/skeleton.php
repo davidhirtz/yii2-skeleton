@@ -131,6 +131,7 @@ return [
     'I18N_ATTRIBUTES_LABEL_LANGUAGE' => '',
     'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND' => '',
     'LOCATION_TAGS' => '',
+    'LOGIN_TOO_MANY_ATTEMPTS' => '',
     'LOG_DATE' => '',
     'LOG_ERROR' => '',
     'LOG_FILE_ACTION_DROPDOWN_DELETE_FILE' => '',

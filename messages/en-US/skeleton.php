@@ -130,6 +130,7 @@ return [
     'I18N_ATTRIBUTES_LABEL_LANGUAGE' => '{label} ({language})',
     'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND' => 'Your email was not found.',
     'LOCATION_TAGS' => 'Tags',
+    'LOGIN_TOO_MANY_ATTEMPTS' => 'Too many failed login attempts. Please wait a few minutes before trying again.',
     'LOG_DATE' => 'Date',
     'LOG_ERROR' => 'Error',
     'LOG_FILE_ACTION_DROPDOWN_DELETE_FILE' => 'Delete file',

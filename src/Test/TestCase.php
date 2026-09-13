@@ -112,6 +112,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             'basePath' => getcwd(),
             'class' => $this->applicationClass,
             'components' => [
+                // a fresh one per test: a file cache would carry rate limit counters into the next test and run
+                'cache' => [
+                    'class' => ArrayCache::class,
+                ],
                 'db' => [
                     'schemaCache' => self::$schemaCache ??= new ArrayCache(),
                 ],

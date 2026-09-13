@@ -63,6 +63,18 @@ class User extends \yii\web\User
     public ?string $ipAddress = null;
 
     /**
+     * @var int how many failed logins an email address or an IP may accumulate before both are locked out, `0`
+     * disables the lockout. A six-digit TOTP code with a discrepancy of one leaves three codes valid per period,
+     * so the second factor needs this as much as the password does.
+     */
+    public int $loginAttemptLimit = 10;
+
+    /**
+     * @var int how long a lockout lasts, in seconds. Every further attempt restarts it.
+     */
+    public int $loginAttemptDuration = 900;
+
+    /**
      * @var string the login type
      */
     public string $loginType = 'unknown';
@@ -191,6 +203,67 @@ class User extends \yii\web\User
 
         return ($this->disableRbacForOwner && $this->identity?->isOwner())
             || parent::can($permissionName, $params, $allowCaching);
+    }
+
+    public function isLoginAttemptLimitReached(?string $email = null): bool
+    {
+        if ($this->loginAttemptLimit < 1) {
+            return false;
+        }
+
+        $cache = Yii::$app->getCache();
+
+        foreach ($this->getLoginAttemptCacheKeys($email) as $key) {
+            if ((int)$cache->get($key) >= $this->loginAttemptLimit) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function addFailedLoginAttempt(?string $email = null): void
+    {
+        if ($this->loginAttemptLimit < 1) {
+            return;
+        }
+
+        $cache = Yii::$app->getCache();
+
+        foreach ($this->getLoginAttemptCacheKeys($email) as $key) {
+            $cache->set($key, (int)$cache->get($key) + 1, $this->loginAttemptDuration);
+        }
+    }
+
+    public function resetFailedLoginAttempts(?string $email = null): void
+    {
+        $cache = Yii::$app->getCache();
+
+        foreach ($this->getLoginAttemptCacheKeys($email) as $key) {
+            $cache->delete($key);
+        }
+    }
+
+    /**
+     * Both the account and the origin are counted: the first stops a password being guessed, the second stops one
+     * password being tried against every account.
+     *
+     * @return list<array{string, string, string, string}>
+     */
+    private function getLoginAttemptCacheKeys(?string $email): array
+    {
+        $keys = [];
+        $email = mb_strtolower(trim((string)$email));
+
+        if ($email !== '') {
+            $keys[] = [self::class, 'login-attempts', 'email', $email];
+        }
+
+        if ($this->ipAddress) {
+            $keys[] = [self::class, 'login-attempts', 'ip', $this->ipAddress];
+        }
+
+        return $keys;
     }
 
     /**

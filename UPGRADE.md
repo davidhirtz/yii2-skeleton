@@ -1,5 +1,28 @@
 # Upgrade Guide
 
+## 3.0.0 — Login rate limiting
+
+`Models\Forms\LoginForm` now refuses a login once an email address or an IP has accumulated
+`Web\User::$loginAttemptLimit` failures within `$loginAttemptDuration` seconds, and it counts a wrong TOTP code
+the same as a wrong password. The counters live in the `cache` component, so **a deployment with more than one
+web node wants a shared cache** (Redis, Memcached, a database cache) rather than the default per-node
+`FileCache`, or the limit is per node.
+
+Tune or disable it on the `user` component:
+
+```php
+'components' => [
+    'user' => [
+        'loginAttemptLimit' => 20,
+        'loginAttemptDuration' => 600,
+    ],
+],
+```
+
+A functional test that submits many bad passwords in one application either raises the limit or calls
+`Yii::$app->getUser()->resetFailedLoginAttempts($email)` between them. `Test\TestCase` now configures an
+`ArrayCache`, so the counters never outlive the test that wrote them.
+
 ## 3.0.0 — Expiring tokens
 
 A verification or password reset token lived in the database, and in every mail archive along the way, until it

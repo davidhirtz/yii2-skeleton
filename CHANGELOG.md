@@ -1,5 +1,13 @@
 ## 3.0.0 (in development)
 
+- The login is rate limited. Nothing counted a failed attempt before, so a password or a six-digit TOTP code —
+  of which three are valid in every period at the default discrepancy — could be guessed at request speed.
+  `Web\User::$loginAttemptLimit` (10) and `$loginAttemptDuration` (900 seconds) drive a per-email **and**
+  per-IP counter in the cache; `Models\Forms\LoginForm` refuses a login while either is over the limit, counts
+  every submission that carried a credential — the code step included — and clears both on success. Set the
+  limit to `0` to disable it
+- `Test\TestCase` gives the test application an `ArrayCache`, so nothing a test writes to the cache reaches the
+  next one
 - Verification and password reset tokens expire. `user` carries a `verification_token_created_at` and a
   `password_reset_token_created_at` (`Migrations\M260913140000TokenExpiry`), `Models\User::$tokenLifetime`
   is how long one stays usable (24 hours), and `isVerificationTokenValid()` / `isPasswordResetTokenValid()`
