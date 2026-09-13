@@ -23,7 +23,7 @@ class M260913160000TwoFactorAuthentication extends Migration
         $this->addColumn(
             User::tableName(),
             'google_2fa_recovery_codes',
-            $this->json()->null()->after('google_2fa_secret')
+            (string)$this->json()->null()->after('google_2fa_secret')
         );
 
         foreach ($this->getUsersWithSecret() as $id => $secret) {

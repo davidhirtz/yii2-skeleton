@@ -398,11 +398,11 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
             $code = '';
 
             for ($j = 0; $j < static::RECOVERY_CODE_LENGTH; $j++) {
-                $code .= static::RECOVERY_CODE_ALPHABET[random_int(0, strlen(static::RECOVERY_CODE_ALPHABET) - 1)];
+                $code .= self::RECOVERY_CODE_ALPHABET[random_int(0, strlen(self::RECOVERY_CODE_ALPHABET) - 1)];
             }
 
             $codes[] = $code;
-            $hashes[] = static::hashTwoFactorAuthenticationRecoveryCode($code);
+            $hashes[] = self::hashTwoFactorAuthenticationRecoveryCode($code);
         }
 
         $this->google_2fa_recovery_codes = $hashes;
@@ -416,7 +416,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
      */
     public function validateTwoFactorAuthenticationRecoveryCode(string $code): bool
     {
-        $hash = static::hashTwoFactorAuthenticationRecoveryCode($code);
+        $hash = self::hashTwoFactorAuthenticationRecoveryCode($code);
         $remaining = [];
         $matched = false;
 
@@ -444,19 +444,19 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
 
     public static function encryptTwoFactorAuthenticationSecret(string $secret): string
     {
-        $data = Yii::$app->getSecurity()->encryptByKey($secret, static::getTwoFactorAuthenticationKey());
-        return static::ENCRYPTED_PREFIX . base64_encode($data);
+        $data = Yii::$app->getSecurity()->encryptByKey($secret, self::getTwoFactorAuthenticationKey());
+        return self::ENCRYPTED_PREFIX . base64_encode($data);
     }
 
     public static function decryptTwoFactorAuthenticationSecret(string $secret): ?string
     {
-        if (!str_starts_with($secret, static::ENCRYPTED_PREFIX)) {
+        if (!str_starts_with($secret, self::ENCRYPTED_PREFIX)) {
             // Written before the column was encrypted, and still the secret itself
             return $secret;
         }
 
-        $data = base64_decode(substr($secret, strlen(static::ENCRYPTED_PREFIX)), true);
-        $secret = $data === false ? false : Yii::$app->getSecurity()->decryptByKey($data, static::getTwoFactorAuthenticationKey());
+        $data = base64_decode(substr($secret, strlen(self::ENCRYPTED_PREFIX)), true);
+        $secret = $data === false ? false : Yii::$app->getSecurity()->decryptByKey($data, self::getTwoFactorAuthenticationKey());
 
         return $secret === false ? null : $secret;
     }
@@ -464,7 +464,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     private static function hashTwoFactorAuthenticationRecoveryCode(string $code): string
     {
         // A recovery code is 50 bits of entropy the user never chose, so it needs no key stretching
-        return hash_hmac('sha256', strtoupper(trim($code)), static::getTwoFactorAuthenticationKey());
+        return hash_hmac('sha256', strtoupper(trim($code)), self::getTwoFactorAuthenticationKey());
     }
 
     /**

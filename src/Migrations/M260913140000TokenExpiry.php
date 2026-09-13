@@ -20,13 +20,13 @@ class M260913140000TokenExpiry extends Migration
         $this->addColumn(
             User::tableName(),
             'verification_token_created_at',
-            $this->dateTime()->null()->after('verification_token')
+            (string)$this->dateTime()->null()->after('verification_token')
         );
 
         $this->addColumn(
             User::tableName(),
             'password_reset_token_created_at',
-            $this->dateTime()->null()->after('password_reset_token')
+            (string)$this->dateTime()->null()->after('password_reset_token')
         );
 
         // A token that is already out there keeps the age of the write that created it, so an old one is expired

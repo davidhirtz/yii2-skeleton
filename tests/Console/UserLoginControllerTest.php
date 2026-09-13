@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Tests\Console;
 
 use Hirtz\Skeleton\Console\Controllers\UserLoginController;
 use Hirtz\Skeleton\Models\UserLogin;
+use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\StdOutBufferControllerTrait;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
@@ -48,7 +49,10 @@ class UserLoginControllerTest extends TestCase
 
     public function testLifetimeComesFromTheAdminModule(): void
     {
-        Yii::$app->getModule('admin')->userLoginLifetime = 60;
+        $module = Yii::$app->getModule('admin');
+        self::assertInstanceOf(Module::class, $module);
+
+        $module->userLoginLifetime = 60;
 
         $this->insertLogin($this->getUserFixtureData('owner')['id'], '-1 day');
 
