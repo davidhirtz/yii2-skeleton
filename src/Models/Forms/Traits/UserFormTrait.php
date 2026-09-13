@@ -8,11 +8,15 @@ use Override;
 
 trait UserFormTrait
 {
+    /**
+     * A form that renders no field of its own — the account settings — is still loaded through the user, which is
+     * the only model the request carries.
+     */
     #[Override]
     public function load($data, $formName = null): bool
     {
-        $this->user->load($this->filterUserData($data, $formName), $formName);
-        return parent::load($data, $formName);
+        $isUserLoaded = $this->user->load($this->filterUserData($data, $formName), $formName);
+        return parent::load($data, $formName) || $isUserLoaded;
     }
 
     #[Override]

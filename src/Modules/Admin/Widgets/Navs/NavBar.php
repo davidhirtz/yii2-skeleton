@@ -10,11 +10,9 @@ use Hirtz\Skeleton\Html\TextInput;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Modules\Admin\Controllers\SearchController;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\AsideToggleButton;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\LanguageDropdownButton;
 use Hirtz\Skeleton\Search\Search;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
-use Hirtz\Skeleton\Widgets\Icon;
-use Hirtz\Skeleton\Widgets\Navs\Dropdown;
-use Hirtz\Skeleton\Widgets\Navs\DropdownOptionLink;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
@@ -24,15 +22,7 @@ class NavBar extends Widget
 {
     use TagAttributesTrait;
 
-    /**
-     * Every id outside `#wrap` has to be a literal: the navbar survives every htmx swap, while
-     * {@see \Hirtz\Skeleton\Helpers\Html::getId()} restarts at `i1` on each request, so a generated one here is
-     * eventually also the id of an element in a later `#wrap` — and `getElementById()` and `popovertarget` alike
-     * resolve to the first match in the document, which is always the navbar's.
-     */
     final public const string SEARCH_RESULTS_ID = 'search-results';
-
-    protected ?array $languageRoute = null;
 
     #[Override]
     protected function renderContent(): Stringable|string
@@ -97,50 +87,7 @@ class NavBar extends Widget
 
     protected function getLanguageDropdownItem(): ?Stringable
     {
-        $i18n = Yii::$app->getI18n();
-
-        if (count($i18n->getLanguages()) < 2) {
-            return null;
-        }
-
-        $icon = Icon::make()
-            ->collection(Icon::ICON_COLLECTION_FLAG)
-            ->name(Yii::$app->language);
-
-        $button = Button::make()
-            ->primary()
-            ->content($icon);
-
-        $dropdown = Dropdown::make()
-            ->button($button)
-            ->popover(fn (Div $tag) => $tag->attribute('id', 'i18n'));
-
-        foreach ($i18n->getLanguages() as $language) {
-            $label = $i18n->getLabel($language);
-
-            $link = DropdownOptionLink::make()
-                ->addClass('i18n-dropdown-option')
-                ->content(
-                    Icon::make()
-                        ->collection(Icon::ICON_COLLECTION_FLAG)
-                        ->name($language),
-                    Div::make()->addText($label)
-                );
-
-            if ($this->languageRoute) {
-                $link->href([
-                    ...Yii::$app->getRequest()->getQueryParams(),
-                    ...$this->languageRoute,
-                    'language' => $language,
-                ]);
-            } else {
-                $link->current(['language' => $language]);
-            }
-
-            $dropdown->addItem($link);
-        }
-
-        return $dropdown;
+        return LanguageDropdownButton::make();
     }
 
     protected function getMobileToggle(): ?Stringable

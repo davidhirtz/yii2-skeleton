@@ -54,16 +54,35 @@ class Module extends \Hirtz\Skeleton\Base\Module
             if (!YII_DEBUG) {
                 Yii::$app->getErrorHandler()->errorView = '@skeleton/../resources/views/admin/views/dashboard/error.php';
             }
-
-            $identity = Yii::$app->getUser()->getIdentity();
-
-            if ($identity) {
-                Yii::$app->language = $identity->language;
-            }
         }
 
+        $this->setLanguage($request instanceof Request ? $request : null);
 
         return parent::beforeAction($action);
+    }
+
+    /**
+     * The language picked via {@see Widgets\Buttons\LanguageDropdownButton} is kept in the session, so it outlives
+     * the request that set it — the login page included, where there is no account to fall back to yet and the
+     * language the URL manager resolved stands. That language is the frontend's — with `UrlManager::$i18nUrl` the
+     * path's, with a tenant its own — and never the admin's, which belongs to the account and not to the content
+     * it edits.
+     */
+    protected function setLanguage(?Request $request): void
+    {
+        $i18n = Yii::$app->getI18n();
+        $language = $request ? $request->getQueryParam($request->languageParam) : null;
+
+        if (is_string($language) && $i18n->hasLanguage($language)) {
+            $i18n->setSessionLanguage($language);
+        }
+
+        $identity = Yii::$app->has('user') ? Yii::$app->getUser()->getIdentity() : null;
+        $language = $i18n->getSessionLanguage() ?? $identity?->language;
+
+        if ($language) {
+            Yii::$app->language = $language;
+        }
     }
 
     public function dashboard(Dashboard $dashboard): Dashboard

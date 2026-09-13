@@ -23,4 +23,20 @@ class I18nTest extends TestCase
         $name = Yii::$app->getI18n()->getTableName('test', 'de');
         self::assertEquals('{{%test_de}}', $name);
     }
+
+    public function testTheSessionLanguageOutlivesOnlyItsConfiguration(): void
+    {
+        $i18n = Yii::$app->getI18n();
+        $i18n->setSessionLanguage('de');
+
+        self::assertSame('de', $i18n->getSessionLanguage());
+
+        $i18n->setLanguages(['en-US']);
+        self::assertNull($i18n->getSessionLanguage());
+
+        $i18n->setLanguages(['en-US', 'de']);
+        $i18n->setSessionLanguage(null);
+
+        self::assertNull($i18n->getSessionLanguage());
+    }
 }

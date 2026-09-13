@@ -90,7 +90,10 @@ class Breadcrumbs extends Widget
     protected function addAdminBreadcrumb(): void
     {
         $this->breadcrumbs = [
-            new Breadcrumb(Yii::t('skeleton', 'BREADCRUMBS_ADMIN'), ['/admin']),
+            new Breadcrumb(
+                Yii::t('skeleton', 'BREADCRUMBS_ADMIN'),
+                !$this->webuser->getIsGuest() ? ['/admin/dashboard/index'] : null
+            ),
             ...$this->breadcrumbs,
         ];
     }

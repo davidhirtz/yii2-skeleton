@@ -15,7 +15,8 @@ use Yii;
 class Request extends \yii\web\Request
 {
     /**
-     * @var string the parameter name used to add the language to a URL via `UrlManager::$i18nUrl`.
+     * @var string the parameter name used to add the language to a URL via `UrlManager::$i18nUrl` and to switch the
+     * session language of the admin, see {@see \Hirtz\Skeleton\Modules\Admin\Module::beforeAction()}.
      */
     public string $languageParam = 'language';
 

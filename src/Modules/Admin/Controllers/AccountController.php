@@ -278,6 +278,10 @@ class AccountController extends Controller
 
         if ($form->load($this->request->post())) {
             if ($form->save()) {
+                // The account's language is what the admin falls back to, so the session override must not outlive it.
+                Yii::$app->getI18n()->setSessionLanguage(null);
+                Yii::$app->language = $form->user->language;
+
                 $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_PROFILE_UPDATED'));
             }
 

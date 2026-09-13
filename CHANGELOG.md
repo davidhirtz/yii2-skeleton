@@ -1,5 +1,19 @@
 ## 3.0.0 (in development)
 
+- The admin language can be switched per session: `Modules\Admin\Widgets\Buttons\LanguageDropdownButton` links
+  to the current URL with the `language` query parameter (`Web\Request::$languageParam`), which
+  `Modules\Admin\Module::beforeAction()` validates against the configured languages and keeps in the session
+  through the new `I18n\I18N::getSessionLanguage()` / `setSessionLanguage()` / `hasLanguage()` — the account's own
+  language is what it falls back to, and saving the account settings drops the override again. A guest switches
+  the language too, on the login page, and the pick outlives the login. The dropdown links are `hx-boost="false"`:
+  the navbar renders outside `#wrap`, so a boosted swap would leave the flag and the labels in the previous
+  language. **`Web\UrlManager::$i18nUrl` is the language of the frontend URL and never the
+  admin's**: the dropdown appends its parameter to the plain current URL so `createUrl()` cannot turn it into a
+  path prefix, and the admin keeps the account's language whatever the URL — or the tenant behind it — resolved
+  to. An administrator does not have to speak the language of the tenant they are editing
+- `Models\Forms\Traits\UserFormTrait::load()` reports a load when only the user was loaded. A form that renders
+  no field of its own — `Models\Forms\AccountUpdateForm`, whose fields are all the user's — never passed the
+  `if ($form->load(...))` of its action, so the account settings silently saved nothing
 - A request that fetches or stores a file makes the page busy: `includes/busy.ts` puts `inert` on the body, an
   `.is-busy` overlay over everything and a progress bar above that — indeterminate while the length is unknown,
   fed with the byte count by the chunked upload. `components/FileUpload.ts` used to append a bar of its own, and

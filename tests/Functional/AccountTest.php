@@ -32,6 +32,24 @@ class AccountTest extends TestCase
         self::assertSubmenuLinks();
     }
 
+    /**
+     * The form renders no field of its own, so it is only loaded through the user.
+     */
+    public function testSettingsAreSaved(): void
+    {
+        $user = $this->getUserFromFixture('owner');
+
+        $this->login('owner');
+        $this->open('admin/account/update');
+
+        $this->submit(values: $this->prefixFormValues($user, [
+            'name' => 'updated',
+        ]));
+
+        self::assertAlertSame('Your account was updated.', 'success');
+        self::assertSame('updated', User::findOne($user->id)->name);
+    }
+
     public function testCredentials(): void
     {
         $this->login('owner');
