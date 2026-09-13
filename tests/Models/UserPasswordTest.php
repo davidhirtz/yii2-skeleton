@@ -14,21 +14,12 @@ class UserPasswordTest extends TestCase
 {
     use UserFixtureTrait;
 
-    public function testLegacySaltedHashStillValidates(): void
-    {
-        $user = $this->getUserFromFixture('owner');
-
-        self::assertNotNull($user->password_salt);
-        self::assertTrue($user->validatePassword('password'));
-        self::assertTrue($user->isPasswordHashOutdated());
-    }
-
-    public function testNewHashDropsTheSaltColumn(): void
+    public function testHashWithoutAPepperRecordsNoScheme(): void
     {
         $user = $this->getUserFromFixture('owner');
         $user->generatePasswordHash('new-password');
 
-        self::assertNull($user->password_salt);
+        self::assertNull($user->password_scheme);
         self::assertTrue($user->validatePassword('new-password'));
         self::assertFalse($user->validatePassword('password'));
         self::assertFalse($user->isPasswordHashOutdated());
@@ -51,10 +42,13 @@ class UserPasswordTest extends TestCase
         self::assertEquals($hash, $user->password_hash);
     }
 
-    public function testLoginRehashesALegacyHashOnce(): void
+    public function testLoginRehashesAnOutdatedHashOnce(): void
     {
         $user = $this->getUserFromFixture('owner');
         $hash = $user->password_hash;
+
+        // A hash written before the installation configured a pepper
+        Yii::$app->params['passwordPepper'] = 'a-pepper-from-params';
 
         $form = Yii::$container->get(LoginForm::class, [], [
             'email' => $user->email,
@@ -65,7 +59,7 @@ class UserPasswordTest extends TestCase
 
         $user = User::findOne($user->id);
 
-        self::assertNull($user->password_salt);
+        self::assertEquals(User::PASSWORD_PEPPER, $user->password_scheme);
         self::assertNotEquals($hash, $user->password_hash);
         self::assertFalse($user->isPasswordHashOutdated());
         self::assertTrue($user->validatePassword('password'));
@@ -79,7 +73,7 @@ class UserPasswordTest extends TestCase
         $user->generatePasswordHash('password');
         $user->update();
 
-        self::assertNull($user->password_salt);
+        self::assertNull($user->password_scheme);
         self::assertFalse($user->isPasswordHashOutdated());
 
         Yii::$app->params['passwordPepper'] = 'a-pepper-from-params';
@@ -99,7 +93,7 @@ class UserPasswordTest extends TestCase
 
         $user = User::findOne($user->id);
 
-        self::assertEquals(User::PASSWORD_PEPPER, $user->password_salt);
+        self::assertEquals(User::PASSWORD_PEPPER, $user->password_scheme);
         self::assertFalse($user->isPasswordHashOutdated());
         self::assertTrue($user->validatePassword('password'));
     }
@@ -111,7 +105,7 @@ class UserPasswordTest extends TestCase
         $user = $this->getUserFromFixture('owner');
         $user->generatePasswordHash('password');
 
-        self::assertEquals(User::PASSWORD_PEPPER, $user->password_salt);
+        self::assertEquals(User::PASSWORD_PEPPER, $user->password_scheme);
         self::assertFalse($user->isPasswordHashOutdated());
 
         Yii::$app->params['passwordPepper'] = null;

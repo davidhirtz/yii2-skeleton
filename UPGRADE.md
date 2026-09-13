@@ -1,5 +1,45 @@
 # Upgrade Guide
 
+## 3.0.0 — v2 passwords are not carried over
+
+**Every user who had a v2 password has to set a new one.** `Migrations\M260913180000PasswordScheme` drops those
+hashes and rotates the matching auth keys, so nobody is silently carrying a password that v2's five-character
+minimum let them choose, and every hash in a v3 database is peppered. The accounts are left exactly where a user
+created without a password already sits: no login until the reset link is used, everything else intact.
+
+Sending the links is a separate, deliberate step — a migration runs in CI and on staging, and must not mail
+anyone:
+
+```bash
+./yii upgrade/passwords
+```
+
+It mails every user without a password. Building an absolute URL from a console application needs a host, which
+Yii will not guess, so configure the console's URL manager first:
+
+```php
+'components' => [
+    'urlManager' => [
+        'hostInfo' => 'https://www.example.com',
+        'baseUrl' => '',
+    ],
+],
+```
+
+If the only administrator is locked out and the mailer is not an option, set a password directly:
+
+```bash
+./yii user/password admin@example.com
+```
+
+### `password_salt` is `password_scheme`
+
+bcrypt salts its own hashes, so the column never needed to hold one. It records which scheme a hash was written
+under instead — `Models\User::PASSWORD_PEPPER` or `null` — which is what lets the `passwordPepper` param be
+added, removed or rotated on a running installation: a hash whose scheme disagrees with the configured pepper is
+reported by `isPasswordHashOutdated()` and rewritten on that user's next successful login. Code that read
+`password_salt` reads `password_scheme`, and must not treat it as an input to the hash.
+
 ## 3.0.0 — Tokens moved to `user_token`
 
 `user.verification_token` and `user.password_reset_token` held their tokens in the clear, so one read of the

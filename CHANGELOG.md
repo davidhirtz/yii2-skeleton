@@ -1,5 +1,15 @@
 ## 3.0.0 (in development)
 
+- `user.password_salt` is `password_scheme` and no longer holds a salt: bcrypt carries its own, and the column
+  records which scheme a hash was written under — `Models\User::PASSWORD_PEPPER` or `null`. Every hash that was
+  still carrying a v2 per-user salt is dropped by `Migrations\M260913180000PasswordScheme`, along with its auth
+  key, so v2's five-character minimum cannot outlive the upgrade and every v3 hash is peppered.
+  `getSeasonedPassword()` lost the legacy branch with them. Those accounts are in the state a user created
+  without a password is already in: no login until the reset link is used
+- `Console\Controllers\UpgradeController` adds `upgrade/passwords`, which mails a reset link to every user
+  without a password — the other half of the migration above, kept out of it because a migration runs in CI and
+  on staging and must not send mail. `Console\Controllers\UserController` adds `user/password <email>`, the way
+  back into an installation whose only administrator has no working mailer
 - `Modules\Admin\Controllers\UserController::actionReset()` emails the reset link it creates. It used to write
   a token nobody could reach and flash that something had happened, and nothing linked to it either — the new
   `Modules\Admin\Widgets\Navs\UserPasswordResetButton` puts it in the user action dropdown. It refuses the

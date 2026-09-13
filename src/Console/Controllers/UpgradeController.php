@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Console\Controllers;
 
+use Hirtz\Skeleton\Models\Forms\PasswordRecoverForm;
 use Hirtz\Skeleton\Models\Trail;
+use Hirtz\Skeleton\Models\User;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\console\Controller;
 use yii\db\Query;
+use yii\helpers\Console;
 
 class UpgradeController extends Controller
 {
@@ -16,6 +20,52 @@ class UpgradeController extends Controller
         $this->updateUserUpdateRule();
         $this->updateMigrationNamespaces();
         $this->updateTrailNamespaces();
+    }
+
+    /**
+     * Mails a password reset link to every user without a password, which after `M260913180000PasswordScheme` is
+     * everyone who still had a v2 password. Kept out of the migration on purpose: a migration runs in CI and on
+     * staging, and must not send mail.
+     */
+    public function actionPasswords(): void
+    {
+        $users = User::find()
+            ->where(['password_hash' => null])
+            ->all();
+
+        if (!$users) {
+            $this->stdout('No users without a password found.' . PHP_EOL, Console::FG_GREEN);
+            return;
+        }
+
+        $count = count($users);
+
+        if ($this->interactive && !$this->confirm("Send a password reset link to $count user(s)?", true)) {
+            return;
+        }
+
+        $form = PasswordRecoverForm::create();
+
+        foreach ($users as $user) {
+            $form->user = $user;
+            $form->email = $user->email;
+
+            try {
+                $form->sendPasswordResetEmail();
+            } catch (InvalidConfigException $exception) {
+                // A console application has no request to take the host from, and Yii refuses to guess one
+                $this->stdout($exception->getMessage() . PHP_EOL, Console::FG_RED);
+                $this->stdout('Configure `components.urlManager.hostInfo` (and `baseUrl`) for the console'
+                    . ' application, so the emailed link knows where it points.' . PHP_EOL, Console::FG_YELLOW);
+
+                return;
+            }
+
+            $this->stdout(" > Sent to $user->email" . PHP_EOL);
+        }
+
+        $count = Yii::$app->getFormatter()->asInteger($count);
+        $this->stdout("Sent $count password reset link(s)." . PHP_EOL, Console::FG_GREEN);
     }
 
     private function updateUserUpdateRule(): void

@@ -36,8 +36,8 @@ use yii\web\IdentityInterface;
  * @property string $email
  * @property DateTime|null $email_confirmed_at
  * @property string|null $password_hash
- * @property string|null $password_salt which scheme the hash was written with — {@see static::PASSWORD_PEPPER},
- *     `null` for none, and a random string for a hash that predates both
+ * @property string|null $password_scheme which scheme the hash was written with —
+ *     {@see static::PASSWORD_PEPPER} or `null`
  * @property string $language
  * @property string|null $timezone
  * @property string|null $auth_key
@@ -70,9 +70,9 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     final public const string AUTH_ROLE_ADMIN = 'admin';
 
     /**
-     * Recorded in `password_salt` for a hash written with the `passwordPepper` param, which is what lets a pepper
-     * be added to a running installation: a hash whose marker disagrees with the configured pepper is outdated,
-     * not broken, and the next successful login rewrites it.
+     * Recorded in `password_scheme` for a hash written with the `passwordPepper` param, which is what lets a
+     * pepper be added, removed or rotated on a running installation: a hash whose scheme disagrees with the
+     * configured pepper is outdated, not broken, and the next successful login rewrites it.
      */
     final public const string PASSWORD_PEPPER = 'pepper';
 
@@ -223,7 +223,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
             return false;
         }
 
-        return $this->password_salt !== self::getPasswordSaltForNewHash()
+        return $this->password_scheme !== self::getPasswordSchemeForNewHash()
             || password_needs_rehash($this->password_hash, PASSWORD_BCRYPT, [
                 'cost' => Yii::$app->getSecurity()->passwordHashCost,
             ]);
@@ -305,26 +305,22 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     {
         // bcrypt carries a salt of its own, so the column records the scheme instead. Setting it first is what
         // decides whether the pepper applies below.
-        $this->password_salt = self::getPasswordSaltForNewHash();
+        $this->password_scheme = self::getPasswordSchemeForNewHash();
         $this->password_hash = Yii::$app->getSecurity()->generatePasswordHash($this->getSeasonedPassword($password));
     }
 
     /**
      * The optional `passwordPepper` param is a secret the database does not hold, so a leaked hash cannot be
-     * attacked offline. Which scheme a given hash used is recorded in `password_salt`, so adding, changing or
+     * attacked offline. Which scheme a given hash used is recorded in `password_scheme`, so adding, changing or
      * removing the pepper never locks anyone out of an account they can still type the password for — it only
      * marks the hash outdated.
      */
     private function getSeasonedPassword(string $password): string
     {
-        return $password . match ($this->password_salt) {
-            null => '',
-            static::PASSWORD_PEPPER => self::getPasswordPepper(),
-            default => $this->password_salt,
-        };
+        return $password . ($this->password_scheme === static::PASSWORD_PEPPER ? self::getPasswordPepper() : '');
     }
 
-    private static function getPasswordSaltForNewHash(): ?string
+    private static function getPasswordSchemeForNewHash(): ?string
     {
         return self::getPasswordPepper() === '' ? null : static::PASSWORD_PEPPER;
     }
@@ -603,7 +599,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         return array_diff($this->attributes(), [
             $this->getCustomAttributesColumn(),
             'password_hash',
-            'password_salt',
+            'password_scheme',
             'auth_key',
             'email_confirmed_at',
             'google_2fa_secret',

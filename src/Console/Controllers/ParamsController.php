@@ -91,8 +91,8 @@ class ParamsController extends Controller
     }
 
     /**
-     * Rotating the pepper does lock people out — the marker in `password_salt` records that a hash was peppered,
-     * not which pepper it used — so a replacement is never the default answer and never happens unattended.
+     * Rotating the pepper does lock people out — `password_scheme` records that a hash was peppered, not which
+     * pepper it used — so a replacement is never the default answer and never happens unattended.
      */
     private function confirmPepper(bool $found): bool
     {
