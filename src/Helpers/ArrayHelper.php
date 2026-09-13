@@ -42,7 +42,7 @@ class ArrayHelper extends BaseArrayHelper
     public static function simpleXmlToArray(?SimpleXMLElement $xml): array
     {
         $namespace = $xml?->getDocNamespaces(true);
-        $namespace[null] = null;
+        $namespace[''] = null;
 
         $children = [];
         $attributes = [];
