@@ -1,5 +1,8 @@
 ## 3.0.0 (in development)
 
+- The navbar search box closes and clears itself on every navigation but the one to the results page, which
+  `includes/search.ts` recognises by the location htmx pushed before the swap. The navbar is never swapped, so
+  the query of the page before used to stay in the input
 - **`Modules\Admin\Module::$languages` is the admin's own language list**, defaulting to the application's
   content languages but no longer tied to them — the admin overrides whatever language the URL manager resolved,
   so the two lists are independent. A single language is pinned and hides both pickers, and the account language

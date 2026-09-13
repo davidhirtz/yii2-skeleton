@@ -147,15 +147,20 @@ export default ($container: HTMLElement) => {
         $results.childElementCount ? open() : close();
     });
 
+    // htmx pushes the URL before it swaps, so the location already names the page landed on.
+    const searchPath = new URL($container.dataset.search!, location.origin).pathname;
+
     document.body.addEventListener('htmx:afterSwap', (event: Event) => {
         if ($container.contains(event.target as Node)) {
             return;
         }
 
-        close();
-
-        if (!$input.value) {
-            $container.classList.remove('expanded');
+        if (location.pathname === searchPath) {
+            close();
+            return;
         }
+
+        $input.value = '';
+        collapse();
     });
 }
