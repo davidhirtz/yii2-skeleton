@@ -34,7 +34,7 @@ class UserSubmenu extends Submenu
 
     protected function getUserUpdateItem(): ?NavItem
     {
-        return $this->webuser->can(User::AUTH_USER_UPDATE, ['user' => $this->model])
+        return $this->webuser->can(User::AUTH_USER_UPDATE)
             ? NavItem::make()
                 ->label(Yii::t('skeleton', 'COMMON_ACCOUNT'))
                 ->url(['/admin/user/update', 'id' => $this->model->id])

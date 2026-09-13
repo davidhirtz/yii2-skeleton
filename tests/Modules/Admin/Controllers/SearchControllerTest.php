@@ -60,7 +60,10 @@ class SearchControllerTest extends TestCase
         self::assertStringNotContainsString('/admin/user/update', $html);
     }
 
-    public function testSuggestHidesTheOwnerFromOtherUsers(): void
+    /**
+     * The update action renders the owner read-only, so hiding them would only lose the link.
+     */
+    public function testSuggestShowsTheOwnerToOtherUsers(): void
     {
         $this->loginUser(User::AUTH_USER_UPDATE);
 
@@ -69,8 +72,8 @@ class SearchControllerTest extends TestCase
 
         $html = $this->createSearchController()->actionSuggest($owner->name);
 
-        self::assertStringContainsString('search-result-empty', $html);
-        self::assertStringNotContainsString('/admin/user/update?id=' . $owner->id, $html);
+        self::assertStringNotContainsString('search-result-empty', $html);
+        self::assertStringContainsString('/admin/user/update?id=' . $owner->id, $html);
     }
 
     public function testSuggestBelowTheMinimumLengthRendersNothing(): void

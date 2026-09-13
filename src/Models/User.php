@@ -516,9 +516,13 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         return 0.5;
     }
 
+    /**
+     * Deliberately unscoped to the record: the update action renders a user the acting one may not change
+     * read-only, so hiding the site owner from the results would only lose the link to them.
+     */
     protected function isSearchResultVisible(): bool
     {
-        return Yii::$app->has('user') && Yii::$app->getUser()->can(static::AUTH_USER_UPDATE, ['user' => $this]);
+        return Yii::$app->has('user') && Yii::$app->getUser()->can(static::AUTH_USER_UPDATE);
     }
 
     public function getAuthKey(): ?string

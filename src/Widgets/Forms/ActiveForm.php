@@ -34,6 +34,12 @@ class ActiveForm extends Widget
     protected string $layout = "{errors}{rows}{buttons}{footer}";
 
     /**
+     * Renders every fieldset `disabled` and drops the buttons, so a record the user may see but not change shows
+     * the form it would otherwise be a 403 instead of.
+     */
+    protected bool $readonly = false;
+
+    /**
      * @var Stringable[]|string[]|false|null
      */
     protected array|false|null $buttons = null;
@@ -59,6 +65,12 @@ class ActiveForm extends Widget
     public function rows(array|false|null $rows): static
     {
         $this->rows = $rows;
+        return $this;
+    }
+
+    public function readonly(bool $readonly = true): static
+    {
+        $this->readonly = $readonly;
         return $this;
     }
 
@@ -129,12 +141,13 @@ class ActiveForm extends Widget
         }
 
         return $fieldsetOrRows
+            ->attribute('disabled', $this->readonly)
             ->form($this);
     }
 
     protected function getButtons(): ?Stringable
     {
-        if (false === $this->buttons) {
+        if ($this->readonly || false === $this->buttons) {
             return null;
         }
 

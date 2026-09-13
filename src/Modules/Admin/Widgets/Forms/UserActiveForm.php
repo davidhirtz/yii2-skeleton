@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms;
 
 use Hirtz\Skeleton\Html\Custom\RelativeTime;
 use Hirtz\Skeleton\Html\Li;
+use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Models\Forms\UserForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\Traits\UserActiveFormTrait;
 use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
@@ -26,6 +27,8 @@ class UserActiveForm extends ActiveForm
     #[Override]
     protected function configure(): void
     {
+        $this->readonly = !$this->webuser->can(User::AUTH_USER_UPDATE, ['user' => $this->model->user]);
+
         $this->rows ??= [
             [
                 $this->getStatusField(),

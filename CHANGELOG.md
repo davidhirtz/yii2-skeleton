@@ -1,5 +1,12 @@
 ## 3.0.0 (in development)
 
+- `Modules\Admin\Controllers\UserController::actionUpdate()` renders a user the acting one may not change —
+  the site owner, or anyone holding a permission they lack — read-only instead of refusing the request, so every
+  link to a user leads somewhere. `Widgets\Forms\ActiveForm::readonly()` is what that does: every fieldset is
+  `disabled` and the buttons are dropped. `Models\User::isSearchResultVisible()` and
+  `Modules\Admin\Widgets\Navs\UserSubmenu` no longer scope their permission check to the record either, which
+  is what kept the owner out of the admin search; `Modules\Admin\Widgets\Buttons\UserDeleteButton` does check
+  the record now, since the page it sits on is reachable without the permission
 - The role markers `ROLE_ANY` (`*`) and `ROLE_AUTHENTICATED` (`@`) moved from `Widgets\Traits\VisibilityTrait`
   to `Models\User`, beside the `AUTH_*` permission names. A trait constant cannot be read through the trait, so
   every call site had to reach them through an arbitrary using class — `Widget::ROLE_AUTHENTICATED` in a

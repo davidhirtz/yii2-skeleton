@@ -80,7 +80,7 @@ class UserGridView extends GridView
                 ->content(Yii::t('skeleton', 'COMMON_USER'))
                 ->class('text-muted');
 
-        return $this->canUpdateUser($user) ? A::make()->content($name)->href($user->getAdminRoute()) : $name;
+        return A::make()->content($name)->href($user->getAdminRoute());
     }
 
     protected function getEmailColumn(): Column

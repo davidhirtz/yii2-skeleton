@@ -17,7 +17,9 @@ class UserDeleteButton extends DeleteButton
     #[Override]
     public function isVisible(): bool
     {
-        return parent::isVisible() && $this->model->isDeletable();
+        return parent::isVisible()
+            && $this->model->isDeletable()
+            && $this->webuser->can(User::AUTH_USER_DELETE, ['user' => $this->model]);
     }
 
     #[Override]

@@ -106,12 +106,18 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * A user the acting one may not update — the site owner, or anyone holding a permission they lack — is
+     * rendered read-only rather than refused, so every link to a user leads somewhere.
+     */
     public function actionUpdate(int $id): Response|string
     {
-        $user = $this->findUser($id, User::AUTH_USER_UPDATE);
+        $user = $this->findUser($id);
         $form = UserForm::create(['user' => $user]);
 
-        if ($form->load($this->request->post()) && $form->save()) {
+        if ($this->webuser->can(User::AUTH_USER_UPDATE, ['user' => $user])
+            && $form->load($this->request->post())
+            && $form->save()) {
             $this->success(Yii::t('skeleton', 'USER_SUCCESS_UPDATED'));
             return $this->refresh();
         }
