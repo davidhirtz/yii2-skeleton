@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Models;
 
 use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\I18n\Message;
 use Hirtz\Skeleton\Models\Collections\TrailModelCollection;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
@@ -25,7 +26,7 @@ use yii\db\ActiveRecordInterface;
  * @property string $model_class
  * @property array|string|null $model_id
  * @property int|null $user_id
- * @property string $message
+ * @property string|null $message
  * @property array|null $data
  * @property DateTime $created_at
  *
@@ -161,6 +162,15 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         return TrailModelCollection::getModelByClassAndId($this->data['model_class'], $this->data['model_id'] ?? null);
     }
 
+    /**
+     * The `message` attribute holds the stored pointer, this returns the text it renders to.
+     */
+    public function getMessage(): ?string
+    {
+        $message = Message::fromJson($this->message);
+        return $message ? (string)$message : null;
+    }
+
     public function isAuthPermissionType(): bool
     {
         return in_array($this->type, [static::TYPE_ASSIGN, static::TYPE_REVOKE], true);
@@ -196,7 +206,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         return $this->getTypeOptions()['hasDataModel'] ?? false;
     }
 
-    public static function createOrderTrail(?TrailModelInterface $model, ?string $message = null, array $data = []): static
+    public static function createOrderTrail(?TrailModelInterface $model, ?Message $message = null, array $data = []): static
     {
         $trail = static::create();
         $trail->type = static::TYPE_ORDER;
@@ -206,7 +216,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
             $trail->model_id = $model instanceof ActiveRecordInterface ? $model->getPrimaryKey(true) : null;
         }
 
-        $trail->message = $message;
+        $trail->message = $message?->toJson();
         $trail->data = $data;
         $trail->insert();
 
@@ -227,13 +237,11 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
     }
 
     /**
-     * The message translations are set via `Yii::t()` so the translation controller will pick them up. The actual
-     * translation will happen in {@see TrailGridView}.
+     * A type's `message` is a {@see Message} pointer, not text: it is rendered in the language of whoever reads the
+     * trail, by {@see TrailGridView}.
      */
     public static function getTypes(): array
     {
-        $language = Yii::$app->sourceLanguage;
-
         return [
             static::TYPE_DEFAULT => [
                 'name' => Yii::t('skeleton', 'TRAIL_MESSAGE'),
@@ -251,7 +259,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
             ],
             static::TYPE_DELETE => [
                 'name' => Yii::t('skeleton', 'COMMON_DELETED'),
-                'message' => Yii::t('skeleton', 'TRAIL_WAS_DELETED', [], $language),
+                'message' => Message::make('skeleton', 'TRAIL_WAS_DELETED'),
                 'parentType' => static::TYPE_CHILD_DELETE,
                 'icon' => 'trash-alt',
             ],
@@ -265,19 +273,19 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
             ],
             static::TYPE_CHILD_CREATE => [
                 'name' => Yii::t('skeleton', 'COMMON_CREATED'),
-                'message' => Yii::t('skeleton', 'TRAIL_CREATED', [], $language),
+                'message' => Message::make('skeleton', 'TRAIL_CREATED'),
                 'hasDataModel' => true,
                 'icon' => 'plus',
             ],
             static::TYPE_CHILD_UPDATE => [
                 'name' => Yii::t('skeleton', 'COMMON_UPDATED'),
-                'message' => Yii::t('skeleton', 'TRAIL_UPDATED', [], $language),
+                'message' => Message::make('skeleton', 'TRAIL_UPDATED'),
                 'hasDataModel' => true,
                 'icon' => 'pencil-alt',
             ],
             static::TYPE_CHILD_DELETE => [
                 'name' => Yii::t('skeleton', 'COMMON_DELETED'),
-                'message' => Yii::t('skeleton', 'TRAIL_DELETED', [], $language),
+                'message' => Message::make('skeleton', 'TRAIL_DELETED'),
                 'hasDataModel' => true,
                 'icon' => 'trash-alt',
             ],
@@ -287,7 +295,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
             ],
             static::TYPE_PASSWORD => [
                 'name' => Yii::t('skeleton', 'TRAIL_PASSWORD_CHANGED'),
-                'message' => Yii::t('skeleton', 'TRAIL_THE_PASSWORD_WAS_CHANGED'),
+                'message' => Message::make('skeleton', 'TRAIL_THE_PASSWORD_WAS_CHANGED'),
                 'icon' => 'key',
             ],
         ];

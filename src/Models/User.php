@@ -70,9 +70,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     final public const string ROLE_ANY = '*';
     final public const string ROLE_AUTHENTICATED = '@';
 
-    final public const string AUTH_USER_CREATE = 'userCreate';
-    final public const string AUTH_USER_DELETE = 'userDelete';
-    final public const string AUTH_USER_UPDATE = 'userUpdate';
+    final public const string AUTH_USER = 'user';
     final public const string AUTH_USER_ASSIGN = 'authUpdate';
     final public const string AUTH_ROLE_ADMIN = 'admin';
 
@@ -522,7 +520,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
      */
     protected function isSearchResultVisible(): bool
     {
-        return Yii::$app->has('user') && Yii::$app->getUser()->can(static::AUTH_USER_UPDATE);
+        return Yii::$app->has('user') && Yii::$app->getUser()->can(static::AUTH_USER);
     }
 
     public function getAuthKey(): ?string

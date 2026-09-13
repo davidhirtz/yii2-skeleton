@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Db\Traits;
 
 use Exception;
 use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\I18n\Message;
 use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
 use Hirtz\Skeleton\Models\Translation;
 use Yii;
@@ -13,12 +14,123 @@ use yii\base\InvalidConfigException;
 use yii\db\ConstraintFinderInterface;
 use yii\db\IndexConstraint;
 use yii\rbac\DbManager;
+use yii\rbac\Permission;
 
 trait MigrationTrait
 {
     protected function getAuthManager(): DbManager
     {
         return Yii::$app->getAuthManager();
+    }
+
+    protected function addPermission(string $name, Message $description, string ...$parents): Permission
+    {
+        $auth = $this->getAuthManager();
+
+        $permission = $auth->createPermission($name);
+        $permission->description = $description->toJson();
+        $auth->add($permission);
+
+        foreach ($parents as $parent) {
+            $auth->addChild($auth->getRole($parent) ?? $auth->getPermission($parent), $permission);
+        }
+
+        $auth->invalidateCache();
+
+        return $permission;
+    }
+
+    /**
+     * Grants `$new` to every parent and every assignee of any of the `$old` items, then deletes those — so an
+     * assignee of a single old verb permission ends up with the whole model.
+     *
+     * @param list<string> $old
+     */
+    protected function replaceAuthItems(array $old, string $new): void
+    {
+        $auth = $this->getAuthManager();
+        $db = $this->getDb();
+
+        $old = array_values(array_diff($old, [$new]));
+
+        if (!$old) {
+            return;
+        }
+
+        $names = implode(', ', array_map($db->quoteValue(...), $old));
+        $item = $db->quoteValue($new);
+
+        $itemTable = $this->getQuotedTableName($auth->itemTable);
+        $itemChildTable = $this->getQuotedTableName($auth->itemChildTable);
+        $assignmentTable = $this->getQuotedTableName($auth->assignmentTable);
+
+        $this->execute("
+            INSERT IGNORE INTO $itemChildTable ([[parent]], [[child]])
+            SELECT DISTINCT [[parent]], $item
+            FROM $itemChildTable
+            WHERE [[child]] IN ($names) AND [[parent]] NOT IN ($names)
+        ");
+
+        $this->execute("
+            INSERT IGNORE INTO $assignmentTable ([[item_name]], [[user_id]], [[created_at]])
+            SELECT DISTINCT $item, [[user_id]], " . time() . "
+            FROM $assignmentTable
+            WHERE [[item_name]] IN ($names)
+        ");
+
+        $this->execute("DELETE FROM $itemTable WHERE [[name]] IN ($names)");
+
+        $auth->invalidateCache();
+    }
+
+    /**
+     * The reverse of {@see MigrationTrait::replaceAuthItems()}. The old items share the new item's description and
+     * parents: the keys that described them one by one are gone, and so is the hierarchy between them.
+     *
+     * @param list<string> $old
+     */
+    protected function restoreAuthItems(array $old, string $new, Message $description): void
+    {
+        $auth = $this->getAuthManager();
+        $db = $this->getDb();
+
+        $old = array_values(array_diff($old, [$new]));
+
+        if (!$old) {
+            return;
+        }
+
+        $item = $db->quoteValue($new);
+
+        $itemTable = $this->getQuotedTableName($auth->itemTable);
+        $itemChildTable = $this->getQuotedTableName($auth->itemChildTable);
+        $assignmentTable = $this->getQuotedTableName($auth->assignmentTable);
+
+        foreach ($old as $name) {
+            $permission = $auth->createPermission($name);
+            $permission->description = $description->toJson();
+            $auth->add($permission);
+
+            $name = $db->quoteValue($name);
+
+            $this->execute("
+                INSERT IGNORE INTO $itemChildTable ([[parent]], [[child]])
+                SELECT DISTINCT [[parent]], $name
+                FROM $itemChildTable
+                WHERE [[child]] = $item
+            ");
+
+            $this->execute("
+                INSERT IGNORE INTO $assignmentTable ([[item_name]], [[user_id]], [[created_at]])
+                SELECT DISTINCT $name, [[user_id]], " . time() . "
+                FROM $assignmentTable
+                WHERE [[item_name]] = $item
+            ");
+        }
+
+        $this->execute("DELETE FROM $itemTable WHERE [[name]] = $item");
+
+        $auth->invalidateCache();
     }
 
     protected function getTableOptions(): ?string

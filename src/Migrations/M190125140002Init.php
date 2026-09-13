@@ -10,7 +10,6 @@ use Hirtz\Skeleton\Db\Traits\MigrationTrait;
 use Hirtz\Skeleton\Models\Session;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Models\UserLogin;
-use Hirtz\Skeleton\Rbac\Rules\OwnerRule;
 use Yii;
 use yii\db\Migration;
 use yii\db\Query;
@@ -24,6 +23,14 @@ class M190125140002Init extends Migration
     use MigrationTrait;
 
     private const string LEGACY_AUTH_CLIENT_TABLE = '{{%auth_client}}';
+
+    /**
+     * The three verb permissions and their rendered descriptions are what 1.0 created; `M260914100000AuthItems`
+     * collapses them into `user`, so neither the constants nor the message keys exist any more.
+     */
+    private const string LEGACY_USER_CREATE = 'userCreate';
+    private const string LEGACY_USER_DELETE = 'userDelete';
+    private const string LEGACY_USER_UPDATE = 'userUpdate';
 
     public function safeUp(): void
     {
@@ -243,27 +250,21 @@ class M190125140002Init extends Migration
         /**
          * Authentication data.
          */
-        $sourceLanguage = Yii::$app->sourceLanguage;
-        $ownerRule = new OwnerRule();
-        $authManager->add($ownerRule);
-
         $authUpdate = $authManager->createPermission(User::AUTH_USER_ASSIGN);
-        $authUpdate->description = Yii::t('skeleton', 'AUTH_AUTH_UPDATE_DESCRIPTION', [], $sourceLanguage);
-        $authUpdate->ruleName = $ownerRule->name;
+        $authUpdate->description = 'Assign permissions';
         $authManager->add($authUpdate);
 
-        $userUpdate = $authManager->createPermission(User::AUTH_USER_UPDATE);
-        $userUpdate->description = Yii::t('skeleton', 'AUTH_USER_UPDATE_DESCRIPTION', [], $sourceLanguage);
-        $userUpdate->ruleName = $ownerRule->name;
+        $userUpdate = $authManager->createPermission(self::LEGACY_USER_UPDATE);
+        $userUpdate->description = 'Update users';
         $authManager->add($userUpdate);
 
-        $userCreate = $authManager->createPermission(User::AUTH_USER_CREATE);
-        $userCreate->description = Yii::t('skeleton', 'AUTH_USER_CREATE_DESCRIPTION', [], $sourceLanguage);
+        $userCreate = $authManager->createPermission(self::LEGACY_USER_CREATE);
+        $userCreate->description = 'Create users';
         $authManager->add($userCreate);
         $authManager->addChild($userCreate, $userUpdate);
 
-        $userDelete = $authManager->createPermission(User::AUTH_USER_DELETE);
-        $userDelete->description = Yii::t('skeleton', 'AUTH_USER_DELETE_DESCRIPTION', [], $sourceLanguage);
+        $userDelete = $authManager->createPermission(self::LEGACY_USER_DELETE);
+        $userDelete->description = 'Delete users';
         $authManager->add($userDelete);
         $authManager->addChild($userDelete, $userUpdate);
 

@@ -4,14 +4,89 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Modules\Admin\Widgets\Grids;
 
+use Hirtz\Skeleton\I18n\Message;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\TrailGridView;
 use Hirtz\Skeleton\Test\TestCase;
+use Override;
 use Stringable;
+use Yii;
 
 class TrailGridViewTest extends TestCase
 {
+    #[Override]
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Yii::$app->getI18n()->setLanguages(['en-US', 'de']);
+        Yii::$app->language = 'en-US';
+    }
+
+    public function testAnAssignTrailRendersTheItemsCurrentLabel(): void
+    {
+        Yii::$app->language = 'de';
+
+        $trail = Trail::create();
+        $trail->type = Trail::TYPE_ASSIGN;
+        $trail->data = ['name' => User::AUTH_USER, 'type' => 2];
+
+        self::assertStringContainsString('<ins>Benutzer verwalten</ins>', TestTrailGridView::make()->dataContent($trail));
+    }
+
+    public function testARevokeTrailOfADeletedItemFallsBackToItsName(): void
+    {
+        $trail = Trail::create();
+        $trail->type = Trail::TYPE_REVOKE;
+        $trail->data = ['name' => 'entryUpdate', 'type' => 2];
+
+        self::assertStringContainsString('<del>entryUpdate</del>', TestTrailGridView::make()->dataContent($trail));
+    }
+
+    public function testAnAssignTrailWrittenBeforeTheChangeStillRenders(): void
+    {
+        $trail = Trail::create();
+        $trail->type = Trail::TYPE_ASSIGN;
+        $trail->message = 'Update users';
+
+        self::assertStringContainsString('<ins>Update users</ins>', TestTrailGridView::make()->dataContent($trail));
+    }
+
+    public function testAnOrderTrailIsRenderedInTheReadersLanguage(): void
+    {
+        $trail = Trail::create();
+        $trail->type = Trail::TYPE_ORDER;
+        $trail->message = Message::make('skeleton', 'TRAIL_ORDERED')->toJson();
+
+        self::assertSame('Ordered', TestTrailGridView::make()->dataContent($trail));
+
+        Yii::$app->language = 'de';
+        self::assertSame('Sortiert', TestTrailGridView::make()->dataContent($trail));
+    }
+
+    public function testADeleteIsRenderedInTheReadersLanguage(): void
+    {
+        $trail = Trail::create();
+        $trail->type = Trail::TYPE_DELETE;
+        $trail->model_class = User::class;
+
+        self::assertStringContainsString('was deleted', TestTrailGridView::make()->dataContent($trail));
+
+        Yii::$app->language = 'de';
+        self::assertStringContainsString('wurde gelöscht', TestTrailGridView::make()->dataContent($trail));
+    }
+
+    public function testAChildDeleteIsRenderedInTheReadersLanguage(): void
+    {
+        Yii::$app->language = 'de';
+
+        $trail = Trail::create();
+        $trail->type = Trail::TYPE_CHILD_DELETE;
+
+        self::assertStringContainsString('Gelöscht</div> gelöscht', TestTrailGridView::make()->dataContent($trail));
+    }
+
     public function testAStructuredValueIsCreatedAsItsOwnRows(): void
     {
         $content = (string)TestTrailGridView::make()->createdAttributeContent([
@@ -109,5 +184,10 @@ class TestTrailGridView extends TrailGridView
     public function userTrailRoute(Trail $trail): array
     {
         return $this->getUserTrailRoute($trail);
+    }
+
+    public function dataContent(Trail $trail): string
+    {
+        return (string)$this->getDataColumnContent($trail);
     }
 }

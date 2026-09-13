@@ -21,7 +21,7 @@ class Username extends Widget
 
     public function clickable(): static
     {
-        if ($this->user && $this->webuser->can(User::AUTH_USER_UPDATE, ['user' => $this->user])) {
+        if ($this->user && $this->webuser->can(User::AUTH_USER, ['user' => $this->user])) {
             $this->attributes['href'] ??= $this->user->getAdminRoute();
         }
 

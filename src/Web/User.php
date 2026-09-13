@@ -90,6 +90,11 @@ class User extends \yii\web\User
     public $identityClass = \Hirtz\Skeleton\Models\User::class;
     public $loginUrl = null;
 
+    /**
+     * @var array<int|string, list<string>> the permission names already looked up in this request
+     */
+    private array $permissionNames = [];
+
     #[Override]
     public function init(): void
     {
@@ -208,8 +213,54 @@ class User extends \yii\web\User
             return false;
         }
 
-        return ($this->disableRbacForOwner && $this->identity?->isOwner())
-            || parent::can($permissionName, $params, $allowCaching);
+        if ($this->disableRbacForOwner && $this->identity?->isOwner()) {
+            return true;
+        }
+
+        $target = $params['user'] ?? null;
+
+        if ($target instanceof \Hirtz\Skeleton\Models\User && !$this->canManageUser($target)) {
+            return false;
+        }
+
+        return parent::can($permissionName, $params, $allowCaching);
+    }
+
+    /**
+     * Guards the site owner, and anyone whose permissions the acting user does not already hold: managing a user
+     * means setting a password, generating a reset token and clearing a second factor, so without this it is a
+     * takeover of every account it reaches — including the ones that can grant permissions.
+     */
+    public function canManageUser(\Hirtz\Skeleton\Models\User $user): bool
+    {
+        $id = $this->getId();
+
+        if ($id === null || $user->id === $id) {
+            return true;
+        }
+
+        if ($user->isOwner()) {
+            return false;
+        }
+
+        $held = $this->getPermissionNames($id);
+
+        // Nobody holds more than everything, so the usual case — an administrator — costs no lookup at all
+        if (count($held) >= count(Yii::$app->getAuthManager()->getPermissions())) {
+            return true;
+        }
+
+        return !array_diff($this->getPermissionNames($user->id), $held);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getPermissionNames(int|string $userId): array
+    {
+        return $this->permissionNames[$userId] ??= array_keys(
+            Yii::$app->getAuthManager()->getPermissionsByUser($userId)
+        );
     }
 
     public function isLoginAttemptLimitReached(?string $email = null): bool

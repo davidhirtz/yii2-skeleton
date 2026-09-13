@@ -1,5 +1,40 @@
 ## 3.0.0 (in development)
 
+- **One permission per admin-managed model.** `Models\User::AUTH_USER` (`user`) replaces `AUTH_USER_CREATE`,
+  `AUTH_USER_UPDATE` and `AUTH_USER_DELETE`; `Models\Redirect::AUTH_REDIRECT` (`redirect`) replaces
+  `AUTH_REDIRECT_CREATE`. `AUTH_USER_ASSIGN` (`authUpdate`) and `Models\Trail::AUTH_TRAIL_INDEX` keep their verb
+  and their value — the first is the escalation-capable one, the second is read-only. `Migrations\M260914100000AuthItems`
+  grants the new item to every parent and assignee of any old one, so an account that held `userUpdate` alone now
+  manages users outright. No `can()` call takes a record any more, except the `user` param the user permissions read
+- **`Rbac\Rules\OwnerRule` is gone**, and with it the only `yii\rbac\Rule` the platform shipped and the serialized
+  class in `auth_rule.data`. The policy is `Web\User::canManageUser()`, which `Web\User::can()` consults for the
+  `user` param: the site owner and anyone holding a permission the acting user lacks stay unreachable, memoisation
+  included. `M260914100000AuthItems` clears every `rule_name` and empties `auth_rule` — the table itself stays,
+  `yii\rbac\DbManager::loadFromCache()` reads it. `Console\Controllers\UpgradeController` lost
+  `updateUserUpdateRule()`, and `M231105142331OwnerRule` and `M260913150000UserDeleteRule` are no-ops
+- **Added `I18n\Message`**, a `JsonSerializable` and `Stringable` pointer at a translation (`category`, `key`,
+  `params`) stored in place of rendered text, so a row written by one user reads in the language of whoever looks
+  at it. `auth_item.description` and the `trail.message` of an order trail hold its JSON; `Message::fromJson()`
+  returns a literal message for anything that is not a pointer, so every row written before 3.0 still renders.
+  `Widgets\Grids\Traits\MessageSourceTrait`, which tried to translate rendered English back by walking every
+  message source, is deleted — it missed, which is why the German admin saw English descriptions
+- `Db\Traits\MigrationTrait::addPermission()` creates a permission with a `Message` description under any number of
+  parents; `replaceAuthItems()` collapses a set of old items into one and `restoreAuthItems()` is its reverse
+- `Models\Trail::createOrderTrail()` takes a `Message` instead of a rendered string, `getMessage()` returns the
+  translated text of the `message` attribute, and the `message` of a `getTypes()` entry is a `Message`, not text
+  rendered in the source language. `Rbac\DbManager::createTrail()` writes the item's `name` and `type` into `data`
+  and no message at all, so an assign trail renders the item's current label
+- `Models\AuthItem::getLabel()` renders the description, falling back to the display name; `getTypes()` names the
+  two types through `AUTH_ITEM_TYPE_ROLE` and `AUTH_ITEM_TYPE_PERMISSION` instead of untranslated English, and the
+  unused `hasPermission()` is gone. `Modules\Admin\Widgets\Grids\AuthItemGridView::$prevRuleName` went with it:
+  it grouped rows by the lowercase prefix of the name, which was the verb split read back out of the name
+- `Modules\Admin\Controllers\Traits\UserTrait::findUser()` keeps its permission argument — the user permissions
+  are the only ones with a per-record policy left
+- `Models\Collections\TrailModelCollection::reset()` drops its two statics, and
+  `Base\Traits\ApplicationTrait::preInitInternal()` calls it, so an application no longer starts with the records
+  the one before it loaded — a renamed record showed its old name in the trail of the next test in the same process
+- `messages/config.php` adds `Message::make` to `translator`, so `yii message` finds the keys that live only in a
+  message pointer
 - The admin language can be switched per session: `Modules\Admin\Widgets\Buttons\LanguageDropdownButton` links
   to the current URL with the `language` query parameter (`Web\Request::$languageParam`), which
   `Modules\Admin\Module::beforeAction()` validates against the configured languages and keeps in the session

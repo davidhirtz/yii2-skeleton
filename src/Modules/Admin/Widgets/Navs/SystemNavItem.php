@@ -58,7 +58,7 @@ class SystemNavItem extends NavItem
             ->label(Yii::t('skeleton', 'COMMON_REDIRECTS'))
             ->url(['/admin/redirect/index'])
             ->order(40)
-            ->roles([Redirect::AUTH_REDIRECT_CREATE])
+            ->roles([Redirect::AUTH_REDIRECT])
             ->routes(['admin/redirect']);
     }
 

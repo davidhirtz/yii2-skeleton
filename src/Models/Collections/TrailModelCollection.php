@@ -52,6 +52,16 @@ class TrailModelCollection
     }
 
     /**
+     * The statics outlive the application; `ApplicationTrait::preInitInternal()` resets them, so a test's
+     * application does not report the record a previous one loaded before it was renamed.
+     */
+    public static function reset(): void
+    {
+        self::$models = [];
+        self::$modelAttributes = [];
+    }
+
+    /**
      * This is the fallback method to format the value based on the attribute name
      */
     public static function formatAttributeValue(Model $model, string $attribute, mixed $value): mixed

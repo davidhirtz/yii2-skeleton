@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Models;
 
 use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\I18n\Message;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Models\Queries\AuthItemQuery;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
@@ -69,17 +70,12 @@ class AuthItem extends ActiveRecord implements TypeAttributeInterface
     }
 
     /**
-     * @noinspection PhpUnused
+     * The description is a {@see Message} pointer; a row written before 3.0 holds rendered English and is shown as
+     * it stands.
      */
-    public function hasPermission(): bool
+    public function getLabel(): string
     {
-        foreach ($this->children as $authItem) {
-            if ($authItem->isAssigned) {
-                return true;
-            }
-        }
-
-        return $this->isAssigned;
+        return (string)(Message::fromJson($this->description) ?? $this->getDisplayName());
     }
 
     public function isRole(): bool
@@ -96,11 +92,11 @@ class AuthItem extends ActiveRecord implements TypeAttributeInterface
     {
         return [
             Item::TYPE_ROLE => [
-                'name' => 'Role',
+                'name' => Yii::t('skeleton', 'AUTH_ITEM_TYPE_ROLE'),
                 'icon' => 'user',
             ],
             Item::TYPE_PERMISSION => [
-                'name' => 'Permission',
+                'name' => Yii::t('skeleton', 'AUTH_ITEM_TYPE_PERMISSION'),
                 'icon' => 'edit',
             ],
         ];

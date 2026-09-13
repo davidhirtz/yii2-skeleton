@@ -1,5 +1,105 @@
 # Upgrade Guide
 
+## 3.0.0 — One permission per model
+
+The 46 verb permissions (`entryCreate`, `entryUpdate`, `entryDelete`, `entryOrder`, …) are 14 nouns, one per
+model the admin manages. `create`, `delete` and `order` were already parents of their `update`, so the only
+states the split could actually express were ones no project used; every project assigns roles.
+
+| Bundle   | New permission                  | Replaces                                                                               |
+|----------|---------------------------------|----------------------------------------------------------------------------------------|
+| skeleton | `user`                          | `userCreate` `userUpdate` `userDelete`                                                 |
+| skeleton | `authUpdate` (kept)             | —                                                                                       |
+| skeleton | `trailIndex` (kept)             | —                                                                                       |
+| skeleton | `redirect`                      | `redirectCreate`                                                                        |
+| cms      | `entry`                         | `entry*` `entryAsset*` `entryCategoryUpdate` `section*` `sectionAsset*`                 |
+| cms      | `category`                      | `category*`                                                                             |
+| media    | `file`                          | `file*`                                                                                 |
+| media    | `folder`                        | `folder*`                                                                               |
+| location | `location`                      | `location*`                                                                             |
+| location | `tag`                           | `tag*`                                                                                  |
+| tenant   | `tenant`                        | `tenant*`                                                                               |
+| config   | `config`                        | `configUpdate`                                                                          |
+| shopify  | `shopifyProduct`                | `shopifyProductUpdate`                                                                  |
+| shopify  | `shopifyWebhook`                | `shopifyWebhookUpdate`                                                                  |
+
+`authUpdate` keeps its verb and its value: it is the one that can grant permissions, and it must stay separate
+from `user`. `trailIndex` keeps its, because it is read-only.
+
+**The migration widens.** `M260914100000AuthItems` and its six siblings grant the new item to every parent and
+every assignee of *any* of the old ones, then delete those. An account or a project role that held `entryUpdate`
+alone now holds `entry` — which includes creating, deleting and reordering entries, their sections and their
+assets. Check your assignments before you run it if that matters.
+
+The three roles are unchanged: `admin` holds everything, `author` holds `entry` and `category`, `media` holds
+`file` and `folder`. An editor who also uploads still needs `media` beside `author`.
+
+### What to rename
+
+- Every `Model::AUTH_*_CREATE` / `_UPDATE` / `_DELETE` / `_ORDER` constant is one `Model::AUTH_<MODEL>`:
+  `User::AUTH_USER`, `Redirect::AUTH_REDIRECT`, `Entry::AUTH_ENTRY`, `Category::AUTH_CATEGORY`,
+  `File::AUTH_FILE`, `Folder::AUTH_FOLDER`, `Location::AUTH_LOCATION`, `Tag::AUTH_TAG`, `Tenant::AUTH_TENANT`,
+  `Config::AUTH_CONFIG`, `Product::AUTH_SHOPIFY_PRODUCT`, `Webhook::AUTH_SHOPIFY_WEBHOOK`. `Section` and the
+  asset models declare none — they are edited through their entry and use `Entry::AUTH_ENTRY`.
+- `Models\Asset::getPermissionName(string $action)` is `getPermissionName()`, and the `can(string $action, Asset)`
+  of the media asset grids is `can(Asset)`.
+- `findEntry()`, `findSection()`, `findCategory()`, `findFile()`, `findFolder()`, `findTenant()`,
+  `findLocation()` and `findTag()` lost their permission argument — `AccessControl` has already answered the
+  same question for the action. `findUser()` keeps it.
+- Every `can()` call loses its record: `can(Entry::AUTH_ENTRY)`, not `can(..., ['entry' => $entry])`. The one
+  exception is the `user` param on `user` and `authUpdate`.
+
+### `OwnerRule` is policy in `Web\User` now
+
+`Rbac\Rules\OwnerRule` and the `userUpdateRule` row are gone, and with them the only `yii\rbac\Rule` the
+platform shipped. `Web\User::can()` reads `$params['user']` and asks `canManageUser()`, which is the rule
+verbatim: the site owner and anyone holding a permission the acting user lacks stay unreachable, and an actor
+holding every registered permission is still answered without a lookup. The migration clears every `rule_name`
+and empties `auth_rule`; the table stays, because `yii\rbac\DbManager::loadFromCache()` reads it.
+
+A project that wants a per-record rule of its own still has Yii's mechanism — a `rule_name` on its own
+permission and `roleParams` on its `AccessRule`. The platform simply no longer ships one.
+
+`Widgets\Traits\VisibilityTrait::$roles` is unchanged: a nav item still names permissions, `User::ROLE_ANY`
+or `User::ROLE_AUTHENTICATED`, and still ORs them.
+
+### Descriptions and trail messages are pointers, not text
+
+`I18n\Message` holds a `category`, a `key` and optional `params`. It serializes to
+`{"category":"cms","key":"AUTH_ENTRY_DESCRIPTION"}` and renders through `Yii::t()` in the *current* language,
+so one row reads German to one administrator and English to the next.
+
+- `auth_item.description` stores the JSON. The column type is unchanged, and `Message::fromJson()` returns a
+  literal message for anything that is not a pointer, so a row an older version wrote still renders — as the
+  English it was written in. `Models\AuthItem::getLabel()` is what the permissions page shows.
+- `trail.message` stores the JSON for an order trail. `Trail::createOrderTrail()` takes a `Message`,
+  `Trail::getMessage()` returns the rendered text, and the `message` of a `Trail::getTypes()` entry is a
+  `Message` rather than text rendered in `sourceLanguage`.
+- An assign or revoke trail no longer copies the description at all: `Rbac\DbManager::createTrail()` writes
+  `data = ['name' => …, 'type' => …]`, and the grid looks the item up and renders its current label, falling
+  back to the name when the item is gone and to the stored text for a row written before 3.0.
+- `Widgets\Grids\Traits\MessageSourceTrait` is deleted. It tried to translate rendered English back by walking
+  every registered message source, which missed for `UPPER_SNAKE_CASE` keys — that is why the German admin saw
+  English descriptions.
+
+**A `Message::make()` key lives nowhere else**, so `messages/config.php` has to list it as a translator or
+`yii message` drops it:
+
+```php
+'translator' => ['Yii::t', '\\Yii::t', 'Message::make'],
+```
+
+### A project with its own permissions
+
+One line in a migration, one message key, one name in the `AccessControl`:
+
+```php
+$this->addPermission(Invoice::AUTH_INVOICE, Message::make('app', 'AUTH_INVOICE_DESCRIPTION'), User::AUTH_ROLE_ADMIN);
+```
+
+`Db\Traits\MigrationTrait` also has `replaceAuthItems(array $old, string $new)` for collapsing a project's own
+verb permissions the same way, and `restoreAuthItems()` for the way back down.
+
 ## 3.0.0 — v2 passwords are not carried over
 
 **Every user who still has a v2 password has to set a new one.** `Migrations\M260913180000PasswordScheme` drops

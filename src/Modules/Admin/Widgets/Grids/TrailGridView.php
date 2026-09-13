@@ -13,6 +13,7 @@ use Hirtz\Skeleton\Html\Table;
 use Hirtz\Skeleton\Html\Td;
 use Hirtz\Skeleton\Html\Th;
 use Hirtz\Skeleton\Html\Ul;
+use Hirtz\Skeleton\I18n\Message;
 use Hirtz\Skeleton\Models\Collections\TrailModelCollection;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Trail;
@@ -23,7 +24,6 @@ use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\TypeIconColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
-use Hirtz\Skeleton\Widgets\Grids\Traits\MessageSourceTrait;
 use Hirtz\Skeleton\Widgets\Username;
 use Jfcherng\Diff\DiffHelper;
 use Override;
@@ -37,8 +37,6 @@ use yii\base\Model;
  */
 class TrailGridView extends GridView
 {
-    use MessageSourceTrait;
-
     protected array $tableAttributes = [
         'class' => 'trail-table table table-striped',
     ];
@@ -57,8 +55,6 @@ class TrailGridView extends GridView
             $this->getUserColumn(),
             $this->getCreatedAtColumn(),
         ];
-
-        $this->messageSourceAttribute = 'message';
 
         parent::configure();
     }
@@ -137,11 +133,34 @@ class TrailGridView extends GridView
     protected function getAuthPermissionContent(Trail $trail): string
     {
         $params = [
-            'permission' => Html::tag($trail->isAuthPermissionAssignType() ? 'ins' : 'del', $this->getTranslations()[$trail->message] ?? $trail->message),
+            'permission' => Html::tag(
+                $trail->isAuthPermissionAssignType() ? 'ins' : 'del',
+                $this->getAuthItemLabel($trail)
+            ),
         ];
 
         return $trail->isAuthPermissionAssignType() ? Yii::t('skeleton', 'TRAIL_PERMISSION_NAMED_ASSIGNED', $params) :
             Yii::t('skeleton', 'TRAIL_PERMISSION_NAMED_REVOKED', $params);
+    }
+
+    /**
+     * A row written before 3.0 names no item and carries the rendered description instead; an item that has since
+     * been deleted leaves only its name.
+     */
+    protected function getAuthItemLabel(Trail $trail): string
+    {
+        $name = $trail->data['name'] ?? null;
+
+        if (!is_string($name)) {
+            return (string)$trail->getMessage();
+        }
+
+        $item = Yii::$app->getAuthManager()->getPermission($name)
+            ?? Yii::$app->getAuthManager()->getRole($name);
+
+        return $item?->description
+            ? (string)Message::fromJson($item->description)
+            : $name;
     }
 
     protected function getCreateAttributesContent(Trail $trail): string|Stringable
@@ -351,8 +370,8 @@ class TrailGridView extends GridView
 
     protected function getMessageContent(Trail $trail): string
     {
-        if ($trail->message) {
-            return trim(($this->getTranslations()[$trail->message] ?? $trail->message) . ' ' . $this->renderDataTrailLink($trail));
+        if ($message = $trail->getMessage()) {
+            return trim($message . ' ' . $this->renderDataTrailLink($trail));
         }
 
         return $this->renderI18nTrailMessage($trail, $trail->getModelRecord());
@@ -376,14 +395,8 @@ class TrailGridView extends GridView
             ->text(Yii::t('skeleton', 'COMMON_DELETED'))
             ->class('text-invalid');
 
-        $options = $trail->getTypeOptions();
-        $message = '';
-
-        if ($options['message'] ?? false) {
-            $message .= Yii::t($options['messageCategory'] ?? 'skeleton', $options['message'], [
-                'model' => $name,
-            ]);
-        }
+        $message = $trail->getTypeOptions()['message'] ?? null;
+        $message = $message instanceof Message ? (string)$message->withParams(['model' => $name]) : '';
 
         return trim($message . ' ' . $this->renderDataTrailLink($trail));
     }

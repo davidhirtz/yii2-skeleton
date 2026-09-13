@@ -92,7 +92,7 @@ class Module extends \Hirtz\Skeleton\Base\Module
                 ->icon('user-plus')
                 ->label(Yii::t('skeleton', 'MODULE_CREATE_NEW_USER'))
                 ->url(['/admin/user/create'])
-                ->roles([User::AUTH_USER_CREATE]),
+                ->roles([User::AUTH_USER]),
             DashboardItem::make()
                 ->icon('globe')
                 ->label(Yii::t('skeleton', 'MODULE_OPEN_HOMEPAGE'))

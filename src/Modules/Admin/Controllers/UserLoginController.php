@@ -29,7 +29,7 @@ class UserLoginController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index', 'view'],
-                        'roles' => [User::AUTH_USER_UPDATE],
+                        'roles' => [User::AUTH_USER],
                     ],
                 ],
             ],
@@ -60,7 +60,7 @@ class UserLoginController extends Controller
 
     public function actionView(int $user): Response|string
     {
-        $user = $this->findUser($user, User::AUTH_USER_UPDATE);
+        $user = $this->findUser($user, User::AUTH_USER);
 
         $provider = new ActiveDataProvider([
             'sort' => false,

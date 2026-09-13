@@ -19,8 +19,8 @@ class UserNavItem extends NavItem
         $this->url ??= ['/admin/user/index'];
 
         $this->roles([
-            User::AUTH_USER_CREATE,
-            User::AUTH_USER_UPDATE,
+            User::AUTH_USER,
+            User::AUTH_USER_ASSIGN,
         ]);
 
         $this->routes([
@@ -63,7 +63,7 @@ class UserNavItem extends NavItem
             ->label(Yii::t('skeleton', 'COMMON_USER_LOGINS'))
             ->url(['/admin/user-login/index'])
             ->order(40)
-            ->roles([User::AUTH_USER_UPDATE])
+            ->roles([User::AUTH_USER])
             ->routes(['admin/user-login/index']);
     }
 }

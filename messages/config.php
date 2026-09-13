@@ -18,6 +18,8 @@ return [
         'zh-CN',
         'zh-TW',
     ],
+    // `Message::make()` stores a pointer instead of rendered text, so its keys live nowhere else
+    'translator' => ['Yii::t', '\\Yii::t', 'Message::make'],
     'ignoreCategories' => ['yii'],
     'overwrite' => true,
     'removeUnused' => true,

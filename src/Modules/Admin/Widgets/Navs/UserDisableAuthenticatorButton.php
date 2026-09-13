@@ -42,7 +42,7 @@ class UserDisableAuthenticatorButton extends Widget
     {
         return $this->model->hasTwoFactorAuthentication()
             && $this->webuser->enableTwoFactorAuthentication
-            && $this->webuser->can(User::AUTH_USER_UPDATE, ['user' => $this->model]);
+            && $this->webuser->can(User::AUTH_USER, ['user' => $this->model]);
     }
 
     #[Override]

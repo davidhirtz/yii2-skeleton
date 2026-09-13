@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Migrations;
 
 use Hirtz\Skeleton\Db\Traits\MigrationTrait;
-use Hirtz\Skeleton\Rbac\Rules\OwnerRule;
-use Yii;
 use yii\db\Migration;
 
 /**
+ * The rule this re-saved is gone in 3.0; `M260914100000AuthItems` empties the table it lived in.
+ *
  * @noinspection PhpUnused
  */
 class M231105142331OwnerRule extends Migration
@@ -18,8 +18,6 @@ class M231105142331OwnerRule extends Migration
 
     public function safeUp(): void
     {
-        $owner = new OwnerRule();
-        Yii::$app->getAuthManager()->update($owner->name, $owner);
     }
 
     public function safeDown(): void

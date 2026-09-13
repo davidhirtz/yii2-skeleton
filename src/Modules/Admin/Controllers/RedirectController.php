@@ -28,7 +28,7 @@ class RedirectController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['create', 'delete', 'delete-all', 'index', 'update'],
-                        'roles' => [Redirect::AUTH_REDIRECT_CREATE],
+                        'roles' => [Redirect::AUTH_REDIRECT],
                     ],
                 ],
             ],
@@ -56,7 +56,7 @@ class RedirectController extends Controller
         $redirect = Redirect::create();
         $redirect->type = $type;
 
-        if (!$this->webuser->can('redirectCreate', ['redirect' => $redirect])) {
+        if (!$this->webuser->can(Redirect::AUTH_REDIRECT)) {
             throw new ForbiddenHttpException();
         }
 
@@ -107,7 +107,7 @@ class RedirectController extends Controller
             $isDeleted = false;
 
             foreach ($redirects as $redirect) {
-                if ($this->webuser->can(Redirect::AUTH_REDIRECT_CREATE, ['redirect' => $redirect])) {
+                if ($this->webuser->can(Redirect::AUTH_REDIRECT)) {
                     if ($redirect->delete()) {
                         $isDeleted = true;
                     }
@@ -139,7 +139,7 @@ class RedirectController extends Controller
             throw new NotFoundHttpException();
         }
 
-        if (!$this->webuser->can(Redirect::AUTH_REDIRECT_CREATE, ['redirect' => $redirect])) {
+        if (!$this->webuser->can(Redirect::AUTH_REDIRECT)) {
             throw new ForbiddenHttpException();
         }
 

@@ -27,7 +27,7 @@ class UserActiveForm extends ActiveForm
     #[Override]
     protected function configure(): void
     {
-        $this->readonly = !$this->webuser->can(User::AUTH_USER_UPDATE, ['user' => $this->model->user]);
+        $this->readonly = !$this->webuser->can(User::AUTH_USER, ['user' => $this->model->user]);
 
         $this->rows ??= [
             [

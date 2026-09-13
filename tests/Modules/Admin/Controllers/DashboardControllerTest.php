@@ -16,7 +16,7 @@ class DashboardControllerTest extends TestCase
     {
         $roles = $this->getAccessRoles();
 
-        self::assertContains(User::AUTH_USER_CREATE, $roles);
+        self::assertContains(User::AUTH_USER, $roles);
         self::assertContains(User::AUTH_USER_ASSIGN, $roles);
     }
 

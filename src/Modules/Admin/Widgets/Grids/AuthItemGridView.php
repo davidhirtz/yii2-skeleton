@@ -15,7 +15,6 @@ use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
-use Hirtz\Skeleton\Widgets\Grids\Traits\MessageSourceTrait;
 use Hirtz\Skeleton\Widgets\Icon;
 use Hirtz\Skeleton\Widgets\Traits\UserWidgetTrait;
 use Override;
@@ -27,13 +26,7 @@ use Yii;
  */
 class AuthItemGridView extends GridView
 {
-    use MessageSourceTrait;
     use UserWidgetTrait;
-
-    /**
-     * @var string|null the previous rule name, needs to be `public` because it's called in content closure.
-     */
-    public static ?string $prevRuleName = null;
 
     #[Override]
     public function configure(): void
@@ -77,23 +70,9 @@ class AuthItemGridView extends GridView
 
     protected function getNameColumnContent(AuthItem $authItem): Stringable
     {
-        $cssClass = $authItem->isRole() ? 'strong' : null;
-
-        if ($authItem->isPermission()) {
-            preg_match('/[A-Z]/', $authItem->name, $matches, PREG_OFFSET_CAPTURE);
-            $ruleName = substr($authItem->name, 0, $matches[0][1] ?? 0);
-
-            if ($ruleName !== static::$prevRuleName) {
-                static::$prevRuleName = $ruleName;
-                $cssClass = 'strong';
-            }
-        }
-
         return Div::make()
-            ->class($cssClass)
-            ->content($authItem->isRole()
-                ? $authItem->getDisplayName()
-                : ($this->getTranslations()[$authItem->description] ?? $authItem->description));
+            ->class($authItem->isRole() ? 'strong' : null)
+            ->content($authItem->getLabel());
     }
 
     protected function getDescriptionColumn(): Column
@@ -109,12 +88,11 @@ class AuthItemGridView extends GridView
         $items = [];
 
         foreach ($authItem->children as $child) {
-            $description = $this->getTranslations()[$child->description ?? ''] ?? $child->description;
+            $label = $child->getLabel();
             $isActive = $this->user && !$authItem->isAssigned && ($child->isAssigned || $child->isInherited);
 
-            $items[] = $isActive ? Html::tag('mark', $description) : $description;
+            $items[] = $isActive ? Html::tag('mark', $label) : $label;
         }
-
 
         return Ul::make()->items(...array_filter($items));
     }

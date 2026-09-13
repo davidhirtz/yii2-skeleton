@@ -149,6 +149,6 @@ class UserGridView extends GridView
 
     protected function canUpdateUser(User $user): bool
     {
-        return $this->webuser->can(User::AUTH_USER_UPDATE, ['user' => $user]);
+        return $this->webuser->can(User::AUTH_USER, ['user' => $user]);
     }
 }

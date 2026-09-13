@@ -39,13 +39,24 @@ class DbManager extends \yii\rbac\DbManager
         return false;
     }
 
+    /**
+     * The item is named, never described: the description is a pointer that a later migration may rewrite, and the
+     * row has to keep reading correctly when it does.
+     */
     protected function createTrail(int $type, Assignment $assignment, int|string $userId): Trail
     {
+        $item = $this->getItem($assignment->roleName);
+
         $trail = Trail::create();
         $trail->type = $type;
         $trail->model_class = User::class;
         $trail->model_id = (string)$userId;
-        $trail->message = $this->getItem($assignment->roleName)->description ?? $assignment->roleName;
+
+        $trail->data = [
+            'name' => $assignment->roleName,
+            'type' => $item?->type,
+        ];
+
         $trail->insert();
 
         return $trail;

@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Controllers\HealthController;
 use Hirtz\Skeleton\Controllers\SitemapController;
 use Hirtz\Skeleton\Db\Connection;
 use Hirtz\Skeleton\I18n\I18N;
+use Hirtz\Skeleton\Models\Collections\TrailModelCollection;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Rbac\DbManager;
@@ -45,6 +46,8 @@ trait ApplicationTrait
     protected function preInitInternal(&$config): void
     {
         Yii::$classMap = [...Yii::$classMap, ...ArrayHelper::remove($config, 'classMap', [])];
+
+        TrailModelCollection::reset();
 
         $core = [
             'id' => 'skeleton',

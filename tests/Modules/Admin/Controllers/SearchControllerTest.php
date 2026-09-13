@@ -39,7 +39,7 @@ class SearchControllerTest extends TestCase
 
     public function testSuggestRendersTheHits(): void
     {
-        $user = $this->loginUser(User::AUTH_USER_UPDATE);
+        $user = $this->loginUser(User::AUTH_USER);
         $this->index($user);
 
         $html = $this->createSearchController()->actionSuggest($user->name);
@@ -65,7 +65,7 @@ class SearchControllerTest extends TestCase
      */
     public function testSuggestShowsTheOwnerToOtherUsers(): void
     {
-        $this->loginUser(User::AUTH_USER_UPDATE);
+        $this->loginUser(User::AUTH_USER);
 
         $owner = $this->getUserFromFixture('owner');
         $this->index($owner);
@@ -78,7 +78,7 @@ class SearchControllerTest extends TestCase
 
     public function testSuggestBelowTheMinimumLengthRendersNothing(): void
     {
-        $user = $this->loginUser(User::AUTH_USER_UPDATE);
+        $user = $this->loginUser(User::AUTH_USER);
         $this->index($user);
 
         self::assertSame('', $this->createSearchController()->actionSuggest(mb_substr($user->name, 0, 1)));
@@ -86,13 +86,13 @@ class SearchControllerTest extends TestCase
 
     public function testSuggestWithoutAQueryRendersNothing(): void
     {
-        $this->loginUser(User::AUTH_USER_UPDATE);
+        $this->loginUser(User::AUTH_USER);
         self::assertSame('', $this->createSearchController()->actionSuggest('  '));
     }
 
     public function testIndexRendersTheResultsPage(): void
     {
-        $user = $this->loginUser(User::AUTH_USER_UPDATE);
+        $user = $this->loginUser(User::AUTH_USER);
         $this->index($user);
 
         $html = $this->createSearchController()->actionIndex($user->name);
@@ -109,7 +109,7 @@ class SearchControllerTest extends TestCase
 
     public function testTheActionsAreGoneWhileTheSearchIsDisabled(): void
     {
-        $this->loginUser(User::AUTH_USER_UPDATE);
+        $this->loginUser(User::AUTH_USER);
 
         /** @var Module $module */
         $module = Yii::$app->getModule('admin');

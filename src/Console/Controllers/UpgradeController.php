@@ -20,7 +20,6 @@ class UpgradeController extends Controller
 {
     public function actionIndex(): void
     {
-        $this->updateUserUpdateRule();
         $this->updateMigrationNamespaces();
         $this->updateTrailNamespaces();
     }
@@ -69,35 +68,6 @@ class UpgradeController extends Controller
 
         $count = Yii::$app->getFormatter()->asInteger($count);
         $this->stdout("Sent $count password reset link(s)." . PHP_EOL, Console::FG_GREEN);
-    }
-
-    private function updateUserUpdateRule(): void
-    {
-        $name = 'userUpdateRule';
-        $old = 'davidhirtz\\yii2\\skeleton\\rbac\\rules\\OwnerRule';
-        $new = \Hirtz\Skeleton\Rbac\Rules\OwnerRule::class;
-
-        $data = (new Query())
-            ->select('data')
-            ->from(Yii::$app->getAuthManager()->ruleTable)
-            ->where(['name' => $name])
-            ->scalar();
-
-        $newData = str_replace($old, $new, $data);
-
-        $success = $newData !== $data
-            ? Yii::$app->getDb()->createCommand()
-                ->update(
-                    Yii::$app->getAuthManager()->ruleTable,
-                    ['data' => $newData, 'updated_at' => time()],
-                    ['name' => $name]
-                )
-                ->execute()
-            : 0;
-
-        $this->stdout($success
-            ? " > Updated $name successfully.\n"
-            : " > No update needed for $name.\n");
     }
 
     private function updateMigrationNamespaces(): void

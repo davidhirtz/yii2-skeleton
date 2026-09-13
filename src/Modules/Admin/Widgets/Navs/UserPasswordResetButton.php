@@ -42,7 +42,7 @@ class UserPasswordResetButton extends Widget
     {
         return (bool)$this->model->id
             && $this->webuser->isPasswordResetEnabled()
-            && $this->webuser->can(User::AUTH_USER_UPDATE, ['user' => $this->model]);
+            && $this->webuser->can(User::AUTH_USER, ['user' => $this->model]);
     }
 
     #[Override]

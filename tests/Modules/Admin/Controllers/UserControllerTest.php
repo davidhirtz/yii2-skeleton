@@ -54,7 +54,7 @@ class UserControllerTest extends TestCase
     private function login(): User
     {
         $user = $this->getUserFromFixture('admin');
-        $this->assignPermission($user->id, User::AUTH_USER_UPDATE);
+        $this->assignPermission($user->id, User::AUTH_USER);
 
         Yii::$app->getUser()->setIdentity($user);
 
@@ -65,6 +65,9 @@ class UserControllerTest extends TestCase
     {
         $controller = Yii::$app->getModule('admin')->createControllerByID('user');
         self::assertInstanceOf(UserController::class, $controller);
+
+        // The delete button's route is relative, and nothing resolves one without an active controller
+        Yii::$app->controller = $controller;
 
         return $controller;
     }

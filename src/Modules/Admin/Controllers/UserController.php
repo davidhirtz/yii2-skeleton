@@ -34,24 +34,16 @@ class UserController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['create'],
-                        'roles' => [User::AUTH_USER_CREATE],
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['delete'],
-                        'roles' => [User::AUTH_USER_DELETE],
-                    ],
-                    [
-                        'allow' => true,
                         'actions' => [
+                            'create',
+                            'delete',
                             'disable-authenticator',
                             'index',
                             'ownership',
                             'reset',
                             'update',
                         ],
-                        'roles' => [User::AUTH_USER_UPDATE],
+                        'roles' => [User::AUTH_USER],
                     ],
                     [
                         'allow' => true,
@@ -86,7 +78,7 @@ class UserController extends Controller
 
     public function actionCreate(): Response|string
     {
-        if (!$this->webuser->can(User::AUTH_USER_CREATE)) {
+        if (!$this->webuser->can(User::AUTH_USER)) {
             throw new ForbiddenHttpException();
         }
 
@@ -115,7 +107,7 @@ class UserController extends Controller
         $user = $this->findUser($id);
         $form = UserForm::create(['user' => $user]);
 
-        if ($this->webuser->can(User::AUTH_USER_UPDATE, ['user' => $user])
+        if ($this->webuser->can(User::AUTH_USER, ['user' => $user])
             && $form->load($this->request->post())
             && $form->save()) {
             $this->success(Yii::t('skeleton', 'USER_SUCCESS_UPDATED'));
@@ -129,7 +121,7 @@ class UserController extends Controller
 
     public function actionDisableAuthenticator(int $id): Response|string
     {
-        $user = $this->findUser($id, User::AUTH_USER_UPDATE);
+        $user = $this->findUser($id, User::AUTH_USER);
         $user->setTwoFactorAuthenticationSecret(null);
 
         if ($user->update()) {
@@ -149,7 +141,7 @@ class UserController extends Controller
             throw new ForbiddenHttpException();
         }
 
-        $user = $this->findUser($id, User::AUTH_USER_UPDATE);
+        $user = $this->findUser($id, User::AUTH_USER);
 
         $form = PasswordRecoverForm::create();
         $form->user = $user;
@@ -170,7 +162,7 @@ class UserController extends Controller
             throw new NotFoundHttpException();
         }
 
-        if (!$this->webuser->can(User::AUTH_USER_DELETE, ['user' => $user])) {
+        if (!$this->webuser->can(User::AUTH_USER, ['user' => $user])) {
             throw new ForbiddenHttpException();
         }
 
@@ -201,7 +193,7 @@ class UserController extends Controller
             throw new ForbiddenHttpException();
         }
 
-        $user = $this->findUser($id, User::AUTH_USER_UPDATE);
+        $user = $this->findUser($id, User::AUTH_USER);
 
         $form = OwnershipForm::create([
             'user' => $user,
