@@ -1,5 +1,26 @@
 # Upgrade Guide
 
+## 3.0.0 — The admin path is a param
+
+`Modules\Admin\Module::$alias` is gone. The path the admin is reached under is `params['adminAlias']`, read by
+`Base\Traits\ApplicationTrait::getAdminAlias()` and defaulting to `admin`:
+
+```php
+// config/params.php
+return [
+    'adminAlias' => 'backend',
+];
+```
+
+The property was never read — the URL rules took the value out of the raw `modules.admin.alias` config array, so
+a project that set it on a `Module` subclass was silently ignored, and reading it off the module instance would
+have meant building the module on every request. A project that configured `modules.admin.alias` moves that
+value to the param.
+
+Moving the admin now also closes the default path: a route no URL rule matched falls back to the request path,
+which kept `admin/…` serving beside the new prefix. `Module::beforeAction()` refuses that one fallback, and only
+when the alias differs — a rule of the project's own that routes into the module parses as before.
+
 ## 3.0.0 — The admin has its own languages
 
 `Modules\Admin\Module::$languages` is the list the admin interface is offered in, and it is no longer the

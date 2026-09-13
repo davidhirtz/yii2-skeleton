@@ -11,12 +11,11 @@ use Hirtz\Skeleton\Widgets\Panels\Dashboard;
 use Hirtz\Skeleton\Widgets\Panels\DashboardItem;
 use Override;
 use Yii;
+use yii\web\NotFoundHttpException;
 use yii\web\Session;
 
 class Module extends \Hirtz\Skeleton\Base\Module
 {
-    public string $alias = 'admin';
-
     /**
      * @var bool whether the fulltext search is available: the navbar button, both search actions, the index writes
      * of {@see \Hirtz\Skeleton\Behaviors\SearchBehavior} and the `search` console commands.
@@ -54,6 +53,8 @@ class Module extends \Hirtz\Skeleton\Base\Module
         $request = $action->controller->request;
 
         if ($request instanceof Request) {
+            $this->assertAliasPath($request);
+
             //  Redirects draft URLs for the backend, but only if it's not an AJAX to prevent breaking frontend
             // implementations or REST APIs that use admin endpoints.
             if ($request->isDraftRequest() && !$request->getIsAjax()) {
@@ -73,6 +74,19 @@ class Module extends \Hirtz\Skeleton\Base\Module
         $this->setLanguage($request instanceof Request ? $request : null);
 
         return parent::beforeAction($action);
+    }
+
+    /**
+     * A path no URL rule matched becomes the route itself, which would keep the default `admin/…` serving beside
+     * the path `params['adminAlias']` names.
+     */
+    protected function assertAliasPath(Request $request): void
+    {
+        $alias = Yii::$app->getAdminAlias();
+
+        if ($alias !== 'admin' && str_starts_with(trim($request->getPathInfo(), '/') . '/', 'admin/')) {
+            throw new NotFoundHttpException();
+        }
     }
 
     /**

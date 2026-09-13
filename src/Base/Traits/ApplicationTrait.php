@@ -174,7 +174,6 @@ trait ApplicationTrait
             'modules' => [
                 'admin' => [
                     'class' => Module::class,
-                    'alias' => 'admin',
                     'viewPath' => '@app/modules/admin/views',
                 ],
             ],
@@ -224,10 +223,14 @@ trait ApplicationTrait
             ?? 'sendmail://default';
     }
 
+    public function getAdminAlias(): string
+    {
+        return trim((string)($this->params['adminAlias'] ?? ''), '/') ?: 'admin';
+    }
+
     protected function setDefaultUrlManagerRules(): void
     {
-        /** @see Module::$alias */
-        $alias = rtrim((string)$this->getModules()['admin']['alias'], '/');
+        $alias = $this->getAdminAlias();
 
         $this->addUrlManagerRules([
             'application-health' => 'health/index',

@@ -1,5 +1,11 @@
 ## 3.0.0 (in development)
 
+- **`Modules\Admin\Module::$alias` is `params['adminAlias']`**, read through
+  `Base\Traits\ApplicationTrait::getAdminAlias()` and defaulting to `admin`. The property was never read: the URL
+  rules took the value from the raw `modules.admin.alias` config array, so setting it on a subclass did nothing,
+  and reading it off the module would have cost an instantiation per request. Moving the admin now also closes the
+  default path — `Module::beforeAction()` refuses `admin/…` reaching it through Yii's fallback route resolution
+  whenever the alias differs. See UPGRADE.md
 - The navbar search box closes and clears itself on every navigation but the one to the results page, which
   `includes/search.ts` recognises by the location htmx pushed before the swap. The navbar is never swapped, so
   the query of the page before used to stay in the input
