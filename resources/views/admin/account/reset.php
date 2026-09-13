@@ -16,8 +16,8 @@ use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Panels\Card;
 
 $this->title($form->user->password_hash
-    ? Yii::t('skeleton', 'Set New Password')
-    : Yii::t('skeleton', 'Create Password'));
+    ? Yii::t('skeleton', 'ACCOUNT_RESET_TITLE')
+    : Yii::t('skeleton', 'ACCOUNT_RESET_CREATE_TITLE'));
 
 echo Container::make()
     ->centered()

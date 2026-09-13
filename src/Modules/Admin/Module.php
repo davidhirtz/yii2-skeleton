@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Widgets\Panels\Dashboard;
 use Hirtz\Skeleton\Widgets\Panels\DashboardItem;
 use Override;
 use Yii;
+use yii\web\Session;
 
 class Module extends \Hirtz\Skeleton\Base\Module
 {
@@ -21,6 +22,19 @@ class Module extends \Hirtz\Skeleton\Base\Module
      * of {@see \Hirtz\Skeleton\Behaviors\SearchBehavior} and the `search` console commands.
      */
     public bool $enableSearch = true;
+
+    /**
+     * @var string[]|null the languages the admin interface is offered in, defaulting to the application's content
+     * languages. The two are only related by that default: the admin overrides whichever language the URL manager
+     * resolved, so a project whose content languages the admin has no translation for names its own list here.
+     */
+    public ?array $languages = null;
+
+    /**
+     * @var string the session key holding the language picked for the current session, see
+     * {@see Module::getSessionLanguage()}.
+     */
+    public string $languageSessionKey = 'language';
 
     public ?int $trailLifetime = null;
 
@@ -70,19 +84,68 @@ class Module extends \Hirtz\Skeleton\Base\Module
      */
     protected function setLanguage(?Request $request): void
     {
-        $i18n = Yii::$app->getI18n();
+        $languages = $this->getLanguages();
+
+        // A single language leaves nothing to pick, so it is pinned and the dropdown renders nothing.
+        if (count($languages) === 1) {
+            Yii::$app->language = reset($languages);
+            return;
+        }
+
         $language = $request ? $request->getQueryParam($request->languageParam) : null;
 
-        if (is_string($language) && $i18n->hasLanguage($language)) {
-            $i18n->setSessionLanguage($language);
+        if (is_string($language) && $this->hasLanguage($language)) {
+            $this->setSessionLanguage($language);
         }
 
         $identity = Yii::$app->has('user') ? Yii::$app->getUser()->getIdentity() : null;
-        $language = $i18n->getSessionLanguage() ?? $identity?->language;
+        $language = $this->getSessionLanguage() ?? $identity?->language;
 
-        if ($language) {
+        if ($language && $this->hasLanguage($language)) {
             Yii::$app->language = $language;
         }
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLanguages(): array
+    {
+        return $this->languages ??= array_values(array_unique(Yii::$app->getI18n()->getLanguages()));
+    }
+
+    public function hasLanguage(string $language): bool
+    {
+        return in_array($language, $this->getLanguages(), true);
+    }
+
+    /**
+     * The language picked for the current session, `null` when none was picked, the picked one is no longer
+     * offered or the application has no session at all.
+     */
+    public function getSessionLanguage(): ?string
+    {
+        $language = $this->getSession()?->get($this->languageSessionKey);
+        return is_string($language) && $this->hasLanguage($language) ? $language : null;
+    }
+
+    public function setSessionLanguage(?string $language): void
+    {
+        $session = $this->getSession();
+
+        if ($language === null) {
+            $session?->remove($this->languageSessionKey);
+            return;
+        }
+
+        $session?->set($this->languageSessionKey, $language);
+    }
+
+    private function getSession(): ?Session
+    {
+        /** @var Session|null $session */
+        $session = Yii::$app->has('session') ? Yii::$app->get('session') : null;
+        return $session;
     }
 
     public function dashboard(Dashboard $dashboard): Dashboard

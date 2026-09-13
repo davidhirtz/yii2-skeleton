@@ -1,5 +1,41 @@
 # Upgrade Guide
 
+## 3.0.0 — The admin has its own languages
+
+`Modules\Admin\Module::$languages` is the list the admin interface is offered in, and it is no longer the
+application's content languages. The two were the same list only because the admin used to follow whatever
+language the URL manager resolved; it now overrides that unconditionally, so a project can edit content in
+languages the admin has no translation for.
+
+```php
+'modules' => [
+    'admin' => [
+        'languages' => ['de', 'en-US'],
+    ],
+],
+```
+
+It defaults to `I18N::getLanguages()`, so a project that says nothing keeps what it had. Three consequences:
+
+- **A single language is pinned.** The admin runs in it, `Widgets\Buttons\LanguageDropdownButton` renders
+  nothing and the account's language field is hidden — there is nothing to pick. A single-language project
+  therefore loses the language column it never used.
+- **The account language is validated against the admin list**, by `Models\User::getLanguages()` and through it
+  the `DynamicRangeValidator` on the attribute. An account whose stored `language` is no longer offered falls
+  back instead of switching the admin into a language it has no messages for — which is what happened before.
+- **The session override moved to the module.** `I18N::$sessionKey`, `I18N::getSessionLanguage()` and
+  `I18N::setSessionLanguage()` are `Module::$languageSessionKey`, `Module::getSessionLanguage()` and
+  `Module::setSessionLanguage()`; `Modules\ModuleTrait` is the skeleton's accessor for the module, matching the
+  other bundles. `I18N` keeps `getLanguages()`, `setLanguages()` and `hasLanguage()` for the content languages.
+
+**Russian and both Chinese translations are gone**, along with their flags: `messages/ru`, `messages/zh-CN` and
+`messages/zh-TW` in every bundle, their entries in `I18N::$languageLabels` and `messages/config.php`, and the
+`ru`/`zh-CN`/`zh-TW` flag images. The shipped set is `de`, `en-US`, `fr` and `pt`. A project that needs one of
+them back adds the language to `$languageLabels`, a flag rule to its own CSS and its own `messages/<lang>`
+directory — the message source reads the bundle's path, so the file has to live there or be pointed at through
+`I18N::$translations`. The `country` category went with them, so a frontend rendering country names in Russian
+or Chinese needs its own source too.
+
 ## 3.0.0 — One permission per model
 
 The 46 verb permissions (`entryCreate`, `entryUpdate`, `entryDelete`, `entryOrder`, …) are 14 nouns, one per

@@ -20,7 +20,7 @@ use Hirtz\Skeleton\Widgets\Panels\StackItem;
 
 ;
 
-$this->title(Yii::t('skeleton', 'Resend Account Confirmation'));
+$this->title(Yii::t('skeleton', 'ACCOUNT_RESEND_TITLE'));
 
 echo Container::make()
     ->centered()
@@ -32,7 +32,7 @@ echo Container::make()
         Stack::make()
             ->addItem(
                 StackItem::make()
-                    ->label(Yii::t('skeleton', 'Back to login'))
+                    ->label(Yii::t('skeleton', 'ACCOUNT_BACK_TO_LOGIN'))
                     ->icon('sign-in-alt')
                     ->url(Url::to(['login']))
                     ->visible(Yii::$app->getUser()->getIsGuest())

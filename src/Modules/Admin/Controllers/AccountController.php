@@ -15,6 +15,7 @@ use Hirtz\Skeleton\Models\Forms\PasswordResetForm;
 use Hirtz\Skeleton\Models\Forms\SignupForm;
 use Hirtz\Skeleton\Models\Forms\TwoFactorAuthenticatorForm;
 use Hirtz\Skeleton\Models\UserLogin;
+use Hirtz\Skeleton\Modules\ModuleTrait;
 use Hirtz\Skeleton\Web\Controller;
 use Override;
 use Yii;
@@ -25,6 +26,8 @@ use yii\web\Response;
 
 class AccountController extends Controller
 {
+    use ModuleTrait;
+
     final public const string RECOVERY_CODES_FLASH = 'twoFactorAuthenticationRecoveryCodes';
 
     public $defaultAction = 'update';
@@ -279,7 +282,7 @@ class AccountController extends Controller
         if ($form->load($this->request->post())) {
             if ($form->save()) {
                 // The account's language is what the admin falls back to, so the session override must not outlive it.
-                Yii::$app->getI18n()->setSessionLanguage(null);
+                static::getModule()->setSessionLanguage(null);
                 Yii::$app->language = $form->user->language;
 
                 $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_PROFILE_UPDATED'));

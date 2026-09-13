@@ -47,7 +47,7 @@ class UserHeader extends Header
             $this->addCreateUserButton();
         } else {
             $this->breadcrumbs ??= [
-                new Breadcrumb(Yii::t('app', 'Users'), ['/admin/user/index']),
+                new Breadcrumb(Yii::t('skeleton', 'COMMON_USERS'), ['/admin/user/index']),
             ];
         }
 

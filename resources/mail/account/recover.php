@@ -12,16 +12,16 @@ declare(strict_types=1);
 
 use yii\mail\MessageInterface;
 
-$this->title = Yii::t('skeleton', 'Reset your password');
+$this->title = Yii::t('skeleton', 'MAIL_ACCOUNT_RECOVER_TITLE');
 ?>
-<p><?= Yii::t('skeleton', 'Hi {name}, ', ['name' => $user->getUsername()]); ?></p>
+<p><?= Yii::t('skeleton', 'MAIL_ACCOUNT_GREETING', ['name' => $user->getUsername()]); ?></p>
 <p>
-    <?= Yii::t('skeleton', 'You have recently requested to change your password.'); ?>
-    <?php echo Yii::t('skeleton', 'If you have not requested a new password, please ignore this message!'); ?>
+    <?= Yii::t('skeleton', 'MAIL_ACCOUNT_RECOVER_TEXT'); ?>
+    <?php echo Yii::t('skeleton', 'MAIL_ACCOUNT_RECOVER_IGNORE'); ?>
 </p>
-<p><?= Yii::t('skeleton', 'Please click the link below to choose a new password.'); ?></p>
-<p><?php echo Yii::t('skeleton', 'Thank you!'); ?></p>
+<p><?= Yii::t('skeleton', 'MAIL_ACCOUNT_PASSWORD_RESET_TEXT'); ?></p>
+<p><?php echo Yii::t('skeleton', 'MAIL_ACCOUNT_THANK_YOU'); ?></p>
 <div class="btn-wrap">
     <a href="<?= $url; ?>"
-       class="btn btn-primary"><?= Yii::t('skeleton', 'Reset your password'); ?></a>
+       class="btn btn-primary"><?= Yii::t('skeleton', 'MAIL_ACCOUNT_RECOVER_TITLE'); ?></a>
 </div>

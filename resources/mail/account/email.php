@@ -12,17 +12,17 @@ declare(strict_types=1);
 use Hirtz\Skeleton\Models\Forms\AccountUpdateForm;
 use yii\mail\MessageInterface;
 
-$this->title = Yii::t('skeleton', 'Email confirmation');
+$this->title = Yii::t('skeleton', 'MAIL_ACCOUNT_EMAIL_TITLE');
 ?>
-<p><?= Yii::t('skeleton', 'Hi {name}, ', ['name' => $form->user->getUsername()]); ?></p>
+<p><?= Yii::t('skeleton', 'MAIL_ACCOUNT_GREETING', ['name' => $form->user->getUsername()]); ?></p>
 <p>
-    <?= Yii::t('skeleton', 'You have recently changed your registered email from {old} to {new}.', [
+    <?= Yii::t('skeleton', 'MAIL_ACCOUNT_EMAIL_TEXT', [
             'old' => $form->email,
             'new' => $form->user->email
     ]); ?>
-    <?= Yii::t('skeleton', 'Please click the link below to verify your new email address.'); ?></p>
-<p><?php echo Yii::t('skeleton', 'Thank you!'); ?></p>
+    <?= Yii::t('skeleton', 'MAIL_ACCOUNT_EMAIL_VERIFY_TEXT'); ?></p>
+<p><?php echo Yii::t('skeleton', 'MAIL_ACCOUNT_THANK_YOU'); ?></p>
 <div class="btn-wrap">
     <a href="<?= $url; ?>"
-       class="btn btn-primary"><?= Yii::t('skeleton', 'Confirm Email'); ?></a>
+       class="btn btn-primary"><?= Yii::t('skeleton', 'MAIL_ACCOUNT_CONFIRM_EMAIL_BUTTON'); ?></a>
 </div>

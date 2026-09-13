@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Tests\Functional;
 
 use Hirtz\Skeleton\Models\Forms\LoginForm;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
@@ -22,6 +23,55 @@ class AdminLanguageTest extends TestCase
     {
         parent::setUp();
         Yii::$app->getI18n()->setLanguages(['en-US', 'de']);
+    }
+
+    public function testTheSessionLanguageOutlivesOnlyItsConfiguration(): void
+    {
+        $module = self::getAdminModule();
+        $module->setSessionLanguage('de');
+
+        self::assertSame('de', $module->getSessionLanguage());
+
+        $module->languages = ['en-US', 'fr'];
+        self::assertNull($module->getSessionLanguage());
+
+        $module->languages = ['en-US', 'de'];
+        $module->setSessionLanguage(null);
+
+        self::assertNull($module->getSessionLanguage());
+    }
+
+    /**
+     * The admin list is independent of the content languages, so a language the content is written in is not
+     * automatically one the admin is offered in.
+     */
+    public function testALanguageOutsideTheAdminListIsIgnored(): void
+    {
+        self::getAdminModule()->languages = ['en-US'];
+        $this->login();
+
+        $this->open('admin?language=de');
+
+        self::assertResponseIsSuccessful();
+        self::assertLanguageSame('en');
+        self::assertNull(self::getAdminModule()->getSessionLanguage());
+    }
+
+    /**
+     * A single admin language leaves nothing to pick: it is pinned, and neither the dropdown nor the account's
+     * language field renders.
+     */
+    public function testASingleLanguageIsPinnedAndHidesThePickers(): void
+    {
+        self::getAdminModule()->languages = ['de'];
+        $this->login();
+
+        $this->open('admin/account/update');
+
+        self::assertResponseIsSuccessful();
+        self::assertLanguageSame('de');
+        self::assertSelectorNotExists('a.i18n-dropdown-option');
+        self::assertSelectorNotExists('select[name$="[language]"]');
     }
 
     public function testTheLanguageParamOutlivesTheRequestThatSetIt(): void
@@ -79,7 +129,7 @@ class AdminLanguageTest extends TestCase
 
         self::assertResponseIsSuccessful();
         self::assertLanguageSame('en');
-        self::assertNull(Yii::$app->getI18n()->getSessionLanguage());
+        self::assertNull(self::getAdminModule()->getSessionLanguage());
     }
 
     public function testTheAccountLanguageReplacesTheSessionLanguage(): void
@@ -95,7 +145,7 @@ class AdminLanguageTest extends TestCase
         ]));
 
         self::assertLanguageSame('en');
-        self::assertNull(Yii::$app->getI18n()->getSessionLanguage());
+        self::assertNull(self::getAdminModule()->getSessionLanguage());
     }
 
     private function login(): User
@@ -110,6 +160,13 @@ class AdminLanguageTest extends TestCase
         ]));
 
         return $user;
+    }
+
+    private static function getAdminModule(): Module
+    {
+        /** @var Module $module */
+        $module = Yii::$app->getModule('admin');
+        return $module;
     }
 
     private static function assertLanguageSame(string $expected): void

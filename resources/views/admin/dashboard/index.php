@@ -11,7 +11,7 @@ use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\DashboardHeader;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Panels\Dashboard;
 
-$this->title(Yii::t('skeleton', 'Dashboard'));
+$this->title(Yii::t('skeleton', 'DASHBOARD_NAV_ITEM_DASHBOARD'));
 
 echo DashboardHeader::make();
 echo Dashboard::make();

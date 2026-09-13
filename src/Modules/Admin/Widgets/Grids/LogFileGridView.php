@@ -50,7 +50,7 @@ class LogFileGridView extends GridView
     {
         return $this->getItems() ?? Alert::make()
             ->success()
-            ->text(Yii::t('app', 'All good! The error logs are empty.'));
+            ->text(Yii::t('skeleton', 'LOG_FILE_EMPTY'));
     }
 
     protected function getNameColumn(): LinkColumn

@@ -19,7 +19,7 @@ $this->title($name);
     <h1><?= $message ?: $name; ?></h1>
 <?php if (Yii::$app->getResponse()->getIsServerError()) {
     ?>
-    <p><?= Yii::t('skeleton', 'Please get in touch with {email}', ['email' => $email]); ?></p>
+    <p><?= Yii::t('skeleton', 'ERROR_GET_IN_TOUCH', ['email' => $email]); ?></p>
     <?php if (Yii::$app->getUser()->can('admin')) {
         ?>
         <p></p>

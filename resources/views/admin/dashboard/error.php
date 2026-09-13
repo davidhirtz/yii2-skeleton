@@ -49,9 +49,9 @@ AdminAssetBundle::register($this);
                 <h1><?= $handler->htmlEncode($message); ?></h1>
                 <h2><?= nl2br($handler->htmlEncode($name)); ?></h2>
                 <p>
-                    <?= Yii::t('skeleton', 'The above error occurred while the webserver was processing your request.'); ?>
+                    <?= Yii::t('skeleton', 'ERROR_ABOVE_OCCURRED'); ?>
                     <br>
-                    <?= Yii::t('skeleton', 'Please contact us if you think this is a server error. Thank you.'); ?>
+                    <?= Yii::t('skeleton', 'ERROR_CONTACT_US'); ?>
                 </p>
             </div>
         </main>

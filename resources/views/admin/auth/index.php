@@ -16,7 +16,7 @@ use Hirtz\Skeleton\Widgets\Navs\Header;
 use yii\data\ActiveDataProvider;
 
 echo Header::make()
-    ->title(Yii::t('skeleton', 'Permissions'));
+    ->title(Yii::t('skeleton', 'COMMON_PERMISSIONS'));
 
 echo GridContainer::make()
     ->grid(AuthItemGridView::make()

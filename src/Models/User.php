@@ -22,6 +22,7 @@ use Hirtz\Skeleton\Models\Traits\SearchableTrait;
 use Hirtz\Skeleton\Models\Traits\StatusAttributeTrait;
 use Hirtz\Skeleton\Models\Traits\TrailModelTrait;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
+use Hirtz\Skeleton\Modules\ModuleTrait;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Hirtz\Skeleton\Validators\UniqueValidator;
 use Override;
@@ -59,6 +60,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
 {
     use AdminModelTrait;
     use CustomAttributesTrait;
+    use ModuleTrait;
     use SearchableTrait;
     use StatusAttributeTrait;
     use TrailModelTrait;
@@ -653,7 +655,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         $i18n = Yii::$app->getI18n();
         $languages = [];
 
-        foreach (Yii::$app->getI18n()->getLanguages() as $language) {
+        foreach (self::getModule()->getLanguages() as $language) {
             $languages[$language]['name'] = $i18n->getLabel($language);
         }
 

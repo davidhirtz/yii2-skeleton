@@ -15,15 +15,15 @@ use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Grids\GridContainer;
 use Hirtz\Skeleton\Widgets\Navs\Header;
 
-$this->title(Yii::t('skeleton', 'System'));
+$this->title(Yii::t('skeleton', 'COMMON_SYSTEM'));
 
 echo Header::make()
-    ->title(Yii::t('skeleton', 'System'));
+    ->title(Yii::t('skeleton', 'COMMON_SYSTEM'));
 
 $blocks = [
-    Yii::t('skeleton', 'Assets') => AssetGridView::make(),
-    Yii::t('skeleton', 'Cache') => CacheGridView::make(),
-    Yii::t('skeleton', 'Sessions') => SessionGridView::make(),
+    Yii::t('skeleton', 'SYSTEM_ASSETS') => AssetGridView::make(),
+    Yii::t('skeleton', 'SYSTEM_CACHE') => CacheGridView::make(),
+    Yii::t('skeleton', 'SESSION_SESSIONS') => SessionGridView::make(),
 ];
 
 foreach ($blocks as $title => $grid) {

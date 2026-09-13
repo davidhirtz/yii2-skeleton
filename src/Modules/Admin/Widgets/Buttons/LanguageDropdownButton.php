@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Buttons;
 
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Modules\ModuleTrait;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Icon;
 use Hirtz\Skeleton\Widgets\Navs\Dropdown;
@@ -16,13 +17,17 @@ use Yii;
 
 class LanguageDropdownButton extends Widget
 {
+    use ModuleTrait;
+
     protected function renderContent(): string|Stringable
     {
-        $i18n = Yii::$app->getI18n();
+        $languages = static::getModule()->getLanguages();
 
-        if (count($i18n->getLanguages()) < 2) {
+        if (count($languages) < 2) {
             return '';
         }
+
+        $i18n = Yii::$app->getI18n();
 
         $icon = Icon::make()
             ->collection(Icon::ICON_COLLECTION_FLAG)
@@ -36,7 +41,7 @@ class LanguageDropdownButton extends Widget
             ->button($button)
             ->popover(fn (Div $tag) => $tag->attribute('id', 'i18n'));
 
-        foreach ($i18n->getLanguages() as $language) {
+        foreach ($languages as $language) {
             $label = $i18n->getLabel($language);
 
             $link = DropdownOptionLink::make()

@@ -31,10 +31,10 @@ if ($form->user->isUnconfirmed()) {
     echo Container::make()
         ->content(Alert::make()
             ->warning()
-            ->content(Yii::t('skeleton', 'Your email address "{email}" was not yet confirmed. Please check your inbox or click {here} to request a new confirmation email.', [
+            ->content(Yii::t('skeleton', 'ACCOUNT_UPDATE_UNCONFIRMED_EMAIL', [
                 'email' => $form->user->email,
                 'here' => A::make()
-                    ->text(Yii::t('skeleton', 'here'))
+                    ->text(Yii::t('skeleton', 'ACCOUNT_UPDATE_UNCONFIRMED_EMAIL_LINK'))
                     ->href(['resend']),
             ])));
 }

@@ -12,14 +12,14 @@ use Hirtz\Skeleton\Models\User;
 use yii\mail\MessageInterface;
 use yii\web\View;
 
-$this->title = Yii::t('skeleton', 'Sign up confirmation');
+$this->title = Yii::t('skeleton', 'MAIL_ACCOUNT_CREATE_TITLE');
 ?>
-<p><?= Yii::t('skeleton', 'Hi {name}, ', ['name' => $user->getUsername()]); ?></p>
+<p><?= Yii::t('skeleton', 'MAIL_ACCOUNT_GREETING', ['name' => $user->getUsername()]); ?></p>
 <p>
-    <?= Yii::t('skeleton', 'Thank you for signing up! Please confirm your email address by clicking the link below.'); ?><br>
+    <?= Yii::t('skeleton', 'MAIL_ACCOUNT_CREATE_TEXT'); ?><br>
 </p>
-<p><?php echo Yii::t('skeleton', 'Thank you!'); ?></p>
+<p><?php echo Yii::t('skeleton', 'MAIL_ACCOUNT_THANK_YOU'); ?></p>
 <div class="btn-wrap">
     <a href="<?= $url; ?>"
-       class="btn btn-primary"><?= Yii::t('skeleton', 'Confirm Email'); ?></a>
+       class="btn btn-primary"><?= Yii::t('skeleton', 'MAIL_ACCOUNT_CONFIRM_EMAIL_BUTTON'); ?></a>
 </div>

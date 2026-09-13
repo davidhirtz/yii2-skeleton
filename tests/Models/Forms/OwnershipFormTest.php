@@ -21,7 +21,7 @@ class OwnershipFormTest extends TestCase
             'user' => $this->getUserFromFixture('disabled')
         ]);
 
-        $expected = Yii::t('skeleton', 'This user is currently disabled and thus can not be made website owner!');
+        $expected = Yii::t('skeleton', 'OWNERSHIP_USER_CURRENTLY_DISABLED');
 
         self::assertFalse($form->update());
         self::assertEquals($expected, $form->getFirstError('name'));
@@ -33,7 +33,7 @@ class OwnershipFormTest extends TestCase
             'user' => $this->getUserFromFixture('owner')
         ]);
 
-        $expected = Yii::t('skeleton', 'This user is already the owner of the website!');
+        $expected = Yii::t('skeleton', 'OWNERSHIP_USER_ALREADY_OWNER');
 
         self::assertFalse($form->update());
         self::assertEquals($expected, $form->getFirstError('name'));

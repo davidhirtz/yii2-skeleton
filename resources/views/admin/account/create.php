@@ -18,18 +18,18 @@ use Hirtz\Skeleton\Widgets\Panels\Card;
 use Hirtz\Skeleton\Widgets\Panels\Stack;
 use Hirtz\Skeleton\Widgets\Panels\StackItem;
 
-$this->title(Yii::t('skeleton', 'Sign up'));
+$this->title(Yii::t('skeleton', 'ACCOUNT_CREATE_TITLE'));
 
 echo Container::make()
     ->content(ErrorSummary::make()
         ->models($form)
-        ->title(Yii::t('skeleton', 'Your account could not be created')));
+        ->title(Yii::t('skeleton', 'ACCOUNT_CREATE_ERROR_SUMMARY')));
 
 echo Noscript::make()
     ->content(Container::make()
         ->content(Alert::make()
             ->danger()
-            ->content(Yii::t('skeleton', 'Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to sign up.'))));
+            ->content(Yii::t('skeleton', 'ACCOUNT_NOSCRIPT'))));
 
 echo Container::make()
     ->centered()
@@ -40,7 +40,7 @@ echo Container::make()
                 ->model($form)),
         Stack::make()
             ->addItem(StackItem::make()
-                ->label(Yii::t('skeleton', 'Back to login'))
+                ->label(Yii::t('skeleton', 'ACCOUNT_BACK_TO_LOGIN'))
                 ->url(['login'])
                 ->icon('sign-in-alt'))
     );

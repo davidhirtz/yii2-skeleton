@@ -1,5 +1,32 @@
 ## 3.0.0 (in development)
 
+- **`Modules\Admin\Module::$languages` is the admin's own language list**, defaulting to the application's
+  content languages but no longer tied to them — the admin overrides whatever language the URL manager resolved,
+  so the two lists are independent. A single language is pinned and hides both pickers, and the account language
+  is validated against the list, so a stored language the admin no longer offers falls back instead of switching
+  it into a language it has no messages for. `I18N::$sessionKey` and its two session-language methods moved to
+  the module, which `Modules\ModuleTrait` now reaches the way the other bundles reach theirs. See UPGRADE.md
+- **Russian and both Chinese translations are dropped**, with their flag images and `I18N::$languageLabels`
+  entries: the shipped set is `de`, `en-US`, `fr` and `pt`
+- **Every message file is translated.** `fr` and `pt` were placeholder files of empty strings across all nine
+  bundles — which renders the raw key, since `PhpMessageSource` does not fall back to the source language — and
+  the `tenant` ones held English text copied verbatim. They were filled and the remaining German gaps closed;
+  German plurals use the ICU categories the language needs. The French and Portuguese were not reviewed by
+  native speakers
+- **`messages/config.php` declares the `categories` it owns**, and `Console\Controllers\MessageController`
+  writes those and nothing else — a category it does not own is never written, and no message file is ever
+  deleted. Yii deletes every file whose category a run did not produce, so `yii2-anakin`, whose `sourcePath`
+  reached only `src` while its keys live in `resources/views`, lost all seven of its message files on every run.
+  The shared config now scans the whole `bundles` tree (`resources` and every sibling bundle included, `tests`
+  and `messages` excluded), because a bundle routinely translates through another's category and `removeUnused`
+  dropped every key it could not see; it also pins `phpDocBlock`, which used to be overwritten with Yii's
+  boilerplate on each run. A config without `categories` throws
+- **The literal v2 strings left in the views and mail templates are keys.** `Yii::t('skeleton', 'Back to login')`
+  is `ACCOUNT_BACK_TO_LOGIN`, the five `resources/mail/account` templates share `MAIL_ACCOUNT_*`, and the three
+  `Yii::t('app', …)` call sites in the bundles are gone — `app` belongs to the host application, so a bundle
+  writing into it left an `app.php` behind in every message directory. Dead keys the rewrite left behind were
+  dropped, `COMMON_USER_LOGINS`, `REDIRECT_CREATE_TITLE` and `USER_CREATE_TITLE` had no English text and rendered
+  as their own key
 - **One permission per admin-managed model.** `Models\User::AUTH_USER` (`user`) replaces `AUTH_USER_CREATE`,
   `AUTH_USER_UPDATE` and `AUTH_USER_DELETE`; `Models\Redirect::AUTH_REDIRECT` (`redirect`) replaces
   `AUTH_REDIRECT_CREATE`. `AUTH_USER_ASSIGN` (`authUpdate`) and `Models\Trail::AUTH_TRAIL_INDEX` keep their verb

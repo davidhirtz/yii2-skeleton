@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms\Traits;
 
 use Hirtz\Skeleton\Helpers\ArrayHelper;
+use Hirtz\Skeleton\Modules\ModuleTrait;
 use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
 use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
 use Hirtz\Skeleton\Widgets\Forms\Fields\SelectField;
@@ -15,6 +16,7 @@ use Stringable;
 trait UserActiveFormTrait
 {
     use CustomAttributeFieldsTrait;
+    use ModuleTrait;
 
     /**
      * @return list<Field>
@@ -66,7 +68,8 @@ trait UserActiveFormTrait
     {
         return SelectField::make()
             ->model($this->model->user)
-            ->property('language');
+            ->property('language')
+            ->visible(count(static::getModule()->getLanguages()) > 1);
     }
 
     protected function getTimezoneField(): string|Stringable

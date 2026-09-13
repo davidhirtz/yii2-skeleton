@@ -20,6 +20,9 @@ class AccountTest extends TestCase
 
     public function testSettings(): void
     {
+        // the language field renders only while the admin offers more than one language
+        Yii::$app->getI18n()->setLanguages(['en-US', 'de']);
+
         $this->login('owner');
         $this->open('admin/account/update');
 

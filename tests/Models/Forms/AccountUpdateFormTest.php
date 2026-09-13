@@ -28,13 +28,13 @@ class AccountUpdateFormTest extends TestCase
 
         $form->user->name = '\\!//';
         self::assertFalse($form->save());
-        $expects = Yii::t('skeleton', 'Username must only contain alphanumeric characters.');
+        $expects = Yii::t('skeleton', 'USER_USERNAME_MUST_ONLY');
         self::assertEquals($expects, $form->getFirstError('name'));
 
         $form->user->name = 'disabled';
         self::assertFalse($form->save());
 
-        $expects = Yii::t('skeleton', 'This username is already used by another user.');
+        $expects = Yii::t('skeleton', 'USER_USERNAME_ALREADY_USED');
         self::assertEquals($expects, $form->getFirstError('name'));
 
         $form->user->name = ' administrator ';

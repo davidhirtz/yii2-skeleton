@@ -8,7 +8,6 @@ use Override;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\i18n\PhpMessageSource;
-use yii\web\Session;
 
 /**
  * @property array $languages {@see I18N::getLanguages()}
@@ -20,16 +19,7 @@ class I18N extends \yii\i18n\I18N
         'en-US' => 'English',
         'fr' => 'Français',
         'pt' => 'Português',
-        'ru' => 'Russian',
-        'zh-CN' => '简体中文', //  // zh-HANS
-        'zh-TW' => '繁體中文', // zh-HANT
     ];
-
-    /**
-     * @var string the session key holding the language picked for the current session, see
-     * {@see I18N::getSessionLanguage()}.
-     */
-    public string $sessionKey = 'language';
 
     private array $languages;
 
@@ -83,35 +73,6 @@ class I18N extends \yii\i18n\I18N
     public function hasLanguage(string $language): bool
     {
         return in_array($language, $this->getLanguages(), true);
-    }
-
-    /**
-     * The language picked for the current session, `null` when none was picked, the picked one is no longer
-     * configured or the application has no session at all.
-     */
-    public function getSessionLanguage(): ?string
-    {
-        $language = $this->getSession()?->get($this->sessionKey);
-        return is_string($language) && $this->hasLanguage($language) ? $language : null;
-    }
-
-    public function setSessionLanguage(?string $language): void
-    {
-        $session = $this->getSession();
-
-        if ($language === null) {
-            $session?->remove($this->sessionKey);
-            return;
-        }
-
-        $session?->set($this->sessionKey, $language);
-    }
-
-    private function getSession(): ?Session
-    {
-        /** @var Session|null $session */
-        $session = Yii::$app->has('session') ? Yii::$app->get('session') : null;
-        return $session;
     }
 
     public function getLabel(string $language): mixed

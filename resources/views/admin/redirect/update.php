@@ -28,6 +28,6 @@ echo FormContainer::make()
         ->model($redirect));
 
 echo GridContainer::make()
-    ->title(Yii::t('skeleton', 'Additional Redirects'))
+    ->title(Yii::t('skeleton', 'REDIRECT_ADDITIONAL_REDIRECTS'))
     ->grid(RedirectGridView::make()
         ->redirect($redirect));

@@ -21,13 +21,13 @@ use Hirtz\Skeleton\Widgets\Panels\Card;
 use Hirtz\Skeleton\Widgets\Panels\Stack;
 use Hirtz\Skeleton\Widgets\Panels\StackItem;
 
-$this->title(Yii::t('skeleton', 'Login'));
+$this->title(Yii::t('skeleton', 'COMMON_LOGIN'));
 
 echo Noscript::make()
     ->content(Container::make()
         ->content(Alert::make()
             ->danger()
-            ->content(Yii::t('skeleton', 'Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to sign up.'))));
+            ->content(Yii::t('skeleton', 'ACCOUNT_NOSCRIPT'))));
 
 echo Container::make()
     ->centered()
@@ -38,17 +38,17 @@ echo Container::make()
                 ->model($form)),
         Stack::make()
             ->addItem(StackItem::make()
-                ->label(Yii::t('skeleton', 'Create new account'))
+                ->label(Yii::t('skeleton', 'ACCOUNT_LOGIN_CREATE_ACCOUNT'))
                 ->icon('user')
                 ->url(['create'])
                 ->visible(Yii::$app->getUser()->isSignupEnabled()))
             ->addItem(StackItem::make()
-                ->label(Yii::t('skeleton', 'Resend email confirmation'))
+                ->label(Yii::t('skeleton', 'ACCOUNT_LOGIN_RESEND_CONFIRMATION'))
                 ->icon('envelope')
                 ->url(['resend'])
                 ->visible(Yii::$app->getUser()->isPasswordResetEnabled() && !Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()))
             ->addItem(StackItem::make()
-                ->label(Yii::t('skeleton', 'I forgot my password'))
+                ->label(Yii::t('skeleton', 'ACCOUNT_LOGIN_RECOVER_PASSWORD'))
                 ->icon('key')
                 ->url(['recover'])
                 ->visible(Yii::$app->getUser()->isPasswordResetEnabled()))

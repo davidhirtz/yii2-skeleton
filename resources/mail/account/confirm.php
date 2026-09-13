@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 use yii\mail\MessageInterface;
 
-$this->title = Yii::t('skeleton', 'Confirm your account');
+$this->title = Yii::t('skeleton', 'MAIL_ACCOUNT_CONFIRM_TITLE');
 ?>
-<p><?= Yii::t('skeleton', 'Hi {name}, ', ['name' => $user->getUsername()]); ?></p>
-<p><?= Yii::t('skeleton', 'You have recently requested a new account confirmation email. Click the link below to confirm your account.'); ?>
+<p><?= Yii::t('skeleton', 'MAIL_ACCOUNT_GREETING', ['name' => $user->getUsername()]); ?></p>
+<p><?= Yii::t('skeleton', 'MAIL_ACCOUNT_CONFIRM_TEXT'); ?>
     <br></p>
-<p><?php echo Yii::t('skeleton', 'Thank you!'); ?></p>
+<p><?php echo Yii::t('skeleton', 'MAIL_ACCOUNT_THANK_YOU'); ?></p>
 <div class="btn-wrap">
     <a href="<?= $url; ?>"
-       class="btn btn-primary"><?= Yii::t('skeleton', 'Confirm Email'); ?></a>
+       class="btn btn-primary"><?= Yii::t('skeleton', 'MAIL_ACCOUNT_CONFIRM_EMAIL_BUTTON'); ?></a>
 </div>
