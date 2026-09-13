@@ -129,6 +129,51 @@ class User extends \yii\web\User
     }
 
     /**
+     * Yii renews the auto login cookie without ever looking inside it, so one whose auth key the database no
+     * longer holds — every cookie issued before a password change, a reset or the v3 upgrade — is handed another
+     * full lifetime on every request the session carries, and only fails once that session lapses. Worse, a
+     * request that renews it while a fresh one is still in flight puts the stale value back, so the logout
+     * repeats for as long as the cookie survives. Validate it here and drop it instead.
+     */
+    #[Override]
+    protected function renewIdentityCookie(): void
+    {
+        $value = Yii::$app->getRequest()->getCookies()->getValue($this->identityCookie['name']);
+
+        if ($value === null) {
+            return;
+        }
+
+        if ($this->isIdentityCookieValid($value)) {
+            parent::renewIdentityCookie();
+            return;
+        }
+
+        $this->removeIdentityCookie();
+    }
+
+    private function isIdentityCookieValid(mixed $value): bool
+    {
+        $identity = $this->getIdentity();
+
+        if (!$identity || !is_string($value)) {
+            return false;
+        }
+
+        $data = json_decode($value, true);
+
+        if (!is_array($data) || count($data) !== 3) {
+            return false;
+        }
+
+        [$id, $authKey] = $data;
+
+        return is_string($authKey)
+            && (string)$id === (string)$identity->getId()
+            && $identity->validateAuthKey($authKey);
+    }
+
+    /**
      * @param \Hirtz\Skeleton\Models\User $identity
      */
     #[Override]

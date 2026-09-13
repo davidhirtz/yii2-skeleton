@@ -1,5 +1,13 @@
 ## 3.0.0 (in development)
 
+- **A stale auto-login cookie is dropped instead of renewed.** `Web\User::renewIdentityCookie()` validates the
+  `_identity` cookie against the current identity before extending it — Yii re-sends it unread, so a cookie whose
+  auth key the database no longer holds (every one issued before a password change, a password reset or the v3
+  upgrade, which rotates `auth_key` for the accounts whose v2 hash it drops) was handed another full lifetime on
+  every request and only ever failed once the session lapsed, logging the user out with an
+  `Invalid cookie auth key` warning. A request renewing it while a freshly issued cookie was still in flight put
+  the stale value back, so the logout repeated indefinitely. A cookie naming a different user than the session is
+  dropped too
 - **`Web\Sitemap::$models` is the configuration, and the instantiated models live beside it.** `init()` read the
   `behaviors` key back off the model it had just created — `ActiveRecord` is an `ArrayAccess`, so the key resolved
   to the behaviors already attached and any model declaring a `sitemap` behavior of its own crashed the component.
