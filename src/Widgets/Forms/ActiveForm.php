@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Forms;
 
+use Closure;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Form;
@@ -62,9 +63,19 @@ class ActiveForm extends Widget
         return $this;
     }
 
-    public function rows(array|false|null $rows): static
+    /**
+     * The closure form is what an outside listener uses to insert a field of its own: the collection is not
+     * public, so it is handed the current one and returns the one it wants.
+     *
+     * @param array<mixed>|false|null|Closure(array<mixed>): (array<mixed>|false|null) $rows
+     * @return $this
+     */
+    public function rows(array|false|null|Closure $rows): static
     {
-        $this->rows = $rows;
+        $this->rows = $rows instanceof Closure
+            ? $rows($this->rows ?? [])
+            : $rows;
+
         return $this;
     }
 

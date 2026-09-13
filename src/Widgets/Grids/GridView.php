@@ -98,9 +98,27 @@ class GridView extends Widget
 
         $this->columns ??= $this->getDefaultColumns();
 
-        $this->ensureColumns();
-
         parent::configure();
+
+        // After the extension points, not before: a column an `EVENT_CONFIGURE` listener or a `prepare()` closure
+        // contributed still has to be bound to the grid and asked whether it is visible.
+        $this->ensureColumns();
+    }
+
+    /**
+     * The closure form is what an outside listener uses to insert a column of its own: the collection is not
+     * public, so it is handed the current one and returns the one it wants.
+     *
+     * @param array<Column|string>|Closure(array<Column|string>): array<Column|string> $columns
+     * @return $this
+     */
+    public function columns(array|Closure $columns): static
+    {
+        $this->columns = $columns instanceof Closure
+            ? $columns($this->columns ?? [])
+            : $columns;
+
+        return $this;
     }
 
     protected function ensureColumns(): void

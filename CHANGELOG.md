@@ -1,5 +1,11 @@
 ## 3.0.0 (in development)
 
+- **A grid's columns and a form's rows can be contributed from outside.** `Widgets\Grids\GridView::columns()` is
+  new and `Widgets\Forms\ActiveForm::rows()` also takes the `Navs\Traits\ItemTrait` closure form, so a
+  `Widget::EVENT_CONFIGURE` listener is handed the current collection and returns the one it wants — a bundle
+  adding a column or a field no longer needs every project to subclass the widget. `GridView::ensureColumns()`
+  moved after `parent::configure()` for the same reason: a column a listener or a `prepare()` closure contributed
+  still has to be bound to its grid and asked whether it is visible
 - **A stale auto-login cookie is dropped instead of renewed.** `Web\User::renewIdentityCookie()` validates the
   `_identity` cookie against the current identity before extending it — Yii re-sends it unread, so a cookie whose
   auth key the database no longer holds (every one issued before a password change, a password reset or the v3
