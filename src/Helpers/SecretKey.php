@@ -14,9 +14,6 @@ use yii\base\InvalidConfigException;
  */
 class SecretKey
 {
-    /**
-     * @throws InvalidConfigException
-     */
     public static function get(): string
     {
         $key = Yii::$app->params['secretKey'] ?? Yii::$app->params['cookieValidationKey'] ?? null;

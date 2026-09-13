@@ -2,20 +2,44 @@
 
 ## 3.0.0 — v2 passwords are not carried over
 
-**Every user who had a v2 password has to set a new one.** `Migrations\M260913180000PasswordScheme` drops those
-hashes and rotates the matching auth keys, so nobody is silently carrying a password that v2's five-character
-minimum let them choose, and every hash in a v3 database is peppered. The accounts are left exactly where a user
-created without a password already sits: no login until the reset link is used, everything else intact.
+**Every user who still has a v2 password has to set a new one.** `Migrations\M260913180000PasswordScheme` drops
+those hashes, so nobody keeps a password that v2's five-character minimum let them choose, and every hash in a
+v3 database is peppered.
 
-Sending the links is a separate, deliberate step — a migration runs in CI and on staging, and must not mail
-anyone:
+Affected is any account whose hash carries a v2 per-user salt. Anything already written under a v3 scheme — and
+any account created without a password — is left alone. Count them **before** you migrate, while the column
+still has its old name:
+
+```sql
+SELECT COUNT(*) FROM user WHERE password_salt IS NOT NULL AND password_salt != 'pepper';
+```
+
+On a database coming straight from v2 that is every user who has ever set a password. **If those users are your
+customers rather than a handful of administrators, this is a support event** — plan the announcement before you
+run it, not after.
+
+### The upgrade, in order
 
 ```bash
+# 1. Back up. The dropped hashes cannot be recovered, and `migrate/down` does not bring them back.
+./yii migrate/backup
+
+# 2. Absolute URLs need a host in a console application, and Yii will not guess one.
+#    Set components.urlManager.hostInfo (and baseUrl) for the console config first — see below.
+
+# 3. Apply the migration. It reports how many passwords it invalidated and sends nothing.
+./yii migrate
+
+# 4. Mail the reset links, once you are ready for the inbox traffic.
 ./yii upgrade/passwords
 ```
 
-It mails every user without a password. Building an absolute URL from a console application needs a host, which
-Yii will not guess, so configure the console's URL manager first:
+Step 4 is deliberately not part of step 3: a migration runs in CI, on staging and on every developer's machine,
+and must never mail your users. It is safe to repeat — it targets every user without a password, so a second run
+only reaches those who have not set one yet. That also means it mails accounts that were created without a
+password and never finished, which is usually what you want.
+
+The console needs to know where the link points:
 
 ```php
 'components' => [
@@ -25,6 +49,20 @@ Yii will not guess, so configure the console's URL manager first:
     ],
 ],
 ```
+
+Without it `upgrade/passwords` stops and tells you so rather than mailing a broken link. The links land on
+`account/reset`, which `Web\User::$enablePasswordReset` can switch off — an installation that keeps it off has
+to turn it on for the duration, or set every password with `user/password` below.
+
+### What survives, and what does not
+
+| | |
+|---|---|
+| Password | Gone. The account cannot log in until the reset link is used. |
+| Remember-me cookies | Gone — `auth_key` is rotated, since those cookies were issued against the old password. |
+| Open sessions | **Kept.** Anyone signed in stays signed in, including the administrator running the upgrade — which is what keeps you from locking yourself out of your own site while the emails go out. |
+| Two-factor authentication | Kept, and still required. Resetting the password does not sign the user in when they owe a code; they finish at the login form. |
+| Everything else | Untouched — roles, profile, trail, login history. |
 
 If the only administrator is locked out and the mailer is not an option, set a password directly:
 

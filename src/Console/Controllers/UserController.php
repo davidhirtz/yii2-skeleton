@@ -10,6 +10,9 @@ use Seld\CliPrompt\CliPrompt;
 use yii\console\Controller;
 use yii\helpers\Console;
 
+/**
+ * Manages user accounts from the console.
+ */
 class UserController extends Controller
 {
     private ?string $name = null;

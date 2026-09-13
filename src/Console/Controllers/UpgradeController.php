@@ -13,6 +13,9 @@ use yii\console\Controller;
 use yii\db\Query;
 use yii\helpers\Console;
 
+/**
+ * Migrates data left behind by an older major version.
+ */
 class UpgradeController extends Controller
 {
     public function actionIndex(): void

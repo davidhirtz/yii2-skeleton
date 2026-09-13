@@ -1,15 +1,20 @@
 ## 3.0.0 (in development)
 
-- `user.password_salt` is `password_scheme` and no longer holds a salt: bcrypt carries its own, and the column
-  records which scheme a hash was written under — `Models\User::PASSWORD_PEPPER` or `null`. Every hash that was
-  still carrying a v2 per-user salt is dropped by `Migrations\M260913180000PasswordScheme`, along with its auth
-  key, so v2's five-character minimum cannot outlive the upgrade and every v3 hash is peppered.
-  `getSeasonedPassword()` lost the legacy branch with them. Those accounts are in the state a user created
-  without a password is already in: no login until the reset link is used
+- **v2 passwords are not carried over.** `Migrations\M260913180000PasswordScheme` drops every hash that still
+  carried a v2 per-user salt and rotates its auth key, so v2's five-character minimum cannot outlive the upgrade
+  and every hash in a v3 database is peppered. Those accounts land where a user created without a password
+  already sits — no login until the reset link is used — while their open sessions, roles and second factor are
+  untouched, which is what keeps the administrator running the upgrade from locking themselves out. See
+  UPGRADE.md
 - `Console\Controllers\UpgradeController` adds `upgrade/passwords`, which mails a reset link to every user
-  without a password — the other half of the migration above, kept out of it because a migration runs in CI and
-  on staging and must not send mail. `Console\Controllers\UserController` adds `user/password <email>`, the way
-  back into an installation whose only administrator has no working mailer
+  without a password. It is the other half of the migration above and deliberately not part of it: a migration
+  runs in CI, on staging and on every developer's machine, and must never mail your users. Repeating it is safe,
+  since it only reaches the users who still have no password. `Console\Controllers\UserController` adds
+  `user/password <email>` for the administrator whose mailer is not an option
+- `user.password_salt` is `password_scheme` and no longer holds a salt: bcrypt carries its own, and the column
+  records which scheme a hash was written under — `Models\User::PASSWORD_PEPPER` or `null` — which is what lets
+  the `passwordPepper` param be added, removed or rotated on a running installation.
+  `Models\User::getSeasonedPassword()` lost its legacy branch along with the v2 hashes
 - `Modules\Admin\Controllers\UserController::actionReset()` emails the reset link it creates. It used to write
   a token nobody could reach and flash that something had happened, and nothing linked to it either — the new
   `Modules\Admin\Widgets\Navs\UserPasswordResetButton` puts it in the user action dropdown. It refuses the
