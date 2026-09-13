@@ -87,8 +87,11 @@ class UserForm extends Model
         if ($this->newPassword) {
             $this->user->generateAuthKey();
             $this->user->generatePasswordHash($this->newPassword);
-        } elseif ($this->user->getIsNewRecord()) {
-            // A user created without a password can only reach the account through the reset link the email carries.
+        }
+
+        // The credentials email never carries the password, so it needs a reset link whether or not one was set
+        // here — and a user created without a password can only reach the account that way at all.
+        if ($this->sendEmail || (!$this->newPassword && $this->user->getIsNewRecord())) {
             $this->user->generatePasswordResetToken();
         }
 
@@ -125,11 +128,11 @@ class UserForm extends Model
     }
 
     /**
-     * @return string|null the reset url of a user created without a password, which is where the email sends them
+     * @return string|null the reset url the credentials email sends the user to, in place of a password
      */
     public function getPasswordResetUrl(): ?string
     {
-        return $this->newPassword ? null : $this->user->getPasswordResetUrl();
+        return $this->user->getPasswordResetUrl();
     }
 
     #[Override]

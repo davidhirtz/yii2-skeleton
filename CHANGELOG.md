@@ -1,5 +1,9 @@
 ## 3.0.0 (in development)
 
+- The credentials email never carries a password. `Modules\Admin\Models\Forms\UserForm` generates a password
+  reset token whenever `sendEmail` is set — not only for a user created without a password — and the mail links
+  there, so nothing readable from a mailbox or a mail archive is a working credential.
+  `UserForm::getPasswordResetUrl()` no longer returns `null` when a password was set
 - A password reset, an email confirmation and a signup no longer log a user in when they owe a second factor.
   Only `Models\Forms\LoginForm` ever checked the TOTP code, so anyone who reached the mailbox — or an admin who
   generated a reset token — got a session on a 2FA account without one. `Web\User::isTwoFactorAuthenticationRequired()`

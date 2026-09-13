@@ -52,20 +52,19 @@ class UserFormTest extends TestCase
         self::assertFalse($form->save());
 
         $form->user->name = 'test-user';
-        $form->newPassword = 'password';
-        $form->repeatPassword = 'password';
+        $form->newPassword = 'Str0ngPassphrase';
+        $form->repeatPassword = 'Str0ngPassphrase';
         $form->user->email = 'test-user@test.com';
         $form->sendEmail = true;
 
         self::assertTrue($form->save());
-
 
         $subject = Yii::t('skeleton', 'Your {name} Account', ['name' => Yii::$app->name]);
 
         $message = $this->mailer->getLastMessage();
 
         self::assertStringContainsString($subject, $message->getSubject());
-        self::assertStringContainsString($form->newPassword, $message->getSymfonyEmail()->getHtmlBody());
+        self::assertStringNotContainsString($form->newPassword, $message->getSymfonyEmail()->getHtmlBody());
     }
 
     public function testCreateUserWithoutPasswordSendsResetLink(): void
@@ -83,30 +82,29 @@ class UserFormTest extends TestCase
         self::assertFalse($form->user->validatePassword(''));
 
         $body = $this->mailer->getLastMessage()->getSymfonyEmail()->getHtmlBody();
-
         self::assertStringContainsString($form->user->getPasswordResetUrl(), $body);
-        self::assertStringNotContainsString('consider changing your password immediately', $body);
     }
 
-    public function testCreateUserWithPasswordKeepsTheLoginLink(): void
+    public function testCreateUserWithPasswordSendsResetLinkInsteadOfThePassword(): void
     {
         $form = UserForm::create();
 
         $form->user->name = 'test-user';
         $form->user->email = 'test-user@test.com';
-        $form->newPassword = 'password';
-        $form->repeatPassword = 'password';
+        $form->newPassword = 'Str0ngPassphrase';
+        $form->repeatPassword = 'Str0ngPassphrase';
         $form->sendEmail = true;
 
         self::assertTrue($form->save());
+        self::assertTrue($form->user->validatePassword('Str0ngPassphrase'));
 
-        self::assertNull($form->user->password_reset_token);
-        self::assertNull($form->getPasswordResetUrl());
+        self::assertNotNull($form->user->password_reset_token);
+        self::assertNotNull($form->getPasswordResetUrl());
 
         $body = $this->mailer->getLastMessage()->getSymfonyEmail()->getHtmlBody();
 
-        self::assertStringContainsString($form->newPassword, $body);
-        self::assertStringContainsString('consider changing your password immediately', $body);
+        self::assertStringNotContainsString($form->newPassword, $body);
+        self::assertStringContainsString($form->getPasswordResetUrl(), $body);
     }
 
     public function testUpdatePassword(): void

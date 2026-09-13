@@ -22,19 +22,8 @@ $passwordResetUrl = $form->getPasswordResetUrl();
         <td><?= Yii::t('skeleton', 'Email'); ?></td>
         <td><?= $form->user->email; ?></td>
     </tr>
-    <?php if ($form->newPassword) { ?>
-        <tr>
-            <td><?= Yii::t('skeleton', 'Password'); ?></td>
-            <td><?= $form->newPassword; ?></td>
-        </tr>
-    <?php } ?>
     </tbody>
 </table>
-<?php if ($passwordResetUrl) { ?>
-    <p><?= Yii::t('skeleton', 'Please click the link below to choose a new password.'); ?></p>
-    <p><a href="<?= $passwordResetUrl; ?>"><?= $passwordResetUrl; ?></a></p>
-<?php } else { ?>
-    <p><?= Yii::t('skeleton', 'Please click the link below to login and consider changing your password immediately.'); ?></p>
-    <p><a href="<?= $form->getLoginUrl(); ?>"><?= $form->getLoginUrl(); ?></a></p>
-<?php } ?>
+<p><?= Yii::t('skeleton', 'Please click the link below to choose a new password.'); ?></p>
+<p><a href="<?= $passwordResetUrl; ?>"><?= $passwordResetUrl; ?></a></p>
 <p><?php echo Yii::t('skeleton', 'Thank you!'); ?></p>
