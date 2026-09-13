@@ -48,7 +48,7 @@ class ActiveRecordErrorLogger extends BaseObject
         return '';
     }
 
-    public static function log(?ActiveRecord $model, ?string $message = null): void
+    public static function log(ActiveRecord $model, ?string $message = null): void
     {
         $logger = Yii::createObject(static::class, [
             'model' => $model,
