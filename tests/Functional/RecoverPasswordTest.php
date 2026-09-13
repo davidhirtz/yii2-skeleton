@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
+use Yii;
 
 class RecoverPasswordTest extends TestCase
 {
@@ -29,10 +30,36 @@ class RecoverPasswordTest extends TestCase
         self::assertAnyValidationErrorSame('Email cannot be blank.');
     }
 
-    public function testPasswordRecoverWithInvalidEmail(): void
+    public function testPasswordRecoverDoesNotSayWhichAddressesExist(): void
     {
-        $this->open("admin/account/recover");
+        $user = $this->getUserFromFixture('admin');
+
+        $this->open('admin/account/recover');
+        $this->submitPasswordRecoverForm($user->email);
+
+        $known = self::$crawler->html();
+
+        self::assertTrue($this->mailer->hasMessages());
+        self::assertSelectorNotExists('.form-error');
+
+        $this->mailer->reset();
+
+        $this->open('admin/account/recover');
         $this->submitPasswordRecoverForm('invalid-email@domain.com');
+
+        // Same page, same redirect, no email — an unknown address is indistinguishable from a known one
+        self::assertEquals($known, self::$crawler->html());
+        self::assertCurrentUrlEquals('');
+        self::assertFalse($this->mailer->hasMessages());
+    }
+
+    public function testPasswordRecoverWithInvalidEmailWithoutEnumerationProtection(): void
+    {
+        Yii::$app->getUser()->enableUserEnumerationProtection = false;
+
+        $this->open('admin/account/recover');
+        $this->submitPasswordRecoverForm('invalid-email@domain.com');
+
         self::assertAnyValidationErrorSame('Your email was not found.');
     }
 
@@ -46,17 +73,19 @@ class RecoverPasswordTest extends TestCase
         $user = User::findOne($user->id);
         self::assertNotNull($user->password_reset_token);
 
-        $this->open("admin/account/recover");
-        $this->submitPasswordRecoverForm($user->email);
-
-        self::assertAnyValidationErrorSame(strtr('We have just sent a link to reset your password to {email}. Please check your inbox!', [
-            '{email}' => $user->email,
-        ]));
-
         $message = $this->mailer->getLastMessage();
 
         self::assertEquals(key($message->getTo()), $user->email);
         self::assertStringContainsString($user->getPasswordResetUrl(), $message->getSymfonyEmail()->getHtmlBody());
+
+        // The spam protection must not answer differently either: a second request reports the same success
+        $this->mailer->reset();
+
+        $this->open('admin/account/recover');
+        $this->submitPasswordRecoverForm($user->email);
+
+        self::assertFalse($this->mailer->hasMessages());
+        self::assertSelectorNotExists('.form-error');
     }
 
     protected function submitPasswordRecoverForm(string $email): void

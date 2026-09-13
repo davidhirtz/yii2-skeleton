@@ -58,6 +58,13 @@ class User extends \yii\web\User
     public bool $enableTwoFactorAuthentication = true;
 
     /**
+     * @var bool whether the guest-facing forms must answer the same for an address that has an account and one
+     * that does not. Turning it off restores the messages that name the reason — useful for a closed admin whose
+     * support desk relies on them, at the cost of handing out a list of accounts.
+     */
+    public bool $enableUserEnumerationProtection = true;
+
+    /**
      * @var string|null the IP address of the user
      */
     public ?string $ipAddress = null;

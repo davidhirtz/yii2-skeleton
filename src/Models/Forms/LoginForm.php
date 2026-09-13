@@ -17,6 +17,12 @@ class LoginForm extends Model
     use IdentityTrait;
     use ModelTrait;
 
+    /**
+     * A bcrypt hash at the default cost that nothing matches, so a login for an unknown address costs the same as
+     * one for a known address with the wrong password.
+     */
+    private const string DUMMY_PASSWORD_HASH = '$2y$13$DbNN/izySYY01sK3RTJb2OZa1Kc1Kr/PImftEuYLT.2IbCbvukEWu';
+
     public ?string $password = null;
     public ?string $code = null;
     public bool|string $rememberMe = true;
@@ -47,7 +53,7 @@ class LoginForm extends Model
             [
                 ['password'],
                 $this->validatePassword(...),
-                'when' => fn () => !$this->hasErrors(),
+                'when' => fn () => !$this->hasErrors('password'),
             ],
             [
                 ['code'],
@@ -82,7 +88,7 @@ class LoginForm extends Model
     #[Override]
     public function afterValidate(): void
     {
-        if (!$this->hasErrors()) {
+        if (!$this->hasErrors() && $this->user) {
             $this->validateUserStatus();
             $this->validateLoginStatus();
             $this->validateTwoFactorAuthenticatorCode();
@@ -93,7 +99,14 @@ class LoginForm extends Model
 
     protected function validatePassword(): void
     {
-        if (!$this->user->validatePassword($this->password)) {
+        if (!$this->user) {
+            // No account matched, and `validateEmail()` has already said so. Hash anyway: skipping it would make
+            // an address that exists measurably slower to reject than one that does not.
+            Yii::$app->getSecurity()->validatePassword((string)$this->password, self::DUMMY_PASSWORD_HASH);
+            return;
+        }
+
+        if (!$this->user->validatePassword((string)$this->password)) {
             $this->addError('email', Yii::t('skeleton', 'USER_EMAIL_PASSWORD_INCORRECT'));
         }
     }

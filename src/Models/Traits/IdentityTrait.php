@@ -20,7 +20,7 @@ trait IdentityTrait
             ->one();
 
         if (null === $this->user) {
-            $this->addError('email', Yii::t('skeleton', 'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND'));
+            $this->addIdentityError(Yii::t('skeleton', 'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND'));
         }
 
         return !$this->hasErrors('email');
@@ -29,7 +29,33 @@ trait IdentityTrait
     protected function validateUserStatus(): void
     {
         if ($this->user->isDisabled() && !$this->user->isOwner()) {
-            $this->addError('email', Yii::t('skeleton', 'COMMON_ACCOUNT_CURRENTLY_DISABLED'));
+            $this->addIdentityError(Yii::t('skeleton', 'COMMON_ACCOUNT_CURRENTLY_DISABLED'));
         }
+    }
+
+    /**
+     * Reports `$message` while the application is willing to say which addresses have an account, and otherwise
+     * either replaces it with the one message every failure shares, or — for a form that would give the answer
+     * away by failing at all — drops the identity so the caller reports its ordinary success.
+     */
+    protected function addIdentityError(string $message): void
+    {
+        if (!$this->canRevealIdentity()) {
+            $this->user = null;
+            return;
+        }
+
+        $this->addError('email', Yii::$app->getUser()->enableUserEnumerationProtection
+            ? Yii::t('skeleton', 'USER_EMAIL_PASSWORD_INCORRECT')
+            : $message);
+    }
+
+    /**
+     * `false` for a form whose failure alone would confirm that an address exists — the password recovery and the
+     * confirmation resend, which a guest can submit for any address they like.
+     */
+    protected function canRevealIdentity(): bool
+    {
+        return true;
     }
 }

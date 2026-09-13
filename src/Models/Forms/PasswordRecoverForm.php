@@ -44,11 +44,19 @@ class PasswordRecoverForm extends Model
         ];
     }
 
+    protected function canRevealIdentity(): bool
+    {
+        return !Yii::$app->getUser()->enableUserEnumerationProtection;
+    }
+
     #[Override]
     public function afterValidate(): void
     {
-        if (!$this->hasErrors()) {
+        if (!$this->hasErrors() && $this->user) {
             $this->validateUserStatus();
+        }
+
+        if (!$this->hasErrors() && $this->user) {
             $this->validateSpamProtection();
         }
 
@@ -58,7 +66,7 @@ class PasswordRecoverForm extends Model
     public function validateSpamProtection(): void
     {
         if ($this->isAlreadySent()) {
-            $this->addError('email', Yii::t('skeleton', 'PASSWORD_RECOVER_WE_JUST', [
+            $this->addIdentityError(Yii::t('skeleton', 'PASSWORD_RECOVER_WE_JUST', [
                 'email' => $this->user->email,
             ]));
         }
@@ -66,15 +74,20 @@ class PasswordRecoverForm extends Model
 
     public function recover(): bool
     {
-        if ($this->validate()) {
+        if (!$this->validate()) {
+            return false;
+        }
+
+        // An address with no account, a disabled one, and one that was just sent a link all report the same
+        // success as one that gets the email, so nothing here says which addresses exist.
+        if ($this->user) {
             $this->user->generatePasswordResetToken();
             $this->user->update();
 
             $this->sendPasswordResetEmail();
-            return true;
         }
 
-        return false;
+        return true;
     }
 
     public function sendPasswordResetEmail(): void

@@ -200,7 +200,7 @@ class AccountController extends Controller
         if ($form->load($this->request->post())) {
             if ($form->resend()) {
                 $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_SENT_ANOTHER', [
-                    'email' => $form->user->email,
+                    'email' => $form->email,
                 ]));
 
                 return $this->goBack();
@@ -226,7 +226,7 @@ class AccountController extends Controller
         if ($form->load($this->request->post())) {
             if ($form->recover()) {
                 $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_SENT_EMAIL', [
-                    'email' => $form->user->email,
+                    'email' => $form->email,
                 ]));
 
                 return $this->goHome();

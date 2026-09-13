@@ -44,12 +44,23 @@ class AccountResendConfirmForm extends Model
         ];
     }
 
+    protected function canRevealIdentity(): bool
+    {
+        return !Yii::$app->getUser()->enableUserEnumerationProtection;
+    }
+
     #[Override]
     public function afterValidate(): void
     {
-        if (!$this->hasErrors()) {
+        if (!$this->hasErrors() && $this->user) {
             $this->validateUserStatus();
+        }
+
+        if (!$this->hasErrors() && $this->user) {
             $this->validateUserConfirmationCode();
+        }
+
+        if (!$this->hasErrors() && $this->user) {
             $this->validateSpamProtection();
         }
 
@@ -59,14 +70,14 @@ class AccountResendConfirmForm extends Model
     protected function validateUserConfirmationCode(): void
     {
         if (!$this->user->verification_token) {
-            $this->addError('email', Yii::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_ACCOUNT'));
+            $this->addIdentityError(Yii::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_ACCOUNT'));
         }
     }
 
     protected function validateSpamProtection(): void
     {
         if ($this->isAlreadySent()) {
-            $this->addError('email', Yii::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_WE', [
+            $this->addIdentityError(Yii::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_WE', [
                 'email' => $this->user->email,
             ]));
         }
@@ -74,17 +85,20 @@ class AccountResendConfirmForm extends Model
 
     public function resend(): bool
     {
-        if ($this->validate()) {
+        if (!$this->validate()) {
+            return false;
+        }
+
+        // An address with nothing to confirm reports the same success, so nothing here says which exist.
+        if ($this->user) {
             $this->sendConfirmEmail();
 
             $this->user->updateAttributes([
                 'updated_at' => new DateTime(),
             ]);
-
-            return true;
         }
 
-        return false;
+        return true;
     }
 
     protected function sendConfirmEmail(): void

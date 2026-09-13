@@ -1,5 +1,31 @@
 # Upgrade Guide
 
+## 3.0.0 — User enumeration
+
+The login, password recovery and confirmation resend forms answered differently for an address that has an
+account and one that does not, which is a way to enumerate the accounts of an installation. They now answer the
+same: one message for every login failure, a dummy bcrypt check so a missing address costs what a wrong password
+costs, and an ordinary success from the recovery and resend forms whatever the address was.
+
+The messages that named the reason — `IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND`,
+`COMMON_ACCOUNT_CURRENTLY_DISABLED`, `ACCOUNT_RESEND_CONFIRM_ACCOUNT`, the two spam-protection ones — are still
+there and still translated, and an application that wants them back says so:
+
+```php
+'components' => [
+    'user' => [
+        'enableUserEnumerationProtection' => false,
+    ],
+],
+```
+
+A form of your own that uses `Models\Traits\IdentityTrait` reports a failure through
+`addIdentityError($specificMessage)` rather than `addError('email', …)`: it substitutes the shared message, or —
+when the form overrides `canRevealIdentity()` to `false`, as the recovery and resend forms do — drops
+`$this->user` so the caller reports its ordinary success. A caller of such a form must therefore tolerate a
+`null` `$form->user` after a successful `validate()`, which is why
+`Modules\Admin\Controllers\AccountController` names `$form->email` in its flash messages.
+
 ## 3.0.0 — Passwords
 
 The minimum length is 8 (`Models\User::$passwordMinLength`, was 5) and the new `$passwordMaxLength` caps one at

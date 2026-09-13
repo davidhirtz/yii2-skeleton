@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Override;
+use Yii;
 
 class AccountResendConfirmTest extends TestCase
 {
@@ -32,7 +33,10 @@ class AccountResendConfirmTest extends TestCase
     public function testResendConfirmWithInvalidEmail(): void
     {
         $this->submitAccountResendConfirmForm('invalid-email@domain.com');
-        self::assertAnyValidationErrorSame('Your email was not found.');
+
+        // An address with no account reports the same success as one that gets the email, and gets no email
+        self::assertSelectorNotExists('.form-error');
+        self::assertFalse($this->mailer->hasMessages());
     }
 
     public function testResendConfirmAsConfirmedUser(): void
@@ -40,6 +44,20 @@ class AccountResendConfirmTest extends TestCase
         $user = $this->getUserFromFixture('owner');
 
         $this->submitAccountResendConfirmForm($user->email);
+
+        self::assertSelectorNotExists('.form-error');
+        self::assertFalse($this->mailer->hasMessages());
+    }
+
+    public function testResendConfirmNamesItsReasonWithoutEnumerationProtection(): void
+    {
+        Yii::$app->getUser()->enableUserEnumerationProtection = false;
+
+        $this->submitAccountResendConfirmForm('invalid-email@domain.com');
+        self::assertAnyValidationErrorSame('Your email was not found.');
+
+        $this->open('admin/account/resend');
+        $this->submitAccountResendConfirmForm($this->getUserFromFixture('owner')->email);
         self::assertAnyValidationErrorSame('Your account was already confirmed!');
     }
 
@@ -50,19 +68,19 @@ class AccountResendConfirmTest extends TestCase
         $this->submitAccountResendConfirmForm($user->email);
         self::assertNotNull($user->verification_token);
 
-        $this->open('admin/account/resend');
-        $this->submitAccountResendConfirmForm($user->email);
-
-        $error = strtr('We have just sent a link to confirm your account to {email}. Please check your inbox!', [
-            '{email}' => $user->email,
-        ]);
-
-        self::assertAnyValidationErrorSame($error);
-
         $email = $this->mailer->getLastMessage();
 
         self::assertEquals(key($email->getTo()), $user->email);
         self::assertStringContainsString($user->getEmailConfirmationUrl(), $email->getSymfonyEmail()->getHtmlBody());
+
+        // The spam protection must not answer differently either
+        $this->mailer->reset();
+
+        $this->open('admin/account/resend');
+        $this->submitAccountResendConfirmForm($user->email);
+
+        self::assertFalse($this->mailer->hasMessages());
+        self::assertSelectorNotExists('.form-error');
     }
 
     private function submitAccountResendConfirmForm(string $email = ''): void

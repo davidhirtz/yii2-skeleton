@@ -1,5 +1,14 @@
 ## 3.0.0 (in development)
 
+- The guest-facing forms no longer say which email addresses have an account. `IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND`,
+  the wrong-password message and `COMMON_ACCOUNT_CURRENTLY_DISABLED` were three different answers, the password
+  check was skipped entirely when nothing matched — so a missing address was measurably faster to reject — and
+  the recovery and resend forms confirmed an address by failing on it. `Models\Traits\IdentityTrait` reports one
+  message through the new `addIdentityError()`, `Models\Forms\LoginForm` hashes against a dummy hash when no
+  account matched, and `PasswordRecoverForm` / `AccountResendConfirmForm` report their ordinary success for an
+  address with no account, a disabled one, or one inside the spam-protection window.
+  `Web\User::$enableUserEnumerationProtection` turns all of it off for an application that would rather keep the
+  messages that name the reason
 - Password policy and hashing. `Models\User::$passwordMinLength` is 8 rather than 5, the new
   `$passwordMaxLength` caps a password at bcrypt's 72 bytes — past which it is silently truncated — and every
   form that takes one enforces both. `generatePasswordHash()` no longer writes a `password_salt`: bcrypt carries

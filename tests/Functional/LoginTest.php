@@ -37,8 +37,12 @@ class LoginTest extends TestCase
         $this->submitLoginForm($this->getUserFixtureData('owner')['email'], 'wrong');
         self::assertAnyValidationErrorSame('Your email or password are incorrect.');
 
+        // A disabled account reports the same as a wrong password, so nothing here says which addresses exist
         $this->submitLoginForm($this->getUserFixtureData('disabled')['email'], 'password');
-        self::assertAnyValidationErrorSame('Your account is currently disabled. Please contact an administrator!');
+        self::assertAnyValidationErrorSame('Your email or password are incorrect.');
+
+        $this->submitLoginForm('never-signed-up@domain.com', 'password');
+        self::assertAnyValidationErrorSame('Your email or password are incorrect.');
 
         $this->submitLoginForm($this->getUserFixtureData('owner')['email'], 'password');
         self::assertResponseStatusCodeSame(403);
@@ -87,6 +91,17 @@ class LoginTest extends TestCase
         self::assertResponseStatusCodeSame(200);
 
         self::assertCurrentUrlEquals('admin/dashboard/index');
+    }
+
+    public function testDisabledAccountNamesItsReasonWithoutEnumerationProtection(): void
+    {
+        Yii::$app->getUser()->enableUserEnumerationProtection = false;
+
+        $this->submitLoginForm($this->getUserFixtureData('disabled')['email'], 'password');
+        self::assertAnyValidationErrorSame('Your account is currently disabled. Please contact an administrator!');
+
+        $this->submitLoginForm('never-signed-up@domain.com', 'password');
+        self::assertAnyValidationErrorSame('Your email was not found.');
     }
 
     public function testDisabledLogin(): void
