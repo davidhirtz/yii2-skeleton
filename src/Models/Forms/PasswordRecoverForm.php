@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Models\Forms;
 use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\Traits\IdentityTrait;
+use Hirtz\Skeleton\Models\UserToken;
 use Override;
 use Yii;
 use yii\base\Model;
@@ -81,9 +82,6 @@ class PasswordRecoverForm extends Model
         // An address with no account, a disabled one, and one that was just sent a link all report the same
         // success as one that gets the email, so nothing here says which addresses exist.
         if ($this->user) {
-            $this->user->generatePasswordResetToken();
-            $this->user->update();
-
             $this->sendPasswordResetEmail();
         }
 
@@ -92,7 +90,10 @@ class PasswordRecoverForm extends Model
 
     public function sendPasswordResetEmail(): void
     {
-        Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/recover', ['user' => $this->user])
+        Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/recover', [
+            'user' => $this->user,
+            'url' => $this->user->createPasswordResetUrl(),
+        ])
             ->setSubject(Yii::t('skeleton', 'PASSWORD_RECOVER_RESET_YOUR_PASSWORD'))
             ->setFrom(Yii::$app->params['email'])
             ->setTo($this->user->email)
@@ -101,8 +102,8 @@ class PasswordRecoverForm extends Model
 
     public function isAlreadySent(): bool
     {
-        return $this->user->password_reset_token
-            && $this->user->password_reset_token_created_at?->modify($this->timeoutSpamProtection) > new DateTime();
+        $token = $this->user->getLatestToken(UserToken::TYPE_PASSWORD_RESET);
+        return $token && $token->created_at->modify($this->timeoutSpamProtection) > new DateTime();
     }
 
     #[\Override]

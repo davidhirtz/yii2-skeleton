@@ -170,10 +170,9 @@ class AccountController extends Controller
         return $this->redirect(['security']);
     }
 
-    public function actionConfirm(string $email, string $code): Response|string
+    public function actionConfirm(string $code): Response|string
     {
         $form = Yii::$container->get(AccountConfirmForm::class, [], [
-            'email' => $email,
             'code' => $code,
         ]);
 
@@ -242,14 +241,13 @@ class AccountController extends Controller
         ]);
     }
 
-    public function actionReset(string $email, string $code): Response|string
+    public function actionReset(string $code): Response|string
     {
         if (!$this->webuser->isPasswordResetEnabled()) {
             throw new ForbiddenHttpException();
         }
 
         $form = PasswordResetForm::create();
-        $form->email = $email;
         $form->code = $code;
 
         if ($form->load($this->request->post())) {
@@ -259,10 +257,10 @@ class AccountController extends Controller
                 // A user who owes a second factor is not logged in by the reset, so the login form is where the
                 // flow has to continue.
                 return $this->webuser->getIsGuest()
-                    ? $this->redirect(['login', 'email' => $form->email])
+                    ? $this->redirect(['login'])
                     : $this->goHome();
             }
-        } elseif (!$form->validateEmail() || !$form->validatePasswordResetCode()) {
+        } elseif (!$form->validatePasswordResetCode()) {
             $this->error($form);
             return $this->goHome();
         }

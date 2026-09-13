@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @var yii\web\View $this
  * @var MessageInterface $message
  * @var AccountUpdateForm $form
+ * @var string $url
  */
 
 use Hirtz\Skeleton\Models\Forms\AccountUpdateForm;
@@ -22,6 +23,6 @@ $this->title = Yii::t('skeleton', 'Email confirmation');
     <?= Yii::t('skeleton', 'Please click the link below to verify your new email address.'); ?></p>
 <p><?php echo Yii::t('skeleton', 'Thank you!'); ?></p>
 <div class="btn-wrap">
-    <a href="<?= $form->user->getEmailConfirmationUrl(); ?>"
+    <a href="<?= $url; ?>"
        class="btn btn-primary"><?= Yii::t('skeleton', 'Confirm Email'); ?></a>
 </div>

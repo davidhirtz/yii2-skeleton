@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Models\Forms;
 
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
-use Hirtz\Skeleton\Models\Traits\IdentityTrait;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Models\UserLogin;
+use Hirtz\Skeleton\Models\UserToken;
 use Override;
 use Yii;
 use yii\base\Model;
@@ -15,9 +15,9 @@ use yii\base\Model;
 class PasswordResetForm extends Model
 {
     use ModelTrait;
-    use IdentityTrait;
 
     public ?string $code = null;
+    public ?User $user = null;
     public ?string $newPassword = null;
     public ?string $repeatPassword = null;
 
@@ -30,17 +30,8 @@ class PasswordResetForm extends Model
                 'trim',
             ],
             [
-                ['email', 'code', 'newPassword', 'repeatPassword'],
+                ['code', 'newPassword', 'repeatPassword'],
                 'required',
-            ],
-            [
-                ['email'],
-                $this->validateEmail(...),
-            ],
-            [
-                ['code'],
-                'string',
-                'length' => 32,
             ],
             [
                 ['newPassword'],
@@ -60,7 +51,10 @@ class PasswordResetForm extends Model
     {
         if (!$this->hasErrors()) {
             $this->validatePasswordResetCode();
-            $this->validateUserStatus();
+        }
+
+        if (!$this->hasErrors() && $this->user->isDisabled() && !$this->user->isOwner()) {
+            $this->addError('id', Yii::t('skeleton', 'COMMON_ACCOUNT_CURRENTLY_DISABLED'));
         }
 
         parent::afterValidate();
@@ -75,7 +69,15 @@ class PasswordResetForm extends Model
 
     public function validatePasswordResetCode(): bool
     {
-        if (!$this->user?->isPasswordResetTokenValid($this->code)) {
+        $this->user ??= UserToken::find()
+            ->whereType(UserToken::TYPE_PASSWORD_RESET)
+            ->whereToken((string)$this->code)
+            ->unexpired()
+            ->selectWith('user')
+            ->limit(1)
+            ->one()?->user;
+
+        if (!$this->user) {
             $this->addError('id', Yii::t('skeleton', 'PASSWORD_RESET_PASSWORD_RECOVERY'));
         }
 
@@ -93,7 +95,7 @@ class PasswordResetForm extends Model
 
         $this->user->generateAuthKey();
         $this->user->generatePasswordHash($this->newPassword);
-        $this->user->clearPasswordResetToken();
+        $this->user->clearPasswordResetTokens();
         $this->user->afterPasswordChange();
 
         $webuser = Yii::$app->getUser();

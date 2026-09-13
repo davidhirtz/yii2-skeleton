@@ -40,7 +40,7 @@ class UserQuery extends ActiveQuery
             'status',
             'name',
             'email',
-            'verification_token',
+            'email_confirmed_at',
             'is_owner',
             'last_login',
             'created_at'

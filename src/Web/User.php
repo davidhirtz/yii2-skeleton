@@ -144,7 +144,7 @@ class User extends \yii\web\User
 
         // Whoever just proved they know the password has no use for a reset link, and the one in their inbox
         // must not stay live behind them.
-        $identity->clearPasswordResetToken();
+        $identity->clearPasswordResetTokens();
 
         if ($cookieBased) {
             $this->loginType = UserLogin::TYPE_COOKIE;

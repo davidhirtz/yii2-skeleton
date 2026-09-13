@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Models\Forms;
 
+use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\Forms\Traits\UserFormTrait;
 use Hirtz\Skeleton\Models\User;
@@ -25,6 +26,9 @@ class UserForm extends Model
     public ?string $newPassword = null;
     public ?string $repeatPassword = null;
     public bool $sendEmail = false;
+
+    private ?string $passwordResetUrl = null;
+    private bool $isNewUser = false;
 
     public function __construct(public User $user, array $config = [])
     {
@@ -81,6 +85,8 @@ class UserForm extends Model
 
     protected function beforeSave(): bool
     {
+        $this->isNewUser = $this->user->getIsNewRecord();
+
         if (!$this->user->isOwner()) {
             $this->user->status = $this->status;
         }
@@ -90,10 +96,9 @@ class UserForm extends Model
             $this->user->generatePasswordHash($this->newPassword);
         }
 
-        // The credentials email never carries the password, so it needs a reset link whether or not one was set
-        // here — and a user created without a password can only reach the account that way at all.
-        if ($this->sendEmail || (!$this->newPassword && $this->user->getIsNewRecord())) {
-            $this->user->generatePasswordResetToken();
+        // An account an administrator creates is confirmed by them, not by an email the user has to answer
+        if ($this->user->getIsNewRecord()) {
+            $this->user->email_confirmed_at ??= new DateTime();
         }
 
         $this->user->created_by_user_id ??= Yii::$app->getUser()->getId();
@@ -106,6 +111,12 @@ class UserForm extends Model
         if ($this->newPassword) {
             $this->user->afterPasswordChange();
             Yii::$app->getUser()->destroyOtherSessions($this->user);
+        }
+
+        // The credentials email never carries the password, so it needs a reset link whether or not one was set
+        // here — and a user created without a password can only reach the account that way at all.
+        if ($this->sendEmail || (!$this->newPassword && $this->isNewUser)) {
+            $this->passwordResetUrl = $this->user->createPasswordResetUrl();
         }
 
         if ($this->sendEmail) {
@@ -130,11 +141,12 @@ class UserForm extends Model
     }
 
     /**
-     * @return string|null the reset url the credentials email sends the user to, in place of a password
+     * @return string|null the reset url the credentials email sends the user to, in place of a password. Only the
+     *     token's HMAC is stored, so this is populated by {@see static::save()} and cannot be rebuilt later.
      */
     public function getPasswordResetUrl(): ?string
     {
-        return $this->user->getPasswordResetUrl();
+        return $this->passwordResetUrl;
     }
 
     #[Override]

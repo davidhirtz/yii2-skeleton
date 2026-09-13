@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Models\Forms\AccountResendConfirmForm;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
+use Hirtz\Skeleton\Models\UserToken;
 use Override;
 use Yii;
 
@@ -66,12 +67,12 @@ class AccountResendConfirmTest extends TestCase
         $user = $this->getUserFromFixture('admin');
 
         $this->submitAccountResendConfirmForm($user->email);
-        self::assertNotNull($user->verification_token);
+        self::assertNotNull($user->getLatestToken(UserToken::TYPE_VERIFICATION));
 
         $email = $this->mailer->getLastMessage();
 
         self::assertEquals(key($email->getTo()), $user->email);
-        self::assertStringContainsString($user->getEmailConfirmationUrl(), $email->getSymfonyEmail()->getHtmlBody());
+        self::assertStringContainsString('/admin/account/confirm', $email->getSymfonyEmail()->getHtmlBody());
 
         // The spam protection must not answer differently either
         $this->mailer->reset();

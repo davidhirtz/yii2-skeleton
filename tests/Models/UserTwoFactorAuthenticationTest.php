@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Tests\Models;
 use Hirtz\Skeleton\Models\Forms\LoginForm;
 use Hirtz\Skeleton\Models\Forms\TwoFactorAuthenticatorForm;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Models\UserToken;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Yii;
@@ -48,9 +49,17 @@ class UserTwoFactorAuthenticationTest extends TestCase
 
         $user = User::findOne($user->id);
 
+        $stored = UserToken::find()
+            ->select(['token'])
+            ->whereUser($user->id)
+            ->whereType(UserToken::TYPE_RECOVERY_CODE)
+            ->column();
+
+        self::assertCount(User::RECOVERY_CODE_COUNT, $stored);
+
         foreach ($codes as $code) {
             self::assertSame(User::RECOVERY_CODE_LENGTH, strlen($code));
-            self::assertNotContains($code, $user->google_2fa_recovery_codes);
+            self::assertNotContains($code, $stored);
         }
     }
 
@@ -62,7 +71,8 @@ class UserTwoFactorAuthenticationTest extends TestCase
 
         $user = User::findOne($user->id);
 
-        self::assertTrue($user->validateTwoFactorAuthenticationRecoveryCode($codes[0]));
+        // Typed in either case, with or without the whitespace a copy tends to bring along
+        self::assertTrue($user->validateTwoFactorAuthenticationRecoveryCode(' ' . strtolower($codes[0]) . ' '));
         self::assertFalse($user->validateTwoFactorAuthenticationRecoveryCode($codes[0]));
         self::assertFalse($user->validateTwoFactorAuthenticationRecoveryCode('NOTACODE12'));
 

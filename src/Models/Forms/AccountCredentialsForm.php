@@ -82,7 +82,7 @@ class AccountCredentialsForm extends Model
     protected function beforeSave(): bool
     {
         if ($this->user->isAttributeChanged('email')) {
-            $this->user->generateVerificationToken();
+            $this->user->email_confirmed_at = null;
         }
 
         if ($this->newPassword) {
@@ -123,7 +123,10 @@ class AccountCredentialsForm extends Model
 
     protected function sendEmailConfirmationEmail(): void
     {
-        Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/email', ['form' => $this])
+        Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/email', [
+            'form' => $this,
+            'url' => $this->user->createEmailConfirmationUrl(),
+        ])
             ->setSubject(Yii::t('skeleton', 'ACCOUNT_UPDATE_PLEASE_CONFIRM_YOUR_NEW_EMAIL_ADDRESS_CONFIRM_TITLE'))
             ->setFrom(Yii::$app->params['email'])
             ->setTo($this->email)

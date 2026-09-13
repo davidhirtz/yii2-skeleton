@@ -137,11 +137,9 @@ class UserController extends Controller
     public function actionReset(int $id): Response|string
     {
         $user = $this->findUser($id, User::AUTH_USER_UPDATE);
-        $user->generatePasswordResetToken();
+        $user->createPasswordResetToken();
 
-        if ($user->save()) {
-            $this->success(Yii::t('skeleton', 'USER_SUCCESS_UPDATED_PASSWORD'));
-        }
+        $this->success(Yii::t('skeleton', 'USER_SUCCESS_UPDATED_PASSWORD'));
 
         return $this->redirect(['update', 'id' => $user->id]);
     }

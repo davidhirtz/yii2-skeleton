@@ -4,51 +4,44 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Forms;
 
-use Hirtz\Skeleton\Models\Traits\IdentityTrait;
+use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Models\UserToken;
 use Override;
 use Yii;
 use yii\base\Model;
 
 class AccountConfirmForm extends Model
 {
-    use IdentityTrait;
-
-    public string $code;
+    public ?string $code = null;
+    public ?User $user = null;
 
     #[Override]
     public function rules(): array
     {
         return [
             [
-                ['email'],
-                'trim',
-            ],
-            [
-                ['email', 'code'],
-                'required',
-            ],
-            [
-                ['email'],
-                $this->validateEmail(...),
-            ],
-            [
                 ['code'],
-                'string',
-                'length' => 32,
-                'notEqual' => Yii::t('yii', '{attribute} is invalid.'),
-                'skipOnError' => true,
+                'required',
             ],
             [
                 ['code'],
                 $this->validateCode(...),
                 'when' => fn () => !$this->hasErrors(),
-            ]
+            ],
         ];
     }
 
     protected function validateCode(): void
     {
-        if (!$this->user->isVerificationTokenValid($this->code)) {
+        $this->user ??= UserToken::find()
+            ->whereType(UserToken::TYPE_VERIFICATION)
+            ->whereToken((string)$this->code)
+            ->unexpired()
+            ->selectWith('user')
+            ->limit(1)
+            ->one()?->user;
+
+        if (!$this->user) {
             $this->addError('code', Yii::t('yii', '{attribute} is invalid.', [
                 'attribute' => $this->getAttributeLabel('code'),
             ]));
@@ -57,10 +50,13 @@ class AccountConfirmForm extends Model
 
     public function confirm(): bool
     {
-        return $this->validate() && $this->user->updateAttributes([
-            'verification_token' => null,
-            'verification_token_created_at' => null,
-        ]);
+        if (!$this->validate()) {
+            return false;
+        }
+
+        $this->user->confirmEmail();
+
+        return true;
     }
 
     #[Override]

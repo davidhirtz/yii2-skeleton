@@ -7,6 +7,7 @@ declare(strict_types=1);
  * @var yii\web\View $this
  * @var MessageInterface $message
  * @var \Hirtz\Skeleton\Models\User $user
+ * @var string $url
  */
 
 use yii\mail\MessageInterface;
@@ -18,6 +19,6 @@ $this->title = Yii::t('skeleton', 'Confirm your account');
     <br></p>
 <p><?php echo Yii::t('skeleton', 'Thank you!'); ?></p>
 <div class="btn-wrap">
-    <a href="<?= $user->getEmailConfirmationUrl(); ?>"
+    <a href="<?= $url; ?>"
        class="btn btn-primary"><?= Yii::t('skeleton', 'Confirm Email'); ?></a>
 </div>

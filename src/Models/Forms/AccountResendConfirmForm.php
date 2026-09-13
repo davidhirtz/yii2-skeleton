@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Models\Forms;
 use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\Traits\IdentityTrait;
+use Hirtz\Skeleton\Models\UserToken;
 use Override;
 use Yii;
 use yii\base\Model;
@@ -69,7 +70,7 @@ class AccountResendConfirmForm extends Model
 
     protected function validateUserConfirmationCode(): void
     {
-        if (!$this->user->verification_token) {
+        if (!$this->user->isUnconfirmed()) {
             $this->addIdentityError(Yii::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_ACCOUNT'));
         }
     }
@@ -92,10 +93,6 @@ class AccountResendConfirmForm extends Model
         // An address with nothing to confirm reports the same success, so nothing here says which exist.
         if ($this->user) {
             $this->sendConfirmEmail();
-
-            $this->user->updateAttributes([
-                'updated_at' => new DateTime(),
-            ]);
         }
 
         return true;
@@ -103,7 +100,10 @@ class AccountResendConfirmForm extends Model
 
     protected function sendConfirmEmail(): void
     {
-        Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/confirm', ['user' => $this->user])
+        Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/confirm', [
+            'user' => $this->user,
+            'url' => $this->user->createEmailConfirmationUrl(),
+        ])
             ->setSubject(Yii::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_CONFIRM_YOUR_ACCOUNT'))
             ->setFrom(Yii::$app->params['email'])
             ->setTo($this->user->email)
@@ -112,8 +112,8 @@ class AccountResendConfirmForm extends Model
 
     protected function isAlreadySent(): bool
     {
-        return $this->user->verification_token
-            && $this->user->updated_at?->modify($this->timeoutSpamProtection) > new DateTime();
+        $token = $this->user->getLatestToken(UserToken::TYPE_VERIFICATION);
+        return $token && $token->created_at->modify($this->timeoutSpamProtection) > new DateTime();
     }
 
     #[\Override]

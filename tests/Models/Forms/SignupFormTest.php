@@ -74,7 +74,7 @@ class SignupFormTest extends TestCase
         self::assertFalse(Yii::$app->getUser()->getIsGuest());
 
         $message = $this->mailer->getLastMessage();
-        self::assertStringContainsString($form->user->getEmailConfirmationUrl(), $message->getSymfonyEmail()->getHtmlBody());
+        self::assertStringContainsString('/admin/account/confirm', $message->getSymfonyEmail()->getHtmlBody());
     }
 
     public function testSignupWithIpSpamProtection(): void

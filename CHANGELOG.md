@@ -1,5 +1,23 @@
 ## 3.0.0 (in development)
 
+- Tokens live in a `user_token` table of their own and are stored as an HMAC, never in the clear. A read of the
+  `user` table used to hand over a working password reset for every account that had one. `Models\UserToken`
+  holds the verification tokens, the password reset tokens and the 2FA recovery codes, one row each, with a
+  per-token `expires_at` (`Migrations\M260913170000UserToken`); `Models\Queries\UserTokenQuery` finds one by
+  `whereToken()`, which hashes before it compares. `user` loses `verification_token`,
+  `verification_token_created_at`, `password_reset_token`, `password_reset_token_created_at` and
+  `google_2fa_recovery_codes`, and gains `email_confirmed_at` — whether an address was confirmed is durable
+  state, where the token that proved it now expires and is collected. See UPGRADE.md
+- The confirmation and reset URLs no longer carry the address: the token finds its own user, so a link in a
+  mailbox, an archive or a referrer stops naming who it belongs to. `Models\User::getEmailConfirmationUrl()` and
+  `getPasswordResetUrl()` are `createEmailConfirmationUrl()` and `createPasswordResetUrl()`, which issue the
+  token they link to, and `generateVerificationToken()` / `generatePasswordResetToken()` are
+  `createVerificationToken()` / `createPasswordResetToken()`, returning the token in the clear for the one moment
+  it exists
+- `Helpers\SecretKey` is the one place the `secretKey` param — falling back to `cookieValidationKey` — is read,
+  for the token HMAC and the encrypted two-factor secret alike
+- `Console\Controllers\UserTokenController` adds `user-token/clear`, which deletes the tokens that have expired
+  and leaves the recovery codes, which are spent rather than aged out
 - `params/index` generates a `passwordPepper` when there is none, the way it already generated the
   `cookieValidationKey`, and `params/pepper` does it on demand. `user.password_salt` records which scheme a hash
   was written under — `Models\User::PASSWORD_PEPPER`, `null`, or a legacy per-user salt — so a pepper can be

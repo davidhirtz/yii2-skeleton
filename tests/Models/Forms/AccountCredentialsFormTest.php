@@ -52,10 +52,10 @@ class AccountCredentialsFormTest extends TestCase
         $form->user->email = 'valid@domain.com';
 
         self::assertTrue($form->save());
-        self::assertNotEmpty($form->user->verification_token);
+        self::assertTrue($form->user->isUnconfirmed());
 
         $message = $this->mailer->getLastMessage();
-        self::assertStringContainsString($form->user->getEmailConfirmationUrl(), $message->getSymfonyEmail()->getHtmlBody());
+        self::assertStringContainsString('/admin/account/confirm', $message->getSymfonyEmail()->getHtmlBody());
     }
 
     public function testUpdatePassword(): void

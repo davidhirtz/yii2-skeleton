@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Tests\Models\Forms;
 use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Models\Forms\PasswordResetForm;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Models\UserToken;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Yii;
@@ -36,7 +37,7 @@ class PasswordResetFormTest extends TestCase
         self::assertTrue(Yii::$app->getUser()->getIsGuest(), 'The second factor must not be skipped');
 
         $user = User::findOne($user->id);
-        self::assertNull($user->password_reset_token);
+        self::assertNull($user->getLatestToken(UserToken::TYPE_PASSWORD_RESET));
         self::assertTrue($user->validatePassword('new-password'));
     }
 
@@ -45,22 +46,31 @@ class PasswordResetFormTest extends TestCase
         $user = $this->getUserFromFixture('owner');
         $form = $this->createForm($user);
 
-        $user->password_reset_token_created_at = new DateTime('-2 days');
-        $user->update();
+        UserToken::updateAll(
+            ['expires_at' => (new DateTime('-1 hour'))->format('Y-m-d H:i:s')],
+            ['user_id' => $user->id]
+        );
 
         self::assertFalse($form->reset());
         self::assertArrayHasKey('id', $form->getErrors());
         self::assertTrue(Yii::$app->getUser()->getIsGuest());
     }
 
+    public function testResetWithAnotherUsersToken(): void
+    {
+        $other = $this->getUserFromFixture('admin');
+        $form = $this->createForm($this->getUserFromFixture('owner'));
+
+        $form->code = $other->createVerificationToken();
+
+        self::assertFalse($form->reset());
+        self::assertArrayHasKey('id', $form->getErrors());
+    }
+
     private function createForm(User $user): PasswordResetForm
     {
-        $user->generatePasswordResetToken();
-        $user->update();
-
         return Yii::$container->get(PasswordResetForm::class, [], [
-            'email' => $user->email,
-            'code' => $user->password_reset_token,
+            'code' => $user->createPasswordResetToken(),
             'newPassword' => 'new-password',
             'repeatPassword' => 'new-password',
         ]);

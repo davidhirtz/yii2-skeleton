@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Modules\Admin\Models\Forms;
 
 use Hirtz\Skeleton\Models\Trail;
+use Hirtz\Skeleton\Models\UserToken;
 use Hirtz\Skeleton\Modules\Admin\Models\Forms\UserForm;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
@@ -78,11 +79,11 @@ class UserFormTest extends TestCase
         self::assertTrue($form->save());
 
         self::assertNull($form->user->password_hash);
-        self::assertNotNull($form->user->password_reset_token);
+        self::assertNotNull($form->user->getLatestToken(UserToken::TYPE_PASSWORD_RESET));
         self::assertFalse($form->user->validatePassword(''));
 
         $body = $this->mailer->getLastMessage()->getSymfonyEmail()->getHtmlBody();
-        self::assertStringContainsString($form->user->getPasswordResetUrl(), $body);
+        self::assertStringContainsString($form->getPasswordResetUrl(), $body);
     }
 
     public function testCreateUserWithPasswordSendsResetLinkInsteadOfThePassword(): void
@@ -98,7 +99,7 @@ class UserFormTest extends TestCase
         self::assertTrue($form->save());
         self::assertTrue($form->user->validatePassword('Str0ngPassphrase'));
 
-        self::assertNotNull($form->user->password_reset_token);
+        self::assertNotNull($form->user->getLatestToken(UserToken::TYPE_PASSWORD_RESET));
         self::assertNotNull($form->getPasswordResetUrl());
 
         $body = $this->mailer->getLastMessage()->getSymfonyEmail()->getHtmlBody();

@@ -66,8 +66,6 @@ abstract class AbstractSignupForm extends Model
     protected function beforeInsert(): bool
     {
         $this->user->generatePasswordHash($this->password);
-        $this->user->generateVerificationToken();
-
         return true;
     }
 

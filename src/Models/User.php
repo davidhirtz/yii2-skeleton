@@ -10,6 +10,7 @@ use davidhirtz\yii2\datetime\DateTimeBehavior;
 use Hirtz\Skeleton\Behaviors\TimestampBehavior;
 use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Helpers\SecretKey;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
@@ -25,7 +26,6 @@ use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Hirtz\Skeleton\Validators\UniqueValidator;
 use Override;
 use Yii;
-use yii\base\InvalidConfigException;
 use yii\base\NotSupportedException;
 use yii\web\IdentityInterface;
 
@@ -34,19 +34,15 @@ use yii\web\IdentityInterface;
  * @property int $status
  * @property string|null $name
  * @property string $email
+ * @property DateTime|null $email_confirmed_at
  * @property string|null $password_hash
  * @property string|null $password_salt which scheme the hash was written with — {@see static::PASSWORD_PEPPER},
  *     `null` for none, and a random string for a hash that predates both
  * @property string $language
  * @property string|null $timezone
  * @property string|null $auth_key
- * @property string|null $verification_token
- * @property DateTime|null $verification_token_created_at
- * @property string|null $password_reset_token
- * @property DateTime|null $password_reset_token_created_at
  * @property string|null $google_2fa_secret the encrypted secret, reached through
  *     {@see static::getTwoFactorAuthenticationSecret()}
- * @property array|null $google_2fa_recovery_codes the hashed single-use codes
  * @property bool|int $is_owner
  * @property int $created_by_user_id
  * @property int $login_count
@@ -343,51 +339,67 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         $this->auth_key = Yii::$app->getSecurity()->generateRandomString();
     }
 
-    public function generateVerificationToken(): void
+    /**
+     * @return string the token in the clear, which is the only time it exists — the row keeps its HMAC
+     */
+    public function createVerificationToken(): string
     {
-        $this->verification_token = Yii::$app->getSecurity()->generateRandomString();
-        $this->verification_token_created_at = new DateTime();
+        return $this->createToken(UserToken::TYPE_VERIFICATION);
     }
 
-    public function generatePasswordResetToken(): void
+    /**
+     * @return string the token in the clear, which is the only time it exists — the row keeps its HMAC
+     */
+    public function createPasswordResetToken(): string
     {
-        $this->password_reset_token = Yii::$app->getSecurity()->generateRandomString();
-        $this->password_reset_token_created_at = new DateTime();
+        return $this->createToken(UserToken::TYPE_PASSWORD_RESET);
     }
 
-    public function clearVerificationToken(): void
+    public function clearVerificationTokens(): void
     {
-        $this->verification_token = null;
-        $this->verification_token_created_at = null;
+        $this->deleteTokens(UserToken::TYPE_VERIFICATION);
     }
 
-    public function clearPasswordResetToken(): void
+    public function clearPasswordResetTokens(): void
     {
-        $this->password_reset_token = null;
-        $this->password_reset_token_created_at = null;
+        $this->deleteTokens(UserToken::TYPE_PASSWORD_RESET);
     }
 
-    public function isVerificationTokenValid(?string $token): bool
+    public function confirmEmail(): void
     {
-        return $this->isTokenValid($this->verification_token, $this->verification_token_created_at, $token);
+        $this->email_confirmed_at ??= new DateTime();
+        $this->updateAttributes(['email_confirmed_at' => $this->email_confirmed_at]);
+
+        $this->clearVerificationTokens();
     }
 
-    public function isPasswordResetTokenValid(?string $token): bool
+    public function getLatestToken(string $type): ?UserToken
     {
-        return $this->isTokenValid($this->password_reset_token, $this->password_reset_token_created_at, $token);
-    }
-
-    private function isTokenValid(?string $expected, ?DateTime $createdAt, ?string $token): bool
-    {
-        if (!$expected || !$token || !$createdAt) {
-            return false;
+        if (!$this->id) {
+            return null;
         }
 
-        if ($createdAt->getTimestamp() + $this->tokenLifetime < time()) {
-            return false;
-        }
+        return UserToken::find()
+            ->whereUser($this->id)
+            ->whereType($type)
+            ->orderBy(['id' => SORT_DESC])
+            ->limit(1)
+            ->one();
+    }
 
-        return Yii::$app->getSecurity()->compareString($expected, $token);
+    private function createToken(string $type): string
+    {
+        $token = Yii::$app->getSecurity()->generateRandomString();
+        UserToken::issue($this->id, $type, $token, $this->tokenLifetime);
+
+        return $token;
+    }
+
+    private function deleteTokens(string $type): void
+    {
+        if ($this->id) {
+            UserToken::deleteAll(['user_id' => $this->id, 'type' => $type]);
+        }
     }
 
     public function hasTwoFactorAuthentication(): bool
@@ -408,7 +420,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
             ? null
             : static::encryptTwoFactorAuthenticationSecret($secret);
 
-        $this->google_2fa_recovery_codes = null;
+        $this->deleteTokens(UserToken::TYPE_RECOVERY_CODE);
     }
 
     /**
@@ -417,8 +429,8 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
      */
     public function generateTwoFactorAuthenticationRecoveryCodes(): array
     {
+        $this->deleteTokens(UserToken::TYPE_RECOVERY_CODE);
         $codes = [];
-        $hashes = [];
 
         for ($i = 0; $i < static::RECOVERY_CODE_COUNT; $i++) {
             $code = '';
@@ -427,50 +439,44 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
                 $code .= self::RECOVERY_CODE_ALPHABET[random_int(0, strlen(self::RECOVERY_CODE_ALPHABET) - 1)];
             }
 
+            // A recovery code never expires; it is spent instead
+            UserToken::issue($this->id, UserToken::TYPE_RECOVERY_CODE, self::normalizeRecoveryCode($code));
             $codes[] = $code;
-            $hashes[] = self::hashTwoFactorAuthenticationRecoveryCode($code);
         }
-
-        $this->google_2fa_recovery_codes = $hashes;
 
         return $codes;
     }
 
     /**
-     * Consumes the code it matches: a recovery code is good once, so this writes the shortened list before it
-     * returns.
+     * Consumes the code it matches: a recovery code is good once, so the row is gone before this returns.
      */
     public function validateTwoFactorAuthenticationRecoveryCode(string $code): bool
     {
-        $hash = self::hashTwoFactorAuthenticationRecoveryCode($code);
-        $remaining = [];
-        $matched = false;
+        $token = UserToken::find()
+            ->whereUser($this->id)
+            ->whereType(UserToken::TYPE_RECOVERY_CODE)
+            ->whereToken(self::normalizeRecoveryCode($code))
+            ->limit(1)
+            ->one();
 
-        foreach ($this->google_2fa_recovery_codes ?? [] as $stored) {
-            if (!$matched && hash_equals((string)$stored, $hash)) {
-                $matched = true;
-                continue;
-            }
-
-            $remaining[] = $stored;
-        }
-
-        if ($matched) {
-            $this->google_2fa_recovery_codes = $remaining;
-            $this->updateAttributes(['google_2fa_recovery_codes' => $remaining]);
-        }
-
-        return $matched;
+        return (bool)$token?->delete();
     }
 
     public function getTwoFactorAuthenticationRecoveryCodeCount(): int
     {
-        return count($this->google_2fa_recovery_codes ?? []);
+        if (!$this->id) {
+            return 0;
+        }
+
+        return (int)UserToken::find()
+            ->whereUser($this->id)
+            ->whereType(UserToken::TYPE_RECOVERY_CODE)
+            ->count();
     }
 
     public static function encryptTwoFactorAuthenticationSecret(string $secret): string
     {
-        $data = Yii::$app->getSecurity()->encryptByKey($secret, self::getTwoFactorAuthenticationKey());
+        $data = Yii::$app->getSecurity()->encryptByKey($secret, SecretKey::get());
         return self::ENCRYPTED_PREFIX . base64_encode($data);
     }
 
@@ -482,29 +488,14 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         }
 
         $data = base64_decode(substr($secret, strlen(self::ENCRYPTED_PREFIX)), true);
-        $secret = $data === false ? false : Yii::$app->getSecurity()->decryptByKey($data, self::getTwoFactorAuthenticationKey());
+        $secret = $data === false ? false : Yii::$app->getSecurity()->decryptByKey($data, SecretKey::get());
 
         return $secret === false ? null : $secret;
     }
 
-    private static function hashTwoFactorAuthenticationRecoveryCode(string $code): string
+    private static function normalizeRecoveryCode(string $code): string
     {
-        // A recovery code is 50 bits of entropy the user never chose, so it needs no key stretching
-        return hash_hmac('sha256', strtoupper(trim($code)), self::getTwoFactorAuthenticationKey());
-    }
-
-    /**
-     * @throws InvalidConfigException
-     */
-    private static function getTwoFactorAuthenticationKey(): string
-    {
-        $key = Yii::$app->params['secretKey'] ?? Yii::$app->params['cookieValidationKey'] ?? null;
-
-        if (!$key) {
-            throw new InvalidConfigException('Either `secretKey` or `cookieValidationKey` must be set in params.');
-        }
-
-        return $key;
+        return strtoupper(trim($code));
     }
 
     public function getAdminRoute(): array
@@ -542,31 +533,29 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         return substr((string)$this->name, 0, 2);
     }
 
-    public function getEmailConfirmationUrl(): ?string
+    /**
+     * Creates the token as a side effect: only its HMAC is kept, so the URL cannot be rebuilt afterwards. The
+     * address is no longer a parameter — the token finds its own user, and the URL travels through mailboxes,
+     * archives and referrers where an address has no business being.
+     *
+     * @see AccountController::actionConfirm()
+     */
+    public function createEmailConfirmationUrl(): string
     {
-        if (!$this->verification_token) {
-            return null;
-        }
-
-        /** @see AccountController::actionConfirm() */
         return Yii::$app->getUrlManager()->createAbsoluteUrl([
             '/admin/account/confirm',
-            'email' => $this->email,
-            'code' => $this->verification_token,
+            'code' => $this->createVerificationToken(),
         ]);
     }
 
-    public function getPasswordResetUrl(): ?string
+    /**
+     * @see AccountController::actionReset()
+     */
+    public function createPasswordResetUrl(): string
     {
-        if (!$this->password_reset_token) {
-            return null;
-        }
-
-        /** @see AccountController::actionReset() */
         return Yii::$app->getUrlManager()->createAbsoluteUrl([
             '/admin/account/reset',
-            'email' => $this->email,
-            'code' => $this->password_reset_token,
+            'code' => $this->createPasswordResetToken(),
         ]);
     }
 
@@ -616,12 +605,8 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
             'password_hash',
             'password_salt',
             'auth_key',
-            'verification_token',
-            'verification_token_created_at',
-            'password_reset_token',
-            'password_reset_token_created_at',
+            'email_confirmed_at',
             'google_2fa_secret',
-            'google_2fa_recovery_codes',
             'login_count',
             'last_login',
             'created_by_user_id',
@@ -652,7 +637,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
 
     public function isUnconfirmed(): bool
     {
-        return !empty($this->verification_token);
+        return $this->email_confirmed_at === null;
     }
 
     /**
@@ -689,7 +674,6 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
             'password' => Yii::t('skeleton', 'USER_PASSWORD_LABEL'),
             'language' => Yii::t('skeleton', 'USER_LANGUAGE_LABEL'),
             'timezone' => Yii::t('skeleton', 'USER_TIMEZONE_LABEL'),
-            'verification_token' => Yii::t('skeleton', 'USER_VERIFICATION_TOKEN_LABEL'),
             'login_count' => Yii::t('skeleton', 'USER_LOGIN_COUNT_LABEL'),
             'last_login' => Yii::t('skeleton', 'USER_LAST_LOGIN_LABEL'),
             'is_owner' => Yii::t('skeleton', 'USER_IS_OWNER_LABEL'),

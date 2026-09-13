@@ -26,7 +26,6 @@ class PasswordResetTest extends TestCase
     public function testPasswordResetWithInvalidUrlParameters(): void
     {
         $this->open('admin/account/reset', [
-            'email' => 'invalid@domain.com',
             'code' => 'invalid-code',
         ]);
 
@@ -35,8 +34,7 @@ class PasswordResetTest extends TestCase
 
     public function testPasswordResetWithWrongInputs(): void
     {
-        $user = $this->getUser();
-        $this->open($user->getPasswordResetUrl());
+        $user = $this->openPasswordResetUrl();
 
         self::submitPasswordResetForm('new-password', 'wrong-repeat-password');
         self::assertAnyValidationErrorSame('The password must match the new password.');
@@ -44,8 +42,7 @@ class PasswordResetTest extends TestCase
 
     public function testPasswordResetWithCorrectInputs(): void
     {
-        $user = $this->getUser();
-        $this->open($user->getPasswordResetUrl());
+        $user = $this->openPasswordResetUrl();
 
         self::submitPasswordResetForm('new-password', 'new-password');
         self::assertCurrentUrlEquals('/');
@@ -54,11 +51,10 @@ class PasswordResetTest extends TestCase
         self::assertEquals($user->id, Yii::$app->getUser()->getId());
     }
 
-    private function getUser(): User
+    private function openPasswordResetUrl(): User
     {
         $user = User::findOne(1);
-        $user->generatePasswordResetToken();
-        $user->update();
+        $this->open($user->createPasswordResetUrl());
 
         return $user;
     }

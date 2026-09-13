@@ -1,5 +1,55 @@
 # Upgrade Guide
 
+## 3.0.0 — Tokens moved to `user_token`
+
+`user.verification_token` and `user.password_reset_token` held their tokens in the clear, so one read of the
+`user` table was a password reset on every account that had one. They now live in a `user_token` table, one row
+per token, stored as an HMAC of the token — a read of that table is worth nothing. The 2FA recovery codes moved
+to the same table (they were already hashed, and copy across unchanged).
+
+`Migrations\M260913170000UserToken` creates the table, copies every live token into it, adds
+`user.email_confirmed_at` and drops the five columns. **Existing confirmation and reset links keep working**;
+they are hashed on the way in.
+
+### `email_confirmed_at`
+
+`isUnconfirmed()` used to mean "has a verification token". Tokens now expire and are garbage collected, which
+would silently confirm every pending account, so whether an address was confirmed is a column of its own. The
+migration backfills it from `updated_at` for every user that had no verification token. A model or fixture that
+set `verification_token` to mark an account unconfirmed sets `email_confirmed_at` to `null` instead, and
+`Models\User::confirmEmail()` is what marks it confirmed.
+
+### What to rename
+
+| Removed                            | Replacement                                            |
+|------------------------------------|--------------------------------------------------------|
+| `generateVerificationToken()`      | `createVerificationToken(): string`                    |
+| `generatePasswordResetToken()`     | `createPasswordResetToken(): string`                   |
+| `clearVerificationToken()`         | `clearVerificationTokens()`                            |
+| `clearPasswordResetToken()`        | `clearPasswordResetTokens()`                           |
+| `getEmailConfirmationUrl()`        | `createEmailConfirmationUrl(): string`                 |
+| `getPasswordResetUrl()`            | `createPasswordResetUrl(): string`                     |
+| `isVerificationTokenValid($token)` | a `UserToken` lookup — see `Models\Forms\AccountConfirmForm` |
+| `isPasswordResetTokenValid($token)`| a `UserToken` lookup — see `Models\Forms\PasswordResetForm`  |
+
+The `create*` methods issue the token as a side effect and return it **in the clear, once** — only its HMAC is
+stored, so a URL cannot be rebuilt from a loaded record afterwards. A form that mails one holds it the way
+`Modules\Admin\Models\Forms\UserForm::getPasswordResetUrl()` and
+`Models\Forms\TwoFactorAuthenticatorForm::$recoveryCodes` do, and the four account mail templates now take the
+URL as a `$url` variable rather than calling the model. Both `create*` methods need a saved record, so a token
+is issued after the insert, not before it.
+
+### URLs
+
+`/admin/account/confirm` and `/admin/account/reset` no longer take an `email` parameter — the token finds its own
+user. A link that still carries one keeps working (the extra parameter is ignored), but anything that *builds*
+these URLs by hand must drop it.
+
+### Retention
+
+`./yii user-token/clear` deletes the tokens that have expired; run it from cron beside `trail/clear` and
+`user-login/clear`. Recovery codes have no expiry — they are spent, not aged out — and are never collected.
+
 ## 3.0.0 — Two-factor authentication
 
 `user.google_2fa_secret` was a plaintext 16-character column, and there were no backup codes at all, so a lost

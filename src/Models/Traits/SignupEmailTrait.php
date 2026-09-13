@@ -12,6 +12,7 @@ trait SignupEmailTrait
     {
         $mail = Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/create', [
             'user' => $this->user,
+            'url' => $this->user->createEmailConfirmationUrl(),
         ]);
 
         $mail->setSubject(Yii::t('skeleton', 'SIGNUP_EMAIL_SIGN_UP_CONFIRMATION'))

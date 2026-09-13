@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Tests\Functional;
 
 use Hirtz\Skeleton\Models\Forms\PasswordRecoverForm;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Models\UserToken;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
@@ -71,12 +72,12 @@ class RecoverPasswordTest extends TestCase
         $this->submitPasswordRecoverForm($user->email);
 
         $user = User::findOne($user->id);
-        self::assertNotNull($user->password_reset_token);
+        self::assertNotNull($user->getLatestToken(UserToken::TYPE_PASSWORD_RESET));
 
         $message = $this->mailer->getLastMessage();
 
         self::assertEquals(key($message->getTo()), $user->email);
-        self::assertStringContainsString($user->getPasswordResetUrl(), $message->getSymfonyEmail()->getHtmlBody());
+        self::assertStringContainsString('/admin/account/reset', $message->getSymfonyEmail()->getHtmlBody());
 
         // The spam protection must not answer differently either: a second request reports the same success
         $this->mailer->reset();
