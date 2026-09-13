@@ -10,16 +10,26 @@ use yii\caching\Cache;
 final class CacheComponents
 {
     /**
-     * @var Cache[]
+     * @var array<string, class-string<Cache>>|null
      */
-    private static array $components;
+    private static ?array $components = null;
 
+    /**
+     * @return array<string, class-string<Cache>>
+     */
     public static function getAll(): array
     {
         return self::$components ??= self::findCaches();
     }
 
+    public static function reset(): void
+    {
+        self::$components = null;
+    }
 
+    /**
+     * @return array<string, class-string<Cache>>
+     */
     private static function findCaches(): array
     {
         $caches = [];

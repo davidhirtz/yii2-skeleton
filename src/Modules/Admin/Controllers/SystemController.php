@@ -28,7 +28,7 @@ class SystemController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['delete', 'flush', 'index', 'php-info', 'publish', 'session-gc', 'view'],
+                        'actions' => ['flush', 'index', 'php-info', 'publish', 'schema', 'session-gc'],
                         'roles' => [User::AUTH_ROLE_ADMIN],
                     ],
                 ],
@@ -36,9 +36,9 @@ class SystemController extends Controller
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'delete' => ['post'],
                     'flush' => ['post'],
                     'publish' => ['post'],
+                    'schema' => ['post'],
                     'session-gc' => ['post'],
                 ],
             ],

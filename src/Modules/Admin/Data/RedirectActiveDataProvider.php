@@ -35,7 +35,7 @@ class RedirectActiveDataProvider extends ActiveDataProvider
         }
 
         if ($this->user) {
-            $this->query->andWhere(['user_id' => $this->user->id]);
+            $this->query->andWhere(['updated_by_user_id' => $this->user->id]);
         }
 
         $this->getPagination()->defaultPageSize = 50;
@@ -57,7 +57,7 @@ class RedirectActiveDataProvider extends ActiveDataProvider
 
         if ($this->user) {
             foreach ($models as $model) {
-                $model->populateRelation('user', $this->user);
+                $model->populateUpdatedRelation($this->user);
             }
         }
 

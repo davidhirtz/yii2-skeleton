@@ -85,20 +85,6 @@ class LogDataProvider extends ArrayDataProvider
         return array_reverse($models);
     }
 
-    protected function findFiles(): array
-    {
-        $files = [];
-
-        foreach (glob(Yii::getAlias($this->basePath . '*')) as $file) {
-            $files[] = [
-                'filename' => pathinfo($file, PATHINFO_BASENAME),
-                'updated_at' => filemtime($file),
-            ];
-        }
-
-        return $files;
-    }
-
     public function isFileValid(): bool
     {
         return is_file($this->basePath . $this->file);

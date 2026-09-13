@@ -124,7 +124,7 @@ class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttribut
         }
     }
 
-    public static function sanitizeUrl(false|string $url): string
+    public static function sanitizeUrl(false|string|null $url): string
     {
         return $url ? preg_replace('/\s+/', '%20', trim($url, '/ ')) : '';
     }
