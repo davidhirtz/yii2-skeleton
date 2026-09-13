@@ -1,0 +1,9 @@
+// Paints over everything but the progress bar, which the page appends to the body while the request runs.
+.is-busy::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  cursor: progress;
+  background-color: var(--busy-backdrop-bg);
+}

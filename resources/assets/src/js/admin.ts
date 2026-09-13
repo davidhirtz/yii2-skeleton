@@ -4,6 +4,7 @@ import type {TinyMCE} from 'tinymce';
 import 'x-timeago';
 
 import aside from './includes/aside';
+import busy from './includes/busy';
 import collapse from './includes/collapse';
 import dropdown from './includes/dropdown';
 import filter from './includes/filter';
@@ -28,6 +29,7 @@ htmx.onLoad(($container) => {
     };
 
     queryAll('[data-aside]', aside);
+    queryAll('[data-busy]', busy);
     queryAll('[data-collapse]', collapse);
     queryAll('[popovertarget]', dropdown);
     queryAll('[data-filter]', filter);

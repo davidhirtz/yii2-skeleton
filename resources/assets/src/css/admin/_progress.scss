@@ -2,10 +2,31 @@
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 80;
   height: 0.5rem;
   width: 100%;
   background-color: var(--progress-bg);
   appearance: none;
+}
+
+// A request of unknown length has no value to show, and `appearance: none` leaves the indeterminate bar empty.
+@media (prefers-reduced-motion: no-preference) {
+  .progress:not([value]) {
+    animation: progress-indeterminate 1.2s ease-in-out infinite;
+    background-image: linear-gradient(90deg, transparent, var(--progress-bar-bg), transparent);
+    background-repeat: no-repeat;
+    background-size: 40% 100%;
+  }
+}
+
+@keyframes progress-indeterminate {
+  from {
+    background-position: -60% 0;
+  }
+
+  to {
+    background-position: 160% 0;
+  }
 }
 
 ::-moz-progress-bar {

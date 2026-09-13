@@ -1,0 +1,2 @@
+var e=document.createElement("progress");e.className="progress";var s=0,o=(t=0)=>(document.querySelector("dialog[open]")?.close(),t?(e.max=t,e.value=0):e.removeAttribute("value"),s++||(document.documentElement.classList.add("is-busy"),document.body.appendChild(e),document.body.inert=!0),e),n=()=>{s&&!--s&&(document.body.inert=!1,document.documentElement.classList.remove("is-busy"),e.remove())},r=t=>{t.addEventListener("htmx:beforeRequest",()=>o()),t.addEventListener("htmx:afterRequest",()=>n())};export{o as a,n as b,r as c};
+//# sourceMappingURL=chunk-5L7YGCX5.js.map

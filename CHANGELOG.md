@@ -1,5 +1,10 @@
 ## 3.0.0 (in development)
 
+- A request that fetches or stores a file makes the page busy: `includes/busy.ts` puts `inert` on the body, an
+  `.is-busy` overlay over everything and a progress bar above that — indeterminate while the length is unknown,
+  fed with the byte count by the chunked upload. `components/FileUpload.ts` used to append a bar of its own, and
+  only past a size threshold, while the page stayed usable and a second upload could be started behind the first.
+  An htmx-driven element opts in with `data-busy`
 - `Modules\Admin\Controllers\UserController::actionUpdate()` renders a user the acting one may not change —
   the site owner, or anyone holding a permission they lack — read-only instead of refusing the request, so every
   link to a user leads somewhere. `Widgets\Forms\ActiveForm::readonly()` is what that does: every fieldset is
