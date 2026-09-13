@@ -1,5 +1,12 @@
 ## 3.0.0 (in development)
 
+- `params/index` generates a `passwordPepper` when there is none, the way it already generated the
+  `cookieValidationKey`, and `params/pepper` does it on demand. `user.password_salt` records which scheme a hash
+  was written under — `Models\User::PASSWORD_PEPPER`, `null`, or a legacy per-user salt — so a pepper can be
+  added to or removed from a running installation without locking anyone out: the hash is reported outdated by
+  `isPasswordHashOutdated()` and rewritten on that user's next successful login. Replacing an existing pepper
+  still invalidates every hash written with it, so `params/pepper` never does that unattended and never defaults
+  to yes
 - The second factor is encrypted and has a recovery path. `user.google_2fa_secret` held the secret in the clear
   in a 16-character column and there were no backup codes, so a lost device meant an administrator.
   `Migrations\M260913160000TwoFactorAuthentication` widens the column, encrypts what is in it and adds

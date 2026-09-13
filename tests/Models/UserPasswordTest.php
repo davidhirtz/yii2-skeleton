@@ -71,6 +71,54 @@ class UserPasswordTest extends TestCase
         self::assertTrue($user->validatePassword('password'));
     }
 
+    public function testAddingAPepperToARunningInstallationRehashesOnLogin(): void
+    {
+        $user = $this->getUserFromFixture('owner');
+
+        // A hash already migrated off the legacy salt, written before anyone configured a pepper
+        $user->generatePasswordHash('password');
+        $user->update();
+
+        self::assertNull($user->password_salt);
+        self::assertFalse($user->isPasswordHashOutdated());
+
+        Yii::$app->params['passwordPepper'] = 'a-pepper-from-params';
+
+        $user = User::findOne($user->id);
+
+        // The old hash still validates, and is only marked for replacement
+        self::assertTrue($user->validatePassword('password'));
+        self::assertTrue($user->isPasswordHashOutdated());
+
+        $form = Yii::$container->get(LoginForm::class, [], [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+
+        self::assertTrue($form->login());
+
+        $user = User::findOne($user->id);
+
+        self::assertEquals(User::PASSWORD_PEPPER, $user->password_salt);
+        self::assertFalse($user->isPasswordHashOutdated());
+        self::assertTrue($user->validatePassword('password'));
+    }
+
+    public function testRemovingThePepperMarksTheHashOutdated(): void
+    {
+        Yii::$app->params['passwordPepper'] = 'a-pepper-from-params';
+
+        $user = $this->getUserFromFixture('owner');
+        $user->generatePasswordHash('password');
+
+        self::assertEquals(User::PASSWORD_PEPPER, $user->password_salt);
+        self::assertFalse($user->isPasswordHashOutdated());
+
+        Yii::$app->params['passwordPepper'] = null;
+
+        self::assertTrue($user->isPasswordHashOutdated());
+    }
+
     public function testPasswordIsCappedAtTheBcryptLimit(): void
     {
         self::assertSame(72, User::instance()->passwordMaxLength);

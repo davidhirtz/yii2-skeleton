@@ -36,14 +36,36 @@ class ParamsControllerTest extends TestCase
         self::assertStringContainsString("- *cookieValidationKey*  'test'" . PHP_EOL, $controller->flushStdOutBuffer());
     }
 
-    public function testActionIndexWithoutCookieValidationKey(): void
+    public function testActionIndexGeneratesTheMissingSecrets(): void
     {
         Yii::$app->params = [];
 
         $controller = $this->createParamsController();
         $controller->actionIndex();
 
-        self::assertEquals('Generate cookie validation key? (yes|no) [yes]:', $controller->flushStdOutBuffer());
+        $expected = 'Generate cookie validation key? (yes|no) [yes]:Generate password pepper? (yes|no) [yes]:';
+        self::assertEquals($expected, $controller->flushStdOutBuffer());
+    }
+
+    public function testActionPepper(): void
+    {
+        $controller = $this->createParamsController();
+        $controller->interactive = false;
+
+        $controller->actionPepper();
+
+        self::assertEquals('Password pepper generated.' . PHP_EOL, $controller->flushStdOutBuffer());
+        self::assertNotEmpty($pepper = Yii::$app->params['passwordPepper']);
+
+        $contents = file_get_contents(Yii::getAlias("$this->configPath/params.php"));
+        self::assertStringContainsString($pepper, $contents);
+
+        // An existing pepper is never replaced without being asked, and never unattended
+        $controller->actionPepper();
+        self::assertEquals($pepper, Yii::$app->params['passwordPepper']);
+
+        $controller->actionPepper(replace: true);
+        self::assertEquals($pepper, Yii::$app->params['passwordPepper']);
     }
 
     public function testActionCookie(): void

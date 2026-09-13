@@ -82,18 +82,25 @@ nothing; it stays in the schema because the hashes written with it still validat
 new `isPasswordHashOutdated()`. The same check replaces the unconditional rehash the login did on every request,
 which was pure cost, and it also picks up a raised `Security::$passwordHashCost`.
 
-An **optional pepper** takes the salt's place: set `passwordPepper` in `config/params.php` and it is appended to
-every password before hashing, so a leaked `user` table cannot be attacked without a secret the database never
-held.
+A **pepper** takes the salt's place. `./yii params` generates one into `config/params.php` when there is none,
+the way it already generated the `cookieValidationKey`, and `./yii params/pepper` does it on demand. It is
+appended to every password before hashing, so a leaked `user` table cannot be attacked without a secret the
+database never held.
 
 ```php
 // config/params.php
 'passwordPepper' => '…',
 ```
 
-Set it once, keep it out of the database and out of version control, and **never change or remove it** — every
-hash written with it stops matching. Hashes written before it keep their `password_salt` and keep working;
-they migrate to the peppered form as their owners log in.
+`password_salt` records which scheme each hash was written under — `Models\User::PASSWORD_PEPPER` for a peppered
+one, `null` for none, a random string for one that predates both — so **adding a pepper to a running
+installation locks nobody out**: the existing hashes still validate, `isPasswordHashOutdated()` reports them, and
+each is rewritten on its owner's next successful login. Removing it again works the same way.
+
+**Replacing** a pepper is the one destructive move: the marker says a hash was peppered, not which pepper it
+used, so every hash written with the old one stops matching and those users need a password reset. `params/pepper`
+therefore never replaces an existing pepper unattended, and never defaults to yes. Keep it out of version control
+and back it up with the rest of your secrets.
 
 ## 3.0.0 — Login rate limiting
 

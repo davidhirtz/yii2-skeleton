@@ -35,7 +35,8 @@ use yii\web\IdentityInterface;
  * @property string|null $name
  * @property string $email
  * @property string|null $password_hash
- * @property string|null $password_salt
+ * @property string|null $password_salt which scheme the hash was written with — {@see static::PASSWORD_PEPPER},
+ *     `null` for none, and a random string for a hash that predates both
  * @property string $language
  * @property string|null $timezone
  * @property string|null $auth_key
@@ -71,6 +72,13 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     final public const string AUTH_USER_UPDATE = 'userUpdate';
     final public const string AUTH_USER_ASSIGN = 'authUpdate';
     final public const string AUTH_ROLE_ADMIN = 'admin';
+
+    /**
+     * Recorded in `password_salt` for a hash written with the `passwordPepper` param, which is what lets a pepper
+     * be added to a running installation: a hash whose marker disagrees with the configured pepper is outdated,
+     * not broken, and the next successful login rewrites it.
+     */
+    final public const string PASSWORD_PEPPER = 'pepper';
 
     /**
      * Marks a secret written by {@see static::encryptTwoFactorAuthenticationSecret()}, so a row that predates the
@@ -209,8 +217,9 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     }
 
     /**
-     * True while the stored hash was written with the legacy `password_salt` or below the security component's
-     * current cost, so a successful login can replace it.
+     * True while the stored hash was written under a scheme the application no longer uses — a legacy per-user
+     * salt, a pepper that has since been added or removed, or a cost below the security component's current one.
+     * A successful login is where it gets rewritten.
      */
     public function isPasswordHashOutdated(): bool
     {
@@ -218,9 +227,10 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
             return false;
         }
 
-        return (bool)$this->password_salt || password_needs_rehash($this->password_hash, PASSWORD_BCRYPT, [
-            'cost' => Yii::$app->getSecurity()->passwordHashCost,
-        ]);
+        return $this->password_salt !== self::getPasswordSaltForNewHash()
+            || password_needs_rehash($this->password_hash, PASSWORD_BCRYPT, [
+                'cost' => Yii::$app->getSecurity()->passwordHashCost,
+            ]);
     }
 
     #[Override]
@@ -297,19 +307,35 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
 
     public function generatePasswordHash(string $password): void
     {
-        // bcrypt carries a salt of its own, so the column adds nothing — it is only kept for the hashes that
-        // were written with it. Clearing it first is what makes the pepper apply below.
-        $this->password_salt = null;
+        // bcrypt carries a salt of its own, so the column records the scheme instead. Setting it first is what
+        // decides whether the pepper applies below.
+        $this->password_salt = self::getPasswordSaltForNewHash();
         $this->password_hash = Yii::$app->getSecurity()->generatePasswordHash($this->getSeasonedPassword($password));
     }
 
     /**
      * The optional `passwordPepper` param is a secret the database does not hold, so a leaked hash cannot be
-     * attacked offline. A hash written before it keeps its own `password_salt` and is still checked with that.
+     * attacked offline. Which scheme a given hash used is recorded in `password_salt`, so adding, changing or
+     * removing the pepper never locks anyone out of an account they can still type the password for — it only
+     * marks the hash outdated.
      */
     private function getSeasonedPassword(string $password): string
     {
-        return $password . ($this->password_salt ?? (Yii::$app->params['passwordPepper'] ?? ''));
+        return $password . match ($this->password_salt) {
+            null => '',
+            static::PASSWORD_PEPPER => self::getPasswordPepper(),
+            default => $this->password_salt,
+        };
+    }
+
+    private static function getPasswordSaltForNewHash(): ?string
+    {
+        return self::getPasswordPepper() === '' ? null : static::PASSWORD_PEPPER;
+    }
+
+    private static function getPasswordPepper(): string
+    {
+        return (string)(Yii::$app->params['passwordPepper'] ?? '');
     }
 
     public function generateAuthKey(): void

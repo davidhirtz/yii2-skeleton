@@ -26,6 +26,10 @@ class ParamsController extends Controller
             $this->actionCookie();
         }
 
+        if (empty(Yii::$app->params['passwordPepper'])) {
+            $this->actionPepper();
+        }
+
         $config = $this->getConfig($this->config);
         $params = Yii::$app->params;
         $maxLength = 0;
@@ -66,6 +70,38 @@ class ParamsController extends Controller
                 $this->setConfig($this->config, $params, 'Cookie validation key generated.');
             }
         }
+    }
+
+    /**
+     * Generates the password pepper, the secret appended to every password before it is hashed.
+     */
+    public function actionPepper(bool $replace = false): void
+    {
+        $params = $this->getConfig($this->config);
+        $found = !empty($params['passwordPepper']);
+
+        if ($found && !$replace) {
+            return;
+        }
+
+        if ($this->confirmPepper($found)) {
+            $params['passwordPepper'] = static::generateKey();
+            $this->setConfig($this->config, $params, 'Password pepper generated.');
+        }
+    }
+
+    /**
+     * Rotating the pepper does lock people out — the marker in `password_salt` records that a hash was peppered,
+     * not which pepper it used — so a replacement is never the default answer and never happens unattended.
+     */
+    private function confirmPepper(bool $found): bool
+    {
+        if ($found) {
+            return $this->interactive
+                && $this->confirm('Replacing the password pepper invalidates every password hashed with the current one. Continue?', false);
+        }
+
+        return !$this->interactive || $this->confirm('Generate password pepper?', true);
     }
 
     /**
@@ -115,9 +151,12 @@ class ParamsController extends Controller
 
     protected static function generateCookieValidationKey(): string
     {
-        $length = 32;
-        $bytes = openssl_random_pseudo_bytes($length);
+        return static::generateKey();
+    }
 
+    protected static function generateKey(int $length = 32): string
+    {
+        $bytes = random_bytes($length);
         return strtr(substr(base64_encode($bytes), 0, $length), '+/=', '_-.');
     }
 }
