@@ -1,5 +1,8 @@
 ## 3.0.0 (in development)
 
+- `user.login_count` is an unsigned `int`. It was a signed `SMALLINT` that every login — a cookie login
+  included — increments, so an account that reached 32,767 could not log in again
+  (`Migrations\M260913130000LoginCount`)
 - The temporary `.cnf` `Db\Mysql\Schema` writes the database password to for `mysqldump` is created `0600`
   instead of with the process umask
 - The error log no longer carries credentials. Its `maskVars` still named `User.newPassword` and friends after the
