@@ -69,7 +69,9 @@ htmx.on('htmx:responseError', (event: Event) => {
 });
 
 // `hx-include` serializes the form without firing `submit`, which is when TinyMCE writes to its textarea.
-htmx.on('htmx:configRequest', () => {
+// `htmx:confirm` is the last event htmx fires before it reads the inputs — by `htmx:configRequest` the values
+// have already been collected and a save would write the editor's content one request too late.
+htmx.on('htmx:confirm', () => {
     window.tinymce?.triggerSave();
 });
 
