@@ -1,5 +1,10 @@
 ## 3.0.0 (in development)
 
+- `userUpdate` is no longer a takeover of every account it reaches. It can set a password, generate a reset token
+  and clear a second factor, so its holder could log in as anyone who was not the owner — including a user holding
+  `authUpdate` or `admin`. `Rbac\Rules\OwnerRule` now also refuses a target whose permissions the acting user
+  does not already hold, and `Migrations\M260913150000UserDeleteRule` puts the same rule on `userDelete`. An
+  actor who holds every permission is answered without a lookup, so the ordinary administrator costs nothing
 - The guest-facing forms no longer say which email addresses have an account. `IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND`,
   the wrong-password message and `COMMON_ACCOUNT_CURRENTLY_DISABLED` were three different answers, the password
   check was skipped entirely when nothing matched — so a missing address was measurably faster to reject — and

@@ -1,5 +1,24 @@
 # Upgrade Guide
 
+## 3.0.0 — `userUpdate` and `userDelete` respect the permission hierarchy
+
+`Rbac\Rules\OwnerRule` guarded the site owner and nothing else, so anyone with `userUpdate` could set a
+password — or generate a reset token, or clear the second factor — for a user holding `authUpdate` or `admin`,
+and then log in as them. The rule now also refuses a target holding a permission the acting user does not,
+and `Migrations\M260913150000UserDeleteRule` attaches it to `userDelete` as well (it re-saves the rule itself,
+which every installation needs whatever its permissions look like).
+
+Two things follow:
+
+- A user with a **narrow** set of permissions who also manages users can no longer edit or delete the
+  administrators. If a project relied on that — a support role that resets anyone's password, say — give that
+  role the permissions of the accounts it has to reach, or grant it `admin`.
+- The check compares permission sets, so it reads both users' permissions. An actor who holds every registered
+  permission is answered without any lookup at all, and the results are memoised per request, so an ordinary
+  administrator pays nothing and a restricted one pays one lookup per distinct user on the page.
+
+The owner remains unreachable to everyone but themselves, unchanged.
+
 ## 3.0.0 — User enumeration
 
 The login, password recovery and confirmation resend forms answered differently for an address that has an
