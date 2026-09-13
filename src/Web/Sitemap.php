@@ -55,11 +55,19 @@ class Sitemap extends Component
     public array $views = [];
 
     /**
-     * @var SitemapInterface[]|array containing the class definitions of all {@see ActiveRecord} which should be used to
-     * create sitemap URLs via the {@see SitemapBehavior} behavior. If `useSitemapIndex` is set to true, the key can
-     * optionally be set to a string which is then used in the sitemap index url generation.
+     * @var array<array-key, class-string<ActiveRecord&SitemapInterface>|array<string, mixed>> the class definitions of all
+     * {@see ActiveRecord} which should be used to create sitemap URLs via the {@see SitemapBehavior} behavior. A
+     * definition may carry a `behaviors` key, which is attached to the model rather than passed to its constructor.
+     * If `useSitemapIndex` is set to true, the key can optionally be set to a string which is then used in the
+     * sitemap index url generation.
      */
     public array $models = [];
+
+    /**
+     * @var array<array-key, ActiveRecord&SitemapInterface> the models of {@see static::$models}, instantiated by
+     * {@see init()}.
+     */
+    private array $sitemapModels = [];
 
     /**
      * @var array containing additional sitemap URLs. Urls can be set as route or relative URL. If additional
@@ -70,16 +78,22 @@ class Sitemap extends Component
 
     public function init(): void
     {
-        foreach ($this->models as &$model) {
-            $model = Yii::createObject($model);
+        foreach ($this->models as $key => $config) {
+            // the behaviors belong to the configuration, not to the object: `Yii::createObject()` has no property
+            // to assign them to, and reading them back off the model returns the ones it already attached
+            $behaviors = is_array($config) ? ArrayHelper::remove($config, 'behaviors', []) : [];
 
-            if ($behaviors = ($model['behaviors'] ?? false)) {
-                if (isset($behaviors['sitemap'])) {
-                    $behaviors['sitemap']['class'] ??= SitemapBehavior::class;
-                }
+            if (isset($behaviors['sitemap']) && is_array($behaviors['sitemap'])) {
+                $behaviors['sitemap']['class'] ??= SitemapBehavior::class;
+            }
 
+            $model = Yii::createObject($config);
+
+            if ($behaviors) {
                 $model->attachBehaviors($behaviors);
             }
+
+            $this->sitemapModels[$key] = $model;
         }
 
         if (is_callable($this->variations)) {
@@ -99,8 +113,8 @@ class Sitemap extends Component
         if (!$this->useSitemapIndex) {
             $urls = $this->getUrlsInternal();
 
-            foreach ($this->models as $key) {
-                $urls = [...$urls, ...$key->generateSitemapUrls()];
+            foreach ($this->sitemapModels as $model) {
+                $urls = [...$urls, ...$model->generateSitemapUrls()];
             }
 
             return $urls;
@@ -110,7 +124,7 @@ class Sitemap extends Component
             return array_slice($this->getUrlsInternal(), $offset * $this->maxUrlCount, $this->maxUrlCount);
         }
 
-        $model = $this->models[$key] ?? null;
+        $model = $this->sitemapModels[$key] ?? null;
 
         return $model?->generateSitemapUrls($offset) ?? [];
     }
@@ -132,12 +146,13 @@ class Sitemap extends Component
             ];
         }
 
-        foreach ($this->models as $key => $model) {
+        // A model sitemap has no `lastmod`: nothing asks the model for one, and `$urlset` is spent by the loop above
+        foreach ($this->sitemapModels as $key => $model) {
             $total = ceil($model->getSitemapUrlCount() / $this->maxUrlCount);
+
             for ($offset = 0; $offset < $total; $offset++) {
                 $sitemaps[] = [
                     'loc' => ['sitemap/index', 'key' => $key, 'offset' => $offset],
-                    'lastmod' => $this->getMaxLastMod($urlset),
                 ];
             }
         }
@@ -161,7 +176,7 @@ class Sitemap extends Component
             $languages = $view['languages'] ?? $defaultLanguages;
             $paramName = $view['paramName'] ?? 'view';
             $defaultView = $view['defaultView'] ?? 'index';
-            $params = [];
+            $params = $view['params'] ?? [];
 
             $options = ArrayHelper::merge($view['options'] ?? [], [
                 'except' => ['_*', 'error.php'],
@@ -170,11 +185,22 @@ class Sitemap extends Component
 
             if (isset($view['alias'], $view['route'])) {
                 foreach (FileHelper::findFiles(Yii::getAlias($view['alias']), $options) as $file) {
-                    $name = $paramName !== false ? pathinfo((string)$file, PATHINFO_FILENAME) : null;
+                    $name = pathinfo((string)$file, PATHINFO_FILENAME);
 
                     foreach ($languages as $language) {
+                        $route = [$view['route'], ...$params];
+
+                        // `false` would collide with the route's own key, which is `0`
+                        if ($paramName !== false && $name !== $defaultView) {
+                            $route[$paramName] = $name;
+                        }
+
+                        if ($language !== null) {
+                            $route['language'] = $language;
+                        }
+
                         $urls[] = [
-                            'loc' => array_filter([$view['route'], $paramName => $name !== $defaultView ? $name : null, 'language' => $language, ...$params]),
+                            'loc' => $route,
                             'lastmod' => date(DATE_W3C, filectime($file)),
                         ];
                     }

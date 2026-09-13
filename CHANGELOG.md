@@ -1,5 +1,12 @@
 ## 3.0.0 (in development)
 
+- **`Web\Sitemap::$models` is the configuration, and the instantiated models live beside it.** `init()` read the
+  `behaviors` key back off the model it had just created — `ActiveRecord` is an `ArrayAccess`, so the key resolved
+  to the behaviors already attached and any model declaring a `sitemap` behavior of its own crashed the component.
+  The key is taken off the configuration now, before `Yii::createObject()`, and still defaults to
+  `Behaviors\SitemapBehavior`. `generateFileUrls()` no longer collides a `paramName` of `false` with the route's
+  own key, and reads the `params` of a view entry, which it documented but dropped; a model sitemap in
+  `generateIndexUrls()` carries no `lastmod`, which was always empty
 - **`Modules\Admin\Module::$alias` is `params['adminAlias']`**, read through
   `Base\Traits\ApplicationTrait::getAdminAlias()` and defaulting to `admin`. The property was never read: the URL
   rules took the value from the raw `modules.admin.alias` config array, so setting it on a subclass did nothing,

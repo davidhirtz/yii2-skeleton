@@ -157,6 +157,8 @@ trait NestedTreeTrait
                 }
 
                 if (!$this->getIsNewRecord()) {
+                    $this->refreshTreeAttributes();
+
                     if ($this->parent_id === $this->id || ($this->lft < $parent->lft && $this->rgt > $parent->rgt)) {
                         $this->addInvalidAttributeError('parent_id');
                         return;
@@ -207,6 +209,8 @@ trait NestedTreeTrait
                 $this->depth = 0;
             }
         } elseif ($this->isAttributeChanged('parent_id', false)) {
+            $this->refreshTreeAttributes();
+
             $query = static::find()->select(['id'])->where('[[lft]] BETWEEN :lft AND :rgt', [
                 'lft' => $this->lft,
                 'rgt' => $this->rgt,
@@ -265,6 +269,23 @@ trait NestedTreeTrait
             $this->rgt += $diff;
             $this->lft += $diff;
             $this->depth += $depthDiff;
+        }
+    }
+
+    /**
+     * Every insert and delete shifts the `lft` and `rgt` of the records to its right, so a record that has been held
+     * in memory since before one of those carries stale bounds — and a move computes every counter relative to them.
+     */
+    private function refreshTreeAttributes(): void
+    {
+        $attributes = (new Query())
+            ->select(['lft', 'rgt', 'depth'])
+            ->from(static::tableName())
+            ->where(['id' => $this->id])
+            ->one(static::getDb());
+
+        if ($attributes) {
+            $this->setAttributes($attributes, false);
         }
     }
 

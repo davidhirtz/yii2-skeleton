@@ -139,6 +139,209 @@ class NestedTreeTraitTest extends TestCase
         // Re-applying the same order is a no-op and updates nothing.
         self::assertSame(0, TestNestedTreeActiveRecord::rebuildNestedTree($root, $order));
     }
+
+    public function testValidateParentIdRefusesAParentThatDoesNotExist(): void
+    {
+        $record = TestNestedTreeActiveRecord::create();
+        $record->name = 'Orphan';
+        $record->parent_id = 99999;
+
+        self::assertFalse($record->save());
+        self::assertArrayHasKey('parent_id', $record->getErrors());
+    }
+
+    public function testValidateParentIdRefusesTheRecordItself(): void
+    {
+        $root = $this->createRecord('Root');
+
+        $root->parent_id = $root->id;
+
+        self::assertFalse($root->save());
+        self::assertArrayHasKey('parent_id', $root->getErrors());
+    }
+
+    /**
+     * A record cannot be moved below one of its own descendants: the branch would be detached from the tree.
+     */
+    public function testValidateParentIdRefusesADescendant(): void
+    {
+        $root = $this->createRecord('Root');
+        $child = $this->createRecord('Child', $root);
+
+        $root->parent_id = $child->id;
+
+        self::assertFalse($root->save());
+        self::assertArrayHasKey('parent_id', $root->getErrors());
+    }
+
+    public function testAParentIdThatDidNotChangeIsNotLookedUpAgain(): void
+    {
+        $root = $this->createRecord('Root');
+        $child = $this->createRecord('Child', $root);
+
+        $child->name = 'Renamed';
+
+        self::assertTrue($child->save());
+        self::assertSame($root->id, $child->parent_id);
+    }
+
+    public function testGetFirstAncestorIsTheOutermostOne(): void
+    {
+        $root = $this->createRecord('Root');
+        $branch = $this->createRecord('Branch', $root);
+        $leaf = $this->createRecord('Leaf', $branch);
+
+        self::assertSame($root->id, $leaf->getFirstAncestor()?->id);
+        self::assertNull($root->getFirstAncestor());
+    }
+
+    /**
+     * `setAncestors()` and `setDescendants()` fill the caches from one already loaded, `lft`-ordered set, so a grid
+     * does not query per row.
+     */
+    public function testTheAncestorAndDescendantCachesAreFilledFromALoadedSet(): void
+    {
+        $root = $this->createRecord('Root');
+        $branch = $this->createRecord('Branch', $root);
+        $leaf = $this->createRecord('Leaf', $branch);
+
+        $records = TestNestedTreeActiveRecord::find()
+            ->orderBy(['lft' => SORT_ASC])
+            ->all();
+
+        [$root, $branch, $leaf] = $records;
+
+        $queries = $this->countQueries(function () use ($records, $root, $branch, $leaf): void {
+            foreach ($records as $record) {
+                $record->setAncestors($records);
+                $record->setDescendants($records);
+            }
+
+            self::assertSame([], $root->getAncestors());
+            self::assertSame([$root->id, $branch->id], array_keys($leaf->getAncestors()));
+            self::assertSame([$branch->id, $leaf->id], array_keys($root->getDescendants()));
+            self::assertSame([], $leaf->getDescendants());
+        });
+
+        self::assertSame(0, $queries);
+    }
+
+    public function testRefreshingTheAncestorsQueriesAgain(): void
+    {
+        $root = $this->createRecord('Root');
+        $child = $this->createRecord('Child', $root);
+
+        $child->setAncestors([]);
+        self::assertSame([], $child->getAncestors());
+
+        self::assertSame([$root->id], array_keys($child->getAncestors(true)));
+    }
+
+    public function testGetBranchCountCountsTheDescendants(): void
+    {
+        $root = $this->createRecord('Root');
+        $branch = $this->createRecord('Branch', $root);
+        $this->createRecord('Leaf', $branch);
+
+        $root->refresh();
+        $branch->refresh();
+
+        self::assertSame(2, $root->getBranchCount());
+        self::assertSame(1, $branch->getBranchCount());
+
+        // a record that is not in the tree yet has no `lft` / `rgt` at all
+        self::assertSame(0, TestNestedTreeActiveRecord::create()->getBranchCount());
+    }
+
+    public function testDeleteNestedTreeItemsRemovesTheWholeBranch(): void
+    {
+        $root = $this->createRecord('Root');
+        $branch = $this->createRecord('Branch', $root);
+        $this->createRecord('Leaf', $branch);
+        $keep = $this->createRecord('Other root');
+
+        $root->refresh();
+        $root->deleteNestedTreeItems();
+
+        self::assertSame(2, (int)TestNestedTreeActiveRecord::find()->count());
+        self::assertNotNull(TestNestedTreeActiveRecord::findOne($root->id));
+        self::assertNotNull(TestNestedTreeActiveRecord::findOne($keep->id));
+    }
+
+    public function testMovingABranchIntoAnotherOne(): void
+    {
+        $first = $this->createRecord('First');
+        $second = $this->createRecord('Second');
+
+        $branch = $this->createRecord('Branch', $first);
+        $leaf = $this->createRecord('Leaf', $branch);
+
+        $branch->populateParentRelation($second);
+
+        self::assertTrue($branch->save());
+
+        $first->refresh();
+        $second->refresh();
+        $leaf->refresh();
+        $branch->refresh();
+
+        self::assertSame(0, $first->getBranchCount());
+        self::assertSame(2, $second->getBranchCount());
+        self::assertSame(1, $branch->depth);
+        self::assertSame(2, $leaf->depth);
+
+        // the tree is still consistent, so a rebuild finds nothing to change
+        self::assertSame(0, TestNestedTreeActiveRecord::rebuildNestedTree());
+    }
+
+    public function testRebuildNestedTreeRepairsTheWholeTree(): void
+    {
+        $root = $this->createRecord('Root');
+        $branch = $this->createRecord('Branch', $root);
+        $leaf = $this->createRecord('Leaf', $branch);
+
+        TestNestedTreeActiveRecord::updateAll(['lft' => 100, 'rgt' => 200, 'depth' => 9], ['id' => $leaf->id]);
+
+        self::assertSame(1, TestNestedTreeActiveRecord::rebuildNestedTree());
+
+        $leaf->refresh();
+
+        self::assertSame(3, (int)$leaf->lft);
+        self::assertSame(4, (int)$leaf->rgt);
+        self::assertSame(2, (int)$leaf->depth);
+    }
+
+    public function testIndentNestedTreeMarksTheDepthOfEachRecord(): void
+    {
+        $root = $this->createRecord('Root');
+        $branch = $this->createRecord('Branch', $root);
+        $this->createRecord('Leaf', $branch);
+        $this->createRecord('Sibling', $root);
+        $this->createRecord('Other root');
+
+        $records = TestNestedTreeActiveRecord::find()
+            ->orderBy(['lft' => SORT_ASC])
+            ->all();
+
+        self::assertSame([
+            'Root',
+            '- Branch',
+            '-- Leaf',
+            '- Sibling',
+            'Other root',
+        ], array_values(TestNestedTreeActiveRecord::indentNestedTree($records, 'name')));
+    }
+
+    private function createRecord(string $name, ?TestNestedTreeActiveRecord $parent = null): TestNestedTreeActiveRecord
+    {
+        $record = TestNestedTreeActiveRecord::create();
+        $record->name = $name;
+        $record->populateParentRelation($parent);
+
+        self::assertTrue($record->save());
+
+        return $record;
+    }
 }
 
 class TestNestedTreeActiveRecord extends ActiveRecord
