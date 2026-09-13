@@ -104,6 +104,7 @@ class UserForm extends Model
     {
         if ($this->newPassword) {
             $this->user->afterPasswordChange();
+            Yii::$app->getUser()->destroyOtherSessions($this->user);
         }
 
         if ($this->sendEmail) {

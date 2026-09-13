@@ -122,7 +122,16 @@ class UserController extends Controller
 
     public function actionDisableAuthenticator(int $id): Response|string
     {
-        return $this->updateUserAttributes($id, ['google_2fa_secret' => null]);
+        $user = $this->findUser($id, User::AUTH_USER_UPDATE);
+        $user->google_2fa_secret = null;
+
+        if ($user->update()) {
+            // A session opened behind the second factor must not outlive it.
+            $this->webuser->destroyOtherSessions($user);
+            $this->success(Yii::t('skeleton', 'USER_SUCCESS_UPDATED'));
+        }
+
+        return $this->redirect(['update', 'id' => $user->id]);
     }
 
     public function actionReset(int $id): Response|string
@@ -188,17 +197,5 @@ class UserController extends Controller
         return $this->render('ownership', [
             'form' => $form,
         ]);
-    }
-
-    protected function updateUserAttributes(int $id, array $attributes): Response
-    {
-        $user = $this->findUser($id, User::AUTH_USER_UPDATE);
-        $user->setAttributes($attributes, false);
-
-        if ($user->save()) {
-            $this->success(Yii::t('skeleton', 'USER_SUCCESS_UPDATED'));
-        }
-
-        return $this->redirect(['update', 'id' => $user->id]);
     }
 }

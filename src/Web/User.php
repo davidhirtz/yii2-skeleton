@@ -190,6 +190,27 @@ class User extends \yii\web\User
     }
 
     /**
+     * Rotating the auth key only invalidates the auto login cookies — every session row already written for this
+     * user keeps working until it expires, so a password change has to delete them by hand.
+     *
+     * @return int the number of sessions destroyed
+     */
+    public function destroyOtherSessions(?\Hirtz\Skeleton\Models\User $user = null): int
+    {
+        $user ??= $this->getIdentity();
+        $session = Yii::$app->getSession();
+
+        if (!$user?->id || !$session instanceof DbSession) {
+            return 0;
+        }
+
+        return $session->destroyUserSessions(
+            $user->id,
+            $session->getIsActive() ? $session->getId() : null
+        );
+    }
+
+    /**
      * A flow that logs a user in without asking for a password — a password reset, an email confirmation, a signup —
      * must not skip the second factor. It has no code to check, so it has to refuse the login instead.
      */

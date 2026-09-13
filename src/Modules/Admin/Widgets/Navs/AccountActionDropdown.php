@@ -21,8 +21,17 @@ class AccountActionDropdown extends ActionDropdown
     #[Override]
     protected function configure(): void
     {
-        $this->addItem($this->getAccountDeleteButton());
+        $this->addItem(
+            $this->getAccountLogoutOtherSessionsButton(),
+            $this->getAccountDeleteButton(),
+        );
         parent::configure();
+    }
+
+    protected function getAccountLogoutOtherSessionsButton(): ?Stringable
+    {
+        return AccountLogoutOtherSessionsButton::make()
+            ->model($this->model);
     }
 
     protected function getAccountDeleteButton(): ?Stringable

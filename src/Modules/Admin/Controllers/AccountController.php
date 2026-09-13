@@ -43,6 +43,7 @@ class AccountController extends Controller
                             'disable-authenticator',
                             'enable-authenticator',
                             'logout',
+                            'logout-other-sessions',
                             'security',
                             'update',
                             'timezone',
@@ -70,6 +71,7 @@ class AccountController extends Controller
                     'disable-authenticator' => ['post'],
                     'enable-authenticator' => ['post'],
                     'logout' => ['post'],
+                    'logout-other-sessions' => ['post'],
                     'token' => ['post'],
                     'timezone' => ['post'],
                 ],
@@ -153,6 +155,17 @@ class AccountController extends Controller
         }
 
         return $this->redirect(['login']);
+    }
+
+    public function actionLogoutOtherSessions(): Response|string
+    {
+        $count = $this->webuser->destroyOtherSessions();
+
+        $this->success($count
+            ? Yii::t('skeleton', 'ACCOUNT_SUCCESS_OTHER_SESSIONS_ENDED', ['count' => $count])
+            : Yii::t('skeleton', 'ACCOUNT_SUCCESS_NO_OTHER_SESSIONS'));
+
+        return $this->redirect(['security']);
     }
 
     public function actionConfirm(string $email, string $code): Response|string

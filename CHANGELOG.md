@@ -1,5 +1,13 @@
 ## 3.0.0 (in development)
 
+- A password change ends every other session. Rotating the auth key only invalidated the auto login cookies, while
+  the `session` rows of the same user kept working — so a stolen session survived the password change meant to
+  close it. `Web\User::destroyOtherSessions()` deletes them through the new
+  `Web\DbSession::destroyUserSessions()`, and the account credentials form, the password reset, the admin user
+  form and the admin's 2FA removal all call it. A user can also end them by hand through the new
+  `account/logout-other-sessions` action and the `Modules\Admin\Widgets\Navs\AccountLogoutOtherSessionsButton`
+  in the account dropdown
+- `Modules\Admin\Controllers\UserController::updateUserAttributes()` is gone with its only caller
 - The credentials email never carries a password. `Modules\Admin\Models\Forms\UserForm` generates a password
   reset token whenever `sendEmail` is set — not only for a user created without a password — and the mail links
   there, so nothing readable from a mailbox or a mail archive is a working credential.

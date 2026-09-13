@@ -96,6 +96,7 @@ class PasswordResetForm extends Model
         $this->user->afterPasswordChange();
 
         $webuser = Yii::$app->getUser();
+        $webuser->destroyOtherSessions($this->user);
 
         $canLogin = $webuser->getIsGuest()
             && !$webuser->isTwoFactorAuthenticationRequired($this->user)
