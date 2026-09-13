@@ -74,7 +74,7 @@ class PasswordResetForm extends Model
 
     public function validatePasswordResetCode(): bool
     {
-        if ($this->user->password_reset_token !== $this->code) {
+        if (!$this->user?->isPasswordResetTokenValid($this->code)) {
             $this->addError('id', Yii::t('skeleton', 'PASSWORD_RESET_PASSWORD_RECOVERY'));
         }
 
@@ -92,7 +92,7 @@ class PasswordResetForm extends Model
 
         $this->user->generateAuthKey();
         $this->user->generatePasswordHash($this->newPassword);
-        $this->user->password_reset_token = null;
+        $this->user->clearPasswordResetToken();
         $this->user->afterPasswordChange();
 
         $webuser = Yii::$app->getUser();

@@ -1,5 +1,11 @@
 ## 3.0.0 (in development)
 
+- Verification and password reset tokens expire. `user` carries a `verification_token_created_at` and a
+  `password_reset_token_created_at` (`Migrations\M260913140000TokenExpiry`), `Models\User::$tokenLifetime`
+  is how long one stays usable (24 hours), and `isVerificationTokenValid()` / `isPasswordResetTokenValid()`
+  compare through `Security::compareString()` where the forms compared with `!==`. A successful login clears
+  whatever reset token is out there, and `Models\Forms\PasswordRecoverForm::isAlreadySent()` reads the token's
+  own timestamp instead of the record's `updated_at`
 - A password change ends every other session. Rotating the auth key only invalidated the auto login cookies, while
   the `session` rows of the same user kept working — so a stolen session survived the password change meant to
   close it. `Web\User::destroyOtherSessions()` deletes them through the new

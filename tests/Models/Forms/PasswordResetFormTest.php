@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Models\Forms;
 
+use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Models\Forms\PasswordResetForm;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
@@ -37,6 +38,19 @@ class PasswordResetFormTest extends TestCase
         $user = User::findOne($user->id);
         self::assertNull($user->password_reset_token);
         self::assertTrue($user->validatePassword('new-password'));
+    }
+
+    public function testResetWithExpiredToken(): void
+    {
+        $user = $this->getUserFromFixture('owner');
+        $form = $this->createForm($user);
+
+        $user->password_reset_token_created_at = new DateTime('-2 days');
+        $user->update();
+
+        self::assertFalse($form->reset());
+        self::assertArrayHasKey('id', $form->getErrors());
+        self::assertTrue(Yii::$app->getUser()->getIsGuest());
     }
 
     private function createForm(User $user): PasswordResetForm

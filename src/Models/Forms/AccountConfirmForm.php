@@ -48,7 +48,7 @@ class AccountConfirmForm extends Model
 
     protected function validateCode(): void
     {
-        if ($this->user->verification_token !== $this->code) {
+        if (!$this->user->isVerificationTokenValid($this->code)) {
             $this->addError('code', Yii::t('yii', '{attribute} is invalid.', [
                 'attribute' => $this->getAttributeLabel('code'),
             ]));
@@ -57,7 +57,10 @@ class AccountConfirmForm extends Model
 
     public function confirm(): bool
     {
-        return $this->validate() && $this->user->updateAttributes(['verification_token' => null]);
+        return $this->validate() && $this->user->updateAttributes([
+            'verification_token' => null,
+            'verification_token_created_at' => null,
+        ]);
     }
 
     #[Override]

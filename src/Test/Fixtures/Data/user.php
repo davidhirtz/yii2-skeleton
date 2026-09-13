@@ -45,6 +45,7 @@ return [
         'google_2fa_secret' => 'AX7CR435GC575V4C', // 123456
         'auth_key' => 'h0rrnZTn0qKf2mWAxfzb6-cp0XuZRnUh',
         'verification_token' => 'fLZHyuassSUGwwuFiWHt_NwBXxM3zsSh',
+        'verification_token_created_at' => new Expression('UTC_TIMESTAMP()'),
         'is_owner' => 0,
         'created_at' => new Expression('UTC_TIMESTAMP()'),
     ],

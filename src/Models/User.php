@@ -39,7 +39,9 @@ use yii\web\IdentityInterface;
  * @property string|null $timezone
  * @property string|null $auth_key
  * @property string|null $verification_token
+ * @property DateTime|null $verification_token_created_at
  * @property string|null $password_reset_token
+ * @property DateTime|null $password_reset_token_created_at
  * @property string|null $google_2fa_secret
  * @property bool|int $is_owner
  * @property int $created_by_user_id
@@ -91,6 +93,12 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
      * @var bool whether the name is required
      */
     public bool $requireName = true;
+
+    /**
+     * @var int how long a verification or password reset token stays valid, in seconds. A token also lives in the
+     * user's inbox and in every mail archive along the way, so it must not be usable forever.
+     */
+    public int $tokenLifetime = 86400;
 
     #[Override]
     public function behaviors(): array
@@ -264,11 +272,48 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     public function generateVerificationToken(): void
     {
         $this->verification_token = Yii::$app->getSecurity()->generateRandomString();
+        $this->verification_token_created_at = new DateTime();
     }
 
     public function generatePasswordResetToken(): void
     {
         $this->password_reset_token = Yii::$app->getSecurity()->generateRandomString();
+        $this->password_reset_token_created_at = new DateTime();
+    }
+
+    public function clearVerificationToken(): void
+    {
+        $this->verification_token = null;
+        $this->verification_token_created_at = null;
+    }
+
+    public function clearPasswordResetToken(): void
+    {
+        $this->password_reset_token = null;
+        $this->password_reset_token_created_at = null;
+    }
+
+    public function isVerificationTokenValid(?string $token): bool
+    {
+        return $this->isTokenValid($this->verification_token, $this->verification_token_created_at, $token);
+    }
+
+    public function isPasswordResetTokenValid(?string $token): bool
+    {
+        return $this->isTokenValid($this->password_reset_token, $this->password_reset_token_created_at, $token);
+    }
+
+    private function isTokenValid(?string $expected, ?DateTime $createdAt, ?string $token): bool
+    {
+        if (!$expected || !$token || !$createdAt) {
+            return false;
+        }
+
+        if ($createdAt->getTimestamp() + $this->tokenLifetime < time()) {
+            return false;
+        }
+
+        return Yii::$app->getSecurity()->compareString($expected, $token);
     }
 
     public function getAdminRoute(): array
@@ -381,7 +426,9 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
             'password_salt',
             'auth_key',
             'verification_token',
+            'verification_token_created_at',
             'password_reset_token',
+            'password_reset_token_created_at',
             'google_2fa_secret',
             'login_count',
             'last_login',

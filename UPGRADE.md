@@ -1,5 +1,31 @@
 # Upgrade Guide
 
+## 3.0.0 — Expiring tokens
+
+A verification or password reset token lived in the database, and in every mail archive along the way, until it
+was used. Both now expire after `Models\User::$tokenLifetime` seconds — 24 hours by default — and a successful
+login clears the password reset token as well.
+
+`Migrations\M260913140000TokenExpiry` adds the two timestamp columns and backfills them from `updated_at`, so a
+token that is already out there is dated by the write that created it and is usually expired at once. A model
+that overrides `generateVerificationToken()` or `generatePasswordResetToken()` must set the matching
+`*_created_at`, or the token it writes is never valid — call the parent, or use `clearVerificationToken()` /
+`clearPasswordResetToken()` to retire one.
+
+Compare a token through `isVerificationTokenValid()` / `isPasswordResetTokenValid()` rather than reading the
+column: they check the age and compare in constant time. A longer-lived invitation link is a wider
+`$tokenLifetime` on the model:
+
+```php
+'container' => [
+    'definitions' => [
+        \Hirtz\Skeleton\Models\User::class => [
+            'tokenLifetime' => 7 * 86400,
+        ],
+    ],
+],
+```
+
 ## 3.0.0 — Secure cookies and HSTS
 
 Session, identity and application cookies now set `secure` when the request is a secure connection, and

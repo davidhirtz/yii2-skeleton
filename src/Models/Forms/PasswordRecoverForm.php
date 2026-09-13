@@ -89,7 +89,7 @@ class PasswordRecoverForm extends Model
     public function isAlreadySent(): bool
     {
         return $this->user->password_reset_token
-            && $this->user->updated_at->modify($this->timeoutSpamProtection) > new DateTime();
+            && $this->user->password_reset_token_created_at?->modify($this->timeoutSpamProtection) > new DateTime();
     }
 
     #[\Override]

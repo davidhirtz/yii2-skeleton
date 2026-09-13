@@ -123,6 +123,10 @@ class User extends \yii\web\User
         $identity->login_count++;
         $identity->last_login = new DateTime();
 
+        // Whoever just proved they know the password has no use for a reset link, and the one in their inbox
+        // must not stay live behind them.
+        $identity->clearPasswordResetToken();
+
         if ($cookieBased) {
             $this->loginType = UserLogin::TYPE_COOKIE;
         }
