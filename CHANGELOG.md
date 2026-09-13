@@ -1,5 +1,10 @@
 ## 3.0.0 (in development)
 
+- The navbar's search results carry the literal id `Modules\Admin\Widgets\Navs\NavBar::SEARCH_RESULTS_ID`
+  instead of a generated one. `Helpers\Html::getId()` restarts at `i1` on every request while the navbar
+  survives every htmx swap, so its generated id was also the id of an element in a later `#wrap` — and both
+  `getElementById()` and `popovertarget` resolve to the first match in the document, which left action dropdowns
+  on the swapped page opening nothing. Every id outside `#wrap` has to be a literal
 - `Models\Actions\ReorderActiveRecords::run()` runs the whole action in one transaction, `afterReorder()`
   included: the trail it writes and the parent record it touches describe positions that were only committed
   once the reorder itself had finished, so a failure there left the two disagreeing.

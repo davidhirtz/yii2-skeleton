@@ -28,6 +28,17 @@ class NavBarTest extends TestCase
         self::assertStringContainsString('hx-target="#', $html);
     }
 
+    /**
+     * The navbar survives every htmx swap while the id counter restarts on each request, so a generated id here
+     * would sooner or later shadow the element of the same id in a later `#wrap`.
+     */
+    public function testTheNavbarCarriesNoGeneratedId(): void
+    {
+        $this->login();
+
+        self::assertDoesNotMatchRegularExpression('/id="i\d+"/', NavBar::make()->render());
+    }
+
     public function testAGuestGetsNoSearch(): void
     {
         self::assertStringNotContainsString('navbar-search', NavBar::make()->render());

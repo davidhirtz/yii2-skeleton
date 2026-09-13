@@ -24,6 +24,14 @@ class NavBar extends Widget
 {
     use TagAttributesTrait;
 
+    /**
+     * Every id outside `#wrap` has to be a literal: the navbar survives every htmx swap, while
+     * {@see \Hirtz\Skeleton\Helpers\Html::getId()} restarts at `i1` on each request, so a generated one here is
+     * eventually also the id of an element in a later `#wrap` — and `getElementById()` and `popovertarget` alike
+     * resolve to the first match in the document, which is always the navbar's.
+     */
+    final public const string SEARCH_RESULTS_ID = 'search-results';
+
     protected ?array $languageRoute = null;
 
     #[Override]
@@ -47,6 +55,7 @@ class NavBar extends Widget
         }
 
         $results = Div::make()
+            ->attribute('id', self::SEARCH_RESULTS_ID)
             ->class('navbar-search-results')
             ->attribute('data-search-results', '')
             ->attribute('popover', 'manual');
@@ -66,7 +75,7 @@ class NavBar extends Widget
                 // Only the literal `unset` stops htmx from inheriting the body's out-of-band flash selector.
                 'hx-select-oob' => 'unset',
                 'hx-swap' => 'innerHTML',
-                'hx-target' => '#' . $results->getId(),
+                'hx-target' => '#' . self::SEARCH_RESULTS_ID,
                 'hx-trigger' => 'input changed delay:250ms',
             ]);
 

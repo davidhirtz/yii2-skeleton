@@ -16,13 +16,22 @@ export default ($btn: HTMLElement) => {
     let selected = 0;
     let teardown: (() => void) | null = null;
 
-    const keydownEvent = (event: KeyboardEvent) => {
-        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-            const $visibleItems = [...$items].filter($item => $item.checkVisibility());
+    // `selected` indexes this list, not `$items` — the filter dropdown hides items as it is typed in.
+    const visibleItems = () => [...$items].filter($item => $item.checkVisibility());
 
-            selected = (selected + (event.key === 'ArrowDown' ? 1 : -1) + $visibleItems.length) % $visibleItems.length;
-            $visibleItems[selected].focus();
+    const keydownEvent = (event: KeyboardEvent) => {
+        if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') {
+            return;
         }
+
+        const $visibleItems = visibleItems();
+
+        if (!$visibleItems.length) {
+            return;
+        }
+
+        selected = (selected + (event.key === 'ArrowDown' ? 1 : -1) + $visibleItems.length) % $visibleItems.length;
+        $visibleItems[selected].focus();
     }
 
     const updatePosition = () => {
@@ -61,7 +70,7 @@ export default ($btn: HTMLElement) => {
             });
 
             if ($btn.hasAttribute('data-autofocus')) {
-                requestAnimationFrame(() => $items[selected].focus());
+                requestAnimationFrame(() => visibleItems()[selected]?.focus());
             }
         } else {
             $popover.style.visibility = '';
