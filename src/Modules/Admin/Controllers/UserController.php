@@ -9,7 +9,7 @@ use Hirtz\Skeleton\Models\Forms\OwnershipForm;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Controllers\Traits\UserTrait;
 use Hirtz\Skeleton\Modules\Admin\Data\UserActiveDataProvider;
-use Hirtz\Skeleton\Modules\Admin\Models\forms\UserForm;
+use Hirtz\Skeleton\Modules\Admin\Models\Forms\UserForm;
 use Hirtz\Skeleton\Web\Controller;
 use Override;
 use Yii;

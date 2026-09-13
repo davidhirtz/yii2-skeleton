@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Modules\Admin\Models\forms;
+namespace Hirtz\Skeleton\Modules\Admin\Models\Forms;
 
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\Forms\Traits\UserFormTrait;

@@ -152,7 +152,7 @@
   and `loginRequired()` mark the response through the new `Web\Response::setHtmxRefresh()`, which drops the
   `HX-Location` htmx would otherwise process first. The page that made the request still carries the identity and the
   CSRF token it was rendered with, so it has to be loaded again rather than patched
-- A user created in the admin no longer needs a password: `Modules\Admin\Models\forms\UserForm` dropped the
+- A user created in the admin no longer needs a password: `Modules\Admin\Models\Forms\UserForm` dropped the
   `required` rule of its insert scenario and generates a password reset token instead, which the credentials
   email offers as a reset link in place of the password
 - `Models\Trail::TYPE_DEFAULT` is `13`, a type of its own for a plain message, and no longer the `TYPE_CREATE`
@@ -825,7 +825,7 @@
 
 ## 2.2.0 (Feb 29, 2024)
 
-- Changed `AuthClientSignupForm` and `Hirtz\Skeleton\Modules\Admin\Models\forms\UserForm` to extend
+- Changed `AuthClientSignupForm` and `Hirtz\Skeleton\Modules\Admin\Models\Forms\UserForm` to extend
   from `Model` instead of `User` (Issue #21)
 - Extracted user picture upload methods and options to `UserPictureForm`
 - Removed `Identity` class and replaced it with `User` class (Issue #20)

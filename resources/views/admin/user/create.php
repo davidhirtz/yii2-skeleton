@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 
 use Hirtz\Skeleton\Modules\Admin\Controllers\UserController;
-use Hirtz\Skeleton\Modules\Admin\Models\forms\UserForm;
+use Hirtz\Skeleton\Modules\Admin\Models\Forms\UserForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\UserActiveForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserHeader;
 use Hirtz\Skeleton\Web\View;
