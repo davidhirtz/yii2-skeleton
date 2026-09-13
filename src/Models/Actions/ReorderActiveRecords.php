@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Models\Actions;
 
 use Hirtz\Skeleton\Helpers\ArrayHelper;
-use Exception;
 use Yii;
 use yii\db\ActiveRecordInterface;
 
@@ -28,35 +27,28 @@ class ReorderActiveRecords
     ) {
     }
 
+    /**
+     * {@see static::afterReorder()} writes the trail and touches the parent record, so it belongs to the same
+     * transaction as the positions it describes.
+     */
     public function run(): int|false
     {
-        if (!$this->beforeReorder()) {
-            return false;
-        }
+        return Yii::$app->getDb()->transaction(function (): int|false {
+            if (!$this->beforeReorder()) {
+                return false;
+            }
 
-        if ($this->reorderActiveRecords()) {
-            $this->afterReorder();
-        }
+            $this->totalRowsUpdated = $this->reorderActiveRecords();
 
-        return $this->totalRowsUpdated;
+            if ($this->totalRowsUpdated) {
+                $this->afterReorder();
+            }
+
+            return $this->totalRowsUpdated;
+        });
     }
 
     protected function reorderActiveRecords(): int
-    {
-        $transaction = Yii::$app->getDb()->beginTransaction();
-
-        try {
-            $this->totalRowsUpdated = $this->reorderActiveRecordsInternal();
-            $transaction->commit();
-        } catch (Exception $exception) {
-            $transaction->rollBack();
-            throw $exception;
-        }
-
-        return $this->totalRowsUpdated;
-    }
-
-    protected function reorderActiveRecordsInternal(): int
     {
         $totalRowsUpdated = 0;
 

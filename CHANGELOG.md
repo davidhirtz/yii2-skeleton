@@ -1,5 +1,9 @@
 ## 3.0.0 (in development)
 
+- `Models\Actions\ReorderActiveRecords::run()` runs the whole action in one transaction, `afterReorder()`
+  included: the trail it writes and the parent record it touches describe positions that were only committed
+  once the reorder itself had finished, so a failure there left the two disagreeing.
+  `reorderActiveRecordsInternal()` is `reorderActiveRecords()` and opens no transaction of its own
 - `user.google_2fa_secret` is `two_factor_secret` (`Migrations\M260913190000TwoFactorSecret`). Every command,
   form, validator and method around it already said `TwoFactor`, and the column was the last thing naming a
   vendor that has nothing to do with TOTP. `Models\Forms\TwoFactorAuthenticatorForm::SESSION_SECRET_NAME`
