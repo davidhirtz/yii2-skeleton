@@ -1,5 +1,12 @@
 ## 3.0.0 (in development)
 
+- **`./yii redirect/clean` removes the redirects that can never resolve.** One whose target comes back to its own
+  request URI and the members of a cycle are deleted one by one so the trail records them; a target that is
+  itself redirected is shortened to the end of its chain, and a redirect merely *leading* into a cycle is
+  reported and left alone. It follows a target exactly as `Web\ErrorHandler` does, which needs to know which
+  hosts a `request_uri` may be qualified by: `--hosts` takes them, defaulting to the URL manager's, and the
+  command says so when it has none. `--dryRun` reports without writing. Whether a target still resolves is
+  never asked — a redirect may point at a static file or another site, and guessing would delete good rows
 - **A rename back to an earlier URL no longer builds a redirect loop.** `Models\Redirect::validateUrl()` ran its
   self-check *before* it flattened a chain and never re-checked the target it had just copied in, so a record
   renamed back to a URL it already had resolved through the redirect the first rename left behind and landed on

@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Console\Controllers\MaintenanceController;
 use Hirtz\Skeleton\Console\Controllers\MessageController;
 use Hirtz\Skeleton\Console\Controllers\MigrateController;
 use Hirtz\Skeleton\Console\Controllers\ParamsController;
+use Hirtz\Skeleton\Console\Controllers\RedirectController;
 use Hirtz\Skeleton\Console\Controllers\SearchController;
 use Hirtz\Skeleton\Console\Controllers\TrailController;
 use Hirtz\Skeleton\Console\Controllers\UpgradeController;
@@ -65,6 +66,7 @@ class Application extends \yii\console\Application
             'message' => MessageController::class,
             'migrate' => MigrateController::class,
             'params' => ParamsController::class,
+            'redirect' => RedirectController::class,
             'search' => SearchController::class,
             'trail' => TrailController::class,
             'user' => UserController::class,
