@@ -5,18 +5,19 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Models\Definitions;
 
 use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
-use yii\base\InvalidConfigException;
 
 /**
- * A definition is born with its value and must never be mutated afterwards: {@see DefinitionRegistry} caches it and
- * every record of that value shares the instance.
+ * A named, iconed value the admin offers in a select. It is born with its value and must never be mutated
+ * afterwards: what holds it caches it, and every use of that value shares the instance.
+ *
+ * {@see ModelDefinition} is the half a model declares and is validated against — a type, a status. A definition
+ * that belongs to no record extends this one directly.
  */
 abstract class Definition
 {
     use ContainerConfigurationTrait;
 
     protected ?string $name = null;
-    protected ?string $plural = null;
     protected ?string $icon = null;
 
     public function __construct(public readonly int $value)
@@ -26,12 +27,6 @@ abstract class Definition
     public function name(?string $name): static
     {
         $this->name = $name;
-        return $this;
-    }
-
-    public function plural(?string $plural): static
-    {
-        $this->plural = $plural;
         return $this;
     }
 
@@ -46,28 +41,9 @@ abstract class Definition
         return $this->name ?? '';
     }
 
-    /**
-     * Falls back to the name, not to an inflection: `Inflector::pluralize()` is English-only and this is what the
-     * admin navigation renders.
-     */
-    public function getPlural(): string
-    {
-        return $this->plural ?? $this->getName();
-    }
-
     public function getIcon(): string
     {
         return $this->icon ?? '';
-    }
-
-    /**
-     * @param class-string $modelClass
-     */
-    public function validate(string $modelClass): void
-    {
-        if ($this->getName() === '') {
-            throw new InvalidConfigException("$modelClass declares {$this->getDisplayValue()} without a name.");
-        }
     }
 
     protected function getDisplayValue(): string

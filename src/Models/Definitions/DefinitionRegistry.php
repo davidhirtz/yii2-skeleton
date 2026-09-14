@@ -21,7 +21,7 @@ use yii\base\InvalidConfigException;
 final class DefinitionRegistry
 {
     /**
-     * @var array<string, array<int, Definition>>
+     * @var array<string, array<int, ModelDefinition>>
      */
     private static array $definitions = [];
 
@@ -31,7 +31,7 @@ final class DefinitionRegistry
     private static array $instances = [];
 
     /**
-     * @template T of Definition
+     * @template T of ModelDefinition
      * @param class-string $modelClass
      * @param class-string<T> $definitionClass
      * @return array<int, T>

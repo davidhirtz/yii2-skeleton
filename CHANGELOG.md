@@ -1,5 +1,14 @@
 ## 3.0.0 (in development)
 
+- **`Models\Definitions\Definition` is split.** The base is what every definition shares — the value, the name,
+  the icon and `make()` — and the new `Models\Definitions\ModelDefinition` adds `plural` and
+  `validate(string $modelClass)`, the half only a definition a *model* declares can honour. `Models\Types\Type`
+  and `Models\Statuses\Status` extend `ModelDefinition`, so every type and status subclass is unaffected, and
+  `Models\Definitions\DefinitionRegistry` is bound to `ModelDefinition` — which is what keeps a definition that
+  belongs to no record out of it. **A project extending `Definition` directly to declare a model's types or
+  statuses extends `ModelDefinition` now.** The split exists because a definition can be worth rendering without
+  a model behind it: `Cms\Models\Sets\SectionSet` is declared on a module and validates itself.
+
 - **A type a record cannot take is refused, not merely hidden.** `Models\Types\Type::available()` was a
   presentation filter — `Widgets\Forms\Fields\TypeSelectField` left the type out of the select and nothing else
   asked — so a hand-posted value reached the database. `Validators\DynamicRangeValidator` now drops an

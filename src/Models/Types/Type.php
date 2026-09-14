@@ -6,14 +6,14 @@ namespace Hirtz\Skeleton\Models\Types;
 
 use Closure;
 use Hirtz\Skeleton\Models\CustomAttributes\CustomAttribute;
-use Hirtz\Skeleton\Models\Definitions\Definition;
+use Hirtz\Skeleton\Models\Definitions\ModelDefinition;
 use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
 use Override;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\db\BaseActiveRecord;
 
-class Type extends Definition
+class Type extends ModelDefinition
 {
     /**
      * @var class-string<Model>|null
