@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Models\Types\Type;
 use Override;
+use yii\base\Model;
 
 /**
  * Reloads the form when the selected type renders different custom attribute fields. Types sharing one definition
@@ -49,21 +50,31 @@ class TypeSelectField extends SelectField
     }
 
     /**
-     * A type instance carries no relation, so a relation-dependent definition has to fingerprint the same for every
-     * type — only the difference between the types decides whether the form reloads.
-     *
      * @return array<int|string, string>
      */
     protected function getFingerprints(): array
     {
-        if (!$this->model instanceof TypeAttributeInterface || !$this->model instanceof CustomAttributeInterface) {
+        $model = $this->model;
+
+        if (!$model instanceof TypeAttributeInterface || !$model instanceof CustomAttributeInterface) {
             return [];
         }
 
+        return $this->getModelFingerprints($model);
+    }
+
+    /**
+     * A type instance carries no relation, so a relation-dependent definition has to fingerprint the same for every
+     * type — only the difference between the types decides whether the form reloads.
+     *
+     * @return array<int, string>
+     */
+    private function getModelFingerprints(Model&TypeAttributeInterface&CustomAttributeInterface $model): array
+    {
         $fingerprints = [];
 
-        foreach ($this->model::getTypeInstances() as $type => $instance) {
-            if (!$this->model::findType($type)?->isAvailable($this->model)) {
+        foreach ($model::getTypeInstances() as $type => $instance) {
+            if (!$model::findType($type)?->isAvailable($model)) {
                 continue;
             }
 
