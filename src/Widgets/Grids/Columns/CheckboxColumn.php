@@ -15,7 +15,7 @@ class CheckboxColumn extends Column
 {
     public array $checkboxAttributes = ['class' => 'input checkbox'];
     protected bool $multiple = true;
-    protected string $param = 'selection[]';
+    protected string $param = 'selection';
 
     public function multiple(bool $multiple = true): static
     {
@@ -25,13 +25,16 @@ class CheckboxColumn extends Column
 
     public function param(string $param): static
     {
-        $this->param = $param;
-
-        if (substr_compare($this->param, '[]', -2, 2)) {
-            $this->param .= '[]';
-        }
-
+        $this->param = preg_replace('/\[]$/', '', $param);
         return $this;
+    }
+
+    /**
+     * An input without a name is never submitted, so the name is what makes the selection reach the action at all.
+     */
+    public function getName(): string
+    {
+        return $this->multiple ? "{$this->param}[]" : $this->param;
     }
 
     #[Override]
@@ -54,7 +57,8 @@ class CheckboxColumn extends Column
         return Checkbox::make()
             ->attributes($this->checkboxAttributes)
             ->attribute('data-check', $this->multiple ? 'multiple' : 'single')
-            ->name($this->title);
+            ->name($this->getName())
+            ->value($key);
     }
 
     protected function registerClientScript(): void

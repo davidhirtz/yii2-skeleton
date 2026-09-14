@@ -1,5 +1,11 @@
 ## 3.0.0 (in development)
 
+- **`Widgets\Grids\Columns\CheckboxColumn` renders a name and a value.** It set neither, so the input was never
+  submitted and every bulk action reading `selection` — the redirect grid's `delete-all` is the only one in the
+  skeleton — received an empty selection. Its `$param` is now the bare name (`selection`), and `getName()` appends
+  the `[]` for a multiple selection only, so the single-selection script, which pairs its checkboxes by name, has
+  one to match. A `param()` that already carries the suffix keeps working.
+
 - **`Widgets\Forms\Fields\AutocompleteField` and `Widgets\Forms\AutocompleteList`** are the admin's own
   autocomplete: the field renders an input with a popover below it, htmx swaps the endpoint's option list into that
   popover, and picking one writes its value into the input. It reuses the `dropdown-menu` / `dropdown-option`
