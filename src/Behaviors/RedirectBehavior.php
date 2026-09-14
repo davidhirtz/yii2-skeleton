@@ -79,6 +79,10 @@ class RedirectBehavior extends Behavior
      * A redirect the owner has just moved back onto is a no-op and is deleted rather than updated: the update
      * would fail {@see Redirect::validateUrl()} and, unreported, leave the row pointing at a URL that no longer
      * resolves — and the redirect recorded for this rename would then chain through it onto itself.
+     *
+     * That deletion comes first, and the ordering is load-bearing: `validateUrl()` resolves the chain its new
+     * target starts, so while the no-op row is still there every other row updated in this pass follows it back
+     * to the URL they are all being moved off.
      */
     protected function updatePreviousRedirectUrls(string $url): void
     {
@@ -87,12 +91,14 @@ class RedirectBehavior extends Behavior
             ->where(['url' => $this->prevUrl])
             ->all();
 
-        foreach ($redirects as $redirect) {
+        foreach ($redirects as $key => $redirect) {
             if ($redirect->request_uri === $url) {
                 $redirect->delete();
-                continue;
+                unset($redirects[$key]);
             }
+        }
 
+        foreach ($redirects as $redirect) {
             $redirect->url = $url;
 
             if (!$redirect->update()) {

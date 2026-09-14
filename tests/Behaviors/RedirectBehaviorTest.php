@@ -151,6 +151,29 @@ class RedirectBehaviorTest extends TestCase
         self::assertEquals('test/test-query-1', $redirects[0]->url);
     }
 
+    /**
+     * {@see Redirect::validateUrl()} resolves the chain its new target starts, so an unrelated redirect moved onto
+     * the record's current URL follows the no-op row of the same pass straight back to the URL it is moving off —
+     * unless that row is deleted first.
+     */
+    public function testRenamingBackCarriesAnUnrelatedRedirectWithIt(): void
+    {
+        $model = $this->createRedirectActiveRecord();
+
+        $redirect = Redirect::create();
+        $redirect->request_uri = 'test/elsewhere';
+        $redirect->url = 'test/test-query-1';
+        self::assertTrue($redirect->insert(), print_r($redirect->getErrors(), true));
+
+        $model->query = 'test-query-2';
+        $model->save();
+
+        $model->query = 'test-query-1';
+        $model->save();
+
+        self::assertSame('test/test-query-1', Redirect::findOne(['request_uri' => 'test/elsewhere'])->url);
+    }
+
     public function testMissingRouteMethod(): void
     {
         $this->expectException(InvalidConfigException::class);

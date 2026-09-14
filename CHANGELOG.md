@@ -1,5 +1,23 @@
 ## 3.0.0 (in development)
 
+- **`Behaviors\RedirectBehavior` deletes the no-op redirect before it repoints the others.**
+  `Models\Redirect::validateUrl()` resolves the chain its new target starts, so while the row the record has just
+  moved back onto was still there, every other redirect updated in the same pass followed it straight back to the
+  URL they were all being moved off — and stayed pointing at a URL nothing resolves.
+  `Cms\Models\Actions\SavePermalinks` carried the same ordering.
+
+- **The grid selection utility is `.block-has-selection` / `.flex-has-selection`**, keyed on
+  `:has([data-check]:checked)`. It was one `.block-has-checked` keyed on `:has(:checked)`, which a **selected
+  `<option>` matches as well** — a grid whose footer holds a select was therefore showing it on every page load.
+  The flavours exist because `.hidden` has to be overridden by a `display` of its own, and `block` silently took
+  the grid footer's `display: flex` away with its row and its gap.
+
+- **A sticky element revealed by a `:has()` rule sticks straight away.** `includes/sticky.ts` only recomputed on
+  scroll and resize, and the grid footer is measured while it is still hidden — a zero-height rect, so never
+  stuck — which left it sitting below the fold until the page was scrolled. It listens for `change` now, the
+  event that flips the rule. A `ResizeObserver` does not work here: it reports no box for an element that had
+  none when `observe()` was called, so a `display: none` → `flex` transition delivers nothing.
+
 - **`Behaviors\SearchBehavior::STATE_ATTRIBUTES`** is the list every searchable model reindexes on (`status`,
   `tenant_id`, `type`) and the default of `$attributes`, which a model overrides to name a column its documents
   depend on without indexing it directly. A searchable attribute that is a getter needs this: the media `File`

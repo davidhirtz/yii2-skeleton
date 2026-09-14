@@ -67,6 +67,13 @@ export default ($el: HTMLElement): void => {
     if (!bound) {
         document.addEventListener('scroll', update, {passive: true});
         window.addEventListener('resize', remeasure);
+
+        // An element a `:has()` rule reveals — the grid footer, which appears once a row is checked — gets no
+        // event of its own: it was measured while hidden, so its rect was all zeros and it never stuck, and
+        // nothing corrected that until the page was scrolled. A `ResizeObserver` is no help either, since it
+        // reports no box for an element that had none when `observe()` was called. The selection is what those
+        // rules are keyed on, so the change that flips them is the signal.
+        document.addEventListener('change', update);
         bound = true;
     }
 

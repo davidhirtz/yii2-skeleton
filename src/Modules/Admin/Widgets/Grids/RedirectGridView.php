@@ -69,7 +69,7 @@ class RedirectGridView extends GridView
         if ($this->showSelection) {
             $this->footer ??= GridFooter::make()
                 ->attributes($this->footerAttributes)
-                ->addClass('hidden block-has-checked')
+                ->addClass('hidden flex-has-selection')
                 ->content($this->getSelectionButton());
         }
 
