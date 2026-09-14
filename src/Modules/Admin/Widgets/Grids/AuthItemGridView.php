@@ -104,10 +104,13 @@ class AuthItemGridView extends GridView
             ->content($this->getUsersColumnColumn(...));
     }
 
+    /**
+     * @see UserAuthController::actionIndex()
+     */
     protected function getUsersColumnColumn(AuthItem $authItem): Stringable
     {
         $items = array_map(
-            fn (User $user) => Html::a($user->getUsername(), ['auth/view', 'user' => $user->id]),
+            fn (User $user) => Html::a($user->getUsername(), ['/admin/user-auth/index', 'id' => $user->id]),
             $authItem->users
         );
 

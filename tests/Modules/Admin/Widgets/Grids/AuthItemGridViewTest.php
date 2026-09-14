@@ -8,12 +8,15 @@ use Hirtz\Skeleton\Models\AuthItem;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\AuthItemGridView;
 use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Override;
 use Yii;
 use yii\data\ArrayDataProvider;
 
 class AuthItemGridViewTest extends TestCase
 {
+    use UserFixtureTrait;
+
     #[Override]
     protected function setUp(): void
     {
@@ -52,6 +55,20 @@ class AuthItemGridViewTest extends TestCase
         $item->type = 1;
 
         self::assertStringContainsString('Admin', $this->renderItems($item));
+    }
+
+    public function testTheUserLinksToItsPermissions(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+        $this->assignAdminRole($user->id);
+
+        $item = AuthItem::find()
+            ->withUsers()
+            ->andWhere(['name' => User::AUTH_ROLE_ADMIN])
+            ->one();
+
+        self::assertInstanceOf(AuthItem::class, $item);
+        self::assertStringContainsString('/admin/user-auth/index?id=' . $user->id, $this->renderItems($item));
     }
 
     private function render(string $name): string
