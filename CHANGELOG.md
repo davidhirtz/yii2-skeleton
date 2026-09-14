@@ -1,5 +1,15 @@
 ## 3.0.0 (in development)
 
+- **A request knows whether it is local or staging.** `Web\Request::$environments` maps an environment name to the
+  host patterns that identify it, matched with `fnmatch()` against the host name — `localhost` and `*.localhost` are
+  `Request::ENVIRONMENT_LOCAL`, `stage.*` and `*.stage.*` are `ENVIRONMENT_STAGE`, and a host matching neither is
+  production. `getEnvironment()` answers the key, `getEnvironmentName()` its label, and three places say so: the home
+  breadcrumb appends it to `Yii::$app->name`, the admin dashboard renders the new
+  `Modules\Admin\Widgets\EnvironmentAlert` (which renders nothing on a production host, so a project's own
+  dashboard view can echo it unconditionally), and `Widgets\Buttons\AdminButton` carries a badge — which also stops
+  the button fading out, since a badge nobody sees is pointless. `AdminButton::registerCss()` takes that as its
+  argument and is deduplicated by `View::registerCss()`'s own key rather than by a static flag.
+
 - **`Helpers\ArrayHelper::simpleXmlToArray()` is gone**, replaced by `Xml\XmlNode` — a readonly node with a `name`,
   a `text`, its `attributes` and its `children`, built with `XmlNode::fromString()` or `fromElement()` and read with
   `getAttribute()`, `getChild()` and `getChildren()`. The namespace handling is unchanged, a prefixed attribute or

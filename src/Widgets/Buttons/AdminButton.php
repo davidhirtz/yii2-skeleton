@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Buttons;
 
 use Hirtz\Skeleton\Html\A;
+use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use Yii;
@@ -22,7 +23,8 @@ class AdminButton extends Widget
     public string $adminLinkZIndex = '3';
     public string $overlayBackgroundColor = '#f8afaf80';
 
-    private static bool $is_Registered = false;
+    public string $badgeBackgroundColor = '#FA7D7E';
+    public string $badgeColor = '#fff';
 
     /**
      * @var bool whether to toggle the button opacity on hover, if `false` the button will always be visible
@@ -31,25 +33,35 @@ class AdminButton extends Widget
 
     protected function renderContent(): string|Stringable
     {
-        $this->registerCss();
+        $environment = Yii::$app->getRequest()->getEnvironmentName();
+        $this->registerCss($environment !== null);
 
         return A::make()
-            ->content($this->icon)
+            ->content($this->icon, $this->getBadge($environment))
             ->href(['/admin/dashboard/index'])
             ->class('admin-btn')
             ->attribute('onclick', 'document.documentElement.classList.toggle(\'is-admin\');return false')
             ->target('_blank');
     }
 
-    protected function registerCss(): void
+    /**
+     * The frontend of a local or staging host says so, the button is the only chrome it has.
+     */
+    protected function getBadge(?string $environment): ?Span
     {
-        if (self::$is_Registered) {
-            return;
-        }
+        return $environment
+            ? Span::make()
+                ->class('admin-btn-badge')
+                ->text($environment)
+            : null;
+    }
 
-        self::$is_Registered = true;
-
-        if ($this->toggleButtonOpacity) {
+    /**
+     * @param bool $alwaysVisible a badged button must not fade out, that is the whole point of the badge
+     */
+    protected function registerCss(bool $alwaysVisible = false): void
+    {
+        if ($this->toggleButtonOpacity && !$alwaysVisible) {
             $btnToggle = <<<CSS
 .admin-btn {
             opacity: 0
@@ -63,7 +75,7 @@ CSS;
             $btnToggle = '';
         }
 
-        Yii::$app->getView()->registerCss(
+        $this->view->registerCss(
             <<<CSS
 :root {
     --admin-btn: 40px;
@@ -85,6 +97,20 @@ CSS;
 .admin-btn svg {
     width: 100%;
     height: 100%
+}
+
+.admin-btn-badge {
+    position: absolute;
+    top: -.35em;
+    right: -.35em;
+    padding: .1em .4em;
+    border-radius: 1em;
+    background-color: $this->badgeBackgroundColor;
+    color: $this->badgeColor;
+    font-size: 10px;
+    line-height: 1.4;
+    text-transform: uppercase;
+    white-space: nowrap
 }
 
 .admin-btn path {
@@ -129,7 +155,8 @@ CSS;
         opacity: 1
     }
 }
-CSS
+CSS,
+            key: self::class,
         );
     }
 }

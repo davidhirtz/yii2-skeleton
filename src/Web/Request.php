@@ -14,6 +14,18 @@ use Yii;
  */
 class Request extends \yii\web\Request
 {
+    final public const string ENVIRONMENT_LOCAL = 'local';
+    final public const string ENVIRONMENT_STAGE = 'stage';
+
+    /**
+     * @var array<string, list<string>> the host names per environment, matched with `fnmatch()`. A host that matches
+     * none of them is the production environment; a project replaces or extends the list under `components.request`.
+     */
+    public array $environments = [
+        self::ENVIRONMENT_LOCAL => ['localhost', '*.localhost'],
+        self::ENVIRONMENT_STAGE => ['stage.*', '*.stage.*'],
+    ];
+
     /**
      * @var string the parameter name used to add the language to a URL via `UrlManager::$i18nUrl` and to switch the
      * session language of the admin, see {@see \Hirtz\Skeleton\Modules\Admin\Module::beforeAction()}.
@@ -60,6 +72,36 @@ class Request extends \yii\web\Request
     {
         $subdomain = Yii::$app->getUrlManager()->draftSubdomain;
         return $subdomain && str_contains((string)$this->getHostInfo(), "//$subdomain.");
+    }
+
+    public function getEnvironment(): ?string
+    {
+        $host = $this->getHostName();
+
+        if ($host !== null) {
+            foreach ($this->environments as $environment => $hosts) {
+                foreach ($hosts as $pattern) {
+                    if (fnmatch($pattern, $host)) {
+                        return $environment;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * The name an environment is labelled with in the admin and on the admin button. A project's own environment is
+     * labelled with the key it configured, only the two shipped ones are translated.
+     */
+    public function getEnvironmentName(): ?string
+    {
+        return match ($environment = $this->getEnvironment()) {
+            self::ENVIRONMENT_LOCAL => Yii::t('skeleton', 'REQUEST_ENVIRONMENT_LOCAL'),
+            self::ENVIRONMENT_STAGE => Yii::t('skeleton', 'REQUEST_ENVIRONMENT_STAGE'),
+            default => $environment,
+        };
     }
 
     public function isHtmxRequest(): bool

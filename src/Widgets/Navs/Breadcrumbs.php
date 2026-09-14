@@ -82,9 +82,18 @@ class Breadcrumbs extends Widget
     protected function addHomeBreadcrumb(): void
     {
         $this->breadcrumbs = [
-            $this->homeBreadcrumb ?? new Breadcrumb(Yii::$app->name, Yii::$app->getHomeUrl()),
+            $this->homeBreadcrumb ?? new Breadcrumb($this->getApplicationName(), Yii::$app->getHomeUrl()),
             ...$this->breadcrumbs,
         ];
+    }
+
+    /**
+     * A request on a local or staging host says so, so a tab open on either is never mistaken for production.
+     */
+    protected function getApplicationName(): string
+    {
+        $environment = Yii::$app->getRequest()->getEnvironmentName();
+        return $environment ? Yii::$app->name . " ($environment)" : Yii::$app->name;
     }
 
     protected function addAdminBreadcrumb(): void
