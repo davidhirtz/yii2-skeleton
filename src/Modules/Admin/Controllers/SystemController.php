@@ -28,7 +28,7 @@ class SystemController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['flush', 'index', 'maintenance', 'php-info', 'publish', 'schema', 'session-gc'],
+                        'actions' => ['flush', 'index', 'maintenance', 'php-info', 'publish', 'schema', 'server', 'session-gc'],
                         'roles' => [User::AUTH_ROLE_ADMIN],
                     ],
                 ],
@@ -48,6 +48,11 @@ class SystemController extends Controller
     public function actionIndex(): Response|string
     {
         return $this->render('index');
+    }
+
+    public function actionServer(): Response|string
+    {
+        return $this->render('server');
     }
 
     public function actionMaintenance(): Response|string

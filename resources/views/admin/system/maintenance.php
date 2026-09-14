@@ -8,7 +8,6 @@ declare(strict_types=1);
  */
 
 use Hirtz\Skeleton\Modules\Admin\Controllers\SystemController;
-use Hirtz\Skeleton\Modules\Admin\Widgets\MigrationAlert;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\SystemSubmenu;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\MaintenanceInfo;
 use Hirtz\Skeleton\Web\View;
@@ -20,5 +19,4 @@ echo Header::make()
     ->title(Yii::t('skeleton', 'COMMON_SYSTEM'));
 
 echo SystemSubmenu::make();
-echo MigrationAlert::make();
 echo MaintenanceInfo::make();

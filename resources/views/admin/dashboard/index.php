@@ -7,6 +7,7 @@ declare(strict_types=1);
  * @var View $this
  */
 
+use Hirtz\Skeleton\Modules\Admin\Widgets\DirectoryAlert;
 use Hirtz\Skeleton\Modules\Admin\Widgets\EnvironmentAlert;
 use Hirtz\Skeleton\Modules\Admin\Widgets\MigrationAlert;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\DashboardHeader;
@@ -17,5 +18,6 @@ $this->title(Yii::t('skeleton', 'DASHBOARD_NAV_ITEM_LABEL'));
 
 echo DashboardHeader::make();
 echo MigrationAlert::make();
+echo DirectoryAlert::make();
 echo EnvironmentAlert::make();
 echo Dashboard::make();

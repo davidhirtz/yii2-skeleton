@@ -20,19 +20,12 @@ class ServerInfoTest extends TestCase
         self::assertStringContainsString((string)php_uname('n'), $html);
     }
 
-    public function testAWritableDirectoryIsAPlainBadgeAndAMissingOneIsAnError(): void
+    public function testTheDirectoriesAreLeftToTheAlert(): void
     {
-        $widget = ServerInfo::make();
-        $widget->directories = ['@runtime', '@runtime/does-not-exist'];
+        $html = ServerInfo::make()->render();
 
-        $html = $widget->render();
-
-        self::assertMatchesRegularExpression('~<span class="badge"[^>]*>@runtime</span>~', $html);
-        self::assertMatchesRegularExpression(
-            '~<span class="badge badge-error"[^>]*>@runtime/does-not-exist</span>~',
-            $html,
-        );
-        self::assertStringContainsString('1 of 2 writable', $html);
+        self::assertStringNotContainsString('@runtime', $html);
+        self::assertStringNotContainsString('badge', $html);
     }
 
     public function testTheMailerDsnCredentialsAreNeverRendered(): void

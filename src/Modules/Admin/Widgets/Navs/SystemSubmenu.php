@@ -17,6 +17,7 @@ class SystemSubmenu extends Submenu
     {
         $this->addItem(
             application: $this->getApplicationItem(),
+            server: $this->getServerItem(),
             maintenance: $this->getMaintenanceItem(),
         );
 
@@ -32,6 +33,17 @@ class SystemSubmenu extends Submenu
             ->label(Yii::t('skeleton', 'SYSTEM_APPLICATION'))
             ->url(['/admin/system/index'])
             ->icon('circle-info');
+    }
+
+    /**
+     * @see SystemController::actionServer()
+     */
+    protected function getServerItem(): NavItem
+    {
+        return NavItem::make()
+            ->label(Yii::t('skeleton', 'SYSTEM_SERVER'))
+            ->url(['/admin/system/server'])
+            ->icon('server');
     }
 
     /**

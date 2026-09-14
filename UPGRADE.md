@@ -2,14 +2,14 @@
 
 ## 3.0.0 — The admin system page was rebuilt
 
-The page is two tabs: `system/index` (Application) and the new `system/maintenance`, which the four maintenance
-actions redirect back to. A project linking straight to `system/index` for a cache flush should point at
-`system/maintenance` instead.
+The page is three tabs, one card each: `system/index` (Application), `system/server` and `system/maintenance`,
+which the four maintenance actions redirect back to. A project linking straight to `system/index` for a cache
+flush should point at `system/maintenance` instead.
 
 `Modules\Admin\Widgets\Grids\AssetBundleGridView`, `CacheGridView` and `SessionGridView` are **removed**. None of
 them listed records — the session grid synthesised a single row out of two counts — so they are
 `Widgets\Panels\InfoList` rows now, gathered in `Modules\Admin\Widgets\Panels\MaintenanceInfo` beside the new
-`ApplicationInfo` card. `InfoList` renders the form row classes rather than a table. A project that subclassed one
+`ApplicationInfo` and `ServerInfo` cards. `InfoList` renders the form row classes rather than a table. A project that subclassed one
 of the grids builds an `InfoList` instead, or adds its rows to the shipped one from a `Widget::EVENT_CONFIGURE`
 listener:
 

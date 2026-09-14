@@ -35,12 +35,29 @@ class SystemControllerTest extends TestCase
         self::assertStringContainsString(Yii::getVersion(), $html);
         self::assertStringContainsString('system/php-info', $html);
 
-        // the server card sits beside it
-        self::assertStringContainsString('<div class="form-label">Trusted hosts</div>', $html);
-        self::assertStringContainsString('<div class="form-label">Directories</div>', $html);
-
-        // the maintenance actions live on their own tab
+        // the server facts and the maintenance actions live on their own tabs
+        self::assertStringNotContainsString('<div class="form-label">Trusted hosts</div>', $html);
         self::assertStringNotContainsString('system/flush', $html);
+    }
+
+    public function testServerReportsTheHostAndItsConfiguration(): void
+    {
+        $this->login();
+
+        $html = Yii::$app->runAction('admin/system/server');
+
+        self::assertIsString($html);
+        self::assertStringContainsString('<div class="form-label">Trusted hosts</div>', $html);
+        self::assertStringContainsString('<div class="form-label">Mailer</div>', $html);
+        self::assertStringContainsString('<div class="form-label">Time zone</div>', $html);
+    }
+
+    public function testServerIsForbiddenForANonAdmin(): void
+    {
+        Yii::$app->getUser()->setIdentity($this->getUserFromFixture('admin'));
+
+        $this->expectException(ForbiddenHttpException::class);
+        Yii::$app->runAction('admin/system/server');
     }
 
     public function testMaintenanceCarriesEveryAction(): void
@@ -59,15 +76,16 @@ class SystemControllerTest extends TestCase
         self::assertStringContainsString('system/session-gc', $html);
     }
 
-    public function testBothTabsAreLinkedFromEachOther(): void
+    public function testEveryTabIsLinkedFromEachOther(): void
     {
         $this->login();
 
-        foreach (['index', 'maintenance'] as $action) {
+        foreach (['index', 'server', 'maintenance'] as $action) {
             $html = (string)Yii::$app->runAction("admin/system/$action");
 
             self::assertStringContainsString('class="tabs nav"', $html);
             self::assertStringContainsString('href="/admin/system/index"', $html);
+            self::assertStringContainsString('href="/admin/system/server"', $html);
             self::assertStringContainsString('href="/admin/system/maintenance"', $html);
         }
     }

@@ -1,24 +1,28 @@
 ## 3.0.0 (in development)
 
-- **The admin system page reports the installation, not just its caches.** It is two tabs now, behind
-  `Modules\Admin\Widgets\Navs\SystemSubmenu`: *Application* (`actionIndex()`) names the application, its Composer
-  version and commit reference, when it was last deployed, the environment, the database server, the last applied
-  migration, PHP — linking its version to `php-info` — and the installed extensions as tooltip badges;
-  *Maintenance* (`actionMaintenance()`) carries the published assets, every cache component, every connection's
-  schema cache and the sessions, each row with its own button. `Grids\AssetBundleGridView`, `Grids\CacheGridView`
+- **The admin system page reports the installation, not just its caches.** It is three tabs now, behind
+  `Modules\Admin\Widgets\Navs\SystemSubmenu`, one card each: *Application* (`actionIndex()`) names the
+  application, its Composer version and commit reference, when it was last deployed, the environment, the database
+  server, the last applied migration, PHP — linking its version to `php-info` — and the installed extensions as
+  tooltip badges; *Server* (`actionServer()`) what it runs on; *Maintenance* (`actionMaintenance()`) the published
+  assets, every cache component, every connection's schema cache and the sessions, each row with its own button. `Grids\AssetBundleGridView`, `Grids\CacheGridView`
   and `Grids\SessionGridView` are **removed** — none of them listed records, and the published asset directories
   are named by a `crc32` hash that cannot be mapped back to an `AssetBundle`. Both cards are
   `Widgets\Panels\InfoList`, which renders label / value rows with an optional action through the form row classes
   (`form-rows`, `form-group form-row`, `form-label`, `form-content`) rather than a table, so a row stacks at phone
   width like every other form row. It is extensible through `EVENT_CONFIGURE` and its `rows()` closure.
 
-- **`Panels\ServerInfo` reports what the installation runs on**, beside `ApplicationInfo` on the Application tab:
-  the server software and host name, the trusted hosts, the mail transport, the time zone and whether the
-  directories the installation writes to are writable (`ServerInfo::$directories`, path aliases a bundle extends
-  through `EVENT_CONFIGURE`). It **warns when a request arrived through a proxy while `Request::$trustedHosts` is
-  empty** — `filterHeaders()` strips every `X-Forwarded-*` header in that case, so the misconfiguration is
-  invisible from `getHeaders()` and the secure cookie flag and HSTS are silently skipped. The mailer row reports
-  only the DSN's scheme, host and port, never its credentials.
+- **`Panels\ServerInfo` reports what the installation runs on**, on the Server tab: the server software and host
+  name, the trusted hosts, the mail transport and the time zone. It **warns when a request arrived through a proxy
+  while `Request::$trustedHosts` is empty** — `filterHeaders()` strips every `X-Forwarded-*` header in that case,
+  so the misconfiguration is invisible from `getHeaders()` and the secure cookie flag and HSTS are silently
+  skipped. The mailer row reports only the DSN's scheme, host and port, never its credentials.
+
+- **`Modules\Admin\Widgets\DirectoryAlert` warns about a directory the installation cannot write to**, on the
+  dashboard and the Server tab, beside `MigrationAlert`. `DirectoryAlert::$directories` holds the path aliases —
+  `@runtime` and `@webroot/assets` by default — which a bundle extends through `EVENT_CONFIGURE` rather than the
+  skeleton naming another bundle's upload path; the alert names the resolved path, since that is what has to be
+  created or chmodded.
 
 - **`Panels\ExtensionVersions` lists the installed extensions as badges**, the version in each badge's tooltip so
   the row stays one or two lines. Its `excluded` property is the block list, matched against the full package name

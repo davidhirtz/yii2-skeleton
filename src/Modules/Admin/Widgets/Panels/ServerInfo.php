@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Panels;
 
-use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Widgets\Panels\InfoList;
 use Override;
@@ -12,21 +11,6 @@ use Yii;
 
 class ServerInfo extends InfoList
 {
-    /**
-     * @var list<string> the path aliases whose directories have to be writable for the installation to work. A
-     * bundle adds its own upload path through `EVENT_CONFIGURE`.
-     */
-    public array $directories = [
-        '@runtime',
-        '@webroot/assets',
-    ];
-
-    public function __construct(array $config = [])
-    {
-        $this->title ??= Yii::t('skeleton', 'SYSTEM_SERVER');
-        parent::__construct($config);
-    }
-
     #[Override]
     protected function configure(): void
     {
@@ -35,7 +19,6 @@ class ServerInfo extends InfoList
             $this->addTrustedHostsRow();
             $this->addMailerRow();
             $this->addTimeZoneRow();
-            $this->addDirectoryRow();
         }
 
         parent::configure();
@@ -134,31 +117,6 @@ class ServerInfo extends InfoList
                 Yii::$app->timeZone,
                 Yii::$app->getFormatter()->asDatetime(time(), 'php:Y-m-d H:i:s'),
             ),
-        );
-    }
-
-    protected function addDirectoryRow(): void
-    {
-        $list = Div::make()->class('badge-list');
-        $writable = 0;
-
-        foreach ($this->directories as $alias) {
-            $path = Yii::getAlias($alias, false);
-            $isWritable = is_string($path) && is_dir($path) && is_writable($path);
-            $writable += (int)$isWritable;
-
-            $list->addContent(Span::make()
-                ->class($isWritable ? 'badge' : 'badge badge-error')
-                ->addAttributes(['data-tooltip' => '', 'title' => is_string($path) ? $path : $alias])
-                ->text($alias));
-        }
-
-        $this->addRow(
-            Yii::t('skeleton', 'SYSTEM_DIRECTORIES'),
-            $this->getValue($list, Yii::t('skeleton', 'SYSTEM_DIRECTORIES_WRITABLE', [
-                'count' => $writable,
-                'total' => count($this->directories),
-            ])),
         );
     }
 }
