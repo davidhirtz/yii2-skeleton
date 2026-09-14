@@ -5,14 +5,21 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Modules\Admin\Widgets\Panels;
 
 use Hirtz\Skeleton\Db\Dsn;
+use Hirtz\Skeleton\Helpers\VersionHelper;
+use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\ApplicationInfo;
 use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Yii;
 
 class ApplicationInfoTest extends TestCase
 {
+    use UserFixtureTrait;
+
     public function testTheCardReportsTheApplicationEnvironmentAndPlatform(): void
     {
+        $this->loginAdmin();
         $html = ApplicationInfo::make()->render();
 
         self::assertStringContainsString(Yii::$app->name, $html);
@@ -32,6 +39,8 @@ class ApplicationInfoTest extends TestCase
 
     public function testTheDatabaseIsNamedWithItsDriverAndSchema(): void
     {
+        $this->loginAdmin();
+
         $db = Yii::$app->getDb();
         $html = ApplicationInfo::make()->render();
 
@@ -64,6 +73,7 @@ class ApplicationInfoTest extends TestCase
 
     public function testThePhpRowLinksToPhpInfoOutsideHtmx(): void
     {
+        $this->loginAdmin();
         $html = ApplicationInfo::make()->render();
 
         self::assertStringContainsString('href="/admin/system/php-info"', $html);
@@ -73,6 +83,7 @@ class ApplicationInfoTest extends TestCase
 
     public function testTheExtensionsAreListedUnderTheYiiVersion(): void
     {
+        $this->loginAdmin();
         $html = ApplicationInfo::make()->render();
 
         $yii = strpos($html, Yii::getVersion());
@@ -82,5 +93,59 @@ class ApplicationInfoTest extends TestCase
         self::assertIsInt($extensions);
         self::assertGreaterThan($yii, $extensions);
         self::assertStringContainsString('>yii2-skeleton</span>', $html);
+    }
+
+    public function testAManagerIsShownThePlatformWithoutItsInfrastructure(): void
+    {
+        $this->loginManager();
+
+        $db = Yii::$app->getDb();
+        $html = ApplicationInfo::make()->render();
+
+        // the application, its commit and the PHP version stay
+        self::assertStringContainsString(Yii::$app->name, $html);
+        self::assertStringContainsString(PHP_VERSION, $html);
+        self::assertStringContainsString(
+            htmlspecialchars((string)VersionHelper::getApplicationReference(), ENT_QUOTES),
+            $html,
+        );
+
+        // the repository, the schema, `phpinfo()` and the versions a maintainer reads do not
+        self::assertStringNotContainsString('davidhirtz/yii2-monorepo', $html);
+        self::assertStringNotContainsString(Dsn::fromString($db->dsn)->database, $html);
+        self::assertStringNotContainsString('system/php-info', $html);
+        self::assertStringNotContainsString('<div class="form-label">Yii</div>', $html);
+        self::assertStringNotContainsString('badge-list', $html);
+    }
+
+    public function testTheSystemPermissionAloneRevealsTheInfrastructureFacts(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+        $this->assignManagerRole($user->id);
+        $this->assignPermission($user->id, Module::AUTH_SYSTEM);
+
+        Yii::$app->getUser()->setIdentity($user);
+        $html = ApplicationInfo::make()->render();
+
+        self::assertFalse(Yii::$app->getUser()->can(User::AUTH_ROLE_ADMIN));
+        self::assertStringContainsString('davidhirtz/yii2-monorepo', $html);
+        self::assertStringContainsString('system/php-info', $html);
+        self::assertStringContainsString(Yii::getVersion(), $html);
+    }
+
+    private function loginAdmin(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+        $this->assignAdminRole($user->id);
+
+        Yii::$app->getUser()->setIdentity($user);
+    }
+
+    private function loginManager(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+        $this->assignManagerRole($user->id);
+
+        Yii::$app->getUser()->setIdentity($user);
     }
 }

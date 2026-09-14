@@ -6,18 +6,34 @@ namespace Hirtz\Skeleton\Tests\Modules\Admin\Widgets\Panels;
 
 use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\ServerInfo;
 use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Yii;
 
 class ServerInfoTest extends TestCase
 {
+    use UserFixtureTrait;
+
     public function testTheCardNamesTheServerMailerAndTimeZone(): void
     {
+        $this->loginAdmin();
         $html = ServerInfo::make()->render();
 
         self::assertStringContainsString('<div class="form-label">Server</div>', $html);
         self::assertStringContainsString('<div class="form-label">Mailer</div>', $html);
         self::assertStringContainsString(Yii::$app->timeZone, $html);
         self::assertStringContainsString((string)php_uname('n'), $html);
+    }
+
+    public function testTheHostNameIsHiddenFromAManager(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+        $this->assignManagerRole($user->id);
+        Yii::$app->getUser()->setIdentity($user);
+
+        $html = ServerInfo::make()->render();
+
+        self::assertStringContainsString('<div class="form-label">Server</div>', $html);
+        self::assertStringNotContainsString((string)php_uname('n'), $html);
     }
 
     public function testTheDirectoriesAreLeftToTheAlert(): void
@@ -82,5 +98,13 @@ class ServerInfoTest extends TestCase
 
         self::assertStringNotContainsString('badge-warning', $html);
         self::assertStringContainsString('<div class="form-label">Trusted hosts</div>', $html);
+    }
+
+    private function loginAdmin(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+        $this->assignAdminRole($user->id);
+
+        Yii::$app->getUser()->setIdentity($user);
     }
 }

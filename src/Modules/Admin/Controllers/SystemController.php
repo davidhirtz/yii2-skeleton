@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 use Hirtz\Skeleton\Caching\CacheComponents;
 use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Web\Controller;
 use Override;
 use Yii;
@@ -28,8 +29,13 @@ class SystemController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['flush', 'index', 'maintenance', 'php-info', 'publish', 'schema', 'server', 'session-gc'],
-                        'roles' => [User::AUTH_ROLE_ADMIN],
+                        'actions' => ['php-info'],
+                        'roles' => [Module::AUTH_SYSTEM],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['flush', 'index', 'maintenance', 'publish', 'schema', 'server', 'session-gc'],
+                        'roles' => [User::AUTH_ROLE_ADMIN, User::AUTH_ROLE_MANAGER],
                     ],
                 ],
             ],

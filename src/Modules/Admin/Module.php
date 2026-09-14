@@ -17,6 +17,13 @@ use yii\web\Session;
 class Module extends \Hirtz\Skeleton\Base\Module
 {
     /**
+     * Reading what the installation runs on: the error logs, `phpinfo()` and the system page's infrastructure rows.
+     * It is the one thing {@see User::AUTH_ROLE_ADMIN} holds and {@see User::AUTH_ROLE_MANAGER} does not, and it is
+     * a permission rather than a role check so a project can grant it without handing over the admin role.
+     */
+    final public const string AUTH_SYSTEM = 'system';
+
+    /**
      * @var bool whether the fulltext search is available: the navbar button, both search actions, the index writes
      * of {@see \Hirtz\Skeleton\Behaviors\SearchBehavior} and the `search` console commands.
      */

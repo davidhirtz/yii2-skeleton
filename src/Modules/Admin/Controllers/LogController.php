@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
 use Hirtz\Skeleton\Helpers\FileHelper;
-use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Modules\Admin\Data\LogDataProvider;
 use Hirtz\Skeleton\Modules\Admin\Data\LogFileArrayDataProvider;
 use Hirtz\Skeleton\Web\Controller;
@@ -29,7 +29,7 @@ class LogController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index', 'delete', 'view'],
-                        'roles' => [User::AUTH_ROLE_ADMIN],
+                        'roles' => [Module::AUTH_SYSTEM],
                     ],
                 ],
             ],

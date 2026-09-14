@@ -67,6 +67,7 @@ return [
     'AUTH_ITEM_TYPE_PERMISSION' => 'Benutzerrecht',
     'AUTH_ITEM_TYPE_ROLE' => 'Rolle',
     'AUTH_REDIRECT_DESCRIPTION' => 'Weiterleitungen verwalten',
+    'AUTH_SYSTEM_DESCRIPTION' => 'Server und Fehlerprotokolle einsehen',
     'AUTH_TRAIL_INDEX_DESCRIPTION' => 'Historie einsehen',
     'AUTH_USER_DESCRIPTION' => 'Benutzer verwalten',
     'BASED_DEFAULT' => 'Standard',

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Panels;
 
 use Hirtz\Skeleton\Html\Span;
+use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Widgets\Panels\InfoList;
 use Override;
 use Yii;
@@ -24,6 +25,10 @@ class ServerInfo extends InfoList
         parent::configure();
     }
 
+    /**
+     * The host name `php_uname()` reports is the machine rather than the site, so it is behind
+     * {@see Module::AUTH_SYSTEM} like the rest of the infrastructure facts.
+     */
     protected function addServerRow(): void
     {
         $software = $_SERVER['SERVER_SOFTWARE'] ?? null;
@@ -32,7 +37,7 @@ class ServerInfo extends InfoList
             Yii::t('skeleton', 'SYSTEM_SERVER'),
             $this->getValue(
                 is_string($software) && $software !== '' ? $software : PHP_SAPI,
-                (string)php_uname('n'),
+                $this->webuser->can(Module::AUTH_SYSTEM) ? (string)php_uname('n') : null,
             ),
         );
     }

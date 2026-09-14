@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Tests\Modules\Admin\Controllers;
 
 use Hirtz\Skeleton\Caching\CacheComponents;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Yii;
@@ -52,7 +53,7 @@ class SystemControllerTest extends TestCase
         self::assertStringContainsString('<div class="form-label">Time zone</div>', $html);
     }
 
-    public function testServerIsForbiddenForANonAdmin(): void
+    public function testServerIsForbiddenWithoutTheManagerRole(): void
     {
         Yii::$app->getUser()->setIdentity($this->getUserFromFixture('admin'));
 
@@ -90,7 +91,7 @@ class SystemControllerTest extends TestCase
         }
     }
 
-    public function testMaintenanceIsForbiddenForANonAdmin(): void
+    public function testMaintenanceIsForbiddenWithoutTheManagerRole(): void
     {
         Yii::$app->getUser()->setIdentity($this->getUserFromFixture('admin'));
 
@@ -132,7 +133,31 @@ class SystemControllerTest extends TestCase
         self::assertStringNotContainsString('<div class="wrap"', $html);
     }
 
-    public function testPhpInfoIsForbiddenForANonAdmin(): void
+    public function testAManagerReachesEveryTabButPhpInfo(): void
+    {
+        $this->loginManager();
+
+        foreach (['index', 'server', 'maintenance'] as $action) {
+            self::assertIsString(Yii::$app->runAction("admin/system/$action"));
+        }
+
+        $this->expectException(ForbiddenHttpException::class);
+        Yii::$app->runAction('admin/system/php-info');
+    }
+
+    public function testAManagerIsNotShownTheInfrastructureFacts(): void
+    {
+        $this->loginManager();
+
+        $html = (string)Yii::$app->runAction('admin/system/index');
+
+        self::assertStringContainsString(Yii::$app->name, $html);
+        self::assertStringNotContainsString('system/php-info', $html);
+        self::assertStringNotContainsString('>yii2-skeleton</span>', $html);
+        self::assertStringNotContainsString(Yii::getVersion(), $html);
+    }
+
+    public function testPhpInfoIsForbiddenWithoutTheSystemPermission(): void
     {
         Yii::$app->getUser()->setIdentity($this->getUserFromFixture('admin'));
 
@@ -140,7 +165,19 @@ class SystemControllerTest extends TestCase
         Yii::$app->runAction('admin/system/php-info');
     }
 
-    public function testIndexIsForbiddenForANonAdmin(): void
+    public function testTheSystemPermissionIsEnoughForPhpInfoWithoutTheAdminRole(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+        $this->assignManagerRole($user->id);
+        $this->assignPermission($user->id, Module::AUTH_SYSTEM);
+
+        Yii::$app->getUser()->setIdentity($user);
+
+        self::assertIsString(Yii::$app->runAction('admin/system/php-info'));
+        self::assertFalse(Yii::$app->getUser()->can(User::AUTH_ROLE_ADMIN));
+    }
+
+    public function testIndexIsForbiddenWithoutTheManagerRole(): void
     {
         Yii::$app->getUser()->setIdentity($this->getUserFromFixture('admin'));
 
@@ -240,6 +277,16 @@ class SystemControllerTest extends TestCase
     {
         $user = $this->getUserFromFixture('admin');
         $this->assignAdminRole($user->id);
+
+        Yii::$app->getUser()->setIdentity($user);
+
+        return $user;
+    }
+
+    private function loginManager(): User
+    {
+        $user = $this->getUserFromFixture('admin');
+        $this->assignManagerRole($user->id);
 
         Yii::$app->getUser()->setIdentity($user);
 

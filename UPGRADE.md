@@ -1,5 +1,41 @@
 # Upgrade Guide
 
+## 3.0.0 — The `manager` role, and flat roles
+
+`Models\User::AUTH_ROLE_MANAGER` (`manager`) holds every permission the installation has.
+`Migrations\M260914190000ManagerRole` creates it and flattens `admin` to the same list: a role lists the
+**permissions themselves**, never another role, so the `author` and `media` roles `admin` used to group them under
+are detached by `yii2-cms` and `yii2-media`. The result is three independent lists:
+
+```
+admin   → user, authUpdate, redirect, trailIndex, entry, category, file, folder,
+          location, tag, tenant, config, shopifyProduct, shopifyWebhook
+manager → the same fourteen
+author  → entry, category, file, folder
+```
+
+**Neither role inherits the other.** A guard an administrator should also pass names both:
+
+```php
+'roles' => [User::AUTH_ROLE_ADMIN, User::AUTH_ROLE_MANAGER],
+```
+
+and a permission of your own is added to both, since `addPermission()` takes any number of parents:
+
+```php
+$this->addPermission(Invoice::AUTH_INVOICE, $description, User::AUTH_ROLE_ADMIN, User::AUTH_ROLE_MANAGER);
+```
+
+Naming only `AUTH_ROLE_ADMIN` keeps it out of a manager's reach — but prefer a permission to a role check, so
+that the list a role shows in the admin is the whole of what it can do. That is what the platform's own
+administrator-only capability became: `Modules\Admin\Module::AUTH_SYSTEM` (`system`, "Inspect the server and the
+error logs") covers the error logs, `phpinfo()` and the system page's infrastructure rows, is held by `admin`
+alone, and can be granted to a role of your own without handing over the admin role. A project that guards a
+controller on `AUTH_ROLE_ADMIN` should ask whether it means a permission instead.
+
+`safeDown()` drops `manager` but leaves `admin` flat: those permissions grant exactly what it reached through a
+role, and nothing records which of the two it held them by.
+
 ## 3.0.0 — The admin system page was rebuilt
 
 The page is three tabs, one card each: `system/index` (Application), `system/server` and `system/maintenance`,

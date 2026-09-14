@@ -43,6 +43,11 @@ trait UserFixtureTrait
         $this->assignRole($userId, User::AUTH_ROLE_ADMIN);
     }
 
+    protected function assignManagerRole(int $userId): void
+    {
+        $this->assignRole($userId, User::AUTH_ROLE_MANAGER);
+    }
+
     protected function assignPermission(int $userId, string $permission): void
     {
         $permission = Yii::$app->getAuthManager()->getPermission($permission);

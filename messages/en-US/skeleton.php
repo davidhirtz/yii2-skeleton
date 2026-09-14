@@ -67,6 +67,7 @@ return [
     'AUTH_ITEM_TYPE_PERMISSION' => 'Permission',
     'AUTH_ITEM_TYPE_ROLE' => 'Role',
     'AUTH_REDIRECT_DESCRIPTION' => 'Manage redirects',
+    'AUTH_SYSTEM_DESCRIPTION' => 'Inspect the server and the error logs',
     'AUTH_TRAIL_INDEX_DESCRIPTION' => 'View history',
     'AUTH_USER_DESCRIPTION' => 'Manage users',
     'BASED_DEFAULT' => 'Default',

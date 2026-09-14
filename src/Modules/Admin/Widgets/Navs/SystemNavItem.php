@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Override;
 use Yii;
@@ -48,7 +49,7 @@ class SystemNavItem extends NavItem
             ->label(Yii::t('skeleton', 'COMMON_ERROR_LOGS'))
             ->url(['/admin/log/index'])
             ->order(20)
-            ->roles([User::AUTH_ROLE_ADMIN])
+            ->roles([Module::AUTH_SYSTEM])
             ->routes(['admin/log']);
     }
 

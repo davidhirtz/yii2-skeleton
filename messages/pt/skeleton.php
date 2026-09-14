@@ -67,6 +67,7 @@ return [
     'AUTH_ITEM_TYPE_PERMISSION' => 'Permissão',
     'AUTH_ITEM_TYPE_ROLE' => 'Função',
     'AUTH_REDIRECT_DESCRIPTION' => 'Gerir redirecionamentos',
+    'AUTH_SYSTEM_DESCRIPTION' => 'Consultar o servidor e os registos de erros',
     'AUTH_TRAIL_INDEX_DESCRIPTION' => 'Ver o histórico',
     'AUTH_USER_DESCRIPTION' => 'Gerir utilizadores',
     'BASED_DEFAULT' => 'Predefinição',

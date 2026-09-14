@@ -67,6 +67,7 @@ return [
     'AUTH_ITEM_TYPE_PERMISSION' => 'Autorisation',
     'AUTH_ITEM_TYPE_ROLE' => 'Rôle',
     'AUTH_REDIRECT_DESCRIPTION' => 'Gérer les redirections',
+    'AUTH_SYSTEM_DESCRIPTION' => 'Consulter le serveur et les journaux d’erreurs',
     'AUTH_TRAIL_INDEX_DESCRIPTION' => 'Consulter l’historique',
     'AUTH_USER_DESCRIPTION' => 'Gérer les utilisateurs',
     'BASED_DEFAULT' => 'Par défaut',

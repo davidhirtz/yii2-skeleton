@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Helpers\VersionHelper;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Custom\RelativeTime;
 use Hirtz\Skeleton\Modules\Admin\Controllers\SystemController;
+use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Widgets\Panels\InfoList;
 use Override;
 use PDO;
@@ -30,10 +31,23 @@ class ApplicationInfo extends InfoList
             $this->addDatabaseRow();
             $this->addMigrationRow();
             $this->addPhpRow();
-            $this->addExtensionsRow();
+
+            if ($this->canReadSystem()) {
+                $this->addYiiRow();
+                $this->addExtensionsRow();
+            }
         }
 
         parent::configure();
+    }
+
+    /**
+     * The repository the installation was built from, the schema it runs against and everything reachable through
+     * `phpinfo()` are infrastructure rather than content, so a manager is shown the platform without them.
+     */
+    protected function canReadSystem(): bool
+    {
+        return $this->webuser->can(Module::AUTH_SYSTEM);
     }
 
     protected function addApplicationRow(): void
@@ -42,7 +56,7 @@ class ApplicationInfo extends InfoList
 
         $this->addRow(
             Yii::t('skeleton', 'SYSTEM_APPLICATION'),
-            $this->getValue(Yii::$app->name, trim(VersionHelper::getApplicationName()
+            $this->getValue(Yii::$app->name, trim(($this->canReadSystem() ? VersionHelper::getApplicationName() : '')
                 . ' ' . VersionHelper::getApplicationVersion()
                 . ($reference !== null ? " ($reference)" : ''))),
         );
@@ -84,7 +98,9 @@ class ApplicationInfo extends InfoList
             Yii::t('skeleton', 'SYSTEM_DATABASE'),
             $this->getValue(
                 $this->getDatabaseVersion($db) ?? ucfirst($db->getDriverName()),
-                Dsn::fromString($db->dsn)->database . ' · ' . $db->getDriverName(),
+                $this->canReadSystem()
+                    ? Dsn::fromString($db->dsn)->database . ' · ' . $db->getDriverName()
+                    : $db->getDriverName(),
             ),
         );
     }
@@ -114,12 +130,7 @@ class ApplicationInfo extends InfoList
         $this->addRow(
             Yii::t('skeleton', 'SYSTEM_PHP'),
             $this->getValue(
-                A::make()
-                    ->href(['/admin/system/php-info'])
-                    ->target('_blank')
-                    ->attribute('hx-boost', 'false')
-                    ->addAttributes(['data-tooltip' => '', 'title' => Yii::t('skeleton', 'SYSTEM_PHP_INFO')])
-                    ->text(PHP_VERSION),
+                $this->getPhpVersion(),
                 implode(' · ', [
                     'memory_limit ' . ini_get('memory_limit'),
                     'upload_max_filesize ' . ini_get('upload_max_filesize'),
@@ -127,7 +138,24 @@ class ApplicationInfo extends InfoList
                 ]),
             ),
         );
+    }
 
+    protected function getPhpVersion(): string|Stringable
+    {
+        if (!$this->canReadSystem()) {
+            return PHP_VERSION;
+        }
+
+        return A::make()
+            ->href(['/admin/system/php-info'])
+            ->target('_blank')
+            ->attribute('hx-boost', 'false')
+            ->addAttributes(['data-tooltip' => '', 'title' => Yii::t('skeleton', 'SYSTEM_PHP_INFO')])
+            ->text(PHP_VERSION);
+    }
+
+    protected function addYiiRow(): void
+    {
         $this->addRow(Yii::t('skeleton', 'SYSTEM_YII'), Yii::getVersion());
     }
 

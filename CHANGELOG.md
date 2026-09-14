@@ -1,5 +1,26 @@
 ## 3.0.0 (in development)
 
+- **`Models\User::AUTH_ROLE_MANAGER` is a new role, and a role lists permissions rather than other roles.**
+  `Migrations\M260914190000ManagerRole` creates `manager` with every permission the installation has and flattens
+  `admin` to the same list, in place of the `author` and `media` roles it used to group them under; those are
+  detached by the bundles that own them. Neither role inherits the other, so an `AccessRule` an administrator
+  should also pass names both, and a new permission is added to both:
+  `addPermission($name, $description, User::AUTH_ROLE_ADMIN, User::AUTH_ROLE_MANAGER)`.
+  `Test\Traits\UserFixtureTrait::assignManagerRole()` is the counterpart of `assignAdminRole()`.
+
+- **`Modules\Admin\Module::AUTH_SYSTEM` (`system`) is what an administrator holds and a manager does not.** It
+  covers reading the installation rather than running it — the error logs, `phpinfo()` and the system page's
+  infrastructure rows — and it is a permission rather than a role check so that the list a role shows is the whole
+  of what it can do, and so a project can grant it without handing over the admin role.
+  `Migrations\M260914220000SystemPermission` adds it to `admin` alone.
+
+- **The admin system page is a manager's page, minus its infrastructure facts.**
+  `Modules\Admin\Controllers\SystemController` allows both roles for every action but `php-info`, which takes
+  `Module::AUTH_SYSTEM`, as `Controllers\LogController` and the error log nav item do.
+  `Panels\ApplicationInfo` hides the repository name (the commit reference stays), the database name, the link to
+  `php-info` and the Yii and extension rows behind the same permission, and `Panels\ServerInfo` hides the host
+  name `php_uname()` reports.
+
 - **The admin system page reports the installation, not just its caches.** It is three tabs now, behind
   `Modules\Admin\Widgets\Navs\SystemSubmenu`, one card each: *Application* (`actionIndex()`) names the
   application, its Composer version and commit reference, when it was last deployed, the environment, the database
