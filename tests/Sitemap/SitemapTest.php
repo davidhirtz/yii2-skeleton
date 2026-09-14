@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Tests\Web;
+namespace Hirtz\Skeleton\Tests\Sitemap;
 
-use Hirtz\Skeleton\Behaviors\SitemapBehavior;
 use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Sitemap\ModelSitemap;
+use Hirtz\Skeleton\Sitemap\Sitemap;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
-use Hirtz\Skeleton\Web\Sitemap;
 use Override;
 use Yii;
+use yii\base\InvalidConfigException;
 
 class SitemapTest extends TestCase
 {
@@ -43,7 +44,7 @@ class SitemapTest extends TestCase
     {
         $sitemap = $this->createSitemap(['views' => [$this->getViewConfig()]]);
 
-        $locations = array_column($sitemap->generateFileUrls(), 'loc');
+        $locations = array_column($sitemap->generateUrls(), 'loc');
 
         self::assertEqualsCanonicalizing([
             ['site/view'],
@@ -61,7 +62,7 @@ class SitemapTest extends TestCase
             'views' => [[...$this->getViewConfig(), 'defaultView' => 'about']],
         ]);
 
-        $locations = array_column($sitemap->generateFileUrls(), 'loc');
+        $locations = array_column($sitemap->generateUrls(), 'loc');
 
         self::assertContains(['site/view'], $locations);
         self::assertContains(['site/view', 'view' => 'index'], $locations);
@@ -73,7 +74,7 @@ class SitemapTest extends TestCase
             'views' => [[...$this->getViewConfig(), 'paramName' => false]],
         ]);
 
-        $locations = array_column($sitemap->generateFileUrls(), 'loc');
+        $locations = array_column($sitemap->generateUrls(), 'loc');
 
         self::assertSame([['site/view'], ['site/view'], ['site/view']], $locations);
     }
@@ -84,7 +85,7 @@ class SitemapTest extends TestCase
             'views' => [[...$this->getViewConfig(), 'languages' => ['en-US', 'de']]],
         ]);
 
-        $urls = $sitemap->generateFileUrls();
+        $urls = $sitemap->generateUrls();
 
         self::assertCount(6, $urls);
         self::assertContains(['site/view', 'language' => 'de'], array_column($urls, 'loc'));
@@ -96,7 +97,7 @@ class SitemapTest extends TestCase
             'views' => [['alias' => $this->viewPath]],
         ]);
 
-        self::assertSame([], $sitemap->generateFileUrls());
+        self::assertSame([], $sitemap->generateUrls());
     }
 
     public function testGenerateUrlsMergesUrlsViewsAndModels(): void
@@ -104,7 +105,7 @@ class SitemapTest extends TestCase
         $sitemap = $this->createSitemap([
             'urls' => [['loc' => '/manual']],
             'views' => [$this->getViewConfig()],
-            'models' => [TestSitemapUser::class],
+            'sitemaps' => ['users' => $this->getUserSitemapConfig()],
         ]);
 
         $locations = array_column($sitemap->generateUrls(), 'loc');
@@ -123,7 +124,7 @@ class SitemapTest extends TestCase
             'useSitemapIndex' => true,
             'maxUrlCount' => 2,
             'urls' => [['loc' => '/a'], ['loc' => '/b'], ['loc' => '/c']],
-            'models' => ['users' => TestSitemapUser::class],
+            'sitemaps' => ['users' => $this->getUserSitemapConfig()],
         ]);
 
         self::assertSame(['/a', '/b'], array_column($sitemap->generateUrls('urls'), 'loc'));
@@ -144,7 +145,7 @@ class SitemapTest extends TestCase
                 ['loc' => '/b', 'lastmod' => '2026-01-01 10:00:00'],
                 ['loc' => '/c'],
             ],
-            'models' => ['users' => TestSitemapUser::class],
+            'sitemaps' => ['users' => $this->getUserSitemapConfig()],
         ]);
 
         $sitemaps = $sitemap->generateIndexUrls();
@@ -158,39 +159,95 @@ class SitemapTest extends TestCase
 
         // the newest `lastmod` of the set wins, and a set without one reports none
         self::assertSame('2026-01-01 10:00:00', $sitemaps[0]['lastmod']);
-        self::assertNull($sitemaps[1]['lastmod']);
+        self::assertArrayNotHasKey('lastmod', $sitemaps[1]);
         self::assertArrayNotHasKey('lastmod', $sitemaps[2]);
     }
 
     /**
-     * A model that does not declare the behavior itself carries it in the configuration, where `class` defaults to
-     * `SitemapBehavior`.
+     * The pages are counted from the records, so a record the URL generation skips shortens its page rather than
+     * pulling a URL forward from the next one.
      */
-    public function testAModelCanCarryItsSitemapBehaviorInTheConfiguration(): void
+    public function testARecordWithoutAUrlShortensItsPage(): void
     {
         $sitemap = $this->createSitemap([
-            'models' => [
-                [
-                    'class' => User::class,
-                    'behaviors' => [
-                        'sitemap' => [
-                            'callback' => fn (User $user): array => ['loc' => ['/user/view', 'id' => $user->id]],
-                        ],
-                    ],
+            'useSitemapIndex' => true,
+            'sitemaps' => [
+                'users' => [
+                    ...$this->getUserSitemapConfig(),
+                    'url' => fn (): bool => false,
                 ],
             ],
         ]);
 
-        self::assertCount(3, $sitemap->generateUrls());
+        self::assertSame(1, $sitemap->getSitemap('users')?->getPageCount());
+        self::assertSame([], $sitemap->generateUrls('users'));
+        self::assertCount(1, $sitemap->generateIndexUrls());
     }
 
-    public function testTheVariationsCallbackIsResolvedOnInit(): void
+    public function testTheUrlsKeyIsReserved(): void
+    {
+        $sitemap = $this->createSitemap(['sitemaps' => ['urls' => $this->getUserSitemapConfig()]]);
+
+        $this->expectException(InvalidConfigException::class);
+        $this->expectExceptionMessage('The sitemap key "urls" is reserved.');
+
+        $sitemap->getSitemaps();
+    }
+
+    public function testAModelClassIsRequired(): void
+    {
+        $this->expectException(InvalidConfigException::class);
+        $this->expectExceptionMessage('::$modelClass must extend');
+
+        $this->createSitemap(['sitemaps' => ['broken' => ModelSitemap::class]])->getSitemaps();
+    }
+
+    public function testAUrlWithoutALocationThrows(): void
     {
         $sitemap = $this->createSitemap([
-            'variations' => fn (): array => [Yii::$app->language],
+            'sitemaps' => [
+                'users' => [
+                    ...$this->getUserSitemapConfig(),
+                    'url' => fn (User $user): array => ['url' => $user->id],
+                ],
+            ],
         ]);
 
-        self::assertSame(['en-US'], $sitemap->variations);
+        $this->expectException(InvalidConfigException::class);
+        $this->expectExceptionMessage('must return an array with a "loc" key.');
+
+        $sitemap->generateUrls();
+    }
+
+    public function testTheDefaultChangeFrequencyAndPriorityAreApplied(): void
+    {
+        $sitemap = $this->createSitemap([
+            'sitemaps' => [
+                'users' => [
+                    ...$this->getUserSitemapConfig(),
+                    'changeFrequency' => 'weekly',
+                    'priority' => 0.8,
+                ],
+            ],
+        ]);
+
+        $url = $sitemap->generateUrls()[0];
+
+        self::assertSame('weekly', $url['changefreq']);
+        self::assertSame(0.8, $url['priority']);
+    }
+
+    /**
+     * A single factor is what the tenant bundle configures, and the page cache needs a list.
+     */
+    public function testTheVariationsCallbackIsResolvedToAList(): void
+    {
+        self::assertSame(['en-US'], $this->createSitemap([
+            'variations' => fn (): array => [Yii::$app->language],
+        ])->getVariations());
+
+        self::assertSame(['1'], $this->createSitemap(['variations' => fn (): int => 1])->getVariations());
+        self::assertSame([], $this->createSitemap(['variations' => fn (): ?int => null])->getVariations());
     }
 
     private function getViewConfig(): array
@@ -201,38 +258,22 @@ class SitemapTest extends TestCase
         ];
     }
 
+    private function getUserSitemapConfig(): array
+    {
+        return [
+            'class' => ModelSitemap::class,
+            'modelClass' => User::class,
+            'url' => fn (User $user): array => ['loc' => ['/user/view', 'id' => $user->id]],
+        ];
+    }
+
     /**
-     * `SitemapBehavior` reads `useSitemapIndex` and `maxUrlCount` off the application component, so the component is
-     * what a test has to replace.
+     * A sitemap reads `maxUrlCount` off the application component, so the component is what a test has to replace.
      */
     private function createSitemap(array $config = []): Sitemap
     {
         Yii::$app->set('sitemap', [...$config, 'class' => Sitemap::class]);
 
-        /** @var Sitemap $sitemap */
-        $sitemap = Yii::$app->get('sitemap');
-
-        return $sitemap;
-    }
-}
-
-class TestSitemapUser extends User
-{
-    #[Override]
-    public function behaviors(): array
-    {
-        return [
-            ...parent::behaviors(),
-            'sitemap' => [
-                'class' => SitemapBehavior::class,
-                'callback' => fn (User $user): array => ['loc' => ['/user/view', 'id' => $user->id]],
-            ],
-        ];
-    }
-
-    #[Override]
-    public static function tableName(): string
-    {
-        return User::tableName();
+        return Sitemap::getComponent();
     }
 }

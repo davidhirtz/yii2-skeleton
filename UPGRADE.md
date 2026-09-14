@@ -1,5 +1,62 @@
 # Upgrade Guide
 
+## 3.0.0 — The sitemap moved out of the models
+
+`Web\Sitemap` is `Sitemap\Sitemap`, and its `models` property is `sitemaps`. Where a model used to be listed —
+implementing `Models\Interfaces\SitemapInterface` itself, or carrying a `Behaviors\SitemapBehavior` — the list now
+holds sitemap objects, and the model is left alone:
+
+```php
+// before
+'sitemap' => [
+    'models' => [
+        'products' => [
+            'class' => Product::class,
+            'behaviors' => [
+                'sitemap' => [
+                    'callback' => fn (Product $product) => ['loc' => $product->getRoute()],
+                    'defaultChangeFrequency' => 'weekly',
+                    'defaultPriority' => 0.8,
+                ],
+            ],
+        ],
+    ],
+],
+
+// after
+'sitemap' => [
+    'sitemaps' => [
+        'products' => [
+            'class' => ModelSitemap::class,
+            'modelClass' => Product::class,
+            'url' => fn (Product $product) => ['loc' => $product->getRoute()],
+            'changeFrequency' => 'weekly',
+            'priority' => 0.8,
+        ],
+    ],
+],
+```
+
+`Behaviors\SitemapBehavior` and `Models\Interfaces\SitemapInterface` are removed. A sitemap that needs more than a
+closure — its own query, images, a record producing several URLs — extends `Sitemap\ModelSitemap` and overrides
+`getQuery()` and `getRecordUrls()`; `getSitemapQuery()`, `generateSitemapUrls()` and `getSitemapUrlCount()` have no
+equivalent on the model.
+
+The component's own `urls` and `views` are unchanged in the configuration, but are now a sitemap of their own,
+`Sitemap\UrlSitemap`, registered under the reserved key `urls` — so a key of that name in `sitemaps` throws.
+
+Three things behave differently:
+
+- **The index pages by URL, not by record.** `SitemapInterface::getPageCount()` replaces the URL count the component
+  used to divide by its own `maxUrlCount`, so a sitemap overriding `maxUrlCount` is paged by its own number. A
+  record producing one URL per language divides the page size with `intdiv()`, which is what a fractional limit
+  silently broke before: the query builder drops a `LIMIT` that is not a whole number, and every page then held
+  every record.
+- **The XML namespace is `http://www.sitemaps.org/schemas/sitemap/0.9`**, as the protocol declares it, rather than
+  the `https` and trailing slash it carried before.
+- **An unknown key or an out-of-range offset is a `404`**, where `sitemap.xml?key=nope` used to answer an empty but
+  valid sitemap with `200`.
+
 ## 3.0.0 — `ArrayHelper::simpleXmlToArray()` became `XmlNode`
 
 The helper walked a `SimpleXMLElement` into nested arrays of `name`, `text`, `attributes` and `children`. It is

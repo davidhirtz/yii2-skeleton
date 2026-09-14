@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Controllers;
 
-use DateTime;
+use DateTimeInterface;
 use Hirtz\Skeleton\Helpers\Url;
+use Hirtz\Skeleton\Sitemap\Sitemap;
 use Hirtz\Skeleton\Web\Controller;
 use Override;
 use XMLWriter;
@@ -16,7 +17,12 @@ use yii\web\Response;
 
 class SitemapController extends Controller
 {
-    private ?XMLWriter $writer = null;
+    /**
+     * @see https://www.sitemaps.org/protocol.html
+     */
+    private const string XML_NAMESPACE = 'http://www.sitemaps.org/schemas/sitemap/0.9';
+
+    private const string IMAGE_XML_NAMESPACE = 'http://www.google.com/schemas/sitemap-image/1.1';
 
     #[Override]
     public function init(): void
@@ -32,14 +38,14 @@ class SitemapController extends Controller
     public function behaviors(): array
     {
         $behaviors = parent::behaviors();
-        $sitemap = Yii::$app->sitemap;
+        $sitemap = $this->getSitemap();
 
         if ($sitemap->cache) {
-            $variations = $sitemap->variations;
+            $variations = $sitemap->getVariations();
 
             if ($sitemap->useSitemapIndex) {
-                $variations[] = $this->request->get('key');
-                $variations[] = $this->request->get('offset');
+                $variations[] = (string)$this->request->get('key');
+                $variations[] = (string)$this->request->get('offset');
             }
 
             $behaviors[] = [
@@ -66,77 +72,102 @@ class SitemapController extends Controller
         return parent::beforeAction($action);
     }
 
-    public function actionIndex(?string $key = null, int $offset = 0): string|bool
+    /**
+     * @throws NotFoundHttpException
+     */
+    public function actionIndex(?string $key = null, int $offset = 0): string
     {
-        $sitemap = Yii::$app->sitemap;
+        $sitemap = $this->getSitemap();
+        $isIndex = $sitemap->useSitemapIndex && $key === null;
+
+        if ($sitemap->useSitemapIndex && !$isIndex) {
+            $requested = $sitemap->getSitemap($key);
+
+            if (!$requested || $offset < 0 || $offset >= $requested->getPageCount()) {
+                throw new NotFoundHttpException();
+            }
+        }
+
+        $urls = $isIndex ? $sitemap->generateIndexUrls() : $sitemap->generateUrls($key, $offset);
+
         $this->response->format = Response::FORMAT_RAW;
+        $this->response->getHeaders()->add('Content-Type', 'application/xml');
 
         ob_start();
         ob_implicit_flush(false);
 
-        $headers = $this->response->getHeaders();
-        $headers->add('Content-Type', 'application/xml');
+        $writer = new XMLWriter();
+        $writer->openUri('php://output');
+        $writer->startDocument('1.0', 'UTF-8');
 
-        $this->writer = new XMLWriter();
-        $this->writer->openUri('php://output');
-        $this->writer->startDocument('1.0', 'UTF-8');
+        $this->writeUrlset($writer, $urls, $isIndex);
 
-        if ($sitemap->useSitemapIndex && $key === null) {
-            $this->writeUrlset(Yii::$app->sitemap->generateIndexUrls(), true);
-        } else {
-            $this->writeUrlset($sitemap->generateUrls($key, $offset));
-        }
+        $writer->endDocument();
+        $writer->flush();
 
-        $this->writer->endDocument();
-        $this->writer->flush();
-
-        return ob_get_clean();
+        return (string)ob_get_clean();
     }
 
-    private function writeUrlset(array $urls, bool $isIndex = false): void
+    private function writeUrlset(XMLWriter $writer, array $urls, bool $isIndex = false): void
     {
-        $this->writer->startElement($isIndex ? 'sitemapindex' : 'urlset');
-        $this->writer->writeAttribute('xmlns', 'https://www.sitemaps.org/schemas/sitemap/0.9/');
+        $writer->startElement($isIndex ? 'sitemapindex' : 'urlset');
+        $writer->writeAttribute('xmlns', self::XML_NAMESPACE);
+
+        // XMLWriter drops an attribute written after the first child, so the image namespace cannot wait for the
+        // first URL that carries images
+        if ($this->hasImages($urls)) {
+            $writer->writeAttribute('xmlns:image', self::IMAGE_XML_NAMESPACE);
+        }
 
         foreach ($urls as $url) {
-            if (isset($url['images'])) {
-                $this->writer->writeAttribute('xmlns:image', 'http://www.google.com/schemas/sitemap-image/1.1');
-            }
+            $writer->startElement($isIndex ? 'sitemap' : 'url');
+            $writer->writeElement('loc', Url::to(is_array($url) ? $url['loc'] : $url, true));
 
-            $this->writer->startElement($isIndex ? 'sitemap' : 'url');
-            $this->writer->writeElement('loc', Url::to(is_array($url) ? $url['loc'] : $url, true));
+            foreach (['lastmod', 'changefreq', 'priority'] as $element) {
+                $value = is_array($url) ? ($url[$element] ?? null) : null;
 
-            if (isset($url['lastmod'])) {
-                $lastmod = $url['lastmod'];
-                $this->writer->writeElement('lastmod', $lastmod instanceof DateTime ? $lastmod->format(DATE_W3C) : $lastmod);
-            }
-
-            if (isset($url['changefreq'])) {
-                $this->writer->writeElement('changefreq', $url['changefreq']);
-            }
-
-            if (isset($url['priority'])) {
-                $this->writer->writeElement('priority', $url['priority']);
-            }
-
-            if (isset($url['images'])) {
-                foreach ($url['images'] as $image) {
-                    $this->writer->startElement('image:image');
-                    $this->writer->writeElement('image:loc', Url::to(is_array($image) ? $image['loc'] : $image, true));
-
-                    foreach (['caption', 'geo_location', 'license', 'title'] as $element) {
-                        if (!empty($image[$element])) {
-                            $this->writer->writeElement('image:' . $element, $image[$element]);
-                        }
-                    }
-
-                    $this->writer->endElement();
+                if ($value !== null && $value !== '') {
+                    $writer->writeElement($element, $this->formatValue($value));
                 }
             }
 
-            $this->writer->endElement();
+            foreach ((is_array($url) ? $url['images'] ?? [] : []) as $image) {
+                $writer->startElement('image:image');
+                $writer->writeElement('image:loc', Url::to(is_array($image) ? $image['loc'] : $image, true));
+
+                foreach (['caption', 'geo_location', 'license', 'title'] as $element) {
+                    if (!empty($image[$element])) {
+                        $writer->writeElement('image:' . $element, (string)$image[$element]);
+                    }
+                }
+
+                $writer->endElement();
+            }
+
+            $writer->endElement();
         }
 
-        $this->writer->endElement();
+        $writer->endElement();
+    }
+
+    private function hasImages(array $urls): bool
+    {
+        foreach ($urls as $url) {
+            if (is_array($url) && !empty($url['images'])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function formatValue(mixed $value): string
+    {
+        return $value instanceof DateTimeInterface ? $value->format(DATE_W3C) : (string)$value;
+    }
+
+    private function getSitemap(): Sitemap
+    {
+        return Sitemap::getComponent();
     }
 }

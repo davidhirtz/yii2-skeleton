@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Controllers\SitemapController;
 use Hirtz\Skeleton\Test\TestCase;
 use SimpleXMLElement;
 use Yii;
+use yii\web\NotFoundHttpException;
 
 class SitemapControllerTest extends TestCase
 {
@@ -15,7 +16,7 @@ class SitemapControllerTest extends TestCase
     {
         $result = $this->runIndexAction();
 
-        self::assertStringContainsString('<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9/"/>', $result);
+        self::assertStringContainsString('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"/>', $result);
 
         $xml = new SimpleXMLElement($result);
 
@@ -45,7 +46,7 @@ class SitemapControllerTest extends TestCase
         $xml = new SimpleXMLElement($result);
 
         self::assertEquals('sitemapindex', $xml->getName());
-        self::assertEquals('https://www.sitemaps.org/schemas/sitemap/0.9/', $xml->getNamespaces()['']);
+        self::assertEquals('http://www.sitemaps.org/schemas/sitemap/0.9', $xml->getNamespaces()['']);
         self::assertCount(2, $xml->children());
 
         $child = $xml->children()->children();
@@ -81,6 +82,43 @@ class SitemapControllerTest extends TestCase
         self::assertCount(3, $xml->children());
     }
 
+    /**
+     * An unknown set — and a page past the end of a known one — is a 404 rather than an empty but valid sitemap.
+     */
+    public function testIndexWithSitemapIndexAndUnknownKey(): void
+    {
+        $this->setSitemapUrls();
+        $this->setUseSitemapIndex();
+
+        $this->expectException(NotFoundHttpException::class);
+
+        $this->runIndexAction('nope');
+    }
+
+    public function testIndexWithSitemapIndexAndOffsetPastTheEnd(): void
+    {
+        $this->setSitemapUrls();
+        $this->setUseSitemapIndex();
+
+        $this->expectException(NotFoundHttpException::class);
+
+        $this->runIndexAction('urls', 2);
+    }
+
+    /**
+     * XMLWriter drops an attribute written after the first child, so the image namespace has to be declared before
+     * the URLs are written — the first one carrying images is rarely the first one.
+     */
+    public function testIndexDeclaresTheImageNamespaceForALaterUrl(): void
+    {
+        $this->setSitemapUrls();
+        Yii::$app->sitemap->urls = array_reverse(Yii::$app->sitemap->urls);
+
+        $xml = new SimpleXMLElement($this->runIndexAction());
+
+        self::assertArrayHasKey('image', $xml->getDocNamespaces());
+    }
+
     private function setSitemapUrls(): void
     {
         Yii::$app->sitemap->urls = [
@@ -108,10 +146,10 @@ class SitemapControllerTest extends TestCase
         ];
     }
 
-    private function runIndexAction(?string $key = null): string
+    private function runIndexAction(?string $key = null, int $offset = 0): string
     {
         Yii::$app->controller = Yii::createObject(SitemapController::class, ['sitemap', Yii::$app]);
-        return Yii::$app->controller->actionIndex($key);
+        return Yii::$app->controller->actionIndex($key, $offset);
     }
 
     private function setUseSitemapIndex(): void
@@ -124,7 +162,7 @@ class SitemapControllerTest extends TestCase
     {
         self::assertEquals('urlset', $xml->getName());
 
-        self::assertEquals('https://www.sitemaps.org/schemas/sitemap/0.9/', $xml->getDocNamespaces()['']);
+        self::assertEquals('http://www.sitemaps.org/schemas/sitemap/0.9', $xml->getDocNamespaces()['']);
         self::assertEquals('http://www.google.com/schemas/sitemap-image/1.1', $xml->getDocNamespaces()['image']);
 
         $child = $xml->children()->children();
