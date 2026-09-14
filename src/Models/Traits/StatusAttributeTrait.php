@@ -29,16 +29,16 @@ trait StatusAttributeTrait
     }
 
     /**
-     * @return array<int|string, Status>
+     * @return array<int, Status>
      */
     public static function getStatusDefinitions(): array
     {
         return DefinitionRegistry::get(static::class, 'getStatuses', Status::class);
     }
 
-    public static function findStatus(int|string|null $status): ?Status
+    public static function findStatus(?int $status): ?Status
     {
-        return $status === null || $status === '' ? null : (static::getStatusDefinitions()[$status] ?? null);
+        return $status === null ? null : (static::getStatusDefinitions()[$status] ?? null);
     }
 
     public function getStatus(): ?Status

@@ -22,11 +22,11 @@ interface StatusAttributeInterface
     public static function getStatuses(): array;
 
     /**
-     * @return array<int|string, Status>
+     * @return array<int, Status>
      */
     public static function getStatusDefinitions(): array;
 
-    public static function findStatus(int|string|null $status): ?Status;
+    public static function findStatus(?int $status): ?Status;
 
     public function getStatus(): ?Status;
 

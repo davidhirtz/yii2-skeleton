@@ -20,7 +20,7 @@ abstract class Definition
     protected ?string $plural = null;
     protected ?string $icon = null;
 
-    public function __construct(public readonly int|string $value)
+    public function __construct(public readonly int $value)
     {
     }
 

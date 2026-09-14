@@ -291,6 +291,7 @@ return [
     'USER_LOGIN_CREATED_AT_LABEL' => 'Login',
     'USER_LOGIN_EMAIL_CONFIRMATION' => 'E-Mail-Bestätigung',
     'USER_LOGIN_IP_ADDRESS_LABEL' => 'IP',
+    'USER_LOGIN_OTHER' => 'Sonstige',
     'USER_LOGIN_PASSWORD_RESET' => 'Passwort zurücksetzen',
     'USER_LOGIN_SIGN_UP' => 'Registrieren',
     'USER_LOGIN_TYPENAME_LABEL' => 'Login',

@@ -7,7 +7,7 @@ namespace Hirtz\Skeleton\Models\Interfaces;
 use Hirtz\Skeleton\Models\Types\Type;
 
 /**
- * @property int|string $type
+ * @property int $type
  */
 interface TypeAttributeInterface
 {
@@ -24,11 +24,11 @@ interface TypeAttributeInterface
     public static function getTypeClass(): string;
 
     /**
-     * @return array<int|string, Type>
+     * @return array<int, Type>
      */
     public static function getTypeDefinitions(): array;
 
-    public static function findType(int|string|null $type): ?Type;
+    public static function findType(?int $type): ?Type;
 
     public function getType(): ?Type;
 
@@ -41,7 +41,7 @@ interface TypeAttributeInterface
     public static function instantiate($row): static;
 
     /**
-     * @return array<int|string, static>
+     * @return array<int, static>
      */
     public static function getTypeInstances(): array;
 }

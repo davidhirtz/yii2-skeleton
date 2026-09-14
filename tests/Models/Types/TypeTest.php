@@ -19,7 +19,6 @@ class TypeTest extends TestCase
     public function testTheValueIsTheConstructorArgument(): void
     {
         self::assertSame(3, Type::make(3)->value);
-        self::assertSame('login', Type::make('login')->value);
     }
 
     public function testPluralDefaultsToTheInflectedName(): void

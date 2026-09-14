@@ -306,7 +306,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
     public function getType(): ?TrailType
     {
         /** @var TrailType|null */
-        return static::findType($this->type ?? null);
+        return static::findType(static::normalizeTypeValue($this->type ?? null));
     }
 
     #[Override]

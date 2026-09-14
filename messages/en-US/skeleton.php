@@ -291,6 +291,7 @@ return [
     'USER_LOGIN_CREATED_AT_LABEL' => 'Login',
     'USER_LOGIN_EMAIL_CONFIRMATION' => 'Email confirmation',
     'USER_LOGIN_IP_ADDRESS_LABEL' => 'IP',
+    'USER_LOGIN_OTHER' => 'Other',
     'USER_LOGIN_PASSWORD_RESET' => 'Password reset',
     'USER_LOGIN_SIGN_UP' => 'Sign up',
     'USER_LOGIN_TYPENAME_LABEL' => 'Login',

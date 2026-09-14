@@ -17,12 +17,12 @@ use yii\base\InvalidConfigException;
 final class DefinitionRegistry
 {
     /**
-     * @var array<string, array<int|string, Definition>>
+     * @var array<string, array<int, Definition>>
      */
     private static array $definitions = [];
 
     /**
-     * @var array<string, array<int|string, object>>
+     * @var array<string, array<int, object>>
      */
     private static array $instances = [];
 
@@ -30,14 +30,14 @@ final class DefinitionRegistry
      * @template T of Definition
      * @param class-string $modelClass
      * @param class-string<T> $definitionClass
-     * @return array<int|string, T>
+     * @return array<int, T>
      */
     public static function get(string $modelClass, string $method, string $definitionClass): array
     {
         $key = self::getCacheKey($modelClass, $method);
 
         if (isset(self::$definitions[$key])) {
-            /** @var array<int|string, T> */
+            /** @var array<int, T> */
             return self::$definitions[$key];
         }
 
@@ -69,7 +69,7 @@ final class DefinitionRegistry
             throw $exception;
         }
 
-        /** @var array<int|string, T> */
+        /** @var array<int, T> */
         return $definitions;
     }
 
@@ -78,8 +78,8 @@ final class DefinitionRegistry
      * separate property in every using class and could not be reset from one place.
      *
      * @param class-string $modelClass
-     * @param Closure(): array<int|string, object> $create
-     * @return array<int|string, object>
+     * @param Closure(): array<int, object> $create
+     * @return array<int, object>
      */
     public static function getInstances(string $modelClass, Closure $create): array
     {

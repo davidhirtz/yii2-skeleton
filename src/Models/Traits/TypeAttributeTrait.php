@@ -12,7 +12,7 @@ use Yii;
  * {@see static::getTypes()} is the declaration; everything reads {@see static::getTypeDefinitions()},
  * {@see static::findType()} or {@see static::getType()}, which are resolved, validated and cached.
  *
- * @property int|string $type
+ * @property int $type
  */
 trait TypeAttributeTrait
 {
@@ -23,7 +23,7 @@ trait TypeAttributeTrait
     public static function instantiate($row): static
     {
         /** @var class-string<static> $className */
-        $className = static::findType($row['type'] ?? null)?->getModelClass() ?? static::class;
+        $className = static::findType(static::normalizeTypeValue($row['type'] ?? null))?->getModelClass() ?? static::class;
 
         $model = $className::create();
         $model->setAttributes($row, false);
@@ -55,16 +55,16 @@ trait TypeAttributeTrait
     }
 
     /**
-     * @return array<int|string, Type>
+     * @return array<int, Type>
      */
     public static function getTypeDefinitions(): array
     {
         return DefinitionRegistry::get(static::class, 'getTypes', static::getTypeClass());
     }
 
-    public static function findType(int|string|null $type): ?Type
+    public static function findType(?int $type): ?Type
     {
-        return $type === null || $type === '' ? null : (static::getTypeDefinitions()[$type] ?? null);
+        return $type === null ? null : (static::getTypeDefinitions()[$type] ?? null);
     }
 
     /**
@@ -72,15 +72,25 @@ trait TypeAttributeTrait
      */
     public function getType(): ?Type
     {
-        return static::findType($this->type ?? null);
+        return static::findType(static::normalizeTypeValue($this->type ?? null));
     }
 
     /**
-     * @return array<int|string, static>
+     * The attribute is whatever was assigned or read — a form posts a string and PDO answers one for an integer
+     * column — so it is normalized here rather than in {@see static::findType()}, which is the typed API. A
+     * narrowing `getType()` override has to call this too.
+     */
+    protected static function normalizeTypeValue(mixed $type): ?int
+    {
+        return is_numeric($type) ? (int)$type : null;
+    }
+
+    /**
+     * @return array<int, static>
      */
     public static function getTypeInstances(): array
     {
-        /** @var array<int|string, static> */
+        /** @var array<int, static> */
         return DefinitionRegistry::getInstances(static::class, static function (): array {
             $instances = [];
 

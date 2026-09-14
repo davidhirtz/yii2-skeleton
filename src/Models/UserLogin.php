@@ -8,6 +8,7 @@ use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
+use Hirtz\Skeleton\Migrations\M260914180000UserLoginType;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
 use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
 use Hirtz\Skeleton\Models\Types\Type;
@@ -18,7 +19,7 @@ use Yii;
 /**
  * @property string $id
  * @property int $user_id
- * @property string $type
+ * @property int $type
  * @property string|null $browser
  * @property string|null $ip_address
  * @property DateTime $created_at
@@ -31,11 +32,18 @@ class UserLogin extends ActiveRecord implements TypeAttributeInterface
 {
     use TypeAttributeTrait;
 
-    public const string TYPE_COOKIE = 'auto';
-    public const string TYPE_LOGIN = 'login';
-    public const string TYPE_SIGNUP = 'signup';
-    public const string TYPE_CONFIRM_EMAIL = 'email';
-    public const string TYPE_RESET_PASSWORD = 'password';
+    /**
+     * Deliberately {@see TypeAttributeInterface::TYPE_DEFAULT}: a login whose caller named no type has told us
+     * nothing, which is what "other" means. It is also where {@see M260914180000UserLoginType} collects the
+     * provider names the removed social login wrote.
+     */
+    public const int TYPE_OTHER = self::TYPE_DEFAULT;
+
+    public const int TYPE_LOGIN = 2;
+    public const int TYPE_COOKIE = 3;
+    public const int TYPE_SIGNUP = 4;
+    public const int TYPE_CONFIRM_EMAIL = 5;
+    public const int TYPE_RESET_PASSWORD = 6;
 
     #[Override]
     public function rules(): array
@@ -72,22 +80,15 @@ class UserLogin extends ActiveRecord implements TypeAttributeInterface
         return $query;
     }
 
-    public function getTypeName(): string
-    {
-        return $this->getType()?->getName() ?: ucfirst($this->type);
-    }
-
-    public function getTypeIcon(): string
-    {
-        return $this->getType()?->getIcon() ?: "brand:$this->type";
-    }
-
     /**
      * @return list<Type>
      */
     public static function getTypes(): array
     {
         return [
+            Type::make(static::TYPE_OTHER)
+                ->name(Yii::t('skeleton', 'USER_LOGIN_OTHER'))
+                ->icon('question'),
             Type::make(static::TYPE_LOGIN)
                 ->name(Yii::t('skeleton', 'COMMON_LOGIN'))
                 ->icon('sign-in-alt'),

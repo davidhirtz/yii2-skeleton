@@ -82,9 +82,10 @@ class User extends \yii\web\User
     public int $loginAttemptDuration = 900;
 
     /**
-     * @var string the login type
+     * @var int the type written to `user_login`, one of the {@see UserLogin} constants. A flow that logs a user in
+     * without naming one is recorded as {@see UserLogin::TYPE_OTHER}.
      */
-    public string $loginType = 'unknown';
+    public int $loginType = UserLogin::TYPE_OTHER;
 
     /**
      * @var bool|null whether the auto login cookie is `Secure`, `null` derives it from the request. Pin it on a
@@ -246,11 +247,9 @@ class User extends \yii\web\User
         $ipAddress = $this->ipAddress ?: Yii::$app->getRequest()->getUserIP();
         $ipAddress = $ipAddress ? inet_pton($ipAddress) : null;
 
-        $type = mb_substr($this->loginType, 0, 12, Yii::$app->charset);
-
         $columns = [
             'user_id' => $user->id,
-            'type' => $type,
+            'type' => $this->loginType,
             'browser' => $browser,
             'ip_address' => $ipAddress,
             'created_at' => $user->last_login,

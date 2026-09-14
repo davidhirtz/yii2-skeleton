@@ -88,6 +88,27 @@ class TypeAttributeTraitTest extends TestCase
         self::assertSame('', $record->getTypeIcon());
     }
 
+    /**
+     * A form posts a string and PDO answers one for an integer column, so the raw attribute reaches `getType()`
+     * before anything typecasts it.
+     */
+    public function testARawStringValueStillResolves(): void
+    {
+        $record = TypeRecord::create();
+        $record->setAttribute('type', (string)TypeRecord::TYPE_CHILD);
+
+        self::assertSame('Child', $record->getTypeName());
+        self::assertInstanceOf(TypeRecordChild::class, TypeRecord::instantiate(['type' => '2']));
+    }
+
+    public function testAValueThatIsNotNumericHasNoType(): void
+    {
+        $record = TypeRecord::create();
+        $record->setAttribute('type', 'child');
+
+        self::assertNull($record->getType());
+    }
+
     public function testInstantiateReadsTheModelClass(): void
     {
         self::assertInstanceOf(TypeRecordChild::class, TypeRecord::instantiate(['type' => TypeRecord::TYPE_CHILD]));

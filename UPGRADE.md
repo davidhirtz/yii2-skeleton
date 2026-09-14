@@ -1,5 +1,53 @@
 # Upgrade Guide
 
+## 3.0.0 — The login type is an integer
+
+`Models\UserLogin::$type` was a `string(12)` and is now a `tinyint`. It was the last string-valued type in the
+platform; every other `TYPE_*` constant was already an integer.
+
+| v2 value     | v3 constant                        | Value |
+|--------------|------------------------------------|-------|
+| `'login'`    | `UserLogin::TYPE_LOGIN`            | 2     |
+| `'auto'`     | `UserLogin::TYPE_COOKIE`           | 3     |
+| `'signup'`   | `UserLogin::TYPE_SIGNUP`           | 4     |
+| `'email'`    | `UserLogin::TYPE_CONFIRM_EMAIL`    | 5     |
+| `'password'` | `UserLogin::TYPE_RESET_PASSWORD`   | 6     |
+| anything else | `UserLogin::TYPE_OTHER`           | 1     |
+
+`M260914180000UserLoginType` applies that map and collapses everything else — the provider names the removed
+social login wrote (`facebook`, `google`, …), and the `'unknown'` that `Web\User::$loginType` used to default to.
+**Those names do not come back**, on the way down or otherwise; `user_login` is pruned by `userLoginLifetime` and
+`user-login/clear` anyway, so the rows are transient by design.
+
+If your project wrote login types of its own — a second identity provider, a Shibboleth integration — map them
+in `config/params.php` **before** running the migration, and declare the same values in your `getTypes()`
+override:
+
+```php
+'userLoginTypes' => [
+    'shibboleth' => 7,
+],
+```
+
+Anything left unmapped becomes `TYPE_OTHER`. Start your own values at 7; 1 to 6 are the platform's.
+
+`Web\User::$loginType` is typed `int` and defaults to `UserLogin::TYPE_OTHER`, so a project that logs a user in
+itself assigns a constant rather than a string:
+
+```php
+// before
+$webuser->loginType = 'sso';
+
+// after
+$webuser->loginType = UserLogin::TYPE_SSO;  // your own constant, declared in getTypes()
+```
+
+The 12-character truncation in `insertLogin()` is gone with the string column, and so are the two fallbacks
+`UserLogin` carried for undeclared values: `getTypeName()` no longer answers `ucfirst($this->type)` and
+`getTypeIcon()` no longer answers `"brand:$this->type"` — a Font Awesome brands icon that only ever existed for
+the social login providers. Every value a login can hold is declared now, so the grid renders a real icon.
+
+
 ## 3.0.0 — Types and statuses are objects
 
 `getTypes()` and `getStatuses()` no longer return arrays. They return a list of definition objects, and the

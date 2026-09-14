@@ -291,6 +291,7 @@ return [
     'USER_LOGIN_CREATED_AT_LABEL' => 'Início de sessão',
     'USER_LOGIN_EMAIL_CONFIRMATION' => 'Confirmação de e-mail',
     'USER_LOGIN_IP_ADDRESS_LABEL' => 'IP',
+    'USER_LOGIN_OTHER' => 'Outro',
     'USER_LOGIN_PASSWORD_RESET' => 'Reposição da palavra-passe',
     'USER_LOGIN_SIGN_UP' => 'Registo',
     'USER_LOGIN_TYPENAME_LABEL' => 'Início de sessão',

@@ -291,6 +291,7 @@ return [
     'USER_LOGIN_CREATED_AT_LABEL' => 'Connexion',
     'USER_LOGIN_EMAIL_CONFIRMATION' => 'Confirmation de l’e-mail',
     'USER_LOGIN_IP_ADDRESS_LABEL' => 'IP',
+    'USER_LOGIN_OTHER' => 'Autre',
     'USER_LOGIN_PASSWORD_RESET' => 'Réinitialisation du mot de passe',
     'USER_LOGIN_SIGN_UP' => 'Inscription',
     'USER_LOGIN_TYPENAME_LABEL' => 'Connexion',

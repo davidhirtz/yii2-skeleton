@@ -1,5 +1,20 @@
 ## 3.0.0 (in development)
 
+- **`Models\UserLogin::$type` is an integer.** It was the last string-valued type in the platform, and it kept
+  `Models\Definitions\Definition::$value` a `int|string` union for one model. The five constants become
+  `TYPE_LOGIN` 2, `TYPE_COOKIE` 3, `TYPE_SIGNUP` 4, `TYPE_CONFIRM_EMAIL` 5 and `TYPE_RESET_PASSWORD` 6, with
+  `TYPE_OTHER` 1 — deliberately `TYPE_DEFAULT` — as the catch-all, and `Web\User::$loginType` is typed `int` with
+  that default rather than the undeclared `'unknown'` it carried before. `M260914180000UserLoginType` converts
+  the column to a `tinyint` and collapses everything it cannot map, which is every provider name the removed
+  social login wrote; a project that wrote types of its own maps them through `params['userLoginTypes']`.
+  `UserLogin::getTypeName()` and `getTypeIcon()` lose their fallbacks — `ucfirst($this->type)` and
+  `"brand:$this->type"`, which rendered a Font Awesome brand icon that only existed for the social providers —
+  since every value is now declared. See UPGRADE.md
+- **A type value is normalized where it is read, not where it is looked up.** `findType()` takes `?int`, but a
+  form posts a string and PDO answers one for an integer column, so `TypeAttributeTrait::getType()` and
+  `instantiate()` go through `normalizeTypeValue()`; a narrowing `getType()` override has to call it too. The
+  `int|string` signature this replaces was silently absorbing unvalidated input
+
 - **A model's types and statuses are objects, not arrays.** `getTypes()` returns a `list<Models\Types\Type>` and
   `getStatuses()` a `list<Models\Statuses\Status>`, built fluently — `Type::make(self::TYPE_X)->name('…')->icon('…')`
   — over a shared `Models\Definitions\Definition` base. The declaration is read through
