@@ -57,7 +57,7 @@ final class DefinitionRegistry
             }
 
             if (isset($definitions[$definition->value])) {
-                throw new InvalidConfigException("$modelClass::$method() declares \"{$definition->value}\" twice.");
+                throw new InvalidConfigException("$modelClass::$method() declares \"$definition->value\" twice.");
             }
 
             $definitions[$definition->value] = $definition;

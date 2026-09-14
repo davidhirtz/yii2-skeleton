@@ -66,7 +66,7 @@ trait TypeAttributeTrait
 
         return [
             $class::make(static::TYPE_DEFAULT)
-                ->name(Yii::t('skeleton', 'BASED_DEFAULT')),
+                ->name(Yii::t('skeleton', 'COMMON_TYPE_DEFAULT')),
         ];
     }
 

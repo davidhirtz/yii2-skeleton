@@ -70,7 +70,7 @@ return [
     'AUTH_SYSTEM_DESCRIPTION' => 'Consulter le serveur et les journaux d’erreurs',
     'AUTH_TRAIL_INDEX_DESCRIPTION' => 'Consulter l’historique',
     'AUTH_USER_DESCRIPTION' => 'Gérer les utilisateurs',
-    'BASED_DEFAULT' => 'Par défaut',
+    'COMMON_TYPE_DEFAULT' => 'Par défaut',
     'BREADCRUMBS_ADMIN' => 'Administration',
     'CARD_TOGGLE' => 'Afficher / masquer',
     'COMMON_ACCOUNT' => 'Compte',

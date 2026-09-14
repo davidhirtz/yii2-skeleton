@@ -70,7 +70,7 @@ return [
     'AUTH_SYSTEM_DESCRIPTION' => 'Server und Fehlerprotokolle einsehen',
     'AUTH_TRAIL_INDEX_DESCRIPTION' => 'Historie einsehen',
     'AUTH_USER_DESCRIPTION' => 'Benutzer verwalten',
-    'BASED_DEFAULT' => 'Standard',
+    'COMMON_TYPE_DEFAULT' => 'Standard',
     'BREADCRUMBS_ADMIN' => 'Admin',
     'CARD_TOGGLE' => 'Umschalten',
     'COMMON_ACCOUNT' => 'Account',

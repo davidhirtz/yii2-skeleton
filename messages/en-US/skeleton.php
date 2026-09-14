@@ -70,7 +70,7 @@ return [
     'AUTH_SYSTEM_DESCRIPTION' => 'Inspect the server and the error logs',
     'AUTH_TRAIL_INDEX_DESCRIPTION' => 'View history',
     'AUTH_USER_DESCRIPTION' => 'Manage users',
-    'BASED_DEFAULT' => 'Default',
+    'COMMON_TYPE_DEFAULT' => 'Default',
     'BREADCRUMBS_ADMIN' => 'Admin',
     'CARD_TOGGLE' => 'Toggle',
     'COMMON_ACCOUNT' => 'Account',

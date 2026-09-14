@@ -70,7 +70,7 @@ return [
     'AUTH_SYSTEM_DESCRIPTION' => 'Consultar o servidor e os registos de erros',
     'AUTH_TRAIL_INDEX_DESCRIPTION' => 'Ver o histórico',
     'AUTH_USER_DESCRIPTION' => 'Gerir utilizadores',
-    'BASED_DEFAULT' => 'Predefinição',
+    'COMMON_TYPE_DEFAULT' => 'Predefinição',
     'BREADCRUMBS_ADMIN' => 'Administração',
     'CARD_TOGGLE' => 'Mostrar / ocultar',
     'COMMON_ACCOUNT' => 'Conta',
