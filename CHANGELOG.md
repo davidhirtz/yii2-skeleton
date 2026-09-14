@@ -4,7 +4,8 @@
   `int|BackedEnum` and unwraps it, so a project that already names a model's types or statuses in an enum
   declares them as `Type::make(EntryType::Page)` instead of repeating the `->value`. `$value` stays a plain
   `int`; a string backed enum is an `InvalidConfigException` naming the enum and the definition, since PHP has
-  no `IntBackedEnum` to type against and the bare assignment would only raise a `TypeError`.
+  no `IntBackedEnum` to type against and the bare assignment would only raise a `TypeError`. The unwrapping is
+  `Base\Traits\IntBackedEnumTrait`, which anything else taking a declared value uses — `Cms\Models\Sets\SectionTemplate` does.
 
 - **`Models\Definitions\Definition` is split.** The base is what every definition shares — the value, the name,
   the icon and `make()` — and the new `Models\Definitions\ModelDefinition` adds `plural` and

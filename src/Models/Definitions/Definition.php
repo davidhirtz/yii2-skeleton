@@ -6,7 +6,7 @@ namespace Hirtz\Skeleton\Models\Definitions;
 
 use BackedEnum;
 use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
-use yii\base\InvalidConfigException;
+use Hirtz\Skeleton\Base\Traits\IntBackedEnumTrait;
 
 /**
  * A named, iconed value the admin offers in a select. It is born with its value and must never be mutated
@@ -18,27 +18,16 @@ use yii\base\InvalidConfigException;
 abstract class Definition
 {
     use ContainerConfigurationTrait;
+    use IntBackedEnumTrait;
 
     protected ?string $name = null;
     protected ?string $icon = null;
 
     public readonly int $value;
 
-    /**
-     * PHP has no `IntBackedEnum`, so a string backed one only fails on the assignment — with a `TypeError` naming
-     * neither the enum nor this class.
-     */
     public function __construct(int|BackedEnum $value)
     {
-        if ($value instanceof BackedEnum) {
-            if (!is_int($value->value)) {
-                throw new InvalidConfigException(static::class . ' cannot be declared with ' . $value::class . ', which is backed by a string.');
-            }
-
-            $value = $value->value;
-        }
-
-        $this->value = $value;
+        $this->value = static::getIntValue($value);
     }
 
     public function name(?string $name): static
