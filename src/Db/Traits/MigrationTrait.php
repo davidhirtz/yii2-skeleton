@@ -163,6 +163,26 @@ trait MigrationTrait
         $this->dropColumnIfExists($table, $column);
     }
 
+    /**
+     * Cosmetic: MySQL can only reorder a column by rewriting its definition, and the JSON column has the same one
+     * everywhere, so it is restated rather than read back from the schema.
+     */
+    protected function moveCustomAttributesColumn(string $table, string $after, string $column = 'custom_attributes'): void
+    {
+        $this->alterColumn($table, $column, (string)$this->json()->null()->after($after));
+    }
+
+    /**
+     * The way back, since there is no last position to name — only a last column.
+     */
+    protected function moveCustomAttributesColumnToEnd(string $table, string $column = 'custom_attributes'): void
+    {
+        $columns = $this->getDb()->getSchema()->getTableSchema($table, true)->getColumnNames();
+        $columns = array_values(array_diff($columns, [$column]));
+
+        $this->moveCustomAttributesColumn($table, (string)end($columns), $column);
+    }
+
     protected function dropColumnIfExists(string $table, string $column): void
     {
         if ($this->getDb()->getTableSchema($table)->getColumn($column)) {

@@ -1,5 +1,10 @@
 ## 3.0.0 (in development)
 
+- **`Db\Traits\MigrationTrait::moveCustomAttributesColumn()`** reorders the JSON column, and
+  `moveCustomAttributesColumnToEnd()` is the way back. `Migrations\M260915130000CustomAttributesColumn` puts
+  `user.custom_attributes` after `two_factor_secret` — cosmetic, so the column reads as part of the record rather
+  than as an afterthought behind the timestamps.
+
 - **`Models\Traits\VisibleAttributeTrait::getVisibleAttribute()` answers `false` for an attribute the model does
   not declare**, instead of throwing through the magic getter. A custom attribute is declared per type and per
   subclass, so "hidden" and "not there at all" are the same answer to a renderer.
