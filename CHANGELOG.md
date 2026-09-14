@@ -1,5 +1,11 @@
 ## 3.0.0 (in development)
 
+- **A submenu's first tab is named after its record, not "General".** Every one of them reads
+  `Models\Interfaces\AdminModelInterface::getAdminType()` now — the record's type name where it has types, its
+  own noun otherwise — so an entry's tab reads "Page" rather than "General" and the tab says what the page
+  below it edits. `COMMON_GENERAL` is gone from the message files with its last call site; a project that
+  translated it drops the key.
+
 - **The navbar search is its own widget**, `Modules\Admin\Widgets\Navs\NavBarSearch`, so a project replaces it
   through the container instead of subclassing the whole navbar. `NavBar::SEARCH_RESULTS_ID` is
   `NavBarSearch::RESULTS_ID`, and a guest or a disabled `Modules\Admin\Module::$enableSearch` now hides the widget

@@ -40,7 +40,8 @@ return [
     'sort' => true,
     'phpDocBlock' => <<<'DOCBLOCK'
         /**
-         * Message translations (domain-first keys; forceTranslation).
+         * Message translations (domain-first keys; forceTranslation). See UPGRADE.md.
+         *
          * NOTE: this file must be saved in UTF-8 encoding.
          */
         DOCBLOCK,
