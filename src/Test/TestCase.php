@@ -149,6 +149,24 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         Yii::setLogger($this->logger);
     }
 
+    /**
+     * A second application on the connection of the first, so the test keeps its open transaction. This is how a
+     * test pins what a request must not inherit from the one before it — a static a `Bootstrap` has to clear.
+     */
+    protected function reloadApplication(): void
+    {
+        $db = Yii::$app->getDb();
+
+        Yii::$app->getErrorHandler()->unregister();
+        Event::offAll();
+
+        $this->setUpApplication();
+
+        // before anything asks for it, or the second application opens a connection of its own and the rows the
+        // test wrote in its transaction are invisible to it
+        Yii::$app->set('db', $db);
+    }
+
     protected function tearDownApplication(): void
     {
         $this->mailer->reset();

@@ -1,5 +1,8 @@
 ## 3.0.0 (in development)
 
+- `Test\TestCase::reloadApplication()` builds a second application on the connection of the first, so the test
+  keeps its open transaction and the rows it wrote. It is how a test pins what a request must not inherit from the
+  one before it — the static caches a bundle's `Bootstrap` clears
 - **`./yii redirect/clean` removes the redirects that can never resolve.** One whose target comes back to its own
   request URI and the members of a cycle are deleted one by one so the trail records them; a target that is
   itself redirected is shortened to the end of its chain, and a redirect merely *leading* into a cycle is
