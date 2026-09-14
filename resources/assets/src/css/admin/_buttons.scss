@@ -81,7 +81,15 @@
   --btn-hover-color: var(--btn-danger-hover-color);
 }
 
-// Todo
+.btn-transparent {
+  --btn-bg: transparent;
+  --btn-border-color: transparent;
+  --btn-color: var(--body-color-danger-bg);
+  --btn-hover-bg: var(--btn-secondary-hover-bg);
+  --btn-hover-border-color: var(--btn-secondary-hover-border-color);
+  --btn-hover-color: var(--btn-secondary-hover-color);
+}
+
 .btn-link {
   background: transparent !important;
   margin: 0;

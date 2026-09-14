@@ -70,7 +70,7 @@ class NavBar extends Widget
             ]);
 
         $button = Button::make()
-            ->primary()
+            ->transparent()
             ->addClass('navbar-search-toggle')
             ->type('button')
             ->attribute('aria-label', Yii::t('skeleton', 'SEARCH_LABEL'))

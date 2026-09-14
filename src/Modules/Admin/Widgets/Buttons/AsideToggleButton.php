@@ -16,7 +16,7 @@ class AsideToggleButton extends Widget
     protected function renderContent(): string|Stringable
     {
         return Button::make()
-            ->secondary()
+            ->transparent()
             ->addClass('aside-toggle')
             ->addAttributes(['data-aside' => ''])
             ->icon('bars')
