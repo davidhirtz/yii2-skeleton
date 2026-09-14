@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
+use Closure;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Web\Controller;
@@ -45,12 +46,18 @@ class DashboardController extends Controller
         return $this->render('index');
     }
 
-    public static function addRoles(array $roles): void
+    /**
+     * A bootstrap runs on every request, the dashboard on one action — so a `Closure` keeps the models the
+     * permission constants live on from being autoloaded just to name them.
+     *
+     * @param array<string>|Closure(): array<string> $roles
+     */
+    public static function addRoles(array|Closure $roles): void
     {
         Event::on(static::class, self::EVENT_CONFIGURE, function (Event $event) use ($roles): void {
             /** @var static $controller */
             $controller = $event->sender;
-            $controller->roles = [...$controller->roles, ...$roles];
+            $controller->roles = [...$controller->roles, ...($roles instanceof Closure ? $roles() : $roles)];
         });
     }
 }

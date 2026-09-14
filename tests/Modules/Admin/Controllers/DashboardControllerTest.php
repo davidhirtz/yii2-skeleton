@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Modules\Admin\Controllers;
 
+use ArrayObject;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Controllers\DashboardController;
 use Hirtz\Skeleton\Test\TestCase;
@@ -29,6 +30,23 @@ class DashboardControllerTest extends TestCase
         DashboardController::addRoles(['test2']);
 
         self::assertSame([...$roles, 'test1', 'test2'], $this->getAccessRoles());
+    }
+
+    public function testAddRolesFromClosureIsDeferredUntilTheControllerIsCreated(): void
+    {
+        $roles = $this->getAccessRoles();
+
+        /** @var ArrayObject<int, string> $calls */
+        $calls = new ArrayObject();
+
+        DashboardController::addRoles(function () use ($calls): array {
+            $calls[] = 'called';
+            return ['test3'];
+        });
+
+        self::assertCount(0, $calls);
+        self::assertSame([...$roles, 'test3'], $this->getAccessRoles());
+        self::assertCount(1, $calls);
     }
 
     /**

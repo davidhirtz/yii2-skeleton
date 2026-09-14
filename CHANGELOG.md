@@ -1,5 +1,16 @@
 ## 3.0.0 (in development)
 
+- **`DashboardController::addRoles()` accepts a `Closure`.** A bootstrap runs on every request and the dashboard
+  on one action, so naming a permission constant in the argument autoloaded the model it lives on — every model
+  of every installed bundle, under the console SAPI too. Pass a closure instead:
+
+  ```php
+  DashboardController::addRoles(static fn (): array => [Entry::AUTH_ENTRY]);
+  ```
+
+  An array is still accepted and behaves as before. In this monorepo the change took the console application from
+  410 declared classes to 383.
+
 - **`getTypes()` and `getStatuses()` are instance methods, and an installation can declare them in the
   container.** The declaration has exactly one caller — `Models\Definitions\DefinitionRegistry`, which resolves
   it once per model class, per language, per application — so `static` bought nothing and cost the ability to
