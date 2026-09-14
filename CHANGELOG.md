@@ -1,5 +1,12 @@
 ## 3.0.0 (in development)
 
+- **`Helpers\ArrayHelper::simpleXmlToArray()` is gone**, replaced by `Xml\XmlNode` — a readonly node with a `name`,
+  a `text`, its `attributes` and its `children`, built with `XmlNode::fromString()` or `fromElement()` and read with
+  `getAttribute()`, `getChild()` and `getChildren()`. The namespace handling is unchanged, a prefixed attribute or
+  child still keeps its prefix, and `toArray()` returns the array the helper did. `fromString()` throws for a
+  string that is not valid XML, where the helper accepted a `?SimpleXMLElement` and then dereferenced the `null`.
+  See UPGRADE.md
+
 - **`Models\UserLogin::$type` is an integer.** It was the last string-valued type in the platform, and it kept
   `Models\Definitions\Definition::$value` a `int|string` union for one model. The five constants become
   `TYPE_LOGIN` 2, `TYPE_COOKIE` 3, `TYPE_SIGNUP` 4, `TYPE_CONFIRM_EMAIL` 5 and `TYPE_RESET_PASSWORD` 6, with

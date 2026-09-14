@@ -1,5 +1,27 @@
 # Upgrade Guide
 
+## 3.0.0 — `ArrayHelper::simpleXmlToArray()` became `XmlNode`
+
+The helper walked a `SimpleXMLElement` into nested arrays of `name`, `text`, `attributes` and `children`. It is
+now `Xml\XmlNode`, a readonly node of the same four properties, so a caller reads a typed object instead of
+indexing an array:
+
+```php
+// before
+$array = ArrayHelper::simpleXmlToArray(simplexml_load_string($xml));
+$title = $array['children']['channel'][0]['children']['title'][0]['text'] ?? null;
+
+// after
+$title = XmlNode::fromString($xml)->getChild('channel')?->getChild('title')?->text;
+```
+
+`XmlNode::fromElement()` takes a `SimpleXMLElement` for a document that is already parsed, and `toArray()` returns
+exactly the array the helper did, so an existing consumer of the array shape only changes where the tree is built.
+
+Two behavioural differences: `fromString()` throws an `InvalidArgumentException` for a string that is not valid
+XML, where the helper left the parsing to its caller and dereferenced the `null` its signature accepted; and the
+`text` of an element that holds nothing but whitespace is `null`, as it was before.
+
 ## 3.0.0 — The login type is an integer
 
 `Models\UserLogin::$type` was a `string(12)` and is now a `tinyint`. It was the last string-valued type in the
