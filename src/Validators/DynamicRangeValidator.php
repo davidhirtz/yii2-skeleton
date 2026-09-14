@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Validators;
 
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
+use Hirtz\Skeleton\Models\Types\Type;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\helpers\Inflector;
@@ -44,6 +45,9 @@ class DynamicRangeValidator extends RangeValidator
     /**
      * The resolved definitions, not the declaration: {@see TypeAttributeInterface::getTypes()} returns a list whose
      * keys are offsets, while the definitions are indexed by value.
+     *
+     * A {@see Type} the record cannot take is out of range, so a value the admin never offered cannot be posted
+     * past it either — {@see Type::isAvailableOrStored()} is what keeps the record's own value valid.
      */
     public function getDynamicRange(Model $model, string $attribute): array
     {
@@ -57,6 +61,17 @@ class DynamicRangeValidator extends RangeValidator
             throw new InvalidConfigException($model::class . '::' . $method . '() must be defined to use ' . self::class . '.');
         }
 
-        return array_keys($model->{$method}());
+        $range = [];
+
+        /** @var iterable<int|string, mixed> $definitions */
+        $definitions = $model->{$method}();
+
+        foreach ($definitions as $value => $definition) {
+            if (!$definition instanceof Type || $definition->isAvailableOrStored($model, $attribute)) {
+                $range[] = $value;
+            }
+        }
+
+        return $range;
     }
 }

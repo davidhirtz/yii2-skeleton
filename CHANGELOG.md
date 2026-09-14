@@ -1,5 +1,19 @@
 ## 3.0.0 (in development)
 
+- **A type a record cannot take is refused, not merely hidden.** `Models\Types\Type::available()` was a
+  presentation filter — `Widgets\Forms\Fields\TypeSelectField` left the type out of the select and nothing else
+  asked — so a hand-posted value reached the database. `Validators\DynamicRangeValidator` now drops an
+  unavailable type from its range, which closes it for every model that validates `type` through it.
+
+  The exemption is the value the record is **stored** with: `Type::isAvailableOrStored()` keeps it valid and keeps
+  it in the select, because a rule can stop matching records that already hold the type — a parent's type changed,
+  a record moved to another tenant — and those have to keep saving and keep showing what they are. Without it the
+  form also silently retyped such a record on its next save, since its own type was missing from the select.
+
+  A project whose `available()` rule is meant to be advisory rather than binding has to widen it, most simply with
+  `fn (?Model $model): bool => !$model?->getIsNewRecord() || …`. `Models\Statuses\Status` has no `available()`,
+  so statuses are untouched, and so is any `get<Plural>()` returning a plain `value => label` map.
+
 - **`Behaviors\RedirectBehavior` deletes the no-op redirect before it repoints the others.**
   `Models\Redirect::validateUrl()` resolves the chain its new target starts, so while the row the record has just
   moved back onto was still there, every other redirect updated in the same pass followed it straight back to the

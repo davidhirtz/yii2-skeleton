@@ -38,14 +38,16 @@ class TypeSelectField extends SelectField
     }
 
     /**
-     * A type the record cannot take is not offered, which is what {@see Type::available()} is for.
+     * A type the record cannot take is not offered, which is what {@see Type::available()} is for — except the
+     * one the record is stored with, or the form would silently retype it on the next save.
      */
     #[Override]
     protected function getItemsFromModel(): array
     {
         return array_filter(
             parent::getItemsFromModel(),
-            fn (mixed $item): bool => !$item instanceof Type || $item->isAvailable($this->model),
+            fn (mixed $item): bool => !$item instanceof Type
+                || $item->isAvailableOrStored($this->model, (string)$this->property),
         );
     }
 
@@ -74,7 +76,7 @@ class TypeSelectField extends SelectField
         $fingerprints = [];
 
         foreach ($model::getTypeInstances() as $type => $instance) {
-            if (!$model::findType($type)?->isAvailable($model)) {
+            if (!$model::findType($type)?->isAvailableOrStored($model, (string)$this->property)) {
                 continue;
             }
 

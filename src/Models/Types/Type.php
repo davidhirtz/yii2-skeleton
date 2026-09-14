@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
 use Override;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
+use yii\db\BaseActiveRecord;
 
 class Type extends Definition
 {
@@ -95,6 +96,22 @@ class Type extends Definition
     public function isAvailable(?Model $owner): bool
     {
         return $this->available instanceof Closure ? (bool)($this->available)($owner) : $this->available;
+    }
+
+    /**
+     * A rule stops matching records that already hold the type — a parent's type changed, a record moved to
+     * another tenant — and those have to keep saving and keep showing what they are. So the value a record is
+     * stored with stays offered and stays valid, while every other unavailable one does not.
+     */
+    public function isAvailableOrStored(Model $owner, string $attribute): bool
+    {
+        if ($this->isAvailable($owner)) {
+            return true;
+        }
+
+        $stored = $owner instanceof BaseActiveRecord ? $owner->getOldAttribute($attribute) : null;
+
+        return $stored !== null && (string)$stored === (string)$this->value;
     }
 
     #[Override]
