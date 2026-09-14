@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Buttons;
 
+use Hirtz\Skeleton\Assets\AdminAssetBundle;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Widgets\Widget;
@@ -24,7 +25,7 @@ class AdminButton extends Widget
     public string $overlayBackgroundColor = '#f8afaf80';
 
     public string $badgeBackgroundColor = '#FA7D7E';
-    public string $badgeColor = '#fff';
+    public string $badgeColor = '#FFF';
 
     /**
      * @var bool whether to toggle the button opacity on hover, if `false` the button will always be visible
@@ -34,7 +35,7 @@ class AdminButton extends Widget
     protected function renderContent(): string|Stringable
     {
         $environment = Yii::$app->getRequest()->getEnvironmentName();
-        $this->registerCss($environment !== null);
+        $this->registerCss();
 
         return A::make()
             ->content($this->icon, $this->getBadge($environment))
@@ -59,9 +60,11 @@ class AdminButton extends Widget
     /**
      * @param bool $alwaysVisible a badged button must not fade out, that is the whole point of the badge
      */
-    protected function registerCss(bool $alwaysVisible = false): void
+    protected function registerCss(): void
     {
-        if ($this->toggleButtonOpacity && !$alwaysVisible) {
+        $bundle = Yii::$app->getAssetManager()->getBundle(AdminAssetBundle::class);
+
+        if ($this->toggleButtonOpacity) {
             $btnToggle = <<<CSS
 .admin-btn {
             opacity: 0
@@ -77,6 +80,13 @@ CSS;
 
         $this->view->registerCss(
             <<<CSS
+@font-face {
+    font-family: 'Bebas Neue';
+    src: url('$bundle->baseUrl/fonts/bebasneue_bold-webfont.woff2') format('truetype');
+    font-weight: normal;
+    font-style: normal
+}
+
 :root {
     --admin-btn: 40px;
     --admin-pos: 15px
@@ -101,14 +111,14 @@ CSS;
 
 .admin-btn-badge {
     position: absolute;
-    top: -.35em;
-    right: -.35em;
-    padding: .1em .4em;
+    top: -.5em;
+    right: -.5em;
+    padding: .25em .5em;
     border-radius: 1em;
     background-color: $this->badgeBackgroundColor;
     color: $this->badgeColor;
-    font-size: 10px;
-    line-height: 1.4;
+    font: 12px/1 'Bebas Neue', sans-serif;
+    letter-spacing: .0625em;
     text-transform: uppercase;
     white-space: nowrap
 }

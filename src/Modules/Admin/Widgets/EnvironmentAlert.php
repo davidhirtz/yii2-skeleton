@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets;
 
-use Hirtz\Skeleton\Web\Request;
+use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Hirtz\Skeleton\Widgets\Alert;
+use Hirtz\Skeleton\Widgets\Traits\ContainerTrait;
+use Hirtz\Skeleton\Widgets\Traits\IconTrait;
+use Hirtz\Skeleton\Widgets\Widget;
 use Override;
+use Stringable;
 use Yii;
 
-/**
- * Renders nothing on a production host, which is what makes it safe to echo unconditionally.
- *
- * @see Request::$environments
- */
-class EnvironmentAlert extends Alert
+class EnvironmentAlert extends Widget
 {
+    use ContainerTrait;
+    use TagContentTrait;
+    use IconTrait;
+
     protected ?string $environment = null;
 
     #[Override]
@@ -26,7 +29,6 @@ class EnvironmentAlert extends Alert
 
         if ($this->environment !== null) {
             $this->icon ??= 'exclamation-triangle';
-            $this->warning();
 
             if (!$this->content) {
                 $this->addText(Yii::t('skeleton', 'ENVIRONMENT_ALERT_MESSAGE', [
@@ -37,6 +39,17 @@ class EnvironmentAlert extends Alert
         }
 
         parent::configure();
+    }
+
+    protected function renderContent(): string|Stringable
+    {
+        return $this->environment
+            ? Alert::make()
+                ->attributes($this->attributes)
+                ->content(...$this->content)
+                ->warning()
+                ->icon($this->icon)
+            : '';
     }
 
     public function environment(?string $environment): static

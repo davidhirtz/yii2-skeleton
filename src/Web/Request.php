@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Web;
 
-use Hirtz\Skeleton\Helpers\ArrayHelper;
 use Override;
 use Yii;
 
@@ -65,7 +64,7 @@ class Request extends \yii\web\Request
 
     public function getIsAjaxRoute(): bool
     {
-        return $this->getIsAjax() && ArrayHelper::getValue($_SERVER, 'HTTP_X_AJAX_REQUEST') === 'route';
+        return $this->getIsAjax() && ($_SERVER['HTTP_X_AJAX_REQUEST'] ?? null) === 'route';
     }
 
     public function isDraftRequest(): bool
@@ -91,10 +90,6 @@ class Request extends \yii\web\Request
         return null;
     }
 
-    /**
-     * The name an environment is labelled with in the admin and on the admin button. A project's own environment is
-     * labelled with the key it configured, only the two shipped ones are translated.
-     */
     public function getEnvironmentName(): ?string
     {
         return match ($environment = $this->getEnvironment()) {

@@ -123,7 +123,7 @@ return [
     'DASHBOARD_HEADER_HELLO_GOOD' => 'Hallo {user}, schön Sie wiederzusehen!',
     'DASHBOARD_HEADER_LAST_LOGIN' => 'Letzte Anmeldung {timestamp}',
     'DASHBOARD_HEADER_WELCOME_NICE' => 'Willkommen {user}, schön Sie kennenzulernen!',
-    'DASHBOARD_NAV_ITEM_DASHBOARD' => 'Dashboard',
+    'DASHBOARD_NAV_ITEM_LABEL' => 'Dashboard',
     'DELETE_ACTIVE_DELETE' => 'Löschen',
     'DELETE_ACTIVE_WARNING_DELETED' => 'Warnung: Die Löschung kann nicht wieder rückgängig gemacht werden. Alle dazugehörigen Daten werden ebenfalls unwiderruflich gelöscht!',
     'DRAFT_STATUS_ATTRIBUTE_DRAFT' => 'Entwurf',

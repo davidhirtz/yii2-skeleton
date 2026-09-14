@@ -12,7 +12,7 @@ use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\DashboardHeader;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Panels\Dashboard;
 
-$this->title(Yii::t('skeleton', 'DASHBOARD_NAV_ITEM_DASHBOARD'));
+$this->title(Yii::t('skeleton', 'DASHBOARD_NAV_ITEM_LABEL'));
 
 echo DashboardHeader::make();
 echo EnvironmentAlert::make();

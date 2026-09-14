@@ -12,11 +12,13 @@ class DashboardNavItem extends NavItem
 {
     public function __construct(array $config = [])
     {
-        $this->label ??= Yii::t('skeleton', 'DASHBOARD_NAV_ITEM_DASHBOARD');
+        $this->label ??= Yii::t('skeleton', 'DASHBOARD_NAV_ITEM_LABEL');
         $this->icon ??= 'home';
-        $this->url ??= ['/admin'];
+        $this->url ??= ['/admin/dashboard/index'];
         $this->order ??= 0;
         $this->roles ??= [User::ROLE_AUTHENTICATED];
+
+        $this->routes(['admin/dashboard/index']);
 
         parent::__construct($config);
     }

@@ -123,7 +123,7 @@ return [
     'DASHBOARD_HEADER_HELLO_GOOD' => 'Olá {user}, que bom tê-lo de volta!',
     'DASHBOARD_HEADER_LAST_LOGIN' => 'Último início de sessão {timestamp}',
     'DASHBOARD_HEADER_WELCOME_NICE' => 'Bem-vindo {user}, é um prazer conhecê-lo!',
-    'DASHBOARD_NAV_ITEM_DASHBOARD' => 'Painel',
+    'DASHBOARD_NAV_ITEM_LABEL' => 'Painel',
     'DELETE_ACTIVE_DELETE' => 'Eliminar',
     'DELETE_ACTIVE_WARNING_DELETED' => 'Aviso: eliminar este registo não pode ser anulado. Todos os ficheiros associados serão também eliminados de forma irrecuperável. Tenha a certeza!',
     'DRAFT_STATUS_ATTRIBUTE_DRAFT' => 'Rascunho',

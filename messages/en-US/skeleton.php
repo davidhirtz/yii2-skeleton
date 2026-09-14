@@ -123,7 +123,7 @@ return [
     'DASHBOARD_HEADER_HELLO_GOOD' => 'Hello {user}, good to have you back!',
     'DASHBOARD_HEADER_LAST_LOGIN' => 'Last login {timestamp}',
     'DASHBOARD_HEADER_WELCOME_NICE' => 'Welcome {user}, nice to meet you!',
-    'DASHBOARD_NAV_ITEM_DASHBOARD' => 'Dashboard',
+    'DASHBOARD_NAV_ITEM_LABEL' => 'Dashboard',
     'DELETE_ACTIVE_DELETE' => 'Delete',
     'DELETE_ACTIVE_WARNING_DELETED' => 'Warning: Deleting this record cannot be undone. All related files will also be unrecoverably deleted. Please be certain!',
     'DRAFT_STATUS_ATTRIBUTE_DRAFT' => 'Draft',

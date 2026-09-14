@@ -123,7 +123,7 @@ return [
     'DASHBOARD_HEADER_HELLO_GOOD' => 'Bonjour {user}, content de vous revoir !',
     'DASHBOARD_HEADER_LAST_LOGIN' => 'Dernière connexion {timestamp}',
     'DASHBOARD_HEADER_WELCOME_NICE' => 'Bienvenue {user}, ravi de vous rencontrer !',
-    'DASHBOARD_NAV_ITEM_DASHBOARD' => 'Tableau de bord',
+    'DASHBOARD_NAV_ITEM_LABEL' => 'Tableau de bord',
     'DELETE_ACTIVE_DELETE' => 'Supprimer',
     'DELETE_ACTIVE_WARNING_DELETED' => 'Attention : la suppression de cet enregistrement est irréversible. Tous les fichiers associés seront également supprimés définitivement. Veuillez confirmer !',
     'DRAFT_STATUS_ATTRIBUTE_DRAFT' => 'Brouillon',
