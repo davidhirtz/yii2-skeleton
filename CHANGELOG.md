@@ -1,5 +1,12 @@
 ## 3.0.0 (in development)
 
+- **`Widgets\Forms\Fields\AutocompleteField` and `Widgets\Forms\AutocompleteList`** are the admin's own
+  autocomplete: the field renders an input with a popover below it, htmx swaps the endpoint's option list into that
+  popover, and picking one writes its value into the input. It reuses the `dropdown-menu` / `dropdown-option`
+  styling and the navbar search's floating-ui positioning, which both now share `includes/popover.ts`. The query
+  reaches the endpoint as `q`, rewritten by `includes/autocomplete.ts` — htmx evaluates an `hx-vals` `js:` value in
+  global scope, with neither `this` nor the triggering event, so the input's own name cannot be replaced there.
+
 - **A submenu's first tab is named after its record, not "General".** Every one of them reads
   `Models\Interfaces\AdminModelInterface::getAdminType()` now — the record's type name where it has types, its
   own noun otherwise — so an entry's tab reads "Page" rather than "General" and the tab says what the page

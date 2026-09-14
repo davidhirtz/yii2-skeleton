@@ -1,7 +1,6 @@
-import {autoUpdate, computePosition, flip, offset, shift} from "@floating-ui/dom";
 import htmx from 'htmx.org';
 
-import {teardownOnDisconnect} from "./teardown";
+import {openUnder} from "./popover";
 
 // The navbar is outside the swapped region, so this runs once and the element survives every boosted navigation.
 export default ($container: HTMLElement) => {
@@ -23,27 +22,8 @@ export default ($container: HTMLElement) => {
 
     const items = () => [...$results.querySelectorAll('a')] as HTMLAnchorElement[];
 
-    const updatePosition = () => computePosition($input, $results, {
-        placement: 'bottom-start',
-        middleware: [offset(4), flip(), shift({padding: 8})],
-    }).then(({x, y}) => {
-        Object.assign($results.style, {
-            left: `${x}px`,
-            minWidth: `${$input.offsetWidth}px`,
-            top: `${y}px`,
-        });
-    });
-
     const open = () => {
-        if ($results.matches(':popover-open')) {
-            updatePosition();
-            return;
-        }
-
-        $results.showPopover();
-
-        const cleanup = autoUpdate($input, $results, updatePosition);
-        teardown = teardownOnDisconnect($results, cleanup);
+        teardown = openUnder($input, $results) ?? teardown;
     };
 
     const close = () => {

@@ -4,6 +4,7 @@ import type {TinyMCE} from 'tinymce';
 import 'x-timeago';
 
 import aside from './includes/aside';
+import autocomplete from './includes/autocomplete';
 import busy from './includes/busy';
 import collapse from './includes/collapse';
 import dropdown from './includes/dropdown';
@@ -29,6 +30,7 @@ htmx.onLoad(($container) => {
     };
 
     queryAll('[data-aside]', aside);
+    queryAll('[data-autocomplete]', autocomplete);
     queryAll('[data-busy]', busy);
     queryAll('[data-collapse]', collapse);
     queryAll('[popovertarget]', dropdown);
