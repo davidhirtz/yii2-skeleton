@@ -53,7 +53,7 @@ class UserLoginController extends Controller
         $this->optimizeTable(UserLogin::tableName());
     }
 
-    protected function getUserLoginLifetime(): ?int
+    protected function getUserLoginLifetime(): int|false
     {
         /** @var Module $module */
         $module = Yii::$app->getModule('admin');

@@ -8,6 +8,7 @@
   flex-direction: column;
   gap: 1rem;
   height: 100dvh;
+  padding-block: 1rem;
   justify-content: space-between;
   overflow-y: auto;
   position: sticky;
@@ -27,12 +28,17 @@
   }
 
   .nav-link {
-    border: 0;
+    border: 0; // Needed for the background
+    padding-block: 0.5625rem
   }
 
   .nav-link-icon {
     min-width: 1rem;
   }
+}
+
+.aside-logo {
+  padding-inline: 2rem;
 }
 
 .aside-nav {
@@ -47,10 +53,16 @@
   --nav-link-hover-color: var(--aside-link-hover-color);
 
   flex-flow: column;
-  padding-block: 1rem;
 
-  &:not(:first-child) {
-    border-top: 1px solid var(--border-color);
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
+  }
+
+  &:last-child {
+    flex-grow: 1;
+    justify-content: flex-end;
   }
 
   & > .nav-item {
@@ -75,6 +87,10 @@
     display: flex;
     flex-flow: column;
     padding-bottom: .5rem;
+  }
+
+  .nav-item:last-child & {
+    padding-bottom: 0;
   }
 
   .nav-link {

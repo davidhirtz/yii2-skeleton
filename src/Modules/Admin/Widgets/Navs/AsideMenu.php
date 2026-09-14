@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
-use Hirtz\Skeleton\Widgets\Widget;
 use Hirtz\Skeleton\Html\Aside;
+use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 
 class AsideMenu extends Widget
@@ -19,7 +19,12 @@ class AsideMenu extends Widget
     {
         return Aside::make()
             ->attributes($this->attributes)
-            ->content($this->getMainMenu(), $this->getAccountMenu());
+            ->content($this->getLogo(), $this->getMainMenu(), $this->getAccountMenu());
+    }
+
+    protected function getLogo(): ?Stringable
+    {
+        return AsideLogo::make();
     }
 
     protected function getMainMenu(): Stringable

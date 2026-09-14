@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
 use Closure;
+use Hirtz\Skeleton\Helpers\EventHelper;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Web\Controller;
 use Override;
-use yii\base\Event;
 use yii\filters\AccessControl;
 use yii\web\Response;
 
@@ -54,9 +54,7 @@ class DashboardController extends Controller
      */
     public static function addRoles(array|Closure $roles): void
     {
-        Event::on(static::class, self::EVENT_CONFIGURE, function (Event $event) use ($roles): void {
-            /** @var static $controller */
-            $controller = $event->sender;
+        EventHelper::on(static::class, self::EVENT_CONFIGURE, function (self $controller) use ($roles): void {
             $controller->roles = [...$controller->roles, ...($roles instanceof Closure ? $roles() : $roles)];
         });
     }

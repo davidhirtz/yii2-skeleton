@@ -76,7 +76,7 @@ class TrailController extends Controller
         $this->optimizeTable(Trail::tableName());
     }
 
-    protected function getTrailLifeTime(): ?int
+    protected function getTrailLifeTime(): int|false
     {
         /** @var Module $module */
         $module = Yii::$app->getModule('admin');

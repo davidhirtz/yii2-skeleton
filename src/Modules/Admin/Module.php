@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin;
 
+use Hirtz\Skeleton\Console\Controllers\TrailController;
+use Hirtz\Skeleton\Console\Controllers\UserLoginController;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Web\Request;
@@ -16,11 +18,6 @@ use yii\web\Session;
 
 class Module extends \Hirtz\Skeleton\Base\Module
 {
-    /**
-     * Reading what the installation runs on: the error logs, `phpinfo()` and the system page's infrastructure rows.
-     * It is the one thing {@see User::AUTH_ROLE_ADMIN} holds and {@see User::AUTH_ROLE_MANAGER} does not, and it is
-     * a permission rather than a role check so a project can grant it without handing over the admin role.
-     */
     final public const string AUTH_SYSTEM = 'system';
 
     /**
@@ -42,14 +39,19 @@ class Module extends \Hirtz\Skeleton\Base\Module
      */
     public string $languageSessionKey = 'language';
 
-    public ?int $trailLifetime = null;
+    /**
+     * @var int|false how long a `trail` record is kept, in seconds. Set it and run `trail/clear` console command.
+     * {@see TrailController::actionClear()}
+     */
+    public int|false $trailLifetime = false;
 
     /**
-     * @var int|null how long a `user_login` record is kept, in seconds. The table holds an IP address and a user
+     * @var int|false how long a `user_login` record is kept, in seconds. The table holds an IP address and a user
      * agent for every login, so it is personal data with no reason to be kept forever — set it and run
-     * `user-login/clear` from cron.
+     * `user-login/clear` console command.
+     * {@see UserLoginController::actionClear()}
      */
-    public ?int $userLoginLifetime = null;
+    public int|false $userLoginLifetime = false;
 
     public $defaultRoute = 'dashboard';
     public $layout = 'main';
@@ -107,13 +109,12 @@ class Module extends \Hirtz\Skeleton\Base\Module
     {
         $languages = $this->getLanguages();
 
-        // A single language leaves nothing to pick, so it is pinned and the dropdown renders nothing.
         if (count($languages) === 1) {
             Yii::$app->language = reset($languages);
             return;
         }
 
-        $language = $request ? $request->getQueryParam($request->languageParam) : null;
+        $language = $request?->getQueryParam($request->languageParam);
 
         if (is_string($language) && $this->hasLanguage($language)) {
             $this->setSessionLanguage($language);

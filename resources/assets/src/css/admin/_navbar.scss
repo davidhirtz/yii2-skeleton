@@ -2,9 +2,10 @@
 @use "../shared/svg" as *;
 
 .navbar {
-  display: flex;
+  align-items: center;
   background: var(--body-bg);
   border-bottom: 1px solid var(--border-color);
+  display: flex;
   justify-content: flex-end;
   padding: 1rem;
 
@@ -27,6 +28,18 @@
       width: 1.5rem;
     }
   }
+}
+
+.navbar-logo {
+  flex-grow: 1;
+
+  @include media-breakpoint-up(md) {
+      display: none;
+  }
+}
+
+.navbar-items {
+  display: flex;
 }
 
 .i18n-icon {

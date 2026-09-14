@@ -22,6 +22,18 @@ class NavBar extends Widget
         return Div::make()
             ->attributes($this->attributes)
             ->addClass('navbar')
+            ->content($this->getLogo(), $this->getItems());
+    }
+
+    protected function getLogo(): ?Stringable
+    {
+        return NavBarLogo::make();
+    }
+
+    protected function getItems(): ?Stringable
+    {
+        return Div::make()
+            ->class('navbar-items')
             ->content($this->getSearchItem(), $this->getLanguageDropdownItem(), $this->getMobileToggle());
     }
 

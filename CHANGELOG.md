@@ -1,5 +1,25 @@
 ## 3.0.0 (in development)
 
+- **`Html\Svg` renders an inline `<svg>`.** A `Base\Tag` with the content trait plus `viewBox()`, `width()`,
+  `height()`, `fill()` and `xmlns()`, so an icon or a logo is composed like every other tag instead of being
+  carried as a raw markup string. It renders nothing without content (`showEmpty` is `false`), and `xmlns()`
+  defaults to `Svg::XML_NAMESPACE` — inline SVG inherits the namespace from the HTML document and only a
+  standalone one has to declare it. **`Widgets\Buttons\AdminButton::$icon` is `string|Stringable` now**, and
+  empty by default: `configure()` resolves it to `getDefaultIcon()` before the event is triggered, so a listener
+  can recolour or replace the `Svg` it holds instead of rebuilding the markup. A project assigning its own icon
+  markup as a string is unaffected.
+
+- **`Helpers\EventHelper::on()` types the sender of a class-level event.** Yii's `Event::on()` cannot be
+  templated — it also takes wildcard patterns — so every handler opened with an inline `@var` on
+  `$event->sender`. The wrapper takes a single class string and hands the narrowed sender to the handler, with
+  the event itself as the optional second argument:
+  `EventHelper::on(File::class, BaseActiveRecord::EVENT_INIT, fn (File $file) => $file->attachBehavior(…))`.
+  PHPStan infers the sender from the class string, so a handler declaring the wrong one is an error rather than
+  a lie in a docblock. The sender is checked with `instanceof`, so an event triggered without an instance
+  (`Event::trigger(Foo::class, …)`) reaches no handler registered this way. `Event::on()` stays for wildcards,
+  for a handler that only reads the event, and for an event class that types `$sender` itself
+  (`Cms\Models\Events\EntrySiteRelationsBuilderEvent`).
+
 - **`Models\Definitions\Definition` takes an int backed enum.** `Definition::__construct()` accepts
   `int|BackedEnum` and unwraps it, so a project that already names a model's types or statuses in an enum
   declares them as `Type::make(EntryType::Page)` instead of repeating the `->value`. `$value` stays a plain
