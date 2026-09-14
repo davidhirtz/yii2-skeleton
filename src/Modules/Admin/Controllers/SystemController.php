@@ -50,11 +50,6 @@ class SystemController extends Controller
         return $this->render('index');
     }
 
-    /**
-     * `phpinfo()` prints a complete document under a web SAPI, so it cannot be wrapped in the admin layout.
-     *
-     * @noinspection PhpUnused
-     */
     public function actionPhpInfo(): string
     {
         ob_start();
@@ -64,9 +59,6 @@ class SystemController extends Controller
         return $this->renderContent((string)ob_get_clean());
     }
 
-    /**
-     * @noinspection PhpUnused
-     */
     public function actionPublish(): Response|string
     {
         $basePath = Yii::$app->getAssetManager()->basePath;
@@ -92,9 +84,6 @@ class SystemController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * @noinspection PhpUnused
-     */
     public function actionSchema(string $db): Response|string
     {
         $connection = Yii::$app->get($db, false);
