@@ -74,6 +74,7 @@ class UserPasswordResetButton extends Widget
     protected function getButton(): string|Stringable
     {
         return Button::make()
+            ->primary()
             ->icon($this->icon)
             ->modal($this->getModal())
             ->text($this->label);
