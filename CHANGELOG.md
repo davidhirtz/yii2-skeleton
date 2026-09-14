@@ -1,5 +1,9 @@
 ## 3.0.0 (in development)
 
+- **`Models\Traits\VisibleAttributeTrait::getVisibleAttribute()` answers `false` for an attribute the model does
+  not declare**, instead of throwing through the magic getter. A custom attribute is declared per type and per
+  subclass, so "hidden" and "not there at all" are the same answer to a renderer.
+
 - **`Db\Traits\MigrationTrait` moves columns into a `custom_attributes` column.**
   `moveColumnsToCustomAttributes()` copies a column and any `<column>_<language>` beside it into the JSON under
   its own name, then the `Models\Translation` rows of the same attributes under their suffixed one, asserts that
