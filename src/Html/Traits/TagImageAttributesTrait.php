@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Html\Traits;
 
+use Stringable;
+
 trait TagImageAttributesTrait
 {
-    public function sizes(?string ...$sizes): self
+    public function sizes(string|Stringable|null ...$sizes): self
     {
-        $items = array_diff($sizes, [null]);
+        $items = array_map(strval(...), array_filter($sizes));
         return $this->attribute('sizes', $items ? implode(',', $items) : null);
     }
 

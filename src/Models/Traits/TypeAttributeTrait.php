@@ -38,8 +38,10 @@ trait TypeAttributeTrait
      */
     public static function getTypes(): array
     {
+        $class = static::getTypeClass();
+
         return [
-            Type::make(static::TYPE_DEFAULT)
+            $class::make(static::TYPE_DEFAULT)
                 ->name(Yii::t('skeleton', 'BASED_DEFAULT')),
         ];
     }

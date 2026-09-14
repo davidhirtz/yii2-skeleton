@@ -63,12 +63,15 @@ class StatusAttributeTraitTest extends TestCase
         self::assertNotSame($definitions, User::getStatusDefinitions());
     }
 
-    private function createModel(): Model&StatusAttributeInterface
+    private function createModel(): StatusModel
     {
-        return new class () extends Model implements StatusAttributeInterface {
-            use StatusAttributeTrait;
-
-            public ?int $status = self::STATUS_DEFAULT;
-        };
+        return new StatusModel();
     }
+}
+
+class StatusModel extends Model implements StatusAttributeInterface
+{
+    use StatusAttributeTrait;
+
+    public ?int $status = self::STATUS_DEFAULT;
 }
