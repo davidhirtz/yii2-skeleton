@@ -27,7 +27,10 @@
   key is `modelClass()`, validated to be a subclass of the declaring model; `hiddenFields()` is variadic; and
   `available()` is new — whether a type is offered for a record in the admin, honoured by
   `Widgets\Forms\Fields\TypeSelectField` and `Widgets\Grids\Toolbars\TypeFilterDropdown`. `getTypeInstances()`
-  is cached in the registry too, which is where it gains a reset it never had. See UPGRADE.md
+  is cached in the registry too, which is where it gains a reset it never had. **`getPlural()` falls back to the
+  name, not to `Inflector::pluralize()`** — the inflection is English-only and the plural is now what the cms
+  navigation, the entry header and the type filter render, so a German `Seite` must not become `Seites`; declare
+  `plural()` where the two differ. See UPGRADE.md
 
 - **The auto login cookie is `_auth` and the session cookie is `_session`**, replacing Yii's `_identity` and
   PHP's `PHPSESSID`. Both are renamed rather than reused because the `secure` flag is derived from the request:

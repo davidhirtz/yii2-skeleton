@@ -21,10 +21,13 @@ class TypeTest extends TestCase
         self::assertSame(3, Type::make(3)->value);
     }
 
-    public function testPluralDefaultsToTheInflectedName(): void
+    /**
+     * Not inflected: `Inflector::pluralize()` is English-only, and the plural is what the admin navigation shows.
+     */
+    public function testPluralDefaultsToTheName(): void
     {
-        self::assertSame('Entries', Type::make(1)->name('Entry')->getPlural());
-        self::assertSame('Pages', Type::make(1)->name('Entry')->plural('Pages')->getPlural());
+        self::assertSame('Seite', Type::make(1)->name('Seite')->getPlural());
+        self::assertSame('Seiten', Type::make(1)->name('Seite')->plural('Seiten')->getPlural());
     }
 
     public function testUndeclaredValuesAreEmpty(): void

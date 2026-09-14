@@ -134,9 +134,13 @@ public static function getTypeClass(): string
 
 public function getType(): ?SectionType
 {
-    return static::findType($this->type);
+    /** @var SectionType|null */
+    return static::findType(static::normalizeTypeValue($this->type ?? null));
 }
 ```
+
+`normalizeTypeValue()` is not optional: a form posts the type as a string and PDO answers one for an integer
+column, and `findType()` takes `?int` under `strict_types`.
 
 New on the base class: `available(Closure|bool)`, whether the type is offered for a record in the admin. That
 is what the asset types' `visible` key meant; a cms section type's `visible()` keeps its own meaning, the

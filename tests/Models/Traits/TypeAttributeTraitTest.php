@@ -73,7 +73,7 @@ class TypeAttributeTraitTest extends TestCase
         $record->type = TypeRecord::TYPE_CHILD;
 
         self::assertSame('Child', $record->getTypeName());
-        self::assertSame('Children', $record->getTypePlural());
+        self::assertSame('Child', $record->getTypePlural());
         self::assertSame('star', $record->getTypeIcon());
     }
 
