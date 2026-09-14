@@ -1,5 +1,10 @@
 ## 3.0.0 (in development)
 
+- **The navbar search is its own widget**, `Modules\Admin\Widgets\Navs\NavBarSearch`, so a project replaces it
+  through the container instead of subclassing the whole navbar. `NavBar::SEARCH_RESULTS_ID` is
+  `NavBarSearch::RESULTS_ID`, and a guest or a disabled `Modules\Admin\Module::$enableSearch` now hides the widget
+  through `isVisible()` rather than a `null` from `NavBar::getSearchItem()`, which still exists and returns it.
+
 - **`Db\Traits\MigrationTrait::moveCustomAttributesColumn()`** reorders the JSON column, and
   `moveCustomAttributesColumnToEnd()` is the way back. `Migrations\M260915130000CustomAttributesColumn` puts
   `user.custom_attributes` after `two_factor_secret` — cosmetic, so the column reads as part of the record rather
