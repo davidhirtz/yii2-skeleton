@@ -111,6 +111,15 @@ class Controller extends \yii\web\Controller
         return $this;
     }
 
+    public function warning(array|string|null $value): static
+    {
+        if ($value) {
+            Yii::$app->getSession()->addFlash('warning', $value);
+        }
+
+        return $this;
+    }
+
     public function errorOrSuccess(Model|array|string $value, string $message): static
     {
         if ($value instanceof Model ? $value->hasErrors() : !empty($value)) {

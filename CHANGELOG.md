@@ -1,5 +1,9 @@
 ## 3.0.0 (in development)
 
+- **`Web\Controller::warning()`** flashes under the `warning` key, which `Widgets\Flashes` already rendered with
+  an icon of its own and nothing used. It is for an outcome that succeeded but is worth saying out loud — a bulk
+  file move that had to rename a file around a name collision.
+
 - **`Widgets\Grids\Columns\CheckboxColumn` renders a name and a value.** It set neither, so the input was never
   submitted and every bulk action reading `selection` — the redirect grid's `delete-all` is the only one in the
   skeleton — received an empty selection. Its `$param` is now the bare name (`selection`), and `getName()` appends
