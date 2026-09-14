@@ -1,5 +1,26 @@
 ## 3.0.0 (in development)
 
+- **A model's types can be declared in the configuration**, through the new `definitions` application component
+  (`Models\Definitions\Definitions`), so a small installation no longer has to subclass a model just to name its
+  types. The key is the class the container resolves the model to, and the value is a **closure** returning the
+  list — a type's name is a `Yii::t()` result, and an array literal in a configuration file would resolve it
+  before the application has an `i18n` component and freeze every definition to one language:
+
+  ```php
+  'components' => [
+      'definitions' => [
+          'types' => [
+              Entry::class => fn (): array => [
+                  EntryType::make(Entry::TYPE_DEFAULT)->name(Yii::t('cms', 'ENTRY_TYPE_PAGE')),
+              ],
+          ],
+      ],
+  ],
+  ```
+
+  A configured list **replaces** what the model declares and is validated and cached exactly like it, per class
+  and per language. A model nobody configured is unaffected.
+
 - **`Models\User::AUTH_ROLE_MANAGER` is a new role, and a role lists permissions rather than other roles.**
   `Migrations\M260914190000ManagerRole` creates `manager` with every permission the installation has and flattens
   `admin` to the same list, in place of the `author` and `media` roles it used to group them under; those are

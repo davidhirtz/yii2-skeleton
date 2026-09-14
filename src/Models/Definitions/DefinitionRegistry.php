@@ -43,7 +43,7 @@ final class DefinitionRegistry
 
         $definitions = [];
 
-        foreach ($modelClass::$method() as $definition) {
+        foreach (self::getDeclaredDefinitions($modelClass, $method) as $definition) {
             if (!$definition instanceof $definitionClass) {
                 $given = get_debug_type($definition);
                 throw new InvalidConfigException("$modelClass::$method() must return a list of $definitionClass, got $given.");
@@ -71,6 +71,27 @@ final class DefinitionRegistry
 
         /** @var array<int, T> */
         return $definitions;
+    }
+
+    /**
+     * `getTypes()` is the one declaration an installation may replace, see {@see Definitions::$types}.
+     *
+     * @param class-string $modelClass
+     * @return iterable<mixed>
+     */
+    private static function getDeclaredDefinitions(string $modelClass, string $method): iterable
+    {
+        if ($method === 'getTypes' && Yii::$app->has('definitions')) {
+            /** @var Definitions $definitions */
+            $definitions = Yii::$app->get('definitions');
+            $types = $definitions->findTypes($modelClass);
+
+            if ($types !== null) {
+                return $types;
+            }
+        }
+
+        return $modelClass::$method();
     }
 
     /**
