@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\I18n\Message;
 use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
 use Hirtz\Skeleton\Models\Translation;
+use RuntimeException;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\db\ConstraintFinderInterface;
@@ -182,6 +183,183 @@ trait MigrationTrait
     {
         $tableName = $this->getDb()->getSchema()->getRawTableName($tableName);
         return $tableName . '_' . $column;
+    }
+
+    /**
+     * Moves a column and any `<column>_<language>` beside it into the JSON column under the column's own name, then
+     * the {@see Translation} rows of the same attributes under their suffixed name, and drops the columns. Both
+     * shapes are read because a project whose configuration no longer names the attribute never had its columns
+     * moved to the translation table in the first place.
+     *
+     * @param list<string> $attributes
+     * @param string $modelClass the `model_class` of the translation rows, which a migration spells out: the class
+     * behind it may be gone by the time the migration runs
+     */
+    protected function moveColumnsToCustomAttributes(
+        string $table,
+        array $attributes,
+        string $modelClass,
+        string $column = 'custom_attributes'
+    ): void {
+        $columns = $this->getCustomAttributeColumns($table, $attributes);
+
+        if ($columns) {
+            $db = $this->getDb();
+            $owner = $this->getQuotedTableName($table);
+            $target = $db->quoteColumnName($column);
+
+            $values = implode(', ', array_map(
+                fn (string $name): string => $db->quoteValue($name) . ", NULLIF([[$name]], '')",
+                $columns
+            ));
+
+            $this->execute("
+                UPDATE $owner SET $target = JSON_MERGE_PATCH(COALESCE($target, '{}'), JSON_OBJECT($values))
+            ");
+        }
+
+        $this->assertCustomAttributeColumns($table, $columns, $column);
+        $this->moveTranslationsToCustomAttributes($table, $attributes, $modelClass, $column);
+
+        foreach ($columns as $name) {
+            $this->dropIndexesContainingColumn($table, $name);
+            $this->dropColumn($table, $name);
+        }
+    }
+
+    /**
+     * @param list<string> $columns
+     */
+    private function assertCustomAttributeColumns(string $table, array $columns, string $column): void
+    {
+        $db = $this->getDb();
+        $owner = $this->getQuotedTableName($table);
+        $target = $db->quoteColumnName($column);
+
+        foreach ($columns as $name) {
+            $path = $db->quoteValue('$."' . $name . '"');
+
+            $count = (int)$db->createCommand("
+                SELECT COUNT(*) FROM $owner
+                WHERE NOT (JSON_UNQUOTE(JSON_EXTRACT($target, $path)) <=> NULLIF([[$name]], ''))
+            ")->queryScalar();
+
+            if ($count !== 0) {
+                throw new RuntimeException("Column \"$name\" of $table did not reach $column in $count rows.");
+            }
+        }
+
+        if (!$this->compact) {
+            echo '    > moved ' . count($columns) . " columns of $table\n";
+        }
+    }
+
+    /**
+     * @param list<string> $attributes
+     */
+    protected function moveTranslationsToCustomAttributes(
+        string $table,
+        array $attributes,
+        string $modelClass,
+        string $column = 'custom_attributes'
+    ): void {
+        $db = $this->getDb();
+        $owner = $this->getQuotedTableName($table);
+        $translations = $this->getQuotedTableName(Translation::tableName());
+        $target = $db->quoteColumnName($column);
+        $class = $db->quoteValue($modelClass);
+        $i18n = Yii::$app->getI18n();
+
+        foreach ($attributes as $attribute) {
+            foreach ($i18n->getLanguages() as $language) {
+                $name = $i18n->getAttributeName($attribute, $language);
+                $path = $db->quoteValue('$."' . $name . '"');
+
+                $this->execute("
+                    UPDATE $owner [[o]] JOIN $translations [[t]]
+                        ON [[t]].[[model_class]] = $class AND [[t]].[[model_id]] = [[o]].[[id]]
+                        AND [[t]].[[attribute]] = {$db->quoteValue($attribute)}
+                        AND [[t]].[[language]] = {$db->quoteValue($language)}
+                    SET [[o]].$target = JSON_SET(COALESCE([[o]].$target, '{}'), $path, [[t]].[[value]])
+                    WHERE [[t]].[[value]] IS NOT NULL AND [[t]].[[value]] != ''
+                ");
+            }
+
+            $this->delete(Translation::tableName(), [
+                'model_class' => $modelClass,
+                'attribute' => $attribute,
+            ]);
+        }
+    }
+
+    /**
+     * The reverse: the source language goes back into its column, every other language back into a
+     * {@see Translation} row, and the keys are removed from the JSON.
+     *
+     * @param array<string, string> $columns the column definition per attribute
+     */
+    protected function restoreColumnsFromCustomAttributes(
+        string $table,
+        array $columns,
+        string $modelClass,
+        string $column = 'custom_attributes'
+    ): void {
+        $db = $this->getDb();
+        $owner = $this->getQuotedTableName($table);
+        $translations = $this->getQuotedTableName(Translation::tableName());
+        $target = $db->quoteColumnName($column);
+        $class = $db->quoteValue($modelClass);
+        $i18n = Yii::$app->getI18n();
+        $paths = [];
+
+        foreach ($columns as $attribute => $type) {
+            if (!$this->hasColumn($table, $attribute)) {
+                $this->addColumn($table, $attribute, $type);
+            }
+
+            foreach ($i18n->getLanguages() as $language) {
+                $name = $i18n->getAttributeName($attribute, $language);
+                $path = $db->quoteValue('$."' . $name . '"');
+                $paths[] = $path;
+
+                if ($name === $attribute) {
+                    $this->execute("
+                        UPDATE $owner SET [[$attribute]] = JSON_UNQUOTE(JSON_EXTRACT($target, $path))
+                        WHERE JSON_EXTRACT($target, $path) IS NOT NULL
+                    ");
+
+                    continue;
+                }
+
+                $this->execute("
+                    INSERT INTO $translations ([[model_class]], [[model_id]], [[language]], [[attribute]], [[value]])
+                    SELECT $class, [[id]], {$db->quoteValue($language)}, {$db->quoteValue($attribute)},
+                        JSON_UNQUOTE(JSON_EXTRACT($target, $path))
+                    FROM $owner WHERE JSON_EXTRACT($target, $path) IS NOT NULL
+                ");
+            }
+        }
+
+        $this->execute("UPDATE $owner SET $target = JSON_REMOVE($target, " . implode(', ', $paths) . ')');
+    }
+
+    /**
+     * @param list<string> $attributes
+     * @return list<string> the attribute columns and their `_xx` variants, in the order they are written
+     */
+    private function getCustomAttributeColumns(string $table, array $attributes): array
+    {
+        $columns = [];
+
+        foreach ($this->getDb()->getSchema()->getTableSchema($table, true)->getColumnNames() as $name) {
+            foreach ($attributes as $attribute) {
+                if ($name === $attribute || str_starts_with($name, $attribute . '_')) {
+                    $columns[] = $name;
+                }
+            }
+        }
+
+        return $columns;
     }
 
     /**

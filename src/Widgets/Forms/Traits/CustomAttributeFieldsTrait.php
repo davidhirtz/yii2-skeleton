@@ -16,15 +16,18 @@ trait CustomAttributeFieldsTrait
     /**
      * @param (Model&CustomAttributeInterface)|null $model the record behind the form, when the form's own model is
      * a wrapper around it
+     * @param list<string> $except definitions the form renders itself, in a place of their own
      * @return list<Field> one field per visible definition, in definition order
      */
-    public function getCustomAttributeFields((Model&CustomAttributeInterface)|null $model = null): array
-    {
+    public function getCustomAttributeFields(
+        (Model&CustomAttributeInterface)|null $model = null,
+        array $except = []
+    ): array {
         $model ??= $this->model;
         $fields = [];
 
         foreach ($model->getCustomAttributeDefinitions() as $definition) {
-            if ($definition->isVisible($model)) {
+            if (!in_array($definition->name, $except, true) && $definition->isVisible($model)) {
                 $fields[] = $definition->createField($model);
             }
         }

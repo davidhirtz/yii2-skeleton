@@ -25,7 +25,6 @@ class TinyMceFieldTest extends TestCase
 
 class TestContentFieldModel extends Model
 {
-    public string $contentType = 'html';
     public ?string $content = null;
 
     #[Override]

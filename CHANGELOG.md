@@ -1,5 +1,21 @@
 ## 3.0.0 (in development)
 
+- **`Db\Traits\MigrationTrait` moves columns into a `custom_attributes` column.**
+  `moveColumnsToCustomAttributes()` copies a column and any `<column>_<language>` beside it into the JSON under
+  its own name, then the `Models\Translation` rows of the same attributes under their suffixed one, asserts that
+  every value arrived and drops the columns; `restoreColumnsFromCustomAttributes()` is the way back.
+
+- **`Models\Traits\TranslatableAttributesTrait`** carries the `translatableAttributes` property and
+  `isTranslatableAttribute()` that the media `Models\Asset` declared itself, so any model with default custom
+  attribute definitions can name which of them are stored per language.
+
+- **`Widgets\Forms\Traits\CustomAttributeFieldsTrait::getCustomAttributeFields()` takes an `except` list**, for
+  a form that renders one definition in a place of its own.
+
+- **A searchable attribute the record cannot read is skipped.** `Models\Traits\SearchableTrait` read it through
+  the magic getter, which throws for a custom attribute only some types or some projects declare, so
+  `getSearchAttributes()` can name an optional one.
+
 - **`DashboardController::addRoles()` accepts a `Closure`.** A bootstrap runs on every request and the dashboard
   on one action, so naming a permission constant in the argument autoloaded the model it lives on — every model
   of every installed bundle, under the console SAPI too. Pass a closure instead:
