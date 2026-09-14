@@ -18,7 +18,7 @@ use Stringable;
 use Yii;
 use yii\data\ArrayDataProvider;
 
-class AssetGridView extends GridView
+class AssetBundleGridView extends GridView
 {
     protected string $layout = '{items}{footer}';
 

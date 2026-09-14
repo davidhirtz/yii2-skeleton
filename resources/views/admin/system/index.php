@@ -8,7 +8,7 @@ declare(strict_types=1);
  */
 
 use Hirtz\Skeleton\Modules\Admin\Controllers\SystemController;
-use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\AssetGridView;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\AssetBundleGridView;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\CacheGridView;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\SessionGridView;
 use Hirtz\Skeleton\Web\View;
@@ -21,7 +21,7 @@ echo Header::make()
     ->title(Yii::t('skeleton', 'COMMON_SYSTEM'));
 
 $blocks = [
-    Yii::t('skeleton', 'SYSTEM_ASSETS') => AssetGridView::make(),
+    Yii::t('skeleton', 'SYSTEM_ASSETS') => AssetBundleGridView::make(),
     Yii::t('skeleton', 'SYSTEM_CACHE') => CacheGridView::make(),
     Yii::t('skeleton', 'SESSION_SESSIONS') => SessionGridView::make(),
 ];
