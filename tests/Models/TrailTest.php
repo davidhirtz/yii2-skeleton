@@ -12,7 +12,7 @@ class TrailTest extends TestCase
     public function testTheDefaultTypeIsNotTheCreateType(): void
     {
         self::assertNotSame(Trail::TYPE_CREATE, Trail::TYPE_DEFAULT);
-        self::assertArrayHasKey(Trail::TYPE_DEFAULT, Trail::getTypes());
+        self::assertArrayHasKey(Trail::TYPE_DEFAULT, Trail::getTypeDefinitions());
     }
 
     public function testATrailWithoutATypeIsAPlainMessage(): void

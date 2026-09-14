@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Models\Queries\AuthItemQuery;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
 use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
+use Hirtz\Skeleton\Models\Types\Type;
 use Yii;
 use yii\rbac\Item;
 
@@ -64,11 +65,6 @@ class AuthItem extends ActiveRecord implements TypeAttributeInterface
         return str_replace(' ', ' / ', $this->generateAttributeLabel($this->name));
     }
 
-    public function getTypeIcon(): string
-    {
-        return $this->getTypeOptions()['icon'] ?? '';
-    }
-
     /**
      * The description is a {@see Message} pointer; a row written before 3.0 holds rendered English and is shown as
      * it stands.
@@ -88,17 +84,18 @@ class AuthItem extends ActiveRecord implements TypeAttributeInterface
         return $this->type === Item::TYPE_PERMISSION;
     }
 
+    /**
+     * @return list<Type>
+     */
     public static function getTypes(): array
     {
         return [
-            Item::TYPE_ROLE => [
-                'name' => Yii::t('skeleton', 'AUTH_ITEM_TYPE_ROLE'),
-                'icon' => 'user',
-            ],
-            Item::TYPE_PERMISSION => [
-                'name' => Yii::t('skeleton', 'AUTH_ITEM_TYPE_PERMISSION'),
-                'icon' => 'edit',
-            ],
+            Type::make(Item::TYPE_ROLE)
+                ->name(Yii::t('skeleton', 'AUTH_ITEM_TYPE_ROLE'))
+                ->icon('user'),
+            Type::make(Item::TYPE_PERMISSION)
+                ->name(Yii::t('skeleton', 'AUTH_ITEM_TYPE_PERMISSION'))
+                ->icon('edit'),
         ];
     }
 

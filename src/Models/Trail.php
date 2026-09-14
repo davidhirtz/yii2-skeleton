@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
 use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
+use Hirtz\Skeleton\Models\Types\TrailType;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\TrailGridView;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Override;
@@ -94,7 +95,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
     public function afterSave($insert, $changedAttributes): void
     {
         if ($this->parents) {
-            if ($type = static::getTypes()[$this->type]['parentType'] ?? false) {
+            if ($type = $this->getType()?->getParentType()) {
                 $this->parents = array_filter(!is_array($this->parents) ? [$this->parents] : $this->parents);
 
                 foreach ($this->parents as $parent) {
@@ -207,7 +208,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
 
     public function hasDataModelEnabled(): bool
     {
-        return $this->getTypeOptions()['hasDataModel'] ?? false;
+        return $this->getType()?->hasDataModelEnabled() ?? false;
     }
 
     public static function createOrderTrail(?TrailModelInterface $model, ?Message $message = null, array $data = []): static
@@ -243,66 +244,69 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
     /**
      * A type's `message` is a {@see Message} pointer, not text: it is rendered in the language of whoever reads the
      * trail, by {@see TrailGridView}.
+     *
+     * @return list<TrailType>
      */
     public static function getTypes(): array
     {
         return [
-            static::TYPE_DEFAULT => [
-                'name' => Yii::t('skeleton', 'TRAIL_MESSAGE'),
-                'icon' => 'info-circle',
-            ],
-            static::TYPE_CREATE => [
-                'name' => Yii::t('skeleton', 'COMMON_CREATED'),
-                'parentType' => static::TYPE_CHILD_CREATE,
-                'icon' => 'plus',
-            ],
-            static::TYPE_UPDATE => [
-                'name' => Yii::t('skeleton', 'COMMON_UPDATED'),
-                'parentType' => static::TYPE_CHILD_UPDATE,
-                'icon' => 'pencil-alt',
-            ],
-            static::TYPE_DELETE => [
-                'name' => Yii::t('skeleton', 'COMMON_DELETED'),
-                'message' => Message::make('skeleton', 'TRAIL_WAS_DELETED'),
-                'parentType' => static::TYPE_CHILD_DELETE,
-                'icon' => 'trash-alt',
-            ],
-            static::TYPE_ASSIGN => [
-                'name' => Yii::t('skeleton', 'TRAIL_PERMISSION_ASSIGNED'),
-                'icon' => 'user-plus',
-            ],
-            static::TYPE_REVOKE => [
-                'name' => Yii::t('skeleton', 'TRAIL_PERMISSION_REVOKED'),
-                'icon' => 'user-minus',
-            ],
-            static::TYPE_CHILD_CREATE => [
-                'name' => Yii::t('skeleton', 'COMMON_CREATED'),
-                'message' => Message::make('skeleton', 'TRAIL_CREATED'),
-                'hasDataModel' => true,
-                'icon' => 'plus',
-            ],
-            static::TYPE_CHILD_UPDATE => [
-                'name' => Yii::t('skeleton', 'COMMON_UPDATED'),
-                'message' => Message::make('skeleton', 'TRAIL_UPDATED'),
-                'hasDataModel' => true,
-                'icon' => 'pencil-alt',
-            ],
-            static::TYPE_CHILD_DELETE => [
-                'name' => Yii::t('skeleton', 'COMMON_DELETED'),
-                'message' => Message::make('skeleton', 'TRAIL_DELETED'),
-                'hasDataModel' => true,
-                'icon' => 'trash-alt',
-            ],
-            static::TYPE_ORDER => [
-                'name' => Yii::t('skeleton', 'TRAIL_ORDERED'),
-                'icon' => 'sort-amount-down',
-            ],
-            static::TYPE_PASSWORD => [
-                'name' => Yii::t('skeleton', 'TRAIL_PASSWORD_CHANGED'),
-                'message' => Message::make('skeleton', 'TRAIL_THE_PASSWORD_WAS_CHANGED'),
-                'icon' => 'key',
-            ],
+            TrailType::make(static::TYPE_DEFAULT)
+                ->name(Yii::t('skeleton', 'TRAIL_MESSAGE'))
+                ->icon('info-circle'),
+            TrailType::make(static::TYPE_CREATE)
+                ->name(Yii::t('skeleton', 'COMMON_CREATED'))
+                ->parentType(static::TYPE_CHILD_CREATE)
+                ->icon('plus'),
+            TrailType::make(static::TYPE_UPDATE)
+                ->name(Yii::t('skeleton', 'COMMON_UPDATED'))
+                ->parentType(static::TYPE_CHILD_UPDATE)
+                ->icon('pencil-alt'),
+            TrailType::make(static::TYPE_DELETE)
+                ->name(Yii::t('skeleton', 'COMMON_DELETED'))
+                ->message(Message::make('skeleton', 'TRAIL_WAS_DELETED'))
+                ->parentType(static::TYPE_CHILD_DELETE)
+                ->icon('trash-alt'),
+            TrailType::make(static::TYPE_ASSIGN)
+                ->name(Yii::t('skeleton', 'TRAIL_PERMISSION_ASSIGNED'))
+                ->icon('user-plus'),
+            TrailType::make(static::TYPE_REVOKE)
+                ->name(Yii::t('skeleton', 'TRAIL_PERMISSION_REVOKED'))
+                ->icon('user-minus'),
+            TrailType::make(static::TYPE_CHILD_CREATE)
+                ->name(Yii::t('skeleton', 'COMMON_CREATED'))
+                ->message(Message::make('skeleton', 'TRAIL_CREATED'))
+                ->hasDataModel()
+                ->icon('plus'),
+            TrailType::make(static::TYPE_CHILD_UPDATE)
+                ->name(Yii::t('skeleton', 'COMMON_UPDATED'))
+                ->message(Message::make('skeleton', 'TRAIL_UPDATED'))
+                ->hasDataModel()
+                ->icon('pencil-alt'),
+            TrailType::make(static::TYPE_CHILD_DELETE)
+                ->name(Yii::t('skeleton', 'COMMON_DELETED'))
+                ->message(Message::make('skeleton', 'TRAIL_DELETED'))
+                ->hasDataModel()
+                ->icon('trash-alt'),
+            TrailType::make(static::TYPE_ORDER)
+                ->name(Yii::t('skeleton', 'TRAIL_ORDERED'))
+                ->icon('sort-amount-down'),
+            TrailType::make(static::TYPE_PASSWORD)
+                ->name(Yii::t('skeleton', 'TRAIL_PASSWORD_CHANGED'))
+                ->message(Message::make('skeleton', 'TRAIL_THE_PASSWORD_WAS_CHANGED'))
+                ->icon('key'),
         ];
+    }
+
+    #[Override]
+    public static function getTypeClass(): string
+    {
+        return TrailType::class;
+    }
+
+    public function getType(): ?TrailType
+    {
+        /** @var TrailType|null */
+        return static::findType($this->type ?? null);
     }
 
     #[Override]

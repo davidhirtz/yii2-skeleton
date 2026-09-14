@@ -9,7 +9,9 @@ use Hirtz\Skeleton\Html\Input;
 use Hirtz\Skeleton\Html\Option;
 use Hirtz\Skeleton\Html\Select;
 use Hirtz\Skeleton\Html\Traits\TagInputTrait;
+use Hirtz\Skeleton\Models\Definitions\Definition;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
+use Hirtz\Skeleton\Models\Types\Type;
 use Override;
 use Stringable;
 use yii\helpers\Inflector;
@@ -71,48 +73,7 @@ class SelectField extends Field
     {
         if ($this->model) {
             if (!$this->items) {
-                $method = 'get' . Inflector::camelize(Inflector::pluralize($this->property));
-
-                /** @var array<int|string, string|array> $items */
-                $items = $this->model->hasMethod($method)
-                    ? call_user_func([$this->model, $method])
-                    : [];
-
-                foreach ($items as $key => $item) {
-                    $this->items[$key] = is_array($item)
-                        ? ['label' => $item['name'], ...$item['attributes'] ?? []]
-                        : $item;
-                }
-
-                $attributes = array_filter(array_map(
-                    function (array|string $options) {
-                        if (is_string($options)) {
-                            return [];
-                        }
-
-                        $attributes = $options['hiddenFields'] ?? [];
-
-                        return $this->model instanceof I18nAttributeInterface
-                            ? $this->model->getI18nAttributesNames($attributes)
-                            : $attributes;
-                    },
-                    $items
-                ));
-
-                if ($attributes) {
-                    $selectors = [];
-
-                    foreach ($attributes as $value => $names) {
-                        $selectors["$value"] = array_map(
-                            fn (string $name) => $this->model->hasProperty($name)
-                                ? Html::getInputId($this->model, $name)
-                                : $name,
-                            $names
-                        );
-                    }
-
-                    $this->attributes['data-toggle'] ??= $selectors;
-                }
+                $this->addItemsFromModel($this->getItemsFromModel());
             }
 
             if ($this->property) {
@@ -126,6 +87,66 @@ class SelectField extends Field
             $this->attributes['multiple'] = true;
             $this->attributes['name'] = "{$this->attributes['name']}[]";
         }
+    }
+
+    /**
+     * @return array<int|string, Definition|string|int|array>
+     */
+    protected function getItemsFromModel(): array
+    {
+        $method = 'get' . Inflector::camelize($this->property) . 'Definitions';
+
+        if (!$this->model->hasMethod($method)) {
+            $method = 'get' . Inflector::camelize(Inflector::pluralize($this->property));
+        }
+
+        /** @var array<int|string, Definition|string|int|array> */
+        return $this->model->hasMethod($method)
+            ? call_user_func([$this->model, $method])
+            : [];
+    }
+
+    /**
+     * @param array<int|string, Definition|string|int|array> $items
+     */
+    protected function addItemsFromModel(array $items): void
+    {
+        $hiddenFields = [];
+
+        foreach ($items as $key => $item) {
+            if ($item instanceof Definition) {
+                $this->items[$key] = $item->getName();
+
+                if ($item instanceof Type && $item->getHiddenFields()) {
+                    $hiddenFields[$key] = $item->getHiddenFields();
+                }
+
+                continue;
+            }
+
+            $this->items[$key] = $item;
+        }
+
+        if (!$hiddenFields) {
+            return;
+        }
+
+        $selectors = [];
+
+        foreach ($hiddenFields as $value => $names) {
+            $names = $this->model instanceof I18nAttributeInterface
+                ? $this->model->getI18nAttributesNames($names)
+                : $names;
+
+            $selectors["$value"] = array_map(
+                fn (string $name) => $this->model->hasProperty($name)
+                    ? Html::getInputId($this->model, $name)
+                    : $name,
+                $names
+            );
+        }
+
+        $this->attributes['data-toggle'] ??= $selectors;
     }
 
     #[Override]

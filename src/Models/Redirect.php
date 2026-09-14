@@ -15,6 +15,7 @@ use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Models\Traits\AdminModelTrait;
 use Hirtz\Skeleton\Models\Traits\TrailModelTrait;
 use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
+use Hirtz\Skeleton\Models\Types\Type;
 use Hirtz\Skeleton\Models\Traits\UpdatedByUserTrait;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Override;
@@ -156,19 +157,20 @@ class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttribut
         return !parse_url($this->url, PHP_URL_HOST) ? '/' : '';
     }
 
+    /**
+     * @return list<Type>
+     */
     public static function getTypes(): array
     {
         return [
-            static::TYPE_MOVED_PERMANENTLY => [
-                'name' => Yii::t('skeleton', 'REDIRECT_301_MOVED_PERMANENTLY'),
-                'plural' => Yii::t('skeleton', 'REDIRECT_301_PERMANENT'),
-                'icon' => 'forward',
-            ],
-            static::TYPE_FOUND => [
-                'name' => Yii::t('skeleton', 'REDIRECT_302_TEMPORARY_REDIRECT'),
-                'plural' => Yii::t('skeleton', 'REDIRECT_302_TEMPORARY'),
-                'icon' => 'clock',
-            ],
+            Type::make(static::TYPE_MOVED_PERMANENTLY)
+                ->name(Yii::t('skeleton', 'REDIRECT_301_MOVED_PERMANENTLY'))
+                ->plural(Yii::t('skeleton', 'REDIRECT_301_PERMANENT'))
+                ->icon('forward'),
+            Type::make(static::TYPE_FOUND)
+                ->name(Yii::t('skeleton', 'REDIRECT_302_TEMPORARY_REDIRECT'))
+                ->plural(Yii::t('skeleton', 'REDIRECT_302_TEMPORARY'))
+                ->icon('clock'),
         ];
     }
 

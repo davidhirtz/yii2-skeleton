@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Models\Traits;
 
 use Hirtz\Skeleton\Models\Interfaces\DraftStatusAttributeInterface;
+use Hirtz\Skeleton\Models\Statuses\Status;
 use Yii;
 
 /**
@@ -14,21 +15,21 @@ trait DraftStatusAttributeTrait
 {
     use StatusAttributeTrait;
 
+    /**
+     * @return list<Status>
+     */
     public static function getStatuses(): array
     {
         return [
-            static::STATUS_ENABLED => [
-                'name' => Yii::t('skeleton', 'COMMON_ENABLED'),
-                'icon' => 'globe',
-            ],
-            static::STATUS_DRAFT => [
-                'name' => Yii::t('skeleton', 'DRAFT_STATUS_ATTRIBUTE_DRAFT'),
-                'icon' => 'edit',
-            ],
-            static::STATUS_DISABLED => [
-                'name' => Yii::t('skeleton', 'COMMON_DISABLED'),
-                'icon' => 'exclamation-triangle',
-            ],
+            Status::make(static::STATUS_ENABLED)
+                ->name(Yii::t('skeleton', 'COMMON_ENABLED'))
+                ->icon('globe'),
+            Status::make(static::STATUS_DRAFT)
+                ->name(Yii::t('skeleton', 'DRAFT_STATUS_ATTRIBUTE_DRAFT'))
+                ->icon('edit'),
+            Status::make(static::STATUS_DISABLED)
+                ->name(Yii::t('skeleton', 'COMMON_DISABLED'))
+                ->icon('exclamation-triangle'),
         ];
     }
 

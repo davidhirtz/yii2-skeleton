@@ -1,5 +1,19 @@
 ## 3.0.0 (in development)
 
+- **A model's types and statuses are objects, not arrays.** `getTypes()` returns a `list<Models\Types\Type>` and
+  `getStatuses()` a `list<Models\Statuses\Status>`, built fluently — `Type::make(self::TYPE_X)->name('…')->icon('…')`
+  — over a shared `Models\Definitions\Definition` base. The declaration is read through
+  `getTypeDefinitions()` / `getStatusDefinitions()`, `findType()` / `findStatus()` and `$model->getType()` /
+  `getStatus()`, which resolve, validate and cache it in `Models\Definitions\DefinitionRegistry`, keyed by model
+  class **and** application language, and reset with the application. `getTypeOptions()` is gone, an array item
+  throws `InvalidConfigException` naming the model, and a duplicate value throws instead of silently winning. The
+  type's integer is the constructor argument rather than the array key, so two declarations compose with the
+  spread operator. `Models\Types\TrailType` carries `message()`, `parentType()` and `hasDataModel()`; the `class`
+  key is `modelClass()`, validated to be a subclass of the declaring model; `hiddenFields()` is variadic; and
+  `available()` is new — whether a type is offered for a record in the admin, honoured by
+  `Widgets\Forms\Fields\TypeSelectField` and `Widgets\Grids\Toolbars\TypeFilterDropdown`. `getTypeInstances()`
+  is cached in the registry too, which is where it gains a reset it never had. See UPGRADE.md
+
 - **The auto login cookie is `_auth` and the session cookie is `_session`**, replacing Yii's `_identity` and
   PHP's `PHPSESSID`. Both are renamed rather than reused because the `secure` flag is derived from the request:
   a host answering on http *and* https writes both a `Secure` and a plain copy, and a browser then refuses every

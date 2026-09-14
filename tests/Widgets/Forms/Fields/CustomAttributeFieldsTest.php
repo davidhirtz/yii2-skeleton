@@ -18,6 +18,7 @@ use Hirtz\Skeleton\Models\Traits\CustomAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\TranslationTrait;
 use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
+use Hirtz\Skeleton\Models\Types\Type;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
@@ -272,9 +273,9 @@ class FieldRecord extends ActiveRecord implements
     public static function getTypes(): array
     {
         return [
-            self::TYPE_DEFAULT => [
-                'name' => 'Default',
-                'customAttributes' => fn (): array => [
+            Type::make(self::TYPE_DEFAULT)
+                ->name('Default')
+                ->customAttributes(fn (): array => [
                     TextCustomAttribute::make('subtitle')
                         ->max(20)
                         ->translatable(),
@@ -288,11 +289,10 @@ class FieldRecord extends ActiveRecord implements
                         ->disabled(),
                     TextCustomAttribute::make('secret')
                         ->visible(false),
-                ],
-            ],
-            self::TYPE_LINKS => [
-                'name' => 'Links',
-                'customAttributes' => fn (): array => [
+                ]),
+            Type::make(self::TYPE_LINKS)
+                ->name('Links')
+                ->customAttributes(fn (): array => [
                     GroupCustomAttribute::make('links')
                         ->multiple()
                         ->maxCount(2)
@@ -300,24 +300,21 @@ class FieldRecord extends ActiveRecord implements
                             TextCustomAttribute::make('label')->translatable(),
                             UrlCustomAttribute::make('url')->required(),
                         ]),
-                ],
-            ],
-            self::TYPE_META => [
-                'name' => 'Meta',
-                'customAttributes' => fn (): array => [
+                ]),
+            Type::make(self::TYPE_META)
+                ->name('Meta')
+                ->customAttributes(fn (): array => [
                     GroupCustomAttribute::make('meta')
                         ->attributes([TextCustomAttribute::make('title')]),
-                ],
-            ],
-            self::TYPE_REQUIRED_LINKS => [
-                'name' => 'Required links',
-                'customAttributes' => fn (): array => [
+                ]),
+            Type::make(self::TYPE_REQUIRED_LINKS)
+                ->name('Required links')
+                ->customAttributes(fn (): array => [
                     GroupCustomAttribute::make('links')
                         ->multiple()
                         ->minCount(2)
                         ->attributes([TextCustomAttribute::make('label')]),
-                ],
-            ],
+                ]),
         ];
     }
 
@@ -365,14 +362,12 @@ class UniformTypeRecord extends FieldRecord
         $customAttributes = fn (): array => [TextCustomAttribute::make('subtitle')];
 
         return [
-            self::TYPE_DEFAULT => [
-                'name' => 'Default',
-                'customAttributes' => $customAttributes,
-            ],
-            self::TYPE_LINKS => [
-                'name' => 'Other',
-                'customAttributes' => $customAttributes,
-            ],
+            Type::make(self::TYPE_DEFAULT)
+                ->name('Default')
+                ->customAttributes($customAttributes),
+            Type::make(self::TYPE_LINKS)
+                ->name('Other')
+                ->customAttributes($customAttributes),
         ];
     }
 }

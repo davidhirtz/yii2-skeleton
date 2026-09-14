@@ -90,15 +90,9 @@ class TestModel extends Model
     public static function getValues(): array
     {
         return [
-            'value1' => [
-                'name' => 'Value 1'
-            ],
-            'value2' => [
-                'name' => 'Value 2'
-            ],
-            'value3' => [
-                'name' => 'Value 3'
-            ],
+            'value1' => 'Value 1',
+            'value2' => 'Value 2',
+            'value3' => 'Value 3',
         ];
     }
 }

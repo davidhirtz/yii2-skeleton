@@ -26,6 +26,7 @@ use Hirtz\Skeleton\Models\Traits\TrailModelTrait;
 use Hirtz\Skeleton\Models\Traits\TranslationTrait;
 use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
 use Hirtz\Skeleton\Models\Translation;
+use Hirtz\Skeleton\Models\Types\Type;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Override;
@@ -516,9 +517,9 @@ class CustomAttributeRecord extends ActiveRecord implements
     public static function getTypes(): array
     {
         return [
-            self::TYPE_DEFAULT => [
-                'name' => 'Default',
-                'customAttributes' => fn (): array => [
+            Type::make(self::TYPE_DEFAULT)
+                ->name('Default')
+                ->customAttributes(fn (): array => [
                     TextCustomAttribute::make('subtitle')
                         ->max(20)
                         ->translatable(),
@@ -537,11 +538,10 @@ class CustomAttributeRecord extends ActiveRecord implements
                         ->disabled(),
                     TextCustomAttribute::make('note')
                         ->required(static fn (self $model): bool => (bool)$model->featured),
-                ],
-            ],
-            self::TYPE_LINKS => [
-                'name' => 'Links',
-                'customAttributes' => fn (): array => [
+                ]),
+            Type::make(self::TYPE_LINKS)
+                ->name('Links')
+                ->customAttributes(fn (): array => [
                     GroupCustomAttribute::make('links')
                         ->multiple()
                         ->maxCount(5)
@@ -549,27 +549,22 @@ class CustomAttributeRecord extends ActiveRecord implements
                             TextCustomAttribute::make('label')->translatable(),
                             UrlCustomAttribute::make('url')->required(),
                         ]),
-                ],
-            ],
-            self::TYPE_COLUMN_COLLISION => [
-                'name' => 'Column collision',
-                'customAttributes' => fn (): array => [TextCustomAttribute::make('name')],
-            ],
-            self::TYPE_I18N_COLLISION => [
-                'name' => 'I18n collision',
-                'customAttributes' => fn (): array => [TextCustomAttribute::make('name_de')],
-            ],
-            self::TYPE_INVALID_NAME => [
-                'name' => 'Invalid name',
-                'customAttributes' => fn (): array => [TextCustomAttribute::make('Sub Title')],
-            ],
-            self::TYPE_DUPLICATE_NAME => [
-                'name' => 'Duplicate name',
-                'customAttributes' => fn (): array => [
+                ]),
+            Type::make(self::TYPE_COLUMN_COLLISION)
+                ->name('Column collision')
+                ->customAttributes(fn (): array => [TextCustomAttribute::make('name')]),
+            Type::make(self::TYPE_I18N_COLLISION)
+                ->name('I18n collision')
+                ->customAttributes(fn (): array => [TextCustomAttribute::make('name_de')]),
+            Type::make(self::TYPE_INVALID_NAME)
+                ->name('Invalid name')
+                ->customAttributes(fn (): array => [TextCustomAttribute::make('Sub Title')]),
+            Type::make(self::TYPE_DUPLICATE_NAME)
+                ->name('Duplicate name')
+                ->customAttributes(fn (): array => [
                     TextCustomAttribute::make('subtitle'),
                     TextCustomAttribute::make('subtitle'),
-                ],
-            ],
+                ]),
         ];
     }
 

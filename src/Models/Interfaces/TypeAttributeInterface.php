@@ -4,11 +4,33 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Interfaces;
 
+use Hirtz\Skeleton\Models\Types\Type;
+
+/**
+ * @property int|string $type
+ */
 interface TypeAttributeInterface
 {
     public const int TYPE_DEFAULT = 1;
 
+    /**
+     * @return list<Type>
+     */
     public static function getTypes(): array;
+
+    /**
+     * @return class-string<Type>
+     */
+    public static function getTypeClass(): string;
+
+    /**
+     * @return array<int|string, Type>
+     */
+    public static function getTypeDefinitions(): array;
+
+    public static function findType(int|string|null $type): ?Type;
+
+    public function getType(): ?Type;
 
     public function getTypeIcon(): string;
 
@@ -16,12 +38,10 @@ interface TypeAttributeInterface
 
     public function getTypePlural(): string;
 
-    public function getTypeOptions(): array;
-
     public static function instantiate($row): static;
 
     /**
-     * @return static[]
+     * @return array<int|string, static>
      */
     public static function getTypeInstances(): array;
 }

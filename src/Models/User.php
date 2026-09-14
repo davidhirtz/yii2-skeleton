@@ -16,6 +16,7 @@ use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
+use Hirtz\Skeleton\Models\Statuses\Status;
 use Hirtz\Skeleton\Models\Traits\AdminModelTrait;
 use Hirtz\Skeleton\Models\Traits\CustomAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\SearchableTrait;
@@ -577,17 +578,18 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         return $this->getOldAttributes()['name'] ?? $this->name;
     }
 
+    /**
+     * @return list<Status>
+     */
     public static function getStatuses(): array
     {
         return [
-            static::STATUS_DISABLED => [
-                'name' => Yii::t('skeleton', 'COMMON_DISABLED'),
-                'icon' => 'exclamation-triangle',
-            ],
-            static::STATUS_ENABLED => [
-                'name' => Yii::t('skeleton', 'COMMON_ENABLED'),
-                'icon' => 'user',
-            ],
+            Status::make(static::STATUS_DISABLED)
+                ->name(Yii::t('skeleton', 'COMMON_DISABLED'))
+                ->icon('exclamation-triangle'),
+            Status::make(static::STATUS_ENABLED)
+                ->name(Yii::t('skeleton', 'COMMON_ENABLED'))
+                ->icon('user'),
         ];
     }
 
@@ -597,12 +599,12 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
             return Yii::t('skeleton', 'USER_SITE_OWNER');
         }
 
-        return static::getStatuses()[$this->status]['name'] ?? '';
+        return $this->getStatus()?->getName() ?? '';
     }
 
     public function getStatusIcon(): string
     {
-        return !$this->isOwner() ? (static::getStatuses()[$this->status]['icon'] ?? '') : 'star';
+        return !$this->isOwner() ? ($this->getStatus()?->getIcon() ?? '') : 'star';
     }
 
     public function getTrailAttributes(): array

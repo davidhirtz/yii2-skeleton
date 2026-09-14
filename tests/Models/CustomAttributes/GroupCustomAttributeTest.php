@@ -17,6 +17,7 @@ use Hirtz\Skeleton\Models\Traits\CustomAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\TranslationTrait;
 use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
+use Hirtz\Skeleton\Models\Types\Type;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Override;
@@ -338,9 +339,9 @@ class GroupRecord extends ActiveRecord implements
     public static function getTypes(): array
     {
         return [
-            self::TYPE_DEFAULT => [
-                'name' => 'Links',
-                'customAttributes' => fn (): array => [
+            Type::make(self::TYPE_DEFAULT)
+                ->name('Links')
+                ->customAttributes(fn (): array => [
                     GroupCustomAttribute::make('links')
                         ->multiple()
                         ->maxCount(5)
@@ -348,27 +349,24 @@ class GroupRecord extends ActiveRecord implements
                             TextCustomAttribute::make('label')->translatable(),
                             UrlCustomAttribute::make('url')->required(),
                         ]),
-                ],
-            ],
-            self::TYPE_SINGLE => [
-                'name' => 'Meta',
-                'customAttributes' => fn (): array => [
+                ]),
+            Type::make(self::TYPE_SINGLE)
+                ->name('Meta')
+                ->customAttributes(fn (): array => [
                     GroupCustomAttribute::make('meta')
                         ->attributes([TextCustomAttribute::make('title')]),
-                ],
-            ],
-            self::TYPE_REQUIRED => [
-                'name' => 'Required',
-                'customAttributes' => fn (): array => [
+                ]),
+            Type::make(self::TYPE_REQUIRED)
+                ->name('Required')
+                ->customAttributes(fn (): array => [
                     GroupCustomAttribute::make('links')
                         ->multiple()
                         ->minCount(2)
                         ->attributes([TextCustomAttribute::make('label')]),
-                ],
-            ],
-            self::TYPE_NESTED => [
-                'name' => 'Nested',
-                'customAttributes' => fn (): array => [
+                ]),
+            Type::make(self::TYPE_NESTED)
+                ->name('Nested')
+                ->customAttributes(fn (): array => [
                     GroupCustomAttribute::make('rows')
                         ->multiple()
                         ->attributes([
@@ -377,8 +375,7 @@ class GroupRecord extends ActiveRecord implements
                                 ->multiple()
                                 ->attributes([TextCustomAttribute::make('text')]),
                         ]),
-                ],
-            ],
+                ]),
         ];
     }
 

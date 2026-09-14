@@ -1,5 +1,100 @@
 # Upgrade Guide
 
+## 3.0.0 — Types and statuses are objects
+
+`getTypes()` and `getStatuses()` no longer return arrays. They return a list of definition objects, and the
+platform refuses anything else: the first read throws `InvalidConfigException` naming the model.
+
+```php
+// before
+public static function getTypes(): array
+{
+    return [
+        self::TYPE_DEFAULT => [
+            'name' => Yii::t('app', 'Page'),
+            'hiddenFields' => ['content', '#assets'],
+            'class' => Page::class,
+        ],
+    ];
+}
+
+// after
+public static function getTypes(): array
+{
+    return [
+        EntryType::make(self::TYPE_DEFAULT)
+            ->name(Yii::t('app', 'Page'))
+            ->hiddenFields('content', AssetModelInterface::FIELD_ASSETS)
+            ->modelClass(Page::class),
+    ];
+}
+```
+
+The value moved from the array key to the constructor argument, every key is a setter of the same name, and
+`class` is `modelClass()`. A misspelled key was silent; a misspelled setter is an `Error`.
+
+Reads change with it. `getTypeOptions()` is gone:
+
+```php
+// before
+$viewFile = $this->getTypeOptions()['viewFile'] ?? null;
+$name = static::getStatuses()[$this->status]['name'] ?? '';
+
+// after
+$viewFile = $this->getType()?->getViewFile();
+$name = static::findStatus($this->status)?->getName() ?? '';
+```
+
+`getTypes()` is the declaration and is read by nothing but the registry. Everything else reads
+`getTypeDefinitions()` (indexed by value, validated, cached), `findType()` or `$model->getType()`, which is
+`null` for a row whose type the code no longer declares. `getStatuses()` mirrors it with
+`getStatusDefinitions()`, `findStatus()` and `getStatus()`.
+
+**Never mutate a definition you were handed.** `DefinitionRegistry` caches it and every record of that value
+shares the instance; a configuration to be reused across several types is a named constructor on your own type
+subclass, which makes a fresh object per call. The cache is keyed by the application language as well, since a
+`name` is a `Yii::t()` result, and is reset with the application.
+
+A project option that used to live in the array — `entriesPerPage`, `headlineTag` — has no home in a bag any
+more; there is deliberately no `option()` escape hatch. Extend the bundle's type class instead:
+
+```php
+final class SectionType extends \Hirtz\Cms\Models\Types\SectionType
+{
+    protected ?int $entriesPerPage = null;
+
+    public function entriesPerPage(?int $entriesPerPage): static
+    {
+        $this->entriesPerPage = $entriesPerPage;
+        return $this;
+    }
+
+    public function getEntriesPerPage(): ?int
+    {
+        return $this->entriesPerPage;
+    }
+}
+```
+
+and point the model at it:
+
+```php
+public static function getTypeClass(): string
+{
+    return SectionType::class;
+}
+
+public function getType(): ?SectionType
+{
+    return static::findType($this->type);
+}
+```
+
+New on the base class: `available(Closure|bool)`, whether the type is offered for a record in the admin. That
+is what the asset types' `visible` key meant; a cms section type's `visible()` keeps its own meaning, the
+frontend render filter.
+
+
 ## 3.0.0 — The session and auto login cookies are renamed
 
 Everyone is logged out once when this deploys. The auto login cookie is `_auth` (was Yii's `_identity`) and the

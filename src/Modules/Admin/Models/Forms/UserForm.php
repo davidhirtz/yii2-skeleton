@@ -45,7 +45,7 @@ class UserForm extends Model
             [
                 ['status'],
                 'in',
-                'range' => array_keys(User::getStatuses()),
+                'range' => array_keys(User::getStatusDefinitions()),
             ],
             [
                 ['newPassword', 'repeatPassword'],

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Grids\Toolbars;
 
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
+use Hirtz\Skeleton\Models\Statuses\Status;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Override;
 use Yii;
@@ -20,7 +21,10 @@ class StatusFilterDropdown extends FilterDropdown
         $this->paramName ??= 'status';
 
         if ($this->model instanceof StatusAttributeInterface) {
-            $this->items = array_map(fn ($item) => $item['name'], ($this->model::getStatuses()));
+            $this->items = array_map(
+                static fn (Status $status): string => $status->getName(),
+                $this->model::getStatusDefinitions(),
+            );
         }
 
         parent::configure();

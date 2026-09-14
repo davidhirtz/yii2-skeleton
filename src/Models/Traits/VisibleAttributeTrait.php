@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Traits;
 
+use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
+
 trait VisibleAttributeTrait
 {
     public function getVisibleAttribute(string $attribute): mixed
@@ -13,6 +15,10 @@ trait VisibleAttributeTrait
 
     public function isAttributeVisible(string $attribute): bool
     {
-        return !in_array($attribute, $this->getTypeOptions()['hiddenFields'] ?? [], true);
+        $hiddenFields = $this instanceof TypeAttributeInterface
+            ? $this->getType()?->getHiddenFields() ?? []
+            : [];
+
+        return !in_array($attribute, $hiddenFields, true);
     }
 }

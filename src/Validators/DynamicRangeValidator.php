@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Validators;
 
+use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\helpers\Inflector;
@@ -40,9 +41,17 @@ class DynamicRangeValidator extends RangeValidator
         return parent::clientValidateAttribute($model, $attribute, $view);
     }
 
+    /**
+     * The resolved definitions, not the declaration: {@see TypeAttributeInterface::getTypes()} returns a list whose
+     * keys are offsets, while the definitions are indexed by value.
+     */
     public function getDynamicRange(Model $model, string $attribute): array
     {
-        $method = 'get' . Inflector::camelize(Inflector::pluralize($attribute));
+        $method = 'get' . Inflector::camelize($attribute) . 'Definitions';
+
+        if (!$model->hasMethod($method)) {
+            $method = 'get' . Inflector::camelize(Inflector::pluralize($attribute));
+        }
 
         if (!$model->hasMethod($method)) {
             throw new InvalidConfigException($model::class . '::' . $method . '() must be defined to use ' . self::class . '.');

@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 use Hirtz\Skeleton\Models\CustomAttributes\CustomAttribute;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
+use Hirtz\Skeleton\Models\Types\Type;
 use Override;
 
 /**
@@ -36,6 +37,18 @@ class TypeSelectField extends SelectField
     }
 
     /**
+     * A type the record cannot take is not offered, which is what {@see Type::available()} is for.
+     */
+    #[Override]
+    protected function getItemsFromModel(): array
+    {
+        return array_filter(
+            parent::getItemsFromModel(),
+            fn (mixed $item): bool => !$item instanceof Type || $item->isAvailable($this->model),
+        );
+    }
+
+    /**
      * A type instance carries no relation, so a relation-dependent definition has to fingerprint the same for every
      * type — only the difference between the types decides whether the form reloads.
      *
@@ -50,6 +63,10 @@ class TypeSelectField extends SelectField
         $fingerprints = [];
 
         foreach ($this->model::getTypeInstances() as $type => $instance) {
+            if (!$this->model::findType($type)?->isAvailable($this->model)) {
+                continue;
+            }
+
             $fingerprints[$type] = md5(implode('', array_map(
                 static fn (CustomAttribute $definition): string => $definition->getFingerprint(),
                 $instance->getCustomAttributeDefinitions(),

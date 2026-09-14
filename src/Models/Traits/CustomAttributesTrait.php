@@ -53,11 +53,13 @@ trait CustomAttributesTrait
     {
         $attributes = $this->customAttributes;
 
-        if ($attributes === null && $this instanceof TypeAttributeInterface) {
-            $attributes = $this->getTypeOptions()['customAttributes'] ?? [];
+        if ($attributes === null) {
+            return $this instanceof TypeAttributeInterface
+                ? $this->getType()?->getCustomAttributes($this) ?? []
+                : [];
         }
 
-        return $attributes instanceof Closure ? $attributes($this) : $attributes ?? [];
+        return $attributes instanceof Closure ? $attributes($this) : $attributes;
     }
 
     /**

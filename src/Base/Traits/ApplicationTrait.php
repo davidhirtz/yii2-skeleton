@@ -12,6 +12,7 @@ use Hirtz\Skeleton\I18n\I18N;
 use Hirtz\Skeleton\Caching\CacheComponents;
 use Hirtz\Skeleton\Db\ActiveQuery;
 use Hirtz\Skeleton\Models\Collections\TrailModelCollection;
+use Hirtz\Skeleton\Models\Definitions\DefinitionRegistry;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Rbac\DbManager;
@@ -51,6 +52,7 @@ trait ApplicationTrait
 
         ActiveQuery::resetStatus();
         CacheComponents::reset();
+        DefinitionRegistry::reset();
         TrailModelCollection::reset();
 
         $core = [

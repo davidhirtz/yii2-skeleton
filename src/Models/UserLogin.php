@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
 use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
+use Hirtz\Skeleton\Models\Types\Type;
 use Hirtz\Skeleton\Validators\RelationValidator;
 use Override;
 use Yii;
@@ -73,37 +74,35 @@ class UserLogin extends ActiveRecord implements TypeAttributeInterface
 
     public function getTypeName(): string
     {
-        return $this->getTypeOptions()['name'] ?? ucfirst($this->type);
+        return $this->getType()?->getName() ?: ucfirst($this->type);
     }
 
     public function getTypeIcon(): string
     {
-        return $this->getTypeOptions()['icon'] ?: "brand:$this->type";
+        return $this->getType()?->getIcon() ?: "brand:$this->type";
     }
 
+    /**
+     * @return list<Type>
+     */
     public static function getTypes(): array
     {
         return [
-            static::TYPE_LOGIN => [
-                'name' => Yii::t('skeleton', 'COMMON_LOGIN'),
-                'icon' => 'sign-in-alt',
-            ],
-            static::TYPE_COOKIE => [
-                'name' => Yii::t('skeleton', 'USER_LOGIN_COOKIE'),
-                'icon' => 'heart',
-            ],
-            static::TYPE_SIGNUP => [
-                'name' => Yii::t('skeleton', 'USER_LOGIN_SIGN_UP'),
-                'icon' => 'user-plus',
-            ],
-            static::TYPE_CONFIRM_EMAIL => [
-                'name' => Yii::t('skeleton', 'USER_LOGIN_EMAIL_CONFIRMATION'),
-                'icon' => 'envelope',
-            ],
-            static::TYPE_RESET_PASSWORD => [
-                'name' => Yii::t('skeleton', 'USER_LOGIN_PASSWORD_RESET'),
-                'icon' => 'unlock',
-            ],
+            Type::make(static::TYPE_LOGIN)
+                ->name(Yii::t('skeleton', 'COMMON_LOGIN'))
+                ->icon('sign-in-alt'),
+            Type::make(static::TYPE_COOKIE)
+                ->name(Yii::t('skeleton', 'USER_LOGIN_COOKIE'))
+                ->icon('heart'),
+            Type::make(static::TYPE_SIGNUP)
+                ->name(Yii::t('skeleton', 'USER_LOGIN_SIGN_UP'))
+                ->icon('user-plus'),
+            Type::make(static::TYPE_CONFIRM_EMAIL)
+                ->name(Yii::t('skeleton', 'USER_LOGIN_EMAIL_CONFIRMATION'))
+                ->icon('envelope'),
+            Type::make(static::TYPE_RESET_PASSWORD)
+                ->name(Yii::t('skeleton', 'USER_LOGIN_PASSWORD_RESET'))
+                ->icon('unlock'),
         ];
     }
 

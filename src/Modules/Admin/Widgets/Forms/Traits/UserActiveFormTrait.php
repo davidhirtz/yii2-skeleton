@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms\Traits;
 
-use Hirtz\Skeleton\Helpers\ArrayHelper;
+use Hirtz\Skeleton\Models\Statuses\Status;
 use Hirtz\Skeleton\Modules\ModuleTrait;
 use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
 use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
@@ -31,7 +31,10 @@ trait UserActiveFormTrait
         return SelectField::make()
             ->model($this->model)
             ->property('status')
-            ->items(ArrayHelper::getColumn($this->model->user::getStatuses(), 'name'))
+            ->items(array_map(
+                static fn (Status $status): string => $status->getName(),
+                $this->model->user::getStatusDefinitions(),
+            ))
             ->visible(!$this->model->user->isOwner());
     }
 

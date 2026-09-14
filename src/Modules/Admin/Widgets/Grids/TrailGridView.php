@@ -398,8 +398,8 @@ class TrailGridView extends GridView
             ->text(Yii::t('skeleton', 'COMMON_DELETED'))
             ->class('text-invalid');
 
-        $message = $trail->getTypeOptions()['message'] ?? null;
-        $message = $message instanceof Message ? (string)$message->withParams(['model' => $name]) : '';
+        $message = $trail->getType()?->getMessage();
+        $message = $message ? (string)$message->withParams(['model' => $name]) : '';
 
         return trim($message . ' ' . $this->renderDataTrailLink($trail));
     }

@@ -13,6 +13,7 @@ use Hirtz\Skeleton\Models\Traits\AdminModelTrait;
 use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\StatusAttributeTrait;
 use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
+use Hirtz\Skeleton\Models\Types\Type;
 use Hirtz\Skeleton\Test\TestCase;
 use Override;
 use Yii;
@@ -190,10 +191,9 @@ class AdminModelRecord extends ActiveRecord implements
     public static function getTypes(): array
     {
         return [
-            self::TYPE_DEFAULT => [
-                'name' => 'Test type',
-                'icon' => 'star',
-            ],
+            Type::make(self::TYPE_DEFAULT)
+                ->name('Test type')
+                ->icon('star'),
         ];
     }
 
