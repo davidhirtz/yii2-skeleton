@@ -57,9 +57,6 @@ class AdminButton extends Widget
             : null;
     }
 
-    /**
-     * @param bool $alwaysVisible a badged button must not fade out, that is the whole point of the badge
-     */
     protected function registerCss(): void
     {
         $bundle = Yii::$app->getAssetManager()->getBundle(AdminAssetBundle::class);
