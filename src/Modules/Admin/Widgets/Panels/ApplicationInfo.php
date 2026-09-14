@@ -20,6 +20,12 @@ use yii\db\Connection;
 
 class ApplicationInfo extends InfoList
 {
+    public function __construct(array $config = [])
+    {
+        $this->title ??= Yii::t('skeleton', 'SYSTEM_APPLICATION');
+        parent::__construct($config);
+    }
+
     #[Override]
     protected function configure(): void
     {

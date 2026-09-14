@@ -12,6 +12,14 @@
   (`form-rows`, `form-group form-row`, `form-label`, `form-content`) rather than a table, so a row stacks at phone
   width like every other form row. It is extensible through `EVENT_CONFIGURE` and its `rows()` closure.
 
+- **`Panels\ServerInfo` reports what the installation runs on**, beside `ApplicationInfo` on the Application tab:
+  the server software and host name, the trusted hosts, the mail transport, the time zone and whether the
+  directories the installation writes to are writable (`ServerInfo::$directories`, path aliases a bundle extends
+  through `EVENT_CONFIGURE`). It **warns when a request arrived through a proxy while `Request::$trustedHosts` is
+  empty** — `filterHeaders()` strips every `X-Forwarded-*` header in that case, so the misconfiguration is
+  invisible from `getHeaders()` and the secure cookie flag and HSTS are silently skipped. The mailer row reports
+  only the DSN's scheme, host and port, never its credentials.
+
 - **`Panels\ExtensionVersions` lists the installed extensions as badges**, the version in each badge's tooltip so
   the row stays one or two lines. Its `excluded` property is the block list, matched against the full package name
   with `fnmatch()`; it defaults to `yiisoft/*` — the framework's own version is a row of its own — and

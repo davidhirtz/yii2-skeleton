@@ -35,6 +35,10 @@ class SystemControllerTest extends TestCase
         self::assertStringContainsString(Yii::getVersion(), $html);
         self::assertStringContainsString('system/php-info', $html);
 
+        // the server card sits beside it
+        self::assertStringContainsString('<div class="form-label">Trusted hosts</div>', $html);
+        self::assertStringContainsString('<div class="form-label">Directories</div>', $html);
+
         // the maintenance actions live on their own tab
         self::assertStringNotContainsString('system/flush', $html);
     }

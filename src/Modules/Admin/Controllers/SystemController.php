@@ -50,9 +50,6 @@ class SystemController extends Controller
         return $this->render('index');
     }
 
-    /**
-     * @noinspection PhpUnused
-     */
     public function actionMaintenance(): Response|string
     {
         return $this->render('maintenance');
