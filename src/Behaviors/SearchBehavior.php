@@ -29,13 +29,20 @@ class SearchBehavior extends Behavior
     public ?string $modelClass = null;
 
     /**
-     * @var list<string> the attributes that change a document besides the searchable ones
+     * @var list<string> the attributes every searchable model reindexes on, whether it names them or not
      */
-    public array $attributes = [
+    final public const array STATE_ATTRIBUTES = [
         'status',
         'tenant_id',
         'type',
     ];
+
+    /**
+     * @var list<string> the attributes that change a document besides the searchable ones. A model whose searchable
+     * attribute is a getter has to name the columns behind it here — the media `File` indexes `filename`, which is
+     * `getFilename()`, so a rename would leave the index stale without `basename`.
+     */
+    public array $attributes = self::STATE_ATTRIBUTES;
 
     #[Override]
     public function attach($owner): void

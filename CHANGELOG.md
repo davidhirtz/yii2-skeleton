@@ -1,5 +1,11 @@
 ## 3.0.0 (in development)
 
+- **`Behaviors\SearchBehavior::STATE_ATTRIBUTES`** is the list every searchable model reindexes on (`status`,
+  `tenant_id`, `type`) and the default of `$attributes`, which a model overrides to name a column its documents
+  depend on without indexing it directly. A searchable attribute that is a getter needs this: the media `File`
+  indexes `filename`, which is `getFilename()`, so nothing in `changedAttributes` matched it and a rename left
+  the index stale.
+
 - **`Web\Controller::warning()`** flashes under the `warning` key, which `Widgets\Flashes` already rendered with
   an icon of its own and nothing used. It is for an outcome that succeeded but is worth saying out loud — a bulk
   file move that had to rename a file around a name collision.

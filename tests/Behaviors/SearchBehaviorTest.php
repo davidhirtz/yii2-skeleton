@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Behaviors;
 
+use Hirtz\Skeleton\Behaviors\SearchBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
 use Hirtz\Skeleton\Models\Search;
@@ -83,6 +84,28 @@ class SearchBehaviorTest extends TestCase
         self::assertSame(1, $record->update());
 
         self::assertSame($id, $this->findDocuments($record)[0]->id);
+    }
+
+    /**
+     * A searchable attribute that is a getter carries no name of its own into `changedAttributes`, so the model
+     * names the columns behind it — the media `File` indexes `filename` and has to name `basename`.
+     */
+    public function testAModelMayNameAnotherAttributeToReindexOn(): void
+    {
+        $record = $this->createRecord();
+        $record->detachBehavior('SearchBehavior');
+        $record->attachBehavior('SearchBehavior', [
+            'class' => SearchBehavior::class,
+            'attributes' => [...SearchBehavior::STATE_ATTRIBUTES, 'excluded'],
+        ]);
+
+        $record->insert();
+        $id = $this->findDocuments($record)[0]->id;
+
+        $record->excluded = 'not indexed, but still a trigger';
+        self::assertSame(1, $record->update());
+
+        self::assertNotSame($id, $this->findDocuments($record)[0]->id);
     }
 
     public function testDeleteRemovesTheDocuments(): void
