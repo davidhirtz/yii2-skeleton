@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Db\Connection;
 use Hirtz\Skeleton\I18n\I18N;
 use Hirtz\Skeleton\Caching\CacheComponents;
 use Hirtz\Skeleton\Db\ActiveQuery;
+use Hirtz\Skeleton\Db\DatabaseComponents;
 use Hirtz\Skeleton\Models\Collections\TrailModelCollection;
 use Hirtz\Skeleton\Models\Definitions\DefinitionRegistry;
 use Hirtz\Skeleton\Models\User;
@@ -22,9 +23,7 @@ use Hirtz\Skeleton\Web\DbSession;
 use Hirtz\Skeleton\Web\UrlManager;
 use Hirtz\Skeleton\Web\View;
 use Yii;
-use yii\base\ActionEvent;
 use yii\caching\FileCache;
-use yii\console\controllers\MigrateController;
 use yii\helpers\ArrayHelper;
 use yii\i18n\PhpMessageSource;
 use yii\log\FileTarget;
@@ -46,14 +45,26 @@ use yii\web\JqueryAsset;
  */
 trait ApplicationTrait
 {
+    /**
+     * Collected under both SAPIs, so `Db\MigrationHistory` can report pending migrations from a web request;
+     * `Console\Controllers\MigrateController` takes its namespaces from here.
+     *
+     * @var list<string>
+     */
+    private array $migrationNamespaces = [];
+
     protected function preInitInternal(&$config): void
     {
         Yii::$classMap = [...Yii::$classMap, ...ArrayHelper::remove($config, 'classMap', [])];
 
         ActiveQuery::resetStatus();
         CacheComponents::reset();
+        DatabaseComponents::reset();
         DefinitionRegistry::reset();
         TrailModelCollection::reset();
+
+        $this->setMigrationNamespace('app\Migrations');
+        $this->setMigrationNamespace('Hirtz\Skeleton\Migrations');
 
         $core = [
             'id' => 'skeleton',
@@ -293,14 +304,16 @@ trait ApplicationTrait
 
     public function setMigrationNamespace(string $namespace): void
     {
-        if ($this->getRequest()->getIsConsoleRequest()) {
-            $this->on(static::EVENT_BEFORE_ACTION, function (ActionEvent $event): void {
-                $controller = $event->action->controller;
-
-                if ($controller instanceof MigrateController) {
-                    $controller->migrationNamespaces[] = $event->data;
-                }
-            }, $namespace);
+        if (!in_array($namespace, $this->migrationNamespaces, true)) {
+            $this->migrationNamespaces[] = $namespace;
         }
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getMigrationNamespaces(): array
+    {
+        return $this->migrationNamespaces;
     }
 }

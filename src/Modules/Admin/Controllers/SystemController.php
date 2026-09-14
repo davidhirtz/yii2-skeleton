@@ -51,15 +51,17 @@ class SystemController extends Controller
     }
 
     /**
+     * `phpinfo()` prints a complete document under a web SAPI, so it cannot be wrapped in the admin layout.
+     *
      * @noinspection PhpUnused
      */
     public function actionPhpInfo(): string
     {
         ob_start();
         phpinfo();
-        $info = ob_get_clean();
 
-        return $this->renderContent($info);
+        $this->layout = false;
+        return $this->renderContent((string)ob_get_clean());
     }
 
     /**
@@ -101,9 +103,9 @@ class SystemController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $schema = $connection->getSchema();
-        $schema->refresh();
+        $connection->getSchema()->refresh();
 
+        $this->success(Yii::t('skeleton', 'SYSTEM_SUCCESS_REFRESHED_SCHEMA'));
         return $this->redirect(['index']);
     }
 

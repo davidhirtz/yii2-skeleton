@@ -89,3 +89,28 @@
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
+
+// Label / value rows rather than records: the label column stays as narrow as its content allows, and the row
+// header drops the display font the column headers of a grid use.
+.table-data {
+  th {
+    font-family: inherit;
+    font-weight: 700;
+    letter-spacing: normal;
+    padding-bottom: 1rem;
+    text-align: left;
+    white-space: nowrap;
+    width: 1%;
+  }
+
+  // a migration class name or a package name has no break opportunity of its own
+  td {
+    overflow-wrap: anywhere;
+  }
+
+  td.table-action {
+    text-align: right;
+    white-space: nowrap;
+    width: 1%;
+  }
+}

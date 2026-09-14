@@ -20,7 +20,7 @@ class SystemControllerTest extends TestCase
 {
     use UserFixtureTrait;
 
-    public function testIndexRendersTheAssetCacheAndSessionGrids(): void
+    public function testIndexReportsTheInstallationAndItsMaintenanceActions(): void
     {
         $this->login();
 
@@ -28,11 +28,61 @@ class SystemControllerTest extends TestCase
 
         self::assertIsString($html);
 
+        // the installation as a maintainer reads it off a client's site
+        self::assertStringContainsString(Yii::$app->name, $html);
+        self::assertStringContainsString('yii2-skeleton', $html);
+        self::assertStringContainsString(PHP_VERSION, $html);
+        self::assertStringContainsString(Yii::getVersion(), $html);
+
         // one row per configured cache component, each with its flush button
         self::assertStringContainsString(ArrayCache::class, $html);
         self::assertStringContainsString('system/flush', $html);
         self::assertStringContainsString('system/publish', $html);
+        self::assertStringContainsString('system/schema', $html);
         self::assertStringContainsString('system/session-gc', $html);
+        self::assertStringContainsString('system/php-info', $html);
+    }
+
+    public function testIndexWarnsAboutAPendingMigration(): void
+    {
+        $this->login();
+
+        self::assertStringNotContainsString(
+            'not been applied',
+            (string)Yii::$app->runAction('admin/system/index'),
+        );
+
+        Yii::$app->getDb()->createCommand()
+            ->delete('{{%migration}}', [
+                'version' => (string)Yii::$app->getDb()
+                    ->createCommand('SELECT version FROM {{%migration}} LIMIT 1')
+                    ->queryScalar(),
+            ])
+            ->execute();
+
+        self::assertStringContainsString(
+            'not been applied',
+            (string)Yii::$app->runAction('admin/system/index'),
+        );
+    }
+
+    public function testPhpInfoIsRenderedWithoutTheAdminLayout(): void
+    {
+        $this->login();
+
+        $html = Yii::$app->runAction('admin/system/php-info');
+
+        self::assertIsString($html);
+        self::assertStringContainsString(PHP_VERSION, $html);
+        self::assertStringNotContainsString('<div class="wrap"', $html);
+    }
+
+    public function testPhpInfoIsForbiddenForANonAdmin(): void
+    {
+        Yii::$app->getUser()->setIdentity($this->getUserFromFixture('admin'));
+
+        $this->expectException(ForbiddenHttpException::class);
+        Yii::$app->runAction('admin/system/php-info');
     }
 
     public function testIndexIsForbiddenForANonAdmin(): void
@@ -101,7 +151,9 @@ class SystemControllerTest extends TestCase
         $this->login();
 
         $response = $this->post('admin/system/schema', ['db' => 'db']);
+
         self::assertInstanceOf(Response::class, $response);
+        self::assertNotEmpty(Yii::$app->getSession()->getFlash('success'));
     }
 
     public function testSchemaOfAComponentThatIsNotAConnectionIsNotFound(): void

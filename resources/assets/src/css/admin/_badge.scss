@@ -37,3 +37,15 @@ a.badge:hover {
   --badge-bg: var(--badge-warning-bg);
   --badge-color: var(--badge-warning-color);
 }
+
+.badge-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .375rem;
+}
+
+.badge-value {
+  font-weight: 400;
+  margin-left: .375rem;
+  opacity: .75;
+}

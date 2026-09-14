@@ -23,10 +23,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
 
     public $migrationPath = null;
 
-    public $migrationNamespaces = [
-        'app\Migrations',
-        'Hirtz\Skeleton\Migrations',
-    ];
+    public $migrationNamespaces = [];
 
     public string $dbFile = '@root/config/db.php';
     public $templateFile = '@skeleton/views/migration.php';
@@ -41,6 +38,11 @@ class MigrateController extends \yii\console\controllers\MigrateController
     #[Override]
     public function init(): void
     {
+        $this->migrationNamespaces = array_values(array_unique([
+            ...$this->migrationNamespaces,
+            ...Yii::$app->getMigrationNamespaces(),
+        ]));
+
         if (!$this->skipBackup) {
             $this->skipBackup = !Yii::$app->getDb()->backupOnMigration;
         }

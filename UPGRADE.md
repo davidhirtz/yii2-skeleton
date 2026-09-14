@@ -1,5 +1,28 @@
 # Upgrade Guide
 
+## 3.0.0 — The admin system page was rebuilt
+
+`Modules\Admin\Widgets\Grids\AssetBundleGridView`, `CacheGridView` and `SessionGridView` are **removed**. None of
+them listed records — the session grid synthesised a single row out of two counts — so they are
+`Widgets\Panels\InfoList` rows now, gathered in `Modules\Admin\Widgets\Panels\MaintenanceInfo` beside the new
+`ApplicationInfo` and `ExtensionVersions` cards. A project that subclassed one of the grids builds an `InfoList`
+instead, or adds its rows to the shipped one from a `Widget::EVENT_CONFIGURE` listener:
+
+```php
+Event::on(MaintenanceInfo::class, Widget::EVENT_CONFIGURE, static function (Event $event): void {
+    /** @var MaintenanceInfo $info */
+    $info = $event->sender;
+    $info->addRow('Queue', $queue->getLength(), Button::make()->post(['/admin/queue/clear']));
+});
+```
+
+`Base\Traits\ApplicationTrait::setMigrationNamespace()` no longer registers a console-only event handler: it
+appends to a property the application keeps under both SAPIs, which `getMigrationNamespaces()` returns. A project
+that called it from its own `Bootstrap` needs no change; one that set
+`Console\Controllers\MigrateController::$migrationNamespaces` directly should call `setMigrationNamespace()`
+instead, since the controller now takes its namespaces from the application. `app\Migrations` and
+`Hirtz\Skeleton\Migrations` are registered by the application itself.
+
 ## 3.0.0 — The sitemap moved out of the models
 
 `Web\Sitemap` is `Sitemap\Sitemap`, and its `models` property is `sitemaps`. Where a model used to be listed —
