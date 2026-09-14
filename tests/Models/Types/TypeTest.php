@@ -21,6 +21,17 @@ class TypeTest extends TestCase
         self::assertSame(3, Type::make(3)->value);
     }
 
+    public function testAnIntBackedEnumIsUnwrappedToItsValue(): void
+    {
+        self::assertSame(3, Type::make(TypeTestEnum::Third)->value);
+    }
+
+    public function testAStringBackedEnumIsInvalid(): void
+    {
+        $this->expectException(InvalidConfigException::class);
+        Type::make(TypeTestStringEnum::Third);
+    }
+
     /**
      * Not inflected: `Inflector::pluralize()` is English-only, and the plural is what the admin navigation shows.
      */
@@ -127,4 +138,14 @@ class TypeTest extends TestCase
 
         self::assertTrue($type->hasDataModel()->hasDataModelEnabled());
     }
+}
+
+enum TypeTestEnum: int
+{
+    case Third = 3;
+}
+
+enum TypeTestStringEnum: string
+{
+    case Third = 'third';
 }
