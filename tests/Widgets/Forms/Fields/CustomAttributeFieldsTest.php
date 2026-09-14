@@ -270,7 +270,7 @@ class FieldRecord extends ActiveRecord implements
     final public const int TYPE_REQUIRED_LINKS = 4;
 
     #[Override]
-    public static function getTypes(): array
+    public function getTypes(): array
     {
         return [
             Type::make(self::TYPE_DEFAULT)
@@ -357,7 +357,7 @@ class FieldRecord extends ActiveRecord implements
 class UniformTypeRecord extends FieldRecord
 {
     #[Override]
-    public static function getTypes(): array
+    public function getTypes(): array
     {
         $customAttributes = fn (): array => [TextCustomAttribute::make('subtitle')];
 

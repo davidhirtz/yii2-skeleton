@@ -83,7 +83,7 @@ class UserLogin extends ActiveRecord implements TypeAttributeInterface
     /**
      * @return list<Type>
      */
-    public static function getTypes(): array
+    public function getTypes(): array
     {
         return [
             Type::make(static::TYPE_OTHER)

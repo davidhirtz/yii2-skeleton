@@ -70,7 +70,7 @@ class AvailabilityRecord extends ActiveRecord implements TypeAttributeInterface
     final public const int TYPE_NEVER = 3;
 
     #[Override]
-    public static function getTypes(): array
+    public function getTypes(): array
     {
         return [
             Type::make(self::TYPE_DEFAULT)

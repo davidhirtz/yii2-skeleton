@@ -1,25 +1,30 @@
 ## 3.0.0 (in development)
 
-- **A model's types can be declared in the configuration**, through the new `definitions` application component
-  (`Models\Definitions\Definitions`), so a small installation no longer has to subclass a model just to name its
-  types. The key is the class the container resolves the model to, and the value is a **closure** returning the
-  list — a type's name is a `Yii::t()` result, and an array literal in a configuration file would resolve it
-  before the application has an `i18n` component and freeze every definition to one language:
+- **`getTypes()` and `getStatuses()` are instance methods, and an installation can declare them in the
+  container.** The declaration has exactly one caller — `Models\Definitions\DefinitionRegistry`, which resolves
+  it once per model class, per language, per application — so `static` bought nothing and cost the ability to
+  configure it. Everything that reads the result (`getTypeDefinitions()`, `findType()`, `instantiate()`,
+  `getStatusDefinitions()`, `findStatus()`) is unchanged and still static. A small project no longer subclasses a
+  model just to name its types:
 
   ```php
-  'components' => [
+  'container' => [
       'definitions' => [
-          'types' => [
-              Entry::class => fn (): array => [
-                  EntryType::make(Entry::TYPE_DEFAULT)->name(Yii::t('cms', 'ENTRY_TYPE_PAGE')),
+          Entry::class => [
+              'types' => fn (): array => [
+                  EntryType::make(Entry::TYPE_DEFAULT)->name(Yii::t('app', 'Page')),
               ],
           ],
       ],
   ],
   ```
 
-  A configured list **replaces** what the model declares and is validated and cached exactly like it, per class
-  and per language. A model nobody configured is unaffected.
+  The value is a **closure** because a type's name is a `Yii::t()` result and a literal in a configuration file
+  would resolve before the application has an `i18n` component; a plain list is accepted where nothing needs
+  translating. A class that declares its own `getTypes()` owns them and ignores the configuration.
+  `TypeAttributeTrait::setTypes()` and `StatusAttributeTrait::setStatuses()` are what `Yii::configure()` writes
+  through — a public `$types` property would have shadowed the `getTypes()` magic property. **Breaking:** drop
+  `static` from every `getTypes()` / `getStatuses()` override, see `UPGRADE.md`.
 
 - **`Models\User::AUTH_ROLE_MANAGER` is a new role, and a role lists permissions rather than other roles.**
   `Migrations\M260914190000ManagerRole` creates `manager` with every permission the installation has and flattens

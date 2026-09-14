@@ -188,7 +188,7 @@ class AdminModelRecord extends ActiveRecord implements
     }
 
     #[Override]
-    public static function getTypes(): array
+    public function getTypes(): array
     {
         return [
             Type::make(self::TYPE_DEFAULT)

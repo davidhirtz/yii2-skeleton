@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Traits;
 
+use Closure;
 use Hirtz\Skeleton\Models\Definitions\DefinitionRegistry;
 use Hirtz\Skeleton\Models\Statuses\Status;
 use Yii;
@@ -14,10 +15,33 @@ use Yii;
 trait StatusAttributeTrait
 {
     /**
+     * @var Closure(): list<Status>|list<Status>|null what the container configured, see {@see static::setStatuses()}
+     */
+    private Closure|array|null $configuredStatuses = null;
+
+    /**
+     * A closure, for the same reason as {@see TypeAttributeTrait::setTypes()}.
+     *
+     * @param Closure(): list<Status>|list<Status> $statuses
+     */
+    public function setStatuses(Closure|array $statuses): void
+    {
+        $this->configuredStatuses = $statuses;
+    }
+
+    /**
+     * Override this method to implement statuses — an override owns them, and the configured list is then ignored.
+     *
      * @return list<Status>
      */
-    public static function getStatuses(): array
+    public function getStatuses(): array
     {
+        if ($this->configuredStatuses !== null) {
+            return $this->configuredStatuses instanceof Closure
+                ? ($this->configuredStatuses)()
+                : $this->configuredStatuses;
+        }
+
         return [
             Status::make(static::STATUS_ENABLED)
                 ->name(Yii::t('skeleton', 'COMMON_ENABLED'))

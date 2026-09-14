@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Traits;
 
+use Closure;
 use Hirtz\Skeleton\Models\Definitions\DefinitionRegistry;
 use Hirtz\Skeleton\Models\Types\Type;
 use Yii;
@@ -16,6 +17,11 @@ use Yii;
  */
 trait TypeAttributeTrait
 {
+    /**
+     * @var Closure(): list<Type>|list<Type>|null what the container configured, see {@see static::setTypes()}
+     */
+    private Closure|array|null $configuredTypes = null;
+
     /**
      * Instantiates a class based on the given `type`. In contrast to the original implementation, this can be used for
      * creating new records directly, as it also populates the model.
@@ -32,12 +38,30 @@ trait TypeAttributeTrait
     }
 
     /**
-     * Override this method to implement types.
+     * A closure, because a type's name is a {@see Yii::t()} result and a literal in a configuration file resolves
+     * before the application has an `i18n` component — which would freeze every definition to one language. A plain
+     * list is accepted for a declaration that needs no translation.
+     *
+     * @param Closure(): list<Type>|list<Type> $types
+     */
+    public function setTypes(Closure|array $types): void
+    {
+        $this->configuredTypes = $types;
+    }
+
+    /**
+     * Override this method to implement types — an override owns them, and the configured list is then ignored.
      *
      * @return list<Type>
      */
-    public static function getTypes(): array
+    public function getTypes(): array
     {
+        if ($this->configuredTypes !== null) {
+            return $this->configuredTypes instanceof Closure
+                ? ($this->configuredTypes)()
+                : $this->configuredTypes;
+        }
+
         $class = static::getTypeClass();
 
         return [

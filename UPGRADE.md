@@ -1,5 +1,50 @@
 # Upgrade Guide
 
+## 3.0.0 — The type and status declarations are instance methods
+
+`getTypes()` and `getStatuses()` lost their `static`. Drop it from every override, or PHP fatals on the class:
+
+```php
+// before
+public static function getTypes(): array
+
+// after
+public function getTypes(): array
+```
+
+Nothing else changes: `getTypeDefinitions()`, `findType()`, `instantiate()`, `getStatusDefinitions()` and
+`findStatus()` are still static and still cached — the declaration has exactly one caller,
+`Models\Definitions\DefinitionRegistry`, which resolves it once per model class, per language, per application.
+
+What it buys is configuration. An installation that declares no model class of its own can now name a model's
+types and statuses in the container, which is where it would re-point the model anyway:
+
+```php
+'container' => [
+    'definitions' => [
+        Entry::class => [
+            'types' => fn (): array => [
+                EntryType::make(Entry::TYPE_DEFAULT)->name(Yii::t('app', 'Page')),
+            ],
+        ],
+    ],
+],
+```
+
+Four things to know:
+
+- **Use a closure.** A type's name is a `Yii::t()` result, and a literal in a configuration file resolves before
+  the application has an `i18n` component — which would freeze every definition to whichever language happened
+  to be current. A plain list is accepted for a declaration that needs no translation.
+- **A class that declares its own `getTypes()` owns them.** The override never reads what the container
+  configured, so configure *or* subclass, not both.
+- **Key it by the class the container resolves the model to.** A project that maps `Entry::class` to one of its
+  own configures that class; naming the bundle's does nothing.
+- The value reaches the model through `Yii::configure()` → `setTypes()` / `setStatuses()`, and
+  `ActiveRecord::__set()` asks `hasAttribute()` first, so a model configured this way needs its table. Every
+  real model has one; only a table-less test stub does not.
+
+
 ## 3.0.0 — The `manager` role, and flat roles
 
 `Models\User::AUTH_ROLE_MANAGER` (`manager`) holds every permission the installation has.
@@ -210,7 +255,7 @@ public static function getTypes(): array
 }
 
 // after
-public static function getTypes(): array
+public function getTypes(): array
 {
     return [
         EntryType::make(self::TYPE_DEFAULT)
@@ -236,7 +281,7 @@ $viewFile = $this->getType()?->getViewFile();
 $name = static::findStatus($this->status)?->getName() ?? '';
 ```
 
-`getTypes()` is the declaration and is read by nothing but the registry. Everything else reads
+`getTypes()` is the declaration, is an **instance** method (see below) and is read by nothing but the registry. Everything else reads
 `getTypeDefinitions()` (indexed by value, validated, cached), `findType()` or `$model->getType()`, which is
 `null` for a row whose type the code no longer declares. `getStatuses()` mirrors it with
 `getStatusDefinitions()`, `findStatus()` and `getStatus()`.

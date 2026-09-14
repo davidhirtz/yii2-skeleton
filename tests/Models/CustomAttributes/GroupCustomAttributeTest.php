@@ -336,7 +336,7 @@ class GroupRecord extends ActiveRecord implements
     final public const int TYPE_REQUIRED = 4;
 
     #[Override]
-    public static function getTypes(): array
+    public function getTypes(): array
     {
         return [
             Type::make(self::TYPE_DEFAULT)

@@ -14,7 +14,6 @@ use Hirtz\Skeleton\Db\ActiveQuery;
 use Hirtz\Skeleton\Db\DatabaseComponents;
 use Hirtz\Skeleton\Models\Collections\TrailModelCollection;
 use Hirtz\Skeleton\Models\Definitions\DefinitionRegistry;
-use Hirtz\Skeleton\Models\Definitions\Definitions;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Rbac\DbManager;
@@ -95,9 +94,6 @@ trait ApplicationTrait
                 ],
                 'cache' => [
                     'class' => FileCache::class,
-                ],
-                'definitions' => [
-                    'class' => Definitions::class,
                 ],
                 'db' => [
                     'class' => Connection::class,

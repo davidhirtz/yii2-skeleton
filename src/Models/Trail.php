@@ -247,7 +247,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
      *
      * @return list<TrailType>
      */
-    public static function getTypes(): array
+    public function getTypes(): array
     {
         return [
             TrailType::make(static::TYPE_DEFAULT)

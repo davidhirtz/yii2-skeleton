@@ -588,7 +588,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     /**
      * @return list<Status>
      */
-    public static function getStatuses(): array
+    public function getStatuses(): array
     {
         return [
             Status::make(static::STATUS_DISABLED)

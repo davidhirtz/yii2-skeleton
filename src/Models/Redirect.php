@@ -160,7 +160,7 @@ class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttribut
     /**
      * @return list<Type>
      */
-    public static function getTypes(): array
+    public function getTypes(): array
     {
         return [
             Type::make(static::TYPE_MOVED_PERMANENTLY)

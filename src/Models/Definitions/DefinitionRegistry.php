@@ -13,6 +13,10 @@ use yii\base\InvalidConfigException;
  * Resolves, validates and caches the definitions a model declares. The cache is keyed by the application language as
  * well: a definition's `name` is a {@see Yii::t()} result, so the admin language switch would otherwise freeze the
  * language of whichever request built it first.
+ *
+ * The declaration is an instance method, which is what lets the container configure it — so a model is built here,
+ * once per class and language. {@see Yii::createObject()} rather than `instance()`, whose cache is process wide and
+ * would hand back an object configured by an application that is already gone.
  */
 final class DefinitionRegistry
 {
@@ -43,7 +47,10 @@ final class DefinitionRegistry
 
         $definitions = [];
 
-        foreach (self::getDeclaredDefinitions($modelClass, $method) as $definition) {
+        /** @var iterable<mixed> $declared */
+        $declared = Yii::createObject($modelClass)->$method();
+
+        foreach ($declared as $definition) {
             if (!$definition instanceof $definitionClass) {
                 $given = get_debug_type($definition);
                 throw new InvalidConfigException("$modelClass::$method() must return a list of $definitionClass, got $given.");
@@ -71,27 +78,6 @@ final class DefinitionRegistry
 
         /** @var array<int, T> */
         return $definitions;
-    }
-
-    /**
-     * `getTypes()` is the one declaration an installation may replace, see {@see Definitions::$types}.
-     *
-     * @param class-string $modelClass
-     * @return iterable<mixed>
-     */
-    private static function getDeclaredDefinitions(string $modelClass, string $method): iterable
-    {
-        if ($method === 'getTypes' && Yii::$app->has('definitions')) {
-            /** @var Definitions $definitions */
-            $definitions = Yii::$app->get('definitions');
-            $types = $definitions->findTypes($modelClass);
-
-            if ($types !== null) {
-                return $types;
-            }
-        }
-
-        return $modelClass::$method();
     }
 
     /**

@@ -176,7 +176,7 @@ class TypeRecord extends ActiveRecord implements TypeAttributeInterface
     public static ?array $types = null;
 
     #[Override]
-    public static function getTypes(): array
+    public function getTypes(): array
     {
         return static::$types ?? [
             Type::make(self::TYPE_DEFAULT)
