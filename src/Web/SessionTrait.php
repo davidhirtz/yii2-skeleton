@@ -14,6 +14,12 @@ trait SessionTrait
      */
     public ?string $cookieDomain = null;
 
+    /**
+     * @var bool|null whether the session cookie is `Secure`, `null` derives it from the request. Pin it on a host
+     * that answers on both schemes — see {@see \Hirtz\Skeleton\Web\User::$cookieSecure}.
+     */
+    public ?bool $cookieSecure = null;
+
     public function getCookieParams(): array
     {
         if ($this->cookieDomain === null) {
@@ -24,7 +30,7 @@ trait SessionTrait
         return [
             ...parent::getCookieParams(),
             'sameSite' => 'Lax',
-            'secure' => Yii::$app->getRequest()->getIsSecureConnection(),
+            'secure' => $this->cookieSecure ?? Yii::$app->getRequest()->getIsSecureConnection(),
             'domain' => $this->cookieDomain,
         ];
     }

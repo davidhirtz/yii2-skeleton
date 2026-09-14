@@ -1,5 +1,37 @@
 # Upgrade Guide
 
+## 3.0.0 — The session and auto login cookies are renamed
+
+Everyone is logged out once when this deploys. The auto login cookie is `_auth` (was Yii's `_identity`) and the
+session cookie is `_session` (was PHP's `PHPSESSID`).
+
+The rename is what disposes of the cookies the upgrade already invalidated — `M260913180000PasswordScheme`
+rotates `auth_key` for every account whose v2 hash it drops — and a migration could not, since it cannot reach a
+browser. It also escapes a trap that made those stale cookies unclearable: `secure` is derived from the request,
+so a host answering on both http and https writes a `Secure` copy beside the plain one, and a browser then
+refuses every plain HTTP response the right to overwrite *or* delete that name (RFC 6265bis §5.4, "leave secure
+cookies alone"). The stale cookie was frozen in the browser and the user logged out on every session lapse,
+while the server sent the correct headers throughout.
+
+A fresh name has no `Secure` twin, but the trap re-arms on it as soon as the site is used over both schemes
+again. **Pin the flag on any host that answers on both** — a local `*.localhost` served by Herd or Valet, or a
+staging box without a redirect:
+
+```php
+'components' => [
+    'session' => ['cookieSecure' => false],
+    'user' => ['cookieSecure' => false],
+],
+```
+
+Both default to `null`, which keeps the previous per-request behaviour, and both accept `true` to pin a cookie
+as `Secure` on an HTTPS-only deployment. A project that named either cookie itself keeps its own name:
+`components.user.identityCookie` and `components.session.name` are unchanged as configuration.
+
+To diagnose a browser already stuck in this state, set two cookies in one response — one under the name in
+question and one under any other name. If only the other one lands, a `Secure` twin exists and nothing served
+over http can remove it; the cookie has to be cleared in the browser, or the name retired.
+
 ## 3.0.0 — The admin path is a param
 
 `Modules\Admin\Module::$alias` is gone. The path the admin is reached under is `params['adminAlias']`, read by

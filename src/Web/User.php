@@ -86,8 +86,16 @@ class User extends \yii\web\User
      */
     public string $loginType = 'unknown';
 
+    /**
+     * @var bool|null whether the auto login cookie is `Secure`, `null` derives it from the request. Pin it on a
+     * host that answers on both schemes: a browser refuses a plain HTTP response the right to overwrite or
+     * delete a cookie an HTTPS one wrote, so the two would be a cookie nothing can clear.
+     */
+    public ?bool $cookieSecure = null;
+
     public $enableAutoLogin = true;
     public $identityClass = \Hirtz\Skeleton\Models\User::class;
+    public $identityCookie = ['name' => '_auth', 'httpOnly' => true];
     public $loginUrl = null;
 
     /**
@@ -106,7 +114,7 @@ class User extends \yii\web\User
         $request = Yii::$app->getRequest();
 
         $this->ipAddress ??= $request->getUserIP();
-        $this->identityCookie['secure'] ??= $request->getIsSecureConnection();
+        $this->identityCookie['secure'] ??= $this->cookieSecure ?? $request->getIsSecureConnection();
 
         parent::init();
     }

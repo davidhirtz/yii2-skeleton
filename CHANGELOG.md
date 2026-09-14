@@ -1,5 +1,14 @@
 ## 3.0.0 (in development)
 
+- **The auto login cookie is `_auth` and the session cookie is `_session`**, replacing Yii's `_identity` and
+  PHP's `PHPSESSID`. Both are renamed rather than reused because the `secure` flag is derived from the request:
+  a host answering on http *and* https writes both a `Secure` and a plain copy, and a browser then refuses every
+  plain HTTP response the right to overwrite or delete that name (RFC 6265bis §5.4) — so a cookie left stale by
+  the v3 `auth_key` rotation could not be cleared, and the user was logged out on every session lapse. A fresh
+  name has no `Secure` twin, and the upgrade already invalidates every auto login cookie it would have kept.
+  `Web\User::$cookieSecure` and the session's (through `Web\SessionTrait`) pin the flag instead of deriving it,
+  which is what stops the trap re-arming; both default to `null`, the previous behaviour. Everyone is logged out
+  once on deploy. See UPGRADE.md
 - `Test\TestCase::reloadApplication()` builds a second application on the connection of the first, so the test
   keeps its open transaction and the rows it wrote. It is how a test pins what a request must not inherit from the
   one before it — the static caches a bundle's `Bootstrap` clears

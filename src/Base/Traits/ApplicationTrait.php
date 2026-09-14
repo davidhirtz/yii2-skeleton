@@ -155,6 +155,7 @@ trait ApplicationTrait
                 ],
                 'session' => [
                     'class' => DbSession::class,
+                    'name' => '_session',
                 ],
                 'sitemap' => [
                     'class' => Sitemap::class,

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Web;
 
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Web\User as WebUser;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Yii;
@@ -14,7 +15,26 @@ class UserIdentityCookieTest extends TestCase
 {
     use UserFixtureTrait;
 
+    private const string NAME = '_auth';
+
     private string $identityCookieValue;
+
+    public function testTheCookieNamesAreNotThePlatformDefaults(): void
+    {
+        // Both were renamed in v3 to escape a `Secure` twin a dual-scheme host leaves behind, which no plain
+        // HTTP response may overwrite or delete — so reverting either name re-poisons the browsers it reaches
+        self::assertSame('_auth', Yii::$app->getUser()->identityCookie['name']);
+        self::assertSame('_session', Yii::$app->getSession()->getName());
+    }
+
+    public function testTheSecureFlagCanBePinned(): void
+    {
+        $webuser = Yii::createObject(['class' => WebUser::class, 'cookieSecure' => false]);
+        self::assertFalse($webuser->identityCookie['secure']);
+
+        $webuser = Yii::createObject(['class' => WebUser::class, 'cookieSecure' => true]);
+        self::assertTrue($webuser->identityCookie['secure']);
+    }
 
     public function testValidCookieIsRenewed(): void
     {
@@ -90,9 +110,9 @@ class UserIdentityCookieTest extends TestCase
         $value = $this->identityCookieValue;
         $request = Yii::$app->getRequest();
 
-        $_COOKIE['_identity'] = $request->enableCookieValidation
+        $_COOKIE[self::NAME] = $request->enableCookieValidation
             ? Yii::$app->getSecurity()->hashData(
-                serialize(['_identity', $value]),
+                serialize([self::NAME, $value]),
                 $request->cookieValidationKey
             )
             : $value;
@@ -100,7 +120,7 @@ class UserIdentityCookieTest extends TestCase
 
     private function getResponseIdentityCookie(): ?Cookie
     {
-        return Yii::$app->getResponse()->getCookies()->get('_identity');
+        return Yii::$app->getResponse()->getCookies()->get(self::NAME);
     }
 
     private function assertIdentityCookieRemoved(): void
