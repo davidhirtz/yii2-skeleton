@@ -8,40 +8,29 @@ use Closure;
 use Hirtz\Skeleton\Helpers\VersionHelper;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Span;
-use Hirtz\Skeleton\Widgets\Panels\Card;
-use Hirtz\Skeleton\Widgets\Traits\CollapsedTrait;
-use Hirtz\Skeleton\Widgets\Traits\ContainerTrait;
-use Hirtz\Skeleton\Widgets\Traits\TitleTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
-use Yii;
 
 /**
  * The installed extensions as a wrapped row of badges, so a maintainer can read off the version a client's
- * installation actually runs without the list taking a screen of its own.
+ * installation runs without the list taking a card of its own. The version is the badge's tooltip.
  */
 class ExtensionVersions extends Widget
 {
-    use ContainerTrait;
-    use CollapsedTrait;
-    use TitleTrait;
-
     /**
-     * @var list<string> the package vendors to leave out, since the framework's own version is reported separately.
+     * @var list<string> the packages to leave out, matched against the full name with `fnmatch()`. The framework's
+     * own extensions carry its version and `yii2-datetime-behavior` is a dependency rather than a bundle.
      */
-    public array $ignoredVendors = ['yiisoft'];
+    public array $excluded = [
+        'yiisoft/*',
+        'davidhirtz/yii2-datetime-behavior',
+    ];
 
     /**
      * @var array<string, string>|null
      */
     protected ?array $extensions = null;
-
-    public function __construct(array $config = [])
-    {
-        $this->title ??= Yii::t('skeleton', 'SYSTEM_EXTENSIONS');
-        parent::__construct($config);
-    }
 
     #[Override]
     protected function configure(): void
@@ -79,9 +68,13 @@ class ExtensionVersions extends Widget
         $extensions = [];
 
         foreach (VersionHelper::getExtensions() as $name => $version) {
-            if (!in_array(strtok($name, '/'), $this->ignoredVendors, true)) {
-                $extensions[$name] = $version;
+            foreach ($this->excluded as $pattern) {
+                if (fnmatch($pattern, $name)) {
+                    continue 2;
+                }
             }
+
+            $extensions[$name] = $version;
         }
 
         return $extensions;
@@ -99,16 +92,10 @@ class ExtensionVersions extends Widget
         foreach ($this->extensions as $name => $version) {
             $list->addContent(Span::make()
                 ->class('badge badge-info')
-                ->attribute('title', $name)
-                ->addText(basename($name))
-                ->addContent(Span::make()
-                    ->class('badge-value')
-                    ->text($version)));
+                ->addAttributes(['data-tooltip' => '', 'title' => $version])
+                ->text(basename($name)));
         }
 
-        return Card::make()
-            ->title($this->title)
-            ->collapsed($this->collapsed)
-            ->content($list);
+        return $list;
     }
 }

@@ -7,7 +7,9 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Panels;
 use Hirtz\Skeleton\Db\Dsn;
 use Hirtz\Skeleton\Db\MigrationHistory;
 use Hirtz\Skeleton\Helpers\VersionHelper;
+use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Custom\RelativeTime;
+use Hirtz\Skeleton\Modules\Admin\Controllers\SystemController;
 use Hirtz\Skeleton\Widgets\Panels\InfoList;
 use Override;
 use PDO;
@@ -18,12 +20,6 @@ use yii\db\Connection;
 
 class ApplicationInfo extends InfoList
 {
-    public function __construct(array $config = [])
-    {
-        $this->title ??= Yii::t('skeleton', 'SYSTEM_APPLICATION');
-        parent::__construct($config);
-    }
-
     #[Override]
     protected function configure(): void
     {
@@ -34,6 +30,7 @@ class ApplicationInfo extends InfoList
             $this->addDatabaseRow();
             $this->addMigrationRow();
             $this->addPhpRow();
+            $this->addExtensionsRow();
         }
 
         parent::configure();
@@ -109,18 +106,38 @@ class ApplicationInfo extends InfoList
         }
     }
 
+    /**
+     * @see SystemController::actionPhpInfo()
+     */
     protected function addPhpRow(): void
     {
         $this->addRow(
             Yii::t('skeleton', 'SYSTEM_PHP'),
-            $this->getValue(PHP_VERSION, implode(' · ', [
-                'memory_limit ' . ini_get('memory_limit'),
-                'upload_max_filesize ' . ini_get('upload_max_filesize'),
-                'post_max_size ' . ini_get('post_max_size'),
-            ])),
+            $this->getValue(
+                A::make()
+                    ->href(['/admin/system/php-info'])
+                    ->target('_blank')
+                    ->attribute('hx-boost', 'false')
+                    ->addAttributes(['data-tooltip' => '', 'title' => Yii::t('skeleton', 'SYSTEM_PHP_INFO')])
+                    ->text(PHP_VERSION),
+                implode(' · ', [
+                    'memory_limit ' . ini_get('memory_limit'),
+                    'upload_max_filesize ' . ini_get('upload_max_filesize'),
+                    'post_max_size ' . ini_get('post_max_size'),
+                ]),
+            ),
         );
 
         $this->addRow(Yii::t('skeleton', 'SYSTEM_YII'), Yii::getVersion());
+    }
+
+    protected function addExtensionsRow(): void
+    {
+        $extensions = ExtensionVersions::make();
+
+        if ($extensions->render() !== '') {
+            $this->addRow(Yii::t('skeleton', 'SYSTEM_EXTENSIONS'), $extensions);
+        }
     }
 
     protected function getDatabaseVersion(Connection $db): ?string

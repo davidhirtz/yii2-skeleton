@@ -20,6 +20,7 @@ class SystemNavItem extends NavItem
         $this->order ??= 999;
         $this->url ??= ['/admin/system/index'];
         $this->roles ??= [User::ROLE_AUTHENTICATED];
+        $this->routes = ['admin/system'];
 
         parent::__construct($config);
     }

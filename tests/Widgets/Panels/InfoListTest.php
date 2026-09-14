@@ -15,35 +15,38 @@ class InfoListTest extends TestCase
         self::assertSame('', InfoList::make()->title('Empty')->render());
     }
 
-    public function testARowIsRenderedAsALabelAndAValueCell(): void
+    public function testARowIsRenderedWithTheFormRowClasses(): void
     {
         $html = InfoList::make()
             ->title('Info')
             ->addRow('PHP', '8.5.0')
             ->render();
 
-        self::assertStringContainsString('<th scope="row">PHP</th>', $html);
-        self::assertStringContainsString('<td>8.5.0</td>', $html);
+        self::assertStringContainsString('class="form-rows"', $html);
+        self::assertStringContainsString('class="form-group form-row"', $html);
+        self::assertStringContainsString('<div class="form-label">PHP</div>', $html);
+        self::assertStringContainsString('<div class="form-content">8.5.0</div>', $html);
         self::assertStringContainsString('Info', $html);
     }
 
-    public function testTheActionColumnIsOmittedWhileNoRowHasAnAction(): void
+    public function testARowWithoutAnActionIsNotWrapped(): void
     {
         $html = InfoList::make()
             ->addRow('PHP', '8.5.0')
             ->render();
 
-        self::assertStringNotContainsString('table-action', $html);
+        self::assertStringNotContainsString('form-action', $html);
     }
 
-    public function testASingleActionAddsTheColumnToEveryRow(): void
+    public function testAnActionIsPlacedBesideTheValue(): void
     {
         $html = InfoList::make()
             ->addRow('Cache', 'cache', '<button></button>')
             ->addRow('PHP', '8.5.0')
             ->render();
 
-        self::assertSame(2, substr_count($html, 'class="table-action"'));
+        self::assertSame(1, substr_count($html, 'class="form-action"'));
+        self::assertStringContainsString('<div class="form-action"><div>cache</div><button></button></div>', $html);
     }
 
     public function testTheValueHintIsRenderedBelowTheValue(): void
@@ -53,7 +56,7 @@ class InfoListTest extends TestCase
             ->render();
 
         self::assertStringContainsString('<div>cache</div>', $html);
-        self::assertStringContainsString('<div class="small">yii\caching\ArrayCache</div>', $html);
+        self::assertStringContainsString('<div class="form-hint">yii\caching\ArrayCache</div>', $html);
     }
 
     public function testAClosureCanAddRowsAfterTheDefaults(): void

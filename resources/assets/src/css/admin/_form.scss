@@ -142,3 +142,11 @@
   --input-border-color: var(--form-invalid-border);
   --input-color: var(--form-invalid-color);
 }
+
+// an informational row whose value carries its own action button
+.form-action {
+  align-items: start;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}

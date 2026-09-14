@@ -1,13 +1,21 @@
 ## 3.0.0 (in development)
 
-- **The admin system page reports the installation, not just its caches.** `Modules\Admin\Widgets\Panels\ApplicationInfo`
-  names the application, its Composer version and commit reference, when it was last deployed, the environment, the
-  database server and the last applied migration; `Panels\ExtensionVersions` lists the installed Yii extensions as
-  badges, so a maintainer without access to the code can read off the version a site runs. `Panels\MaintenanceInfo`
-  replaces `Grids\AssetBundleGridView`, `Grids\CacheGridView` and `Grids\SessionGridView`, which are **removed** —
-  none of them listed records, and the published asset directories are named by a `crc32` hash that cannot be mapped
-  back to an `AssetBundle`. All three are `Widgets\Panels\InfoList`, a card of label / value rows with an optional
-  action button per row, extensible through `EVENT_CONFIGURE` and its `rows()` closure.
+- **The admin system page reports the installation, not just its caches.** It is two tabs now, behind
+  `Modules\Admin\Widgets\Navs\SystemSubmenu`: *Application* (`actionIndex()`) names the application, its Composer
+  version and commit reference, when it was last deployed, the environment, the database server, the last applied
+  migration, PHP — linking its version to `php-info` — and the installed extensions as tooltip badges;
+  *Maintenance* (`actionMaintenance()`) carries the published assets, every cache component, every connection's
+  schema cache and the sessions, each row with its own button. `Grids\AssetBundleGridView`, `Grids\CacheGridView`
+  and `Grids\SessionGridView` are **removed** — none of them listed records, and the published asset directories
+  are named by a `crc32` hash that cannot be mapped back to an `AssetBundle`. Both cards are
+  `Widgets\Panels\InfoList`, which renders label / value rows with an optional action through the form row classes
+  (`form-rows`, `form-group form-row`, `form-label`, `form-content`) rather than a table, so a row stacks at phone
+  width like every other form row. It is extensible through `EVENT_CONFIGURE` and its `rows()` closure.
+
+- **`Panels\ExtensionVersions` lists the installed extensions as badges**, the version in each badge's tooltip so
+  the row stays one or two lines. Its `excluded` property is the block list, matched against the full package name
+  with `fnmatch()`; it defaults to `yiisoft/*` — the framework's own version is a row of its own — and
+  `davidhirtz/yii2-datetime-behavior`, which is a dependency rather than a bundle.
 
 - **`Modules\Admin\Widgets\MigrationAlert` warns about migrations the database has not applied**, on the dashboard
   and the system page, the way `EnvironmentAlert` warns about a local or staging host. It reads `Db\MigrationHistory`,
@@ -17,8 +25,8 @@
   register a console-only `EVENT_BEFORE_ACTION` handler, and the controller's two default namespaces moved to the
   application beside it.
 
-- **`SystemController::actionPhpInfo()` and `actionSchema()` are reachable.** Neither was linked anywhere: php-info is
-  a button in the operations panel and the schema cache refresh is the action of every connection's row. `phpinfo()`
+- **`SystemController::actionPhpInfo()` and `actionSchema()` are reachable.** Neither was linked anywhere: php-info
+  is the PHP row's own link and the schema cache refresh is the action of every connection's row. `phpinfo()`
   prints a complete document under a web SAPI, so the action renders it without the admin layout — it produced a
   document nested inside the admin page before, which no test caught because `phpinfo()` is plain text under the CLI
   SAPI. `actionSchema()` flashes its success like the other three actions.

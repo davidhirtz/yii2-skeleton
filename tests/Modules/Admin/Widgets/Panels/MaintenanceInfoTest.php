@@ -41,7 +41,8 @@ class MaintenanceInfoTest extends TestCase
 
         self::assertStringContainsString('system/publish', $html);
         self::assertStringContainsString('system/session-gc', $html);
-        self::assertStringContainsString('Sessions', $html);
+        self::assertStringContainsString('<div class="form-label">Sessions</div>', $html);
+        self::assertSame(4, substr_count($html, 'class="form-action"'));
     }
 
     public function testTheCacheIsNotListedAsAConnection(): void

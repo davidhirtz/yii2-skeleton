@@ -59,6 +59,28 @@ class ApplicationInfoTest extends TestCase
             ->rows(fn (ApplicationInfo $info) => $info->addRow('Queue', 'redis'))
             ->render();
 
-        self::assertStringContainsString('<th scope="row">Queue</th>', $html);
+        self::assertStringContainsString('<div class="form-label">Queue</div>', $html);
+    }
+
+    public function testThePhpRowLinksToPhpInfoOutsideHtmx(): void
+    {
+        $html = ApplicationInfo::make()->render();
+
+        self::assertStringContainsString('href="/admin/system/php-info"', $html);
+        self::assertStringContainsString('target="_blank"', $html);
+        self::assertStringContainsString('hx-boost="false"', $html);
+    }
+
+    public function testTheExtensionsAreListedUnderTheYiiVersion(): void
+    {
+        $html = ApplicationInfo::make()->render();
+
+        $yii = strpos($html, Yii::getVersion());
+        $extensions = strpos($html, 'badge-list');
+
+        self::assertIsInt($yii);
+        self::assertIsInt($extensions);
+        self::assertGreaterThan($yii, $extensions);
+        self::assertStringContainsString('>yii2-skeleton</span>', $html);
     }
 }

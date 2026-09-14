@@ -28,7 +28,7 @@ class SystemController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['flush', 'index', 'php-info', 'publish', 'schema', 'session-gc'],
+                        'actions' => ['flush', 'index', 'maintenance', 'php-info', 'publish', 'schema', 'session-gc'],
                         'roles' => [User::AUTH_ROLE_ADMIN],
                     ],
                 ],
@@ -50,6 +50,14 @@ class SystemController extends Controller
         return $this->render('index');
     }
 
+    /**
+     * @noinspection PhpUnused
+     */
+    public function actionMaintenance(): Response|string
+    {
+        return $this->render('maintenance');
+    }
+
     public function actionPhpInfo(): string
     {
         ob_start();
@@ -69,7 +77,7 @@ class SystemController extends Controller
         }
 
         $this->success(Yii::t('skeleton', 'SYSTEM_SUCCESS_REFRESHED'));
-        return $this->redirect(['index']);
+        return $this->redirect(['maintenance']);
     }
 
     public function actionFlush(string $cache): Response|string
@@ -81,7 +89,7 @@ class SystemController extends Controller
         Yii::$app->get($cache)->flush();
 
         $this->success(Yii::t('skeleton', 'SYSTEM_SUCCESS_FLUSHED'));
-        return $this->redirect(['index']);
+        return $this->redirect(['maintenance']);
     }
 
     public function actionSchema(string $db): Response|string
@@ -95,13 +103,13 @@ class SystemController extends Controller
         $connection->getSchema()->refresh();
 
         $this->success(Yii::t('skeleton', 'SYSTEM_SUCCESS_REFRESHED_SCHEMA'));
-        return $this->redirect(['index']);
+        return $this->redirect(['maintenance']);
     }
 
     public function actionSessionGc(): Response|string
     {
         Yii::$app->getSession()->gcSession(0);
         $this->success(Yii::t('skeleton', 'SYSTEM_SUCCESS_DELETED'));
-        return $this->redirect(['index']);
+        return $this->redirect(['maintenance']);
     }
 }

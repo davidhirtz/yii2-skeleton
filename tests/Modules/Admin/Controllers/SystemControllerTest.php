@@ -20,7 +20,7 @@ class SystemControllerTest extends TestCase
 {
     use UserFixtureTrait;
 
-    public function testIndexReportsTheInstallationAndItsMaintenanceActions(): void
+    public function testIndexReportsTheInstallation(): void
     {
         $this->login();
 
@@ -30,9 +30,22 @@ class SystemControllerTest extends TestCase
 
         // the installation as a maintainer reads it off a client's site
         self::assertStringContainsString(Yii::$app->name, $html);
-        self::assertStringContainsString('yii2-skeleton', $html);
+        self::assertStringContainsString('>yii2-skeleton</span>', $html);
         self::assertStringContainsString(PHP_VERSION, $html);
         self::assertStringContainsString(Yii::getVersion(), $html);
+        self::assertStringContainsString('system/php-info', $html);
+
+        // the maintenance actions live on their own tab
+        self::assertStringNotContainsString('system/flush', $html);
+    }
+
+    public function testMaintenanceCarriesEveryAction(): void
+    {
+        $this->login();
+
+        $html = Yii::$app->runAction('admin/system/maintenance');
+
+        self::assertIsString($html);
 
         // one row per configured cache component, each with its flush button
         self::assertStringContainsString(ArrayCache::class, $html);
@@ -40,7 +53,27 @@ class SystemControllerTest extends TestCase
         self::assertStringContainsString('system/publish', $html);
         self::assertStringContainsString('system/schema', $html);
         self::assertStringContainsString('system/session-gc', $html);
-        self::assertStringContainsString('system/php-info', $html);
+    }
+
+    public function testBothTabsAreLinkedFromEachOther(): void
+    {
+        $this->login();
+
+        foreach (['index', 'maintenance'] as $action) {
+            $html = (string)Yii::$app->runAction("admin/system/$action");
+
+            self::assertStringContainsString('class="tabs nav"', $html);
+            self::assertStringContainsString('href="/admin/system/index"', $html);
+            self::assertStringContainsString('href="/admin/system/maintenance"', $html);
+        }
+    }
+
+    public function testMaintenanceIsForbiddenForANonAdmin(): void
+    {
+        Yii::$app->getUser()->setIdentity($this->getUserFromFixture('admin'));
+
+        $this->expectException(ForbiddenHttpException::class);
+        Yii::$app->runAction('admin/system/maintenance');
     }
 
     public function testIndexWarnsAboutAPendingMigration(): void

@@ -18,12 +18,6 @@ use Yii;
 
 class MaintenanceInfo extends InfoList
 {
-    public function __construct(array $config = [])
-    {
-        $this->title ??= Yii::t('skeleton', 'SYSTEM_MAINTENANCE');
-        parent::__construct($config);
-    }
-
     #[Override]
     protected function configure(): void
     {

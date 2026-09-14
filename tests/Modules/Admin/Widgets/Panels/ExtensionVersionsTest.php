@@ -10,38 +10,49 @@ use Hirtz\Skeleton\Test\TestCase;
 
 class ExtensionVersionsTest extends TestCase
 {
-    public function testTheFrameworksOwnExtensionsAreLeftOut(): void
+    public function testTheDefaultBlockListLeavesOutTheFrameworkAndTheDateTimeBehavior(): void
     {
-        $isFramework = fn (string $name) => str_starts_with($name, 'yiisoft/');
+        $installed = array_keys(VersionHelper::getExtensions());
 
-        self::assertNotSame([], array_filter(array_keys(VersionHelper::getExtensions()), $isFramework));
+        self::assertContains('yiisoft/yii2-debug', $installed);
+        self::assertContains('davidhirtz/yii2-datetime-behavior', $installed);
 
         $widget = ExtensionVersions::make();
         $widget->render();
 
-        self::assertSame([], array_filter(array_keys($widget->getExtensions()), $isFramework));
+        $listed = array_keys($widget->getExtensions());
+
+        self::assertNotContains('yiisoft/yii2-debug', $listed);
+        self::assertNotContains('davidhirtz/yii2-datetime-behavior', $listed);
+        self::assertContains('davidhirtz/yii2-skeleton', $listed);
     }
 
-    public function testEveryExtensionIsRenderedAsABadgeWithoutItsVendor(): void
+    public function testAProjectCanBlockAnExtensionOfItsOwn(): void
+    {
+        $widget = ExtensionVersions::make();
+        $widget->excluded = ['*/yii2-skeleton'];
+        $widget->render();
+
+        self::assertArrayNotHasKey('davidhirtz/yii2-skeleton', $widget->getExtensions());
+        self::assertArrayHasKey('yiisoft/yii2-debug', $widget->getExtensions());
+    }
+
+    public function testTheVersionIsTheBadgesTooltipRatherThanItsText(): void
     {
         $html = ExtensionVersions::make()
-            ->extensions(['davidhirtz/yii2-skeleton' => '3.0.0', 'acme/yii2-foo' => 'dev-main'])
+            ->extensions(['davidhirtz/yii2-skeleton' => '3.0.0'])
             ->render();
 
         self::assertStringContainsString('class="badge-list"', $html);
-        self::assertStringContainsString('title="davidhirtz/yii2-skeleton"', $html);
-        self::assertStringContainsString('yii2-skeleton<span class="badge-value">3.0.0</span>', $html);
-        self::assertStringContainsString('yii2-foo<span class="badge-value">dev-main</span>', $html);
+        self::assertStringContainsString('class="badge badge-info"', $html);
+        self::assertStringContainsString('data-tooltip=""', $html);
+        self::assertStringContainsString('title="3.0.0"', $html);
+        self::assertStringContainsString('>yii2-skeleton</span>', $html);
         self::assertStringNotContainsString('davidhirtz/yii2-skeleton<', $html);
     }
 
-    public function testTheCardIsOmittedWithoutExtensions(): void
+    public function testNothingIsRenderedWithoutExtensions(): void
     {
         self::assertSame('', ExtensionVersions::make()->extensions([])->render());
-    }
-
-    public function testTheSkeletonIsReportedForThisInstallation(): void
-    {
-        self::assertStringContainsString('yii2-skeleton', ExtensionVersions::make()->render());
     }
 }
