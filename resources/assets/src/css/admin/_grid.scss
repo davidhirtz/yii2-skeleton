@@ -47,6 +47,10 @@
   }
 }
 
+// `img { max-width: 100% }` leaves an image no min-content width of its own, so an auto layout table under
+// space pressure collapses this column to its padding rather than overflowing `.table-wrap`. The minimum is
+// what makes the table scroll sideways instead.
 .grid-col-thumbnail {
   width: 12rem;
+  min-width: 12rem;
 }
