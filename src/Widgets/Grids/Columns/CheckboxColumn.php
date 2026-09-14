@@ -29,9 +29,6 @@ class CheckboxColumn extends Column
         return $this;
     }
 
-    /**
-     * An input without a name is never submitted, so the name is what makes the selection reach the action at all.
-     */
     public function getName(): string
     {
         return $this->multiple ? "{$this->param}[]" : $this->param;

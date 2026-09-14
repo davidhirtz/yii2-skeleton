@@ -6,10 +6,7 @@
   display: none;
 }
 
-// A selected `<option>` matches `:checked` too, so the marker of the grid's own checkboxes is what this asks
-// for — a plain `:has(:checked)` is true for every page carrying a select. `.hidden` also has to be overridden
-// by a `display` of its own, so the utility comes in the flavour the element needs: a grid footer laid out with
-// `display: flex` silently loses its row and its gap to `block`.
+// A selected `<option>` matches `:checked`, so a plain `:has(:checked)` is true for every page carrying a select.
 :has([data-check]:checked) {
   .block-has-selection {
     display: block;
