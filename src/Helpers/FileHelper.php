@@ -137,6 +137,22 @@ EOL
         return $path;
     }
 
+    /**
+     * Whether a file of this basename already exists in any of the given extensions.
+     *
+     * @param list<string> $extensions
+     */
+    public static function isFilenameTaken(string $basename, array $extensions): bool
+    {
+        foreach ($extensions as $extension) {
+            if (file_exists("$basename.$extension")) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static function getExtensionFromUrl(string $url): string
     {
         return strtolower(pathinfo((string)parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));

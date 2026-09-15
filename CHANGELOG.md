@@ -1,5 +1,9 @@
 ## 3.0.0 (in development)
 
+- **`Helpers\FileHelper::isFilenameTaken(string $basename, array $extensions)`** answers whether a file of that
+  basename is already on disk in any of the given extensions. `Media\Models\File` uses it to keep an upload from
+  overwriting a file no record knows about.
+
 - **`Html\Traits\TagInputTrait` writes a boolean attribute as `true` rather than as an empty string**, so
   `disabled()`, `required()`, `readonly()` and `autofocus()` render the bare attribute and, more importantly, read
   back as `true`. `Widgets\Forms\Fields\Field::isDisabled()` and `isRequired()` answered `false` for a field

@@ -45,6 +45,22 @@ class FileHelperTest extends TestCase
         self::assertFileDoesNotExist($folder);
     }
 
+    public function testAFilenameIsTakenByAnyOfItsExtensions(): void
+    {
+        $folder = Yii::getAlias('@runtime/files');
+        FileHelper::createDirectory($folder);
+
+        $basename = "$folder/photo";
+        file_put_contents("$basename.png", '');
+
+        self::assertTrue(FileHelper::isFilenameTaken($basename, ['jpg', 'png']));
+        self::assertFalse(FileHelper::isFilenameTaken($basename, ['jpg']));
+        self::assertFalse(FileHelper::isFilenameTaken($basename, []));
+        self::assertFalse(FileHelper::isFilenameTaken("$folder/other", ['png']));
+
+        FileHelper::removeDirectory($folder);
+    }
+
     public function testUnlinkInvalidFile(): void
     {
         self::assertFalse(FileHelper::unlink('@runtime/invalid-file'));
