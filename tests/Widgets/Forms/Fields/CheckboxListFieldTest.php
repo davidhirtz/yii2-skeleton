@@ -44,14 +44,14 @@ class CheckboxListFieldTest extends TestCase
         self::assertStringContainsString('<label class="label">Tags</label>', $content);
     }
 
-    public function testAnItemCarriesItsOwnRowAttributes(): void
+    public function testAnItemCarriesItsOwnLabelAttributes(): void
     {
         $content = CheckboxListField::make()
             ->items([1 => 'First', 2 => 'Second'])
             ->itemAttributes([2 => ['class' => 'text-invalid']])
             ->render();
 
-        self::assertStringContainsString('<div class="text-invalid form-checkbox">', $content);
+        self::assertStringContainsString('<label class="text-invalid label" for="-2">Second</label>', $content);
         self::assertSame(1, substr_count($content, 'text-invalid'));
     }
 

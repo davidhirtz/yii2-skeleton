@@ -11,7 +11,8 @@
 - Added `Widgets\Forms\Fields\CheckboxListField`, a checkbox per item for an attribute holding a list of
   values. The hidden input it renders in front of them is what makes "nothing checked" reach the model at all,
   and its group label carries no `for`, since it labels no single input. `itemAttributes()` sets attributes on
-  an item's row rather than on its box, which is where a tooltip or a state class has to sit
+  an item's **label**, which is where a tooltip or a state class has to sit: a tooltip is placed against its
+  element's box, and the label's is the text the reader is looking at
 
 - **`Widgets\Flashes` no longer renders `hx-swap-oob` on its container.** htmx snapshots the page into its
   history cache verbatim, so the attribute was found again in the content a back button restores, applied to the

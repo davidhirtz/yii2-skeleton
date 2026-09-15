@@ -27,8 +27,9 @@ class CheckboxListField extends Field
     protected array $items = [];
 
     /**
-     * @var array<int|string, array<string, mixed>> attributes for an item's row, which is what a tooltip or a
-     * state class has to sit on: the input itself is a box, and only the row carries the label beside it
+     * @var array<int|string, array<string, mixed>> attributes for an item's label, which is what a tooltip or a
+     * state class has to sit on: a tooltip is placed against its element's box, and the label is the only part
+     * of a checkbox row whose box is the text the reader is looking at
      */
     protected array $itemAttributes = [];
 
@@ -92,7 +93,6 @@ class CheckboxListField extends Field
             $id = Html::getInputIdByName("{$name}[$itemValue]");
 
             $content .= Div::make()
-                ->attributes($this->itemAttributes[$itemValue] ?? [])
                 ->addClass('form-checkbox')
                 ->content(
                     Div::make()
@@ -107,6 +107,7 @@ class CheckboxListField extends Field
                             ->addClass('input')
                             ->checked(in_array((string)$itemValue, $checked, true))),
                     Label::make()
+                        ->attributes($this->itemAttributes[$itemValue] ?? [])
                         ->addClass('label')
                         ->for($id)
                         ->text($label)

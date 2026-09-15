@@ -70,6 +70,12 @@
 .form-checkbox {
   display: flex;
   gap: 1rem;
+
+  // The label anchors the item's tooltip, so its box has to be the text and nothing else — `inline-flex`
+  // drops the descender leading an `inline-block` keeps below it.
+  .label {
+    display: inline-flex;
+  }
 }
 
 .form-error {
@@ -129,8 +135,10 @@
     font-weight: 700;
   }
 
+  // The padding lines a column label up with the input beside it, so a label that labels a checkbox is
+  // excluded — `.form-checkbox-row` for a single one, `.form-checkbox` for an item of a list.
   @include media-breakpoint-up(sm) {
-    .form-row:not(.form-checkbox-row):has(.input) & {
+    .form-row:not(.form-checkbox-row):has(.input) &:not(.form-checkbox *) {
       padding: 0.5rem 0;
     }
   }
