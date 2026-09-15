@@ -4,3 +4,4 @@
 runtime/
 /vendor
 Thumbs.db
+/composer.lock

@@ -33,11 +33,13 @@
     "phpstan/phpstan": "^2.1",
     "phpunit/phpunit": "^12.5",
     "symfony/browser-kit": "^7.4",
-    "symfony/css-selector": "^7.4"
+    "symfony/css-selector": "^7.4",
+    "yiisoft/yii2-debug": "^2.1"
   },
   "provide": {
     "bower-asset/bootstrap": "*",
     "bower-asset/inputmask": "*",
+    "bower-asset/jquery": "*",
     "bower-asset/punycode": "*",
     "bower-asset/yii2-pjax": "*"
   },

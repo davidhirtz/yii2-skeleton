@@ -1,75 +1,15 @@
 name: CI
 
+# On demand only: the release script dispatches this before it tags, and nothing runs on a push. The work is
+# in bundle-ci.yml, which every bundle shares; this one calls it by path because the skeleton is where it lives.
+
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  yii:
-    name: CI (PHP ${{ matrix.php-versions }})
-    runs-on: ubuntu-latest
-
-    # Docs: https://docs.github.com/en/actions/using-containerized-services
-    services:
-      mysql:
-        image: mysql:latest
-        env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: true
-          MYSQL_DATABASE: yii2_skeleton_test
-        ports:
-          - 3306/tcp
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-    strategy:
-      fail-fast: false
-      matrix:
-        php-versions: [ '8.3', '8.4' ]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-versions }}
-          extensions: mbstring, intl, gd, imagick, zip, dom, mysql
-          coverage: xdebug
-
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-      - name: Cache composer dependencies
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
-
-      - name: Install composer dependencies
-        run: composer install --no-progress --prefer-dist --optimize-autoloader
-
-      - name: Prepare the application
-        run: php tests/yii migrate --interactive=0 --skip-backup
-        env:
-          MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.mysql.ports['3306'] }};dbname=yii2_skeleton_test
-
-      - name: Run tests
-        run: composer test
-        env:
-          MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.mysql.ports['3306'] }};dbname=yii2_skeleton_test
-
-      - name: Check coding standards
-        run: composer check-cs
-
-      - name: Run static code analysis
-        run: composer phpstan
-
-      - name: Save logs on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: logs-php-${{ matrix.php-versions }}
-          path: ./runtime/logs
-          if-no-files-found: ignore
+  ci:
+    uses: ./.github/workflows/bundle-ci.yml

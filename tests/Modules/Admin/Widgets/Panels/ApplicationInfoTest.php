@@ -23,7 +23,7 @@ class ApplicationInfoTest extends TestCase
         $html = ApplicationInfo::make()->render();
 
         self::assertStringContainsString(Yii::$app->name, $html);
-        self::assertStringContainsString('davidhirtz/yii2-monorepo', $html);
+        self::assertStringContainsString(VersionHelper::getApplicationName(), $html);
         self::assertStringContainsString(PHP_VERSION, $html);
         self::assertStringContainsString(Yii::getVersion(), $html);
     }
@@ -111,7 +111,7 @@ class ApplicationInfoTest extends TestCase
         );
 
         // the repository, the schema, `phpinfo()` and the versions a maintainer reads do not
-        self::assertStringNotContainsString('davidhirtz/yii2-monorepo', $html);
+        self::assertStringNotContainsString(VersionHelper::getApplicationName(), $html);
         self::assertStringNotContainsString(Dsn::fromString($db->dsn)->database, $html);
         self::assertStringNotContainsString('system/php-info', $html);
         self::assertStringNotContainsString('<div class="form-label">Yii</div>', $html);
@@ -128,7 +128,7 @@ class ApplicationInfoTest extends TestCase
         $html = ApplicationInfo::make()->render();
 
         self::assertFalse(Yii::$app->getUser()->can(User::AUTH_ROLE_ADMIN));
-        self::assertStringContainsString('davidhirtz/yii2-monorepo', $html);
+        self::assertStringContainsString(VersionHelper::getApplicationName(), $html);
         self::assertStringContainsString('system/php-info', $html);
         self::assertStringContainsString(Yii::getVersion(), $html);
     }

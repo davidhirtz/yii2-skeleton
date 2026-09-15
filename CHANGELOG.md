@@ -1,5 +1,10 @@
 ## 3.0.0 (in development)
 
+- **`bower-asset/jquery` is provided by the skeleton.** jQuery is never served — `yii\web\JqueryAsset` is replaced by
+  an `EmptyAssetBundle` — so a project no longer needs the asset-packagist repository for it, and the bundle installs
+  on its own. Its `composer.lock` is no longer committed; a library is tested against the newest dependencies its
+  constraints allow.
+
 - **The i18n migration helpers take strings, not a model.**
   `Db\Traits\MigrationTrait::moveI18nColumnsToTranslations()` and `restoreI18nColumnsFromTranslations()` are
   `(string $table, string $modelClass)` — building the model resolved the custom attributes it declares *today*,

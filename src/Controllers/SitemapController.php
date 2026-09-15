@@ -131,7 +131,7 @@ class SitemapController extends Controller
                 }
             }
 
-            foreach ((is_array($url) ? $url['images'] ?? [] : []) as $image) {
+            foreach ($url['images'] ?? [] as $image) {
                 $writer->startElement('image:image');
                 $writer->writeElement('image:loc', Url::to(is_array($image) ? $image['loc'] : $image, true));
 

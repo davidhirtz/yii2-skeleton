@@ -36,8 +36,6 @@ class AdminGermanRbacTest extends TestCase
         $html = self::$crawler->html();
 
         self::assertStringContainsString('Benutzer verwalten', $html);
-        self::assertStringContainsString('Einträge verwalten', $html);
-        self::assertStringContainsString('Dateien verwalten', $html);
         self::assertStringContainsString('Benutzerrecht', $html);
     }
 
@@ -45,7 +43,7 @@ class AdminGermanRbacTest extends TestCase
     {
         $user = $this->login();
 
-        $this->createTrail($user, Trail::TYPE_ORDER, Message::make('cms', 'COMMON_ENTRY_ORDER_CHANGED')->toJson());
+        $this->createTrail($user, Trail::TYPE_ORDER, Message::make('skeleton', 'TRAIL_PASSWORD_CHANGED')->toJson());
         $this->createTrail($user, Trail::TYPE_DELETE);
         $this->createTrail($user, Trail::TYPE_CHILD_DELETE);
 
@@ -63,7 +61,7 @@ class AdminGermanRbacTest extends TestCase
 
         $html = self::$crawler->html();
 
-        self::assertStringContainsString('Reihenfolge der Einträge geändert', $html);
+        self::assertStringContainsString('Passwort geändert', $html);
         self::assertStringContainsString('wurde gelöscht', $html);
         self::assertStringContainsString('Gelöscht</div> gelöscht', $html);
         self::assertStringContainsString('Update entries', $html);

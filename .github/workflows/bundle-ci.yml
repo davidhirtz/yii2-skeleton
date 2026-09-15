@@ -1,0 +1,83 @@
+name: Bundle CI
+
+# The standalone install of a bundle, which the monorepo never exercises: it symlinks every bundle into one
+# vendor/ and never reads a bundle's own composer.json. Every bundle's ci.yml calls this one, so a change here
+# reaches all of them on their next run. It runs on demand only — the release script dispatches it before it
+# tags — so a red run costs a fix commit rather than a tag Packagist has already seen.
+
+on:
+  workflow_call:
+    inputs:
+      php-versions:
+        description: JSON list of the PHP versions to run on
+        type: string
+        default: '["8.3", "8.5"]'
+
+jobs:
+  test:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ${{ fromJSON(inputs.php-versions) }}
+
+    services:
+      mariadb:
+        image: mariadb:lts
+        env:
+          MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: yes
+          MARIADB_DATABASE: yii2_test
+        ports:
+          - 3306/tcp
+        options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=5
+
+    steps:
+      - name: Check out the bundle
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, intl, gd, imagick, zip, dom, pdo_mysql
+          ini-values: memory_limit=1G
+          coverage: none
+
+      - name: Find the Composer cache
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Composer packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-php${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
+          restore-keys: ${{ runner.os }}-php${{ matrix.php }}-composer-
+
+      # No lock file: a library is tested against the newest dependencies its constraints allow.
+      - name: Install the bundle on its own
+        run: composer update --no-interaction --no-progress --prefer-dist --optimize-autoloader
+
+      - name: Point the tests at the database
+        run: echo "MYSQL_DSN=mysql:host=127.0.0.1;port=${{ job.services.mariadb.ports['3306'] }};dbname=yii2_test" >> "$GITHUB_ENV"
+
+      # The console application resolves its base path to the working directory, and the bundle's own
+      # config/test.php is the whole configuration a test run needs.
+      - name: Migrate the test database
+        run: php -r 'require "vendor/autoload.php"; require "vendor/yiisoft/yii2/Yii.php"; exit((int)(new Hirtz\Skeleton\Console\Application(require "config/test.php"))->run());' -- migrate --interactive=0 --skip-backup
+
+      - name: Run the tests
+        run: composer test
+
+      - name: Run the static analysis
+        run: composer phpstan
+
+      - name: Keep the logs of a failed run
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-php${{ matrix.php }}
+          path: runtime/logs
+          if-no-files-found: ignore

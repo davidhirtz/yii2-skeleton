@@ -11,7 +11,7 @@ use Yii;
 
 class StreamUploadedFileTest extends TestCase
 {
-    protected const string VALID_URL = 'https://raw.githubusercontent.com/davidhirtz/yii2-skeleton/master/README.md';
+    protected const string VALID_URL = 'https://raw.githubusercontent.com/davidhirtz/yii2-skeleton/main/README.md';
 
     public function _after(): void
     {
@@ -53,7 +53,7 @@ class StreamUploadedFileTest extends TestCase
     public function testUploadFromUnencodedUrl(): void
     {
         $upload = $this->getStreamUploadedFile([
-            'url' => 'https://raw.githubusercontent.com/davidhirtz/yii2-skeleton/v3/resources/tests/data/Ümlauts & Spaces.md',
+            'url' => 'https://raw.githubusercontent.com/davidhirtz/yii2-skeleton/main/resources/tests/data/Ümlauts & Spaces.md',
             'allowedExtensions' => ['md', 'txt'],
         ]);
 

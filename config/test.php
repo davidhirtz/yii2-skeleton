@@ -13,6 +13,10 @@ if ($token = getenv('TEST_TOKEN')) {
 }
 
 return [
+    'aliases' => [
+        // the root package is never in vendor/yiisoft/extensions.php, so a standalone run has no alias for its own namespace
+        '@Hirtz/Skeleton' => dirname(__DIR__) . '/src',
+    ],
     'params' => [
         // the tenant seed migration refuses to guess the canonical URL of an environment
         'tenantUrl' => 'https://www.domain.localhost',

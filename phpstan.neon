@@ -12,3 +12,13 @@ parameters:
         - resources/views
         - src
         - tests
+    scanFiles:
+        - Yii.php
+
+    # used by other bundles only, which a standalone run cannot see
+    ignoreErrors:
+        -
+            identifier: trait.unused
+            paths:
+                - src/Models/Traits/*
+            reportUnmatched: false
