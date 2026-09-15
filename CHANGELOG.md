@@ -1,5 +1,15 @@
 ## 3.0.0 (in development)
 
+- **`Html\Traits\TagInputTrait` writes a boolean attribute as `true` rather than as an empty string**, so
+  `disabled()`, `required()`, `readonly()` and `autofocus()` render the bare attribute and, more importantly, read
+  back as `true`. `Widgets\Forms\Fields\Field::isDisabled()` and `isRequired()` answered `false` for a field
+  disabled or required through the fluent setter, which cost such a field the exemption below and dropped it from
+  the form as unsafe — `Modules\Admin\Widgets\Forms\PasswordResetActiveForm` had been rendering without its email
+  input. That field is bound to `PasswordResetForm::$user` now, and
+  `Modules\Admin\Controllers\AccountController::actionReset()` resolves the user before the post rather than
+  beside it, so a failed validation re-renders the address and an invalid code redirects home whichever way the
+  page was reached
+
 - **`Widgets\Forms\Fieldset` no longer asks a field `isVisible()` before the field has configured itself.**
   A field is rendered like every other widget — `configure()`, then `isVisible()` — and the fieldset drops the
   rows that rendered empty, so a field may decide its visibility on what its own `configure()` resolved. The one

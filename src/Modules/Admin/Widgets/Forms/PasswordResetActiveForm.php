@@ -54,10 +54,14 @@ class PasswordResetActiveForm extends ActiveForm
                 : Yii::t('skeleton', 'PASSWORD_RESET_ACTIVE_ENTER_BELOW'));
     }
 
+    /**
+     * {@see PasswordResetForm} has no `email` of its own, so the field is bound to the user its code resolved. It is
+     * shown rather than edited, which is what `disabled` says — and what exempts it from the fieldset's safe check.
+     */
     protected function getEmailField(): ?Stringable
     {
         return InputField::make()
-            ->model($this->model)
+            ->model($this->model->user)
             ->property('email')
             ->disabled()
             ->prepend(Icon::make()

@@ -260,19 +260,21 @@ class AccountController extends Controller
         $form = PasswordResetForm::create();
         $form->code = $code;
 
-        if ($form->load($this->request->post())) {
-            if ($form->reset()) {
-                $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_UPDATED_PASSWORD'));
-
-                // A user who owes a second factor is not logged in by the reset, so the login form is where the
-                // flow has to continue.
-                return $this->webuser->getIsGuest()
-                    ? $this->redirect(['login'])
-                    : $this->goHome();
-            }
-        } elseif (!$form->validatePasswordResetCode()) {
+        // The rendered form names the user the code resolves, and a failed validation never reaches the check in
+        // `afterValidate()`, so the code is validated before the post rather than beside it.
+        if (!$form->validatePasswordResetCode()) {
             $this->error($form);
             return $this->goHome();
+        }
+
+        if ($form->load($this->request->post()) && $form->reset()) {
+            $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_UPDATED_PASSWORD'));
+
+            // A user who owes a second factor is not logged in by the reset, so the login form is where the
+            // flow has to continue.
+            return $this->webuser->getIsGuest()
+                ? $this->redirect(['login'])
+                : $this->goHome();
         }
 
         return $this->render('reset', [

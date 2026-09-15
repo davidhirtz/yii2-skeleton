@@ -37,6 +37,18 @@ class PasswordResetTest extends TestCase
 
         self::submitPasswordResetForm('new-password', 'wrong-repeat-password');
         self::assertAnyValidationErrorSame('The password must match the new password.');
+
+        self::assertDisabledEmailField($user);
+    }
+
+    /**
+     * A disabled field is unsafe by definition, so the fieldset dropping it silently left the page without its
+     * address — the whole of monorepo issue #103.
+     */
+    public function testPasswordResetShowsTheAddressItResets(): void
+    {
+        $user = $this->openPasswordResetUrl();
+        self::assertDisabledEmailField($user);
     }
 
     public function testPasswordResetWithCorrectInputs(): void
@@ -56,6 +68,14 @@ class PasswordResetTest extends TestCase
         $this->open($user->createPasswordResetUrl());
 
         return $user;
+    }
+
+    private static function assertDisabledEmailField(User $user): void
+    {
+        $name = Html::getInputName($user, 'email');
+
+        self::assertSelectorExists("input[name=\"$name\"][disabled]");
+        self::assertInputValueSame($name, $user->email);
     }
 
     private function submitPasswordResetForm(string $newPassword, string $repeatPassword): void

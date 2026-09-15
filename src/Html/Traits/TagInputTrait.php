@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Html\Traits;
 
+/**
+ * A boolean attribute is written as `true` rather than as the empty string its HTML spelling suggests, because it is
+ * read back as one — {@see \Hirtz\Skeleton\Widgets\Forms\Fields\Field::isDisabled()} — and `(bool)''` is `false`.
+ */
 trait TagInputTrait
 {
     public function autofocus(bool $autofocus = true): static
     {
-        return $this->attribute('autofocus', $autofocus ? '' : null);
+        return $this->attribute('autofocus', $autofocus ? true : null);
     }
 
     public function autocomplete(?string $autocomplete): static
@@ -18,7 +22,7 @@ trait TagInputTrait
 
     public function disabled(bool $disabled = true): static
     {
-        return $this->attribute('disabled', $disabled ? '' : null);
+        return $this->attribute('disabled', $disabled ? true : null);
     }
 
     public function name(?string $name): static
@@ -33,12 +37,12 @@ trait TagInputTrait
 
     public function readonly(bool $readonly = true): static
     {
-        return $this->attribute('readonly', $readonly ? '' : null);
+        return $this->attribute('readonly', $readonly ? true : null);
     }
 
     public function required(bool $required = true): static
     {
-        return $this->attribute('required', $required ? '' : null);
+        return $this->attribute('required', $required ? true : null);
     }
 
     public function type(?string $type): static
