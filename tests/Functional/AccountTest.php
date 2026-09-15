@@ -29,6 +29,7 @@ class AccountTest extends TestCase
         self::assertResponseIsSuccessful();
         self::assertSelectorExists('#user-name');
         self::assertSelectorExists('#user-language');
+        self::assertSelectorTextSame('#user-language option[value="de"]', 'Deutsch');
         self::assertSelectorExists('#user-timezone');
         self::assertSelectorNotExists('#user-email');
 

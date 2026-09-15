@@ -6,7 +6,6 @@ namespace Hirtz\Skeleton\I18n;
 
 use Override;
 use Yii;
-use yii\helpers\ArrayHelper;
 use yii\i18n\PhpMessageSource;
 
 /**
@@ -75,9 +74,13 @@ class I18N extends \yii\i18n\I18N
         return in_array($language, $this->getLanguages(), true);
     }
 
-    public function getLabel(string $language): mixed
+    /**
+     * A language with no entry in {@see I18N::$languageLabels} is rendered as its own code rather than as
+     * nothing — every caller renders the result.
+     */
+    public function getLabel(string $language): string
     {
-        return ArrayHelper::getValue(static::$languageLabels, $language);
+        return static::$languageLabels[$language] ?? $language;
     }
 
     public function getLanguageCode(): string

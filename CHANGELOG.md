@@ -1,5 +1,12 @@
 ## 3.0.0 (in development)
 
+- **A language select renders the label again.** `Models\User::getLanguages()` answered
+  `['de' => ['name' => 'Deutsch']]`, a shape `Widgets\Forms\Fields\SelectField` has not read since the
+  definitions landed — it looks for a `label` key and fell back to the option's own value, so the account form
+  offered `de` and `en-US`. Both are a plain `value => label` map now. `I18n\I18N::getLabel()` returns a
+  `string` rather than `mixed` and answers the language code for one it has no label for, which the navbar's
+  `Modules\Admin\Widgets\Buttons\LanguageDropdownButton` handed straight to a `string` parameter.
+
 - **`Models\Redirect::sanitizeUrl()` is `Helpers\Url::sanitize()`.** Trimming the surrounding slashes and
   encoding the remaining whitespace is what makes two URLs comparable, which every writer of a redirect needs
   and the model was only the first to. The behaviour is unchanged; a caller renames the call.

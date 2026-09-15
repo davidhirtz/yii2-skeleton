@@ -657,6 +657,8 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     }
 
     /**
+     * @see \Hirtz\Skeleton\Widgets\Forms\Fields\SelectField::getItemsFromModel()
+     * @return array<string, string>
      * @noinspection PhpUnused
      */
     public static function getLanguages(): array
@@ -665,7 +667,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         $languages = [];
 
         foreach (self::getModule()->getLanguages() as $language) {
-            $languages[$language]['name'] = $i18n->getLabel($language);
+            $languages[$language] = $i18n->getLabel($language);
         }
 
         return $languages;
