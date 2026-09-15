@@ -18,6 +18,10 @@ abstract class AbstractAssetBundle extends AssetBundle
      * {@see \Hirtz\Skeleton\Widgets\Forms\Fields\Field::reloadsForm()}) would drop the bundle of a widget the
      * response introduces.
      */
-    public $jsOptions = ['type' => 'module', 'position' => View::POS_HEAD];
+    public $jsOptions = [
+        'position' => View::POS_HEAD,
+        'type' => 'module',
+    ];
+
     public $sourcePath = '@skeleton/../resources/assets/dist';
 }

@@ -26,6 +26,9 @@ class UploadCustomAttributeTest extends TestCase
 
         Yii::$app->getI18n()->setLanguages(['en-US', 'de']);
         $this->upload = Upload::getComponent();
+
+        // A run that left files behind would otherwise be counted as this test's own.
+        FileHelper::removeDirectory($this->upload->tempPath);
     }
 
     #[Override]

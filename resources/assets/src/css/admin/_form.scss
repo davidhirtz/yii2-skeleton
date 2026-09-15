@@ -38,7 +38,7 @@
   letter-spacing: .0625em;
 
   @include media-breakpoint-up(sm) {
-    .form-row:not(.form-checkbox-row):has(.input) & {
+    .form-row:not(.form-checkbox-row):has(.input, .upload) & {
       padding: 1px 0;
     }
   }
@@ -135,10 +135,11 @@
     font-weight: 700;
   }
 
-  // The padding lines a column label up with the input beside it, so a label that labels a checkbox is
-  // excluded — `.form-checkbox-row` for a single one, `.form-checkbox` for an item of a list.
+  // The padding lines a column label up with the control beside it, so a label that labels a checkbox is
+  // excluded — `.form-checkbox-row` for a single one, `.form-checkbox` for an item of a list. `.upload` is
+  // named beside `.input` because an upload field renders a button and a hidden input, neither of which is one.
   @include media-breakpoint-up(sm) {
-    .form-row:not(.form-checkbox-row):has(.input) &:not(.form-checkbox *) {
+    .form-row:not(.form-checkbox-row):has(.input, .upload) &:not(.form-checkbox *) {
       padding: 0.5rem 0;
     }
   }

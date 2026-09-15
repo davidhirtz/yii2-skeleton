@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Input;
+use Hirtz\Skeleton\Html\Label;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Models\CustomAttributes\UploadCustomAttribute;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
@@ -103,7 +104,7 @@ class UploadField extends Field
     protected function getRemoveButton(): string|Stringable
     {
         return Button::make()
-            ->transparent()
+            ->class('btn-icon icon')
             ->icon('xmark')
             ->tooltip(Yii::t('skeleton', 'UPLOAD_BUTTON_REMOVE'))
             ->replace($this->getUrl(remove: true), '#' . $this->getContainerId());
@@ -115,9 +116,20 @@ class UploadField extends Field
             ->label(Yii::t('skeleton', 'UPLOAD_BUTTON_SELECT'))
             ->icon('upload')
             ->accept($this->definition?->getAccept())
+            ->button(fn (Button $button): Button => $button->class('btn btn-secondary'))
             ->name('upload')
             ->target('#' . $this->getContainerId())
             ->url($this->getUrl());
+    }
+
+    /**
+     * A hidden input is not labelable, and the picker the label could name is only in the DOM while no file is
+     * chosen — so the label names the row rather than a control.
+     */
+    #[Override]
+    protected function getLabel(): ?Label
+    {
+        return parent::getLabel()?->attribute('for', null);
     }
 
     /**
@@ -131,6 +143,8 @@ class UploadField extends Field
         $attribute = (string)$this->property;
         $type = $model instanceof TypeAttributeInterface ? $model->getType()?->value : null;
 
+        $value = $this->attributes['value'] ?? null;
+
         return [
             '/admin/upload/create',
             'model' => $model::class,
@@ -138,6 +152,7 @@ class UploadField extends Field
             'type' => $type,
             'signature' => $this->getUpload()->sign($model::class, $attribute, $type),
             ...$remove ? ['remove' => 1] : [],
+            ...$remove && $this->getUpload()->isToken($value) ? ['token' => $value] : [],
         ];
     }
 

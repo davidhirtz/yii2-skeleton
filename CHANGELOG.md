@@ -18,8 +18,9 @@
   in `Upload::$tempPath` and answers with the field re-rendered — the chunked upload of `Widgets\Buttons\FileUploadButton`
   unchanged, so there is no size limit to work around. The JSON column holds the filename alone; the directory is
   `<table>/<record id>/<hashed attribute>/` under `Upload::$path` (`@webroot/attachments`), so nothing in the URL names
-  a column. `upload/clear` collects the files of uploads nobody saved, and the upload action does too with
-  `Upload::$gcProbability`.
+  a column. Removing a pending upload deletes its file at once; a file the record already holds goes with the save,
+  which is the only point at which the removal is more than a cleared input. `upload/clear` collects what is left
+  over, and the upload action does too with `Upload::$gcProbability`.
 
 - **A `Models\CustomAttributes\CustomAttribute` has a lifecycle.** `afterSave()`, `afterDelete()` and `afterDuplicate()`
   are no-ops on the base and are called by `Db\ActiveRecord` and `Models\Actions\DuplicateActiveRecord`, so a

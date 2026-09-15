@@ -168,6 +168,15 @@ class Upload extends Component
         return is_file($path) ? $path : null;
     }
 
+    public function deleteTempFile(?string $token): void
+    {
+        $path = $this->getTempFile($token);
+
+        if ($path !== null) {
+            FileHelper::unlink($path);
+        }
+    }
+
     /**
      * A token and a stored filename share the attribute, so they have to be told apart by shape.
      */

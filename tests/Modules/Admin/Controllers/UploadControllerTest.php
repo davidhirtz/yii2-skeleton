@@ -39,6 +39,9 @@ class UploadControllerTest extends TestCase
         $this->path = Yii::getAlias('@runtime/test-uploads') . '/';
 
         FileHelper::createDirectory($this->path);
+
+        // A run that left files behind would otherwise be counted as this test's own.
+        FileHelper::removeDirectory($this->upload->tempPath);
     }
 
     #[Override]
@@ -176,6 +179,25 @@ class UploadControllerTest extends TestCase
 
         self::assertStringContainsString('file-upload', $html);
         self::assertStringNotContainsString('notes.txt', $html);
+    }
+
+    /**
+     * Nothing will ever ask for the file of a pending upload once the form has dropped its token, so it goes now
+     * rather than waiting for the collector.
+     */
+    public function testRemovingAPendingUploadDeletesItsFile(): void
+    {
+        $this->login();
+        $this->setUpUpload('notes.txt');
+        $this->post();
+
+        $files = glob($this->upload->tempPath . '*') ?: [];
+
+        self::assertCount(1, $files);
+
+        $this->post(['remove' => 1, 'token' => basename($files[0])]);
+
+        self::assertSame([], glob($this->upload->tempPath . '*') ?: []);
     }
 
     public function testAbandonedTemporaryFilesAreCollected(): void

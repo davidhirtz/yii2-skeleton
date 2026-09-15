@@ -9,7 +9,6 @@ use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Models\CustomAttributes\UploadCustomAttribute;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
-use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Upload\Upload;
@@ -65,6 +64,7 @@ class UploadController extends Controller
         string $signature,
         ?int $type = null,
         bool $remove = false,
+        ?string $token = null,
     ): Response|string {
         $upload = Upload::getComponent();
 
@@ -79,7 +79,12 @@ class UploadController extends Controller
             throw new NotFoundHttpException();
         }
 
-        if (!$remove) {
+        if ($remove) {
+            // The file a pending upload parked goes now rather than waiting for the collector: the form still
+            // holds its token, so nothing else will ever ask for it. A file the record already has is deleted by
+            // the save, which is the only point at which the removal is more than a cleared input.
+            $upload->deleteTempFile($token);
+        } else {
             $token = $this->upload($definition, $upload);
 
             if ($token === null) {
@@ -166,14 +171,14 @@ class UploadController extends Controller
             throw new NotFoundHttpException();
         }
 
+        // Through `instantiate()`, never `createObject()`: a type may name a class of its own
+        // ({@see \Hirtz\Skeleton\Models\Types\Type::getModelClass()}) and the definitions live on that one.
         /** @var ActiveRecord&CustomAttributeInterface $record */
-        $record = Yii::createObject($model);
+        $record = $model::instantiate($type === null ? [] : ['type' => $type]);
 
-        // The definitions hang off the type, so a record with none of its own has to reach its default first.
-        $record->loadDefaultValues();
-
-        if ($type !== null && $record instanceof TypeAttributeInterface) {
-            $record->setAttribute('type', $type);
+        // The definitions hang off the type, so a record given none has to reach its default first.
+        if ($type === null) {
+            $record->loadDefaultValues();
         }
 
         return $record;

@@ -85,8 +85,7 @@ class UploadCustomAttribute extends CustomAttribute
      */
     public function validateUploadedFile(UploadedFile $upload): ?string
     {
-        $validator = Yii::createObject([
-            'class' => FileValidator::class,
+        $validator = Yii::$container->get(FileValidator::class, config: [
             'checkExtensionByMimeType' => $this->checkExtensionByMimeType,
             'extensions' => $this->assertExtensions(),
             'maxSize' => $this->getMaxSize(),
@@ -114,7 +113,7 @@ class UploadCustomAttribute extends CustomAttribute
      * An inline rule names a method of the *model*, which hands the attribute back here — a closure would be rebound
      * to the model by {@see \yii\validators\InlineValidator} and an array callable is handed no model at all.
      *
-     * @uses \Hirtz\Skeleton\Models\Traits\CustomAttributesTrait::validateCustomAttributeUpload()
+     * @see \Hirtz\Skeleton\Models\Traits\CustomAttributesTrait::validateCustomAttributeUpload()
      */
     #[Override]
     protected function getValidationRules(Model $owner): array
@@ -146,13 +145,14 @@ class UploadCustomAttribute extends CustomAttribute
 
         // Otherwise it is the filename the record already holds, or the one a duplicate was inserted with. It
         // becomes a path segment, so that is all it may be — a request is free to send whatever it likes.
+        /** @noinspection PhpConditionCheckedByNextConditionInspection */
         if (!is_string($value) || $value !== basename($value) || str_starts_with($value, '.')) {
             $owner->{$attribute} = null;
         }
     }
 
     #[Override]
-    public function normalize(mixed $value): mixed
+    public function normalize(mixed $value): ?string
     {
         return $value === null || $value === '' ? null : (string)$value;
     }
