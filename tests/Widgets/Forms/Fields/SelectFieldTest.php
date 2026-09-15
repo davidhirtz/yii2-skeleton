@@ -41,6 +41,18 @@ class SelectFieldTest extends TestCase
         self::assertEquals($html, $select->render());
     }
 
+    /**
+     * An option without a `value` posts its label, so a prompt carrying one has to spell the empty value out.
+     */
+    public function testPromptValue(): void
+    {
+        $select = SelectField::make()
+            ->prompt('Detect from browser')
+            ->items([1 => 'Option 1', 2 => 'Option 2']);
+
+        self::assertStringContainsString('<option value="">Detect from browser</option>', $select->render());
+    }
+
     public function testPromptAttributes(): void
     {
         $select = SelectField::make()

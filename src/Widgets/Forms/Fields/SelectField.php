@@ -194,6 +194,9 @@ class SelectField extends Field
         if (false !== $this->prompt && !$this->multiple && (!$this->isRequired() || [''] !== $selected)) {
             $this->promptAttributes['disabled'] ??= $this->isRequired();
 
+            // An option without a `value` posts its label, so a prompt carrying one is submitted as that text.
+            $this->promptAttributes['value'] ??= '';
+
             $select->addOption(Option::make()
                 ->attributes($this->promptAttributes)
                 ->label($this->prompt));
