@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Db\Traits;
 
 use Exception;
-use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\I18n\Message;
-use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
 use Hirtz\Skeleton\Models\Translation;
 use RuntimeException;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\db\ConstraintFinderInterface;
 use yii\db\IndexConstraint;
+use yii\db\Query;
 use yii\rbac\DbManager;
 use yii\rbac\Permission;
 
@@ -383,24 +382,24 @@ trait MigrationTrait
     }
 
     /**
-     * Only the configured languages and attributes are moved; any other `_xx` column is left alone.
+     * The columns are read off the table, never off the model: what a v2 database translated is what it has
+     * columns for, and the v3 model that would answer today declares a different set — one whose resolution can
+     * need columns this point in history does not have yet.
+     *
+     * @param class-string $modelClass the `model_class` the records are filed under
      */
-    protected function moveI18nColumnsToTranslations(ActiveRecord&TranslationInterface $model): void
+    protected function moveI18nColumnsToTranslations(string $table, string $modelClass): void
     {
         $db = $this->getDb();
-        $table = $model::tableName();
 
         $owner = $this->getQuotedTableName($table);
         $translations = $this->getQuotedTableName(Translation::tableName());
-        $class = $db->quoteValue($model->getTranslationModelClass());
+        $model = $this->getTranslationModelColumn();
+        $class = $db->quoteValue($modelClass);
 
-        foreach ($model->getTranslatedAttributeNames() as $column => [$attribute, $language]) {
-            if (!$this->hasColumn($table, $column)) {
-                continue;
-            }
-
+        foreach ($this->getI18nColumns($table) as $column => [$attribute, $language]) {
             $this->execute("
-                INSERT INTO $translations ([[model_class]], [[model_id]], [[language]], [[attribute]], [[value]])
+                INSERT INTO $translations ([[$model]], [[model_id]], [[language]], [[attribute]], [[value]])
                 SELECT $class, [[id]], {$db->quoteValue($language)}, {$db->quoteValue($attribute)}, [[$column]]
                 FROM $owner
                 WHERE [[$column]] IS NOT NULL AND [[$column]] != ''
@@ -409,6 +408,29 @@ trait MigrationTrait
             $this->dropIndexesContainingColumn($table, $column);
             $this->dropColumn($table, $column);
         }
+    }
+
+    /**
+     * @return array<string, array{string, string}> the translated columns of the table, each mapped to its
+     * attribute and language. A `<attribute>_<language>` counts only while the source column is there too.
+     */
+    protected function getI18nColumns(string $table): array
+    {
+        $i18n = Yii::$app->getI18n();
+        $names = $this->getDb()->getSchema()->getTableSchema($table, true)->getColumnNames();
+        $columns = [];
+
+        foreach ($names as $attribute) {
+            foreach ($i18n->getLanguages() as $language) {
+                $column = $i18n->getAttributeName($attribute, $language);
+
+                if ($column !== $attribute && in_array($column, $names, true)) {
+                    $columns[$column] = [$attribute, $language];
+                }
+            }
+        }
+
+        return $columns;
     }
 
     /**
@@ -434,28 +456,31 @@ trait MigrationTrait
     }
 
     /**
-     * Indexes are not restored; the migration that dropped one recreates it.
+     * The rows themselves say which columns to rebuild, so a translation in a language the installation has since
+     * dropped is restored as well. Indexes are not; the migration that dropped one recreates it.
+     *
+     * @param class-string $modelClass the `model_class` the records are filed under
      */
-    protected function restoreI18nColumnsFromTranslations(ActiveRecord&TranslationInterface $model): void
+    protected function restoreI18nColumnsFromTranslations(string $table, string $modelClass): void
     {
         $db = $this->getDb();
-        $table = $model::tableName();
-
-        $this->addI18nColumns($table, $model->getTranslationAttributes());
 
         $owner = $this->getQuotedTableName($table);
         $translations = $this->getQuotedTableName(Translation::tableName());
-        $class = $db->quoteValue($model->getTranslationModelClass());
+        $model = $this->getTranslationModelColumn();
+        $class = $db->quoteValue($modelClass);
 
-        foreach ($model->getTranslatedAttributeNames() as $column => [$attribute, $language]) {
-            if (!$this->hasColumn($table, $column)) {
+        foreach ($this->getTranslatedAttributes($modelClass) as [$attribute, $language]) {
+            $column = $this->addI18nColumn($table, $attribute, $language);
+
+            if (!$column) {
                 continue;
             }
 
             $this->execute("
                 UPDATE $owner AS [[owner]]
                 INNER JOIN $translations AS [[translation]]
-                    ON [[translation]].[[model_class]] = $class
+                    ON [[translation]].[[$model]] = $class
                     AND [[translation]].[[model_id]] = [[owner]].[[id]]
                     AND [[translation]].[[language]] = {$db->quoteValue($language)}
                     AND [[translation]].[[attribute]] = {$db->quoteValue($attribute)}
@@ -463,42 +488,78 @@ trait MigrationTrait
             ");
         }
 
-        $this->execute("DELETE FROM $translations WHERE [[model_class]] = $class");
+        $this->execute("DELETE FROM $translations WHERE [[$model]] = $class");
     }
 
     /**
-     * @param list<string> $attributes
+     * The column is `model` until {@see \Hirtz\Skeleton\Migrations\M260912090000ModelClass} renames it, and
+     * that runs well after the migrations that fill the table — so an upgrade meets both names.
      */
-    private function addI18nColumns(string $table, array $attributes): void
+    private function getTranslationModelColumn(): string
+    {
+        return $this->hasColumn(Translation::tableName(), 'model_class') ? 'model_class' : 'model';
+    }
+
+    /**
+     * @param class-string $modelClass
+     * @return list<array{string, string}> the attribute and language of every translation the model has
+     */
+    private function getTranslatedAttributes(string $modelClass): array
+    {
+        $rows = (new Query())
+            ->select(['attribute', 'language'])
+            ->distinct()
+            ->from(Translation::tableName())
+            ->where([$this->getTranslationModelColumn() => $modelClass])
+            ->orderBy(['attribute' => SORT_ASC, 'language' => SORT_ASC])
+            ->all($this->getDb());
+
+        return array_map(static fn (array $row): array => [(string)$row['attribute'], (string)$row['language']], $rows);
+    }
+
+    /**
+     * @return string|null the column, `null` while the source column it is typed and placed after is missing
+     */
+    private function addI18nColumn(string $table, string $attribute, string $language): ?string
     {
         $schema = $this->getDb()->getSchema();
         $tableSchema = $schema->getTableSchema($table, true);
+        $source = $tableSchema->getColumn($attribute);
+        $column = Yii::$app->getI18n()->getAttributeName($attribute, $language);
+
+        if (!$source || $column === $attribute) {
+            return null;
+        }
+
+        if (!$tableSchema->getColumn($column)) {
+            $type = $schema->createColumnSchemaBuilder($source->type, $source->size)
+                ->defaultValue($source->defaultValue)
+                ->append("AFTER [[{$this->getPreviousI18nColumn($tableSchema->getColumnNames(), $attribute)}]]");
+
+            $this->addColumn($table, $column, (string)$type);
+        }
+
+        return $column;
+    }
+
+    /**
+     * @param list<string> $names
+     * @return string the attribute's last language column, so a new one lands beside its siblings
+     */
+    private function getPreviousI18nColumn(array $names, string $attribute): string
+    {
         $i18n = Yii::$app->getI18n();
+        $previous = $attribute;
 
-        foreach ($attributes as $attribute) {
-            $column = $tableSchema->getColumn($attribute);
+        foreach ($i18n->getLanguages() as $language) {
+            $name = $i18n->getAttributeName($attribute, $language);
 
-            if (!$column) {
-                continue;
-            }
-
-            $previous = $attribute;
-            $type = $schema->createColumnSchemaBuilder($column->type, $column->size)
-                ->defaultValue($column->defaultValue);
-
-            foreach ($i18n->getLanguages() as $language) {
-                if ($language === Yii::$app->sourceLanguage) {
-                    continue;
-                }
-
-                $type->append("AFTER [[$previous]]");
-                $previous = $i18n->getAttributeName($attribute, $language);
-
-                if (!$tableSchema->getColumn($previous)) {
-                    $this->addColumn($table, $previous, (string)$type);
-                }
+            if ($name !== $attribute && in_array($name, $names, true)) {
+                $previous = $name;
             }
         }
+
+        return $previous;
     }
 
     protected function getQuotedTableName(string $tableName): string

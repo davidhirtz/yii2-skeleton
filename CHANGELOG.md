@@ -1,5 +1,17 @@
 ## 3.0.0 (in development)
 
+- **The i18n migration helpers take strings, not a model.**
+  `Db\Traits\MigrationTrait::moveI18nColumnsToTranslations()` and `restoreI18nColumnsFromTranslations()` are
+  `(string $table, string $modelClass)` — building the model resolved the custom attributes it declares *today*,
+  which broke a fresh install five migrations before the column those need is added. The columns are found
+  without it: on the way up from the table (`getI18nColumns()`, every `<attribute>_<language>` whose source
+  column is there too), on the way down from the translations themselves, so a language the installation has
+  since dropped is restored rather than deleted unread. `addI18nColumns()` is gone with the model.
+
+  The same pass fixed the `INSERT`s those migrations ran: `translation.model_class` is called `model` until
+  `Migrations\M260912090000ModelClass`, which runs long after the migrations that fill the table, so a v2
+  upgrade carrying a single translated column died there.
+
 - **Nobody hands out an auth item they do not hold themselves.**
   `Modules\Admin\Controllers\UserAuthController::getAuthItem()` refuses one the acting user cannot pass — a
   `ForbiddenHttpException`, as an unmanageable target already is — and

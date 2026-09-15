@@ -66,7 +66,7 @@ class MigrationTraitTranslationsTest extends TestCase
         $empty = $this->insertRow('Only source', '');
 
         $migration = $this->createMigration();
-        $migration->moveI18nColumnsToTranslations(TranslatedMigrationRecord::instance());
+        $migration->moveI18nColumnsToTranslations(TranslatedMigrationRecord::tableName(), TranslatedMigrationRecord::class);
 
         self::assertFalse($migration->hasColumn(TranslatedMigrationRecord::tableName(), 'name_de'));
 
@@ -96,7 +96,7 @@ class MigrationTraitTranslationsTest extends TestCase
         $migration = $this->createMigration();
         $migration->createIndex('test_parent_name_de', TranslatedMigrationRecord::tableName(), ['parent_id', 'name_de'], true);
 
-        $migration->moveI18nColumnsToTranslations(TranslatedMigrationRecord::instance());
+        $migration->moveI18nColumnsToTranslations(TranslatedMigrationRecord::tableName(), TranslatedMigrationRecord::class);
 
         $indexes = Yii::$app->getDb()
             ->getSchema()
@@ -117,8 +117,8 @@ class MigrationTraitTranslationsTest extends TestCase
         $id = $this->insertRow('Name', 'Name DE');
 
         $migration = $this->createMigration();
-        $migration->moveI18nColumnsToTranslations(TranslatedMigrationRecord::instance());
-        $migration->restoreI18nColumnsFromTranslations(TranslatedMigrationRecord::instance());
+        $migration->moveI18nColumnsToTranslations(TranslatedMigrationRecord::tableName(), TranslatedMigrationRecord::class);
+        $migration->restoreI18nColumnsFromTranslations(TranslatedMigrationRecord::tableName(), TranslatedMigrationRecord::class);
 
         self::assertTrue($migration->hasColumn(TranslatedMigrationRecord::tableName(), 'name_de'));
 
@@ -134,13 +134,59 @@ class MigrationTraitTranslationsTest extends TestCase
         self::assertSame(0, (int)Translation::find()->where(['model_class' => TranslatedMigrationRecord::class])->count());
     }
 
+    /**
+     * The columns are discovered from the table rather than from the model, and a `_xx` column whose source
+     * column is gone is not one of them — the pair is what makes it a translation.
+     */
+    public function testAColumnWithoutItsSourceColumnIsLeftAlone(): void
+    {
+        $migration = $this->createMigration();
+        $migration->addColumn(TranslatedMigrationRecord::tableName(), 'title_de', (string)$migration->string(100)->null());
+
+        $migration->moveI18nColumnsToTranslations(TranslatedMigrationRecord::tableName(), TranslatedMigrationRecord::class);
+
+        self::assertTrue($migration->hasColumn(TranslatedMigrationRecord::tableName(), 'title_de'));
+        self::assertFalse($migration->hasColumn(TranslatedMigrationRecord::tableName(), 'name_de'));
+    }
+
+    /**
+     * The rows say which columns to rebuild, so a translation the installation no longer configures a language
+     * for is restored rather than deleted unread.
+     */
+    public function testATranslationInAnUnconfiguredLanguageIsRestored(): void
+    {
+        $id = $this->insertRow('Name', 'Name DE');
+
+        $migration = $this->createMigration();
+        $migration->moveI18nColumnsToTranslations(TranslatedMigrationRecord::tableName(), TranslatedMigrationRecord::class);
+
+        $translation = Translation::create();
+        $translation->model_class = TranslatedMigrationRecord::class;
+        $translation->model_id = $id;
+        $translation->language = 'fr';
+        $translation->attribute = 'name';
+        $translation->value = 'Name FR';
+
+        self::assertTrue($translation->save());
+
+        $migration->restoreI18nColumnsFromTranslations(TranslatedMigrationRecord::tableName(), TranslatedMigrationRecord::class);
+
+        $row = (new Query())
+            ->from(TranslatedMigrationRecord::tableName())
+            ->where(['id' => $id])
+            ->one();
+
+        self::assertSame('Name DE', $row['name_de']);
+        self::assertSame('Name FR', $row['name_fr']);
+    }
+
     public function testAColumnThatIsAlreadyGoneIsSkipped(): void
     {
         $migration = $this->createMigration();
-        $migration->moveI18nColumnsToTranslations(TranslatedMigrationRecord::instance());
+        $migration->moveI18nColumnsToTranslations(TranslatedMigrationRecord::tableName(), TranslatedMigrationRecord::class);
 
         // a second run finds nothing to move and must not fail
-        $migration->moveI18nColumnsToTranslations(TranslatedMigrationRecord::instance());
+        $migration->moveI18nColumnsToTranslations(TranslatedMigrationRecord::tableName(), TranslatedMigrationRecord::class);
 
         self::assertFalse($migration->hasColumn(TranslatedMigrationRecord::tableName(), 'name_de'));
     }
