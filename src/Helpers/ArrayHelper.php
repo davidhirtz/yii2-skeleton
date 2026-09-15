@@ -4,10 +4,28 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Helpers;
 
+use Closure;
+use Override;
 use yii\helpers\BaseArrayHelper;
 
 class ArrayHelper extends BaseArrayHelper
 {
+    /**
+     * Yii answers a plain `array`, which loses the element type at every call site. Grouping nests the result,
+     * so only the ungrouped form keeps it.
+     *
+     * @template T
+     * @param array<T>|null $array
+     * @param Closure(T): (int|string|null)|string|null $key
+     * @param array<Closure(T): (int|string|null)|string> $groups
+     * @return ($groups is array{} ? array<array-key, T> : array<array-key, mixed>)
+     */
+    #[Override]
+    public static function index($array, $key, $groups = []): array
+    {
+        return parent::index($array, $key, $groups);
+    }
+
     /**
      * @param array<array-key, mixed> $array
      * @noinspection PhpUnused
