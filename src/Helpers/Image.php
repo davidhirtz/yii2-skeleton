@@ -165,7 +165,10 @@ class Image extends BaseImage
     {
         if ($image instanceof \Imagine\Imagick\Image) {
             $imagick = $image->getImagick();
-            $imagick->setImageOrientation($rotation ?: Imagick::ORIENTATION_TOPLEFT);
+            $imagick->setImageOrientation(match ($rotation) {
+                1, 2, 3, 4, 5, 6, 7, 8 => $rotation,
+                default => Imagick::ORIENTATION_TOPLEFT,
+            });
         }
 
         return $image;

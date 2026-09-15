@@ -46,12 +46,12 @@ class FormFooter extends Widget
 
     protected function renderContent(): string|Stringable
     {
-        $this->items ??= array_filter([
+        $this->items ??= array_values(array_filter([
             (string)UpdatedAtFooterItem::make()
                 ->model($this->model),
             (string)CreatedAtFooterItem::make()
                 ->model($this->model),
-        ]);
+        ]));
 
         return $this->items
             ? FormRow::make()

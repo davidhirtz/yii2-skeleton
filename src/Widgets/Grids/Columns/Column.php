@@ -92,8 +92,8 @@ class Column
 
     public function centered(): static
     {
-        $callback = fn (Td|Th $tag) => $tag->addClass('text-center');
-        return $this->body($callback)->header($callback);
+        return $this->body(fn (Td $tag) => $tag->addClass('text-center'))
+            ->header(fn (Th $tag) => $tag->addClass('text-center'));
     }
 
     public function nowrap(): static
@@ -103,14 +103,14 @@ class Column
 
     public function hiddenForSmallDevices(): static
     {
-        $closure = fn (Td|Th $tag) => $tag->addClass('hidden md:table-cell');
-        return $this->body($closure)->header($closure);
+        return $this->body(fn (Td $tag) => $tag->addClass('hidden md:table-cell'))
+            ->header(fn (Th $tag) => $tag->addClass('hidden md:table-cell'));
     }
 
     public function hiddenForMediumDevices(): static
     {
-        $closure = fn (Td|Th $tag) => $tag->addClass('hidden lg:table-cell');
-        return $this->body($closure)->header($closure);
+        return $this->body(fn (Td $tag) => $tag->addClass('hidden lg:table-cell'))
+            ->header(fn (Th $tag) => $tag->addClass('hidden lg:table-cell'));
     }
 
     public function width(int $width): static

@@ -82,6 +82,8 @@ class TinyMceField extends Field
      */
     public array|HtmlValidator|string|null $validator = HtmlValidator::class;
 
+    private ?HtmlValidator $htmlValidator = null;
+
     protected ?string $value = null;
 
     /**
@@ -105,6 +107,9 @@ class TinyMceField extends Field
         if (!$this->validator instanceof HtmlValidator) {
             $this->validator = $this->validator === null ? null : Yii::createObject($this->validator);
         }
+
+        // The public property stays the configuration it was given; everything below reads the resolved one.
+        $this->htmlValidator = $this->validator instanceof HtmlValidator ? $this->validator : null;
 
         if (null === $this->languageUrl) {
             $bundle = Yii::$app->getAssetManager()->getBundle(TinyMceLanguageAssetBundle::class);
@@ -177,15 +182,15 @@ class TinyMceField extends Field
             $this->clientOptions['content_style'] ??= $this->contentStyle;
         }
 
-        if ($allowedElements = ($this->validator?->purifierOptions['HTML.Allowed'] ?? false)) {
+        if ($allowedElements = ($this->htmlValidator?->purifierOptions['HTML.Allowed'] ?? false)) {
             $this->clientOptions['valid_elements'] ??= $allowedElements;
         }
 
         // Client option `valid_classes` needs every class per tag to be defined on their own.
-        if ($this->validator?->allowedClasses) {
+        if ($this->htmlValidator?->getAllowedClassesByTag()) {
             $allowedClasses = [];
 
-            foreach ($this->validator->allowedClasses as $tag => $classes) {
+            foreach ($this->htmlValidator->getAllowedClassesByTag() as $tag => $classes) {
                 $allowedClasses[$tag] = [];
 
                 foreach ($classes as $class) {
@@ -225,7 +230,7 @@ class TinyMceField extends Field
 
         foreach ($tags as $tag) {
             if ($this->isTagAllowed($tag)) {
-                $this->setStylesFormArray($tag, $this->validator?->allowedClasses[$tag] ?? []);
+                $this->setStylesFormArray($tag, $this->htmlValidator?->getAllowedClassesByTag()[$tag] ?? []);
             }
         }
 
@@ -262,10 +267,10 @@ class TinyMceField extends Field
             $this->clientOptions['formats'] ??= $this->formats;
         }
 
-        if ($this->validator) {
+        if ($this->htmlValidator) {
             $this->clientOptions['formats']['removeformat'] ??= [
                 [
-                    'selector' => $this->validator->allowedHtmlTags,
+                    'selector' => $this->htmlValidator->allowedHtmlTags,
                     'remove' => 'all',
                     'expand' => false,
                     'block_expand' => true,
@@ -309,7 +314,7 @@ class TinyMceField extends Field
 
             $linkClassList = [];
 
-            foreach ((array)($this->validator?->allowedClasses['a'] ?? []) as $name => $cssClass) {
+            foreach ($this->htmlValidator?->getAllowedClassesByTag()['a'] ?? [] as $name => $cssClass) {
                 if (is_int($name)) {
                     $name = match ($cssClass) {
                         'btn' => Yii::t('skeleton', 'TINY_MCE_BUTTON'),
@@ -394,7 +399,7 @@ class TinyMceField extends Field
 
     protected function isTagAllowed(string $tag): bool
     {
-        return !$this->validator || in_array($tag, $this->validator->allowedHtmlTags, true);
+        return !$this->htmlValidator || in_array($tag, $this->htmlValidator->allowedHtmlTags, true);
     }
 
     protected function registerClientScript(): void

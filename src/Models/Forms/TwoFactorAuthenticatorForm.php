@@ -100,7 +100,7 @@ class TwoFactorAuthenticatorForm extends Model
         return $this->secret;
     }
 
-    public function getQrImageUrl(int|string $size): string
+    public function getQrImageUrl(int $size): string
     {
         $issuer = str_replace(':', '-', $this->getTwoFactorAuthenticationIssuer());
         $label = "$issuer:{$this->user->email}";

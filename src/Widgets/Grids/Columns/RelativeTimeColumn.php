@@ -26,7 +26,7 @@ class RelativeTimeColumn extends LinkColumn
     }
 
     /**
-     * @param array<string, mixed>|Model $model
+     * @param TModel $model
      */
     protected function getRelativeTime(array|Model $model): string|Stringable
     {

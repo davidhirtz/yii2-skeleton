@@ -118,11 +118,11 @@ class Connection extends \yii\db\Connection
 
         $tokens = [
             '{file}' => $file,
-            '{port}' => $dsn->port ?? '',
+            '{port}' => (string)($dsn->port ?? ''),
             '{server}' => $dsn->host,
-            '{user}' => $this->username,
+            '{user}' => (string)$this->username,
             '{password}' => $password,
-            '{database}' => $dsn->database,
+            '{database}' => (string)$dsn->database,
         ];
 
         return str_replace(array_keys($tokens), $tokens, $command);

@@ -25,24 +25,24 @@ use yii\helpers\ArrayHelper;
 trait NestedTreeTrait
 {
     /**
-     * @var array<int|string, static>|null
+     * @var array<int|string, self>|null
      */
     private ?array $ancestors = null;
     /**
-     * @var array<int|string, static>|null
+     * @var array<int|string, self>|null
      */
     private ?array $descendants = null;
 
     /**
-     * @return ActiveQuery<static>
+     * @return ActiveQuery<self>
      */
     public function getParent(): ActiveQuery
     {
-        return $this->hasOne(static::class, ['id' => 'parent_id']);
+        return $this->hasOne(self::class, ['id' => 'parent_id']);
     }
 
     /**
-     * @return static[]
+     * @return self[]
      */
     public function getAncestors(bool $refresh = false): array
     {
@@ -60,7 +60,7 @@ trait NestedTreeTrait
     }
 
     /**
-     * @param static[] $records
+     * @param self[] $records
      */
     public function setAncestors(array $records): void
     {
@@ -82,9 +82,9 @@ trait NestedTreeTrait
     }
 
     /**
-     * @return static|null
+     * @return self|null
      */
-    public function getFirstAncestor(): ?static
+    public function getFirstAncestor(): ?self
     {
         if ($this->parent_id) {
             $ancestors = $this->getAncestors();
@@ -95,7 +95,7 @@ trait NestedTreeTrait
     }
 
     /**
-     * @return ActiveQuery<covariant static>
+     * @return ActiveQuery<covariant self>
      */
     public function findAncestors(): ActiveQuery
     {
@@ -103,7 +103,7 @@ trait NestedTreeTrait
     }
 
     /**
-     * @return static[]
+     * @return self[]
      */
     public function getDescendants(bool $refresh = false): array
     {
@@ -121,7 +121,7 @@ trait NestedTreeTrait
     }
 
     /**
-     * @param static[] $records
+     * @param self[] $records
      */
     public function setDescendants(array $records): void
     {
@@ -137,7 +137,7 @@ trait NestedTreeTrait
     }
 
     /**
-     * @return ActiveQuery<covariant static>
+     * @return ActiveQuery<covariant self>
      */
     public function findDescendants(): ActiveQuery
     {
@@ -299,7 +299,7 @@ trait NestedTreeTrait
             ->where(['id' => $this->id])
             ->one(static::getDb());
 
-        if ($attributes) {
+        if (is_array($attributes)) {
             $this->setAttributes($attributes, false);
         }
     }
@@ -388,7 +388,7 @@ trait NestedTreeTrait
     }
 
     /**
-     * @param array<int|string, list<int>> $branch
+     * @param array<int|string, array<int>> $branch
      * @return array<int, array{lft: int, rgt: int, depth: int}>
      */
     private static function rebuildNestedTreeBranch(array $branch, int &$lft, int|string $parentId, int $depth): array
@@ -396,14 +396,13 @@ trait NestedTreeTrait
         $tree = [];
 
         foreach ($branch[$parentId] as $id) {
-            $tree[$id]['lft'] = $lft++;
-            $tree[$id]['depth'] = $depth;
+            $left = $lft++;
 
             if (isset($branch[$id])) {
                 $tree += self::rebuildNestedTreeBranch($branch, $lft, $id, $depth + 1);
             }
 
-            $tree[$id]['rgt'] = $lft++;
+            $tree[$id] = ['lft' => $left, 'rgt' => $lft++, 'depth' => $depth];
         }
 
         return $tree;

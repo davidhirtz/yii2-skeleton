@@ -14,7 +14,7 @@ use Yii;
 class Flashes extends Widget
 {
     /**
-     * @var list<string|Stringable>
+     * @var array<string, array<int|string, string>|string>
      */
     protected array $alerts;
 
@@ -41,7 +41,7 @@ class Flashes extends Widget
     {
         return is_array($messages)
             ? array_reduce($messages, fn ($carry, $item) => $carry . $this->getAlerts($status, $item), '')
-            : Html::tag('flash-alert', $this->renderAlert($status, $messages));
+            : Html::tag('flash-alert', (string)$this->renderAlert($status, $messages));
     }
 
     protected function renderAlert(string $status, string $message): string|Stringable

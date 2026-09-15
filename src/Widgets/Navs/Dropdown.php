@@ -77,7 +77,7 @@ class Dropdown extends Widget
 
     public function addItem(string|Stringable|null ...$items): static
     {
-        $this->items = [...$this->items, ...array_filter($items)];
+        $this->items = [...$this->items, ...array_values(array_filter($items))];
         return $this;
     }
 
@@ -133,6 +133,6 @@ class Dropdown extends Widget
                 : Li::make()->class('dropdown-item')->content($item)->render();
         }
 
-        return array_filter($items);
+        return array_values(array_filter($items));
     }
 }

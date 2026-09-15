@@ -31,7 +31,7 @@ class Alert extends Widget
 
     public function buttons(Button ...$buttons): static
     {
-        $this->buttons = $buttons;
+        $this->buttons = array_values($buttons);
         return $this;
     }
 

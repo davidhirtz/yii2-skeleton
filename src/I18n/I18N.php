@@ -79,7 +79,7 @@ class I18N extends \yii\i18n\I18N
      */
     public function setLanguages(array|string $languages): void
     {
-        $this->languages = array_unique((array)$languages);
+        $this->languages = array_values(array_unique((array)$languages));
     }
 
     public function hasLanguage(string $language): bool

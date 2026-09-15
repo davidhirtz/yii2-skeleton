@@ -154,6 +154,9 @@ class ParamsController extends Controller
         return static::generateKey();
     }
 
+    /**
+     * @param positive-int $length
+     */
     protected static function generateKey(int $length = 32): string
     {
         $bytes = random_bytes($length);

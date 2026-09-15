@@ -58,7 +58,8 @@ class DateTimeField extends Field
 
     protected function getTimeZone(): ?string
     {
-        $offset = $this->timeZone->getOffset(new DateTime());
+        $timeZone = is_string($this->timeZone) ? new DateTimeZone($this->timeZone) : $this->timeZone;
+        $offset = $timeZone->getOffset(new DateTime());
         $abs = abs($offset);
         $hours = intdiv($abs, 3600);
         $minutes = intdiv($abs % 3600, 60);

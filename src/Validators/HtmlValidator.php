@@ -23,6 +23,22 @@ class HtmlValidator extends Validator
     public array $allowedClasses = [];
 
     /**
+     * @var array<string, array<int|string, string>>
+     */
+    private array $classesByTag = [];
+
+    /**
+     * `allowedClasses` still carries whichever of the two shapes it was configured with; this is the tag-keyed
+     * one `init()` settled on.
+     *
+     * @return array<string, array<int|string, string>>
+     */
+    public function getAllowedClassesByTag(): array
+    {
+        return $this->classesByTag;
+    }
+
+    /**
      * @var list<string> containing allowed HTML tags like h1-h5 for format, table, th, td, tr for tables or blockquote,
      * strike, em for font styles.
      */
@@ -92,11 +108,15 @@ class HtmlValidator extends Validator
         }
 
         // Sanitize user input
-        $this->allowedHtmlTags = array_map(strtolower(...), array_filter($this->allowedHtmlTags));
+        $this->allowedHtmlTags = array_values(array_map(strtolower(...), array_filter($this->allowedHtmlTags)));
 
         // Transform legacy allowedClasses to an array of allowed classes for the link tag.
         if (key($this->allowedClasses) === 0) {
-            $this->allowedClasses = ['a' => $this->allowedClasses];
+            $this->allowedClasses = ['a' => array_filter($this->allowedClasses, is_string(...))];
+        }
+
+        foreach ($this->allowedClasses as $tag => $classes) {
+            $this->classesByTag[(string)$tag] = (array)$classes;
         }
 
         $defaultTags = [
@@ -167,7 +187,7 @@ class HtmlValidator extends Validator
         if ($this->allowedClasses) {
             $allowedClasses = [];
 
-            foreach ($this->allowedClasses as $values) {
+            foreach ($this->classesByTag as $values) {
                 foreach ($values as $classes) {
                     $allowedClasses = [
                         ...$allowedClasses,

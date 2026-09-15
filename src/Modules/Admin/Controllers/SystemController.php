@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\Controller;
 use Override;
 use Yii;
+use yii\caching\CacheInterface;
 use yii\db\Connection;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -98,7 +99,13 @@ class SystemController extends Controller
             throw new NotFoundHttpException();
         }
 
-        Yii::$app->get($cache)->flush();
+        $component = Yii::$app->get($cache);
+
+        if (!$component instanceof CacheInterface) {
+            throw new NotFoundHttpException();
+        }
+
+        $component->flush();
 
         $this->success(Yii::t('skeleton', 'SYSTEM_SUCCESS_FLUSHED'));
         return $this->redirect(['maintenance']);

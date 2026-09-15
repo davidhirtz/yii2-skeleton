@@ -68,9 +68,15 @@ class SerializedAttributesBehavior extends Behavior
         foreach ($this->attributes as $attribute) {
             $this->oldAttributes[$attribute] = $this->owner->getOldAttribute($attribute);
 
-            if (is_scalar($this->owner->$attribute)) {
+            if (is_string($this->owner->$attribute)) {
                 if ($this->encode) {
-                    $this->owner->$attribute = base64_decode($this->owner->$attribute, true);
+                    $decoded = base64_decode($this->owner->$attribute, true);
+
+                    if ($decoded === false) {
+                        continue;
+                    }
+
+                    $this->owner->$attribute = $decoded;
                 }
 
                 $value = @unserialize($this->owner->$attribute);

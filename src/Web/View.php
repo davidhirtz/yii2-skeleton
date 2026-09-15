@@ -25,6 +25,9 @@ class View extends \yii\web\View
     public ?string $titleTemplate = null;
 
     protected string|null $description = null;
+    /**
+     * @var non-empty-string
+     */
     protected string $jsImportName = 'a';
 
     #[Override]

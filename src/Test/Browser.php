@@ -115,7 +115,7 @@ class Browser extends AbstractBrowser
 
     /**
      * @param array<string, mixed> $parameters
-     * @return array<string, mixed>
+     * @return array<int|string, array<mixed>|string>
      */
     private function normalizeQueryParameters(array $parameters): array
     {

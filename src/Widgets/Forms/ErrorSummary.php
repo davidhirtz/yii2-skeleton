@@ -22,7 +22,7 @@ class ErrorSummary extends Widget
     public bool $showAllErrors = true;
 
     /**
-     * @var array<string, list<string>>|null
+     * @var list<string>|null
      */
     protected ?array $errors = null;
     /**
@@ -42,7 +42,7 @@ class ErrorSummary extends Widget
     }
 
     /**
-     * @param array<string, list<string>>|null $errors
+     * @param list<string>|null $errors
      */
     public function errors(?array $errors): static
     {

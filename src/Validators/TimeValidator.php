@@ -43,8 +43,8 @@ class TimeValidator extends Validator
             return;
         }
 
-        $hours = $match[1] ?? 0;
-        $minutes = $match[2] ?? 0;
+        $hours = (int)($match[1] ?? 0);
+        $minutes = (int)($match[2] ?? 0);
 
         if (($match['3'] ?? false) === 'pm' && $hours < 12) {
             $hours += 12;

@@ -32,7 +32,7 @@ trait TrailModelTrait
             $exclude[] = $this->getCustomAttributesColumn();
         }
 
-        return array_diff($this->attributes(), $exclude);
+        return array_values(array_diff($this->attributes(), $exclude));
     }
 
     public function getTrailBehavior(): TrailBehavior

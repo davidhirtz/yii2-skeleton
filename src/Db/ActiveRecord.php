@@ -157,7 +157,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     public function attributes(): array
     {
         $virtual = $this->getVirtualAttributes();
-        return $virtual ? array_values(array_unique([...parent::attributes(), ...$virtual])) : parent::attributes();
+        return array_values($virtual ? array_unique([...parent::attributes(), ...$virtual]) : parent::attributes());
     }
 
     /**

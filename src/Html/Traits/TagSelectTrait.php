@@ -8,25 +8,22 @@ use Hirtz\Skeleton\Html\Optgroup;
 use Hirtz\Skeleton\Html\Option;
 use Override;
 
-/**
- * @template T of Option|Optgroup
- */
 trait TagSelectTrait
 {
     /**
-     * @var T[]
+     * @var list<Option|Optgroup>
      */
     protected array $options = [];
 
     public function options(Option|Optgroup ...$option): static
     {
-        $this->options = $option;
+        $this->options = array_values($option);
         return $this;
     }
 
     public function addOption(Option|Optgroup ...$option): static
     {
-        $this->options = [...$this->options, ...$option];
+        $this->options = [...$this->options, ...array_values($option)];
         return $this;
     }
 

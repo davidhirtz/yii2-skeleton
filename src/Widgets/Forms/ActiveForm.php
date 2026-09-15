@@ -158,13 +158,13 @@ class ActiveForm extends Widget
     }
 
     /**
-     * @param array<int|string, mixed>|Fieldset $fieldsetOrRows
+     * @param array<int|string, mixed>|Fieldset|string|Stringable $fieldsetOrRows
      */
-    protected function getFieldset(array|Fieldset $fieldsetOrRows): ?Stringable
+    protected function getFieldset(array|Fieldset|string|Stringable $fieldsetOrRows): ?Stringable
     {
         if (!$fieldsetOrRows instanceof Fieldset) {
             $fieldsetOrRows = Fieldset::make()
-                ->rows($fieldsetOrRows);
+                ->rows(is_array($fieldsetOrRows) ? $fieldsetOrRows : [$fieldsetOrRows]);
         }
 
         return $fieldsetOrRows
@@ -217,6 +217,6 @@ class ActiveForm extends Widget
 
         return FormFooter::make()
             ->model($this->model)
-            ->items($this->footer);
+            ->items($this->footer !== null ? array_values($this->footer) : null);
     }
 }

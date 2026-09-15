@@ -473,7 +473,8 @@ class TrailGridView extends GridView
      */
     protected function getTrailModelRoute(Trail $trail): ?array
     {
-        return $this->getTrailIndexRoute($trail->model_class, (string)$trail->model_id);
+        $modelId = is_array($trail->model_id) ? implode('-', $trail->model_id) : $trail->model_id;
+        return $this->getTrailIndexRoute($trail->model_class, (string)$modelId);
     }
 
     /**

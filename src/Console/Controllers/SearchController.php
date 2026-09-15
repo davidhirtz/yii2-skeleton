@@ -113,7 +113,7 @@ class SearchController extends Controller
      */
     protected function getModelClasses(?string $models): array
     {
-        $names = $models !== null ? array_filter(array_map(trim(...), explode(',', $models))) : [];
+        $names = $models !== null ? array_values(array_filter(array_map(trim(...), explode(',', $models)))) : [];
         $classes = [];
 
         foreach ($this->getSearch()->getModelClasses() as $modelClass) {

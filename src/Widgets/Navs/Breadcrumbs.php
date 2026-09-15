@@ -64,13 +64,8 @@ class Breadcrumbs extends Widget
             ->class('breadcrumbs-list');
 
         foreach ($this->breadcrumbs as $breadcrumb) {
-            $tag = ($breadcrumb->url ? A::make() : Span::make())
-                ->class('breadcrumbs-link')
-                ->text($breadcrumb->label);
-
-            if ($breadcrumb->url) {
-                $tag->href($breadcrumb->url);
-            }
+            $tag = $breadcrumb->url ? A::make()->href($breadcrumb->url) : Span::make();
+            $tag->class('breadcrumbs-link')->text($breadcrumb->label);
 
             $list->addContent(Li::make()
                 ->class('breadcrumbs-item')

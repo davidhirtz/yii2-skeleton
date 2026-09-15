@@ -320,7 +320,7 @@ class UrlManager extends \yii\web\UrlManager
             }
         }
 
-        return array_unique($params);
+        return array_values(array_unique($params));
     }
 
     public function getDraftHostInfo(): string

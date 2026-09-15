@@ -14,20 +14,25 @@ class EventHelper
      * handler; the event itself is the optional second argument. An event triggered without an instance
      * (`Event::trigger(Foo::class, …)`) carries no sender and reaches no handler registered here.
      *
+     * A handler that reads more than the base event names its class in `$eventClass`, which is checked here as
+     * well as narrowed — nothing maps an event name to its class, so the two could otherwise disagree silently.
+     *
      * @template T of object
      * @template TEvent of Event
      * @phpstan-param class-string<T> $class
      * @param callable(T, TEvent): mixed $handler
+     * @phpstan-param class-string<TEvent> $eventClass
      */
     public static function on(
         string $class,
         string $name,
         callable $handler,
+        string $eventClass = Event::class,
         mixed $data = null,
         bool $append = true
     ): void {
-        Event::on($class, $name, static function (Event $event) use ($class, $handler): void {
-            if ($event->sender instanceof $class) {
+        Event::on($class, $name, static function (Event $event) use ($class, $eventClass, $handler): void {
+            if ($event->sender instanceof $class && $event instanceof $eventClass) {
                 $handler($event->sender, $event);
             }
         }, $data, $append);

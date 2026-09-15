@@ -19,9 +19,13 @@ class DuplicateActiveRecord
     public const EVENT_AFTER_DUPLICATE = 'afterDuplicate';
     public const EVENT_BEFORE_DUPLICATE = 'beforeDuplicate';
 
+    /**
+     * @var T
+     */
     public ActiveRecord $duplicate;
 
     /**
+     * @param T $model
      * @param array<string, mixed> $attributes
      */
     public function __construct(protected ActiveRecord $model, array $attributes = [])

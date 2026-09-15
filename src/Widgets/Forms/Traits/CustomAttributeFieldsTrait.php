@@ -23,7 +23,12 @@ trait CustomAttributeFieldsTrait
         (Model&CustomAttributeInterface)|null $model = null,
         array $except = []
     ): array {
-        $model ??= $this->model;
+        $model ??= $this->model instanceof CustomAttributeInterface ? $this->model : null;
+
+        if ($model === null) {
+            return [];
+        }
+
         $fields = [];
 
         foreach ($model->getCustomAttributeDefinitions() as $definition) {

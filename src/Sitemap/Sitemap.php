@@ -68,7 +68,7 @@ class Sitemap extends Component
     public array $urls = [];
 
     /**
-     * @var array<array-key, class-string<SitemapInterface>|array<string, mixed>> the class definitions of the
+     * @var array<array-key, class-string<SitemapInterface>|array{class: class-string<SitemapInterface>, ...}> the class definitions of the
      * sitemaps. The key is what the sitemap index names the sitemap by, so it should be a stable string.
      */
     public array $sitemaps = [];

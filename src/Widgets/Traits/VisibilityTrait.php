@@ -21,7 +21,7 @@ trait VisibilityTrait
     public function roles(?array $roles): static
     {
         $this->roles = $roles
-            ? array_unique(array_filter($this->roles ? [...$this->roles, ...$roles] : $roles))
+            ? array_values(array_unique(array_filter($this->roles ? [...$this->roles, ...$roles] : $roles)))
             : null;
 
         return $this;

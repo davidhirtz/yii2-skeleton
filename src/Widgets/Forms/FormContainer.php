@@ -16,7 +16,7 @@ class FormContainer extends Widget
     use ContainerTrait;
     use CardTrait;
 
-    protected ActiveForm $form;
+    protected ActiveForm|string $form;
 
     public function form(ActiveForm|string $form): static
     {

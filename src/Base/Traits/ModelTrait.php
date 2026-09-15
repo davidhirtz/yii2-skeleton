@@ -12,7 +12,7 @@ use yii\validators\Validator;
 trait ModelTrait
 {
     /**
-     * @var array<string, list<string>>|null
+     * @var array<string, array<string>>|null
      */
     private ?array $scenarios = null;
     /**

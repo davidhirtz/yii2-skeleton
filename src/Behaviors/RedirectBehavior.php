@@ -15,7 +15,7 @@ use yii\base\InvalidConfigException;
 use Closure;
 
 /**
- * @property ActiveRecord|static $owner
+ * @property ActiveRecord $owner
  */
 class RedirectBehavior extends Behavior
 {
@@ -50,7 +50,7 @@ class RedirectBehavior extends Behavior
 
     public function afterFind(): void
     {
-        $this->prevUrl = !$this->owner->getIsNewRecord() ? Url::sanitize($this->owner->getUrl()) : null;
+        $this->prevUrl = !$this->owner->getIsNewRecord() ? Url::sanitize($this->getUrl()) : null;
     }
 
     /**
@@ -58,7 +58,7 @@ class RedirectBehavior extends Behavior
      */
     public function afterSave(): void
     {
-        $url = Url::sanitize($this->owner->getUrl());
+        $url = Url::sanitize($this->getUrl());
 
         if ($url && $this->prevUrl && $this->prevUrl !== $url) {
             $this->updatePreviousRedirectUrls($url);
@@ -73,7 +73,7 @@ class RedirectBehavior extends Behavior
      */
     public function afterDelete(): void
     {
-        if ($url = Url::sanitize($this->owner->getUrl())) {
+        if ($url = Url::sanitize($this->getUrl())) {
             $this->deleteRedirects($url);
         }
     }
@@ -145,10 +145,15 @@ class RedirectBehavior extends Behavior
     }
 
     /**
-     * This method tries to generate a URL from owner's `getUrl` method if it does not implement a `getUrl` method.
+     * The owner's own `getUrl()` where it has one — Yii's behavior magic used to pick between the two, which left
+     * every call site reading an ambiguous union — and a URL built from its `getRoute()` otherwise.
      */
     public function getUrl(): false|string
     {
+        if (method_exists($this->owner, 'getUrl')) {
+            return $this->owner->getUrl();
+        }
+
         if (!method_exists($this->owner, 'getRoute')) {
             throw new InvalidConfigException($this->owner::class . ' needs to either implement a `getUrl` or `getRoute` method');
         }

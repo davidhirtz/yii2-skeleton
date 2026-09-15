@@ -12,9 +12,6 @@ use Override;
 class Select extends Tag
 {
     use TagInputTrait;
-    /**
-     * @use TagSelectTrait<Option|Optgroup>
-     */
     use TagSelectTrait;
 
     public function size(int $size): static

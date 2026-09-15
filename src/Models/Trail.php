@@ -26,7 +26,6 @@ use yii\db\ActiveRecordInterface;
  * @property int $id
  * @property int $type
  * @property string|null $model_class
- * @property array|string|null $model_id
  * @property int|null $user_id
  * @property string|null $message
  * @property array|null $data
@@ -87,7 +86,8 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         $webuser = WebUser::current();
 
         if ($webuser) {
-            $this->user_id = $webuser->getId();
+            $id = $webuser->getId();
+            $this->user_id = $id !== null ? (int)$id : null;
         }
 
         if (is_array($this->model_id)) {
@@ -166,7 +166,8 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
             return null;
         }
 
-        return TrailModelCollection::getModelByClassAndId($this->model_class, $this->model_id);
+        $modelId = is_array($this->model_id) ? implode('-', $this->model_id) : $this->model_id;
+        return TrailModelCollection::getModelByClassAndId($this->model_class, $modelId);
     }
 
     public function getDataModelRecord(): ?Model

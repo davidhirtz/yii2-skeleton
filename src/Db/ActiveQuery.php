@@ -276,7 +276,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
 
     /**
      * @param array<string, mixed>|\yii\db\ActiveRecord $row
-     * @param list<string> $keys
+     * @param array<string> $keys
      */
     private function getRowKey(array|\yii\db\ActiveRecord $row, array $keys): ?string
     {

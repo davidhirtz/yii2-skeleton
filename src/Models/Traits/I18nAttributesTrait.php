@@ -83,7 +83,7 @@ trait I18nAttributesTrait
     }
 
     /**
-     * @param list<string>|string $attributes
+     * @param array<string>|string $attributes
      * @param list<string>|null $languages
      * @return list<string>
      */

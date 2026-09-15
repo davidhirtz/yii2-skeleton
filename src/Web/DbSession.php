@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Web;
 
+use yii\db\Connection;
+use yii\di\Instance;
+
 class DbSession extends \yii\web\DbSession
 {
     use SessionTrait;
@@ -19,7 +22,7 @@ class DbSession extends \yii\web\DbSession
             $condition = ['and', $condition, ['not', ['id' => $exceptId]]];
         }
 
-        return $this->db->createCommand()
+        return Instance::ensure($this->db, Connection::class)->createCommand()
             ->delete($this->sessionTable, $condition)
             ->execute();
     }

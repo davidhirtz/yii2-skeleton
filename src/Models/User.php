@@ -504,7 +504,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         $data = base64_decode(substr($secret, strlen(self::ENCRYPTED_PREFIX)), true);
         $secret = $data === false ? false : Yii::$app->getSecurity()->decryptByKey($data, SecretKey::get());
 
-        return $secret === false ? null : $secret;
+        return is_string($secret) ? $secret : null;
     }
 
     private static function normalizeRecoveryCode(string $code): string
@@ -622,7 +622,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
      */
     public function getTrailAttributes(): array
     {
-        return array_diff($this->attributes(), [
+        return array_values(array_diff($this->attributes(), [
             $this->getCustomAttributesColumn(),
             'password_hash',
             'password_scheme',
@@ -634,7 +634,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
             'created_by_user_id',
             'updated_at',
             'created_at',
-        ]);
+        ]));
     }
 
     protected function getAdminNameAttributeValue(): string

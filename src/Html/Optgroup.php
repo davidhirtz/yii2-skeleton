@@ -10,7 +10,6 @@ use Override;
 
 class Optgroup extends Tag
 {
-    /** @use TagSelectTrait<Option> */
     use TagSelectTrait;
 
     #[Override]

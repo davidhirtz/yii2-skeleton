@@ -126,7 +126,7 @@ class I18nActiveQuery extends ActiveQuery
      * no knowledge of it.
      *
      * @param array<int|string, mixed>|string $columns
-     * @return array<string, mixed>
+     * @return array<int|string, mixed>
      */
     #[Override]
     protected function normalizeOrderBy($columns): array

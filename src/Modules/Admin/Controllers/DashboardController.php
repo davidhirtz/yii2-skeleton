@@ -58,7 +58,7 @@ class DashboardController extends Controller
     public static function addRoles(array|Closure $roles): void
     {
         EventHelper::on(static::class, self::EVENT_CONFIGURE, function (self $controller) use ($roles): void {
-            $controller->roles = [...$controller->roles, ...($roles instanceof Closure ? $roles() : $roles)];
+            $controller->roles = array_values([...$controller->roles, ...($roles instanceof Closure ? $roles() : $roles)]);
         });
     }
 }

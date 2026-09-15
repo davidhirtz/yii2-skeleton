@@ -82,7 +82,7 @@ class PageCacheTest extends TestCase
 
         $filter = $this->createPageCache();
 
-        self::assertSame([false, 'de'], $filter->variations);
+        self::assertSame(['0', 'de'], $filter->variations);
     }
 
     public function testTheConfiguredParamsAreAddedToTheVariations(): void
@@ -91,14 +91,14 @@ class PageCacheTest extends TestCase
 
         $filter = $this->createPageCache(['params' => ['page', 'category']]);
 
-        self::assertSame([false, 'en-US', '2', ''], $filter->variations);
+        self::assertSame(['0', 'en-US', '2', ''], $filter->variations);
     }
 
     public function testTheConfiguredVariationsAreKept(): void
     {
         $filter = $this->createPageCache(['variations' => ['own']]);
 
-        self::assertSame(['own', false, 'en-US'], $filter->variations);
+        self::assertSame(['own', '0', 'en-US'], $filter->variations);
     }
 
     public function testCallableVariationsAndParamsCannotBeCombined(): void

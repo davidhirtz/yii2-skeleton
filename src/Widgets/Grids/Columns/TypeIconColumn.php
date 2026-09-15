@@ -10,7 +10,7 @@ use Stringable;
 use yii\base\Model;
 
 /**
- * @template TModel of array|Model = Model
+ * @template TModel of TypeAttributeInterface&Model = TypeAttributeInterface&Model
  * @extends LinkColumn<TModel>
  */
 class TypeIconColumn extends LinkColumn

@@ -216,7 +216,7 @@ class GroupCustomAttribute extends CustomAttribute
     }
 
     /**
-     * @return array<string, string|Stringable|null>
+     * @return array<string, array<string, string|Stringable|null>|string|Stringable|null>
      */
     private function getFormattedValues(Model $owner, mixed $value, string $prefix): array
     {

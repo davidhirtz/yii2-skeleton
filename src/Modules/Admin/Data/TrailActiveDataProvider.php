@@ -69,6 +69,6 @@ class TrailActiveDataProvider extends ActiveDataProvider
             }
         }
 
-        return $models;
+        return array_values($models);
     }
 }

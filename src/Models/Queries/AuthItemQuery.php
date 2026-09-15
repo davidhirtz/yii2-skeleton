@@ -52,7 +52,7 @@ class AuthItemQuery extends ActiveQuery
             ->all();
 
         foreach ($relations as $relation) {
-            $this->setAuthItemChild($items, $relations, $relation['parent'], $relation['child']);
+            $this->setAuthItemChild($items, $relations, (string)$relation['parent'], (string)$relation['child']);
         }
 
         return $items;
@@ -60,7 +60,7 @@ class AuthItemQuery extends ActiveQuery
 
     /**
      * @param array<string, mixed> $items
-     * @param list<array{parent: string, child: string}> $relations
+     * @param array<array<string, mixed>> $relations
      */
     private function setAuthItemChild(array &$items, array $relations, string $parent, string$child): void
     {

@@ -35,7 +35,7 @@ class M220513072052User extends Migration
                 ->after('timezone'));
         }
 
-        if ($this->db->getSchema()->getTableSchema('{{%session_auth_key}}')) {
+        if ($this->getDb()->getSchema()->getTableSchema('{{%session_auth_key}}')) {
             $this->dropTable('{{%session_auth_key}}');
         }
     }

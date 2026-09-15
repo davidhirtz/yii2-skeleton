@@ -37,7 +37,7 @@ class BreadcrumbList extends Widget
      */
     protected function getItemListElement(): array
     {
-        return array_filter(array_map($this->getListItem(...), $this->breadcrumbs, array_keys($this->breadcrumbs)));
+        return array_values(array_filter(array_map($this->getListItem(...), $this->breadcrumbs, array_keys($this->breadcrumbs))));
     }
 
     /**

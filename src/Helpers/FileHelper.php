@@ -84,7 +84,7 @@ class FileHelper extends BaseFileHelper
     public static function findDirectories($dir, $options = []): array
     {
         $dir = Yii::getAlias($dir);
-        return parent::findDirectories($dir, $options);
+        return array_values(parent::findDirectories($dir, $options));
     }
 
     /**
@@ -104,13 +104,8 @@ class FileHelper extends BaseFileHelper
         $export = VarDumper::export($config);
         $date = date('c');
 
-        if ($phpdoc) {
-            if (is_string($phpdoc)) {
-                $phpdoc = preg_split("/\r\n|\n|\r/", $phpdoc) ?: [];
-            }
-
-            $phpdoc = "\n * " . implode("\n * ", $phpdoc) . "\n *";
-        }
+        $lines = is_string($phpdoc) ? preg_split("/\r\n|\n|\r/", $phpdoc) ?: [] : $phpdoc ?? [];
+        $phpdoc = $lines ? "\n * " . implode("\n * ", $lines) . "\n *" : '';
 
         return file_put_contents(
             $file,

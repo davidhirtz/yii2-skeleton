@@ -131,7 +131,7 @@ class Fieldset extends Widget
             }
 
             if ($validator instanceof DynamicRangeValidator) {
-                $className = SelectField::make();
+                $className = SelectField::class;
                 break;
             }
 
@@ -160,10 +160,11 @@ class Fieldset extends Widget
             }
         }
 
-        return $className::make()
-            ->type($type)
+        $field = $className::make()
             ->property($property)
             ->model($this->model);
+
+        return $field instanceof InputField ? $field->type($type) : $field;
     }
 
     protected function renderContent(): string|Stringable

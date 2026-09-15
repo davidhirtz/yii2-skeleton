@@ -109,16 +109,19 @@ class SelectField extends Field
      */
     protected function getItemsFromModel(): array
     {
+        $model = $this->model;
+
+        if ($model === null) {
+            return [];
+        }
+
         $method = 'get' . Inflector::camelize($this->property) . 'Definitions';
 
-        if (!$this->model->hasMethod($method)) {
+        if (!$model->hasMethod($method)) {
             $method = 'get' . Inflector::camelize(Inflector::pluralize($this->property));
         }
 
-        /** @var array<int|string, Definition|string|int|array<string, mixed>> */
-        return $this->model->hasMethod($method)
-            ? call_user_func([$this->model, $method])
-            : [];
+        return $model->hasMethod($method) ? $model->$method() : [];
     }
 
     /**

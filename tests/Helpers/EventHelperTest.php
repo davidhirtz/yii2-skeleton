@@ -42,6 +42,7 @@ class EventHelperTest extends TestCase
                 $data = $event->data;
                 $name = $event->name;
             },
+            Event::class,
             'attached data'
         );
 

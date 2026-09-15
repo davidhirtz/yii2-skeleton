@@ -77,9 +77,13 @@ class LinkPager extends \yii\widgets\LinkPager
         return '';
     }
 
+    /**
+     * @param int|string $label the page number a first/last button carries, beside the configured labels
+     */
     #[\Override]
     protected function renderPageButton($label, $page, $class, $disabled, $active): string
     {
+        $label = (string)$label;
         $options = $this->pageOptions;
         $tag = ArrayHelper::remove($options, 'tag', 'li');
 
@@ -127,7 +131,7 @@ class LinkPager extends \yii\widgets\LinkPager
     {
         $label ??= $this->prevPageLabel;
 
-        if (!$label) {
+        if (!is_string($label)) {
             return '';
         }
 
@@ -144,7 +148,7 @@ class LinkPager extends \yii\widgets\LinkPager
     {
         $label ??= $this->nextPageLabel;
 
-        if (!$label) {
+        if (!is_string($label)) {
             return '';
         }
 

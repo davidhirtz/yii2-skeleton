@@ -44,7 +44,11 @@ class GridSearch
 
     public function getUrl(): ?string
     {
-        return $this->url ?? Url::current([
+        if ($this->url !== null) {
+            return is_array($this->url) ? Url::to($this->url) : $this->url;
+        }
+
+        return Url::current([
             $this->paramName => null,
             'page' => null,
         ]);

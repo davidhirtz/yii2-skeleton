@@ -65,12 +65,12 @@ class PageCache extends \yii\filters\PageCache
         }
 
         if (!is_callable($this->variations)) {
-            $this->variations = $this->variations ?: [];
-            $this->variations[] = $request->getIsAjaxRoute();
+            $this->variations = $this->variations ? (array)$this->variations : [];
+            $this->variations[] = $request->getIsAjaxRoute() ? '1' : '0';
             $this->variations[] = Yii::$app->language;
 
             foreach ($this->params as $param) {
-                $this->variations[] = $request->get($param, '');
+                $this->variations[] = (string)$request->get($param, '');
             }
         } elseif ($this->params) {
             throw new InvalidConfigException('PageCache::$params cannot be set if "variations" is callable.');

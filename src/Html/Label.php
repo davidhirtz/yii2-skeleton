@@ -21,7 +21,7 @@ class Label extends Tag
 
     final public function text(string|Stringable $text): static
     {
-        $this->text = Html::encode($text);
+        $this->text = Html::encode((string)$text);
         return $this;
     }
 

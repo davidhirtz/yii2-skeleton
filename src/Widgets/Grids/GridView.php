@@ -52,6 +52,11 @@ class GridView extends Widget
     protected array $columns;
 
     /**
+     * @var list<Column> what `ensureColumns()` resolved the configuration above into
+     */
+    protected array $visibleColumns = [];
+
+    /**
      * @var list<string|Stringable>|GridFooter|null
      */
     protected array|GridFooter|null $footer = null;
@@ -87,7 +92,7 @@ class GridView extends Widget
     protected array $tableBodyAttributes = [];
 
     /**
-     * @var array<string, mixed>|Closure(T, int|string, int, static): array<string, mixed>|null
+     * @var array<string, mixed>|Closure(T, int|string=, int=, static=): (array<string, mixed>|null)|null
      */
     protected array|Closure|null $rowAttributes = null;
 
@@ -152,17 +157,14 @@ class GridView extends Widget
 
     protected function ensureColumns(): void
     {
-        $this->columns = array_values(array_filter($this->columns));
+        $this->visibleColumns = [];
 
-        foreach ($this->columns as $i => &$column) {
-            if (is_string($column)) {
-                $column = DataColumn::make()->property($column);
-            }
-
+        foreach (array_filter($this->columns) as $column) {
+            $column = is_string($column) ? DataColumn::make()->property($column) : $column;
             $column->grid($this);
 
-            if (!$column->isVisible()) {
-                unset($this->columns[$i]);
+            if ($column->isVisible()) {
+                $this->visibleColumns[] = $column;
             }
         }
     }
@@ -232,7 +234,7 @@ class GridView extends Widget
         $columns = [];
 
         if (is_array($model) || is_object($model)) {
-            foreach ($model as $name => $value) {
+            foreach (is_array($model) ? $model : get_object_vars($model) as $name => $value) {
                 if ($value === null || is_scalar($value) || $value instanceof Stringable) {
                     $columns[] = (string)$name;
                 }
@@ -246,7 +248,7 @@ class GridView extends Widget
     {
         $tr = Tr::make()->attributes($this->tableHeaderAttributes);
 
-        foreach ($this->columns as $column) {
+        foreach ($this->visibleColumns as $column) {
             $tr->addCells($column->renderHeader());
         }
 
@@ -288,7 +290,7 @@ class GridView extends Widget
 
         $tr = Tr::make()->attributes($attributes);
 
-        foreach ($this->columns as $column) {
+        foreach ($this->visibleColumns as $column) {
             $tr->addCells($column->renderBody($model, $key, $index));
         }
 

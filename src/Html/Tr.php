@@ -11,7 +11,7 @@ use Override;
 class Tr extends Tag
 {
     /**
-     * @var TableCell[]
+     * @var array<TableCell|string>
      */
     protected array $cells = [];
 
