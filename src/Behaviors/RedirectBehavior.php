@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Behaviors;
 
 use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Models\Trail;
 use Exception;
@@ -45,7 +46,7 @@ class RedirectBehavior extends Behavior
 
     public function afterFind(): void
     {
-        $this->prevUrl = !$this->owner->getIsNewRecord() ? Redirect::sanitizeUrl($this->owner->getUrl()) : false;
+        $this->prevUrl = !$this->owner->getIsNewRecord() ? Url::sanitize($this->owner->getUrl()) : false;
     }
 
     /**
@@ -53,7 +54,7 @@ class RedirectBehavior extends Behavior
      */
     public function afterSave(): void
     {
-        $url = Redirect::sanitizeUrl($this->owner->getUrl());
+        $url = Url::sanitize($this->owner->getUrl());
 
         if ($url && $this->prevUrl && $this->prevUrl !== $url) {
             $this->updatePreviousRedirectUrls($url);
@@ -68,7 +69,7 @@ class RedirectBehavior extends Behavior
      */
     public function afterDelete(): void
     {
-        if ($url = Redirect::sanitizeUrl($this->owner->getUrl())) {
+        if ($url = Url::sanitize($this->owner->getUrl())) {
             $this->deleteRedirects($url);
         }
     }

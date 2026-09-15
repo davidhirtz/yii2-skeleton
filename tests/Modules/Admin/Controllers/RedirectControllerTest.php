@@ -106,7 +106,7 @@ class RedirectControllerTest extends TestCase
         $redirect = Redirect::findOne(['request_uri' => 'old-page']);
         self::assertNotNull($redirect);
 
-        // `Redirect::sanitizeUrl()` strips the surrounding slashes off both ends
+        // `Helpers\Url::sanitize()` strips the surrounding slashes off both ends
         self::assertSame('new-page', $redirect->url);
         self::assertSame(Redirect::TYPE_MOVED_PERMANENTLY, $redirect->type);
     }

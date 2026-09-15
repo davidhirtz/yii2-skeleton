@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Behaviors\BlameableBehavior;
 use Hirtz\Skeleton\Behaviors\TimestampBehavior;
 use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Models\Traits\AdminModelTrait;
@@ -88,8 +89,8 @@ class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttribut
     {
         $this->type ??= static::TYPE_DEFAULT;
 
-        $this->request_uri = static::sanitizeUrl($this->request_uri);
-        $this->url = static::sanitizeUrl($this->url);
+        $this->request_uri = Url::sanitize($this->request_uri);
+        $this->url = Url::sanitize($this->url);
 
         return parent::beforeValidate();
     }
@@ -135,11 +136,6 @@ class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttribut
         if ($this->url === $this->request_uri) {
             $this->addInvalidAttributeError('url');
         }
-    }
-
-    public static function sanitizeUrl(false|string|null $url): string
-    {
-        return $url ? preg_replace('/\s+/', '%20', trim($url, '/ ')) : '';
     }
 
     public function getAdminRoute(): array|false

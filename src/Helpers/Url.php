@@ -13,4 +13,13 @@ class Url extends BaseUrl
     {
         return Yii::$app->getUrlManager()->createDraftUrl($params);
     }
+
+    /**
+     * Trims the surrounding slashes and whitespace and encodes whatever whitespace is left, so two URLs that
+     * differ in nothing else compare equal.
+     */
+    public static function sanitize(false|string|null $url): string
+    {
+        return $url ? preg_replace('/\s+/', '%20', trim($url, '/ ')) : '';
+    }
 }

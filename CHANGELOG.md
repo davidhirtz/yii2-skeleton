@@ -1,5 +1,9 @@
 ## 3.0.0 (in development)
 
+- **`Models\Redirect::sanitizeUrl()` is `Helpers\Url::sanitize()`.** Trimming the surrounding slashes and
+  encoding the remaining whitespace is what makes two URLs comparable, which every writer of a redirect needs
+  and the model was only the first to. The behaviour is unchanged; a caller renames the call.
+
 - **`Html\Svg` renders an inline `<svg>`.** A `Base\Tag` with the content trait plus `viewBox()`, `width()`,
   `height()`, `fill()` and `xmlns()`, so an icon or a logo is composed like every other tag instead of being
   carried as a raw markup string. It renders nothing without content (`showEmpty` is `false`), and `xmlns()`
