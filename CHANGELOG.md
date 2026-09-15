@@ -1,4 +1,4 @@
-## 2.6.9 (in development)
+## 2.6.9 (Sept 15, 2026)
 
 - PHP 8.5 compatibility fixes
 
