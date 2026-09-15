@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
 use Hirtz\Skeleton\Html\Aside;
 use Hirtz\Skeleton\Widgets\Widget;
+use Override;
 use Stringable;
 
 class AsideMenu extends Widget
@@ -15,6 +16,7 @@ class AsideMenu extends Widget
         'id' => 'aside',
     ];
 
+    #[Override]
     protected function renderContent(): string|Stringable
     {
         return Aside::make()

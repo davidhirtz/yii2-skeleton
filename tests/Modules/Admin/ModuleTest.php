@@ -42,8 +42,17 @@ class ModuleTest extends TestCase
     {
         $content = MainMenu::make()->render();
 
-        self::assertStringContainsString('class="aside-nav nav"', $content);
+        self::assertStringContainsString('class="aside-main aside-nav nav"', $content);
         self::assertStringContainsString('Test Module', $content);
+    }
+
+    /**
+     * `YII_DEBUG` is off in production only, so the error view is never rendered by a test — and a path that has
+     * gone stale is only noticed on a live site.
+     */
+    public function testErrorView(): void
+    {
+        self::assertFileExists(Yii::getAlias(Module::ERROR_VIEW));
     }
 
     public function testDashboard(): void

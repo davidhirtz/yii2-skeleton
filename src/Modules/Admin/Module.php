@@ -21,6 +21,12 @@ class Module extends \Hirtz\Skeleton\Base\Module
     final public const string AUTH_SYSTEM = 'system';
 
     /**
+     * Only a production request reaches it, so nothing but {@see \Hirtz\Skeleton\Tests\Modules\Admin\ModuleTest}
+     * notices the day the view moves.
+     */
+    final public const string ERROR_VIEW = '@skeleton/../resources/views/admin/dashboard/error.php';
+
+    /**
      * @var bool whether the fulltext search is available: the navbar button, both search actions, the index writes
      * of {@see \Hirtz\Skeleton\Behaviors\SearchBehavior} and the `search` console commands.
      */
@@ -76,7 +82,7 @@ class Module extends \Hirtz\Skeleton\Base\Module
             Yii::$app->getUser()->loginUrl ??= ['/admin/account/login'];
 
             if (!YII_DEBUG) {
-                Yii::$app->getErrorHandler()->errorView = '@skeleton/../resources/views/admin/views/dashboard/error.php';
+                Yii::$app->getErrorHandler()->errorView = self::ERROR_VIEW;
             }
         }
 

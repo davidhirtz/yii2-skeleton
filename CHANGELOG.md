@@ -1,5 +1,14 @@
 ## 3.0.0 (in development)
 
+- **The admin logo moved out of the skeleton.** `Modules\Admin\Widgets\Navs\AsideLogo`, `NavBarLogo` and
+  `Navs\Traits\LogoTrait` are gone — a theme adds its own by replacing `Navs\NavBar` and `Navs\AsideMenu`
+  through the container, as `davidhirtz/yii2-anakin` does. `Navs\MainMenu` carries an `aside-main` class so an
+  aside holding a logo can space itself
+
+- `Modules\Admin\Module::ERROR_VIEW` replaces the path the module assigned to the error handler inline, which
+  had gone stale (`resources/views/admin/views/dashboard/error.php`). Only a production request takes that
+  branch, so nothing ever noticed
+
 - **`bower-asset/jquery` is provided by the skeleton.** jQuery is never served — `yii\web\JqueryAsset` is replaced by
   an `EmptyAssetBundle` — so a project no longer needs the asset-packagist repository for it, and the bundle installs
   on its own. Its `composer.lock` is no longer committed; a library is tested against the newest dependencies its

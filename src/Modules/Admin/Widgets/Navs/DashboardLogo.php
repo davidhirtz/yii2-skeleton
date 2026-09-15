@@ -29,9 +29,9 @@ class DashboardLogo extends Widget
     #[Override]
     protected function renderContent(): string|Stringable
     {
-       return array_key_exists('src', $this->attributes)
-           ? Img::make()->attributes($this->attributes)
-           : '';
+        return array_key_exists('src', $this->attributes)
+            ? Img::make()->attributes($this->attributes)
+            : '';
     }
 
     protected function getDefaultImageSource(): string|false
