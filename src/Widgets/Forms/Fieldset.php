@@ -83,18 +83,10 @@ class Fieldset extends Widget
         }
 
         foreach ($rows as $key => $field) {
-            if (!$field instanceof Field) {
-                continue;
-            }
-
-            if (!$field->isVisible()) {
-                Yii::debug("Skipping field for invisible attribute '$field->property'");
-                unset($rows[$key]);
-                continue;
-            }
-
-            // A disabled field is unsafe by definition, but it still renders.
-            if (!$field->isSafe() && !$field->isDisabled()) {
+            // Whether a field is visible is decided by its own render, once it has configured itself; whether the
+            // model accepts its attribute has to be answered before that, since configuring reads the attribute.
+            // A disabled field is unsafe by definition and still renders.
+            if ($field instanceof Field && !$field->isSafe() && !$field->isDisabled()) {
                 Yii::debug("Skipping field for unsafe attribute '$field->property'");
                 unset($rows[$key]);
             }
@@ -169,11 +161,13 @@ class Fieldset extends Widget
 
     protected function renderContent(): string|Stringable
     {
-        return $this->rows
+        $rows = array_filter(array_map(static fn (string|Stringable $row): string => (string)$row, $this->rows));
+
+        return $rows
             ? \Hirtz\Skeleton\Html\Fieldset::make()
                 ->attributes($this->attributes)
                 ->addClass('fieldset')
-                ->content(...$this->rows)
+                ->content(...$rows)
             : '';
     }
 }

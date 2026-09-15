@@ -17,10 +17,11 @@ use yii\base\Model;
  */
 class TypeSelectField extends SelectField
 {
+    public ?string $property = 'type';
+
     #[Override]
     protected function configure(): void
     {
-        $this->property ??= 'type';
         $fingerprints = $this->getFingerprints();
 
         if (count(array_unique($fingerprints)) > 1) {

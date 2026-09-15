@@ -148,7 +148,7 @@ class ActiveForm extends Widget
 
         $content = is_array(current($this->rows)) || current($this->rows) instanceof Fieldset
             ? implode('', array_map($this->getFieldset(...), $this->rows))
-            : $this->getFieldset($this->rows);
+            : (string)$this->getFieldset($this->rows);
 
         return $content
             ? Div::make()

@@ -1,5 +1,14 @@
 ## 3.0.0 (in development)
 
+- **`Widgets\Forms\Fieldset` no longer asks a field `isVisible()` before the field has configured itself.**
+  A field is rendered like every other widget — `configure()`, then `isVisible()` — and the fieldset drops the
+  rows that rendered empty, so a field may decide its visibility on what its own `configure()` resolved. The one
+  check that still runs first is `!isSafe() && !isDisabled()`, because configuring a field reads its attribute
+  off the model and an attribute the model does not have is a fatal rather than a missing row. That check needs
+  the field's `property` before `configure()`, so **a `Field` subclass binding itself to an attribute declares
+  `public ?string $property = '…';` instead of assigning it in `configure()`** — `Widgets\Forms\Fields\TypeSelectField`
+  does, and `Field::isSafe()`'s `!$this->property` now means "bound to no attribute" rather than "not resolved yet"
+
 - **`Models\Collections\TrailModelCollection::formatAttributeValue()` resolves a range attribute through
   `get<Attribute>Definitions()`**, falling back to `get<Plural>()` as `Validators\DynamicRangeValidator` and
   `Widgets\Forms\Fields\SelectField` do, and reads a `Models\Definitions\Definition` through `getName()`. It

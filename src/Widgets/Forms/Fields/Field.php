@@ -143,6 +143,10 @@ abstract class Field extends Widget
             : '';
     }
 
+    /**
+     * Read by {@see \Hirtz\Skeleton\Widgets\Forms\Fieldset::configure()} before the field configures itself, so a
+     * subclass binding itself to an attribute declares `$property` rather than assigning it in `configure()`.
+     */
     public function isSafe(): bool
     {
         return !$this->property || ($this->model?->isAttributeSafe($this->property) ?? false);
