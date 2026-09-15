@@ -13,7 +13,9 @@ use yii\base\InvalidConfigException;
 use yii\db\ConstraintFinderInterface;
 use yii\db\IndexConstraint;
 use yii\db\Query;
+use yii\db\TableSchema;
 use yii\rbac\DbManager;
+use yii\rbac\Item;
 use yii\rbac\Permission;
 
 trait MigrationTrait
@@ -21,6 +23,18 @@ trait MigrationTrait
     protected function getAuthManager(): DbManager
     {
         return Yii::$app->getAuthManager();
+    }
+
+    /**
+     * A name no item carries names itself, rather than reaching `addChild()` as `null`.
+     */
+    protected function getAuthItem(string $name): Item
+    {
+        $auth = $this->getAuthManager();
+
+        return $auth->getRole($name)
+            ?? $auth->getPermission($name)
+            ?? throw new RuntimeException("Auth item \"$name\" does not exist.");
     }
 
     protected function addPermission(string $name, Message $description, string ...$parents): Permission
@@ -32,7 +46,7 @@ trait MigrationTrait
         $auth->add($permission);
 
         foreach ($parents as $parent) {
-            $auth->addChild($auth->getRole($parent) ?? $auth->getPermission($parent), $permission);
+            $auth->addChild($this->getAuthItem($parent), $permission);
         }
 
         $auth->invalidateCache();
@@ -176,7 +190,7 @@ trait MigrationTrait
      */
     protected function moveCustomAttributesColumnToEnd(string $table, string $column = 'custom_attributes'): void
     {
-        $columns = $this->getDb()->getSchema()->getTableSchema($table, true)->getColumnNames();
+        $columns = $this->getTableSchema($table)->getColumnNames();
         $columns = array_values(array_diff($columns, [$column]));
 
         $this->moveCustomAttributesColumn($table, (string)end($columns), $column);
@@ -184,7 +198,7 @@ trait MigrationTrait
 
     protected function dropColumnIfExists(string $table, string $column): void
     {
-        if ($this->getDb()->getTableSchema($table)->getColumn($column)) {
+        if ($this->getTableSchema($table)->getColumn($column)) {
             $this->dropColumn($table, $column);
         }
     }
@@ -370,7 +384,7 @@ trait MigrationTrait
     {
         $columns = [];
 
-        foreach ($this->getDb()->getSchema()->getTableSchema($table, true)->getColumnNames() as $name) {
+        foreach ($this->getTableSchema($table)->getColumnNames() as $name) {
             foreach ($attributes as $attribute) {
                 if ($name === $attribute || str_starts_with($name, $attribute . '_')) {
                     $columns[] = $name;
@@ -417,7 +431,7 @@ trait MigrationTrait
     protected function getI18nColumns(string $table): array
     {
         $i18n = Yii::$app->getI18n();
-        $names = $this->getDb()->getSchema()->getTableSchema($table, true)->getColumnNames();
+        $names = $this->getTableSchema($table)->getColumnNames();
         $columns = [];
 
         foreach ($names as $attribute) {
@@ -523,7 +537,7 @@ trait MigrationTrait
     private function addI18nColumn(string $table, string $attribute, string $language): ?string
     {
         $schema = $this->getDb()->getSchema();
-        $tableSchema = $schema->getTableSchema($table, true);
+        $tableSchema = $this->getTableSchema($table);
         $source = $tableSchema->getColumn($attribute);
         $column = Yii::$app->getI18n()->getAttributeName($attribute, $language);
 
@@ -568,8 +582,18 @@ trait MigrationTrait
         return $db->quoteTableName($db->getSchema()->getRawTableName($tableName));
     }
 
+    /**
+     * The schema is read fresh, since a migration is part-way through changing it, and a missing table names
+     * itself rather than leaving Yii to report a call on `null`.
+     */
+    protected function getTableSchema(string $table): TableSchema
+    {
+        return $this->getDb()->getSchema()->getTableSchema($table, true)
+            ?? throw new RuntimeException("Table \"$table\" does not exist.");
+    }
+
     protected function hasColumn(string $table, string $column): bool
     {
-        return $this->getDb()->getSchema()->getTableSchema($table, true)->getColumn($column) !== null;
+        return $this->getTableSchema($table)->getColumn($column) !== null;
     }
 }

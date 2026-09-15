@@ -1,5 +1,17 @@
 ## 3.0.0 (in development)
 
+- **A migration helper that cannot answer names the table or the item, rather than reaching Yii as `null`.**
+  `Db\Traits\MigrationTrait::getTableSchema()` replaces the eight `getDb()->getSchema()->getTableSchema($table, true)`
+  reads and throws for a table that is not there; `getAuthItem()` does the same for a name neither
+  `getRole()` nor `getPermission()` knows, so a mistyped parent in `addPermission()` is reported instead of
+  reaching `addChild()` as `null`. The fixture lookups took the same treatment —
+  `Test\Traits\UserFixtureTrait::getUserFromFixture()`, `assignRole()` and `assignPermission()` name what was
+  missing where they used to hand a `null` on
+
+- `Html\Traits\TagContentTrait::addText()` skips a `null`, as `content()` and `addContent()` already did. It
+  passed one to `Html::encode()`, which is a `htmlspecialchars(null)` deprecation on PHP 8.1+ for an empty
+  string nothing rendered
+
 - **PHPStan runs at level 7.** The pass cleared 1256 findings, most of them a `list<>` promised where
   `array_filter()`, `array_diff()`, `Query::column()` or a variadic collected through named arguments answers a
   key-preserving array, or a builtin's `false` reaching a non-nullable property. Two of the three live bugs it

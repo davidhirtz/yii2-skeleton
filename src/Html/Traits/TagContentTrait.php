@@ -35,6 +35,10 @@ trait TagContentTrait
     final public function addText(string|Stringable|null ...$content): static
     {
         foreach ($content as $text) {
+            if ($text === null) {
+                continue;
+            }
+
             $this->content[] = $text instanceof Stringable ? $text : Html::encode($text);
         }
 

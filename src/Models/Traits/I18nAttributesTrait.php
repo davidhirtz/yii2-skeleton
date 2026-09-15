@@ -17,17 +17,17 @@ trait I18nAttributesTrait
     public array $i18nAttributes = [];
 
     /**
-     * @var array<string, string>|null
+     * @var array<string, string>
      */
-    private ?array $i18nHints = null;
+    private array $i18nHints = [];
     /**
-     * @var array<string, string>|null
+     * @var array<string, string>
      */
-    private ?array $i18nLabels = null;
+    private array $i18nLabels = [];
     /**
-     * @var list<string>
+     * @var list<string>|null the attributes the labels and hints were built for, `null` while they never were
      */
-    private array $i18nLabelsKey = [];
+    private ?array $i18nLabelsKey = null;
 
     /**
      * @return list<string> `i18nAttributes` plus the translatable custom attributes of the model's current state
@@ -140,7 +140,7 @@ trait I18nAttributesTrait
     {
         $attributes = $this->getI18nAttributes();
 
-        if ($this->i18nLabels !== null && $this->i18nLabelsKey === $attributes) {
+        if ($this->i18nLabelsKey === $attributes) {
             return;
         }
 
@@ -163,7 +163,11 @@ trait I18nAttributesTrait
                 }
 
                 $this->i18nLabels[$name] = $label;
-                $this->i18nHints[$name] ??= $this->i18nHints[$attribute] ?? null;
+                $hint = $this->i18nHints[$name] ?? $this->i18nHints[$attribute] ?? null;
+
+                if ($hint !== null) {
+                    $this->i18nHints[$name] = $hint;
+                }
             }
         }
     }

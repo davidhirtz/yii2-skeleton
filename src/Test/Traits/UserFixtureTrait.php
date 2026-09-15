@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Test\Traits;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\Fixtures\UserFixture;
 use Override;
+use RuntimeException;
 use Yii;
 
 trait UserFixtureTrait
@@ -41,7 +42,8 @@ trait UserFixtureTrait
 
     protected function getUserFromFixture(string $key): User
     {
-        return User::findOne($this->getUserFixtureData($key)['id']);
+        return User::findOne($this->getUserFixtureData($key)['id'])
+            ?? throw new RuntimeException("User fixture \"$key\" was not loaded.");
     }
 
     protected function assignAdminRole(int $userId): void
@@ -56,13 +58,19 @@ trait UserFixtureTrait
 
     protected function assignPermission(int $userId, string $permission): void
     {
-        $permission = Yii::$app->getAuthManager()->getPermission($permission);
-        Yii::$app->getAuthManager()->assign($permission, $userId);
+        $auth = Yii::$app->getAuthManager();
+        $item = $auth->getPermission($permission)
+            ?? throw new RuntimeException("Permission \"$permission\" does not exist.");
+
+        $auth->assign($item, $userId);
     }
 
     protected function assignRole(int $userId, string $role): void
     {
-        $role = Yii::$app->getAuthManager()->getRole($role);
-        Yii::$app->getAuthManager()->assign($role, $userId);
+        $auth = Yii::$app->getAuthManager();
+        $item = $auth->getRole($role)
+            ?? throw new RuntimeException("Role \"$role\" does not exist.");
+
+        $auth->assign($item, $userId);
     }
 }

@@ -9,6 +9,7 @@ use Hirtz\Skeleton\I18n\Message;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
+use RuntimeException;
 use Yii;
 use yii\db\Migration;
 
@@ -81,6 +82,18 @@ class MigrationTraitAuthItemsTest extends TestCase
         self::assertArrayHasKey('testOldUpdate', $assignments);
     }
 
+    public function testGetAuthItemNamesAnUnknownItem(): void
+    {
+        $migration = $this->createMigration();
+
+        self::assertSame(User::AUTH_ROLE_ADMIN, $migration->getAuthItem(User::AUTH_ROLE_ADMIN)->name);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Auth item "nope" does not exist.');
+
+        $migration->getAuthItem('nope');
+    }
+
     private function createMigration(): TestAuthItemMigration
     {
         return new TestAuthItemMigration(['compact' => true]);
@@ -91,6 +104,7 @@ class TestAuthItemMigration extends Migration
 {
     use MigrationTrait {
         addPermission as public;
+        getAuthItem as public;
         replaceAuthItems as public;
         restoreAuthItems as public;
     }

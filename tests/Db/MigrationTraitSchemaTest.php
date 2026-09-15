@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Tests\Db;
 use Hirtz\Skeleton\Db\Traits\MigrationTrait;
 use Hirtz\Skeleton\Test\TestCase;
 use Override;
+use RuntimeException;
 use Yii;
 use yii\db\Migration;
 
@@ -160,6 +161,18 @@ class MigrationTraitSchemaTest extends TestCase
         return $names;
     }
 
+    public function testGetTableSchemaNamesAMissingTable(): void
+    {
+        $migration = $this->createMigration();
+
+        self::assertSame(self::TABLE, $migration->getTableSchema(self::TABLE)->name);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Table "nope" does not exist.');
+
+        $migration->getTableSchema('nope');
+    }
+
     private function createMigration(): TestSchemaMigration
     {
         return new TestSchemaMigration(['compact' => true]);
@@ -176,6 +189,7 @@ class TestSchemaMigration extends Migration
         dropIndexIfExists as public;
         getForeignKeyName as public;
         getQuotedTableName as public;
+        getTableSchema as public;
         getTableOptions as public;
         hasColumn as public;
     }
