@@ -29,7 +29,7 @@ class ModuleTest extends TestCase
         parent::setUp();
 
         // The admin menu is a logged-in surface: `DashboardNavItem` and `SystemNavItem` are guarded by `ROLE_AUTHENTICATED`.
-        Yii::$app->getUser()->login($this->getUserFromFixture('admin'));
+        $this->getWebUser()->login($this->getUserFromFixture('admin'));
 
         /** @var Module $module */
         $module = Yii::$app->getModule('admin');

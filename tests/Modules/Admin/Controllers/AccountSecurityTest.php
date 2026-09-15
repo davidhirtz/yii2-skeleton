@@ -34,10 +34,10 @@ class AccountSecurityTest extends TestCase
 
         self::assertTrue($user->hasTwoFactorAuthentication());
         self::assertSame($secret, $user->getTwoFactorAuthenticationSecret());
-        self::assertNotEmpty(Yii::$app->getSession()->getFlash('success'));
+        self::assertNotEmpty($this->getWebSession()->getFlash('success'));
 
         // the codes are readable exactly once, on the page the redirect lands on
-        $codes = Yii::$app->getSession()->getFlash(AccountController::RECOVERY_CODES_FLASH);
+        $codes = $this->getWebSession()->getFlash(AccountController::RECOVERY_CODES_FLASH);
 
         self::assertCount(User::RECOVERY_CODE_COUNT, $codes);
     }
@@ -52,8 +52,8 @@ class AccountSecurityTest extends TestCase
         ]);
 
         self::assertFalse(User::findOne($user->id)->hasTwoFactorAuthentication());
-        self::assertNotEmpty(Yii::$app->getSession()->getFlash('danger'));
-        self::assertEmpty(Yii::$app->getSession()->getFlash(AccountController::RECOVERY_CODES_FLASH));
+        self::assertNotEmpty($this->getWebSession()->getFlash('danger'));
+        self::assertEmpty($this->getWebSession()->getFlash(AccountController::RECOVERY_CODES_FLASH));
     }
 
     public function testTheAuthenticatorIsDisabledWithACode(): void
@@ -65,7 +65,7 @@ class AccountSecurityTest extends TestCase
         ]);
 
         self::assertFalse(User::findOne($user->id)->hasTwoFactorAuthentication());
-        self::assertNotEmpty(Yii::$app->getSession()->getFlash('success'));
+        self::assertNotEmpty($this->getWebSession()->getFlash('success'));
     }
 
     /**
@@ -94,13 +94,13 @@ class AccountSecurityTest extends TestCase
         ]);
 
         self::assertTrue(User::findOne($user->id)->hasTwoFactorAuthentication());
-        self::assertNotEmpty(Yii::$app->getSession()->getFlash('danger'));
+        self::assertNotEmpty($this->getWebSession()->getFlash('danger'));
     }
 
     public function testTheSecurityPageIsGoneWhileTwoFactorAuthenticationIsOff(): void
     {
         $this->login('owner');
-        Yii::$app->getUser()->enableTwoFactorAuthentication = false;
+        $this->getWebUser()->enableTwoFactorAuthentication = false;
 
         $this->expectException(ForbiddenHttpException::class);
         Yii::$app->runAction('admin/account/security');
@@ -121,7 +121,7 @@ class AccountSecurityTest extends TestCase
         $response = $this->post('admin/account/logout-other-sessions');
 
         self::assertInstanceOf(Response::class, $response);
-        self::assertNotEmpty(Yii::$app->getSession()->getFlash('success'));
+        self::assertNotEmpty($this->getWebSession()->getFlash('success'));
     }
 
     public function testTheTimezoneIsSaved(): void
@@ -131,7 +131,7 @@ class AccountSecurityTest extends TestCase
         $this->post('admin/account/timezone', ['timezone' => 'Europe/Berlin']);
 
         self::assertSame('Europe/Berlin', User::findOne($user->id)->timezone);
-        self::assertNotEmpty(Yii::$app->getSession()->getFlash('success'));
+        self::assertNotEmpty($this->getWebSession()->getFlash('success'));
     }
 
     public function testAnInvalidTimezoneIsRefused(): void
@@ -141,7 +141,7 @@ class AccountSecurityTest extends TestCase
         $this->post('admin/account/timezone', ['timezone' => 'Mars/Olympus']);
 
         self::assertNull(User::findOne($user->id)->timezone);
-        self::assertNotEmpty(Yii::$app->getSession()->getFlash('danger'));
+        self::assertNotEmpty($this->getWebSession()->getFlash('danger'));
     }
 
     public function testTheTimezoneRedirectsWhereItWasAskedTo(): void
@@ -158,7 +158,7 @@ class AccountSecurityTest extends TestCase
     {
         self::assertNull(Yii::$app->runAction('admin/account/security'));
 
-        $location = Yii::$app->getResponse()->getHeaders()->get('location');
+        $location = $this->getWebResponse()->getHeaders()->get('location');
 
         self::assertStringContainsString('account/login', (string)$location);
     }
@@ -179,7 +179,7 @@ class AccountSecurityTest extends TestCase
     {
         $_SERVER['REQUEST_METHOD'] = 'POST';
 
-        $request = Yii::$app->getRequest();
+        $request = $this->getWebRequest();
         $request->setBodyParams([...$bodyParams, $request->csrfParam => $request->getCsrfToken()]);
 
         return Yii::$app->runAction($route, $params);
@@ -188,7 +188,7 @@ class AccountSecurityTest extends TestCase
     private function login(string $fixtureKey): User
     {
         $user = $this->getUserFromFixture($fixtureKey);
-        Yii::$app->getUser()->setIdentity($user);
+        $this->getWebUser()->setIdentity($user);
 
         return $user;
     }

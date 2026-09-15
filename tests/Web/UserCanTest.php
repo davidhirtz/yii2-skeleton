@@ -21,8 +21,8 @@ class UserCanTest extends TestCase
         $this->assignAdminRole($admin->id);
         $this->loginAs($admin);
 
-        self::assertFalse(Yii::$app->getUser()->can(User::AUTH_USER, ['user' => $owner]));
-        self::assertFalse(Yii::$app->getUser()->can(User::AUTH_USER_ASSIGN, ['user' => $owner]));
+        self::assertFalse($this->getWebUser()->can(User::AUTH_USER, ['user' => $owner]));
+        self::assertFalse($this->getWebUser()->can(User::AUTH_USER_ASSIGN, ['user' => $owner]));
     }
 
     public function testAnAdminCanManageAnOrdinaryUser(): void
@@ -33,7 +33,7 @@ class UserCanTest extends TestCase
         $this->assignAdminRole($admin->id);
         $this->loginAs($admin);
 
-        self::assertTrue(Yii::$app->getUser()->can(User::AUTH_USER, ['user' => $other]));
+        self::assertTrue($this->getWebUser()->can(User::AUTH_USER, ['user' => $other]));
     }
 
     public function testAUserCannotManageSomeoneWithMorePermissions(): void
@@ -47,8 +47,8 @@ class UserCanTest extends TestCase
 
         $this->loginAs($editor);
 
-        self::assertTrue(Yii::$app->getUser()->can(User::AUTH_USER, ['user' => $editor]));
-        self::assertFalse(Yii::$app->getUser()->can(User::AUTH_USER, ['user' => $admin]));
+        self::assertTrue($this->getWebUser()->can(User::AUTH_USER, ['user' => $editor]));
+        self::assertFalse($this->getWebUser()->can(User::AUTH_USER, ['user' => $admin]));
     }
 
     public function testAnActorHoldingEverythingIsAnsweredWithoutALookup(): void
@@ -59,7 +59,7 @@ class UserCanTest extends TestCase
         $this->assignAdminRole($admin->id);
         $this->loginAs($admin);
 
-        $webuser = Yii::$app->getUser();
+        $webuser = $this->getWebUser();
         $count = count(Yii::$app->getAuthManager()->getPermissions());
 
         self::assertCount($count, Yii::$app->getAuthManager()->getPermissionsByUser($admin->id));
@@ -73,13 +73,13 @@ class UserCanTest extends TestCase
 
         $this->loginAs($editor);
 
-        self::assertTrue(Yii::$app->getUser()->canManageUser($other));
-        self::assertFalse(Yii::$app->getUser()->can(User::AUTH_USER, ['user' => $other]));
+        self::assertTrue($this->getWebUser()->canManageUser($other));
+        self::assertFalse($this->getWebUser()->can(User::AUTH_USER, ['user' => $other]));
     }
 
     private function loginAs(User $user): void
     {
-        Yii::$app->getUser()->disableRbacForOwner = false;
-        Yii::$app->getUser()->setIdentity($user);
+        $this->getWebUser()->disableRbacForOwner = false;
+        $this->getWebUser()->setIdentity($user);
     }
 }

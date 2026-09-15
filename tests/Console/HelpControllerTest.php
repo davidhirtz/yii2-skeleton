@@ -8,7 +8,6 @@ use Hirtz\Skeleton\Console\Application;
 use Hirtz\Skeleton\Console\Controllers\HelpController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\DashboardController;
 use Hirtz\Skeleton\Test\TestCase;
-use Yii;
 use yii\console\UnknownCommandException;
 
 class HelpControllerTest extends TestCase
@@ -21,9 +20,9 @@ class HelpControllerTest extends TestCase
      */
     public function testGetCommandsSkipsWebControllersInControllerMap(): void
     {
-        Yii::$app->getModule('admin')->controllerMap['dashboard'] = DashboardController::class;
+        Application::current()->getModule('admin')->controllerMap['dashboard'] = DashboardController::class;
 
-        $commands = (new HelpController('help', Yii::$app))->getCommands();
+        $commands = (new HelpController('help', Application::current()))->getCommands();
 
         self::assertNotContains('admin/dashboard', $commands);
         self::assertContains('migrate', $commands);
@@ -31,16 +30,16 @@ class HelpControllerTest extends TestCase
 
     public function testUnknownCommandSuggestsAlternatives(): void
     {
-        Yii::$app->getModule('admin')->controllerMap['dashboard'] = DashboardController::class;
+        Application::current()->getModule('admin')->controllerMap['dashboard'] = DashboardController::class;
 
-        $exception = new UnknownCommandException('migrat', Yii::$app);
+        $exception = new UnknownCommandException('migrat', Application::current());
 
         self::assertContains('migrate', $exception->getSuggestedAlternatives());
     }
 
     public function testHelpCommandResolvesToOverriddenController(): void
     {
-        [$controller] = Yii::$app->createController('help');
+        [$controller] = Application::current()->createController('help');
 
         self::assertInstanceOf(HelpController::class, $controller);
     }

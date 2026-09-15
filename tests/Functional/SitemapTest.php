@@ -6,7 +6,6 @@ namespace Hirtz\Skeleton\Tests\Functional;
 
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
-use Yii;
 
 class SitemapTest extends TestCase
 {
@@ -18,6 +17,6 @@ class SitemapTest extends TestCase
 
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('content-type', 'application/xml');
-        self::assertFalse(Yii::$app->getRequest()->getIsDraft());
+        self::assertFalse($this->getWebRequest()->getIsDraft());
     }
 }

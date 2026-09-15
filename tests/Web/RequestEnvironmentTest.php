@@ -117,6 +117,6 @@ class RequestEnvironmentTest extends TestCase
 
     private function getRequest(): Request
     {
-        return Yii::$app->getRequest();
+        return $this->getWebRequest();
     }
 }

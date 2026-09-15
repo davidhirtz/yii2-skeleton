@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Console;
 
+use Hirtz\Skeleton\Console\Application;
 use Hirtz\Skeleton\Console\Controllers\MessageController;
 use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Test\TestCase;
@@ -14,6 +15,8 @@ use yii\console\Exception;
 
 class MessageControllerTest extends TestCase
 {
+    protected string $applicationClass = Application::class;
+
     private string $path;
     private string $sourcePath;
     private string $messagePath;
@@ -141,7 +144,7 @@ class MessageControllerTest extends TestCase
 
     private function createController(): TestMessageController
     {
-        return new TestMessageController('message', Yii::$app);
+        return new TestMessageController('message', Application::current());
     }
 }
 

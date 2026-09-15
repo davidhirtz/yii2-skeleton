@@ -18,7 +18,7 @@ class ControllerTest extends TestCase
 
         $controller = new Controller('test', Yii::$app);
         $controller->errorOrSuccess($model, 'Success message');
-        $flashes = Yii::$app->getSession()->getAllFlashes();
+        $flashes = $this->getWebSession()->getAllFlashes();
 
         self::assertArrayHasKey('danger', $flashes);
         self::assertEquals('error', $flashes['danger'][0]['field']);
@@ -29,7 +29,7 @@ class ControllerTest extends TestCase
     {
         $controller = new Controller('test', Yii::$app);
         $controller->errorOrSuccess(new Model(), 'Success message');
-        $flashes = Yii::$app->getSession()->getAllFlashes();
+        $flashes = $this->getWebSession()->getAllFlashes();
 
         self::assertArrayHasKey('success', $flashes);
         self::assertEquals('Success message', $flashes['success'][0]);
@@ -40,7 +40,7 @@ class ControllerTest extends TestCase
     {
         $controller = new Controller('test', Yii::$app);
         $controller->errorOrSuccess(['error'], 'Success message');
-        $flashes = Yii::$app->getSession()->getAllFlashes();
+        $flashes = $this->getWebSession()->getAllFlashes();
 
         self::assertArrayHasKey('danger', $flashes);
         self::assertEquals(['error'], $flashes['danger'][0]);
@@ -51,7 +51,7 @@ class ControllerTest extends TestCase
     {
         $controller = new Controller('test', Yii::$app);
         $controller->errorOrSuccess([], 'Success message');
-        $flashes = Yii::$app->getSession()->getAllFlashes();
+        $flashes = $this->getWebSession()->getAllFlashes();
 
         self::assertArrayHasKey('success', $flashes);
         self::assertEquals('Success message', $flashes['success'][0]);

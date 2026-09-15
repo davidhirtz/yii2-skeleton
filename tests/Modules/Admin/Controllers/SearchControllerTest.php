@@ -134,7 +134,7 @@ class SearchControllerTest extends TestCase
             $this->assignPermission($user->id, $permission);
         }
 
-        Yii::$app->getUser()->setIdentity($user);
+        $this->getWebUser()->setIdentity($user);
 
         return $user;
     }

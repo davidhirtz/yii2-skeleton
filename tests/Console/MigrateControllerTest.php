@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Console;
 
-use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Console\Application;
 use Hirtz\Skeleton\Console\Controllers\MigrateController;
 use Hirtz\Skeleton\Helpers\FileHelper;
+use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\StdOutBufferControllerTrait;
 use Override;
 use Yii;
 
 class MigrateControllerTest extends TestCase
 {
+    protected string $applicationClass = Application::class;
+
     private string $configPath = '@runtime/config';
 
     #[\Override]
@@ -56,7 +59,7 @@ class MigrateControllerTest extends TestCase
         $stdout = $controller->flushStdOutBuffer();
         self::assertStringContainsString('Backing up database ... done', $stdout);
 
-        $backups = Yii::$app->getDb()->getBackups();
+        $backups = Application::current()->getDb()->getBackups();
         self::assertNotEmpty($backups);
 
         $filename = $backups[0];
@@ -98,7 +101,7 @@ class MigrateControllerTest extends TestCase
 
     protected function createMigrationController(): MigrateControllerMock
     {
-        return new MigrateControllerMock('migration', Yii::$app);
+        return new MigrateControllerMock('migration', Application::current());
     }
 }
 
@@ -116,16 +119,16 @@ class MigrateControllerMock extends MigrateController
 
     public function resetDbCredentials(): void
     {
-        $dsn = (string)Yii::$app->getDb()->dsn;
+        $dsn = (string)Application::current()->getDb()->dsn;
 
         $this->dbHost = preg_replace('/^.*host=([^;]+).*$/i', '$1', $dsn);
         $this->dbName = preg_replace('/^.*dbname=([^;]+).*$/i', '$1', $dsn);
         $this->dbPort = preg_replace('/^.*port=([^;]+).*$/i', '$1', $dsn);
 
-        $this->dbUsername = Yii::$app->getDb()->username;
-        $this->dbPassword = Yii::$app->getDb()->password;
+        $this->dbUsername = Application::current()->getDb()->username;
+        $this->dbPassword = Application::current()->getDb()->password;
 
-        Yii::$app->getDb()->dsn = '';
+        Application::current()->getDb()->dsn = '';
     }
 
     #[Override]

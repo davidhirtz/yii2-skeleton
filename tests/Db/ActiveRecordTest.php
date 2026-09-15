@@ -102,7 +102,7 @@ class ActiveRecordTest extends TestCase
 
     public function testUpdateAttributesBlameable(): void
     {
-        Yii::$app->getUser()->login(User::findOne(1));
+        $this->getWebUser()->login(User::findOne(1));
 
         $model = new TestActiveRecord();
         $model->name = 'Test';

@@ -31,9 +31,9 @@ class AccountConfirmTest extends TestCase
         self::assertInstanceOf(Response::class, $response);
         self::assertFalse(User::findOne($user->id)->isUnconfirmed());
 
-        self::assertSame($user->id, Yii::$app->getUser()->getId());
-        self::assertSame(UserLogin::TYPE_CONFIRM_EMAIL, Yii::$app->getUser()->loginType);
-        self::assertNotEmpty(Yii::$app->getSession()->getFlash('success'));
+        self::assertSame($user->id, $this->getWebUser()->getId());
+        self::assertSame(UserLogin::TYPE_CONFIRM_EMAIL, $this->getWebUser()->loginType);
+        self::assertNotEmpty($this->getWebSession()->getFlash('success'));
     }
 
     /**
@@ -49,7 +49,7 @@ class AccountConfirmTest extends TestCase
         ]);
 
         self::assertFalse(User::findOne($user->id)->isUnconfirmed());
-        self::assertTrue(Yii::$app->getUser()->getIsGuest());
+        self::assertTrue($this->getWebUser()->getIsGuest());
     }
 
     public function testADisabledUserIsNotLoggedIn(): void
@@ -62,7 +62,7 @@ class AccountConfirmTest extends TestCase
         ]);
 
         self::assertFalse(User::findOne($user->id)->isUnconfirmed());
-        self::assertTrue(Yii::$app->getUser()->getIsGuest());
+        self::assertTrue($this->getWebUser()->getIsGuest());
     }
 
     public function testAUserWhoIsAlreadyLoggedInIsNotSwitched(): void
@@ -72,13 +72,13 @@ class AccountConfirmTest extends TestCase
         $user->update();
 
         $owner = $this->getUserFromFixture('owner');
-        Yii::$app->getUser()->setIdentity($owner);
+        $this->getWebUser()->setIdentity($owner);
 
         Yii::$app->runAction('admin/account/confirm', [
             'code' => $user->createVerificationToken(),
         ]);
 
-        self::assertSame($owner->id, Yii::$app->getUser()->getId());
+        self::assertSame($owner->id, $this->getWebUser()->getId());
     }
 
     public function testAnInvalidCodeIsReportedAndConfirmsNothing(): void
@@ -88,15 +88,15 @@ class AccountConfirmTest extends TestCase
         Yii::$app->runAction('admin/account/confirm', ['code' => str_repeat('a', 32)]);
 
         self::assertTrue(User::findOne($user->id)->isUnconfirmed());
-        self::assertTrue(Yii::$app->getUser()->getIsGuest());
-        self::assertNotEmpty(Yii::$app->getSession()->getFlash('danger'));
+        self::assertTrue($this->getWebUser()->getIsGuest());
+        self::assertNotEmpty($this->getWebSession()->getFlash('danger'));
     }
 
     public function testTheSignupTokenIsHandedOutAsJson(): void
     {
         $_SERVER['REQUEST_METHOD'] = 'POST';
 
-        $request = Yii::$app->getRequest();
+        $request = $this->getWebRequest();
         $request->setBodyParams([$request->csrfParam => $request->getCsrfToken()]);
 
         $data = Yii::$app->runAction('admin/account/token');

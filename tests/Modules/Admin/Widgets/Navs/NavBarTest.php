@@ -7,7 +7,6 @@ namespace Hirtz\Skeleton\Tests\Modules\Admin\Widgets\Navs;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\NavBar;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
-use Yii;
 
 class NavBarTest extends TestCase
 {
@@ -38,6 +37,6 @@ class NavBarTest extends TestCase
 
     private function login(): void
     {
-        Yii::$app->getUser()->setIdentity($this->getUserFromFixture('admin'));
+        $this->getWebUser()->setIdentity($this->getUserFromFixture('admin'));
     }
 }

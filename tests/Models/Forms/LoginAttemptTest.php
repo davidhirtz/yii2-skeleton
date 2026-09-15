@@ -15,7 +15,7 @@ class LoginAttemptTest extends TestCase
 
     public function testLockoutAfterFailedAttempts(): void
     {
-        $webuser = Yii::$app->getUser();
+        $webuser = $this->getWebUser();
         $webuser->loginAttemptLimit = 3;
 
         $email = $this->getUserFixtureData('owner')['email'];
@@ -37,7 +37,7 @@ class LoginAttemptTest extends TestCase
 
     public function testFailedTwoFactorCodeCounts(): void
     {
-        $webuser = Yii::$app->getUser();
+        $webuser = $this->getWebUser();
         $webuser->loginAttemptLimit = 2;
 
         $email = $this->getUserFixtureData('admin')['email'];
@@ -50,7 +50,7 @@ class LoginAttemptTest extends TestCase
 
     public function testSuccessfulLoginClearsTheCounter(): void
     {
-        $webuser = Yii::$app->getUser();
+        $webuser = $this->getWebUser();
         $webuser->loginAttemptLimit = 3;
 
         $email = $this->getUserFixtureData('owner')['email'];
@@ -63,7 +63,7 @@ class LoginAttemptTest extends TestCase
 
     public function testBlankFormIsNotAnAttempt(): void
     {
-        $webuser = Yii::$app->getUser();
+        $webuser = $this->getWebUser();
         $webuser->loginAttemptLimit = 1;
 
         self::assertFalse($this->createForm('', '')->login());

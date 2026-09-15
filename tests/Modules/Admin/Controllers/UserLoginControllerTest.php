@@ -73,7 +73,7 @@ class UserLoginControllerTest extends TestCase
 
     public function testIndexIsForbiddenWithoutThePermission(): void
     {
-        Yii::$app->getUser()->setIdentity($this->getUserFromFixture('admin'));
+        $this->getWebUser()->setIdentity($this->getUserFromFixture('admin'));
 
         $this->expectException(ForbiddenHttpException::class);
         Yii::$app->runAction('admin/user-login/index');
@@ -130,7 +130,7 @@ class UserLoginControllerTest extends TestCase
         $user = $this->getUserFromFixture('admin');
         $this->assignPermission($user->id, User::AUTH_USER);
 
-        Yii::$app->getUser()->setIdentity($user);
+        $this->getWebUser()->setIdentity($user);
 
         return $user;
     }

@@ -58,7 +58,7 @@ class NavTest extends TestCase
 
     public function testItemRoles(): void
     {
-        Yii::$app->getUser()->disableRbacForGuests = false;
+        $this->getWebUser()->disableRbacForGuests = false;
 
         $content = Nav::make()
             ->items([
@@ -87,7 +87,7 @@ class NavTest extends TestCase
 
         self::assertEmpty($nav());
 
-        Yii::$app->getUser()->login($this->getUserFromFixture('admin'));
+        $this->getWebUser()->login($this->getUserFromFixture('admin'));
 
         self::assertStringContainsString('Home', $nav());
     }
@@ -155,7 +155,7 @@ class NavTest extends TestCase
 
     public function testActiveItemWithRequestQueryParameters(): void
     {
-        Yii::$app->getRequest()->setQueryParams(['id' => 1]);
+        $this->getWebRequest()->setQueryParams(['id' => 1]);
 
         $content = Nav::make()
             ->items([

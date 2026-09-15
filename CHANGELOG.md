@@ -8,6 +8,11 @@
   from a mail template, `Models\Actions\ReorderActiveRecords::runWithBodyParam()`,
   `Media\Helpers\Html::prepareLinkOptions()` and `Tenant\Models\Collections\TenantCollection::getFromRequest()`
 
+- `Console\Application::current()` mirrors it for code that only ever runs as a command, and `Test\TestCase`
+  exposes `getWebUser()`, `getWebSession()`, `getWebRequest()` and `getWebResponse()` so a test reads the
+  components off the case rather than off `Yii::$app`. The five cases under `tests/Console` declare
+  `$applicationClass = Console\Application::class`; three of them handed a web application to a console
+  controller's constructor, which type-checked only because the union hid it
 
 - **`Web\Request::post()` and `getBodyParams()` answer an array.** Yii answers an object for a body parser
   configured to decode into one, which `Model::load()` rejects — so every one of the 39 `load($this->request->post())`

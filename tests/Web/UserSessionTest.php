@@ -23,7 +23,7 @@ class UserSessionTest extends TestCase
         $this->insertSession('another-device', $user->id);
         $this->insertSession('someone-else', $this->getUserFromFixture('admin')->id);
 
-        self::assertSame(2, Yii::$app->getUser()->destroyOtherSessions($user));
+        self::assertSame(2, $this->getWebUser()->destroyOtherSessions($user));
 
         self::assertFalse($this->hasSession('other-device'));
         self::assertFalse($this->hasSession('another-device'));
@@ -46,7 +46,7 @@ class UserSessionTest extends TestCase
 
     private function getSession(): DbSession
     {
-        $session = Yii::$app->getSession();
+        $session = $this->getWebSession();
         self::assertInstanceOf(DbSession::class, $session);
 
         return $session;

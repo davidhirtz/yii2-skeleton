@@ -7,7 +7,6 @@ namespace Hirtz\Skeleton\Tests\Models\Forms;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Models\Forms\SignupForm;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
-use Yii;
 
 class SignupFormTest extends TestCase
 {
@@ -23,7 +22,7 @@ class SignupFormTest extends TestCase
 
     public function testSignupWithInvalidCredentials(): void
     {
-        Yii::$app->getUser()->enableSignup = true;
+        $this->getWebUser()->enableSignup = true;
 
         $form = TestSignupForm::create();
         $form->honeypot = 'test';
@@ -58,7 +57,7 @@ class SignupFormTest extends TestCase
 
     public function testSignupWithValidCredentials(): void
     {
-        Yii::$app->getUser()->enableSignup = true;
+        $this->getWebUser()->enableSignup = true;
 
         $form = TestSignupForm::create();
 
@@ -71,7 +70,7 @@ class SignupFormTest extends TestCase
 
         self::assertTrue($form->insert());
         self::assertFalse($form->user->getIsNewRecord());
-        self::assertFalse(Yii::$app->getUser()->getIsGuest());
+        self::assertFalse($this->getWebUser()->getIsGuest());
 
         $message = $this->mailer->getLastMessage();
         self::assertStringContainsString('/admin/account/confirm', $message->getSymfonyEmail()->getHtmlBody());
@@ -79,7 +78,7 @@ class SignupFormTest extends TestCase
 
     public function testSignupWithIpSpamProtection(): void
     {
-        $webuser = Yii::$app->getUser();
+        $webuser = $this->getWebUser();
         $webuser->enableSignup = true;
         $webuser->ipAddress = '1.244.25.235';
 
@@ -104,7 +103,7 @@ class SignupFormTest extends TestCase
 
     public function testSignupWithInvalidToken(): void
     {
-        Yii::$app->getUser()->enableSignup = true;
+        $this->getWebUser()->enableSignup = true;
 
         $form = SignupForm::create();
 

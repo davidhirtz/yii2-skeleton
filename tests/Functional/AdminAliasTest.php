@@ -39,7 +39,7 @@ class AdminAliasTest extends TestCase
      */
     public function testTheDefaultPathIsRefused(): void
     {
-        Yii::$app->getRequest()->setPathInfo('admin/account/login');
+        $this->getWebRequest()->setPathInfo('admin/account/login');
 
         $this->expectException(NotFoundHttpException::class);
         Yii::$app->runAction('admin/account/login');
@@ -47,7 +47,7 @@ class AdminAliasTest extends TestCase
 
     public function testTheAliasPathIsServed(): void
     {
-        Yii::$app->getRequest()->setPathInfo('backend/account/login');
+        $this->getWebRequest()->setPathInfo('backend/account/login');
 
         self::assertIsString(Yii::$app->runAction('admin/account/login'));
     }

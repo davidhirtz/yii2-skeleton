@@ -23,8 +23,8 @@ class UserIdentityCookieTest extends TestCase
     {
         // Both were renamed in v3 to escape a `Secure` twin a dual-scheme host leaves behind, which no plain
         // HTTP response may overwrite or delete — so reverting either name re-poisons the browsers it reaches
-        self::assertSame('_auth', Yii::$app->getUser()->identityCookie['name']);
-        self::assertSame('_session', Yii::$app->getSession()->getName());
+        self::assertSame('_auth', $this->getWebUser()->identityCookie['name']);
+        self::assertSame('_session', $this->getWebSession()->getName());
     }
 
     public function testTheSecureFlagCanBePinned(): void
@@ -94,8 +94,8 @@ class UserIdentityCookieTest extends TestCase
      */
     private function login(User $user): void
     {
-        $webuser = Yii::$app->getUser();
-        $session = Yii::$app->getSession();
+        $webuser = $this->getWebUser();
+        $session = $this->getWebSession();
         $session->open();
 
         $session->set($webuser->idParam, $user->getId());
@@ -108,7 +108,7 @@ class UserIdentityCookieTest extends TestCase
     {
         $this->identityCookieValue = $value ?? (string)json_encode([$id, $authKey, 3600]);
         $value = $this->identityCookieValue;
-        $request = Yii::$app->getRequest();
+        $request = $this->getWebRequest();
 
         $_COOKIE[self::NAME] = $request->enableCookieValidation
             ? Yii::$app->getSecurity()->hashData(
@@ -120,7 +120,7 @@ class UserIdentityCookieTest extends TestCase
 
     private function getResponseIdentityCookie(): ?Cookie
     {
-        return Yii::$app->getResponse()->getCookies()->get(self::NAME);
+        return $this->getWebResponse()->getCookies()->get(self::NAME);
     }
 
     private function assertIdentityCookieRemoved(): void

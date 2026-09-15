@@ -28,7 +28,7 @@ class LoginTest extends TestCase
 
     public function testLoginWithInvalidCredentials(): void
     {
-        Yii::$app->getUser()->disableRbacForOwner = false;
+        $this->getWebUser()->disableRbacForOwner = false;
 
         $this->submitLoginForm();
         self::assertAnyValidationErrorSame('Email cannot be blank.');
@@ -50,7 +50,7 @@ class LoginTest extends TestCase
 
     public function testLoginWithAdminPermission(): void
     {
-        Yii::$app->getUser()->disableRbacForOwner = false;
+        $this->getWebUser()->disableRbacForOwner = false;
 
         $user = $this->getUserFromFixture('owner');
         $this->assignAdminRole($user->id);
@@ -95,7 +95,7 @@ class LoginTest extends TestCase
 
     public function testDisabledAccountNamesItsReasonWithoutEnumerationProtection(): void
     {
-        Yii::$app->getUser()->enableUserEnumerationProtection = false;
+        $this->getWebUser()->enableUserEnumerationProtection = false;
 
         $this->submitLoginForm($this->getUserFixtureData('disabled')['email'], 'password');
         self::assertAnyValidationErrorSame('Your account is currently disabled. Please contact an administrator!');
@@ -106,7 +106,7 @@ class LoginTest extends TestCase
 
     public function testDisabledLogin(): void
     {
-        Yii::$app->getUser()->enableLogin = false;
+        $this->getWebUser()->enableLogin = false;
         $user = $this->getUserFromFixture('owner');
 
         $this->submitLoginForm($user->email, 'password');

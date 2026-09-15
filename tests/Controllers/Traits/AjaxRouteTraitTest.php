@@ -21,7 +21,7 @@ class AjaxRouteTraitTest extends TestCase
 
     public function testAjaxRequest(): void
     {
-        Yii::$app->getRequest()->getHeaders()->set('X-Requested-With', 'XMLHttpRequest');
+        $this->getWebRequest()->getHeaders()->set('X-Requested-With', 'XMLHttpRequest');
 
         $controller = new AjaxRouteControllerMock('test', Yii::$app);
         self::assertStringStartsWith('<!DOCTYPE html>', $controller->actionIndex());
@@ -53,7 +53,7 @@ class AjaxRouteTraitTest extends TestCase
 
     protected function setAjaxRouteMock(): void
     {
-        Yii::$app->getRequest()->getHeaders()->set('X-Requested-With', 'XMLHttpRequest');
+        $this->getWebRequest()->getHeaders()->set('X-Requested-With', 'XMLHttpRequest');
         $_SERVER['HTTP_X_AJAX_REQUEST'] = 'route';
     }
 }

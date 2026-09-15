@@ -65,7 +65,7 @@ class UserDeleteTest extends TestCase
      */
     protected function postDeleteForm(string $value): void
     {
-        $request = Yii::$app->getRequest();
+        $request = $this->getWebRequest();
 
         self::$crawler = self::$client->request('POST', "https://www.test.localhost/admin/user/delete?id={$this->user->id}", [
             'value' => $value,

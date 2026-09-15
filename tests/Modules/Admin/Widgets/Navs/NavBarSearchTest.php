@@ -45,6 +45,6 @@ class NavBarSearchTest extends TestCase
 
     private function login(): void
     {
-        Yii::$app->getUser()->setIdentity($this->getUserFromFixture('admin'));
+        $this->getWebUser()->setIdentity($this->getUserFromFixture('admin'));
     }
 }

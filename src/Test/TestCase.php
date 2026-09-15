@@ -7,7 +7,11 @@ namespace Hirtz\Skeleton\Test;
 use Hirtz\Skeleton\Helpers\ArrayHelper;
 use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Web\Application;
+use Hirtz\Skeleton\Web\Request;
+use Hirtz\Skeleton\Web\Response;
+use Hirtz\Skeleton\Web\User as WebUser;
 use Override;
 use Yii;
 use yii\base\Event;
@@ -16,9 +20,9 @@ use yii\db\Transaction;
 use yii\di\Container;
 use yii\log\Logger;
 use yii\test\FixtureTrait;
+use yii\web\Session;
 use yii\web\UploadedFile;
 use yii\web\View;
-use Hirtz\Skeleton\Models\User;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
@@ -162,6 +166,31 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $this->logger = $this->getLogger();
 
         Yii::setLogger($this->logger);
+    }
+
+    /**
+     * `Yii::$app` is the `Console|Web` union, which is what keeps a console command reaching for one of these a
+     * static analysis error. A test case that overrides `$applicationClass` with the console application — the
+     * two under `tests/Console` — calls none of them.
+     */
+    protected function getWebUser(): WebUser
+    {
+        return Application::current()->getUser();
+    }
+
+    protected function getWebSession(): Session
+    {
+        return Application::current()->getSession();
+    }
+
+    protected function getWebRequest(): Request
+    {
+        return Application::current()->getRequest();
+    }
+
+    protected function getWebResponse(): Response
+    {
+        return Application::current()->getResponse();
     }
 
     /**

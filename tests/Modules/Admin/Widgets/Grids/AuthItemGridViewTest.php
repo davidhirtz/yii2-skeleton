@@ -80,7 +80,7 @@ class AuthItemGridViewTest extends TestCase
     {
         $actor = $this->getUserFromFixture('admin');
         $this->assignPermission($actor->id, User::AUTH_USER_ASSIGN);
-        Yii::$app->getUser()->setIdentity($actor);
+        $this->getWebUser()->setIdentity($actor);
 
         $target = $this->getUserFromFixture('disabled');
 

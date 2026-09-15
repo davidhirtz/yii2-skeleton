@@ -244,7 +244,7 @@ class ChunkedUploadedFileTest extends TestCase
         ?string $range = null,
         array $config = [],
     ): ChunkedUploadedFile {
-        $headers = Yii::$app->getRequest()->getHeaders();
+        $headers = $this->getWebRequest()->getHeaders();
         $headers->remove('content-range');
 
         if ($range !== null) {

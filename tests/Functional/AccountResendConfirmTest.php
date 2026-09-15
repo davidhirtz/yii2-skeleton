@@ -10,7 +10,6 @@ use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Hirtz\Skeleton\Models\UserToken;
 use Override;
-use Yii;
 
 class AccountResendConfirmTest extends TestCase
 {
@@ -52,7 +51,7 @@ class AccountResendConfirmTest extends TestCase
 
     public function testResendConfirmNamesItsReasonWithoutEnumerationProtection(): void
     {
-        Yii::$app->getUser()->enableUserEnumerationProtection = false;
+        $this->getWebUser()->enableUserEnumerationProtection = false;
 
         $this->submitAccountResendConfirmForm('invalid-email@domain.com');
         self::assertAnyValidationErrorSame('Your email was not found.');

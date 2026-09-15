@@ -82,7 +82,7 @@ class AccountTest extends TestCase
     public function testDisabledSecurity(): void
     {
         $this->login('owner');
-        Yii::$app->getUser()->enableTwoFactorAuthentication = false;
+        $this->getWebUser()->enableTwoFactorAuthentication = false;
 
         $this->open('admin/account/security');
         self::assertResponseStatusCodeSame(403);
@@ -99,7 +99,7 @@ class AccountTest extends TestCase
 
     public function testDeleteButtonOfDeletableUser(): void
     {
-        Yii::$app->getUser()->enableTwoFactorAuthentication = false;
+        $this->getWebUser()->enableTwoFactorAuthentication = false;
 
         $this->login('admin');
         $this->open('admin/account/update');
@@ -117,7 +117,7 @@ class AccountTest extends TestCase
      */
     public function testDeleteAccountWithWrongPassword(): void
     {
-        Yii::$app->getUser()->enableTwoFactorAuthentication = false;
+        $this->getWebUser()->enableTwoFactorAuthentication = false;
 
         $this->login('admin');
         $id = $this->getUserFromFixture('admin')->id;
@@ -138,7 +138,7 @@ class AccountTest extends TestCase
      */
     protected function postDeleteForm(string $password): void
     {
-        $request = Yii::$app->getRequest();
+        $request = $this->getWebRequest();
 
         self::$crawler = self::$client->request('POST', 'https://www.test.localhost/admin/account/delete', [
             'value' => $password,

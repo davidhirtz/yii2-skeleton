@@ -22,7 +22,7 @@ class PageCacheTest extends TestCase
 
     public function testALoggedInUserIsNotCached(): void
     {
-        Yii::$app->getUser()->setIdentity($this->getUserFromFixture('owner'));
+        $this->getWebUser()->setIdentity($this->getUserFromFixture('owner'));
 
         self::assertFalse($this->createPageCache()->enabled);
         self::assertTrue($this->createPageCache(['disableForUsers' => false])->enabled);
@@ -50,7 +50,7 @@ class PageCacheTest extends TestCase
      */
     public function testADraftRequestIsNotCached(): void
     {
-        Yii::$app->getRequest()->setIsDraft(true);
+        $this->getWebRequest()->setIsDraft(true);
 
         self::assertFalse($this->createPageCache()->enabled);
         self::assertFalse($this->createPageCache(['disableForUsers' => false])->enabled);

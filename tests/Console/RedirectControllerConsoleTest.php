@@ -9,7 +9,6 @@ use Hirtz\Skeleton\Console\Controllers\RedirectController;
 use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\StdOutBufferControllerTrait;
-use Yii;
 
 /**
  * The host list is the one thing the command reads off the application, and a console application is where that
@@ -21,7 +20,7 @@ class RedirectControllerConsoleTest extends TestCase
 
     public function testTheCommandIsRegistered(): void
     {
-        self::assertSame(RedirectController::class, Yii::$app->coreCommands()['redirect'] ?? null);
+        self::assertSame(RedirectController::class, Application::current()->coreCommands()['redirect'] ?? null);
     }
 
     /**
@@ -35,7 +34,7 @@ class RedirectControllerConsoleTest extends TestCase
         $redirect->url = 'new';
         $redirect->insert();
 
-        $controller = new ConsoleRedirectControllerMock('redirect', Yii::$app);
+        $controller = new ConsoleRedirectControllerMock('redirect', Application::current());
         $controller->interactive = false;
         $controller->actionClean();
 

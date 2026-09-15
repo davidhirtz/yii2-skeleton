@@ -52,20 +52,20 @@ class ErrorActionTest extends TestCase
         ]);
 
         self::assertStringContainsString(Yii::t('yii', 'Page not found.'), $result);
-        self::assertEquals(404, Yii::$app->getResponse()->getStatusCode());
+        self::assertEquals(404, $this->getWebResponse()->getStatusCode());
         self::assertStringContainsString("<title>$error</title>", $result);
     }
 
     public function testAjaxRequest(): void
     {
-        Yii::$app->getRequest()->getHeaders()->set('X-Requested-With', 'XMLHttpRequest');
+        $this->getWebRequest()->getHeaders()->set('X-Requested-With', 'XMLHttpRequest');
         self::assertEquals('Page not found.', $this->runErrorAction());
     }
 
     public function testNoExceptionInHandler(): void
     {
         self::assertStringContainsString('Page not found.', $this->runErrorAction());
-        self::assertEquals(404, Yii::$app->getResponse()->getStatusCode());
+        self::assertEquals(404, $this->getWebResponse()->getStatusCode());
     }
 
     public function testInvalidView(): void

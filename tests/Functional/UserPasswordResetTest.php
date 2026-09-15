@@ -62,7 +62,7 @@ class UserPasswordResetTest extends TestCase
 
     public function testResetIsRefusedWhenPasswordResetIsDisabled(): void
     {
-        Yii::$app->getUser()->enablePasswordReset = false;
+        $this->getWebUser()->enablePasswordReset = false;
 
         $this->postReset();
 
@@ -72,7 +72,7 @@ class UserPasswordResetTest extends TestCase
 
     private function postReset(): void
     {
-        $request = Yii::$app->getRequest();
+        $request = $this->getWebRequest();
 
         self::$crawler = self::$client->request('POST', "https://www.test.localhost/admin/user/reset?id={$this->user->id}", [
             $request->csrfParam => $request->getCsrfToken(),

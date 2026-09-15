@@ -73,7 +73,7 @@ class RedirectControllerTest extends TestCase
 
     public function testIndexIsForbiddenWithoutThePermission(): void
     {
-        Yii::$app->getUser()->setIdentity($this->getUserFromFixture('admin'));
+        $this->getWebUser()->setIdentity($this->getUserFromFixture('admin'));
 
         $this->expectException(ForbiddenHttpException::class);
         Yii::$app->runAction('admin/redirect/index');
@@ -213,7 +213,7 @@ class RedirectControllerTest extends TestCase
 
         self::assertInstanceOf(Response::class, $response);
         self::assertNull(Redirect::findOne($redirect->id));
-        self::assertNotEmpty(Yii::$app->getSession()->getFlash('success'));
+        self::assertNotEmpty($this->getWebSession()->getFlash('success'));
     }
 
     public function testDeleteAllRemovesTheSelectedRedirects(): void
@@ -231,7 +231,7 @@ class RedirectControllerTest extends TestCase
         self::assertNull(Redirect::findOne($first->id));
         self::assertNull(Redirect::findOne($second->id));
         self::assertNotNull(Redirect::findOne($third->id));
-        self::assertNotEmpty(Yii::$app->getSession()->getFlash('success'));
+        self::assertNotEmpty($this->getWebSession()->getFlash('success'));
     }
 
     public function testDeleteAllWithoutASelectionChangesNothing(): void
@@ -242,7 +242,7 @@ class RedirectControllerTest extends TestCase
         $this->post('admin/redirect/delete-all', []);
 
         self::assertNotNull(Redirect::findOne($redirect->id));
-        self::assertEmpty(Yii::$app->getSession()->getFlash('success'));
+        self::assertEmpty($this->getWebSession()->getFlash('success'));
     }
 
     private function createRedirect(
@@ -268,7 +268,7 @@ class RedirectControllerTest extends TestCase
     {
         $_SERVER['REQUEST_METHOD'] = 'POST';
 
-        $request = Yii::$app->getRequest();
+        $request = $this->getWebRequest();
         $request->setBodyParams([...$bodyParams, $request->csrfParam => $request->getCsrfToken()]);
 
         return Yii::$app->runAction($route, $params);
@@ -279,7 +279,7 @@ class RedirectControllerTest extends TestCase
         $user = $this->getUserFromFixture('admin');
         $this->assignPermission($user->id, Redirect::AUTH_REDIRECT);
 
-        Yii::$app->getUser()->setIdentity($user);
+        $this->getWebUser()->setIdentity($user);
 
         return $user;
     }

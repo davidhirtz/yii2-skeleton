@@ -37,7 +37,7 @@ class UserAuthControllerTest extends TestCase
 
     public function testIndexIsForbiddenWithoutThePermission(): void
     {
-        Yii::$app->getUser()->setIdentity($this->getUserFromFixture('admin'));
+        $this->getWebUser()->setIdentity($this->getUserFromFixture('admin'));
         $user = $this->getUserFromFixture('disabled');
 
         $this->expectException(ForbiddenHttpException::class);
@@ -84,7 +84,7 @@ class UserAuthControllerTest extends TestCase
 
         self::assertInstanceOf(Response::class, $response);
         self::assertArrayHasKey(User::AUTH_USER, Yii::$app->getAuthManager()->getPermissionsByUser($user->id));
-        self::assertNotEmpty(Yii::$app->getSession()->getFlash('success'));
+        self::assertNotEmpty($this->getWebSession()->getFlash('success'));
     }
 
     /**
@@ -176,7 +176,7 @@ class UserAuthControllerTest extends TestCase
         ]);
 
         self::assertEmpty(Yii::$app->getAuthManager()->getPermissionsByUser($user->id));
-        self::assertNotEmpty(Yii::$app->getSession()->getFlash('success'));
+        self::assertNotEmpty($this->getWebSession()->getFlash('success'));
     }
 
     public function testDeleteReportsAnItemThatWasNotAssigned(): void
@@ -190,8 +190,8 @@ class UserAuthControllerTest extends TestCase
             'type' => Item::TYPE_PERMISSION,
         ]);
 
-        self::assertEmpty(Yii::$app->getSession()->getFlash('success'));
-        self::assertNotEmpty(Yii::$app->getSession()->getFlash('danger'));
+        self::assertEmpty($this->getWebSession()->getFlash('success'));
+        self::assertNotEmpty($this->getWebSession()->getFlash('danger'));
     }
 
     public function testAnUnknownItemIsNotFound(): void
@@ -272,7 +272,7 @@ class UserAuthControllerTest extends TestCase
     {
         $_SERVER['REQUEST_METHOD'] = 'POST';
 
-        $request = Yii::$app->getRequest();
+        $request = $this->getWebRequest();
         $request->setBodyParams([$request->csrfParam => $request->getCsrfToken()]);
 
         return Yii::$app->runAction($route, $params);
@@ -286,7 +286,7 @@ class UserAuthControllerTest extends TestCase
         $user = $this->getUserFromFixture('admin');
         $this->assignAdminRole($user->id);
 
-        Yii::$app->getUser()->setIdentity($user);
+        $this->getWebUser()->setIdentity($user);
 
         return $user;
     }
@@ -300,7 +300,7 @@ class UserAuthControllerTest extends TestCase
         $user = $this->getUserFromFixture('admin');
         $this->assignPermission($user->id, User::AUTH_USER_ASSIGN);
 
-        Yii::$app->getUser()->setIdentity($user);
+        $this->getWebUser()->setIdentity($user);
 
         return $user;
     }

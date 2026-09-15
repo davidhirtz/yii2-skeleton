@@ -43,7 +43,7 @@ class UserControllerTest extends TestCase
         $this->login();
         $owner = $this->getUserFromFixture('owner');
 
-        Yii::$app->getRequest()->setBodyParams([
+        $this->getWebRequest()->setBodyParams([
             'UserForm' => ['email' => 'taken@domain.com'],
         ]);
 
@@ -56,7 +56,7 @@ class UserControllerTest extends TestCase
         $user = $this->getUserFromFixture('admin');
         $this->assignPermission($user->id, User::AUTH_USER);
 
-        Yii::$app->getUser()->setIdentity($user);
+        $this->getWebUser()->setIdentity($user);
 
         return $user;
     }

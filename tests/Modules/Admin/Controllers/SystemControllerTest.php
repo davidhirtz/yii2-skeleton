@@ -55,7 +55,7 @@ class SystemControllerTest extends TestCase
 
     public function testServerIsForbiddenWithoutTheManagerRole(): void
     {
-        Yii::$app->getUser()->setIdentity($this->getUserFromFixture('admin'));
+        $this->getWebUser()->setIdentity($this->getUserFromFixture('admin'));
 
         $this->expectException(ForbiddenHttpException::class);
         Yii::$app->runAction('admin/system/server');
@@ -93,7 +93,7 @@ class SystemControllerTest extends TestCase
 
     public function testMaintenanceIsForbiddenWithoutTheManagerRole(): void
     {
-        Yii::$app->getUser()->setIdentity($this->getUserFromFixture('admin'));
+        $this->getWebUser()->setIdentity($this->getUserFromFixture('admin'));
 
         $this->expectException(ForbiddenHttpException::class);
         Yii::$app->runAction('admin/system/maintenance');
@@ -159,7 +159,7 @@ class SystemControllerTest extends TestCase
 
     public function testPhpInfoIsForbiddenWithoutTheSystemPermission(): void
     {
-        Yii::$app->getUser()->setIdentity($this->getUserFromFixture('admin'));
+        $this->getWebUser()->setIdentity($this->getUserFromFixture('admin'));
 
         $this->expectException(ForbiddenHttpException::class);
         Yii::$app->runAction('admin/system/php-info');
@@ -171,15 +171,15 @@ class SystemControllerTest extends TestCase
         $this->assignManagerRole($user->id);
         $this->assignPermission($user->id, Module::AUTH_SYSTEM);
 
-        Yii::$app->getUser()->setIdentity($user);
+        $this->getWebUser()->setIdentity($user);
 
         self::assertIsString(Yii::$app->runAction('admin/system/php-info'));
-        self::assertFalse(Yii::$app->getUser()->can(User::AUTH_ROLE_ADMIN));
+        self::assertFalse($this->getWebUser()->can(User::AUTH_ROLE_ADMIN));
     }
 
     public function testIndexIsForbiddenWithoutTheManagerRole(): void
     {
-        Yii::$app->getUser()->setIdentity($this->getUserFromFixture('admin'));
+        $this->getWebUser()->setIdentity($this->getUserFromFixture('admin'));
 
         $this->expectException(ForbiddenHttpException::class);
         Yii::$app->runAction('admin/system/index');
@@ -194,7 +194,7 @@ class SystemControllerTest extends TestCase
 
         self::assertInstanceOf(Response::class, $response);
         self::assertFalse(Yii::$app->getCache()->get('key'));
-        self::assertNotEmpty(Yii::$app->getSession()->getFlash('success'));
+        self::assertNotEmpty($this->getWebSession()->getFlash('success'));
     }
 
     public function testFlushOfAComponentThatIsNotACacheIsNotFound(): void
@@ -225,7 +225,7 @@ class SystemControllerTest extends TestCase
         $this->post('admin/system/publish');
 
         self::assertDirectoryDoesNotExist($directory);
-        self::assertNotEmpty(Yii::$app->getSession()->getFlash('success'));
+        self::assertNotEmpty($this->getWebSession()->getFlash('success'));
     }
 
     public function testSessionGcRunsAgainstTheSessionComponent(): void
@@ -235,7 +235,7 @@ class SystemControllerTest extends TestCase
         $response = $this->post('admin/system/session-gc');
 
         self::assertInstanceOf(Response::class, $response);
-        self::assertNotEmpty(Yii::$app->getSession()->getFlash('success'));
+        self::assertNotEmpty($this->getWebSession()->getFlash('success'));
     }
 
     public function testSchemaRefreshesTheConnection(): void
@@ -245,7 +245,7 @@ class SystemControllerTest extends TestCase
         $response = $this->post('admin/system/schema', ['db' => 'db']);
 
         self::assertInstanceOf(Response::class, $response);
-        self::assertNotEmpty(Yii::$app->getSession()->getFlash('success'));
+        self::assertNotEmpty($this->getWebSession()->getFlash('success'));
     }
 
     public function testSchemaOfAComponentThatIsNotAConnectionIsNotFound(): void
@@ -270,7 +270,7 @@ class SystemControllerTest extends TestCase
     {
         $_SERVER['REQUEST_METHOD'] = 'POST';
 
-        $request = Yii::$app->getRequest();
+        $request = $this->getWebRequest();
         $request->setBodyParams([$request->csrfParam => $request->getCsrfToken()]);
 
         return Yii::$app->runAction($route, $params);
@@ -281,7 +281,7 @@ class SystemControllerTest extends TestCase
         $user = $this->getUserFromFixture('admin');
         $this->assignAdminRole($user->id);
 
-        Yii::$app->getUser()->setIdentity($user);
+        $this->getWebUser()->setIdentity($user);
 
         return $user;
     }
@@ -291,7 +291,7 @@ class SystemControllerTest extends TestCase
         $user = $this->getUserFromFixture('admin');
         $this->assignManagerRole($user->id);
 
-        Yii::$app->getUser()->setIdentity($user);
+        $this->getWebUser()->setIdentity($user);
 
         return $user;
     }

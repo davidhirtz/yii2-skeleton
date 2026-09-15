@@ -127,10 +127,10 @@ class ApplicationInfoTest extends TestCase
         $this->assignManagerRole($user->id);
         $this->assignPermission($user->id, Module::AUTH_SYSTEM);
 
-        Yii::$app->getUser()->setIdentity($user);
+        $this->getWebUser()->setIdentity($user);
         $html = ApplicationInfo::make()->render();
 
-        self::assertFalse(Yii::$app->getUser()->can(User::AUTH_ROLE_ADMIN));
+        self::assertFalse($this->getWebUser()->can(User::AUTH_ROLE_ADMIN));
         self::assertStringContainsString(VersionHelper::getApplicationName(), $html);
         self::assertStringContainsString('system/php-info', $html);
         self::assertStringContainsString(Yii::getVersion(), $html);
@@ -141,7 +141,7 @@ class ApplicationInfoTest extends TestCase
         $user = $this->getUserFromFixture('admin');
         $this->assignAdminRole($user->id);
 
-        Yii::$app->getUser()->setIdentity($user);
+        $this->getWebUser()->setIdentity($user);
     }
 
     private function loginManager(): void
@@ -149,6 +149,6 @@ class ApplicationInfoTest extends TestCase
         $user = $this->getUserFromFixture('admin');
         $this->assignManagerRole($user->id);
 
-        Yii::$app->getUser()->setIdentity($user);
+        $this->getWebUser()->setIdentity($user);
     }
 }

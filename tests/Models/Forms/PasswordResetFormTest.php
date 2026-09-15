@@ -22,8 +22,8 @@ class PasswordResetFormTest extends TestCase
         $form = $this->createForm($user);
 
         self::assertNotFalse($form->reset());
-        self::assertFalse(Yii::$app->getUser()->getIsGuest());
-        self::assertEquals($user->id, Yii::$app->getUser()->getId());
+        self::assertFalse($this->getWebUser()->getIsGuest());
+        self::assertEquals($user->id, $this->getWebUser()->getId());
     }
 
     public function testResetDoesNotLogInUserWithTwoFactorAuthentication(): void
@@ -34,7 +34,7 @@ class PasswordResetFormTest extends TestCase
         $form = $this->createForm($user);
 
         self::assertNotFalse($form->reset());
-        self::assertTrue(Yii::$app->getUser()->getIsGuest(), 'The second factor must not be skipped');
+        self::assertTrue($this->getWebUser()->getIsGuest(), 'The second factor must not be skipped');
 
         $user = User::findOne($user->id);
         self::assertNull($user->getLatestToken(UserToken::TYPE_PASSWORD_RESET));
@@ -53,7 +53,7 @@ class PasswordResetFormTest extends TestCase
 
         self::assertFalse($form->reset());
         self::assertArrayHasKey('id', $form->getErrors());
-        self::assertTrue(Yii::$app->getUser()->getIsGuest());
+        self::assertTrue($this->getWebUser()->getIsGuest());
     }
 
     public function testResetWithAnotherUsersToken(): void

@@ -21,12 +21,29 @@ use Hirtz\Skeleton\Console\Controllers\UserLoginController;
 use Hirtz\Skeleton\Console\Controllers\UserTokenController;
 use Override;
 use Yii;
+use yii\base\InvalidCallException;
 
 class Application extends \yii\console\Application
 {
     use ApplicationTrait;
 
     public $controllerNamespace = 'App\\Commands';
+
+    /**
+     * The mirror of `Web\Application::current()`, for code that only ever runs as a command. `Yii::$app` stays
+     * the union of the two, which is what makes a console command reaching for `getUser()` or `getSession()` a
+     * static analysis error rather than a runtime surprise.
+     */
+    public static function current(): static
+    {
+        $app = Yii::$app;
+
+        if (!$app instanceof static) {
+            throw new InvalidCallException('This can only be called from a console application.');
+        }
+
+        return $app;
+    }
 
     /**
      * @param array<array-key, mixed> $config

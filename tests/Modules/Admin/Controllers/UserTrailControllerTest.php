@@ -60,7 +60,7 @@ class UserTrailControllerTest extends TestCase
     public function testIndexIsForbiddenWithoutThePermission(): void
     {
         $user = $this->getUserFromFixture('admin');
-        Yii::$app->getUser()->setIdentity($user);
+        $this->getWebUser()->setIdentity($user);
 
         $this->expectException(ForbiddenHttpException::class);
         Yii::$app->runAction('admin/user-trail/index', ['id' => $user->id]);
@@ -87,7 +87,7 @@ class UserTrailControllerTest extends TestCase
         $user = $this->getUserFromFixture('admin');
         $this->assignPermission($user->id, Trail::AUTH_TRAIL_INDEX);
 
-        Yii::$app->getUser()->setIdentity($user);
+        $this->getWebUser()->setIdentity($user);
 
         return $user;
     }

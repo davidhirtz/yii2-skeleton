@@ -10,7 +10,6 @@ use Hirtz\Skeleton\Models\UserToken;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
-use Yii;
 
 class RecoverPasswordTest extends TestCase
 {
@@ -56,7 +55,7 @@ class RecoverPasswordTest extends TestCase
 
     public function testPasswordRecoverWithInvalidEmailWithoutEnumerationProtection(): void
     {
-        Yii::$app->getUser()->enableUserEnumerationProtection = false;
+        $this->getWebUser()->enableUserEnumerationProtection = false;
 
         $this->open('admin/account/recover');
         $this->submitPasswordRecoverForm('invalid-email@domain.com');

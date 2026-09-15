@@ -75,7 +75,7 @@ class UrlManagerTest extends TestCase
         $url = $manager->createDraftUrl('post/view');
         self::assertEquals('https://preview.test.localhost/post/view', $url);
 
-        Yii::$app->getRequest()->setIsDraft(true);
+        $this->getWebRequest()->setIsDraft(true);
         $manager->draftSubdomain = false;
 
         $url = $manager->createDraftUrl('post/view');
@@ -316,7 +316,7 @@ class UrlManagerTest extends TestCase
             ...$config,
         ]);
 
-        return Yii::$app->getRequest();
+        return $this->getWebRequest();
     }
 
     /**

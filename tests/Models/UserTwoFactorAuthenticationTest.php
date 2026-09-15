@@ -95,7 +95,7 @@ class UserTwoFactorAuthenticationTest extends TestCase
         ]);
 
         self::assertTrue($form->login());
-        self::assertFalse(Yii::$app->getUser()->getIsGuest());
+        self::assertFalse($this->getWebUser()->getIsGuest());
 
         self::assertEquals(
             User::RECOVERY_CODE_COUNT - 1,
@@ -117,7 +117,7 @@ class UserTwoFactorAuthenticationTest extends TestCase
 
         self::assertFalse($form->login());
         self::assertArrayHasKey('code', $form->getErrors());
-        self::assertTrue(Yii::$app->getUser()->getIsGuest());
+        self::assertTrue($this->getWebUser()->getIsGuest());
     }
 
     public function testRecoveryCodeDisablesTwoFactorAuthentication(): void

@@ -8,7 +8,6 @@ use Hirtz\Skeleton\Models\Forms\LoginForm;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
-use Yii;
 
 /**
  * A page whose session is gone cannot be patched, so htmx is told to load it again instead.
@@ -73,7 +72,7 @@ class HtmxRefreshTest extends TestCase
      */
     protected function post(string $uri, array $server = []): void
     {
-        $request = Yii::$app->getRequest();
+        $request = $this->getWebRequest();
 
         self::$crawler = self::$client->request(
             'POST',

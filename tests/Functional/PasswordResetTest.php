@@ -10,7 +10,6 @@ use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
-use Yii;
 
 class PasswordResetTest extends TestCase
 {
@@ -47,8 +46,8 @@ class PasswordResetTest extends TestCase
         self::submitPasswordResetForm('new-password', 'new-password');
         self::assertCurrentUrlEquals('/');
 
-        self::assertFalse(Yii::$app->getUser()->getIsGuest());
-        self::assertEquals($user->id, Yii::$app->getUser()->getId());
+        self::assertFalse($this->getWebUser()->getIsGuest());
+        self::assertEquals($user->id, $this->getWebUser()->getId());
     }
 
     private function openPasswordResetUrl(): User

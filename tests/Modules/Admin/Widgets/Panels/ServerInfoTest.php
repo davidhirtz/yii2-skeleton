@@ -28,7 +28,7 @@ class ServerInfoTest extends TestCase
     {
         $user = $this->getUserFromFixture('admin');
         $this->assignManagerRole($user->id);
-        Yii::$app->getUser()->setIdentity($user);
+        $this->getWebUser()->setIdentity($user);
 
         $html = ServerInfo::make()->render();
 
@@ -69,7 +69,7 @@ class ServerInfoTest extends TestCase
     public function testAProxiedRequestWithoutTrustedHostsIsFlagged(): void
     {
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '203.0.113.7';
-        Yii::$app->getRequest()->trustedHosts = [];
+        $this->getWebRequest()->trustedHosts = [];
 
         $html = ServerInfo::make()->render();
 
@@ -81,7 +81,7 @@ class ServerInfoTest extends TestCase
     public function testAProxiedRequestWithTrustedHostsIsNotFlagged(): void
     {
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '203.0.113.7';
-        Yii::$app->getRequest()->trustedHosts = ['10.0.0.0/8'];
+        $this->getWebRequest()->trustedHosts = ['10.0.0.0/8'];
 
         $html = ServerInfo::make()->render();
 
@@ -92,7 +92,7 @@ class ServerInfoTest extends TestCase
     public function testAnUnproxiedRequestIsNotFlagged(): void
     {
         unset($_SERVER['HTTP_X_FORWARDED_FOR']);
-        Yii::$app->getRequest()->trustedHosts = [];
+        $this->getWebRequest()->trustedHosts = [];
 
         $html = ServerInfo::make()->render();
 
@@ -105,6 +105,6 @@ class ServerInfoTest extends TestCase
         $user = $this->getUserFromFixture('admin');
         $this->assignAdminRole($user->id);
 
-        Yii::$app->getUser()->setIdentity($user);
+        $this->getWebUser()->setIdentity($user);
     }
 }
