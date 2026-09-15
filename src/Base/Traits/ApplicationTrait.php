@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Base\Traits;
 
 use Hirtz\Skeleton\Assets\EmptyAssetBundle;
+use Hirtz\Skeleton\Base\RootPackage;
 use Hirtz\Skeleton\Controllers\HealthController;
 use Hirtz\Skeleton\Controllers\SitemapController;
 use Hirtz\Skeleton\Db\Connection;
@@ -199,6 +200,9 @@ trait ApplicationTrait
         ];
 
         $config = ArrayHelper::merge($core, $config);
+
+        $this->addRootPackageBootstrap($config);
+
         $path = "{$config['basePath']}/config/";
 
         if (!YII_ENV_TEST) {
@@ -224,6 +228,28 @@ trait ApplicationTrait
         }
 
         $this->setDefaultMailerDsn($config);
+    }
+
+    /**
+     * Composer never lists the root package in `vendor/yiisoft/extensions.php`, so a bundle installed on its own
+     * — which is how a project's Composer sees every bundle but the one it is testing — has to be wired up here.
+     */
+    protected function addRootPackageBootstrap(array &$config): void
+    {
+        $package = new RootPackage(
+            $config['basePath'],
+            $config['vendorPath'] ?? $config['basePath'] . '/vendor',
+        );
+
+        $bootstrap = $package->getBootstrap();
+
+        if ($bootstrap === null) {
+            return;
+        }
+
+        // the aliases last, so a configured one still wins
+        $config['aliases'] = [...$package->getAliases(), ...$config['aliases']];
+        $config['bootstrap'][] = $bootstrap;
     }
 
     protected function setDefaultMailerDsn(&$config): void
