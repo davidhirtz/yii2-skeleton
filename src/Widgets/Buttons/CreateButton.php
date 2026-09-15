@@ -20,6 +20,9 @@ class CreateButton extends Widget
     use LabelTrait;
     use UrlTrait;
 
+    /**
+     * @param array<string, mixed> $config
+     */
     public function __construct(array $config = [])
     {
         $this->icon ??= 'plus';

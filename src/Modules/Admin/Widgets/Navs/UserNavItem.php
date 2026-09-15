@@ -11,6 +11,9 @@ use Yii;
 
 class UserNavItem extends NavItem
 {
+    /**
+     * @param array<string, mixed> $config
+     */
     public function __construct(array $config = [])
     {
         $this->label ??= Yii::t('skeleton', 'COMMON_USERS');

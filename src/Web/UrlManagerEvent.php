@@ -9,6 +9,9 @@ use yii\base\Event;
 class UrlManagerEvent extends Event
 {
     public ?string $url = null;
+    /**
+     * @var array<int|string, mixed>|null
+     */
     public ?array $params = null;
     public ?Request $request = null;
 }

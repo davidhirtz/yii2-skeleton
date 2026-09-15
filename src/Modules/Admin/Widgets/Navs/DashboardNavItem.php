@@ -10,6 +10,9 @@ use Yii;
 
 class DashboardNavItem extends NavItem
 {
+    /**
+     * @param array<string, mixed> $config
+     */
     public function __construct(array $config = [])
     {
         $this->label ??= Yii::t('skeleton', 'DASHBOARD_NAV_ITEM_LABEL');

@@ -120,6 +120,9 @@ class MaterializedTreeTraitTest extends TestCase
         self::assertEquals(1, $model->ancestors[2]->getFirstAncestor()->id);
     }
 
+    /**
+     * @param list<TestMaterializedTreeActiveRecord> $ancestors
+     */
     private static function assertAncestors(array $ancestors): void
     {
         self::assertArrayHasKey(1, $ancestors);
@@ -141,6 +144,9 @@ class MaterializedTreeTraitTest extends TestCase
         self::assertChildren($model->children);
     }
 
+    /**
+     * @param list<TestMaterializedTreeActiveRecord> $children
+     */
     private static function assertChildren(array $children): void
     {
         self::assertArrayHasKey(2, $children);
@@ -162,6 +168,9 @@ class MaterializedTreeTraitTest extends TestCase
         self::assertDescendants($descendants);
     }
 
+    /**
+     * @param list<TestMaterializedTreeActiveRecord> $descendants
+     */
     private static function assertDescendants(array $descendants): void
     {
         self::assertArrayHasKey(2, $descendants);
@@ -185,6 +194,9 @@ class MaterializedTreeTraitTest extends TestCase
         self::assertEquals(2, $model->findSiblings()->count());
     }
 
+    /**
+     * @return list<TestMaterializedTreeActiveRecord>
+     */
     private function getAllModelsInRandomOrder(): array
     {
         return TestMaterializedTreeActiveRecord::find()
@@ -199,6 +211,7 @@ class MaterializedTreeTraitTest extends TestCase
  * @property array|null $path
  * @property string|null $name
  * @property int $position
+ * @property list<int>|null $path
  */
 class TestMaterializedTreeActiveRecord extends ActiveRecord
 {

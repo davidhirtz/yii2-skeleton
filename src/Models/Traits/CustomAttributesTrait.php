@@ -274,6 +274,8 @@ trait CustomAttributesTrait
      * The custom attributes are assigned last, in a pass of their own: a value of the first pass can change which
      * definitions apply, which both drops the new ones from `safeAttributes()` and makes assigning a name the new
      * state does not have throw.
+     *
+     * @param array<string, mixed> $values
      */
     #[Override]
     public function setAttributes($values, $safeOnly = true): void

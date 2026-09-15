@@ -15,7 +15,7 @@ use yii\web\UploadedFile;
 class StreamUploadedFile extends UploadedFile
 {
     /**
-     * @var array|null containing a list of allowed extensions which will be filtered against the found mime-type only
+     * @var list<string>|null containing a list of allowed extensions which will be filtered against the found mime-type only
      * after the file was downloaded. This will also determine the file ending. Leave empty to use URL ending.
      */
     public ?array $allowedExtensions = null;

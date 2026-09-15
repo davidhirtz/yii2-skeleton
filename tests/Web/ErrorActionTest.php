@@ -13,6 +13,7 @@ use yii\base\InvalidConfigException;
 use yii\base\UserException;
 use yii\base\ViewNotFoundException;
 use yii\web\ForbiddenHttpException;
+use yii\base\Module;
 
 class ErrorActionTest extends TestCase
 {
@@ -95,6 +96,9 @@ class ErrorActionTest extends TestCase
         $controller->runAction('error');
     }
 
+    /**
+     * @param array<string, mixed> $config
+     */
     private function getController(array $config = []): TestController
     {
         return new TestController('test', Yii::$app, [
@@ -103,14 +107,23 @@ class ErrorActionTest extends TestCase
         ]);
     }
 
+    /**
+     * @param array<string, mixed> $config
+     */
     private function runErrorAction(array $config = []): string
     {
         return $this->getController($config)->runAction('error');
     }
 }
 
+/**
+ * @extends Controller<Module>
+ */
 class TestController extends Controller
 {
+    /**
+     * @var array<string, mixed>
+     */
     public array $config = [];
 
     #[Override]

@@ -11,10 +11,14 @@ use Hirtz\Skeleton\Html\Li;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Stringable;
 use Yii;
+use yii\base\Model;
 
 class CreatedAtFooterItem implements Stringable
 {
     use ContainerConfigurationTrait;
+    /**
+     * @use ModelTrait<Model|null>
+     */
     use ModelTrait;
 
     protected string $attributeName = 'created_at';

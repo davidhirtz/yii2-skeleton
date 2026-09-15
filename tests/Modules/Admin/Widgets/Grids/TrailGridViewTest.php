@@ -216,6 +216,9 @@ class TestTrailGridView extends TrailGridView
         return $this->getUpdatedAttributeContent($oldValue, $newValue);
     }
 
+    /**
+     * @return array<int|string, mixed>
+     */
     public function userTrailRoute(Trail $trail): array
     {
         return $this->getUserTrailRoute($trail);

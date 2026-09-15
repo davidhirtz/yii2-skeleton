@@ -112,6 +112,10 @@ class Browser extends AbstractBrowser
         return new Response($content, $status, $headers);
     }
 
+    /**
+     * @param array<string, mixed> $parameters
+     * @return array<string, mixed>
+     */
     private function normalizeQueryParameters(array $parameters): array
     {
         parse_str(http_build_query($parameters), $normalizedParameters);

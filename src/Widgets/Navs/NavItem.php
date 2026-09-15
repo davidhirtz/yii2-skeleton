@@ -39,6 +39,9 @@ class NavItem extends Widget
 
     protected ?bool $active = null;
     protected Closure|string|int|null $badge = null;
+    /**
+     * @var array<int|string, array<int|string, mixed>|string>
+     */
     protected array $routes = [];
 
     /**
@@ -66,6 +69,9 @@ class NavItem extends Widget
         return $this;
     }
 
+    /**
+     * @param array<int|string, array<int|string, mixed>|string> $routes
+     */
     public function routes(array $routes): static
     {
         $this->routes = [...$this->routes, ...$routes];

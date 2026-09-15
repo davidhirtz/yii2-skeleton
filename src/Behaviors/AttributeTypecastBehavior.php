@@ -18,6 +18,7 @@ use yii\helpers\StringHelper;
 use yii\validators\BooleanValidator;
 use yii\validators\NumberValidator;
 use yii\validators\StringValidator;
+use Closure;
 
 /**
  * This is a rewrite of {@see \yii\behaviors\AttributeTypecastBehavior}.
@@ -33,8 +34,8 @@ use yii\validators\StringValidator;
  * attributes possible. But it can be configured to perform typecasting after validation, before saving, after saving
  * and after finding, to stay consistent with the original class.
  *
- * @property array $attributeTypes {@see static::setAttributeTypes()}
- * @property array $nullableAttributes {@see static::setNullableAttributes()}
+ * @property array<string, mixed>|null $attributeTypes {@see static::setAttributeTypes()}
+ * @property list<string>|null $nullableAttributes {@see static::setNullableAttributes()}
  *
  * @extends Behavior<ActiveRecord|Model>
  */
@@ -83,20 +84,29 @@ class AttributeTypecastBehavior extends Behavior
     public bool $typecastBooleanAsInteger = true;
 
     /**
-     * @var array|null the list of nullable attributes to be typecast to `null` if empty. If `null`, nullable
-     * attributes will be auto-detected from the table schema.
+     * @var array<string, mixed>|null the attribute types, auto-detected from the table schema when `null`.
      */
     private ?array $attributeTypes = null;
 
     /**
-     * @var array|null the list of nullable attributes to be typecast to `null` if empty. If `null`, nullable
+     * @var list<string>|null the list of nullable attributes to be typecast to `null` if empty. If `null`, nullable
      * attributes will be auto-detected from the table schema.
      */
     private ?array $nullableAttributes = null;
 
+    /**
+     * @var array<string, array<string, mixed>>
+     */
     private static array $autoDetectedAttributeTypes = [];
+
+    /**
+     * @var array<string, list<string>>
+     */
     private static array $autoDetectedNullableAttributes = [];
 
+    /**
+     * @return array<string, string|Closure>
+     */
     #[\Override]
     public function events(): array
     {
@@ -178,6 +188,9 @@ class AttributeTypecastBehavior extends Behavior
         }
     }
 
+    /**
+     * @param list<string>|null $attributeNames
+     */
     public function typecastAttributes(?array $attributeNames = null): void
     {
         $attributeNames ??= $this->owner instanceof SkeletonActiveRecord
@@ -230,6 +243,9 @@ class AttributeTypecastBehavior extends Behavior
         return $value === null || $value === [] || $value === '';
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     public function getAttributeTypes(): ?array
     {
         if ($this->attributeTypes === null) {
@@ -240,11 +256,17 @@ class AttributeTypecastBehavior extends Behavior
         return $this->attributeTypes;
     }
 
+    /**
+     * @param array<string, mixed>|null $attributeTypes
+     */
     public function setAttributeTypes(?array $attributeTypes): void
     {
         $this->attributeTypes = $attributeTypes;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function detectAttributeTypes(): array
     {
         /** @noinspection DuplicatedCode */
@@ -271,6 +293,9 @@ class AttributeTypecastBehavior extends Behavior
         return $attributeTypes;
     }
 
+    /**
+     * @return list<string>|null
+     */
     public function getNullableAttributes(): ?array
     {
         if ($this->nullableAttributes === null) {
@@ -281,11 +306,17 @@ class AttributeTypecastBehavior extends Behavior
         return $this->nullableAttributes;
     }
 
+    /**
+     * @param list<string>|null $nullableAttributes
+     */
     public function setNullableAttributes(?array $nullableAttributes): void
     {
         $this->nullableAttributes = $nullableAttributes;
     }
 
+    /**
+     * @return list<string>
+     */
     protected function detectNullableAttributes(): array
     {
         if (!$this->owner instanceof ActiveRecord) {

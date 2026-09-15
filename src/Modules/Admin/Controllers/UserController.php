@@ -19,7 +19,11 @@ use yii\filters\VerbFilter;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use Hirtz\Skeleton\Modules\Admin\Module;
 
+/**
+ * @extends Controller<Module>
+ */
 class UserController extends Controller
 {
     use UserTrait;

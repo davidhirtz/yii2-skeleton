@@ -16,7 +16,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 
 /**
- * @template TModel of array|Model
+ * @template TModel of array|Model = Model
  * @extends Column<TModel>
  */
 class DataColumn extends Column
@@ -30,8 +30,14 @@ class DataColumn extends Column
     protected ?Closure $value = null;
     protected bool $enableSorting = true;
 
+    /**
+     * @var list<Closure>|null
+     */
     private ?array $sortCallbacks = null;
 
+    /**
+     * @param array<string, mixed> $config
+     */
     public function __construct(array $config = [])
     {
         $this->content ??= $this->getValue(...);

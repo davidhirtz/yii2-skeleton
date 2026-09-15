@@ -83,6 +83,9 @@ trait SearchableTrait
         return $documents;
     }
 
+    /**
+     * @return ActiveQuery<covariant ActiveRecord>
+     */
     public static function findSearchable(): ActiveQuery
     {
         return static::find();
@@ -144,7 +147,7 @@ trait SearchableTrait
      */
     protected function getSearchLanguages(): array
     {
-        return array_values(Yii::$app->getI18n()->getLanguages());
+        return Yii::$app->getI18n()->getLanguages();
     }
 
     /**

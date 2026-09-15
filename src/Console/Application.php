@@ -28,6 +28,9 @@ class Application extends \yii\console\Application
 
     public $controllerNamespace = 'App\\Commands';
 
+    /**
+     * @param array<array-key, mixed> $config
+     */
     #[Override]
     public function preInit(&$config): void
     {
@@ -54,6 +57,9 @@ class Application extends \yii\console\Application
         parent::bootstrap();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     #[Override]
     public function coreCommands(): array
     {

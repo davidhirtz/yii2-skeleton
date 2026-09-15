@@ -7,7 +7,11 @@ namespace Hirtz\Skeleton\Controllers;
 use Hirtz\Skeleton\Web\Controller;
 use Exception;
 use Yii;
+use yii\base\Module;
 
+/**
+ * @extends Controller<Module>
+ */
 class HealthController extends Controller
 {
     public $enableCsrfValidation = false;

@@ -24,7 +24,13 @@ use yii\helpers\ArrayHelper;
  */
 trait NestedTreeTrait
 {
+    /**
+     * @var array<int|string, static>|null
+     */
     private ?array $ancestors = null;
+    /**
+     * @var array<int|string, static>|null
+     */
     private ?array $descendants = null;
 
     /**
@@ -88,6 +94,9 @@ trait NestedTreeTrait
         return null;
     }
 
+    /**
+     * @return ActiveQuery<covariant static>
+     */
     public function findAncestors(): ActiveQuery
     {
         return static::find()->where('[[lft]]<:rgt AND [[rgt]]>:rgt', ['rgt' => $this->rgt]);
@@ -127,6 +136,9 @@ trait NestedTreeTrait
         }
     }
 
+    /**
+     * @return ActiveQuery<covariant static>
+     */
     public function findDescendants(): ActiveQuery
     {
         return static::find()->where('[[lft]]>:lft AND [[rgt]]<:rgt', ['lft' => $this->lft, 'rgt' => $this->rgt]);
@@ -319,6 +331,9 @@ trait NestedTreeTrait
         }
     }
 
+    /**
+     * @param array<int|string, int> $order
+     */
     public static function rebuildNestedTree(?ActiveRecord $parent = null, array $order = []): int
     {
         $parentId = $parent?->getPrimaryKey() ?? '';
@@ -369,6 +384,10 @@ trait NestedTreeTrait
         return $totalRowsUpdated;
     }
 
+    /**
+     * @param array<int|string, list<int>> $branch
+     * @return array<int, array{lft: int, rgt: int, depth: int}>
+     */
     private static function rebuildNestedTreeBranch(array $branch, int &$lft, int|string $parentId, int $depth): array
     {
         $tree = [];
@@ -389,6 +408,7 @@ trait NestedTreeTrait
 
     /**
      * @param ActiveRecord[] $records
+     * @return array<int|string, string>
      */
     public static function indentNestedTree(array $records, string $attribute, string $indent = '-'): array
     {

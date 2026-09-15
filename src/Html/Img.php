@@ -12,6 +12,9 @@ class Img extends VoidTag
 {
     use TagImageAttributesTrait;
 
+    /**
+     * @var array<string, mixed>
+     */
     public array $attributes = [
         'alt' => '',
     ];

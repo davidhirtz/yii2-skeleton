@@ -9,9 +9,13 @@ use Hirtz\Skeleton\Models\Statuses\Status;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Override;
 use Yii;
+use yii\base\Model;
 
 class StatusFilterDropdown extends FilterDropdown
 {
+    /**
+     * @use ModelTrait<Model|null>
+     */
     use ModelTrait;
 
     #[Override]

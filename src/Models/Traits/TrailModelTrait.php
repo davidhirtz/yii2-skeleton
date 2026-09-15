@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Collections\TrailModelCollection;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
+use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 
 trait TrailModelTrait
 {
@@ -20,6 +21,9 @@ trait TrailModelTrait
             : TrailModelCollection::formatAttributeValue($this, $attribute, $value);
     }
 
+    /**
+     * @return list<string>
+     */
     public function getTrailAttributes(): array
     {
         $exclude = $this->getTrailBehavior()->exclude;
@@ -38,6 +42,9 @@ trait TrailModelTrait
         return $behavior;
     }
 
+    /**
+     * @return list<TrailModelInterface>|null
+     */
     public function getTrailParents(): ?array
     {
         return null;

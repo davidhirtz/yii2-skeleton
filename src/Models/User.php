@@ -56,6 +56,7 @@ use yii\web\IdentityInterface;
  * @property-read User|null $created {@see static::getCreated()}
  *
  * @mixin TrailBehavior
+ * @property array<string, mixed>|null $custom_attributes
  */
 class User extends ActiveRecord implements CustomAttributeInterface, IdentityInterface, SearchableInterface, StatusAttributeInterface, TrailModelInterface
 {
@@ -274,7 +275,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
      */
     public function getCreated(): UserQuery
     {
-        /** @var UserQuery $query */
+        /** @var UserQuery<static> $query */
         $query = $this->hasOne(static::class, ['id' => 'created_by_user_id']);
         return $query;
     }
@@ -615,6 +616,9 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         return !$this->isOwner() ? ($this->getStatus()?->getIcon() ?? '') : 'star';
     }
 
+    /**
+     * @return list<string>
+     */
     public function getTrailAttributes(): array
     {
         return array_diff($this->attributes(), [
@@ -676,6 +680,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
 
     /**
      * @noinspection PhpUnused
+     * @return array<string, string>
      */
     public static function getTimezones(): array
     {

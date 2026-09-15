@@ -9,9 +9,13 @@ use Hirtz\Skeleton\Models\Types\Type;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Override;
 use Yii;
+use yii\base\Model;
 
 class TypeFilterDropdown extends FilterDropdown
 {
+    /**
+     * @use ModelTrait<Model|null>
+     */
     use ModelTrait;
 
     #[Override]

@@ -17,11 +17,21 @@ use Hirtz\Skeleton\Helpers\ArrayHelper;
  * @property-read static[] $children {@see static::getChildren()}
  * @property-read static[] $descendants {@see static::getDescendants()}
  * @property-read static|null $parent {@see static::getParent()}
+ * @property list<int>|null $path
  */
 trait MaterializedTreeTrait
 {
+    /**
+     * @var array<int|string, static>|null
+     */
     private ?array $ancestors = null;
+    /**
+     * @var array<int|string, static>|null
+     */
     private ?array $descendants = null;
+    /**
+     * @var array<int|string, static>|null
+     */
     private ?array $children = null;
 
     /**
@@ -42,6 +52,9 @@ trait MaterializedTreeTrait
         return $this->ancestors;
     }
 
+    /**
+     * @param array<int|string, static> $ancestors
+     */
     public function setAncestors(array $ancestors): void
     {
         $this->ancestors = [];
@@ -68,6 +81,9 @@ trait MaterializedTreeTrait
         return current($ancestors) ?: null;
     }
 
+    /**
+     * @return ActiveQuery<static>
+     */
     public function findAncestors(): ActiveQuery
     {
         return static::find()
@@ -95,6 +111,9 @@ trait MaterializedTreeTrait
         return $this->children;
     }
 
+    /**
+     * @param array<int|string, static> $children
+     */
     public function setChildren(array $children): void
     {
         $this->children = [];
@@ -106,6 +125,9 @@ trait MaterializedTreeTrait
         }
     }
 
+    /**
+     * @return ActiveQuery<static>
+     */
     public function findChildren(): ActiveQuery
     {
         return static::find()
@@ -133,6 +155,9 @@ trait MaterializedTreeTrait
         return $this->descendants;
     }
 
+    /**
+     * @param array<int|string, static> $descendants
+     */
     public function setDescendants(array $descendants): void
     {
         $path = $this->path ?? [];
@@ -146,6 +171,9 @@ trait MaterializedTreeTrait
         }
     }
 
+    /**
+     * @return ActiveQuery<static>
+     */
     public function findDescendants(): ActiveQuery
     {
         $fieldName = static::tableName() . '.[[path]]';
@@ -168,6 +196,9 @@ trait MaterializedTreeTrait
         return $this->hasOne(static::class, ['id' => 'parent_id']);
     }
 
+    /**
+     * @return ActiveQuery<static>
+     */
     public function findSiblings(): ActiveQuery
     {
         return static::find()
@@ -175,6 +206,9 @@ trait MaterializedTreeTrait
             ->orderBy(['position' => SORT_ASC]);
     }
 
+    /**
+     * @return list<int>
+     */
     public function getAncestorIds(): array
     {
         return array_map(intval(...), $this->path ?? []);

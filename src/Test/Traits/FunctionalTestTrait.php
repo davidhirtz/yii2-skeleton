@@ -23,6 +23,9 @@ trait FunctionalTestTrait
     protected static Browser $client;
     protected static Crawler $crawler;
 
+    /**
+     * @param array<string, mixed> $parameters
+     */
     protected function open(string $uri, array $parameters = []): void
     {
         $host = parse_url($uri, PHP_URL_HOST) ?: 'www.test.localhost';
@@ -35,6 +38,9 @@ trait FunctionalTestTrait
         self::$crawler = self::$client->request('GET', $uri, $parameters);
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     protected function getJsonResponseData(): array
     {
         self::assertResponseIsJson();
@@ -49,6 +55,10 @@ trait FunctionalTestTrait
         self::$crawler = self::$client->click($link);
     }
 
+    /**
+     * @param array<string, mixed> $values
+     * @param array<string, mixed> $server
+     */
     protected function submit(string $selector = 'form', array $values = [], array $server = []): void
     {
         self::assertSelectorExists($selector);
@@ -57,6 +67,10 @@ trait FunctionalTestTrait
         self::$crawler = self::$client->submit($form, [], $server);
     }
 
+    /**
+     * @param array<string, mixed> $values
+     * @return array<string, mixed>
+     */
     protected function prefixFormValues(string|Model $prefix, array $values): array
     {
         $keys = array_map(fn ($key) => sprintf('%s[%s]', is_string($prefix) ? $prefix : $prefix->formName(), $key), array_keys($values));

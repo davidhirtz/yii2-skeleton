@@ -18,6 +18,9 @@ use yii\web\Response;
  */
 class DashboardController extends Controller
 {
+    /**
+     * @var list<string>
+     */
     public array $roles = [
         User::AUTH_USER,
         User::AUTH_USER_ASSIGN,

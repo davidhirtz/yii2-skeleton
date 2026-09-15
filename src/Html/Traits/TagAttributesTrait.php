@@ -5,11 +5,18 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Html\Traits;
 
 use Hirtz\Skeleton\Helpers\Html;
+use Stringable;
 
 trait TagAttributesTrait
 {
+    /**
+     * @var array<string, mixed>
+     */
     public array $attributes = [];
 
+    /**
+     * @param array<string, mixed> $attributes
+     */
     final public function addAttributes(array $attributes): static
     {
         $this->attributes = [...$this->attributes, ...$attributes];
@@ -22,6 +29,9 @@ trait TagAttributesTrait
         return $this;
     }
 
+    /**
+     * @param array<string, mixed> $attributes
+     */
     final public function attributes(array $attributes): static
     {
         $this->attributes = $attributes;
@@ -43,12 +53,18 @@ trait TagAttributesTrait
         return $this;
     }
 
+    /**
+     * @param array<string, string|Stringable|null>|string $style
+     */
     final public function addStyle(array|string $style, bool $overwrite = true): static
     {
         Html::addCssStyle($this->attributes, $style, $overwrite);
         return $this;
     }
 
+    /**
+     * @param list<string>|string $properties
+     */
     final public function removeStyle(string|array $properties): static
     {
         Html::removeCssStyle($this->attributes, $properties);

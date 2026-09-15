@@ -8,6 +8,9 @@ use Yii;
 
 trait ContainerConfigurationTrait
 {
+    /**
+     * @param mixed ...$args
+     */
     public static function make(...$args): static
     {
         return Yii::createObject(static::class, $args);

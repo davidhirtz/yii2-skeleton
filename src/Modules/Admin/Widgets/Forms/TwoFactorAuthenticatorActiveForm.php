@@ -45,6 +45,9 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
         parent::configure();
     }
 
+    /**
+     * @return list<string|Stringable>
+     */
     protected function getDisableAuthenticatorRows(): array
     {
         return [
@@ -58,6 +61,9 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
         ];
     }
 
+    /**
+     * @return list<string|Stringable>
+     */
     protected function getEnableAuthenticatorRows(): array
     {
         return [

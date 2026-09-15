@@ -12,19 +12,29 @@ use Stringable;
 use yii\base\Model;
 
 /**
- * @template TModel of array|Model
+ * @template TModel of array|Model = Model
  * @extends DataColumn<TModel>
  */
 class LinkColumn extends DataColumn
 {
+    /**
+     * @var array<string, mixed>
+     */
     protected array $linkAttributes = [];
+    /**
+     * @var list<Closure>|null
+     */
     private ?array $linkCallbacks = null;
 
     /**
      * @var Closure(TModel, string|int=, int=):(array|string|null|false)|null
+     * @var Closure(TModel, string|int=, int=):(array<int|string, mixed>|string|null|false)|null
      */
     protected ?Closure $url = null;
 
+    /**
+     * @param array<string, mixed> $config
+     */
     public function __construct(array $config = [])
     {
         $this->content ??= $this->getLink(...);
@@ -52,8 +62,8 @@ class LinkColumn extends DataColumn
     }
 
     /**
-     * @template TUrlModel of array|Model
-     * @param Closure(TUrlModel, string|int=, int=):(array|string|null|false)|null $url
+     * @template TUrlModel of array|Model = TModel
+     * @param Closure(TUrlModel, string|int=, int=):(array<int|string, mixed>|string|null|false)|null $url
      * @return self<TUrlModel>
      */
     public function url(?Closure $url): self

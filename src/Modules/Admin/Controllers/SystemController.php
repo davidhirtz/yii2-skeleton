@@ -17,6 +17,9 @@ use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
+/**
+ * @extends Controller<Module>
+ */
 class SystemController extends Controller
 {
     #[Override]

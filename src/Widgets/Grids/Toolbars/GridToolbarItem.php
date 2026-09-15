@@ -11,6 +11,8 @@ use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Hirtz\Skeleton\Widgets\Grids\Traits\GridTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
+use Hirtz\Skeleton\Widgets\Grids\GridView;
+use yii\base\Model;
 
 class GridToolbarItem extends Widget
 {

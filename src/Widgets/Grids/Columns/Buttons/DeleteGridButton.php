@@ -8,7 +8,11 @@ use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Buttons\DeleteButton;
 use Override;
 use Stringable;
+use yii\base\Model;
 
+/**
+ * @extends DeleteButton<Model>
+ */
 class DeleteGridButton extends DeleteButton
 {
     #[Override]

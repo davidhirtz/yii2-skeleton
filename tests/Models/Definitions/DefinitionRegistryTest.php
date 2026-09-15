@@ -144,6 +144,7 @@ class DefinitionRegistryTest extends TestCase
 
     /**
      * @param array<string, Closure|array> $config
+     * @param array<string, mixed> $config
      */
     private function configure(array $config): void
     {

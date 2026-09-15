@@ -9,7 +9,13 @@ use Hirtz\Skeleton\Validators\HtmlValidator;
 
 class HtmlValidatorTest extends TestCase
 {
+    /**
+     * @var list<string>
+     */
     protected array $defaultAllowedHtmlTags = ['a', 'br', 'li', 'ol', 'p', 'span', 'strong', 'ul'];
+    /**
+     * @var array<string, list<string>>
+     */
     protected array $defaultAllowedHtmlAttributes = [
         'a' => ['href', 'title', 'target', 'rel'],
     ];

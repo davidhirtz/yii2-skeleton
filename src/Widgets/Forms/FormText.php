@@ -16,10 +16,14 @@ use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
+use yii\base\Model;
 
 class FormText extends Widget
 {
     use FormatTrait;
+    /**
+     * @use ModelTrait<Model|null>
+     */
     use ModelTrait;
     use PropertyTrait;
     use RowAttributesTrait;
@@ -27,7 +31,13 @@ class FormText extends Widget
     use TagIdTrait;
     use LabelTrait;
 
+    /**
+     * @var array<string, mixed>
+     */
     public array $contentAttributes = [];
+    /**
+     * @var array<string, mixed>
+     */
     public array $labelAttributes = [];
 
     protected string|int|float|bool|Stringable|null $content = null;

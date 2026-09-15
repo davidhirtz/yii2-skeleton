@@ -15,7 +15,13 @@ class FormRow extends Widget
     use TagAttributesTrait;
     use TagContentTrait;
 
+    /**
+     * @var array<string, mixed>
+     */
     public array $headerAttributes = ['class' => 'form-label'];
+    /**
+     * @var array<string, mixed>
+     */
     public array $contentAttributes = ['class' => 'form-content'];
 
     protected string|Stringable|null $header = null;

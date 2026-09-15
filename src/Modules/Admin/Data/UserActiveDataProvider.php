@@ -8,9 +8,11 @@ use Hirtz\Skeleton\Data\ActiveDataProvider;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
 use Hirtz\Skeleton\Models\User;
 use Override;
+use yii\data\Pagination;
+use yii\data\Sort;
 
 /**
- * @property UserQuery $query
+ * @property UserQuery<User> $query
  * @extends ActiveDataProvider<User>
  */
 class UserActiveDataProvider extends ActiveDataProvider
@@ -42,6 +44,9 @@ class UserActiveDataProvider extends ActiveDataProvider
         }
     }
 
+    /**
+     * @param array<string, mixed>|Sort|bool $value
+     */
     #[Override]
     public function setSort($value): void
     {
@@ -52,6 +57,9 @@ class UserActiveDataProvider extends ActiveDataProvider
         parent::setSort($value);
     }
 
+    /**
+     * @param array<string, mixed>|Pagination|bool $value
+     */
     #[Override]
     public function setPagination($value): void
     {

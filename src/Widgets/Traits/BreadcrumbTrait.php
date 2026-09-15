@@ -31,6 +31,9 @@ trait BreadcrumbTrait
         return $this;
     }
 
+    /**
+     * @param array<int|string, mixed>|string|null $url
+     */
     public function addBreadcrumb(Breadcrumb|string|null $label, array|string|null $url = null): static
     {
         if ($label) {

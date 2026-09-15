@@ -145,6 +145,9 @@ class M260913170000UserToken extends Migration
         }
     }
 
+    /**
+     * @param array<string, mixed> $columns
+     */
     private function insertToken(int|string $userId, string $type, array $columns): void
     {
         $createdAt = $columns['created_at'] ?: gmdate('Y-m-d H:i:s');

@@ -25,6 +25,8 @@ trait TypeAttributeTrait
     /**
      * Instantiates a class based on the given `type`. In contrast to the original implementation, this can be used for
      * creating new records directly, as it also populates the model.
+     *
+     * @param array<string, mixed> $row
      */
     public static function instantiate($row): static
     {

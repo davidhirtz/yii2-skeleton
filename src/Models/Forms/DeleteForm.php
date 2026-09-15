@@ -67,6 +67,9 @@ class DeleteForm extends Model
         return !$this->hasErrors();
     }
 
+    /**
+     * @return array<string, mixed>|int|string
+     */
     public function getId(): array|int|string
     {
         return $this->model->getPrimaryKey();
@@ -90,6 +93,9 @@ class DeleteForm extends Model
         ];
     }
 
+    /**
+     * @param array<string, mixed> $config
+     */
     public static function create(array $config): static
     {
         return Yii::$container->get(static::class, $config);

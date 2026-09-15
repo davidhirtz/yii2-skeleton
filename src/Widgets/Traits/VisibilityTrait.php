@@ -9,9 +9,15 @@ use Hirtz\Skeleton\Models\User;
 
 trait VisibilityTrait
 {
+    /**
+     * @var list<string>|null
+     */
     protected ?array $roles = null;
     protected Closure|bool $visible = true;
 
+    /**
+     * @param list<string>|null $roles
+     */
     public function roles(?array $roles): static
     {
         $this->roles = $roles
@@ -21,6 +27,9 @@ trait VisibilityTrait
         return $this;
     }
 
+    /**
+     * @return list<string>
+     */
     public function getRoles(): array
     {
         return $this->roles ?? [];

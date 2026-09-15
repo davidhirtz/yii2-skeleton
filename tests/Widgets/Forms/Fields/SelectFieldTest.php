@@ -16,6 +16,9 @@ class SelectFieldTest extends TestCase
             public int $status = 1;
 
             /** @noinspection PhpUnused */
+            /**
+             * @return array<int|string, mixed>
+             */
             public function getStatuses(): array
             {
                 return [

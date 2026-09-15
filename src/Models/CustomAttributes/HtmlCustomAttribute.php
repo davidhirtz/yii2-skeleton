@@ -13,11 +13,17 @@ use yii\base\Model;
 
 class HtmlCustomAttribute extends CustomAttribute
 {
+    /**
+     * @var class-string<HtmlValidator>|array{class: class-string<HtmlValidator>, ...}|null
+     */
     protected array|string|null $validator = HtmlValidator::class;
     protected ?int $max = 65535;
 
     private ?HtmlValidator $htmlValidator = null;
 
+    /**
+     * @param class-string<HtmlValidator>|array{class: class-string<HtmlValidator>, ...}|null $validator
+     */
     public function validator(array|string|null $validator): static
     {
         $this->validator = $validator;

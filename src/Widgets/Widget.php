@@ -39,6 +39,8 @@ abstract class Widget implements Stringable, ViewContextInterface
     /**
      * A subclass constructor runs before this one, so it must not read `$view` or `$webuser` — it has to call the
      * components itself.
+     *
+     * @param array<string, mixed> $config
      */
     public function __construct(array $config = [])
     {

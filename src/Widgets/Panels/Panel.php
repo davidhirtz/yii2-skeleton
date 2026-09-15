@@ -12,6 +12,8 @@ use Hirtz\Skeleton\Widgets\Traits\ContainerTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use Yii;
+use Hirtz\Skeleton\Widgets\Grids\GridView;
+use yii\base\Model;
 
 class Panel extends Widget
 {
@@ -19,11 +21,23 @@ class Panel extends Widget
     use GridTrait;
     use CardTrait;
 
+    /**
+     * @var array<string, mixed>
+     */
     public array $panelAttributes = ['class' => 'form-group form-row'];
+    /**
+     * @var array<string, mixed>
+     */
     public array $contentOptions = ['class' => 'form-content'];
 
+    /**
+     * @var list<string|Stringable>
+     */
     protected array $buttons = [];
 
+    /**
+     * @param array<string, mixed> $config
+     */
     public function __construct(array $config = [])
     {
         $this->title ??= Yii::t('skeleton', 'PANEL_OPERATIONS');

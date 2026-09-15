@@ -55,6 +55,9 @@ class TrailActiveDataProvider extends ActiveDataProvider
         parent::init();
     }
 
+    /**
+     * @return list<Trail>
+     */
     #[Override]
     protected function prepareModels(): array
     {

@@ -9,6 +9,9 @@ use Yii;
 
 class AdminAssetBundle extends AbstractAssetBundle
 {
+    /**
+     * @var array<string, mixed>
+     */
     public array $faviconOptions = [];
 
     public $css = ['css/admin.css'];

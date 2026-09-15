@@ -13,9 +13,13 @@ use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use Yii;
 use yii\db\ActiveRecordInterface;
+use yii\base\Model;
 
 class ViewGridButton extends Widget
 {
+    /**
+     * @use ModelTrait<Model|null>
+     */
     use ModelTrait;
     use UrlTrait;
     use IconTextTrait;

@@ -19,7 +19,13 @@ class LoginActiveForm extends ActiveForm
 {
     use LoginActiveFormTrait;
 
+    /**
+     * @var array<string, mixed>
+     */
     public array $attributes = ['class' => 'form-plain'];
+    /**
+     * @var list<string>
+     */
     public array $excludedErrorProperties = ['email', 'password'];
     public bool $hasStickyButtons = false;
     protected string $layout = "{errors}{rows}{buttons}";

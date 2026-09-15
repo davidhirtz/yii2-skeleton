@@ -48,6 +48,9 @@ class Response extends \yii\web\Response
         $this->setStatusCode(200);
     }
 
+    /**
+     * @param array<int|string, mixed>|string $url
+     */
     #[\Override]
     public function redirect($url, $statusCode = 302, $checkAjax = true): static
     {

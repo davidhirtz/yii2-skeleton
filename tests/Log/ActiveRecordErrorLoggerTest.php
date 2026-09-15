@@ -73,6 +73,9 @@ class ActiveRecordErrorLoggerTest extends TestCase
         return $redirect;
     }
 
+    /**
+     * @return array<int|string, mixed>
+     */
     private function getLastMessage(): array
     {
         $messages = array_values(array_filter(

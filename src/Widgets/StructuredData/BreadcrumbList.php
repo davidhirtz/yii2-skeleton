@@ -32,11 +32,17 @@ class BreadcrumbList extends Widget
         ]);
     }
 
+    /**
+     * @return list<array<string, mixed>>
+     */
     protected function getItemListElement(): array
     {
         return array_filter(array_map($this->getListItem(...), $this->breadcrumbs, array_keys($this->breadcrumbs)));
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function getListItem(Breadcrumb $breadcrumb, int $index): array
     {
         return $breadcrumb->url

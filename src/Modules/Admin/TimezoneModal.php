@@ -22,6 +22,9 @@ class TimezoneModal extends Widget
 
     final protected const string SESSION_KEY = 'timezone_validated';
 
+    /**
+     * @param array<string, mixed> $config
+     */
     public function __construct(array $config = [])
     {
         $this->session = Yii::$app->getSession();

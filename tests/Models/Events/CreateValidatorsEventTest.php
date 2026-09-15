@@ -32,6 +32,9 @@ class TestModel extends Model
 
 class CreateValidatorsEventBehavior extends Behavior
 {
+    /**
+     * @return array<string, \Closure>
+     */
     #[\Override]
     public function events(): array
     {

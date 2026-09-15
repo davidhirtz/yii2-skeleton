@@ -17,6 +17,8 @@ use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
 use Yii;
+use Hirtz\Skeleton\Widgets\Grids\GridView;
+use yii\base\Model;
 
 class GridSearchForm extends Widget
 {
@@ -31,6 +33,9 @@ class GridSearchForm extends Widget
     protected ?Closure $input = null;
     protected ?Closure $form = null;
 
+    /**
+     * @param array<string, mixed> $config
+     */
     public function __construct(array $config = [])
     {
         $this->icon ??= 'search';

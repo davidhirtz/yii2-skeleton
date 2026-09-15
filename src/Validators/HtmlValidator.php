@@ -11,7 +11,7 @@ use yii\validators\Validator;
 class HtmlValidator extends Validator
 {
     /**
-     * @var array|array[] containing CSS classes that should be allowed. Use tag name as a key and an array of allowed
+     * @var array<int|string, array<int|string, string>|string> containing CSS classes that should be allowed. Use tag name as a key and an array of allowed
      *     classes as value. Example: ['a' => ['btn', 'btn-primary']].
      *
      * Allowed classes can also have a human-readable name as key and the class name as value.
@@ -23,23 +23,23 @@ class HtmlValidator extends Validator
     public array $allowedClasses = [];
 
     /**
-     * @var array containing allowed HTML tags like h1-h5 for format, table, th, td, tr for tables or blockquote,
+     * @var list<string> containing allowed HTML tags like h1-h5 for format, table, th, td, tr for tables or blockquote,
      * strike, em for font styles.
      */
     public array $allowedHtmlTags = [];
 
     /**
-     * @var array containing a list of excluded HTML tags. Use this to override the default allowedHtmlTags.
+     * @var list<string> containing a list of excluded HTML tags. Use this to override the default allowedHtmlTags.
      */
     public array $excludedHtmlTags = [];
 
     /**
-     * @var array[] containing allowed HTML attributes, indexed by tag name.
+     * @var array<string, list<string>> containing allowed HTML attributes, indexed by tag name.
      */
     public array $allowedHtmlAttributes = [];
 
     /**
-     * @var array containing CSS properties that should be allowed.
+     * @var array<string, list<string>> containing CSS properties that should be allowed.
      */
     public array $allowedCssProperties = [];
 
@@ -55,7 +55,7 @@ class HtmlValidator extends Validator
     public bool $allowTables = false;
 
     /**
-     * @var array containing options for HtmlPurifier. This should not be necessary in most cases.
+     * @var array<string, mixed> containing options for HtmlPurifier. This should not be necessary in most cases.
      */
     public array $purifierOptions = [];
 
@@ -144,7 +144,7 @@ class HtmlValidator extends Validator
         $allowedHtmlTags = [];
 
         foreach ($this->allowedHtmlTags as $tag) {
-            /** @var array|string|null $attributes */
+            /** @var list<string>|string|null $attributes */
             $attributes = $this->allowedHtmlAttributes[$tag] ?? null;
 
             if (is_array($attributes)) {

@@ -25,6 +25,9 @@ class Dashboard extends Widget
 
     protected Module $module;
 
+    /**
+     * @param array<string, mixed> $config
+     */
     public function __construct(array $config = [])
     {
         /** @var Module $module */

@@ -109,6 +109,9 @@ class MessageControllerTest extends TestCase
         self::assertSame($this->messagePath . 'config.php', $controller->getDefaultConfigPath());
     }
 
+    /**
+     * @param list<string>|null $categories
+     */
     private function extract(?array $categories): string
     {
         $config = [

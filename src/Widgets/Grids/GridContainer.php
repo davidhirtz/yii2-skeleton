@@ -10,6 +10,8 @@ use Hirtz\Skeleton\Widgets\Traits\ContainerTrait;
 use Hirtz\Skeleton\Widgets\Traits\CardTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
+use Hirtz\Skeleton\Widgets\Grids\GridView;
+use yii\base\Model;
 
 class GridContainer extends Widget
 {

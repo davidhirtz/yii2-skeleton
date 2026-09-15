@@ -8,6 +8,9 @@ use Hirtz\Skeleton\Helpers\Url;
 
 trait AjaxAttributesTrait
 {
+    /**
+     * @param array<int|string, mixed>|string $url
+     */
     public function delete(string|array $url, string $target): static
     {
         $this->attributes['hx-select'] = $target;
@@ -17,6 +20,9 @@ trait AjaxAttributesTrait
         return $this->post($url);
     }
 
+    /**
+     * @param array<int|string, mixed>|string $url
+     */
     public function replace(string|array $url, string $target): static
     {
         $this->attributes['hx-select'] = $target;
@@ -25,6 +31,9 @@ trait AjaxAttributesTrait
         return $this->post($url);
     }
 
+    /**
+     * @param array<int|string, mixed>|string $url
+     */
     public function get(string|array $url, bool $pushHistory = true): static
     {
         $this->attributes['hx-get'] = Url::to($url);
@@ -36,6 +45,9 @@ trait AjaxAttributesTrait
         return $this;
     }
 
+    /**
+     * @param array<int|string, mixed>|string $url
+     */
     public function post(string|array $url, bool $pushHistory = false): static
     {
         $this->attributes['hx-post'] = Url::to($url);

@@ -113,7 +113,7 @@ class TranslatableAttributesTraitTest extends TestCase
 
 /**
  * @property int $id
- * @property array|null $custom_attributes
+ * @property array<string, mixed>|null $custom_attributes
  * @property string|null $name
  * @property string|null $name_de
  * @property string|null $note

@@ -28,11 +28,17 @@ class FileUploadButton extends Widget
     use UrlTrait;
 
     protected ?int $maxChunkSize = null;
+    /**
+     * @var array<string, mixed>
+     */
     protected array $inputAttributes = [];
 
     protected ?string $target = null;
     protected ?string $selectOob = null;
 
+    /**
+     * @var list<Closure>|null
+     */
     private ?array $buttonCallbacks = null;
 
     public function accept(?string $accept): static

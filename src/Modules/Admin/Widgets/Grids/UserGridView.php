@@ -125,6 +125,9 @@ class UserGridView extends GridView
             ->content($this->getButtonColumnContent(...));
     }
 
+    /**
+     * @return list<Stringable>
+     */
     protected function getButtonColumnContent(User $user): array|string
     {
         if ($this->canUpdateUser($user)) {

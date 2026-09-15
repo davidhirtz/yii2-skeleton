@@ -23,6 +23,9 @@ class Modal extends Widget
     use TitleTrait;
 
     private string|false|null $dismiss = null;
+    /**
+     * @var list<string|Stringable>
+     */
     private array $footer = [];
 
     public function dismiss(string|false|null $dismiss): static

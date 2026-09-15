@@ -19,6 +19,9 @@ use Yii;
 /**
  * @property LogDataProvider $provider
  */
+/**
+ * @extends GridView<Log>
+ */
 class LogGridView extends GridView
 {
     protected string $layout = '{items}';
@@ -71,6 +74,9 @@ class LogGridView extends GridView
             ->content($this->getMessageColumnContent(...));
     }
 
+    /**
+     * @return list<string|Stringable>
+     */
     protected function getMessageColumnContent(Log $log): array
     {
         $content = [

@@ -79,6 +79,9 @@ class TrailBehaviorTest extends TestCase
     public function testAfterInsertEventWithoutTrailAttributes(): void
     {
         $model = new class () extends TrailActiveRecord {
+            /**
+             * @return list<string>
+             */
             public function getTrailAttributes(): array
             {
                 return [];
@@ -351,11 +354,14 @@ class TrailActiveRecord extends ActiveRecord implements TrailModelInterface
      */
     public function getUser(): UserQuery
     {
-        /** @var UserQuery $query */
+        /** @var UserQuery<User> $query */
         $query = $this->hasOne(User::class, ['id' => 'user_id']);
         return $query;
     }
 
+    /**
+     * @return array<int, string>
+     */
     public function getRanges(): array
     {
         return [
@@ -378,6 +384,9 @@ class TrailBehaviorMock extends TrailBehavior
     protected function insertTrail(Trail $trail): void
     {
         $trail = new class () extends Trail {
+            /**
+             * @param array<string, mixed> $attributes
+             */
             public function insert($runValidation = true, $attributes = null): bool
             {
                 throw new Exception("Mocked error message");

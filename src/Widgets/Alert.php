@@ -18,6 +18,9 @@ class Alert extends Widget
     use TagContentTrait;
     use IconTrait;
 
+    /**
+     * @var list<string|Stringable>
+     */
     protected array $buttons = [];
 
     public function button(Button $btn): static

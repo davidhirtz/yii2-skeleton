@@ -19,8 +19,9 @@ class DynamicRangeValidator extends RangeValidator
     public bool $integerOnly = true;
 
     /**
-     * @var array which will be dynamically overridden by {@see DynamicRangeValidator::getDynamicRange()}. Defaults to
-     * an empty array to prevent an exception thrown by {@see RangeValidator}.
+     * @var array<int|string, mixed>|\Closure|\Traversable<int|string, mixed> which will be dynamically overridden by
+     * {@see DynamicRangeValidator::getDynamicRange()}. Defaults to an empty array to prevent an exception thrown
+     * by {@see RangeValidator}.
      */
     public $range = [];
 
@@ -48,6 +49,8 @@ class DynamicRangeValidator extends RangeValidator
      *
      * A {@see Type} the record cannot take is out of range, so a value the admin never offered cannot be posted
      * past it either — {@see Type::isAvailableOrStored()} is what keeps the record's own value valid.
+     *
+     * @return array<int|string, mixed>
      */
     public function getDynamicRange(Model $model, string $attribute): array
     {

@@ -23,12 +23,12 @@ class TinyMceField extends Field
     use TagPlaceholderTrait;
 
     /**
-     * @var array containing all TinyMCE options, only set directly to override default behavior.
+     * @var array<string, mixed> containing all TinyMCE options, only set directly to override default behavior.
      */
     public array $clientOptions = [];
 
     /**
-     * @var array|string|null containing TinyMCE content CSS files, if empty, the skin's content CSS file will be used.
+     * @var list<string>|string|null containing TinyMCE content CSS files, if empty, the skin's content CSS file will be used.
      * @link https://www.tiny.cloud/docs/tinymce/6/add-css-options/#content_css
      */
     public array|string|null $contentCss = null;
@@ -40,7 +40,7 @@ class TinyMceField extends Field
     public ?string $contentStyle = null;
 
     /**
-     * @var array containing all TinyMCE formats, only set directly to override default behavior.
+     * @var array<string, mixed> containing all TinyMCE formats, only set directly to override default behavior.
      */
     public array $formats = [];
 
@@ -55,7 +55,7 @@ class TinyMceField extends Field
     public ?string $languageUrl = null;
 
     /**
-     * @var array containing all TinyMCE plugins, only set directly to override default behavior.
+     * @var list<string> containing all TinyMCE plugins, only set directly to override default behavior.
      */
     public array $plugins = [];
 
@@ -67,23 +67,26 @@ class TinyMceField extends Field
     public string|null|false $skin = null;
 
     /**
-     * @var array containing all TinyMCE style dropdown options, only set directly to override default behavior.
+     * @var list<array<string, mixed>> containing all TinyMCE style dropdown options, only set directly to override default behavior.
      */
     public array $stylesFormats = [];
 
     /**
-     * @var array containing all TinyMCE options, only set directly to override default behavior.
+     * @var list<string> containing all TinyMCE options, only set directly to override default behavior.
      */
     public array $toolbar = [];
 
     /**
-     * @var array|class-string|HtmlValidator|null containing the validator configuration. If set to false, no
+     * @var array{class: class-string<HtmlValidator>}|class-string<HtmlValidator>|HtmlValidator|null containing the validator configuration. If set to false, no
      * validation will be performed.
      */
     public array|HtmlValidator|string|null $validator = HtmlValidator::class;
 
     protected ?string $value = null;
 
+    /**
+     * @param array{class: class-string<HtmlValidator>}|class-string<HtmlValidator>|HtmlValidator|null $validator
+     */
     public function validator(array|HtmlValidator|string|null $validator): static
     {
         $this->validator = $validator;
@@ -100,7 +103,7 @@ class TinyMceField extends Field
     protected function configure(): void
     {
         if (!$this->validator instanceof HtmlValidator) {
-            $this->validator = $this->validator ? Yii::createObject($this->validator) : null;
+            $this->validator = $this->validator === null ? null : Yii::createObject($this->validator);
         }
 
         if (null === $this->languageUrl) {
@@ -306,7 +309,7 @@ class TinyMceField extends Field
 
             $linkClassList = [];
 
-            foreach ($this->validator?->allowedClasses['a'] ?? [] as $name => $cssClass) {
+            foreach ((array)($this->validator?->allowedClasses['a'] ?? []) as $name => $cssClass) {
                 if (is_int($name)) {
                     $name = match ($cssClass) {
                         'btn' => Yii::t('skeleton', 'TINY_MCE_BUTTON'),
@@ -370,6 +373,9 @@ class TinyMceField extends Field
         $this->clientOptions['plugins'] ??= implode(' ', array_unique($this->plugins));
     }
 
+    /**
+     * @param array<int|string, string> $styles
+     */
     protected function setStylesFormArray(string $tag, array $styles = []): void
     {
         foreach ($styles as $name => $cssClass) {

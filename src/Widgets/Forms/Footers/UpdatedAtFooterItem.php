@@ -18,10 +18,14 @@ use Hirtz\Skeleton\Widgets\Username;
 use Stringable;
 use Yii;
 use yii\db\ActiveRecord;
+use yii\base\Model;
 
 class UpdatedAtFooterItem implements Stringable
 {
     use ContainerConfigurationTrait;
+    /**
+     * @use ModelTrait<Model|null>
+     */
     use ModelTrait;
 
     protected string $attributeName = 'updated_at';

@@ -250,6 +250,9 @@ class SitemapTest extends TestCase
         self::assertSame([], $this->createSitemap(['variations' => fn (): ?int => null])->getVariations());
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getViewConfig(): array
     {
         return [
@@ -258,6 +261,9 @@ class SitemapTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getUserSitemapConfig(): array
     {
         return [
@@ -269,6 +275,8 @@ class SitemapTest extends TestCase
 
     /**
      * A sitemap reads `maxUrlCount` off the application component, so the component is what a test has to replace.
+     *
+     * @param array<string, mixed> $config
      */
     private function createSitemap(array $config = []): Sitemap
     {

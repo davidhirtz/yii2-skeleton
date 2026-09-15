@@ -23,6 +23,9 @@ class AutocompleteField extends InputField
      */
     final public const string OPTIONS_ID = 'autocomplete-options';
 
+    /**
+     * @var array<int|string, mixed>|string|null
+     */
     protected array|string|null $url = null;
 
     /**
@@ -30,6 +33,9 @@ class AutocompleteField extends InputField
      */
     protected ?string $resultsId = null;
 
+    /**
+     * @param array<int|string, mixed>|string|null $url
+     */
     public function url(array|string|null $url): static
     {
         $this->url = $url;

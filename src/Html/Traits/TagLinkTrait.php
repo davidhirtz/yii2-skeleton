@@ -8,6 +8,9 @@ use Hirtz\Skeleton\Helpers\Url;
 
 trait TagLinkTrait
 {
+    /**
+     * @param array<string, mixed> $params
+     */
     public function current(array $params = [], bool $scheme = false): static
     {
         return $this->addAttributes([
@@ -21,6 +24,9 @@ trait TagLinkTrait
         return $this->attribute('aria-label', $label);
     }
 
+    /**
+     * @param array<int|string, mixed>|string|null $url
+     */
     public function href(string|array|null $url): static
     {
         return $this->addAttributes([

@@ -96,7 +96,13 @@ class User extends \yii\web\User
 
     public $enableAutoLogin = true;
     public $identityClass = \Hirtz\Skeleton\Models\User::class;
+    /**
+     * @var array<string, mixed>
+     */
     public $identityCookie = ['name' => '_auth', 'httpOnly' => true];
+    /**
+     * @var array<int|string, mixed>|string|null
+     */
     public $loginUrl = null;
 
     /**
@@ -258,6 +264,9 @@ class User extends \yii\web\User
         UserLogin::getDb()->createCommand()->insert(UserLogin::tableName(), $columns)->execute();
     }
 
+    /**
+     * @param array<string, mixed> $params
+     */
     #[Override]
     public function can($permissionName, $params = [], $allowCaching = true): bool
     {

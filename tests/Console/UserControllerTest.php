@@ -114,6 +114,9 @@ class UserControllerTest extends TestCase
         self::assertStringContainsString('Do you want to retry?', $output);
     }
 
+    /**
+     * @param array<string, string> $answers
+     */
     private function createController(string $password, array $answers = []): TestUserController
     {
         $controller = new TestUserController('user', Yii::$app);
@@ -129,6 +132,9 @@ class TestUserController extends UserController
     use StdOutBufferControllerTrait;
 
     public string $password = '';
+    /**
+     * @var array<string, string>
+     */
     public array $answers = [];
 
     #[Override]
@@ -138,6 +144,9 @@ class TestUserController extends UserController
         return $this->password;
     }
 
+    /**
+     * @param array<string, mixed> $options
+     */
     #[Override]
     public function prompt($text, $options = []): string
     {

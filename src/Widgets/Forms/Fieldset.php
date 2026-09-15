@@ -27,12 +27,16 @@ use Yii;
 use yii\validators\BooleanValidator;
 use yii\validators\EmailValidator;
 use yii\validators\NumberValidator;
+use yii\base\Model;
 
 class Fieldset extends Widget
 {
     use FormWidgetTrait;
     use TagAttributesTrait;
     use TagIdTrait;
+    /**
+     * @use ModelTrait<Model|null>
+     */
     use ModelTrait;
 
     /**
@@ -40,6 +44,9 @@ class Fieldset extends Widget
      */
     protected array $rows = [];
 
+    /**
+     * @param list<string|Stringable> $rows
+     */
     public function rows(array $rows): static
     {
         $this->rows = array_filter($rows);

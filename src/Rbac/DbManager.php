@@ -7,9 +7,13 @@ namespace Hirtz\Skeleton\Rbac;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use yii\rbac\Assignment;
+use yii\caching\CacheInterface;
 
 class DbManager extends \yii\rbac\DbManager
 {
+    /**
+     * @var CacheInterface|string|null
+     */
     public $cache = 'cache';
 
     #[\Override]

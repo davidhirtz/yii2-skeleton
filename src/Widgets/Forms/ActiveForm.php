@@ -22,13 +22,20 @@ use Yii;
 use yii\db\ActiveRecordInterface;
 use yii\helpers\Inflector;
 use yii\web\Controller;
+use yii\base\Model;
 
 class ActiveForm extends Widget
 {
     use TagAttributesTrait;
     use TagIdTrait;
+    /**
+     * @use ModelTrait<Model|null>
+     */
     use ModelTrait;
 
+    /**
+     * @var array<int|string, mixed>|string|false|null
+     */
     public array|string|false|null $action = null;
 
     public bool $hasStickyButtons = true;
@@ -50,6 +57,9 @@ class ActiveForm extends Widget
      * @var Stringable[]|string[]|false|null
      */
     protected array|false|null $footer = null;
+    /**
+     * @var list<string>
+     */
     protected array $excludedErrorProperties = [];
 
     /**
@@ -57,6 +67,9 @@ class ActiveForm extends Widget
      */
     protected ?array $rows = null;
 
+    /**
+     * @param array<int|string, mixed>|string|false|null $action
+     */
     public function action(array|string|false|null $action): static
     {
         $this->action = $action ? Url::to($action) : $action;
@@ -144,6 +157,9 @@ class ActiveForm extends Widget
             : '';
     }
 
+    /**
+     * @param array<int|string, mixed>|Fieldset $fieldsetOrRows
+     */
     protected function getFieldset(array|Fieldset $fieldsetOrRows): ?Stringable
     {
         if (!$fieldsetOrRows instanceof Fieldset) {

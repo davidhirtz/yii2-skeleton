@@ -25,9 +25,15 @@ class SignupActiveForm extends ActiveForm
 {
     use LoginActiveFormTrait;
 
+    /**
+     * @var array<string, mixed>
+     */
     public array $attributes = ['class' => 'form-plain'];
     public bool $hasStickyButtons = false;
     protected string $layout = "{errors}{rows}{buttons}";
+    /**
+     * @var list<string>
+     */
     public array $excludedErrorProperties = ['name', 'email', 'password'];
 
     #[\Override]

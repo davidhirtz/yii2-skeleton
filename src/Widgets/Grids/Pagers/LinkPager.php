@@ -9,6 +9,9 @@ use Hirtz\Skeleton\Helpers\Html;
 
 class LinkPager extends \yii\widgets\LinkPager
 {
+    /**
+     * @var array<string, mixed>
+     */
     public array $pageOptions = [];
     public string $linkCssClass = 'page-link';
     public bool $renderDisabledLink = true;
@@ -18,6 +21,9 @@ class LinkPager extends \yii\widgets\LinkPager
     public $firstPageLabel = true;
     public $lastPageLabel = true;
 
+    /**
+     * @var array<string, mixed>
+     */
     public $options = [
         'class' => 'pagination',
         'hx-boost' => 'true',

@@ -18,12 +18,18 @@ class DeleteActiveForm extends ActiveForm
     use PropertyTrait;
     use LabelTrait;
 
+    /**
+     * @var array<string, mixed>
+     */
     public array $inputAttributes = ['autocomplete' => 'off'];
     public bool $hasStickyButtons = false;
 
     protected ?string $message = null;
     protected string|false|null $confirm = null;
 
+    /**
+     * @param array<string, mixed> $attributes
+     */
     public function inputAttributes(array $attributes): static
     {
         $this->inputAttributes = $attributes;

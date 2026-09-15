@@ -23,6 +23,9 @@ use Yii;
 /**
  * @property LogFileArrayDataProvider|null $provider
  */
+/**
+ * @extends GridView<LogFile>
+ */
 class LogFileGridView extends GridView
 {
     protected array $tableAttributes = [
@@ -83,6 +86,9 @@ class LogFileGridView extends GridView
             ->content($this->getButtonColumnContent(...));
     }
 
+    /**
+     * @return list<Stringable>
+     */
     protected function getButtonColumnContent(LogFile $file): array
     {
         return [
@@ -97,6 +103,7 @@ class LogFileGridView extends GridView
     /**
      * @see LogController::actionView()
      * @see LogController::actionDelete()
+     * @return array<int|string, mixed>
      */
     protected function getLogFileUrl(LogFile $file, string $action = 'view', ?bool $raw = null): array
     {

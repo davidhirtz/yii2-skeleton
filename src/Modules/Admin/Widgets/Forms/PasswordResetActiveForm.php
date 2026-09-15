@@ -18,7 +18,13 @@ use Yii;
  */
 class PasswordResetActiveForm extends ActiveForm
 {
+    /**
+     * @var array<string, mixed>
+     */
     public array $attributes = ['class' => 'form-plain'];
+    /**
+     * @var list<string>
+     */
     public array $excludedErrorProperties = ['newPassword', 'repeatPassword'];
     public bool $hasStickyButtons = false;
     protected string $layout = "{errors}{rows}{buttons}";

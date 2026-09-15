@@ -85,6 +85,9 @@ class Controller extends \yii\web\Controller
         return trim((string)preg_replace('/>\s+</', '><', $html));
     }
 
+    /**
+     * @param Model|array<int|string, mixed>|string $value
+     */
     public function error(Model|array|string $value): static
     {
         if ($value instanceof Model) {
@@ -98,6 +101,9 @@ class Controller extends \yii\web\Controller
         return $this;
     }
 
+    /**
+     * @param Model|array<int|string, mixed>|string|null $value
+     */
     public function success(Model|array|string|null $value, ?string $message = null): static
     {
         if ($value instanceof Model && !$value->hasErrors()) {
@@ -111,6 +117,9 @@ class Controller extends \yii\web\Controller
         return $this;
     }
 
+    /**
+     * @param array<int|string, mixed>|string|null $value
+     */
     public function warning(array|string|null $value): static
     {
         if ($value) {
@@ -120,6 +129,9 @@ class Controller extends \yii\web\Controller
         return $this;
     }
 
+    /**
+     * @param Model|array<int|string, mixed>|string $value
+     */
     public function errorOrSuccess(Model|array|string $value, string $message): static
     {
         if ($value instanceof Model ? $value->hasErrors() : !empty($value)) {

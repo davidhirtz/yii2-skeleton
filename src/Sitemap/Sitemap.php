@@ -25,6 +25,9 @@ class Sitemap extends Component
 
     public int $duration = 86400;
 
+    /**
+     * @var array<string, mixed>|Dependency|null
+     */
     public array|Dependency|null $dependency = null;
 
     /**
@@ -55,12 +58,12 @@ class Sitemap extends Component
     public int $maxUrlCount = 50000;
 
     /**
-     * @var array containing the static views, see {@see UrlSitemap::$views}.
+     * @var array<string, mixed> containing the static views, see {@see UrlSitemap::$views}.
      */
     public array $views = [];
 
     /**
-     * @var array containing additional sitemap URLs, see {@see UrlSitemap::$urls}.
+     * @var list<array<string, mixed>|string> containing additional sitemap URLs, see {@see UrlSitemap::$urls}.
      */
     public array $urls = [];
 
@@ -139,6 +142,8 @@ class Sitemap extends Component
     /**
      * Generates the URLs of a single sitemap. Without `useSitemapIndex` there is only one, holding every URL, and
      * both `key` and `offset` are ignored.
+     *
+     * @return list<array<string, mixed>|string>
      */
     public function generateUrls(string|int|null $key = null, int $offset = 0): array
     {
@@ -157,6 +162,8 @@ class Sitemap extends Component
 
     /**
      * Generates an index of sitemap.xml URLs.
+     *
+     * @return list<array<string, mixed>|string>
      */
     public function generateIndexUrls(): array
     {
@@ -177,7 +184,7 @@ class Sitemap extends Component
     }
 
     /**
-     * @param string|array<string, mixed> $config
+     * @param class-string|array{class: class-string, ...} $config
      */
     private function createSitemap(string|array $config): SitemapInterface
     {

@@ -13,7 +13,11 @@ use Override;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Response;
+use Hirtz\Skeleton\Modules\Admin\Module;
 
+/**
+ * @extends Controller<Module>
+ */
 class UserLoginController extends Controller
 {
     use UserTrait;

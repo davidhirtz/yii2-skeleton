@@ -23,7 +23,11 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\ForbiddenHttpException;
 use yii\web\Response;
+use Hirtz\Skeleton\Modules\Admin\Module;
 
+/**
+ * @extends Controller<Module>
+ */
 class AccountController extends Controller
 {
     use ModuleTrait;
@@ -107,6 +111,8 @@ class AccountController extends Controller
     /**
      * Returns JSON encoded string containing a signup token.
      * The token will only be every five minutes, to prevent multiple signups within one session.
+     *
+     * @return array<string, mixed>
      */
     public function actionToken(): array
     {

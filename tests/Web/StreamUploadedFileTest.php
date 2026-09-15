@@ -70,6 +70,9 @@ class StreamUploadedFileTest extends TestCase
         self::assertEquals(UPLOAD_ERR_CANT_WRITE, $upload->error);
     }
 
+    /**
+     * @param array<string, mixed> $config
+     */
     protected function getStreamUploadedFile(array $config = []): StreamUploadedFile
     {
         return Yii::$container->get(StreamUploadedFile::class, [], $config);

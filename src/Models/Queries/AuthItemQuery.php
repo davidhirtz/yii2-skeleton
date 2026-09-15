@@ -11,6 +11,9 @@ use yii\db\Connection;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
+/**
+ * @extends ActiveQuery<AuthItem>
+ */
 class AuthItemQuery extends ActiveQuery
 {
     public function orderByType(): static
@@ -55,6 +58,10 @@ class AuthItemQuery extends ActiveQuery
         return $items;
     }
 
+    /**
+     * @param array<string, mixed> $items
+     * @param list<array{parent: string, child: string}> $relations
+     */
     private function setAuthItemChild(array &$items, array $relations, string $parent, string$child): void
     {
         if (!$items[$child]->isInherited) {

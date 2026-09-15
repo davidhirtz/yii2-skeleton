@@ -11,14 +11,24 @@ use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
+use yii\base\Model;
 
 class FormFooter extends Widget
 {
     use TagAttributesTrait;
+    /**
+     * @use ModelTrait<Model|null>
+     */
     use ModelTrait;
 
+    /**
+     * @var list<string|Stringable>|null
+     */
     protected array|null $items = null;
 
+    /**
+     * @param list<string|Stringable>|null $items
+     */
     public function items(array|null $items): static
     {
         $this->items = $items;

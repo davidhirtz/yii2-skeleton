@@ -14,9 +14,15 @@ interface TrailModelInterface extends AdminModelInterface
 {
     public function formatTrailAttributeValue(string $attribute, mixed $value): mixed;
 
+    /**
+     * @return list<string>
+     */
     public function getTrailAttributes(): array;
 
     public function getTrailBehavior(): TrailBehavior;
 
+    /**
+     * @return list<TrailModelInterface>|null
+     */
     public function getTrailParents(): ?array;
 }

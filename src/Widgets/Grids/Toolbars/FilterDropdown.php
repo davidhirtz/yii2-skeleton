@@ -23,6 +23,9 @@ class FilterDropdown extends Widget
     use TagIdTrait;
 
     protected int|false $showFilterThreshold = 20;
+    /**
+     * @var array<string, mixed>
+     */
     protected array $params = ['page' => null];
 
     protected string $paramName;
@@ -33,9 +36,13 @@ class FilterDropdown extends Widget
 
     /**
      * @param array<int|string, string> $items
+     * @var array<int|string, mixed>
      */
     protected array $items = [];
 
+    /**
+     * @param array<int|string, mixed> $items
+     */
     public function items(array $items): static
     {
         $this->items = $items;

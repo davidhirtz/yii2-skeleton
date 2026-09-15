@@ -111,6 +111,9 @@ class PageCacheTest extends TestCase
         ]);
     }
 
+    /**
+     * @param array<string, mixed> $config
+     */
     private function createPageCache(array $config = []): PageCache
     {
         return new PageCache($config);

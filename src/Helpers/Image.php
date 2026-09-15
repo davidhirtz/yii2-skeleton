@@ -24,6 +24,8 @@ class Image extends BaseImage
     /**
      * Replacement for Imagick's native `writeImages` as it doesn't support stream wrappers. Image format
      * can be set via options, otherwise the filename extension will be used.
+     *
+     * @param array<string, mixed> $options
      */
     public static function saveImage(ImageInterface $image, string $filename, array $options = []): int|bool
     {
@@ -112,6 +114,9 @@ class Image extends BaseImage
         return static::setImageRotation(parent::autorotate($image, $color));
     }
 
+    /**
+     * @return array<int|string, mixed>|false
+     */
     public static function getImageSize(string $filename, ?string $extension = null): array|bool
     {
         if (!$extension) {
@@ -123,6 +128,8 @@ class Image extends BaseImage
 
     /**
      * Extracts width and height from SVG attributes including viewBox.
+     *
+     * @return array{int, int}|false
      */
     public static function getSvgDimensions(string $filename): array|bool
     {

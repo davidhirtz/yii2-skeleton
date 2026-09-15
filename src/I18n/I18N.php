@@ -10,9 +10,13 @@ use yii\i18n\PhpMessageSource;
 
 /**
  * @property array $languages {@see I18N::getLanguages()}
+ * @property list<string> $languages
  */
 class I18N extends \yii\i18n\I18N
 {
+    /**
+     * @var array<string, string>
+     */
     public static array $languageLabels = [
         'de' => 'Deutsch',
         'en-US' => 'English',
@@ -20,6 +24,9 @@ class I18N extends \yii\i18n\I18N
         'pt' => 'Português',
     ];
 
+    /**
+     * @var list<string>
+     */
     private array $languages;
 
     #[Override]
@@ -59,11 +66,17 @@ class I18N extends \yii\i18n\I18N
         }
     }
 
+    /**
+     * @return list<string>
+     */
     public function getLanguages(): array
     {
         return $this->languages;
     }
 
+    /**
+     * @param list<string>|string $languages
+     */
     public function setLanguages(array|string $languages): void
     {
         $this->languages = array_unique((array)$languages);
@@ -104,6 +117,10 @@ class I18N extends \yii\i18n\I18N
     /**
      * Returns a flat array with all translated attribute names for given languages. If languages are omitted, all
      * available languages are used.
+     *
+     * @param list<string>|string $attributes
+     * @param list<string>|null $languages
+     * @return list<string>
      */
     public function getAttributeNames(array|string $attributes, ?array $languages = null): array
     {

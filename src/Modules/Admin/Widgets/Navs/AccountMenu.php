@@ -36,6 +36,9 @@ class AccountMenu extends Widget
             ->items($this->getItems());
     }
 
+    /**
+     * @return array<NavItem|null>
+     */
     protected function getItems(): array
     {
         return [

@@ -12,6 +12,9 @@ class ActionDropdown extends Dropdown
 {
     use IconTrait;
 
+    /**
+     * @param array<string, mixed> $config
+     */
     public function __construct(array $config = [])
     {
         $this->attributes['class'] ??= 'dropdown-actions';

@@ -21,13 +21,22 @@ class MigrateController extends \yii\console\controllers\MigrateController
     use BackupTrait;
     use ConfigTrait;
 
+    /**
+     * @var string|null
+     */
     public $migrationPath = null;
 
+    /**
+     * @var list<string>
+     */
     public $migrationNamespaces = [];
 
     public string $dbFile = '@root/config/db.php';
     public $templateFile = '@skeleton/views/migration.php';
 
+    /**
+     * @var array<string, mixed>|null
+     */
     private ?array $dbConfig = null;
 
     /**
@@ -158,6 +167,9 @@ class MigrateController extends \yii\console\controllers\MigrateController
         return CliPrompt::hiddenPrompt();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function getDbConfig(): array
     {
         $this->dbConfig ??= $this->getConfig($this->dbFile);

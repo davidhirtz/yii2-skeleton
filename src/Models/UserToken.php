@@ -94,7 +94,7 @@ class UserToken extends ActiveRecord
      */
     public function getUser(): UserQuery
     {
-        /** @var UserQuery $query */
+        /** @var UserQuery<User> $query */
         $query = $this->hasOne(User::class, ['id' => 'user_id']);
         return $query;
     }

@@ -149,6 +149,9 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return array_values(array_diff($this->attributes(), $this->getVirtualAttributes()));
     }
 
+    /**
+     * @return list<string>
+     */
     #[Override]
     public function attributes(): array
     {
@@ -156,12 +159,18 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return $virtual ? array_values(array_unique([...parent::attributes(), ...$virtual])) : parent::attributes();
     }
 
+    /**
+     * @param list<string>|null $attributes
+     */
     #[Override]
     protected function insertInternal($attributes = null): bool
     {
         return parent::insertInternal($this->filterColumnAttributes($attributes));
     }
 
+    /**
+     * @param list<string>|null $attributes
+     */
     #[Override]
     protected function updateInternal($attributes = null): false|int
     {
@@ -248,6 +257,8 @@ class ActiveRecord extends \yii\db\ActiveRecord
     /**
      * The virtual attributes are written here rather than from a behavior, so their changes reach the event the
      * trail listens to without depending on the order two behaviors were attached in.
+     *
+     * @param array<string, mixed> $changedAttributes
      */
     #[Override]
     public function afterSave($insert, $changedAttributes): void
@@ -283,6 +294,8 @@ class ActiveRecord extends \yii\db\ActiveRecord
 
     /**
      * Through the container, so a definition such as `i18nAttributes` also applies to loaded records.
+     *
+     * @param array<string, mixed> $row
      */
     #[Override]
     public static function instantiate($row): static
@@ -296,9 +309,12 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return $condition === null ? null : parent::findOne($condition);
     }
 
+    /**
+     * @return ActiveQuery<ActiveRecord>|null
+     */
     public function getRelationFromForeignKey(string $foreignKey, bool $throwException = false): ?ActiveQuery
     {
-        /** @var ActiveQuery|null $query */
+        /** @var ActiveQuery<ActiveRecord>|null $query */
         $query = $this->getRelation($this->getRelationNameFromForeignKey($foreignKey), $throwException);
         return $query;
     }
@@ -308,9 +324,12 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return lcfirst(Inflector::camelize(str_replace('_id', '', $foreignKey)));
     }
 
+    /**
+     * @return ActiveRecord|array<int|string, ActiveRecord>|null
+     */
     public function refreshRelation(string $name): ActiveRecord|array|null
     {
-        /** @var ActiveQuery $query */
+        /** @var ActiveQuery<ActiveRecord> $query */
         $query = $this->getRelation($name);
         $method = $query->multiple ? 'all' : 'one';
 
@@ -320,6 +339,9 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return $related;
     }
 
+    /**
+     * @param array<int|string, mixed> $attributes
+     */
     public function updateAttributesBlameable(array $attributes): int
     {
         foreach ($attributes as $name => $value) {
@@ -339,6 +361,9 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return $this->updateAttributes($attributes);
     }
 
+    /**
+     * @param array<string, mixed> $attributes
+     */
     public function upsert(bool $runValidation = true, ?array $attributes = null): bool
     {
         return !$this->getIsNewRecord()
@@ -346,6 +371,10 @@ class ActiveRecord extends \yii\db\ActiveRecord
             : $this->insert($runValidation, $attributes);
     }
 
+    /**
+     * @param list<string>|list<array<string, mixed>> $columns
+     * @param list<array<string, mixed>>|null $rows
+     */
     public static function batchInsert(array $columns, ?array $rows = null, bool $ignore = false): int
     {
         $query = Yii::createObject(BatchInsertQueryBuild::class, [static::class, ...func_get_args()]);
@@ -355,6 +384,8 @@ class ActiveRecord extends \yii\db\ActiveRecord
     /**
      * Extends the default functionality by checking for DateTime objects, which unfortunately cannot be compared by
      * checking identical values using `===` as it always returns `true` even if the date was not changed.
+     *
+     * @return array<string, mixed>
      */
     #[Override]
     public function getDirtyAttributes($names = null): array
@@ -384,6 +415,9 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return parent::isAttributeChanged($name, $identical);
     }
 
+    /**
+     * @param list<string> $attributeNames
+     */
     public function hasChangedAttributes(array $attributeNames, bool $identical = true): bool
     {
         foreach ($attributeNames as $attribute) {

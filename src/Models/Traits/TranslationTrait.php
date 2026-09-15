@@ -41,7 +41,7 @@ trait TranslationTrait
      */
     public function getTranslationAttributes(): array
     {
-        return array_values($this->i18nAttributes);
+        return $this->i18nAttributes;
     }
 
     /**

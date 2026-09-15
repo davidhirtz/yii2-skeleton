@@ -11,6 +11,7 @@ use Override;
 use yii\base\Behavior;
 use yii\db\ActiveRecord;
 use yii\db\AfterSaveEvent;
+use Closure;
 
 /**
  * Attached by {@see \Hirtz\Skeleton\Db\ActiveRecord::behaviors()} to every {@see SearchableInterface}. Unlike the
@@ -51,6 +52,9 @@ class SearchBehavior extends Behavior
         parent::attach($owner);
     }
 
+    /**
+     * @return array<string, string|Closure>
+     */
     #[Override]
     public function events(): array
     {

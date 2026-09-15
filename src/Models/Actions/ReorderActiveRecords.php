@@ -18,6 +18,7 @@ class ReorderActiveRecords
 
     /**
      * @param TActiveRecord[] $models
+     * @param array<int|string, int> $order
      */
     public function __construct(
         protected array $models,
@@ -73,12 +74,18 @@ class ReorderActiveRecords
     {
     }
 
+    /**
+     * @param array<string, mixed> $primaryKey
+     */
     protected function getNewPosition(array $primaryKey): int
     {
         $index = $this->index ? $primaryKey[$this->index] : current($primaryKey);
         return ArrayHelper::getValue($this->order, $index, 0) + 1;
     }
 
+    /**
+     * @param array<string, mixed> $config
+     */
     public static function runWithBodyParam(string $paramName, array $config = []): int|false
     {
         $order = array_map(intval(...), array_filter(Yii::$app->getRequest()->getBodyParam($paramName, [])));

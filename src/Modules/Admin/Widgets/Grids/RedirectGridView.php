@@ -146,6 +146,7 @@ class RedirectGridView extends GridView
     /**
      * @see RedirectController::actionDelete()
      * @see RedirectController::actionUpdate()
+     * @return list<Stringable>
      */
     protected function getButtonColumnContent(Redirect $redirect): array
     {

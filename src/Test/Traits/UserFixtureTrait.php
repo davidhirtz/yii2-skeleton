@@ -11,6 +11,9 @@ use Yii;
 
 trait UserFixtureTrait
 {
+    /**
+     * @return array<string, mixed>
+     */
     #[Override]
     public function fixtures(): array
     {
@@ -28,6 +31,9 @@ trait UserFixtureTrait
         return $fixture;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function getUserFixtureData(string $key): array
     {
         return $this->getUserFixture()->data[$key];

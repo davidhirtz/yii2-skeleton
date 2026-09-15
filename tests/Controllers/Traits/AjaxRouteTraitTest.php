@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Web\Controller;
 use Yii;
 use yii\web\View;
+use yii\base\Module;
 
 class AjaxRouteTraitTest extends TestCase
 {
@@ -57,6 +58,9 @@ class AjaxRouteTraitTest extends TestCase
     }
 }
 
+/**
+ * @extends Controller<Module>
+ */
 class AjaxRouteControllerMock extends Controller
 {
     use AjaxRouteTrait;

@@ -68,6 +68,9 @@ class HtmxRefreshTest extends TestCase
         ]));
     }
 
+    /**
+     * @param array<string, mixed> $server
+     */
     protected function post(string $uri, array $server = []): void
     {
         $request = Yii::$app->getRequest();

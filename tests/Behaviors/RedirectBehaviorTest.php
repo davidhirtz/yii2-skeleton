@@ -219,6 +219,9 @@ class BaseRedirectActiveRecord extends ActiveRecord
 
 class RedirectActiveRecord extends BaseRedirectActiveRecord
 {
+    /**
+     * @return array<int|string, mixed>|false
+     */
     public function getRoute(): array|false
     {
         return ['site/index', 'query' => $this->query];

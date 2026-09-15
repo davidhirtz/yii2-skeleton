@@ -66,6 +66,9 @@ class AccountCredentialsForm extends Model
         ];
     }
 
+    /**
+     * @return list<string>
+     */
     protected function getUserAttributeNames(): array
     {
         return ['email'];

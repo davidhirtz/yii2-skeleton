@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Db\ActiveQuery;
 use Hirtz\Skeleton\Models\Traits\SearchableTrait;
 use Hirtz\Skeleton\Search\SearchDocument;
 use Hirtz\Skeleton\Search\SearchResult;
+use Hirtz\Skeleton\Db\ActiveRecord;
 
 /**
  * Implemented via {@see SearchableTrait}, which leaves only {@see static::getSearchAttributes()} to the model.
@@ -44,6 +45,8 @@ interface SearchableInterface extends AdminModelInterface
     /**
      * The query the rebuild and the hit hydration load records with, so a model can eager load what its documents
      * or its result need.
+     *
+     * @return ActiveQuery<covariant ActiveRecord>
      */
     public static function findSearchable(): ActiveQuery;
 }

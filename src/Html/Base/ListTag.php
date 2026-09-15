@@ -11,6 +11,9 @@ use Stringable;
 abstract class ListTag extends Tag
 {
     protected bool $showEmpty = false;
+    /**
+     * @var list<string|Stringable>
+     */
     protected array $items = [];
 
     final public function items(string|Stringable|null ...$items): static

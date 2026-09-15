@@ -39,6 +39,9 @@ class Html extends BaseHtml
         );
     }
 
+    /**
+     * @param list<string>|string|null $keywords
+     */
     public static function markKeywords(string $text, array|string|null $keywords, bool $wordBoundary = false): string
     {
         if ($keywords) {

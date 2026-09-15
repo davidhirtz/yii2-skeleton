@@ -21,6 +21,9 @@ class Submenu extends Widget
     use TagContentTrait;
     use ContainerTrait;
 
+    /**
+     * @var array<string, mixed>
+     */
     protected array $navAttributes = ['class' => 'tabs'];
     protected bool $hideSingleItem = true;
 

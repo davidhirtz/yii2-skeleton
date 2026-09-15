@@ -28,10 +28,13 @@ class PageCache extends \yii\filters\PageCache
      */
     public string|false $noCacheParam = 'nocache';
 
+    /**
+     * @var list<string>
+     */
     public $only = ['index', 'view'];
 
     /**
-     * @var array the default GET param values used by {@see static::$variations}
+     * @var array<string, mixed> the default GET param values used by {@see static::$variations}
      */
     public array $params = [];
 

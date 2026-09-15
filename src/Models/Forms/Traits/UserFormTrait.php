@@ -11,6 +11,8 @@ trait UserFormTrait
     /**
      * A form that renders no field of its own — the account settings — is still loaded through the user, which is
      * the only model the request carries.
+     *
+     * @param array<string, mixed> $data
      */
     #[Override]
     public function load($data, $formName = null): bool

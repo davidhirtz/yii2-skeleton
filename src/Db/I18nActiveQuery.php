@@ -124,6 +124,9 @@ class I18nActiveQuery extends ActiveQuery
     /**
      * Rewrites a translated attribute name, bare or prefixed, to its stored expression, so `Sort` and `orderBy()` need
      * no knowledge of it.
+     *
+     * @param array<int|string, mixed>|string $columns
+     * @return array<string, mixed>
      */
     #[Override]
     protected function normalizeOrderBy($columns): array
@@ -163,6 +166,9 @@ class I18nActiveQuery extends ActiveQuery
 
     /**
      * The parent resolves the relations, so deciding here covers `all()`, `each()` and `batch()` alike.
+     *
+     * @param array<int, array<string, mixed>> $rows
+     * @return array<int|string, T>
      */
     #[Override]
     public function populate($rows): array

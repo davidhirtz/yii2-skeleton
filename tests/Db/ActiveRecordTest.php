@@ -239,9 +239,12 @@ class TestActiveRecord extends ActiveRecord
         ];
     }
 
+    /**
+     * @return UserQuery<User>
+     */
     public function getUser(): UserQuery
     {
-        /** @var UserQuery $query */
+        /** @var UserQuery<User> $query */
         $query = $this->hasOne(User::class, ['id' => 'user_id']);
         return $query;
     }

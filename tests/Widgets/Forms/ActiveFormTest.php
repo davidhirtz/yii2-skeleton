@@ -87,6 +87,9 @@ class TestModel extends Model
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public static function getValues(): array
     {
         return [

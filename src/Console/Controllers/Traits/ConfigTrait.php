@@ -32,12 +32,19 @@ trait ConfigTrait
         };
     }
 
+    /**
+     * @param array<string, mixed> $default
+     * @return array<string, mixed>
+     */
     protected function getConfig(string $file, array $default = []): array
     {
         $file = Yii::getAlias($file);
         return is_file($file) ? require ($file) : $default;
     }
 
+    /**
+     * @param array<string, mixed> $config
+     */
     protected function setConfig(string $file, array $config, ?string $message = null): void
     {
         if (!FileHelper::createConfigFile($file, $config)) {

@@ -60,6 +60,9 @@ class MigrationAlert extends Widget
         return $this->pending ?? [];
     }
 
+    /**
+     * @return list<string>
+     */
     protected function findPendingMigrations(): array
     {
         $history = Yii::createObject(MigrationHistory::class, [Yii::$app->getDb()]);

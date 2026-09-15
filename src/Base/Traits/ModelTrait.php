@@ -7,10 +7,17 @@ namespace Hirtz\Skeleton\Base\Traits;
 use ArrayObject;
 use Hirtz\Skeleton\Models\Events\CreateValidatorsEvent;
 use Yii;
+use yii\validators\Validator;
 
 trait ModelTrait
 {
+    /**
+     * @var array<string, list<string>>|null
+     */
     private ?array $scenarios = null;
+    /**
+     * @var ArrayObject<int, Validator>|null
+     */
     private ?ArrayObject $validators = null;
 
     public function addInvalidAttributeError(string $attribute): bool
@@ -58,6 +65,9 @@ trait ModelTrait
         return $event->validators;
     }
 
+    /**
+     * @param array<string, mixed> $params
+     */
     public static function create(array $params = []): static
     {
         return Yii::createObject(static::class, $params);

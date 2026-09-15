@@ -16,9 +16,10 @@ use Hirtz\Skeleton\Web\User;
 use Stringable;
 use Yii;
 use yii\base\Model;
+use Hirtz\Skeleton\Widgets\Grids\GridView;
 
 /**
- * @template TModel of array|Model
+ * @template TModel of array|Model = Model
  */
 class Column
 {
@@ -28,16 +29,31 @@ class Column
     use TitleTrait;
     use VisibilityTrait;
 
+    /**
+     * @var array<string, mixed>
+     */
     protected array $bodyAttributes = [];
+    /**
+     * @var array<string, mixed>
+     */
     protected array $headerAttributes = [];
     protected User $webuser;
 
     protected Closure $content;
     protected string $emptyCell = '';
 
+    /**
+     * @var list<Closure>|null
+     */
     private ?array $bodyCallbacks = null;
+    /**
+     * @var list<Closure>|null
+     */
     private ?array $headerCallbacks = null;
 
+    /**
+     * @param array<string, mixed> $config
+     */
     public function __construct(array $config = [])
     {
         $this->webuser ??= Yii::$app->getUser();

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Html;
 
 use Override;
+use Stringable;
 
 class Table extends Base\Tag
 {
@@ -23,6 +24,9 @@ class Table extends Base\Tag
         return $this;
     }
 
+    /**
+     * @param list<list<string|Stringable>> $rows
+     */
     public function rows(array $rows): self
     {
         $this->body ??= Tbody::make();

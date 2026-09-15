@@ -73,6 +73,9 @@ class TrailGridView extends GridView
             ->visible(!$this->provider->model);
     }
 
+    /**
+     * @return list<string|Stringable>|string
+     */
     protected function getModelColumnContent(Trail $trail): array|string
     {
         if ($trail->model_class) {
@@ -359,6 +362,9 @@ class TrailGridView extends GridView
             ->class('strong');
     }
 
+    /**
+     * @param list<list<string|Stringable>> $rows
+     */
     protected function getTrailAttributesTable(array $rows): Table
     {
         return Table::make()
@@ -462,11 +468,17 @@ class TrailGridView extends GridView
             ->hiddenForSmallDevices();
     }
 
+    /**
+     * @return array<int|string, mixed>|null
+     */
     protected function getTrailModelRoute(Trail $trail): ?array
     {
         return $this->getTrailIndexRoute($trail->model_class, (string)$trail->model_id);
     }
 
+    /**
+     * @return array<int|string, mixed>
+     */
     protected function getUserTrailRoute(Trail $trail): array
     {
         return $this->getTrailIndexRoute(User::class, (string)$trail->user_id);
@@ -475,6 +487,8 @@ class TrailGridView extends GridView
     /**
      * {@see \Hirtz\Skeleton\Modules\Admin\Controllers\TrailController::actionIndex()} splits the parameter on
      * `@`, so a route that joins on anything else filters nothing.
+     *
+     * @return array<int|string, mixed>
      */
     protected function getTrailIndexRoute(string $modelClass, string $modelId): array
     {

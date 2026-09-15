@@ -32,6 +32,8 @@ use yii\db\ActiveRecordInterface;
  * @property DateTime $created_at
  *
  * @property-read User|null $user {@see Trail::getUser}
+ * @property array<string, mixed>|null $data
+ * @property list<int|string>|int|string|null $model_id
  */
 class Trail extends ActiveRecord implements TypeAttributeInterface
 {
@@ -55,6 +57,9 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
     final public const int TYPE_ORDER = 11;
     final public const int TYPE_PASSWORD = 12;
 
+    /**
+     * @var ActiveRecordInterface|array<int|string, mixed>|null
+     */
     public ActiveRecordInterface|array|null $parents = null;
 
     #[Override]
@@ -91,6 +96,9 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         return parent::beforeSave($insert);
     }
 
+    /**
+     * @param array<string, mixed> $changedAttributes
+     */
     #[Override]
     public function afterSave($insert, $changedAttributes): void
     {
@@ -127,7 +135,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
      */
     public function getUser(): UserQuery
     {
-        /** @var UserQuery $query */
+        /** @var UserQuery<User> $query */
         $query = $this->hasOne(User::class, ['id' => 'user_id']);
         return $query;
     }
@@ -211,6 +219,9 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         return $this->getType()?->hasDataModelEnabled() ?? false;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public static function createOrderTrail(?TrailModelInterface $model, ?Message $message = null, array $data = []): static
     {
         $trail = static::create();
@@ -228,6 +239,9 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         return $trail;
     }
 
+    /**
+     * @return array<int|string, mixed>
+     */
     public static function getAdminRouteByModel(?Model $model, int|string|null $id = null): array
     {
         if ($model instanceof TrailModelInterface) {

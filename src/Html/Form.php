@@ -14,6 +14,9 @@ class Form extends Tag
 {
     use TagContentTrait;
 
+    /**
+     * @param array<int|string, mixed>|string|null $action
+     */
     public function action(array|string|null $action): static
     {
         return $this->attribute('action', $action !== null ? Url::to($action) : null);

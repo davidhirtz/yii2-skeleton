@@ -14,7 +14,11 @@ use Yii;
 use yii\filters\PageCache;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\base\Module;
 
+/**
+ * @extends Controller<Module>
+ */
 class SitemapController extends Controller
 {
     /**
@@ -108,6 +112,9 @@ class SitemapController extends Controller
         return (string)ob_get_clean();
     }
 
+    /**
+     * @param list<array<string, mixed>|string> $urls
+     */
     private function writeUrlset(XMLWriter $writer, array $urls, bool $isIndex = false): void
     {
         $writer->startElement($isIndex ? 'sitemapindex' : 'urlset');
@@ -150,6 +157,9 @@ class SitemapController extends Controller
         $writer->endElement();
     }
 
+    /**
+     * @param list<array<string, mixed>|string> $urls
+     */
     private function hasImages(array $urls): bool
     {
         foreach ($urls as $url) {

@@ -265,6 +265,9 @@ class UserAuthControllerTest extends TestCase
         ]);
     }
 
+    /**
+     * @param array<string, mixed> $params
+     */
     private function post(string $route, array $params): mixed
     {
         $_SERVER['REQUEST_METHOD'] = 'POST';

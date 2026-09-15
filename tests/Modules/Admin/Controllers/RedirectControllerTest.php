@@ -260,6 +260,10 @@ class RedirectControllerTest extends TestCase
         return $redirect;
     }
 
+    /**
+     * @param array<string, mixed> $bodyParams
+     * @param array<string, mixed> $params
+     */
     private function post(string $route, array $bodyParams, array $params = []): mixed
     {
         $_SERVER['REQUEST_METHOD'] = 'POST';

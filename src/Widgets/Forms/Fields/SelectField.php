@@ -21,21 +21,26 @@ class SelectField extends Field
     use TagInputTrait;
 
     /**
-     * @var array<string|int, string|int|array>
+     * @var array<int|string, string|int|array<string, mixed>>
      */
     protected array $items = [];
 
     protected string|false $prompt = false;
+    /**
+     * @var array<string, mixed>
+     */
     protected array $promptAttributes = [];
     protected bool $multiple = false;
 
     /**
-     * @var array<int|string, array> extra attributes per option value, also applied to an item built from the model
+     * @var array<int|string, array<string, mixed>> extra attributes per option value, also applied to an item
+     * built from the model
      */
     protected array $itemAttributes = [];
 
     /**
-     * @param array<int|string, array> $itemAttributes
+     * @param array<int|string, array<string, mixed>> $itemAttributes
+     * @param array<int|string, array<string, mixed>> $itemAttributes
      */
     public function itemAttributes(array $itemAttributes): static
     {
@@ -49,6 +54,9 @@ class SelectField extends Field
         return $this;
     }
 
+    /**
+     * @param array<string, mixed> $attributes
+     */
     public function prompt(string|false $prompt = '', array $attributes = []): static
     {
         $this->prompt = $prompt;
@@ -56,12 +64,18 @@ class SelectField extends Field
         return $this;
     }
 
+    /**
+     * @param array<int|string, mixed> $items
+     */
     public function items(array $items): static
     {
         $this->items = $items;
         return $this;
     }
 
+    /**
+     * @param array<string, mixed>|string|int $item
+     */
     public function addItem(string|int $value, string|int|array $item): static
     {
         $this->items[$value] = $item;
@@ -91,6 +105,7 @@ class SelectField extends Field
 
     /**
      * @return array<int|string, Definition|string|int|array>
+     * @return array<int|string, mixed>
      */
     protected function getItemsFromModel(): array
     {
@@ -100,7 +115,7 @@ class SelectField extends Field
             $method = 'get' . Inflector::camelize(Inflector::pluralize($this->property));
         }
 
-        /** @var array<int|string, Definition|string|int|array> */
+        /** @var array<int|string, Definition|string|int|array<string, mixed>> */
         return $this->model->hasMethod($method)
             ? call_user_func([$this->model, $method])
             : [];
@@ -108,6 +123,7 @@ class SelectField extends Field
 
     /**
      * @param array<int|string, Definition|string|int|array> $items
+     * @param array<int|string, mixed> $items
      */
     protected function addItemsFromModel(array $items): void
     {

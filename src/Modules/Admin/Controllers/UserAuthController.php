@@ -18,7 +18,11 @@ use yii\rbac\Role;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use Hirtz\Skeleton\Modules\Admin\Module;
 
+/**
+ * @extends Controller<Module>
+ */
 class UserAuthController extends Controller
 {
     use UserTrait;

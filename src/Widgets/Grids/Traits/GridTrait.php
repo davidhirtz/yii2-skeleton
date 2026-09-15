@@ -5,19 +5,17 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Grids\Traits;
 
 use Hirtz\Skeleton\Widgets\Grids\GridView;
+use yii\base\Model;
 
-/**
- * @template T of GridView
- */
 trait GridTrait
 {
     /**
-     * @var T
+     * @var GridView<covariant Model>
      */
     protected GridView $grid;
 
     /**
-     * @param T $grid
+     * @param GridView<covariant Model> $grid
      */
     public function grid(GridView $grid): static
     {

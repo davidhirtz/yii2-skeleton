@@ -40,6 +40,8 @@ class TypeSelectField extends SelectField
     /**
      * A type the record cannot take is not offered, which is what {@see Type::available()} is for — except the
      * one the record is stored with, or the form would silently retype it on the next save.
+     *
+     * @return array<int|string, mixed>
      */
     #[Override]
     protected function getItemsFromModel(): array

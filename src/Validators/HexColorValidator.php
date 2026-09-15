@@ -38,6 +38,9 @@ class HexColorValidator extends StringValidator
         $model->$attribute = $value;
     }
 
+    /**
+     * @return array{string, array<string, mixed>}|null
+     */
     #[\Override]
     protected function validateValue($value): ?array
     {

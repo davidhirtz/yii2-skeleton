@@ -434,6 +434,9 @@ class CustomAttributesTraitTest extends TestCase
         return $model;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function findStoredValues(CustomAttributeRecord $model): array
     {
         $value = Yii::$app->getDb()->createCommand('SELECT [[custom_attributes]] FROM {{custom_attribute_test}} WHERE [[id]] = :id', [
@@ -460,7 +463,7 @@ class CustomAttributesTraitTest extends TestCase
  * @property int $type
  * @property string|null $name
  * @property string|null $name_de
- * @property array|null $custom_attributes
+ * @property array<string, mixed>|null $custom_attributes
  * @property string|null $subtitle
  * @property string|null $subtitle_de
  * @property bool|string|null $featured
@@ -470,7 +473,7 @@ class CustomAttributesTraitTest extends TestCase
  * @property string|null $secret
  * @property string|null $locked
  * @property string|null $note
- * @property array|null $links
+ * @property list<array<string, string>>|null $links
  * @property string|null $configured
  */
 class CustomAttributeRecord extends ActiveRecord implements

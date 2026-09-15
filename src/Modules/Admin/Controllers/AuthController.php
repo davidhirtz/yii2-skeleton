@@ -12,7 +12,11 @@ use Override;
 use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Response;
+use Hirtz\Skeleton\Modules\Admin\Module;
 
+/**
+ * @extends Controller<Module>
+ */
 class AuthController extends Controller
 {
     use UserTrait;

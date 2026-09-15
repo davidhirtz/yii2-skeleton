@@ -152,6 +152,9 @@ class HtmlValidatorPurifyTest extends TestCase
         self::assertSame('', $this->purify(null));
     }
 
+    /**
+     * @param array<string, mixed> $config
+     */
     private function purify(?string $html, array $config = []): string
     {
         $translation = Translation::create();

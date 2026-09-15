@@ -41,6 +41,9 @@ interface TypeAttributeInterface
 
     public function getTypePlural(): string;
 
+    /**
+     * @param array<string, mixed> $row
+     */
     public static function instantiate($row): static;
 
     /**

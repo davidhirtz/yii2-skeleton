@@ -9,6 +9,9 @@ use Stringable;
 
 trait TagContentTrait
 {
+    /**
+     * @var list<string|Stringable>
+     */
     protected array $content = [];
 
     final public function content(string|Stringable|null ...$content): static

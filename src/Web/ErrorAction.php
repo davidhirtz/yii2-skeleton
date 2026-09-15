@@ -6,9 +6,11 @@ namespace Hirtz\Skeleton\Web;
 
 use Override;
 use Yii;
+use yii\base\Module;
 
 /**
  * @property Controller $controller
+ * @property Controller<Module> $controller
  */
 class ErrorAction extends \yii\web\ErrorAction
 {
@@ -64,6 +66,9 @@ class ErrorAction extends \yii\web\ErrorAction
         };
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     #[Override]
     protected function getViewRenderParams(): array
     {

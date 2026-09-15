@@ -12,6 +12,7 @@ use Exception;
 use Yii;
 use yii\base\Behavior;
 use yii\base\InvalidConfigException;
+use Closure;
 
 /**
  * @property ActiveRecord|static $owner
@@ -20,6 +21,9 @@ class RedirectBehavior extends Behavior
 {
     private ?string $prevUrl = null;
 
+    /**
+     * @return array<string, string|Closure>
+     */
     #[\Override]
     public function events(): array
     {

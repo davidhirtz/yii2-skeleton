@@ -18,7 +18,7 @@ trait UpdatedByUserTrait
      */
     public function getUpdated(): UserQuery
     {
-        /** @var UserQuery $query */
+        /** @var UserQuery<User> $query */
         $query = $this->hasOne(User::class, ['id' => 'updated_by_user_id']);
         return $query;
     }

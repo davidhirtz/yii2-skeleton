@@ -12,6 +12,9 @@ use Yii;
 
 class Flashes extends Widget
 {
+    /**
+     * @var list<string|Stringable>
+     */
     protected array $alerts;
 
     protected function renderContent(): string|Stringable
@@ -30,6 +33,9 @@ class Flashes extends Widget
         return $content;
     }
 
+    /**
+     * @param array<int|string, string>|string $messages
+     */
     protected function getAlerts(string $status, array|string $messages): string|Stringable
     {
         return is_array($messages)

@@ -244,7 +244,7 @@ class CustomAttributeFieldsTest extends TestCase
 /**
  * @property int $id
  * @property int $type
- * @property array|null $custom_attributes
+ * @property array<string, mixed>|null $custom_attributes
  * @property string|null $subtitle
  * @property string|null $subtitle_de
  * @property bool|null $featured
@@ -252,8 +252,8 @@ class CustomAttributeFieldsTest extends TestCase
  * @property list<int>|null $tags
  * @property string|null $locked
  * @property string|null $secret
- * @property array|null $links
- * @property array|null $meta
+ * @property list<array<string, string>>|null $links
+ * @property array<string, mixed>|null $meta
  */
 class FieldRecord extends ActiveRecord implements
     CustomAttributeInterface,

@@ -21,7 +21,13 @@ class ErrorSummary extends Widget
     public ?string $icon = 'exclamation-triangle';
     public bool $showAllErrors = true;
 
+    /**
+     * @var array<string, list<string>>|null
+     */
     protected ?array $errors = null;
+    /**
+     * @var list<string>
+     */
     protected array $excluded = [];
 
     /**
@@ -35,18 +41,27 @@ class ErrorSummary extends Widget
         return $this;
     }
 
+    /**
+     * @param array<string, list<string>>|null $errors
+     */
     public function errors(?array $errors): static
     {
         $this->errors = $errors;
         return $this;
     }
 
+    /**
+     * @param list<string> $excluded
+     */
     public function excluding(array $excluded): static
     {
         $this->excluded = $excluded;
         return $this;
     }
 
+    /**
+     * @param list<Model>|Model $model
+     */
     public function models(array|Model $model): static
     {
         if ($model instanceof ActiveRecord) {
@@ -71,6 +86,9 @@ class ErrorSummary extends Widget
         return $this->errors ? $this->getAlert() : '';
     }
 
+    /**
+     * @return list<string>
+     */
     protected function getModelErrors(): array
     {
         $lines = [];

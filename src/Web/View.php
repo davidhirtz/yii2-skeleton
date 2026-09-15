@@ -80,6 +80,9 @@ class View extends \yii\web\View
         return $this->description;
     }
 
+    /**
+     * @param array<int|string, mixed>|string|null $arguments
+     */
     public function registerJsModule(string $filename, array|string|null $arguments = null, string|null|false $importName = null, ?string $key = null): void
     {
         if ($importName === null) {
@@ -97,6 +100,9 @@ class View extends \yii\web\View
         }
     }
 
+    /**
+     * @param array<int|string, mixed>|string|null $arguments
+     */
     protected function prepareJsArguments(array|string|null $arguments = null): string
     {
         if (is_array($arguments) && array_is_list($arguments)) {
@@ -121,6 +127,9 @@ class View extends \yii\web\View
         }
     }
 
+    /**
+     * @param list<string> $languages
+     */
     public function registerHrefLangLinkTags(array $languages = [], string|false|null $default = null): void
     {
         if (!$languages) {

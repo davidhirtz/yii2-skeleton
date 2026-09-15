@@ -306,6 +306,9 @@ class UrlManagerTest extends TestCase
         self::assertEquals($urlRule->route, $urlManager->rules[0]->route);
     }
 
+    /**
+     * @param array<string, mixed> $config
+     */
     protected function getRequest($config = []): Request
     {
         Yii::$app->set('request', [
@@ -316,6 +319,9 @@ class UrlManagerTest extends TestCase
         return Yii::$app->getRequest();
     }
 
+    /**
+     * @param array<string, mixed> $config
+     */
     protected function getUrlManager($config = []): UrlManager
     {
         Yii::$app->set('urlManager', [

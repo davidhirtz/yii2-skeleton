@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Behaviors;
 
 use Hirtz\Skeleton\Db\ActiveRecord;
 use yii\base\Behavior;
+use Closure;
 
 /**
  * @extends Behavior<ActiveRecord>
@@ -13,7 +14,7 @@ use yii\base\Behavior;
 class SerializedAttributesBehavior extends Behavior
 {
     /**
-     * @var array containing the attributes to be serialized
+     * @var list<string> containing the attributes to be serialized
      */
     public array $attributes = [];
 
@@ -23,8 +24,14 @@ class SerializedAttributesBehavior extends Behavior
      */
     public bool $encode = false;
 
+    /**
+     * @var array<string, mixed>
+     */
     private array $oldAttributes = [];
 
+    /**
+     * @return array<string, string|Closure>
+     */
     #[\Override]
     public function events(): array
     {

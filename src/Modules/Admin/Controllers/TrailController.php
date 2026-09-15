@@ -11,7 +11,11 @@ use Override;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Response;
+use Hirtz\Skeleton\Modules\Admin\Module;
 
+/**
+ * @extends Controller<Module>
+ */
 class TrailController extends Controller
 {
     #[Override]

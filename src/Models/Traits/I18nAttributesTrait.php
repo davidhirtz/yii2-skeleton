@@ -12,12 +12,21 @@ use yii\validators\UniqueValidator as BaseUniqueValidator;
 trait I18nAttributesTrait
 {
     /**
-     * @var array containing the attribute names of attributes which should be used with I18N features
+     * @var list<string> containing the attribute names of attributes which should be used with I18N features
      */
     public array $i18nAttributes = [];
 
+    /**
+     * @var array<string, string>|null
+     */
     private ?array $i18nHints = null;
+    /**
+     * @var array<string, string>|null
+     */
     private ?array $i18nLabels = null;
+    /**
+     * @var list<string>
+     */
     private array $i18nLabelsKey = [];
 
     /**
@@ -26,8 +35,8 @@ trait I18nAttributesTrait
     public function getI18nAttributes(): array
     {
         return $this instanceof CustomAttributeInterface
-            ? [...array_values($this->i18nAttributes), ...$this->getTranslatableCustomAttributeNames()]
-            : array_values($this->i18nAttributes);
+            ? [...$this->i18nAttributes, ...$this->getTranslatableCustomAttributeNames()]
+            : $this->i18nAttributes;
     }
 
     public function getI18nAttribute(string $attribute, ?string $language = null, bool $fallback = false): mixed
@@ -49,6 +58,10 @@ trait I18nAttributesTrait
             : $name;
     }
 
+    /**
+     * @param list<string>|null $languages
+     * @return array<string, string>
+     */
     public function getI18nAttributeNames(string $attribute, ?array $languages = null): array
     {
         if (!$this->isI18nAttribute($attribute)) {
@@ -69,6 +82,11 @@ trait I18nAttributesTrait
         return $names;
     }
 
+    /**
+     * @param list<string>|string $attributes
+     * @param list<string>|null $languages
+     * @return list<string>
+     */
     public function getI18nAttributesNames(array|string $attributes, ?array $languages = null): array
     {
         $i18n = Yii::$app->getI18n();
@@ -95,12 +113,18 @@ trait I18nAttributesTrait
         return $labels[$attribute] ?? parent::getAttributeLabel($attribute);
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function getI18nHints(): array
     {
         $this->buildI18nLabelsAndHints();
         return $this->i18nHints;
     }
 
+    /**
+     * @return array<string, string>
+     */
     protected function getI18nLabels(): array
     {
         $this->buildI18nLabelsAndHints();
@@ -142,6 +166,10 @@ trait I18nAttributesTrait
         }
     }
 
+    /**
+     * @param list<array<mixed>> $rules
+     * @return list<array<mixed>>
+     */
     public function getI18nRules(array $rules): array
     {
         if ($this->getI18nAttributes()) {

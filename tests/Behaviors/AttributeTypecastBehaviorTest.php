@@ -15,6 +15,7 @@ use yii\base\Behavior;
 use yii\base\DynamicModel;
 use yii\base\Model;
 use yii\validators\NumberValidator;
+use Closure;
 
 class AttributeTypecastBehaviorTest extends TestCase
 {
@@ -394,6 +395,9 @@ class AttributeTypecastBehaviorTest extends TestCase
         };
 
         $behavior = new class () extends Behavior {
+            /**
+             * @return array<string, string|Closure>
+             */
             public function events(): array
             {
                 return [

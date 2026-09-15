@@ -17,10 +17,14 @@ use yii\data\Pagination;
 use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use Hirtz\Skeleton\Modules\Admin\Module;
 
 /**
  * Never scoped to a tenant: users are not scoped to tenants, so an editor sees every tenant's hits. The results are
  * filtered by {@see \Hirtz\Skeleton\Models\Interfaces\SearchableInterface::getSearchResult()} instead.
+ */
+/**
+ * @extends Controller<Module>
  */
 class SearchController extends Controller
 {

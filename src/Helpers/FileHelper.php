@@ -66,6 +66,9 @@ class FileHelper extends BaseFileHelper
         return parent::createDirectory($path, $mode, $recursive);
     }
 
+    /**
+     * @param array<string, mixed> $options
+     */
     #[Override]
     public static function removeDirectory($dir, $options = []): void
     {
@@ -73,6 +76,10 @@ class FileHelper extends BaseFileHelper
         parent::removeDirectory($dir, $options);
     }
 
+    /**
+     * @param array<string, mixed> $options
+     * @return list<string>
+     */
     #[Override]
     public static function findDirectories($dir, $options = []): array
     {
@@ -82,6 +89,9 @@ class FileHelper extends BaseFileHelper
 
     /**
      * Creates a config PHP file from the config array.
+     *
+     * @param array<string, mixed> $config
+     * @param list<string>|string|null $phpdoc
      */
     public static function createConfigFile(string $file, array $config = [], array|string|null $phpdoc = null): false|int
     {

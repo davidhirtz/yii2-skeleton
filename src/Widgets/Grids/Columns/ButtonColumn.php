@@ -12,8 +12,15 @@ use Override;
 use Stringable;
 use yii\base\Model;
 
+/**
+ * @template TModel of array|Model = Model
+ * @extends Column<TModel>
+ */
 class ButtonColumn extends Column
 {
+    /**
+     * @param array<string, mixed> $config
+     */
     public function __construct(array $config = [])
     {
         $this->bodyAttributes = ['class' => 'text-end'];

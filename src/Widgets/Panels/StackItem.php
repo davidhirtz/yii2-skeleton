@@ -24,6 +24,9 @@ class StackItem extends Widget
     use LabelTrait;
     use UrlTrait;
 
+    /**
+     * @var array<string, mixed>
+     */
     public array $linkAttributes = ['class' => 'stack-link'];
 
     #[Override]

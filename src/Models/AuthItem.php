@@ -45,9 +45,12 @@ class AuthItem extends ActiveRecord implements TypeAttributeInterface
      */
     public array $children = [];
 
+    /**
+     * @return UserQuery<User>
+     */
     public function getUsers(): UserQuery
     {
-        /** @var UserQuery $query */
+        /** @var UserQuery<User> $query */
         $query = $this->hasMany(User::class, ['id' => 'user_id'])
             ->viaTable(Yii::$app->getAuthManager()->assignmentTable, ['item_name' => 'name']);
 

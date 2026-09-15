@@ -303,6 +303,9 @@ class GroupCustomAttributeTest extends TestCase
         return $model;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function findStoredValues(GroupRecord $model): array
     {
         $value = Yii::$app->getDb()->createCommand('SELECT [[custom_attributes]] FROM {{group_test}} WHERE [[id]] = :id', [
@@ -316,10 +319,10 @@ class GroupCustomAttributeTest extends TestCase
 /**
  * @property int $id
  * @property int $type
- * @property array|null $custom_attributes
- * @property array|null $links
- * @property array|null $meta
- * @property array|null $rows
+ * @property array<string, mixed>|null $custom_attributes
+ * @property array<int, array<string, string>>|null $links
+ * @property array<string, mixed>|null $meta
+ * @property list<array<string, mixed>>|null $rows
  */
 class GroupRecord extends ActiveRecord implements
     CustomAttributeInterface,

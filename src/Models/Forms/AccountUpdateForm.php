@@ -19,6 +19,9 @@ class AccountUpdateForm extends Model
         parent::__construct($config);
     }
 
+    /**
+     * @return list<string>
+     */
     protected function getUserAttributeNames(): array
     {
         return [

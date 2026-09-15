@@ -12,18 +12,22 @@ use Yii;
 class UrlSitemap extends AbstractSitemap
 {
     /**
-     * @var array containing sitemap URLs. A URL can be set as route or relative URL. If additional information such
-     * as priority or last modified should be added, an array with the url as "loc" value can be used.
+     * @var list<array<string, mixed>|string> containing sitemap URLs. A URL can be set as route or relative URL. If
+     * additional information such as priority or last modified should be added, an array with the url as "loc"
+     * value can be used.
      */
     public array $urls = [];
 
     /**
-     * @var array containing the static views. Array keys "alias" for the view path and "route" string for URL manager
-     * are required. Optional "params" for additional route params, "paramName" for the view param and "exclude" for
-     * files that should not be included.
+     * @var array<string, mixed> containing the static views. Array keys "alias" for the view path and "route" string
+     * for URL manager are required. Optional "params" for additional route params, "paramName" for the view param
+     * and "exclude" for files that should not be included.
      */
     public array $views = [];
 
+    /**
+     * @var list<array<string, mixed>|string>|null
+     */
     private ?array $generatedUrls = null;
 
     public function generateUrls(?int $offset = null): array
@@ -56,6 +60,9 @@ class UrlSitemap extends AbstractSitemap
         return $lastModified;
     }
 
+    /**
+     * @return list<array<string, mixed>|string>
+     */
     public function getUrls(): array
     {
         return $this->generatedUrls ??= [...$this->urls, ...($this->views ? $this->generateFileUrls() : [])];
@@ -63,6 +70,8 @@ class UrlSitemap extends AbstractSitemap
 
     /**
      * Generates sitemap URLs from view files.
+     *
+     * @return list<array<string, mixed>|string>
      */
     public function generateFileUrls(): array
     {

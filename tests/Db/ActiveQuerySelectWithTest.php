@@ -20,6 +20,9 @@ use yii\base\InvalidCallException;
  */
 class ActiveQuerySelectWithTest extends TestCase
 {
+    /**
+     * @return array<string, mixed>
+     */
     #[Override]
     public function fixtures(): array
     {

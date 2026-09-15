@@ -24,6 +24,9 @@ class TrailModelCollection
      * @var ActiveRecord[][]
      */
     private static array $models = [];
+    /**
+     * @var array<string, array<string, mixed>>
+     */
     private static array $modelAttributes = [];
 
     /**
@@ -39,7 +42,9 @@ class TrailModelCollection
 
         return Yii::$app->getI18n()->callback($language, function () use ($modelClass, $modelId) {
             try {
-                $instance = Yii::createObject($modelClass[0]);
+                /** @var class-string $class */
+                $class = $modelClass[0];
+                $instance = Yii::createObject($class);
             } catch (Throwable $e) {
                 Yii::error($e->getMessage(), __METHOD__);
                 $instance = null;
@@ -121,6 +126,8 @@ class TrailModelCollection
 
     /**
      * Cycles through the owner model validators to detect default display values for attribute names.
+     *
+     * @return array<string, mixed>
      */
     private static function getDefaultAttributeValues(Model $model): array
     {

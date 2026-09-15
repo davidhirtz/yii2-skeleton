@@ -28,7 +28,7 @@ class UrlManager extends \yii\web\UrlManager
     public bool $i18nUrl = false;
 
     /**
-     * @var array|false|null containing the languages available for `i18nUrl`, the language identifier as key and the
+     * @var array<string, string>|false|null containing the languages available for `i18nUrl`, the language identifier as key and the
      * language param as value (e.g. ['en-US' ⇒ 'en']). Defaults to languages set in the I18n component.
      */
     public array|false|null $languages = null;
@@ -41,7 +41,7 @@ class UrlManager extends \yii\web\UrlManager
     public ?string $defaultLanguage = null;
 
     /**
-     * @var array containing hard redirects, either as request URI ⇒ URL pairs, which generate regular 301 redirects
+     * @var array<string, array{url?: string, request?: string, code?: int}|string> containing hard redirects, either as request URI ⇒ URL pairs, which generate regular 301 redirects
      * or as arrays containing the request URIs as an array in array key `request`, the target URL as the key `url`
      * and optional the redirect code (defaults to 301) as `status`.
      *
@@ -74,6 +74,9 @@ class UrlManager extends \yii\web\UrlManager
         parent::init();
     }
 
+    /**
+     * @param array<int|string, mixed>|string $params
+     */
     #[Override]
     public function createUrl($params): string
     {
@@ -108,6 +111,9 @@ class UrlManager extends \yii\web\UrlManager
         return $url;
     }
 
+    /**
+     * @param array<int|string, mixed>|string $params
+     */
     public function createDraftUrl(array|string $params): string
     {
         if ($this->draftSubdomain) {
@@ -128,6 +134,7 @@ class UrlManager extends \yii\web\UrlManager
 
     /**
      * @param Request $request
+     * @return array{string, array<string, mixed>}|false
      */
     #[Override]
     public function parseRequest($request): bool|array
@@ -152,6 +159,9 @@ class UrlManager extends \yii\web\UrlManager
         return parent::parseRequest($request);
     }
 
+    /**
+     * @param array<string, array{url?: string, request?: string, code?: int}|string> $redirectMap
+     */
     protected function parseRedirectMap(Request $request, array $redirectMap): void
     {
         if ($redirectMap) {
@@ -170,7 +180,7 @@ class UrlManager extends \yii\web\UrlManager
                     $location = $location['url'];
                 }
 
-                if (!str_contains((string)$location, '://') && is_string($location)) {
+                if (!str_contains($location, '://')) {
                     $location = '/' . ltrim($location, '/');
                 }
 
@@ -237,6 +247,9 @@ class UrlManager extends \yii\web\UrlManager
         return $event;
     }
 
+    /**
+     * @param array<int|string, mixed> $params
+     */
     protected function getAfterCreateEvent(string $url, array $params): ?UrlManagerEvent
     {
         $event = Yii::$container->get(UrlManagerEvent::class, [], [
@@ -249,6 +262,9 @@ class UrlManager extends \yii\web\UrlManager
         return $event;
     }
 
+    /**
+     * @param array<string, mixed> $ruleDeclarations
+     */
     #[Override]
     protected function buildRules($ruleDeclarations): array
     {
@@ -270,6 +286,8 @@ class UrlManager extends \yii\web\UrlManager
 
     /**
      * Generates a list of rule parameters at given position. This can be used to validate dynamic slugs, etc.
+     *
+     * @return list<string>
      */
     public function getImmutableRuleParams(int $position = 0): array
     {

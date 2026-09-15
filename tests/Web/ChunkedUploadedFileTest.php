@@ -235,6 +235,9 @@ class ChunkedUploadedFileTest extends TestCase
         return $path;
     }
 
+    /**
+     * @param array<string, mixed> $config
+     */
     private function createUploadedFile(
         string $tempName,
         ?int $size = null,

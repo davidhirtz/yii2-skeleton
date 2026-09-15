@@ -33,6 +33,9 @@ class Application extends \yii\web\Application
 {
     use ApplicationTrait;
 
+    /**
+     * @param array<array-key, mixed> $config
+     */
     #[Override]
     public function preInit(&$config): void
     {
@@ -55,6 +58,9 @@ class Application extends \yii\web\Application
         $this->setDefaultEmail();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     #[Override]
     public function coreComponents(): array
     {
@@ -77,6 +83,8 @@ class Application extends \yii\web\Application
 
     /**
      * Configures Yii2 debug module (which is currently only available for web applications) if `YII_DEBUG` is `true`.
+     *
+     * @param array<string, mixed> $config
      */
     protected function setDebugModuleConfig(array &$config): void
     {

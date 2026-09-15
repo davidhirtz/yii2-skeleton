@@ -18,12 +18,16 @@ use yii\log\Logger;
 use yii\test\FixtureTrait;
 use yii\web\UploadedFile;
 use yii\web\View;
+use Hirtz\Skeleton\Models\User;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
     use FixtureTrait;
 
     protected string $applicationClass = Application::class;
+    /**
+     * @var array<string, mixed>
+     */
     protected array $config;
     protected TestMailer $mailer;
     protected TestLogger $logger;
@@ -31,7 +35,13 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     private Transaction $transaction;
     protected string $webroot = '@runtime/web';
 
+    /**
+     * @var array<string, mixed>
+     */
     private array $originalServerParams;
+    /**
+     * @var array<int, array<string, mixed>>
+     */
     private array $originalRequestParams;
 
     private static ?ArrayCache $schemaCache = null;
@@ -95,6 +105,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     {
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function getServerParams(): array
     {
         return [
@@ -138,7 +151,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             $config['runtimePath'] = getcwd() . "/runtime/paratest/$token";
         }
 
-        Yii::createObject(ArrayHelper::merge($config, $this->config));
+        /** @var array{class: class-string<Application<User>>, ...} $config */
+        $config = ArrayHelper::merge($config, $this->config);
+        Yii::createObject($config);
         Yii::setAlias('@webroot', $this->webroot);
 
         FileHelper::createDirectory("$this->webroot/assets");

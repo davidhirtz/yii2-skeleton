@@ -263,6 +263,9 @@ class SystemControllerTest extends TestCase
         self::assertNotSame(FileCache::class, CacheComponents::getAll()['cache']);
     }
 
+    /**
+     * @param array<string, mixed> $params
+     */
     private function post(string $route, array $params = []): mixed
     {
         $_SERVER['REQUEST_METHOD'] = 'POST';

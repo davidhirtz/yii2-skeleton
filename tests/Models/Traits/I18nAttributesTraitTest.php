@@ -275,6 +275,9 @@ class TestI18nActiveRecord extends ActiveRecord implements I18nAttributeInterfac
     use I18nAttributesTrait;
     use TranslationTrait;
 
+    /**
+     * @var array<int|string, mixed>|string|null
+     */
     public array|string|null $slugTargetAttribute = null;
 
     #[Override]

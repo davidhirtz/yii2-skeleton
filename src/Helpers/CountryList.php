@@ -8,8 +8,14 @@ use Yii;
 
 class CountryList
 {
+    /**
+     * @var array<string, string>|null
+     */
     private static ?array $country = null;
 
+    /**
+     * @return array<string, string>
+     */
     public static function getNames(): array
     {
         if (null === self::$country) {

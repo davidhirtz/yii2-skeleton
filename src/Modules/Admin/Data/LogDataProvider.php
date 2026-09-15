@@ -37,6 +37,9 @@ class LogDataProvider extends ArrayDataProvider
         parent::init();
     }
 
+    /**
+     * @return list<Log>
+     */
     protected function parseFile(): array
     {
         $models = [];

@@ -9,6 +9,9 @@ use yii\helpers\BaseUrl;
 
 class Url extends BaseUrl
 {
+    /**
+     * @param array<string, mixed> $params
+     */
     public static function draft(array|string $params): string
     {
         return Yii::$app->getUrlManager()->createDraftUrl($params);

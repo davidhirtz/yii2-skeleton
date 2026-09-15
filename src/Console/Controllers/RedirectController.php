@@ -51,6 +51,9 @@ class RedirectController extends Controller
         return [...parent::options($actionID), 'hosts', 'dryRun'];
     }
 
+    /**
+     * @return array<string, string>
+     */
     #[Override]
     public function optionAliases(): array
     {

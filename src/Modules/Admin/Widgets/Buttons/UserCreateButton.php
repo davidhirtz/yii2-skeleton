@@ -10,6 +10,9 @@ use Yii;
 
 class UserCreateButton extends CreateButton
 {
+    /**
+     * @param array<string, mixed> $config
+     */
     public function __construct(array $config = [])
     {
         $this->label ??= Yii::t('skeleton', 'USER_CREATE_NEW_USER');

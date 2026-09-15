@@ -23,8 +23,14 @@ class Dropdown extends Widget
     protected bool $autofocus = false;
     protected Button $button;
 
+    /**
+     * @var list<string|Stringable>
+     */
     protected array $items = [];
 
+    /**
+     * @var list<Closure>|null
+     */
     private ?array $popoverCallbacks = null;
 
     public function autofocus(bool $autofocus = true): static
@@ -60,6 +66,9 @@ class Dropdown extends Widget
         return $this->addClass('dropup');
     }
 
+    /**
+     * @param list<string|Stringable> $items
+     */
     public function items(array $items): static
     {
         $this->items = array_values(array_filter($items));
@@ -111,6 +120,9 @@ class Dropdown extends Widget
             ->content($this->button, $popover);
     }
 
+    /**
+     * @return list<string|Stringable>
+     */
     protected function getListContent(): array
     {
         $items = [];

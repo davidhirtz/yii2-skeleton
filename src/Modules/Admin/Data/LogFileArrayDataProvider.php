@@ -25,6 +25,9 @@ class LogFileArrayDataProvider extends ArrayDataProvider
         parent::init();
     }
 
+    /**
+     * @return list<LogFile>
+     */
     protected function findFiles(): array
     {
         $files = glob(Yii::getAlias($this->basePath . '*'));

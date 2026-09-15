@@ -13,6 +13,9 @@ class Stack extends Widget
 {
     use TagAttributesTrait;
 
+    /**
+     * @var list<StackItem>
+     */
     protected array $items = [];
 
     public function items(StackItem|null ...$items): static

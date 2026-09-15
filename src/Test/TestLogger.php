@@ -26,6 +26,9 @@ class TestLogger extends Logger
     {
     }
 
+    /**
+     * @param mixed $message
+     */
     #[Override]
     public function log($message, $level, $category = 'application'): void
     {

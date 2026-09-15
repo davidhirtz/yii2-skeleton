@@ -12,9 +12,13 @@ use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Hirtz\Skeleton\Widgets\Traits\ProviderTrait;
 use Override;
 use Yii;
+use yii\base\Model;
 
 class TrailHeader extends Header
 {
+    /**
+     * @use ModelTrait<Model|null>
+     */
     use ModelTrait;
 
     /**
@@ -59,10 +63,12 @@ class TrailHeader extends Header
                 'id' => $this->provider->trailId,
             ]);
         }
-
         return Yii::t('skeleton', 'COMMON_HISTORY');
     }
 
+    /**
+     * @return array<int|string, mixed>|null
+     */
     protected function getTrailModelAdminRoute(): ?array
     {
         if (!$this->model instanceof TrailModelInterface) {

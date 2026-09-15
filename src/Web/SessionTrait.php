@@ -20,6 +20,9 @@ trait SessionTrait
      */
     public ?bool $cookieSecure = null;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getCookieParams(): array
     {
         if ($this->cookieDomain === null) {

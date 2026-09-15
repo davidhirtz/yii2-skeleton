@@ -19,17 +19,24 @@ use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
 use Yii;
+use yii\base\Model;
 
 abstract class Field extends Widget
 {
     use FormWidgetTrait;
     use LabelTrait;
+    /**
+     * @use ModelTrait<Model|null>
+     */
     use ModelTrait;
     use PropertyTrait;
     use RowAttributesTrait;
     use TagAttributesTrait;
     use TagIdTrait;
 
+    /**
+     * @var array<string, mixed>
+     */
     protected array $labelAttributes = [];
 
     protected string $layout = '{input}{error}{hint}';
@@ -38,6 +45,9 @@ abstract class Field extends Widget
     protected ?string $error = null;
     protected ?string $hint = null;
 
+    /**
+     * @param array<string, mixed> $config
+     */
     public function __construct(array $config = [])
     {
         // Make protected

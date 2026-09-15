@@ -51,6 +51,9 @@ class CurrencyValidator extends NumberValidator
         parent::validateAttribute($model, $attribute);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     #[\Override]
     public function getClientOptions($model, $attribute): array
     {

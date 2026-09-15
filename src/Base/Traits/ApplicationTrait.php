@@ -54,6 +54,9 @@ trait ApplicationTrait
      */
     private array $migrationNamespaces = [];
 
+    /**
+     * @param array<array-key, mixed> $config
+     */
     protected function preInitInternal(&$config): void
     {
         Yii::$classMap = [...Yii::$classMap, ...ArrayHelper::remove($config, 'classMap', [])];
@@ -233,6 +236,8 @@ trait ApplicationTrait
     /**
      * Composer never lists the root package in `vendor/yiisoft/extensions.php`, so a bundle installed on its own
      * — which is how a project's Composer sees every bundle but the one it is testing — has to be wired up here.
+     *
+     * @param array<string, mixed> $config
      */
     protected function addRootPackageBootstrap(array &$config): void
     {
@@ -246,6 +251,9 @@ trait ApplicationTrait
         }
     }
 
+    /**
+     * @param array<array-key, mixed> $config
+     */
     protected function setDefaultMailerDsn(&$config): void
     {
         if (!empty($config['components']['mailer']['useFileTransport'])) {
@@ -295,12 +303,17 @@ trait ApplicationTrait
 
     /**
      * Extends given application component.
+     *
+     * @param array<string, mixed> $definition
      */
     public function extendComponent(string $id, array $definition): void
     {
         $this->set($id, ArrayHelper::merge($definition, $this->getComponents()[$id] ?? []));
     }
 
+    /**
+     * @param array<string, array<string, mixed>> $components
+     */
     public function extendComponents(array $components): void
     {
         foreach ($components as $id => $definition) {
@@ -308,6 +321,9 @@ trait ApplicationTrait
         }
     }
 
+    /**
+     * @param array<string, mixed> $module
+     */
     public function extendModule(string $id, array $module): void
     {
         if ($module) {
@@ -315,6 +331,9 @@ trait ApplicationTrait
         }
     }
 
+    /**
+     * @param array<string, array<string, mixed>> $modules
+     */
     public function extendModules(array $modules): void
     {
         foreach ($modules as $id => $config) {

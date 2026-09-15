@@ -147,6 +147,9 @@ class MigrateControllerMock extends MigrateController
         return false;
     }
 
+    /**
+     * @param array<string, mixed> $options
+     */
     #[Override]
     public function prompt($text, $options = []): string
     {

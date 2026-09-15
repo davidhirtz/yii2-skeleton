@@ -12,13 +12,20 @@ use mikehaertl\shellcommand\Command;
 use Override;
 use RuntimeException;
 use Yii;
+use yii\db\mysql\ColumnSchema;
 
 class Connection extends \yii\db\Connection
 {
     public bool $backupOnMigration = true;
     public string $backupPath = '@runtime/backups';
+    /**
+     * @var list<string>|null
+     */
     public ?array $ignoredBackupTables = null;
     public int|false $maxBackups = 10;
+    /**
+     * @var Schema<ColumnSchema>
+     */
     private Schema $schema;
 
     public function init(): void
@@ -138,6 +145,9 @@ class Connection extends \yii\db\Connection
         return true;
     }
 
+    /**
+     * @return Schema<ColumnSchema>
+     */
     #[Override]
     public function getSchema(): Schema
     {

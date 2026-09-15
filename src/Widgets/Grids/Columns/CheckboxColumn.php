@@ -11,8 +11,15 @@ use Stringable;
 use Yii;
 use yii\base\Model;
 
+/**
+ * @template TModel of array|Model = Model
+ * @extends Column<TModel>
+ */
 class CheckboxColumn extends Column
 {
+    /**
+     * @var array<string, mixed>
+     */
     public array $checkboxAttributes = ['class' => 'input checkbox'];
     protected bool $multiple = true;
     protected string $param = 'selection';

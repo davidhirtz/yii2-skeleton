@@ -21,6 +21,9 @@ class DuplicateActiveRecord
 
     public ActiveRecord $duplicate;
 
+    /**
+     * @param array<string, mixed> $attributes
+     */
     public function __construct(protected ActiveRecord $model, array $attributes = [])
     {
         $this->duplicate = $this->model::create();
@@ -75,12 +78,16 @@ class DuplicateActiveRecord
         $this->model->trigger(static::EVENT_AFTER_DUPLICATE, $event);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function getSafeAttributes(): array
     {
         return $this->model->getAttributes($this->model->safeAttributes());
     }
 
     /**
+     * @param array<int|string, mixed> $params
      * @return T
      * @noinspection PhpDocSignatureInspection
      */

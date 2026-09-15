@@ -10,6 +10,9 @@ use Override;
 
 class TimezoneSelectField extends SelectField
 {
+    /**
+     * @var array<string, string>|null
+     */
     private ?array $timezones = null;
 
     #[Override]
@@ -19,6 +22,9 @@ class TimezoneSelectField extends SelectField
         parent::configure();
     }
 
+    /**
+     * @return array<string, string>
+     */
     protected function getTimezones(): array
     {
         if (null === $this->timezones) {

@@ -13,6 +13,9 @@ class FileUpload extends Tag
 {
     use TagContentTrait;
 
+    /**
+     * @param array<int|string, mixed>|string|null $url
+     */
     public function url(string|array|null $url): static
     {
         return $this->attribute('data-url', null !== $url ? Url::to($url) : null);

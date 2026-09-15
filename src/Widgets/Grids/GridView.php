@@ -28,14 +28,19 @@ use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
 use Yii;
+use yii\base\Model;
 use yii\helpers\Inflector;
+use yii\data\DataProviderInterface;
 
 /**
- * @template T of ActiveRecord
+ * @template T of Model
  */
 class GridView extends Widget
 {
     use ContainerConfigurationTrait;
+    /**
+     * @use ProviderTrait<DataProviderInterface|null>
+     */
     use ProviderTrait;
 
     use TagAttributesTrait;
@@ -51,6 +56,9 @@ class GridView extends Widget
      */
     protected array|GridFooter|null $footer = null;
 
+    /**
+     * @var array<string, mixed>
+     */
     protected array $footerAttributes = [
         'class' => 'grid-footer sticky',
         'data-sticky' => 'bottom',
@@ -60,10 +68,22 @@ class GridView extends Widget
      * @var list<string|Stringable>|GridHeader|null
      */
     protected array|GridHeader|null $header = null;
+    /**
+     * @var array<string, mixed>
+     */
     protected array $headerAttributes = ['class' => 'grid-header'];
 
+    /**
+     * @var array<string, mixed>
+     */
     protected array $tableAttributes = ['class' => 'table table-striped table-hover'];
+    /**
+     * @var array<string, mixed>
+     */
     protected array $tableHeaderAttributes = [];
+    /**
+     * @var array<string, mixed>
+     */
     protected array $tableBodyAttributes = [];
 
     /**
@@ -71,14 +91,23 @@ class GridView extends Widget
      */
     protected array|Closure|null $rowAttributes = null;
 
+    /**
+     * @var array<string, mixed>
+     */
     protected array $pagerOptions = [];
     protected bool $showOnEmpty = true;
 
     protected string $layout = '{header}{summary}{items}{pager}{footer}';
+    /**
+     * @var array<int|string, mixed>|null
+     */
     protected ?array $orderRoute = ['order'];
 
     public GridSearch $search;
 
+    /**
+     * @param array<string, mixed> $config
+     */
     public function __construct(array $config = [])
     {
         $this->search ??= GridSearch::make();
@@ -193,6 +222,9 @@ class GridView extends Widget
             ->body($this->getTableBody());
     }
 
+    /**
+     * @return array<Column|string>
+     */
     protected function getDefaultColumns(): array
     {
         $models = $this->provider->getModels();

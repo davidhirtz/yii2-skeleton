@@ -19,7 +19,13 @@ class AccountResendConfirmActiveForm extends ActiveForm
 {
     use LoginActiveFormTrait;
 
+    /**
+     * @var array<string, mixed>
+     */
     public array $attributes = ['class' => 'form-plain'];
+    /**
+     * @var list<string>
+     */
     public array $excludedErrorProperties = ['email'];
     public bool $hasStickyButtons = false;
     protected string $layout = "{errors}{rows}{buttons}";
