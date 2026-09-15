@@ -236,20 +236,14 @@ trait ApplicationTrait
      */
     protected function addRootPackageBootstrap(array &$config): void
     {
-        $package = new RootPackage(
-            $config['basePath'],
-            $config['vendorPath'] ?? $config['basePath'] . '/vendor',
-        );
-
-        $bootstrap = $package->getBootstrap();
-
-        if ($bootstrap === null) {
-            return;
-        }
+        $package = new RootPackage($config['basePath']);
 
         // the aliases last, so a configured one still wins
         $config['aliases'] = [...$package->getAliases(), ...$config['aliases']];
-        $config['bootstrap'][] = $bootstrap;
+
+        if (($bootstrap = $package->getBootstrap()) !== null) {
+            $config['bootstrap'][] = $bootstrap;
+        }
     }
 
     protected function setDefaultMailerDsn(&$config): void

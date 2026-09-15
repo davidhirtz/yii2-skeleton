@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Base;
 
+use Composer\InstalledVersions;
+
 /**
- * A bundle installed as a dependency is wired up by `vendor/yiisoft/extensions.php`, which Composer writes from
- * its `extra.bootstrap` and its autoload. Composer never lists the root package there, so a bundle tested or run
- * on its own would have neither its namespace alias nor its `Bootstrap` — and therefore none of the migrations,
- * modules and event handlers the bootstrap registers.
+ * A bundle installed as a dependency is wired up by `vendor/yiisoft/extensions.php`, which Composer never writes
+ * the root package into — so a bundle run on its own has neither its namespace alias nor its `Bootstrap`.
  */
 class RootPackage
 {
@@ -17,15 +17,16 @@ class RootPackage
      */
     private ?array $package = null;
 
+    /**
+     * @param array{name?: string, type?: string}|null $rootPackage what Composer installed as the root package;
+     * defaults to `InstalledVersions::getRootPackage()`, which the autoloader already holds in memory
+     */
     public function __construct(
         private readonly string $basePath,
-        private readonly string $vendorPath,
+        private readonly ?array $rootPackage = null,
     ) {
     }
 
-    /**
-     * The `Bootstrap` of the root package, or `null` where there is none to run by hand.
-     */
     public function getBootstrap(): ?string
     {
         $bootstrap = $this->getPackage()['extra']['bootstrap'] ?? null;
@@ -60,26 +61,24 @@ class RootPackage
     }
 
     /**
+     * Only a root package of type `yii2-extension` is read from disk — a project answers `project` without any I/O.
+     * The name has to match too: tests run from inside a bundle directory of a monorepo see that bundle's
+     * composer.json beside the base path while Composer's root is the monorepo, whose extensions.php already
+     * bootstraps the bundle.
+     *
      * @return array<string, mixed>
      */
     private function loadPackage(): array
     {
-        $json = @file_get_contents("$this->basePath/composer.json");
-        $package = is_string($json) ? json_decode($json, true) : null;
+        $root = $this->rootPackage ?? InstalledVersions::getRootPackage();
 
-        // A package without one is a project rather than a bundle, and Yii already knows everything about it.
-        if (!is_array($package) || !isset($package['extra']['bootstrap'])) {
+        if (($root['type'] ?? null) !== 'yii2-extension') {
             return [];
         }
 
-        return $this->isInstalled($package['name'] ?? null) ? [] : $package;
-    }
+        $json = @file_get_contents("$this->basePath/composer.json");
+        $package = is_string($json) ? json_decode($json, true) : null;
 
-    private function isInstalled(mixed $name): bool
-    {
-        $file = "$this->vendorPath/yiisoft/extensions.php";
-        $extensions = is_file($file) ? require $file : [];
-
-        return is_array($extensions) && isset($extensions[$name]);
+        return is_array($package) && ($package['name'] ?? null) === ($root['name'] ?? null) ? $package : [];
     }
 }

@@ -2,9 +2,10 @@
 
 - **A bundle installed as the root package runs its own `Bootstrap`.** Composer never lists the root package in
   `vendor/yiisoft/extensions.php`, so a bundle tested on its own had neither its namespace alias nor the
-  migrations, modules and event handlers its bootstrap registers. `Base\RootPackage` reads them out of the
-  `composer.json` beside the application and `Base\Traits\ApplicationTrait` adds them — only when that file
-  does not already carry the package, so an installed bundle is still bootstrapped exactly once
+  migrations, modules and event handlers its bootstrap registers. `Base\RootPackage` asks Composer's runtime API which
+  package is the root and reads that package's `composer.json` only when it is a `yii2-extension` — a project
+  pays no file read — and `Base\Traits\ApplicationTrait` adds its aliases and, where it declares one, its
+  `Bootstrap`, so an installed bundle is still bootstrapped exactly once.
 
 - **The admin logo moved out of the skeleton.** `Modules\Admin\Widgets\Navs\AsideLogo`, `NavBarLogo` and
   `Navs\Traits\LogoTrait` are gone — a theme adds its own by replacing `Navs\NavBar` and `Navs\AsideMenu`
