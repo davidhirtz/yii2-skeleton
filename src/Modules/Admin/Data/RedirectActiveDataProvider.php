@@ -40,7 +40,7 @@ class RedirectActiveDataProvider extends ActiveDataProvider
 
         $this->setPagination(['defaultPageSize' => 50, 'pageSizeLimit' => false]);
 
-        $this->getSort()->defaultOrder = ['updated_at' => SORT_DESC];
+        $this->setSort(['defaultOrder' => ['updated_at' => SORT_DESC]]);
 
         parent::init();
     }

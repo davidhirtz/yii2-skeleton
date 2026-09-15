@@ -39,7 +39,10 @@ class HelpControllerTest extends TestCase
 
     public function testHelpCommandResolvesToOverriddenController(): void
     {
-        [$controller] = Application::current()->createController('help');
+        $route = Application::current()->createController('help');
+        self::assertNotFalse($route);
+
+        [$controller] = $route;
 
         self::assertInstanceOf(HelpController::class, $controller);
     }

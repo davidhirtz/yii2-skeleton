@@ -70,7 +70,7 @@ class UserLoginControllerTest extends TestCase
             ->insert(UserLogin::tableName(), [
                 'user_id' => $userId,
                 'type' => UserLogin::TYPE_LOGIN,
-                'created_at' => gmdate('Y-m-d H:i:s', strtotime($modify)),
+                'created_at' => gmdate('Y-m-d H:i:s', strtotime($modify) ?: null),
             ])
             ->execute();
     }

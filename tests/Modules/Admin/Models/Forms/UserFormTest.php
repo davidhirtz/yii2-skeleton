@@ -65,7 +65,7 @@ class UserFormTest extends TestCase
         $message = $this->mailer->getLastMessage();
 
         self::assertStringContainsString($subject, $message->getSubject());
-        self::assertStringNotContainsString($form->newPassword, $message->getSymfonyEmail()->getHtmlBody());
+        self::assertStringNotContainsString($form->newPassword, $this->mailer->getLastMessageBody());
     }
 
     public function testCreateUserWithoutPasswordSendsResetLink(): void
@@ -82,7 +82,7 @@ class UserFormTest extends TestCase
         self::assertNotNull($form->user->getLatestToken(UserToken::TYPE_PASSWORD_RESET));
         self::assertFalse($form->user->validatePassword(''));
 
-        $body = $this->mailer->getLastMessage()->getSymfonyEmail()->getHtmlBody();
+        $body = $this->mailer->getLastMessageBody();
         self::assertStringContainsString($form->getPasswordResetUrl(), $body);
     }
 
@@ -102,7 +102,7 @@ class UserFormTest extends TestCase
         self::assertNotNull($form->user->getLatestToken(UserToken::TYPE_PASSWORD_RESET));
         self::assertNotNull($form->getPasswordResetUrl());
 
-        $body = $this->mailer->getLastMessage()->getSymfonyEmail()->getHtmlBody();
+        $body = $this->mailer->getLastMessageBody();
 
         self::assertStringNotContainsString($form->newPassword, $body);
         self::assertStringContainsString($form->getPasswordResetUrl(), $body);

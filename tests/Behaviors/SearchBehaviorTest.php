@@ -158,13 +158,13 @@ class SearchBehaviorTest extends TestCase
      */
     private function findDocuments(SearchableActiveRecord $record): array
     {
-        return Search::find()
+        return array_values(Search::find()
             ->where([
                 'model_class' => $record::class,
                 'model_id' => $record->id,
             ])
             ->orderBy(['language' => SORT_ASC])
-            ->all();
+            ->all());
     }
 
     private function getAdminModule(): Module

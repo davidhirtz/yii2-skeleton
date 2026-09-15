@@ -87,10 +87,10 @@ class ReorderActiveRecordsTest extends TestCase
      */
     private function getOrderedIds(): array
     {
-        return array_map(intval(...), ReorderRecord::find()
+        return array_values(array_map(intval(...), ReorderRecord::find()
             ->select(['id'])
             ->orderBy(['position' => SORT_ASC])
-            ->column());
+            ->column()));
     }
 }
 

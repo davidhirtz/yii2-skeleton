@@ -58,6 +58,7 @@ class ParamsControllerTest extends TestCase
         self::assertNotEmpty($pepper = Yii::$app->params['passwordPepper']);
 
         $contents = file_get_contents(Yii::getAlias("$this->configPath/params.php"));
+        self::assertNotFalse($contents);
         self::assertStringContainsString($pepper, $contents);
 
         // An existing pepper is never replaced without being asked, and never unattended
@@ -82,6 +83,7 @@ class ParamsControllerTest extends TestCase
         self::assertFileExists($filename);
 
         $contents = file_get_contents($filename);
+        self::assertNotFalse($contents);
         self::assertStringContainsString(Yii::$app->params['cookieValidationKey'], $contents);
     }
 
@@ -99,6 +101,7 @@ class ParamsControllerTest extends TestCase
         self::assertFileExists($filename);
 
         $contents = file_get_contents($filename);
+        self::assertNotFalse($contents);
         self::assertStringContainsString('test', $contents);
     }
 

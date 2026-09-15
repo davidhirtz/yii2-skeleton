@@ -70,8 +70,8 @@ class AccountResendConfirmTest extends TestCase
 
         $email = $this->mailer->getLastMessage();
 
-        self::assertEquals(key($email->getTo()), $user->email);
-        self::assertStringContainsString('/admin/account/confirm', $email->getSymfonyEmail()->getHtmlBody());
+        self::assertEquals($this->mailer->getLastMessageTo(), $user->email);
+        self::assertStringContainsString('/admin/account/confirm', $this->mailer->getLastMessageBody());
 
         // The spam protection must not answer differently either
         $this->mailer->reset();

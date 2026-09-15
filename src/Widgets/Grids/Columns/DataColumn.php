@@ -25,7 +25,10 @@ class DataColumn extends Column
     use PropertyTrait;
 
     /**
-     * @var Closure(TModel, string|int=, int=):mixed|null
+     * The closure a caller hands `value()` is typed against whichever model it re-binds the column to, which the
+     * column itself has no way of holding — it applies it to the model the grid gives it.
+     *
+     * @var Closure(mixed, string|int=, int=):mixed|null
      */
     protected ?Closure $value = null;
     protected bool $enableSorting = true;

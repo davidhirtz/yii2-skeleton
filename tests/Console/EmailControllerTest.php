@@ -22,8 +22,8 @@ class EmailControllerTest extends TestCase
 
         $message = $this->mailer->getLastMessage();
 
-        self::assertEquals($email, key($message->getTo()));
-        self::assertEquals(Yii::$app->params['email'], key($message->getFrom()));
+        self::assertEquals($email, $this->mailer->getLastMessageTo());
+        self::assertEquals(Yii::$app->params['email'], $this->mailer->getLastMessageFrom());
         self::assertEquals('Test email', $message->getSubject());
     }
 

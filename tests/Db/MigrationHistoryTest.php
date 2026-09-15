@@ -54,6 +54,11 @@ class MigrationHistoryTest extends TestCase
         $last = $history->getLastApplied();
 
         self::assertNotNull($last);
+
+        if ($applied === []) {
+            self::fail('No migration has been applied.');
+        }
+
         self::assertSame(array_key_first($applied), $last['version']);
         self::assertSame(max($applied), $last['applyTime']);
     }

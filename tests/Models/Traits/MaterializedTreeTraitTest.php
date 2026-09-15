@@ -121,7 +121,7 @@ class MaterializedTreeTraitTest extends TestCase
     }
 
     /**
-     * @param list<TestMaterializedTreeActiveRecord> $ancestors
+     * @param array<int, TestMaterializedTreeActiveRecord> $ancestors
      */
     private static function assertAncestors(array $ancestors): void
     {
@@ -145,7 +145,7 @@ class MaterializedTreeTraitTest extends TestCase
     }
 
     /**
-     * @param list<TestMaterializedTreeActiveRecord> $children
+     * @param array<int, TestMaterializedTreeActiveRecord> $children
      */
     private static function assertChildren(array $children): void
     {
@@ -169,7 +169,7 @@ class MaterializedTreeTraitTest extends TestCase
     }
 
     /**
-     * @param list<TestMaterializedTreeActiveRecord> $descendants
+     * @param array<int, TestMaterializedTreeActiveRecord> $descendants
      */
     private static function assertDescendants(array $descendants): void
     {
@@ -199,9 +199,9 @@ class MaterializedTreeTraitTest extends TestCase
      */
     private function getAllModelsInRandomOrder(): array
     {
-        return TestMaterializedTreeActiveRecord::find()
+        return array_values(TestMaterializedTreeActiveRecord::find()
             ->orderBy([new Expression('RAND()')])
-            ->all();
+            ->all());
     }
 }
 

@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Models\Search;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Controllers\SearchController;
 use Hirtz\Skeleton\Modules\Admin\Module;
+use Hirtz\Skeleton\Search\Search as SearchComponent;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Override;
@@ -123,7 +124,7 @@ class SearchControllerTest extends TestCase
 
     private function index(SearchableInterface $model): void
     {
-        Yii::$app->get('search')->index($model);
+        SearchComponent::getComponent()->index($model);
     }
 
     private function loginUser(?string $permission = null): User

@@ -93,6 +93,10 @@ class I18nAttributesTraitTest extends TestCase
         $model = new TestI18nActiveRecord();
         $rules = $model->rules();
 
+        self::assertIsArray($rules[0]);
+        self::assertIsArray($rules[1]);
+        self::assertIsArray($rules[3]);
+
         self::assertEquals(['name', 'name_de', 'slug', 'slug_de'], $rules[0][0]);
         self::assertEquals(['name', 'name_de', 'slug', 'slug_de', 'untranslated'], $rules[1][0]);
         self::assertEquals(['slug_de'], $rules[3]['targetAttribute']);
@@ -118,6 +122,9 @@ class I18nAttributesTraitTest extends TestCase
     {
         $model = new TestI18nParentSlugActiveRecord();
         $rules = $model->rules();
+
+        self::assertIsArray($rules[2]);
+        self::assertIsArray($rules[3]);
 
         self::assertEquals(['slug', 'parent_slug'], $rules[2]['targetAttribute']);
         self::assertEquals(['slug_de', 'parent_slug_de'], $rules[3]['targetAttribute']);
@@ -206,11 +213,7 @@ class I18nAttributesTraitTest extends TestCase
 
     public function testEmptyI18nAttributes(): void
     {
-        $model = new class () extends ActiveRecord {
-            use I18nAttributesTrait;
-
-            public string $name = '';
-        };
+        $model = new EmptyI18nActiveRecord();
 
         self::assertEquals('Name', $model->getAttributeLabel('name'));
     }
@@ -344,4 +347,14 @@ class TestI18nParentSlugActiveRecord extends TestI18nActiveRecord
         $this->slugTargetAttribute = ['slug', 'parent_slug'];
         parent::init();
     }
+}
+
+/**
+ * @property string $name
+ */
+class EmptyI18nActiveRecord extends ActiveRecord
+{
+    use I18nAttributesTrait;
+
+    public string $name = '';
 }

@@ -101,10 +101,13 @@ class ErrorActionTest extends TestCase
      */
     private function getController(array $config = []): TestController
     {
-        return new TestController('test', Yii::$app, [
-            'layout' => false,
-            'config' => $config,
-        ]);
+        $controller = new TestController('test', Yii::$app, ['layout' => false]);
+
+        foreach ($config as $name => $value) {
+            $controller->config[$name] = $value;
+        }
+
+        return $controller;
     }
 
     /**
@@ -122,18 +125,13 @@ class ErrorActionTest extends TestCase
 class TestController extends Controller
 {
     /**
-     * @var array<string, mixed>
+     * @var array{class: class-string, ...} the error action, with whatever options a test adds to it
      */
-    public array $config = [];
+    public array $config = ['class' => ErrorAction::class];
 
     #[Override]
     public function actions(): array
     {
-        return [
-            'error' => [
-                'class' => ErrorAction::class,
-                ...$this->config,
-            ],
-        ];
+        return ['error' => $this->config];
     }
 }

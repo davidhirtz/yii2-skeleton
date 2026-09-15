@@ -383,7 +383,13 @@ class AttributeTypecastBehaviorTest extends TestCase
             public function behaviors(): array
             {
                 $behaviors = parent::behaviors();
-                $behaviors['AttributeTypecastBehavior']['attributeTypes'] = null;
+                $typecast = $behaviors['AttributeTypecastBehavior'];
+
+                $behaviors['AttributeTypecastBehavior'] = [
+                    'class' => AttributeTypecastBehavior::class,
+                    ...(array)$typecast,
+                    'attributeTypes' => null,
+                ];
 
                 return $behaviors;
             }

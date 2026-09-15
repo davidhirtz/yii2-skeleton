@@ -27,6 +27,7 @@ class SchemaTest extends TestCase
         self::assertFileExists($file);
 
         $contents = file_get_contents($file);
+        self::assertNotFalse($contents);
 
         self::assertStringContainsString('[client]', $contents);
         self::assertStringContainsString("user=user", $contents);

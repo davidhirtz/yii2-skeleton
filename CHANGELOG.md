@@ -1,5 +1,25 @@
 ## 3.0.0 (in development)
 
+- **PHPStan runs at level 7.** The pass cleared 1256 findings, most of them a `list<>` promised where
+  `array_filter()`, `array_diff()`, `Query::column()` or a variadic collected through named arguments answers a
+  key-preserving array, or a builtin's `false` reaching a non-nullable property. Two of the three live bugs it
+  found are here: `Widgets\Forms\Fieldset` assigned `SelectField::make()` — an *instance* — where its other
+  branches assign class strings and then called `type()` on the result, which only `InputField` has, so a
+  hex-colour or dynamic-range attribute rendered through a generated fieldset was a fatal; and
+  `Validators\HtmlValidator::setAllowedClasses()` iterated the configured shape rather than the normalised one,
+  so the legacy flat form reached a nested `foreach`
+
+- `Validators\HtmlValidator::getAllowedClassesByTag()` answers the tag-keyed shape `init()` settles on, where
+  `$allowedClasses` still carries whichever of the two it was configured with. `Widgets\Grids\GridView` keeps
+  the columns `ensureColumns()` resolved in `$visibleColumns`, and `Widgets\Forms\Fields\TinyMceField` the
+  validator it built in `$htmlValidator` — the public properties stay the configuration they were given
+
+- `Helpers\EventHelper::on()` takes the handler's event class as its fourth argument and checks it, where
+  nothing verified that the handler's declared event matched the one the trigger carries
+
+- `Test\TestMailer::getLastMessageBody()`, `getLastMessageTo()` and `getLastMessageFrom()` answer the shapes
+  Symfony and Yii type loosely, so a test asserting on a mail no longer narrows them itself
+
 - **The SAPI is stated at the access point, so `Yii::$app` can stay the `Console|Web` union.** `Web\Application::current()`
   throws for code that only ever runs under a web request — everything under `Web\`, `Modules\Admin\`, `Widgets\`,
   `Filters\` and the views — while `Web\User::current()` and `Web\Request::current()` answer `null` and are what

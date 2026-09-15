@@ -88,8 +88,8 @@ class UserForm extends Model
     {
         $this->isNewUser = $this->user->getIsNewRecord();
 
-        if (!$this->user->isOwner()) {
-            $this->user->status = $this->status;
+        if (!$this->user->isOwner() && $this->status !== null) {
+            $this->user->status = (int)$this->status;
         }
 
         if ($this->newPassword) {
@@ -102,7 +102,11 @@ class UserForm extends Model
             $this->user->email_confirmed_at ??= new DateTime();
         }
 
-        $this->user->created_by_user_id ??= Application::current()->getUser()->getId();
+        $createdBy = Application::current()->getUser()->getId();
+
+        if ($createdBy !== null) {
+            $this->user->created_by_user_id ??= (int)$createdBy;
+        }
 
         return true;
     }

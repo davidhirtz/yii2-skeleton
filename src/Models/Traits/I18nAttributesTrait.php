@@ -34,9 +34,11 @@ trait I18nAttributesTrait
      */
     public function getI18nAttributes(): array
     {
-        return $this instanceof CustomAttributeInterface
-            ? [...$this->i18nAttributes, ...$this->getTranslatableCustomAttributeNames()]
-            : $this->i18nAttributes;
+        if (!$this instanceof CustomAttributeInterface) {
+            return $this->i18nAttributes;
+        }
+
+        return [...$this->i18nAttributes, ...$this->getTranslatableCustomAttributeNames()];
     }
 
     public function getI18nAttribute(string $attribute, ?string $language = null, bool $fallback = false): mixed

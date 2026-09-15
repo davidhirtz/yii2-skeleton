@@ -188,7 +188,7 @@ class TrailBehaviorTest extends TestCase
         self::assertEquals($expected, $model->formatTrailAttributeValue('datetime', $trail->data['datetime']));
 
         $user = $model->formatTrailAttributeValue('user_id', $trail->data['user_id']);
-        self::assertIsObject($user);
+        self::assertInstanceOf(User::class, $user);
         self::assertEquals(1, $user->id);
 
         $data = ['one', 'two'];

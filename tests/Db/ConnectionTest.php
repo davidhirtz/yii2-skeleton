@@ -19,6 +19,7 @@ class ConnectionTest extends TestCase
         $db->maxBackups = 1;
 
         $filePath = $db->backup();
+        self::assertNotFalse($filePath);
 
         $database = Dsn::fromString($db->dsn)->database;
         $date = date('Y-m-d');
@@ -29,6 +30,7 @@ class ConnectionTest extends TestCase
         self::assertStringEndsWith('.sql', $filePath);
 
         $newFilePath = $db->backup();
+        self::assertNotFalse($newFilePath);
 
         self::assertNotSame($filePath, $newFilePath);
         self::assertFileExists($newFilePath);

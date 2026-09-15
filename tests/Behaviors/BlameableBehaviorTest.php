@@ -172,7 +172,10 @@ class BlameableBehaviorTest extends TestCase
 
     private function getUser(): UserMock
     {
-        return Yii::$app->get('user');
+        $webuser = Yii::$app->get('user');
+        self::assertInstanceOf(UserMock::class, $webuser);
+
+        return $webuser;
     }
 }
 

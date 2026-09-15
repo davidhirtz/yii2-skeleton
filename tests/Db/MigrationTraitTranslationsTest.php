@@ -77,6 +77,7 @@ class MigrationTraitTranslationsTest extends TestCase
         self::assertCount(1, $translations);
 
         $translation = reset($translations);
+        self::assertNotFalse($translation);
 
         self::assertSame((string)$id, (string)$translation->model_id);
         self::assertSame('de', $translation->language);
@@ -127,6 +128,8 @@ class MigrationTraitTranslationsTest extends TestCase
             ->where(['id' => $id])
             ->one();
 
+        self::assertIsArray($row);
+
         self::assertSame('Name', $row['name']);
         self::assertSame('Name DE', $row['name_de']);
 
@@ -175,6 +178,8 @@ class MigrationTraitTranslationsTest extends TestCase
             ->from(TranslatedMigrationRecord::tableName())
             ->where(['id' => $id])
             ->one();
+
+        self::assertIsArray($row);
 
         self::assertSame('Name DE', $row['name_de']);
         self::assertSame('Name FR', $row['name_fr']);

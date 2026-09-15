@@ -75,8 +75,8 @@ class RecoverPasswordTest extends TestCase
 
         $message = $this->mailer->getLastMessage();
 
-        self::assertEquals(key($message->getTo()), $user->email);
-        self::assertStringContainsString('/admin/account/reset', $message->getSymfonyEmail()->getHtmlBody());
+        self::assertEquals($this->mailer->getLastMessageTo(), $user->email);
+        self::assertStringContainsString('/admin/account/reset', $this->mailer->getLastMessageBody());
 
         // The spam protection must not answer differently either: a second request reports the same success
         $this->mailer->reset();

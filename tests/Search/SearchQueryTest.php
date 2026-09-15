@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Tests\Search;
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
 use Hirtz\Skeleton\Models\Search;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Search\Search as SearchComponent;
 use Hirtz\Skeleton\Search\SearchDocument;
 use Hirtz\Skeleton\Search\SearchRequest;
 use Hirtz\Skeleton\Search\SearchText;
@@ -102,7 +103,7 @@ class SearchQueryTest extends TestCase
 
     public function testTheLanguageRowsAreCollapsedIntoOneHit(): void
     {
-        $set = Yii::$app->get('search')->search(new SearchRequest('Impressum'));
+        $set = SearchComponent::getComponent()->search(new SearchRequest('Impressum'));
         $ids = array_map(fn ($hit): int => $hit->modelId, $set->hits);
 
         self::assertSame([self::TITLE_ID, self::CONTENT_ID], $ids);
@@ -136,7 +137,7 @@ class SearchQueryTest extends TestCase
 
     public function testTheWeightMultipliesTheScore(): void
     {
-        $hits = Yii::$app->get('search')
+        $hits = SearchComponent::getComponent()
             ->search(new SearchRequest('Sonderangebot'))
             ->hits;
 
@@ -146,7 +147,7 @@ class SearchQueryTest extends TestCase
 
     public function testCountMatchesTheNumberOfRecords(): void
     {
-        self::assertSame(2, Yii::$app->get('search')->count(new SearchRequest('Impressum')));
+        self::assertSame(2, SearchComponent::getComponent()->count(new SearchRequest('Impressum')));
     }
 
     /**
@@ -162,7 +163,7 @@ class SearchQueryTest extends TestCase
         ?int $status = null,
     ): array {
         $request = new SearchRequest($query, $languages, $models, $tenantId, $status);
-        $set = Yii::$app->get('search')->search($request);
+        $set = SearchComponent::getComponent()->search($request);
 
         return array_map(fn ($hit): int => $hit->modelId, $set->hits);
     }
@@ -182,7 +183,7 @@ class SearchQueryTest extends TestCase
             $this->createDocument(self::COMMERCE_ID, 'Commerce', 'Commerce department'),
         ];
 
-        Yii::$app->get('search')->getDriver()->index(...$documents);
+        SearchComponent::getComponent()->getDriver()->index(...$documents);
     }
 
     private function createDocument(

@@ -120,6 +120,8 @@ class MigrationTraitCustomAttributesTest extends TestCase
 
         $row = (new Query())->from(self::TABLE)->where(['id' => $id])->one();
 
+        self::assertIsArray($row);
+
         self::assertSame('Name', $row['name']);
         self::assertSame('<p>Text</p>', $row['content']);
 

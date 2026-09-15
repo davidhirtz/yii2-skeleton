@@ -67,12 +67,15 @@ class PageCacheTest extends TestCase
     {
         $filter = $this->createPageCache();
 
+        self::assertIsArray($filter->dependency);
         self::assertSame(TagDependency::class, $filter->dependency['class']);
         self::assertSame([PageCache::TAG_DEPENDENCY_KEY], $filter->dependency['tags']);
         self::assertTrue($filter->dependency['reusable']);
 
         // a cached cookie is per visitor, so the dependency cannot be shared between requests
-        self::assertFalse($this->createPageCache(['cacheCookies' => true])->dependency['reusable']);
+        $cookieDependency = $this->createPageCache(['cacheCookies' => true])->dependency;
+        self::assertIsArray($cookieDependency);
+        self::assertFalse($cookieDependency['reusable']);
         self::assertEmpty($this->createPageCache(['useTagDependency' => false])->dependency);
     }
 

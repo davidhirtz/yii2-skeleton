@@ -88,6 +88,8 @@ class SitemapTest extends TestCase
         $urls = $sitemap->generateUrls();
 
         self::assertCount(6, $urls);
+
+        self::assertIsArray($urls[0]);
         self::assertContains(['site/view', 'language' => 'de'], array_column($urls, 'loc'));
     }
 
@@ -158,6 +160,10 @@ class SitemapTest extends TestCase
         ], array_column($sitemaps, 'loc'));
 
         // the newest `lastmod` of the set wins, and a set without one reports none
+        self::assertIsArray($sitemaps[0]);
+        self::assertIsArray($sitemaps[1]);
+        self::assertIsArray($sitemaps[2]);
+
         self::assertSame('2026-01-01 10:00:00', $sitemaps[0]['lastmod']);
         self::assertArrayNotHasKey('lastmod', $sitemaps[1]);
         self::assertArrayNotHasKey('lastmod', $sitemaps[2]);
@@ -232,6 +238,7 @@ class SitemapTest extends TestCase
         ]);
 
         $url = $sitemap->generateUrls()[0];
+        self::assertIsArray($url);
 
         self::assertSame('weekly', $url['changefreq']);
         self::assertSame(0.8, $url['priority']);

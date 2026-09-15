@@ -54,8 +54,8 @@ class UserPasswordResetTest extends TestCase
 
         $message = $this->mailer->getLastMessage();
 
-        self::assertEquals($this->user->email, key($message->getTo()));
-        self::assertStringContainsString('/admin/account/reset', $message->getSymfonyEmail()->getHtmlBody());
+        self::assertEquals($this->user->email, $this->mailer->getLastMessageTo());
+        self::assertStringContainsString('/admin/account/reset', $this->mailer->getLastMessageBody());
 
         self::assertNotNull($this->user->getLatestToken(UserToken::TYPE_PASSWORD_RESET));
     }

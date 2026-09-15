@@ -41,6 +41,33 @@ class TestMailer extends Mailer
         return end($this->messages) ?: null;
     }
 
+    /**
+     * Symfony types the body `string|resource|null` and `MessageInterface::getTo()` an array or a plain string,
+     * neither of which a test wants to narrow for itself.
+     */
+    public function getLastMessageBody(): string
+    {
+        return (string)$this->getLastMessage()?->getSymfonyEmail()->getHtmlBody();
+    }
+
+    public function getLastMessageTo(): string
+    {
+        return $this->getFirstAddress($this->getLastMessage()?->getTo() ?? []);
+    }
+
+    public function getLastMessageFrom(): string
+    {
+        return $this->getFirstAddress($this->getLastMessage()?->getFrom() ?? []);
+    }
+
+    /**
+     * @param array<string, string>|string $addresses
+     */
+    private function getFirstAddress(array|string $addresses): string
+    {
+        return is_array($addresses) ? (string)key($addresses) : $addresses;
+    }
+
     public function reset(): void
     {
         $this->messages = [];

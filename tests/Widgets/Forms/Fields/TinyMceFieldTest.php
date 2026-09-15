@@ -19,7 +19,9 @@ class TinyMceFieldTest extends TestCase
         $form = TestContentFieldActiveForm::make()->render();
 
         self::assertStringContainsString('textarea', $form);
-        self::assertArrayHasKey(TinyMceAssetBundle::class, Yii::$app->getAssetManager()->bundles);
+        $bundles = Yii::$app->getAssetManager()->bundles;
+        self::assertIsArray($bundles);
+        self::assertArrayHasKey(TinyMceAssetBundle::class, $bundles);
     }
 }
 

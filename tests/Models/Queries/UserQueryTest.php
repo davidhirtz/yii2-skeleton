@@ -39,7 +39,8 @@ class UserQueryTest extends TestCase
             ->all();
 
         self::assertCount(1, $users);
-        self::assertSame($id, reset($users)->id);
+        self::assertNotFalse($user = reset($users));
+        self::assertSame($id, $user->id);
     }
 
     public function testMatchingAnAddressSearchesTheEmail(): void
@@ -49,7 +50,8 @@ class UserQueryTest extends TestCase
             ->all();
 
         self::assertCount(1, $users);
-        self::assertSame('disabled@domain.com', reset($users)->email);
+        self::assertNotFalse($user = reset($users));
+        self::assertSame('disabled@domain.com', $user->email);
     }
 
     public function testMatchingANameSearchesNameAndEmail(): void
@@ -59,7 +61,8 @@ class UserQueryTest extends TestCase
             ->all();
 
         self::assertCount(1, $users);
-        self::assertSame('owner', reset($users)->name);
+        self::assertNotFalse($user = reset($users));
+        self::assertSame('owner', $user->name);
     }
 
     public function testMatchingSeveralKeywordsJoinsThemWithASpace(): void

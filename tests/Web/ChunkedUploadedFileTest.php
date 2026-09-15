@@ -91,7 +91,7 @@ class ChunkedUploadedFileTest extends TestCase
 
         self::assertSame(UPLOAD_ERR_FORM_SIZE, $file->error);
         self::assertSame($source, $file->tempName);
-        self::assertCount(0, glob($this->path . '*.tmp'));
+        self::assertCount(0, glob($this->path . '*.tmp') ?: []);
     }
 
     public function testAnUploadAtTheMaximumSizeIsAccepted(): void
@@ -124,7 +124,7 @@ class ChunkedUploadedFileTest extends TestCase
         self::assertSame(UPLOAD_ERR_PARTIAL, $file->error);
         self::assertFalse($file->isCompleted());
         self::assertFalse($file->saveAs($this->path . 'target.txt', false));
-        self::assertCount(0, glob($this->path . '*.tmp'));
+        self::assertCount(0, glob($this->path . '*.tmp') ?: []);
 
         // the uploader must not be told to send the next chunk of an upload that broke
         self::assertFalse($file->isPartial());

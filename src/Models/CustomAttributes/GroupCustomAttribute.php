@@ -207,7 +207,7 @@ class GroupCustomAttribute extends CustomAttribute
      * A label per child of every row, so the trail can pair the old and the new value of each one. A nested group is
      * flattened into the same map rather than nested, so its children diff on their own too.
      *
-     * @return array<string, string|Stringable|null>
+     * @return array<string, array<string, string|Stringable|null>|string|Stringable|null>
      */
     #[Override]
     public function formatValue(Model $owner, mixed $value): array

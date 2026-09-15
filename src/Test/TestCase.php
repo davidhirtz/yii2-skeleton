@@ -15,6 +15,7 @@ use Hirtz\Skeleton\Web\User as WebUser;
 use Override;
 use Yii;
 use yii\base\Event;
+use yii\base\InvalidConfigException;
 use yii\caching\ArrayCache;
 use yii\db\Transaction;
 use yii\di\Container;
@@ -162,7 +163,13 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
         FileHelper::createDirectory("$this->webroot/assets");
 
-        $this->mailer = Yii::$app->get('mailer');
+        $mailer = Yii::$app->getMailer();
+
+        if (!$mailer instanceof TestMailer) {
+            throw new InvalidConfigException('The test application must be configured with a ' . TestMailer::class . '.');
+        }
+
+        $this->mailer = $mailer;
         $this->logger = $this->getLogger();
 
         Yii::setLogger($this->logger);

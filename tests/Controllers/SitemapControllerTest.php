@@ -116,7 +116,9 @@ class SitemapControllerTest extends TestCase
 
         $xml = new SimpleXMLElement($this->runIndexAction());
 
-        self::assertArrayHasKey('image', $xml->getDocNamespaces());
+        $namespaces = $xml->getDocNamespaces();
+        self::assertIsArray($namespaces);
+        self::assertArrayHasKey('image', $namespaces);
     }
 
     private function setSitemapUrls(): void
@@ -162,8 +164,11 @@ class SitemapControllerTest extends TestCase
     {
         self::assertEquals('urlset', $xml->getName());
 
-        self::assertEquals('http://www.sitemaps.org/schemas/sitemap/0.9', $xml->getDocNamespaces()['']);
-        self::assertEquals('http://www.google.com/schemas/sitemap-image/1.1', $xml->getDocNamespaces()['image']);
+        $namespaces = $xml->getDocNamespaces();
+        self::assertIsArray($namespaces);
+
+        self::assertEquals('http://www.sitemaps.org/schemas/sitemap/0.9', $namespaces['']);
+        self::assertEquals('http://www.google.com/schemas/sitemap-image/1.1', $namespaces['image']);
 
         $child = $xml->children()->children();
         self::assertEquals('https://test.localhost/page-1', $child->loc[0]);

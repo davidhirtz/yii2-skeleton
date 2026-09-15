@@ -115,7 +115,7 @@ class UserLoginControllerTest extends TestCase
         $login = UserLogin::create();
         $login->user_id = $user->id;
         $login->type = UserLogin::TYPE_LOGIN;
-        $login->ip_address = inet_pton($ip);
+        $login->ip_address = inet_pton($ip) ?: null;
 
         // the row is written raw by `Web\User::insertLogin()`, so nothing stamps it
         $login->created_at = new DateTime();

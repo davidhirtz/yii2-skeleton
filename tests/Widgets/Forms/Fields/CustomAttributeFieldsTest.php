@@ -227,9 +227,9 @@ class CustomAttributeFieldsTest extends TestCase
         self::assertMatchesRegularExpression('/<select[^>]*>/', $content);
         preg_match('/<select[^>]*>/', $content, $select);
 
-        self::assertStringContainsString('name="UniformTypeRecord[type]"', $select[0]);
+        self::assertStringContainsString('name="UniformTypeRecord[type]"', $select[0] ?? '');
         self::assertStringNotContainsString('data-fingerprint', $content);
-        self::assertStringNotContainsString('hx-', $select[0]);
+        self::assertStringNotContainsString('hx-', $select[0] ?? '');
     }
 
     protected function createRecord(): FieldRecord

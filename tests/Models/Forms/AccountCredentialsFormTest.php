@@ -55,7 +55,7 @@ class AccountCredentialsFormTest extends TestCase
         self::assertTrue($form->user->isUnconfirmed());
 
         $message = $this->mailer->getLastMessage();
-        self::assertStringContainsString('/admin/account/confirm', $message->getSymfonyEmail()->getHtmlBody());
+        self::assertStringContainsString('/admin/account/confirm', $this->mailer->getLastMessageBody());
     }
 
     public function testUpdatePassword(): void

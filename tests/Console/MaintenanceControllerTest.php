@@ -48,7 +48,10 @@ class MaintenanceControllerTest extends TestCase
         $config = Yii::getAlias(MaintenanceConfigForm::MAINTENANCE_CONFIG);
         self::assertFileExists($config);
 
-        $config = json_decode(file_get_contents($config), true);
+        $contents = file_get_contents($config);
+        self::assertNotFalse($contents);
+
+        $config = json_decode($contents, true);
 
         self::assertEquals('https://test.localhost', $config['redirect']);
         self::assertEquals(1, $config['retry']);
@@ -56,6 +59,7 @@ class MaintenanceControllerTest extends TestCase
         self::assertEquals(500, $config['status']);
 
         $template = file_get_contents(Yii::getAlias($controller->viewFile));
+        self::assertNotFalse($template);
 
         self::assertEquals($template, $config['template']);
 
