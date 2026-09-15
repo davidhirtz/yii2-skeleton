@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Web;
 
 use Hirtz\Skeleton\Helpers\FileHelper;
+use Hirtz\Skeleton\Upload\Upload;
 use Override;
 use Yii;
 use yii\web\UploadedFile;
 
-/**
- * @property string $partialName
- */
 class StreamUploadedFile extends UploadedFile
 {
     /**
@@ -20,8 +18,6 @@ class StreamUploadedFile extends UploadedFile
      */
     public ?array $allowedExtensions = null;
     public ?string $url = null;
-
-    private ?string $temporaryUploadPath = null;
 
     public function init(): void
     {
@@ -107,18 +103,15 @@ class StreamUploadedFile extends UploadedFile
         return $potentialExtensions ? current($potentialExtensions) : parent::getExtension();
     }
 
-    public function getTemporaryUploadPath(): ?string
+    /**
+     * The same directory every other upload waits in, so one collector reaches all of them — a download parked
+     * under a path of its own would be swept by nothing the moment a project moves {@see Upload::$tempPath}.
+     */
+    public function getTemporaryUploadPath(): string
     {
-        if ($this->temporaryUploadPath === null) {
-            $this->setTemporaryUploadPath('@runtime/uploads');
-        }
+        $path = Upload::getComponent()->tempPath;
+        FileHelper::createDirectory($path);
 
-        return $this->temporaryUploadPath;
-    }
-
-    public function setTemporaryUploadPath(string $path): void
-    {
-        $this->temporaryUploadPath = rtrim((string)Yii::getAlias($path), '/') . '/';
-        FileHelper::createDirectory($this->temporaryUploadPath);
+        return $path;
     }
 }

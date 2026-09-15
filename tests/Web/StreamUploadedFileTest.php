@@ -6,16 +6,20 @@ namespace Hirtz\Skeleton\Tests\Web;
 
 use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Upload\Upload;
 use Hirtz\Skeleton\Web\StreamUploadedFile;
+use Override;
 use Yii;
 
 class StreamUploadedFileTest extends TestCase
 {
     protected const string VALID_URL = 'https://raw.githubusercontent.com/davidhirtz/yii2-skeleton/main/README.md';
 
-    public function _after(): void
+    #[Override]
+    protected function tearDown(): void
     {
-        FileHelper::removeDirectory(Yii::getAlias('@runtime/uploads'));
+        FileHelper::removeDirectory(Upload::getComponent()->tempPath);
+        parent::tearDown();
     }
 
     public function testSaveValidFile(): void

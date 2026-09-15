@@ -36,7 +36,8 @@
   `Web\ChunkedUploadedFile` assembles as much as for the files an attachment parks: one directory
   (`Upload::$tempPath`, `@runtime/uploads`), one lifetime, one switch and one place to look. `ChunkedUploadedFile`
   loses `$partialUploadPath`, `$tempFileLifetime`, `$gcProbability` and `removeAbortedFiles()` with it, and no
-  longer collects from `saveAs()`.
+  longer collects from `saveAs()`; `StreamUploadedFile` loses `$temporaryUploadPath` and its setter. A download
+  used to park under a path of its own, which nothing would have collected once a project moved the directory.
 
   `Upload::collectGarbageOncePerSession()` replaces both probability checks: a small installation has no cron to
   run `upload/clear` with, and an upload is the only moment at which the directory is known to matter, so a request
