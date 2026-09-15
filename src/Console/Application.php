@@ -18,6 +18,7 @@ use Hirtz\Skeleton\Console\Controllers\TrailController;
 use Hirtz\Skeleton\Console\Controllers\UpgradeController;
 use Hirtz\Skeleton\Console\Controllers\UserController;
 use Hirtz\Skeleton\Console\Controllers\UserLoginController;
+use Hirtz\Skeleton\Console\Controllers\UploadController;
 use Hirtz\Skeleton\Console\Controllers\UserTokenController;
 use Override;
 use Yii;
@@ -92,6 +93,7 @@ class Application extends \yii\console\Application
             'redirect' => RedirectController::class,
             'search' => SearchController::class,
             'trail' => TrailController::class,
+            'upload' => UploadController::class,
             'user' => UserController::class,
             'user-login' => UserLoginController::class,
             'user-token' => UserTokenController::class,

@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Models\Actions;
 
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Events\DuplicateActiveRecordEvent;
+use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Exception;
 use Yii;
 
@@ -76,10 +77,29 @@ class DuplicateActiveRecord
 
     protected function afterDuplicate(): void
     {
+        $this->duplicateCustomAttributes();
+
         $event = new DuplicateActiveRecordEvent();
         $event->duplicate = $this->duplicate;
 
         $this->model->trigger(static::EVENT_AFTER_DUPLICATE, $event);
+    }
+
+    /**
+     * The duplicate was inserted with the source's values, so a definition storing something of its own outside the
+     * column is pointing at what the source owns until it is told.
+     */
+    protected function duplicateCustomAttributes(): void
+    {
+        if (!$this->duplicate instanceof CustomAttributeInterface || !$this->model instanceof CustomAttributeInterface) {
+            return;
+        }
+
+        foreach ($this->duplicate->getCustomAttributeDefinitions() as $definition) {
+            foreach ($definition->getAttributeNames($this->duplicate) as $name) {
+                $definition->afterDuplicate($this->duplicate, $this->model, $name);
+            }
+        }
     }
 
     /**

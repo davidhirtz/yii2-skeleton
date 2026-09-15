@@ -1,5 +1,39 @@
 ## 3.0.0 (in development)
 
+- **`Models\CustomAttributes\UploadCustomAttribute` attaches one file to a record**, translatable like every other
+  definition and stored by the new `upload` application component (`Upload\Upload`) rather than in the media library:
+  no folder, no transformations, no assets, and it goes with the record it hangs on.
+
+  ```php
+  UploadCustomAttribute::make('track')
+      ->extensions(['vtt', 'srt'])
+      ->maxSize(5 * 1024 * 1024)
+      ->translatable(),
+  ```
+
+  `extensions()` is required rather than defaulted: the web server serves the directory straight, so what may land
+  there is an allow list — a definition declaring none throws.
+
+  A file is picked before the record exists, so `Modules\Admin\Controllers\UploadController` parks it under a token
+  in `Upload::$tempPath` and answers with the field re-rendered — the chunked upload of `Widgets\Buttons\FileUploadButton`
+  unchanged, so there is no size limit to work around. The JSON column holds the filename alone; the directory is
+  `<table>/<record id>/<hashed attribute>/` under `Upload::$path` (`@webroot/attachments`), so nothing in the URL names
+  a column. `upload/clear` collects the files of uploads nobody saved, and the upload action does too with
+  `Upload::$gcProbability`.
+
+- **A `Models\CustomAttributes\CustomAttribute` has a lifecycle.** `afterSave()`, `afterDelete()` and `afterDuplicate()`
+  are no-ops on the base and are called by `Db\ActiveRecord` and `Models\Actions\DuplicateActiveRecord`, so a
+  definition storing something outside the JSON column follows its record: the upload is moved into place once the
+  record has an id, the previous file goes when the value is replaced or cleared, and a duplicate gets a copy of its
+  own instead of pointing into the source's directory. `Models\Interfaces\CustomAttributeInterface` gains
+  `validateCustomAttributeUpload()` beside `validateCustomAttributeGroup()`.
+
+- **`Assets\AbstractAssetBundle` registers its scripts in the head.** For a module script that changes nothing — it is
+  deferred either way — but `View::endBody()` renders inside `#wrap`, so a fragment swap selecting less than that
+  dropped the bundle of any widget the response introduced. A form reload
+  (`Widgets\Forms\Fields\Field::reloadsForm()`) selects the form alone, so a type change that brought in a TinyMCE,
+  group or upload field left it without its script; the `head-support` extension carries a head tag across every swap.
+
 - **`Helpers\FileHelper::isFilenameTaken(string $basename, array $extensions)`** answers whether a file of that
   basename is already on disk in any of the given extensions. `Media\Models\File` uses it to keep an upload from
   overwriting a file no record knows about.

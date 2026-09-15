@@ -74,6 +74,8 @@ interface CustomAttributeInterface
 
     public function validateCustomAttributeGroup(string $attribute): void;
 
+    public function validateCustomAttributeUpload(string $attribute): void;
+
     public function applyCustomAttributeDefaults(): void;
 
     public function resetCustomAttributes(): void;

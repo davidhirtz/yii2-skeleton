@@ -268,7 +268,17 @@ class ActiveRecord extends \yii\db\ActiveRecord
             $changedAttributes = [...$changedAttributes, ...$this->saveVirtualAttributes()];
         }
 
-        $changedAttributes = [...$changedAttributes, ...$this->getChangedCustomAttributes($insert)];
+        $changedCustomAttributes = $this->getChangedCustomAttributes($insert);
+        $changedAttributes = [...$changedAttributes, ...$changedCustomAttributes];
+
+        // Before the old values are updated: a definition with a side effect of its own, such as a file it has to
+        // move into place now that the record has an id, rewrites the attribute here.
+        if ($this instanceof CustomAttributeInterface) {
+            foreach ($changedCustomAttributes as $name => $old) {
+                $this->getCustomAttribute($name)?->afterSave($this, $name, $old);
+            }
+        }
+
         $this->updateOldVirtualAttributes();
 
         parent::afterSave($insert, $changedAttributes);
@@ -279,6 +289,14 @@ class ActiveRecord extends \yii\db\ActiveRecord
     {
         if ($this instanceof TranslationInterface) {
             $this->deleteVirtualAttributes();
+        }
+
+        if ($this instanceof CustomAttributeInterface) {
+            foreach ($this->getCustomAttributeDefinitions() as $definition) {
+                foreach ($definition->getAttributeNames($this) as $name) {
+                    $definition->afterDelete($this, $name);
+                }
+            }
         }
 
         parent::afterDelete();

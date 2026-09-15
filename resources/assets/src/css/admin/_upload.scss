@@ -1,0 +1,22 @@
+.upload {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+.upload-file {
+  align-items: center;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius, .25rem);
+  display: flex;
+  gap: .5rem;
+  max-width: 100%;
+  padding: .25rem .25rem .25rem .75rem;
+}
+
+.upload-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

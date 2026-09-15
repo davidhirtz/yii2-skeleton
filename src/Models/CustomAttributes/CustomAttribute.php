@@ -190,6 +190,32 @@ abstract class CustomAttribute
     abstract public function createField(Model $owner): Field;
 
     /**
+     * Side effects a definition has beyond the JSON column, such as a file to move into place or to remove. Called
+     * from {@see \Hirtz\Skeleton\Db\ActiveRecord::afterSave()} for every attribute whose value changed, before the
+     * old values are updated, so a hook may still rewrite the attribute.
+     */
+    public function afterSave(Model $owner, string $name, mixed $old): void
+    {
+    }
+
+    /**
+     * @see \Hirtz\Skeleton\Db\ActiveRecord::afterDelete()
+     */
+    public function afterDelete(Model $owner, string $name): void
+    {
+    }
+
+    /**
+     * A duplicate is inserted with the source's values, which for a definition storing something outside the column
+     * is a reference to what the source owns — this is where it gets its own copy.
+     *
+     * @see \Hirtz\Skeleton\Models\Actions\DuplicateActiveRecord::afterDuplicate()
+     */
+    public function afterDuplicate(Model $duplicate, Model $source, string $name): void
+    {
+    }
+
+    /**
      * Hashes what the server renders, so a form only has to reload when a type change actually changes its shape.
      */
     final public function getFingerprint(): string

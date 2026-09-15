@@ -20,6 +20,7 @@ use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Rbac\DbManager;
 use Hirtz\Skeleton\Search\Search;
 use Hirtz\Skeleton\Sitemap\Sitemap;
+use Hirtz\Skeleton\Upload\Upload;
 use Hirtz\Skeleton\Web\DbSession;
 use Hirtz\Skeleton\Web\UrlManager;
 use Hirtz\Skeleton\Web\View;
@@ -35,6 +36,7 @@ use yii\web\JqueryAsset;
 /**
  * @property Search $search
  * @property Sitemap $sitemap
+ * @property Upload $upload
  * @property UrlManager $urlManager
  *
  * @method DbManager getAuthManager()
@@ -176,6 +178,9 @@ trait ApplicationTrait
                 ],
                 'sitemap' => [
                     'class' => Sitemap::class,
+                ],
+                'upload' => [
+                    'class' => Upload::class,
                 ],
                 'urlManager' => [
                     'class' => UrlManager::class,

@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\CustomAttributes\CustomAttribute;
 use Hirtz\Skeleton\Models\CustomAttributes\CustomAttributeGroupItem;
 use Hirtz\Skeleton\Models\CustomAttributes\GroupCustomAttribute;
+use Hirtz\Skeleton\Models\CustomAttributes\UploadCustomAttribute;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Override;
@@ -242,6 +243,18 @@ trait CustomAttributesTrait
 
             $this->{$attribute} = $value;
             $this->customAttributeItemSources[$attribute] = $value;
+        }
+    }
+
+    /**
+     * @uses UploadCustomAttribute::getValidationRules()
+     */
+    public function validateCustomAttributeUpload(string $attribute): void
+    {
+        $definition = $this->getCustomAttribute($attribute);
+
+        if ($definition instanceof UploadCustomAttribute) {
+            $definition->validateUpload($this, $attribute);
         }
     }
 
