@@ -12,12 +12,18 @@ $breakpoints: (
 @function breakpoint-next($name) {
   $breakpoint-names: map.keys($breakpoints);
   $n: list.index($breakpoint-names, $name);
-  @return if($n < list.length($breakpoint-names), list.nth($breakpoint-names, $n + 1), null);
+  @if $n < list.length($breakpoint-names) {
+    @return list.nth($breakpoint-names, $n + 1);
+  }
+  @return null;
 }
 
 @function breakpoint-min($name) {
   $min: map.get($breakpoints, $name);
-  @return if($min != 0, $min, null);
+  @if $min != 0 {
+    @return $min;
+  }
+  @return null;
 }
 
 @mixin media-breakpoint-up($name) {
@@ -43,5 +49,8 @@ $breakpoints: (
 }
 
 @function breakpoint-infix($name) {
-  @return if(breakpoint-min($name) == null, "", "-#{$name}");
+  @if breakpoint-min($name) == null {
+    @return "";
+  }
+  @return "-#{$name}";
 }

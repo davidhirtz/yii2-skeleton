@@ -1,6 +1,4 @@
-$path: '../../';
-
-@import "../shared/fonts";
+@use "../shared/fonts" with ($path: '../../');
 
 body {
   background: transparent;
