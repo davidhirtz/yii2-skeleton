@@ -26,7 +26,8 @@ class BatchInsertQueryBuild
     {
         if ($rows === null) {
             $rows = $columns;
-            $columns = array_keys(current($columns));
+            $first = current($columns);
+            $columns = is_array($first) ? array_keys($first) : [];
         }
 
         $db = $modelClass::getDb();

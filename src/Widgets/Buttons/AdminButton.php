@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Assets\AdminAssetBundle;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Html\Svg;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
@@ -53,7 +54,7 @@ class AdminButton extends Widget
 
     protected function renderContent(): string|Stringable
     {
-        $environment = Yii::$app->getRequest()->getEnvironmentName();
+        $environment = Application::current()->getRequest()->getEnvironmentName();
         $this->registerCss();
 
         return A::make()

@@ -9,14 +9,15 @@ use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
 use Hirtz\Skeleton\Base\Traits\EvaluateClosureTrait;
 use Hirtz\Skeleton\Html\Td;
 use Hirtz\Skeleton\Html\Th;
+use Hirtz\Skeleton\Web\Application;
+use Hirtz\Skeleton\Web\User;
+use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Hirtz\Skeleton\Widgets\Grids\Traits\GridTrait;
 use Hirtz\Skeleton\Widgets\Traits\TitleTrait;
 use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
-use Hirtz\Skeleton\Web\User;
 use Stringable;
 use Yii;
 use yii\base\Model;
-use Hirtz\Skeleton\Widgets\Grids\GridView;
 
 /**
  * @template TModel of array|Model = Model
@@ -56,7 +57,7 @@ class Column
      */
     public function __construct(array $config = [])
     {
-        $this->webuser ??= Yii::$app->getUser();
+        $this->webuser ??= Application::current()->getUser();
 
         if ($config) {
             Yii::configure($this, $config);

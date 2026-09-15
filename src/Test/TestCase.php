@@ -75,7 +75,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     protected function tearDown(): void
     {
         if (Yii::$app->get('session', false)) {
-            Yii::$app->getSession()->close();
+            Application::current()->getSession()->close();
         }
 
         if ($this->transaction->getIsActive() && $this->transaction->db->pdo?->inTransaction()) {

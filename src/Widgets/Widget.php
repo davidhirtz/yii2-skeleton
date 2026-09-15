@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Widgets;
 use Closure;
 use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
 use Hirtz\Skeleton\Base\Traits\EvaluateClosureTrait;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\User;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
@@ -45,7 +46,7 @@ abstract class Widget implements Stringable, ViewContextInterface
     public function __construct(array $config = [])
     {
         $this->view ??= Yii::$app->getView();
-        $this->webuser ??= Yii::$app->getUser();
+        $this->webuser ??= Application::current()->getUser();
 
         if ($config) {
             Yii::configure($this, $config);

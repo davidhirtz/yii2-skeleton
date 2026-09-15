@@ -15,7 +15,9 @@ use Hirtz\Skeleton\Models\Forms\PasswordResetForm;
 use Hirtz\Skeleton\Models\Forms\SignupForm;
 use Hirtz\Skeleton\Models\Forms\TwoFactorAuthenticatorForm;
 use Hirtz\Skeleton\Models\UserLogin;
+use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Modules\ModuleTrait;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\Controller;
 use Override;
 use Yii;
@@ -23,7 +25,6 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\ForbiddenHttpException;
 use yii\web\Response;
-use Hirtz\Skeleton\Modules\Admin\Module;
 
 /**
  * @extends Controller<Module>
@@ -96,7 +97,7 @@ class AccountController extends Controller
         }
 
         $form = SignupForm::create();
-        $form->email = $this->request->get('email', Yii::$app->getSession()->get('email'));
+        $form->email = $this->request->get('email', Application::current()->getSession()->get('email'));
 
         if ($form->load($this->request->post()) && $form->insert()) {
             $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_SIGN_UP_COMPLETED_PLEASE'));
@@ -132,7 +133,7 @@ class AccountController extends Controller
         }
 
         $form = LoginForm::create();
-        $form->email = $this->request->get('email', Yii::$app->getSession()->get('email'));
+        $form->email = $this->request->get('email', Application::current()->getSession()->get('email'));
 
         if ($form->load($this->request->post())) {
             if ($form->login()) {
@@ -151,7 +152,7 @@ class AccountController extends Controller
                 ]);
             }
 
-            Yii::$app->getSession()->set('email', $form->email);
+            Application::current()->getSession()->set('email', $form->email);
         }
 
         return $this->render('login', [
@@ -205,7 +206,7 @@ class AccountController extends Controller
         $form = AccountResendConfirmForm::create();
 
         $form->user = $this->webuser->getIdentity();
-        $form->email ??= $this->request->get('email', Yii::$app->getSession()->get('email'));
+        $form->email ??= $this->request->get('email', Application::current()->getSession()->get('email'));
 
         if ($form->load($this->request->post())) {
             if ($form->resend()) {
@@ -231,7 +232,7 @@ class AccountController extends Controller
         }
 
         $form = PasswordRecoverForm::create();
-        $form->email = $this->request->get('email', Yii::$app->getSession()->get('email'));
+        $form->email = $this->request->get('email', Application::current()->getSession()->get('email'));
 
         if ($form->load($this->request->post())) {
             if ($form->recover()) {
@@ -242,7 +243,7 @@ class AccountController extends Controller
                 return $this->goHome();
             }
 
-            Yii::$app->getSession()->set('email', $form->email);
+            Application::current()->getSession()->set('email', $form->email);
         }
 
         return $this->render('recover', [
@@ -335,7 +336,7 @@ class AccountController extends Controller
 
         return $this->render('security', [
             'user' => $this->webuser->getIdentity(),
-            'recoveryCodes' => Yii::$app->getSession()->getFlash(self::RECOVERY_CODES_FLASH) ?: [],
+            'recoveryCodes' => Application::current()->getSession()->getFlash(self::RECOVERY_CODES_FLASH) ?: [],
         ]);
     }
 
@@ -378,7 +379,7 @@ class AccountController extends Controller
     protected function setRecoveryCodesFlash(TwoFactorAuthenticatorForm $form): void
     {
         if ($form->recoveryCodes) {
-            Yii::$app->getSession()->setFlash(self::RECOVERY_CODES_FLASH, $form->recoveryCodes);
+            Application::current()->getSession()->setFlash(self::RECOVERY_CODES_FLASH, $form->recoveryCodes);
         }
     }
 

@@ -28,10 +28,10 @@ class UrlManager extends \yii\web\UrlManager
     public bool $i18nUrl = false;
 
     /**
-     * @var array<string, string>|false|null containing the languages available for `i18nUrl`, the language identifier as key and the
+     * @var array<string, string>|null containing the languages available for `i18nUrl`, the language identifier as key and the
      * language param as value (e.g. ['en-US' ⇒ 'en']). Defaults to languages set in the I18n component.
      */
-    public array|false|null $languages = null;
+    public ?array $languages = null;
 
     /**
      * @var string|null the language to fall back to when `i18nUrl` is disabled or no language prefix is present.
@@ -59,6 +59,18 @@ class UrlManager extends \yii\web\UrlManager
             $this->i18nUrl = false;
         }
 
+        if (count($this->getLanguages()) < 2) {
+            $this->i18nUrl = false;
+        }
+
+        parent::init();
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function getLanguages(): array
+    {
         if ($this->languages === null) {
             $this->languages = [];
 
@@ -67,11 +79,7 @@ class UrlManager extends \yii\web\UrlManager
             }
         }
 
-        if (count($this->languages) < 2) {
-            $this->i18nUrl = false;
-        }
-
-        parent::init();
+        return $this->languages;
     }
 
     /**
@@ -80,13 +88,13 @@ class UrlManager extends \yii\web\UrlManager
     #[Override]
     public function createUrl($params): string
     {
-        $request = Yii::$app->getRequest();
+        $request = Request::current();
         $language = Yii::$app->language;
 
         $params = (array)$params;
 
         if ($this->i18nUrl) {
-            $language = ArrayHelper::remove($params, $request->languageParam, $language);
+            $language = ArrayHelper::remove($params, $request->languageParam ?? 'language', $language);
             $defaultLanguage = ArrayHelper::remove($params, 'defaultLanguage');
         }
 
@@ -103,9 +111,11 @@ class UrlManager extends \yii\web\UrlManager
             return $url;
         }
 
-        if ($this->i18nUrl && isset($this->languages[$language]) && $language !== $defaultLanguage) {
+        $languages = $this->getLanguages();
+
+        if ($this->i18nUrl && isset($languages[$language]) && $language !== $defaultLanguage) {
             $position = strlen($this->showScriptName ? $this->getScriptUrl() : $this->getBaseUrl());
-            return rtrim(substr_replace($url, '/' . $this->languages[$language], $position, 0), '/');
+            return rtrim(substr_replace($url, '/' . $languages[$language], $position, 0), '/');
         }
 
         return $url;
@@ -146,7 +156,7 @@ class UrlManager extends \yii\web\UrlManager
             $this->setDraftStatus($request);
         }
 
-        if (count($this->languages) > 1) {
+        if (count($this->getLanguages()) > 1) {
             $this->setLanguage($request);
         }
 
@@ -219,9 +229,11 @@ class UrlManager extends \yii\web\UrlManager
         if ($this->i18nUrl) {
             $pathInfo = trim($request->getPathInfo(), '/');
 
-            if (preg_match('#^(' . implode('|', $this->languages) . ')\b(/?)#i', $pathInfo, $matches)) {
+            $languages = $this->getLanguages();
+
+            if (preg_match('#^(' . implode('|', $languages) . ')\b(/?)#i', $pathInfo, $matches)) {
                 $request->setPathInfo(mb_substr($pathInfo, mb_strlen($matches[0], Yii::$app->charset), null, Yii::$app->charset));
-                $language = array_search($matches[1], $this->languages, true);
+                $language = array_search($matches[1], $languages, true);
 
                 if ($language) {
                     if ($language === $this->defaultLanguage) {
@@ -236,7 +248,7 @@ class UrlManager extends \yii\web\UrlManager
             }
         }
 
-        Yii::$app->language = $this->defaultLanguage ?: $request->getPreferredLanguage(array_keys($this->languages));
+        Yii::$app->language = $this->defaultLanguage ?: $request->getPreferredLanguage(array_keys($this->getLanguages()));
     }
 
     protected function getBeforeParseEvent(Request $request): ?UrlManagerEvent

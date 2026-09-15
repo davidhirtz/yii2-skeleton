@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\TextInput;
 use Hirtz\Skeleton\Modules\Admin\Controllers\SearchController;
 use Hirtz\Skeleton\Search\Search;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
@@ -49,7 +50,7 @@ class NavBarSearch extends Widget
             ->addClass('navbar-search-input')
             ->type('search')
             ->name('q')
-            ->value(Yii::$app->getRequest()->get('q'))
+            ->value(Application::current()->getRequest()->get('q'))
             ->autocomplete('off')
             ->placeholder(Yii::t('skeleton', 'SEARCH_PLACEHOLDER'))
             ->addAttributes([

@@ -245,27 +245,30 @@ trait NestedTreeTrait
                 // Refresh tree attributes.
                 $this->parent->refresh();
 
+                $parentRgt = (int)$this->parent->getAttribute('rgt');
+
                 // Update new ancestors.
-                $query = (new Query())->where([
-                    'not in',
-                    'id',
-                    $branchIds,
-                ])->andWhere(new Expression(':rgt BETWEEN [[lft]] AND [[rgt]]', ['rgt' => $this->parent->getAttribute('rgt')]));
-                static::updateAllCounters(['rgt' => $diff], $query->where);
+                static::updateAllCounters(['rgt' => $diff], [
+                    'and',
+                    ['not in', 'id', $branchIds],
+                    new Expression(':rgt BETWEEN [[lft]] AND [[rgt]]', ['rgt' => $parentRgt]),
+                ]);
 
                 // Update the new right-hand side of the tree.
-                $query = (new Query())
-                    ->where(['not in', 'id', $branchIds])
-                    ->andWhere(new Expression('[[lft]]>:rgt', ['rgt' => $this->parent->getAttribute('rgt')]));
+                static::updateAllCounters(['lft' => $diff, 'rgt' => $diff], [
+                    'and',
+                    ['not in', 'id', $branchIds],
+                    new Expression('[[lft]]>:rgt', ['rgt' => $parentRgt]),
+                ]);
 
-                static::updateAllCounters(['lft' => $diff, 'rgt' => $diff], $query->where);
+                $parentRgt += $diff;
+                $this->parent->setAttribute('rgt', $parentRgt);
 
-                $this->parent->setAttribute('rgt', $this->parent->getAttribute('rgt') + $diff);
-                $diff = $this->parent->getAttribute('rgt') > $this->rgt ? ('+' . ($this->parent->getAttribute('rgt') - $this->rgt - 1)) : ('-' . abs($this->parent->getAttribute('rgt') - $this->rgt - 1));
+                // Both branches of the signed string this used to build came out as the same number.
+                $diff = $parentRgt - $this->rgt - 1;
             } else {
                 // Find max right excluding self and children.
-                $rgt = static::find()->where(['not in', 'id', $branchIds])->max('rgt');
-                $diff = $rgt - $this->lft + 1;
+                $diff = (int)static::find()->where(['not in', 'id', $branchIds])->max('rgt') - $this->lft + 1;
             }
 
             $depthDiff = ($this->parent ? (int)$this->parent->getAttribute('depth') + 1 : 0) - $this->depth;

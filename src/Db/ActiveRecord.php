@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Db;
 
-use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Behaviors\AttributeTypecastBehavior;
 use Hirtz\Skeleton\Behaviors\SearchBehavior;
@@ -12,8 +11,10 @@ use Hirtz\Skeleton\Db\Commands\BatchInsertQueryBuild;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
 use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
+use Hirtz\Skeleton\Web\User as WebUser;
 use Override;
 use Yii;
+use davidhirtz\yii2\datetime\DateTime;
 use yii\helpers\Inflector;
 
 class ActiveRecord extends \yii\db\ActiveRecord
@@ -347,7 +348,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
         foreach ($attributes as $name => $value) {
             if (is_int($name)) {
                 if ($value === 'updated_by_user_id') {
-                    $attributes[$value] = Yii::$app->has('user') ? Yii::$app->getUser()->getId() : null;
+                    $attributes[$value] = WebUser::current()?->getId();
                     unset($name);
                 }
 

@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Models\Forms;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Validators\TwoFactorAuthenticationValidator;
+use Hirtz\Skeleton\Web\Application;
 use Override;
 use RobThree\Auth\Providers\Qr\QRServerProvider;
 use RobThree\Auth\TwoFactorAuth;
@@ -59,7 +60,7 @@ class TwoFactorAuthenticatorForm extends Model
         $this->user->setTwoFactorAuthenticationSecret($this->getSecret());
         $this->recoveryCodes = $this->user->generateTwoFactorAuthenticationRecoveryCodes();
 
-        Yii::$app->getSession()->set(static::SESSION_SECRET_NAME, null);
+        Application::current()->getSession()->set(static::SESSION_SECRET_NAME, null);
 
         return $this->user->update() === 1;
     }
@@ -70,7 +71,7 @@ class TwoFactorAuthenticatorForm extends Model
             return false;
         }
 
-        Yii::$app->getSession()->set(static::SESSION_SECRET_NAME, null);
+        Application::current()->getSession()->set(static::SESSION_SECRET_NAME, null);
         $this->user->setTwoFactorAuthenticationSecret(null);
 
         return $this->user->update();
@@ -90,7 +91,7 @@ class TwoFactorAuthenticatorForm extends Model
 
     public function getSecret(): string
     {
-        $this->secret ??= $this->user->getTwoFactorAuthenticationSecret() ?: Yii::$app->getSession()->get(static::SESSION_SECRET_NAME);
+        $this->secret ??= $this->user->getTwoFactorAuthenticationSecret() ?: Application::current()->getSession()->get(static::SESSION_SECRET_NAME);
 
         if (!$this->secret) {
             $this->generateSecret();
@@ -117,7 +118,7 @@ class TwoFactorAuthenticatorForm extends Model
     {
         $this->secret = (new TwoFactorAuth(new QRServerProvider()))->createSecret();
 
-        Yii::$app->getSession()->set(static::SESSION_SECRET_NAME, $this->secret);
+        Application::current()->getSession()->set(static::SESSION_SECRET_NAME, $this->secret);
         Yii::debug('New authenticator secret generated');
     }
 

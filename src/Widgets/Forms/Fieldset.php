@@ -45,7 +45,7 @@ class Fieldset extends Widget
     protected array $rows = [];
 
     /**
-     * @param list<string|Stringable> $rows
+     * @param array<Field|Stringable|string|null> $rows
      */
     public function rows(array $rows): static
     {

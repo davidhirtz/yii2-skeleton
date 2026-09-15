@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Models\UserLogin;
 use Hirtz\Skeleton\Models\UserToken;
+use Hirtz\Skeleton\Web\Application;
 use Override;
 use Yii;
 use yii\base\Model;
@@ -98,7 +99,7 @@ class PasswordResetForm extends Model
         $this->user->clearPasswordResetTokens();
         $this->user->afterPasswordChange();
 
-        $webuser = Yii::$app->getUser();
+        $webuser = Application::current()->getUser();
         $webuser->destroyOtherSessions($this->user);
 
         $canLogin = $webuser->getIsGuest()

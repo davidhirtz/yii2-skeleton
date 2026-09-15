@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets;
 
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Alert;
 use Hirtz\Skeleton\Widgets\Traits\ContainerTrait;
 use Hirtz\Skeleton\Widgets\Traits\IconTrait;
@@ -24,7 +25,7 @@ class EnvironmentAlert extends Widget
     #[Override]
     protected function configure(): void
     {
-        $request = Yii::$app->getRequest();
+        $request = Application::current()->getRequest();
         $this->environment ??= $request->getEnvironment();
 
         if ($this->environment !== null) {

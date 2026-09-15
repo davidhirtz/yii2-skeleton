@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Form;
 use Hirtz\Skeleton\Html\P;
 use Hirtz\Skeleton\Html\TextInput;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Modal;
 use Hirtz\Skeleton\Widgets\Traits\IconTextTrait;
 use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
@@ -52,7 +53,7 @@ class DeleteButton extends Widget
         if ($this->model instanceof ActiveRecordInterface) {
             $this->url ??= [
                 'delete',
-                ...Yii::$app->getRequest()->getQueryParams(),
+                ...Application::current()->getRequest()->getQueryParams(),
                 'id' => $this->model->getPrimaryKey(),
             ];
         }

@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Caching\CacheComponents;
 use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\Controller;
 use Override;
 use Yii;
@@ -119,7 +120,7 @@ class SystemController extends Controller
 
     public function actionSessionGc(): Response|string
     {
-        Yii::$app->getSession()->gcSession(0);
+        Application::current()->getSession()->gcSession(0);
         $this->success(Yii::t('skeleton', 'SYSTEM_SUCCESS_DELETED'));
         return $this->redirect(['maintenance']);
     }

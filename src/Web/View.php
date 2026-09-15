@@ -133,7 +133,7 @@ class View extends \yii\web\View
     public function registerHrefLangLinkTags(array $languages = [], string|false|null $default = null): void
     {
         if (!$languages) {
-            $languages = Yii::$app->getUrlManager()->languages;
+            $languages = array_keys(Yii::$app->getUrlManager()->getLanguages());
         }
 
         foreach ($languages as $language) {

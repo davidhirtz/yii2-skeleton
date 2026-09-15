@@ -50,7 +50,7 @@ class RedirectBehavior extends Behavior
 
     public function afterFind(): void
     {
-        $this->prevUrl = !$this->owner->getIsNewRecord() ? Url::sanitize($this->owner->getUrl()) : false;
+        $this->prevUrl = !$this->owner->getIsNewRecord() ? Url::sanitize($this->owner->getUrl()) : null;
     }
 
     /**

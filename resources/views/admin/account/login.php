@@ -14,6 +14,7 @@ declare(strict_types=1);
 use Hirtz\Skeleton\Html\Noscript;
 use Hirtz\Skeleton\Models\Forms\LoginForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\LoginActiveForm;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Alert;
 use Hirtz\Skeleton\Widgets\Container;
@@ -41,15 +42,15 @@ echo Container::make()
                 ->label(Yii::t('skeleton', 'ACCOUNT_LOGIN_CREATE_ACCOUNT'))
                 ->icon('user')
                 ->url(['create'])
-                ->visible(Yii::$app->getUser()->isSignupEnabled()))
+                ->visible(Application::current()->getUser()->isSignupEnabled()))
             ->addItem(StackItem::make()
                 ->label(Yii::t('skeleton', 'ACCOUNT_LOGIN_RESEND_CONFIRMATION'))
                 ->icon('envelope')
                 ->url(['resend'])
-                ->visible(Yii::$app->getUser()->isPasswordResetEnabled() && !Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()))
+                ->visible(Application::current()->getUser()->isPasswordResetEnabled() && !Application::current()->getUser()->isUnconfirmedEmailLoginEnabled()))
             ->addItem(StackItem::make()
                 ->label(Yii::t('skeleton', 'ACCOUNT_LOGIN_RECOVER_PASSWORD'))
                 ->icon('key')
                 ->url(['recover'])
-                ->visible(Yii::$app->getUser()->isPasswordResetEnabled()))
+                ->visible(Application::current()->getUser()->isPasswordResetEnabled()))
     );

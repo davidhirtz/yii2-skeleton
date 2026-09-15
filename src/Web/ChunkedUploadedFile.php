@@ -44,7 +44,7 @@ class ChunkedUploadedFile extends UploadedFile
             return;
         }
 
-        $range = (string)Yii::$app->getRequest()->getHeaders()->get('content-range');
+        $range = (string)Application::current()->getRequest()->getHeaders()->get('content-range');
 
         if (!preg_match('/^bytes (\d+)-(\d+)\/(\d+)$/', $range, $matches)) {
             return;
@@ -58,7 +58,7 @@ class ChunkedUploadedFile extends UploadedFile
             return;
         }
 
-        $tempName = $this->getPartialUploadPath() . Yii::$app->getSession()->getId() . "-$this->name.tmp";
+        $tempName = $this->getPartialUploadPath() . Application::current()->getSession()->getId() . "-$this->name.tmp";
 
         if ($start === 0 && is_file($tempName)) {
             Yii::debug("Remove previously aborted upload '$tempName'");
@@ -109,7 +109,7 @@ class ChunkedUploadedFile extends UploadedFile
         $fileCount = 0;
 
         if (is_dir($path)) {
-            foreach (glob($path . '/*') as $file) {
+            foreach (glob($path . '/*') ?: [] as $file) {
                 if (filemtime($file) <= $lifetime && unlink($file)) {
                     ++$fileCount;
                 }

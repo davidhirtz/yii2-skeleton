@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Html\Custom\RelativeTime;
 use Hirtz\Skeleton\Models\Session;
 use Hirtz\Skeleton\Modules\Admin\Controllers\SystemController;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Panels\InfoList;
 use Override;
@@ -87,7 +88,7 @@ class MaintenanceInfo extends InfoList
 
     protected function addSessionRow(): void
     {
-        $session = Yii::$app->getSession();
+        $session = Application::current()->getSession();
 
         /** @see SystemController::actionSessionGc() */
         $this->addRow(

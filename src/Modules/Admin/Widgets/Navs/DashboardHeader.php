@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
 use Hirtz\Skeleton\Html\Custom\RelativeTime;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Navs\Header;
 use Override;
 use Yii;
@@ -21,7 +22,7 @@ class DashboardHeader extends Header
             ? Yii::t('skeleton', 'DASHBOARD_HEADER_HELLO_GOOD', $params)
             : Yii::t('skeleton', 'DASHBOARD_HEADER_WELCOME_NICE', $params);
 
-        $lastLogin = Yii::$app->getSession()->get('last_login_timestamp');
+        $lastLogin = Application::current()->getSession()->get('last_login_timestamp');
 
         if ($lastLogin) {
             $this->subheading ??= Yii::t('skeleton', 'DASHBOARD_HEADER_LAST_LOGIN', [

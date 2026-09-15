@@ -20,7 +20,7 @@ class Response extends \yii\web\Response
     #[\Override]
     protected function prepare(): void
     {
-        if (Yii::$app->getRequest()->getIsDraft()) {
+        if (Application::current()->getRequest()->getIsDraft()) {
             $this->getHeaders()->set('X-Robots-Tag', 'none');
         }
 
@@ -58,7 +58,7 @@ class Response extends \yii\web\Response
             $url[0] = '/' . ltrim((string) $url[0], '/');
         }
 
-        $request = Yii::$app->getRequest();
+        $request = Application::current()->getRequest();
         $url = Url::to($url);
 
         if (preg_match('/\n/', $url)) {

@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Forms;
 
-use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\Traits\IdentityTrait;
 use Hirtz\Skeleton\Models\UserToken;
+use Hirtz\Skeleton\Web\User as WebUser;
 use Override;
 use Yii;
+use davidhirtz\yii2\datetime\DateTime;
 use yii\base\Model;
 
 class PasswordRecoverForm extends Model
@@ -47,7 +48,7 @@ class PasswordRecoverForm extends Model
 
     protected function canRevealIdentity(): bool
     {
-        return !Yii::$app->getUser()->enableUserEnumerationProtection;
+        return !WebUser::current()?->enableUserEnumerationProtection;
     }
 
     #[Override]

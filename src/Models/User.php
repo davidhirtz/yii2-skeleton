@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Models;
 
 use DateTimeZone;
-use davidhirtz\yii2\datetime\DateTime;
-use davidhirtz\yii2\datetime\DateTimeBehavior;
 use Hirtz\Skeleton\Behaviors\TimestampBehavior;
 use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
@@ -26,8 +24,11 @@ use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Modules\ModuleTrait;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Hirtz\Skeleton\Validators\UniqueValidator;
+use Hirtz\Skeleton\Web\User as WebUser;
 use Override;
 use Yii;
+use davidhirtz\yii2\datetime\DateTime;
+use davidhirtz\yii2\datetime\DateTimeBehavior;
 use yii\base\NotSupportedException;
 use yii\web\IdentityInterface;
 
@@ -532,7 +533,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
      */
     protected function isSearchResultVisible(): bool
     {
-        return Yii::$app->has('user') && Yii::$app->getUser()->can(static::AUTH_USER);
+        return WebUser::current()?->can(static::AUTH_USER) ?? false;
     }
 
     public function getAuthKey(): ?string

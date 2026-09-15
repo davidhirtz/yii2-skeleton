@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Filters;
 
+use Hirtz\Skeleton\Web\Application;
 use Override;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -46,12 +47,12 @@ class PageCache extends \yii\filters\PageCache
     #[Override]
     public function init(): void
     {
-        $request = Yii::$app->getRequest();
+        $request = Application::current()->getRequest();
 
         if ($this->enabled) {
             $this->enabled = (!$this->disableForPostRequests || $request->getIsGet())
                 && !$request->getIsDraft()
-                && (!$this->disableForUsers || Yii::$app->getUser()->getIsGuest())
+                && (!$this->disableForUsers || Application::current()->getUser()->getIsGuest())
                 && (!$this->noCacheParam || !$request->get($this->noCacheParam));
         }
 

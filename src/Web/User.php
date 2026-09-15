@@ -18,6 +18,16 @@ use yii\web\Response;
 class User extends \yii\web\User
 {
     /**
+     * The console application has no `user` component, so shared code — a model's blameable attributes, the trail,
+     * a search result's visibility — asks for the identity holder instead of assuming a web request.
+     */
+    public static function current(): ?static
+    {
+        $user = Yii::$app->has('user') ? Yii::$app->get('user') : null;
+        return $user instanceof static ? $user : null;
+    }
+
+    /**
      * @var int the cookie lifetime in seconds
      */
     public int $cookieLifetime = 2_592_000;
@@ -118,7 +128,7 @@ class User extends \yii\web\User
             $this->enableAutoLogin = false;
         }
 
-        $request = Yii::$app->getRequest();
+        $request = Application::current()->getRequest();
 
         $this->ipAddress ??= $request->getUserIP();
         $this->identityCookie['secure'] ??= $this->cookieSecure ?? $request->getIsSecureConnection();
@@ -129,15 +139,15 @@ class User extends \yii\web\User
     #[Override]
     public function loginRequired($checkAjax = true, $checkAcceptHeader = true): ?Response
     {
-        $request = Yii::$app->getRequest();
+        $request = Application::current()->getRequest();
 
         // Set flash message for required logins.
         if (!$checkAjax || !$request->getIsAjax()) {
-            Yii::$app->getSession()->addFlash('error', Yii::t('skeleton', 'USER_ERROR_MUST_LOGIN_VIEW'));
+            Application::current()->getSession()->addFlash('error', Yii::t('skeleton', 'USER_ERROR_MUST_LOGIN_VIEW'));
         }
 
         if ($request->isHtmxRequest()) {
-            return Yii::$app->getResponse()->setHtmxRefresh();
+            return Application::current()->getResponse()->setHtmxRefresh();
         }
 
         return parent::loginRequired($checkAjax, $checkAcceptHeader);
@@ -153,7 +163,7 @@ class User extends \yii\web\User
     #[Override]
     protected function renewIdentityCookie(): void
     {
-        $value = Yii::$app->getRequest()->getCookies()->getValue($this->identityCookie['name']);
+        $value = Application::current()->getRequest()->getCookies()->getValue($this->identityCookie['name']);
 
         if ($value === null) {
             return;
@@ -194,12 +204,12 @@ class User extends \yii\web\User
     #[Override]
     protected function afterLogin($identity, $cookieBased, $duration): void
     {
-        $session = Yii::$app->getSession();
+        $session = Application::current()->getSession();
         $session->set('last_login_timestamp', $identity->last_login?->getTimestamp());
 
         if ($session instanceof MultiFieldSession) {
             $session->writeCallback = fn () => [
-                'ip_address' => ($ipAddress = Yii::$app->getRequest()->getUserIP()) ? inet_pton($ipAddress) : null,
+                'ip_address' => ($ipAddress = Application::current()->getRequest()->getUserIP()) ? inet_pton($ipAddress) : null,
                 'user_id' => $identity->id,
             ];
         }
@@ -227,7 +237,7 @@ class User extends \yii\web\User
     #[Override]
     protected function afterLogout($identity): void
     {
-        $session = Yii::$app->getSession();
+        $session = Application::current()->getSession();
 
         if ($session instanceof MultiFieldSession) {
             $session->writeCallback = fn () => [
@@ -235,8 +245,8 @@ class User extends \yii\web\User
             ];
         }
 
-        if (Yii::$app->getRequest()->isHtmxRequest()) {
-            Yii::$app->getResponse()->setHtmxRefresh();
+        if (Application::current()->getRequest()->isHtmxRequest()) {
+            Application::current()->getResponse()->setHtmxRefresh();
         }
 
         parent::afterLogout($identity);
@@ -244,13 +254,13 @@ class User extends \yii\web\User
 
     private function insertLogin(\Hirtz\Skeleton\Models\User $user): void
     {
-        $browser = Yii::$app->getRequest()->getUserAgent();
+        $browser = Application::current()->getRequest()->getUserAgent();
 
         if (is_string($browser)) {
             $browser = mb_substr($browser, 0, 255, Yii::$app->charset);
         }
 
-        $ipAddress = $this->ipAddress ?: Yii::$app->getRequest()->getUserIP();
+        $ipAddress = $this->ipAddress ?: Application::current()->getRequest()->getUserIP();
         $ipAddress = $ipAddress ? inet_pton($ipAddress) : null;
 
         $columns = [
@@ -394,7 +404,7 @@ class User extends \yii\web\User
     public function destroyOtherSessions(?\Hirtz\Skeleton\Models\User $user = null): int
     {
         $user ??= $this->getIdentity();
-        $session = Yii::$app->getSession();
+        $session = Application::current()->getSession();
 
         if (!$user?->id || !$session instanceof DbSession) {
             return 0;

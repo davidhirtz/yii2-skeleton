@@ -34,9 +34,9 @@ class ActiveForm extends Widget
     use ModelTrait;
 
     /**
-     * @var array<int|string, mixed>|string|false|null
+     * @var array<int|string, mixed>|string|null
      */
-    public array|string|false|null $action = null;
+    public array|string|null $action = null;
 
     public bool $hasStickyButtons = true;
     protected string $layout = "{errors}{rows}{buttons}{footer}";
@@ -63,14 +63,14 @@ class ActiveForm extends Widget
     protected array $excludedErrorProperties = [];
 
     /**
-     * @var Stringable[]|Field[][]|string[][]|string[]|null
+     * @var array<array<Field|Stringable|string|null>|Stringable|string>|null
      */
     protected ?array $rows = null;
 
     /**
-     * @param array<int|string, mixed>|string|false|null $action
+     * @param array<int|string, mixed>|string|null $action
      */
-    public function action(array|string|false|null $action): static
+    public function action(array|string|null $action): static
     {
         $this->action = $action ? Url::to($action) : $action;
         return $this;
@@ -80,10 +80,10 @@ class ActiveForm extends Widget
      * The closure form is what an outside listener uses to insert a field of its own: the collection is not
      * public, so it is handed the current one and returns the one it wants.
      *
-     * @param array<mixed>|false|null|Closure(array<mixed>): (array<mixed>|false|null) $rows
+     * @param array<mixed>|null|Closure(array<mixed>): (array<mixed>|null) $rows
      * @return $this
      */
-    public function rows(array|false|null|Closure $rows): static
+    public function rows(array|null|Closure $rows): static
     {
         $this->rows = $rows instanceof Closure
             ? $rows($this->rows ?? [])

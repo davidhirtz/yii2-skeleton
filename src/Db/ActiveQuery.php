@@ -325,18 +325,14 @@ class ActiveQuery extends \yii\db\ActiveQuery
     /**
      * Prefixes given `columns` with the table alias.
      *
-     * @param list<string> $columns
+     * @param array<string> $columns
      * @return list<string>
      */
     public function prefixColumns(array $columns): array
     {
         $alias = $this->getTableAlias();
 
-        foreach ($columns as &$column) {
-            $column = "$alias.[[$column]]";
-        }
-
-        return $columns;
+        return array_values(array_map(static fn (string $column): string => "$alias.[[$column]]", $columns));
     }
 
     /**
@@ -411,7 +407,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
      */
     public function splitSearchString(?string $search): array
     {
-        return array_filter(preg_split('/[\s,]+/', $this->sanitizeSearchString($search)));
+        return array_values(array_filter(preg_split('/[\s,]+/', $this->sanitizeSearchString($search)) ?: []));
     }
 
     public function sanitizeSearchString(?string $search): string

@@ -48,7 +48,7 @@ class XmlNode
 
         // The empty prefix comes last, it reads whatever carries no namespace and must not be overridden by a
         // default namespace declared on the document.
-        $prefixes = [...array_keys($element->getDocNamespaces(true)), ''];
+        $prefixes = [...array_keys($element->getDocNamespaces(true) ?: []), ''];
 
         foreach ($prefixes as $prefix) {
             foreach ($element->attributes($prefix, true) ?? [] as $name => $value) {

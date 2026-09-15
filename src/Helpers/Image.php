@@ -11,6 +11,7 @@ use Imagine\Image\Palette\Color\ColorInterface;
 use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
 use Yii;
+use yii\base\InvalidArgumentException;
 use yii\db\Exception;
 use yii\imagine\BaseImage;
 
@@ -135,6 +136,11 @@ class Image extends BaseImage
     {
         try {
             $svg = simplexml_load_file($filename);
+
+            if (!$svg) {
+                return false;
+            }
+
             $attributes = $svg->attributes();
             $dimensions = [0, 0];
 
@@ -155,7 +161,7 @@ class Image extends BaseImage
         return false;
     }
 
-    public static function setImageRotation(ImageInterface|string $image, ?int $rotation = null): ImageInterface
+    public static function setImageRotation(ImageInterface $image, ?int $rotation = null): ImageInterface
     {
         if ($image instanceof \Imagine\Imagick\Image) {
             $imagick = $image->getImagick();
@@ -171,7 +177,13 @@ class Image extends BaseImage
         // Prevent loading remote resources via Imagine as doesn't support stream wrappers
         // such as Amazon S3. This makes sure remote files are loaded via fopen.
         if (is_string($image) && !stream_is_local($image = Yii::getAlias($image))) {
-            $image = fopen($image, 'r');
+            $stream = fopen($image, 'r');
+
+            if ($stream === false) {
+                throw new InvalidArgumentException("Remote file \"$image\" could not be opened.");
+            }
+
+            $image = $stream;
         }
 
         return parent::ensureImageInterfaceInstance($image);

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models;
 
-use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\I18n\Message;
 use Hirtz\Skeleton\Models\Collections\TrailModelCollection;
@@ -15,9 +14,11 @@ use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
 use Hirtz\Skeleton\Models\Types\TrailType;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\TrailGridView;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
+use Hirtz\Skeleton\Web\User as WebUser;
 use Override;
 use ReflectionClass;
 use Yii;
+use davidhirtz\yii2\datetime\DateTime;
 use yii\base\Model;
 use yii\db\ActiveRecordInterface;
 
@@ -83,8 +84,10 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
     #[Override]
     public function beforeSave($insert): bool
     {
-        if (Yii::$app->has('user')) {
-            $this->user_id = Yii::$app->getUser()->getId();
+        $webuser = WebUser::current();
+
+        if ($webuser) {
+            $this->user_id = $webuser->getId();
         }
 
         if (is_array($this->model_id)) {

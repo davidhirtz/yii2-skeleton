@@ -40,7 +40,7 @@ class ErrorHandler extends \yii\web\ErrorHandler
      */
     protected function redirectRequestUri(): bool
     {
-        $url = trim((string)Yii::$app->getRequest()->getUrl(), '/');
+        $url = trim((string)Application::current()->getRequest()->getUrl(), '/');
 
         if (!$url) {
             return false;
@@ -53,7 +53,7 @@ class ErrorHandler extends \yii\web\ErrorHandler
             return false;
         }
 
-        $response = Yii::$app->getResponse();
+        $response = Application::current()->getResponse();
         $response->redirect($redirect->getBaseUrl() . $redirect->url, $redirect->type);
         $response->send();
 

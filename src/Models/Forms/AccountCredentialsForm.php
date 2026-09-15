@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Models\Forms;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\Forms\Traits\UserFormTrait;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Web\Application;
 use Override;
 use Yii;
 use yii\base\Model;
@@ -106,8 +107,8 @@ class AccountCredentialsForm extends Model
     protected function afterSave(): void
     {
         if ($this->email !== $this->user->email) {
-            $session = Yii::$app->getSession();
-            $webuser = Yii::$app->getUser();
+            $session = Application::current()->getSession();
+            $webuser = Application::current()->getUser();
 
             if (!$webuser->isUnconfirmedEmailLoginEnabled()) {
                 $webuser->logout(false);
@@ -120,7 +121,7 @@ class AccountCredentialsForm extends Model
 
         if ($this->newPassword) {
             $this->user->afterPasswordChange();
-            Yii::$app->getUser()->destroyOtherSessions($this->user);
+            Application::current()->getUser()->destroyOtherSessions($this->user);
         }
     }
 

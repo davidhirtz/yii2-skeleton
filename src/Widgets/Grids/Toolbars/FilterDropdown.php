@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\TextInput;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Navs\Dropdown;
 use Hirtz\Skeleton\Widgets\Navs\DropdownOptionLink;
 use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
@@ -82,7 +83,7 @@ class FilterDropdown extends Widget
 
         $this->default ??= Yii::t('skeleton', 'FILTER_DROPDOWN_SHOW_ALL');
         $this->placeholder ??= Yii::t('skeleton', 'FILTER_DROPDOWN_FILTER');
-        $this->value ??= Yii::$app->getRequest()->get($this->paramName);
+        $this->value ??= Application::current()->getRequest()->get($this->paramName);
 
         if ($this->showFilterThreshold !== false) {
             $this->filterable ??= count($this->items) >= $this->showFilterThreshold;

@@ -38,8 +38,7 @@ class RedirectActiveDataProvider extends ActiveDataProvider
             $this->query->andWhere(['updated_by_user_id' => $this->user->id]);
         }
 
-        $this->getPagination()->defaultPageSize = 50;
-        $this->getPagination()->pageSizeLimit = false;
+        $this->setPagination(['defaultPageSize' => 50, 'pageSizeLimit' => false]);
 
         $this->getSort()->defaultOrder = ['updated_at' => SORT_DESC];
 

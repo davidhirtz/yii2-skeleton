@@ -49,8 +49,7 @@ class TrailActiveDataProvider extends ActiveDataProvider
         }
 
         $this->setSort(false);
-        $this->getPagination()->defaultPageSize = 50;
-        $this->getPagination()->pageSizeLimit = false;
+        $this->setPagination(['defaultPageSize' => 50, 'pageSizeLimit' => false]);
 
         parent::init();
     }

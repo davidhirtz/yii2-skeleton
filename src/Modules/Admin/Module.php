@@ -8,7 +8,9 @@ use Hirtz\Skeleton\Console\Controllers\TrailController;
 use Hirtz\Skeleton\Console\Controllers\UserLoginController;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\Request;
+use Hirtz\Skeleton\Web\User as WebUser;
 use Hirtz\Skeleton\Widgets\Panels\Dashboard;
 use Hirtz\Skeleton\Widgets\Panels\DashboardItem;
 use Override;
@@ -74,15 +76,17 @@ class Module extends \Hirtz\Skeleton\Base\Module
             // implementations or REST APIs that use admin endpoints.
             if ($request->isDraftRequest() && !$request->getIsAjax()) {
                 $url = Yii::$app->getUrlManager()->createAbsoluteUrl($request->getUrl());
-                Yii::$app->getResponse()->redirect($url)->send();
+                Application::current()->getResponse()->redirect($url)->send();
             }
         }
 
-        if (Yii::$app->has('user')) {
-            Yii::$app->getUser()->loginUrl ??= ['/admin/account/login'];
+        $webuser = WebUser::current();
+
+        if ($webuser) {
+            $webuser->loginUrl ??= ['/admin/account/login'];
 
             if (!YII_DEBUG) {
-                Yii::$app->getErrorHandler()->errorView = self::ERROR_VIEW;
+                Application::current()->getErrorHandler()->errorView = self::ERROR_VIEW;
             }
         }
 
@@ -126,7 +130,7 @@ class Module extends \Hirtz\Skeleton\Base\Module
             $this->setSessionLanguage($language);
         }
 
-        $identity = Yii::$app->has('user') ? Yii::$app->getUser()->getIdentity() : null;
+        $identity = WebUser::current()?->getIdentity();
         $language = $this->getSessionLanguage() ?? $identity?->language;
 
         if ($language && $this->hasLanguage($language)) {

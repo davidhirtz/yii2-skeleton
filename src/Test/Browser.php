@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Test;
 
 use Exception;
+use Hirtz\Skeleton\Web\Application;
 use Symfony\Component\BrowserKit\AbstractBrowser;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\BrowserKit\Request;
@@ -72,10 +73,10 @@ class Browser extends AbstractBrowser
             }
         }
 
-        $response = Yii::$app->getResponse();
+        $response = Application::current()->getResponse();
 
-        if (Yii::$app->getRequest()->enableCookieValidation) {
-            $validationKey = Yii::$app->getRequest()->cookieValidationKey;
+        if (Application::current()->getRequest()->enableCookieValidation) {
+            $validationKey = Application::current()->getRequest()->cookieValidationKey;
         }
 
         /** @var \yii\web\Cookie $cookie */
@@ -100,7 +101,7 @@ class Browser extends AbstractBrowser
             ));
         }
 
-        $content = ob_get_clean();
+        $content = ob_get_clean() ?: '';
 
         $status = $response->getStatusCode();
         $headers = $response->getHeaders()->toArray();

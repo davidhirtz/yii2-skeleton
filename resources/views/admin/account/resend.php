@@ -12,6 +12,7 @@ declare(strict_types=1);
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Models\Forms\AccountResendConfirmForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\AccountResendConfirmActiveForm;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Panels\Card;
@@ -35,6 +36,6 @@ echo Container::make()
                     ->label(Yii::t('skeleton', 'ACCOUNT_BACK_TO_LOGIN'))
                     ->icon('sign-in-alt')
                     ->url(Url::to(['login']))
-                    ->visible(Yii::$app->getUser()->getIsGuest())
+                    ->visible(Application::current()->getUser()->getIsGuest())
             )
     );

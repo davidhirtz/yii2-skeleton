@@ -8,6 +8,7 @@ use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Db\ActiveQuery;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
+use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
 use Hirtz\Skeleton\Search\Search;
 use Hirtz\Skeleton\Search\SearchDocument;
@@ -53,7 +54,7 @@ trait SearchableTrait
     }
 
     /**
-     * @param class-string|null $modelClass
+     * @param class-string<SearchableInterface>|null $modelClass
      * @return list<SearchDocument>
      */
     public function getSearchDocuments(?string $modelClass = null): array

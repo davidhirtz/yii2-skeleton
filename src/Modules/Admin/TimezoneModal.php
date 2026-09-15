@@ -9,6 +9,7 @@ use DateTimeZone;
 use Hirtz\Skeleton\Html\P;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Modal;
 use Hirtz\Skeleton\Widgets\Widget;
@@ -27,7 +28,7 @@ class TimezoneModal extends Widget
      */
     public function __construct(array $config = [])
     {
-        $this->session = Yii::$app->getSession();
+        $this->session = Application::current()->getSession();
         parent::__construct($config);
     }
 
@@ -84,7 +85,7 @@ class TimezoneModal extends Widget
         return Button::make()
             ->primary()
             ->content(Yii::t('skeleton', 'TIMEZONE_MODAL_UPDATE_TIMEZONE'))
-            ->post(['/admin/account/timezone', 'redirect' => Yii::$app->getRequest()->getUrl()])
+            ->post(['/admin/account/timezone', 'redirect' => Application::current()->getRequest()->getUrl()])
             ->attribute('data-timezone-button', '');
     }
 }

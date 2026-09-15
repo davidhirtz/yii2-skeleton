@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Models\Forms;
 
-use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
+use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Models\Forms\Traits\UserFormTrait;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Web\Application;
 use Override;
 use Yii;
+use davidhirtz\yii2\datetime\DateTime;
 use yii\base\Model;
-use Hirtz\Skeleton\Helpers\Url;
 
 ;
 
@@ -101,7 +102,7 @@ class UserForm extends Model
             $this->user->email_confirmed_at ??= new DateTime();
         }
 
-        $this->user->created_by_user_id ??= Yii::$app->getUser()->getId();
+        $this->user->created_by_user_id ??= Application::current()->getUser()->getId();
 
         return true;
     }
@@ -110,7 +111,7 @@ class UserForm extends Model
     {
         if ($this->newPassword) {
             $this->user->afterPasswordChange();
-            Yii::$app->getUser()->destroyOtherSessions($this->user);
+            Application::current()->getUser()->destroyOtherSessions($this->user);
         }
 
         // The credentials email never carries the password, so it needs a reset link whether or not one was set
@@ -137,7 +138,7 @@ class UserForm extends Model
 
     public function getLoginUrl(): string
     {
-        return Url::to(Yii::$app->getUser()->loginUrl, true);
+        return Url::to(Application::current()->getUser()->loginUrl, true);
     }
 
     /**

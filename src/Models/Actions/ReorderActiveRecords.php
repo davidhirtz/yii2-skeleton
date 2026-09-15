@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Models\Actions;
 
 use Hirtz\Skeleton\Helpers\ArrayHelper;
+use Hirtz\Skeleton\Web\Request;
 use Yii;
 use yii\db\ActiveRecordInterface;
 
@@ -88,7 +89,7 @@ class ReorderActiveRecords
      */
     public static function runWithBodyParam(string $paramName, array $config = []): int|false
     {
-        $order = array_map(intval(...), array_filter(Yii::$app->getRequest()->getBodyParam($paramName, [])));
+        $order = array_map(intval(...), array_filter(Request::current()?->getBodyParam($paramName, []) ?? []));
 
         if ($order) {
             $action = Yii::createObject(static::class, [...array_values($config), $order]);

@@ -76,7 +76,7 @@ trait CustomAttributesTrait
      */
     public function getCustomAttributeDefinitions(): array
     {
-        $key = json_encode($this->getCustomAttributesKey());
+        $key = json_encode($this->getCustomAttributesKey(), JSON_THROW_ON_ERROR);
 
         if ($this->customAttributeDefinitions !== null) {
             if ($this->customAttributesKey === $key) {

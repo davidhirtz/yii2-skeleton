@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * Yii returns `false` here to mean "the request was not parsed" and never `true`, and its prose documents the
+ * array as the route and its parameters — only the `@return array|bool` docblock is looser than that.
+ */
+
+namespace yii\web;
+
+class UrlManager
+{
+    /**
+     * @param mixed $request
+     * @return array{string, array<string, mixed>}|false
+     */
+    public function parseRequest($request)
+    {
+    }
+}

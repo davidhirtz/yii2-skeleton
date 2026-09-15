@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Custom\RelativeTime;
 use Hirtz\Skeleton\Modules\Admin\Controllers\SystemController;
 use Hirtz\Skeleton\Modules\Admin\Module;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Panels\InfoList;
 use Override;
 use PDO;
@@ -79,7 +80,7 @@ class ApplicationInfo extends InfoList
 
     protected function addEnvironmentRow(): void
     {
-        $request = Yii::$app->getRequest();
+        $request = Application::current()->getRequest();
 
         $this->addRow(
             Yii::t('skeleton', 'SYSTEM_ENVIRONMENT'),

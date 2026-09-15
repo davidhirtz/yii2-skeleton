@@ -63,12 +63,14 @@ class StreamUploadedFile extends UploadedFile
 
         Yii::debug("Can write", __METHOD__);
 
-        $this->size = @file_put_contents($this->tempName, $contents);
+        $size = @file_put_contents($this->tempName, $contents);
 
-        if (!$this->size) {
+        if (!$size) {
             $this->error = UPLOAD_ERR_CANT_WRITE;
             return;
         }
+
+        $this->size = $size;
 
         Yii::debug("Has size", __METHOD__);
 

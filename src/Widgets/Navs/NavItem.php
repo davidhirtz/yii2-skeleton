@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Html\Li;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Buttons\Badge;
 use Hirtz\Skeleton\Widgets\Navs\Traits\ItemTrait;
 use Hirtz\Skeleton\Widgets\Traits\IconTrait;
@@ -113,7 +114,7 @@ class NavItem extends Widget
             $link->addContent($badge);
         }
 
-        $this->active ??= $this->hasActiveRoute() ?? Yii::$app->getRequest()->getUrl() === $link->attributes['href'];
+        $this->active ??= $this->hasActiveRoute() ?? Application::current()->getRequest()->getUrl() === $link->attributes['href'];
 
         if ($this->active) {
             $link->addClass('active');
@@ -128,7 +129,7 @@ class NavItem extends Widget
             return false;
         }
 
-        $request = Yii::$app->getRequest();
+        $request = Application::current()->getRequest();
 
         foreach ($this->routes as $route => $params) {
             if (is_int($route)) {

@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Widgets\Grids;
 use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
 use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Helpers\Url;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Yii;
 
@@ -58,7 +59,7 @@ class GridSearch
     public function getValue(): string
     {
         if ($this->value === null) {
-            $this->value = Yii::$app->getRequest()->get($this->paramName);
+            $this->value = Application::current()->getRequest()->get($this->paramName);
             $this->value = trim($this->value ?? '');
         }
 

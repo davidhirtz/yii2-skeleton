@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Models\Traits\IdentityTrait;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Models\UserLogin;
 use Hirtz\Skeleton\Validators\TwoFactorAuthenticationValidator;
+use Hirtz\Skeleton\Web\Application;
 use Override;
 use Yii;
 use yii\base\Model;
@@ -72,7 +73,7 @@ class LoginForm extends Model
     #[Override]
     public function beforeValidate(): bool
     {
-        $webuser = Yii::$app->getUser();
+        $webuser = Application::current()->getUser();
 
         if (!$webuser->isLoginEnabled()) {
             $this->addError('email', Yii::t('skeleton', 'USER_SORRY_LOGGING_CURRENTLY'));
@@ -115,14 +116,14 @@ class LoginForm extends Model
 
     protected function validateLoginStatus(): void
     {
-        if ($this->user->isUnconfirmed() && !Yii::$app->getUser()->isUnconfirmedEmailLoginEnabled()) {
+        if ($this->user->isUnconfirmed() && !Application::current()->getUser()->isUnconfirmedEmailLoginEnabled()) {
             $this->addError('status', Yii::t('skeleton', 'USER_EMAIL_ADDRESS_NOT'));
         }
     }
 
     protected function validateTwoFactorAuthenticatorCode(): void
     {
-        if (!Yii::$app->getUser()->isTwoFactorAuthenticationRequired($this->user)) {
+        if (!Application::current()->getUser()->isTwoFactorAuthenticationRequired($this->user)) {
             return;
         }
 
@@ -154,7 +155,7 @@ class LoginForm extends Model
 
     public function login(): bool
     {
-        $webuser = Yii::$app->getUser();
+        $webuser = Application::current()->getUser();
 
         if ($this->validate()) {
             $webuser->loginType = UserLogin::TYPE_LOGIN;

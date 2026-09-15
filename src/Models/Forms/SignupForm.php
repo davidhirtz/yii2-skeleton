@@ -6,6 +6,8 @@ namespace Hirtz\Skeleton\Models\Forms;
 
 use Hirtz\Skeleton\Models\Traits\SignupEmailTrait;
 use Hirtz\Skeleton\Models\UserLogin;
+use Hirtz\Skeleton\Web\Application;
+use Hirtz\Skeleton\Web\User as WebUser;
 use Override;
 use Yii;
 
@@ -100,7 +102,7 @@ class SignupForm extends AbstractSignupForm
     #[Override]
     public function beforeValidate(): bool
     {
-        if (!Yii::$app->getUser()->isSignupEnabled()) {
+        if (!Application::current()->getUser()->isSignupEnabled()) {
             $this->addError('id', Yii::t('skeleton', 'COMMON_SORRY_SIGNING_UP'));
             return false;
         }
@@ -126,11 +128,11 @@ class SignupForm extends AbstractSignupForm
 
     protected function validateIp(): void
     {
-        if (!Yii::$app->has('user') || !$this->spamProtectionInSeconds) {
+        $webuser = WebUser::current();
+
+        if (!$webuser || !$this->spamProtectionInSeconds) {
             return;
         }
-
-        $webuser = Yii::$app->getUser();
 
         if ($webuser->ipAddress) {
             $signup = UserLogin::find()
@@ -156,7 +158,7 @@ class SignupForm extends AbstractSignupForm
         $token = $this->getSessionToken();
 
         if ($token !== null) {
-            $tokenCreatedAt = Yii::$app->getSession()->get(self::SESSION_TIMESTAMP_NAME);
+            $tokenCreatedAt = Application::current()->getSession()->get(self::SESSION_TIMESTAMP_NAME);
 
             if ($this->token !== $token || $tokenCreatedAt === null) {
                 $this->addError('token', Yii::t('skeleton', 'SIGNUP_SIGN_UP_COULD'));
@@ -175,7 +177,7 @@ class SignupForm extends AbstractSignupForm
     public function afterInsert(): void
     {
         if ($this->getSessionToken() !== null) {
-            Yii::$app->getSession()->set(static::SESSION_TOKEN_NAME, '');
+            Application::current()->getSession()->set(static::SESSION_TOKEN_NAME, '');
         }
 
         $this->createUserLogin();
@@ -184,7 +186,7 @@ class SignupForm extends AbstractSignupForm
 
     private function createUserLogin(): void
     {
-        $webuser = Yii::$app->getUser();
+        $webuser = Application::current()->getUser();
 
         if ($webuser->isUnconfirmedEmailLoginEnabled() && !$webuser->isTwoFactorAuthenticationRequired($this->user)) {
             $webuser->loginType = UserLogin::TYPE_SIGNUP;
@@ -198,7 +200,7 @@ class SignupForm extends AbstractSignupForm
      */
     public function getSessionToken(): ?string
     {
-        $session = Yii::$app->getSession();
+        $session = Application::current()->getSession();
         $time = time();
 
         $isExpired = $session->get(self::SESSION_TIMESTAMP_NAME, 0) < $time - static::SESSION_TOKEN_MAX_TIME;

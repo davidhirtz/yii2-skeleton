@@ -19,8 +19,8 @@ class LogFile extends Model
     {
         $log = static::create();
         $log->name = pathinfo($filename, PATHINFO_BASENAME);
-        $log->size = filesize($filename);
-        $log->updated_at = filemtime($filename);
+        $log->size = filesize($filename) ?: 0;
+        $log->updated_at = filemtime($filename) ?: 0;
 
         return $log;
     }

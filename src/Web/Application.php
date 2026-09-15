@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Base\Traits\ApplicationTrait;
 use Hirtz\Skeleton\Rbac\DbManager;
 use Override;
 use Yii;
+use yii\base\InvalidCallException;
 use yii\debug\Module;
 use yii\symfonymailer\Mailer;
 use yii\web\Cookie;
@@ -32,6 +33,22 @@ use yii\web\Cookie;
 class Application extends \yii\web\Application
 {
     use ApplicationTrait;
+
+    /**
+     * `Yii::$app` is either application, so code that only ever runs under a web request asks for this one and
+     * code that runs under both keeps `Yii::$app` and narrows — which is what makes a console command reaching
+     * for `getUser()` or `getSession()` a static analysis error rather than a runtime surprise.
+     */
+    public static function current(): static
+    {
+        $app = Yii::$app;
+
+        if (!$app instanceof static) {
+            throw new InvalidCallException('This can only be called from a web application.');
+        }
+
+        return $app;
+    }
 
     /**
      * @param array<array-key, mixed> $config

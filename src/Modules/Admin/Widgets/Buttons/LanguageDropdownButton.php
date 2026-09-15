@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Buttons;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Modules\ModuleTrait;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Icon;
 use Hirtz\Skeleton\Widgets\Navs\Dropdown;
@@ -70,7 +71,7 @@ class LanguageDropdownButton extends Widget
      */
     protected function getUrl(string $language): string
     {
-        $param = Yii::$app->getRequest()->languageParam;
+        $param = Application::current()->getRequest()->languageParam;
         $url = Url::current([$param => null]);
 
         return $url . (str_contains($url, '?') ? '&' : '?') . http_build_query([$param => $language]);

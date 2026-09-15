@@ -43,7 +43,7 @@ class Controller extends \yii\web\Controller
 
     public function __construct($id, $module, $config = [])
     {
-        $this->webuser = Yii::$app->getUser();
+        $this->webuser = Application::current()->getUser();
         parent::__construct($id, $module, $config);
     }
 
@@ -95,7 +95,7 @@ class Controller extends \yii\web\Controller
         }
 
         if ($value) {
-            Yii::$app->getSession()->addFlash('danger', $value);
+            Application::current()->getSession()->addFlash('danger', $value);
         }
 
         return $this;
@@ -111,7 +111,7 @@ class Controller extends \yii\web\Controller
         }
 
         if ($value) {
-            Yii::$app->getSession()->addFlash('success', $value);
+            Application::current()->getSession()->addFlash('success', $value);
         }
 
         return $this;
@@ -123,7 +123,7 @@ class Controller extends \yii\web\Controller
     public function warning(array|string|null $value): static
     {
         if ($value) {
-            Yii::$app->getSession()->addFlash('warning', $value);
+            Application::current()->getSession()->addFlash('warning', $value);
         }
 
         return $this;

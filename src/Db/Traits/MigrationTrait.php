@@ -514,7 +514,7 @@ trait MigrationTrait
             ->orderBy(['attribute' => SORT_ASC, 'language' => SORT_ASC])
             ->all($this->getDb());
 
-        return array_map(static fn (array $row): array => [(string)$row['attribute'], (string)$row['language']], $rows);
+        return array_values(array_map(static fn (array $row): array => [(string)$row['attribute'], (string)$row['language']], $rows));
     }
 
     /**
@@ -543,7 +543,7 @@ trait MigrationTrait
     }
 
     /**
-     * @param list<string> $names
+     * @param array<string> $names
      * @return string the attribute's last language column, so a new one lands beside its siblings
      */
     private function getPreviousI18nColumn(array $names, string $attribute): string

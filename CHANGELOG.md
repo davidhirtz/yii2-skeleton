@@ -1,5 +1,34 @@
 ## 3.0.0 (in development)
 
+- **The SAPI is stated at the access point, so `Yii::$app` can stay the `Console|Web` union.** `Web\Application::current()`
+  throws for code that only ever runs under a web request — everything under `Web\`, `Modules\Admin\`, `Widgets\`,
+  `Filters\` and the views — while `Web\User::current()` and `Web\Request::current()` answer `null` and are what
+  shared code uses. They replace the `Yii::$app->has('user') ? … : null` idiom, which guarded at runtime but left
+  the type unnarrowed, and they close four places that had no guard at all: `Html\Form::renderContent()` reached
+  from a mail template, `Models\Actions\ReorderActiveRecords::runWithBodyParam()`,
+  `Media\Helpers\Html::prepareLinkOptions()` and `Tenant\Models\Collections\TenantCollection::getFromRequest()`
+
+
+- **`Web\Request::post()` and `getBodyParams()` answer an array.** Yii answers an object for a body parser
+  configured to decode into one, which `Model::load()` rejects — so every one of the 39 `load($this->request->post())`
+  call sites across the bundles carried the object case. The shape is settled in one place instead
+
+- **`Web\UrlManager::$languages` is `?array`** and is read through the new `getLanguages()`, which resolves the
+  I18n default the way `Modules\Admin\Module::getLanguages()` does. The `false` the property also accepted was
+  never assigned anywhere and `count(false)` would have been a fatal. `Web\View::registerHrefLangLinkTags()` now
+  takes the language *identifiers* off it rather than its values, so a configured `en-US ⇒ en` produced an
+  alternate URL carrying no language prefix at all
+
+- `Widgets\Forms\ActiveForm::action()` and `rows()` no longer accept `false`: both properties are typed without
+  it, so passing one was a `TypeError`, and nothing ever did
+
+- `Helpers\Image::setImageRotation()` takes an `ImageInterface` — it returned whatever it was handed, so a string
+  was a `TypeError` against its own `: ImageInterface`. `getSvgDimensions()` answers `false` for an SVG
+  `simplexml_load_file()` cannot read, where it used to call a method on `false`
+
+- `Test\Fixtures\ActiveFixture::getDb()` answers the resolved `Connection` that `yii\test\DbFixture::$db`
+  still declares as a union
+
 - **A bundle installed as the root package runs its own `Bootstrap`.** Composer never lists the root package in
   `vendor/yiisoft/extensions.php`, so a bundle tested on its own had neither its namespace alias nor the
   migrations, modules and event handlers its bootstrap registers. `Base\RootPackage` asks Composer's runtime API which

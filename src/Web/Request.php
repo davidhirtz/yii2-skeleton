@@ -39,6 +39,16 @@ class Request extends \yii\web\Request
     private bool $isDraft = false;
 
     /**
+     * Both applications answer a request, so shared code — a mail template rendering a form, a collection reading
+     * a query parameter — asks for the web one instead of assuming the request carries a query string at all.
+     */
+    public static function current(): ?static
+    {
+        $request = Yii::$app->getRequest();
+        return $request instanceof static ? $request : null;
+    }
+
+    /**
      * Sets the host info via params after draft mode is checked. Setting the host info manually can be useful if
      * multiple domains link to a single website and the URLs (e.g., in the sitemap.xml) should be consistent or to
      * prevent faked header attacks (see https://www.acunetix.com/vulnerabilities/web/host-header-attack). The original
@@ -52,6 +62,31 @@ class Request extends \yii\web\Request
         }
 
         parent::init();
+    }
+
+    /**
+     * A body parser configured to decode into objects makes `yii\web\Request` answer one, which `Model::load()`
+     * rejects — every call site would have to handle it, so the shape is settled here instead.
+     *
+     * @return array<string, mixed>
+     */
+    #[Override]
+    public function getBodyParams(): array
+    {
+        $params = parent::getBodyParams();
+
+        return is_object($params) ? get_object_vars($params) : $params;
+    }
+
+    /**
+     * @param string|null $name
+     * @param mixed $defaultValue
+     * @return ($name is null ? array<string, mixed> : mixed)
+     */
+    #[Override]
+    public function post($name = null, $defaultValue = null)
+    {
+        return $name === null ? $this->getBodyParams() : parent::post($name, $defaultValue);
     }
 
     /**

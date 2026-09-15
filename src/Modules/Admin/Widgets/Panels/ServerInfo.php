@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Panels;
 
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Modules\Admin\Module;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Panels\InfoList;
 use Override;
 use Yii;
@@ -48,7 +49,7 @@ class ServerInfo extends InfoList
      */
     protected function addTrustedHostsRow(): void
     {
-        $trustedHosts = Yii::$app->getRequest()->trustedHosts;
+        $trustedHosts = Application::current()->getRequest()->trustedHosts;
         $forwarded = $this->findForwardedHeader();
 
         if (!$trustedHosts && $forwarded !== null) {
@@ -69,7 +70,7 @@ class ServerInfo extends InfoList
             Yii::t('skeleton', 'SYSTEM_TRUSTED_HOSTS'),
             $this->getValue(
                 $trustedHosts ? implode(' · ', $trustedHosts) : Yii::t('skeleton', 'SYSTEM_TRUSTED_HOSTS_NONE'),
-                Yii::$app->getRequest()->getIsSecureConnection()
+                Application::current()->getRequest()->getIsSecureConnection()
                     ? Yii::t('skeleton', 'SYSTEM_CONNECTION_SECURE')
                     : Yii::t('skeleton', 'SYSTEM_CONNECTION_INSECURE'),
             ),

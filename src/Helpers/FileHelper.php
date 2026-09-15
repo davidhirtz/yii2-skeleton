@@ -106,7 +106,7 @@ class FileHelper extends BaseFileHelper
 
         if ($phpdoc) {
             if (is_string($phpdoc)) {
-                $phpdoc = preg_split("/\r\n|\n|\r/", $phpdoc);
+                $phpdoc = preg_split("/\r\n|\n|\r/", $phpdoc) ?: [];
             }
 
             $phpdoc = "\n * " . implode("\n * ", $phpdoc) . "\n *";

@@ -59,10 +59,8 @@ class UserLoginController extends Controller
         $provider = new ActiveDataProvider([
             'sort' => false,
             'query' => $query,
+            'pagination' => ['defaultPageSize' => 50],
         ]);
-
-        $provider->getPagination()->defaultPageSize = 50;
-        $provider->setSort(false);
 
         return $this->render('index', [
             'provider' => $provider,

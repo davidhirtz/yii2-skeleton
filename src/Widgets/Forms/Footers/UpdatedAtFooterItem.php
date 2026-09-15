@@ -13,12 +13,13 @@ use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Hirtz\Skeleton\Widgets\Username;
 use Stringable;
 use Yii;
-use yii\db\ActiveRecord;
 use yii\base\Model;
+use yii\db\ActiveRecord;
 
 class UpdatedAtFooterItem implements Stringable
 {
@@ -59,7 +60,7 @@ class UpdatedAtFooterItem implements Stringable
                 'timestamp' => $timestamp,
             ]);
 
-        $url = $this->model instanceof TrailModelInterface && Yii::$app->getUser()->can(Trail::AUTH_TRAIL_INDEX)
+        $url = $this->model instanceof TrailModelInterface && Application::current()->getUser()->can(Trail::AUTH_TRAIL_INDEX)
             ? Trail::getAdminRouteByModel($this->model)
             : null;
 

@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Widgets;
 
 use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Stringable;
 use Yii;
@@ -19,7 +20,7 @@ class Flashes extends Widget
 
     protected function renderContent(): string|Stringable
     {
-        $this->alerts ??= Yii::$app->getSession()->getAllFlashes();
+        $this->alerts ??= Application::current()->getSession()->getAllFlashes();
 
         $content = Div::make()
             ->attribute('id', 'flashes')

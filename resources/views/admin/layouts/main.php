@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Modules\Admin\TimezoneModal;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\AsideToggleButton;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\AsideMenu;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\NavBar;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Flashes;
 use Hirtz\Skeleton\Widgets\Navs\Breadcrumbs;
@@ -33,7 +34,7 @@ AdminAssetBundle::register($this);
     <div class="wrap">
         <?= NavBar::make(); ?>
         <?= Flashes::make(); ?>
-        <div class="layout" id="wrap" hx-headers='{"X-CSRF-TOKEN":"<?= Yii::$app->getRequest()->getCsrfToken(); ?>"}'>
+        <div class="layout" id="wrap" hx-headers='{"X-CSRF-TOKEN":"<?= Application::current()->getRequest()->getCsrfToken(); ?>"}'>
             <?= AsideMenu::make(); ?>
             <?= TimezoneModal::make(); ?>
             <main class="main">

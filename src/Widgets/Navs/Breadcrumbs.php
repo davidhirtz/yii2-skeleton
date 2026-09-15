@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Html\Ol;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Models\Breadcrumb;
 use Hirtz\Skeleton\Modules\Admin\Module;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Traits\BreadcrumbTrait;
 use Hirtz\Skeleton\Widgets\Widget;
@@ -82,7 +83,7 @@ class Breadcrumbs extends Widget
     protected function addHomeBreadcrumb(): void
     {
         $this->breadcrumbs = [
-            $this->homeBreadcrumb ?? new Breadcrumb($this->getApplicationName(), Yii::$app->getHomeUrl()),
+            $this->homeBreadcrumb ?? new Breadcrumb($this->getApplicationName(), Application::current()->getHomeUrl()),
             ...$this->breadcrumbs,
         ];
     }
@@ -92,7 +93,7 @@ class Breadcrumbs extends Widget
      */
     protected function getApplicationName(): string
     {
-        $environment = Yii::$app->getRequest()->getEnvironmentName();
+        $environment = Application::current()->getRequest()->getEnvironmentName();
         return $environment ? Yii::$app->name . " ($environment)" : Yii::$app->name;
     }
 

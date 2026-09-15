@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Html;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Base\Tag;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
+use Hirtz\Skeleton\Web\Request;
 use Override;
 use Yii;
 
@@ -37,12 +38,14 @@ class Form extends Tag
     #[Override]
     protected function renderContent(): string
     {
-        if (strtolower($this->attributes['method']) === 'post') {
+        $request = Request::current();
+
+        if ($request && strtolower($this->attributes['method']) === 'post') {
             $this->content = [
                 TextInput::make()
                     ->type('hidden')
-                    ->name(Yii::$app->request->csrfParam)
-                    ->value(Yii::$app->request->getCsrfToken()),
+                    ->name($request->csrfParam)
+                    ->value($request->getCsrfToken()),
                 ...$this->content,
             ];
         }

@@ -116,7 +116,7 @@ class RedirectGridView extends GridView
             ->property('request_uri')
             ->content(fn (Redirect $redirect): Stringable => A::make()
                 ->content($this->search->markKeywords($redirect->request_uri))
-                ->href($redirect->getAdminRoute()));
+                ->href($redirect->getAdminRoute() ?: null));
     }
 
     protected function getUrlColumn(): ?Column

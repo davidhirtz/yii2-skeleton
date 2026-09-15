@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Models\Traits;
 
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Web\User as WebUser;
 use Yii;
 
 trait IdentityTrait
@@ -45,7 +46,7 @@ trait IdentityTrait
             return;
         }
 
-        $this->addError('email', Yii::$app->getUser()->enableUserEnumerationProtection
+        $this->addError('email', WebUser::current()?->enableUserEnumerationProtection
             ? Yii::t('skeleton', 'USER_EMAIL_PASSWORD_INCORRECT')
             : $message);
     }
