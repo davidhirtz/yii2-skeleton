@@ -131,7 +131,10 @@ class MaintenanceController extends Controller
             }
         }
 
-        if (copy(Yii::getAlias($this->maintenanceStubFile), Yii::getAlias(self::MAINTENANCE_FILE))) {
+        $file = Yii::getAlias(self::MAINTENANCE_FILE);
+        FileHelper::createDirectory(dirname($file));
+
+        if (copy(Yii::getAlias($this->maintenanceStubFile), $file)) {
             $this->stdout('Maintenance mode enabled.' . PHP_EOL, Console::FG_GREEN);
         }
     }

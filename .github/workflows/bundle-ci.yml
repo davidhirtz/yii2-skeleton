@@ -45,6 +45,11 @@ jobs:
           ini-values: memory_limit=1G
           coverage: none
 
+      # The runner ships MySQL's client, whose mysqldump fails against a MariaDB server; the backup and restore
+      # tests need the matching one.
+      - name: Use the MariaDB client
+        run: sudo apt-get install -y --no-install-recommends mariadb-client
+
       - name: Find the Composer cache
         id: composer-cache
         run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
