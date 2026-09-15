@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 
 use Hirtz\Skeleton\Assets\HexColorInputAssetBundle;
+use Hirtz\Skeleton\Html\Custom\ColorPicker;
 use Hirtz\Skeleton\Html\Input;
 use Hirtz\Skeleton\Widgets\Forms\InputGroup;
 use Stringable;
@@ -36,15 +37,16 @@ class HexColorField extends Field
             $hexValue = '#' . $hexValue[1] . $hexValue[1] . $hexValue[2] . $hexValue[2] . $hexValue[3] . $hexValue[3];
         }
 
-        return InputGroup::make()
-            ->prepend(Input::make()
-                ->attribute('id', "{$this->attributes['id']}-color")
-                ->type('color')
-                ->value($hexValue)
-                ->required())
-            ->content(Input::make()
-                ->attributes($this->attributes)
-                ->addClass('input'));
+        return ColorPicker::make()
+            ->content(InputGroup::make()
+                ->prepend(Input::make()
+                    ->attribute('id', "{$this->attributes['id']}-color")
+                    ->type('color')
+                    ->value($hexValue)
+                    ->required())
+                ->content(Input::make()
+                    ->attributes($this->attributes)
+                    ->addClass('input')));
     }
 
     protected function registerClientScript(): void
