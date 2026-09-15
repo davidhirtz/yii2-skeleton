@@ -71,6 +71,29 @@ class AuthItemGridViewTest extends TestCase
         self::assertStringContainsString('/admin/user-auth/index?id=' . $user->id, $this->renderItems($item));
     }
 
+    /**
+     * The button is what the actor could act on, so it is left out of the row of an item they cannot pass on
+     * themselves — {@see \Hirtz\Skeleton\Modules\Admin\Controllers\UserAuthController::getAuthItem()}
+     * refuses it either way.
+     */
+    public function testOnlyAnItemTheActorHoldsOffersAButton(): void
+    {
+        $actor = $this->getUserFromFixture('admin');
+        $this->assignPermission($actor->id, User::AUTH_USER_ASSIGN);
+        Yii::$app->getUser()->setIdentity($actor);
+
+        $target = $this->getUserFromFixture('disabled');
+
+        $held = AuthItem::findOne(['name' => User::AUTH_USER_ASSIGN]);
+        $notHeld = AuthItem::findOne(['name' => User::AUTH_ROLE_ADMIN]);
+
+        self::assertInstanceOf(AuthItem::class, $held);
+        self::assertInstanceOf(AuthItem::class, $notHeld);
+
+        self::assertStringContainsString('user-auth/create', $this->renderItemsForUser($target, $held));
+        self::assertStringNotContainsString('user-auth/create', $this->renderItemsForUser($target, $notHeld));
+    }
+
     private function render(string $name): string
     {
         $item = AuthItem::findOne(['name' => $name]);
@@ -82,9 +105,21 @@ class AuthItemGridViewTest extends TestCase
     private function renderItems(AuthItem ...$items): string
     {
         return (string)AuthItemGridView::make()
-            ->provider(new ArrayDataProvider([
-                'allModels' => $items,
-                'pagination' => false,
-            ]));
+            ->provider($this->getProvider(...$items));
+    }
+
+    private function renderItemsForUser(User $user, AuthItem ...$items): string
+    {
+        return (string)AuthItemGridView::make()
+            ->provider($this->getProvider(...$items))
+            ->user($user);
+    }
+
+    private function getProvider(AuthItem ...$items): ArrayDataProvider
+    {
+        return new ArrayDataProvider([
+            'allModels' => $items,
+            'pagination' => false,
+        ]);
     }
 }

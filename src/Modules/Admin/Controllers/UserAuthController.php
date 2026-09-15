@@ -15,6 +15,7 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\rbac\Permission;
 use yii\rbac\Role;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -100,6 +101,10 @@ class UserAuthController extends Controller
         return $this->redirect(['/admin/user-auth/index', 'id' => $user->id]);
     }
 
+    /**
+     * Nobody hands out what they do not hold themselves: an item the acting user cannot pass is refused, or
+     * `authUpdate` alone would be enough to assign the `admin` role and take the installation over.
+     */
     protected function getAuthItem(string $name, int $type): Permission|Role
     {
         $rbac = Yii::$app->getAuthManager();
@@ -112,6 +117,10 @@ class UserAuthController extends Controller
 
         if (!$role) {
             throw new NotFoundHttpException();
+        }
+
+        if (!$this->webuser->can($role->name)) {
+            throw new ForbiddenHttpException();
         }
 
         return $role;

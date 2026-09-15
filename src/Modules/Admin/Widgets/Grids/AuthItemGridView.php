@@ -126,11 +126,18 @@ class AuthItemGridView extends GridView
     }
 
     /**
+     * An item the acting user cannot pass themselves offers no button: {@see UserAuthController::getAuthItem()}
+     * refuses it either way.
+     *
      * @see UserAuthController::actionCreate()
      * @see UserAuthController::actionDelete()
      */
     protected function getButtonColumnContent(AuthItem $authItem): string
     {
+        if (!$this->webuser->can($authItem->name)) {
+            return '';
+        }
+
         $route = [
             $authItem->isAssigned ? '/admin/user-auth/delete' : '/admin/user-auth/create',
             'id' => $this->user->id,

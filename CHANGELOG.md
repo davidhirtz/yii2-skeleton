@@ -1,5 +1,17 @@
 ## 3.0.0 (in development)
 
+- **Nobody hands out an auth item they do not hold themselves.**
+  `Modules\Admin\Controllers\UserAuthController::getAuthItem()` refuses one the acting user cannot pass — a
+  `ForbiddenHttpException`, as an unmanageable target already is — and
+  `Modules\Admin\Widgets\Grids\AuthItemGridView` leaves its row without a button. `authUpdate` alone was
+  otherwise a takeover: grant `admin` to an account that holds nothing — one `Web\User::canManageUser()` lets
+  you set a password for — and log in as it.
+
+- **The `manager` role no longer holds `tenant`.** `Models\User::AUTH_ROLE_MANAGER` holds every permission but
+  the installation-level ones, which are `system` and now `tenant` too;
+  `Tenant\Migrations\M260915190000ManagerTenantPermission` takes it out of the list
+  `Migrations\M260914190000ManagerRole` had handed it.
+
 - **A language select renders the label again.** `Models\User::getLanguages()` answered
   `['de' => ['name' => 'Deutsch']]`, a shape `Widgets\Forms\Fields\SelectField` has not read since the
   definitions landed — it looks for a `label` key and fell back to the option's own value, so the account form

@@ -78,9 +78,10 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     final public const string AUTH_ROLE_ADMIN = 'admin';
 
     /**
-     * Holds every permission the installation has, as {@see static::AUTH_ROLE_ADMIN} does — a role lists the
-     * permissions themselves, never another role. The two are therefore separate lists and neither inherits the
-     * other, so a guard an administrator should also pass has to name both.
+     * Holds every permission the installation has but the installation-level ones — `system` and `tenant` are
+     * {@see static::AUTH_ROLE_ADMIN}'s alone. A role lists the permissions themselves, never another role, so
+     * the two are separate lists and neither inherits the other: a guard an administrator should also pass has
+     * to name both.
      */
     final public const string AUTH_ROLE_MANAGER = 'manager';
 

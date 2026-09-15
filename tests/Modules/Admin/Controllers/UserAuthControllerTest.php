@@ -54,7 +54,7 @@ class UserAuthControllerTest extends TestCase
 
     public function testAUserHoldingAPermissionTheActorLacksIsForbidden(): void
     {
-        $this->login();
+        $this->loginWithAuthUpdateOnly();
         $user = $this->getUserFromFixture('disabled');
         $this->assignPermission($user->id, User::AUTH_USER);
 
@@ -122,6 +122,45 @@ class UserAuthControllerTest extends TestCase
         ]);
 
         self::assertArrayHasKey(User::AUTH_ROLE_ADMIN, Yii::$app->getAuthManager()->getRolesByUser($user->id));
+    }
+
+    /**
+     * `authUpdate` alone would otherwise be enough to hand the `admin` role to an account of one's own and take
+     * the installation over.
+     */
+    public function testCreateRefusesAnItemTheActorDoesNotHold(): void
+    {
+        $this->loginWithAuthUpdateOnly();
+        $user = $this->getUserFromFixture('disabled');
+
+        try {
+            $this->post('admin/user-auth/create', [
+                'id' => $user->id,
+                'name' => User::AUTH_ROLE_ADMIN,
+                'type' => Item::TYPE_ROLE,
+            ]);
+
+            self::fail('The assignment was not refused.');
+        } catch (ForbiddenHttpException) {
+            self::assertEmpty(Yii::$app->getAuthManager()->getRolesByUser($user->id));
+        }
+    }
+
+    public function testCreateAssignsAnItemTheActorHolds(): void
+    {
+        $this->loginWithAuthUpdateOnly();
+        $user = $this->getUserFromFixture('disabled');
+
+        $this->post('admin/user-auth/create', [
+            'id' => $user->id,
+            'name' => User::AUTH_USER_ASSIGN,
+            'type' => Item::TYPE_PERMISSION,
+        ]);
+
+        self::assertArrayHasKey(
+            User::AUTH_USER_ASSIGN,
+            Yii::$app->getAuthManager()->getPermissionsByUser($user->id)
+        );
     }
 
     public function testDeleteRevokesThePermission(): void
@@ -237,9 +276,23 @@ class UserAuthControllerTest extends TestCase
     }
 
     /**
-     * The actor holds `authUpdate` only, so `Web\User::canManageUser()` still has to answer for every target.
+     * An administrator holds every permission, so they may hand out any of them.
      */
     private function login(): User
+    {
+        $user = $this->getUserFromFixture('admin');
+        $this->assignAdminRole($user->id);
+
+        Yii::$app->getUser()->setIdentity($user);
+
+        return $user;
+    }
+
+    /**
+     * The actor holds `authUpdate` alone, so `Web\User::canManageUser()` has to answer for every target and
+     * every item they hand out has to be one they hold themselves.
+     */
+    private function loginWithAuthUpdateOnly(): User
     {
         $user = $this->getUserFromFixture('admin');
         $this->assignPermission($user->id, User::AUTH_USER_ASSIGN);
