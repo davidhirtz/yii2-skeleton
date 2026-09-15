@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Modules\Admin\Widgets\Panels;
 
 use Hirtz\Skeleton\Db\Dsn;
+use Hirtz\Skeleton\Db\MigrationHistory;
 use Hirtz\Skeleton\Helpers\VersionHelper;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
@@ -52,8 +53,10 @@ class ApplicationInfoTest extends TestCase
 
     public function testTheLastAppliedMigrationIsReported(): void
     {
+        // the base row ties with the first real migration on `apply_time` when both landed in the same second
         $version = (string)Yii::$app->getDb()
-            ->createCommand('SELECT version FROM {{%migration}} ORDER BY apply_time DESC, version DESC LIMIT 1')
+            ->createCommand('SELECT version FROM {{%migration}} WHERE version <> :base ORDER BY apply_time DESC, version DESC LIMIT 1')
+            ->bindValue(':base', MigrationHistory::BASE_MIGRATION)
             ->queryScalar();
 
         self::assertStringContainsString(

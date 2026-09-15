@@ -24,7 +24,7 @@ class MaintenanceController extends Controller
     /**
      * @var string path to the maintenance mode template stub
      */
-    public string $maintenanceStubFile = '@skeleton/console/controllers/stubs/maintenance.stub';
+    public string $maintenanceStubFile = '@skeleton/Console/Controllers/Stubs/maintenance.stub';
 
     /**
      * @var string|null optional redirect URL
@@ -136,6 +136,8 @@ class MaintenanceController extends Controller
 
         if (copy(Yii::getAlias($this->maintenanceStubFile), $file)) {
             $this->stdout('Maintenance mode enabled.' . PHP_EOL, Console::FG_GREEN);
+        } else {
+            $this->stderr("Could not write $file." . PHP_EOL, Console::FG_RED);
         }
     }
 
