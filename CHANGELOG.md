@@ -1,5 +1,13 @@
 ## 3.0.0 (in development)
 
+- **`Models\Collections\TrailModelCollection::formatAttributeValue()` resolves a range attribute through
+  `get<Attribute>Definitions()`**, falling back to `get<Plural>()` as `Validators\DynamicRangeValidator` and
+  `Widgets\Forms\Fields\SelectField` do, and reads a `Models\Definitions\Definition` through `getName()`. It
+  still read the declaration, which is indexed by offset rather than by value and now holds objects: a trail row
+  recording a `type` or `status` change either showed nothing or was a fatal
+  `Cannot use object of type ... as array`, taking the whole admin trail index with it. A value no definition
+  matches now falls back to the value rather than to `false`
+
 - Added `Widgets\Forms\Fields\CheckboxListField`, a checkbox per item for an attribute holding a list of
   values. The hidden input it renders in front of them is what makes "nothing checked" reach the model at all,
   and its group label carries no `for`, since it labels no single input. `itemAttributes()` sets attributes on

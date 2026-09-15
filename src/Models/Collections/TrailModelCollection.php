@@ -7,6 +7,9 @@ namespace Hirtz\Skeleton\Models\Collections;
 use DateTime;
 use DateTimeZone;
 use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Models\Definitions\Definition;
+use Hirtz\Skeleton\Validators\DynamicRangeValidator;
+use Hirtz\Skeleton\Widgets\Forms\Fields\SelectField;
 use Throwable;
 use Yii;
 use yii\base\Model;
@@ -89,21 +92,45 @@ class TrailModelCollection
                     : $value;
 
             case self::VALUE_TYPE_RANGE:
-                $method = 'get' . Inflector::camelize(Inflector::pluralize($attribute));
-
-                if ($model->hasMethod($method) && $value) {
-                    $value = $model->{$method}()[$value] ?? false;
-
-                    if ($value) {
-                        // Return string value or "name" key, as a fallback print out the array content
-                        return is_string($value) ? $value : ($value['name'] ?? print_r($value, true));
-                    }
-                }
-
-                return $value;
+                return self::formatRangeValue($model, $attribute, $value);
         }
 
         return is_array($value) ? print_r($value, true) : (string)$value;
+    }
+
+    /**
+     * The resolved definitions before the declaration, as {@see DynamicRangeValidator::getDynamicRange()} and
+     * {@see SelectField::getItemsFromModel()} do: `getTypes()` is indexed by offset, `getTypeDefinitions()` by value.
+     */
+    private static function formatRangeValue(Model $model, string $attribute, mixed $value): mixed
+    {
+        // A `RangeValidator` with `allowArray` holds a list, which is no array offset and renders on its own.
+        if (!$value || !is_scalar($value)) {
+            return $value;
+        }
+
+        $method = 'get' . Inflector::camelize($attribute) . 'Definitions';
+
+        if (!$model->hasMethod($method)) {
+            $method = 'get' . Inflector::camelize(Inflector::pluralize($attribute));
+        }
+
+        if (!$model->hasMethod($method)) {
+            return $value;
+        }
+
+        $item = $model->{$method}()[$value] ?? null;
+
+        if ($item instanceof Definition) {
+            return $item->getName();
+        }
+
+        // A plain `value => label` map, or the pre-3.0 `['name' => ...]` shape a project may still declare.
+        return match (true) {
+            $item === null => $value,
+            is_array($item) => $item['name'] ?? print_r($item, true),
+            default => $item,
+        };
     }
 
     private static function getOrFindActiveRecord(ActiveRecord $instance, int|string $id): ActiveRecord

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Modules\Admin\Widgets\Grids;
 
 use Hirtz\Skeleton\I18n\Message;
+use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\TrailGridView;
@@ -68,6 +69,24 @@ class TrailGridViewTest extends TestCase
 
         self::assertStringContainsString('<li>1</li>', $html);
         self::assertStringContainsString('<li>3</li>', $html);
+    }
+
+    /**
+     * The type is a range attribute, resolved through the model's definitions — the declaration it used to read is
+     * indexed by offset and handed the formatter a {@see \Hirtz\Skeleton\Models\Types\Type} to subscript.
+     */
+    public function testAnUpdateTrailRendersTheNamesOfAChangedType(): void
+    {
+        $trail = Trail::create();
+        $trail->type = Trail::TYPE_UPDATE;
+        $trail->model_class = Redirect::class;
+        $trail->data = ['type' => [Redirect::TYPE_MOVED_PERMANENTLY, Redirect::TYPE_FOUND]];
+
+        // The differ marks up the shared prefix, so the names are only contiguous without the tags.
+        $text = strip_tags(TestTrailGridView::make()->dataContent($trail));
+
+        self::assertStringContainsString('301 - Moved permanently', $text);
+        self::assertStringContainsString('302 - Temporary redirect', $text);
     }
 
     public function testARevokeTrailOfADeletedItemFallsBackToItsName(): void
