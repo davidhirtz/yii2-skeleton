@@ -16,11 +16,3 @@ parameters:
         - Yii.php
         # mb_trim() is native from PHP 8.4 and the polyfill declares it in a file its bootstrap only requires at runtime
         - %rootDir%/../../../vendor/symfony/polyfill-mbstring/bootstrap80.php
-
-    # used by other bundles only, which a standalone run cannot see
-    ignoreErrors:
-        -
-            identifier: trait.unused
-            paths:
-                - src/Models/Traits/*
-            reportUnmatched: false
