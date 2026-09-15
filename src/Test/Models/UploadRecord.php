@@ -15,6 +15,7 @@ use Hirtz\Skeleton\Models\Traits\CustomAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\TranslationTrait;
 use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
+use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Models\Types\Type;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Override;
@@ -69,7 +70,8 @@ class UploadRecord extends ActiveRecord implements
                 ->customAttributes(fn (): array => [
                     UploadCustomAttribute::make('attachment')
                         ->extensions(['pdf'])
-                        ->maxSize(16),
+                        ->maxSize(16)
+                        ->permission(User::AUTH_USER),
                 ]),
         ];
     }

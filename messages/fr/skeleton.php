@@ -296,6 +296,7 @@ return [
     'UPLOAD_BUTTON_SELECT' => 'Sélectionner un fichier',
     'UPLOAD_EXPIRED_ERROR' => 'Le fichier téléversé n\'est plus disponible, veuillez le sélectionner à nouveau.',
     'UPLOAD_FAILED_ERROR' => 'Le fichier n\'a pas pu être téléversé.',
+    'UPLOAD_LIMIT_ERROR' => 'Trop de téléversements, veuillez réessayer plus tard.',
     'USER_ACTIVE_CREATED_BY' => 'Créé par {user} {timestamp}',
     'USER_ACTIVE_SIGNED_UP' => 'Inscrit {timestamp}',
     'USER_AUTH_PERMISSION_ALREADY' => 'Cette autorisation était déjà attribuée à l’utilisateur {name}.',

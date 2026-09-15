@@ -12,13 +12,14 @@ use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Upload\Upload;
-use Hirtz\Skeleton\Web\ChunkedUploadedFile;
 use Hirtz\Skeleton\Web\Controller;
+use Hirtz\Skeleton\Web\Traits\UploadControllerTrait;
 use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
 use Override;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -34,6 +35,8 @@ use yii\web\Response;
  */
 class UploadController extends Controller
 {
+    use UploadControllerTrait;
+
     #[Override]
     public function behaviors(): array
     {
@@ -77,6 +80,12 @@ class UploadController extends Controller
 
         if (!$definition instanceof UploadCustomAttribute || $definition->isDisabled($record)) {
             throw new NotFoundHttpException();
+        }
+
+        $permission = $definition->getPermission();
+
+        if ($permission !== null && !$this->webuser->can($permission)) {
+            throw new ForbiddenHttpException();
         }
 
         if ($remove) {
@@ -127,14 +136,18 @@ class UploadController extends Controller
      */
     protected function upload(UploadCustomAttribute $definition, Upload $upload): ?string
     {
-        $file = ChunkedUploadedFile::getInstanceByName('upload');
+        $file = $this->receiveUpload();
 
         if ($file === null) {
-            throw new NotFoundHttpException();
+            if ($this->response->getIsOk()) {
+                throw new NotFoundHttpException();
+            }
+
+            return null;
         }
 
-        if ($file->isPartial()) {
-            $this->response->setStatusCode(201);
+        if ($upload->isUploadLimitReached()) {
+            $this->response->setStatusCode(429, Yii::t('skeleton', 'UPLOAD_LIMIT_ERROR'));
             return null;
         }
 
@@ -151,12 +164,15 @@ class UploadController extends Controller
             return null;
         }
 
-        $upload->collectGarbage(force: false);
         $token = $upload->createTempFile($file);
 
         if ($token === null) {
             $this->response->setStatusCode(400, Yii::t('skeleton', 'UPLOAD_FAILED_ERROR'));
+
+            return null;
         }
+
+        $upload->addUpload();
 
         return $token;
     }

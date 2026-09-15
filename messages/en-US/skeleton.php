@@ -296,6 +296,7 @@ return [
     'UPLOAD_BUTTON_SELECT' => 'Select file',
     'UPLOAD_EXPIRED_ERROR' => 'The uploaded file is no longer available, please select it again.',
     'UPLOAD_FAILED_ERROR' => 'The file could not be uploaded.',
+    'UPLOAD_LIMIT_ERROR' => 'Too many uploads, please try again later.',
     'USER_ACTIVE_CREATED_BY' => 'Created by {user} {timestamp}',
     'USER_ACTIVE_SIGNED_UP' => 'Signed up {timestamp}',
     'USER_AUTH_PERMISSION_ALREADY' => 'This permission was already assigned to user {name}.',

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Web;
 
 use Hirtz\Skeleton\Helpers\FileHelper;
+use Hirtz\Skeleton\Upload\Upload;
 use Override;
 use Yii;
 use yii\base\InvalidCallException;
@@ -13,21 +14,10 @@ use yii\web\UploadedFile;
 class ChunkedUploadedFile extends UploadedFile
 {
     /**
-     * @var int temporary file lifetime in seconds
-     */
-    public int $tempFileLifetime = 86400;
-
-    /**
-     * @var int garbage collection probability in percentage, defaults to 1%
-     */
-    public int $gcProbability = 1;
-
-    /**
      * @var int|null the maximum file size for chunked uploads.
      */
     public ?int $maxSize = null;
 
-    private ?string $partialUploadPath = null;
     private bool $isChunked = false;
 
     public function init(): void
@@ -84,17 +74,14 @@ class ChunkedUploadedFile extends UploadedFile
             : "Upload of \"$this->name\" completed.");
     }
 
+    /**
+     * The abandoned chunks are not collected here: {@see Upload} owns the directory and
+     * {@see Upload::collectGarbageOncePerSession()} sweeps it, so an upload pays for it once rather than by dice
+     * roll on every write.
+     */
     #[Override]
     public function saveAs($file, $deleteTempFile = true): bool
     {
-        if ($deleteTempFile) {
-            $deleteTempFile = random_int(1, 10000) <= $this->gcProbability * 100;
-        }
-
-        if ($deleteTempFile) {
-            $this->removeAbortedFiles();
-        }
-
         if ($this->isCompleted()) {
             return FileHelper::rename($this->tempName, $file);
         }
@@ -102,36 +89,12 @@ class ChunkedUploadedFile extends UploadedFile
         return false;
     }
 
-    protected function removeAbortedFiles(): int
+    public function getPartialUploadPath(): string
     {
-        $lifetime = time() - $this->tempFileLifetime;
-        $path = rtrim((string)Yii::getAlias($this->getPartialUploadPath()), '/');
-        $fileCount = 0;
+        $path = Upload::getComponent()->tempPath;
+        FileHelper::createDirectory($path);
 
-        if (is_dir($path)) {
-            foreach (glob($path . '/*') ?: [] as $file) {
-                if (filemtime($file) <= $lifetime && unlink($file)) {
-                    ++$fileCount;
-                }
-            }
-        }
-
-        return $fileCount;
-    }
-
-    public function getPartialUploadPath(): ?string
-    {
-        if ($this->partialUploadPath === null) {
-            $this->setPartialUploadPath('@runtime/uploads');
-        }
-
-        return $this->partialUploadPath;
-    }
-
-    public function setPartialUploadPath(string $path): void
-    {
-        $this->partialUploadPath = rtrim((string)Yii::getAlias($path), '/') . '/';
-        FileHelper::createDirectory($this->partialUploadPath);
+        return $path;
     }
 
     public function isCompleted(): bool

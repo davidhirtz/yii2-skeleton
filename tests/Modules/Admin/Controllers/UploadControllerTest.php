@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Upload\Upload;
 use Override;
 use Yii;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 
 class UploadControllerTest extends TestCase
@@ -114,13 +115,56 @@ class UploadControllerTest extends TestCase
 
     public function testAFileOverTheMaximumSizeIsRefused(): void
     {
-        $this->login();
+        $this->assignPermission($this->login(), User::AUTH_USER);
         $this->setUpUpload('notes.pdf', str_repeat('x', 32));
 
         $this->post(['type' => UploadRecord::TYPE_RESTRICTED]);
 
         self::assertSame(400, $this->getWebResponse()->getStatusCode());
         self::assertSame([], glob($this->upload->tempPath . '*') ?: []);
+    }
+
+    /**
+     * The skeleton cannot know a model's permission, so the definition names it and the action asks — an account
+     * that may open the form is otherwise all the endpoint checks.
+     */
+    public function testADefinitionsPermissionIsEnforced(): void
+    {
+        $this->login();
+        $this->setUpUpload('notes.pdf', 'x');
+
+        $this->expectException(ForbiddenHttpException::class);
+
+        $this->post(['type' => UploadRecord::TYPE_RESTRICTED]);
+    }
+
+    public function testADefinitionsPermissionIsGranted(): void
+    {
+        $user = $this->login();
+        $this->assignPermission($user, User::AUTH_USER);
+        $this->setUpUpload('notes.pdf', 'x');
+
+        $html = $this->post(['type' => UploadRecord::TYPE_RESTRICTED]);
+
+        self::assertIsString($html);
+        self::assertStringContainsString('notes.pdf', $html);
+    }
+
+    public function testAnAccountOverTheUploadLimitIsRefused(): void
+    {
+        $this->login();
+        $this->upload->uploadLimit = 1;
+
+        $this->setUpUpload('notes.txt');
+        $this->post();
+
+        self::assertSame(200, $this->getWebResponse()->getStatusCode());
+
+        $this->setUpUpload('second.txt');
+        $this->post();
+
+        self::assertSame(429, $this->getWebResponse()->getStatusCode());
+        self::assertCount(1, glob($this->upload->tempPath . '*') ?: []);
     }
 
     public function testASignatureOfAnotherAttributeIsRefused(): void
@@ -259,6 +303,12 @@ class UploadControllerTest extends TestCase
         $this->getWebUser()->setIdentity($user);
 
         return $user;
+    }
+
+    private function assignPermission(User $user, string $name): void
+    {
+        $auth = Yii::$app->getAuthManager();
+        $auth->assign($auth->getPermission($name), $user->id);
     }
 
     private function getUserFromFixture(string $key): User

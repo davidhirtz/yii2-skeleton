@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Tests\Web;
 use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Upload\Upload;
 use Hirtz\Skeleton\Web\ChunkedUploadedFile;
 use Override;
 use Yii;
@@ -22,6 +23,14 @@ class ChunkedUploadedFileTest extends TestCase
         parent::setUp();
 
         $this->path = Yii::getAlias('@runtime/test-uploads') . '/';
+
+        // The chunks land wherever the `upload` component keeps them; the component is built lazily, so replacing
+        // its definition here is enough.
+        Yii::$app->set('upload', [
+            'class' => Upload::class,
+            'tempPath' => $this->path,
+        ]);
+
         FileHelper::createDirectory($this->path);
     }
 
@@ -159,25 +168,6 @@ class ChunkedUploadedFileTest extends TestCase
         self::assertFileDoesNotExist($this->path . 'target.txt');
     }
 
-    public function testTheGarbageCollectorOnlyRemovesExpiredFiles(): void
-    {
-        $expired = $this->path . 'expired.tmp';
-        $fresh = $this->path . 'fresh.tmp';
-
-        file_put_contents($expired, 'old');
-        file_put_contents($fresh, 'new');
-        touch($expired, time() - 90000);
-
-        $file = $this->createUploadedFile($this->createSourceFile('abc'), range: 'bytes 0-2/3', config: [
-            'gcProbability' => 100,
-        ]);
-
-        self::assertTrue($file->saveAs($this->path . 'target.txt'));
-
-        self::assertFileDoesNotExist($expired);
-        self::assertFileExists($fresh);
-    }
-
     public function testGetInstanceReadsTheFileOfAModelAttribute(): void
     {
         $source = $this->createSourceFile('abc');
@@ -256,8 +246,6 @@ class ChunkedUploadedFileTest extends TestCase
             'error' => UPLOAD_ERR_OK,
             'tempName' => $tempName,
             'size' => $size ?? 0,
-            'partialUploadPath' => $this->path,
-            'gcProbability' => 0,
             ...$config,
         ]);
     }

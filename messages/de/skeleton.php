@@ -296,6 +296,7 @@ return [
     'UPLOAD_BUTTON_SELECT' => 'Datei auswählen',
     'UPLOAD_EXPIRED_ERROR' => 'Die hochgeladene Datei ist nicht mehr verfügbar, bitte wähle sie erneut aus.',
     'UPLOAD_FAILED_ERROR' => 'Die Datei konnte nicht hochgeladen werden.',
+    'UPLOAD_LIMIT_ERROR' => 'Zu viele Uploads, bitte versuche es später erneut.',
     'USER_ACTIVE_CREATED_BY' => 'Erstellt von {user} {timestamp}',
     'USER_ACTIVE_SIGNED_UP' => 'Registriert {timestamp}',
     'USER_AUTH_PERMISSION_ALREADY' => 'Diese Rechte wurden bereits {name} erteilt.',

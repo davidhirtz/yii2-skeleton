@@ -19,8 +19,11 @@
   unchanged, so there is no size limit to work around. The JSON column holds the filename alone; the directory is
   `<table>/<record id>/<hashed attribute>/` under `Upload::$path` (`@webroot/attachments`), so nothing in the URL names
   a column. Removing a pending upload deletes its file at once; a file the record already holds goes with the save,
-  which is the only point at which the removal is more than a cleared input. `upload/clear` collects what is left
-  over, and the upload action does too with `Upload::$gcProbability`.
+  which is the only point at which the removal is more than a cleared input.
+
+  `permission()` names the auth item the upload action requires — the skeleton cannot know a model's own, so the
+  definition says it. A definition declaring none is guarded by `Upload::$uploadLimit` (120 per hour per account,
+  `0` to disable), counted in the cache the way `Web\User` already counts failed logins.
 
 - **A `Models\CustomAttributes\CustomAttribute` has a lifecycle.** `afterSave()`, `afterDelete()` and `afterDuplicate()`
   are no-ops on the base and are called by `Db\ActiveRecord` and `Models\Actions\DuplicateActiveRecord`, so a
@@ -28,6 +31,21 @@
   record has an id, the previous file goes when the value is replaced or cleared, and a duplicate gets a copy of its
   own instead of pointing into the source's directory. `Models\Interfaces\CustomAttributeInterface` gains
   `validateCustomAttributeUpload()` beside `validateCustomAttributeGroup()`.
+
+- **The `upload` component owns the temporary directory and its collector**, for the chunks
+  `Web\ChunkedUploadedFile` assembles as much as for the files an attachment parks: one directory
+  (`Upload::$tempPath`, `@runtime/uploads`), one lifetime, one switch and one place to look. `ChunkedUploadedFile`
+  loses `$partialUploadPath`, `$tempFileLifetime`, `$gcProbability` and `removeAbortedFiles()` with it, and no
+  longer collects from `saveAs()`.
+
+  `Upload::collectGarbageOncePerSession()` replaces both probability checks: a small installation has no cron to
+  run `upload/clear` with, and an upload is the only moment at which the directory is known to matter, so a request
+  collects at most once per session and lifetime window. `Upload::$enableGarbageCollection` turns it off.
+  (monorepo issue #104)
+
+- **`Web\Traits\UploadControllerTrait::receiveUpload()`** is the half of an upload action both bundles wrote
+  themselves — read the chunk, answer `201` for one that landed and wants the next, collect what earlier uploads
+  abandoned. `Media\…\FileControllerTrait` and `Modules\Admin\Controllers\UploadController` share it now.
 
 - **`Assets\AbstractAssetBundle` registers its scripts in the head.** For a module script that changes nothing — it is
   deferred either way — but `View::endBody()` renders inside `#wrap`, so a fragment swap selecting less than that

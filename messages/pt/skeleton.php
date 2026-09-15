@@ -296,6 +296,7 @@ return [
     'UPLOAD_BUTTON_SELECT' => 'Selecionar ficheiro',
     'UPLOAD_EXPIRED_ERROR' => 'O ficheiro carregado já não está disponível, seleciona-o novamente.',
     'UPLOAD_FAILED_ERROR' => 'Não foi possível carregar o ficheiro.',
+    'UPLOAD_LIMIT_ERROR' => 'Demasiados carregamentos, tenta novamente mais tarde.',
     'USER_ACTIVE_CREATED_BY' => 'Criado por {user} {timestamp}',
     'USER_ACTIVE_SIGNED_UP' => 'Registado {timestamp}',
     'USER_AUTH_PERMISSION_ALREADY' => 'Esta permissão já estava atribuída ao utilizador {name}.',

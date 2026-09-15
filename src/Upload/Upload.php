@@ -12,6 +12,7 @@ use Yii;
 use yii\base\Component;
 use yii\db\ActiveRecord;
 use yii\helpers\Inflector;
+use yii\web\Session;
 use yii\web\UploadedFile;
 
 /**
@@ -28,6 +29,8 @@ class Upload extends Component
 {
     public const int TOKEN_LENGTH = 16;
 
+    public const string SESSION_KEY = 'upload.gc';
+
     private const string TOKEN_PATTERN = '/^[\w-]{' . self::TOKEN_LENGTH . '}-[\w-]+\.[a-zA-Z0-9]+$/';
 
     /**
@@ -42,22 +45,41 @@ class Upload extends Component
      */
     public ?string $baseUrl = null;
 
-    public string $tempPath = '@runtime/attachments';
+    /**
+     * @var string where an upload waits: the chunks {@see \Hirtz\Skeleton\Web\ChunkedUploadedFile} assembles, and
+     * the completed file an attachment parks until its record exists. One directory for both, so there is one place
+     * to look and one collector to reason about.
+     */
+    public string $tempPath = '@runtime/uploads';
 
     /**
-     * @var int how long a file nobody saved is kept, in seconds.
+     * @var int how long a file nobody claimed is kept, in seconds.
      */
     public int $tempLifetime = 86400;
 
     /**
-     * @var int the percentage of upload requests that also collect the abandoned temporary files.
+     * @var bool whether an upload request also collects what earlier ones abandoned. A small installation has no
+     * cron to run `upload/clear` with, and an upload is the only moment at which the directory is known to matter.
+     * @see Upload::collectGarbageOncePerSession()
      */
-    public int $gcProbability = 1;
+    public bool $enableGarbageCollection = true;
 
     /**
      * @var int the ceiling no definition may raise, in bytes.
      */
     public int $maxSize = 67108864;
+
+    /**
+     * @var int how many uploads one user may start per {@see Upload::$uploadLimitDuration}, `0` disables the limit.
+     * The endpoint is reached from every form that renders an upload field, and a definition declaring no
+     * permission lets any account that may open one write to the temporary directory.
+     */
+    public int $uploadLimit = 120;
+
+    /**
+     * @var int the window the limit is counted over, in seconds.
+     */
+    public int $uploadLimitDuration = 3600;
 
     public static function getComponent(): self
     {
@@ -218,12 +240,29 @@ class Upload extends Component
         return hash_equals($this->sign($modelClass, $attribute, $type), $signature);
     }
 
-    public function collectGarbage(bool $force = true): int
+    /**
+     * Collects at most once per session and lifetime window, so a request pays for it rarely and a session that
+     * outlives the window still does its share.
+     */
+    public function collectGarbageOncePerSession(): int
     {
-        if (!$force && random_int(1, 10000) > $this->gcProbability * 100) {
+        $session = $this->getSession();
+
+        if (!$this->enableGarbageCollection || !$session) {
             return 0;
         }
 
+        if ((int)$session->get(self::SESSION_KEY) > time() - $this->tempLifetime) {
+            return 0;
+        }
+
+        $session->set(self::SESSION_KEY, time());
+
+        return $this->collectGarbage();
+    }
+
+    public function collectGarbage(): int
+    {
         $lifetime = time() - $this->tempLifetime;
         $count = 0;
 
@@ -247,6 +286,42 @@ class Upload extends Component
         $basename = Inflector::slug($upload->getBaseName(), '-', false);
 
         return ($basename ?: Yii::$app->getSecurity()->generateRandomString(8)) . ".$extension";
+    }
+
+    public function isUploadLimitReached(): bool
+    {
+        return $this->uploadLimit > 0
+            && (int)Yii::$app->getCache()->get($this->getUploadLimitCacheKey()) >= $this->uploadLimit;
+    }
+
+    public function addUpload(): void
+    {
+        if ($this->uploadLimit > 0) {
+            $cache = Yii::$app->getCache();
+            $key = $this->getUploadLimitCacheKey();
+
+            $cache->set($key, (int)$cache->get($key) + 1, $this->uploadLimitDuration);
+        }
+    }
+
+    /**
+     * Counted per account rather than per IP: the endpoint is behind a login, and an office behind one address
+     * would otherwise share one budget.
+     *
+     * @return list<string>
+     */
+    protected function getUploadLimitCacheKey(): array
+    {
+        return [self::class, 'uploads', (string)WebUser::current()?->getId()];
+    }
+
+    /**
+     * The console application has no session component at all, which is why this is asked rather than reached for.
+     */
+    protected function getSession(): ?Session
+    {
+        $session = Yii::$app->has('session') ? Yii::$app->get('session') : null;
+        return $session instanceof Session ? $session : null;
     }
 
     protected function getRecordPath(ActiveRecord $owner): string

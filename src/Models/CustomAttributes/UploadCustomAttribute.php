@@ -36,6 +36,7 @@ class UploadCustomAttribute extends CustomAttribute
 
     protected ?int $maxSize = null;
     protected bool $checkExtensionByMimeType = false;
+    protected ?string $permission = null;
 
     /**
      * @param list<string> $extensions
@@ -56,6 +57,21 @@ class UploadCustomAttribute extends CustomAttribute
     {
         $this->checkExtensionByMimeType = $checkExtensionByMimeType;
         return $this;
+    }
+
+    /**
+     * @param string|null $permission the auth item the upload action requires, which is the owner's own — the
+     * skeleton cannot know it, and a definition declaring none is guarded by the rate limit alone.
+     */
+    public function permission(?string $permission): static
+    {
+        $this->permission = $permission;
+        return $this;
+    }
+
+    public function getPermission(): ?string
+    {
+        return $this->permission;
     }
 
     /**
@@ -238,7 +254,7 @@ class UploadCustomAttribute extends CustomAttribute
     #[Override]
     protected function getFingerprintData(): array
     {
-        return [$this->extensions, $this->maxSize, $this->checkExtensionByMimeType];
+        return [$this->extensions, $this->maxSize, $this->checkExtensionByMimeType, $this->permission];
     }
 
     protected function getUpload(): Upload
