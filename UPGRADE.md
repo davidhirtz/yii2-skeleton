@@ -1,5 +1,45 @@
 # Upgrade Guide
 
+## 3.0.0 — A URL import is guarded, a local copy is a different class
+
+`Web\StreamUploadedFile` fetched whatever it was given. Anyone who could reach the media file form could make the
+server request a cloud metadata endpoint, anything on localhost or anything else inside the network, and a value
+with no scheme fell through to a plain filesystem read. It now accepts `http` and `https` only, resolves the host
+and refuses a loopback, private or reserved address, checks every redirect hop again, and streams the body under a
+timeout and a size ceiling.
+
+Two things a project may have to act on:
+
+- **An import from inside your own network now fails.** Either name the file by path instead, or allow it:
+
+  ```php
+  'components' => [
+      'upload' => [
+          'allowPrivateStreamUploadHosts' => true,
+          // 'enableStreamUploads' => false, // or turn the feature off entirely
+      ],
+  ],
+  ```
+
+  `Upload::$streamUploadTimeout` (10 s), `$maxStreamUploadSize` (64 MB) and `$maxStreamUploadRedirects` (5) are
+  beside it; there used to be no timeout and no ceiling at all.
+
+- **A path the application names is `Web\CopiedUploadedFile` now**, which opens it as it stands — a stream
+  wrapper's included — and none of the policy above applies to it. That is what the media bundle's
+  `Models\File::copy()` builds. Code doing this itself changes:
+
+  ```php
+  // before
+  new StreamUploadedFile(['url' => $file->getFilePath()]);
+
+  // after
+  new CopiedUploadedFile(['path' => $file->getFilePath()]);
+  ```
+
+  Both extend the new `Web\AbstractUploadedFile`, which owns `$allowedExtensions`, the temporary file,
+  `saveAs()` and `getExtension()` — a subclass overriding one of those still works, one naming
+  `StreamUploadedFile` as the type of an application path does not.
+
 ## 3.0.0 — The type and status declarations are instance methods
 
 `getTypes()` and `getStatuses()` lost their `static`. Drop it from every override, or PHP fatals on the class:

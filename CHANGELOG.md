@@ -1,5 +1,30 @@
 ## 3.0.0 (in development)
 
+- **A URL import is guarded and can be turned off.** `Web\StreamUploadedFile` fetched whatever the media file form
+  put in front of it, so an account holding `file` could make the server request a cloud metadata endpoint, anything
+  on localhost or anything else inside the network, and read the answer back out of the error code — a value with no
+  scheme at all fell through to a plain `file_get_contents('/etc/passwd')`. It now accepts `http` and `https` only,
+  resolves the host and refuses a loopback, private or reserved address, follows redirects itself so every hop is
+  checked again, and streams the body instead of reading it into memory whole. A refusal reports the same
+  `UPLOAD_ERR_NO_FILE` as a target that answered nothing, so the code says nothing about the network.
+
+  The policy is on the `upload` component, so an installation with no use for the feature turns it off in one line:
+
+  ```php
+  'components' => ['upload' => ['enableStreamUploads' => false]],
+  ```
+
+  Beside it, `Upload::$allowPrivateStreamUploadHosts` (`false`), `$streamUploadTimeout` (10 s),
+  `$maxStreamUploadSize` (64 MB) and `$maxStreamUploadRedirects` (5) — there used to be no timeout and no ceiling,
+  so a slow or endless response held a worker. `Media\…\FileImportButton` renders nothing while the feature is off.
+
+- **`Web\CopiedUploadedFile` is the upload made from a path the application names**, and `Web\AbstractUploadedFile`
+  is what the two share. A URL that arrived with a request and a file the application already holds used to be the
+  same class and the same method, which is why the guard above could not simply be added: the media bundle's
+  `Models\File::copy()` hands it a local path, a stream wrapper's included, and is not what any of the policy is
+  about. `StreamUploadedFile` keeps `$url` and loses its `$allowedExtensions`, `saveAs()`, `getExtension()` and
+  `getTemporaryUploadPath()` to the base.
+
 - **`Models\CustomAttributes\UploadCustomAttribute` attaches one file to a record**, translatable like every other
   definition and stored by the new `upload` application component (`Upload\Upload`) rather than in the media library:
   no folder, no transformations, no assets, and it goes with the record it hangs on.

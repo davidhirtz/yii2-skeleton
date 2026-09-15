@@ -70,6 +70,34 @@ class Upload extends Component
     public int $maxSize = 67108864;
 
     /**
+     * @var bool whether a file may be imported from a URL at all {@see \Hirtz\Skeleton\Web\StreamUploadedFile}.
+     * The server, not the browser, issues that request, so an installation with no use for it turns it off here.
+     */
+    public bool $enableStreamUploads = true;
+
+    /**
+     * @var bool whether an import may reach a loopback, private or reserved address. Off, because the URL comes
+     * from a form: a cloud metadata endpoint and the rest of the network are one request away otherwise.
+     */
+    public bool $allowPrivateStreamUploadHosts = false;
+
+    /**
+     * @var int how long an import may wait for the far end, in seconds.
+     */
+    public int $streamUploadTimeout = 10;
+
+    /**
+     * @var int the largest body an import accepts, in bytes.
+     */
+    public int $maxStreamUploadSize = 67108864;
+
+    /**
+     * @var int how many redirect hops an import follows. Each is resolved and checked again, since an allow list
+     * applied to the submitted URL alone would not survive one.
+     */
+    public int $maxStreamUploadRedirects = 5;
+
+    /**
      * @var int how many uploads one user may start per {@see Upload::$uploadLimitDuration}, `0` disables the limit.
      * The endpoint is reached from every form that renders an upload field, and a definition declaring no
      * permission lets any account that may open one write to the temporary directory.
