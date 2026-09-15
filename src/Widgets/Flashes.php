@@ -22,9 +22,11 @@ class Flashes extends Widget
     {
         $this->alerts ??= Application::current()->getSession()->getAllFlashes();
 
+        // The container is page furniture, so it must not carry `hx-swap-oob`: the body's `hx-select-oob` delivers
+        // the alerts of every response, while an attribute that survives in the DOM is consumed out of the page
+        // htmx restores from its history cache, leaving the next response without a target.
         $content = Div::make()
             ->attribute('id', 'flashes')
-            ->attribute('hx-swap-oob', 'beforeend:#flashes')
             ->class('flashes hidden-empty');
 
         foreach ($this->alerts as $status => $alerts) {

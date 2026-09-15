@@ -87,7 +87,11 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
                                     show: 'top',
                                 }, {
                                     select: this.dataset.target || undefined,
-                                    selectOOB: this.dataset.selectOob || undefined,
+                                    // The swap is not an htmx request, so nothing inherits the body's
+                                    // `hx-select-oob` and the flashes have to be named here.
+                                    selectOOB: ['#flashes:beforeend', this.dataset.selectOob]
+                                        .filter(Boolean)
+                                        .join(','),
                                 });
                             })
                         } else if (!response.ok) {

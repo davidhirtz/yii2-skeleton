@@ -1,5 +1,12 @@
 ## 3.0.0 (in development)
 
+- **`Widgets\Flashes` no longer renders `hx-swap-oob` on its container.** htmx snapshots the page into its
+  history cache verbatim, so the attribute was found again in the content a back button restores, applied to the
+  live DOM and then removed from the fragment replacing it — the page was left without a `#flashes` container and
+  every later response reported `htmx:oobErrorNoTarget`. The alerts are delivered by the body's
+  `hx-select-oob="#flashes:beforeend"`, which needs no attribute in the response; a project that swaps a response
+  in by hand has to name the flashes in its own `selectOOB`, as `components/FileUpload.ts` now does
+
 - **A migration helper that cannot answer names the table or the item, rather than reaching Yii as `null`.**
   `Db\Traits\MigrationTrait::getTableSchema()` replaces the eight `getDb()->getSchema()->getTableSchema($table, true)`
   reads and throws for a table that is not there; `getAuthItem()` does the same for a name neither
