@@ -26,7 +26,7 @@ class MainMenu extends Nav
     #[Override]
     protected function configure(): void
     {
-        $this->addClass('aside-nav');
+        $this->addClass('aside-main aside-nav');
 
         $this->addItem(
             dashboard: DashboardNavItem::make(),

@@ -19,12 +19,7 @@ class AsideMenu extends Widget
     {
         return Aside::make()
             ->attributes($this->attributes)
-            ->content($this->getLogo(), $this->getMainMenu(), $this->getAccountMenu());
-    }
-
-    protected function getLogo(): ?Stringable
-    {
-        return AsideLogo::make();
+            ->content($this->getMainMenu(), $this->getAccountMenu());
     }
 
     protected function getMainMenu(): Stringable
