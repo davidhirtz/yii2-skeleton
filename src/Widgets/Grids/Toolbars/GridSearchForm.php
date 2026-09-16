@@ -76,16 +76,41 @@ class GridSearchForm extends Widget
 
     protected function getForm(): ?Stringable
     {
+        $parts = explode('?', (string)$this->grid->search->getUrl(), 2);
+
         $form = Form::make()
             ->attributes([
                 'hx-push-url' => 'true',
                 'hx-boost' => 'true',
             ])
-            ->action($this->grid->search->getUrl())
+            ->action($parts[0] ?: null)
             ->method('get')
-            ->content($this->getInputGroup());
+            ->content(...[...$this->getHiddenInputs($parts[1] ?? ''), $this->getInputGroup()]);
 
         return $this->form ? ($this->form)($form) : $form;
+    }
+
+    /**
+     * A GET form submits its own fields and nothing else — the browser replaces the action's query string with
+     * them, and htmx strips it from a boosted form for the same reason — so every parameter the grid's URL
+     * carries is a hidden input here, or searching leaves the route it was issued from.
+     *
+     * @return list<Stringable>
+     */
+    protected function getHiddenInputs(string $query): array
+    {
+        $inputs = [];
+
+        foreach (array_filter(explode('&', $query)) as $parameter) {
+            $parts = explode('=', $parameter, 2);
+
+            $inputs[] = Input::make()
+                ->type('hidden')
+                ->name(urldecode($parts[0]))
+                ->value(urldecode($parts[1] ?? ''));
+        }
+
+        return $inputs;
     }
 
     protected function getInputGroup(): Stringable
