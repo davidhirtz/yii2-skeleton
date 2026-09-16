@@ -194,8 +194,28 @@ class ActiveRecordTest extends TestCase
         $model->setAttribute('user_id', '1');
         $model->validate();
 
-        self::assertEquals(1, $model->user_id);
-        self::assertEquals(null, $model->nullable);
+        self::assertSame(1, $model->user_id);
+        self::assertNull($model->nullable);
+    }
+
+    /**
+     * A form reload renders the loaded record without validating it, so a `Closure` reading an attribute off it
+     * would otherwise see the posted string.
+     */
+    public function testTypecastAttributesOnLoad(): void
+    {
+        $model = new TestActiveRecord();
+
+        self::assertTrue($model->load([
+            'TestActiveRecord' => [
+                'name' => 'Test',
+                'nullable' => '',
+                'user_id' => '1',
+            ],
+        ]));
+
+        self::assertSame(1, $model->user_id);
+        self::assertNull($model->nullable);
     }
 }
 
@@ -235,6 +255,10 @@ class TestActiveRecord extends ActiveRecord
                 ['name', 'nullable'],
                 'string',
                 'max' => 255,
+            ],
+            [
+                ['user_id'],
+                'integer',
             ],
         ];
     }

@@ -43,6 +43,29 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
+     * A form posts strings, and only validation typecast them until now — which a form reload never reaches. So a
+     * `Closure` reading an attribute off the loaded record, {@see \Hirtz\Skeleton\Models\Types\Type::available()}
+     * and its kind, saw `"2"` where the saved record holds `2`.
+     *
+     * @param array<string, mixed> $data
+     */
+    #[Override]
+    public function load($data, $formName = null): bool
+    {
+        if (!parent::load($data, $formName)) {
+            return false;
+        }
+
+        $behavior = $this->getBehavior('AttributeTypecastBehavior');
+
+        if ($behavior instanceof AttributeTypecastBehavior) {
+            $behavior->typecastAttributes();
+        }
+
+        return true;
+    }
+
+    /**
      * @return list<string> the attributes without a column of their own
      */
     public function getVirtualAttributes(): array

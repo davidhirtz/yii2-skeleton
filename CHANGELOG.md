@@ -1,5 +1,12 @@
 ## 3.0.0 (in development)
 
+- **`Db\ActiveRecord::load()` typecasts the attributes it loaded.** A form posts strings, and only validation
+  turned them back into the column's type — which a form reload never reaches, since it renders the loaded record
+  and returns. So a `Closure` reading an attribute off that record saw `"2"` where the saved record holds `2`, and
+  `Models\Types\Type::available()`, the cms `Models\Menus\Menu::available()` and anything else a project
+  declares that way silently answered for the type the record no longer has. `Behaviors\AttributeTypecastBehavior`
+  is the same one that ran before validation; it now runs after a successful `load()` too.
+
 - **A URL import is guarded and can be turned off.** `Web\StreamUploadedFile` fetched whatever the media file form
   put in front of it, so an account holding `file` could make the server request a cloud metadata endpoint, anything
   on localhost or anything else inside the network, and read the answer back out of the error code — a value with no
