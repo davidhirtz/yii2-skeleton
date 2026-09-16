@@ -186,10 +186,16 @@ class View extends \yii\web\View
         }
     }
 
+    /**
+     * A file the deployment has not published yet answers without a version rather than taking the page down:
+     * `filemtime()` warns, and the error handler raises that as an exception.
+     */
     public function getFilenameWithVersion(string $filename): string
     {
         $filename = trim($filename, '/');
-        return "/$filename?" . filemtime(Yii::getAlias('@webroot/' . $filename));
+        $time = @filemtime(Yii::getAlias("@webroot/$filename"));
+
+        return $time === false ? "/$filename" : "/$filename?$time";
     }
 
     public function getHtmlLangAttribute(): string

@@ -137,7 +137,9 @@ class MessageControllerTest extends TestCase
         file_put_contents($configFile, '<?php return ' . var_export($config, true) . ';');
 
         $controller = $this->createController();
-        $controller->actionExtract($configFile);
+
+        // through `runAction()`, or Yii's own `actionExtract()` reads `$this->action->id` off a null action
+        $controller->runAction('extract', [$configFile]);
 
         return $controller->flushStdOutBuffer();
     }

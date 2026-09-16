@@ -55,9 +55,11 @@ class ChunkedUploadedFile extends UploadedFile
             @unlink($tempName);
         }
 
-        $data = fopen($this->tempName, 'r');
+        // Suppressed, not unchecked: a warning reaches the error handler as an exception, which would make the
+        // `UPLOAD_ERR_CANT_WRITE` below unreachable and answer a 500 for an unreadable chunk.
+        $data = @fopen($this->tempName, 'r');
 
-        if ($data === false || file_put_contents($tempName, $data, FILE_APPEND) === false) {
+        if ($data === false || @file_put_contents($tempName, $data, FILE_APPEND) === false) {
             $this->error = UPLOAD_ERR_CANT_WRITE;
             return;
         }

@@ -48,6 +48,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      * @var array<int, array<string, mixed>>
      */
     private array $originalRequestParams;
+    private int $originalErrorReportingLevel;
 
     private static ?ArrayCache $schemaCache = null;
 
@@ -58,6 +59,12 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
         $this->originalServerParams = $_SERVER;
         $this->originalRequestParams = [$_GET, $_POST, $_COOKIE, $_REQUEST, $_FILES];
+
+        // PHPUnit lowers `error_reporting()` to the levels it cannot handle, because its own handler is called
+        // whatever the mask says. The application's is not: `yii\base\ErrorHandler::handleError()` answers `false`
+        // for a masked level and PHP then drops it — and since the application's handler *replaces* PHPUnit's,
+        // every deprecation, warning and notice was silently green here while being a 500 in a browser (#129).
+        $this->originalErrorReportingLevel = error_reporting(E_ALL);
 
         $_SERVER = [
             ...$_SERVER,
@@ -95,6 +102,8 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
         $_SERVER = $this->originalServerParams;
         [$_GET, $_POST, $_COOKIE, $_REQUEST, $_FILES] = $this->originalRequestParams;
+
+        error_reporting($this->originalErrorReportingLevel);
 
         parent::tearDown();
     }

@@ -34,7 +34,7 @@ class Breadcrumbs extends Widget
         if ($this->showAdminBreadcrumb) {
             /** @var Module $module */
             $module = Yii::$app->getModule('admin');
-            $current = Yii::$app->controller->module;
+            $current = Yii::$app->controller?->module;
 
             if ($current instanceof Module || in_array($current, $module->getModules(), true)) {
                 $this->addAdminBreadcrumb();

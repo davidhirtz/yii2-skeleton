@@ -1,5 +1,22 @@
 ## 3.0.0 (in development)
 
+- **`Test\TestCase` raises `error_reporting()` to `E_ALL` for the duration of a test**, so a deprecation, warning
+  or notice is an `ErrorException` and a test error — exactly what it is in a browser (monorepo issue #129).
+  PHPUnit deliberately lowers the mask, because its own handler is called whatever it says; the application's
+  handler is not written that way and *replaces* PHPUnit's, so every one of these was silently dropped. **A
+  project upgrading will see its own suite report code it thought was covered.** Two shapes account for most of
+  it: a builtin whose `false` the code checks itself (`fopen()`, `filemtime()`, `file_put_contents()`) needs `@`
+  or the check is unreachable, and a `null` array offset is no longer a shrug.
+
+- `Web\View::getFilenameWithVersion()` answers `/<filename>` with no query string for a file that is not on
+  disk, where it used to call `filemtime()` unguarded and take the page down with a 500.
+
+- `Web\ChunkedUploadedFile` reports `UPLOAD_ERR_CANT_WRITE` for a chunk it cannot read or append, which the
+  unsuppressed `fopen()` in front of that check had made unreachable.
+
+- `Widgets\Navs\Breadcrumbs` renders outside a controller — a widget test, or anything rendering before one is
+  set — instead of reading `module` off a null.
+
 - **A trait and its using class must never both declare the same `@property`** (monorepo issue #125). PHPStan
   keeps the first tag and, where the two disagree, drops that class's whole PHPDoc scope with no error of its
   own — which was the entire pre-existing level-7 baseline, reported against

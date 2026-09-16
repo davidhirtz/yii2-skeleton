@@ -85,12 +85,20 @@ class ViewTest extends TestCase
 
     public function testFilenameWithVersion(): void
     {
-        $filename = '/tests/bootstrap.php';
+        $filename = '/assets/version.txt';
+        file_put_contents(Yii::getAlias('@webroot') . $filename, 'test');
+
         $time = filemtime(Yii::getAlias('@webroot') . $filename);
+        self::assertNotFalse($time);
 
         $view = new View();
-        $actual = $view->getFilenameWithVersion($filename);
-        static::assertEquals("$filename?$time", $actual);
+        self::assertSame("$filename?$time", $view->getFilenameWithVersion($filename));
+    }
+
+    public function testFilenameWithVersionOfAMissingFile(): void
+    {
+        $view = new View();
+        self::assertSame('/assets/nowhere.txt', $view->getFilenameWithVersion('/assets/nowhere.txt'));
     }
 
     public function testRegisterJsModule(): void
