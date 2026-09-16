@@ -42,6 +42,7 @@ class HexColorField extends Field
             ->content(InputGroup::make()
                 ->prepend(Input::make()
                     ->attribute('id', "{$this->attributes['id']}-color")
+                    ->class('input')
                     ->type('color')
                     ->value($hexValue)
                     ->required())

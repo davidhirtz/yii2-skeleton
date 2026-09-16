@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Validators;
 
+use Override;
 use Yii;
 use yii\validators\StringValidator;
 
@@ -11,7 +12,7 @@ class HexColorValidator extends StringValidator
 {
     public string $pattern = '/^#(?:[0-9a-fA-F]{3}){1,2}$/i';
 
-    #[\Override]
+    #[Override]
     public function init(): void
     {
         if ($this->message === null) {
@@ -21,7 +22,7 @@ class HexColorValidator extends StringValidator
         parent::init();
     }
 
-    #[\Override]
+    #[Override]
     public function validateAttribute($model, $attribute): void
     {
         $value = (string)$model->$attribute;
@@ -41,7 +42,7 @@ class HexColorValidator extends StringValidator
     /**
      * @return array{string, array<string, mixed>}|null
      */
-    #[\Override]
+    #[Override]
     protected function validateValue($value): ?array
     {
         $valid = !is_array($value) && preg_match($this->pattern, (string)$value);

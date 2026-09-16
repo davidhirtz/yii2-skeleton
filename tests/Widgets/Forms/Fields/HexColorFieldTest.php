@@ -19,7 +19,7 @@ class HexColorFieldTest extends TestCase
             ->render();
 
         self::assertStringContainsString('<color-picker><div class="input-group">', $content);
-        self::assertStringContainsString('<input type="color" id="i1-color" value="#ff0000" required>', $content);
+        self::assertStringContainsString('<input type="color" id="i1-color" class="input" value="#ff0000" required>', $content);
         self::assertStringContainsString('</div></color-picker>', $content);
     }
 
@@ -29,7 +29,7 @@ class HexColorFieldTest extends TestCase
             ->attribute('value', 'f00')
             ->render();
 
-        self::assertStringContainsString('<input type="color" id="i1-color" value="#ff0000" required>', $content);
+        self::assertStringContainsString('<input type="color" id="i1-color" class="input" value="#ff0000" required>', $content);
         self::assertStringContainsString('value="#f00"', $content);
     }
 }
