@@ -103,6 +103,7 @@ class GridView extends Widget
     protected bool $showOnEmpty = true;
 
     protected string $layout = '{header}{summary}{items}{pager}{footer}';
+
     /**
      * @var array<int|string, mixed>|null
      */
