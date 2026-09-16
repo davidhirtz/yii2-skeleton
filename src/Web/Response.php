@@ -13,7 +13,10 @@ use Hirtz\Skeleton\Helpers\Url;
 
 class Response extends \yii\web\Response
 {
-    protected string $htmxRedirectTarget = '#wrap';
+    /**
+     * `null` leaves the swap to whatever issued the request; see {@see setHtmxRedirectTarget()}.
+     */
+    protected ?string $htmxRedirectTarget = '#wrap';
 
     private bool $isHtmxRefresh = false;
 
@@ -74,7 +77,7 @@ class Response extends \yii\web\Response
 
         $headers = $this->getHeaders();
 
-        if ($request->isHtmxRequest()) {
+        if ($request->isHtmxRequest() && $this->htmxRedirectTarget !== null) {
             $headers->set('HX-Location', Json::encode([
                 'path' => $url,
                 'target' => $this->htmxRedirectTarget,
@@ -87,7 +90,16 @@ class Response extends \yii\web\Response
         return $this->setStatusCode($statusCode);
     }
 
-    public function setHtmxRedirectTarget(string $target): static
+    /**
+     * `HX-Location` is the navigation: it carries its own swap context and so overrides the `hx-select`, `hx-swap`
+     * and `hx-select-oob` of whatever issued the request, which is what lets it replace the page and push the URL.
+     * An action refreshing a region of the page the user is already on passes `null` instead, and is answered with
+     * an ordinary redirect the requesting element follows itself, leaving all three of its attributes to apply.
+     *
+     * Which of the two it is only the action knows: a form targets itself so its validation errors land in place,
+     * and still navigates away once it saves.
+     */
+    public function setHtmxRedirectTarget(?string $target): static
     {
         $this->htmxRedirectTarget = $target;
         return $this;

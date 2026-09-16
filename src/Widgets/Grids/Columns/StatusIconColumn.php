@@ -85,15 +85,8 @@ class StatusIconColumn extends LinkColumn
                 'next' => $next->getName(),
             ]))
             ->ariaLabel($next->getName())
-            // The grid alone, not the body's `#wrap`: a swap of the whole page empties the document for an instant,
-            // which clamps the scroll position to the top, and a status toggle must leave the user where they are.
-            // The body's `hx-select-oob` is left alone, so the flash the action redirects with still lands.
-            ->addAttributes([
-                'hx-select' => "#{$this->grid->getId()}",
-                'hx-target' => "#{$this->grid->getId()}",
-                'hx-swap' => 'outerHTML',
-            ])
-            ->post($url);
+            // The grid alone, so a status toggle leaves the user where they are.
+            ->replace($url, "#{$this->grid->getId()}");
     }
 
     /**

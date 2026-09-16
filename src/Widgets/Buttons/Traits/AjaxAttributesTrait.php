@@ -21,12 +21,23 @@ trait AjaxAttributesTrait
     }
 
     /**
+     * Swaps one element of the page rather than the body's `#wrap`: a swap of the whole page empties the document
+     * for an instant, which clamps the scroll position to the top. The `hx-swap` beats the body's `show:top`, and
+     * naming an element in `$selectOob` replaces the body's own `hx-select-oob`, so the flashes are named again.
+     *
      * @param array<int|string, mixed>|string $url
+     * @param string $target the element to swap, under an id both the page and the response resolve
+     * @param string|null $selectOob what the response also refreshes, such as a counter outside the target
      */
-    public function replace(string|array $url, string $target): static
+    public function replace(string|array $url, string $target, ?string $selectOob = null): static
     {
         $this->attributes['hx-select'] = $target;
+        $this->attributes['hx-swap'] = 'outerHTML';
         $this->attributes['hx-target'] = $target;
+
+        if ($selectOob) {
+            $this->attributes['hx-select-oob'] = "#flashes:beforeend,$selectOob";
+        }
 
         return $this->post($url);
     }

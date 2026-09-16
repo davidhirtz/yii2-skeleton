@@ -1,5 +1,19 @@
 ## 3.0.0 (in development)
 
+- **A redirect no longer decides the htmx swap for the element that asked for it** (monorepo issue #135).
+  `Web\Response::redirect()` answered every htmx request with `HX-Location`, which carries its own swap context
+  and therefore overrode the `hx-select`, `hx-swap` and `hx-select-oob` of whatever issued the request — so the
+  grid-only swap of `Widgets\Grids\Columns\StatusIconColumn` had never worked and a status toggle threw the user
+  back to the top of the page. `setHtmxRedirectTarget()` takes `?string` now, and `null` answers with an ordinary
+  redirect the requesting element follows itself, leaving all three of its attributes to apply.
+  `Web\Traits\StatusControllerTrait::updateStatus()` passes it. Which of the two a redirect is only the action
+  knows — a form targets itself so its validation errors land in place, and still navigates away once it saves.
+
+- `Widgets\Buttons\Traits\AjaxAttributesTrait::replace()` sets `hx-swap` to `outerHTML` beside the target it
+  already set, so it beats the body's `show:top`, and takes an optional `$selectOob` for what the response
+  refreshes besides the target — prepending the flash container, which naming one of your own would otherwise
+  replace. `StatusIconColumn` uses it in place of writing the attributes itself.
+
 - **`Test\TestCase` raises `error_reporting()` to `E_ALL` for the duration of a test**, so a deprecation, warning
   or notice is an `ErrorException` and a test error — exactly what it is in a browser (monorepo issue #129).
   PHPUnit deliberately lowers the mask, because its own handler is called whatever it says; the application's

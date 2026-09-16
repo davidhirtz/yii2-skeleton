@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Web\Traits;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\Controller;
 use Yii;
 use yii\base\Module;
@@ -41,6 +42,9 @@ trait StatusControllerTrait
         }
 
         $this->error($model);
+
+        // The icon swaps its own grid, so the redirect is an ordinary one it follows itself.
+        Application::current()->getResponse()->setHtmxRedirectTarget(null);
 
         return $this->redirect($this->request->getReferrer() ?? ['index']);
     }
