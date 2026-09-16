@@ -64,6 +64,13 @@ class MigrateControllerTest extends TestCase
 
         $filename = $backups[0];
 
+        // The restore drops and recreates every table through the `mysql` client, which needs an exclusive
+        // metadata lock on each of them — and the test transaction holds a shared one on every table it has
+        // read, `migration` among them since `beforeAction()` reads the history. The two wait on each other
+        // for `lock_wait_timeout`, a day by default, so the run wedges rather than fails. `tearDown()` notices
+        // the ended transaction and unloads the fixtures by hand.
+        Application::current()->getDb()->getTransaction()?->rollBack();
+
         $controller->runAction('restore');
         $stdout = $controller->flushStdOutBuffer();
 

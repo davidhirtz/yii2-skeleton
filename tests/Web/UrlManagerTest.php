@@ -324,6 +324,11 @@ class UrlManagerTest extends TestCase
      */
     protected function getUrlManager($config = []): UrlManager
     {
+        // The tenant bundle points the container at its own subclass, which pins the host of whichever tenant
+        // it resolves — a row the seed migration puts into every database it creates. This is the skeleton's
+        // own URL manager under test, so the definition is cleared rather than the host asserted around.
+        Yii::$container->clear(UrlManager::class);
+
         Yii::$app->set('urlManager', [
             'class' => UrlManager::class,
             ...$config,
