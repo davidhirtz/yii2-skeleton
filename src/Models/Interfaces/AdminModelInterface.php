@@ -25,4 +25,10 @@ interface AdminModelInterface
     public function getAdminType(): string;
 
     public function getAdminIcon(): ?string;
+
+    /**
+     * How this model is named in the query string of a controller that is scoped to it, so a widget can build that
+     * controller's routes without knowing which model it has.
+     */
+    public function getParamName(): string;
 }

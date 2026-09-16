@@ -1,5 +1,11 @@
 ## 3.0.0 (in development)
 
+- **`Models\Interfaces\AdminModelInterface` declares `getParamName()`**, implemented by
+  `Models\Traits\AdminModelTrait`, so a widget can build the routes of a controller scoped to a model without
+  knowing which model it has. It moved up from the media bundle's `AssetModelInterface`, where a second
+  polymorphic relation needed the same thing. A model implementing the interface without the trait has to
+  declare it.
+
 - **A redirect no longer decides the htmx swap for the element that asked for it** (monorepo issue #135).
   `Web\Response::redirect()` answered every htmx request with `HX-Location`, which carries its own swap context
   and therefore overrode the `hx-select`, `hx-swap` and `hx-select-oob` of whatever issued the request — so the

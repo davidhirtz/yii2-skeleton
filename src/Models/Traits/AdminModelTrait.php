@@ -12,6 +12,7 @@ use ReflectionClass;
 use Yii;
 use yii\base\Model;
 use yii\db\ActiveRecordInterface;
+use yii\helpers\Inflector;
 
 /**
  * {@see AdminModelInterface::getAdminRoute()} is deliberately not implemented here: only the model knows its
@@ -42,6 +43,11 @@ trait AdminModelTrait
         }
 
         return (new ReflectionClass(static::class))->getShortName();
+    }
+
+    public function getParamName(): string
+    {
+        return Inflector::slug($this->formName());
     }
 
     public function getAdminIcon(): ?string
