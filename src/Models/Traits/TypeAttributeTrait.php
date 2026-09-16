@@ -8,6 +8,7 @@ use Closure;
 use Hirtz\Skeleton\Models\Definitions\DefinitionRegistry;
 use Hirtz\Skeleton\Models\Types\Type;
 use Yii;
+use yii\base\InvalidConfigException;
 
 /**
  * {@see static::getTypes()} is the declaration; everything reads {@see static::getTypeDefinitions()},
@@ -26,6 +27,9 @@ trait TypeAttributeTrait
      * Instantiates a class based on the given `type`. In contrast to the original implementation, this can be used for
      * creating new records directly, as it also populates the model.
      *
+     * A caller holding a type rather than a row takes {@see static::instantiateByType()}, whose `?int` the analyser
+     * checks — a misspelled key here falls through to the base class as silently as no key at all.
+     *
      * @param array<string, mixed> $row
      */
     public static function instantiate($row): static
@@ -35,6 +39,48 @@ trait TypeAttributeTrait
 
         $model = $className::create();
         $model->setAttributes($row, false);
+
+        return $model;
+    }
+
+    /**
+     * **A record whose type is known is built here, never through `create()` or {@see Yii::createObject()}.**
+     * Assigning `type` to an already-built record leaves the base class, with the base class's definitions, rules
+     * and lifecycle hooks — and nothing catches it, since the wrong class is a valid instance of the right base.
+     * {@see static::loadDefaultValues()} runs after this, or the column default wins over the type asked for.
+     */
+    public static function instantiateByType(?int $type): static
+    {
+        return static::instantiate(['type' => $type]);
+    }
+
+    /**
+     * The type a form posted decides the class, so it is read before the record is built: a type select reloads the
+     * form by posting to the same action, and {@see static::load()} cannot change the class of a record that already
+     * exists. `$type` is the fallback the route carries, for the first request, which posts nothing.
+     *
+     * @param array<string, mixed> $data the request body, as {@see static::load()} takes it
+     */
+    public static function instantiateFromPost(array $data, ?int $type = null): static
+    {
+        $formName = static::instance()->formName();
+        $attributes = ($formName === '' ? $data : $data[$formName] ?? null);
+
+        $posted = is_array($attributes)
+            ? static::normalizeTypeValue($attributes['type'] ?? null)
+            : null;
+
+        $model = static::instantiateByType($posted ?? $type);
+
+        // A form name follows the runtime class, so a family answering different ones would post under one and
+        // load under another, dropping everything typed on the type switch. The fix is an override pinning it.
+        if ($model->formName() !== $formName) {
+            throw new InvalidConfigException(
+                $model::class . ', which a type of ' . static::class . ' names, answers the form name "'
+                . $model->formName() . '" instead of "' . $formName . '" — a record built from what a form posted '
+                . 'needs them to agree.'
+            );
+        }
 
         return $model;
     }
@@ -121,7 +167,7 @@ trait TypeAttributeTrait
             $instances = [];
 
             foreach (static::getTypeDefinitions() as $value => $definition) {
-                $instance = static::instantiate(['type' => $value]);
+                $instance = static::instantiateByType($value);
                 $instance->type = $value;
 
                 $instances[$value] = $instance;

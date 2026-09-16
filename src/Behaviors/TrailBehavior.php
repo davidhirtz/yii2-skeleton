@@ -93,8 +93,7 @@ class TrailBehavior extends Behavior
         }
 
         if ($data) {
-            $trail = $this->createTrail();
-            $trail->type = $insert ? Trail::TYPE_CREATE : Trail::TYPE_UPDATE;
+            $trail = $this->createTrail($insert ? Trail::TYPE_CREATE : Trail::TYPE_UPDATE);
             $trail->data = $data;
             $this->insertTrail($trail);
         }
@@ -102,14 +101,16 @@ class TrailBehavior extends Behavior
 
     protected function onAfterDelete(): void
     {
-        $trail = $this->createTrail();
-        $trail->type = Trail::TYPE_DELETE;
-        $this->insertTrail($trail);
+        $this->insertTrail($this->createTrail(Trail::TYPE_DELETE));
     }
 
-    protected function createTrail(): Trail
+    /**
+     * The type is taken here rather than assigned afterwards: it decides the class, see
+     * {@see Trail::instantiate()}.
+     */
+    protected function createTrail(int $type): Trail
     {
-        $trail = Trail::create();
+        $trail = Trail::instantiateByType($type);
         $trail->model_class = $this->modelClass;
 
         if ($this->owner instanceof ActiveRecord) {

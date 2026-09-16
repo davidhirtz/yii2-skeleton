@@ -312,10 +312,9 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
 
     public function afterPasswordChange(): void
     {
-        $trail = Trail::create();
+        $trail = Trail::instantiateByType(Trail::TYPE_PASSWORD);
         $trail->model_class = User::class;
         $trail->model_id = (string)$this->id;
-        $trail->type = Trail::TYPE_PASSWORD;
         $trail->insert();
     }
 

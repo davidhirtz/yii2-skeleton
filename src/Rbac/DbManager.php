@@ -51,8 +51,7 @@ class DbManager extends \yii\rbac\DbManager
     {
         $item = $this->getItem($assignment->roleName);
 
-        $trail = Trail::create();
-        $trail->type = $type;
+        $trail = Trail::instantiateByType($type);
         $trail->model_class = User::class;
         $trail->model_id = (string)$userId;
 

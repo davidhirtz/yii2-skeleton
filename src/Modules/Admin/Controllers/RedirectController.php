@@ -57,8 +57,7 @@ class RedirectController extends Controller
 
     public function actionCreate(?int $type = null): Response|string
     {
-        $redirect = Redirect::create();
-        $redirect->type = $type;
+        $redirect = Redirect::instantiateFromPost($this->request->post(), $type);
 
         if (!$this->webuser->can(Redirect::AUTH_REDIRECT)) {
             throw new ForbiddenHttpException();

@@ -116,6 +116,72 @@ class TypeAttributeTraitTest extends TestCase
         self::assertInstanceOf(TypeRecord::class, TypeRecord::instantiate([]));
     }
 
+    public function testInstantiateByTypeReadsTheModelClass(): void
+    {
+        $child = TypeRecord::instantiateByType(TypeRecord::TYPE_CHILD);
+
+        self::assertInstanceOf(TypeRecordChild::class, $child);
+        self::assertSame(TypeRecord::TYPE_CHILD, $child->type);
+
+        self::assertNotInstanceOf(TypeRecordChild::class, TypeRecord::instantiateByType(null));
+        self::assertNotInstanceOf(TypeRecordChild::class, TypeRecord::instantiateByType(TypeRecord::TYPE_DEFAULT));
+    }
+
+    public function testThePostedTypeDecidesTheClass(): void
+    {
+        $post = ['TypeRecord' => ['type' => (string)TypeRecord::TYPE_CHILD]];
+
+        self::assertInstanceOf(TypeRecordChild::class, TypeRecord::instantiateFromPost($post));
+        self::assertInstanceOf(
+            TypeRecordChild::class,
+            TypeRecord::instantiateFromPost($post, TypeRecord::TYPE_DEFAULT),
+            'The posted type has to win over the one the route carries.',
+        );
+    }
+
+    /**
+     * The route's type is what the first request has, which posts nothing at all.
+     */
+    public function testAPostWithoutAUsableTypeFallsBackToTheRoute(): void
+    {
+        $type = TypeRecord::TYPE_CHILD;
+
+        foreach ([[], ['Other' => ['type' => 1]], ['TypeRecord' => ['name' => 'x']], ['TypeRecord' => ['type' => '']]] as $post) {
+            self::assertInstanceOf(TypeRecordChild::class, TypeRecord::instantiateFromPost($post, $type));
+        }
+
+        self::assertNotInstanceOf(TypeRecordChild::class, TypeRecord::instantiateFromPost([]));
+    }
+
+    public function testAFormNameLessModelReadsTheTopLevelPost(): void
+    {
+        $record = TypeRecordWithoutFormName::instantiateFromPost(['type' => TypeRecord::TYPE_CHILD]);
+        self::assertInstanceOf(TypeRecordWithoutFormNameChild::class, $record);
+    }
+
+    /**
+     * A form name follows the runtime class, so a type naming one that answers a different name would post under
+     * one and load under another — silently dropping everything typed on the type switch.
+     */
+    public function testAModelClassChangingTheFormNameThrows(): void
+    {
+        TypeRecord::$types = [
+            Type::make(TypeRecord::TYPE_DEFAULT)
+                ->name('Default'),
+            Type::make(TypeRecord::TYPE_CHILD)
+                ->name('Child')
+                ->modelClass(TypeRecordWithOwnFormName::class),
+        ];
+
+        $post = ['TypeRecord' => ['type' => TypeRecord::TYPE_CHILD]];
+
+        // The type itself stays usable — only building from what a form posted needs the names to agree.
+        self::assertInstanceOf(TypeRecordWithOwnFormName::class, TypeRecord::instantiateByType(TypeRecord::TYPE_CHILD));
+
+        $this->expectException(InvalidConfigException::class);
+        TypeRecord::instantiateFromPost($post);
+    }
+
     public function testTypeInstancesCarryTheirTypeAndModelClass(): void
     {
         $instances = TypeRecord::getTypeInstances();
@@ -171,6 +237,16 @@ class TypeRecord extends ActiveRecord implements TypeAttributeInterface
     final public const int TYPE_CHILD = 2;
 
     /**
+     * Pinned across the subclasses a type names: the form name follows the runtime class otherwise, and a type
+     * switch would post under one and load under another.
+     */
+    #[Override]
+    public function formName(): string
+    {
+        return 'TypeRecord';
+    }
+
+    /**
      * @var list<Type>|null
      */
     public static ?array $types = null;
@@ -205,6 +281,44 @@ class TypeRecord extends ActiveRecord implements TypeAttributeInterface
     }
 }
 
+/**
+ * A type's model class keeps the form name of the class declaring the types, which is what lets a form switch
+ * between them — {@see TypeRecord::formName()}.
+ */
 class TypeRecordChild extends TypeRecord
+{
+}
+
+class TypeRecordWithOwnFormName extends TypeRecord
+{
+    #[Override]
+    public function formName(): string
+    {
+        return 'Something else';
+    }
+}
+
+class TypeRecordWithoutFormName extends TypeRecord
+{
+    #[Override]
+    public function getTypes(): array
+    {
+        return [
+            Type::make(self::TYPE_DEFAULT)
+                ->name('Default'),
+            Type::make(self::TYPE_CHILD)
+                ->name('Child')
+                ->modelClass(TypeRecordWithoutFormNameChild::class),
+        ];
+    }
+
+    #[Override]
+    public function formName(): string
+    {
+        return '';
+    }
+}
+
+class TypeRecordWithoutFormNameChild extends TypeRecordWithoutFormName
 {
 }

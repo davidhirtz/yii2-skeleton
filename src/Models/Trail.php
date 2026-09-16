@@ -228,8 +228,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
      */
     public static function createOrderTrail(?TrailModelInterface $model, ?Message $message = null, array $data = []): static
     {
-        $trail = static::create();
-        $trail->type = static::TYPE_ORDER;
+        $trail = static::instantiateByType(static::TYPE_ORDER);
 
         if ($model) {
             $trail->model_class = $model->getTrailBehavior()->modelClass;

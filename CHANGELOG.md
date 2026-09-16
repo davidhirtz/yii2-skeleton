@@ -1,5 +1,27 @@
 ## 3.0.0 (in development)
 
+- **A record built from a type the caller already knows goes through
+  `Models\Traits\TypeAttributeTrait::instantiateByType()`, never `create()`** (monorepo issue #105). It resolves
+  the class the type names through `Models\Types\Type::getModelClass()`, so building the record any other way and
+  assigning `type` afterwards silently hands back the base class — with the base class's definitions, rules and
+  lifecycle hooks. Nothing catches it, since the wrong class is still a valid instance of the right base.
+
+  **`Behaviors\TrailBehavior::createTrail()` therefore takes the type**, `createTrail(int $type)`, rather than
+  having it assigned to the returned trail; an override has to follow. `Models\Trail::createOrderTrail()`,
+  `Models\User::afterPasswordChange()`, `Rbac\DbManager::createTrail()` and
+  `Modules\Admin\Controllers\RedirectController::actionCreate()` were the other call sites here.
+
+- **`TypeAttributeTrait::instantiateFromPost(array $data, ?int $type = null)` is what a create action builds
+  with.** A type select reloads the form by posting to the same action, and `load()` cannot change the class of a
+  record that already exists — so the posted type is read first and `$type`, the one the route carries, is the
+  fallback for the first request. It takes the body rather than reaching for the request, the way `load()` does.
+
+  **A consequence for `Type::modelClass()`: every class in a type family has to answer the same `formName()`.**
+  It follows the runtime class otherwise, so the form would post under one name and load under another and drop
+  everything typed on the switch; `Models\Asset::formName()` in `yii2-media` is what pinning it looks like.
+  `instantiateFromPost()` throws an `InvalidConfigException` naming the class when the two disagree, rather than
+  losing the input.
+
 - **`Validators\HtmlValidator::$allowedClasses` also takes a `Closure` returning the array.** A class may carry a
   human-readable label as its key, which `Widgets\Forms\Fields\TinyMceField` renders as the dropdown entry — and
   a translated label is a `Yii::t()` result, which resolves before the application has an `i18n` component when it
