@@ -38,11 +38,18 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
         $enabled = $this->model->hasTwoFactorAuthentication();
 
         $this->action ??= $enabled ? ['account/disable-authenticator'] : ['account/enable-authenticator'];
-        $this->rows ??= $enabled ? $this->getDisableAuthenticatorRows() : $this->getEnableAuthenticatorRows();
         $this->submitButtonText ??= $enabled ? Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_DISABLE') : Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_ENABLE');
         $this->footer ??= false;
 
         parent::configure();
+    }
+
+    #[Override]
+    protected function getDefaultRows(): array
+    {
+        return $this->model->hasTwoFactorAuthentication()
+            ? $this->getDisableAuthenticatorRows()
+            : $this->getEnableAuthenticatorRows();
     }
 
     /**

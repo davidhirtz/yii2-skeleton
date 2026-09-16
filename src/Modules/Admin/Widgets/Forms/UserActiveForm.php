@@ -29,7 +29,22 @@ class UserActiveForm extends ActiveForm
     {
         $this->readonly = !$this->webuser->can(User::AUTH_USER, ['user' => $this->model->user]);
 
-        $this->rows ??= [
+        $this->submitButtonText ??= $this->model->user->getIsNewRecord()
+            ? Yii::t('skeleton', 'COMMON_CREATE')
+            : Yii::t('skeleton', 'COMMON_UPDATE');
+
+        $this->footer ??= [
+            $this->getUpdatedAtFooterItem(),
+            $this->getCreatedAtFooterItem(),
+        ];
+
+        parent::configure();
+    }
+
+    #[Override]
+    protected function getDefaultRows(): array
+    {
+        return [
             [
                 $this->getStatusField(),
                 $this->getNameField(),
@@ -48,17 +63,6 @@ class UserActiveForm extends ActiveForm
                 $this->sendEmailField(),
             ],
         ];
-
-        $this->submitButtonText ??= $this->model->user->getIsNewRecord()
-            ? Yii::t('skeleton', 'COMMON_CREATE')
-            : Yii::t('skeleton', 'COMMON_UPDATE');
-
-        $this->footer ??= [
-            $this->getUpdatedAtFooterItem(),
-            $this->getCreatedAtFooterItem(),
-        ];
-
-        parent::configure();
     }
 
     protected function getUpdatedAtFooterItem(): Stringable

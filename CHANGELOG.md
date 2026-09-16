@@ -1,5 +1,33 @@
 ## 3.0.0 (in development)
 
+- **`Widgets\Forms\ActiveForm::$rows` is `$fieldsets`, a normalized `list<Fieldset>`, and a form declares its own
+  rows in `getDefaultRows()`.** Rows could be a flat list of fields, a list of groups or a list of fieldsets, and
+  which one it was got sniffed off the *first* element with the answer applied to the rest. So a bare field behind a
+  group was handed to a fieldset that never got its model — `Call to a member function getActiveValidators() on
+  null`, one row order away — and every reader downstream had to repeat the guess: `Cms\Shopify\Bootstrap`
+  re-implemented it to insert a field from another bundle, and the cms `EntryActiveForm` a second time to add its
+  tenant row (monorepo issue #120).
+
+  All three shapes still go in, and `normalizeRows()` turns them into fieldsets once, before `EVENT_CONFIGURE`
+  fires. So a listener is handed `list<Fieldset>` and can reach a single fieldset instead of guessing at the form:
+
+  ```php
+  $form->rows(static function (array $fieldsets): array {
+      $fieldsets[0]->rows(static fn (array $rows): array => [...$rows, MyField::make()]);
+      return $fieldsets;
+  });
+  ```
+
+  **A subclass overrides `getDefaultRows()` instead of assigning `$this->rows ??=` in `configure()`**, or its rows
+  reach neither the normalizer nor a listener. Mixing a bare field into a list of groups is now an
+  `InvalidConfigException` naming the form, rather than a fatal further down.
+
+- **`Widgets\Forms\Fieldset::rows()` takes a `Closure`** handed the current rows, the same shape
+  `Widgets\Grids\GridView::columns()` and `Widgets\Navs\Traits\ItemTrait::items()` already had, and
+  `Fieldset::getRows()` reads them back. That pair is what lets another bundle place a field inside one fieldset.
+  `ActiveForm::getFieldset()` is gone — `createFieldset()` replaces it and answers a `Fieldset` rather than a
+  `Stringable`.
+
 - **A type change always reloads the page, and a hidden field is gone rather than hidden.** The two halves of what a
   type decides were answered separately: `Widgets\Forms\Fields\TypeSelectField` reloaded the form only when the
   candidate types fingerprinted to different *custom attributes*, and `Models\Types\Type::hiddenFields()` was a list

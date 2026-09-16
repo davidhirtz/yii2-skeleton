@@ -37,15 +37,19 @@ class LoginActiveForm extends ActiveForm
         $this->attributes['hx-select'] ??= '#wrap';
         $this->attributes['id'] ??= 'login-form';
 
-        $this->rows ??= [
+        $this->submitButtonText ??= Yii::t('skeleton', 'COMMON_LOGIN');
+
+        parent::configure();
+    }
+
+    #[Override]
+    protected function getDefaultRows(): array
+    {
+        return [
             $this->getEmailField(),
             $this->getPasswordField('current-password'),
             $this->getRememberMeField(),
         ];
-
-        $this->submitButtonText ??= Yii::t('skeleton', 'COMMON_LOGIN');
-
-        parent::configure();
     }
 
     protected function getRememberMeField(): ?Stringable

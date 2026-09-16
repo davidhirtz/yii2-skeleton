@@ -78,7 +78,7 @@ abstract class AbstractSignupForm extends Model
     {
         return [
             ...$this->user->attributeLabels(),
-            'password' => Yii::t('skeleton', 'ABSTRACT_SIGNUP_PASSWORD_LABEL'),
+            'password' => Yii::t('skeleton', 'SIGNUP_PASSWORD_LABEL'),
         ];
     }
 }

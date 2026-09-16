@@ -12,7 +12,6 @@ use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Buttons\ButtonGroup;
-use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
 use Hirtz\Skeleton\Widgets\Forms\Footers\FormFooter;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Hirtz\Skeleton\Widgets\Widget;
@@ -21,6 +20,7 @@ use Stringable;
 use Yii;
 use yii\db\ActiveRecordInterface;
 use yii\helpers\Inflector;
+use yii\base\InvalidConfigException;
 use yii\web\Controller;
 use yii\base\Model;
 
@@ -63,9 +63,12 @@ class ActiveForm extends Widget
     protected array $excludedErrorProperties = [];
 
     /**
-     * @var array<array<Field|Stringable|string|null>|Stringable|string>|null
+     * What `rows()` was given, normalized. A row of a form is a label and its content — `Fieldset::$rows` holds
+     * those — so what a form itself holds is the fieldsets they sit in.
+     *
+     * @var list<Fieldset>|null
      */
-    protected ?array $rows = null;
+    protected ?array $fieldsets = null;
 
     /**
      * @param array<int|string, mixed>|string|null $action
@@ -78,16 +81,16 @@ class ActiveForm extends Widget
 
     /**
      * The closure form is what an outside listener uses to insert a field of its own: the collection is not
-     * public, so it is handed the current one and returns the one it wants.
+     * public, so it is handed the current one and returns the one it wants. Whatever shape it returns is
+     * normalized, so the closure may hand back the fieldsets it was given.
      *
-     * @param array<mixed>|null|Closure(array<mixed>): (array<mixed>|null) $rows
+     * @param array<mixed>|null|Closure(list<Fieldset>): (array<mixed>|null) $rows
      * @return $this
      */
     public function rows(array|null|Closure $rows): static
     {
-        $this->rows = $rows instanceof Closure
-            ? $rows($this->rows ?? [])
-            : $rows;
+        $rows = $rows instanceof Closure ? $rows($this->fieldsets ?? []) : $rows;
+        $this->fieldsets = null === $rows ? null : $this->normalizeRows($rows);
 
         return $this;
     }
@@ -108,9 +111,58 @@ class ActiveForm extends Widget
         $this->attributes['hx-target'] ??= $this->attributes['hx-select'];
         $this->attributes['hx-boost'] ??= "true";
 
-        $this->rows ??= $this->model?->safeAttributes() ?: [];
+        $this->fieldsets = $this->normalizeRows($this->fieldsets ?? $this->getDefaultRows());
 
         parent::configure();
+    }
+
+    /**
+     * The rows a form shows when the caller named none. A subclass declares its fields here rather than assigning
+     * `$fieldsets`, so whatever it returns is normalized before an `EVENT_CONFIGURE` listener ever sees it.
+     *
+     * @return array<mixed>
+     */
+    protected function getDefaultRows(): array
+    {
+        return $this->model?->safeAttributes() ?: [];
+    }
+
+    /**
+     * Rows are declared as a flat list of fields, as a list of groups or as fieldsets, and become a list of
+     * fieldsets here — so a subclass, a listener and the render all see one shape. Mixing a bare field into a list
+     * of groups is refused rather than guessed at: the old sniff asked only the first element and applied its
+     * answer to the rest, which rendered a fieldset that never got its model.
+     *
+     * @param array<mixed> $rows
+     * @return list<Fieldset>
+     */
+    protected function normalizeRows(array $rows): array
+    {
+        $rows = array_values(array_filter(
+            $rows,
+            static fn (mixed $row): bool => null !== $row && '' !== $row,
+        ));
+
+        $groups = array_filter($rows, static fn (mixed $row): bool => is_array($row) || $row instanceof Fieldset);
+
+        if (!$groups) {
+            return $rows ? [$this->createFieldset($rows)] : [];
+        }
+
+        if (count($groups) !== count($rows)) {
+            throw new InvalidConfigException(static::class . '::rows() takes either a flat list of fields or a '
+                . 'list of groups, not both. Wrap the bare fields in a group of their own.');
+        }
+
+        return array_map($this->createFieldset(...), $rows);
+    }
+
+    /**
+     * @param array<mixed>|Fieldset $rows
+     */
+    protected function createFieldset(array|Fieldset $rows): Fieldset
+    {
+        return $rows instanceof Fieldset ? $rows : Fieldset::make()->rows($rows);
     }
 
     protected function renderContent(): string|Stringable
@@ -142,34 +194,18 @@ class ActiveForm extends Widget
 
     protected function getRows(): string|Stringable
     {
-        if (!$this->rows) {
-            return '';
-        }
-
-        $content = is_array(current($this->rows)) || current($this->rows) instanceof Fieldset
-            ? implode('', array_map($this->getFieldset(...), $this->rows))
-            : (string)$this->getFieldset($this->rows);
+        $content = implode('', array_map(
+            fn (Fieldset $fieldset): string => (string)$fieldset
+                ->attribute('disabled', $this->readonly)
+                ->form($this),
+            $this->fieldsets ?? [],
+        ));
 
         return $content
             ? Div::make()
                 ->class('form-rows')
                 ->content($content)
             : '';
-    }
-
-    /**
-     * @param array<int|string, mixed>|Fieldset|string|Stringable $fieldsetOrRows
-     */
-    protected function getFieldset(array|Fieldset|string|Stringable $fieldsetOrRows): ?Stringable
-    {
-        if (!$fieldsetOrRows instanceof Fieldset) {
-            $fieldsetOrRows = Fieldset::make()
-                ->rows(is_array($fieldsetOrRows) ? $fieldsetOrRows : [$fieldsetOrRows]);
-        }
-
-        return $fieldsetOrRows
-            ->attribute('disabled', $this->readonly)
-            ->form($this);
     }
 
     protected function getButtons(): ?Stringable

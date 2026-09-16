@@ -20,9 +20,9 @@ class AccountActiveForm extends ActiveForm
     use UserActiveFormTrait;
 
     #[Override]
-    protected function configure(): void
+    protected function getDefaultRows(): array
     {
-        $this->rows ??= [
+        return [
             [
                 $this->getNameField(),
             ],
@@ -34,7 +34,5 @@ class AccountActiveForm extends ActiveForm
                 ...$this->getUserCustomAttributeFields(),
             ],
         ];
-
-        parent::configure();
     }
 }

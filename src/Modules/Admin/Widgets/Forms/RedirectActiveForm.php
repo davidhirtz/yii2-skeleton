@@ -14,14 +14,12 @@ use Override;
 class RedirectActiveForm extends ActiveForm
 {
     #[Override]
-    protected function configure(): void
+    protected function getDefaultRows(): array
     {
-        $this->rows ??= [
+        return [
             'type',
             'request_uri',
             'url',
         ];
-
-        parent::configure();
     }
 }

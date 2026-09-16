@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Forms;
 
+use Closure;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
@@ -41,17 +42,37 @@ class Fieldset extends Widget
     use ModelTrait;
 
     /**
-     * @var Stringable[]|string[]
+     * @var list<Field|Stringable|string>
      */
     protected array $rows = [];
 
     /**
-     * @param array<Field|Stringable|string|null> $rows
+     * The closure form is what an outside listener uses to insert a field of its own: the collection is not
+     * public, so it is handed the current one and returns the one it wants.
+     *
+     * @param array<Field|Stringable|string|null>|Closure(list<Field|Stringable|string>): array<Field|Stringable|string|null> $rows
      */
-    public function rows(array $rows): static
+    public function rows(array|Closure $rows): static
     {
-        $this->rows = array_filter($rows);
+        $rows = $rows instanceof Closure ? $rows($this->rows) : $rows;
+
+        $this->rows = array_values(array_filter(
+            $rows,
+            static fn (Field|Stringable|string|null $row): bool => null !== $row && '' !== $row,
+        ));
+
         return $this;
+    }
+
+    /**
+     * Before `configure()` these are the rows as declared — a property name, a field or any other stringable.
+     * Afterwards they are the resolved fields, cloned per language where the model translates them.
+     *
+     * @return list<Field|Stringable|string>
+     */
+    public function getRows(): array
+    {
+        return $this->rows;
     }
 
     #[Override]

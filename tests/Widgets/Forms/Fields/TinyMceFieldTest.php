@@ -48,8 +48,13 @@ class TestContentFieldActiveForm extends ActiveForm
     {
         $this->action = '/';
         $this->model = new TestContentFieldModel();
-        $this->rows = ['content'];
 
         parent::configure();
+    }
+
+    #[Override]
+    protected function getDefaultRows(): array
+    {
+        return ['content'];
     }
 }

@@ -79,7 +79,7 @@ class AccountResendConfirmForm extends Model
     protected function validateSpamProtection(): void
     {
         if ($this->isAlreadySent()) {
-            $this->addIdentityError(Yii::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_WE', [
+            $this->addIdentityError(Yii::t('skeleton', 'ACCOUNT_ERROR_RESEND_ALREADY_SENT', [
                 'email' => $this->user->email,
             ]));
         }

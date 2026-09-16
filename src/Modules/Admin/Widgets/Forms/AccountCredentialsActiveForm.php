@@ -22,9 +22,9 @@ class AccountCredentialsActiveForm extends ActiveForm
     use UserActiveFormTrait;
 
     #[Override]
-    protected function configure(): void
+    protected function getDefaultRows(): array
     {
-        $this->rows ??= [
+        return [
             [
                 $this->getEmailField(),
             ],
@@ -36,8 +36,6 @@ class AccountCredentialsActiveForm extends ActiveForm
                 $this->getOldPasswordField(),
             ],
         ];
-
-        parent::configure();
     }
 
     protected function getOldPasswordField(): string|Stringable

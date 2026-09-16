@@ -13,6 +13,7 @@ use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
 use Hirtz\Skeleton\Widgets\Forms\Fields\CheckboxField;
 use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
 use Hirtz\Skeleton\Widgets\Icon;
+use Override;
 use Stringable;
 use Yii;
 
@@ -36,7 +37,7 @@ class SignupActiveForm extends ActiveForm
      */
     public array $excludedErrorProperties = ['name', 'email', 'password'];
 
-    #[\Override]
+    #[Override]
     protected function configure(): void
     {
         $this->registerSignupClientScript();
@@ -44,7 +45,15 @@ class SignupActiveForm extends ActiveForm
         $this->attributes['id'] ??= 'signup-form';
         $this->attributes['data-id'] = 'signup';
 
-        $this->rows ??= [
+        $this->submitButtonText ??= Yii::t('skeleton', 'SIGNUP_ACTIVE_CREATE_ACCOUNT');
+
+        parent::configure();
+    }
+
+    #[Override]
+    protected function getDefaultRows(): array
+    {
+        return [
             $this->getUsernameField(),
             $this->getEmailField(),
             $this->getPasswordField('new-password'),
@@ -53,10 +62,6 @@ class SignupActiveForm extends ActiveForm
             $this->getTokenField(),
             $this->getTimezoneField(),
         ];
-
-        $this->submitButtonText ??= Yii::t('skeleton', 'SIGNUP_ACTIVE_CREATE_ACCOUNT');
-
-        parent::configure();
     }
 
     protected function getUsernameField(): ?Stringable

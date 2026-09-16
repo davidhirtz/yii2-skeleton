@@ -8,7 +8,9 @@ use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
+use Hirtz\Skeleton\Widgets\Forms\Fieldset;
 use Override;
+use yii\base\InvalidConfigException;
 use yii\base\Model;
 
 class ActiveFormTest extends TestCase
@@ -56,6 +58,60 @@ class ActiveFormTest extends TestCase
         self::assertStringContainsString('Block 2', $content);
         self::assertStringContainsString('<div class="form-label"><label class="label" for="testmodel-text">Text</label>', $content);
         self::assertStringNotContainsString('invalid', $content);
+    }
+
+    /**
+     * A fieldset caches its render, so each pass builds its own rather than reordering the same two.
+     */
+    public function testEveryFieldsetIsBoundToTheForm(): void
+    {
+        $properties = ['number', 'text'];
+
+        foreach ([$properties, array_reverse($properties)] as $order) {
+            $content = ActiveForm::make()
+                ->model(new TestModel())
+                ->rows(array_map(
+                    static fn (string $property): Fieldset => Fieldset::make()->rows([$property]),
+                    $order,
+                ))
+                ->render();
+
+            self::assertStringContainsString('name="TestModel[number]"', $content);
+            self::assertStringContainsString('name="TestModel[text]"', $content);
+            self::assertSame(2, substr_count($content, '<fieldset'));
+        }
+    }
+
+    public function testRowsAreNormalizedToFieldsets(): void
+    {
+        $form = ActiveForm::make()
+            ->model(new TestModel())
+            ->rows(['number', 'text']);
+
+        $form->rows(function (array $rows): array {
+            self::assertCount(1, $rows);
+            self::assertSame(['number', 'text'], $rows[0]->getRows());
+
+            return $rows;
+        });
+
+        $form->render();
+    }
+
+    /**
+     * The shape used to be sniffed off the first row and the answer applied to the rest, so a bare field behind a
+     * group was handed to a fieldset that never got its model — a fatal, one row order away (#120).
+     */
+    public function testMixingGroupsAndBareFieldsIsRefused(): void
+    {
+        $this->expectException(InvalidConfigException::class);
+
+        ActiveForm::make()
+            ->model(new TestModel())
+            ->rows([
+                ['number'],
+                'text',
+            ]);
     }
 }
 

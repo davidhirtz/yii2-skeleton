@@ -33,16 +33,20 @@ class TwoFactorAuthenticationLoginActiveForm extends ActiveForm
     {
         $this->attributes['id'] ??= 'authentication-form';
 
-        $this->rows ??= [
+        $this->submitButtonText ??= Yii::t('skeleton', 'COMMON_LOGIN');
+
+        parent::configure();
+    }
+
+    #[Override]
+    protected function getDefaultRows(): array
+    {
+        return [
             $this->getCodeField(),
             $this->getEmailField(),
             $this->getPasswordField(),
             $this->getRememberMeField(),
         ];
-
-        $this->submitButtonText ??= Yii::t('skeleton', 'COMMON_LOGIN');
-
-        parent::configure();
     }
 
     public function getCodeField(): ?Stringable

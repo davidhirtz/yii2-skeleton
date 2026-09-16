@@ -28,7 +28,7 @@ echo Noscript::make()
     ->content(Container::make()
         ->content(Alert::make()
             ->danger()
-            ->content(Yii::t('skeleton', 'ACCOUNT_NOSCRIPT'))));
+            ->content(Yii::t('skeleton', 'ACCOUNT_WARNING_NOSCRIPT'))));
 
 echo Container::make()
     ->centered()

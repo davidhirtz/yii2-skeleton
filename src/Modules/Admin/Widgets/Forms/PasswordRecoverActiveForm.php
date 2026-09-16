@@ -34,14 +34,18 @@ class PasswordRecoverActiveForm extends ActiveForm
     {
         $this->attributes['id'] ??= 'password-recover-form';
 
-        $this->rows ??= [
-            $this->getHelpText(),
-            $this->getEmailField(),
-        ];
-
         $this->submitButtonText = Yii::t('skeleton', 'COMMON_SEND_EMAIL');
 
         parent::configure();
+    }
+
+    #[Override]
+    protected function getDefaultRows(): array
+    {
+        return [
+            $this->getHelpText(),
+            $this->getEmailField(),
+        ];
     }
 
     protected function getHelpText(): ?Stringable

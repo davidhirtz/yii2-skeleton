@@ -92,7 +92,7 @@ class AccountController extends Controller
     public function actionCreate(): Response|string
     {
         if (!$this->webuser->getIsGuest()) {
-            $this->error(Yii::t('skeleton', 'ACCOUNT_LOGOUT_BEFORE_CREATING'));
+            $this->error(Yii::t('skeleton', 'ACCOUNT_ERROR_LOGOUT_BEFORE_CREATING'));
             return $this->goHome();
         }
 
@@ -128,7 +128,7 @@ class AccountController extends Controller
     public function actionLogin(): Response|string
     {
         if (!$this->webuser->getIsGuest()) {
-            $this->error(Yii::t('skeleton', 'ACCOUNT_LOGOUT_BEFORE_LOGGING'));
+            $this->error(Yii::t('skeleton', 'ACCOUNT_ERROR_LOGOUT_BEFORE_LOGIN'));
             return $this->goHome();
         }
 

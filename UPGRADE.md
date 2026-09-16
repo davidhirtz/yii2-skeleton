@@ -1,5 +1,81 @@
 # Upgrade Guide
 
+## 3.0.0 — A form's rows are fieldsets
+
+`Widgets\Forms\ActiveForm::$rows` accepted three shapes — a flat list of fields, a list of groups, or fieldsets —
+and which one it held was guessed from the *first* element, with the answer applied to the rest. A bare field behind
+a group was therefore handed to a fieldset that never got its model (`Call to a member function
+getActiveValidators() on null`), and everything reading the rows had to repeat the guess, including any bundle or
+project inserting a field through `Widget::EVENT_CONFIGURE`.
+
+All three shapes still go in. They are normalized to `list<Fieldset>` once, before the event fires, so there is one
+shape to read.
+
+### A subclass declares its rows in `getDefaultRows()`
+
+```php
+// before
+protected function configure(): void
+{
+    $this->rows ??= [
+        $this->getStatusField(),
+        $this->getNameField(),
+    ];
+
+    parent::configure();
+}
+
+// after
+protected function getDefaultRows(): array
+{
+    return [
+        $this->getStatusField(),
+        $this->getNameField(),
+    ];
+}
+```
+
+The hook is only asked when the caller named no rows, which is what `??=` used to say. **The property is
+`$fieldsets` now**, typed `list<Fieldset>|null` — a row of a form is a label and its content, which is what
+`Fieldset::$rows` holds, so what a form itself holds is the fieldsets those sit in. Assigning it directly takes the
+rows past the normalizer and PHPStan reports it. Anything else a form does in `configure()` stays there; only the
+rows move.
+
+### A listener reaches into a fieldset
+
+`rows()` hands its closure `list<Fieldset>`, and `Fieldset::rows()` takes a closure of its own over the rows of
+that one fieldset — the shape `Widgets\Grids\GridView::columns()` already had. `Fieldset::getRows()` reads them
+back, which is how a listener finds the fieldset it wants:
+
+```php
+EventHelper::on(
+    EntryActiveForm::class,
+    Widget::EVENT_CONFIGURE,
+    static fn (EntryActiveForm $form) => $form->rows(static function (array $fieldsets): array {
+        $fieldsets[0]->rows(static fn (array $rows): array => [...$rows, MyField::make()]);
+        return $fieldsets;
+    }),
+);
+```
+
+Before `configure()` a fieldset's rows are what was declared — a property name, a field, any stringable. Afterwards
+they are the resolved fields, cloned per language where the model translates them.
+
+### Mixing shapes is refused
+
+A list holding both groups and bare fields throws an `InvalidConfigException` naming the form. Wrap the bare fields
+in a group of their own:
+
+```php
+// before — the first element decided for all of them
+[[$status, $name], $slug]
+
+// after
+[[$status, $name], [$slug]]
+```
+
+`ActiveForm::getFieldset()` is gone. `createFieldset()` replaces it and answers a `Fieldset`, not a `Stringable`.
+
 ## 3.0.0 — A type change reloads the page, and a hidden field is really gone
 
 What a type decides used to reach the browser two different ways, each answering for half of it: the type select

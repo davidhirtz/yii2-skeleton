@@ -34,16 +34,20 @@ class PasswordResetActiveForm extends ActiveForm
     {
         $this->attributes['id'] ??= 'password-reset-form';
 
-        $this->rows ??= [
+        $this->submitButtonText = Yii::t('skeleton', 'PASSWORD_RESET_ACTIVE_SAVE_NEW_PASSWORD');
+
+        parent::configure();
+    }
+
+    #[Override]
+    protected function getDefaultRows(): array
+    {
+        return [
             $this->getHelpText(),
             $this->getEmailField(),
             $this->getNewPasswordField(),
             $this->getRepeatPasswordField(),
         ];
-
-        $this->submitButtonText = Yii::t('skeleton', 'PASSWORD_RESET_ACTIVE_SAVE_NEW_PASSWORD');
-
-        parent::configure();
     }
 
     protected function getHelpText(): ?Stringable

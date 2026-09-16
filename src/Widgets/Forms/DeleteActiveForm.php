@@ -26,6 +26,7 @@ class DeleteActiveForm extends ActiveForm
 
     protected ?string $message = null;
     protected string|false|null $confirm = null;
+    protected DeleteForm $deleteForm;
 
     /**
      * @param array<string, mixed> $attributes
@@ -51,20 +52,20 @@ class DeleteActiveForm extends ActiveForm
     #[Override]
     protected function configure(): void
     {
-        $form = DeleteForm::create([
+        $this->deleteForm = DeleteForm::create([
             'model' => $this->model,
             'attribute' => $this->property,
         ]);
 
-        $this->model = $form;
+        $this->model = $this->deleteForm;
 
         $this->message ??= $this->property
             ? Yii::t('skeleton', 'COMMON_TYPE_EXACT', [
-                'attribute' => $form->getAttributeLabel('value'),
+                'attribute' => $this->deleteForm->getAttributeLabel('value'),
             ])
             : Yii::t('skeleton', 'DELETE_ACTIVE_WARNING_DELETED');
 
-        $this->action ??= ['delete', 'id' => $form->getId()];
+        $this->action ??= ['delete', 'id' => $this->deleteForm->getId()];
 
         $this->confirm ??= Yii::t('yii', 'Are you sure you want to delete this item?');
         $this->label ??= Yii::t('skeleton', 'DELETE_ACTIVE_DELETE');
@@ -89,20 +90,24 @@ class DeleteActiveForm extends ActiveForm
         $this->buttons ??= [$btn];
         $this->footer ??= false;
 
-        $expected = $form->getExpectedValue();
+        parent::configure();
+    }
 
-        $this->rows ??= [
+    #[Override]
+    protected function getDefaultRows(): array
+    {
+        $expected = $this->deleteForm->getExpectedValue();
+
+        return [
             FormRow::make()
                 ->content($this->message),
-            $form->attribute
+            $this->deleteForm->attribute
                 ? InputField::make()
-                ->attributes($this->inputAttributes)
-                ->pattern($expected !== null ? '^' . preg_quote($expected, '/') . '$' : null)
-                ->property('value')
-                ->required()
+                    ->attributes($this->inputAttributes)
+                    ->pattern($expected !== null ? '^' . preg_quote($expected, '/') . '$' : null)
+                    ->property('value')
+                    ->required()
                 : null,
         ];
-
-        parent::configure();
     }
 }
