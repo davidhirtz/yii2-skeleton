@@ -11,12 +11,10 @@ use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
- * @property int $id
  * @property int|null $parent_id
  * @property int $rgt
  * @property int $lft
  * @property int $depth
- * @property string $name
  *
  * @property-read static|null $parent {@see static::getParent()}
  *

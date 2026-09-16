@@ -16,7 +16,6 @@ use yii\rbac\Item;
 
 /**
  * @property string $name
- * @property int $type
  * @property string|null $description
  * @property string|null $rule_name
  * @property string|null $data

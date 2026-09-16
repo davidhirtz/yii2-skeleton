@@ -344,6 +344,11 @@ class NestedTreeTraitTest extends TestCase
     }
 }
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property int $position
+ */
 class TestNestedTreeActiveRecord extends ActiveRecord
 {
     use NestedTreeTrait;

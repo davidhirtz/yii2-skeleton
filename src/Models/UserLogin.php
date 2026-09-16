@@ -19,7 +19,6 @@ use Yii;
 /**
  * @property string $id
  * @property int $user_id
- * @property int $type
  * @property string|null $browser
  * @property string|null $ip_address
  * @property DateTime $created_at

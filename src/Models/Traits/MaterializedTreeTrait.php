@@ -8,7 +8,6 @@ use yii\db\ActiveQuery;
 use Hirtz\Skeleton\Helpers\ArrayHelper;
 
 /**
- * @property int $id
  * @property int|null $parent_id
  * @property list<int>|null $path
  *

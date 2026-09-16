@@ -34,7 +34,6 @@ use yii\web\IdentityInterface;
 
 /**
  * @property int $id
- * @property int $status
  * @property string|null $name
  * @property string $email
  * @property DateTime|null $email_confirmed_at

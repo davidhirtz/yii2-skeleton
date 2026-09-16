@@ -207,11 +207,8 @@ class MaterializedTreeTraitTest extends TestCase
 
 /**
  * @property int $id
- * @property int $parent_id
- * @property array|null $path
  * @property string|null $name
  * @property int $position
- * @property list<int>|null $path
  */
 class TestMaterializedTreeActiveRecord extends ActiveRecord
 {

@@ -24,7 +24,6 @@ use yii\db\ActiveRecordInterface;
 
 /**
  * @property int $id
- * @property int $type
  * @property string|null $model_class
  * @property int|null $user_id
  * @property string|null $message

@@ -26,7 +26,6 @@ use Yii;
  * controller test can both reach it. Its table is created by whichever test uses it.
  *
  * @property int $id
- * @property int $type
  * @property string|null $attachment
  * @property string|null $track
  * @property string|null $track_de
