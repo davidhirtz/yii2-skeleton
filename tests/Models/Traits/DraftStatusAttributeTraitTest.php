@@ -23,7 +23,7 @@ class DraftStatusAttributeTraitTest extends TestCase
         $model->status = $model::STATUS_DRAFT;
         self::assertTrue($model->isDraft());
 
-        self::assertEquals(Yii::t('skeleton', 'DRAFT_STATUS_ATTRIBUTE_DRAFT'), $model->getStatusName());
+        self::assertEquals(Yii::t('skeleton', 'COMMON_STATUS_ATTRIBUTE_DRAFT'), $model->getStatusName());
         self::assertEquals('edit', $model->getStatusIcon());
 
         $model->status = $model::STATUS_DISABLED;

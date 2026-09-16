@@ -185,7 +185,7 @@ class Module extends \Hirtz\Skeleton\Base\Module
         $dashboard->addItem(
             DashboardItem::make()
                 ->icon('user-plus')
-                ->label(Yii::t('skeleton', 'MODULE_CREATE_NEW_USER'))
+                ->label(Yii::t('skeleton', 'DASHBOARD_ACTION_USER_CREATE'))
                 ->url(['/admin/user/create'])
                 ->roles([User::AUTH_USER]),
             DashboardItem::make()

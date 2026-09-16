@@ -25,7 +25,7 @@ trait DraftStatusAttributeTrait
                 ->name(Yii::t('skeleton', 'COMMON_ENABLED'))
                 ->icon('globe'),
             Status::make(static::STATUS_DRAFT)
-                ->name(Yii::t('skeleton', 'DRAFT_STATUS_ATTRIBUTE_DRAFT'))
+                ->name(Yii::t('skeleton', 'COMMON_STATUS_ATTRIBUTE_DRAFT'))
                 ->icon('edit'),
             Status::make(static::STATUS_DISABLED)
                 ->name(Yii::t('skeleton', 'COMMON_DISABLED'))

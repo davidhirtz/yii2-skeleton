@@ -87,7 +87,7 @@ class GridSummary extends Widget
         if ($this->grid->search->getValue()) {
             return match ($count) {
                 1 => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ONLY', $params),
-                0 => Yii::t('skeleton', 'GRID_SUMMARY_SORRY_NO', $params),
+                0 => Yii::t('skeleton', 'GRID_SUMMARY_NO_RESULTS_SEARCH', $params),
                 $totalCount => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ALL_RESULTS_MATCHING', $params),
                 default => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_OF_RESULTS_MATCHING', $params),
             };
@@ -95,7 +95,7 @@ class GridSummary extends Widget
 
         return match ($count) {
             1 => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_THE_ONLY_RECORD', $params),
-            0 => Yii::t('skeleton', 'GRID_SUMMARY_SORRY_NO_RECORDS_FOUND', $params),
+            0 => Yii::t('skeleton', 'GRID_SUMMARY_NO_RESULTS', $params),
             $totalCount => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ALL_RECORDS', $params),
             default => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_OF_RECORDS', $params),
         };

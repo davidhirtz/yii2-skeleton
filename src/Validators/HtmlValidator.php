@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Validators;
 
+use Closure;
 use yii\db\ActiveRecord;
 use yii\helpers\HtmlPurifier;
 use yii\validators\Validator;
@@ -11,16 +12,20 @@ use yii\validators\Validator;
 class HtmlValidator extends Validator
 {
     /**
-     * @var array<int|string, array<int|string, string>|string> containing CSS classes that should be allowed. Use tag name as a key and an array of allowed
-     *     classes as value. Example: ['a' => ['btn', 'btn-primary']].
+     * @var array<int|string, array<int|string, string>|string>|Closure(): array<int|string, array<int|string, string>|string>
+     *     containing CSS classes that should be allowed. Use tag name as a key and an array of allowed classes as
+     *     value. Example: ['a' => ['btn', 'btn-primary']].
      *
      * Allowed classes can also have a human-readable name as key and the class name as value.
      * Example: ['a' => ['Primary Button' => 'btn btn-primary']].
      *
+     * A label is a `Yii::t()` result, which cannot be called while the application is still being configured, so a
+     * translated list is declared as a closure returning the array.
+     *
      * For backwards compatibility, this can also be a simple array of allowed classes. These will be applied to link
      * tags only
      */
-    public array $allowedClasses = [];
+    public array|Closure $allowedClasses = [];
 
     /**
      * @var array<string, array<int|string, string>>
@@ -28,7 +33,7 @@ class HtmlValidator extends Validator
     private array $classesByTag = [];
 
     /**
-     * `allowedClasses` still carries whichever of the two shapes it was configured with; this is the tag-keyed
+     * `allowedClasses` still carries whichever of the three shapes it was configured with; this is the tag-keyed
      * one `init()` settled on.
      *
      * @return array<string, array<int|string, string>>
@@ -85,6 +90,7 @@ class HtmlValidator extends Validator
     {
         $this->setDefaultOptions();
 
+        $this->setAllowedClassesByTag();
         $this->setHtmlAllowed();
         $this->setAllowedClasses();
         $this->setAllowedCssProperties();
@@ -95,6 +101,22 @@ class HtmlValidator extends Validator
     protected function setDefaultOptions(): void
     {
         $this->purifierOptions = ['Attr.AllowedFrameTargets' => '_blank', 'Attr.AllowedRel' => 'nofollow', 'AutoFormat.RemoveEmpty' => true, 'AutoFormat.AutoParagraph' => true, 'HTML.TargetBlank' => true, ...$this->purifierOptions];
+    }
+
+    protected function setAllowedClassesByTag(): void
+    {
+        $allowedClasses = $this->allowedClasses instanceof Closure
+            ? ($this->allowedClasses)()
+            : $this->allowedClasses;
+
+        // Transform legacy allowedClasses to an array of allowed classes for the link tag.
+        if (key($allowedClasses) === 0) {
+            $allowedClasses = ['a' => array_filter($allowedClasses, is_string(...))];
+        }
+
+        foreach ($allowedClasses as $tag => $classes) {
+            $this->classesByTag[(string)$tag] = (array)$classes;
+        }
     }
 
     protected function setHtmlAllowed(): void
@@ -109,15 +131,6 @@ class HtmlValidator extends Validator
 
         // Sanitize user input
         $this->allowedHtmlTags = array_values(array_map(strtolower(...), array_filter($this->allowedHtmlTags)));
-
-        // Transform legacy allowedClasses to an array of allowed classes for the link tag.
-        if (key($this->allowedClasses) === 0) {
-            $this->allowedClasses = ['a' => array_filter($this->allowedClasses, is_string(...))];
-        }
-
-        foreach ($this->allowedClasses as $tag => $classes) {
-            $this->classesByTag[(string)$tag] = (array)$classes;
-        }
 
         $defaultTags = [
             'a',
@@ -155,7 +168,7 @@ class HtmlValidator extends Validator
             $this->allowedHtmlAttributes['img'] ??= ['alt', 'height', 'src', 'title', 'width'];
         }
 
-        foreach ($this->allowedClasses as $tag => $classes) {
+        foreach (array_keys($this->classesByTag) as $tag) {
             if (in_array($tag, $this->allowedHtmlTags, true)) {
                 $this->allowedHtmlAttributes[$tag][] = 'class';
             }
@@ -184,7 +197,7 @@ class HtmlValidator extends Validator
 
     protected function setAllowedClasses(): void
     {
-        if ($this->allowedClasses) {
+        if ($this->classesByTag) {
             $allowedClasses = [];
 
             foreach ($this->classesByTag as $values) {

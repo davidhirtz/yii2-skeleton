@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Tests\Validators;
 
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Validators\HtmlValidator;
+use Yii;
 
 class HtmlValidatorTest extends TestCase
 {
@@ -83,10 +84,23 @@ class HtmlValidatorTest extends TestCase
             'allowedClasses' => $allowedClasses,
         ]);
 
-        static::assertEqualsCanonicalizing(['Named 1' => 'marked', 'Named 2' => 'highlight'], $validator->allowedClasses['span'] ?? []);
+        static::assertEqualsCanonicalizing(['Named 1' => 'marked', 'Named 2' => 'highlight'], $validator->getAllowedClassesByTag()['span'] ?? []);
         static::assertEqualsCanonicalizing(['btn', 'cta', 'marked', 'highlight'], $validator->purifierOptions['Attr.AllowedClasses']);
         static::assertStringContainsString('a[class|href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']);
         static::assertStringContainsString('span[class]', $validator->purifierOptions['HTML.Allowed']);
+    }
+
+    public function testConfigWithAllowedClassesFromClosure(): void
+    {
+        $validator = new HtmlValidator([
+            'allowedClasses' => fn (): array => [
+                'a' => [Yii::t('skeleton', 'COMMON_ID_LABEL') => 'btn'],
+            ],
+        ]);
+
+        static::assertEqualsCanonicalizing(['a' => ['ID' => 'btn']], $validator->getAllowedClassesByTag());
+        static::assertEqualsCanonicalizing(['btn'], $validator->purifierOptions['Attr.AllowedClasses']);
+        static::assertStringContainsString('a[class|href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']);
     }
 
     public function testConfigWithAllowedClassesLegacyLink(): void
@@ -97,7 +111,7 @@ class HtmlValidatorTest extends TestCase
             'allowedClasses' => $allowedClasses,
         ]);
 
-        static::assertEqualsCanonicalizing($validator->allowedClasses, ['a' => $allowedClasses]);
+        static::assertEqualsCanonicalizing($validator->getAllowedClassesByTag(), ['a' => $allowedClasses]);
         static::assertEqualsCanonicalizing($allowedClasses, $validator->purifierOptions['Attr.AllowedClasses']);
         static::assertStringContainsString('a[class|href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']);
     }

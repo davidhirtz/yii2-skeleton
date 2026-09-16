@@ -1,5 +1,18 @@
 ## 3.0.0 (in development)
 
+- **`Validators\HtmlValidator::$allowedClasses` also takes a `Closure` returning the array.** A class may carry a
+  human-readable label as its key, which `Widgets\Forms\Fields\TinyMceField` renders as the dropdown entry — and
+  a translated label is a `Yii::t()` result, which resolves before the application has an `i18n` component when it
+  sits in a config file. The closure is the same shape a model's `getTypes()` takes for the same reason:
+
+  ```php
+  'allowedClasses' => fn (): array => ['a' => [Yii::t('app', 'BUTTON_PRIMARY_LABEL') => 'btn btn-primary']],
+  ```
+
+  `init()` resolves it in `setAllowedClassesByTag()` and no longer rewrites the legacy flat list into
+  `$allowedClasses` — the property keeps whatever it was configured with, and `getAllowedClassesByTag()` is the
+  resolved, tag-keyed value as before
+
 - **`Widgets\Forms\ActiveForm::$rows` is `$fieldsets`, a normalized `list<Fieldset>`, and a form declares its own
   rows in `getDefaultRows()`.** Rows could be a flat list of fields, a list of groups or a list of fieldsets, and
   which one it was got sniffed off the *first* element with the answer applied to the rest. So a bare field behind a
