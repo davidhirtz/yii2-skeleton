@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Db\Traits;
 
-use Exception;
 use Hirtz\Skeleton\I18n\Message;
 use Hirtz\Skeleton\Models\Translation;
 use RuntimeException;
@@ -205,10 +204,8 @@ trait MigrationTrait
 
     protected function dropIndexIfExists(string $name, string $table): void
     {
-        try {
+        if ($this->hasIndex($table, $name)) {
             $this->dropIndex($name, $table);
-        } catch (Exception) {
-            echo " skipped\n";
         }
     }
 
@@ -595,5 +592,25 @@ trait MigrationTrait
     protected function hasColumn(string $table, string $column): bool
     {
         return $this->getTableSchema($table)->getColumn($column) !== null;
+    }
+
+    protected function hasIndex(string $table, string $name): bool
+    {
+        $schema = $this->getDb()->getSchema();
+
+        if (!$schema instanceof ConstraintFinderInterface) {
+            return false;
+        }
+
+        /** @var IndexConstraint[] $indexes */
+        $indexes = $schema->getTableIndexes($table, true);
+
+        foreach ($indexes as $index) {
+            if ($index->name === $name) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

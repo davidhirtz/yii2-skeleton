@@ -66,8 +66,11 @@ class MigrationTraitSchemaTest extends TestCase
         $migration = $this->createMigration();
         $migration->createIndex('test_slug', self::TABLE, 'slug');
 
+        self::assertTrue($migration->hasIndex(self::TABLE, 'test_slug'));
+
         $migration->dropIndexIfExists('test_slug', self::TABLE);
         self::assertSame([], $this->getIndexNames());
+        self::assertFalse($migration->hasIndex(self::TABLE, 'test_slug'));
 
         $migration->dropIndexIfExists('test_slug', self::TABLE);
         self::assertSame([], $this->getIndexNames());
@@ -192,5 +195,6 @@ class TestSchemaMigration extends Migration
         getTableSchema as public;
         getTableOptions as public;
         hasColumn as public;
+        hasIndex as public;
     }
 }
