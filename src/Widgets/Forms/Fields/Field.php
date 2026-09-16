@@ -163,8 +163,14 @@ abstract class Field extends Widget
     }
 
     /**
-     * Posts the form to its own action on change and swaps it with the response, so a field the rendered form depends
-     * on can take effect without saving. {@see \Hirtz\Skeleton\Web\Request::isFormReload()} tells the action apart.
+     * Posts the form to its own action on change and re-renders the page from the loaded but unsaved record, so a
+     * field the rest of the page depends on takes effect without saving.
+     * {@see \Hirtz\Skeleton\Web\Request::isFormReload()} tells the action apart.
+     *
+     * The swap is the whole `#wrap` the body declares, not the form: a type decides more than its fields — the
+     * submenu tabs, the header, the record's own noun — and picking those out one selector at a time is what the
+     * server already answers by rendering the page. The form's own narrower `hx-select` has to be overridden for
+     * that, and `hx-swap` beats the body's `show:top` so the scroll position survives.
      */
     public function reloadsForm(): static
     {
@@ -173,13 +179,11 @@ abstract class Field extends Widget
                 return;
             }
 
-            $id = $field->form->getId();
-
             $field->attributes['hx-post'] ??= $field->form->action ?: '';
             $field->attributes['hx-trigger'] ??= 'change';
             $field->attributes['hx-include'] ??= 'closest form';
-            $field->attributes['hx-select'] ??= "#$id";
-            $field->attributes['hx-target'] ??= "#$id";
+            $field->attributes['hx-select'] ??= '#wrap';
+            $field->attributes['hx-target'] ??= '#wrap';
             $field->attributes['hx-swap'] ??= 'outerHTML';
             $field->attributes['hx-headers'] ??= ['X-Form-Reload' => '1'];
         });

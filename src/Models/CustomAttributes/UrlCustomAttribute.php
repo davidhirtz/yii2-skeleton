@@ -34,9 +34,4 @@ class UrlCustomAttribute extends TextCustomAttribute
         return $this->configureField(InputField::make()->type('url'), $owner);
     }
 
-    #[Override]
-    protected function getFingerprintData(): array
-    {
-        return [...parent::getFingerprintData(), $this->defaultScheme];
-    }
 }

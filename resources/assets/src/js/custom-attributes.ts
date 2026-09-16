@@ -47,7 +47,7 @@ htmx.onLoad(($node) => {
             const $item = $items.lastElementChild as HTMLElement | null;
 
             if ($item) {
-                // Wires `data-toggle`, tooltips and the `tinymce-editor` element of the inserted item.
+                // Wires the tooltips and the `tinymce-editor` element of the inserted item.
                 htmx.process($item);
                 $item.querySelector<HTMLElement>('input,select,textarea')?.focus();
             }

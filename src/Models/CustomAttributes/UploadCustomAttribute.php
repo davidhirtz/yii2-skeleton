@@ -251,11 +251,6 @@ class UploadCustomAttribute extends CustomAttribute
         return $this->configureField(UploadField::make()->definition($this), $owner);
     }
 
-    #[Override]
-    protected function getFingerprintData(): array
-    {
-        return [$this->extensions, $this->maxSize, $this->checkExtensionByMimeType, $this->permission];
-    }
 
     protected function getUpload(): Upload
     {

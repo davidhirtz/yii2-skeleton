@@ -29,9 +29,4 @@ class IconCustomAttribute extends SelectCustomAttribute
         return $this->options ? parent::getOptions($owner) : IconHelper::getIconFilenames($this->path);
     }
 
-    #[Override]
-    protected function getFingerprintData(): array
-    {
-        return [...parent::getFingerprintData(), $this->path];
-    }
 }

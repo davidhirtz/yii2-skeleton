@@ -1,5 +1,30 @@
 ## 3.0.0 (in development)
 
+- **A type change always reloads the page, and a hidden field is gone rather than hidden.** The two halves of what a
+  type decides were answered separately: `Widgets\Forms\Fields\TypeSelectField` reloaded the form only when the
+  candidate types fingerprinted to different *custom attributes*, and `Models\Types\Type::hiddenFields()` was a list
+  of CSS selectors a script toggled in the browser. Anything else a type decides — a field another bundle
+  contributes, a panel outside the form, the cms `Models\Menus\Menu::available()` — reached neither, so two types
+  declaring the same custom attributes emitted no `hx-*` at all and the type change never left the page (monorepo
+  issue #118).
+
+  The select now reloads whenever it offers more than one type, and the reload swaps the whole `#wrap` the layout
+  declares rather than the form alone — the server renders the page for the posted record, so every type-dependent
+  decision is answered where it is made. `Field::reloadsForm()` is unchanged as an API and is what the cms
+  `TenantIdField` uses too.
+
+  Gone with it: `Models\CustomAttributes\CustomAttribute::getFingerprint()` and the `getFingerprintData()` overrides
+  of every definition class, and the `data-toggle` attribute `Widgets\Forms\Fields\SelectField` wrote with its
+  `includes/forms.ts` handler. **`hiddenFields()` takes attribute names**, not selectors, and a bundle's `FIELD_*`
+  marker lost the `#` it carried for that syntax.
+
+  A hidden attribute is now dropped server-side: `CustomAttribute::isVisible()` answers `false` for one, which takes
+  it out of `rules()` as well, and `Widgets\Forms\Fieldset` skips the field of a hidden column. So a hidden
+  attribute is neither rendered, validated nor assigned — **and the value a record holds under a type that hides it
+  survives the save** instead of being overwritten by what the form did not post. `Models\Interfaces\VisibleAttributeInterface`
+  is the opt-in beside `Models\Traits\VisibleAttributeTrait`; a model using the trait has to declare it, or the
+  skeleton cannot ask.
+
 - **`Db\ActiveRecord::load()` typecasts the attributes it loaded.** A form posts strings, and only validation
   turned them back into the column's type — which a form reload never reaches, since it renders the loaded record
   and returns. So a `Closure` reading an attribute off that record saw `"2"` where the saved record holds `2`, and

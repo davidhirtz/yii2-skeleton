@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
+use Hirtz\Skeleton\Models\Interfaces\VisibleAttributeInterface;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Hirtz\Skeleton\Validators\HexColorValidator;
 use Hirtz\Skeleton\Validators\HtmlValidator;
@@ -68,6 +69,11 @@ class Fieldset extends Widget
                 continue;
             }
 
+            // Before the i18n clones, which carry the language suffix a type's hidden field list does not name.
+            if ($field->property && $this->isAttributeHidden($field->property)) {
+                continue;
+            }
+
             $field->form($this->form);
 
             if (!$this->model instanceof I18nAttributeInterface || !$field->property) {
@@ -95,6 +101,15 @@ class Fieldset extends Widget
         $this->rows = array_values($rows);
 
         parent::configure();
+    }
+
+    /**
+     * A type declaring a field hidden takes it out of `rules()` as well, so a custom attribute is already gone by
+     * here; this is what answers for a column of the model's own.
+     */
+    protected function isAttributeHidden(string $property): bool
+    {
+        return $this->model instanceof VisibleAttributeInterface && !$this->model->isAttributeVisible($property);
     }
 
     protected function getFieldForProperty(string $property): Field

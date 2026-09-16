@@ -14,7 +14,7 @@ import search from './includes/search';
 import sticky from './includes/sticky';
 import timezone from "./includes/timezone.ts";
 import tooltip from './includes/tooltips';
-import {toggle, updateTargetsOnChange} from './includes/forms';
+import {updateTargetsOnChange} from './includes/forms';
 
 import './includes/FlashAlert';
 
@@ -36,7 +36,6 @@ htmx.onLoad(($container) => {
     queryAll('[popovertarget]', dropdown);
     queryAll('[data-filter]', filter);
     queryAll('[data-form-target]', updateTargetsOnChange);
-    queryAll('[data-toggle]', toggle);
     queryAll('[data-modal]', closeModal);
     queryAll('[data-search]', search);
     queryAll('[data-sticky]', sticky);

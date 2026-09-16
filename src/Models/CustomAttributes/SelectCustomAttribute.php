@@ -104,14 +104,6 @@ class SelectCustomAttribute extends CustomAttribute
         return $this->configureField($field, $owner);
     }
 
-    #[Override]
-    protected function getFingerprintData(): array
-    {
-        return [
-            $this->options instanceof Closure ? Closure::class : array_keys($this->options),
-            $this->multiple,
-        ];
-    }
 
     protected function normalizeValue(mixed $value): int|string
     {

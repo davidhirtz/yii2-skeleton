@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 
-use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\Input;
 use Hirtz\Skeleton\Html\Option;
 use Hirtz\Skeleton\Html\Select;
 use Hirtz\Skeleton\Html\Traits\TagInputTrait;
 use Hirtz\Skeleton\Models\Definitions\Definition;
-use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
-use Hirtz\Skeleton\Models\Types\Type;
 use Override;
 use Stringable;
 use yii\helpers\Inflector;
@@ -130,42 +127,9 @@ class SelectField extends Field
      */
     protected function addItemsFromModel(array $items): void
     {
-        $hiddenFields = [];
-
         foreach ($items as $key => $item) {
-            if ($item instanceof Definition) {
-                $this->items[$key] = $item->getName();
-
-                if ($item instanceof Type && $item->getHiddenFields()) {
-                    $hiddenFields[$key] = $item->getHiddenFields();
-                }
-
-                continue;
-            }
-
-            $this->items[$key] = $item;
+            $this->items[$key] = $item instanceof Definition ? $item->getName() : $item;
         }
-
-        if (!$hiddenFields) {
-            return;
-        }
-
-        $selectors = [];
-
-        foreach ($hiddenFields as $value => $names) {
-            $names = $this->model instanceof I18nAttributeInterface
-                ? $this->model->getI18nAttributesNames($names)
-                : $names;
-
-            $selectors["$value"] = array_map(
-                fn (string $name) => $this->model->hasProperty($name)
-                    ? Html::getInputId($this->model, $name)
-                    : $name,
-                $names
-            );
-        }
-
-        $this->attributes['data-toggle'] ??= $selectors;
     }
 
     #[Override]

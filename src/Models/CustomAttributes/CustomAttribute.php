@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Models\CustomAttributes;
 use Closure;
 use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
+use Hirtz\Skeleton\Models\Interfaces\VisibleAttributeInterface;
 use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
 use Stringable;
 use yii\base\Model;
@@ -91,8 +92,16 @@ abstract class CustomAttribute
         return $this->required instanceof Closure ? (bool)($this->required)($owner) : $this->required;
     }
 
+    /**
+     * A type hiding the attribute is the same answer as a `visible(false)` of the definition's own: no field, no
+     * rule, and therefore no assignment — {@see \Hirtz\Skeleton\Models\Types\Type::hiddenFields()}.
+     */
     public function isVisible(Model $owner): bool
     {
+        if ($owner instanceof VisibleAttributeInterface && !$owner->isAttributeVisible($this->name)) {
+            return false;
+        }
+
         return $this->visible instanceof Closure ? (bool)($this->visible)($owner) : $this->visible;
     }
 
@@ -213,29 +222,6 @@ abstract class CustomAttribute
      */
     public function afterDuplicate(Model $duplicate, Model $source, string $name): void
     {
-    }
-
-    /**
-     * Hashes what the server renders, so a form only has to reload when a type change actually changes its shape.
-     */
-    final public function getFingerprint(): string
-    {
-        return md5(serialize([
-            static::class,
-            $this->name,
-            $this->translatable,
-            $this->label,
-            $this->hint,
-            ...$this->getFingerprintData(),
-        ]));
-    }
-
-    /**
-     * @return list<mixed> a closure has no stable hash and must be represented by an opaque marker
-     */
-    protected function getFingerprintData(): array
-    {
-        return [];
     }
 
     /**

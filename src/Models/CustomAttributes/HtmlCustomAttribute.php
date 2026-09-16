@@ -78,9 +78,4 @@ class HtmlCustomAttribute extends CustomAttribute
         return $this->configureField(TinyMceField::make()->validator($this->validator), $owner);
     }
 
-    #[Override]
-    protected function getFingerprintData(): array
-    {
-        return [$this->validator, $this->max];
-    }
 }

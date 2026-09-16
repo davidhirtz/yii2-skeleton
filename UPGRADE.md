@@ -1,5 +1,50 @@
 # Upgrade Guide
 
+## 3.0.0 — A type change reloads the page, and a hidden field is really gone
+
+What a type decides used to reach the browser two different ways, each answering for half of it: the type select
+reloaded the *form* when the candidate types' custom attribute definitions hashed differently, and
+`Models\Types\Type::hiddenFields()` was a list of CSS selectors a script hid on change. A type that decided
+anything else — a field another bundle contributes, a panel outside the form, which menus an entry may go in —
+reached neither, and two types with the same custom attributes emitted no `hx-*` at all.
+
+Now the select reloads whenever it offers more than one type, and the reload re-renders the whole `#wrap`: the
+server answers for the page, so nothing has to be enumerated on the client.
+
+**`hiddenFields()` takes attribute names, not selectors.** A bundle's `FIELD_*` marker lost the `#` it carried for
+the old syntax, so a project spelling one out by hand changes:
+
+```php
+// before
+->hiddenFields('content', '#assets')
+
+// after — or better, name the constant
+->hiddenFields('content', Entry::FIELD_ASSETS)
+```
+
+**A hidden attribute is no longer safe.** It is dropped from `rules()`, so it is neither rendered, validated nor
+assigned by `load()`. Two consequences:
+
+- The value a record holds under a type that hides it now **survives** a save instead of being overwritten by what
+  the form did not post. This is the point of the change.
+- Code relying on a hidden attribute still being mass-assignable has to assign it itself, or the type should not
+  have hidden it.
+
+**A model using `Models\Traits\VisibleAttributeTrait` must declare `Models\Interfaces\VisibleAttributeInterface`**,
+or the skeleton cannot ask it and the type's hidden fields are silently ignored:
+
+```php
+class Entry extends ActiveRecord implements TypeAttributeInterface, VisibleAttributeInterface
+{
+    use VisibleAttributeTrait;
+}
+```
+
+**Gone:** `Models\CustomAttributes\CustomAttribute::getFingerprint()` and the `getFingerprintData()` overrides of
+every definition class — a custom definition class overriding one drops it. So is the `data-toggle` attribute
+`Widgets\Forms\Fields\SelectField` wrote and the `includes/forms.ts` handler behind it; a project reading
+`data-toggle` in its own script has nothing to read any more.
+
 ## 3.0.0 — A URL import is guarded, a local copy is a different class
 
 `Web\StreamUploadedFile` fetched whatever it was given. Anyone who could reach the media file form could make the

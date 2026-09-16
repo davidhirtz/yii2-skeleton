@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Tests\Models\Traits;
 
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
+use Hirtz\Skeleton\Models\Interfaces\VisibleAttributeInterface;
 use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
 use Hirtz\Skeleton\Models\Traits\VisibleAttributeTrait;
@@ -78,7 +79,7 @@ class VisibleAttributeTraitTest extends TestCase
     }
 }
 
-class VisibleModel extends Model implements TypeAttributeInterface
+class VisibleModel extends Model implements TypeAttributeInterface, VisibleAttributeInterface
 {
     use I18nAttributesTrait;
     use ModelTrait;

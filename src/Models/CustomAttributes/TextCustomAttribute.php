@@ -63,9 +63,4 @@ class TextCustomAttribute extends CustomAttribute
         return $this->configureField($field, $owner);
     }
 
-    #[Override]
-    protected function getFingerprintData(): array
-    {
-        return [$this->min, $this->max, $this->multiline];
-    }
 }

@@ -8,13 +8,14 @@ use Hirtz\Skeleton\Assets\HexColorInputAssetBundle;
 use Hirtz\Skeleton\Html\Custom\ColorPicker;
 use Hirtz\Skeleton\Html\Input;
 use Hirtz\Skeleton\Widgets\Forms\InputGroup;
+use Override;
 use Stringable;
 
 class HexColorField extends Field
 {
     public string $defaultColor = '#000000';
 
-    #[\Override]
+    #[Override]
     protected function configure(): void
     {
         $this->attributes['id'] ??= $this->getId();

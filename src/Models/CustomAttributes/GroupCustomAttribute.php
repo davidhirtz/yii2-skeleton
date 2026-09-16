@@ -256,18 +256,6 @@ class GroupCustomAttribute extends CustomAttribute
         return $this->configureField(GroupField::make()->group($this), $owner);
     }
 
-    #[Override]
-    protected function getFingerprintData(): array
-    {
-        return [
-            array_map(static fn (CustomAttribute $attribute): string => $attribute->getFingerprint(), $this->attributes),
-            $this->multiple,
-            $this->minCount,
-            $this->maxCount,
-            $this->sortable,
-            $this->itemClass,
-        ];
-    }
 
     /**
      * @param list<array<string, mixed>> $rows

@@ -42,6 +42,10 @@ class Type extends ModelDefinition
         return $this;
     }
 
+    /**
+     * Attribute names the type does not use, plus the `FIELD_*` markers a bundle declares for a panel of its own. A
+     * hidden attribute is neither rendered nor safe, so its stored value survives a save under a type hiding it.
+     */
     public function hiddenFields(string ...$hiddenFields): static
     {
         $this->hiddenFields = array_values($hiddenFields);

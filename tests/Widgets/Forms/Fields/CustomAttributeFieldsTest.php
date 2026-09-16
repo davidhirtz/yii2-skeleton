@@ -14,10 +14,12 @@ use Hirtz\Skeleton\Models\CustomAttributes\UrlCustomAttribute;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
+use Hirtz\Skeleton\Models\Interfaces\VisibleAttributeInterface;
 use Hirtz\Skeleton\Models\Traits\CustomAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\TranslationTrait;
 use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
+use Hirtz\Skeleton\Models\Traits\VisibleAttributeTrait;
 use Hirtz\Skeleton\Models\Types\Type;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
@@ -203,33 +205,81 @@ class CustomAttributeFieldsTest extends TestCase
         self::assertStringNotContainsString('data-group-remove', $content);
     }
 
-    public function testTypeSelectReloadsOnlyWhenTheTypesRenderDifferentFields(): void
+    /**
+     * Every type change reloads, whatever the types have in common: what a type decides reaches past its custom
+     * attributes — hidden fields, a field another bundle contributes, a panel outside the form — and none of that
+     * is visible from here. See monorepo issue #118.
+     */
+    public function testTypeSelectReloadsThePage(): void
     {
-        $content = ActiveForm::make()
-            ->model($this->createRecord())
-            ->rows([TypeSelectField::make()->property('type')])
-            ->render();
+        $select = $this->renderTypeSelect($this->createRecord());
 
-        self::assertStringContainsString('name="FieldRecord[type]"', $content);
-        self::assertStringContainsString('hx-trigger="change[this.selectedOptions[0].dataset.fingerprint !== this.dataset.fingerprint]"', $content);
-        self::assertStringContainsString('hx-headers=\'{"X-Form-Reload":"1"}\'', $content);
-        self::assertMatchesRegularExpression('/<select[^>]* data-fingerprint="[0-9a-f]{32}"/', $content);
-        self::assertMatchesRegularExpression('/<option value="2" data-fingerprint="[0-9a-f]{32}">Links<\/option>/', $content);
+        self::assertStringContainsString('name="FieldRecord[type]"', $select);
+        self::assertStringContainsString('hx-trigger="change"', $select);
+        self::assertStringContainsString('hx-include="closest form"', $select);
+        self::assertStringContainsString('hx-select="#wrap"', $select);
+        self::assertStringContainsString('hx-target="#wrap"', $select);
+        self::assertStringContainsString('hx-swap="outerHTML"', $select);
+        self::assertStringContainsString('hx-headers=\'{"X-Form-Reload":"1"}\'', $select);
+    }
 
+    public function testTypeSelectReloadsForTypesSharingTheirCustomAttributes(): void
+    {
         $model = UniformTypeRecord::create();
         $model->type = UniformTypeRecord::TYPE_DEFAULT;
 
+        $select = $this->renderTypeSelect($model);
+
+        self::assertStringContainsString('name="UniformTypeRecord[type]"', $select);
+        self::assertStringContainsString('hx-post', $select);
+    }
+
+    public function testASingleTypeHasNothingToReloadFor(): void
+    {
+        $model = SingleTypeRecord::create();
+        $model->type = SingleTypeRecord::TYPE_DEFAULT;
+
+        $select = $this->renderTypeSelect($model);
+
+        self::assertStringContainsString('name="SingleTypeRecord[type]"', $select);
+        self::assertStringNotContainsString('hx-', $select);
+    }
+
+    /**
+     * A hidden field is neither rendered nor safe, so the value a record holds under a type that hides it is kept
+     * rather than overwritten by whatever the form did not post.
+     */
+    public function testATypeHidingACustomAttributeDropsItsField(): void
+    {
+        $model = HiddenFieldRecord::create();
+        $model->type = HiddenFieldRecord::TYPE_WITHOUT_SUBTITLE;
+
+        $content = Fieldset::make()
+            ->model($model)
+            ->rows(['featured'])
+            ->render();
+
+        self::assertStringContainsString('name="HiddenFieldRecord[featured]"', $content);
+        self::assertFalse($model->isAttributeSafe('subtitle'));
+
+        $content = Fieldset::make()
+            ->model($model)
+            ->rows(['subtitle'])
+            ->render();
+
+        self::assertSame('', $content);
+    }
+
+    protected function renderTypeSelect(FieldRecord $model): string
+    {
         $content = ActiveForm::make()
             ->model($model)
             ->rows([TypeSelectField::make()->property('type')])
             ->render();
 
-        self::assertMatchesRegularExpression('/<select[^>]*>/', $content);
         preg_match('/<select[^>]*>/', $content, $select);
 
-        self::assertStringContainsString('name="UniformTypeRecord[type]"', $select[0] ?? '');
-        self::assertStringNotContainsString('data-fingerprint', $content);
-        self::assertStringNotContainsString('hx-', $select[0] ?? '');
+        return $select[0] ?? self::fail('The form renders no select.');
     }
 
     protected function createRecord(): FieldRecord
@@ -368,6 +418,48 @@ class UniformTypeRecord extends FieldRecord
             Type::make(self::TYPE_LINKS)
                 ->name('Other')
                 ->customAttributes($customAttributes),
+        ];
+    }
+}
+
+/**
+ * A type carrying nothing to choose between, which is the one case the select has no reload to offer.
+ */
+class SingleTypeRecord extends FieldRecord
+{
+    #[Override]
+    public function getTypes(): array
+    {
+        return [
+            Type::make(self::TYPE_DEFAULT)
+                ->name('Default')
+                ->customAttributes(fn (): array => [TextCustomAttribute::make('subtitle')]),
+        ];
+    }
+}
+
+class HiddenFieldRecord extends FieldRecord implements VisibleAttributeInterface
+{
+    use VisibleAttributeTrait;
+
+    final public const int TYPE_WITHOUT_SUBTITLE = 5;
+
+    #[Override]
+    public function getTypes(): array
+    {
+        $customAttributes = fn (): array => [
+            TextCustomAttribute::make('subtitle'),
+            BooleanCustomAttribute::make('featured'),
+        ];
+
+        return [
+            Type::make(self::TYPE_DEFAULT)
+                ->name('Default')
+                ->customAttributes($customAttributes),
+            Type::make(self::TYPE_WITHOUT_SUBTITLE)
+                ->name('Without subtitle')
+                ->customAttributes($customAttributes)
+                ->hiddenFields('subtitle'),
         ];
     }
 }
