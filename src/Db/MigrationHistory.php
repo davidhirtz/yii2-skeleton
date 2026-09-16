@@ -36,7 +36,11 @@ class MigrationHistory
         if ($this->applied === null) {
             $this->applied = [];
 
-            if ($this->db->getSchema()->getTableSchema($this->tableName) !== null) {
+            // Refreshed rather than read from the schema cache, which outlives the process: a database
+            // recreated behind a warm cache passes the null check and then fails the SELECT with a 1146,
+            // which is exactly the state an interrupted restore leaves and therefore the moment this is
+            // asked. The result is memoised below, so it costs one query per instance.
+            if ($this->db->getSchema()->getTableSchema($this->tableName, true) !== null) {
                 $rows = (new Query())
                     ->select(['version', 'apply_time'])
                     ->from($this->tableName)
@@ -52,6 +56,34 @@ class MigrationHistory
         }
 
         return $this->applied;
+    }
+
+    /**
+     * Applied migrations whose class cannot be loaded. On a healthy installation this is empty; a v2 database
+     * pointed at v3 code returns all of them, because the namespaces were renamed. A project that deleted one
+     * of its own migrations without clearing the row shows up here too, which is worth knowing either way.
+     *
+     * @return list<string>
+     */
+    public function getUnresolved(): array
+    {
+        $unresolved = [];
+
+        foreach (array_keys($this->getApplied()) as $version) {
+            if (str_contains($version, '\\') && !class_exists($version)) {
+                $unresolved[] = $version;
+            }
+        }
+
+        return $unresolved;
+    }
+
+    /**
+     * Forgets what it read, for a caller that has just rewritten the table.
+     */
+    public function refresh(): void
+    {
+        $this->applied = null;
     }
 
     /**

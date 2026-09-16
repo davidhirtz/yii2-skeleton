@@ -25,18 +25,31 @@ class MigrationAlert extends Widget
      */
     protected ?array $pending = null;
 
+    /**
+     * @var list<string>|null applied migrations whose class cannot be loaded, which means this database has
+     * not been upgraded to the namespaces this code uses.
+     */
+    protected ?array $unresolved = null;
+
     #[Override]
     protected function configure(): void
     {
         $this->pending ??= $this->findPendingMigrations();
+        $this->unresolved ??= $this->findUnresolvedMigrations();
 
-        if ($this->pending) {
+        if ($this->pending || $this->unresolved) {
             $this->icon ??= 'exclamation-triangle';
 
             if (!$this->content) {
-                $this->addText(Yii::t('skeleton', 'MIGRATION_ALERT_MESSAGE', [
-                    'count' => count($this->pending),
-                ]));
+                // An unresolved history is the louder of the two and answers for the pending count as well:
+                // every migration looks pending to a database that predates the namespace rename.
+                $this->addText($this->unresolved !== []
+                    ? Yii::t('skeleton', 'MIGRATION_ALERT_UNRESOLVED_MESSAGE', [
+                        'count' => count($this->unresolved),
+                    ])
+                    : Yii::t('skeleton', 'MIGRATION_ALERT_MESSAGE', [
+                        'count' => count($this->pending),
+                    ]));
             }
         }
 
@@ -69,10 +82,27 @@ class MigrationAlert extends Widget
         return $history->getPending();
     }
 
+    /**
+     * @return list<string>
+     */
+    protected function findUnresolvedMigrations(): array
+    {
+        $history = Yii::createObject(MigrationHistory::class, [Yii::$app->getDb()]);
+        return $history->getUnresolved();
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getUnresolved(): array
+    {
+        return $this->unresolved ?? [];
+    }
+
     #[Override]
     protected function renderContent(): string|Stringable
     {
-        return $this->pending
+        return $this->pending || $this->unresolved
             ? Alert::make()
                 ->attributes($this->attributes)
                 ->content(...$this->content)
@@ -84,6 +114,6 @@ class MigrationAlert extends Widget
     #[Override]
     public function isVisible(): bool
     {
-        return (bool)$this->pending && parent::isVisible();
+        return ($this->pending || $this->unresolved) && parent::isVisible();
     }
 }

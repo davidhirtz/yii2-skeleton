@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Console\Controllers;
 
 use Hirtz\Skeleton\Console\Controllers\Traits\BackupTrait;
 use Hirtz\Skeleton\Console\Controllers\Traits\ConfigTrait;
+use Hirtz\Skeleton\Db\MigrationHistory;
 use Hirtz\Skeleton\Models\User;
 use Override;
 use Seld\CliPrompt\CliPrompt;
@@ -31,7 +32,20 @@ class MigrateController extends \yii\console\controllers\MigrateController
      */
     public $migrationNamespaces = [];
 
+    /**
+     * The actions that apply migrations, and therefore the only ones the history guard runs for.
+     * @see MigrateController::checkHistory()
+     */
+    private const array MIGRATING_ACTIONS = ['up', 'down', 'to', 'redo', 'fresh'];
+
     public string $dbFile = '@root/config/db.php';
+
+    /**
+     * @var string a script an upgrade may leave in the project to repair a migration history this code cannot
+     * resolve. Set to an empty string to refuse instead of repairing.
+     * @see MigrateController::repairHistory()
+     */
+    public string $upgradeFile = '@root/upgrade/collapse.php';
     public $templateFile = '@skeleton/views/migration.php';
 
     /**
@@ -80,7 +94,88 @@ class MigrateController extends \yii\console\controllers\MigrateController
             $this->actionConfig(false);
         }
 
-        return Yii::$app->getDb()->dsn && parent::beforeAction($action);
+        if (!Yii::$app->getDb()->dsn) {
+            return false;
+        }
+
+        return $this->checkHistory($action->id) && parent::beforeAction($action);
+    }
+
+    /**
+     * A migration history naming classes that cannot be loaded means the database predates a rename of the
+     * migration namespaces — it has not been upgraded. Yii would treat every migration as new and try to
+     * build the schema again over populated tables, so the run stops here.
+     *
+     * The repair, if the project ships one, runs **before** `parent::beforeAction()`: the list of new
+     * migrations is computed inside the action, so rewriting the history first is what makes the list right.
+     *
+     * Only the actions that apply migrations are guarded. Refusing `backup` because the history is unresolved
+     * is backwards — it is the one thing worth doing first — and `repairHistory()` calls `actionBackup()`
+     * itself, so guarding it would recurse. Reading the history table for `create` on a database that has
+     * none is the other reason: it takes a metadata lock the caller never asked for.
+     */
+    protected function checkHistory(string $actionId): bool
+    {
+        if (!in_array($actionId, self::MIGRATING_ACTIONS, true)) {
+            return true;
+        }
+
+        /** @var MigrationHistory $history */
+        $history = Yii::createObject(MigrationHistory::class, [Yii::$app->getDb()]);
+        $unresolved = $history->getUnresolved();
+
+        if ($unresolved === []) {
+            return true;
+        }
+
+        $this->stdout(Yii::t('skeleton', 'MIGRATE_UNRESOLVED_MESSAGE', [
+            'count' => count($unresolved),
+        ]) . PHP_EOL, Console::FG_YELLOW);
+
+        foreach ($unresolved as $version) {
+            $this->stdout("  $version" . PHP_EOL);
+        }
+
+        return $this->repairHistory($history);
+    }
+
+    /**
+     * Runs the script an upgrade left in the project, then reads the history again. The file's presence is
+     * the authorisation: it is generated, reviewed and committed by hand, and a deployment cannot be asked
+     * to confirm anything.
+     */
+    protected function repairHistory(MigrationHistory $history): bool
+    {
+        $file = $this->upgradeFile === '' ? null : Yii::getAlias($this->upgradeFile, false);
+
+        if (!is_string($file) || !is_file($file)) {
+            $this->stderr(Yii::t('skeleton', 'MIGRATE_UNRESOLVED_ERROR') . PHP_EOL, Console::FG_RED);
+            return false;
+        }
+
+        // Before the repair, not after: the backup otherwise captures a database the script has already
+        // rewritten, and `migrateUp()` would take it too late to be worth anything.
+        if (!$this->skipBackup) {
+            $this->actionBackup();
+            $this->skipBackup = true;
+        }
+
+        $this->stdout(Yii::t('skeleton', 'MIGRATE_UPGRADE_MESSAGE', ['file' => $file]) . PHP_EOL);
+
+        passthru(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($file), $status);
+
+        if ($status !== ExitCode::OK) {
+            return false;
+        }
+
+        $history->refresh();
+
+        if ($history->getUnresolved() !== []) {
+            $this->stderr(Yii::t('skeleton', 'MIGRATE_UNRESOLVED_ERROR') . PHP_EOL, Console::FG_RED);
+            return false;
+        }
+
+        return true;
     }
 
     #[Override]

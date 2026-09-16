@@ -72,4 +72,36 @@ class MigrationHistoryTest extends TestCase
     {
         return new MigrationHistory(Yii::$app->getDb());
     }
+
+    /**
+     * A history naming a class that cannot be loaded is how a database that predates the v3 namespace rename
+     * is recognised. `Console\Controllers\MigrateController` refuses to run against one, because Yii would
+     * treat every migration as new and build the schema again over populated tables.
+     */
+    public function testAnAppliedMigrationWhoseClassIsGoneIsUnresolved(): void
+    {
+        $db = Yii::$app->getDb();
+        $history = new MigrationHistory($db);
+
+        self::assertSame([], $history->getUnresolved());
+
+        $db->createCommand()->insert('{{%migration}}', [
+            'version' => 'davidhirtz\yii2\skeleton\migrations\M190125140002Init',
+            'apply_time' => 1_700_000_000,
+        ])->execute();
+
+        $history->refresh();
+
+        self::assertSame(['davidhirtz\yii2\skeleton\migrations\M190125140002Init'], $history->getUnresolved());
+    }
+
+    /**
+     * `m000000_000000_base` carries no namespace and is not a class, so it must never be reported.
+     */
+    public function testTheBaseMigrationIsNeverUnresolved(): void
+    {
+        $history = new MigrationHistory(Yii::$app->getDb());
+
+        self::assertNotContains(MigrationHistory::BASE_MIGRATION, $history->getUnresolved());
+    }
 }

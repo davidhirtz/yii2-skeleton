@@ -1,5 +1,25 @@
 ## 3.0.0 (in development)
 
+- **`Console\Controllers\MigrateController` refuses to migrate a database it cannot read the history of, and
+  repairs it when the project ships a repair.** v3 renamed every migration namespace, so a v2 database's
+  `migration` rows name classes that no longer load — and Yii would treat every migration as new and build the
+  schema again over populated tables. `Db\MigrationHistory::getUnresolved()` is the detection, and
+  `MigrationAlert` reports the same condition on the dashboard. If `$upgradeFile` (`@root/upgrade/collapse.php`
+  by default) exists, the controller backs the database up, runs it and reads the history again, so an upgrade
+  deployment is an ordinary `./yii migrate` rather than a bespoke extra step; set it to an empty string to
+  refuse instead. The file's presence is the authorisation — a deployment cannot be asked to confirm anything.
+  The repair runs in `beforeAction()` because the list of new migrations is computed inside the action, and it
+  takes the backup itself because `migrateUp()` would otherwise take one of an already-rewritten database.
+  **Only `up`, `down`, `to`, `redo` and `fresh` are guarded**: refusing `backup` because the history is
+  unresolved is backwards — it is the one thing worth doing first — and `repairHistory()` calls
+  `actionBackup()` itself, so guarding it would recurse.
+
+- **`Db\MigrationHistory` re-reads the schema rather than trusting the cache.** The schema cache outlives the
+  process, so a database recreated behind a warm one passed the "does `migration` exist" check and then failed
+  the `SELECT` with a 1146 — which is exactly the state an interrupted `migrate/restore` leaves, so the
+  recovery path was the one that broke and `runtime/cache` had to be cleared by hand. The table schema is read
+  with `refresh: true` and the result memoised, so it costs one query per instance.
+
 - **`Models\Interfaces\AdminModelInterface` declares `getParamName()`**, implemented by
   `Models\Traits\AdminModelTrait`, so a widget can build the routes of a controller scoped to a model without
   knowing which model it has. It moved up from the media bundle's `AssetModelInterface`, where a second
