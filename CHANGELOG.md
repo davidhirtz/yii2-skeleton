@@ -1,5 +1,18 @@
 ## 3.0.0 (in development)
 
+- **`Widgets\Grids\Traits\SelectionTrait` is the grid selection**, extracted from the four grids that had
+  written it out one by one — `Modules\Admin\Widgets\Grids\RedirectGridView` here, the cms
+  `SectionGridView` and `BlockSectionGridView`, the media `AssetGridView` and `FileGridView`. It carries
+  `$showSelection` (on by default), the checkbox column, the sticky footer the selection reveals and the
+  delete button in it, and a using class calls `configureSelection()` from its own `configure()` before it
+  builds its columns — a trait has nowhere to register a listener — and names the checkbox column itself.
+  What a grid still answers for is `getDeleteSelectionLabel()` and `getDeleteSelectionRoute()`, both abstract,
+  plus optionally `canDeleteSelection()` (default `true`), `getDeleteSelectionMessage()` (default
+  `COMMON_CONFIRM_DELETE_SELECTED`) and `getSelectionItems()`, which is what lets `FileGridView` keep its move
+  button beside the delete one. Renamed with it: `RedirectGridView::getSelectionButton()` and
+  `SectionGridView::getSelectionButton()` are `getDeleteSelectionButton()`, and the dead
+  `data-id="check-button"` attribute the redirect grid's trigger carried is gone.
+
 - **`Db\Connection::$lockWaitTimeout` (60 s) bounds how long a restore waits for a metadata lock.** A dump
   opens with a `DROP TABLE IF EXISTS` per table, and any other connection that has merely *read* one inside an
   open transaction holds a shared lock on it — so under the server's own `lock_wait_timeout`, a day on MariaDB,

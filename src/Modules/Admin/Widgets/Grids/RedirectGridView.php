@@ -8,21 +8,17 @@ use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Modules\Admin\Controllers\RedirectController;
 use Hirtz\Skeleton\Modules\Admin\Data\RedirectActiveDataProvider;
-use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\DeleteGridButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\ViewGridButton;
-use Hirtz\Skeleton\Widgets\Grids\Columns\CheckboxColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\TypeIconColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
-use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridFooter;
-use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridToolbarItem;
+use Hirtz\Skeleton\Widgets\Grids\Traits\SelectionTrait;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\TypeFilterDropdown;
 use Hirtz\Skeleton\Widgets\Link;
-use Hirtz\Skeleton\Widgets\Modal;
 use Override;
 use Stringable;
 use Yii;
@@ -33,7 +29,8 @@ use Yii;
  */
 class RedirectGridView extends GridView
 {
-    public bool $showSelection = true;
+    use SelectionTrait;
+
     protected ?Redirect $redirect = null;
 
     public function redirect(Redirect $redirect): static
@@ -57,6 +54,8 @@ class RedirectGridView extends GridView
             $this->getSearchInput(),
         ];
 
+        $this->configureSelection();
+
         $this->columns ??= [
             $this->getCheckboxColumn(),
             $this->getTypeColumn(),
@@ -65,13 +64,6 @@ class RedirectGridView extends GridView
             $this->getUpdatedAtColumn(),
             $this->getButtonColumn(),
         ];
-
-        if ($this->showSelection) {
-            $this->footer ??= GridFooter::make()
-                ->attributes($this->footerAttributes)
-                ->addClass('hidden flex-has-selection')
-                ->content($this->getSelectionButton());
-        }
 
         parent::configure();
     }
@@ -96,13 +88,6 @@ class RedirectGridView extends GridView
     {
         return TypeFilterDropdown::make()
             ->model(Redirect::instance());
-    }
-
-    protected function getCheckboxColumn(): ?CheckboxColumn
-    {
-        return $this->showSelection
-            ? CheckboxColumn::make()
-            : null;
     }
 
     protected function getTypeColumn(): ?Column
@@ -158,29 +143,16 @@ class RedirectGridView extends GridView
         ];
     }
 
+    protected function getDeleteSelectionLabel(): string
+    {
+        return Yii::t('skeleton', 'REDIRECT_DELETE_SELECTED');
+    }
+
     /**
      * @see RedirectController::actionDeleteAll()
      */
-    protected function getSelectionButton(): Stringable
+    protected function getDeleteSelectionRoute(): array
     {
-        $modal = Modal::make()
-            ->title(Yii::t('skeleton', 'REDIRECT_DELETE_SELECTED'))
-            ->text(Yii::t('skeleton', 'COMMON_CONFIRM_DELETE_SELECTED'))
-            ->footer(Button::make()
-                ->danger()
-                ->text(Yii::t('skeleton', 'REDIRECT_DELETE_SELECTED'))
-                ->icon('trash')
-                ->post(['/admin/redirect/delete-all'])
-                ->attribute('hx-include', '[data-check]:checked'));
-
-        $button = Button::make()
-            ->danger()
-            ->text(Yii::t('skeleton', 'REDIRECT_DELETE_SELECTED'))
-            ->icon('trash')
-            ->attribute('data-id', 'check-button')
-            ->modal($modal);
-
-        return GridToolbarItem::make()
-            ->content($button);
+        return ['/admin/redirect/delete-all'];
     }
 }
