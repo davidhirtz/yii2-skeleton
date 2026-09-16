@@ -1,5 +1,17 @@
 ## 3.0.0 (in development)
 
+- **`Db\Connection::$lockWaitTimeout` (60 s) bounds how long a restore waits for a metadata lock.** A dump
+  opens with a `DROP TABLE IF EXISTS` per table, and any other connection that has merely *read* one inside an
+  open transaction holds a shared lock on it — so under the server's own `lock_wait_timeout`, a day on MariaDB,
+  a blocked restore hung rather than failing, and killing it left the database half dropped. The value rides on
+  the `mysql` session as an `--init-command`; `0` removes the ceiling. The backup cannot carry it, MariaDB's
+  `mysqldump` takes no `--init-command`.
+
+- **`Test\Fixtures\ActiveFixture::resetTable()` deletes only the rows the fixture loaded.** Yii empties the
+  whole table, which the test transaction normally rolls back — but a test that loses its transaction to DDL
+  committed that delete, removing rows nothing in the suite had written. A fixture holding no loaded rows still
+  clears the table, which is what the unload preceding every load is for.
+
 - **`Console\Controllers\MigrateController` refuses to migrate a database it cannot read the history of, and
   repairs it when the project ships a repair.** v3 renamed every migration namespace, so a v2 database's
   `migration` rows name classes that no longer load — and Yii would treat every migration as new and build the

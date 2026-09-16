@@ -12,13 +12,7 @@ class SchemaTest extends TestCase
 {
     public function testGetBackupCommand(): void
     {
-        $schema = new Schema([
-            'db' => new Connection([
-                'dsn' => 'mysql:host=localhost;dbname=test',
-                'username' => 'user',
-                'password' => 'pass',
-            ]),
-        ]);
+        $schema = new Schema(['db' => self::createConnection()]);
 
         $command = $schema->getBackupCommand();
         $file = preg_match('/--defaults-file\'=\'([^\']+)/', $command, $matches) ? $matches[1] : null;
@@ -34,5 +28,36 @@ class SchemaTest extends TestCase
         self::assertStringContainsString('password="pass"', $contents);
         self::assertStringContainsString('host=localhost', $contents);
         self::assertStringNotContainsString('port=', $contents);
+    }
+
+    /**
+     * Without the ceiling a table another connection still holds a shared metadata lock on blocks the dump's
+     * `DROP TABLE` for `lock_wait_timeout`, a day on MariaDB (monorepo #141).
+     */
+    public function testGetRestoreCommandCarriesALockWaitTimeout(): void
+    {
+        $schema = new Schema(['db' => self::createConnection()]);
+
+        self::assertStringContainsString("'--init-command'='SET SESSION lock_wait_timeout=60'", $schema->getRestoreCommand());
+    }
+
+    public function testGetRestoreCommandWithoutLockWaitTimeout(): void
+    {
+        $schema = new Schema(['db' => self::createConnection(['lockWaitTimeout' => 0])]);
+
+        self::assertStringNotContainsString('--init-command', $schema->getRestoreCommand());
+    }
+
+    /**
+     * @param array<string, mixed> $config
+     */
+    private static function createConnection(array $config = []): Connection
+    {
+        return new Connection([
+            'dsn' => 'mysql:host=localhost;dbname=test',
+            'username' => 'user',
+            'password' => 'pass',
+            ...$config,
+        ]);
     }
 }

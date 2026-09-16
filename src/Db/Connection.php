@@ -24,6 +24,14 @@ class Connection extends \yii\db\Connection
     public ?array $ignoredBackupTables = null;
     public int|false $maxBackups = 10;
     /**
+     * Seconds a restore waits for a metadata lock before it gives up. The dump drops every table, and any other
+     * connection that has merely *read* one inside an open transaction holds a shared lock on it — so with the
+     * server's own `lock_wait_timeout`, a day on MariaDB, a blocked restore hangs instead of failing, and killing
+     * it is what leaves the database half dropped (monorepo #141). The backup cannot carry the same ceiling:
+     * MariaDB's `mysqldump` takes no `--init-command`.
+     */
+    public int $lockWaitTimeout = 60;
+    /**
      * @var Schema<ColumnSchema>
      */
     private Schema $schema;

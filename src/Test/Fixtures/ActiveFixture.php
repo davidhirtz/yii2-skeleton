@@ -55,9 +55,43 @@ abstract class ActiveFixture extends \yii\test\ActiveFixture
         return $this->loadData($dataFile);
     }
 
+    /**
+     * Yii empties the whole table, which the test transaction normally rolls back — but a test that loses its
+     * transaction to DDL commits the delete, removing rows it never wrote (monorepo #142). A fixture holding
+     * loaded rows removes those; one holding none — the `unloadFixtures()` that precedes every load — still
+     * clears the table of whatever an earlier run left behind, and so does a row that cannot be identified.
+     */
     #[Override]
     protected function resetTable(): void
     {
-        $this->getDb()->createCommand()->delete($this->getTableSchema()->fullName)->execute();
+        $this->getDb()->createCommand()
+            ->delete($this->getTableSchema()->fullName, $this->getLoadedRowsCondition())
+            ->execute();
+    }
+
+    /**
+     * @return array<int|string, mixed>|string
+     */
+    private function getLoadedRowsCondition(): array|string
+    {
+        $primaryKey = $this->getTableSchema()->primaryKey;
+
+        if (!$this->data || !$primaryKey) {
+            return '';
+        }
+
+        $condition = ['or'];
+
+        foreach ($this->data as $row) {
+            $values = array_intersect_key((array)$row, array_flip($primaryKey));
+
+            if (count($values) !== count($primaryKey)) {
+                return '';
+            }
+
+            $condition[] = $values;
+        }
+
+        return $condition;
     }
 }

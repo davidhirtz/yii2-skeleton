@@ -66,8 +66,13 @@ class Schema extends \yii\db\mysql\Schema
     public function getRestoreCommand(): string
     {
         $command = (new Command('mysql'))
-            ->addArg('--defaults-file=', $this->getTempConfigFile())
-            ->addArg('{database}');
+            ->addArg('--defaults-file=', $this->getTempConfigFile());
+
+        if ($this->db->lockWaitTimeout > 0) {
+            $command->addArg('--init-command=', "SET SESSION lock_wait_timeout={$this->db->lockWaitTimeout}");
+        }
+
+        $command->addArg('{database}');
 
         return $command->getExecCommand() . ' < "{file}"';
     }
