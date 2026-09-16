@@ -27,8 +27,10 @@ class LinkColumn extends DataColumn
     private ?array $linkCallbacks = null;
 
     /**
-     * @var Closure(TModel, string|int=, int=):(array|string|null|false)|null
-     * @var Closure(TModel, string|int=, int=):(array<int|string, mixed>|string|null|false)|null
+     * The closure a caller hands `url()` is typed against whichever model it re-binds the column to, which the
+     * column itself has no way of holding — it applies it to the model the grid gives it.
+     *
+     * @var Closure(mixed, string|int=, int=):(array<int|string, mixed>|string|null|false)|null
      */
     protected ?Closure $url = null;
 

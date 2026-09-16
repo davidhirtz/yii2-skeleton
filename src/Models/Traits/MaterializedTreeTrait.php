@@ -10,14 +10,12 @@ use Hirtz\Skeleton\Helpers\ArrayHelper;
 /**
  * @property int $id
  * @property int|null $parent_id
- * @property array|null $path
- * @property int $position
+ * @property list<int>|null $path
  *
  * @property-read static[] $ancestors {@see static::getAncestors()}
  * @property-read static[] $children {@see static::getChildren()}
  * @property-read static[] $descendants {@see static::getDescendants()}
  * @property-read static|null $parent {@see static::getParent()}
- * @property list<int>|null $path
  */
 trait MaterializedTreeTrait
 {

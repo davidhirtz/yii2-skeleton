@@ -52,12 +52,11 @@ use yii\web\IdentityInterface;
  * @property DateTime|null $last_login
  * @property DateTime|null $updated_at
  * @property DateTime $created_at
- * @property array|null $custom_attributes
+ * @property array<string, mixed>|null $custom_attributes
  *
  * @property-read User|null $created {@see static::getCreated()}
  *
  * @mixin TrailBehavior
- * @property array<string, mixed>|null $custom_attributes
  */
 class User extends ActiveRecord implements CustomAttributeInterface, IdentityInterface, SearchableInterface, StatusAttributeInterface, TrailModelInterface
 {
@@ -614,6 +613,15 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     public function getStatusIcon(): string
     {
         return !$this->isOwner() ? ($this->getStatus()?->getIcon() ?? '') : 'star';
+    }
+
+    /**
+     * The owner's star is not a status, so there is nothing to cycle through. No `#[Override]`: the method comes
+     * from a trait this class uses itself.
+     */
+    public function isStatusUpdatable(): bool
+    {
+        return !$this->isOwner();
     }
 
     /**

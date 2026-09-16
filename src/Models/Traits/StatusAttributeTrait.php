@@ -70,6 +70,30 @@ trait StatusAttributeTrait
         return static::findStatus($this->status ?? null);
     }
 
+    /**
+     * The next declared status, wrapping at the end of the list. `null` where the model declares fewer than two, or
+     * where the record's own value is not among them — a record stored with a status the configuration has since
+     * dropped is left alone rather than silently moved to the first one.
+     */
+    public function getNextStatus(): ?Status
+    {
+        $definitions = static::getStatusDefinitions();
+        $values = array_keys($definitions);
+        $index = array_search($this->getStatus()?->value, $values, true);
+
+        return $index === false || count($values) < 2
+            ? null
+            : $definitions[$values[($index + 1) % count($values)]];
+    }
+
+    /**
+     * {@see \Hirtz\Skeleton\Models\User} refuses for the site owner, whose star is not one of the statuses at all.
+     */
+    public function isStatusUpdatable(): bool
+    {
+        return true;
+    }
+
     public function getStatusName(): string
     {
         return $this->getStatus()?->getName() ?? '';

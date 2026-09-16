@@ -33,6 +33,16 @@ interface StatusAttributeInterface
 
     public function getStatus(): ?Status;
 
+    /**
+     * The status a click on the grid's status icon moves the record to.
+     */
+    public function getNextStatus(): ?Status;
+
+    /**
+     * Whether such a click is offered for this record at all.
+     */
+    public function isStatusUpdatable(): bool;
+
     public function getStatusName(): string;
 
     public function getStatusIcon(): string;

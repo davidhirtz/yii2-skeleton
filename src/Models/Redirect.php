@@ -27,7 +27,6 @@ use Yii;
  * @property int $type
  * @property string $request_uri
  * @property string $url
- * @property int|null $updated_by_user_id
  * @property DateTime|null $updated_at
  * @property DateTime $created_at
  */

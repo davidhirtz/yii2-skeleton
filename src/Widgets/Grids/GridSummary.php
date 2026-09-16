@@ -19,6 +19,7 @@ class GridSummary extends Widget
     use GridTrait;
 
     protected ?string $message = null;
+    protected ?string $emptyMessage = null;
     /**
      * @var array<string, mixed>
      */
@@ -27,6 +28,16 @@ class GridSummary extends Widget
     public function message(string $message): static
     {
         $this->message = $message;
+        return $this;
+    }
+
+    /**
+     * What the grid is for, said only where the grid is empty and nothing was searched for — a filled grid
+     * explains itself, and a fruitless search needs the search summary rather than the explanation.
+     */
+    public function emptyMessage(?string $emptyMessage): static
+    {
+        $this->emptyMessage = $emptyMessage;
         return $this;
     }
 
@@ -82,6 +93,10 @@ class GridSummary extends Widget
 
         if ($this->message) {
             return Yii::$app->getI18n()->format($this->message, $params, Yii::$app->language);
+        }
+
+        if ($this->emptyMessage && !$count && !$this->grid->search->getValue()) {
+            return Yii::$app->getI18n()->format($this->emptyMessage, $params, Yii::$app->language);
         }
 
         if ($this->grid->search->getValue()) {

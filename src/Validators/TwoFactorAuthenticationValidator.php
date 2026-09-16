@@ -76,7 +76,6 @@ class TwoFactorAuthenticationValidator extends StringValidator
 
     /**
      * @param mixed $value
-     * @return array|bool|void
      * @return array{string, array<string, mixed>}|null
      */
     #[Override]

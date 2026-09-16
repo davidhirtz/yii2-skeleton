@@ -102,6 +102,15 @@ class GridView extends Widget
     protected array $pagerOptions = [];
     protected bool $showOnEmpty = true;
 
+    protected ?string $emptyMessage = null;
+
+    /**
+     * @var bool whether the status icon cycles the record's status on a click. Public so a project can switch it off
+     * for one grid through the container, where it is too risky to offer — `[TenantGridView::class =>
+     * ['enableStatusUpdate' => false]]`. A grid still answers for its own pickers and permissions.
+     */
+    public bool $enableStatusUpdate = true;
+
     protected string $layout = '{header}{summary}{items}{pager}{footer}';
 
     /**
@@ -203,9 +212,21 @@ class GridView extends Widget
         return GridSearchForm::make()->grid($this);
     }
 
+    /**
+     * What the grid is for, rendered in place of the bare "no records" summary while it is empty. A grid whose
+     * empty state is not self-explanatory sets it in `configure()`.
+     */
+    public function emptyMessage(?string $emptyMessage): static
+    {
+        $this->emptyMessage = $emptyMessage;
+        return $this;
+    }
+
     protected function getSummary(): ?GridSummary
     {
-        return GridSummary::make()->grid($this);
+        return GridSummary::make()
+            ->grid($this)
+            ->emptyMessage($this->emptyMessage);
     }
 
     protected function getItems(): ?Stringable

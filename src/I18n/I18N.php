@@ -9,8 +9,7 @@ use Yii;
 use yii\i18n\PhpMessageSource;
 
 /**
- * @property array $languages {@see I18N::getLanguages()}
- * @property list<string> $languages
+ * @property list<string> $languages {@see I18N::getLanguages()}
  */
 class I18N extends \yii\i18n\I18N
 {

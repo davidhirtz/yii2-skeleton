@@ -9,7 +9,6 @@ use Yii;
 use yii\base\Module;
 
 /**
- * @property Controller $controller
  * @property Controller<Module> $controller
  */
 class ErrorAction extends \yii\web\ErrorAction

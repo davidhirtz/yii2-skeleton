@@ -1,5 +1,67 @@
 ## 3.0.0 (in development)
 
+- **A trait and its using class must never both declare the same `@property`** (monorepo issue #125). PHPStan
+  keeps the first tag and, where the two disagree, drops that class's whole PHPDoc scope with no error of its
+  own — which was the entire pre-existing level-7 baseline, reported against
+  `Models\Traits\TypeAttributeTrait` for classes that only *use* it. So
+  `Models\Traits\UpdatedByUserTrait` owns `updated_by_user_id` and the models no longer repeat it,
+  `MaterializedTreeTrait` no longer declares `$position`, and
+  `Modules\Admin\Widgets\Forms\Traits\AssetFieldsTrait` (media) no longer declares `$model`. A relation trait
+  declares only its `@property-read` relation and leaves the foreign key to the model, whose nullability it
+  cannot know.
+
+  **`Widgets\Grids\Columns\LinkColumn::$url` takes the loose `Closure(mixed, …)`**, the shape
+  `Widgets\Grids\Columns\DataColumn::$value` already documents: the closure a caller hands `url()` is typed
+  against whichever model it re-binds the column to, which the column cannot hold. Its docblock had carried two
+  `@var` tags, and repairing that surfaced five variance errors it had been hiding.
+
+- **The status icon in a grid cycles the record's status on a click** (monorepo issue #121).
+  `Widgets\Grids\Columns\StatusIconColumn::enableUpdate()` turns the icon into a button posting to a `status`
+  action, and `Widgets\Grids\GridView::$enableStatusUpdate` is the public switch a project turns the feature off
+  with for one grid where it is too risky — `[TenantGridView::class => ['enableStatusUpdate' => false]]`. The
+  column stays an icon wherever a click must not change anything, and the grid answers for its own pickers and
+  permissions:
+
+  ```php
+  protected function getStatusColumn(): ?Column
+  {
+      return StatusIconColumn::make()
+          ->enableUpdate($this->enableStatusUpdate && $this->webuser->can(Foo::AUTH_FOO));
+  }
+  ```
+
+  **`Models\Interfaces\StatusAttributeInterface` gained `getNextStatus()` and `isStatusUpdatable()`**, both
+  implemented by `Models\Traits\StatusAttributeTrait` — a model implementing the interface without the trait has
+  to add them. `getNextStatus()` is the next declared status, wrapping at the end of the list, and `null` where
+  the model declares fewer than two or the record's stored value is not among them, so a record carrying a status
+  the configuration has since dropped is left alone rather than silently moved to the first one.
+  `Models\User::isStatusUpdatable()` refuses for the site owner, whose star is not a status.
+
+  **`Web\Traits\StatusControllerTrait::updateStatus()` is the body of the action**, with no opinion on who may
+  run it: a controller resolves and authorises the record the way its update action does, adds `status` to its
+  access rule and to `VerbFilter` as `['post']`, and calls it. `Modules\Admin\Controllers\UserController` is the
+  one here. The button derives its route by swapping `update` for `status` in the record's own
+  `AdminModelInterface::getAdminRoute()`, so a model whose route falls back to an index — `Models\User` with no
+  id, the cms `Category`, the media `Folder` — carries no key to act on and keeps the plain icon.
+
+- **`Widgets\Grids\GridView::emptyMessage()` says what a grid is *for*, in place of the bare "no records"
+  summary** (monorepo issue #119). `Widgets\Grids\GridSummary` renders it only while the grid is empty **and**
+  nothing was searched for: a fruitless search still gets the search summary, or the user is told the grid is
+  empty when it is their keyword that matched nothing. A grid whose layout drops `{summary}` when it is filled
+  keeps the explanation by putting it back and hiding the summary itself, the way
+  `Media\Modules\Admin\Widgets\Grids\AssetGridView` does:
+
+  ```php
+  protected function getSummary(): ?GridSummary
+  {
+      return parent::getSummary()
+          ->emptyMessage(Yii::t('app', 'FOO_GRID_SUMMARY_EMPTY'))
+          ->visible(fn (): bool => $this->provider->getCount() === 0);
+  }
+  ```
+
+  `GridSummary::message()` is unchanged and still replaces the summary unconditionally.
+
 - **A record built from a type the caller already knows goes through
   `Models\Traits\TypeAttributeTrait::instantiateByType()`, never `create()`** (monorepo issue #105). It resolves
   the class the type names through `Models\Types\Type::getModelClass()`, so building the record any other way and

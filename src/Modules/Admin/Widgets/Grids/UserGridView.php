@@ -60,7 +60,8 @@ class UserGridView extends GridView
 
     protected function getStatusColumn(): ?Column
     {
-        return StatusIconColumn::make();
+        return StatusIconColumn::make()
+            ->enableUpdate($this->enableStatusUpdate && $this->webuser->can(User::AUTH_USER));
     }
 
     protected function getNameColumn(): Column

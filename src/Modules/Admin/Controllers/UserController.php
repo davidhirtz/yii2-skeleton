@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Modules\Admin\Controllers\Traits\UserTrait;
 use Hirtz\Skeleton\Modules\Admin\Data\UserActiveDataProvider;
 use Hirtz\Skeleton\Modules\Admin\Models\Forms\UserForm;
 use Hirtz\Skeleton\Web\Controller;
+use Hirtz\Skeleton\Web\Traits\StatusControllerTrait;
 use Override;
 use Yii;
 use yii\filters\AccessControl;
@@ -26,6 +27,7 @@ use Hirtz\Skeleton\Modules\Admin\Module;
  */
 class UserController extends Controller
 {
+    use StatusControllerTrait;
     use UserTrait;
 
     #[Override]
@@ -45,6 +47,7 @@ class UserController extends Controller
                             'index',
                             'ownership',
                             'reset',
+                            'status',
                             'update',
                         ],
                         'roles' => [User::AUTH_USER],
@@ -63,6 +66,7 @@ class UserController extends Controller
                     'disable-authenticator' => ['post'],
                     'ownership' => ['post'],
                     'reset' => ['post'],
+                    'status' => ['post'],
                 ],
             ],
         ];
@@ -189,6 +193,11 @@ class UserController extends Controller
         $this->error($form);
 
         return $this->redirect(['update', 'id' => $user->id]);
+    }
+
+    public function actionStatus(int $id): Response
+    {
+        return $this->updateStatus($this->findUser($id, User::AUTH_USER));
     }
 
     public function actionOwnership(int $id): Response|string

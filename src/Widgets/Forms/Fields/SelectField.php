@@ -37,7 +37,6 @@ class SelectField extends Field
 
     /**
      * @param array<int|string, array<string, mixed>> $itemAttributes
-     * @param array<int|string, array<string, mixed>> $itemAttributes
      */
     public function itemAttributes(array $itemAttributes): static
     {
@@ -101,8 +100,7 @@ class SelectField extends Field
     }
 
     /**
-     * @return array<int|string, Definition|string|int|array>
-     * @return array<int|string, mixed>
+     * @return array<int|string, Definition|string|int|mixed[]>
      */
     protected function getItemsFromModel(): array
     {
@@ -122,8 +120,7 @@ class SelectField extends Field
     }
 
     /**
-     * @param array<int|string, Definition|string|int|array> $items
-     * @param array<int|string, mixed> $items
+     * @param array<int|string, Definition|string|int|mixed[]> $items
      */
     protected function addItemsFromModel(array $items): void
     {
