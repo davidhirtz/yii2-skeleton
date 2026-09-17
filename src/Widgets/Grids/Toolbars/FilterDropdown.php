@@ -68,6 +68,15 @@ class FilterDropdown extends Widget
         return $this;
     }
 
+    /**
+     * Read by {@see \Hirtz\Skeleton\Widgets\Grids\GridView::isFiltered()}, which has to answer before anything
+     * rendered — a dropdown a grid never configured has no parameter at all.
+     */
+    public function getParamName(): ?string
+    {
+        return $this->paramName ?? null;
+    }
+
     public function placeholder(string $placeholder): static
     {
         $this->placeholder = $placeholder;

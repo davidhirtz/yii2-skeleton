@@ -22,7 +22,9 @@ use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Pagers\LinkPager;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridFooter;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridHeader;
+use Hirtz\Skeleton\Widgets\Grids\Toolbars\FilterDropdown;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridSearchForm;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Traits\ProviderTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
@@ -203,11 +205,42 @@ class GridView extends Widget
         ]);
     }
 
+    /**
+     * A grid with nothing in it and nothing narrowing it has nothing to search or filter, so the toolbar is
+     * dropped rather than offered over an empty table (monorepo issue #159).
+     */
     protected function getHeader(): ?GridHeader
     {
+        if (!$this->provider->getCount() && !$this->isFiltered()) {
+            return null;
+        }
+
         return is_array($this->header)
             ? GridHeader::make()->attributes($this->headerAttributes)->content(...$this->header)
             : $this->header;
+    }
+
+    /**
+     * Whether something the toolbar offers is what emptied the grid. The toolbar has to stay in that case, or a
+     * search that matched nothing takes away the box that would clear it.
+     */
+    protected function isFiltered(): bool
+    {
+        if ($this->search->getValue()) {
+            return true;
+        }
+
+        $request = Application::current()->getRequest();
+
+        foreach (is_array($this->header) ? $this->header : [] as $item) {
+            $paramName = $item instanceof FilterDropdown ? $item->getParamName() : null;
+
+            if ($paramName !== null && $request->get($paramName) !== null) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected function getSearchInput(): ?GridSearchForm

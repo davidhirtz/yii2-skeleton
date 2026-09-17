@@ -1,5 +1,11 @@
 ## 3.0.0 (in development)
 
+- **A grid with nothing in it renders no toolbar** (monorepo issue #159): an empty table has nothing to search
+  or filter. `Widgets\Grids\GridView::isFiltered()` is what keeps it where the toolbar is what emptied the grid
+  — a fruitless search must not take away the box that would clear it — and reads the grid's own
+  `GridSearch` plus the request parameter of every `Toolbars\FilterDropdown` in the header, which answers
+  `getParamName()` for it now. A grid wanting its toolbar regardless overrides `getHeader()`.
+
 - **htmx 4** (monorepo issue #154). The npm release is tagged `next` rather than `latest`; `htmx-ext-head-support`
   is dropped for the `hx-head` extension htmx 4 ships inside its own package, imported into `admin.ts` after
   htmx itself, which is what assigns the global the extension reaches for.
