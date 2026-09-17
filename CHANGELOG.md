@@ -1,5 +1,21 @@
 ## 3.0.0 (in development)
 
+- **A `sentryDsn` parameter reports to Sentry beside the file log** (monorepo issue #164). `Log\SentryTarget`
+  is added to `components.log.targets` under the key `sentry` by `Base\Traits\ApplicationTrait::preInitInternal()`
+  when `config/params.php` carries a `sentryDsn`, and nothing at all is built when it does not — `sentry/sentry`
+  is a dependency of this bundle now, not an integration a project wires itself. The file target the core config
+  has always carried is keyed `file` rather than `0`, so a project can reconfigure either by name.
+
+  What the default target sends is deliberately narrower than what Sentry's own `\Sentry\init()` would: its
+  three error-listener integrations are filtered out, because Yii's error handler already reports through this
+  target and Sentry's would both duplicate every report and take over the handler that renders the error page;
+  `max_request_body_size` is `none` and `send_default_pii` is `false`, the posted body being what the file
+  target's `maskVars` exists to keep out of a log that never leaves this server; `logVars` is empty, since
+  `yii\log\Target::collect()` appends that dump as a message of its own; and the user is named by id alone.
+  `levels` is `['error', 'warning']` and `except` is `['yii\web\HttpException:4*']` — a 404 is not a report,
+  the 5xx above it is, which is where this differs from the file target's blanket `yii\web\HttpException:*`.
+  `environment` defaults to `YII_ENV` and `release` to the deployed commit; `$clientOptions` overrides any of it.
+
 - **A flash encodes what it is handed and trusts only a `Stringable`** (monorepo issue #160). A flash is
   rendered as HTML — `Widgets\Alert::content()` is the raw setter — and `Web\Controller::error()` passed a
   model's validation messages through verbatim, several of which interpolate the value the user typed

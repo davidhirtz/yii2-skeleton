@@ -1,0 +1,227 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Hirtz\Skeleton\Tests\Log;
+
+use Hirtz\Skeleton\Helpers\VersionHelper;
+use Hirtz\Skeleton\Log\SentryTarget;
+use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
+use Override;
+use RuntimeException;
+use Sentry\Event;
+use Sentry\Integration\ErrorListenerIntegration;
+use Sentry\Integration\ExceptionListenerIntegration;
+use Sentry\Integration\FatalErrorListenerIntegration;
+use Sentry\Integration\ModulesIntegration;
+use Sentry\SentrySdk;
+use Sentry\Severity;
+use Sentry\Transport\Result;
+use Sentry\Transport\ResultStatus;
+use Sentry\Transport\TransportInterface;
+use Yii;
+use yii\base\InvalidConfigException;
+use yii\log\Logger;
+
+/**
+ * The transport is replaced, so nothing here reaches the network. Sentry's hub is a process-wide singleton the
+ * target sets, so each test starts from a fresh one.
+ */
+class SentryTargetTest extends TestCase
+{
+    use UserFixtureTrait;
+
+    #[Override]
+    protected function tearDown(): void
+    {
+        SentrySdk::init();
+        parent::tearDown();
+    }
+
+    public function testATargetWithoutADsnIsRefused(): void
+    {
+        $this->expectException(InvalidConfigException::class);
+        $this->expectExceptionMessage('sentryDsn');
+
+        Yii::createObject(SentryTarget::class);
+    }
+
+    public function testAnExceptionIsReportedWithItsStackTrace(): void
+    {
+        $transport = $this->export([[new RuntimeException('Something broke'), Logger::LEVEL_ERROR, 'application', 0.0, [], 0]]);
+
+        $event = $transport->events[0] ?? null;
+        self::assertNotNull($event);
+
+        $exceptions = $event->getExceptions();
+        self::assertCount(1, $exceptions);
+        self::assertSame(RuntimeException::class, $exceptions[0]->getType());
+        self::assertSame('Something broke', $exceptions[0]->getValue());
+        self::assertNotNull($exceptions[0]->getStacktrace());
+    }
+
+    public function testAMessageIsReportedWithItsLevelAndCategory(): void
+    {
+        $transport = $this->export([['Something is off', Logger::LEVEL_WARNING, 'app\\Widget', 0.0, [], 0]]);
+
+        $event = $transport->events[0] ?? null;
+        self::assertNotNull($event);
+
+        self::assertSame('Something is off', $event->getMessage());
+        self::assertEquals(Severity::warning(), $event->getLevel());
+        self::assertSame('app\\Widget', $event->getTags()['category'] ?? null);
+    }
+
+    /**
+     * A message that is not a string — `Yii::error()` takes anything — still has to arrive as something readable.
+     */
+    public function testAnArrayMessageIsExported(): void
+    {
+        $transport = $this->export([[['key' => 'value'], Logger::LEVEL_ERROR, 'application', 0.0, [], 0]]);
+
+        self::assertStringContainsString("'key' => 'value'", (string)$transport->events[0]->getMessage());
+    }
+
+    public function testTheReportNamesTheUserByIdAlone(): void
+    {
+        $user = $this->getUserFromFixture('owner');
+        $this->getWebUser()->setIdentity($user);
+
+        $transport = $this->export([['Something broke', Logger::LEVEL_ERROR, 'application', 0.0, [], 0]]);
+
+        $reported = $transport->events[0]->getUser();
+        self::assertNotNull($reported);
+        self::assertSame($user->id, $reported->getId());
+        self::assertNull($reported->getEmail());
+        self::assertNull($reported->getIpAddress());
+    }
+
+    public function testAGuestIsReportedWithoutAUser(): void
+    {
+        $transport = $this->export([['Something broke', Logger::LEVEL_ERROR, 'application', 0.0, [], 0]]);
+        self::assertNull($transport->events[0]->getUser());
+    }
+
+    /**
+     * The posted body is what the file log's `maskVars` keeps out of it, and no mask of ours reaches Sentry's own
+     * request integration — so the integration is told not to read one.
+     */
+    public function testThePostedBodyAndTheCookiesAreNeverSent(): void
+    {
+        $options = $this->getClientOptions();
+
+        self::assertSame('none', $options['max_request_body_size']);
+        self::assertFalse($options['send_default_pii']);
+    }
+
+    /**
+     * Yii's error handler reports through this target. Sentry's own listeners would report a second time and take
+     * over the handler that renders the error page.
+     */
+    public function testSentryInstallsNoErrorHandlerOfItsOwn(): void
+    {
+        $filter = $this->getClientOptions()['integrations'];
+        self::assertIsCallable($filter);
+
+        $integrations = $filter([
+            new ExceptionListenerIntegration(),
+            new ErrorListenerIntegration(),
+            new FatalErrorListenerIntegration(),
+            new ModulesIntegration(),
+        ]);
+
+        self::assertCount(1, $integrations);
+        self::assertInstanceOf(ModulesIntegration::class, $integrations[0]);
+    }
+
+    public function testTheReportIsGroupedByEnvironmentAndCommit(): void
+    {
+        $options = $this->getClientOptions();
+
+        self::assertSame(YII_ENV, $options['environment']);
+        self::assertSame(VersionHelper::getApplicationReference(), $options['release']);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function getClientOptions(): array
+    {
+        return (new TestSentryTarget(['dsn' => 'https://public@sentry.localhost/1']))->getClientOptions();
+    }
+
+    /**
+     * `Target::collect()` appends the `logVars` dump as a message of its own — the cookies and the posted body
+     * among them, masked for a file on this server rather than for an external service.
+     */
+    public function testTheContextDumpIsNotReported(): void
+    {
+        $transport = new TestTransport();
+        $target = $this->createTarget($transport);
+
+        $target->collect([['Something broke', Logger::LEVEL_ERROR, 'application', 0.0, [], 0]], true);
+
+        self::assertCount(1, $transport->events);
+        self::assertSame('Something broke', $transport->events[0]->getMessage());
+    }
+
+    /**
+     * @param list<array{0: mixed, 1: int, 2: string, 3: float, 4: array<mixed>, 5: int}> $messages
+     */
+    private function export(array $messages): TestTransport&TransportInterface
+    {
+        $transport = new TestTransport();
+        $target = $this->createTarget($transport);
+
+        $target->messages = $messages;
+        $target->export();
+
+        return $transport;
+    }
+
+    private function createTarget(TestTransport $transport): SentryTarget
+    {
+        $target = Yii::createObject([
+            'class' => SentryTarget::class,
+            'dsn' => 'https://public@sentry.localhost/1',
+            'clientOptions' => ['transport' => $transport],
+        ]);
+
+        self::assertInstanceOf(SentryTarget::class, $target);
+        return $target;
+    }
+}
+
+class TestSentryTarget extends SentryTarget
+{
+    /**
+     * @return array<string, mixed>
+     */
+    #[Override]
+    public function getClientOptions(): array
+    {
+        return parent::getClientOptions();
+    }
+}
+
+/**
+ * Declared here rather than beside the test: a `path` repository installs no dev autoload, so a class in another
+ * test file is only loaded when that file runs.
+ */
+class TestTransport implements TransportInterface
+{
+    /** @var list<Event> */
+    public array $events = [];
+
+    public function send(Event $event): Result
+    {
+        $this->events[] = $event;
+        return new Result(ResultStatus::success(), $event);
+    }
+
+    public function close(?int $timeout = null): Result
+    {
+        return new Result(ResultStatus::success());
+    }
+}

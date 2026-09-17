@@ -23,6 +23,7 @@
     "jfcherng/php-diff": "^6.9",
     "mikehaertl/php-shellcommand": "^1.7",
     "robthree/twofactorauth": "^3.0",
+    "sentry/sentry": "^4.15",
     "seld/cli-prompt": "^1.0",
     "symfony/polyfill-mbstring": "^1.31",
     "tinymce/tinymce": "^8.2",

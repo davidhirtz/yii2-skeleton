@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Controllers\HealthController;
 use Hirtz\Skeleton\Controllers\SitemapController;
 use Hirtz\Skeleton\Db\Connection;
 use Hirtz\Skeleton\I18n\I18N;
+use Hirtz\Skeleton\Log\SentryTarget;
 use Hirtz\Skeleton\Caching\CacheComponents;
 use Hirtz\Skeleton\Db\ActiveQuery;
 use Hirtz\Skeleton\Db\DatabaseComponents;
@@ -119,7 +120,7 @@ trait ApplicationTrait
                 'log' => [
                     'traceLevel' => YII_DEBUG ? 3 : 0,
                     'targets' => [
-                        [
+                        'file' => [
                             'class' => FileTarget::class,
                             'levels' => ['error', 'warning'],
                             'fileMode' => 0770, // Make sure both web and console user can write to file
@@ -236,6 +237,32 @@ trait ApplicationTrait
         }
 
         $this->setDefaultMailerDsn($config);
+        $this->setSentryLogTarget($config);
+    }
+
+    /**
+     * Beside the file target rather than instead of it, and only where the parameter is set: an installation with
+     * no `sentryDsn` never builds a Sentry client.
+     *
+     * @param array<array-key, mixed> $config
+     */
+    protected function setSentryLogTarget(&$config): void
+    {
+        $dsn = $config['params']['sentryDsn'] ?? null;
+
+        if (!is_string($dsn) || !$dsn) {
+            return;
+        }
+
+        $config['components']['log']['targets']['sentry'] = ArrayHelper::merge([
+            'class' => SentryTarget::class,
+            'dsn' => $dsn,
+            'levels' => ['error', 'warning'],
+            // A 404 is not an error worth a report, while a 5xx is the one that matters most.
+            'except' => [
+                'yii\\web\\HttpException:4*',
+            ],
+        ], $config['components']['log']['targets']['sentry'] ?? []);
     }
 
     /**
