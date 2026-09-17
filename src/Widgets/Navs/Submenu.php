@@ -24,7 +24,7 @@ class Submenu extends Widget
     /**
      * @var array<string, mixed>
      */
-    protected array $navAttributes = ['class' => 'tabs'];
+    protected array $navAttributes = ['class' => 'tabs', 'data-scroll-active' => true];
     protected bool $hideSingleItem = true;
 
     public function title(): void

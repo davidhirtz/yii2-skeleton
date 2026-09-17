@@ -10,6 +10,7 @@ import collapse from './includes/collapse';
 import dropdown from './includes/dropdown';
 import filter from './includes/filter';
 import {closeModal, createModal} from './includes/modals';
+import scrollActiveIntoView from './includes/scrollActiveIntoView';
 import search from './includes/search';
 import sticky from './includes/sticky';
 import timezone from "./includes/timezone.ts";
@@ -37,6 +38,7 @@ htmx.onLoad(($container) => {
     queryAll('[data-filter]', filter);
     queryAll('[data-form-target]', updateTargetsOnChange);
     queryAll('[data-modal]', closeModal);
+    queryAll('[data-scroll-active]', scrollActiveIntoView);
     queryAll('[data-search]', search);
     queryAll('[data-sticky]', sticky);
     queryAll('[data-tooltip]', tooltip);
