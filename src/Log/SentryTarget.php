@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Log;
 
+use Closure;
 use Hirtz\Skeleton\Helpers\VersionHelper;
+use Hirtz\Skeleton\Log\Traits\MaskQueryParamsTrait;
 use Hirtz\Skeleton\Web\User as WebUser;
 use Override;
 use Sentry\ClientBuilder;
+use Sentry\Event;
+use Sentry\EventHint;
 use Sentry\Integration\AbstractErrorListenerIntegration;
 use Sentry\Integration\IntegrationInterface;
 use Sentry\SentrySdk;
@@ -28,6 +32,8 @@ use yii\log\Target;
  */
 class SentryTarget extends Target
 {
+    use MaskQueryParamsTrait;
+
     public ?string $dsn = null;
 
     /**
@@ -152,9 +158,37 @@ class SentryTarget extends Target
                 static fn (IntegrationInterface $integration): bool => !$integration instanceof AbstractErrorListenerIntegration,
             )),
             ...$this->clientOptions,
-            // Last, and merged rather than replaced: a project adding a tag of its own must not drop this one.
+            // Last, and both composed rather than replaced: a project adding a tag or a callback of its own must
+            // not drop the project's name or the masking.
             'tags' => [...$this->getTags(), ...$this->clientOptions['tags'] ?? []],
+            'before_send' => $this->getBeforeSend(),
         ];
+    }
+
+    /**
+     * `send_default_pii` gates the cookies and the headers, not the URL — Sentry's `RequestIntegration` sends
+     * `url` and `query_string` either way, and a confirmation or reset link carries its token in one
+     * (monorepo issue #166). This is the hook that can see them: `Client::prepareEvent()` runs the scope's event
+     * processors, which is what attaches the request, and only then the callback. A project's own runs after
+     * this one, on the already masked event.
+     */
+    protected function getBeforeSend(): Closure
+    {
+        $callback = $this->clientOptions['before_send'] ?? null;
+
+        return function (Event $event, ?EventHint $hint = null) use ($callback): ?Event {
+            $request = $event->getRequest();
+
+            foreach (['url', 'query_string'] as $key) {
+                if (is_string($request[$key] ?? null)) {
+                    $request[$key] = $this->maskQueryParamValues($request[$key]);
+                }
+            }
+
+            $event->setRequest($request);
+
+            return is_callable($callback) ? $callback($event, $hint) : $event;
+        };
     }
 
     /**

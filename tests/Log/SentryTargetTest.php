@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Log;
 
+use Closure;
 use Hirtz\Skeleton\Helpers\VersionHelper;
 use Hirtz\Skeleton\Log\SentryTarget;
 use Hirtz\Skeleton\Test\TestCase;
@@ -253,6 +254,64 @@ class SentryTargetTest extends TestCase
     }
 
     /**
+     * `send_default_pii` gates the cookies and the headers, not the URL — a confirmation or reset link carries
+     * its token in the query string, and Sentry's request integration sends both either way (issue #166).
+     *
+     * The callback is exercised rather than the integration: `RequestIntegration::setupOnce()` registers a
+     * *global* event processor bound to whichever instance ran first in the process, so a fetcher of one's own
+     * reaches nothing once any other client has been built.
+     */
+    public function testTheTokenIsMaskedInTheRequestUrl(): void
+    {
+        $request = $this->beforeSend()->getRequest();
+
+        self::assertSame('http://www.test.localhost/admin/account/reset?code=***&q=search', $request['url']);
+        self::assertSame('code=***&q=search', $request['query_string']);
+        self::assertSame('GET', $request['method']);
+    }
+
+    /**
+     * A project's own callback is composed with the masking rather than replacing it, and sees the masked event.
+     */
+    public function testAProjectsOwnBeforeSendRunsOnTheMaskedEvent(): void
+    {
+        $seen = null;
+
+        $event = $this->beforeSend([
+            'before_send' => function (Event $event) use (&$seen): Event {
+                $seen = $event->getRequest()['url'] ?? null;
+                return $event;
+            },
+        ]);
+
+        self::assertSame('http://www.test.localhost/admin/account/reset?code=***&q=search', $seen);
+        self::assertSame($seen, $event->getRequest()['url']);
+    }
+
+    /**
+     * @param array<string, mixed> $clientOptions
+     */
+    private function beforeSend(array $clientOptions = []): Event
+    {
+        $event = Event::createEvent();
+        $event->setRequest([
+            'url' => 'http://www.test.localhost/admin/account/reset?code=a-real-token&q=search',
+            'method' => 'GET',
+            'query_string' => 'code=a-real-token&q=search',
+        ]);
+
+        $target = new TestSentryTarget([
+            'dsn' => 'https://public@sentry.localhost/1',
+            'clientOptions' => $clientOptions,
+        ]);
+
+        $masked = ($target->getBeforeSend())($event);
+
+        self::assertInstanceOf(Event::class, $masked);
+        return $masked;
+    }
+
+    /**
      * @param list<array{0: mixed, 1: int, 2: string, 3: float, 4: array<mixed>, 5: int}> $messages
      */
     private function export(array $messages): TestTransport&TransportInterface
@@ -288,6 +347,12 @@ class TestSentryTarget extends SentryTarget
     public function getClientOptions(): array
     {
         return parent::getClientOptions();
+    }
+
+    #[Override]
+    public function getBeforeSend(): Closure
+    {
+        return parent::getBeforeSend();
     }
 }
 

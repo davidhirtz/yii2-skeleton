@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Controllers\HealthController;
 use Hirtz\Skeleton\Controllers\SitemapController;
 use Hirtz\Skeleton\Db\Connection;
 use Hirtz\Skeleton\I18n\I18N;
+use Hirtz\Skeleton\Log\FileTarget;
 use Hirtz\Skeleton\Log\SentryTarget;
 use Hirtz\Skeleton\Caching\CacheComponents;
 use Hirtz\Skeleton\Db\ActiveQuery;
@@ -29,7 +30,6 @@ use Yii;
 use yii\caching\FileCache;
 use yii\helpers\ArrayHelper;
 use yii\i18n\PhpMessageSource;
-use yii\log\FileTarget;
 use yii\symfonymailer\Mailer;
 use yii\validators\TrimValidator;
 use yii\web\JqueryAsset;
@@ -125,7 +125,8 @@ trait ApplicationTrait
                             'levels' => ['error', 'warning'],
                             'fileMode' => 0770, // Make sure both web and console user can write to file
                             // The session id and the identity cookie are credentials, and a reset or
-                            // confirmation link carries its token in the query string.
+                            // confirmation link carries its token in the query string — which `maskVars` cannot
+                            // reach inside `_SERVER.REQUEST_URI`, hence the target's own `maskQueryParams`.
                             'logVars' => [
                                 '_GET',
                                 '_POST',

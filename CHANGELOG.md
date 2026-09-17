@@ -1,5 +1,18 @@
 ## 3.0.0 (in development)
 
+- **A token in the query string no longer escapes the log's masking** (monorepo issue #166). `maskVars` named
+  `_GET.code`, because a confirmation or reset link carries its token there — but `logVars` also names
+  `_SERVER`, and nothing masked `_SERVER.REQUEST_URI`, which is the whole request line. The token was written
+  out in full beside the `'code' => '***'` that said it had been kept out.
+
+  `Log\Traits\MaskQueryParamsTrait` adds `$maskQueryParams` (default `['code']`), which masks a named
+  parameter's **value** wherever it appears rather than replacing a whole variable — the URL an entry happened
+  on is most of what makes it readable. The new `Log\FileTarget` applies it to the rendered context, so one rule
+  covers `REQUEST_URI`, `QUERY_STRING`, `HTTP_REFERER` and whatever else carries the same URL, and the core
+  config points at it instead of `yii\log\FileTarget`. `Log\SentryTarget` applies it to `request.url` and
+  `request.query_string` through a `before_send`, `send_default_pii` gating the cookies and the headers but not
+  those two; a project's own `before_send` is composed with it rather than replacing it, as `tags` already was.
+
 - **A `sentryDsn` parameter reports to Sentry beside the file log** (monorepo issue #164). `Log\SentryTarget`
   is added to `components.log.targets` under the key `sentry` by `Base\Traits\ApplicationTrait::preInitInternal()`
   when `config/params.php` carries a `sentryDsn`, and nothing at all is built when it does not — `sentry/sentry`
