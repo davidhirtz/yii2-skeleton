@@ -86,4 +86,19 @@ htmx.on('htmx:beforeSwap', (event: Event) => {
     htmx.config.scrollBehavior = (event as CustomEvent).detail.requestConfig?.verb === 'post' ? 'smooth' : 'instant';
 });
 
+// The header cross-fades on every swap, and slides the way the navigation went: `#wrap` carries the depth the
+// header computed, so comparing the incoming one with the current says whether the user went deeper or back up.
+// A fragment that carries no `#wrap` — an autocomplete list, a flash — leaves the direction alone.
+htmx.on('htmx:beforeSwap', (event: Event) => {
+    const response = (event as CustomEvent).detail.serverResponse;
+    const current = Number(document.getElementById('wrap')?.dataset.depth ?? 0);
+    const depth = typeof response === 'string' ? /data-depth="(\d+)"/.exec(response)?.[1] : undefined;
+    const incoming = depth === undefined ? current : Number(depth);
+
+    document.documentElement.dataset.navigate = incoming === current
+        ? 'none'
+        : (incoming > current ? 'down' : 'up');
+});
+
+htmx.config.globalViewTransitions = true;
 htmx.config.historyCacheSize = 0;

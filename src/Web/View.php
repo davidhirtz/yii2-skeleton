@@ -24,6 +24,12 @@ class View extends \yii\web\View
 
     public ?string $titleTemplate = null;
 
+    /**
+     * How deep in the admin the page sits, written onto `#wrap` by the layout so a swap can tell which way it
+     * is going. The header sets it; the content renders before the layout, so the layout reads it back.
+     */
+    public int $depth = 0;
+
     protected string|null $description = null;
     /**
      * @var non-empty-string

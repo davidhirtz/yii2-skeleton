@@ -34,7 +34,7 @@ AdminAssetBundle::register($this);
     <div class="wrap">
         <?= NavBar::make(); ?>
         <?= Flashes::make(); ?>
-        <div class="layout" id="wrap" hx-headers='{"X-CSRF-TOKEN":"<?= Application::current()->getRequest()->getCsrfToken(); ?>"}'>
+        <div class="layout" id="wrap" data-depth="<?= $this->depth; ?>" hx-headers='{"X-CSRF-TOKEN":"<?= Application::current()->getRequest()->getCsrfToken(); ?>"}'>
             <?= AsideMenu::make(); ?>
             <?= TimezoneModal::make(); ?>
             <main class="main">

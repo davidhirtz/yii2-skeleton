@@ -7,3 +7,70 @@
     transition: color .2s, background-color .2s, border-color .2s;
   }
 }
+// htmx runs every swap through the View Transitions API, so the header can animate across pages. It is the one
+// region that carries meaning between two pages — the record you are on — hence the only named transition.
+.header-content {
+  view-transition-name: header;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(header),
+  ::view-transition-new(header) {
+    animation-duration: .2s;
+    animation-timing-function: ease;
+  }
+
+  // Going deeper pushes the old title up and brings the new one in from below; going back up reverses it. A
+  // swap that changes no depth — a save, a filter, a status toggle — keeps the plain cross-fade.
+  [data-navigate="down"]::view-transition-old(header) {
+    animation-name: header-leave-up;
+  }
+
+  [data-navigate="down"]::view-transition-new(header) {
+    animation-name: header-enter-up;
+  }
+
+  [data-navigate="up"]::view-transition-old(header) {
+    animation-name: header-leave-down;
+  }
+
+  [data-navigate="up"]::view-transition-new(header) {
+    animation-name: header-enter-down;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+@keyframes header-leave-up {
+  to {
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes header-enter-up {
+  from {
+    opacity: 0;
+    transform: translateY(50%);
+  }
+}
+
+@keyframes header-leave-down {
+  to {
+    opacity: 0;
+    transform: translateY(50%);
+  }
+}
+
+@keyframes header-enter-down {
+  from {
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+}

@@ -88,6 +88,7 @@ class Header extends Widget
 
         if ($this->breadcrumbs) {
             $this->view->addBreadcrumbs($this->breadcrumbs);
+            $this->view->depth = count($this->breadcrumbs);
         }
 
         parent::configure();
