@@ -31,7 +31,8 @@ class SentryTarget extends Target
     public ?string $dsn = null;
 
     /**
-     * Defaults to `YII_ENV` and to the deployed commit; both are what a report is grouped and filtered by.
+     * Both are what a report is grouped and filtered by, and both are resolved in the same order: this property,
+     * then Sentry's own `SENTRY_ENVIRONMENT` / `SENTRY_RELEASE` variable, then a default of ours.
      */
     public ?string $environment = null;
     public ?string $release = null;
@@ -133,8 +134,10 @@ class SentryTarget extends Target
     {
         return [
             'dsn' => $this->dsn,
-            'environment' => $this->environment ?? YII_ENV,
-            'release' => $this->release ?? VersionHelper::getApplicationReference(),
+            // The middle term of each is Sentry's own default, repeated because naming the key at all shadows it
+            // — and a deploy pipeline setting `SENTRY_RELEASE` is the one that can associate commits.
+            'environment' => $this->environment ?? $_SERVER['SENTRY_ENVIRONMENT'] ?? YII_ENV,
+            'release' => $this->release ?? $_SERVER['SENTRY_RELEASE'] ?? $this->getDefaultRelease(),
             // The posted body is what `maskVars` keeps out of the file log, and no mask of ours reaches it here.
             'max_request_body_size' => 'none',
             'send_default_pii' => false,
@@ -145,6 +148,37 @@ class SentryTarget extends Target
                 static fn (IntegrationInterface $integration): bool => !$integration instanceof AbstractErrorListenerIntegration,
             )),
             ...$this->clientOptions,
+            // Last, and merged rather than replaced: a project adding a tag of its own must not drop this one.
+            'tags' => [...$this->getTags(), ...$this->clientOptions['tags'] ?? []],
+        ];
+    }
+
+    /**
+     * Sentry's own `package@version` convention, so the Releases view reads as the project rather than as a bare
+     * commit. The version is the deployed commit where there is one, abbreviated as everywhere else here: an
+     * installation reaching this default has no pipeline registering releases, and therefore no commits to
+     * associate a full reference with.
+     */
+    protected function getDefaultRelease(): string
+    {
+        $version = VersionHelper::getApplicationReference() ?? VersionHelper::getApplicationVersion();
+        return VersionHelper::getApplicationName() . '@' . $version;
+    }
+
+    /**
+     * `Client` merges these into every event. **Which installation** is the one thing a report cannot be read
+     * without and nothing else carries: the frames point into the same twelve bundle repositories whichever
+     * deployment raised them, and `server_name` is the host rather than the project. Composer's root package is
+     * the answer — a project whose `composer.json` declares no `name` reports `__root__`, which is the sign to
+     * give it one.
+     *
+     * @return array<string, string>
+     */
+    protected function getTags(): array
+    {
+        return [
+            'project' => VersionHelper::getApplicationName(),
+            'project_version' => VersionHelper::getApplicationVersion(),
         ];
     }
 }

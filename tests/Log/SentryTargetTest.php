@@ -104,6 +104,43 @@ class SentryTargetTest extends TestCase
     }
 
     /**
+     * The frames of a report point into the same twelve bundle repositories whichever installation raised it, so
+     * the root package Composer recorded is what tells two deployments apart.
+     */
+    public function testEveryReportNamesTheProject(): void
+    {
+        $transport = $this->export([['Something broke', Logger::LEVEL_ERROR, 'application', 0.0, [], 0]]);
+        $tags = $transport->events[0]->getTags();
+
+        self::assertSame(VersionHelper::getApplicationName(), $tags['project'] ?? null);
+        self::assertSame(VersionHelper::getApplicationVersion(), $tags['project_version'] ?? null);
+    }
+
+    /**
+     * The tags are the one client option merged rather than replaced.
+     */
+    public function testAProjectKeepsTheProjectTagBesideItsOwn(): void
+    {
+        $transport = new TestTransport();
+
+        $target = Yii::createObject([
+            'class' => SentryTarget::class,
+            'dsn' => 'https://public@sentry.localhost/1',
+            'clientOptions' => ['transport' => $transport, 'tags' => ['tenant' => 'acme']],
+        ]);
+
+        self::assertInstanceOf(SentryTarget::class, $target);
+
+        $target->messages = [['Something broke', Logger::LEVEL_ERROR, 'application', 0.0, [], 0]];
+        $target->export();
+
+        $tags = $transport->events[0]->getTags();
+
+        self::assertSame('acme', $tags['tenant'] ?? null);
+        self::assertSame(VersionHelper::getApplicationName(), $tags['project'] ?? null);
+    }
+
+    /**
      * The posted body is what the file log's `maskVars` keeps out of it, and no mask of ours reaches Sentry's own
      * request integration — so the integration is told not to read one.
      */
@@ -140,7 +177,45 @@ class SentryTargetTest extends TestCase
         $options = $this->getClientOptions();
 
         self::assertSame(YII_ENV, $options['environment']);
-        self::assertSame(VersionHelper::getApplicationReference(), $options['release']);
+
+        // Sentry's own `package@version`, so the Releases view reads as the project rather than as a bare commit.
+        self::assertSame(
+            VersionHelper::getApplicationName() . '@' . VersionHelper::getApplicationReference(),
+            $options['release'],
+        );
+    }
+
+    /**
+     * A deploy pipeline sets these, and it is the only thing that can associate commits with a release — so a
+     * default of ours must not shadow Sentry's own resolution of them.
+     */
+    public function testTheDeploymentsOwnReleaseAndEnvironmentWin(): void
+    {
+        $_SERVER['SENTRY_RELEASE'] = 'acme/website@0123456789abcdef0123456789abcdef01234567';
+        $_SERVER['SENTRY_ENVIRONMENT'] = 'staging';
+
+        $options = $this->getClientOptions();
+
+        self::assertSame('acme/website@0123456789abcdef0123456789abcdef01234567', $options['release']);
+        self::assertSame('staging', $options['environment']);
+    }
+
+    /**
+     * The property is above the variable, so a project pinning either in its own configuration still can.
+     */
+    public function testTheConfiguredReleaseAndEnvironmentWinOverBoth(): void
+    {
+        $_SERVER['SENTRY_RELEASE'] = 'acme/website@deadbeef';
+        $_SERVER['SENTRY_ENVIRONMENT'] = 'staging';
+
+        $target = new TestSentryTarget([
+            'dsn' => 'https://public@sentry.localhost/1',
+            'release' => 'pinned',
+            'environment' => 'production',
+        ]);
+
+        self::assertSame('pinned', $target->getClientOptions()['release']);
+        self::assertSame('production', $target->getClientOptions()['environment']);
     }
 
     /**

@@ -14,7 +14,18 @@
   `yii\log\Target::collect()` appends that dump as a message of its own; and the user is named by id alone.
   `levels` is `['error', 'warning']` and `except` is `['yii\web\HttpException:4*']` — a 404 is not a report,
   the 5xx above it is, which is where this differs from the file target's blanket `yii\web\HttpException:*`.
-  `environment` defaults to `YII_ENV` and `release` to the deployed commit; `$clientOptions` overrides any of it.
+  `environment` and `release` resolve in three steps — the target's property, then Sentry's own
+  `SENTRY_ENVIRONMENT` / `SENTRY_RELEASE` variable, then `YII_ENV` and `<root package>@<commit>`. The middle
+  step is the point: naming either key at all shadows the SDK's resolution of it, and a deploy pipeline setting
+  `SENTRY_RELEASE` is the only thing that can associate commits with a release. `$clientOptions` overrides any
+  of it, `tags` excepted.
+
+  **Every event carries a `project` and a `project_version` tag**, from Composer's root package
+  (`Helpers\VersionHelper::getApplicationName()` / `getApplicationVersion()`) through `getTags()`. That is the
+  one thing a report cannot be read without and nothing else in it carries: the frames point into the same
+  bundle repositories whichever installation raised them, and `server_name` is the host rather than the project.
+  A project whose `composer.json` declares no `name` reports `__root__`, which is the sign to give it one.
+  `tags` is the one client option merged rather than replaced, so a project adding its own keeps these.
 
 - **A flash encodes what it is handed and trusts only a `Stringable`** (monorepo issue #160). A flash is
   rendered as HTML — `Widgets\Alert::content()` is the raw setter — and `Web\Controller::error()` passed a
