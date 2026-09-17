@@ -4,23 +4,19 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Navs;
 
-use Hirtz\Skeleton\Html\A;
-use Hirtz\Skeleton\Html\Li;
-use Hirtz\Skeleton\Html\Ol;
-use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Models\Breadcrumb;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
-use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
-use Hirtz\Skeleton\Widgets\Icon;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Override;
-use Stringable;
 use yii\base\Model;
 
 /**
- * The header of a page that belongs to one record: it names that record and walks
- * {@see AdminModelInterface::getAdminParent()} for everything above it, so no header knows another one. A subclass
- * that leaves `title` set keeps its own title but still gets the path and the breadcrumbs.
+ * The header of a page that belongs to one record. The H1 stays on the **base** record — the one that owns the
+ * page — and every record between it and the page's own becomes the subtitle beneath, so an asset four levels
+ * down still reads "About — Section #3 · Asset #1 · Hotspot #2 · Asset #1". Which record is the base is
+ * {@see AdminModelInterface::getAdminSubtitle()}: a record that answers `null` owns its page, which is why an
+ * entry filed under another entry is still its own base. No header knows another header's class, and the
+ * complete map stays the breadcrumb bar's job.
  *
  * @template TModel of (Model&AdminModelInterface)|null = (Model&AdminModelInterface)|null
  */
@@ -31,10 +27,7 @@ class ModelHeader extends Header
      */
     use ModelTrait;
 
-    /**
-     * A chain longer than this collapses into a non-linked `…`; the breadcrumb bar scrolls and is never capped.
-     */
-    protected int $maxPathCount = 3;
+    protected string $subtitleSeparator = ' · ';
 
     /**
      * None of the shipped models can form a cycle, but `getAdminParent()` is a project extension point.
@@ -45,17 +38,51 @@ class ModelHeader extends Header
     protected function configure(): void
     {
         if ($this->model) {
-            $this->title ??= $this->model->getAdminName();
-            $this->url ??= $this->model->getAdminRoute() ?: null;
+            [$base, $chain] = $this->getModelChain($this->model);
 
-            if ($this->model instanceof TypeAttributeInterface) {
-                $this->subtitle ??= $this->model->getAdminType();
-            }
+            $this->title ??= $base->getAdminName();
+            $this->url ??= $base->getAdminRoute() ?: null;
+            $this->subtitle ??= $this->getModelSubtitle($chain);
 
             $this->addBreadcrumbs($this->getModelBreadcrumbs());
         }
 
         parent::configure();
+    }
+
+    /**
+     * @return array{AdminModelInterface, list<AdminModelInterface>} the base record, and everything between it
+     *     and `$model` with `$model` itself last
+     */
+    protected function getModelChain(AdminModelInterface $model): array
+    {
+        $chain = [];
+
+        while ($model->getAdminSubtitle() !== null && count($chain) < $this->maxChainCount) {
+            $chain[] = $model;
+            $parent = $model->getAdminParent();
+
+            if (!$parent) {
+                break;
+            }
+
+            $model = $parent;
+        }
+
+        return [$model, array_reverse($chain)];
+    }
+
+    /**
+     * @param list<AdminModelInterface> $chain
+     */
+    protected function getModelSubtitle(array $chain): ?string
+    {
+        $subtitles = array_map(
+            static fn (AdminModelInterface $model): ?string => $model->getAdminSubtitle(),
+            $chain,
+        );
+
+        return $subtitles ? implode($this->subtitleSeparator, $subtitles) : null;
     }
 
     /**
@@ -88,42 +115,5 @@ class ModelHeader extends Header
         $breadcrumbs[] = $this->model?->getAdminIndexBreadcrumb();
 
         return array_values(array_filter($breadcrumbs));
-    }
-
-    #[Override]
-    protected function getHeaderPath(): ?Stringable
-    {
-        $ancestors = $this->getAdminAncestors();
-
-        if (!$ancestors) {
-            return null;
-        }
-
-        $path = Ol::make()->class('header-path small');
-
-        if (count($ancestors) > $this->maxPathCount) {
-            $ancestors = array_slice($ancestors, -$this->maxPathCount);
-            $path->addContent(Li::make()->class('header-path-item')->text('…'));
-        }
-
-        foreach ($ancestors as $ancestor) {
-            $path->addContent(Li::make()
-                ->class('header-path-item')
-                ->content($this->getPathItemContent($ancestor)));
-        }
-
-        return $path;
-    }
-
-    protected function getPathItemContent(AdminModelInterface $model): Stringable
-    {
-        $route = $model->getAdminRoute();
-        $tag = $route ? A::make()->href($route) : Span::make();
-        $icon = $model->getAdminIcon();
-
-        return $tag
-            ->class('header-path-link')
-            ->content($icon ? Icon::make()->name($icon)->addClass('header-path-icon') : null)
-            ->addText($model->getAdminName());
     }
 }

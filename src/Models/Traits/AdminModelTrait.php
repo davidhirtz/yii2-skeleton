@@ -57,6 +57,30 @@ trait AdminModelTrait
         return null;
     }
 
+    public function getAdminSubtitle(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * The shape a subordinate record answers {@see AdminModelInterface::getAdminSubtitle()} with: its noun and
+     * its position among its siblings, falling back to the primary key for a model that has no `position`.
+     * Read through `getAttribute()` rather than the magic property, which is undeclared on a model without the
+     * column.
+     */
+    protected function getAdminPositionLabel(): string
+    {
+        $position = $this instanceof ActiveRecordInterface ? $this->getAttribute('position') : null;
+        $position ??= $this->getAdminId();
+
+        return is_scalar($position)
+            ? Yii::t('skeleton', 'COMMON_MODEL_ID', [
+                'model' => $this->getAdminType(),
+                'id' => $position,
+            ])
+            : $this->getAdminType();
+    }
+
     public function getParamName(): string
     {
         return Inflector::slug($this->formName());

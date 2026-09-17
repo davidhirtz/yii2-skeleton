@@ -64,7 +64,7 @@ class Header extends Widget
 
         $wrapper->content(Div::make()
             ->class('header-content')
-            ->content($this->getHeaderPath(), $this->getHeaderContent(), $this->getSubheading()));
+            ->content($this->getHeaderContent(), $this->getSubheading()));
 
         if ($this->content) {
             $wrapper->addContent(Div::make()->content(...$this->content));
@@ -91,11 +91,6 @@ class Header extends Widget
         }
 
         parent::configure();
-    }
-
-    protected function getHeaderPath(): ?Stringable
-    {
-        return null;
     }
 
     protected function getHeaderContent(): string|Stringable|null

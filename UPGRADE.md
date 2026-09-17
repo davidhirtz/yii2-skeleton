@@ -1,19 +1,24 @@
 # Upgrade Guide
 
-## 3.0.0 — a page's header is its own record, and the ancestry lives on the model
+## 3.0.0 — the admin's nesting lives on the model
 
-`Models\Interfaces\AdminModelInterface` declares `getAdminParent(): ?AdminModelInterface` and
-`getAdminIndexBreadcrumb(): ?Breadcrumb`. Both default to `null` in `Models\Traits\AdminModelTrait`, so
-nothing breaks at class load — a model that answers neither simply keeps the breadcrumb bar it has.
+`Models\Interfaces\AdminModelInterface` declares `getAdminParent(): ?AdminModelInterface`,
+`getAdminIndexBreadcrumb(): ?Breadcrumb` and `getAdminSubtitle(): ?string`. All three default to `null` in
+`Models\Traits\AdminModelTrait`, so nothing breaks at class load — a model that answers none keeps the header
+and the breadcrumb bar it has.
 
-A project header that added breadcrumbs by hand declares them on the model instead and extends
-`Widgets\Navs\ModelHeader`:
+A record **edited through another** — a section, an asset, a hotspot — says so by answering the third, and that
+is what tells `Widgets\Navs\ModelHeader` the H1 belongs further up:
 
 ```php
-// on the model
-public function getAdminParent(): ?AdminModelInterface
+public function getAdminParent(): Entry
 {
     return $this->entry;
+}
+
+public function getAdminSubtitle(): string
+{
+    return $this->getAdminPositionLabel();
 }
 
 public function getAdminIndexBreadcrumb(): Breadcrumb
@@ -21,6 +26,11 @@ public function getAdminIndexBreadcrumb(): Breadcrumb
     return new Breadcrumb(Yii::t('app', 'COMMON_SECTIONS'), ['/admin/section/index', 'entry' => $this->entry_id]);
 }
 ```
+
+A record with a page of its own answers only the middle one — including a record filed under one of its own
+kind, since a tree parent belongs in the bar rather than in the title.
+
+A project header then extends `ModelHeader` and drops whatever breadcrumbs it built by hand:
 
 ```php
 /**
@@ -31,13 +41,9 @@ class SectionHeader extends ModelHeader
 }
 ```
 
-`ModelHeader` fills `title`, `url` and — for a `TypeAttributeInterface` model only — `subtitle` from the
-record, renders the ancestors as the header path and *appends* the chain breadcrumbs, so a header that adds a
-crumb of its own before calling `parent::configure()` keeps it in front. A subclass that leaves `title` set
-keeps its own title and still gets the path.
-
-The header is the record the page edits or lists for, never its owner's: a view rendering an asset page passes
-the asset to the header and the owner to the submenu.
+`ModelHeader` fills `title` and `url` from the **base** record, `subtitle` from the chain between it and the
+page's own record, and *appends* the chain breadcrumbs — so a header that adds a crumb of its own before
+calling `parent::configure()` keeps it in front. A subclass that leaves `title` set keeps its own title.
 
 ## 3.0.0 — `AdminModelInterface` answers for the permission, and `AdminLink` moved here
 

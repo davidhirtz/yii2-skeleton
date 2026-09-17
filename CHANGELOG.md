@@ -1,13 +1,18 @@
 ## 3.0.0 (in development)
 
 - **`Models\Interfaces\AdminModelInterface` answers for the admin's nesting** — `getAdminParent()` names the
-  record this one is filed under and `getAdminIndexBreadcrumb()` the listing it appears in, both defaulting to
-  `null` in `Models\Traits\AdminModelTrait`. `Widgets\Navs\ModelHeader` walks that chain, so a page's header
-  names the record it edits or lists for, carries the ancestor *records* as a compact path above the title and
-  pushes the complete alternating chain — each ancestor's listing, then the ancestor — into the breadcrumb bar.
-  No header knows another header's class any more, and the hand-written breadcrumb code of
-  `Modules\Admin\Widgets\Navs\UserHeader` and `RedirectHeader` is gone with it. `Widgets\Navs\Header` gained
-  the `getHeaderPath()` hook the path renders through; it answers `null` there.
+  record this one is filed under, `getAdminIndexBreadcrumb()` the listing it appears in, and
+  `getAdminSubtitle()` how a record *edited through* another names itself under that record's title. All three
+  default to `null` in `Models\Traits\AdminModelTrait`, which also carries the `getAdminPositionLabel()` a
+  subordinate model answers the third with — its noun and its position, as `COMMON_MODEL_ID`.
+
+- **`Widgets\Navs\ModelHeader` is the one thing that walks that chain.** The H1 stays on the **base** record,
+  the first one up the chain that answers no subtitle, and every record between it and the page's own becomes
+  the subtitle beneath — so a hotspot's asset reads "About — Section #3 · Asset #1 · Hotspot #2 · Asset #1"
+  rather than retitling the page. A record filed under one of its own kind answers no subtitle, so an entry
+  under an entry is still its own base. The breadcrumb bar gets the complete alternating chain, each ancestor's
+  listing then the ancestor, uncapped and never the record itself. No header knows another header's class, and
+  the hand-written breadcrumb code of `Modules\Admin\Widgets\Navs\UserHeader` and `RedirectHeader` is gone.
 
 - **`Models\Interfaces\AdminModelInterface::getPermissionName()` is the permission guarding a model's admin
   page.** It was declared ad hoc on the `Media\Models\Asset` and `Cms\Models\EntryRelation` families and

@@ -40,6 +40,13 @@ interface AdminModelInterface
     public function getAdminIndexBreadcrumb(): ?Breadcrumb;
 
     /**
+     * How a record edited *through* another names itself under that record's title — its noun and its place in
+     * the owner, never its own name. **`null` means the record owns its page**, which is what tells
+     * {@see \Hirtz\Skeleton\Widgets\Navs\ModelHeader} where the H1 belongs.
+     */
+    public function getAdminSubtitle(): ?string;
+
+    /**
      * How this model is named in the query string of a controller that is scoped to it, so a widget can build that
      * controller's routes without knowing which model it has.
      */
