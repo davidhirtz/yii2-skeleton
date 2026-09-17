@@ -7,35 +7,42 @@
     transition: color .2s, background-color .2s, border-color .2s;
   }
 }
-// htmx runs every swap through the View Transitions API, so the header can animate across pages. It is the one
-// region that carries meaning between two pages — the record you are on — hence the only named transition.
+
+// htmx runs every swap through the View Transitions API. `.header-content` is named so the header morphs as one
+// region across two pages, which is the part that carries meaning; only the **subtitle** animates
+// directionally, being the line that changes while the context holds. A changed `h1` *is* the context change —
+// there is no continuity left to describe — so it only ever morphs.
 .header-content {
   view-transition-name: header;
 }
 
+.header-subtitle {
+  view-transition-name: header-subtitle;
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  ::view-transition-old(header),
-  ::view-transition-new(header) {
+  ::view-transition-old(header-subtitle),
+  ::view-transition-new(header-subtitle) {
     animation-duration: .2s;
     animation-timing-function: ease;
   }
 
-  // Going deeper pushes the old title up and brings the new one in from below; going back up reverses it. A
-  // swap that changes no depth — a save, a filter, a status toggle — keeps the plain cross-fade.
-  [data-navigate="down"]::view-transition-old(header) {
-    animation-name: header-leave-up;
+  // Going deeper appends a record to the right of the line, so the new one enters from there and the old
+  // leaves to the left; going back up reverses it. A swap that changes no depth keeps the plain cross-fade.
+  [data-navigate="down"]::view-transition-old(header-subtitle) {
+    animation-name: header-subtitle-leave-left;
   }
 
-  [data-navigate="down"]::view-transition-new(header) {
-    animation-name: header-enter-up;
+  [data-navigate="down"]::view-transition-new(header-subtitle) {
+    animation-name: header-subtitle-enter-right;
   }
 
-  [data-navigate="up"]::view-transition-old(header) {
-    animation-name: header-leave-down;
+  [data-navigate="up"]::view-transition-old(header-subtitle) {
+    animation-name: header-subtitle-leave-right;
   }
 
-  [data-navigate="up"]::view-transition-new(header) {
-    animation-name: header-enter-down;
+  [data-navigate="up"]::view-transition-new(header-subtitle) {
+    animation-name: header-subtitle-enter-left;
   }
 }
 
@@ -47,30 +54,31 @@
   }
 }
 
-@keyframes header-leave-up {
+// Short enough that the line never paints outside the header it belongs to.
+@keyframes header-subtitle-leave-left {
   to {
     opacity: 0;
-    transform: translateY(-50%);
+    transform: translateX(-2rem);
   }
 }
 
-@keyframes header-enter-up {
+@keyframes header-subtitle-enter-right {
   from {
     opacity: 0;
-    transform: translateY(50%);
+    transform: translateX(2rem);
   }
 }
 
-@keyframes header-leave-down {
+@keyframes header-subtitle-leave-right {
   to {
     opacity: 0;
-    transform: translateY(50%);
+    transform: translateX(2rem);
   }
 }
 
-@keyframes header-enter-down {
+@keyframes header-subtitle-enter-left {
   from {
     opacity: 0;
-    transform: translateY(-50%);
+    transform: translateX(-2rem);
   }
 }
