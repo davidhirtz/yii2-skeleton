@@ -41,7 +41,8 @@ class NavBarSearch extends Widget
             ->class('navbar-search')
             ->attribute('data-search', Url::toRoute(['/admin/search/index']))
             // The Enter key issues a boosted-style request from this element, which pushes the URL as a link would.
-            ->attribute('hx-push-url', 'true')
+            // `:inherited` because the input inside it is what htmx reads the attribute off.
+            ->attribute('hx-push-url:inherited', 'true')
             ->content($this->getInput(), $this->getToggle(), $this->getResults());
     }
 
@@ -59,8 +60,8 @@ class NavBarSearch extends Widget
                 'hx-get' => Url::toRoute(['/admin/search/suggest']),
                 'hx-push-url' => 'false',
                 'hx-select' => '#' . SearchController::LIST_ID,
-                // Only the literal `unset` stops htmx from inheriting the body's out-of-band flash selector.
-                'hx-select-oob' => 'unset',
+                // An empty attribute is what stops htmx from inheriting the body's out-of-band flash selector.
+                'hx-select-oob' => '',
                 'hx-swap' => 'innerHTML',
                 'hx-target' => '#' . self::RESULTS_ID,
                 'hx-trigger' => 'input changed delay:250ms',

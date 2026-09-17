@@ -73,6 +73,6 @@ trait AjaxAttributesTrait
     private function addPushHistoryAttributes(): void
     {
         $this->attributes['hx-push-url'] = 'true';
-        $this->attributes['hx-swap'] = 'show:window:top';
+        $this->attributes['hx-swap'] = 'show:top';
     }
 }

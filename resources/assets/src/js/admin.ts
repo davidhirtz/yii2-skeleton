@@ -1,5 +1,9 @@
 import htmx from 'htmx.org'
-import 'htmx-ext-head-support';
+
+import onLoad from './includes/onLoad';
+// The extension is an IIFE reaching for the global `htmx`, which the ESM build of the import above assigns —
+// so the order of these two lines is what makes it register at all.
+import 'htmx.org/dist/ext/hx-head.js';
 import type {TinyMCE} from 'tinymce';
 import 'x-timeago';
 
@@ -24,7 +28,7 @@ declare global {
     }
 }
 
-htmx.onLoad(($container) => {
+onLoad(($container) => {
     const queryAll = (selector: string, method: Function) => {
         ($container as HTMLElement).querySelectorAll(selector).forEach(($el: Element) => method($el));
     };
@@ -50,38 +54,36 @@ htmx.onLoad(($container) => {
 });
 
 
-htmx.on('htmx:responseError', (event: Event) => {
-    const detail = (event as CustomEvent).detail;
-    const xhr = detail.xhr;
-
-    if (xhr.ok) {
-        return;
-    }
+htmx.on('htmx:response:error', (event: Event) => {
+    const {ctx} = (event as CustomEvent).detail;
 
     const iframe = document.createElement('iframe');
 
     iframe.style.width = '100%';
     iframe.style.height = '100%';
     iframe.style.border = '0';
-    iframe.srcdoc = xhr.responseText;
+    iframe.srcdoc = ctx.text;
 
-    const $dialog = createModal(`${xhr.status} ${xhr.statusText}`, iframe.outerHTML);
+    const $dialog = createModal(`${ctx.response.status} ${ctx.response.raw.statusText}`, iframe.outerHTML);
 
     $dialog.style.width = 'min(90rem, 90vw)';
     $dialog.style.height = 'min(60rem, 90vh)';
 });
 
-// `hx-include` serializes the form without firing `submit`, which is when TinyMCE writes to its textarea.
-// `htmx:confirm` is the last event htmx fires before it reads the inputs — by `htmx:configRequest` the values
-// have already been collected and a save would write the editor's content one request too late.
-htmx.on('htmx:confirm', () => {
-    window.tinymce?.triggerSave();
+// `hx-include` serializes the form without firing `submit`, which is when TinyMCE writes to its textarea. htmx
+// collects the values inside its own listener for the triggering event and fires no event of its own before
+// that — `htmx:config:request` is already too late — so the editors are flushed in the capture phase of the
+// three events htmx listens for.
+['submit', 'click', 'change'].forEach((name: string) => {
+    document.addEventListener(name, () => window.tinymce?.triggerSave(), true);
 });
 
 // A save lands back on the page it was made on, where an instant jump to the top reads as a glitch and a scroll
 // reads as the page answering. Navigation keeps the jump, so the new page does not scroll past its own header.
-htmx.on('htmx:beforeSwap', (event: Event) => {
-    htmx.config.scrollBehavior = (event as CustomEvent).detail.requestConfig?.verb === 'post' ? 'smooth' : 'instant';
+// `show:top` is a bare `scrollIntoView(true)`, so the choice is the document's own `scroll-behavior`.
+htmx.on('htmx:before:swap', (event: Event) => {
+    const method = (event as CustomEvent).detail.ctx?.request?.method;
+    document.documentElement.style.scrollBehavior = method === 'POST' ? 'smooth' : 'auto';
 });
 
 // Only a swap of `#wrap` is a navigation, and `data-navigate` says so for the CSS. A narrower one — a grid's
@@ -91,17 +93,16 @@ htmx.on('htmx:beforeSwap', (event: Event) => {
 //
 // Within a navigation, `#wrap` carries the depth the header computed, so comparing the incoming one with the
 // current says whether the user went deeper or back up — which is the direction the header's subtitle slides.
-htmx.on('htmx:beforeSwap', (event: Event) => {
-    const detail = (event as CustomEvent).detail;
+htmx.on('htmx:before:swap', (event: Event) => {
+    const {ctx} = (event as CustomEvent).detail;
     const $wrap = document.getElementById('wrap');
 
-    if (detail.target !== $wrap && detail.target !== document.body) {
+    if (ctx.target !== $wrap && ctx.target !== document.body) {
         document.documentElement.dataset.navigate = 'none';
         return;
     }
 
-    const response = detail.serverResponse;
-    const depth = typeof response === 'string' ? /data-depth="(\d+)"/.exec(response)?.[1] : undefined;
+    const depth = typeof ctx.text === 'string' ? /data-depth="(\d+)"/.exec(ctx.text)?.[1] : undefined;
     const current = Number($wrap?.dataset.depth ?? 0);
     const incoming = depth === undefined ? current : Number(depth);
 
@@ -110,5 +111,4 @@ htmx.on('htmx:beforeSwap', (event: Event) => {
         : (incoming > current ? 'down' : 'up');
 });
 
-htmx.config.globalViewTransitions = true;
-htmx.config.historyCacheSize = 0;
+htmx.config.transitions = true;

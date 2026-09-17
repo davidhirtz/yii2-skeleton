@@ -26,7 +26,7 @@ class AutocompleteFieldTest extends TestCase
 
         self::assertStringContainsString('hx-get="/admin/location/location/autocomplete"', $html);
         self::assertStringContainsString('hx-select="#' . AutocompleteField::OPTIONS_ID . '"', $html);
-        self::assertStringContainsString('hx-select-oob="unset"', $html);
+        self::assertStringContainsString('hx-select-oob=""', $html);
         self::assertStringContainsString('hx-swap="innerHTML"', $html);
     }
 

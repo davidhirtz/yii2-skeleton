@@ -103,7 +103,7 @@ class SearchControllerTest extends TestCase
 
         // The navbar is outside `#wrap`, so the input has to override the inherited htmx attributes itself.
         self::assertStringContainsString('class="navbar-search"', $html);
-        self::assertStringContainsString('hx-select-oob="unset"', $html);
+        self::assertStringContainsString('hx-select-oob=""', $html);
         self::assertStringContainsString('hx-select="#' . SearchController::LIST_ID . '"', $html);
         self::assertStringContainsString('hx-swap="innerHTML"', $html);
     }

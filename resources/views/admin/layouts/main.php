@@ -29,12 +29,12 @@ AdminAssetBundle::register($this);
         <title><?= Html::encode($this->getDocumentTitle()); ?></title>
         <?php $this->head() ?>
     </head>
-    <body hx-ext="head-support" hx-select="#wrap" hx-select-oob="#flashes:beforeend" hx-swap="outerHTML show:top" hx-target="#wrap" hx-boost="true">
+    <body hx-select:inherited="#wrap" hx-swap:inherited="outerHTML show:top" hx-target:inherited="#wrap" hx-boost:inherited="true">
     <?php $this->beginBody() ?>
     <div class="wrap">
         <?= NavBar::make(); ?>
         <?= Flashes::make(); ?>
-        <div class="layout" id="wrap" data-depth="<?= $this->depth; ?>" hx-headers='{"X-CSRF-TOKEN":"<?= Application::current()->getRequest()->getCsrfToken(); ?>"}'>
+        <div class="layout" id="wrap" data-depth="<?= $this->depth; ?>" hx-select-oob:inherited="#flashes:beforeend" hx-headers:inherited='{"X-CSRF-TOKEN":"<?= Application::current()->getRequest()->getCsrfToken(); ?>"}'>
             <?= AsideMenu::make(); ?>
             <?= TimezoneModal::make(); ?>
             <main class="main">

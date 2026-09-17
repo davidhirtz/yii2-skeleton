@@ -48,8 +48,11 @@ export default ($container: HTMLElement) => {
 
     // The input's name carries the model and the attribute, and `hx-vals` cannot reach the element it sits on —
     // htmx evaluates a `js:` value in global scope, with neither `this` nor the triggering event.
-    $input.addEventListener('htmx:configRequest', (event: Event) => {
-        (event as CustomEvent).detail.parameters = {q: $input.value};
+    $input.addEventListener('htmx:config:request', (event: Event) => {
+        const {body} = (event as CustomEvent).detail.ctx.request;
+
+        [...body.keys()].forEach((key: string) => body.delete(key));
+        body.set('q', $input.value);
     });
 
     $results.addEventListener('click', (event: Event) => {
@@ -102,7 +105,9 @@ export default ($container: HTMLElement) => {
         next < 0 ? $input.focus() : $options[Math.min(next, $options.length - 1)].focus();
     });
 
-    $results.addEventListener('htmx:afterSwap', () => {
+    // htmx fires the swap events on the element that issued the request, not on the one it swapped, so this
+    // listens on the container the input sits in rather than on the results it fills.
+    $container.addEventListener('htmx:after:swap', () => {
         $results.childElementCount ? open() : close();
     });
 }

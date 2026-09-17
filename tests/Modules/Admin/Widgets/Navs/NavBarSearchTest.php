@@ -22,7 +22,7 @@ class NavBarSearchTest extends TestCase
 
         self::assertStringContainsString('class="navbar-search"', $html);
         self::assertStringContainsString('hx-select="#' . SearchController::LIST_ID . '"', $html);
-        self::assertStringContainsString('hx-select-oob="unset"', $html);
+        self::assertStringContainsString('hx-select-oob=""', $html);
         self::assertStringContainsString('hx-swap="innerHTML"', $html);
         self::assertStringContainsString('hx-target="#' . NavBarSearch::RESULTS_ID . '"', $html);
     }

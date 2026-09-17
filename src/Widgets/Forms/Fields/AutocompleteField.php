@@ -92,8 +92,8 @@ class AutocompleteField extends InputField
             'hx-get' => is_array($this->url) ? Url::toRoute($this->url) : $this->url,
             'hx-push-url' => 'false',
             'hx-select' => '#' . self::OPTIONS_ID,
-            // Only the literal `unset` stops htmx from inheriting the body's out-of-band flash selector.
-            'hx-select-oob' => 'unset',
+            // An empty attribute is what stops htmx from inheriting the body's out-of-band flash selector.
+            'hx-select-oob' => '',
             'hx-swap' => 'innerHTML',
             'hx-target' => '#' . $this->getResultsId(),
             'hx-trigger' => 'input changed delay:250ms',

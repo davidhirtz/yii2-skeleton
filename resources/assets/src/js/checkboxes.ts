@@ -1,6 +1,6 @@
-import htmx from "htmx.org";
+import onLoad from './includes/onLoad';
 
-htmx.onLoad((elt) => {
+onLoad((elt) => {
     const $container = elt as HTMLElement;
 
     $container.querySelectorAll<HTMLInputElement>('[data-check-all]')

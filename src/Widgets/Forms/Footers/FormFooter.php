@@ -38,8 +38,9 @@ class FormFooter extends Widget
     #[Override]
     protected function configure(): void
     {
-        $this->attributes['hx-select'] ??= "#wrap";
-        $this->attributes['hx-target'] ??= $this->attributes['hx-select'];
+        // `:inherited`: the footer is the container, its buttons are what issue the request.
+        $this->attributes['hx-select:inherited'] ??= "#wrap";
+        $this->attributes['hx-target:inherited'] ??= $this->attributes['hx-select:inherited'];
 
         parent::configure();
     }

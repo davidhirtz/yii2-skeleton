@@ -130,14 +130,16 @@ export default ($container: HTMLElement) => {
         $toggle.setAttribute('aria-expanded', 'true');
     }
 
-    $results.addEventListener('htmx:afterSwap', () => {
+    // htmx fires the swap events on the element that issued the request, not on the one it swapped, so this
+    // listens on the container the input sits in rather than on the results it fills.
+    $container.addEventListener('htmx:after:swap', () => {
         $results.childElementCount ? open() : close();
     });
 
     // htmx pushes the URL before it swaps, so the location already names the page landed on.
     const searchPath = new URL($container.dataset.search!, location.origin).pathname;
 
-    document.body.addEventListener('htmx:afterSwap', (event: Event) => {
+    document.body.addEventListener('htmx:after:swap', (event: Event) => {
         if ($container.contains(event.target as Node)) {
             return;
         }

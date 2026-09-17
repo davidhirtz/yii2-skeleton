@@ -118,7 +118,7 @@ class DeleteButton extends Widget
     {
         return Form::make()
             ->attribute('hx-post', Url::toRoute($this->url))
-            ->attribute('hx-swap', 'outerHTML show:window:top')
+            ->attribute('hx-swap', 'outerHTML show:top')
             ->content($this->getInput());
     }
 

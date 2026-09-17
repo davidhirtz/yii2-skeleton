@@ -3,9 +3,11 @@ import Sortable, {AutoScroll} from 'sortablejs/modular/sortable.core.esm.js';
 import {SortableOptions} from "sortablejs";
 import htmx from "htmx.org";
 
+import onLoad from './includes/onLoad';
+
 Sortable.mount(new AutoScroll());
 
-htmx.onLoad(($node) => {
+onLoad(($node) => {
     if (!($node instanceof HTMLElement)) {
         return;
     }

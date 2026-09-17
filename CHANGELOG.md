@@ -1,5 +1,33 @@
 ## 3.0.0 (in development)
 
+- **htmx 4** (monorepo issue #154). The npm release is tagged `next` rather than `latest`; `htmx-ext-head-support`
+  is dropped for the `hx-head` extension htmx 4 ships inside its own package, imported into `admin.ts` after
+  htmx itself, which is what assigns the global the extension reaches for.
+
+  **Every htmx attribute written for the elements inside a container now carries `:inherited`** — nothing
+  inherits by default. `Widgets\Grids\GridView::$headerAttributes` and `$tableHeaderAttributes`,
+  `Widgets\Forms\Footers\FormFooter`, `Widgets\Grids\Pagers\LinkPager::$options` and
+  `Modules\Admin\Widgets\Navs\NavBarSearch` are the ones the skeleton owns; a project widget putting `hx-*` on a
+  wrapper has to do the same or its links swap the whole page. **An empty attribute cancels an inherited one**,
+  where htmx 2 needed the literal `unset`. `show:window:top` is `show:top`, `window` no longer being a scroll
+  target.
+
+  **`#wrap` carries `hx-select-oob:inherited` now, not the body**: an out-of-band selection removes the matched
+  element from the response, and the history restore — which re-fetches and morphs the whole `<body>`, there
+  being no localStorage cache any more — deleted `#flashes` from the page on the first back button.
+
+  **`includes/onLoad.ts` replaces every direct `htmx.onLoad()` call.** htmx runs its first pass on a timer that
+  fires between two deferred module scripts, so on a page loading more than one entry point everything the later
+  one registered was inert; the new module registers once from the shared chunk and replays that pass for
+  whoever arrives after.
+
+  The events are renamed and fire on the requesting element rather than the swapped one, so
+  `includes/search.ts` and `includes/autocomplete.ts` listen on their container; the autocomplete rewrites the
+  request's `FormData` rather than a `parameters` object. `htmx:confirm` fires only for `hx-confirm` now, so the
+  TinyMCE flush is a capture-phase listener on `submit`, `click` and `change`. `htmx.swap()` takes one context
+  object. `htmx.config.globalViewTransitions` is `transitions`, and `historyCacheSize` and `scrollBehavior` are
+  gone — the smooth-versus-instant scroll of a save is `document.documentElement.style.scrollBehavior`.
+
 - **A navigation no longer cross-fades the whole page** (monorepo issue #158). `.aside`, `.breadcrumbs` and
   `.tabs` are view transition groups of their own beside `.header-content`, so the furniture a navigation leaves
   standing morphs in place while the content is replaced outright — cross-fading a grid into a form read as a

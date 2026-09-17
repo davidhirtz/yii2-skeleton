@@ -30,6 +30,6 @@ export const stopBusy = () => {
 }
 
 export default ($el: HTMLElement) => {
-    $el.addEventListener('htmx:beforeRequest', () => startBusy());
-    $el.addEventListener('htmx:afterRequest', () => stopBusy());
+    $el.addEventListener('htmx:before:request', () => startBusy());
+    $el.addEventListener('htmx:after:request', () => stopBusy());
 }

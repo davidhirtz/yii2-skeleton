@@ -132,13 +132,16 @@ class GridView extends Widget
     #[Override]
     protected function configure(): void
     {
-        $this->headerAttributes['hx-select'] ??= "#{$this->getId()}";
-        $this->headerAttributes['hx-target'] ??= $this->headerAttributes['hx-select'];
-        $this->headerAttributes['hx-boost'] ??= 'true';
+        // `:inherited` because these sit on the containers — the toolbar, the header row — whose links and forms
+        // issue the request. Without it they reach nothing and the body's `#wrap` wins, swapping the whole page
+        // for a sort or a filter.
+        $this->headerAttributes['hx-select:inherited'] ??= "#{$this->getId()}";
+        $this->headerAttributes['hx-target:inherited'] ??= $this->headerAttributes['hx-select:inherited'];
+        $this->headerAttributes['hx-boost:inherited'] ??= 'true';
 
-        $this->tableHeaderAttributes['hx-select'] ??= "#{$this->getId()} table";
-        $this->tableHeaderAttributes['hx-target'] ??= $this->tableHeaderAttributes['hx-select'];
-        $this->tableHeaderAttributes['hx-boost'] ??= 'true';
+        $this->tableHeaderAttributes['hx-select:inherited'] ??= "#{$this->getId()} table";
+        $this->tableHeaderAttributes['hx-target:inherited'] ??= $this->tableHeaderAttributes['hx-select:inherited'];
+        $this->tableHeaderAttributes['hx-boost:inherited'] ??= 'true';
 
         $this->columns ??= $this->getDefaultColumns();
 

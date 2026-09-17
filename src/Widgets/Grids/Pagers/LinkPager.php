@@ -26,8 +26,9 @@ class LinkPager extends \yii\widgets\LinkPager
      */
     public $options = [
         'class' => 'pagination',
-        'hx-boost' => 'true',
-        'hx-swap' => 'scroll:top',
+        // `:inherited`: these sit on the pagination list, its links are what issue the request.
+        'hx-boost:inherited' => 'true',
+        'hx-swap:inherited' => 'scroll:top',
     ];
 
     #[\Override]

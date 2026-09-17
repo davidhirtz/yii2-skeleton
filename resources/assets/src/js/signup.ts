@@ -1,6 +1,6 @@
-import htmx from "htmx.org";
+import onLoad from './includes/onLoad';
 
-htmx.onLoad(($container) => {
+onLoad(($container) => {
     (($container as HTMLElement).querySelectorAll('[data-id="signup"]') as NodeListOf<HTMLFormElement>).forEach(($form) => {
         const getField = (id: string): HTMLInputElement => {
             return $form.querySelector(`[data-id="${id}"]`) as HTMLInputElement;

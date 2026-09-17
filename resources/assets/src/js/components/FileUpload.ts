@@ -70,7 +70,7 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
                     headers.set('Prefer', 'status=204');
                 }
 
-                headers.set('X-CSRF-Token', Object.values(JSON.parse(document.querySelector('#wrap')!.getAttribute('hx-headers') as string) as Object).pop());
+                headers.set('X-CSRF-Token', Object.values(JSON.parse(document.querySelector('#wrap')!.getAttribute('hx-headers:inherited') as string) as Object).pop());
 
                 await fetch(this.dataset.url as string, {
                     body: body,
@@ -80,12 +80,10 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
                     .then(response => {
                         if (response.status === 200) {
                             response.text().then(html => {
-                                htmx.swap($target, html, {
-                                    swapStyle: 'outerHTML',
-                                    swapDelay: 0,
-                                    settleDelay: 0,
-                                    show: 'top',
-                                }, {
+                                void htmx.swap({
+                                    text: html,
+                                    target: $target,
+                                    swap: 'outerHTML show:top',
                                     select: this.dataset.target || undefined,
                                     // The swap is not an htmx request, so nothing inherits the body's
                                     // `hx-select-oob` and the flashes have to be named here.

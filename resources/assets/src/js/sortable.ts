@@ -6,7 +6,9 @@ Sortable.mount(new AutoScroll());
 
 import htmx from "htmx.org";
 
-htmx.onLoad(($node) => {
+import onLoad from './includes/onLoad';
+
+onLoad(($node) => {
     if (!($node instanceof HTMLElement)) {
         return;
     }
