@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Web;
 
+use Hirtz\Skeleton\Helpers\Html;
 use Override;
+use Stringable;
 use Yii;
 use yii\base\Event;
 use yii\base\Model;
@@ -86,53 +88,42 @@ class Controller extends \yii\web\Controller
     }
 
     /**
-     * @param Model|array<int|string, mixed>|string $value
+     * @param Model|array<int|string, mixed>|string|Stringable $value
      */
-    public function error(Model|array|string $value): static
+    public function error(Model|array|string|Stringable $value): static
     {
         if ($value instanceof Model) {
             $value = $value->getFirstErrors();
         }
 
-        if ($value) {
-            Application::current()->getSession()->addFlash('danger', $value);
-        }
-
-        return $this;
+        return $this->addFlash('danger', $value);
     }
 
     /**
-     * @param Model|array<int|string, mixed>|string|null $value
+     * @param Model|array<int|string, mixed>|string|Stringable|null $value
      */
-    public function success(Model|array|string|null $value, ?string $message = null): static
+    public function success(Model|array|string|Stringable|null $value, string|Stringable|null $message = null): static
     {
-        if ($value instanceof Model && !$value->hasErrors()) {
-            $value = $message;
+        // A record that still has errors is not a success, and the session can hold no object either way.
+        if ($value instanceof Model) {
+            $value = $value->hasErrors() ? null : $message;
         }
 
-        if ($value) {
-            Application::current()->getSession()->addFlash('success', $value);
-        }
-
-        return $this;
+        return $this->addFlash('success', $value);
     }
 
     /**
-     * @param array<int|string, mixed>|string|null $value
+     * @param array<int|string, mixed>|string|Stringable|null $value
      */
-    public function warning(array|string|null $value): static
+    public function warning(array|string|Stringable|null $value): static
     {
-        if ($value) {
-            Application::current()->getSession()->addFlash('warning', $value);
-        }
-
-        return $this;
+        return $this->addFlash('warning', $value);
     }
 
     /**
-     * @param Model|array<int|string, mixed>|string $value
+     * @param Model|array<int|string, mixed>|string|Stringable $value
      */
-    public function errorOrSuccess(Model|array|string $value, string $message): static
+    public function errorOrSuccess(Model|array|string|Stringable $value, string|Stringable $message): static
     {
         if ($value instanceof Model ? $value->hasErrors() : !empty($value)) {
             $this->error($value);
@@ -141,5 +132,36 @@ class Controller extends \yii\web\Controller
         }
 
         return $this;
+    }
+
+    /**
+     * A flash is rendered as HTML, so a plain string is encoded here and only a `Stringable` — something that
+     * built its own markup and knows what it escaped — is trusted (monorepo issue #160). The session holds a
+     * string either way, since a flash survives a redirect by being serialized into it.
+     *
+     * @param array<int|string, mixed>|string|Stringable|null $value
+     */
+    protected function addFlash(string $status, array|string|Stringable|null $value): static
+    {
+        $value = $this->encodeFlash($value);
+
+        if ($value) {
+            Application::current()->getSession()->addFlash($status, $value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param array<int|string, mixed>|string|Stringable|null $value
+     * @return array<int|string, mixed>|string|null
+     */
+    protected function encodeFlash(array|string|Stringable|null $value): array|string|null
+    {
+        if (is_array($value)) {
+            return array_map($this->encodeFlash(...), $value);
+        }
+
+        return $value instanceof Stringable ? (string)$value : ($value === null ? null : Html::encode($value));
     }
 }

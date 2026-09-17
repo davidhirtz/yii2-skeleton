@@ -1,5 +1,15 @@
 ## 3.0.0 (in development)
 
+- **A flash encodes what it is handed and trusts only a `Stringable`** (monorepo issue #160). A flash is
+  rendered as HTML — `Widgets\Alert::content()` is the raw setter — and `Web\Controller::error()` passed a
+  model's validation messages through verbatim, several of which interpolate the value the user typed
+  (Yii's `UniqueValidator` is `'{attribute} "{value}" has already been taken.'`). `error()`, `success()`,
+  `warning()` and `errorOrSuccess()` take `string|Stringable` now and go through the new `addFlash()`, which
+  `Html::encode()`s a string and casts a `Stringable` — the same distinction `Html\Traits\TagContentTrait`
+  draws between `text()` and `content()`. **A caller flashing markup hands over something that renders itself**,
+  the session holding a string either way. `success()` given a model that still has errors flashes nothing,
+  where it used to put the object itself into the session.
+
 - **A grid with nothing in it renders no toolbar** (monorepo issue #159): an empty table has nothing to search
   or filter. `Widgets\Grids\GridView::isFiltered()` is what keeps it where the toolbar is what emptied the grid
   — a fruitless search must not take away the box that would clear it — and reads the grid's own
