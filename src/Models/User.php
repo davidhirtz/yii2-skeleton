@@ -514,6 +514,11 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         return $this->id ? ['/admin/user/update', 'id' => $this->id] : ['/admin/user/index'];
     }
 
+    public function getPermissionName(): string
+    {
+        return self::AUTH_USER;
+    }
+
     public function getSearchAttributes(): array
     {
         return ['name', 'email'];

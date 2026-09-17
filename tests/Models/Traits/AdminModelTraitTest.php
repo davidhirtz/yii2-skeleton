@@ -101,6 +101,11 @@ class AdminModelTraitTest extends TestCase
             {
                 return false;
             }
+
+            public function getPermissionName(): string
+            {
+                return 'test';
+            }
         };
 
         self::assertEquals($model->getAdminType(), $model->getAdminName());
@@ -127,6 +132,11 @@ class AdminModelTraitTest extends TestCase
             public function getAdminRoute(): array|false
             {
                 return false;
+            }
+
+            public function getPermissionName(): string
+            {
+                return 'test';
             }
         };
 
@@ -200,6 +210,11 @@ class AdminModelRecord extends ActiveRecord implements
     public function getAdminRoute(): array|false
     {
         return $this->id ? ['/admin/test', 'id' => $this->id] : false;
+    }
+
+    public function getPermissionName(): string
+    {
+        return 'test';
     }
 
     #[Override]

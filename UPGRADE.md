@@ -1,5 +1,59 @@
 # Upgrade Guide
 
+## 3.0.0 — `AdminModelInterface` answers for the permission, and `AdminLink` moved here
+
+`Models\Interfaces\AdminModelInterface` declares `getPermissionName(): string`, the permission guarding the
+model's admin page. It was declared ad hoc on the media `Asset` and cms `EntryRelation` families and nowhere
+else, so anything holding an `AdminModelInterface` had to duck-type its way to it.
+
+`Models\Traits\AdminModelTrait` does **not** implement it, for the same reason it leaves `getAdminRoute()` to
+the model: only the model knows, and a silent default would hide every link to it — or show one it should not.
+So a model implementing the interface has to answer it, and a model that does not is a fatal at class load.
+
+```php
+// a model with an admin page of its own
+public function getPermissionName(): string
+{
+    return self::AUTH_PRODUCT;
+}
+
+// a model only ever edited through another answers that one's — there is no `entryAsset`
+public function getPermissionName(): string
+{
+    return Entry::AUTH_ENTRY;
+}
+```
+
+The permission has to be one the auth manager actually holds. Nothing throws for a name nobody registered: the
+record simply stops being reachable and every link to it disappears, so assert it in a test —
+`Yii::$app->getAuthManager()->getPermission($model->getPermissionName())`.
+
+### `Widgets\AdminLink` moved out of `yii2-cms`
+
+The frontend overlay link is `Hirtz\Skeleton\Widgets\AdminLink`, not `Hirtz\Cms\Widgets\AdminLink`. It
+never referenced a cms class, and the CSS it renders into is `Widgets\Buttons\AdminButton`'s, which was
+already here. `AdminLink::tag($model)` takes any `AdminModelInterface` and is otherwise unchanged.
+
+**Its default class is `admin`, no longer `admin overlay`.** `overlay` was never a platform class — each
+project defined its own — so `AdminButton::registerCss()` positions `.admin` itself now:
+
+```css
+.admin {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%
+}
+```
+
+Two consequences. A caller passing its own `class` replaces the default outright (`attributes()` replaces,
+`addAttributes()` merges), so that class has to carry the geometry itself. And the overlay fills the nearest
+*positioned* ancestor, which stays the project's markup: `Cms\Widgets\Artwork` and the cms `_sections.php`
+both name `relative` for it, but the platform never defines that class — supply it through Tailwind or a rule
+of your own, or the overlay covers the viewport rather than the record.
+
 ## 3.0.0 — A form's rows are fieldsets
 
 `Widgets\Forms\ActiveForm::$rows` accepted three shapes — a flat list of fields, a list of groups, or fieldsets —

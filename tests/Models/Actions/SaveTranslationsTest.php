@@ -190,6 +190,11 @@ class TranslatedActiveRecord extends ActiveRecord implements TrailModelInterface
         return false;
     }
 
+    public function getPermissionName(): string
+    {
+        return 'test';
+    }
+
     #[Override]
     public function init(): void
     {

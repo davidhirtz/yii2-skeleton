@@ -1,5 +1,23 @@
 ## 3.0.0 (in development)
 
+- **`Models\Interfaces\AdminModelInterface::getPermissionName()` is the permission guarding a model's admin
+  page.** It was declared ad hoc on the `Media\Models\Asset` and `Cms\Models\EntryRelation` families and
+  nowhere else, so anything holding an `AdminModelInterface` had to duck-type its way to it — the cms
+  `Widgets\AdminLink` asked `method_exists()` and answered `false` otherwise, which is why the frontend overlay
+  link had silently stopped rendering on sections, entries and categories. `Models\Traits\AdminModelTrait`
+  deliberately does not implement it, for the same reason it leaves `getAdminRoute()` to the model: only the
+  model knows, and a silent default would hide every link to it or show one it should not. **Every model
+  implementing the interface has to answer it** — `Models\Redirect` and `Models\User` return their own
+  `AUTH_*` constant here, and a model only ever edited through another returns that one's.
+
+- **`Widgets\AdminLink` moved here from `yii2-cms`** (`Hirtz\Cms\Widgets\AdminLink` →
+  `Hirtz\Skeleton\Widgets\AdminLink`). It is the frontend counterpart of `Widgets\Buttons\AdminButton` and
+  never referenced a cms class; the `.admin` class it renders is the button's own CSS, so only the consumer had
+  been in the wrong bundle. **Its default class is `admin`, not `admin overlay`** — `overlay` was never a
+  platform class, each project defined one — and `AdminButton::registerCss()` gives `.admin` the
+  `position: absolute` / `inset` geometry that class used to carry. A caller passing its own `class` replaces
+  the default, so that class owns the geometry; the positioned ancestor is still the project's markup.
+
 - **The navbar search opens as an overlay below `md`.** The bar is in flow there and the input had nothing to
   grow into, so an open box pushed the language dropdown and the aside toggle off the edge; it now covers them
   instead, and `Modules\Admin\Widgets\Navs\NavBarSearch::getToggle()` renders a search *and* a close icon

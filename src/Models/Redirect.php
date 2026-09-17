@@ -141,6 +141,11 @@ class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttribut
         return $this->id ? ['/admin/redirect/update', 'id' => $this->id] : false;
     }
 
+    public function getPermissionName(): string
+    {
+        return self::AUTH_REDIRECT;
+    }
+
     public function getAdminType(): string
     {
         return Yii::t('skeleton', 'REDIRECT_REDIRECT');

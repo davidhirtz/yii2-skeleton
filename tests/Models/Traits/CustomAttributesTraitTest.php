@@ -500,6 +500,11 @@ class CustomAttributeRecord extends ActiveRecord implements
         return false;
     }
 
+    public function getPermissionName(): string
+    {
+        return 'test';
+    }
+
     #[Override]
     public function init(): void
     {

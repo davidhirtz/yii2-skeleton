@@ -15,8 +15,9 @@ use yii\db\ActiveRecordInterface;
 use yii\helpers\Inflector;
 
 /**
- * {@see AdminModelInterface::getAdminRoute()} is deliberately not implemented here: only the model knows its
- * controller, and a silent `false` would hide every link to it.
+ * {@see AdminModelInterface::getAdminRoute()} and {@see AdminModelInterface::getPermissionName()} are deliberately
+ * not implemented here: only the model knows its controller and the permission guarding it, and a silent default
+ * would hide every link to it — or, worse, show one it should not.
  *
  * @mixin Model
  */

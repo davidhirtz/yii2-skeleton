@@ -7,8 +7,9 @@ namespace Hirtz\Skeleton\Models\Interfaces;
 use Hirtz\Skeleton\Models\Traits\AdminModelTrait;
 
 /**
- * How a model presents itself in the admin — its link, its name, the noun it is filed under and its icon. Implemented
- * via {@see AdminModelTrait}, which leaves only {@see static::getAdminRoute()} to the model.
+ * How a model presents itself in the admin — its link, the permission guarding it, its name, the noun it is filed
+ * under and its icon. Implemented via {@see AdminModelTrait}, which leaves {@see static::getAdminRoute()} and
+ * {@see static::getPermissionName()} to the model.
  */
 interface AdminModelInterface
 {
@@ -31,4 +32,10 @@ interface AdminModelInterface
      * controller's routes without knowing which model it has.
      */
     public function getParamName(): string;
+
+    /**
+     * The permission that guards {@see static::getAdminRoute()}. A model only ever edited through another answers
+     * that one's — there is no permission per model that has no page of its own.
+     */
+    public function getPermissionName(): string;
 }

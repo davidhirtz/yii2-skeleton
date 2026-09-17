@@ -194,6 +194,11 @@ class SearchableActiveRecord extends ActiveRecord implements SearchableInterface
         return false;
     }
 
+    public function getPermissionName(): string
+    {
+        return 'test';
+    }
+
     public function getSearchAttributes(): array
     {
         return ['name', 'content'];

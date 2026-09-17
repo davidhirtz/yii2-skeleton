@@ -236,6 +236,11 @@ class TrailBehaviorTest extends TestCase
                 return false;
             }
 
+            public function getPermissionName(): string
+            {
+                return 'test';
+            }
+
             public ?int $value = null;
 
             public function behaviors(): array
@@ -305,6 +310,11 @@ class TrailActiveRecord extends ActiveRecord implements TrailModelInterface
     public function getAdminRoute(): array|false
     {
         return false;
+    }
+
+    public function getPermissionName(): string
+    {
+        return 'test';
     }
 
     #[Override]
