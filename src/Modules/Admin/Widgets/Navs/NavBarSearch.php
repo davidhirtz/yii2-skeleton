@@ -74,8 +74,7 @@ class NavBarSearch extends Widget
     protected function getToggle(): Stringable
     {
         return Button::make()
-            ->transparent()
-            ->addClass('navbar-search-toggle')
+            ->addClass('btn navbar-search-toggle')
             ->type('button')
             ->attribute('aria-label', Yii::t('skeleton', 'SEARCH_LABEL'))
             ->attribute('aria-expanded', 'false')

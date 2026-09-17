@@ -35,7 +35,7 @@ class LanguageDropdownButton extends Widget
             ->name(Yii::$app->language);
 
         $button = Button::make()
-            ->transparent()
+            ->class('btn')
             ->content($icon);
 
         $dropdown = Dropdown::make()

@@ -1,6 +1,7 @@
 const metrics = new WeakMap<HTMLElement, {reclaim: number; offset: number}>();
 const items = new Set<HTMLElement>();
 let bound = false;
+let resizeTimeout = 0;
 
 // Measures how much height the element reclaims when it collapses (the `.sticky` styling) and its
 // document offset, both read in the expanded state with transitions suppressed so the values are exact.
@@ -60,13 +61,21 @@ const remeasure = (): void => {
     update();
 };
 
+// A resize fires continuously through a drag, and running `update()` on each one collapses and expands
+// the element as the wrapped content changes the page height under it — a .2s transition replayed for
+// the whole drag. Both the measurement and the state are therefore deferred to the end of it.
+const onResize = (): void => {
+    window.clearTimeout(resizeTimeout);
+    resizeTimeout = window.setTimeout(remeasure, 150);
+};
+
 export default ($el: HTMLElement): void => {
     items.add($el);
     measure($el);
 
     if (!bound) {
         document.addEventListener('scroll', update, {passive: true});
-        window.addEventListener('resize', remeasure);
+        window.addEventListener('resize', onResize);
 
         // An element a `:has()` rule reveals fires no event of its own, and a `ResizeObserver` reports no box
         // for one that had none when `observe()` was called — so the change that flips the rule is the signal.
