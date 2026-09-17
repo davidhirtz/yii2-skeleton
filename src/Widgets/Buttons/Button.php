@@ -62,11 +62,6 @@ class Button extends Widget
         return $this->addClass('btn btn-secondary');
     }
 
-    public function transparent(): static
-    {
-        return $this->addClass('btn btn-transparent');
-    }
-
     public function link(): static
     {
         return $this->addClass('btn btn-link');
