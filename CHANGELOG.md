@@ -1,5 +1,14 @@
 ## 3.0.0 (in development)
 
+- **`Models\Interfaces\AdminModelInterface` answers for the admin's nesting** — `getAdminParent()` names the
+  record this one is filed under and `getAdminIndexBreadcrumb()` the listing it appears in, both defaulting to
+  `null` in `Models\Traits\AdminModelTrait`. `Widgets\Navs\ModelHeader` walks that chain, so a page's header
+  names the record it edits or lists for, carries the ancestor *records* as a compact path above the title and
+  pushes the complete alternating chain — each ancestor's listing, then the ancestor — into the breadcrumb bar.
+  No header knows another header's class any more, and the hand-written breadcrumb code of
+  `Modules\Admin\Widgets\Navs\UserHeader` and `RedirectHeader` is gone with it. `Widgets\Navs\Header` gained
+  the `getHeaderPath()` hook the path renders through; it answers `null` there.
+
 - **`Models\Interfaces\AdminModelInterface::getPermissionName()` is the permission guarding a model's admin
   page.** It was declared ad hoc on the `Media\Models\Asset` and `Cms\Models\EntryRelation` families and
   nowhere else, so anything holding an `AdminModelInterface` had to duck-type its way to it — the cms

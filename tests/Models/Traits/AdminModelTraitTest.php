@@ -159,6 +159,14 @@ class AdminModelTraitTest extends TestCase
         self::assertEquals($model->getStatusIcon(), $model->getAdminIcon());
     }
 
+    public function testAdminParentAndIndexBreadcrumbDefaultToNull(): void
+    {
+        $model = new AdminModelRecord();
+
+        self::assertNull($model->getAdminParent());
+        self::assertNull($model->getAdminIndexBreadcrumb());
+    }
+
     /**
      * @param array<string, mixed> $attributes
      */

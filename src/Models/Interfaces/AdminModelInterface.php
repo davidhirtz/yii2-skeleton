@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Interfaces;
 
+use Hirtz\Skeleton\Models\Breadcrumb;
 use Hirtz\Skeleton\Models\Traits\AdminModelTrait;
 
 /**
  * How a model presents itself in the admin — its link, the permission guarding it, its name, the noun it is filed
- * under and its icon. Implemented via {@see AdminModelTrait}, which leaves {@see static::getAdminRoute()} and
- * {@see static::getPermissionName()} to the model.
+ * under, its icon and where it sits in the admin's nesting. Implemented via {@see AdminModelTrait}, which leaves
+ * {@see static::getAdminRoute()} and {@see static::getPermissionName()} to the model.
  */
 interface AdminModelInterface
 {
@@ -26,6 +27,17 @@ interface AdminModelInterface
     public function getAdminType(): string;
 
     public function getAdminIcon(): ?string;
+
+    /**
+     * The record this one is filed under in the admin, `null` for one at the top of its nav item.
+     */
+    public function getAdminParent(): ?AdminModelInterface;
+
+    /**
+     * The listing this record appears in — its parent's collection, or its nav item's index — as a breadcrumb,
+     * `null` for a record whose listing is its parent's own page.
+     */
+    public function getAdminIndexBreadcrumb(): ?Breadcrumb;
 
     /**
      * How this model is named in the query string of a controller that is scoped to it, so a widget can build that

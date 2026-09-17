@@ -4,23 +4,19 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
-use Hirtz\Skeleton\Models\Breadcrumb;
 use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Modules\Admin\Data\RedirectActiveDataProvider;
 use Hirtz\Skeleton\Widgets\Buttons\CreateButton;
-use Hirtz\Skeleton\Widgets\Navs\Header;
-use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
+use Hirtz\Skeleton\Widgets\Navs\ModelHeader;
 use Hirtz\Skeleton\Widgets\Traits\ProviderTrait;
 use Stringable;
 use Yii;
 
-class RedirectHeader extends Header
+/**
+ * @extends ModelHeader<Redirect|null>
+ */
+class RedirectHeader extends ModelHeader
 {
-    /**
-     * @use ModelTrait<Redirect|null>
-     */
-    use ModelTrait;
-
     /**
      * @use ProviderTrait<RedirectActiveDataProvider|null>
      */
@@ -29,21 +25,22 @@ class RedirectHeader extends Header
     #[\Override]
     protected function configure(): void
     {
-        $this->title ??= $this->provider
-            ? Yii::t('skeleton', 'COMMON_REDIRECTS')
-            : $this->model?->getAdminName() ?? Yii::t('skeleton', 'REDIRECT_HEADER_CREATE_NEW_REDIRECT');
-
         $this->addSystemBreadcrumb();
 
         if ($this->model) {
-            $this->addRedirectBreadcrumb();
             $this->addContent($this->getActionDropdown());
         }
 
         if ($this->provider) {
-            $this->addContent($this->getCreateButton());
+            $this->title ??= Yii::t('skeleton', 'COMMON_REDIRECTS');
             $this->subtitle ??= $this->getPaginationSubtitle($this->provider);
             $this->url ??= ['/admin/redirect/index'];
+
+            $this->addContent($this->getCreateButton());
+        }
+
+        if (!$this->model && !$this->provider) {
+            $this->title ??= Yii::t('skeleton', 'REDIRECT_HEADER_CREATE_NEW_REDIRECT');
         }
 
         parent::configure();
@@ -65,10 +62,5 @@ class RedirectHeader extends Header
     protected function addSystemBreadcrumb(): void
     {
         $this->addBreadcrumb(Yii::t('skeleton', 'COMMON_SYSTEM'), ['/admin/system/index']);
-    }
-
-    protected function addRedirectBreadcrumb(): void
-    {
-        $this->addBreadcrumb(Yii::t('skeleton', 'COMMON_REDIRECTS'), ['/admin/redirect/index']);
     }
 }

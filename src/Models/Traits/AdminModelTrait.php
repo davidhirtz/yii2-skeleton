@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Traits;
 
+use Hirtz\Skeleton\Models\Breadcrumb;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
@@ -44,6 +45,16 @@ trait AdminModelTrait
         }
 
         return (new ReflectionClass(static::class))->getShortName();
+    }
+
+    public function getAdminParent(): ?AdminModelInterface
+    {
+        return null;
+    }
+
+    public function getAdminIndexBreadcrumb(): ?Breadcrumb
+    {
+        return null;
     }
 
     public function getParamName(): string

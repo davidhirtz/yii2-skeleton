@@ -4,25 +4,21 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
-use Hirtz\Skeleton\Models\Breadcrumb;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Data\UserActiveDataProvider;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\UserCreateButton;
-use Hirtz\Skeleton\Widgets\Navs\Header;
-use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
+use Hirtz\Skeleton\Widgets\Navs\ModelHeader;
 use Hirtz\Skeleton\Widgets\Traits\ProviderTrait;
 use Override;
 use Stringable;
 use Yii;
 use yii\data\ActiveDataProvider;
 
-class UserHeader extends Header
+/**
+ * @extends ModelHeader<User|null>
+ */
+class UserHeader extends ModelHeader
 {
-    /**
-     * @use ModelTrait<User|null>
-     */
-    use ModelTrait;
-
     /**
      * @use ProviderTrait<ActiveDataProvider|null>
      */
@@ -33,7 +29,6 @@ class UserHeader extends Header
     {
         if ($this->model) {
             $this->title ??= $this->model->getUsername();
-            $this->url ??= ['/admin/user/update', 'id' => $this->model->id];
             $this->addContent($this->getUserActionDropdown());
         }
 
@@ -45,10 +40,6 @@ class UserHeader extends Header
 
         if ($this->provider instanceof UserActiveDataProvider) {
             $this->addCreateUserButton();
-        } else {
-            $this->breadcrumbs ??= [
-                new Breadcrumb(Yii::t('skeleton', 'COMMON_USERS'), ['/admin/user/index']),
-            ];
         }
 
         parent::configure();

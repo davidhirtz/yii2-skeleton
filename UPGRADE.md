@@ -1,5 +1,44 @@
 # Upgrade Guide
 
+## 3.0.0 — a page's header is its own record, and the ancestry lives on the model
+
+`Models\Interfaces\AdminModelInterface` declares `getAdminParent(): ?AdminModelInterface` and
+`getAdminIndexBreadcrumb(): ?Breadcrumb`. Both default to `null` in `Models\Traits\AdminModelTrait`, so
+nothing breaks at class load — a model that answers neither simply keeps the breadcrumb bar it has.
+
+A project header that added breadcrumbs by hand declares them on the model instead and extends
+`Widgets\Navs\ModelHeader`:
+
+```php
+// on the model
+public function getAdminParent(): ?AdminModelInterface
+{
+    return $this->entry;
+}
+
+public function getAdminIndexBreadcrumb(): Breadcrumb
+{
+    return new Breadcrumb(Yii::t('app', 'COMMON_SECTIONS'), ['/admin/section/index', 'entry' => $this->entry_id]);
+}
+```
+
+```php
+/**
+ * @extends ModelHeader<Section|null>
+ */
+class SectionHeader extends ModelHeader
+{
+}
+```
+
+`ModelHeader` fills `title`, `url` and — for a `TypeAttributeInterface` model only — `subtitle` from the
+record, renders the ancestors as the header path and *appends* the chain breadcrumbs, so a header that adds a
+crumb of its own before calling `parent::configure()` keeps it in front. A subclass that leaves `title` set
+keeps its own title and still gets the path.
+
+The header is the record the page edits or lists for, never its owner's: a view rendering an asset page passes
+the asset to the header and the owner to the submenu.
+
 ## 3.0.0 — `AdminModelInterface` answers for the permission, and `AdminLink` moved here
 
 `Models\Interfaces\AdminModelInterface` declares `getPermissionName(): string`, the permission guarding the

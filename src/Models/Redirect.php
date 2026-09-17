@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Behaviors\TimestampBehavior;
 use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Helpers\Url;
+use Hirtz\Skeleton\Models\Breadcrumb;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Models\Traits\AdminModelTrait;
@@ -139,6 +140,11 @@ class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttribut
     public function getAdminRoute(): array|false
     {
         return $this->id ? ['/admin/redirect/update', 'id' => $this->id] : false;
+    }
+
+    public function getAdminIndexBreadcrumb(): Breadcrumb
+    {
+        return new Breadcrumb(Yii::t('skeleton', 'COMMON_REDIRECTS'), ['/admin/redirect/index']);
     }
 
     public function getPermissionName(): string
