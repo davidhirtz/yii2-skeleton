@@ -103,7 +103,7 @@ return [
     'COMMON_STATUS_ATTRIBUTE_DRAFT' => 'Brouillon',
     'COMMON_STATUS_BUTTON_TOOLTIP' => '{status} — cliquez pour définir « {next} »',
     'COMMON_STATUS_LABEL' => 'Statut',
-    'COMMON_STATUS_SUCCESS_UPDATED' => '« {name} » est maintenant {status}.',
+    'COMMON_STATUS_SUCCESS_UPDATED' => '« {name} » est maintenant défini sur {status}.',
     'COMMON_SYSTEM' => 'Système',
     'COMMON_TYPE' => 'Type',
     'COMMON_TYPE_DEFAULT' => 'Par défaut',

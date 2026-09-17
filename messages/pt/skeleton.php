@@ -103,7 +103,7 @@ return [
     'COMMON_STATUS_ATTRIBUTE_DRAFT' => 'Rascunho',
     'COMMON_STATUS_BUTTON_TOOLTIP' => '{status} — clique para definir «{next}»',
     'COMMON_STATUS_LABEL' => 'Estado',
-    'COMMON_STATUS_SUCCESS_UPDATED' => '«{name}» está agora {status}.',
+    'COMMON_STATUS_SUCCESS_UPDATED' => '“{name}” está agora definido como {status}.',
     'COMMON_SYSTEM' => 'Sistema',
     'COMMON_TYPE' => 'Tipo',
     'COMMON_TYPE_DEFAULT' => 'Predefinição',

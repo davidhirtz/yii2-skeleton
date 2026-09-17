@@ -103,7 +103,7 @@ return [
     'COMMON_STATUS_ATTRIBUTE_DRAFT' => 'Entwurf',
     'COMMON_STATUS_BUTTON_TOOLTIP' => '{status} — klicken, um auf „{next}“ zu setzen',
     'COMMON_STATUS_LABEL' => 'Status',
-    'COMMON_STATUS_SUCCESS_UPDATED' => '„{name}“ ist jetzt {status}.',
+    'COMMON_STATUS_SUCCESS_UPDATED' => '„{name}“ steht jetzt auf {status}.',
     'COMMON_SYSTEM' => 'System',
     'COMMON_TYPE' => 'Typ',
     'COMMON_TYPE_DEFAULT' => 'Standard',
