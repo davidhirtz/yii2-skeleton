@@ -1,8 +1,44 @@
+@use "../shared/breakpoints" as *;
+
 .navbar-search {
   align-items: center;
   display: flex;
   gap: .5rem;
   position: relative;
+
+  // The script reads this to find out whether an open box hides the rest of the navbar, so the breakpoint stays
+  // declared in one place.
+  --navbar-search-overlay: 0;
+
+  // Below `md` the navbar is in flow and there is nothing to grow into, so the open box covers it instead. The
+  // language dropdown beside it is `position: relative` and would otherwise paint over the overlay.
+  @include media-breakpoint-down(sm) {
+    --navbar-search-overlay: 1;
+
+    &.expanded {
+      background-color: var(--body-bg);
+      inset: 0;
+      padding: 1rem;
+      position: absolute;
+      z-index: 1;
+    }
+  }
+}
+
+.navbar-search-toggle {
+  .navbar-search-toggle-close {
+    display: none;
+  }
+
+  .expanded & {
+    .navbar-search-toggle-open {
+      display: none;
+    }
+
+    .navbar-search-toggle-close {
+      display: inline-block;
+    }
+  }
 }
 
 .navbar-search-input {
@@ -28,6 +64,13 @@
     pointer-events: auto;
     transition: width .15s ease-in-out, opacity .15s ease-in-out;
     width: min(18rem, 50vw);
+
+    @include media-breakpoint-down(sm) {
+      flex: 1;
+      min-width: 0;
+      transition: opacity .15s ease-in-out;
+      width: auto;
+    }
   }
 }
 

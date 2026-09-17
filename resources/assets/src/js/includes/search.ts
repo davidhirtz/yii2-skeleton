@@ -35,8 +35,12 @@ export default ($container: HTMLElement) => {
         teardown = null;
     };
 
+    // Below the navbar's own breakpoint the open box covers the rest of the bar, the aside toggle included.
+    const isOverlay = () => getComputedStyle($container).getPropertyValue('--navbar-search-overlay').trim() === '1';
+
     const expand = () => {
         $container.classList.add('expanded');
+        $toggle.setAttribute('aria-expanded', 'true');
         $input.focus();
     };
 
@@ -44,6 +48,7 @@ export default ($container: HTMLElement) => {
         close();
         $results.innerHTML = '';
         $container.classList.remove('expanded');
+        $toggle.setAttribute('aria-expanded', 'false');
     };
 
     $toggle.addEventListener('click', () => {
@@ -118,9 +123,11 @@ export default ($container: HTMLElement) => {
         });
     });
 
-    // The results page renders the query back into the input, so the box has to open with it.
-    if ($input.value) {
+    // The results page renders the query back into the input, so the box has to open with it — without stealing the
+    // focus, and not where it would leave the menu behind an overlay the page was not asked to put there.
+    if ($input.value && !isOverlay()) {
         $container.classList.add('expanded');
+        $toggle.setAttribute('aria-expanded', 'true');
     }
 
     $results.addEventListener('htmx:afterSwap', () => {

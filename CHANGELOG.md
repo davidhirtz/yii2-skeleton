@@ -1,5 +1,12 @@
 ## 3.0.0 (in development)
 
+- **The navbar search opens as an overlay below `md`.** The bar is in flow there and the input had nothing to
+  grow into, so an open box pushed the language dropdown and the aside toggle off the edge; it now covers them
+  instead, and `Modules\Admin\Widgets\Navs\NavBarSearch::getToggle()` renders a search *and* a close icon
+  (`navbar-search-toggle-open` / `-close`) of which the open state picks one, plus `aria-expanded` the script
+  keeps in sync. The results page no longer reopens the box where that would leave the menu behind it — the
+  script reads the breakpoint off the `--navbar-search-overlay` custom property rather than repeating it.
+
 - **`Widgets\Grids\Traits\SelectionTrait` is the grid selection**, extracted from the four grids that had
   written it out one by one — `Modules\Admin\Widgets\Grids\RedirectGridView` here, the cms
   `SectionGridView` and `BlockSectionGridView`, the media `AssetGridView` and `FileGridView`. It carries

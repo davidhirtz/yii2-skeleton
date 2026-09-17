@@ -27,6 +27,16 @@ class NavBarSearchTest extends TestCase
         self::assertStringContainsString('hx-target="#' . NavBarSearch::RESULTS_ID . '"', $html);
     }
 
+    public function testTheToggleCarriesBothIcons(): void
+    {
+        $this->login();
+        $html = NavBarSearch::make()->render();
+
+        self::assertStringContainsString('aria-expanded="false"', $html);
+        self::assertStringContainsString('navbar-search-toggle-open fas fa-search', $html);
+        self::assertStringContainsString('navbar-search-toggle-close fas fa-xmark', $html);
+    }
+
     public function testAGuestGetsNoSearch(): void
     {
         self::assertSame('', NavBarSearch::make()->render());

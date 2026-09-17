@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Modules\Admin\Controllers\SearchController;
 use Hirtz\Skeleton\Search\Search;
 use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
+use Hirtz\Skeleton\Widgets\Icon;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
@@ -66,6 +67,10 @@ class NavBarSearch extends Widget
             ]);
     }
 
+    /**
+     * Both icons are rendered and the open state picks one in CSS, so the toggle needs no second render. The
+     * disclosure state is `aria-expanded` rather than a second label, which the script keeps in sync.
+     */
     protected function getToggle(): Stringable
     {
         return Button::make()
@@ -73,8 +78,12 @@ class NavBarSearch extends Widget
             ->addClass('navbar-search-toggle')
             ->type('button')
             ->attribute('aria-label', Yii::t('skeleton', 'SEARCH_LABEL'))
+            ->attribute('aria-expanded', 'false')
             ->attribute('data-search-toggle', '')
-            ->icon('search');
+            ->content(
+                Icon::make()->name('search')->addClass('navbar-search-toggle-open'),
+                Icon::make()->name('xmark')->addClass('navbar-search-toggle-close'),
+            );
     }
 
     protected function getResults(): Stringable

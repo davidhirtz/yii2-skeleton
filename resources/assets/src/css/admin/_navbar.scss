@@ -8,6 +8,8 @@
   display: flex;
   justify-content: flex-end;
   padding: 1rem;
+  // The containing block of the search overlay below `md`, where the bar is still in flow.
+  position: relative;
 
   @include media-breakpoint-up(md) {
     position: absolute;
