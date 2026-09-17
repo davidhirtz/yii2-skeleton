@@ -227,6 +227,7 @@ return [
     'SEARCH_HEADER_TITLE' => 'Suche',
     'SEARCH_LABEL' => 'Suche',
     'SEARCH_PLACEHOLDER' => 'Suchen …',
+    'SENTRY_ALERT_MESSAGE' => 'Fehler dieser Installation werden nur in die Log-Datei geschrieben. Bitte sentryDsn in config/params.php konfigurieren, um sie an Sentry zu melden.',
     'SESSION_DELETE_EXPIRED_SESSIONS' => 'Abgelaufene Sitzungen löschen',
     'SESSION_EXPIRED_SESSIONS' => 'Abgelaufene Sitzungen: {count,number}',
     'SESSION_SESSIONS' => 'Sitzungen',

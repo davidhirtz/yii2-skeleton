@@ -227,6 +227,7 @@ return [
     'SEARCH_HEADER_TITLE' => 'Pesquisa',
     'SEARCH_LABEL' => 'Pesquisa',
     'SEARCH_PLACEHOLDER' => 'Procurar …',
+    'SENTRY_ALERT_MESSAGE' => 'Os erros desta instalação são apenas registados no seu ficheiro de registo. Configure sentryDsn em config/params.php para os reportar ao Sentry.',
     'SESSION_DELETE_EXPIRED_SESSIONS' => 'Eliminar as sessões expiradas',
     'SESSION_EXPIRED_SESSIONS' => 'Sessões expiradas: {count,number}',
     'SESSION_SESSIONS' => 'Sessões',

@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Modules\Admin\Controllers\SystemController;
 use Hirtz\Skeleton\Modules\Admin\Widgets\MigrationAlert;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\SystemSubmenu;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\ApplicationInfo;
+use Hirtz\Skeleton\Modules\Admin\Widgets\SentryAlert;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Navs\Header;
 
@@ -21,4 +22,5 @@ echo Header::make()
 
 echo SystemSubmenu::make();
 echo MigrationAlert::make();
+echo SentryAlert::make();
 echo ApplicationInfo::make();

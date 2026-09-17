@@ -1,5 +1,12 @@
 ## 3.0.0 (in development)
 
+- **A production installation reporting nowhere but its log file says so** (monorepo issue #168).
+  `Modules\Admin\Widgets\SentryAlert` warns on the dashboard and the system *Application* tab while the request
+  resolves to no environment — `Web\Request::getEnvironment()`, so local and staging are silent — and no enabled
+  `Log\SentryTarget` is among the log targets. It is the target rather than `params.sentryDsn` that is checked,
+  since a project may configure one itself; one reporting its errors some other way answers `unreported(false)`
+  from an `EVENT_CONFIGURE` listener.
+
 - **A token in the query string no longer escapes the log's masking** (monorepo issue #166). `maskVars` named
   `_GET.code`, because a confirmation or reset link carries its token there — but `logVars` also names
   `_SERVER`, and nothing masked `_SERVER.REQUEST_URI`, which is the whole request line. The token was written
