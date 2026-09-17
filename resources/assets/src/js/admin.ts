@@ -84,17 +84,29 @@ htmx.on('htmx:beforeSwap', (event: Event) => {
     htmx.config.scrollBehavior = (event as CustomEvent).detail.requestConfig?.verb === 'post' ? 'smooth' : 'instant';
 });
 
-// The header cross-fades on every swap, and slides the way the navigation went: `#wrap` carries the depth the
-// header computed, so comparing the incoming one with the current says whether the user went deeper or back up.
-// A fragment that carries no `#wrap` — an autocomplete list, a flash — leaves the direction alone.
+// Only a swap of `#wrap` is a navigation, and `data-navigate` says so for the CSS. A narrower one — a grid's
+// filter, sort or pager, an autocomplete list, a flash — leaves the page around it standing, and is `none`: the
+// root cross-fade is what makes the swapped region morph rather than blink. The target decides this, never the
+// response, which is the whole page either way whenever `hx-select` picked something out of it.
+//
+// Within a navigation, `#wrap` carries the depth the header computed, so comparing the incoming one with the
+// current says whether the user went deeper or back up — which is the direction the header's subtitle slides.
 htmx.on('htmx:beforeSwap', (event: Event) => {
-    const response = (event as CustomEvent).detail.serverResponse;
-    const current = Number(document.getElementById('wrap')?.dataset.depth ?? 0);
+    const detail = (event as CustomEvent).detail;
+    const $wrap = document.getElementById('wrap');
+
+    if (detail.target !== $wrap && detail.target !== document.body) {
+        document.documentElement.dataset.navigate = 'none';
+        return;
+    }
+
+    const response = detail.serverResponse;
     const depth = typeof response === 'string' ? /data-depth="(\d+)"/.exec(response)?.[1] : undefined;
+    const current = Number($wrap?.dataset.depth ?? 0);
     const incoming = depth === undefined ? current : Number(depth);
 
     document.documentElement.dataset.navigate = incoming === current
-        ? 'none'
+        ? 'same'
         : (incoming > current ? 'down' : 'up');
 });
 

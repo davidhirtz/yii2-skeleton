@@ -15,6 +15,31 @@
   view-transition-name: header;
 }
 
+// The three regions a navigation leaves standing but for their active item. Each is its own group, so it morphs
+// in place while the content behind it is replaced outright. Each renders at most once per page — two elements
+// sharing a name abort the whole transition.
+.aside {
+  view-transition-name: aside;
+}
+
+.breadcrumbs {
+  view-transition-name: breadcrumbs;
+}
+
+.tabs {
+  view-transition-name: tabs;
+}
+
+// A swap that replaced `#wrap` is a navigation, and the two pages' content has nothing in common — cross-fading
+// a grid into a form reads as a smear that outlasts the click. The named regions above carry the continuity
+// instead and the content is simply replaced. A partial swap leaves `#wrap` alone and keeps the cross-fade,
+// which is what makes a re-filtered, re-sorted or re-paged grid look like the same grid (monorepo issue #158).
+:root:not([data-navigate="none"])::view-transition-group(root),
+:root:not([data-navigate="none"])::view-transition-old(root),
+:root:not([data-navigate="none"])::view-transition-new(root) {
+  animation: none;
+}
+
 // Every record in the subtitle is its own group, named after the record by `ModelHeader` so the browser matches
 // it across the two pages: opening a section's asset appends an item and must leave the section itself alone.
 // Only the item that enters or leaves animates, which is what `:only-child` says — a group holding both

@@ -1,5 +1,12 @@
 ## 3.0.0 (in development)
 
+- **A navigation no longer cross-fades the whole page** (monorepo issue #158). `.aside`, `.breadcrumbs` and
+  `.tabs` are view transition groups of their own beside `.header-content`, so the furniture a navigation leaves
+  standing morphs in place while the content is replaced outright — cross-fading a grid into a form read as a
+  smear that outlasted the click. The root's animation is kept for a swap narrower than `#wrap`, which is what
+  makes a re-filtered, re-sorted or re-paged grid look like the same grid. `data-navigate` therefore has a
+  fourth value, `same`, and decides `none` by the swap's target rather than by the response.
+
 - **The bar in front of the header's subtitle is drawn by its first item**, not by the container (monorepo issue
   #156): only an item carries a `view-transition-name`, so a bar on the container stayed put while the item it
   belongs to slid past it. The dot between items and the bar are one rule at two widths now, and
