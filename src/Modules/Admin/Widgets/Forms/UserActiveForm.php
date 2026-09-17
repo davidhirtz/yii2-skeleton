@@ -60,6 +60,9 @@ class UserActiveForm extends ActiveForm
                 ...$this->getUserCustomAttributeFields(),
             ],
             [
+                $this->getShowHintsField(),
+            ],
+            [
                 $this->sendEmailField(),
             ],
         ];

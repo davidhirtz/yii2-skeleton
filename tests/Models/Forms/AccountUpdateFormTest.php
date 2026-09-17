@@ -72,6 +72,29 @@ class AccountUpdateFormTest extends TestCase
         self::assertEquals(['timezone' => ['Europe/Berlin', $form->user->timezone]], $trail->data);
     }
 
+    /**
+     * The form posts the hidden `0` of the checkbox, so a saved account without it would keep the stored `1`
+     * and the hints could never be turned off.
+     */
+    public function testTheHintsAreTurnedOffThroughTheAccountForm(): void
+    {
+        $form = AccountUpdateForm::create([
+            'user' => User::findOne(3),
+        ]);
+
+        self::assertTrue($form->user->showsHints());
+
+        $form->load([
+            $form->user->formName() => [
+                'show_hints' => '0',
+            ],
+        ]);
+
+        self::assertTrue($form->save());
+        self::assertFalse($form->user->showsHints());
+        self::assertFalse(User::findOne(3)->showsHints());
+    }
+
     public function testUpdateUnsafeAttributes(): void
     {
         $form = AccountUpdateForm::create([

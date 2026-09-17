@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\AuthItemGridView;
+use Hirtz\Skeleton\Modules\Admin\Widgets\HintAlert;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserHeader;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserSubmenu;
 use Hirtz\Skeleton\Web\View;
@@ -23,6 +24,9 @@ echo UserHeader::make()
 
 echo UserSubmenu::make()
     ->model($user);
+
+echo HintAlert::make()
+    ->text(Yii::t('skeleton', 'USER_AUTH_INDEX_HINT'));
 
 echo GridContainer::make()
     ->grid(AuthItemGridView::make()

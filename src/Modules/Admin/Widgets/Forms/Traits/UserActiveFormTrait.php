@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms\Traits;
 
 use Hirtz\Skeleton\Models\Statuses\Status;
 use Hirtz\Skeleton\Modules\ModuleTrait;
+use Hirtz\Skeleton\Widgets\Forms\Fields\CheckboxField;
 use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
 use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
 use Hirtz\Skeleton\Widgets\Forms\Fields\SelectField;
@@ -80,5 +81,16 @@ trait UserActiveFormTrait
         return TimezoneSelectField::make()
             ->model($this->model->user)
             ->property('timezone');
+    }
+
+    /**
+     * An unchecked checkbox posts nothing, so the stored `1` would survive the save without the hidden input.
+     */
+    protected function getShowHintsField(): string|Stringable
+    {
+        return CheckboxField::make()
+            ->model($this->model->user)
+            ->property('show_hints')
+            ->uncheckedValue('0');
     }
 }

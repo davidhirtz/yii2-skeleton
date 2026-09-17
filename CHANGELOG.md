@@ -1,5 +1,14 @@
 ## 3.0.0 (in development)
 
+- **A page whose model is not self-evident explains itself** (monorepo issue #163).
+  `Modules\Admin\Widgets\HintAlert` renders an info alert a view passes its own text to, and every one of them
+  is switched off at once by the account's new `user.show_hints` column (default on, `Models\User::showsHints()`,
+  `Migrations\M260917100000ShowHints`) — so a view renders one unconditionally and never asks who is reading.
+  The checkbox is `Modules\Admin\Widgets\Forms\Traits\UserActiveFormTrait::getShowHintsField()`, in the account
+  settings and the admin's user form alike; it carries an explicit `uncheckedValue('0')`, since an unticked
+  checkbox posts nothing and the stored `1` would survive the save. The shipped hints are on *Permissions*, a
+  user's *Permissions* tab and *Redirects*.
+
 - **A production installation reporting nowhere but its log file says so** (monorepo issue #168).
   `Modules\Admin\Widgets\SentryAlert` warns on the dashboard and the system *Application* tab while the request
   resolves to no environment — `Web\Request::getEnvironment()`, so local and staging are silent — and no enabled

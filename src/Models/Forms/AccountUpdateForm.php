@@ -28,6 +28,7 @@ class AccountUpdateForm extends Model
             'name',
             'language',
             'timezone',
+            'show_hints',
             ...$this->user->getCustomAttributeNames(),
         ];
     }

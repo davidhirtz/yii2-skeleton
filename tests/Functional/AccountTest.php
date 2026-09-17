@@ -31,6 +31,7 @@ class AccountTest extends TestCase
         self::assertSelectorExists('#user-language');
         self::assertSelectorTextSame('#user-language option[value="de"]', 'Deutsch');
         self::assertSelectorExists('#user-timezone');
+        self::assertSelectorExists('#user-show-hints');
         self::assertSelectorNotExists('#user-email');
 
         self::assertSubmenuLinks();
@@ -52,6 +53,20 @@ class AccountTest extends TestCase
 
         self::assertAlertSame('Your account was updated.', 'success');
         self::assertSame('updated', User::findOne($user->id)->name);
+    }
+
+    /**
+     * An unticked checkbox posts nothing at all, so only the hidden `0` in front of it can turn the hints off.
+     * Submitting the form cannot prove it here: BrowserKit keys its fields by name, so the checkbox replaces the
+     * hidden input of the same name and unticking it posts nothing either way.
+     */
+    public function testTheHintCheckboxCarriesItsUncheckedValue(): void
+    {
+        $this->login('owner');
+        $this->open('admin/account/update');
+
+        self::assertSelectorExists('input[type="hidden"][name="User[show_hints]"][value="0"]');
+        self::assertSelectorExists('#user-show-hints[name="User[show_hints]"][value="1"]');
     }
 
     public function testCredentials(): void

@@ -43,6 +43,7 @@ use yii\web\IdentityInterface;
  *     {@see static::PASSWORD_PEPPER} or `null`
  * @property string $language
  * @property string|null $timezone
+ * @property bool|int $show_hints
  * @property string|null $auth_key
  * @property string|null $two_factor_secret the encrypted secret, reached through
  *     {@see static::getTwoFactorAuthenticationSecret()}
@@ -173,6 +174,10 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
                 ['language', 'timezone'],
                 DynamicRangeValidator::class,
                 'integerOnly' => false,
+            ],
+            [
+                ['show_hints'],
+                'boolean',
             ],
             [
                 ['name'],
@@ -674,6 +679,11 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         return (bool)$this->is_owner;
     }
 
+    public function showsHints(): bool
+    {
+        return (bool)$this->show_hints;
+    }
+
     public function isUnconfirmed(): bool
     {
         return $this->email_confirmed_at === null;
@@ -706,6 +716,15 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     }
 
     #[Override]
+    public function attributeHints(): array
+    {
+        return [
+            ...parent::attributeHints(),
+            'show_hints' => Yii::t('skeleton', 'USER_SHOW_HINTS_HINT'),
+        ];
+    }
+
+    #[Override]
     public function attributeLabels(): array
     {
         return [
@@ -716,6 +735,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
             'password' => Yii::t('skeleton', 'USER_PASSWORD_LABEL'),
             'language' => Yii::t('skeleton', 'USER_LANGUAGE_LABEL'),
             'timezone' => Yii::t('skeleton', 'USER_TIMEZONE_LABEL'),
+            'show_hints' => Yii::t('skeleton', 'USER_SHOW_HINTS_LABEL'),
             'login_count' => Yii::t('skeleton', 'USER_LOGIN_COUNT_LABEL'),
             'last_login' => Yii::t('skeleton', 'USER_LAST_LOGIN_LABEL'),
             'is_owner' => Yii::t('skeleton', 'USER_IS_OWNER_LABEL'),
