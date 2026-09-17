@@ -83,6 +83,10 @@ class SentryTarget extends Target
 
         $scope->setTag('category', $category);
 
+        // On the scope rather than on the capture: `captureException()` names no level of its own, so an
+        // exception logged as a warning would arrive as the `error` Sentry defaults a level-less event to.
+        $scope->setLevel($this->getSeverity($level));
+
         if ($user = $this->getUser()) {
             $scope->setUser($user);
         }
@@ -92,7 +96,7 @@ class SentryTarget extends Target
             return;
         }
 
-        $hub->captureMessage(is_string($text) ? $text : VarDumper::export($text), $this->getSeverity($level));
+        $hub->captureMessage(is_string($text) ? $text : VarDumper::export($text));
     }
 
     /**

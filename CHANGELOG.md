@@ -27,6 +27,10 @@
   A project whose `composer.json` declares no `name` reports `__root__`, which is the sign to give it one.
   `tags` is the one client option merged rather than replaced, so a project adding its own keeps these.
 
+  The level is set on the **scope** rather than on the capture, because `captureException()` names none of its
+  own and Sentry defaults a level-less event to `error` — so an exception logged as a warning used to arrive as
+  an error.
+
 - **A flash encodes what it is handed and trusts only a `Stringable`** (monorepo issue #160). A flash is
   rendered as HTML — `Widgets\Alert::content()` is the raw setter — and `Web\Controller::error()` passed a
   model's validation messages through verbatim, several of which interpolate the value the user typed

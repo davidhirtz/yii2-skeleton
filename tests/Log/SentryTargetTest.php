@@ -61,6 +61,17 @@ class SentryTargetTest extends TestCase
         self::assertNotNull($exceptions[0]->getStacktrace());
     }
 
+    /**
+     * `captureException()` names no level of its own, and Sentry defaults a level-less event to `error` — so
+     * without the scope's, every exception would arrive as one whatever Yii logged it as.
+     */
+    public function testAnExceptionKeepsTheLevelItWasLoggedAt(): void
+    {
+        $transport = $this->export([[new RuntimeException('Odd but survivable'), Logger::LEVEL_WARNING, 'application', 0.0, [], 0]]);
+
+        self::assertEquals(Severity::warning(), $transport->events[0]->getLevel());
+    }
+
     public function testAMessageIsReportedWithItsLevelAndCategory(): void
     {
         $transport = $this->export([['Something is off', Logger::LEVEL_WARNING, 'app\\Widget', 0.0, [], 0]]);
