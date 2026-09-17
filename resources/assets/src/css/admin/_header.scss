@@ -35,6 +35,7 @@
   display: flex;
   flex-direction: column;
   min-height: 2.5rem;
+  min-width: 0; // lets the subheading's url clamp instead of widening the header
   place-content: center;
   gap: .25rem;
 
@@ -43,28 +44,40 @@
   }
 }
 
+.header-subheading {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 
 .header-title,
-.header-subtitle {
-  display: flex;
+.header-subtitle,
+.header-subtitle-item {
   align-items: center;
+  display: flex;
   gap: 1rem;
 }
 
-.header-subtitle {
-  display: none;
-
-  @include media-breakpoint-up(sm) {
-    display: flex;
-  }
+.header-title {
+  flex-wrap: wrap; // the subtitle drops below the title rather than pushing it off a narrow screen
 }
 
 .header-subtitle {
-  &:before {
-    content: "";
-    width: 1.25rem;
-    height: 0.25rem;
-    border-radius: 0.25rem;
-    background-color: var(--link-hover-color);
-  }
+  min-width: 0;
+}
+
+// The bar in front of the subtitle and the dot between its items are the same shape at two widths.
+.header-subtitle::before,
+.header-subtitle-item:not(:first-child)::before {
+  background-color: var(--link-hover-color);
+  border-radius: .25rem;
+  content: "";
+  flex-shrink: 0;
+  height: .25rem;
+  width: .25rem;
+}
+
+.header-subtitle::before {
+  width: 1.25rem;
 }

@@ -132,7 +132,7 @@ class Header extends Widget
     {
         return $this->subheading
             ? Div::make()
-                ->class('small')
+                ->class('header-subheading small')
                 ->content($this->subheading)
             : null;
     }

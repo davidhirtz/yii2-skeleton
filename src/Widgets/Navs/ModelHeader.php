@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Navs;
 
+use Hirtz\Skeleton\Html\A;
+use Hirtz\Skeleton\Html\H2;
+use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Models\Breadcrumb;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Override;
+use Stringable;
 use yii\base\Model;
 
 /**
@@ -27,7 +31,10 @@ class ModelHeader extends Header
      */
     use ModelTrait;
 
-    protected string $subtitleSeparator = ' · ';
+    /**
+     * @var list<Stringable> the chain below the base record, each item linked where it has a page of its own
+     */
+    protected array $subtitleItems = [];
 
     /**
      * None of the shipped models can form a cycle, but `getAdminParent()` is a project extension point.
@@ -42,7 +49,10 @@ class ModelHeader extends Header
 
             $this->title ??= $base->getAdminName();
             $this->url ??= $base->getAdminRoute() ?: null;
-            $this->subtitle ??= $this->getModelSubtitle($chain);
+
+            if ($this->subtitle === null) {
+                $this->subtitleItems = $this->getSubtitleItems($chain);
+            }
 
             $this->addBreadcrumbs($this->getModelBreadcrumbs());
         }
@@ -73,16 +83,41 @@ class ModelHeader extends Header
     }
 
     /**
+     * The subtitle is markup rather than a joined string: each record links to its own page where it has one,
+     * and the separator between them is the `.header-subtitle-item` rule rather than a character.
+     *
      * @param list<AdminModelInterface> $chain
+     * @return list<Stringable>
      */
-    protected function getModelSubtitle(array $chain): ?string
+    protected function getSubtitleItems(array $chain): array
     {
-        $subtitles = array_map(
-            static fn (AdminModelInterface $model): ?string => $model->getAdminSubtitle(),
-            $chain,
-        );
+        $items = [];
 
-        return $subtitles ? implode($this->subtitleSeparator, $subtitles) : null;
+        foreach ($chain as $model) {
+            $subtitle = $model->getAdminSubtitle();
+
+            if ($subtitle === null) {
+                continue;
+            }
+
+            $route = $model->getAdminRoute();
+
+            $items[] = ($route ? A::make()->href($route) : Span::make())
+                ->class('header-subtitle-item')
+                ->text($subtitle);
+        }
+
+        return $items;
+    }
+
+    #[Override]
+    protected function getSubtitle(): ?Stringable
+    {
+        return $this->subtitleItems
+            ? H2::make()
+                ->class('header-subtitle')
+                ->content(...$this->subtitleItems)
+            : parent::getSubtitle();
     }
 
     /**

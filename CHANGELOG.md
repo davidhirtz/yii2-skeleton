@@ -4,7 +4,8 @@
   record this one is filed under, `getAdminIndexBreadcrumb()` the listing it appears in, and
   `getAdminSubtitle()` how a record *edited through* another names itself under that record's title. All three
   default to `null` in `Models\Traits\AdminModelTrait`, which also carries the `getAdminPositionLabel()` a
-  subordinate model answers the third with — its noun and its position, as `COMMON_MODEL_ID`.
+  subordinate model answers the third with — its noun and its position, as `COMMON_MODEL_ID`. That helper takes
+  an optional noun, for a record whose type name would repeat what the subtitle already says before it.
 
 - **`Widgets\Navs\ModelHeader` is the one thing that walks that chain.** The H1 stays on the **base** record,
   the first one up the chain that answers no subtitle, and every record between it and the page's own becomes
@@ -13,6 +14,17 @@
   under an entry is still its own base. The breadcrumb bar gets the complete alternating chain, each ancestor's
   listing then the ancestor, uncapped and never the record itself. No header knows another header's class, and
   the hand-written breadcrumb code of `Modules\Admin\Widgets\Navs\UserHeader` and `RedirectHeader` is gone.
+
+  **The subtitle is markup, not a joined string**: each record is an `.header-subtitle-item` linking to its own
+  page where it has one, and the dot between them is a CSS rule rather than a character — the same shape as the
+  bar `.header-subtitle::before` already drew, at `.25rem` instead of `1.25rem`, the two declarations merged. A
+  subclass that sets `$subtitle` itself still wins and still renders as plain text.
+
+- **The header's subtitle shows at every width and its subheading clamps to one line.** `.header-subtitle` had
+  been hidden below `sm`, which now hid the only thing naming the record; `.header-title` wraps instead, so the
+  subtitle drops below the title on a narrow screen. The subheading is `.header-subheading` and truncates with
+  an ellipsis rather than wrapping a long permalink over several lines, which `min-width: 0` on
+  `.header-content` is what makes possible.
 
 - **`Models\Interfaces\AdminModelInterface::getPermissionName()` is the permission guarding a model's admin
   page.** It was declared ad hoc on the `Media\Models\Asset` and `Cms\Models\EntryRelation` families and

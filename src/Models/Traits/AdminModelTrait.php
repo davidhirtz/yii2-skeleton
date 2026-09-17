@@ -67,18 +67,19 @@ trait AdminModelTrait
      * its position among its siblings, falling back to the primary key for a model that has no `position`.
      * Read through `getAttribute()` rather than the magic property, which is undeclared on a model without the
      * column.
+     *
+     * @param string|null $type a noun to use in place of {@see static::getAdminType()}, for a record whose type
+     *     name repeats what the subtitle already says before it
      */
-    protected function getAdminPositionLabel(): string
+    protected function getAdminPositionLabel(?string $type = null): string
     {
+        $type ??= $this->getAdminType();
         $position = $this instanceof ActiveRecordInterface ? $this->getAttribute('position') : null;
         $position ??= $this->getAdminId();
 
         return is_scalar($position)
-            ? Yii::t('skeleton', 'COMMON_MODEL_ID', [
-                'model' => $this->getAdminType(),
-                'id' => $position,
-            ])
-            : $this->getAdminType();
+            ? Yii::t('skeleton', 'COMMON_MODEL_ID', ['model' => $type, 'id' => $position])
+            : $type;
     }
 
     public function getParamName(): string

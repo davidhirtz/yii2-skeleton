@@ -52,10 +52,37 @@ class ModelHeaderTest extends TestCase
             ->model($this->createChain('About', 'Section #3', 'Asset #1', 'Hotspot #2', 'Asset #1'))
             ->render();
 
+        self::assertSame(
+            ['Section #3', 'Asset #1', 'Hotspot #2', 'Asset #1'],
+            array_column($this->getSubtitleItems($html), 2),
+        );
+    }
+
+    public function testASubtitleItemLinksToItsOwnPage(): void
+    {
+        $html = ModelHeader::make()
+            ->model($this->createChain('About', 'Section #3'))
+            ->render();
+
         self::assertStringContainsString(
-            '<h2 class="header-subtitle">Section #3 · Asset #1 · Hotspot #2 · Asset #1</h2>',
+            '<a class="header-subtitle-item" href="/admin/test/update?name=Section+%233">Section #3</a>',
             $html,
         );
+    }
+
+    public function testASubtitleItemWithoutARouteIsNotALink(): void
+    {
+        $model = $this->createChain('About', 'Section #3');
+        $model->hasRoute = false;
+
+        $html = ModelHeader::make()
+            ->model($model)
+            ->render();
+
+        self::assertSame([['span', 'Section #3']], array_map(
+            static fn (array $item): array => [$item[1], $item[2]],
+            $this->getSubtitleItems($html),
+        ));
     }
 
     public function testABaseRecordGetsNoSubtitle(): void
@@ -162,6 +189,21 @@ class ModelHeaderTest extends TestCase
 
         self::assertSame($header(Header::class), $header(ModelHeader::class));
         self::assertSame([], $this->getViewBreadcrumbs());
+    }
+
+    /**
+     * @return list<array{0: string, 1: string, 2: string}> the whole tag, its name and its text, per item
+     */
+    private function getSubtitleItems(string $html): array
+    {
+        preg_match_all(
+            '~<(a|span) class="header-subtitle-item"[^>]*>([^<]*)</\\1>~',
+            $html,
+            $matches,
+            PREG_SET_ORDER,
+        );
+
+        return $matches;
     }
 
     /**
