@@ -107,6 +107,23 @@ class ModelHeaderTest extends TestCase
         ));
     }
 
+    /**
+     * The bar in front of the subtitle is drawn by its first item, so a plain string subtitle is an item too or
+     * it loses the bar (monorepo issue #156).
+     */
+    public function testAPlainSubtitleIsAnItemAsWell(): void
+    {
+        $html = Header::make()
+            ->title('Files')
+            ->subtitle('Page 2')
+            ->render();
+
+        self::assertStringContainsString(
+            '<h2 class="header-subtitle"><span class="header-subtitle-item">Page 2</span></h2>',
+            $html,
+        );
+    }
+
     public function testABaseRecordGetsNoSubtitle(): void
     {
         $html = ModelHeader::make()

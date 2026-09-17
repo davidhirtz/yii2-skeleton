@@ -75,9 +75,10 @@
   scrollbar-width: none;
 }
 
-// The bar in front of the subtitle and the dot between its items are the same shape at two widths.
-.header-subtitle::before,
-.header-subtitle-item:not(:first-child)::before {
+// The bar in front of the subtitle and the dot between its items are the same shape at two widths, and both sit
+// on the item rather than on the container: only an item carries a `view-transition-name`, so a bar drawn on the
+// container stays put while the item it belongs to slides.
+.header-subtitle-item::before {
   background-color: var(--link-hover-color);
   border-radius: .25rem;
   content: "";
@@ -86,7 +87,7 @@
   width: .25rem;
 }
 
-.header-subtitle::before {
+.header-subtitle-item:first-child::before {
   width: 1.25rem;
 }
 

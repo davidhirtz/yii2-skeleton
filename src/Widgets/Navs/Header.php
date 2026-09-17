@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\H1;
 use Hirtz\Skeleton\Html\H2;
+use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Hirtz\Skeleton\Widgets\Traits\BreadcrumbTrait;
@@ -120,12 +121,18 @@ class Header extends Widget
         return H1::make()->text($this->title);
     }
 
+    /**
+     * A subtitle is always a list of items, even when it is one string: the bar in front of it is drawn by the
+     * first item, so that it travels with the item's view transition instead of sitting still behind it.
+     */
     protected function getSubtitle(): ?Stringable
     {
         return $this->subtitle
             ? H2::make()
                 ->class('header-subtitle')
-                ->text($this->subtitle)
+                ->content(Span::make()
+                    ->class('header-subtitle-item')
+                    ->text($this->subtitle))
             : null;
     }
 

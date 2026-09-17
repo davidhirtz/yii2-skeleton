@@ -1,5 +1,11 @@
 ## 3.0.0 (in development)
 
+- **The bar in front of the header's subtitle is drawn by its first item**, not by the container (monorepo issue
+  #156): only an item carries a `view-transition-name`, so a bar on the container stayed put while the item it
+  belongs to slid past it. The dot between items and the bar are one rule at two widths now, and
+  `Widgets\Navs\Header::getSubtitle()` wraps a plain string subtitle in a `.header-subtitle-item` so both shapes
+  render the same.
+
 - **`Validators\Interfaces\AttributeTypeInterface` lets a validator name the type its attributes hold.**
   `Behaviors\AttributeTypecastBehavior::detectAttributeTypes()` recognised four validator classes and nothing
   else, so an attribute guarded by a validator of a bundle's own kept the string a form posted —
