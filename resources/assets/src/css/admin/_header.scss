@@ -20,9 +20,13 @@
 
     h1, h2 {
       font-size: 1rem;
-      white-space: nowrap;
+    }
+
+    // The subtitle clamps itself by scrolling, so only the title needs an ellipsis here.
+    h1 {
       overflow: hidden;
       text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 
@@ -63,8 +67,12 @@
   flex-wrap: wrap; // the subtitle drops below the title rather than pushing it off a narrow screen
 }
 
+// Side-scrolls rather than wrapping, as the breadcrumb bar and the submenu tabs do: a chain of four records
+// has nowhere to go on a phone, and breaking it mid-label reads as broken rather than as truncated.
 .header-subtitle {
   min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
 // The bar in front of the subtitle and the dot between its items are the same shape at two widths.
@@ -80,4 +88,9 @@
 
 .header-subtitle::before {
   width: 1.25rem;
+}
+
+.header-subtitle-item {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
