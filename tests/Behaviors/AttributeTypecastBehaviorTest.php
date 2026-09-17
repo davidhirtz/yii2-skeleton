@@ -9,12 +9,14 @@ use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Behaviors\AttributeTypecastBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Events\CreateValidatorsEvent;
+use Hirtz\Skeleton\Validators\Interfaces\AttributeTypeInterface;
 use Override;
 use Yii;
 use yii\base\Behavior;
 use yii\base\DynamicModel;
 use yii\base\Model;
 use yii\validators\NumberValidator;
+use yii\validators\Validator;
 use Closure;
 
 class AttributeTypecastBehaviorTest extends TestCase
@@ -423,6 +425,28 @@ class AttributeTypecastBehaviorTest extends TestCase
         $model->validate();
 
         self::assertIsInt($model->name);
+    }
+
+    public function testAutoDetectAttributeTypesFromValidatorInterface(): void
+    {
+        $model = (new DynamicModel(['amount' => '']))
+            ->addRule('amount', new class () extends Validator implements AttributeTypeInterface {
+                #[Override]
+                public function getAttributeType(): string
+                {
+                    return AttributeTypecastBehavior::TYPE_INTEGER;
+                }
+
+                #[Override]
+                public function validateAttribute($model, $attribute): void
+                {
+                }
+            });
+
+        $behavior = new AttributeTypecastBehavior();
+        $behavior->attach($model);
+
+        self::assertSame(['amount' => AttributeTypecastBehavior::TYPE_INTEGER], $behavior->attributeTypes);
     }
 
     public function testSkipNotSelectedAttribute(): void

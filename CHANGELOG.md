@@ -1,5 +1,13 @@
 ## 3.0.0 (in development)
 
+- **`Validators\Interfaces\AttributeTypeInterface` lets a validator name the type its attributes hold.**
+  `Behaviors\AttributeTypecastBehavior::detectAttributeTypes()` recognised four validator classes and nothing
+  else, so an attribute guarded by a validator of a bundle's own kept the string a form posted —
+  `Db\ActiveRecord::load()` typecasts, but only what the behavior knows about, and a form reload never validates.
+  The `data-form-target` script of `resources/assets/src/js/includes/forms.ts` is **deleted** with its last
+  caller: a select that decides what the rest of the form shows calls
+  `Widgets\Forms\Fields\Field::reloadsForm()` instead of carrying a value per option.
+
 - **`Models\Interfaces\AdminModelInterface` answers for the admin's nesting** — `getAdminParent()` names the
   record this one is filed under, `getAdminIndexBreadcrumb()` the listing it appears in, and
   `getAdminSubtitle()` how a record *edited through* another names itself under that record's title. All three

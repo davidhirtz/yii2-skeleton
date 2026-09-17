@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Behaviors;
 
 use Hirtz\Skeleton\Db\ActiveRecord as SkeletonActiveRecord;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
+use Hirtz\Skeleton\Validators\Interfaces\AttributeTypeInterface;
 use yii\base\Behavior;
 use yii\base\Event;
 use yii\base\InvalidArgumentException;
@@ -275,7 +276,9 @@ class AttributeTypecastBehavior extends Behavior
         foreach ($this->owner->getValidators() as $validator) {
             $type = null;
 
-            if ($validator instanceof BooleanValidator) {
+            if ($validator instanceof AttributeTypeInterface) {
+                $type = $validator->getAttributeType();
+            } elseif ($validator instanceof BooleanValidator) {
                 $type = self::TYPE_BOOLEAN;
             } elseif ($validator instanceof NumberValidator) {
                 $type = $validator->integerOnly ? self::TYPE_INTEGER : self::TYPE_FLOAT;

@@ -15,7 +15,6 @@ import search from './includes/search';
 import sticky from './includes/sticky';
 import timezone from "./includes/timezone.ts";
 import tooltip from './includes/tooltips';
-import {updateTargetsOnChange} from './includes/forms';
 
 import './includes/FlashAlert';
 
@@ -36,7 +35,6 @@ htmx.onLoad(($container) => {
     queryAll('[data-collapse]', collapse);
     queryAll('[popovertarget]', dropdown);
     queryAll('[data-filter]', filter);
-    queryAll('[data-form-target]', updateTargetsOnChange);
     queryAll('[data-modal]', closeModal);
     queryAll('[data-scroll-active]', scrollActiveIntoView);
     queryAll('[data-search]', search);
