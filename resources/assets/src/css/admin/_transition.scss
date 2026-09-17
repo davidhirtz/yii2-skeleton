@@ -20,6 +20,20 @@
   view-transition-name: header-subtitle;
 }
 
+// A group whose two snapshots differ in size scales **both** of them to its animating box — the default is
+// `inline-size: 100%` with the image stretched to fill — so the header visibly zooms for the length of the
+// transition as the subtitle or the url changes its width. Painting each snapshot at its natural size, pinned
+// to the group's top left, cross-fades them in place instead: the group still moves, its content does not
+// stretch.
+::view-transition-old(header),
+::view-transition-new(header),
+::view-transition-old(header-subtitle),
+::view-transition-new(header-subtitle) {
+  height: 100%;
+  object-fit: none;
+  object-position: top left;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   ::view-transition-old(header-subtitle),
   ::view-transition-new(header-subtitle) {
