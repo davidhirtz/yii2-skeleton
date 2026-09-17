@@ -93,7 +93,7 @@ class ModelHeader extends Header
     {
         $items = [];
 
-        foreach ($chain as $model) {
+        foreach ($chain as $index => $model) {
             $subtitle = $model->getAdminSubtitle();
 
             if ($subtitle === null) {
@@ -104,10 +104,25 @@ class ModelHeader extends Header
 
             $items[] = ($route ? A::make()->href($route) : Span::make())
                 ->class('header-subtitle-item')
+                ->addStyle(['view-transition-name' => $this->getSubtitleItemName($model, $index)])
                 ->text($subtitle);
         }
 
         return $items;
+    }
+
+    /**
+     * Names the item after the record rather than after its place in the line, so a view transition matches the
+     * same record across two pages and leaves it alone: clicking a section's asset must not move the section.
+     * Built from the record's own route, which is what makes it both stable and unique.
+     */
+    protected function getSubtitleItemName(AdminModelInterface $model, int $index): string
+    {
+        $route = $model->getAdminRoute();
+        $parts = $route ? array_filter($route, is_scalar(...)) : [$index];
+        $name = preg_replace('/[^a-z0-9]+/', '-', strtolower(implode('-', $parts))) ?? '';
+
+        return 'subtitle-' . (trim($name, '-') ?: (string)$index);
     }
 
     #[Override]

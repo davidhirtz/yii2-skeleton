@@ -54,7 +54,7 @@ class ModelHeaderTest extends TestCase
 
         self::assertSame(
             ['Section #3', 'Asset #1', 'Hotspot #2', 'Asset #1'],
-            array_column($this->getSubtitleItems($html), 2),
+            array_column($this->getSubtitleItems($html), 3),
         );
     }
 
@@ -64,10 +64,32 @@ class ModelHeaderTest extends TestCase
             ->model($this->createChain('About', 'Section #3'))
             ->render();
 
-        self::assertStringContainsString(
-            '<a class="header-subtitle-item" href="/admin/test/update?name=Section+%233">Section #3</a>',
-            $html,
+        self::assertSame(
+            [['/admin/test/update?name=Section+%233', 'Section #3']],
+            array_map(
+                static fn (array $item): array => [$item[2], $item[3]],
+                $this->getSubtitleItems($html),
+            ),
         );
+    }
+
+    /**
+     * The name is what a view transition matches the same record by across two pages, so an item that did not
+     * change does not animate — it has to follow the record, never its place in the line.
+     */
+    public function testASubtitleItemIsNamedAfterItsRecordAndNotItsPosition(): void
+    {
+        $name = fn (string ...$names): string => $this->getSubtitleItems(
+            ModelHeader::make()->model($this->createChain(...$names))->render(),
+        )[0][1];
+
+        self::assertSame(
+            $name('About', 'Section #3'),
+            $name('About', 'Section #3', 'Asset #1'),
+            'The section keeps its name when an asset is appended after it.',
+        );
+
+        self::assertNotSame($name('About', 'Section #3'), $name('About', 'Section #4'));
     }
 
     public function testASubtitleItemWithoutARouteIsNotALink(): void
@@ -79,8 +101,8 @@ class ModelHeaderTest extends TestCase
             ->model($model)
             ->render();
 
-        self::assertSame([['span', 'Section #3']], array_map(
-            static fn (array $item): array => [$item[1], $item[2]],
+        self::assertSame([['', 'Section #3']], array_map(
+            static fn (array $item): array => [$item[2], $item[3]],
             $this->getSubtitleItems($html),
         ));
     }
@@ -192,18 +214,24 @@ class ModelHeaderTest extends TestCase
     }
 
     /**
-     * @return list<array{0: string, 1: string, 2: string}> the whole tag, its name and its text, per item
+     * @return list<array{0: string, 1: string, 2: string, 3: string}> the whole tag, then its
+     *     `view-transition-name`, its `href` and its text, per item
      */
     private function getSubtitleItems(string $html): array
     {
         preg_match_all(
-            '~<(a|span) class="header-subtitle-item"[^>]*>([^<]*)</\\1>~',
+            '~<(?:a|span)[^>]*class="header-subtitle-item"[^>]*>[^<]*</(?:a|span)>~',
             $html,
             $matches,
-            PREG_SET_ORDER,
         );
 
-        return $matches;
+        return array_map(static function (string $tag): array {
+            preg_match('~view-transition-name: ([^;"]+)~', $tag, $name);
+            preg_match('~href="([^"]*)"~', $tag, $href);
+            preg_match('~>([^<]*)<~', $tag, $text);
+
+            return [$tag, $name[1] ?? '', $href[1] ?? '', $text[1] ?? ''];
+        }, $matches[0]);
     }
 
     /**
