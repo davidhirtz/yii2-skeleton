@@ -1,5 +1,13 @@
 ## 3.0.0 (in development)
 
+- **`Base\Module` keeps a configured `viewPath`** (monorepo issue #172). `init()` assigned the derived one
+  unconditionally, so the core config's `'admin' => ['viewPath' => '@app/modules/admin/views']` was dead — and
+  it is gone with the fix, since a module now finds the views beside its own `src/` tree without being told.
+  `getViewPathFromBasePath()` walked up until it popped a `src` segment, which a project's module class
+  (`App\Modules\Admin\Module` under `app/Modules/Admin`) does not have: the loop popped every segment and
+  answered a path above the filesystem root. Such a module takes `@views/<module id>` now, so a project no
+  longer has to override the method.
+
 - **A checkbox `Widgets\Forms\Fieldset` derives carries its unchecked value** (monorepo issue #171). It read
   `'0' !== $validator->falseValue ? $validator->falseValue : null`, and `yii\validators\BooleanValidator::$falseValue`
   defaults to `'0'` — so no hidden input was rendered, an unticked box posted nothing, and `Model::load()` left a

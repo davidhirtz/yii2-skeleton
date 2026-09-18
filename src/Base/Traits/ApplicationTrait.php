@@ -207,7 +207,6 @@ trait ApplicationTrait
             'modules' => [
                 'admin' => [
                     'class' => Module::class,
-                    'viewPath' => '@app/modules/admin/views',
                 ],
             ],
             'viewPath' => '@views',
