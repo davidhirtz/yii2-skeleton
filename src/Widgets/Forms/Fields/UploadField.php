@@ -15,6 +15,7 @@ use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Upload\Upload;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Buttons\FileUploadButton;
+use Hirtz\Skeleton\Widgets\Forms\InputGroup;
 use Override;
 use Stringable;
 use Yii;
@@ -74,11 +75,15 @@ class UploadField extends Field
             : null;
     }
 
+    /**
+     * A filled field reads as the text input it stands in for, the remove button appended the way the grid search
+     * prepends its own — {@see \Hirtz\Skeleton\Widgets\Grids\Toolbars\GridSearchForm::getInputGroup()}.
+     */
     protected function getFile(): string|Stringable
     {
-        return Div::make()
-            ->addClass('upload-file')
-            ->content($this->getFileLink(), $this->getRemoveButton());
+        return InputGroup::make()
+            ->append($this->getRemoveButton())
+            ->content($this->getFileLink());
     }
 
     /**
@@ -91,11 +96,11 @@ class UploadField extends Field
         $model = $this->model;
 
         if (!$model instanceof ActiveRecord || $model->getIsNewRecord() || $this->getUpload()->isToken($value)) {
-            return Span::make()->addClass('upload-name')->text($filename);
+            return Span::make()->addClass('input upload-name')->text($filename);
         }
 
         return A::make()
-            ->addClass('upload-name')
+            ->addClass('input upload-name')
             ->href($this->getUpload()->getUrl($model, (string)$this->property, $filename))
             ->target('_blank')
             ->text($filename);
@@ -104,7 +109,7 @@ class UploadField extends Field
     protected function getRemoveButton(): string|Stringable
     {
         return Button::make()
-            ->class('btn-icon icon')
+            ->class('btn btn-icon icon')
             ->icon('xmark')
             ->tooltip(Yii::t('skeleton', 'UPLOAD_BUTTON_REMOVE'))
             ->replace($this->getUrl(remove: true), '#' . $this->getContainerId());

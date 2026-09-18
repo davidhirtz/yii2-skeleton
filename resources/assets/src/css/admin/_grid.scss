@@ -38,11 +38,13 @@
   bottom: 0;
   margin-top: calc(-1rem - 1px);
   background: var(--card-bg);
-  border-top: 1px solid var(--table-th-border-color);
+  border-top: 1px solid var(--grid-footer-border-color);
   padding-top: 1rem;
   z-index: 20;
 
   &.sticky {
+    --grid-footer-border-color: var(--grid-footer-sticky-border-color);
+
     padding-block: 1rem;
   }
 }

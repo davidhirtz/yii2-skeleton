@@ -7,6 +7,10 @@
   host-only deletion beside the configured one; `yii\web\CookieCollection` is keyed by name, so it goes out as
   a `Set-Cookie` header of its own.
 
+- **A filled `Widgets\Forms\Fields\UploadField` renders as an input group** (monorepo issue #181), the
+  filename as the `.input` and the remove button appended, the way `Widgets\Grids\Toolbars\GridSearchForm`
+  prepends its own. The `.upload-file` wrapper is gone; a project styling it moves to `.input-group`.
+
 - **An installation reports itself to the version registry** (monorepo issue #170). `./yii registry/push` posts
   what the system *Application* tab shows — `Registry\Report`, one JSON object with the application's name,
   version and commit, the installed extensions with their commits, PHP, database, Yii and the migration state —

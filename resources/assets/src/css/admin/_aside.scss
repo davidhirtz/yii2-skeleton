@@ -6,6 +6,8 @@
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
+  // A wide grid gives `.main` a min-content width of its own, and the aside is the flex item that gives way.
+  flex-shrink: 0;
   gap: 1rem;
   height: 100dvh;
   padding-block: 1rem;
