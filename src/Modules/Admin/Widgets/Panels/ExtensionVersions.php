@@ -19,13 +19,9 @@ use Stringable;
 class ExtensionVersions extends Widget
 {
     /**
-     * @var list<string> the packages to leave out, matched against the full name with `fnmatch()`. The framework's
-     * own extensions carry its version and `yii2-datetime-behavior` is a dependency rather than a bundle.
+     * @var list<string> the packages to leave out, matched against the full name with `fnmatch()`
      */
-    public array $excluded = [
-        'yiisoft/*',
-        'davidhirtz/yii2-datetime-behavior',
-    ];
+    public array $excluded = VersionHelper::EXCLUDED_PACKAGES;
 
     /**
      * @var array<string, string>|null
@@ -65,19 +61,11 @@ class ExtensionVersions extends Widget
      */
     protected function findExtensions(): array
     {
-        $extensions = [];
-
-        foreach (VersionHelper::getExtensions() as $name => $version) {
-            foreach ($this->excluded as $pattern) {
-                if (fnmatch($pattern, $name)) {
-                    continue 2;
-                }
-            }
-
-            $extensions[$name] = $version;
-        }
-
-        return $extensions;
+        return array_filter(
+            VersionHelper::getExtensions(),
+            fn (string $name): bool => VersionHelper::isPlatformPackage($name, $this->excluded),
+            ARRAY_FILTER_USE_KEY,
+        );
     }
 
     #[Override]

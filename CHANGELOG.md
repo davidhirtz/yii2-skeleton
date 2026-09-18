@@ -1,5 +1,11 @@
 ## 3.0.0 (in development)
 
+- **Which installed packages are the platform is one answer** (monorepo issue #174):
+  `Helpers\VersionHelper::isPlatformPackage()` over `VersionHelper::EXCLUDED_PACKAGES`, which the version
+  registry reads beside `Modules\Admin\Widgets\Panels\ExtensionVersions`. `davidhirtz/yii2-vite` joins the
+  default exclusion — it matched `davidhirtz/yii2-*` and its `0.5.0` became an installation's platform version.
+  The widget's `$excluded` stays, now defaulting to the constant and passed to the same predicate.
+
 - **`Base\Module` keeps a configured `viewPath`** (monorepo issue #172). `init()` assigned the derived one
   unconditionally, so the core config's `'admin' => ['viewPath' => '@app/modules/admin/views']` was dead — and
   it is gone with the fix, since a module now finds the views beside its own `src/` tree without being told.

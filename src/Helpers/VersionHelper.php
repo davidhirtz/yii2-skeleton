@@ -14,6 +14,34 @@ use Yii;
  */
 class VersionHelper
 {
+    /**
+     * @var list<string> the installed packages that are not the platform, matched against the full name with
+     * `fnmatch()`. The framework's own extensions carry its version, and the two `davidhirtz/` packages are
+     * dependencies rather than bundles.
+     */
+    final public const array EXCLUDED_PACKAGES = [
+        'yiisoft/*',
+        'davidhirtz/yii2-datetime-behavior',
+        'davidhirtz/yii2-vite',
+    ];
+
+    /**
+     * Which of the installed extensions make up the platform, and therefore what an installation's version is
+     * read from. One answer, since the version registry asks it as well as the system page.
+     *
+     * @param list<string> $excluded patterns to use in place of {@see static::EXCLUDED_PACKAGES}
+     */
+    public static function isPlatformPackage(string $name, array $excluded = self::EXCLUDED_PACKAGES): bool
+    {
+        foreach ($excluded as $pattern) {
+            if (fnmatch($pattern, $name)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public static function getApplicationName(): string
     {
         return InstalledVersions::getRootPackage()['name'];
