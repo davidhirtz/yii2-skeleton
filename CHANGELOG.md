@@ -1,5 +1,24 @@
 ## 3.0.0 (in development)
 
+- **`Log\FileTarget` stamps its lines in UTC** (monorepo issue #192). Yii writes the timestamp with `date()`,
+  which answers in the process time zone, and `Models\User::findIdentity()` pins that to the account behind the
+  request — so a file held one zone per user, was not in chronological order, and the admin read every line of it
+  back as UTC, which is the formatter's `defaultTimeZone`. `getTime()` is overridden to write UTC, and
+  `Modules\Admin\Widgets\Grids\LogGridView` renders the time below the date, both through the formatter and
+  therefore in the reading account's zone. Lines an installation already holds are unchanged, so the entries
+  either side of the upgrade are only comparable once the file rolls over.
+
+- **`Modules\Admin\Widgets\Navs\NavBar` renders nothing when none of its items do** (monorepo issue #190).
+  `getItems()` answers `null` for that rather than an empty `div.navbar-items`, the shape `Widgets\Navs\Nav`
+  already uses — a subclass rendering the return value has to tolerate it. `Buttons\AsideToggleButton` is
+  invisible to a guest, whose aside holds nothing and hides itself, which below `md` left the login page with an
+  empty bordered strip across the top.
+
+- **`Modules\Admin\Controllers\AccountController::actionTimezone()` refuses a request carrying no timezone**
+  (monorepo issue #191) with a `BadRequestHttpException`, rather than assigning the empty value — which every
+  validator skips, so the stored timezone was cleared and the flash still read as a success. The modal's script
+  sets `hx-vals`; `hx-vars`, which it used, is gone from htmx 4.
+
 - **`Web\Response::clear()` resets the htmx state it carries** (monorepo issue #187) — `$isHtmxRefresh` and
   `$htmxRedirectTarget`, whose default is now `Response::HTMX_REDIRECT_TARGET`. Only an application serving more
   than one request reaches `clear()`, which is why a single `setHtmxRefresh()` turned every later response of a
