@@ -45,7 +45,8 @@
   &.sticky {
     --grid-footer-border-color: var(--grid-footer-sticky-border-color);
 
-    padding-block: 1rem;
+    margin-inline: -2rem;
+    padding: 1rem 2rem;
   }
 }
 
