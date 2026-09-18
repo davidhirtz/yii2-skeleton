@@ -9,7 +9,7 @@ use Hirtz\Skeleton\Rbac\DbManager;
 use Override;
 use Yii;
 use yii\base\InvalidCallException;
-use yii\debug\Module;
+use Hirtz\Skeleton\Modules\Debug\Module as DebugModule;
 use yii\symfonymailer\Mailer;
 use yii\web\Cookie;
 
@@ -110,7 +110,7 @@ class Application extends \yii\web\Application
                 $config['bootstrap'][] = 'debug';
             }
 
-            $config['modules']['debug']['class'] ??= Module::class;
+            $config['modules']['debug']['class'] ??= DebugModule::class;
             $config['modules']['debug']['panels'] ??= ['user' => false];
             $config['modules']['debug']['traceLine'] ??= '<a href="phpstorm://open?file={file}&line={line}">{file}:{line}</a>';
         }

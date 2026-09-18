@@ -1,5 +1,14 @@
 ## 3.0.0 (in development)
 
+- **The debug panels render again** (monorepo issue #184). `Web\Application` turns `yiisoft/yii2-debug` on for
+  every `YII_DEBUG` request, but `yii\debug\Module::beforeAction()` empties `assetManager.bundles` — dropping
+  the mapping of `JqueryAsset` onto `Assets\EmptyAssetBundle` that the skeleton relies on while `composer.json`
+  only `provide`s `bower-asset/jquery`. Every panel answered 500 publishing `@bower/jquery/dist`. It is now
+  `Modules\Debug\Module` that is wired up, and it restores the mapping for the debug routes alone. Installing
+  the suggested `components/jquery` additionally gets the panels a real jQuery and a stock `yii\web\View`,
+  without which their grid filters stay inert — `Web\View` drops the `POS_READY` scripts they register.
+  `$jqueryPath` and `$jqueryFile` point the module elsewhere, `$jqueryPath = null` turns it off.
+
 - **A `Set-Cookie` the application adds as a header no longer discards the ones PHP already queued**
   (monorepo issue #183). `yii\web\Response::sendHeaders()` sends the first value of every header name with
   PHP's `$replace`, so one `Set-Cookie` in the collection threw away the session cookie
