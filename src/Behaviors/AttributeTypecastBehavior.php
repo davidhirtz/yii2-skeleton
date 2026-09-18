@@ -279,7 +279,11 @@ class AttributeTypecastBehavior extends Behavior
             if ($validator instanceof AttributeTypeInterface) {
                 $type = $validator->getAttributeType();
             } elseif ($validator instanceof BooleanValidator) {
-                $type = self::TYPE_BOOLEAN;
+                // A rule carrying values of its own does not describe a boolean column — it accepts `yes` and
+                // `no`, which `(int)` would both store as `0`.
+                $type = $validator->trueValue === '1' && $validator->falseValue === '0'
+                    ? self::TYPE_BOOLEAN
+                    : null;
             } elseif ($validator instanceof NumberValidator) {
                 $type = $validator->integerOnly ? self::TYPE_INTEGER : self::TYPE_FLOAT;
             } elseif ($validator instanceof DynamicRangeValidator) {

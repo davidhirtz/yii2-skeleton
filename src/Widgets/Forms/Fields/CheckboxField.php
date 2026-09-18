@@ -24,7 +24,6 @@ class CheckboxField extends Field
     public function checkedValue(string|int $checkedValue): static
     {
         $this->checkedValue = $checkedValue;
-        $this->attributes['value'] = $checkedValue;
         return $this;
     }
 
@@ -56,6 +55,9 @@ class CheckboxField extends Field
     protected function getInput(): string|Stringable
     {
         $this->attributes['type'] ??= 'checkbox';
+
+        // What the record holds decides the tick, what the box posts is the checked value — two different
+        // things in the one `value` attribute, so the first is read before the second overwrites it.
         $value = $this->attributes['value'] ?? $this->model->{$this->property} ?? '';
         $this->attributes['value'] = $this->checkedValue;
 

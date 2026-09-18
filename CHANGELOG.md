@@ -1,5 +1,12 @@
 ## 3.0.0 (in development)
 
+- **A checkbox reads its tick off the record again** (monorepo issue #186).
+  `Widgets\Forms\Fields\CheckboxField::checkedValue()` assigned `attributes['value']` beside its own property,
+  which is the attribute `getInput()` reads the record's value from — so every field that named a checked value
+  rendered `checked` whatever the record held. With that fixed, a `BooleanValidator` carrying `trueValue` /
+  `falseValue` of its own works end to end: `Widgets\Forms\Fieldset` derives both from the rule, and
+  `Behaviors\AttributeTypecastBehavior` leaves such an attribute uncast, since `(int)'yes'` is `0`.
+
 - **The web application routes to `App\Controllers`, and the `@App` alias is gone** (monorepo issues #173 and
   #188). `Web\Application::$controllerNamespace` kept Yii's lowercase `app\controllers`, which Composer's
   case-sensitive PSR-4 lookup never resolves against a v3 project's `App\` prefix — so a project's own

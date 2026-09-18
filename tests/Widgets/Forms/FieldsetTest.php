@@ -52,6 +52,7 @@ class FieldsetTest extends TestCase
             'email' => 'string null',
             'password' => 'string null',
             'terms' => 'boolean null',
+            'consent' => 'string null',
             'number' => 'integer(2) unsigned not null',
         ];
 
@@ -130,6 +131,41 @@ class FieldsetTest extends TestCase
         self::assertFalse((bool)$reloaded->terms);
     }
 
+    /**
+     * A rule declaring values of its own gets both of them, or the field posts what that same rule refuses —
+     * and `Behaviors\AttributeTypecastBehavior` leaves the attribute alone, since `(int)'yes'` is `0`.
+     */
+    public function testADerivedCheckboxCarriesTheValuesOfItsRule(): void
+    {
+        $model = TestActiveRecord::findOne(1);
+        self::assertInstanceOf(TestActiveRecord::class, $model);
+
+        $content = Fieldset::make()
+            ->model($model)
+            ->rows(['consent'])
+            ->render();
+
+        self::assertStringContainsString('<input type="hidden" name="TestActiveRecord[consent]" value="no">', $content);
+        self::assertStringContainsString('name="TestActiveRecord[consent]" value="yes"', $content);
+        self::assertStringNotContainsString('checked', $content);
+
+        self::assertTrue($model->load(['TestActiveRecord' => ['consent' => 'yes']]));
+        self::assertSame('yes', $model->consent);
+        self::assertTrue($model->validate(['consent']));
+        self::assertNotFalse($model->update());
+
+        $reloaded = TestActiveRecord::findOne(1);
+        self::assertInstanceOf(TestActiveRecord::class, $reloaded);
+        self::assertSame('yes', $reloaded->consent);
+
+        $content = Fieldset::make()
+            ->model($reloaded)
+            ->rows(['consent'])
+            ->render();
+
+        self::assertStringContainsString('value="yes" checked', $content);
+    }
+
     public function testI18nFields(): void
     {
         $model = TestActiveRecord::findOne(1);
@@ -158,6 +194,7 @@ class FieldsetTest extends TestCase
  * @property string $email
  * @property string $password
  * @property bool|null $terms
+ * @property string|null $consent
  * @property int|null $number
  */
 class TestActiveRecord extends ActiveRecord implements I18nAttributeInterface, TranslationInterface
@@ -216,6 +253,12 @@ class TestActiveRecord extends ActiveRecord implements I18nAttributeInterface, T
             [
                 ['terms'],
                 'boolean',
+            ],
+            [
+                ['consent'],
+                'boolean',
+                'trueValue' => 'yes',
+                'falseValue' => 'no',
             ],
         ]);
     }
