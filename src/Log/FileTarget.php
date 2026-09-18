@@ -21,4 +21,20 @@ class FileTarget extends \yii\log\FileTarget
     {
         return $this->maskQueryParamValues(parent::getContextMessage());
     }
+
+    /**
+     * Yii stamps the line with `date()`, which answers in the process time zone — and
+     * {@see \Hirtz\Skeleton\Models\User::findIdentity()} pins that to the account behind the request. So the file
+     * held one time zone per user and was not even in chronological order, while the admin reads it back through
+     * the formatter, whose `defaultTimeZone` is UTC. The line is written in UTC instead.
+     *
+     * @param float|int $timestamp
+     */
+    #[Override]
+    protected function getTime($timestamp): string
+    {
+        $parts = explode('.', sprintf('%F', $timestamp));
+
+        return gmdate('Y-m-d H:i:s', (int)$parts[0]) . ($this->microtime ? ('.' . $parts[1]) : '');
+    }
 }

@@ -7,10 +7,10 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Pre;
 use Hirtz\Skeleton\Html\Th;
+use Hirtz\Skeleton\Log\FileTarget;
 use Hirtz\Skeleton\Models\Log;
 use Hirtz\Skeleton\Modules\Admin\Data\LogDataProvider;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
-use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Override;
 use Stringable;
@@ -18,8 +18,7 @@ use Yii;
 
 /**
  * @property LogDataProvider $provider
- */
-/**
+ *
  * @extends GridView<Log>
  */
 class LogGridView extends GridView
@@ -42,14 +41,31 @@ class LogGridView extends GridView
         parent::configure();
     }
 
-    protected function getDateColumn(): DataColumn
+    protected function getDateColumn(): Column
     {
-        return DataColumn::make()
-            ->property('date')
-            ->format('date')
+        return Column::make()
             ->title(Yii::t('skeleton', 'LOG_DATE'))
+            ->content($this->getDateColumnContent(...))
             ->nowrap()
             ->width(150);
+    }
+
+    /**
+     * The date alone cannot tell two entries of the same day apart, which is most of a log. The file holds UTC —
+     * {@see FileTarget::getTime()} — and the formatter reads it as such, so both lines are in the account's zone.
+     *
+     * @return list<string|Stringable>
+     */
+    protected function getDateColumnContent(Log $log): array
+    {
+        $formatter = Yii::$app->getFormatter();
+
+        return [
+            Div::make()->text($formatter->asDate($log->date)),
+            Div::make()
+                ->class('log-time small')
+                ->text($formatter->asTime($log->date)),
+        ];
     }
 
     protected function getLevelColumn(): Column

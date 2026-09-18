@@ -105,6 +105,21 @@ class LogControllerTest extends TestCase
         self::assertStringContainsString('$_GET = []', $provider->allModels[1]->content);
     }
 
+    /**
+     * Most of a log is entries of the same day, which the date alone could not tell apart (monorepo issue #192).
+     */
+    public function testViewCarriesTheTimeOfEachEntry(): void
+    {
+        $this->login();
+        $this->createLogFile('app.log');
+
+        $html = Yii::$app->runAction('admin/log/view', ['log' => 'app.log']);
+
+        self::assertIsString($html);
+        self::assertStringContainsString('10:00:00', $html);
+        self::assertStringContainsString('11:00:00', $html);
+    }
+
     public function testViewOfAnUnknownFileIsNotFound(): void
     {
         $this->login();

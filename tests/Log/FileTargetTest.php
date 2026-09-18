@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Log;
 
+use DateTime;
+use DateTimeZone;
 use Hirtz\Skeleton\Log\FileTarget;
 use Hirtz\Skeleton\Test\TestCase;
 use Override;
 use Yii;
+use yii\log\Logger;
 
-/**
- * `maskVars` replaces a whole variable, which is no use for a token that sits inside the one variable saying
- * which page failed (monorepo issue #166).
- */
 class FileTargetTest extends TestCase
 {
+    /**
+     * `maskVars` replaces a whole variable, which is no use for a token that sits inside the one variable saying
+     * which page failed (monorepo issue #166).
+     */
     public function testTheTokenIsMaskedWhereverTheUrlAppears(): void
     {
         $_GET = ['code' => 'a-real-token', 'q' => 'search'];
@@ -39,14 +42,38 @@ class FileTargetTest extends TestCase
     /**
      * The name is matched whole: a parameter that merely ends in one of them is not a credential.
      */
-    /**
-     * The name is matched whole: a parameter that merely ends in one of them is not a credential.
-     */
     public function testAnUnnamedParameterIsLeftAlone(): void
     {
         $_SERVER['REQUEST_URI'] = '/admin/media/file/index?q=codex&passcode=kept&folder=2';
 
         self::assertStringContainsString('?q=codex&passcode=kept&folder=2', $this->getContextMessage());
+    }
+
+    /**
+     * Yii stamps the line with `date()`, which answers in the process time zone — and `Models\User::findIdentity()`
+     * pins that to the account behind the request, so the file held one zone per user and was not even in
+     * chronological order, while the admin reads it back as UTC (monorepo issue #192).
+     */
+    public function testTheTimestampIsWrittenInUtc(): void
+    {
+        $timestamp = 1600000000;
+        $timeZone = Yii::$app->getTimeZone();
+
+        $utc = (new DateTime("@$timestamp"))->format('Y-m-d H:i:s');
+        $local = (new DateTime("@$timestamp"))
+            ->setTimezone(new DateTimeZone('America/New_York'))
+            ->format('Y-m-d H:i:s');
+
+        Yii::$app->setTimeZone('America/New_York');
+
+        try {
+            $message = (new FileTarget())->formatMessage(['a message', Logger::LEVEL_ERROR, 'application', $timestamp]);
+        } finally {
+            Yii::$app->setTimeZone($timeZone);
+        }
+
+        self::assertSame($utc, substr($message, 0, 19));
+        self::assertStringNotContainsString($local, $message);
     }
 
     private function getContextMessage(): string
