@@ -22,7 +22,6 @@ class VersionHelper
     final public const array EXCLUDED_PACKAGES = [
         'yiisoft/*',
         'davidhirtz/yii2-datetime-behavior',
-        'davidhirtz/yii2-vite',
     ];
 
     /**
