@@ -8,6 +8,7 @@ use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Models\UserLogin;
 use Override;
 use Yii;
+use yii\web\Cookie;
 use yii\web\IdentityInterface;
 use yii\web\MultiFieldSession;
 use yii\web\Response;
@@ -175,6 +176,50 @@ class User extends \yii\web\User
         }
 
         $this->removeIdentityCookie();
+    }
+
+    /**
+     * The auto login cookie is a credential, so the logout has to remove it whatever scope it was written under. A
+     * `Domain` the installation has since gained or lost — a tenant's, an edited `cookie_domain` — leaves a second
+     * cookie of the same name behind that the scoped deletion never reaches, and the next request logs the account
+     * straight back in. {@see \yii\web\CookieCollection} is keyed by name, so the host-only deletion cannot go
+     * through it and is sent as a header of its own.
+     */
+    #[Override]
+    protected function removeIdentityCookie(): void
+    {
+        $cookie = Yii::$container->get(Cookie::class, [], $this->identityCookie);
+
+        if ($cookie->domain !== '') {
+            Application::current()->getResponse()->getHeaders()
+                ->add('Set-Cookie', $this->getExpiredCookieHeader($cookie));
+        }
+
+        parent::removeIdentityCookie();
+    }
+
+    private function getExpiredCookieHeader(Cookie $cookie): string
+    {
+        $parts = [
+            "$cookie->name=",
+            'Expires=Thu, 01 Jan 1970 00:00:01 GMT',
+            'Max-Age=0',
+            'Path=' . ($cookie->path ?: '/'),
+        ];
+
+        if ($cookie->secure) {
+            $parts[] = 'Secure';
+        }
+
+        if ($cookie->httpOnly) {
+            $parts[] = 'HttpOnly';
+        }
+
+        if ($cookie->sameSite) {
+            $parts[] = "SameSite=$cookie->sameSite";
+        }
+
+        return implode('; ', $parts);
     }
 
     private function isIdentityCookieValid(mixed $value): bool

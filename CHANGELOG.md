@@ -1,5 +1,12 @@
 ## 3.0.0 (in development)
 
+- **The logout removes the auto login cookie in every scope the installation writes** (monorepo issue #178).
+  A `Domain` an installation has gained or lost — a tenant's cookie domain, an edited one — leaves a second
+  `_auth` cookie of the same name in the browser that the scoped deletion never reaches, and the next request
+  logs the account straight back in, indefinitely. `Web\User::removeIdentityCookie()` therefore sends the
+  host-only deletion beside the configured one; `yii\web\CookieCollection` is keyed by name, so it goes out as
+  a `Set-Cookie` header of its own.
+
 - **An installation reports itself to the version registry** (monorepo issue #170). `./yii registry/push` posts
   what the system *Application* tab shows — `Registry\Report`, one JSON object with the application's name,
   version and commit, the installed extensions with their commits, PHP, database, Yii and the migration state —

@@ -81,6 +81,42 @@ class UserIdentityCookieTest extends TestCase
         $this->assertIdentityCookieRemoved();
     }
 
+    /**
+     * A `Domain` the installation has gained or lost leaves a second cookie of the same name behind, which the
+     * scoped deletion never reaches — and it logs the account straight back in on the next request.
+     */
+    public function testTheHostOnlyCookieIsRemovedBesideTheScopedOne(): void
+    {
+        Yii::$container->set(Cookie::class, [
+            'domain' => '.domain.localhost',
+            'sameSite' => Cookie::SAME_SITE_LAX,
+        ]);
+
+        $user = $this->getUserFromFixture('owner');
+
+        $this->setIdentityCookie($user->getId(), 'this-is-not-the-current-auth-key');
+        $this->login($user);
+
+        $this->assertIdentityCookieRemoved();
+        self::assertSame('.domain.localhost', $this->getResponseIdentityCookie()?->domain);
+
+        self::assertSame(
+            ['_auth=; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; Path=/; Secure; HttpOnly; SameSite=Lax'],
+            $this->getWebResponse()->getHeaders()->get('Set-Cookie', null, false),
+        );
+    }
+
+    public function testTheHostOnlyCookieNeedsNoSecondHeaderWithoutADomain(): void
+    {
+        $user = $this->getUserFromFixture('owner');
+
+        $this->setIdentityCookie($user->getId(), 'this-is-not-the-current-auth-key');
+        $this->login($user);
+
+        $this->assertIdentityCookieRemoved();
+        self::assertNull($this->getWebResponse()->getHeaders()->get('Set-Cookie'));
+    }
+
     public function testNoCookieSendsNothing(): void
     {
         $this->login($this->getUserFromFixture('owner'));
