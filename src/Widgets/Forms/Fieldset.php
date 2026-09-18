@@ -164,8 +164,11 @@ class Fieldset extends Widget
             }
 
             if ($validator instanceof BooleanValidator) {
+                // The unchecked value renders the hidden input in front of the box, and an unticked checkbox posts
+                // nothing at all — without it a stored `true` can never be cleared. A form that wants the key
+                // absent says so on a field of its own, with `uncheckedValue(null)`.
                 return CheckboxField::make()
-                    ->uncheckedValue('0' !== $validator->falseValue ? $validator->falseValue : null)
+                    ->uncheckedValue($this->getCheckboxValue($validator->falseValue))
                     ->property($property)
                     ->model($this->model);
             }
@@ -193,6 +196,14 @@ class Fieldset extends Widget
             ->model($this->model);
 
         return $field instanceof InputField ? $field->type($type) : $field;
+    }
+
+    /**
+     * {@see BooleanValidator::$falseValue} is untyped, and a value a checkbox cannot carry has no place in one.
+     */
+    protected function getCheckboxValue(mixed $value): string|int|null
+    {
+        return is_string($value) || is_int($value) ? $value : null;
     }
 
     protected function renderContent(): string|Stringable

@@ -95,8 +95,39 @@ class FieldsetTest extends TestCase
         $expected = '<div class="form-group form-row" data-id="testactiverecord-password"><div class="form-label"><label class="label" for="testactiverecord-password">Password</label></div><div class="form-content"><input type="password" id="testactiverecord-password" class="input" name="TestActiveRecord[password]"></div></div>';
         self::assertStringContainsString($expected, $content);
 
-        $expected = '<div class="form-checkbox-row form-group form-row" data-id="testactiverecord-terms"><div class="form-content"><div class="checkbox"><input type="checkbox" id="testactiverecord-terms" class="input" name="TestActiveRecord[terms]" value="1"></div><div><label class="label" for="testactiverecord-terms">Terms</label></div></div></div>';
+        $expected = '<div class="form-checkbox-row form-group form-row" data-id="testactiverecord-terms"><div class="form-content"><div class="checkbox"><input type="hidden" name="TestActiveRecord[terms]" value="0"><input type="checkbox" id="testactiverecord-terms" class="input" name="TestActiveRecord[terms]" value="1"></div><div><label class="label" for="testactiverecord-terms">Terms</label></div></div></div>';
         self::assertStringContainsString($expected, $content);
+    }
+
+    /**
+     * An unticked checkbox posts nothing, so the hidden input in front of it is the only way a stored `true` is
+     * ever cleared. Asserted through `load()` rather than a functional test: BrowserKit keys a form's fields by
+     * name, so the checkbox hides the hidden input and the crawler cannot tell the two cases apart.
+     */
+    public function testADerivedCheckboxCarriesItsUncheckedValue(): void
+    {
+        Yii::$app->getDb()->createCommand()
+            ->update(TestActiveRecord::tableName(), ['terms' => true], ['id' => 1])
+            ->execute();
+
+        $model = TestActiveRecord::findOne(1);
+        self::assertInstanceOf(TestActiveRecord::class, $model);
+        self::assertTrue((bool)$model->terms);
+
+        $content = Fieldset::make()
+            ->model($model)
+            ->rows(['terms'])
+            ->render();
+
+        self::assertStringContainsString('<input type="hidden" name="TestActiveRecord[terms]" value="0">', $content);
+
+        // What a browser posts for that form with the box unticked.
+        self::assertTrue($model->load(['TestActiveRecord' => ['terms' => '0']]));
+        self::assertNotFalse($model->update());
+
+        $reloaded = TestActiveRecord::findOne(1);
+        self::assertInstanceOf(TestActiveRecord::class, $reloaded);
+        self::assertFalse((bool)$reloaded->terms);
     }
 
     public function testI18nFields(): void

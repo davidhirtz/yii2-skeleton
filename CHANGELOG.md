@@ -1,5 +1,11 @@
 ## 3.0.0 (in development)
 
+- **A checkbox `Widgets\Forms\Fieldset` derives carries its unchecked value** (monorepo issue #171). It read
+  `'0' !== $validator->falseValue ? $validator->falseValue : null`, and `yii\validators\BooleanValidator::$falseValue`
+  defaults to `'0'` — so no hidden input was rendered, an unticked box posted nothing, and `Model::load()` left a
+  stored `true` alone. Visible in `Models\Forms\LoginForm::$rememberMe`, which defaults to `true`: unticking it
+  did nothing. A field that wants the key absent declares itself and passes `uncheckedValue(null)`.
+
 - **The debug panels render again** (monorepo issue #184). `Web\Application` turns `yiisoft/yii2-debug` on for
   every `YII_DEBUG` request, but `yii\debug\Module::beforeAction()` empties `assetManager.bundles` — dropping
   the mapping of `JqueryAsset` onto `Assets\EmptyAssetBundle` that the skeleton relies on while `composer.json`
