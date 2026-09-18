@@ -13,12 +13,29 @@ use Hirtz\Skeleton\Helpers\Url;
 
 class Response extends \yii\web\Response
 {
+    final public const string HTMX_REDIRECT_TARGET = '#wrap';
+
     /**
      * `null` leaves the swap to whatever issued the request; see {@see setHtmxRedirectTarget()}.
      */
-    protected ?string $htmxRedirectTarget = '#wrap';
+    protected ?string $htmxRedirectTarget = self::HTMX_REDIRECT_TARGET;
 
     private bool $isHtmxRefresh = false;
+
+    /**
+     * Both htmx properties are per-response state, and `clear()` is what resets a response for the next one —
+     * which only an application serving more than one request reaches, `Test\Browser` among them. Without this
+     * a single `setHtmxRefresh()` turned every later response of the same test into an empty 200 carrying
+     * `HX-Refresh`, so a login answered after one read as a login that had silently failed.
+     */
+    #[\Override]
+    public function clear(): void
+    {
+        $this->htmxRedirectTarget = self::HTMX_REDIRECT_TARGET;
+        $this->isHtmxRefresh = false;
+
+        parent::clear();
+    }
 
     #[\Override]
     protected function prepare(): void

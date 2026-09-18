@@ -120,8 +120,18 @@ class LoginTest extends TestCase
      */
     public function testALoginRequiredFlashDoesNotOutliveTheLogin(): void
     {
-        $this->getWebSession()->addFlash('error', Yii::t('skeleton', 'USER_ERROR_MUST_LOGIN_VIEW'));
+        $login = self::$crawler;
 
+        self::$client->request(
+            'GET',
+            'https://www.test.localhost/admin/user/index',
+            server: ['HTTP_HX_REQUEST' => 'true'],
+        );
+
+        self::assertResponseHeaderSame('hx-refresh', 'true');
+        self::assertSame('', self::$client->getResponse()->getContent());
+
+        self::$crawler = $login;
         $this->submitLoginForm($this->getUserFromFixture('owner')->email, 'password');
 
         self::assertCurrentUrlEquals('admin/dashboard/index');

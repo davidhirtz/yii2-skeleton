@@ -57,6 +57,30 @@ class HtmxRefreshTest extends TestCase
         self::assertResponseNotHasHeader('hx-location');
     }
 
+    /**
+     * Two pieces of per-request state used to reach the request after it: `Test\Browser` merged each request's
+     * server bag into the process-wide `$_SERVER`, so one htmx request made the rest of the test an htmx
+     * session, and `Web\Response` kept its refresh flag across a `clear()`, so every later response was an empty
+     * 200 carrying `HX-Refresh` — which reads as a request that silently did nothing.
+     */
+    public function testAnHtmxRequestDoesNotOutliveItself(): void
+    {
+        $this->open('admin/account/login');
+
+        self::$client->request(
+            'GET',
+            'https://www.test.localhost/admin/user/index',
+            server: self::HTMX_SERVER,
+        );
+
+        self::assertResponseHeaderSame('hx-refresh', 'true');
+
+        self::$crawler = self::$client->request('GET', 'https://www.test.localhost/admin/account/login');
+
+        self::assertResponseNotHasHeader('hx-refresh');
+        self::assertSelectorExists('form');
+    }
+
     protected function login(): void
     {
         $this->open('admin/account/login');

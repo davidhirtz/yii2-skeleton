@@ -1,5 +1,11 @@
 ## 3.0.0 (in development)
 
+- **`Web\Response::clear()` resets the htmx state it carries** (monorepo issue #187) — `$isHtmxRefresh` and
+  `$htmxRedirectTarget`, whose default is now `Response::HTMX_REDIRECT_TARGET`. Only an application serving more
+  than one request reaches `clear()`, which is why a single `setHtmxRefresh()` turned every later response of a
+  functional test into an empty 200. `Test\Browser` restores `$_SERVER` from a snapshot beside it, rather than
+  merging each request's server bag into whatever the previous one left.
+
 - **A checkbox reads its tick off the record again** (monorepo issue #186).
   `Widgets\Forms\Fields\CheckboxField::checkedValue()` assigned `attributes['value']` beside its own property,
   which is the attribute `getInput()` reads the record's value from — so every field that named a checked value
