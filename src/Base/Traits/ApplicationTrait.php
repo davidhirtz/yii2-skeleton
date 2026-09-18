@@ -70,7 +70,10 @@ trait ApplicationTrait
         DefinitionRegistry::reset();
         TrailModelCollection::reset();
 
-        $this->setMigrationNamespace('app\Migrations');
+        // `App\`, as the console's `controllerNamespace` and `Console\Controllers\UpgradeController` already say:
+        // Composer's PSR-4 lookup is case-sensitive, so `app\Migrations\M…` autoloads nowhere and a row written
+        // under it reads as unresolved.
+        $this->setMigrationNamespace('App\Migrations');
         $this->setMigrationNamespace('Hirtz\Skeleton\Migrations');
 
         $core = [
@@ -79,6 +82,10 @@ trait ApplicationTrait
                 '@root' => $config['basePath'],
                 '@skeleton' => dirname(__FILE__, 3),
                 '@app' => '@root/app',
+                // Yii derives a module's controller path from its namespace, so a project's own module needs the
+                // StudlyCase alias too; the root package is never in `extensions.php`, which is where a bundle's
+                // comes from.
+                '@App' => '@root/app',
                 '@messages' => '@root/messages',
                 '@resources' => '@root/resources',
                 '@views' => '@resources/views',

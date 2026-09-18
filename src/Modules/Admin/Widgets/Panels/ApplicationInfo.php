@@ -14,11 +14,8 @@ use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Panels\InfoList;
 use Override;
-use PDO;
 use Stringable;
-use Throwable;
 use Yii;
-use yii\db\Connection;
 
 class ApplicationInfo extends InfoList
 {
@@ -98,7 +95,7 @@ class ApplicationInfo extends InfoList
         $this->addRow(
             Yii::t('skeleton', 'SYSTEM_DATABASE'),
             $this->getValue(
-                $this->getDatabaseVersion($db) ?? ucfirst($db->getDriverName()),
+                $db->getServerVersion() ?? ucfirst($db->getDriverName()),
                 $this->canReadSystem()
                     ? Dsn::fromString($db->dsn)->database . ' · ' . $db->getDriverName()
                     : $db->getDriverName(),
@@ -167,16 +164,5 @@ class ApplicationInfo extends InfoList
         if ($extensions->render() !== '') {
             $this->addRow(Yii::t('skeleton', 'SYSTEM_EXTENSIONS'), $extensions);
         }
-    }
-
-    protected function getDatabaseVersion(Connection $db): ?string
-    {
-        try {
-            $version = (string)$db->getSlavePdo(true)->getAttribute(PDO::ATTR_SERVER_VERSION);
-        } catch (Throwable) {
-            return null;
-        }
-
-        return $version === '' ? null : $version;
     }
 }

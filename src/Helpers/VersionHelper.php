@@ -55,6 +55,29 @@ class VersionHelper
     }
 
     /**
+     * The extensions with the commit they were installed from, which is the only thing that tells two `dev-main`
+     * installs apart.
+     *
+     * @return array<string, array{version: string, reference: string|null}>
+     */
+    public static function getInstalledExtensions(): array
+    {
+        $extensions = [];
+
+        foreach (InstalledVersions::getInstalledPackagesByType('yii2-extension') as $package) {
+            $reference = InstalledVersions::getReference($package);
+
+            $extensions[$package] = [
+                'version' => InstalledVersions::getPrettyVersion($package) ?? '',
+                'reference' => is_string($reference) && $reference !== '' ? substr($reference, 0, 8) : null,
+            ];
+        }
+
+        ksort($extensions);
+        return $extensions;
+    }
+
+    /**
      * @return array{reference: string, time: int}|array{}
      */
     private static function getGitHead(): array

@@ -13,6 +13,7 @@ use Hirtz\Skeleton\Console\Controllers\MessageController;
 use Hirtz\Skeleton\Console\Controllers\MigrateController;
 use Hirtz\Skeleton\Console\Controllers\ParamsController;
 use Hirtz\Skeleton\Console\Controllers\RedirectController;
+use Hirtz\Skeleton\Console\Controllers\RegistryController;
 use Hirtz\Skeleton\Console\Controllers\SearchController;
 use Hirtz\Skeleton\Console\Controllers\TrailController;
 use Hirtz\Skeleton\Console\Controllers\UpgradeController;
@@ -70,7 +71,7 @@ class Application extends \yii\console\Application
         $this->setWebrootAliases();
         $this->setDefaultUrlManagerRules();
 
-        $this->setControllerPath(Yii::getAlias('@app/commands'));
+        $this->setControllerPath(Yii::getAlias('@app/Commands'));
 
         parent::bootstrap();
     }
@@ -91,6 +92,7 @@ class Application extends \yii\console\Application
             'migrate' => MigrateController::class,
             'params' => ParamsController::class,
             'redirect' => RedirectController::class,
+            'registry' => RegistryController::class,
             'search' => SearchController::class,
             'trail' => TrailController::class,
             'upload' => UploadController::class,

@@ -58,4 +58,19 @@ class VersionHelperTest extends TestCase
 
         self::assertSame($names, array_keys($extensions));
     }
+
+    public function testTheInstalledExtensionsCarryTheirReference(): void
+    {
+        $extensions = VersionHelper::getInstalledExtensions();
+
+        self::assertSame(array_keys(VersionHelper::getExtensions()), array_keys($extensions));
+
+        foreach ($extensions as $name => $extension) {
+            self::assertSame(VersionHelper::getExtensions()[$name], $extension['version']);
+            self::assertTrue($extension['reference'] === null || preg_match('/^[0-9a-f]{8}$/', $extension['reference']) === 1, $name);
+        }
+
+        // a path repository records the checked out commit, so the skeleton's own reference is known here
+        self::assertNotNull($extensions['davidhirtz/yii2-skeleton']['reference']);
+    }
 }

@@ -14,7 +14,7 @@ class MigrationHistoryTest extends TestCase
     {
         $namespaces = Yii::$app->getMigrationNamespaces();
 
-        self::assertContains('app\Migrations', $namespaces);
+        self::assertContains('App\Migrations', $namespaces);
         self::assertContains('Hirtz\Skeleton\Migrations', $namespaces);
         self::assertSame($namespaces, array_unique($namespaces));
     }

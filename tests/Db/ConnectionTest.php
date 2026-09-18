@@ -40,4 +40,12 @@ class ConnectionTest extends TestCase
 
         FileHelper::removeDirectory($db->backupPath);
     }
+
+    public function testTheServerVersionIsReported(): void
+    {
+        $version = Yii::$app->getDb()->getServerVersion();
+
+        self::assertNotNull($version);
+        self::assertMatchesRegularExpression('/^\d+\.\d+/', $version);
+    }
 }

@@ -24,4 +24,14 @@ class SecretKey
 
         return (string)$key;
     }
+
+    /**
+     * A random key of URL-safe characters, for anything that is handed out once and stored hashed.
+     *
+     * @param positive-int $length
+     */
+    public static function generate(int $length = 32): string
+    {
+        return substr(rtrim(strtr(base64_encode(random_bytes($length)), '+/', '-_'), '='), 0, $length);
+    }
 }

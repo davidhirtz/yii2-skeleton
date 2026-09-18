@@ -1,5 +1,27 @@
 ## 3.0.0 (in development)
 
+- **An installation reports itself to the version registry** (monorepo issue #170). `./yii registry/push` posts
+  what the system *Application* tab shows — `Registry\Report`, one JSON object with the application's name,
+  version and commit, the installed extensions with their commits, PHP, database, Yii and the migration state —
+  to `params.registryUrl`, authenticated with `params.registryKey` as a bearer token. Neither parameter set is
+  not an error, and neither is a registry that is down or a key that was revoked: the command warns on stderr and
+  exits 0, so a deploy can carry it as its last step; `--strict` makes both `ExitCode::UNAVAILABLE`. `--url`
+  names the installation's URL for a console application whose URL manager has no `hostInfo`, and
+  `registry/show` prints the report without sending it. The transport is `Registry\RegistryClient` over Guzzle,
+  with `RegistryClient::$client` as the test seam. Beside it: `Db\Connection::getServerVersion()` (moved out of
+  `Panels\ApplicationInfo`), `Helpers\VersionHelper::getInstalledExtensions()` (`name => {version, reference}`)
+  and `Helpers\SecretKey::generate()` (moved out of `ParamsController`, which delegates to it).
+
+  Building the registry as the first project outside the monorepo also fixed three project-level defaults: the
+  migration namespace a project's own migrations are registered under is **`App\Migrations`** (the StudlyCase
+  the console's `App\Commands` and `upgrade` already assumed; the lowercase `app\Migrations` applied the file
+  but wrote a row Composer's PSR-4 lookup could not resolve), the **`@App` alias** is registered beside `@app`
+  (Yii derives a module's controller path from it, and `./yii help` died on a project module without it), and
+  the console's controller path is `@app/Commands`. A project that already applied a migration under the
+  lowercase name renames the row once:
+  `UPDATE migration SET version = REPLACE(version, 'app\\Migrations', 'App\\Migrations')`. The dist archive
+  no longer ships `resources/tests/`.
+
 - **A page whose model is not self-evident explains itself** (monorepo issue #163).
   `Modules\Admin\Widgets\HintAlert` renders an info alert a view passes its own text to, and every one of them
   is switched off at once by the account's new `user.show_hints` column (default on, `Models\User::showsHints()`,

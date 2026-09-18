@@ -10,7 +10,9 @@ use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Models\Session;
 use mikehaertl\shellcommand\Command;
 use Override;
+use PDO;
 use RuntimeException;
+use Throwable;
 use Yii;
 use yii\db\mysql\ColumnSchema;
 
@@ -151,6 +153,20 @@ class Connection extends \yii\db\Connection
         }
 
         return true;
+    }
+
+    /**
+     * The server's own version string (`11.4.2-MariaDB`, `8.0.36`), `null` where the driver does not answer.
+     */
+    public function getServerVersion(): ?string
+    {
+        try {
+            $version = (string)$this->getSlavePdo(true)->getAttribute(PDO::ATTR_SERVER_VERSION);
+        } catch (Throwable) {
+            return null;
+        }
+
+        return $version === '' ? null : $version;
     }
 
     /**

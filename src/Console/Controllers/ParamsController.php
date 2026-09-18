@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Console\Controllers;
 
 use Hirtz\Skeleton\Console\Controllers\Traits\ConfigTrait;
+use Hirtz\Skeleton\Helpers\SecretKey;
 use Yii;
 use yii\console\Controller;
 
@@ -159,7 +160,6 @@ class ParamsController extends Controller
      */
     protected static function generateKey(int $length = 32): string
     {
-        $bytes = random_bytes($length);
-        return strtr(substr(base64_encode($bytes), 0, $length), '+/=', '_-.');
+        return SecretKey::generate($length);
     }
 }
