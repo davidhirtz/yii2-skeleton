@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Db\MigrationHistory;
 use Hirtz\Skeleton\Helpers\VersionHelper;
 use Hirtz\Skeleton\Registry\Report;
 use Hirtz\Skeleton\Test\TestCase;
+use Override;
 use Yii;
 
 /**
@@ -17,6 +18,16 @@ use Yii;
 class ReportTest extends TestCase
 {
     protected string $applicationClass = Application::class;
+
+    /**
+     * The tenant bundle re-points the report in the container; this tests the skeleton's own.
+     */
+    #[Override]
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Yii::$container->clear(Report::class);
+    }
 
     public function testTheReportCarriesTheSchemaAndTheApplicationIdentity(): void
     {
