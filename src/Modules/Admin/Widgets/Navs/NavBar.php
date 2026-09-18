@@ -19,17 +19,33 @@ class NavBar extends Widget
     #[Override]
     protected function renderContent(): Stringable|string
     {
-        return Div::make()
-            ->attributes($this->attributes)
-            ->addClass('navbar')
-            ->content($this->getItems());
+        $items = $this->getItems();
+
+        return $items
+            ? Div::make()
+                ->attributes($this->attributes)
+                ->addClass('navbar')
+                ->content($items)
+            : '';
     }
 
+    /**
+     * Every item is guarded — the search and the toggle by the identity, the language dropdown by the number of
+     * admin languages — so a logged out view is left with a bar containing nothing at all.
+     */
     protected function getItems(): ?Stringable
     {
-        return Div::make()
-            ->class('navbar-items')
-            ->content($this->getSearchItem(), $this->getLanguageDropdownItem(), $this->getMobileToggle());
+        $content = implode('', array_map(strval(...), array_filter([
+            $this->getSearchItem(),
+            $this->getLanguageDropdownItem(),
+            $this->getMobileToggle(),
+        ])));
+
+        return $content
+            ? Div::make()
+                ->class('navbar-items')
+                ->content($content)
+            : null;
     }
 
     protected function getSearchItem(): ?Stringable

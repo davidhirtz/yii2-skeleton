@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Buttons;
 
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\AsideMenu;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
@@ -12,6 +13,16 @@ use Yii;
 
 class AsideToggleButton extends Widget
 {
+    /**
+     * Every item of {@see AsideMenu} is guarded by the identity, so a guest's aside is empty and hides itself
+     * through `hidden-empty` — the toggle would open nothing.
+     */
+    #[Override]
+    public function isVisible(): bool
+    {
+        return parent::isVisible() && !$this->webuser->getIsGuest();
+    }
+
     #[Override]
     protected function renderContent(): string|Stringable
     {

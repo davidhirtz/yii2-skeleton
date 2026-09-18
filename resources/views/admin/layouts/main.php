@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 use Hirtz\Skeleton\Assets\AdminAssetBundle;
 use Hirtz\Skeleton\Modules\Admin\TimezoneModal;
-use Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\AsideToggleButton;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\AsideMenu;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\NavBar;
 use Hirtz\Skeleton\Web\Application;
