@@ -1,17 +1,19 @@
 .badge {
+  background: var(--badge-bg);
+  border-radius: .25rem;
+  color: var(--badge-color);
   display: inline-block;
-  padding: 0.25rem .5rem;
+  font-family: Bebas Neue, sans-serif;
   font-size: .75rem ;
   font-weight: 700;
+  letter-spacing: .0625em;
   line-height: 1;
+  padding: 0.25rem .5rem;
   text-align: center;
-  white-space: nowrap;
-  vertical-align: baseline;
-  border-radius: .25rem;
-  background: var(--badge-bg);
-  color: var(--badge-color);
   text-decoration: none !important;
   transition: background .2s, color .2s;
+  vertical-align: baseline;
+  white-space: nowrap;
 
   &:empty {
     display: none;

@@ -70,9 +70,6 @@ trait ApplicationTrait
         DefinitionRegistry::reset();
         TrailModelCollection::reset();
 
-        // `App\`, as the console's `controllerNamespace` and `Console\Controllers\UpgradeController` already say:
-        // Composer's PSR-4 lookup is case-sensitive, so `app\Migrations\M…` autoloads nowhere and a row written
-        // under it reads as unresolved.
         $this->setMigrationNamespace('App\Migrations');
         $this->setMigrationNamespace('Hirtz\Skeleton\Migrations');
 

@@ -91,7 +91,7 @@
   //--color-slate-100: oklch(96.8% 0.007 247.896);
   //--color-slate-200: oklch(92.9% 0.013 255.508);
   //--color-slate-300: oklch(86.9% 0.022 252.894);
-  --color-slate-400: oklch(70.4% 0.04 256.788);
+  --color-slate-400: #B7C5D8;//oklch(70.4% 0.04 256.788);
   --color-slate-500: oklch(55.4% 0.046 257.417);
   //--color-slate-600: oklch(44.6% 0.043 257.281);
   //--color-slate-700: oklch(37.2% 0.044 257.287);
@@ -155,7 +155,7 @@
   // Badge
   --badge-color: var(--color-white);
   --badge-bg: var(--color-slate-400);
-  --badge-active-bg: var(--color-gray-700);
+  --badge-active-bg: var(--badge-bg);
   --badge-active-color: var(--color-white);
   --badge-info-bg: var(--color-blue-50);
   --badge-info-color: var(--color-blue-900);
