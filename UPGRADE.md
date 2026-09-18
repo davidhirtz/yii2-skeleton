@@ -1,5 +1,22 @@
 # Upgrade Guide
 
+## 3.0.0 — `App\Controllers`, and the `@App` alias is gone
+
+`Web\Application::$controllerNamespace` is `App\Controllers`, where Yii's default is the lowercase
+`app\controllers` — which Composer's case-sensitive PSR-4 lookup never resolved against a project's `App\`
+prefix, so a project's own `SiteController` answered a 404 until the project set the property itself. Such a
+project can drop the line; one that keeps its controllers elsewhere keeps it, and is only routed by the
+namespace either way, since a controller is resolved by class name and never by path.
+
+The `@App` alias is gone with it. It pointed at the directory `@app` already names, and existed only because
+Yii resolves a namespace to a directory through an alias of the same name. **A project's configuration, view or
+command naming `@App` names `@app`.** Nothing derives a path from that alias any more: a module and both
+applications pin their controller path, `Helpers\NamespaceHelper::getPath()` answers a namespace's directory
+from Composer's autoloader, and a migration run registers the one alias Yii's own private resolver asks for.
+
+One consequence is worth knowing: `Yii::autoload()` is registered ahead of Composer's autoloader, so with the
+alias in place a project's own classes were loaded by Yii rather than by Composer. They are Composer's again.
+
 ## 3.0.0 — `ext-intl` is required
 
 `Models\CustomAttributes\UrlCustomAttribute` validates with `enableIDN`, so `https://münchen.de` is accepted the

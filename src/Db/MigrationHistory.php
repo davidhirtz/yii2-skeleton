@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Db;
 
+use Hirtz\Skeleton\Helpers\NamespaceHelper;
 use Yii;
 use yii\db\Connection as BaseConnection;
 use yii\db\Query;
@@ -114,9 +115,9 @@ class MigrationHistory
         $pending = [];
 
         foreach (Yii::$app->getMigrationNamespaces() as $namespace) {
-            $path = Yii::getAlias('@' . str_replace('\\', '/', $namespace), false);
+            $path = NamespaceHelper::getPath($namespace);
 
-            if (!is_string($path) || !is_dir($path)) {
+            if ($path === null || !is_dir($path)) {
                 continue;
             }
 

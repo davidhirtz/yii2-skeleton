@@ -35,6 +35,13 @@ class Application extends \yii\web\Application
     use ApplicationTrait;
 
     /**
+     * @var string Yii's default is the lowercase `app\controllers`, which Composer's case-sensitive PSR-4 lookup
+     * never resolves against a project's `App\` prefix — and a controller that cannot be found is a 404 rather
+     * than an error.
+     */
+    public $controllerNamespace = 'App\\Controllers';
+
+    /**
      * `Yii::$app` is either application, so code that only ever runs under a web request asks for this one and
      * code that runs under both keeps `Yii::$app` and narrows — which is what makes a console command reaching
      * for `getUser()` or `getSession()` a static analysis error rather than a runtime surprise.
@@ -69,6 +76,10 @@ class Application extends \yii\web\Application
     {
         $this->setDefaultCookieConfig();
         $this->setDefaultUrlManagerRules();
+
+        // Not derived from the namespace above, which would need an alias mirroring it; the console application
+        // pins its own the same way.
+        $this->setControllerPath(Yii::getAlias('@app/Controllers'));
 
         parent::bootstrap();
 

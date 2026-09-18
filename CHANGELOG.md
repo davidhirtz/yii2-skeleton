@@ -1,5 +1,19 @@
 ## 3.0.0 (in development)
 
+- **The web application routes to `App\Controllers`, and the `@App` alias is gone** (monorepo issues #173 and
+  #188). `Web\Application::$controllerNamespace` kept Yii's lowercase `app\controllers`, which Composer's
+  case-sensitive PSR-4 lookup never resolves against a v3 project's `App\` prefix — so a project's own
+  controller was a silent 404 until it set the property itself, while `Console\Application` had answered
+  `App\Commands` all along. The path is pinned beside it, and `Base\Module` pins its own beside the controller
+  namespace it derives: Yii otherwise derives the directory back from the namespace through an alias mirroring
+  it, which only an installed extension ever has. That alias — `'@App' => '@root/app'`, a duplicate of `@app`
+  pointing at the same directory — is therefore gone, and with it the prepended autoloader path through which
+  Yii, rather than Composer, loaded a project's classes. `Helpers\NamespaceHelper::getPath()` answers a
+  namespace's directory from Composer's autoloader instead, without an alias and without reading anything from
+  disk; `Db\MigrationHistory` resolves its migration directories that way from a web request, and
+  `Console\Controllers\MigrateController` registers the one alias Yii's private path resolver insists on, derived
+  rather than configured, for the length of a migration run. See `UPGRADE.md`.
+
 - **`Models\CustomAttributes\UrlCustomAttribute`'s rule and its field agree on what a URL is** (monorepo issue
   #182). `defaultScheme` and the `defaultScheme()` setter are gone — `<input type="url">` refuses a scheme-less
   value client-side, so the rewrite to `https://` could never be reached from a browser — and `enableIDN` is on,

@@ -79,10 +79,6 @@ trait ApplicationTrait
                 '@root' => $config['basePath'],
                 '@skeleton' => dirname(__FILE__, 3),
                 '@app' => '@root/app',
-                // Yii derives a module's controller path from its namespace, so a project's own module needs the
-                // StudlyCase alias too; the root package is never in `extensions.php`, which is where a bundle's
-                // comes from.
-                '@App' => '@root/app',
                 '@messages' => '@root/messages',
                 '@resources' => '@root/resources',
                 '@views' => '@resources/views',

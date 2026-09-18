@@ -26,7 +26,13 @@ class Module extends \yii\base\Module
 
         $this->trigger(self::EVENT_INIT);
 
-        $this->controllerNamespace ??= (new ReflectionClass(static::class))->getNamespaceName() . '\\Controllers';
+        if ($this->controllerNamespace === null) {
+            $this->controllerNamespace = (new ReflectionClass(static::class))->getNamespaceName() . '\\Controllers';
+
+            // Yii would derive the directory back from that namespace through an alias of the same name, which a
+            // project's own module never has: only an installed extension is written into `extensions.php`.
+            $this->setControllerPath($this->getBasePath() . '/Controllers');
+        }
 
         parent::init();
     }

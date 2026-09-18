@@ -38,6 +38,18 @@ class ModuleTest extends TestCase
         $module = new ProjectModule('project');
         self::assertSame(Yii::getAlias('@views/project'), $module->getViewPath());
     }
+
+    /**
+     * Yii derives the directory back from the controller namespace, through an alias mirroring it that only an
+     * installed extension ever has — so a project's module is the case that has to be pinned.
+     */
+    public function testAModuleTakesItsControllerPathFromItsBasePath(): void
+    {
+        $module = new ProjectModule('project');
+
+        self::assertSame(__NAMESPACE__ . '\\Controllers', $module->controllerNamespace);
+        self::assertSame('/project/app/Modules/Project/Controllers', $module->getControllerPath());
+    }
 }
 
 class ProjectModule extends Module

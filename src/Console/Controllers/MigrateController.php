@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Console\Controllers;
 use Hirtz\Skeleton\Console\Controllers\Traits\BackupTrait;
 use Hirtz\Skeleton\Console\Controllers\Traits\ConfigTrait;
 use Hirtz\Skeleton\Db\MigrationHistory;
+use Hirtz\Skeleton\Helpers\NamespaceHelper;
 use Hirtz\Skeleton\Models\User;
 use Override;
 use Seld\CliPrompt\CliPrompt;
@@ -70,7 +71,28 @@ class MigrateController extends \yii\console\controllers\MigrateController
             $this->skipBackup = !Yii::$app->getDb()->backupOnMigration;
         }
 
+        $this->setMigrationNamespaceAliases();
+
         parent::init();
+    }
+
+    /**
+     * `BaseMigrateController` resolves a namespace's directory through an alias of the namespace's own name, in a
+     * private method — and Composer writes one into `vendor/yiisoft/extensions.php` for every installed extension
+     * but never for the root package, so a project's own `App\Migrations` had nothing to resolve against. The
+     * alias is registered here, from the autoloader and only for the namespaces that lack one, rather than
+     * configured: nothing outside a migration run asks for it, and `Db\MigrationHistory` — which reads the same
+     * namespaces from a web request — needs no alias at all.
+     */
+    protected function setMigrationNamespaceAliases(): void
+    {
+        foreach ($this->migrationNamespaces as $namespace) {
+            $alias = '@' . str_replace('\\', '/', $namespace);
+
+            if (Yii::getAlias($alias, false) === false && ($path = NamespaceHelper::getPath($namespace)) !== null) {
+                Yii::setAlias($alias, $path);
+            }
+        }
     }
 
     #[Override]
