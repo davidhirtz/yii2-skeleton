@@ -252,6 +252,11 @@ class User extends \yii\web\User
         $session = Application::current()->getSession();
         $session->set('last_login_timestamp', $identity->last_login?->getTimestamp());
 
+        // The login answers whatever {@see static::loginRequired()} flashed, and a flash removed after access is
+        // removed only once something reads it — so one added to a response that renders none, an htmx request
+        // answered with a refresh among them, would surface on the page after the login.
+        $session->removeFlash('error');
+
         if ($session instanceof MultiFieldSession) {
             $session->writeCallback = fn () => [
                 'ip_address' => ($ipAddress = Application::current()->getRequest()->getUserIP()) ? inet_pton($ipAddress) : null,

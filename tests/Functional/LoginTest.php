@@ -113,6 +113,21 @@ class LoginTest extends TestCase
         self::assertAnyValidationErrorSame('Sorry, logging in is currently disabled!');
     }
 
+    /**
+     * The login page is what renders the flash, so one `loginRequired()` adds after it was drawn — from a
+     * background htmx request, which is answered with a refresh rather than a body — is read by the page after
+     * the login instead: a flash removed after access is removed only once something reads it.
+     */
+    public function testALoginRequiredFlashDoesNotOutliveTheLogin(): void
+    {
+        $this->getWebSession()->addFlash('error', Yii::t('skeleton', 'USER_ERROR_MUST_LOGIN_VIEW'));
+
+        $this->submitLoginForm($this->getUserFromFixture('owner')->email, 'password');
+
+        self::assertCurrentUrlEquals('admin/dashboard/index');
+        self::assertSelectorNotExists('[data-alert="error"]');
+    }
+
     private function submitLoginForm(?string $email = null, ?string $password = null, ?string $code = null): void
     {
         $this->submit(values: $this->prefixFormValues(LoginForm::instance()->formName(), array_filter([
