@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Test\Traits\StdOutBufferControllerTrait;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Override;
 use Yii;
+use yii\console\ExitCode;
 
 /**
  * `user/password` is the way back into an installation whose only administrator lost their password and whose
@@ -99,6 +100,69 @@ class UserControllerTest extends TestCase
         self::assertTrue($user->validatePassword('a-brand-new-password'));
     }
 
+    /**
+     * A provisioning script gets no terminal, so every prompt has an option — and the password an environment
+     * variable beside it, which keeps it out of the shell history and the process list.
+     */
+    public function testCreateTakesItsValuesFromTheOptions(): void
+    {
+        $controller = $this->createController(null);
+        $controller->interactive = false;
+        $controller->name = 'scripted';
+        $controller->email = 'scripted@domain.com';
+        $controller->password = 'a-brand-new-password';
+
+        self::assertSame(ExitCode::OK, $controller->actionCreate());
+
+        $user = User::find()
+            ->andWhereEmail('scripted@domain.com')
+            ->one();
+
+        self::assertSame('scripted', $user?->name);
+        self::assertTrue($user->validatePassword('a-brand-new-password'));
+    }
+
+    public function testCreateTakesThePasswordFromTheEnvironment(): void
+    {
+        putenv(UserController::PASSWORD_ENV . '=a-brand-new-password');
+
+        try {
+            $controller = $this->createController(null);
+            $controller->interactive = false;
+            $controller->name = 'scripted';
+            $controller->email = 'scripted@domain.com';
+
+            self::assertSame(ExitCode::OK, $controller->actionCreate());
+        } finally {
+            putenv(UserController::PASSWORD_ENV);
+        }
+
+        $user = User::find()
+            ->andWhereEmail('scripted@domain.com')
+            ->one();
+
+        self::assertTrue($user?->validatePassword('a-brand-new-password'));
+    }
+
+    /**
+     * `confirm()` answers its default without a terminal, so an unguarded retry would recurse until the process
+     * died on the value the script gave it.
+     */
+    public function testAScriptedCreateReportsItsErrorsInsteadOfRetrying(): void
+    {
+        $controller = $this->createController('a-brand-new-password');
+        $controller->interactive = false;
+        $controller->name = 'scripted';
+        $controller->email = $this->getUserFromFixture('owner')->email;
+
+        self::assertSame(ExitCode::DATAERR, $controller->actionCreate());
+
+        $output = $controller->flushStdOutBuffer();
+
+        self::assertStringNotContainsString('User account created.', $output);
+        self::assertStringNotContainsString('Do you want to retry?', $output);
+    }
+
     public function testCreateReportsTheErrorsOfADuplicateAddress(): void
     {
         $controller = $this->createController('a-brand-new-password', [
@@ -117,7 +181,7 @@ class UserControllerTest extends TestCase
     /**
      * @param array<string, string> $answers
      */
-    private function createController(string $password, array $answers = []): TestUserController
+    private function createController(?string $password, array $answers = []): TestUserController
     {
         $controller = new TestUserController('user', Yii::$app);
         $controller->password = $password;
@@ -131,18 +195,10 @@ class TestUserController extends UserController
 {
     use StdOutBufferControllerTrait;
 
-    public string $password = '';
     /**
      * @var array<string, string>
      */
     public array $answers = [];
-
-    #[Override]
-    protected function readPassword(): string
-    {
-        $this->stdout('Enter password: ');
-        return $this->password;
-    }
 
     /**
      * @param array<string, mixed> $options

@@ -79,11 +79,4 @@ class UpgradeControllerMock extends UpgradeController
 class UserControllerMock extends UserController
 {
     use StdOutBufferControllerTrait;
-
-    public string $password = '';
-
-    protected function readPassword(): string
-    {
-        return $this->password;
-    }
 }

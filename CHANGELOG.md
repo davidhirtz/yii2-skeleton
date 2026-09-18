@@ -1,5 +1,12 @@
 ## 3.0.0 (in development)
 
+- **`user/create` and `user/password` can be scripted** (monorepo issue #175). `--name`, `--email` and
+  `--password` skip the prompts, and `Console\Controllers\UserController::PASSWORD_ENV` (`YII_USER_PASSWORD`)
+  takes the password out of the shell history and the process list. `readPassword()` read the terminal rather
+  than stdin, so a piped password blocked forever and `--interactive=0` had nothing to fall back to. Both
+  actions answer an `ExitCode` now, and the retry the create offers is asked for only where there is a terminal
+  to ask — `confirm()` answers its default otherwise, which would have recursed forever.
+
 - **Which installed packages are the platform is one answer** (monorepo issue #174):
   `Helpers\VersionHelper::isPlatformPackage()` over `VersionHelper::EXCLUDED_PACKAGES`, which the version
   registry reads beside `Modules\Admin\Widgets\Panels\ExtensionVersions`. `davidhirtz/yii2-vite` joins the
