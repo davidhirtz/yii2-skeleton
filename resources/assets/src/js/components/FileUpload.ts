@@ -2,6 +2,15 @@ import htmx from "htmx.org"
 
 import {startBusy, stopBusy} from "../includes/busy";
 
+// The upload was started from a button the user could see, so the target it refreshes almost always is on screen
+// too — scrolling it to the top then throws the page around for no reason and reads as a reload. `show:top` is
+// kept for the case it was added for: a target the swap would otherwise leave out of sight, such as a grid
+// uploaded into from a dropdown far down the page.
+const isOnScreen = ($el: Element): boolean => {
+    const {top, bottom} = $el.getBoundingClientRect();
+    return bottom > 0 && top < window.innerHeight;
+};
+
 window.customElements.get('file-upload') || window.customElements.define('file-upload', class extends HTMLElement {
     // noinspection JSUnusedGlobalSymbols
     connectedCallback() {
@@ -83,7 +92,7 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
                                 void htmx.swap({
                                     text: html,
                                     target: $target,
-                                    swap: 'outerHTML show:top',
+                                    swap: isOnScreen($target) ? 'outerHTML' : 'outerHTML show:top',
                                     select: this.dataset.target || undefined,
                                     // The swap is not an htmx request, so nothing inherits the body's
                                     // `hx-select-oob` and the flashes have to be named here.

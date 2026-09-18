@@ -1,2 +1,0 @@
-var e=document.createElement("progress");e.className="progress";var s=0,o=(t=0)=>(document.querySelector("dialog[open]")?.close(),t?(e.max=t,e.value=0):e.removeAttribute("value"),s++||(document.documentElement.classList.add("is-busy"),document.body.appendChild(e),document.body.inert=!0),e),r=()=>{s&&!--s&&(document.body.inert=!1,document.documentElement.classList.remove("is-busy"),e.remove())},n=t=>{t.addEventListener("htmx:before:request",()=>o()),t.addEventListener("htmx:after:request",()=>r())};export{o as a,r as b,n as c};
-//# sourceMappingURL=chunk-TUNDTTYM.js.map
