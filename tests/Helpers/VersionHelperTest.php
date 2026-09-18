@@ -11,17 +11,18 @@ use Yii;
 class VersionHelperTest extends TestCase
 {
     /**
-     * Which packages are the platform is one answer, since the version registry reads it beside the system page:
-     * `yii2-vite` is a dependency whose `0.5.0` would otherwise become an installation's platform version.
+     * The exclusions are the framework's own extensions and a package that is a dependency rather than a bundle.
+     * A version that would distort an installation's *platform version* is the version registry's own exclusion,
+     * since only the registry computes one — the badges here report whatever the installation runs.
      */
     public function testThePlatformIsTheBundlesRatherThanTheirDependencies(): void
     {
         self::assertTrue(VersionHelper::isPlatformPackage('davidhirtz/yii2-skeleton'));
+        self::assertTrue(VersionHelper::isPlatformPackage('davidhirtz/yii2-vite'));
         self::assertFalse(VersionHelper::isPlatformPackage('yiisoft/yii2-debug'));
         self::assertFalse(VersionHelper::isPlatformPackage('davidhirtz/yii2-datetime-behavior'));
-        self::assertFalse(VersionHelper::isPlatformPackage('davidhirtz/yii2-vite'));
 
-        self::assertTrue(VersionHelper::isPlatformPackage('davidhirtz/yii2-vite', ['yiisoft/*']));
+        self::assertTrue(VersionHelper::isPlatformPackage('davidhirtz/yii2-datetime-behavior', ['yiisoft/*']));
         self::assertFalse(VersionHelper::isPlatformPackage('davidhirtz/yii2-skeleton', ['*/yii2-skeleton']));
     }
 

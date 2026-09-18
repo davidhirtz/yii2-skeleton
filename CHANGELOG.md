@@ -28,10 +28,12 @@
   to ask — `confirm()` answers its default otherwise, which would have recursed forever.
 
 - **Which installed packages are the platform is one answer** (monorepo issue #174):
-  `Helpers\VersionHelper::isPlatformPackage()` over `VersionHelper::EXCLUDED_PACKAGES`, which the version
-  registry reads beside `Modules\Admin\Widgets\Panels\ExtensionVersions`. `davidhirtz/yii2-vite` joins the
-  default exclusion — it matched `davidhirtz/yii2-*` and its `0.5.0` became an installation's platform version.
-  The widget's `$excluded` stays, now defaulting to the constant and passed to the same predicate.
+  `Helpers\VersionHelper::isPlatformPackage()` over `VersionHelper::EXCLUDED_PACKAGES`, the default of
+  `Modules\Admin\Widgets\Panels\ExtensionVersions::$excluded`, which stays and is passed to the same predicate.
+  The list is the framework's own extensions and `davidhirtz/yii2-datetime-behavior`, a dependency rather than
+  a bundle. A package whose `0.x` would distort an installation's **platform version** — `davidhirtz/yii2-vite`
+  — is not excluded here: only the version registry computes such a version, and it keeps its own list, while
+  the badges on the system page report whatever the installation runs.
 
 - **`Base\Module` keeps a configured `viewPath`** (monorepo issue #172). `init()` assigned the derived one
   unconditionally, so the core config's `'admin' => ['viewPath' => '@app/modules/admin/views']` was dead — and
