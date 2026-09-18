@@ -35,6 +35,30 @@ class Response extends \yii\web\Response
     }
 
     /**
+     * `yii\web\Response::sendHeaders()` sends the first value of every header name with PHP's `$replace` set, and
+     * for `Set-Cookie` that throws away every cookie already queued — including the session cookie PHP itself
+     * emitted from `session_regenerate_id()`, which a login always triggers. The client then kept the session id
+     * it came with, found no session behind it on the next request, and every flash died with it. A cookie the
+     * application adds as a header is therefore appended after the rest, never sent through the collection.
+     */
+    #[\Override]
+    protected function sendHeaders(): void
+    {
+        $cookies = $this->getHeaders()->remove('Set-Cookie');
+
+        parent::sendHeaders();
+
+        foreach ((array)$cookies as $cookie) {
+            $this->sendCookieHeader((string)$cookie);
+        }
+    }
+
+    protected function sendCookieHeader(string $cookie): void
+    {
+        header("Set-Cookie: $cookie", false);
+    }
+
+    /**
      * htmx reads `HX-Location` first and returns, so the redirect headers have to go for the refresh to happen.
      */
     protected function prepareHtmxRefresh(): void

@@ -1,5 +1,11 @@
 ## 3.0.0 (in development)
 
+- **A `Set-Cookie` the application adds as a header no longer discards the ones PHP already queued**
+  (monorepo issue #183). `yii\web\Response::sendHeaders()` sends the first value of every header name with
+  PHP's `$replace`, so one `Set-Cookie` in the collection threw away the session cookie
+  `session_regenerate_id()` emits on every login: the client kept the id it came with, found no session behind
+  it on the next request, and every flash died with it. `Web\Response::sendHeaders()` appends them instead.
+
 - **The logout removes the auto login cookie in every scope the installation writes** (monorepo issue #178).
   A `Domain` an installation has gained or lost — a tenant's cookie domain, an edited one — leaves a second
   `_auth` cookie of the same name in the browser that the scoped deletion never reaches, and the next request
