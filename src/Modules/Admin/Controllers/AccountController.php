@@ -23,6 +23,7 @@ use Override;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\Response;
 
@@ -399,10 +400,20 @@ class AccountController extends Controller
         return $this->redirect(['security']);
     }
 
+    /**
+     * A request carrying no timezone is the client failing to report one, never a user clearing theirs — an empty
+     * value is skipped by every validator, so assigning it would wipe the stored one and still flash a success.
+     */
     public function actionTimezone(?string $redirect = null): Response|string
     {
+        $timezone = $this->request->post('timezone');
+
+        if (!is_string($timezone) || '' === $timezone) {
+            throw new BadRequestHttpException();
+        }
+
         $user = $this->webuser->getIdentity();
-        $user->timezone = $this->request->post('timezone');
+        $user->timezone = $timezone;
         $user->update();
 
         $this->errorOrSuccess($user, Yii::t('skeleton', 'ACCOUNT_SUCCESS_UPDATED_TIMEZONE'));

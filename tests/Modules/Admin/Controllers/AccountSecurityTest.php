@@ -13,6 +13,7 @@ use Hirtz\Skeleton\Validators\TwoFactorAuthenticationValidator;
 use RobThree\Auth\Providers\Qr\QRServerProvider;
 use RobThree\Auth\TwoFactorAuth;
 use Yii;
+use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\MethodNotAllowedHttpException;
 use yii\web\Response;
@@ -142,6 +143,25 @@ class AccountSecurityTest extends TestCase
 
         self::assertNull(User::findOne($user->id)->timezone);
         self::assertNotEmpty($this->getWebSession()->getFlash('danger'));
+    }
+
+    /**
+     * The modal used to set the value through `hx-vars`, which htmx 4 dropped, so the button posted an empty body —
+     * and an empty value is skipped by every validator, so the stored timezone was cleared and the flash still read
+     * as a success (monorepo issue #191).
+     */
+    public function testAPostCarryingNoTimezoneIsRefused(): void
+    {
+        $user = $this->login('owner');
+        $user->updateAttributes(['timezone' => 'Europe/Berlin']);
+
+        $this->expectException(BadRequestHttpException::class);
+
+        try {
+            $this->post('admin/account/timezone');
+        } finally {
+            self::assertSame('Europe/Berlin', User::findOne($user->id)->timezone);
+        }
     }
 
     public function testTheTimezoneRedirectsWhereItWasAskedTo(): void

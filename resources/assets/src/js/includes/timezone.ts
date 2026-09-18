@@ -12,7 +12,9 @@ export default ($modal: HTMLDialogElement) => {
         }
 
         if ($button) {
-            $button.setAttribute('hx-vars', JSON.stringify({timezone}));
+            // htmx 4 dropped `hx-vars`, and reads `hx-vals` off the element at request time — so setting it here,
+            // after htmx has already processed the modal, is what the button posts.
+            $button.setAttribute('hx-vals', JSON.stringify({timezone}));
         }
 
         $modal.showModal();

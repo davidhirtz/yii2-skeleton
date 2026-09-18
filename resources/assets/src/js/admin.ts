@@ -44,7 +44,7 @@ onLoad(($container) => {
     queryAll('[data-search]', search);
     queryAll('[data-sticky]', sticky);
     queryAll('[data-tooltip]', tooltip);
-    queryAll('[data-timezone-offset', timezone)
+    queryAll('[data-timezone-offset]', timezone);
 
     queryAll('[aria-invalid]', ($input: HTMLElement) => {
         $input.addEventListener('input', () => $input.removeAttribute('aria-invalid'));
