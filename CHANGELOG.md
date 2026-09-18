@@ -1,5 +1,11 @@
 ## 3.0.0 (in development)
 
+- **`Models\CustomAttributes\UrlCustomAttribute`'s rule and its field agree on what a URL is** (monorepo issue
+  #182). `defaultScheme` and the `defaultScheme()` setter are gone — `<input type="url">` refuses a scheme-less
+  value client-side, so the rewrite to `https://` could never be reached from a browser — and `enableIDN` is on,
+  so a non-ASCII *host* validates the way a non-ASCII *path* already did. That makes `ext-intl` a requirement of
+  the skeleton; see `UPGRADE.md`.
+
 - **`user/create` and `user/password` can be scripted** (monorepo issue #175). `--name`, `--email` and
   `--password` skip the prompts, and `Console\Controllers\UserController::PASSWORD_ENV` (`YII_USER_PASSWORD`)
   takes the password out of the shell history and the process list. `readPassword()` read the terminal rather

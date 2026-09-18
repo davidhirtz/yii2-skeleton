@@ -1,5 +1,15 @@
 # Upgrade Guide
 
+## 3.0.0 — `ext-intl` is required
+
+`Models\CustomAttributes\UrlCustomAttribute` validates with `enableIDN`, so `https://münchen.de` is accepted the
+way `https://example.com/über-uns` already was, and `yii\validators\UrlValidator` throws without the extension.
+It is in `composer.json` now; a deployment that installs from a lock file has to make sure the extension is there.
+
+Its `defaultScheme` is gone with the setter that configured it. The field renders `<input type="url">`, which
+refuses a scheme-less value client-side, so the rewrite of `example.com` to `https://example.com` was unreachable
+from a browser while a console or import path silently relied on it. Prefix such a value before it is assigned.
+
 ## 3.0.0 — the admin's nesting lives on the model
 
 `Models\Interfaces\AdminModelInterface` declares `getAdminParent(): ?AdminModelInterface`,
