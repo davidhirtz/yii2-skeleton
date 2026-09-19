@@ -20,10 +20,17 @@ class MigrateControllerHistoryTest extends TestCase
     protected string $applicationClass = Application::class;
 
     private const string LEGACY = 'davidhirtz\yii2\skeleton\migrations\M190125140002Init';
+    private const string UNDECLARABLE = 'Gone\M240101000000Undeclarable';
+
+    /** @var (callable(): void)|null */
+    private $undeclarable = null;
 
     #[Override]
     protected function tearDown(): void
     {
+        ($this->undeclarable ?? static fn () => null)();
+        $this->undeclarable = null;
+
         // `migration` carries no fixture, so a row inserted here outlives the transaction of a test that ran
         // DDL and would be seen by the next one.
         Yii::$app->getDb()->createCommand()
@@ -120,6 +127,58 @@ class MigrateControllerHistoryTest extends TestCase
         self::assertFalse($controller->checkHistoryPublic());
 
         unlink($file);
+    }
+
+    /**
+     * The shape a v2 project migration has on the upgrade deploy: its file is on disk and it still `use`s a
+     * trait v3 removed, so `class_exists()` throws rather than returning false. Unguarded, the `Error` comes
+     * from inside this guard — `./yii migrate` dies with a stack trace before printing anything, and
+     * maintenance mode is left on.
+     *
+     * @see https://github.com/davidhirtz/yii2-monorepo/issues/199
+     */
+    public function testAMigrationWhoseClassCannotBeDeclaredIsReportedRatherThanFatal(): void
+    {
+        $class = $this->registerUndeclarableClass();
+
+        Yii::$app->getDb()->createCommand()
+            ->insert('{{%migration}}', ['version' => $class, 'apply_time' => 1_700_000_000])
+            ->execute();
+
+        $controller = $this->createController();
+        $controller->upgradeFile = '@runtime/does-not-exist.php';
+
+        self::assertFalse($controller->checkHistoryPublic());
+        self::assertStringContainsString($class, $controller->flushStdOutBuffer());
+    }
+
+    /**
+     * A class whose file is on disk and whose trait is not. Autoloaded from `@runtime` rather than committed,
+     * so no fixture of this repository is a file PHP cannot declare.
+     */
+    private function registerUndeclarableClass(): string
+    {
+        $file = Yii::getAlias('@runtime/undeclarable-migration.php');
+
+        file_put_contents($file, sprintf(
+            '<?php namespace %s; final class %s { use \Gone\MissingTrait; }',
+            substr(self::UNDECLARABLE, 0, (int)strrpos(self::UNDECLARABLE, '\\')),
+            substr(strrchr(self::UNDECLARABLE, '\\') ?: '', 1),
+        ));
+
+        $loader = static function (string $name) use ($file): void {
+            if ($name === self::UNDECLARABLE) {
+                require $file;
+            }
+        };
+
+        spl_autoload_register($loader);
+        $this->undeclarable = static function () use ($loader, $file): void {
+            spl_autoload_unregister($loader);
+            is_file($file) && unlink($file);
+        };
+
+        return self::UNDECLARABLE;
     }
 
     /**

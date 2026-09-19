@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Db;
 
 use Hirtz\Skeleton\Helpers\NamespaceHelper;
+use Throwable;
 use Yii;
 use yii\db\Connection as BaseConnection;
 use yii\db\Query;
@@ -64,6 +65,12 @@ class MigrationHistory
      * pointed at v3 code returns all of them, because the namespaces were renamed. A project that deleted one
      * of its own migrations without clearing the row shows up here too, which is worth knowing either way.
      *
+     * `class_exists()` returns false for a class that is simply absent and **throws** for one whose file is
+     * found and cannot be declared — a missing parent, interface or trait. That is not a corner case here: it
+     * is the shape of a project migration still using a trait v3 removed, and the throw would come from inside
+     * the guard whose whole job is to print a readable message. Such a version is unresolved in the sense that
+     * matters, so it is reported rather than raised.
+     *
      * @return list<string>
      */
     public function getUnresolved(): array
@@ -71,9 +78,17 @@ class MigrationHistory
         $unresolved = [];
 
         foreach (array_keys($this->getApplied()) as $version) {
-            if (str_contains($version, '\\') && !class_exists($version)) {
-                $unresolved[] = $version;
+            if (!str_contains($version, '\\')) {
+                continue;
             }
+
+            try {
+                $exists = class_exists($version);
+            } catch (Throwable) {
+                $exists = false;
+            }
+
+            $exists || $unresolved[] = $version;
         }
 
         return $unresolved;
