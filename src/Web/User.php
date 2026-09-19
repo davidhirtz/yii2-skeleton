@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Web;
 
 use davidhirtz\yii2\datetime\DateTime;
+use Hirtz\Skeleton\Helpers\CookieHelper;
 use Hirtz\Skeleton\Models\UserLogin;
 use Override;
 use Yii;
@@ -192,34 +193,10 @@ class User extends \yii\web\User
 
         if ($cookie->domain !== '') {
             Application::current()->getResponse()->getHeaders()
-                ->add('Set-Cookie', $this->getExpiredCookieHeader($cookie));
+                ->add('Set-Cookie', CookieHelper::getExpiredHeader($cookie));
         }
 
         parent::removeIdentityCookie();
-    }
-
-    private function getExpiredCookieHeader(Cookie $cookie): string
-    {
-        $parts = [
-            "$cookie->name=",
-            'Expires=Thu, 01 Jan 1970 00:00:01 GMT',
-            'Max-Age=0',
-            'Path=' . ($cookie->path ?: '/'),
-        ];
-
-        if ($cookie->secure) {
-            $parts[] = 'Secure';
-        }
-
-        if ($cookie->httpOnly) {
-            $parts[] = 'HttpOnly';
-        }
-
-        if ($cookie->sameSite) {
-            $parts[] = "SameSite=$cookie->sameSite";
-        }
-
-        return implode('; ', $parts);
     }
 
     private function isIdentityCookieValid(mixed $value): bool

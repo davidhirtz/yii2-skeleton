@@ -97,6 +97,27 @@ class Request extends \yii\web\Request
         return $this->getHeaders()->has($this->formReloadHeader);
     }
 
+    /**
+     * PHP collapses two cookies of one name into the first the browser sent, so `$_COOKIE` — and with it
+     * {@see getCookies()} — cannot see a duplicate at all. Only the raw header lists both (monorepo issue #195).
+     *
+     * @return list<string>
+     */
+    public function getDuplicateCookieNames(): array
+    {
+        $counts = [];
+
+        foreach (explode(';', (string)($_SERVER['HTTP_COOKIE'] ?? '')) as $cookie) {
+            $name = trim(strstr($cookie, '=', true) ?: $cookie);
+
+            if ($name !== '') {
+                $counts[$name] = ($counts[$name] ?? 0) + 1;
+            }
+        }
+
+        return array_keys(array_filter($counts, static fn (int $count): bool => $count > 1));
+    }
+
     public function getIsAjaxRoute(): bool
     {
         return $this->getIsAjax() && ($_SERVER['HTTP_X_AJAX_REQUEST'] ?? null) === 'route';

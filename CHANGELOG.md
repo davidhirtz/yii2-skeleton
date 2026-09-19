@@ -1,5 +1,20 @@
 ## 3.0.0 (in development)
 
+- **`Web\Response` deletes the host-only twin of the session and CSRF cookies** (monorepo issue #195). A cookie's
+  identity is its name *and* its scope, and PHP keeps the **first** of two the browser sends — the stale one. So a
+  host-only `_session` left over from an earlier scope of the installation silently discarded every session written
+  under the configured `Domain`: each request read the dead id, started a fresh one and wrote a cookie nothing read
+  back, losing the admin language, the flashes and the CSRF token a form was rendered with between requests.
+  `removeHostOnlyCookies()` sends the deletion beside the write, as `Web\User::removeIdentityCookie()` does for the
+  auto login cookie, and only for a name the request actually carried twice — which `Web\Request::getDuplicateCookieNames()`
+  reads off the raw header, `$_COOKIE` having collapsed the pair. The expired-header builder both share is the new
+  `Helpers\CookieHelper::getExpiredHeader()`.
+
+- **A click on a navbar search result closes the suggestion box** (monorepo issue #193). The result is a boosted
+  link inside the search container, so its `htmx:after:swap` reached the listener that refills the box and reopened
+  the popover over the page just navigated to. Only the input's own request refills it now; everything else is a
+  navigation. The Enter key, which renders the full results page, closes the popover too and keeps the query.
+
 - **The admin language is picked through `Modules\Admin\Controllers\AccountController::actionLanguage()`**
   (monorepo issue #194), a POST-only route carrying the language in its body, rather than by appending
   `Request::$languageParam` to the current URL. `Modules\Admin\Module::setLanguage()` no longer reads that

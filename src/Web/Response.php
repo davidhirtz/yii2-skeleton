@@ -7,6 +7,8 @@ namespace Hirtz\Skeleton\Web;
 use Yii;
 use yii\base\InvalidRouteException;
 use yii\helpers\Json;
+use yii\web\Cookie;
+use Hirtz\Skeleton\Helpers\CookieHelper;
 use Hirtz\Skeleton\Helpers\Url;
 
 ;
@@ -48,7 +50,54 @@ class Response extends \yii\web\Response
             $this->prepareHtmxRefresh();
         }
 
+        $this->removeHostOnlyCookies();
+
         parent::prepare();
+    }
+
+    /**
+     * A cookie's identity is its name *and* its scope, and PHP keeps the **first** of two the browser sends, which
+     * is the stale one. So a host-only `_session` left over from an earlier scope of the installation silently
+     * discards every session written under the configured `Domain`: each request reads the dead id, starts a fresh
+     * session and writes a domain-scoped cookie nothing ever reads back — the admin language, the flashes and the
+     * CSRF token a form was rendered with all die between requests, with nothing on the server to say why. Nothing
+     * else clears the twin, since the application only ever writes the scoped cookie (monorepo issue #195).
+     *
+     * This is {@see \Hirtz\Skeleton\Web\User::removeIdentityCookie()} for the two cookies that have no logout to
+     * hang the deletion on, and it is sent only for a name the request actually carried twice, so a healed browser
+     * stops paying for it.
+     */
+    protected function removeHostOnlyCookies(): void
+    {
+        $request = Application::current()->getRequest();
+        $duplicates = $request->getDuplicateCookieNames();
+
+        if (!$duplicates) {
+            return;
+        }
+
+        $session = Application::current()->getSession();
+        $cookies = [];
+
+        if (in_array($session->getName(), $duplicates, true)) {
+            $cookies[] = Yii::$container->get(Cookie::class, [], [
+                'name' => $session->getName(),
+                'secure' => (bool)($session->getCookieParams()['secure'] ?? false),
+            ]);
+        }
+
+        if ($request->enableCsrfCookie && in_array($request->csrfParam, $duplicates, true)) {
+            $cookies[] = Yii::$container->get(Cookie::class, [], [
+                ...$request->csrfCookie,
+                'name' => $request->csrfParam,
+            ]);
+        }
+
+        foreach ($cookies as $cookie) {
+            if ($cookie->domain !== '') {
+                $this->getHeaders()->add('Set-Cookie', CookieHelper::getExpiredHeader($cookie));
+            }
+        }
     }
 
     /**

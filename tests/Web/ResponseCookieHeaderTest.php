@@ -36,6 +36,62 @@ class ResponseCookieHeaderTest extends TestCase
         self::assertNull($response->getHeaders()->get('Set-Cookie'));
     }
 
+    /**
+     * A host-only `_session` beside the domain-scoped one is what PHP hands the application, so every request
+     * starts a fresh session and nothing it carries survives the redirect that was meant to show it (#195).
+     */
+    public function testTheHostOnlyTwinOfTheSessionCookieIsRemoved(): void
+    {
+        $this->setCookieDomain();
+        $_SERVER['HTTP_COOKIE'] = '_session=stale; _session=live';
+
+        self::assertSame(
+            ['_session=; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; Path=/; Secure; HttpOnly; SameSite=Lax'],
+            $this->send(),
+        );
+    }
+
+    public function testTheHostOnlyTwinOfTheCsrfCookieIsRemoved(): void
+    {
+        $this->setCookieDomain();
+        $_SERVER['HTTP_COOKIE'] = '_csrf=stale; _csrf=live';
+
+        self::assertSame(
+            ['_csrf=; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; Path=/; Secure; HttpOnly; SameSite=Lax'],
+            $this->send(),
+        );
+    }
+
+    public function testACookieSentOnceIsLeftAlone(): void
+    {
+        $this->setCookieDomain();
+        $_SERVER['HTTP_COOKIE'] = '_session=live; _csrf=live; _auth=live';
+
+        self::assertSame([], $this->send());
+    }
+
+    /**
+     * Without a `Domain` there is no twin to tell apart, and the deletion would take the live cookie with it.
+     */
+    public function testNothingIsRemovedWithoutACookieDomain(): void
+    {
+        Yii::$container->set(Cookie::class, ['sameSite' => Cookie::SAME_SITE_LAX]);
+        $_SERVER['HTTP_COOKIE'] = '_session=stale; _session=live';
+
+        self::assertSame([], $this->send());
+    }
+
+    /**
+     * The name is read up to its `=`, so a cookie whose name merely ends in another's is not a duplicate.
+     */
+    public function testANameEndingInAnothersIsNotADuplicate(): void
+    {
+        $this->setCookieDomain();
+        $_SERVER['HTTP_COOKIE'] = '_session=live; app_session=other';
+
+        self::assertSame([], $this->send());
+    }
+
     public function testACookieOfTheCollectionIsLeftToYii(): void
     {
         $response = Yii::createObject(RecordingResponse::class);
@@ -51,6 +107,29 @@ class ResponseCookieHeaderTest extends TestCase
 
         self::assertSame([], $response->sent);
         self::assertNotNull($response->getCookies()->get('_auth'));
+    }
+
+    private function setCookieDomain(): void
+    {
+        Yii::$container->set(Cookie::class, [
+            'domain' => '.domain.localhost',
+            'sameSite' => Cookie::SAME_SITE_LAX,
+            'secure' => true,
+        ]);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function send(): array
+    {
+        $response = Yii::createObject(RecordingResponse::class);
+
+        ob_start();
+        $response->send();
+        ob_end_clean();
+
+        return $response->sent;
     }
 }
 

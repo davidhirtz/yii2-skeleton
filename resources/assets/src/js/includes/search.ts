@@ -131,8 +131,14 @@ export default ($container: HTMLElement) => {
     }
 
     // htmx fires the swap events on the element that issued the request, not on the one it swapped, so this
-    // listens on the container the input sits in rather than on the results it fills.
-    $container.addEventListener('htmx:after:swap', () => {
+    // listens on the container the input sits in rather than on the results it fills. Only the input's own
+    // request refills the box: a result link is boosted and sits inside the container too, so without the guard
+    // its navigation reopened the popover over the page it had just gone to (monorepo issue #193).
+    $container.addEventListener('htmx:after:swap', (event: Event) => {
+        if (event.target !== $input) {
+            return;
+        }
+
         $results.childElementCount ? open() : close();
     });
 
@@ -140,7 +146,9 @@ export default ($container: HTMLElement) => {
     const searchPath = new URL($container.dataset.search!, location.origin).pathname;
 
     document.body.addEventListener('htmx:after:swap', (event: Event) => {
-        if ($container.contains(event.target as Node)) {
+        // Everything but the suggest request is a navigation, wherever it was issued from — the Enter key on the
+        // container, a result link inside the popover, or any other boosted link on the page.
+        if (event.target === $input) {
             return;
         }
 
