@@ -1,5 +1,19 @@
 ## 3.0.0 (in development)
 
+- **`Widgets\Buttons\AdminButton` is invisible to a guest** (monorepo issue #198). It declared no `roles`, and
+  `Widgets\Traits\VisibilityTrait::isVisible()` answers `true` for an unset list — so a project rendering the cms
+  `site/view.php` unchanged put a floating link to `/admin/dashboard/index`, and the environment badge beside it,
+  on every public page. `configure()` now defaults the list to `Models\User::ROLE_AUTHENTICATED`, after the event
+  and the `prepare()` closures so a caller narrowing it to a permission narrows it — `roles()` merges, and the
+  default would otherwise have widened it back. A project wanting the old behaviour passes
+  `roles([User::ROLE_ANY])`.
+
+- **`Log\FileTarget` masks a credential variable however many times Apache prefixed it** (monorepo issue #197).
+  `REDIRECT_` is added once per internal redirect, so the common two-rewrite `.htaccess` hands PHP a
+  `REDIRECT_REDIRECT_HTTP_AUTHORIZATION` no literal name in `maskVars` reached and the bearer token was written
+  to the log in the clear. The four names are wildcards now (`_SERVER.*HTTP_AUTHORIZATION` and friends), which
+  `yii\log\Target::getContextMessage()` resolves with `StringHelper::matchWildcard()`.
+
 - **`Web\Response` deletes the host-only twin of the session and CSRF cookies** (monorepo issue #195). A cookie's
   identity is its name *and* its scope, and PHP keeps the **first** of two the browser sends — the stale one. So a
   host-only `_session` left over from an earlier scope of the installation silently discarded every session written

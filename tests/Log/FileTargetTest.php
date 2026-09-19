@@ -50,6 +50,36 @@ class FileTargetTest extends TestCase
     }
 
     /**
+     * Apache prefixes `REDIRECT_` once per internal redirect, and the two-rewrite shape a project's `.htaccess`
+     * commonly has therefore hands PHP a doubly-prefixed variable no literal name reaches (monorepo issue #197).
+     */
+    public function testADoublyPrefixedCredentialVariableIsMasked(): void
+    {
+        $server = $_SERVER;
+
+        $_SERVER['HTTP_AUTHORIZATION'] = 'Bearer once';
+        $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] = 'Bearer twice';
+        $_SERVER['REDIRECT_REDIRECT_HTTP_AUTHORIZATION'] = 'Bearer thrice';
+        $_SERVER['REDIRECT_REDIRECT_HTTP_COOKIE'] = '_session=a-real-session-id';
+        $_SERVER['REDIRECT_REDIRECT_PHP_AUTH_USER'] = 'an-account';
+        $_SERVER['REDIRECT_REDIRECT_PHP_AUTH_PW'] = 'a-real-password';
+        $_SERVER['REQUEST_URI'] = '/admin/dashboard/index';
+
+        try {
+            $context = $this->getConfiguredContextMessage();
+        } finally {
+            $_SERVER = $server;
+        }
+
+        foreach (['once', 'twice', 'thrice', 'a-real-session-id', 'an-account', 'a-real-password'] as $secret) {
+            self::assertStringNotContainsString($secret, $context);
+        }
+
+        // The wildcard is anchored on the credential name, so an ordinary variable is left alone.
+        self::assertStringContainsString('/admin/dashboard/index', $context);
+    }
+
+    /**
      * Yii stamps the line with `date()`, which answers in the process time zone — and `Models\User::findIdentity()`
      * pins that to the account behind the request, so the file held one zone per user and was not even in
      * chronological order, while the admin reads it back as UTC (monorepo issue #192).
@@ -74,6 +104,23 @@ class FileTargetTest extends TestCase
 
         self::assertSame($utc, substr($message, 0, 19));
         self::assertStringNotContainsString($local, $message);
+    }
+
+    /**
+     * The list the application configures is what the issue is about, so the test reads it off the live target
+     * rather than restating it.
+     */
+    private function getConfiguredContextMessage(): string
+    {
+        $file = Yii::$app->getLog()->targets['file'];
+        self::assertInstanceOf(FileTarget::class, $file);
+
+        $target = new TestFileTarget([
+            'logVars' => $file->logVars,
+            'maskVars' => $file->maskVars,
+        ]);
+
+        return $target->getContextMessage();
     }
 
     private function getContextMessage(): string

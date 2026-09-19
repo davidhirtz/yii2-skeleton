@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Web;
 
+use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Widgets\EnvironmentAlert;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Web\Controller;
@@ -77,7 +78,7 @@ class RequestEnvironmentTest extends TestCase
 
     public function testTheAdminButtonIsBadged(): void
     {
-        $html = (string)AdminButton::make();
+        $html = $this->renderAdminButton();
 
         self::assertStringContainsString('admin-btn-badge', $html);
         self::assertStringContainsString('>Local<', $html);
@@ -87,9 +88,7 @@ class RequestEnvironmentTest extends TestCase
     {
         $this->getRequest()->setHostInfo('https://www.example.com');
 
-        $html = (string)AdminButton::make();
-
-        self::assertStringNotContainsString('admin-btn-badge', $html);
+        self::assertStringNotContainsString('admin-btn-badge', $this->renderAdminButton());
     }
 
     public function testTheAlertNamesTheEnvironmentAndTheHost(): void
@@ -105,6 +104,17 @@ class RequestEnvironmentTest extends TestCase
         $this->getRequest()->setHostInfo('https://www.example.com');
 
         self::assertSame('', (string)EnvironmentAlert::make());
+    }
+
+    /**
+     * The button is invisible to a guest, which `Tests\Widgets\Buttons\AdminButtonTest` is about — the badge is
+     * what is under test here, so this one opts out rather than logging in.
+     */
+    private function renderAdminButton(): string
+    {
+        return AdminButton::make()
+            ->roles([User::ROLE_ANY])
+            ->render();
     }
 
     private function renderBreadcrumbs(): string

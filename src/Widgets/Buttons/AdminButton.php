@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Assets\AdminAssetBundle;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Html\Svg;
+use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
@@ -39,7 +40,12 @@ class AdminButton extends Widget
     protected function configure(): void
     {
         $this->icon = $this->icon ?: $this->getDefaultIcon();
+
         parent::configure();
+
+        // The button is the admin overlay's furniture, so it must never be part of a public page; assigned after
+        // the event, or a caller narrowing it to a permission would only have widened it (`roles()` merges).
+        $this->roles ??= [User::ROLE_AUTHENTICATED];
     }
 
     protected function getDefaultIcon(): Svg

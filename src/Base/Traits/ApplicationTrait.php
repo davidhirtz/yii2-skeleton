@@ -135,17 +135,13 @@ trait ApplicationTrait
                             ],
                             'maskVars' => [
                                 '_GET.code',
-                                // Apache hands `Authorization` to PHP through a rewrite whose value arrives as
-                                // `REDIRECT_HTTP_AUTHORIZATION` and an internal redirect prefixes the other credential
-                                // vars the same way — so both forms are masked.
-                                '_SERVER.HTTP_AUTHORIZATION',
-                                '_SERVER.REDIRECT_HTTP_AUTHORIZATION',
-                                '_SERVER.HTTP_COOKIE',
-                                '_SERVER.REDIRECT_HTTP_COOKIE',
-                                '_SERVER.PHP_AUTH_USER',
-                                '_SERVER.REDIRECT_PHP_AUTH_USER',
-                                '_SERVER.PHP_AUTH_PW',
-                                '_SERVER.REDIRECT_PHP_AUTH_PW',
+                                // Apache prefixes `REDIRECT_` once per internal redirect, so a credential var
+                                // arrives as `HTTP_AUTHORIZATION`, `REDIRECT_HTTP_AUTHORIZATION` or any deeper
+                                // form — hence the leading wildcard, which `matchWildcard()` resolves.
+                                '_SERVER.*HTTP_AUTHORIZATION',
+                                '_SERVER.*HTTP_COOKIE',
+                                '_SERVER.*PHP_AUTH_USER',
+                                '_SERVER.*PHP_AUTH_PW',
                                 '_POST.value',
                                 '_POST.AccountCredentialsForm.newPassword',
                                 '_POST.AccountCredentialsForm.oldPassword',
